@@ -42,14 +42,14 @@ public class FatFormulariosDAO extends DAO {
 		FatFormularios form = new FatFormularios();
 		String sql = "select co_formulario, ds_formulario from fat_formularios where st_ativo = 'S' and co_formulario = " + id;
 
-		DBHandler db = getDb();
+		
 
 		try {
-		ResultSet rs = db.GetSQL(sql);
+		ResultSet rs = DBHandler.GetSQL(sql);
 
 		if (rs.next()) {
 			form.setCoFormulario(rs.getInt(1));
-			form.setDsFormulario(db.getString(rs,2));
+			form.setDsFormulario(DBHandler.getString(rs,2));
 		}
 		} finally {
 		}
@@ -62,16 +62,16 @@ public class FatFormulariosDAO extends DAO {
         String sql = "select co_formulario, ds_formulario from fat_formularios where st_ativo = 'S'";
 		MiscUtils.getLogger().debug("sql = " + sql);
 
-        DBHandler db = getDb();
+        
 
         try {
-        ResultSet rs = db.GetSQL(sql);
+        ResultSet rs = DBHandler.GetSQL(sql);
         MiscUtils.getLogger().debug("executou sql");
 
         while (rs.next()) {
             FatFormularios form = new FatFormularios();
             form.setCoFormulario(rs.getInt(1));
-            form.setDsFormulario(db.getString(rs,2));
+            form.setDsFormulario(DBHandler.getString(rs,2));
             list.add(form);
 			MiscUtils.getLogger().debug("adicionou reg");
         }
@@ -87,15 +87,15 @@ public class FatFormulariosDAO extends DAO {
             "select a.co_procedimento, b.ds_procedimento from rl_formulario_procedimento a, cad_procedimentos b where a.co_procedimento = b.co_procedimento and co_formulario = + " +
             id;
 
-        DBHandler db = getDb();
+        
 
         try {
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
 
             while (rs.next()) {
                 FatFormularioProcedimento formProc = new FatFormularioProcedimento();
                 formProc.getCadProcedimentos().setCoProcedimento(rs.getInt(1));
-                formProc.getCadProcedimentos().setDsProcedimento(db.getString(rs,2));
+                formProc.getCadProcedimentos().setDsProcedimento(DBHandler.getString(rs,2));
 				formProc.getFatFormularios().setCoFormulario(Integer.parseInt(
 						id));
                 list.add(formProc);
@@ -113,15 +113,15 @@ public class FatFormulariosDAO extends DAO {
             "select a.co_procedimento, b.ds_procedimento, a.co_formulario from rl_formulario_procedimento a, cad_procedimentos b where a.co_procedimento = b.co_procedimento and a.co_procedimento in (" +
             getStrIn(ids) + ")";
 
-        DBHandler db = getDb();
+        
 
         try {
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
 
             while (rs.next()) {
                 FatFormularioProcedimento formProc = new FatFormularioProcedimento();
                 formProc.getCadProcedimentos().setCoProcedimento(rs.getInt(1));
-                formProc.getCadProcedimentos().setDsProcedimento(db.getString(rs,2));
+                formProc.getCadProcedimentos().setDsProcedimento(DBHandler.getString(rs,2));
                 formProc.getFatFormularios().setCoFormulario(rs.getInt(3));
                 list.add(formProc);
             }

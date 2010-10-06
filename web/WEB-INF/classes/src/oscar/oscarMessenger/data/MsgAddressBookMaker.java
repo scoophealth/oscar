@@ -38,13 +38,6 @@ import oscar.oscarMessenger.docxfer.util.MsgUtil;
 // This is a modified version of oscar.comm.client.AddressBook
 public class MsgAddressBookMaker
 {
-    DBHandler db;
-
-    public MsgAddressBookMaker(DBHandler db)
-    {
-        this.db = db;
-    }
-
     // Update the local address book and return true if changed
     public boolean updateAddressBook() throws SQLException
     {
@@ -54,14 +47,14 @@ public class MsgAddressBookMaker
 
         addressBook.appendChild(this.getChildren(doc, 0, ""));
 
-        ResultSet rs = db.GetSQL("SELECT addressBook FROM oscarcommlocations WHERE current1 = 1");
+        ResultSet rs = DBHandler.GetSQL("SELECT addressBook FROM oscarcommlocations WHERE current1 = 1");
         if(rs.next())
         {
             String newAddressBook = MsgCommxml.toXML(addressBook);
 
-            //if((db.getString(rs,"addressBook")==null) /*|| (db.getString(rs,"addressBook").equals(newAddressBook)==false)*/)
+            //if((DBHandler.getString(rs,"addressBook")==null) /*|| (DBHandler.getString(rs,"addressBook").equals(newAddressBook)==false)*/)
             //{
-                db.RunSQL("UPDATE oscarcommlocations SET addressBook = '" + MsgUtil.replaceQuote(newAddressBook) + "' WHERE current1 = 1");
+                DBHandler.RunSQL("UPDATE oscarcommlocations SET addressBook = '" + MsgUtil.replaceQuote(newAddressBook) + "' WHERE current1 = 1");
             //}
             //else
             //{
@@ -85,11 +78,11 @@ public class MsgAddressBookMaker
 
         String sql = "SELECT * FROM groups_tbl WHERE parentID = " + groupId;
 
-        ResultSet rs = db.GetSQL(sql);
+        ResultSet rs = DBHandler.GetSQL(sql);
 
         while(rs.next())
         {
-            Element subGrp = getChildren(doc, rs.getInt("groupID"), db.getString(rs,"groupDesc"));
+            Element subGrp = getChildren(doc, rs.getInt("groupID"), DBHandler.getString(rs,"groupDesc"));
 
             if(subGrp.hasChildNodes())
             {
@@ -102,13 +95,13 @@ public class MsgAddressBookMaker
             + "FROM groupMembers_tbl g INNER JOIN provider p ON g.provider_No = p.provider_no "
             + "WHERE groupID = " + groupId + " ORDER BY p.last_name, p.first_name";
 
-        rs = db.GetSQL(sql);
+        rs = DBHandler.GetSQL(sql);
 
         while(rs.next())
         {
             Element address = MsgCommxml.addNode(group, "address");
-            address.setAttribute("id", db.getString(rs,"provider_no"));
-            address.setAttribute("desc", new String(db.getString(rs,"last_name") + ", " + db.getString(rs,"first_name")));
+            address.setAttribute("id", DBHandler.getString(rs,"provider_no"));
+            address.setAttribute("desc", new String(DBHandler.getString(rs,"last_name") + ", " + DBHandler.getString(rs,"first_name")));
         }
         rs.close();
 

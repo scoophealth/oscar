@@ -109,7 +109,7 @@ public class SupServiceCodeAssocDAO {
    */
   public void saveOrUpdateServiceCodeAssociation(String primaryCode,
                                                  String secondaryCode) {
-    DBHandler db = null;
+    
     ResultSet rs = null;
     String primaryCodeId = this.getBillingServiceValue(primaryCode,
         this.VALUE_BY_CODE);
@@ -117,8 +117,8 @@ public class SupServiceCodeAssocDAO {
         this.VALUE_BY_CODE);
 
     try {
-      db = new DBHandler();
-      rs = db.GetSQL(
+      
+      rs = DBHandler.GetSQL(
           "select billingServiceNo,billingServiceTrayNo from billing_trayfees where billingServiceNo = " +
           primaryCodeId);
 
@@ -145,8 +145,6 @@ public class SupServiceCodeAssocDAO {
     }
     finally {
       try {
-        if (db != null) {
-        }
         if (rs != null) {
           rs.close();
         }
@@ -189,10 +187,10 @@ public class SupServiceCodeAssocDAO {
   public void deleteServiceCodeAssociation(String id) {
     String qry = "delete from billing_trayfees where id = " +
         id;
-    DBHandler db = null;
+    
     try {
-      db = new DBHandler();
-      db.RunSQL(qry);
+      
+    	DBHandler.RunSQL(qry);
     }
     catch (Exception e) {
       MiscUtils.getLogger().error("Error", e);

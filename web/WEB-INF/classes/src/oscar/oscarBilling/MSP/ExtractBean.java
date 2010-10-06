@@ -323,8 +323,8 @@ public class ExtractBean extends Object implements Serializable {
     public void setAsBilled(String newInvNo){               
         String query30 = "update billing set status='B' where billing_no='" + newInvNo + "'";               
         try {            
-            DBHandler db = new DBHandler();
-            db.RunSQL(query30);
+            
+        	DBHandler.RunSQL(query30);
         }
         catch (SQLException e) {
             MiscUtils.getLogger().error("Error", e);
@@ -334,8 +334,8 @@ public class ExtractBean extends Object implements Serializable {
     public void setAsBilledMaster(String newInvNo){               
         String query30 = "update billingmaster set billingstatus='B' where billingmaster_no='" + newInvNo + "'";               
         try {            
-            DBHandler db = new DBHandler();
-            db.RunSQL(query30);
+            
+        	DBHandler.RunSQL(query30);
         }
         catch (SQLException e) {
             MiscUtils.getLogger().error("Error", e);
@@ -350,8 +350,8 @@ public class ExtractBean extends Object implements Serializable {
 
         try {
             
-            DBHandler db = new DBHandler();
-            db.RunSQL(nsql);
+            
+        	DBHandler.RunSQL(nsql);
         }
         catch (SQLException e) {
             MiscUtils.getLogger().error("Error", e);
@@ -366,9 +366,9 @@ public class ExtractBean extends Object implements Serializable {
         nsql = "insert into log_teleplantx (log_no, claim)";
         nsql = nsql + " values('\\N','" + "New Log" + "')";
         try {            
-            DBHandler db = new DBHandler();
-            db.RunSQL(nsql);
-            ResultSet  rs = db.GetSQL("SELECT LAST_INSERT_ID()");
+            
+        	DBHandler.RunSQL(nsql);
+            ResultSet  rs = DBHandler.GetSQL("SELECT LAST_INSERT_ID()");
 
             if (rs.next()){
                 n = rs.getString(1);

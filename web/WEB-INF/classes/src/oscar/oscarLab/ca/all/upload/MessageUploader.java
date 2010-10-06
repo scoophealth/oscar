@@ -261,7 +261,7 @@ public final class MessageUploader {
 
 		try {
 
-			DBHandler db = new DBHandler();
+			
 			Connection conn = DBHandler.getConnection();
 			PreparedStatement pstmt;
 
@@ -280,9 +280,9 @@ public final class MessageUploader {
 					pstmt = conn.prepareStatement(sql);
 					rs = pstmt.executeQuery();
 					if (rs.next()) {
-						sql = "INSERT INTO recyclebin (provider_no, updatedatetime, table_name, keyword, table_content) " + "VALUES ('0', '" + UtilDateUtilities.getToday("yyyy-MM-dd HH:mm:ss") + "', 'hl7TextInfo', '" + lab_id + "', " + "'<id>" + db.getString(rs, "id") + "</id>" + "<lab_no>" + lab_id + "</lab_no>" + "<sex>" + db.getString(rs, "sex") + "</sex>" + "<health_no>" + db.getString(rs, "health_no") + "</health_no>" + "<result_status>" + db.getString(rs, "result_status") + "</result_status>"
-						        + "<final_result_count>" + db.getString(rs, "final_result_count") + "</final_result_count>" + "<obr_date>" + db.getString(rs, "obr_date") + "</obr_date>" + "<priority>" + db.getString(rs, "priority") + "</priority>" + "<requesting_client>" + db.getString(rs, "requesting_client") + "</requesting_client>" + "<discipline>" + db.getString(rs, "discipline") + "</discipline>" + "<last_name>" + db.getString(rs, "last_name") + "</last_name>" + "<first_name>"
-						        + db.getString(rs, "first_name") + "</first_name>" + "<report_status>" + db.getString(rs, "report_status") + "</report_status>" + "<accessionNum>" + db.getString(rs, "accessionNum") + "</accessionNum>')";
+						sql = "INSERT INTO recyclebin (provider_no, updatedatetime, table_name, keyword, table_content) " + "VALUES ('0', '" + UtilDateUtilities.getToday("yyyy-MM-dd HH:mm:ss") + "', 'hl7TextInfo', '" + lab_id + "', " + "'<id>" + DBHandler.getString(rs, "id") + "</id>" + "<lab_no>" + lab_id + "</lab_no>" + "<sex>" + DBHandler.getString(rs, "sex") + "</sex>" + "<health_no>" + DBHandler.getString(rs, "health_no") + "</health_no>" + "<result_status>" + DBHandler.getString(rs, "result_status") + "</result_status>"
+						        + "<final_result_count>" + DBHandler.getString(rs, "final_result_count") + "</final_result_count>" + "<obr_date>" + DBHandler.getString(rs, "obr_date") + "</obr_date>" + "<priority>" + DBHandler.getString(rs, "priority") + "</priority>" + "<requesting_client>" + DBHandler.getString(rs, "requesting_client") + "</requesting_client>" + "<discipline>" + DBHandler.getString(rs, "discipline") + "</discipline>" + "<last_name>" + DBHandler.getString(rs, "last_name") + "</last_name>" + "<first_name>"
+						        + DBHandler.getString(rs, "first_name") + "</first_name>" + "<report_status>" + DBHandler.getString(rs, "report_status") + "</report_status>" + "<accessionNum>" + DBHandler.getString(rs, "accessionNum") + "</accessionNum>')";
 
 						pstmt = conn.prepareStatement(sql);
 						pstmt.executeUpdate();
@@ -300,7 +300,7 @@ public final class MessageUploader {
 					pstmt = conn.prepareStatement(sql);
 					rs = pstmt.executeQuery();
 					if (rs.next()) {
-						sql = "INSERT INTO recyclebin (provider_no, updatedatetime, table_name, keyword, table_content) " + "VALUES ('0', '" + UtilDateUtilities.getToday("yyyy-MM-dd HH:mm:ss") + "', 'hl7TextMessage', '" + lab_id + "', " + "'<lab_id>" + db.getString(rs, "lab_id") + "</lab_id>" + "<message>" + db.getString(rs, "message") + "</message>" + "<type>" + db.getString(rs, "type") + "</type>" + "<fileUploadCheck_id>" + db.getString(rs, "fileUploadCheck_id") + "</fileUploadCheck_id>')";
+						sql = "INSERT INTO recyclebin (provider_no, updatedatetime, table_name, keyword, table_content) " + "VALUES ('0', '" + UtilDateUtilities.getToday("yyyy-MM-dd HH:mm:ss") + "', 'hl7TextMessage', '" + lab_id + "', " + "'<lab_id>" + DBHandler.getString(rs, "lab_id") + "</lab_id>" + "<message>" + DBHandler.getString(rs, "message") + "</message>" + "<type>" + DBHandler.getString(rs, "type") + "</type>" + "<fileUploadCheck_id>" + DBHandler.getString(rs, "fileUploadCheck_id") + "</fileUploadCheck_id>')";
 
 						pstmt = conn.prepareStatement(sql);
 						pstmt.executeUpdate();
@@ -318,8 +318,8 @@ public final class MessageUploader {
 					pstmt = conn.prepareStatement(sql);
 					rs = pstmt.executeQuery();
 					if (rs.next()) {
-						sql = "INSERT INTO recyclebin (provider_no, updatedatetime, table_name, keyword, table_content) " + "VALUES ('0', '" + UtilDateUtilities.getToday("yyyy-MM-dd HH:mm:ss") + "', 'providerLabRouting', '" + lab_id + "', " + "'<provider_no>" + db.getString(rs, "provider_no") + "</provider_no>" + "<lab_no>" + db.getString(rs, "lab_no") + "</lab_no>" + "<status>" + db.getString(rs, "status") + "</status>" + "<comment>" + db.getString(rs, "comment") + "</comment>" + "<timestamp>"
-						        + db.getString(rs, "timestamp") + "</timestamp>" + "<lab_type>" + db.getString(rs, "lab_type") + "</lab_type>" + "<id>" + db.getString(rs, "id") + "</id>')";
+						sql = "INSERT INTO recyclebin (provider_no, updatedatetime, table_name, keyword, table_content) " + "VALUES ('0', '" + UtilDateUtilities.getToday("yyyy-MM-dd HH:mm:ss") + "', 'providerLabRouting', '" + lab_id + "', " + "'<provider_no>" + DBHandler.getString(rs, "provider_no") + "</provider_no>" + "<lab_no>" + DBHandler.getString(rs, "lab_no") + "</lab_no>" + "<status>" + DBHandler.getString(rs, "status") + "</status>" + "<comment>" + DBHandler.getString(rs, "comment") + "</comment>" + "<timestamp>"
+						        + DBHandler.getString(rs, "timestamp") + "</timestamp>" + "<lab_type>" + DBHandler.getString(rs, "lab_type") + "</lab_type>" + "<id>" + DBHandler.getString(rs, "id") + "</id>')";
 
 						pstmt = conn.prepareStatement(sql);
 						pstmt.executeUpdate();
@@ -337,7 +337,7 @@ public final class MessageUploader {
 					pstmt = conn.prepareStatement(sql);
 					rs = pstmt.executeQuery();
 					if (rs.next()) {
-						sql = "INSERT INTO recyclebin (provider_no, updatedatetime, table_name, keyword, table_content) " + "VALUES ('0', '" + UtilDateUtilities.getToday("yyyy-MM-dd HH:mm:ss") + "', 'patientLabRouting', '" + lab_id + "', " + "'<demographic_no>" + db.getString(rs, "demographic_no") + "</demographic_no>" + "<lab_no>" + db.getString(rs, "lab_no") + "</lab_no>" + "<lab_type>" + db.getString(rs, "lab_type") + "</lab_type>" + "<id>" + db.getString(rs, "id") + "</id>')";
+						sql = "INSERT INTO recyclebin (provider_no, updatedatetime, table_name, keyword, table_content) " + "VALUES ('0', '" + UtilDateUtilities.getToday("yyyy-MM-dd HH:mm:ss") + "', 'patientLabRouting', '" + lab_id + "', " + "'<demographic_no>" + DBHandler.getString(rs, "demographic_no") + "</demographic_no>" + "<lab_no>" + DBHandler.getString(rs, "lab_no") + "</lab_no>" + "<lab_type>" + DBHandler.getString(rs, "lab_type") + "</lab_type>" + "<id>" + DBHandler.getString(rs, "id") + "</id>')";
 
 						pstmt = conn.prepareStatement(sql);
 						pstmt.executeUpdate();
@@ -401,8 +401,8 @@ public final class MessageUploader {
 				pstmt = conn.prepareStatement(sql);
 				rs = pstmt.executeQuery();
 				if (rs.next()) {
-					sql = "INSERT INTO recyclebin (provider_no, updatedatetime, table_name, keyword, table_content) " + "VALUES ('0', '" + UtilDateUtilities.getToday("yyyy-MM-dd HH:mm:ss") + "', 'fileUploadCheck', '" + fileId + "', " + "'<id>" + db.getString(rs, "id") + "</id>" + "<provider_no>" + db.getString(rs, "provider_no") + "</provider_no>" + "<filename>" + db.getString(rs, "filename") + "</filename>" + "<md5sum>" + db.getString(rs, "md5sum") + "</md5sum>" + "<datetime>"
-					        + db.getString(rs, "date_time") + "</datetime>')";
+					sql = "INSERT INTO recyclebin (provider_no, updatedatetime, table_name, keyword, table_content) " + "VALUES ('0', '" + UtilDateUtilities.getToday("yyyy-MM-dd HH:mm:ss") + "', 'fileUploadCheck', '" + fileId + "', " + "'<id>" + DBHandler.getString(rs, "id") + "</id>" + "<provider_no>" + DBHandler.getString(rs, "provider_no") + "</provider_no>" + "<filename>" + DBHandler.getString(rs, "filename") + "</filename>" + "<md5sum>" + DBHandler.getString(rs, "md5sum") + "</md5sum>" + "<datetime>"
+					        + DBHandler.getString(rs, "date_time") + "</datetime>')";
 
 					pstmt = conn.prepareStatement(sql);
 					pstmt.executeUpdate();

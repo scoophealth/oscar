@@ -58,8 +58,8 @@ try{
 *   dateList: (dateIdHash)
 *   dateIdHash: (date, lab_no)
     */
-    DBHandler db = new DBHandler();
-    Connection conn = db.getConnection();
+    
+    Connection conn = DBHandler.getConnection();
     for (int i = 0; i < items.size(); i++){
         Element e = (Element) items.get(i);
         String loinc_code = e.getAttributeValue("loinc_code");

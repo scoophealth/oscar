@@ -31,13 +31,13 @@ public class AcknowledgementData {
     public ArrayList getAcknowledgements(String segmentID) {
         ArrayList acknowledgements = null;
         try {
-            DBHandler db = new DBHandler();
+            
 
             acknowledgements = new ArrayList();
             String sql = "select provider.first_name, provider.last_name, provider.provider_no, providerLabRouting.status, providerLabRouting.comment, providerLabRouting.timestamp from provider, providerLabRouting where provider.provider_no = providerLabRouting.provider_no and providerLabRouting.lab_no='" + segmentID + "' and providerLabRouting.lab_type='HL7'";
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
             while (rs.next()) {
-                acknowledgements.add(new ReportStatus(db.getString(rs, "first_name") + " " + db.getString(rs, "last_name"), db.getString(rs, "provider_no"), db.getString(rs, "status"), db.getString(rs, "comment"), db.getString(rs, "timestamp"), segmentID));
+                acknowledgements.add(new ReportStatus(DBHandler.getString(rs, "first_name") + " " + DBHandler.getString(rs, "last_name"), DBHandler.getString(rs, "provider_no"), DBHandler.getString(rs, "status"), DBHandler.getString(rs, "comment"), DBHandler.getString(rs, "timestamp"), segmentID));
             }
             rs.close();
         } catch (Exception e) {
@@ -49,13 +49,13 @@ public class AcknowledgementData {
     public ArrayList getAcknowledgements(String docType, String segmentID) {
         ArrayList acknowledgements = null;
         try {
-            DBHandler db = new DBHandler();
+            
 
             acknowledgements = new ArrayList();
             String sql = "select provider.first_name, provider.last_name, provider.provider_no, providerLabRouting.status, providerLabRouting.comment, providerLabRouting.timestamp from provider, providerLabRouting where provider.provider_no = providerLabRouting.provider_no and providerLabRouting.lab_no='" + segmentID + "' and providerLabRouting.lab_type='" + docType + "'";
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
             while (rs.next()) {
-                acknowledgements.add(new ReportStatus(db.getString(rs, "first_name") + " " + db.getString(rs, "last_name"), db.getString(rs, "provider_no"), db.getString(rs, "status"), db.getString(rs, "comment"), db.getString(rs, "timestamp"), segmentID));
+                acknowledgements.add(new ReportStatus(DBHandler.getString(rs, "first_name") + " " + DBHandler.getString(rs, "last_name"), DBHandler.getString(rs, "provider_no"), DBHandler.getString(rs, "status"), DBHandler.getString(rs, "comment"), DBHandler.getString(rs, "timestamp"), segmentID));
             }
             rs.close();
         } catch (Exception e) {

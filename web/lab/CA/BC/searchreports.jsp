@@ -30,7 +30,8 @@
 	}
 	String url = "searchreports.jsp?cmd_search=search&provider_no=" + provider_no;
 %>
-<html>
+
+<%@page import="oscar.oscarDB.DBHandler"%><html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>OSCAR PathNET - Search Lab Reports</title>
@@ -77,10 +78,9 @@ function PopupLab(pid)
 			Patients</option>
 
 			<%
-	oscar.oscarDB.DBHandler db = new oscar.oscarDB.DBHandler();
-	java.sql.ResultSet rs = db.GetSQL(select_providers_with_reports);
+	java.sql.ResultSet rs = DBHandler.GetSQL(select_providers_with_reports);
 	while(rs.next()){
-		out.println("<option value='" + db.getString(rs,"provider_no") + "'" + (db.getString(rs,"provider_no").equals(provider_no)? "selected" : "") + ">" + db.getString(rs,"last_name") + ", " + db.getString(rs,"first_name") + "</option>");
+		out.println("<option value='" + DBHandler.getString(rs,"provider_no") + "'" + (DBHandler.getString(rs,"provider_no").equals(provider_no)? "selected" : "") + ">" + DBHandler.getString(rs,"last_name") + ", " + DBHandler.getString(rs,"first_name") + "</option>");
 	}
 	rs.close();
 %>
@@ -111,20 +111,20 @@ function PopupLab(pid)
 	</tr>
 	<%
 	if(sql != null){
-		rs = db.GetSQL(sql);
+		rs = DBHandler.GetSQL(sql);
 		boolean other = true;
 		while(rs.next()){
 %>
 	<tr class="<%=(other? "LightBG" : "WhiteBG")%>">
 		<td class="Text"><a href="searchreports.jsp"
-			onclick="PopupLab('<%=db.getString(rs,"pid_id")%>'); return false;"><%=db.getString(rs,"pid_id")%></a></td>
-		<td class="Text" nowrap><%=oscar.Misc.check(db.getString(rs,"patient_name"), "")%></td>
-		<td class="Text" nowrap><%=oscar.Misc.check(db.getString(rs,"ordering_provider"), "").replaceAll("~", ",<br/>")%></td>
-		<td class="Text"><%=oscar.Misc.check(db.getString(rs,"result_copies_to"), "").replaceAll("~", ",<br/>")%></td>
+			onclick="PopupLab('<%=DBHandler.getString(rs,"pid_id")%>'); return false;"><%=DBHandler.getString(rs,"pid_id")%></a></td>
+		<td class="Text" nowrap><%=oscar.Misc.check(DBHandler.getString(rs,"patient_name"), "")%></td>
+		<td class="Text" nowrap><%=oscar.Misc.check(DBHandler.getString(rs,"ordering_provider"), "").replaceAll("~", ",<br/>")%></td>
+		<td class="Text"><%=oscar.Misc.check(DBHandler.getString(rs,"result_copies_to"), "").replaceAll("~", ",<br/>")%></td>
 		<td class="Text" nowrap>
 		<%
-			if(db.getString(rs,"status") != null){
-				switch(db.getString(rs,"status").toCharArray()[0]){
+			if(DBHandler.getString(rs,"status") != null){
+				switch(DBHandler.getString(rs,"status").toCharArray()[0]){
 					case 'S':
 						out.print("Signed");
 						break;
@@ -142,11 +142,11 @@ function PopupLab(pid)
 %>
 		</td>
 		<td class="Text" nowrap>
-		<%String signed = oscar.Misc.check(db.getString(rs,"signed_on"), "");
+		<%String signed = oscar.Misc.check(DBHandler.getString(rs,"signed_on"), "");
 									out.print( (signed.indexOf(" ")>-1)? signed.substring(0, signed.indexOf(" ")) : signed);%>
 		</td>
-		<td class="Text" nowrap><%=((db.getString(rs,"last_name") != null && !db.getString(rs,"last_name").equals(""))? oscar.Misc.check(db.getString(rs,"last_name"), "") + ", " + oscar.Misc.check(db.getString(rs,"first_name"), "") : "&nbsp;")%></td>
-		<td class="Text" nowrap><%=db.getString(rs,"date_time").substring(0, db.getString(rs,"date_time").indexOf(" "))%></td>
+		<td class="Text" nowrap><%=((DBHandler.getString(rs,"last_name") != null && !DBHandler.getString(rs,"last_name").equals(""))? oscar.Misc.check(DBHandler.getString(rs,"last_name"), "") + ", " + oscar.Misc.check(DBHandler.getString(rs,"first_name"), "") : "&nbsp;")%></td>
+		<td class="Text" nowrap><%=DBHandler.getString(rs,"date_time").substring(0, DBHandler.getString(rs,"date_time").indexOf(" "))%></td>
 	</tr>
 	<%
 		other = !other;

@@ -29,8 +29,7 @@ public class PathNetInfo {
       String select_pending = "SELECT count(hl7_pid.pid_id) as `count` " +
                               "FROM hl7_pid left join hl7_link on hl7_pid.pid_id=hl7_link.pid_id " +
                               "WHERE hl7_link.status='P' OR hl7_link.status is null";      
-      DBHandler dbLab = new DBHandler();
-      ResultSet rsLab = dbLab.GetSQL(select_pending);
+      ResultSet rsLab = DBHandler.GetSQL(select_pending);
       if(rsLab.next()){
          pendingLabs = rsLab.getInt("count");
       }
@@ -45,8 +44,7 @@ public class PathNetInfo {
                               "AND demographic.demographic_no=hl7_link.demographic_no " +
                               "AND (hl7_link.status='N' OR hl7_link.status='A')";
       int notSigned = 0;
-      DBHandler dbLab = new DBHandler();
-      ResultSet rsLab = dbLab.GetSQL(select_not_signed);
+      ResultSet rsLab = DBHandler.GetSQL(select_not_signed);
       if(rsLab.next()){
          notSigned = rsLab.getInt("count");
       }

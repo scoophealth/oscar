@@ -55,9 +55,9 @@ public class EctImmDeleteImmunizationSetAction extends Action {
       
       if(sets.length > 0)
          try {
-            DBHandler db = new DBHandler();
+            
             String sql = stringBuffer.toString();
-            db.RunSQL(sql);
+            DBHandler.RunSQL(sql);
          }
          catch(SQLException e) {
             MiscUtils.getLogger().error("Error", e);

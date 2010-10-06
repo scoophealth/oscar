@@ -53,9 +53,9 @@ public class ProcessSurveyFile{
    private int maxProcessed(String surveyId){
       int maxprocessed = 0 ;
       try{
-         DBHandler db = new DBHandler();
+         
          String sql = "select max(processed) as maxprocessed from surveyData  where surveyId = '"+surveyId+"'  ";         
-         ResultSet rs = db.GetSQL(sql);
+         ResultSet rs = DBHandler.GetSQL(sql);
          
          if(rs.next()){
             maxprocessed = rs.getInt("maxprocessed");            
@@ -69,9 +69,9 @@ public class ProcessSurveyFile{
    
    private void setProcessed(String surveyDataId, int processedId){
       try{
-         DBHandler db = new DBHandler();
+         
          String sql = "update surveyData set processed = '"+processedId+"' where surveyDataId = '"+surveyDataId+"'  ";         
-         db.RunSQL(sql);         
+         DBHandler.RunSQL(sql);         
       }catch(Exception e){
          MiscUtils.getLogger().error("Error", e);
       }
@@ -102,10 +102,10 @@ public class ProcessSurveyFile{
       String sStatus = null;
       int numRecordsToProcess = 0;
       try{
-         DBHandler db = new DBHandler();
+         
          String processCount = "select count(surveyDataId) as recordsForProcessing from surveyData  where surveyId = '"+surveyId+"' and processed is null and status = 'A'";
          
-         ResultSet rs = db.GetSQL(processCount);
+         ResultSet rs = DBHandler.GetSQL(processCount);
          
          if (rs.next()){
             numRecordsToProcess = rs.getInt("recordsForProcessing");            
@@ -122,12 +122,12 @@ public class ProcessSurveyFile{
                String exp = survey.getExportString();
                  log.debug("xp "+exp);
                
-               rs = db.GetSQL(sql);  
+               rs = DBHandler.GetSQL(sql);  
                
                try{
                   BufferedWriter out = new BufferedWriter(new FileWriter(fileDir+filename));                
                   while(rs.next()){ 
-                     String surveyDataId = db.getString(rs,"surveyDataId");
+                     String surveyDataId = DBHandler.getString(rs,"surveyDataId");
                      String writeString = replaceAllValues(exp, rs);                     
                      out.write(writeString+'\n');                                    
                      setProcessed(surveyDataId,processedId);

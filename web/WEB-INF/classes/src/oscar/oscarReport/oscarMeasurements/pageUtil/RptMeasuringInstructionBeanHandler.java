@@ -44,11 +44,11 @@ public class RptMeasuringInstructionBeanHandler {
         
         boolean verdict = true;
         try {
-            DBHandler db = new DBHandler();
+            
             String sql = "SELECT measuringInstruction FROM measurementType WHERE typeDisplayName='" + measurementType + "'";
             MiscUtils.getLogger().debug("Sql Statement: " + sql);
             ResultSet rs;
-            for(rs = db.GetSQL(sql); rs.next(); )
+            for(rs = DBHandler.GetSQL(sql); rs.next(); )
             {
                 RptMeasuringInstructionBean measuringInstrc = new RptMeasuringInstructionBean(rs.getString("measuringInstruction"));
                 measuringInstrcVector.add(measuringInstrc);

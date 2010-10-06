@@ -17,11 +17,11 @@ public class dxCodeHandler {
       
     	try {
             ResultSet rs;
-            DBHandler db = new DBHandler();
+            
             String sql = "SELECT " + codingSystem +",description FROM " + codingSystem + " WHERE " + codingSystem + " = '" + code + "'";
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
             if(rs.next()){
-            	result = db.getString(rs,"description"); 
+            	result = DBHandler.getString(rs,"description"); 
             }
             rs.close();
         }

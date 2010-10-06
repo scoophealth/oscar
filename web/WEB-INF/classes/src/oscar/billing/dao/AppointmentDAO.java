@@ -158,21 +158,21 @@ public class AppointmentDAO extends DAO {
 
 		MiscUtils.getLogger().debug("sql = " + sql);
 
-		DBHandler db = getDb();
+		
 
 		try {
-			ResultSet rs = db.GetSQL(sql);
+			ResultSet rs = DBHandler.GetSQL(sql);
 
 			if (rs.next()) {
 				appointment.setAppointmentNo(rs.getLong(1));
-				appointment.getProvider().setProviderNo(db.getString(rs, 2));
-				appointment.getProvider().setFirstName(db.getString(rs, 3));
-				appointment.getProvider().setLastName(db.getString(rs, 4));
+				appointment.getProvider().setProviderNo(DBHandler.getString(rs, 2));
+				appointment.getProvider().setFirstName(DBHandler.getString(rs, 3));
+				appointment.getProvider().setLastName(DBHandler.getString(rs, 4));
 				appointment.getDemographic().setDemographicNo(rs.getLong(5));
-				appointment.getDemographic().setFirstName(db.getString(rs, 6));
-				appointment.getDemographic().setLastName(db.getString(rs, 7));
-				appointment.setName(db.getString(rs, 8));
-				appointment.setReason(db.getString(rs, 9));
+				appointment.getDemographic().setFirstName(DBHandler.getString(rs, 6));
+				appointment.getDemographic().setLastName(DBHandler.getString(rs, 7));
+				appointment.setName(DBHandler.getString(rs, 8));
+				appointment.setReason(DBHandler.getString(rs, 9));
 				appointment.setAppointmentDate(rs.getDate(10));
 			}
 		} finally {
@@ -199,21 +199,21 @@ public class AppointmentDAO extends DAO {
 
 		sql = sql + " order by a.appointment_date desc";
 
-		DBHandler db = getDb();
+		
 
 		try {
-			ResultSet rs = db.GetSQL(sql);
+			ResultSet rs = DBHandler.GetSQL(sql);
 
 			while (rs.next()) {
 				Appointment app = new Appointment();
 				app.setAppointmentNo(rs.getLong(1));
 				app.setAppointmentDate(rs.getDate(2));
-				app.getProvider().setProviderNo(db.getString(rs, 3));
-				app.getProvider().setLastName(db.getString(rs, 4));
-				app.getProvider().setFirstName(db.getString(rs, 5));
+				app.getProvider().setProviderNo(DBHandler.getString(rs, 3));
+				app.getProvider().setLastName(DBHandler.getString(rs, 4));
+				app.getProvider().setFirstName(DBHandler.getString(rs, 5));
 				app.getDemographic().setDemographicNo(rs.getLong(6));
-				app.getDemographic().setLastName(db.getString(rs, 7));
-				app.getDemographic().setFirstName(db.getString(rs, 8));
+				app.getDemographic().setLastName(DBHandler.getString(rs, 7));
+				app.getDemographic().setFirstName(DBHandler.getString(rs, 8));
 
 				list.add(app);
 			}
@@ -227,19 +227,19 @@ public class AppointmentDAO extends DAO {
 		ArrayList list = new ArrayList();
 		String sql = "select a.appointment_no, a.appointment_date, a.provider_no, b.last_name, " + "b.first_name, a.billing " + "from appointment a, provider b, demographic c " + "where a.provider_no = b.provider_no and " + "a.demographic_no = c.demographic_no and " + "a.demographic_no = " + demographic.getDemographicNo() + " and " + "a.billing is not null " + "order by a.appointment_date desc";
 
-		DBHandler db = getDb();
+		
 
 		try {
-			ResultSet rs = db.GetSQL(sql);
+			ResultSet rs = DBHandler.GetSQL(sql);
 
 			while (rs.next()) {
 				Appointment app = new Appointment();
 				app.setAppointmentNo(rs.getLong(1));
 				app.setAppointmentDate(rs.getDate(2));
-				app.getProvider().setProviderNo(db.getString(rs, 3));
-				app.getProvider().setLastName(db.getString(rs, 4));
-				app.getProvider().setFirstName(db.getString(rs, 5));
-				app.setBilling(db.getString(rs, 6));
+				app.getProvider().setProviderNo(DBHandler.getString(rs, 3));
+				app.getProvider().setLastName(DBHandler.getString(rs, 4));
+				app.getProvider().setFirstName(DBHandler.getString(rs, 5));
+				app.setBilling(DBHandler.getString(rs, 6));
 
 				list.add(app);
 			}

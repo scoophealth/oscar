@@ -36,26 +36,26 @@ public class FrmMentalHealthRecord  extends FrmRecord {
         Properties props = new Properties();
 
         if(existingID <= 0) {
-			DBHandler db = new DBHandler();
+			
 			String sql = "SELECT demographic_no, CONCAT(last_name, ', ', first_name) AS pName, "
                 + "sex, CONCAT(address, ', ', city, ', ', province, ' ', postal) AS address, "
                 + "phone, year_of_birth, month_of_birth, date_of_birth, roster_status "
                 + "FROM demographic WHERE demographic_no = " + demographicNo;
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
 
             if(rs.next()) {
-                java.util.Date dob = UtilDateUtilities.calcDate(db.getString(rs,"year_of_birth"), db.getString(rs,"month_of_birth"), db.getString(rs,"date_of_birth"));
+                java.util.Date dob = UtilDateUtilities.calcDate(DBHandler.getString(rs,"year_of_birth"), DBHandler.getString(rs,"month_of_birth"), DBHandler.getString(rs,"date_of_birth"));
 
-                props.setProperty("demographic_no", db.getString(rs,"demographic_no"));
-                props.setProperty("c_pName", db.getString(rs,"pName"));
-                props.setProperty("c_sex", db.getString(rs,"sex"));
+                props.setProperty("demographic_no", DBHandler.getString(rs,"demographic_no"));
+                props.setProperty("c_pName", DBHandler.getString(rs,"pName"));
+                props.setProperty("c_sex", DBHandler.getString(rs,"sex"));
                 props.setProperty("c_referralDate", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                 props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                 //props.setProperty("formEdited", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
-                props.setProperty("c_address", db.getString(rs,"address"));
+                props.setProperty("c_address", DBHandler.getString(rs,"address"));
                 props.setProperty("c_birthDate", UtilDateUtilities.DateToString(dob, "yyyy/MM/dd"));
-                props.setProperty("c_homePhone", db.getString(rs,"phone"));
-                props.setProperty("demo_roster_status", db.getString(rs,"roster_status"));
+                props.setProperty("c_homePhone", DBHandler.getString(rs,"phone"));
+                props.setProperty("demo_roster_status", DBHandler.getString(rs,"roster_status"));
             }
             rs.close();
 
@@ -64,12 +64,12 @@ public class FrmMentalHealthRecord  extends FrmRecord {
 			props = (new FrmRecordHelp()).getFormRecord(sql);
 
 			// get roster_status from demographic table
-			DBHandler db = new DBHandler();
+			
 			ResultSet rs = null;
 			sql = "SELECT roster_status FROM demographic WHERE demographic_no = " + demographicNo;
-			rs = db.GetSQL(sql);
+			rs = DBHandler.GetSQL(sql);
 			if(rs.next()) {
-				props.setProperty("demo_roster_status", db.getString(rs,"roster_status"));
+				props.setProperty("demo_roster_status", DBHandler.getString(rs,"roster_status"));
 			}
 			rs.close();
         }
@@ -78,16 +78,16 @@ public class FrmMentalHealthRecord  extends FrmRecord {
     }
 
     public Properties getFormCustRecord(Properties props, int provNo) throws SQLException {
-		DBHandler db = new DBHandler();
+		
 		ResultSet rs = null;
 		String sql = null;
 
         // from provider table
         sql = "SELECT CONCAT(last_name, ', ', first_name) AS provName "
               + "FROM provider WHERE provider_no = " + provNo;
-        rs = db.GetSQL(sql);
+        rs = DBHandler.GetSQL(sql);
         if(rs.next()) {
-            props.setProperty("c_referredBy", db.getString(rs,"provName"));
+            props.setProperty("c_referredBy", DBHandler.getString(rs,"provName"));
         }
         rs.close();
 		return props;

@@ -58,24 +58,24 @@ public class EctDeleteDataAction extends Action {
         String dateDeleted = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DATE) ;
                 
         try{
-            DBHandler db = new DBHandler();                                                                                    
+                                                                                                
             
             if(deleteCheckbox != null){
                 for(int i=0; i<deleteCheckbox.length; i++){
                     MiscUtils.getLogger().debug(deleteCheckbox[i]);
                     String sql = "SELECT * FROM `measurements` WHERE id='"+ deleteCheckbox[i] +"'";                                        
                     MiscUtils.getLogger().debug(" sql statement "+sql);
-                    ResultSet rs = db.GetSQL(sql);
+                    ResultSet rs = DBHandler.GetSQL(sql);
                     if(rs.next()){
                         sql = "INSERT INTO measurementsDeleted"
                              +"(type, demographicNo, providerNo, dataField, measuringInstruction, comments, dateObserved, dateEntered, dateDeleted)"
-                             +" VALUES ('"+db.getString(rs,"type")+"','"+db.getString(rs,"demographicNo")+"','"+db.getString(rs,"providerNo")+"','"
-                             + db.getString(rs,"dataField")+"','" + db.getString(rs,"measuringInstruction")+"','"+db.getString(rs,"comments")+"','"
-                             + db.getString(rs,"dateObserved")+"','"+db.getString(rs,"dateEntered")+"','"+dateDeleted+"')";
-                        db.RunSQL(sql);
+                             +" VALUES ('"+DBHandler.getString(rs,"type")+"','"+DBHandler.getString(rs,"demographicNo")+"','"+DBHandler.getString(rs,"providerNo")+"','"
+                             + DBHandler.getString(rs,"dataField")+"','" + DBHandler.getString(rs,"measuringInstruction")+"','"+DBHandler.getString(rs,"comments")+"','"
+                             + DBHandler.getString(rs,"dateObserved")+"','"+DBHandler.getString(rs,"dateEntered")+"','"+dateDeleted+"')";
+                        DBHandler.RunSQL(sql);
                         rs.close();
                         sql = "DELETE FROM `measurements` WHERE id='"+ deleteCheckbox[i] +"'"; 
-                        db.RunSQL(sql);
+                        DBHandler.RunSQL(sql);
                     }
                 }
             }

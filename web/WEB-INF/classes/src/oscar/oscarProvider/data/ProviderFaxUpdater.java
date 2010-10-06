@@ -57,21 +57,21 @@ public class ProviderFaxUpdater {
        DBHandler db;
        
        try {
-        db = new DBHandler();
+        
        
         sql = "SELECT value FROM property WHERE name = '" + faxColName + "' AND provider_no = '" + provider + "'";
-        rs = db.GetSQL(sql);
+        rs = DBHandler.GetSQL(sql);
             
         if( rs.next() ) {
-            faxNum = db.getString(rs,"value");
+            faxNum = DBHandler.getString(rs,"value");
         }
         
         if( faxNum.equals("") ) {
             sql = "SELECT clinic_fax FROM clinic";
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
             
             if( rs.next() ) {
-                faxNum = db.getString(rs,"clinic_fax");
+                faxNum = DBHandler.getString(rs,"clinic_fax");
             }
         }
         
@@ -98,8 +98,8 @@ public class ProviderFaxUpdater {
         else
            sql = "INSERT INTO property (name,value,provider_no) VALUES('" + faxColName + "', '" + fax + "', '" + provider + "')";
         
-        db = new DBHandler();
-        db.RunSQL(sql);
+        
+        DBHandler.RunSQL(sql);
        
        }catch( SQLException ex ) {
            MiscUtils.getLogger().debug("Error adding fax number: " + ex.getMessage());
@@ -114,10 +114,10 @@ public class ProviderFaxUpdater {
        String sql;
        ResultSet rs;       
               
-       db = new DBHandler();
+       
        sql = "SELECT value FROM property WHERE name = '" + faxColName + "' AND provider_no = '" + provider + "'";
        
-       rs = db.GetSQL(sql);
+       rs = DBHandler.GetSQL(sql);
        
        return rs.next();              
        

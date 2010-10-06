@@ -154,10 +154,10 @@ public class BillingSessionBean {
     
     // public void estUserName(){
     //     try{
-    //             DBHandler db = new DBHandler();
+    //             
     //             java.sql.ResultSet rs;
     //             String sql = new String("select first_name, last_name from provider where provider_no = '"+providerNo+"'");
-    //             rs = db.GetSQL(sql);
+    //             rs = DBHandler.GetSQL(sql);
     //             if (rs.next()){
     //                userName =  rs.getString("first_name")+" "+rs.getString("last_name");
     //             }

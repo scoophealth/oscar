@@ -50,17 +50,17 @@ public class EctRemoteAttachments
         dates = new ArrayList();
         try
         {
-            DBHandler db = new DBHandler();
+            
             ResultSet rs;
             String sql ="Select * from remoteAttachments where demographic_no = '"+demoNo+"' order by date";
             MiscUtils.getLogger().debug("sql message "+sql);
-            rs = db.GetSQL(sql); 
-            //for(rs = db.GetSQL(String.valueOf(String.valueOf((new StringBuffer("SELECT * FROM remoteAttachments WHERE demographic_no = '")).append(demoNo).append("' order by date ")))); rs.next(); dates.add(db.getString(rs,"date")))
+            rs = DBHandler.GetSQL(sql); 
+            //for(rs = DBHandler.GetSQL(String.valueOf(String.valueOf((new StringBuffer("SELECT * FROM remoteAttachments WHERE demographic_no = '")).append(demoNo).append("' order by date ")))); rs.next(); dates.add(DBHandler.getString(rs,"date")))
             while(rs.next())
 	    {
-		dates.add(db.getString(rs,"date"));
-                messageIds.add(db.getString(rs,"messageid"));
-                savedBys.add(db.getString(rs,"savedBy"));
+		dates.add(DBHandler.getString(rs,"date"));
+                messageIds.add(DBHandler.getString(rs,"messageid"));
+                savedBys.add(DBHandler.getString(rs,"savedBy"));
             }
 
             rs.close();
@@ -76,15 +76,15 @@ public class EctRemoteAttachments
         ArrayList retval = new ArrayList();
         try
         {
-            DBHandler db = new DBHandler();
+            
             ResultSet rs;
             String sql = "select ocl.locationDesc, mess.thesubject from messagetbl mess, oscarcommlocations ocl where mess.sentByLocation = ocl.locationId and mess.messageid = '"+messId+"' ";
 	    MiscUtils.getLogger().debug("sql ="+sql);
-	    rs = db.GetSQL(sql);
-//            for(rs = db.GetSQL(String.valueOf(String.valueOf((new StringBuffer("SELECT ocl.locationDesc, mess.thesubject FROM messagetbl mess, oscarcommlocations ocl where mess.sentByLocation = ocl.locationId and mess.messageid = '")).append(messId).append("'"))));
+	    rs = DBHandler.GetSQL(sql);
+//            for(rs = DBHandler.GetSQL(String.valueOf(String.valueOf((new StringBuffer("SELECT ocl.locationDesc, mess.thesubject FROM messagetbl mess, oscarcommlocations ocl where mess.sentByLocation = ocl.locationId and mess.messageid = '")).append(messId).append("'"))));
              while ( rs.next()){
-                 retval.add(db.getString(rs,"thesubject"));
-                 retval.add(db.getString(rs,"locationDesc"));
+                 retval.add(DBHandler.getString(rs,"thesubject"));
+                 retval.add(DBHandler.getString(rs,"locationDesc"));
  	     }
             rs.close();
         }

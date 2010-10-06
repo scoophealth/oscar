@@ -46,7 +46,7 @@ public class dxCodeSearchBeanHandler {
         boolean verdict = true;
         try {
             ResultSet rs;
-            DBHandler db = new DBHandler();
+            
             String sql = "";
             boolean orFlag = false;
             for(int i=0; i<keywords.length; i++){
@@ -60,12 +60,12 @@ public class dxCodeSearchBeanHandler {
                 }
             }
 
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
             while(rs.next()){
-                dxCodeSearchBean bean = new dxCodeSearchBean(db.getString(rs,"description"),                                                                 
-                                                             db.getString(rs,codingSystem));
+                dxCodeSearchBean bean = new dxCodeSearchBean(DBHandler.getString(rs,"description"),                                                                 
+                                                             DBHandler.getString(rs,codingSystem));
                 for(int i=0; i<keywords.length; i++){
-                    if(keywords[i].equals(db.getString(rs,codingSystem)))
+                    if(keywords[i].equals(DBHandler.getString(rs,codingSystem)))
                         bean.setExactMatch("checked");                    
                 }
                 

@@ -364,7 +364,7 @@ public class FrmFormAction extends Action {
         boolean newDataAdded = false;
 
         try{
-            DBHandler db = new DBHandler();    
+                
             org.apache.commons.validator.GenericValidator gValidator = new org.apache.commons.validator.GenericValidator();
             if(!gValidator.isBlankOrNull(inputValue)){
                 //Find if the same data has already been entered into the system
@@ -372,7 +372,7 @@ public class FrmFormAction extends Action {
                             + "' AND type='" + mt.getType() + "' AND dataField='"+inputValue 
                             + "' AND measuringInstruction='" + mt.getMeasuringInstrc() + "' AND comments='" + comments
                             + "' AND dateObserved='" + dateObserved + "'";
-                ResultSet rs = db.GetSQL(sql);
+                ResultSet rs = DBHandler.GetSQL(sql);
                 if(!rs.next()){
                     newDataAdded = true;
                     //Write to the Dababase if all input values are valid                        
@@ -380,7 +380,7 @@ public class FrmFormAction extends Action {
                             +"(type, demographicNo, providerNo, dataField, measuringInstruction, comments, dateObserved, dateEntered)"
                             +" VALUES ('"+mt.getType()+"','"+demographicNo+"','"+providerNo+"','"+inputValue+"','"
                             + mt.getMeasuringInstrc() +"','"+comments+"','"+dateObserved+"', now())";                           
-                    db.RunSQL(sql);
+                    DBHandler.RunSQL(sql);
                 }
                 rs.close();                
             }

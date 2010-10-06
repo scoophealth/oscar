@@ -40,13 +40,13 @@
 	String username = "yilee18";
 	String password = "515750564848564853485353544852485248484851575150";
 
-	DBHandler db = new DBHandler(); 
+	 
     String sql = "SELECT * from studylogin where provider_no=" + provNo + " and study_no = " + studyId + " and current1=1" ;
-	ResultSet rs = db.GetSQL(sql);
+	ResultSet rs = DBHandler.GetSQL(sql);
 	while(rs.next()) {
-		baseURL = db.getString(rs,"remote_login_url");
-		username = db.getString(rs,"username");
-		password = db.getString(rs,"password");
+		baseURL = DBHandler.getString(rs,"remote_login_url");
+		username = DBHandler.getString(rs,"username");
+		password = DBHandler.getString(rs,"password");
 	}
 
 	rs.close();

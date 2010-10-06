@@ -72,8 +72,8 @@ public class INRReporter implements Reporter {
         String cssCurrent = "";
         boolean firstRow = true;
          try {
-            DBHandler db = new DBHandler();
-            rs = db.GetSQL(sql);
+            
+            rs = DBHandler.GetSQL(sql);
             demographicNo = -1;
             rsHtml.append("<table class=\"reportTable\">\n");
             header.append("<th class=\"reportHeader\">Last Name</th><th class=\"reportHeader\">First Name</th><th class=\"reportHeader\">DOB</th><th class=\"reportHeader\">MRP</th><th class=\"reportHeader\">INR</th><th class=\"reportHeader\">Observation Date</th><th class=\"reportHeader\">DX Code</th>");

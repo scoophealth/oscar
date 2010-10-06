@@ -65,7 +65,7 @@ public class RptInitializeFrequencyOfRelevantTestsCDMReportAction extends Action
         String endDateA = frm.getEndDateA();
         int nbPatient = 0; 
         try{
-                DBHandler db = new DBHandler();  
+                  
                 if(!validate(frm, request)){                    
                     return (new ActionForward(mapping.getInput()));
                 }
@@ -73,13 +73,13 @@ public class RptInitializeFrequencyOfRelevantTestsCDMReportAction extends Action
                 
                 addHeading(headings, request);
                 if(patientSeenCheckbox!=null){
-                    nbPatient = mData.getNbPatientSeen(db, startDateA, endDateA);  
+                    nbPatient = mData.getNbPatientSeen(startDateA, endDateA);  
                     String msg = mr.getMessage("oscarReport.CDMReport.msgPatientSeen", Integer.toString(nbPatient), startDateA, endDateA); 
                     MiscUtils.getLogger().debug(msg);
                     reportMsg.add(msg);
                     reportMsg.add("");
                 }
-                getFrequenceOfTestPerformed(db, frm, reportMsg, request);
+                getFrequenceOfTestPerformed(frm, reportMsg, request);
                 
                 String title = mr.getMessage("oscarReport.CDMReport.msgFrequencyOfRelevantTestsBeingPerformed");
                 request.setAttribute("title", title);
@@ -181,7 +181,7 @@ public class RptInitializeFrequencyOfRelevantTestsCDMReportAction extends Action
      *
      * @return ArrayList which contain the result in String format
      ******************************************************************************************/      
-    private ArrayList getFrequenceOfTestPerformed(DBHandler db, RptInitializeFrequencyOfRelevantTestsCDMReportForm frm, ArrayList percentageMsg, HttpServletRequest request){
+    private ArrayList getFrequenceOfTestPerformed(RptInitializeFrequencyOfRelevantTestsCDMReportForm frm, ArrayList percentageMsg, HttpServletRequest request){
         String[] startDateD = frm.getStartDateD();
         String[] endDateD = frm.getEndDateD();         
         int[] exactly = frm.getExactly(); 
@@ -205,7 +205,7 @@ public class RptInitializeFrequencyOfRelevantTestsCDMReportAction extends Action
                     String measurementType = (String) frm.getValue("measurementTypeD"+ctr);                    
                     String sNumMInstrc = (String) frm.getValue("mNbInstrcsD"+ctr);
                     int iNumMInstrc = Integer.parseInt(sNumMInstrc);                    
-                    ArrayList patients = mData.getPatientsSeen(db, startDate, endDate);
+                    ArrayList patients = mData.getPatientsSeen(startDate, endDate);
                     int nbPatients = patients.size();
                     
                     for(int j=0; j<iNumMInstrc; j++){
@@ -227,7 +227,7 @@ public class RptInitializeFrequencyOfRelevantTestsCDMReportAction extends Action
                                              + "'AND type='"+ measurementType + "'AND measuringInstruction='"+ mInstrc 
                                              + "' AND demographicNo=" + "'" + patient + "'";
                                 
-                                ResultSet rs = db.GetSQL(sql);  
+                                ResultSet rs = DBHandler.GetSQL(sql);  
                                 if (rs.next())
                                     nbTest = rs.getInt("nbTest");                              
                                 rs.close();

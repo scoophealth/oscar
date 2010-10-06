@@ -60,17 +60,17 @@ public class EfmData {
    public Hashtable getLastEformDate(String formName, String demographicNo){
       Hashtable ret = null;
       try {
-         DBHandler db = new DBHandler();         
+                  
          String sql = "select form_name,subject,form_date,form_time,form_provider from eform_data where demographic_no = '"+demographicNo+"' and form_name like '"+formName+"%' and status = '1' order by form_date,form_time desc";        
 
-         ResultSet rs = db.GetSQL(sql);                                                
+         ResultSet rs = DBHandler.GetSQL(sql);                                                
          if (rs.next()){
             ret = new Hashtable();
-            ret.put("formName", db.getString(rs,"form_name"));
-            ret.put("subject", db.getString(rs,"subject"));
-            ret.put("date", db.getString(rs,"form_date"));
-            ret.put("time", db.getString(rs,"form_time"));
-            ret.put("provider", db.getString(rs,"form_provider"));                          
+            ret.put("formName", DBHandler.getString(rs,"form_name"));
+            ret.put("subject", DBHandler.getString(rs,"subject"));
+            ret.put("date", DBHandler.getString(rs,"form_date"));
+            ret.put("time", DBHandler.getString(rs,"form_time"));
+            ret.put("provider", DBHandler.getString(rs,"form_provider"));                          
          }            
       } catch (SQLException e) {
          MiscUtils.getLogger().error("Error", e);

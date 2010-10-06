@@ -52,7 +52,7 @@ public class RptCheckGuideline{
             MiscUtils.getLogger().debug("SQL Statement: " + sql);
             ResultSet rs;
             
-            for(rs=db.GetSQL(sql); rs.next();){            
+            for(rs=DBHandler.GetSQL(sql); rs.next();){            
                 String patient = rs.getString("demographicNo");
                 patients.add(patient);                
             }
@@ -71,17 +71,17 @@ public class RptCheckGuideline{
      *
      * @return 0 when it is false, 1 otherwise
      ******************************************************************************************/
-    public int getValidation(DBHandler db, String measurementType){        
+    public int getValidation(String measurementType){        
         
         try{
             String sql = "SELECT * FROM measurementType WHERE type='" + measurementType + "'";
             ResultSet rs;
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
             rs.next();
             String validation = rs.getString("validation");
             rs.close();
             sql = "SELECT * FROM validations WHERE id='" + validation + "'";
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
             rs.next();
             if(rs.getString("isNumeric")!=null){
                 MiscUtils.getLogger().debug("isNumeric: " + rs.getInt("isNumeric"));

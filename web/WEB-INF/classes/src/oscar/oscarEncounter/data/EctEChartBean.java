@@ -37,21 +37,21 @@ public class EctEChartBean {
 	public void setEChartBean(String demoNo) {
 		demographicNo = demoNo;
 		try {
-			DBHandler db = new DBHandler();
+			
 			String sql = "select * from eChart where demographicNo=" + demoNo
 					+ " ORDER BY eChartId DESC";
 //         			+ " ORDER BY eChartId DESC limit 1";
-			ResultSet rs = db.GetSQL(sql);
+			ResultSet rs = DBHandler.GetSQL(sql);
 			if (rs.next()) {
 				eChartTimeStamp = rs.getTimestamp("timeStamp");
-				socialHistory = db.getString(rs,"socialHistory");
-				familyHistory = db.getString(rs,"familyHistory");
-				medicalHistory = db.getString(rs,"medicalHistory");
-				ongoingConcerns = db.getString(rs,"ongoingConcerns");
-				reminders = db.getString(rs,"reminders");
-				encounter = db.getString(rs,"encounter");
-				subject = db.getString(rs,"subject");
-				providerNo = db.getString(rs,"providerNo");
+				socialHistory = DBHandler.getString(rs,"socialHistory");
+				familyHistory = DBHandler.getString(rs,"familyHistory");
+				medicalHistory = DBHandler.getString(rs,"medicalHistory");
+				ongoingConcerns = DBHandler.getString(rs,"ongoingConcerns");
+				reminders = DBHandler.getString(rs,"reminders");
+				encounter = DBHandler.getString(rs,"encounter");
+				subject = DBHandler.getString(rs,"subject");
+				providerNo = DBHandler.getString(rs,"providerNo");
 			} else {
 				eChartTimeStamp = null;
 				socialHistory = "";

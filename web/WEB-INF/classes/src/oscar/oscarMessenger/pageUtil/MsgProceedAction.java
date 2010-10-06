@@ -62,12 +62,12 @@ public class MsgProceedAction extends Action {
     //id = oscar.oscarMessenger.docxfer.util.xml.decode64(id);
 
     try{
-        DBHandler db = new DBHandler();
+        
         java.sql.ResultSet rs;
 
         String sel = "select * from remoteAttachments where demographic_no = '"+demoId+"' and messageid = '"+id+"' ";
 
-        rs = db.GetSQL(sel);
+        rs = DBHandler.GetSQL(sel);
 
         if (rs.next()){
             rs.close();
@@ -76,7 +76,7 @@ public class MsgProceedAction extends Action {
             rs.close();
             String sql = "insert into remoteAttachments (demographic_no,messageid, savedBy,date,time) values "
             +"('"+demoId+"','"+id+"','"+bean.getUserName()+"','today', 'now')";
-            db.RunSQL(sql);
+            DBHandler.RunSQL(sql);
             request.setAttribute("confMessage","2");
 
         }

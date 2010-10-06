@@ -64,21 +64,21 @@ public final class EctViewAttachmentAction extends Action {
     MiscUtils.getLogger().debug("mess id = "+mesId);
 
     try{
-       DBHandler db = new DBHandler();
+       
        ResultSet rs;
 
 
-       rs = db.GetSQL("SELECT m.thesubject, m.theime, m.thedate, m.attachment, m.themessage, m.sentBy, ocl.locationDesc  "
+       rs = DBHandler.GetSQL("SELECT m.thesubject, m.theime, m.thedate, m.attachment, m.themessage, m.sentBy, ocl.locationDesc  "
                      +"FROM messagetbl m, oscarcommlocations ocl where m.sentByLocation = ocl.locationId and "
                      +" messageid = '"+mesId+"'");
        if(rs.next()){
-          remoteName = db.getString(rs,"locationDesc");
-          themessage = db.getString(rs,"themessage");
-          theime     = db.getString(rs,"theime");
-          thedate    = db.getString(rs,"thedate");
-          attachment = db.getString(rs,"attachment");
-          thesubject = db.getString(rs,"thesubject");
-          sentBy     = db.getString(rs,"sentBy");
+          remoteName = DBHandler.getString(rs,"locationDesc");
+          themessage = DBHandler.getString(rs,"themessage");
+          theime     = DBHandler.getString(rs,"theime");
+          thedate    = DBHandler.getString(rs,"thedate");
+          attachment = DBHandler.getString(rs,"attachment");
+          thesubject = DBHandler.getString(rs,"thesubject");
+          sentBy     = DBHandler.getString(rs,"sentBy");
        }
        rs.close();
     }catch(SQLException e){MiscUtils.getLogger().debug("CrAsH"); MiscUtils.getLogger().error("Error", e);}

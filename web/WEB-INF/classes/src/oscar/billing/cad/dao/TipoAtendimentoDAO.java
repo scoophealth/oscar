@@ -48,15 +48,15 @@ public class TipoAtendimentoDAO extends DAO {
         String sql = "select ta.co_tipo_atendimento, ta.ds_tipo_atendimento " +
             "from cad_tipos_atendimento ta";
         
-        DBHandler db = getDb();
+        
 
         try {
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
 
             while (rs.next()) {
                 CadTiposAtendimento tpAtend = new CadTiposAtendimento();
                 tpAtend.setCoTipoatendimento(rs.getLong(1));
-                tpAtend.setDsTipoatendimento(db.getString(rs,2));                
+                tpAtend.setDsTipoatendimento(DBHandler.getString(rs,2));                
                 list.add(tpAtend);
             }
         } finally {

@@ -89,10 +89,10 @@ public class SQLNumerator implements Numerator {
     //TODO:Do i change this to pull fields out of the query?
     public boolean evaluateOLD(String demographicNo) {
         boolean evalTrue = false;
-        DBHandler db = null;
+        
         try{
-            db = new DBHandler();
-            ResultSet rs = db.GetSQL(sql.replaceAll("\\$\\{"+processString+"\\}", demographicNo));   
+            
+            ResultSet rs = DBHandler.GetSQL(sql.replaceAll("\\$\\{"+processString+"\\}", demographicNo));   
             MiscUtils.getLogger().debug("SQL Statement: " + sql);
             while(rs.next()){
                int count = rs.getInt(identifier);
@@ -116,18 +116,18 @@ public class SQLNumerator implements Numerator {
     // change to get a list of params 
     public boolean evaluate(String demographicNo) {
         boolean evalTrue = false;
-        DBHandler db = null;
+        
         outputValues = null;
         try{
-            db = new DBHandler();
-            ResultSet rs = db.GetSQL(sql.replaceAll("\\$\\{"+processString+"\\}", demographicNo));   
+            
+            ResultSet rs = DBHandler.GetSQL(sql.replaceAll("\\$\\{"+processString+"\\}", demographicNo));   
             MiscUtils.getLogger().debug("SQL Statement: " + sql);
             if(rs.next()){
                 evalTrue = true;
                 if (outputfields != null){
                     outputValues = new Hashtable();
                     for (int i = 0; i < outputfields.length; i++){
-                        outputValues.put(outputfields[i],db.getString(rs,outputfields[i]));
+                        outputValues.put(outputfields[i],DBHandler.getString(rs,outputfields[i]));
                     }
                     outputValues.put("_evaluation",new Boolean(evalTrue));
                 }

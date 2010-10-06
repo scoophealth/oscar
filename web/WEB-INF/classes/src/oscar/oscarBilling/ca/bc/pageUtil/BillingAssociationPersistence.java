@@ -82,10 +82,10 @@ public class BillingAssociationPersistence {
     String qry =
         "insert into ctl_servicecodes_dxcodes(service_code,dxcode) values('" +
         svc + "','" + dx + "')";
-    DBHandler db = null;
+    
     try {
-      db = new DBHandler();
-      ret = db.RunSQL(qry);
+      
+      ret = DBHandler.RunSQL(qry);
 
     }
     catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
@@ -102,10 +102,10 @@ public class BillingAssociationPersistence {
     boolean ret = false;
     String qry = "delete from ctl_servicecodes_dxcodes where service_code = '" +
         svcCode + "'";
-    DBHandler db = null;
+    
     try {
-      db = new DBHandler();
-      ret = db.RunSQL(qry);
+      
+      ret = DBHandler.RunSQL(qry);
     }
     catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
 
@@ -120,12 +120,12 @@ public class BillingAssociationPersistence {
    */
   public List getServiceCodeAssocs() {
     ArrayList list = new ArrayList();
-    DBHandler db = null;
+    
     ResultSet rs = null;
     try {
       String qry = "select * from ctl_servicecodes_dxcodes";
-      db = new DBHandler();
-      rs = db.GetSQL(qry);
+      
+      rs = DBHandler.GetSQL(qry);
       String curSvcCode = "";
       ServiceCodeAssociation assoc = new ServiceCodeAssociation();
       //create the first object to establish an initial reference service code
@@ -202,11 +202,11 @@ public class BillingAssociationPersistence {
    */
   public boolean recordExists(String qry) {
     boolean ret = false;
-    DBHandler db = null;
+    
     ResultSet rs = null;
     try {
-      db = new DBHandler();
-      rs = db.GetSQL(qry);
+      
+      rs = DBHandler.GetSQL(qry);
       if (rs.next()) {
         ret = true;
       }
@@ -232,14 +232,14 @@ public class BillingAssociationPersistence {
    */
   public ServiceCodeAssociation getServiceCodeAssocByCode(String svcCode) {
     ServiceCodeAssociation assoc = new ServiceCodeAssociation();
-    DBHandler db = null;
+    
     ResultSet rs = null;
     try {
       String qry =
           "select * from ctl_servicecodes_dxcodes where service_code = '" +
           svcCode + "'";
-      db = new DBHandler();
-      rs = db.GetSQL(qry);
+      
+      rs = DBHandler.GetSQL(qry);
 
       while (rs.next()) {
         

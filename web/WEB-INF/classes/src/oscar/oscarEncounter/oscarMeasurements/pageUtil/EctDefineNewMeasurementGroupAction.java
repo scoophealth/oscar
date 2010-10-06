@@ -90,13 +90,13 @@ public class EctDefineNewMeasurementGroupAction extends Action {
     private boolean write2Database(String inputGroupName, String styleSheet){
         boolean isWrite2Database = true;
         try {
-            DBHandler db = new DBHandler();
+            
             String sql = "SELECT groupName from measurementGroupStyle ORDER BY groupName";
             MiscUtils.getLogger().debug("Sql Statement: " + sql);
             ResultSet rs;
-            for(rs = db.GetSQL(sql); rs.next(); )
+            for(rs = DBHandler.GetSQL(sql); rs.next(); )
             {
-                String groupName = db.getString(rs,"groupName");
+                String groupName = DBHandler.getString(rs,"groupName");
                 if (inputGroupName.compareTo(groupName)==0){
                     isWrite2Database = false;
                     break;
@@ -106,7 +106,7 @@ public class EctDefineNewMeasurementGroupAction extends Action {
             
             if (isWrite2Database){
                 sql = "INSERT INTO measurementGroupStyle(groupName, cssID) VALUES ('" + inputGroupName + "','" + styleSheet + "')";
-                db.RunSQL(sql);
+                DBHandler.RunSQL(sql);
             }
         }
         catch(SQLException e) {

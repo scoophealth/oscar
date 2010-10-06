@@ -41,29 +41,29 @@ public class EctConsultationFormRequestUtil {
         boolean verdict = true;
 
         try {
-            DBHandler db = new DBHandler();
+            
             String sql = "select * from demographic where demographic_no = " + demoNo;
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
 
             if (rs.next()) {
-                patientFirstName = db.getString(rs, "first_name");
-                patientLastName = db.getString(rs, "last_name");
+                patientFirstName = DBHandler.getString(rs, "first_name");
+                patientLastName = DBHandler.getString(rs, "last_name");
                 patientName = patientLastName + "," +patientFirstName;
 
-                patientAddress = db.getString(rs, "address") + "<br>" + db.getString(rs, "city") +
-                        "," + db.getString(rs, "province") + "," + db.getString(rs, "postal");
-                patientPhone = db.getString(rs, "phone");
-                patientWPhone = db.getString(rs, "phone2");
-                patientDOB = db.getString(rs, "year_of_birth") + "-" +
-                        db.getString(rs, "month_of_birth") + "-" + db.getString(rs, "date_of_birth");
-                patientHealthNum = db.getString(rs, "hin");
-                patientSex = db.getString(rs, "sex");
-                patientHealthCardType = db.getString(rs, "hc_type");
-                patientHealthCardVersionCode = db.getString(rs, "ver");
-                patientChartNo = db.getString(rs, "chart_no");
-                patientAge = UtilDateUtilities.calcAge(UtilDateUtilities.calcDate(rs.getString("year_of_birth"), db.getString(rs, "month_of_birth"),
-                        db.getString(rs, "date_of_birth")));
-                mrp = db.getString(rs, "provider_no");
+                patientAddress = DBHandler.getString(rs, "address") + "<br>" + DBHandler.getString(rs, "city") +
+                        "," + DBHandler.getString(rs, "province") + "," + DBHandler.getString(rs, "postal");
+                patientPhone = DBHandler.getString(rs, "phone");
+                patientWPhone = DBHandler.getString(rs, "phone2");
+                patientDOB = DBHandler.getString(rs, "year_of_birth") + "-" +
+                        DBHandler.getString(rs, "month_of_birth") + "-" + DBHandler.getString(rs, "date_of_birth");
+                patientHealthNum = DBHandler.getString(rs, "hin");
+                patientSex = DBHandler.getString(rs, "sex");
+                patientHealthCardType = DBHandler.getString(rs, "hc_type");
+                patientHealthCardVersionCode = DBHandler.getString(rs, "ver");
+                patientChartNo = DBHandler.getString(rs, "chart_no");
+                patientAge = UtilDateUtilities.calcAge(UtilDateUtilities.calcDate(rs.getString("year_of_birth"), DBHandler.getString(rs, "month_of_birth"),
+                        DBHandler.getString(rs, "date_of_birth")));
+                mrp = DBHandler.getString(rs, "provider_no");
             }
             rs.close();
         } catch (SQLException e) {
@@ -77,12 +77,12 @@ public class EctConsultationFormRequestUtil {
         boolean verdict = true;
         teamVec = new Vector();
         try {
-            DBHandler db = new DBHandler();
+            
             String sql = "select distinct team from provider where status = '1' and team != '' order by team";
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
 
             while (rs.next()) {
-                String teamName = db.getString(rs, "team");
+                String teamName = DBHandler.getString(rs, "team");
                 if (!teamName.equals("")) {
                     teamVec.add(teamName);
                 }
@@ -100,12 +100,12 @@ public class EctConsultationFormRequestUtil {
         boolean verdict = true;
         teamVec = new Vector();
         try {
-            DBHandler db = new DBHandler();
+            
             String sql = "select distinct team from provider order by team ";
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
 
             while (rs.next()) {
-                String teamName = db.getString(rs, "team");
+                String teamName = DBHandler.getString(rs, "team");
                 if (!teamName.equals("")) {
                     teamVec.add(teamName);
                 }
@@ -123,31 +123,31 @@ public class EctConsultationFormRequestUtil {
         boolean verdict = true;
         getSpecailistsName(id);
         try {
-            DBHandler db = new DBHandler();
+            
             String sql = "select * from consultationRequests where requestId  = " +id;
 
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
             if (rs.next()) {
-                pwb = db.getString(rs, "patientWillBook");
-                urgency = db.getString(rs, "urgency");
-                providerNo = db.getString(rs, "providerNo");
-                referalDate = db.getString(rs, "referalDate");
-                service = db.getString(rs, "serviceId");
-                specialist = db.getString(rs, "specId");
-                String appointmentTime = db.getString(rs, "appointmentTime");
-                reasonForConsultation = db.getString(rs, "reason");
-                clinicalInformation = db.getString(rs, "clinicalInfo");
-                concurrentProblems = db.getString(rs, "concurrentProblems");
-                currentMedications = db.getString(rs, "currentMeds");
-                allergies = db.getString(rs, "allergies");
-                sendTo = db.getString(rs, "sendTo");
-                status = db.getString(rs, "status");
-                appointmentNotes = db.getString(rs, "statusText");
+                pwb = DBHandler.getString(rs, "patientWillBook");
+                urgency = DBHandler.getString(rs, "urgency");
+                providerNo = DBHandler.getString(rs, "providerNo");
+                referalDate = DBHandler.getString(rs, "referalDate");
+                service = DBHandler.getString(rs, "serviceId");
+                specialist = DBHandler.getString(rs, "specId");
+                String appointmentTime = DBHandler.getString(rs, "appointmentTime");
+                reasonForConsultation = DBHandler.getString(rs, "reason");
+                clinicalInformation = DBHandler.getString(rs, "clinicalInfo");
+                concurrentProblems = DBHandler.getString(rs, "concurrentProblems");
+                currentMedications = DBHandler.getString(rs, "currentMeds");
+                allergies = DBHandler.getString(rs, "allergies");
+                sendTo = DBHandler.getString(rs, "sendTo");
+                status = DBHandler.getString(rs, "status");
+                appointmentNotes = DBHandler.getString(rs, "statusText");
                 if (appointmentNotes == null || appointmentNotes.equals("null")) {
                     appointmentNotes = new String();
                 }
-                estPatient(db.getString(rs, "demographicNo"));
-                String date = db.getString(rs, "appointmentDate");
+                estPatient(DBHandler.getString(rs, "demographicNo"));
+                String date = DBHandler.getString(rs, "appointmentDate");
                 int fir = date.indexOf('-');
                 int las = date.lastIndexOf('-');
                 appointmentYear = date.substring(0, fir);
@@ -182,15 +182,15 @@ public class EctConsultationFormRequestUtil {
     public String getSpecailistsName(String id) {
         String retval = new String();
         try {
-            DBHandler db = new DBHandler();
+            
             String sql = "select * from professionalSpecialists where specId  = " +id;
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
             if (rs.next()) {
-                retval = db.getString(rs, "lName") + ", " + db.getString(rs, "fName") + " " +db.getString(rs, "proLetters");
-                specPhone = db.getString(rs, "phone");
-                specFax = db.getString(rs, "fax");
-                specAddr = db.getString(rs, "address");
-                specEmail = db.getString(rs, "email");
+                retval = DBHandler.getString(rs, "lName") + ", " + DBHandler.getString(rs, "fName") + " " +DBHandler.getString(rs, "proLetters");
+                specPhone = DBHandler.getString(rs, "phone");
+                specFax = DBHandler.getString(rs, "fax");
+                specAddr = DBHandler.getString(rs, "address");
+                specEmail = DBHandler.getString(rs, "email");
                 MiscUtils.getLogger().debug("getting Null" + specEmail + "<");
 
                 if (specPhone == null || specPhone.equals("null")) {
@@ -218,11 +218,11 @@ public class EctConsultationFormRequestUtil {
         MiscUtils.getLogger().debug("in Get SPECAILISTS EMAIL \n\n" + id);
         String retval = new String();
         try {
-            DBHandler db = new DBHandler();
+            
             String sql = "select email from professionalSpecialists where specId  = '" + id + "'";
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
             if (rs.next()) {
-                specEmail = db.getString(rs, "email");
+                specEmail = DBHandler.getString(rs, "email");
                 MiscUtils.getLogger().debug("meial" + specEmail + "<");
                 if (specEmail == null || specEmail.equalsIgnoreCase("null")) {
                     specEmail = new String();
@@ -239,11 +239,11 @@ public class EctConsultationFormRequestUtil {
     public String getProviderTeam(String id) {
         String retval = new String();
         try {
-            DBHandler db = new DBHandler();
+            
             String sql = "select team from provider where provider_no  = " + id;
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
             if (rs.next()) {
-                retval = db.getString(rs, "team");
+                retval = DBHandler.getString(rs, "team");
             }
             rs.close();
         } catch (SQLException e) {
@@ -255,11 +255,11 @@ public class EctConsultationFormRequestUtil {
     public String getProviderName(String id) {
         String retval = new String();
         try {
-            DBHandler db = new DBHandler();
+            
             String sql = "select * from provider where provider_no  = " + id;
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
             if (rs.next()) {
-                retval = db.getString(rs, "last_name") + ", " + db.getString(rs, "first_name");
+                retval = DBHandler.getString(rs, "last_name") + ", " + DBHandler.getString(rs, "first_name");
             }
             rs.close();
         } catch (SQLException e) {
@@ -271,11 +271,11 @@ public class EctConsultationFormRequestUtil {
     public String getFamilyDoctor() {
         String retval = new String();
         try {
-            DBHandler db = new DBHandler();
+            
             String sql = "select p.last_name, p.first_name from provider p, demographic d where d.provider_no  = p.provider_no and  d.demographic_no = " +demoNo;
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
             if (rs.next()) {
-                retval = db.getString(rs, "last_name") + ", " + db.getString(rs, "first_name");
+                retval = DBHandler.getString(rs, "last_name") + ", " + DBHandler.getString(rs, "first_name");
             }
             rs.close();
         } catch (SQLException e) {
@@ -287,11 +287,11 @@ public class EctConsultationFormRequestUtil {
     public String getServiceName(String id) {
         String retval = new String();
         try {
-            DBHandler db = new DBHandler();
+            
             String sql = "select * from consultationServices where serviceId  = " +id;
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
             if (rs.next()) {
-                retval = db.getString(rs, "serviceDesc");
+                retval = DBHandler.getString(rs, "serviceDesc");
             }
             rs.close();
         } catch (SQLException e) {
@@ -303,11 +303,11 @@ public class EctConsultationFormRequestUtil {
     public String getClinicName() {
         String retval = new String();
         try {
-            DBHandler db = new DBHandler();
+            
             String sql = "select clinic_name from clinic";
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
             if (rs.next()) {
-                retval = db.getString(rs, "clinic_name");
+                retval = DBHandler.getString(rs, "clinic_name");
             }
             rs.close();
         } catch (SQLException e) {

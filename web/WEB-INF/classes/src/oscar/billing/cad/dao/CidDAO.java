@@ -48,10 +48,10 @@ public class CidDAO extends DAO {
             "where co_cid = '" +
             id + "'";
 
-        DBHandler db = getDb();
+        
 
         try {
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
 
             if (rs.next()) {
                 cid.setCoCid(rs.getString(1));

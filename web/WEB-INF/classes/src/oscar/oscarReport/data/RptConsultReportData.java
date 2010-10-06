@@ -44,14 +44,14 @@ public class RptConsultReportData {
         ArrayList arrayList = new ArrayList();
         try{
 
-              DBHandler db = new DBHandler();
+              
               ResultSet rs;
               String sql = "select provider_no, last_name, first_name from provider where provider_type = 'doctor' order by last_name";
-              rs = db.GetSQL(sql);
+              rs = DBHandler.GetSQL(sql);
               while (rs.next()) {
                  ArrayList a = new ArrayList (); 
-                 a.add( db.getString(rs,"provider_no") );
-                 a.add( db.getString(rs,"last_name") +", "+ db.getString(rs,"first_name") );
+                 a.add( DBHandler.getString(rs,"provider_no") );
+                 a.add( DBHandler.getString(rs,"last_name") +", "+ DBHandler.getString(rs,"first_name") );
                  arrayList.add(a);
               }
               rs.close();
@@ -63,7 +63,7 @@ public class RptConsultReportData {
        this.days = days;
        try{
               
-              DBHandler db = new DBHandler();
+              
               ResultSet rs;
               // mysql function for dates = select date_sub(now(),interval 1 month); 
 
@@ -86,12 +86,12 @@ public class RptConsultReportData {
 
 
               //String sql = " Select distinct demographicNo from consultationRequests where to_days(now()) - to_days(referalDate) <= 30 ";
-              rs = db.GetSQL(sql);
+              rs = DBHandler.GetSQL(sql);
               demoList = new ArrayList();
               DemoConsultDataStruct d;
               while (rs.next()) {
                 d = new DemoConsultDataStruct();
-                d.demoNo = db.getString(rs,"demographicNo");
+                d.demoNo = DBHandler.getString(rs,"demographicNo");
                 demoList.add(d);
               }
 
@@ -111,21 +111,21 @@ public class DemoConsultDataStruct{
 
     public ArrayList getConsults(){
        try{
-          DBHandler db = new DBHandler();
+          
           java.sql.ResultSet rs;
           String sql = " select * from consultationRequests where demographicNo = '"+demoNo+"' "
                       +" and to_days(now()) - to_days(referalDate) <=  "
                       +" (to_days( now() ) - to_days( date_sub( now(), interval "+days+" month ) ) )";
-          rs = db.GetSQL(sql);
+          rs = DBHandler.GetSQL(sql);
           Consult con; 
           consultList = new ArrayList();
           while (rs.next()){
              con = new Consult(); 
-             con.requestId   = db.getString(rs,"requestId");
-             con.referalDate = db.getString(rs,"referalDate");
-             con.serviceId   = db.getString(rs,"serviceId");
-             con.specialist  = db.getString(rs,"specId");
-             con.appDate     = db.getString(rs,"appointmentDate");
+             con.requestId   = DBHandler.getString(rs,"requestId");
+             con.referalDate = DBHandler.getString(rs,"referalDate");
+             con.serviceId   = DBHandler.getString(rs,"serviceId");
+             con.specialist  = DBHandler.getString(rs,"specId");
+             con.appDate     = DBHandler.getString(rs,"appointmentDate");
              consultList.add(con);
           }
           rs.close();
@@ -135,19 +135,19 @@ public class DemoConsultDataStruct{
     public ArrayList getConReplys(){
 
        try{
-          DBHandler db = new DBHandler();
+          
           ResultSet rs;
           String sql = "select d.document_no, d.docdesc,d.docfilename, d.updatedatetime, d.status  from ctl_document c, document d where c.module = 'demographic' and c.document_no = d.document_no and d.doctype = 'consult' and module_id = '"+demoNo+"' ";
-          rs = db.GetSQL(sql);
+          rs = DBHandler.GetSQL(sql);
           ConLetter conLetter;
           conReplyList = new ArrayList();
           while( rs.next()){
              conLetter = new ConLetter();
-             conLetter.document_no = db.getString(rs,"document_no"); 
-             conLetter.docdesc     = db.getString(rs,"docdesc");
-             conLetter.docfileName = db.getString(rs,"docfilename");
+             conLetter.document_no = DBHandler.getString(rs,"document_no"); 
+             conLetter.docdesc     = DBHandler.getString(rs,"docdesc");
+             conLetter.docfileName = DBHandler.getString(rs,"docfilename");
              conLetter.docDate     = rs.getDate("updatedatetime");     
-             conLetter.docStatus   = db.getString(rs,"status");
+             conLetter.docStatus   = DBHandler.getString(rs,"status");
              conReplyList.add(conLetter);
           }         
           rs.close(); 
@@ -158,12 +158,12 @@ public class DemoConsultDataStruct{
     public String getDemographicName(){
        String retval = "&nbsp;";
        try{
-           DBHandler db = new DBHandler();
+           
            ResultSet rs;
            String sql = "Select last_name, first_name from demographic where demographic_no = '"+demoNo+"' ";
-           rs = db.GetSQL(sql);
+           rs = DBHandler.GetSQL(sql);
            if (rs.next()){
-              retval = db.getString(rs,"last_name")+", "+db.getString(rs,"first_name");
+              retval = DBHandler.getString(rs,"last_name")+", "+DBHandler.getString(rs,"first_name");
            }
            rs.close();
        }catch ( java.sql.SQLException e4) { MiscUtils.getLogger().debug(e4.getMessage()); }
@@ -173,12 +173,12 @@ public class DemoConsultDataStruct{
     public String getService(String serId){
        String retval = "";
        try{
-           DBHandler db = new DBHandler();
+           
            ResultSet rs;
            String sql = "Select serviceDesc from consultationServices where serviceId = '"+serId+"' ";
-           rs = db.GetSQL(sql);
+           rs = DBHandler.GetSQL(sql);
            if (rs.next()){
-              retval = db.getString(rs,"last_name")+", "+db.getString(rs,"first_name");
+              retval = DBHandler.getString(rs,"last_name")+", "+DBHandler.getString(rs,"first_name");
            }
            rs.close();
        }catch ( java.sql.SQLException e4) { MiscUtils.getLogger().debug(e4.getMessage()); }
@@ -188,12 +188,12 @@ public class DemoConsultDataStruct{
     public String getSpecialist(String specId){
         String retval = "";
        try{
-           DBHandler db = new DBHandler();
+           
            ResultSet rs;
            String sql = "Select lname, fname from professionalSpecialists where specId = '"+specId+"' ";
-           rs = db.GetSQL(sql);
+           rs = DBHandler.GetSQL(sql);
            if (rs.next()){
-              retval = db.getString(rs,"lname")+", "+db.getString(rs,"fname");
+              retval = DBHandler.getString(rs,"lname")+", "+DBHandler.getString(rs,"fname");
            }
            rs.close();
        }catch ( java.sql.SQLException e4) { MiscUtils.getLogger().debug(e4.getMessage()); }
@@ -211,12 +211,12 @@ public class DemoConsultDataStruct{
       public String getService(String serId){
        String retval = "&nbsp;";
        try{
-           DBHandler db = new DBHandler();
+           
            ResultSet rs;
            String sql = "Select serviceDesc from consultationServices where serviceId = '"+serId+"' ";
-           rs = db.GetSQL(sql);
+           rs = DBHandler.GetSQL(sql);
            if (rs.next()){
-              retval = db.getString(rs,"serviceDesc");
+              retval = DBHandler.getString(rs,"serviceDesc");
            }
            rs.close();
        }catch ( java.sql.SQLException e4) { MiscUtils.getLogger().debug(e4.getMessage()); }
@@ -226,12 +226,12 @@ public class DemoConsultDataStruct{
     public String getSpecialist(String specId){
         String retval = "&nbsp;";
        try{
-           DBHandler db = new DBHandler();
+           
            ResultSet rs;
            String sql = "Select lname, fname from professionalSpecialists where specId = '"+specId+"' ";
-           rs = db.GetSQL(sql);
+           rs = DBHandler.GetSQL(sql);
            if (rs.next()){
-              retval = db.getString(rs,"lname")+", "+db.getString(rs,"fname");
+              retval = DBHandler.getString(rs,"lname")+", "+DBHandler.getString(rs,"fname");
            }
            rs.close();
        }catch ( java.sql.SQLException e4) { MiscUtils.getLogger().debug(e4.getMessage()); }

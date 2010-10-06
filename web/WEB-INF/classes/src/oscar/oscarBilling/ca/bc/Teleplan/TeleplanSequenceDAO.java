@@ -50,9 +50,9 @@ public class TeleplanSequenceDAO {
     
     private void setSequence(int sequenceNum){
         try{
-            DBHandler db = new DBHandler();
+            
             String query = "insert into property (name,value) values ('teleplan_sequence','"+sequenceNum+"') " ;
-            db.RunSQL(query);           
+            DBHandler.RunSQL(query);           
         }catch(Exception e){
             MiscUtils.getLogger().error("Error", e);
         }
@@ -60,9 +60,9 @@ public class TeleplanSequenceDAO {
     
     private void updateSequence(int sequenceNum){
         try{
-            DBHandler db = new DBHandler();
+            
             String query = "update property set value = '"+sequenceNum+"' where name = 'teleplan_sequence' " ;
-            db.RunSQL(query);            
+            DBHandler.RunSQL(query);            
         }catch(Exception e){
             MiscUtils.getLogger().error("Error", e);
         }
@@ -71,9 +71,9 @@ public class TeleplanSequenceDAO {
     private boolean hasSequence(){
         boolean hasSequence = false;
         try{
-            DBHandler db = new DBHandler();
+            
             String query = "select value from property where name = 'teleplan_sequence' " ;
-            ResultSet rs = db.GetSQL(query); 
+            ResultSet rs = DBHandler.GetSQL(query); 
             if(rs.next()){
                 hasSequence = true;
             }
@@ -95,10 +95,10 @@ public class TeleplanSequenceDAO {
         //insert into property (name,value) values ('teleplan_sequence','3430') 
         int sequenceNum = 0; 
         try{
-            DBHandler db = new DBHandler();
+            
             String query = "select value from property where name='teleplan_sequence'  " ;
             log.debug("1st billing query "+query);
-            ResultSet rs = db.GetSQL(query);
+            ResultSet rs = DBHandler.GetSQL(query);
         while (rs.next()){
             String value = rs.getString("value");
             sequenceNum = Integer.parseInt(value);

@@ -38,9 +38,9 @@ public class ProSignatureData {
        boolean retval = false;
        try
             {
-                DBHandler db = new DBHandler();
+                
                 String sql = "select signature from providerExt where provider_no = '"+proNo+"' ";
-                ResultSet rs = db.GetSQL(sql);
+                ResultSet rs = DBHandler.GetSQL(sql);
                 if(rs.next())
                     retval = true;
                 rs.close();
@@ -57,11 +57,11 @@ public class ProSignatureData {
     public String getSignature(String providerNo){
        String retval = "";
        try{
-             DBHandler db = new DBHandler();
+             
              String sql = "select signature from providerExt where provider_no = '"+providerNo+"' ";
-             ResultSet rs = db.GetSQL(sql);
+             ResultSet rs = DBHandler.GetSQL(sql);
              if(rs.next())
-                retval = db.getString(rs,"signature");
+                retval = DBHandler.getString(rs,"signature");
              rs.close();
           }
           catch(SQLException e){
@@ -86,9 +86,9 @@ public class ProSignatureData {
     private void addSignature(String providerNo,String signature){
        MsgStringQuote s = new MsgStringQuote();
        try{
-             DBHandler db = new DBHandler();
+             
              String sql = "insert into  providerExt (provider_no,signature) values ('"+providerNo+"','"+s.q(signature)+"') ";
-             db.RunSQL(sql);
+             DBHandler.RunSQL(sql);
           }
           catch(SQLException e){
              MiscUtils.getLogger().debug("There has been an error while adding a provider's signature");
@@ -101,9 +101,9 @@ public class ProSignatureData {
     private void updateSignature(String providerNo,String signature){
        MsgStringQuote s = new MsgStringQuote();
        try{
-             DBHandler db = new DBHandler();
+             
              String sql = "update  providerExt set signature = '"+s.q(signature)+"' where provider_no = '"+providerNo+"' ";
-             db.RunSQL(sql);
+             DBHandler.RunSQL(sql);
           }
           catch(SQLException e){
              MiscUtils.getLogger().debug("There has been an error while updating a provider's signature");

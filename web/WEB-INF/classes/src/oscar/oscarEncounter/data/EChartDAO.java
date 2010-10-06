@@ -59,10 +59,10 @@ public class EChartDAO {
         UtilMisc.charEscape(echart.getOngoingConcerns(), '\'') + "','" +
         UtilMisc.charEscape(echart.getReminders(), '\'') + "','" +
         UtilMisc.charEscape(echart.getEncounter(), '\'') + "')";
-    DBHandler db = null;
+    
     try {
-      db = new DBHandler();
-      db.RunSQL(qry);
+      
+      DBHandler.RunSQL(qry);
       MiscUtils.getLogger().debug("qry=" + qry);
     }
     catch (SQLException e) {
@@ -79,25 +79,25 @@ public class EChartDAO {
     Echart echart = null;
 
     try {
-      DBHandler db = new DBHandler();
+      
       ResultSet rs;
       String sql = "select * from eChart where demographicNo=" +
           demographicNo
           + " ORDER BY eChartId DESC";
 //          + " ORDER BY eChartId DESC limit 1";
-      rs = db.GetSQL(sql);
+      rs = DBHandler.GetSQL(sql);
       if (rs.next()) {
         echart = new Echart();
         echart.setTimeStamp(rs.getTimestamp("timeStamp"));
-        echart.setSocialHistory(db.getString(rs,"socialHistory"));
-        echart.setFamilyHistory(db.getString(rs,"familyHistory"));
-        echart.setMedicalHistory(db.getString(rs,"medicalHistory"));
-        echart.setOngoingConcerns(db.getString(rs,"ongoingConcerns"));
-        echart.setReminders(db.getString(rs,"reminders"));
-        echart.setEncounter(db.getString(rs,"encounter"));
-        echart.setSubject(db.getString(rs,"subject"));
+        echart.setSocialHistory(DBHandler.getString(rs,"socialHistory"));
+        echart.setFamilyHistory(DBHandler.getString(rs,"familyHistory"));
+        echart.setMedicalHistory(DBHandler.getString(rs,"medicalHistory"));
+        echart.setOngoingConcerns(DBHandler.getString(rs,"ongoingConcerns"));
+        echart.setReminders(DBHandler.getString(rs,"reminders"));
+        echart.setEncounter(DBHandler.getString(rs,"encounter"));
+        echart.setSubject(DBHandler.getString(rs,"subject"));
         echart.setDemographicNo(String.valueOf(demographicNo));
-        echart.setProviderNo(db.getString(rs,"providerNo"));
+        echart.setProviderNo(DBHandler.getString(rs,"providerNo"));
       }
       rs.close();
     }

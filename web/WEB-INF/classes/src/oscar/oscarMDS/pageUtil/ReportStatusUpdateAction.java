@@ -70,11 +70,11 @@ public class ReportStatusUpdateAction extends Action {
             String demographicID = "";
             try{
                 String sql = "SELECT demographic_no FROM patientLabRouting WHERE lab_type = '"+lab_type+"' and lab_no='"+labNo+"'";
-                DBHandler db = new DBHandler();
-                ResultSet rs = db.GetSQL(sql);
+                
+                ResultSet rs = DBHandler.GetSQL(sql);
 
                 while(rs.next()){
-                    demographicID = db.getString(rs,"demographic_no");
+                    demographicID = DBHandler.getString(rs,"demographic_no");
                 }
                 rs.close();
 

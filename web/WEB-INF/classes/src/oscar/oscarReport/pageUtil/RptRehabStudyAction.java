@@ -54,9 +54,9 @@ public class RptRehabStudyAction extends Action {
         String endDate = frm.getEndDate();
         String results = "<table>";
         try{
-            DBHandler db = new DBHandler();    
+                
             String sql = "select * from " + formName + " limit 1"; 
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
             if(rs.next())
                 results = results + getHeadingStructure(rs);
             rs.close();
@@ -64,12 +64,12 @@ public class RptRehabStudyAction extends Action {
             sql = "select max(formEdited) as formEdited, demographic_no from " + formName + " where formEdited > '" + startDate +
                   "' and formEdited < '" + endDate + "' group by demographic_no";
             MiscUtils.getLogger().debug("sql:" + sql);
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
             while(rs.next()){
                 String sqlDemo =   "SELECT * FROM " + formName + " where demographic_no='" + rs.getString("demographic_no")
                                  + "' AND formEdited='" + rs.getString("formEdited") + "'";
                 MiscUtils.getLogger().debug("sqlDemo:" + sqlDemo);
-                ResultSet rsDemo = db.GetSQL(sqlDemo);
+                ResultSet rsDemo = DBHandler.GetSQL(sqlDemo);
                 //if(rsDemo.next())                    
                     results = results + getStructure(rsDemo);
                 rsDemo.close();                    

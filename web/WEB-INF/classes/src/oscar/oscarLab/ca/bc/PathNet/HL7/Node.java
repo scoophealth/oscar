@@ -43,12 +43,12 @@ public abstract class Node {
    protected Hashtable data;
    private static final String last_insert_id = "SELECT LAST_INSERT_ID();";
    protected abstract String[] getProperties();
-   public abstract int ToDatabase(DBHandler db, int parent)
+   public abstract int ToDatabase(int parent)
    throws SQLException;
    public abstract Node Parse(String line);
    protected abstract String getInsertSql(int parent);
-   protected int getLastInsertedId(DBHandler db) throws SQLException {
-      ResultSet result = db.GetSQL(last_insert_id);
+   protected int getLastInsertedId() throws SQLException {
+      ResultSet result = DBHandler.GetSQL(last_insert_id);
       int parent = 0;
       if (result.next()) {
          parent = result.getInt(1);

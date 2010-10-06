@@ -55,7 +55,7 @@ public class MsgGenerate {
         Document doc = MsgCommxml.newDocument();
         Element docRoot = MsgCommxml.addNode(doc, "root");
         
-        DBHandler db = new DBHandler();
+        
         
         Document cfg = null;
         try {
@@ -72,7 +72,7 @@ public class MsgGenerate {
             
             if(tbl.getNodeType() == Node.ELEMENT_NODE) {
                 if(((Element)tbl).getTagName().equals("table")) {
-                    Element newTable = constructTable((Element)tbl, doc, db);
+                    Element newTable = constructTable((Element)tbl, doc);
                     if (newTable.hasChildNodes()){
                         docRoot.appendChild(newTable);
                     }
@@ -82,7 +82,7 @@ public class MsgGenerate {
         return doc;
     }
     
-    private Element constructTable(Element cfgTable, Document doc, DBHandler db)
+    private Element constructTable(Element cfgTable, Document doc)
     throws java.sql.SQLException {
         Element table = doc.createElement("table");
         
@@ -94,7 +94,7 @@ public class MsgGenerate {
         }
         
         String sql = this.constructSQL(cfgTable);
-        ResultSet rs = db.GetSQL(sql);
+        ResultSet rs = DBHandler.GetSQL(sql);
         ResultSetMetaData meta = rs.getMetaData();
         
         Element cfgItem = (Element)cfgTable.getElementsByTagName("item").item(0);
@@ -116,7 +116,7 @@ public class MsgGenerate {
                     String fldData = "";
                     try {
                         
-                        fldData = db.getString(rs,i);
+                        fldData = DBHandler.getString(rs,i);
                         
                         if(fldData==null) fldData = "";
                         
@@ -143,7 +143,7 @@ public class MsgGenerate {
             }
             
             {
-                String value = db.getString(rs,"fldItem");
+                String value = DBHandler.getString(rs,"fldItem");
                 if(value==null) value="";
                 item.setAttribute("value", value);
             }
@@ -154,7 +154,7 @@ public class MsgGenerate {
                 
                 fld.setAttribute("name", cfgFld.getAttribute("name"));
                 fld.setAttribute("sql", cfgFld.getAttribute("sql"));
-                String value = db.getString(rs,"fld" + i);
+                String value = DBHandler.getString(rs,"fld" + i);
                 if(value==null) value="";
                 fld.setAttribute("value", value);
             }

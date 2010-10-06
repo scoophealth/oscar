@@ -635,8 +635,8 @@ boolean wasBilledLocal(String account,String provider,String billing_date, Strin
    java.util.Date date = UtilDateUtilities.getDateFromString(billing_date, "yyyyMMdd");
    String sql = "select count(*) as cou from billing b, billingdetail bd where b.billing_no= '"+account+"' and b.billing_date = '"+UtilDateUtilities.DateToString(date)+"' and b.provider_ohip_no = '"+provider+"' and bd.billing_no = b.billing_no  and bd.service_code = '"+code+"'";
    try{
-       DBHandler db = new DBHandler(); 
-       ResultSet rs  = db.GetSQL(sql);
+        
+       ResultSet rs  = DBHandler.GetSQL(sql);
        if(rs.next()){          
              int ret = rs.getInt("cou");
              if(ret >= 1){

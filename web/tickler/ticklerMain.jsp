@@ -129,7 +129,8 @@ GregorianCalendar now=new GregorianCalendar();
 
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request" />
 
-<%@page import="org.oscarehr.util.DbConnectionFilter"%><html:html locale="true">
+<%@page import="org.oscarehr.util.DbConnectionFilter"%>
+<%@page import="oscar.oscarDB.DBHandler"%><html:html locale="true">
 <head>
 <title><bean:message key="tickler.ticklerMain.title"/></title>
       <meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
@@ -651,29 +652,28 @@ function changeSite(sel) {
                             
                             param[5] = order;
                             String sql = "select t.tickler_no, d.demographic_no, d.last_name,d.first_name, p.last_name as provider_last, p.first_name as provider_first, t.status,t.message,t.service_date, t.update_date, t.priority, p2.first_name AS assignedFirst, p2.last_name as assignedLast from tickler t LEFT JOIN provider p2 ON ( p2.provider_no=t.task_assigned_to), demographic d LEFT JOIN provider p ON ( p.provider_no=d.provider_no) where t.demographic_no=d.demographic_no and t.status='" + param[0] + "' and TO_DAYS(t.service_date) >=TO_DAYS('" + param[1] + "') and TO_DAYS(t.service_date)<=TO_DAYS('" + param[2] + "') and " + param[3] + " and t.task_assigned_to like '" + param[4] + "' order by " + param[5];
-                            oscar.oscarDB.DBHandler db = new oscar.oscarDB.DBHandler();
                             java.sql.PreparedStatement ps =  DbConnectionFilter.getThreadLocalDbConnection().prepareStatement(sql);
                               
-                            rs = db.GetSQL(sql);
+                            rs = DBHandler.GetSQL(sql);
                             
                             while (rs.next()) {
                             nItems = nItems +1;
                             
-                            if (db.getString(rs,"provider_last")==null || db.getString(rs,"provider_first")==null){
+                            if (DBHandler.getString(rs,"provider_last")==null || DBHandler.getString(rs,"provider_first")==null){
                             provider = "";
                             }
                             else{
-                            provider = db.getString(rs,"provider_last") + ", " + db.getString(rs,"provider_first");
+                            provider = DBHandler.getString(rs,"provider_last") + ", " + DBHandler.getString(rs,"provider_first");
                             }
                             
-                            if (db.getString(rs,"assignedLast")==null || db.getString(rs,"assignedFirst")==null){
+                            if (DBHandler.getString(rs,"assignedLast")==null || DBHandler.getString(rs,"assignedFirst")==null){
                             taskAssignedTo = "";
                             }
                             else{
-                            taskAssignedTo = db.getString(rs,"assignedLast") + ", " + db.getString(rs,"assignedFirst");
+                            taskAssignedTo = DBHandler.getString(rs,"assignedLast") + ", " + DBHandler.getString(rs,"assignedFirst");
                             }
                             bodd=bodd?false:true;
-                            vGrantdate = db.getString(rs,"service_date")+ ".0";
+                            vGrantdate = DBHandler.getString(rs,"service_date")+ ".0";
                             java.util.Date grantdate = dateFormat.parse(vGrantdate);
                             java.util.Date toDate = new java.util.Date();
                             long millisDifference = toDate.getTime() - grantdate.getTime();

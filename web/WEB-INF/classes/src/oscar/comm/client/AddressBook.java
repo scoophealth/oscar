@@ -34,11 +34,6 @@ import oscar.oscarDB.DBHandler;
 import oscar.util.UtilXML;
 
 class AddressBook {
-    private DBHandler db;
-
-    public AddressBook(DBHandler db) {
-        this.db = db;
-    }
 
     public Element getLocalAddressBook(Document doc) throws SQLException {
         Element root = doc.createElement("localAddressBook");
@@ -46,12 +41,12 @@ class AddressBook {
         Element addressBook = doc.createElement("addressBook");
         addressBook.appendChild(this.getChildren(doc, 0, ""));
 
-        ResultSet rs = db.GetSQL("SELECT addressBook FROM oscarcommlocations WHERE current1 = 1");
+        ResultSet rs = DBHandler.GetSQL("SELECT addressBook FROM oscarcommlocations WHERE current1 = 1");
         if(rs.next()) {
             String newAddressBook = UtilXML.toXML(addressBook);
 
-            if((db.getString(rs,"addressBook")==null) || (db.getString(rs,"addressBook").equals(newAddressBook)==false)) {
-                db.RunSQL("UPDATE oscarcommlocations SET addressBook = '" + newAddressBook + "' WHERE current1 = 1");
+            if((DBHandler.getString(rs,"addressBook")==null) || (DBHandler.getString(rs,"addressBook").equals(newAddressBook)==false)) {
+            	DBHandler.RunSQL("UPDATE oscarcommlocations SET addressBook = '" + newAddressBook + "' WHERE current1 = 1");
             } else {
                 addressBook = null;
             }
@@ -60,7 +55,7 @@ class AddressBook {
 
         if(addressBook!=null) {
             root.setAttribute("updated", "true");
-            root.appendChild(new Location(db).getRemotes(doc));
+            root.appendChild(new Location().getRemotes(doc));
             root.appendChild(addressBook);
         } else {
             root.setAttribute("updated", "false");
@@ -77,20 +72,20 @@ class AddressBook {
         }
 
         String sql = "SELECT * FROM groups_tbl WHERE parentID = " + groupId;
-        ResultSet rs = db.GetSQL(sql);
+        ResultSet rs = DBHandler.GetSQL(sql);
         while(rs.next()) {
-            group.appendChild(getChildren(doc, rs.getInt("groupID"), db.getString(rs,"groupDesc")));
+            group.appendChild(getChildren(doc, rs.getInt("groupID"), DBHandler.getString(rs,"groupDesc")));
         }
         rs.close();
 
         sql = "SELECT p.provider_no, p.last_name, p.first_name "
             + "FROM groupMembers_tbl g INNER JOIN provider p ON g.provider_No = p.provider_no "
             + "WHERE groupID = " + groupId + " ORDER BY p.last_name, p.first_name";
-        rs = db.GetSQL(sql);
+        rs = DBHandler.GetSQL(sql);
         while(rs.next()) {
             Element address = UtilXML.addNode(group, "address");
-            address.setAttribute("id", db.getString(rs,"provider_no"));
-            address.setAttribute("desc", new String(db.getString(rs,"last_name") + ", " + db.getString(rs,"first_name")));
+            address.setAttribute("id", DBHandler.getString(rs,"provider_no"));
+            address.setAttribute("desc", new String(DBHandler.getString(rs,"last_name") + ", " + DBHandler.getString(rs,"first_name")));
         }
         rs.close();
 
@@ -108,7 +103,7 @@ class AddressBook {
             String addressBook = UtilXML.toXML(location.getElementsByTagName("addressBook").item(0));
 
             String sql = "SELECT 1 FROM oscarcommlocations WHERE locationId = " + locationId;
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
             if(rs.next()) {
                 sql = "UPDATE oscarcommlocations SET locationDesc = '"
                     + locationDesc + "', addressBook = '" + addressBook
@@ -119,7 +114,7 @@ class AddressBook {
             }
             rs.close();
 
-            db.RunSQL(sql);
+            DBHandler.RunSQL(sql);
         }
     }
 }

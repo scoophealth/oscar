@@ -113,7 +113,7 @@ public class EctSessionBean {
     public void setUpEncounterPage() {
         resetAll();
         String tmp;
-        DBHandler db = null;
+        
         String sql;
         ResultSet rs;
 
@@ -124,22 +124,22 @@ public class EctSessionBean {
 
         //This block gets the patient age and
         try {
-            db = new DBHandler();
+            
             sql = "select * from demographic where demographic_no=" + demographicNo;
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
             while (rs.next()) {
-                patientLastName = db.getString(rs,"last_name");
-                patientFirstName = db.getString(rs,"first_name");
-                address = db.getString(rs,"address");
-                city = db.getString(rs,"city");
-                postal = db.getString(rs,"postal");
-                phone = db.getString(rs,"phone");
-                familyDoctorNo = db.getString(rs,"provider_no");
-                yearOfBirth = db.getString(rs,"year_of_birth");
-                monthOfBirth = db.getString(rs,"month_of_birth");
-                dateOfBirth = db.getString(rs,"date_of_birth");
-                roster = db.getString(rs,"roster_status");
-                patientSex = db.getString(rs,"sex");
+                patientLastName = DBHandler.getString(rs,"last_name");
+                patientFirstName = DBHandler.getString(rs,"first_name");
+                address = DBHandler.getString(rs,"address");
+                city = DBHandler.getString(rs,"city");
+                postal = DBHandler.getString(rs,"postal");
+                phone = DBHandler.getString(rs,"phone");
+                familyDoctorNo = DBHandler.getString(rs,"provider_no");
+                yearOfBirth = DBHandler.getString(rs,"year_of_birth");
+                monthOfBirth = DBHandler.getString(rs,"month_of_birth");
+                dateOfBirth = DBHandler.getString(rs,"date_of_birth");
+                roster = DBHandler.getString(rs,"roster_status");
+                patientSex = DBHandler.getString(rs,"sex");
 
                 if (yearOfBirth.equals("null") || yearOfBirth=="") {
                     yearOfBirth = "0";
@@ -159,40 +159,40 @@ public class EctSessionBean {
 
             sql = "select * from appointment where provider_no='" + curProviderNo + "' and appointment_date='"
                     + appointmentDate + "'";
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
             while (rs.next()) {
                 tmp = Integer.toString(rs.getInt("appointment_no"));
                 appointmentsIdArray.add(tmp);
-                appointmentsNamesArray.add(db.getString(rs,"name") + " " + db.getString(rs,"start_time"));
+                appointmentsNamesArray.add(DBHandler.getString(rs,"name") + " " + DBHandler.getString(rs,"start_time"));
 
             }
             rs.close();
             sql = "select * from encountertemplate order by encountertemplate_name";
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
             while (rs.next()) {
-                templateNames.add(db.getString(rs,"encountertemplate_name"));
+                templateNames.add(DBHandler.getString(rs,"encountertemplate_name"));
             }
             rs.close();
 
             sql = "SELECT groupName from measurementGroupStyle ORDER BY groupName";
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
             while (rs.next()) {
-                measurementGroupNames.add(db.getString(rs,"groupName"));
+                measurementGroupNames.add(DBHandler.getString(rs,"groupName"));
             }
             rs.close();
 
             sql = "select * from eChart where demographicNo=" + demographicNo + " ORDER BY eChartId DESC";
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
             if (rs.next()) {
-                eChartId = db.getString(rs,"eChartId");
+                eChartId = DBHandler.getString(rs,"eChartId");
                 eChartTimeStamp = rs.getTimestamp("timeStamp");
-                socialHistory = db.getString(rs,"socialHistory");
-                familyHistory = db.getString(rs,"familyHistory");
-                medicalHistory = db.getString(rs,"medicalHistory");
-                ongoingConcerns = db.getString(rs,"ongoingConcerns");
-                reminders = db.getString(rs,"reminders");
-                encounter = db.getString(rs,"encounter");
-                subject = db.getString(rs,"subject");
+                socialHistory = DBHandler.getString(rs,"socialHistory");
+                familyHistory = DBHandler.getString(rs,"familyHistory");
+                medicalHistory = DBHandler.getString(rs,"medicalHistory");
+                ongoingConcerns = DBHandler.getString(rs,"ongoingConcerns");
+                reminders = DBHandler.getString(rs,"reminders");
+                encounter = DBHandler.getString(rs,"encounter");
+                subject = DBHandler.getString(rs,"subject");
             } else {
                 eChartTimeStamp = null;
                 socialHistory = "";
@@ -206,14 +206,14 @@ public class EctSessionBean {
             rs.close();
             if (oscarMsgID != null) {
                 sql = "Select * from messagetbl where messageid = \'" + oscarMsgID + "\' ";
-                rs = db.GetSQL(sql);
+                rs = DBHandler.GetSQL(sql);
                 if (rs.next()) {
-                    String message = (db.getString(rs,"themessage"));
-                    String subject = (db.getString(rs,"thesubject"));
-                    String sentby = (db.getString(rs,"sentby"));
-                    String sentto = (db.getString(rs,"sentto"));
-                    String thetime = (db.getString(rs,"theime"));
-                    String thedate = (db.getString(rs,"thedate"));
+                    String message = (DBHandler.getString(rs,"themessage"));
+                    String subject = (DBHandler.getString(rs,"thesubject"));
+                    String sentby = (DBHandler.getString(rs,"sentby"));
+                    String sentto = (DBHandler.getString(rs,"sentto"));
+                    String thetime = (DBHandler.getString(rs,"theime"));
+                    String thedate = (DBHandler.getString(rs,"thedate"));
                     oscarMsg = "From: " + sentby + "\n" + "To: " + sentto + "\n" + "Date: " + thedate + " " + thetime
                             + "\n" + "Subject: " + subject + "\n" + message;
                 }
@@ -238,22 +238,22 @@ public class EctSessionBean {
         templateNames = new ArrayList();
 
         String tmp;
-        DBHandler db = null;
+        
         ResultSet rs;
         String sql;
 
         try {
-            db = new DBHandler();
+            
             sql = "select * from appointment where appointment_no=" + appointmentNo;
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
             while (rs.next()) {
-                demographicNo = db.getString(rs,"demographic_no");
+                demographicNo = DBHandler.getString(rs,"demographic_no");
                 this.appointmentNo = appointmentNo;
-                reason = db.getString(rs,"reason");
+                reason = DBHandler.getString(rs,"reason");
                 encType = new String("face to face encounter with client");
-                appointmentDate = db.getString(rs,"appointment_date");
-                startTime = db.getString(rs,"start_time");
-                status = db.getString(rs,"status");
+                appointmentDate = DBHandler.getString(rs,"appointment_date");
+                startTime = DBHandler.getString(rs,"start_time");
+                status = DBHandler.getString(rs,"status");
             }
             rs.close();
         } catch (java.sql.SQLException e) {
@@ -262,37 +262,37 @@ public class EctSessionBean {
         try {
             sql = "select * from appointment where provider_no='" + curProviderNo + "' and appointment_date='"
                     + appointmentDate + "'";
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
             while (rs.next()) {
                 tmp = Integer.toString(rs.getInt("appointment_no"));
                 appointmentsIdArray.add(tmp);
-                appointmentsNamesArray.add(db.getString(rs,"name") + " " + db.getString(rs,"start_time"));
+                appointmentsNamesArray.add(DBHandler.getString(rs,"name") + " " + DBHandler.getString(rs,"start_time"));
             }
             rs.close();
             sql = "select * from encountertemplate order by encountertemplate_name";
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
             while (rs.next()) {
-                templateNames.add(db.getString(rs,"encountertemplate_name"));
+                templateNames.add(DBHandler.getString(rs,"encountertemplate_name"));
             }
             rs.close();
         } catch (java.sql.SQLException e) {
             MiscUtils.getLogger().error("Error", e);
         }
         try {
-            //            DBHandler db = new DBHandler();
+            //            
             sql = "select * from eChart where demographicNo='" + demographicNo + "' ORDER BY eChartId DESC limit 1";
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
             ;
             if (rs.next()) {
-                eChartId = db.getString(rs,"eChartId");
+                eChartId = DBHandler.getString(rs,"eChartId");
                 eChartTimeStamp = rs.getTimestamp("timeStamp");
-                socialHistory = db.getString(rs,"socialHistory");
-                familyHistory = db.getString(rs,"familyHistory");
-                medicalHistory = db.getString(rs,"medicalHistory");
-                ongoingConcerns = db.getString(rs,"ongoingConcerns");
-                reminders = db.getString(rs,"reminders");
-                encounter = db.getString(rs,"encounter");
-                subject = db.getString(rs,"subject");
+                socialHistory = DBHandler.getString(rs,"socialHistory");
+                familyHistory = DBHandler.getString(rs,"familyHistory");
+                medicalHistory = DBHandler.getString(rs,"medicalHistory");
+                ongoingConcerns = DBHandler.getString(rs,"ongoingConcerns");
+                reminders = DBHandler.getString(rs,"reminders");
+                encounter = DBHandler.getString(rs,"encounter");
+                subject = DBHandler.getString(rs,"subject");
             } else {
                 eChartTimeStamp = null;
                 socialHistory = "";
@@ -310,22 +310,22 @@ public class EctSessionBean {
         //apointmentsIdArray and the appointmentsNamesArray are
         //already set up so no need to get them again
         try {
-            //            DBHandler db = new DBHandler();
+            //            
             sql = "select * from demographic where demographic_no=" + demographicNo;
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
             while (rs.next()) {
-                patientLastName = db.getString(rs,"last_name");
-                patientFirstName = db.getString(rs,"first_name");
-                address = db.getString(rs,"address");
-                city = db.getString(rs,"city");
-                postal = db.getString(rs,"postal");
-                phone = db.getString(rs,"phone");
-                familyDoctorNo = db.getString(rs,"provider_no");
-                yearOfBirth = db.getString(rs,"year_of_birth");
-                monthOfBirth = db.getString(rs,"month_of_birth");
-                dateOfBirth = db.getString(rs,"date_of_birth");
-                roster = db.getString(rs,"roster_status");
-                patientSex = db.getString(rs,"sex");
+                patientLastName = DBHandler.getString(rs,"last_name");
+                patientFirstName = DBHandler.getString(rs,"first_name");
+                address = DBHandler.getString(rs,"address");
+                city = DBHandler.getString(rs,"city");
+                postal = DBHandler.getString(rs,"postal");
+                phone = DBHandler.getString(rs,"phone");
+                familyDoctorNo = DBHandler.getString(rs,"provider_no");
+                yearOfBirth = DBHandler.getString(rs,"year_of_birth");
+                monthOfBirth = DBHandler.getString(rs,"month_of_birth");
+                dateOfBirth = DBHandler.getString(rs,"date_of_birth");
+                roster = DBHandler.getString(rs,"roster_status");
+                patientSex = DBHandler.getString(rs,"sex");
                 if (yearOfBirth.equals("null")) {
                     yearOfBirth = "0";
                 }
@@ -354,25 +354,25 @@ public class EctSessionBean {
         resetAll();
 
         
-        DBHandler db = null;
+        
         ResultSet rs;
         String sql;
 
         try {
-            db = new DBHandler();
+            
             sql = "select * from eChart where eChartId = " + echartid + " and demographicNo=" + demographicNo;
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
             ;
             if (rs.next()) {
                 eChartId = echartid;
                 eChartTimeStamp = rs.getTimestamp("timeStamp");
-                socialHistory = db.getString(rs,"socialHistory");
-                familyHistory = db.getString(rs,"familyHistory");
-                medicalHistory = db.getString(rs,"medicalHistory");
-                ongoingConcerns = db.getString(rs,"ongoingConcerns");
-                reminders = db.getString(rs,"reminders");
-                encounter = db.getString(rs,"encounter");
-                subject = db.getString(rs,"subject");
+                socialHistory = DBHandler.getString(rs,"socialHistory");
+                familyHistory = DBHandler.getString(rs,"familyHistory");
+                medicalHistory = DBHandler.getString(rs,"medicalHistory");
+                ongoingConcerns = DBHandler.getString(rs,"ongoingConcerns");
+                reminders = DBHandler.getString(rs,"reminders");
+                encounter = DBHandler.getString(rs,"encounter");
+                subject = DBHandler.getString(rs,"subject");
             }
             rs.close();
         } catch (java.sql.SQLException e) {
@@ -381,20 +381,20 @@ public class EctSessionBean {
 
         try {
             sql = "select * from demographic where demographic_no=" + demographicNo;
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
             while (rs.next()) {
-                patientLastName = db.getString(rs,"last_name");
-                patientFirstName = db.getString(rs,"first_name");
-                address = db.getString(rs,"address");
-                city = db.getString(rs,"city");
-                postal = db.getString(rs,"postal");
-                phone = db.getString(rs,"phone");
-                familyDoctorNo = db.getString(rs,"provider_no");
-                yearOfBirth = db.getString(rs,"year_of_birth");
-                monthOfBirth = db.getString(rs,"month_of_birth");
-                dateOfBirth = db.getString(rs,"date_of_birth");
-                roster = db.getString(rs,"roster_status");
-                patientSex = db.getString(rs,"sex");
+                patientLastName = DBHandler.getString(rs,"last_name");
+                patientFirstName = DBHandler.getString(rs,"first_name");
+                address = DBHandler.getString(rs,"address");
+                city = DBHandler.getString(rs,"city");
+                postal = DBHandler.getString(rs,"postal");
+                phone = DBHandler.getString(rs,"phone");
+                familyDoctorNo = DBHandler.getString(rs,"provider_no");
+                yearOfBirth = DBHandler.getString(rs,"year_of_birth");
+                monthOfBirth = DBHandler.getString(rs,"month_of_birth");
+                dateOfBirth = DBHandler.getString(rs,"date_of_birth");
+                roster = DBHandler.getString(rs,"roster_status");
+                patientSex = DBHandler.getString(rs,"sex");
                 if (yearOfBirth.equals("null")) {
                     yearOfBirth = "0";
                 }

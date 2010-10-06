@@ -91,7 +91,7 @@ public class BillingViewBean {
   private String defaultPayeeLastName;
   public void loadBilling(String billing_no) {
     try {
-      DBHandler db = new DBHandler();
+      
       ResultSet rs;
       String sql;
 
@@ -101,7 +101,7 @@ public class BillingViewBean {
       sql = sql + "from billingmaster b, billing bi where bi.billing_no=b.billing_no and b.billing_no='" +
           billing_no + "'";
       MiscUtils.getLogger().debug(sql);
-      rs = db.GetSQL(sql);
+      rs = DBHandler.GetSQL(sql);
 
       while (rs.next()) {
 
@@ -154,9 +154,9 @@ public class BillingViewBean {
    * @param paymentMethod String - The paymentMethod code
    */
   public void updateBill(String billingNo,String payeeNo) {
-    DBHandler db = null;
+    
     try {
-      db = new DBHandler();
+      
       List billingMasterNos = SqlUtils.getQueryResultsList(
           "select billingmaster_no from billingmaster where billing_no = " +
           billingNo);
@@ -165,7 +165,7 @@ public class BillingViewBean {
         for (int i = 0; i < billingMasterNos.size(); i++) {
           String[] values = (String[]) billingMasterNos.get(i);
           String billingMasternum = values[0];
-          db.RunSQL("update billingmaster set payee_no = '" + payeeNo + "' " +
+          DBHandler.RunSQL("update billingmaster set payee_no = '" + payeeNo + "' " +
                     " where billingmaster_no = " + billingMasternum + "");
 
         }
@@ -181,12 +181,12 @@ public class BillingViewBean {
   }
 
   public String getMessageNotesByBillingNo(String billingNo) {
-    DBHandler db = null;
+    
     ResultSet rs = null;
     StringBuffer res = new StringBuffer();
     try {
-      db = new DBHandler();
-      rs = db.GetSQL(
+      
+      rs = DBHandler.GetSQL(
           "select billingmaster_no from billingmaster where billing_no = " +
           billingNo);
       ArrayList billingMasterNos = new ArrayList();
@@ -616,11 +616,11 @@ public class BillingViewBean {
   public List getPaymentTypes() {
     ArrayList types = new ArrayList();
     String sql = "select * from billing_payment_type";
-    DBHandler db = null;
+    
     ResultSet rs = null;
     try {
-      db = new DBHandler();
-      rs = db.GetSQL(sql);
+      
+      rs = DBHandler.GetSQL(sql);
 
       while (rs.next()) {
         PaymentType tp = new PaymentType();

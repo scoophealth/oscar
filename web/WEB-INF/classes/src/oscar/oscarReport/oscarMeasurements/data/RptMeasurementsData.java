@@ -40,14 +40,14 @@ public class RptMeasurementsData {
      *
      * @return number or Patients seen in Integer
      ******************************************************************************************/  
-    public int getNbPatientSeen(DBHandler db, String startDateA, String endDateA){
+    public int getNbPatientSeen(String startDateA, String endDateA){
         
         int nbPatient = 0;
         
         try{
             String sql = "SELECT DISTINCT demographicNo FROM measurements WHERE dateObserved >= '" + startDateA + "' AND dateObserved <= '" + endDateA + "'";
             ResultSet rs;
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
             MiscUtils.getLogger().debug("SQL Statement: " + sql);
             rs.last();
             nbPatient = rs.getRow();
@@ -69,7 +69,7 @@ public class RptMeasurementsData {
      *
      * @return ArrayList which contain the result in String format
      ******************************************************************************************/      
-    public ArrayList getPatientsSeen(DBHandler db, String startDate, String endDate){
+    public ArrayList getPatientsSeen(String startDate, String endDate){
 
         ArrayList patients = new ArrayList();
         
@@ -78,7 +78,7 @@ public class RptMeasurementsData {
             MiscUtils.getLogger().debug("SQL Statement: " + sql);
             ResultSet rs;
             
-            for(rs=db.GetSQL(sql); rs.next();){            
+            for(rs=DBHandler.GetSQL(sql); rs.next();){            
                 String patient = rs.getString("demographicNo");
                 patients.add(patient);                
             }

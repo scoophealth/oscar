@@ -32,13 +32,13 @@ public class ForwardingRules {
         ArrayList ret = new ArrayList();
         String sql = "SELECT p.provider_no, p.first_name, p.last_name FROM incomingLabRules i, provider p WHERE i.archive='0' AND i.provider_no='"+providerNo+"' AND p.provider_no=i.frwdProvider_no";
         try{
-            DBHandler db = new DBHandler();
-            ResultSet rs = db.GetSQL(sql);            
+            
+            ResultSet rs = DBHandler.GetSQL(sql);            
             while (rs.next()){
                 ArrayList info = new ArrayList();
-                info.add(db.getString(rs,"provider_no"));
-                info.add(db.getString(rs,"first_name"));
-                info.add(db.getString(rs,"last_name"));
+                info.add(DBHandler.getString(rs,"provider_no"));
+                info.add(DBHandler.getString(rs,"first_name"));
+                info.add(DBHandler.getString(rs,"last_name"));
                 ret.add(info);
             }
         }catch(Exception e){
@@ -51,10 +51,10 @@ public class ForwardingRules {
         String ret = "N";
         String sql = "SELECT status FROM incomingLabRules WHERE archive='0' AND provider_no='"+providerNo+"'";
         try{
-            DBHandler db = new DBHandler();
-            ResultSet rs = db.GetSQL(sql);            
+            
+            ResultSet rs = DBHandler.GetSQL(sql);            
             if (rs.next()){
-                ret = db.getString(rs,"status");
+                ret = DBHandler.getString(rs,"status");
             }
         }catch(Exception e){
             logger.error("Could not retrieve forwarding rules", e);
@@ -66,8 +66,8 @@ public class ForwardingRules {
         boolean ret = false;
         String sql = "SELECT status FROM incomingLabRules WHERE archive='0' AND provider_no='"+providerNo+"'";
         try{
-            DBHandler db = new DBHandler();
-            ResultSet rs = db.GetSQL(sql);            
+            
+            ResultSet rs = DBHandler.GetSQL(sql);            
             if (rs.next()){
                 ret = true;
             }

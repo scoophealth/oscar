@@ -57,16 +57,16 @@ public class ScratchData {
         Hashtable retval = null;
         try {
             //Get Provider from database
-            DBHandler db = new DBHandler();
+            
             ResultSet rs;
             String sql = "SELECT * FROM scratch_pad WHERE provider_no = " + providerNo + " order by id  desc limit 1";
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
    
             if (rs.next()){
                 retval = new Hashtable();
-                retval.put("id",db.getString(rs,"id"));
-                retval.put("text",db.getString(rs,"scratch_text"));
-                retval.put("date",db.getString(rs,"date_time"));
+                retval.put("id",DBHandler.getString(rs,"id"));
+                retval.put("text",DBHandler.getString(rs,"scratch_text"));
+                retval.put("date",DBHandler.getString(rs,"date_time"));
             }
             rs.close();
         } catch (SQLException e) {
@@ -79,11 +79,11 @@ public class ScratchData {
         String scratch_id = null;
         try {
             //Get Provider from database
-            DBHandler db = new DBHandler();
+            
             ResultSet rs;
             String sql = "INSERT into scratch_pad (provider_no, scratch_text,date_time ) values ('" + providerNo + "','"+text+"',now())";
-            db.RunSQL(sql);
-            rs = db.GetSQL("SELECT LAST_INSERT_ID() ");
+            DBHandler.RunSQL(sql);
+            rs = DBHandler.GetSQL("SELECT LAST_INSERT_ID() ");
    
             if(rs.next()){
                scratch_id = Integer.toString( rs.getInt(1) );
@@ -100,7 +100,7 @@ public class ScratchData {
         String scratch_id = null;
         try {
             //Get Provider from database
-            //DBHandler db = new DBHandler(); //unused variable db
+            // //unused variable db
              String sql = "INSERT into scratch_pad (provider_no, scratch_text,date_time ) values (?,?,now())";
              Connection conn = DBHandler.getConnection();
              PreparedStatement pstat = conn.prepareStatement(sql);

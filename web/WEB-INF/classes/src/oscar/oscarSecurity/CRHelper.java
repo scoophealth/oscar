@@ -46,9 +46,8 @@ public class CRHelper implements RolesProvider {
 	}
 	
 	public String[] getRolesForUser(String user) {
-		DBHandler db = null;
+		
 		try {
-			db=new DBHandler();
 			Connection con = DBHandler.getConnection();
 			String sql = establishStringToUse(con);
 			if(sql==null){
@@ -60,7 +59,7 @@ public class CRHelper implements RolesProvider {
 			ResultSet rs = st.executeQuery();
 			HashSet list = new HashSet();
 			while(rs.next()){
-				list.add(db.getString(rs,1));
+				list.add(DBHandler.getString(rs,1));
 			}
 			if(queryCaisiRoles(con)){
 				rs.close();
@@ -69,7 +68,7 @@ public class CRHelper implements RolesProvider {
 				st.setString(1,(String)userNameToProviderNO.get(user));
 				rs = st.executeQuery();
 				while(rs.next()){
-					list.add(db.getString(rs,1));
+					list.add(DBHandler.getString(rs,1));
 				}
 			}
 			rs.close();
@@ -78,8 +77,6 @@ public class CRHelper implements RolesProvider {
 		} catch (SQLException e) {
 			MiscUtils.getLogger().error("Error", e);
 			return new String[0];
-		}finally{
-			if(db!=null) try{}catch(Throwable t){}
 		}
 	}
 	

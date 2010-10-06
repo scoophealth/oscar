@@ -116,11 +116,11 @@ public class ExtractBean extends Object implements Serializable {
                errorMsg = "";
 
                value = batchHeader;
-               DBHandler db = new DBHandler();
+               
                query = "select * from billing where provider_ohip_no='"+ providerNo+"' and (status='O' or status='W') " + dateRange;
 
                MiscUtils.getLogger().debug("1st billing query "+query);
-               ResultSet rs = db.GetSQL(query);
+               ResultSet rs = DBHandler.GetSQL(query);
 
 
                if (rs != null){
@@ -136,7 +136,7 @@ public class ExtractBean extends Object implements Serializable {
                         if (billType.equals("MSP")  || billType.equals("ICBC") ) {
                            MiscUtils.getLogger().debug("Going to process a "+billType+" type bill invoice #"+invNo );
 
-                           ResultSet rs2 = db.GetSQL("select * from billingmaster where billing_no='"+ invNo +"' and billingstatus='O'");
+                           ResultSet rs2 = DBHandler.GetSQL("select * from billingmaster where billing_no='"+ invNo +"' and billingstatus='O'");
                               while (rs2.next()) {
                                  recordCount ++;
 
@@ -179,7 +179,7 @@ public class ExtractBean extends Object implements Serializable {
                               }// while
                         }else if (billType.equals("WCB")){
                            ResultSet rs2 =
-                           db.GetSQL("SELECT *, billingservice.value As `feeitem1` FROM billingservice, wcb JOIN billing ON wcb.billing_no=billing.billing_no WHERE wcb.billing_no='"
+                           DBHandler.GetSQL("SELECT *, billingservice.value As `feeitem1` FROM billingservice, wcb JOIN billing ON wcb.billing_no=billing.billing_no WHERE wcb.billing_no='"
                            + invNo + "' AND wcb.status='O' AND billing.status IN ('O', 'W') AND billingservice.service_code=wcb.w_feeitem");
 
 
@@ -241,7 +241,7 @@ public class ExtractBean extends Object implements Serializable {
                            }
 
                            rs2.close();
-                           rs2 = db.GetSQL("SELECT billingmaster_no FROM billingmaster WHERE billing_no="+ invNo);
+                           rs2 = DBHandler.GetSQL("SELECT billingmaster_no FROM billingmaster WHERE billing_no="+ invNo);
                            if (rs2.next()) {
                               setAsBilledMaster(rs2.getString("billingmaster_no"));
                            }
@@ -274,8 +274,8 @@ public class ExtractBean extends Object implements Serializable {
       if (eFlag.equals("1")){
          String query30 = "update billing set status='B' where billing_no='" + newInvNo + "'";
          try {
-            DBHandler db = new DBHandler();
-            db.RunSQL(query30);
+            
+        	 DBHandler.RunSQL(query30);
          }catch (SQLException e) {
             MiscUtils.getLogger().error("Error", e);
          }
@@ -286,8 +286,8 @@ public class ExtractBean extends Object implements Serializable {
       if (eFlag.equals("1")){
          String query30 = "update billingmaster set billingstatus='B' where billingmaster_no='" + newInvNo + "'";
          try {
-            DBHandler db = new DBHandler();
-            db.RunSQL(query30);
+            
+        	 DBHandler.RunSQL(query30);
             createBillArchive(newInvNo);
          }catch (SQLException e) {
             MiscUtils.getLogger().error("Error", e);
@@ -308,8 +308,8 @@ public class ExtractBean extends Object implements Serializable {
       if (eFlag.equals("1")){
          String nsql = "update log_teleplantx set claim='" + UtilMisc.mysqlEscape(logValue) + "' where log_no='"+ x +"'";
          try {
-            DBHandler db = new DBHandler();
-            db.RunSQL(nsql);
+            
+        	 DBHandler.RunSQL(nsql);
          }catch (SQLException e) {
             MiscUtils.getLogger().error("Error", e);
          }
@@ -323,9 +323,9 @@ public class ExtractBean extends Object implements Serializable {
          String nsql ="";
          nsql =  "insert into log_teleplantx (log_no, claim) values ('\\N','" + "New Log" + "')";
          try {
-            DBHandler db = new DBHandler();
-            db.RunSQL(nsql);
-            ResultSet  rs = db.GetSQL("SELECT LAST_INSERT_ID()");
+            
+        	 DBHandler.RunSQL(nsql);
+            ResultSet  rs = DBHandler.GetSQL("SELECT LAST_INSERT_ID()");
             if (rs.next()){
                n = rs.getString(1);
             }
@@ -564,9 +564,9 @@ public class ExtractBean extends Object implements Serializable {
     public static boolean HasBillingItemsToSubmit() {
       boolean tosubmit = false;
       try {
-         DBHandler db = new DBHandler();
+         
          ResultSet rs =
-         db.GetSQL("SELECT COUNT(billing_no) As `count` FROM billing WHERE status <> 'B' AND billingtype IN ('ICBC', 'WCB', 'MSP')");
+         DBHandler.GetSQL("SELECT COUNT(billing_no) As `count` FROM billing WHERE status <> 'B' AND billingtype IN ('ICBC', 'WCB', 'MSP')");
          tosubmit = rs.next() && 0 < rs.getInt("count");
          rs.close();
       }catch (Exception ex) {

@@ -38,9 +38,9 @@ public class FrmRecordHelp {
     public Properties getFormRecord(String sql) //int demographicNo, int existingID)
             throws SQLException {
         Properties props = new Properties();
-        DBHandler db = new DBHandler();
+        
 
-        ResultSet rs = db.GetSQL(sql);
+        ResultSet rs = DBHandler.GetSQL(sql);
         if (rs.next()) {
             ResultSetMetaData md = rs.getMetaData();
             for (int i = 1; i <= md.getColumnCount(); i++) {
@@ -57,7 +57,7 @@ public class FrmRecordHelp {
                 else if (md.getColumnTypeName(i).equalsIgnoreCase("timestamp"))
                     value = UtilDateUtilities.DateToString(rs.getTimestamp(i), "yyyy/MM/dd HH:mm:ss");
                 else
-                    value = db.getString(rs,i);
+                    value = DBHandler.getString(rs,i);
 
                 if (value != null)
                     props.setProperty(name, value);
@@ -68,9 +68,9 @@ public class FrmRecordHelp {
     }
 
     public synchronized int saveFormRecord(Properties props, String sql) throws SQLException {
-        DBHandler db = new DBHandler();
+        
 
-        ResultSet rs = db.GetSQL(sql, true);
+        ResultSet rs = DBHandler.GetSQL(sql, true);
         rs.moveToInsertRow();
         rs = updateResultSet(props, rs, true);
         rs.insertRow();
@@ -114,7 +114,7 @@ public class FrmRecordHelp {
         } else {
             throw new SQLException("ERROR: Database " + db_type + " unrecognized.");
         }
-        rs = db.GetSQL(sql);
+        rs = DBHandler.GetSQL(sql);
         if (rs.next())
             ret = rs.getInt(1);
         rs.close();
@@ -190,9 +190,9 @@ public class FrmRecordHelp {
 
     //for page form
     public void updateFormRecord(Properties props, String sql) throws SQLException {
-        DBHandler db = new DBHandler();
+        
 
-        ResultSet rs = db.GetSQL(sql, true);
+        ResultSet rs = DBHandler.GetSQL(sql, true);
         //rs.relative(0);
 
         rs = updateResultSet(props, rs, false);
@@ -203,9 +203,9 @@ public class FrmRecordHelp {
 
     public Properties getPrintRecord(String sql) throws SQLException {
         Properties props = new Properties();
-        DBHandler db = new DBHandler();
+        
 
-        ResultSet rs = db.GetSQL(sql);
+        ResultSet rs = DBHandler.GetSQL(sql);
         if (rs.next()) {
             ResultSetMetaData md = rs.getMetaData();
             for (int i = 1; i <= md.getColumnCount(); i++) {
@@ -220,7 +220,7 @@ public class FrmRecordHelp {
                 } else if (md.getColumnTypeName(i).equalsIgnoreCase("date"))
                     value = UtilDateUtilities.DateToString(rs.getDate(i), _dateFormat);
                 else
-                    value = db.getString(rs,i);
+                    value = DBHandler.getString(rs,i);
 
                 if (value != null)
                     props.setProperty(name, value);

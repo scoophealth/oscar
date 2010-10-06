@@ -49,13 +49,13 @@ public class EctTypeDisplayNameBeanHandler {
         
         boolean verdict = true;
         try {
-            DBHandler db = new DBHandler();
+            
             String sql = "SELECT DISTINCT typeDisplayName FROM measurementType";
             MiscUtils.getLogger().debug("Sql Statement: " + sql);
             ResultSet rs;
-            for(rs = db.GetSQL(sql); rs.next(); )
+            for(rs = DBHandler.GetSQL(sql); rs.next(); )
             {
-                EctTypeDisplayNameBean typeDisplayName = new EctTypeDisplayNameBean(db.getString(rs,"typeDisplayName"));
+                EctTypeDisplayNameBean typeDisplayName = new EctTypeDisplayNameBean(DBHandler.getString(rs,"typeDisplayName"));
                 typeDisplayNameVector.add(typeDisplayName);
             }
 
@@ -72,7 +72,7 @@ public class EctTypeDisplayNameBeanHandler {
         
         boolean verdict = true;
         try {
-            DBHandler db = new DBHandler();
+            
             String sql = null;
             if (excludeGroupName){
                 sql = "SELECT DISTINCT typeDisplayName FROM measurementType";  
@@ -82,11 +82,11 @@ public class EctTypeDisplayNameBeanHandler {
                 MiscUtils.getLogger().debug("Sql Statement: " + sqlGr);
                 ResultSet rsGr;
                 
-                for(rs = db.GetSQL(sql); rs.next(); )
+                for(rs = DBHandler.GetSQL(sql); rs.next(); )
                 {
                     boolean foundInGroup = false;
-                    for(rsGr = db.GetSQL(sqlGr); rsGr.next();){                        
-                        if(db.getString(rs,"typeDisplayName").compareTo(rsGr.getString("typeDisplayName"))==0){
+                    for(rsGr = DBHandler.GetSQL(sqlGr); rsGr.next();){                        
+                        if(DBHandler.getString(rs,"typeDisplayName").compareTo(rsGr.getString("typeDisplayName"))==0){
                             foundInGroup = true;
                             break;
                         }
@@ -95,7 +95,7 @@ public class EctTypeDisplayNameBeanHandler {
                         }                                                
                     }
                     if (!foundInGroup){
-                        EctTypeDisplayNameBean typeDisplayName = new EctTypeDisplayNameBean(db.getString(rs,"typeDisplayName"));
+                        EctTypeDisplayNameBean typeDisplayName = new EctTypeDisplayNameBean(DBHandler.getString(rs,"typeDisplayName"));
                         typeDisplayNameVector.add(typeDisplayName);
                     }
                 }
@@ -105,9 +105,9 @@ public class EctTypeDisplayNameBeanHandler {
                 sql = "SELECT typeDisplayName FROM measurementGroup WHERE name='" + groupName +"'";
                 MiscUtils.getLogger().debug("Sql Statement: " + sql);
                 ResultSet rs;
-                for(rs = db.GetSQL(sql); rs.next(); )
+                for(rs = DBHandler.GetSQL(sql); rs.next(); )
                 {
-                    EctTypeDisplayNameBean typeDisplayName = new EctTypeDisplayNameBean(db.getString(rs,"typeDisplayName"));
+                    EctTypeDisplayNameBean typeDisplayName = new EctTypeDisplayNameBean(DBHandler.getString(rs,"typeDisplayName"));
                     typeDisplayNameVector.add(typeDisplayName);
                 }
                 rs.close();

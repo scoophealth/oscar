@@ -142,10 +142,10 @@ public class BillingDocumentErrorReportUploadAction extends Action {
 	 */
 	private void write2Database(String fileName) {
 		try {
-			DBHandler db = new DBHandler();
+			
 			String sql = "INSERT INTO measurementCSSLocation(location) VALUES('" + fileName + "')";
 			MiscUtils.getLogger().debug("Sql Statement: " + sql);
-			db.RunSQL(sql);
+			DBHandler.RunSQL(sql);
 		} catch (SQLException e) {
 			MiscUtils.getLogger().error("Error", e);
 		}
@@ -306,7 +306,7 @@ public class BillingDocumentErrorReportUploadAction extends Action {
 		BillingEDTOBECOutputSpecificationBeanHandler hd = new BillingEDTOBECOutputSpecificationBeanHandler(file);
 		Vector outputSpecVector = hd.getEDTOBECOutputSecifiationBeanVector();
 		try {
-			DBHandler db = new DBHandler();
+			
 
 			for (int i = 0; i < outputSpecVector.size(); i++) {
 				BillingEDTOBECOutputSpecificationBean bean = (BillingEDTOBECOutputSpecificationBean) outputSpecVector
@@ -322,19 +322,19 @@ public class BillingDocumentErrorReportUploadAction extends Action {
 				if (responseCodeNum < 50 || responseCodeNum > 59) {
 
 					String sql = "SELECT * FROM batchEligibility where responseCode='" + responseCode + "'";
-					ResultSet rs = db.GetSQL(sql);
+					ResultSet rs = DBHandler.GetSQL(sql);
 
 					String sqlDemo = "SELECT * FROM demographic WHERE hin='" + hin + "'";
-					ResultSet rsDemo = db.GetSQL(sqlDemo);
+					ResultSet rsDemo = DBHandler.GetSQL(sqlDemo);
 
 					if (rsDemo.next()) {
 						if (rsDemo.getString("ver").compareTo(bean.getVersion()) == 0) {
 							String sqlVer = "UPDATE demographic SET ver ='##' WHERE hin='" + hin + "'";
-							db.RunSQL(sqlVer);
+							DBHandler.RunSQL(sqlVer);
 							String sqlAlert = "SELECT * FROM demographiccust where demographic_no ='"
 									+ rsDemo.getString("demographic_no") + "'";
 							MiscUtils.getLogger().debug("Select Demo sql: " + sqlAlert);
-							ResultSet rsAlert = db.GetSQL(sqlAlert);
+							ResultSet rsAlert = DBHandler.GetSQL(sqlAlert);
 							if (rsAlert.next() && rs.next()) {
 								String newAlert = rsAlert.getString("cust3") + "\n" + "Invalid old version code: "                                                                                
 										+ bean.getVersion() + "\nReason: " + rs.getString("MOHResponse") + "- "
@@ -342,7 +342,7 @@ public class BillingDocumentErrorReportUploadAction extends Action {
 								String newAlertSql = "UPDATE demographiccust SET cust3 = '" + newAlert
 										+ "' where demographic_no='" + rsDemo.getString("demographic_no") + "'";
 								MiscUtils.getLogger().debug("Update alert msg: " + newAlertSql);
-								db.RunSQL(newAlertSql);
+								DBHandler.RunSQL(newAlertSql);
 							}
 							rsAlert.close();
 						}

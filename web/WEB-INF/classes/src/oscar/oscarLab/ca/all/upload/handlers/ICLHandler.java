@@ -55,14 +55,14 @@ public class ICLHandler implements MessageHandler  {
     private void updateLabStatus(int n) throws SQLException {
         Hl7textResultsData data = new Hl7textResultsData();
         String sql = "SELECT lab_no, result_status FROM hl7TextInfo ORDER BY lab_no DESC";
-        DBHandler db = new DBHandler();
         
-        ResultSet rs = db.GetSQL(sql);
+        
+        ResultSet rs = DBHandler.GetSQL(sql);
         while(rs.next() && n > 0){
             
             // only recheck the result status if it is not already set to abnormal
-            if (!db.getString(rs,"result_status").equals("A")){
-                oscar.oscarLab.ca.all.parsers.MessageHandler h = Factory.getHandler(db.getString(rs,"lab_no"));
+            if (!DBHandler.getString(rs,"result_status").equals("A")){
+                oscar.oscarLab.ca.all.parsers.MessageHandler h = Factory.getHandler(DBHandler.getString(rs,"lab_no"));
                 int i=0;
                 int j=0;
                 String resultStatus = "";
@@ -71,8 +71,8 @@ public class ICLHandler implements MessageHandler  {
                     while(resultStatus.equals("") && j < h.getOBXCount(i)){
                         if(h.isOBXAbnormal(i, j)){
                             resultStatus = "A";
-                            sql = "UPDATE hl7TextInfo SET result_status='A' WHERE lab_no='"+db.getString(rs,"lab_no")+"'";
-                            db.RunSQL(sql);
+                            sql = "UPDATE hl7TextInfo SET result_status='A' WHERE lab_no='"+DBHandler.getString(rs,"lab_no")+"'";
+                            DBHandler.RunSQL(sql);
                         }
                         j++;
                     }

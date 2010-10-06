@@ -61,16 +61,16 @@ public class MsgMessengerAdminAction extends Action {
         if (update.equals(oscarR.getString("oscarMessenger.config.MessengerAdmin.btnUpdateGroupMembers"))){
 
            try{
-              DBHandler db = new DBHandler();
+              
               java.sql.ResultSet rs;
               String sql = new String("delete from groupMembers_tbl where groupID = '"+grpNo+"'");
-              db.RunSQL(sql);
+              DBHandler.RunSQL(sql);
               for (int i = 0; i < providers.length ; i++){
                   sql = new String("insert into groupMembers_tbl (groupID,provider_No) values ('"+grpNo+"','"+providers[i]+"')");
-                  db.RunSQL(sql);
+                  DBHandler.RunSQL(sql);
               }
               
-              MsgAddressBookMaker addMake = new MsgAddressBookMaker(db);
+              MsgAddressBookMaker addMake = new MsgAddressBookMaker();
               boolean  res = addMake.updateAddressBook();
            }catch (java.sql.SQLException e){MiscUtils.getLogger().error("Error", e); }
 
@@ -79,18 +79,18 @@ public class MsgMessengerAdminAction extends Action {
         }else if(delete.equals(oscarR.getString("oscarMessenger.config.MessengerAdmin.btnDeleteThisGroup"))){
 
             try{
-                 DBHandler db = new DBHandler();
+                 
                  java.sql.ResultSet rs;
 
                  String sql = new String("select parentID from groups_tbl where groupID = '"+grpNo+"'");
-                 rs = db.GetSQL(sql);
+                 rs = DBHandler.GetSQL(sql);
                  if (rs.next()){
-                     parent =  db.getString(rs,"parentID");
+                     parent =  DBHandler.getString(rs,"parentID");
                  }
 
 
                  sql = new String("select * from groups_tbl where parentID = '"+grpNo+"'");
-                 rs = db.GetSQL(sql);
+                 rs = DBHandler.GetSQL(sql);
 
                  if (rs.next()){
                     request.setAttribute("groupNo",grpNo);
@@ -98,14 +98,14 @@ public class MsgMessengerAdminAction extends Action {
                     return (mapping.findForward("failure"));
                  }else{
                     sql = new String("delete from groupMembers_tbl where groupID = '"+grpNo+"'");
-                    db.RunSQL(sql);
+                    DBHandler.RunSQL(sql);
 
                     sql = new String("delete from groups_tbl where groupID = '"+grpNo+"'");
-                    db.RunSQL(sql);
+                    DBHandler.RunSQL(sql);
 
                  }
               rs.close();
-              MsgAddressBookMaker addMake = new MsgAddressBookMaker(db);
+              MsgAddressBookMaker addMake = new MsgAddressBookMaker();
               boolean res = addMake.updateAddressBook();
            }catch (java.sql.SQLException e){MiscUtils.getLogger().error("Error", e); }
 

@@ -36,21 +36,21 @@ public class FrmMMSERecord  extends FrmRecord {
         Properties props = new Properties();
 
         if(existingID <= 0) {
-			DBHandler db = new DBHandler();
+			
             String sql = "SELECT demographic_no, CONCAT(last_name, ', ', first_name) AS pName, "
                 + "sex, year_of_birth, month_of_birth, date_of_birth "
                 + "FROM demographic WHERE demographic_no = " + demographicNo;
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
 
             if(rs.next()) {
-                java.util.Date dob = UtilDateUtilities.calcDate(db.getString(rs,"year_of_birth"), db.getString(rs,"month_of_birth"), db.getString(rs,"date_of_birth"));
+                java.util.Date dob = UtilDateUtilities.calcDate(DBHandler.getString(rs,"year_of_birth"), DBHandler.getString(rs,"month_of_birth"), DBHandler.getString(rs,"date_of_birth"));
 
-                props.setProperty("demographic_no", db.getString(rs,"demographic_no"));
-                props.setProperty("pName", db.getString(rs,"pName"));
+                props.setProperty("demographic_no", DBHandler.getString(rs,"demographic_no"));
+                props.setProperty("pName", DBHandler.getString(rs,"pName"));
                 props.setProperty("formDate", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                 props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                 //props.setProperty("formEdited", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
-                props.setProperty("sex", db.getString(rs,"sex"));
+                props.setProperty("sex", DBHandler.getString(rs,"sex"));
                 props.setProperty("age", String.valueOf(UtilDateUtilities.calcAge(dob)));
             }
             rs.close();

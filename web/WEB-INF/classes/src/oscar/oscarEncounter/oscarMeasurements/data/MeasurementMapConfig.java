@@ -39,13 +39,13 @@ public class MeasurementMapConfig {
         List ret = new LinkedList();
         String sql = "select distinct lab_type from measurementMap";
         try {
-            DBHandler db = new DBHandler();
+            
             Connection conn = DBHandler.getConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql);
             logger.info(sql);
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
-                ret.add(db.getString(rs, "lab_type"));
+                ret.add(DBHandler.getString(rs, "lab_type"));
             }
             pstmt.close();
         } catch (SQLException e) {
@@ -60,7 +60,7 @@ public class MeasurementMapConfig {
         String sql = "select * from measurementMap where loinc_code = ?";
 
         try {
-            DBHandler db = new DBHandler();
+            
             Connection conn = DBHandler.getConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, loincCode);
@@ -69,11 +69,11 @@ public class MeasurementMapConfig {
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 Hashtable<String, String> ht = new Hashtable();
-                ht.put("id", getString(db.getString(rs, "id")));
-                ht.put("loinc_code", getString(db.getString(rs, "loinc_code")));
-                ht.put("ident_code", getString(db.getString(rs, "ident_code")));
-                ht.put("name", getString(db.getString(rs, "name")));
-                ht.put("lab_type", getString(db.getString(rs, "lab_type")));
+                ht.put("id", getString(DBHandler.getString(rs, "id")));
+                ht.put("loinc_code", getString(DBHandler.getString(rs, "loinc_code")));
+                ht.put("ident_code", getString(DBHandler.getString(rs, "ident_code")));
+                ht.put("name", getString(DBHandler.getString(rs, "name")));
+                ht.put("lab_type", getString(DBHandler.getString(rs, "lab_type")));
                 ret.add(ht);
             }
 
@@ -89,7 +89,7 @@ public class MeasurementMapConfig {
         String sql = "select * from measurementMap where loinc_code = ?";
 
         try {
-            DBHandler db = new DBHandler();
+            
             Connection conn = DBHandler.getConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, loincCode);
@@ -98,12 +98,12 @@ public class MeasurementMapConfig {
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 Hashtable<String, String> ht = new Hashtable();
-                ht.put("id", getString(db.getString(rs, "id")));
-                ht.put("loinc_code", getString(db.getString(rs, "loinc_code")));
-                ht.put("ident_code", getString(db.getString(rs, "ident_code")));
-                ht.put("name", getString(db.getString(rs, "name")));
-                ht.put("lab_type", getString(db.getString(rs, "lab_type")));
-                ret.put(getString(db.getString(rs, "lab_type")), ht);
+                ht.put("id", getString(DBHandler.getString(rs, "id")));
+                ht.put("loinc_code", getString(DBHandler.getString(rs, "loinc_code")));
+                ht.put("ident_code", getString(DBHandler.getString(rs, "ident_code")));
+                ht.put("name", getString(DBHandler.getString(rs, "name")));
+                ht.put("lab_type", getString(DBHandler.getString(rs, "lab_type")));
+                ret.put(getString(DBHandler.getString(rs, "lab_type")), ht);
             }
 
             pstmt.close();
@@ -118,13 +118,13 @@ public class MeasurementMapConfig {
         String sql = "SELECT DISTINCT loinc_code FROM measurementMap ORDER BY name";
 
         try {
-            DBHandler db = new DBHandler();
+            
             Connection conn = DBHandler.getConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql);
             logger.info(sql);
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
-                ret.add(db.getString(rs, "loinc_code"));
+                ret.add(DBHandler.getString(rs, "loinc_code"));
             }
             pstmt.close();
         } catch (SQLException e) {
@@ -135,9 +135,9 @@ public class MeasurementMapConfig {
 
     public String getLoincCodeByIdentCode(String identifier) throws SQLException {
         if (identifier != null && identifier.trim().length() > 0) {
-            DBHandler db = new DBHandler();
+            
             String sql = "SELECT loinc_code FROM measurementMap WHERE ident_code='" + identifier + "'";
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
 
             if (rs.next()) {
                 return rs.getString("loinc_code");
@@ -148,8 +148,8 @@ public class MeasurementMapConfig {
     
     public boolean isTypeMappedToLoinc(String measurementType) throws SQLException {
         String sql = "SELECT mm.id, mm.loinc_code, mm.ident_code, mm.name, mm.lab_type FROM measurementMap mm WHERE ident_code='" + measurementType + "'";
-        DBHandler db = new DBHandler();
-        ResultSet rs = db.GetSQL(sql);
+        
+        ResultSet rs = DBHandler.GetSQL(sql);
         return rs.next();
     }
 
@@ -157,8 +157,8 @@ public class MeasurementMapConfig {
     public LoincMapEntry getLoincMapEntryByIdentCode(String identCode) {
         String sql = "SELECT mm.id, mm.loinc_code, mm.ident_code, mm.name, mm.lab_type FROM measurementMap mm WHERE ident_code='" + identCode + "'";
         try {
-            DBHandler db = new DBHandler();
-            ResultSet rs = db.GetSQL(sql);
+            
+            ResultSet rs = DBHandler.GetSQL(sql);
             if (rs.next()) return rsToLoincMapEntry(rs);
             else return null;
         } catch (SQLException sqe) {
@@ -192,7 +192,7 @@ public class MeasurementMapConfig {
         String sql = "SELECT DISTINCT loinc_code, name FROM measurementMap WHERE loinc_code=ident_code and name like '" + searchString + "' ORDER BY name";
 
         try {
-            DBHandler db = new DBHandler();
+            
             Connection conn = DBHandler.getConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql);
             logger.info(sql);
@@ -200,8 +200,8 @@ public class MeasurementMapConfig {
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 Hashtable ht = new Hashtable();
-                ht.put("code", db.getString(rs, "loinc_code"));
-                ht.put("name", db.getString(rs, "name"));
+                ht.put("code", DBHandler.getString(rs, "loinc_code"));
+                ht.put("name", DBHandler.getString(rs, "name"));
                 ret.add(ht);
             }
 
@@ -220,7 +220,7 @@ public class MeasurementMapConfig {
         String sql = "SELECT DISTINCT * FROM measurementMap WHERE name LIKE '" + searchString + "' ORDER BY name";
 
         try {
-            DBHandler db = new DBHandler();
+            
             Connection conn = DBHandler.getConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql);
             logger.info(sql);
@@ -228,11 +228,11 @@ public class MeasurementMapConfig {
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 Hashtable ht = new Hashtable();
-                ht.put("id", getString(db.getString(rs, "id")));
-                ht.put("loinc_code", getString(db.getString(rs, "loinc_code")));
-                ht.put("ident_code", getString(db.getString(rs, "ident_code")));
-                ht.put("name", getString(db.getString(rs, "name")));
-                ht.put("lab_type", getString(db.getString(rs, "lab_type")));
+                ht.put("id", getString(DBHandler.getString(rs, "id")));
+                ht.put("loinc_code", getString(DBHandler.getString(rs, "loinc_code")));
+                ht.put("ident_code", getString(DBHandler.getString(rs, "ident_code")));
+                ht.put("name", getString(DBHandler.getString(rs, "name")));
+                ht.put("lab_type", getString(DBHandler.getString(rs, "lab_type")));
                 ret.add(ht);
             }
 
@@ -255,7 +255,7 @@ public class MeasurementMapConfig {
                 "AND me1.val NOT IN (SELECT ident_code FROM measurementMap) ORDER BY h.type";
 
         try {
-            DBHandler db = new DBHandler();
+            
             Connection conn = DBHandler.getConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql);
             logger.info(sql);
@@ -263,9 +263,9 @@ public class MeasurementMapConfig {
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 Hashtable ht = new Hashtable();
-                ht.put("type", getString(db.getString(rs, "type")));
-                ht.put("identifier", getString(db.getString(rs, "identifier")));
-                ht.put("name", getString(db.getString(rs, "name")));
+                ht.put("type", getString(DBHandler.getString(rs, "type")));
+                ht.put("identifier", getString(DBHandler.getString(rs, "identifier")));
+                ht.put("name", getString(DBHandler.getString(rs, "name")));
                 ret.add(ht);
             }
 
@@ -281,7 +281,7 @@ public class MeasurementMapConfig {
 
         String sql = "INSERT INTO measurementMap (loinc_code, ident_code, name, lab_type) VALUES ('" + loinc + "', '" + identifier + "', '" + name + "', '" + type + "')";
 
-        DBHandler db = new DBHandler();
+        
         Connection conn = DBHandler.getConnection();
         PreparedStatement pstmt = conn.prepareStatement(sql);
         logger.info(sql);
@@ -298,17 +298,17 @@ public class MeasurementMapConfig {
         String name = "";
         String lab_type = "";
 
-        DBHandler db = new DBHandler();
+        
         Connection conn = DBHandler.getConnection();
 
         String sql = "SELECT * FROM measurementMap WHERE id='" + id + "'";
         PreparedStatement pstmt = conn.prepareStatement(sql);
         ResultSet rs = pstmt.executeQuery();
         if (rs.next()) {
-            ident_code = getString(db.getString(rs, "ident_code"));
-            loinc_code = getString(db.getString(rs, "loinc_code"));
-            name = getString(db.getString(rs, "name"));
-            lab_type = getString(db.getString(rs, "lab_type"));
+            ident_code = getString(DBHandler.getString(rs, "ident_code"));
+            loinc_code = getString(DBHandler.getString(rs, "loinc_code"));
+            name = getString(DBHandler.getString(rs, "name"));
+            lab_type = getString(DBHandler.getString(rs, "lab_type"));
         }
 
         sql = "DELETE FROM measurementMap WHERE id='" + id + "'";
@@ -340,7 +340,7 @@ public class MeasurementMapConfig {
         boolean ret = false;
         String sql = "SELECT * from measurementMap WHERE loinc_code='" + loinc + "' AND lab_type='" + type + "'";
 
-        DBHandler db = new DBHandler();
+        
         Connection conn = DBHandler.getConnection();
         PreparedStatement pstmt = conn.prepareStatement(sql);
         logger.info(sql);

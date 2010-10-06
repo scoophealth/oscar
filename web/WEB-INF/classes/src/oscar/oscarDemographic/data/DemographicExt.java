@@ -85,7 +85,7 @@ public class DemographicExt {
    public String getValueForDemoKey(String demo, String key){
       String retval  = null;
       try {
-            DBHandler db = new DBHandler();
+            
             ResultSet rs;
             String sql = "select value from demographicExt where demographic_no = ? and key_val = ? order by id desc  limit 1";
             
@@ -97,7 +97,7 @@ public class DemographicExt {
             rs = pstmt.executeQuery();
             
             if(rs.next()){
-               retval = db.getString(rs,"value");
+               retval = DBHandler.getString(rs,"value");
             }
                                       
             pstmt.close();
@@ -114,7 +114,7 @@ public class DemographicExt {
    public Hashtable getAllValuesForDemo(String demo){
       Hashtable retval =  new Hashtable();
       try {
-            DBHandler db = new DBHandler();
+            
             ResultSet rs;
                                     
             String sql = "select key_val, value from demographicExt where demographic_no = ? ";
@@ -127,8 +127,8 @@ public class DemographicExt {
             rs = pstmt.executeQuery();
             
             while(rs.next()){
-               String key = db.getString(rs,"key_val");
-               String val = db.getString(rs,"value");
+               String key = DBHandler.getString(rs,"key_val");
+               String val = DBHandler.getString(rs,"value");
                
                MiscUtils.getLogger().debug("for hash Key "+key+" value "+val);
                if(key != null && val != null){

@@ -81,21 +81,21 @@ public class EctFindMeasurementTypeUtil {
         Vector measurementTypeVector = new Vector();
         
         try {
-            DBHandler db = new DBHandler();
+            
             String sql =   "SELECT mf.typeId, mt.type, mt.typeDisplayName, mt.typeDescription, " 
                             + "mt.measuringInstruction, mt.validation"
                             + " FROM measurementForm mf, measurementType mt WHERE mf.formName='" + formName 
                             + "' AND mf.typeId=mt.id";            
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
             while(rs.next()){                                      
                 EctMeasurementTypesBean measurementTypes = new EctMeasurementTypesBean( rs.getInt("typeId"), 
-                                                                                        db.getString(rs,("type"), 
-                                                                                        db.getString(rs,("typeDisplayName"), 
-                                                                                        db.getString(rs,("typeDescription"), 
-                                                                                        db.getString(rs,("measuringInstruction"), 
-                                                                                        db.getString(rs,("validation")); 
+                                                                                        DBHandler.getString(rs,("type"), 
+                                                                                        DBHandler.getString(rs,("typeDisplayName"), 
+                                                                                        DBHandler.getString(rs,("typeDescription"), 
+                                                                                        DBHandler.getString(rs,("measuringInstruction"), 
+                                                                                        DBHandler.getString(rs,("validation")); 
                 measurementTypeVector.add(measurementTypes);                                                       
-                MiscUtils.getLogger().debug("getMeasurementType() type: " + db.getString(rs,("typeId"));
+                MiscUtils.getLogger().debug("getMeasurementType() type: " + DBHandler.getString(rs,("typeId"));
             }
             
             rs.close();            
@@ -133,17 +133,17 @@ public class EctFindMeasurementTypeUtil {
     static public boolean measurementTypeIsFound(EctMeasurementTypesBean mt, String formName){
         boolean verdict = true;
         try {
-            DBHandler db = new DBHandler();
+            
             String sql = "SELECT * from measurementType where type='"+ mt.getType() + "' AND measuringInstruction='"
                          + mt.getMeasuringInstrc() + "'";
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
             if(!rs.next()){   
                 
                 verdict = false;
             }
             /*else{
-                if(!measurementFrmIsAdded(formName, db.getString(rs,("id")))
-                    add2MeasurementForm(formName, db.getString(rs,("id"));
+                if(!measurementFrmIsAdded(formName, DBHandler.getString(rs,("id")))
+                    add2MeasurementForm(formName, DBHandler.getString(rs,("id"));
             }*/
             rs.close();
         }
@@ -157,9 +157,9 @@ public class EctFindMeasurementTypeUtil {
     static public boolean measurementTypeKeyIsFound(EctMeasurementTypesBean mt){
         boolean verdict = true;
         try {
-            DBHandler db = new DBHandler();
+            
             String sql = "SELECT * from measurementType where type='"+ mt.getType() + "' ";
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
             if(!rs.next()){                   
                 verdict = false;
             }
@@ -178,9 +178,9 @@ public class EctFindMeasurementTypeUtil {
         boolean verdict = true;
         try {
 
-            DBHandler db = new DBHandler();
+            
             String sql = "SELECT * FROM measurementForm WHERE formName='" + formName + "' AND typeId='"+typeId+"'";
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
             if(!rs.next()){            
                 verdict = false;
             }
@@ -195,7 +195,7 @@ public class EctFindMeasurementTypeUtil {
     
     static public void addMeasurementType(EctMeasurementTypesBean mt, String formName){
         try{
-            DBHandler db = new DBHandler();
+            
             //Find validation if not found add validation
             Vector validations = mt.getValidationRules();
             if(validations.size()>0){
@@ -208,12 +208,12 @@ public class EctFindMeasurementTypeUtil {
                 String sql ="INSERT INTO measurementType(type, typeDisplayName, typeDescription, measuringInstruction, validation)" +
                             "VALUES('" + mt.getType() + "', '" + mt.getTypeDisplayName() + "', '" + mt.getTypeDesc() + "', '" +
                             mt.getMeasuringInstrc() + "', '" + validationId + "')";
-                db.RunSQL(sql);                
+                DBHandler.RunSQL(sql);                
                 /*sql = "SELECT * FROM measurementType ORDER BY id DESC LIMIT 1";
-                ResultSet rs = db.GetSQL(sql);             
+                ResultSet rs = DBHandler.GetSQL(sql);             
                 if(rs.next()){
-                    if(!measurementFrmIsAdded(formName, db.getString(rs,("id")))
-                        add2MeasurementForm(formName, db.getString(rs,("id"));
+                    if(!measurementFrmIsAdded(formName, DBHandler.getString(rs,("id")))
+                        add2MeasurementForm(formName, DBHandler.getString(rs,("id"));
                 }*/
             }
         }
@@ -227,9 +227,9 @@ public class EctFindMeasurementTypeUtil {
         boolean verdict = true;
         try {
 
-            DBHandler db = new DBHandler();
+            
             String sql = "INSERT INTO measurementForm VALUES('" + formName + "','"+typeId+"')";
-            db.RunSQL(sql);
+            DBHandler.RunSQL(sql);
             
         }
         catch(SQLException e) {

@@ -36,17 +36,17 @@ public class FrmPalliativeCareRecord  extends FrmRecord {
         Properties props = new Properties();
 
         if(existingID <= 0) {
-			DBHandler db = new DBHandler();
+			
             String sql = "SELECT demographic_no, CONCAT(last_name, ', ', first_name) AS pName "
                 + "FROM demographic WHERE demographic_no = " + demographicNo;
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
 
             if(rs.next()) {
-                props.setProperty("demographic_no", db.getString(rs,"demographic_no"));
+                props.setProperty("demographic_no", DBHandler.getString(rs,"demographic_no"));
                 props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                 //props.setProperty("formEdited", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                 props.setProperty("formDate", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
-                props.setProperty("pName", db.getString(rs,"pName"));
+                props.setProperty("pName", DBHandler.getString(rs,"pName"));
             }
             rs.close();
 

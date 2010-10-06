@@ -51,10 +51,10 @@ public class ProviderDAO extends DAO {
 
         sql = sql + " order by first_name, last_name";
 
-        DBHandler db = getDb();
+        
 
         try {
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
             MiscUtils.getLogger().debug("sql " + sql);
             
             Provider provider = new Provider();
@@ -65,9 +65,9 @@ public class ProviderDAO extends DAO {
 
             while (rs.next()) {
                 provider = new Provider();
-                provider.setProviderNo(db.getString(rs,1));
-                provider.setLastName(db.getString(rs,2));
-                provider.setFirstName(db.getString(rs,3));
+                provider.setProviderNo(DBHandler.getString(rs,1));
+                provider.setLastName(DBHandler.getString(rs,2));
+                provider.setFirstName(DBHandler.getString(rs,3));
                 list.add(provider);
             }
         } finally {

@@ -52,7 +52,7 @@ public class WLWaitingListBeanHandler {
         
         boolean verdict = true;
         try {
-            DBHandler db = new DBHandler();
+            
             
             String sql = " SELECT CONCAT(d.last_name, ', ', d.first_name) AS patientName, d.demographic_no, " + 
             			 " d.phone, w.listID, w.position, w.note, w.onListSince FROM waitingList w, demographic d " + 
@@ -61,25 +61,25 @@ public class WLWaitingListBeanHandler {
             log.debug(sql);
             ResultSet rs;      
             String onListSinceDateOnly = "";
-            for(rs = db.GetSQL(sql); rs.next(); )
+            for(rs = DBHandler.GetSQL(sql); rs.next(); )
             {                
-            	onListSinceDateOnly = db.getString(rs,"onListSince").substring(0, 10);//2007-01-01
+            	onListSinceDateOnly = DBHandler.getString(rs,"onListSince").substring(0, 10);//2007-01-01
             	
-                WLPatientWaitingListBean wLBean = new WLPatientWaitingListBean( db.getString(rs,"demographic_no"),
-                                                                                db.getString(rs,"listID"),
-                                                                                db.getString(rs,"position"),
-                                                                                db.getString(rs,"patientName"), 
-                                                                                db.getString(rs,"phone"),
-                                                                                db.getString(rs,"note"),
+                WLPatientWaitingListBean wLBean = new WLPatientWaitingListBean( DBHandler.getString(rs,"demographic_no"),
+                                                                                DBHandler.getString(rs,"listID"),
+                                                                                DBHandler.getString(rs,"position"),
+                                                                                DBHandler.getString(rs,"patientName"), 
+                                                                                DBHandler.getString(rs,"phone"),
+                                                                                DBHandler.getString(rs,"note"),
                                                                                 onListSinceDateOnly);   
                 waitingListArrayList.add(wLBean);
             }                            
             
             sql = "SELECT * FROM waitingListName where ID="+waitingListID + " AND is_history = 'N' ";
             log.debug(sql);
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
             if(rs.next()){
-                waitingListName = db.getString(rs,"name");
+                waitingListName = DBHandler.getString(rs,"name");
             }
             rs.close();
         }
@@ -93,26 +93,26 @@ public class WLWaitingListBeanHandler {
     static public void updateWaitingList(String waitingListID) {
                 
         try {
-            DBHandler db = new DBHandler();
+            
             String sql = " SELECT demographic_no FROM waitingList WHERE listID=" + waitingListID + 
                          " AND is_history = 'N' ";
             log.debug(sql);
             ResultSet rs;
             boolean needUpdate = false;
             //go thru all the patient on the list
-            for(rs = db.GetSQL(sql); rs.next();){
+            for(rs = DBHandler.GetSQL(sql); rs.next();){
                 
                 //check if the patient has an appointment already
                 sql = "select a.demographic_no, a.appointment_date, wl.onListSince from appointment a, waitingList wl where a.appointment_date >= wl.onListSince AND a.demographic_no=wl.demographic_no AND a.demographic_no="
-                      + db.getString(rs,"demographic_no") + "";
+                      + DBHandler.getString(rs,"demographic_no") + "";
                 log.debug(sql);
-                ResultSet rsCheck = db.GetSQL(sql);        
+                ResultSet rsCheck = DBHandler.GetSQL(sql);        
                 
                 if(rsCheck.next())
                 {                
                     //delete patient from the waitingList
 
-                	WLWaitingListUtil.removeFromWaitingList(waitingListID, db.getString(rs,"demographic_no"));
+                	WLWaitingListUtil.removeFromWaitingList(waitingListID, DBHandler.getString(rs,"demographic_no"));
                     needUpdate = true;
                 }
                 rsCheck.close();
@@ -123,14 +123,14 @@ public class WLWaitingListBeanHandler {
                 sql = " SELECT * FROM waitingList WHERE listID=" + waitingListID + "  AND is_history = 'N' ORDER BY onListSince";
                 log.debug(sql);
                 int i=1;            
-                for(rs = db.GetSQL(sql); rs.next();){                    
+                for(rs = DBHandler.GetSQL(sql); rs.next();){                    
                     sql =   " UPDATE waitingList SET position="+ i + 
                     		" WHERE listID=" + waitingListID + 
-                            " AND demographic_no=" + db.getString(rs,"demographic_no") +
+                            " AND demographic_no=" + DBHandler.getString(rs,"demographic_no") +
                             " AND is_history = 'N' ";
 
                     log.debug(sql);
-                    db.RunSQL(sql);
+                    DBHandler.RunSQL(sql);
                     i++;
                 }                            
                 rs.close();

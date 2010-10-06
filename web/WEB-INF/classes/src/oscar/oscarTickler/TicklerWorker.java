@@ -60,13 +60,13 @@ public class TicklerWorker extends Thread {
 
         try {
             TicklerData td = new TicklerData();
-            DBHandler db = new DBHandler();
+            
             String sql = "select * from consultationRequests where to_days(now()) - to_days(referalDate) > 14 and status = '1' and providerNo = '" + provider + "' ";
 
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
             while (rs.next()) {
-                String demo = db.getString(rs,"demographicNo");
-                String date = db.getString(rs,"referalDate");
+                String demo = DBHandler.getString(rs,"demographicNo");
+                String date = DBHandler.getString(rs,"referalDate");
 
                 ticklerMessage = DemographicNameAgeString.getInstance().getNameAgeString(demo) + " has an Consultation Request with a status of 'Nothing Done'. Referral Date was " + date;
                 if (!td.hasTickler(demo, provider, ticklerMessage)) {

@@ -20,7 +20,8 @@
 		url = "demo_select.jsp?keyword=" + keyword + "&postTo=" + postTo + (column.equals("")? "" : "&column=" + column),
 		sql = query.replaceAll("@keyword", keyword).replaceAll("@orderby", orderby).replaceAll("@startLimit", startLimit).replaceAll("@column", column);
 %>
-<html>
+
+<%@page import="oscar.oscarDB.DBHandler"%><html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>OSCAR Patient Search</title>
@@ -79,21 +80,20 @@ function PopupReturn(index){
 			href="<%=url%>&orderby=patient_status">Status</a></td>
 	</tr>
 	<%
-	oscar.oscarDB.DBHandler db = new oscar.oscarDB.DBHandler();
-	java.sql.ResultSet rs = db.GetSQL(sql);
+	java.sql.ResultSet rs = DBHandler.GetSQL(sql);
 	boolean other = true;
 	int count = 0;
 	while (rs.next()){
 %>
 	<tr class="<%=(other? "LightBG" : "WhiteBG")%>">
 		<td class="Text" align="center"><a
-			href="javascript:PopupReturn('<%=db.getString(rs,"demographic_no")%>')"><%=db.getString(rs,"demographic_no")%></a></td>
-		<td class="Text"><%=oscar.Misc.toUpperLowerCase(db.getString(rs,"last_name"))%></td>
-		<td class="Text"><%=oscar.Misc.toUpperLowerCase(db.getString(rs,"first_name"))%></td>
-		<td class="Text" align="center"><%=oscar.Misc.check(db.getString(rs,"chart_no"), "")%></td>
-		<td class="Text" align="center"><%=oscar.Misc.check(db.getString(rs,"sex"), "")%></td>
-		<td class="Text" align="center" nowrap><%=db.getString(rs,"year_of_birth")+"-"+db.getString(rs,"month_of_birth")+"-"+db.getString(rs,"date_of_birth")%></td>
-		<td class="Text" align="center"><%=oscar.Misc.check(db.getString(rs,"patient_status"), "")%></td>
+			href="javascript:PopupReturn('<%=DBHandler.getString(rs,"demographic_no")%>')"><%=DBHandler.getString(rs,"demographic_no")%></a></td>
+		<td class="Text"><%=oscar.Misc.toUpperLowerCase(DBHandler.getString(rs,"last_name"))%></td>
+		<td class="Text"><%=oscar.Misc.toUpperLowerCase(DBHandler.getString(rs,"first_name"))%></td>
+		<td class="Text" align="center"><%=oscar.Misc.check(DBHandler.getString(rs,"chart_no"), "")%></td>
+		<td class="Text" align="center"><%=oscar.Misc.check(DBHandler.getString(rs,"sex"), "")%></td>
+		<td class="Text" align="center" nowrap><%=DBHandler.getString(rs,"year_of_birth")+"-"+DBHandler.getString(rs,"month_of_birth")+"-"+DBHandler.getString(rs,"date_of_birth")%></td>
+		<td class="Text" align="center"><%=oscar.Misc.check(DBHandler.getString(rs,"patient_status"), "")%></td>
 	</tr>
 	<%
 		count++;

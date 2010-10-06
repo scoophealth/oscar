@@ -479,12 +479,12 @@ public class EFormUtil {
 
 	public static void addEFormToGroup(String groupName, String fid) {
 		try {
-			DBHandler db = new DBHandler();
+			
 			String sql1 = "SELECT eform_groups.fid FROM eform_groups, eform WHERE eform_groups.fid=" + fid + " AND eform_groups.fid=eform.fid AND eform.status=1 AND eform_groups.group_name='" + groupName + "'";
-			ResultSet rs = db.GetSQL(sql1);
+			ResultSet rs = DBHandler.GetSQL(sql1);
 			if (!rs.next()) {
 				String sql = "INSERT INTO eform_groups (fid, group_name) " + "VALUES (" + fid + ", '" + groupName + "')";
-				db.RunSQL(sql);
+				DBHandler.RunSQL(sql);
 			}
 		} catch (SQLException sqe) {
 			logger.error("Error", sqe);
@@ -675,8 +675,8 @@ public class EFormUtil {
 	// ------------------private
 	private static void runSQL(String sql) {
 		try {
-			DBHandler db = new DBHandler();
-			db.RunSQL(sql);
+			
+			DBHandler.RunSQL(sql);
 		} catch (SQLException sqe) {
 			logger.error("Error", sqe);
 		}
@@ -684,10 +684,10 @@ public class EFormUtil {
 
 	private static String runSQLinsert(String sql) {
 		try {
-			DBHandler db = new DBHandler();
-			db.RunSQL(sql);
+			
+			DBHandler.RunSQL(sql);
 			sql = "SELECT LAST_INSERT_ID()";
-			ResultSet rs = db.GetSQL(sql);
+			ResultSet rs = DBHandler.GetSQL(sql);
 			rs.next();
 			String lastID = oscar.Misc.getString(rs, "LAST_INSERT_ID()");
 			rs.close();
@@ -701,8 +701,8 @@ public class EFormUtil {
 	private static ResultSet getSQL(String sql) {
 		ResultSet rs = null;
 		try {
-			DBHandler db = new DBHandler();
-			rs = db.GetSQL(sql);
+			
+			rs = DBHandler.GetSQL(sql);
 		} catch (SQLException sqe) {
 			logger.error("Error", sqe);
 		}

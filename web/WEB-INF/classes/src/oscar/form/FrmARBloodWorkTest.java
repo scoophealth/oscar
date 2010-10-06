@@ -38,13 +38,11 @@ public class FrmARBloodWorkTest {
 	
 	public FrmARBloodWorkTest(int demographicNo, int formId){
 		
-		DBHandler db = null;
 		ResultSet rs = null;
 
         if(demographicNo > 0  &&  formId >= 0) {
         	
         	try{
-				db = new DBHandler();
 				
 	            String sql = " SELECT pg1_labHb, pg1_labMCV, pg1_labABO, pg1_labRh, pg1_labAntiScr, " + 
 	                         " pg1_labRubella, pg1_labHBsAg, pg1_labVDRL, pg1_labHIV  FROM formONAR " + 
@@ -52,7 +50,7 @@ public class FrmARBloodWorkTest {
 	                         " AND ID=" + formId;
 	            
 	            
-	            rs = db.GetSQL(sql);
+	            rs = DBHandler.GetSQL(sql);
 	            
 	            if(rs.next()) {//only retrieve the first record
 

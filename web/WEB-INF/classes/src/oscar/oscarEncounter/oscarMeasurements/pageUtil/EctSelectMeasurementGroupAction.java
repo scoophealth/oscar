@@ -88,12 +88,12 @@ public class EctSelectMeasurementGroupAction extends Action {
     private void deleteGroup(String inputGroupName){
         
         try {
-            DBHandler db = new DBHandler();
+            
             String sql = "DELETE FROM measurementGroupStyle WHERE groupName='" + inputGroupName + "'";
             MiscUtils.getLogger().debug("Sql Statement: " + sql);
-            db.RunSQL(sql);            
+            DBHandler.RunSQL(sql);            
             sql = "DELETE FROM measurementGroup WHERE name='" + inputGroupName + "'";
-            db.RunSQL(sql);
+            DBHandler.RunSQL(sql);
         }
         catch(SQLException e) {
             MiscUtils.getLogger().error("Error", e);            

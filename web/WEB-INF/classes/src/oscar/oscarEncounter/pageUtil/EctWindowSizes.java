@@ -49,16 +49,16 @@ public class EctWindowSizes {
         
         try {
 
-            DBHandler db = new DBHandler();
+            
             String sql = "select * from encounterWindow where provider_no='"+provNo+"'";
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
             
             rs.next(); // we WANT this to throw an exception if there is no corresponding row in the DB
             
-            props.setProperty("rowOneSize", db.getString(rs,"rowOneSize"));
-            props.setProperty("rowTwoSize", db.getString(rs,"rowTwoSize"));
-            props.setProperty("rowThreeSize", db.getString(rs,"rowThreeSize"));
-            props.setProperty("presBoxSize", db.getString(rs,"presBoxSize"));                                       
+            props.setProperty("rowOneSize", DBHandler.getString(rs,"rowOneSize"));
+            props.setProperty("rowTwoSize", DBHandler.getString(rs,"rowTwoSize"));
+            props.setProperty("rowThreeSize", DBHandler.getString(rs,"rowThreeSize"));
+            props.setProperty("presBoxSize", DBHandler.getString(rs,"presBoxSize"));                                       
             rs.close();
         } catch (Exception e) {
             //MiscUtils.getLogger().error("Error", e);

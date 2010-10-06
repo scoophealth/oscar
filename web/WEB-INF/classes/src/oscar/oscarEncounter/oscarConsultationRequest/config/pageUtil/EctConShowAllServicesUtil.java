@@ -41,9 +41,9 @@ public class EctConShowAllServicesUtil
         serviceDescVec = new Vector();
         try
         {
-            DBHandler db = new DBHandler();
+            
             String sql = "select * from consultationServices where active = '1' order by serviceDesc";
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
             while(rs.next()) {
               serviceDescVec.add(rs.getString("serviceDesc"));
               serviceIdVec.add(rs.getString("serviceId"));

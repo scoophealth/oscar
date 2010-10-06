@@ -68,8 +68,8 @@ public class UnusedMinutesReporter implements Reporter{
         booked = unbooked = 0;
         
         try {
-            DBHandler db = new DBHandler();
-            rs = db.GetSQL(scheduleSQL);
+            
+            rs = DBHandler.GetSQL(scheduleSQL);
             int duration;
             String timecodes, code;
             String schedDate, tmpApptSQL;           
@@ -86,7 +86,7 @@ public class UnusedMinutesReporter implements Reporter{
                 schedDate = rs.getString("sdate");
                 tmpApptSQL = apptSQL + schedDate + "' order by start_time asc";
 
-                rs2 = db.GetSQL(tmpApptSQL);
+                rs2 = DBHandler.GetSQL(tmpApptSQL);
                 codePos = 0;
                 latestApptHour = latestApptMin = 0;
                 for(int iTotalMin = 0; iTotalMin < dayMins; iTotalMin+=duration) {

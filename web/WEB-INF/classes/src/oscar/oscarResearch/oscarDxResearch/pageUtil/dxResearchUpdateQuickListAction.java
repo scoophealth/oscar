@@ -59,7 +59,7 @@ public class dxResearchUpdateQuickListAction extends Action {
         try{
             
             
-            DBHandler db = new DBHandler();            
+                        
             String sql;
             
             if(forward.equals("add")){
@@ -79,7 +79,7 @@ public class dxResearchUpdateQuickListAction extends Action {
                         //need to validate the dxresearch code before write to the database
                         sql = "select * from "+codingSystem+" where "+codingSystem+" like '" + xml_research[i] +"'";
                         
-                        ResultSet rsCode = db.GetSQL(sql);
+                        ResultSet rsCode = DBHandler.GetSQL(sql);
 
                         if(!rsCode.next() || rsCode==null){
                             valid = false;
@@ -89,11 +89,11 @@ public class dxResearchUpdateQuickListAction extends Action {
                         }
                         else{
                             sql = "select * from quickList where quickListName = '" + quickListName + "' AND dxResearchCode='"+xml_research[i]+"' AND codingSystem='"+codingSystem+"'";
-                            ResultSet rs = db.GetSQL(sql);                            
+                            ResultSet rs = DBHandler.GetSQL(sql);                            
                             if(!rs.next()){                                                            
                                 sql = "insert into quickList (quickListName, dxResearchCode, createdByProvider, codingSystem) values('"
                                         + quickListName +"','" + xml_research[i] + "','" + curUser +"', '"+codingSystem+"')";
-                                db.RunSQL(sql);
+                                DBHandler.RunSQL(sql);
                             }
                         }
                         
@@ -107,7 +107,7 @@ public class dxResearchUpdateQuickListAction extends Action {
                     for(int i=0; i<removedItems.length; i++){
                         itemValues = removedItems[i].split(",");
                         sql = "Delete from quickList where quickListName = '"+ quickListName + "' AND dxResearchCode = '"+itemValues[1]+"' AND codingSystem = '" + itemValues[0] + "'";
-                        db.RunSQL(sql);
+                        DBHandler.RunSQL(sql);
                     }
                 }
             }

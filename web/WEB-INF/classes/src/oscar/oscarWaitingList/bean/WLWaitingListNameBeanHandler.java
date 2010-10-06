@@ -48,21 +48,21 @@ public class WLWaitingListNameBeanHandler {
         
         boolean verdict = true;
         try {
-            DBHandler db = new DBHandler();
+            
             
             String sql = " SELECT * FROM waitingListName WHERE group_no='" + groupNo + "' " +
                          " AND is_history='N' order by `name` asc";
             ResultSet rs;
             
-            for(rs = db.GetSQL(sql); rs.next(); )
+            for(rs = DBHandler.GetSQL(sql); rs.next(); )
             {                
-                WLWaitingListNameBean wLBean = new WLWaitingListNameBean(   db.getString(rs,"ID"),
-                                                                            db.getString(rs,"name"),
-                                                                            db.getString(rs,"group_no"),
-                                                                            db.getString(rs,"provider_no"),
-                                                                            db.getString(rs,"create_date"));                   
+                WLWaitingListNameBean wLBean = new WLWaitingListNameBean(   DBHandler.getString(rs,"ID"),
+                                                                            DBHandler.getString(rs,"name"),
+                                                                            DBHandler.getString(rs,"group_no"),
+                                                                            DBHandler.getString(rs,"provider_no"),
+                                                                            DBHandler.getString(rs,"create_date"));                   
                 waitingListNameList.add(wLBean);
-                waitingListNames.add(db.getString(rs,"name"));
+                waitingListNames.add(DBHandler.getString(rs,"name"));
             }                            
             rs.close();
         }

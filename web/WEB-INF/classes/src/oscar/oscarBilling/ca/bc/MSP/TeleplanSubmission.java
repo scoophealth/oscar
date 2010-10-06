@@ -193,8 +193,8 @@ public class TeleplanSubmission {
     private void markListAsBilled(List list){
         String query = "update billing set status = 'B' where billing_no in ("+ StringUtils.getCSV(list) +")"; 
         try {             
-           DBHandler dbhandler = new DBHandler();
-           dbhandler.RunSQL(query);
+           
+        	DBHandler.RunSQL(query);
         }catch (SQLException sqlexception) {
            MiscUtils.getLogger().debug(sqlexception.getMessage());
         }

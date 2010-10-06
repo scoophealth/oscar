@@ -53,15 +53,15 @@ public class dxResearchUpdateAction extends Action {
         String nowDate = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy/MM/dd"); 
         
         try{
-            DBHandler db = new DBHandler();            
+                        
             String sql = "";
             if (status.equals("C")){
                 sql = "update dxresearch set update_date='"+nowDate + "', status='C' where dxresearch_no='"+did+"'";
-                db.RunSQL(sql);
+                DBHandler.RunSQL(sql);
             }
             else if (status.equals("D")){
                 sql = "update dxresearch set update_date='"+nowDate + "', status='D' where dxresearch_no='"+did+"'";
-                db.RunSQL(sql);
+                DBHandler.RunSQL(sql);
             }
         }
 

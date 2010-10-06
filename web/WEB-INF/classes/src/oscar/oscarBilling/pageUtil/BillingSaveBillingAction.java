@@ -81,8 +81,8 @@ public class BillingSaveBillingAction
         "' where appointment_no='" + bean.getApptNo() + "'";
 
     try {
-      DBHandler db = new DBHandler();
-      db.RunSQL(sql);
+      
+      DBHandler.RunSQL(sql);
 
     }
     catch (SQLException e) {
@@ -99,9 +99,9 @@ public class BillingSaveBillingAction
         bean.getBillingPracNo() + "','" + bean.getApptProviderNo() + "','" +
         bean.getCreator() + "')";
     try {
-      DBHandler db = new DBHandler();
-      db.RunSQL(sql);
-      rs = db.GetSQL("SELECT LAST_INSERT_ID()");
+      
+      DBHandler.RunSQL(sql);
+      rs = DBHandler.GetSQL("SELECT LAST_INSERT_ID()");
 
       if (rs.next()) {
         billingid = rs.getString(1);
@@ -220,9 +220,9 @@ public class BillingSaveBillingAction
               + "'')";
           try {
 
-            DBHandler db = new DBHandler();
-            db.RunSQL(sql);
-            rs = db.GetSQL("SELECT LAST_INSERT_ID()");
+            
+            DBHandler.RunSQL(sql);
+            rs = DBHandler.GetSQL("SELECT LAST_INSERT_ID()");
 
             /**
              * @todo Don't forget to verify that this is the correct billingmaster_no
@@ -290,9 +290,9 @@ public class BillingSaveBillingAction
               "', '', '', '" + bean.getPatientPostal() + "')";
 
           try {
-            DBHandler db = new DBHandler();
-            db.RunSQL(sql);
-            rs = db.GetSQL("SELECT LAST_INSERT_ID()");
+            
+            DBHandler.RunSQL(sql);
+            rs = DBHandler.GetSQL("SELECT LAST_INSERT_ID()");
             /**
              * @todo Don't forget to verify that this is the correct billingmaster_no
              */

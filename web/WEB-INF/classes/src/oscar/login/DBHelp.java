@@ -36,8 +36,8 @@ public final class DBHelp {
     public static ResultSet searchDBRecord(String sql) throws SQLException {
         ResultSet ret = null;
         try {
-        	DBHandler db = new DBHandler();
-            ret = db.GetSQL(sql);
+        	
+            ret = DBHandler.GetSQL(sql);
         } catch (SQLException e) {
             logger.error("Error", e);
         }

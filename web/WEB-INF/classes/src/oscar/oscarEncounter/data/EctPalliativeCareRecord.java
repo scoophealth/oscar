@@ -39,7 +39,7 @@ public class EctPalliativeCareRecord
     {
         Properties props = new Properties();
 
-        DBHandler db = new DBHandler();
+        
         ResultSet rs;
         String sql;
 
@@ -48,15 +48,15 @@ public class EctPalliativeCareRecord
             sql = "SELECT demographic_no, CONCAT(last_name, ', ', first_name) AS pName "
                 + "FROM demographic WHERE demographic_no = " + demographicNo;
 
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
 
             if(rs.next())
             {
-                props.setProperty("demographic_no", db.getString(rs,"demographic_no"));
+                props.setProperty("demographic_no", DBHandler.getString(rs,"demographic_no"));
                 props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                 props.setProperty("formEdited", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                 props.setProperty("formDate", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
-                props.setProperty("pName", db.getString(rs,"pName"));
+                props.setProperty("pName", DBHandler.getString(rs,"pName"));
             }
 
             rs.close();
@@ -65,7 +65,7 @@ public class EctPalliativeCareRecord
         {
             sql = "SELECT * FROM formPalliativeCare WHERE demographic_no = " + demographicNo + " AND ID = " + existingID;
 
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
 
             if(rs.next())
             {
@@ -96,7 +96,7 @@ public class EctPalliativeCareRecord
                         }
                         else
                         {
-                            value = db.getString(rs,i);
+                            value = DBHandler.getString(rs,i);
                         }
                     }
 
@@ -114,9 +114,9 @@ public class EctPalliativeCareRecord
     public int savePalliativeCareRecord(Properties props) throws SQLException   {
         String demographic_no = props.getProperty("demographic_no");
 
-        DBHandler db = new DBHandler();
+        
         String sql="SELECT * FROM formPalliativeCare WHERE demographic_no=" + demographic_no + " AND ID=0";
-        ResultSet rs = db.GetSQL(sql, true);
+        ResultSet rs = DBHandler.GetSQL(sql, true);
 
         rs.moveToInsertRow();
 
@@ -197,7 +197,7 @@ public class EctPalliativeCareRecord
         int ret = 0;
 
         sql = "SELECT LAST_INSERT_ID()";
-        rs = db.GetSQL(sql);
+        rs = DBHandler.GetSQL(sql);
         if(rs.next())
         {
             ret = rs.getInt(1);

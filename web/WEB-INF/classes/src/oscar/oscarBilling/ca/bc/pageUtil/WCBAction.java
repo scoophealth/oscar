@@ -143,10 +143,10 @@ public final class WCBAction extends Action {
     
     MiscUtils.getLogger().debug("WOULD BE A GOOD TIME TO SAVE---  i still get called WCB ACTION");  
       
-//    DBHandler db = null;
+//    
 //    try {
-//      db = new DBHandler();
-//      db.RunSQL(frm.SQL("0", "0"));
+//      
+//      DBHandler.RunSQL(frm.SQL("0", "0"));
 //      List idList = SqlUtils.getQueryResultsList("SELECT max(ID) from wcb");
 //      if(idList!=null){
 //        String[] id = (String[])idList.get(0);

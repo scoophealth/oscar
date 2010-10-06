@@ -37,13 +37,13 @@ public class EctAlphaRecord {
     public Properties getAlphaRecord(int demographicNo, int existingID)
         throws SQLException  {
         Properties props = new Properties();
-        DBHandler db = new DBHandler();
+        
         if(existingID <= 0) {
             String sql = "SELECT demographic_no, CONCAT(last_name, ', ', first_name) AS pName FROM demographic WHERE demographic_no = " +demographicNo ;
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
             if(rs.next()) {
-                props.setProperty("demographic_no", db.getString(rs,"demographic_no"));
-                props.setProperty("pName", db.getString(rs,"pName"));
+                props.setProperty("demographic_no", DBHandler.getString(rs,"demographic_no"));
+                props.setProperty("pName", DBHandler.getString(rs,"pName"));
                 props.setProperty("formDate", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                 props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                 props.setProperty("formEdited", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
@@ -51,7 +51,7 @@ public class EctAlphaRecord {
             rs.close();
         } else {
             String sql = "SELECT * FROM formAlpha WHERE demographic_no = " +demographicNo +" AND ID = " +existingID;
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
             if(rs.next()) {
                 ResultSetMetaData md = rs.getMetaData();
                 for(int i = 1; i <= md.getColumnCount(); i++)  {
@@ -65,7 +65,7 @@ public class EctAlphaRecord {
                     } else if(md.getColumnTypeName(i).equalsIgnoreCase("date"))
                         value = UtilDateUtilities.DateToString(rs.getDate(i), "yyyy/MM/dd");
                     else
-                        value = db.getString(rs,i);
+                        value = DBHandler.getString(rs,i);
                     if(value != null)
                         props.setProperty(name, value);
                 }
@@ -78,9 +78,9 @@ public class EctAlphaRecord {
 
     public int saveAlphaRecord(Properties props)  throws SQLException  {
         String demographic_no = props.getProperty("demographic_no");
-        DBHandler db = new DBHandler();
+        
         String sql = "SELECT * FROM formAlpha WHERE demographic_no=" +demographic_no +" AND ID=0";
-        ResultSet rs = db.GetSQL(sql, true);
+        ResultSet rs = DBHandler.GetSQL(sql, true);
         rs.moveToInsertRow();
         ResultSetMetaData md = rs.getMetaData();
         for(int i = 1; i <= md.getColumnCount(); i++)  {
@@ -123,7 +123,7 @@ public class EctAlphaRecord {
         rs.close();
         int ret = 0;
         sql = "SELECT LAST_INSERT_ID()";
-        rs = db.GetSQL(sql);
+        rs = DBHandler.GetSQL(sql);
         if(rs.next())
             ret = rs.getInt(1);
         rs.close();
@@ -132,9 +132,9 @@ public class EctAlphaRecord {
 
     public Properties getAlphaPrintRecord(int demographicNo, int existingID) throws SQLException  {
         Properties props = new Properties();
-        DBHandler db = new DBHandler();
+        
         String sql = "SELECT * FROM formAlpha WHERE demographic_no = " +demographicNo +" AND ID = " +existingID ;
-        ResultSet rs = db.GetSQL(sql);
+        ResultSet rs = DBHandler.GetSQL(sql);
         if(rs.next())  {
             ResultSetMetaData md = rs.getMetaData();
             for(int i = 1; i <= md.getColumnCount(); i++)  {
@@ -148,7 +148,7 @@ public class EctAlphaRecord {
                 } else if(md.getColumnTypeName(i).equalsIgnoreCase("date"))
                     value = UtilDateUtilities.DateToString(rs.getDate(i), "yyyy/MM/dd");
                 else
-                    value = db.getString(rs,i);
+                    value = DBHandler.getString(rs,i);
                 if(value != null)
                     props.setProperty(name, value);
             }

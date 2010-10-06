@@ -54,10 +54,10 @@ public class TicklerCreator {
       String sql = "insert into tickler (demographic_no, message, status, update_date, service_date, creator, priority, task_assigned_to) " +
           " values(" + demoNo + " ,'" + message + "','A',now(),'" + nowDate +
           "','" + provNo + "','4','" + provNo + "')";
-      DBHandler db = null;
+      
       try {
-        db = new DBHandler();
-        db.RunSQL(sql);
+        
+        DBHandler.RunSQL(sql);
       }
       catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
       }
@@ -76,11 +76,11 @@ public class TicklerCreator {
     String sql = "select * from tickler where demographic_no = " + demoNo +
         " and message = '" + message + "'" +
         " and status = 'A'";
-    DBHandler db = null;
+    
     ResultSet rs = null;
     try {
-      db = new DBHandler();
-      rs = db.GetSQL(sql);
+      
+      rs = DBHandler.GetSQL(sql);
       return rs.next();
     }
     catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
@@ -101,10 +101,10 @@ public class TicklerCreator {
         demoNo + "'" +
         " and message like '%" + remString + "%'" +
         " and status = 'A'";
-    DBHandler db = null;
+    
     try {
-      db = new DBHandler();
-      db.RunSQL(sql);
+      
+      DBHandler.RunSQL(sql);
     }
     catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
     }
@@ -127,11 +127,11 @@ public class TicklerCreator {
     qry += cdmPatientNos.size()==0 ? "0" : "";
 
     qry += ") and message like '%" + remString + "%' and status = 'A'";
-    DBHandler db = null;
+    
 
     try {
-      db = new DBHandler();
-      db.RunSQL(qry);
+      
+      DBHandler.RunSQL(qry);
     }
     catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
     }

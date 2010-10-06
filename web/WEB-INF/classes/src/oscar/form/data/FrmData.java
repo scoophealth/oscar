@@ -94,12 +94,12 @@ public class FrmData {
     public PatientForm[] getPatientForms(String demoNo, String table) throws SQLException {
         ArrayList forms = new ArrayList();
 
-        DBHandler db = new DBHandler();
+        
         String sql = "SELECT ID, demographic_no, formCreated, formEdited FROM " + table
                     + " WHERE demographic_no=" + demoNo + " ORDER BY ID DESC";
-        ResultSet rs = db.GetSQL(sql);
+        ResultSet rs = DBHandler.GetSQL(sql);
         while(rs.next()) {
-            PatientForm frm = new PatientForm(db.getString(rs,"ID"), db.getString(rs,"demographic_no"),
+            PatientForm frm = new PatientForm(DBHandler.getString(rs,"ID"), DBHandler.getString(rs,"demographic_no"),
                                 UtilDateUtilities.DateToString(rs.getDate("formCreated"), "yy/MM/dd"), UtilDateUtilities.DateToString(rs.getDate("formEdited"), "yy/MM/dd"));
             forms.add(frm);
         }
@@ -113,19 +113,19 @@ public class FrmData {
     public PatientForm getCurrentPatientForm(String demoNo, String studyNo) throws SQLException {
         PatientForm frm = null;
 
-        DBHandler db = new DBHandler();
+        
         String sql = "SELECT e.form_table from encounterForm e, study s where e.form_name = s.form_name and s.study_no = " + studyNo;
         String table = "";
-        ResultSet rs = db.GetSQL(sql);
+        ResultSet rs = DBHandler.GetSQL(sql);
         while(rs.next()) {
-            table = db.getString(rs,"form_table");
+            table = DBHandler.getString(rs,"form_table");
         }
         rs = null;
 
         sql = "SELECT ID, demographic_no, formCreated, formEdited FROM " + table + " WHERE demographic_no=" + demoNo + " ORDER BY ID DESC limit 0,1";
-        rs = db.GetSQL(sql);
+        rs = DBHandler.GetSQL(sql);
         while(rs.next()) {
-            frm = new PatientForm(db.getString(rs,"ID"), db.getString(rs,"demographic_no"),
+            frm = new PatientForm(DBHandler.getString(rs,"ID"), DBHandler.getString(rs,"demographic_no"),
                                 UtilDateUtilities.DateToString(rs.getDate("formCreated"), "yy/MM/dd"), UtilDateUtilities.DateToString(rs.getDate("formEdited"), "yy/MM/dd"));
         }
 
@@ -136,12 +136,12 @@ public class FrmData {
     public String[] getStudyNameLink(String studyNo) throws java.sql.SQLException {
         String[] ret = new String[2];
 
-        DBHandler db = new DBHandler();
+        
         String sql = "SELECT study_name, study_link FROM study WHERE study_no=" + studyNo;
-        ResultSet rs = db.GetSQL(sql);
+        ResultSet rs = DBHandler.GetSQL(sql);
         while(rs.next()) {
-            ret[0] = db.getString(rs,"study_name");
-            ret[1] = db.getString(rs,"study_link");
+            ret[0] = DBHandler.getString(rs,"study_name");
+            ret[1] = DBHandler.getString(rs,"study_link");
         }
 
         rs.close();
@@ -162,7 +162,7 @@ public class FrmData {
             table = encounterForm.getFormTable();
 		}
 
-        DBHandler db = new DBHandler();
+        
         String sql;
         ResultSet rs;
         
@@ -172,9 +172,9 @@ public class FrmData {
             if (searchFormName.equals("AR1")) searchFormName = "ar1_99_12"; // quick hack for ease of migration from old forms to new
             if (searchFormName.equals("AR2")) searchFormName = "ar2_99_08"; // ditto
             sql = "SELECT form_no FROM " + table + " WHERE demographic_no=" + demoNo +" AND form_name='" + searchFormName + "' order by form_no desc limit 0,1";
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
             while(rs.next()) {
-                ret[1] = db.getString(rs,"form_no");
+                ret[1] = DBHandler.getString(rs,"form_no");
             }
             String[] xmlForm = (String[]) ret.clone();
              
@@ -253,9 +253,9 @@ public class FrmData {
 //            }
         } else {
             sql = "SELECT ID FROM " + table + " WHERE demographic_no=" + demoNo +" order by formEdited desc limit 0,1";
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
             while(rs.next()) {
-                ret[1] = db.getString(rs,"ID");
+                ret[1] = DBHandler.getString(rs,"ID");
             }
         }
 
@@ -267,11 +267,11 @@ public class FrmData {
     public String getResource() throws java.sql.SQLException {
         String ret = "";
 
-        DBHandler db = new DBHandler();
+        
         String sql = "SELECT value FROM property WHERE name='resource'";
-        ResultSet rs = db.GetSQL(sql);
+        ResultSet rs = DBHandler.GetSQL(sql);
         while(rs.next()) {
-            ret = db.getString(rs,"value");
+            ret = DBHandler.getString(rs,"value");
         }
 
         rs.close();
@@ -284,11 +284,11 @@ public class FrmData {
     public String getResource(String name) throws java.sql.SQLException {
         String ret = "";
 
-        DBHandler db = new DBHandler();
+        
         String sql = "SELECT value FROM property WHERE name='" + name + "'";
-        ResultSet rs = db.GetSQL(sql);
+        ResultSet rs = DBHandler.GetSQL(sql);
         while(rs.next()) {
-            ret = db.getString(rs,"value");
+            ret = DBHandler.getString(rs,"value");
         }
 
         rs.close();

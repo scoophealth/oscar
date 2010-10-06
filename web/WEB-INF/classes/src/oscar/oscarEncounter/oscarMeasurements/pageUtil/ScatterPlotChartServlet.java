@@ -223,12 +223,12 @@ public class ScatterPlotChartServlet extends HttpServlet
             
             try{
                 if(isNumeric(type, mInstrc)){
-                    DBHandler db = new DBHandler();
+                    
                     String sql = "SELECT DISTINCT dateObserved FROM measurements WHERE demographicNo = '" + demo + "' AND type='"+ type + "' AND measuringInstruction='" + mInstrc 
                                  + "' ORDER BY dateObserved";
                     MiscUtils.getLogger().debug("SQL Statement: " + sql);
                     ResultSet rs;
-                    rs = db.GetSQL(sql);                
+                    rs = DBHandler.GetSQL(sql);                
                     rs.last();
                     int nbData = rs.getRow();
                     rs.first();
@@ -236,9 +236,9 @@ public class ScatterPlotChartServlet extends HttpServlet
                     
                     for(int i=0; i<nbData; i++){ 
                         sql =   "SELECT * FROM measurements WHERE demographicNo='" + demo + "' AND type='"+ type 
-                                + "' AND dateObserved='"+db.getString(rs,"dateObserved") + "' ORDER BY dateEntered DESC limit 1";
+                                + "' AND dateObserved='"+DBHandler.getString(rs,"dateObserved") + "' ORDER BY dateEntered DESC limit 1";
                         ResultSet rsData;
-                        rsData = db.GetSQL(sql);
+                        rsData = DBHandler.GetSQL(sql);
                         if(rsData.next()){
                             Date dateObserved = rs.getDate("dateObserved");
                             points[0][i] = dateObserved.getTime()/1000/60/60/24;                        
@@ -251,12 +251,12 @@ public class ScatterPlotChartServlet extends HttpServlet
                     rs.close();
                 }
                 else if (type.compareTo("BP")==0){
-                    DBHandler db = new DBHandler();
+                    
                     String sql = "SELECT dateObserved FROM measurements WHERE demographicNo = '" + demo + "' AND type='"+ type + "' AND measuringInstruction='" + mInstrc 
                                  + "' GROUP BY dateObserved ORDER BY dateObserved";
                     MiscUtils.getLogger().debug("SQL Statement: " + sql);
                     ResultSet rs;
-                    rs = db.GetSQL(sql);                
+                    rs = DBHandler.GetSQL(sql);                
                     rs.last();                    
                     int nbPatient = rs.getRow();
                     rs.first();
@@ -268,10 +268,10 @@ public class ScatterPlotChartServlet extends HttpServlet
                     for(int i=0; i<nbPatient; i++){
                         if(rs.next()){                            
                             sql =   "SELECT * FROM measurements WHERE demographicNo='" + demo + "' AND type='"+ type 
-                                    + "' AND dateObserved='"+db.getString(rs,"dateObserved") + "' ORDER BY dateEntered DESC limit 1";
+                                    + "' AND dateObserved='"+DBHandler.getString(rs,"dateObserved") + "' ORDER BY dateEntered DESC limit 1";
                             MiscUtils.getLogger().debug("sql dateObserved: " + sql);
                             ResultSet rsData;
-                            rsData = db.GetSQL(sql);
+                            rsData = DBHandler.GetSQL(sql);
                             if(rsData.next()){
                                 String bloodPressure = rsData.getString("dataField");
                                 MiscUtils.getLogger().debug("bloodPressure: " + bloodPressure);
@@ -312,17 +312,17 @@ public class ScatterPlotChartServlet extends HttpServlet
             boolean isNumeric = false;
             
             try{
-                DBHandler db = new DBHandler();
+                
                 String sql = "SELECT * FROM measurementType WHERE type='"+ type + "' AND measuringInstruction='" + mInstrc + "'";
                 MiscUtils.getLogger().debug("SQL Statement: " + sql);
                 ResultSet rs;
-                rs = db.GetSQL(sql);                
+                rs = DBHandler.GetSQL(sql);                
                 rs.next();
-                String validation = db.getString(rs,"validation");
+                String validation = DBHandler.getString(rs,"validation");
                 rs.close();
                 
                 sql = "SELECT * FROM validations WHERE id='"+ validation + "'";
-                rs = db.GetSQL(sql);
+                rs = DBHandler.GetSQL(sql);
                 rs.next();
                 if(rs.getInt("isNumeric")==1){
                     isNumeric = true;

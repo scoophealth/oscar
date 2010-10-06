@@ -40,11 +40,11 @@ public class EctConDisplayServiceUtil
         String retval = new String();
         try
         {
-            DBHandler db = new DBHandler();
+            
             String sql = String.valueOf(String.valueOf((new StringBuffer("select serviceDesc from consultationServices where serviceId = '")).append(serId).append("' order by serviceDesc")));
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
             if(rs.next())
-                retval = db.getString(rs,"serviceDesc");
+                retval = DBHandler.getString(rs,"serviceDesc");
             rs.close();
         }
         catch(SQLException e)
@@ -68,20 +68,20 @@ public class EctConDisplayServiceUtil
         specIdVec = new Vector();
         try
         {
-            DBHandler db = new DBHandler();
+            
             String sql = "select * from professionalSpecialists order by lName ";
             ResultSet rs;
-            for(rs = db.GetSQL(sql); rs.next(); specIdVec.add(db.getString(rs,"specId")))
+            for(rs = DBHandler.GetSQL(sql); rs.next(); specIdVec.add(DBHandler.getString(rs,"specId")))
             {
-                fNameVec.add(db.getString(rs,"fName"));
-                lNameVec.add(db.getString(rs,"lName"));
-                proLettersVec.add(db.getString(rs,"proLetters"));
-                addressVec.add(db.getString(rs,"address"));
-                phoneVec.add(db.getString(rs,"phone"));
-                faxVec.add(db.getString(rs,"fax"));
-                websiteVec.add(db.getString(rs,"website"));
-                emailVec.add(db.getString(rs,"email"));
-                specTypeVec.add(db.getString(rs,"specType"));
+                fNameVec.add(DBHandler.getString(rs,"fName"));
+                lNameVec.add(DBHandler.getString(rs,"lName"));
+                proLettersVec.add(DBHandler.getString(rs,"proLetters"));
+                addressVec.add(DBHandler.getString(rs,"address"));
+                phoneVec.add(DBHandler.getString(rs,"phone"));
+                faxVec.add(DBHandler.getString(rs,"fax"));
+                websiteVec.add(DBHandler.getString(rs,"website"));
+                emailVec.add(DBHandler.getString(rs,"email"));
+                specTypeVec.add(DBHandler.getString(rs,"specType"));
             }
 
             rs.close();
@@ -97,10 +97,10 @@ public class EctConDisplayServiceUtil
         Vector vector = new Vector();
         try
         {
-            DBHandler db = new DBHandler();
+            
             String sql = String.valueOf(String.valueOf((new StringBuffer("select * from serviceSpecialists where serviceId = '")).append(serviceId).append("'")));
             ResultSet rs;
-            for(rs = db.GetSQL(sql); rs.next(); vector.add(db.getString(rs,"specId")));
+            for(rs = DBHandler.GetSQL(sql); rs.next(); vector.add(DBHandler.getString(rs,"specId")));
             rs.close();
         }
         catch(SQLException e)
@@ -116,11 +116,11 @@ public class EctConDisplayServiceUtil
         serviceName = new Vector();
         try
         {
-            DBHandler db = new DBHandler();
+            
             String sql = "select * from consultationServices where active = '1' order by serviceDesc";
             ResultSet rs;
-            for(rs = db.GetSQL(sql); rs.next(); serviceName.add(db.getString(rs,"serviceDesc")))
-                serviceId.add(db.getString(rs,"serviceId"));
+            for(rs = DBHandler.GetSQL(sql); rs.next(); serviceName.add(DBHandler.getString(rs,"serviceDesc")))
+                serviceId.add(DBHandler.getString(rs,"serviceId"));
 
             rs.close();
         }

@@ -965,9 +965,9 @@ public class MeasurementGraphAction2 extends Action {
     private  Hashtable getMeasurementsExt(Integer measurementId) throws SQLException {
 	Hashtable hash = new Hashtable();
 	if (measurementId!=null) {
-	    DBHandler db = new DBHandler();
+	    
 	    String sql = "SELECT * FROM measurementsExt WHERE measurement_id=" + measurementId;
-	    ResultSet rs = db.GetSQL(sql);
+	    ResultSet rs = DBHandler.GetSQL(sql);
 
 	    while (rs.next()) {
 		hash.put(rs.getString("keyval"),rs.getString("val"));

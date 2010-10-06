@@ -46,9 +46,9 @@ public class MSH extends oscar.oscarLab.ca.bc.PathNet.HL7.Node {
    
    
    //This inserts a record into the hl7_msh returns a 0 if it worked and 1 if it failed  
-   public int ToDatabase(DBHandler db, int parent) throws SQLException {
+   public int ToDatabase(int parent) throws SQLException {
       _logger.debug("Inserting into Database :"+this.getInsertSql(parent));
-      return booleanConvert(db.RunSQL(this.getInsertSql(parent)));      
+      return booleanConvert(DBHandler.RunSQL(this.getInsertSql(parent)));      
    }
    
    protected String getInsertSql(int parent) {

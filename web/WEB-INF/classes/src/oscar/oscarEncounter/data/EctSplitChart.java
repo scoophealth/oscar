@@ -55,12 +55,12 @@ public class EctSplitChart {
       Vector vec = null;//
       try{              
          vec = new Vector();
-         DBHandler db = new DBHandler();
+         
          String sql = "select eChartId, timeStamp from eChart where demographicNo= '"+demographicNo+"'  and subject = 'SPLIT CHART' order by timeStamp ";
-         ResultSet rs = db.GetSQL(sql);
+         ResultSet rs = DBHandler.GetSQL(sql);
          while(rs.next()) {
             String[] s = new String[2];
-             s[0] = db.getString(rs,"eChartId");            
+             s[0] = DBHandler.getString(rs,"eChartId");            
              Timestamp timestamp = rs.getTimestamp("timeStamp");             
              java.util.Date d = new java.util.Date(timestamp.getTime());
              

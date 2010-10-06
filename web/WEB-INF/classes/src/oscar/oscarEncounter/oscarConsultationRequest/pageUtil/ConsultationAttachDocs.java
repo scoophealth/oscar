@@ -96,10 +96,10 @@ public class ConsultationAttachDocs {
         else {
             String sql = "SELECT demographicNo FROM consultationRequests WHERE requestId = " + reqId;
             try {
-                DBHandler db = new DBHandler();                
-                ResultSet rs = db.GetSQL(sql);
+                                
+                ResultSet rs = DBHandler.GetSQL(sql);
                 if( rs.next() ) {
-                    demo = db.getString(rs,"demographicNo");
+                    demo = DBHandler.getString(rs,"demographicNo");
                     demoNo = demo;
                 }
                 else

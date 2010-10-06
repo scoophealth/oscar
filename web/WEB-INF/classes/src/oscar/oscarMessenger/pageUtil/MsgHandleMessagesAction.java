@@ -111,10 +111,10 @@ public  class MsgHandleMessagesAction extends Action {
 
         if (delete.compareToIgnoreCase("Delete") == 0){
           try{    //sents this message status to del
-             DBHandler db = new DBHandler();
+             
              
              String sql = "update messagelisttbl set status = 'del' where provider_no = '"+providerNo+"' and message = '"+messageNo+"'";
-             db.RunSQL(sql);
+             DBHandler.RunSQL(sql);
 
           }catch (java.sql.SQLException e){MiscUtils.getLogger().error("Error", e); }
 
@@ -128,16 +128,16 @@ public  class MsgHandleMessagesAction extends Action {
           StringBuffer theSendMessage = new StringBuffer();
 
           try{   //gets the sender
-             DBHandler db = new DBHandler();
+             
              java.sql.ResultSet rs;
              String sql = new String("Select sentbyNo,thesubject,themessage,sentByLocation from messagetbl where messageid = '"+messageNo+"'");
-             rs = db.GetSQL(sql);
+             rs = DBHandler.GetSQL(sql);
 
              if ( rs.next()){
-                vector.add(db.getString(rs,"sentbyNo"));
-                subject.append(db.getString(rs,"thesubject"));
-                themessage= db.getString(rs,"themessage");
-                sentByLocation = db.getString(rs,"sentByLocation");
+                vector.add(DBHandler.getString(rs,"sentbyNo"));
+                subject.append(DBHandler.getString(rs,"thesubject"));
+                themessage= DBHandler.getString(rs,"themessage");
+                sentByLocation = DBHandler.getString(rs,"sentByLocation");
                 themessage = themessage.replace('\n','>');        //puts > at the beginning
                 theSendMessage = new StringBuffer(themessage);    //of each line
                 theSendMessage.insert(0,"\n\n\n>");
@@ -149,11 +149,11 @@ public  class MsgHandleMessagesAction extends Action {
               }
 
               if(replyAll.compareToIgnoreCase("reply All") == 0){  // add every one that got the message
-                 rs = db.GetSQL("select provider_no, remoteLocation from messagelisttbl where message = '"+messageNo+"'");
+                 rs = DBHandler.GetSQL("select provider_no, remoteLocation from messagelisttbl where message = '"+messageNo+"'");
                  while (rs.next()){
-                     MiscUtils.getLogger().debug("LOOK4ME pro no "+db.getString(rs,"provider_no")+" remo Loco "+db.getString(rs,"remoteLocation"));
-                     vector.add(db.getString(rs,"provider_no"));
-                     replyMessageData.add(db.getString(rs,"provider_no"),db.getString(rs,"remoteLocation"));
+                     MiscUtils.getLogger().debug("LOOK4ME pro no "+DBHandler.getString(rs,"provider_no")+" remo Loco "+DBHandler.getString(rs,"remoteLocation"));
+                     vector.add(DBHandler.getString(rs,"provider_no"));
+                     replyMessageData.add(DBHandler.getString(rs,"provider_no"),DBHandler.getString(rs,"remoteLocation"));
                  }
                  replyval = new String[vector.size()];  //no need for the old replyval
                  for (int k =0; k < vector.size(); k++){
@@ -179,16 +179,16 @@ public  class MsgHandleMessagesAction extends Action {
            StringBuffer theSendMessage = new StringBuffer();
 
            try{   //gets the sender
-              DBHandler db = new DBHandler();
+              
               java.sql.ResultSet rs;
               String sql = new String("Select sentbyNo,thesubject,themessage,sentByLocation from messagetbl where messageid = '"+messageNo+"'");
-              rs = db.GetSQL(sql);
+              rs = DBHandler.GetSQL(sql);
 
               if ( rs.next()){
-//                 vector.add(db.getString(rs,"sentbyNo"));
-                 subject.append(db.getString(rs,"thesubject"));
-                 themessage= db.getString(rs,"themessage");
-//                 sentByLocation = db.getString(rs,"sentByLocation");
+//                 vector.add(DBHandler.getString(rs,"sentbyNo"));
+                 subject.append(DBHandler.getString(rs,"thesubject"));
+                 themessage= DBHandler.getString(rs,"themessage");
+//                 sentByLocation = DBHandler.getString(rs,"sentByLocation");
                  themessage = themessage.replace('\n','>');        //puts > at the beginning
                  theSendMessage = new StringBuffer(themessage);    //of each line
                  theSendMessage.insert(0,"\n\n\n>");

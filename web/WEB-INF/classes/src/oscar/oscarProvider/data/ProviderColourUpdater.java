@@ -57,13 +57,13 @@ public class ProviderColourUpdater {
        DBHandler db;
        
        try {
-        db = new DBHandler();
+        
        
         sql = "SELECT value FROM property WHERE name = '" + strColName + "' AND provider_no = '" + provider + "'";
-        rs = db.GetSQL(sql);
+        rs = DBHandler.GetSQL(sql);
             
         if( rs.next() ) {
-            colour = db.getString(rs,"value");
+            colour = DBHandler.getString(rs,"value");
         }
                 
         
@@ -90,8 +90,8 @@ public class ProviderColourUpdater {
         else
            sql = "INSERT INTO property (name,value,provider_no) VALUES('" + strColName + "', '" + c + "', '" + provider + "')";
         
-        db = new DBHandler();
-        db.RunSQL(sql);
+        
+        DBHandler.RunSQL(sql);
        
        }catch( SQLException ex ) {
            MiscUtils.getLogger().debug("Error adding provider colour: " + ex.getMessage());
@@ -106,10 +106,10 @@ public class ProviderColourUpdater {
        String sql;
        ResultSet rs;       
               
-       db = new DBHandler();
+       
        sql = "SELECT value FROM property WHERE name = '" + strColName + "' AND provider_no = '" + provider + "'";
        
-       rs = db.GetSQL(sql);
+       rs = DBHandler.GetSQL(sql);
        
        return rs.next();              
        

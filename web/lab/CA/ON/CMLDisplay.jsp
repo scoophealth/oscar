@@ -19,12 +19,12 @@ String reqID = reqIDL==null ? "" : String.valueOf(reqIDL);
 <oscar:oscarPropertiesCheck property="SPEC3" value="yes">
     <%
     String sql = "SELECT demographic_no FROM patientLabRouting WHERE lab_no='"+segmentID+"';";
-DBHandler db = new DBHandler();
-ResultSet rs = db.GetSQL(sql);
+
+ResultSet rs = DBHandler.GetSQL(sql);
 String demographicID = "";
 
 while(rs.next()){
-    demographicID = db.getString(rs,"demographic_no");
+    demographicID = DBHandler.getString(rs,"demographic_no");
 }
 rs.close();
     

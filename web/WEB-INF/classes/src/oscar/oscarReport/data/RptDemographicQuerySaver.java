@@ -149,7 +149,7 @@ public class RptDemographicQuerySaver {
         }
         oscar.oscarMessenger.util.MsgStringQuote s = new oscar.oscarMessenger.util.MsgStringQuote();
         try{
-                  DBHandler db = new DBHandler();
+                  
 
                   String sql = "insert into demographicQueryFavourites "
                   +"(selects,age,startYear,endYear,firstName,lastName,rosterStatus,sex,providerNo,patientStatus,queryName,archived)"
@@ -157,7 +157,7 @@ public class RptDemographicQuerySaver {
                   +" ('"+sqSelects+"','"+sqAge+"','"+sqStartYear+"','"+sqEndYear+"','"+s.q(sqFirstName)+"','"+s.q(sqLastName)+"',"
                   +"  '"+sqRosterStatus+"', '"+s.q(sqSex)+"', '"+sqProviderNo+"' , '"+sqPatientStatus+"','"+sqQueryName+"','1')";;
                   MiscUtils.getLogger().debug("sql statement : "+sql);
-                  db.RunSQL(sql);
+                  DBHandler.RunSQL(sql);
        }catch (java.sql.SQLException e){ MiscUtils.getLogger().error("Error", e); }
 
 

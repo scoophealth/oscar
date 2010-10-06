@@ -36,7 +36,7 @@ public class EctMMSERecord {
     public Properties getMMSERecord(int demographicNo, int existingID)  throws SQLException  {
         Properties props = new Properties();
 
-        DBHandler db = new DBHandler();
+        
         ResultSet rs;
         String sql;
 
@@ -45,17 +45,17 @@ public class EctMMSERecord {
                 + "sex, year_of_birth, month_of_birth, date_of_birth "
                 + "FROM demographic WHERE demographic_no = " + demographicNo;
 
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
 
             if(rs.next()) {
-                java.util.Date dob = UtilDateUtilities.calcDate(db.getString(rs,"year_of_birth"), db.getString(rs,"month_of_birth"), db.getString(rs,"date_of_birth"));
+                java.util.Date dob = UtilDateUtilities.calcDate(DBHandler.getString(rs,"year_of_birth"), DBHandler.getString(rs,"month_of_birth"), DBHandler.getString(rs,"date_of_birth"));
 
-                props.setProperty("demographic_no", db.getString(rs,"demographic_no"));
-                props.setProperty("pName", db.getString(rs,"pName"));
+                props.setProperty("demographic_no", DBHandler.getString(rs,"demographic_no"));
+                props.setProperty("pName", DBHandler.getString(rs,"pName"));
                 props.setProperty("formDate", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                 props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                 props.setProperty("formEdited", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
-                props.setProperty("sex", db.getString(rs,"sex"));
+                props.setProperty("sex", DBHandler.getString(rs,"sex"));
                 props.setProperty("age", String.valueOf(UtilDateUtilities.calcAge(dob)));
             }
 
@@ -63,7 +63,7 @@ public class EctMMSERecord {
         } else {
             sql = "SELECT * FROM formMMSE WHERE demographic_no = " + demographicNo + " AND ID = " + existingID;
 
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
 
             if(rs.next())
             {
@@ -94,7 +94,7 @@ public class EctMMSERecord {
                         }
                         else
                         {
-                            value = db.getString(rs,i);
+                            value = DBHandler.getString(rs,i);
                         }
                     }
 
@@ -113,9 +113,9 @@ public class EctMMSERecord {
     public int saveMMSERecord(Properties props)  throws SQLException  {
         String demographic_no = props.getProperty("demographic_no");
 
-        DBHandler db = new DBHandler();
+        
         String sql="SELECT * FROM formMMSE WHERE demographic_no=" + demographic_no + " AND ID=0";
-        ResultSet rs = db.GetSQL(sql, true);
+        ResultSet rs = DBHandler.GetSQL(sql, true);
 
         rs.moveToInsertRow();
 
@@ -197,7 +197,7 @@ public class EctMMSERecord {
         int ret = 0;
 
         sql = "SELECT LAST_INSERT_ID()";
-        rs = db.GetSQL(sql);
+        rs = DBHandler.GetSQL(sql);
         if(rs.next())
         {
             ret = rs.getInt(1);

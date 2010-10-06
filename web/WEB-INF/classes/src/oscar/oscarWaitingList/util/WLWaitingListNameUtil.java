@@ -43,15 +43,11 @@ public class WLWaitingListNameUtil {
 		}
         MiscUtils.getLogger().debug("WLWaitingListNameUtil/removeFromWaitingListName(): waiting list name: " + wlNameId + 
         		           " for groupNo " + groupNo);
-        DBHandler db = new DBHandler();
+        
         ResultSet rs = null;
         String sql;
-        if(db == null){
-        	MiscUtils.getLogger().debug("WLWaitingListNameUtil/removeFromWaitingListName(): dbHandler == null");    
-        	throw new Exception("systemError");
-        }
 
-        boolean isUsed = isWaitingListNameBeingUsed( db, rs, wlNameId );
+        boolean isUsed = isWaitingListNameBeingUsed( rs, wlNameId );
         if(isUsed){
             MiscUtils.getLogger().debug("WLWaitingListNameUtil/removeFromWaitingListName(): Waiting list name is being used.");
             throw new Exception("wlNameUsed");
@@ -63,7 +59,7 @@ public class WLWaitingListNameUtil {
               " AND group_no='" + groupNo +"'";
         MiscUtils.getLogger().debug("remove waiting list name sql: " + sql);
 
-        db.RunSQL(sql);
+        DBHandler.RunSQL(sql);
         if(rs != null){
         	rs.close();
         }
@@ -82,12 +78,12 @@ public class WLWaitingListNameUtil {
         MiscUtils.getLogger().debug( "WLWaitingListNameUtil/createWaitingListName(): waiting list name: " + wlName + 
         					" for groupNo: " + groupNo + "/ providerNo: " + providerNo);
         
-        DBHandler db = new DBHandler();
+        
         ResultSet rs = null;
         
         wlName = org.apache.commons.lang.StringEscapeUtils.escapeSql(wlName);
         
-        rs = getWaitingListNameRecords( db, rs, wlName, groupNo );
+        rs = getWaitingListNameRecords( rs, wlName, groupNo );
         boolean isExist = isWaitingListNameExist( rs );
         
         if(isExist){
@@ -102,7 +98,7 @@ public class WLWaitingListNameUtil {
     
         MiscUtils.getLogger().debug("WLWaitingListNameUtil/createWaitingListName(): sql = " + sql);
         
-        db.RunSQL(sql);
+        DBHandler.RunSQL(sql);
         if(rs != null){
         	rs.close();
         }
@@ -130,18 +126,12 @@ public class WLWaitingListNameUtil {
 
         MiscUtils.getLogger().debug("WLWaitingListNameUtil/updateWaitingListName(): wlNameId/wlName = " + 
         		wlNameId + "/" + wlName);
-	    
-        DBHandler db = new DBHandler();
+	            
         ResultSet rs = null;
-
-        if(db == null){
-        	MiscUtils.getLogger().debug("WLWaitingListNameUtil/updateWaitingListName(): dbHandler == null");    
-        	throw new Exception("systemError");
-        }
 
         wlName = org.apache.commons.lang.StringEscapeUtils.escapeSql(wlName);
         
-        rs = getWaitingListNameRecords( db, rs, wlName, groupNo );
+        rs = getWaitingListNameRecords( rs, wlName, groupNo );
         boolean isExist = isWaitingListNameExist( rs );
         
         if(isExist){
@@ -155,7 +145,7 @@ public class WLWaitingListNameUtil {
 
         MiscUtils.getLogger().debug("WLWaitingListNameUtil/updateWaitingListName(): sql = " + sql);
 
-        db.RunSQL(sql);
+        DBHandler.RunSQL(sql);
         if(rs != null){
         	rs.close();
         }
@@ -164,9 +154,9 @@ public class WLWaitingListNameUtil {
 
 
 	
-	static private boolean isWaitingListNameBeingUsed( DBHandler db, ResultSet rs, String wlNameId ) throws SQLException{
+	static private boolean isWaitingListNameBeingUsed( ResultSet rs, String wlNameId ) throws SQLException{
 		
-		if( db == null  ||  wlNameId == null ){
+		if( wlNameId == null ){
 			MiscUtils.getLogger().debug("WLWaitingListNameUtil/isWaitingListNameBeingUsed(): db or rs or wlNameId is null"); 
 			return true;
 		}
@@ -174,7 +164,7 @@ public class WLWaitingListNameUtil {
 		             " WHERE listID = " + wlNameId +
 		             " AND is_history='N'";
 			        
-        rs = db.GetSQL(sql); 
+        rs = DBHandler.GetSQL(sql); 
         if(rs == null){
         	MiscUtils.getLogger().debug("WLWaitingListNameUtil/isWaitingListNameBeingUsed(): result set == null");    
         	return true;
@@ -199,9 +189,9 @@ public class WLWaitingListNameUtil {
 		return false;
 	}
 	
-	static private ResultSet getWaitingListNameRecords( DBHandler db, ResultSet rs, String wlName, String groupNo ) 
+	static private ResultSet getWaitingListNameRecords( ResultSet rs, String wlName, String groupNo ) 
 	throws SQLException{
-		if( db == null  ||  wlName == null  ||  groupNo == null  ){
+		if( wlName == null  ||  groupNo == null  ){
 			MiscUtils.getLogger().debug("WLWaitingListNameUtil/getWaitingListNameRecords(): db or rs or wlName or groupNo is null"); 
 			return null;
 		}
@@ -211,7 +201,7 @@ public class WLWaitingListNameUtil {
 		             " AND is_history='N'";
 			        
         MiscUtils.getLogger().debug("WLWaitingListNameUtil/getWaitingListNameRecords(): sql = " + sql);   
-        rs = db.GetSQL(sql); 
+        rs = DBHandler.GetSQL(sql); 
         
         if(rs == null){
         	MiscUtils.getLogger().debug("WLWaitingListNameUtil/getWaitingListNameRecords(): result set == null");    
@@ -231,7 +221,7 @@ public class WLWaitingListNameUtil {
 		             " WHERE ID = " + wlNameId + 
 		             " AND is_history='N'";
 			        
-        rs = db.GetSQL(sql); 
+        rs = DBHandler.GetSQL(sql); 
         
         if(rs == null){
         	MiscUtils.getLogger().debug("WLWaitingListNameUtil/getWaitingListNameRecords(): result set == null");    

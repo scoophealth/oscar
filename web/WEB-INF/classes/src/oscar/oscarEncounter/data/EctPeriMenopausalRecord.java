@@ -44,7 +44,7 @@ public class EctPeriMenopausalRecord
     {
         Properties props = new Properties();
 
-        DBHandler db = new DBHandler();
+        
         ResultSet rs;
         String sql;
 
@@ -55,14 +55,14 @@ public class EctPeriMenopausalRecord
                     + "year_of_birth, month_of_birth, date_of_birth "
                     + "FROM demographic WHERE demographic_no = " + demographicNo;
 
-                rs = db.GetSQL(sql);
+                rs = DBHandler.GetSQL(sql);
 
                 if(rs.next())
                 {
-                    java.util.Date dob = UtilDateUtilities.calcDate(db.getString(rs,"year_of_birth"), db.getString(rs,"month_of_birth"), db.getString(rs,"date_of_birth"));
+                    java.util.Date dob = UtilDateUtilities.calcDate(DBHandler.getString(rs,"year_of_birth"), DBHandler.getString(rs,"month_of_birth"), DBHandler.getString(rs,"date_of_birth"));
 
-                    props.setProperty("demographic_no", db.getString(rs,"demographic_no"));
-                    props.setProperty("pName", db.getString(rs,"pName"));
+                    props.setProperty("demographic_no", DBHandler.getString(rs,"demographic_no"));
+                    props.setProperty("pName", DBHandler.getString(rs,"pName"));
                     props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                     props.setProperty("formEdited", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                     props.setProperty("age", String.valueOf(UtilDateUtilities.calcAge(dob)));
@@ -76,7 +76,7 @@ public class EctPeriMenopausalRecord
             try{
                 sql = "SELECT * FROM formPeriMenopausal WHERE demographic_no = " + demographicNo + " AND ID = " + existingID;
 
-                rs = db.GetSQL(sql);
+                rs = DBHandler.GetSQL(sql);
 
                 if(rs.next()) {
                     ResultSetMetaData md = rs.getMetaData();
@@ -105,7 +105,7 @@ public class EctPeriMenopausalRecord
                             }
                             else
                             {
-                                value = db.getString(rs,i);
+                                value = DBHandler.getString(rs,i);
                             }
                         }
 
@@ -126,9 +126,9 @@ public class EctPeriMenopausalRecord
     public int savePeriMenopausalRecord(Properties props)     throws SQLException    {
         String demographic_no = props.getProperty("demographic_no");
 
-        DBHandler db = new DBHandler();
+        
         String sql="SELECT * FROM formPeriMenopausal WHERE demographic_no=" + demographic_no + " AND ID=0";
-        ResultSet rs = db.GetSQL(sql, true);
+        ResultSet rs = DBHandler.GetSQL(sql, true);
 
         rs.moveToInsertRow();
 
@@ -198,7 +198,7 @@ public class EctPeriMenopausalRecord
         int ret = 0;
 
         sql = "SELECT LAST_INSERT_ID()";
-        rs = db.GetSQL(sql);
+        rs = DBHandler.GetSQL(sql);
         if(rs.next())
         {
             ret = rs.getInt(1);

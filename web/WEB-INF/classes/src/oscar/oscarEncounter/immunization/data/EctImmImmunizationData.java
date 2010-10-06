@@ -40,11 +40,11 @@ public class EctImmImmunizationData
         throws SQLException
     {
         String sRet = null;
-        DBHandler db = new DBHandler();
+        
         String sql = String.valueOf(String.valueOf((new StringBuffer("SELECT * FROM immunizations WHERE demographic_no = ")).append(demographicNo).append(" AND archived=0")));
-        ResultSet rs = db.GetSQL(sql);
+        ResultSet rs = DBHandler.GetSQL(sql);
         if(rs.next())
-            sRet = db.getString(rs,"immunizations");
+            sRet = DBHandler.getString(rs,"immunizations");
         rs.close();
         return sRet;
     }
@@ -53,9 +53,9 @@ public class EctImmImmunizationData
         throws SQLException
     {        
         boolean retval = false;
-        DBHandler db = new DBHandler();
+        
         String sql = String.valueOf(String.valueOf((new StringBuffer("SELECT * FROM immunizations WHERE demographic_no = ")).append(demographicNo).append(" AND archived=0")));
-        ResultSet rs = db.GetSQL(sql);
+        ResultSet rs = DBHandler.GetSQL(sql);
         if(rs.next()) {
             retval = true;
         }         
@@ -66,10 +66,10 @@ public class EctImmImmunizationData
     public void saveImmunizations(String demographicNo, String providerNo, String immunizations)
         throws SQLException
     {
-        DBHandler db = new DBHandler();
+        
         MiscUtils.getLogger().debug(String.valueOf(String.valueOf((new StringBuffer(String.valueOf(String.valueOf(demographicNo)))).append(" ").append(providerNo).append(" ").append(immunizations))));
         String sql = String.valueOf(String.valueOf((new StringBuffer("INSERT INTO immunizations (demographic_no, provider_no, immunizations, save_date, archived) VALUES (")).append(demographicNo).append(", '").append(providerNo).append("', '").append(immunizations).append("', CURRENT_DATE, 0)")));
-        db.RunSQL(sql);
+        DBHandler.RunSQL(sql);
 	//select the specific database function:
 	String db_type = OscarProperties.getInstance().getProperty("db_type", "mysql");
 	db_type.trim();
@@ -80,20 +80,20 @@ public class EctImmImmunizationData
 	
         sql = "UPDATE immunizations SET archived = 1 WHERE demographic_no = " + demographicNo + 
               " AND ID <>" + proper_func;
-        db.RunSQL(sql);
+        DBHandler.RunSQL(sql);
     }
 
     public String[] getProviders()
         throws SQLException
     {
         Vector vRet = new Vector();
-        DBHandler db = new DBHandler();
+        
         String sql = "SELECT provider_no, CONCAT(last_name, ', ', first_name) AS namer FROM provider WHERE status = 1 ORDER BY last_name, first_name";
         ResultSet rs;
         String s;
-        for(rs = db.GetSQL(sql); rs.next(); vRet.add(s))
+        for(rs = DBHandler.GetSQL(sql); rs.next(); vRet.add(s))
         {
-            s = String.valueOf(String.valueOf((new StringBuffer(String.valueOf(String.valueOf(db.getString(rs,"provider_no"))))).append("/").append(db.getString(rs,"namer"))));
+            s = String.valueOf(String.valueOf((new StringBuffer(String.valueOf(String.valueOf(DBHandler.getString(rs,"provider_no"))))).append("/").append(DBHandler.getString(rs,"namer"))));
             MiscUtils.getLogger().debug(s);
         }
 

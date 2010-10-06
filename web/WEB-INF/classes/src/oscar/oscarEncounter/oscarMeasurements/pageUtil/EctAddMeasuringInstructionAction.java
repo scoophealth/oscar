@@ -63,7 +63,7 @@ public class EctAddMeasuringInstructionAction extends Action {
         List messages = new LinkedList();
         
         try{
-            DBHandler db = new DBHandler();
+            
 
             String typeDisplayName = frm.getTypeDisplayName();
             String measuringInstrc = frm.getMeasuringInstrc();
@@ -90,7 +90,7 @@ public class EctAddMeasuringInstructionAction extends Action {
                 return (new ActionForward(mapping.getInput()));
             
             String sql = "SELECT measuringInstruction FROM measurementType WHERE measuringInstruction='" + str.q(measuringInstrc) +"' AND typeDisplayName='" + str.q(typeDisplayName) + "'";
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
             rs.next();
             
             if(rs.getRow()>0){
@@ -102,18 +102,18 @@ public class EctAddMeasuringInstructionAction extends Action {
             
             rs.close();
             sql = "SELECT * FROM measurementType WHERE typeDisplayName='" + str.q(typeDisplayName) +"'";
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
             rs.next();
             
-            String type = db.getString(rs,"type");
-            String typeDesc = db.getString(rs,"typeDescription");            
+            String type = DBHandler.getString(rs,"type");
+            String typeDesc = DBHandler.getString(rs,"typeDescription");            
             
             //Write to database
             sql = "INSERT INTO measurementType"
                 +"(type, typeDisplayName, typeDescription, measuringInstruction, validation)"
                 +" VALUES ('"+str.q(type)+"','"+str.q(typeDisplayName)+"','"+str.q(typeDesc)+"','"+str.q(measuringInstrc)+"','"
                 + str.q(validation)+"')";
-            db.RunSQL(sql);
+            DBHandler.RunSQL(sql);
 
 
             /* select the correct db specific command */
@@ -129,7 +129,7 @@ public class EctAddMeasuringInstructionAction extends Action {
                 throw new SQLException("ERROR: Database " + db_type + " unrecognized.");
 
             rs.close();
-            rs = db.GetSQL(dbSpecificCommand);
+            rs = DBHandler.GetSQL(dbSpecificCommand);
             if(rs.next())
                 requestId = Integer.toString(rs.getInt(1));
                 

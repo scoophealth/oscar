@@ -114,7 +114,7 @@ public class CPPData {
       String sql= "insert into cpp (demographic_no,provider_no,socialFam,ongoingCon,medHist,reminder,riskfactor,otherMed,otherAller,medsList,allergyList,divArr,created) values (?,?,?,?,?,?,?,?,?,?,?,?,?) "  ;
                               
       try{
-         DBHandler db = new DBHandler();
+         
          Connection conn = DBHandler.getConnection();
          PreparedStatement ps=  conn.prepareStatement(sql);
          ps.setString(1, demoNo);
@@ -146,23 +146,23 @@ public class CPPData {
       String sql= "select * from cpp  where demographic_no = '"+demoNo+"' order by id desc limit 1";
       MiscUtils.getLogger().debug(sql);
       try{
-         DBHandler db = new DBHandler();
-         ResultSet rs =  db.GetSQL(sql);
+         
+         ResultSet rs =  DBHandler.GetSQL(sql);
          if(rs.next()){
    
-            String providerNo = db.getString(rs,"provider_no");
-            String socialFam = db.getString(rs,"socialFam");
-            String ongoingCon = db.getString(rs,"ongoingCon");
-            String medHist = db.getString(rs,"medHist");
-            String reminder = db.getString(rs,"reminder");
-            String riskfactor = db.getString(rs,"riskfactor"); 
-            String otherMed = db.getString(rs,"otherMed");
-            String otherAller = db.getString(rs,"otherAller");
+            String providerNo = DBHandler.getString(rs,"provider_no");
+            String socialFam = DBHandler.getString(rs,"socialFam");
+            String ongoingCon = DBHandler.getString(rs,"ongoingCon");
+            String medHist = DBHandler.getString(rs,"medHist");
+            String reminder = DBHandler.getString(rs,"reminder");
+            String riskfactor = DBHandler.getString(rs,"riskfactor"); 
+            String otherMed = DBHandler.getString(rs,"otherMed");
+            String otherAller = DBHandler.getString(rs,"otherAller");
             
-            String medsList = db.getString(rs,"medsList");  
-            String allegryList = db.getString(rs,"allergyList");              
-            String divArr = db.getString(rs,"divArr");
-            String created= db.getString(rs,"created");                                                               
+            String medsList = DBHandler.getString(rs,"medsList");  
+            String allegryList = DBHandler.getString(rs,"allergyList");              
+            String divArr = DBHandler.getString(rs,"divArr");
+            String created= DBHandler.getString(rs,"created");                                                               
             
             hm.put("providerNo",providerNo);
             hm.put("socialFam",socialFam);

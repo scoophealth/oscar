@@ -38,7 +38,7 @@ public class EctMentalHealthRecord
             throws SQLException    {
         Properties props = new Properties();
 
-        DBHandler db = new DBHandler();
+        
         ResultSet rs;
         String sql;
 
@@ -48,20 +48,20 @@ public class EctMentalHealthRecord
                 + "phone, year_of_birth, month_of_birth, date_of_birth "
                 + "FROM demographic WHERE demographic_no = " + demographicNo;
 
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
 
             if(rs.next())    {
-                java.util.Date dob = UtilDateUtilities.calcDate(db.getString(rs,"year_of_birth"), db.getString(rs,"month_of_birth"), db.getString(rs,"date_of_birth"));
+                java.util.Date dob = UtilDateUtilities.calcDate(DBHandler.getString(rs,"year_of_birth"), DBHandler.getString(rs,"month_of_birth"), DBHandler.getString(rs,"date_of_birth"));
 
-                props.setProperty("demographic_no", db.getString(rs,"demographic_no"));
-                props.setProperty("c_pName", db.getString(rs,"pName"));
-                props.setProperty("c_sex", db.getString(rs,"sex"));
+                props.setProperty("demographic_no", DBHandler.getString(rs,"demographic_no"));
+                props.setProperty("c_pName", DBHandler.getString(rs,"pName"));
+                props.setProperty("c_sex", DBHandler.getString(rs,"sex"));
                 props.setProperty("c_referralDate", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                 props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                 props.setProperty("formEdited", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
-                props.setProperty("c_address", db.getString(rs,"address"));
+                props.setProperty("c_address", DBHandler.getString(rs,"address"));
                 props.setProperty("c_birthDate", UtilDateUtilities.DateToString(dob, "yyyy/MM/dd"));
-                props.setProperty("c_homePhone", db.getString(rs,"phone"));
+                props.setProperty("c_homePhone", DBHandler.getString(rs,"phone"));
             }
             rs.close();
 
@@ -69,16 +69,16 @@ public class EctMentalHealthRecord
             sql = "SELECT CONCAT(last_name, ', ', first_name) AS provName "
                 + "FROM provider WHERE provider_no = " + provNo;
 
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
 
             if(rs.next()) {
-                props.setProperty("c_referredBy", db.getString(rs,"provName"));
+                props.setProperty("c_referredBy", DBHandler.getString(rs,"provName"));
             }
             rs.close();
         } else {
             sql = "SELECT * FROM formMentalHealth WHERE demographic_no = " + demographicNo + " AND ID = " + existingID;
 
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
 
             if(rs.next()) {
                 ResultSetMetaData md = rs.getMetaData();
@@ -101,7 +101,7 @@ public class EctMentalHealthRecord
                                 value = UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd");
                             }
                         }  else  {
-                            value = db.getString(rs,i);
+                            value = DBHandler.getString(rs,i);
                         }
                     }
 
@@ -120,14 +120,14 @@ public class EctMentalHealthRecord
         String temp = props.getProperty("c_lastVisited");
         String page = temp.substring(0,1).toLowerCase()+"_";
 
-        DBHandler db = new DBHandler();
+        
 
         String sqlDB = "SELECT * FROM formMentalHealth WHERE demographic_no=" + demographic_no + " AND ID=" + formId;
-        ResultSet rsDB = db.GetSQL(sqlDB);
+        ResultSet rsDB = DBHandler.GetSQL(sqlDB);
         rsDB.next();
 
         String sqlNew="SELECT * FROM formMentalHealth WHERE demographic_no=" + demographic_no + " AND ID=0";
-        ResultSet rsNew = db.GetSQL(sqlNew, true);
+        ResultSet rsNew = DBHandler.GetSQL(sqlNew, true);
         rsNew.moveToInsertRow();
 
         ResultSetMetaData md = rsNew.getMetaData();
@@ -228,7 +228,7 @@ public class EctMentalHealthRecord
         int ret = 0;
 
         sqlNew = "SELECT LAST_INSERT_ID()";
-        rsNew = db.GetSQL(sqlNew);
+        rsNew = DBHandler.GetSQL(sqlNew);
         if(rsNew.next())
         {
             ret = rsNew.getInt(1);

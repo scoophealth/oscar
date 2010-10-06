@@ -45,13 +45,13 @@ public class EctGroupNameBeanHandler {
         
         boolean verdict = true;
         try {
-            DBHandler db = new DBHandler();
+            
             String sql = "SELECT groupName from measurementGroupStyle ORDER BY groupName";
             MiscUtils.getLogger().debug("Sql Statement: " + sql);
             ResultSet rs;
-            for(rs = db.GetSQL(sql); rs.next(); )
+            for(rs = DBHandler.GetSQL(sql); rs.next(); )
             {
-                EctGroupNameBean groupName = new EctGroupNameBean(db.getString(rs,"groupName"));
+                EctGroupNameBean groupName = new EctGroupNameBean(DBHandler.getString(rs,"groupName"));
                 groupNameVector.add(groupName);
             }
 

@@ -83,8 +83,8 @@ public class BillingData {
 				+ demoQuery;
 		MiscUtils.getLogger().debug("bill status query " + p);
 		try {
-			DBHandler db = new DBHandler();
-			ResultSet rs = db.GetSQL(p);
+			
+			ResultSet rs = DBHandler.GetSQL(p);
 			while (rs.next()) {
 				Hashtable h = new Hashtable();
 				h.put("billing_no", "" + rs.getInt("billing_no"));

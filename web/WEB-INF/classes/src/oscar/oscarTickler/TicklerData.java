@@ -55,8 +55,8 @@ public class TicklerData {
    
    public ResultSet listTickler(String demographic_no, String status, String beginDate, String endDate) throws SQLException {
        String sql = "select t.message,t.service_date, t.update_date from tickler t where t.status='A' and TO_DAYS(t.service_date) >=TO_DAYS('" + beginDate + "') and TO_DAYS(t.service_date)<=TO_DAYS('" + endDate + "') and t.demographic_no = " + demographic_no + " order by t.service_date desc";
-       DBHandler db = new DBHandler();
-       ResultSet rs = db.GetSQL(sql);
+       
+       ResultSet rs = DBHandler.GetSQL(sql);
        
        return rs;
    }
@@ -81,8 +81,8 @@ public class TicklerData {
                   +" '"+StringEscapeUtils.escapeSql(task_assigned_to)+"')";  
 
       try {         
-         DBHandler db = new DBHandler();
-            db.RunSQL(sql);         
+         
+            DBHandler.RunSQL(sql);         
       } catch (SQLException e) {         
          MiscUtils.getLogger().error("Error", e);
          MiscUtils.getLogger().error("Error", e);
@@ -92,12 +92,12 @@ public class TicklerData {
    public boolean hasTickler(String demographic,String task_assigned_to,String message){
       boolean hastickler = false;
       try {         
-         DBHandler db = new DBHandler();
+         
          String sql = "select * from tickler  where demographic_no = '"+StringEscapeUtils.escapeSql(demographic)+"' "
                      +" and task_assigned_to = '"+StringEscapeUtils.escapeSql(task_assigned_to)+"' "
                      +" and message = '"+StringEscapeUtils.escapeSql(message)+"'";
 
-         ResultSet rs = db.GetSQL(sql);
+         ResultSet rs = DBHandler.GetSQL(sql);
          if (rs.next()){
             hastickler = true;
          }

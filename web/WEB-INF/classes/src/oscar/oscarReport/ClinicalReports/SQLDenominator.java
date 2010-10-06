@@ -68,7 +68,7 @@ public class SQLDenominator implements Denominator{
     public List getDenominatorList() {
         ArrayList list = new ArrayList();
         try{
-            DBHandler db = new DBHandler();
+            
             if (replaceableValues != null){
                 MiscUtils.getLogger().debug("has replaceablevalues"+replaceableValues.size());
                 MiscUtils.getLogger().debug("before replace \n"+sql);
@@ -79,10 +79,10 @@ public class SQLDenominator implements Denominator{
                 MiscUtils.getLogger().debug("sql "+sql);
             }
             
-            ResultSet rs = db.GetSQL(exeSql);
+            ResultSet rs = DBHandler.GetSQL(exeSql);
             MiscUtils.getLogger().debug("SQL Statement: " + exeSql);
             while(rs.next()){
-               String toAdd = db.getString(rs,resultString);
+               String toAdd = DBHandler.getString(rs,resultString);
                list.add(toAdd);
             }
             rs.close();

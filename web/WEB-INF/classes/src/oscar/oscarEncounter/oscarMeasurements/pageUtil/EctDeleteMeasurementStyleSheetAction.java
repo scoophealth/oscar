@@ -54,7 +54,7 @@ public class EctDeleteMeasurementStyleSheetAction extends Action {
         String[] deleteCheckbox = frm.getDeleteCheckbox();
        
         try{
-            DBHandler db = new DBHandler();                                                                                    
+                                                                                                
             
             if(deleteCheckbox != null){
                 for(int i=0; i<deleteCheckbox.length; i++){
@@ -62,14 +62,14 @@ public class EctDeleteMeasurementStyleSheetAction extends Action {
                     String sql = "SELECT * FROM measurementGroupStyle WHERE cssID='"+ deleteCheckbox[i] +"'";
                     MiscUtils.getLogger().debug("SQL: " + sql);
                     ResultSet rs;
-                    rs = db.GetSQL(sql);
+                    rs = DBHandler.GetSQL(sql);
                     if(rs.next()){
                         sql = "SELECT * FROM measurementCSSLocation WHERE cssID ='" + deleteCheckbox[i] + "'";
-                        rs = db.GetSQL(sql);
+                        rs = DBHandler.GetSQL(sql);
                         if(rs.next()){
                             ActionMessages errors = new ActionMessages();  
                             errors.add(deleteCheckbox[i],
-                            new ActionMessage("error.oscarEncounter.Measurements.cannotDeleteStyleSheet", db.getString(rs,"location")));
+                            new ActionMessage("error.oscarEncounter.Measurements.cannotDeleteStyleSheet", DBHandler.getString(rs,"location")));
                             saveErrors(request, errors);
                             return (new ActionForward(mapping.getInput()));
                         }
@@ -77,7 +77,7 @@ public class EctDeleteMeasurementStyleSheetAction extends Action {
                     else{
                         sql = "DELETE  FROM measurementCSSLocation WHERE cssID='"+ deleteCheckbox[i] +"'";                                        
                         MiscUtils.getLogger().debug(" sql statement "+sql);
-                        db.RunSQL(sql);                        
+                        DBHandler.RunSQL(sql);                        
                     }
                 }
             }

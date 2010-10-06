@@ -49,11 +49,11 @@ public final class EctInsertTemplateAction extends Action {
         String templateName = (String) request.getParameter("templateName");
             
         try{
-            DBHandler db = new DBHandler();
+            
             String sql = "SELECT encountertemplate_value FROM encountertemplate WHERE encountertemplate_name='" + templateName + "'";
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
             if (rs.next()){
-                String encounterTmpValue = db.getString(rs,"encountertemplate_value");                   
+                String encounterTmpValue = DBHandler.getString(rs,"encountertemplate_value");                   
                 encounterTmpValue = encounterTmpValue.replaceAll("\\\\", "\\\\u005C"); // replace \ with unicode equiv.
                 encounterTmpValue = encounterTmpValue.replaceAll("\"", "\\\\u0022"); // replace " with unicode equiv.
                 encounterTmpValue = encounterTmpValue.replaceAll("'", "\\\\u0027"); // replace ' with unicode equiv.

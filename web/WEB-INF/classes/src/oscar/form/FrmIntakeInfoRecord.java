@@ -40,33 +40,33 @@ public class FrmIntakeInfoRecord extends FrmRecord {
 		throws SQLException {
 		Properties props = new Properties();
                 
-                DBHandler db = new DBHandler();
+                
                 ResultSet rs;
                 String sql;
 
 		if (existingID <= 0) {			
 			sql = "SELECT demographic_no, sex, year_of_birth, month_of_birth, date_of_birth, phone FROM demographic WHERE demographic_no = "
                               + demographicNo;
-			rs = db.GetSQL(sql);
+			rs = DBHandler.GetSQL(sql);
 			if (rs.next()) {
-                                java.util.Date dob = UtilDateUtilities.calcDate(db.getString(rs,"year_of_birth"), db.getString(rs,"month_of_birth"), db.getString(rs,"date_of_birth"));
+                                java.util.Date dob = UtilDateUtilities.calcDate(DBHandler.getString(rs,"year_of_birth"), DBHandler.getString(rs,"month_of_birth"), DBHandler.getString(rs,"date_of_birth"));
 				props.setProperty(
 					"demographic_no",
-					db.getString(rs,"demographic_no"));
+					DBHandler.getString(rs,"demographic_no"));
 				props.setProperty(
 					"formCreated",
 					UtilDateUtilities.DateToString(
 						UtilDateUtilities.Today(),
 						_dateFormat));	
                                 props.setProperty("dob", UtilDateUtilities.DateToString(dob,"yyyy/MM/dd"));
-                                props.setProperty("sex", db.getString(rs,"sex"));
-                                props.setProperty("phone", db.getString(rs,"phone"));
+                                props.setProperty("sex", DBHandler.getString(rs,"sex"));
+                                props.setProperty("phone", DBHandler.getString(rs,"phone"));
 			}
 			rs.close();
                         sql = "SELECT studyID FROM rehabStudy2004 WHERE demographic_no='"+demographicNo + "'";
-                        rs = db.GetSQL(sql);
+                        rs = DBHandler.GetSQL(sql);
                         if (rs.next()){
-                            props.setProperty("studyID", db.getString(rs,"studyID"));
+                            props.setProperty("studyID", DBHandler.getString(rs,"studyID"));
                         }
                         else{
                             props.setProperty("studyID", "N/A");
@@ -78,7 +78,7 @@ public class FrmIntakeInfoRecord extends FrmRecord {
 					+ demographicNo
 					+ " AND ID = "
 					+ existingID;
-			rs = db.GetSQL(sql);
+			rs = DBHandler.GetSQL(sql);
 
                         if(rs.next())
                         {
@@ -113,7 +113,7 @@ public class FrmIntakeInfoRecord extends FrmRecord {
                                     }
                                     else
                                     {
-                                        value = db.getString(rs,i);
+                                        value = DBHandler.getString(rs,i);
                                     }
                                 }
 

@@ -65,21 +65,21 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
         ArrayList reportMsg = new ArrayList();
         
         try{
-                DBHandler db = new DBHandler();
+                
                 if(!validate(frm, request)){
                     MiscUtils.getLogger().debug("the form is invalid");
                     return (new ActionForward(mapping.getInput()));
                 }
                 
                 if(patientSeenCheckbox!=null){
-                    int nbPatient = mData.getNbPatientSeen(db, startDateA, endDateA);  
+                    int nbPatient = mData.getNbPatientSeen(startDateA, endDateA);  
                     String msg = mr.getMessage("oscarReport.CDMReport.msgPatientSeen", Integer.toString(nbPatient), startDateA, endDateA); 
                     MiscUtils.getLogger().debug(msg);
                     reportMsg.add(msg);
                     reportMsg.add("");
                 }
                 
-                getMetGuidelinePercentage(db, frm, reportMsg, request);
+                getMetGuidelinePercentage(frm, reportMsg, request);
                 //getPatientsMetAllSelectedGuideline(db, frm, reportMsg, request);
                
                 String title = mr.getMessage("oscarReport.CDMReport.msgPercentageOfPatientWhoMetGuideline");
@@ -197,7 +197,7 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
      *
      * @return ArrayList which contain the result in String format
      ******************************************************************************************/  
-    private ArrayList getMetGuidelinePercentage(DBHandler db, RptInitializePatientsMetGuidelineCDMReportForm frm, ArrayList metGLPercentageMsg, HttpServletRequest request){
+    private ArrayList getMetGuidelinePercentage(RptInitializePatientsMetGuidelineCDMReportForm frm, ArrayList metGLPercentageMsg, HttpServletRequest request){
         String[] startDateB = frm.getStartDateB();
         String[] endDateB = frm.getEndDateB(); 
         String[] idB = frm.getIdB();
@@ -234,18 +234,18 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
                                  + "' AND type='"+ measurementType + "'AND measuringInstruction='"+ mInstrc 
                                  + "' group by demographicNo";
                             MiscUtils.getLogger().debug("SQL statement is" + sql);
-                            rs = db.GetSQL(sql);                            
+                            rs = DBHandler.GetSQL(sql);                            
                             double nbGeneral = 0;                            
                                                         
                             if (measurementType.compareTo("BP")==0){
                                                                 
                                 MiscUtils.getLogger().debug("SQL statement is " + sql);
-                                rs = db.GetSQL(sql);
+                                rs = DBHandler.GetSQL(sql);
                                 while(rs.next()){
                                     sql =   "SELECT dataField FROM measurements WHERE dateEntered = '" + rs.getString("max(dateEntered)") + 
                                             "' AND demographicNo = '" + rs.getString("demographicNo") 
                                             + "' AND type='"+ measurementType + "'AND measuringInstruction='"+ mInstrc + "'";
-                                    ResultSet rsData =  db.GetSQL(sql);
+                                    ResultSet rsData =  DBHandler.GetSQL(sql);
                                     if (rsData.next()){
                                         if(checkGuideline.isBloodPressureMetGuideline(rsData.getString("dataField"), guideline, aboveBelow)){
                                             nbMetGL++;
@@ -267,13 +267,13 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
                                 MiscUtils.getLogger().debug(msg);
                                 metGLPercentageMsg.add(msg);           
                             }
-                            else if (checkGuideline.getValidation(db, measurementType)==1)
+                            else if (checkGuideline.getValidation(measurementType)==1)
                             {
                                 while(rs.next()){
                                     sql =   "SELECT dataField FROM measurements WHERE dateEntered = '" + rs.getString("max(dateEntered)") 
                                             + "' AND demographicNo = '" + rs.getString("demographicNo") + "' AND type='"+ measurementType + "' AND measuringInstruction='"+ mInstrc
                                             + "' AND dataField" + aboveBelow + "'" + guideline + "'";
-                                    ResultSet rsData = db.GetSQL(sql);
+                                    ResultSet rsData = DBHandler.GetSQL(sql);
                                     rsData.last();
                                     if(rsData.getRow()>0)
                                         nbMetGL++;
@@ -300,7 +300,7 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
                                     sql =   "SELECT dataField FROM measurements WHERE dateEntered = '" + rs.getString("max(dateEntered)") + 
                                             "' AND demographicNo = '" + rs.getString("demographicNo") 
                                             + "' AND type='"+ measurementType + "'AND measuringInstruction='"+ mInstrc + "'";
-                                    ResultSet rsData =  db.GetSQL(sql);
+                                    ResultSet rsData =  DBHandler.GetSQL(sql);
                                     if (rsData.next()){
                                         if(checkGuideline.isYesNoMetGuideline(rsData.getString("dataField"), guideline)){
                                             nbMetGL++;
@@ -332,17 +332,17 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
                         sql = "SELECT demographicNo, max(dateEntered) FROM measurements WHERE dateObserved >='" + startDate + "'AND dateObserved <='" + endDate
                                  + "' AND type='"+ measurementType +  "' group by demographicNo";
                             MiscUtils.getLogger().debug("SQL statement is" + sql);
-                            rs = db.GetSQL(sql);                            
+                            rs = DBHandler.GetSQL(sql);                            
                             double nbGeneral = 0;                            
                                                         
                             if (measurementType.compareTo("BP")==0){
                                                                 
                                 MiscUtils.getLogger().debug("SQL statement is " + sql);
-                                rs = db.GetSQL(sql);
+                                rs = DBHandler.GetSQL(sql);
                                 while(rs.next()){
                                     sql =   "SELECT dataField FROM measurements WHERE dateEntered = '" + rs.getString("max(dateEntered)") + 
                                             "' AND demographicNo = '" + rs.getString("demographicNo") + "' AND type='"+ measurementType + "'";
-                                    ResultSet rsData =  db.GetSQL(sql);
+                                    ResultSet rsData =  DBHandler.GetSQL(sql);
                                     if (rsData.next()){
                                         if(checkGuideline.isBloodPressureMetGuideline(rsData.getString("dataField"), guideline, aboveBelow)){
                                             nbMetGL++;
@@ -364,13 +364,13 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
                                 MiscUtils.getLogger().debug(msg);
                                 metGLPercentageMsg.add(msg);           
                             }
-                            else if (checkGuideline.getValidation(db, measurementType)==1)
+                            else if (checkGuideline.getValidation(measurementType)==1)
                             {
                                 while(rs.next()){
                                     sql =   "SELECT dataField FROM measurements WHERE dateEntered = '" + rs.getString("max(dateEntered)") 
                                             + "' AND demographicNo = '" + rs.getString("demographicNo") + "' AND type='"+ measurementType
                                             + "' AND dataField" + aboveBelow + "'" + guideline + "'";
-                                    ResultSet rsData = db.GetSQL(sql);
+                                    ResultSet rsData = DBHandler.GetSQL(sql);
                                     rsData.last();
                                     if(rsData.getRow()>0)
                                         nbMetGL++;
@@ -395,7 +395,7 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
                                 while(rs.next()){
                                     sql =   "SELECT dataField FROM measurements WHERE dateEntered = '" + rs.getString("max(dateEntered)") + 
                                             "' AND demographicNo = '" + rs.getString("demographicNo") + "' AND type='"+ measurementType + "'";
-                                    ResultSet rsData =  db.GetSQL(sql);
+                                    ResultSet rsData =  DBHandler.GetSQL(sql);
                                     if (rsData.next()){
                                         if(checkGuideline.isYesNoMetGuideline(rsData.getString("dataField"), guideline)){
                                             nbMetGL++;
@@ -445,7 +445,7 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
         String endDate = frm.getEndDateA();
         RptCheckGuideline checkGuideline = new RptCheckGuideline();
         RptMeasurementsData mData = new RptMeasurementsData();
-        ArrayList patients = mData.getPatientsSeen(db, startDate, endDate);
+        ArrayList patients = mData.getPatientsSeen(startDate, endDate);
         int nbPatients = patients.size();
         double nbPatientsDoneAllTest = 0;
         double nbPatientsPassAllTest = 0;
@@ -470,10 +470,10 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
                     
                     String sql = "SELECT DISTINCT type, measuringInstruction FROM measurements WHERE demographicNo='" + patient + "'";                              
 
-                    for(rs=db.GetSQL(sql);rs.next(); ){ 
+                    for(rs=DBHandler.GetSQL(sql);rs.next(); ){ 
                         sql =   "SELECT dataField FROM measurements WHERE demographicNo='"+patient+"' AND type='"+ rs.getString("type") 
                                 + "' ORDER BY dateEntered DESC LIMIT 1";
-                        rsData = db.GetSQL(sql);
+                        rsData = DBHandler.GetSQL(sql);
                         if(rsData.next()){
                             testsDone.add(rs.getString("type"));
                             data.add(rsData.getString("dataField"));
@@ -496,7 +496,7 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
                                 MiscUtils.getLogger().debug("testdone: " + testDone);                           
                                 if(measurementType.compareTo(testDone)==0){                                 
 
-                                    if(checkGuideline.getValidation(db, measurementType)==1){ 
+                                    if(checkGuideline.getValidation(measurementType)==1){ 
                                         passAllTests = checkGuideline.isNumericValueMetGuideline(Double.parseDouble((String) data.get(k)), guideline, aboveBelow);                                    
                                     }
                                     else if(measurementType.compareTo("BP") == 0){

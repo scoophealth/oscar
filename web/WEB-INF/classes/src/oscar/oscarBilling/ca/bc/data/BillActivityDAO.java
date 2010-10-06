@@ -99,9 +99,7 @@ public class BillActivityDAO {
          //beginningOfYear.set(Calendar.MONTH,0);
          beginningOfYear.set(Calendar.DAY_OF_YEAR,1);
          /////
-         DBHandler dbhandler = null;
          try {             
-            dbhandler = new DBHandler();
             String s = "select * from billactivity where monthCode=? and groupno=? and updatedatetime > ? and status <> 'D' order by batchcount";
             PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(s);
                 pstmt.setString(1,getMonthCode(d));
@@ -143,10 +141,7 @@ public class BillActivityDAO {
     */
     public int saveBillactivity(String monthCode,String batchCount,String htmlFilename, String mspFilename, String providerNo, String htmlFile,String mspFile, Date date,int records, String fileTotal ){
         int id = 0;
-        ////
-        DBHandler dbhandler = null;
         try {             
-           dbhandler = new DBHandler();
                                                          //1 2 3 4 5 6 7 8 9 0 1 2 3     
            String query = "insert into billactivity (monthCode,batchcount,htmlfilename,ohipfilename,providerohipno,groupno,creator,htmlcontext,ohipcontext,claimrecord,updatedatetime,status,total ) values (?,?,?,?,?,?,?,?,?,?,?,?,?)";
         
@@ -181,9 +176,7 @@ public class BillActivityDAO {
     }
     
     public void setStatusToSent(Billactivity b){
-        DBHandler dbhandler = null;
         try {             
-           dbhandler = new DBHandler();
                                                          //1 2 3 4 5 6 7 8 9 0 1 2 3     
            String query = "update billactivity set status = ?, sentdate = ? where id = ? ";
         

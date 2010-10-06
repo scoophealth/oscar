@@ -292,10 +292,10 @@ public class EctConsultationFormRequestPrintPdf {
         try {
             
             String sql = "SELECT lab_no FROM patientLabRouting p, consultdocs c WHERE p.id = c.document_no AND c.requestId='"+reqId+"' AND c.doctype='L' AND c.deleted IS NULL";
-            DBHandler db = new DBHandler();
-            ResultSet rs = db.GetSQL(sql);
+            
+            ResultSet rs = DBHandler.GetSQL(sql);
             while(rs.next()){
-                String segmentId = db.getString(rs,"lab_no");
+                String segmentId = DBHandler.getString(rs,"lab_no");
                 request.setAttribute("segmentID", segmentId);
                 MessageHandler handler = Factory.getHandler(segmentId);
                 String fileName = OscarProperties.getInstance().getProperty("DOCUMENT_DIR")+"//"+handler.getPatientName().replaceAll("\\s", "_")+"_"+handler.getMsgDate()+"_LabReport.pdf";

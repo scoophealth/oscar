@@ -40,21 +40,21 @@ public class PatientData
     public Patient getPatient(String demographicNo)
         throws SQLException
     {
-        DBHandler db = new DBHandler();
+        
         ResultSet rs;
         Patient p = null;
 
         try
         {
-            rs = db.GetSQL("SELECT patientName, dOB, healthNumber, sex, homePhone, "
+            rs = DBHandler.GetSQL("SELECT patientName, dOB, healthNumber, sex, homePhone, "
                 + "altPatientID "
                 + "FROM mdsPID WHERE segmentID = " + demographicNo);
 
             if(rs.next())
             {
-                p = new Patient(db.getString(rs,"patientName"), db.getString(rs,"dOB"),
-                    db.getString(rs,"healthNumber"), db.getString(rs,"sex"),
-                    db.getString(rs,"homePhone"), db.getString(rs,"altPatientID"));
+                p = new Patient(DBHandler.getString(rs,"patientName"), DBHandler.getString(rs,"dOB"),
+                    DBHandler.getString(rs,"healthNumber"), DBHandler.getString(rs,"sex"),
+                    DBHandler.getString(rs,"homePhone"), DBHandler.getString(rs,"altPatientID"));
             }
 
             rs.close();

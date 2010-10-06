@@ -45,13 +45,13 @@ public class EctStyleSheetBeanHandler {
         
         boolean verdict = true;
         try {
-            DBHandler db = new DBHandler();
+            
             String sql = "SELECT * from measurementCSSLocation ORDER BY cssID";
             MiscUtils.getLogger().debug("Sql Statement: " + sql);
             ResultSet rs;
-            for(rs = db.GetSQL(sql); rs.next(); )
+            for(rs = DBHandler.GetSQL(sql); rs.next(); )
             {
-                EctStyleSheetBean location = new EctStyleSheetBean(db.getString(rs,"location"), rs.getInt("cssID"));
+                EctStyleSheetBean location = new EctStyleSheetBean(DBHandler.getString(rs,"location"), rs.getInt("cssID"));
                 styleSheetNameVector.add(location);
             }
 

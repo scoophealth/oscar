@@ -52,15 +52,15 @@ public class DemographicData {
 		_log.debug("test");
 		MiscUtils.getLogger().debug("test");
 		try {
-			DBHandler db = new DBHandler();
+			
 			ResultSet rs;
 			String sql = "SELECT first_name, last_name FROM demographic WHERE demographic_no = '" + demographicNo + "'";
-			rs = db.GetSQL(sql);
+			rs = DBHandler.GetSQL(sql);
 			MiscUtils.getLogger().debug("sql: " + sql);
 
 			if (rs.next()) {
-				MiscUtils.getLogger().debug(db.getString(rs, "first_name"));
-				fullName = db.getString(rs, "first_name") + " " + db.getString(rs, "last_name");
+				MiscUtils.getLogger().debug(DBHandler.getString(rs, "first_name"));
+				fullName = DBHandler.getString(rs, "first_name") + " " + DBHandler.getString(rs, "last_name");
 			}
 			rs.close();
 
@@ -75,13 +75,13 @@ public class DemographicData {
 		Date date = null;
 
 		try {
-			DBHandler db = new DBHandler();
+			
 			ResultSet rs;
 			String sql = "SELECT year_of_birth,month_of_birth,date_of_birth FROM demographic WHERE demographic_no = '" + demographicNo + "'";
-			rs = db.GetSQL(sql);
+			rs = DBHandler.GetSQL(sql);
 			if (rs.next()) {
 				try {
-					date = (Date) formatter.parse(db.getString(rs, "year_of_birth") + "-" + db.getString(rs, "month_of_birth") + "-" + db.getString(rs, "date_of_birth"));
+					date = (Date) formatter.parse(DBHandler.getString(rs, "year_of_birth") + "-" + DBHandler.getString(rs, "month_of_birth") + "-" + DBHandler.getString(rs, "date_of_birth"));
 				} catch (Exception eg) {
 				}
 			}
@@ -98,12 +98,12 @@ public class DemographicData {
 		String demographicNo = "";
 
 		try {
-			DBHandler db = new DBHandler();
+			
 			ResultSet rs;
 			String sql = "SELECT demographic_no FROM demographic WHERE pin = '" + pin + "'";
-			rs = db.GetSQL(sql);
+			rs = DBHandler.GetSQL(sql);
 			if (rs.next()) {
-				demographicNo = db.getString(rs, "demographic_no");
+				demographicNo = DBHandler.getString(rs, "demographic_no");
 			}
 			rs.close();
 			return demographicNo;
@@ -117,7 +117,7 @@ public class DemographicData {
 		String demographicNo = "";
 
 		try {
-			DBHandler db = new DBHandler();
+			
 			ResultSet rs;
 
 			firstName = "first_name='" + firstName.trim() + "' ";
@@ -128,9 +128,9 @@ public class DemographicData {
 
 			String sql = "SELECT demographic_no FROM demographic WHERE " + firstName + lastName + hPhone + wPhone + email;
 
-			rs = db.GetSQL(sql);
+			rs = DBHandler.GetSQL(sql);
 			if (rs.next()) {
-				demographicNo = db.getString(rs, "demographic_no");
+				demographicNo = DBHandler.getString(rs, "demographic_no");
 			}
 			rs.close();
 			return demographicNo;
@@ -144,10 +144,10 @@ public class DemographicData {
 	public int numDemographicsWithHIN(String hin) {
 		int num = 0;
 		try {
-			DBHandler db = new DBHandler();
+			
 			ResultSet rs;
 			String sql = "SELECT count(*) as c FROM demographic WHERE hin = '" + hin + "'";
-			rs = db.GetSQL(sql);
+			rs = DBHandler.GetSQL(sql);
 			if (rs.next()) {
 				num = rs.getInt("c");
 			}
@@ -165,13 +165,13 @@ public class DemographicData {
 	public ArrayList getDemographicWithHIN(String hin) {
 		ArrayList list = new ArrayList();
 		try {
-			DBHandler db = new DBHandler();
+			
 			ResultSet rs;
 			String sql = "SELECT demographic_no FROM demographic WHERE hin = '" + hin + "'";
 
-			rs = db.GetSQL(sql);
+			rs = DBHandler.GetSQL(sql);
 			while (rs.next()) {
-				String demoNo = db.getString(rs, "demographic_no");
+				String demoNo = DBHandler.getString(rs, "demographic_no");
 
 				list.add(getDemographic(demoNo));
 			}
@@ -201,16 +201,16 @@ public class DemographicData {
 	public ArrayList getDemographicWithLastFirstDOB(String lastname, String firstname, String year_of_birth, String month_of_birth, String date_of_birth) {
 		ArrayList list = new ArrayList();
 		try {
-			DBHandler db = new DBHandler();
+			
 			ResultSet rs;
 			String sql = "SELECT demographic_no FROM demographic " + " WHERE last_name like '" + lastname + "%' and first_name like '" + lastname + "%'";
 			if (year_of_birth!=null) sql=sql+"  and year_of_birth = '" + year_of_birth + "'";
 			if (month_of_birth!=null) sql=sql+" and month_of_birth = '" + month_of_birth + "'";
 			if (date_of_birth!=null) sql=sql+" and date_of_birth = '" + date_of_birth + "'";
 			
-			rs = db.GetSQL(sql);
+			rs = DBHandler.GetSQL(sql);
 			while (rs.next()) {
-				String demoNo = db.getString(rs, "demographic_no");
+				String demoNo = DBHandler.getString(rs, "demographic_no");
 
 				list.add(getDemographic(demoNo));
 			}
@@ -224,16 +224,16 @@ public class DemographicData {
 	public String getNameAgeString(String demographicNo) {
 		String nameage = "";
 		try {
-			DBHandler db = new DBHandler();
+			
 			ResultSet rs;
 			String sql = "SELECT last_name, first_name, year_of_birth,sex,month_of_birth,date_of_birth FROM demographic WHERE demographic_no = '" + demographicNo + "'";
-			rs = db.GetSQL(sql);
+			rs = DBHandler.GetSQL(sql);
 			if (rs.next()) {
-				String age = UtilDateUtilities.calcAge(UtilDateUtilities.calcDate(db.getString(rs, "year_of_birth"), db.getString(rs, "month_of_birth"), db.getString(rs, "date_of_birth")));
+				String age = UtilDateUtilities.calcAge(UtilDateUtilities.calcDate(DBHandler.getString(rs, "year_of_birth"), DBHandler.getString(rs, "month_of_birth"), DBHandler.getString(rs, "date_of_birth")));
 				if (age == null) {
 					age = "";
 				}
-				nameage = db.getString(rs, "last_name") + ", " + db.getString(rs, "first_name") + " " + db.getString(rs, "sex") + " " + age;
+				nameage = DBHandler.getString(rs, "last_name") + ", " + DBHandler.getString(rs, "first_name") + " " + DBHandler.getString(rs, "sex") + " " + age;
 			}
 
 			rs.close();
@@ -247,16 +247,16 @@ public class DemographicData {
 	public String[] getNameAgeSexArray(String demographicNo) {
 		String[] nameage = null;
 		try {
-			DBHandler db = new DBHandler();
+			
 			ResultSet rs;
 			String sql = "SELECT last_name, first_name, year_of_birth,sex,month_of_birth,date_of_birth FROM demographic WHERE demographic_no = '" + demographicNo + "'";
-			rs = db.GetSQL(sql);
+			rs = DBHandler.GetSQL(sql);
 			if (rs.next()) {
-				String age = UtilDateUtilities.calcAge(UtilDateUtilities.calcDate(db.getString(rs, "year_of_birth"), db.getString(rs, "month_of_birth"), db.getString(rs, "date_of_birth")));
+				String age = UtilDateUtilities.calcAge(UtilDateUtilities.calcDate(DBHandler.getString(rs, "year_of_birth"), DBHandler.getString(rs, "month_of_birth"), DBHandler.getString(rs, "date_of_birth")));
 				if (age == null) {
 					age = "";
 				}
-				nameage = new String[] { db.getString(rs, "last_name"), db.getString(rs, "first_name"), db.getString(rs, "sex"), age };
+				nameage = new String[] { DBHandler.getString(rs, "last_name"), DBHandler.getString(rs, "first_name"), DBHandler.getString(rs, "sex"), age };
 			}
 
 			rs.close();
@@ -270,13 +270,13 @@ public class DemographicData {
 	public String getDemographicSex(String demographicNo) {
 		String retval = "";
 		try {
-			DBHandler db = new DBHandler();
+			
 			ResultSet rs;
 			String sql = "SELECT sex FROM demographic WHERE demographic_no = '" + demographicNo + "'";
-			rs = db.GetSQL(sql);
+			rs = DBHandler.GetSQL(sql);
 			if (rs.next()) {
 				try {
-					retval = db.getString(rs, "sex");
+					retval = DBHandler.getString(rs, "sex");
 				} catch (Exception eg) {
 				}
 			}
@@ -303,16 +303,16 @@ public class DemographicData {
 		Demographic demographic = null;
 
 		try {
-			DBHandler db = new DBHandler();
+			
 			ResultSet rs;
 			String sql = "SELECT * FROM demographic WHERE demographic_no = '" + DemographicNo + "'";
 
-			rs = db.GetSQL(sql);
+			rs = DBHandler.GetSQL(sql);
 
 			if (rs.next()) {
-				demographic = new Demographic(DemographicNo, db.getString(rs, "title"), db.getString(rs, "last_name"), db.getString(rs, "first_name"), db.getString(rs, "address"), db.getString(rs, "city"), db.getString(rs, "province"), db.getString(rs, "postal"), db.getString(rs, "phone"), db.getString(rs, "phone2"), db.getString(rs, "email"), db.getString(rs, "pin"), db.getString(rs, "year_of_birth"), db.getString(rs, "month_of_birth"), db.getString(rs, "date_of_birth"), db.getString(rs, "hin"), db
-				        .getString(rs, "ver"), db.getString(rs, "roster_status"), db.getString(rs, "patient_status"), db.getString(rs, "date_joined"), db.getString(rs, "chart_no"), db.getString(rs, "official_lang"), db.getString(rs, "spoken_lang"), db.getString(rs, "provider_no"), db.getString(rs, "sex"), db.getString(rs, "end_date"), db.getString(rs, "eff_date"), db.getString(rs, "pcn_indicator"), db.getString(rs, "hc_type"), db.getString(rs, "hc_renew_date"), db.getString(rs, "family_doctor"), db
-				        .getString(rs, "alias"), db.getString(rs, "previousAddress"), db.getString(rs, "children"), db.getString(rs, "sourceOfIncome"), db.getString(rs, "citizenship"), db.getString(rs, "sin"));
+				demographic = new Demographic(DemographicNo, DBHandler.getString(rs, "title"), DBHandler.getString(rs, "last_name"), DBHandler.getString(rs, "first_name"), DBHandler.getString(rs, "address"), DBHandler.getString(rs, "city"), DBHandler.getString(rs, "province"), DBHandler.getString(rs, "postal"), DBHandler.getString(rs, "phone"), DBHandler.getString(rs, "phone2"), DBHandler.getString(rs, "email"), DBHandler.getString(rs, "pin"), DBHandler.getString(rs, "year_of_birth"), DBHandler.getString(rs, "month_of_birth"), DBHandler.getString(rs, "date_of_birth"), DBHandler.getString(rs, "hin"), DBHandler
+				        .getString(rs, "ver"), DBHandler.getString(rs, "roster_status"), DBHandler.getString(rs, "patient_status"), DBHandler.getString(rs, "date_joined"), DBHandler.getString(rs, "chart_no"), DBHandler.getString(rs, "official_lang"), DBHandler.getString(rs, "spoken_lang"), DBHandler.getString(rs, "provider_no"), DBHandler.getString(rs, "sex"), DBHandler.getString(rs, "end_date"), DBHandler.getString(rs, "eff_date"), DBHandler.getString(rs, "pcn_indicator"), DBHandler.getString(rs, "hc_type"), DBHandler.getString(rs, "hc_renew_date"), DBHandler.getString(rs, "family_doctor"), DBHandler
+				        .getString(rs, "alias"), DBHandler.getString(rs, "previousAddress"), DBHandler.getString(rs, "children"), DBHandler.getString(rs, "sourceOfIncome"), DBHandler.getString(rs, "citizenship"), DBHandler.getString(rs, "sin"));
 			}
 
 			rs.close();
@@ -328,12 +328,12 @@ public class DemographicData {
 		String demographicNo = "";
 
 		try {
-			DBHandler db = new DBHandler();
+			
 			ResultSet rs;
 			String sql = "SELECT demographic_no FROM demographic WHERE pin = '" + pin + "'";
-			rs = db.GetSQL(sql);
+			rs = DBHandler.GetSQL(sql);
 			if (rs.next()) {
-				demographicNo = db.getString(rs, "demographic_no");
+				demographicNo = DBHandler.getString(rs, "demographic_no");
 			}
 			rs.close();
 			return demographicNo;
@@ -346,14 +346,14 @@ public class DemographicData {
 	public String getDemographicDateJoined(String DemographicNo) {
 		String date = null;
 		try {
-			DBHandler db = new DBHandler();
+			
 			ResultSet rs;
 			String sql = "SELECT date_joined FROM demographic WHERE demographic_no = '" + DemographicNo + "'";
 
-			rs = db.GetSQL(sql);
+			rs = DBHandler.GetSQL(sql);
 
 			if (rs.next()) {
-				date = db.getString(rs, "date_joined");// getString("date_joined");
+				date = DBHandler.getString(rs, "date_joined");// getString("date_joined");
 			}
 
 			rs.close();
@@ -365,15 +365,15 @@ public class DemographicData {
 	}
 
 	public void setDemographicPin(String demographicNo, String pin) throws Exception {
-		DBHandler db = new DBHandler();
+		
 		String sql = "UPDATE demographic SET pin = '" + pin + "' WHERE demographic_no = " + demographicNo;
-		db.RunSQL(sql);
+		DBHandler.RunSQL(sql);
 	}
 
 	public void setDemographic(Demographic dm) throws Exception {
 		if (dm.getDemographicNo()==null || dm.getDemographicNo().trim().equals("")) return;
 
-		DBHandler db = new DBHandler();
+		
 		String sql = "UPDATE demographic SET " +
 						"title = '" + dm.getTitle() + "', " +
 						"last_name = '" + dm.getLastName() + "', " +
@@ -412,7 +412,7 @@ public class DemographicData {
 						"citizenship = '" + dm.getCitizenship() + "', " +
 						"sin = '" + dm.getSin() + "' " +
 					"WHERE demographic_no = " + dm.getDemographicNo();
-		db.RunSQL(sql);
+		DBHandler.RunSQL(sql);
 	}
 
 	public class Demographic {
@@ -509,50 +509,50 @@ public class DemographicData {
 		private void init(String DemographicNo) {
 
 			try {
-				DBHandler db = new DBHandler();
+				
 				ResultSet rs;
 				String sql = "SELECT * FROM demographic WHERE demographic_no = '" + DemographicNo + "'";
 
-				rs = db.GetSQL(sql);
+				rs = DBHandler.GetSQL(sql);
 
 				if (rs.next()) {
 					this.demographic_no = DemographicNo;
-					this.title = db.getString(rs, "title");
-					this.last_name = db.getString(rs, "last_name");
-					this.first_name = db.getString(rs, "first_name");
-					this.address = db.getString(rs, "address");
-					this.city = db.getString(rs, "city");
-					this.province = db.getString(rs, "province");
-					this.postal = db.getString(rs, "postal");
-					this.phone = db.getString(rs, "phone");
-					this.phone2 = db.getString(rs, "phone2");
-					this.email = db.getString(rs, "email");
-					this.pin = db.getString(rs, "pin");
-					this.year_of_birth = db.getString(rs, "year_of_birth");
-					this.month_of_birth = db.getString(rs, "month_of_birth");
-					this.date_of_birth = db.getString(rs, "date_of_birth");
-					this.hin = db.getString(rs, "hin");
-					this.ver = db.getString(rs, "ver");
-					this.roster_status = db.getString(rs, "roster_status");
-					this.patient_status = db.getString(rs, "patient_status");
-					this.date_joined = db.getString(rs, "date_joined");
-					this.chart_no = db.getString(rs, "chart_no");
-					this.official_lang = db.getString(rs, "official_lang");
-					this.spoken_lang = db.getString(rs, "spoken_lang");
-					this.provider_no = db.getString(rs, "provider_no");
-					this.sex = db.getString(rs, "sex");
-					this.end_date = db.getString(rs, "end_date");
-					this.eff_date = db.getString(rs, "eff_date");
-					this.pcn_indicator = db.getString(rs, "pcn_indicator");
-					this.hc_type = db.getString(rs, "hc_type");
-					this.hc_renew_date = db.getString(rs, "hc_renew_date");
-					this.family_doctor = db.getString(rs, "family_doctor");
-					this.alias = db.getString(rs, "alias");
-					this.previousAddress = db.getString(rs, "previousAddress");
-					this.children = db.getString(rs, "children");
-					this.sourceOfIncome = db.getString(rs, "sourceOfIncome");
-					this.citizenship = db.getString(rs, "citizenship");
-					this.sin = db.getString(rs, "sin");
+					this.title = DBHandler.getString(rs, "title");
+					this.last_name = DBHandler.getString(rs, "last_name");
+					this.first_name = DBHandler.getString(rs, "first_name");
+					this.address = DBHandler.getString(rs, "address");
+					this.city = DBHandler.getString(rs, "city");
+					this.province = DBHandler.getString(rs, "province");
+					this.postal = DBHandler.getString(rs, "postal");
+					this.phone = DBHandler.getString(rs, "phone");
+					this.phone2 = DBHandler.getString(rs, "phone2");
+					this.email = DBHandler.getString(rs, "email");
+					this.pin = DBHandler.getString(rs, "pin");
+					this.year_of_birth = DBHandler.getString(rs, "year_of_birth");
+					this.month_of_birth = DBHandler.getString(rs, "month_of_birth");
+					this.date_of_birth = DBHandler.getString(rs, "date_of_birth");
+					this.hin = DBHandler.getString(rs, "hin");
+					this.ver = DBHandler.getString(rs, "ver");
+					this.roster_status = DBHandler.getString(rs, "roster_status");
+					this.patient_status = DBHandler.getString(rs, "patient_status");
+					this.date_joined = DBHandler.getString(rs, "date_joined");
+					this.chart_no = DBHandler.getString(rs, "chart_no");
+					this.official_lang = DBHandler.getString(rs, "official_lang");
+					this.spoken_lang = DBHandler.getString(rs, "spoken_lang");
+					this.provider_no = DBHandler.getString(rs, "provider_no");
+					this.sex = DBHandler.getString(rs, "sex");
+					this.end_date = DBHandler.getString(rs, "end_date");
+					this.eff_date = DBHandler.getString(rs, "eff_date");
+					this.pcn_indicator = DBHandler.getString(rs, "pcn_indicator");
+					this.hc_type = DBHandler.getString(rs, "hc_type");
+					this.hc_renew_date = DBHandler.getString(rs, "hc_renew_date");
+					this.family_doctor = DBHandler.getString(rs, "family_doctor");
+					this.alias = DBHandler.getString(rs, "alias");
+					this.previousAddress = DBHandler.getString(rs, "previousAddress");
+					this.children = DBHandler.getString(rs, "children");
+					this.sourceOfIncome = DBHandler.getString(rs, "sourceOfIncome");
+					this.citizenship = DBHandler.getString(rs, "citizenship");
+					this.sin = DBHandler.getString(rs, "sin");
 				}
 
 				rs.close();
@@ -1102,7 +1102,7 @@ public class DemographicData {
 
 		if (!duplicateRecord) {
 			try {
-				DBHandler db = new DBHandler();
+				
 				Connection conn = DBHandler.getConnection();
 
 				PreparedStatement add_record = conn.prepareStatement(add_record_string);
@@ -1171,8 +1171,8 @@ public class DemographicData {
 		String sql = "INSERT INTO demographiccust VALUES ('" + demoNo + "','','','','','<unotes>" + content + "</unotes>')";
 		DBHandler db;
 		try {
-			db = new DBHandler();
-			db.RunSQL(sql);
+			
+			DBHandler.RunSQL(sql);
 		} catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
 		}
 	}

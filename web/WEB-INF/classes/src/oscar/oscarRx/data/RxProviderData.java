@@ -37,42 +37,42 @@ public class RxProviderData {
 
         try {
             //Get Provider from database
-            DBHandler db = new DBHandler();
+            
             ResultSet rs;
             String sql = "SELECT * FROM provider WHERE provider_no = '" + providerNo + "'";
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
 
             String providerClinicPhone=null, surname=null, firstName=null,  clinicName=null, clinicAddress=null, clinicCity=null, clinicPostal=null, clinicPhone=null, clinicFax=null, clinicProvince=null, practitionerNo=null;
             if (rs.next()) {
-                surname = db.getString(rs,"last_name");
-                firstName = db.getString(rs,"first_name");
-                practitionerNo = db.getString(rs,"practitionerNo");
+                surname = DBHandler.getString(rs,"last_name");
+                firstName = DBHandler.getString(rs,"first_name");
+                practitionerNo = DBHandler.getString(rs,"practitionerNo");
                 if(firstName.indexOf("Dr.")<0) {
                     firstName = "Dr. " + firstName;
                 }
-                providerClinicPhone = db.getString(rs,"work_phone");
+                providerClinicPhone = DBHandler.getString(rs,"work_phone");
             }
 
             sql = "SELECT value FROM property WHERE name = 'faxnumber' AND provider_no = '" + providerNo + "'";
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
             
             if( rs.next() ) {
-                clinicFax = db.getString(rs,"value");
+                clinicFax = DBHandler.getString(rs,"value");
             }
             
             sql = "SELECT * FROM clinic";
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
 
             if (rs.next()) {
-                clinicName = db.getString(rs,"clinic_name");
-                clinicAddress = db.getString(rs,"clinic_address");
-                clinicCity = db.getString(rs,"clinic_city");
-                clinicPostal = db.getString(rs,"clinic_postal");
-                clinicPhone = db.getString(rs,"clinic_phone");
-                clinicProvince = db.getString(rs,"clinic_province");
+                clinicName = DBHandler.getString(rs,"clinic_name");
+                clinicAddress = DBHandler.getString(rs,"clinic_address");
+                clinicCity = DBHandler.getString(rs,"clinic_city");
+                clinicPostal = DBHandler.getString(rs,"clinic_postal");
+                clinicPhone = DBHandler.getString(rs,"clinic_phone");
+                clinicProvince = DBHandler.getString(rs,"clinic_province");
                 
                 if( clinicFax == null )
-                    clinicFax = db.getString(rs,"clinic_fax");
+                    clinicFax = DBHandler.getString(rs,"clinic_fax");
             }
 
             if((clinicPhone.length()>15) && (providerClinicPhone != null && !providerClinicPhone.equals(""))) clinicPhone = providerClinicPhone;

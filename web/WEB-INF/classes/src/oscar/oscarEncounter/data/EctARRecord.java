@@ -37,10 +37,10 @@ public class EctARRecord {
 
     public Properties getARRecord(int demographicNo, int existingID) throws SQLException {
         Properties properties = new Properties();
-        DBHandler dbhandler = new DBHandler();
+        
         if( existingID <= 0) {
             String s = "SELECT demographic_no, CONCAT(last_name, ', ', first_name) AS pName, sex, CONCAT(address, ', ', city, ', ', province, ' ', postal) AS address, phone, phone2, year_of_birth, month_of_birth, date_of_birth FROM demographic WHERE demographic_no = " + demographicNo;
-            ResultSet resultset = dbhandler.GetSQL(s);
+            ResultSet resultset = DBHandler.GetSQL(s);
             if(resultset.next()) {
                 java.util.Date date = UtilDateUtilities.calcDate(resultset.getString("year_of_birth"), resultset.getString("month_of_birth"), resultset.getString("date_of_birth"));
                 properties.setProperty("demographic_no", resultset.getString("demographic_no"));
@@ -57,7 +57,7 @@ public class EctARRecord {
             resultset.close();
         } else {
             String s1 = "SELECT * FROM formAR WHERE demographic_no = " + demographicNo + " AND ID = " + existingID;
-            ResultSet resultset1 = dbhandler.GetSQL(s1);
+            ResultSet resultset1 = DBHandler.GetSQL(s1);
             if(resultset1.next()) {
                 ResultSetMetaData resultsetmetadata = resultset1.getMetaData();
                 for(int k = 1; k <= resultsetmetadata.getColumnCount(); k++) {
@@ -88,13 +88,13 @@ public class EctARRecord {
         String demographic_no = properties.getProperty("demographic_no");
         String temp = properties.getProperty("c_lastVisited");
         String page = temp.substring(0, 3).toLowerCase() + "_";
-        DBHandler dbhandler = new DBHandler();
+        
 
         String sqlDB = "SELECT * FROM formAR WHERE demographic_no=" + demographic_no + " AND ID=" + formId;
-        ResultSet resultset = dbhandler.GetSQL(sqlDB);
+        ResultSet resultset = DBHandler.GetSQL(sqlDB);
         resultset.next();
         String sqlNew = "SELECT * FROM formAR WHERE demographic_no=" + demographic_no + " AND ID=0";
-        ResultSet resultset1 = dbhandler.GetSQL(sqlNew, true);
+        ResultSet resultset1 = DBHandler.GetSQL(sqlNew, true);
         resultset1.moveToInsertRow();
         ResultSetMetaData resultsetmetadata = resultset1.getMetaData();
 
@@ -149,7 +149,7 @@ public class EctARRecord {
         resultset1.close();
         int j = 0;
         sqlNew = "SELECT LAST_INSERT_ID()";
-        resultset1 = dbhandler.GetSQL(sqlNew);
+        resultset1 = DBHandler.GetSQL(sqlNew);
         if(resultset1.next())
             j = resultset1.getInt(1);
         resultset1.close();
@@ -158,9 +158,9 @@ public class EctARRecord {
 
     public Properties getARPrintRecord(int demographicNo, int existingID) throws SQLException {
         Properties properties = new Properties();
-        DBHandler dbhandler = new DBHandler();
+        
         String s = "SELECT * FROM formAR WHERE demographic_no = " + demographicNo + " AND ID = " + existingID;
-        ResultSet resultset = dbhandler.GetSQL(s);
+        ResultSet resultset = DBHandler.GetSQL(s);
         if(resultset.next()) {
             ResultSetMetaData resultsetmetadata = resultset.getMetaData();
             for(int k = 1; k <= resultsetmetadata.getColumnCount(); k++) {

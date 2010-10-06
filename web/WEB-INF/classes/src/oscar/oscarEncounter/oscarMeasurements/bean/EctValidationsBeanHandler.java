@@ -46,12 +46,12 @@ public class EctValidationsBeanHandler {
         
         boolean verdict = true;
         try {
-            DBHandler db = new DBHandler();
+            
             String sql = "SELECT name,id FROM validations ORDER BY name";
             ResultSet rs;
-            for(rs = db.GetSQL(sql); rs.next(); )
+            for(rs = DBHandler.GetSQL(sql); rs.next(); )
             {
-                EctValidationsBean validation = new EctValidationsBean(db.getString(rs,"name"), rs.getInt("id"));
+                EctValidationsBean validation = new EctValidationsBean(DBHandler.getString(rs,"name"), rs.getInt("id"));
                 validationsVector.add(validation);
             }
 
@@ -100,7 +100,7 @@ public class EctValidationsBeanHandler {
             isDate = "='" + validation.getIsDate() + "'";
         
         try{
-            DBHandler db = new DBHandler();            
+                        
             String sql ="SELECT * FROM validations WHERE regularExp" + regularExp
                         + " AND minValue" + minValue 
                         + " AND maxValue" + maxValue
@@ -109,7 +109,7 @@ public class EctValidationsBeanHandler {
                         + " AND isNumeric" + isNumeric
                         + " AND isDate" + isDate;
 
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
             if(rs.next()){
                 validationId = rs.getInt("id");
 
@@ -129,7 +129,7 @@ public class EctValidationsBeanHandler {
         int validationId = -1;
         
         try{
-            DBHandler db = new DBHandler();            
+                        
             String regularExp = null;
             String minValue = null;
             String maxValue = null;
@@ -169,9 +169,9 @@ public class EctValidationsBeanHandler {
                         + isNumeric + ","
                         + isDate + ")";
 
-            db.RunSQL(sql);
+            DBHandler.RunSQL(sql);
             sql = "SELECT id FROM validations ORDER BY id DESC LIMIT 1";
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
             if(rs.next()){
                 validationId = rs.getInt("id");
             }
@@ -188,20 +188,20 @@ public class EctValidationsBeanHandler {
     public EctValidationsBean getValidation(String val){   
         EctValidationsBean validation = new EctValidationsBean();
         try{
-            DBHandler db = new DBHandler();            
+                        
 
             String sql ="SELECT * FROM  validations WHERE name = '"+StringEscapeUtils.escapeSql(val)+"'";             
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
             
             if (rs.next()){
                 validation.setName(val);
-                validation.setRegularExp(db.getString(rs,"regularExp")); 
-                validation.setMinValue(db.getString(rs,"minValue"));
-                validation.setMaxValue(db.getString(rs,"maxValue"));
-                validation.setMinLength(db.getString(rs,"minLength"));
-                validation.setMaxLength(db.getString(rs,"maxLength"));
-                validation.setIsNumeric(db.getString(rs,"isNumeric"));
-                validation.setIsDate(db.getString(rs,"isDate"));
+                validation.setRegularExp(DBHandler.getString(rs,"regularExp")); 
+                validation.setMinValue(DBHandler.getString(rs,"minValue"));
+                validation.setMaxValue(DBHandler.getString(rs,"maxValue"));
+                validation.setMinLength(DBHandler.getString(rs,"minLength"));
+                validation.setMaxLength(DBHandler.getString(rs,"maxLength"));
+                validation.setIsNumeric(DBHandler.getString(rs,"isNumeric"));
+                validation.setIsDate(DBHandler.getString(rs,"isDate"));
             }
         }catch(SQLException e) {
             MiscUtils.getLogger().error("Error", e);

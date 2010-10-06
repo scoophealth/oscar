@@ -101,12 +101,12 @@ public class PID extends oscar.oscarLab.ca.bc.PathNet.HL7.Node {
    //This inserts a record into the hl7_pid table with a key to the hl7.message_id field 
    //Then gets the last insert Id from the hl7_pid table
    //Then for each PIDContainer in containers ArrayList calls the PIDContainer.ToDatabase
-   public int ToDatabase(DBHandler db, int parent) throws SQLException {
-      db.RunSQL(this.getInsertSql(parent));
-      int lastInsert = super.getLastInsertedId(db);
+   public int ToDatabase(int parent) throws SQLException {
+      DBHandler.RunSQL(this.getInsertSql(parent));
+      int lastInsert = super.getLastInsertedId();
       int size = this.containers.size();
       for(int i = 0; i < size; ++i) {
-         ((PIDContainer)this.containers.get(i)).ToDatabase(db, lastInsert);
+         ((PIDContainer)this.containers.get(i)).ToDatabase(lastInsert);
       }
       return lastInsert;
    }

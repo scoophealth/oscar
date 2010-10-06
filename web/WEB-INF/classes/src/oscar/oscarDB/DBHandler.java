@@ -40,63 +40,62 @@ import org.oscarehr.util.DbConnectionFilter;
  */
 public final class DBHandler {
 
-    public static String OSCAR_DATA = "oscar_sfhc";
+	public static String OSCAR_DATA = "oscar_sfhc";
 
-    public DBHandler() throws SQLException {
-    	// constructor left here to throw exception so 
-    	// classes jsp's don't get "exception never thrown" or 
-    	// "unreachable code" errors.
-    }
+	private DBHandler() {
+		// not intented for instantiation
+	}
 
-    public static Connection getConnection() throws SQLException {
-        return DbConnectionFilter.getThreadLocalDbConnection();
-    }
+	public static Connection getConnection() throws SQLException {
+		return DbConnectionFilter.getThreadLocalDbConnection();
+	}
 
-    public java.sql.ResultSet GetSQL(String SQLStatement) throws SQLException {
-        return this.GetSQL(SQLStatement, false);
-    }
+	public static java.sql.ResultSet GetSQL(String SQLStatement) throws SQLException {
+		return GetSQL(SQLStatement, false);
+	}
 
-    synchronized public java.sql.ResultSet GetSQL(String SQLStatement, boolean updatable) throws SQLException {
-        Statement stmt;
-        ResultSet rs = null;
-        if (updatable) {
-            stmt = getConnection().createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-        }
-        else {
-            //stmt = getConnection().createStatement();
-        	stmt = getConnection().createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_READ_ONLY);
-        }
+	public static ResultSet GetSQL(String SQLStatement, boolean updatable) throws SQLException {
+		Statement stmt;
+		ResultSet rs = null;
+		if (updatable) {
+			stmt = getConnection().createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+		} else {
+			// stmt = getConnection().createStatement();
+			stmt = getConnection().createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+		}
 
-        rs = stmt.executeQuery(SQLStatement);
-        return rs;
-    }
-    synchronized public int RunSQL(String SQLStatement, String para1) throws SQLException {
-        PreparedStatement ps = getConnection().prepareStatement(SQLStatement); 
-        ps.setString(1,para1);
-        int result = ps.executeUpdate();
-        return result;
-    }
-    synchronized public java.sql.ResultSet GetPreSQL(String SQLStatement, String para1) throws SQLException {
-        PreparedStatement ps = getConnection().prepareStatement(SQLStatement); 
-        ps.setString(1,para1);
-        ResultSet result = ps.executeQuery();
-        return result;
-    }
-    synchronized public boolean RunSQL(String SQLStatement) throws SQLException {
-        boolean b = false;
-        Statement stmt;
-        stmt = getConnection().createStatement();
-        b = stmt.execute(SQLStatement);
-        return b;
-    }
+		rs = stmt.executeQuery(SQLStatement);
+		return rs;
+	}
 
-    public String getString(ResultSet rs, String columnName) throws SQLException
-    {
-    	return oscar.Misc.getString(rs, columnName);
-    }
-    public String getString(ResultSet rs, int columnIndex) throws SQLException
-    {
-    	return oscar.Misc.getString(rs, columnIndex);
-    }
-    
+	public static int RunSQL(String SQLStatement, String para1) throws SQLException {
+		PreparedStatement ps = getConnection().prepareStatement(SQLStatement);
+		ps.setString(1, para1);
+		int result = ps.executeUpdate();
+		return result;
+	}
+
+	public static java.sql.ResultSet GetPreSQL(String SQLStatement, String para1) throws SQLException {
+		PreparedStatement ps = getConnection().prepareStatement(SQLStatement);
+		ps.setString(1, para1);
+		ResultSet result = ps.executeQuery();
+		return result;
+	}
+
+	public static boolean RunSQL(String SQLStatement) throws SQLException {
+		boolean b = false;
+		Statement stmt;
+		stmt = getConnection().createStatement();
+		b = stmt.execute(SQLStatement);
+		return b;
+	}
+
+	public static String getString(ResultSet rs, String columnName) throws SQLException {
+		return oscar.Misc.getString(rs, columnName);
+	}
+
+	public static String getString(ResultSet rs, int columnIndex) throws SQLException {
+		return oscar.Misc.getString(rs, columnIndex);
+	}
+
 }

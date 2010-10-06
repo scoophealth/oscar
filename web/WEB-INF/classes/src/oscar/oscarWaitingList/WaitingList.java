@@ -48,13 +48,13 @@ public class WaitingList{
 	}
 
     public boolean checkWaitingListTable(){       
-       DBHandler db = null;
+       
        ResultSet rs = null;
        try{
-           db = new DBHandler();
+           
            String sql = "SELECT count(*) FROM waitingListName where is_history = 'N' ";
 //           String sql = "SELECT * FROM waitingListName where is_history = 'N' limit 1 ";
-           rs = db.GetSQL(sql);
+           rs = DBHandler.GetSQL(sql);
            rs.next();
            int count = rs.getInt(1);
            return count > 0;

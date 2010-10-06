@@ -323,9 +323,9 @@ public class BillingReProcessBillAction extends Action {
         _log.debug("WHAT IS BILL <ASTER2 "+billingmaster.getBillingmasterNo());
         
         try {
-      DBHandler db = new DBHandler();
-      //db.RunSQL(sql);
-      //db.RunSQL(providerSQL);
+      
+      //DBHandler.RunSQL(sql);
+      //DBHandler.RunSQL(providerSQL);
       if (!StringUtils.isNullOrEmpty(billingStatus)) {  //What if billing status is null?? the status just doesn't get updated but everything else does??'
           //Why does this get called??  update billing type based on the billing status.  I guess this is effective when you switch this to bill on 
         msp.updateBillingStatus(frm.getBillNumber(), billingStatus,billingmasterNo);  
@@ -345,7 +345,7 @@ public class BillingReProcessBillAction extends Action {
       }
       if (secondSQL != null) {
         _log.debug(secondSQL);
-        db.RunSQL(secondSQL);
+        DBHandler.RunSQL(secondSQL);
       }
 
       if (correspondenceCode.equals("N") || correspondenceCode.equals("B")) {

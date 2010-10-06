@@ -41,7 +41,7 @@ import oscar.OscarProperties;
  */
 public final class DBPreparedHandler {
 
-    DBHandler db = null;
+    
     ResultSet rs = null;
     Statement stmt = null;
     PreparedStatement preparedStmt = null;

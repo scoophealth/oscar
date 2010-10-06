@@ -83,8 +83,8 @@ public class DepressionContinuityReporter implements Reporter{
         ResultSet rs = null;        
         Boolean odd = new Boolean(true);
         try {
-            DBHandler db = new DBHandler();
-            rs = db.GetSQL(cohortSQL);
+            
+            rs = DBHandler.GetSQL(cohortSQL);
 
             rsHtml = this.makeHTMLHeader();
             csv = this.makeCSVHeader();
@@ -114,7 +114,7 @@ public class DepressionContinuityReporter implements Reporter{
                 csvMap.put(curDemo, csvTmp);
             }
 
-            this.addAppt(db, apptSQL, curDemo, odd);
+            this.addAppt(apptSQL, curDemo, odd);
 
             rsHtml.append("</table>");
         }catch(Exception e) {
@@ -152,7 +152,7 @@ public class DepressionContinuityReporter implements Reporter{
         return csvCode;
     }
 
-    private void addAppt(DBHandler db, String apptSQL, String curDemo, Boolean odd) throws Exception {
+    private void addAppt(String apptSQL, String curDemo, Boolean odd) throws Exception {
         ResultSet rs2 = null;
 
         Set<String>setDemo = demographics.keySet();
@@ -168,7 +168,7 @@ public class DepressionContinuityReporter implements Reporter{
         String apptSQLwDemo;
         apptSQLwDemo = apptSQL.replaceAll("\\?", demos.toString());
         MiscUtils.getLogger().debug(apptSQLwDemo);
-        rs2 = db.GetSQL(apptSQLwDemo);        
+        rs2 = DBHandler.GetSQL(apptSQLwDemo);        
         String rxName, rxPrescriber, tmpDemo = "";
         while(rs2.next()) {
             if( !tmpDemo.equals(rs2.getString(7))) {

@@ -90,8 +90,8 @@ public class ThirdApptTimeReporter implements Reporter{
         int unbooked = 0;
 
         try {
-            DBHandler db = new DBHandler();
-            rs = db.GetSQL(scheduleSQL);
+            
+            rs = DBHandler.GetSQL(scheduleSQL);
             int duration;
             String timecodes, code;
             String tmpApptSQL;           
@@ -112,7 +112,7 @@ public class ThirdApptTimeReporter implements Reporter{
                 schedDate = rs.getString("sdate");
                 tmpApptSQL = "select start_time, end_time from appointment where provider_no = '" + rs.getString("provider_no") + "' and status not like '%C%' and appointment_date = '" + schedDate + "' order by start_time asc";
 
-                rs2 = db.GetSQL(tmpApptSQL);
+                rs2 = DBHandler.GetSQL(tmpApptSQL);
                 codePos = 0;
                 latestApptHour = latestApptMin = 0;
                 unbooked = 0;
@@ -179,7 +179,7 @@ public class ThirdApptTimeReporter implements Reporter{
             
             String calcDaysSQL = "select datediff('" + schedDate + "','" + date_from + "')";
             if( numAppts == third ) {
-                rs = db.GetSQL(calcDaysSQL);
+                rs = DBHandler.GetSQL(calcDaysSQL);
                 if( rs.next() ) {
                     numDays = rs.getInt(1);
                 }

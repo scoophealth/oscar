@@ -135,8 +135,8 @@ public class TeleplanCorrectionActionWCB
     }
     private void updateUnitValue(String i, String billingno) {
         try {
-            DBHandler db = new DBHandler();
-            db.RunSQL("update billingmaster set billing_unit = '" + i + "' WHERE billing_no ='" + billingno + "'");
+            
+        	DBHandler.RunSQL("update billingmaster set billing_unit = '" + i + "' WHERE billing_no ='" + billingno + "'");
         } catch (java.sql.SQLException e) {
             log.error("", e);
         }
@@ -146,9 +146,9 @@ public class TeleplanCorrectionActionWCB
         String billamt = "0.00";
 
         try {
-            DBHandler db = new DBHandler();
+            
             java.sql.ResultSet rs;
-            rs = db.GetSQL("SELECT value FROM billingservice WHERE service_code='" +
+            rs = DBHandler.GetSQL("SELECT value FROM billingservice WHERE service_code='" +
                     fee1 + "'");
             if (rs.next()) {
                 billamt = rs.getString("value");

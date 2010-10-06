@@ -162,9 +162,9 @@ public class CommonLabResultData {
 
             if(rs.next()){  //
 
-                String id = db.getString(rs,"id");
+                String id = DBHandler.getString(rs,"id");
                 sql = "update providerLabRouting set status='"+status+"', comment=? where id = '"+id+"'";
-                if (!db.getString(rs,"status").equals("A")){
+                if (!DBHandler.getString(rs,"status").equals("A")){
 
                     db.queryExecute(sql, new String[] { comment });
 
@@ -199,12 +199,12 @@ public class CommonLabResultData {
 
         String sql = "select provider.first_name, provider.last_name, provider.provider_no, providerLabRouting.status, providerLabRouting.comment, providerLabRouting.timestamp from provider, providerLabRouting where provider.provider_no = providerLabRouting.provider_no and providerLabRouting.lab_no='"+labId+"' and providerLabRouting.lab_type = '"+labType+"'";
         try{
-            DBHandler db = new DBHandler();
-            ResultSet rs = db.GetSQL(sql);
+            
+            ResultSet rs = DBHandler.GetSQL(sql);
             logger.info(sql);
             while(rs.next()){
-                statusArray.add( new ReportStatus(db.getString(rs,"first_name")+" "+db.getString(rs,"last_name"), db.getString(rs,"provider_no"), descriptiveStatus(db.getString(rs,"status")), db.getString(rs,"comment"), db.getString(rs,"timestamp"), labId ) );
-                //statusArray.add( new ReportStatus(db.getString(rs,"first_name")+" "+db.getString(rs,"last_name"), db.getString(rs,"provider_no"), descriptiveStatus(db.getString(rs,"status")), db.getString(rs,"comment"), rs.getTimestamp("timestamp").getTime(), labId ) );
+                statusArray.add( new ReportStatus(DBHandler.getString(rs,"first_name")+" "+DBHandler.getString(rs,"last_name"), DBHandler.getString(rs,"provider_no"), descriptiveStatus(DBHandler.getString(rs,"status")), DBHandler.getString(rs,"comment"), DBHandler.getString(rs,"timestamp"), labId ) );
+                //statusArray.add( new ReportStatus(DBHandler.getString(rs,"first_name")+" "+DBHandler.getString(rs,"last_name"), DBHandler.getString(rs,"provider_no"), descriptiveStatus(DBHandler.getString(rs,"status")), DBHandler.getString(rs,"comment"), rs.getTimestamp("timestamp").getTime(), labId ) );
             }
             rs.close();
         }catch(Exception e){
@@ -225,12 +225,12 @@ public class CommonLabResultData {
     public static String searchPatient(String labNo,String labType) {
         String retval = "0";
         try {
-            DBHandler db = new DBHandler();
+            
 
             String sql = "select demographic_no from patientLabRouting where lab_no='"+labNo+"' and lab_type = '"+labType+"'";
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
             if(rs.next()){
-                retval = db.getString(rs,"demographic_no");
+                retval = DBHandler.getString(rs,"demographic_no");
             }
         }catch(Exception e){
             Logger l = Logger.getLogger(CommonLabResultData.class);
@@ -244,7 +244,7 @@ public class CommonLabResultData {
         boolean result = false;
 
         try {
-            DBHandler db = new DBHandler();
+            
 
             // update pateintLabRouting for labs with the same accession number
             CommonLabResultData data = new CommonLabResultData();
@@ -253,11 +253,11 @@ public class CommonLabResultData {
 
                 // delete old entries
                 String sql = "delete from patientLabRouting where lab_no='"+labArray[i]+"' and lab_type = '"+labType+"'";
-                result = db.RunSQL(sql);
+                result = DBHandler.RunSQL(sql);
 
                 // add new entries
                 sql = "insert into patientLabRouting (lab_no, demographic_no,lab_type) values ('"+labArray[i]+"', '"+demographicNo+"','"+labType+"')";
-                result = db.RunSQL(sql);
+                result = DBHandler.RunSQL(sql);
 
                 // add labs to measurements table
                 populateMeasurementsTable(labArray[i], demographicNo, labType);
@@ -278,7 +278,7 @@ public class CommonLabResultData {
         boolean result;
 
         try {
-            DBHandler db = new DBHandler();
+            
 
             String[] providersArray = selectedProviders.split(",");
            
@@ -308,7 +308,7 @@ public class CommonLabResultData {
                     // delete old entries
                     String sql = "delete from providerLabRouting where provider_no='0' and lab_type= '"+labType+"' and lab_no = '"+labIds[k]+"'";
 
-                    result = db.RunSQL(sql);
+                    result = DBHandler.RunSQL(sql);
 
                 }
 
@@ -318,7 +318,7 @@ public class CommonLabResultData {
 
             // add new entries
             //String sql = "insert ignore into providerLabRouting (provider_no, lab_no, status,lab_type) values "+insertString;
-            //result = db.RunSQL(sql);
+            //result = DBHandler.RunSQL(sql);
             return true;
         }catch(Exception e){
             Logger l = Logger.getLogger(CommonLabResultData.class);
@@ -377,10 +377,10 @@ public class CommonLabResultData {
     public String getDemographicNo(String labId,String labType){
         String demoNo = null;
         try{
-            DBHandler db = new DBHandler();
-            ResultSet rs = db.GetSQL("select demographic_no from patientLabRouting where lab_no = '"+labId+"' and lab_type = '"+labType+"'");
+            
+            ResultSet rs = DBHandler.GetSQL("select demographic_no from patientLabRouting where lab_no = '"+labId+"' and lab_type = '"+labType+"'");
             if (rs.next()){
-                String d = db.getString(rs,"demographic_no");
+                String d = DBHandler.getString(rs,"demographic_no");
                 if ( !"0".equals(d)){
                     demoNo = d;
                 }
@@ -396,11 +396,10 @@ public class CommonLabResultData {
     public boolean isDocLinkedWithPatient(String labId,String labType){
         boolean ret=false;
         try{
-            DBHandler db=new DBHandler();
             String sql="select module_id from ctl_document where document_no="+labId+" and module='demographic'";
-            ResultSet rs=db.GetSQL(sql);
+            ResultSet rs=DBHandler.GetSQL(sql);
             if(rs.next()){
-                String mi=db.getString(rs, "module_id");
+                String mi=DBHandler.getString(rs, "module_id");
                 if(mi!=null && !mi.trim().equals("-1")){
                     ret=true;
                 }
@@ -414,12 +413,12 @@ public class CommonLabResultData {
     public boolean isLabLinkedWithPatient(String labId,String labType){
         boolean ret = false;
         try {
-            DBHandler db = new DBHandler();
+            
             String sql = "select demographic_no from patientLabRouting where lab_no = '"+labId+"' and lab_type  = '"+labType+"' ";
 
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
             if(rs.next()){
-                String demo =  db.getString(rs,"demographic_no");
+                String demo =  DBHandler.getString(rs,"demographic_no");
                 if(demo != null && !demo.trim().equals("0") ){
                     ret = true;
                 }
@@ -435,9 +434,9 @@ public class CommonLabResultData {
     public int getAckCount(String labId, String labType){
         int ret = 0;
         try {
-            DBHandler db = new DBHandler();
+            
             String sql = "select count(*) from providerLabRouting where lab_no = '"+labId+"' and lab_type  = '"+labType+"' and status='A'";
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
             if(rs.next()){
                 ret = rs.getInt(1);
             }

@@ -84,7 +84,7 @@ public class RptByExampleAction extends Action {
     public void write2Database(String query, String providerNo){
         if (query!=null && query.compareTo("")!=0){
             try {
-                DBHandler db = new DBHandler();
+                
                 
                 StringEscapeUtils strEscUtils = new StringEscapeUtils();
                 
@@ -94,7 +94,7 @@ public class RptByExampleAction extends Action {
                 query = strEscUtils.escapeSql(query);
                 
                 String sql = "INSERT INTO reportByExamples(providerNo, query, date) VALUES('" + providerNo + "','" + query + "', NOW())";
-                db.RunSQL(sql);
+                DBHandler.RunSQL(sql);
             }
             catch(SQLException e) {
                 MiscUtils.getLogger().error("Error", e);            

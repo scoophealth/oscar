@@ -64,8 +64,8 @@ public class OBX extends oscar.oscarLab.ca.bc.PathNet.HL7.Node {
       return null;
    }
    
-   public int ToDatabase(DBHandler db, int parent)throws SQLException {
-      return booleanConvert(db.RunSQL(this.update? this.getUpdateSql(parent) : this.getInsertSql(parent) ));
+   public int ToDatabase(int parent)throws SQLException {
+      return booleanConvert(DBHandler.RunSQL(this.update? this.getUpdateSql(parent) : this.getInsertSql(parent) ));
    }
    
    

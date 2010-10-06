@@ -103,14 +103,14 @@ public class MsgDocListForm {
       providerLastName = new java.util.Vector();
       providerFirstName = new java.util.Vector();
       try{
-         DBHandler db = new DBHandler();
+         
          java.sql.ResultSet rs;
          String sql = "select * from provider order by first_name asc";
-         rs = db.GetSQL(sql);
+         rs = DBHandler.GetSQL(sql);
          while (rs.next()) {
-            providerNoVector.add(db.getString(rs,"provider_no"));
-            providerFirstName.add(db.getString(rs,"first_name"));
-            providerLastName.add(db.getString(rs,"last_name"));
+            providerNoVector.add(DBHandler.getString(rs,"provider_no"));
+            providerFirstName.add(DBHandler.getString(rs,"first_name"));
+            providerLastName.add(DBHandler.getString(rs,"last_name"));
          }
 
        rs.close();

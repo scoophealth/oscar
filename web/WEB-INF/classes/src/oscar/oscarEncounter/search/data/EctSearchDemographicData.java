@@ -159,25 +159,25 @@ public class EctSearchDemographicData
             vector = new Vector();
             try
             {
-                DBHandler db = new DBHandler();
+                
                 ResultSet rs;
                 EctDemographicData demographicData;
-                for(rs = db.GetSQL(sql); rs.next(); vector.add(demographicData))
+                for(rs = DBHandler.GetSQL(sql); rs.next(); vector.add(demographicData))
                 {
                     demographicData = new EctDemographicData();
-                    demographicData.demographicNo = db.getString(rs,"demographic_no");
-                    demographicData.firstName = db.getString(rs,"first_name");
-                    demographicData.lastName = db.getString(rs,"last_name");
-                    demographicData.address = db.getString(rs,"address");
-                    demographicData.city = db.getString(rs,"city");
-                    demographicData.province = db.getString(rs,"province");
-                    demographicData.phone = db.getString(rs,"phone");
-                    demographicData.phone2 = db.getString(rs,"phone2");
-                    demographicData.hin = db.getString(rs,"hin");
-                    demographicData.sex = db.getString(rs,"sex");
-                    demographicData.yearOfBirth = db.getString(rs,"year_of_birth");
-                    demographicData.monthOfBirth = db.getString(rs,"month_of_birth");
-                    demographicData.dayOfBirth = db.getString(rs,"date_of_birth");
+                    demographicData.demographicNo = DBHandler.getString(rs,"demographic_no");
+                    demographicData.firstName = DBHandler.getString(rs,"first_name");
+                    demographicData.lastName = DBHandler.getString(rs,"last_name");
+                    demographicData.address = DBHandler.getString(rs,"address");
+                    demographicData.city = DBHandler.getString(rs,"city");
+                    demographicData.province = DBHandler.getString(rs,"province");
+                    demographicData.phone = DBHandler.getString(rs,"phone");
+                    demographicData.phone2 = DBHandler.getString(rs,"phone2");
+                    demographicData.hin = DBHandler.getString(rs,"hin");
+                    demographicData.sex = DBHandler.getString(rs,"sex");
+                    demographicData.yearOfBirth = DBHandler.getString(rs,"year_of_birth");
+                    demographicData.monthOfBirth = DBHandler.getString(rs,"month_of_birth");
+                    demographicData.dayOfBirth = DBHandler.getString(rs,"date_of_birth");
                 }
 
                 rs.close();

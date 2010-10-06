@@ -44,14 +44,14 @@ public class DiagnosticoDAO extends DAO {
             "where diag.co_cid = cid.co_cid and " + "diag.appointment_no = " +
             id;
 		MiscUtils.getLogger().debug(sql);
-        DBHandler db = getDb();
+        
 
-        ResultSet rs = db.GetSQL(sql);
+        ResultSet rs = DBHandler.GetSQL(sql);
 
         while (rs.next()) {
             Diagnostico diagnostico = new Diagnostico();
-            diagnostico.getCadCid().setCoCid(db.getString(rs,1));
-            diagnostico.getCadCid().setDsCid(db.getString(rs,2));
+            diagnostico.getCadCid().setCoCid(DBHandler.getString(rs,1));
+            diagnostico.getCadCid().setDsCid(DBHandler.getString(rs,2));
             diagnostico.getAppointment().setAppointmentNo(Long.parseLong(id));
 			diagnostico.setSave(true);
 

@@ -57,11 +57,11 @@ public class RptByExamplesFavoriteAction extends Action {
                     frm.setFavoriteName(frm.getNewName());
                 else{
                     try {
-                        DBHandler db = new DBHandler();                            
+                                                    
                         
                         String sql = "SELECT * from reportByExamplesFavorite WHERE query LIKE '" + StringEscapeUtils.escapeSql(frm.getNewQuery()) + "'";
                         MiscUtils.getLogger().debug("HERE "+sql);
-                        ResultSet rs = db.GetSQL(sql);
+                        ResultSet rs = DBHandler.GetSQL(sql);
                         if(rs.next())
                             frm.setFavoriteName(rs.getString("name"));
                     }
@@ -97,7 +97,7 @@ public class RptByExamplesFavoriteAction extends Action {
     public void write2Database(String providerNo, String favoriteName, String query){
         if (query!=null && query.compareTo("")!=0){
             try {
-                DBHandler db = new DBHandler();
+                
                 
                 //StringEscapeUtils strEscUtils = new StringEscapeUtils();
                                 
@@ -106,16 +106,16 @@ public class RptByExamplesFavoriteAction extends Action {
                 
                 
                 String sql = "SELECT * from reportByExamplesFavorite WHERE providerNo = '"+providerNo+"' and name LIKE '" + favoriteName + "' OR query LIKE '" + query + "'";
-                ResultSet rs = db.GetSQL(sql);
+                ResultSet rs = DBHandler.GetSQL(sql);
                 if(!rs.next()){
                     sql = "INSERT INTO reportByExamplesFavorite(providerNo, name, query) VALUES('" + providerNo + "','" 
                           + favoriteName + "','" + query + "')";
-                    db.RunSQL(sql);
+                    DBHandler.RunSQL(sql);
                 }
                 else{
                     sql = "UPDATE reportByExamplesFavorite SET name='" + favoriteName + "', query='" + query + 
                           "' WHERE id ='" + rs.getString("id") + "'";
-                    db.RunSQL(sql);
+                    DBHandler.RunSQL(sql);
                 }
             }
             catch(SQLException e) {
@@ -127,10 +127,10 @@ public class RptByExamplesFavoriteAction extends Action {
     public void deleteQuery(String id){
         
         try {
-            DBHandler db = new DBHandler();                   
+                               
 
             String sql = "DELETE FROM reportByExamplesFavorite WHERE id = '" + id + "'";                
-            db.RunSQL(sql);
+            DBHandler.RunSQL(sql);
         }
         catch(SQLException e) {
             MiscUtils.getLogger().error("Error", e);            

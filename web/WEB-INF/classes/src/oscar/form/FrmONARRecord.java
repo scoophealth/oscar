@@ -34,26 +34,26 @@ public class FrmONARRecord extends FrmRecord {
                     + demographicNo;
             ResultSet rs = db.searchDBRecord(sql);
             if (rs.next()) {
-                java.util.Date date = UtilDateUtilities.calcDate(db.getString(rs,"year_of_birth"), rs
-                        .getString("month_of_birth"), db.getString(rs,"date_of_birth"));
-                props.setProperty("demographic_no", db.getString(rs,"demographic_no"));
+                java.util.Date date = UtilDateUtilities.calcDate(DBHandler.getString(rs,"year_of_birth"), rs
+                        .getString("month_of_birth"), DBHandler.getString(rs,"date_of_birth"));
+                props.setProperty("demographic_no", DBHandler.getString(rs,"demographic_no"));
                 props.setProperty("formCreated", UtilDateUtilities
                         .DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                 // props.setProperty("formEdited",
                 // UtilDateUtilities.DateToString(UtilDateUtilities.Today(),"yyyy/MM/dd"));
-                props.setProperty("c_lastName", db.getString(rs,"last_name"));
-                props.setProperty("c_firstName", db.getString(rs,"first_name"));
-                props.setProperty("c_address", db.getString(rs,"address"));
-                props.setProperty("c_city", db.getString(rs,"city"));
-                props.setProperty("c_province", db.getString(rs,"province"));
-                props.setProperty("c_postal", db.getString(rs,"postal"));
-                props.setProperty("c_hin", db.getString(rs,"hin"));
-                props.setProperty("c_fileNo", db.getString(rs,"chart_no"));
+                props.setProperty("c_lastName", DBHandler.getString(rs,"last_name"));
+                props.setProperty("c_firstName", DBHandler.getString(rs,"first_name"));
+                props.setProperty("c_address", DBHandler.getString(rs,"address"));
+                props.setProperty("c_city", DBHandler.getString(rs,"city"));
+                props.setProperty("c_province", DBHandler.getString(rs,"province"));
+                props.setProperty("c_postal", DBHandler.getString(rs,"postal"));
+                props.setProperty("c_hin", DBHandler.getString(rs,"hin"));
+                props.setProperty("c_fileNo", DBHandler.getString(rs,"chart_no"));
                 props.setProperty("pg1_dateOfBirth", UtilDateUtilities.DateToString(date, "yyyy/MM/dd"));
-                props.setProperty("pg1_age", String.valueOf(UtilDateUtilities.calcAge(db.getString(rs,"year_of_birth"), rs
-                        .getString("month_of_birth"), db.getString(rs,"date_of_birth"))));
-                props.setProperty("pg1_homePhone", db.getString(rs,"phone"));
-                props.setProperty("pg1_workPhone", db.getString(rs,"phone2"));
+                props.setProperty("pg1_age", String.valueOf(UtilDateUtilities.calcAge(DBHandler.getString(rs,"year_of_birth"), rs
+                        .getString("month_of_birth"), DBHandler.getString(rs,"date_of_birth"))));
+                props.setProperty("pg1_homePhone", DBHandler.getString(rs,"phone"));
+                props.setProperty("pg1_workPhone", DBHandler.getString(rs,"phone2"));
                 props.setProperty("pg1_formDate", UtilDateUtilities.DateToString(UtilDateUtilities.Today(),
                         "yyyy/MM/dd"));
             }
@@ -91,12 +91,12 @@ public class FrmONARRecord extends FrmRecord {
         if ("yes".equalsIgnoreCase(OscarProperties.getInstance().getProperty("PHR", ""))) {
 
             String demographic_no = demoNo;
-            DBHandler db = new DBHandler();
+            
             String sql = "select email from demographic where demographic_no=" + demographic_no;
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
             if (rs.next()) {
-                if (db.getString(rs,"email") != null && db.getString(rs,"email").length() > 5
-                        && db.getString(rs,"email").matches(".*@.*"))
+                if (DBHandler.getString(rs,"email") != null && DBHandler.getString(rs,"email").length() > 5
+                        && DBHandler.getString(rs,"email").matches(".*@.*"))
                     ret = true;
             }
 

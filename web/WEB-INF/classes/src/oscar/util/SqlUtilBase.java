@@ -20,8 +20,8 @@ public class SqlUtilBase {
            //------------------private
    protected void runSQL(String sql) {
        try {
-           DBHandler db = new DBHandler();
-           db.RunSQL(sql);
+           
+           DBHandler.RunSQL(sql);
        } catch (SQLException sqe) {
            MiscUtils.getLogger().error("Error", sqe);
        }
@@ -29,12 +29,12 @@ public class SqlUtilBase {
    
    protected String runSQLinsert(String sql) {
        try {
-           DBHandler db = new DBHandler();
-           db.RunSQL(sql);
+           
+           DBHandler.RunSQL(sql);
            sql = "SELECT LAST_INSERT_ID()";
-           ResultSet rs = db.GetSQL(sql);
+           ResultSet rs = DBHandler.GetSQL(sql);
            rs.next();
-           String lastID = db.getString(rs,"LAST_INSERT_ID()");
+           String lastID = DBHandler.getString(rs,"LAST_INSERT_ID()");
            rs.close();
            return(lastID);
        } catch (SQLException sqe) { MiscUtils.getLogger().error("Error", sqe); }
@@ -44,8 +44,8 @@ public class SqlUtilBase {
    protected ResultSet getSQL(String sql) {
        ResultSet rs = null;
        try {
-           DBHandler db = new DBHandler();
-           rs = db.GetSQL(sql);
+           
+           rs = DBHandler.GetSQL(sql);
        } catch (SQLException sqe) {
            MiscUtils.getLogger().error("Error", sqe);
        }

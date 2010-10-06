@@ -54,7 +54,7 @@ public class EctMeasurementsDataBeanHandler {
     /*public boolean init(String demo) {
         boolean verdict = true;
         try {
-            DBHandler db = new DBHandler();
+            
             String sql ="SELECT m.id, mt.type, mt.typeDisplayName, m.demographicNo, m.providerNo, m.dataField, m.measuringInstruction,"+
                         "m.comments, m.dateObserved, m.dateEntered , p.first_name AS provider_first, p.last_name AS provider_last," +
                         "v.isNumeric AS numericValidation, v.name AS validationName FROM measurements m, provider p, validations v," +
@@ -65,18 +65,18 @@ public class EctMeasurementsDataBeanHandler {
             log.debug(" EctMeasurementDataBeanHandler sql: " + sql);
             ResultSet rs;
             String canPlot = null;
-            for(rs = db.GetSQL(sql); rs.next(); )
+            for(rs = DBHandler.GetSQL(sql); rs.next(); )
             {
-                    if (rs.getInt("numericValidation")==1 || db.getString(rs,"validationName").compareTo("Blood Pressure")==0)
+                    if (rs.getInt("numericValidation")==1 || DBHandler.getString(rs,"validationName").compareTo("Blood Pressure")==0)
                         canPlot = "true";
                     else
                         canPlot = null;
                     //log.debug("canPlot value: " + canPlot);
-                    EctMeasurementsDataBean data = new EctMeasurementsDataBean(rs.getInt("id"), db.getString(rs,"type"), db.getString(rs,"typeDisplayName"), db.getString(rs,"demographicNo"),
-                                                                               db.getString(rs,"provider_first"), db.getString(rs,"provider_last"),
-                                                                               db.getString(rs,"dataField"), db.getString(rs,"measuringInstruction"),
-                                                                               db.getString(rs,"comments"), db.getString(rs,"dateObserved"),
-                                                                               db.getString(rs,"dateEntered"), canPlot);
+                    EctMeasurementsDataBean data = new EctMeasurementsDataBean(rs.getInt("id"), DBHandler.getString(rs,"type"), DBHandler.getString(rs,"typeDisplayName"), DBHandler.getString(rs,"demographicNo"),
+                                                                               DBHandler.getString(rs,"provider_first"), DBHandler.getString(rs,"provider_last"),
+                                                                               DBHandler.getString(rs,"dataField"), DBHandler.getString(rs,"measuringInstruction"),
+                                                                               DBHandler.getString(rs,"comments"), DBHandler.getString(rs,"dateObserved"),
+                                                                               DBHandler.getString(rs,"dateEntered"), canPlot);
                     measurementsDataVector.add(data);
             }
      
@@ -92,7 +92,7 @@ public class EctMeasurementsDataBeanHandler {
     public boolean init(String demo) {
         boolean verdict = true;
         try {
-            DBHandler db = new DBHandler();
+            
             String sql ="SELECT mt.type, mt.typeDisplayName, mt.typeDescription, mt.measuringInstruction FROM measurements m," +
                     "measurementType mt WHERE m.demographicNo='" + demo + "' AND m.type = mt.type " +
                     "GROUP BY mt.type ORDER BY m.type ASC";
@@ -100,13 +100,13 @@ public class EctMeasurementsDataBeanHandler {
             log.debug(" EctMeasurementDataBeanHandler sql: " + sql);
             ResultSet rs;
             String canPlot = null;
-            for(rs = db.GetSQL(sql); rs.next(); ) {
+            for(rs = DBHandler.GetSQL(sql); rs.next(); ) {
                 EctMeasurementsDataBean data = new EctMeasurementsDataBean();
-                data.setType(db.getString(rs,"type"));
-                data.setTypeDisplayName(db.getString(rs,"typeDisplayName"));
-                data.setTypeDescription(db.getString(rs,"typeDescription"));
-                data.setMeasuringInstrc(db.getString(rs,"measuringInstruction"));
-                //log.debug("Measurments: " + db.getString(rs,"type") + " " + db.getString(rs,"typeDisplayName") + " " + db.getString(rs,"typeDescription"));
+                data.setType(DBHandler.getString(rs,"type"));
+                data.setTypeDisplayName(DBHandler.getString(rs,"typeDisplayName"));
+                data.setTypeDescription(DBHandler.getString(rs,"typeDescription"));
+                data.setMeasuringInstrc(DBHandler.getString(rs,"measuringInstruction"));
+                //log.debug("Measurments: " + DBHandler.getString(rs,"type") + " " + DBHandler.getString(rs,"typeDisplayName") + " " + DBHandler.getString(rs,"typeDescription"));
                 measurementsDataVector.add(data);
             }
             
@@ -123,7 +123,7 @@ public class EctMeasurementsDataBeanHandler {
         log.debug("Getting type "+type+" for demograph "+demo);
         boolean verdict = true;
         try {
-            DBHandler db = new DBHandler();
+            
             MeasurementTypes mt = MeasurementTypes.getInstance();
             EctMeasurementTypesBean mBean = mt.getByType(type);
             if ( mBean != null){
@@ -147,26 +147,26 @@ public class EctMeasurementsDataBeanHandler {
                 String canPlot = null;
                 String firstName;
                 String lastName;
-                rs = db.GetSQL(sql);
+                rs = DBHandler.GetSQL(sql);
                 
                 while( rs.next() ){
-                    if (rs.getInt("numericValidation")==1 || db.getString(rs,"validationName").compareTo("Blood Pressure")==0)
+                    if (rs.getInt("numericValidation")==1 || DBHandler.getString(rs,"validationName").compareTo("Blood Pressure")==0)
                         canPlot = "true";
                     else
                         canPlot = null;
                     
-                    firstName = db.getString(rs,"provider_first");
-                    lastName = db.getString(rs,"provider_last");
+                    firstName = DBHandler.getString(rs,"provider_first");
+                    lastName = DBHandler.getString(rs,"provider_last");
                     if (firstName == null && lastName == null){
                         firstName = "Automatic";
                         lastName = "";
                     }
                     //log.debug("canPlot value: " + canPlot);
-                    EctMeasurementsDataBean data = new EctMeasurementsDataBean(rs.getInt("id"), db.getString(rs,"type"), mBean.getTypeDisplayName(),mBean.getTypeDesc(), db.getString(rs,"demographicNo"),
+                    EctMeasurementsDataBean data = new EctMeasurementsDataBean(rs.getInt("id"), DBHandler.getString(rs,"type"), mBean.getTypeDisplayName(),mBean.getTypeDesc(), DBHandler.getString(rs,"demographicNo"),
                             firstName, lastName,
-                            db.getString(rs,"dataField"), db.getString(rs,"measuringInstruction"),
-                            db.getString(rs,"comments"), db.getString(rs,"dateObserved"),
-                            db.getString(rs,"dateEntered"), canPlot,rs.getDate("dateObserved"),rs.getDate("dateEntered"));
+                            DBHandler.getString(rs,"dataField"), DBHandler.getString(rs,"measuringInstruction"),
+                            DBHandler.getString(rs,"comments"), DBHandler.getString(rs,"dateObserved"),
+                            DBHandler.getString(rs,"dateEntered"), canPlot,rs.getDate("dateObserved"),rs.getDate("dateEntered"));
                     measurementsDataVector.add(data);
                     
                 }
@@ -188,7 +188,7 @@ public class EctMeasurementsDataBeanHandler {
     public boolean init2(String demo, String type) {
         boolean verdict = true;
         try {
-            DBHandler db = new DBHandler();
+            
             String sql ="SELECT m.id, mt.type, mt.typeDisplayName, mt.typeDescription, m.demographicNo, m.providerNo, m.dataField, m.measuringInstruction,"+
                     "m.comments, m.dateObserved, m.dateEntered , p.first_name AS provider_first, p.last_name AS provider_last," +
                     "v.isNumeric AS numericValidation, v.name AS validationName FROM measurements m, provider p, validations v," +
@@ -198,17 +198,17 @@ public class EctMeasurementsDataBeanHandler {
             log.debug("sql: " + sql);
             ResultSet rs;
             String canPlot = null;
-            for(rs = db.GetSQL(sql); rs.next(); ) {
-                if (rs.getInt("numericValidation")==1 || db.getString(rs,"validationName").compareTo("Blood Pressure")==0)
+            for(rs = DBHandler.GetSQL(sql); rs.next(); ) {
+                if (rs.getInt("numericValidation")==1 || DBHandler.getString(rs,"validationName").compareTo("Blood Pressure")==0)
                     canPlot = "true";
                 else
                     canPlot = null;
                 //log.debug("canPlot value: " + canPlot);
-                EctMeasurementsDataBean data = new EctMeasurementsDataBean(rs.getInt("id"), db.getString(rs,"type"), db.getString(rs,"typeDisplayName"), db.getString(rs,"typeDescription"), db.getString(rs,"demographicNo"),
-                        db.getString(rs,"provider_first"), db.getString(rs,"provider_last"),
-                        db.getString(rs,"dataField"), db.getString(rs,"measuringInstruction"),
-                        db.getString(rs,"comments"), db.getString(rs,"dateObserved"),
-                        db.getString(rs,"dateEntered"), canPlot,rs.getDate("dateObserved"),rs.getDate("dateEntered"));
+                EctMeasurementsDataBean data = new EctMeasurementsDataBean(rs.getInt("id"), DBHandler.getString(rs,"type"), DBHandler.getString(rs,"typeDisplayName"), DBHandler.getString(rs,"typeDescription"), DBHandler.getString(rs,"demographicNo"),
+                        DBHandler.getString(rs,"provider_first"), DBHandler.getString(rs,"provider_last"),
+                        DBHandler.getString(rs,"dataField"), DBHandler.getString(rs,"measuringInstruction"),
+                        DBHandler.getString(rs,"comments"), DBHandler.getString(rs,"dateObserved"),
+                        DBHandler.getString(rs,"dateEntered"), canPlot,rs.getDate("dateObserved"),rs.getDate("dateEntered"));
                 measurementsDataVector.add(data);
                 
             }
@@ -235,7 +235,7 @@ public class EctMeasurementsDataBeanHandler {
     
     public static List<EctMeasurementsDataBean> getMeasurementObjectByType(String type, String demographicNo) {
         try {
-            DBHandler db = new DBHandler();
+            
             String sql = "SELECT m.id, m.type, m.demographicNo, m.providerNo, m.dataField, m.measuringInstruction, m.comments," +
                     " m.dateObserved, m.dateEntered, mt.typeDisplayName, mt.typeDescription, p.first_name AS provider_first," +
                     " p.last_name AS provider_last FROM measurements m LEFT JOIN provider p ON m.providerNo=p.provider_no," +
@@ -244,7 +244,7 @@ public class EctMeasurementsDataBeanHandler {
             ResultSet rs;
             
             ArrayList<EctMeasurementsDataBean> measurements = new ArrayList();
-            for (rs = db.GetSQL(sql); rs.next(); ) {
+            for (rs = DBHandler.GetSQL(sql); rs.next(); ) {
                 EctMeasurementsDataBean measurement = new EctMeasurementsDataBean();
                 measurement.setId(Integer.parseInt(rsGetString(rs, "id")));
                 measurement.setMeasuringInstrc(rsGetString(rs, "measuringInstruction"));
@@ -277,13 +277,13 @@ public class EctMeasurementsDataBeanHandler {
     
 //    public static Hashtable getLast(String demo, String type) {
 //        try {
-//            DBHandler db = new DBHandler();
+//            
 //            String sql ="SELECT mt.typeDisplayName, mt.typeDescription, m.dataField, m.measuringInstruction,"+
 //                        "m.comments, m.dateObserved, m.dateEntered , p.first_name AS provider_first, p.last_name AS provider_last " +
 //                        "FROM measurements m, provider p, measurementType mt " +
 //                        "WHERE m.demographicNo='" + demo + "' AND m.type = '" + type + "' AND m.providerNo= p.provider_no " +
 //                        "AND m.type = mt.type GROUP BY m.id ORDER BY m.dateObserved DESC LIMIT 1";
-//            ResultSet rs = db.GetSQL(sql);
+//            ResultSet rs = DBHandler.GetSQL(sql);
 //            if (rs.next()) {
 //                Hashtable data = new Hashtable();
 //                data.put("type", rsGetString(rs, "typeDisplayName"));
@@ -318,8 +318,8 @@ public class EctMeasurementsDataBeanHandler {
         Hashtable data = null;
         log.debug(sql);
         try {
-            DBHandler db = new DBHandler();
-            ResultSet rs = db.GetSQL(sql);
+            
+            ResultSet rs = DBHandler.GetSQL(sql);
             if (rs.next()) {
                 data = new Hashtable();
                 data.put("type", rsGetString(rs, "typeDisplayName"));

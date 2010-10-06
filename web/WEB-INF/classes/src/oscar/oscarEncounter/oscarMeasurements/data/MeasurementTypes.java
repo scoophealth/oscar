@@ -93,21 +93,21 @@ public class MeasurementTypes {
             byType = new Hashtable();
 
             try {
-               DBHandler db = new DBHandler();
+               
                String sql = "SELECT * FROM measurementType";   
 
-               ResultSet rs = db.GetSQL(sql);        
+               ResultSet rs = DBHandler.GetSQL(sql);        
                while(rs.next()){                
-                  //log.debug("validation "+db.getString(rs,("validation"));  
+                  //log.debug("validation "+DBHandler.getString(rs,("validation"));  
                   EctMeasurementTypesBean ret = null;
-                  ret = new EctMeasurementTypesBean(rs.getInt("id"), db.getString(rs,"type"), 
-                                                     db.getString(rs,"typeDisplayName"), 
-                                                     db.getString(rs,"typeDescription"), 
-                                                     db.getString(rs,"measuringInstruction"),  
-                                                     db.getString(rs,"validation")); 
-                  ret.setValidationName(getValidation(db.getString(rs,"validation")));
+                  ret = new EctMeasurementTypesBean(rs.getInt("id"), DBHandler.getString(rs,"type"), 
+                                                     DBHandler.getString(rs,"typeDisplayName"), 
+                                                     DBHandler.getString(rs,"typeDescription"), 
+                                                     DBHandler.getString(rs,"measuringInstruction"),  
+                                                     DBHandler.getString(rs,"validation")); 
+                  ret.setValidationName(getValidation(DBHandler.getString(rs,"validation")));
                   byId.put(""+rs.getInt("id"),ret);
-                  byType.put(db.getString(rs,"type"),ret);
+                  byType.put(DBHandler.getString(rs,"type"),ret);
 
 
                 }
@@ -125,11 +125,11 @@ public class MeasurementTypes {
     private String getValidation(String val){
         String validation = null;
         try {
-            DBHandler db = new DBHandler();
+            
             String sqlValidation = "SELECT name FROM validations WHERE id='"+val+"'";
-            ResultSet rs = db.GetSQL(sqlValidation);
+            ResultSet rs = DBHandler.GetSQL(sqlValidation);
             if (rs.next()){ 
-                validation = db.getString(rs,"name");
+                validation = DBHandler.getString(rs,"name");
                 //log.debug("setting validation to "+validation);
             }
             rs.close();

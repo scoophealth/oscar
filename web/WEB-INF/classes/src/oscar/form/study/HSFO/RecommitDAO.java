@@ -28,12 +28,10 @@ public class RecommitDAO {
 	     String sqlstatement ="select * from hsfo_recommit_schedule ";
 	     if (statusFlag) sqlstatement+="where status='D' ";
 	     sqlstatement+="order by id desc";
-	     DBHandler db =null;
 	     ResultSet rs = null;
 	     RecommitSchedule reSchedule=null;
 	     SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	     try {
-	            db = new DBHandler();
 	            Connection connect = DBHandler.getConnection();
 	            st = connect.prepareStatement(sqlstatement);
 	            st.execute();
@@ -42,10 +40,10 @@ public class RecommitDAO {
 	            if (rs.next()){
 	            	reSchedule=new RecommitSchedule();
 	            	reSchedule.setId(new Integer(rs.getInt("id")));
-	            	reSchedule.setStatus(db.getString(rs,"status"));
-	            	reSchedule.setMemo(db.getString(rs,"memo"));
-	            	reSchedule.setSchedule_time(sf.parse(db.getString(rs,"schedule_time")));
-	            	reSchedule.setUser_no(db.getString(rs,"user_no"));
+	            	reSchedule.setStatus(DBHandler.getString(rs,"status"));
+	            	reSchedule.setMemo(DBHandler.getString(rs,"memo"));
+	            	reSchedule.setSchedule_time(sf.parse(DBHandler.getString(rs,"schedule_time")));
+	            	reSchedule.setUser_no(DBHandler.getString(rs,"user_no"));
 	            	reSchedule.setCheck_flag(rs.getBoolean("check_flag"));
 	            }
 				

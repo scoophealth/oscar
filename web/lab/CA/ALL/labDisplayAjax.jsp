@@ -24,12 +24,12 @@ String patientMatched = request.getParameter("patientMatched");
 Long reqIDL = LabRequestReportLink.getIdByReport("hl7TextMessage",Long.valueOf(segmentID.trim()));
 String reqID = reqIDL==null ? "" : String.valueOf(reqIDL);
 String sql = "SELECT demographic_no FROM patientLabRouting WHERE lab_type='HL7' and lab_no='"+segmentID+"';";
-DBHandler db = new DBHandler();
-ResultSet rs = db.GetSQL(sql);
+
+ResultSet rs = DBHandler.GetSQL(sql);
 String demographicID = "";
 
 while(rs.next()){
-    demographicID = db.getString(rs,"demographic_no");
+    demographicID = DBHandler.getString(rs,"demographic_no");
 }
 rs.close();
 

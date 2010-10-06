@@ -69,16 +69,16 @@ public class ProviderData {
     
     public static ArrayList getProviderList () {
         try {            
-            DBHandler db = new DBHandler();
+            
             ArrayList result = new ArrayList();
             
             String sql = "select provider_no, first_name, last_name from provider where provider_type='doctor' order by last_name , first_name";
-            ResultSet rs = db.GetSQL(sql);            
+            ResultSet rs = DBHandler.GetSQL(sql);            
             while ( rs.next() ) {
                 ArrayList provider = new ArrayList();
-                provider.add(db.getString(rs,"provider_no"));
-                provider.add(db.getString(rs,"first_name"));
-                provider.add(db.getString(rs,"last_name"));
+                provider.add(DBHandler.getString(rs,"provider_no"));
+                provider.add(DBHandler.getString(rs,"first_name"));
+                provider.add(DBHandler.getString(rs,"last_name"));
                 result.add(provider);
             }
             return result;
@@ -91,16 +91,16 @@ public class ProviderData {
     
     public static ArrayList getProviderListWithLabNo () {
         try {            
-            DBHandler db = new DBHandler();
+            
             ArrayList result = new ArrayList();
             
             String sql = "select provider_no, first_name, last_name from provider where provider_type='doctor'  and ohip_no != '' order by last_name , first_name";
-            ResultSet rs = db.GetSQL(sql);            
+            ResultSet rs = DBHandler.GetSQL(sql);            
             while ( rs.next() ) {
                 ArrayList provider = new ArrayList();
-                provider.add(db.getString(rs,"provider_no"));
-                provider.add(db.getString(rs,"first_name"));
-                provider.add(db.getString(rs,"last_name"));
+                provider.add(DBHandler.getString(rs,"provider_no"));
+                provider.add(DBHandler.getString(rs,"first_name"));
+                provider.add(DBHandler.getString(rs,"last_name"));
                 result.add(provider);
             }
             return result;
@@ -112,13 +112,13 @@ public class ProviderData {
     
     public static String getProviderName(String providerNo) {
            try {
-            DBHandler db = new DBHandler();
+            
             
                                     
             String sql = "select first_name, last_name from provider where provider_no='"+providerNo+"'";
-            ResultSet rs = db.GetSQL(sql);            
+            ResultSet rs = DBHandler.GetSQL(sql);            
             if ( rs.next() ) {            
-                return ( db.getString(rs,"first_name") + " " + db.getString(rs,"last_name") );            
+                return ( DBHandler.getString(rs,"first_name") + " " + DBHandler.getString(rs,"last_name") );            
             } else {                            
                 return "";
             }

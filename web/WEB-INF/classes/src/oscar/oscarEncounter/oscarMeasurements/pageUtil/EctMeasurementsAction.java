@@ -125,7 +125,7 @@ public class EctMeasurementsAction extends Action {
         boolean valid = true;
         try
             {
-                DBHandler db = new DBHandler();
+                
                 EctValidation ectValidation = new EctValidation();
                 ActionMessages errors = new ActionMessages();
 
@@ -237,7 +237,7 @@ public class EctMeasurementsAction extends Action {
                                         +"' AND measuringInstruction='" + mInstrc + "' AND comments='" + comments
                                         + "' AND dateObserved='" + dateObserved + "' and type = '"+inputType+"'";
 
-                            rs = db.GetSQL(sql);
+                            rs = DBHandler.GetSQL(sql);
                             if(!rs.next()){
                                 //Write to the Dababase if all input values are valid
                                 sql = "INSERT INTO measurements"
@@ -245,7 +245,7 @@ public class EctMeasurementsAction extends Action {
                                         +" VALUES ('"+str.q(inputType)+"','"+str.q(demographicNo)+"','"+str.q(providerNo)+"','"+str.q(inputValue)+"','"
                                         + str.q(mInstrc)+"','"+str.q(comments)+"','"+str.q(dateObserved)+"','"+str.q(dateEntered)+"')";
 
-                                db.RunSQL(sql);
+                                DBHandler.RunSQL(sql);
                                 //prepare input values for writing to the encounter form
                                 if (mFlowsheet == null){
                                     textOnEncounter =  textOnEncounter + inputType + "    " + inputValue + " " + mInstrc + " " + comments + "\\n";

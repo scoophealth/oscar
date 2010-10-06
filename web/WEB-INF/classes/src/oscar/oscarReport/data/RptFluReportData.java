@@ -49,10 +49,10 @@ public class RptFluReportData {
 		public String getBillingDate() {
 			String s = "&nbsp;";
 			try {
-				DBHandler dbhandler = new DBHandler();
+				
 				String s1 = "select b.billing_no, b.billing_date from billing b, billingdetail bd where bd.billing_no=b.billing_no and bd.status<>'D' and b.status<>'D' and (bd.service_code='G590A' or bd.service_code='G591A') and b.billing_date <= '2003-04-01' and b.demographic_no='"
 						+ demoNo + "' limit 0,1";
-				ResultSet resultset = dbhandler.GetSQL(s1);
+				ResultSet resultset = DBHandler.GetSQL(s1);
 				if (resultset.next())
 					s = resultset.getString("billing_date");
 				resultset.close();
@@ -66,7 +66,7 @@ public class RptFluReportData {
 			String sDate = reportYear + "-01-01";
 			String eDate = reportYear + "-12-31";
 			try {
-				DBHandler dbhandler = new DBHandler();
+				
 				String s1 = "select b.id, b.billing_date from billing_on_cheader1 b, billing_on_item bd where b.demographic_no='"
 						+ demoNo
 						+ "' and bd.ch1_id=b.id and (bd.service_code='G590A' or bd.service_code='G591A') and b.billing_date >= '"
@@ -74,7 +74,7 @@ public class RptFluReportData {
 						+ "' and b.billing_date <= '"
 						+ eDate
 						+ "' and  bd.status<>'D' and b.status<>'D' order by b.billing_date desc limit 0,1";
-				ResultSet resultset = dbhandler.GetSQL(s1);
+				ResultSet resultset = DBHandler.GetSQL(s1);
 				if (resultset.next())
 					s = resultset.getString("billing_date");
 				resultset.close();
@@ -100,11 +100,11 @@ public class RptFluReportData {
 	public ArrayList providerList() {
 		ArrayList arraylist = new ArrayList();
 		try {
-			DBHandler dbhandler = new DBHandler();
+			
 			String s = "select provider_no, last_name, first_name from provider where provider_type = 'doctor' order by last_name";
 			ResultSet resultset;
 			ArrayList arraylist1;
-			for (resultset = dbhandler.GetSQL(s); resultset.next(); arraylist
+			for (resultset = DBHandler.GetSQL(s); resultset.next(); arraylist
 					.add(arraylist1)) {
 				arraylist1 = new ArrayList();
 				arraylist1.add(resultset.getString("provider_no"));
@@ -121,12 +121,12 @@ public class RptFluReportData {
 	public void fluReportGenerate(String s, String s1) {
 		years = s1;
 		try {
-			DBHandler dbhandler = new DBHandler();
+			
 			String s2 = "select demographic_no, CONCAT(last_name,',',first_name) as demoname, phone, roster_status, patient_status, DATE_FORMAT(CONCAT((year_of_birth), '-', (month_of_birth), '-',(date_of_birth)),'%Y-%m-%d') as dob, (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((year_of_birth), '-', (month_of_birth),'-',(date_of_birth)),'%Y-%m-%d')))-(RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((year_of_birth), '-', (month_of_birth),'-',(date_of_birth)),'%Y-%m-%d'),5)) as age from demographic  where (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((year_of_birth),'-', (month_of_birth),'-',(date_of_birth)),'%Y-%m-%d')))-(RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((year_of_birth), '-', (month_of_birth),'-',(date_of_birth)),'%Y-%m-%d'),5)) >= 65 and (patient_status = 'AC' or patient_status = 'UHIP') and (roster_status='RO' or roster_status='NR' or roster_status='FS' or roster_status='RF' or roster_status='PL')";
 			if (!s.equals("-1"))
 				s2 = s2 + " and provider_no = '" + s + "' ";
 			s2 = s2 + "  order by last_name ";
-			ResultSet resultset = dbhandler.GetSQL(s2);
+			ResultSet resultset = DBHandler.GetSQL(s2);
 			demoList = new ArrayList();
 			DemoFluDataStruct demofludatastruct;
 			for (; resultset.next(); demoList.add(demofludatastruct)) {

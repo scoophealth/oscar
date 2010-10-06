@@ -53,7 +53,7 @@ public class BillingEDTOBECOutputSpecificationBeanHandler {
         String nextline;
         
         try{
-            DBHandler db = new DBHandler();
+            
             while ((nextline=input.readLine()) != null){
 
                 if (nextline.length() > 2){
@@ -64,21 +64,21 @@ public class BillingEDTOBECOutputSpecificationBeanHandler {
                     BillingEDTOBECOutputSpecificationBean osBean = new BillingEDTOBECOutputSpecificationBean(obecHIN,obecVer,obecResponse);
                     
                     String sql = "SELECT * FROM demographic WHERE hin='" + obecHIN + "'";
-                    ResultSet rs = db.GetSQL(sql);
+                    ResultSet rs = DBHandler.GetSQL(sql);
                     if (rs.next()){
                         osBean.setLastName(rs.getString("last_name"));               
                         osBean.setFirstName(rs.getString("first_name"));
                         osBean.setDOB(rs.getString("year_of_birth")+"-"+rs.getString("month_of_birth")+"-"+rs.getString("date_of_birth"));
                         osBean.setSex(rs.getString("sex"));
                         String sqlProvider = "SELECT * FROM provider where provider_no = '" + rs.getString("provider_no") + "'";
-                        ResultSet rsProvider = db.GetSQL(sqlProvider);
+                        ResultSet rsProvider = DBHandler.GetSQL(sqlProvider);
                         if(rsProvider.next()){
                             osBean.setIdentifier(rsProvider.getString("last_name"));
                         }
                         rs.close();
                     }
                     sql = "SELECT * FROM batchEligibility where responseCode='" + obecResponse + "'";
-                    rs = db.GetSQL(sql);
+                    rs = DBHandler.GetSQL(sql);
                     if(rs.next()){
                         osBean.setMOH(rs.getString("MOHResponse"));
                         rs.close();

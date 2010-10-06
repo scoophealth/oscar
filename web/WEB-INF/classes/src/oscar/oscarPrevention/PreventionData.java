@@ -77,14 +77,14 @@ public class PreventionData {
 			String neverWarn, ArrayList list) {
 		String sql = null;
 		try {
-			DBHandler db = new DBHandler();
+			
 			ResultSet rs;
 			sql = "Insert into preventions (creator,demographic_no,prevention_date,provider_no,provider_name,prevention_type,refused,creation_date,next_date,never) values " + "('"
 					+ creator + "','" + demoNo + "','" + date + "','" + providerNo + "','" + providerName + "','" + preventionType + "','" + refused + "',now(),'" + nextDate
 					+ "','" + neverWarn + "')";
 			log.debug(sql);
-			db.RunSQL(sql);
-			rs = db.GetSQL("select Last_insert_id()");
+			DBHandler.RunSQL(sql);
+			rs = DBHandler.GetSQL("select Last_insert_id()");
 			int insertId = -1;
 			if (rs.next()) {
 				insertId = rs.getInt(1);
@@ -110,11 +110,11 @@ public class PreventionData {
 	public void addPreventionKeyValue(String preventionId, String keyval, String val) {
 		String sql = null;
 		try {
-			DBHandler db = new DBHandler();
+			
 			
 			sql = "Insert into preventionsExt (prevention_id,keyval,val) values " + "('" + preventionId + "','" + keyval + "','" + StringEscapeUtils.escapeSql(val) + "')";
 			log.debug(sql);
-			db.RunSQL(sql);
+			DBHandler.RunSQL(sql);
 		}
 		catch (SQLException e) {
 			log.error(e.getMessage(), e);
@@ -126,11 +126,11 @@ public class PreventionData {
 		Hashtable h = new Hashtable();
 		String sql = null;
 		try {
-			DBHandler db = new DBHandler();
+			
 			ResultSet rs;
 			sql = "select * from  preventionsExt where prevention_id = '" + preventionId + "'";
 			log.debug(sql);
-			rs = db.GetSQL(sql);
+			rs = DBHandler.GetSQL(sql);
 			while (rs.next()) {
 				String key = oscar.Misc.getString(rs, "keyval");
 				String val = oscar.Misc.getString(rs, "val");
@@ -149,11 +149,11 @@ public class PreventionData {
 	public void deletePreventionData(String id) {
 		String sql = null;
 		try {
-			DBHandler db = new DBHandler();
+			
 			
 			sql = "update preventions set deleted = '1' where id = '" + id + "' "; // TODO: logg this in the Deletion record table or generic logging table
 			log.debug(sql);
-			db.RunSQL(sql);
+			DBHandler.RunSQL(sql);
 		}
 		catch (SQLException e) {
 			log.error(e.getMessage(), e);
@@ -164,11 +164,11 @@ public class PreventionData {
 	public void setNextPreventionDate(String date, String id) {
 		String sql = null;
 		try {
-			DBHandler db = new DBHandler();
+			
 			
 			sql = "update preventions set next_date = '" + date + "' where id = '" + id + "' ";
 			log.debug(sql);
-			db.RunSQL(sql);
+			DBHandler.RunSQL(sql);
 		}
 		catch (SQLException e) {
 			log.error(e.getMessage(), e);
@@ -204,11 +204,11 @@ public class PreventionData {
 		ArrayList list = new ArrayList();
 		String sql = null;
 		try {
-			DBHandler db = new DBHandler();
+			
 			ResultSet rs;
 			sql = "Select prevention_id from preventionsExt where  keyval = '" + extKey + "' and val = '" + extVal + "'";
 			log.debug(sql);
-			rs = db.GetSQL(sql);
+			rs = DBHandler.GetSQL(sql);
 			while (rs.next()) {
 				Hashtable hash = getPreventionById(oscar.Misc.getString(rs, "prevention_id"));
 				if (hash.get("deleted") != null && ((String) hash.get("deleted")).equals("0")) {
@@ -315,11 +315,11 @@ public class PreventionData {
 		java.util.Date dob = getDemographicDateOfBirth(demoNo);
 
 		try {
-			DBHandler db = new DBHandler();
+			
 			ResultSet rs;
 			sql = "Select * from preventions where  demographic_no = '" + demoNo + "' and prevention_type like '" + preventionType + "' and deleted != 1 order by prevention_date";
 			log.debug(sql);
-			rs = db.GetSQL(sql);
+			rs = DBHandler.GetSQL(sql);
 			while (rs.next()) {
 				Hashtable h = new Hashtable();
 				h.put("id", oscar.Misc.getString(rs, "id"));
@@ -362,11 +362,11 @@ public class PreventionData {
 		String comment = null;
 		String sql = null;
 		try {
-			DBHandler db = new DBHandler();
+			
 			ResultSet rs;
 			sql = "Select val from preventionsExt where  prevention_id = '" + id + "' and keyval = 'comments' ";
 			log.debug(sql);
-			rs = db.GetSQL(sql);
+			rs = DBHandler.GetSQL(sql);
 			if (rs.next()) {
 				comment = oscar.Misc.getString(rs, "val");
 				if (comment != null && comment.trim().length() == 0) {
@@ -389,11 +389,11 @@ public class PreventionData {
 		Prevention p = new Prevention(sex, dob);
 
 		try {
-			DBHandler db = new DBHandler();
+			
 			ResultSet rs;
 			sql = "Select * from preventions where  demographic_no = '" + demoNo + "'  and deleted != 1 order by prevention_type,prevention_date";
 			log.debug(sql);
-			rs = db.GetSQL(sql);
+			rs = DBHandler.GetSQL(sql);
 			while (rs.next()) {
 				PreventionItem pi = new PreventionItem(oscar.Misc.getString(rs, "prevention_type"), rs.getDate("prevention_date"), oscar.Misc.getString(rs, "never"), rs
 						.getDate("next_date"), rs.getString("refused"));
@@ -510,11 +510,11 @@ public class PreventionData {
 		String sql = null;
 		Hashtable h = null;
 		try {
-			DBHandler db = new DBHandler();
+			
 			ResultSet rs;
 			sql = "Select * from preventions where  id = '" + id + "' ";
 			log.debug(sql);
-			rs = db.GetSQL(sql);
+			rs = DBHandler.GetSQL(sql);
 			if (rs.next()) {
 				h = new Hashtable();
 				log.debug("preventionType" + oscar.Misc.getString(rs, "prevention_type"));

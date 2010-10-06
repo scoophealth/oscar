@@ -108,14 +108,14 @@ public class ServiceCodeValidationLogic {
    */
   public ServiceCodeValidator getSexValidator(String serviceCode, Demographic d) {
     SexValidator v = new SexValidator(serviceCode, d.getSex());
-    DBHandler db = null;
+    
     ResultSet rs;
     try {
-      db = new DBHandler();
+      
       String sexQry = "select gender " +
           "from ctl_billingservice_sex_rules " +
           "where service_code = '" + serviceCode + "'";
-      rs = db.GetSQL(sexQry);
+      rs = DBHandler.GetSQL(sexQry);
       if (rs.next()) {
         v.setGender(rs.getString(1));
       }
@@ -133,15 +133,15 @@ public class ServiceCodeValidationLogic {
    * @return ServiceCodeValidator
    */
   public ServiceCodeValidator getAgeValidator(String serviceCode, Demographic d) {
-    DBHandler db = null;
+    
     ResultSet rs = null;
     AgeValidator v = new AgeValidator(serviceCode, d.getAgeInYears());
     try {
-      db = new DBHandler();
+      
       String ageQry = "select minAge,maxAge " +
           "from ctl_billingservice_age_rules " +
           "where service_code = '" + serviceCode + "'";
-      rs = db.GetSQL(ageQry);
+      rs = DBHandler.GetSQL(ageQry);
       if (rs.next()) {
         v.setMinAge(rs.getInt(1));
         v.setMaxAge(rs.getInt(2));
@@ -161,17 +161,17 @@ public class ServiceCodeValidationLogic {
    */
   public int daysSinceLast13050(String demoNo) {
     int ret = 0;
-    DBHandler db = null;
+    
     ResultSet rs = null;
     try {
-      db = new DBHandler();
+      
       String qry =
           "select TO_DAYS(CURDATE()) - TO_DAYS(CAST(service_date as DATE)) " +
           "from billingmaster " +
           "where demographic_no = '" + demoNo + "' " +
           "and billing_code = '13050'" +
           " and billingstatus not in ('D','R','F')";
-      rs = db.GetSQL(qry);
+      rs = DBHandler.GetSQL(qry);
       int index = 0;
       while (rs.next()) {
         ret = rs.getInt(1);
@@ -195,17 +195,17 @@ public class ServiceCodeValidationLogic {
    */
   public int daysSinceCodeLastBilled(String demoNo,String code) {
     int ret = 0;
-    DBHandler db = null;
+    
     ResultSet rs = null;
     try {
-      db = new DBHandler();
+      
       String qry =
           "select TO_DAYS(CURDATE()) - TO_DAYS(CAST(service_date as DATE)) " +
           "from billingmaster " +
           "where demographic_no = '" + demoNo + "' " +
           "and billing_code = '" + code + "'" +
           " and billingstatus not in ('D','R','F')";    //TODO:  should be more status here.  Need to investigate
-      rs = db.GetSQL(qry);
+      rs = DBHandler.GetSQL(qry);
       int index = 0;
       while (rs.next()) {
         ret = rs.getInt(1);
@@ -230,10 +230,10 @@ public class ServiceCodeValidationLogic {
   public boolean hasMore00120Codes(String demoNo, String cnslCode,
                                    String serviceDate) {
     boolean ret = false;
-    DBHandler db = null;
+    
     ResultSet rs = null;
     try {
-      db = new DBHandler();
+      
       String qry = "SELECT COUNT(*) " +
           "FROM billingmaster " +
           "WHERE demographic_no = '" + demoNo + "'" +
@@ -241,7 +241,7 @@ public class ServiceCodeValidationLogic {
           " AND YEAR(service_date) = YEAR('" +
           DateUtils.convertDate8Char(serviceDate) +
           "') and billingstatus != 'D'";
-      rs = db.GetSQL(qry);
+      rs = DBHandler.GetSQL(qry);
       if (rs.next()) {
         int numCodes = rs.getInt(1);
         ret = numCodes < 4;
@@ -389,17 +389,17 @@ public class ServiceCodeValidationLogic {
    */
   public String getDateofLast13050(String demoNo) {
     String ret = "";
-    DBHandler db = null;
+    
     ResultSet rs = null;
     try {
-      db = new DBHandler();
+      
       String qry =
           "select service_date " +
           "from billingmaster " +
           "where demographic_no = '" + demoNo + "' " +
           "and billing_code = '13050'" +
           " and billingstatus not in('D','R','F')";
-      rs = db.GetSQL(qry);
+      rs = DBHandler.GetSQL(qry);
       if (rs.next()) {
         ret = rs.getString(1);
       }

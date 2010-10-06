@@ -66,17 +66,17 @@ public class VisitReportData {
        retVisit[5] = "0";
 
        try{
-             DBHandler db = new DBHandler();
+             
              String sql = "select Right(visittype, 1) visit, count(*) n from billing where status<>'D' and appointment_no<>'0' and creator='"+ providerNo +"' and billing_date>='" + dateBegin + "' and billing_date<='" + dateEnd + "' group by visittype";
              MiscUtils.getLogger().debug(sql);
              if (OscarProperties.getInstance().getBooleanProperty("isNewONbilling","true")){
                 sql = "select Right(visittype, 1) visit, count(*) n from billing_on_cheader1 where status<>'D' and appointment_no<>'0' and creator='"+ providerNo +"' and billing_date>='" + dateBegin + "' and billing_date<='" + dateEnd + "' group by visittype";
              }
              MiscUtils.getLogger().debug(sql);
-             ResultSet rs = db.GetSQL(sql);
+             ResultSet rs = DBHandler.GetSQL(sql);
              while (rs.next()){
-                retval = db.getString(rs,"visit");
-                retcount =db.getString(rs,"n");
+                retval = DBHandler.getString(rs,"visit");
+                retcount =DBHandler.getString(rs,"n");
                 retVisit[Integer.parseInt(retval)] = retcount;
 
 			}
@@ -102,17 +102,17 @@ public class VisitReportData {
                retVisit[5] = "0";
 
 	       try{
-	             DBHandler db = new DBHandler();
+	             
 	             String sql = "select Right(visittype, 1) visit, count(*) n from billing where status<>'D' and appointment_no<>'0' and apptProvider_no='"+ providerNo +"' and billing_date>='" + dateBegin + "' and billing_date<='" + dateEnd + "' group by visittype";
                      MiscUtils.getLogger().debug(sql);
                      if (OscarProperties.getInstance().getBooleanProperty("isNewONbilling","true")){
                         sql = "select Right(visittype, 1) visit, count(*) n from billing_on_cheader1 where status<>'D' and appointment_no<>'0' and apptProvider_no='"+ providerNo +"' and billing_date>='" + dateBegin + "' and billing_date<='" + dateEnd + "' group by visittype";
                      }
                      MiscUtils.getLogger().debug(sql);
-                     ResultSet rs = db.GetSQL(sql);
+                     ResultSet rs = DBHandler.GetSQL(sql);
 	             while (rs.next()){
-	                retval = db.getString(rs,"visit");
-	                retcount =db.getString(rs,"n");
+	                retval = DBHandler.getString(rs,"visit");
+	                retcount =DBHandler.getString(rs,"n");
 	                retVisit[Integer.parseInt(retval)] = retcount;
 
 				}

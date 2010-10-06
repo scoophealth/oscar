@@ -65,7 +65,7 @@ public class OscarRoleObjectPrivilege {
         Vector ret = new Vector();
         Properties prop = new Properties();
         try {
-            DBHandler db = new DBHandler();
+            
             java.sql.ResultSet rs;
             String [] objectNames  = getVecObjectName(objName);
             StringBuffer objectWhere = new StringBuffer();
@@ -79,11 +79,11 @@ public class OscarRoleObjectPrivilege {
             
             String sql = new String("select roleUserGroup,privilege from secObjPrivilege where "+ objectWhere.toString() +" order by priority desc");
 
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
             Vector roleInObj = new Vector();
             while (rs.next()) {
-                prop.setProperty(db.getString(rs,"roleUserGroup"), db.getString(rs,"privilege"));
-                roleInObj.add(db.getString(rs,"roleUserGroup"));
+                prop.setProperty(DBHandler.getString(rs,"roleUserGroup"), DBHandler.getString(rs,"privilege"));
+                roleInObj.add(DBHandler.getString(rs,"roleUserGroup"));
             }
             ret.add(prop);
             ret.add(roleInObj);

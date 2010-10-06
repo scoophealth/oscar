@@ -123,19 +123,19 @@ public class JDBCUtil
             String formName = fileName.substring(0,indexForm);
             String demographicNo = fileName.substring(indexForm+1, indexDemo);
             String timeStamp = fileName.substring(indexDemo+1,indexTimeStamp);
-            DBHandler db = new DBHandler();
+            
             
             //check if the data existed in the database already...
             String sql = "SELECT * FROM " + formName + " WHERE demographic_no='"
                          + demographicNo + "' AND formEdited='" + timeStamp + "'";
             MiscUtils.getLogger().debug(sql);
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
             if(!rs.first()){
                 rs.close();
                 sql = "SELECT * FROM " + formName + " WHERE demographic_no='"
                         + demographicNo + "' AND ID='0'";
                 MiscUtils.getLogger().debug("sql: " + sql);
-                rs = db.GetSQL(sql, true);  
+                rs = DBHandler.GetSQL(sql, true);  
                 rs.moveToInsertRow();        
                 //To validate or not
                 parser.setFeature( "http://xml.org/sax/features/validation",validation ); 

@@ -55,10 +55,10 @@ public class EctConDeleteServicesAction extends Action {
                stringBuffer.append(String.valueOf(String.valueOf((new StringBuffer(" serviceId = '")).append(servs[i]).append("' or "))));
          
          try {
-            DBHandler db = new DBHandler();
+            
             String sql = "update consultationServices set active = '02' where ".concat(String.valueOf(String.valueOf(stringBuffer.toString())));
             MiscUtils.getLogger().debug("sql = ".concat(String.valueOf(String.valueOf(sql))));
-            db.RunSQL(sql);
+            DBHandler.RunSQL(sql);
          }
          catch(SQLException e) {
             MiscUtils.getLogger().error("Error", e);

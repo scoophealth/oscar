@@ -41,7 +41,7 @@ import oscar.util.SqlUtils;
  * @version 1.0
  */
 public class PrivateBillTransactionsDAO {
-  DBHandler db = null;
+  
 
   public PrivateBillTransactionsDAO() {
   }
@@ -63,8 +63,8 @@ public class PrivateBillTransactionsDAO {
   public void savePrivateBillTransaction(int billingmaster_no, double amount, int paymentType) {
     String qry = "insert into billing_private_transactions(billingmaster_no,amount_received,creation_date,payment_type_id) values("+ String.valueOf(billingmaster_no) + "," + String.valueOf(amount) +",now()," +  paymentType + ")";
     try {
-      db = new DBHandler();
-      db.RunSQL(qry);
+      
+    	DBHandler.RunSQL(qry);
     }
     catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
     }

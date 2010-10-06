@@ -76,7 +76,7 @@ public class DxReference {
        ArrayList list = new ArrayList(); 
        String nsql ="select dx_code1, dx_code2, dx_code3,service_date from billingmaster where demographic_no = ? and billingstatus != 'D' order by service_date desc";
        try {
-            DBHandler db = new DBHandler();
+            
             PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(nsql);
             pstmt.setString(1,demo);
             ResultSet rs = pstmt.executeQuery();

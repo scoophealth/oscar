@@ -36,17 +36,14 @@ public class SendMessageClient {
     public boolean sendMessage(String databaseURL, String databaseName, String messageXML)
             throws OscarCommClientException, java.sql.SQLException {
         boolean ret = false;
-        DBHandler db = null;
         String wsURL = null;
         WebServiceClient client = null;
 
         try {
-            db = new DBHandler();
-
             String sql = "SELECT remoteServerURL FROM oscarcommlocations WHERE current1 = 1";
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
             if(rs.next()) {
-                wsURL = db.getString(rs,"remoteServerURL");
+                wsURL = DBHandler.getString(rs,"remoteServerURL");
             }
             rs.close();
         } catch (Exception ex) {
@@ -56,7 +53,7 @@ public class SendMessageClient {
         client = new WebServiceClient(wsURL);
 
         try {
-            String s = UtilXML.toXML(client.callSendMessage(createRequest(db, messageXML)));
+            String s = UtilXML.toXML(client.callSendMessage(createRequest(messageXML)));
             ret = (s.indexOf("<response/>") > -1);
         } catch (Exception ex) {
             throw new OscarCommClientException("Send Message failed.", ex);
@@ -65,10 +62,10 @@ public class SendMessageClient {
         return ret;
     }
 
-    private Element createRequest(DBHandler db, String messageXML) throws SQLException {
+    private Element createRequest(String messageXML) throws SQLException {
         Document doc = UtilXML.newDocument();
         Element root = UtilXML.addNode(doc, "sendMessage");
-        root.appendChild(new Location(db).getLocal(doc));
+        root.appendChild(new Location().getLocal(doc));
 
         Element message = (Element)doc.importNode(UtilXML.parseXML(messageXML).getDocumentElement(), true);
         root.appendChild(message);

@@ -45,12 +45,12 @@ public class RptSearchData {
     public java.util.ArrayList getRosterTypes(){
             java.util.ArrayList retval = new java.util.ArrayList();
          try{
-              DBHandler db = new DBHandler();
+              
               java.sql.ResultSet rs;
-              rs = db.GetSQL("select distinct roster_status from demographic where roster_status is not null order by roster_status");
+              rs = DBHandler.GetSQL("select distinct roster_status from demographic where roster_status is not null order by roster_status");
 
               while (rs.next()) {
-                retval.add( db.getString(rs,"roster_status") );
+                retval.add( DBHandler.getString(rs,"roster_status") );
 
               }
               rs.close();
@@ -63,12 +63,12 @@ public class RptSearchData {
     public java.util.ArrayList getPatientTypes(){
             java.util.ArrayList retval = new java.util.ArrayList();
          try{
-              DBHandler db = new DBHandler();
+              
               java.sql.ResultSet rs;
-              rs = db.GetSQL("select distinct patient_status from demographic where patient_status is not null order by patient_status");
+              rs = DBHandler.GetSQL("select distinct patient_status from demographic where patient_status is not null order by patient_status");
 
               while (rs.next()) {
-                retval.add( db.getString(rs,"patient_status") );
+                retval.add( DBHandler.getString(rs,"patient_status") );
 
               }
               rs.close();
@@ -79,12 +79,12 @@ public class RptSearchData {
     public java.util.ArrayList getProvidersWithDemographics(){
             java.util.ArrayList retval = new java.util.ArrayList();
          try{
-              DBHandler db = new DBHandler();
+              
               java.sql.ResultSet rs;
-              rs = db.GetSQL("select distinct provider_no from demographic order by provider_no");
+              rs = DBHandler.GetSQL("select distinct provider_no from demographic order by provider_no");
 
               while (rs.next()) {
-                retval.add( db.getString(rs,"provider_no") );
+                retval.add( DBHandler.getString(rs,"provider_no") );
 
               }
               rs.close();
@@ -95,14 +95,14 @@ public class RptSearchData {
     public java.util.ArrayList getQueryTypes(){
             java.util.ArrayList retval = new java.util.ArrayList();
          try{
-              DBHandler db = new DBHandler();
+              
               java.sql.ResultSet rs;
-              rs = db.GetSQL("select favId, queryName from demographicQueryFavourites where archived = '1' order by queryName");
+              rs = DBHandler.GetSQL("select favId, queryName from demographicQueryFavourites where archived = '1' order by queryName");
 
               while (rs.next()) {
                 SearchCriteria sc = new SearchCriteria();
-                sc.id = db.getString(rs,"favId");
-                sc.queryName = db.getString(rs,"queryName");
+                sc.id = DBHandler.getString(rs,"favId");
+                sc.queryName = DBHandler.getString(rs,"queryName");
 
                 retval.add( sc );
 
@@ -115,8 +115,8 @@ public class RptSearchData {
     
     public void deleteQueryFavourite(String id){
        try{
-          DBHandler db = new DBHandler();
-          db.RunSQL("update demographicQueryFavourites set archived = '0' where favId = '"+id+"'");
+          
+          DBHandler.RunSQL("update demographicQueryFavourites set archived = '0' where favId = '"+id+"'");
        }catch (java.sql.SQLException e){ 
            MiscUtils.getLogger().error("Error", e);
        }

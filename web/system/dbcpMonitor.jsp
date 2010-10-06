@@ -59,12 +59,11 @@ detect those and search the source.
 
 <%
         BasicDataSource basicDataSource = (BasicDataSource) SpringUtils.getBean("dataSource");
-        DBHandler dbHandler = new DBHandler();
 
         int numActive = basicDataSource.getNumActive();
         int numIdle = basicDataSource.getNumIdle();
 
-        ResultSet rsProcessList = dbHandler.GetSQL("show processlist");
+        ResultSet rsProcessList = DBHandler.GetSQL("show processlist");
 
 %>
 

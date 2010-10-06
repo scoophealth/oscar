@@ -25,16 +25,16 @@ public class DoctorList {
 
         ArrayList dnl = new ArrayList();
         try{
-            DBHandler db = new DBHandler();
+            
             
             java.sql.ResultSet rs;
             String sql = "select last_name, first_name, provider_no from provider where provider_type='doctor'";
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
 
             while(rs.next()){
                 ProviderNameBean pb = new ProviderNameBean();
-                pb.setProviderID(db.getString(rs,3));
-                pb.setProviderName(db.getString(rs,2)+ " " +db.getString(rs,1));
+                pb.setProviderID(DBHandler.getString(rs,3));
+                pb.setProviderName(DBHandler.getString(rs,2)+ " " +DBHandler.getString(rs,1));
                 dnl.add(pb);
                 
             }

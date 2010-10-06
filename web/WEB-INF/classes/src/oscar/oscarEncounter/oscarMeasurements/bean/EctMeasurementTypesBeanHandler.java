@@ -53,20 +53,20 @@ public class EctMeasurementTypesBeanHandler {
         
         boolean verdict = true;
         try {
-            DBHandler db = new DBHandler();
+            
 
             String sql = "SELECT * FROM measurementType ORDER BY type";              
             ResultSet rs;        
-            for(rs = db.GetSQL(sql); rs.next(); )
+            for(rs = DBHandler.GetSQL(sql); rs.next(); )
             {                
-                String validation = db.getString(rs,"validation");
+                String validation = DBHandler.getString(rs,"validation");
                 String sqlValidation = "SELECT name FROM validations WHERE id='" + validation + "'";
-                ResultSet rsValidation = db.GetSQL(sqlValidation);
+                ResultSet rsValidation = DBHandler.GetSQL(sqlValidation);
                 if (rsValidation.next()){
-                    EctMeasurementTypesBean measurementTypes = new EctMeasurementTypesBean(rs.getInt("id"), db.getString(rs,"type"), 
-                                                                                           db.getString(rs,"typeDisplayName"), 
-                                                                                           db.getString(rs,"typeDescription"), 
-                                                                                           db.getString(rs,"measuringInstruction"), 
+                    EctMeasurementTypesBean measurementTypes = new EctMeasurementTypesBean(rs.getInt("id"), DBHandler.getString(rs,"type"), 
+                                                                                           DBHandler.getString(rs,"typeDisplayName"), 
+                                                                                           DBHandler.getString(rs,"typeDescription"), 
+                                                                                           DBHandler.getString(rs,"measuringInstruction"), 
                                                                                            rsValidation.getString("name"));   
                     measurementTypeVector.add(measurementTypes);
                 }
@@ -86,15 +86,15 @@ public class EctMeasurementTypesBeanHandler {
         
         boolean verdict = true;
         try {
-            DBHandler db = new DBHandler();
+            
             String sqlMGr = "SELECT typeDisplayName FROM measurementGroup WHERE name='" + groupName + "'ORDER BY typeDisplayName";            
             ResultSet rsMGr;
  
-            for(rsMGr = db.GetSQL(sqlMGr); rsMGr.next();){
+            for(rsMGr = DBHandler.GetSQL(sqlMGr); rsMGr.next();){
                 String typeDisplayName  = rsMGr.getString("typeDisplayName");
                 String sqlMT = "SELECT * FROM measurementType WHERE typeDisplayName = '" + typeDisplayName + "'";                
                 ResultSet rsMT;        
-                for(rsMT = db.GetSQL(sqlMT); rsMT.next(); )
+                for(rsMT = DBHandler.GetSQL(sqlMT); rsMT.next(); )
                 {                
                     EctMeasuringInstructionBean mInstrc = new EctMeasuringInstructionBean(rsMT.getString("measuringInstruction"));                    
                     measuringInstrcVector.add(mInstrc);
@@ -104,12 +104,12 @@ public class EctMeasurementTypesBeanHandler {
                 //Get the data last entered for the current measurement type
                 String sqlData = "SELECT * FROM measurements WHERE demographicNo='"+ demo + "' AND type ='" + rsMT.getString("type")
                                  + "' ORDER BY dateEntered DESC LIMIT 1";
-                ResultSet rsData = db.GetSQL(sqlData);
+                ResultSet rsData = DBHandler.GetSQL(sqlData);
                 boolean hasPreviousData = false;
                 if(rsData.next()){
                     String providerNo = rsData.getString("providerNo");
                     String sqlProvider = "SELECT * FROM provider WHERE provider_no='" + providerNo + "'";
-                    ResultSet rsProvider = db.GetSQL(sqlProvider);
+                    ResultSet rsProvider = DBHandler.GetSQL(sqlProvider);
                     String pFname = "";
                     String pLname = "";
                     if(rsProvider.next()){

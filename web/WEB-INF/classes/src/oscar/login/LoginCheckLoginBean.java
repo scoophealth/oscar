@@ -142,21 +142,21 @@ public class LoginCheckLoginBean {
         LoginSecurityBean secBean = null;
 
         accessDB = new DBHelp();
-        DBHandler db = new DBHandler();
+        
        
         
         String sql = "select * from security where user_name = '" + StringEscapeUtils.escapeSql(username) + "'";
-        ResultSet rs =  db.GetSQL(sql);
+        ResultSet rs =  DBHandler.GetSQL(sql);
         while (rs.next()) {
             secBean = new LoginSecurityBean();
-            secBean.setUser_name(db.getString(rs,"user_name"));
-            secBean.setPassword(db.getString(rs,"password"));
-            secBean.setProviderNo(db.getString(rs,"provider_no"));
-            secBean.setPin(db.getString(rs,"pin"));
+            secBean.setUser_name(DBHandler.getString(rs,"user_name"));
+            secBean.setPassword(DBHandler.getString(rs,"password"));
+            secBean.setProviderNo(DBHandler.getString(rs,"provider_no"));
+            secBean.setPin(DBHandler.getString(rs,"pin"));
             secBean.setB_ExpireSet(new Integer(rs.getInt("b_ExpireSet")));
             secBean.setDate_ExpireDate(rs.getDate("date_ExpireDate"));
-            secBean.setB_LocalLockSet(new Integer(db.getString(rs,"b_LocalLockSet")));
-            secBean.setB_RemoteLockSet(new Integer(db.getString(rs,"b_RemoteLockSet")));
+            secBean.setB_LocalLockSet(new Integer(DBHandler.getString(rs,"b_LocalLockSet")));
+            secBean.setB_RemoteLockSet(new Integer(DBHandler.getString(rs,"b_RemoteLockSet")));
         }
         rs.close();
 

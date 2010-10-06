@@ -26,25 +26,25 @@ public class FrmARRecord extends FrmRecord {
         Properties props = new Properties();
 
         if (existingID <= 0) {
-            DBHandler db = new DBHandler();
+            
             String sql = "SELECT demographic_no, CONCAT(last_name, ', ', first_name) AS pName, sex, CONCAT(address, ', ', city, ', ', province, ' ', postal) AS address, phone, phone2, year_of_birth, month_of_birth, date_of_birth FROM demographic WHERE demographic_no = "
                     + demographicNo;
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
             if (rs.next()) {
-                java.util.Date date = UtilDateUtilities.calcDate(db.getString(rs,"year_of_birth"), rs
-                        .getString("month_of_birth"), db.getString(rs,"date_of_birth"));
-                props.setProperty("demographic_no", db.getString(rs,"demographic_no"));
+                java.util.Date date = UtilDateUtilities.calcDate(DBHandler.getString(rs,"year_of_birth"), rs
+                        .getString("month_of_birth"), DBHandler.getString(rs,"date_of_birth"));
+                props.setProperty("demographic_no", DBHandler.getString(rs,"demographic_no"));
                 props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities
                         .Today(), "yyyy/MM/dd"));
                 //props.setProperty("formEdited",
                 // UtilDateUtilities.DateToString(UtilDateUtilities.Today(),"yyyy/MM/dd"));
-                props.setProperty("c_pName", db.getString(rs,"pName"));
-                props.setProperty("c_address", db.getString(rs,"address"));
+                props.setProperty("c_pName", DBHandler.getString(rs,"pName"));
+                props.setProperty("c_address", DBHandler.getString(rs,"address"));
                 props.setProperty("pg1_dateOfBirth", UtilDateUtilities.DateToString(date,
                         "yyyy/MM/dd"));
                 props.setProperty("pg1_age", String.valueOf(UtilDateUtilities.calcAge(date)));
-                props.setProperty("pg1_homePhone", db.getString(rs,"phone"));
-                props.setProperty("pg1_workPhone", db.getString(rs,"phone2"));
+                props.setProperty("pg1_homePhone", DBHandler.getString(rs,"phone"));
+                props.setProperty("pg1_workPhone", DBHandler.getString(rs,"phone2"));
                 props.setProperty("pg1_formDate", UtilDateUtilities.DateToString(UtilDateUtilities
                         .Today(), "yyyy/MM/dd"));
             }
@@ -85,12 +85,12 @@ public class FrmARRecord extends FrmRecord {
         if ("yes".equalsIgnoreCase(OscarProperties.getInstance().getProperty("PHR", ""))) {
 
             String demographic_no = demoNo;
-            DBHandler db = new DBHandler();
+            
             String sql = "select email from demographic where demographic_no=" + demographic_no;
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
             if (rs.next()) {
-                if (db.getString(rs,"email") != null && db.getString(rs,"email").length() > 5
-                        && db.getString(rs,"email").matches(".*@.*"))
+                if (DBHandler.getString(rs,"email") != null && DBHandler.getString(rs,"email").length() > 5
+                        && DBHandler.getString(rs,"email").matches(".*@.*"))
                     ret = true;
             }
 

@@ -79,23 +79,23 @@ public class ClinicData {
     void fillClinicData(){
         if (!filled){
             try{
-               DBHandler db = new DBHandler();
+               
                java.sql.ResultSet rs;
                String sql = "select * from clinic ";
-               rs = db.GetSQL(sql);
+               rs = DBHandler.GetSQL(sql);
                 
                if(rs.next()){
-                 clinic_no              = db.getString(rs,"clinic_no"); 
-                 clinic_name            = db.getString(rs,"clinic_name");  
-                 clinic_address         = db.getString(rs,"clinic_address"); 
-                 clinic_city            = db.getString(rs,"clinic_city"); 
-                 clinic_postal          = db.getString(rs,"clinic_postal"); 
-                 clinic_phone           = db.getString(rs,"clinic_phone"); 
-                 clinic_fax             = db.getString(rs,"clinic_fax"); 
-                 clinic_location_code   = db.getString(rs,"clinic_location_code"); 
-                 clinic_province        = db.getString(rs,"clinic_province"); 
-                 clinic_delim_phone     = db.getString(rs,"clinic_delim_phone"); 
-                 clinic_delim_fax       = db.getString(rs,"clinic_delim_fax"); 
+                 clinic_no              = DBHandler.getString(rs,"clinic_no"); 
+                 clinic_name            = DBHandler.getString(rs,"clinic_name");  
+                 clinic_address         = DBHandler.getString(rs,"clinic_address"); 
+                 clinic_city            = DBHandler.getString(rs,"clinic_city"); 
+                 clinic_postal          = DBHandler.getString(rs,"clinic_postal"); 
+                 clinic_phone           = DBHandler.getString(rs,"clinic_phone"); 
+                 clinic_fax             = DBHandler.getString(rs,"clinic_fax"); 
+                 clinic_location_code   = DBHandler.getString(rs,"clinic_location_code"); 
+                 clinic_province        = DBHandler.getString(rs,"clinic_province"); 
+                 clinic_delim_phone     = DBHandler.getString(rs,"clinic_delim_phone"); 
+                 clinic_delim_fax       = DBHandler.getString(rs,"clinic_delim_fax"); 
                   
                }
             }

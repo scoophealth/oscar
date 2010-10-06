@@ -42,15 +42,15 @@ public class EctImmConfigData {
 
 	public String getImmunizationConfig()
 		throws SAXException, ParserConfigurationException, SQLException {
-		DBHandler db = new DBHandler();
+		
 		String sql =
 			"SELECT setName, setXmlDoc FROM config_Immunization WHERE archived=0 AND setName IS NOT NULL AND setName <> '' ORDER BY setName";
-		ResultSet rs = db.GetSQL(sql);
+		ResultSet rs = DBHandler.GetSQL(sql);
 		Document doc = UtilXML.newDocument();
 		Element root = UtilXML.addNode(doc, "immunization");
 		Node newSet;
 		for (; rs.next(); root.appendChild(newSet)) {
-			Document setDoc = UtilXML.parseXML(db.getString(rs,"setXmlDoc"));
+			Document setDoc = UtilXML.parseXML(DBHandler.getString(rs,"setXmlDoc"));
 			Element setRoot = setDoc.getDocumentElement();
 			newSet = doc.importNode(setRoot, true);
 		}
@@ -62,13 +62,13 @@ public class EctImmConfigData {
 	public Vector getImmunizationConfigName()
 		throws SAXException, ParserConfigurationException, SQLException {
 		Vector ret = new Vector();
-		DBHandler db = new DBHandler();
+		
 		String sql =
 			"SELECT setName FROM config_Immunization WHERE archived=0 AND setName IS NOT NULL AND setName <> '' ORDER BY setName";
-		ResultSet rs = db.GetSQL(sql);
+		ResultSet rs = DBHandler.GetSQL(sql);
 		
 		while (rs.next()){
-			ret.add(db.getString(rs,"setName"));
+			ret.add(DBHandler.getString(rs,"setName"));
 		}
 		rs.close();
 		return ret;
@@ -77,10 +77,10 @@ public class EctImmConfigData {
 	public Vector getImmunizationConfigId()
 	throws SAXException, ParserConfigurationException, SQLException {
 		Vector ret = new Vector();
-		DBHandler db = new DBHandler();
+		
 		String sql =
 			"SELECT setId FROM config_Immunization WHERE archived=0 AND setName IS NOT NULL AND setName <> '' ORDER BY setName";
-		ResultSet rs = db.GetSQL(sql);
+		ResultSet rs = DBHandler.GetSQL(sql);
 		
 		while (rs.next()){
 			ret.add(""+rs.getInt("setId"));

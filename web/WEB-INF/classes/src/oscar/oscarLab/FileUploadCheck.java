@@ -67,9 +67,9 @@ public class FileUploadCheck {
    public boolean hasFileBeenUploaded(String md5sum){
       boolean hasFileBeenUploaded = false;
       try{         
-         DBHandler db = new DBHandler();
+         
          String sql = "select * from fileUploadCheck where md5sum = '"+md5sum+"' ";
-         ResultSet rs = db.GetSQL(sql);
+         ResultSet rs = DBHandler.GetSQL(sql);
          if(rs.next()){
             hasFileBeenUploaded = true;
          }         
@@ -92,14 +92,14 @@ public class FileUploadCheck {
    public Hashtable getFileInfo(String md5sum){
       Hashtable fileInfo = new Hashtable();
       try{         
-         DBHandler db = new DBHandler();
+         
          String sql = "select * from fileUploadCheck where md5sum = '"+md5sum+"' ";
-         ResultSet rs = db.GetSQL(sql);
+         ResultSet rs = DBHandler.GetSQL(sql);
          if(rs.next()){
-            fileInfo.put("providerNo",db.getString(rs,"provider_no"));
-            fileInfo.put("filename", db.getString(rs,"filename"));
-            fileInfo.put("md5sum", db.getString(rs,"md5sum"));
-            fileInfo.put("dateTime",db.getString(rs,"date_time"));
+            fileInfo.put("providerNo",DBHandler.getString(rs,"provider_no"));
+            fileInfo.put("filename", DBHandler.getString(rs,"filename"));
+            fileInfo.put("md5sum", DBHandler.getString(rs,"md5sum"));
+            fileInfo.put("dateTime",DBHandler.getString(rs,"date_time"));
          }         
       }catch(Exception e){
          MiscUtils.getLogger().error("Error", e);
@@ -117,11 +117,11 @@ public class FileUploadCheck {
       try{
          String md5sum = getMd5Sum(is);
          if(!hasFileBeenUploaded(md5sum)){           
-            DBHandler db = new DBHandler();
+            
             String sql = "insert into fileUploadCheck (provider_no,filename,md5sum,date_time) values ('"+provider+"','"+StringEscapeUtils.escapeSql(name)+"','"+md5sum+"',now())";
             MiscUtils.getLogger().debug(sql);
-            db.RunSQL(sql);
-            ResultSet rs = db.GetSQL("SELECT LAST_INSERT_ID() ");
+            DBHandler.RunSQL(sql);
+            ResultSet rs = DBHandler.GetSQL("SELECT LAST_INSERT_ID() ");
             if(rs.next()){
                 fileUploaded= rs.getInt(1) ;
             }       

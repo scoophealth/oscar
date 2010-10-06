@@ -45,11 +45,11 @@ public class RptGroupNameBeanHandler {
         
         boolean verdict = true;
         try {
-            DBHandler db = new DBHandler();
+            
             String sql = "SELECT DISTINCT name FROM measurementGroup";
             MiscUtils.getLogger().debug("Sql Statement: " + sql);
             ResultSet rs;
-            for(rs = db.GetSQL(sql); rs.next(); )
+            for(rs = DBHandler.GetSQL(sql); rs.next(); )
             {
                 RptGroupNameBean groupName = new RptGroupNameBean(rs.getString("name"));
                 groupNameVector.add(groupName);

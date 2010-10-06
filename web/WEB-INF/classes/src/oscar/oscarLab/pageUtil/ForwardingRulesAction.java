@@ -54,14 +54,14 @@ public class ForwardingRulesAction extends Action{
             String status = request.getParameter("status");
             
             try{
-                DBHandler db = new DBHandler();
+                
                 // insert forwarding rules
                 if (providerNums != null){
                     String sql = "UPDATE incomingLabRules SET archive='1' WHERE provider_no='"+providerNo+"' AND frwdProvider_no='0' AND archive='0'";
-                    db.RunSQL(sql);
+                    DBHandler.RunSQL(sql);
                     for (int i=0; i < providerNums.length; i++){
                         sql = "INSERT INTO incomingLabRules (provider_no, frwdProvider_no) VALUES ('"+providerNo+"', '"+providerNums[i]+"')";
-                        db.RunSQL(sql);
+                        DBHandler.RunSQL(sql);
                     }
                 }
                 
@@ -73,7 +73,7 @@ public class ForwardingRulesAction extends Action{
                     // insert a new rule setting the status to final without forwarding
                     if (status.equals("F")){
                         String sql = "INSERT INTO incomingLabRules (provider_no, status, frwdProvider_no) VALUES ('"+providerNo+"', '"+status+"', '0')";
-                        db.RunSQL(sql);
+                        DBHandler.RunSQL(sql);
                         // clear the rules if there is no forwarding and the user sets the
                         // status to New... since this is the default
                     }else if(!clearRules(providerNo)){
@@ -82,7 +82,7 @@ public class ForwardingRulesAction extends Action{
                     // if the rules are set to forward the labs update the status of those rules
                 }else{
                     String sql = "UPDATE incomingLabRules SET status='"+status+"' WHERE archive='0' AND provider_no='"+providerNo+"'";
-                    db.RunSQL(sql);
+                    DBHandler.RunSQL(sql);
                 }
             }catch(Exception e){
                 logger.error("Could not update forwarding rules", e);
@@ -103,9 +103,9 @@ public class ForwardingRulesAction extends Action{
     
     private boolean clearRules(String providerNo){
         try{
-            DBHandler db = new DBHandler();
+            
             String sql = "UPDATE incomingLabRules SET archive='1' WHERE provider_no='"+providerNo+"'";
-            db.RunSQL(sql);
+            DBHandler.RunSQL(sql);
         }catch(Exception e){
             logger.error("Could not clear forwarding rules", e);
             return false;
@@ -120,19 +120,19 @@ public class ForwardingRulesAction extends Action{
             
             ForwardingRules fr = new ForwardingRules();
             String status = fr.getStatus(providerNo);
-            DBHandler db = new DBHandler();
+            
             
             if ( autoFileLabs != null && autoFileLabs.equalsIgnoreCase("yes") && status.equals("F")){
                 String sql = "UPDATE incomingLabRules SET archive='1' WHERE provider_no='"+providerNo+"' AND frwdProvider_no='"+remProviderNum+"'";
                 logger.info(sql);
-                db.RunSQL(sql);
+                DBHandler.RunSQL(sql);
                 sql = "INSERT INTO incomingLabRules (provider_no, status) VALUES ('"+providerNo+"', 'F')";
                 logger.info(sql);
-                db.RunSQL(sql);
+                DBHandler.RunSQL(sql);
             }else{
                 String sql = "UPDATE incomingLabRules SET archive='1' WHERE provider_no='"+providerNo+"' AND frwdProvider_no='"+remProviderNum+"'";
                 logger.info(sql);
-                db.RunSQL(sql);
+                DBHandler.RunSQL(sql);
             }
         }catch(Exception e){
             logger.error("Could not remove provider '"+remProviderNum+"' from the forwarding rules", e);

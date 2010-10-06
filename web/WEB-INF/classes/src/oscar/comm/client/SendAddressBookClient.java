@@ -38,17 +38,13 @@ public class SendAddressBookClient {
             throws OscarCommClientException, SQLException {
         boolean ret = false;
         String wsURL = null;
-        DBHandler db = null;
         WebServiceClient client = null;
 
         try {
-            db = new DBHandler();
-            
-
             String sql = "SELECT remoteServerURL FROM oscarcommlocations WHERE current1 = 1";
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
             if(rs.next()) {
-                wsURL = db.getString(rs,"remoteServerURL");
+                wsURL = DBHandler.getString(rs,"remoteServerURL");
             }
             rs.close();
         } catch (Exception ex) {
@@ -61,11 +57,11 @@ public class SendAddressBookClient {
             Element request;
             Element response;
 
-            request = createRequest(db);
+            request = createRequest();
             response = client.callSendRequest(request);
 
             if(response!=null) {
-                parseResponse(response, db);
+                parseResponse(response);
                 ret = true;
             }
         } catch (Exception ex) {
@@ -75,28 +71,28 @@ public class SendAddressBookClient {
         return ret;
     }
 
-    private Element createRequest(DBHandler db) throws SQLException {
+    private Element createRequest() throws SQLException {
         Document doc = UtilXML.newDocument();
         Element root = UtilXML.addNode(doc, "request");
 
-        root.appendChild(new Location(db).getLocal(doc));
-        root.appendChild(new AddressBook(db).getLocalAddressBook(doc));
+        root.appendChild(new Location().getLocal(doc));
+        root.appendChild(new AddressBook().getLocalAddressBook(doc));
 
         return root;
     }
 
-    private void parseResponse(Element response, DBHandler db) throws SQLException {
+    private void parseResponse(Element response) throws SQLException {
         NodeList rootChildren = response.getChildNodes();
 
         for(int i=0; i<rootChildren.getLength(); i++) {
             Element element = (Element)rootChildren.item(i);
 
             if(element.getNodeName().equalsIgnoreCase("remoteAddressBooks")) {
-                new AddressBook(db).setRemoteAddressBooks(element);
+                new AddressBook().setRemoteAddressBooks(element);
             }
 
             if(element.getNodeName().equalsIgnoreCase("messageList")) {
-                new Messages(db).addMessageList(element);
+                new Messages().addMessageList(element);
             }
         }
     }

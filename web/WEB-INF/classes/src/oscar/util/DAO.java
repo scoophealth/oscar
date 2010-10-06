@@ -86,13 +86,6 @@ public class DAO {
     /**
      * @return
      */
-    public DBHandler getDb() throws SQLException {
-        return new DBHandler();
-    }
-
-    /**
-     * @return
-     */
     public DBPreparedHandler getDBPreparedHandler() throws SQLException {
         return new DBPreparedHandler();
     }

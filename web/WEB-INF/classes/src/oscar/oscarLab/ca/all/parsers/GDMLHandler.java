@@ -101,27 +101,27 @@ public class GDMLHandler implements MessageHandler {
         
         try{
             
-            DBHandler db = new DBHandler();
+            
             String sql = "SELECT m2.message, a.lab_no AS lab_no_A, b.lab_no AS lab_no_B,  a.obr_date, b.obr_date as labDate FROM hl7TextInfo a, hl7TextInfo b, hl7TextMessage m1, hl7TextMessage m2 WHERE m2.lab_id = a.lab_no AND a.accessionNum !='' AND a.accessionNum=b.accessionNum AND b.lab_no = m1.lab_id AND m1.message='"+(new String(base64.encode(hl7Body.getBytes(MiscUtils.ENCODING)), MiscUtils.ENCODING))+"' ORDER BY a.obr_date, a.lab_no";
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
             
             while(rs.next()) {
                 //Accession numbers may be recycled, accession
                 //numbers for a lab should have lab dates within less than 4
                 //months of eachother even this is a large timespan
-                Date dateA = UtilDateUtilities.StringToDate(db.getString(rs,"obr_date"), "yyyy-MM-dd hh:mm:ss");
-                Date dateB = UtilDateUtilities.StringToDate(db.getString(rs,"labDate"), "yyyy-MM-dd hh:mm:ss");
+                Date dateA = UtilDateUtilities.StringToDate(DBHandler.getString(rs,"obr_date"), "yyyy-MM-dd hh:mm:ss");
+                Date dateB = UtilDateUtilities.StringToDate(DBHandler.getString(rs,"labDate"), "yyyy-MM-dd hh:mm:ss");
                 if (dateA.before(dateB)){
                     monthsBetween = UtilDateUtilities.getNumMonths(dateA, dateB);
                 }else{
                     monthsBetween = UtilDateUtilities.getNumMonths(dateB, dateA);
                 }
                 if (monthsBetween < 4){
-                    ret.add(new String(base64.decode(db.getString(rs,"message").getBytes(MiscUtils.ENCODING)), MiscUtils.ENCODING));
+                    ret.add(new String(base64.decode(DBHandler.getString(rs,"message").getBytes(MiscUtils.ENCODING)), MiscUtils.ENCODING));
                 }
                 
                 // only return labs up to the one being initialized
-                if (db.getString(rs,"lab_no_A").equals(db.getString(rs,"lab_no_B")))
+                if (DBHandler.getString(rs,"lab_no_A").equals(DBHandler.getString(rs,"lab_no_B")))
                     break;
             }
             rs.close();

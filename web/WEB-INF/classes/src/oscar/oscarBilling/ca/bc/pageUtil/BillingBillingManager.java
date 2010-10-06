@@ -56,14 +56,14 @@ public class BillingBillingManager {
         service_code = bi.service_code;
         units = bi.units;
 
-        DBHandler db = new DBHandler();
+        
         ResultSet rs;
         String sql =
             "SELECT b.service_code, b.description , b.value, b.percentage "
             + "FROM billingservice b WHERE b.service_code='" + service_code +
             "'";
 
-        rs = db.GetSQL(sql);
+        rs = DBHandler.GetSQL(sql);
 
         while (rs.next()) {
           billingitem = new BillingItem(rs.getString("service_code"),
@@ -90,10 +90,10 @@ public class BillingBillingManager {
   public ArrayList getBillView(String billing_no) {
     ArrayList billingItemsArray = new ArrayList();
     try {
-      DBHandler db = new DBHandler();
+      
       ResultSet rs;
       ///is msp or wcb?
-      rs = db.GetSQL("select billingtype from billing where billing_no = '" +
+      rs = DBHandler.GetSQL("select billingtype from billing where billing_no = '" +
                      billing_no + "'");
       String billingType = "";
       if (rs.next()) {
@@ -106,14 +106,14 @@ public class BillingBillingManager {
       sql = sql + "dx_expansion, service_location, referral_flag1, referral_no1, referral_flag2, referral_no2, time_call, service_start_time, service_end_time, birth_date, office_number, correspondence_code, claim_comment ";
       sql = sql + "from billingmaster where billing_no='" + billing_no + "'";
       MiscUtils.getLogger().debug(sql);
-      rs = db.GetSQL(sql);
+      rs = DBHandler.GetSQL(sql);
       String billingCode = "";
       String billingUnit = "";
 
       while (rs.next()) {
 
         if (billingType.equals("WCB")) {
-          ResultSet wcbrs = db.GetSQL(
+          ResultSet wcbrs = DBHandler.GetSQL(
               "select w_feeitem from wcb where billing_no = '" + billing_no +
               "'");
           if (wcbrs.next()) {
@@ -346,7 +346,7 @@ public class BillingBillingManager {
 
     public void fill(String billType) {
       try {
-        DBHandler db = new DBHandler();
+        
         ResultSet rs;
         String sql;
 
@@ -361,7 +361,7 @@ public class BillingBillingManager {
               "'";
         }
         MiscUtils.getLogger().debug(sql);
-        rs = db.GetSQL(sql);
+        rs = DBHandler.GetSQL(sql);
 
         while (rs.next()) {
           this.description = rs.getString("description");

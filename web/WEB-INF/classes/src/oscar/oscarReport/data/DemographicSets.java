@@ -62,11 +62,11 @@ public class DemographicSets {
    
    public void addDemographicSet(String setName, ArrayList demoList){      
       try{
-         DBHandler db = new DBHandler();
+         
               
          for (int i = 0; i < demoList.size(); i++){                            
             String demographicNo = (String) demoList.get(i);
-            db.RunSQL("insert into demographicSets (set_name,demographic_no) values ('"+StringEscapeUtils.escapeSql(setName)+"','"+demographicNo+"')");
+            DBHandler.RunSQL("insert into demographicSets (set_name,demographic_no) values ('"+StringEscapeUtils.escapeSql(setName)+"','"+demographicNo+"')");
          }
       }catch (java.sql.SQLException e){ MiscUtils.getLogger().error("Error", e); }            
    }
@@ -75,11 +75,11 @@ public class DemographicSets {
    public ArrayList getDemographicSet(String setName){      
       ArrayList retval = new ArrayList();
       try{
-         DBHandler db = new DBHandler();
-         ResultSet rs = db.GetSQL("select * from demographicSets where archive != '1' and set_name = '"+StringEscapeUtils.escapeSql(setName)+"'");          
+         
+         ResultSet rs = DBHandler.GetSQL("select * from demographicSets where archive != '1' and set_name = '"+StringEscapeUtils.escapeSql(setName)+"'");          
          
          while (rs.next()){
-            retval.add(db.getString(rs,"demographic_no"));            
+            retval.add(DBHandler.getString(rs,"demographic_no"));            
          }
          rs.close();
       }catch (java.sql.SQLException e){ MiscUtils.getLogger().error("Error", e); }            
@@ -97,11 +97,11 @@ public class DemographicSets {
            }
        }
       try{
-         DBHandler db = new DBHandler();
-         ResultSet rs = db.GetSQL("select * from demographicSets where  archive != '1' and set_name in (" + strNames.toString() + ") group by demographic_no");          
+         
+         ResultSet rs = DBHandler.GetSQL("select * from demographicSets where  archive != '1' and set_name in (" + strNames.toString() + ") group by demographic_no");          
          
          while (rs.next()){
-            retval.add(db.getString(rs,"demographic_no"));            
+            retval.add(DBHandler.getString(rs,"demographic_no"));            
          }
          rs.close();
       }catch (java.sql.SQLException e){ MiscUtils.getLogger().error("Error", e); }            
@@ -111,13 +111,13 @@ public class DemographicSets {
    public ArrayList getDemographicSetExt(String setName){      
       ArrayList retval = new ArrayList();
       try{
-         DBHandler db = new DBHandler();
-         ResultSet rs = db.GetSQL("select * from demographicSets  where archive != '1' and  set_name = '"+StringEscapeUtils.escapeSql(setName)+"'");          
+         
+         ResultSet rs = DBHandler.GetSQL("select * from demographicSets  where archive != '1' and  set_name = '"+StringEscapeUtils.escapeSql(setName)+"'");          
          
          while (rs.next()){
             Hashtable h = new Hashtable();
-            h.put("demographic_no",db.getString(rs,"demographic_no"));            
-            String el = db.getString(rs,"eligibility");
+            h.put("demographic_no",DBHandler.getString(rs,"demographic_no"));            
+            String el = DBHandler.getString(rs,"eligibility");
             if (el == null || el.equalsIgnoreCase("null")){
                el = "0";
             }
@@ -133,11 +133,11 @@ public class DemographicSets {
    public ArrayList getIneligibleDemographicSet(String setName){      
       ArrayList retval = new ArrayList();
       try{
-         DBHandler db = new DBHandler();
-         ResultSet rs = db.GetSQL("select * from demographicSets where set_name = '"+StringEscapeUtils.escapeSql(setName)+"' and eligibility = '1' ");          
+         
+         ResultSet rs = DBHandler.GetSQL("select * from demographicSets where set_name = '"+StringEscapeUtils.escapeSql(setName)+"' and eligibility = '1' ");          
          
          while (rs.next()){
-            retval.add(db.getString(rs,"demographic_no"));            
+            retval.add(DBHandler.getString(rs,"demographic_no"));            
          }
          rs.close();
       }catch (java.sql.SQLException e){ MiscUtils.getLogger().error("Error", e); }            
@@ -147,11 +147,11 @@ public class DemographicSets {
    public ArrayList getEligibleDemographicSet(String setName){      
       ArrayList retval = new ArrayList();
       try{
-         DBHandler db = new DBHandler();
-         ResultSet rs = db.GetSQL("select * from demographicSets where set_name = '"+StringEscapeUtils.escapeSql(setName)+"' and eligibility = '0' ");          
+         
+         ResultSet rs = DBHandler.GetSQL("select * from demographicSets where set_name = '"+StringEscapeUtils.escapeSql(setName)+"' and eligibility = '0' ");          
          
          while (rs.next()){
-            retval.add(db.getString(rs,"demographic_no"));            
+            retval.add(DBHandler.getString(rs,"demographic_no"));            
          }
          rs.close();
       }catch (java.sql.SQLException e){ MiscUtils.getLogger().error("Error", e); }            
@@ -162,8 +162,8 @@ public class DemographicSets {
    public ArrayList setDemographicIneligible(String setName,String demoNo){      
       ArrayList retval = new ArrayList();
       try{
-         DBHandler db = new DBHandler();
-         db.RunSQL("update demographicSets set eligibility = '1' where set_name = '"+StringEscapeUtils.escapeSql(setName)+"' and demographic_no = '"+demoNo+"'");
+         
+         DBHandler.RunSQL("update demographicSets set eligibility = '1' where set_name = '"+StringEscapeUtils.escapeSql(setName)+"' and demographic_no = '"+demoNo+"'");
       }catch (java.sql.SQLException e){ MiscUtils.getLogger().error("Error", e); }            
       return retval;
    }
@@ -171,8 +171,8 @@ public class DemographicSets {
    public ArrayList setDemographicDelete(String setName,String demoNo){      
       ArrayList retval = new ArrayList();
       try{
-         DBHandler db = new DBHandler();
-         db.RunSQL("update demographicSets set archive = '1' where set_name = '"+StringEscapeUtils.escapeSql(setName)+"' and demographic_no = '"+demoNo+"'");
+         
+         DBHandler.RunSQL("update demographicSets set archive = '1' where set_name = '"+StringEscapeUtils.escapeSql(setName)+"' and demographic_no = '"+demoNo+"'");
       }catch (java.sql.SQLException e){ MiscUtils.getLogger().error("Error", e); }            
       return retval;
    }
@@ -181,11 +181,11 @@ public class DemographicSets {
    public ArrayList getDemographicSets(String demoNo) {
        ArrayList retval = new ArrayList();
        try{
-         DBHandler db = new DBHandler();
-         ResultSet rs = db.GetSQL("select distinct set_name from demographicSets where archive = '1' and demographic_no = " + demoNo);
+         
+         ResultSet rs = DBHandler.GetSQL("select distinct set_name from demographicSets where archive = '1' and demographic_no = " + demoNo);
          
          while (rs.next()){
-            retval.add(db.getString(rs,"set_name"));            
+            retval.add(DBHandler.getString(rs,"set_name"));            
          }
          rs.close();
       }catch (java.sql.SQLException e){ MiscUtils.getLogger().error("Error", e); }            
@@ -196,11 +196,11 @@ public class DemographicSets {
    public ArrayList getDemographicSets(){
       ArrayList retval = new ArrayList();
       try{
-         DBHandler db = new DBHandler();
-         ResultSet rs = db.GetSQL("select distinct set_name from demographicSets ");
+         
+         ResultSet rs = DBHandler.GetSQL("select distinct set_name from demographicSets ");
          
          while (rs.next()){
-            retval.add(db.getString(rs,"set_name"));            
+            retval.add(DBHandler.getString(rs,"set_name"));            
          }
          rs.close();
       }catch (java.sql.SQLException e){ MiscUtils.getLogger().error("Error", e); }            

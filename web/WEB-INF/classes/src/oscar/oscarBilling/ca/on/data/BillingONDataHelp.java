@@ -46,10 +46,10 @@ import oscar.oscarDB.DBHandler;
 public class BillingONDataHelp {
 	public synchronized int saveBillingRecord(String sql) {
 		int ret = 0;
-		DBHandler db = null;
+		
 		try {
-			db = new DBHandler();
-			db.RunSQL(sql);
+			
+			DBHandler.RunSQL(sql);
 
 			/*
 			 * if db_type = mysql return LAST_INSERT_ID() but if db_type =
@@ -65,7 +65,7 @@ public class BillingONDataHelp {
 			} else {
 				throw new SQLException("ERROR: Database " + db_type + " unrecognized.");
 			}
-			ResultSet rs = db.GetSQL(sql);
+			ResultSet rs = DBHandler.GetSQL(sql);
 			if (rs.next())
 				ret = rs.getInt(1);
 			rs.close();
@@ -77,10 +77,10 @@ public class BillingONDataHelp {
 
 	public synchronized boolean updateDBRecord(String sql) {
 		boolean ret = false;
-		DBHandler db = null;
+		
 		try {
-			db = new DBHandler();
-			ret = db.RunSQL(sql);
+			
+			ret = DBHandler.RunSQL(sql);
 			ret = true;
 		} catch (SQLException e) {
 			ret = false;
@@ -91,10 +91,10 @@ public class BillingONDataHelp {
 
 	public synchronized ResultSet searchDBRecord(String sql) {
 		ResultSet ret = null;
-		DBHandler db = null;
+		
 		try {
-			db = new DBHandler();
-			ret = db.GetSQL(sql);
+			
+			ret = DBHandler.GetSQL(sql);
 		} catch (SQLException e) {
 			MiscUtils.getLogger().error("Error", e);
 		}

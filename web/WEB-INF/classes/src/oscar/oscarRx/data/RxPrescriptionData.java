@@ -73,52 +73,52 @@ public class RxPrescriptionData {
 
         try {
             // Get Prescription from database
-            DBHandler db = new DBHandler();
+            
             ResultSet rs;
 
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
 
             if (rs.next()) {
-                prescription = new Prescription(drugId, db.getString(rs, "provider_no"), rs.getInt("demographic_no"));
+                prescription = new Prescription(drugId, DBHandler.getString(rs, "provider_no"), rs.getInt("demographic_no"));
                 prescription.setRxCreatedDate(rs.getDate("create_date"));
                 prescription.setRxDate(rs.getDate("rx_date"));
                 prescription.setEndDate(rs.getDate("end_date"));
                 prescription.setWrittenDate(rs.getDate("written_date"));
-                prescription.setBrandName(db.getString(rs, "BN"));
+                prescription.setBrandName(DBHandler.getString(rs, "BN"));
                 prescription.setGCN_SEQNO(rs.getInt("GCN_SEQNO"));
-                prescription.setCustomName(db.getString(rs, "customName"));
+                prescription.setCustomName(DBHandler.getString(rs, "customName"));
                 prescription.setTakeMin(rs.getFloat("takemin"));
                 prescription.setTakeMax(rs.getFloat("takemax"));
-                prescription.setFrequencyCode(db.getString(rs, "freqcode"));
-                String dur=db.getString(rs, "duration");
+                prescription.setFrequencyCode(DBHandler.getString(rs, "freqcode"));
+                String dur=DBHandler.getString(rs, "duration");
                 if(dur.equalsIgnoreCase("null"))
                     dur="";
                 prescription.setDuration(dur);
-                prescription.setDurationUnit(db.getString(rs, "durunit"));
-                prescription.setQuantity(db.getString(rs, "quantity"));
+                prescription.setDurationUnit(DBHandler.getString(rs, "durunit"));
+                prescription.setQuantity(DBHandler.getString(rs, "quantity"));
                 prescription.setRepeat(rs.getInt("repeat"));
                 prescription.setLastRefillDate(rs.getDate("last_refill_date"));
                 prescription.setNosubs(rs.getInt("nosubs"));
                 prescription.setPrn(rs.getInt("prn"));
-                prescription.setSpecial(db.getString(rs, "special"));
-                prescription.setGenericName(db.getString(rs, "GN"));
-                prescription.setAtcCode(db.getString(rs, "ATC"));
-                prescription.setScript_no(db.getString(rs, "script_no"));
-                prescription.setRegionalIdentifier(db.getString(rs, "regional_Identifier"));
-                prescription.setUnit(db.getString(rs, "unit"));
-                prescription.setUnitName(db.getString(rs, "unitName"));
-                prescription.setMethod(db.getString(rs, "method"));
-                prescription.setRoute(db.getString(rs, "route"));
-                prescription.setDrugForm(db.getString(rs, "drug_form"));
+                prescription.setSpecial(DBHandler.getString(rs, "special"));
+                prescription.setGenericName(DBHandler.getString(rs, "GN"));
+                prescription.setAtcCode(DBHandler.getString(rs, "ATC"));
+                prescription.setScript_no(DBHandler.getString(rs, "script_no"));
+                prescription.setRegionalIdentifier(DBHandler.getString(rs, "regional_Identifier"));
+                prescription.setUnit(DBHandler.getString(rs, "unit"));
+                prescription.setUnitName(DBHandler.getString(rs, "unitName"));
+                prescription.setMethod(DBHandler.getString(rs, "method"));
+                prescription.setRoute(DBHandler.getString(rs, "route"));
+                prescription.setDrugForm(DBHandler.getString(rs, "drug_form"));
                 prescription.setCustomInstr(rs.getBoolean("custom_instructions"));
-                prescription.setDosage(db.getString(rs, "dosage"));
+                prescription.setDosage(DBHandler.getString(rs, "dosage"));
                 prescription.setLongTerm(rs.getBoolean("long_term"));
                 prescription.setCustomNote(rs.getBoolean("custom_note"));
                 prescription.setPastMed(rs.getBoolean("past_med"));
                 prescription.setPatientCompliance(rs.getInt("patient_compliance"));
-                prescription.setOutsideProviderName(db.getString(rs, "outside_provider_name"));
-                prescription.setOutsideProviderOhip(db.getString(rs, "outside_provider_ohip"));
-                prescription.setSpecialInstruction(db.getString(rs, "special_instruction"));
+                prescription.setOutsideProviderName(DBHandler.getString(rs, "outside_provider_name"));
+                prescription.setOutsideProviderOhip(DBHandler.getString(rs, "outside_provider_ohip"));
+                prescription.setSpecialInstruction(DBHandler.getString(rs, "special_instruction"));
 
                 if (prescription.getSpecial() == null || prescription.getSpecial().length() <= 6) {
                     logger.error("I strongly suspect something is wrong, either special is null or it appears to not contain anything useful. drugId=" + drugId + ", drug.special=" + prescription.getSpecial(), new IllegalStateException("Drug special is blank or invalid"));
@@ -234,51 +234,51 @@ public class RxPrescriptionData {
 
         try {
             // Get Prescription from database
-            DBHandler db = new DBHandler();
+            
             ResultSet rs;
 
             Prescription p;
 
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
 
             while (rs.next()) {
-                p = new Prescription(rs.getInt("drugid"), db.getString(rs, "provider_no"), demographicNo);
+                p = new Prescription(rs.getInt("drugid"), DBHandler.getString(rs, "provider_no"), demographicNo);
                 p.setRxCreatedDate(rs.getDate("create_date"));
                 p.setRxDate(rs.getDate("rx_date"));
                 p.setEndDate(rs.getDate("end_date"));
                 p.setWrittenDate(rs.getDate("written_date"));
-                p.setBrandName(db.getString(rs, "BN"));
+                p.setBrandName(DBHandler.getString(rs, "BN"));
                 p.setGCN_SEQNO(rs.getInt("GCN_SEQNO"));
-                p.setCustomName(db.getString(rs, "customName"));
+                p.setCustomName(DBHandler.getString(rs, "customName"));
                 p.setTakeMin(rs.getFloat("takemin"));
                 p.setTakeMax(rs.getFloat("takemax"));
-                p.setFrequencyCode(db.getString(rs, "freqcode"));
-                p.setDuration(db.getString(rs, "duration"));
-                p.setDurationUnit(db.getString(rs, "durunit"));
-                p.setQuantity(db.getString(rs, "quantity"));
+                p.setFrequencyCode(DBHandler.getString(rs, "freqcode"));
+                p.setDuration(DBHandler.getString(rs, "duration"));
+                p.setDurationUnit(DBHandler.getString(rs, "durunit"));
+                p.setQuantity(DBHandler.getString(rs, "quantity"));
                 p.setRepeat(rs.getInt("repeat"));
                 p.setLastRefillDate(rs.getDate("last_refill_date"));
                 p.setNosubs(rs.getInt("nosubs"));
                 p.setPrn(rs.getInt("prn"));
-                p.setSpecial(db.getString(rs, "special"));
-                p.setArchived(db.getString(rs, "archived"));
-                p.setGenericName(db.getString(rs, "GN"));
-                p.setAtcCode(db.getString(rs, "ATC"));
-                p.setScript_no(db.getString(rs, "script_no"));
-                p.setRegionalIdentifier(db.getString(rs, "regional_identifier"));
-                p.setUnit(db.getString(rs, "unit"));
-                p.setUnitName(db.getString(rs, "unitName"));
-                p.setMethod(db.getString(rs, "method"));
-                p.setRoute(db.getString(rs, "route"));
-                p.setDrugForm(db.getString(rs, "drug_form"));
+                p.setSpecial(DBHandler.getString(rs, "special"));
+                p.setArchived(DBHandler.getString(rs, "archived"));
+                p.setGenericName(DBHandler.getString(rs, "GN"));
+                p.setAtcCode(DBHandler.getString(rs, "ATC"));
+                p.setScript_no(DBHandler.getString(rs, "script_no"));
+                p.setRegionalIdentifier(DBHandler.getString(rs, "regional_identifier"));
+                p.setUnit(DBHandler.getString(rs, "unit"));
+                p.setUnitName(DBHandler.getString(rs, "unitName"));
+                p.setMethod(DBHandler.getString(rs, "method"));
+                p.setRoute(DBHandler.getString(rs, "route"));
+                p.setDrugForm(DBHandler.getString(rs, "drug_form"));
                 p.setCustomInstr(rs.getBoolean("custom_instructions"));
-                p.setDosage(db.getString(rs, "dosage"));
+                p.setDosage(DBHandler.getString(rs, "dosage"));
                 p.setLongTerm(rs.getBoolean("long_term"));
                 p.setCustomNote(rs.getBoolean("custom_note"));
                 p.setPastMed(rs.getBoolean("past_med"));
                 p.setPatientCompliance(rs.getInt("patient_compliance"));
-                p.setOutsideProviderName(db.getString(rs, "outside_provider_name"));
-                p.setOutsideProviderOhip(db.getString(rs, "outside_provider_ohip"));
+                p.setOutsideProviderName(DBHandler.getString(rs, "outside_provider_name"));
+                p.setOutsideProviderOhip(DBHandler.getString(rs, "outside_provider_ohip"));
                 lst.add(p);
             }
 
@@ -357,19 +357,19 @@ public class RxPrescriptionData {
 
         try {
             // Get Prescription from database
-            DBHandler db = new DBHandler();
+            
             ResultSet rs;
 
             Prescription p;
             String datesRePrinted;
 
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
 
             while (rs.next()) {
                 lst.add(getPrescriptionFromRS(rs, demographicNo));
             }
             rs.close();
-            db.getConnection().close();
+            DBHandler.getConnection().close();
 
             arr = (Prescription[]) lst.toArray(arr);
         } catch (SQLException e) {
@@ -387,18 +387,18 @@ public class RxPrescriptionData {
 
         try {
             // Get Prescription from database
-            DBHandler db = new DBHandler();
+            
             ResultSet rs;
 
             Prescription p;
 
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
 
             while (rs.next()) {
                 lst.add(getPrescriptionFromRS(rs, demographicNo));
             }
             rs.close();
-            db.getConnection().close();
+            DBHandler.getConnection().close();
 
             arr = (Prescription[]) lst.toArray(arr);
         } catch (SQLException e) {
@@ -417,18 +417,18 @@ public class RxPrescriptionData {
 
         try {
             // Get Prescription from database
-            DBHandler db = new DBHandler();
+            
             ResultSet rs;
 
             Prescription p;
 
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
 
             while (rs.next()) {
                 lst.add(getPrescriptionFromRS(rs, demographicNo));
             }
             rs.close();
-            db.getConnection().close();
+            DBHandler.getConnection().close();
 
             arr = (Prescription[]) lst.toArray(arr);
         } catch (SQLException e) {
@@ -451,54 +451,54 @@ public class RxPrescriptionData {
 
         try {
             // Get Prescription from database
-            DBHandler db = new DBHandler();
+            
             ResultSet rs;
 
             Prescription p;
             String datesRePrinted;
 
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
 
             while (rs.next()) {
-                p = new Prescription(rs.getInt("drugid"), db.getString(rs, "provider_no"), demographicNo);
+                p = new Prescription(rs.getInt("drugid"), DBHandler.getString(rs, "provider_no"), demographicNo);
                 p.setRxCreatedDate(rs.getDate("create_date"));
                 p.setRxDate(rs.getDate("rx_date"));
                 p.setEndDate(rs.getDate("end_date"));
                 p.setWrittenDate(rs.getDate("written_date"));
-                p.setBrandName(db.getString(rs, "BN"));
+                p.setBrandName(DBHandler.getString(rs, "BN"));
                 p.setGCN_SEQNO(rs.getInt("GCN_SEQNO"));
-                p.setCustomName(db.getString(rs, "customName"));
+                p.setCustomName(DBHandler.getString(rs, "customName"));
                 p.setTakeMin(rs.getFloat("takemin"));
                 p.setTakeMax(rs.getFloat("takemax"));
-                p.setFrequencyCode(db.getString(rs, "freqcode"));
-                p.setDuration(db.getString(rs, "duration"));
-                p.setDurationUnit(db.getString(rs, "durunit"));
-                p.setQuantity(db.getString(rs, "quantity"));
+                p.setFrequencyCode(DBHandler.getString(rs, "freqcode"));
+                p.setDuration(DBHandler.getString(rs, "duration"));
+                p.setDurationUnit(DBHandler.getString(rs, "durunit"));
+                p.setQuantity(DBHandler.getString(rs, "quantity"));
                 p.setRepeat(rs.getInt("repeat"));
                 p.setLastRefillDate(rs.getDate("last_refill_date"));
                 p.setNosubs(rs.getInt("nosubs"));
                 p.setPrn(rs.getInt("prn"));
-                p.setSpecial(db.getString(rs, "special"));
-                p.setArchived(db.getString(rs, "archived"));
-                p.setGenericName(db.getString(rs, "GN"));
-                p.setAtcCode(db.getString(rs, "ATC"));
-                p.setScript_no(db.getString(rs, "script_no"));
-                p.setRegionalIdentifier(db.getString(rs, "regional_identifier"));
-                p.setUnit(db.getString(rs, "unit"));
-                p.setUnitName(db.getString(rs, "unitName"));
-                p.setMethod(db.getString(rs, "method"));
-                p.setRoute(db.getString(rs, "route"));
-                p.setDrugForm(db.getString(rs, "drug_form"));
+                p.setSpecial(DBHandler.getString(rs, "special"));
+                p.setArchived(DBHandler.getString(rs, "archived"));
+                p.setGenericName(DBHandler.getString(rs, "GN"));
+                p.setAtcCode(DBHandler.getString(rs, "ATC"));
+                p.setScript_no(DBHandler.getString(rs, "script_no"));
+                p.setRegionalIdentifier(DBHandler.getString(rs, "regional_identifier"));
+                p.setUnit(DBHandler.getString(rs, "unit"));
+                p.setUnitName(DBHandler.getString(rs, "unitName"));
+                p.setMethod(DBHandler.getString(rs, "method"));
+                p.setRoute(DBHandler.getString(rs, "route"));
+                p.setDrugForm(DBHandler.getString(rs, "drug_form"));
                 p.setCustomInstr(rs.getBoolean("custom_instructions"));
-                p.setDosage(db.getString(rs, "dosage"));
+                p.setDosage(DBHandler.getString(rs, "dosage"));
                 p.setLongTerm(rs.getBoolean("long_term"));
                 p.setCustomNote(rs.getBoolean("custom_note"));
                 p.setPastMed(rs.getBoolean("past_med"));
                 p.setPatientCompliance(rs.getInt("patient_compliance"));
-                p.setOutsideProviderName(db.getString(rs, "outside_provider_name"));
-                p.setOutsideProviderOhip(db.getString(rs, "outside_provider_ohip"));
+                p.setOutsideProviderName(DBHandler.getString(rs, "outside_provider_name"));
+                p.setOutsideProviderOhip(DBHandler.getString(rs, "outside_provider_ohip"));
 
-                datesRePrinted = db.getString(rs, "dates_reprinted");
+                datesRePrinted = DBHandler.getString(rs, "dates_reprinted");
                 if (datesRePrinted != null && datesRePrinted.length() > 0) {
                     p.setNumPrints(datesRePrinted.split(",").length + 1);
                 } else {
@@ -509,7 +509,7 @@ public class RxPrescriptionData {
             }
 
             rs.close();
-            db.getConnection().close();
+            DBHandler.getConnection().close();
 
             arr = (Prescription[]) lst.toArray(arr);
 
@@ -527,54 +527,54 @@ public class RxPrescriptionData {
 
         try {
             // Get Prescription from database
-            DBHandler db = new DBHandler();
+            
             ResultSet rs;
 
             Prescription p;
             String datesRePrinted;
 
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
 
             while (rs.next()) {
-                p = new Prescription(rs.getInt("drugid"), db.getString(rs, "provider_no"), demographicNo);
+                p = new Prescription(rs.getInt("drugid"), DBHandler.getString(rs, "provider_no"), demographicNo);
                 p.setRxCreatedDate(rs.getDate("create_date"));
                 p.setRxDate(rs.getDate("rx_date"));
                 p.setEndDate(rs.getDate("end_date"));
                 p.setWrittenDate(rs.getDate("written_date"));
-                p.setBrandName(db.getString(rs, "BN"));
+                p.setBrandName(DBHandler.getString(rs, "BN"));
                 p.setGCN_SEQNO(rs.getInt("GCN_SEQNO"));
-                p.setCustomName(db.getString(rs, "customName"));
+                p.setCustomName(DBHandler.getString(rs, "customName"));
                 p.setTakeMin(rs.getFloat("takemin"));
                 p.setTakeMax(rs.getFloat("takemax"));
-                p.setFrequencyCode(db.getString(rs, "freqcode"));
-                p.setDuration(db.getString(rs, "duration"));
-                p.setDurationUnit(db.getString(rs, "durunit"));
-                p.setQuantity(db.getString(rs, "quantity"));
+                p.setFrequencyCode(DBHandler.getString(rs, "freqcode"));
+                p.setDuration(DBHandler.getString(rs, "duration"));
+                p.setDurationUnit(DBHandler.getString(rs, "durunit"));
+                p.setQuantity(DBHandler.getString(rs, "quantity"));
                 p.setRepeat(rs.getInt("repeat"));
                 p.setLastRefillDate(rs.getDate("last_refill_date"));
                 p.setNosubs(rs.getInt("nosubs"));
                 p.setPrn(rs.getInt("prn"));
-                p.setSpecial(db.getString(rs, "special"));
-                p.setGenericName(db.getString(rs, "GN"));
-                p.setAtcCode(db.getString(rs, "ATC"));
-                p.setScript_no(db.getString(rs, "script_no"));
-                p.setRegionalIdentifier(db.getString(rs, "regional_identifier"));
-                p.setUnit(db.getString(rs, "unit"));
-                p.setUnitName(db.getString(rs, "unitName"));
-                p.setMethod(db.getString(rs, "method"));
-                p.setRoute(db.getString(rs, "route"));
-                p.setDrugForm(db.getString(rs, "drug_form"));
+                p.setSpecial(DBHandler.getString(rs, "special"));
+                p.setGenericName(DBHandler.getString(rs, "GN"));
+                p.setAtcCode(DBHandler.getString(rs, "ATC"));
+                p.setScript_no(DBHandler.getString(rs, "script_no"));
+                p.setRegionalIdentifier(DBHandler.getString(rs, "regional_identifier"));
+                p.setUnit(DBHandler.getString(rs, "unit"));
+                p.setUnitName(DBHandler.getString(rs, "unitName"));
+                p.setMethod(DBHandler.getString(rs, "method"));
+                p.setRoute(DBHandler.getString(rs, "route"));
+                p.setDrugForm(DBHandler.getString(rs, "drug_form"));
                 p.setCustomInstr(rs.getBoolean("custom_instructions"));
-                p.setDosage(db.getString(rs, "dosage"));
+                p.setDosage(DBHandler.getString(rs, "dosage"));
                 p.setLongTerm(rs.getBoolean("long_term"));
                 p.setCustomNote(rs.getBoolean("custom_note"));
                 p.setPastMed(rs.getBoolean("past_med"));
                 p.setPatientCompliance(rs.getInt("patient_compliance"));
-                p.setOutsideProviderName(db.getString(rs, "outside_provider_name"));
-                p.setOutsideProviderOhip(db.getString(rs, "outside_provider_ohip"));
+                p.setOutsideProviderName(DBHandler.getString(rs, "outside_provider_name"));
+                p.setOutsideProviderOhip(DBHandler.getString(rs, "outside_provider_ohip"));
                 p.setPrintDate(rs.getDate("date_printed"));
 
-                datesRePrinted = db.getString(rs, "dates_reprinted");
+                datesRePrinted = DBHandler.getString(rs, "dates_reprinted");
                 if (datesRePrinted != null && datesRePrinted.length() > 0) p.setNumPrints(datesRePrinted.split(",").length + 1);
                 else p.setNumPrints(1);
 
@@ -582,7 +582,7 @@ public class RxPrescriptionData {
             }
 
             rs.close();
-            db.getConnection().close();
+            DBHandler.getConnection().close();
 
         } catch (SQLException e) {
             logger.error(sql, e);
@@ -600,52 +600,52 @@ public class RxPrescriptionData {
 
         try {
             // Get Prescription from database
-            DBHandler db = new DBHandler();
+            
             ResultSet rs;
 
             Prescription p;
 
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
             // java.sql.Connection conn = db.getConnection();
             // conn.createStatement()
 
             while (rs.next()) {
-                p = new Prescription(rs.getInt("drugid"), db.getString(rs, "provider_no"), demographicNo);
+                p = new Prescription(rs.getInt("drugid"), DBHandler.getString(rs, "provider_no"), demographicNo);
                 p.setRxCreatedDate(rs.getDate("create_date"));
                 p.setRxDate(rs.getDate("rx_date"));
                 p.setEndDate(rs.getDate("end_date"));
                 p.setWrittenDate(rs.getDate("written_date"));
-                p.setBrandName(db.getString(rs, "BN"));
+                p.setBrandName(DBHandler.getString(rs, "BN"));
                 p.setGCN_SEQNO(rs.getInt("GCN_SEQNO"));
-                p.setCustomName(db.getString(rs, "customName"));
+                p.setCustomName(DBHandler.getString(rs, "customName"));
                 p.setTakeMin(rs.getFloat("takemin"));
                 p.setTakeMax(rs.getFloat("takemax"));
-                p.setFrequencyCode(db.getString(rs, "freqcode"));
-                p.setDuration(db.getString(rs, "duration"));
-                p.setDurationUnit(db.getString(rs, "durunit"));
-                p.setQuantity(db.getString(rs, "quantity"));
+                p.setFrequencyCode(DBHandler.getString(rs, "freqcode"));
+                p.setDuration(DBHandler.getString(rs, "duration"));
+                p.setDurationUnit(DBHandler.getString(rs, "durunit"));
+                p.setQuantity(DBHandler.getString(rs, "quantity"));
                 p.setRepeat(rs.getInt("repeat"));
                 p.setLastRefillDate(rs.getDate("last_refill_date"));
                 p.setNosubs(rs.getInt("nosubs"));
                 p.setPrn(rs.getInt("prn"));
-                p.setSpecial(db.getString(rs, "special"));
-                p.setGenericName(db.getString(rs, "GN"));
-                p.setAtcCode(db.getString(rs, "ATC"));
-                p.setScript_no(db.getString(rs, "script_no"));
-                p.setRegionalIdentifier(db.getString(rs, "regional_identifier"));
-                p.setUnit(db.getString(rs, "unit"));
-                p.setUnitName(db.getString(rs, "unitName"));
-                p.setMethod(db.getString(rs, "method"));
-                p.setRoute(db.getString(rs, "route"));
-                p.setDrugForm(db.getString(rs, "drug_form"));
+                p.setSpecial(DBHandler.getString(rs, "special"));
+                p.setGenericName(DBHandler.getString(rs, "GN"));
+                p.setAtcCode(DBHandler.getString(rs, "ATC"));
+                p.setScript_no(DBHandler.getString(rs, "script_no"));
+                p.setRegionalIdentifier(DBHandler.getString(rs, "regional_identifier"));
+                p.setUnit(DBHandler.getString(rs, "unit"));
+                p.setUnitName(DBHandler.getString(rs, "unitName"));
+                p.setMethod(DBHandler.getString(rs, "method"));
+                p.setRoute(DBHandler.getString(rs, "route"));
+                p.setDrugForm(DBHandler.getString(rs, "drug_form"));
                 p.setCustomInstr(rs.getBoolean("custom_instructions"));
-                p.setDosage(db.getString(rs, "dosage"));
+                p.setDosage(DBHandler.getString(rs, "dosage"));
                 p.setLongTerm(rs.getBoolean("long_term"));
                 p.setCustomNote(rs.getBoolean("custom_note"));
                 p.setPastMed(rs.getBoolean("past_med"));
                 p.setPatientCompliance(rs.getInt("patient_compliance"));
-                p.setOutsideProviderName(db.getString(rs, "outside_provider_name"));
-                p.setOutsideProviderOhip(db.getString(rs, "outside_provider_ohip"));
+                p.setOutsideProviderName(DBHandler.getString(rs, "outside_provider_name"));
+                p.setOutsideProviderOhip(DBHandler.getString(rs, "outside_provider_ohip"));
                 lst.add(p);
             }
 
@@ -686,14 +686,14 @@ public class RxPrescriptionData {
 
         try {
             // Get Prescription from database
-            DBHandler db = new DBHandler();
+            
             ResultSet rs, rs2;
             String sql = "SELECT * FROM drugs d WHERE d.archived = 0 AND d.demographic_no = " + demographicNo + " ORDER BY rx_date DESC, drugId DESC";
             String indivoSql = "SELECT indivoDocIdx FROM indivoDocs i WHERE i.oscarDocNo = ? and docType = 'Rx' limit 1";
             boolean myOscarEnabled = OscarProperties.getInstance().getProperty("MY_OSCAR", "").trim().equalsIgnoreCase("YES");
             Prescription p;
 
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
 
             while (rs.next()) {
                 boolean b = true;
@@ -707,8 +707,8 @@ public class RxPrescriptionData {
                             b = false;
                         } else // custom
                         {
-                            if (p2.getCustomName() != null && db.getString(rs, "customName") != null) {
-                                if (p2.getCustomName().equals(db.getString(rs, "customName"))) // same custom
+                            if (p2.getCustomName() != null && DBHandler.getString(rs, "customName") != null) {
+                                if (p2.getCustomName().equals(DBHandler.getString(rs, "customName"))) // same custom
                                 {
                                     b = false;
                                 }
@@ -718,46 +718,46 @@ public class RxPrescriptionData {
                 }
 
                 if (b) {
-                    p = new Prescription(rs.getInt("drugid"), db.getString(rs, "provider_no"), demographicNo);
+                    p = new Prescription(rs.getInt("drugid"), DBHandler.getString(rs, "provider_no"), demographicNo);
                     p.setRxCreatedDate(rs.getDate("create_date"));
                     p.setRxDate(rs.getDate("rx_date"));
                     p.setEndDate(rs.getDate("end_date"));
                     p.setWrittenDate(rs.getDate("written_date"));
-                    p.setBrandName(db.getString(rs, "BN"));
+                    p.setBrandName(DBHandler.getString(rs, "BN"));
                     p.setGCN_SEQNO(rs.getInt("GCN_SEQNO"));
-                    p.setCustomName(db.getString(rs, "customName"));
+                    p.setCustomName(DBHandler.getString(rs, "customName"));
                     p.setTakeMin(rs.getFloat("takemin"));
                     p.setTakeMax(rs.getFloat("takemax"));
-                    p.setFrequencyCode(db.getString(rs, "freqcode"));
-                    p.setDuration(db.getString(rs, "duration"));
-                    p.setDurationUnit(db.getString(rs, "durunit"));
-                    p.setQuantity(db.getString(rs, "quantity"));
+                    p.setFrequencyCode(DBHandler.getString(rs, "freqcode"));
+                    p.setDuration(DBHandler.getString(rs, "duration"));
+                    p.setDurationUnit(DBHandler.getString(rs, "durunit"));
+                    p.setQuantity(DBHandler.getString(rs, "quantity"));
                     p.setRepeat(rs.getInt("repeat"));
                     p.setLastRefillDate(rs.getDate("last_refill_date"));
                     p.setNosubs(rs.getInt("nosubs"));
                     p.setPrn(rs.getInt("prn"));
-                    p.setSpecial(db.getString(rs, "special"));
-                    p.setGenericName(db.getString(rs, "GN"));
-                    p.setAtcCode(db.getString(rs, "ATC"));
-                    p.setScript_no(db.getString(rs, "script_no"));
-                    p.setRegionalIdentifier(db.getString(rs, "regional_identifier"));
-                    p.setUnit(db.getString(rs, "unit"));
-                    p.setUnitName(db.getString(rs, "unitName"));
-                    p.setMethod(db.getString(rs, "method"));
-                    p.setRoute(db.getString(rs, "route"));
-                    p.setDrugForm(db.getString(rs, "drug_form"));
+                    p.setSpecial(DBHandler.getString(rs, "special"));
+                    p.setGenericName(DBHandler.getString(rs, "GN"));
+                    p.setAtcCode(DBHandler.getString(rs, "ATC"));
+                    p.setScript_no(DBHandler.getString(rs, "script_no"));
+                    p.setRegionalIdentifier(DBHandler.getString(rs, "regional_identifier"));
+                    p.setUnit(DBHandler.getString(rs, "unit"));
+                    p.setUnitName(DBHandler.getString(rs, "unitName"));
+                    p.setMethod(DBHandler.getString(rs, "method"));
+                    p.setRoute(DBHandler.getString(rs, "route"));
+                    p.setDrugForm(DBHandler.getString(rs, "drug_form"));
                     p.setCustomInstr(rs.getBoolean("custom_instructions"));
-                    p.setDosage(db.getString(rs, "dosage"));
+                    p.setDosage(DBHandler.getString(rs, "dosage"));
                     p.setLongTerm(rs.getBoolean("long_term"));
                     p.setCustomNote(rs.getBoolean("custom_note"));
                     p.setPastMed(rs.getBoolean("past_med"));
                     p.setPatientCompliance(rs.getInt("patient_compliance"));
-                    p.setOutsideProviderName(db.getString(rs, "outside_provider_name"));
-                    p.setOutsideProviderOhip(db.getString(rs, "outside_provider_ohip"));
+                    p.setOutsideProviderName(DBHandler.getString(rs, "outside_provider_name"));
+                    p.setOutsideProviderOhip(DBHandler.getString(rs, "outside_provider_ohip"));
 
                     if (myOscarEnabled) {
-                        String tmp = indivoSql.replaceFirst("\\?", db.getString(rs, "drugid"));
-                        rs2 = db.GetSQL(tmp);
+                        String tmp = indivoSql.replaceFirst("\\?", DBHandler.getString(rs, "drugid"));
+                        rs2 = DBHandler.GetSQL(tmp);
 
                         if (rs2.next()) {
                             p.setIndivoIdx(rs2.getString("indivoDocIdx"));
@@ -788,16 +788,16 @@ public class RxPrescriptionData {
         LinkedList lst = new LinkedList();
 
         try {
-            DBHandler db = new DBHandler();
+            
             ResultSet rs;
             Favorite favorite;
 
-            rs = db.GetSQL("SELECT * FROM favorites WHERE provider_no = '" + providerNo + "' ORDER BY favoritename");
+            rs = DBHandler.GetSQL("SELECT * FROM favorites WHERE provider_no = '" + providerNo + "' ORDER BY favoritename");
 
             while (rs.next()) {
-                favorite = new Favorite(rs.getInt("favoriteid"), db.getString(rs, "provider_no"), db.getString(rs, "favoritename"), db.getString(rs, "BN"), rs.getInt("GCN_SEQNO"), db.getString(rs, "customName"), rs.getFloat("takemin"), rs.getFloat("takemax"), db.getString(rs, "freqcode"), db.getString(rs, "duration"), db.getString(rs, "durunit"), db.getString(rs, "quantity"), rs.getInt("repeat"), rs.getInt("nosubs"), rs.getInt("prn"), db.getString(rs, "special"),
-                        db.getString(rs, "GN"), db.getString(rs, "ATC"), db.getString(rs, "regional_identifier"), db.getString(rs, "unit"), db.getString(rs, "unitName"), db.getString(rs, "method"), db.getString(rs, "route"), db.getString(rs, "drug_form"),
-                        rs.getBoolean("custom_instructions"), db.getString(rs, "dosage"));
+                favorite = new Favorite(rs.getInt("favoriteid"), DBHandler.getString(rs, "provider_no"), DBHandler.getString(rs, "favoritename"), DBHandler.getString(rs, "BN"), rs.getInt("GCN_SEQNO"), DBHandler.getString(rs, "customName"), rs.getFloat("takemin"), rs.getFloat("takemax"), DBHandler.getString(rs, "freqcode"), DBHandler.getString(rs, "duration"), DBHandler.getString(rs, "durunit"), DBHandler.getString(rs, "quantity"), rs.getInt("repeat"), rs.getInt("nosubs"), rs.getInt("prn"), DBHandler.getString(rs, "special"),
+                        DBHandler.getString(rs, "GN"), DBHandler.getString(rs, "ATC"), DBHandler.getString(rs, "regional_identifier"), DBHandler.getString(rs, "unit"), DBHandler.getString(rs, "unitName"), DBHandler.getString(rs, "method"), DBHandler.getString(rs, "route"), DBHandler.getString(rs, "drug_form"),
+                        rs.getBoolean("custom_instructions"), DBHandler.getString(rs, "dosage"));
 
                 lst.add(favorite);
             }
@@ -819,15 +819,15 @@ public class RxPrescriptionData {
         Favorite favorite = null;
 
         try {
-            DBHandler db = new DBHandler();
+            
             ResultSet rs;
 
-            rs = db.GetSQL("SELECT * FROM favorites WHERE favoriteid = " + favoriteId);
+            rs = DBHandler.GetSQL("SELECT * FROM favorites WHERE favoriteid = " + favoriteId);
 
             if (rs.next()) {
-                favorite = new Favorite(rs.getInt("favoriteid"), db.getString(rs, "provider_no"), db.getString(rs, "favoritename"), db.getString(rs, "BN"), rs.getInt("GCN_SEQNO"), db.getString(rs, "customName"), rs.getFloat("takemin"), rs.getFloat("takemax"), db.getString(rs, "freqcode"), db.getString(rs, "duration"), db.getString(rs, "durunit"), db.getString(rs, "quantity"), rs.getInt("repeat"), rs.getInt("nosubs"), rs.getInt("prn"), db.getString(rs, "special"),
-                        db.getString(rs, "GN"), db.getString(rs, "ATC"), db.getString(rs, "regional_identifier"), db.getString(rs, "unit"), db.getString(rs, "unitName"), db.getString(rs, "method"), db.getString(rs, "route"), db.getString(rs, "drug_form"),
-                        rs.getBoolean("custom_instructions"), db.getString(rs, "dosage"));
+                favorite = new Favorite(rs.getInt("favoriteid"), DBHandler.getString(rs, "provider_no"), DBHandler.getString(rs, "favoritename"), DBHandler.getString(rs, "BN"), rs.getInt("GCN_SEQNO"), DBHandler.getString(rs, "customName"), rs.getFloat("takemin"), rs.getFloat("takemax"), DBHandler.getString(rs, "freqcode"), DBHandler.getString(rs, "duration"), DBHandler.getString(rs, "durunit"), DBHandler.getString(rs, "quantity"), rs.getInt("repeat"), rs.getInt("nosubs"), rs.getInt("prn"), DBHandler.getString(rs, "special"),
+                        DBHandler.getString(rs, "GN"), DBHandler.getString(rs, "ATC"), DBHandler.getString(rs, "regional_identifier"), DBHandler.getString(rs, "unit"), DBHandler.getString(rs, "unitName"), DBHandler.getString(rs, "method"), DBHandler.getString(rs, "route"), DBHandler.getString(rs, "drug_form"),
+                        rs.getBoolean("custom_instructions"), DBHandler.getString(rs, "dosage"));
             }
 
             rs.close();
@@ -845,11 +845,11 @@ public class RxPrescriptionData {
         boolean ret = false;
 
         try {
-            DBHandler db = new DBHandler();
+            
             String sql = "DELETE FROM favorites WHERE favoriteid = " + favoriteId;
 
-            db.RunSQL(sql);
-            db.getConnection().close();
+            DBHandler.RunSQL(sql);
+            DBHandler.getConnection().close();
             ret = true;
         } catch (SQLException e) {
             logger.error("unexpected error", e);
@@ -924,18 +924,18 @@ public class RxPrescriptionData {
         String sql = " insert into prescription " + " (provider_no,demographic_no,date_prescribed,date_printed,textView) " + " values " + " ( '" + provider_no + "', " + "   '" + demographic_no + "', " + "   '" + date_prescribed + "', " + "   '" + date_printed + "', " + "   '" + StringEscapeUtils.escapeSql(textView.toString()) + "') ";
         try {
 
-            DBHandler db = new DBHandler();
+            
 
-            db.RunSQL(sql);
+            DBHandler.RunSQL(sql);
 
             ResultSet rs;
             // NEEDS TO BE UPDATED FOR POSTGRES
-            rs = db.GetSQL("SELECT LAST_INSERT_ID() ");
+            rs = DBHandler.GetSQL("SELECT LAST_INSERT_ID() ");
 
             if (rs.next()) {
                 retval = Integer.toString(rs.getInt(1));
             }
-            db.getConnection().close();
+            DBHandler.getConnection().close();
         } catch (SQLException e) {
             logger.error("unexpected error", e);
         }
@@ -947,8 +947,8 @@ public class RxPrescriptionData {
     public void setScriptComment(String scriptNo, String comment) {
         String sql = "update prescription set rx_comments = '" + StringEscapeUtils.escapeSql(comment) + "' where script_no = " + scriptNo;
         try {
-            DBHandler db = new DBHandler();
-            db.RunSQL(sql);
+            
+            DBHandler.RunSQL(sql);
         } catch (SQLException e) {
             logger.error("unexpected error", e);
         } finally {
@@ -961,8 +961,8 @@ public class RxPrescriptionData {
         String sql = "select rx_comments from  prescription where script_no = " + scriptNo;
         logger.debug("SQL " + sql);
         try {
-            DBHandler db = new DBHandler();
-            ResultSet rs = db.GetSQL(sql);
+            
+            ResultSet rs = DBHandler.GetSQL(sql);
             if (rs.next()) {
                 ret = rs.getString("rx_comments");
             }
@@ -1705,15 +1705,15 @@ public class RxPrescriptionData {
 
         public void Delete() {
             try {
-                DBHandler db = new DBHandler();
+                
                 String sql;
 
                 if (this.getDrugId() > 0) {
                     sql = "UPDATE drugs SET archived = 1 WHERE drugid = " + this.getDrugId();
-                    db.RunSQL(sql);
+                    DBHandler.RunSQL(sql);
                 }
 
-                db.getConnection().close();
+                DBHandler.getConnection().close();
             } catch (Exception e) {
                 logger.error("unexpected error", e);
             }
@@ -1733,10 +1733,10 @@ public class RxPrescriptionData {
                     update = "I";
                 }
 
-                DBHandler db = new DBHandler();
+                
                 String sql = "INSERT INTO indivoDocs (oscarDocNo, indivoDocIdx, docType, dateSent, `update`)" + " VALUES(" + String.valueOf(getDrugId()) + ",'" + getIndivoIdx() + "','" + docType + "',now(),'" + update + "')";
 
-                db.RunSQL(sql);
+                DBHandler.RunSQL(sql);
                 ret = true;
             } catch (SQLException e) {
                 logger.error("DATABASE ERROR: " + e.getMessage());
@@ -1748,15 +1748,15 @@ public class RxPrescriptionData {
         public boolean Print() {
             boolean ret = false;
             try {
-                DBHandler db = new DBHandler();
+                
                 ResultSet rs;
                 String sql = "SELECT dates_reprinted, now() FROM prescription WHERE script_no = " + this.getScript_no();
 
-                rs = db.GetSQL(sql);
+                rs = DBHandler.GetSQL(sql);
 
                 if (rs.next()) {
-                    String dates_reprinted = db.getString(rs, 1);
-                    String now = db.getString(rs, 2);
+                    String dates_reprinted = DBHandler.getString(rs, 1);
+                    String now = DBHandler.getString(rs, 2);
                     if (dates_reprinted != null && dates_reprinted.length() > 0) {
                         dates_reprinted += "," + now;
                     } else {
@@ -1764,7 +1764,7 @@ public class RxPrescriptionData {
                     }
 
                     sql = "UPDATE prescription SET dates_reprinted = '" + dates_reprinted + "' WHERE script_no = " + this.getScript_no();
-                    db.RunSQL(sql);
+                    DBHandler.RunSQL(sql);
                     ret = true;
 
                     this.setNumPrints(this.getNumPrints() + 1);
@@ -1801,7 +1801,7 @@ public class RxPrescriptionData {
                 logger.error("drug special after escaping appears to be null or empty : " + escapedSpecial, new IllegalStateException("Drug special is invalid after escaping."));
             }
             try {
-                DBHandler db = new DBHandler();
+                
                 ResultSet rs;
                 String sql;
 
@@ -1825,7 +1825,7 @@ public class RxPrescriptionData {
                             this.getLongTerm() +" AND " + "custom_note = " + this.isCustomNote() + " AND " + "past_med = " + this.getPastMed() + " AND " + "patient_compliance = " + this.getPatientCompliance()
                             +" AND "+" special_instruction = '"+this.getSpecialInstruction()+"'";
                     MiscUtils.getLogger().debug(sql);
-                    rs = db.GetSQL(sql);
+                    rs = DBHandler.GetSQL(sql);
 
                     if (rs.next()) {
                         this.drugId = rs.getInt("drugid");
@@ -1841,12 +1841,12 @@ public class RxPrescriptionData {
                         sql = "INSERT INTO drugs (provider_no, demographic_no, " + "rx_date, end_date, written_date, BN, GCN_SEQNO, customName, " + "takemin, takemax, freqcode, duration, durunit, quantity, " + "`repeat`, last_refill_date, nosubs, prn, special, GN, script_no, ATC, " + "regional_identifier, unit, method, route, drug_form, create_date, " + "outside_provider_name, outside_provider_ohip, custom_instructions, " + "dosage, unitName, long_term, custom_note, past_med, special_instruction,patient_compliance) " + "VALUES ('" + this.getProviderNo() + "', " + this.getDemographicNo() + ", '" + RxUtil.DateToString(this.getRxDate()) + "', '" + RxUtil.DateToString(this.getEndDate()) + "', '" + RxUtil.DateToString(this.getWrittenDate()) + "', '" + StringEscapeUtils.escapeSql(this.getBrandName()) + "', " + this.getGCN_SEQNO() + ", '" + StringEscapeUtils.escapeSql(this.getCustomName()) + "', " + this.getTakeMin() + ", " + this.getTakeMax() + ", '" + this.getFrequencyCode() + "', '" + this.getDuration() + "', '" + this.getDurationUnit() + "', '" + this.getQuantity() + "', " + this.getRepeat() + ", '" + RxUtil.DateToString(this.getLastRefillDate()) + "', " + this.getNosubsInt() + ", " + this.getPrnInt() + ", '" + escapedSpecial + "','" + StringEscapeUtils.escapeSql(this.getGenericName()) + "','" + scriptId + "', '" + this.getAtcCode() + "', '" + this.getRegionalIdentifier() + "','" + this.getUnit() + "','" + this.getMethod() + "','" + this.getRoute() + "','" + this.getDrugForm() + "',now(),'" + this.getOutsideProviderName() + "','" + this.getOutsideProviderOhip() + "', " + this.getCustomInstr() + ",'" + this.getDosage() + "', '" + this.getUnitName() + "', " + this.getLongTerm() + ", "  + this.isCustomNote() + ", " + this.getPastMed() + ", '" +this.special_instruction+"', "+ this.getPatientCompliance() + ")";
                           MiscUtils.getLogger().debug("sql="+sql);
 
-                        db.RunSQL(sql);
+                        DBHandler.RunSQL(sql);
 
                         // it's added, so get the top (most recent) drugid
                         sql = "SELECT Max(drugid) FROM drugs";
 
-                        rs = db.GetSQL(sql);
+                        rs = DBHandler.GetSQL(sql);
 
                         if (rs.next()) {
                             this.drugId = rs.getInt(1);
@@ -1862,13 +1862,13 @@ public class RxPrescriptionData {
                     //create_date is not updated
                     sql = "UPDATE drugs SET " + "provider_no = '" + this.getProviderNo() + "', " + "demographic_no = " + this.getDemographicNo() + ", " + "rx_date = '" + RxUtil.DateToString(this.getRxDate()) + "', " + "end_date = '" + RxUtil.DateToString(this.getEndDate()) + "', " + "written_date = '" + RxUtil.DateToString(this.getWrittenDate()) + "', " + "BN = '" + StringEscapeUtils.escapeSql(this.getBrandName()) + "', " + "GCN_SEQNO = " + this.getGCN_SEQNO() + ", " + "customName = '" + StringEscapeUtils.escapeSql(this.getCustomName()) + "', " + "takemin = " + this.getTakeMin() + ", " + "takemax = " + this.getTakeMax() + ", " + "freqcode = '" + this.getFrequencyCode() + "', " + "duration = '" + this.getDuration() + "', " + "durunit = '" + this.getDurationUnit() + "', " + "quantity = '" + this.getQuantity() + "', " + "`repeat` = " + this.getRepeat() + ", " + "last_refill_date = '" + RxUtil.DateToString(this.getLastRefillDate()) + "', " + "nosubs = " + this.getNosubsInt() + ", " + "prn = " + this.getPrnInt() + ", " + "special = '" + escapedSpecial + "', " + "ATC = '" + this.atcCode + "', " + "regional_identifier = '" + this.regionalIdentifier + "', " + "unit = '" + this.getUnit() + "', " + "method = '" + this.getMethod() + "', " + "route = '" + this.getRoute() + "', " + "drug_form = '" + this.getDrugForm() + "', " + "dosage = '" + this.getDosage() + "', " + "outside_provider_name = '" + this.getOutsideProviderName() + "', " + "outside_provider_ohip = '" + this.getOutsideProviderOhip() + "', " + "custom_instructions = " + this.getCustomInstr() + ", " + "unitName = '" + this.getUnitName() + "', " + "long_term = " + this.getLongTerm() + ", " +"custom_note = " + this.isCustomNote() +", " + "past_med = " + this.getPastMed() + ", " +"special_instruction = '"+this.getSpecialInstruction()+"', " + "patient_compliance = " + this.getPatientCompliance() + " " + "WHERE drugid = " + this.getDrugId();
                     MiscUtils.getLogger().debug("sql="+sql);
-                    db.RunSQL(sql);
+                    DBHandler.RunSQL(sql);
 
                     b = true;
                 }
 
                 // close by conn
-                db.getConnection().close();
+                DBHandler.getConnection().close();
 
             } catch (SQLException e) {
                 logger.error("unexpected error", e);
@@ -2300,14 +2300,14 @@ if (getSpecial() == null || getSpecial().length() < 4) {
             }
 
             try {
-                DBHandler db = new DBHandler();
+                
                 ResultSet rs;
                 String sql;
 
                 if (this.getFavoriteId() == 0) {
                     sql = "SELECT favoriteid FROM favorites WHERE " + "provider_no = '" + this.getProviderNo() + "' AND " + "favoritename = '" + this.getFavoriteName() + "' AND " + "BN = '" + this.getBN() + "' AND " + "GCN_SEQNO = " + this.getGCN_SEQNO() + " AND " + "customName = '" + this.getCustomName() + "' AND " + "takemin = " + this.getTakeMin() + " AND " + "takemax = " + this.getTakeMax() + " AND " + "freqcode = '" + this.getFrequencyCode() + "' AND " + "duration = '" + this.getDuration() + "' AND " + "durunit = '" + this.getDurationUnit() + "' AND " + "quantity = '" + this.getQuantity() + "' AND " + "`repeat` = " + this.getRepeat() + " AND " + "nosubs = " + this.getNosubsInt() + " AND " + "prn = " + this.getPrnInt() + " AND " + "special = '" + parsedSpecial + "' AND " + "GN = '" + this.getGN() + "' AND " + "unitName = '" + this.getUnitName() + "' AND " + "custom_instructions = " + this.getCustomInstr();
 
-                    rs = db.GetSQL(sql);
+                    rs = DBHandler.GetSQL(sql);
 
                     if (rs.next()) {
                         this.favoriteId = rs.getInt("favoriteid");
@@ -2320,11 +2320,11 @@ if (getSpecial() == null || getSpecial().length() < 4) {
                     if (this.getFavoriteId() == 0) {
                         sql = "INSERT INTO favorites (provider_no, favoritename, " + "BN, GCN_SEQNO, customName, takemin, takemax, " + "freqcode, duration, durunit, quantity, " + "`repeat`, nosubs, prn, special,GN,ATC,regional_identifier,unit,unitName,method,route,drug_form,custom_instructions,dosage) " + "VALUES ('" + this.getProviderNo() + "', '" + StringEscapeUtils.escapeSql(this.getFavoriteName()) + "', '" + StringEscapeUtils.escapeSql(this.getBN()) + "', " + this.getGCN_SEQNO() + ", '" + StringEscapeUtils.escapeSql(this.getCustomName()) + "', " + this.getTakeMin() + ", " + this.getTakeMax() + ", '" + this.getFrequencyCode() + "', '" + this.getDuration() + "', '" + this.getDurationUnit() + "', '" + this.getQuantity() + "', " + this.getRepeat() + ", " + this.getNosubsInt() + ", " + this.getPrnInt() + ", '" + parsedSpecial + "', '" + this.getGN() + "', ' " + this.getAtcCode() + "', '" + this.getRegionalIdentifier() + "', '" + this.getUnit() + "', '" + this.getUnitName() + "', '" + this.getMethod() + "', '" + this.getRoute() + "', '" + this.getDrugForm() + "', " + this.getCustomInstr() + ", '" + this.getDosage() + "')";
 
-                        db.RunSQL(sql);
+                        DBHandler.RunSQL(sql);
 
                         sql = "SELECT Max(favoriteid) FROM favorites";
 
-                        rs = db.GetSQL(sql);
+                        rs = DBHandler.GetSQL(sql);
 
                         if (rs.next()) {
                             this.favoriteId = rs.getInt(1);
@@ -2338,7 +2338,7 @@ if (getSpecial() == null || getSpecial().length() < 4) {
                 } else {
                     sql = "UPDATE favorites SET " + "provider_no = '" + this.getProviderNo() + "', " + "favoritename = '" + this.getFavoriteName() + "', " + "BN = '" + StringEscapeUtils.escapeSql(this.getBN()) + "', " + "GCN_SEQNO = " + this.getGCN_SEQNO() + ", " + "customName = '" + StringEscapeUtils.escapeSql(this.getCustomName()) + "', " + "takemin = " + this.getTakeMin() + ", " + "takemax = " + this.getTakeMax() + ", " + "freqcode = '" + this.getFrequencyCode() + "', " + "duration = '" + this.getDuration() + "', " + "durunit = '" + this.getDurationUnit() + "', " + "quantity = '" + this.getQuantity() + "', " + "`repeat` = " + this.getRepeat() + ", " + "nosubs = " + this.getNosubsInt() + ", " + "prn = " + this.getPrnInt() + ", " + "special = '" + parsedSpecial + "', " + "GN = '" + this.getGN() + "', " + "ATC = '" + this.getAtcCode() + "', " + "regional_identifier = '" + this.getRegionalIdentifier() + "', " + "unit = '" + this.getUnit() + "', " + "unitName = '" + this.getUnitName() + "', " + "method = '" + this.getMethod() + "', " + "route = '" + this.getRoute() + "', " + "drug_form = '" + this.getDrugForm() + "', " + "custom_instructions = " + this.getCustomInstr() + ", " + "dosage = '" + this.getDosage() + "' " + "WHERE favoriteid = " + this.getFavoriteId();
 
-                    db.RunSQL(sql);
+                    DBHandler.RunSQL(sql);
 
                     b = true;
                 }

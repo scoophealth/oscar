@@ -58,25 +58,25 @@ public class EctDeleteMeasurementTypesAction extends Action {
         String dateDeleted = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DATE) ;
                 
         try{
-            DBHandler db = new DBHandler();                                                                                    
+                                                                                                
             
             if(deleteCheckbox != null){
                 for(int i=0; i<deleteCheckbox.length; i++){
                     MiscUtils.getLogger().debug(deleteCheckbox[i]);
                     String sql = "SELECT * FROM measurementType WHERE id='"+ deleteCheckbox[i] +"'"; 
                     ResultSet rs;
-                    rs = db.GetSQL(sql);
+                    rs = DBHandler.GetSQL(sql);
                     if(rs.next()){
                         sql = "INSERT INTO measurementTypeDeleted(type, typeDisplayName,  typeDescription, measuringInstruction, validation, dateDeleted)" +
-                              "VALUES('"+ db.getString(rs,"type") + "','" + db.getString(rs,"typeDisplayName")+ "','" +db.getString(rs,"typeDescription")+ "','" +
-                              db.getString(rs,"measuringInstruction")+ "','" + db.getString(rs,"validation") + "','" + dateDeleted +"')";
-                        db.RunSQL(sql);
+                              "VALUES('"+ DBHandler.getString(rs,"type") + "','" + DBHandler.getString(rs,"typeDisplayName")+ "','" +DBHandler.getString(rs,"typeDescription")+ "','" +
+                              DBHandler.getString(rs,"measuringInstruction")+ "','" + DBHandler.getString(rs,"validation") + "','" + dateDeleted +"')";
+                        DBHandler.RunSQL(sql);
                         sql = "DELETE  FROM measurementType WHERE id='"+ deleteCheckbox[i] +"'";                                        
                         MiscUtils.getLogger().debug(" sql statement "+sql);
-                        db.RunSQL(sql);
-                        sql = "DELETE FROM measurementGroup WHERE typeDisplayName = '" + db.getString(rs,"typeDisplayName") + "'";
+                        DBHandler.RunSQL(sql);
+                        sql = "DELETE FROM measurementGroup WHERE typeDisplayName = '" + DBHandler.getString(rs,"typeDisplayName") + "'";
                         MiscUtils.getLogger().debug("sql Statement " + sql);
-                        db.RunSQL(sql);
+                        DBHandler.RunSQL(sql);
                     }
                 }
             }

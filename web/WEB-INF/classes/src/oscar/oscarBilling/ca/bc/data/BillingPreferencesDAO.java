@@ -60,25 +60,25 @@ public class BillingPreferencesDAO {
    * @return List
    */
   public void saveUserPreferences(BillingPreference pref) {
-    DBHandler db = null;
+    
     ResultSet rs = null;
     String recordExistsQRY =
         "SELECT * from billing_preferences where providerNo = " +
         pref.getProviderNo();
     try {
-      db = new DBHandler();
-      rs = db.GetSQL(recordExistsQRY);
+      
+      rs = DBHandler.GetSQL(recordExistsQRY);
       if (rs.next()) {
         String updateSQL = "update billing_preferences set referral = " +
             pref.getReferral() + ",defaultPayeeNo = " + pref.getDefaultPayeeNo() +
             " where providerNo = " + pref.getProviderNo();
-        db.RunSQL(updateSQL);
+        DBHandler.RunSQL(updateSQL);
       }
       else {
         String insertSQL =
             "insert into billing_preferences(referral,providerNo,defaultPayeeNo) values(" +
             pref.getReferral() + "," + pref.getProviderNo() + "," + pref.getDefaultPayeeNo() + ")";
-        db.RunSQL(insertSQL);
+        DBHandler.RunSQL(insertSQL);
       }
     }
     catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);

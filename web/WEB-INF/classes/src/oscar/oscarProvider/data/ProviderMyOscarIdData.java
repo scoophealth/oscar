@@ -61,13 +61,13 @@ public class ProviderMyOscarIdData {
        DBHandler db;
        
        try {
-        db = new DBHandler();
+        
        
         sql = "SELECT value FROM property WHERE name = '" + strColName + "' AND provider_no = '" + providerNo + "'";
-        rs = db.GetSQL(sql);
+        rs = DBHandler.GetSQL(sql);
             
         if( rs.next() ) {
-            myOscarId = db.getString(rs,"value");
+            myOscarId = DBHandler.getString(rs,"value");
         }
                 
         
@@ -94,8 +94,8 @@ public class ProviderMyOscarIdData {
         else
            sql = "INSERT INTO property (name,value,provider_no) VALUES('" + strColName + "', '" + id + "', '" + provider + "')";
         
-        db = new DBHandler();
-        db.RunSQL(sql);
+        
+        DBHandler.RunSQL(sql);
        
        }catch( SQLException ex ) {
            MiscUtils.getLogger().debug("Error adding provider myOscar Login Id: " + ex.getMessage());
@@ -110,10 +110,10 @@ public class ProviderMyOscarIdData {
        String sql;
        ResultSet rs;       
               
-       db = new DBHandler();
+       
        sql = "SELECT value FROM property WHERE name = '" + strColName + "' AND provider_no = '" + provider + "'";
        
-       rs = db.GetSQL(sql);
+       rs = DBHandler.GetSQL(sql);
        
        return rs.next();              
        
@@ -127,14 +127,14 @@ public class ProviderMyOscarIdData {
       DBHandler db;
       
       try {
-          db = new DBHandler();
+          
           
           sql = "SELECT provider_no FROM property WHERE name = '" + strColName + "' AND value = '" + myOscarId+ "'";
           MiscUtils.getLogger().debug(sql);
-          rs = db.GetSQL(sql);
+          rs = DBHandler.GetSQL(sql);
           
           if( rs.next() ) {
-              providerNo = db.getString(rs,"provider_no");
+              providerNo = DBHandler.getString(rs,"provider_no");
           }
       } catch( SQLException ex ) {
           MiscUtils.getLogger().error("Error", ex);
@@ -148,10 +148,10 @@ public class ProviderMyOscarIdData {
       ArrayList providerList = new ArrayList();
       oscar.oscarProvider.data.ProviderData.getProviderName("sdf");
       try {
-          DBHandler db = new DBHandler();
+          
 
           sql = "SELECT provider_no FROM property WHERE name = '" + strColName + "'";
-          ResultSet rs = db.GetSQL(sql);
+          ResultSet rs = DBHandler.GetSQL(sql);
            
           while (rs.next()) {
               providerList.add(rs.getString("provider_no"));

@@ -78,23 +78,23 @@ public class MsgViewMessageAction extends Action {
         int  i = 1;
 
         try{
-           DBHandler db = new DBHandler();
+           
            java.sql.ResultSet rs;
            
               //print out message
               String sql = new String("Select * from messagetbl where messageid = \'"+messageNo+"\' ");
-              rs = db.GetSQL(sql);
+              rs = DBHandler.GetSQL(sql);
 
               if (rs.next()) {
                  String attach, pdfAttach;
-                 String message = (db.getString(rs,"themessage"));
-                 String subject = (db.getString(rs,"thesubject"));
-                 String sentby  = (db.getString(rs,"sentby"));
-                 String sentto  = (db.getString(rs,"sentto"));
-                 String thetime = (db.getString(rs,"theime"));
-                 String thedate = (db.getString(rs,"thedate"));
-                 String att     = db.getString(rs,"attachment");
-                 String pdfAtt     = db.getString(rs,"pdfattachment");
+                 String message = (DBHandler.getString(rs,"themessage"));
+                 String subject = (DBHandler.getString(rs,"thesubject"));
+                 String sentby  = (DBHandler.getString(rs,"sentby"));
+                 String sentto  = (DBHandler.getString(rs,"sentto"));
+                 String thetime = (DBHandler.getString(rs,"theime"));
+                 String thedate = (DBHandler.getString(rs,"thedate"));
+                 String att     = DBHandler.getString(rs,"attachment");
+                 String pdfAtt     = DBHandler.getString(rs,"pdfattachment");
 
                  if (att == null || att.equals("null") ){
                     attach ="0";
@@ -133,7 +133,7 @@ public class MsgViewMessageAction extends Action {
               }
 
               if (i == 1){
-                 db.RunSQL("update messagelisttbl set status = \'read\' where provider_no = \'"+providerNo+"\' and message = \'"+messageNo+"\' and status not like 'del'");
+                 DBHandler.RunSQL("update messagelisttbl set status = \'read\' where provider_no = \'"+providerNo+"\' and message = \'"+messageNo+"\' and status not like 'del'");
               }
               
               if (linkMsgDemo !=null && demographic_no!=null){

@@ -56,22 +56,22 @@ public class RptByExampleQueryBeanHandler {
         
     public Collection getFavoriteCollection(String providerNo){
         try {
-            DBHandler db = new DBHandler();
+            
             String sql = "SELECT * from reportByExamplesFavorite WHERE providerNo='" + providerNo + "' ORDER BY name";
             MiscUtils.getLogger().debug("Sql Statement: " + sql);
             ResultSet rs;
             
-            for(rs = db.GetSQL(sql); rs.next(); )
+            for(rs = DBHandler.GetSQL(sql); rs.next(); )
             {
             
                     StringEscapeUtils strEscUtils = new StringEscapeUtils();                                                   
-                    String queryWithEscapeChar = strEscUtils.escapeJava(db.getString(rs,"query"));                   
+                    String queryWithEscapeChar = strEscUtils.escapeJava(DBHandler.getString(rs,"query"));                   
                     //oscar.oscarReport.data.RptByExampleData exampleData  = new oscar.oscarReport.data.RptByExampleData();
                     //queryWithEscapeChar = exampleData.replaceSQLString (";","",queryWithEscapeChar);
                     //queryWithEscapeChar = exampleData.replaceSQLString("\"", "\'", queryWithEscapeChar);            
 
-                    String queryNameWithEscapeChar = strEscUtils.escapeJava(db.getString(rs,"name"));
-                    RptByExampleQueryBean query = new RptByExampleQueryBean(rs.getInt("id"), db.getString(rs,"query"), db.getString(rs,"name"));
+                    String queryNameWithEscapeChar = strEscUtils.escapeJava(DBHandler.getString(rs,"name"));
+                    RptByExampleQueryBean query = new RptByExampleQueryBean(rs.getInt("id"), DBHandler.getString(rs,"query"), DBHandler.getString(rs,"name"));
                     favoriteVector.add(query);                             
             }
 
@@ -89,15 +89,15 @@ public class RptByExampleQueryBeanHandler {
     
     public Collection getAllQueryVector(){
         try {
-            DBHandler db = new DBHandler();
+            
             String sql = "SELECT r.query, r.date, p.last_name, p.first_name from reportByExamples r, provider p WHERE r.providerNo=p.provider_No ORDER BY date DESC";
             MiscUtils.getLogger().debug("Sql Statement: " + sql);
             ResultSet rs;
-            for(rs = db.GetSQL(sql); rs.next(); )
+            for(rs = DBHandler.GetSQL(sql); rs.next(); )
             {
                 //StringEscapeUtils strEscUtils = new StringEscapeUtils();                                
-                //String queryWithEscapeChar = strEscUtils.escapeJava(db.getString(rs,"query"));
-                RptByExampleQueryBean query = new RptByExampleQueryBean(db.getString(rs,"last_name"), db.getString(rs,"first_name"), db.getString(rs,"query"), db.getString(rs,"date"));
+                //String queryWithEscapeChar = strEscUtils.escapeJava(DBHandler.getString(rs,"query"));
+                RptByExampleQueryBean query = new RptByExampleQueryBean(DBHandler.getString(rs,"last_name"), DBHandler.getString(rs,"first_name"), DBHandler.getString(rs,"query"), DBHandler.getString(rs,"date"));
                 allQueryVector.add(query);
             }
 
@@ -111,18 +111,18 @@ public class RptByExampleQueryBeanHandler {
     
     public Vector getQueryVector(){
         try {
-            DBHandler db = new DBHandler();
+            
             String sql = "SELECT r.query, r.date, p.last_name, p.first_name from reportByExamples r, provider p "
                          + "WHERE r.providerNo=p.provider_No AND date>= '" + startDate + "' AND date <='" + endDate
                          + "' ORDER BY date DESC";
             MiscUtils.getLogger().debug("Sql Statement: " + sql);
             ResultSet rs;
-            for(rs = db.GetSQL(sql); rs.next(); )
+            for(rs = DBHandler.GetSQL(sql); rs.next(); )
             {
 
                 StringEscapeUtils strEscUtils = new StringEscapeUtils();                                
-                String queryWithEscapeChar = strEscUtils.escapeJava(db.getString(rs,"query"));
-                RptByExampleQueryBean query = new RptByExampleQueryBean(db.getString(rs,"last_name"), db.getString(rs,"first_name"), db.getString(rs,"query"), db.getString(rs,"date"));
+                String queryWithEscapeChar = strEscUtils.escapeJava(DBHandler.getString(rs,"query"));
+                RptByExampleQueryBean query = new RptByExampleQueryBean(DBHandler.getString(rs,"last_name"), DBHandler.getString(rs,"first_name"), DBHandler.getString(rs,"query"), DBHandler.getString(rs,"date"));
                 queryVector.add(query);
             }
 

@@ -70,13 +70,13 @@ public class MsgAddressBook {
       String retval = new String();
       CurrentLocationName = new String();
       try{
-            DBHandler db = new DBHandler();
+            
             java.sql.ResultSet rs;
             String sql = new String("select locationDesc, addressBook from oscarcommlocations where current1 = 1");
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
             if (rs.next()){
-               retval = db.getString(rs,"addressBook");
-               CurrentLocationName = db.getString(rs,"locationDesc");
+               retval = DBHandler.getString(rs,"addressBook");
+               CurrentLocationName = DBHandler.getString(rs,"locationDesc");
             }
             rs.close();
          }catch (java.sql.SQLException e){MiscUtils.getLogger().error("Error", e); }
@@ -95,14 +95,14 @@ public class MsgAddressBook {
       remoteLocationId        = new java.util.Vector();
 
       try{
-            DBHandler db = new DBHandler();
+            
             java.sql.ResultSet rs;
             String sql = new String("select locationDesc, locationId, addressBook from oscarcommlocations where current1 = 0");
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
             while (rs.next()){
-               vector.add(db.getString(rs,"addressBook"));
-               remoteLocationDesc.add(db.getString(rs,"locationDesc"));
-               remoteLocationId.add(db.getString(rs,"locationId"));
+               vector.add(DBHandler.getString(rs,"addressBook"));
+               remoteLocationDesc.add(DBHandler.getString(rs,"locationDesc"));
+               remoteLocationId.add(DBHandler.getString(rs,"locationId"));
             }
             rs.close();
       }catch (java.sql.SQLException e){MiscUtils.getLogger().error("Error", e); }

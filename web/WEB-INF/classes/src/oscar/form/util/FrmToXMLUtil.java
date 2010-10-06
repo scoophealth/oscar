@@ -365,15 +365,14 @@ public class FrmToXMLUtil{
    private static String getFluShotBillingDate(String demoNo) {
         String s = null;
         try {
-                DBHandler dbhandler = new DBHandler();
                 String s1 = "select b.billing_no, b.billing_date from billing b, billingdetail bd where b.demographic_no='"
                                 + demoNo
                                 + "' and bd.billing_no=b.billing_no and (bd.service_code='G590A' or bd.service_code='G591A') "
                                 + " and bd.status<>'D' and b.status<>'D' order by b.billing_date desc limit 0,1";
-                ResultSet rs = dbhandler.GetSQL(s1);
+                ResultSet rs = DBHandler.GetSQL(s1);
 
                 if (rs.next())
-                        s = dbhandler.getString(rs,"billing_date");
+                        s = DBHandler.getString(rs,"billing_date");
                 rs.close();
             } catch (SQLException sqlexception) {
                 MiscUtils.getLogger().debug(sqlexception.getMessage());

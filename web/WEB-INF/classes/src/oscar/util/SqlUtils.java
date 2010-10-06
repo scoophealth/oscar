@@ -225,10 +225,10 @@ public class SqlUtils {
 		ArrayList rec = new ArrayList();
 		int colCount = 0;
 		ResultSet rs = null;
-		DBHandler db = null;
+		
 		try {
-			db = new DBHandler();
-			rs = (ResultSet) db.GetSQL(qry);
+			
+			rs = (ResultSet) DBHandler.GetSQL(qry);
 			ResultSetMetaData rsmd = rs.getMetaData();
 			colCount = rsmd.getColumnCount();
 
@@ -295,9 +295,6 @@ public class SqlUtils {
 		}
 		finally {
 			try {
-				if (db != null) {
-				}
-
 				if (rs != null) {
 					rs.close();
 				}
@@ -356,11 +353,11 @@ public class SqlUtils {
 	public static List getQueryResultsList(String qry) {
 		ArrayList records = null;
 		ResultSet rs = null;
-		DBHandler db = null;
+		
 		try {
 			records = new ArrayList();
-			db = new DBHandler();
-			rs = (ResultSet) db.GetSQL(qry);
+			
+			rs = (ResultSet) DBHandler.GetSQL(qry);
 			int cols = rs.getMetaData().getColumnCount();
 			while (rs.next()) {
 				String[] record = new String[cols];
@@ -416,11 +413,11 @@ public class SqlUtils {
 	public static List getQueryResultsMapList(String qry) {
 		List records = null;
 		ResultSet rs = null;
-		DBHandler db = null;
+		
 		try {
 			records = new ArrayList();
-			db = new DBHandler();
-			rs = (ResultSet) db.GetSQL(qry);
+			
+			rs = (ResultSet) DBHandler.GetSQL(qry);
 			int cols = rs.getMetaData().getColumnCount();
 			while (rs.next()) {
 				Properties record = new Properties();

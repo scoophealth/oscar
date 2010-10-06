@@ -103,8 +103,8 @@ public class CadProcedimentoDAO extends DAO {
             StringUtils.getStrIn(ids) + ") order by ds_procedimento";
 
         try {
-            DBHandler db = getDb();
-            ResultSet rs = db.GetSQL(sql);
+            
+            ResultSet rs = DBHandler.GetSQL(sql);
 
             if (rs != null) {
                 beans = new ArrayList();
@@ -112,7 +112,7 @@ public class CadProcedimentoDAO extends DAO {
                 while (rs.next()) {
                     CadProcedimentos bean = new CadProcedimentos();
                     bean.setCoProcedimento(rs.getLong("co_procedimento"));
-                    bean.setDsProcedimento(db.getString(rs,"ds_procedimento"));
+                    bean.setDsProcedimento(DBHandler.getString(rs,"ds_procedimento"));
                     beans.add(bean);
                 }
             }
@@ -131,12 +131,12 @@ public class CadProcedimentoDAO extends DAO {
             id + " order by ds_procedimento";
 
         try {
-            DBHandler db = getDb();
-            ResultSet rs = db.GetSQL(sql);
+            
+            ResultSet rs = DBHandler.GetSQL(sql);
 
             if (rs.next()) {
                 bean.setCoProcedimento(rs.getLong("co_procedimento"));
-                bean.setDsProcedimento(db.getString(rs,"ds_procedimento"));
+                bean.setDsProcedimento(DBHandler.getString(rs,"ds_procedimento"));
             }
         } catch (Exception err) {
         	MiscUtils.getLogger().error("Error", err);

@@ -43,7 +43,7 @@ public class EctRourkeRecord {
             throws SQLException    {
         Properties props = new Properties();
 
-        DBHandler db = new DBHandler();
+        
         ResultSet rs;
         String sql;
 
@@ -52,17 +52,17 @@ public class EctRourkeRecord {
                 + "year_of_birth, month_of_birth, date_of_birth, sex "
                 + "FROM demographic WHERE demographic_no = " + demographicNo;
 
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
 
             if(rs.next())  {
-                java.util.Date dob = UtilDateUtilities.calcDate(db.getString(rs,"year_of_birth"), db.getString(rs,"month_of_birth"), db.getString(rs,"date_of_birth"));
+                java.util.Date dob = UtilDateUtilities.calcDate(DBHandler.getString(rs,"year_of_birth"), DBHandler.getString(rs,"month_of_birth"), DBHandler.getString(rs,"date_of_birth"));
 
-                props.setProperty("demographic_no", db.getString(rs,"demographic_no"));
+                props.setProperty("demographic_no", DBHandler.getString(rs,"demographic_no"));
                 props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                 props.setProperty("formEdited", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                 props.setProperty("c_birthDate", UtilDateUtilities.DateToString(dob, "yyyy/MM/dd"));
-                props.setProperty("c_pName", db.getString(rs,"pName"));
-                if(db.getString(rs,"sex").equalsIgnoreCase("M")) {
+                props.setProperty("c_pName", DBHandler.getString(rs,"pName"));
+                if(DBHandler.getString(rs,"sex").equalsIgnoreCase("M")) {
                     props.setProperty("c_male", "checked='checked'");
                 } else {
                     props.setProperty("c_female", "checked='checked'");
@@ -71,7 +71,7 @@ public class EctRourkeRecord {
             rs.close();
         } else {
             sql = "SELECT * FROM formRourke WHERE demographic_no = " + demographicNo + " AND ID = " + existingID;
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
 
             if(rs.next()) {
                 ResultSetMetaData md = rs.getMetaData();
@@ -91,7 +91,7 @@ public class EctRourkeRecord {
                         if(md.getColumnTypeName(i).equalsIgnoreCase("date")) {
                             value = UtilDateUtilities.DateToString(rs.getDate(i), "yyyy/MM/dd");
                         } else {
-                            value = db.getString(rs,i);
+                            value = DBHandler.getString(rs,i);
                         }
                     }
 
@@ -109,13 +109,13 @@ public class EctRourkeRecord {
         String demographic_no = props.getProperty("demographic_no");
         String page = "p"+props.getProperty("c_lastVisited")+"_";
 
-        DBHandler db = new DBHandler();
+        
         String sqlDB = "SELECT * FROM formRourke WHERE demographic_no=" + demographic_no + " AND ID=" + formId;
-        ResultSet rsDB = db.GetSQL(sqlDB);
+        ResultSet rsDB = DBHandler.GetSQL(sqlDB);
         rsDB.next();
 
         String sqlPage="SELECT * FROM formRourke WHERE demographic_no=" + demographic_no + " AND ID=0";
-        ResultSet rsPage = db.GetSQL(sqlPage, true);
+        ResultSet rsPage = DBHandler.GetSQL(sqlPage, true);
         rsPage.moveToInsertRow();
 
         ResultSetMetaData md = rsPage.getMetaData();
@@ -187,7 +187,7 @@ public class EctRourkeRecord {
         int ret = 0;
 
         sqlPage = "SELECT LAST_INSERT_ID()";
-        rsPage = db.GetSQL(sqlPage);
+        rsPage = DBHandler.GetSQL(sqlPage);
         if(rsPage.next()) {
             ret = rsPage.getInt(1);
         }
@@ -198,7 +198,7 @@ public class EctRourkeRecord {
     public Properties getGraph(int demographicNo, int existingID)  throws SQLException {
         Properties props = new Properties();
 
-        DBHandler db = new DBHandler();
+        
         ResultSet rs;
         String sql;
 
@@ -217,7 +217,7 @@ public class EctRourkeRecord {
                 + "FROM formRourke "
                 + "WHERE demographic_no = " + demographicNo + " AND ID = " + existingID;
 
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
 
             if(rs.next())           {
                 ResultSetMetaData md = rs.getMetaData();
@@ -229,7 +229,7 @@ public class EctRourkeRecord {
                     if(md.getColumnTypeName(i).equalsIgnoreCase("date"))               {
                         value = UtilDateUtilities.DateToString(rs.getDate(i), "yyyy/MM/dd");
                     } else {
-                        value = db.getString(rs,i);
+                        value = DBHandler.getString(rs,i);
                     }
 
                     if(i<=6) {
@@ -276,10 +276,10 @@ public class EctRourkeRecord {
         ResultSet rs;
         String str = "M";
         try{
-                db = new DBHandler();
-                rs = db.GetSQL("select sex from demographic where demographic_no = "+demo);
+                
+                rs = DBHandler.GetSQL("select sex from demographic where demographic_no = "+demo);
                 if(rs.next()){
-                        str = db.getString(rs,"sex");
+                        str = DBHandler.getString(rs,"sex");
                         if (str.equalsIgnoreCase("F")){
                                 retval = true;
                         }

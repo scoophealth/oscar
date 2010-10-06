@@ -123,15 +123,15 @@ public class MsgSendMessageAction extends Action {
 
             try
             {
-              DBHandler db = new DBHandler();
+              
               java.sql.ResultSet rs;
 
-              rs = db.GetSQL(sql);
+              rs = DBHandler.GetSQL(sql);
               while (rs.next()) {
 
-              sentToWho.append(" "+db.getString(rs,"first_name") +" " +db.getString(rs,"last_name")+". ");
-              //providerFirstName.add(db.getString(rs,"first_name"));
-              //providerLastName.add(db.getString(rs,"last_name"));
+              sentToWho.append(" "+DBHandler.getString(rs,"first_name") +" " +DBHandler.getString(rs,"last_name")+". ");
+              //providerFirstName.add(DBHandler.getString(rs,"first_name"));
+              //providerLastName.add(DBHandler.getString(rs,"last_name"));
               }
         rs.close();
 
@@ -145,27 +145,27 @@ public class MsgSendMessageAction extends Action {
 
       try
             {
-              DBHandler db = new DBHandler();
+              
               java.sql.ResultSet rs;
               //String sql = "insert into messagetbl (thedate,thetime,themessage,thesubject,sentby,sentto) values ('today','now','"+message+"','"+subject+"','jay','"+sentToWho+"' ";
-              db.RunSQL("insert into messagetbl (thedate,theime,themessage,thesubject,sentby,sentto) values ('today','now','"+message+"','"+subject+"','jay','"+sentToWho+"') ");
+              DBHandler.RunSQL("insert into messagetbl (thedate,theime,themessage,thesubject,sentby,sentto) values ('today','now','"+message+"','"+subject+"','jay','"+sentToWho+"') ");
 
 	      /* Choose the right command to recover the messageid inserted above */
 	      OscarProperties prop = OscarProperties.getInstance();
 	      String db_type = prop.getProperty("db_type").trim();
 	      if (db_type.equalsIgnoreCase("mysql")) {
-		rs = db.GetSQL("SELECT LAST_INSERT_ID() ");
+		rs = DBHandler.GetSQL("SELECT LAST_INSERT_ID() ");
 	      } else if (db_type.equalsIgnoreCase("postgresql")) {
-		rs = db.GetSQL("SELECT CURRVAL('messagetbl_int_seq')");
+		rs = DBHandler.GetSQL("SELECT CURRVAL('messagetbl_int_seq')");
 	      } else
 	      throw new java.sql.SQLException("ERROR: Database " + db_type + " unrecognized");
 
-              String messageid = db.getString(rs,1);
+              String messageid = DBHandler.getString(rs,1);
 
               for (int i =0 ; i < providers.length ; i++)
               {
 
-                db.RunSQL("insert into messagelisttbl (message,provider_no,status) values ('"+messageid+"','"+providers[i]+"','new')");
+                DBHandler.RunSQL("insert into messagelisttbl (message,provider_no,status) values ('"+messageid+"','"+providers[i]+"','new')");
               }
         rs.close();
 

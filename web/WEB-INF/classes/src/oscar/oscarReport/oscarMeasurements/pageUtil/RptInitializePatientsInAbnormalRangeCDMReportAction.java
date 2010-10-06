@@ -65,7 +65,7 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
         ArrayList reportMsg = new ArrayList();
         
         try{
-                DBHandler db = new DBHandler();  
+                  
                 if(!validate(frm, request)){
                     MiscUtils.getLogger().debug("the form is invalid");
                     return (new ActionForward(mapping.getInput()));
@@ -73,14 +73,14 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
                 
                
                 if(patientSeenCheckbox!=null){
-                    int nbPatient = mData.getNbPatientSeen(db, startDateA, endDateA);  
+                    int nbPatient = mData.getNbPatientSeen(startDateA, endDateA);  
                     String msg = mr.getMessage("oscarReport.CDMReport.msgPatientSeen", Integer.toString(nbPatient), startDateA, endDateA); 
                     MiscUtils.getLogger().debug(msg);
                     reportMsg.add(msg);
                     reportMsg.add("");
                 }
                 
-                getInAbnormalRangePercentage(db, frm, reportMsg, request);                
+                getInAbnormalRangePercentage(frm, reportMsg, request);                
                 String title = mr.getMessage("oscarReport.CDMReport.msgPercentageOfPatientInAbnormalRange");
                 request.setAttribute("title", title);
                 request.setAttribute("messages", reportMsg);
@@ -217,7 +217,7 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
      *
      * @return ArrayList which contain the result in String format
      ******************************************************************************************/      
-    private ArrayList getInAbnormalRangePercentage(DBHandler db, RptInitializePatientsInAbnormalRangeCDMReportForm frm, ArrayList metGLPercentageMsg, HttpServletRequest request){
+    private ArrayList getInAbnormalRangePercentage(RptInitializePatientsInAbnormalRangeCDMReportForm frm, ArrayList metGLPercentageMsg, HttpServletRequest request){
         String[] startDateC = frm.getStartDateC();
         String[] endDateC = frm.getEndDateC();         
         String[] upperBound = frm.getUpperBound(); 
@@ -257,17 +257,17 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
                                  + "' AND type='"+ measurementType + "'AND measuringInstruction='"+ mInstrc 
                                  + "' group by demographicNo";
                             MiscUtils.getLogger().debug("SQL statement is" + sql);
-                            rs = db.GetSQL(sql);                            
+                            rs = DBHandler.GetSQL(sql);                            
                             double nbGeneral = 0;   
                             
                             if (measurementType.compareTo("BP")==0){                                
                                 MiscUtils.getLogger().debug("SQL statement is " + sql);
-                                rs = db.GetSQL(sql);
+                                rs = DBHandler.GetSQL(sql);
                                 while(rs.next()){
                                     sql =   "SELECT dataField FROM measurements WHERE dateEntered = '" + rs.getString("max(dateEntered)") + 
                                             "' AND demographicNo = '" + rs.getString("demographicNo") 
                                             + "' AND type='"+ measurementType + "'AND measuringInstruction='"+ mInstrc + "'";
-                                    ResultSet rsData =  db.GetSQL(sql);
+                                    ResultSet rsData =  DBHandler.GetSQL(sql);
                                     if (rsData.next()){
                                         if(checkGuideline.isBloodPressureMetGuideline(rsData.getString("dataField"), upper, "<") &&
                                         checkGuideline.isBloodPressureMetGuideline(rsData.getString("dataField"), lower, ">")){
@@ -291,13 +291,13 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
                                 MiscUtils.getLogger().debug(msg);
                                 metGLPercentageMsg.add(msg); 
                             }
-                            else if (checkGuideline.getValidation(db, measurementType)==1)
+                            else if (checkGuideline.getValidation(measurementType)==1)
                             {
                                 while(rs.next()){
                                     sql =   "SELECT dataField FROM measurements WHERE dateEntered = '" + rs.getString("max(dateEntered)") 
                                             + "' AND demographicNo = '" + rs.getString("demographicNo") + "' AND type='"+ measurementType + "' AND measuringInstruction='"+ mInstrc
                                             + "' AND dataField <" + "'" + upper + "' AND dataField >" + "'" + lower + "'";
-                                    ResultSet rsData = db.GetSQL(sql);
+                                    ResultSet rsData = DBHandler.GetSQL(sql);
                                     rsData.last();
                                     if(rsData.getRow()>0)
                                         nbMetGL++;
@@ -323,7 +323,7 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
                                     sql =   "SELECT dataField FROM measurements WHERE dateEntered = '" + rs.getString("max(dateEntered)") + 
                                             "' AND demographicNo = '" + rs.getString("demographicNo") 
                                             + "' AND type='"+ measurementType + "'AND measuringInstruction='"+ mInstrc + "'";
-                                    ResultSet rsData =  db.GetSQL(sql);
+                                    ResultSet rsData =  DBHandler.GetSQL(sql);
                                     if (rsData.next()){
                                         if(checkGuideline.isYesNoMetGuideline(rsData.getString("dataField"), upper)){
                                             nbMetGL++;
@@ -359,17 +359,17 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
                     sql = "SELECT demographicNo, max(dateEntered) FROM measurements WHERE dateObserved >='" + startDate + "' AND dateObserved <='" + endDate
                      + "' AND type='"+ measurementType + "' group by demographicNo";
                     MiscUtils.getLogger().debug("SQL statement is" + sql);
-                    rs = db.GetSQL(sql);                            
+                    rs = DBHandler.GetSQL(sql);                            
                     double nbGeneral = 0;   
 
                     if (measurementType.compareTo("BP")==0){                                
                         MiscUtils.getLogger().debug("SQL statement is " + sql);
-                        rs = db.GetSQL(sql);
+                        rs = DBHandler.GetSQL(sql);
                         while(rs.next()){
                             sql =   "SELECT dataField FROM measurements WHERE dateEntered = '" + rs.getString("max(dateEntered)") + 
                                     "' AND demographicNo = '" + rs.getString("demographicNo") 
                                     + "' AND type='"+ measurementType + "'";
-                            ResultSet rsData =  db.GetSQL(sql);
+                            ResultSet rsData =  DBHandler.GetSQL(sql);
                             if (rsData.next()){
                                 if(checkGuideline.isBloodPressureMetGuideline(rsData.getString("dataField"), upper, "<") &&
                                 checkGuideline.isBloodPressureMetGuideline(rsData.getString("dataField"), lower, ">")){
@@ -393,13 +393,13 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
                         MiscUtils.getLogger().debug(msg);
                         metGLPercentageMsg.add(msg); 
                     }
-                    else if (checkGuideline.getValidation(db, measurementType)==1)
+                    else if (checkGuideline.getValidation(measurementType)==1)
                     {
                         while(rs.next()){
                             sql =   "SELECT dataField FROM measurements WHERE dateEntered = '" + rs.getString("max(dateEntered)") 
                                     + "' AND demographicNo = '" + rs.getString("demographicNo") + "' AND type='"+ measurementType 
                                     + "' AND dataField <" + "'" + upper + "' AND dataField >" + "'" + lower + "'";
-                            ResultSet rsData = db.GetSQL(sql);
+                            ResultSet rsData = DBHandler.GetSQL(sql);
                             rsData.last();
                             if(rsData.getRow()>0)
                                 nbMetGL++;
@@ -425,7 +425,7 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
                             sql =   "SELECT dataField FROM measurements WHERE dateEntered = '" + rs.getString("max(dateEntered)") + 
                                     "' AND demographicNo = '" + rs.getString("demographicNo") 
                                     + "' AND type='"+ measurementType + "'";
-                            ResultSet rsData =  db.GetSQL(sql);
+                            ResultSet rsData =  DBHandler.GetSQL(sql);
                             if (rsData.next()){
                                 if(checkGuideline.isYesNoMetGuideline(rsData.getString("dataField"), upper)){
                                     nbMetGL++;

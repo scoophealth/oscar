@@ -95,11 +95,11 @@ public  class MsgRemoteMessageData extends Thread{
             XMLstring = new StringBuffer("<?xml version=\"1.0\" ?>\n <message>\n ");
 
             try{
-               DBHandler db = new DBHandler();
+               
                java.sql.ResultSet rs_message, rs_whotoo;
                String sql_message = new String("Select * from messagetbl where messageid = '"+messageID+"'");
                String sql_whotoo = new String("Select * from messagelisttbl where message = '"+messageID+"'");
-               rs_message = db.GetSQL(sql_message);
+               rs_message = DBHandler.GetSQL(sql_message);
 
                if (rs_message.next()){
                   message   = replaceIllegalCharacters(rs_message.getString("themessage"));
@@ -121,7 +121,7 @@ public  class MsgRemoteMessageData extends Thread{
                }
 
 
-               rs_whotoo = db.GetSQL(sql_whotoo);
+               rs_whotoo = DBHandler.GetSQL(sql_whotoo);
 
                while (rs_whotoo.next()){
                   providerNo.add(rs_whotoo.getString("provider_no"));

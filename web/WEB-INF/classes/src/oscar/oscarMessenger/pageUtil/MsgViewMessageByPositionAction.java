@@ -75,7 +75,7 @@ public class MsgViewMessageByPositionAction extends Action {
         ParameterActionForward actionforward = new ParameterActionForward(mapping.findForward("success"));
         
         try{
-           DBHandler db = new DBHandler();
+           
            java.sql.ResultSet rs;
            
                 //String sql = new String("select m.messageid from messagelisttbl ml, messagetbl m, msgDemoMap map"
@@ -88,9 +88,9 @@ public class MsgViewMessageByPositionAction extends Action {
         
                 
                 MiscUtils.getLogger().debug("this ="+sql);
-                rs = db.GetSQL(sql);
+                rs = DBHandler.GetSQL(sql);
                 if (rs.next()) {                                                                   
-                    actionforward.addParameter("messageID", db.getString(rs,"messageid"));
+                    actionforward.addParameter("messageID", DBHandler.getString(rs,"messageid"));
                     actionforward.addParameter("from", "encounter");     
                     actionforward.addParameter("demographic_no", demographic_no);
                     actionforward.addParameter("messagePostion", messagePosition);

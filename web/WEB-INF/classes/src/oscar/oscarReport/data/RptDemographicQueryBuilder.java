@@ -351,16 +351,16 @@ public class RptDemographicQueryBuilder {
         MiscUtils.getLogger().debug("SEARCH SQL STATEMENT \n"+stringBuffer.toString());
         java.util.ArrayList searchedArray = new java.util.ArrayList();
         try{
-              DBHandler db = new DBHandler();
+              
               java.sql.ResultSet rs;
-              rs = db.GetSQL(stringBuffer.toString());
+              rs = DBHandler.GetSQL(stringBuffer.toString());
               MiscUtils.getLogger().debug(stringBuffer.toString());
 
               while (rs.next()) {
 
                 java.util.ArrayList tempArr  = new java.util.ArrayList();
                 for (int i = 0; i < select.length ; i++){
-                   tempArr.add( db.getString(rs,select[i]) );
+                   tempArr.add( DBHandler.getString(rs,select[i]) );
                 }
                 searchedArray.add(tempArr);
 

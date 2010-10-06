@@ -102,13 +102,13 @@ public class WcbSb {
    
    public WcbSb(String billingNo){
        try{
-           DBHandler db = new DBHandler();
+           
            
            String sql = "SELECT *, billingservice.value As `feeitem1` FROM  wcb JOIN billing ON wcb.billing_no=billing.billing_no left join billingservice on wcb.w_feeitem=billingservice.service_code "
             +"WHERE wcb.billing_no='"+ billingNo + "' AND wcb.status='O' AND billing.status IN ('O', 'W') ";
            
            ResultSet rs =
-           db.GetSQL(sql);
+           DBHandler.GetSQL(sql);
            if (rs.next()){
               fillWithRs(rs);
            }
@@ -264,8 +264,8 @@ public class WcbSb {
    public String getBillingMasterNo(String invNo){
       String retval = invNo;
       try{
-         DBHandler db = new DBHandler();               
-         ResultSet rs = db.GetSQL("SELECT billingmaster_no FROM billingmaster WHERE billing_no="+ invNo);
+                        
+         ResultSet rs = DBHandler.GetSQL("SELECT billingmaster_no FROM billingmaster WHERE billing_no="+ invNo);
          if (rs.next()) {
             retval = rs.getString("billingmaster_no");
          }

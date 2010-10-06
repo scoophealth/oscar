@@ -26,12 +26,12 @@ String reqID = reqIDL==null ? "" : String.valueOf(reqIDL);
 
 //String sql = "SELECT status FROM providerLabRouting WHERE lab_no='"+segmentID+"';";
 String sql = "SELECT demographic_no FROM patientLabRouting WHERE lab_type='HL7' and lab_no='"+segmentID+"';";
-DBHandler db = new DBHandler();
-ResultSet rs = db.GetSQL(sql);
+
+ResultSet rs = DBHandler.GetSQL(sql);
 String demographicID = "";
 
 while(rs.next()){
-    demographicID = db.getString(rs,"demographic_no");
+    demographicID = DBHandler.getString(rs,"demographic_no");
 }
 rs.close();
 boolean isLinkedToDemographic=false;

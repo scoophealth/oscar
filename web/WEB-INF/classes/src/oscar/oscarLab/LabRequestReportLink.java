@@ -38,10 +38,10 @@ public class LabRequestReportLink {
     public static Hashtable getLinkByReport(String reportTable, Long reportId) throws SQLException {
 	Hashtable link = new Hashtable();
 	
-	DBHandler db = new DBHandler();
+	
 	String sql = "SELECT * FROM labRequestReportLink WHERE report_table='" + reportTable+"'" +
 							    " AND report_id="  + reportId;
-	ResultSet rs = db.GetSQL(sql);
+	ResultSet rs = DBHandler.GetSQL(sql);
 	if (rs.next()) {
 	    link.put("id", rs.getLong("id"));
 	    link.put("request_table", rs.getString("request_table"));
@@ -54,9 +54,9 @@ public class LabRequestReportLink {
     }
     
     public static String getRequestDate(String id) throws SQLException {
-	DBHandler db = new DBHandler();
+	
 	String sql = "SELECT request_date FROM labRequestReportLink WHERE id=" + id;
-	ResultSet rs = db.GetSQL(sql);
+	ResultSet rs = DBHandler.GetSQL(sql);
 	Date requestDate = null;
 	if (rs.next()) {
 	    requestDate = rs.getDate(1);
@@ -75,18 +75,18 @@ public class LabRequestReportLink {
 	String requestDateString="null";
 	if (requestDate!=null) requestDateString="'"+requestDate+"'";
 	
-	DBHandler db = new DBHandler();
+	
 	String sql = "INSERT INTO labRequestReportLink (request_table,request_id,request_date,report_table,report_id) VALUES ('" +
 		     requestTable+"',"+requestId+","+requestDateString+",'"+reportTable+"',"+reportId+")";
-	db.RunSQL(sql);
+	DBHandler.RunSQL(sql);
     }
     
     public static void update(Long id, String requestTable, Long requestId, String requestDate) throws SQLException {
-	DBHandler db = new DBHandler();
+	
 	String sql = "UPDATE labRequestReportLink SET request_table='" + requestTable + "'" +
 						" AND request_id=" + requestId +
 						" AND request_date='" + requestDate + "'" +
 						" WHERE id=" + id;
-	db.RunSQL(sql);
+	DBHandler.RunSQL(sql);
     }
 }

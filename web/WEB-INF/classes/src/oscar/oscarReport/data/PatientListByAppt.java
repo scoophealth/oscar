@@ -57,7 +57,7 @@ public class PatientListByAppt extends HttpServlet {
         String datefrom = request.getParameter("date_from");
         String dateto = request.getParameter("date_to");
         try{
-            DBHandler db = new DBHandler();
+            
             
             java.sql.ResultSet rs;
             String sql = "select d.last_name, d.first_name, d.phone,  d.phone2, "+
@@ -78,19 +78,19 @@ public class PatientListByAppt extends HttpServlet {
             }
             sql = sql + "order by a.appointment_date";
 
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
             
             PrintStream ps = new PrintStream(response.getOutputStream());
 
               while(rs.next()){
-               ps.print(db.getString(rs,1)+",");
-               ps.print(db.getString(rs,2)+",");
-               ps.print(db.getString(rs,3)+",");
-               ps.print(db.getString(rs,4)+",");
-               ps.print(db.getString(rs,6)+",");
-               ps.print(db.getString(rs,5)+",");
-               ps.print(db.getString(rs,7).replaceAll("\r\n","")+",");
-               ps.print(db.getString(rs,9)+" ");
+               ps.print(DBHandler.getString(rs,1)+",");
+               ps.print(DBHandler.getString(rs,2)+",");
+               ps.print(DBHandler.getString(rs,3)+",");
+               ps.print(DBHandler.getString(rs,4)+",");
+               ps.print(DBHandler.getString(rs,6)+",");
+               ps.print(DBHandler.getString(rs,5)+",");
+               ps.print(DBHandler.getString(rs,7).replaceAll("\r\n","")+",");
+               ps.print(DBHandler.getString(rs,9)+" ");
                ps.print(rs.getString(8)+",");
                ps.print(rs.getString(10));
                ps.print("\n");

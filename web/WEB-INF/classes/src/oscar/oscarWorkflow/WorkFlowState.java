@@ -68,10 +68,7 @@ public class WorkFlowState {
     //TODO: need to add which provider added it  OR i could just logg it as well
     public int addToWorkFlow(String workflowType,String providerNo, String demographicNo, Date endDate,String current_state){
         int id = -1;
-        DBHandler dbhandler = null;
         try {
-
-            dbhandler = new DBHandler();
             String s = "insert into workflow (workflow_type,provider_no, demographic_no, completion_date,current_state,create_date_time) values (?,?,?,?,?,now())" ;
             Connection  conn = DBHandler.getConnection();
             PreparedStatement pstmt = conn.prepareStatement(s);
@@ -103,10 +100,7 @@ public class WorkFlowState {
     }
     
     public void updateWorkFlowState(String workflowId,String state ){
-        DBHandler dbhandler = null;
         try {
-
-            dbhandler = new DBHandler();
             String s = "update workflow set current_state = ? where ID = ?" ;
             PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(s);
             pstmt.setString(1,state);
@@ -119,10 +113,7 @@ public class WorkFlowState {
     }
     
     public void updateWorkFlowState(String workflowId,String state, Date date ){
-        DBHandler dbhandler = null;
         try {
-
-            dbhandler = new DBHandler();
             String s = "update workflow set current_state = ?, completion_date = ? where ID = ?" ;
             PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(s);
             pstmt.setString(1,state);
@@ -138,10 +129,7 @@ public class WorkFlowState {
     
     public ArrayList getWorkFlowList(String workflowType){
         ArrayList list = new ArrayList();
-        DBHandler dbhandler = null;
         try {
-
-            dbhandler = new DBHandler();
             String s = "select * from workflow where workflow_type = ?" ;
             PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(s);
             pstmt.setString(1,workflowType);
@@ -163,10 +151,7 @@ public class WorkFlowState {
     
     public ArrayList getActiveWorkFlowList(String workflowType){
         ArrayList list = new ArrayList();
-        DBHandler dbhandler = null;
         try {
-
-            dbhandler = new DBHandler();
             String s = "select * from workflow where workflow_type = ? and current_state != 'C'" ;
             PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(s);
             pstmt.setString(1,workflowType);
@@ -201,10 +186,7 @@ public class WorkFlowState {
     
     public ArrayList getActiveWorkFlowList(String workflowType, String demographicNo){
         ArrayList list = new ArrayList();
-        DBHandler dbhandler = null;
         try {
-
-            dbhandler = new DBHandler();
             String s = "select * from workflow where workflow_type = ? and demographic_no = ? and current_state != 'C'" ;
             MiscUtils.getLogger().debug("workflow type "+workflowType+" demo "+demographicNo);
             PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(s);

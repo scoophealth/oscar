@@ -87,7 +87,7 @@ public class LabUploadAction extends Action {
                 boolean success = true;
                 try {                  
                    int size = messages.size();
-                   DBHandler db = new DBHandler();
+                   
                    String now = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
                    for (int i = 0; i < size; i++) {
                       if (_logger.isDebugEnabled()){ _logger.debug("Call Message Constructor for message # "+i); }
@@ -95,7 +95,7 @@ public class LabUploadAction extends Action {
                       if (_logger.isDebugEnabled()){ _logger.debug("Call Message.Parse for message # "+i); }
                       message.Parse((String) messages.get(i));
                       if (_logger.isDebugEnabled()){ _logger.debug("Call Message.ToDatabase for message # "+i); }
-                      message.ToDatabase(db);
+                      message.ToDatabase();
                    }
                    outcome = "success";
                 }                

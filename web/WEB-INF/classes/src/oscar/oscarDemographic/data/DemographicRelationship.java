@@ -77,11 +77,11 @@ public class DemographicRelationship {
        }
        
        try {
-            DBHandler db = new DBHandler();
+            
             ResultSet rs;
             String sql = "insert into relationships (facility_id,demographic_no,relation_demographic_no,relation,sub_decision_maker,emergency_contact,notes,creator,creation_date) values "
             + "("+facilityId+",'"+demographic+"','"+linkingDemographic+"','"+StringEscapeUtils.escapeSql(relationship)+"','"+sdmStr+"','"+eContact+"','"+StringEscapeUtils.escapeSql(notes)+"','"+providerNo+"',now())";
-            db.RunSQL(sql);
+            DBHandler.RunSQL(sql);
             
         } catch (SQLException e) {
             MiscUtils.getLogger().error("Error", e);
@@ -90,9 +90,9 @@ public class DemographicRelationship {
    
    public void deleteDemographicRelationship(String id){
       try {
-         DBHandler db = new DBHandler();
+         
          String sql = "update relationships  set deleted = '1' where  id = '"+id+"'";
-         db.RunSQL(sql);
+         DBHandler.RunSQL(sql);
       } catch (SQLException e) {
          MiscUtils.getLogger().error("Error", e);
       }       
@@ -102,18 +102,18 @@ public class DemographicRelationship {
    public ArrayList getDemographicRelationships(String demographic){
       ArrayList list = new ArrayList();
       try {
-         DBHandler db = new DBHandler();
+         
          ResultSet rs;
          String sql = "select * from relationships where demographic_no = '"+demographic+"' and deleted != '1'";
-         rs = db.GetSQL(sql);
+         rs = DBHandler.GetSQL(sql);
          while(rs.next()){
             Hashtable h = new Hashtable();
-            h.put("id", db.getString(rs,"id"));
-            h.put("demographic_no", db.getString(rs,"relation_demographic_no"));
-            h.put("relation", db.getString(rs,"relation"));
-            h.put("sub_decision_maker", db.getString(rs,"sub_decision_maker"));
-	    h.put("emergency_contact", db.getString(rs,"emergency_contact"));
-            h.put("notes", db.getString(rs,"notes"));
+            h.put("id", DBHandler.getString(rs,"id"));
+            h.put("demographic_no", DBHandler.getString(rs,"relation_demographic_no"));
+            h.put("relation", DBHandler.getString(rs,"relation"));
+            h.put("sub_decision_maker", DBHandler.getString(rs,"sub_decision_maker"));
+	    h.put("emergency_contact", DBHandler.getString(rs,"emergency_contact"));
+            h.put("notes", DBHandler.getString(rs,"notes"));
             list.add(h);
          }            
       } catch (SQLException e) {
@@ -126,18 +126,18 @@ public class DemographicRelationship {
    public ArrayList getDemographicRelationshipsByID(String id){
       ArrayList list = new ArrayList();
       try {
-         DBHandler db = new DBHandler();
+         
          ResultSet rs;
          String sql = "select * from relationships where id = '"+id+"' and deleted != '1'";
-         rs = db.GetSQL(sql);
+         rs = DBHandler.GetSQL(sql);
          while(rs.next()){
             Hashtable h = new Hashtable();
-            h.put("demographic_no", db.getString(rs,"demographic_no"));
-            h.put("relation_demographic_no", db.getString(rs,"relation_demographic_no"));
-            h.put("relation", db.getString(rs,"relation"));
-            h.put("sub_decision_maker", db.getString(rs,"sub_decision_maker"));
-	    h.put("emergency_contact", db.getString(rs,"emergency_contact"));
-            h.put("notes", db.getString(rs,"notes"));
+            h.put("demographic_no", DBHandler.getString(rs,"demographic_no"));
+            h.put("relation_demographic_no", DBHandler.getString(rs,"relation_demographic_no"));
+            h.put("relation", DBHandler.getString(rs,"relation"));
+            h.put("sub_decision_maker", DBHandler.getString(rs,"sub_decision_maker"));
+	    h.put("emergency_contact", DBHandler.getString(rs,"emergency_contact"));
+            h.put("notes", DBHandler.getString(rs,"notes"));
             list.add(h);
          }            
       } catch (SQLException e) {
@@ -150,12 +150,12 @@ public class DemographicRelationship {
    public String getSDM(String demographic){
       String sdm = null;
       try {
-         DBHandler db = new DBHandler();
+         
          ResultSet rs;
          String sql = "select * from relationships where demographic_no = '"+demographic+"' and deleted != '1' and sub_decision_maker = '1'";
-         rs = db.GetSQL(sql);
+         rs = DBHandler.GetSQL(sql);
          if(rs.next()){            
-            sdm = db.getString(rs,"relation_demographic_no");
+            sdm = DBHandler.getString(rs,"relation_demographic_no");
          }            
       } catch (SQLException e) {
          MiscUtils.getLogger().error("Error", e);
@@ -168,24 +168,24 @@ public class DemographicRelationship {
    public ArrayList getDemographicRelationshipsWithNamePhone(String demographic_no){                 
       ArrayList list = new ArrayList();
       try {
-         DBHandler db = new DBHandler();
+         
          ResultSet rs;
          String sql = "select * from relationships where demographic_no = '"+demographic_no+"' and deleted != '1'";
-         rs = db.GetSQL(sql);
+         rs = DBHandler.GetSQL(sql);
          while(rs.next()){
             Hashtable h = new Hashtable();
-            String demo = db.getString(rs,"relation_demographic_no");
+            String demo = DBHandler.getString(rs,"relation_demographic_no");
             DemographicData dd = new DemographicData();
             DemographicData.Demographic demographic = dd.getDemographic(demo);    
             h.put("lastName", demographic.getLastName());
             h.put("firstName", demographic.getFirstName());
             h.put("phone", demographic.getPhone());
             h.put("demographicNo", demo);
-            h.put("relation", db.getString(rs,"relation"));
+            h.put("relation", DBHandler.getString(rs,"relation"));
             
-            h.put("subDecisionMaker", booleanConverter(db.getString(rs,"sub_decision_maker")));
-            h.put("emergencyContact", booleanConverter(db.getString(rs,"emergency_contact")));
-            h.put("notes", db.getString(rs,"notes"));
+            h.put("subDecisionMaker", booleanConverter(DBHandler.getString(rs,"sub_decision_maker")));
+            h.put("emergencyContact", booleanConverter(DBHandler.getString(rs,"emergency_contact")));
+            h.put("notes", DBHandler.getString(rs,"notes"));
             h.put("age",demographic.getAge());
             list.add(h);
          }            
@@ -198,25 +198,25 @@ public class DemographicRelationship {
    public ArrayList getDemographicRelationshipsWithNamePhone(String demographic_no, Integer facilityId){                 
 	      ArrayList list = new ArrayList();
 	      try {
-	         DBHandler db = new DBHandler();
+	         
 	         ResultSet rs;
 	         String sql = "select * from relationships where demographic_no = '"+demographic_no+"' and deleted != '1'" +
 	                      " and facility_id=" + facilityId.toString();
-	         rs = db.GetSQL(sql);
+	         rs = DBHandler.GetSQL(sql);
 	         while(rs.next()){
 	            Hashtable h = new Hashtable();
-	            String demo = db.getString(rs,"relation_demographic_no");
+	            String demo = DBHandler.getString(rs,"relation_demographic_no");
 	            DemographicData dd = new DemographicData();
 	            DemographicData.Demographic demographic = dd.getDemographic(demo);    
 	            h.put("lastName", demographic.getLastName());
 	            h.put("firstName", demographic.getFirstName());
 	            h.put("phone", demographic.getPhone());
 	            h.put("demographicNo", demo);
-	            h.put("relation", db.getString(rs,"relation"));
+	            h.put("relation", DBHandler.getString(rs,"relation"));
 	            
-	            h.put("subDecisionMaker", booleanConverter(db.getString(rs,"sub_decision_maker")));
-	            h.put("emergencyContact", booleanConverter(db.getString(rs,"emergency_contact")));
-	            h.put("notes", db.getString(rs,"notes"));
+	            h.put("subDecisionMaker", booleanConverter(DBHandler.getString(rs,"sub_decision_maker")));
+	            h.put("emergencyContact", booleanConverter(DBHandler.getString(rs,"emergency_contact")));
+	            h.put("notes", DBHandler.getString(rs,"notes"));
 	            h.put("age",demographic.getAge());
 	            list.add(h);
 	         }            

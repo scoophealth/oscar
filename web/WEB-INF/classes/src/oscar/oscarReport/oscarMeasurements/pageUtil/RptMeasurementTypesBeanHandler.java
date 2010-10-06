@@ -47,15 +47,15 @@ public class RptMeasurementTypesBeanHandler {
         
         boolean verdict = true;
         try {
-            DBHandler db = new DBHandler();
+            
             String sql = "SELECT typeDisplayName FROM measurementGroup WHERE name='" + groupName + "'ORDER BY typeDisplayName";            
             ResultSet rs;
  
-            for(rs = db.GetSQL(sql); rs.next();){
+            for(rs = DBHandler.GetSQL(sql); rs.next();){
                 String typeDisplayName  = rs.getString("typeDisplayName");
                 String sqlMT = "SELECT DISTINCT * FROM measurementType WHERE typeDisplayName = '" + typeDisplayName + "'ORDER BY typeDescription";
                 MiscUtils.getLogger().debug("SQL: " + sqlMT);
-                ResultSet rsMT = db.GetSQL(sqlMT);
+                ResultSet rsMT = DBHandler.GetSQL(sqlMT);
                 if (rsMT.next()){
                     RptMeasurementTypesBean measurementTypes = new RptMeasurementTypesBean(rsMT.getInt("id"), rsMT.getString("type"), 
                                                                                        rsMT.getString("typeDisplayName"), 

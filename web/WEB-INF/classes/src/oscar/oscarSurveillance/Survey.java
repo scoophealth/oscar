@@ -127,13 +127,13 @@ public class Survey {
        boolean isdemographicSelected = true;
        int num = 0;
        try {
-            DBHandler db = new DBHandler();
+            
             ResultSet rs;            
             String sql = "SELECT count(demographic_no) as demoCount FROM demographic WHERE demographic_no = '" + demographicNo +"' and "+queryString;            
             if ( queryString != null && queryString.trim().startsWith("FROM") ){
                sql = "SELECT count(demographic.demographic_no) as demoCount "+queryString+" and demographic.demographic_no = '" + demographicNo +"'";
             }
-            rs = db.GetSQL(sql);            
+            rs = DBHandler.GetSQL(sql);            
             if (rs.next()) {
                num = rs.getInt("demoCount");
             }
@@ -192,13 +192,13 @@ public class Survey {
    
    private void getRecordsForPeriod(String demographic_no){
       try{
-         DBHandler db = new DBHandler();
+         
          String sql = //"select * from surveyData where to_days(survey_date) < to_days('"+endDate+"'))
          "select * from surveyData where demographic_no = '"+demographic_no+"' and (to_days(now()) - to_days(survey_date) < "+period+") ";
          
-         ResultSet rs = db.GetSQL(sql);
+         ResultSet rs = DBHandler.GetSQL(sql);
          if(rs.next()){
-            surveyStatus = db.getString(rs,"status");            
+            surveyStatus = DBHandler.getString(rs,"status");            
          }            
          rs.close();
          
@@ -211,13 +211,13 @@ public class Survey {
    private String getSurveyStatusForPeriod(String demographic_no){
       String sStatus = null;
       try{
-         DBHandler db = new DBHandler();
+         
          String sql = //"select * from surveyData where to_days(survey_date) < to_days('"+endDate+"'))
          "select * from surveyData where surveyId = '"+surveyId+"' and demographic_no = '"+demographic_no+"' and (to_days(now()) - to_days(survey_date) < "+period+") ";
          
-         ResultSet rs = db.GetSQL(sql);
+         ResultSet rs = DBHandler.GetSQL(sql);
          if(rs.next()){
-            sStatus = db.getString(rs,"status");            
+            sStatus = DBHandler.getString(rs,"status");            
          }            
          rs.close();
          
@@ -236,7 +236,7 @@ public class Survey {
       //This will beused to set patient to been seen in this period.
       String insertId = "";
       try{
-         DBHandler db = new DBHandler();
+         
          String sql = 
          "insert into surveyData ( surveyId, demographic_no,provider_no,status,answer,survey_date) values "
             +"("
@@ -247,10 +247,10 @@ public class Survey {
             +"'"+answer+"',"
             +"now())";
          
-         db.RunSQL(sql);
-         ResultSet rs = db.GetSQL("SELECT LAST_INSERT_ID()");
+         DBHandler.RunSQL(sql);
+         ResultSet rs = DBHandler.GetSQL("SELECT LAST_INSERT_ID()");
          if (rs.next()){
-            insertId = db.getString(rs,1);
+            insertId = DBHandler.getString(rs,1);
          }         
       }catch(Exception e){
          MiscUtils.getLogger().error("Error", e);
@@ -270,13 +270,13 @@ public class Survey {
    private String getSurveyIdForDemographic(String demographic_no){
       String surveyDataId = null;
       try{
-         DBHandler db = new DBHandler();
+         
          String sql = //"select * from surveyData where to_days(survey_date) < to_days('"+endDate+"'))
          "select * from surveyData where surveyId = '"+surveyId+"' and demographic_no = '"+demographic_no+"' and (to_days(now()) - to_days(survey_date) < "+period+") ";
          
-         ResultSet rs = db.GetSQL(sql);
+         ResultSet rs = DBHandler.GetSQL(sql);
          if(rs.next()){
-            surveyDataId = db.getString(rs,"surveyDataId");            
+            surveyDataId = DBHandler.getString(rs,"surveyDataId");            
          }            
          rs.close();
          
@@ -300,13 +300,13 @@ public class Survey {
       Answer a = getAnswerByString(answer);
       log.debug("Answer a :"+a.answerString +" answer "+answer);
       try{
-         DBHandler db = new DBHandler();
+         
          String sql = "update surveyData set "
                      +" status = '"+a.answerStatus+"',"
                      +" answer = '"+a.answerValue+"'"
                      +" where surveyDataId = "
                      +"'"+surveyDataId+"'";
-         db.RunSQL(sql);         
+         DBHandler.RunSQL(sql);         
       }catch(Exception e){
          MiscUtils.getLogger().error("Error", e);
       }      
@@ -527,12 +527,12 @@ public class Survey {
    public ArrayList getStatusCount(String surveyId){
       ArrayList list = new ArrayList();
       try{
-         DBHandler db = new DBHandler();
+         
          String sql = "select status , count(status) as countstatus from surveyData where surveyId = '"+surveyId+"' group by status";
-         ResultSet rs = db.GetSQL(sql);  
+         ResultSet rs = DBHandler.GetSQL(sql);  
          
          while(rs.next()){
-            String[] s =  {db.getString(rs,"status"),db.getString(rs,"countstatus")};
+            String[] s =  {DBHandler.getString(rs,"status"),DBHandler.getString(rs,"countstatus")};
             list.add(s);
          }         
       }catch(Exception e){
@@ -544,13 +544,13 @@ public class Survey {
    public ArrayList getAnswerCount(String surveyId){
       ArrayList list = new ArrayList();
       try{
-         DBHandler db = new DBHandler();
+         
          String sql = "select answer , count(answer) as countanswer from surveyData where surveyId = '"+surveyId+"' and status = 'A'  group by answer;";
          
-         ResultSet rs = db.GetSQL(sql);  
+         ResultSet rs = DBHandler.GetSQL(sql);  
          
          while(rs.next()){
-            String[] s =  {db.getString(rs,"answer"),db.getString(rs,"countanswer")};
+            String[] s =  {DBHandler.getString(rs,"answer"),DBHandler.getString(rs,"countanswer")};
             list.add(s);
          }         
       }catch(Exception e){

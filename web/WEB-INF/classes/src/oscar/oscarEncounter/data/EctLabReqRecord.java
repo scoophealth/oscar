@@ -44,7 +44,7 @@ public class EctLabReqRecord
     {
         Properties props = new Properties();
 
-        DBHandler db = new DBHandler();
+        
         ResultSet rs;
         String sql;
 
@@ -56,25 +56,25 @@ public class EctLabReqRecord
                     + "phone, year_of_birth, month_of_birth, date_of_birth "
                     + "FROM demographic WHERE demographic_no = " + demographicNo;
 
-                rs = db.GetSQL(sql);
+                rs = DBHandler.GetSQL(sql);
 
                 if(rs.next())
                 {
-                    java.util.Date dob = UtilDateUtilities.calcDate(db.getString(rs,"year_of_birth"), db.getString(rs,"month_of_birth"), db.getString(rs,"date_of_birth"));
+                    java.util.Date dob = UtilDateUtilities.calcDate(DBHandler.getString(rs,"year_of_birth"), DBHandler.getString(rs,"month_of_birth"), DBHandler.getString(rs,"date_of_birth"));
 
-                    props.setProperty("demographic_no", db.getString(rs,"demographic_no"));
-                    props.setProperty("patientName", db.getString(rs,"patientName"));
-                    props.setProperty("healthNumber", db.getString(rs,"hin"));
-                    props.setProperty("version", db.getString(rs,"ver"));
+                    props.setProperty("demographic_no", DBHandler.getString(rs,"demographic_no"));
+                    props.setProperty("patientName", DBHandler.getString(rs,"patientName"));
+                    props.setProperty("healthNumber", DBHandler.getString(rs,"hin"));
+                    props.setProperty("version", DBHandler.getString(rs,"ver"));
                     props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                     props.setProperty("formEdited", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                     props.setProperty("birthDate", UtilDateUtilities.DateToString(dob, "yyyy/MM/dd"));
-                    props.setProperty("homePhone", db.getString(rs,"phone"));
-                    props.setProperty("patientAddress", db.getString(rs,"address"));
-                    props.setProperty("patientCity", db.getString(rs,"city"));
-                    props.setProperty("patientPC", db.getString(rs,"postal"));
-                    props.setProperty("province", db.getString(rs,"province"));
-                    props.setProperty("sex", db.getString(rs,"sex"));
+                    props.setProperty("homePhone", DBHandler.getString(rs,"phone"));
+                    props.setProperty("patientAddress", DBHandler.getString(rs,"address"));
+                    props.setProperty("patientCity", DBHandler.getString(rs,"city"));
+                    props.setProperty("patientPC", DBHandler.getString(rs,"postal"));
+                    props.setProperty("province", DBHandler.getString(rs,"province"));
+                    props.setProperty("sex", DBHandler.getString(rs,"sex"));
                 }
                 rs.close();
 
@@ -82,12 +82,12 @@ public class EctLabReqRecord
                 sql = "SELECT CONCAT(last_name, ', ', first_name) AS provName, ohip_no "
                     + "FROM provider WHERE provider_no = " + provNo;
 
-                rs = db.GetSQL(sql);
+                rs = DBHandler.GetSQL(sql);
 
                 if(rs.next())
                 {
-                    String num = db.getString(rs,"ohip_no");
-                    props.setProperty("provName", db.getString(rs,"provName"));
+                    String num = DBHandler.getString(rs,"ohip_no");
+                    props.setProperty("provName", DBHandler.getString(rs,"provName"));
                     props.setProperty("practitionerNo", "0000-"+num+"-00");
                 }
                 rs.close();
@@ -99,7 +99,7 @@ public class EctLabReqRecord
         {
             sql = "SELECT * FROM formLabReq WHERE demographic_no = " + demographicNo + " AND ID = " + existingID;
 
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
 
             if(rs.next())
             {
@@ -129,7 +129,7 @@ public class EctLabReqRecord
                         }
                         else
                         {
-                            value = db.getString(rs,i);
+                            value = DBHandler.getString(rs,i);
                         }
                     }
 
@@ -147,9 +147,9 @@ public class EctLabReqRecord
     public int saveLabReqRecord(Properties props)  throws SQLException  {
         String demographic_no = props.getProperty("demographic_no");
 
-        DBHandler db = new DBHandler();
+        
         String sql="SELECT * FROM formLabReq WHERE demographic_no=" + demographic_no + " AND ID=0";
-        ResultSet rs = db.GetSQL(sql, true);
+        ResultSet rs = DBHandler.GetSQL(sql, true);
 
         rs.moveToInsertRow();
 
@@ -231,7 +231,7 @@ public class EctLabReqRecord
         int ret = 0;
 
         sql = "SELECT LAST_INSERT_ID()";
-        rs = db.GetSQL(sql);
+        rs = DBHandler.GetSQL(sql);
         if(rs.next())
         {
             ret = rs.getInt(1);

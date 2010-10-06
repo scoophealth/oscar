@@ -27,7 +27,8 @@
  * EMR System
  */
 -->
-<html:html locale="true">
+
+<%@page import="oscar.oscarDB.DBHandler"%><html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>OSCAR Providers</title>
@@ -62,17 +63,16 @@ function posttoText(index){
 	</tr>
 	<%
 	boolean color = false;
-	oscar.oscarDB.DBHandler db = new oscar.oscarDB.DBHandler();
-	java.sql.ResultSet rs = db.GetSQL("SELECT first_name, last_name, ohip_no  FROM provider WHERE ohip_no<> '' ORDER BY first_name, last_name");
+	java.sql.ResultSet rs = DBHandler.GetSQL("SELECT first_name, last_name, ohip_no  FROM provider WHERE ohip_no<> '' ORDER BY first_name, last_name");
 	while (rs.next())
 	{
 %>
 	<tr <%=((color) ? "bgcolor=\"#F6F6F6\"" : "")%> align="left"
 		valign="top">
 		<td class="SmallerText"><a href=#
-			onClick="posttoText('<%=db.getString(rs,"ohip_no")%>');"><%=db.getString(rs,"ohip_no")%></a>
+			onClick="posttoText('<%=DBHandler.getString(rs,"ohip_no")%>');"><%=DBHandler.getString(rs,"ohip_no")%></a>
 		</td>
-		<td class="SmallerText">Dr. <%=db.getString(rs,"first_name")%> <%=db.getString(rs,"last_name")%>
+		<td class="SmallerText">Dr. <%=DBHandler.getString(rs,"first_name")%> <%=DBHandler.getString(rs,"last_name")%>
 		</td>
 	</tr>
 	<%

@@ -51,7 +51,7 @@ public class dxQuickListItemsHandler {
         boolean verdict = true;
         try {
             ResultSet rs;
-            DBHandler db = new DBHandler();
+            
             
             dxResearchCodingSystem codingSys = new dxResearchCodingSystem();
             String[] codingSystems = codingSys.getCodingSystems(); 
@@ -65,14 +65,14 @@ public class dxQuickListItemsHandler {
             
             //need to put the providerID as well
             String sql = "Select quickListName, providerNo from quickListUser where quickListName='"+name + "' AND providerNo ='"+providerNo+"'";
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
             if(rs.next()){
                 sql = "Update quickListUser set lastUsed=now() where quickListName='"+name + "' AND providerNo ='"+providerNo+"'";
-                db.RunSQL(sql);
+                DBHandler.RunSQL(sql);
             }
             else{
                 sql = "Insert into quickListUser(quickListName, providerNo, lastUsed) VALUES ('"+name+"','"+providerNo+"',now())";
-                db.RunSQL(sql);
+                DBHandler.RunSQL(sql);
             }
             
             for( int idx = 0; idx < codingSystems.length; ++idx )
@@ -80,10 +80,10 @@ public class dxQuickListItemsHandler {
                 codingSystem = codingSystems[idx];
                 sql = "Select q.dxResearchCode, c.description FROM quickList q, "+codingSystem+" c where codingSystem = '"+codingSystem+"' and quickListName='"+ quickListName +"' AND c."+codingSystem+" = q.dxResearchCode order by c.description";
             
-                rs = db.GetSQL(sql);            
+                rs = DBHandler.GetSQL(sql);            
                 while(rs.next()){                
-                    dxCodeSearchBean bean = new dxCodeSearchBean(db.getString(rs,"description"),
-                                                             db.getString(rs,"dxResearchCode"));
+                    dxCodeSearchBean bean = new dxCodeSearchBean(DBHandler.getString(rs,"description"),
+                                                             DBHandler.getString(rs,"dxResearchCode"));
                     bean.setType(codingSystem);
                     dxQuickListItemsVector.add(bean);
                 }
@@ -101,7 +101,7 @@ public class dxQuickListItemsHandler {
         
         boolean verdict = true;
         try {            
-            DBHandler db = new DBHandler();
+            
             dxResearchCodingSystem codingSys = new dxResearchCodingSystem();
             String[] codingSystems = codingSys.getCodingSystems(); 
             String codingSystem;
@@ -111,10 +111,10 @@ public class dxQuickListItemsHandler {
                 codingSystem = codingSystems[idx];
                 sql = "Select q.dxResearchCode, c.description FROM quickList q, "+codingSystem+" c where codingSystem = '"+codingSystem+"' and quickListName='"+ quickListName +"' AND c."+codingSystem+" = q.dxResearchCode order by c.description";           
 
-                ResultSet rs = db.GetSQL(sql);            
+                ResultSet rs = DBHandler.GetSQL(sql);            
                 while(rs.next()){                
-                    dxCodeSearchBean bean = new dxCodeSearchBean(db.getString(rs,"description"),
-                                                             db.getString(rs,"dxResearchCode")); 
+                    dxCodeSearchBean bean = new dxCodeSearchBean(DBHandler.getString(rs,"description"),
+                                                             DBHandler.getString(rs,"dxResearchCode")); 
                     bean.setType(codingSystem);
                     dxQuickListItemsVector.add(bean);
                 }

@@ -65,9 +65,9 @@ public class CadAtividadeSaudeDAO extends DAO {
 
         sql = sql + " order by ds_atividade";
 
-        DBHandler db = getDb();
+        
 
-        ResultSet rs = db.GetSQL(sql);
+        ResultSet rs = DBHandler.GetSQL(sql);
 
         if (rs != null) {
             beans = new ArrayList();
@@ -75,7 +75,7 @@ public class CadAtividadeSaudeDAO extends DAO {
             while (rs.next()) {
                 CadAtividadesSaude bean = new CadAtividadesSaude();
                 bean.setCoAtividade(rs.getLong("co_atividade"));
-                bean.setDsAtividade(db.getString(rs,"ds_atividade"));
+                bean.setDsAtividade(DBHandler.getString(rs,"ds_atividade"));
                 beans.add(bean);
             }
         }

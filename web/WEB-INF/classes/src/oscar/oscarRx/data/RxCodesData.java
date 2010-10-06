@@ -42,14 +42,14 @@ public class RxCodesData {
         ArrayList lst = new ArrayList();
         
         try {
-            DBHandler db = new DBHandler();
+            
             ResultSet rs;
             String sql = "SELECT * FROM ctl_frequency";
             
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
             
             while (rs.next()) {
-                lst.add(new FrequencyCode(rs.getInt("freqid"), db.getString(rs,"freqcode"), db.getString(rs,"dailymin"), db.getString(rs,"dailymax")));
+                lst.add(new FrequencyCode(rs.getInt("freqid"), DBHandler.getString(rs,"freqcode"), DBHandler.getString(rs,"dailymin"), DBHandler.getString(rs,"dailymax")));
             }
             
             rs.close();
@@ -67,14 +67,14 @@ public class RxCodesData {
         ArrayList lst = new ArrayList();
         
         try {
-            DBHandler db = new DBHandler();
+            
             ResultSet rs;
             String sql = "SELECT * FROM ctl_specialinstructions";
             
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
             
             while (rs.next()) {
-                lst.add(db.getString(rs,"description"));
+                lst.add(DBHandler.getString(rs,"description"));
             }
             
             rs.close();

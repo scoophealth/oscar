@@ -1167,11 +1167,10 @@ public class RxUtil {
    private static List<HashMap<String,String>> drugsTableQuery(String parameter,String value){
         List<HashMap<String,String>> retList=new ArrayList();
        try{
-            DBHandler db=new DBHandler();
             ResultSet rs;
             String sql="select special ,special_instruction from drugs where "+parameter+" = '"+value+"' order by drugid desc" ;
             MiscUtils.getLogger().debug("in drugsTableQuery,sql="+sql);
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
             while(rs.next()){
                 HashMap hm=new HashMap();
                 hm.put("instruction", rs.getString("special"));
@@ -1334,7 +1333,7 @@ public class RxUtil {
     public static void setSpecialQuantityRepeat(RxPrescriptionData.Prescription rx) {
 
         try {
-            DBHandler db = new DBHandler();
+            
             ResultSet rs;
             if (rx.getRegionalIdentifier() != null && rx.getRegionalIdentifier().length() > 1) {
                 p("if1");
@@ -1343,13 +1342,13 @@ public class RxUtil {
                 // String sql = "SELECT * FROM drugs WHERE regional_identifier='" + rx.getRegionalIdentifier() + "' order by written_date desc"; //most recent is the first.
                 String sql = "SELECT * FROM drugs WHERE regional_identifier='" + rx.getRegionalIdentifier() + "' and BN='"+rx.getBrandName()+"' AND demographic_no="+rx.getDemographicNo()+" order by drugid desc"; //most recent is the first.
                 MiscUtils.getLogger().debug("sql 1="+sql);
-                rs = db.GetSQL(sql);
+                rs = DBHandler.GetSQL(sql);
                 if (rs.first()) {//use the first result if there are multiple.
                     setResultSpecialQuantityRepeat(rx, rs);
                 } else {
                     String sql2 = "SELECT * FROM drugs WHERE regional_identifier='" + rx.getRegionalIdentifier() + "' and BN='"+rx.getBrandName()+"' order by drugid desc"; //most recent is the first.
                     MiscUtils.getLogger().debug("sql 2="+sql2);
-                    rs = db.GetSQL(sql2);
+                    rs = DBHandler.GetSQL(sql2);
                     if (rs.first()) {//use the first result if there are multiple.
                         setResultSpecialQuantityRepeat(rx, rs);
                     }else   //else, set to special to "1 OD", quantity to "30", repeat to "0".
@@ -1364,13 +1363,13 @@ public class RxUtil {
                     MiscUtils.getLogger().debug("sql 2="+sql2);
                     //if none, query database to see if there is rx with same brandname.
                     //if there are multiple, use latest.
-                    rs = db.GetSQL(sql2);
+                    rs = DBHandler.GetSQL(sql2);
                     if (rs.first()) {
                         setResultSpecialQuantityRepeat(rx, rs);
                     } else {
                         String sql3="SELECT * FROM drugs WHERE BN='" + StringEscapeUtils.escapeSql(rx.getBrandName()) + "' order by drugid desc"; //most recent is the first.
                         MiscUtils.getLogger().debug("sql 3="+sql3);
-                        rs = db.GetSQL(sql3);
+                        rs = DBHandler.GetSQL(sql3);
                         if (rs.first()) {//use the first result if there are multiple.
                             setResultSpecialQuantityRepeat(rx, rs);
                         }else                        //else, set to special to "1 OD", quantity to "30", repeat to "0".
@@ -1385,12 +1384,12 @@ public class RxUtil {
                         MiscUtils.getLogger().debug("sql 3="+sql3);
                         //if none, query database to see if there is rx with same customName.
                         //if there are multiple, use latest.
-                        rs = db.GetSQL(sql3);
+                        rs = DBHandler.GetSQL(sql3);
                         if (rs.first()) {
                             setResultSpecialQuantityRepeat(rx, rs);
                         } else {
                             String sql4="SELECT * FROM drugs WHERE customName='" + StringEscapeUtils.escapeSql(rx.getCustomName()) + "'  order by drugid desc"; //most recent is the first.
-                            rs = db.GetSQL(sql4);
+                            rs = DBHandler.GetSQL(sql4);
                             if (rs.first()) {
                                 setResultSpecialQuantityRepeat(rx, rs);
                             }//else, set to special to "1 OD", quantity to "30", repeat to "0".
@@ -1420,9 +1419,9 @@ public class RxUtil {
         String sql = "SELECT max(drugid) FROM drugs WHERE archived=0 AND archived_reason='' AND BN='" + StringEscapeUtils.escapeSql(rx.getBrandName()) + "' AND GN='" + StringEscapeUtils.escapeSql(rx.getGenericName()) + "' AND demographic_no=" + rx.getDemographicNo();
 
         try {
-            DBHandler db = new DBHandler();
+            
             ResultSet rs;
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
             if (rs.next()) {
                 int compareId = rs.getInt("max(drugid)");
                 MiscUtils.getLogger().debug("compareId: " + compareId);
@@ -1449,9 +1448,9 @@ public class RxUtil {
         boolean discontinuedLatest = false;
         String sql = "SELECT * FROM drugs WHERE archived=1 AND archived_reason<>'' AND ATC='" + rx.getAtcCode() + "' AND regional_identifier='" + rx.getRegionalIdentifier() + "' AND demographic_no=" + rx.getDemographicNo() + " order by drugid desc";
         try {
-            DBHandler db = new DBHandler();
+            
             ResultSet rs;
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
             if (rs.next()) {//get the first result which has the largest drugid and hence the most recent result.
 
                 int drugId = rs.getInt("drugid");
@@ -1464,7 +1463,7 @@ public class RxUtil {
                     Date archivedDate = rs.getDate("archived_date");
                     // String archDate = rs.getString("archived_date");
                     String archDate = RxUtil.DateToString(archivedDate);
-                    String archReason = db.getString(rs, "archived_reason");
+                    String archReason = DBHandler.getString(rs, "archived_reason");
 
 
                     rx.setLastArchDate(archDate);
@@ -1541,9 +1540,9 @@ public class RxUtil {
         String sql ="SELECT distinct special_instruction from drugs where special_instruction!='NULL'";
         List<String> resultSpecInst=new ArrayList<String>();
         try {
-            DBHandler db = new DBHandler();
+            
             ResultSet rs;
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
             while(rs.next()){
                 resultSpecInst.add(rs.getString("special_instruction"));
             }

@@ -37,8 +37,8 @@ public class RxAllergyImport {
 	Long id = null;
 	String sql = "INSERT INTO allergies (demographic_no, entry_date, DESCRIPTION, TYPECODE, reaction, start_date, severity_of_reaction, regional_identifier)" +
 				   " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-	DBHandler db = new DBHandler();
-	Connection conn = db.getConnection();
+	
+	Connection conn = DBHandler.getConnection();
 	PreparedStatement pstmt = conn.prepareStatement(sql);
 	pstmt.setString(1, demographicNo);
 	pstmt.setString(2, entryDate);

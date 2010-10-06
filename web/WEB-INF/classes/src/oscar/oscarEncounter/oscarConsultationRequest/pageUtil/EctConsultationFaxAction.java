@@ -238,11 +238,11 @@ public class EctConsultationFaxAction extends Action {
    String getLocationId(){
       String retval = "";
       try {
-         DBHandler db = new DBHandler();
+         
          String sql = "select locationId from oscarcommlocations where current1 = '1' ";
-         ResultSet rs = db.GetSQL(sql);
+         ResultSet rs = DBHandler.GetSQL(sql);
          if(rs.next())
-            retval = db.getString(rs,"locationId");
+            retval = DBHandler.getString(rs,"locationId");
       }
       catch(SQLException e) {
          MiscUtils.getLogger().error("Error", e);

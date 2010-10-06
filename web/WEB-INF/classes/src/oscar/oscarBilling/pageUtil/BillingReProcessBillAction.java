@@ -221,11 +221,11 @@ public class BillingReProcessBillAction extends Action {
             
             MiscUtils.getLogger().debug("\n"+sql+"\n");
             try {                                                
-               DBHandler db = new DBHandler();
-               db.RunSQL(sql);
+               
+               DBHandler.RunSQL(sql);
                if (secondSQL != null){
                     MiscUtils.getLogger().debug(secondSQL);
-                    db.RunSQL(secondSQL);
+                    DBHandler.RunSQL(secondSQL);
                }
                MiscUtils.getLogger().debug("sql "+sql);
             } catch (SQLException e3) {

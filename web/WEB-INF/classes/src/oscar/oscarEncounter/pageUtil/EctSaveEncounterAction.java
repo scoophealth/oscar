@@ -55,13 +55,13 @@ public class EctSaveEncounterAction
   
   private String getLatestID(String demoNo) throws
     SQLException  {
-      DBHandler dbhandler = new DBHandler();
+      
       String sql = "select MAX(eChartId) as maxID from eChart where demographicNo = " + demoNo;
-      ResultSet rs = dbhandler.GetSQL(sql);
+      ResultSet rs = DBHandler.GetSQL(sql);
       String latestID = null;
       
       if (rs.next()) {
-          latestID = dbhandler.getString(rs,"maxID");
+          latestID = DBHandler.getString(rs,"maxID");
       }
       rs.close();
 
@@ -209,9 +209,7 @@ public class EctSaveEncounterAction
               return actionmapping.findForward("concurrencyError");
           }
 
-          DBHandler dbhandler = null;
           try {             
-            dbhandler = new DBHandler();
             String s = "insert into eChart (timeStamp, demographicNo,providerNo,subject,socialHistory,familyHistory,medicalHistory,ongoingConcerns,reminders,encounter) values (?,?,?,?,?,?,?,?,?,?)" ;
             PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(s);
                 pstmt.setTimestamp(1,new java.sql.Timestamp(date.getTime())); 
@@ -243,13 +241,13 @@ public class EctSaveEncounterAction
                   "Sign,Save and Exit")) {
                 s = "update appointment set status='" + as.signStatus() +
                     "' where appointment_no=" + sessionbean.appointmentNo;
-                dbhandler.RunSQL(s);
+                DBHandler.RunSQL(s);
               }
               if (httpservletrequest.getParameter("btnPressed").equals(
                   "Verify and Sign")) {
                 s = "update appointment set status='" + as.verifyStatus() +
                     "' where appointment_no=" + sessionbean.appointmentNo;
-                dbhandler.RunSQL(s);
+                DBHandler.RunSQL(s);
               }
             }
           }
@@ -260,17 +258,17 @@ public class EctSaveEncounterAction
     }
 
     try { // save enc. window sizes
-      DBHandler dbhandler = new DBHandler();
+      
       String s = "delete from encounterWindow where provider_no='" +
           sessionbean.providerNo + "'";
-      dbhandler.RunSQL(s);
+      DBHandler.RunSQL(s);
       s = "insert into encounterWindow (provider_no, rowOneSize, rowTwoSize, presBoxSize, rowThreeSize) values ('" +
           sessionbean.providerNo + "', '" +
           httpservletrequest.getParameter("rowOneSize") + "', '" +
           httpservletrequest.getParameter("rowTwoSize") + "', '" +
           httpservletrequest.getParameter("presBoxSize") + "', '" +
           httpservletrequest.getParameter("rowThreeSize") + "')";
-      dbhandler.RunSQL(s);
+      DBHandler.RunSQL(s);
     }
     catch (Exception e) {
      MiscUtils.getLogger().error("Error", e);

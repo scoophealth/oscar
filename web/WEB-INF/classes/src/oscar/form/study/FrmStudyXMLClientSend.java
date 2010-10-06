@@ -79,7 +79,6 @@ public class FrmStudyXMLClientSend {
 	Properties param = new Properties();
 	Vector studyContent = new Vector();
 	Vector studyNo = new Vector();
-	DBHandler db = null; 
 	String sql = null; 
 	ResultSet rs = null; 
 
@@ -110,7 +109,6 @@ public class FrmStudyXMLClientSend {
 	private synchronized void init (String file, String url) throws java.sql.SQLException, java.io.IOException  {
 		URLService = url;
 		param.load(new FileInputStream(file)); 
-        db = new DBHandler();
 
 		GregorianCalendar now=new GregorianCalendar();
 		now.add(now.DATE, -1);
@@ -121,17 +119,17 @@ public class FrmStudyXMLClientSend {
 
 	private synchronized void getStudyContent () throws java.sql.SQLException  {
         sql = "SELECT studydata_no, content from studydata where timestamp > '" + dateYesterday + "' and timestamp < '" + dateTomorrow + "' and status='ready' order by studydata_no";
-        rs = db.GetSQL(sql);
+        rs = DBHandler.GetSQL(sql);
         while(rs.next()) {
-			studyContent.add(db.getString(rs,"content")); 
-			studyNo.add(db.getString(rs,"studydata_no")); 
+			studyContent.add(DBHandler.getString(rs,"content")); 
+			studyNo.add(DBHandler.getString(rs,"studydata_no")); 
 		}
         rs.close();
 	}
 
 	private synchronized void updateStatus (String studyDataNo) throws java.sql.SQLException  {
         sql = "update studydata set status='sent' where studydata_no=" + studyDataNo ;
-		if (db.RunSQL(sql)) throw new java.sql.SQLException();
+		if (DBHandler.RunSQL(sql)) throw new java.sql.SQLException();
         rs.close();
 	}
 

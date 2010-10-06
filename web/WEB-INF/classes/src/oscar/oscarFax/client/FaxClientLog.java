@@ -55,10 +55,10 @@ public class FaxClientLog {
        
 	try
             {
-                DBHandler db = new DBHandler();
+                
                 String sql = "insert into FaxClientLog (provider_no,startTime) values ('"+providerNo+"',now()) ";
-                db.RunSQL(sql);
-                ResultSet rs = db.GetSQL("SELECT LAST_INSERT_ID() ");
+                DBHandler.RunSQL(sql);
+                ResultSet rs = DBHandler.GetSQL("SELECT LAST_INSERT_ID() ");
                 if(rs.next())
                     faxLogId = Integer.toString(rs.getInt(1));
             }
@@ -73,9 +73,9 @@ public class FaxClientLog {
            if (!faxLogId.equals("")){;
             try
             {
-                DBHandler db = new DBHandler();
+                
                 String sql = "update FaxClientLog set requestId = '"+requestId+"' , faxId = '"+faxId+"' , endTime = now() where faxLogId = '"+faxLogId+"' ";
-                db.RunSQL(sql);
+                DBHandler.RunSQL(sql);
             }
             catch(SQLException e)
             {
@@ -92,9 +92,9 @@ public class FaxClientLog {
            if (!faxLogId.equals("")){;
             try
             {
-                DBHandler db = new DBHandler();
+                
                 String sql = "update FaxClientLog set result = '"+result+"' , endTime = now() where faxLogId = '"+faxLogId+"' ";
-                db.RunSQL(sql);
+                DBHandler.RunSQL(sql);
             }
             catch(SQLException e)
             {

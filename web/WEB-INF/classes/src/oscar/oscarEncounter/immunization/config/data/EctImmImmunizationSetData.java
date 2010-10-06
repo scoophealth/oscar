@@ -51,7 +51,7 @@ public class EctImmImmunizationSetData {
 		String providerNo) {
 		//StringQuote str = new StringQuote();
 		try {
-			DBHandler db = new DBHandler();
+			
 			String sql =
 				"insert into config_Immunization (setName,setXmlDoc,createDate,ProviderNo) values ('"
 					+ UtilMisc.charEscape(setName, '\\')
@@ -61,7 +61,7 @@ public class EctImmImmunizationSetData {
 					+ " current_date ,'"
 					+ UtilMisc.charEscape(providerNo, '\\')
 					+ "')";
-			db.RunSQL(sql);
+			DBHandler.RunSQL(sql);
 		} catch (SQLException eee) {
 			MiscUtils.getLogger().debug(eee.getMessage());
 		}
@@ -70,15 +70,15 @@ public class EctImmImmunizationSetData {
 	public boolean estImmunizationVecs() {
 		boolean verdict = true;
 		try {
-			DBHandler db = new DBHandler();
+			
 			String sql =
 				"select setId, setName, createDate from config_Immunization where archived = 0";
 			ResultSet rs;
-			for (rs = db.GetSQL(sql);
+			for (rs = DBHandler.GetSQL(sql);
 				rs.next();
-				createDateVec.add(db.getString(rs,"createDate"))) {
-				setNameVec.add(db.getString(rs,"setName"));
-				setIdVec.add(db.getString(rs,"setId"));
+				createDateVec.add(DBHandler.getString(rs,"createDate"))) {
+				setNameVec.add(DBHandler.getString(rs,"setName"));
+				setIdVec.add(DBHandler.getString(rs,"setId"));
 			}
 
 			rs.close();
@@ -92,16 +92,16 @@ public class EctImmImmunizationSetData {
 	public boolean estImmunizationVecs(int stat) {
 		boolean verdict = true;
 		try {
-			DBHandler db = new DBHandler();
+			
 			String sql =
 				"select setId, setName, createDate from config_Immunization where archived = "
 					+ stat + " order by setName";
 			ResultSet rs;
-			for (rs = db.GetSQL(sql);
+			for (rs = DBHandler.GetSQL(sql);
 				rs.next();
-				createDateVec.add(db.getString(rs,"createDate"))) {
-				setNameVec.add(db.getString(rs,"setName"));
-				setIdVec.add(db.getString(rs,"setId"));
+				createDateVec.add(DBHandler.getString(rs,"createDate"))) {
+				setNameVec.add(DBHandler.getString(rs,"setName"));
+				setIdVec.add(DBHandler.getString(rs,"setId"));
 			}
 
 			rs.close();
@@ -115,7 +115,7 @@ public class EctImmImmunizationSetData {
 	public String getSetXMLDoc(String setId) {
 		String xmlDoc = null;
 		try {
-			DBHandler db = new DBHandler();
+			
 			String sql =
 				String.valueOf(
 					String.valueOf(
@@ -123,9 +123,9 @@ public class EctImmImmunizationSetData {
 							new StringBuffer("select setXmlDoc from config_Immunization where  setId = '"))
 							.append(setId)
 							.append("'")));
-			ResultSet rs = db.GetSQL(sql);
+			ResultSet rs = DBHandler.GetSQL(sql);
 			if (rs.next())
-				xmlDoc = db.getString(rs,"setXmlDoc");
+				xmlDoc = DBHandler.getString(rs,"setXmlDoc");
 			rs.close();
 		} catch (SQLException e) {
 			MiscUtils.getLogger().error("Error", e);
@@ -135,13 +135,13 @@ public class EctImmImmunizationSetData {
 
 	public void updateImmunizationSetStatus(String setId, int stat) {
 		try {
-			DBHandler db = new DBHandler();
+			
 			String sql =
 				"update config_Immunization set archived = "
 					+ stat
 					+ " where setId = "
 					+ setId;
-			db.RunSQL(sql);
+			DBHandler.RunSQL(sql);
 		} catch (SQLException eee) {
 			MiscUtils.getLogger().debug(eee.getMessage());
 		}

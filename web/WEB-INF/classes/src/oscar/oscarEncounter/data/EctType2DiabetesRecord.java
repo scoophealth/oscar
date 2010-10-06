@@ -37,23 +37,23 @@ public class EctType2DiabetesRecord {
     public Properties getType2DiabetesRecord(int demographicNo, int existingID)
         throws SQLException    {
         Properties props = new Properties();
-        DBHandler db = new DBHandler();
+        
         if(existingID <= 0) {
             String sql = "SELECT demographic_no, CONCAT(last_name, ', ', first_name) AS pName, year_of_birth, month_of_birth, date_of_birth FROM demographic WHERE demographic_no = " +demographicNo;
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
             if(rs.next())
             {
-                Date dob = UtilDateUtilities.calcDate(db.getString(rs,"year_of_birth"), db.getString(rs,"month_of_birth"), db.getString(rs,"date_of_birth"));
-                props.setProperty("demographic_no", db.getString(rs,"demographic_no"));
+                Date dob = UtilDateUtilities.calcDate(DBHandler.getString(rs,"year_of_birth"), DBHandler.getString(rs,"month_of_birth"), DBHandler.getString(rs,"date_of_birth"));
+                props.setProperty("demographic_no", DBHandler.getString(rs,"demographic_no"));
                 props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                 props.setProperty("formEdited", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                 props.setProperty("birthDate", UtilDateUtilities.DateToString(dob, "yyyy/MM/dd"));
-                props.setProperty("pName", db.getString(rs,"pName"));
+                props.setProperty("pName", DBHandler.getString(rs,"pName"));
             }
             rs.close();
         } else {
             String sql = "SELECT * FROM formType2Diabetes WHERE demographic_no = " +demographicNo +" AND ID = " +existingID;
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
             if(rs.next()) {
                 ResultSetMetaData md = rs.getMetaData();
                 for(int i = 1; i <= md.getColumnCount(); i++) {
@@ -67,7 +67,7 @@ public class EctType2DiabetesRecord {
                     } else if(md.getColumnTypeName(i).equalsIgnoreCase("date"))
                         value = UtilDateUtilities.DateToString(rs.getDate(i), "yyyy/MM/dd");
                     else
-                        value = db.getString(rs,i);
+                        value = DBHandler.getString(rs,i);
                     if(value != null)
                         props.setProperty(name, value);
                 }
@@ -92,9 +92,9 @@ public class EctType2DiabetesRecord {
 	    props = temp;
 	}
         String demographic_no = props.getProperty("demographic_no");
-        DBHandler db = new DBHandler();
+        
         String sql = "SELECT * FROM formType2Diabetes WHERE demographic_no="+demographic_no+" AND ID=0";
-        ResultSet rs = db.GetSQL(sql, true);
+        ResultSet rs = DBHandler.GetSQL(sql, true);
         rs.moveToInsertRow();
         ResultSetMetaData md = rs.getMetaData();
 
@@ -141,7 +141,7 @@ public class EctType2DiabetesRecord {
         int ret = 0;
 	/* another fix */
 	if (db_type.equalsIgnoreCase("postgresql")) {
-	    ResultSet rs1 = db.GetSQL("select nextval('formtype2diabetes_numeric_se')");
+	    ResultSet rs1 = DBHandler.GetSQL("select nextval('formtype2diabetes_numeric_se')");
 	    rs1.next();
 	    ret = rs1.getInt(1);
 	    rs.updateInt("id", ret);	    
@@ -152,7 +152,7 @@ public class EctType2DiabetesRecord {
 
 	if (db_type.equalsIgnoreCase("mysql")) {
 	    sql = "SELECT LAST_INSERT_ID()";
-	    rs = db.GetSQL(sql);
+	    rs = DBHandler.GetSQL(sql);
 	    if(rs.next())
 		ret = rs.getInt(1);
 	    rs.close();

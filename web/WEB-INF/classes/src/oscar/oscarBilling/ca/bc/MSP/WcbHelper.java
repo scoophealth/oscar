@@ -54,9 +54,9 @@ public class WcbHelper {
       ArrayList employers  = new ArrayList();
       
       try{
-      DBHandler db = new DBHandler();
+      
       String sql = "select distinct w_empname,w_emparea,w_empphone,w_opaddress,w_opcity from wcb where demographic_no = '"+demographic_no+"'";
-      ResultSet rs = db.GetSQL(sql);
+      ResultSet rs = DBHandler.GetSQL(sql);
       while(rs.next()){         
          WCBEmployer wcbEmp = new WCBEmployer();
             wcbEmp.w_empname   = rs.getString("w_empname");
@@ -78,9 +78,9 @@ public class WcbHelper {
       empList = new ArrayList();
       claimList = new ArrayList();
       try{
-      DBHandler db = new DBHandler();
+      
       String sql = "select * from wcb where demographic_no = '"+demographic_no+"'";
-      ResultSet rs = db.GetSQL(sql);
+      ResultSet rs = DBHandler.GetSQL(sql);
       while(rs.next()){
          MiscUtils.getLogger().debug("wcbno "+rs.getString("w_wcbno"));
          WCBClaim wcb = new WCBClaim(rs.getString("w_wcbno"));
@@ -105,12 +105,12 @@ public class WcbHelper {
    public ArrayList getClaimInfo(String demographic_no){      
       ArrayList claimList = new ArrayList();
       try{
-      DBHandler db = new DBHandler();
+      
       String sql = "select distinct w_empname,w_emparea,w_empphone,w_opaddress,w_opcity,w_wcbno,w_icd9,w_bp,w_side,w_noi,w_doi from wcb where demographic_no = '"+demographic_no+"'";
 
 
 
-      ResultSet rs = db.GetSQL(sql);
+      ResultSet rs = DBHandler.GetSQL(sql);
       while(rs.next()){
          
          WCBClaim wcb = new WCBClaim(rs.getString("w_wcbno"));

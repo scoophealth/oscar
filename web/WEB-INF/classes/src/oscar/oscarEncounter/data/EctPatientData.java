@@ -40,12 +40,11 @@ public class EctPatientData {
     public static String getProviderNo(String demographicNo) {
         String ret = "";
         try {
-            DBHandler db = new DBHandler();
-            ResultSet rs = db
-                    .GetSQL("SELECT provider_no FROM demographic WHERE demographic_no = "
+            
+            ResultSet rs = DBHandler.GetSQL("SELECT provider_no FROM demographic WHERE demographic_no = "
                             + demographicNo);
             if (rs.next())
-                ret = db.getString(rs,"provider_no");
+                ret = DBHandler.getString(rs,"provider_no");
             rs.close();
         } catch (SQLException e) {
             MiscUtils.getLogger().debug("error - EctPatientData.getProviderNo");
@@ -54,18 +53,17 @@ public class EctPatientData {
     }
 
     public Patient getPatient(String demographicNo) throws SQLException {
-        DBHandler db = new DBHandler();
+        
         Patient p = null;
         try {
-            ResultSet rs = db
-                    .GetSQL("SELECT demographic_no, last_name, first_name, sex, year_of_birth, month_of_birth, date_of_birth, address, city, postal, phone, roster_status FROM demographic WHERE demographic_no = "
+            ResultSet rs = DBHandler.GetSQL("SELECT demographic_no, last_name, first_name, sex, year_of_birth, month_of_birth, date_of_birth, address, city, postal, phone, roster_status FROM demographic WHERE demographic_no = "
                             + demographicNo);
             if (rs.next())
-                p = new Patient(rs.getInt("demographic_no"), db.getString(rs,"last_name"), db.getString(rs,"first_name"),
-                        db.getString(rs,"sex"), UtilDateUtilities.calcDate(db.getString(rs,"year_of_birth"), rs
-                                .getString("month_of_birth"), db.getString(rs,"date_of_birth")),
-                        db.getString(rs,"address"), db.getString(rs,"city"), db.getString(rs,"postal"), db.getString(rs,"phone"),
-                        db.getString(rs,"roster_status"));
+                p = new Patient(rs.getInt("demographic_no"), DBHandler.getString(rs,"last_name"), DBHandler.getString(rs,"first_name"),
+                        DBHandler.getString(rs,"sex"), UtilDateUtilities.calcDate(DBHandler.getString(rs,"year_of_birth"), rs
+                                .getString("month_of_birth"), DBHandler.getString(rs,"date_of_birth")),
+                        DBHandler.getString(rs,"address"), DBHandler.getString(rs,"city"), DBHandler.getString(rs,"postal"), DBHandler.getString(rs,"phone"),
+                        DBHandler.getString(rs,"roster_status"));
             rs.close();
         } catch (SQLException e) {
             MiscUtils.getLogger().error("Error", e);
@@ -166,22 +164,22 @@ public class EctPatientData {
 
             private void init() {
                 try {
-                    DBHandler db = new DBHandler();
+                    
                     ResultSet rs;
 
                     String sql = "select * from eChart where demographicNo=" + demographicNo
                             + " ORDER BY eChartId DESC";
 //                            + " ORDER BY eChartId DESC limit 1";
-                    rs = db.GetSQL(sql);
+                    rs = DBHandler.GetSQL(sql);
                     if (rs.next()) {
                         this.eChartTimeStamp = rs.getTimestamp("timeStamp");
-                        this.socialHistory = db.getString(rs,"socialHistory");
-                        this.familyHistory = db.getString(rs,"familyHistory");
-                        this.medicalHistory = db.getString(rs,"medicalHistory");
-                        this.ongoingConcerns = db.getString(rs,"ongoingConcerns");
-                        this.reminders = db.getString(rs,"reminders");
-                        this.encounter = db.getString(rs,"encounter");
-                        this.subject = db.getString(rs,"subject");
+                        this.socialHistory = DBHandler.getString(rs,"socialHistory");
+                        this.familyHistory = DBHandler.getString(rs,"familyHistory");
+                        this.medicalHistory = DBHandler.getString(rs,"medicalHistory");
+                        this.ongoingConcerns = DBHandler.getString(rs,"ongoingConcerns");
+                        this.reminders = DBHandler.getString(rs,"reminders");
+                        this.encounter = DBHandler.getString(rs,"encounter");
+                        this.subject = DBHandler.getString(rs,"subject");
                     }
                     rs.close();
                 } catch (SQLException e) {

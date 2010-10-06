@@ -40,23 +40,23 @@ public class FrmCESDRecord extends FrmRecord {
 		throws SQLException {
 		Properties props = new Properties();
                 
-                DBHandler db = new DBHandler();
+                
                 ResultSet rs;
                 String sql;
 
 		if (existingID <= 0) {			
 			sql = "SELECT demographic_no FROM demographic WHERE demographic_no = "
                               + demographicNo;
-			rs = db.GetSQL(sql);
+			rs = DBHandler.GetSQL(sql);
 			if (rs.next()) {                                
-				props.setProperty("demographic_no",db.getString(rs,"demographic_no"));
+				props.setProperty("demographic_no",DBHandler.getString(rs,"demographic_no"));
 				props.setProperty("formCreated",UtilDateUtilities.DateToString(UtilDateUtilities.Today(),_dateFormat));
 			}
 			rs.close();
                         sql = "SELECT studyID FROM rehabStudy2004 WHERE demographic_no='"+demographicNo + "'";
-                        rs = db.GetSQL(sql);
+                        rs = DBHandler.GetSQL(sql);
                         if (rs.next()){
-                            props.setProperty("studyID", db.getString(rs,"studyID"));
+                            props.setProperty("studyID", DBHandler.getString(rs,"studyID"));
                         }
                         else{
                             props.setProperty("studyID", "N/A");
@@ -67,7 +67,7 @@ public class FrmCESDRecord extends FrmRecord {
                                 + demographicNo
                                 + " AND ID = "
                                 + existingID;
-			rs = db.GetSQL(sql);
+			rs = DBHandler.GetSQL(sql);
 
                         if(rs.next())
                         {
@@ -102,7 +102,7 @@ public class FrmCESDRecord extends FrmRecord {
                                     }
                                     else
                                     {
-                                        value = db.getString(rs,i);
+                                        value = DBHandler.getString(rs,i);
                                     }
                                 }
 

@@ -33,7 +33,7 @@ public class DemographicMerged {
     }
     
     public void Merge(String demographic_no, String head) throws SQLException{
-        DBHandler db = new DBHandler();
+        
         Connection conn = DBHandler.getConnection();
         
         String sql = "insert into demographic_merged (demographic_no, merged_to) values (?,?)";
@@ -58,7 +58,7 @@ public class DemographicMerged {
     
     public void UnMerge(String demographic_no, String curUser_no) throws SQLException{
         
-        DBHandler db = new DBHandler();
+        
         Connection conn = DBHandler.getConnection();
         
         String sql = "update demographic_merged set deleted=1 where demographic_no=?";
@@ -77,9 +77,9 @@ public class DemographicMerged {
         String priority = "";
         String provider_no = "";
         while (rs.next()) {
-            privilege = db.getString(rs,"privilege");
-            priority = db.getString(rs,"priority");
-            provider_no = db.getString(rs,"provider_no");
+            privilege = DBHandler.getString(rs,"privilege");
+            priority = DBHandler.getString(rs,"priority");
+            provider_no = DBHandler.getString(rs,"provider_no");
         }
         pstmt.close();
         
@@ -106,7 +106,7 @@ public class DemographicMerged {
     }
     
     public String getHead(String demographic_no) throws SQLException{
-        DBHandler db = new DBHandler();
+        
         Connection conn = DBHandler.getConnection();
         ResultSet rs;
         String head = null;
@@ -117,7 +117,7 @@ public class DemographicMerged {
         pstmt.setInt(1, Integer.parseInt(demographic_no));
         rs = pstmt.executeQuery();
         if(rs.next())
-            head = db.getString(rs,"merged_to");
+            head = DBHandler.getString(rs,"merged_to");
         
         pstmt.close();
         if (head != null)
@@ -131,7 +131,7 @@ public class DemographicMerged {
     
     public ArrayList getTail(String demographic_no) throws SQLException{
         
-        DBHandler db = new DBHandler();
+        
         Connection conn = DBHandler.getConnection();
         ResultSet rs;
         ArrayList tailArray = new ArrayList();
@@ -142,7 +142,7 @@ public class DemographicMerged {
         pstmt.setInt(1, Integer.parseInt(demographic_no));
         rs = pstmt.executeQuery();
         while(rs.next()){
-            tailArray.add(db.getString(rs,"demographic_no"));
+            tailArray.add(DBHandler.getString(rs,"demographic_no"));
         }
         
         pstmt.close();

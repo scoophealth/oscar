@@ -30,20 +30,20 @@ public class FrmGrowth0_36Record extends FrmRecord {
         Properties props = new Properties();
 
         if (existingID <= 0) {
-            DBHandler db = new DBHandler();
+            
             String sql = "SELECT demographic_no, last_name, first_name, sex, address, city, province, postal, phone, phone2, year_of_birth, month_of_birth, date_of_birth, hin FROM demographic WHERE demographic_no = "
                     + demographicNo;
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
             if (rs.next()) {
-                java.util.Date date = UtilDateUtilities.calcDate(db.getString(rs,"year_of_birth"), rs
-                        .getString("month_of_birth"), db.getString(rs,"date_of_birth"));
-                props.setProperty("demographic_no", db.getString(rs,"demographic_no"));
+                java.util.Date date = UtilDateUtilities.calcDate(DBHandler.getString(rs,"year_of_birth"), rs
+                        .getString("month_of_birth"), DBHandler.getString(rs,"date_of_birth"));
+                props.setProperty("demographic_no", DBHandler.getString(rs,"demographic_no"));
                 props
                         .setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(),
                                 _dateFormat));
                 props.setProperty("formEdited", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), _dateFormat));
-                props.setProperty("patientName", db.getString(rs,"first_name") + " " + db.getString(rs,"last_name"));
-                props.setProperty("patientSex", db.getString(rs,"sex"));
+                props.setProperty("patientName", DBHandler.getString(rs,"first_name") + " " + DBHandler.getString(rs,"last_name"));
+                props.setProperty("patientSex", DBHandler.getString(rs,"sex"));
                 props.setProperty("dateOfBirth", UtilDateUtilities.DateToString(date, _dateFormat));
             }
             rs.close();
@@ -53,14 +53,14 @@ public class FrmGrowth0_36Record extends FrmRecord {
             FrmRecordHelp frh = new FrmRecordHelp();
             frh.setDateFormat(_dateFormat);
             props = (frh).getFormRecord(sql);
-            DBHandler db = new DBHandler();
+            
             sql = "SELECT sex, year_of_birth, month_of_birth, date_of_birth FROM demographic WHERE demographic_no = "
                     + demographicNo;
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
             if (rs.next()) {
-                java.util.Date date = UtilDateUtilities.calcDate(db.getString(rs,"year_of_birth"), rs
-                        .getString("month_of_birth"), db.getString(rs,"date_of_birth"));
-                props.setProperty("patientSex", db.getString(rs,"sex"));
+                java.util.Date date = UtilDateUtilities.calcDate(DBHandler.getString(rs,"year_of_birth"), rs
+                        .getString("month_of_birth"), DBHandler.getString(rs,"date_of_birth"));
+                props.setProperty("patientSex", DBHandler.getString(rs,"sex"));
                 props.setProperty("dateOfBirth", UtilDateUtilities.DateToString(date, _dateFormat));
             }
         }

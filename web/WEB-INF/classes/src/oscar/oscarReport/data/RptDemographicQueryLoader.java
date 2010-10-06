@@ -43,7 +43,7 @@ public class RptDemographicQueryLoader {
         String qId = frm.getSavedQuery();
         RptDemographicReportForm dRF = new RptDemographicReportForm();
         try{
-                  DBHandler db = new DBHandler();
+                  
                   java.sql.ResultSet rs;
                   String mSelect         = null;
                   String mAge           = null;
@@ -61,19 +61,19 @@ public class RptDemographicQueryLoader {
 
 
 
-                  rs = db.GetSQL("select * from demographicQueryFavourites where favId = '"+qId+"'");                  
+                  rs = DBHandler.GetSQL("select * from demographicQueryFavourites where favId = '"+qId+"'");                  
 
                   if (rs.next()){
-                        mSelect         = db.getString(rs,"selects");
-                        mAge            = db.getString(rs,"age");
-                        mStartYear      = db.getString(rs,"startYear");
-                        mEndYear        = db.getString(rs,"endYear");
-                        mFirstName      = db.getString(rs,"firstName");
-                        mLastName       = db.getString(rs,"lastName");
-                        mRosterStatus   = db.getString(rs,"rosterStatus");
-                        mSex            = db.getString(rs,"sex");
-                        mProviderNo     = db.getString(rs,"providerNo");
-                        mPatientStatus  = db.getString(rs,"patientStatus");
+                        mSelect         = DBHandler.getString(rs,"selects");
+                        mAge            = DBHandler.getString(rs,"age");
+                        mStartYear      = DBHandler.getString(rs,"startYear");
+                        mEndYear        = DBHandler.getString(rs,"endYear");
+                        mFirstName      = DBHandler.getString(rs,"firstName");
+                        mLastName       = DBHandler.getString(rs,"lastName");
+                        mRosterStatus   = DBHandler.getString(rs,"rosterStatus");
+                        mSex            = DBHandler.getString(rs,"sex");
+                        mProviderNo     = DBHandler.getString(rs,"providerNo");
+                        mPatientStatus  = DBHandler.getString(rs,"patientStatus");
                   }
 
                   if (mSelect != null && mSelect.length() != 0){

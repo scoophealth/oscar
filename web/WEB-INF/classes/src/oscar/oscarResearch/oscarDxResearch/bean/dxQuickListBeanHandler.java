@@ -69,31 +69,31 @@ public class dxQuickListBeanHandler {
             String quickListName;
            
            
-            DBHandler db = new DBHandler();
+            
             String lastUsed = "";
             String sql;
             
             lastUsed = OscarProperties.getInstance().getProperty("DX_QUICK_LIST_DEFAULT");
             if( lastUsed == null ) {
                 sql = "SELECT DISTINCT quickListName FROM quickList ORDER BY quickListName LIMIT 1";
-                rs = db.GetSQL(sql);
+                rs = DBHandler.GetSQL(sql);
                 if(rs.next()) 
-                    lastUsed = db.getString(rs,"quickListName");                                           
+                    lastUsed = DBHandler.getString(rs,"quickListName");                                           
 
                 rs.close();
             }
 
             sql = "Select quickListName, createdByProvider from quickList "+codSys+" group by quickListName";            
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
             while(rs.next()){                
-                dxQuickListBean bean = new dxQuickListBean(db.getString(rs,"quickListName"),
-                                                           db.getString(rs,"createdByProvider"));
-                quickListName = db.getString(rs,"quickListName");
+                dxQuickListBean bean = new dxQuickListBean(DBHandler.getString(rs,"quickListName"),
+                                                           DBHandler.getString(rs,"createdByProvider"));
+                quickListName = DBHandler.getString(rs,"quickListName");
                                     
                 if(lastUsed.equals(quickListName)){
 
                     bean.setLastUsed("Selected");
-                    lastUsedQuickList = db.getString(rs,"quickListName");
+                    lastUsedQuickList = DBHandler.getString(rs,"quickListName");
                 }                
                 dxQuickListBeanVector.add(bean);
             }
@@ -113,13 +113,13 @@ public class dxQuickListBeanHandler {
             
             ResultSet rs;
             
-            DBHandler db = new DBHandler();
+            
            
             String sql = "SELECT DISTINCT quickListName FROM quickList ORDER BY quickListName"; 
 
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
             while(rs.next()){                
-                dxQuickListBean bean = new dxQuickListBean(db.getString(rs,"quickListName"));                              
+                dxQuickListBean bean = new dxQuickListBean(DBHandler.getString(rs,"quickListName"));                              
                 dxQuickListBeanVector.add(bean);
             }
             rs.close();

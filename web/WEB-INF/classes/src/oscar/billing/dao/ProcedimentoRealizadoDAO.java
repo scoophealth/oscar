@@ -55,17 +55,17 @@ public class ProcedimentoRealizadoDAO extends DAO {
             
         MiscUtils.getLogger().debug(sql);
 
-        DBHandler db = getDb();
+        
 
         try {
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
             
             // for each procedure found, assemble the 
             // object and put it in the list
             while (rs.next()) {
                 ProcedimentoRealizado pr = new ProcedimentoRealizado();
                 pr.getCadProcedimentos().setCoProcedimento(rs.getLong(1));
-                pr.getCadProcedimentos().setDsProcedimento(db.getString(rs,2));
+                pr.getCadProcedimentos().setDsProcedimento(DBHandler.getString(rs,2));
                 pr.setDtRealizacao(rs.getDate(3,
                         DateUtils.getDateFormatter().getCalendar()));
                 pr.getTpAtendimento().setCoTipoatendimento(rs.getLong(4));
@@ -94,9 +94,9 @@ public class ProcedimentoRealizadoDAO extends DAO {
         	
         MiscUtils.getLogger().debug(sql);
 
-        DBHandler db = getDb();
+        
         try {
-            db.RunSQL(sql);
+            DBHandler.RunSQL(sql);
         } finally {
         }
 

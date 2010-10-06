@@ -50,15 +50,15 @@ public class EctValidation{
     public ResultSet getValidationType(String inputType, String mInstrc){
         ResultSet rs = null;
         try{
-                DBHandler db = new DBHandler();                
+                                
                 String sql = "SELECT validation FROM measurementType WHERE type = '"+ inputType + "'AND measuringInstruction='" + mInstrc + "'"; 
-                rs = db.GetSQL(sql);
+                rs = DBHandler.GetSQL(sql);
                 if (rs.next()){
-                    String validation = db.getString(rs,"validation");                
+                    String validation = DBHandler.getString(rs,"validation");                
                     rs.close();
 
                     sql = "SELECT * FROM validations where id=" + validation;
-                    rs = db.GetSQL(sql);
+                    rs = DBHandler.GetSQL(sql);
                 }
         }
         catch(SQLException e){
@@ -204,17 +204,17 @@ public class EctValidation{
     public String getCssPath(String inputGroupName){
         String cssLocation = null;
         try {
-            DBHandler db = new DBHandler();
+            
             String sql = "SELECT * from measurementGroupStyle where groupName = '" + inputGroupName + "'";
             MiscUtils.getLogger().debug("Sql Statement: " + sql);
             ResultSet rs;
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
             if(rs.next()){
-                String cssId = db.getString(rs,"cssID");
+                String cssId = DBHandler.getString(rs,"cssID");
                 rs.close();   
                 
                 sql = "SELECT * from measurementCSSLocation where cssID = '" + cssId + "'";
-                rs = db.GetSQL(sql);
+                rs = DBHandler.GetSQL(sql);
                 if(rs.next()){
                     String place = "StreamStyleSheet.do?cssfilename="; // Streams by default
 
@@ -234,7 +234,7 @@ public class EctValidation{
                      * }
                      */
 
-                    cssLocation = place+db.getString(rs,"location");
+                    cssLocation = place+DBHandler.getString(rs,"location");
                 }
             }
         }
@@ -253,19 +253,19 @@ public class EctValidation{
     public String getCssName(String inputGroupName){
         String cssName = null;
         try {
-            DBHandler db = new DBHandler();
+            
             String sql = "SELECT * from measurementGroupStyle where groupName = '" + inputGroupName + "'";
             MiscUtils.getLogger().debug("Sql Statement: " + sql);
             ResultSet rs;
-            rs = db.GetSQL(sql);
+            rs = DBHandler.GetSQL(sql);
             if(rs.next()){
-                String cssId = db.getString(rs,"cssID");
+                String cssId = DBHandler.getString(rs,"cssID");
                 rs.close();   
                 
                 sql = "SELECT * from measurementCSSLocation where cssID = '" + cssId + "'";
-                rs = db.GetSQL(sql);
+                rs = DBHandler.GetSQL(sql);
                 if(rs.next()){                    
-                    cssName = db.getString(rs,"location");
+                    cssName = DBHandler.getString(rs,"location");
                 }
             }
         }

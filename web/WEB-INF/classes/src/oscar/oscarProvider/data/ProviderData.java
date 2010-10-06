@@ -127,13 +127,13 @@ public class ProviderData {
    public List getProviderListWithInsuranceNo(String insurerNo){
         ArrayList list = new ArrayList();
         try {
-                DBHandler db = new DBHandler();
+                
                 ResultSet rs;
                 String sql = "select * from provider where provider_type='doctor' and ohip_no like '"+insurerNo+"' and ohip_no != '' order by last_name";
 
-                rs = db.GetSQL(sql);
+                rs = DBHandler.GetSQL(sql);
                 while  (rs.next()) {
-                   list.add(db.getString(rs,"provider_no"));
+                   list.add(DBHandler.getString(rs,"provider_no"));
                 }
 
                 rs.close();
@@ -148,39 +148,39 @@ public class ProviderData {
    
    public void getProvider(String providerNo){
           try {
-                DBHandler db = new DBHandler();
+                
                 ResultSet rs;
                 String sql = "SELECT * FROM provider WHERE provider_no = '" + providerNo +"'";
 
-                rs = db.GetSQL(sql);
+                rs = DBHandler.GetSQL(sql);
 
                 if (rs.next()) {
-                   this.provider_no = db.getString(rs, "provider_no");
-                   this.last_name = db.getString(rs, "last_name");
-                   this.first_name = db.getString(rs, "first_name");
-                   this.provider_type = db.getString(rs, "provider_type");
-                   this.specialty = db.getString(rs, "specialty");
-                   this.team = db.getString(rs, "team");
-                   this.sex= db.getString(rs, "sex");
-                   this.dob= db.getString(rs, "dob");
-                   this.address= db.getString(rs, "address");
-                   this.phone= db.getString(rs, "phone");
-                   this.work_phone= db.getString(rs, "work_phone");
-                   this.ohip_no= db.getString(rs, "ohip_no");
-                   this.rma_no= db.getString(rs, "rma_no");
-                   this.billing_no= db.getString(rs, "billing_no");
-                   this.hso_no= db.getString(rs, "hso_no");
-                   this.status= db.getString(rs, "status");
-                   this.comments= db.getString(rs, "comments");
-                   this.provider_activity= db.getString(rs, "provider_activity");
-                   this.practitionerNo= db.getString(rs, "practitionerNo");
-                   this.init= db.getString(rs, "init");
-                   this.job_title= db.getString(rs, "job_title");
-                   this.email= db.getString(rs, "email");
-                   this.title= db.getString(rs, "title");
-                   this.lastUpdateUser= db.getString(rs, "lastUpdateUser");
-                   this.lastUpdateDate= db.getString(rs, "lastUpdateDate");
-                   this.signed_confidentiality= db.getString(rs, "signed_confidentiality");
+                   this.provider_no = DBHandler.getString(rs, "provider_no");
+                   this.last_name = DBHandler.getString(rs, "last_name");
+                   this.first_name = DBHandler.getString(rs, "first_name");
+                   this.provider_type = DBHandler.getString(rs, "provider_type");
+                   this.specialty = DBHandler.getString(rs, "specialty");
+                   this.team = DBHandler.getString(rs, "team");
+                   this.sex= DBHandler.getString(rs, "sex");
+                   this.dob= DBHandler.getString(rs, "dob");
+                   this.address= DBHandler.getString(rs, "address");
+                   this.phone= DBHandler.getString(rs, "phone");
+                   this.work_phone= DBHandler.getString(rs, "work_phone");
+                   this.ohip_no= DBHandler.getString(rs, "ohip_no");
+                   this.rma_no= DBHandler.getString(rs, "rma_no");
+                   this.billing_no= DBHandler.getString(rs, "billing_no");
+                   this.hso_no= DBHandler.getString(rs, "hso_no");
+                   this.status= DBHandler.getString(rs, "status");
+                   this.comments= DBHandler.getString(rs, "comments");
+                   this.provider_activity= DBHandler.getString(rs, "provider_activity");
+                   this.practitionerNo= DBHandler.getString(rs, "practitionerNo");
+                   this.init= DBHandler.getString(rs, "init");
+                   this.job_title= DBHandler.getString(rs, "job_title");
+                   this.email= DBHandler.getString(rs, "email");
+                   this.title= DBHandler.getString(rs, "title");
+                   this.lastUpdateUser= DBHandler.getString(rs, "lastUpdateUser");
+                   this.lastUpdateDate= DBHandler.getString(rs, "lastUpdateDate");
+                   this.signed_confidentiality= DBHandler.getString(rs, "signed_confidentiality");
                 }
 
                 rs.close();
@@ -552,7 +552,7 @@ public class ProviderData {
    //TODO: Add a cache of providers
    public static ArrayList getProviderList (boolean inactive) {
         try {            
-            DBHandler db = new DBHandler();
+            
             ArrayList result = new ArrayList();
             String active = " and status = '1' ";
             if (inactive){
@@ -560,13 +560,13 @@ public class ProviderData {
             }
             
             String sql = "select provider_no, first_name, last_name, ohip_no from provider where provider_type='doctor' "+active+" order by last_name , first_name";
-            ResultSet rs = db.GetSQL(sql);            
+            ResultSet rs = DBHandler.GetSQL(sql);            
             while ( rs.next() ) {
                 Hashtable provider = new Hashtable();
-                provider.put("providerNo",db.getString(rs,"provider_no"));
-                provider.put("firstName",db.getString(rs,"first_name"));
-                provider.put("lastName",db.getString(rs,"last_name"));
-		provider.put("ohipNo",db.getString(rs,"ohip_no"));
+                provider.put("providerNo",DBHandler.getString(rs,"provider_no"));
+                provider.put("firstName",DBHandler.getString(rs,"first_name"));
+                provider.put("lastName",DBHandler.getString(rs,"last_name"));
+		provider.put("ohipNo",DBHandler.getString(rs,"ohip_no"));
                 result.add(provider);
             }
             return result;
@@ -593,13 +593,12 @@ public class ProviderData {
        if(lastname!=null && firstname!=null)
            sql+="last_name like '"+lastname+ "%' AND first_name like '"+firstname+"%' ";
        try{
-           DBHandler db=new DBHandler();
-           ResultSet rs=db.GetSQL(sql);
+           ResultSet rs=DBHandler.GetSQL(sql);
            while(rs.next()){
                Hashtable provider=new Hashtable();
-               provider.put("providerNo", db.getString(rs, "provider_no"));
-               provider.put("firstName", db.getString(rs, "first_name"));
-               provider.put("lastName", db.getString(rs, "last_name"));
+               provider.put("providerNo", DBHandler.getString(rs, "provider_no"));
+               provider.put("firstName", DBHandler.getString(rs, "first_name"));
+               provider.put("lastName", DBHandler.getString(rs, "last_name"));
                retList.add(provider);
            }
            return retList;
@@ -612,7 +611,7 @@ public class ProviderData {
    }
    public static ArrayList getProviderListOfAllTypes (boolean inactive) {
         try {
-            DBHandler db = new DBHandler();
+            
             ArrayList result = new ArrayList();
             String active = "where status = '1'";
             if (inactive){
@@ -620,13 +619,13 @@ public class ProviderData {
             }
 
             String sql = "select provider_no, first_name, last_name, ohip_no from provider "+active+" order by last_name , first_name";
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
             while ( rs.next() ) {
                 Hashtable provider = new Hashtable();
-                provider.put("providerNo",db.getString(rs,"provider_no"));
-                provider.put("firstName",db.getString(rs,"first_name"));
-                provider.put("lastName",db.getString(rs,"last_name"));
-		provider.put("ohipNo",db.getString(rs,"ohip_no"));
+                provider.put("providerNo",DBHandler.getString(rs,"provider_no"));
+                provider.put("firstName",DBHandler.getString(rs,"first_name"));
+                provider.put("lastName",DBHandler.getString(rs,"last_name"));
+		provider.put("ohipNo",DBHandler.getString(rs,"ohip_no"));
                 result.add(provider);
             }
             return result;
@@ -647,13 +646,13 @@ public class ProviderData {
               
     public static String getProviderName(String providerNo) {
            try {
-            DBHandler db = new DBHandler();
+            
             
                                     
             String sql = "select first_name, last_name from provider where provider_no='"+providerNo+"'";
-            ResultSet rs = db.GetSQL(sql);            
+            ResultSet rs = DBHandler.GetSQL(sql);            
             if ( rs.next() ) {            
-                return ( db.getString(rs,"first_name") + " " + db.getString(rs,"last_name") );            
+                return ( DBHandler.getString(rs,"first_name") + " " + DBHandler.getString(rs,"last_name") );            
             } else {                            
                 return "";
             }
@@ -754,10 +753,10 @@ public class ProviderData {
             return null;
         }
         try {
-            DBHandler db = new DBHandler();
-            ResultSet rs = db.GetSQL(sql);
+            
+            ResultSet rs = DBHandler.GetSQL(sql);
             if (rs.next()) {
-                providerNo = db.getString(rs, 1);
+                providerNo = DBHandler.getString(rs, 1);
             }
             rs.close();
         } catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);

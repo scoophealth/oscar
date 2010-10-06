@@ -7,8 +7,7 @@
     pid = request.getParameter("pid");
 	if(null != request.getParameter("unlink")){
 		String update_link = "UPDATE hl7_link SET hl7_link.status = 'P' WHERE hl7_link.pid_id='@pid';";
-		oscar.oscarDB.DBHandler dbLink = new oscar.oscarDB.DBHandler();
-		dbLink.RunSQL(update_link.replaceAll("@pid", pid));
+		DBHandler.RunSQL(update_link.replaceAll("@pid", pid));
 	}
 	if(null == demo_no){
 		out.println("<script language=\"JavaScript\">javascript:window.close();</SCRIPT>");
@@ -16,7 +15,8 @@
 	}
 	String select_lab_reports = "SELECT DISTINCT hl7_link.pid_id, hl7_obr.requested_date_time, hl7_obr.diagnostic_service_sect_id FROM hl7_link, hl7_obr WHERE hl7_link.demographic_no='@demo_no' AND hl7_link.pid_id=hl7_obr.pid_id AND (hl7_link.status='N' OR hl7_link.status='A' OR hl7_link.status='S') ORDER BY hl7_obr.requested_date_time DESC";
 %>
-<html>
+
+<%@page import="oscar.oscarDB.DBHandler"%><html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>OSCAR PathNET - View Lab Reports</title>
@@ -44,8 +44,7 @@ function PopupLab(pid)
 <form action="viewreports.jsp" method="post">
 <table width="100%">
 	<%
-	oscar.oscarDB.DBHandler db = new oscar.oscarDB.DBHandler();
-	java.sql.ResultSet rs = db.GetSQL(select_lab_reports.replaceAll("@demo_no", demo_no));
+	java.sql.ResultSet rs = DBHandler.GetSQL(select_lab_reports.replaceAll("@demo_no", demo_no));
 	if(rs.isBeforeFirst()){
 		String dpid = "",
 		diagnostic = "";
@@ -54,16 +53,16 @@ function PopupLab(pid)
 		boolean other = false;
 		while(rs.next()){
 			format = new java.text.SimpleDateFormat("yyyy-MM-d HH:mm:ss");
-			date = (format.parse(db.getString(rs,"requested_date_time")));
+			date = (format.parse(DBHandler.getString(rs,"requested_date_time")));
 			format.applyPattern("MMM d, yyyy");
-			if(dpid.equals(db.getString(rs,"pid_id"))){
-				diagnostic += ", " + db.getString(rs,"diagnostic_service_sect_id");
+			if(dpid.equals(DBHandler.getString(rs,"pid_id"))){
+				diagnostic += ", " + DBHandler.getString(rs,"diagnostic_service_sect_id");
 			}else{
 				if(!dpid.equals("")){
 					out.println("<tr bgcolor='" + (other? "F6F6F6" : "WHITE") + "'><td class=\"Text\"><a href=\"#\" onclick=\"return PopupLab('" + dpid + "');\">" + format.format(date) + " (" + diagnostic + ")</a></td><td class=\"Text\"><a onclick=\"return confirm('Are you sure you want to unlink this lab report?');\" href=\"viewreports.jsp?unlink=true&demo_no=" + demo_no + "&pid=" + dpid + "\">unlink</a></td></tr>");
 				}
-				dpid = db.getString(rs,"pid_id");
-				diagnostic = db.getString(rs,"diagnostic_service_sect_id");
+				dpid = DBHandler.getString(rs,"pid_id");
+				diagnostic = DBHandler.getString(rs,"diagnostic_service_sect_id");
 				other = !other;
 			}
 		}

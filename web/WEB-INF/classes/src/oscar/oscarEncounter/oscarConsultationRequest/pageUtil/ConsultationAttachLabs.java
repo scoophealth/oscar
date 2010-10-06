@@ -102,8 +102,8 @@ public class ConsultationAttachLabs {
         MiscUtils.getLogger().debug("detachDoc: " + sql);
         
         try {
-            DBHandler db = new DBHandler();
-            db.RunSQL(sql);
+            
+            DBHandler.RunSQL(sql);
         }
         catch(SQLException e) {
             MiscUtils.getLogger().debug("Error detaching lab: " + e.getMessage());
@@ -116,8 +116,8 @@ public class ConsultationAttachLabs {
         MiscUtils.getLogger().debug("attachLab: " + sql);
         
         try {
-            DBHandler db = new DBHandler();
-            db.RunSQL(sql);
+            
+            DBHandler.RunSQL(sql);
         }
         catch(SQLException e) {
             MiscUtils.getLogger().debug("Error attaching lab: " + e.getMessage());

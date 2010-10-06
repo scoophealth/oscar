@@ -26,14 +26,14 @@ public class FrmDischargeSummaryRecord extends FrmRecord {
 	public Properties getCaisiFormRecord(int demographicNo, int existingID, int providerNo, int programNo) throws SQLException {
         Properties props = new Properties();
         if (existingID <= 0) {
-            DBHandler db = new DBHandler();
+            
             
             /**************will delete this section later *****************************/
             /* For Client Report in Seaton House */
             /* ******************            
             
             String sql_cr1 = "SELECT demographic_no, last_name, first_name, CONCAT(date_of_birth,'/',month_of_birth,'/',year_of_birth) as dob from demographic";
-            ResultSet rs_cr1 = db.GetSQL(sql_cr1);
+            ResultSet rs_cr1 = DBHandler.GetSQL(sql_cr1);
             while(rs_cr1.next()) {
             	String fusion47_yn = "";
                 String rotary12_yn = "";
@@ -49,13 +49,13 @@ public class FrmDischargeSummaryRecord extends FrmRecord {
             	String dob = rs_cr1.getString("dob");            	
             	
             	String sql_cr2 = "select program_id from admission where client_id="+demographic_no+" and admission_status='current' ";
-            	ResultSet rs_cr2 = db.GetSQL(sql_cr2);
+            	ResultSet rs_cr2 = DBHandler.GetSQL(sql_cr2);
         		while(rs_cr2.next()) {
         			programId = rs_cr2.getString("program_id");        		
         			
         			String sql_cr22 = "select name from program where id="+programId+" and type='Bed' ";
             	//String sql_cr2 = "select p.name as program_name from program p, admission a where p.id=a.program_id and a.client_id="+demographic_no+" and a.admission_status='current' and p.type='Bed' ";
-        			ResultSet rs_cr22 = db.GetSQL(sql_cr22);
+        			ResultSet rs_cr22 = DBHandler.GetSQL(sql_cr22);
         			if(rs_cr22.next()) {
         				program_name = rs_cr22.getString("name");
         			}
@@ -65,7 +65,7 @@ public class FrmDischargeSummaryRecord extends FrmRecord {
         		rs_cr2.close();
         		
             	String sql_cr3 = "select count(*) as c_fusion47 from admission a where a.client_id="+demographic_no +" and a.admission_status='current' and a.program_id=47";
-            	ResultSet rs_cr3 = db.GetSQL(sql_cr3);
+            	ResultSet rs_cr3 = DBHandler.GetSQL(sql_cr3);
         		if(rs_cr3.next()) {
         			c_fusion47 = rs_cr3.getString("c_fusion47");
         			if(c_fusion47.equals("0")) {        			
@@ -77,7 +77,7 @@ public class FrmDischargeSummaryRecord extends FrmRecord {
         		rs_cr3.close();	
             	
         		String sql_cr4 = "select count(*) as c_rotary12 from admission a where a.client_id="+demographic_no+" and a.admission_status='current' and a.program_id=12";
-        		ResultSet rs_cr4 = db.GetSQL(sql_cr4);
+        		ResultSet rs_cr4 = DBHandler.GetSQL(sql_cr4);
         		if(rs_cr4.next()) {
         			c_rotary12 = rs_cr4.getString("c_rotary12");
         			if(c_rotary12.equals("0")) {
@@ -89,7 +89,7 @@ public class FrmDischargeSummaryRecord extends FrmRecord {
         		rs_cr4.close();	
         		
         		String sql_cr5 = "select i.code as code ,i.description as descr, ci.resolved as resolved,ci.type as type from casemgmt_issue ci, issue i where ci.demographic_no="+demographic_no+" and ci.issue_id=i.issue_id";
-        		ResultSet rs_cr5 = db.GetSQL(sql_cr5);
+        		ResultSet rs_cr5 = DBHandler.GetSQL(sql_cr5);
         		while(rs_cr5.next()) {
         			String issue_code = rs_cr5.getString("code");
         			String issue_description = rs_cr5.getString("descr");
@@ -100,7 +100,7 @@ public class FrmDischargeSummaryRecord extends FrmRecord {
         			//String sql_insert = "insert into clientReport values('"+program_name+"','"+demographic_no+"','"+last_name+"','"+first_name+"','"+dob+"','"+issue_code+"','"+issue_desription+"','"+casemgmt_issue_resolved+"','"+casemgmt_issue_type+"','"+fusion47_yn+"','"+rotary12_yn+"')";
         			String sql_insert = "insert into clientReport values('"+UtilMisc.charEscape(program_name,'\'')+"','"+UtilMisc.charEscape(demographic_no,'\'')+"','"+UtilMisc.charEscape(last_name,'\'')+"','"+UtilMisc.charEscape(first_name,'\'')+"','"+dob+"','"+UtilMisc.charEscape(issue_code,'\'')+"','"+UtilMisc.charEscape(issue_description,'\'')+"','"+casemgmt_issue_resolved+"','"+casemgmt_issue_type+"','"+fusion47_yn+"','"+rotary12_yn+"')";
         			MiscUtils.getLogger().debug(sql_insert);
-        			db.RunSQL(sql_insert);
+        			DBHandler.RunSQL(sql_insert);
         			
         		}
         		rs_cr5.close();		
@@ -111,32 +111,32 @@ public class FrmDischargeSummaryRecord extends FrmRecord {
             *******************end *************************/
            
             String sql0 = "SELECT name AS programName FROM program WHERE id='"+programNo+"'";
-            ResultSet rs0 = db.GetSQL(sql0);
+            ResultSet rs0 = DBHandler.GetSQL(sql0);
             if(rs0.next()) {
-            	props.setProperty("programName",db.getString(rs0,"programName"));
+            	props.setProperty("programName",DBHandler.getString(rs0,"programName"));
             }
             rs0.close();  
             
             String sql = "SELECT demographic_no, CONCAT(CONCAT(last_name, ', '), first_name) AS clientName, year_of_birth, month_of_birth, date_of_birth, CONCAT(hin,ver) AS ohip FROM demographic WHERE demographic_no = "
                     + demographicNo;
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
             if (rs.next()) {
-                Date dob = UtilDateUtilities.calcDate(db.getString(rs,"year_of_birth"), db.getString(rs,"month_of_birth"),
-                        db.getString(rs,"date_of_birth"));
-                props.setProperty("demographic_no", db.getString(rs,"demographic_no"));
+                Date dob = UtilDateUtilities.calcDate(DBHandler.getString(rs,"year_of_birth"), DBHandler.getString(rs,"month_of_birth"),
+                        DBHandler.getString(rs,"date_of_birth"));
+                props.setProperty("demographic_no", DBHandler.getString(rs,"demographic_no"));
                 props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(),
                         "yyyy/MM/dd"));
                 //props.setProperty("formEdited",
                 // UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy-MM-dd
                 // HH:mm:ss"));
                 props.setProperty("birthDate", UtilDateUtilities.DateToString(dob, "yyyy/MM/dd"));
-                props.setProperty("clientName", db.getString(rs,"clientName"));
-                props.setProperty("ohip",db.getString(rs,"ohip"));
+                props.setProperty("clientName", DBHandler.getString(rs,"clientName"));
+                props.setProperty("ohip",DBHandler.getString(rs,"ohip"));
             }
             rs.close();
             
             String sql1 = "SELECT CONCAT(CONCAT(last_name,', '),first_name) AS providerName FROM provider WHERE provider_no='"+providerNo+"'";
-            ResultSet rs1 = db.GetSQL(sql1);
+            ResultSet rs1 = DBHandler.GetSQL(sql1);
             if(rs1.next()) {
             	props.setProperty("providerName",rs1.getString("providerName"));
             }
@@ -144,10 +144,10 @@ public class FrmDischargeSummaryRecord extends FrmRecord {
             
             //String sql2 = "SELECT admission_date,discharge_date,admission_notes FROM admission where client_id="+demographicNo+" and program_id="+programNo+" and admission_status='discharged' ORDER BY discharge_date DESC ";
             String sql2 = "SELECT admission_date,discharge_date,admission_notes FROM admission where client_id="+demographicNo+" and program_id="+programNo+" and admission_status='current' ORDER BY admission_date DESC ";
-            ResultSet rs2 = db.GetSQL(sql2);
+            ResultSet rs2 = DBHandler.GetSQL(sql2);
             if(rs2.next()){
             	if(rs2.isFirst()) {
-            		String admitDate = db.getString(rs2,"admission_date").substring(0,10);
+            		String admitDate = DBHandler.getString(rs2,"admission_date").substring(0,10);
             		String admitDate_r = admitDate.replace("-", "/");
             		props.setProperty("admitDate",admitDate_r);
             		            		
@@ -157,13 +157,13 @@ public class FrmDischargeSummaryRecord extends FrmRecord {
              
             StringBuffer allergies = new StringBuffer();
             String sql3 = "SELECT DESCRIPTION from allergies where demographic_no="+demographicNo;
-            ResultSet rs3 = db.GetSQL(sql3);
+            ResultSet rs3 = DBHandler.GetSQL(sql3);
             while(rs3.next()) {
             	if(rs3.isFirst())
-            		allergies.append(db.getString(rs3,"DESCRIPTION"));
+            		allergies.append(DBHandler.getString(rs3,"DESCRIPTION"));
             	else {
             		allergies.append(",");
-            		allergies.append(db.getString(rs3,"DESCRIPTION"));
+            		allergies.append(DBHandler.getString(rs3,"DESCRIPTION"));
             	}
             }
             props.setProperty("allergies",allergies.toString());
@@ -171,17 +171,17 @@ public class FrmDischargeSummaryRecord extends FrmRecord {
             
             StringBuffer issues = new StringBuffer();
             String sql4 = "SELECT issue_id from casemgmt_issue where demographic_no="+demographicNo+" and resolved=0";
-            ResultSet rs4 = db.GetSQL(sql4);
+            ResultSet rs4 = DBHandler.GetSQL(sql4);
             while(rs4.next()) {
-            	String sql5 = "SELECT description from issue where issue_id="+db.getString(rs4,"issue_id");
-            	ResultSet rs5 = db.GetSQL(sql5);
+            	String sql5 = "SELECT description from issue where issue_id="+DBHandler.getString(rs4,"issue_id");
+            	ResultSet rs5 = DBHandler.GetSQL(sql5);
             	if(rs5.next()) {
             		if(rs4.isFirst()) {
-            			issues.append(db.getString(rs5,"description"));
+            			issues.append(DBHandler.getString(rs5,"description"));
             		}
             		else {
             			issues.append(";");
-            			issues.append(db.getString(rs5,"description"));
+            			issues.append(DBHandler.getString(rs5,"description"));
             		}
             	}
             	rs5.close();
@@ -192,14 +192,14 @@ public class FrmDischargeSummaryRecord extends FrmRecord {
             StringBuffer prescriptions = new StringBuffer();
             //select d.rx_date,d.special,d.end_date, d.archived,d.BN,d.GCN_SEQNO,d.customName from Drug d where d.demographic_no = ? ORDER BY d.rx_date DESC, d.id DESC";
             String sql5 = "SELECT special from drugs where demographic_no="+demographicNo+" and archived=0 ORDER BY rx_date DESC, drugid DESC";
-            ResultSet rs5 = db.GetSQL(sql5);
+            ResultSet rs5 = DBHandler.GetSQL(sql5);
             while(rs5.next()) {
             	if(rs5.isFirst()) {
-            		prescriptions.append(db.getString(rs5,"special"));            	
+            		prescriptions.append(DBHandler.getString(rs5,"special"));            	
             	}
             	else {
             		//prescriptions.append(";");
-            		prescriptions.append(db.getString(rs5,"special"));
+            		prescriptions.append(DBHandler.getString(rs5,"special"));
             	}
             }
             props.setProperty("prescriptionSummary", prescriptions.toString());
@@ -219,21 +219,21 @@ public class FrmDischargeSummaryRecord extends FrmRecord {
 	public Properties getFormRecord(int demographicNo, int existingID) throws SQLException {
         Properties props = new Properties();
         if (existingID <= 0) {
-            DBHandler db = new DBHandler();
+            
             String sql = "SELECT demographic_no, CONCAT(CONCAT(last_name, ', '), first_name) AS clientName, year_of_birth, month_of_birth, date_of_birth FROM demographic WHERE demographic_no = "
                     + demographicNo;
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
             if (rs.next()) {
-                Date dob = UtilDateUtilities.calcDate(db.getString(rs,"year_of_birth"), db.getString(rs,"month_of_birth"),
-                        db.getString(rs,"date_of_birth"));
-                props.setProperty("demographic_no", db.getString(rs,"demographic_no"));
+                Date dob = UtilDateUtilities.calcDate(DBHandler.getString(rs,"year_of_birth"), DBHandler.getString(rs,"month_of_birth"),
+                        DBHandler.getString(rs,"date_of_birth"));
+                props.setProperty("demographic_no", DBHandler.getString(rs,"demographic_no"));
                 props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(),
                         "yyyy/MM/dd"));
                 //props.setProperty("formEdited",
                 // UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy-MM-dd
                 // HH:mm:ss"));
                 props.setProperty("birthDate", UtilDateUtilities.DateToString(dob, "yyyy/MM/dd"));
-                props.setProperty("clientName", db.getString(rs,"pName"));
+                props.setProperty("clientName", DBHandler.getString(rs,"pName"));
             }
             rs.close();
         } else {
@@ -247,7 +247,7 @@ public class FrmDischargeSummaryRecord extends FrmRecord {
 
     public int saveFormRecord(Properties props) throws SQLException {
         String demographic_no = props.getProperty("demographic_no");
-        // DBHandler db = new DBHandler();
+        // 
         String sql = "SELECT * FROM formDischargeSummary WHERE demographic_no=" + demographic_no + " AND ID=0";
 
         return ((new FrmRecordHelp()).saveFormRecord(props, sql));

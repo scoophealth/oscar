@@ -90,7 +90,7 @@ public class WriteNewMeasurements {
     static private void preProcess(Vector measures) {
         //fills in required values
         try {
-            DBHandler db = new DBHandler();
+            
             ResultSet rs = null;
             for (int i=0; i<measures.size(); i++) {
                 Hashtable curmeasure = (Hashtable) measures.get(i);
@@ -103,9 +103,9 @@ public class WriteNewMeasurements {
                 String sql;
                 if (measuringInst == null || measuringInst.equals("")) {
                     sql = "SELECT measuringInstruction FROM measurementType WHERE type='" + type + "'";
-                    rs = db.GetSQL(sql);
+                    rs = DBHandler.GetSQL(sql);
                     if (rs.next()) {
-                        measuringInst = db.getString(rs,"measuringInstruction");
+                        measuringInst = DBHandler.getString(rs,"measuringInstruction");
                         curmeasure.put("measuringInstruction", measuringInst);
                         rs.close();
                     } else {
@@ -129,7 +129,7 @@ public class WriteNewMeasurements {
     static private ActionMessages validate(Vector measures, String demographicNo) {
         ActionMessages errors = new ActionMessages();
         try {
-            DBHandler db = new DBHandler();
+            
             EctValidation ectValidation = new EctValidation();
             ResultSet rs;
             boolean valid = true;
@@ -211,7 +211,7 @@ public class WriteNewMeasurements {
                 String sql = "SELECT * FROM measurements WHERE demographicNo='"+demographicNo+ "' AND dataField='"+inputValue
                 +"' AND measuringInstruction='" + mInstrc + "' AND comments='" + comments
                 + "' AND dateObserved='" + dateObserved + "'";
-                rs = db.GetSQL(sql);
+                rs = DBHandler.GetSQL(sql);
                 if(rs.next()) {
                     measures.remove(i);
                     i--;
@@ -224,7 +224,7 @@ public class WriteNewMeasurements {
 
     static public void write(Vector measures, String demographicNo, String providerNo) {
         try {
-            DBHandler db = new DBHandler();
+            
             for (int i=0; i<measures.size(); i++) {
                 Hashtable measure = (Hashtable) measures.get(i);
 
@@ -240,7 +240,7 @@ public class WriteNewMeasurements {
                 +" VALUES ('"+inputType+"','"+demographicNo+"','"+providerNo+"','"+inputValue+"','"
                 + mInstrc+"','"+comments+"','"+dateObserved+"','"+dateEntered+"')";
                 MiscUtils.getLogger().debug("SQL measure ====" + sql);
-                db.RunSQL(sql);
+                DBHandler.RunSQL(sql);
             }
         }
         catch(SQLException e) { MiscUtils.getLogger().error("Error", e); }
@@ -248,7 +248,7 @@ public class WriteNewMeasurements {
     
     static public void write(Hashtable measure, String demographicNo, String providerNo) {
         try {
-            DBHandler db = new DBHandler();
+            
             String inputValue = (String) measure.get("value");
             String inputType = (String) measure.get("type");
             String mInstrc = (String) measure.get("measuringInstruction");
@@ -261,7 +261,7 @@ public class WriteNewMeasurements {
             +" VALUES ('"+inputType+"','"+demographicNo+"','"+providerNo+"','"+inputValue+"','"
             + mInstrc+"','"+comments+"','"+dateObserved+"','"+dateEntered+"')";
             MiscUtils.getLogger().debug("SQL measure ====" + sql);
-            db.RunSQL(sql);
+            DBHandler.RunSQL(sql);
         }
         catch(SQLException e) { MiscUtils.getLogger().error("Error", e); }
     }

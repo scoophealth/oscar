@@ -290,15 +290,14 @@ public final class FrmSetupFormAction extends Action {
     private String getFluShotBillingDate(String demoNo) {
         String s = null;
         try {
-                DBHandler dbhandler = new DBHandler();
                 String s1 = "select b.billing_no, b.billing_date from billing b, billingdetail bd where b.demographic_no='"
                                 + demoNo
                                 + "' and bd.billing_no=b.billing_no and (bd.service_code='G590A' or bd.service_code='G591A') "
                                 + " and bd.status<>'D' and b.status<>'D' order by b.billing_date desc limit 0,1";
-                ResultSet rs = dbhandler.GetSQL(s1);
+                ResultSet rs = DBHandler.GetSQL(s1);
 
                 if (rs.next())
-                        s = dbhandler.getString(rs,"billing_date");
+                        s = DBHandler.getString(rs,"billing_date");
                 rs.close();
             } catch (SQLException sqlexception) {
                 MiscUtils.getLogger().debug(sqlexception.getMessage());
@@ -312,14 +311,14 @@ public final class FrmSetupFormAction extends Action {
             
             if(formId!=null){
                 if(Integer.parseInt(formId)>0){
-                    DBHandler db = new DBHandler();
+                    
                     String sql = "SELECT * FROM form" + formName + " WHERE ID='" + formId + "' AND demographic_no='" + demographicNo + "'";
-                    ResultSet rs = db.GetSQL(sql);
+                    ResultSet rs = DBHandler.GetSQL(sql);
                     if(rs.next()) {
                         ResultSetMetaData md = rs.getMetaData();
                         for(int i = 1; i <= md.getColumnCount(); i++)  {
                                 String name = md.getColumnName(i);
-                                String value = db.getString(rs,i);
+                                String value = DBHandler.getString(rs,i);
                                 if(value != null)	
                                     props.setProperty(name, value);
                         }
@@ -416,15 +415,15 @@ public final class FrmSetupFormAction extends Action {
     
     private void addLastData(EctMeasurementTypesBean mt,  String demo){
         try{
-            DBHandler db = new DBHandler();            
+                        
             //get last value and its observation date                
             String sqlData = "SELECT dataField, dateEntered FROM measurements WHERE demographicNo='"+ demo + "' AND type ='" + mt.getType()
                              + "' AND measuringInstruction='" + mt.getMeasuringInstrc() + "' ORDER BY dateEntered DESC limit 1";
 
-            ResultSet rs = db.GetSQL(sqlData);
+            ResultSet rs = DBHandler.GetSQL(sqlData);
             if(rs.next()){
-                mt.setLastData(db.getString(rs,"dataField"));
-                mt.setLastDateEntered(db.getString(rs,"dateEntered"));                
+                mt.setLastData(DBHandler.getString(rs,"dataField"));
+                mt.setLastDateEntered(DBHandler.getString(rs,"dateEntered"));                
             }
                             
             rs.close();

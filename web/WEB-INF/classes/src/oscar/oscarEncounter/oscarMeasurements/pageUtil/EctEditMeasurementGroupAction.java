@@ -56,7 +56,7 @@ public class EctEditMeasurementGroupAction extends Action {
                 
         if(frm.getForward()!=null){
             try{
-                DBHandler db = new DBHandler();                                                                        
+                                                                                        
                 
                 if (frm.getForward().compareTo("add")==0) {
                     MiscUtils.getLogger().debug("the add button is pressed");
@@ -66,7 +66,7 @@ public class EctEditMeasurementGroupAction extends Action {
                             MiscUtils.getLogger().debug(selectedAddTypes[i]);
                             String sql = "INSERT INTO measurementGroup (name, typeDisplayName) VALUES('" + groupName + "','" + selectedAddTypes[i] +"')";
                             MiscUtils.getLogger().debug(" sql statement "+sql);
-                            db.RunSQL(sql);                                
+                            DBHandler.RunSQL(sql);                                
                         }
                     }
                 }
@@ -78,7 +78,7 @@ public class EctEditMeasurementGroupAction extends Action {
                             MiscUtils.getLogger().debug(selectedDeleteTypes[i]);
                             String sql = "DELETE  FROM `measurementGroup` WHERE name='"+ groupName +"' AND typeDisplayName='" + selectedDeleteTypes[i] + "'";                                        
                             MiscUtils.getLogger().debug(" sql statement "+sql);
-                            db.RunSQL(sql);                                
+                            DBHandler.RunSQL(sql);                                
                         }
                     }
                 }
@@ -95,7 +95,7 @@ public class EctEditMeasurementGroupAction extends Action {
                 else
                     throw new SQLException("ERROR: Database " + db_type + " unrecognized.");
                     
-                ResultSet rs = db.GetSQL(dbSpecificCommand);
+                ResultSet rs = DBHandler.GetSQL(dbSpecificCommand);
                 if(rs.next())
                     requestId = Integer.toString(rs.getInt(1));
             }

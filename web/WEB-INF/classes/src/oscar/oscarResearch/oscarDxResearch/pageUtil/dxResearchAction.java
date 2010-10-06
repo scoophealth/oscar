@@ -90,7 +90,7 @@ public class dxResearchAction extends Action {
         ActionMessages errors = new ActionMessages();  
         
         try{
-            DBHandler db = new DBHandler();
+            
             String sql = null;
             for(int i=0; i<xml_research.length; i++){ 
                 int Count = 0;
@@ -104,12 +104,12 @@ public class dxResearchAction extends Action {
                               "' and dxresearch_code='" + xml_research[i] + "' and (status='A' or status='C') and coding_system='"+
                               codingSystem +"'";
 
-                        rsdemo2 = db.GetSQL(sql);
+                        rsdemo2 = DBHandler.GetSQL(sql);
                         if(rsdemo2!=null){
                             while(rsdemo2.next()){
                                     Count = Count +1;
                                     sql = "update dxresearch set update_date='"+nowDate+"', status='A' where dxresearch_no='"+rsdemo2.getString("dxresearch_no")+"'";
-                                    db.RunSQL(sql);                                        
+                                    DBHandler.RunSQL(sql);                                        
 
                             } 
                         }
@@ -118,7 +118,7 @@ public class dxResearchAction extends Action {
                                 //need to validate the dxresearch code before write to the database
                                 sql = "select * from "+ codingSystem +" where "+ codingSystem + " like '" + xml_research[i] +"'";
                                 
-                                ResultSet rsCode = db.GetSQL(sql);
+                                ResultSet rsCode = DBHandler.GetSQL(sql);
                           
                                 if(!rsCode.next() || rsCode==null){
                                     valid = false;
@@ -130,7 +130,7 @@ public class dxResearchAction extends Action {
                                     sql = "insert into dxresearch (demographic_no, start_date, update_date, status, dxresearch_code, coding_system) values('"
                                             + demographicNo +"','" + nowDate + "','" + nowDate + "', 'A','" + xml_research[i]+ "','"+codingSystem+"')";
 
-                                    db.RunSQL(sql);                                                                     
+                                    DBHandler.RunSQL(sql);                                                                     
                                 }
                         }	    
                 }

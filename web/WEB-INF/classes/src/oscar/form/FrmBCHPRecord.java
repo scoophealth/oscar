@@ -39,11 +39,11 @@ public class FrmBCHPRecord extends FrmRecord {
         Properties props = new Properties();
 
         if (existingID <= 0) {
-            DBHandler db = new DBHandler();
+            
             String sql = "SELECT demographic_no, last_name, first_name, phone, phone2, hin,provider_no FROM demographic WHERE demographic_no = "
                     + demographicNo;
             String providerNo = null;
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
             if (rs.next()) {
                 props.setProperty("demographic_no", rs.getString("demographic_no"));
                 props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(),

@@ -61,12 +61,12 @@ public class MsgSessionBean
 
     public void estUserName(){
         try{
-                DBHandler db = new DBHandler();
+                
                 java.sql.ResultSet rs;
                 String sql = new String("select first_name, last_name from provider where provider_no = '"+providerNo+"'");
-                rs = db.GetSQL(sql);
+                rs = DBHandler.GetSQL(sql);
                 if (rs.next()){
-                   userName =  db.getString(rs,"first_name")+" "+db.getString(rs,"last_name");
+                   userName =  DBHandler.getString(rs,"first_name")+" "+DBHandler.getString(rs,"last_name");
                 }
                 rs.close();
         }catch (java.sql.SQLException e){MiscUtils.getLogger().error("Error", e); }

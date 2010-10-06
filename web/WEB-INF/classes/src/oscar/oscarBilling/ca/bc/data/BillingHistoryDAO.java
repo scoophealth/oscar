@@ -43,7 +43,7 @@ import oscar.util.SqlUtils;
  * @version 1.0
  */
 public class BillingHistoryDAO {
-  DBHandler db = null;
+  
   public BillingHistoryDAO() {
   }
 
@@ -70,8 +70,8 @@ public class BillingHistoryDAO {
     List list = new ArrayList();
     ResultSet rs = null;
     try {
-      db = new DBHandler();
-      rs = (ResultSet) db.GetSQL(qry);
+      
+      rs = (ResultSet) DBHandler.GetSQL(qry);
       while (rs.next()) {
         BillHistory bh = new BillHistory();
         bh.setId(rs.getInt(1));
@@ -119,7 +119,7 @@ public class BillingHistoryDAO {
    * @param status String - The status of the BillingMaster  record
    */
   public void createBillingHistoryArchive(BillHistory history) {
-    DBHandler db = null;
+    
 
     String qry = "insert into billing_history(billingmaster_no,billingstatus,creation_date,practitioner_no,billingtype,seqNum,amount,amount_received,payment_type_id) values(" +
         history.getBillingMasterNo() + ",'" + history.getBillingStatus() +
@@ -128,8 +128,8 @@ public class BillingHistoryDAO {
         "','" + history.getSeqNum() + "','" + history.getAmount() + "','" +
         history.getAmountReceived() + "'," + history.getPaymentTypeId() + ")";
     try {
-      db = new DBHandler();
-      db.RunSQL(qry);
+      
+    	DBHandler.RunSQL(qry);
       if(null == history.getPaymentTypeId()){
         throw new RuntimeException("Bill History: " + history.getBillingMasterNo() + " Payment type is '0'");
       }
@@ -190,14 +190,14 @@ public class BillingHistoryDAO {
    * @param stat String - The status of the billingMaster records that will be archived
    */
   public void createBillingHistoryArchiveByBillNo(String billingNo) {
-    DBHandler db = null;
+    
     ResultSet rs = null;
     String qry =
         "SELECT billingmaster_no FROM billingmaster b WHERE b.billing_no = " +
         billingNo;
     try {
-      db = new DBHandler();
-      rs = db.GetSQL(qry);
+      
+      rs = DBHandler.GetSQL(qry);
       while (rs.next()) {
         String billMasterNo = rs.getString(1);
         this.createBillingHistoryArchive(billMasterNo);

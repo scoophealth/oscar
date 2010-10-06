@@ -45,7 +45,7 @@ public class dxResearchBeanHandler {
         
         boolean verdict = true;
         try {
-            DBHandler db = new DBHandler();
+            
             
             dxResearchCodingSystem codingSys = new dxResearchCodingSystem();
             String[] codingSystems = codingSys.getCodingSystems();                                            
@@ -57,14 +57,14 @@ public class dxResearchBeanHandler {
                 sql = "select d.start_date, d.update_date, c.description, c."+codingSystem+", d.dxresearch_no, d.status from dxresearch d, "+codingSystem+" c " +
                          "where d.dxresearch_code=c."+codingSystem+" and d.status<>'D' and d.demographic_no ='"+ demographicNo +"' and d.coding_system = '"+codingSystem+"'"
                         +" order by d.start_date desc, d.update_date desc";
-                for(rs = db.GetSQL(sql); rs.next(); )
+                for(rs = DBHandler.GetSQL(sql); rs.next(); )
                 {                
-                    dxResearchBean bean = new dxResearchBean(   db.getString(rs,"description"), 
-                                                            db.getString(rs,"dxresearch_no"),
-                                                            db.getString(rs,codingSystem),
-                                                            db.getString(rs,"update_date"),
-                                                            db.getString(rs,"start_date"),
-                                                            db.getString(rs,"status"),
+                    dxResearchBean bean = new dxResearchBean(   DBHandler.getString(rs,"description"), 
+                                                            DBHandler.getString(rs,"dxresearch_no"),
+                                                            DBHandler.getString(rs,codingSystem),
+                                                            DBHandler.getString(rs,"update_date"),
+                                                            DBHandler.getString(rs,"start_date"),
+                                                            DBHandler.getString(rs,"status"),
                                                             codingSystem);
                     dxResearchBeanVector.add(bean);
 
