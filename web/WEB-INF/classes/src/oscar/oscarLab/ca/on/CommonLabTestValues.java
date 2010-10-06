@@ -38,6 +38,7 @@ import java.util.Hashtable;
 import java.util.LinkedHashMap;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
@@ -273,7 +274,7 @@ public class CommonLabTestValues {
      *  //second field is result
      *  //third field is observation date
      */
-    public ArrayList findValuesByLoinc(String demographicNo, String loincCode, Connection conn){
+    public ArrayList findValuesByLoinc(String demographicNo, String loincCode){
         ArrayList labList = new ArrayList();
         
         String sql = "SELECT dataField, dateObserved, e1.val AS lab_no, e3.val AS abnormal FROM measurements m " +
@@ -283,9 +284,8 @@ public class CommonLabTestValues {
                 "WHERE e2.val = ident_code AND LOINC_CODE='"+loincCode+"' AND demographicNo='"+demographicNo+"' " +
                 "ORDER BY dateObserved DESC";
         try {
-            //
+            Connection conn=DbConnectionFilter.getThreadLocalDbConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            //ResultSet rs = DBHandler.GetSQL(sql);
             ResultSet rs = pstmt.executeQuery();
             
             while(rs.next()){

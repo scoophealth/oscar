@@ -40,7 +40,6 @@ import oscar.OscarProperties;
  * @deprecated Use JPA instead, no new code should be written against this class.
  */
 public final class DBPreparedHandler {
-
     
     ResultSet rs = null;
     Statement stmt = null;

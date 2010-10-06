@@ -59,14 +59,13 @@ try{
 *   dateIdHash: (date, lab_no)
     */
     
-    Connection conn = DBHandler.getConnection();
     for (int i = 0; i < items.size(); i++){
         Element e = (Element) items.get(i);
         String loinc_code = e.getAttributeValue("loinc_code");
         String name = e.getAttributeValue("name");
         if (!loinc_code.equalsIgnoreCase("NULL")){
             LinkedHashMap IdMap = new LinkedHashMap();
-            ArrayList labList = labTests.findValuesByLoinc(demographic_no, loinc_code, conn);
+            ArrayList labList = labTests.findValuesByLoinc(demographic_no, loinc_code);
             for (int j=0; j < labList.size(); j++){
                 Hashtable h = (Hashtable) labList.get(j);
                 String date = ( (String) h.get("date") );
