@@ -46,6 +46,12 @@
 		</condition>
 		<property name="tomcat.lib.dir" location="${tomcat.lib}" />
 
+		<!-- ant-contrib needed for the if statements -->
+		<taskdef resource="net/sf/antcontrib/antcontrib.properties">
+		  <classpath>
+		    <pathelement location="tasks/lib/ant-contrib-1.0b3.jar"/>
+		  </classpath>
+		</taskdef>
 
 		<if>
 			<!-- tomcat 5.5 uses jasper2 where as tomcat 6 uses jasper -->
