@@ -57,7 +57,6 @@ import org.oscarehr.caisi_integrator.ws.CachedDemographicNote;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.casemgmt.dao.AllergyDAO;
-import org.oscarehr.casemgmt.dao.ApptDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementCPPDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementIssueDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
@@ -120,7 +119,6 @@ public class CaseManagementManager {
 	private PrescriptionDAO prescriptionDAO;
 	private MessagetblDAO messagetblDAO;
 	private EchartDAO echartDAO;
-	private ApptDAO apptDAO;
 	private ProviderDao providerDAO;
 	private ClientDao demographicDao;
 	private ProviderSignitureDao providerSignitureDao;
@@ -169,11 +167,6 @@ public class CaseManagementManager {
 			if (providers == null) providers = new ArrayList<Provider>();
 			note.setEditors(providers);
 		}
-	}
-
-	public void updateAppointment(String apptId, String status, String type) {
-
-		apptDAO.updateAppointmentStatus(apptId, status, type);
 	}
 
 	public UserProperty getUserProperty(String provider_no, String name) {
@@ -1371,10 +1364,6 @@ public class CaseManagementManager {
 
 	public void setEchartDAO(EchartDAO echartDAO) {
 		this.echartDAO = echartDAO;
-	}
-
-	public void setApptDAO(ApptDAO apptDAO) {
-		this.apptDAO = apptDAO;
 	}
 
 	public void setMessagetblDAO(MessagetblDAO dao) {
