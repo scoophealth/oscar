@@ -62,7 +62,6 @@
 	<bean id="IssueDAO" class="org.oscarehr.casemgmt.dao.IssueDAO" autowire="byName" />
 	<bean id="EchartDAO" class="org.oscarehr.casemgmt.dao.EchartDAO" autowire="byName" />
 	<bean id="secroleDao" class="com.quatro.dao.security.SecroleDao" autowire="byName"/>
-	<bean id="ApptDAO" class="org.oscarehr.casemgmt.dao.ApptDAO" autowire="byName" />
 	<bean id="MessagetblDAO" class="org.oscarehr.casemgmt.dao.MessagetblDAO" autowire="byName" />
 	<bean id="ProviderSignitureDao" class="org.oscarehr.casemgmt.dao.ProviderSignitureDao" autowire="byName" />
 	<bean id="RoleProgramAccessDAO" class="org.oscarehr.casemgmt.dao.RoleProgramAccessDAO" autowire="byName" />
@@ -220,7 +219,6 @@
 		<property name="issueDAO" ref="IssueDAO" />
 		<property name="messagetblDAO" ref="MessagetblDAO" />
 		<property name="echartDAO" ref="EchartDAO" />
-		<property name="apptDAO" ref="ApptDAO" />
 		<property name="providerSignitureDao" ref="ProviderSignitureDao" />
 		<property name="providerDAO" ref="providerDao" />
 		<property name="demographicDao" ref="clientDao" />
