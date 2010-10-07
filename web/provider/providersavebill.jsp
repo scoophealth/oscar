@@ -75,16 +75,18 @@
 
   int rowsAffected = oscarSuperManager.update("providerDao", request.getParameter("dboperation"), param);
   if (rowsAffected == 1) {
-	String[] param1 = new String[2];
+	String[] param1 = new String[3];
 	param1[0]="B";
-	param1[1]=request.getParameter("appointment_no");
+	param1[1]=(String)session.getAttribute("user");
+	param1[2]=request.getParameter("appointment_no");
+        oscarSuperManager.update("providerDao", "archive_appt", new String[]{request.getParameter("appointment_no")});
 	rowsAffected = oscarSuperManager.update("providerDao", "updateapptstatus", param1);
 	List<Map> resultList = oscarSuperManager.find("providerDao", "search_billing_no", new Object[] {request.getParameter("demographic_no")});
 	for (Map bill: resultList) {
 %>
 <p>
 <h1>Successful Addition of a billing Record.</h1>
-</p>
+
 <script LANGUAGE="JavaScript">
       self.close();
       self.opener.document.encounter.encounterattachment.value +="<billing>providercontrol.jsp?billing_no=<%=bill.get("billing_no")%>^displaymode=vary^displaymodevariable=billing<%=request.getParameter("billing_name")%>.jsp^dboperation=search_bill</billing>";
@@ -97,7 +99,7 @@
 %>
 <p>
 <h1>Sorry, addition has failed.</h1>
-</p>
+
 <%  
   }
 %>
