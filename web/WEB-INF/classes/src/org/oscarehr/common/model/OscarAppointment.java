@@ -36,6 +36,7 @@ public class OscarAppointment implements Serializable {
     private Time    end_time;
     private String  name;
     private Integer demographic_no;
+    private Integer program_id;
     private String  notes;
     private String  reason;
     private String  location;
@@ -47,6 +48,7 @@ public class OscarAppointment implements Serializable {
     private Date    createdatetime;
     private Date    updatedatetime;
     private String  creator;
+    private String  lastupdateuser;
     private String  remarks;
 
     public Integer getAppointment_no() {
@@ -75,6 +77,10 @@ public class OscarAppointment implements Serializable {
 
     public Integer getDemographic_no() {
         return this.demographic_no;
+    }
+
+    public Integer getProgram_id() {
+        return this.program_id;
     }
 
     public String getNotes() {
@@ -121,6 +127,10 @@ public class OscarAppointment implements Serializable {
         return this.creator;
     }
 
+    public String getLastupdateuser() {
+        return this.lastupdateuser;
+    }
+
     public String getRemarks() {
         return this.remarks;
     }
@@ -151,6 +161,10 @@ public class OscarAppointment implements Serializable {
 
     public void setDemographic_no(Integer demographic_no) {
         this.demographic_no = demographic_no;
+    }
+
+    public void setProgram_id(Integer program_id) {
+        this.program_id = program_id;
     }
 
     public void setNotes(String notes) {
@@ -195,6 +209,10 @@ public class OscarAppointment implements Serializable {
 
     public void setCreator(String creator) {
         this.creator = creator;
+    }
+
+    public void setLastupdateuser(String lastupdateuser) {
+        this.lastupdateuser = lastupdateuser;
     }
 
     public void setRemarks(String remarks) {

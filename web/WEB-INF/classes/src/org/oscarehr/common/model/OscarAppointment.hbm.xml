@@ -30,6 +30,7 @@
                 <property name="end_time" />
                 <property name="name" />
                 <property name="demographic_no" />
+                <property name="program_id" />
                 <property name="notes" />
                 <property name="reason" />
                 <property name="location" />
@@ -41,6 +42,7 @@
                 <property name="createdatetime" />
                 <property name="updatedatetime" />
                 <property name="creator" />
+                <property name="lastupdateuser" />
                 <property name="remarks" />
     </class>
 </hibernate-mapping>
