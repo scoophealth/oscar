@@ -675,7 +675,9 @@ public class GDMLHandler implements MessageHandler {
             
             //requesting client number
             docNum = msg.getRESPONSE().getORDER_OBSERVATION(0).getOBR().getOrderingProvider(i).getIDNumber().getValue();
-            nums.add(docNum);
+            if (docNum != null){
+               nums.add(docNum);
+            }
             
             //cc'd docs numbers
             Terser terser = new Terser(msg);
