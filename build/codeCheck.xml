@@ -1,10 +1,12 @@
 <?xml version="1.0"?>
 <project default="codeCheck">
 	<!--
-		For now we custom wrote out own checks because what we want to do is almost trivial.
-		Once we get the code base cleaned up and want to take it further, we should
-		switch to using "checkstyle" instead, it's available for both
-		maven and ant. The ant version is here : checkstyle.sourceforge.net
+		Note that this should be a self contained ant xml script with no reliance on
+		build.xml. "ant -f codeCheck.xml" should run properly. 
+	
+		For now we custom just have our own custom checks because the code base is too
+		messy. Once it's cleaned up a bit we should start using "pmd" and "checkstyle"
+		to help enforce more.
 	-->
 
 	<property name="srcDir" location="../web" />

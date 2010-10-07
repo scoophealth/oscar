@@ -1,6 +1,9 @@
 <?xml version="1.0"?>
 <project default="jspc">
 	<!--
+		Note that this should be a self contained ant xml script with no reliance on
+		build.xml. "ant -f jspc.xml" should run properly. 
+
 		Generally speaking there's no need to precompile jsp's. Jasper is 
 		fairly quick and efficient anyways so dynamic compilation is fine
 		and offers the ability to change things on the fly. The reason 
@@ -38,11 +41,11 @@
 		<antcall target="jspc.clean" />
 		<unwar src="tmp/oscar.war" dest="${jspc.expandedWarDir}" />
 
-		<condition property="tomcat.lib" value="${catalina}/lib">
-			<available file="${catalina}/lib" type="dir" />
+		<condition property="tomcat.lib" value="${catalina.home}/lib">
+			<available file="${catalina.home}/lib" type="dir" />
 		</condition>
-		<condition property="tomcat.lib" value="${catalina}/common/lib">
-			<available file="${catalina}/common/lib" type="dir" />
+		<condition property="tomcat.lib" value="${catalina.home}/common/lib">
+			<available file="${catalina.home}/common/lib" type="dir" />
 		</condition>
 		<property name="tomcat.lib.dir" location="${tomcat.lib}" />
 
@@ -55,7 +58,7 @@
 
 		<if>
 			<!-- tomcat 5.5 uses jasper2 where as tomcat 6 uses jasper -->
-			<equals arg1="${tomcat.lib.dir}" arg2="${catalina}/lib" />
+			<equals arg1="${tomcat.lib.dir}" arg2="${catalina.home}/lib" />
 			<then>
 				<jasper uriroot="${jspcDir}/web" webXmlFragment="${jspcDir}/generated_web.xml" outputDir="${jspc.generatedDir}" validateXml="false" failOnError="false" />
 			</then>
