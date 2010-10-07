@@ -58,7 +58,7 @@
 			</else>
 		</if>
 
-		<javac srcdir="${jspc.generatedDir}" source="1.5" target="1.5">
+		<javac srcdir="${jspc.generatedDir}" source="1.5" target="1.5" debug="on">
 			<classpath>
 				<pathelement location="${jspc.expandedWarDir}/WEB-INF/classes" />
 				<fileset dir="${jspc.expandedWarDir}/WEB-INF/lib">
