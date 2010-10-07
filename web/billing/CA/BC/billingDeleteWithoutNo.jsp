@@ -82,7 +82,7 @@ if (cannotDelete) {
 %>
 <p>
 <h1>Sorry, cannot delete billed items.</h1>
-</p>
+
 <form><input type="button" value="Back to previous page"
 	onClick="window.close()"></form>
 <% } else{
@@ -100,14 +100,16 @@ if (cannotDelete) {
     if (updateApptStatus) {
         oscar.appt.ApptStatusData as = new oscar.appt.ApptStatusData();
         String unbillStatus = as.unbillStatus(request.getParameter("status"));
-        String[] param1 =new String[2];
+        String[] param1 =new String[3];
         param1[0]=unbillStatus;
-        param1[1]=request.getParameter("appointment_no");
+        param1[1]=(String)session.getAttribute("user");
+        param1[2]=request.getParameter("appointment_no");
+        apptMainBean.queryExecuteUpdate(new String[]{request.getParameter("appointment_no")}, "archive_appt");
         apptMainBean.queryExecuteUpdate(param1,"updateapptstatus");
 %>
 <p>
 <h1>Successful Addition of a billing Record.</h1>
-</p>
+
 <script LANGUAGE="JavaScript">
       self.close();
      	self.opener.refresh();
@@ -118,13 +120,13 @@ if (cannotDelete) {
 %>
 <p>
 <h1>Sorry, addition has failed.</h1>
-</p>
+
 <%  
     }
 }
 %>
 <p></p>
-<hr width="90%"></hr>
+<hr width="90%">
 <form><input type="button" value="Close this window"
 	onClick="window.close()"></form>
 </center>
