@@ -286,7 +286,7 @@
 
 
 	<path id="classpath.path.pmd">
-		<pathelement path="pmd-4.2.5.jar" />
+		<pathelement path="tasks/lib/pmd-4.2.5.jar" />
 		<fileset dir="../web/WEB-INF/lib">
 			<include name="*.jar" />
 		</fileset>

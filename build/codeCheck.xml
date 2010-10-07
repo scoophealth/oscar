@@ -6,55 +6,32 @@
 		switch to using "checkstyle" instead, it's available for both
 		maven and ant. The ant version is here : checkstyle.sourceforge.net
 	-->
-	
-	
+
 	<property name="srcDir" location="../web" />
 
-	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
-	  <classpath>
-	    <pathelement location="ant-contrib-1.0b3.jar"/>
-	  </classpath>
-	</taskdef>
+	<path id="codeCheckClassPath">
+		<fileset dir="../web/WEB-INF/lib">
+			<include name="*.jar" />
+		</fileset>
+		<fileset dir="tasks/lib">
+			<include name="*.jar" />
+		</fileset>
+		<pathelement location="tasks/classes" />
+	</path>
 
 	<target name="codeCheck">
-		<antcall target="loggerCheck" />
-		<antcall target="asciiCheck" />
-	</target>
+		<delete>
+			<fileset dir="tasks/classes" includes="**/*.class" />
+		</delete>
+		<javac srcdir="tasks/src" destdir="tasks/classes" debug="on">
+			<classpath refid="codeCheckClassPath" />
+		</javac>
 
-	<!-- logger check -->	
-	<target name="loggerCheck">
-		<foreach target="failLoggerCheck" param="file">
-			<path>
-				<fileset dir="${srcDir}" includes="**/*.j*" excludes="**/*.jar, **/dojoajax/**/*">
-					<or>
-						<contains text="System.err" />
-						<contains text="System.out" />
-						<!--
-						<contains text="printStackTrace" />
-						-->
-					</or>
-				</fileset>
-			</path>			
-		</foreach>
-	</target>
+		<taskdef name="GrepStuffAntTask" classname="GrepStuffAntTask">
+			<classpath refid="codeCheckClassPath" />
+		</taskdef>
 
-	<target name="failLoggerCheck">
-		<fail message="File is not using logger. File=${file}" />
-	</target>
-
-	<!-- ascii check -->	
-	<target name="asciiCheck">
-		<foreach target="failAsciiCheck" param="file">
-			<path>
-				<fileset dir="${srcDir}" includes="**/*.j*" excludes="**/*.jar, **/TeleplanAPI.java">
-					<contains text="ASCII" />
-				</fileset>
-			</path>			
-		</foreach>
-	</target>
-
-	<target name="failAsciiCheck">
-		<fail message="File references ASCII, should use UTF-8 from MiscUtils.ENCODING instead. File=${file}" />
+		<GrepStuffAntTask srcDir="../web" dataFile="grep_check.data" />
 	</target>
 
 </project>
