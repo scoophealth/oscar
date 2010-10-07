@@ -42,12 +42,14 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
 import oscar.log.LogAction;
 import oscar.log.LogConst;
 import oscar.oscarDB.DBHandler;
 import oscar.oscarSurveillance.SurveillanceMaster;
+import oscar.service.OscarSuperManager;
 import oscar.util.UtilDateUtilities;
 
 public class EctSaveEncounterAction
@@ -238,17 +240,18 @@ public class EctSaveEncounterAction
             if (sessionbean.status != null && !sessionbean.status.equals("")) {
               oscar.appt.ApptStatusData as = new oscar.appt.ApptStatusData();
               as.setApptStatus(sessionbean.status);
+              OscarSuperManager oscarSuperManager = (OscarSuperManager)SpringUtils.getBean("oscarSuperManager");
+
+
               if (httpservletrequest.getParameter("btnPressed").equals(
                   "Sign,Save and Exit")) {
-                s = "update appointment set status='" + as.signStatus() +
-                    "' where appointment_no=" + sessionbean.appointmentNo;
-                DBHandler.RunSQL(s);
+                  oscarSuperManager.update("appointmentDao", "archive_appt", new Object[]{sessionbean.appointmentNo});
+                  oscarSuperManager.update("appointmentDao", "updatestatusc", new Object[]{as.signStatus(),sessionbean.providerNo,sessionbean.appointmentNo});
               }
               if (httpservletrequest.getParameter("btnPressed").equals(
                   "Verify and Sign")) {
-                s = "update appointment set status='" + as.verifyStatus() +
-                    "' where appointment_no=" + sessionbean.appointmentNo;
-                DBHandler.RunSQL(s);
+                  oscarSuperManager.update("appointmentDao", "archive_appt", new Object[]{sessionbean.appointmentNo});
+                  oscarSuperManager.update("appointmentDao", "updatestatusc", new Object[]{as.verifyStatus(),sessionbean.providerNo,sessionbean.appointmentNo});
               }
             }
           }
