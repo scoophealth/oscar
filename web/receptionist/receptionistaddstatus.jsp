@@ -29,9 +29,11 @@
 <%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 
 <%
-  String[] param = new String[2];
+  String[] param = new String[3];
   param[0] = request.getParameter("status") + request.getParameter("statusch");
-  param[1] = request.getParameter("appointment_no");
+  param[1] = (String)session.getAttribute("user");
+  param[2] = request.getParameter("appointment_no");
+  oscarSuperManager.update("receptionistDao", "archive_appt", new String[]{request.getParameter("appointment_no")});
   int rowsAffected = oscarSuperManager.update("receptionistDao", request.getParameter("dboperation"), param);
   if (rowsAffected == 1) {
     int view=0;
