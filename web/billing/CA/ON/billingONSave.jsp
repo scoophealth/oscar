@@ -64,7 +64,7 @@
 						String apptCurStatus = bObj.getApptStatus(apptNo);
 						oscar.appt.ApptStatusData as = new oscar.appt.ApptStatusData();
 						String billStatus = as.billStatus(apptCurStatus);
-						bObj.updateApptStatus(apptNo, billStatus);
+						bObj.updateApptStatus(apptNo, billStatus, (String)session.getAttribute("user"));
 					}
 				%>
 <p>
@@ -79,7 +79,7 @@
 <a href="billingON3rdInv.jsp?billingNo=<%=billingNo%>"> Print
 invoice</a>
 <% } %>
-</p>
+
 
 <% if(!"Settle & Print Invoice".equals(request.getParameter("submit")) && !"Save & Print Invoice".equals(request.getParameter("submit"))) { %>
 <script LANGUAGE="JavaScript">
@@ -127,10 +127,10 @@ invoice</a>
 				%>
 <p>
 <h1>Sorry, billing has failed. Please do it again!</h1>
-</p>
+
 <%}
 			}
 			%>
 <p>
 <h1>Sorry, billing has failed. Please do it again!</h1>
-</p>
+
