@@ -151,9 +151,10 @@ if (nBillNo > 0) {
 
         oscar.appt.ApptStatusData as = new oscar.appt.ApptStatusData();
         String billStatus = as.billStatus(apptCurStatus);
-        String[] param1 =new String[2];
+        String[] param1 =new String[3];
 	    param1[0]=billStatus;
-	    param1[1]=request.getParameter("appointment_no");
+	    param1[1]=(String)session.getAttribute("user");
+	    param1[2]=request.getParameter("appointment_no");
 
         int rowsAffected = apptMainBean.queryExecuteUpdate(param1,"updateapptstatus");
         //rsdemo = null;
@@ -163,7 +164,7 @@ if (nBillNo > 0) {
 %>
 <p>
 <h1>Successful Addition of a billing Record.</h1>
-</p>
+
 <script LANGUAGE="JavaScript">
 	if (self.opener.document.caseManagementEntryForm) 
 		self.opener.document.caseManagementEntryForm.elements["caseNote.billing_code"].value="<%=nBillNo%>";
@@ -176,19 +177,19 @@ if (nBillNo > 0) {
 %>
 <p>
 <h1>Sorry, billing has failed. Please do it again!</h1>
-</p>
+
 <%  
     }
 }  else {
 %>
 <p>
 <h1>Sorry, billing has failed. Please do it again!</h1>
-</p>
+
 <%  
 }
 %>
 <p></p>
-<hr width="90%"></hr>
+<hr width="90%">
 <input type="button" value="Close this window" onClick="window.close()">
 
 </center>

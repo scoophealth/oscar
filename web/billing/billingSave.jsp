@@ -130,10 +130,12 @@ function closeit() {
 
         oscar.appt.ApptStatusData as = new oscar.appt.ApptStatusData();
         String billStatus = as.billStatus(apptCurStatus);
-        String[] param1 =new String[2];
+        String[] param1 =new String[3];
 	    param1[0]=billStatus;
-	    param1[1]=request.getParameter("appointment_no");
+	    param1[1]=(String)session.getAttribute("user");
+	    param1[2]=request.getParameter("appointment_no");
 //	  param1[1]=request.getParameter("apptProvider_no"); param1[2]=request.getParameter("appointment_date"); param1[3]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("start_time"));
+        apptMainBean.queryExecuteUpdate(new String[]{request.getParameter("appointment_no")}, "archive_appt");
         rowsAffected = apptMainBean.queryExecuteUpdate(param1,"updateapptstatus");
         rsdemo = null;
         rsdemo = apptMainBean.queryResults(request.getParameter("demographic_no"), "search_billing_no");
@@ -141,7 +143,7 @@ function closeit() {
 %>
 <p>
 <h1>Successful Addition of a billing Record.</h1>
-</p>
+
 <%
 // not sure what this variable is suppose to be, this page has never compiled since 2004 when some one did a faulty merge
 int nBillNo=0;
@@ -158,12 +160,12 @@ int nBillNo=0;
 %>
 <p>
 <h1>Sorry, addition has failed.</h1>
-</p>
+
 <%  
     }
 %>
 <p></p>
-<hr width="90%"></hr>
+<hr width="90%">
 <form><input type="button" value="Close this window"
 	onClick="window.close()"></form>
 </center>
