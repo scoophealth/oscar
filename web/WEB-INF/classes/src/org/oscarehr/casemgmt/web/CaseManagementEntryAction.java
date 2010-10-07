@@ -84,6 +84,7 @@ import oscar.oscarSurveillance.SurveillanceMaster;
 import oscar.util.UtilDateUtilities;
 
 import com.lowagie.text.DocumentException;
+import oscar.service.OscarSuperManager;
 
 /*
  * Updated by Eugene Petruhin on 12 and 13 jan 2009 while fixing #2482832 & #2494061
@@ -982,10 +983,11 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         String strBeanName = "casemgmt_oscar_bean" + demo;
         EctSessionBean sessionBean = (EctSessionBean) request.getSession().getAttribute(strBeanName);
         String verify = request.getParameter("verify");
-       
+        OscarSuperManager oscarSuperManager = (OscarSuperManager)SpringUtils.getBean("oscarSuperManager");
+
         Date now = new Date();
         String roleName = caseManagementMgr.getRoleName(providerNo, note.getProgram_no());
-        
+
         if (verify != null && verify.equalsIgnoreCase("on")) {
             String message = caseManagementMgr.getSignature(providerNo, userName, roleName, request.getLocale(), caseManagementMgr.SIGNATURE_VERIFY);
             
@@ -993,7 +995,12 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
            note.setNote(n);
 
             // only update appt if there is one
-            if (sessionBean.appointmentNo != null && !sessionBean.appointmentNo.equals("")) caseManagementMgr.updateAppointment(sessionBean.appointmentNo, sessionBean.status, "verify");
+            if (sessionBean.appointmentNo != null && !sessionBean.appointmentNo.equals("")) {
+                String apptStatus = updateApptStatus(sessionBean.status, "verify");
+                oscarSuperManager.update("appointmentDao", "archive_appt", new Object[]{sessionBean.appointmentNo});
+                oscarSuperManager.update("appointmentDao", "updatestatusc", new Object[]{apptStatus,providerNo,sessionBean.appointmentNo});
+            }
+
         }
         else if (note.isSigned()) {
             String message = caseManagementMgr.getSignature(providerNo, userName, roleName, request.getLocale(), caseManagementMgr.SIGNATURE_SIGNED);         
@@ -1002,7 +1009,11 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             note.setNote(n);
 
             // only update appt if there is one
-            if (sessionBean.appointmentNo != null && !sessionBean.appointmentNo.equals("")) caseManagementMgr.updateAppointment(sessionBean.appointmentNo, sessionBean.status, "sign");
+            if (sessionBean.appointmentNo != null && !sessionBean.appointmentNo.equals("")) {
+                String apptStatus = updateApptStatus(sessionBean.status, "sign");
+                oscarSuperManager.update("appointmentDao", "archive_appt", new Object[]{sessionBean.appointmentNo});
+                oscarSuperManager.update("appointmentDao", "updatestatusc", new Object[]{apptStatus,providerNo,sessionBean.appointmentNo});
+            }
         }
         
         //PLACEHOLDER FOR DX CHECK
@@ -1103,6 +1114,16 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
         return note.getId();
     }
+
+        private String updateApptStatus(String status, String type) {
+            oscar.appt.ApptStatusData as = new oscar.appt.ApptStatusData();
+            as.setApptStatus(status);
+            
+            if (type.equalsIgnoreCase("sign")) status = as.signStatus();
+            if (type.equalsIgnoreCase("verify")) status = as.verifyStatus();
+            
+            return status;
+        }
 
 	private String saveCheckedIssues_oldCme(HttpServletRequest request, String demo, List<CaseManagementIssue> issuelist, CheckBoxBean[] checkedlist, Set<CaseManagementIssue> issueset, Set noteSet, String ongoing) {
 
