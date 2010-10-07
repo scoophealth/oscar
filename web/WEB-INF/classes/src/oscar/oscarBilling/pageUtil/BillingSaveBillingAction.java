@@ -38,10 +38,12 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
 import oscar.oscarBilling.ca.bc.data.BillingHistoryDAO;
 import oscar.oscarDB.DBHandler;
+import oscar.service.OscarSuperManager;
 
 public class BillingSaveBillingAction
     extends Action {
@@ -75,21 +77,14 @@ public class BillingSaveBillingAction
     String dataCenterId = OscarProperties.getInstance().getProperty(
         "dataCenterId");
 
+    //change appointment status
     MiscUtils.getLogger().debug("appointment_no: " + bean.getApptNo());
     MiscUtils.getLogger().debug("BillStatus:" + billStatus);
-    String sql = "update appointment set status='" + billStatus +
-        "' where appointment_no='" + bean.getApptNo() + "'";
+    OscarSuperManager oscarSuperManager = (OscarSuperManager)SpringUtils.getBean("oscarSuperManager");
+    oscarSuperManager.update("appointmentDao", "archive_appt", new Object[]{bean.getApptNo()});
+    oscarSuperManager.update("appointmentDao", "updatestatusc", new Object[]{billStatus,bean.getCreator(),bean.getApptNo()});
 
-    try {
-      
-      DBHandler.RunSQL(sql);
-
-    }
-    catch (SQLException e) {
-      MiscUtils.getLogger().error("Error", e);
-    }
-
-    sql = "insert into billing (billing_no,demographic_no, provider_no,appointment_no, demographic_name,hin,update_date, billing_date, total, status, dob, visitdate, visittype, provider_ohip_no, apptProvider_no, creator)";
+    String sql = "insert into billing (billing_no,demographic_no, provider_no,appointment_no, demographic_name,hin,update_date, billing_date, total, status, dob, visitdate, visittype, provider_ohip_no, apptProvider_no, creator)";
     sql = sql + " values('\\N','" + bean.getPatientNo() + "', '" +
         bean.getBillingProvider() + "', '" + bean.getApptNo() + "','" +
         bean.getPatientName() + "','" + bean.getPatientPHN() + "','" + curDate +
