@@ -26,8 +26,10 @@
             {"search_daysheetnew",       "select a.appointment_date, a.provider_no, a.start_time, a.end_time, a.reason, a.name, p.last_name, p.first_name, d.provider_no as doc_no, d.chart_no, d.roster_status, p2.last_name as doc_last_name, p2.first_name as doc_first_name from (appointment a, provider p, demographic d) left join provider p2 on d.provider_no=p2.provider_no where a.provider_no=p.provider_no and a.demographic_no=d.demographic_no and d.demographic_no = a.demographic_no and a.appointment_date=? and a.provider_no=p.provider_no and a.status like 't%' order by p.last_name, p.first_name, a.appointment_date,"+orderby },
             {"search_daysheetsinglenew", "select a.appointment_date, a.provider_no, a.start_time, a.end_time, a.reason, a.name, p.last_name, p.first_name, d.provider_no as doc_no, d.chart_no, d.roster_status, p2.last_name as doc_last_name, p2.first_name as doc_first_name from (appointment a, provider p, demographic d) left join provider p2 on d.provider_no=p2.provider_no where a.provider_no=p.provider_no and a.demographic_no=d.demographic_no and d.demographic_no = a.demographic_no and a.appointment_date=? and a.provider_no=? and a.status like 't%' and a.provider_no=p.provider_no order by a.appointment_date,"+orderby },
             {"searchmygroupall",         "select * from mygroup where mygroup_no= ?"},
-            {"update_apptstatus",        "update appointment set status='T' where appointment_date=? and status='t' " },
-            {"update_apptstatussingle",  "update appointment set status='T' where appointment_date=? and provider_no=? and status='t' " },
+            {"update_apptstatus",        "update appointment set status='T', lastupdateuser=?, updatedatetime=now() where appointment_date=? and status='t' " },
+            {"update_apptstatussingle",  "update appointment set status='T', lastupdateuser=?, updatedatetime=now() where appointment_date=? and provider_no=? and status='t' " },
+            {"archive_appt",             "insert into appointmentArchive (select * from appointment where appointment_date=? and status='t'"},
+            {"archive_apptsingle",       "insert into appointmentArchive (select * from appointment where appointment_date=? and provider_no=? and status='t'"}
         };
     } else {
         dbQueries=new String[][] {
@@ -36,8 +38,10 @@
             {"search_daysheetnew",       "select concat(d.year_of_birth,'/',d.month_of_birth,'/',d.date_of_birth)as dob, d.family_doctor, a.appointment_date, a.provider_no, a.start_time, a.end_time, a.reason, a.name, p.last_name, p.first_name, d.provider_no as doc_no, d.chart_no, d.roster_status, p2.last_name as doc_last_name, p2.first_name as doc_first_name, d.hin, d.ver  from (appointment a, provider p) left join demographic d on a.demographic_no=d.demographic_no left join provider p2 on d.provider_no=p2.provider_no where a.appointment_date=? and a.provider_no=p.provider_no and a.status like binary 't' order by p.last_name, p.first_name, a.appointment_date,"+orderby },
             {"search_daysheetsinglenew", "select concat(d.year_of_birth,'/',d.month_of_birth,'/',d.date_of_birth)as dob, d.family_doctor, a.appointment_date, a.provider_no, a.start_time, a.end_time, a.reason, a.name, p.last_name, p.first_name, d.provider_no as doc_no, d.chart_no, d.roster_status, p2.last_name as doc_last_name, p2.first_name as doc_first_name, d.hin  d.ver from (appointment a, provider p) left join demographic d on a.demographic_no=d.demographic_no left join provider p2 on d.provider_no=p2.provider_no where a.appointment_date=? and a.provider_no=? and a.status like binary 't' and a.provider_no=p.provider_no order by a.appointment_date,"+orderby },
             {"searchmygroupall",         "select * from mygroup where mygroup_no= ?"},
-            {"update_apptstatus",        "update appointment set status='T' where appointment_date=? and status='t' " },
-            {"update_apptstatussingle",  "update appointment set status='T' where appointment_date=? and provider_no=? and status='t' " },
+            {"update_apptstatus",        "update appointment set status='T', lastupdateuser=?, updatedatetime=now() where appointment_date=? and status='t' " },
+            {"update_apptstatussingle",  "update appointment set status='T', lastupdateuser=?, updatedatetime=now() where appointment_date=? and provider_no=? and status='t' " },
+            {"archive_appt",             "insert into appointmentArchive (select * from appointment where appointment_date=? and status='t'"},
+            {"archive_apptsingle",       "insert into appointmentArchive (select * from appointment where appointment_date=? and provider_no=? and status='t'"}
         };
     }
   	
@@ -84,7 +88,7 @@ td {
 <!--
 
 //-->
-</SCRIPT>
+</script>
 </head>
 <%
 	boolean bDob = oscarVariables.getProperty("daysheet_dob", "").equalsIgnoreCase("true") ? true : false;
@@ -121,7 +125,7 @@ td {
 			name="Button"
 			value="<bean:message key="report.reportdaysheet.btnPrint"/>"
 			onClick="window.print()"><input type="button" name="Button"
-			value="<bean:message key="global.btnExit"/>" onClick="window.close()"></th>
+			value="<bean:message key="global.btnExit"/>" onClick="window.close()">
 	</tr>
 </table>
 
@@ -129,9 +133,10 @@ td {
   boolean bFistL = true; //first line in a table for TH
   String strTemp = "";
   String dateTemp = "";
-  String [] param = new String[2];
-  param[0] = sdate;
-  param[1] = provider_no;
+  String [] param = new String[3];
+  param[0] = (String) session.getAttribute("user");
+  param[1] = sdate;
+  param[2] = provider_no;
   String [] parama = new String[5];
   parama[0] = sdate;
   parama[1] = edate;
@@ -148,10 +153,12 @@ td {
   } else { //new appt, need to update status
     if(!provider_no.equals("*") && !provider_no.startsWith("_grp_") ) {
 	  rsdemo = daySheetBean.queryResults(param, "search_daysheetsinglenew");
-	  int rowsAffected = daySheetBean.queryExecuteUpdate(param, "update_apptstatussingle");
+          daySheetBean.queryExecuteUpdate(new String[]{param[1],param[2]}, "archive_apptsingle");
+	  daySheetBean.queryExecuteUpdate(param, "update_apptstatussingle");
     } else { //select all providers
 	  rsdemo = daySheetBean.queryResults(param[0], "search_daysheetnew");
-	  int rowsAffected = daySheetBean.queryExecuteUpdate(param[0], "update_apptstatus");
+          daySheetBean.queryExecuteUpdate(param[1], "archive_appt");
+	  daySheetBean.queryExecuteUpdate(new String[]{param[0],param[1]}, "update_apptstatus");
     }
   }
   while (rsdemo.next()) {
