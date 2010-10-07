@@ -26,37 +26,39 @@ public class AppointmentDao extends OscarSuperDao {
 	}
 
 	private String [][] dbQueries = new String[][] { 
-	    {"search_appt", "select count(appointment_no) AS n from appointment where appointment_date = ? and provider_no = ? and status !='C' and ((start_time>= ? and start_time<= ?) or (end_time>= ? and end_time<= ?) or (start_time<= ? and end_time>= ?) ) and program_id=?" }, 
-	    {"search_appt_name", "select name from appointment where appointment_date = ? and provider_no = ? and status !='C' and ((start_time>= ? and start_time<= ?) or (end_time>= ? and end_time<= ?) or (start_time<= ? and end_time>= ?) ) and program_id=?" }, 
-	    {"search_provider_name", "select last_name,first_name from provider where provider_no= ? " },
-	    {"search_demographic_statusroster", "select * from demographic where demographic_no = ? " }, 
-	    {"search_demographiccust_alert", "select cust3 from demographiccust where demographic_no = ? " }, 
-	    {"search_appt_future", "select appt.appointment_date, appt.start_time, appt.status, p.last_name, p.first_name from appointment appt, provider p where appt.provider_no = p.provider_no and appt.demographic_no = ? and appt.appointment_date >= ? and appt.appointment_date < ? order by appointment_date desc, start_time desc" },
-	    {"search_appt_past", "select appt.appointment_date, appt.start_time, appt.status, p.last_name, p.first_name from appointment appt, provider p where appt.provider_no = p.provider_no and appt.demographic_no = ? and appt.appointment_date < ? and appt.appointment_date > ? order by appointment_date desc, start_time desc"},
-		{"search_appt_no", "select appointment_no from appointment where provider_no=? and appointment_date=? and start_time=? and end_time=? and createdatetime=? and creator=? and demographic_no=? order by appointment_no desc limit 1"},
+            {"search_appt", "select count(appointment_no) AS n from appointment where appointment_date = ? and provider_no = ? and status !='C' and ((start_time>= ? and start_time<= ?) or (end_time>= ? and end_time<= ?) or (start_time<= ? and end_time>= ?) ) and program_id=?" },
+            {"search_appt_name", "select name from appointment where appointment_date = ? and provider_no = ? and status !='C' and ((start_time>= ? and start_time<= ?) or (end_time>= ? and end_time<= ?) or (start_time<= ? and end_time>= ?) ) and program_id=?" },
+            {"search_provider_name", "select last_name,first_name from provider where provider_no= ? " },
+            {"search_demographic_statusroster", "select * from demographic where demographic_no = ? " },
+            {"search_demographiccust_alert", "select cust3 from demographiccust where demographic_no = ? " },
+            {"search_appt_future", "select appt.appointment_date, appt.start_time, appt.status, p.last_name, p.first_name from appointment appt, provider p where appt.provider_no = p.provider_no and appt.demographic_no = ? and appt.appointment_date >= ? and appt.appointment_date < ? order by appointment_date desc, start_time desc" },
+            {"search_appt_past", "select appt.appointment_date, appt.start_time, appt.status, p.last_name, p.first_name from appointment appt, provider p where appt.provider_no = p.provider_no and appt.demographic_no = ? and appt.appointment_date < ? and appt.appointment_date > ? order by appointment_date desc, start_time desc"},
+            {"search_appt_no", "select appointment_no from appointment where provider_no=? and appointment_date=? and start_time=? and end_time=? and createdatetime=? and creator=? and demographic_no=? order by appointment_no desc limit 1"},
 
-	    {"add_apptrecord", "insert into appointment (provider_no,appointment_date,start_time,end_time,name, notes,reason,location,resources,type, style,billing,status,createdatetime,creator, remarks, demographic_no, program_id) values(?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?)" },
-	    {"search_waitinglist", "select wl.listID, wln.name from waitingList wl, waitingListName wln where wl.demographic_no=? and wln.ID=wl.listID and wl.is_history ='N' order by wl.listID"},
+            {"add_apptrecord", "insert into appointment (provider_no,appointment_date,start_time,end_time,name, notes,reason,location,resources,type, style,billing,status,createdatetime,creator, remarks, demographic_no, program_id) values(?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?)" },
+            {"search_waitinglist", "select wl.listID, wln.name from waitingList wl, waitingListName wln where wl.demographic_no=? and wln.ID=wl.listID and wl.is_history ='N' order by wl.listID"},
 
-	    {"updatestatusc", "update appointment set status=?, creator=?, updatedatetime=? where appointment_no=?"},
+            {"updatestatusc", "update appointment set status=?, lastupdateuser=?, updatedatetime=now() where appointment_no=?"},
+            {"update_apptrecord", "update appointment set demographic_no=?,appointment_date=?,start_time=?,end_time=?,name=?, notes=?,reason =?,location=?, resources=?, type=?,style=?,billing =?,status=?,lastupdateuser=?,remarks=?,updatedatetime=now() where appointment_no=? "},
 
-	    {"update_apptrecord", "update appointment set demographic_no=?,appointment_date=?,start_time=?,end_time=?,name=?, notes=?,reason =?,location=?, resources=?, type=?,style=?,billing =?,status=?,updatedatetime=?,creator=?,remarks=? where appointment_no=? "},
+            {"search", "select * from appointment where appointment_no=?"},
+            {"search_detail", "select * from demographic where demographic_no=?"},
 
-	    {"search", "select * from appointment where appointment_no=?"},
-	    {"search_detail", "select * from demographic where demographic_no=?"},
+            {"delete", "delete from appointment where appointment_no=?"},
 
-	    {"delete", "delete from appointment where appointment_no=?"},
+            {"search_otherappt", "select * from appointment where appointment_date=? and ((start_time <= ? and end_time >= ?) or (start_time > ? and start_time < ?) ) order by provider_no, start_time" },
+            {"search_groupprovider", "select p.last_name, p.first_name, p.provider_no from mygroup m, provider p where m.mygroup_no=? and m.provider_no=p.provider_no order by p.last_name"},
+            {"search_scheduledate_single", "select * from scheduledate where sdate=? and provider_no=?" },
 
-        {"search_otherappt", "select * from appointment where appointment_date=? and ((start_time <= ? and end_time >= ?) or (start_time > ? and start_time < ?) ) order by provider_no, start_time" }, 
-        {"search_groupprovider", "select p.last_name, p.first_name, p.provider_no from mygroup m, provider p where m.mygroup_no=? and m.provider_no=p.provider_no order by p.last_name"}, 
-        {"search_scheduledate_single", "select * from scheduledate where sdate=? and provider_no=?" }, 
+            {"cancel_appt", "update appointment set status = ?, updatedatetime = ?, lastupdateuser = ? where appointment_date=? and provider_no=? and start_time=? and end_time=? and name=? and notes=? and reason=? and createdatetime like ?  and creator=? and demographic_no=? " },
+            {"delete_appt", "delete from appointment where appointment_date=? and provider_no=? and start_time=? and end_time=? and name=? and notes=? and reason=? and createdatetime like ?  and creator=? and demographic_no=? " },
+            {"update_appt", "update appointment set start_time=?, end_time=?, name=?, demographic_no=?, notes=?, reason=?, location=?, resources=?, updatedatetime=?, lastupdateuser=? where appointment_date=? and provider_no=? and start_time=? and end_time=? and name=? and notes=? and reason=? and createdatetime like ?  and creator=? and demographic_no=?" },
 
-		{"cancel_appt", "update appointment set status = ?, updatedatetime = ?, creator = ? where appointment_date=? and provider_no=? and start_time=? and end_time=? and name=? and notes=? and reason=? and createdatetime like ?  and creator=? and demographic_no=? " }, 
-		{"delete_appt", "delete from appointment where appointment_date=? and provider_no=? and start_time=? and end_time=? and name=? and notes=? and reason=? and createdatetime like ?  and creator=? and demographic_no=? " }, 
-		{"update_appt", "update appointment set start_time=?, end_time=?, name=?, demographic_no=?, notes=?, reason=?, location=?, resources=?, updatedatetime=?, creator=? where appointment_date=? and provider_no=? and start_time=? and end_time=? and name=? and notes=? and reason=? and createdatetime like ?  and creator=? and demographic_no=?" }, 
+            {"archive_appt", "insert into appointmentArchive (select * from appointment where appointment_no=?)"},
+            {"archive_group", "insert into appointmentArchive (select * from appointment where appointment_date=? and provider_no=? and start_time=? and end_time=? and name=? and notes=? and reason=? and createdatetime like ?  and creator=? and demographic_no=?"},
 
-		{"import_appt", "insert into appointment (provider_no,appointment_date,start_time,end_time,name,demographic_no,notes,reason,status) values (?,?,?,?,?,?,?,?,?)" },
-		{"export_appt", "select app.*, prov.first_name, prov.last_name, prov.ohip_no from appointment app, provider prov where app.provider_no = prov.provider_no and app.demographic_no = ?" }
+            {"import_appt", "insert into appointment (provider_no,appointment_date,start_time,end_time,name,demographic_no,notes,reason,status) values (?,?,?,?,?,?,?,?,?)" },
+            {"export_appt", "select app.*, prov.first_name, prov.last_name, prov.ohip_no from appointment app, provider prov where app.provider_no = prov.provider_no and app.demographic_no = ?" }
 	};
 
     /**
