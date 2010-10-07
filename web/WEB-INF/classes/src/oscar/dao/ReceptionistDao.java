@@ -34,7 +34,8 @@ public class ReceptionistDao extends OscarSuperDao {
 			{"savemygroup", "insert into mygroup (mygroup_no,provider_no,last_name,first_name) values(?,?,?,?)" },
 			{"searchprovider", "select provider_no, last_name, first_name from provider where provider_type='doctor' and status='1' order by last_name"}, 
 			{"searchallprovider", "select * from provider where status='1' order by last_name"}, 
-			{"updateapptstatus", "update appointment set status=? where appointment_no=? "},
+			{"updateapptstatus", "update appointment set status=?, lastupdateuser=?, updatedatetime=now() where appointment_no=? "},
+                        {"archive_appt", "insert into appointmentArchive (select * from appointment where appointment_no=?)"},
 
 			{"search_provider", "select provider_no, last_name, first_name from provider where last_name like ? and first_name like ? order by last_name"}, 
 		    {"search_providersgroup", "select mygroup_no, last_name, first_name from mygroup where last_name like ? and first_name like ? order by last_name, first_name, mygroup_no"}, 
