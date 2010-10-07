@@ -69,8 +69,8 @@ public class BillingSavePrep {
 	}
 
 	// set appt to B
-	public boolean updateApptStatus(String apptNo, String status) {
-		boolean ret = (new JdbcBillingPageUtil()).updateApptStatus(apptNo, status);
+	public boolean updateApptStatus(String apptNo, String status, String userNo) {
+		boolean ret = (new JdbcBillingPageUtil()).updateApptStatus(apptNo, status, userNo);
 		return ret;
 	}
 
