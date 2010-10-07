@@ -28,6 +28,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -39,9 +41,8 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.caisi.model.Appointment;
-import org.oscarehr.casemgmt.dao.ApptDAO;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -54,6 +55,7 @@ import oscar.oscarBilling.ca.bc.data.BillingHistoryDAO;
 import oscar.oscarBilling.ca.bc.data.BillingNote;
 import oscar.oscarBilling.ca.bc.data.BillingmasterDAO;
 import oscar.oscarDB.DBHandler;
+import oscar.service.OscarSuperManager;
 import oscar.util.UtilDateUtilities;
 
 public class BillingSaveBillingAction extends Action {
@@ -75,7 +77,6 @@ public class BillingSaveBillingAction extends Action {
         //Get rid of this
         WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext());
         BillingmasterDAO billingmasterDAO = (BillingmasterDAO) ctx.getBean("BillingmasterDAO");
-        ApptDAO apptDAO = (ApptDAO) ctx.getBean("ApptDAO");
         MiscUtils.getLogger().debug("appointment_no---: " + bean.getApptNo());
         oscar.appt.ApptStatusData as = new oscar.appt.ApptStatusData();
         String sql = "";
@@ -91,23 +92,24 @@ public class BillingSaveBillingAction extends Action {
         }
 
         ////////////
+        OscarSuperManager oscarSuperManager = (OscarSuperManager)SpringUtils.getBean("oscarSuperManager");
         if (bean.getApptNo() != null && !bean.getApptNo().trim().equals("0") &&  !bean.getApptNo().trim().equals("")){
-            Appointment appt = apptDAO.getAppt(""+bean.getApptNo());
-            String billStatus = as.billStatus(appt.getStatus());
+            String apptStatus = "";
+            List<Map> resultList  = oscarSuperManager.find("appointmentDao", "search", new Object[]{bean.getApptNo()});
+            if (resultList.size() < 1) {
+                log.error("LLLOOK: APPT ERROR - APPT ("+bean.getApptNo()+") NOT FOUND - FOR demo:" + bean.getPatientName() +" date " + curDate);
+            } else {
+                Map m_status = resultList.get(0);
+                apptStatus = (String)m_status.get("status");
+            }
+            String billStatus = as.billStatus(apptStatus);
             ///Update Appointment information
             log.debug("appointment_no: " + bean.getApptNo());
             log.debug("BillStatus:" + billStatus);
-            sql = "update appointment set status='" + billStatus + "' where appointment_no='" + bean.getApptNo() + "'";
+            oscarSuperManager.update("appointmentDao", "archive_appt", new Object[]{bean.getApptNo()});
+            int rowsAffected = oscarSuperManager.update("appointmentDao", "updatestatusc", new Object[]{billStatus,bean.getCreator(),bean.getApptNo()});
 
-            try {
-                
-                DBHandler.RunSQL(sql);
-
-            }catch (SQLException e) {
-                log.error(e.getMessage(),e);
-                log.error("LLLOOK: APPT ERROR FOR demo:" + bean.getPatientName() +" date " + curDate);
-                MiscUtils.getLogger().error("Error", e);
-            }
+            if (rowsAffected<1) log.error("LLLOOK: APPT ERROR - CANNOT UPDATE APPT ("+bean.getApptNo()+") FOR demo:" + bean.getPatientName() +" date " + curDate);
         }
        
 
@@ -179,18 +181,15 @@ public class BillingSaveBillingAction extends Action {
             // HOW TO DO THIS PART
             /* Need to link the id of a WCB for with a bill
                 -Continue to put it in the WCB form ?   + no data structure change - not sure how will it work.
-                ===============================================================================================
                 On submission how would this work??  for each bill submission that would look for it's id in the wcb table?
                 The problem is that it's not really logical but it would work.  Not every form would have a billing. 
                 
              
                 -Add a field to Billingmaster?   + data structure change + data migration + initial reaction
-                ===============================================================================================
                 Data conversion wouldn't be that big of a deal though.  because everything else would be coming over too.
                 Most logical
              
                 -Add a separate table ?       + data structure change + data migration + 2nd initial reacion
-                ===============================================================================================
              
              */ 
             MiscUtils.getLogger().debug("WCB BILL!!");
@@ -420,21 +419,6 @@ public class BillingSaveBillingAction extends Action {
         }
 
         return amnt;
-    }
-
-    private String updateAppt(String billStatus, BillingSessionBean bean, Date curDate) {
-        String sql = "update appointment set status='" + billStatus + "' where appointment_no='" + bean.getApptNo() + "'";
-
-        try {
-            
-            DBHandler.RunSQL(sql);
-        } catch (SQLException e) {
-            log.error(e.getMessage(), e);
-            log.error("LLLOOK: APPT ERROR FOR demo:" + bean.getPatientName() + " date " + curDate);
-            MiscUtils.getLogger().error("Error", e);
-        }
-        ////End of updating appt information
-        return sql;
     }
 
 //    private void updatePatientChartWithWCBInfo(
