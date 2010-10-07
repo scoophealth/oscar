@@ -23,8 +23,10 @@ import java.util.Properties;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.SxmlMisc;
+import oscar.service.OscarSuperManager;
 
 public class JdbcBillingPageUtil {
 	private static final Logger _logger = Logger.getLogger(JdbcBillingPageUtil.class);
@@ -259,11 +261,11 @@ public class JdbcBillingPageUtil {
 		return retval;
 	}
 
-	public boolean updateApptStatus(String apptNo, String status) {
-		boolean retval = false;
-		String sql = "update appointment set status='" + status + "' " + "where appointment_no=" + apptNo + " ";
-		retval = dbObj.updateDBRecord(sql);
-		return retval;
+	public boolean updateApptStatus(String apptNo, String status, String userNo) {
+                OscarSuperManager oscarSuperManager = (OscarSuperManager)SpringUtils.getBean("oscarSuperManager");
+                oscarSuperManager.update("appointmentDao", "archive_appt", new Object[]{apptNo});
+                int rowsAffected = oscarSuperManager.update("appointmentDao", "updatestatusc", new Object[]{status,userNo,apptNo});
+                return (rowsAffected==1);
 	}
 
 	public String getApptStatus(String apptNo) {
