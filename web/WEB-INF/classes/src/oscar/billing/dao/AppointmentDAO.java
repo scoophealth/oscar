@@ -28,10 +28,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Properties;
 
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.billing.model.Appointment;
 import oscar.billing.model.Demographic;
@@ -39,6 +39,7 @@ import oscar.billing.model.Diagnostico;
 import oscar.billing.model.ProcedimentoRealizado;
 import oscar.billing.model.Provider;
 import oscar.oscarDB.DBHandler;
+import oscar.service.OscarSuperManager;
 import oscar.util.DAO;
 import oscar.util.DateUtils;
 import oscar.util.FieldTypes;
@@ -83,6 +84,9 @@ public class AppointmentDAO extends DAO {
 				pstmDiag.executeUpdate();
 			}
 
+                        OscarSuperManager oscarSuperManager = (OscarSuperManager)SpringUtils.getBean("oscarSuperManager");
+                        oscarSuperManager.update("appointmentDao", "archive_appt", new String[]{String.valueOf(app.getAppointmentNo())});
+                        
 			SqlUtils.fillPreparedStatement(pstmApp, 1, String.valueOf(app.getAppointmentNo()), FieldTypes.LONG);
 			pstmApp.executeUpdate();
 
