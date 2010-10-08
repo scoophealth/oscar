@@ -22,13 +22,14 @@
 </table>
 <%
 	ApptUtil.copyAppointmentIntoSession(request);
+        oscarSuperManager.update("appointmentDao", "archive_appt", new Object [] {request.getParameter("appointment_no")});
 	int rowsAffected = oscarSuperManager.update("appointmentDao", "delete", new Object [] {request.getParameter("appointment_no")});
 	if (rowsAffected == 1) {
 %>
 <p>
 <h1><bean:message
 	key="appointment.appointmentupdatearecord.msgUpdateSuccess" /></h1>
-</p>
+
 <script LANGUAGE="JavaScript">
 	self.opener.refresh();
 	self.close();
@@ -38,7 +39,7 @@
 <p>
 <h1><bean:message
 	key="appointment.appointmentupdatearecord.msgUpdateFailure" /></h1>
-</p>
+
 <%  
 	}
 %>
