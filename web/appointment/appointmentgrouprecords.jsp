@@ -23,22 +23,22 @@
 		String createdDateTime = UtilDateUtilities.DateToString(UtilDateUtilities.now(),"yyyy-MM-dd HH:mm:ss");
 		String userName = (String) session.getAttribute("userlastname") + ", " + (String) session.getAttribute("userfirstname");
 
- 	    param[1]=request.getParameter("appointment_date");
-	    param[2]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("start_time"));
-        param[3]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("end_time"));
-        param[4]=request.getParameter("keyword");
-        param[5]=request.getParameter("notes");
-        param[6]=request.getParameter("reason");
-	    param[7]=request.getParameter("location");
-        param[8]=request.getParameter("resources");
-        param[9]=request.getParameter("type");
-	    param[10]=request.getParameter("style");
-        param[11]=request.getParameter("billing");
-        param[12]=request.getParameter("status");
- 	    param[13]=createdDateTime;   //request.getParameter("createdatetime");
-        param[14]=userName;  //request.getParameter("creator");
-	    param[15]=request.getParameter("remarks");
-	    param[17]=(String)request.getSession().getAttribute("programId_oscarView");
+                param[1]=request.getParameter("appointment_date");
+                param[2]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("start_time"));
+                param[3]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("end_time"));
+                param[4]=request.getParameter("keyword");
+                param[5]=request.getParameter("notes");
+                param[6]=request.getParameter("reason");
+                param[7]=request.getParameter("location");
+                param[8]=request.getParameter("resources");
+                param[9]=request.getParameter("type");
+                param[10]=request.getParameter("style");
+                param[11]=request.getParameter("billing");
+                param[12]=request.getParameter("status");
+                param[13]=createdDateTime;   //request.getParameter("createdatetime");
+                param[14]=userName;  //request.getParameter("creator");
+                param[15]=request.getParameter("remarks");
+                param[17]=(String)request.getSession().getAttribute("programId_oscarView");
 		
 		String[] param2 = new String[7];
         for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
@@ -86,42 +86,44 @@
  		    datano=Integer.parseInt(request.getParameter(strbuf.toString()) );
 
             if (request.getParameter("groupappt").equals("Group Cancel")) {
-                String[] param = new String[4];
+                String[] param = new String[3];
 	            param[0]="C";
-     	        param[1]=userName;   //request.getParameter("createdatetime");
-	            param[2]=createdDateTime;
-	            param[3]=request.getParameter("appointment_no" + datano);  //request.getParameter("creator");
+                    param[1]=userName;   //request.getParameter("createdatetime");
+	            param[2]=request.getParameter("appointment_no" + datano);  //request.getParameter("creator");
+                    oscarSuperManager.update("appointmentDao", "archive_appt", new String[]{request.getParameter("appointment_no"+datano)});
 	            rowsAffected = oscarSuperManager.update("appointmentDao", "updatestatusc", param);
 			}
 
 		    //delete the selected appts
             if (request.getParameter("groupappt").equals("Group Delete")) {
+                oscarSuperManager.update("appointmentDao", "archive_appt", new Object[]{request.getParameter("appointment_no"+datano)});
             	rowsAffected = oscarSuperManager.update("appointmentDao", "delete",
             			new Object [] {request.getParameter("appointment_no" + datano)});
-			}
+            }
 
-			if (request.getParameter("groupappt").equals("Group Update")) {
+            if (request.getParameter("groupappt").equals("Group Update")) {
+                oscarSuperManager.update("appointmentDao", "archive_appt", new Object[]{request.getParameter("appointment_no"+datano)});
             	rowsAffected = oscarSuperManager.update("appointmentDao", "delete",
             			new Object [] {request.getParameter("appointment_no" + datano)});
      	        
                 String[] paramu = new String[18];
-				paramu[0]=request.getParameter("provider_no"+datano);
-				paramu[1]=request.getParameter("appointment_date");
-	    	    paramu[2]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("start_time"));
-		        paramu[3]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("end_time"));
-			    paramu[4]=request.getParameter("keyword");
-				paramu[5]=request.getParameter("notes");
-		        paramu[6]=request.getParameter("reason");
-			    paramu[7]=request.getParameter("location");
-			    paramu[8]=request.getParameter("resources");
-				paramu[9]=request.getParameter("type");
-	    	    paramu[10]=request.getParameter("style");
-		        paramu[11]=request.getParameter("billing");
-			    paramu[12]=request.getParameter("status");
-     			paramu[13]=createdDateTime;   //request.getParameter("createdatetime");
-		        paramu[14]=userName;  //request.getParameter("creator");
-			    paramu[15]=request.getParameter("remarks");
-			    paramu[17]=(String)request.getSession().getAttribute("programId_oscarView");
+                        paramu[0]=request.getParameter("provider_no"+datano);
+                        paramu[1]=request.getParameter("appointment_date");
+                        paramu[2]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("start_time"));
+                        paramu[3]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("end_time"));
+                        paramu[4]=request.getParameter("keyword");
+                        paramu[5]=request.getParameter("notes");
+                        paramu[6]=request.getParameter("reason");
+                        paramu[7]=request.getParameter("location");
+                        paramu[8]=request.getParameter("resources");
+                        paramu[9]=request.getParameter("type");
+                        paramu[10]=request.getParameter("style");
+                        paramu[11]=request.getParameter("billing");
+                        paramu[12]=request.getParameter("status");
+                        paramu[13]=createdDateTime;   //request.getParameter("createdatetime");
+                        paramu[14]=userName;  //request.getParameter("creator");
+                        paramu[15]=request.getParameter("remarks");
+                        paramu[17]=(String)request.getSession().getAttribute("programId_oscarView");
 	    		
 		        if (!(request.getParameter("demographic_no").equals("")) && strbuf.toString().indexOf("one") != -1) {
 					paramu[16]=request.getParameter("demographic_no");
