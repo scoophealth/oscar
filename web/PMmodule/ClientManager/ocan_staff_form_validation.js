@@ -492,9 +492,17 @@ function submitOcanForm() {
 			return false;
 		}		
 	}
+	if($("#date_of_birth").val().length==0) {	
+		if($("#clientDOBType").val() != 'UNK') {
+			alert('Date of Birth - do not know the date of birth? please choose unknown');
+			$("#clientDOBType").focus();
+			return false;
+		}
+	}
+	
 	if($("#clientDOBType").val() == 'UNK') {		
 		if($("#date_of_birth").val().length!=0) {			
-			alert('Date of Birth (YYYY-MM-DD) - Please do not provide date of birth');
+			alert('Date of Birth (YYYY-MM-DD) - You should not provide date of birth and choose unknown at the same time');
 			$("#date_of_birth").focus();
 			return false;
 		}		
@@ -530,7 +538,7 @@ function submitOcanForm() {
 		
 	if($("#completedByOCANLead").val() == 'FALSE') { 
 		if($("#reasonForAssessment").val() != 'REV' && $("#reasonForAssessment").val() != 'REK') {
-			alert('Reason for OCAN -- You can only choose Re-view or Rekey');
+			alert('Reason for OCAN -- This OCAN was not completed by OCAN lead. You can only choose Re-view or Rekey');
 			$("#reasonForAssessment").focus();
 			return false;
 		}
@@ -733,9 +741,12 @@ function validateStartAndCompletionDates()
 	var hours = mins/60;
 	var days = hours/24;
 	
+	// a warning message may be displayed when
+	//Completion Date is greater than 30 days from Start Date but this should not
+	//prevent you from completing and saving the OCAN.
 	if(days > 30) {
 		alert('Completion Date must be within 30 days of Start Date');
-		return false;
+		
 	}
 	return true;
 }
