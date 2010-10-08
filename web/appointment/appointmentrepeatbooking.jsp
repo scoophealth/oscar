@@ -92,42 +92,43 @@
  		    datano = Integer.parseInt(request.getParameter(strbuf.toString()));
 
             if (request.getParameter("groupappt").equals("Group Cancel")) {
-                String[] paramc = new String[4];
+                String[] paramc = new String[3];
 	            paramc[0]="C";
 	            paramc[1]=userName;
-     	        paramc[2]=createdDateTime;
-	            paramc[3]=request.getParameter("appointment_no" + datano);  //request.getParameter("creator");
-
+	            paramc[2]=request.getParameter("appointment_no" + datano);  //request.getParameter("creator");
+                oscarSuperManager.update("appointmentDao", "archive_appt", new String[]{request.getParameter("appointment_no"+datano)});
                 rowsAffected = oscarSuperManager.update("appointmentDao", "updatestatusc", paramc);
 			}
 
 		    //delete the selected appts
             if (request.getParameter("groupappt").equals("Group Delete")) {
+                oscarSuperManager.update("appointmentDao", "archive_appt", new String[]{request.getParameter("appointment_no"+datano)});
             	rowsAffected = oscarSuperManager.update("appointmentDao", "delete",
             			new Object [] {request.getParameter("appointment_no" + datano)});
-			}
+            }
 
-			if (request.getParameter("groupappt").equals("Group Update")) {
+            if (request.getParameter("groupappt").equals("Group Update")) {
+                oscarSuperManager.update("appointmentDao", "archive_appt", new String[]{request.getParameter("appointment_no"+datano)});
             	rowsAffected = oscarSuperManager.update("appointmentDao", "delete",
             			new Object [] {request.getParameter("appointment_no" + datano)});
      	        
                 String[] paramu = new String[17];
-				paramu[0]=request.getParameter("provider_no"+datano);
-				paramu[1]=request.getParameter("appointment_date");
-	    	    paramu[2]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("start_time"));
-		        paramu[3]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("end_time"));
-			    paramu[4]=request.getParameter("keyword");
-				paramu[5]=request.getParameter("notes");
-		        paramu[6]=request.getParameter("reason");
-			    paramu[7]=request.getParameter("location");
-			    paramu[8]=request.getParameter("resources");
-				paramu[9]=request.getParameter("type");
-	    	    paramu[10]=request.getParameter("style");
-		        paramu[11]=request.getParameter("billing");
-			    paramu[12]=request.getParameter("status");
-     			paramu[13]=createdDateTime;   //request.getParameter("createdatetime");
-		        paramu[14]=userName;  //request.getParameter("creator");
-			    paramu[15]=request.getParameter("remarks");
+                        paramu[0]=request.getParameter("provider_no"+datano);
+                        paramu[1]=request.getParameter("appointment_date");
+                        paramu[2]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("start_time"));
+                        paramu[3]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("end_time"));
+                        paramu[4]=request.getParameter("keyword");
+                        paramu[5]=request.getParameter("notes");
+                        paramu[6]=request.getParameter("reason");
+                        paramu[7]=request.getParameter("location");
+                        paramu[8]=request.getParameter("resources");
+                        paramu[9]=request.getParameter("type");
+                        paramu[10]=request.getParameter("style");
+                        paramu[11]=request.getParameter("billing");
+                        paramu[12]=request.getParameter("status");
+                        paramu[13]=createdDateTime;   //request.getParameter("createdatetime");
+                        paramu[14]=userName;  //request.getParameter("creator");
+                        paramu[15]=request.getParameter("remarks");
 		        if (!(request.getParameter("demographic_no").equals("")) && strbuf.toString().indexOf("one") != -1) {
 					paramu[16]=request.getParameter("demographic_no");
 	     	    } else {
@@ -155,7 +156,7 @@
 <p>
 <h1><bean:message
 	key="appointment.appointmentgrouprecords.msgAddFailure" /></h1>
-</p>
+
 <%  
     }
     return;
@@ -220,7 +221,7 @@ function onSub() {
   } 
 }
 //-->
-</SCRIPT>
+</script>
 <!-- calendar stylesheet -->
 <link rel="stylesheet" type="text/css" media="all"
 	href="../share/calendar/calendar.css" title="win2k-cold-1" />
