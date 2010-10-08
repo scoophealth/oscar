@@ -1,0 +1,98 @@
+Code Logging
+============
+
+This document outlines how logging in the code should be done. Note that this is not data
+access logging or audit logging. Specifically we're talking about code / debug logging.
+
+
+At a high level
+---------------
+
+We should use log4j as our logger.
+
+*   INFO level should only be used for rare messages like configuration or startup / shutdown notifications.
+*   DEBUG should be used for debugging messages.
+*   ERROR should be used for any error and exceptions.
+
+A convenience method is provided in MiscUtils.getLogger().
+This method will return a logger named after the calling class at runtime.
+
+**Note that this also works in JSP's as jsp's are compiled to servlets / classes during runtime.
+This method helps prevent people cutting and pasting logger delcarations with the wrong class name passed in.**
+
+Loggers should generally be delcared as
+private static final Logger logger=MiscUtils.getLogger();
+There's generally no reason to not have it private and static.
+
+Specifically with oscar, we have an override option for the location of the log4j file. A system property of “log4j.override.configuration” can be used to specify the absolute or relative path to a file that will be used to overlay the default log4j.xml file. The path/filename can include ${contestName} which will be expanded to the contextPath of the running code. See MiscUtil.addLogginOverrideConfiguration() for more information.
+
+
+Why Log4j
+---------
+
+The options for logging are generally :
+
+*   log4j
+*   java.util.logging
+*   apache commons logging
+
+Apache commons logging is usually only appropriate for application infrastructure builders. The reason is it allows other developers to choose the logger of their choice. In our case, we are not building infrastructure, we're building the application so it is not realistic to allow individual deployers to choose their logger. Between Java.util.logging and log4j logging, at the time of this writing, the log4j logging was much more versatile.
+
+
+System.err/System.out
+---------------------
+
+Please do not use System.err and or System.out. If you are doing some quick testing that's fine, but hopefully those lines should not be commited into CVS.
+
+
+Importance of proper logging
+----------------------------
+
+It is important to log properly in an application so that errors can be detected.
+Ideally, an application would show a few lines at INFO level during startup, then show nothing more until shutdown.
+
+If an error occurs during runtime, it should be logged at the ERROR level.
+If the logging is “clean” then it would be easy to notice and act on this error when
+it shows up as it would be an anomalie between the startup/shutdown info.
+
+If excessive logging is always done, i.e. improperly logging at INFO level or using System.err/out,
+log files may grow huge like hundreds of lines per day or per hour.
+The problem with this is you never really know when something has gone wrong.
+It's much easier to see an error when you expect to see nothing, than to see an error in
+a sea of hundreds of lines of out put.
+
+When logging an exception, it's important to provide the exception. As an example
+
+    try{
+        something
+    }catch (Exception e){
+        logger.error(“an error occured”, e);
+    }
+
+Note that with log4j, you can not do logger.error(e), this will not print the stack trace,
+you must put a string as the first parameter. Also note, do not do 
+
+    logger.error(e.getMessage());
+
+as that will not provide the stack trace either. Pass in the actual exception to the logging call.
+
+
+Logging Efficiency
+------------------
+
+Generally speaking logging is very fast and efficient and is of no real concern. i.e.
+
+    logger.debug(“The sql is : “+sql);
+
+is not of great concern. It has the over head of 1 method call as well as 1
+string concatenation but it is generally efficient enough.
+
+If you are doing something extensive though, then you should check the logging level first.
+As an example
+
+    if (logger.isDebugEnabled()){
+        String pi=calculatePiToAMillionPlaces();
+        logger.debug(“Pi to a million places is : ”+pi);
+    }
+
+Check the logging level first will ensure the rest of the logic isn't run when logging is not required.

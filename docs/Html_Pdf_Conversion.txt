@@ -1,0 +1,72 @@
+Html to Pdf Conversion
+============
+
+This document outlines some framework/infrastructure available in oscar to do html to pdf conversions.
+The audience for this document is developers / programmers. This is not a system administration
+documentation on how to configure oscar for these features, there should be other documentation for that.
+The initial purpose of this feature was to convert filled out eforms to pdf so the forms and the
+data on them could be sent to other systems and viewed. For examples of this look at
+the eforms “Send to PHR” button and associated code.
+
+
+Requirements
+------------
+
+There are a lot of generic html to pdf converters lying around but we need one that generates
+a pdf as close as we can to what you see on a browser. This a has quite a few implications, as examples,
+the html can be mal-formed. Web browsers generally render mal-formed-html quite well. Css and Javascript
+must be rendered and or run as they affect the resulting display. Referenced files must be loaded and
+rendered / taken into account as well like images or included css or included js files.
+
+
+Options
+-------
+
+At the time of this writing there was only 1 reliable way of rendering pdf's from HTML that
+sufficed all the requirements, using a browser to save-as-pdf or print-to-pdf.
+One option is Firefox which has a plugin which allowes you to run firefox and print to
+file, all from the command line. The problem with this is that it still required a
+ screen/display. The work around for that (on linux) is to use a virtual screen buffer.
+Another option is a rendition of the konquerer/safari/chrome browser engine called “wkhtmltopdf”
+which pretty much does the same as the firefox option but was specifically
+coded for this purpose so it does not require a display / screen buffer.
+
+
+Implementation
+--------------
+
+For our implementation we will use “wkhtmltopdf” (until something better comes along).
+
+In our code there's a utility called WKHtmlToPdfUtils.java.
+In this class you will find a couple of convertToPdf() methods.
+Converting a web page to pdf is as simple as calling one of those methods.
+
+With respect to oscar, there's a few more realities though like security.
+Since this code acts like a web client, the web client (even though it's on / within the server)
+must get by security some how. To resolve this issue, we've openned a little
+hole to render data but it's available to local host only. This is currently provided
+as EformViewForPdfGenerationServlet.java. This servlet is on the exempt list of secured pages
+and will forward requests to viewing of eForms – if you're coming from 127.0.0.1.
+
+As a result, to convert a page (efmshowform_data.jsp) to html right now the logical flow is :
+
+[efmpatientformlistSendPhrAction.jsp] → [WkHtmlToPdfUtils.java] → [EformViewForPdfGenerationServlet.java] → [efmshowform_data.jsp]
+
+
+Future Considerations
+---------------------
+
+In the future, if you need to generate other pdf's from html pages, you can rename
+the above mentioned servlet to something more generic, then add a parameter to the
+servlet to select which page to redirect to. Do not allow all pages though, don't take a
+url as a parameter as that would be too high of a security risk, the allowed pages should
+be an explicitly enumerated list.
+
+In the future, if we have time and want slightly better security, we can implement a
+temporary key feature. As an example, one piece of code that's running based on an end
+user browser request could set a temporary key (or just a random number) in memory or in a
+temporary database table or something like that. This key could then be passed as a query
+parameter to wkhtmltopdf invokation. The above mentioned servlet could then allow or deny
+requests based on this temporary key. There would have to be some clearing algorithm on the
+keys too like remove it once it's requested or after a certain time.
+logic isn't run when logging is not required.
