@@ -491,12 +491,12 @@ if (pId==null) pId="";
 			<td class="fieldTitle">include checked issues in note</td>
 			<td class="fieldValue"><html:checkbox property="includeIssue" onchange="setChangeFlag(true);" /></td>
 		</tr>
-
+<!-- commented out on Oct 4, 2010
 		<tr>
 			<td class="fieldTitle">Group Note</td>
 			<td class="fieldValue"><html:checkbox property="groupNote" onchange="setChangeFlag(true);toggleGroupNote(this);" /></td>
 		</tr>
-		
+ -->	
       <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
 		<c:if test="${param.from=='casemgmt' || requestScope.from=='casemgmt'}" >
 		<c:url value="${sessionScope.billing_url}" var="url"/>
