@@ -246,6 +246,7 @@ function changeNumberOfReferrals() {
 
 <script>
 $("document").ready(function(){
+	/* should not blank out 2,3a,3b, those are optional.
 	$("select[domain1='true']").change(function(){
 		var curId = $(this).attr("id");
 		var domainNumber = curId.substring(0,curId.indexOf("_"));
@@ -277,7 +278,7 @@ $("document").ready(function(){
 			$("#"+domainNumber+"_3b").attr("disabled","");
 		}
 	});
-
+	*/
 	//autism
 	$("input[name='6_medical_conditions'][value='408856003']").change(function(){
 		if($(this).attr("checked")) {
@@ -631,8 +632,12 @@ $("document").ready(function(){
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Postal Code</td>
-			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"familyDoctorPostalCode",1,30,prepopulationLevel)%>
+			<td class="genericTableData" >
+				<% String input = OcanForm.renderAsTextField(ocanStaffForm.getId(),"familyDoctorPostalCode",7,prepopulationLevel);
+				input = input.substring(0,input.length()-2);
+				input = input.concat(" class=\"{validate: {postalCode:true}}\"/>");
+				%>
+				<%=input %>
 			</td>
 		</tr>
 		<tr>
@@ -708,7 +713,13 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Postal Code</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"psychiatristPostalCode",1,30,prepopulationLevel)%>
+				<%
+					input = "";
+					input = OcanForm.renderAsTextField(ocanStaffForm.getId(),"psychiatristPostalCode",7,prepopulationLevel);
+					input = input.substring(0,input.length()-2);
+					input = input.concat(" class=\"{validate: {postalCode:true}}\"/>");
+				%>
+				<%=input %>
 			</td>
 		</tr>
 		<tr>
@@ -796,7 +807,13 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Postal Code</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"1_otherContactPostalCode",1,30,prepopulationLevel)%>
+				<%
+					input = "";
+					input = OcanForm.renderAsTextField(ocanStaffForm.getId(),"1_otherContactPostalCode",7,prepopulationLevel);
+					input = input.substring(0,input.length()-2);
+					input = input.concat(" class=\"{validate: {postalCode:true}}\"/>");
+				%>
+				<%=input %>			
 			</td>
 		</tr>
 		<tr>
@@ -873,7 +890,14 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Postal Code</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"2_otherContactPostalCode",1,30,prepopulationLevel)%>
+				<%
+					input = "";
+					input = OcanForm.renderAsTextField(ocanStaffForm.getId(),"2_otherContactPostalCode",7,prepopulationLevel);
+					input = input.substring(0,input.length()-2);
+					input = input.concat(" class=\"{validate: {postalCode:true}}\"/>");
+				%>
+				<%=input %>
+			
 			</td>
 		</tr>
 		<tr>
@@ -950,7 +974,14 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Postal Code</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"3_otherContactPostalCode",1,30,prepopulationLevel)%>
+				<%
+					input = "";
+					input = OcanForm.renderAsTextField(ocanStaffForm.getId(),"3_otherContactPostalCode",7,prepopulationLevel);
+					input = input.substring(0,input.length()-2);
+					input = input.concat(" class=\"{validate: {postalCode:true}}\"/>");
+				%>
+				<%=input %>
+			
 			</td>
 		</tr>
 		<tr>
@@ -1030,7 +1061,14 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Postal Code</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"1_otherAgencyPostalCode",1,30,prepopulationLevel)%>
+				<%
+					input = "";
+					input = OcanForm.renderAsTextField(ocanStaffForm.getId(),"1_otherAgencyPostalCode",7,prepopulationLevel);
+					input = input.substring(0,input.length()-2);
+					input = input.concat(" class=\"{validate: {postalCode:true}}\"/>");
+				%>
+				<%=input %>
+			
 			</td>
 		</tr>
 		<tr>
@@ -1099,7 +1137,13 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Postal Code</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"2_otherAgencyPostalCode",1,30,prepopulationLevel)%>
+				<%
+					input = "";
+					input = OcanForm.renderAsTextField(ocanStaffForm.getId(),"2_otherAgencyPostalCode",7,prepopulationLevel);
+					input = input.substring(0,input.length()-2);
+					input = input.concat(" class=\"{validate: {postalCode:true}}\"/>");
+				%>
+				<%=input %>
 			</td>
 		</tr>
 		<tr>
@@ -1167,7 +1211,13 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Postal Code</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"3_otherAgencyPostalCode",1,30,prepopulationLevel)%>
+				<%
+					input = "";
+					input = OcanForm.renderAsTextField(ocanStaffForm.getId(),"3_otherAgencyPostalCode",7,prepopulationLevel);
+					input = input.substring(0,input.length()-2);
+					input = input.concat(" class=\"{validate: {postalCode:true}}\"/>");
+				%>
+				<%=input %>
 			</td>
 		</tr>
 		<tr>
@@ -2699,7 +2749,7 @@ This information is collected from a variety of sources, including self-report, 
 		<tr>
 			<td class="genericTableHeader">Which of the following drugs have you used? (Select all that apply)</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsDrugUseRadioBoxOptions(ocanStaffForm.getId(), "drug_list", OcanForm.getOcanFormOptions("Drug List"),prepopulationLevel)%>						
+				<%=OcanForm.renderAsDrugUseCheckBoxOptions(ocanStaffForm.getId(), "drug_list", OcanForm.getOcanFormOptions("Drug List"),prepopulationLevel)%>						
 			</td>
 		</tr>	
 					
