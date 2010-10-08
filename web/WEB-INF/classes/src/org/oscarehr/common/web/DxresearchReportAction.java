@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import oscar.oscarResearch.oscarDxResearch.bean.dxCodeSearchBean;
 import oscar.oscarResearch.oscarDxResearch.bean.dxQuickListBeanHandler;
+import oscar.oscarResearch.oscarDxResearch.bean.dxQuickListItemsHandler;
 import oscar.oscarResearch.oscarDxResearch.util.dxResearchCodingSystem;
 
 /**
@@ -32,6 +33,7 @@ import oscar.oscarResearch.oscarDxResearch.util.dxResearchCodingSystem;
 public class DxresearchReportAction extends DispatchAction {
     
     private final static String SUCCESS = "success";
+    private final static String EDIT_DESC = "editdesc";
     private DxresearchDAO dxresearchdao ;
     private MyGroupDAO mygroupdao;
 
@@ -150,6 +152,22 @@ public class DxresearchReportAction extends DispatchAction {
         return mapping.findForward(SUCCESS);
     }
 
+    public ActionForward editDesc( ActionMapping mapping, ActionForm  form,
+                                HttpServletRequest request, HttpServletResponse response)
+                                throws Exception
+    {
+      String editingCodeType = request.getParameter( "editingCodeType" );
+      String editingCodeCode = request.getParameter( "editingCodeCode" );
+      String editingCodeDesc = request.getParameter( "editingCodeDesc" );
+
+      dxQuickListItemsHandler.updatePatientCodeDesc( editingCodeType, editingCodeCode, editingCodeDesc );
+
+      editingCodeDesc = String.format( "\"%s\"", editingCodeDesc );
+      request.getSession().setAttribute( "editingCodeDesc", editingCodeDesc );
+
+      return mapping.findForward(EDIT_DESC);
+    }
+
     public ActionForward addSearchCode(ActionMapping mapping, ActionForm  form,
             HttpServletRequest request, HttpServletResponse response)
             throws Exception {
@@ -168,6 +186,22 @@ public class DxresearchReportAction extends DispatchAction {
             newAddition.setType("icd9"); // ichppccode/icd10 not supported yet
             newAddition.setDxSearchCode(codeSingle.split("-->")[0]);
             newAddition.setDescription(codeSingle.split("-->")[1]);
+        }
+
+        String action = request.getParameter( "action" );
+        if( action != null && action.equalsIgnoreCase( "edit" ) && newAddition != null )
+        {
+//          List editingCodeList = new ArrayList();
+//          editingCodeList.add( newAddition );
+//          request.getSession().setAttribute("editingCode", editingCodeList );
+//          request.getSession().setAttribute("codeSearch", editingCodeList );
+          //editingCodeType
+          request.getSession().setAttribute( "editingCodeType", newAddition.getType() );
+          request.getSession().setAttribute( "editingCodeCode", newAddition.getDxSearchCode() );
+          String description = newAddition.getDescription().trim();
+          description = String.format( "\"%s\"", description );
+          request.getSession().setAttribute( "editingCodeDesc", description );
+          return mapping.findForward(SUCCESS);
         }
 
         List existcodeSearch;

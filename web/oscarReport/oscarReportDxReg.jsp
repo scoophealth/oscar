@@ -62,6 +62,13 @@ objectName="_admin,_admin.reporting" rights="r" reverse="<%=true%>">
 		google.load("jquery", "1");
 	</script>
 	<script src="../js/jquery.autocomplete.js"></script>
+
+	<script type="text/javascript">
+    	function setAction(target)
+    	{
+     		document.forms[0].action.value=target;
+		};
+	</script>
 	<style>
 		input {
 			font-size: 100%;
@@ -72,6 +79,9 @@ objectName="_admin,_admin.reporting" rights="r" reverse="<%=true%>">
                 request.setAttribute("listview", request.getSession().getAttribute("listview"));
                 request.setAttribute("codeSearch", request.getSession().getAttribute("codeSearch"));
                 //request.setAttribute("codeSearch", request.getSession().getAttribute("codeSearch"));
+                String editingCodeType = (String) session.getAttribute("editingCodeType");
+                String editingCodeCode = (String) session.getAttribute("editingCodeCode");
+                String editingCodeDesc = (String) session.getAttribute("editingCodeDesc");
 
     %>
     <body vlink="#0000FF" class="BodyStyle">
@@ -95,6 +105,7 @@ objectName="_admin,_admin.reporting" rights="r" reverse="<%=true%>">
                     <table border="1" width="100%">
                             <tbody>
                                 <html:form action="/report/DxresearchReport?method=addSearchCode">
+                                <tr> <input type="hidden" name="action" value="NA" /> </tr>
                                 <tr>
                                     <td>
                                         <html:select property="quicklistname">
@@ -127,6 +138,10 @@ objectName="_admin,_admin.reporting" rights="r" reverse="<%=true%>">
                                             $("#codesearch").autocomplete("../oscarReport/oscarReportDxRegHelper.jsp");
                                         </script>
                                     </td>
+                                     <td>
+                                        <nested:submit onclick="setAction('edit');submit();" style="border:1px solid #666666;">EDIT</nested:submit>
+                                    </td>
+
                                     <td>
                                         <nested:submit style="border:1px solid #666666;">ADD</nested:submit>
                                     </td>
