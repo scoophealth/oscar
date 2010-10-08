@@ -42,20 +42,19 @@
 	</tr>
 </table>
 <%
-  String creator = (String) session.getAttribute("userlastname") + ", " + (String) session.getAttribute("userfirstname");
-  String createdatetime = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy-MM-dd HH:mm:ss");
+  String updateuser = (String) session.getAttribute("user");
 
   int rowsAffected = 0;
+  oscarSuperManager.update("appointmentDao", "archive_appt", new String[]{request.getParameter("appointment_no")});
   if (request.getParameter("buttoncancel")!=null && (request.getParameter("buttoncancel").equals("Cancel Appt") || request.getParameter("buttoncancel").equals("No Show"))) {
-	  String[] param = new String[4];
+	  String[] param = new String[3];
 	  param[0]=request.getParameter("buttoncancel").equals("Cancel Appt")?"C":"N";
-	  param[1]=creator;  //request.getParameter("creator");
-	  param[2]=createdatetime;
-	  param[3]=request.getParameter("appointment_no");
+	  param[1]=updateuser;  //request.getParameter("creator");
+	  param[2]=request.getParameter("appointment_no");
 	  rowsAffected = oscarSuperManager.update("appointmentDao", "updatestatusc", param);
 
   } else {
-	  String[] param = new String[17];
+	  String[] param = new String[16];
 	  if (request.getParameter("demographic_no")!=null && !(request.getParameter("demographic_no").equals(""))) {
 		  param[0] = request.getParameter("demographic_no");
 	  } else param[0]="0";
@@ -71,10 +70,9 @@
 	  param[10]=request.getParameter("style");
 	  param[11]=request.getParameter("billing");
 	  param[12]=request.getParameter("status");
-	  param[13]=createdatetime;  //request.getParameter("createdatetime");
-	  param[14]=creator;  //request.getParameter("creator");
-	  param[15]=request.getParameter("remarks");
-	  param[16]=request.getParameter("appointment_no");
+	  param[13]=updateuser;  //request.getParameter("creator");
+	  param[14]=request.getParameter("remarks");
+	  param[15]=request.getParameter("appointment_no");
 	  rowsAffected = oscarSuperManager.update("appointmentDao", request.getParameter("dboperation"), param);
   }
   if (rowsAffected == 1) {
