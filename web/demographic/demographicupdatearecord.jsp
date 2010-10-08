@@ -60,7 +60,7 @@
   java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
 
   //if action is good, then give me the result
-    String[] param =new String[29];
+    String[] param =new String[30];
 	  param[0]=request.getParameter("last_name");
 	  param[1]=request.getParameter("first_name");
 	  param[2]=request.getParameter("address");
@@ -90,6 +90,7 @@
 	  param[26]=request.getParameter("title");
 	  param[27]=request.getParameter("official_lang");
 	  param[28]=request.getParameter("spoken_lang");
+          param[29]=(String)session.getAttribute("user");
 	
 		java.sql.Date [] dtparam = new java.sql.Date[4];
 
@@ -202,6 +203,9 @@
             }
         }
     }
+
+    int[] paramArch =new int[] {Integer.parseInt(request.getParameter("demographic_no"))};
+    apptMainBean.queryExecuteUpdate(paramArch, "archive_record");
 
   int rowsAffected = apptMainBean.queryExecuteUpdate(param, dtparam, intparam, request.getParameter("dboperation"));
   if (rowsAffected ==1) {      
