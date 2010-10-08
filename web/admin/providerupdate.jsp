@@ -50,7 +50,7 @@
   ProviderBillCenter billCenter = new ProviderBillCenter();
   billCenter.updateBillCenter(request.getParameter("provider_no"),request.getParameter("billcenter")); 
   
-  DBPreparedHandlerParam[] param =new DBPreparedHandlerParam[20];
+  DBPreparedHandlerParam[] param =new DBPreparedHandlerParam[21];
   param[0]=new DBPreparedHandlerParam(request.getParameter("last_name"));
   param[1]=new DBPreparedHandlerParam(request.getParameter("first_name"));
   param[2]=new DBPreparedHandlerParam(request.getParameter("provider_type"));
@@ -76,21 +76,25 @@
   param[16]=new DBPreparedHandlerParam(SxmlMisc.createXmlDataString(request,"xml_p"));
   param[17]=new DBPreparedHandlerParam(request.getParameter("provider_activity"));
   param[18]=new DBPreparedHandlerParam(request.getParameter("practitionerNo"));
-  param[19]=new DBPreparedHandlerParam(request.getParameter("provider_no"));
+  param[19]=new DBPreparedHandlerParam((String)session.getAttribute("user"));
+  param[20]=new DBPreparedHandlerParam(request.getParameter("provider_no"));
   
+    DBPreparedHandlerParam[] paramArch =new DBPreparedHandlerParam[] {new DBPreparedHandlerParam(request.getParameter("provider_no"))};
+    apptMainBean.queryExecuteUpdate(paramArch, "provider_archive_record");
+
   int rowsAffected = apptMainBean.queryExecuteUpdate(param, request.getParameter("dboperation"));
   if (rowsAffected ==1) {
-	  if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
-		String[] sites = request.getParameterValues("sites");
-		DBPreparedHandler dbObj = new DBPreparedHandler();
-		String provider_no = request.getParameter("provider_no");
-		dbObj.queryExecuteUpdate("delete from providersite where provider_no = ?", new String[]{provider_no});
-		if (sites!=null) {
-			for (int i=0; i<sites.length; i++) {
-				dbObj.queryExecuteUpdate("insert into providersite (provider_no, site_id) values (?,?)", new String[] {provider_no, String.valueOf(sites[i])});
-			}
-		}
-	  }
+        if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
+            String[] sites = request.getParameterValues("sites");
+            DBPreparedHandler dbObj = new DBPreparedHandler();
+            String provider_no = request.getParameter("provider_no");
+            dbObj.queryExecuteUpdate("delete from providersite where provider_no = ?", new String[]{provider_no});
+            if (sites!=null) {
+                for (int i=0; i<sites.length; i++) {
+                    dbObj.queryExecuteUpdate("insert into providersite (provider_no, site_id) values (?,?)", new String[] {provider_no, String.valueOf(sites[i])});
+                }
+            }
+        }
 %>
 <p>
 <h2><bean:message key="admin.providerupdate.msgUpdateSuccess" /><a
@@ -99,7 +103,7 @@
 <%  
   } else {
 %>
-<h1><bean:message key="admin.providerupdate.msgUpdateFailure" /><%= request.getParameter("provider_no") %>.
+<h1><bean:message key="admin.providerupdate.msgUpdateFailure" /><%= request.getParameter("provider_no") %>.</h1>
 <%  
   } 
 %>
