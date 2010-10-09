@@ -183,7 +183,22 @@ public class OcanReportUIBean {
 		submissionFile.setTimestamp(convertToOcanXmlDateTime(new Date()));
 			
 		List<OCANv2SubmissionRecord> submissionRecordList = new ArrayList<OCANv2SubmissionRecord>();
+		int clientId_0=0;
 		for(OcanStaffForm staffForm:ocanStaffForms) {
+			//If ReasonForAssessment is Review or Re-key, this ocan should not be included in xml file.
+			String answer = staffForm.getReasonForAssessment();
+			if(answer.equals("REV") || answer.equals("REK")) {
+				continue;
+			}
+			
+			//Only download one latest completed OCAN for one client 
+			int clientId_1 = staffForm.getClientId().intValue();
+			if(clientId_0!=clientId_1) {
+				clientId_0 = clientId_1;
+			} else {
+				continue;
+			}
+			
 			//check for a clientform
 			OcanClientForm clientForm = ocanClientFormDao.findLatestSignedOcanForm(loggedInInfo.currentFacility.getId(),staffForm.getClientId(), "1.2", getStartDate(year,month), getEndDate(year,month));
 			List<OcanClientFormData> clientFormData = null;
@@ -352,12 +367,12 @@ public class OcanReportUIBean {
 	public static Domain convertOCANDomain(int domainNumber,OcanStaffForm ocanStaffForm, List<OcanStaffFormData> ocanStaffFormData, OcanClientForm ocanClientForm, List<OcanClientFormData> ocanClientFormData) {
 		Domain domain = Domain.Factory.newInstance();
 		domain.setName(Domain.Name.Enum.forString(getDomainName(domainNumber)));
-		domain.setDomainComments(convertDomainComments(String.valueOf(domainNumber),ocanStaffFormData));
+		domain.setDomainComments(convertDomainComments(String.valueOf(domainNumber),ocanStaffFormData,ocanClientForm, ocanClientFormData));
 		domain.setDomainActions(convertDomainActions(String.valueOf(domainNumber),ocanStaffFormData));
 	
 		NeedRating needRating = convertNeedRating(domainNumber,ocanStaffForm,ocanStaffFormData, ocanClientForm, ocanClientFormData);
 		domain.setNeedRating(needRating);
-		//2,3a,3b
+		
 			domain.setInformalHelpRecvd(convertInformalHelpRecvd(domainNumber,ocanStaffForm,ocanStaffFormData));
 			domain.setFormalHelpRecvd(convertFormalHelpRecvd(domainNumber,ocanStaffForm,ocanStaffFormData));
 			domain.setFormalHelpNeed(convertFormalHelpNeed(domainNumber,ocanStaffForm,ocanStaffFormData));			
@@ -493,12 +508,16 @@ public class OcanReportUIBean {
 		NeedRating needRating = NeedRating.Factory.newInstance();
 		String staffAnswer = getStaffAnswer(domainNumber+"_1",ocanStaffFormData);
 		needRating.setStaff(Byte.valueOf(staffAnswer));
-		if(ocanClientForm != null) {
-			String clientAnswer = getClientAnswer(domainNumber+"_1",ocanClientFormData);
-			if(clientAnswer.length()>0)
-				needRating.setClient(Byte.valueOf(clientAnswer));
-			else
+		if(getStaffAnswer("consumerSelfAxCompleted",ocanStaffFormData).equals("TRUE")) {
+			if(ocanClientForm != null) {
+				String clientAnswer = getClientAnswer(domainNumber+"_1",ocanClientFormData);
+				if(clientAnswer.length()>0)
+					needRating.setClient(Byte.valueOf(clientAnswer));
+				else
+					needRating.setClient((byte)-1);
+			} else {
 				needRating.setClient((byte)-1);
+			}
 		} else {
 			needRating.setClient((byte)-1);
 		}
@@ -535,13 +554,23 @@ public class OcanReportUIBean {
 		return formalHelpNeed;
 	}
 
-	
-	public static DomainComments convertDomainComments(String domainNumber,List<OcanStaffFormData> ocanStaffFormData) {
+	public static DomainComments convertDomainComments(String domainNumber,List<OcanStaffFormData> ocanStaffFormData, OcanClientForm ocanClientForm, List<OcanClientFormData> ocanClientFormData) {
 		DomainComments domainComments = DomainComments.Factory.newInstance();
 		
 		domainComments.setStaff(getStaffAnswer(domainNumber+"_comments",ocanStaffFormData));
-		domainComments.setClient(getStaffAnswer(domainNumber+"_comments",ocanStaffFormData));
-			
+		if(getStaffAnswer("consumerSelfAxCompleted",ocanStaffFormData).equals("TRUE")) {
+			if(ocanClientForm != null) {
+				String clientAnswer = getClientAnswer(domainNumber+"_comments",ocanClientFormData);
+				if(clientAnswer.length()>0)
+					domainComments.setClient(clientAnswer);
+				else
+					domainComments.setClient("");
+			} else {
+				domainComments.setClient("");
+			}
+		} else {
+			domainComments.setClient("");
+		}
 		return domainComments;
 	}
 	
@@ -770,37 +799,39 @@ public class OcanReportUIBean {
 	
 	public static DrugUseList getDrugUseList(List<OcanStaffFormData> ocanStaffFormData) {
 		DrugUseList drugUseList = DrugUseList.Factory.newInstance();
-		/*
+		
 		List<DrugUse> drugs = new ArrayList<DrugUse>();
 		List<String> drugList = getDrugList();
 		
 		for(String drug:drugList) {
-			String mnth = getStaffAnswer(drug+"_freq_6months",ocanStaffFormData);
-			String ever = getStaffAnswer(drug+"_freq_ever",ocanStaffFormData);
+			String mnth = getStaffAnswer(drug.concat("_freq_6months"),ocanStaffFormData);
+			String ever = getStaffAnswer(drug.concat("_freq_ever"),ocanStaffFormData);
+			DrugUse drugUse = DrugUse.Factory.newInstance();
 			if(mnth.length()>0 || ever.length()>0) {
-				//we have a winner
-				DrugUse drugUse = DrugUse.Factory.newInstance();
+				//we have a winner				
 				drugUse.setName(DrugUse.Name.Enum.forString(drug));
 				if(mnth.length()>0) {
-					drugUse.setFrequency("5");
+					drugUse.setFrequency(DrugUse.Frequency.Enum.forString(mnth));
 				} else {
-					drugUse.setFrequency("6");
-				}				
-				drugs.add(drugUse);
+					drugUse.setFrequency(DrugUse.Frequency.Enum.forString(ever));
+				}					
+			} else {
+				drugUse.setFrequency(DrugUse.Frequency.Enum.forString(""));
 			}
+			drugs.add(drugUse);
 		}
 		
 		if(getStaffAnswer("drug_injection_freq_6months",ocanStaffFormData).length()>0) {
-			drugUseList.setInjected("5");
+			drugUseList.setInjected(DrugUseList.Injected.Enum.forString(getStaffAnswer("drug_injection_freq_6months",ocanStaffFormData)));
 		} else if(getStaffAnswer("drug_injection_freq_ever",ocanStaffFormData).length()>0) {
-			drugUseList.setInjected("6");
+			drugUseList.setInjected(DrugUseList.Injected.Enum.forString(getStaffAnswer("drug_injection_freq_ever",ocanStaffFormData)));
 		} else {
-			drugUseList.setInjected("");
+			drugUseList.setInjected(DrugUseList.Injected.Enum.forString(""));
 		}
 		drugUseList.setDrugUseArray(drugs.toArray(new DrugUse[drugs.size()]));
-	}
-		*/
+	
 		
+		/*
 		drugUseList.setInjected(DrugUseList.Injected.Enum.forString(getStaffAnswer("drug_injection_freq",ocanStaffFormData)));
 		
 		List<String> drugList = getDrugList();
@@ -817,7 +848,7 @@ public class OcanReportUIBean {
 			drugUse.add(du);
 		}				
 		drugUseList.setDrugUseArray(drugUse.toArray(new DrugUse[drugList.size()]));	
-		
+		*/
 		return drugUseList;
 	}
 	

@@ -504,7 +504,7 @@ public class OcanForm {
 		return(ocanClientForm);
 	}
 	
-	
+	/*
 	public static String renderAsDrugUseCheckBoxOptions(Integer ocanStaffFormId, String question, List<OcanFormOption> options, int prepopulationLevel)
 	{
 		return renderAsDrugUseCheckBoxOptions(ocanStaffFormId, question,options,prepopulationLevel, false);
@@ -553,14 +553,14 @@ public class OcanForm {
 		
 		return(sb.toString());
 	}
+	*/
 	
-	
-	public static String renderAsDrugUseRadioBoxOptions(Integer ocanStaffFormId, String question, List<OcanFormOption> options, int prepopulationLevel)
+	public static String renderAsDrugUseCheckBoxOptions(Integer ocanStaffFormId, String question, List<OcanFormOption> options, int prepopulationLevel)
 	{
-		return renderAsDrugUseRadioBoxOptions(ocanStaffFormId, question,options,prepopulationLevel, false);
+		return renderAsDrugUseCheckBoxOptions(ocanStaffFormId, question,options,prepopulationLevel, false);
 	}
 	
-	public static String renderAsDrugUseRadioBoxOptions(Integer ocanStaffFormId, String question, List<OcanFormOption> options, int prepopulationLevel, boolean clientForm)
+	public static String renderAsDrugUseCheckBoxOptions(Integer ocanStaffFormId, String question, List<OcanFormOption> options, int prepopulationLevel, boolean clientForm)
 	{
 		 
 		StringBuilder sb=new StringBuilder();
@@ -571,9 +571,12 @@ public class OcanForm {
 			String htmlEscapedName=StringEscapeUtils.escapeHtml(option.getOcanDataCategoryName());
 			String value = option.getOcanDataCategoryValue(); //drug id
 			
-			String checked2 = null;
-			String checked3 = null;
+			List<OcanStaffFormData> freqMnthAnswer = getStaffAnswers(ocanStaffFormId, value+"_freq_6months", prepopulationLevel);
+			List<OcanStaffFormData> freqEverAnswer = getStaffAnswers(ocanStaffFormId, value+"_freq_ever", prepopulationLevel);
 			
+			String checked2=((freqMnthAnswer.size()>0)?"checked=\"checked\"":"");
+			String checked3=((freqEverAnswer.size()>0)?"checked=\"checked\"":"");
+			/*
 			List<OcanStaffFormData> freqAnswer = getStaffAnswers(ocanStaffFormId, value+"_DrugUseFreq", prepopulationLevel);
 			Iterator it = freqAnswer.iterator();
 			while(it.hasNext()) {
@@ -581,19 +584,21 @@ public class OcanForm {
 				checked2=((data.getAnswer().equals("5"))?"checked":"");
 				checked3=((data.getAnswer().equals("6"))?"checked":"");
 			}	
-			sb.append("<tr><td>"+htmlEscapedName+"</td><td><input type=\"radio\" "+checked2+" name=\""+StringEscapeUtils.escapeHtml(option.getOcanDataCategoryValue())+"_DrugUseFreq\" value=\"5\" /></td><td><input type=\"radio\" "+checked3+" name=\""+StringEscapeUtils.escapeHtml(option.getOcanDataCategoryValue())+"_DrugUseFreq\" value=\"6\" /></td></tr>");
+			*/
+			sb.append("<tr><td>"+htmlEscapedName+"</td><td><input type=\"checkbox\" "+checked2+" id=\""+StringEscapeUtils.escapeHtml(option.getOcanDataCategoryValue())+"_freq_6months\" name=\""+StringEscapeUtils.escapeHtml(option.getOcanDataCategoryValue())+"_freq_6months\" value=\"5\" /></td><td><input type=\"checkbox\" "+checked3+" id=\""+StringEscapeUtils.escapeHtml(option.getOcanDataCategoryValue())+"_freq_ever\" name=\""+StringEscapeUtils.escapeHtml(option.getOcanDataCategoryValue())+"_freq_ever\" value=\"6\" /></td></tr>");
 		}
 		
-		sb.append(renderAsDrugInjectionRadioBoxOptions(ocanStaffFormId,question,options,prepopulationLevel,clientForm));
+		sb.append(renderAsDrugInjectionCheckBoxOptions(ocanStaffFormId,question,options,prepopulationLevel,clientForm));
 		sb.append("</table>");
 		return(sb.toString());
 	}
 
 	
-	public static String renderAsDrugInjectionRadioBoxOptions(Integer ocanStaffFormId, String question, List<OcanFormOption> options, int prepopulationLevel, boolean clientForm)
+	public static String renderAsDrugInjectionCheckBoxOptions(Integer ocanStaffFormId, String question, List<OcanFormOption> options, int prepopulationLevel, boolean clientForm)
 	{
 		 
 		StringBuilder sb=new StringBuilder();
+		/*
 		String checked2 = null;
 		String checked3 = null;
 		
@@ -603,8 +608,15 @@ public class OcanForm {
 			OcanStaffFormData data = (OcanStaffFormData) it.next();
 			checked2=((data.getAnswer().equals("5"))?"checked":"");
 			checked3=((data.getAnswer().equals("6"))?"checked":"");
-		}		
-		sb.append("<tr><td>Has the substance been injected?</td><td><input type=\"radio\" "+checked2+" name=\"drug_injection_freq\" value=\"5\" /></td><td><input type=\"radio\" "+checked3+" name=\"drug_injection_freq\" value=\"6\" /></td></tr>");
+		}
+		*/
+		List<OcanStaffFormData> freqMnthAnswer = getStaffAnswers(ocanStaffFormId, "drug_injection_freq_6months", prepopulationLevel);
+		List<OcanStaffFormData> freqEverAnswer = getStaffAnswers(ocanStaffFormId, "drug_injection_freq_ever", prepopulationLevel);
+		
+		String checked2=((freqMnthAnswer.size()>0)?"checked=\"checked\"":"");
+		String checked3=((freqEverAnswer.size()>0)?"checked=\"checked\"":"");
+		
+		sb.append("<tr><td>Has the substance been injected?</td><td><input type=\"checkbox\" "+checked2+" id=\"drug_injection_freq_6months\" name=\"drug_injection_freq_6months\" value=\"5\" /></td><td><input type=\"checkbox\" "+checked3+" id=\"drug_injection_freq_ever\" name=\"drug_injection_freq_ever\" value=\"6\" /></td></tr>");
 	
 		
 		return(sb.toString());
