@@ -1,3 +1,6 @@
+<%String _appPath = request.getContextPath();
+%>
+<p><image src="<%=_appPath%>/images/CAISI_Large_Logo_4_grey_blue.PNG" border="0" align="center"></image></p>
 <p><font color="#2b6991" face="Helvetica Neue" size="4"><b>Individual 
 Consent form for personal information integration</b></font></h1>
 <h2><a name="0.1__TOC8351"></a><font color="#2b6991" face="Helvetica Neue" size="3"><b>Summary</b></font></h2>
