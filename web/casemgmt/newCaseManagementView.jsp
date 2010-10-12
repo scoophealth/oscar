@@ -337,8 +337,7 @@ try
 				</security:oscarSec>
 			</div>
 		</div>
-	
-	--</div>
+	</div>
 </html:form>
 
 <nested:form action="/CaseManagementEntry" style="display:inline; margin-top:0; margin-bottom:0;">
