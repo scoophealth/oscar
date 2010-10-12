@@ -36,11 +36,16 @@ public class GrepStuffDirectoryWalker extends DirectoryWalker {
 		String fileContents=FileUtils.readFileToString(file);
 		
 		if (relativePath.endsWith(".hbm.xml")) violations.put(".hbm.xml", relativePath);
+		if (relativePath.endsWith(".class")) violations.put(".class", relativePath);
 		
 		checkContains(relativePath, fileContents, "System.err");
 		checkContains(relativePath, fileContents, "System.out");	    
 		checkContains(relativePath, fileContents, "printStackTrace");	    
 		checkContains(relativePath, fileContents, "ASCII");	    
+		checkContains(relativePath, fileContents, "DBHandler.");	    
+		checkContains(relativePath, fileContents, "getConnection(");	    
+		checkContains(relativePath, fileContents, "OscarSuperManager");	
+		checkContains(relativePath, fileContents, "org.apache.commons.logging.Log");
     }
 
 
