@@ -139,7 +139,7 @@ SiteUser.java
 Looking at individual lines here :
 ----------------------------------
 -   12 : @Entity marks this as a JPA entity. This is a standard JPA annotation.
-         Annotations are not normally inherited so you can not annotated this is the superclass.
+         Annotations are not normally inherited so you can not annotated this in the superclass.
 -   13 : The generics <Integer> parameter denotes that this model object will use an Integer as it's primary key.
          You can specify any valid jpa primary key class here.
 -   15 : Note that we are annotating the field variables, not the methods.
@@ -150,7 +150,7 @@ Looking at individual lines here :
          it means the database generates the id via the auto increment option.
          This is a standard JPA annotation.
 -   17 : Note that although it's perfectly legal to use primitives like “int”
-         as an ID, it's probably not a good idea. The reason is nuder the scene
+         as an ID, it's probably not a good idea. The reason is under the scene
          it's an Integer anyways so you're just causing a lot of auto-boxing to occur.
 -   22 : @Temporal helps distinguish between date and date+time. It should
          always be specified for date fields. Both java.util.Date and
@@ -172,7 +172,7 @@ Looking at individual lines here :
          it is an existing entity. Also note that this has really conflicting logistics
          once you're in a transaction as well. Also note that JPA and Hibernate support
          level2 caches. The L2 caches are often just HashMap's of PK->Object, If you change
-         the PK within the object, you will throw the l2 cache out of wack as the map
+         the PK within the object, you will throw the l2 cache out of whack as the map
          will not point to the right object.
 -   37 & 45 : Note that I do manual data checking here. Even though name and password
          columns are declared not null, the error returned by persisting an object is not-friendly
@@ -275,7 +275,7 @@ SiteUserDao.java
 Dao objects are managed by Spring. The reason is because since they are the ones doing the database work,
 they must have a transaction, and we would like to use spring annotated transactions.
 
--   6 : @Repository is a spring specific annotation. This annotation provides us with a few  things.
+-   6 : @Repository is a spring specific annotation. This annotation provides us with a few things.
         1) is automatic registering of the bean with spring. 2) sets this bean up as a prototype (adverse to singleton)
         (because the entityManager must be thread specific). 3) it marks every method in this class as requiring a transaction
         similar to the @Transaction annotation. There is a more in depth discussion on transactions later.
