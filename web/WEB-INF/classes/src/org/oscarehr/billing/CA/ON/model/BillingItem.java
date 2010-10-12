@@ -43,7 +43,8 @@ import org.oscarehr.common.model.AbstractModel;
 @Table(name = "billing_on_item")
 public class BillingItem  extends AbstractModel<Integer> implements Serializable {
 
-    private Integer id;    
+    private Integer id;
+    private Integer ch1_id;
     private String transc_id;
     private String rec_id;
     private String service_code;
@@ -55,7 +56,6 @@ public class BillingItem  extends AbstractModel<Integer> implements Serializable
     private String dx2;
     private String status;
     private Date timestamp;
-    //private BillingClaimHeader1 billingClaimHeader1;
 
     @Override
     @Id()
@@ -67,7 +67,7 @@ public class BillingItem  extends AbstractModel<Integer> implements Serializable
     public void setId(Integer id) {
         this.id = id;
     }
-   
+
     /**
      * @return the transc_id
      */
@@ -229,6 +229,20 @@ public class BillingItem  extends AbstractModel<Integer> implements Serializable
      */
     public void setTimestamp(Date timestamp) {
         this.timestamp = timestamp;
+    }
+
+    /**
+     * @return the ch1_id
+     */
+    public Integer getCh1_id() {
+        return ch1_id;
+    }
+
+    /**
+     * @param ch1_id the ch1_id to set
+     */
+    public void setCh1_id(Integer ch1_id) {
+        this.ch1_id = ch1_id;
     }
 
 }
