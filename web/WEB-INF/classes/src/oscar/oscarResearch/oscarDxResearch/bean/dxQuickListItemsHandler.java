@@ -156,19 +156,13 @@ public class dxQuickListItemsHandler {
     }
 
 
-    public static void updatePatientCodeDesc( String type, String code, String desc )
-    {
+    public static void updatePatientCodeDesc( String type, String code, String desc ){
       String sql = String.format( "update %s set description = '%s' where %s = '%s'", type, desc, type, code );
-      try
-      {
+      try{
         DBHandler.RunSQL( sql );
-      }
-      catch ( Exception e )
-      {
-        e.printStackTrace();
-      }
-      finally
-      {
+      }catch ( Exception e ){
+	MiscUtils.getLogger().error("Error", e);
+      }finally{
        
       }
 
