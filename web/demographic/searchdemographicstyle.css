@@ -1,0 +1,135 @@
+/*
+ *
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
+ * <OSCAR TEAM>
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster Unviersity
+ * Hamilton
+ * Ontario, Canada
+ */
+
+body {
+    font-family: Verdana, helvetica, sans-serif;
+    font-size: 100%;
+    margin: 0px;
+    padding: 0px;
+    background-image: url("../images/gray_bg.jpg");
+    padding-top:17px; /* push everything down, since the element with class title is at top */
+}
+
+form {
+    margin: 0px;
+    padding: 0px;
+}
+
+ul {
+    margin: 0px;
+    padding: 0px;
+    list-style:none;
+}
+
+a:active {
+	text-decoration: none;
+}
+
+a:link {
+	text-decoration: none;
+	color: #0066CC
+}
+
+a:visited {
+	text-decoration: none;
+	color: #0080c0;
+}
+
+a:hover {
+	COLOR: red;
+	TEXT-DECORATION: underline;
+}
+
+.deep { background-color: #CCCCFF; }
+.weak { background-color: #EEEEFF; }
+
+.title {
+    text-align:center;
+    font-weight: bold;
+    height:17px;
+}
+
+li.tableHeadings {
+    height: 35px;
+    border-bottom: 1px solid #c0c0c0;
+}
+
+li#searchlist {
+    height:20px;
+    border-bottom: 1px solid #c0c0c0;
+}
+
+#demographicSearch .header, #cancelButton, #backButton, #searchPopUpButton {
+    display:none;
+}
+
+#searchResults ul {
+    background-color: white;
+    display: table;
+    width:100%;
+}
+
+.header {
+    position:absolute;
+    top:0px;
+    left:0px;
+    width:100%;
+}
+
+#searchResults li {
+    display: table-row;
+}
+
+#searchResults li div {
+    border: 1px solid white;
+    text-align:center;
+    vertical-align:middle;
+    display: table-cell;
+    padding: 0px;
+    margin:0px;
+}
+#searchResults {
+    clear:both;
+}
+
+#searchResults li.tableHeadings {
+    font-weight:bold;
+    vertical-align:middle;
+    border-top: 2px solid white;
+}
+
+.demoId {
+    border-left: 1px solid #c0c0c0;
+}
+#searchResults li div.name, #searchResults li div.links { text-align: left; }
+#searchResults li.tableHeadings div.name { text-align: center; }
+
+.name, .doctor, .lastName { width:20%; }
+.firstName { width: 15%; }
+.age { width:5%; }
+.sex { width:2%; }
+.phone, .chartNo { width: 10%; }
+.dob { width: 10%; }
+.demoIdSearch, .demoId, .links { width:10%; }
+.rosterStatus, .patientStatus { width: 3%; }

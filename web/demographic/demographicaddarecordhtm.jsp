@@ -124,6 +124,10 @@
 <script type="text/javascript" src="<%=request.getContextPath() %>/js/check_hin.js"></script>
 
 <link rel="stylesheet" href="../web.css" />
+
+<!-- Stylesheet for zdemographicfulltitlesearch.jsp -->
+<link rel="stylesheet" type="text/css" href="../share/css/searchBox.css" />
+
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 <script language="JavaScript">
 
@@ -356,6 +360,41 @@ function checkTitleSex(ttl) {
 	else if (ttl=="MR" || ttl=="MSSR") document.adddemographic.sex.selectedIndex=0;
 }
 
+function removeAccents(s){
+        var r=s.toLowerCase();
+        r = r.replace(new RegExp("\\s", 'g'),"");
+        r = r.replace(new RegExp("[абвгде]", 'g'),"a");
+        r = r.replace(new RegExp("з", 'g'),"c");
+        r = r.replace(new RegExp("[ийкл]", 'g'),"e");
+        r = r.replace(new RegExp("[мноп]", 'g'),"i");
+        r = r.replace(new RegExp("с", 'g'),"n");
+        r = r.replace(new RegExp("[туфхц]", 'g'),"o");
+        r = r.replace(new RegExp("[щъыь]", 'g'),"u");
+        r = r.replace(new RegExp("[эя]", 'g'),"y");
+        r = r.replace(new RegExp("\\W", 'g'),"");
+        return r;
+}
+
+function autoFillHin(){
+   var hcType = document.getElementById('hc_type').value;
+   var hin = document.getElementById('hin').value;
+   if(	hcType == 'QC' && hin == ''){
+   	  var last = document.getElementById('last_name').value;
+   	  var first = document.getElementById('first_name').value;
+      var yob = document.getElementById('year_of_birth').value;
+      var mob = document.getElementById('month_of_birth').value;
+      var dob = document.getElementById('date_of_birth').value;
+
+   	  last = removeAccents(last.substring(0,3)).toUpperCase();
+   	  first = removeAccents(first.substring(0,1)).toUpperCase();
+   	  yob = yob.substring(2,4);
+
+      document.getElementById('hin').value = last + first + yob + mob + dob;
+      hin.focus();
+      hin.value = hin.value;
+   }
+}
+
 </script>
 </head>
 <!-- Databases have alias for today. It is not necessary give the current date -->
@@ -380,11 +419,11 @@ function checkTitleSex(ttl) {
     <tr>
       <td align="right"> <b><bean:message key="demographic.demographicaddrecordhtm.formLastName"/><font color="red">:</font> </b></td>
       <td align="left">
-        <input type="text" name="last_name" onBlur="upCaseCtrl(this)" size=30 />
+        <input type="text" name="last_name" id="last_name" onBlur="upCaseCtrl(this)" size=30 />
       </td>
       <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formFirstName"/><font color="red">:</font> </b> </td>
       <td align="left">
-        <input type="text" name="first_name" onBlur="upCaseCtrl(this)"  size=30>
+        <input type="text" name="first_name" id="first_name" onBlur="upCaseCtrl(this)"  size=30>
       </td>
     </tr>
     <tr>
@@ -650,13 +689,13 @@ function checkTitleSex(ttl) {
 				<td align="left" nowrap>
 				<table border="0" cellpadding="0" cellspacing="0">
 					<tr>
-						<td><input type="text" name="year_of_birth" size="4"
+						<td><input type="text" name="year_of_birth" size="4" id="year_of_birth"
 							maxlength="4" value="yyyy"
 							onFocus="if(this.value=='yyyy')this.value='';"
 							onBlur="if(this.value=='')this.value='yyyy';"></td>
 						<td>-</td>
 						<td><!--input type="text" name="month_of_birth" size="2" maxlength="2"-->
-						<select name="month_of_birth">
+                                                    <select name="month_of_birth" id="month_of_birth">
 							<option value="01">01
 							<option value="02">02
 							<option value="03">03
@@ -672,7 +711,7 @@ function checkTitleSex(ttl) {
 						</select></td>
 						<td>-</td>
 						<td><!--input type="text" name="date_of_birth" size="2" maxlength="2"-->
-						<select name="date_of_birth">
+						<select name="date_of_birth" id="date_of_birth">
 							<option value="01">01
 							<option value="02">02
 							<option value="03">03
@@ -734,8 +773,8 @@ function checkTitleSex(ttl) {
 			<tr valign="top">
 				<td align="right"><b><bean:message
 					key="demographic.demographicaddrecordhtm.formHIN" />: </b></td>
-				<td align="left" nowrap><input type="text" name="hin"
-					size="15"> <b><bean:message
+				<td align="left" nowrap><input type="text" name="hin" id="hin"
+                                                               size="15" onfocus="autoFillHin()" > <b><bean:message
 					key="demographic.demographicaddrecordhtm.formVer" />: <input
 					type="text" name="ver" value="" size="3" onBlur="upCaseCtrl(this)">
 				</b></td>
@@ -752,7 +791,7 @@ function checkTitleSex(ttl) {
 				<td>
 				<% if(vLocale.getCountry().equals("BR")) { %> <input type="text"
 					name="hc_type" value=""> <% } else { %>
-				<select name="hc_type">
+				<select name="hc_type" id="hc_type">
 					<option value="OT"
 						<%=HCType.equals("")||HCType.equals("OT")?" selected":""%>>Other</option>
 					<% if (pNames.isDefined()) {
