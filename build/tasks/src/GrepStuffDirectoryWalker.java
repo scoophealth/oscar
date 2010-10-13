@@ -45,6 +45,7 @@ public class GrepStuffDirectoryWalker extends DirectoryWalker {
 		checkContains(relativePath, fileContents, "getConnection(");
 		checkContains(relativePath, fileContents, "OscarSuperManager");
 		checkContains(relativePath, fileContents, "org.apache.commons.logging.Log");
+		checkContains(relativePath, fileContents, "com.sun.");
 
 		// --- hack for ignore case comparison ---
 		checkContains(relativePath, fileContentsLowered, "latin-1");
