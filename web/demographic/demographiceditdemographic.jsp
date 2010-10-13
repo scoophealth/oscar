@@ -1,3 +1,4 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%-- @ taglib uri="../WEB-INF/taglibs-log.tld" prefix="log" --%>
 <%--
 /*
@@ -89,6 +90,7 @@
 
 	OscarProperties oscarProps = OscarProperties.getInstance();
 
+        Boolean isMobileOptimized = session.getAttribute("mobileOptimized") != null;
 	ProvinceNames pNames = ProvinceNames.getInstance();
 	oscar.oscarDemographic.data.DemographicExt ext = new oscar.oscarDemographic.data.DemographicExt();
 	ArrayList arr = ext.getListOfValuesForDemo(demographic_no);
@@ -131,9 +133,14 @@
 <!-- calendar stylesheet -->
 <link rel="stylesheet" type="text/css" media="all"
 	href="../share/calendar/calendar.css" title="win2k-cold-1" />
-
-<link rel="stylesheet" type="text/css"
-	href="../oscarEncounter/encounterStyles.css">
+<% if (isMobileOptimized) { %>
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width" />
+    <link rel="stylesheet" type="text/css" href="../mobile/editdemographicstyle.css">
+<% } else { %>
+    <link rel="stylesheet" type="text/css" href="../oscarEncounter/encounterStyles.css">
+    <link rel="stylesheet" type="text/css" href="../share/css/searchBox.css">
+    <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+<% } %>
 <script language="javascript" type="text/javascript"
 	src="../share/javascript/Oscar.js"></script>
 
@@ -371,6 +378,25 @@ function newStatus1() {
     }
 }
 
+removeAccents(s){
+        var r=s.toLowerCase();
+        r = r.replace(new RegExp("\\s", 'g'),"");
+        r = r.replace(new RegExp("[абвгде]", 'g'),"a");
+        r = r.replace(new RegExp("ж", 'g'),"ae");
+        r = r.replace(new RegExp("з", 'g'),"c");
+        r = r.replace(new RegExp("[ийкл]", 'g'),"e");
+        r = r.replace(new RegExp("[мноп]", 'g'),"i");
+        r = r.replace(new RegExp("с", 'g'),"n");
+        r = r.replace(new RegExp("[туфхц]", 'g'),"o");
+        r = r.replace(new RegExp("?", 'g'),"oe");
+        r = r.replace(new RegExp("[щъыь]", 'g'),"u");
+        r = r.replace(new RegExp("[эя]", 'g'),"y");
+        r = r.replace(new RegExp("\\W", 'g'),"");
+        return r;
+}
+
+
+
 </script>
 <script language="JavaScript">
 function showHideDetail(){
@@ -380,11 +406,31 @@ function showHideDetail(){
     showHideItem('swipeButton');
 }
 
+// Used to display demographic sections, where sections is an array of id's for
+// div elements with class "demographicSection"
+function showHideMobileSections(sections) {
+    showHideItem('mobileDetailSections');
+    for (var i = 0; i < sections.length; i++) {
+        showHideItem(sections[i]);
+    }
+    // Change behaviour of cancel button
+    var cancelValue = "<bean:message key="global.btnCancel" />";
+    var backValue = "<bean:message key="global.btnBack" />";
+    var cancelBtn = document.getElementById('cancelButton');
+    if (cancelBtn.value == cancelValue) {
+        cancelBtn.value = backValue;
+        cancelBtn.onclick = function() { showHideMobileSections(sections); };
+    } else {
+        cancelBtn.value = cancelValue;
+        cancelBtn.onclick = function() { self.close(); };
+    }
+}
+
 function showHideItem(id){
-    if(document.getElementById(id).style.display == 'none')
-        document.getElementById(id).style.display = 'inline';
-    else
+    if(document.getElementById(id).style.display == 'inline' || document.getElementById(id).style.display == 'block')
         document.getElementById(id).style.display = 'none';
+    else
+        document.getElementById(id).style.display = 'block';
 }
 
 function showItem(id){
@@ -535,7 +581,7 @@ div.demographicWrapper {
 		<td class="MainTableTopRowLeftColumn"><bean:message
 			key="demographic.demographiceditdemographic.msgPatientDetailRecord" />
 		</td>
-		<td class="MainTableTopRowRightColumn" width="400">
+		<td class="MainTableTopRowRightColumn">
 		<table class="TopStatusBar">
 			<tr>
 				<td>
@@ -888,8 +934,29 @@ if (iviewTag!=null && !"".equalsIgnoreCase(iviewTag.trim())){
 		</table>
 		</td>
 		<td class="MainTableRightColumn" valign="top">
-		<table border=0 cellspacing=4 width="100%">
-			<tr>
+                    <!-- A list used in the mobile version for users to pick which information they'd like to see -->
+                    <div id="mobileDetailSections" style="display:<%=(isMobileOptimized)?"block":"none"%>;">
+                        <ul class="wideList">
+                            <% if (!alert.equals("")) { %>
+                            <li><a style="color:brown" onClick="showHideMobileSections(new Array('alert'))"><bean:message
+                                key="demographic.demographiceditdemographic.formAlert" /></a></li>
+                            <% } %>
+                            <li><a onClick="showHideMobileSections(new Array('demographic'))"><bean:message
+                                key="demographic.demographiceditdemographic.msgDemographic"/></a></li>
+                            <li><a onClick="showHideMobileSections(new Array('contactInformation'))"><bean:message
+                                key="demographic.demographiceditdemographic.msgContactInfo"/></a></li>
+                            <li><a onClick="showHideMobileSections(new Array('otherContacts'))"><bean:message
+                                key="demographic.demographiceditdemographic.msgOtherContacts"/></a></li>
+                            <li><a onClick="showHideMobileSections(new Array('healthInsurance'))"><bean:message
+                                key="demographic.demographiceditdemographic.msgHealthIns"/></a></li>
+                            <li><a onClick="showHideMobileSections(new Array('patientClinicStatus','clinicStatus'))"><bean:message
+                                key="demographic.demographiceditdemographic.msgClinicStatus"/></a></li>
+                            <li><a onClick="showHideMobileSections(new Array('notes'))"><bean:message
+                                key="demographic.demographiceditdemographic.formNotes" /></a></li>
+                        </ul>
+                    </div>
+		<table border=0 width="100%">
+			<tr id="searchTable">
 				<td colspan="4"><%-- log:info category="Demographic">Demographic [<%=demographic_no%>] is viewed by User [<%=userfirstname%> <%=userlastname %>]  </log:info --%>
 				<%@ include file="zdemographicfulltitlesearch.jsp"%>
 				</td>
@@ -901,7 +968,7 @@ if (iviewTag!=null && !"".equalsIgnoreCase(iviewTag.trim())){
 					onSubmit="return checkTypeInEdit();"><input type="hidden"
 					name="demographic_no"
 					value="<%=apptMainBean.getString(rs,"demographic_no")%>">
-				<table width="100%" bgcolor="#CCCCFF" cellspacing="1" cellpadding="1">
+				<table width="100%" class="demographicDetail">
 					<tr>
 						<td class="RowTop">
 						<%
@@ -912,7 +979,7 @@ if (iviewTag!=null && !"".equalsIgnoreCase(iviewTag.trim())){
                             if (vLocale.getCountry().equals("BR"))
                                 dboperation = "search_detail_ptbr";
 
-                            %><b><bean:message key="demographic.demographiceditdemographic.msgRecord"/></b> ( <%if (head.equals(demographic_no)){
+                            %><b><span class="rec"><bean:message key="demographic.demographiceditdemographic.msgRecord"/> ( <%if (head.equals(demographic_no)){
                                     %><%=demographic_no%>
 						<%
                                 }else{
@@ -930,20 +997,20 @@ if (iviewTag!=null && !"".equalsIgnoreCase(iviewTag.trim())){
 						<%
                                     }
                                 }
-                            %> )
+                            %> ) </span></b>
                             <%
                                                     if( head.equals(demographic_no)) {
                                                     %>
-                                                        <a href="javascript: showHideDetail();"><bean:message key="demographic.demographiceditdemographic.msgEdit"/></a>
+                                                        <a id="editBtn" href="javascript: showHideDetail();"><bean:message key="demographic.demographiceditdemographic.msgEdit"/></a>
                                                    <% } %>
 						</td>
 					</tr>
 					<tr>
-						<td bgcolor="#eeeeff"><!---new-->
-						<div style="background-color: #EEEEFF;" id="viewDemographics2">
-						<div class="demographicWrapper" style="background-color: #EEEEFF;">
-						<div style="width: 49%; float: left;">
-						<div class="demographicSection" style="margin-top: 2px;">
+						<td class="lightPurple"><!---new-->
+						<div style="display: inline;" id="viewDemographics2">
+						<div class="demographicWrapper">
+						<div class="leftSection">
+						<div class="demographicSection" id="demographic">
 						<h3>&nbsp;<bean:message key="demographic.demographiceditdemographic.msgDemographic"/></h3>
 						<div style="background-color: #EEEEFF;">
 						<ul>
@@ -1596,19 +1663,16 @@ if(oscarVariables.getProperty("demographicExt") != null) {
                                  decF.applyPattern("0000");
 
 								 GregorianCalendar hcRenewalCal=new GregorianCalendar();
-								 String renewDateYear="";
-								 String renewDateMonth="";
-								 String renewDateDay="";
-								 if (demographic.getHcRenewDate()!=null)
-								 {
-									 hcRenewalCal.setTime(demographic.getHcRenewDate());
-	                                 renewDateYear = decF.format(hcRenewalCal.get(GregorianCalendar.YEAR));
-	                                 // Month and Day
-	                                 decF.applyPattern("00");
-	                                 renewDateMonth = decF.format(hcRenewalCal.get(GregorianCalendar.MONTH)+1);
-	                                 renewDateDay = decF.format(hcRenewalCal.get(GregorianCalendar.DAY_OF_MONTH));
+
+                                                                 if(demographic != null && demographic.getHcRenewDate() != null){
+								    hcRenewalCal.setTime(demographic.getHcRenewDate());
 								 }
-								 
+                                 String renewDateYear = decF.format(hcRenewalCal.get(GregorianCalendar.YEAR));
+                                 // Month and Day
+                                 decF.applyPattern("00");
+                                 String renewDateMonth = decF.format(hcRenewalCal.get(GregorianCalendar.MONTH)+1);
+                                 String renewDateDay = decF.format(hcRenewalCal.get(GregorianCalendar.DAY_OF_MONTH));
+
                               %> 
 								<input type="text" name="hc_renew_date_year" size="4" maxlength="4" value="<%=renewDateYear%>">
 								<input type="text" name="hc_renew_date_month" size="2" maxlength="2" value="<%=renewDateMonth%>">
@@ -1833,13 +1897,9 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 </script> <% } else {%> <input type="text" name="r_doctor" size="30" maxlength="40"
 									value="<%=rd%>"> <% } %>
 								</td>
-								<td align="right" nowrap><b><bean:message
-									key="demographic.demographiceditdemographic.formRefDocNo" />: </b></td>
-								<td align="left"><input type="text" name="r_doctor_ohip"
-									size="20" maxlength="6" value="<%=rdohip%>"> <% if("ON".equals(prov)) { %>
-								<a
-									href="javascript:referralScriptAttach2('r_doctor_ohip','r_doctor')"><bean:message key="demographic.demographiceditdemographic.btnSearch"/>
-								#</a> <% } %>
+								<td align="right" nowrap><b><bean:message key="demographic.demographiceditdemographic.formRefDocNo" />: </b></td>
+								<td align="left"><input type="text" name="r_doctor_ohip" size="20" maxlength="6" value="<%=rdohip%>">
+								<a href="javascript:referralScriptAttach2('r_doctor_ohip','r_doctor')"><bean:message key="demographic.demographiceditdemographic.btnSearch"/> #</a>
 								</td>
 							</tr>
 
@@ -2147,7 +2207,7 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
 						</table>
 						</td>
 					</tr>
-					<tr bgcolor="#CCCCFF">
+					<tr class="darkPurple">
 						<td colspan="4">
 						<table border="0" width="100%" cellpadding="0" cellspacing="0">
 							<tr>
@@ -2161,7 +2221,7 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
                                                                         <input type="button"
 									name="Button" value="<bean:message key="global.btnBack" />"
 									onclick="history.go(-1);return false;"> <input
-									type="button" name="Button"
+									type="button" name="Button" id="cancelButton" class="leftButton top"
 									value="<bean:message key="global.btnCancel" />"
 									onclick=self.close();>
 								<br><input type="button" value="<bean:message key="demographic.demographiceditdemographic.msgExport"/>"
