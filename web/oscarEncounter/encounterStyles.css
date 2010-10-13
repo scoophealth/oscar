@@ -531,3 +531,200 @@ div.leftBox li { /*padding-right: 15px;*/
 	color: white;
 	text-decoration: none;
 }
+
+#leftNavBar {
+    display:inline; float:left; width:20%;
+}
+#rightNavBar {
+    display:inline; float:right; width:20%; margin-left:-3px;
+}
+#content {
+    display:inline; float:left; width:60%; background-color:#CCCCFF;
+}
+#encMainDiv {
+    width: 99%; border-top: thin groove #000000; border-right: thin groove #000000; border-left: thin groove #000000; background-color: #FFFFFF; height: 410px; overflow: auto; margin-left: 2px;
+}
+.addItem {
+    width: 10%; float: right; text-align: center;
+}
+.headerTitle {
+    clear: left; float: left; width: 90%;
+}
+/* formatting for navbar */
+.links {
+    color: blue;
+    text-decoration:none;
+    font-size:9px;
+}
+
+.linkhover {
+    color: black;
+    text-decoration: underline;
+}
+#mainContent {
+    background-color: #FFFFFF; width: 100%; margin-right: -2px; display: inline; float: left;
+}
+#notCpp {
+    height: 70%; margin-left: 2px; background-color: #FFFFFF;
+}
+.editBtn {
+    float: right; margin-right: 5px; font-size: 8px;
+}
+.caseNote_date {
+    float:left; font-size:1.0em; width:25%;
+    font-weight:bold;
+}
+.caseNote_content {
+    float:left; font-size:1.0em; width:60%;
+}
+
+div.note {
+            color: #000000;
+            font-family:arial,sans-serif;
+            margin: 3px 0px 3px 5px;
+            float:left;
+            width:98%;
+        }
+
+#save {
+    width: 98.7%; margin-left: 2px; background-color: #CCCCFF; padding: 5px 0px 5px 2px; margin-left: 2px; border-left: thin solid #000000; border-right: thin solid #000000; border-bottom: thin solid #000000;
+}
+#save #saveButtons, #save #globalButtons {
+    float:right; margin-right: 5px;
+}
+#saveButtons > input {
+    margin: 0 3px;
+}
+.sig {
+    background-color:#CCCCFF;
+    color: #000000;
+    width:100%;
+    font-size:9px;
+}
+.observation, .observationEdit, .showEditDate {
+    float: right;
+    margin-right: 3px;
+    font-style: italic;
+}
+.encType{
+    clear: right;
+    margin-right: 3px;
+    float: right;
+}
+.topLinks  {
+    color: black;
+    text-decoration:none;
+    font-size:9px;
+}
+
+.topLinkhover {
+    color: blue;
+    text-decoration: underline;
+}
+div.newNote {
+    color: #000000;
+    font-family:arial,sans-serif;
+    font-size:0.8em;
+    margin: 5px 0px 5px 5px;
+    float:left;
+    width:98%;
+    /* margin-bottom: 30px; /* removes br's */
+}
+
+div.newNote pre {
+    color: #000000;
+    font-family:arial,sans-serif;
+    margin: 0px 3px 0px 3px;
+    width:100%;
+    clear:left;
+}
+
+.txtArea {
+    font-family:arial,sans-serif;
+    font-size:1.0em;
+    width:99%;
+    rows:10;
+    overflow:hidden;
+    border:none;
+    margin: 0px 3px;
+}
+
+div#autosaveTime {
+    text-align:center;
+    margin:0px;
+}
+div.expandedBox, div.cppBox { clear: both; overflow: auto; }
+div.expandedBox { height:100%; }
+
+/* in place editor */
+.showEdPosition {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.showEdFooter {
+    text-align:left;
+    padding: 0 2px;
+}
+
+ul#issueIdList {
+    padding:0;
+}
+
+.showEdContent {
+    /*border: thin ridge black;*/
+    background-color:#CCCCFF;
+    font-size:9px;
+
+    position: absolute;
+    display:none;
+    z-index:200;
+    right:100px;
+    bottom:200px;
+    text-align: center;
+}
+
+#showEditButtons, #showEditLogout {float:right; margin-right:10px;}
+
+#noteEditTxt { margin: 10px; }
+
+div#issueNoteAssign { text-align: center; }
+/*****/
+
+/* template styles*/
+#issueListCPP {
+    background-color:#FFFFFF;
+    height:200px; width:350px;
+    position:absolute;
+    z-index:1;
+    overflow:auto;
+}
+.enTemplate_name_auto_complete {
+    width: 350px;
+    background: #fff;
+    font-size: 9px;
+    text-align:left;
+}
+.enTemplate_name_auto_complete ul {
+    border:1px solid #888;
+    margin:0;
+    padding:0;
+    width:100%;
+    list-style-type:square;
+    list-style-position:inside;
+}
+.enTemplate_name_auto_complete ul li {
+    margin:0;
+    padding:3px;
+}
+.enTemplate_name_auto_complete ul li.selected {
+    background-color: #ffb;
+    text-decoration: underline;
+}
+.enTemplate_name_auto_complete ul strong.highlight {
+    color: #800;
+    margin:0;
+    padding:0;
+}
+p.passwd, p.passwdErr { margin: 0px 3px; }
+p.passwdErr { color: red; }
