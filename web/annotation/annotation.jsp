@@ -130,6 +130,7 @@
     if(uuid.length()>0){
         lastCmn=cmm.getMostRecentNote(uuid);
     }
+    Boolean isMobileOptimized = session.getAttribute("mobileOptimized") != null;
 %>
 
 
@@ -137,8 +138,17 @@
 <head>
     <meta content="text/html; charset=UTF-8"http-equiv="Content-Type">
     <title>Annotation</title>
-
+    <% if (isMobileOptimized) { %>
+        <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width" />
+        <link rel="stylesheet" type="text/css" href="../share/css/OscarStandardMobileLayout.css" />
+    <% } else { %>
     <link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css" />
+        <style type="text/css">
+            body { font-size: x-small; }
+            textarea { width: 100%; margin: 5px 0; }
+            div.label { float: left; }
+        </style>
+    <% } %>
     <script type="text/javascript">
 	function showHistory(uuid,display) {
 	    if (uuid=="") {
@@ -160,34 +170,22 @@
 	<input type="hidden" name="display" value="<%=display%>" />
 	<input type="hidden" name="table_id" value="<%=tid%>" />
 	<input type="hidden" name="saved" />
-	<table>
-	    <tr><td colspan="2"><%=display%> Annotation:</td></tr>
+        <div class="header"></div>
+        <div class="panel">
+            <%=display%> Annotation:
             <%if(lastCmn!=null){%>
-            <tr>
-                <td>
-                Documentation Date: <%=lastCmn.getCreate_date()%><br>
-                </td>
-                <td>
-                Saved by <%=lastCmn.getProviderName()%>
-                </td>
-            </tr>
+            <div class="label">Documentation Date: <%=lastCmn.getCreate_date()%></div>
+            <div class="label">Saved by <%=lastCmn.getProviderName()%></div>
             <%}%>
-	    <tr><td colspan="2">
-		    <textarea name="note" rows="10" cols="50"><%=note%></textarea>             
-		</td>
-	    </tr>
-	    <tr>
-		<td>
-		    <input type="submit" value="Save" onclick="this.form.saved.value='true';"/> &nbsp;
-		    <input type="button" value="Cancel" onclick="window.close();"/>
-		</td>
-		<td align="right">
+            <textarea name="note" rows="10"><%=note%></textarea>
+            <input type="submit" class="rightButton blueButton top"value="Save" onclick="this.form.saved.value='true';"/> &nbsp;
+            <input type="button" class="leftButton top" value="Cancel" onclick="window.close();"/>
 	<% if (rev>0) { %>
+            <div class="revision" style="float: right;">
 		    rev<a href="#" onclick="showHistory('<%=uuid%>','<%=display%>');"><%=rev%></a>
+            </div>
 	<% } %>
-		</td>
-	    </tr>
-	</table>
+        </div>
     </form>
 </body>
 
