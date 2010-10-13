@@ -33,6 +33,7 @@
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 
 <% String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user"); %>
+<% Boolean isMobileOptimized = session.getAttribute("mobileOptimized") != null; %>
 
 <html:html locale="true">
 <head>
@@ -90,82 +91,39 @@
         }
          
         </script>
-<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+<% if (isMobileOptimized) { %>
+   <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width" />
+   <link rel="stylesheet" type="text/css" href="../mobile/searchdemographicstyle.css">
+<% } else { %>
+   <link rel="stylesheet" type="text/css" href="../share/css/searchBox.css" />
+   <style type="text/css">
+       body {
+            font-family: Verdana, helvetica, sans-serif;
+            font-size: 14px; margin: 0px; padding: 0px;
+            background-image: url("../images/gray_bg.jpg");
+       }
+       .searchBox .title { display: none; /* We don't want to display the title in the included jsp file ' */ }
+   </style>
+<% } %>
 </head>
 <body onload="setfocus()">
+<div id="demographicSearch">
 <table border="0" cellspacing="0" cellpadding="0" width="100%">
 	<tr bgcolor="#CCCCFF">
 		<th NOWRAP><font face="Helvetica"><bean:message
 			key="demographic.search.msgSearchPatient" /></font></th>
 	</tr>
 </table>
-<form method="get" name="titlesearch" action="demographiccontrol.jsp"
-	onSubmit="return checkTypeIn()">
-<table BORDER="0" CELLPADDING="1" CELLSPACING="0" WIDTH="100%"
-	BGCOLOR="#EEEEFF">
-	<tr valign="top">
-		<td rowspan="2" ALIGN="right" valign="middle"><font
-			face="Verdana" color="#0000FF"><b><i><bean:message
-			key="demographic.search.msgSearch" /></i></b></font></td>
-
-		<td width="10%" nowrap><font size="1" face="Verdana"
-			color="#0000FF"> <input type="radio" checked
-			name="search_mode" value="search_name"> <bean:message
-			key="demographic.search.formName" /> </font></td>
-		<td nowrap><font size="1" face="Verdana" color="#0000FF">
-		<input type="radio" name="search_mode" value="search_phone"> <bean:message
-			key="demographic.search.formPhone" /></font></td>
-		<td nowrap><font size="1" face="Verdana" color="#0000FF">
-		<input type="radio" name="search_mode" value="search_dob"> <bean:message
-			key="demographic.search.formDOB" /></font></td>
-		<td valign="middle" rowspan="2" ALIGN="left"><input type="text"
-			NAME="keyword" SIZE="17" MAXLENGTH="100"> <INPUT
-			TYPE="hidden" NAME="orderby" VALUE="last_name, first_name">
-		<INPUT TYPE="hidden" NAME="dboperation" VALUE="search_titlename">
-		<INPUT TYPE="hidden" NAME="limit1" VALUE="0"> <INPUT
-			TYPE="hidden" NAME="limit2" VALUE="10"> <INPUT TYPE="hidden"
-			NAME="displaymode" VALUE="Search"> <INPUT TYPE="hidden"
-			NAME="ptstatus" VALUE="active"><INPUT TYPE="hidden"
-			NAME="outofdomain" VALUE=""> <INPUT TYPE="SUBMIT"
-			NAME="displaymode"
-			VALUE="<bean:message key="demographic.search.btnSearch"/>" SIZE="17"
-			TITLE="<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchActive"/>">
-		&nbsp;&nbsp;&nbsp; <INPUT TYPE="button" onclick="searchInactive();"
-			TITLE="<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchInactive"/>"
-			VALUE="<bean:message key="demographic.search.Inactive"/>"> <INPUT
-			TYPE="button" onclick="searchAll();"
-			TITLE="<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchAll"/>"
-			VALUE="<bean:message key="demographic.search.All"/>">
-			<security:oscarSec roleName="<%=roleName$%>" objectName="_search.outofdomain" rights="r">  
-		<INPUT TYPE="button" onclick="searchOutOfDomain();"
-			TITLE="<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchOutOfDomain"/>"
-			VALUE="<bean:message key="demographic.search.OutOfDomain"/>">
-			</security:oscarSec>	
-		</td>
-	</tr>
-	<tr>
-		<td nowrap><font size="1" face="Verdana" color="#0000FF">
-		<input type="radio" name="search_mode" value="search_address">
-		<bean:message key="demographic.search.formAddr" /> </font></td>
-		<td nowrap><font size="1" face="Verdana" color="#0000FF">
-		<input type="radio" name="search_mode" value="search_hin"> <bean:message
-			key="demographic.search.formHIN" /></font></td>
-		<td nowrap><font size="1" face="Verdana" color="#0000FF">
-		<input type="radio" name="search_mode" value="search_chart_no">
-		<bean:message key="demographic.search.formChart" /></font></td>
-	</tr>
-</table>
-</form>
-
-<CENTER>
-<p><br>
-</p>
-
+</div>
+    <!-- Search Box -->
+    <%@ include file="zdemographicfulltitlesearch.jsp"%>
 <p>
 <!-- we may want to not allow students to create new patients? -->
 <!-- <security:oscarSec roleName="<%=roleName$%>" objectName="_demographic.addnew" rights="r">  -->
+    <div class="createNew">
 	<a href="demographicaddarecordhtm.jsp"><b><font size="+1"><bean:message
 	key="demographic.search.btnCreateNew" /></font></b></a> 
+    </div>
 <!-- </security:oscarSec> -->
 		
 	<oscar:oscarPropertiesCheck
@@ -174,6 +132,5 @@
 		size="+1">Import New Demographic</font></a>
 </oscar:oscarPropertiesCheck></p>
 <p><!--a href="http://204.92.240.253:8080/test/slt/Search.jsp"><font size="+1"><bean:message key="demographic.search.btnELearning"/></font></a--></p>
-</center>
 </body>
 </html:html>
