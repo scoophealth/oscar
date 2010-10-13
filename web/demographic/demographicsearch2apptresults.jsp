@@ -23,12 +23,14 @@
  * Ontario, Canada 
  */
 --%>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
 
 <% 
   if(session.getAttribute("user") == null)    response.sendRedirect("../logout.htm");
+  Boolean isMobileOptimized = session.getAttribute("mobileOptimized") != null;
   // String curProvider_no = (String) session.getAttribute("user");
   String curProvider_no = request.getParameter("provider_no");
       
@@ -55,12 +57,44 @@
 (demographicsearch2apptresults)</title>
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
-<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+<% if (isMobileOptimized) { %>
+   <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width" />
+   <link rel="stylesheet" type="text/css" href="../mobile/searchdemographicstyle.css">
+<% } else { %>
+   <link rel="stylesheet" type="text/css" href="../share/css/searchBox.css" />
+   <link rel="stylesheet" type="text/css" media="all" href="../demographic/searchdemographicstyle.css"  />
+   <!-- Alternative display (removed borders) for IE 7 and below, since display:table properties are not understood -->
+   <!--[if lt IE 8]>
+   <style type="text/css">
+            body { min-width: 860px; }
+            .dob { width: 20%; }
+            #searchResults li div { border: none !important; float: left; }
+            #searchResults li { min-height: 1px; }
+            div.demoId { clear: both; vertical-align: middle; }
+        </style>
+    <![endif]-->
+    <!-- Min-width doesn't work properly in IE6, so we simulate it using JavaScript.
+    It's important to set a min-width since many elements will be floating, and
+    resizing may cause elements to collapse in strange ways
+    -->
+    <!--[if lt IE 7]>
+        <style type="text/css">#searchResults li { height: 1px; }</style>
+<script language="JavaScript">
+            window.onresize = function() { setMinWidth(860); }
+        </script>
+    <![endif]-->
+<% } %>
 <script language="JavaScript">
 function setfocus() {
   this.focus();
   document.titlesearch.keyword.focus();
   document.titlesearch.keyword.select();
+}
+function showHideItem(id){
+    if(document.getElementById(id).style.display == 'inline')
+        document.getElementById(id).style.display = 'none';
+    else
+        document.getElementById(id).style.display = 'inline';
 }
 function checkTypeIn() {  
   var dob = document.titlesearch.keyword;
@@ -99,71 +133,54 @@ function searchAll() {
 </SCRIPT>
 </head>
 <body bgcolor="white" bgproperties="fixed" onLoad="setfocus()"
-	topmargin="0" leftmargin="0" rightmargin="0">
-<table border="0" cellspacing="0" cellpadding="0" width="100%">
-	<tr class="subject">
-		<th><bean:message
-			key="demographic.demographicsearch2apptresults.patientsRecord" /></th>
-	</tr>
-</table>
-<table border="0" cellpadding="1" cellspacing="0" width="100%"
-	bgcolor="#CCCCFF">
+	topmargin="0" leftmargin="0" rightmargin="0" bottommargin="0">
+<div id="demographicSearch" class="searchBox">
 	<form method="post" name="titlesearch"
 		action="../demographic/demographiccontrol.jsp"
 		onSubmit="return checkTypeIn()"><%--@ include file="zdemographictitlesearch.htm"--%>
-	<tr>
-		<td class="searchTitle" colspan="4"><bean:message
-			key="demographic.demographicsearch2apptresults.btnSearch" /></td>
-	</tr>
-	<tr>
-		<td class="blueText" width="10%" nowrap><input type="radio"
-			name="search_mode" value="search_name"
-			<%=request.getParameter("search_mode").equals("search_name")?"checked":""%>>
+    <div class="header deep">
+        <div class="title"><bean:message
+            key="demographic.demographicsearch2apptresults.findPatient" /></div>
+    </div>
+    <ul>
+        <li>
+            <div class="label"><bean:message
+                 key="demographic.zdemographicfulltitlesearch.msgBy" />:
+            </div>
+            <select class="wideInput" name="search_mode">
+                <option value="search_name" <%=request.getParameter("search_mode").equals("search_name")?"selected":""%>>
 		<bean:message key="demographic.demographicsearch2apptresults.optName" />
-		</td>
-		<td class="blueText" nowrap><input type="radio"
-			name="search_mode" value="search_phone"
-			<%=request.getParameter("search_mode").equals("search_phone")?"checked":""%>>
-		<bean:message key="demographic.demographicsearch2apptresults.optPhone" /></td>
-		<td class="blueText" nowrap><input type="radio"
-			name="search_mode" value="search_dob"
-			<%=request.getParameter("search_mode").equals("search_dob")?"checked":""%>>
-		<bean:message key="demographic.demographicsearch2apptresults.optDOB" /></td>
-		<td valign="middle" rowspan="2" ALIGN="left"><input type="text"
-			NAME="keyword" VALUE="<%=request.getParameter("keyword")%>" SIZE="17"
-			MAXLENGTH="100"> <INPUT TYPE="hidden" NAME="orderby"
-			VALUE="last_name, first_name"> <INPUT TYPE="hidden"
-			NAME="dboperation" VALUE="search_titlename"> <INPUT
-			TYPE="hidden" NAME="limit1" VALUE="0"> <INPUT TYPE="hidden"
-			NAME="limit2" VALUE="5"> <input type="hidden"
-			name="displaymode" value="Search "> <INPUT TYPE="hidden"
-			NAME="ptstatus" VALUE="active"> <input type="SUBMIT"
-			class="mbttn" name="displaymode"
-			value='<bean:message key="global.search"/>' size="17"
-			title='<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchActive"/>'>
-		&nbsp;&nbsp; <INPUT TYPE="button" class="mbttn"
-			onclick="searchInactive();"
-			TITLE="<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchInactive"/>"
-			VALUE="<bean:message key="demographic.search.Inactive"/>"> <INPUT
-			TYPE="button" class="mbttn" onclick="searchAll();"
-			TITLE="<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchAll"/>"
-			VALUE="<bean:message key="demographic.search.All"/>"></td>
-	</tr>
-	<tr>
-		<td class="blueText" nowrap><input type="radio"
-			name="search_mode" value="search_address"
-			<%=request.getParameter("search_mode").equals("search_address")?"checked":""%>>
-		<bean:message
-			key="demographic.demographicsearch2apptresults.optAddress" /></td>
-		<td class="blueText" nowrap><input type="radio"
-			name="search_mode" value="search_hin"
-			<%=request.getParameter("search_mode").equals("search_hin")?"checked":""%>>
-		<bean:message key="demographic.demographicsearch2apptresults.optHIN" /></td>
-		<td class="blueText" nowrap>
-                    <input type="radio" name="search_mode" value="search_chart_no" <%=request.getParameter("search_mode").equals("search_chart_no")?"checked":""%>>
+		</option>
+		<option value="search_phone" <%=request.getParameter("search_mode").equals("search_phone")?"selected":""%>>
+                    <bean:message key="demographic.demographicsearch2apptresults.optPhone" />
+                </option>
+		<option value="search_dob" <%=request.getParameter("search_mode").equals("search_dob")?"selected":""%>>
+                    <bean:message key="demographic.demographicsearch2apptresults.optDOB" />
+                </option>
+                <option value="search_address" <%=request.getParameter("search_mode").equals("search_address")?"selected":""%>>
+                    <bean:message key="demographic.demographicsearch2apptresults.optAddress" />
+                </option>
+		<option value="search_hin" <%=request.getParameter("search_mode").equals("search_hin")?"selected":""%>>
+                    <bean:message key="demographic.demographicsearch2apptresults.optHIN" />
+                </option>
+                <option value="search_chart_no" <%=request.getParameter("search_mode").equals("search_chart_no")?"selected":""%>>
                     <bean:message key="demographic.demographicsearch2apptresults.optChart"/>
-                </td>
-	</tr>
+                </option>
+            </select>
+        </li>
+        <li>
+            <div class="label"><bean:message
+                 key="demographic.zdemographicfulltitlesearch.msgInput" />:
+            </div>
+            <input type="text" class="wideInput" NAME="keyword" VALUE="<%=request.getParameter("keyword")%>" SIZE="17" MAXLENGTH="100"/>
+        </li>
+        <li>
+	<INPUT TYPE="hidden" NAME="orderby" VALUE="last_name, first_name">
+        <INPUT TYPE="hidden" NAME="dboperation" VALUE="search_titlename">
+        <INPUT TYPE="hidden" NAME="limit1" VALUE="0">
+        <INPUT TYPE="hidden" NAME="limit2" VALUE="5">
+        <input type="hidden" name="displaymode" value="Search ">
+        <INPUT TYPE="hidden" NAME="ptstatus" VALUE="active">
 	<%
   String temp=null;
 	for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
@@ -172,16 +189,37 @@ function searchAll() {
   	out.println("<input type='hidden' name='"+temp+"' value='"+request.getParameter(temp)+"'>");
   }
 	%>
+            <a href="#" onclick="showHideItem('demographicSearch');" id="cancelButton" class="leftButton top">
+                <bean:message key="global.btnCancel" />
+            </a>
+            <input type="SUBMIT" class="rightButton blueButton top" name="displaymode"
+                value='<bean:message key="global.search"/>' size="17"
+                title='<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchActive"/>'>&nbsp;&nbsp;
+            <INPUT TYPE="button" id="inactiveButton"
+                onclick="searchInactive();"
+                TITLE="<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchInactive"/>"
+                VALUE="<bean:message key="demographic.search.Inactive"/>">
+            <INPUT TYPE="button" id="allButton"
+                onclick="searchAll();"
+                TITLE="<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchAll"/>"
+                VALUE="<bean:message key="demographic.search.All"/>">
+        </li>
+    </ul>
 	</form>
-</table>
+</div>
 
+<div id="searchResults">
+    <div class="header deep">
+        <div class="title"><bean:message
+            key="demographic.demographicsearch2apptresults.patientsRecord" />
+        </div>
+    </div>
 <table width="95%" border="0">
 	<tr>
 		<td align="left"><bean:message
 			key="demographic.demographicsearch2apptresults.msgKeywords" /> <%=request.getParameter("keyword")%></td>
 	</tr>
 </table>
-
 
 <script language="JavaScript">
 
@@ -206,54 +244,46 @@ function addNameCaisi(demographic_no,lastname,firstname,chartno,messageID) {
 	self.close();
 }
 <%}%>
-</SCRIPT>
+</script>
 
-<CENTER>
-<table width="100%" border="0" cellpadding="0" cellspacing="1"
-	bgcolor="#C0C0C0">
+<ul bgcolor="#C0C0C0">
 	<form method="post" name="addform"
 		action="../appointment/addappointment.jsp">
-	<tr class="title">
-		<TH width="20%"><b><bean:message
-			key="demographic.demographicsearch2apptresults.demographicId" /></b></TH>
-		<TH width="20%"><b><bean:message
-			key="demographic.demographicsearch2apptresults.lastName" /></b></TH>
-		<TH width="20%"><b><bean:message
-			key="demographic.demographicsearch2apptresults.firstName" /></b></TH>
-		<TH width="5%"><b><bean:message
-			key="demographic.demographicsearch2apptresults.age" /></b></TH>
-		<TH width="10%"><b><bean:message
-			key="demographic.demographicsearch2apptresults.rosterStatus" /></b></TH>
-		<TH width="5%"><b><bean:message
-			key="demographic.demographicsearch2apptresults.sex" /></B></TH>
-		<TH width="10%"><b><bean:message
-			key="demographic.demographicsearch2apptresults.DOB" /></B></TH>
-		<TH width="10%"><b><bean:message
-			key="demographic.demographicsearch2apptresults.doctor" /></B></TH>
-	</tr>
+        <li class="tableHeadings deep">
+            <div class="demoId"><bean:message key="demographic.demographicsearch2apptresults.demographicId" /></div>
+            <div class="lastName"><bean:message key="demographic.demographicsearch2apptresults.lastName" /></div>
+            <div class="firstName"><bean:message key="demographic.demographicsearch2apptresults.firstName" /></div>
+            <div class="age"><bean:message key="demographic.demographicsearch2apptresults.age" /></div>
+            <div class="rosterStatus"><font size='-1'><bean:message key="demographic.demographicsearch2apptresults.rosterStatus" /></font></div>
+            <div class="sex"><bean:message key="demographic.demographicsearch2apptresults.sex" /></div>
+            <div class="dob"><bean:message key="demographic.demographicsearch2apptresults.DOB" /></div>
+            <div class="doctor"><bean:message key="demographic.demographicsearch2apptresults.doctor" /></div>
+	</li>
 
 	<%@ include file="../demographic/zzdemographicsearchresult.jspf"%>
 	<%
 String bgColor = bodd?"#EEEEFF":"white";
 %>
-
-	<tr bgcolor="<%=bgColor%>" align="center"
+        <li style="background-color: <%=bgColor%>"
 		<%-- 07/10/2006 RJ Added doctor provider_no to url --%>
 onMouseOver="this.style.cursor='hand';this.style.backgroundColor='pink';"
 		onMouseout="this.style.backgroundColor='<%=bgColor%>';"
 		onClick="document.forms[0].demographic_no.value=<%=apptMainBean.getString(rs,"demographic_no")%>;<% if(caisi) { out.print("addNameCaisi");} else { out.print("addName");} %>('<%=apptMainBean.getString(rs,"demographic_no")%>','<%=URLEncoder.encode(apptMainBean.getString(rs,"last_name"))%>','<%=URLEncoder.encode(apptMainBean.getString(rs,"first_name"))%>','<%=URLEncoder.encode(apptMainBean.getString(rs,"chart_no"))%>','<%=request.getParameter("messageId")%>','<%=apptMainBean.getString(rs,"provider_no")%>')">
 		<%-- 07/10/2006 RJ Added doctor provider_no to url --%>
-		<td><input type="submit" class="mbttn" name="demographic_no"
+		<div class="demoId"><input type="submit" class="mbttn" name="demographic_no"
 			value="<%=apptMainBean.getString(rs,"demographic_no")%>"
-			onClick="<% if(caisi) {out.print("addNameCaisi");} else {out.print("addName");} %>('<%=apptMainBean.getString(rs,"demographic_no")%>','<%=URLEncoder.encode(apptMainBean.getString(rs,"last_name"))%>','<%=URLEncoder.encode(apptMainBean.getString(rs,"first_name"))%>','<%=URLEncoder.encode(apptMainBean.getString(rs,"chart_no"))%>','<%=request.getParameter("messageId")%>','<%=apptMainBean.getString(rs,"provider_no")%>')"></td>
-		<td><%=Misc.toUpperLowerCase(apptMainBean.getString(rs,"last_name"))%></td>
-		<td><%=Misc.toUpperLowerCase(apptMainBean.getString(rs,"first_name"))%></td>
-		<td><%=age%></td>
-		<td><%=apptMainBean.getString(rs,"roster_status")%></td>
-		<td><%=apptMainBean.getString(rs,"sex")%></td>
-		<td><%=apptMainBean.getString(rs,"year_of_birth")+"-"+apptMainBean.getString(rs,"month_of_birth")+"-"+apptMainBean.getString(rs,"date_of_birth")%></td>
-		<td><%=providerBean.getProperty(apptMainBean.getString(rs,"provider_no"))==null?"":providerBean.getProperty(apptMainBean.getString(rs,"provider_no"))%></td>
-	</tr>
+			onClick="<% if(caisi) {out.print("addNameCaisi");} else {out.print("addName");} %>('<%=apptMainBean.getString(rs,"demographic_no")%>','<%=URLEncoder.encode(apptMainBean.getString(rs,"last_name"))%>','<%=URLEncoder.encode(apptMainBean.getString(rs,"first_name"))%>','<%=URLEncoder.encode(apptMainBean.getString(rs,"chart_no"))%>','<%=request.getParameter("messageId")%>','<%=apptMainBean.getString(rs,"provider_no")%>')">
+                </div>
+		<div class="lastName"><%=Misc.toUpperLowerCase(apptMainBean.getString(rs,"last_name"))%></div>
+		<div class="firstName"><%=Misc.toUpperLowerCase(apptMainBean.getString(rs,"first_name"))%></div>
+		<div class="age"><%=age%></div>
+		<div class="rosterStatus"><%=apptMainBean.getString(rs,"roster_status")==null||apptMainBean.getString(rs,"roster_status").equals("")?"&nbsp;":apptMainBean.getString(rs,"roster_status")%></div>
+		<div class="sex"><%=apptMainBean.getString(rs,"sex")%></div>
+		<div class="dob"><%=apptMainBean.getString(rs,"year_of_birth")+"-"+apptMainBean.getString(rs,"month_of_birth")+"-"+apptMainBean.getString(rs,"date_of_birth")%></div>
+                <div class="doctor">
+                    <%=providerBean.getProperty(apptMainBean.getString(rs,"provider_no"))==null?"":providerBean.getProperty(apptMainBean.getString(rs,"provider_no"))%>
+                </div>
+	</li>
 	<%
       bufName = new StringBuffer( (apptMainBean.getString(rs,"last_name")+ ","+ apptMainBean.getString(rs,"first_name")) );
       bufNo = new StringBuffer( (apptMainBean.getString(rs,"demographic_no")) );
@@ -274,7 +304,7 @@ onMouseOver="this.style.cursor='hand';this.style.backgroundColor='pink';"
 	%>
 	</form>
 
-</table>
+</ul>
 <%
   int nLastPage=0,nNextPage=0;
   nNextPage=Integer.parseInt(strLimit2)+Integer.parseInt(strLimit1);
@@ -305,8 +335,10 @@ onMouseOver="this.style.cursor='hand';this.style.backgroundColor='pink';"
   if(nItems==0 && nLastPage<=0) {
 %> <caisi:isModuleLoad moduleName="caisi" reverse="true">
 	<bean:message key="demographic.search.noResultsWereFound" />
+        <div class="createNew">
 	<a href="../demographic/demographicaddarecordhtm.jsp"><bean:message
 		key="demographic.search.btnCreateNew" /></a>
+        </div>
 </caisi:isModuleLoad> <%
     }
 %> <script language="JavaScript">
@@ -321,18 +353,19 @@ function next() {
 }
 //-->
 </SCRIPT>
-
+<a href="#" onclick="showHideItem('demographicSearch');" id="searchPopUpButton" class="rightButton top">Search</a>
+<div class="bottomBar">
 <form method="post" name="nextform"
 	action="../demographic/demographiccontrol.jsp">
 <%
   if(nLastPage>=0) {
-%> <input type="submit" class="mbttn" name="submit"
+%> <input type="submit" id="prevPageButton" name="submit"
 	value="<bean:message key="demographic.demographicsearch2apptresults.btnPrevPage"/>"
 	onClick="last()"> <%
   }
 //  if(nItems==Integer.parseInt(strLimit2)) {
   if(nItems<iRow) {
-%> <input type="submit" class="mbttn" name="submit"
+%> <input type="submit" id="nextPageButton" name="submit"
 	value="<bean:message key="demographic.demographicsearch2apptresults.btnNextPage"/>"
 	onClick="next()"> <%
 }
@@ -343,8 +376,11 @@ function next() {
   	out.println("<input type='hidden' name='"+temp+"' value='"+request.getParameter(temp)+"'>");
   }
 	%>
+
 </form>
+</div>
 <%--
 Please select by clicking on the demographic no button.</center> --%>
+</div>
 </body>
 </html>

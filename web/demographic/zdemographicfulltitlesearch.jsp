@@ -54,12 +54,17 @@ function searchOutOfDomain() {
 
 <form method="get" name="titlesearch" action="demographiccontrol.jsp"
 	onsubmit="return checkTypeIn()">
-<table BORDER="0" CELLPADDING="0" CELLSPACING="2" WIDTH="100%"
-	bgcolor="#CCCCFF">
-	<tr>
-		<td colspan="6" class="RowTop"><b><bean:message
-			key="demographic.zdemographicfulltitlesearch.msgSearch" /></b></td>
-	</tr>
+<div class="searchBox">
+<div class="RowTop header">
+    <div class="title">
+        <bean:message key="demographic.zdemographicfulltitlesearch.msgSearch" />
+    </div>
+</div>
+<ul>
+    <li>
+        <div class="label"><bean:message
+            key="demographic.zdemographicfulltitlesearch.msgBy" />:
+        </div>
 	<% String searchMode = request.getParameter("search_mode");
          String keyWord = request.getParameter("keyword");
          if (searchMode == null || searchMode.equals("")) {
@@ -69,35 +74,43 @@ function searchOutOfDomain() {
              keyWord = "";
          }
      %>
-	<tr>
-		<td>
-		<table bgcolor="white" width="100%">
-			<tr>
-				<td width="10%" nowrap><input type="radio" name="search_mode"
-					value="search_name"
-					<%=searchMode.equals("search_name")?"checked":""%>> <bean:message
-					key="demographic.zdemographicfulltitlesearch.formName" /></td>
-				<td nowrap><input type="radio" name="search_mode"
-					value="search_phone"
-					<%=searchMode.equals("search_phone")?"checked":""%>> <bean:message
-					key="demographic.zdemographicfulltitlesearch.formPhone" /></td>
-				<td nowrap><input type="radio" name="search_mode"
-					value="search_dob"
-					<%=searchMode.equals("search_dob")?"checked":""%>> <bean:message
-					key="demographic.zdemographicfulltitlesearch.formDOB" /></td>
-				<td valign="middle" rowspan="2" ALIGN="left"><input type="text"
-					NAME="keyword" VALUE="<%=keyWord%>" SIZE="17" MAXLENGTH="100">
+         <select class="wideInput" name="search_mode">
+            <option value="search_name" <%=searchMode.equals("search_name")?"selected":""%>>
+                <bean:message key="demographic.zdemographicfulltitlesearch.formName" />
+            </option>
+            <option value="search_phone" <%=searchMode.equals("search_phone")?"selected":""%>>
+                <bean:message key="demographic.zdemographicfulltitlesearch.formPhone" />
+            </option>
+            <option value="search_dob" <%=searchMode.equals("search_dob")?"selected":""%>>
+                <bean:message key="demographic.zdemographicfulltitlesearch.formDOB" />
+            </option>
+            <option value="search_address" <%=searchMode.equals("search_address")?"selected":""%>>
+                <bean:message key="demographic.zdemographicfulltitlesearch.formAddr" />
+            </option>
+            <option value="search_hin" <%=searchMode.equals("search_hin")?"selected":""%>>
+                <bean:message key="demographic.zdemographicfulltitlesearch.formHIN" />
+            </option>
+            <option value="search_chart_no" <%=searchMode.equals("search_chart_no")?"selected":""%>>
+                <bean:message key="demographic.zdemographicfulltitlesearch.formChart" />
+            </option>
+         </select>
+    </li>
+    <li>
+        <div class="label"><bean:message
+            key="demographic.zdemographicfulltitlesearch.msgInput" />:
+        </div>
+        <input class="wideInput" type="text" NAME="keyword" VALUE="<%=keyWord%>" SIZE="17" MAXLENGTH="100">
+    </li>
+    <li>
 				<INPUT TYPE="hidden" NAME="orderby" VALUE="last_name, first_name">
 				<INPUT TYPE="hidden" NAME="dboperation" VALUE="search_titlename">
-				<INPUT TYPE="hidden" NAME="limit1" VALUE="0"> <INPUT
-					TYPE="hidden" NAME="limit2" VALUE="10"> <INPUT
-					TYPE="hidden" NAME="displaymode" VALUE="Search"> <INPUT
-					TYPE="hidden" NAME="ptstatus" VALUE="active"> <INPUT
-					TYPE="hidden" NAME="fromMessenger" VALUE="<%=fromMessenger%>">
+    <INPUT TYPE="hidden" NAME="limit1" VALUE="0">
+    <INPUT TYPE="hidden" NAME="limit2" VALUE="10">
+    <INPUT TYPE="hidden" NAME="displaymode" VALUE="Search">
+    <INPUT TYPE="hidden" NAME="ptstatus" VALUE="active">
+    <INPUT TYPE="hidden" NAME="fromMessenger" VALUE="<%=fromMessenger%>">
 					<INPUT TYPE="hidden" NAME="outofdomain" VALUE="">
-				<INPUT TYPE="SUBMIT"
-					VALUE="<bean:message key="demographic.zdemographicfulltitlesearch.msgSearch" />"
-					SIZE="17"
+    <INPUT TYPE="SUBMIT" class="rightButton blueButton top" VALUE="<bean:message key="demographic.zdemographicfulltitlesearch.msgSearch" />" SIZE="17"
 					TITLE="<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchActive"/>">
 				&nbsp;&nbsp;&nbsp; <INPUT TYPE="button" onclick="searchInactive();"
 					TITLE="<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchInactive"/>"
@@ -110,24 +123,7 @@ function searchOutOfDomain() {
 					TITLE="<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchOutOfDomain"/>"
 					VALUE="<bean:message key="demographic.search.OutOfDomain"/>">
 					</security:oscarSec>
-					</td>
-			</tr>
-			<tr bgcolor="white">
-				<td nowrap><input type="radio" name="search_mode"
-					value="search_address"
-					<%=searchMode.equals("search_address")?"checked":""%>> <bean:message
-					key="demographic.zdemographicfulltitlesearch.formAddr" /></td>
-				<td nowrap><input type="radio" name="search_mode"
-					value="search_hin"
-					<%=searchMode.equals("search_hin")?"checked":""%>> <bean:message
-					key="demographic.zdemographicfulltitlesearch.formHIN" /></td>
-				<td nowrap><input type="radio" name="search_mode"
-					value="search_chart_no"
-					<%=searchMode.equals("search_chart_no")?"checked":""%>> <bean:message
-					key="demographic.zdemographicfulltitlesearch.formChart" /></td>
-			</tr>
-		</table>
-		</td>
-	</tr>
-</table>
+    </li>
+</ul>
+</div>
 </form>
