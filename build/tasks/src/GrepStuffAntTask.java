@@ -16,13 +16,9 @@ import org.apache.tools.ant.Task;
  * so refactoring is going to take months. The second problem is that people are making new calls to DBHandler despite the deprecation and notes and comments and emails and documentation saying not to use it. As a result, we need something that will
  * "fail". So, the idea is I grep through the code for DBHandler, I see maybe 2134 references. I now have an ant task which will grep through the code upon each build, if the reference count is greater than the previous count (2134) then I will fail the
  * ant build. So the only real purpose of this class is to help enforce rules we have agreed upon, but is apparently being ignored. This can be extended to other any checking as required. Before extending, check PMD and checkstyle to see if what you want
- * is already covered though. 
- * 
- * As a note, I will keep more than just the count, I will keep a copy of every file reference. This is because I need to be able to report which file caused the violation or else it'll be useless.
- * 
- * For usage, the first time this is run, not previous data will be found. As a result it will assume all errors are new and fail the build.
- * It will then generate and save data file as per your dataFile name. Upon subsequent runs it will assume that data file is the baseline
- * to compare to. When you want to rest the baseline, just delete the file and run the task again and a new data file will be generated.
+ * is already covered though. As a note, I will keep more than just the count, I will keep a copy of every file reference. This is because I need to be able to report which file caused the violation or else it'll be useless. For usage, the first time this
+ * is run, not previous data will be found. As a result it will assume all errors are new and fail the build. It will then generate and save data file as per your dataFile name. Upon subsequent runs it will assume that data file is the baseline to compare
+ * to. When you want to rest the baseline, just delete the file and run the task again and a new data file will be generated.
  */
 
 public class GrepStuffAntTask extends Task {
@@ -46,8 +42,8 @@ public class GrepStuffAntTask extends Task {
 			MultiValueMapSerialisable previousViolations = getPreviousViolations();
 			MultiValueMapSerialisable currentViolations = getCurrentViolations();
 
-			if (previousViolations==null) writeOut(currentViolations);
-			
+			if (previousViolations == null) writeOut(currentViolations);
+
 			if (hasNewErrors(previousViolations, currentViolations)) {
 				throw (new BuildException("Failed, new violations found."));
 			}
@@ -61,24 +57,22 @@ public class GrepStuffAntTask extends Task {
 	}
 
 	private void writeOut(MultiValueMapSerialisable currentViolations) throws IOException {
-		FileOutputStream fos=new FileOutputStream(dataFile);
-		try
-		{
-			ObjectOutputStream oos=new ObjectOutputStream(fos);
+		FileOutputStream fos = new FileOutputStream(dataFile);
+		try {
+			ObjectOutputStream oos = new ObjectOutputStream(fos);
 			oos.writeObject(currentViolations);
 			oos.flush();
-		}
-		finally
-		{
+		} finally {
 			fos.close();
 		}
-    }
+	}
 
 	private boolean hasNewErrors(MultiValueMapSerialisable previousViolations, MultiValueMapSerialisable currentViolations) {
 
 		Set<String> keys = currentViolations.keySet();
 		boolean hasNewErrors = false;
-
+		log("----------------------------------------");
+		
 		for (String key : keys) {
 			Collection<String> previousValues = null;
 			if (previousViolations != null) previousValues = previousViolations.getCollection(key);
@@ -109,7 +103,7 @@ public class GrepStuffAntTask extends Task {
 	private MultiValueMapSerialisable getPreviousViolations() throws IOException, ClassNotFoundException {
 		FileInputStream fis = null;
 		try {
-			fis=new FileInputStream(dataFile);
+			fis = new FileInputStream(dataFile);
 			ObjectInputStream ois = new ObjectInputStream(fis);
 
 			MultiValueMapSerialisable result = (MultiValueMapSerialisable) (ois.readObject());

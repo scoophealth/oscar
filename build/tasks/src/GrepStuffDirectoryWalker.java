@@ -10,81 +10,79 @@ public class GrepStuffDirectoryWalker extends DirectoryWalker {
 
 	private String rootPath;
 	private Task logger;
-	
+
 	/** key=String/violation value=String/relativePath */
-	private MultiValueMapSerialisable violations=new MultiValueMapSerialisable();
-	
-	public GrepStuffDirectoryWalker(Task logger)
-	{
-		this.logger=logger;
+	private MultiValueMapSerialisable violations = new MultiValueMapSerialisable();
+
+	public GrepStuffDirectoryWalker(Task logger) {
+		this.logger = logger;
 	}
-	
-	
+
 	@SuppressWarnings("unchecked")
-    @Override
-    protected void handleFile(File file, int depth, Collection results) throws IOException
-	{
-		String fullPath=file.getCanonicalPath();
-		
+	@Override
+	protected void handleFile(File file, int depth, Collection results) throws IOException {
+		String fullPath = file.getCanonicalPath();
+
 		if (isIgnoredFile(fullPath)) return;
-		
-		String relativePath=fullPath.substring(rootPath.length());
+
+		String relativePath = fullPath.substring(rootPath.length());
 		checkViolations(file, relativePath);
 	}
-	
+
 	private void checkViolations(File file, String relativePath) throws IOException {
-		String fileContents=FileUtils.readFileToString(file);
-		
+		String fileContents = FileUtils.readFileToString(file);
+		String fileContentsLowered = fileContents.toLowerCase();
+
+		// --- filename checking ---
 		if (relativePath.endsWith(".hbm.xml")) violations.put(".hbm.xml", relativePath);
 		if (relativePath.endsWith(".class")) violations.put(".class", relativePath);
-		
-		checkContains(relativePath, fileContents, "System.err");
-		checkContains(relativePath, fileContents, "System.out");	    
-		checkContains(relativePath, fileContents, "printStackTrace");	    
-		checkContains(relativePath, fileContents, "ASCII");	    
-		checkContains(relativePath, fileContents, "DBHandler.");	    
-		checkContains(relativePath, fileContents, "getConnection(");	    
-		checkContains(relativePath, fileContents, "OscarSuperManager");	
-		checkContains(relativePath, fileContents, "org.apache.commons.logging.Log");
-    }
 
+		// --- case sensitive comparison ---
+		checkContains(relativePath, fileContents, "System.err");
+		checkContains(relativePath, fileContents, "System.out");
+		checkContains(relativePath, fileContents, "printStackTrace");
+		checkContains(relativePath, fileContents, "DBHandler.");
+		checkContains(relativePath, fileContents, "getConnection(");
+		checkContains(relativePath, fileContents, "OscarSuperManager");
+		checkContains(relativePath, fileContents, "org.apache.commons.logging.Log");
+
+		// --- hack for ignore case comparison ---
+		checkContains(relativePath, fileContentsLowered, "latin-1");
+		checkContains(relativePath, fileContentsLowered, "ascii");
+		checkContains(relativePath, fileContentsLowered, "8859-1");
+	}
 
 	private void checkContains(String relativePath, String fileContents, String s) {
-	    if (fileContents.contains(s))
-	    {
-	    	violations.put(s, relativePath);
-	    }
-    }
-
+		if (fileContents.contains(s)) {
+			violations.put(s, relativePath);
+		}
+	}
 
 	private boolean isIgnoredFile(String fullPath) {
-		if (fullPath.endsWith("/CVS/Repository")) return(true);
-		if (fullPath.endsWith("/CVS/Root")) return(true);
-		if (fullPath.endsWith("/CVS/Entries")) return(true);
-		
-		if (fullPath.endsWith(".jpg")) return(true);
-		if (fullPath.endsWith(".png")) return(true);
-		if (fullPath.endsWith(".gif")) return(true);
-		if (fullPath.endsWith(".pdf")) return(true);
-		if (fullPath.endsWith(".swf")) return(true);
-		if (fullPath.endsWith(".jar")) return(true);
+		if (fullPath.endsWith("/CVS/Repository")) return (true);
+		if (fullPath.endsWith("/CVS/Root")) return (true);
+		if (fullPath.endsWith("/CVS/Entries")) return (true);
 
-		return(false);
+		if (fullPath.endsWith(".jpg")) return (true);
+		if (fullPath.endsWith(".png")) return (true);
+		if (fullPath.endsWith(".gif")) return (true);
+		if (fullPath.endsWith(".pdf")) return (true);
+		if (fullPath.endsWith(".swf")) return (true);
+		if (fullPath.endsWith(".jar")) return (true);
+
+		return (false);
 	}
 
+	public void walk(String srcDir) throws IOException {
+		File srcDirFile = new File(srcDir);
+		rootPath = srcDirFile.getCanonicalPath();
 
-	public void walk(String srcDir) throws IOException
-	{
-		File srcDirFile=new File(srcDir);
-		rootPath=srcDirFile.getCanonicalPath();
-		
-		logger.log("canonical srcDir="+rootPath);
-		
+		logger.log("canonical srcDir=" + rootPath);
+
 		super.walk(srcDirFile, null);
 	}
-	
-	public MultiValueMapSerialisable getVoliations()
-	{
-		return(violations);
+
+	public MultiValueMapSerialisable getVoliations() {
+		return (violations);
 	}
 }
