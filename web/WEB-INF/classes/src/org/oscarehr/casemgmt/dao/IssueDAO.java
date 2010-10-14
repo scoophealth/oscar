@@ -27,14 +27,15 @@ import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
-import org.jboss.logging.Logger;
+import org.apache.log4j.Logger;
 import org.oscarehr.casemgmt.model.Issue;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import com.quatro.model.security.Secrole;
 
 public class IssueDAO extends HibernateDaoSupport {
-	private Logger log = Logger.getLogger(this.getClass());
+	private static Logger logger = MiscUtils.getLogger();
 	
     public Issue getIssue(Long id) {
 		return (Issue)getHibernateTemplate().get(Issue.class, id);
@@ -93,7 +94,7 @@ public class IssueDAO extends HibernateDaoSupport {
         search = "%" + search + "%";
         search = search.toLowerCase();
         String sql = "from Issue i where (lower(i.code) like ? or lower(i.description) like ?) and i.role in (" + roleList + ")";
-        log.info(sql);
+        logger.debug(sql);
         return this.getHibernateTemplate().find(sql, new Object[] {search, search});
 
     }
@@ -102,7 +103,7 @@ public class IssueDAO extends HibernateDaoSupport {
         search = "%" + search + "%";
         search = search.toLowerCase();
         String sql = "from Issue i where (lower(i.code) like ? or lower(i.description) like ?)";
-        log.info(sql);
+        logger.debug(sql);
         return this.getHibernateTemplate().find(sql, new Object[] {search, search});
     }
     
