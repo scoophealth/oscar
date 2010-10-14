@@ -30,3 +30,7 @@ cp -r ../web/WEB-INF/classes/{*.properties,*.xml,src/*.properties} ${main_dir}/r
 # get rid of cvs files
 zip -rm cvs.zip mvn -i \*/CVS/\*
 rm cvs.zip
+
+# make local repo and add libs
+mkdir mvn/local_repo
+mvn install:install-file -DgroupId=org.oscarehr -DartifactId=caisi_integrator_client -Dversion=0.0-SNAPSHOT -Dpackaging=jar -Dfile=../web/WEB-INF/lib/caisi_integrator_client.jar -DgeneratePom=true -DcreateChecksum=true -DlocalRepositoryPath=mvn/local_repo -DlocalRepositoryId=local_repo
