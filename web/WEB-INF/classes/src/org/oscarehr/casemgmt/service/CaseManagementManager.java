@@ -37,6 +37,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.util.LabelValueBean;
@@ -956,6 +957,8 @@ public class CaseManagementManager {
 	 * @param demoNo demographic to search for
 	 */
 	public List getIssueHistory(String issueIds, String demoNo) {
+		issueIds=StringUtils.trimToNull(issueIds);
+		if (issueIds==null) return(new ArrayList());
 		return this.caseManagementNoteDAO.getIssueHistory(issueIds, demoNo);
 	}
 

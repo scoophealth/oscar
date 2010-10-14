@@ -45,6 +45,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -2128,10 +2129,14 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		StringBuffer title = new StringBuffer();
 		String arrIssues[] = issueIds.split(",");
 		ResourceBundle props = ResourceBundle.getBundle("oscarResources");
-		for (int idx = 0; idx < arrIssues.length; ++idx) {
-			Issue i = this.caseManagementMgr.getIssue(arrIssues[idx]);
-			title.append(i.getDescription());
-			if (idx < arrIssues.length - 1) title.append(", ");
+		if (arrIssues != null) {
+			for (int idx = 0; idx < arrIssues.length; ++idx) {
+				String tempArrIssue=StringUtils.trimToNull(arrIssues[idx]);
+				if (tempArrIssue==null) continue;
+				Issue i = this.caseManagementMgr.getIssue(tempArrIssue);
+				title.append(i.getDescription());
+				if (idx < arrIssues.length - 1) title.append(", ");
+			}
 		}
 		title.append(" " + props.getString("oscarEncounter.history.title"));
 		request.setAttribute("title", title.toString());
