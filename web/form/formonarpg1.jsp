@@ -23,6 +23,9 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<!--add for con report-->
+<%@ taglib uri="http://www.caisi.ca/plugin-tag" prefix="plugin" %>
+
 <jsp:useBean id="oscarVariables" class="java.util.Properties"
 	scope="session" />
 
@@ -89,6 +92,13 @@
         }
         return ret;
     }
+    
+    function refreshOpener() {
+		if (window.opener && window.opener.name=="inboxDocDetails") {
+			window.opener.location.reload(true);
+		}	
+    }
+    window.onunload=refreshOpener;
     function onSave() {
         document.forms[0].submit.value="save";
         var ret = checkAllDates();
@@ -97,9 +107,18 @@
             reset();
             ret = confirm("Are you sure you want to save this form?");
         }
+        if (ret)
+            window.onunload=null;
         return ret;
     }
-    
+    function onExit() {
+        if(confirm("Are you sure you wish to exit without saving your changes?")==true)
+        {
+        	refreshOpener();
+            window.close();
+        }
+        return(false);
+    }
     function onSaveExit() {
         document.forms[0].submit.value="exit";
         var ret = checkAllDates();
@@ -108,6 +127,8 @@
             reset();
             ret = confirm("Are you sure you wish to save and close this window?");
         }
+        if (ret)
+        	refreshOpener();
         return ret;
     }
     function popupPage(varpage) {
@@ -118,6 +139,14 @@
             popup.opener = self;
         }
     }
+    function popupPageFull(varpage) {
+        windowprops = "location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=no,screenX=50,screenY=50,top=20,left=20";
+        var popup = window.open(varpage, "ar2", windowprops);
+        if (popup.opener == null) {
+            popup.opener = self;
+        }
+    }
+
     function popPage(varpage,pageName) {
         windowprops = "height=700,width=960"+
             ",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=no,screenX=50,screenY=50,top=20,left=20";
@@ -333,12 +362,14 @@ function calToday(field) {
 function calByLMP(obj) {
 	if (document.forms[0].pg1_menLMP.value!="" && valDate(document.forms[0].pg1_menLMP)==true) {
 		var str_date = document.forms[0].pg1_menLMP.value;
-                var tmp = str_date.split("/", 3);
-                var yyyy = tmp[0];
-                var mm = tmp[1]; 
-                mm -= 1;
-                var dd  = tmp[2];
-		var calDate=new Date(yyyy,mm,dd,8,0,0,0);		                
+        var yyyy = str_date.substring(0, str_date.indexOf("/"));
+        var mm = eval(str_date.substring(eval(str_date.indexOf("/")+1), str_date.lastIndexOf("/")) - 1);
+        var dd  = str_date.substring(eval(str_date.lastIndexOf("/")+1));
+		var calDate=new Date();
+		calDate.setFullYear(yyyy);
+		calDate.setMonth(mm);
+		calDate.setDate(dd);
+		calDate.setHours("8");
 		var odate = new Date(calDate.getTime() + (280 * 86400000));
 		varMonth1 = odate.getMonth()+1;
 		varMonth1 = varMonth1>9? varMonth1 : ("0"+varMonth1);
@@ -379,7 +410,15 @@ function calByLMP(obj) {
   }
 %> <input type="submit" value="Exit"
 				onclick="javascript:return onExit();" /> <input type="submit"
-				value="Print" onclick="javascript:return onPrint();" /></td>
+				value="Print" onclick="javascript:return onPrint();" />
+            <plugin:hideWhenCompExists componentName="specialencounterComp" reverse="true">
+            <%if (formId!=0) {%>
+<a style="font-weight: bold; color: red;" href="javascript: popupPageFull('<%=request.getContextPath()%>
+/mod/specialencounterComp/EyeForm.do?method=conReportHis&demographicNo=<%=demoNo%>&ARformId=<%=formId%>&provNo=<%=provNo%>');">
+Con Report</a> |
+            <%} %>
+			</plugin:hideWhenCompExists>
+</td>
 			<%
   if (!bView) {
 %>
