@@ -1,6 +1,8 @@
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Hashtable;
+import java.util.WeakHashMap;
 
 import org.apache.commons.io.DirectoryWalker;
 import org.apache.commons.io.FileUtils;
@@ -48,6 +50,15 @@ public class GrepStuffDirectoryWalker extends DirectoryWalker {
 		checkContains(relativePath, fileContents, "com.sun.");
 		checkContains(relativePath, fileContents, "LogManager.getLogger(");
 		checkContains(relativePath, fileContents, "HibernateDaoSupport");
+		checkContains(relativePath, fileContents, "Hashtable");
+		checkContains(relativePath, fileContents, "Vector");
+		checkContains(relativePath, fileContents, "ArrayList()");
+		checkContains(relativePath, fileContents, "HashSet()");
+		checkContains(relativePath, fileContents, "HashMap()");
+		checkContains(relativePath, fileContents, "TreeSet()");
+		checkContains(relativePath, fileContents, "TreeMap()");
+		checkContains(relativePath, fileContents, "WeakHashMap()");
+		checkContains(relativePath, fileContents, "StringBuffer");
 		
 		// --- hack for ignore case comparison ---
 		checkContains(relativePath, fileContentsLowered, "latin-1");
