@@ -47,7 +47,8 @@ public class GrepStuffDirectoryWalker extends DirectoryWalker {
 		checkContains(relativePath, fileContents, "org.apache.commons.logging.Log");
 		checkContains(relativePath, fileContents, "com.sun.");
 		checkContains(relativePath, fileContents, "LogManager.getLogger(");
-
+		checkContains(relativePath, fileContents, "HibernateDaoSupport");
+		
 		// --- hack for ignore case comparison ---
 		checkContains(relativePath, fileContentsLowered, "latin-1");
 		checkContains(relativePath, fileContentsLowered, "ascii");
