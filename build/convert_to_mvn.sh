@@ -51,3 +51,12 @@ mvn install:install-file -DgroupId=net.sf.jcharts -DartifactId=krysalis-jCharts 
 
 # cds isn't in maven
 mvn install:install-file -DgroupId=cds -DartifactId=cds -Dversion=0.0-SNAPSHOT -Dpackaging=jar -Dfile=../web/WEB-INF/lib/cds.jar -DgeneratePom=true -DcreateChecksum=true -DlocalRepositoryPath=mvn/local_repo -DlocalRepositoryId=local_repo
+
+# hsfo is not in maven
+mvn install:install-file -DgroupId=hsfo -DartifactId=hsfo -Dversion=2007-02-12 -Dpackaging=jar -Dfile=../web/WEB-INF/lib/hsfo_2007-02-12.jar -DgeneratePom=true -DcreateChecksum=true -DlocalRepositoryPath=mvn/local_repo -DlocalRepositoryId=local_repo
+
+# cookie revolver is not in maven
+mvn install:install-file -DgroupId=net.sf.cookierevolver -DartifactId=cookierevolver -Dversion=0.2.5 -Dpackaging=jar -Dfile=../web/WEB-INF/lib/cookierev-0.2.5.jar -DgeneratePom=true -DcreateChecksum=true -DlocalRepositoryPath=mvn/local_repo -DlocalRepositoryId=local_repo
+
+# crystal reports... tried to ask SAP if these were free/opensource/redistributable but they wouldn't answer with out me buying support, their loss 
+mvn install:install-file -DgroupId=com.crystaldecisions -DartifactId=webreporting -Dversion=0.0-SNAPSHOT -Dpackaging=jar -Dfile=../web/WEB-INF/lib/webreporting.jar -DgeneratePom=true -DcreateChecksum=true -DlocalRepositoryPath=mvn/local_repo -DlocalRepositoryId=local_repo
