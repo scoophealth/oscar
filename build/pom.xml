@@ -431,6 +431,63 @@
             <artifactId>webreporting</artifactId>
             <version>0.0-SNAPSHOT</version>
         </dependency>
+		<dependency>
+            <groupId>com.crystaldecisions</groupId>
+            <artifactId>rascore</artifactId>
+            <version>0.0-SNAPSHOT</version>
+        </dependency>
+		<dependency>
+            <groupId>com.crystaldecisions</groupId>
+            <artifactId>jrcerom</artifactId>
+            <version>0.0-SNAPSHOT</version>
+        </dependency>
+
+		<!-- email -->
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+			<version>1.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-email</artifactId>
+			<version>1.1</version>
+		</dependency>
+
+		<!-- jfree charts -->
+		<dependency>
+			<groupId>jfree</groupId>
+			<artifactId>jfreechart</artifactId>
+			<version>1.0.12</version>
+		</dependency>
+
+        <!-- dm.jar , suspect this is generated classes and should be removed as a jar in the future -->
+		<dependency>
+            <groupId>dm</groupId>
+            <artifactId>dm</artifactId>
+            <version>0.0-SNAPSHOT</version>
+        </dependency>
+
+        <!-- patientSiteVisit.jar , suspect this is generated classes and should be removed as a jar in the future -->
+		<dependency>
+            <groupId>patientSiteVisit</groupId>
+            <artifactId>patientSiteVisit</artifactId>
+            <version>0.0-SNAPSHOT</version>
+        </dependency>
+
+        <!-- surveyModel.jar , suspect this is generated classes and should be removed as a jar in the future -->
+		<dependency>
+            <groupId>surveyModel</groupId>
+            <artifactId>surveyModel</artifactId>
+            <version>0.0-SNAPSHOT</version>
+        </dependency>
+
+		<!-- jaxm api ... why do we need this? -->
+		<dependency>
+			<groupId>javax.xml</groupId>
+			<artifactId>jaxm-api</artifactId>
+			<version>UNKNOWN</version>
+		</dependency>
 
 	</dependencies>
 

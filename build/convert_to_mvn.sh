@@ -60,3 +60,17 @@ mvn install:install-file -DgroupId=net.sf.cookierevolver -DartifactId=cookierevo
 
 # crystal reports... tried to ask SAP if these were free/opensource/redistributable but they wouldn't answer with out me buying support, their loss 
 mvn install:install-file -DgroupId=com.crystaldecisions -DartifactId=webreporting -Dversion=0.0-SNAPSHOT -Dpackaging=jar -Dfile=../web/WEB-INF/lib/webreporting.jar -DgeneratePom=true -DcreateChecksum=true -DlocalRepositoryPath=mvn/local_repo -DlocalRepositoryId=local_repo
+mvn install:install-file -DgroupId=com.crystaldecisions -DartifactId=rascore -Dversion=0.0-SNAPSHOT -Dpackaging=jar -Dfile=../web/WEB-INF/lib/rascore.jar -DgeneratePom=true -DcreateChecksum=true -DlocalRepositoryPath=mvn/local_repo -DlocalRepositoryId=local_repo
+mvn install:install-file -DgroupId=com.crystaldecisions -DartifactId=jrcerom -Dversion=0.0-SNAPSHOT -Dpackaging=jar -Dfile=../web/WEB-INF/lib/jrcerom.jar -DgeneratePom=true -DcreateChecksum=true -DlocalRepositoryPath=mvn/local_repo -DlocalRepositoryId=local_repo
+
+# dm.jar I suspect this shouldn't even be in a jar like this ... but we'll deal with it later, I think it's generated classes
+mvn install:install-file -DgroupId=dm -DartifactId=dm -Dversion=0.0-SNAPSHOT -Dpackaging=jar -Dfile=../web/WEB-INF/lib/dm.jar -DgeneratePom=true -DcreateChecksum=true -DlocalRepositoryPath=mvn/local_repo -DlocalRepositoryId=local_repo
+
+# patientSiteVisit.jar I suspect this shouldn't even be in a jar like this ... but we'll deal with it later, I think it's generated classes
+mvn install:install-file -DgroupId=patientSiteVisit -DartifactId=patientSiteVisit -Dversion=0.0-SNAPSHOT -Dpackaging=jar -Dfile=../web/WEB-INF/lib/patientSiteVisit.jar -DgeneratePom=true -DcreateChecksum=true -DlocalRepositoryPath=mvn/local_repo -DlocalRepositoryId=local_repo
+
+# hsfo is not in maven
+mvn install:install-file -DgroupId=javax.xml -DartifactId=jaxm-api -Dversion=UNKNOWN -Dpackaging=jar -Dfile=../web/WEB-INF/lib/jaxm-api.jar -DgeneratePom=true -DcreateChecksum=true -DlocalRepositoryPath=mvn/local_repo -DlocalRepositoryId=local_repo
+
+# surveyModel.jar I suspect this shouldn't even be in a jar like this ... but we'll deal with it later, I think it's generated classes
+mvn install:install-file -DgroupId=surveyModel -DartifactId=surveyModel -Dversion=0.0-SNAPSHOT -Dpackaging=jar -Dfile=../web/WEB-INF/lib/surveyModel.jar -DgeneratePom=true -DcreateChecksum=true -DlocalRepositoryPath=mvn/local_repo -DlocalRepositoryId=local_repo
