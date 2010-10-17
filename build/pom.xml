@@ -297,6 +297,82 @@
 			<version>1.4</version>
 		</dependency>
 				
+		<!-- indivo -->
+		<dependency>
+			<groupId>org.indivo</groupId>
+			<artifactId>indivo-client-java</artifactId>
+			<version>3.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.indivo</groupId>
+			<artifactId>indivo-core</artifactId>
+			<version>3.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.indivo</groupId>
+			<artifactId>indivo-model-core</artifactId>
+			<version>3.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.indivo</groupId>
+			<artifactId>indivo-model-phr</artifactId>
+			<version>3.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.indivo</groupId>
+			<artifactId>indivo-protocol</artifactId>
+			<version>3.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.indivo</groupId>
+			<artifactId>indivo-security-core</artifactId>
+			<version>3.2-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.indivo</groupId>
+			<artifactId>indivo-security-model</artifactId>
+			<version>3.2-SNAPSHOT</version>
+		</dependency>
+				
+		<!-- jcharts -->
+		<dependency>
+			<groupId>net.sf.jcharts</groupId>
+			<artifactId>krysalis-jCharts</artifactId>
+			<version>0.7.5</version>
+		</dependency>
+		<dependency>
+			<groupId>batik</groupId>
+			<artifactId>batik-awt-util</artifactId>
+			<version>1.6-1</version>
+		</dependency>
+		<dependency>
+			<groupId>batik</groupId>
+			<artifactId>batik-dom</artifactId>
+			<version>1.6-1</version>
+		</dependency>
+		<dependency>
+			<groupId>batik</groupId>
+			<artifactId>batik-svggen</artifactId>
+			<version>1.6-1</version>
+		</dependency>
+		<dependency>
+			<groupId>batik</groupId>
+			<artifactId>batik-util</artifactId>
+			<version>1.6-1</version>
+		</dependency>
+		<dependency>
+			<groupId>batik</groupId>
+			<artifactId>batik-xml</artifactId>
+			<version>1.6-1</version>
+		</dependency>
+				
+		<!-- cds -->
+		<dependency>
+			<groupId>cds</groupId>
+			<artifactId>cds</artifactId>
+			<version>0.0-SNAPSHOT</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

@@ -33,4 +33,21 @@ rm cvs.zip
 
 # make local repo and add libs
 mkdir mvn/local_repo
+
+# integrator isn't in maven
 mvn install:install-file -DgroupId=org.oscarehr -DartifactId=caisi_integrator_client -Dversion=0.0-SNAPSHOT -Dpackaging=jar -Dfile=../web/WEB-INF/lib/caisi_integrator_client.jar -DgeneratePom=true -DcreateChecksum=true -DlocalRepositoryPath=mvn/local_repo -DlocalRepositoryId=local_repo
+
+# indivo isn't in maven
+mvn install:install-file -DgroupId=org.indivo -DartifactId=indivo-client-java -Dversion=3.0-SNAPSHOT -Dpackaging=jar -Dfile=../web/WEB-INF/lib/indivo-client-java-3.0-SNAPSHOT.jar -DgeneratePom=true -DcreateChecksum=true -DlocalRepositoryPath=mvn/local_repo -DlocalRepositoryId=local_repo
+mvn install:install-file -DgroupId=org.indivo -DartifactId=indivo-core -Dversion=3.0-SNAPSHOT -Dpackaging=jar -Dfile=../web/WEB-INF/lib/indivo-core-3.0-SNAPSHOT.jar -DgeneratePom=true -DcreateChecksum=true -DlocalRepositoryPath=mvn/local_repo -DlocalRepositoryId=local_repo
+mvn install:install-file -DgroupId=org.indivo -DartifactId=indivo-model-core -Dversion=3.0-SNAPSHOT -Dpackaging=jar -Dfile=../web/WEB-INF/lib/indivo-model-core-3.0-SNAPSHOT.jar -DgeneratePom=true -DcreateChecksum=true -DlocalRepositoryPath=mvn/local_repo -DlocalRepositoryId=local_repo
+mvn install:install-file -DgroupId=org.indivo -DartifactId=indivo-model-phr -Dversion=3.0-SNAPSHOT -Dpackaging=jar -Dfile=../web/WEB-INF/lib/indivo-model-phr-3.0-SNAPSHOT.jar -DgeneratePom=true -DcreateChecksum=true -DlocalRepositoryPath=mvn/local_repo -DlocalRepositoryId=local_repo
+mvn install:install-file -DgroupId=org.indivo -DartifactId=indivo-protocol -Dversion=3.0-SNAPSHOT -Dpackaging=jar -Dfile=../web/WEB-INF/lib/indivo-protocol-3.0-SNAPSHOT.jar -DgeneratePom=true -DcreateChecksum=true -DlocalRepositoryPath=mvn/local_repo -DlocalRepositoryId=local_repo
+mvn install:install-file -DgroupId=org.indivo -DartifactId=indivo-security-core -Dversion=3.2-SNAPSHOT -Dpackaging=jar -Dfile=../web/WEB-INF/lib/indivo-security-core-3.2-SNAPSHOT.jar -DgeneratePom=true -DcreateChecksum=true -DlocalRepositoryPath=mvn/local_repo -DlocalRepositoryId=local_repo
+mvn install:install-file -DgroupId=org.indivo -DartifactId=indivo-security-model -Dversion=3.2-SNAPSHOT -Dpackaging=jar -Dfile=../web/WEB-INF/lib/indivo-security-model-3.2-SNAPSHOT.jar -DgeneratePom=true -DcreateChecksum=true -DlocalRepositoryPath=mvn/local_repo -DlocalRepositoryId=local_repo
+
+# jcharts doesn't have right version in maven
+mvn install:install-file -DgroupId=net.sf.jcharts -DartifactId=krysalis-jCharts -Dversion=0.7.5 -Dpackaging=jar -Dfile=../web/WEB-INF/lib/jCharts-0.7.5.jar -DgeneratePom=true -DcreateChecksum=true -DlocalRepositoryPath=mvn/local_repo -DlocalRepositoryId=local_repo
+
+# cds isn't in maven
+mvn install:install-file -DgroupId=cds -DartifactId=cds -Dversion=0.0-SNAPSHOT -Dpackaging=jar -Dfile=../web/WEB-INF/lib/cds.jar -DgeneratePom=true -DcreateChecksum=true -DlocalRepositoryPath=mvn/local_repo -DlocalRepositoryId=local_repo
