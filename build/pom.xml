@@ -247,7 +247,7 @@
 		<dependency>
 			<groupId>com.lowagie</groupId>
 			<artifactId>itext</artifactId>
-			<version>2.1.7</version>
+			<version>1.4</version>
 		</dependency>
 		
 		<!-- json -->
@@ -281,7 +281,7 @@
 		<dependency>
 			<groupId>net.sourceforge.barbecue</groupId>
 			<artifactId>barbecue</artifactId>
-			<version>1.5-beta1</version>
+			<version>1.0.6b</version>
 		</dependency>
 		
 		<!-- joda time -->
@@ -532,7 +532,7 @@
 			<version>1.2</version>
 		</dependency>
 
-		<!-- sun xacml -->
+		<!-- sun pdfview -->
 		<dependency>
 			<groupId>com.sun</groupId>
 			<artifactId>pdfview</artifactId>
@@ -546,7 +546,7 @@
 			<version>1.1.1</version>
 		</dependency>
 
-		<!-- display tag -->
+		<!-- zxing / 2d bar codes -->
 		<dependency>
 			<groupId>zxing</groupId>
 			<artifactId>zxing-core</artifactId>
@@ -556,6 +556,47 @@
 			<groupId>zxing</groupId>
 			<artifactId>zxing-j2se</artifactId>
 			<version>1.5</version>
+		</dependency>
+
+		<!-- chip / ping libararies -->
+		<dependency>
+			<groupId>org.chip.ping</groupId>
+			<artifactId>oscar-ping</artifactId>
+			<version>UNKNOWN</version>
+		</dependency>
+		<dependency>
+			<groupId>org.chip.ping</groupId>
+			<artifactId>ping-client</artifactId>
+			<version>UNKNOWN</version>
+		</dependency>
+		<dependency>
+			<groupId>org.chip.ping</groupId>
+			<artifactId>ping-core</artifactId>
+			<version>UNKNOWN</version>
+		</dependency>
+		<dependency>
+			<groupId>org.chip.ping</groupId>
+			<artifactId>ping-server</artifactId>
+			<version>UNKNOWN</version>
+		</dependency>
+		<dependency>
+			<groupId>org.chip.ping</groupId>
+			<artifactId>ping-xml</artifactId>
+			<version>UNKNOWN</version>
+		</dependency>
+
+		<!-- jtidy -->
+		<dependency>
+			<groupId>jtidy</groupId>
+			<artifactId>jtidy</artifactId>
+			<version>4aug2000r7-dev</version>
+		</dependency>
+
+		<!-- jtidy -->
+		<dependency>
+			<groupId>TrackingBasicDataSource</groupId>
+			<artifactId>TrackingBasicDataSource</artifactId>
+			<version>0.0-SNAPSHOT</version>
 		</dependency>
 
 	</dependencies>

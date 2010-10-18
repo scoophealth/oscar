@@ -43,7 +43,6 @@ if(session.getAttribute("user") == null) response.sendRedirect("../../logout.jsp
 
 <% 
 String [][] dbQueries=new String[][] { 
-	//{"search_demographic", "select * from demographic where demographic_no=? "}, 
     {"search_formar", "select * from formAR where demographic_no= ? order by formEdited desc, ID desc limit 0,1"}, 
 	{"search_desaprisk", "select risk_content, checklist_content from desaprisk where form_no <= ? and demographic_no = ? order by form_no desc, desaprisk_date desc, desaprisk_time desc limit 1 " }, 
 };

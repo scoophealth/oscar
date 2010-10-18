@@ -17,7 +17,7 @@ mkdir -p ${test_dir}/java
 mkdir -p ${test_dir}/resources
 
 # copy web code over
-cp -r ../web ${main_dir}/webapp
+cp -r ../web/* ${main_dir}/webapp
 rm -rf ${main_dir}/webapp/WEB-INF/*
 cp -r ../web/WEB-INF/web.xml ${main_dir}/webapp/WEB-INF
 
@@ -90,3 +90,16 @@ mvn install:install-file -DgroupId=ocan -DartifactId=ocan -Dversion=0.0-SNAPSHOT
 # zxing libraries aren't in maven
 mvn install:install-file -DgroupId=zxing -DartifactId=zxing-core -Dversion=1.5 -Dpackaging=jar -Dfile=../web/WEB-INF/lib/zxing_core_15.jar -DgeneratePom=true -DcreateChecksum=true -DlocalRepositoryPath=mvn/local_repo -DlocalRepositoryId=local_repo
 mvn install:install-file -DgroupId=zxing -DartifactId=zxing-j2se -Dversion=1.5 -Dpackaging=jar -Dfile=../web/WEB-INF/lib/zxing_javase_15.jar -DgeneratePom=true -DcreateChecksum=true -DlocalRepositoryPath=mvn/local_repo -DlocalRepositoryId=local_repo
+
+# chip ping libraries
+mvn install:install-file -DgroupId=org.chip.ping -DartifactId=oscar-ping -Dversion=UNKNOWN -Dpackaging=jar -Dfile=../web/WEB-INF/lib/oscar-ping.jar -DgeneratePom=true -DcreateChecksum=true -DlocalRepositoryPath=mvn/local_repo -DlocalRepositoryId=local_repo
+mvn install:install-file -DgroupId=org.chip.ping -DartifactId=ping-client -Dversion=UNKNOWN -Dpackaging=jar -Dfile=../web/WEB-INF/lib/ping-client.jar -DgeneratePom=true -DcreateChecksum=true -DlocalRepositoryPath=mvn/local_repo -DlocalRepositoryId=local_repo
+mvn install:install-file -DgroupId=org.chip.ping -DartifactId=ping-core -Dversion=UNKNOWN -Dpackaging=jar -Dfile=../web/WEB-INF/lib/ping-core.jar -DgeneratePom=true -DcreateChecksum=true -DlocalRepositoryPath=mvn/local_repo -DlocalRepositoryId=local_repo
+mvn install:install-file -DgroupId=org.chip.ping -DartifactId=ping-server -Dversion=UNKNOWN -Dpackaging=jar -Dfile=../web/WEB-INF/lib/ping-server.jar -DgeneratePom=true -DcreateChecksum=true -DlocalRepositoryPath=mvn/local_repo -DlocalRepositoryId=local_repo
+mvn install:install-file -DgroupId=org.chip.ping -DartifactId=ping-xml -Dversion=UNKNOWN -Dpackaging=jar -Dfile=../web/WEB-INF/lib/ping-xml.jar -DgeneratePom=true -DcreateChecksum=true -DlocalRepositoryPath=mvn/local_repo -DlocalRepositoryId=local_repo
+
+# TrackingBasicDataSource get rid of this once we fix all jdbc stuff
+mvn install:install-file -DgroupId=TrackingBasicDataSource -DartifactId=TrackingBasicDataSource -Dversion=0.0-SNAPSHOT -Dpackaging=jar -Dfile=../web/WEB-INF/lib/tracking_basic_datasource.jar -DgeneratePom=true -DcreateChecksum=true -DlocalRepositoryPath=mvn/local_repo -DlocalRepositoryId=local_repo
+
+# barbecue renderer is too old to be in maven
+mvn install:install-file -DgroupId=net.sourceforge.barbecue -DartifactId=barbecue -Dversion=1.0.6b -Dpackaging=jar -Dfile=../web/WEB-INF/lib/barbecue-1.0.6b.jar -DgeneratePom=true -DcreateChecksum=true -DlocalRepositoryPath=mvn/local_repo -DlocalRepositoryId=local_repo
