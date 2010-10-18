@@ -2,16 +2,20 @@
 <%@page contentType="text/html"%>
 <%@page pageEncoding="ISO-8859-1"%> 
 <%@page  import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarEncounter.oscarMeasurements.*,oscar.oscarEncounter.oscarMeasurements.bean.*,java.net.*"%>
+<%@page import="oscar.OscarProperties, oscar.util.StringUtils, org.oscarehr.common.dao.DemographicDao, org.oscarehr.common.model.Demographic" %>
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils,oscar.log.*"%>
 <%@page import="org.springframework.web.context.WebApplicationContext,oscar.oscarResearch.oscarDxResearch.bean.*"%>
 <%@page import="org.oscarehr.common.dao.FlowSheetCustomizerDAO,org.oscarehr.common.model.FlowSheetCustomization"%>
 <%@page import="org.oscarehr.common.dao.FlowSheetDrugDAO,org.oscarehr.common.model.FlowSheetDrug"%>
 <%@page import="org.oscarehr.common.dao.UserPropertyDAO,org.oscarehr.common.model.UserProperty"%>
+<%@page import=" org.oscarehr.decisionSupport.model.DSConsequence,oscar.oscarBilling.ca.bc.decisionSupport.BillingGuidelines" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 <%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite" %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
+<c:set var="contx" value="${pageContext.request.contextPath}" scope="request"/>
 <%
     if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
     //int demographic_no = Integer.parseInt(request.getParameter("demographic_no"));
@@ -32,8 +36,40 @@
 <%
    
     LogAction.addLog((String) session.getAttribute("user"), LogConst.READ, LogConst.CON_FLOWSHEET,  temp , request.getRemoteAddr(),demographic_no);
+    WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
+    DemographicDao demographicDao = (DemographicDao) ctx.getBean("demographicDao");
+    Demographic demographic = demographicDao.getDemographic(demographic_no);
+    String mrp = demographic.getProviderNo();
     
+    List listBillingCodes = null;
+    String incentiveCodes = "";
+    if( OscarProperties.getInstance().getProperty("billregion", "").equals("ON") ) {
+        HashMap<String,String> codeMap = new HashMap<String,String>();
+        codeMap.put("diab2", "250");
+        codeMap.put("chf", "428");
+        String tempcode = codeMap.get(temp);
+        try{
+            if( tempcode != null ) {
+                List<DSConsequence> list = BillingGuidelines.getInstance(tempcode).evaluateAndGetConsequences(demographic_no, mrp);
+                for (DSConsequence dscon : list){
+                    List<Object> javaConsequence = dscon.getObjConsequence();
+                    if( javaConsequence != null ) {
+                        for( Object obj : javaConsequence ) {
+                            if( obj instanceof List ) {
+                                listBillingCodes = (List)obj;
+                            }
+                        }
+                    }
+               }
+           }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     
+    }
+    if( listBillingCodes != null ) {
+        incentiveCodes = StringUtils.join(listBillingCodes, ",");
+     }
     int numElementsToShow = 4;
     Date sdate = null;
     Date edate = null;
@@ -68,9 +104,6 @@
 
     boolean dsProblems = false;
 
-    
-    WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
-            
     FlowSheetCustomizerDAO flowSheetCustomizerDAO = (FlowSheetCustomizerDAO) ctx.getBean("flowSheetCustomizerDAO");
     FlowSheetDrugDAO flowSheetDrugDAO = (FlowSheetDrugDAO) ctx.getBean("flowSheetDrugDAO");
     
@@ -236,7 +269,40 @@ div.headPrevention p {
 
     }
     
+    <%if(listBillingCodes != null ) { %>
     
+    function batchBill(id) {
+
+        var url = "<c:out value="${contx}"/>" + "/billing/CA/ON/BatchBill.do";
+        url += "?clinic_view=<%=OscarProperties.getInstance().getProperty("clinic_view","")%>";
+
+        <% Iterator i = listBillingCodes.iterator();
+           String billingCode;
+           while(i.hasNext()) {
+               billingCode = (String)i.next();
+        %>
+                url += "&bill=<%=billingCode+";"+demographic_no+";"+mrp%>";
+        <%}%>
+
+        new Ajax.Request(
+            url,
+            {
+                method: 'post',
+                asynchronous: true,
+                onSuccess: function(ret) {
+                    $(id).update("Bill successfully complete");
+                },
+                onFailure: function(ret) {
+                    alert( ret.status + " Billing Failed");
+                }
+            }
+
+        );
+
+        return false;
+    }
+
+    <%}%>
    function loadDifferentElements(){
        //console.log("hapy");
         var numEle = $('numEle').value;
@@ -601,7 +667,12 @@ div.recommendations li{
 <img src="../../oscarEncounter/GraphMeasurements.do?demographic_no=<%=demographic_no%>&type=INR&type2=COUM"/>
 <br/>
 --%>
-<div >
+<% if( listBillingCodes != null ) {
+
+%>
+<div id="batchBill">You are eligible to bill code <a href="#" onclick="batchBill('batchBill');"><%=incentiveCodes%></a></div>
+<% } %>
+<div>
 <%
     boolean flatformat = true;
 
