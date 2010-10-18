@@ -274,7 +274,7 @@ public class StringUtils {
     }
 
     //arraylist elements must be string types
-    public static String join(ArrayList strArray, String delimiter) {
+    public static String join(List strArray, String delimiter) {
         StringBuffer result = new StringBuffer();
         for (int i = 0, arrayLength = strArray.size(); i < arrayLength; i++) {
             result.append(strArray.get(i));
