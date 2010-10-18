@@ -138,8 +138,7 @@ public class DSGuidelineDrools extends DSGuideline {
         
         RuleBaseCreator ruleBaseCreator = new RuleBaseCreator();
         try {
-            //XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat());
-            //xmlOutputter.output(rules, System.out);
+            
             _ruleBase = ruleBaseCreator.getRuleBase(this.getTitle(), rules);
         } catch (Exception e) {
             throw new DecisionSupportException("Could not create a rule base for guideline '" + this.getTitle() + "'", e);
