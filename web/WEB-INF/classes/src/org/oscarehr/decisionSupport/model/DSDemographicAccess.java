@@ -12,6 +12,7 @@ import java.util.Hashtable;
 import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.oscarehr.billing.CA.ON.dao.BillingClaimDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.decisionSupport.web.DSGuidelineAction;
@@ -22,6 +23,7 @@ import oscar.oscarResearch.oscarDxResearch.bean.dxResearchBean;
 import oscar.oscarResearch.oscarDxResearch.bean.dxResearchBeanHandler;
 import oscar.oscarRx.data.RxPrescriptionData;
 import oscar.oscarRx.data.RxPrescriptionData.Prescription;
+import oscar.OscarProperties;
 
 /**
  *
@@ -81,9 +83,11 @@ public class DSDemographicAccess {
         _log.debug("HAS DX CODES CALLED");
         List<dxResearchBean> dxCodes = this.getDxCodes();
         for (dxResearchBean dxCode: dxCodes) {
-            if (dxCode.getDxSearchCode().equals(code) && dxCode.getType().equalsIgnoreCase(codeType))
+            if (dxCode.getDxSearchCode().equals(code) && dxCode.getType().equalsIgnoreCase(codeType)) {
                 return true;
         }
+        }
+
         return false;
     }
 
@@ -312,7 +316,15 @@ public class DSDemographicAccess {
         boolean retval = false;
         if(options.containsKey("payer") && options.get("payer").equals("MSP")){
             _log.debug("PAYER:MSP ");
-            ServiceCodeValidationLogic bcCodeValidation = new ServiceCodeValidationLogic();
+            ServiceCodeValidationLogic bcCodeValidation = null;
+            BillingClaimDAO billingClaimONDAO = null;
+            String billregion = OscarProperties.getInstance().getProperty("billregion", "");
+            if( billregion.equalsIgnoreCase("BC") ) {
+                bcCodeValidation = new ServiceCodeValidationLogic();
+            }
+            else if( billregion.equalsIgnoreCase("ON") ) {
+                billingClaimONDAO = (BillingClaimDAO)SpringUtils.getBean("billingClaimDAO");
+            }
             String[] codes = searchStrings.replaceAll("\'","" ).split(",");
 
 
@@ -330,8 +342,13 @@ public class DSDemographicAccess {
                 retval = true;  //Set this optimistically that it has not been billed in the said number of days
                 for (String code: codes){
                     //This returns how many days since the last time this code was billed and -1 if it never has been billed
-                    int numDays = bcCodeValidation.daysSinceCodeLastBilled(demographicNo,code) ;
-
+                     if( billregion.equalsIgnoreCase("BC") ) {
+                        numDays = bcCodeValidation.daysSinceCodeLastBilled(demographicNo,code) ;
+                     }
+                     else if( billregion.equalsIgnoreCase("ON") ) {
+                         numDays = billingClaimONDAO.getDaysSinceBilled(code, demographicNo);
+                     }
+                     System.out.println("NUM DAYS " + numDays);
                     //If any of the codes has been billed in the number of days then return false
                     if (numDays < notInDays && numDays != -1){
                         retval = false;  // should it just return false here,  why go on once it finds a false?
