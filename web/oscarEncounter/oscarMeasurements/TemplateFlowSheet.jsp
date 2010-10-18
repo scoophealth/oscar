@@ -9,6 +9,7 @@
 <%@page import="org.oscarehr.common.dao.FlowSheetDrugDAO,org.oscarehr.common.model.FlowSheetDrug"%>
 <%@page import="org.oscarehr.common.dao.UserPropertyDAO,org.oscarehr.common.model.UserProperty"%>
 <%@page import=" org.oscarehr.decisionSupport.model.DSConsequence,oscar.oscarBilling.ca.bc.decisionSupport.BillingGuidelines" %>
+<%@page import="org.oscarehr.util.MiscUtils" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
@@ -24,6 +25,7 @@
     String demographic_no = request.getParameter("demographic_no");
     String providerNo = (String) session.getAttribute("user");
     String temp = request.getParameter("template");
+    
 %>
 <oscar:oscarPropertiesCheck property="SPEC3" value="yes">
     <security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="r" reverse="<%=true%>">
@@ -63,7 +65,7 @@
                }
            }
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Billing Guidelines Failed", e);
         }
     
     }
