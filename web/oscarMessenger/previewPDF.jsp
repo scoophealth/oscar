@@ -8,8 +8,6 @@
 
     String srcText = (String) request.getParameter("srcText");
     
-// Doc2PDF.parseJSP2PDF( request, response, "http://localhost:8084/oscar_mcmaster/index.jsp" ); 
-
     Doc2PDF.parseString2PDF( request, response, "<HTML>" + srcText + "</HTML>" );
 
 %>
