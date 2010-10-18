@@ -33,6 +33,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -41,6 +42,8 @@ import org.oscarehr.decisionSupport.model.DSGuideline;
 import org.oscarehr.decisionSupport.model.DSGuidelineFactory;
 import org.oscarehr.decisionSupport.model.DecisionSupportException;
 import org.oscarehr.util.MiscUtils;
+
+import oscar.OscarProperties;
 
 /**
  * Class used to Manage BillingGuidelines.
@@ -55,20 +58,31 @@ public class BillingGuidelines  {
     
    
     static BillingGuidelines measurementTemplateFlowSheetConfig = new BillingGuidelines();
+    static String region = "";
 
+    HashMap<String,String[]> filenameMap = new HashMap<String,String[]>();
+    String[] filenamesBC= {"BC250.xml","BC401a.xml","BC401b.xml","BC428.xml"};
+    String[] filenamesON= {"ON250.xml","ON428.xml"};
+    String[] filenameON250 = {"ON250.xml"};
+    String[] filenameON428 = {"ON428.xml"};
    
    
     /**
      * Creates a new instance of MeasurementTemplateFlowSheetConfig
      */
     private BillingGuidelines() {
+        filenameMap.put("BC", filenamesBC);
+        filenameMap.put("ON", filenamesON);
+        filenameMap.put("250", filenameON250);
+        filenameMap.put("428", filenameON428);
     }
 
-
-    static public BillingGuidelines getInstance() {
-        if (measurementTemplateFlowSheetConfig.billingGuideLines == null) {
+    static public BillingGuidelines getInstance(String code) {
+        if (measurementTemplateFlowSheetConfig.billingGuideLines == null || !code.equals(region)) {
             try {
-                measurementTemplateFlowSheetConfig.loadGuidelines();
+                region = code;
+                measurementTemplateFlowSheetConfig.loadGuidelines(region);
+
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
             }
@@ -76,19 +90,34 @@ public class BillingGuidelines  {
         return measurementTemplateFlowSheetConfig;
     }
 
-    String[] filenames= {"250.xml","401a.xml","401b.xml","428.xml"};
+    static public BillingGuidelines getInstance() {
+        String tmpRegion = OscarProperties.getInstance().getProperty("billregion","");
+        if (measurementTemplateFlowSheetConfig.billingGuideLines == null || !tmpRegion.equals(region)) {
+            try {
+                region = tmpRegion;
+                measurementTemplateFlowSheetConfig.loadGuidelines(region);
+
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return measurementTemplateFlowSheetConfig;
+    }
 
     /**
      * Loads all the guidelines from preset files in this package.  This will probably change to load them from a table in the database.
      */
-    void loadGuidelines() throws FileNotFoundException {
+    void loadGuidelines(String regionCode) throws FileNotFoundException {
         log.debug("LOADING FLOWSSHEETS");
         billingGuideLines = new ArrayList();
+
+        String[] filenames = filenameMap.get(regionCode);
+        if( filenames != null ) {
         for (String filename : filenames) {
             DSGuideline guideline = null;
             StringBuffer sb = new StringBuffer();
             try{
-                String streamToGet = "oscar/oscarBilling/ca/bc/decisionSupport/"+filename;
+                    String streamToGet = "oscar/oscarBilling/ca/decisionSupport/"+filename;
                 log.debug("Trying to get "+streamToGet);
                 BufferedReader in = new BufferedReader(new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream(streamToGet)));
                 String str;
@@ -103,6 +132,10 @@ public class BillingGuidelines  {
             }catch(Exception e){
                 MiscUtils.getLogger().error("Error", e);
             }
+        }
+    }
+        else {
+            throw new RuntimeException("bill code not found");
         }
     }
 
