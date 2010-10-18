@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<guideline title="401Message2" >
+<conditions>
+	<condition type="dxcodes" any="icd9:401"/>
+        <condition type="dxcodes" any="icd9:250"/>
+	<condition type="billedFor" any="13050,14050,14051,14052">
+			<param key="payer" value="MSP"/>
+			<param key="notInDays" value="365"/>
+
+	</condition>
+</conditions>
+<consequence>
+<warning strength="warning">Service code 14050 can be billed. (Either 14050 or 14052 can be billed but 14050 is worth more, and only one can be billed)</warning>
+</consequence>
+</guideline>
