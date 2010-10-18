@@ -340,6 +340,7 @@ public class DSDemographicAccess {
             if(options.containsKey("notInDays")){
                 int notInDays = getAsInt(options,"notInDays");
                 retval = true;  //Set this optimistically that it has not been billed in the said number of days
+                int numDays = -1;
                 for (String code: codes){
                     //This returns how many days since the last time this code was billed and -1 if it never has been billed
                      if( billregion.equalsIgnoreCase("BC") ) {
