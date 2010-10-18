@@ -39,7 +39,6 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.DynaActionForm;
-import org.caisi.event.OscarCaisiEvent;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.Formintakea;
 import org.oscarehr.PMmodule.model.Program;
@@ -53,7 +52,6 @@ import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.PMmodule.web.formbean.IntakeAFormBean;
 import org.oscarehr.PMmodule.web.formbean.IntakeFormBean;
 import org.oscarehr.common.model.Demographic;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 
 public class IntakeAAction2 extends BaseAction {
     private static Log log = LogFactory.getLog(IntakeAAction2.class);
@@ -269,11 +267,11 @@ public class IntakeAAction2 extends BaseAction {
 
         // Intake A saved exposed to Oscar-Triggers as event
         // begin-event-code
-        OscarCaisiEvent ev = new OscarCaisiEvent("pmm.intakea.saved", intakea);
-        ev.getOscarCaisiContext().setProviderID(this.getProviderNo(request));
-        ev.getOscarCaisiContext().setClientID(intakea.getDemographicNo().toString());
-        ev.addBean("form", intakea);
-        WebApplicationContextUtils.getWebApplicationContext(getServlet().getServletContext()).publishEvent(ev);
+//        OscarCaisiEvent ev = new OscarCaisiEvent("pmm.intakea.saved", intakea);
+//        ev.getOscarCaisiContext().setProviderID(this.getProviderNo(request));
+//        ev.getOscarCaisiContext().setClientID(intakea.getDemographicNo().toString());
+//        ev.addBean("form", intakea);
+//        WebApplicationContextUtils.getWebApplicationContext(getServlet().getServletContext()).publishEvent(ev);
         // end-event-code
 
         request.getSession().setAttribute("demographic", null);
