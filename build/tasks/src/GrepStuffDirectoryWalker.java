@@ -1,8 +1,6 @@
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Hashtable;
-import java.util.WeakHashMap;
 
 import org.apache.commons.io.DirectoryWalker;
 import org.apache.commons.io.FileUtils;
@@ -59,7 +57,8 @@ public class GrepStuffDirectoryWalker extends DirectoryWalker {
 		checkContains(relativePath, fileContents, "TreeMap()");
 		checkContains(relativePath, fileContents, "WeakHashMap()");
 		checkContains(relativePath, fileContents, "StringBuffer");
-		
+		checkContains(relativePath, fileContents, "com.Ostermiller");
+				
 		// --- hack for ignore case comparison ---
 		checkContains(relativePath, fileContentsLowered, "latin-1");
 		checkContains(relativePath, fileContentsLowered, "ascii");

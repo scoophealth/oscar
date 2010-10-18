@@ -74,3 +74,19 @@ mvn install:install-file -DgroupId=javax.xml -DartifactId=jaxm-api -Dversion=UNK
 
 # surveyModel.jar I suspect this shouldn't even be in a jar like this ... but we'll deal with it later, I think it's generated classes
 mvn install:install-file -DgroupId=surveyModel -DartifactId=surveyModel -Dversion=0.0-SNAPSHOT -Dpackaging=jar -Dfile=../web/WEB-INF/lib/surveyModel.jar -DgeneratePom=true -DcreateChecksum=true -DlocalRepositoryPath=mvn/local_repo -DlocalRepositoryId=local_repo
+
+# ostermillerutils_1_04_03_for_java_1_4.jar, we need to stop using this apache commons replaces this
+mvn install:install-file -DgroupId=com.ostermiller -DartifactId=ostermillerutils -Dversion=1.4.3 -Dpackaging=jar -Dfile=../web/WEB-INF/lib/ostermillerutils_1_04_03_for_java_1_4.jar -DgeneratePom=true -DcreateChecksum=true -DlocalRepositoryPath=mvn/local_repo -DlocalRepositoryId=local_repo
+
+# sunxacml-1.2.jar
+mvn install:install-file -DgroupId=com.sun -DartifactId=xacml -Dversion=1.2 -Dpackaging=jar -Dfile=../web/WEB-INF/lib/sunxacml-1.2.jar -DgeneratePom=true -DcreateChecksum=true -DlocalRepositoryPath=mvn/local_repo -DlocalRepositoryId=local_repo
+
+# PDFRenderer.jar
+mvn install:install-file -DgroupId=com.sun -DartifactId=pdfview -Dversion=UNKNOWN -Dpackaging=jar -Dfile=../web/WEB-INF/lib/PDFRenderer.jar -DgeneratePom=true -DcreateChecksum=true -DlocalRepositoryPath=mvn/local_repo -DlocalRepositoryId=local_repo
+
+# ocan.jar I suspect this shouldn't even be in a jar like this ... but we'll deal with it later, I think it's generated classes
+mvn install:install-file -DgroupId=ocan -DartifactId=ocan -Dversion=0.0-SNAPSHOT -Dpackaging=jar -Dfile=../web/WEB-INF/lib/ocan.jar -DgeneratePom=true -DcreateChecksum=true -DlocalRepositoryPath=mvn/local_repo -DlocalRepositoryId=local_repo
+
+# zxing libraries aren't in maven
+mvn install:install-file -DgroupId=zxing -DartifactId=zxing-core -Dversion=1.5 -Dpackaging=jar -Dfile=../web/WEB-INF/lib/zxing_core_15.jar -DgeneratePom=true -DcreateChecksum=true -DlocalRepositoryPath=mvn/local_repo -DlocalRepositoryId=local_repo
+mvn install:install-file -DgroupId=zxing -DartifactId=zxing-j2se -Dversion=1.5 -Dpackaging=jar -Dfile=../web/WEB-INF/lib/zxing_javase_15.jar -DgeneratePom=true -DcreateChecksum=true -DlocalRepositoryPath=mvn/local_repo -DlocalRepositoryId=local_repo

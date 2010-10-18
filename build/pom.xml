@@ -45,6 +45,11 @@
 			<version>1.3.2</version>
 		</dependency>
 		<dependency>
+			<groupId>commons-collections</groupId>
+			<artifactId>commons-collections</artifactId>
+			<version>3.2.1</version>
+		</dependency>
+		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.4</version>
@@ -403,6 +408,16 @@
             <artifactId>commons-httpclient</artifactId>
             <version>3.0-rc3</version>
         </dependency>
+		<dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.0.1</version>
+        </dependency>
+		<dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpmime</artifactId>
+            <version>4.0.1</version>
+        </dependency>
 
         <!-- quartz -->
 		<dependency>
@@ -468,6 +483,13 @@
             <version>0.0-SNAPSHOT</version>
         </dependency>
 
+        <!-- ocan.jar , suspect this is generated classes and should be removed as a jar in the future -->
+		<dependency>
+            <groupId>ocan</groupId>
+            <artifactId>ocan</artifactId>
+            <version>0.0-SNAPSHOT</version>
+        </dependency>
+
         <!-- patientSiteVisit.jar , suspect this is generated classes and should be removed as a jar in the future -->
 		<dependency>
             <groupId>patientSiteVisit</groupId>
@@ -487,6 +509,53 @@
 			<groupId>javax.xml</groupId>
 			<artifactId>jaxm-api</artifactId>
 			<version>UNKNOWN</version>
+		</dependency>
+
+		<!-- apache poi -->
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>3.6</version>
+		</dependency>
+
+		<!-- ostermillerutils_1_04_03_for_java_1_4.jar we need to stop using this and replace it with apache commons -->
+		<dependency>
+			<groupId>com.ostermiller</groupId>
+			<artifactId>ostermillerutils</artifactId>
+			<version>1.4.3</version>
+		</dependency>
+
+		<!-- sun xacml -->
+		<dependency>
+			<groupId>com.sun</groupId>
+			<artifactId>xacml</artifactId>
+			<version>1.2</version>
+		</dependency>
+
+		<!-- sun xacml -->
+		<dependency>
+			<groupId>com.sun</groupId>
+			<artifactId>pdfview</artifactId>
+			<version>UNKNOWN</version>
+		</dependency>
+
+		<!-- display tag -->
+		<dependency>
+			<groupId>displaytag</groupId>
+			<artifactId>displaytag</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+
+		<!-- display tag -->
+		<dependency>
+			<groupId>zxing</groupId>
+			<artifactId>zxing-core</artifactId>
+			<version>1.5</version>
+		</dependency>
+		<dependency>
+			<groupId>zxing</groupId>
+			<artifactId>zxing-j2se</artifactId>
+			<version>1.5</version>
 		</dependency>
 
 	</dependencies>
