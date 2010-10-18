@@ -349,7 +349,7 @@ public class DSDemographicAccess {
                      else if( billregion.equalsIgnoreCase("ON") ) {
                          numDays = billingClaimONDAO.getDaysSinceBilled(code, demographicNo);
                      }
-                     System.out.println("NUM DAYS " + numDays);
+                     
                     //If any of the codes has been billed in the number of days then return false
                     if (numDays < notInDays && numDays != -1){
                         retval = false;  // should it just return false here,  why go on once it finds a false?
