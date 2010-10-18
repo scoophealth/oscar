@@ -230,13 +230,20 @@ public class CaseManagementIssue extends BaseObject {
 	{
 		String cacheKey=LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo()+':'+programId;
 		
+		/* one cacheKey like 91:10018 could have the value of "false" or "true"
+		 * You cannot say the first write access is false then all others will be false too
+		 * Not sure why we have cacheKey here. But it surely caused one bug:
+		 * If one client had counselor issues and doctor issues, all issues would be grayed out for the counselor if the counselor didn't have "write doctor issues" access right.
+		 * In this case, only doctor issues should be grayed out. 
+		
 		Boolean result=writeAccessCache.get(cacheKey);
 		if (result==null)
 		{
 			result=calculateWriteAccess(programId);
 			writeAccessCache.put(cacheKey, result);
 		}
-		
+		*/
+		Boolean result = calculateWriteAccess(programId);
 		return(result);
 	}
 

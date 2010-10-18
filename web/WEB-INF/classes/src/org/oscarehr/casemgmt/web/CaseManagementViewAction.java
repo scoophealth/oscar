@@ -590,8 +590,9 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		// deal with local notes
 		startTime = System.currentTimeMillis();
 		Collection<CaseManagementNote> localNotes = caseManagementNoteDao.findNotesByDemographicAndIssueCode(demographicNo, checkedCodeList.toArray(new String[0]));
-		localNotes = manageLockedNotes(localNotes, true, this.getUnlockedNotesMap(request));
-		localNotes = caseManagementMgr.filterNotes(localNotes, programId);
+		//show locked notes anyway: localNotes = manageLockedNotes(localNotes, true, this.getUnlockedNotesMap(request));
+	    localNotes = manageLockedNotes(localNotes, false, this.getUnlockedNotesMap(request));
+	    localNotes = caseManagementMgr.filterNotes(localNotes, programId);
 
 		caseManagementMgr.getEditors(localNotes);
 
@@ -694,7 +695,8 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			startTime = System.currentTimeMillis();
 			request.setAttribute("checked_issues", checkedIssues);
 			notes = caseManagementMgr.getNotes(demoNo, checkedIssues);
-			notes = manageLockedNotes(notes, true, this.getUnlockedNotesMap(request));
+			//show locked notes anyway: notes = manageLockedNotes(notes, true, this.getUnlockedNotesMap(request));
+			notes = manageLockedNotes(notes, false, this.getUnlockedNotesMap(request));
 			logger.debug("Get Notes with checked issues " + (System.currentTimeMillis() - startTime));
 		} else { // get all notes
 			logger.debug("Get Notes");
