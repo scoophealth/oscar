@@ -44,6 +44,29 @@ public class DSGuidelineFactory {
 
         String guidelineTitle = guidelineRoot.getAttributeValue("title");
         dsGuideline.setTitle(guidelineTitle);
+
+        //Load parameters such as classes
+        //<parameter identifier="a">
+        //  <class>java.util.ArrayList</class>
+        //</parameter>
+        ArrayList<DSParameter> parameters = new ArrayList();
+        List<Element> parameterTags = guidelineRoot.getChildren("parameter");
+        for( Element parameterTag : parameterTags ) {
+            String alias = parameterTag.getAttributeValue("identifier");
+            if( alias == null ) {
+                throw new DecisionSupportParseException(guidelineTitle, "Parameter identifier attribute is mandatory");
+            }
+
+            Element Eclass = parameterTag.getChild("class");
+            String strClass = Eclass.getText();
+            DSParameter dsParameter = new DSParameter();
+            dsParameter.setStrAlias(alias);
+            dsParameter.setStrClass(strClass);
+            parameters.add(dsParameter);
+        }
+
+        dsGuideline.setParameters(parameters);
+
         //Load Conditions
         //<conditions>
         //  <condition type="dxcodes" any="icd9:4439,icd9:4438,icd10:E11,icd10:E12"/>
@@ -116,6 +139,9 @@ public class DSGuidelineFactory {
             
             if (consequenceType == DSConsequence.ConsequenceType.warning) {
                 String strengthStr = consequenceElement.getAttributeValue("strength");
+                if( strengthStr == null ) {
+                    strengthStr = "warning";
+                }
                 DSConsequence.ConsequenceStrength strength = null;
                 //try to resolve strength type
                 try {
@@ -126,8 +152,6 @@ public class DSGuidelineFactory {
                     throw new DecisionSupportParseException(guidelineTitle, "Unknown strength: " + strengthStr + ". Allowed: " + knownStrengths, iae);
                 }
             }
-            
-            
             dsConsequence.setText(consequenceElement.getText());
             dsConsequences.add(dsConsequence);
         }
