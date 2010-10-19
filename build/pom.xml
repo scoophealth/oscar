@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.oscarehr</groupId>
 	<artifactId>oscar</artifactId>
@@ -7,9 +6,9 @@
 	<version>0.0-SNAPSHOT</version>
 	<name>oscar</name>
 	<url>http://www.oscarcanada.org</url>
-		
+
 	<properties>
-	    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<cxf.version>2.2.1</cxf.version>
 	</properties>
 
@@ -27,7 +26,7 @@
 	</repositories>
 
 	<dependencies>
-	
+
 		<!-- general libraries -->
 		<dependency>
 			<groupId>log4j</groupId>
@@ -70,25 +69,25 @@
 
 		<!-- hapi/HL7 -->
 		<dependency>
-            <groupId>ca.uhn.hapi</groupId>
-            <artifactId>hapi-base</artifactId>
-            <version>1.0.1</version>
-        </dependency>       
-        <dependency>
-            <groupId>ca.uhn.hapi</groupId>
-            <artifactId>hapi-structures-v26</artifactId>
-            <version>1.0.1</version>
-        </dependency>
-        <dependency>
-            <groupId>ca.uhn.hapi</groupId>
-            <artifactId>hapi-structures-v25</artifactId>
-            <version>1.0.1</version>
-        </dependency>
-        <dependency>
-            <groupId>ca.uhn.hapi</groupId>
-            <artifactId>hapi-structures-v23</artifactId>
-            <version>1.0.1</version>
-        </dependency>
+			<groupId>ca.uhn.hapi</groupId>
+			<artifactId>hapi-base</artifactId>
+			<version>1.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>ca.uhn.hapi</groupId>
+			<artifactId>hapi-structures-v26</artifactId>
+			<version>1.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>ca.uhn.hapi</groupId>
+			<artifactId>hapi-structures-v25</artifactId>
+			<version>1.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>ca.uhn.hapi</groupId>
+			<artifactId>hapi-structures-v23</artifactId>
+			<version>1.0.1</version>
+		</dependency>
 
 		<!-- spring -->
 		<dependency>
@@ -149,7 +148,7 @@
 			<exclusions>
 				<exclusion>
 					<groupId>org.springframework</groupId>
-		            <artifactId>spring-web</artifactId>
+					<artifactId>spring-web</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -170,7 +169,7 @@
 			<exclusions>
 				<exclusion>
 					<groupId>org.springframework</groupId>
-		            <artifactId>spring-web</artifactId>
+					<artifactId>spring-web</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -181,7 +180,7 @@
 			<exclusions>
 				<exclusion>
 					<groupId>org.springframework</groupId>
-		            <artifactId>spring-jms</artifactId>
+					<artifactId>spring-jms</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -238,18 +237,23 @@
 			<version>2.4.3</version>
 		</dependency>
 		<dependency>
+			<groupId>org.apache.struts</groupId>
+			<artifactId>struts-el</artifactId>
+			<version>REALLY_OLD</version>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc-struts</artifactId>
 			<version>2.5.6.SEC02</version>
 		</dependency>
-		
+
 		<!-- pdf / lowagie -->
 		<dependency>
 			<groupId>com.lowagie</groupId>
 			<artifactId>itext</artifactId>
 			<version>1.4</version>
 		</dependency>
-		
+
 		<!-- json -->
 		<dependency>
 			<groupId>net.sf.json-lib</groupId>
@@ -257,21 +261,21 @@
 			<version>2.3</version>
 			<classifier>jdk15</classifier>
 		</dependency>
-		
+
 		<!-- apache xmlrpc -->
 		<dependency>
 			<groupId>xmlrpc</groupId>
 			<artifactId>xmlrpc</artifactId>
 			<version>1.2-b1</version>
 		</dependency>
-		
+
 		<!-- apache xmlrpc -->
 		<dependency>
 			<groupId>drools</groupId>
 			<artifactId>drools-all</artifactId>
 			<version>2.0</version>
 		</dependency>
-		
+
 		<!-- jasper reports -->
 		<dependency>
 			<groupId>jasperreports</groupId>
@@ -283,35 +287,35 @@
 			<artifactId>barbecue</artifactId>
 			<version>1.0.6b</version>
 		</dependency>
-		
+
 		<!-- joda time -->
 		<dependency>
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
 			<version>1.4</version>
 		</dependency>
-		
+
 		<!-- caisi integrator -->
 		<dependency>
 			<groupId>org.oscarehr</groupId>
 			<artifactId>caisi_integrator_client</artifactId>
 			<version>0.0-SNAPSHOT</version>
 		</dependency>
-		
+
 		<!-- apache xmlgraphics batik -->
 		<dependency>
 			<groupId>org.apache.xmlgraphics</groupId>
 			<artifactId>batik-dom</artifactId>
 			<version>1.7</version>
 		</dependency>
-				
+
 		<!-- apache commons codec -->
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
 			<version>1.4</version>
 		</dependency>
-				
+
 		<!-- indivo -->
 		<dependency>
 			<groupId>org.indivo</groupId>
@@ -348,7 +352,7 @@
 			<artifactId>indivo-security-model</artifactId>
 			<version>3.2-SNAPSHOT</version>
 		</dependency>
-				
+
 		<!-- jcharts -->
 		<dependency>
 			<groupId>net.sf.jcharts</groupId>
@@ -380,7 +384,7 @@
 			<artifactId>batik-xml</artifactId>
 			<version>1.6-1</version>
 		</dependency>
-				
+
 		<!-- cds -->
 		<dependency>
 			<groupId>cds</groupId>
@@ -402,60 +406,60 @@
 			<version>2.4.0</version>
 		</dependency>
 
-        <!-- HttpClient -->
+		<!-- HttpClient -->
 		<dependency>
-            <groupId>commons-httpclient</groupId>
-            <artifactId>commons-httpclient</artifactId>
-            <version>3.0-rc3</version>
-        </dependency>
+			<groupId>commons-httpclient</groupId>
+			<artifactId>commons-httpclient</artifactId>
+			<version>3.0-rc3</version>
+		</dependency>
 		<dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>4.0.1</version>
-        </dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.0.1</version>
+		</dependency>
 		<dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpmime</artifactId>
-            <version>4.0.1</version>
-        </dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpmime</artifactId>
+			<version>4.0.1</version>
+		</dependency>
 
-        <!-- quartz -->
+		<!-- quartz -->
 		<dependency>
-            <groupId>org.quartz-scheduler</groupId>
-            <artifactId>quartz</artifactId>
-            <version>1.8.4</version>
-        </dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz</artifactId>
+			<version>1.8.4</version>
+		</dependency>
 
-        <!-- cookie revolver -->
+		<!-- cookie revolver -->
 		<dependency>
-            <groupId>net.sf.cookierevolver</groupId>
-            <artifactId>cookierevolver</artifactId>
-            <version>0.2.5</version>
-        </dependency>
+			<groupId>net.sf.cookierevolver</groupId>
+			<artifactId>cookierevolver</artifactId>
+			<version>0.2.5</version>
+		</dependency>
 
-        <!-- commons-betwixt ... what is this for? -->
+		<!-- commons-betwixt ... what is this for? -->
 		<dependency>
-            <groupId>commons-betwixt</groupId>
-            <artifactId>commons-betwixt</artifactId>
-            <version>0.7</version>
-        </dependency>
+			<groupId>commons-betwixt</groupId>
+			<artifactId>commons-betwixt</artifactId>
+			<version>0.7</version>
+		</dependency>
 
-        <!-- crystal reports ... probably not even allowed in our project -->
+		<!-- crystal reports ... probably not even allowed in our project -->
 		<dependency>
-            <groupId>com.crystaldecisions</groupId>
-            <artifactId>webreporting</artifactId>
-            <version>0.0-SNAPSHOT</version>
-        </dependency>
+			<groupId>com.crystaldecisions</groupId>
+			<artifactId>webreporting</artifactId>
+			<version>0.0-SNAPSHOT</version>
+		</dependency>
 		<dependency>
-            <groupId>com.crystaldecisions</groupId>
-            <artifactId>rascore</artifactId>
-            <version>0.0-SNAPSHOT</version>
-        </dependency>
+			<groupId>com.crystaldecisions</groupId>
+			<artifactId>rascore</artifactId>
+			<version>0.0-SNAPSHOT</version>
+		</dependency>
 		<dependency>
-            <groupId>com.crystaldecisions</groupId>
-            <artifactId>jrcerom</artifactId>
-            <version>0.0-SNAPSHOT</version>
-        </dependency>
+			<groupId>com.crystaldecisions</groupId>
+			<artifactId>jrcerom</artifactId>
+			<version>0.0-SNAPSHOT</version>
+		</dependency>
 
 		<!-- email -->
 		<dependency>
@@ -476,33 +480,33 @@
 			<version>1.0.12</version>
 		</dependency>
 
-        <!-- dm.jar , suspect this is generated classes and should be removed as a jar in the future -->
+		<!-- dm.jar , suspect this is generated classes and should be removed as a jar in the future -->
 		<dependency>
-            <groupId>dm</groupId>
-            <artifactId>dm</artifactId>
-            <version>0.0-SNAPSHOT</version>
-        </dependency>
+			<groupId>dm</groupId>
+			<artifactId>dm</artifactId>
+			<version>0.0-SNAPSHOT</version>
+		</dependency>
 
-        <!-- ocan.jar , suspect this is generated classes and should be removed as a jar in the future -->
+		<!-- ocan.jar , suspect this is generated classes and should be removed as a jar in the future -->
 		<dependency>
-            <groupId>ocan</groupId>
-            <artifactId>ocan</artifactId>
-            <version>0.0-SNAPSHOT</version>
-        </dependency>
+			<groupId>ocan</groupId>
+			<artifactId>ocan</artifactId>
+			<version>0.0-SNAPSHOT</version>
+		</dependency>
 
-        <!-- patientSiteVisit.jar , suspect this is generated classes and should be removed as a jar in the future -->
+		<!-- patientSiteVisit.jar , suspect this is generated classes and should be removed as a jar in the future -->
 		<dependency>
-            <groupId>patientSiteVisit</groupId>
-            <artifactId>patientSiteVisit</artifactId>
-            <version>0.0-SNAPSHOT</version>
-        </dependency>
+			<groupId>patientSiteVisit</groupId>
+			<artifactId>patientSiteVisit</artifactId>
+			<version>0.0-SNAPSHOT</version>
+		</dependency>
 
-        <!-- surveyModel.jar , suspect this is generated classes and should be removed as a jar in the future -->
+		<!-- surveyModel.jar , suspect this is generated classes and should be removed as a jar in the future -->
 		<dependency>
-            <groupId>surveyModel</groupId>
-            <artifactId>surveyModel</artifactId>
-            <version>0.0-SNAPSHOT</version>
-        </dependency>
+			<groupId>surveyModel</groupId>
+			<artifactId>surveyModel</artifactId>
+			<version>0.0-SNAPSHOT</version>
+		</dependency>
 
 		<!-- jaxm api ... why do we need this? -->
 		<dependency>
@@ -611,6 +615,54 @@
 					<target>1.6</target>
 				</configuration>
 			</plugin>
+
+<!-- Maybe this one isn't such a good idea as everyone would then have to run it all the time
+			<plugin>
+				<groupId>org.codehaus.mojo.jspc</groupId>
+				<artifactId>jspc-maven-plugin</artifactId>
+				<version>2.0-alpha-3</version>
+				<configuration>
+					<includeInProject>false</includeInProject>
+					<source>1.5</source>
+					<target>1.5</target>
+					<javaEncoding>UTF-8</javaEncoding>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>compile</goal>
+						</goals>
+					</execution>
+				</executions>
+
+				<dependencies>
+					<dependency>
+						<groupId>org.codehaus.mojo.jspc</groupId>
+						<artifactId>jspc-compiler-tomcat6</artifactId>
+						<version>2.0-alpha-3</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+ -->
+ 
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>set_build_time</id>
+						<phase>process-classes</phase>
+						<configuration>
+							<tasks>
+								<ant antfile="ant_pom_tasks.xml" target="set_build_time" />
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
 		</plugins>
 	</build>
 

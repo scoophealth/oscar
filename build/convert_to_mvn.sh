@@ -3,6 +3,7 @@
 rm -rf mvn
 mkdir mvn
 cp pom.xml mvn
+cp ant_pom_tasks.xml mvn
 
 main_dir=mvn/src/main
 test_dir=mvn/src/test
@@ -19,7 +20,11 @@ mkdir -p ${test_dir}/resources
 # copy web code over
 cp -r ../web/* ${main_dir}/webapp
 rm -rf ${main_dir}/webapp/WEB-INF/*
-cp -r ../web/WEB-INF/web.xml ${main_dir}/webapp/WEB-INF
+cp ../web/WEB-INF/web.xml ${main_dir}/webapp/WEB-INF
+cp ../web/WEB-INF/struts-bean.tld ${main_dir}/webapp/WEB-INF
+cp ../web/WEB-INF/struts-html.tld ${main_dir}/webapp/WEB-INF
+cp ../web/WEB-INF/struts-logic.tld ${main_dir}/webapp/WEB-INF
+cp ../web/WEB-INF/caisi-tag.tld ${main_dir}/webapp/WEB-INF
 
 # copy java code over
 cp -r ../web/WEB-INF/classes/src/{*.java,com,filters,net,org,oscar} ${main_dir}/java
@@ -101,5 +106,8 @@ mvn install:install-file -DgroupId=org.chip.ping -DartifactId=ping-xml -Dversion
 # TrackingBasicDataSource get rid of this once we fix all jdbc stuff
 mvn install:install-file -DgroupId=TrackingBasicDataSource -DartifactId=TrackingBasicDataSource -Dversion=0.0-SNAPSHOT -Dpackaging=jar -Dfile=../web/WEB-INF/lib/tracking_basic_datasource.jar -DgeneratePom=true -DcreateChecksum=true -DlocalRepositoryPath=mvn/local_repo -DlocalRepositoryId=local_repo
 
-# barbecue renderer is too old to be in maven
+# ourbarbecue renderer is too old to be in maven
 mvn install:install-file -DgroupId=net.sourceforge.barbecue -DartifactId=barbecue -Dversion=1.0.6b -Dpackaging=jar -Dfile=../web/WEB-INF/lib/barbecue-1.0.6b.jar -DgeneratePom=true -DcreateChecksum=true -DlocalRepositoryPath=mvn/local_repo -DlocalRepositoryId=local_repo
+
+# our struts-el is too old to be in maven
+mvn install:install-file -DgroupId=org.apache.struts -DartifactId=struts-el -Dversion=REALLY_OLD -Dpackaging=jar -Dfile=../web/WEB-INF/lib/struts-el.jar -DgeneratePom=true -DcreateChecksum=true -DlocalRepositoryPath=mvn/local_repo -DlocalRepositoryId=local_repo

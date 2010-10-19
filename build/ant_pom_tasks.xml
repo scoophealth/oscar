@@ -1,0 +1,17 @@
+<!-- Note that this is not a self standing ant build file. This file is only meant to be called from maven. -->
+<project default="">
+
+	<!-- this task updates a properties file after a compile but before a package -->
+	<target name="set_build_time">
+		<!-- fix this later
+		<tstamp>
+			<format property="build.dateTime" pattern="yyyy-MM-dd hh:mm aa" />
+		</tstamp>
+		
+		<echo message="build time : ${build.dateTime}" />
+		
+		<replace file="target/classes/config.properties" token="${ant.build.dateTime}" value="${build.dateTime}" />
+		-->
+	</target>
+
+</project>
