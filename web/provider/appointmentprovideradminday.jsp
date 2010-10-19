@@ -1409,7 +1409,7 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
     					</caisi:isModuleLoad>
 					<%} %>
 
-<!-- doctor code block -->
+<!-- doctor code block 1 -->
 <% if(bShowDocLink) { %>
 <!-- security:oscarSec roleName="<%--=roleName$--%>" objectName="_appointment.doctorLink" rights="r" -->
 <% if ("".compareTo(study_no.toString()) != 0) {%>	<a href="#" onClick="popupPage(700,1024, '../form/study/forwardstudyname.jsp?study_link=<%=study_link.toString()%>&demographic_no=<%=demographic_no%>&study_no=<%=study_no%>');return false;" title="<bean:message key="provider.appointmentProviderAdminDay.study"/>: <%=UtilMisc.htmlEscape(studyDescription.toString())%>"><%="<font color='"+studyColor+"'>"+studySymbol+"</font>"%></a><%} %>
@@ -1421,7 +1421,7 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
 <% if ("NR".equalsIgnoreCase(roster) || "PL".equalsIgnoreCase(roster)){%> <a href="#" title="<bean:message key="provider.appointmentProviderAdminDay.rosterMsg"/> <%=UtilMisc.htmlEscape(roster)%>"><font color="red">#</font></a><%}%>
 <!-- /security:oscarSec -->
 <% } %>
-<!-- doctor code block -->
+<!-- doctor code block 2 -->
 <oscar:oscarPropertiesCheck property="SHOW_PREVENTION_STOP_SIGNS" value="yes" defaultVal="true">
 <%String warning = prevMgr.getWarnings(String.valueOf(demographic_no));
   String htmlWarning = "";
@@ -1443,7 +1443,7 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
 </oscar:oscarPropertiesCheck>
 </security:oscarSec>
 
-<!-- doctor code block -->
+<!-- doctor code block 3 -->
 <% if(bShowEncounterLink && !isWeekView) { %>
 <% String  eURL = "../oscarEncounter/IncomingEncounter.do?providerNo="+curUser_no+"&appointmentNo="+appointment.get("appointment_no")+"&demographicNo="+demographic_no+"&curProviderNo="+curProvider_no[nProvider]+"&reason="+URLEncoder.encode(reason)+"&encType="+URLEncoder.encode("face to face encounter with client","UTF-8")+"&userName="+URLEncoder.encode( userfirstname+" "+userlastname)+"&curDate="+curYear+"-"+curMonth+"-"+curDay+"&appointmentDate="+year+"-"+month+"-"+day+"&startTime="+iS+":"+iSm+"&status="+status + "&apptProvider_no=" + curProvider_no[nProvider] + "&providerview=" + curProvider_no[nProvider];%>
 <a href=# class="encounterBtn" onClick="popupWithApptNo(710, 1024,'<%=eURL%>','encounter',<%=appointment.get("appointment_no")%>);return false;" title="<bean:message key="global.encounter"/>">
@@ -1481,9 +1481,8 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
 </security:oscarSec>
       <% if (!vLocale.getCountry().equals("BR") && !isWeekView) { %>
 
-<!-- doctor code block -->
+<!-- doctor code block 4 -->
 
-          <!-- doctor code block -->
 	  <security:oscarSec roleName="<%=roleName$%>" objectName="_appointment.doctorLink" rights="r">
       <a href=# onClick="popupOscarRx(700,1027,'../oscarRx/choosePatient.do?providerNo=<%=curUser_no%>&demographicNo=<%=demographic_no%>')" title="<bean:message key="global.prescriptions"/>">|<bean:message key="global.rx"/></a>
       <%
