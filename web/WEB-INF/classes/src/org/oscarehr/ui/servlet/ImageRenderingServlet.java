@@ -164,7 +164,7 @@ public final class ImageRenderingServlet extends HttpServlet {
 		try {
 			// get image
 			org.oscarehr.casemgmt.model.ClientImage clientImage = clientImageDAO.getClientImage(Integer.parseInt(request.getParameter("clientId")));
-			if (clientImage != null && "jpg".equals(clientImage.getImage_type())) {
+			if (clientImage != null && "jpg".equalsIgnoreCase(clientImage.getImage_type())) {
 				renderImage(response, clientImage.getImage_data(), "jpeg");
 				return;
 			}
