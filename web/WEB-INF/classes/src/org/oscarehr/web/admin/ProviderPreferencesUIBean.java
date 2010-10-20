@@ -1,10 +1,17 @@
 package org.oscarehr.web.admin;
 
+import java.util.Collections;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
+import org.oscarehr.common.dao.EFormDao;
+import org.oscarehr.common.dao.EncounterFormDao;
 import org.oscarehr.common.dao.ProviderPreferenceDao;
+import org.oscarehr.common.model.EForm;
+import org.oscarehr.common.model.EncounterForm;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.ProviderPreference;
 import org.oscarehr.util.LoggedInInfo;
@@ -14,6 +21,8 @@ import org.oscarehr.util.WebUtils;
 public final class ProviderPreferencesUIBean {
 	
 	private static final ProviderPreferenceDao providerPreferenceDao=(ProviderPreferenceDao) SpringUtils.getBean("providerPreferenceDao");
+	private static final EFormDao eFormDao=(EFormDao) SpringUtils.getBean("EFormDao");
+	private static final EncounterFormDao encounterFormDao=(EncounterFormDao) SpringUtils.getBean("encounterFormDao");
 
 	public static final ProviderPreference updateOrCreateProviderPreferences(HttpServletRequest request)
 	{
@@ -88,5 +97,19 @@ public final class ProviderPreferencesUIBean {
 	{
 		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 		return(providerPreferenceDao.find(loggedInInfo.loggedInProvider.getProviderNo()));
+	}
+	
+	public static List<EForm> getAllEForms()
+	{
+		List<EForm> results=eFormDao.findAll();
+		Collections.sort(results, EForm.FORM_NAME_COMPARATOR);
+		return(results);
+	}
+
+	public static List<EncounterForm> getAllEncounterForms()
+	{
+		List<EncounterForm> results=encounterFormDao.findAll();
+		Collections.sort(results, EncounterForm.FORM_NAME_COMPARATOR);
+		return(results);
 	}
 }

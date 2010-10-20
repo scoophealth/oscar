@@ -42,7 +42,10 @@
 <%@page import="org.oscarehr.common.model.ProviderPreference"%>
 <%@page import="org.oscarehr.web.admin.ProviderPreferencesUIBean"%>
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
-<%@page import="org.oscarehr.web.PrescriptionQrCodeUIBean"%><html:html locale="true">
+<%@page import="org.oscarehr.web.PrescriptionQrCodeUIBean"%>
+<%@page import="org.oscarehr.common.model.EForm"%>
+<%@page import="org.apache.commons.lang.StringEscapeUtils"%>
+<%@page import="org.oscarehr.common.model.EncounterForm"%><html:html locale="true">
 
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
@@ -283,7 +286,7 @@ function showHideBillPref() {
 			</caisi:isModuleLoad>
 		
 			<!-- QR Code on prescriptions setting -->
-			<tr style="background-color:<%=weakcolor%>">
+			<tr>
 				<td class="preferenceLabel">
 					<bean:message key="provider.providerpreference.qrCodeOnPrescriptions" />
 				</td>
@@ -294,6 +297,48 @@ function showHideBillPref() {
 	            	<input type="checkbox" name="prescriptionQrCodes" <%=checked?"checked=\"checked\"":""%> />
 	            </td>
 			</tr>		
+		
+			<%-- Forms and EForms to display on the appointment screen --%>
+			<tr>
+				<td class="preferenceLabel">
+					<bean:message key="provider.providerpreference.formsToDisplayOnAppointmentScreen" />
+				</td>
+				<td class="preferenceValue">
+					<div style="height:10em;border:solid grey 1px;overflow:auto;width:25em">
+					<%
+						List<EncounterForm> encounterForms=ProviderPreferencesUIBean.getAllEncounterForms();
+						for(EncounterForm encounterForm : encounterForms)
+						{
+							String nameEscaped=StringEscapeUtils.escapeHtml(encounterForm.getFormName());
+							%>
+								<input type="checkbox" name="encounterFormName" value="<%=nameEscaped%>" /> <%=nameEscaped%>
+								<br />
+							<%
+						}
+	            	%> 
+					</div>
+	            </td>
+			</tr>		
+			<tr>
+				<td class="preferenceLabel">
+					<bean:message key="provider.providerpreference.eFormsToDisplayOnAppointmentScreen" />
+				</td>
+				<td class="preferenceValue">
+					<div style="height:10em;border:solid grey 1px;overflow:auto;width:25em">
+					<%
+						List<EForm> eforms=ProviderPreferencesUIBean.getAllEForms();
+						for(EForm eform : eforms)
+						{
+							%>
+								<input type="checkbox" name="eformId" value="<%=eform.getId()%>" /> <%=StringEscapeUtils.escapeHtml(eform.getFormName())%>
+								<br />
+							<%
+						}
+	            	%> 
+					</div>
+	            </td>
+			</tr>		
+		
 		
 		</table>
 

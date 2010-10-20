@@ -48,6 +48,15 @@ public class EncounterForm extends AbstractModel<String> implements Serializable
 		}
 	};
 
+	/**
+	 * This comparator sorts EncounterForm ascending based on the formName
+	 */
+	public static final Comparator<EncounterForm> FORM_NAME_COMPARATOR = new Comparator<EncounterForm>() {
+		public int compare(EncounterForm o1, EncounterForm o2) {
+			return (o1.formName.compareTo(o2.formName));
+		}
+	};
+
 	@Id
 	@Column(name = "form_value")
 	private String formValue;
