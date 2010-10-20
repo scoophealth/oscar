@@ -307,11 +307,13 @@ function showHideBillPref() {
 					<div style="height:10em;border:solid grey 1px;overflow:auto;width:25em">
 					<%
 						List<EncounterForm> encounterForms=ProviderPreferencesUIBean.getAllEncounterForms();
+						Collection<String> checkedEncounterFormNames=ProviderPreferencesUIBean.getCheckedEncounterFormNames();
 						for(EncounterForm encounterForm : encounterForms)
 						{
 							String nameEscaped=StringEscapeUtils.escapeHtml(encounterForm.getFormName());
+							String checkedString=(checkedEncounterFormNames.contains(encounterForm.getFormName())?"checked=\"checked\"":"");
 							%>
-								<input type="checkbox" name="encounterFormName" value="<%=nameEscaped%>" /> <%=nameEscaped%>
+								<input type="checkbox" name="encounterFormName" value="<%=nameEscaped%>" <%=checkedString%> /> <%=nameEscaped%>
 								<br />
 							<%
 						}
@@ -327,10 +329,12 @@ function showHideBillPref() {
 					<div style="height:10em;border:solid grey 1px;overflow:auto;width:25em">
 					<%
 						List<EForm> eforms=ProviderPreferencesUIBean.getAllEForms();
+						Collection<Integer> checkedEFormIds=ProviderPreferencesUIBean.getCheckedEFormIds();
 						for(EForm eform : eforms)
 						{
+							String checkedString=(checkedEFormIds.contains(eform.getId())?"checked=\"checked\"":"");
 							%>
-								<input type="checkbox" name="eformId" value="<%=eform.getId()%>" /> <%=StringEscapeUtils.escapeHtml(eform.getFormName())%>
+								<input type="checkbox" name="eformId" value="<%=eform.getId()%>" <%=checkedString%> /> <%=StringEscapeUtils.escapeHtml(eform.getFormName())%>
 								<br />
 							<%
 						}
@@ -347,7 +351,6 @@ function showHideBillPref() {
 			<INPUT TYPE = "RESET" VALUE ='<bean:message key="global.btnClose"/>' onClick="window.close();">
   		</div>
 
-		<INPUT TYPE="hidden" NAME="provider_no" VALUE='<%=providerNo%>'>
 		<INPUT TYPE="hidden" NAME="color_template" VALUE='deepblue'>
 		<INPUT TYPE="hidden" NAME="displaymode" VALUE='updatepreference'>
 
