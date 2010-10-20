@@ -82,6 +82,22 @@ public final class ProviderPreferencesUIBean {
 
 		providerPreference.setPrintQrCodeOnPrescriptions(WebUtils.isChecked(request, "prescriptionQrCodes"));
 
+		// get encounterForms for appointment screen
+		String[] formNames = request.getParameterValues("encounterFormName");
+		Collection<String> formNamesList = providerPreference.getAppointmentScreenForms();
+		formNamesList.clear();
+		for (String formName : formNames) {
+			formNamesList.add(formName);
+		}
+
+		// get eForms for appointment screen
+		String[] formIds = request.getParameterValues("eformId");
+		Collection<Integer> eFormsIdsList = providerPreference.getAppointmentScreenEForms();
+		eFormsIdsList.clear();
+		for (String formId : formIds) {
+			eFormsIdsList.add(Integer.parseInt(formId));
+		}
+
 		providerPreferenceDao.merge(providerPreference);
 
 		return (providerPreference);
@@ -93,7 +109,7 @@ public final class ProviderPreferencesUIBean {
 	}
 
 	public static List<EForm> getAllEForms() {
-		List<EForm> results = eFormDao.findAll();
+		List<EForm> results = eFormDao.findAll(true);
 		Collections.sort(results, EForm.FORM_NAME_COMPARATOR);
 		return (results);
 	}

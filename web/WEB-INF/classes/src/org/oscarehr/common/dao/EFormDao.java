@@ -38,10 +38,29 @@ public class EFormDao extends AbstractDao<EForm> {
 		super(EForm.class);
 	}
 
-    public List<EForm> findAll()
+	/**
+	 * @param current can be null for both
+	 * @return
+	 */
+    public List<EForm> findAll(Boolean current)
 	{
-		Query query = entityManager.createQuery("select x from "+modelClass.getSimpleName()+" x");
+    	StringBuilder sb=new StringBuilder();
+    	sb.append("select x from ");
+    	sb.append(modelClass.getSimpleName());
+    	sb.append(" x");
+    	
+    	if (current!=null)
+    	{
+    		sb.append(" where x.current=?1");
+    	}
+
+    	Query query = entityManager.createQuery(sb.toString());
+    	if (current!=null)
+    	{
+    		query.setParameter(1, current);
+    	}
 		
+    	
 		@SuppressWarnings("unchecked")
 		List<EForm> results = query.getResultList();
 
