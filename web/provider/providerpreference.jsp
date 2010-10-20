@@ -10,7 +10,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
-<%@ page import="java.util.*, java.text.*,java.sql.*, java.net.*" errorPage="errorpage.jsp" %>
+<%@ page import="java.util.*,java.text.*,java.sql.*,java.net.*" errorPage="errorpage.jsp" %>
 <%@ page import="oscar.OscarProperties" %>
 <%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 <!--  
@@ -153,138 +153,159 @@ function showHideBillPref() {
 }
 
 </script>
+<style type="text/css">
+	.preferenceTable td
+	{
+		border: solid white 2px;
+	}
+	
+	.preferenceLabel
+	{
+		text-align:right;
+		width:25%;
+		padding-right:8px;
+		font-size:13px;
+		font-weight:bold;
+		vertical-align:top;
+	}
+
+	.preferenceUnits
+	{
+		font-size:9px;
+		font-weight:normal;
+	}
+
+	.preferenceValue
+	{
+		font-size:12px;
+	}
+</style>
 </head>
 
 <%
 	ProviderPreference providerPreference=ProviderPreferencesUIBean.getLoggedInProviderPreference();
 %>
 
-<body bgproperties="fixed"  onLoad="setfocus();showHideBillPref();" topmargin="0"leftmargin="0" rightmargin="0">
+<body bgproperties="fixed"  onLoad="setfocus();showHideBillPref();" topmargin="0"leftmargin="0" rightmargin="0" style="font-family:sans-serif">
 	<FORM NAME = "UPDATEPRE" METHOD="post" ACTION="providercontrol.jsp" onSubmit="return(checkTypeInAll())">
 
-		<table border=0 cellspacing=0 cellpadding=0 width="100%" >
-		  <tr bgcolor="<%=deepcolor%>"> 
-		      <th><font face="Helvetica"><bean:message key="provider.providerpreference.description"/></font></th>
-		  </tr>
+		<div style="background-color:<%=deepcolor%>;text-align:center;font-weight:bold">
+			<bean:message key="provider.providerpreference.description"/>
+		</div>
+
+		<table class="preferenceTable" style="width:100%;border-collapse:collapse;background-color:<%=weakcolor%>;">
+			<tr>
+				<td class="preferenceLabel">
+					<bean:message key="provider.preference.formStartHour" />
+					<span class="preferenceUnits">(0-23)</span>
+				</td>
+				<td class="preferenceValue">
+					<INPUT TYPE="TEXT" NAME="start_hour" VALUE='<%=request.getParameter("start_hour")%>' size="2" maxlength="2">
+				</td>
+			</tr>
+			<tr>
+				<td class="preferenceLabel">
+					<bean:message key="provider.preference.formEndHour" />
+					<span class="preferenceUnits">(0-23)</span>
+				</td>
+				<td class="preferenceValue">
+					<INPUT TYPE="TEXT" NAME="end_hour" VALUE='<%=request.getParameter("end_hour")%>' size="2" maxlength="2">
+				</td>
+			</tr>
+			<tr>
+				<td class="preferenceLabel">
+					<bean:message key="provider.preference.formPeriod" />
+					<span class="preferenceUnits"><bean:message key="provider.preference.min" /></span>
+				</td>
+				<td class="preferenceValue">
+					<INPUT TYPE="TEXT" NAME="every_min" VALUE='<%=request.getParameter("every_min")%>' size="2" maxlength="2">
+				</td>
+			</tr>
+			<tr>
+				<td class="preferenceLabel">
+					<bean:message key="provider.preference.formGroupNo" />
+				</td>
+				<td class="preferenceValue">
+					<INPUT TYPE="TEXT" NAME="mygroup_no" VALUE='<%=request.getParameter("mygroup_no")%>' size="12" maxlength="10">
+					<input type="button" value="<bean:message key="provider.providerpreference.viewedit" />" onClick="popupPage(360,680,'providercontrol.jsp?displaymode=displaymygroup&dboperation=searchmygroupall' );return false;" />
+				</td>
+			</tr>
+			<caisi:isModuleLoad moduleName="ticklerplus">
+				<tr>
+					<!-- check box of new-tickler-warnning-windows -->
+					<td class="preferenceLabel">
+						New Tickler Warning Window
+					</td>
+					<td class="preferenceValue">
+						<%
+							String myCheck1 = "";
+							String myCheck2 = "";
+							String myValue ="";
+							if((request.getParameter("new_tickler_warning_window")).equals("enabled")) { 
+								myCheck1 = "checked";
+								myCheck2 = "unchecked";
+							}
+							else {
+								myCheck1 = "unchecked";
+								myCheck2 = "checked";
+							}
+						%>
+			            <input type="radio" name="new_tickler_warning_window" value="enabled" <%= myCheck1 %>> Enabled 
+			            <br>
+						<input type="radio" name="new_tickler_warning_window" value="disabled" <%= myCheck2 %>> Disabled
+					</td>
+				</tr>
+		
+				<!-- check box of the default PMM window -->
+				<tr>
+					<td class="preferenceLabel">
+						Default PMM
+					</td>
+					<td class="preferenceValue">
+						<%  
+							String myCheck3 = "";
+							String myCheck4 = "";                 
+							if("enabled".equals(request.getParameter("default_pmm"))) { 
+								myCheck3 = "checked";
+								myCheck4 = "unchecked";
+							}
+							else {
+								myCheck3 = "unchecked";
+								myCheck4 = "checked";
+							}
+						%> 
+			            <input type="radio" name="default_pmm" value="enabled" <%= myCheck3 %>> Enabled 
+			            <br>
+						<input type="radio" name="default_pmm" value="disabled" <%= myCheck4 %>> Disabled
+					</td>
+				</tr>
+		
+			</caisi:isModuleLoad>
+		
+			<!-- QR Code on prescriptions setting -->
+			<tr style="background-color:<%=weakcolor%>">
+				<td class="preferenceLabel">
+					<bean:message key="provider.providerpreference.qrCodeOnPrescriptions" />
+				</td>
+				<td class="preferenceValue">
+					<%
+	            		boolean checked=PrescriptionQrCodeUIBean.isPrescriptionQrCodeEnabledForCurrentProvider();
+	            	%> 
+	            	<input type="checkbox" name="prescriptionQrCodes" <%=checked?"checked=\"checked\"":""%> />
+	            </td>
+			</tr>		
+		
 		</table>
 
-        <table BORDER="0" WIDTH="100%">
-          <tr BGCOLOR="<%=weakcolor%>"> 
-            <td width="20%"> 
-              <div align="right"><font face="arial"><bean:message key="provider.preference.formStartHour"/>:</font></div>
-            </td>
-            <td width="20%"> 
-              <INPUT TYPE="TEXT" NAME="start_hour" VALUE='<%=request.getParameter("start_hour")%>' WIDTH="25" HEIGHT="20" border="0" hspace="2" size="8" maxlength="2" >
-              <font size="-2"><bean:message key="provider.preference.hr"/></font> </td>
-            <td width="20%"> 
-              <div align="right"><font face="arial"><bean:message key="provider.preference.formEndHour"/><font size='-2' color='red'>(<=23)</font> :</font></div>
-            </td>
-            <td width="25%"> 
-              <INPUT TYPE="TEXT" NAME="end_hour" VALUE='<%=request.getParameter("end_hour")%>' WIDTH="25" HEIGHT="20" border="0" hspace="2" size="8" maxlength="2" >
-              <font size="-2"><bean:message key="provider.preference.hr"/></font></td>
-          </tr>
-          <tr  BGCOLOR="<%=weakcolor%>"> 
-            <td width="20%"> 
-              <div align="right"><font face="arial"><bean:message key="provider.preference.formPeriod"/>:</font></div>
-            </td>
-            <td width="20%"> 
-              <INPUT TYPE="TEXT" NAME="every_min" VALUE='<%=request.getParameter("every_min")%>' WIDTH="25" HEIGHT="20" border="0" hspace="2" size="8" maxlength="2" >
-              <font size="-2"><bean:message key="provider.preference.min"/></font> </td>
-            <td width="20%"> 
-              <div align="right"><font face="arial"><a href=# onClick ="popupPage(360,680,'providercontrol.jsp?displaymode=displaymygroup&dboperation=searchmygroupall' );return false;"> 
-                <font size="-2">(<bean:message key="provider.providerpreference.viewedit"/>)</font><bean:message key="provider.preference.formGroupNo"/></a>:</font></div>
-            </td>
-            <td width="25%"> 
-              <INPUT TYPE="TEXT" NAME="mygroup_no" VALUE='<%=request.getParameter("mygroup_no")%>' WIDTH="30" HEIGHT="20" border="0" size="12" maxlength="10">
-            </td>
-          </tr>
-	<caisi:isModuleLoad moduleName="ticklerplus">
-          <!-- check box of new-tickler-warnning-windows -->
-          <tr BGCOLOR="<%=weakcolor%>"> 
-            <td width="20%"> 
-            </td>
-            <td width="40%"> 
-              <div align="right"><font face="arial">New Tickler Warning Window:</font></div>
-            </td>
-            <td width="20%"> 
-             <%  String myCheck1 = "";
-             	 String myCheck2 = "";
-                 String myValue ="";
-                  if((request.getParameter("new_tickler_warning_window")).equals("enabled"))
-                  { myCheck1 = "checked";
-                  	  myCheck2 = "unchecked";}
-                  else
-                  { myCheck1 = "unchecked";
-              	  	  myCheck2 = "checked";}
-     
-               %>
-              
-   				<input type="radio" name="new_tickler_warning_window" value="enabled" <%= myCheck1 %> > Enabled
-				<br>
-				<input type="radio" name="new_tickler_warning_window" value="disabled" <%= myCheck2 %> > Disabled
-   				
-            </td>
-            <td width="20%"> 
-            </td>
-          </tr>
-          
-          <!-- check box of the default PMM window -->
-          <tr BGCOLOR="<%=weakcolor%>"> 
-            <td width="20%"> 
-            </td>
-            <td width="40%"> 
-              <div align="right"><font face="arial">Default PMM:</font></div>
-            </td>
-            <td width="20%"> 
-             <%  String myCheck3 = "";
-             	 String myCheck4 = "";                 
-                  if("enabled".equals(request.getParameter("default_pmm")))
-                  { myCheck3 = "checked";
-                  	  myCheck4 = "unchecked";}
-                  else
-                  { myCheck3 = "unchecked";
-              	  	  myCheck4 = "checked";}
-     
-               %>
-              
-   				<input type="radio" name="default_pmm" value="enabled" <%= myCheck3 %> > Enabled
-				<br>
-				<input type="radio" name="default_pmm" value="disabled" <%= myCheck4 %> > Disabled
-   				
-            </td>
-            <td width="20%"> 
-            </td>
-          </tr>
-          
-          <!-- QR Code on prescriptions setting -->
-          <tr style="background-color:<%=weakcolor%>"> 
-            <td colspan="2" style="text-align:right"> 
-              <bean:message key="provider.providerpreference.qrCodeOnPrescriptions"/>
-            </td>
-            <td colspan="2">
-            	<%
-            		boolean checked=PrescriptionQrCodeUIBean.isPrescriptionQrCodeEnabledForCurrentProvider();
-            	%>
-            	<input type="checkbox" name="prescriptionQrCodes" <%=checked?"checked=\"checked\"":""%> />
-            </td>
-          </tr>
-          
-          
-      </caisi:isModuleLoad>
-      
-              <INPUT TYPE="hidden" NAME="provider_no" VALUE='<%=providerNo%>'>
-              <INPUT TYPE="hidden" NAME="color_template" VALUE='deepblue'>
-              <INPUT TYPE="hidden" NAME="displaymode" VALUE='updatepreference'>
+		<div style="background-color:<%=deepcolor%>;text-align:center;font-weight:bold">
+			<INPUT TYPE="submit" VALUE='<bean:message key="provider.providerpreference.btnSubmit"/>' SIZE="7">
+			<INPUT TYPE = "RESET" VALUE ='<bean:message key="global.btnClose"/>' onClick="window.close();">
+  		</div>
 
-        </table>
+		<INPUT TYPE="hidden" NAME="provider_no" VALUE='<%=providerNo%>'>
+		<INPUT TYPE="hidden" NAME="color_template" VALUE='deepblue'>
+		<INPUT TYPE="hidden" NAME="displaymode" VALUE='updatepreference'>
 
-<table width="100%">
-  <tr bgcolor="<%=deepcolor%>">
-    <TD align="center">
-      <INPUT TYPE="submit" VALUE='<bean:message key="provider.providerpreference.btnSubmit"/>' SIZE="7">
-      <INPUT TYPE = "RESET" VALUE ='<bean:message key="global.btnClose"/>' onClick="window.close();"></TD>
-  </tr>
-</TABLE>
 
 <table width="100%" BGCOLOR="eeeeee">
 

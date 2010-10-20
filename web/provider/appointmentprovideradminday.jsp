@@ -125,7 +125,6 @@ public boolean patientHasOutstandingPrivateBills(String demographicNo){
 	String formName2Short = formName2.length() > 3 ? (formName2.substring(0,2)+".") : formName2;
         boolean bShortcutForm2 = bShortcutForm && !formName2.equals("");
 
-    //String userprofession = (String) session.getAttribute("userprofession");
     int startHour=Integer.parseInt(((String) session.getAttribute("starthour")).trim());
     int endHour=Integer.parseInt(((String) session.getAttribute("endhour")).trim());
     int everyMin=Integer.parseInt(((String) session.getAttribute("everymin")).trim());
