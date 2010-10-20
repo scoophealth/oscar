@@ -25,13 +25,21 @@
 package org.oscarehr.common.model;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.PostLoad;
 import javax.persistence.PreUpdate;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import org.hibernate.annotations.CollectionOfElements;
 
 import oscar.OscarProperties;
 
@@ -50,9 +58,26 @@ public class ProviderPreference extends AbstractModel<String> implements Seriali
 	private String defaultCaisiPmm="disabled";
 	private String defaultNewOscarCme="disabled";
 	private boolean printQrCodeOnPrescriptions=Boolean.valueOf(OscarProperties.getInstance().getProperty("QR_CODE_ENABLED_PROVIDER_DEFAULT"));
+
+	@CollectionOfElements(targetElement = String.class)
+	@JoinTable(name = "ProviderPreferenceAppointmentScreenForm",joinColumns = @JoinColumn(name = "providerNo"))
+	@Column(name="appointmentScreenForm")
+	private Collection<String> appointmentScreenForms=new HashSet<String>();
+	
+	@CollectionOfElements(targetElement = Integer.class)
+	@JoinTable(name = "ProviderPreferenceAppointmentScreenEForm",joinColumns = @JoinColumn(name = "providerNo"))
+	@Column(name="appointmentScreenEForm")
+	private Collection<Integer> appointmentScreenEForms=new HashSet<Integer>();
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastUpdated=new Date();
+	
+	@PostLoad
+	protected void hibernatePreFetchCollectionsFix() {
+		// forces eager fetching which can't be done normally as hibernate doesn't allow mulitple collection eager fetching
+		appointmentScreenForms.size();
+		appointmentScreenEForms.size();
+	}
 	
 	@PreUpdate
 	protected void jpaUpdateLastUpdateTime() {
@@ -159,5 +184,17 @@ public class ProviderPreference extends AbstractModel<String> implements Seriali
 	public Date getLastUpdated() {
     	return lastUpdated;
     }
-	
+
+	public Collection<String> getAppointmentScreenForms() {
+    	return appointmentScreenForms;
+    }
+
+	public Collection<Integer> getAppointmentScreenEForms() {
+    	return appointmentScreenEForms;
+    }
+
+	public void setAppointmentScreenEForms(Collection<Integer> appointmentScreenEForms) {
+    	this.appointmentScreenEForms = appointmentScreenEForms;
+    }
+
 }
