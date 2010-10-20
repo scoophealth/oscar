@@ -1,5 +1,7 @@
 package org.oscarehr.web.admin;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -19,97 +21,104 @@ import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.WebUtils;
 
 public final class ProviderPreferencesUIBean {
-	
-	private static final ProviderPreferenceDao providerPreferenceDao=(ProviderPreferenceDao) SpringUtils.getBean("providerPreferenceDao");
-	private static final EFormDao eFormDao=(EFormDao) SpringUtils.getBean("EFormDao");
-	private static final EncounterFormDao encounterFormDao=(EncounterFormDao) SpringUtils.getBean("encounterFormDao");
 
-	public static final ProviderPreference updateOrCreateProviderPreferences(HttpServletRequest request)
-	{
-		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-		Provider provider=loggedInInfo.loggedInProvider;
-		
+	private static final ProviderPreferenceDao providerPreferenceDao = (ProviderPreferenceDao) SpringUtils.getBean("providerPreferenceDao");
+	private static final EFormDao eFormDao = (EFormDao) SpringUtils.getBean("EFormDao");
+	private static final EncounterFormDao encounterFormDao = (EncounterFormDao) SpringUtils.getBean("encounterFormDao");
+
+	public static final ProviderPreference updateOrCreateProviderPreferences(HttpServletRequest request) {
+		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+		Provider provider = loggedInInfo.loggedInProvider;
+
 		// get or create new preferences entry
-		ProviderPreference providerPreference=providerPreferenceDao.find(provider.getProviderNo());
-		if (providerPreference==null)
-		{
-			providerPreference=new ProviderPreference();
+		ProviderPreference providerPreference = providerPreferenceDao.find(provider.getProviderNo());
+		if (providerPreference == null) {
+			providerPreference = new ProviderPreference();
 			providerPreference.setProviderNo(provider.getProviderNo());
 			providerPreferenceDao.persist(providerPreference);
 		}
-		
+
 		// update preferences based on request parameters
 		String temp;
-		HttpSession session=request.getSession();
-		
+		HttpSession session = request.getSession();
+
 		// new tickler window
-		temp=StringUtils.trimToNull(request.getParameter("new_tickler_warning_window"));
-		if (temp!=null)
-		{
+		temp = StringUtils.trimToNull(request.getParameter("new_tickler_warning_window"));
+		if (temp != null) {
 			providerPreference.setNewTicklerWarningWindow(temp);
-		}
-		else
-		{
-			temp=StringUtils.trimToNull((String)session.getAttribute("newticklerwarningwindow"));
-			if (temp!=null) providerPreference.setNewTicklerWarningWindow(temp);
+		} else {
+			temp = StringUtils.trimToNull((String) session.getAttribute("newticklerwarningwindow"));
+			if (temp != null) providerPreference.setNewTicklerWarningWindow(temp);
 		}
 
 		// default pmm
-		temp=StringUtils.trimToNull(request.getParameter("default_pmm"));
-		if (temp!=null)
-		{
+		temp = StringUtils.trimToNull(request.getParameter("default_pmm"));
+		if (temp != null) {
 			providerPreference.setDefaultCaisiPmm(temp);
-		}
-		else
-		{
-			temp=StringUtils.trimToNull((String)session.getAttribute("default_pmm"));
-			if (temp==null) providerPreference.setDefaultCaisiPmm("disabled");
+		} else {
+			temp = StringUtils.trimToNull((String) session.getAttribute("default_pmm"));
+			if (temp == null) providerPreference.setDefaultCaisiPmm("disabled");
 			else providerPreference.setDefaultCaisiPmm(temp);
 		}
-		
+
 		// rest
-		temp=StringUtils.trimToNull(request.getParameter("start_hour"));
-		if (temp!=null)	providerPreference.setStartHour(Integer.parseInt(temp));
-		
-		temp=StringUtils.trimToNull(request.getParameter("end_hour"));
-		if (temp!=null)	providerPreference.setEndHour(Integer.parseInt(temp));
-		
-		temp=StringUtils.trimToNull(request.getParameter("every_min"));
-		if (temp!=null)	providerPreference.setEveryMin(Integer.parseInt(temp));
-		
-		temp=StringUtils.trimToNull(request.getParameter("mygroup_no"));
-		if (temp!=null)	providerPreference.setMyGroupNo(temp);
-		
-		temp=StringUtils.trimToNull(request.getParameter("default_servicetype"));
-		if (temp!=null)	providerPreference.setDefaultServiceType(temp);
-		
-		temp=StringUtils.trimToNull(request.getParameter("color_template"));
-		if (temp!=null)	providerPreference.setColourTemplate(temp);
-		
+		temp = StringUtils.trimToNull(request.getParameter("start_hour"));
+		if (temp != null) providerPreference.setStartHour(Integer.parseInt(temp));
+
+		temp = StringUtils.trimToNull(request.getParameter("end_hour"));
+		if (temp != null) providerPreference.setEndHour(Integer.parseInt(temp));
+
+		temp = StringUtils.trimToNull(request.getParameter("every_min"));
+		if (temp != null) providerPreference.setEveryMin(Integer.parseInt(temp));
+
+		temp = StringUtils.trimToNull(request.getParameter("mygroup_no"));
+		if (temp != null) providerPreference.setMyGroupNo(temp);
+
+		temp = StringUtils.trimToNull(request.getParameter("default_servicetype"));
+		if (temp != null) providerPreference.setDefaultServiceType(temp);
+
+		temp = StringUtils.trimToNull(request.getParameter("color_template"));
+		if (temp != null) providerPreference.setColourTemplate(temp);
+
 		providerPreference.setPrintQrCodeOnPrescriptions(WebUtils.isChecked(request, "prescriptionQrCodes"));
-		
+
 		providerPreferenceDao.merge(providerPreference);
-		
-		return(providerPreference);
-	}
-	
-	public static ProviderPreference getLoggedInProviderPreference()
-	{
-		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-		return(providerPreferenceDao.find(loggedInInfo.loggedInProvider.getProviderNo()));
-	}
-	
-	public static List<EForm> getAllEForms()
-	{
-		List<EForm> results=eFormDao.findAll();
-		Collections.sort(results, EForm.FORM_NAME_COMPARATOR);
-		return(results);
+
+		return (providerPreference);
 	}
 
-	public static List<EncounterForm> getAllEncounterForms()
-	{
-		List<EncounterForm> results=encounterFormDao.findAll();
+	public static ProviderPreference getLoggedInProviderPreference() {
+		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+		return (providerPreferenceDao.find(loggedInInfo.loggedInProvider.getProviderNo()));
+	}
+
+	public static List<EForm> getAllEForms() {
+		List<EForm> results = eFormDao.findAll();
+		Collections.sort(results, EForm.FORM_NAME_COMPARATOR);
+		return (results);
+	}
+
+	public static List<EncounterForm> getAllEncounterForms() {
+		List<EncounterForm> results = encounterFormDao.findAll();
 		Collections.sort(results, EncounterForm.FORM_NAME_COMPARATOR);
-		return(results);
+		return (results);
+	}
+
+	public static Collection<String> getCheckedEncounterFormNames() {
+		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+		Provider provider = loggedInInfo.loggedInProvider;
+
+		ProviderPreference providerPreference = providerPreferenceDao.find(provider.getProviderNo());
+		if (providerPreference != null) return (providerPreference.getAppointmentScreenForms());
+		else return (new ArrayList<String>());
+	}
+
+	public static Collection<Integer> getCheckedEFormIds() {
+		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+		Provider provider = loggedInInfo.loggedInProvider;
+
+		ProviderPreference providerPreference = providerPreferenceDao.find(provider.getProviderNo());
+		if (providerPreference != null) return (providerPreference.getAppointmentScreenEForms());
+		else return (new ArrayList<Integer>());
 	}
 }

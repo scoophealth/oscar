@@ -190,7 +190,7 @@ function showHideBillPref() {
 %>
 
 <body bgproperties="fixed"  onLoad="setfocus();showHideBillPref();" topmargin="0"leftmargin="0" rightmargin="0" style="font-family:sans-serif">
-	<FORM NAME = "UPDATEPRE" METHOD="post" ACTION="providercontrol.jsp" onSubmit="return(checkTypeInAll())">
+	<FORM NAME = "UPDATEPRE" METHOD="post" ACTION="providerupdatepreference.jsp" onSubmit="return(checkTypeInAll())">
 
 		<div style="background-color:<%=deepcolor%>;text-align:center;font-weight:bold">
 			<bean:message key="provider.providerpreference.description"/>
@@ -352,7 +352,6 @@ function showHideBillPref() {
   		</div>
 
 		<INPUT TYPE="hidden" NAME="color_template" VALUE='deepblue'>
-		<INPUT TYPE="hidden" NAME="displaymode" VALUE='updatepreference'>
 
 
 <table width="100%" BGCOLOR="eeeeee">

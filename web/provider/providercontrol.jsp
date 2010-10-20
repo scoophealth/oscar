@@ -71,7 +71,6 @@
             {"day" , "appointmentprovideradminday.jsp"},
             {"month" , "appointmentprovideradminmonth.jsp"},
             {"addstatus" , "provideraddstatus.jsp"},
-            {"updatepreference" , "providerupdatepreference.jsp"},
             {"displaymygroup" , "providerdisplaymygroup.jsp"},
             {"encounter" , "providerencounter.jsp"},
             {"prescribe" , "providerprescribe.jsp"},
