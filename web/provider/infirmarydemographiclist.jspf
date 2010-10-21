@@ -139,9 +139,9 @@ if ((k/2)*2==k){ %>
 				<security:oscarSec roleName="<%=roleName$%>" objectName="_billing"
 					rights="r">
 
-					<%= bShortcutForm?"<a href=# onClick='popupPage2( \"../form/forwardshortcutname.jsp?formname="+formName+"&demographic_no="+demographic_no+"\")' title='form'>|"+formNameShort+"</a>" : ""%>
-					<%= bShortcutForm2?"<a href=# onClick='popupPage2( \"../form/forwardshortcutname.jsp?formname="+formName2+"&demographic_no="+demographic_no+"\")' title='form'>|"+formName2Short+"</a>" : ""%>
-
+					<%String appointment_no=rsAppointNO;%>
+					<%@include file="appointmentFormsLinks.jspf" %>
+ 
 				</security:oscarSec> <!-- billing code block --> <security:oscarSec
 					roleName="<%=roleName$%>" objectName="_masterLink" rights="r">
 					<% if (vLocale.getCountry().equals("BR")) {%>

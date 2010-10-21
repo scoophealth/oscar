@@ -927,7 +927,7 @@ if (iviewTag!=null && !"".equalsIgnoreCase(iviewTag.trim())){
 			</tr>
 			<tr>
 				<td><a
-					href="../eform/efmformslistadd.jsp?demographic_no=<%=demographic_no%>&apptProvider=<%=apptProvider%>&appointment=<%=appointment%>">
+					href="../eform/efmformslistadd.jsp?demographic_no=<%=demographic_no%>&appointment=<%=appointment%>">
 				<bean:message
 					key="demographic.demographiceditdemographic.btnAddEForm" /> </a></td>
 			</tr>

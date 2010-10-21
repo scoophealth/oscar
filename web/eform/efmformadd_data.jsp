@@ -29,7 +29,8 @@
 <%
   if (request.getAttribute("page_errors") != null) {
 %>
-<script language=javascript type='text/javascript'>
+
+<%@page import="org.oscarehr.util.LoggedInInfo"%><script language=javascript type='text/javascript'>
 function hideDiv() {
     if (document.getElementById) { // DOM3 = IE5, NS6
         document.getElementById('hideshow').style.display = 'none';
@@ -65,7 +66,9 @@ function hideDiv() {
   }
 
   thisEForm.setAppointmentNo(request.getParameter("appointment"));
-  thisEForm.setApptProvider(request.getParameter("apptProvider"));
+  
+  LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+  thisEForm.setApptProvider(loggedInInfo.loggedInProvider.getProviderNo());
 
   thisEForm.setContextPath(request.getContextPath());
   thisEForm.setImagePath();

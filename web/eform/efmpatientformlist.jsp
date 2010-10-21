@@ -120,7 +120,7 @@ function updateAjax() {
 	</tr>
 	<tr>
 		<td class="MainTableLeftColumn" valign="top">
-			<a href="efmformslistadd.jsp?demographic_no=<%=demographic_no%>&apptProvider=<%=apptProvider%>&appointment=<%=appointment%>&parentAjaxId=<%=parentAjaxId%>">
+			<a href="efmformslistadd.jsp?demographic_no=<%=demographic_no%>&appointment=<%=appointment%>&parentAjaxId=<%=parentAjaxId%>">
 				<bean:message key="eform.showmyform.btnAddEForm" />
 			</a>
 			<br>

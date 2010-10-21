@@ -73,7 +73,7 @@ public class EctDisplayEFormAction extends EctDisplayAction {
 	        
 	        //set the right hand heading link
 	        winName = "AddeForm" + bean.demographicNo;
-	        url = "popupPage(500,950,'"+winName+"','"+request.getContextPath()+"/eform/efmformslistadd.jsp?demographic_no="+bean.demographicNo+"&apptProvider="+bean.getCurProviderNo()+"&appointment="+bean.appointmentNo+"&parentAjaxId="+cmd+"'); return false;";
+	        url = "popupPage(500,950,'"+winName+"','"+request.getContextPath()+"/eform/efmformslistadd.jsp?demographic_no="+bean.demographicNo+"&appointment="+bean.appointmentNo+"&parentAjaxId="+cmd+"'); return false;";
 	        Dao.setRightURL(url);        
 	        Dao.setRightHeadingID(cmd);  //no menu so set div id to unique id for this action      
 	
@@ -87,7 +87,7 @@ public class EctDisplayEFormAction extends EctDisplayAction {
 	            Hashtable<String,Object> curform = eForms.get(i);
 	            winName = (String)curform.get("formName") + bean.demographicNo;            
 	            hash = Math.abs(winName.hashCode());
-	            url = "popupPage(700,800,'"+hash+"','"+request.getContextPath()+"/eform/efmformadd_data.jsp?fid="+curform.get("fid")+"&demographic_no="+bean.demographicNo+"&apptProvider="+bean.getCurProviderNo()+"&appointment="+bean.appointmentNo+"&parentAjaxId="+cmd+"','FormA"+i+"');";
+	            url = "popupPage(700,800,'"+hash+"','"+request.getContextPath()+"/eform/efmformadd_data.jsp?fid="+curform.get("fid")+"&demographic_no="+bean.demographicNo+"&appointment="+bean.appointmentNo+"&parentAjaxId="+cmd+"','FormA"+i+"');";
 	            logger.debug("SETTING EFORM URL " + url);
 	            key = StringUtils.maxLenString((String)curform.get("formName"), MAX_LEN_KEY, CROP_LEN_KEY, ELLIPSES) + " (new)";
 	            key = StringEscapeUtils.escapeJavaScript(key);

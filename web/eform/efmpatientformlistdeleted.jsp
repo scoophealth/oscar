@@ -111,7 +111,7 @@ function updateAjax() {
 	</tr>
 	<tr>
 		<td class="MainTableLeftColumn" valign="top"><a
-			href="efmformslistadd.jsp?demographic_no=<%=demographic_no%>&apptProvider=<%=apptProvider%>&appointment=<%=appointment%>"> <bean:message
+			href="efmformslistadd.jsp?demographic_no=<%=demographic_no%>&appointment=<%=appointment%>"> <bean:message
 			key="eform.showmyform.btnAddEForm" /></a> <br>
 		<%  if (country.equals("BR")) { %> <a
 			href="../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&apptProvider=<%=apptProvider%>&appointment=<%=appointment%>&displaymode=edit&dboperation=search_detail_ptbr"><bean:message

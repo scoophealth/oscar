@@ -1,0 +1,25 @@
+<%
+	if (providerPreference!=null)
+	{
+		Collection<String> formNames=providerPreference.getAppointmentScreenForms();
+		for (String formNameTemp : formNames)
+		{
+			String trimmedEscapedFormName=StringEscapeUtils.escapeHtml(AppointmentProviderAdminDayUIBean.getLengthLimitedFormName(formNameTemp));
+			String escapedFormName=StringEscapeUtils.escapeHtml(formNameTemp);
+			%>
+				|<a href=# onClick='popupPage2("../form/forwardshortcutname.jsp?formname=<%=escapedFormName%>&amp;demographic_no=<%=demographic_no%>")' title='<%=escapedFormName%>'><%=trimmedEscapedFormName%></a>
+			<%
+		}
+		
+		Collection<Integer> eFormIds=providerPreference.getAppointmentScreenEForms();
+		for (Integer eFormIdTemp : eFormIds)
+		{
+			EForm eForm=AppointmentProviderAdminDayUIBean.getEForms(eFormIdTemp);
+			String trimmedEscapedFormName=StringEscapeUtils.escapeHtml(AppointmentProviderAdminDayUIBean.getLengthLimitedFormName(eForm.getFormName()));
+			String escapedFormName=StringEscapeUtils.escapeHtml(eForm.getFormName());
+			%>
+				|<a href=# onClick='popupPage2("<%=request.getContextPath()%>/eform/efmformadd_data.jsp?fid=<%=eFormIdTemp%>&amp;demographic_no=<%=demographic_no%>&amp;appointment=<%=appointment_no%>")' title='<%=escapedFormName%>'><%=trimmedEscapedFormName%></a>
+			<%
+		}
+	}
+%>

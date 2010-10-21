@@ -110,30 +110,21 @@ public boolean patientHasOutstandingPrivateBills(String demographicNo){
 
     String mygroupno = (String) session.getAttribute("groupno");  
     String caisiView = null;
-    caisiView = (String)request.getParameter("GoToCaisiViewFromOscarView");
+    caisiView = request.getParameter("GoToCaisiViewFromOscarView");
     if(caisiView!=null && "true".equals(caisiView)) {
     	mygroupno = ".default";
     }
     String userfirstname = (String) session.getAttribute("userfirstname");
     String userlastname = (String) session.getAttribute("userlastname");
-    String prov= ((String ) oscarVariables.getProperty("billregion","")).trim().toUpperCase();
+    String prov= (oscarVariables.getProperty("billregion","")).trim().toUpperCase();
    
-	boolean bShortcutForm = oscarVariables.getProperty("appt_formview", "").equalsIgnoreCase("on") ? true : false;
-	String formName = bShortcutForm ? oscarVariables.getProperty("appt_formview_name") : "";
-	String formNameShort = formName.length() > 3 ? (formName.substring(0,2)+".") : formName;
-        String formName2 = bShortcutForm ? oscarVariables.getProperty("appt_formview_name2", "") : "";
-	String formName2Short = formName2.length() > 3 ? (formName2.substring(0,2)+".") : formName2;
-        boolean bShortcutForm2 = bShortcutForm && !formName2.equals("");
-
     int startHour=Integer.parseInt(((String) session.getAttribute("starthour")).trim());
     int endHour=Integer.parseInt(((String) session.getAttribute("endhour")).trim());
     int everyMin=Integer.parseInt(((String) session.getAttribute("everymin")).trim());
     String defaultServiceType = (String) session.getAttribute("default_servicetype");
-    if( defaultServiceType == null ) {
-    	ProviderPreference providerPreference=ProviderPreferencesUIBean.getLoggedInProviderPreference();
-        if (providerPreference!=null) {
-            defaultServiceType = providerPreference.getDefaultServiceType();
-        }
+	ProviderPreference providerPreference=ProviderPreferencesUIBean.getLoggedInProviderPreference();
+    if( defaultServiceType == null && providerPreference!=null) {
+    	defaultServiceType = providerPreference.getDefaultServiceType();
     }
 
     if( defaultServiceType == null ) {
@@ -279,7 +270,9 @@ if (apptDate.before(minDate)) {
 <%@page import="org.oscarehr.common.dao.SiteDao"%>
 <%@page import="org.oscarehr.common.model.Site"%>
 <%@page import="org.oscarehr.web.admin.ProviderPreferencesUIBean"%>
-<%@page import="org.oscarehr.common.model.ProviderPreference"%><html:html locale="true">
+<%@page import="org.oscarehr.common.model.ProviderPreference"%>
+<%@page import="org.oscarehr.web.AppointmentProviderAdminDayUIBean"%>
+<%@page import="org.oscarehr.common.model.EForm"%><html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><%=WordUtils.capitalize(userlastname + ", " +  org.apache.commons.lang.StringUtils.substring(userfirstname, 0, 1)) + "-"%><bean:message key="provider.appointmentProviderAdminDay.title"/></title>
@@ -1437,7 +1430,7 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
 
 <security:oscarSec roleName="<%=roleName$%>" objectName="_eChart" rights="r">
 <oscar:oscarPropertiesCheck property="eform_in_appointment" value="yes">
-	<b><a href="#" onclick="popupPage(500,1024,'../eform/efmformslistadd.jsp?parentAjaxId=eforms&demographic_no=<%=demographic_no%>&apptProvider=<%=curProvider_no[nProvider]%>&appointment=<%=appointment.get("appointment_no")%>'); return false;"
+	<b><a href="#" onclick="popupPage(500,1024,'../eform/efmformslistadd.jsp?parentAjaxId=eforms&demographic_no=<%=demographic_no%>&appointment=<%=appointment.get("appointment_no")%>'); return false;"
 		  title="eForms">|e</a></b>
 </oscar:oscarPropertiesCheck>
 </security:oscarSec>
@@ -1451,10 +1444,11 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
 
 <!-- billing code block -->
 <% if (!isWeekView) { %>
-	  <security:oscarSec roleName="<%=roleName$%>" objectName="_billing" rights="r">
+	<security:oscarSec roleName="<%=roleName$%>" objectName="_billing" rights="r">
 
-            <%= bShortcutForm?"<a href=# onClick='popupPage2( \"../form/forwardshortcutname.jsp?formname="+formName+"&demographic_no="+demographic_no+"\")' title='form'>|"+formNameShort+"</a>" : ""%>
-            <%= bShortcutForm2?"<a href=# onClick='popupPage2( \"../form/forwardshortcutname.jsp?formname="+formName2+"&demographic_no="+demographic_no+"\")' title='form'>|"+formName2Short+"</a>" : ""%>
+			<%String appointment_no=appointment.get("appointment_no").toString();%>
+			<%@include file="appointmentFormsLinks.jspf" %>
+		    
              <% if(status.indexOf('B')==-1) {
                 //java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.action.Action.LOCALE_KEY);
                 if (vLocale.getCountry().equals("BR")) { %>
