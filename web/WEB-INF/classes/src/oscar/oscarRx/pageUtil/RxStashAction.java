@@ -72,10 +72,7 @@ public final class RxStashAction extends DispatchAction {
                 }
             }
         }
-   /*     MiscUtils.getLogger().debug("bean.getStashIndex()="+bean.getStashIndex());
-         MiscUtils.getLogger().debug("bean.getStashSize()="+bean.getStashSize());
-        MiscUtils.getLogger().debug("===========end in rxstatshaction.java===========");
-     */   return mapping.findForward("success");
+        return mapping.findForward("success");
     }
 
     public ActionForward setStashIndex(ActionMapping mapping,

@@ -126,12 +126,10 @@ public final class RxChooseDrugAction extends Action {
                 rx.setFrequencyCode("OID");
                 rx.setDuration("30");
                 rx.setDurationUnit("D");
-          //      p("String.valueOf(bean.getStashIndex()): "+String.valueOf(bean.getStashIndex()));
                 bean.addAttributeName(rx.getAtcCode() + "-" + String.valueOf(bean.getStashIndex()));
                 
 
                 bean.setStashIndex(bean.addStashItem(rx));
-            //    p("bean.getStashIndex: "+bean.getStashIndex());
             }
             catch (Exception e){
                MiscUtils.getLogger().error("Error", e);

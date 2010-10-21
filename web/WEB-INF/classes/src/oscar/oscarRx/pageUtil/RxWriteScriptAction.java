@@ -144,7 +144,6 @@ public final class RxWriteScriptAction extends DispatchAction {
 
 			bean.addAttributeName(annotation_attrib, bean.getStashIndex());
 			bean.setStashItem(bean.getStashIndex(), rx);
-			// p("bean.getStashIndex() in unspecified=" + "" + bean.getStashIndex());
 			rx = null;
 
 			if (frm.getAction().equals("update")) {
