@@ -29,16 +29,14 @@
 	<property name="jspc.expandedWarDir" value="${jspcDir}/web" />
 	<property name="jspc.generatedDir" value="${jspcDir}/generated_jsp_classes" />
 
-	<target name="jspc">
+	<target name="jspc" depends="jspc.clean">
 		<!--
 		The general algorithm is as follows :
-		1) setup a clean working area
-		2) unzip the oscar.war
-		3) compile jsp's into java source
-		4) compile java source into class files
+		1) unzip the oscar.war
+		2) compile jsp's into java source
+		3) compile java source into class files
 		-->
 
-		<antcall target="jspc.clean" />
 		<unwar src="tmp/oscar.war" dest="${jspc.expandedWarDir}" />
 
 		<condition property="tomcat.lib" value="${catalina.home}/lib">
@@ -60,10 +58,10 @@
 			<!-- tomcat 5.5 uses jasper2 where as tomcat 6 uses jasper -->
 			<equals arg1="${tomcat.lib.dir}" arg2="${catalina.home}/lib" />
 			<then>
-				<jasper uriroot="${jspcDir}/web" webXmlFragment="${jspcDir}/generated_web.xml" outputDir="${jspc.generatedDir}" validateXml="false" failOnError="false" />
+				<jasper uriroot="${jspc.expandedWarDir}" webXmlFragment="${jspcDir}/generated_web.xml" outputDir="${jspc.generatedDir}" validateXml="false" failOnError="false" />
 			</then>
 			<else>
-				<jasper2 uriroot="${jspcDir}/web" webXmlFragment="${jspcDir}/generated_web.xml" outputDir="${jspc.generatedDir}" validateXml="false" failOnError="false" />
+				<jasper2 uriroot="${jspc.expandedWarDir}" webXmlFragment="${jspcDir}/generated_web.xml" outputDir="${jspc.generatedDir}" validateXml="false" failOnError="false" />
 			</else>
 		</if>
 
