@@ -4,6 +4,7 @@ rm -rf mvn
 mkdir mvn
 cp pom.xml mvn
 cp ant_pom_tasks.xml mvn
+cp maven_jspc.xml mvn
 
 main_dir=mvn/src/main
 test_dir=mvn/src/test
@@ -25,12 +26,15 @@ cp ../web/WEB-INF/struts-bean.tld ${main_dir}/webapp/WEB-INF
 cp ../web/WEB-INF/struts-html.tld ${main_dir}/webapp/WEB-INF
 cp ../web/WEB-INF/struts-logic.tld ${main_dir}/webapp/WEB-INF
 cp ../web/WEB-INF/caisi-tag.tld ${main_dir}/webapp/WEB-INF
+cp ../web/WEB-INF/applicationContext*.xml ${main_dir}/webapp/WEB-INF
 
 # copy java code over
 cp -r ../web/WEB-INF/classes/src/{*.java,com,filters,net,org,oscar} ${main_dir}/java
 
 # copy resources over 
-cp -r ../web/WEB-INF/classes/{*.properties,*.xml,src/*.properties} ${main_dir}/resources
+cp ../web/WEB-INF/classes/{*.properties,*.xml,src/*.properties} ${main_dir}/resources
+cp -r ../web/WEB-INF/classes/src/META-INF ${main_dir}/resources
+
 
 # get rid of cvs files
 zip -rm cvs.zip mvn -i \*/CVS/\*

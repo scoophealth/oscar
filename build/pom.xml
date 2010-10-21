@@ -123,6 +123,11 @@
 			<artifactId>hibernate-entitymanager</artifactId>
 			<version>3.4.0.GA</version>
 		</dependency>
+		<dependency>
+			<groupId>cglib</groupId>
+			<artifactId>cglib-nodep</artifactId>
+			<version>2.2</version>
+		</dependency>
 
 		<!-- cxf -->
 		<dependency>
@@ -596,11 +601,18 @@
 			<version>4aug2000r7-dev</version>
 		</dependency>
 
-		<!-- jtidy -->
+		<!-- tracking data source, can be removed once we fix our database access -->
 		<dependency>
 			<groupId>TrackingBasicDataSource</groupId>
 			<artifactId>TrackingBasicDataSource</artifactId>
 			<version>0.0-SNAPSHOT</version>
+		</dependency>
+
+		<!-- xerces -->
+		<dependency>
+			<groupId>xerces</groupId>
+			<artifactId>xercesImpl</artifactId>
+			<version>2.9.1</version>
 		</dependency>
 
 	</dependencies>
