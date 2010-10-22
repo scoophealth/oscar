@@ -106,7 +106,49 @@ public class CommonLabResultData {
     public ArrayList populateLabResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status) {
         return populateLabResultsData( providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber,status, "I");
     }
-    
+    public ArrayList populateLabResultsDataInboxIndexPage(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status,String scannedDocStatus) {
+        ArrayList labs = new ArrayList();
+        oscar.oscarMDS.data.MDSResultsData mDSData = new oscar.oscarMDS.data.MDSResultsData();
+
+        OscarProperties op = OscarProperties.getInstance();
+
+        String cml = op.getProperty("CML_LABS");
+        String mds = op.getProperty("MDS_LABS");
+        String pathnet = op.getProperty("PATHNET_LABS");
+        String hl7text = op.getProperty("HL7TEXT_LABS");
+
+        if(scannedDocStatus !=null && (scannedDocStatus.equals("N")  || scannedDocStatus.equals("I")  || scannedDocStatus.equals(""))){
+
+            if( cml != null && cml.trim().equals("yes")){
+                ArrayList cmlLabs = mDSData.populateCMLResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
+                labs.addAll(cmlLabs);
+            }
+            if (mds != null && mds.trim().equals("yes")){
+                ArrayList mdsLabs = mDSData.populateMDSResultsData2(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
+                labs.addAll(mdsLabs);
+            }
+            if (pathnet != null && pathnet.trim().equals("yes")){
+                PathnetResultsData pathData = new PathnetResultsData();
+                ArrayList pathLabs = pathData.populatePathnetResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
+                labs.addAll(pathLabs);
+            }
+            if (hl7text != null && hl7text.trim().equals("yes")){
+
+                Hl7textResultsData hl7Data = new Hl7textResultsData();
+                ArrayList hl7Labs = hl7Data.populateHl7ResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
+                labs.addAll(hl7Labs);
+            }
+        }
+
+        if(scannedDocStatus !=null && (scannedDocStatus.equals("O")  || scannedDocStatus.equals("I")  || scannedDocStatus.equals(""))){
+
+            DocumentResultsDao documentResultsDao= (DocumentResultsDao) SpringUtils.getBean("documentResultsDao");
+            ArrayList docs = documentResultsDao.populateDocumentResultsDataOfAllProviders(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
+            labs.addAll(docs);
+        }
+
+        return labs;
+    }
     public ArrayList populateLabResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status,String scannedDocStatus) {
         ArrayList labs = new ArrayList();
         oscar.oscarMDS.data.MDSResultsData mDSData = new oscar.oscarMDS.data.MDSResultsData();
