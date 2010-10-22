@@ -1,0 +1,76 @@
+Oscar Standards
+===============
+
+
+Coding Standards
+----------------
+
+-No System.out or System.err can be used in the committed code.  Use the logger instead (Code_Logging.txt)
+-No printStackTrace can be used in the committed code. Use the logger instead (Code_Logging.txt)
+
+
+
+How to Report a Bug
+-------------------
+
+1.  Login to the oscar bug/feature tracker
+    - currently we use the bug tracker on [sourceforge](https://sourceforge.net/tracker/?func=add&group_id=66701&atid=515432)
+    This doesn't require a sourceforge account but it is incouraged so that you can have follow up when the bugs status changes.
+
+2.  Set the category to the appropriate module.
+
+3.  Add a good summary of the bug so that it can be easily identified in a list.
+
+4.  Add a detailed description of the problem.  Including steps to recreate the problem.  Upload screen shots if you have them.
+    Make sure there is not patient identifiable data visible.
+
+5.  Click "Add Artifact" at the bottom.
+
+
+How to Request a Feature
+------------------------
+
+1.  Login to the oscar bug/feature tracker
+     - currently we use the bug tracker on [sourceforge](https://sourceforge.net/tracker/?func=add&group_id=66701&atid=515435)
+      This doesn't require a sourceforge account but it is incouraged so that you can have follow up when the bugs status changes.
+
+2.  Set the category to appropriate module.
+
+3.  Add a summary of the feature so that can be easily identified in a list.
+
+4.  Add a detailed description of the problem.  Including steps to recreate the problem.
+    Upload screen shots if you have them.  Make sure there is not patient identifiable data visible.
+
+5.  Click "Add Artifact" at the bottom.
+
+
+
+Committing to the repository
+----------------------------
+
+Before committing you need to run the following ant command.
+
+ant clean dist jspc codeCheck
+
+This needs to build without errors.  It checks to make sure all java and jsp files compile and checks the source to validate that the coding standard is followed.
+
+All commits must either have a bug/feature number as the first line of the commit message followed by a description of what has been changed.
+
+eg.
+
+    ID: 2344324
+    Added Button to launch the search window.
+
+*Note: This id will become an active link when viewed on the build server
+
+
+How to submit a bug fix/feature request
+---------------------------------------
+
+A patch can be submitted to the mailing list or one of the developers with commit access.
+
+
+
+
+
+
