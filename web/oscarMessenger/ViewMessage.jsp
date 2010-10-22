@@ -118,10 +118,9 @@ function popup(demographicNo, msgId, providerNo, action) { //open a new popup wi
       
       if ( action == "writeToEncounter") {
           win = window.open("","<bean:message key="provider.appointmentProviderAdminDay.apptProvider"/>");
-          if( win.writeNewNote && win.demographicNo == demographicNo ) {            
-            header = "\n[" + today + " .: " + header + "]\n\n";
+          if( win.pasteToEncounterNote && win.demographicNo == demographicNo ) {
             txt = fmtOscarMsg();
-            win.writeNewNote(header, txt, encType);
+            win.pasteToEncounterNote(txt);
           }
           else {
             win.close();                          
@@ -191,79 +190,11 @@ function fmtOscarMsg() {
 
 }
 
-//paste msg txt into open encounter
-function paste2Encounter(demoNo) {
-    var win = window.open("","apptProvider");
-    var txt;
-    if( win.pasteToEncounterNote && win.demographicNo == demoNo ) {  
-        txt = fmtOscarMsg();
-        win.pasteToEncounterNote(txt);
-    }
-    else {
-        win.close();
-    }
-    return false;
-}
-
-
-//enable paste button for linked demographic if encounter window is open
-function init() {
-    var win = window.open("","apptProvider");
-    var idx = 0;
-    var pasteEnc = "pasteEnc";
-    var demo = "demoId";
-    var btnId;
-    var demoId;
-    var elem;
-    if( win.pasteToEncounterNote ) {
-       demoId = demo + idx;
-       elem = document.getElementById(demoId);
-       while( elem != null ) {            
-            if( win.demographicNo == elem.value ) {
-                btnId = pasteEnc + elem.value;
-                elem = document.getElementById(btnId);
-                elem.disabled = false;
-            }
-            ++idx;
-            demoId = demo + idx;
-            elem = document.getElementById(demoId);
-       }
-    }
-    else {        
-        win.close();
-    }
-}
-
-function managePasteBtns(demoNo) {
-    var demoId = "demoId";
-    var pasteEnc = "pasteEnc";
-    var tmp;
-    var elem;
-    var idx = 0;
-    
-    tmp = demoId + idx;
-    elem = document.getElementById(tmp);
-    while( elem != null ) {
-        if( demoNo != elem.value ) {
-            tmp = pasteEnc + elem.value;
-            elem = document.getElementById(tmp);
-            elem.disabled = true;
-        }
-        
-        ++idx;
-        tmp = demoId + idx;
-        elem = document.getElementById(tmp);
-    }
-    
-    tmp = pasteEnc + demoNo;
-    elem = document.getElementById(tmp);
-    elem.disabled = false;
-}
 </script>
 
 </head>
 
-<body class="BodyStyle" vlink="#0000FF" onload="init();">
+<body class="BodyStyle" vlink="#0000FF">
 <html:form action="/oscarMessenger/HandleMessages">
 
 	<!--  -->
@@ -518,7 +449,7 @@ function managePasteBtns(demoNo) {
 								value="<%=(String)demoMap.get(demoID)%>" /> <a
 								href="javascript:popupViewAttach(700,960,'../demographic/demographiccontrol.jsp?demographic_no=<%=demoID%>&displaymode=edit&dboperation=search_detail')">M</a>
 							<a href="#"
-								onclick="popupViewAttach(700,960,'../oscarEncounter/IncomingEncounter.do?demographicNo=<%=demoID%>&curProviderNo=<%=request.getAttribute("providerNo")%>');managePasteBtns('<%=demoID%>');return false;">E</a>
+								onclick="popupViewAttach(700,960,'../oscarEncounter/IncomingEncounter.do?demographicNo=<%=demoID%>&curProviderNo=<%=request.getAttribute("providerNo")%>');return false;">E</a>
 							<a
 								href="javascript:popupViewAttach(700,960,'../oscarRx/choosePatient.do?providerNo=<%=request.getAttribute("providerNo")%>&demographicNo=<%=demoID%>')">Rx</a>
 
@@ -526,11 +457,7 @@ function managePasteBtns(demoNo) {
 							<input type="button" class="ControlPushButton"
 								name="writeEncounter" value="Write to encounter"
 								onclick="popup( '<%=demoID%>','<%=request.getAttribute("viewMessageId")%>','<%=request.getAttribute("providerNo")%>','writeToEncounter')" />
-							<input type="button" class="ControlPushButton"
-								name="pasteEncounter" value="Paste to encounter"
-								onclick="return paste2Encounter(<%=demoID%>);" disabled
-								id="pasteEnc<%=demoID%>"> <input type="hidden"
-								id="demoId<%=idx%>" value="<%=demoID%>"></td>
+							</td>
 						</tr>
 						<tr>
 							<td bgcolor="#EEEEFF"></td>
