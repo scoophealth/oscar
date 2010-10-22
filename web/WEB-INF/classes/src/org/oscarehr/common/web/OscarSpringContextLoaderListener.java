@@ -20,18 +20,24 @@
  */
 package org.oscarehr.common.web;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.web.context.ContextLoader;
 import org.springframework.web.context.ContextLoaderListener;
 
 public class OscarSpringContextLoaderListener extends ContextLoaderListener {
 
-	private static Log log = LogFactory.getLog(OscarSpringContextLoaderListener.class);
+	private static Logger logger = MiscUtils.getLogger();
 
-	protected ContextLoader createContextLoader() {
-		log.info("Creating OscarContextLoader");
-		return new OscarSpringContextLoader();
+	@Override
+    protected ContextLoader createContextLoader() {
+		try {
+			logger.info("Creating OscarContextLoader");
+			return new OscarSpringContextLoader();
+		} catch (Exception e) {
+			logger.error("Unexpected error.", e);
+			throw (new RuntimeException(e));
+		}
 	}
-	
+
 }

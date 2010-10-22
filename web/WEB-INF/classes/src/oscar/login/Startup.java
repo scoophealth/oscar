@@ -36,8 +36,7 @@ import java.util.Collections;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.oscarehr.util.MiscUtils;
 
 /**
@@ -46,144 +45,141 @@ import org.oscarehr.util.MiscUtils;
  * @author Jay Gallagher
  */
 public class Startup implements ServletContextListener {
-        private static Log log = LogFactory.getLog(Startup.class);
-        private oscar.OscarProperties p = oscar.OscarProperties.getInstance();
-	public Startup() {}
+	private static Logger logger = MiscUtils.getLogger();
+	private oscar.OscarProperties p = oscar.OscarProperties.getInstance();
 
 	public void contextInitialized(ServletContextEvent sc) {
-		MiscUtils.getLogger().debug("contextInit");
-		
-		String contextPath = "";
-		String propFileName = "";
-		
 		try {
-			// Anyone know a better way to do this?
-			String url = sc.getServletContext().getResource("/").getPath();
-                        log.info(url);
-            int idx = url.lastIndexOf('/');
-			url = url.substring(0,idx);
+			logger.debug("contextInit");
 
-			idx = url.lastIndexOf('/');
-			url = url.substring(idx+1);
+			String contextPath = "";
+			String propFileName = "";
 
-			idx = url.lastIndexOf('.');
-			if (idx > 0) url = url.substring(0,idx);
+			try {
+				// Anyone know a better way to do this?
+				String url = sc.getServletContext().getResource("/").getPath();
+				logger.info(url);
+				int idx = url.lastIndexOf('/');
+				url = url.substring(0, idx);
 
-			contextPath = url;
+				idx = url.lastIndexOf('/');
+				url = url.substring(idx + 1);
+
+				idx = url.lastIndexOf('.');
+				if (idx > 0) url = url.substring(0, idx);
+
+				contextPath = url;
+			} catch (Exception e) {
+				logger.error("Error", e);
+			}
+
+			String propName = contextPath + ".properties";
+
+			char sep = System.getProperty("file.separator").toCharArray()[0];
+			propFileName = System.getProperty("user.home") + sep + propName;
+			logger.info("looking up " + propFileName);
+			// oscar.OscarProperties p = oscar.OscarProperties.getInstance();
+			try {
+				// This has been used to look in the users home directory that started tomcat
+				p.loader(propFileName);
+				logger.info("loading properties from " + propFileName);
+			} catch (java.io.FileNotFoundException ex) {
+				logger.info(propFileName + " not found");
+			}
+			if (p.isEmpty()) {
+				/* if the file not found in the user root, look in the WEB-INF directory */
+				try {
+					logger.info("looking up  /WEB-INF/" + propName);
+					InputStream pf = sc.getServletContext().getResource("/WEB-INF/" + propName).openStream();
+					p.loader(pf);
+					logger.info("loading properties from /WEB-INF/" + propName);
+				} catch (java.io.FileNotFoundException e) {
+					logger.error("Configuration file: " + propName + " cannot be found, it should be put either in the User's home or in WEB-INF ");
+					return;
+				} catch (Exception e) {
+					logger.error("Error", e);
+					return;
+				}
+			}
+			try {
+				// Specify who will see new casemanagement screen
+				ArrayList<String> listUsers;
+				String casemgmtscreen = p.getProperty("CASEMANAGEMENT");
+				if (casemgmtscreen != null) {
+					String[] arrUsers = casemgmtscreen.split(",");
+					listUsers = new ArrayList<String>(Arrays.asList(arrUsers));
+					Collections.sort(listUsers);
+				} else listUsers = new ArrayList<String>();
+
+				sc.getServletContext().setAttribute("CaseMgmtUsers", listUsers);
+
+				// Temporary Testing of new ECHART
+				// To be removed
+				String newDocs = p.getProperty("DOCS_NEW_ECHART");
+
+				if (newDocs != null) {
+					String[] arrnewDocs = newDocs.split(",");
+					ArrayList<String> newDocArr = new ArrayList<String>(Arrays.asList(arrnewDocs));
+					Collections.sort(newDocArr);
+					sc.getServletContext().setAttribute("newDocArr", newDocArr);
+				}
+
+				String echartSwitch = p.getProperty("USE_NEW_ECHART");
+				if (echartSwitch != null && echartSwitch.equalsIgnoreCase("yes")) {
+					sc.getServletContext().setAttribute("useNewEchart", true);
+				}
+
+				logger.info("BILLING REGION : " + p.getProperty("billregion", "NOTSET"));
+				logger.info("DB PROPS: Username :" + p.getProperty("db_username", "NOTSET") + " db name: " + p.getProperty("db_name", "NOTSET"));
+				p.setProperty("OSCAR_START_TIME", "" + System.currentTimeMillis());
+
+			} catch (Exception e) {
+				logger.error("*** No Property File ***");
+				logger.error("Property file not found at:");
+				logger.error(propFileName);
+			}
+
+			// CHECK FOR DEFAULT PROPERTIES
+			String baseDocumentDir = p.getProperty("BASE_DOCUMENT_DIR");
+			if (baseDocumentDir != null) {
+				logger.info("Found Base Document Dir: " + baseDocumentDir);
+				checkAndSetProperty(baseDocumentDir, contextPath, "HOME_DIR", "/billing/download/");
+				checkAndSetProperty(baseDocumentDir, contextPath, "DOCUMENT_DIR", "/document/");
+				checkAndSetProperty(baseDocumentDir, contextPath, "eform_image", "/eform/images/");
+
+				checkAndSetProperty(baseDocumentDir, contextPath, "oscarMeasurement_css_upload_path", "/oscarEncounter/oscarMeasurements/styles/");
+				checkAndSetProperty(baseDocumentDir, contextPath, "TMP_DIR", "/export/");
+				checkAndSetProperty(baseDocumentDir, contextPath, "form_record_path", "/form/records/");
+			}
+
+			logger.debug("LAST LINE IN contextInitialized");
 		} catch (Exception e) {
-			MiscUtils.getLogger().error("Error", e);
+			logger.error("Unexpected error.", e);
+			throw (new RuntimeException(e));
 		}
-		
-		String propName = contextPath + ".properties";
-
-		char sep = System.getProperty("file.separator").toCharArray()[0];
-		propFileName = System.getProperty("user.home") + sep + propName;
-        log.info("looking up " + propFileName);
-        // oscar.OscarProperties p = oscar.OscarProperties.getInstance();
-		try {
-			// This has been used to look in the users home directory that started tomcat
-			p.loader(propFileName);
-	        log.info("loading properties from " + propFileName);
-		}
-		catch (java.io.FileNotFoundException ex)
-		{
-	        log.info( propFileName + " not found");
-		}
-		if (p.isEmpty()) {
-			/* if the file not found in the user root, look in the WEB-INF directory */
-			try { 
-		        log.info("looking up  /WEB-INF/" + propName);
-				InputStream pf = sc.getServletContext().getResource("/WEB-INF/" + propName).openStream();
-				p.loader(pf);
-		        log.info("loading properties from /WEB-INF/" + propName);
-			}
-			catch(java.io.FileNotFoundException e)
-			{
-				log.error("Configuration file: " + propName + " cannot be found, it should be put either in the User's home or in WEB-INF ");
-				return;
-			}
-			catch(Exception e)
-			{
-				MiscUtils.getLogger().error("Error", e);
-				return;
-			}
-		}
-		try {
-            //Specify who will see new casemanagement screen
-            ArrayList<String> listUsers;
-            String casemgmtscreen = p.getProperty("CASEMANAGEMENT");
-            if( casemgmtscreen != null ) {
-                String[] arrUsers = casemgmtscreen.split(",");
-                listUsers = new ArrayList<String>(Arrays.asList(arrUsers));
-                Collections.sort(listUsers);                            
-            }
-            else
-                listUsers = new ArrayList<String>();
-            
-            sc.getServletContext().setAttribute("CaseMgmtUsers", listUsers);
-                        
-			// Temporary Testing of new ECHART
-			// To be removed
-			String newDocs = p.getProperty("DOCS_NEW_ECHART");
-			
-			if (newDocs != null) {
-				String[] arrnewDocs = newDocs.split(",");
-				ArrayList newDocArr = new ArrayList(Arrays.asList(arrnewDocs));
-				Collections.sort(newDocArr);
-				sc.getServletContext().setAttribute("newDocArr", newDocArr);
-			}
-
-			String echartSwitch = p.getProperty("USE_NEW_ECHART");
-			if (echartSwitch != null && echartSwitch.equalsIgnoreCase("yes")) {
-				sc.getServletContext().setAttribute("useNewEchart", true);
-			}
-                        
-                        log.info("BILLING REGION : "+p.getProperty("billregion","NOTSET"));
-                        log.info("DB PROPS: Username :"+p.getProperty("db_username","NOTSET")+ " db name: "+p.getProperty("db_name","NOTSET"));
-                        p.setProperty("OSCAR_START_TIME",""+System.currentTimeMillis());
-                       
-		} catch (Exception e) {
-			MiscUtils.getLogger().debug("*** No Property File ***");
-			MiscUtils.getLogger().debug("Property file not found at:");
-			MiscUtils.getLogger().debug(propFileName);
-		}
-
-                // CHECK FOR DEFAULT PROPERTIES
-		String baseDocumentDir = p.getProperty("BASE_DOCUMENT_DIR");
-                if (baseDocumentDir != null) {
-                    log.info("Found Base Document Dir: " + baseDocumentDir);
-                    checkAndSetProperty(baseDocumentDir, contextPath, "HOME_DIR", "/billing/download/");
-                    checkAndSetProperty(baseDocumentDir, contextPath, "DOCUMENT_DIR", "/document/");
-                    checkAndSetProperty(baseDocumentDir, contextPath, "eform_image", "/eform/images/");
-                    // checkAndSetProperty("/OscarDocument", contextPath, "oscarMeasurement_css", "/oscarEncounter/oscarMeasurements/styles/");
-                    checkAndSetProperty(baseDocumentDir, contextPath, "oscarMeasurement_css_upload_path", "/oscarEncounter/oscarMeasurements/styles/");
-                    checkAndSetProperty(baseDocumentDir, contextPath, "TMP_DIR", "/export/" );
-                    checkAndSetProperty(baseDocumentDir, contextPath, "form_record_path", "/form/records/");
-                }
-                
-		MiscUtils.getLogger().debug("LAST LINE IN contextInitialized");      
 	}
 
-        // Checks for default property with name propName. If the property does not exist,
-        // the property is set with value equal to the base directory, plus /, plus the webapp context
-        // path and any further extensions. If the formed directory does not exist in the system,
-        // it is created.
-        private void checkAndSetProperty(String baseDir, String context, String propName, String endDir) {
-            String propertyDir = p.getProperty(propName);
-            if (propertyDir == null) {
-                propertyDir = baseDir + "/" + context + endDir;
-                log.info("Setting property " + propName + " with value " + propertyDir);
-                p.setProperty(propName, propertyDir);
-                // Create directory if it does not exist
-                if (!(new File(propertyDir)).exists()) {
-                    log.info("Directory does not exist:  " + propertyDir);
-                    log.info("Creating...");
-                    boolean success = (new File(propertyDir)).mkdirs();
-                    if (!success) log.info("An error occured when creating " + propertyDir);
-                }
-            }
-        }
+	// Checks for default property with name propName. If the property does not exist,
+	// the property is set with value equal to the base directory, plus /, plus the webapp context
+	// path and any further extensions. If the formed directory does not exist in the system,
+	// it is created.
+	private void checkAndSetProperty(String baseDir, String context, String propName, String endDir) {
+		String propertyDir = p.getProperty(propName);
+		if (propertyDir == null) {
+			propertyDir = baseDir + "/" + context + endDir;
+			logger.info("Setting property " + propName + " with value " + propertyDir);
+			p.setProperty(propName, propertyDir);
+			// Create directory if it does not exist
+			if (!(new File(propertyDir)).exists()) {
+				logger.info("Directory does not exist:  " + propertyDir);
+				logger.info("Creating...");
+				boolean success = (new File(propertyDir)).mkdirs();
+				if (!success) logger.info("An error occured when creating " + propertyDir);
+			}
+		}
+	}
 
-	public void contextDestroyed(ServletContextEvent arg0) {}
+	public void contextDestroyed(ServletContextEvent arg0) {
+	}
 
 }
