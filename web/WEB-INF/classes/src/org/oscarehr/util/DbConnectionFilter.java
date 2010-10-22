@@ -56,7 +56,7 @@ public class DbConnectionFilter implements javax.servlet.Filter {
     }
 
     public void init(FilterConfig filterConfig) throws ServletException {
-        // nothing
+    	logger.info("Starting Filter : "+getClass().getSimpleName());
     }
 
 	public void doFilter(ServletRequest tmpRequest, ServletResponse tmpResponse, FilterChain chain) throws IOException, ServletException {

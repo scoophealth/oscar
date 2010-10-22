@@ -615,6 +615,20 @@
 			<version>2.9.1</version>
 		</dependency>
 
+		<!-- janino -->
+		<dependency>
+			<groupId>janino</groupId>
+			<artifactId>janino</artifactId>
+			<version>2.3.2</version>
+		</dependency>
+
+		<!-- *sigh* we really need to get rid of this -->
+		<dependency>
+			<groupId>pluginframework</groupId>
+			<artifactId>pluginframework</artifactId>
+			<version>0.9.13</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

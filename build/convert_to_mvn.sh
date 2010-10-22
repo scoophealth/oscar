@@ -33,12 +33,15 @@ cp -r ../web/WEB-INF/classes/src/{*.java,com,filters,net,org,oscar} ${main_dir}/
 
 # copy resources over 
 cp ../web/WEB-INF/classes/{*.properties,*.xml,src/*.properties} ${main_dir}/resources
-cp -r ../web/WEB-INF/classes/src/META-INF ${main_dir}/resources
-
+pushd ../web/WEB-INF/classes/src/
+zip -qr /tmp/xml.zip {com,oscar,org,META-INF} -i \*.xml \*.drl
+popd
+pushd ${main_dir}/resources
+unzip -q /tmp/xml.zip
+popd
 
 # get rid of cvs files
-zip -rm cvs.zip mvn -i \*/CVS/\*
-rm cvs.zip
+zip -qrm /tmp/cvs_dirs.zip mvn -i \*/CVS/\*
 
 # make local repo and add libs
 mkdir mvn/local_repo
@@ -115,3 +118,6 @@ mvn install:install-file -DgroupId=net.sourceforge.barbecue -DartifactId=barbecu
 
 # our struts-el is too old to be in maven
 mvn install:install-file -DgroupId=org.apache.struts -DartifactId=struts-el -Dversion=REALLY_OLD -Dpackaging=jar -Dfile=../web/WEB-INF/lib/struts-el.jar -DgeneratePom=true -DcreateChecksum=true -DlocalRepositoryPath=mvn/local_repo -DlocalRepositoryId=local_repo
+
+# plugin-framework... oh boy... we can't get rid of this quick enough
+mvn install:install-file -DgroupId=pluginframework -DartifactId=pluginframework -Dversion=0.9.13 -Dpackaging=jar -Dfile=../web/WEB-INF/lib/pluginframework-0.9.13.jar -DgeneratePom=true -DcreateChecksum=true -DlocalRepositoryPath=mvn/local_repo -DlocalRepositoryId=local_repo

@@ -63,6 +63,8 @@ public class LoginFilter implements Filter {
 	 * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
 	 */
 	public void init(FilterConfig config) throws ServletException {
+		logger.info("Starting Filter : "+getClass().getSimpleName());
+		
 		if (!CRHelper.isCRFrameworkEnabled()) {
 			CRFactory.getConfig().setProperty("cr.disabled", "true");
 		}

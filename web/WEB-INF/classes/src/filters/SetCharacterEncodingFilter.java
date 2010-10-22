@@ -26,6 +26,9 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
+import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
+
 
 /**
  * <p>Example filter that sets the character encoding to be used in parsing the
@@ -53,12 +56,13 @@ import javax.servlet.ServletResponse;
  * user's session.</p>
  *
  * @author Craig McClanahan
- * @version $Revision: 1.1 $ $Date: 2010-05-16 04:43:05 $
+ * @version $Revision: 1.2 $ $Date: 2010-10-22 00:45:37 $
  */
 
 public class SetCharacterEncodingFilter implements Filter {
 
-
+	private static Logger logger=MiscUtils.getLogger();
+	
     // ----------------------------------------------------- Instance Variables
 
 
@@ -130,7 +134,8 @@ public class SetCharacterEncodingFilter implements Filter {
      * @param filterConfig The filter configuration object
      */
     public void init(FilterConfig filterConfig) throws ServletException {
-
+    	logger.info("Starting Filter : "+getClass().getSimpleName());
+    	
 	this.filterConfig = filterConfig;
         this.encoding = filterConfig.getInitParameter("encoding");
         String value = filterConfig.getInitParameter("ignore");
