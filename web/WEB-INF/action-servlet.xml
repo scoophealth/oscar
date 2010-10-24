@@ -156,10 +156,6 @@
 		<property name="populationReportManager" ref="populationReportManager" />
 	</bean>
 
-	<!-- Quatro Shelter Report -->
-	<bean name="/QuatroReport/ReportList" class="com.quatro.web.report.QuatroReportListAction" singleton="false">
-	</bean>
-
 	<!--  Lookup and Table Mainteance -->
 	<bean name="/Lookup/LookupList" class="com.quatro.web.lookup.LookupListAction" singleton="false">
 		<property name="lookupManager" ref="lookupManager" />
