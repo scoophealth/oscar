@@ -9,8 +9,6 @@
 		to help enforce more.
 	-->
 
-	<property name="srcDir" location="../web" />
-
 	<path id="codeCheckClassPath">
 		<fileset dir="../web/WEB-INF/lib">
 			<include name="*.jar" />
@@ -33,7 +31,8 @@
 			<classpath refid="codeCheckClassPath" />
 		</taskdef>
 
-		<GrepStuffAntTask srcDir="../web" dataFile="grep_check.data" />
+		<GrepStuffAntTask srcDir="../web" dataFile="grep_check_web.data" />
+		<GrepStuffAntTask srcDir="../database/mysql" dataFile="grep_check_sql.data" />
 	</target>
 
 </project>

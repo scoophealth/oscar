@@ -58,11 +58,19 @@ public class GrepStuffDirectoryWalker extends DirectoryWalker {
 		checkContains(relativePath, fileContents, "WeakHashMap()");
 		checkContains(relativePath, fileContents, "StringBuffer");
 		checkContains(relativePath, fileContents, "com.Ostermiller");
-				
+
 		// --- hack for ignore case comparison ---
 		checkContains(relativePath, fileContentsLowered, "latin-1");
 		checkContains(relativePath, fileContentsLowered, "ascii");
 		checkContains(relativePath, fileContentsLowered, "8859-1");
+
+		// --- check for database sql problems ---
+		if (relativePath.endsWith(".sql")) {
+			if (fileContentsLowered.contains(" default ")) {
+				violations.put("database 'default'", relativePath);
+			}
+		}
+
 	}
 
 	private void checkContains(String relativePath, String fileContents, String s) {
