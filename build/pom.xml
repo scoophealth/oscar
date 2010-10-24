@@ -251,6 +251,16 @@
 			<artifactId>spring-webmvc-struts</artifactId>
 			<version>2.5.6.SEC02</version>
 		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
+			<version>1.0.5</version>
+		</dependency>
+		<dependency>
+			<groupId>standard</groupId>
+			<artifactId>standard</artifactId>
+			<version>UNKNOWN</version>
+		</dependency>
 
 		<!-- pdf / lowagie -->
 		<dependency>

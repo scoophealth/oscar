@@ -191,8 +191,6 @@
 	    }
     }
 
-    // int rowsAffected = apptMainBean.queryExecuteUpdate(intparam, param, request.getParameter("dboperation"));
-
   int rowsAffected = apptMainBean.queryExecuteUpdate(param, request.getParameter("dboperation")); //add_record
   if (rowsAffected ==1) {
   
