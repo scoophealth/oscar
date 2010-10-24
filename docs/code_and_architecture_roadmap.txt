@@ -1,0 +1,87 @@
+This document is meant to out line the medium to long term objective for the code base and architecture of the oscar project. We will highlight the large issues and go into more detail for only the issues we are currently addressing.
+
+---------
+Objective
+---------
+
+Architecture
+------------
+We would like Oscar to be split into a commonly seen N-tier application. The main tiers would be :
+- data storage and database
+- data access layer
+- presentation layer / html / web services
+
+There may need to be a business logic / manager layer added in the future, that's not certain at this point in time.
+
+Code Structure
+--------------
+We would like to split the oscar code structure into packages and directories according to the layers. Generally speaking there should be very few top level packages under org.oscarehr. As an example, it is reasonable to expect to have only the following top level packages
+	- org.oscarehr.utils
+	- org.oscarehr.dao
+	- org.oscarehr.web
+	- org.oscarehr.ws
+
+Specifically, we should not be splitting the code up by components as it is now, i.e. pmmodule/dao, pmmodule/web, eforms/dao, eforms/web, etc, It should be org.oscarehr.web.eforms, org.oscarehr.web.pmmodule etc. Note also that everything should be under org.oscarehr regardless of who submits the code, i.e. com.quatro.*, ca.caisi.*, and oscar.* should all go away.
+
+Code quality
+------------
+We would like to have uniform code visual structure like bracket placement etc.
+
+We would like to have our code base adhere to at least some quality standard in terms of coding practices etc like proper use of loggers or proper scoping of variables etc.
+
+Working Model
+-------------
+The desired working model is generally a fast paced, dynamic code base. Finding what and where you need to change something should be intuitive based on the structure of the code. Changing the code itself should be simple, this means methods should be kept small so they are easily scoped, comprehended, and smaller methods will increase reusability and refactorability. We need to provide some type of infrastructure to provide confidence in making changes, i.e. automated testing.
+
+The code and the work we do should follow convention rather than relying on documentation. So as an example, if we follow maven directory structure, we don't have to document the directory structure much, or if we follow standard JPA/ORM usage we don't need to document our data access model much.
+
+The code base itself should be self-documenting to the extent possible. As an example method names should be descriptive in what they do as well as variable names. Abbreviations should be avoided unless they are absolutely world standards (like 'ID' is a standard abbreviation which would be acceptible). TableNames, column names, object names, field names, method names, parameter names should all be spelled out with in reason. If the names you have provided does not immediately make it's usage/purpose obvious, you will need to write documentation for that table/column/field/method/parameter. Note that self documenting can also be algorithms, if you break down a process into 4 steps, if you make those 4 steps - 4 methods with names identifying the steps, you don't need to write the routine as it will be as simple as reading a comment about the algorithm.
+
+
+-----------------
+Current work plan
+-----------------
+We are currently far away from our objective. We will only detail a small portion of work as we only have enough resouces to work on a small portion at a time.
+
+At this point in time we can not just fix the current code base. The problem is that new problems are being created at a rate that's too fast. It is like bailling water out of a boat with a hole. The first thing we need is a process in place to prevent the proliferation of these problems, then once we have stopped the growth of the problems, we can reduce the current instances of these problems.
+
+We have discussed where to start tackling the code base and it was decided that we would start from the data access layer, then we can spread towards the database tables and the presentation layer. This decision was made in hopes to reduce effort as it appeared that the model is core to everything and would allow simpler refactoring of the difference sections once we got this right. For now we will focus our efforts into fixing the data access layer, this doesn't mean we don't think there's anything wrong with the other portions of code, it just means we have to choose a place to start.
+
+The following components amd technologies are what is currently being looked at and implemented :
+
+Git & Gerrit
+------------
+Conversion of our repository to use git & gerrit will allow us to have an approval process for code people wish to commit into oscar. This will allow a code review for all code submitted and it will allow us to stop and reject code before it hits the repository (adverse to the current cvs implementation of tracking down the code after it's been commited). Git also allows for better off-line usage and allegedy as much better branch & merging features that make life easier.
+
+
+PMD & CheckStyle & our custom CodeCheck
+---------------------------------------
+These are automated checks against our code base for common problems or undesired items. So as an example PMD and CheckStyle can enforce brackets on if statments and the location of brackets as well. They can also check for usages of System.err.println and throw errors.
+
+The problem with these is that our current code base is such a mess it makes PMD and CheckStyle almost useless and they show thousands of problems. As a stop-gap measure, we have implemented our own CodeCheck routine which looks for these undesired items, and just keeps track of them and only complains if new occurrances of these undesired items appear. This will at least help us keep a cap on the problem and so when we have time, we can slowly take care of the existing problems knowing that the problem is only getting smaller from now on and is not getting any larger.
+
+
+Maven
+-----
+Maven should hopefully help us sort out or library mess. It will also help us reduce our build configuration as we expand our build to do more things like junit testing. This will also give us a standard directory structure which any one else having used maven would be familiar with instead of our current proprietary one. The maven conversion process has been prototyped, we just need to decide on a good time to do the cut-over, the current thinking is that the git & gerrit conversion may make the ideal switch over time.
+
+
+JDBC / SQL / JPA
+----------------
+JPA was agreed upon as the main target technology for the data access layer. There is a separate document outlining details of our JPA usage. The summary here is that Hibernate, SpringTemplates, DBHandler code is all deprecated and should all be converted to JPA object based access. As for raw JDBC, this is generally undesirable but in some rare cases relational access is desired instead of object based access and there maybe some JDBC code left in the end. The need for JDBC is very very small though, it is usually to do with reporting and statistics only. Normal data access should all be through object based access.
+
+
+JUnit & HttpUnit
+----------------
+Junit will allow us to automate testing of java classes. This can be both logical functions like calculations or can be data access functions like dao find method. HttpUnit can be used to test the actual JSP's including work flow like going to the front screen of oscar, logging in, creating a new demographic etc. This is some what dependant on the maven conversion just because maven will make it so much easier for setup the junit framework. As it is no work has been done on this other than identifying this as a desired component.
+
+
+JSP / Struts / JSF / GWT / HTML / AJAX
+--------------------------------------
+We are aware of problems with the presentation layer, we have chosen to defer work in this area as we have enough to deal with already.
+
+
+Database tables & columns & data 
+--------------------------------
+We are aware of many problems including but not limited to naming of tables/columns, timestamps on tables, datatypes of columns etc. Work was deferred on this section pending the JPA conversion. The thinking is that fixing the tables will be much safter and easier once the code base is on JPA.
+
