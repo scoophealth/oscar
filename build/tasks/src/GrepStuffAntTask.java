@@ -22,9 +22,13 @@ import org.apache.tools.ant.Task;
  */
 
 public class GrepStuffAntTask extends Task {
+	private static final String DATA_SEPARATOR="----------------------------------------";
+	
 	private String dataFile;
 	private String srcDir;
-
+	private String showExtensions;
+	private String showAllViolations;
+	
 	public void setDataFile(String dataFile) {
 		this.dataFile = dataFile;
 	}
@@ -32,6 +36,14 @@ public class GrepStuffAntTask extends Task {
 	public void setSrcDir(String srcDir) {
 		this.srcDir = srcDir;
 	}
+	
+	public void setShowExtensions(String showExtensions) {
+    	this.showExtensions = showExtensions;
+    }
+
+	public void setShowAllViolations(String showAllViolations) {
+    	this.showAllViolations = showAllViolations;
+    }
 
 	@Override
 	public void execute() throws BuildException {
@@ -40,14 +52,23 @@ public class GrepStuffAntTask extends Task {
 
 			// these maps are of type key=String/violation value=String/relativePath
 			MultiValueMapSerialisable previousViolations = getPreviousViolations();
-			MultiValueMapSerialisable currentViolations = getCurrentViolations();
+			
+			GrepStuffDirectoryWalker grepStuffDirectoryWalker=getWalkedDirectory();
+			MultiValueMapSerialisable currentViolations = grepStuffDirectoryWalker.getVoliations();
 
 			if (previousViolations == null) writeOut(currentViolations);
 
 			if (hasNewErrors(previousViolations, currentViolations)) {
 				throw (new BuildException("Failed, new violations found."));
 			}
-
+			
+			if ("true".equals(showExtensions)) {
+				log(DATA_SEPARATOR);
+				for (String s : grepStuffDirectoryWalker.getExtensions())
+				{
+					log("extension : "+s);
+				}
+			}
 		} catch (BuildException e) {
 			throw (e);
 		} catch (Exception e) {
@@ -71,7 +92,7 @@ public class GrepStuffAntTask extends Task {
 
 		Set<String> keys = currentViolations.keySet();
 		boolean hasNewErrors = false;
-		log("----------------------------------------");
+		log(DATA_SEPARATOR);
 		
 		for (String key : keys) {
 			Collection<String> previousValues = null;
@@ -88,18 +109,23 @@ public class GrepStuffAntTask extends Task {
 					hasNewErrors = true;
 					log("New violation. Type=" + key + ", file=" + currentTemp);
 				}
+				else if ("true".equals(showAllViolations))
+				{
+					log("Existing violation. Type=" + key + ", file=" + currentTemp);
+				}
 			}
 		}
 
 		return (hasNewErrors);
 	}
 
-	private MultiValueMapSerialisable getCurrentViolations() throws IOException {
+	private GrepStuffDirectoryWalker getWalkedDirectory() throws IOException
+	{
 		GrepStuffDirectoryWalker grepStuffDirectoryWalker = new GrepStuffDirectoryWalker(this);
-		grepStuffDirectoryWalker.walk(srcDir);
-		return (grepStuffDirectoryWalker.getVoliations());
+		grepStuffDirectoryWalker.walk(srcDir);	
+		return(grepStuffDirectoryWalker);
 	}
-
+	
 	private MultiValueMapSerialisable getPreviousViolations() throws IOException, ClassNotFoundException {
 		FileInputStream fis = null;
 		try {

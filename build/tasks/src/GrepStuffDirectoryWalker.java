@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashSet;
 
 import org.apache.commons.io.DirectoryWalker;
 import org.apache.commons.io.FileUtils;
@@ -10,7 +11,8 @@ public class GrepStuffDirectoryWalker extends DirectoryWalker {
 
 	private String rootPath;
 	private Task logger;
-
+	private HashSet<String> extensions=new HashSet<String>();
+	
 	/** key=String/violation value=String/relativePath */
 	private MultiValueMapSerialisable violations = new MultiValueMapSerialisable();
 
@@ -22,8 +24,15 @@ public class GrepStuffDirectoryWalker extends DirectoryWalker {
 	@Override
 	protected void handleFile(File file, int depth, Collection results) throws IOException {
 		String fullPath = file.getCanonicalPath();
-
+		
 		if (isIgnoredFile(fullPath)) return;
+
+		int indexOfLastDot=fullPath.lastIndexOf('.');
+		if (indexOfLastDot>0)
+		{
+			String ext=fullPath.substring(indexOfLastDot);
+			extensions.add(ext);
+		}
 
 		String relativePath = fullPath.substring(rootPath.length());
 		checkViolations(file, relativePath);
@@ -36,6 +45,9 @@ public class GrepStuffDirectoryWalker extends DirectoryWalker {
 		// --- filename checking ---
 		if (relativePath.endsWith(".hbm.xml")) violations.put(".hbm.xml", relativePath);
 		if (relativePath.endsWith(".class")) violations.put(".class", relativePath);
+		if (relativePath.endsWith(".PNG")) violations.put(".PNG", relativePath);
+		if (relativePath.endsWith(".JPG")) violations.put(".JPG", relativePath);
+		if (relativePath.endsWith(".GIF")) violations.put(".GIF", relativePath);
 
 		// --- case sensitive comparison ---
 		checkContains(relativePath, fileContents, "System.err");
@@ -106,4 +118,8 @@ public class GrepStuffDirectoryWalker extends DirectoryWalker {
 	public MultiValueMapSerialisable getVoliations() {
 		return (violations);
 	}
+
+	public HashSet<String> getExtensions() {
+    	return extensions;
+    }
 }
