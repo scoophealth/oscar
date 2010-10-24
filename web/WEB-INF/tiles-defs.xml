@@ -158,11 +158,6 @@
 		<put name="body" value="/PMmodule/Admin/StaffManagerForm.jsp" />
 	</definition>
 
-	<definition name="page.report.quatroreportrunner" path="/PMmodule/layout.jsp">
-		<put name="navigation" value="/PMmodule/navigation.jsp" />
-		<put name="body" value="/PMmodule/reports/QuatroReportRunner.jsp" />
-	</definition>
-
 	<definition name="page.report.activityform" path="/PMmodule/layout.jsp">
 		<put name="navigation" value="/PMmodule/navigation.jsp" />
 		<put name="body" value="/PMmodule/reports/ActivityReportForm.jsp" />
