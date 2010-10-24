@@ -1845,7 +1845,6 @@
 			<forward name="list" path="/PMmodule/lookup/LookupList.jsp" />
 		</action>
 
-
 		<action path="/Lookup/LookupTableList" type="org.springframework.web.struts.DelegatingActionProxy" name="lookupTableListForm" scope="request" validate="false" parameter="method">
 			<forward name="list" path="/PMmodule/lookup/LookupTableList.jsp" />
 		</action>
