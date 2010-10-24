@@ -237,9 +237,9 @@
 			<version>1.2.7</version>
 		</dependency>
 		<dependency>
-			<groupId>struts-menu</groupId>
+			<groupId>org.apache.struts</groupId>
 			<artifactId>struts-menu</artifactId>
-			<version>2.4.3</version>
+			<version>UNKNOWN</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.struts</groupId>

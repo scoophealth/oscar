@@ -21,12 +21,7 @@ mkdir -p ${test_dir}/resources
 # copy web code over
 cp -r ../web/* ${main_dir}/webapp
 rm -rf ${main_dir}/webapp/WEB-INF/*
-cp ../web/WEB-INF/web.xml ${main_dir}/webapp/WEB-INF
-cp ../web/WEB-INF/struts-bean.tld ${main_dir}/webapp/WEB-INF
-cp ../web/WEB-INF/struts-html.tld ${main_dir}/webapp/WEB-INF
-cp ../web/WEB-INF/struts-logic.tld ${main_dir}/webapp/WEB-INF
-cp ../web/WEB-INF/caisi-tag.tld ${main_dir}/webapp/WEB-INF
-cp ../web/WEB-INF/applicationContext*.xml ${main_dir}/webapp/WEB-INF
+cp ../web/WEB-INF/* ${main_dir}/webapp/WEB-INF
 
 # copy java code over
 cp -r ../web/WEB-INF/classes/src/{*.java,com,filters,net,org,oscar} ${main_dir}/java
@@ -118,6 +113,9 @@ mvn install:install-file -DgroupId=net.sourceforge.barbecue -DartifactId=barbecu
 
 # our struts-el is too old to be in maven
 mvn install:install-file -DgroupId=org.apache.struts -DartifactId=struts-el -Dversion=REALLY_OLD -Dpackaging=jar -Dfile=../web/WEB-INF/lib/struts-el.jar -DgeneratePom=true -DcreateChecksum=true -DlocalRepositoryPath=mvn/local_repo -DlocalRepositoryId=local_repo
+
+# our struts-menu is not what it claims to be, it's some unknown or altered version
+mvn install:install-file -DgroupId=org.apache.struts -DartifactId=struts-menu -Dversion=UNKNOWN -Dpackaging=jar -Dfile=../web/WEB-INF/lib/struts-menu-2.4.3.jar -DgeneratePom=true -DcreateChecksum=true -DlocalRepositoryPath=mvn/local_repo -DlocalRepositoryId=local_repo
 
 # plugin-framework... oh boy... we can't get rid of this quick enough
 mvn install:install-file -DgroupId=pluginframework -DartifactId=pluginframework -Dversion=0.9.13 -Dpackaging=jar -Dfile=../web/WEB-INF/lib/pluginframework-0.9.13.jar -DgeneratePom=true -DcreateChecksum=true -DlocalRepositoryPath=mvn/local_repo -DlocalRepositoryId=local_repo
