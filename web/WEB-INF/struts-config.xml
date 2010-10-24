@@ -1841,9 +1841,6 @@
 			<forward name="rlist" path="/PMmodule/Admin/DefaultRoleAccess.do?method=list" redirect="true" />
 		</action>
 		<!-- REPORTS -->
-		<action path="/QuatroReport/SaveReportTemplate" type="com.quatro.web.report.QuatroReportTemplateAction" name="quatroReportSaveTemplateForm" validate="false" scope="request">
-			<forward name="success" path="/PMmodule/reports/QuatroReportTemplateTitle.jsp" />
-		</action>
 		<action path="/Lookup/LookupList" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="lookupListForm" scope="request" validate="false">
 			<forward name="list" path="/PMmodule/lookup/LookupList.jsp" />
 		</action>
