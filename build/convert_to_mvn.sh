@@ -65,11 +65,6 @@ mkdir -p mvn/local_repo
 # cookie revolver is not in maven
 ./mvn_install.sh -DgroupId=net.sf.cookierevolver -DartifactId=cookierevolver -Dversion=0.2.5 -Dfile=../web/WEB-INF/lib/cookierev-0.2.5.jar
 
-# crystal reports... tried to ask SAP if these were free/opensource/redistributable but they wouldn't answer with out me buying support, their loss 
-./mvn_install.sh -DgroupId=com.crystaldecisions -DartifactId=webreporting -Dversion=0.0-SNAPSHOT -Dfile=../web/WEB-INF/lib/webreporting.jar
-./mvn_install.sh -DgroupId=com.crystaldecisions -DartifactId=rascore -Dversion=0.0-SNAPSHOT -Dfile=../web/WEB-INF/lib/rascore.jar
-./mvn_install.sh -DgroupId=com.crystaldecisions -DartifactId=jrcerom -Dversion=0.0-SNAPSHOT -Dfile=../web/WEB-INF/lib/jrcerom.jar
-
 # dm.jar I suspect this shouldn't even be in a jar like this ... but we'll deal with it later, I think it's generated classes
 ./mvn_install.sh -DgroupId=dm -DartifactId=dm -Dversion=0.0-SNAPSHOT -Dfile=../web/WEB-INF/lib/dm.jar
 
