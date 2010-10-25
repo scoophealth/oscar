@@ -58,7 +58,7 @@ public class DocumentResultsDao extends AbstractDao<Document>{
                 }
                 else return false;
             }catch(Exception e){
-                e.printStackTrace();
+                MiscUtils.getLogger().error("Error", e);
                 return false;
             }
         }else return false;
