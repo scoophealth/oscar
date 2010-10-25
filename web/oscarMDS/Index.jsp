@@ -445,11 +445,11 @@ height:0px;
             </tr>
         </table>
     </form>
-        <table id="readerViewTable" style="display:none;table-layout: fixed;border-color: blue;border-width: thin;border-spacing: 0px;background-color: #E0E1FF" width="1080" border="1">
+        <table id="readerViewTable" style="display:none;table-layout: fixed;border-color: blue;border-width: thin;border-spacing: 0px;background-color: #E0E1FF" width="100%" height="100%" border="1">
                                                      <col width="120">
                                                      <col width="950">
           <tr>
-              <td valign="top" style="overflow:hidden;border-color: blue;border-width: thin;background-color: #E0E1FF" >
+              <td valign="top" style="width:20%;height: 100%;overflow:hidden;border-color: blue;border-width: thin;background-color: #E0E1FF" >
                     <%Enumeration en=patientIdNames.keys();
                         if(en.hasMoreElements()){%>
                         <div><a id="totalAll" href="javascript:void(0);" onclick="resetCurrentFirstDocLab();showAllDocLabs();un_bold(this);">All (<span id="totalNumDocs"><%=totalNumDocs%></span>)</a></div><br>
@@ -521,8 +521,8 @@ if(totalDocs>0||totalHL7>0){%><br><%}
 
                     </dt></dl>
              </td>
-             <td style="width:100%;height:600px;background-color: #E0E1FF">
-                 <div id="docViews" style="width:100%;height:600px;overflow:auto;"></div>  
+             <td style="width:80%;height:100%;background-color: #E0E1FF">
+                 <div id="docViews" style="width:100%;height:100%;overflow:auto;"></div>
              </td>
           </tr>
      </table>
