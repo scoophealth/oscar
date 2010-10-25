@@ -2563,6 +2563,7 @@ create table IntegratorConsent
 	
 	excludeMentalHealthData tinyint(1) NOT NULL,
 	clientConsentStatus varchar(32) NOT NULL,
+	signatureStatus varchar(10) not NULL,
 	expiry date,
 
 	digitalSignatureId int, foreign key (digitalSignatureId) references DigitalSignature(id)
@@ -2650,6 +2651,7 @@ create table OcanStaffForm
         hcNumber varchar(100),
         hcVersion varchar(100),
         dateOfBirth varchar(100),
+        reasonForAssessment varchar(100),
 	assessmentStatus varchar(40),
 	index(assessmentStatus),
 	startDate date,
