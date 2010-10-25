@@ -156,7 +156,6 @@ public class EForm extends EFormBase {
 		String name = "name=\"saveEForm\" ";
 		if ((pointer >= 0) && (pointer < endtag)) {
 			pointer2 = nextSpot(html, pointer + 1);
-			html = html.delete(pointer, pointer2);
 			endtag = html.indexOf(">", index + 1);
 			name = "";
 		}
