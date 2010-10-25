@@ -76,6 +76,10 @@ public class ManageConsentAction {
 		consent.setClientConsentStatus(IntegratorConsent.ConsentStatus.valueOf(s));
 	}
 
+	public void setSignatureStatus(String s) {
+		consent.setSignatureStatus(IntegratorConsent.SignatureStatus.valueOf(s));
+	}
+	
 	public void setExpiry(String s) {
 		int months = -1;
 		if (s!= null) 

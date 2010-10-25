@@ -29,6 +29,10 @@ public class IntegratorConsent extends AbstractModel<Integer> {
 		GIVEN, REVOKED, DEFERRED_NOT_APPROPRIATE, DEFERRED_CONSIDER_LATER, REFUSED_TO_SIGN
 	}
 	
+	public enum SignatureStatus {
+		PAPER, ELECTRONIC
+	}
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id = null;
@@ -51,6 +55,10 @@ public class IntegratorConsent extends AbstractModel<Integer> {
 	
 	@Enumerated(EnumType.STRING)
 	private ConsentStatus clientConsentStatus = null;
+	
+	@Enumerated(EnumType.STRING)
+	private SignatureStatus signatureStatus = null;
+	
 	private Date expiry=null;
 	
 	private Integer digitalSignatureId = null;
@@ -124,6 +132,14 @@ public class IntegratorConsent extends AbstractModel<Integer> {
 		this.clientConsentStatus = clientConsentStatus;
 	}
 
+	public SignatureStatus getSignatureStatus() {
+		return signatureStatus;
+	}
+
+	public void setSignatureStatus(SignatureStatus signatureStatus) {
+		this.signatureStatus = signatureStatus;
+	}
+	
 	public Date getExpiry() {
     	return expiry;
     }
