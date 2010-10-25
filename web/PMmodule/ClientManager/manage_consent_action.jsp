@@ -14,6 +14,7 @@
 	manageConsentAction.setSignatureRequestId(request.getParameter(DigitalSignatureUtils.SIGNATURE_REQUEST_ID_KEY));
 	manageConsentAction.setExcludeMentalHealthData(WebUtils.isChecked(request, "excludeMentalHealth"));
 	manageConsentAction.setConsentStatus(request.getParameter("consentStatus"));
+	manageConsentAction.setSignatureStatus(request.getParameter("signatureStatus"));
 	manageConsentAction.setExpiry(request.getParameter("consentExpiry"));
 	
 	@SuppressWarnings("unchecked")

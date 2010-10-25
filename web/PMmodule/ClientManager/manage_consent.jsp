@@ -2,6 +2,7 @@
 <%@page import="org.oscarehr.common.dao.*"%>
 <%@page import="org.oscarehr.common.model.*"%>
 <%@page import="org.oscarehr.common.model.IntegratorConsent.ConsentStatus"%>
+<%@page import="org.oscarehr.common.model.IntegratorConsent.SignatureStatus"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.PMmodule.web.ManageConsent"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.CachedFacility"%>
@@ -24,6 +25,29 @@
 	
 	String signatureRequestId = null;
 %>
+<script type="text/javascript">
+	function submitManageConsentForm() {
+		var val = "";
+		for (var i=0; i < document.manageConsentForm.signatureStatus.length; i++)
+		{
+		   		if (document.manageConsentForm.signatureStatus[i].checked)
+		      	{
+		      		 val = document.manageConsentForm.signatureStatus[i].value;
+		      	}
+		}
+		
+		if(val == "") {
+			alert("In order to save this form, please select whether a paper or electronic signature has been collected.");
+			return false;
+		}		
+		else if(val == "PAPER") {
+			return confirm("Has a paper copy of this consent been signed and retained at this agency?");
+		}
+		else
+			return true;
+	}
+	
+</script>
 
 <h3><%=viewConsentId!=null?"View Consent":"Manage Consent"%></h3>
 <hr />
@@ -33,7 +57,7 @@
 <hr />
 
 
-<form action="manage_consent_action.jsp">
+<form name="manageConsentForm" action="manage_consent_action.jsp" onsubmit="return submitManageConsentForm()">
 	<input type="hidden" name="demographicId" value="<%=currentDemographicId%>" />
 	<input type="hidden" name="signature_status" id="signature_status" value="NOT_FOUND"/>
 	<div style="font-weight:bold">Client consent</div>
@@ -147,7 +171,11 @@
 			%>
 				<br />
 				<input type="hidden" name="<%=DigitalSignatureUtils.SIGNATURE_REQUEST_ID_KEY%>" value="<%=signatureRequestId%>" />
-				Client Signature<br /><img style="border:solid gray 1px; width:500px; height:100px" id="signature" src="<%=imageUrl%>" alt="digital_signature" />
+				
+				Client Signature<br />
+				<table><tr><td rowspan="2">
+				<img style="border:solid gray 1px; width:480px; height:100px" id="signature" src="<%=imageUrl%>" alt="digital_signature" />
+				
 				<script type="text/javascript">
 					var POLL_TIME=2500;
 					var counter=0;
@@ -171,7 +199,17 @@
 						
 					}
 				</script>
+				</td>
+				<td>
+				<input type="radio" name="signatureStatus" <%=manageConsent.disableEdit()?"disabled=\"disabled\"":""%> value="<%=SignatureStatus.PAPER%>" <%=manageConsent.displayAsSelectedSignatureStatus(SignatureStatus.PAPER)?"checked=\"on\"":""%> />
+				A paper copy of this consent has been signed and retained at this agency
 				<br />
+				<input type="radio" name="signatureStatus" <%=manageConsent.disableEdit()?"disabled=\"disabled\"":""%> value="<%=SignatureStatus.ELECTRONIC%>" <%=manageConsent.displayAsSelectedSignatureStatus(SignatureStatus.ELECTRONIC)?"checked=\"on\"":""%> />
+				An electronic signature has been recorded
+				<br />
+				</td>
+				</tr>
+				</table>
 				<input type="button" value="Sign Signature" onclick="setInterval('refreshImage()', POLL_TIME); document.location='<%=request.getContextPath()%>/signature_pad/topaz_signature_pad.jnlp.jsp?<%=DigitalSignatureUtils.SIGNATURE_REQUEST_ID_KEY%>=<%=signatureRequestId%>'" <%=manageConsent.disableEdit()?"disabled=\"disabled\" style=\"display:none\"":""%> />
 				<br />					
 			<%								
