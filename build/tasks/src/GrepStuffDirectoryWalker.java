@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 
 import org.apache.commons.io.DirectoryWalker;
@@ -11,8 +12,8 @@ public class GrepStuffDirectoryWalker extends DirectoryWalker {
 
 	private String rootPath;
 	private Task logger;
-	private HashSet<String> extensions=new HashSet<String>();
-	
+	private HashSet<String> extensions = new HashSet<String>();
+
 	/** key=String/violation value=String/relativePath */
 	private MultiValueMapSerialisable violations = new MultiValueMapSerialisable();
 
@@ -24,13 +25,12 @@ public class GrepStuffDirectoryWalker extends DirectoryWalker {
 	@Override
 	protected void handleFile(File file, int depth, Collection results) throws IOException {
 		String fullPath = file.getCanonicalPath();
-		
+
 		if (isIgnoredFile(fullPath)) return;
 
-		int indexOfLastDot=fullPath.lastIndexOf('.');
-		if (indexOfLastDot>0)
-		{
-			String ext=fullPath.substring(indexOfLastDot);
+		int indexOfLastDot = fullPath.lastIndexOf('.');
+		if (indexOfLastDot > 0) {
+			String ext = fullPath.substring(indexOfLastDot);
 			extensions.add(ext);
 		}
 
@@ -43,51 +43,56 @@ public class GrepStuffDirectoryWalker extends DirectoryWalker {
 		String fileContentsLowered = fileContents.toLowerCase();
 
 		// --- filename checking ---
-		if (relativePath.endsWith(".hbm.xml")) violations.put(".hbm.xml", relativePath);
-		if (relativePath.endsWith(".class")) violations.put(".class", relativePath);
-		if (relativePath.endsWith(".PNG")) violations.put(".PNG", relativePath);
-		if (relativePath.endsWith(".JPG")) violations.put(".JPG", relativePath);
-		if (relativePath.endsWith(".GIF")) violations.put(".GIF", relativePath);
+		if (relativePath.endsWith(".hbm.xml")) violations.put(".hbm.xml, stop using hibernate, use jpa & annotations instead", relativePath);
+		if (relativePath.endsWith(".class")) violations.put(".class, don't commit compiled class files", relativePath);
+		if (relativePath.endsWith(".PNG")) violations.put(".PNG, png should be lower case", relativePath);
+		if (relativePath.endsWith(".JPG")) violations.put(".JPG, jpg should be lower case", relativePath);
+		if (relativePath.endsWith(".GIF")) violations.put(".GIF, gif should be lower case", relativePath);
 
 		// --- case sensitive comparison ---
-		checkContains(relativePath, fileContents, "System.err");
-		checkContains(relativePath, fileContents, "System.out");
-		checkContains(relativePath, fileContents, "printStackTrace");
-		checkContains(relativePath, fileContents, "DBHandler.");
-		checkContains(relativePath, fileContents, "getConnection(");
-		checkContains(relativePath, fileContents, "OscarSuperManager");
-		checkContains(relativePath, fileContents, "org.apache.commons.logging.Log");
-		checkContains(relativePath, fileContents, "com.sun.");
-		checkContains(relativePath, fileContents, "LogManager.getLogger(");
-		checkContains(relativePath, fileContents, "HibernateDaoSupport");
-		checkContains(relativePath, fileContents, "Hashtable");
-		checkContains(relativePath, fileContents, "Vector");
-		checkContains(relativePath, fileContents, "ArrayList()");
-		checkContains(relativePath, fileContents, "HashSet()");
-		checkContains(relativePath, fileContents, "HashMap()");
-		checkContains(relativePath, fileContents, "TreeSet()");
-		checkContains(relativePath, fileContents, "TreeMap()");
-		checkContains(relativePath, fileContents, "WeakHashMap()");
-		checkContains(relativePath, fileContents, "StringBuffer");
-		checkContains(relativePath, fileContents, "com.Ostermiller");
+
+		// if it's not the oscar main code base ignore these items
+		if (!file.getCanonicalPath().contains("/database/mysql/")) {
+			checkContains(relativePath, fileContents, "System.err", "use log4j logger");
+			checkContains(relativePath, fileContents, "System.out", "use log4j logger");
+			checkContains(relativePath, fileContents, "printStackTrace", "use log4j logger");
+			checkContains(relativePath, fileContents, "getConnection(", "use jpa");
+		}
+
+		checkContains(relativePath, fileContents, "DBHandler.", "use jpa");
+		checkContains(relativePath, fileContents, "OscarSuperManager", "use jpa");
+		checkContains(relativePath, fileContents, "org.apache.commons.logging.Log", "use log4j logger");
+		checkContains(relativePath, fileContents, "com.sun.", "classes are not always available, usually org.apache will have standard libraries to replace these");
+		checkContains(relativePath, fileContents, "LogManager.getLogger(", "use MiscUtils.getLogger() instead");
+		checkContains(relativePath, fileContents, "HibernateDaoSupport", "use jpa");
+		checkContains(relativePath, fileContents, "Hashtable", "excessively rare that this is required, usually HashMap is the better choice");
+		checkContains(relativePath, fileContents, "Vector", "excessively rare that this is required, usually ArrayList is the better choice");
+		checkContains(relativePath, fileContents, "ArrayList()", "use generics");
+		checkContains(relativePath, fileContents, "HashSet()", "use generics");
+		checkContains(relativePath, fileContents, "HashMap()", "use generics");
+		checkContains(relativePath, fileContents, "TreeSet()", "use generics");
+		checkContains(relativePath, fileContents, "TreeMap()", "use generics");
+		checkContains(relativePath, fileContents, "WeakHashMap()", "use generics");
+		checkContains(relativePath, fileContents, "StringBuffer", "very very rare that this is required, usually StringBuilder is the better choice");
+		checkContains(relativePath, fileContents, "com.Ostermiller", "use org.apache libraries instead, duplicated libs and apache is... more standard (if that's a word)");
 
 		// --- hack for ignore case comparison ---
-		checkContains(relativePath, fileContentsLowered, "latin-1");
-		checkContains(relativePath, fileContentsLowered, "ascii");
-		checkContains(relativePath, fileContentsLowered, "8859-1");
+		checkContains(relativePath, fileContentsLowered, "latin-1", "use utf-8");
+		checkContains(relativePath, fileContentsLowered, "ascii", "use utf-8");
+		checkContains(relativePath, fileContentsLowered, "8859-1", "use utf-8");
 
 		// --- check for database sql problems ---
 		if (relativePath.endsWith(".sql")) {
 			if (fileContentsLowered.contains(" default ")) {
-				violations.put("database 'default'", relativePath);
+				violations.put("database 'default' should not be used, set the default in java in the jpa objects", relativePath);
 			}
 		}
 
 	}
 
-	private void checkContains(String relativePath, String fileContents, String s) {
-		if (fileContents.contains(s)) {
-			violations.put(s, relativePath);
+	private void checkContains(String relativePath, String fileContents, String searchString, String violationReason) {
+		if (fileContents.contains(searchString)) {
+			violations.put(searchString + ", " + violationReason, relativePath);
 		}
 	}
 
@@ -120,6 +125,6 @@ public class GrepStuffDirectoryWalker extends DirectoryWalker {
 	}
 
 	public HashSet<String> getExtensions() {
-    	return extensions;
-    }
+		return extensions;
+	}
 }
