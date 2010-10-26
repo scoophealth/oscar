@@ -533,7 +533,12 @@ request.setAttribute("pageMethod",pageMethod);
                             <td>
                                 
                                 <html-el:link action="/phr/PhrMessage?method=read&noreply=yes&comingfrom=viewSentMessages&id=${sMessage.id}"  >
-                                   <c:out value="${sMessage.docSubject}"/>
+                                   <c:if test='${not empty sMessage.docSubject}'>
+                                    <c:out value="${sMessage.docSubject}"/>
+                                    </c:if>
+                                    <c:if test='${empty sMessage.docSubject}'>
+                                    No Subject
+                                    </c:if>
                                 </html-el:link>
                                 
                             </td>
@@ -567,7 +572,12 @@ request.setAttribute("pageMethod",pageMethod);
                             <td>
                                 
                                 <html-el:link action="/phr/PhrMessage?&method=read&comingfrom=viewArchivedMessages&id=${archivedMessage.id}"  >
-                                   <c:out value="${archivedMessage.docSubject}"/>
+                                   <c:if test='${not empty archivedMessage.docSubject}'>
+                                    <c:out value="${archivedMessage.docSubject}"/>
+                                   </c:if>
+                                   <c:if test='${empty archivedMessage.docSubject}'>
+                                    No Subject
+                                   </c:if>
                                 </html-el:link>
                                 
                             </td>
@@ -610,7 +620,12 @@ request.setAttribute("pageMethod",pageMethod);
                             <td bgcolor="#EEEEFF">
                                 
                                 <html-el:link action="/phr/PhrMessage?&method=read&comingfrom=viewMessages&id=${iMessage.id}"  >
-                                   <c:out value="${iMessage.docSubject}"/>
+                                   <c:if test='${not empty iMessage.docSubject}'>
+                                    <c:out value="${iMessage.docSubject}"/>
+                                   </c:if>
+                                   <c:if test='${empty iMessage.docSubject}'>
+                                    No Subject
+                                   </c:if>
                                 </html-el:link>
                                 
                             </td>
