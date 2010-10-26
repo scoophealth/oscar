@@ -69,7 +69,7 @@ function upCaseCtrl(ctrl) {
 	</tr>
 </table>
 
-<%@ include file="zdemographicfulltitlesearch.jsp"%>
+<%@ include file="../demographic/zdemographicfulltitlesearch.jsp"%>
 
 <%
 	GregorianCalendar now=new GregorianCalendar();
@@ -259,7 +259,7 @@ NO : <%=apptMainBean.getString(rs,"demographic_no")%></font></b></div>
     }
   }
 %>
-<%@ include file="footer.jsp"%>
+<%@ include file="../demographic/footer.jsp"%>
 
 </body>
 </html>
