@@ -106,13 +106,11 @@ function BackToOscar()
 								<tr>
 									<td><bean:message
 										key="oscarEncounter.search.demographicSearch.formMale" /></td>
-									<td><html:radio property="sex"
-										value="<bean:message key="oscarEncounter.search.demographicSearch.formMale"/>" />
+									<td><html:radio property="sex" value="M" />
 									</td>
 									<td><bean:message
 										key="oscarEncounter.search.demographicSearch.formFemale" /></td>
-									<td><html:radio property="sex"
-										value="<bean:message key="oscarEncounter.search.demographicSearch.formFemale"/>" />
+                                                                        <td><html:radio property="sex" value="F" />
 									</td>
 								</tr>
 							</table>
