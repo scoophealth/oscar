@@ -295,13 +295,24 @@
 	<target name="findbugs" depends="init">
 		<path id="findbugs-jar">
 			<pathelement path="${findbugs_home}/lib/findbugs-ant.jar" />
-			<fileset dir="../web/WEB-INF/lib">
+			<fileset dir="${webapp}/WEB-INF/lib">
 				<include name="*.jar" />
 			</fileset>
 		</path>
 
+                <path id="findbugs.compile.classpath">
+                  <fileset dir="../web/WEB-INF/lib">
+			<include name="*.jar" />
+                  </fileset>
+		  <fileset dir="${tomcat.lib.dir}">
+			<include name="*.jar" />
+		  </fileset>
+                </path>
+                <pathconvert property="findbugs.compile.classpath" refid="findbugs.compile.classpath" />
+
 		<taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask" classpathref="findbugs-jar" />
 		<findbugs home="${findbugs_home}" output="xml" outputFile="${report}/oscar-fb.xml" jvmargs="-Xmx1024m" timeout="9000000">
+                        <auxClasspath path="${findbugs.compile.classpath}"/>
 			<sourcePath path="${src_web}" />
 			<class location="${classes_web}" />
 		</findbugs>
