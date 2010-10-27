@@ -159,13 +159,12 @@ height:0px;
                               }
                             }
 
-
 </script>
 </head>
 
-<body oldclass="BodyStyle" vlink="#0000FF" onload="setTotalRows();" >
+<body oldclass="BodyStyle" vlink="#0000FF" onload="setTotalRows();checkBox();" >
     <form name="reassignForm" method="post" action="ReportReassign.do" id="lab_form">
-        <table  oldclass="MainTable" id="scrollNumber1" border="0" name="encounterTable" cellspacing="0" cellpadding="3" width="100%">
+        <table  oldclass="MainTable" id="scrollNumber1" border="0" name="encounterTable" cellspacing="0" cellpadding="3" height="100%" width="100%">
             <tr oldclass="MainTableTopRow">
                 <td class="MainTableTopRowRightColumn" colspan="10" align="left">
                  <table width="100%">
@@ -217,11 +216,12 @@ height:0px;
                                         <input id="topFileBtn" type="button" class="smallButton" value="File" onclick="submitFile()"/>
                                     <% }
                                 }%>
-                                
-                                <input type="checkbox" name="documentCB" id="documentCB" onclick="syncCB(this);checkBox();" ><span name="cbText" class="categoryCB"><bean:message key="global.Document"/></span>
-                                <input type="checkbox" onclick="syncCB(this);checkBox();" id="hl7CB" name="hl7CB"><span name="cbText" class="categoryCB"><bean:message key="global.hl7"/></span>
+                              <input type="checkbox" name="documentCB" id="documentCB" checked onclick="syncCB(this);checkBox();" ><span name="cbText" class="categoryCB"><bean:message key="inboxmanager.documents"/></span>
+                                <input type="checkbox" onclick="syncCB(this);checkBox();" checked id="hl7CB" name="hl7CB"><span name="cbText" class="categoryCB"><bean:message key="global.hl7"/></span>
                                 <input type="checkbox" onclick="syncCB(this);checkBox();" id="normalCB"  name="normalCB"><span name="cbText" class="categoryCB"><bean:message key="global.normal"/></span>
                                 <input type="checkbox" id="abnormalCB" onclick="syncCB(this);checkBox();" name="abnormalCB"><span name="cbText" class="categoryCB"><bean:message key="global.abnormal"/></span>
+                                <input type="checkbox" name="notAssignedDocCB" id="notAssignedDocCB" onclick="syncCB(this);checkBox()"><span name="cbText" class="categoryCB"><bean:message key="inboxmanager.notAssignedDocs"/></span>
+
                                 <input type="hidden" id="currentNumberOfPages" value="0"/>
                             </td>
                             
@@ -239,12 +239,12 @@ height:0px;
             </tr>
             <tr>
                 <td style="margin:0px;padding:0px;">
-                    <table id="summaryView" width="100%" style="margin:0px;padding:0px;" cellpadding="0" cellspacing="0">
+                    <table id="summaryView" width="100%" height="100%" style="margin:0px;padding:0px;" cellpadding="0" cellspacing="0">
                         <tr>
                             <th align="left" valign="bottom" class="cell" nowrap>
                                 <input type="checkbox" onclick="checkAll('lab_form');" name="checkA"/>
                                 <bean:message key="oscarMDS.index.msgHealthNumber"/>
-                            </th>
+                            </th>                            
                             <th align="left" valign="bottom" class="cell">
                                 <bean:message key="oscarMDS.index.msgPatientName"/>
                             </th>
@@ -273,8 +273,10 @@ height:0px;
                                 Ack #
                             </th>
                         </tr>
-
+                        
                                                 <%
+                                boolean assignedDoc=false;
+                                boolean notAssignedDoc=false;
                             List doclabid_seq=new ArrayList();
                             int number_of_rows_per_page=20;
                             int totalNoPages=labdocs.size()/number_of_rows_per_page;
@@ -288,12 +290,25 @@ height:0px;
 
                                 String segmentID        =  result.segmentID;
                                 String status           =  result.acknowledgedStatus;
-
                                 String bgcolor = i % 2 == 0 ? "#e0e0ff" : "#ccccff" ;
                                 if (!result.isMatchedToPatient()){
                                    bgcolor = "#FFCC00";
                                 }
 
+                                if(result.isDocument()){
+                                    if(result.isMatchedToPatient()){
+                                        assignedDoc=true;
+                                        notAssignedDoc=false;
+                                    }
+                                    else{
+                                        notAssignedDoc=true;
+                                        assignedDoc=false;
+                                    }
+                                }else{
+                                    assignedDoc=false;
+                                    notAssignedDoc=false;
+                                }
+                                
                                 String discipline=result.getDiscipline();
                                 if(discipline==null || discipline.equalsIgnoreCase("null"))
                                     discipline="";
@@ -301,7 +316,7 @@ height:0px;
                                 doclabid_seq.add(segmentID);
                                 %>
                         
-                                <tr id="row<%=i%>" <%if((number_of_rows_per_page-1)<i){%>style="display:none;"<%}%> bgcolor="<%=bgcolor%>" <%if(result.isDocument()){%> name="scannedDoc" <%} else{%> name="HL7lab" <%}%> class="<%= (result.isAbnormal() ? "AbnormalRes" : "NormalRes" ) %>">
+                                <tr id="row<%=i%>" style="display:none;" bgcolor="<%=bgcolor%>" <%if(assignedDoc){%> name="assignedDoc" <%} else if(notAssignedDoc){%> name="notAssignedDoc" <%} else{%> name="HL7lab" <%}%> class="<%= (result.isAbnormal() ? "AbnormalRes" : "NormalRes" ) %>">
                                 <td nowrap>
                                     <input type="hidden" id="totalNumberRow" value="<%=total_row_index+1%>">
                                     <input type="checkbox" name="flaggedLabs" value="<%=segmentID%>">
@@ -379,6 +394,7 @@ height:0px;
                                 </td>
                             </tr>
                          <% } %>
+                         <tr id="blankrow" style="display:none" ><td height="100%" colspan="10">&nbsp;</td></tr>
                             <tr class="MainTableBottomRow">
                                 <td class="MainTableBottomRowRightColumn" bgcolor="#003399" colspan="10" align="left">
                                     <table width="100%">
@@ -398,10 +414,12 @@ height:0px;
                                                         <input type="button" class="smallButton" value="File" onclick="submitFile()"/>
                                                     <% }
                                                 } %>                                                
-                                                    <input type="checkbox" name="documentCB2" id="documentCB2" onclick="syncCB(this);checkBox();"><span name="cbText" class="categoryCB"><bean:message key="global.Document"/></span>
-                                                    <input type="checkbox" onclick="syncCB(this);checkBox();" id="hl7CB2" name="hl7CB2"><span name="cbText" class="categoryCB"><bean:message key="global.hl7"/></span>
+                                                <input type="checkbox" name="documentCB2" id="documentCB2" checked onclick="syncCB(this);checkBox();"><span name="cbText" class="categoryCB"><bean:message key="inboxmanager.documents"/></span>
+                                                <input type="checkbox" onclick="syncCB(this);checkBox();" checked id="hl7CB2" name="hl7CB2"><span name="cbText" class="categoryCB"><bean:message key="global.hl7"/></span>
                                                     <input type="checkbox" onclick="syncCB(this);checkBox();" id="normalCB2"  name="normalCB2"><span name="cbText" class="categoryCB"><bean:message key="global.normal"/></span>
                                                     <input type="checkbox" id="abnormalCB2" onclick="syncCB(this);checkBox();" name="abnormalCB2"><span name="cbText" class="categoryCB"><bean:message key="global.abnormal"/></span>
+                                                    <input type="checkbox" name="notAssignedDocCB2" id="notAssignedDocCB2" onclick="syncCB(this);checkBox()"><span name="cbText" class="categoryCB"><bean:message key="inboxmanager.notAssignedDocs"/></span>
+
                                             </td>
                                         <script type="text/javascript">
                                                 var doclabid_seq='<%=doclabid_seq%>';
@@ -448,6 +466,62 @@ height:0px;
         <table id="readerViewTable" style="display:none;table-layout: fixed;border-color: blue;border-width: thin;border-spacing: 0px;background-color: #E0E1FF" width="100%" height="100%" border="1">
                                                      <col width="120">
                                                      <col width="950">
+                <tr oldclass="MainTableTopRow">
+                <td class="MainTableTopRowRightColumn" colspan="10" align="left">
+                 <table width="100%">
+                    <tr>
+                        <td align="center" colspan="2" class="Nav">
+                                <% if (demographicNo == null) { %>
+                                    <span class="white">
+                                     <% if (ackStatus.equals("N")) {%>
+                                           <bean:message key="oscarMDS.index.msgNewLabReportsFor"/>
+                                     <%} else if (ackStatus.equals("A")) {%>
+                                           <bean:message key="oscarMDS.index.msgAcknowledgedLabReportsFor"/>
+                                     <%} else {%>
+                                           <bean:message key="oscarMDS.index.msgAllLabReportsFor"/>
+                                     <%}%>&nbsp;
+
+                                     <% if (searchProviderNo.equals("")) {%>
+                                            <bean:message key="oscarMDS.index.msgAllPhysicians"/>
+                                     <%} else if (searchProviderNo.equals("0")) {%>
+                                            <bean:message key="oscarMDS.index.msgUnclaimed"/>
+                                     <%} else {%>
+                                            <%=ProviderData.getProviderName(searchProviderNo)%>
+                                     <%}%>
+                                        &nbsp;&nbsp;&nbsp;
+                                        Page : <a id="currentPageNum"><%=pageNum%></a>
+                                     </span>
+                                <% } %>
+                        </td>
+                        </tr>
+                        <tr>
+                            <td align="left" valign="center" >
+                                <input type="hidden" name="providerNo" value="<%= providerNo %>">
+                                <input type="hidden" name="searchProviderNo" value="<%= searchProviderNo %>">
+                                <%= (request.getParameter("lname") == null ? "" : "<input type=\"hidden\" name=\"lname\" value=\""+request.getParameter("lname")+"\">") %>
+                                <%= (request.getParameter("fname") == null ? "" : "<input type=\"hidden\" name=\"fname\" value=\""+request.getParameter("fname")+"\">") %>
+                                <%= (request.getParameter("hnum") == null ? "" : "<input type=\"hidden\" name=\"hnum\" value=\""+request.getParameter("hnum")+"\">") %>
+                                <input type="hidden" name="status" value="<%= ackStatus %>">
+                                <input type="hidden" name="selectedProviders">
+                                <% if (demographicNo == null) { %>
+                                    <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnSearch"/>" onClick="window.location='Search.jsp?providerNo=<%= providerNo %>'">
+                                <% } %>
+                                <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnClose"/>" onClick="wrapUp()">
+
+                            </td>
+
+                            <td align="right" valign="center" width="30%">
+                                <a href="javascript:popupStart(300,400,'../oscarEncounter/Help.jsp')" style="color: #FFFFFF;"><bean:message key="global.help"/></a>
+                                | <a href="javascript:popupStart(300,400,'../oscarEncounter/About.jsp')" style="color: #FFFFFF;" ><bean:message key="global.about"/></a>
+                                | <a href="javascript:popupStart(800,1000,'../lab/CA/ALL/testUploader.jsp')" style="color: #FFFFFF; "><bean:message key="admin.admin.hl7LabUpload"/></a>
+                                | <a href="javascript:popupStart(600,500,'../dms/html5AddDocuments.jsp')" style="color: #FFFFFF; "><bean:message key="inboxmanager.document.uploadDoc"/></a>
+                                | <a href="javascript:void(0);" onclick="changeView();" style="color: #FFFFFF;"><bean:message key="inboxmanager.document.changeView"/></a>
+
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
           <tr>
               <td valign="top" style="width:20%;height: 100%;overflow:hidden;border-color: blue;border-width: thin;background-color: #E0E1FF" >
                     <%Enumeration en=patientIdNames.keys();
