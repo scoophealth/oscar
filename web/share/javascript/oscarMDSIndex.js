@@ -297,18 +297,20 @@ function showTopBtn(){
 }
 }
   function changeView(){
-                                if($('summaryView').getStyle('display')=='none'){
-                                     $('summaryView').show();
+                                if($('scrollNumber1').getStyle('display')=='none'){
+                                     $('scrollNumber1').show();
                                      $('readerViewTable').hide();
 
                                      $('documentCB').show();
                                      $('hl7CB').show();
                                      $('normalCB').show();
                                      $('abnormalCB').show();
+                                     $('notAssignedDocCB').show();
                                      $('documentCB2').show();
                                      $('hl7CB2').show();
                                      $('normalCB2').show();
                                      $('abnormalCB2').show();
+                                     $('notAssignedDocCB2').show();
                                      var eles=document.getElementsByName('cbText');
                                      for(var i=0;i<eles.length;i++){
                                          var ele=eles[i];
@@ -317,17 +319,19 @@ function showTopBtn(){
                                       showTopBtn();
                                 }
                                 else{
-                                     $('summaryView').hide();
+                                     $('scrollNumber1').hide();
                                      $('readerViewTable').show();
 
                                      $('documentCB').hide();
                                      $('hl7CB').hide();
                                      $('normalCB').hide();
                                      $('abnormalCB').hide();
+                                     $('notAssignedDocCB').hide();
                                      $('documentCB2').hide();
                                      $('hl7CB2').hide();
                                      $('normalCB2').hide();
                                      $('abnormalCB2').hide();
+                                     $('notAssignedDocCB2').hide();
                                      var eles=document.getElementsByName('cbText');
                                      for(var i=0;i<eles.length;i++){
                                          var ele=eles[i];
@@ -531,7 +535,7 @@ function wrapUp() {
                                var eles;
                                var numberPerPage=20;
                                if(type=='D'){
-                                   eles=document.getElementsByName('scannedDoc');
+                                   eles=document.getElementsByName('assignedDoc');
                                    var length=eles.length;
                                    var startindex=(parseInt(page)-1)*numberPerPage;
                                    var endindex=startindex+numberPerPage-1;
@@ -583,13 +587,14 @@ function wrapUp() {
                                        ele.setStyle({display:'none'});
                                    }
                                    //hide all labs
-                                   eles=document.getElementsByName('scannedDoc');
+                                   eles=document.getElementsByName('assignedDoc');
                                    for(i=0;i<eles.length;i++){
                                         var ele=eles[i];
                                         ele.setStyle({display:'none'});
                                    }
                                }else if (type=='N'){
-                                    var eles1=document.getElementsByClassName('NormalRes');
+                                    var eles1=filterAb_normal('normal');
+
                                     var length=eles.length;
                                     var startindex=(parseInt(page)-1)*numberPerPage;
                                     var endindex=startindex+numberPerPage-1;
@@ -612,14 +617,14 @@ function wrapUp() {
                                        ele.setStyle({display:'none'});
                                    }
                                    //hide all abnormals
-                                    var eles2=document.getElementsByClassName('AbnormalRes');
+                                    var eles2=filterAb_normal('abnormal');
                                     i=0;
                                     for(i=0;i<eles2.length;i++){
                                         var ele=eles2[i];
                                         ele.setStyle({display:'none'});
                                     }
                                }else if (type=='AB'){
-                                    var eles1=document.getElementsByClassName('AbnormalRes');
+                                    var eles1=filterAb_normal('abnormal');
                                     var length=eles.length;
                                     var startindex=(parseInt(page)-1)*numberPerPage;
                                     var endindex=startindex+numberPerPage-1;
@@ -641,16 +646,45 @@ function wrapUp() {
                                        ele.setStyle({display:'none'});
                                    }
                                    //hide all normals
-                                    var eles2=document.getElementsByClassName('NormalRes');
+                                    var eles2=filterAb_normal('normal');
                                     for(var i=0;i<eles2.length;i++){
                                         var ele=eles2[i];
                                         ele.setStyle({display:'none'});
                                     }
                                }
                            }
+                function filterAb_normal(type){//filter normal and abnormal elements from not assigned
+                    if(type=='normal'){
+                        var n=document.getElementsByClassName('NormalRes');
+                        //remove if it's not assigned
+                        var r=new Array();
+                        for(var i=0;i<n.length;i++){
+                            var ele=n[i];
+                            if(ele.getAttribute('name')=='notAssignedDoc');
+                            else{
+                                r.push(ele);
+                            }
+                        }
+                        return r;
+                    }else if(type=='abnormal'){
+                        var abn=document.getElementsByClassName('AbnormalRes');
+                        //remove if it's not assigned
+                        var r=new Array();
+                        for(var i=0;i<abn.length;i++){
+                            var ele=abn[i];
+                            if(ele.getAttribute('name')=='notAssignedDoc');
+                            else{
+                                r.push(ele);
+                            }
+                        }
+                        return r;
+                    }
+                    return new Array();
+                }
                 function setTotalRows(){
-                               var ds=document.getElementsByName('scannedDoc');
+                               var ds=document.getElementsByName('assignedDoc');
                                var ls=document.getElementsByName('HL7lab');
+                               var nd=document.getElementsByName('notAssignedDoc');
                                for(var i=0;i<ds.length;i++){
                                    var ele=ds[i];
                                    total_rows.push(ele.id);
@@ -659,18 +693,24 @@ function wrapUp() {
                                    var ele=ls[i];
                                    total_rows.push(ele.id);
                                }
+                               for(var i=0;i<nd.length;i++){
+                                   var ele=nd[i];
+                                   total_rows.push(ele.id);
+                               }
                                total_rows=sortRowId(uniqueArray(total_rows));
                                current_category=new Array();
-                                                        current_category[0]=document.getElementsByName('scannedDoc');
+                                                        current_category[0]=document.getElementsByName('assignedDoc');
                                                         current_category[1]=document.getElementsByName('HL7lab');
-                                                        current_category[2]=document.getElementsByClassName('NormalRes');
-                                                        current_category[3]=document.getElementsByClassName('AbnormalRes');
+                                                        current_category[2]=filterAb_normal('normal');
+                                                        current_category[3]=filterAb_normal('abnormal');
+                                                        current_category[4]=document.getElementsByName('notAssignedDoc');
+                                                        
                            }
                            function checkBox(){
                                                     //oscarLog("in checkBox");
                                                     var checkedArray=new Array();
                                                     if($('documentCB').checked==1){
-                                                        checkedArray.push('document');
+                                                        checkedArray.push('assignedDoc');
                                                     }
                                                     if($('hl7CB').checked==1){
                                                         checkedArray.push('hl7');
@@ -681,7 +721,11 @@ function wrapUp() {
                                                     if($('abnormalCB').checked==1){
                                                         checkedArray.push('abnormal');
                                                     }
-                                         if(checkedArray.length==0||checkedArray.length==4){
+                                                    if($('notAssignedDocCB').checked==1){
+                                                        checkedArray.push('notAssignedDoc');
+                                                    }
+                                                    //console.log('length='+checkedArray.length);
+                                         if(checkedArray.length==5){//show all
                                                         var endindex= number_of_row_per_page-1;
                                                         if(endindex>=total_rows.length)
                                                             endindex=total_rows.length-1;
@@ -702,10 +746,16 @@ function wrapUp() {
                                                         current_numberofpages=Math.ceil(total_rows.length/number_of_row_per_page);
                                                         initializeNavigation();
                                                         current_category=new Array();
-                                                        current_category[0]=document.getElementsByName('scannedDoc');
+                                                        current_category[0]=document.getElementsByName('assignedDoc');
                                                         current_category[1]=document.getElementsByName('HL7lab');
-                                                        current_category[2]=document.getElementsByClassName('NormalRes');
-                                                        current_category[3]=document.getElementsByClassName('AbnormalRes');
+                                                        current_category[2]=filterAb_normal('normal');
+                                                        current_category[3]=filterAb_normal('abnormal');
+                                                        current_category[4]=document.getElementsByName('notAssignedDoc');
+//                                                        console.log(current_category[0]);
+//                                                        console.log(current_category[1]);
+//                                                        console.log(current_category[2]);
+//                                                        console.log(current_category[3]);
+//                                                        console.log(current_category[4]);
                                            }
                                             else{
                                                         //oscarLog('checkedArray='+checkedArray);
@@ -713,8 +763,8 @@ function wrapUp() {
                                                     for(var i=0;i<checkedArray.length;i++){
                                                         var type=checkedArray[i];
 
-                                                        if(type=='document'){
-                                                            var docs=document.getElementsByName('scannedDoc');
+                                                        if(type=='assignedDoc'){
+                                                            var docs=document.getElementsByName('assignedDoc');
                                                             eles.push(docs);
                                                         }
                                                         else if(type=='hl7'){
@@ -722,15 +772,18 @@ function wrapUp() {
                                                             eles.push(labs);
                                                         }
                                                         else if(type=='normal'){
-                                                            var norm=document.getElementsByClassName('NormalRes');
+                                                            var norm=filterAb_normal('normal');
                                                             eles.push(norm);
-
                                                         }
                                                         else if(type=='abnormal'){
-                                                            var abn=document.getElementsByClassName('AbnormalRes');
+                                                            var abn=filterAb_normal('abnormal');
                                                             eles.push(abn);
                                                         }
-                                                    }
+                                                        else if(type=='notAssignedDoc'){
+                                                            var nd=document.getElementsByName('notAssignedDoc');
+                                                            eles.push(nd);
+                                                        }
+                                                    }                                               
                                                     current_category=eles;
                                                     displayCategoryPage(1);
                                                     initializeNavigation();
@@ -772,6 +825,9 @@ function wrapUp() {
                                                             current_rows.push(displayrowids[i]);
                                                         }
                                                     }
+                                                    if(current_rows.length<20)//show blank row to fill in empty space 
+                                                        $('blankrow').show();
+                                                    else $('blankrow').hide();
                                                     //loop through every thing,if it's in displayrowids, show it , if it's not hide it.
                                                     for(var i=0;i<total_rows.length;i++){
                                                         var rowid=total_rows[i];
@@ -885,6 +941,18 @@ function wrapUp() {
                                                         $('documentCB').checked=1;
                                                     else
                                                         $('documentCB').checked=0;
+                                                }
+                                                else if(id=='notAssignedDocCB'){
+                                                    if(ele.checked==1)
+                                                        $('notAssignedDocCB2').checked=1;
+                                                    else
+                                                        $('notAssignedDocCB2').checked=0;
+                                                }
+                                                else if(id=='notAssignedDocCB2'){
+                                                    if(ele.checked==1)
+                                                        $('notAssignedDocCB').checked=1;
+                                                    else
+                                                        $('notAssignedDocCB').checked=0;
                                                 }
                                                 else if(id=='hl7CB'){
                                                     if(ele.checked==1)
