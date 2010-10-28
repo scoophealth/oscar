@@ -6336,7 +6336,8 @@ create table ProviderPreference
 	defaultCaisiPmm varchar(10),
 	defaultNewOscarCme varchar(10),
 	printQrCodeOnPrescriptions tinyint not null,
-	lastUpdated datetime not null
+	lastUpdated datetime not null,
+	appointmentScreenFormNameDisplayLength int not
 );
 
 --

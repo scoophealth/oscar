@@ -83,6 +83,9 @@ public final class ProviderPreferencesUIBean {
 		providerPreference.setPrintQrCodeOnPrescriptions(WebUtils.isChecked(request, "prescriptionQrCodes"));
 
 		// get encounterForms for appointment screen
+		temp = StringUtils.trimToNull(request.getParameter("appointmentScreenFormsNameDisplayLength"));
+		if (temp != null) providerPreference.setAppointmentScreenFormNameDisplayLength(Integer.parseInt(temp));
+
 		String[] formNames = request.getParameterValues("encounterFormName");
 		Collection<String> formNamesList = providerPreference.getAppointmentScreenForms();
 		formNamesList.clear();

@@ -301,6 +301,14 @@ function showHideBillPref() {
 			<%-- Forms and EForms to display on the appointment screen --%>
 			<tr>
 				<td class="preferenceLabel">
+					<bean:message key="provider.providerpreference.appointmentScreenFormsNameDisplayLength" />
+				</td>
+				<td class="preferenceValue">
+					<input type="text" name="appointmentScreenFormsNameDisplayLength" value='<%=providerPreference.getAppointmentScreenFormNameDisplayLength()%>' size="2">
+	            </td>
+			</tr>		
+			<tr>
+				<td class="preferenceLabel">
 					<bean:message key="provider.providerpreference.formsToDisplayOnAppointmentScreen" />
 				</td>
 				<td class="preferenceValue">
