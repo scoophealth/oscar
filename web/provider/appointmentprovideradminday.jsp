@@ -1445,10 +1445,6 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
 <!-- billing code block -->
 <% if (!isWeekView) { %>
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_billing" rights="r">
-
-			<%String appointment_no=appointment.get("appointment_no").toString();%>
-			<%@include file="appointmentFormsLinks.jspf" %>
-		    
              <% if(status.indexOf('B')==-1) {
                 //java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.action.Action.LOCALE_KEY);
                 if (vLocale.getCountry().equals("BR")) { %>
@@ -1498,6 +1494,11 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
        	| <img src="../images/cake.gif" height="20" alt="Happy Birthday"/>
 
       <%}%>
+      
+      <%String appointment_no=appointment.get("appointment_no").toString();%>
+	  <%@include file="appointmentFormsLinks.jspf" %>
+		    
+      
       <!--Inline display of reason -->
       <oscar:oscarPropertiesCheck property="SHOW_APPT_REASON_TOOLTIP" value="yes" defaultVal="true"><span class="reason"><bean:message key="provider.appointmentProviderAdminDay.Reason"/>:<%=UtilMisc.htmlEscape(reason)%></span></oscar:oscarPropertiesCheck>
       <% } %>
