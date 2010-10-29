@@ -2,14 +2,16 @@ This is a temporary document that will out line the things we need to do to migr
 
 This document will start off as a changing work plan / to-do list. Once the document is more or less complete, all developers should read this and be familiar with the changes about to take place.
 
+
 -------
 Purpose
 -------
 The main purpose of this migration is to to move to git & gerrit. Maven is actually an unrelated change but due to the mass change in repository and structure and reconfiguration required to developers, this seems like an opportunistic time to slip in this change as well. Maven will not be covered in detail here.
 
+
 git & gerrit
 ------------
-The main impudus for change here is the ability to control the work flow of the code commited. The are many desireable side effects of git but the main thing was that git allowed us to easily have multiple repositories for incoming code v.s. approved & published code. Gerrit turns out to be a tool that embraces this workflow and provides tools and a UI etc to help accompolish this (although we could have done it even with out gerrit). 
+The main impudus for change here is the ability to control the work flow of the code commited. The are many desirable side effects of git but the main thing was that git allowed us to easily have multiple repositories for incoming code v.s. approved & published code. Gerrit turns out to be a tool that embraces this workflow and provides tools and a UI etc to help accompolish this (although we could have done it even with out gerrit). 
 
 The structure of and usage of git & gerrit is that gerrit is a git repository which proxies all read / write access so it can trigger events as read / write occurs. From the end users point of view, the only difference is the location you are submitting to, i.e. the port number for ssh is different, and the branch location is different as an example "git push ssh://r6squeegee@localhost:29418/foo HEAD:refs/heads/test".
 
@@ -36,7 +38,7 @@ Dry run of setup (Jay & Ted)
 	- publishing to sf
 
 
-Annoucement of Intent to migrate
+Announcement of Intent to migrate
 --------------------------------
 If our dry run works, we need to make an announcement of our migration plans and intent so developers can :
 - familiarise themselves with Git / Gerrit / Maven and how to use them with their IDEs. We can use the test system to help people test it out.
@@ -60,7 +62,7 @@ caisi_integrator migration (Jay, Ted, Annie, Ronnie)
 ----------------------------------------------------
 This project has a few more developers, Annie and Ronnie have touched the integrator recently, they will need to know git by here.
 
-- There's an anomalie here we want to take care of. the HNR was embedded with in the integrator repository because of CVS / sourceforge reasons. At this point we should split it back up into 2 projects. Ted can handle this portion.
+- There's an anomaly here we want to take care of. the HNR was embedded with in the integrator repository because of CVS / sourceforge reasons. At this point we should split it back up into 2 projects. Ted can handle this portion.
 - convert integrator & hnr to git/gerrit like with oscar_apps
 
 
