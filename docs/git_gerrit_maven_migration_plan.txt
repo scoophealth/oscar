@@ -96,7 +96,7 @@ If failure occurs before the oscar_apps migration we can abort everything.
 
 If failure occurs at oscar_apps, we can hopefully revert this to cvs and abort everything.
 
-After oscar_apps, this is the point of no-return. We can pause the migration plan at any point in time, but after oscar_apps we are committed to living with what is converted and commited to converting everything "eventually". 
+After oscar_apps, this is the point of no-return. We can pause the migration plan at any point in time, but after oscar_apps we are committed to living with what is converted and committed to converting everything "eventually". 
 
 
 
