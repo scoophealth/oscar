@@ -19,10 +19,8 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 
-import org.apache.cxf.aegis.type.java5.XMLGregorianCalendarType;
 
 import oscar.ocan.domain.client.AnswerGroup;
 import oscar.ocan.domain.client.OCANClientSelfAssessment;
@@ -84,7 +82,6 @@ import oscar.ocan.domain.submission.SideEffectsDetailList;
 import oscar.ocan.domain.submission.SymptomList;
 import oscar.ocan.domain.submission.TimeLivedInCanada;
 
-import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 import org.apache.xerces.jaxp.datatype.DatatypeFactoryImpl;
 
 public class OcanDataProcessor {
