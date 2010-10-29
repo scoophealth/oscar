@@ -69,6 +69,7 @@ oscar (all developers)
 At this point all developers have had some time to read up on git. If you don't know it now... too late :)
 
 - migrate oscar to git /gerrit like previous projects
+- do the tracker ID / change log thing still work? 
 - do a maven conversion
 - code will be missing after maven conversion, most can be ignored but some will require new projects
 	- oscar/oscar_document
