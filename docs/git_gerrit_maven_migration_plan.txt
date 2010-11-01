@@ -34,6 +34,7 @@ Dry run of setup (Jay & Ted)
 - setup a test gerrit at mcmaster
 - test out
 	- usual reading / writing to gerrit
+	- make sure emails are being sent on approvals / rejections
 	- access controls and work flow with different accounts etc
 	- publishing to sf
 
