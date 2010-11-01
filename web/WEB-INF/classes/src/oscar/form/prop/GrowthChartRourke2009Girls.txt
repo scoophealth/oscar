@@ -1,0 +1,49 @@
+c_pName	: left, 401, 63, 0, BaseFont.HELVETICA, 8
+c_birthDate : left, 397, 77, 0, BaseFont.HELVETICA, 8
+c_birthWeight : center, 429, 642, 0, BaseFont.HELVETICA, 6, _, 487, 649, 7
+c_length :  center, 371, 642, 0, BaseFont.HELVETICA, 6, _, 428, 649, 7
+
+p1_date1w : center, 256, 650, 0, BaseFont.HELVETICA, 6, _, 312, 657, 7
+__age1w : center, 341, 656, 0, BaseFont.HELVETICA, 6, 1 week
+p1_wt1w : center, 428, 650, 0, BaseFont.HELVETICA, 6, _, 488, 657, 7
+p1_ht1w : center, 371, 650, 0, BaseFont.HELVETICA, 6, _, 428, 657, 7
+
+p1_date2w : center, 255, 658, 0, BaseFont.HELVETICA, 6, _, 311, 665, 7
+__age2w : center, 341, 665, 0, BaseFont.HELVETICA, 6, 2 weeks
+p1_wt2w : center, 428, 658, 0, BaseFont.HELVETICA, 6, _, 487, 665, 7
+p1_ht2w : center, 371, 658, 0, BaseFont.HELVETICA, 6, _, 428, 665, 7
+
+p1_date1m : center, 255, 665, 0, BaseFont.HELVETICA, 6, _, 312, 672, 7
+__age1m : center, 341, 672, 0, BaseFont.HELVETICA, 6, 1 month
+p1_wt1m : center, 428, 665, 0, BaseFont.HELVETICA, 6, _, 488, 672, 7
+p1_ht1m : center, 371, 665, 0, BaseFont.HELVETICA, 6, _, 428, 672, 7
+
+p2_date2m : center, 255, 672, 0, BaseFont.HELVETICA, 6, _, 312, 680, 7
+__age2m :   center, 341, 680, 0, BaseFont.HELVETICA, 6, 2 months
+p2_wt2m : center, 429, 672, 0, BaseFont.HELVETICA, 6, _, 487, 680, 7
+p2_ht2m : center, 371, 672, 0, BaseFont.HELVETICA, 6, _, 428, 680, 7
+
+p2_date4m : center, 255, 680, 0, BaseFont.HELVETICA, 6, _, 311, 688, 7
+__age4m :   center, 341, 688, 0, BaseFont.HELVETICA, 6, 4 months
+p2_wt4m : center, 428, 680, 0, BaseFont.HELVETICA, 6, _, 487, 688, 7
+p2_ht4m : center, 371, 680, 0, BaseFont.HELVETICA, 6, _, 428, 688, 7
+
+p2_date6m : center, 255, 688, 0, BaseFont.HELVETICA, 6, _, 312, 695, 7
+__age6m :   center, 341, 695, 0, BaseFont.HELVETICA, 6, 6 months
+p2_wt6m : center, 429, 688, 0, BaseFont.HELVETICA, 6, _, 487, 695, 7
+p2_ht6m : center, 371, 688, 0, BaseFont.HELVETICA, 6, _, 428, 695, 7
+
+p3_date9m : center, 255, 696, 0, BaseFont.HELVETICA, 6, _, 312, 703, 7
+__age9m :   center, 341, 703, 0, BaseFont.HELVETICA, 6, 9 months
+p3_wt9m : center, 428, 696, 0, BaseFont.HELVETICA, 6, _, 487, 703, 7
+p3_ht9m : center, 371, 696, 0, BaseFont.HELVETICA, 6, _, 428, 703, 7
+
+p3_date12m : center, 255, 703, 0, BaseFont.HELVETICA, 6, _, 312, 711, 7
+__age12m :   center, 341, 711, 0, BaseFont.HELVETICA, 6, 12 months
+p3_wt12m : center, 429, 703, 0, BaseFont.HELVETICA, 6, _, 488, 711, 7
+p3_ht12m : center, 371, 703, 0, BaseFont.HELVETICA, 6, _, 428, 711, 7
+
+p3_date15m : center, 255, 711, 0, BaseFont.HELVETICA, 6, _, 312, 720, 7
+__age15m :   center, 341, 720, 0, BaseFont.HELVETICA, 6, 15 months
+p3_wt15m : center, 428, 711, 0, BaseFont.HELVETICA, 6, _, 487, 720, 7
+p3_ht15m : center, 371, 711, 0, BaseFont.HELVETICA, 6, _, 428, 720, 7

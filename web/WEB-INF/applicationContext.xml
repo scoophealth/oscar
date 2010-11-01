@@ -108,6 +108,7 @@
 	<bean id="ProcedureBookDAO" class="org.oscarehr.eyeform.dao.ProcedureBookDao" autowire="byName" />
 	<bean id="TestBookDAO" class="org.oscarehr.eyeform.dao.TestBookRecordDao" autowire="byName" />
 	<bean id="MacroDAO" class="org.oscarehr.eyeform.dao.MacroDao" autowire="byName" />
+        <bean id="rourke2009Dao" class="oscar.form.dao.Rourke2009DAO" autowire="byName" />      
 
 	<!--  configure the scratch pad -->
 	<bean id="scratchPadDao" class="com.quatro.dao.ScratchPadDao" autowire="byName" />
@@ -177,7 +178,7 @@
 				<!--value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/inrFlowsheet2.xml</value-->
 
 
-				<!--<value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/physicalFunctionFlowsheet.xml</value >
+				<!--<value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/physicalFunctionFlowsheet.xml</value >				
 				<value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/omdAsthmaFlowsheet.xml</value >
 				<value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/omdCOPDFlowsheet.xml</value>
 				<value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/omdChf.xml</value>

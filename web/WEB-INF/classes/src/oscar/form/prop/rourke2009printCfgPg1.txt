@@ -1,0 +1,234 @@
+c_pName	: left, 251, 82, 0, BaseFont.HELVETICA, 8 
+c_birthDate : left, 463, 83, 0, BaseFont.HELVETICA, 8
+c_birthRemarks : left, 24, 66, 0, BaseFont.HELVETICA;italic, 6, _, 119, 112, 10
+c_riskFactors : left, 126, 66, 0, BaseFont.HELVETICA;italic, 6, _, 221, 113, 10
+c_length : left, 271, 99, 0, BaseFont.HELVETICA, 8
+c_headCirc : left, 364, 99, 0, BaseFont.HELVETICA, 8
+c_birthWeight : left, 453, 99, 0, BaseFont.HELVETICA, 8
+c_dischargeWeight : left, 553, 99, 0, BaseFont.HELVETICA, 8
+c_male : left, 559, 83, 0, BaseFont.HELVETICA, 8, x
+c_female ; left, 582, 83, 0, BaseFont.HELVETICA, 8, x
+
+p1_date1w : centre, 169, 117, 0, BaseFont.HELVETICA, 8, _, 275, 127, 10
+p1_date2w : centre, 334, 117, 0, BaseFont.HELVETICA, 8, _, 431, 127, 10
+p1_date1m : centre, 492, 117, 0, BaseFont.HELVETICA, 8, _, 588, 127, 10
+
+p1_ht1w : centre, 125, 140, 0, BaseFont.HELVETICA, 8, _, 172, 156, 10
+p1_wt1w : centre, 176, 140, 0, BaseFont.HELVETICA, 8, _, 224, 156, 10
+p1_hc1w : centre, 228, 140, 0, BaseFont.HELVETICA, 8, _, 276, 156, 10
+
+p1_ht2w : centre, 280, 140, 0, BaseFont.HELVETICA, 8, _, 328, 156, 10
+p1_wt2w : centre, 332, 140, 0, BaseFont.HELVETICA, 8, _, 380, 156, 10
+p1_hc2w : centre, 384, 140, 0, BaseFont.HELVETICA, 8, _, 433, 156, 10
+
+p1_ht1m : centre, 436, 140, 0, BaseFont.HELVETICA, 8, _, 485, 156, 10
+p1_wt1m : centre, 487, 140, 0, BaseFont.HELVETICA, 8, _, 536, 156, 10
+p1_hc1m : centre, 539, 140, 0, BaseFont.HELVETICA, 8, _, 588, 156, 10
+
+p1_pConcern1w : left, 125, 161, 0, BaseFont.HELVETICA;italic, 6, _, 276, 208, 10
+p1_pConcern2w : left, 281, 161, 0, BaseFont.HELVETICA;italic, 6, _, 432, 208, 10
+p1_pConcern1m : left, 436, 161, 0, BaseFont.HELVETICA;italic, 6, _, 586, 208, 10
+
+p1_breastFeeding1w : left, 128, 218, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_formulaFeeding1w : left, 128, 233, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_stoolUrine1w : left, 128, 250, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+
+p1_breastFeeding2w : left, 284, 218, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_formulaFeeding2w : left, 284, 233, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_stoolUrine2w : left, 284, 250, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+
+p1_breastFeeding1m : left, 440, 218, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_formulaFeeding1m : left, 440, 233, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_stoolUrine1m : left, 440, 250, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+
+p1_carSeatOk : left, 128, 283, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_carSeatNo : left, 128, 283, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_smokeSafetyOk : left, 128, 291, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_smokeSafetyNo : left, 128, 291, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_sleepCryOk : left, 128, 312, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_sleepCryNo : left, 128, 312, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_bondingOk :  left, 128, 320, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_bondingNo :  left, 128, 320, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_2ndSmokeOk :  left, 128, 339, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_2ndSmokeNo :  left, 128, 339, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_feverOk :  left, 128, 356, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_feverNo :  left, 128, 356, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_noCoughMedOk :  left, 236, 339, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_noCoughMedNo :  left, 236, 339, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_sleepPosOk :  left, 236, 283, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_sleepPosNo :  left, 236, 283, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_soothabilityOk :  left, 236, 312, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_soothabilityNo :  left, 236, 312, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_pFatigueOk :  left, 236, 320, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_pFatigueNo :  left, 236, 320, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_altMedOk :  left, 380, 339, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_altMedNo :  left, 380, 339, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_tmpControlOk :  left, 236, 348, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_tmpControlNo :  left, 236, 348, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_cribSafetyOk :  left, 380, 283, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_cribSafetyNo :  left, 380, 283, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_hotWaterOk :  left, 236, 291, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_hotWaterNo :  left, 236, 291, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_homeVisitOk :  left, 380, 312, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_homeVisitNo :  left, 380, 312, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_famConflictOk :  left, 380, 320, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_famConflictNo :  left, 380, 320, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_firearmSafetyOk :  left, 489, 283, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_firearmSafetyNo :  left, 489, 283, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_safeToysOk :  left, 380, 291, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_safeToysNo :  left, 380, 291, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_siblingsOk :  left, 491, 320, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_siblingsNo :  left, 491, 320, 0, BaseFont.ZAPFDINGBATS, 8, \u2715co
+
+p1_pacifierOk :  left, 128, 348, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_pacifierNo :  left, 128, 348, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_sunExposureOk :  left, 380, 348, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_sunExposureNo :  left, 380, 348, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_development1w : left, 126, 386, 0, BaseFont.HELVETICA;italic, 6, _, 275, 497, 10
+p1_development2w : left, 282, 403, 0, BaseFont.HELVETICA;italic, 6, _, 431, 497, 10
+p1_development1m : left, 437, 427, 0, BaseFont.HELVETICA;italic, 6, _, 587, 497, 10
+
+p1_sucks2wOk : left, 285, 390, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_sucks2wNo : left, 285, 390, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_noParentsConcerns2wOk : left, 285, 398, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_noParentsConcerns2wNo : left, 285, 398, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_focusGaze1mOk : left, 440, 390, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_focusGaze1mNo : left, 440, 390, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_startles1mOk : left, 440, 398, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_startles1mNo : left, 440, 398, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_calms1mOk : left, 440, 405, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_calms1mNo : left, 440, 405, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_sucks1mOk : left, 440, 415, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_sucks1mNo : left, 440, 415, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_noParentsConcerns1mOk : left, 440, 423, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_noParentsConcerns1mNo : left, 440, 423, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_skin1wOk : left, 128, 508, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_skin1wNo : left, 128, 508, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_fontanelles1wOk : left, 128, 516, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_fontanelles1wNo : left, 128, 516, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_eyes1wOk : left, 128, 523, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_eyes1wNo : left, 128, 523, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_ears1wOk : left, 128, 533, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_ears1wNo : left, 128, 533, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_heartLungs1wOk : left, 128, 540, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_heartLungs1wNo : left, 128, 540, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_umbilicus1wOk : left, 128, 549, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_umbilicus1wNo : left, 128, 549, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_femoralPulses1wOk : left, 128, 557, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_femoralPulses1wNo : left, 128, 557, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_hips1wOk : left, 128, 565, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_hips1wNo : left, 128, 565, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_muscleTone1wOk : left, 128, 573, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_muscleTone1wNo : left, 128, 573, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_testicles1wOk : left, 128, 581, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_testicles1wNo : left, 128, 581, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_maleUrinary1wOk : left, 128, 590, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_maleUrinary1wNo : left, 128, 590, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_skin2wOk : left, 284, 508, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_skin2wNo : left, 284, 508, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_fontanelles2wOk : left, 284, 516, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_fontanelles2wNo : left, 284, 516, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_eyes2wOk : left, 284, 523, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_eyes2wNo : left, 284, 523, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_ears2wOk : left, 284, 533, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_ears2wNo : left, 284, 533, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_heartLungs2wOk : left, 284, 540, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_heartLungs2wNo : left, 284, 540, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_umbilicus2wOk : left, 284, 549, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_umbilicus2wNo : left, 284, 549, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_femoralPulses2wOk : left, 284, 557, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_femoralPulses2wNo : left, 284, 557, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_hips2wOk : left, 284, 565, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_hips2wNo : left, 284, 565, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_muscleTone2wOk : left, 284, 573, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_muscleTone2wNo : left, 284, 573, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_testicles2wOk : left, 284, 581, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_testicles2wNo : left, 284, 581, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_maleUrinary2wOk : left, 284, 589, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_maleUrinary2wNo : left, 284, 589, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_skin1mOk : left, 441, 508, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_skin1mNo : left, 441, 508, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_fontanelles1mOk : left, 441, 516, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_fontanelles1mNo : left, 441, 516, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_eyes1mOk : left, 441, 523, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_eyes1mNo : left, 441, 523, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_corneal1mOk : left, 441, 533, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_corneal1mNo : left, 441, 533, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_hearing1mOk : left, 441, 541, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_hearing1mNo : left, 441, 541, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_heart1mOk : left, 441, 549, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_heart1mNo : left, 441, 549, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_hips1mOk : left, 441, 556, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_hips1mNo : left, 441, 556, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_muscleTone1mOk : left, 441, 564, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_muscleTone1mNo : left, 441, 564, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p1_pkuThyroid1w : left, 128, 632, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_hemoScreen1w : left, 128, 641, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+
+p1_problems1w : left, 123, 644, 0, BaseFont.HELVETICA;italic, 6, _, 276, 671, 10
+p1_problems2w : left, 281, 626, 0, BaseFont.HELVETICA;italic, 6, _, 431, 671, 10
+p1_problems1m : left, 437, 626, 0, BaseFont.HELVETICA;italic, 6, _, 588, 671, 10
+
+p1_hepatitisVaccine1w : left, 128, 698, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p1_hepatitisVaccine1m : left, 441, 698, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+
+p1_signature1w : centre, 158, 706, 0, BaseFont.HELVETICA;italic, 6, _, 275, 721, 10
+p1_signature2w : centre, 313, 706, 0, BaseFont.HELVETICA;italic, 6, _, 431, 721, 10
+p1_signature1m : centre, 468, 706, 0, BaseFont.HELVETICA;italic, 6, _, 586, 721, 10
