@@ -26,7 +26,7 @@
  */
 -->
 <%@page  import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarProvider.data.*,oscar.util.*,oscar.oscarReport.data.*,oscar.oscarPrevention.pageUtil.*,java.net.*,oscar.eform.*"%>
-<%@page import="oscar.OscarProperties" %>
+<%@page import="oscar.OscarProperties, org.oscarehr.util.SpringUtils, org.oscarehr.billing.CA.ON.dao.BillingClaimDAO" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
@@ -45,7 +45,7 @@
   
   String eformSearch = (String) request.getAttribute("eformSearch");
   EfmData efData = new EfmData();
-  
+  BillingClaimDAO bcDAO = (BillingClaimDAO)SpringUtils.getBean("billingClaimDAO");
 %>
 
 <html:html locale="true">
@@ -403,6 +403,8 @@ table.ele td{
                        <%DemographicNameAgeString deName = DemographicNameAgeString.getInstance();                       
                          DemographicData demoData= new DemographicData();
                          boolean setBill;
+                         String enabled = "";
+                         int numDays;
                          
                          for (int i = 0; i < list.size(); i++){ 
                              setBill = false;
@@ -489,10 +491,13 @@ table.ele td{
                               <%}%>
                           </td>
                           <td bgcolor="<%=dis.color%>"><%=providerBean.getProperty(demo.getProviderNo()) %></td>
-                          <td bgcolor="<%=dis.color%>">
-                              <% if( setBill ) {
+                          <td bgcolor="<%=dis.color%>">                              
+                              <% if( billCode != null && setBill ) {
+                                  numDays = bcDAO.getDaysSinceBilled(billCode, dis.demographicNo);
+                                  //we only want to enable billing if it has been a year since the last invoice was created
+                                  enabled = numDays >= 0 && numDays < 365 ? "disabled" : "checked";
                               %>
-                              <input type="checkbox" name="bill" checked value="<%=billCode + ";" + dis.demographicNo + ";" + demo.getProviderNo()%>">
+                              <input type="checkbox" name="bill" <%=enabled%> value="<%=billCode + ";" + dis.demographicNo + ";" + demo.getProviderNo()%>">
                               <%}%>
                           </td>
 
