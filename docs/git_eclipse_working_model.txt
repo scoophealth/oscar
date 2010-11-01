@@ -1,0 +1,9 @@
+This document is a tutorial for developers migrating from eclipse & cvs. 
+
+This document doesn't isn't required in that if you already have experience using eclipse & git, this will not be of any use to you.
+
+
+- required plugins
+- how to setup project
+- how to commit & push
+- how to fetch & merge 
