@@ -1,0 +1,21 @@
+This document out lines how we'll user gerrit in our work flow.
+
+-------
+purpose
+-------
+	- do a little better than our current cvs/no-review model
+	- very little overhead
+	- not something extensive / complex 
+
+------
+config
+------
+- have a new group called approvers
+	- only a few people on here like 2
+	- approvers are the only ones with submit access
+
+- registered users only have 0/-1 code review
+
+- get rid of verified requirement
+
+- use openId for user control
