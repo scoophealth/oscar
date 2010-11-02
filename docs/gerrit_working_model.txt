@@ -32,6 +32,7 @@ Steps
 Install Gerrit (on the server)
 - we'll use the users home directory as working directory open a terminal to the users home directory
 - run "java -jar gerrit-2.1.5.war init -d review_site"
+*** do we want to use Mysql instead of H2?
 - accept all the defaults up to "SMTP server hostname", enter either a mcmaster or google smtp server information
 	- gmails's example maybe : smtp.gmail.com:465, ssl
 - accept the defaults again starting from "Run as" up to "Canonical Url" at which point put in the proper hostname un the url shown.
@@ -39,9 +40,9 @@ Install Gerrit (on the server)
 - Note that we have accepted the default ports 8080 and 29418, I see no reason to change these.
 
 
-Configure Gerrit (from your client machine, not the server)
+Configure Gerrit (from your client / developer machine)
 - goto "http://127.0.0.1:8080" (or what ever host name you need to use.)
-- on the top right click on register. Select one of the methods to register/login, I'm using my google ID in this example. Note the first user to register is an administrator, everyone else after is a regular user.
+- on the top right click on register. Select one of the methods to register/login, I'm using my google ID "r6squeegee" in this example. Note the first user to register is an administrator, everyone else after is a regular user.
 	- For "select a unique username" this will become your ssh access username, we might want to state that it's your email address (before the @ sign) as a standard.
 	- For "Register an SSH public key" : if you already know or have SSH keys you can just provide it, otherwise do the following : 
 		- on your client machine / developer machine : "ssh-keygen -t rsa", enter a password when it asks, do not leave it blank.
@@ -50,4 +51,8 @@ Configure Gerrit (from your client machine, not the server)
 	- now... there's a bug to check, sometimes it fails to save your username / full name. On the top right of the screen click on "settings", then on the left nav menu look at both "profile" and "contact information" if your username and fullname did not save, just change it again on these screens. While you're at it check that your ssh key saved.
 - on the top left of the screen, click on admin -> groups. Create a new group called "code_approvers"
 - on the top left of the screen, click on admin -> projects. Then select "all projects", then select "access".
-	-  
+	// - add the new permissions category="Verified", group name="code_approvers", range=-1 to +1
+	- add the new permissions category="submit", group name="code_approvers", range=+1
+
+Add a project (from client / developer machine)
+- from the command line, do a "ssh -p 29418 r6squeegee@127.0.0.1 gerrit create-project --name foo" (where foo is your project name).
