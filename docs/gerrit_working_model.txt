@@ -18,8 +18,6 @@ Summary / Intent
 - have a new group called approvers
 	- only a few people on here like 2
 	- approvers are the only ones with submit access
-- registered users only have 0/-1 code review
-- get rid of verified status requirement
 
 
 Details
@@ -53,9 +51,15 @@ Configure Gerrit (from your client / developer machine)
 	- now on the bottom of the screen there's a link that says "continue" click that, now you should be at the your "code review dashboard" screen.
 - on the top left of the screen, click on admin -> groups. Create a new group called "code_approvers"
 - on the top left of the screen, click on admin -> projects. Then select "all projects", then select "access".
-	// - add the new permissions category="Verified", group name="code_approvers", range=-1 to +1
+	- add the new permissions category="code review", group name="code_approvers", range=+2
+	- add the new permissions category="verified", group name="code_approvers", range=+1
 	- add the new permissions category="submit", group name="code_approvers", range=+1
 
 Add a project (from client / developer machine)
 - from the command line, do a "ssh -p 29418 r6squeegee@127.0.0.1 gerrit create-project --name foo" (where foo is your project name).
 - now you'll want to clone the project in your favourite git tool, and commit & push all the previous files / existing code that's being ported.
+
+----------------
+Review Work Flow
+----------------
+Reviewer logins in, select one of the branches, click review, if it's good set verified=+1, review=+2, then click publish and submit, and it's into the main branch.
