@@ -840,6 +840,9 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
                     cachedBillingOnItem.setCaisiDemographicId(demographicId);
                     cachedBillingOnItem.setCaisiProviderId(billingCh1.getProvider_no());
+                    cachedBillingOnItem.setApptProviderId(billingCh1.getApptProvider_no());
+                    cachedBillingOnItem.setAsstProviderId(billingCh1.getAsstProvider_no());
+                    cachedBillingOnItem.setAppointmentId(billingCh1.getAppointment_no());
                     cachedBillingOnItem.setDx(billingItem.getDx());
                     cachedBillingOnItem.setDx1(billingItem.getDx1());
                     cachedBillingOnItem.setDx2(billingItem.getDx2());
