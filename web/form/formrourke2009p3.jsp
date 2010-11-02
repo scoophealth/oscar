@@ -521,9 +521,18 @@ description layer</div>
 			<td colspan="3" valign="top">
 			<table cellpadding="0" cellspacing="0" width="100%">
 				<tr>
-					<td valign="top"><input type="checkbox" class="chk"
-						name="p3_breastFeeding9m"
-						<%= props.getProperty("p3_breastFeeding9m", "") %> /></td>
+                                            <td style="padding-right: 5pt" valign="top"><img height="15"
+                                                        width="20" src="graphics/Checkmark_L.gif"></td>
+                                            <td class="edcol" valign="top">X</td>
+                                            <td>&nbsp;</td>
+                                </tr>
+                                <tr>
+                                        <td valign="top"><input type="radio" id="p3_breastFeeding9mOk"
+						name="p3_breastFeeding9mOk" onclick="onCheck(this,'p3_breastFeeding9m')"
+						<%= props.getProperty("p3_breastFeeding9mOk", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_breastFeeding9mNo"
+						name="p3_breastFeeding9mNo" onclick="onCheck(this,'p3_breastFeeding9m')"
+						<%= props.getProperty("p3_breastFeeding9mNo", "") %>></td>
 					<td><b><a href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><bean:message
@@ -534,135 +543,219 @@ description layer</div>
 						key="oscarEncounter.formRourke2006_1.msgBreastFeedingDescr" /></span></b></td>
 				</tr>
 				<tr>
-					<td valign="top"><input type="checkbox" class="chk"
-						name="p3_formulaFeeding9m"
-						<%= props.getProperty("p3_formulaFeeding9m", "") %> /></td>
+                                        <td valign="top"><input type="radio" id="p3_formulaFeeding9mOk"
+						name="p3_formulaFeeding9mOk" onclick="onCheck(this,'p3_formulaFeeding9m')"
+						<%= props.getProperty("p3_formulaFeeding9mOk", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_formulaFeeding9mNo"
+						name="p3_formulaFeeding9mNo" onclick="onCheck(this,'p3_formulaFeeding9m')"
+						<%= props.getProperty("p3_formulaFeeding9mNo", "") %>></td>					
 					<td><i><bean:message
 						key="oscarEncounter.formRourke2009_3.msgFormulaFeeding" /></i></td>
 				</tr>
 				<tr>
-					<td valign="top"><input type="checkbox" class="chk"
-						name="p3_bottle9m" <%= props.getProperty("p3_bottle9m", "") %>></td>
+                                        <td valign="top"><input type="radio" id="p3_bottle9mOk"
+						name="p3_bottle9mOk" onclick="onCheck(this,'p3_bottle9m')"
+						<%= props.getProperty("p3_bottle9mOk", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_bottle9mNo"
+						name="p3_bottle9mNo" onclick="onCheck(this,'p3_bottle9m')"
+						<%= props.getProperty("p3_bottle9mNo", "") %>></td>
 					<td><bean:message
 						key="oscarEncounter.formRourke2006_2.msgBottle" /></td>
 				</tr>
 				<tr>
-					<td valign="top"><input type="checkbox" class="chk"
-						name="p3_liquids9m" <%= props.getProperty("p3_liquids9m", "") %>></td>
+                                        <td valign="top"><input type="radio" id="p3_liquids9mOk"
+						name="p3_liquids9mOk" onclick="onCheck(this,'p3_liquids9m')"
+						<%= props.getProperty("p3_liquids9mOk", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_liquids9mNo"
+						name="p3_liquids9mNo" onclick="onCheck(this,'p3_liquids9m')"
+						<%= props.getProperty("p3_liquids9mNo", "") %>></td>					
 					<td><bean:message
 						key="oscarEncounter.formRourke2009_2.msgLiquids" /></td>
 				</tr>
 				<tr>
-					<td valign="top"><input type="checkbox" class="chk"
-						name="p3_cereal9m" <%= props.getProperty("p3_cereal9m", "") %>></td>
+                                        <td valign="top"><input type="radio" id="p3_cereal9mOk"
+						name="p3_cereal9mOk" onclick="onCheck(this,'p3_cereal9m')"
+						<%= props.getProperty("p3_cereal9mOk", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_cereal9mNo"
+						name="p3_cereal9mNo" onclick="onCheck(this,'p3_cereal9m')"
+						<%= props.getProperty("p3_cereal9mNo", "") %>></td>
 					<td><bean:message
 						key="oscarEncounter.formRourke2006_3.msgCereal" /></td>
 				</tr>
 				<tr>
-					<td valign="top"><input type="checkbox" class="chk"
-						name="p3_introCowMilk9m"
-						<%= props.getProperty("p3_introCowMilk9m", "") %>></td>
+                                        <td valign="top"><input type="radio" id="p3_introCowMilk9mOk"
+						name="p3_introCowMilk9mOk" onclick="onCheck(this,'p3_introCowMilk9m')"
+						<%= props.getProperty("p3_cereal9mOk", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_introCowMilk9mNo"
+						name="p3_introCowMilk9mNo" onclick="onCheck(this,'p3_introCowMilk9m')"
+						<%= props.getProperty("p3_introCowMilk9mNo", "") %>></td>
 					<td><bean:message
 						key="oscarEncounter.formRourke2006_3.msgIntroCowMilk" /></td>
 				</tr>
 				<tr>
-					<td valign="top"><input type="checkbox" class="chk"
-						name="p3_egg9m" <%= props.getProperty("p3_egg9m", "") %>></td>
+                                        <td valign="top"><input type="radio" id="p3_egg9mOk"
+						name="p3_egg9mOk" onclick="onCheck(this,'p3_egg9m')"
+						<%= props.getProperty("p3_egg9mOk", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_egg9mNo"
+						name="p3_egg9mNo" onclick="onCheck(this,'p3_egg9m')"
+						<%= props.getProperty("p3_egg9mNo", "") %>></td>
 					<td><bean:message
 						key="oscarEncounter.formRourke2006_2.msgEggWhites" /></td>
 				</tr>
-				<tr>
-					<td valign="top"><input type="checkbox" name="p3_choking9m"
-						<%= props.getProperty("p3_choking9m", "") %>></td>
+				<tr>    
+                                    <td valign="top"><input type="radio" id="p3_choking9mOk"
+						name="p3_choking9mOk" onclick="onCheck(this,'p3_choking9m')"
+						<%= props.getProperty("p3_choking9mOk", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_choking9mNo"
+						name="p3_choking9mNo" onclick="onCheck(this,'p3_choking9m')"
+						<%= props.getProperty("p3_choking9mNo", "") %>></td>
 					<td><a href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><bean:message
 						key="oscarEncounter.formRourke2006_2.msgChoking" />*</a></td>
 				</tr>
+                                <tr>
+					<td class="edcol" colspan="3" valign="top"><input
+						class="delete" type="button" value="Del"
+						onclick="del('p3_breastFeeding9mOk,p3_breastFeeding9mNo,p3_formulaFeeding9mOk,p3_formulaFeeding9mNo,p3_bottle9mOk,p3_bottle9mNo,p3_liquids9mOk,p3_liquids9mNo,p3_cereal9mOk,p3_cereal9mNo,p3_introCowMilk9mOk,p3_introCowMilk9mNo,p3_egg9mOk,p3_egg9mNo,p3_choking9mOk,p3_choking9mNo');" /></td>
+                                </tr>
 			</table>
 
 			</td>
 			<td colspan="3" valign="top">
 			<table cellpadding="0" cellspacing="0" width="100%">
 				<tr align="center">
-					<td colspan="2"><textarea id="p3_nutrition12m"
+					<td colspan="3"><textarea id="p3_nutrition12m"
 						name="p3_nutrition12m" class="wide" rows="5" cols="25"><%= props.getProperty("p3_nutrition12m", "") %></textarea></td>
 				</tr>
-				<tr>
-					<td valign="top"><input type="checkbox" class="chk"
-						name="p3_breastFeeding12m"
-						<%= props.getProperty("p3_breastFeeding12m", "") %>></td>
+                                <tr>
+                                            <td style="padding-right: 5pt" valign="top"><img height="15"
+                                                        width="20" src="graphics/Checkmark_L.gif"></td>
+                                            <td class="edcol" valign="top">X</td>
+                                            <td>&nbsp;</td>
+                                </tr>
+                                <tr>
+                                        <td valign="top"><input type="radio" id="p3_breastFeeding12mOk"
+						name="p3_breastFeeding12mOk" onclick="onCheck(this,'p3_breastFeeding12m')"
+						<%= props.getProperty("p3_breastFeeding12mOk", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_breastFeeding12mNo"
+						name="p3_breastFeeding12mNo" onclick="onCheck(this,'p3_breastFeeding12m')"
+						<%= props.getProperty("p3_breastFeeding12mNo", "") %>></td>
 					<td><b><a href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><bean:message
-						key="oscarEncounter.formRourke1.btnBreastFeeding" />*</a></td>
+						key="oscarEncounter.formRourke1.btnBreastFeeding" />*</a></b></td>
 				</tr>
 				<tr>
-					<td valign="top"><input type="checkbox" class="chk"
-						name="p3_homoMilk12m"
-						<%= props.getProperty("p3_homoMilk12m", "") %>></td>
+                                        <td valign="top"><input type="radio" id="p3_homoMilk12mOk"
+						name="p3_homoMilk12mOk" onclick="onCheck(this,'p3_homoMilk12m')"
+						<%= props.getProperty("p3_homoMilk12mOk", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_homoMilk12mNo"
+						name="p3_homoMilk12mNo" onclick="onCheck(this,'p3_homoMilk12m')"
+						<%= props.getProperty("p3_homoMilk12mNo", "") %>></td>
 					<td><bean:message
 						key="oscarEncounter.formRourke2.formHomogenizedMilk" /></td>
 				</tr>
 				<tr>
-					<td valign="top"><input type="checkbox" class="chk"
-						name="p3_cup12m" <%= props.getProperty("p3_cup12m", "") %>></td>
+                                        <td valign="top"><input type="radio" id="p3_cup12mOk"
+						name="p3_cup12mOk" onclick="onCheck(this,'p3_cup12m')"
+						<%= props.getProperty("p3_cup12mOk", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_cup12mNo"
+						name="p3_cup12mNo" onclick="onCheck(this,'p3_cup12m')"
+						<%= props.getProperty("p3_cup12mNo", "") %>></td>
 					<td><bean:message
 						key="oscarEncounter.formRourke2009_3.formEncourageCup" /></td>
 				</tr>
 				<tr>
-					<td valign="top"><input type="checkbox" class="chk"
-						name="p3_appetite12m"
-						<%= props.getProperty("p3_appetite12m", "") %>></td>
+                                        <td valign="top"><input type="radio" id="p3_appetite12mOk"
+						name="p3_appetite12mOk" onclick="onCheck(this,'p3_appetite12m')"
+						<%= props.getProperty("p3_appetite12mOk", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_appetite12mNo"
+						name="p3_appetite12mNo" onclick="onCheck(this,'p3_appetite12m')"
+						<%= props.getProperty("p3_appetite12mNo", "") %>></td>
 					<td><bean:message
 						key="oscarEncounter.formRourke2.formAppetiteReduced" /></td>
 				</tr>
 				<tr>
-					<td valign="top"><input type="checkbox" name="p3_choking12m"
-						<%= props.getProperty("p3_choking12m", "") %>></td>
+                                        <td valign="top"><input type="radio" id="p3_choking12mOk"
+						name="p3_choking12mOk" onclick="onCheck(this,'p3_choking12m')"
+						<%= props.getProperty("p3_choking12mOk", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_choking12mNo"
+						name="p3_choking12mNo" onclick="onCheck(this,'p3_choking12m')"
+						<%= props.getProperty("p3_choking12mNo", "") %>></td>
 					<td><a href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><bean:message
 						key="oscarEncounter.formRourke2006_2.msgChoking" />*</a></td>
 				</tr>
+                                <tr>
+					<td class="edcol" colspan="3" valign="top"><input
+						class="delete" type="button" value="Del"
+						onclick="del('p3_breastFeeding12mOk,p3_breastFeeding12mNo,p3_homoMilk12mOk,p3_homoMilk12mNo,p3_cup12mOk,p3_cup12mNo,p3_appetite12mOk,p3_appetite12mNo,p3_choking12mOk,p3_choking12mNo');" /></td>
+                                </tr>
 			</table>
 			</td>
 			<td colspan="3" valign="top">
 			<table cellpadding="0" cellspacing="0" width="100%" height="100%">
 				<tr align="center">
-					<td colspan="2"><textarea id="p3_nutrition15m"
+					<td colspan="3"><textarea id="p3_nutrition15m"
 						name="p3_nutrition15m" class="wide" rows="5" cols="25"><%= props.getProperty("p3_nutrition15m", "") %></textarea></td>
 				</tr>
-				<tr>
-					<td valign="top"><input type="checkbox" class="chk"
-						name="p3_breastFeeding15m"
-						<%= props.getProperty("p3_breastFeeding15m", "") %>></td>
+                                <tr>
+                                            <td style="padding-right: 5pt" valign="top"><img height="15"
+                                                        width="20" src="graphics/Checkmark_L.gif"></td>
+                                            <td class="edcol" valign="top">X</td>
+                                            <td>&nbsp;</td>
+                                </tr>
+                                <tr>
+                                        <td valign="top"><input type="radio" id="p3_breastFeeding15mOk"
+						name="p3_breastFeeding15mOk" onclick="onCheck(this,'p3_breastFeeding15m')"
+						<%= props.getProperty("p3_breastFeeding15mOk", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_breastFeeding15mNo"
+						name="p3_breastFeeding15mNo" onclick="onCheck(this,'p3_breastFeeding15m')"
+						<%= props.getProperty("p3_breastFeeding15mNo", "") %>></td>
 					<td><b><a href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><bean:message
-						key="oscarEncounter.formRourke1.btnBreastFeeding" />*</a></td>
+						key="oscarEncounter.formRourke1.btnBreastFeeding" />*</a></b></td>
 				</tr>
 				<tr>
-					<td valign="top"><input type="checkbox" class="chk"
-						name="p3_homoMilk15m"
-						<%= props.getProperty("p3_homoMilk15m", "") %>></td>
+                                        <td valign="top"><input type="radio" id="p3_homoMilk15mOk"
+						name="p3_homoMilk15mOk" onclick="onCheck(this,'p3_homoMilk15m')"
+						<%= props.getProperty("p3_homoMilk15mOk", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_homoMilk15mNo"
+						name="p3_homoMilk15mNo" onclick="onCheck(this,'p3_homoMilk15m')"
+						<%= props.getProperty("p3_homoMilk15mNo", "") %>></td>
 					<td><bean:message
 						key="oscarEncounter.formRourke2.formHomogenizedMilk" /></td>
 				</tr>
 				<tr>
-					<td valign="top"><input type="checkbox" name="p3_choking15m"
-						<%= props.getProperty("p3_choking15m", "") %>></td>
+                                        <td valign="top"><input type="radio" id="p3_choking15mOk"
+						name="p3_choking15mOk" onclick="onCheck(this,'p3_choking15m')"
+						<%= props.getProperty("p3_choking15mOk", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_choking15mNo"
+						name="p3_choking15mNo" onclick="onCheck(this,'p3_choking15m')"
+						<%= props.getProperty("p3_choking15mNo", "") %>></td>
 					<td><a href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><bean:message
 						key="oscarEncounter.formRourke2006_2.msgChoking" />*</a></td>
 				</tr>
 				<tr>
-					<td valign="top"><input type="checkbox" class="chk"
-						name="p3_cup15m" <%= props.getProperty("p3_cup15m", "") %>></td>
+                                        <td valign="top"><input type="radio" id="p3_cup15mOk"
+						name="p3_cup15mOk" onclick="onCheck(this,'p3_cup15m')"
+						<%= props.getProperty("p3_cup15mOk", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_cup15mNo"
+						name="p3_cup15mNo" onclick="onCheck(this,'p3_cup15m')"
+						<%= props.getProperty("p3_cup15mNo", "") %>></td>
 					<td><bean:message
 						key="oscarEncounter.formRourke2009_3.formEncourageCup" /></td>
 				</tr>
+                                <tr>
+					<td class="edcol" colspan="3" valign="top"><input
+						class="delete" type="button" value="Del"
+						onclick="del('p3_breastFeeding15mOk,p3_breastFeeding15mNo,p3_homoMilk15mOk,p3_homoMilk15mNo,p3_cup15mOk,p3_cup15mNo,p3_choking15mOk,p3_choking15mNo');" /></td>
+                                </tr>
 			</table>
 			</td>
 		</tr>
