@@ -7,15 +7,47 @@ purpose
 	- very little overhead
 	- not something extensive / complex 
 
-------
-config
-------
+----------------------------
+Installation & Configuration
+----------------------------
+
+Summary / Intent
+----------------
+- use openId for web user control
+- use ssh for repository commit user control
 - have a new group called approvers
 	- only a few people on here like 2
 	- approvers are the only ones with submit access
-
 - registered users only have 0/-1 code review
+- get rid of verified status requirement
 
-- get rid of verified requirement
 
-- use openId for user control
+Details
+-------
+Prerequisite
+- Have a server & linux user for gerrit & downloaded gerrit-2.1.5.war & java 1.6 installed
+
+Steps
+
+Install Gerrit (on the server)
+- we'll use the users home directory as working directory open a terminal to the users home directory
+- run "java -jar gerrit-2.1.5.war init -d review_site"
+- accept all the defaults up to "SMTP server hostname", enter either a mcmaster or google smtp server information
+	- gmails's example maybe : smtp.gmail.com:465, ssl
+- accept the defaults again starting from "Run as" up to "Canonical Url" at which point put in the proper hostname un the url shown.
+- change your linux to start gerrit upon boot up. To start gerrit : "cd ~/review_site", "./bin/gerrit.sh start". Note the funny directory change / reference in the preceeding 2 commands, it has to be that way or gerrit doesn't figure out where it's installed. (You can configure more to make it work but the prior 2 commands is the easiest way).
+- Note that we have accepted the default ports 8080 and 29418, I see no reason to change these.
+
+
+Configure Gerrit (from your client machine, not the server)
+- goto "http://127.0.0.1:8080" (or what ever host name you need to use.)
+- on the top right click on register. Select one of the methods to register/login, I'm using my google ID in this example. Note the first user to register is an administrator, everyone else after is a regular user.
+	- For "select a unique username" this will become your ssh access username, we might want to state that it's your email address (before the @ sign) as a standard.
+	- For "Register an SSH public key" : if you already know or have SSH keys you can just provide it, otherwise do the following : 
+		- on your client machine / developer machine : "ssh-keygen -t rsa", enter a password when it asks, do not leave it blank.
+		- now cut and paste the contents of "~/.ssh/id_rsa.pub" into the text area on the web page.
+	- click on "add" it should bring you back to the main gerrit screen now, but you're now logged in.
+	- now... there's a bug to check, sometimes it fails to save your username / full name. On the top right of the screen click on "settings", then on the left nav menu look at both "profile" and "contact information" if your username and fullname did not save, just change it again on these screens. While you're at it check that your ssh key saved.
+- on the top left of the screen, click on admin -> groups. Create a new group called "code_approvers"
+- on the top left of the screen, click on admin -> projects. Then select "all projects", then select "access".
+	-  
