@@ -22,7 +22,7 @@
 */
  -->
 
-<%@ taglib uri="/tags/struts-logic" prefix="logic"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 
 <logic:redirect forward="timeout" />
 
