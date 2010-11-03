@@ -392,7 +392,7 @@ description layer</div>
 				rows="3" cols="17"><%= props.getProperty("c_riskFactors", "") %></textarea>
 			</td>
 			<td nowrap align="center"><bean:message
-				key="oscarEncounter.formRourke2009_4.formFamHistory" />:<br>
+				key="oscarEncounter.formRourke2006_2.formFamHistory" /><br>
 			<textarea id="c_famHistory" name="c_famHistory" rows="3" cols="17"><%= props.getProperty("c_famHistory", "") %></textarea>
 			</td>
 			<td width="65%" nowrap align="center">
