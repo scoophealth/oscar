@@ -192,13 +192,14 @@ public class BillingReviewPrep {
 	}
 
 	// ret[0],[1],[2] - Vector vecCode, Vector vecUnit, Vector vecAt
-	public Vector[] getRequestCodeVec(HttpServletRequest requestData,
+    public Vector<String>[] getRequestCodeVec(HttpServletRequest requestData,
 			String paramNameCode, String paramNameUnit, String paramNameAt,
 			int numItem) {
-		Vector[] ret = new Vector[3];
-		ret[0] = new Vector();
-		ret[1] = new Vector();
-		ret[2] = new Vector();
+    	@SuppressWarnings("unchecked")
+		Vector<String>[] ret = new Vector[3];
+		ret[0] = new Vector<String>();
+		ret[1] = new Vector<String>();
+		ret[2] = new Vector<String>();
 
 		for (int i = 0; i < numItem; i++) {
 			if ("".equals(requestData.getParameter(paramNameCode + i)))
@@ -216,12 +217,13 @@ public class BillingReviewPrep {
 	// checkbox
 	// this way for no sequence order
 	// should change to col1, col2, col3 scan and get a sequence order
-	public Vector[] getRequestFormCodeVec(HttpServletRequest requestData,
+	public Vector<String>[] getRequestFormCodeVec(HttpServletRequest requestData,
 			String paramNameCode, String paramNameUnit, String paramNameAt) {
-		Vector[] ret = new Vector[3];
-		ret[0] = new Vector();
-		ret[1] = new Vector();
-		ret[2] = new Vector();
+    	@SuppressWarnings("unchecked")
+		Vector<String>[] ret = new Vector[3];
+		ret[0] = new Vector<String>();
+		ret[1] = new Vector<String>();
+		ret[2] = new Vector<String>();
 
 		for (Enumeration e = requestData.getParameterNames(); e
 				.hasMoreElements();) {
