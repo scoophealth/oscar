@@ -18,8 +18,6 @@
  */
 -->
 <%@ include file="/taglibs.jsp"%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <script type="text/javascript">
 <!--
 function submitForm(func){
