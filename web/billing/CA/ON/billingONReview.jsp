@@ -60,16 +60,17 @@ boolean dupServiceCode = false;
 
 <%//
 	BillingReviewPrep prepObj = new BillingReviewPrep();
-	Vector[] vecServiceParam = new Vector[3];
+	@SuppressWarnings("unchecked")
+	Vector<String>[] vecServiceParam = new Vector[3];
 	if(oscarVariables.getProperty("onBillingSingleClick", "").equals("yes")) {
-		vecServiceParam[0] = new Vector();
-		vecServiceParam[1] = new Vector();
-		vecServiceParam[2] = new Vector();
+		vecServiceParam[0] = new Vector<String>();
+		vecServiceParam[1] = new Vector<String>();
+		vecServiceParam[2] = new Vector<String>();
 	} else {
 		vecServiceParam = prepObj.getRequestFormCodeVec(request, "xml_", "1", "1");
 	}
 	
-	Vector[] vecServiceParam0 = prepObj.getRequestCodeVec(request, "serviceCode", "serviceUnit", "serviceAt", BillingDataHlp.FIELD_SERVICE_NUM);
+	Vector<String>[] vecServiceParam0 = prepObj.getRequestCodeVec(request, "serviceCode", "serviceUnit", "serviceAt", BillingDataHlp.FIELD_SERVICE_NUM);
 	vecServiceParam[0].addAll(vecServiceParam0[0]);
 	vecServiceParam[1].addAll(vecServiceParam0[1]);
 	vecServiceParam[2].addAll(vecServiceParam0[2]);
@@ -78,7 +79,7 @@ boolean dupServiceCode = false;
         //User double click a service code, and then check off that 
         //service code in billingON page will cause duplicated service
         //code in billing review page.
-        TreeMap mapServiceParam = new TreeMap();
+        TreeMap<String,Integer> mapServiceParam = new TreeMap<String,Integer>();
         for (int i = 0 ; i< vecServiceParam[0].size(); i++){
             mapServiceParam.put(vecServiceParam[0].get(i),i);
         }

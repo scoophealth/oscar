@@ -69,7 +69,7 @@ public class FatFormularios {
      *
      * </p>
      */
-    public Collection fatFormularioProcedimento = new TreeSet(); // of type FatFormularioProcedimento
+    public Collection<FatFormularioProcedimento> fatFormularioProcedimento = new TreeSet<FatFormularioProcedimento>(); // of type FatFormularioProcedimento
 
     ///////////////////////////////////////
     // operations
@@ -105,7 +105,7 @@ public class FatFormularios {
     /**
      * @return
      */
-    public Collection getFatFormularioProcedimento() {
+    public Collection<FatFormularioProcedimento> getFatFormularioProcedimento() {
         return fatFormularioProcedimento;
     }
 
@@ -133,7 +133,7 @@ public class FatFormularios {
     /**
      * @param collection
      */
-    public void setFatFormularioProcedimento(Collection collection) {
+    public void setFatFormularioProcedimento(Collection<FatFormularioProcedimento> collection) {
         fatFormularioProcedimento = collection;
     }
 
