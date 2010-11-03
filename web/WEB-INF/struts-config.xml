@@ -2027,7 +2027,8 @@
 		</action>
 
 		<action path="/report/DxresearchReport" name="DxresearchReportForm" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
-			<forward name="editdesc" path="/oscarReport/editCodeDesc.jsp" />
+			<forward name="success" path="/oscarReport/oscarReportDxReg.jsp" />
+                        <forward name="editdesc" path="/oscarReport/editCodeDesc.jsp" />
 		</action>
 
 		<action path="/OscarAnnotation" name="annotationForm" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">

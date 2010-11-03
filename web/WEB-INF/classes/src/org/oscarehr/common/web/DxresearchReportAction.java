@@ -31,7 +31,7 @@ import oscar.oscarResearch.oscarDxResearch.util.dxResearchCodingSystem;
  */
 @Transactional(propagation=Propagation.REQUIRES_NEW)
 public class DxresearchReportAction extends DispatchAction {
-    
+
     private final static String SUCCESS = "success";
     private final static String EDIT_DESC = "editdesc";
     private DxresearchDAO dxresearchdao ;
@@ -55,7 +55,7 @@ public class DxresearchReportAction extends DispatchAction {
         request.getSession().setAttribute("radiovaluestatus", request.getSession().getAttribute("radiovaluestatus"));
         return mapping.findForward(SUCCESS);
     }
-    
+
     public ActionForward patientRegistedAll(ActionMapping mapping, ActionForm  form,
             HttpServletRequest request, HttpServletResponse response)
             throws Exception {
@@ -68,7 +68,7 @@ public class DxresearchReportAction extends DispatchAction {
         }else
             providerNoList.add(providerNo);
 
- 
+
         List codeSearch = (List)request.getSession().getAttribute("codeSearch");
         List patientInfo = dxresearchdao.patientRegistedAll(codeSearch,providerNoList);
         request.getSession().setAttribute("listview", patientInfo);
@@ -144,7 +144,7 @@ public class DxresearchReportAction extends DispatchAction {
             providerNoList = mygroupdao.getGroupDoctors(providerNo);
         }else
             providerNoList.add(providerNo);
-        
+
         List codeSearch = (List)request.getSession().getAttribute("codeSearch");
         List patientInfo = dxresearchdao.patientRegistedResolve(codeSearch,providerNoList);
         request.getSession().setAttribute("listview", patientInfo);
@@ -165,7 +165,7 @@ public class DxresearchReportAction extends DispatchAction {
       editingCodeDesc = String.format( "\"%s\"", editingCodeDesc );
       request.getSession().setAttribute( "editingCodeDesc", editingCodeDesc );
 
-      return mapping.findForward(EDIT_DESC);
+      return mapping.findForward(SUCCESS);
     }
 
     public ActionForward addSearchCode(ActionMapping mapping, ActionForm  form,
@@ -201,7 +201,7 @@ public class DxresearchReportAction extends DispatchAction {
           String description = newAddition.getDescription().trim();
           description = String.format( "\"%s\"", description );
           request.getSession().setAttribute( "editingCodeDesc", description );
-          return mapping.findForward(SUCCESS);
+          return mapping.findForward(EDIT_DESC);
         }
 
         List existcodeSearch;
@@ -223,7 +223,7 @@ public class DxresearchReportAction extends DispatchAction {
             HttpServletRequest request, HttpServletResponse response)
             throws Exception {
 
-        
+        DynaBean lazyForm = (DynaBean) form;
 
         //String quickListName = (String)lazyForm.get("quicklistname");
         //List codeSearch = dxresearchdao.getQuickListItems(quickListName);;
