@@ -225,29 +225,7 @@ objectName="_admin,_admin.reporting" rights="r" reverse="<%=true%>">
                             Resolved</label>
 
 
-                            <select name="provider_no">
-                                <%
-                                            ResultSet rsgroup = reportMainBean.queryResults("search_group");
-                                            while (rsgroup.next()) {
-                                %>
-                                <option value="<%="_grp_" + rsgroup.getString("mygroup_no")%>"
-                                        <%=mygroupno.equals(rsgroup.getString("mygroup_no")) ? "selected" : ""%>><%="GRP: " + rsgroup.getString("mygroup_no")%></option>
-                                <%
-                                            }
-                                %>
-                                <%
-                                            rsgroup = reportMainBean.queryResults("search_provider");
-                                            while (rsgroup.next()) {
-                                %>
-                                <option value="<%=rsgroup.getString("provider_no")%>"
-                                        <%=curUser_no.equals(rsgroup.getString("provider_no")) ? "selected" : ""%>><%=rsgroup.getString("last_name") + ", " + rsgroup.getString("first_name")%></option>
-                                <%
-                                            }
-                                %>
-                                <option value="*"><bean:message
-                                        key="report.reportindex.formAllProviders" /></option>
-                            </select>
-
+                           
                         &nbsp;&nbsp;
                         <nested:submit style="border:1px solid #666666;">Search Patients</nested:submit>
                     </nested:form>
