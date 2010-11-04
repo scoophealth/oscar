@@ -41,12 +41,7 @@ objectName="_admin,_admin.reporting" rights="r" reverse="<%=true%>">
 <%@page import="org.oscarehr.common.dao.DxresearchDAO"%>
 <%@page import="org.oscarehr.common.model.Dxresearch"%>
 <%@page import="oscar.oscarResearch.oscarDxResearch.util.*"%>
-<%@page import="java.util.*, java.sql.*"%>
-<jsp:useBean id="reportMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
-<%  if(!reportMainBean.getBDoConfigure()) { %>
-<%@ include file="../../report/reportMainBeanConn.jsp"%>
-<% }  %>
+<%@page import="java.util.*"%>
 
 
 <html:html locale="true">
