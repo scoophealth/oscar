@@ -59,12 +59,14 @@ public class EctDisplaySpecsHistoryAction extends EctDisplayAction {
  	 
  try {         
 
+	 String appointmentNo = request.getParameter("appointment_no");
+			 
     //Set lefthand module heading and link
     String winName = "SpecsHistory" + bean.demographicNo;
     String pathview, pathedit;
     
     pathview = "javascript:alert('Not yet available');";
-    pathedit = request.getContextPath() + "/eyeform/SpecsHistory.do?specs.demographicNo=" + bean.demographicNo;
+    pathedit = request.getContextPath() + "/eyeform/SpecsHistory.do?specs.demographicNo=" + bean.demographicNo + "&specs.appointmentNo=" + appointmentNo;
     
     
     String url = "popupPage(500,900,'" + winName + "','" + pathview + "')";
@@ -79,7 +81,7 @@ public class EctDisplaySpecsHistoryAction extends EctDisplayAction {
         
 
     SpecsHistoryDao shDao = (SpecsHistoryDao)SpringUtils.getBean("SpecsHistoryDAO");
-    List<SpecsHistory> shs = shDao.getByDemographicNo(Integer.parseInt(bean.demographicNo));
+    List<SpecsHistory> shs = shDao.getByAppointmentNo(Integer.parseInt(appointmentNo));
 
     for(SpecsHistory sh:shs) {
     	NavBarDisplayDAO.Item item = Dao.Item();                  

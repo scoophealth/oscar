@@ -5,8 +5,8 @@
 
 <hibernate-mapping package="org.oscarehr.eyeform.model">
 	<class
-		name="ProcedureBook"
-		table="procedurebook"
+		name="FollowUp"
+		table="eyeform_followup"
 	>
 		<meta attribute="sync-DAO">false</meta>
 		<id
@@ -18,26 +18,6 @@
 		</id>
 
 		<property
-			name="eyeformId"
-			column="eyeform_id"
-			type="java.lang.Long"
-			not-null="false"
-		/>
-		
-		<property
-			name="provider"
-			column="provider"
-			type="string"
-			not-null="false"
-			length="60"
-		/>
-		
-		<property
-			name="status"
-			column="status"
-			type="string"
-		/>
-		<property
 			name="appointmentNo"
 			column="appointment_no"
 			type="integer"
@@ -48,53 +28,41 @@
 			name="demographicNo"
 			column="demographic_no"
 			type="integer"
-			not-null="false"			
+			not-null="false"
 		/>
-		
+<!-- 		
 		<many-to-one
 			name="demographic"
 			column="demographic_no"
 			class="org.oscarehr.common.model.Demographic"
 			not-null="false"
-			insert="false" update="false"
 		>
 		</many-to-one>
+-->
 		
 		<property
-			name="procedureName"
-			column="procedure_name"
-			type="string"
-			not-null="false"
-			length="30"
+			name="timespan"
+			column="timespan"
+			type="integer"
+			not-null="false"			
 		/>
+
 		<property
-			name="eye"
-			column="eye"
+			name="timeframe"
+			column="timeframe"
 			type="string"
-			not-null="false"
-			length="20"
+			not-null="false"			
 		/>
+		
 		<property
-			name="location"
-			column="location"
+			name="followupProvider"
+			column="followup_provider"
 			type="string"
-			not-null="false"
-			length="50"
+			not-null="false"			
 		/>
-		<property
-			name="urgency"
-			column="urgency"
-			type="string"
-			not-null="false"
-			length="10"
-		/>
-		<property
-			name="comment"
-			column="comment"
-			type="string"
-			not-null="false"
-			
-		/>
+		
+		<!-- list of "templates" -->		
+		
 		<property
 			name="date"
 			column="date"
@@ -104,5 +72,8 @@
 		/>
 
 
+		<many-to-one name="provider" class="org.oscarehr.common.model.Provider"
+                        column="followup_provider" update="false" insert="false" lazy="false" />
+                        
 	</class>	
 </hibernate-mapping>

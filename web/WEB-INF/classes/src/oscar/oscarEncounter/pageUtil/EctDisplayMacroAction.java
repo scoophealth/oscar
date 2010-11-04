@@ -60,6 +60,8 @@ public class EctDisplayMacroAction extends EctDisplayAction {
  	 
  try {         
 
+	 String appointmentNo = request.getParameter("appointment_no");
+		
     //Set lefthand module heading and link
     String winName = "macro" + bean.demographicNo;
     String pathview, pathedit;

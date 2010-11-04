@@ -36,6 +36,7 @@
 <%--This is included in documentReport.jsp - wasn't meant to be displayed as a separate page --%>
 <%
 String user_no = (String) session.getAttribute("user");
+String appointment = request.getParameter("appointment_no");
 
 String module = "";
 String moduleid = "";
@@ -98,6 +99,7 @@ formdata = (AddEditDocumentForm) request.getAttribute("completedForm");
     formdata.setDocCreator(user_no);
     formdata.setObservationDate(UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy/MM/dd"));
     formdata.setHtml(defaultHtml);
+    formdata.setAppointment(appointment);
 }
 ArrayList doctypes = EDocUtil.getDoctypes(formdata.getFunction());
 %>

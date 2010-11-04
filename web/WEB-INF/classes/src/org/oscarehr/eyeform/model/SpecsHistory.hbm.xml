@@ -23,7 +23,17 @@
 			not-null="true"
 			length="11"
 		/>
+	
+		
 		<property
+			name="appointmentNo"
+			column="appointment_no"
+			type="integer"
+			not-null="true"
+			length="11"
+		/>
+		<property
+		
 			name="provider"
 			column="provider"
 			type="string"

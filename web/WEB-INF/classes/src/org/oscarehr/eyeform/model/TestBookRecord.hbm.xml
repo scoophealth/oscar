@@ -44,12 +44,20 @@
 			not-null="false"
 		/>
 		
+		<property
+			name="demographicNo"
+			column="demographic_no"
+			type="integer"
+			not-null="false"			
+		/>
+		
+		
 		<many-to-one
 			name="demographic"
 			column="demographic_no"
 			class="org.oscarehr.common.model.Demographic"
 			not-null="false"
-		>
+			insert="false" update="false">		
 		</many-to-one>
 		<property
 			name="eyeformId"

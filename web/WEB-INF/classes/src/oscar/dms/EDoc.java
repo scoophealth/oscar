@@ -66,7 +66,8 @@ public class EDoc extends TagObject implements Comparable {
 	private String indivoIdx = null;
 	private boolean indivoRegistered = false;
 	private int numberOfPages = 0;
-
+	private Integer appointmentNo = -1;
+	
 	/** Creates a new instance of EDoc */
 	public EDoc() {
 	}
@@ -358,6 +359,16 @@ public class EDoc extends TagObject implements Comparable {
 
 	public void setProgramId(Integer programId) {
 		this.programId = programId;
+	}
+	
+	
+
+	public Integer getAppointmentNo() {
+		return appointmentNo;
+	}
+
+	public void setAppointmentNo(Integer appointmentNo) {
+		this.appointmentNo = appointmentNo;
 	}
 
 	public Date getDateTimeStampAsDate() {

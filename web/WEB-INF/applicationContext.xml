@@ -108,6 +108,7 @@
 	<bean id="ProcedureBookDAO" class="org.oscarehr.eyeform.dao.ProcedureBookDao" autowire="byName" />
 	<bean id="TestBookDAO" class="org.oscarehr.eyeform.dao.TestBookRecordDao" autowire="byName" />
 	<bean id="MacroDAO" class="org.oscarehr.eyeform.dao.MacroDao" autowire="byName" />
+	<bean id="FollowUpDAO" class="org.oscarehr.eyeform.dao.FollowUpDao" autowire="byName" />
         <bean id="rourke2009Dao" class="oscar.form.dao.Rourke2009DAO" autowire="byName" />      
 
 	<!--  configure the scratch pad -->

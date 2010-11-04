@@ -1,3 +1,13 @@
+<%@ page import="oscar.OscarProperties"%>
+
+<%@ taglib uri="http://jakarta.apache.org/struts/tags-html" prefix="html"%>
+
+<%
+	oscar.OscarProperties pros = oscar.OscarProperties.getInstance();
+	String fid = pros.getProperty("eyeform_diagram_eform");
+
+%>
+
 <script>
 //if have value under slidy block set the color to brown
 function touchColor() {
@@ -215,10 +225,17 @@ span.ge{
 <td>
 <div class="slidey">
         <div class="title">
-            <a style="font-weight: bold;" href="javascript:void(0)" tabindex="31" id="a_20" onclick="return;">Digital Photos:</a>            
+            <a style="font-weight: bold;" href="javascript:void(0)" tabindex="31" id="a_19" onclick="togglediv(this);">Digital Photos:</a>            
         </div>
+        <div id="s_19" class="slideblock">
+	        <a href="#" onclick="window.open('<html:rewrite page="/dms/documentReport.jsp"/>?function=demographic&doctype=lab&functionid=14&curUser=<%=session.getAttribute("user")%>&mode=add&parentAjaxId=docs&appointment_no='+appointmentNo);return false;">Add Photos</a>
+        </div>
+        
         <div class="title">
             <a style="font-weight: bold;" href="javascript:void(0)" tabindex="31" id="a_20" onclick="alert('Not yet implemented');">Diagrams:</a>            
+        </div>
+        <div id="s_20" class="slideblock">
+            <a href="#" onclick="window.open('<html:rewrite page="/eform/efmformadd_data.jsp"/>?fid=<%=fid %>&demographic_no=<%=request.getParameter("demographic_no") %>&appointment=<%=request.getParameter("appointment_no") %>');return false;">Add Diagram</a>
         </div>
 </div>
 </td>

@@ -175,12 +175,14 @@
            
        }
 
-          
+
+       var appointmentNo = <%=request.getParameter("appointmentNo")%>;
+              
    </script>
  
    
    <%
-   
+      
  	String customScript = (String)request.getAttribute("cme_js");
    if(customScript != null && customScript.length()>0) {
 	%>

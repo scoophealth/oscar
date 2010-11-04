@@ -11,6 +11,7 @@ public class TestBookRecord {
 	private String status;
 	private int appointmentNo;
 	private Demographic demographic;	
+	private int demographicNo;
 	private long eyeformId;
 	private String eye;
 	private String urgency;
@@ -18,6 +19,13 @@ public class TestBookRecord {
 	private Date date;
 	
 	
+	
+	public int getDemographicNo() {
+		return demographicNo;
+	}
+	public void setDemographicNo(int demographicNo) {
+		this.demographicNo = demographicNo;
+	}
 	public Demographic getDemographic() {
 		return demographic;
 	}

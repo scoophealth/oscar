@@ -134,8 +134,8 @@ public final class EDocUtil extends SqlUtilBaseS {
      * @return the new documentId
      */
     public static String addDocumentSQL(EDoc newDocument) {
-        String preparedSQL = "INSERT INTO document (doctype, docdesc, docxml, docfilename, doccreator, source, responsible, program_id, updatedatetime, status, contenttype, public1, observationdate,number_of_pages) VALUES (?,?,?, ?,?,?, ?,?,?, ?,?,?,?,?)";
-        DBPreparedHandlerParam[] param = new DBPreparedHandlerParam[14];
+        String preparedSQL = "INSERT INTO document (doctype, docdesc, docxml, docfilename, doccreator, source, responsible, program_id, updatedatetime, status, contenttype, public1, observationdate,number_of_pages,appointment_no) VALUES (?,?,?, ?,?,?, ?,?,?, ?,?,?,?,?,?)";
+        DBPreparedHandlerParam[] param = new DBPreparedHandlerParam[15];
         int counter = 0;
         param[counter++] = new DBPreparedHandlerParam(newDocument.getType());
         param[counter++] = new DBPreparedHandlerParam(newDocument.getDescription());
@@ -155,6 +155,7 @@ public final class EDocUtil extends SqlUtilBaseS {
         java.sql.Date od2 = MyDateFormat.getSysDate(newDocument.getObservationDate());
         param[counter++] = new DBPreparedHandlerParam(od2);
         param[counter++] = new DBPreparedHandlerParam(newDocument.getNumberOfPages());
+        param[counter++] = new DBPreparedHandlerParam(newDocument.getAppointmentNo());
 
         /*
          * String documentSql = "INSERT INTO document (doctype, docdesc, docxml, docfilename, doccreator, updatedatetime, status, contenttype, public1, observationdate) " + "VALUES ('" +
@@ -245,10 +246,10 @@ public final class EDocUtil extends SqlUtilBaseS {
      * Fetches all consult docs attached to specific consultation
      */
     public static ArrayList<EDoc> listDocs(String demoNo, String consultationId, boolean attached) {
-        String sql = "SELECT DISTINCT d.document_no, d.doccreator, d.source, d.responsible, d.program_id, d.doctype, d.docdesc, d.observationdate, d.status, d.docfilename, d.contenttype, d.reviewer, d.reviewdatetime FROM document d, ctl_document c "
+        String sql = "SELECT DISTINCT d.document_no, d.doccreator, d.source, d.responsible, d.program_id, d.doctype, d.docdesc, d.observationdate, d.status, d.docfilename, d.contenttype, d.reviewer, d.reviewdatetime, d.appointment_no FROM document d, ctl_document c "
                 + "WHERE d.status=c.status AND d.status != 'D' AND c.document_no=d.document_no AND " + "c.module='demographic' AND c.module_id = " + demoNo;
 
-        String attachQuery = "SELECT d.document_no, d.doccreator, d.source, d.responsible, d.program_id, d.doctype, d.docdesc, d.observationdate, d.status, d.docfilename, d.contenttype, d.reviewer, d.reviewdatetime FROM document d, consultdocs cd " +
+        String attachQuery = "SELECT d.document_no, d.doccreator, d.source, d.responsible, d.program_id, d.doctype, d.docdesc, d.observationdate, d.status, d.docfilename, d.contenttype, d.reviewer, d.reviewdatetime, d.appointment_no FROM document d, consultdocs cd " +
 		"WHERE d.document_no = cd.document_no AND " + "cd.requestId = "+consultationId+" AND cd.doctype = 'D' AND cd.deleted IS NULL";
 
         ArrayList<EDoc> resultDocs = new ArrayList<EDoc>();
@@ -267,6 +268,8 @@ public final class EDocUtil extends SqlUtilBaseS {
 		currentdoc.setResponsibleId(rsGetString(rs, "responsible"));
                 String temp = rsGetString(rs, "program_id");
                 if (temp != null && temp.length()>0) currentdoc.setProgramId(Integer.valueOf(temp));
+                temp = rsGetString(rs, "appointment_no");
+                if (temp != null && temp.length()>0) currentdoc.setAppointmentNo(Integer.valueOf(temp));
                 currentdoc.setType(rsGetString(rs, "doctype"));
                 currentdoc.setStatus(rsGetString(rs, "status").charAt(0));
                 currentdoc.setObservationDate(rsGetString(rs, "observationdate"));
@@ -289,6 +292,8 @@ public final class EDocUtil extends SqlUtilBaseS {
 		    currentdoc.setResponsibleId(rsGetString(rs, "responsible"));
                     String temp = rsGetString(rs, "program_id");
                     if (temp != null && temp.length()>0) currentdoc.setProgramId(Integer.valueOf(temp));
+                    temp = rsGetString(rs, "appointment_no");
+                    if (temp != null && temp.length()>0) currentdoc.setAppointmentNo(Integer.valueOf(temp));
                     currentdoc.setType(rsGetString(rs, "doctype"));
                     currentdoc.setStatus(rsGetString(rs, "status").charAt(0));
                     currentdoc.setObservationDate(rsGetString(rs, "observationdate"));
@@ -319,7 +324,7 @@ public final class EDocUtil extends SqlUtilBaseS {
 
     public static EDoc getEDocFromDocId(String docId){
          String sql = "SELECT DISTINCT c.module, c.module_id, d.doccreator, d.source, d.responsible, d.program_id, "
-                + "d.status, d.docdesc, d.docfilename, d.doctype, d.document_no, d.updatedatetime, d.contenttype, d.observationdate, d.reviewer, d.reviewdatetime " +
+                + "d.status, d.docdesc, d.docfilename, d.doctype, d.document_no, d.updatedatetime, d.contenttype, d.observationdate, d.reviewer, d.reviewdatetime, d.appointment_no " +
 		"FROM document d, ctl_document c WHERE "
                 + " c.document_no=d.document_no AND c.document_no='" + docId + "'";
         sql = sql + " ORDER BY " + EDocUtil.SORT_OBSERVATIONDATE;//default sort
@@ -339,6 +344,8 @@ public final class EDocUtil extends SqlUtilBaseS {
 		currentdoc.setResponsibleId(rsGetString(rs, "responsible"));
                 String temp = rsGetString(rs, "program_id");
                 if (temp != null && temp.length()>0) currentdoc.setProgramId(Integer.valueOf(temp));
+                temp = rsGetString(rs, "appointment_no");
+                if (temp != null && temp.length()>0) currentdoc.setAppointmentNo(Integer.valueOf(temp));
                 currentdoc.setDateTimeStamp(rsGetString(rs, "updatedatetime"));
                 currentdoc.setFileName(rsGetString(rs, "docfilename"));
                 currentdoc.setStatus(rsGetString(rs, "status").charAt(0));
@@ -372,7 +379,7 @@ public final class EDocUtil extends SqlUtilBaseS {
         // docType = null or = "all" to show all doctypes
         // select publicDoc and sorting from static variables for this class i.e. sort=EDocUtil.SORT_OBSERVATIONDATE
         // sql base (prefix) to avoid repetition in the if-statements
-        String sql = "SELECT DISTINCT c.module, c.module_id, d.doccreator, d.source, d.responsible, d.program_id, d.status, d.docdesc, d.docfilename, d.doctype, d.document_no, d.updatedatetime, d.contenttype, d.observationdate, d.reviewer, d.reviewdatetime " +
+        String sql = "SELECT DISTINCT c.module, c.module_id, d.doccreator, d.source, d.responsible, d.program_id, d.status, d.docdesc, d.docfilename, d.doctype, d.document_no, d.updatedatetime, d.contenttype, d.observationdate, d.reviewer, d.reviewdatetime, d.appointment_no " +
 		"FROM document d, ctl_document c WHERE c.document_no=d.document_no AND c.module='" + module + "'";
         // if-statements to select the where condition (suffix)
         if (publicDoc.equals(PUBLIC)) {
@@ -407,6 +414,8 @@ public final class EDocUtil extends SqlUtilBaseS {
 		currentdoc.setResponsibleId(rsGetString(rs, "responsible"));
                 String temp = rsGetString(rs, "program_id");
                 if (temp != null && temp.length()>0) currentdoc.setProgramId(Integer.valueOf(temp));
+                temp = rsGetString(rs, "appointment_no");
+                if (temp != null && temp.length()>0) currentdoc.setAppointmentNo(Integer.valueOf(temp));
                 currentdoc.setDateTimeStamp(rsGetString(rs, "updatedatetime"));
                 currentdoc.setFileName(rsGetString(rs, "docfilename"));
                 currentdoc.setStatus(rsGetString(rs, "status").charAt(0));
@@ -432,7 +441,7 @@ public final class EDocUtil extends SqlUtilBaseS {
     public ArrayList<EDoc> getUnmatchedDocuments(String creator, String responsible, Date startDate, Date endDate, boolean unmatchedDemographics){
        ArrayList<EDoc> list = new ArrayList();
        //boolean matchedDemographics = true;
-       String sql= "SELECT DISTINCT c.module, c.module_id, d.doccreator, d.source, d.responsible, d.program_id, d.status, d.docdesc, d.docfilename, d.doctype, d.document_no, d.updatedatetime, d.contenttype, d.observationdate FROM document d, ctl_document c WHERE c.document_no=d.document_no AND c.module='demographic' and doccreator = ? and responsible = ? and updatedatetime >= ?  and updatedatetime <= ?";
+       String sql= "SELECT DISTINCT c.module, c.module_id, d.doccreator, d.source, d.responsible, d.program_id, d.status, d.docdesc, d.docfilename, d.doctype, d.document_no, d.updatedatetime, d.contenttype, d.observationdate, d.appointment_no FROM document d, ctl_document c WHERE c.document_no=d.document_no AND c.module='demographic' and doccreator = ? and responsible = ? and updatedatetime >= ?  and updatedatetime <= ?";
        if (unmatchedDemographics){
            sql += " and c.module_id = -1 ";
        }
@@ -464,6 +473,8 @@ public final class EDocUtil extends SqlUtilBaseS {
 		currentdoc.setResponsibleId(rsGetString(rs, "responsible"));
                 String temp = rsGetString(rs, "program_id");
                 if (temp != null && temp.length()>0) currentdoc.setProgramId(Integer.valueOf(temp));
+                temp = rsGetString(rs, "appointment_no");
+                if (temp != null && temp.length()>0) currentdoc.setAppointmentNo(Integer.valueOf(temp));
                 currentdoc.setDateTimeStamp(rsGetString(rs, "updatedatetime"));
                 currentdoc.setFileName(rsGetString(rs, "docfilename"));
                 currentdoc.setStatus(rsGetString(rs, "status").charAt(0));
@@ -507,6 +518,8 @@ public final class EDocUtil extends SqlUtilBaseS {
 		currentdoc.setResponsibleId(rsGetString(rs, "responsible"));
                 String temp = rsGetString(rs, "program_id");
                 if (temp != null && temp.length()>0) currentdoc.setProgramId(Integer.valueOf(temp));
+                temp = rsGetString(rs, "appointment_no");
+                if (temp != null && temp.length()>0) currentdoc.setAppointmentNo(Integer.valueOf(temp));
                 currentdoc.setDateTimeStamp(rsGetString(rs, "updatedatetime"));
                 currentdoc.setContentType(rsGetString(rs, "contenttype"));
                 currentdoc.setObservationDate(rsGetString(rs, "observationdate"));

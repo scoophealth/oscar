@@ -17,6 +17,10 @@ public class SpecsHistoryDao extends HibernateDaoSupport {
 		return getHibernateTemplate().find("from SpecsHistory sh where sh.demographicNo = ? order by sh.date desc",demographicNo);
 	}
 	
+	public List<SpecsHistory> getByAppointmentNo(int appointmentNo) {
+		return getHibernateTemplate().find("from SpecsHistory sh where sh.appointmentNo = ? order by sh.date desc",appointmentNo);
+	}
+	
 	public SpecsHistory find(int id) {
 		return (SpecsHistory)getHibernateTemplate().get(SpecsHistory.class, id);
 	}

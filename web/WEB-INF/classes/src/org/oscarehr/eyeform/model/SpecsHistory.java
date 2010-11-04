@@ -25,8 +25,16 @@ public class SpecsHistory {
 	private String osPrism;
 	private Date updateTime;
 	private String dateStr;
+	private int appointmentNo;
 	
 	
+	
+	public int getAppointmentNo() {
+		return appointmentNo;
+	}
+	public void setAppointmentNo(int appointmentNo) {
+		this.appointmentNo = appointmentNo;
+	}
 	public String getOsSph() {
 		return osSph;
 	}

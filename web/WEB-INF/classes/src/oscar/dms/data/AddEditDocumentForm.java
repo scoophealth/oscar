@@ -45,6 +45,8 @@ public class AddEditDocumentForm extends ActionForm {
     private boolean reviewDoc = false;
     private String html = "";
     
+    private String appointment = "";
+    
     public AddEditDocumentForm() {
     }
 
@@ -175,5 +177,14 @@ public class AddEditDocumentForm extends ActionForm {
     public void setFiledata(FormFile Filedata) {
         this.filedata = Filedata;
     }
+
+	public String getAppointment() {
+		return appointment;
+	}
+
+	public void setAppointment(String appointment) {
+		this.appointment = appointment;
+	}
+    
     
 }

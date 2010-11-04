@@ -25,6 +25,9 @@ Book Test
 		<input type="hidden" name="method" value="save"/>
 				
 		<html:hidden property="data.id"/>
+		<html:hidden property="data.demographicNo"/>		
+		<html:hidden property="data.appointmentNo"/>
+		
 		
 		<tr>
 			<td class="genericTableHeader">Test name</td>

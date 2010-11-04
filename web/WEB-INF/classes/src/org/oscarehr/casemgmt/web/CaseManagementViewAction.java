@@ -1109,6 +1109,8 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		String providerNo = getProviderNo(request);
 		String demoNo = getDemographicNo(request);
 		Collection notes = null;
+		
+		String appointmentNo = request.getParameter("appointment_no");
 
 		String[] codes = request.getParameterValues("issue_code");
 
@@ -1135,7 +1137,15 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			if (!a) {
 				return mapping.findForward("success"); // The link of Medical History won't show up on new CME screen.
 			}
-		}
+		} /* else if (codes[0].equalsIgnoreCase("PastOcularHistory")) {
+			return mapping.findForward("success");
+		}  else if (codes[0].equalsIgnoreCase("OcularMedications")) {
+			return mapping.findForward("success");
+		} else if (codes[0].equalsIgnoreCase("PatientLog")) {
+			return mapping.findForward("success");
+		} else if (codes[0].equalsIgnoreCase("DiagnosticNotes")) {
+			return mapping.findForward("success");
+		}*/
 
 		// set save url to be used by ajax editor
 		String identUrl = request.getQueryString();

@@ -1,4 +1,8 @@
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jstl/fmt" prefix="fmt" %>
+<%@ taglib prefix="display" uri="http://displaytag.sf.net"%>
+
+
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>	
 <script>
 function setDischarge(){
@@ -60,55 +64,78 @@ function saveEyeformNote() {
 	});
 	
  }
+
+
+function saveNoteAndSendTickler() {
+	//alert("save function called for eyeform - " + savedNoteId);
+	//do the ajax call to save form values 
+	
+	jQuery.ajax({
+		type: 'POST',
+		url: ctx+'/eyeform/NoteData.do?method=save',
+		data: jQuery("form[name='caseManagementEntryForm']").serialize(),
+		success: function (){alert('saved');},
+		dataType: 'html'	
+	});
+	
+	
+ }
+
 </script>
 
 <span note_addon="saveEyeformNote"></span>
 
 <table border="0">
-           <tbody><tr>
-            <td width="25%">Follow up:
+           <tbody>
+           
+<tr>
+<td colspan="3">
+<div>
 
-             <input name="followNo" value="4"  style="width: 25px;" class="special" type="text">
-             <select name="followFrame" style="width: 50px;" class="special">
-             	<option value="days" selected="selected">days</option>
-            	<option value="weeks">weeks</option>
-            	<option value="months">months</option>
-            </select>
-            </td> 
-			<td width="45%">
-            Doctor:
+        <div>
             
-            <select property="internalNo">
-            	<c:forEach var="item" items="${internalList}">
-            		<option value="<c:out value="${item.providerNo}"/>"><c:out value="${item.formattedName}"/></option>
-            	</c:forEach>            	
-			</select>
-	  		
-            </td>
-            <td>
-            	
-            	 
-            	<input tabindex="236" style="width: 10%;" value="" id="ack1" name="ack1" onchange="setDischarge()" type="checkbox">
-            	
-            	discharge
-           <br>
+            <b>Follow Up/Consult:</b>
             
-            	 
-            	<input tabindex="237" style="width: 10%;" checked="checked" id="ack2" value="checked" name="ack2" onchange="setSaveflag(true);setStat();" type="checkbox">
-            	
-            	
-            	STAT/PRN
-           <br>
+            
+            <span>&nbsp;&nbsp;</span>
+			<%
+				Integer noteId = (Integer)request.getAttribute("noteId");
+				String aptNo = request.getParameter("appointmentNo");
+				String demographicNo = request.getParameter("demographicNo");
+			%>            
+            <a href="javascript:void(0)" onclick="popupPageOne('<c:out value="${ctx}"/>/eyeform/FollowUp.do?method=form&amp;followup.demographicNo=<%=demographicNo %>&amp;noteId=<%=noteId%>&amp;followup.appointmentNo=<%=aptNo%>','eyeFollowUp');">[arrange follow up/consult]</a>
+            &nbsp;            	
+        </div>
 
-            
-            	
-            	 
-            	<input tabindex="240" style="width: 10%;" value="" id="ack3" name="ack3" onchange="setOpt();" type="checkbox">
-            	
-            	optom routine
-            </td>
-            </tr>
+        <div>
+            <display:table name="requestScope.followUps"
+            requestURI="/EyeForm.do" class="display" id="tb" pagesize="5">
+
+                <display:setProperty name="paging.banner.one_item_found" value=""/>
+                <display:setProperty name="paging.banner.all_items_found" value=""/>
+                <display:setProperty name="paging.banner.some_items_found" value=""/>
+                
+                <display:column title="Time Span">
+                                        <c:out value="${tb.timespan}"/>
+                                </display:column>
+                                <display:column title="Time Frame">
+                                <c:out value="${tb.timeframe}"/>
+                                </display:column>
+                                <display:column title="Date">
+                                <c:out value="${tb.date}"/>
+                                </display:column>
+                                <display:column title="Provider">
+                                <c:out value="${tb.provider.formattedName}"/>
+                                </display:column>
+                               
+			</display:table>           
+        </div>
+</div>
+</td>
+</tr>
+
            </tbody>
+    
 
 <% //book procedure, book test %>
 
@@ -124,14 +151,37 @@ function saveEyeformNote() {
             
             <span>&nbsp;&nbsp;</span>
 			<%
-				Integer noteId = (Integer)request.getAttribute("noteId");
+				noteId = (Integer)request.getAttribute("noteId");
 			%>            
-            <a href="javascript:void(0)" onclick="popupPageOne('<c:out value="${ctx}"/>/eyeform/ProcedureBook.do?method=form&amp;appNo=4&amp;demographicNo=1&amp;noteId=<%=noteId%>','eyeProbook');">[arrange procedure]</a>
+            <a href="javascript:void(0)" onclick="popupPageOne('<c:out value="${ctx}"/>/eyeform/ProcedureBook.do?method=form&amp;data.appointmentNo=<%=aptNo%>&amp;data.demographicNo=<%=demographicNo %>&amp;noteId=<%=noteId%>','eyeProbook');">[arrange procedure]</a>
             &nbsp;            	
         </div>
 
         <div>
-            Nothing found to display.
+			<display:table name="requestScope.procedures"
+            	requestURI="/EyeForm.do" class="display" id="tb" pagesize="5">
+
+                <display:setProperty name="paging.banner.one_item_found" value=""/>
+                <display:setProperty name="paging.banner.all_items_found" value=""/>
+                <display:setProperty name="paging.banner.some_items_found" value=""/>
+                
+                 <display:column title="Procedure">
+                 	<c:out value="${tb.procedureName}"/>
+                 </display:column>
+				<display:column title="Eye" >
+		      		<c:out value="${tb.eye}"/>
+				</display:column>
+				<display:column title="Urgency" >
+		      		<c:out value="${tb.urgency}"/>
+				</display:column>
+				<display:column title="Location" >
+		      		<c:out value="${tb.location}"/>
+				</display:column>
+				<display:column title="comment" >
+		      		<c:out value="${tb.comment}"/>
+				</display:column>
+				                 
+            </display:table>            
         </div>
 </div>
 </td>
@@ -148,12 +198,31 @@ function saveEyeformNote() {
            
             <span>&nbsp;&nbsp;</span>
             
-            <a href="javascript:void(0)" onclick="popupPageOne('<c:out value="${ctx}"/>/eyeform/TestBook.do?method=form&amp;appNo=4&amp;demographicNo=1','eyeProbook');">[arrange test]</a>
+            <a href="javascript:void(0)" onclick="popupPageOne('<c:out value="${ctx}"/>/eyeform/TestBook.do?method=form&amp;data.appointmentNo=<%=aptNo%>&amp;data.demographicNo=<%=demographicNo %>','eyeTestbook');">[arrange test]</a>
             	&nbsp;
             	
         </div>
         <div>
-            Nothing found to display.
+			<display:table name="requestScope.testBookRecords"
+            	requestURI="/EyeForm.do" class="display" id="tb2" pagesize="5">
+
+                <display:setProperty name="paging.banner.one_item_found" value=""/>
+                <display:setProperty name="paging.banner.all_items_found" value=""/>
+                <display:setProperty name="paging.banner.some_items_found" value=""/>
+                                 
+            	<display:column title="Test Name"  >
+			   		<c:out value="${tb2.testname}"/>
+				</display:column>
+				<display:column title="Eye" >
+		      		<c:out value="${tb2.eye}"/>
+				</display:column>
+				<display:column title="Urgency" >
+		      		<c:out value="${tb2.urgency}"/>
+				</display:column>
+				<display:column title="comment" >
+		      		<c:out value="${tb2.comment}"/>
+				</display:column>
+            </display:table>                    
         </div>
 
 </div>
@@ -185,7 +254,7 @@ function saveEyeformNote() {
            </td>
            <td width="15%">
             
-			<input tabindex="251" value="send tickler" onclick="markTickler();touchColor();AjaxSubmitAction('sendEyeTickler');return false;" id="stickler" style="color: black;" type="submit">
+			<input tabindex="251" value="Send Tickler" onclick="saveNoteAndSendTickler();return false;" id="stickler" style="color: black;" type="submit">
 			 
             </td>
             <td width="45%"></td>
@@ -199,6 +268,11 @@ function saveEyeformNote() {
 </tr>
 
            
+           <tr>
+            <td nowrap="nowrap" width="40%">
+            	<input tabindex="251" value="Generate Note" onclick="AjaxSubmitAction('sendEyeNoTickler');return false;" id="stickler0" style="color: black;" type="submit">			
+            </td>
+           </tr>
            
       </table>
 

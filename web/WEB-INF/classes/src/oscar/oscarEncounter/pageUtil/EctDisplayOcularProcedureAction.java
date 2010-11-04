@@ -59,12 +59,14 @@ public class EctDisplayOcularProcedureAction extends EctDisplayAction {
  	 
  try {         
 
+	String appointmentNo = request.getParameter("appointment_no");
+	
     //Set lefthand module heading and link
     String winName = "OcularProcedure" + bean.demographicNo;
     String pathview, pathedit;
     
     pathview = "javascript:alert('Not yet available');";
-    pathedit = request.getContextPath() + "/eyeform/OcularProc.do?proc.demographicNo=" + bean.demographicNo;
+    pathedit = request.getContextPath() + "/eyeform/OcularProc.do?proc.demographicNo=" + bean.demographicNo + "&proc.appointmentNo=" + appointmentNo;
     
     
     String url = "popupPage(500,900,'" + winName + "','" + pathview + "')";
@@ -79,7 +81,7 @@ public class EctDisplayOcularProcedureAction extends EctDisplayAction {
         
 
     OcularProcDao opDao = (OcularProcDao)SpringUtils.getBean("OcularProcDAO");
-    List<OcularProc> ops = opDao.getByDemographicNo(Integer.parseInt(bean.demographicNo));
+    List<OcularProc> ops = opDao.getByAppointmentNo(Integer.parseInt(appointmentNo));
 
     for(OcularProc op:ops) {
     	NavBarDisplayDAO.Item item = Dao.Item();                  

@@ -25,6 +25,7 @@ Book Ocular Procedure
 		<input type="hidden" name="method" value="save"/>
 		
 		<html:hidden property="proc.demographicNo"/>
+		<html:hidden property="proc.appointmentNo"/>
 		<html:hidden property="proc.id"/>
 		
 

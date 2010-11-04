@@ -477,6 +477,10 @@
 		<form-bean name="testBookForm" type="org.apache.struts.validator.DynaValidatorForm">
 			<form-property name="data" type="org.oscarehr.eyeform.model.TestBookRecord" />
 		</form-bean>
+		
+		<form-bean name="followUpForm2" type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property name="followup" type="org.oscarehr.eyeform.model.FollowUp" />
+		</form-bean>
 
 	</form-beans>
 
@@ -1975,7 +1979,10 @@
 			<forward name="success" path="/eyeform/success.jsp" />
 		</action>
 
-
+		<action path="/eyeform/FollowUp" type="org.oscarehr.eyeform.web.FollowUpAction" parameter="method" scope="request" validate="false" input="/eyeform/followup.jsp" name="followUpForm2">
+			<forward name="form" path="/eyeform/followup.jsp" />
+			<forward name="success" path="/eyeform/success.jsp" />
+		</action>
 
 		<!-- END OSCAR Report By Template -->
 

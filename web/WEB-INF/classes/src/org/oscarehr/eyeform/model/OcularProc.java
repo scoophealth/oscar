@@ -17,6 +17,15 @@ public class OcularProc {
 	private String doctor;
 	private String location;
 	private Date updateTime;
+	private int appointmentNo;
+	
+	
+	public int getAppointmentNo() {
+		return appointmentNo;
+	}
+	public void setAppointmentNo(int appointmentNo) {
+		this.appointmentNo = appointmentNo;
+	}
 	public Integer getId() {
 		return id;
 	}

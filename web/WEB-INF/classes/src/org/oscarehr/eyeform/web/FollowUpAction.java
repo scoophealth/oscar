@@ -9,13 +9,13 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.validator.DynaValidatorForm;
 import org.oscarehr.PMmodule.dao.ProviderDao;
-import org.oscarehr.eyeform.dao.OcularProcDao;
-import org.oscarehr.eyeform.model.OcularProc;
+import org.oscarehr.eyeform.dao.FollowUpDao;
+import org.oscarehr.eyeform.model.FollowUp;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
-public class OcularProcAction extends DispatchAction {
-	
+public class FollowUpAction extends DispatchAction {
+
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         return form(mapping, form, request, response);
     }
@@ -26,32 +26,35 @@ public class OcularProcAction extends DispatchAction {
 
     public ActionForward form(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
     	ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
-    	OcularProcDao dao = (OcularProcDao)SpringUtils.getBean("OcularProcDAO");
-    	
     	request.setAttribute("providers",providerDao.getActiveProviders());
     	
+    	
+    	/*
+    	ProcedureBookDao dao = (ProcedureBookDao)SpringUtils.getBean("ProcedureBookDAO");
+    	
+    	
     	DynaValidatorForm f = (DynaValidatorForm)form;
-    	OcularProc procedure = (OcularProc)f.get("proc");
-    	if(procedure.getId() != null && procedure.getId().intValue()>0) {
-    		procedure = dao.find(procedure.getId()); 
+    	ProcedureBook data = (ProcedureBook)f.get("data");
+    	if(data.getId() != null && data.getId().intValue()>0) {
+    		data = dao.find(data.getId()); 
     	}
     	
-    	f.set("proc", procedure);
-    	
+    	f.set("data", data);
+    */	        
         return mapping.findForward("form");
     }
     
-    public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+    public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {    	
     	DynaValidatorForm f = (DynaValidatorForm)form;
-    	OcularProc procedure = (OcularProc)f.get("proc");
+    	FollowUp data = (FollowUp)f.get("followup");
+    	if(data.getId()!=null && data.getId()==0) {
+    		data.setId(null);
+    	}
+    	FollowUpDao dao = (FollowUpDao)SpringUtils.getBean("FollowUpDAO");
+    	//data.setProvider(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());	
+    	dao.save(data);
     	
-    	OcularProcDao dao = (OcularProcDao)SpringUtils.getBean("OcularProcDAO");
-    	procedure.setProvider(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());	
-    	if(procedure.getId() == 0)
-    		procedure.setId(null);
-    	dao.save(procedure);
     	
     	return mapping.findForward("success");
     }
-
 }

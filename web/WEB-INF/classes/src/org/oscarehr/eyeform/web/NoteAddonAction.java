@@ -1,5 +1,7 @@
 package org.oscarehr.eyeform.web;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -8,6 +10,12 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.eyeform.dao.FollowUpDao;
+import org.oscarehr.eyeform.dao.ProcedureBookDao;
+import org.oscarehr.eyeform.dao.TestBookRecordDao;
+import org.oscarehr.eyeform.model.FollowUp;
+import org.oscarehr.eyeform.model.ProcedureBook;
+import org.oscarehr.eyeform.model.TestBookRecord;
 import org.oscarehr.util.SpringUtils;
 
 public class NoteAddonAction extends DispatchAction {
@@ -17,10 +25,24 @@ public class NoteAddonAction extends DispatchAction {
 	public ActionForward getCurrentNoteData(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		String demographicNo = request.getParameter("demographicNo");
 		String noteId = request.getParameter("noteId");
+		String appointmentNo = request.getParameter("appointmentNo");
 		
 		request.setAttribute("internalList", providerDao.getActiveProviders());
 
 		//load up tests/procedures and extra info
+		FollowUpDao followUpDao = (FollowUpDao)SpringUtils.getBean("FollowUpDAO");
+		TestBookRecordDao testDao = (TestBookRecordDao)SpringUtils.getBean("TestBookDAO");
+		ProcedureBookDao procedureBookDao = (ProcedureBookDao)SpringUtils.getBean("ProcedureBookDAO");
+		
+		List<FollowUp> followUps = followUpDao.getByAppointmentNo(Integer.parseInt(appointmentNo));
+		request.setAttribute("followUps",followUps);
+		
+		List<TestBookRecord> testBookRecords = testDao.getByAppointmentNo(Integer.parseInt(appointmentNo));
+		request.setAttribute("testBookRecords",testBookRecords);
+		
+		List<ProcedureBook> procedures = procedureBookDao.getByAppointmentNo(Integer.parseInt(appointmentNo));
+		request.setAttribute("procedures",procedures);
+		
 		
 		
 		return mapping.findForward("current_note");
@@ -36,7 +58,7 @@ public class NoteAddonAction extends DispatchAction {
 	 * 
 	 * procedure/test
 	 */
-	public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {		
+	public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		return null;
 	}
 }

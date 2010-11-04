@@ -230,6 +230,10 @@ public class AddEditDocumentAction extends DispatchAction {
 			String programIdStr = (String) request.getSession().getAttribute(SessionConstants.CURRENT_PROGRAM_ID);
 			if (programIdStr != null) newDoc.setProgramId(Integer.valueOf(programIdStr));
 
+			// if the document was added in the context of an appointment
+			if(fm.getAppointment() != null && fm.getAppointment().length()>0) {
+				newDoc.setAppointmentNo(Integer.parseInt(fm.getAppointment()));
+			}
 			// ---
 			String doc_no = EDocUtil.addDocumentSQL(newDoc);
 			LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD, LogConst.CON_DOCUMENT, doc_no, request.getRemoteAddr());

@@ -17,8 +17,15 @@ public class ProcedureBook {
 	private String urgency;
 	private String comment;
 	private Date date;
+	private int demographicNo;
 	
 	
+	public int getDemographicNo() {
+		return demographicNo;
+	}
+	public void setDemographicNo(int demographicNo) {
+		this.demographicNo = demographicNo;
+	}
 	public Integer getId() {
 		return id;
 	}

@@ -106,6 +106,7 @@ Specs History
 		<input type="hidden" name="method" value="save"/>
 		
 		<html:hidden property="specs.demographicNo"/>
+		<html:hidden property="specs.appointmentNo"/>
 		<html:hidden property="specs.id"/>
 		
 	
