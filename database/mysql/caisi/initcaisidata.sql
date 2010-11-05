@@ -1969,5 +1969,34 @@ INSERT INTO encounterForm VALUES("Mental Health Form1","../form/formMentalHealth
 INSERT INTO encounterForm VALUES("Mental Health Form14","../form/formMentalHealthForm14.jsp?demographic_no=","formMentalHealthForm14",0);
 insert into encounterForm values("Mental Health Form42","../form/formMentalHealthForm42.jsp?demographic_no=","formMentalHealthForm42",0);
 
+insert into ctl_billingservice values('PSYCHIATRIST',	'P01','K203A','Group3','Group3','A',1);
+insert into ctl_billingservice values('PSYCHIATRIST',	'P01','K204A','Group3','Group3','A',2);
+insert into ctl_billingservice values('PSYCHIATRIST',	'P01','K205A','Group3','Group3','A',3);
+insert into ctl_billingservice values('PSYCHIATRIST',	'P01','K620A','Group3','Group3','A',4);
+insert into ctl_billingservice values('PSYCHIATRIST',	'P01','K623A','Group3','Group3','A',5);
+insert into ctl_billingservice values('PSYCHIATRIST',	'P01','K624A','Group3','Group3','A',6);
+insert into ctl_billingservice values('PSYCHIATRIST',	'P01','K992A','Group3','Group3','A',7);
+insert into ctl_billingservice values('PSYCHIATRIST',	'P01','K994A','Group3','Group3','A',8);
+insert into ctl_billingservice values('PSYCHIATRIST',	'P01','K002A','Group2','Group2','A',1);
+insert into ctl_billingservice values('PSYCHIATRIST',	'P01','K003A','Group2','Group2','A',2);
+insert into ctl_billingservice values('PSYCHIATRIST',	'P01','K005A','Group2','Group2','A',3);
+insert into ctl_billingservice values('PSYCHIATRIST',	'P01','K050A','Group2','Group2','A',4);
+insert into ctl_billingservice values('PSYCHIATRIST',	'P01','K051A','Group2','Group2','A',5);
+insert into ctl_billingservice values('PSYCHIATRIST',	'P01','K052A','Group2','Group2','A',6);
+insert into ctl_billingservice values('PSYCHIATRIST',	'P01','K053A','Group2','Group2','A',7);
+insert into ctl_billingservice values('PSYCHIATRIST',	'P01','K054A','Group2','Group2','A',8);
+insert into ctl_billingservice values('PSYCHIATRIST',	'P01','K055A','Group2','Group2','A',9);
+insert into ctl_billingservice values('PSYCHIATRIST',	'P01','K193A','Group2','Group2','A',10);
+insert into ctl_billingservice values('PSYCHIATRIST',	'P01','K195A','Group2','Group2','A',11);
+insert into ctl_billingservice values('PSYCHIATRIST',	'P01','K197A','Group2','Group2','A',12);
+insert into ctl_billingservice values('PSYCHIATRIST',	'P01','K198A','Group2','Group2','A',13);
+insert into ctl_billingservice values('PSYCHIATRIST',	'P01','A194A','Group1','Group1','A',2);
+insert into ctl_billingservice values('PSYCHIATRIST',	'P01','A193A','Group1','Group1','A',1);
+insert into ctl_billingservice values('PSYCHIATRIST',	'P01','A195A','Group1','Group1','A',3);
+insert into ctl_billingservice values('PSYCHIATRIST',	'P01','A395A','Group1','Group1','A',4);
+insert into ctl_billingservice values('PSYCHIATRIST',	'P01','G497A','Group1','Group1','A',6);
+insert into ctl_billingservice values('PSYCHIATRIST',	'P01','A795A','Group1','Group1','A',5);
+
+
 source init_cds_form_4_options.sql;
 source init_functional_centres.sql;
