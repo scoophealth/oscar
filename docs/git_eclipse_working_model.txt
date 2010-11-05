@@ -7,7 +7,7 @@ This document is very brief, you should have a basic understanding of GIT before
 -------------------
 Register For Gerrit
 -------------------
-Go to the gerrit web site and register your user. The gerrit url should be provided. For this example I will use https://source.oscartools.org:8080 and r6squeegee@gmail.com.
+Go to the gerrit web site and register your user. The gerrit url should be provided. For this example I will use https://source.oscartools.org:8080 and my email r6squeegee@gmail.com (you'll need to use your own where ever you see my account name).
 
 On the gerrit main screen you should see a register option on the top right of the screen, you should be able to register using openId with your google email or one of the similar options.
 
@@ -61,7 +61,7 @@ Now say you've created new files in the project and altered some existing ones.
 
 If you right click on the project, go to team -> commit. You'll see the commit screen. Notice on eclipse it will list the tracked and untracked file and by default they will be "git added" and "git commited" at the same time. Now when you commit, it's commited locally. This means no one else except you has these changes still.
 
-Now to share these changes with everyone else, i.e. commited to the main repository... (You must have commited locally first, you need to understand git's local/remote/distributed repositories.) First you must have updated from the remote origin, then merged the latest code into yours. This will help ensure the changes you have will merge back into the master properly. After you've done that...
+Now to share these changes with everyone else, i.e. commited to the main repository... (You must have commited locally first, you need to understand git's local/remote/distributed repositories.) 
 
 Now, right click on the project, go to team -> push. 
 
