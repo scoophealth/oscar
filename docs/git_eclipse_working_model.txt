@@ -7,7 +7,7 @@ This document is very brief, you should have a basic understanding of GIT before
 -------------------
 Register For Gerrit
 -------------------
-Go to the gerrit web site and register your user. The gerrit url should be provided. For this example I wil use http://localhost:8080 and r6squeegee@gmail.com.
+Go to the gerrit web site and register your user. The gerrit url should be provided. For this example I will use https://source.oscartools.org:8080 and r6squeegee@gmail.com.
 
 On the gerrit main screen you should see a register option on the top right of the screen, you should be able to register using openId with your google email or one of the similar options.
 
@@ -34,7 +34,7 @@ Add Repository
 --------------
 On the package explorer tab (or what ever your favourite explorer is), right click and select import -> "projects from git" -> clone.
 
-The repository details should be provided for your git/gerrit installation, for my example I will use "ssh://r6squeegee@localhost:29418/foo". Just continue with the screen flow, most options should be obvious or defaults should be fine.
+The repository details should be provided for your git/gerrit installation, for my example I will use "ssh://r6squeegee@source.osrcartools.org:29418/test". Just continue with the screen flow, most options should be obvious or defaults should be fine.
 
 Now back on the import screen, select the new repository (click on it again even though it's highlighted to make the next button available). Continue with the screen flow, most of the defaults should be fine.
 
