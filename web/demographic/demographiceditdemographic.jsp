@@ -378,7 +378,7 @@ function newStatus1() {
     }
 }
 
-removeAccents(s){
+function removeAccents(s){
         var r=s.toLowerCase();
         r = r.replace(new RegExp("\\s", 'g'),"");
         r = r.replace(new RegExp("[אבגדהו]", 'g'),"a");
