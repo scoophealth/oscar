@@ -29,11 +29,14 @@ Steps
 
 Install Gerrit (on the server)
 - Create a mysql database called "reviewdb" and a user/password for gerrit to use.
-- we'll use the users home directory as working directory open a terminal to the users home directory
+- we'll put everything into /var/gerrit/* (no real reason, just where the disk space was allocated on the server)
 - run "java -jar gerrit-2.1.5.war init -d review_site", from here on accept the defaults if not mentione here
 - at "Sql Database", enter "mysql" instead.
 - at "SMTP server hostname", enter either a mcmaster or google smtp server information, gmails's example maybe : smtp.gmail.com:465, ssl
-- at "Canonical Url", enter the proper hostname / url for your server
+- use SSL for the http daemon.
+- for http daemon listen port put it back to 8080 (instead of 8443)
+- at "Canonical Url", enter the proper hostname / url for your server (https://source.oscartools.org:8080/)
+- create a self signed certificate, change the number of days to something huge like 10 years.
 - change your linux to start gerrit upon boot up. To start gerrit : "cd ~/review_site", "./bin/gerrit.sh start". Note the funny directory change / reference in the preceeding 2 commands, it has to be that way or gerrit doesn't figure out where it's installed. (You can configure more to make it work but the prior 2 commands is the easiest way).
 - Note that we have accepted the default ports 8080 and 29418, I see no reason to change these.
 - At this point, gerrit may or may not have auto started itself, check the ps listing to find out. Start gerrit if you have to.
@@ -49,11 +52,11 @@ Configure Gerrit (from your client / developer machine)
 		- now cut and paste the contents of "~/.ssh/id_rsa.pub" into the text area on the web page.
 		- click add and it should list it as an added key on the screen.
 	- now on the bottom of the screen there's a link that says "continue" click that, now you should be at the your "code review dashboard" screen.
-- on the top left of the screen, click on admin -> groups. Create a new group called "code_approvers"
+- on the top left of the screen, click on admin -> groups. Create a new group called "code approvers"
 - on the top left of the screen, click on admin -> projects. Then select "all projects", then select "access".
-	- add the new permissions category="code review", group name="code_approvers", range=+2
-	- add the new permissions category="verified", group name="code_approvers", range=+1
-	- add the new permissions category="submit", group name="code_approvers", range=+1
+	- add the new permissions category="code review", group name="code approvers", range=+2/-2
+	- add the new permissions category="verified", group name="code approvers", range=+1/-1
+	- add the new permissions category="submit", group name="code approvers", range=+1
 
 Add a project (from client / developer machine)
 - from the command line, do a "ssh -p 29418 r6squeegee@127.0.0.1 gerrit create-project --name foo" (where foo is your project name).
