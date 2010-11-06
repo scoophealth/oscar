@@ -34,6 +34,7 @@ public class QueueDocumentLink {
     private int id;
     private int docId;
     private int queueId;
+    private String status;
 
     public int getId() {
         return id;
@@ -54,5 +55,11 @@ public class QueueDocumentLink {
     }
     public void setQueueId(int qId){
         this.queueId=qId;
+    }
+    public void setStatus(String s){
+        this.status=s;
+    }
+    public String getStatus(){
+        return this.status;
     }
 }
