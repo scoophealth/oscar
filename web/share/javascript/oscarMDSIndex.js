@@ -20,7 +20,23 @@
  *  Ontario, Canada   Creates a new instance of CommonLabResultData
 
  */
+var nowChildId;
+var nowDocLabIds=new Array();
+var nowMultiple=1;
 
+
+function showDocInQueue(qid){
+    $('docs').innerHTML='';
+    var docs=queueDocNos[qid];
+    nowChildId='docs';
+    nowMultiple=1;
+    nowDocLabIds=new Array();
+    for(var i=docs.length-1;i>-1;i--){
+         var docid=docs[i];
+         nowDocLabIds.push(docid);
+    }
+    showFirstTime();
+}
 function updateLabDemoStatus(labno){
 
                                     if(document.getElementById("DemoTable"+labno)){
@@ -33,7 +49,12 @@ function updateLabDemoStatus(labno){
 
 /************init global data methods*****************/
 
+function initQueueIdDocs(s){
+    var r=new Array();
+    s=s.replace('{','');
+    s=s.replace('}','');
 
+}
 
 function initPatientIds(s){
                                var r= new Array();
@@ -134,7 +155,7 @@ function initPatientIds(s){
                                     var sar=s.split(',');
                                     return sar;
                                 }else{
-                                    var re=new Arrays();
+                                    var re=new Array();
                                     return re;
                                 }
                            }
@@ -339,10 +360,36 @@ function showTopBtn(){
                                      }
                                     hideTopBtn();
                                  }
-
-
                             }
 
+function popupMsg(width, height,docid) {
+    var dn=$('demofind'+docid).value;
+    var saved=$('saved'+docid).value;
+    var b=false;
+    //console.log('saved'+saved);
+    if(dn==-1 || saved=='false'){
+        if(confirm('Document is not linked with a patient, do you still want to Msg?')){
+            b=true;
+        }
+    }else{
+        b=true;
+    }
+    if(b){
+         var url='../oscarMessenger/SendDemoMessage.do?'+'demographic_no='+dn;
+         popup(width,height,url,'msg');
+    }
+}
+
+function popupTickler(width, height,docid) {
+        var dn=$('demofind'+docid).value;
+        var saved=$('saved'+docid).value;
+    if(dn==-1 || saved=='false'){
+        alert('Please link document with a patient');
+    }else{
+        var url="../tickler/ForwardDemographicTickler.do?docType=DOC&demographic_no="+dn+"&docId="+docid;
+        popup(width,height,url,'Tickler');
+    }
+}
 function popupStart(vheight,vwidth,varpage) {
     popupStart(vheight,vwidth,varpage,"helpwindow");
 }
@@ -356,6 +403,12 @@ function popupStart(vheight,vwidth,varpage,windowname) {
     var page = varpage;
     windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes";
     var popup=window.open(varpage, windowname, windowprops);
+    if (popup != null) {
+        if (popup.opener == null) {
+            popup.opener = self;
+        }
+        popup.focus();
+    }
 }
 
 function reportWindow(page,height,width) {
@@ -428,7 +481,73 @@ function wrapUp() {
     }
 }
 
-       function showDocLab(childId,docNo,providerNo,searchProviderNo,status,demoName,showhide){//showhide is 0 = document currently hidden, 1=currently shown
+
+
+function isNeedShowMore(wh,sd){//input window height and scrool distance , return true if need to scroll down.
+    var r=false;
+    if(wh*nowMultiple < sd){
+        r=true;
+        nowMultiple++;        
+    }
+    return r;
+}
+function showFirstTime(){//show first five doc labs
+    
+                for(var i=0;i<5;i++){//show 5
+                if(nowDocLabIds.length>0){
+                    var id=nowDocLabIds.pop();
+                    id=id.replace(" ","");
+                    if(id && id.length>0) {
+                        var ackStatus=getAckStatusFromDocLabId(id);
+                        var patientId=getPatientIdFromDocLabId(id);
+                        var patientName=getPatientNameFromPatientId(patientId);
+                        if(i==0){if(current_first_doclab==0) current_first_doclab=id;}
+                        showDocLab(nowChildId,id,providerNo,searchProviderNo,ackStatus,patientName);
+                    }
+                }
+            }
+}
+function bufferAndShow(){//show 5 if scroll down to a certain extend relative to the window
+        var wh=f_clientHeight();//window_height
+        var sd=f_scrollTop();//scroll_distance
+        var showMore=isNeedShowMore(wh,sd);
+        if(showMore){
+            for(var i=0;i<5;i++){//show 5
+                if(nowDocLabIds.length>0){
+                    var id=nowDocLabIds.pop();
+                    id=id.replace(" ","");
+                    if(id && id.length>0) {
+                        var ackStatus=getAckStatusFromDocLabId(id);
+                        var patientId=getPatientIdFromDocLabId(id);
+                        var patientName=getPatientNameFromPatientId(patientId);
+                        showDocLab(nowChildId,id,providerNo,searchProviderNo,ackStatus,patientName);
+                    }
+                }
+            }
+        }
+
+}
+function f_clientHeight() {
+	return f_filterResults (
+		window.innerHeight ? window.innerHeight : 0,
+		document.documentElement ? document.documentElement.clientHeight : 0,
+		document.body ? document.body.clientHeight : 0
+	);
+}
+function f_scrollTop() {
+	return f_filterResults (
+		window.pageYOffset ? window.pageYOffset : 0,
+		document.documentElement ? document.documentElement.scrollTop : 0,
+		document.body ? document.body.scrollTop : 0
+	);
+}
+function f_filterResults(n_win, n_docel, n_body) {
+	var n_result = n_win ? n_win : 0;
+	if (n_docel && (!n_result || (n_result > n_docel)))
+		n_result = n_docel;
+	return n_body && (!n_result || (n_result > n_body)) ? n_body : n_result;
+}
+       function showDocLab(childId,docNo,providerNo,searchProviderNo,status,demoName,inQueue){//showhide is 0 = document currently hidden, 1=currently shown
                                 //create child element in docViews
                                 docNo=docNo.replace(' ','');//trim
                                 var type=checkType(docNo);
@@ -452,7 +571,11 @@ function wrapUp() {
 
                                         //oscarLog('url='+url);
                                         var data="segmentID="+docNo+"&providerNo="+providerNo+"&searchProviderNo="+searchProviderNo+"&status="+status+"&demoName="+demoName;
-                                        //oscarLog('url='+url+'+-+ \n data='+data);
+                                        if(inQueue)
+                                            data+="&inQueue=true";
+                                        else
+                                            data+="&inQueue=false";
+                                       // oscarLog('url='+url+'+-+ \n data='+data+"----div:"+div);
                                         new Ajax.Updater(div,url,{method:'get',parameters:data,insertion:Insertion.Bottom,evalScripts:true,onSuccess:function(transport){
                                                 focusFirstDocLab();
                                         }});
@@ -1010,14 +1133,19 @@ function wrapUp() {
                                 if(childId!=null && childId.length>0){
                                       clearDocView();
                                         createNewElement('docViews',childId);
-                                        for(var i=0;i<ids.length;i++){
+                                        nowChildId=childId;
+                                        nowMultiple=1;
+                                        nowDocLabIds=new Array();
+                                        //console.log("nowDocLabIds");
+                                        //console.log(ids);
+                                        for(var i=ids.length-1;i>-1;i--){//push in reverse so pop first to last
                                             var docLabId=ids[i].replace(/\s/g,'');
-                                            var ackStatus=getAckStatusFromDocLabId(docLabId);
-                                            var patientId=getPatientIdFromDocLabId(docLabId);
-                                            var patientName=getPatientNameFromPatientId(patientId);
-                                            if(current_first_doclab==0) current_first_doclab=docLabId;
-                                            showDocLab(childId,docLabId,providerNo,searchProviderNo,ackStatus,patientName,ab_normal+'show');
+                                            //console.log(docLabId);
+                                            nowDocLabIds.push(docLabId);
+                                            //console.log(nowDocLabIds);
                                         }
+                                        //console.log(nowDocLabIds);
+                                        showFirstTime();
                                 }
                            }
 
@@ -1030,19 +1158,22 @@ function wrapUp() {
                                      // else{
                                      clearDocView();
                                         createNewElement('docViews',childId);
-                                        for(var i=0;i<labdocsArr.length;i++){
+                                        nowChildId=childId;
+                                        nowMultiple=1;
+					nowDocLabIds=new Array();
+                                        for(var i=labdocsArr.length-1;i>-1;i--){
                                             var labdoc=labdocsArr[i];
                                             labdoc=labdoc.replace(' ','');
                                             //oscarLog('check type input='+labdoc);
                                             var type=checkType(labdoc);
-                                            var ackStatus=getAckStatusFromDocLabId(labdoc);
-                                            var patientName=getPatientNameFromPatientId(patientId);
-                                            if(current_first_doclab==0) current_first_doclab=labdoc;
+                                            
                                             //oscarLog("type="+type+"--subType="+subType);
-                                            if(type==subType)
-                                                showDocLab(childId,labdoc,providerNo,searchProviderNo,ackStatus,patientName,'subtype'+subType+patientId+'show');
-                                            else;
+                                            if(type==subType){
+                                                nowDocLabIds.push(labdoc);
+                                            }
+                                            
                                         }
+                                        showFirstTime();
                                         //toggleMarker('subtype'+subType+patientId+'show');
                                     //}
                                   }
@@ -1050,17 +1181,22 @@ function wrapUp() {
                             }
                             function getPatientNameFromPatientId(patientId){
                                 var pn=patientIdNames[patientId];
+                                //console.log("in getpatientnamefrompatientid");
+                                //console.log(patientIdNames);
                                 if(pn&&pn!=null){
                                     return pn;
                                 }else{
                                     var url=contextpath+"/dms/ManageDocument.do";
                                     var data='method=getDemoNameAjax&demo_no='+patientId;
+                                    //console.log('in getp '+patientId);
                                     new Ajax.Request(url,{method:'post',parameters:data,onSuccess:function(transport){
                                          var json=transport.responseText.evalJSON();
+                                         //console.log("onsuccess=="+json);
                                          if(json!=null ){
                                            var pn=json.demoName;//get name from id
                                            addPatientIdName(patientId,pn);
                                            addPatientId(patientId);
+                                           //console.log("PN ="+pn);
                                            return pn;
                                          }
                                      }});
@@ -1072,18 +1208,31 @@ function wrapUp() {
                             }
                             function showAllDocLabs(){
 
+
+                                
                                 clearDocView();
+                                var childId='showTotalDocLabs';
+                                createNewElement('docViews',childId);
+                                nowChildId=childId;
+                                nowMultiple=1;
+                                nowDocLabIds=new Array();
                                 for(var i=0;i<patientIds.length;i++){
                                     var id=patientIds[i];
                                     //oscarLog("ids in showalldoclabs="+id);
                                     if(id.length>0){
-                                        showThisPatientDocs(id,true);
-
+                                            //oscarLog("patientId in show this patientdocs="+patientId);
+                                            var labDocsArr=getLabDocFromPatientId(id);
+                                            if(labDocsArr!=null && labDocsArr.length>0){
+                                                    for(var j=labDocsArr.length-1;j>-1;j--){
+                                                        var docId=labDocsArr[j].replace(' ', '');
+                                                        nowDocLabIds.push(docId);
+                                                    }
+                                            }
                                     }
                                 }
-
+                                showFirstTime();
                             }
-                            function showCategory(cat){
+                            function showCategory(cat){//show in document or hl7
                                 if(cat.length>0){
                                      var sA=getDocLabFromCat(cat);
                                      if(sA && sA.length>0){
@@ -1093,23 +1242,15 @@ function wrapUp() {
                                         // else{
                                          clearDocView();
                                          createNewElement('docViews',childId);
-                                         for(var i=0;i<sA.length;i++){
+                                         nowChildId=childId;
+                                         nowMultiple=1;
+                                         nowDocLabIds=new Array();
+                                         for(var i=sA.length-1;i>-1;i--){
                                              var docLabId=sA[i];
                                              docLabId=docLabId.replace(/\s/g, "");
-                                             //oscarLog("docLabId="+docLabId);
-                                             var patientId=getPatientIdFromDocLabId(docLabId);
-                                             //oscarLog("patientId="+patientId);
-                                             var patientName=getPatientNameFromPatientId(patientId);
-                                             var ackStatus=getAckStatusFromDocLabId(docLabId);
-                                             //oscarLog("patientName="+patientName);
-                                             //oscarLog("ackStatus="+ackStatus);
-
-                                             if(patientName!=null) {
-                                                 if(current_first_doclab==0) current_first_doclab=docLabId;
-                                                 showDocLab(childId,docLabId,providerNo,searchProviderNo,ackStatus,patientName,cat+'show');
-                                             }
+                                             nowDocLabIds.push(docLabId);
                                          }
-
+                                         showFirstTime();
                                      }
                                 }
                             }
@@ -1136,7 +1277,6 @@ function wrapUp() {
                                 }
                                 //console.log(notUsedPid);
                                 for(var i=0;i<notUsedPid.length;i++){
-
                                     removePatientId(notUsedPid[i]);
                                 }
                             }
@@ -1145,8 +1285,7 @@ function wrapUp() {
                                 //console.log(patientDocs);
                                 return patientDocs[patientId];
                             }
-
-                            function showThisPatientDocs(patientId,keepPrevious){
+                            function showThisPatientDocs(patientId,keepPrevious){//show doclabs belong to this patient
                                 //oscarLog("patientId in show this patientdocs="+patientId);
                                 var labDocsArr=getLabDocFromPatientId(patientId);
                                 var patientName=getPatientNameFromPatientId(patientId);
@@ -1155,16 +1294,17 @@ function wrapUp() {
                                         var childId='patient'+patientId;
                                       //if(toggleElement(childId));
                                       //else{
-                                      if(keepPrevious);
-                                      else clearDocView();
+                                      //if(keepPrevious);
+                                       clearDocView();
                                         createNewElement('docViews',childId);
-                                        for(var i=0;i<labDocsArr.length;i++){
+                                        nowChildId=childId;
+                                        nowMultiple=1;
+                                        nowDocLabIds=new Array();
+                                        for(var i=labDocsArr.length-1;i>-1;i--){
                                             var docId=labDocsArr[i].replace(' ', '');
-                                            if(current_first_doclab==0) current_first_doclab=docId;
-                                            var ackStatus=getAckStatusFromDocLabId(docId);
-                                            //oscarLog('childId='+childId+',docId='+docId+',ackStatus='+ackStatus);
-                                            showDocLab(childId,docId,providerNo,searchProviderNo,ackStatus,patientName,'labdoc'+patientId+'show');
+                                            nowDocLabIds.push(docId);
                                         }
+                                        showFirstTime();
                                 }
                             }
                             function popupConsultation(segmentId) {
@@ -1204,15 +1344,16 @@ function checkSelected() {
     }
 }
 
-function updateDocLabData(doclabid){//remove doclabid from global variables
+function updateDocLabData(doclabid,inQueue){//remove doclabid from global variables
 //console.log('in updatedoclabdata='+doclabid);
   if(doclabid){
       //console.log('aa');
        //trim doclabid
       doclabid=doclabid.replace(/\s/g,'');
-        updateSideNav(doclabid);
+        updateSideNav(doclabid,inQueue);
         //console.log('aa_aa11');
-        hideRowUsingId(doclabid);
+      if(inQueue){;}
+       else  hideRowUsingId(doclabid);
 //console.log('aa_aa');
     //change typeDocLab
     removeIdFromTypeDocLab(doclabid);
@@ -1253,7 +1394,69 @@ function checkAb_normal(doclabid){
     else if(abnormals.indexOf(doclabid)!=-1)
         return 'abnormal';
 }
-function updateSideNav(doclabid){
+function removeDocFromQueue(docid){
+    //console.log('before removal ');
+    //console.log(queueDocNos);
+    var found=false;
+    for(i in queueDocNos){
+        var r=queueDocNos[i];     
+        //console.log('when r is ');
+        //console.log(r);
+        for(var j=0;j<r.length;j++){
+            if(r[j]==docid){
+                //remove it
+                r.splice(j,1);
+                //console.log('after splice, j is'+j);
+                //console.log(r);
+                queueDocNos[i]=r;
+                found=true;
+                break;
+            }else{
+                
+            }
+        }
+        if(found)
+            break;//break the outer for loop.
+    }
+    //console.log('after removal ');
+    //console.log(queueDocNos);
+}
+
+function updateSideNavInQueue(docid){
+//console.log('in updateSide');
+    var foundQ='';
+    //find which queueid the doc is in
+for(var i in queueDocNos){
+    var r=queueDocNos[i];
+    for(var j=0;j<r.length;j++){
+        if(r[j]==docid){
+            foundQ=i;
+            //console.log('match found foundQ='+foundQ);
+            break;
+        }
+    }
+    if(foundQ==i)
+        break;
+}
+//console.log('foundQ='+foundQ);
+        //descrease the queue's doc number by 1
+        if(foundQ.length>0){
+            var n=$('docNo_'+foundQ).innerHTML;
+            //console.log('not found11');
+            n=parseInt(n);
+            //console.log('not found22');
+            if(n>0){
+                //console.log('not found33');
+                $('docNo_'+foundQ).innerHTML=n-1;
+            }
+        }
+        //console.log('not found44');
+
+}
+function updateSideNav(doclabid, inqueue){
+    if(inqueue)
+        updateSideNavInQueue(doclabid);
+    else{
     //oscarLog('in updatesidenav');
     var n=$('totalNumDocs').innerHTML;
     n=parseInt(n);
@@ -1323,15 +1526,22 @@ function updateSideNav(doclabid){
         }
     }
 }
-
+}
 function getRowIdFromDocLabId(doclabid){
         var rowid;
+        //console.log('getRowIdFromDocLabId '+doclabid);
+        if(doclabid_sql){
+        //console.log("doclabid_sql");
+        //console.log(doclabid_sql);
+
         for(var i=0;i<doclabid_seq.length;i++){
             if(doclabid==doclabid_seq[i]){
                 rowid='row'+i;
                 break;
             }
         }
+
+}
     return rowid;
     }
 
@@ -1340,7 +1550,7 @@ function hideRowUsingId(doclabid){
         var rowid;
         doclabid=doclabid.replace(' ','');
         rowid=getRowIdFromDocLabId(doclabid);
-        $(rowid).remove();
+        if($(rowid)) $(rowid).remove();
 }
 }
 function resetCurrentFirstDocLab(){
@@ -1361,7 +1571,7 @@ function focusFirstDocLab(){
     }
 
 /***methos for showDocument.jsp***/
-function updateGlobalDataAndSideNav(doclabid,patientId){
+function addDocToPatient(doclabid,patientId){//if doc is previously not assigned to a patient, add it to a patient's list of docs
                                          doclabid=doclabid.replace(/\s/g,'');
                                          if(doclabid.length>0){
                                                                //delete doclabid from not assigned list
@@ -1432,6 +1642,7 @@ function updateGlobalDataAndSideNav(doclabid,patientId){
                                  function createPatientDocLabEle(patientId,doclabid){
                                     var url=contextpath+"/dms/ManageDocument.do";
                                     var data='method=getDemoNameAjax&demo_no='+patientId;
+                                    //console.log('in cre '+patientId);
                                     new Ajax.Request(url,{method:'post',parameters:data,onSuccess:function(transport){
                                         var json=transport.responseText.evalJSON();
                                               //oscarLog(json);
@@ -1496,18 +1707,20 @@ function updateGlobalDataAndSideNav(doclabid,patientId){
                                          }
                                      }
                                  }
-                               function  popupStart(vheight,vwidth,varpage,windowname) {
-                                                    //oscarLog("in popupStart ");
-                                                    if(!windowname)
-                                                        windowname="helpwindow";
-                                                    var page = varpage;
-                                                    var windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes";
-                                                    //oscarLog(varpage);
-                                                    //oscarLog(windowname);
-                                                    //oscarLog(windowprops);
-                                                    var popup=window.open(varpage, windowname, windowprops);
-                                                }
-                                               function updateDocument(eleId){//save doc info
+
+                            function saveNext(docid){
+                                updateDocument('forms_'+docid,true);
+
+}
+  function  updateDocStatusInQueue(docid){//change status of queue document link row to I=inactive
+      //console.log('in updateDocStatusInQueue, docid '+docid);
+            var url="../dms/inboxManage.do",data="docid="+docid+"&method=updateDocStatusInQueue";
+            new Ajax.Request(url,{method:'post',parameters:data,onSuccess:function(transport){}});
+
+
+  }
+
+                                               function updateDocument(eleId,isNext){//save doc info
                                                     var url="../dms/ManageDocument.do",data=$(eleId).serialize(true);
                                                     new Ajax.Request(url,{method:'post',parameters:data,onSuccess:function(transport){
                                                             var json=transport.responseText.evalJSON();
@@ -1521,15 +1734,31 @@ function updateGlobalDataAndSideNav(doclabid,patientId){
                                                                 num=num.replace(/\s/g,'');
                                                                 $("saveSucessMsg_"+num).show();
                                                                 $('saved'+num).value='true';
-
-                                                                var success= updateGlobalDataAndSideNav(num,patientId);
+                                                                //console.log('before update global data');
+                                                                var success= addDocToPatient(num,patientId);
+                                                                //console.log('result of update global data='+success);
                                                                 if(success){
                                                                     success=updatePatientDocLabNav(num,patientId);
+                                                                    //console.log('result of update patient doc lab nav '+success);
                                                                     if(success){
+                                                                        //console.log('before disable autocompletedemo '+num+'--'+$('autocompletedemo'+num));
                                                                         //disable demo input
-                                                                        $('autocompletedemo'+num).disabled=true;
+                                                                        if($('autocompletedemo'+num))
+                                                                            $('autocompletedemo'+num).disabled=true;
                                                                         //console.log('updated by save');
                                                                         //console.log(patientDocs);
+                                                                        //console.log("isNext "+isNext);
+                                                                        if(isNext){
+                                                                            //console.log("isNext is true");
+                                                                            //blind up
+                                                                             Effect.BlindUp('labdoc_'+num);
+                                                                            //make the document out of the queue
+                                                                            updateDocStatusInQueue(num);                                                                            
+                                                                            //update side navigation for queue
+                                                                            updateSideNav(num,true);
+                                                                            //remove doc from queueDocNos
+                                                                            removeDocFromQueue(num);
+                                                                        }
                                                                     }
                                                                 }
                                                             }
@@ -1537,7 +1766,11 @@ function updateGlobalDataAndSideNav(doclabid,patientId){
                                                     return false;
                                                 }
 
-                                             function updateStatus(formid){//acknowledge
+                                             function updateStatus(formid,inQueue){//acknowledge
+                                                 if(inQueue)
+                                                     //console.log('inqueue is boolean true');
+                                                 if(inQueue=='true')
+                                                     //console.log('inqueue is string true');
                                                  var num=formid.split("_");
                                                         var doclabid=num[1];
                                                         if(doclabid){
@@ -1550,11 +1783,19 @@ function updateGlobalDataAndSideNav(doclabid,patientId){
                                                         var data=$(formid).serialize(true);
 
                                                         new Ajax.Request(url,{method:'post',parameters:data,onSuccess:function(transport){
-                                                                
+                                                                //console.log('after updatestatus ,doclabid '+doclabid);
                                                                          if(doclabid){
                                                                              Effect.BlindUp('labdoc_'+doclabid);
-                                                                             updateDocLabData(doclabid);
-
+                                                                             updateDocLabData(doclabid,inQueue);
+                                                                             if(inQueue){
+                                                                                 //console.log(' inqueue is true ');
+                                                                                 //make the document out of the queue
+                                                                                 updateDocStatusInQueue(doclabid);
+                                                                                 //remove doc from queueDocNos
+                                                                                 removeDocFromQueue(doclabid);
+                                                                         }else{
+                                                                             //console.log('inqueue is false');
+                                                                         }
                                                             }
                                                         }});
                                                     }
