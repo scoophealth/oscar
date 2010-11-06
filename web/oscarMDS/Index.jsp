@@ -116,6 +116,10 @@ height:0px;
 }
         </style>
 <script type="text/javascript" >
+Event.observe(window,'scroll',function(){//check for scrolling
+    bufferAndShow();
+});
+
                            var tabindex=0;
                            var current_first_doclab=0;
                            var currentBold='';
@@ -231,7 +235,7 @@ height:0px;
                                 | <a href="javascript:popupStart(800,1000,'../lab/CA/ALL/testUploader.jsp')" style="color: #FFFFFF; "><bean:message key="admin.admin.hl7LabUpload"/></a>
                                 | <a href="javascript:popupStart(600,500,'../dms/html5AddDocuments.jsp')" style="color: #FFFFFF; "><bean:message key="inboxmanager.document.uploadDoc"/></a>
                                 | <a href="javascript:void(0);" onclick="changeView();" style="color: #FFFFFF;"><bean:message key="inboxmanager.document.changeView"/></a>
-                                
+                                | <a href="javascript:popupStart(700,1100,'../dms/inboxManage.do?method=getDocumentsInQueues')" style="color: #FFFFFF;"><bean:message key="inboxmanager.document.pendingDocs"/></a>
                             </td>
                         </tr>
                     </table>
