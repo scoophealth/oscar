@@ -26,5 +26,6 @@
       </id>
       <property name="queueId" column="queue_id"/>
       <property name="docId" column="document_id"/>
+      <property name="status" column="status"/>
    </class>
 </hibernate-mapping>
