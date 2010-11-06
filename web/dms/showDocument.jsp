@@ -14,6 +14,10 @@
             String providerNo = request.getParameter("providerNo");
             String searchProviderNo = request.getParameter("searchProviderNo");
             String status = request.getParameter("status");
+            String inQueue=request.getParameter("inQueue");
+            boolean inQueueB=false;
+            if(inQueue!=null && inQueue.equals("true"))
+                inQueueB=true;
 
             String creator = (String) session.getAttribute("user");
             ArrayList doctypes = EDocUtil.getDoctypes("demographic");
@@ -85,6 +89,7 @@
                                                    selectedDemos.push(args[0].getInputEl().value);
                                                    //enable Save button whenever a selection is made
                                                    $('save<%=docId%>').enable();
+                                                   $('saveNext<%=docId%>').enable();
 
                                                 });
 
@@ -235,7 +240,8 @@
                                     </tr>
                                     <tr>
                                         <td><bean:message key="inboxmanager.document.DemographicMsg" /></td>
-                                        <td><%if(!demographicID.equals("-1")){%>
+                                        <td><%
+                                        if(!demographicID.equals("-1")){%>
                                             <input id="saved<%=docId%>" type="hidden" name="saved" value="true"/>
                                             <input type="hidden" value="<%=demographicID%>" name="demog" id="demofind<%=docId%>" />
                                             <%=demoName%><%}else{%>
@@ -247,7 +253,7 @@
 
 
                                                    <input id="saved_<%=docId%>" type="hidden" name="saved" value="false"/>
-                                                   <input id="mrp_<%=docId%>" type="checkbox" onclick="sendMRP(this)"  name="demoLink" ><bean:message key="inboxmanager.document.SendToMRPMsg" />
+                                                   <br><input id="mrp_<%=docId%>" type="checkbox" onclick="sendMRP(this)"  name="demoLink" ><bean:message key="inboxmanager.document.SendToMRPMsg" />
                                                    <a id="mrp_fail_<%=docId%>" style="color:red;font-style: italic;display: none;" ><bean:message key="inboxmanager.document.SendToMRPFailedMsg" /></a>
                                         </td>
                                     </tr>
@@ -272,8 +278,10 @@
                                     </tr>
 
                                     <tr>
-                                        <td colspan="2" align="right"><a id="saveSucessMsg_<%=docId%>" style="display:none;color:blue;"><bean:message key="inboxmanager.document.SuccessfullySavedMsg"/></a><%if(!demographicID.equals("-1")){%><input type="submit" name="save" id="save<%=docId%>" value="Save" /><%} else{%><input type="submit" name="save" id="save<%=docId%>" disabled value="Save" /> <%}%>
-
+                                        <td width="30%" colspan="1" align="right"><a id="saveSucessMsg_<%=docId%>" style="display:none;color:blue;"><bean:message key="inboxmanager.document.SuccessfullySavedMsg"/></a></td>
+                                        <td width="30%" colspan="1" align="right"><%if(!demographicID.equals("-1")){%><input type="submit" name="save" id="save<%=docId%>" value="Save" /><input type="button" name="save" id="saveNext<%=docId%>" onclick="saveNext(<%=docId%>)" value='<bean:message key="inboxmanager.document.SaveAndNext"/>' /><%}
+            else{%><input type="submit" name="save" id="save<%=docId%>" disabled value="Save" /><input type="button" name="save" onclick="saveNext(<%=docId%>)" id="saveNext<%=docId%>" disabled value='<bean:message key="inboxmanager.document.SaveAndNext"/>' /> <%}%>
+                                       
                                     </tr>
 
                                     <tr>
@@ -286,7 +294,8 @@
                                             <ul>
                                                 <%for (ProviderInboxItem pItem : routeList) {
                                                     String s=p.getProperty(pItem.getProviderNo(), pItem.getProviderNo());
-                                                    if(!s.equals("0")){  %>
+                                                  
+                                                    if(!s.equals("0")&&!s.equals("null")){  %>
                                                         <li><%=s%></li>
                                                 <%}
                                                 }%>
@@ -356,7 +365,7 @@
                                 <input type="hidden" name="providerNo" value="<%= providerNo%>" />
                                 <input type="hidden" name="ajax" value="yes" />
                             </form>
-                                <form name="acknowledgeForm_<%=docId%>" id="acknowledgeForm_<%=docId%>" onsubmit="updateStatus('acknowledgeForm_<%=docId%>');" method="post" action="javascript:void(0);">
+                                <form name="acknowledgeForm_<%=docId%>" id="acknowledgeForm_<%=docId%>" onsubmit="updateStatus('acknowledgeForm_<%=docId%>',<%=inQueueB%>);" method="post" action="javascript:void(0);">
 
                                 <table width="100%" height="100%" border="0" cellspacing="0" cellpadding="0">
                                     <tr>
@@ -381,8 +390,8 @@
                                                         <input type="button" id="closeBtn_<%=docId%>" value=" <bean:message key="global.btnClose"/> " onClick="window.close()">
                                                         <input type="button" id="printBtn_<%=docId%>" value=" <bean:message key="global.btnPrint"/> " onClick="popup(700,960,'<%=url2%>','file download')">
                                                         <% if (demographicID != null && !demographicID.equals("") && !demographicID.equalsIgnoreCase("null")) {%>
-                                                        <input type="button" id="msgBtn_<%=docId%>" value="Msg" onclick="popup(700,960,'../oscarMessenger/SendDemoMessage.do?demographic_no=<%=demographicID%>','msg')"/>
-                                                        <input type="button" id="ticklerBtn_<%=docId%>" value="Tickler" onclick="popup(450,600,'../tickler/ForwardDemographicTickler.do?docType=DOC&docId=<%=docId%>&demographic_no=<%=demographicID%>','tickler')"/>
+                                                        <input type="button" id="msgBtn_<%=docId%>" value="Msg" onclick="popupMsg(700,960,'<%=docId%>');"/>
+                                                        <input type="button" id="ticklerBtn_<%=docId%>" value="Tickler" onclick="popupTickler(450,600,'<%=docId%>')"/>
                                                         <% }
 
                                                         %>
