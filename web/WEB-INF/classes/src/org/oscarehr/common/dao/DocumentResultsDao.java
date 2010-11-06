@@ -46,10 +46,13 @@ public class DocumentResultsDao extends AbstractDao<Document>{
                 List<ProviderInboxItem> r=query.getResultList();
                 if(r!=null && r.size()>0){
                     ProviderInboxItem pii=r.get(r.size()-1);
-                    if(pii.getProviderNo().equals("000000"))//takes care of case when a provider number is 000000
+                    String pns=pii.getProviderNo();
+                    if(pns.equals("000000"))//takes care of case when a provider number is 000000
                         return true;
+                    else if (pns.equalsIgnoreCase("null"))
+                        return false;
                     else{
-                        int pn = Integer.parseInt(pii.getProviderNo());
+                        int pn = Integer.parseInt(pns);
                         if(pn>0){
                             return true;
                         }else
