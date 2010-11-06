@@ -26,6 +26,7 @@
 package org.oscarehr.common.dao;
 
 import java.util.List;
+import org.oscarehr.common.model.Queue;
 
 import org.oscarehr.common.model.QueueDocumentLink;
 import org.oscarehr.util.MiscUtils;
@@ -42,6 +43,10 @@ public class QueueDocumentLinkDao extends HibernateDaoSupport {
         List queues=this.getHibernateTemplate().find("from QueueDocumentLink");
         return queues;
     }
+    public List getActiveQueueDocLink(){
+        return this.getHibernateTemplate().find("from QueueDocumentLink where status=?",new Object[]{"A"});
+    }
+
     public List getQueueFromDocument(Integer docId){
         List queues = this.getHibernateTemplate().find("from QueueDocumentLink where docId = ?",new Object[] {docId});
         return queues;
@@ -60,7 +65,21 @@ public class QueueDocumentLinkDao extends HibernateDaoSupport {
         else
             return false;
     }
-
+    public boolean setStatusInactive(Integer docId){
+        List<QueueDocumentLink> qs=getQueueFromDocument(docId);
+        if(qs.size()>0){
+            QueueDocumentLink q=qs.get(0);
+            if(!q.getStatus().equals("I")){
+                q.setStatus("I");
+                this.getHibernateTemplate().update(q);
+                return true;
+            }else{
+                return false;
+            }
+        }return false;
+        //if status is not I, change to I
+        //if status is I, do nothing
+    }
     public void addToQueueDocumentLink(Integer qId,Integer dId){
         try{
             if(!hasQueueBeenLinkedWithDocument(dId,qId)){
