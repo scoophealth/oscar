@@ -23,6 +23,17 @@ public class QueueDao extends AbstractDao<Queue>{
         super(Queue.class);
     }
 
+    public Hashtable getQueuesHashtable(){
+        String q="select q from Queue q";
+        Query query=entityManager.createQuery(q);
+        List<Queue> result=new ArrayList();
+        result=query.getResultList();
+        Hashtable ht=new Hashtable();
+        for(Queue que:result){
+            ht.put(que.getId(),que.getName());
+        }
+        return ht;
+    }
     public List<Hashtable> getQueues(){
         String q="select q from Queue q";
         Query query=entityManager.createQuery(q);
