@@ -66,3 +66,17 @@ Add a project (from client / developer machine)
 Review Work Flow
 ----------------
 Reviewer logins in, select one of the branches, click review, if it's good set verified=+1, review=+2, then click publish and submit, and it's into the main branch.
+
+
+-----------
+Replication
+-----------
+Original intent of this section is replication of gerrit to sourceforge, this should generally be the same for any other git repository though.
+- the SF server is oscarmcmaster.git.sourcegorge.net
+- ssh to the above server with the gerrit linux user so the known_hosts file is populated, you don't actually have to login.
+- generate an ssh key as per the "ssh-keygen -t rsa" command if you don't already have a key
+- register a user for gerrit with sourceforge, i.e. we're using gerrit@oscarmcmaster.org for all the emails so we might as well register that user for replication.
+- need to add gerrit public key to sourceforge
+- add config file gerrit/review_site/replication.config with contents
+	[remote "sourceforget"]
+	  url = ssh://oscargerrit@oscarmcmaster.git.sourceforge.net:/oscarmcmaster/{name}/
