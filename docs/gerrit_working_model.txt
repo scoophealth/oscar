@@ -32,7 +32,7 @@ Install Gerrit (on the server)
 - we'll put everything into /var/gerrit/* (no real reason, just where the disk space was allocated on the server)
 - run "java -jar gerrit-2.1.5.war init -d review_site", from here on accept the defaults if not mentione here
 - at "Sql Database", enter "mysql" instead.
-- at "SMTP server hostname", enter either a mcmaster or google smtp server information, gmails's example maybe : smtp.gmail.com:465, ssl
+- at "SMTP server hostname", enter either a mcmaster or google smtp server information, gmails's example maybe : smtp.gmail.com:465, ssl, gerrit@oscarmcmaster.org
 - use SSL for the http daemon.
 - for http daemon listen port put it back to 8080 (instead of 8443)
 - at "Canonical Url", enter the proper hostname / url for your server (https://source.oscartools.org:8080/)
