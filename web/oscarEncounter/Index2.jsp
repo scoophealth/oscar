@@ -326,8 +326,8 @@ if (request.getParameter("casetoEncounter")==null)
         text = text.replace(/\\u000D/g, "");
         text = text.replace(/\\u003E/g, ">");
         text = text.replace(/\\u003C/g, "<");
-        text = text.replace(/\\u005C/g, "\");
-        text = text.replace(/\\u0022/g, """);
+        text = text.replace(/\\u005C/g, "\\");
+        text = text.replace(/\\u0022/g, "\"");
         text = text.replace(/\\u0027/g, "'");
 
         document.encForm.enTextarea.value += "\n\n";
@@ -389,8 +389,8 @@ if (request.getParameter("casetoEncounter")==null)
             document.encForm.enTextarea.value = document.encForm.enTextarea.value + "\n\n" + text;
             document.encForm.enTextarea.value = document.encForm.enTextarea.value.replace(/\\u003E/g, ">");
             document.encForm.enTextarea.value = document.encForm.enTextarea.value.replace(/\\u003C/g, "<");
-            document.encForm.enTextarea.value = document.encForm.enTextarea.value.replace(/\\u005C/g, "\");
-            document.encForm.enTextarea.value = document.encForm.enTextarea.value.replace(/\\u0022/g, """);
+            document.encForm.enTextarea.value = document.encForm.enTextarea.value.replace(/\\u005C/g, "\\");
+            document.encForm.enTextarea.value = document.encForm.enTextarea.value.replace(/\\u0022/g, "\"");
             document.encForm.enTextarea.value = document.encForm.enTextarea.value.replace(/\\u0027/g, "'");
             window.setTimeout("document.encForm.enTextarea.scrollTop=2147483647", 0);  // setTimeout is needed to allow browser to realize that text field has been updated
             document.encForm.enTextarea.focus();
