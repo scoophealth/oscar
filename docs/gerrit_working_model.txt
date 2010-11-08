@@ -1,4 +1,4 @@
-This document out lines how we'll user gerrit in our work flow.
+This document out lines how we'll use gerrit.
 
 -------
 purpose
@@ -62,11 +62,6 @@ Add a project (from client / developer machine)
 - from the command line, do a "ssh -p 29418 r6squeegee@127.0.0.1 gerrit create-project --name foo" (where foo is your project name).
 - now you'll want to clone the project in your favourite git tool, and commit & push all the previous files / existing code that's being ported.
 
-----------------
-Review Work Flow
-----------------
-Reviewer logins in, select one of the branches, click review, if it's good set verified=+1, review=+2, then click publish and submit, and it's into the main branch.
-
 
 -----------
 Replication
@@ -80,3 +75,20 @@ Original intent of this section is replication of gerrit to sourceforge, this sh
 - add config file gerrit/review_site/replication.config with contents
 	[remote "sourceforget"]
 	  url = ssh://oscargerrit@oscarmcmaster.git.sourceforge.net:/oscarmcmaster/{name}/
+** not finished here yet
+
+
+----------------
+Review Work Flow
+----------------
+Reviewer logins in, select one of the branches, click review, if it's good set verified=+1, review=+2, then click publish and submit, and it's into the main branch.
+
+------------------
+Server maintenance
+------------------
+The data on this machine is not critical. All repository data on this machine is replicated to sourceforge, and is also available on developers machines who have pulled from this machine.
+
+Having said that, I think we should still back up this machine. The above steps should help us reconfigure the machine if necessary, but reconfiguring and reregistering all the users and setting up everyones ssh keys etc would be a pain.
+
+Because of the above, we could live with an infrequent backup, i.e. once a week. If the server fails, we can restore it from a week old backup, then restore the git repository from sourceforge. The only things we'd lose then is any new user registrations in the last week.
+
