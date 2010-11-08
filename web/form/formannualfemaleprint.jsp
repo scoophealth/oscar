@@ -522,9 +522,7 @@
 		</td>
 	</tr>
 </table>
-</td>
-</tr>
-</table>
+
 
 <table class="Header">
 	<tr>
