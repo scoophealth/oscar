@@ -646,19 +646,19 @@ public class DmsInboxManageAction extends DispatchAction {
 
         String patientIdNamesStr="";
         List<QueueDocumentLink> qs=queueDocumentLinkDAO.getActiveQueueDocLink();
-        Hashtable queueDocNos=new Hashtable();
-        Hashtable docType=new Hashtable();
-        Hashtable<Integer,List> patientDocs=new Hashtable();
+        HashMap queueDocNos=new HashMap();
+        HashMap docType=new HashMap();
+        HashMap<Integer,List> patientDocs=new HashMap();
         DocumentDAO documentDAO=(DocumentDAO) SpringUtils.getBean("documentDAO");
                 Demographic demo =new Demographic();
                 List docsWithPatient=new ArrayList();
                 Hashtable patientIdNames=new Hashtable();//lbData.patientName = demo.getLastName()+ ", "+demo.getFirstName();
                 List<Integer> patientIds=new ArrayList();
                 Integer demoNo;
-                Hashtable docStatus=new Hashtable();
+                HashMap docStatus=new HashMap();
                 String patientIdStr="";
-                StringBuffer patientIdBuf=new StringBuffer();
-                Hashtable typeDocLab=new Hashtable();
+                StringBuilder patientIdBud=new StringBuilder();
+                HashMap typeDocLab=new HashMap();
                 List ListDocIds=new ArrayList();
         for(QueueDocumentLink q:qs){
              int qid=q.getQueueId();
@@ -713,11 +713,11 @@ public class DmsInboxManageAction extends DispatchAction {
         Integer dn=0;
         for(int i=0;i<patientIds.size();i++){
             dn=patientIds.get(i);
-            patientIdBuf.append(dn);
+            patientIdBud.append(dn);
             if(i!=patientIds.size()-1)
-                patientIdBuf.append(",");
+                patientIdBud.append(",");
         }
-        patientIdStr=patientIdBuf.toString();
+        patientIdStr=patientIdBud.toString();
         typeDocLab.put("DOC", ListDocIds);
         List normals=ListDocIds;//assume all documents are normal
         List abnormals=new ArrayList();
@@ -732,7 +732,7 @@ public class DmsInboxManageAction extends DispatchAction {
         request.setAttribute("abnormals", abnormals);
         request.setAttribute("queueDocNos", queueDocNos);
         request.setAttribute("patientIdNamesStr",patientIdNamesStr);
-        request.setAttribute("queueIdNames", queueDAO.getQueuesHashtable());
+        request.setAttribute("queueIdNames", queueDAO.getQueuesHashMap());
         request.setAttribute("providerNo", providerNo);
         request.setAttribute("searchProviderNo", searchProviderNo);
         return mapping.findForward("document_in_queues");
