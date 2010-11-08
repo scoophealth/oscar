@@ -64,8 +64,6 @@ public class GrepStuffDirectoryWalker extends DirectoryWalker {
 		checkContains(relativePath, fileContents, "com.sun.", "classes are not always available, usually org.apache will have standard libraries to replace these");
 		checkContains(relativePath, fileContents, "LogManager.getLogger(", "use MiscUtils.getLogger() instead");
 		checkContains(relativePath, fileContents, "HibernateDaoSupport", "use jpa");
-		checkContains(relativePath, fileContents, "Hashtable", "excessively rare that this is required, usually HashMap is the better choice");
-		checkContains(relativePath, fileContents, "Vector", "excessively rare that this is required, usually ArrayList is the better choice");
 		checkContains(relativePath, fileContents, "ArrayList()", "use generics");
 		checkContains(relativePath, fileContents, "HashSet()", "use generics");
 		checkContains(relativePath, fileContents, "HashMap()", "use generics");
@@ -74,6 +72,12 @@ public class GrepStuffDirectoryWalker extends DirectoryWalker {
 		checkContains(relativePath, fileContents, "WeakHashMap()", "use generics");
 		checkContains(relativePath, fileContents, "StringBuffer", "very very rare that this is required, usually StringBuilder is the better choice");
 		checkContains(relativePath, fileContents, "com.Ostermiller", "use org.apache libraries instead, duplicated libs and apache is... more standard (if that's a word)");
+
+		checkContains(relativePath, fileContents, "Vector", "excessively rare that this is required, usually ArrayList is the better choice");
+
+		if (fileContents.contains("Hashtable") && !fileContents.contains("initHashtableWithList")) {
+			violations.put("Hashtable" + ", " + "excessively rare that this is required, usually HashMap is the better choice", relativePath);
+		}
 
 		// --- hack for ignore case comparison ---
 		checkContains(relativePath, fileContentsLowered, "latin-1", "use utf-8");
