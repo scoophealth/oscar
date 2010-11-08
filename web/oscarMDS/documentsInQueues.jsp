@@ -53,17 +53,18 @@ height:0px;
 
     <body>
         <%
-        Hashtable queueIdNames=(Hashtable)request.getAttribute("queueIdNames");//each queue id has a corresponding name
-        Hashtable queueDocNos=(Hashtable)request.getAttribute("queueDocNos");//one queue id is linked to a list of docs
+        HashMap queueIdNames=(HashMap)request.getAttribute("queueIdNames");//each queue id has a corresponding name
+        HashMap queueDocNos=(HashMap)request.getAttribute("queueDocNos");//one queue id is linked to a list of docs
         String providerNo=(String)request.getAttribute("providerNo");
         String searchProviderNo=(String)request.getAttribute("searchProviderNo");
-        Enumeration keys=queueDocNos.keys();
+        Set keys=queueDocNos.keySet();
+        Iterator itr=keys.iterator();
 String patientIdNamesStr=(String)request.getAttribute("patientIdNamesStr");
-Hashtable docStatus=(Hashtable)request.getAttribute("docStatus");
+HashMap docStatus=(HashMap)request.getAttribute("docStatus");
 String patientIdStr =(String)request.getAttribute("patientIdStr");
-Hashtable typeDocLab =(Hashtable)request.getAttribute("typeDocLab");
-Hashtable docType=(Hashtable)request.getAttribute("docType");
-Hashtable patientDocs=(Hashtable)request.getAttribute("patientDocs");
+HashMap typeDocLab =(HashMap)request.getAttribute("typeDocLab");
+HashMap docType=(HashMap)request.getAttribute("docType");
+HashMap patientDocs=(HashMap)request.getAttribute("patientDocs");
 List<String> normals=(List<String>)request.getAttribute("normals");
 List<String> abnormals=(List<String>)request.getAttribute("abnormals");
 
@@ -105,11 +106,11 @@ List<String> abnormals=(List<String>)request.getAttribute("abnormals");
             <tr >
                 <td valign="top"  id="queueNames" width="20%">
                     <%
-                    while(keys.hasMoreElements()){
-                        Integer qId=(Integer)keys.nextElement();
+                    while(itr.hasNext()){
+                        Integer qId=(Integer)itr.next();
                         String name=(String)queueIdNames.get(qId);
-List dos=(List)queueDocNos.get(qId);
-Integer numberOfDocs=dos.size();
+                        List dos=(List)queueDocNos.get(qId);
+                        Integer numberOfDocs=dos.size();
 %>
 <a href="javascript:void(0);" onclick="resetCurrentFirstDocLab();showDocInQueue('<%=qId%>')"><%=name%>&nbsp;(<span id="docNo_<%=qId%>"><%=numberOfDocs%></span>)</a><br/>
                     <%}%>
