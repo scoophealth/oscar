@@ -304,8 +304,8 @@
 		<td><input type="text" name="value"
 			value="<%=prop.getProperty("value", "")%>" size='8' maxlength='8'>Add
 		GST<input type="checkbox" name="gstCheck" id="gstCheck"
-			onclick="setFlag()" /> (format: xx.xx, e.g. 18.20)</td>
-		<input type="hidden" value="" id="gstFlag" name="gstFlag" />
+			onclick="setFlag()" /> (format: xx.xx, e.g. 18.20)
+		<input type="hidden" value="" id="gstFlag" name="gstFlag" /></td>
 	</tr>
 	<tr>
 		<td align="right"><b>Issued Date</b></td>
