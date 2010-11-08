@@ -26,9 +26,10 @@
 -->
 
 <%@page import="org.oscarehr.util.MiscUtils"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <html>
 <head>
-<title>OSCAR e-Form Generator</title>
+<title> <bean:message key="eFormGenerator.title"/></title>
 
 <style type="text/css" media="print">
 <!-- CSS Script that removes the whole division when printing -->
@@ -2435,7 +2436,7 @@ function _CompInt(x, y)
 </head>
 
 <!-- resetAll() -->
-<body onload="init(); resetAll();">
+<body onload="init(); resetAll(); hide('all')">
 
 <img name="BGImage" id="BGImage" style="position: absolute; left: 0px; top: 0px;"
 	onmouseover="SetDrawOn();"
@@ -2445,7 +2446,7 @@ function _CompInt(x, y)
 	onmouseup="SetMouseUp(); DrawMarker();loadInputList();">
 
 
-<h1>E-form Generator</h1>
+<h1><bean:message key="eFormGenerator.title"/></h1>
 
 <!-- this form  used for injecting html in to Edit E-Form-->
 <form method="post" action="efmformmanageredit.jsp" id="toSave">
@@ -2457,11 +2458,15 @@ function _CompInt(x, y)
 <div name="Wizard" id="Wizard" class="DoNotPrint" style="position: absolute; leftoscar_image_path:750px; top: 0px; width: 500px;" >
 
 
+<span class="h1"><bean:message key="eFormGenerator.title"/></span>
+	<a onclick="show('all');"><bean:message key="eFormGenerator.expandAll"/></a>/
+	<a onclick="hide('all');"><bean:message key="eFormGenerator.collapseAll"/></a>
+
 <hr>
-<span class="h2">1. Load Image:</span> <a onclick="show('Section1');">Expand</a>/<a onclick="hide('Section1');">Collapse</a>
+<span class="h2">1. <bean:message key="eFormGenerator.loadImage"/>:</span> <a onclick="show('Section1');"><bean:message key="eFormGenerator.expand"/></a>/<a onclick="hide('Section1');"><bean:message key="eFormGenerator.collapse"/></a>
 <div id="Section1">
  <p><select name="imageName" id="imageName">
-                 <option value=""                    >choose an image...</option>
+                 <option value=""                    ><bean:message key="eFormGenerator.imageChooseSelect"/>...</option>
                     <%
                     /**
                         this function/scriplet look in images directory and populate the selection
@@ -2488,92 +2493,92 @@ function _CompInt(x, y)
         </p>
 
 	<!-- <p><b>Image Name:</b><input type="text" name="imageName" id="imageName"></p> -->
-	<p>	- If the picture does not appear on the list upload it.</p>
+	<p>	- <bean:message key="eFormGenerator.imageUploadPrompt"/> <bean:message key="eFormGenerator.imageUploadLink"/></p>
 	<p><b>Orientation of form:</b><br>
-			<input type="radio" name="Orientation" id="OrientPortrait" value="750" checked>Portrait (image width should be 1500 pixels, resized to 750 pixels on screen)<br>
-			<input type="radio" name="Orientation" id="OrientLandscape" value="1000">Landscape (image width should be 2000 pixels, resized to 1000 pixels on screen)<br>
-			<input type="radio" name="Orientation" id="OrientCustom" value="CustomWidth">Custom <input type="text" name="OrientCustomValue" id="OrientCustomValue" width="100"> (enter an integer)<br>
-			<input type="button" value="Load Image" onClick="loadImage();">
+			<input type="radio" name="Orientation" id="OrientPortrait" value="750" checked><bean:message key="eFormGenerator.imagePortrait"/><br>
+			<input type="radio" name="Orientation" id="OrientLandscape" value="1000"><bean:message key="eFormGenerator.imageLandscape"/><br>
+			<input type="radio" name="Orientation" id="OrientCustom" value="CustomWidth"><bean:message key="eFormGenerator.imageCustom"/> <input type="text" name="OrientCustomValue" id="OrientCustomValue" width="100"> <bean:message key="eFormGenerator.imageEnterInteger"/><br>
+			<input type="button" value=<bean:message key="eFormGenerator.imageLoadButton"/> onClick="loadImage();">
 	</p>
-	<p>If the eform image extends past the red outline, you've cropped the image too long and it won't fit on a letter-sized printout.  Try typing a number smaller than 750 in the "Custom" field.</p>
+	<p><bean:message key="eFormGenerator.image.RedOutlinehint"/></p>
 
 </div>
 
 <hr>
 
-<span class='h2'>2. eForm Name:</span> <a onclick="show('Section2');">Expand</a>/<a onclick="hide('Section2');">Collapse</a>
+<span class='h2'>2. <bean:message key="eFormGenerator.eFormName"/></span> <a onclick="show('Section2');"><bean:message key="eFormGenerator.expand"/></a>/<a onclick="hide('Section2');"><bean:message key="eFormGenerator.collapse"/></a>
 <div id="Section2">
-	<p>Enter a name for the form here:<input type="text" name="eFormName" id="eFormName"></p>
+	<p><bean:message key="eFormGenerator.nameInstruction"/><input type="text" name="eFormName" id="eFormName"></p>
 </div>
 
 <hr>
 
-<span class='h2'>3. Special Case With Gender Checkboxes:</span><a onclick="show('Section3');">Expand</a>/<a onclick="hide('Section3');">Collapse</a>
+<span class='h2'>3. <bean:message key="eFormGenerator.gender"/></span> <a onclick="show('Section3');"><bean:message key="eFormGenerator.expand"/></a>/<a onclick="hide('Section3');"><bean:message key="eFormGenerator.collapse"/></a>
 <div id="Section3">
-			<p>Gender checkboxes used in this form? If yes, click here <input name="preCheckGender" id="preCheckGender" type="checkbox" onclick="toggleView(this.checked,'Section3a');"></p>
+			<p><bean:message key="eFormGenerator.genderCheckbox"/> <input name="preCheckGender" id="preCheckGender" type="checkbox" onclick="toggleView(this.checked,'Section3a');"></p>
 			<div id="Section3a" style="display:none">
 				<table>
 					<tr>
-						<td><span><b>Male</b>: </span></td>
-						<td><input name="Male" id="Male" type="button" value="Click this, then click the top left corner of the male checkbox" onclick="SetSwitchOn(this.id);"></td>
+						<td><span><b><bean:message key="eFormGenerator.genderMale"/></b>: </span></td>
+						<td><input name="Male" id="Male" type="button" value='<bean:message key="eFormGenerator.genderMaleButton"/>' onclick="SetSwitchOn(this.id);"></td>
 					</tr>
 					<tr>
-						<td><span><b>Female</b>:</span></td>
-						<td><input name="Female" id="Female" type="button" value="Click this, then click the top left corner of the female checkbox" onclick="SetSwitchOn(this.id);"></td>
+						<td><span><b><bean:message key="eFormGenerator.genderFemale"/></b>:</span></td>
+						<td><input name="Female" id="Female" type="button" value='<bean:message key="eFormGenerator.genderFemaleButton"/>' onclick="SetSwitchOn(this.id);"></td>
 					</tr>
 				</table>
 			</div>
 </div>
 <hr>
-<span class='h2'>4. Special Case With Signatures:</span><a onclick="show('Section4');">Expand</a>/<a onclick="hide('Section4');">Collapse</a>
+<span class='h2'>4. <bean:message key="eFormGenerator.signature"/></span><a onclick="show('Section4');"><bean:message key="eFormGenerator.expand"/></a>/<a onclick="hide('Section4');"><bean:message key="eFormGenerator.collapse"/></a>
 <div id="Section4">
 	<p>
 		<input type="checkbox" name="AddSignature" id="AddSignature"
-			onclick="	toggleView(this.checked,'Section4a');toggleView(this.checked,'Section4b');">Add Signature to this form<br>
+			onclick="	toggleView(this.checked,'Section4a');toggleView(this.checked,'Section4b');"><bean:message key="eFormGenerator.signatureCheckbox"/><br>
 		<div id="Section4a" style="display:none">
-			<input type="radio" name="SignatureType" id="AutoSign" value="AutoSign" onclick="show('Section4aa'); show('Section4ab'); hide('Section4ba');"><span>Automatically load user's signature images:</span><br>
+			<input type="radio" name="SignatureType" id="AutoSign" value="AutoSign" onclick="show('Section4aa'); show('Section4ab'); hide('Section4ba');"><span><bean:message key="eFormGenerator.signatureLoad"/></span><br>
 		</div>
 			<div id="Section4aa" style="display:none">
 				<ul>
-					<li>User Name(i.e. oscarDB=current_user) - as a shortcut, you may enter a short segment of the name, as long as this segment is unique among all the users:
+					<li><bean:message key="eFormGenerator.signatureFragment"/>
 						<input type="text" name="UserList" id="UserList" style="width:200px;"></li>
-					<li>Corresponding signature image file:
+					<li><bean:message key="eFormGenerator.signatureImage"/>
 						<input type="text" name="SignatureList" id="SignatureList" style="width:200px;"></li>
-					<input type="button" name="AddToUserSignatureList" id="AddToUserSignatureList" value="Add to List" onclick="addToUserSignatureList();">
-					<input type="button" name="EmptyUserSignatureList" id="EmptyUserSignatureList" value="Empty List" onclick="emptyUserSignaturelist()"><br>
+					<input type="button" name="AddToUserSignatureList" id="AddToUserSignatureList" value="<bean:message key="eFormGenerator.signatureAddButton"/>" onclick="addToUserSignatureList();">
+					<input type="button" name="EmptyUserSignatureList" id="EmptyUserSignatureList" value="<bean:message key="eFormGenerator.signatureEmptyButton"/>" onclick="emptyUserSignaturelist()"><br>
 					<ul name="UserSignatureList" id="UserSignatureList" style="list-style-type:none; list-style: none; margin-left: 0; padding-left: 1em; text-indent: -1em"></ul>
 				</ul>
 			</div>
 			<div id="Section4ab" style="display:none">
-				<input type="button" name="AddSignatureBox1" id="AddSignatureBox1" style="width:400px" value="Click here, then drag a box around the signature area" onclick="SetSwitchOn('SignatureBox');">
+				<input type="button" name="AddSignatureBox1" id="AddSignatureBox1" style="width:400px" value="<bean:message key="eFormGenerator.signatureLocationButton"/>" onclick="SetSwitchOn('SignatureBox');">
 			</div>
 		<div id="Section4b"  style="display:none">
-			<input type="radio" name="SignatureType" id="DrawSign" value="DrawSign" onclick="show('Section4ba'); hide('Section4aa'); hide('Section4ab');"><span>Add a drawing area to "sign" a signature on the fly<span>
+			<input type="radio" name="SignatureType" id="DrawSign" value="DrawSign" onclick="show('Section4ba'); hide('Section4aa'); hide('Section4ab');"><span><bean:message key="eFormGenerator.signatureFreehand"/><span>
 		</div>
 			<div id="Section4ba" style="display:none">
-				<input type="button" name="AddSignatureBox2" id="AddSignatureBox2" style="width:400px" value="Click here, then drag a box around the signature area" onclick="SetSwitchOn('SignatureBox');">
+				<input type="button" name="AddSignatureBox2" id="AddSignatureBox2" style="width:400px" value="<bean:message key="eFormGenerator.signatureLocationButton"/>" onclick="SetSwitchOn('SignatureBox');">
 			</div>
 	</p>
 </div>
 
 <hr>
-<span class='h2'>5. Add in form input fields (one-by-one)</span> <a onclick="show('Section5');">Expand</a>/<a onclick="hide('Section5');">Collapse</a></span>
+<span class='h2'>5. <bean:message key="eFormGenerator.input"/></span> <a onclick="show('Section5');"><bean:message key="eFormGenerator.expand"/></a>/<a onclick="hide('Section5');"><bean:message key="eFormGenerator.collapse"/></a></span>
 <div id="Section5">
-	<span class='h3'>a) Select An Input Type</span>
+	<span class='h3'><bean:message key="eFormGenerator.inputType"/></span>
 		<p>
-		<input type="radio" name="inputType" id="Text" value="text" onclick="hide('SectionPrecheck');show('SectionCustomText');show('SectionDatabase');show('SectionImportMeasurements');SetSwitchOn(this.id);">Single-line text input
-		<input type="radio" name="inputType" id="Textbox" value="textarea" onclick="hide('SectionPrecheck');show('SectionCustomText');show('SectionDatabase');show('SectionImportMeasurements');SetSwitchOn(this.id);">Multi-line text input
-		<input type="radio" name="inputType" id="Checkbox" value="checkbox" onclick="show('SectionPrecheck');hide('SectionCustomText');hide('SectionDatabase');hide('SectionImportMeasurements');SetSwitchOn(this.id);">Checkbox
+		<input type="radio" name="inputType" id="Text" value="text" onclick="hide('SectionPrecheck');show('SectionCustomText');show('SectionDatabase');show('SectionImportMeasurements');SetSwitchOn(this.id);"><bean:message key="eFormGenerator.inputTypeText"/>
+		<input type="radio" name="inputType" id="Textbox" value="textarea" onclick="hide('SectionPrecheck');show('SectionCustomText');show('SectionDatabase');show('SectionImportMeasurements');SetSwitchOn(this.id);"><bean:message key="eFormGenerator.inputTypeTextArea"/>
+		<input type="radio" name="inputType" id="Checkbox" value="checkbox" onclick="show('SectionPrecheck');hide('SectionCustomText');hide('SectionDatabase');hide('SectionImportMeasurements');SetSwitchOn(this.id);"><bean:message key="eFormGenerator.inputTypeCheckbox"/>
 		</p>
 
-	<span class='h3'>b) Auto-populating Input Box</span>
+	<span class='h3'><bean:message key="eFormGenerator.inputAuto"/></span>
 <ul style="list-style-type:none">
 			<li id='SectionCustomText' style="display:block">
-				<input type="radio" name="AutoPopType" id="AutoPopCustom" value="custom">Custom text:<input type="text" name="inputValue" id="inputValue" value=""></li>
+				<input type="radio" name="AutoPopType" id="AutoPopCustom" value="custom"><bean:message key="eFormGenerator.inputTypeCustom"/><input type="text" name="inputValue" id="inputValue" value=""></li>
 			<li id='SectionDatabase' style="display:block">
-				<input type="radio" name="AutoPopType" id="AutoPopDatabase" value="database">From Oscar Database:
+				<input type="radio" name="AutoPopType" id="AutoPopDatabase" value="database"><bean:message key="eFormGenerator.inputTypeData"/>
 			 <select name="oscarDB" id="oscarDB">
-                                 <option value=""          >----NONE----</option>
+                                 <option value=""          ><bean:message key="eFormGenerator.inputTypeDataButton"/></option>
                                 <%
                                   EFormLoader names = EFormLoader.getInstance();
                                   //return the array with a list of names from database
@@ -2585,13 +2590,13 @@ function _CompInt(x, y)
                                  %>
                         </select>			</li>
 			<li id="SectionImportMeasurements" style="diplay:block;">
-				<input type="radio" name="AutoPopType" id="AutoPopMeasurements" value="measurements">Importing from Measurements:<br>
+				<input type="radio" name="AutoPopType" id="AutoPopMeasurements" value="measurements"><bean:message key="eFormGenerator.inputTypeMeasurements"/><br>
 				<table>
 					<tr>
-						<td><p>Measurement Type:</p></td>
+						<td><p><bean:message key="eFormGenerator.inputTypeMeasurementsType"/></p></td>
 						<td><p>
 							<select name="MeasurementList" id="MeasurementList">
-								<option value="" selected="selected">--NONE--</option>
+								<option value="" selected="selected"><bean:message key="eFormGenerator.inputTypeMeasurementsButton"/></option>
 								<option value="HT">HT</option>
 								<option value="WT">WT</option>
 								<option value="BP">BP</option>
@@ -2611,15 +2616,15 @@ function _CompInt(x, y)
 								<option value="ACR">ACR</option>
 							</select>
 							<br>
-						, or custom <input type="text" name="MeasurementCustom" id="MeasurementCustom" style="width:50px;">
+						<bean:message key="eFormGenerator.inputTypeMeasurementsCustom"/><input type="text" name="MeasurementCustom" id="MeasurementCustom" style="width:50px;">
 						</p>
 						</td>
 						<td>
-							<p>Field:
+							<p><bean:message key="eFormGenerator.inputTypeMeasurementsField"/>
 								<select name="MeasurementField" id="MeasurementField">
-									<option value="value">Value</option>
-									<option value="dateObserved">Date Observed</option>
-									<option value="comments">Comments</option>
+									<option value="value"><bean:message key="eFormGenerator.inputTypeMeasurementsFieldButtonValue"/></option>
+									<option value="dateObserved"><bean:message key="eFormGenerator.inputTypeMeasurementsFieldButtonDateObserved"/></option>
+									<option value="comments"><bean:message key="eFormGenerator.inputTypeMeasurementsFieldButtonComment"/></option>
 								</select>
 							</p>
 						</td>
@@ -2631,62 +2636,62 @@ function _CompInt(x, y)
 		</ul>
 
 
-	<span class='h3'>c) Formating The Input Box</span>
+	<span class='h3'><bean:message key="eFormGenerator.inputFormat"/></span>
 			<p>
-			Font Family:
+			<bean:message key="eFormGenerator.inputFormatFont"/>
 				<select id="fontFamily">
-					 <option value="sans-serif">sans-serif</option>
-					 <option value="serif">serif</option>
-					 <option value="monospace">monospace</option>
+					 <option value="sans-serif"><bean:message key="eFormGenerator.inputFormatSelectSans"/></option>
+					 <option value="serif"><bean:message key="eFormGenerator.inputFormatSelectSerif"/></option>
+					 <option value="monospace"><bean:message key="eFormGenerator.inputFormatSelectMono"/></option>
 				</select>
-			Font Style:
+			<bean:message key="eFormGenerator.inputFormatStyle"/>
 				<select id="fontStyle">
-					 <option value="normal">normal</option>
-					 <option value="italic">italic</option>
+					 <option value="normal"><bean:message key="eFormGenerator.inputFormatStyleNormal"/></option>
+					 <option value="italic"><bean:message key="eFormGenerator.inputFormatStyleItalic"/></option>
 				</select>
-			Font Weight:
+			<bean:message key="eFormGenerator.inputFormatWeight"/>
 				<select id="fontWeight">
-					 <option value="normal">normal</option>
-					 <option value="bold">bold</option>
-					 <option value="bolder">bolder</option>
-					 <option value="lighter">lighter</option>
+					 <option value="normal"><bean:message key="eFormGenerator.inputFormatStyleNormal"/></option>
+					 <option value="bold"><bean:message key="eFormGenerator.inputFormatWeightBold"/></option>
+					 <option value="bolder"><bean:message key="eFormGenerator.inputFormatWeightBolder"/></option>
+					 <option value="lighter"><bean:message key="eFormGenerator.inputFormatWeightLighter"/></option>
 				</select>
 			<br>
-			Font Size:<input type="text" name="fontSize" id="fontSize"  style="width:50px" value="12">(in px, usually 12-14)
-			Horizontal Alignment:
+			<bean:message key="eFormGenerator.inputFormatSize"/><input type="text" name="fontSize" id="fontSize"  style="width:50px" value="12"><bean:message key="eFormGenerator.inputFormatSizehint"/>
+			<bean:message key="eFormGenerator.inputFormatAlign"/>
 				<select id="textAlign">
-					<option value="left">Left</option>
-					<option value="center">Center</option>
-					<option value="right">Right</option>
-					<option value="justify">Justify</option>
+					<option value="left"><bean:message key="eFormGenerator.inputFormatAlignLeft"/></option>
+					<option value="center"><bean:message key="eFormGenerator.inputFormatAlignCenter"/></option>
+					<option value="right"><bean:message key="eFormGenerator.inputFormatAlignRight"/></option>
+					<option value="justify"><bean:message key="eFormGenerator.inputFormatAlignJustify"/></option>
 				</select>
 			</p>
-			<p>Background Color:
+			<p><bean:message key="eFormGenerator.inputFormatBackground"/>
 				<select id="bgColor">
-					<option value="transparent">transparent</option>
-					<option value="white">white</option>
+					<option value="transparent"><bean:message key="eFormGenerator.inputFormatBackgroundTransparent"/></option>
+					<option value="white"><bean:message key="eFormGenerator.inputFormatBackgroundWhite"/></option>
 				</select><br>
-				- Useful to have a white background to cover-up lines within the input field
+				- <bean:message key="eFormGenerator.inputFormatBackgroundhint"/>
 			</p>
 
 
 
-	<span class='h3'>c) Naming the input field:</span>
-		<p>i)<input type="radio" name="InputNameType" id="InputNameAuto" value="Auto" checked>Automatic Sequential Naming (quicker method for most cases).<br>
-				- automatic name prefix:<input type="text" name="AutoNamePrefix" id="AutoNamePrefix" style="width:100px" value="AutoName">(One Continuous Word)<br>
-			ii)<input type="radio" name="InputNameType" id="InputNameCustom" value="Custom">Custom <font style="color:red;">UNIQUE</font> Name:
+	<span class='h3'><bean:message key="eFormGenerator.inputName"/></span>
+		<p><input type="radio" name="InputNameType" id="InputNameAuto" value="Auto" checked><bean:message key="eFormGenerator.inputNameSeq"/><br>
+				- <bean:message key="eFormGenerator.inputNameSeqPrefix"/><input type="text" name="AutoNamePrefix" id="AutoNamePrefix" style="width:100px" value="AutoName"><br>
+			<input type="radio" name="InputNameCustom" id="InputNameCustom" value="Custom"><bean:message key="eFormGenerator.inputNameSeqCustom"/>
 				<input type="text" name="inputName" id="inputName">
 				<br>
-				- Must be <i>one continuous word</i> with letters/numbers only (<i>no spaces/symbols</i>)<br>
-				- Use custom naming to easily identify the corresponding html code if you're going to be editing the code later on
+				- <bean:message key="eFormGenerator.inputNameSeqCustomhint1"/><br>
+				- <bean:message key="eFormGenerator.inputNameSeqCustomhint2"/>
 			<br>
-			iii)<input type="radio" name="InputNameType" id="InputNameMeasurement" value="Measurement">If you would like to export the value of this input field to <b>Measurements</b>, select the Measurement Type and Field here:<br>
+			<input type="radio" name="InputNameType" id="InputNameMeasurement" value="Measurement"><bean:message key="eFormGenerator.inputNameMeasurement"/><br>
 			<table>
 				<tr>
-					<td><p>Measurement Type:</p></td>
+					<td><p><bean:message key="eFormGenerator.inputNameMeasurementType"/></p></td>
 					<td><p>
 						<select name="ExportMeasurementList" id="ExportMeasurementList">
-							<option value="" selected="selected">--NONE--</option>
+							<option value="" selected="selected"><bean:message key="eFormGenerator.inputNameMeasurementButton"/></option>
 							<option value="HT">HT</option>
 							<option value="WT">WT</option>
 							<option value="BP">BP</option>
@@ -2706,15 +2711,15 @@ function _CompInt(x, y)
 							<option value="ACR">ACR</option>
 						</select>
 						<br>
-				, or custom <input type="text" name="ExportMeasurementCustom" id="ExportMeasurementCustom" style="width:50px;">
+				&nbsp;<bean:message key="eFormGenerator.inputNameMeasurementsCustom"/>&nbsp;<input type="text" name="ExportMeasurementCustom" id="ExportMeasurementCustom" style="width:50px;">
 					</p>
 					</td>
 					<td>
-						<p>Field:
+						<p><bean:message key="eFormGenerator.inputNameMeasurementsField"/>
 							<select name="ExportMeasurementField" id="ExportMeasurementField">
-								<option value="value">Value</option>
-								<option value="dateObserved">Date Observed</option>
-								<option value="comments">Comments</option>
+								<option value="value"><bean:message key="eFormGenerator.inputTypeMeasurementsFieldButtonValue"/></option>
+								<option value="dateObserved"><bean:message key="eFormGenerator.inputTypeMeasurementsFieldButtonDateObserved"/></option>
+								<option value="comments"><bean:message key="eFormGenerator.inputTypeMeasurementsFieldButtonComment"/></option>
 							</select>
 						</p>
 					</td>
@@ -2722,106 +2727,106 @@ function _CompInt(x, y)
 			</table>
 
 		</p>
-	<span class='h3'>d) Drawing the input fields</span>
+	<span class='h3'><bean:message key="eFormGenerator.inputDraw"/></span>
 	<br>
-		<span class='h4'>For one- and multi-lined textboxes:</span>
+		<span class='h4'><bean:message key="eFormGenerator.inputDrawText"/></span>
 			<p>
-			- Drag a box from the top left corner to the bottom right corner of the box.<br>
+			- <bean:message key="eFormGenerator.inputDrawTexthint"/><br>
 			</p>
-		<span class='h4'>For checkboxes</span>
+		<span class='h4'><bean:message key="eFormGenerator.inputDrawCheckbox"/></span>
 			<p>
-			- Click on the top left corner of the checkbox<br>
+			- <bean:message key="eFormGenerator.inputDrawCheckboxhint"/><br>
 			</p>
-	<p><input type="button" onclick="Undo();" value="Undo"></p>
-	<p>Repeat step # 3 until all input boxes are done.</p>
+	<p><input type="button" onclick="Undo();" value='<bean:message key="eFormGenerator.inputDrawUndoButton"/>'></p>
+	<p><bean:message key="eFormGenerator.inputDrawhint"/></p>
 
 </div>
 
 <hr>
-<span class='h2'>6. Fine-tuning The Input Fields</span><a onclick="show('Section6');">Expand</a>/<a onclick="hide('Section6');">Collapse</a>
+<span class='h2'>6. <bean:message key="eFormGenerator.tuning"/></span><a onclick="show('Section6');"><bean:message key="eFormGenerator.expand"/></a>/<a onclick="hide('Section6');"><bean:message key="eFormGenerator.collapse"/></a>
 <div id="Section6">
 
-<input type="button" value="Show/Hide Input Names" onclick="ToggleInputName();"><br>
+<input type="button" value='<bean:message key="eFormGenerator.tuningShowButton"/>' onclick="ToggleInputName();"><br>
 <table style="text-align:center; border: 1px solid black;">
 	<tr>
 		<td style="background-color:#dddddd;">
-			<input type="button" value="Uncheck all" onclick="uncheckList('InputChecklist');"><br>
-			<input type="button" value="Check all" onclick="checkList('InputChecklist');">
+			<input type="button" value='<bean:message key="eFormGenerator.tuningNoneButton"/>' onclick="uncheckList('InputChecklist');"><br>
+			<input type="button" value='<bean:message key="eFormGenerator.tuningAllButton"/>' onclick="checkList('InputChecklist');">
 		</td>
 		<td>
-			<span>UP</span><br>
-			<input type="button" value="Align" style="width:100px;" onclick="alignInput('top');"><br>
-			<input type="button" value="Shift" style="width:100px;" onclick="changeInput('up',10);"><br>
-			<input type="button" value="Nudge" style="width:100px;" onclick="changeInput('up',1);">
+			<span><bean:message key="eFormGenerator.tuningUpButton"/></span><br>
+			<input type="button" value='<bean:message key="eFormGenerator.tuningAlignButton"/>' style="width:100px;" onclick="alignInput('top');"><br>
+			<input type="button" value='<bean:message key="eFormGenerator.tuningShiftButton"/>' style="width:100px;" onclick="changeInput('up',10);"><br>
+			<input type="button" value='<bean:message key="eFormGenerator.tuningNudgeButton"/>' style="width:100px;" onclick="changeInput('up',1);">
 		</td>
 		<td style="background-color:#dddddd;">
-			<input type="button" value="Delete" Style="width:100px;" onclick="deleteInput();">
+			<input type="button" value='<bean:message key="eFormGenerator.tuningDeleteButton"/>' Style="width:100px;" onclick="deleteInput();">
 		</td>
 	</tr>
 	<tr>
 		<td>
-			<span>LEFT</span><br>
-			<input type="button" value="Align" style="width:50px;" onclick="alignInput('left');">
-			<input type="button" value="Shift" style="width:50px;" onclick="changeInput('left',10);">
-			<input type="button" value="Nudge" style="width:50px;" onclick="changeInput('left',1);">
+			<span><bean:message key="eFormGenerator.tuningLeft"/></span><br>
+			<input type="button" value='<bean:message key="eFormGenerator.tuningAlignButton"/>' style="width:50px;" onclick="alignInput('left');">
+			<input type="button" value='<bean:message key="eFormGenerator.tuningShiftButton"/>' style="width:50px;" onclick="changeInput('left',10);">
+			<input type="button" value='<bean:message key="eFormGenerator.tuningNudgeButton"/>' style="width:50px;" onclick="changeInput('left',1);">
 		</td>
 		<td style="text-align:left;">
 			<ul id="InputList" name="InputList" style="list-style-type:none; list-style: none; margin-left: 0; padding-left: 1em; text-indent: -1em"></ul>
 		</td>
 		<td>
-			<span>RIGHT</span><br>
-			<input type="button" value="Nudge" style="width:50px;" onclick="changeInput('right',1);">
-			<input type="button" value="Shift" style="width:50px;" onclick="changeInput('right',10);">
-			<input type="button" value="Align" style="width:50px;" onclick="alignInput('right');">
+			<span><bean:message key="eFormGenerator.tuningRight"/></span><br>
+			<input type="button" value='<bean:message key="eFormGenerator.tuningNudgeButton"/>' style="width:50px;" onclick="changeInput('right',1);">
+			<input type="button" value='<bean:message key="eFormGenerator.tuningShiftButton"/>' style="width:50px;" onclick="changeInput('right',10);">
+			<input type="button" value='<bean:message key="eFormGenerator.tuningAlignButton"/>' style="width:50px;" onclick="alignInput('right');">
 		</td>
 	</tr>
 	<tr>
 		<td style="background-color:#dddddd;">
-			<span>WIDTH</span><br>
-			<input type="button" value="Increase" style="width:75px;" onclick="changeInput('width',1);"><br>
-			<input type="button" value="Decrease" style="width:75px;" onclick="changeInput('width',-1);">
+			<span><bean:message key="eFormGenerator.tuningWidth"/></span><br>
+			<input type="button" value='<bean:message key="eFormGenerator.tuningIncreaseButton"/>' style="width:75px;" onclick="changeInput('width',1);"><br>
+			<input type="button" value='<bean:message key="eFormGenerator.tuningDecreaseButton"/>' style="width:75px;" onclick="changeInput('width',-1);">
 		</td>
 		<td>
 
-			<input type="button" value="Nudge" style="width:100px;" onclick="changeInput('down',1);"><br>
-			<input type="button" value="Shift" style="width:100px;" onclick="changeInput('down',10);"><br>
-			<input type="button" value="Align" style="width:100px;" onclick="alignInput('bottom');"><br>
-			<span>DOWN</span>
+			<input type="button" value='<bean:message key="eFormGenerator.tuningNudgeButton"/>' style="width:100px;" onclick="changeInput('down',1);"><br>
+			<input type="button" value='<bean:message key="eFormGenerator.tuningShiftButton"/>' style="width:100px;" onclick="changeInput('down',10);"><br>
+			<input type="button" value='<bean:message key="eFormGenerator.tuningAlignButton"/>' style="width:100px;" onclick="alignInput('bottom');"><br>
+			<span><bean:message key="eFormGenerator.tuningDown"/></span>
 			</td>
 		<td style="background-color:#dddddd;">
-			<span>HEIGHT</span><br>
-			<input type="button" value="Increase" style="width:75px;" onclick="changeInput('height',1);"><br>
-			<input type="button" value="Decrease" style="width:75px;" onclick="changeInput('height',-1);">
+			<span><bean:message key="eFormGenerator.tuningHeight"/></span><br>
+			<input type="button" value='<bean:message key="eFormGenerator.tuningIncreaseButton"/>' style="width:75px;" onclick="changeInput('height',1);"><br>
+			<input type="button" value='<bean:message key="eFormGenerator.tuningDecreaseButton"/>' style="width:75px;" onclick="changeInput('height',-1);">
 		</td>
 	</tr>
 </table>
 
 </div>
 <hr>
-<span class='h2'>7. Miscellaneous Options</span><a onclick="show('Section7');">Expand</a>/<a onclick="hide('Section7');">Collapse</a>
+<span class='h2'>7. <bean:message key="eFormGenerator.misc"/></span><a onclick="show('Section7');"><bean:message key="eFormGenerator.expand"/></a>/<a onclick="hide('Section7');"><bean:message key="eFormGenerator.collapse"/></a>
 <div id="Section7">
-<p><span class="h2">Maximize window when eForm loads.</span><br>
-	<input name="maximizeWindow" id="maximizeWindow" type="checkbox">Useful for lower resolution monitors.
+<p><span class="h2"><bean:message key="eFormGenerator.miscMax"/></span><br>
+	<input name="maximizeWindow" id="maximizeWindow" type="checkbox"><bean:message key="eFormGenerator.miscMaxhint"/>
 </p>
-<p><span class='h2'>Emphasize Checkmarks:</span><br>
-	<input name="DefaultCheckmark" id="DefaultCheckmark" type="checkbox">"Drawing" in checkmarks during printing. Works for Firefox older than 3.5, longer code, and may not work for IE.<br>
-	<input name="ScaleCheckmark" id="ScaleCheckmark" type="checkbox">Scaling up checkbox.  (Works for Firefox 3.5 or newer, Safari (or similar WebKit)  3.1 or newer, IE 5-7 or IE 8 running compatibility mode, Opera 10.5)
+<p><span class='h2'><bean:message key="eFormGenerator.miscCheckmarks"/></span><br>
+	<input name="ScaleCheckmark" id="ScaleCheckmark" type="checkbox"><bean:message key="eFormGenerator.miscCheckmarksScale"/><br>
+	<input name="DefaultCheckmark" id="DefaultCheckmark" type="checkbox"><bean:message key="eFormGenerator.miscCheckmarksDraw"/>
 </p>
 </div>
 <hr>
-<span class='h2'>8. Generate eForm</span><a onclick="show('Section8');">Expand</a>/<a onclick="hide('Section8');">Collapse</a>
+<span class='h2'>8. <bean:message key="eFormGenerator.generate"/></span><a onclick="show('Section8');"><bean:message key="eFormGenerator.expand"/></a>/<a onclick="hide('Section8');"><bean:message key="eFormGenerator.collapse"/></a>
 <div id='Section8'>
 <!-- Inject the html to the eForm window -->
-		<input name="loadHTMLButton" id="loadHTMLButton" type="button" value="Load HTML code in new window" onClick="injectHtml();">
-	<input name="reset" id="reset" type="button" value="Reset form and start again" onclick="resetAll();">
+		<input name="loadHTMLButton" id="loadHTMLButton" type="button" value='<bean:message key="eFormGenerator.generateLoadButton"/>' onClick="injectHtml();">
+	<input name="reset" id="reset" type="button" value='<bean:message key="eFormGenerator.generateResetButton"/>' onclick="resetAll();">
 <!--  Cookie Monster says hello! -->
-	<input name="save" id="save" type="button" value="Save" onclick="save_to_cookie();">
-	<input name="restore" id="restore" type="button" value="Restore saved" onclick="restoreSaved();">
+	<input name="save" id="save" type="button" value='<bean:message key="eFormGenerator.generateSaveButton"/>' onclick="save_to_cookie();">
+	<input name="restore" id="restore" type="button" value='<bean:message key="eFormGenerator.generateRestoreSaveButton"/>' onclick="restoreSaved();">
 <!--  Cookie Monster says bye! -->
-	<p>- The html code should open up in Edit E-Form window.
-                <br>- Now you need to fill the fields shown (<i><b>form name,Additional Information,etc</b></i>):
-		<br>- Save the form by clicking <i><b>Save</b></i> button
-                <br>- DONE!!
+	<p>- <bean:message key="eFormGenerator.generatehint1"/>
+                <br>- <bean:message key="eFormGenerator.generatehint2"/>
+		<br>- <bean:message key="eFormGenerator.generatehint3"/>
+                <br>- <bean:message key="eFormGenerator.generatehint4"/>
 	</p>
 
 </div>
