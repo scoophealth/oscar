@@ -13,7 +13,6 @@ insert into `secRole` (role_name, description) values('Case Manager', 'Case Mana
 insert into `secRole` (role_name, description) values('Housing Worker', 'Housing Worker');
 insert into `secRole` (role_name, description) values('Support Worker', 'Support Worker');
 insert into `secRole` (role_name, description) values('Client Service Worker', 'Client Service Worker');
-insert into `secRole` (role_name, description) values('Recreation Therapist', 'Recreation Therapist');
 
 insert into access_type (name, type) values("read ticklers assigned to a doctor","access");
 
@@ -95,7 +94,3 @@ insert into access_type (name, type) values("write Client Service Worker issues"
 insert into access_type (name, type) values("read Client Service Worker issues","access");
 insert into access_type (name, type) values("read Client Service Worker notes","access");
 
-insert into access_type (name, type) values("read ticklers assigned to a Recreation Therapist","access");
-insert into access_type (name, type) values("write Recreation Therapist issues","access");
-insert into access_type (name, type) values("read Recreation Therapist issues","access");
-insert into access_type (name, type) values("read Recreation Therapist notes","access");
