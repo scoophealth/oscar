@@ -24,7 +24,7 @@ public class QueueDao extends AbstractDao<Queue>{
         super(Queue.class);
     }
 
-    public HashMap getQueuesHashMap(){
+    public HashMap getHashMapOfQueues(){
         String q="select q from Queue q";
         Query query=entityManager.createQuery(q);
         List<Queue> result=new ArrayList<Queue>();
