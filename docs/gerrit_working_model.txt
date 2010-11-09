@@ -72,11 +72,11 @@ Original intent of this section is replication of gerrit to sourceforge, this sh
 - generate an ssh key as per the "ssh-keygen -t rsa" command if you don't already have a key
 - register a user for gerrit with sourceforge, i.e. we're using gerrit@oscarmcmaster.org for all the emails so we might as well register that user for replication.
 - need to add gerrit public key to sourceforge
-- add config file gerrit/review_site/replication.config with contents
-	[remote "sourceforget"]
-	  url = ssh://oscargerrit@oscarmcmaster.git.sourceforge.net:/oscarmcmaster/{name}/
-** not finished here yet
+- add config file gerrit/review_site/etc/replication.config with contents
+	[remote "sourceforge"]
+	  url = ssh://oscargerrit@oscarmcmaster.git.sourceforge.net/gitroot/oscarmcmaster/${name}
 
+and it appears to all work! amazing :)
 
 ----------------
 Review Work Flow
