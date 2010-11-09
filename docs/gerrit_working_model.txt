@@ -94,4 +94,26 @@ Because of the above, we could live with an infrequent backup, i.e. once a week.
 
 To backup the system, the site directory should be backed up (/var/gerrrit/* will include the site directory), the mysql database (reviewdb). The only thing lost then would be your ssh keys as I don't think those are backup-able upon server change (though they might be).
 
-There's logs in /var/gerrit/review_site/logs/* that should be cleaned out every once in a while. They generally have no use for us. 
+There's logs in /var/gerrit/review_site/logs/* that should be cleaned out every once in a while. They generally have no use for us.
+
+
+--------------------------------------
+Importing existing repository From CVS
+--------------------------------------
+On the gerrit server do the following : 
+
+convert cvs to git
+------------------
+- cd /tmp
+- CVSROOT=:pserver:anonymous@oscarmcmaster.cvs.sourceforge.net:/cvsroot/oscarmcmaster cvs login
+- git cvsimport -v -d :pserver:anonymous@oscarmcmaster.cvs.sourceforge.net:/cvsroot/oscarmcmaster -C test2  oscar_mcmaster/docs
+
+import git into gerrit
+----------------------
+- gerrit.sh stop
+- cd /var/gerrit/review_site/git
+- cp /tmp/test2/.git test2.git
+- cp test.git/config test2.git/config
+- in mysql : insert into projects (use_contributor_agreements,submit_type,name) values ('N','M','test2');
+- gerrit.sh start
+
