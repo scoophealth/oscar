@@ -6,6 +6,7 @@
 package org.oscarehr.common.dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import javax.persistence.Query;
@@ -23,12 +24,12 @@ public class QueueDao extends AbstractDao<Queue>{
         super(Queue.class);
     }
 
-    public Hashtable getQueuesHashtable(){
+    public HashMap getQueuesHashMap(){
         String q="select q from Queue q";
         Query query=entityManager.createQuery(q);
         List<Queue> result=new ArrayList();
         result=query.getResultList();
-        Hashtable ht=new Hashtable();
+        HashMap ht=new HashMap();
         for(Queue que:result){
             ht.put(que.getId(),que.getName());
         }
