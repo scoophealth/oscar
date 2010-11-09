@@ -646,20 +646,20 @@ public class DmsInboxManageAction extends DispatchAction {
 
         String patientIdNamesStr="";
         List<QueueDocumentLink> qs=queueDocumentLinkDAO.getActiveQueueDocLink();
-        HashMap queueDocNos=new HashMap();
-        HashMap docType=new HashMap();
-        HashMap<Integer,List> patientDocs=new HashMap();
+        HashMap<Integer,List<Integer>> queueDocNos=new HashMap<Integer,List<Integer>>();
+        HashMap<Integer,String> docType=new HashMap<Integer,String>();
+        HashMap<Integer,List<Integer>> patientDocs=new HashMap<Integer,List<Integer>>();
         DocumentDAO documentDAO=(DocumentDAO) SpringUtils.getBean("documentDAO");
                 Demographic demo =new Demographic();
-                List docsWithPatient=new ArrayList();
-                Hashtable patientIdNames=new Hashtable();//lbData.patientName = demo.getLastName()+ ", "+demo.getFirstName();
-                List<Integer> patientIds=new ArrayList();
+                List<Integer> docsWithPatient=new ArrayList<Integer>();
+                HashMap<Integer,String> patientIdNames=new HashMap<Integer,String>();//lbData.patientName = demo.getLastName()+ ", "+demo.getFirstName();
+                List<Integer> patientIds=new ArrayList<Integer>();
                 Integer demoNo;
-                HashMap docStatus=new HashMap();
+                HashMap<Integer,String> docStatus=new HashMap<Integer,String>();
                 String patientIdStr="";
                 StringBuilder patientIdBud=new StringBuilder();
-                HashMap typeDocLab=new HashMap();
-                List ListDocIds=new ArrayList();
+                HashMap<String,List<Integer>> typeDocLab=new HashMap<String,List<Integer>>();
+                List<Integer> ListDocIds=new ArrayList<Integer>();
         for(QueueDocumentLink q:qs){
              int qid=q.getQueueId();
              int docid=q.getDocId();
@@ -684,7 +684,7 @@ public class DmsInboxManageAction extends DispatchAction {
 
 
             }
-             List providers=providerInboxRoutingDAO.getProvidersWithRoutingForDocument("DOC",Integer.toString(docid) );
+             List<ProviderInboxItem> providers=providerInboxRoutingDAO.getProvidersWithRoutingForDocument("DOC",Integer.toString(docid) );
              if(providers.size()>0){
                  ProviderInboxItem pii=(ProviderInboxItem)providers.get(0);
                  docStatus.put(docid, pii.getStatus());
@@ -694,7 +694,7 @@ public class DmsInboxManageAction extends DispatchAction {
                  docsWithPatient.add(docid);
                  patientDocs.put(demoNo,docsWithPatient);
              }else{
-                 docsWithPatient=new ArrayList();
+                 docsWithPatient=new ArrayList<Integer>();
                  docsWithPatient.add(docid);
                  patientDocs.put(demoNo, docsWithPatient);
              }
@@ -705,7 +705,7 @@ public class DmsInboxManageAction extends DispatchAction {
                  queueDocNos.put(qid, ds);
 
              }else{
-                 List<Integer> ds=new ArrayList();
+                 List<Integer> ds=new ArrayList<Integer>();
                  ds.add(docid);
                  queueDocNos.put(qid, ds);
              }             
@@ -719,8 +719,8 @@ public class DmsInboxManageAction extends DispatchAction {
         }
         patientIdStr=patientIdBud.toString();
         typeDocLab.put("DOC", ListDocIds);
-        List normals=ListDocIds;//assume all documents are normal
-        List abnormals=new ArrayList();
+        List<Integer> normals=ListDocIds;//assume all documents are normal
+        List<Integer> abnormals=new ArrayList<Integer>();
         request.setAttribute("typeDocLab", typeDocLab);
         request.setAttribute("docStatus", docStatus);
         request.setAttribute("patientDocs",patientDocs );
@@ -732,7 +732,7 @@ public class DmsInboxManageAction extends DispatchAction {
         request.setAttribute("abnormals", abnormals);
         request.setAttribute("queueDocNos", queueDocNos);
         request.setAttribute("patientIdNamesStr",patientIdNamesStr);
-        request.setAttribute("queueIdNames", queueDAO.getQueuesHashMap());
+        request.setAttribute("queueIdNames", queueDAO.getHashMapOfQueues());
         request.setAttribute("providerNo", providerNo);
         request.setAttribute("searchProviderNo", searchProviderNo);
         return mapping.findForward("document_in_queues");
