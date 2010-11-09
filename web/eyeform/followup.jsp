@@ -51,30 +51,7 @@ Follow Up/Consult
 	  		
             </td>
             </tr>
-            <tr>
-            <td>
-            	
-            	 
-            	<html:checkbox style="width: 10%;" value="checked" styleId="ack1" property="followup.ack1" onchange="setDischarge()" />
-            	
-            	discharge
-           <br>
-            
-            	 
-            	<html:checkbox style="width: 10%;" styleId="ack2" value="checked" property="followup.ack2" onchange="setSaveflag(true);setStat();" />
-            	
-            	
-            	STAT/PRN
-           <br>
-
-            
-            	
-            	 
-            	<html:checkbox style="width: 10%;" value="checked" styleId="ack3" property="followup.ack3" onchange="setOpt();" />
-            	
-            	optom routine
-            </td>
-            </tr>
+           
             <tr>
             <td><br/><html:submit value="submit"/></td>
             </tr>

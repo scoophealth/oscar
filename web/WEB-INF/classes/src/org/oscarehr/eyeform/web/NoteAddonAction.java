@@ -10,6 +10,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.eyeform.dao.FollowUpDao;
 import org.oscarehr.eyeform.dao.ProcedureBookDao;
 import org.oscarehr.eyeform.dao.TestBookRecordDao;
@@ -34,7 +35,14 @@ public class NoteAddonAction extends DispatchAction {
 		TestBookRecordDao testDao = (TestBookRecordDao)SpringUtils.getBean("TestBookDAO");
 		ProcedureBookDao procedureBookDao = (ProcedureBookDao)SpringUtils.getBean("ProcedureBookDAO");
 		
+		ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
+		DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
+		
 		List<FollowUp> followUps = followUpDao.getByAppointmentNo(Integer.parseInt(appointmentNo));
+		for(FollowUp fu:followUps) {
+			fu.setProvider(providerDao.getProvider(fu.getFollowupProvider()));
+			fu.setDemographic(demographicDao.getDemographic(String.valueOf(fu.getDemographicNo())));			
+		}		
 		request.setAttribute("followUps",followUps);
 		
 		List<TestBookRecord> testBookRecords = testDao.getByAppointmentNo(Integer.parseInt(appointmentNo));

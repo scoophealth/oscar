@@ -2,23 +2,48 @@ package org.oscarehr.eyeform.model;
 
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+
+import org.oscarehr.common.model.AbstractModel;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Provider;
 
-public class FollowUp {
+@Entity
+@Table(name="eyeform_followup")
+public class FollowUp extends AbstractModel<Integer> {
 
+	@Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
+	
+	@Column(name="appointment_no")
 	private int appointmentNo;
+	
+	@Transient
 	private Demographic demographic;
+	
+	@Column(name="demographic_no")
 	private int demographicNo;	
 	private int timespan;
 	private String timeframe;
+	@Column(name="followup_provider")
 	private String followupProvider;
+	
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date date;
 	
-	private String ack1;
-	private String ack2;
-	private String ack3;
+	//private String ack1;
+	//private String ack2;
+	//private String ack3;
+	@Transient
 	private Provider provider;
 	
 	
@@ -70,6 +95,7 @@ public class FollowUp {
 	public void setDate(Date date) {
 		this.date = date;
 	}
+	/*
 	public String getAck1() {
 		return ack1;
 	}
@@ -88,6 +114,7 @@ public class FollowUp {
 	public void setAck3(String ack3) {
 		this.ack3 = ack3;
 	}
+	*/
 	public int getDemographicNo() {
 		return demographicNo;
 	}
