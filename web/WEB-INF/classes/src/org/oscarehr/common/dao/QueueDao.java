@@ -29,11 +29,11 @@ public class QueueDao extends AbstractDao<Queue>{
         Query query=entityManager.createQuery(q);
         List<Queue> result=new ArrayList();
         result=query.getResultList();
-        HashMap ht=new HashMap();
+        HashMap<Integer,String> hm=new HashMap();
         for(Queue que:result){
-            ht.put(que.getId(),que.getName());
+            hm.put(que.getId(),que.getName());
         }
-        return ht;
+        return hm;
     }
     public List<Hashtable> getQueues(){
         String q="select q from Queue q";
