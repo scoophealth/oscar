@@ -80,19 +80,19 @@
 							</tr>
 							<tr bgcolor="white">
 								<td width="11%" align="center"><img
-									src="graphics/functionVisualAid/None.JPG" align="center"
+									src="graphics/functionVisualAid/None.jpg" align="center"
 									border='0' /></td>
 								<td width="20%" align="center"><img
-									src="graphics/functionVisualAid/little.JPG" align="center"
+									src="graphics/functionVisualAid/little.jpg" align="center"
 									border='0' /></td>
 								<td width="25%" align="center"><img
-									src="graphics/functionVisualAid/some.JPG" align="center"
+									src="graphics/functionVisualAid/some.jpg" align="center"
 									border='0' /></td>
 								<td width="30%" align="center"><img
-									src="graphics/functionVisualAid/quiteALot.JPG" align="center"
+									src="graphics/functionVisualAid/quiteALot.jpg" align="center"
 									border='0' /></td>
 								<td width="34%" align="center"><img
-									src="graphics/functionVisualAid/cannotDo.JPG" align="center"
+									src="graphics/functionVisualAid/cannotDo.jpg" align="center"
 									border='0' /></td>
 							</tr>
 							<tr bgcolor="white">

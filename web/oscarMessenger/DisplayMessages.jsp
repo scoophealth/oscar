@@ -422,7 +422,7 @@ function checkAll(formId){
                                        String atta = dm.attach;
                                        String pdfAtta = dm.pdfAttach; 
                                        if (atta.equals("1") || pdfAtta.equals("1") ){ %>
-                                            <img src="img/clip4.JPG">
+                                            <img src="img/clip4.jpg">
                                     <% } %>
 
 

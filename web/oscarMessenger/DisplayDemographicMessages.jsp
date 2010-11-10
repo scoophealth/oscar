@@ -228,7 +228,7 @@ function unlink(){
 							<td bgcolor="#EEEEFF" width="75"><html:checkbox
 								property="messageNo" value="<%=dm.messageId %>" /> <% String atta = dm.attach;
                                             if (atta.equals("1")){
-                                            %><img src="img/clip4.JPG">
+                                            %><img src="img/clip4.jpg">
 							<%
                                             }
                                          %> &nbsp;</td>

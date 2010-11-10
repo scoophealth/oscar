@@ -76,19 +76,19 @@
 							</tr>
 							<tr bgcolor="white" height="150px">
 								<td width="34%" align="center"><img
-									src="graphics/disabilityVisualAid/veryOften.JPG" align="center"
+									src="graphics/disabilityVisualAid/veryOften.jpg" align="center"
 									border='0' /></td>
 								<td width="30%" align="center"><img
-									src="graphics/disabilityVisualAid/often.JPG" align="center"
+									src="graphics/disabilityVisualAid/often.jpg" align="center"
 									border='0' /></td>
 								<td width="25%" align="center"><img
-									src="graphics/disabilityVisualAid/onceInAWhile.JPG"
+									src="graphics/disabilityVisualAid/onceInAWhile.jpg"
 									align="center" border='0' /></td>
 								<td width="20%" align="center"><img
-									src="graphics/disabilityVisualAid/almostNever.JPG"
+									src="graphics/disabilityVisualAid/almostNever.jpg"
 									align="center" border='0' /></td>
 								<td width="11%" align="center"><img
-									src="graphics/disabilityVisualAid/never.JPG" align="center"
+									src="graphics/disabilityVisualAid/never.jpg" align="center"
 									border='0' /></td>
 							</tr>
 							<tr bgcolor="white" height="80px">
