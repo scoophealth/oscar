@@ -54,8 +54,11 @@ public class GrepStuffDirectoryWalker extends DirectoryWalker {
 			
 			checkContains(relativePath, fileContents, "System.err", "use log4j logger");
 			checkContains(relativePath, fileContents, "System.out", "use log4j logger");
-			checkContains(relativePath, fileContents, "printStackTrace", "use log4j logger");
 			checkContains(relativePath, fileContents, "getConnection(", "use jpa");
+			
+			if (fileContents.contains("printStackTrace") && !relativePath.endsWith(".js")) {
+				violations.put("printStackTrace" + ", " + "use log4j logger", relativePath);
+			}
 			
 			checkContains(relativePath, fileContents, "DBHandler.", "use jpa");
 			checkContains(relativePath, fileContents, "OscarSuperManager", "use jpa");
