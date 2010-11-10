@@ -58,10 +58,10 @@
 			<!-- tomcat 5.5 uses jasper2 where as tomcat 6 uses jasper -->
 			<equals arg1="${tomcat.lib.dir}" arg2="${catalina.home}/lib" />
 			<then>
-				<jasper uriroot="${jspc.expandedWarDir}" webXmlFragment="${jspcDir}/generated_web.xml" outputDir="${jspc.generatedDir}" validateXml="false" failOnError="false" />
+				<jasper uriroot="${jspc.expandedWarDir}" webXmlFragment="${jspcDir}/generated_web.xml" outputDir="${jspc.generatedDir}" validateXml="false" failOnError="true" />
 			</then>
 			<else>
-				<jasper2 uriroot="${jspc.expandedWarDir}" webXmlFragment="${jspcDir}/generated_web.xml" outputDir="${jspc.generatedDir}" validateXml="false" failOnError="false" />
+				<jasper2 uriroot="${jspc.expandedWarDir}" webXmlFragment="${jspcDir}/generated_web.xml" outputDir="${jspc.generatedDir}" validateXml="false" failOnError="true" />
 			</else>
 		</if>
 
