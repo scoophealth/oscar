@@ -48,6 +48,7 @@ public class GrepStuffAntTask extends Task {
 	@Override
 	public void execute() throws BuildException {
 		try {
+			log(DATA_SEPARATOR);
 			log(getClass().getName() + " starting with srcDir=" + srcDir + ", dataFile=" + dataFile);
 
 			// these maps are of type key=String/violation value=String/relativePath
