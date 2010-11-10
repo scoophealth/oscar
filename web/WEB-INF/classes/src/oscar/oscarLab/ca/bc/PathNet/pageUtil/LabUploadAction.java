@@ -76,9 +76,7 @@ public class LabUploadAction extends Action {
           InputStream is = importFile.getInputStream();
           filename = importFile.getFileName();
           
-          FileUploadCheck fileC = new FileUploadCheck();
-          
-          int check = fileC.addFile(filename,is,proNo);
+          int check = FileUploadCheck.addFile(filename,is,proNo);
           is.reset();
           if (check != FileUploadCheck.UNSUCCESSFUL_SAVE){
              Connection connection = new Connection();

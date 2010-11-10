@@ -93,10 +93,9 @@ public class LabUploadAction extends Action {
              boolean fileUploadedSuccessfully = false;
              if (localFileName != null){
                 InputStream  fis = new FileInputStream(localFileName); 
-                FileUploadCheck fileC = new FileUploadCheck();  
                 int check = FileUploadCheck.UNSUCCESSFUL_SAVE;
                 try{
-                    check = fileC.addFile(filename,fis,proNo);
+                    check = FileUploadCheck.addFile(filename,fis,proNo);
                     if (check != FileUploadCheck.UNSUCCESSFUL_SAVE){
                         outcome = "uploadedPreviously";
                     }
