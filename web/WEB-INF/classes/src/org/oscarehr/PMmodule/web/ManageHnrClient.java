@@ -3,7 +3,6 @@ package org.oscarehr.PMmodule.web;
 import java.util.List;
 
 import org.apache.commons.lang.time.DateFormatUtils;
-import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.caisi_integrator.ws.ConnectException_Exception;
@@ -19,10 +18,11 @@ import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.HnrDataValidation;
 import org.oscarehr.ui.servlet.ImageRenderingServlet;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class ManageHnrClient {
-	private static Logger logger = LogManager.getLogger(ManageHnrClient.class);
+	private static Logger logger = MiscUtils.getLogger();
 	private static DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
 	private static ClientLinkDao clientLinkDao = (ClientLinkDao) SpringUtils.getBean("clientLinkDao");
 	private static ClientImageDAO clientImageDAO = (ClientImageDAO) SpringUtils.getBean("clientImageDAO");

@@ -22,23 +22,22 @@
 
 package com.quatro.dao.security;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import com.quatro.model.security.Secrole;
 
 public class SecroleDao extends HibernateDaoSupport {
 
-    private Logger log = LogManager.getLogger(SecroleDao.class);
+    private Logger logger = MiscUtils.getLogger();
 
     public List getRoles() {
         List results = this.getHibernateTemplate().find("from Secrole r order by roleName");
 
-        log.debug("getRoles: # of results=" + results.size());
+        logger.debug("getRoles: # of results=" + results.size());
 
         return results;
     }
@@ -50,7 +49,7 @@ public class SecroleDao extends HibernateDaoSupport {
 
         Secrole result = (Secrole) this.getHibernateTemplate().get(Secrole.class, new Long(id));
 
-        log.debug("getRole: id=" + id + ",found=" + (result != null));
+        logger.debug("getRole: id=" + id + ",found=" + (result != null));
 
         return result;
     }
@@ -65,7 +64,7 @@ public class SecroleDao extends HibernateDaoSupport {
         if(lst != null && lst.size() > 0)
         	result = (Secrole) lst.get(0);
 
-        log.debug("getRoleByName: roleName=" + roleName + ",found=" + (result != null));
+        logger.debug("getRoleByName: roleName=" + roleName + ",found=" + (result != null));
 
         return result;
     }

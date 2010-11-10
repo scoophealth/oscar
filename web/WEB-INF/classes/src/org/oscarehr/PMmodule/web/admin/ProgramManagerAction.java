@@ -76,7 +76,7 @@ import com.quatro.service.security.RolesManager;
 
 public class ProgramManagerAction extends BaseAction {
 
-	private static final Logger logger = org.apache.log4j.LogManager.getLogger(ProgramManagerAction.class);
+	private static final Logger logger = MiscUtils.getLogger();
 
 	private ClientRestrictionManager clientRestrictionManager;
 	private FacilityDao facilityDao = null;

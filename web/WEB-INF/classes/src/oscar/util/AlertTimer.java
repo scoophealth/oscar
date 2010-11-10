@@ -27,10 +27,10 @@ package oscar.util;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.ShutdownException;
 
 /**
@@ -44,7 +44,7 @@ import org.oscarehr.util.ShutdownException;
  * @version 1.0
  */
 public class AlertTimer {
-	private static Logger logger=LogManager.getLogger(AlertTimer.class);
+	private static Logger logger=MiscUtils.getLogger();
 	
 	private static AlertTimer alerts = null;
     private static Timer timer;

@@ -122,7 +122,7 @@ import com.quatro.service.LookupManager;
 
 public class ClientManagerAction extends BaseAction {
 
-	private static final Logger logger = org.apache.log4j.LogManager.getLogger(ClientManagerAction.class);
+	private static final Logger logger = MiscUtils.getLogger();
 
 	private HealthSafetyManager healthSafetyManager;
 	private ClientRestrictionManager clientRestrictionManager;

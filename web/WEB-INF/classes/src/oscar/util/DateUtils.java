@@ -54,13 +54,12 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import org.apache.commons.lang.time.DateFormatUtils;
-import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.oscarehr.util.MiscUtils;
 
 public final class DateUtils {
 
-	private static Logger logger = LogManager.getLogger(DateUtils.class);
+	private static Logger logger = MiscUtils.getLogger();
 
 	private static SimpleDateFormat sdf;
 

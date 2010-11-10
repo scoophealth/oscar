@@ -41,53 +41,49 @@ public class GrepStuffDirectoryWalker extends DirectoryWalker {
 		String fileContents = FileUtils.readFileToString(file);
 		String fileContentsLowered = fileContents.toLowerCase();
 
-		// --- filename checking ---
-		if (relativePath.endsWith(".hbm.xml")) violations.put(".hbm.xml, stop using hibernate, use jpa & annotations instead", relativePath);
-		if (relativePath.endsWith(".class")) violations.put(".class, don't commit compiled class files", relativePath);
-		if (relativePath.endsWith(".PNG")) violations.put(".PNG, png should be lower case", relativePath);
-		if (relativePath.endsWith(".JPG")) violations.put(".JPG, jpg should be lower case", relativePath);
-		if (relativePath.endsWith(".GIF")) violations.put(".GIF, gif should be lower case", relativePath);
+		// stuff to check if it's the oscar code base
+		if (file.getCanonicalPath().contains("/web/")) {
+			// --- filename checking ---
+			if (relativePath.endsWith(".hbm.xml")) violations.put(".hbm.xml, stop using hibernate, use jpa & annotations instead", relativePath);
+			if (relativePath.endsWith(".class")) violations.put(".class, don't commit compiled class files", relativePath);
+			if (relativePath.endsWith(".PNG")) violations.put(".PNG, png should be lower case", relativePath);
+			if (relativePath.endsWith(".JPG")) violations.put(".JPG, jpg should be lower case", relativePath);
+			if (relativePath.endsWith(".GIF")) violations.put(".GIF, gif should be lower case", relativePath);
 
-		// --- case sensitive comparison ---
+			// --- case sensitive comparison ---
+			checkContains(relativePath, fileContents, "DBHandler.", "use jpa");
+			checkContains(relativePath, fileContents, "OscarSuperManager", "use jpa");
+			checkContains(relativePath, fileContents, "org.apache.commons.logging.Log", "use log4j logger");
+			checkContains(relativePath, fileContents, "com.sun.", "classes are not always available, usually org.apache will have standard libraries to replace these");
+			checkContains(relativePath, fileContents, "LogManager.getLogger(", "use MiscUtils.getLogger() instead");
+			checkContains(relativePath, fileContents, "HibernateDaoSupport", "use jpa");
+			checkContains(relativePath, fileContents, "ArrayList()", "use generics");
+			checkContains(relativePath, fileContents, "HashSet()", "use generics");
+			checkContains(relativePath, fileContents, "HashMap()", "use generics");
+			checkContains(relativePath, fileContents, "TreeSet()", "use generics");
+			checkContains(relativePath, fileContents, "TreeMap()", "use generics");
+			checkContains(relativePath, fileContents, "WeakHashMap()", "use generics");
+			checkContains(relativePath, fileContents, "StringBuffer", "very very rare that this is required, usually StringBuilder is the better choice");
+			checkContains(relativePath, fileContents, "com.Ostermiller", "use org.apache libraries instead, duplicated libs and apache is... more standard (if that's a word)");
 
-		// if it's not the oscar main code base ignore these items
-		if (!file.getCanonicalPath().contains("/database/mysql/")) {
-			checkContains(relativePath, fileContents, "System.err", "use log4j logger");
-			checkContains(relativePath, fileContents, "System.out", "use log4j logger");
-			checkContains(relativePath, fileContents, "printStackTrace", "use log4j logger");
-			checkContains(relativePath, fileContents, "getConnection(", "use jpa");
+			checkContains(relativePath, fileContents, "Vector", "excessively rare that this is required, usually ArrayList is the better choice");
+
+			if (fileContents.contains("Hashtable") && !fileContents.contains("initHashtableWithList")) {
+				violations.put("Hashtable" + ", " + "excessively rare that this is required, usually HashMap is the better choice", relativePath);
+			}
+
+			// --- hack for ignore case comparison ---
+			checkContains(relativePath, fileContentsLowered, "latin-1", "use utf-8");
+			checkContains(relativePath, fileContentsLowered, "ascii", "use utf-8");
+			checkContains(relativePath, fileContentsLowered, "8859-1", "use utf-8");
 		}
-
-		checkContains(relativePath, fileContents, "DBHandler.", "use jpa");
-		checkContains(relativePath, fileContents, "OscarSuperManager", "use jpa");
-		checkContains(relativePath, fileContents, "org.apache.commons.logging.Log", "use log4j logger");
-		checkContains(relativePath, fileContents, "com.sun.", "classes are not always available, usually org.apache will have standard libraries to replace these");
-		checkContains(relativePath, fileContents, "LogManager.getLogger(", "use MiscUtils.getLogger() instead");
-		checkContains(relativePath, fileContents, "HibernateDaoSupport", "use jpa");
-		checkContains(relativePath, fileContents, "ArrayList()", "use generics");
-		checkContains(relativePath, fileContents, "HashSet()", "use generics");
-		checkContains(relativePath, fileContents, "HashMap()", "use generics");
-		checkContains(relativePath, fileContents, "TreeSet()", "use generics");
-		checkContains(relativePath, fileContents, "TreeMap()", "use generics");
-		checkContains(relativePath, fileContents, "WeakHashMap()", "use generics");
-		checkContains(relativePath, fileContents, "StringBuffer", "very very rare that this is required, usually StringBuilder is the better choice");
-		checkContains(relativePath, fileContents, "com.Ostermiller", "use org.apache libraries instead, duplicated libs and apache is... more standard (if that's a word)");
-
-		checkContains(relativePath, fileContents, "Vector", "excessively rare that this is required, usually ArrayList is the better choice");
-
-		if (fileContents.contains("Hashtable") && !fileContents.contains("initHashtableWithList")) {
-			violations.put("Hashtable" + ", " + "excessively rare that this is required, usually HashMap is the better choice", relativePath);
-		}
-
-		// --- hack for ignore case comparison ---
-		checkContains(relativePath, fileContentsLowered, "latin-1", "use utf-8");
-		checkContains(relativePath, fileContentsLowered, "ascii", "use utf-8");
-		checkContains(relativePath, fileContentsLowered, "8859-1", "use utf-8");
 
 		// --- check for database sql problems ---
-		if (relativePath.endsWith(".sql")) {
-			if (fileContentsLowered.contains(" default ")) {
-				violations.put("database 'default' should not be used, set the default in java in the jpa objects", relativePath);
+		if (file.getCanonicalPath().contains("/database/")) {
+			if (relativePath.endsWith(".sql")) {
+				if (fileContentsLowered.contains(" default ")) {
+					violations.put("database 'default' should not be used, set the default in java in the jpa objects", relativePath);
+				}
 			}
 		}
 

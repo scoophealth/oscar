@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.caisi_integrator.ws.ConnectException_Exception;
@@ -22,10 +21,11 @@ import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.HnrDataValidation;
 import org.oscarehr.hnr.ws.Gender;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class ManageHnrClientAction {
-	private static Logger logger = LogManager.getLogger(ManageHnrClientAction.class);
+	private static Logger logger = MiscUtils.getLogger();
 	private static DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
 	private static ClientLinkDao clientLinkDao = (ClientLinkDao) SpringUtils.getBean("clientLinkDao");
 	private static ClientImageDAO clientImageDAO = (ClientImageDAO) SpringUtils.getBean("clientImageDAO");

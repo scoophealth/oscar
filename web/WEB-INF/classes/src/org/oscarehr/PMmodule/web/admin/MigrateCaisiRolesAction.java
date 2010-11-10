@@ -33,7 +33,7 @@ import com.quatro.service.security.RolesManager;
 
 public class MigrateCaisiRolesAction extends BaseAdminAction {
 
-	private static final Logger logger = org.apache.log4j.LogManager.getLogger(MigrateCaisiRolesAction.class);
+	private static final Logger logger = MiscUtils.getLogger();
 
 	//private CaisiRoleManager caisiRoleMgr;
 	private RolesManager oscarRolesMgr;

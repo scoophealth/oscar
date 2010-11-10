@@ -28,9 +28,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.time.DateUtils;
-import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.oscarehr.casemgmt.model.ClientImage;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.TimeClearedHashMap;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
@@ -39,7 +39,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  */
 public class ClientImageDAO extends HibernateDaoSupport {
 
-	private static final Logger logger = LogManager.getLogger(ClientImageDAO.class);
+	private static final Logger logger = MiscUtils.getLogger();
 
 	/**
 	 * This is a simple cache for image data because the images are excessively large (relatively speaking). The Integer key is the demographic_no.

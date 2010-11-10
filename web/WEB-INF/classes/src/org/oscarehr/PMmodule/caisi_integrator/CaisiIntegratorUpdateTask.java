@@ -37,7 +37,6 @@ import java.util.TimerTask;
 import javax.xml.ws.WebServiceException;
 
 import org.apache.commons.beanutils.BeanUtils;
-import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.dao.AdmissionDao;
 import org.oscarehr.PMmodule.dao.ProgramDao;
@@ -132,7 +131,7 @@ import oscar.oscarEncounter.oscarMeasurements.model.Measurementtype;
 
 public class CaisiIntegratorUpdateTask extends TimerTask {
 
-	private static final Logger logger = LogManager.getLogger(CaisiIntegratorUpdateTask.class);
+	private static final Logger logger = MiscUtils.getLogger();
 
 	private static final String INTEGRATOR_UPDATE_PERIOD_PROPERTIES_KEY = "INTEGRATOR_UPDATE_PERIOD";
 

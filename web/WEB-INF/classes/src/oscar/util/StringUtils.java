@@ -34,14 +34,13 @@ import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.struts.upload.FormFile;
 import org.oscarehr.util.MiscUtils;
 
 public class StringUtils {
 
-    private static Logger logger = LogManager.getLogger(StringUtils.class);
+    private static Logger logger = MiscUtils.getLogger();
 
     /**
      * use to have a maximum string length view 

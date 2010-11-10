@@ -26,11 +26,11 @@ package oscar.billing.controler;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.billing.dao.AppointmentDAO;
 import oscar.billing.model.Demographic;
@@ -38,7 +38,7 @@ import oscar.util.OscarAction;
 
 
 public class ConsultaFaturamentoPacienteAction extends OscarAction {
-    private static Logger logger = LogManager.getLogger(ConsultaFaturamentoPacienteAction.class);
+    private static Logger logger = MiscUtils.getLogger();
 
     public ActionForward execute(ActionMapping mapping, ActionForm form,
         HttpServletRequest request, HttpServletResponse response) {

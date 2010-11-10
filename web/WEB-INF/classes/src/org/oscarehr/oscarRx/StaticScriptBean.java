@@ -8,7 +8,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicDrug;
@@ -19,6 +18,7 @@ import org.oscarehr.caisi_integrator.ws.FacilityIdStringCompositePk;
 import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarRx.data.RxPrescriptionData;
@@ -26,7 +26,7 @@ import oscar.oscarRx.data.RxProviderData;
 import oscar.oscarRx.util.RxUtil;
 
 public class StaticScriptBean {
-	private static final Logger logger = LogManager.getLogger(StaticScriptBean.class);
+	private static final Logger logger = MiscUtils.getLogger();
 	private static DrugDao drugDao = (DrugDao) SpringUtils.getBean("drugDao");
 
 	public static class DrugDisplayData {

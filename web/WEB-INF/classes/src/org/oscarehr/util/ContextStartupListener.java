@@ -1,13 +1,12 @@
 package org.oscarehr.util;
 
-import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorUpdateTask;
 
 import oscar.OscarProperties;
 
 public class ContextStartupListener implements javax.servlet.ServletContextListener {
-	private static final Logger logger = LogManager.getLogger(ContextStartupListener.class);
+	private static final Logger logger = MiscUtils.getLogger();
 	private static String contextPath=null;
 
 	public void contextInitialized(javax.servlet.ServletContextEvent sce) {
