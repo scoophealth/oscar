@@ -9,7 +9,7 @@ create table `eyeform_followup` (
 	primary key(id)
 );
 
-alter table document add appointment_no integer default NULL;
+alter table document add appointment_no integer;
 
 insert into issue (code,description,role,update_date,priority,type) values ('PastOcularHistory','Past Ocular History','nurse',now(),NULL,'system');
 insert into issue (code,description,role,update_date,priority,type) values ('DiagnosticNotes','Diagnostic Notes','nurse',now(),NULL,'system');
