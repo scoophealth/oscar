@@ -51,6 +51,12 @@ public class GrepStuffDirectoryWalker extends DirectoryWalker {
 			if (relativePath.endsWith(".GIF")) violations.put(".GIF, gif should be lower case", relativePath);
 
 			// --- case sensitive comparison ---
+			
+			checkContains(relativePath, fileContents, "System.err", "use log4j logger");
+			checkContains(relativePath, fileContents, "System.out", "use log4j logger");
+			checkContains(relativePath, fileContents, "printStackTrace", "use log4j logger");
+			checkContains(relativePath, fileContents, "getConnection(", "use jpa");
+			
 			checkContains(relativePath, fileContents, "DBHandler.", "use jpa");
 			checkContains(relativePath, fileContents, "OscarSuperManager", "use jpa");
 			checkContains(relativePath, fileContents, "org.apache.commons.logging.Log", "use log4j logger");
