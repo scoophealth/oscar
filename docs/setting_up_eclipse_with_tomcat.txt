@@ -29,7 +29,7 @@ Existing Project - integrator
 - add the integrator to your server -> tomcat V6.0 ... 
 - restart the tomcat and it should work (kind of, you need to setup your recaptcha key for the web login if you use that).
 
-As for how I did that with the integrator, it's a maven project. To build the eclipse project setup for maven its : mvn eclipse:eclipse
+As for how I did that with the integrator, it's a maven project. To build the eclipse project setup for regular java from maven its : mvn eclipse:eclipse
 for a web project it's : mvn eclipse:eclipse -Dwtpversion=1.5 (where the 1.5 is what ever WTP version you're running)
 
 I've commited the eclipse settings so everyone gets them now.
