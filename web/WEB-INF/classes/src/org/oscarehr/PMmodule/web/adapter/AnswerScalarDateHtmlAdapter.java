@@ -122,7 +122,7 @@ public class AnswerScalarDateHtmlAdapter extends AbstractAnswerScalarHtmlAdapter
 	}
 	
 	private String getCalendarScript(String inputId, String buttonId) {		
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		sb.append("<script type=\"text/javascript\">");
 		sb.append("Calendar.setup(");
 		sb.append("{");

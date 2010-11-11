@@ -109,7 +109,7 @@ public class CaseManagementNote extends BaseObject {
 	}
 
 	public String getAuditString() {
-		StringBuffer auditStr = new StringBuffer(getNote());
+		StringBuilder auditStr = new StringBuilder(getNote());
 		Iterator<CaseManagementIssue> iter = issues.iterator();
 		auditStr.append("\nIssues\n");
 		int idx = 0;

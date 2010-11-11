@@ -116,7 +116,7 @@ public class Msgdemomap implements Serializable {
 
     public int hashCode () {
         if (Integer.MIN_VALUE == this.hashCode) {
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             if (null != this.getMessageID()) {
                 sb.append(this.getMessageID().hashCode());
                 sb.append(":");

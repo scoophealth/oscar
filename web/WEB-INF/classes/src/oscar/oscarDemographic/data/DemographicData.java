@@ -964,7 +964,7 @@ public class DemographicData {
 				oscar.oscarRx.data.RxPrescriptionData prescriptData = new oscar.oscarRx.data.RxPrescriptionData();
 				oscar.oscarRx.data.RxPrescriptionData.Prescription[] arr = {};
 				arr = prescriptData.getUniquePrescriptionsByPatient(Integer.parseInt(demographic_no));
-				StringBuffer stringBuffer = new StringBuffer();
+				StringBuilder stringBuffer = new StringBuilder();
 				for (int i = 0; i < arr.length; i++) {
 					if (arr[i].isCurrent()) {
 
@@ -982,7 +982,7 @@ public class DemographicData {
 					oscar.oscarRx.data.RxPatientData.Patient patient = pData.getPatient(Integer.parseInt(demographic_no));
 					oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergies = {};
 					allergies = patient.getAllergies();
-					StringBuffer stringBuffer = new StringBuffer();
+					StringBuilder stringBuffer = new StringBuilder();
 					for (int i = 0; i < allergies.length; i++) {
 						oscar.oscarRx.data.RxAllergyData.Allergy allerg = allergies[i].getAllergy();
 						stringBuffer.append(allerg.getDESCRIPTION() + "  " + allerg.getTypeDesc() + " \n");

@@ -111,7 +111,7 @@ public class RAData {
     }
 
     public String getErrorCodes(ArrayList a) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < a.size(); i++) {
             Hashtable h = (Hashtable) a.get(i);
             sb.append(h.get("error_code"));

@@ -183,7 +183,7 @@ public class WcbSb {
    
    
    public String validate(){
-        StringBuffer m = new StringBuffer();
+        StringBuilder m = new StringBuilder();
         if ( billamountforfeeitem1 == null || billamountforfeeitem1.equalsIgnoreCase("NULL")){
             m.append(": INVALID Fee Code "); 
         }

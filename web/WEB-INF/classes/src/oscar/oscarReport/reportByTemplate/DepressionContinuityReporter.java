@@ -41,10 +41,10 @@ import oscar.oscarDB.DBHandler;
  * @author rjonasz
  */
 public class DepressionContinuityReporter implements Reporter{
-    private StringBuffer rsHtml = new StringBuffer();
-    private StringBuffer csv = new StringBuffer();
-    private HashMap<String,StringBuffer>demographics = new HashMap<String,StringBuffer>();
-    private HashMap<String,StringBuffer>csvMap = new HashMap<String,StringBuffer>();
+    private StringBuilder rsHtml = new StringBuilder();
+    private StringBuilder csv = new StringBuilder();
+    private HashMap<String,StringBuilder>demographics = new HashMap<String,StringBuilder>();
+    private HashMap<String,StringBuilder>csvMap = new HashMap<String,StringBuilder>();
     /**
      * Creates a new instance of DepressionContinuityReporter
      */
@@ -88,8 +88,8 @@ public class DepressionContinuityReporter implements Reporter{
 
             rsHtml = this.makeHTMLHeader();
             csv = this.makeCSVHeader();
-            StringBuffer html = new StringBuffer();
-            StringBuffer csvTmp = new StringBuffer();
+            StringBuilder html = new StringBuilder();
+            StringBuilder csvTmp = new StringBuilder();
             String curDemo = null;
             while(rs.next() ) {
                 if( curDemo == null ) {
@@ -105,7 +105,7 @@ public class DepressionContinuityReporter implements Reporter{
                     demographics.put(curDemo, html);
                     csvMap.put(curDemo, csvTmp);
                     html = this.addCodeEntry(rs, odd);
-                    csvTmp = new StringBuffer(this.csvCodeEntry(rs));
+                    csvTmp = new StringBuilder(this.csvCodeEntry(rs));
                 }
                 curDemo = rs.getString(1);
             }
@@ -130,8 +130,8 @@ public class DepressionContinuityReporter implements Reporter{
         return true;
     }
 
-    private StringBuffer addCodeEntry(ResultSet rs, Boolean odd) throws Exception {
-         StringBuffer html = new StringBuffer("<tr class=\"");
+    private StringBuilder addCodeEntry(ResultSet rs, Boolean odd) throws Exception {
+         StringBuilder html = new StringBuilder("<tr class=\"");
         if( odd ) {
             html.append("reportRow1\">");
         }
@@ -157,7 +157,7 @@ public class DepressionContinuityReporter implements Reporter{
 
         Set<String>setDemo = demographics.keySet();
         Iterator<String>iter = setDemo.iterator();
-        StringBuffer demos = new StringBuffer();
+        StringBuilder demos = new StringBuilder();
         while(iter.hasNext()) {
             demos.append(iter.next());
             if( iter.hasNext() ) {
@@ -217,8 +217,8 @@ public class DepressionContinuityReporter implements Reporter{
         }
     }
 
-    private StringBuffer makeHTMLHeader() {
-        StringBuffer html = new StringBuffer("<table class=\"reportTable\">\n");
+    private StringBuilder makeHTMLHeader() {
+        StringBuilder html = new StringBuilder("<table class=\"reportTable\">\n");
         html.append("<th class=\"reportHeader\">ID</th><th class=\"reportHeader\">Date of Code</th><th class=\"reportHeader\">Dx Code</th>"
                 + "<th class=\"reportHeader\">Date of Visit</th><th class=\"reportHeader\">Provider Seen</th><th class=\"reportHeader\">MRP</th>"
                 + "<th class=\"reportHeader\">Billing Code</th><th class=\"reportHeader\">Rx Name</th><th class=\"reportHeader\">Prescriber</th>");
@@ -226,8 +226,8 @@ public class DepressionContinuityReporter implements Reporter{
         return html;
     }
 
-    private StringBuffer makeCSVHeader() {
-        StringBuffer cvs = new StringBuffer("ID,Date of Code,Dx Code,Date of Visit,Provider Seen,MRP,Billing Code,Rx Name,Prescriber\n");
+    private StringBuilder makeCSVHeader() {
+        StringBuilder cvs = new StringBuilder("ID,Date of Code,Dx Code,Date of Visit,Provider Seen,MRP,Billing Code,Rx Name,Prescriber\n");
         return cvs;
     }
 

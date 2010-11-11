@@ -86,7 +86,7 @@ public class FrmGraphicAR {
 		if (weight.length() == 0) return "-1";
 
 		int N=weight.length();
-		StringBuffer sb=new StringBuffer(N);
+		StringBuilder sb=new StringBuilder(N);
 		for(int i=0;i<N;i++){
 			char c=weight.charAt(i);
 			if(c=='.')sb.append(".");

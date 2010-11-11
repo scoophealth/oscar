@@ -23,7 +23,7 @@ public class DSValueString extends DSValue {
     
     @Override
     public String toString() {
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         if (this.getValueType() != null) result.append(this.getValueType() + ":");
         if (this.getValueUnit() == null) {  //shouldn't be a unit anyways, otherwise must be a number, so should do statement (i.e. =5 kg)
             result.append("'" + this.getValue() + "'");

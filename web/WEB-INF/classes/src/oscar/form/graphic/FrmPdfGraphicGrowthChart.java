@@ -95,7 +95,7 @@ public final class FrmPdfGraphicGrowthChart extends FrmPdfGraphic {
             return false;
 
         int N = str.length();
-        StringBuffer sb = new StringBuffer(N);
+        StringBuilder sb = new StringBuilder(N);
         for (int i = 0; i < N; i++) {
             char c = str.charAt(i);
             if (c >= '0' && c <= '9')

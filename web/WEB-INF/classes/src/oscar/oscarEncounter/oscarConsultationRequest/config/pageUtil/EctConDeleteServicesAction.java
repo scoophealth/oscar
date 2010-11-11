@@ -47,12 +47,12 @@ public class EctConDeleteServicesAction extends Action {
       EctConDeleteServicesForm frm = (EctConDeleteServicesForm)form;
       String servs[] = frm.getService();
       if(servs.length > 0) {
-         StringBuffer stringBuffer = new StringBuffer();
+         StringBuilder stringBuffer = new StringBuilder();
          for(int i = 0; i < servs.length; i++)
             if(i == servs.length - 1)
-               stringBuffer.append(String.valueOf(String.valueOf((new StringBuffer(" serviceId = '")).append(servs[i]).append("' "))));
+               stringBuffer.append(String.valueOf(String.valueOf((new StringBuilder(" serviceId = '")).append(servs[i]).append("' "))));
             else
-               stringBuffer.append(String.valueOf(String.valueOf((new StringBuffer(" serviceId = '")).append(servs[i]).append("' or "))));
+               stringBuffer.append(String.valueOf(String.valueOf((new StringBuilder(" serviceId = '")).append(servs[i]).append("' or "))));
          
          try {
             

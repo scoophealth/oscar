@@ -31,7 +31,7 @@ public class RptResultStruct {
 public static String getStructure(ResultSet rs) throws SQLException {
 
 // assuming  multiple rows in rs
-	StringBuffer sb = new StringBuffer();
+	StringBuilder sb = new StringBuilder();
 
 	ResultSetMetaData rsmd = rs.getMetaData();
 
@@ -78,7 +78,7 @@ CSS:
 public static String getStructure2(ResultSet rs) throws SQLException {
 
 // assuming  multiple rows in rs
-	StringBuffer sb = new StringBuffer();
+	StringBuilder sb = new StringBuilder();
         boolean results = true;
 	ResultSetMetaData rsmd = rs.getMetaData();
 

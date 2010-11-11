@@ -55,7 +55,7 @@ public class EctImmImmunizations
         Arrays.sort(tempIntArray);
         for(int r = 0; r < tempIntArray.length; r++)
         {
-            MiscUtils.getLogger().debug(String.valueOf(String.valueOf((new StringBuffer("line ")).append(r).append(" value ").append(tempIntArray[r]))));
+            MiscUtils.getLogger().debug(String.valueOf(String.valueOf((new StringBuilder("line ")).append(r).append(" value ").append(tempIntArray[r]))));
             indexAge.setElementAt(Integer.toString(tempIntArray[r]), r);
         }
 

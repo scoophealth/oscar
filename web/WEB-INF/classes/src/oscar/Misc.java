@@ -63,7 +63,7 @@ public final class Misc {
 
 //		if (null == S) return S;
 //		int N = S.length();
-//		StringBuffer sb = new StringBuffer(N);
+//		StringBuilder sb = new StringBuilder(N);
 //		for (int i = 0; i < N; i++) {
 //			char c = S.charAt(i);
 //			if (c == '&') sb.append("&amp;");
@@ -79,7 +79,7 @@ public final class Misc {
 	public static String charEscape(String S, char a) {
 		if (null == S) return S;
 		int N = S.length();
-		StringBuffer sb = new StringBuffer(N);
+		StringBuilder sb = new StringBuilder(N);
 		for (int i = 0; i < N; i++) {
 			char c = S.charAt(i);
 			if (c == '\\') sb.append("\\");
@@ -94,7 +94,7 @@ public final class Misc {
 		
 //		if (null == S) return S;
 //		int N = S.length();
-//		StringBuffer sb = new StringBuffer(N);
+//		StringBuilder sb = new StringBuilder(N);
 //		for (int i = 0; i < N; i++) {
 //			char c = S.charAt(i);
 //			if (c == '&') sb.append("&amp;");
@@ -147,7 +147,7 @@ public final class Misc {
 	public static String mysqlEscape(String S) {
 		if (null == S) return S;
 		int N = S.length();
-		StringBuffer sb = new StringBuffer(N);
+		StringBuilder sb = new StringBuilder(N);
 		for (int i = 0; i < N; i++) {
 			char c = S.charAt(i);
 			if (c == '\\') sb.append("\\");
@@ -161,7 +161,7 @@ public final class Misc {
 	public static String JSEscape(String S) {
 		if (null == S) return S;
 		int N = S.length();
-		StringBuffer sb = new StringBuffer(N);
+		StringBuilder sb = new StringBuilder(N);
 		for (int i = 0; i < N; i++) {
 			char c = S.charAt(i);
 			if (c == '"') sb.append("&quot;");
@@ -177,7 +177,7 @@ public final class Misc {
 		S = S.trim().toLowerCase();
 		int N = S.length();
 		boolean bUpper = false;
-		StringBuffer sb = new StringBuffer(N);
+		StringBuilder sb = new StringBuilder(N);
 		for (int i = 0; i < N; i++) {
 			char c = S.charAt(i);
 			if (i == 0 || bUpper) {
@@ -204,7 +204,7 @@ public final class Misc {
 
 	public static String stringArrayJoin(String[] A, String S) {
 		if (A == null || A.length == 0) return "";
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		sb.append(A[0]);
 		for (int i = 1; i < A.length; i++) {
 			sb.append(S);
@@ -406,7 +406,7 @@ public final class Misc {
 	}
 
 	public static String removeNewLine(String str) {
-		StringBuffer stringBuffer = new java.lang.StringBuffer();
+		StringBuilder stringBuffer = new java.lang.StringBuilder();
 		for (int i = 0; i < str.length(); i++) {
 			int a = str.charAt(i);
 			if (a == 13 || a == 10) {
@@ -529,7 +529,7 @@ public final class Misc {
 
 	public static String replace(String str, String pattern, String replaceTo) {
 		String[] buff = str.split(pattern);
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 
 		sb.append(buff[0]);
 		for (int i = 1; i < buff.length; i++) {

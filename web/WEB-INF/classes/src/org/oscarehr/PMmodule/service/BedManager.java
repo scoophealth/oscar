@@ -514,7 +514,7 @@ public class BedManager {
 					
 					beds[i].setRoom(roomDAO.getRoom(beds[i].getRoomId()));
 					duplicateBeds.add(beds[i]);
-					StringBuffer errMsg = new StringBuffer();
+					StringBuilder errMsg = new StringBuilder();
 					for (Iterator it = duplicateBeds.iterator(); it.hasNext();) {
 						Bed theBed = (Bed) it.next();
 						if(theBed != null){

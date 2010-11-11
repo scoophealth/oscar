@@ -49,10 +49,10 @@ public class EctConDisplayServiceAction extends Action {
       MiscUtils.getLogger().debug("num specs".concat(String.valueOf(String.valueOf(specialists.length))));
       try {
          
-         String sql = String.valueOf(String.valueOf((new StringBuffer("delete from serviceSpecialists where serviceId = '")).append(serviceId).append("'")));
+         String sql = String.valueOf(String.valueOf((new StringBuilder("delete from serviceSpecialists where serviceId = '")).append(serviceId).append("'")));
          DBHandler.RunSQL(sql);
          for(int i = 0; i < specialists.length; i++) {
-            sql = String.valueOf(String.valueOf((new StringBuffer("insert into serviceSpecialists (serviceId,specId) values ('")).append(serviceId).append("','").append(specialists[i]).append("')")));
+            sql = String.valueOf(String.valueOf((new StringBuilder("insert into serviceSpecialists (serviceId,specId) values ('")).append(serviceId).append("','").append(specialists[i]).append("')")));
             DBHandler.RunSQL(sql);
          }
       }

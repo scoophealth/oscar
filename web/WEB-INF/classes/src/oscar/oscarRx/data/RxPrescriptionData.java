@@ -873,7 +873,7 @@ public class RxPrescriptionData {
         String date_prescribed = oscar.oscarRx.util.RxUtil.DateToString(oscar.oscarRx.util.RxUtil.Today(), "yyyy/MM/dd");
         String date_printed = date_prescribed;
 
-        StringBuffer textView = new StringBuffer();
+        StringBuilder textView = new StringBuilder();
         String retval = null;
 
         // ///create full text view

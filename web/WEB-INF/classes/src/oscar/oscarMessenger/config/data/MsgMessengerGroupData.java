@@ -88,7 +88,7 @@ public class MsgMessengerGroupData {
 //////////////////--------------------------------------------------------------
 
    public String printGroups(String groupNo){
-      StringBuffer stringBuffer = new StringBuffer();
+      StringBuilder stringBuffer = new StringBuilder();
       numGroups = 0;
       try{
            
@@ -183,7 +183,7 @@ public class MsgMessengerGroupData {
    }
 
    public String printAllBelowGroups(String grpNo){
-      StringBuffer stringBuffer = new StringBuffer();
+      StringBuilder stringBuffer = new StringBuilder();
       int untilZero = Integer.parseInt(grpNo);
 
          try{

@@ -225,7 +225,7 @@ public final class EDocUtil extends SqlUtilBaseS {
     }
 
     public static void indivoRegister(EDoc doc) {
-        StringBuffer sql = new StringBuffer("INSERT INTO indivoDocs (oscarDocNo, indivoDocIdx, docType, dateSent, `update`) VALUES(" + doc.getDocId() + ",'" + doc.getIndivoIdx() + "','document',now(),");
+        StringBuilder sql = new StringBuilder("INSERT INTO indivoDocs (oscarDocNo, indivoDocIdx, docType, dateSent, `update`) VALUES(" + doc.getDocId() + ",'" + doc.getIndivoIdx() + "','document',now(),");
 
         if (doc.isInIndivo()) sql.append("'U')");
         else sql.append("'I')");

@@ -36,7 +36,7 @@ public class RptDemographicQueryBuilder {
 
     int theWhereFlag;
     int theFirstFlag;
-    StringBuffer stringBuffer = null;
+    StringBuilder stringBuffer = null;
 
     public void whereClause(){
         if (stringBuffer != null){
@@ -65,7 +65,7 @@ public class RptDemographicQueryBuilder {
       MiscUtils.getLogger().debug("in buildQuery");
 
         String[] select = frm.getSelect();
-        stringBuffer =  new StringBuffer("select " );
+        stringBuffer =  new StringBuilder("select " );
 
         String ageStyle         = frm.getAgeStyle();
         String yearStyle        = frm.getAge();

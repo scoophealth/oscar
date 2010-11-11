@@ -183,7 +183,7 @@ public class BillingViewBean {
   public String getMessageNotesByBillingNo(String billingNo) {
     
     ResultSet rs = null;
-    StringBuffer res = new StringBuffer();
+    StringBuilder res = new StringBuilder();
     try {
       
       rs = DBHandler.GetSQL(

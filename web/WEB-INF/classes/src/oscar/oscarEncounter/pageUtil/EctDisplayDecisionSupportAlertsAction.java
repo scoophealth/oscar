@@ -55,7 +55,7 @@ public class EctDisplayDecisionSupportAlertsAction extends EctDisplayAction {
         Dao.setRightURL(url);
         Dao.setRightHeadingID(cmd);  //no menu so set div id to unique id for this action
 
-        StringBuffer javascript = new StringBuffer("<script type=\"text/javascript\">");
+        StringBuilder javascript = new StringBuilder("<script type=\"text/javascript\">");
         String js = "";
 
         WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServlet().getServletContext());

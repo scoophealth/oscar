@@ -355,12 +355,12 @@ public class TicklerAction extends DispatchAction {
             String today = formatter.format(new Date());
 
             String e = chart.getEncounter();
-            StringBuffer buf;
+            StringBuilder buf;
             if (e != null) {
-                buf = new StringBuffer(e);
+                buf = new StringBuilder(e);
             }
             else {
-                buf = new StringBuffer();
+                buf = new StringBuilder();
             }
             buf.append("\n\n");
             if (!today.equals(postedDate)) {

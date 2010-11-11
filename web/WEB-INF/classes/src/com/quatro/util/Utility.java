@@ -332,7 +332,7 @@ public class Utility {
     }
     public static String getEscapedPattern(String str)
     {
-    	StringBuffer sb = new StringBuffer();
+    	StringBuilder sb = new StringBuilder();
     	for (int i=0; i< str.length(); i++)
     	{
     		String c  = str.substring(i,i+1); 
@@ -351,7 +351,7 @@ public class Utility {
     {
     	String patternEsc = getEscapedPattern(pattern);
     	String[] buff = str.split(patternEsc);
-    	StringBuffer sb = new StringBuffer();
+    	StringBuilder sb = new StringBuilder();
     	sb.append(buff[0]);
     	for(int i=1; i<buff.length;i++)
     	{
@@ -369,7 +369,7 @@ public class Utility {
     public static String merge(String[] str, String sep)
     {
     	if (str == null || str.length ==0) return "";
-    	StringBuffer sb = new StringBuffer();
+    	StringBuilder sb = new StringBuilder();
     	sb.append(str[0]);
     	for(int i=1; i<str.length;i++)
     	{

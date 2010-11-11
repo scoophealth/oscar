@@ -32,7 +32,7 @@ import org.oscarehr.util.MiscUtils;
 
 public class ReadLocalFile {
     public static String getStringFromFile(String fileName) {
-        StringBuffer fileStr = new StringBuffer();
+        StringBuilder fileStr = new StringBuilder();
         String lineStr = new String();
         try {
             BufferedReader in = new BufferedReader(new FileReader(fileName));

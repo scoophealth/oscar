@@ -24,7 +24,7 @@ public final class RptReportCreator {
 
     // select formBCAR.pg1_ethOrig as Ethnic Origin, ...
     public String getSelectField(String recordId) throws SQLException {
-        StringBuffer ret = new StringBuffer();
+        StringBuilder ret = new StringBuilder();
         String sql = "select * from reportConfig where report_id = " + recordId + " order by order_no";
         ResultSet rs = dbObj.searchDBRecord(sql);
         while (rs.next()) {

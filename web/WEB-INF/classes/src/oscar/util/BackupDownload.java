@@ -80,7 +80,7 @@ public class BackupDownload extends GenericDownload {
             
             java.sql.ResultSet rs;
             String [] objectNames  = getVecObjectName(objName);
-            StringBuffer objectWhere = new StringBuffer();
+            StringBuilder objectWhere = new StringBuilder();
             for (int i = 0; i < objectNames.length; i++){
                 if (i < (objectNames.length - 1)){
                    objectWhere.append(" objectName = '"+objectNames[i]+"' or ");

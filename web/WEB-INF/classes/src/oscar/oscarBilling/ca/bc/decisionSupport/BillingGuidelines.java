@@ -115,7 +115,7 @@ public class BillingGuidelines  {
         if( filenames != null ) {
         for (String filename : filenames) {
             DSGuideline guideline = null;
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             try{
                     String streamToGet = "oscar/oscarBilling/ca/decisionSupport/"+filename;
                 log.debug("Trying to get "+streamToGet);

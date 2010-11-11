@@ -166,7 +166,7 @@ public class RxUtil {
 
     public static String replace(String expression, String searchFor, String replaceWith) {
         if (expression != null) {
-            StringBuffer buf = new StringBuffer(expression);
+            StringBuilder buf = new StringBuilder(expression);
 
             int pos = -1;
 

@@ -470,7 +470,7 @@ public class OscarFormDAOHibernate extends HibernateDaoSupport implements
 	
 	private String escapeAndQuote(String value){
         String s = StringHelper.replace(value, String.valueOf(quoteChar), String.valueOf(quoteChar) + String.valueOf(quoteChar));
-        return (new StringBuffer(2 + s.length())).append(quoteChar).append(s).append(quoteChar).toString();
+        return (new StringBuilder(2 + s.length())).append(quoteChar).append(s).append(quoteChar).toString();
 	}
 	
 	public void convertFormXMLToDb(Long formId) {

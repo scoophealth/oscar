@@ -93,7 +93,7 @@ public class WCBTeleplanSubmission {
     
     
     public String validate(WCB wcb,Billingmaster bm){
-        StringBuffer m = new StringBuffer();
+        StringBuilder m = new StringBuilder();
         
         try {
             Integer.parseInt(bm.getDxCode1() );
@@ -177,7 +177,7 @@ public class WCBTeleplanSubmission {
 
   private String replaceExtendedAskiiValues(String s){
        log.debug("s "+s.length());
-       StringBuffer sb = new StringBuffer();
+       StringBuilder sb = new StringBuilder();
        for (int i =0; i < s.length(); i++){
            char c = s.charAt(i);
            int j = (int) c;
@@ -267,7 +267,7 @@ public class WCBTeleplanSubmission {
     
     
    private String Claim(String logNo, String billedAmount, String feeitem,String correspondenceCode,Billingmaster bm,WCB wcb) {
-      StringBuffer dLine = new StringBuffer();
+      StringBuilder dLine = new StringBuilder();
       log.debug("Demographic "+demographicDao+"   "+bm.getDemographicNo());
       Demographic d = demographicDao.getDemographic(""+bm.getDemographicNo()); 
        

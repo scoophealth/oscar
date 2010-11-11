@@ -74,14 +74,14 @@ public class PrintBarcodeAction extends OscarAction {
         return actionMapping.findForward(this.target);
     }
 
-    private StringBuffer getHeader(HttpServletResponse response) {
-        StringBuffer strHeader = new StringBuffer();
+    private StringBuilder getHeader(HttpServletResponse response) {
+        StringBuilder strHeader = new StringBuilder();
         strHeader.append("label_");
         strHeader.append(".pdf");
         response.setHeader("Cache-Control", "max-age=0");
         response.setDateHeader("Expires", 0);
         response.setContentType("application/pdf");
-        StringBuffer sbContentDispValue = new StringBuffer();
+        StringBuilder sbContentDispValue = new StringBuilder();
         sbContentDispValue.append("inline; filename="); //inline - display
         sbContentDispValue.append(strHeader);
         return sbContentDispValue;

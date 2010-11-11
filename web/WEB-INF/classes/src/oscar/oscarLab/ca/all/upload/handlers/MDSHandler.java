@@ -24,7 +24,7 @@ public class MDSHandler implements MessageHandler {
 		int i = 0;
 		try {
 
-			StringBuffer audit = new StringBuffer();
+			StringBuilder audit = new StringBuilder();
 			ArrayList<String> messages = Utilities.separateMessages(fileName);
 			for (i = 0; i < messages.size(); i++) {
 

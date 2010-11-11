@@ -249,7 +249,7 @@ public class StringUtils {
         try {
             InputStream is = file.getInputStream();
             int pointer;
-            StringBuffer strb = new StringBuffer(file.getFileSize());
+            StringBuilder strb = new StringBuilder(file.getFileSize());
             while ((pointer = is.read()) != -1) {
                 strb.append((char) pointer);
             }
@@ -262,7 +262,7 @@ public class StringUtils {
 
     //joins an array into a string; array elements separated by a specified delimiter
     public static String join(String[] strArray, String delimiter) {
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         for (int i = 0, arrayLength = strArray.length; i < arrayLength; i++) {
             result.append(strArray[i]);
             if (i < arrayLength - 1) {
@@ -274,7 +274,7 @@ public class StringUtils {
 
     //arraylist elements must be string types
     public static String join(List strArray, String delimiter) {
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         for (int i = 0, arrayLength = strArray.size(); i < arrayLength; i++) {
             result.append(strArray.get(i));
             if (i < arrayLength - 1) {
@@ -310,7 +310,7 @@ public class StringUtils {
      *Takes a list of String Objects and returns a String with the all values from the list separated by a comma
      */
     public static String getCSV(List l) {
-        StringBuffer ret = new StringBuffer();
+        StringBuilder ret = new StringBuilder();
         ;
         if (l != null) {
             for (int i = 0; i < l.size(); i++) {
@@ -329,7 +329,7 @@ public class StringUtils {
      * johnchwk Apr 2008
      */
     public static String lineBreaks(String str) {
-        StringBuffer mystringBuffer = new StringBuffer();
+        StringBuilder mystringBuffer = new StringBuilder();
         mystringBuffer.append(str);
 
         boolean spaces = true;

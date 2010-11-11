@@ -273,7 +273,7 @@ public class ManageLetters {
     }
     
     private String serializeDemographic(String[] demos){
-        StringBuffer serialString = new StringBuffer();
+        StringBuilder serialString = new StringBuilder();
         if(demos != null){
             for ( int i = 0; i < demos.length; i++){
                 serialString.append(demos[i]);

@@ -394,7 +394,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		}
 
 		if (fwd != null) {
-			StringBuffer path = new StringBuffer(fwd.getPath());
+			StringBuilder path = new StringBuilder(fwd.getPath());
 
 			if (path.indexOf("?") == -1) path.append("?");
 			else path.append("&");
@@ -522,7 +522,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		Iterator<CaseManagementIssue> iter = noteIssues.iterator();
 		CaseManagementIssue cIssue;
 		boolean issueExists;
-		StringBuffer issueNames = new StringBuffer();
+		StringBuilder issueNames = new StringBuilder();
 		int j;
 
 		// we need the defining issue as originally passed in
@@ -672,7 +672,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		/*
 		 * Remove linked issue(s) and insert message into note
 		 * 
-		 * if( removeIssue.equals("true") ) { issue_id = request.getParameterValues("issue_id"); issueSet = note.getIssues(); StringBuffer issueNames = new StringBuffer(); for( int idx = 0; idx < issue_id.length; ++idx ) { for(Iterator iter =
+		 * if( removeIssue.equals("true") ) { issue_id = request.getParameterValues("issue_id"); issueSet = note.getIssues(); StringBuilder issueNames = new StringBuilder(); for( int idx = 0; idx < issue_id.length; ++idx ) { for(Iterator iter =
 		 * issueSet.iterator();iter.hasNext();) { CaseManagementIssue cIssue = (CaseManagementIssue)iter.next(); if( cIssue.getIssue_id() == Long.parseLong(issue_id[idx]) ) { issueSet.remove(cIssue); issueNames.append(cIssue.getIssue().getDescription() +
 		 * "\n"); break; } } } //Force hibernate to save rather than update Set tmpIssues = new HashSet(issueSet); note.setIssues(tmpIssues); strNote += "\n" + new SimpleDateFormat("dd-MMM-yyyy").format(new Date()) + " Removed following issue(s):\n" +
 		 * issueNames.toString(); note.setNote(strNote); }
@@ -758,7 +758,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		LogAction.addLog((String) request.getSession().getAttribute("user"), logAction, LogConst.CON_CME_NOTE, String.valueOf(note.getId()), request.getRemoteAddr(), demo, note.getAuditString());
 
 		ActionForward forward = mapping.findForward("listCPPNotes");
-		StringBuffer path = new StringBuffer(forward.getPath());
+		StringBuilder path = new StringBuilder(forward.getPath());
 		path.append("?" + reloadQuery);
 		return new ActionForward(path.toString());
 	}
@@ -1219,7 +1219,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			varName = "saveNote" + demono;
 			request.getSession().setAttribute(varName, new Boolean(true)); // tell CaseManagementView we have just saved note
 			ActionForward fwd = mapping.findForward(chain);
-			StringBuffer path = new StringBuffer(fwd.getPath());
+			StringBuilder path = new StringBuilder(fwd.getPath());
 			ResourceBundle props = ResourceBundle.getBundle("oscarResources");
 			if (request.getAttribute("DateError") != null) {
 				if (path.indexOf("?") == -1) path.append("?");
@@ -1479,7 +1479,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			varName = "saveNote" + demoNo;
 			request.getSession().setAttribute(varName, new Boolean(true)); // tell CaseManagementView we have just saved note
 			ActionForward fwd = mapping.findForward("list");
-			StringBuffer path = new StringBuffer(fwd.getPath());
+			StringBuilder path = new StringBuilder(fwd.getPath());
 
 			if (path.indexOf("?") == -1) path.append("?");
 			else path.append("&");
@@ -1504,7 +1504,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
 			Set setIssues = cform.getCaseNote().getIssues();
 			Iterator iter = setIssues.iterator();
-			StringBuffer dxCodes = new StringBuffer();
+			StringBuilder dxCodes = new StringBuilder();
 			String strDxCode;
 			int dxNum = 0;
 			while (iter.hasNext()) {
@@ -2126,7 +2126,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		request.setAttribute("history", history);
 		request.setAttribute("current", current);
 
-		StringBuffer title = new StringBuffer();
+		StringBuilder title = new StringBuilder();
 		String arrIssues[] = issueIds.split(",");
 		ResourceBundle props = ResourceBundle.getBundle("oscarResources");
 		if (arrIssues != null) {
@@ -2425,7 +2425,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
 	protected CaseManagementCPP copyNote2cpp(CaseManagementCPP cpp, CaseManagementNote note) {
 		Set<CaseManagementIssue> issueSet = note.getIssues();
-		StringBuffer text = new StringBuffer();
+		StringBuilder text = new StringBuilder();
 		Date d = new Date();
 		String separator = "\n-----[[" + d + "]]-----\n";
 		for (CaseManagementIssue issue : issueSet) {

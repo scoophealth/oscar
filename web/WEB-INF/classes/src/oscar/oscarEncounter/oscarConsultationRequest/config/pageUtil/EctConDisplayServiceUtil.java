@@ -41,7 +41,7 @@ public class EctConDisplayServiceUtil
         try
         {
             
-            String sql = String.valueOf(String.valueOf((new StringBuffer("select serviceDesc from consultationServices where serviceId = '")).append(serId).append("' order by serviceDesc")));
+            String sql = String.valueOf(String.valueOf((new StringBuilder("select serviceDesc from consultationServices where serviceId = '")).append(serId).append("' order by serviceDesc")));
             ResultSet rs = DBHandler.GetSQL(sql);
             if(rs.next())
                 retval = oscar.Misc.getString(rs, "serviceDesc");
@@ -98,7 +98,7 @@ public class EctConDisplayServiceUtil
         try
         {
             
-            String sql = String.valueOf(String.valueOf((new StringBuffer("select * from serviceSpecialists where serviceId = '")).append(serviceId).append("'")));
+            String sql = String.valueOf(String.valueOf((new StringBuilder("select * from serviceSpecialists where serviceId = '")).append(serviceId).append("'")));
             ResultSet rs;
             for(rs = DBHandler.GetSQL(sql); rs.next(); vector.add(oscar.Misc.getString(rs, "specId")));
             rs.close();

@@ -193,7 +193,7 @@ public class PathnetLabTest {
                 docName = p.getProperty("name",oscar.Misc.getString(rs, "ordering_provider"));
                 String ccs = oscar.Misc.getString(rs, "result_copies_to");
                 String docs[] = ccs.split("~");
-                StringBuffer sb = new StringBuffer();
+                StringBuilder sb = new StringBuilder();
                 for (int i = 0; i < docs.length; i++){
                     sb.append(justGetDocName(docs[i]));
                     if (i < (docs.length - 1)){

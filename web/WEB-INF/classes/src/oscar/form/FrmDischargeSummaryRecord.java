@@ -155,7 +155,7 @@ public class FrmDischargeSummaryRecord extends FrmRecord {
             }
             rs2.close();
              
-            StringBuffer allergies = new StringBuffer();
+            StringBuilder allergies = new StringBuilder();
             String sql3 = "SELECT DESCRIPTION from allergies where demographic_no="+demographicNo;
             ResultSet rs3 = DBHandler.GetSQL(sql3);
             while(rs3.next()) {
@@ -169,7 +169,7 @@ public class FrmDischargeSummaryRecord extends FrmRecord {
             props.setProperty("allergies",allergies.toString());
             rs3.close();
             
-            StringBuffer issues = new StringBuffer();
+            StringBuilder issues = new StringBuilder();
             String sql4 = "SELECT issue_id from casemgmt_issue where demographic_no="+demographicNo+" and resolved=0";
             ResultSet rs4 = DBHandler.GetSQL(sql4);
             while(rs4.next()) {
@@ -189,7 +189,7 @@ public class FrmDischargeSummaryRecord extends FrmRecord {
             props.setProperty("currentIssues",issues.toString());
             rs4.close();
             
-            StringBuffer prescriptions = new StringBuffer();
+            StringBuilder prescriptions = new StringBuilder();
             //select d.rx_date,d.special,d.end_date, d.archived,d.BN,d.GCN_SEQNO,d.customName from Drug d where d.demographic_no = ? ORDER BY d.rx_date DESC, d.id DESC";
             String sql5 = "SELECT special from drugs where demographic_no="+demographicNo+" and archived=0 ORDER BY rx_date DESC, drugid DESC";
             ResultSet rs5 = DBHandler.GetSQL(sql5);

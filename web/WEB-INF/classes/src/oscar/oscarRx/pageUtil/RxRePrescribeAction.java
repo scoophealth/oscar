@@ -71,7 +71,7 @@ public final class RxRePrescribeAction extends DispatchAction {
 		RxPrescriptionData rxData = new RxPrescriptionData();
 		ArrayList<RxPrescriptionData.Prescription> list = rxData.getPrescriptionsByScriptNo(Integer.parseInt(script_no), sessionBeanRX.getDemographicNo());
 		RxPrescriptionData.Prescription p = null;
-		StringBuffer auditStr = new StringBuffer();
+		StringBuilder auditStr = new StringBuilder();
 		for (int idx = 0; idx < list.size(); ++idx) {
 			p = list.get(idx);
 			beanRX.setStashIndex(beanRX.addStashItem(p));
@@ -112,7 +112,7 @@ public final class RxRePrescribeAction extends DispatchAction {
 		RxPrescriptionData rxData = new RxPrescriptionData();
 		ArrayList<RxPrescriptionData.Prescription> list = rxData.getPrescriptionsByScriptNo(Integer.parseInt(script_no), sessionBeanRX.getDemographicNo());
 		RxPrescriptionData.Prescription p = null;
-		StringBuffer auditStr = new StringBuffer();
+		StringBuilder auditStr = new StringBuilder();
 		for (int idx = 0; idx < list.size(); ++idx) {
 			p = list.get(idx);
 			beanRX.setStashIndex(beanRX.addStashItem(p));
@@ -141,7 +141,7 @@ public final class RxRePrescribeAction extends DispatchAction {
 			return null;
 		}
 		RxDrugListForm frm = (RxDrugListForm) form;
-		StringBuffer auditStr = new StringBuffer();
+		StringBuilder auditStr = new StringBuilder();
 		try {
 			RxPrescriptionData rxData = new RxPrescriptionData();
 
@@ -192,7 +192,7 @@ public final class RxRePrescribeAction extends DispatchAction {
 			response.sendRedirect("error.html");
 			return null;
 		}
-		StringBuffer auditStr = new StringBuffer();
+		StringBuilder auditStr = new StringBuilder();
 
 		RxPrescriptionData rxData = new RxPrescriptionData();
 
@@ -252,7 +252,7 @@ public final class RxRePrescribeAction extends DispatchAction {
 			response.sendRedirect("error.html");
 			return null;
 		}
-		StringBuffer auditStr = new StringBuffer();
+		StringBuilder auditStr = new StringBuilder();
 
 		RxPrescriptionData rxData = new RxPrescriptionData();
 
@@ -315,7 +315,7 @@ public final class RxRePrescribeAction extends DispatchAction {
 			response.sendRedirect("error.html");
 			return null;
 		}
-		StringBuffer auditStr = new StringBuffer();
+		StringBuilder auditStr = new StringBuilder();
 		// String idList = request.getParameter("drugIdList");
 
 		String demoNo = request.getParameter("demoNo");

@@ -214,7 +214,7 @@ public class CMLLabTest {
             }else if(alist.size() != 0) {
                 int lenAvail = 20 - ( alist.size() - 1);
                 if ( lenAvail > count){
-                    StringBuffer s = new StringBuffer();
+                    StringBuilder s = new StringBuilder();
                     for(int i = 0; i < alist.size(); i++){
                         s.append( (String) alist.get(i));
                         if (i < (alist.size() -1)){
@@ -224,7 +224,7 @@ public class CMLLabTest {
                     dis = s.toString();
                 }else{//need to divide up characters
                     int charEach = lenAvail / alist.size();
-                    StringBuffer s = new StringBuffer();
+                    StringBuilder s = new StringBuilder();
                     for(int i = 0; i < alist.size(); i++){
                         String str = (String) alist.get(i);
                         

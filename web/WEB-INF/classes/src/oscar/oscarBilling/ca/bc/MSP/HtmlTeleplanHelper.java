@@ -47,7 +47,7 @@ public class HtmlTeleplanHelper {
     
     
     public static String htmlHeaderGen(String errorMsg){
-      StringBuffer htmlContentHeader = new StringBuffer();  
+      StringBuilder htmlContentHeader = new StringBuilder();  
       htmlContentHeader.append("<html>");
       htmlContentHeader.append("<head><script type='text/javascript'>function openBrWindow(theURL,winName,features) { window.open(theURL,winName,features);}</script> </head>");
       htmlContentHeader.append("<body><style type='text/css'><!-- .bodytext{  font-family: Tahoma, Arial, Helvetica, sans-serif;  font-size: 12px; font-style: normal;  line-height: normal;  font-weight: normal;  font-variant: normal;  text-transform: none;  color: #003366;  text-decoration: none; --></style>\n");
@@ -63,7 +63,7 @@ public class HtmlTeleplanHelper {
        try{
           dateStr = new SimpleDateFormat("yyyyMMdd").format(new Date());
        }catch(Exception e){} 
-       StringBuffer htmlContentHeader = new StringBuffer(); 
+       StringBuilder htmlContentHeader = new StringBuilder(); 
        htmlContentHeader.append("<tr> \n");
        htmlContentHeader.append("<td colspan='4' class='bodytext'>Billing Invoice for Billing No."+ providerNo +"</td> \n");
        htmlContentHeader.append("<td colspan='7' class='bodytext'>Payment date of " + dateStr+ "</td> \n");
@@ -86,7 +86,7 @@ public class HtmlTeleplanHelper {
     }
     
     public static String htmlContentHeaderGen(String providerNo,String output,String errorMsg){
-       StringBuffer htmlContentHeader = new StringBuffer();  
+       StringBuilder htmlContentHeader = new StringBuilder();  
        htmlContentHeader.append("<html><body><style type='text/css'><!-- .bodytext{  font-family: Tahoma, Arial, Helvetica, sans-serif;  font-size: 12px; font-style: normal;  line-height: normal;  font-weight: normal;  font-variant: normal;  text-transform: none;  color: #003366;  text-decoration: none; --></style>");
        htmlContentHeader.append("<table width='100%' border='0' cellspacing='0' cellpadding='0'>");
        htmlContentHeader.append("<tr>");
@@ -111,7 +111,7 @@ public class HtmlTeleplanHelper {
     }
     
     public static String htmlLine(String billingMasterNo,String invNo, String demoName, String phn, String serviceDate,String billingCode,String billAmount,String dx1,String dx2,String dx3){
-       StringBuffer htmlContent = new StringBuffer();
+       StringBuilder htmlContent = new StringBuilder();
        htmlContent.append("<tr> \n");
           htmlContent.append("<td class='bodytext'> \n");
              htmlContent.append("<a href='#' onClick=\"openBrWindow('adjustBill.jsp?billing_no=");
@@ -135,7 +135,7 @@ public class HtmlTeleplanHelper {
     }
 
     public static String htmlFooter(String providerNo,int count,BigDecimal total){
-        StringBuffer htmlFooter = new StringBuffer();
+        StringBuilder htmlFooter = new StringBuilder();
         htmlFooter.append("<tr><td colspan='11' class='bodytext'>&nbsp;</td>  </tr>  <tr>    <td colspan='5' class='bodytext'>Billing No: ");
         htmlFooter.append( providerNo );
         htmlFooter.append(": ");

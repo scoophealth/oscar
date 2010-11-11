@@ -228,7 +228,7 @@ public class EctValidation{
                      * if (downloadMethod == null || !(downloadMethod.equalsIgnoreCase("stream"))) {
                      *    place = OscarProperties.getInstance().getProperty("oscarMeasurement_css");
                      *    if(!place.endsWith("/"))
-                     *       place = new StringBuffer(place).insert(place.length(),"/").toString();
+                     *       place = new StringBuilder(place).insert(place.length(),"/").toString();
                      * } else {
                      *    place = "StreamStyleSheet.do?cssfilename=";
                      * }

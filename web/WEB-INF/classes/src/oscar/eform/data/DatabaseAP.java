@@ -64,7 +64,7 @@ public class DatabaseAP {
     
     public static String parserReplace(String name, String var, String str) {
         //replaces <$name$> with var in str
-        StringBuffer strb = new StringBuffer(str);
+        StringBuilder strb = new StringBuilder(str);
         int tagstart = -2;
         int tagend;
         while ((tagstart = strb.indexOf("${", tagstart+2)) >= 0) {
@@ -76,7 +76,7 @@ public class DatabaseAP {
         return strb.toString();
     }
     public static ArrayList parserGetNames(String str) {
-        StringBuffer strb = new StringBuffer(str);
+        StringBuilder strb = new StringBuilder(str);
         ArrayList names = new ArrayList();
         int tagstart = -2;
         int tagend;
@@ -88,7 +88,7 @@ public class DatabaseAP {
     }
     public static String parserClean(String str) {
         //removes left over ${...} in str; replaces with ""
-        StringBuffer strb = new StringBuffer(str);
+        StringBuilder strb = new StringBuilder(str);
         int tagstart = -2;
         int tagend;
         while ((tagstart = strb.indexOf("${", tagstart+2)) >=0) {

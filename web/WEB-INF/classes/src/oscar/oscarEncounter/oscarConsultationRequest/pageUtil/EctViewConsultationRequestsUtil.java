@@ -66,7 +66,7 @@ public class EctViewConsultationRequestsUtil {
       apptDate = new Vector();
       boolean verdict = true;
             
-      StringBuffer sql = new StringBuffer();
+      StringBuilder sql = new StringBuilder();
       sql.append(" select demo.demographic_no, cr.status, cr.referalDate, cr.requestId,  cr.patientWillBook, cr.urgency, cr.appointmentDate, cr.appointmentTime, demo.last_name, demo.first_name,  pro.last_name as lName, pro.first_name as fName, ser.serviceDesc ");
       sql.append("from consultationRequests cr,  demographic demo, provider pro, consultationServices ser ");
       sql.append("where  demo.demographic_no = cr.demographicNo and pro.provider_no = cr.providerNo and  ser.serviceId = cr.serviceId ");

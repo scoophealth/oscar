@@ -1193,14 +1193,14 @@ public class ImportDemographicDataAction2 extends Action {
        return ret;
     }
     
-    void appendIfNotNull(StringBuffer s, String name, String object){
+    void appendIfNotNull(StringBuilder s, String name, String object){
         if (object != null){
             s.append(name+": "+object+"\n");
         }
     }
 
     String getLabDline( cds.LaboratoryResultsDocument.LaboratoryResults labRes){
-        StringBuffer s = new StringBuffer();
+        StringBuilder s = new StringBuilder();
         appendIfNotNull(s,"LaboratoryName",labRes.getLaboratoryName());
         appendIfNotNull(s,"TestNameReportedByLab", labRes.getTestNameReportedByLab());
         appendIfNotNull(s,"LabTestCode",labRes.getLabTestCode()); 

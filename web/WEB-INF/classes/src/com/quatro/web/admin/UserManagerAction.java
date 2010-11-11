@@ -429,7 +429,7 @@ public class UserManagerAction extends BaseAdminAction {
 	}
 	
 	private String encryptPassword(String password) throws NoSuchAlgorithmException{
-		StringBuffer sbTemp = new StringBuffer();
+		StringBuilder sbTemp = new StringBuilder();
 		byte[] pwd = password.getBytes();
 		
 		md = MessageDigest.getInstance("SHA");

@@ -71,7 +71,7 @@ public class EctConTitlebar
 
     public String estBar(HttpServletRequest request)
     {
-        StringBuffer strBuf = new StringBuffer();
+        StringBuilder strBuf = new StringBuilder();
         strBuf.append("<table bgcolor=\"#ffffff\" cellspacing=\"2\">\n");
         strBuf.append("   <tr>\n");
         String uri = request.getRequestURI();
@@ -87,7 +87,7 @@ public class EctConTitlebar
             } else
             {
                 strBuf.append("      <td bgcolor=\"#9999ff\">\n");
-                strBuf.append(String.valueOf(String.valueOf((new StringBuffer("         <a href=")).append((String)jspVect.elementAt(i)).append(" class=\"consultButtonsActive\">").append((String)displayNameVect.elementAt(i)).append("</a>\n"))));
+                strBuf.append(String.valueOf(String.valueOf((new StringBuilder("         <a href=")).append((String)jspVect.elementAt(i)).append(" class=\"consultButtonsActive\">").append((String)displayNameVect.elementAt(i)).append("</a>\n"))));
                 strBuf.append("      </td>\n");
             }
             strBuf.append("   </tr>\n");

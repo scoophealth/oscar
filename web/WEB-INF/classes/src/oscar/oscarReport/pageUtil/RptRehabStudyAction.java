@@ -90,7 +90,7 @@ public class RptRehabStudyAction extends Action {
     public String getHeadingStructure(ResultSet rs) throws SQLException {
 
         // assuming  multiple rows in rs
-	StringBuffer sb = new StringBuffer();
+	StringBuilder sb = new StringBuilder();
 
 	ResultSetMetaData rsmd = rs.getMetaData();
 	int columns = rsmd.getColumnCount();	
@@ -111,7 +111,7 @@ public class RptRehabStudyAction extends Action {
     public String getStructure(ResultSet rs) throws SQLException {
 
         // assuming  multiple rows in rs
-	StringBuffer sb = new StringBuffer();
+	StringBuilder sb = new StringBuilder();
 
 	ResultSetMetaData rsmd = rs.getMetaData();
 	int columns = rsmd.getColumnCount();

@@ -116,7 +116,7 @@ public class RenalDosingFactory {
                         rec.setDose(recDoses);
                         
                         List moreinformation = e.getChildren("moreinfo");    
-                        StringBuffer sb = new StringBuffer();
+                        StringBuilder sb = new StringBuilder();
                         for (int m = 0; m < moreinformation.size(); m++){
                             Element info = (Element) moreinformation.get(m);
                             sb.append(info.getText());

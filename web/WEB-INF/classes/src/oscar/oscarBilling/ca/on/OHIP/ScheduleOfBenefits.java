@@ -55,7 +55,7 @@ public class ScheduleOfBenefits {
    public List processNewFeeSchedule(InputStream is, boolean addNewCodes , boolean addChangedCodes){
       ArrayList changes = new ArrayList();      
       BillingCodeData bc = new BillingCodeData();      
-      StringBuffer codesThatHaveBothGPSpec = new StringBuffer();
+      StringBuilder codesThatHaveBothGPSpec = new StringBuilder();
       
       try {
          InputStreamReader isr = new InputStreamReader(is);

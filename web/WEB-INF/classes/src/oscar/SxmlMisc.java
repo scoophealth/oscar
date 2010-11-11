@@ -34,7 +34,7 @@ public class SxmlMisc extends Properties {
   //get the xml string 
   public static String createXmlDataString(HttpServletRequest req, String strPrefix) {
     String temp=null, content="";//default is not null
-    StringBuffer sbContent=new StringBuffer("");
+    StringBuilder sbContent=new StringBuilder("");
 	  for (Enumeration e = req.getParameterNames() ; e.hasMoreElements() ;) {
 		  temp=e.nextElement().toString();
 		  if( !temp.startsWith(strPrefix) || req.getParameter(temp).equals("")) continue;
@@ -47,7 +47,7 @@ public class SxmlMisc extends Properties {
   //get a string 
   public static String createDataString(HttpServletRequest req, String strPrefix, String defaultValue, int maxsize) {
     String temp=null;//default is not null
-    //StringBuffer sbContent=new StringBuffer("");
+    //StringBuilder sbContent=new StringBuilder("");
     byte[] abyte = new byte[maxsize];
     int i=0,n=0;
     for (Enumeration e = req.getParameterNames() ; e.hasMoreElements() ;) {

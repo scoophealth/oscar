@@ -84,7 +84,7 @@ public class dbBillingData {
 		accessDB = new DBPreparedHandler();
 		String strSQL = "select service_code, description, value, percentage from billingservice where service_code = '" + service_code + "'";
 
-		temp = searchDB(strSQL, "service_code", "description", "value", "percentage"); // use StringBuffer later
+		temp = searchDB(strSQL, "service_code", "description", "value", "percentage"); // use StringBuilder later
 		if (temp != null) {
 			db_service_code = temp[0];
 			description = temp[1];

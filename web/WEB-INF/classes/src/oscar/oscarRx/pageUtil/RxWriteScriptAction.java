@@ -159,7 +159,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 				@SuppressWarnings("unchecked")
 				ArrayList<String> attrib_names = bean.getAttributeNames();
 				// p("attrib_names", attrib_names.toString());
-				StringBuffer auditStr = new StringBuffer();
+				StringBuilder auditStr = new StringBuilder();
 				for (i = 0; i < bean.getStashSize(); i++) {
 					rx = bean.getStashItem(i);
 
@@ -991,7 +991,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 		RxPrescriptionData.Prescription rx = null;
 		RxPrescriptionData prescription = new RxPrescriptionData();
 		String scriptId = prescription.saveScript(bean);
-		StringBuffer auditStr = new StringBuffer();
+		StringBuilder auditStr = new StringBuilder();
 		ArrayList<String> attrib_names = bean.getAttributeNames();
 		for (int i = 0; i < bean.getStashSize(); i++) {
 			try {

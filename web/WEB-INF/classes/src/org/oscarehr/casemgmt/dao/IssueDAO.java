@@ -82,7 +82,7 @@ public class IssueDAO extends HibernateDaoSupport {
             return new ArrayList();
         }
 
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         for (int x = 0; x < roles.size(); x++) {
             if (x != 0) {
                 buf.append(",");

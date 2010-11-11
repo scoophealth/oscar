@@ -123,9 +123,9 @@ public  class MsgHandleMessagesAction extends Action {
 
           String[] replyval = new String[] {};
           java.util.Vector vector = new java.util.Vector();
-          StringBuffer subject = new StringBuffer("Re:");
+          StringBuilder subject = new StringBuilder("Re:");
           String themessage = new String();
-          StringBuffer theSendMessage = new StringBuffer();
+          StringBuilder theSendMessage = new StringBuilder();
 
           try{   //gets the sender
              
@@ -139,7 +139,7 @@ public  class MsgHandleMessagesAction extends Action {
                 themessage= oscar.Misc.getString(rs, "themessage");
                 sentByLocation = oscar.Misc.getString(rs, "sentByLocation");
                 themessage = themessage.replace('\n','>');        //puts > at the beginning
-                theSendMessage = new StringBuffer(themessage);    //of each line
+                theSendMessage = new StringBuilder(themessage);    //of each line
                 theSendMessage.insert(0,"\n\n\n>");
                 replyMessageData.add( (String) vector.elementAt(0) ,sentByLocation);
               }
@@ -174,9 +174,9 @@ public  class MsgHandleMessagesAction extends Action {
         else if (forward.equals("Forward")){
            String[] replyval = new String[] {};
            
-           StringBuffer subject = new StringBuffer("Fwd:");
+           StringBuilder subject = new StringBuilder("Fwd:");
            String themessage = new String();
-           StringBuffer theSendMessage = new StringBuffer();
+           StringBuilder theSendMessage = new StringBuilder();
 
            try{   //gets the sender
               
@@ -190,7 +190,7 @@ public  class MsgHandleMessagesAction extends Action {
                  themessage= oscar.Misc.getString(rs, "themessage");
 //                 sentByLocation = oscar.Misc.getString(rs,"sentByLocation");
                  themessage = themessage.replace('\n','>');        //puts > at the beginning
-                 theSendMessage = new StringBuffer(themessage);    //of each line
+                 theSendMessage = new StringBuilder(themessage);    //of each line
                  theSendMessage.insert(0,"\n\n\n>");
               }
 

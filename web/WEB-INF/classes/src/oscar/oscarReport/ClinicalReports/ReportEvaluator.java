@@ -144,7 +144,7 @@ public class ReportEvaluator {
     
     
     public String getName(){
-        StringBuffer  name = new StringBuffer();
+        StringBuilder  name = new StringBuilder();
         name.append(numerator.getNumeratorName());
         name.append("/");
         name.append(denominator.getDenominatorName());

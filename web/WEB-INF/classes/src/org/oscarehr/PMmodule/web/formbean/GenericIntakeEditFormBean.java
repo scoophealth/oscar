@@ -136,7 +136,7 @@ public class GenericIntakeEditFormBean extends ActionForm {
 	}
 
 	public void setProgramInDomainLabel(boolean hasProgramsInDomain) {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 
 		if (hasProgramsInDomain) {
 			buffer.append(PROGRAM_IN_DOMAIN_LABEL);
@@ -185,7 +185,7 @@ public class GenericIntakeEditFormBean extends ActionForm {
 	}
 
 	public void setExternalProgramLabel(boolean hasExternalPrograms) {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 
 		if (hasExternalPrograms) {
 			buffer.append(EXTERNAL_PROGRAM_LABEL);
@@ -229,7 +229,7 @@ public class GenericIntakeEditFormBean extends ActionForm {
 	}
 
 	public void setBedCommunityProgramLabel(boolean hasBedPrograms, boolean hasCommunityPrograms) {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 
 		if (hasBedPrograms) {
 			buffer.append(BED_PROGRAM_LABEL);

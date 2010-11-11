@@ -138,7 +138,7 @@ public class SecUserRole implements Serializable {
 
     public int hashCode () {
         if (Integer.MIN_VALUE == this.hashCode) {
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             if (null != this.getRoleName()) {
                 sb.append(this.getRoleName().hashCode());
                 sb.append(":");

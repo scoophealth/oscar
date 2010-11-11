@@ -667,7 +667,7 @@ public java.util.Vector estDemographicInbox(){
         java.sql.ResultSet rs;
 
         //make search string
-        StringBuffer stringBuffer = new StringBuffer();
+        StringBuilder stringBuffer = new StringBuilder();
         for ( int i = 0; i < messageid.size() ; i++){
             if (messageid.size()-1 == i){
                 stringBuffer.append(" messageid = '"+messageid.get(i)+"' ");

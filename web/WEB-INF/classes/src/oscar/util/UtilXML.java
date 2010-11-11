@@ -194,8 +194,8 @@ public class UtilXML {
    }
    
    public static void setPropText(Node node, String tag, String attr1, String attr2) {
-      StringBuffer sb1 = new StringBuffer();
-      StringBuffer sb2 = new StringBuffer();
+      StringBuilder sb1 = new StringBuilder();
+      StringBuilder sb2 = new StringBuilder();
       
       NodeList list = node.getChildNodes();
       
@@ -210,8 +210,8 @@ public class UtilXML {
             NamedNodeMap attrib = node.getAttributes();
             for (int i = 0; i < attrib.getLength(); i++ ) {
                Node curAttr = attrib.item(i);
-               if (curAttr.getNodeName().equals(attr1) ) sb1 = new StringBuffer(curAttr.getNodeValue());
-               if (curAttr.getNodeName().equals(attr2) ) sb2 = new StringBuffer(curAttr.getNodeValue());
+               if (curAttr.getNodeName().equals(attr1) ) sb1 = new StringBuilder(curAttr.getNodeValue());
+               if (curAttr.getNodeName().equals(attr2) ) sb2 = new StringBuilder(curAttr.getNodeValue());
             }
             prop.setProperty(sb1.toString(), sb2.toString());
          }

@@ -77,7 +77,7 @@ public  class MsgRemoteMessageData extends Thread{
          * @return
          */
          String getXMLMessage(String messageID){
-            StringBuffer XMLstring;
+            StringBuilder XMLstring;
             message    = new String();
             subject    = new String();
             sentby     = new String();
@@ -92,7 +92,7 @@ public  class MsgRemoteMessageData extends Thread{
 
 
 
-            XMLstring = new StringBuffer("<?xml version=\"1.0\" ?>\n <message>\n ");
+            XMLstring = new StringBuilder("<?xml version=\"1.0\" ?>\n <message>\n ");
 
             try{
                
@@ -202,7 +202,7 @@ public  class MsgRemoteMessageData extends Thread{
         private void defunctMessage(){
         //sendMessage2(String message, String subject,String userName,String sentToWho,String userNo,java.util.ArrayList providers )
         java.util.ArrayList aList = new java.util.ArrayList();
-        StringBuffer stringBuffer = new StringBuffer("This message could not be delivered to remote Providers. \nPlease try again\n\n");
+        StringBuilder stringBuffer = new StringBuilder("This message could not be delivered to remote Providers. \nPlease try again\n\n");
         MsgProviderData providerData = new MsgProviderData();
         providerData.locationId = currentLocation;
         providerData.providerNo = sentbyNo;

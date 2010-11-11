@@ -106,7 +106,7 @@ public class BillingDocumentErrorReportUploadAction extends Action {
 			String place = props.getProperty("DOCUMENT_DIR");
 
 			if (!place.endsWith("/"))
-				place = new StringBuffer(place).insert(place.length(), "/").toString();
+				place = new StringBuilder(place).insert(place.length(), "/").toString();
 			retVal = place + file.getFileName();
 			MiscUtils.getLogger().debug(retVal);
 			// write the file to the file specified
@@ -167,7 +167,7 @@ public class BillingDocumentErrorReportUploadAction extends Action {
 			String filepath = props.getProperty("DOCUMENT_DIR");
 			boolean bNewBilling = props.getProperty("isNewONbilling", "").equals("true") ? true : false;
 			if (!filepath.endsWith("/"))
-				filepath = new StringBuffer(filepath).insert(filepath.length(), "/").toString();
+				filepath = new StringBuilder(filepath).insert(filepath.length(), "/").toString();
 			FileInputStream file = new FileInputStream(filepath + fileName);
 			MiscUtils.getLogger().debug("file path: " + filepath + fileName);
 			// Assign associated report Name

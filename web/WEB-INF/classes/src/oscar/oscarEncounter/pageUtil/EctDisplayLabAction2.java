@@ -102,7 +102,7 @@ public class EctDisplayLabAction2 extends EctDisplayAction {
         LabResultData result;
         String labDisplayName;
         //String bgcolour = "FFFFCC";
-        StringBuffer func;
+        StringBuilder func;
         int hash;
         
         LinkedHashMap accessionMap = new LinkedHashMap();
@@ -123,7 +123,7 @@ public class EctDisplayLabAction2 extends EctDisplayAction {
             Date date = result.getDateObj();
             String formattedDate = DateUtils.getDate(date,"dd-MMM-yyyy", request.getLocale());
             //String formattedDate = DateUtils.getDate(date);
-            func = new StringBuffer("popupPage(700,960,'");
+            func = new StringBuilder("popupPage(700,960,'");
             
             if ( result.isMDS() ){
                 labDisplayName = result.getDiscipline();

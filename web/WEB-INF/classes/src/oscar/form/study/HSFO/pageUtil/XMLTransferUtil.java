@@ -1400,7 +1400,7 @@ public class XMLTransferUtil
 
 	public String printErrors(ArrayList validationErrors)
 	{
-		StringBuffer sb = new StringBuffer(
+		StringBuilder sb = new StringBuilder(
 				"++++++++++++Invalid XML!++++++++++++\n");
 
 		sb.append("Errors discovered during validation: \n");

@@ -88,7 +88,7 @@ public class DemographicSets {
    
    public ArrayList getDemographicSet(ArrayList setNames) {
        ArrayList retval = new ArrayList();
-       StringBuffer strNames = new StringBuffer();
+       StringBuilder strNames = new StringBuilder();
        
        for( int idx = 0; idx < setNames.size(); ++idx ) {
            strNames.append("'" + StringEscapeUtils.escapeSql((String)setNames.get(idx)) + "'");

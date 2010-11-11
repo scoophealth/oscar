@@ -68,14 +68,14 @@ public final class EctImmSaveScheduleAction extends Action {
             NodeList rows = set.getElementsByTagName("row");
             for(int j = 0; j < rows.getLength(); j++) {
                Element row = (Element)rows.item(j);
-               String sRow = String.valueOf(String.valueOf((new StringBuffer("tdSet")).append(i).append("_Row").append(j)));
+               String sRow = String.valueOf(String.valueOf((new StringBuilder("tdSet")).append(i).append("_Row").append(j)));
                if(row.getAttribute("name").length() == 0 || row.getAttribute("name") == null)
                   row.setAttribute("name", request.getParameter(String.valueOf(String.valueOf(sRow)).concat("_name_text")));
                NodeList cells = row.getElementsByTagName("cell");
                for(int k = 0; k < cells.getLength(); k++) {
                   Element cell = (Element)cells.item(k);
                   String index = cell.getAttribute("index");
-                  String sCell = String.valueOf(String.valueOf((new StringBuffer(String.valueOf(String.valueOf(sRow)))).append("_Col").append(index)));
+                  String sCell = String.valueOf(String.valueOf((new StringBuilder(String.valueOf(String.valueOf(sRow)))).append("_Col").append(index)));
                   String givenDate = request.getParameter(String.valueOf(String.valueOf(sCell)).concat("_givenDate"));
                   String refusedDate = request.getParameter(String.valueOf(String.valueOf(sCell)).concat("_refusedDate"));
                   String lot = request.getParameter(String.valueOf(String.valueOf(sCell)).concat("_lot"));

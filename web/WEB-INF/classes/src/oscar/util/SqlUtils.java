@@ -463,7 +463,7 @@ public class SqlUtils {
 	 * @return String - The constructed sql 'in' clause String
 	 */
 	public static String constructInClauseString(String[] criteria, boolean useQuotes) {
-		StringBuffer ret = new StringBuffer();
+		StringBuilder ret = new StringBuilder();
 		String quote = useQuotes == true ? "'" : "";
 		if (criteria.length != 0) {
 			ret.append("in (");

@@ -114,8 +114,8 @@ public class MsgMessageData {
     public String createSentToString(String[] providers){
 
             String sql = "select first_name, last_name from provider where ";
-            StringBuffer temp = new StringBuffer(sql);
-            StringBuffer sentToWho = new StringBuffer();
+            StringBuilder temp = new StringBuilder(sql);
+            StringBuilder sentToWho = new StringBuilder();
 
 
             //create SQL statement with the provider numbers
@@ -165,8 +165,8 @@ public class MsgMessageData {
      public String createSentToString(java.util.ArrayList providerList){
 
             String sql = "select first_name, last_name from provider where ";
-            StringBuffer temp = new StringBuffer(sql);
-            StringBuffer sentToWho = new StringBuffer();
+            StringBuilder temp = new StringBuilder(sql);
+            StringBuilder sentToWho = new StringBuilder();
 
 
             //create SQL statement with the provider numbers
@@ -416,7 +416,7 @@ public class MsgMessageData {
             vectOfSortedProvs.add(sortedProvs);
         }
 
-    StringBuffer stringBuffer = new StringBuffer();
+    StringBuilder stringBuffer = new StringBuilder();
     for (int i=0; i < sortedArrayOfLocations.length; i++){
         //for each location get there address book and there locationDesc
         String theAddressBook = new String();

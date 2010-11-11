@@ -73,7 +73,7 @@ public class ThirdApptTimeReporter implements Reporter{
             return false;
         }
 
-        StringBuffer providerList = new StringBuffer();
+        StringBuilder providerList = new StringBuilder();
         for( int idx = 0; idx < providers.length; ++idx ) {
             providerList.append("'" + providers[idx] + "'");
             if( idx < providers.length - 1) {

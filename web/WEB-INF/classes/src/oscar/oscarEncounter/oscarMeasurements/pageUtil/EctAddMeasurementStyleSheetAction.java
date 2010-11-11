@@ -103,7 +103,7 @@ public class EctAddMeasurementStyleSheetAction extends Action {
             String place= OscarProperties.getInstance().getProperty("oscarMeasurement_css_upload_path");
             
             if(!place.endsWith("/"))
-                    place = new StringBuffer(place).insert(place.length(),"/").toString();
+                    place = new StringBuilder(place).insert(place.length(),"/").toString();
             retVal = place+file.getFileName();
 
             //write the file to the file specified

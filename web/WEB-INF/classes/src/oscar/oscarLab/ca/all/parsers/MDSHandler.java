@@ -813,7 +813,7 @@ public class MDSHandler implements MessageHandler {
 	}
 
 	String getPaddedString(String originalString, int length, char paddingChar){
-           StringBuffer str = new StringBuffer(length);
+           StringBuilder str = new StringBuilder(length);
            str.append(originalString);
                       
            for (int i = str.length(); i < length; i++){

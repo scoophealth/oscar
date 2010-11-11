@@ -41,7 +41,7 @@ public class EctImmImmunizationData
     {
         String sRet = null;
         
-        String sql = String.valueOf(String.valueOf((new StringBuffer("SELECT * FROM immunizations WHERE demographic_no = ")).append(demographicNo).append(" AND archived=0")));
+        String sql = String.valueOf(String.valueOf((new StringBuilder("SELECT * FROM immunizations WHERE demographic_no = ")).append(demographicNo).append(" AND archived=0")));
         ResultSet rs = DBHandler.GetSQL(sql);
         if(rs.next())
             sRet = oscar.Misc.getString(rs, "immunizations");
@@ -54,7 +54,7 @@ public class EctImmImmunizationData
     {        
         boolean retval = false;
         
-        String sql = String.valueOf(String.valueOf((new StringBuffer("SELECT * FROM immunizations WHERE demographic_no = ")).append(demographicNo).append(" AND archived=0")));
+        String sql = String.valueOf(String.valueOf((new StringBuilder("SELECT * FROM immunizations WHERE demographic_no = ")).append(demographicNo).append(" AND archived=0")));
         ResultSet rs = DBHandler.GetSQL(sql);
         if(rs.next()) {
             retval = true;
@@ -67,8 +67,8 @@ public class EctImmImmunizationData
         throws SQLException
     {
         
-        MiscUtils.getLogger().debug(String.valueOf(String.valueOf((new StringBuffer(String.valueOf(String.valueOf(demographicNo)))).append(" ").append(providerNo).append(" ").append(immunizations))));
-        String sql = String.valueOf(String.valueOf((new StringBuffer("INSERT INTO immunizations (demographic_no, provider_no, immunizations, save_date, archived) VALUES (")).append(demographicNo).append(", '").append(providerNo).append("', '").append(immunizations).append("', CURRENT_DATE, 0)")));
+        MiscUtils.getLogger().debug(String.valueOf(String.valueOf((new StringBuilder(String.valueOf(String.valueOf(demographicNo)))).append(" ").append(providerNo).append(" ").append(immunizations))));
+        String sql = String.valueOf(String.valueOf((new StringBuilder("INSERT INTO immunizations (demographic_no, provider_no, immunizations, save_date, archived) VALUES (")).append(demographicNo).append(", '").append(providerNo).append("', '").append(immunizations).append("', CURRENT_DATE, 0)")));
         DBHandler.RunSQL(sql);
 	//select the specific database function:
 	String db_type = OscarProperties.getInstance().getProperty("db_type", "mysql");
@@ -93,7 +93,7 @@ public class EctImmImmunizationData
         String s;
         for(rs = DBHandler.GetSQL(sql); rs.next(); vRet.add(s))
         {
-            s = String.valueOf(String.valueOf((new StringBuffer(String.valueOf(String.valueOf(oscar.Misc.getString(rs, "provider_no"))))).append("/").append(oscar.Misc.getString(rs, "namer"))));
+            s = String.valueOf(String.valueOf((new StringBuilder(String.valueOf(String.valueOf(oscar.Misc.getString(rs, "provider_no"))))).append("/").append(oscar.Misc.getString(rs, "namer"))));
             MiscUtils.getLogger().debug(s);
         }
 

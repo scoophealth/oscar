@@ -63,7 +63,7 @@ public class PreventionTag extends TagSupport {
         }
 	ArrayList warnings = p.getWarnings();      
 	
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         if (warnings != null){
            numWarnings = warnings.size();
            for (int i = 0; i < warnings.size(); i++){

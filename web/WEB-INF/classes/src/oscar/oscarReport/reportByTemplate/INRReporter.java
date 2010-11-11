@@ -48,12 +48,12 @@ public class INRReporter implements Reporter {
         ReportObject curReport = (new ReportManager()).getReportTemplateNoParam(templateId);
         String fromDate = request.getParameter("from_date");
         String toDate = request.getParameter("to_date");
-        StringBuffer csvBody = new StringBuffer();
-        StringBuffer csvHeader = new StringBuffer();
-        StringBuffer csv = new StringBuffer();
-        StringBuffer rsHtml = new StringBuffer();
-        StringBuffer header = new StringBuffer();
-        StringBuffer body = new StringBuffer();
+        StringBuilder csvBody = new StringBuilder();
+        StringBuilder csvHeader = new StringBuilder();
+        StringBuilder csv = new StringBuilder();
+        StringBuilder rsHtml = new StringBuilder();
+        StringBuilder header = new StringBuilder();
+        StringBuilder body = new StringBuilder();
         int numHeaders = 1;
         int curHeader = 0;
         ResultSet rs;

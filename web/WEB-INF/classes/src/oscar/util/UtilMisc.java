@@ -44,7 +44,7 @@ public class UtilMisc {
       return S;
     }
     int N = S.length();
-    StringBuffer sb = new StringBuffer(N);
+    StringBuilder sb = new StringBuilder(N);
     for (int i = 0; i < N; i++) {
       char c = S.charAt(i);
       if (c == '&') {
@@ -80,7 +80,7 @@ public class UtilMisc {
     if (null == S) return S;
 
     int N = S.length();
-    StringBuffer sb = new StringBuffer(N);
+    StringBuilder sb = new StringBuilder(N);
     for (int i = 0; i < N; i++) {
         char c = S.charAt(i);
         if (c == '&') {//the read one more char and encode
@@ -123,7 +123,7 @@ public class UtilMisc {
       return S;
     }
     int N = S.length();
-    StringBuffer sb = new StringBuffer(N);
+    StringBuilder sb = new StringBuilder(N);
     for (int i = 0; i < N; i++) {
       char c = S.charAt(i);
       if (c == '\\') {
@@ -144,7 +144,7 @@ public class UtilMisc {
       return S;
     }
     int N = S.length();
-    StringBuffer sb = new StringBuffer(N);
+    StringBuilder sb = new StringBuilder(N);
     for (int i = 0; i < N; i++) {
       char c = S.charAt(i);
       if (c == '&') {
@@ -186,7 +186,7 @@ public class UtilMisc {
       return S;
     }
     int N = S.length();
-    StringBuffer sb = new StringBuffer(N);
+    StringBuilder sb = new StringBuilder(N);
     for (int i = 0; i < N; i++) {
       char c = S.charAt(i);
       if (c == '\\') {
@@ -210,7 +210,7 @@ public class UtilMisc {
       return S;
     }
     int N = S.length();
-    StringBuffer sb = new StringBuffer(N);
+    StringBuilder sb = new StringBuilder(N);
     for (int i = 0; i < N; i++) {
       char c = S.charAt(i);
       if (c == '"') {
@@ -236,7 +236,7 @@ public class UtilMisc {
     S = S.trim().toLowerCase();
     int N = S.length();
     boolean bUpper = false;
-    StringBuffer sb = new StringBuffer(N);
+    StringBuilder sb = new StringBuilder(N);
     for (int i = 0; i < N; i++) {
       char c = S.charAt(i);
       if (i == 0 || bUpper) {
@@ -324,7 +324,7 @@ public class UtilMisc {
     for (int i = 0; i < array.length; i++) {
       ret = String.valueOf(ret)
           + String.valueOf(String.valueOf(String
-                                          .valueOf( (new StringBuffer("'")).
+                                          .valueOf( (new StringBuilder("'")).
           append(
               String.valueOf(array[i])).append("'"))));
       if (i < array.length - 1) {
@@ -337,7 +337,7 @@ public class UtilMisc {
   public static String replace(String expression, String searchFor,
                                String replaceWith) {
     if (expression != null) {
-      StringBuffer buf = new StringBuffer(expression);
+      StringBuilder buf = new StringBuilder(expression);
       int pos = -1;
       do {
         pos = buf.indexOf(searchFor, pos);

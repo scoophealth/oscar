@@ -39,7 +39,7 @@ public class EctSearchDemographicData
             String chartNumber, String monthOfBirth, String dayOfBirth, String city)
     {
         int items = 0;
-        StringBuffer searchString = new StringBuffer("Select * from demographic where ");
+        StringBuilder searchString = new StringBuilder("Select * from demographic where ");
         fName = fName.trim();
         lName = lName.trim();
         phone = phone.trim();
@@ -53,89 +53,89 @@ public class EctSearchDemographicData
         if(!fName.equals(""))
         {
             if(items == 0)
-                searchString.append(String.valueOf(String.valueOf((new StringBuffer(" first_name like '")).append(fName).append("%' "))));
+                searchString.append(String.valueOf(String.valueOf((new StringBuilder(" first_name like '")).append(fName).append("%' "))));
             else
-                searchString.append(String.valueOf(String.valueOf((new StringBuffer(" and first_name like '")).append(fName).append("%' "))));
+                searchString.append(String.valueOf(String.valueOf((new StringBuilder(" and first_name like '")).append(fName).append("%' "))));
             items++;
         }
         if(!lName.equals(""))
         {
             if(items == 0)
-                searchString.append(String.valueOf(String.valueOf((new StringBuffer(" last_name like '")).append(lName).append("%' "))));
+                searchString.append(String.valueOf(String.valueOf((new StringBuilder(" last_name like '")).append(lName).append("%' "))));
             else
-                searchString.append(String.valueOf(String.valueOf((new StringBuffer(" and last_name like '")).append(lName).append("%' "))));
+                searchString.append(String.valueOf(String.valueOf((new StringBuilder(" and last_name like '")).append(lName).append("%' "))));
             items++;
         }
         if(!phone.equals(""))
         {
             if(items == 0)
-                searchString.append(String.valueOf(String.valueOf((new StringBuffer(" phone  like '")).append(phone).append("%' or phone2 like '").append(phone).append("%' "))));
+                searchString.append(String.valueOf(String.valueOf((new StringBuilder(" phone  like '")).append(phone).append("%' or phone2 like '").append(phone).append("%' "))));
             else
-                searchString.append(String.valueOf(String.valueOf((new StringBuffer(" and phone  like '")).append(phone).append("%' or phone2 like '").append(phone).append("%' "))));
+                searchString.append(String.valueOf(String.valueOf((new StringBuilder(" and phone  like '")).append(phone).append("%' or phone2 like '").append(phone).append("%' "))));
             items++;
         }
         if(!hin.equals(""))
         {
             if(items == 0)
-                searchString.append(String.valueOf(String.valueOf((new StringBuffer(" hin like '")).append(hin).append("%' "))));
+                searchString.append(String.valueOf(String.valueOf((new StringBuilder(" hin like '")).append(hin).append("%' "))));
             else
-                searchString.append(String.valueOf(String.valueOf((new StringBuffer(" and hin like '")).append(hin).append("%' "))));
+                searchString.append(String.valueOf(String.valueOf((new StringBuilder(" and hin like '")).append(hin).append("%' "))));
             items++;
         }
         if(!yearOfBirth.equals(""))
         {
             if(items == 0)
-                searchString.append(String.valueOf(String.valueOf((new StringBuffer(" year_of_birth  like '")).append(yearOfBirth).append("%' "))));
+                searchString.append(String.valueOf(String.valueOf((new StringBuilder(" year_of_birth  like '")).append(yearOfBirth).append("%' "))));
             else
-                searchString.append(String.valueOf(String.valueOf((new StringBuffer(" and year_of_birth  like '")).append(yearOfBirth).append("%' "))));
+                searchString.append(String.valueOf(String.valueOf((new StringBuilder(" and year_of_birth  like '")).append(yearOfBirth).append("%' "))));
             items++;
         }
         if(!sex.equals(""))
         {
             if(items == 0)
-                searchString.append(String.valueOf(String.valueOf((new StringBuffer(" sex  like '")).append(sex).append("%' "))));
+                searchString.append(String.valueOf(String.valueOf((new StringBuilder(" sex  like '")).append(sex).append("%' "))));
             else
-                searchString.append(String.valueOf(String.valueOf((new StringBuffer(" and sex  like '")).append(sex).append("%' "))));
+                searchString.append(String.valueOf(String.valueOf((new StringBuilder(" and sex  like '")).append(sex).append("%' "))));
             items++;
         }
         if(!address.equals(""))
         {
             if(items == 0)
-                searchString.append(String.valueOf(String.valueOf((new StringBuffer(" address  like '")).append(address).append("%' "))));
+                searchString.append(String.valueOf(String.valueOf((new StringBuilder(" address  like '")).append(address).append("%' "))));
             else
-                searchString.append(String.valueOf(String.valueOf((new StringBuffer(" and address  like '")).append(address).append("%' "))));
+                searchString.append(String.valueOf(String.valueOf((new StringBuilder(" and address  like '")).append(address).append("%' "))));
             items++;
         }
         if(!chartNumber.equals(""))
         {
             if(items == 0)
-                searchString.append(String.valueOf(String.valueOf((new StringBuffer(" chart_no  like '")).append(chartNumber).append("%' "))));
+                searchString.append(String.valueOf(String.valueOf((new StringBuilder(" chart_no  like '")).append(chartNumber).append("%' "))));
             else
-                searchString.append(String.valueOf(String.valueOf((new StringBuffer(" and chart_no  like '")).append(chartNumber).append("%' "))));
+                searchString.append(String.valueOf(String.valueOf((new StringBuilder(" and chart_no  like '")).append(chartNumber).append("%' "))));
             items++;
         }
         if(!monthOfBirth.equals(""))
         {
             if(items == 0)
-                searchString.append(String.valueOf(String.valueOf((new StringBuffer(" month_of_birth  like '")).append(monthOfBirth).append("%' "))));
+                searchString.append(String.valueOf(String.valueOf((new StringBuilder(" month_of_birth  like '")).append(monthOfBirth).append("%' "))));
             else
-                searchString.append(String.valueOf(String.valueOf((new StringBuffer(" and month_of_birth  like '")).append(monthOfBirth).append("%' "))));
+                searchString.append(String.valueOf(String.valueOf((new StringBuilder(" and month_of_birth  like '")).append(monthOfBirth).append("%' "))));
             items++;
         }
         if(!dayOfBirth.equals(""))
         {
             if(items == 0)
-                searchString.append(String.valueOf(String.valueOf((new StringBuffer(" date_of_birth  like '")).append(dayOfBirth).append("%' "))));
+                searchString.append(String.valueOf(String.valueOf((new StringBuilder(" date_of_birth  like '")).append(dayOfBirth).append("%' "))));
             else
-                searchString.append(String.valueOf(String.valueOf((new StringBuffer(" and date_of_birth  like '")).append(dayOfBirth).append("%' "))));
+                searchString.append(String.valueOf(String.valueOf((new StringBuilder(" and date_of_birth  like '")).append(dayOfBirth).append("%' "))));
             items++;
         }
         if(!city.equals(""))
         {
             if(items == 0)
-                searchString.append(String.valueOf(String.valueOf((new StringBuffer(" city  like '")).append(city).append("%' "))));
+                searchString.append(String.valueOf(String.valueOf((new StringBuilder(" city  like '")).append(city).append("%' "))));
             else
-                searchString.append(String.valueOf(String.valueOf((new StringBuffer(" and city  like '")).append(city).append("%' "))));
+                searchString.append(String.valueOf(String.valueOf((new StringBuilder(" and city  like '")).append(city).append("%' "))));
             items++;
         }
         if(items > 0)

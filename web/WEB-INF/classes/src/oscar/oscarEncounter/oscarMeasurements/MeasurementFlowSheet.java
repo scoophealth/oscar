@@ -123,7 +123,7 @@ public class MeasurementFlowSheet {
     }
     
     public String getDxTriggersString(){ 
-       StringBuffer sb = new StringBuffer();
+       StringBuilder sb = new StringBuilder();
        boolean firstElement = true;
        if (dxTriggers != null){
            for(String s:dxTriggers){
@@ -201,7 +201,7 @@ public class MeasurementFlowSheet {
     }
     /////
     public String getTopHTMLStream() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         if (topHTMLFileName != null) {
             try {
                 String measurementDirPath = OscarProperties.getInstance().getProperty("MEASUREMENT_DS_HTML_DIRECTORY");

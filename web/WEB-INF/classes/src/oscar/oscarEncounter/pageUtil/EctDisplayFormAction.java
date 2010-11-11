@@ -69,7 +69,7 @@ public class EctDisplayFormAction extends EctDisplayAction {
 			try {
 
 				String winName = "Forms" + bean.demographicNo;
-				StringBuffer url = new StringBuffer("popupPage(600, 700, '" + winName + "', '" + request.getContextPath() + "/oscarEncounter/formlist.jsp?demographic_no=" + bean.demographicNo + "')");
+				StringBuilder url = new StringBuilder("popupPage(600, 700, '" + winName + "', '" + request.getContextPath() + "/oscarEncounter/formlist.jsp?demographic_no=" + bean.demographicNo + "')");
 
 				// set text for lefthand module title
 				Dao.setLeftHeading(messages.getMessage(request.getLocale(), "oscarEncounter.Index.msgForms"));
@@ -79,11 +79,11 @@ public class EctDisplayFormAction extends EctDisplayAction {
 				// we're going to display a pop up menu of forms so we set the menu title and id num of menu
 				Dao.setRightHeadingID(menuId);
 				Dao.setMenuHeader(messages.getMessage("oscarEncounter.LeftNavBar.AddFrm"));
-				StringBuffer javascript = new StringBuffer("<script type=\"text/javascript\">");
+				StringBuilder javascript = new StringBuilder("<script type=\"text/javascript\">");
 				String js = "";
 				String dbFormat = "yy/MM/dd";
 				String serviceDateStr;
-				StringBuffer strTitle;
+				StringBuilder strTitle;
 				String fullTitle;
 				Date date;
 				String key;
@@ -122,10 +122,10 @@ public class EctDisplayFormAction extends EctDisplayAction {
 							item.setDate(date);
 
 							fullTitle = encounterForm.getFormName();
-							strTitle = new StringBuffer(StringUtils.maxLenString(fullTitle, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES));
+							strTitle = new StringBuilder(StringUtils.maxLenString(fullTitle, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES));
 
 							hash = Math.abs(winName.hashCode());
-							url = new StringBuffer("popupPage(700,960,'" + hash + "started', '" + request.getContextPath() + "/form/forwardshortcutname.jsp?formname=" + encounterForm.getFormName() + "&demographic_no=" + bean.demographicNo + "');");
+							url = new StringBuilder("popupPage(700,960,'" + hash + "started', '" + request.getContextPath() + "/form/forwardshortcutname.jsp?formname=" + encounterForm.getFormName() + "&demographic_no=" + bean.demographicNo + "');");
 							key = StringUtils.maxLenString(fullTitle, MAX_LEN_KEY, CROP_LEN_KEY, ELLIPSES) + "(" + serviceDateStr + ")";
 							key = StringEscapeUtils.escapeJavaScript(key);
 
@@ -148,7 +148,7 @@ public class EctDisplayFormAction extends EctDisplayAction {
 					// we add all unhidden forms to the pop up menu
 					if (!encounterForm.isHidden()) {
 						hash = Math.abs(winName.hashCode());
-						url = new StringBuffer("popupPage(700,960,'" + hash + "new', '" + encounterForm.getFormValue() + bean.demographicNo + "&formId=0&provNo=" + bean.providerNo + "&parentAjaxId=" + cmd + "')");
+						url = new StringBuilder("popupPage(700,960,'" + hash + "new', '" + encounterForm.getFormValue() + bean.demographicNo + "&formId=0&provNo=" + bean.providerNo + "&parentAjaxId=" + cmd + "')");
 						Dao.addPopUpUrl(url.toString());
 						key = StringUtils.maxLenString(encounterForm.getFormName(), MAX_LEN_KEY, CROP_LEN_KEY, ELLIPSES) + " (new)";
 						Dao.addPopUpText(encounterForm.getFormName());
@@ -159,7 +159,7 @@ public class EctDisplayFormAction extends EctDisplayAction {
 						javascript.append(js);
 					}
 				}
-				url = new StringBuffer("return !showMenu('" + menuId + "', event);");
+				url = new StringBuilder("return !showMenu('" + menuId + "', event);");
 				Dao.setRightURL(url.toString());
 
 				javascript.append("</script>");

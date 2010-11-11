@@ -368,7 +368,7 @@ public class EFormUtil {
 			return S;
 		}
 		int N = S.length();
-		StringBuffer sb = new StringBuffer(N);
+		StringBuilder sb = new StringBuilder(N);
 		for (int i = 0; i < N; i++) {
 			char c = S.charAt(i);
 			// escape the escape characters

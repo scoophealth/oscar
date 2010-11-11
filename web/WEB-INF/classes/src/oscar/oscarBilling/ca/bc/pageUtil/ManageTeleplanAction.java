@@ -222,7 +222,7 @@ public class ManageTeleplanAction extends DispatchAction {
            String line = null;
 
            boolean start= false;
-           StringBuffer sb = new StringBuffer();
+           StringBuilder sb = new StringBuilder();
            MspErrorCodes errorCodes = new MspErrorCodes();
 
            while ((line = buff.readLine()) != null) {
@@ -234,7 +234,7 @@ public class ManageTeleplanAction extends DispatchAction {
                if (start){
                    if (line.trim().equals("")){
                        String togo = sb.toString();
-                       sb = new StringBuffer();
+                       sb = new StringBuilder();
                        if (!togo.equals("")){
                           errorCodes.put(togo.substring(0,2), togo.substring(4));
                        }
@@ -259,7 +259,7 @@ public class ManageTeleplanAction extends DispatchAction {
            errorCodes.save();
 
            //...I guess pass the errors back to jsp
-           StringBuffer errorStr = new StringBuffer("");
+           StringBuilder errorStr = new StringBuilder("");
            for (Entry error: errorCodes.entrySet()) {
                errorStr.append("Error codes: \n");
                errorStr.append(error.getKey());
@@ -526,7 +526,7 @@ public class ManageTeleplanAction extends DispatchAction {
            if (realFile != null && !realFile.trim().equals("")){
                File file = tr.getFile();
                BufferedReader buff = new BufferedReader(new FileReader(file));
-               StringBuffer sb = new StringBuffer();
+               StringBuilder sb = new StringBuilder();
                String line = null;
                
                while ((line = buff.readLine()) != null) {

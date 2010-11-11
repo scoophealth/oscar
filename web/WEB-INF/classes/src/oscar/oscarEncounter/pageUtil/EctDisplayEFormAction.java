@@ -77,7 +77,7 @@ public class EctDisplayEFormAction extends EctDisplayAction {
 	        Dao.setRightURL(url);        
 	        Dao.setRightHeadingID(cmd);  //no menu so set div id to unique id for this action      
 	
-	        StringBuffer javascript = new StringBuffer("<script type=\"text/javascript\">");        
+	        StringBuilder javascript = new StringBuilder("<script type=\"text/javascript\">");        
 	        String js = ""; 
 	        ArrayList<Hashtable<String,Object>> eForms = EFormUtil.listEForms(EFormUtil.NAME, EFormUtil.CURRENT, roleName);
 	        String key;

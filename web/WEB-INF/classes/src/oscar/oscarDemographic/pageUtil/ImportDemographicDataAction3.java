@@ -2032,7 +2032,7 @@ import oscar.util.StringUtils;
 	}
 
 	String getLabDline(LaboratoryResults labRes, int timeShiftInDays){
-		StringBuffer s = new StringBuffer();
+		StringBuilder s = new StringBuilder();
 		appendIfNotNull(s,"LaboratoryName",labRes.getLaboratoryName());
 		appendIfNotNull(s,"TestNameReportedByLab", labRes.getTestNameReportedByLab());
 		appendIfNotNull(s,"LabTestCode",labRes.getLabTestCode());
@@ -2103,7 +2103,7 @@ import oscar.util.StringUtils;
 		return s.toString();
 	}
 
-	void appendIfNotNull(StringBuffer s, String name, String object){
+	void appendIfNotNull(StringBuilder s, String name, String object){
 		if (object != null){
 			s.append(name+": "+object+"\n");
 		}

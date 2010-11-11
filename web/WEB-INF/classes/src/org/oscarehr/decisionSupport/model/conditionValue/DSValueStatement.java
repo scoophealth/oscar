@@ -79,7 +79,7 @@ public class DSValueStatement extends DSValue {
 
     @Override
     public String toString() {
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         if (this.getValueType() != null) result.append(this.getValueType() + ":");
         if (this.getOperator() != null) result.append(this.getOperator());
         result.append(this.getValue());

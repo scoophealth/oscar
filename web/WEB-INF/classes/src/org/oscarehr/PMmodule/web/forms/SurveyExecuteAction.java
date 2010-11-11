@@ -643,14 +643,14 @@ public class SurveyExecuteAction extends DispatchAction {
 
         if (caisiObject.equals("Current Medications")) {
             List<Drug> meds = cmeManager.getPrescriptions(demographic_no, true);
-            StringBuffer str = new StringBuffer();
+            StringBuilder str = new StringBuilder();
             for (Drug med : meds) {
                 str.append(med.getSpecial().replaceAll("\r\n", " ")).append("\r\n");
             }
             data.getValues().put(key, str.toString());
         } else if (caisiObject.equals("Current Issues")) {
             List issues = cmeManager.getIssues(Integer.parseInt(demographic_no), false);
-            StringBuffer str = new StringBuffer();
+            StringBuilder str = new StringBuilder();
             for (Iterator iter = issues.iterator(); iter.hasNext();) {
                 CaseManagementIssue issue = (CaseManagementIssue) iter.next();
                 str.append(issue.getIssue().getDescription()).append("\r\n");
@@ -658,7 +658,7 @@ public class SurveyExecuteAction extends DispatchAction {
             data.getValues().put(key, str.toString());
         } else if (caisiObject.equals("Allergies")) {
             List allergies = cmeManager.getAllergies(demographic_no);
-            StringBuffer str = new StringBuffer();
+            StringBuilder str = new StringBuilder();
             for (Iterator iter = allergies.iterator(); iter.hasNext();) {
                 Allergy med = (Allergy) iter.next();
                 str.append(med.getDescription()).append(" ").append(med.getReaction()).append("\r\n");

@@ -1155,8 +1155,8 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		// UserProperty userProp = caseManagementMgr.getUserProperty(providerNo, UserProperty.STALE_NOTEDATE);
 
 		List<Issue> issues = caseManagementMgr.getIssueInfoByCode(providerNo, codes);
-		StringBuffer checked_issues = new StringBuffer();
-		StringBuffer cppIssues = new StringBuffer();
+		StringBuilder checked_issues = new StringBuilder();
+		StringBuilder cppIssues = new StringBuilder();
 		String[] issueIds = new String[issues.size()];
 		int idx = 0;
 		for (Issue issue : issues) {

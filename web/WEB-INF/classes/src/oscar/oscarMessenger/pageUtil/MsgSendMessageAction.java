@@ -103,8 +103,8 @@ public class MsgSendMessageAction extends Action {
             //create a string with all the providers it will be sent too
 
             String sql = "select first_name, last_name from provider where ";
-            StringBuffer temp = new StringBuffer(sql);
-            StringBuffer sentToWho = new StringBuffer("Sent to : ");
+            StringBuilder temp = new StringBuilder(sql);
+            StringBuilder sentToWho = new StringBuilder("Sent to : ");
 
 
 

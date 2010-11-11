@@ -289,7 +289,7 @@ public class BillingSaveBillingAction extends Action {
             af = mapping.findForward("anotherBill");
 
         } else if (frm.getSubmit().equals("Save & Print Receipt")) {
-            StringBuffer stb = new StringBuffer();
+            StringBuilder stb = new StringBuilder();
             for (String s : billingIds) {
                 log.debug("String " + s);
                 stb.append("billing_no=" + s + "&");

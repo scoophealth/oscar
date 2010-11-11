@@ -120,7 +120,7 @@ public class EctImmImmunizationSetData {
 				String.valueOf(
 					String.valueOf(
 						(
-							new StringBuffer("select setXmlDoc from config_Immunization where  setId = '"))
+							new StringBuilder("select setXmlDoc from config_Immunization where  setId = '"))
 							.append(setId)
 							.append("'")));
 			ResultSet rs = DBHandler.GetSQL(sql);

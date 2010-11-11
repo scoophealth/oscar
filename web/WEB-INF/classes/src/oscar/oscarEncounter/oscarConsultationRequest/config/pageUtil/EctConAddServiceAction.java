@@ -49,7 +49,7 @@ public class EctConAddServiceAction extends Action
         try
         {
             
-            String sql = String.valueOf(String.valueOf((new StringBuffer("insert into consultationServices (serviceDesc,active) values ('")).append(service).append("','1')")));
+            String sql = String.valueOf(String.valueOf((new StringBuilder("insert into consultationServices (serviceDesc,active) values ('")).append(service).append("','1')")));
             DBHandler.RunSQL(sql);
         }
         catch(SQLException e)

@@ -96,9 +96,9 @@ public final class RxChooseDrugAction extends Action {
                     }          
                     rx.setDosage(dosage);
                  //   p("rx set dosage to: "+dosage);
-                    StringBuffer compString = null;
+                    StringBuilder compString = null;
                     if (f.components != null){
-                        compString = new StringBuffer();
+                        compString = new StringBuilder();
                         for (int c = 0; c < f.components.size();c++){
                             RxDrugData.DrugMonograph.DrugComponent dc = (RxDrugData.DrugMonograph.DrugComponent) f.components.get(c);
                   //          p("dc.name: "+dc.name+"dc.strength: "+dc.strength+"dc.unit: "+dc.unit);

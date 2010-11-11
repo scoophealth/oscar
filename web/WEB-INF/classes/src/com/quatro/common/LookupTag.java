@@ -61,7 +61,7 @@ public class LookupTag extends BaseInputTag {
         	sRootPath=Misc.getApplicationName(pageContext.getServletContext().getResource("/").getPath());
 	    } catch (Exception e) {}
 
-    	StringBuffer results = new StringBuffer("<table");
+	    StringBuffer results = new StringBuffer("<table");
         prepareAttribute(results, "cellpadding", "0");
         prepareAttribute(results, "style", "border:0px;");
         prepareAttribute(results, "cellspacing", "0");
@@ -149,7 +149,7 @@ public class LookupTag extends BaseInputTag {
     }
     
     protected String prepareBodyStyles() throws JspException {
-       StringBuffer styles = new StringBuffer();
+    	StringBuffer styles = new StringBuffer();
        prepareAttribute(styles, "style", bodyStyle);
        prepareAttribute(styles, "class", bodyStyleClass);
        return styles.toString();
@@ -186,7 +186,7 @@ public class LookupTag extends BaseInputTag {
        if (property == null) return null;
 
        if (indexed) {
-          StringBuffer results = new StringBuffer();
+    	   StringBuffer results = new StringBuffer();
           prepareIndex(results, pre_name);
           results.append(property);
           return results.toString();

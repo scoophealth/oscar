@@ -98,7 +98,7 @@ public class Utilities {
             String place= props.getProperty("DOCUMENT_DIR");
             
             if(!place.endsWith("/"))
-                place = new StringBuffer(place).insert(place.length(),"/").toString();
+                place = new StringBuilder(place).insert(place.length(),"/").toString();
             retVal = place+"LabUpload."+filename.replaceAll(".enc", "")+"."+(new Date()).getTime();
             
             //write the  file to the file specified

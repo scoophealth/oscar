@@ -29,7 +29,7 @@ package oscar.eform.data;
 
 import java.util.Properties;
 
-import oscar.util.StringBufferUtils;
+import oscar.util.StringBuilderUtils;
 import oscar.util.UtilDateUtilities;
 
 public class EFormBase {
@@ -80,11 +80,11 @@ public class EFormBase {
         Properties prop = oscar.OscarProperties.getInstance();
         String projHome = prop.getProperty("project_home");
         String output = "../eform/displayImage.do?imagefile=";
-        StringBuffer html = new StringBuffer(formHtml);
-        int pointer = StringBufferUtils.indexOfIgnoreCase(html, imageMarker, 0);
+        StringBuilder html = new StringBuilder(formHtml);
+        int pointer = StringBuilderUtils.indexOfIgnoreCase(html, imageMarker, 0);
         while (pointer >= 0) {
             html = html.replace(pointer, pointer+imageMarker.length(), output);
-            pointer = StringBufferUtils.indexOfIgnoreCase(html, imageMarker, 0);
+            pointer = StringBuilderUtils.indexOfIgnoreCase(html, imageMarker, 0);
         }
         formHtml = html.toString();
     }

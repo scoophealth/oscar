@@ -341,7 +341,7 @@ public class PathnetResultsData {
     
     
     public String findPathnetDisipline(String labId){
-        StringBuffer ret = new StringBuffer();
+        StringBuilder ret = new StringBuilder();
         try {
             
             String sql = "select distinct diagnostic_service_sect_id from hl7_pid pid, hl7_obr obr where obr.pid_id = pid.pid_id and pid.message_id = '"+labId+"'";

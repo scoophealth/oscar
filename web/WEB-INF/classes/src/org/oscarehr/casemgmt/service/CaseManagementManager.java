@@ -1508,7 +1508,7 @@ public class CaseManagementManager {
          * @return Formatted String
          */
         public String getTemplateSignature(String template,ResourceBundle rc,Map<String,String> map){
-            StringBuffer ret = new StringBuffer();
+            StringBuilder ret = new StringBuilder();
             int tagstart = -2;
             int tagend;
             int currentPosition = 0;

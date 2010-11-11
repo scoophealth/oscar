@@ -63,7 +63,7 @@ public class GetProviderRoles {
 	    			continue;
 	    		}
 	    		int x=0;
-	    		StringBuffer buf = new StringBuffer();
+	    		StringBuilder buf = new StringBuilder();
 	    		for(Iterator iter2=roles.iterator();iter2.hasNext();) {
 	    			String roleName= (String)iter2.next();
 	    			if(x!=0) {

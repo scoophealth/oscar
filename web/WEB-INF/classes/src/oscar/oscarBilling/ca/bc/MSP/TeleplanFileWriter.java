@@ -60,8 +60,8 @@ public class TeleplanFileWriter {
     private static Log log = LogFactory.getLog(TeleplanFileWriter.class);
     
     
-    StringBuffer mspFileStr = null;
-    StringBuffer mspHtmlStr = null;
+    StringBuilder mspFileStr = null;
+    StringBuilder mspHtmlStr = null;
     int sequenceNum = 0;
     ArrayList billingToBeMarkedAsBilled = null;
     ArrayList billingmasterToBeMarkedAsBilled = null;
@@ -76,8 +76,8 @@ public class TeleplanFileWriter {
     
     /** Creates a new instance of TeleplanFileWriter */
     public TeleplanFileWriter() {
-        mspFileStr = new StringBuffer();
-        mspHtmlStr = new StringBuffer();
+        mspFileStr = new StringBuilder();
+        mspHtmlStr = new StringBuilder();
         sequenceNum = getLastSequenceNumber();
         billingToBeMarkedAsBilled = new ArrayList();
         billingmasterToBeMarkedAsBilled = new ArrayList();
@@ -454,7 +454,7 @@ public class TeleplanFileWriter {
     }
     
     public String getClaimDetailRecord(Billingmaster bm ,String logNo) {
-        StringBuffer dLine = new StringBuffer(); 
+        StringBuilder dLine = new StringBuilder(); 
             dLine.append(Misc.forwardSpace(bm.getClaimcode(),3));                       //p00   3
             dLine.append(Misc.forwardSpace(bm.getDatacenter(),5));                      //p02   5
             dLine.append(Misc.forwardZero(logNo,7));                                    //p04   7

@@ -45,7 +45,7 @@ import oscar.eform.EFormLoader;
 import oscar.eform.EFormUtil;
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler;
 import oscar.oscarEncounter.oscarMeasurements.util.WriteNewMeasurements;
-import oscar.util.StringBufferUtils;
+import oscar.util.StringBuilderUtils;
 import oscar.util.UtilDateUtilities;
 
 public class EForm extends EFormBase {
@@ -135,24 +135,24 @@ public class EForm extends EFormBase {
 
 	public void setAction(boolean unset) {
 		// sets action= in the form
-		StringBuffer html = new StringBuffer(this.formHtml);
-		int index = StringBufferUtils.indexOfIgnoreCase(html, "<form", 0);
+		StringBuilder html = new StringBuilder(this.formHtml);
+		int index = StringBuilderUtils.indexOfIgnoreCase(html, "<form", 0);
 		int endtag = html.indexOf(">", index + 1);
 		// --remove all previous actions, methods and names from the form tag
 		if (index < 0) return;
 
 		int pointer, pointer2;
-		while (((pointer = StringBufferUtils.indexOfIgnoreCase(html, " action=", index)) >= 0) && (pointer < endtag)) {
+		while (((pointer = StringBuilderUtils.indexOfIgnoreCase(html, " action=", index)) >= 0) && (pointer < endtag)) {
 			pointer2 = nextSpot(html, pointer + 1);
 			html = html.delete(pointer, pointer2);
 			endtag = html.indexOf(">", index + 1);
 		}
-		while (((pointer = StringBufferUtils.indexOfIgnoreCase(html, " method=", index)) >= 0) && (pointer < endtag)) {
+		while (((pointer = StringBuilderUtils.indexOfIgnoreCase(html, " method=", index)) >= 0) && (pointer < endtag)) {
 			pointer2 = nextSpot(html, pointer + 1);
 			html = html.delete(pointer, pointer2);
 			endtag = html.indexOf(">", index + 1);
 		}
-		pointer = StringBufferUtils.indexOfIgnoreCase(html, " name=", index);
+		pointer = StringBuilderUtils.indexOfIgnoreCase(html, " name=", index);
 		String name = "name=\"saveEForm\" ";
 		if ((pointer >= 0) && (pointer < endtag)) {
 			pointer2 = nextSpot(html, pointer + 1);
@@ -165,7 +165,7 @@ public class EForm extends EFormBase {
 			return;
 		}
 		index += 5;
-		StringBuffer action = new StringBuffer("action=\"../eform/addEForm.do?efmfid=" + this.fid + "&efmdemographic_no=" + this.demographicNo + "&efmprovider_no=" + this.providerNo);
+		StringBuilder action = new StringBuilder("action=\"../eform/addEForm.do?efmfid=" + this.fid + "&efmdemographic_no=" + this.demographicNo + "&efmprovider_no=" + this.providerNo);
 		if (this.parentAjaxId != null) action.append("&parentAjaxId=" + this.parentAjaxId);
 
 		action.append("\"");
@@ -178,10 +178,10 @@ public class EForm extends EFormBase {
 	// ------------------Saving the Form (inserting value= statements)---------------------
 	public void setValues(ArrayList names, ArrayList values) {
 		if (names.size() != values.size()) return;
-		StringBuffer html = new StringBuffer(this.formHtml);
+		StringBuilder html = new StringBuilder(this.formHtml);
 		int pointer = 0;
 		int nameEnd;
-		while ((pointer = StringBufferUtils.indexOfIgnoreCase(html, "name=", pointer)) >= 0) {
+		while ((pointer = StringBuilderUtils.indexOfIgnoreCase(html, "name=", pointer)) >= 0) {
 			nameEnd = nextSpot(html, pointer);
 			if (nameEnd < 0) continue;
 			pointer += 5;
@@ -200,7 +200,7 @@ public class EForm extends EFormBase {
 
 	// --------------------------Setting APs utilities----------------------------------------
 	public void setDatabaseAPs() {
-		StringBuffer html = new StringBuffer(this.formHtml);
+		StringBuilder html = new StringBuilder(this.formHtml);
 		String marker = EFormLoader.getInstance().getMarker(); // default: marker: "oscarDB="
 		if (demographicNo == null) demographicNo = "";
 		if (providerNo == null) providerNo = "";
@@ -363,7 +363,7 @@ public class EForm extends EFormBase {
 	}
 
 	// ----------------------------------private
-	private StringBuffer putValue(String value, int pointer, StringBuffer html) {
+	private StringBuilder putValue(String value, int pointer, StringBuilder html) {
 		// inserts value= into tag or textarea
 		pointer -= 2; // take it back to name^="
 		String tagType = getFieldType(html, pointer);
@@ -380,7 +380,7 @@ public class EForm extends EFormBase {
 		} else if (tagType.equals("checkbox")) {
 			html.insert(pointer, " checked");
 		} else if (tagType.equals("select")) {
-			int endindex = StringBufferUtils.indexOfIgnoreCase(html, "</select>", pointer);
+			int endindex = StringBuilderUtils.indexOfIgnoreCase(html, "</select>", pointer);
 			if (endindex < 0) return html; // if closing tag not found
 			int valueLoc = nextIndex(html, " value=" + value, " value=\"" + value, pointer);
 			if (valueLoc < 0 || valueLoc > endindex) {
@@ -404,7 +404,7 @@ public class EForm extends EFormBase {
 		return html;
 	}
 
-	private int nextIndex(StringBuffer text, String option1, String option2, int pointer) {
+	private int nextIndex(StringBuilder text, String option1, String option2, int pointer) {
 		// returns the index of option1 or option2 whichever one is closer and exists
 		int index;
 		int option1i = text.indexOf(option1, pointer);
@@ -415,7 +415,7 @@ public class EForm extends EFormBase {
 		return index;
 	}
 
-	private int nextSpot(StringBuffer text, int pointer) {
+	private int nextSpot(StringBuilder text, int pointer) {
 		int end = nextIndex(text, "\n", "\r", pointer);
 		if (end < 0) end = text.length();
 		int index = text.substring(pointer, end).indexOf('=') + pointer;
@@ -433,7 +433,7 @@ public class EForm extends EFormBase {
 		return nextIndex(text, " ", ">", pointer);
 	}
 
-	private String getFieldType(StringBuffer html, int pointer) {
+	private String getFieldType(StringBuilder html, int pointer) {
 		// pointer can be any place in the tag - isolates tag and sends back field type
 		int open = html.substring(0, pointer).lastIndexOf("<");
 		int close = html.substring(pointer).indexOf(">") + pointer + 1;
@@ -463,7 +463,7 @@ public class EForm extends EFormBase {
 		return "";
 	}
 
-	private StringBuffer putValue(DatabaseAP ap, String type, int pointer, StringBuffer html) {
+	private StringBuilder putValue(DatabaseAP ap, String type, int pointer, StringBuilder html) {
 		// pointer set up to where to write the value
 		String sql = ap.getApSQL();
 		String output = ap.getApOutput();
@@ -486,7 +486,7 @@ public class EForm extends EFormBase {
 			pointer = html.indexOf(">", pointer) + 1;
 			html.insert(pointer, output);
 		} else if (type.equals("select")) {
-			int selectEnd = StringBufferUtils.indexOfIgnoreCase(html, "</select>", pointer);
+			int selectEnd = StringBuilderUtils.indexOfIgnoreCase(html, "</select>", pointer);
 			if (selectEnd >= 0) {
 				int valueLoc = nextIndex(html, " value=" + output, " value=\"" + output, pointer);
 				if (valueLoc < 0 || valueLoc > selectEnd) {
@@ -544,13 +544,13 @@ public class EForm extends EFormBase {
 		return value == null ? "" : value;
 	}
 
-	private int getFieldIndex(StringBuffer html, int from) {
+	private int getFieldIndex(StringBuilder html, int from) {
 		if (html == null) return -1;
 
 		Integer[] index = new Integer[3];
-		index[0] = StringBufferUtils.indexOfIgnoreCase(html, "<input", from);
-		index[1] = StringBufferUtils.indexOfIgnoreCase(html, "<select", from);
-		index[2] = StringBufferUtils.indexOfIgnoreCase(html, "<textarea", from);
+		index[0] = StringBuilderUtils.indexOfIgnoreCase(html, "<input", from);
+		index[1] = StringBuilderUtils.indexOfIgnoreCase(html, "<select", from);
+		index[2] = StringBuilderUtils.indexOfIgnoreCase(html, "<textarea", from);
 
 		ArrayList<Integer> list = new ArrayList<Integer>();
 		for (int i = 0; i < index.length; i++)
@@ -564,11 +564,11 @@ public class EForm extends EFormBase {
 	}
 
 	private String getFieldHeader(String html, int fieldIndex) {
-		StringBuffer sb_html = new StringBuffer(html);
+		StringBuilder sb_html = new StringBuilder(html);
 		return getFieldHeader(sb_html, fieldIndex);
 	}
 
-	private String getFieldHeader(StringBuffer html, int fieldIndex) {
+	private String getFieldHeader(StringBuilder html, int fieldIndex) {
 		if (html == null || fieldIndex < 0) return "";
 		if (html.charAt(fieldIndex) != '<') return ""; // field header must be "<...>"
 
@@ -587,7 +587,7 @@ public class EForm extends EFormBase {
 		return html.substring(fieldIndex, end);
 	}
 
-	private void saveFieldValue(StringBuffer html, int fieldIndex) {
+	private void saveFieldValue(StringBuilder html, int fieldIndex) {
 		String header = getFieldHeader(html, fieldIndex);
 		if (blank(header)) return;
 

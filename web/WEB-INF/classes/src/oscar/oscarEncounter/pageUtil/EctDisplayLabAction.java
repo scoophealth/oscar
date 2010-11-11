@@ -76,13 +76,13 @@ public class EctDisplayLabAction extends EctDisplayAction {
         LabResultData result;
         String labDisplayName;
         //String bgcolour = "FFFFCC";
-        StringBuffer func; 
+        StringBuilder func; 
         int hash;
         for( int idx = 0; idx < labs.size(); ++idx ) {
             result = (LabResultData) labs.get(idx);
             Date date = result.getDateObj();
             String formattedDate = DateUtils.getDate(date,dateFormat,request.getLocale());               
-            func = new StringBuffer("popupPage(700,960,'");
+            func = new StringBuilder("popupPage(700,960,'");
             
             if ( result.isMDS() ){ 
                 labDisplayName = result.getDiscipline();               

@@ -81,7 +81,7 @@ public class TeleplanSubmission {
 
     
     public String toString(){
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("msp file content\n");
         sb.append(this.getMspFile());
         sb.append("\n");

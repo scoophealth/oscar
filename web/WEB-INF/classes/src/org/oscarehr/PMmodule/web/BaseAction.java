@@ -170,7 +170,7 @@ public abstract class BaseAction extends DispatchAction {
 		return attribute;
 	}
 	
-	protected ActionForward createRedirectForward(ActionMapping mapping, String forwardName, StringBuilder parameters) {
+	protected ActionForward createRedirectForward(ActionMapping mapping, String forwardName, StringBuffer parameters) {
 		ActionForward forward = mapping.findForward(forwardName);
 		StringBuilder path = new StringBuilder(forward.getPath());
 		path.append(parameters);
@@ -250,9 +250,9 @@ public abstract class BaseAction extends DispatchAction {
 	}
 	
 	protected ActionForward createRedirectForward(ActionMapping mapping,
-			String forwardName, StringBuffer parameters) {
+			String forwardName, StringBuilder parameters) {
 		ActionForward forward = mapping.findForward(forwardName);
-		StringBuffer path = new StringBuffer(forward.getPath());
+		StringBuilder path = new StringBuilder(forward.getPath());
 		path.append(parameters);
 
 		return new RedirectingActionForward(path.toString());

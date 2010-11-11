@@ -93,7 +93,7 @@ public class LoginCheckLoginBean {
                 }
         }
         
-        StringBuffer sbTemp = new StringBuffer();
+        StringBuilder sbTemp = new StringBuilder();
         byte[] btTypeInPasswd = md.digest(password.getBytes());
         for (int i = 0; i < btTypeInPasswd.length; i++)
             sbTemp = sbTemp.append(btTypeInPasswd[i]);
@@ -101,7 +101,7 @@ public class LoginCheckLoginBean {
 
         userpassword = secBean.getPassword();
         if (userpassword.length() < 20) {
-            sbTemp = new StringBuffer();
+            sbTemp = new StringBuilder();
             byte[] btDBPasswd = md.digest(userpassword.getBytes());
             for (int i = 0; i < btDBPasswd.length; i++)
                 sbTemp = sbTemp.append(btDBPasswd[i]);
