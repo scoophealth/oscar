@@ -112,7 +112,7 @@ import git into gerrit
 ----------------------
 - gerrit.sh stop
 - cd /var/gerrit/review_site/git
-- cp /tmp/test2/.git test2.git
+- cp -r /tmp/test2/.git test2.git
 - cp test.git/config test2.git/config
 - in mysql : insert into projects (use_contributor_agreements,submit_type,name) values ('N','M','test2');
 - gerrit.sh start
