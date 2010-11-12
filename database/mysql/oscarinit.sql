@@ -8045,6 +8045,7 @@ CREATE TABLE demographicArchive (
   hin varchar(20),
   ver char(3),
   roster_status varchar(20),
+  roster_date date,
   patient_status varchar(20),
   date_joined date,
   chart_no varchar(10),
