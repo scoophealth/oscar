@@ -77,6 +77,7 @@ public class Demographic implements Serializable {
 	private String email;
 	private String yearOfBirth;
 	private Date effDate;
+        private Date rosterDate;
 	private String links;
 	private DemographicExt[] extras;
 
@@ -93,6 +94,20 @@ public class Demographic implements Serializable {
 
 	private int activeCount = 0;
 	private int hsAlertCount = 0;
+
+    /**
+     * @return the rosterDate
+     */
+    public Date getRosterDate() {
+        return rosterDate;
+    }
+
+    /**
+     * @param rosterDate the rosterDate to set
+     */
+    public void setRosterDate(Date rosterDate) {
+        this.rosterDate = rosterDate;
+    }
 
 	public enum PatientStatus {
 		AC, IN, DE, IC, ID, MO, FI
@@ -763,6 +778,22 @@ public class Demographic implements Serializable {
 		return Utility.calcAgeAtDate(Utility.calcDate(Utility.convertToReplaceStrIfEmptyStr(getYearOfBirth(), DEFAULT_YEAR), Utility.convertToReplaceStrIfEmptyStr(getMonthOfBirth(), DEFAULT_MONTH), Utility.convertToReplaceStrIfEmptyStr(getDateOfBirth(), DEFAULT_DATE)), asofDate);
 	}
 
+
+        //NEED TO IMPLEMENT
+
+//            public long getAgeInDays(){
+//           return UtilDateUtilities.getNumDays(UtilDateUtilities.calcDate(year_of_birth,month_of_birth,date_of_birth),Calendar.getInstance().getTime());
+//        }
+//
+//
+//        public int getAgeInMonths(){
+//           return UtilDateUtilities.getNumMonths(UtilDateUtilities.calcDate(year_of_birth,month_of_birth,date_of_birth),Calendar.getInstance().getTime());
+//        }
+//
+//        public int getAgeInMonthsAsOf(Date asofDate){
+//           return UtilDateUtilities.getNumMonths(UtilDateUtilities.calcDate(year_of_birth,month_of_birth,date_of_birth),asofDate);
+//        }
+
 	public int getAgeInYears() {
 		return Utility.getNumYears(Utility.calcDate(Utility.convertToReplaceStrIfEmptyStr(getYearOfBirth(), DEFAULT_YEAR), Utility.convertToReplaceStrIfEmptyStr(getMonthOfBirth(), DEFAULT_MONTH), Utility.convertToReplaceStrIfEmptyStr(getDateOfBirth(), DEFAULT_DATE)), Calendar.getInstance().getTime());
 	}
@@ -793,6 +824,14 @@ public class Demographic implements Serializable {
 		}
 
 	}
+
+//      Implement?
+//      public String getDob() {
+//           return addZero(year_of_birth,4)+addZero(month_of_birth,2)+addZero(date_of_birth,2);
+//      }
+//      public String getDob(String seperator){
+//	   return this.getYearOfBirth() + seperator + this.getMonthOfBirth() + seperator + this.getDateOfBirth();
+//	}
 
 	public String getFormattedLinks() {
 		StringBuilder response = new StringBuilder();
