@@ -1094,7 +1094,7 @@ if (iviewTag!=null && !"".equalsIgnoreCase(iviewTag.trim())){
                                                     </li><li>
                                                         <span class="label"><bean:message
                                                             key="demographic.demographiceditdemographic.DateJoined" />:</span>
-                                                        <span class="info"><%=MyDateFormat.getMyStandardDate(apptMainBean.getString(rs,"hc_renew_date"))%></span>
+                                                        <span class="info"><%=MyDateFormat.getMyStandardDate(apptMainBean.getString(rs,"roster_date"))%></span>
 							</li>
                                                     <li><span class="label"><bean:message
 								key="demographic.demographiceditdemographic.formPatientStatus" />:</span>
@@ -1963,9 +1963,28 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 								<td align="right" nowrap><b><bean:message
 									key="demographic.demographiceditdemographic.DateJoined" />: </b></td>
 								<td align="left">
-                                <input disabled="disabled" type="text" name="" size="4" maxlength="4" value="">
-                                <input disabled="disabled" type="text" name="" size="2" maxlength="2" value="">
-                                <input disabled="disabled" type="text" name="" size="2" maxlength="2" value="">
+                                                                    <%
+                                                             // Put 0 on the left on dates
+                                                             // Year
+                                                             decF.applyPattern("0000");
+
+                                                             GregorianCalendar rosterDateCal=new GregorianCalendar();
+                                                             String rosterDateYear="";
+                                                             String rosterDateMonth="";
+                                                             String rosterDateDay="";
+                                                             if (demographic.getRosterDate()!=null){
+                                                                rosterDateCal.setTime(demographic.getRosterDate());
+                                                                rosterDateYear = decF.format(rosterDateCal.get(GregorianCalendar.YEAR));
+                                                                // Month and Day
+                                                                decF.applyPattern("00");
+                                                                rosterDateMonth = decF.format(rosterDateCal.get(GregorianCalendar.MONTH)+1);
+                                                                rosterDateDay   = decF.format(rosterDateCal.get(GregorianCalendar.DAY_OF_MONTH));
+                                                             }
+                                                                    %>
+
+                                                                    <input  type="text" name="roster_date_year" size="4" maxlength="4" value="<%=rosterDateYear%>">
+                                                                    <input  type="text" name="roster_date_month" size="2" maxlength="2" value="<%=rosterDateMonth%>">
+                                                                    <input  type="text" name="roster_date_day" size="2" maxlength="2" value="<%=rosterDateDay%>">
 								</td>
 							</tr>
 							<tr valign="top">

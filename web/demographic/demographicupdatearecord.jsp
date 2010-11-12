@@ -92,7 +92,7 @@
 	  param[28]=request.getParameter("spoken_lang");
           param[29]=(String)session.getAttribute("user");
 	
-		java.sql.Date [] dtparam = new java.sql.Date[4];
+		java.sql.Date [] dtparam = new java.sql.Date[5];
 
 		String yearTmp=StringUtils.trimToNull(request.getParameter("date_joined_year"));
 		String monthTmp=StringUtils.trimToNull(request.getParameter("date_joined_month"));
@@ -141,7 +141,20 @@
 		{
 			dtparam[3]=null;
 		}
-          
+
+                yearTmp=StringUtils.trimToNull(request.getParameter("roster_date_year"));
+		monthTmp=StringUtils.trimToNull(request.getParameter("roster_date_month"));
+		dayTmp=StringUtils.trimToNull(request.getParameter("roster_date_day"));
+
+		if( yearTmp != null && monthTmp!=null && dayTmp!=null )
+		{
+			dtparam[4]=MyDateFormat.getSysDate(yearTmp+'-'+monthTmp+'-'+dayTmp);
+		}
+		else
+		{
+			dtparam[4]=null;
+		}
+         
           
 	  int []intparam=new int[] {Integer.parseInt(request.getParameter("demographic_no"))};
      
