@@ -100,6 +100,9 @@ if(listRxDrugs!=null){
                     String prnStr="";
                     if(prn)
                         prnStr="prn";
+                drugName=drugName.replace("'", "\\'");
+                drugName=drugName.replace("\"","\\\"");
+
 %>
 
 <fieldset style="margin-top:2px;width:580px;" id="set_<%=rand%>">
@@ -195,7 +198,6 @@ if(listRxDrugs!=null){
                     showHideSpecInst('siAutoComplete_'+id);
             }
             showHideSpecInst=function showHideSpecInst(elementId){
-                oscarLog("in show hide spec inst="+elementId);
               if($(elementId).getStyle('display')=='none'){
                   Effect.BlindDown(elementId);
               }else{
