@@ -1012,31 +1012,43 @@ if (iviewTag!=null && !"".equalsIgnoreCase(iviewTag.trim())){
 						<div class="leftSection">
 						<div class="demographicSection" id="demographic">
 						<h3>&nbsp;<bean:message key="demographic.demographiceditdemographic.msgDemographic"/></h3>
-						<div style="background-color: #EEEEFF;">
 						<ul>
-							<li><bean:message
-								key="demographic.demographiceditdemographic.formLastName" />: <b><%=apptMainBean.getString(rs,"last_name")%></b>
+                                                    <li><span class="label"><bean:message
+                                                            key="demographic.demographiceditdemographic.formLastName" />:</span>
+                                                        <span class="info"><%=apptMainBean.getString(rs,"last_name")%></span>
+                                                    </li>
+                                                    <li><span class="label">
 							<bean:message
-								key="demographic.demographiceditdemographic.formFirstName" />: <b>
-							<%=apptMainBean.getString(rs,"first_name")%></b></li>
-							<li><bean:message key="demographic.demographiceditdemographic.msgDemoTitle"/>:<b><%=apptMainBean.getString(rs,"title")%></b> &nbsp;
-							    <bean:message key="demographic.demographiceditdemographic.formSex" />:<b><%=apptMainBean.getString(rs,"sex")%></b>
+                                                                key="demographic.demographiceditdemographic.formFirstName" />:</span>
+                                                        <span class="info"><%=apptMainBean.getString(rs,"first_name")%></span>
 							</li>
-							<li><bean:message key="demographic.demographiceditdemographic.msgDemoAge"/>:<b><%=age%></b> &nbsp; <bean:message
-								key="demographic.demographiceditdemographic.formDOB" />:<b>(<%=apptMainBean.getString(rs,"year_of_birth")%>-<%=apptMainBean.getString(rs,"month_of_birth")%>-<%=apptMainBean.getString(rs,"date_of_birth")%>)</b>
+                                                    <li><span class="label"><bean:message key="demographic.demographiceditdemographic.msgDemoTitle"/>:</span>
+                                                        <span class="info"><%=apptMainBean.getString(rs,"title")%></span>
 							</li>
-							<li><bean:message key="demographic.demographiceditdemographic.msgDemoLanguage"/>: <b><%= apptMainBean.getString(rs,"official_lang")%></b>
+                                                    <li><span class="label"><bean:message key="demographic.demographiceditdemographic.formSex" />:</span>
+                                                        <span class="info"><%=apptMainBean.getString(rs,"sex")%></span>
+                                                    </li>
+                                                    <li><span class="label"><bean:message key="demographic.demographiceditdemographic.msgDemoAge"/>:</span>
+                                                        <span class="info"><%=age%>&nbsp;(<bean:message
+                                                            key="demographic.demographiceditdemographic.formDOB" />: <%=apptMainBean.getString(rs,"year_of_birth")%>-<%=apptMainBean.getString(rs,"month_of_birth")%>-<%=apptMainBean.getString(rs,"date_of_birth")%>)
+                                                        </span>
+                                                    </li>
+                                                    <li><span class="label"><bean:message key="demographic.demographiceditdemographic.msgDemoLanguage"/>:</span>
+                                                        <span class="info"><%= apptMainBean.getString(rs,"official_lang")%></span>
+                                                    </li>
 						<% if (apptMainBean.getString(rs,"country_of_origin") != null &&  !apptMainBean.getString(rs,"country_of_origin").equals("") && !apptMainBean.getString(rs,"country_of_origin").equals("-1")){
                                                         CountryCode countryCode = ccDAO.getCountryCode(apptMainBean.getString(rs,"country_of_origin"));
                                                         if  (countryCode != null){
                                                     %>
-							<bean:message key="demographic.demographiceditdemographic.msgCountryOfOrigin"/>: <b><%=countryCode.getCountryName() %></b> <%      }
+                                                <li><span class="label"><bean:message key="demographic.demographiceditdemographic.msgCountryOfOrigin"/>:</span>
+                                                    <span class="info"><%=countryCode.getCountryName() %></span>
+                                                </li><%      }
                                                     }
                                                 %>
-							</li>
 						<% String sp_lang = apptMainBean.getString(rs,"spoken_lang");
 						   if (sp_lang!=null && sp_lang.length()>0) { %>
-							<li><bean:message key="demographic.demographiceditdemographic.msgSpokenLang"/>: <b><%=sp_lang%></b>
+                                               <li><span class="label"><bean:message key="demographic.demographiceditdemographic.msgSpokenLang"/>:</span>
+                                                   <span class="info"><%=sp_lang%></span>
 							</li>
 						<% }
 						  if (oscarProps.getProperty("EXTRA_DEMO_FIELDS") !=null){
@@ -1050,14 +1062,12 @@ if (iviewTag!=null && !"".equalsIgnoreCase(iviewTag.trim())){
 
 						</ul>
 						</div>
-						</div>
 
-						<div class="demographicSection">
+						<div class="demographicSection" id="otherContacts">
 						<h3>&nbsp;<bean:message key="demographic.demographiceditdemographic.msgOtherContacts"/>: <b><a
 							href="javascript: function myFunction() {return false; }"
 							onClick="popup(700,960,'AddAlternateContact.jsp?demo=<%=apptMainBean.getString(rs,"demographic_no")%>','AddRelation')">
 						<bean:message key="demographic.demographiceditdemographic.msgAddRelation"/><!--i18n--></a></b></h3>
-						<div style="background-color: #EEEEFF;">
 						<ul>
 							<%DemographicRelationship demoRelation = new DemographicRelationship();
                                           ArrayList relList = demoRelation.getDemographicRelationshipsWithNamePhone(apptMainBean.getString(rs,"demographic_no"));
@@ -1067,166 +1077,175 @@ if (iviewTag!=null && !"".equalsIgnoreCase(iviewTag.trim())){
                                              String ec = relHash.get("emergencyContact") == null?"":((Boolean) relHash.get("emergencyContact")).booleanValue()?"<span title=\"Emergency Contact\">/EC</span>":"";
 
                                           %>
-							<li><b><%=relHash.get("relation")%><%=sdb%><%=ec%>: </b><%=relHash.get("lastName")%>,
-							<%=relHash.get("firstName")%> ,<%=relHash.get("phone")%></li>
+							<li><span class="label"><%=relHash.get("relation")%><%=sdb%><%=ec%>:</span>
+                                                            <span class="info"><%=relHash.get("lastName")%>, <%=relHash.get("firstName")%>, <%=relHash.get("phone")%></span>
+                                                        </li>
 							<%}%>
 
 						</ul>
 						</div>
-						</div>
 
-						<div class="demographicSection">
+						<div class="demographicSection" id="clinicStatus">
 						<h3>&nbsp;<bean:message key="demographic.demographiceditdemographic.msgClinicStatus"/></h3>
-						<div style="background-color: #EEEEFF;">
 						<ul>
-							<li><bean:message
-								key="demographic.demographiceditdemographic.formRosterStatus" />:
-							<b><%=apptMainBean.getString(rs,"roster_status")%></b> <bean:message
-								key="demographic.demographiceditdemographic.DateJoined" />: <b><%=MyDateFormat.getMyStandardDate(apptMainBean.getString(rs,"hc_renew_date"))%></b>
+                                                    <li><span class="label"><bean:message
+                                                            key="demographic.demographiceditdemographic.formRosterStatus" />:</span>
+                                                        <span class="info"><%=apptMainBean.getString(rs,"roster_status")%></span>
+                                                    </li><li>
+                                                        <span class="label"><bean:message
+                                                            key="demographic.demographiceditdemographic.DateJoined" />:</span>
+                                                        <span class="info"><%=MyDateFormat.getMyStandardDate(apptMainBean.getString(rs,"hc_renew_date"))%></span>
 							</li>
-
-							<li>
+                                                    <li><span class="label"><bean:message
+								key="demographic.demographiceditdemographic.formPatientStatus" />:</span>
+                                                        <span class="info">
 							<%
 String PatStat = rs.getString("patient_status");
 String Dead = "DE";
 String Inactive = "IN";
 
 if ( PatStat.equals(Dead) ) {%>
-							<div style="color: #FF0000;"><bean:message
-								key="demographic.demographiceditdemographic.formPatientStatus" />: <b><%=rs.getString("patient_status")%></b></div>
+							<b style="color: #FF0000;"><%=rs.getString("patient_status")%></b>
 							<%} else if (PatStat.equals(Inactive) ){%>
-							<div style="color: #0000FF;"><bean:message
-								key="demographic.demographiceditdemographic.formPatientStatus" />: <b><%=rs.getString("patient_status")%></b></div>
-							<%} else {%> <bean:message
-								key="demographic.demographiceditdemographic.formPatientStatus" />: <b><%=rs.getString("patient_status")%></b>
+							<b style="color: #0000FF;"><%=rs.getString("patient_status")%></b>
+							<%} else {%>
+                                                            <%=rs.getString("patient_status")%>
 							<%}%>
-
+                                                        </span>
 							</li>
-							<li><bean:message
-								key="demographic.demographiceditdemographic.formChartNo" />: <b><%=apptMainBean.getString(rs,"chart_no")%></b>
+                                                    <li><span class="label"><bean:message
+                                                            key="demographic.demographiceditdemographic.formChartNo" />:</span>
+                                                        <span class="info"><%=apptMainBean.getString(rs,"chart_no")%></span>
 							</li>
 							<% if (oscarProps.isPropertyActive("meditech_id")) { %>
-							<li>Meditech ID: <b><%=OtherIdManager.getDemoOtherId(demographic_no, "meditech_id")%></b>
+                                                    <li><span class="label">Meditech ID:</span>
+                                                        <span class="info"><%=OtherIdManager.getDemoOtherId(demographic_no, "meditech_id")%></span>
 							</li>
 <% } %>
-							<li><bean:message
-								key="demographic.demographiceditdemographic.cytolNum" />: <b>
-							<%=apptMainBean.getString(demoExt.get("cytolNum"))%></b></li>
-							<li><bean:message
-								key="demographic.demographiceditdemographic.formDateJoined1" />:
-							<b><%=MyDateFormat.getMyStandardDate(apptMainBean.getString(rs,"date_joined"))%></b>
-							<bean:message
-								key="demographic.demographiceditdemographic.formEndDate" />: <b><%=MyDateFormat.getMyStandardDate(apptMainBean.getString(rs,"end_date"))%></b>
+                                                    <li><span class="label"><bean:message
+                                                            key="demographic.demographiceditdemographic.cytolNum" />:</span>
+                                                        <span class="info"><%=apptMainBean.getString(demoExt.get("cytolNum"))%></span></li>
+                                                    <li><span class="label"><bean:message
+                                                            key="demographic.demographiceditdemographic.formDateJoined1" />:</span>
+							<span class="info"><%=MyDateFormat.getMyStandardDate(apptMainBean.getString(rs,"date_joined"))%></span>
+                                                    </li><li>
+                                                        <span class="label"><bean:message
+                                                            key="demographic.demographiceditdemographic.formEndDate" />:</span>
+                                                        <span class="info"><%=MyDateFormat.getMyStandardDate(apptMainBean.getString(rs,"end_date"))%></span>
 							</li>
 						</ul>
 						</div>
-						</div>
 
-						<div class="demographicSection">
+						<div class="demographicSection" id="alert">
 						<h3>&nbsp;<bean:message
 							key="demographic.demographiceditdemographic.formAlert" /></h3>
-						<div style="background-color: #EEEEFF; color: red;"><%=alert%>
-						&nbsp;</div>
+                                                <ul><li><b style="color: brown;"><%=alert%></b></li></ul>
+						&nbsp;
 						</div>
 
 						</div>
-						<div style="width: 49%; float: left; margin-left: 5px;">
-						<div class="demographicSection" style="margin-top: 2px;">
+						<div class="rightSection">
+						<div class="demographicSection" id="contactInformation">
 						<h3>&nbsp;<bean:message key="demographic.demographiceditdemographic.msgContactInfo"/></h3>
-						<div style="background-color: #EEEEFF;">
 						<ul>
-							<li><bean:message
-								key="demographic.demographiceditdemographic.formPhoneH" />:<b><%=apptMainBean.getString(rs,"phone")%>
-							<%=apptMainBean.getString(demoExt.get("hPhoneExt"))%></b> <bean:message
-								key="demographic.demographiceditdemographic.formPhoneW" />:<b>
-							<%=apptMainBean.getString(rs,"phone2")%> <%=apptMainBean.getString(demoExt.get("wPhoneExt"))%></b>
-
-
+                                                    <li><span class="label"><bean:message
+                                                            key="demographic.demographiceditdemographic.formPhoneH" />:</span>
+                                                        <span class="info"><%=apptMainBean.getString(rs,"phone")%> <%=apptMainBean.getString(demoExt.get("hPhoneExt"))%></span>
 							</li>
-							<li><bean:message
-								key="demographic.demographiceditdemographic.formPhoneC" />:<b>
-							<%=apptMainBean.getString(demoExt.get("demo_cell"))%></b></li>
-							<li><bean:message
-								key="demographic.demographiceditdemographic.formAddr" />: <b><%=apptMainBean.getString(rs,"address")%></b>
+                                                    <li><span class="label"><bean:message
+                                                            key="demographic.demographiceditdemographic.formPhoneW" />:</span>
+                                                        <span class="info"><%=apptMainBean.getString(rs,"phone2")%> <%=apptMainBean.getString(demoExt.get("wPhoneExt"))%></span>
 							</li>
-							<li><bean:message
-								key="demographic.demographiceditdemographic.formCity" />: <b><%=apptMainBean.getString(rs,"city")%></b>
+                                                    <li><span class="label"><bean:message
+                                                            key="demographic.demographiceditdemographic.formPhoneC" />:</span>
+                                                        <span class="info"><%=apptMainBean.getString(demoExt.get("demo_cell"))%></span></li>
+                                                    <li><span class="label"><bean:message
+                                                            key="demographic.demographiceditdemographic.formAddr" />:</span>
+                                                        <span class="info"><%=apptMainBean.getString(rs,"address")%></span>
 							</li>
-							<li>
+                                                    <li><span class="label"><bean:message
+                                                            key="demographic.demographiceditdemographic.formCity" />:</span>
+                                                        <span class="info"><%=apptMainBean.getString(rs,"city")%></span>
+                                                    </li>
+                                                    <li><span class="label">
 							<% if(oscarProps.getProperty("demographicLabelProvince") == null) { %>
 							<bean:message
 								key="demographic.demographiceditdemographic.formProcvince" /> <% } else {
 			                                  out.print(oscarProps.getProperty("demographicLabelProvince"));
-										   } %> : <b> <%=apptMainBean.getString(rs,"province")%></b></li>
-							<li>
+                                                                               } %>:</span>
+                                                        <span class="info"><%=apptMainBean.getString(rs,"province")%></span></li>
+                                                    <li><span class="label">
 							<% if(oscarProps.getProperty("demographicLabelPostal") == null) { %>
 							<bean:message
 								key="demographic.demographiceditdemographic.formPostal" /> <% } else {
 			                                  out.print(oscarProps.getProperty("demographicLabelPostal"));
-										   } %> : <b> <%=apptMainBean.getString(rs,"postal")%></b></li>
+                                                                               } %>:</span>
+                                                       <span class="info"><%=apptMainBean.getString(rs,"postal")%></span></li>
 
-							<li><bean:message
-								key="demographic.demographiceditdemographic.formEmail" />: <b>
-							<%=apptMainBean.getString(rs,"email")!=null? apptMainBean.getString(rs,"email") : ""%></b>
+                                                    <li><span class="label"><bean:message
+                                                            key="demographic.demographiceditdemographic.formEmail" />:</span>
+                                                        <span class="info"><%=apptMainBean.getString(rs,"email")!=null? apptMainBean.getString(rs,"email") : ""%></span>
 							</li>
-							<li><bean:message
-								key="demographic.demographiceditdemographic.formNewsLetter" />:
-							<b> <%=apptMainBean.getString(rs,"newsletter")!=null? apptMainBean.getString(rs,"newsletter") : "Unknown"%></b>
+                                                    <li><span class="label"><bean:message
+                                                            key="demographic.demographiceditdemographic.formNewsLetter" />:</span>
+                                                        <span class="info"><%=apptMainBean.getString(rs,"newsletter")!=null? apptMainBean.getString(rs,"newsletter") : "Unknown"%></span>
 							</li>
 						</ul>
 						</div>
-						</div>
 
-						<div class="demographicSection">
+						<div class="demographicSection" id="healthInsurance">
 						<h3>&nbsp;<bean:message key="demographic.demographiceditdemographic.msgHealthIns"/></h3>
-						<div style="background-color: #EEEEFF;">
 						<ul>
-							<li><bean:message
-								key="demographic.demographiceditdemographic.formHin" />: <b><%=apptMainBean.getString(rs,"hin")%>
-							&nbsp; <%=apptMainBean.getString(rs,"ver")%></b> <bean:message
-								key="demographic.demographiceditdemographic.formHCType" />:<b><%=apptMainBean.getString(rs,"hc_type")==null?"":apptMainBean.getString(rs,"hc_type") %></b>
+                                                    <li><span class="label"><bean:message
+								key="demographic.demographiceditdemographic.formHin" />:</span>
+                                                                <span class="info"><%=apptMainBean.getString(rs,"hin")%>
+							&nbsp; <%=apptMainBean.getString(rs,"ver")%></span>
 							</li>
-							<li><bean:message
-								key="demographic.demographiceditdemographic.formEFFDate" />:<b><%=MyDateFormat.getMyStandardDate(apptMainBean.getString(rs,"eff_date"))%></b>
+                                                    <li><span class="label"><bean:message
+								key="demographic.demographiceditdemographic.formHCType" />:</span>
+                                                        <span class="info"><%=apptMainBean.getString(rs,"hc_type")==null?"":apptMainBean.getString(rs,"hc_type") %></span>
 							</li>
+                                                    <li><span class="label"><bean:message
+                                                            key="demographic.demographiceditdemographic.formEFFDate" />:</span>
+                                                        <span class="info"><%=MyDateFormat.getMyStandardDate(apptMainBean.getString(rs,"eff_date"))%></span>
+                                                    </li>
 						</ul>
 						</div>
-						</div>
 
-						<div class="demographicSection">
+						<div class="demographicSection" id="patientClinicStatus">
 						<h3>&nbsp;<bean:message key="demographic.demographiceditdemographic.msgPatientClinicStatus"/></h3>
-						<div style="background-color: #EEEEFF;">
 						<ul>
-							<li>
+                                                    <li><span class="label">
 							<% if(oscarProps.getProperty("demographicLabelDoctor") != null) { out.print(oscarProps.getProperty("demographicLabelDoctor","")); } else { %>
 							<bean:message
 								key="demographic.demographiceditdemographic.formDoctor" />
-							<% } %>: <b><%=providerBean.getProperty(apptMainBean.getString(rs,"provider_no"),"")%></b>
+                                                    <% } %>:</span><span class="info"><%=providerBean.getProperty(apptMainBean.getString(rs,"provider_no"),"")%></span>
 							</li>
-							<li><bean:message
-								key="demographic.demographiceditdemographic.formNurse" />: <b><%=providerBean.getProperty(resident,"")%></b>
+                                                    <li><span class="label"><bean:message
+                                                            key="demographic.demographiceditdemographic.formNurse" />:</span><span class="info"><%=providerBean.getProperty(resident,"")%></span>
 							</li>
-							<li><bean:message
-								key="demographic.demographiceditdemographic.formMidwife" />: <b><%=providerBean.getProperty(midwife,"")%></b>
+                                                    <li><span class="label"><bean:message
+                                                            key="demographic.demographiceditdemographic.formMidwife" />:</span><span class="info"><%=providerBean.getProperty(midwife,"")%></span>
 							</li>
-							<li><bean:message
-								key="demographic.demographiceditdemographic.formResident" />:<b>
-							<%=providerBean.getProperty(nurse,"")%></b></li>
-							<li><bean:message
-								key="demographic.demographiceditdemographic.formRefDoc" />: <b><%=rd%></b>
+                                                    <li><span class="label"><bean:message
+                                                            key="demographic.demographiceditdemographic.formResident" />:</span>
+                                                        <span class="info"><%=providerBean.getProperty(nurse,"")%></span></li>
+                                                    <li><span class="label"><bean:message
+                                                            key="demographic.demographiceditdemographic.formRefDoc" />:</span><span class="info"><%=rd%></span>
 							</li>
-							<li><bean:message
-								key="demographic.demographiceditdemographic.formRefDocNo" />: <b><%=rdohip%></b>
+                                                    <li><span class="label"><bean:message
+                                                            key="demographic.demographiceditdemographic.formRefDocNo" />:</span><span class="info"><%=rdohip%></span>
 							</li>
 						</ul>
 						</div>
-						</div>
 
 
-						<div class="demographicSection">
+						<div class="demographicSection" id="notes">
 						<h3>&nbsp;<bean:message
 							key="demographic.demographiceditdemographic.formNotes" /></h3>
-						<div style="background-color: #EEEEFF;"><%=notes%> &nbsp;</div>
+						<ul><li>
+                                                    <%=notes%>&nbsp;
+                                                </li></ul>
 						</div>
 						</div>
 						</div>
@@ -1235,12 +1254,10 @@ if ( PatStat.equals(Dead) ) {%>
 if(oscarVariables.getProperty("demographicExt") != null) {
 	String [] propDemoExt = oscarVariables.getProperty("demographicExt","").split("\\|");
 %>
-						<div class="demographicSection">
+						<div class="demographicSection" id="special">
 						<h3>&nbsp;Special</h3>
-						<div style="background-color: #EEEEFF;">
 						<% 	for(int k=0; k<propDemoExt.length; k++) {%> <%=propDemoExt[k]+": <b>" + apptMainBean.getString(demoExt.get(propDemoExt[k].replace(' ', '_'))) +"</b>"%>
 						&nbsp;<%=((k+1)%4==0&&(k+1)<propDemoExt.length)?"<br>":"" %> <% 	} %>
-						</div>
 						</div>
 						<% } %>
 						</div>
@@ -1663,15 +1680,18 @@ if(oscarVariables.getProperty("demographicExt") != null) {
                                  decF.applyPattern("0000");
 
 								 GregorianCalendar hcRenewalCal=new GregorianCalendar();
-
-                                                                 if(demographic != null && demographic.getHcRenewDate() != null){
+								 String renewDateYear="";
+								 String renewDateMonth="";
+								 String renewDateDay="";
+								 if (demographic.getHcRenewDate()!=null)
+								 {
 								    hcRenewalCal.setTime(demographic.getHcRenewDate());
-								 }
-                                 String renewDateYear = decF.format(hcRenewalCal.get(GregorianCalendar.YEAR));
+	                                 renewDateYear = decF.format(hcRenewalCal.get(GregorianCalendar.YEAR));
                                  // Month and Day
                                  decF.applyPattern("00");
-                                 String renewDateMonth = decF.format(hcRenewalCal.get(GregorianCalendar.MONTH)+1);
-                                 String renewDateDay = decF.format(hcRenewalCal.get(GregorianCalendar.DAY_OF_MONTH));
+	                                 renewDateMonth = decF.format(hcRenewalCal.get(GregorianCalendar.MONTH)+1);
+	                                 renewDateDay = decF.format(hcRenewalCal.get(GregorianCalendar.DAY_OF_MONTH));
+								 }
 
                               %> 
 								<input type="text" name="hc_renew_date_year" size="4" maxlength="4" value="<%=renewDateYear%>">
@@ -1897,9 +1917,13 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 </script> <% } else {%> <input type="text" name="r_doctor" size="30" maxlength="40"
 									value="<%=rd%>"> <% } %>
 								</td>
-								<td align="right" nowrap><b><bean:message key="demographic.demographiceditdemographic.formRefDocNo" />: </b></td>
-								<td align="left"><input type="text" name="r_doctor_ohip" size="20" maxlength="6" value="<%=rdohip%>">
-								<a href="javascript:referralScriptAttach2('r_doctor_ohip','r_doctor')"><bean:message key="demographic.demographiceditdemographic.btnSearch"/> #</a>
+								<td align="right" nowrap><b><bean:message
+									key="demographic.demographiceditdemographic.formRefDocNo" />: </b></td>
+								<td align="left"><input type="text" name="r_doctor_ohip"
+									size="20" maxlength="6" value="<%=rdohip%>"> <% if("ON".equals(prov)) { %>
+								<a
+									href="javascript:referralScriptAttach2('r_doctor_ohip','r_doctor')"><bean:message key="demographic.demographiceditdemographic.btnSearch"/>
+								#</a> <% } %>
 								</td>
 							</tr>
 
