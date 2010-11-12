@@ -406,6 +406,7 @@ CREATE TABLE demographic (
   hin varchar(20) default NULL,
   ver char(3) default NULL,
   roster_status varchar(20) default NULL,
+  roster_date date,
   patient_status varchar(20) default NULL,
   date_joined date default NULL,
   chart_no varchar(10) default NULL,
