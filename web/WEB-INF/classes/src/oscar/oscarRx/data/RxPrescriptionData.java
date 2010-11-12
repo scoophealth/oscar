@@ -606,8 +606,7 @@ public class RxPrescriptionData {
             Prescription p;
 
             rs = DBHandler.GetSQL(sql);
-            // java.sql.Connection conn = db.getConnection();
-            // conn.createStatement()
+
 
             while (rs.next()) {
                 p = new Prescription(rs.getInt("drugid"), oscar.Misc.getString(rs, "provider_no"), demographicNo);
