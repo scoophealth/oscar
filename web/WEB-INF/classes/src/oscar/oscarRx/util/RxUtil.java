@@ -1340,13 +1340,13 @@ public class RxUtil {
                 p(rx.getRegionalIdentifier());
                 //query the database to see if there is a rx with same din as this rx.
                 // String sql = "SELECT * FROM drugs WHERE regional_identifier='" + rx.getRegionalIdentifier() + "' order by written_date desc"; //most recent is the first.
-                String sql = "SELECT * FROM drugs WHERE regional_identifier='" + rx.getRegionalIdentifier() + "' and BN='"+rx.getBrandName()+"' AND demographic_no="+rx.getDemographicNo()+" order by drugid desc"; //most recent is the first.
+                String sql = "SELECT * FROM drugs WHERE regional_identifier='" + rx.getRegionalIdentifier() + "' and BN='"+StringEscapeUtils.escapeSql(rx.getBrandName())+"' AND demographic_no="+rx.getDemographicNo()+" order by drugid desc"; //most recent is the first.
                 MiscUtils.getLogger().debug("sql 1="+sql);
                 rs = DBHandler.GetSQL(sql);
                 if (rs.first()) {//use the first result if there are multiple.
                     setResultSpecialQuantityRepeat(rx, rs);
                 } else {
-                    String sql2 = "SELECT * FROM drugs WHERE regional_identifier='" + rx.getRegionalIdentifier() + "' and BN='"+rx.getBrandName()+"' order by drugid desc"; //most recent is the first.
+                    String sql2 = "SELECT * FROM drugs WHERE regional_identifier='" + rx.getRegionalIdentifier() + "' and BN='"+StringEscapeUtils.escapeSql(rx.getBrandName())+"' order by drugid desc"; //most recent is the first.
                     MiscUtils.getLogger().debug("sql 2="+sql2);
                     rs = DBHandler.GetSQL(sql2);
                     if (rs.first()) {//use the first result if there are multiple.
