@@ -25,15 +25,26 @@
 
 package oscar.oscarEncounter.oscarConsultationRequest.pageUtil;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Date;
 import java.util.Vector;
+import java.util.List;
+import java.util.Calendar;
+
+import org.apache.commons.lang.time.DateFormatUtils;
 
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.common.model.ConsultationRequest;
+import org.oscarehr.common.dao.ConsultationRequestDao;
+import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.common.model.Provider;
+import org.oscarehr.common.dao.ProfessionalSpecialistDao;
+import org.oscarehr.common.model.ProfessionalSpecialist;
+import org.oscarehr.common.dao.ConsultationServiceDao;
+import org.oscarehr.common.model.ConsultationServices;
 
-import oscar.oscarDB.DBHandler;
-import oscar.util.UtilDateUtilities;
+import org.oscarehr.util.SpringUtils;
 
 public class EctViewConsultationRequestsUtil {         
    
@@ -54,92 +65,68 @@ public class EctViewConsultationRequestsUtil {
    }  
             
    public boolean estConsultationVecByTeam(String team,boolean showCompleted,Date startDate, Date endDate,String orderby,String desc,String searchDate) {       
-      ids = new Vector();
-      status = new Vector();
-      patient = new Vector();
-      provider = new Vector();
-      service = new Vector();
-      urgency = new Vector();
-      date = new Vector();
-      demographicNo = new Vector();
-      this.patientWillBook = new Vector();
-      apptDate = new Vector();
+      ids = new Vector<String>();
+      status = new Vector<String>();
+      patient = new Vector<String>();
+      provider = new Vector<String>();
+      teams = new Vector<String>();
+      service = new Vector<String>();
+      vSpecialist = new Vector<String>();
+      urgency = new Vector<String>();
+      date = new Vector<String>();
+      demographicNo = new Vector<String>();
+      this.patientWillBook = new Vector<String>();
+      apptDate = new Vector<String>();
+      followUpDate = new Vector<String>();
       boolean verdict = true;
-            
-      StringBuilder sql = new StringBuilder();
-      sql.append(" select demo.demographic_no, cr.status, cr.referalDate, cr.requestId,  cr.patientWillBook, cr.urgency, cr.appointmentDate, cr.appointmentTime, demo.last_name, demo.first_name,  pro.last_name as lName, pro.first_name as fName, ser.serviceDesc ");
-      sql.append("from consultationRequests cr,  demographic demo, provider pro, consultationServices ser ");
-      sql.append("where  demo.demographic_no = cr.demographicNo and pro.provider_no = cr.providerNo and  ser.serviceId = cr.serviceId ");
-            
-      if(!showCompleted){         
-         sql.append("and cr.status != 4 "); //don't show compleded
-      }
-      
-      if(!team.equals("-1")) {
-         sql.append("and sendTo ='" +team+ "' ");
-      }
-      
-      if(startDate != null){
-         if (searchDate != null && searchDate.equals("1")){
-            sql.append("and appointmentDate >= '" +UtilDateUtilities.DateToString(startDate)+ "' ");            
-         }else{
-            sql.append("and referalDate >= '" +UtilDateUtilities.DateToString(startDate)+ "' ");
-         }        
-      }
-      
-      if(endDate != null){
-         if (searchDate != null && searchDate.equals("1")){
-            sql.append("and appointmentDate <= '" +UtilDateUtilities.DateToString(endDate)+ "' ");            
-         }else{
-            sql.append("and referalDate <= '" +UtilDateUtilities.DateToString(endDate)+ "' ");
-         }
-      }
-                  
-      if (orderby == null){
-         sql.append("order by cr.referalDate desc ");            
-      }else if(orderby.equals("1")){               //1 = msgStatus
-         sql.append("order by cr.status ");            
-      }else if(orderby.equals("2")){               //2 = msgPatient
-         sql.append("order by demo.last_name ");  
-      }else if(orderby.equals("3")){               //3 = msgProvider
-         sql.append("order by pro.last_name ");   
-      }else if(orderby.equals("4")){               //4 = msgService
-         sql.append("order by ser.serviceDesc");            
-      }else if(orderby.equals("5")){               //5 = msgRefDate
-         sql.append("order by cr.referalDate");            
-      }else if(orderby.equals("6")){               //6 = Appointment Date
-         sql.append("order by cr.appointmentDate");            
-      }else{
-         sql.append("order by cr.referalDate desc");            
-      }            
-      
-      if (desc != null && desc.equals("1")){
-         sql.append(" desc");            
-      }            
-      
-      if(orderby != null && orderby.equals("2")){  //HACK to make order by "desc" to work on lastname
-         sql.append(" , demo.first_name");
-      }else if( orderby != null && orderby.equals("3")){
-         sql.append(" , pro.first_name");
-      }                        
-                     
+
       try {
-         
-         ResultSet rs= DBHandler.GetSQL(sql.toString());
-         while(rs.next()) {
-            demographicNo.add(oscar.Misc.getString(rs, "demographic_no"));
-            date.add(oscar.Misc.getString(rs, "referalDate"));               
-            ids.add(oscar.Misc.getString(rs, "requestId"));               
-            status.add(oscar.Misc.getString(rs, "status"));
-            patient.add(oscar.Misc.getString(rs, "last_name") +", "+ oscar.Misc.getString(rs, "first_name")) ;
-            provider.add(oscar.Misc.getString(rs, "lName") +", "+ oscar.Misc.getString(rs, "fName"));
-            service.add(oscar.Misc.getString(rs, "serviceDesc"));
-            urgency.add(oscar.Misc.getString(rs, "urgency"));
-            apptDate.add(oscar.Misc.getString(rs, "appointmentDate")+" "+oscar.Misc.getString(rs, "appointmentTime"));
-            this.patientWillBook.add(oscar.Misc.getString(rs, "patientWillBook"));
-         }            
-         rs.close();            
-      } catch(SQLException e) {            
+          ConsultationRequestDao consultReqDao = (ConsultationRequestDao) SpringUtils.getBean("consultationRequestDao");
+          DemographicDao demoDao = (DemographicDao) SpringUtils.getBean("demographicDao");
+          ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
+          ProfessionalSpecialistDao specialistDao = (ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
+          ConsultationServiceDao serviceDao = (ConsultationServiceDao) SpringUtils.getBean("consultationServiceDao");
+          ConsultationRequest consult;
+          Demographic demo;
+          Provider prov;
+          ProfessionalSpecialist specialist;
+          ConsultationServices services;
+          Calendar cal = Calendar.getInstance();
+          Date date1, date2;
+
+          List consultList = consultReqDao.getConsults(team, showCompleted, startDate, endDate, orderby, desc, searchDate);
+          for( int idx = 0; idx < consultList.size(); ++idx ) {
+              consult = (ConsultationRequest)consultList.get(idx);
+              demo = demoDao.getDemographicById(consult.getDemographicId());
+              prov = providerDao.getProvider(demo.getProviderNo());
+              specialist = specialistDao.find(consult.getSpecialistId());
+              services = serviceDao.find(consult.getServiceId());
+
+              demographicNo.add(consult.getDemographicId().toString());
+              date.add(DateFormatUtils.ISO_DATE_FORMAT.format(consult.getReferralDate()));
+              ids.add(consult.getId().toString());
+              status.add(consult.getStatus());
+              patient.add(demo.getFormattedName());
+              provider.add(prov.getFormattedName());
+              service.add(services.getServiceDesc());
+              vSpecialist.add(specialist.getLastName() + ", " + specialist.getFirstName());
+              urgency.add(consult.getUrgency());
+              teams.add(consult.getSendTo());
+              cal.setTime(consult.getAppointmentDate());
+              date1 = cal.getTime();
+              cal.setTime(consult.getAppointmentTime());
+              date2 = cal.getTime();
+              apptDate.add(DateFormatUtils.ISO_DATE_FORMAT.format(date1) + " " +  DateFormatUtils.ISO_TIME_FORMAT.format(date2));
+              patientWillBook.add(""+consult.isPatientWillBook());
+              date1 = consult.getFollowUpDate();
+              if( date1 == null ) {
+                  followUpDate.add("N/A");
+              }
+              else {
+                followUpDate.add(DateFormatUtils.ISO_DATE_FORMAT.format(date1));
+              }
+          }
+      } catch(Exception e) {            
          MiscUtils.getLogger().error("Error", e);            
          verdict = false;            
       }                     
@@ -148,32 +135,48 @@ public class EctViewConsultationRequestsUtil {
    
       
    public boolean estConsultationVecByDemographic(String demoNo) {      
-      ids = new Vector();      
-      status = new Vector();      
-      patient = new Vector();      
-      provider = new Vector();      
-      service = new Vector();      
-      date = new Vector();
-      this.patientWillBook = new Vector();     
-      urgency = new Vector();
-      apptDate = new Vector();
+      ids = new Vector<String>();
+      status = new Vector<String>();
+      patient = new Vector<String>();
+      provider = new Vector<String>();
+      service = new Vector<String>();
+      date = new Vector<String>();
+      this.patientWillBook = new Vector<String>();
+      urgency = new Vector<String>();
+      apptDate = new Vector<String>();
       boolean verdict = true;      
-      try {         
-                  
-         String sql = " select cr.status, cr.referalDate, cr.requestId, cr.patientWillBook, cr.urgency, demo.last_name, demo.first_name,  pro.last_name as lName, pro.first_name as fName, ser.serviceDesc from consultationRequests cr,  demographic demo, provider pro, consultationServices ser where  demo.demographic_no = cr.demographicNo and pro.provider_no = cr.providerNo and  ser.serviceId = cr.serviceId and demographicNo ='"+demoNo+"' order by cr.referalDate ";         
-         ResultSet rs;         
-         for(rs = DBHandler.GetSQL(sql); rs.next(); date.add(oscar.Misc.getString(rs, "referalDate"))){            
-            ids.add(oscar.Misc.getString(rs, "requestId"));            
-            status.add(oscar.Misc.getString(rs, "status"));            
-            patient.add(oscar.Misc.getString(rs, "last_name")+", "+oscar.Misc.getString(rs, "first_name"));            
-            provider.add(oscar.Misc.getString(rs, "lName")+", "+oscar.Misc.getString(rs, "fName"));            
-            service.add(oscar.Misc.getString(rs, "serviceDesc"));
-            urgency.add(oscar.Misc.getString(rs, "urgency"));
-            
-            patientWillBook.add(oscar.Misc.getString(rs, "patientWillBook"));            
-         }                  
-         rs.close();         
-      } catch(SQLException e) {         
+      try {                           
+
+          ConsultationRequestDao consultReqDao = (ConsultationRequestDao) SpringUtils.getBean("consultationRequestDao");
+
+          ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
+          DemographicDao demoDao = (DemographicDao) SpringUtils.getBean("demographicDao");
+          ProfessionalSpecialistDao specialistDao = (ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
+          ConsultationServiceDao serviceDao = (ConsultationServiceDao) SpringUtils.getBean("consultationServiceDao");
+          ConsultationRequest consult;
+          Provider prov;
+          Demographic demo;
+          ProfessionalSpecialist specialist;
+          ConsultationServices services;
+
+          List consultList = consultReqDao.getConsults(demoNo);
+          for( int idx = 0; idx < consultList.size(); ++idx ) {
+              consult = (ConsultationRequest)consultList.get(idx);
+              demo = demoDao.getDemographicById(consult.getDemographicId());
+              prov = providerDao.getProvider(demo.getProviderNo());
+              specialist = specialistDao.find(consult.getSpecialistId());
+              services = serviceDao.find(consult.getServiceId());
+
+              ids.add(consult.getId().toString());
+              status.add(consult.getStatus());
+              patient.add(demo.getFormattedName());
+              provider.add(prov.getFormattedName());
+              service.add(services.getServiceDesc());
+              urgency.add(consult.getUrgency());
+              patientWillBook.add(""+consult.isPatientWillBook());
+              date.add(DateFormatUtils.ISO_DATE_FORMAT.format(consult.getAppointmentDate()));
+          }
+      } catch(Exception e) {         
          MiscUtils.getLogger().error("Error", e);         
          verdict = false;         
       }      
@@ -181,15 +184,18 @@ public class EctViewConsultationRequestsUtil {
    }
    
       
-   public Vector ids;   
-   public Vector status;   
-   public Vector patient;   
-   public Vector provider;   
-   public Vector service;   
-   public Vector date;   
-   public Vector demographicNo;
-   public Vector apptDate;
-   public Vector patientWillBook;
-   public Vector urgency;
+   public Vector<String> ids;
+   public Vector<String> status;
+   public Vector<String> patient;
+   public Vector<String> teams;
+   public Vector<String> provider;
+   public Vector<String> service;
+   public Vector<String> vSpecialist;
+   public Vector<String> date;
+   public Vector<String> demographicNo;
+   public Vector<String> apptDate;
+   public Vector<String> patientWillBook;
+   public Vector<String> urgency;
+   public Vector<String> followUpDate;;
    
 }

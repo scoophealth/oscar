@@ -246,7 +246,11 @@ function setOrder(val){
 				 <th align="left" class="VCRheads" width="10%">
 					<bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgUrgency"/>
                                 </th>
-
+                                <th align="left" class="VCRheads">
+                                   <a href=# onclick="setOrder('3'); return false;">
+                                   Team
+                                   </a>
+                                </th>
                                 <th align="left" class="VCRheads" width="75">
                                    <a href=# onclick="setOrder('2'); return false;">
                                    <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgPatient"/>
@@ -264,16 +268,26 @@ function setOrder(val){
                                 </th>
                                 <th align="left" class="VCRheads">
                                    <a href=# onclick="setOrder('5'); return false;">
-                                   <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgRefDate"/>
+                                   Consultant
                                    </a>
                                 </th>
                                 <th align="left" class="VCRheads">
                                    <a href=# onclick="setOrder('6'); return false;">
+                                   <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgRefDate"/>
+                                   </a>
+                                </th>
+                                <th align="left" class="VCRheads">
+                                   <a href=# onclick="setOrder('7'); return false;">
                                    <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgAppointmentDate"/>
                                    </a>
                                 </th>
+                                <th align="left" class="VCRheads">
+                                   <a href=# onclick="setOrder('8'); return false;">
+                                        Last Followup
+                                   </a>
+                                </th>
                             </tr>
-                        <%                              
+                        <%                                                        
                             oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctViewConsultationRequestsUtil theRequests;                            
                             theRequests = new  oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctViewConsultationRequestsUtil();                            
                             theRequests.estConsultationVecByTeam(team,includeCompleted,startDate,endDate,orderby,desc,searchDate);                                                        
@@ -299,6 +313,9 @@ function setOrder(val){
                             String appt    = (String) theRequests.apptDate.elementAt(i);
                             String patBook = (String) theRequests.patientWillBook.elementAt(i);
                             String urgency = (String) theRequests.urgency.elementAt(i);
+                            String sendTo = theRequests.teams.elementAt(i);
+                            String specialist = theRequests.vSpecialist.elementAt(i);
+                            String followUpDate = theRequests.followUpDate.elementAt(i);
                             
                             if(status.equals("1") && dateGreaterThan(date, Calendar.WEEK_OF_YEAR, -1)){
                                 tickerList.add(demo);
@@ -343,7 +360,7 @@ function setOrder(val){
 				</td>
                                 <td class="stat<%=status%>">
 			            <% if (urgency.equals("1")){ %>
-					<div style="color:red";> Urgent </div>
+					<div style="color:red;"> Urgent </div>
                                     <% }else if(urgency.equals("2")) { %>
 					Non-Urgent
                                     <% }else if(urgency.equals("3")) { %>
@@ -351,6 +368,11 @@ function setOrder(val){
                                     <% } %>
 
 
+                                </td>
+                                <td class="stat<%=status%>">
+                                    <a href="javascript:popupOscarRx(700,960,'<%=serverURL%>/oscarEncounter/ViewRequest.do?requestId=<%=id%>')">
+                                    <%=sendTo.equals("-1")?"N/A":sendTo%>
+                                    </a>
                                 </td>
                                 <td class="stat<%=status%>">
                                     <a href="javascript:popupOscarRx(700,960,'<%=serverURL%>/oscarEncounter/ViewRequest.do?requestId=<%=id%>')">
@@ -367,6 +389,12 @@ function setOrder(val){
 
                                 </td>
                                 <td class="stat<%=status%>">
+                                    <a href="javascript:popupOscarRx(700,960,'<%=serverURL%>/oscarEncounter/ViewRequest.do?requestId=<%=id%>')">
+                                        <%=specialist%>
+                                    </a>
+
+                                </td>
+                                <td class="stat<%=status%>">
                                     <%=date%>
                                 </td>
                                 <td class="stat<%=status%>">
@@ -375,6 +403,12 @@ function setOrder(val){
                                    <%}else{%> 
                                    <%=appt%> 
                                    <%}%>
+                                </td>
+                                <td class="stat<%=status%>">
+                                    <a href="javascript:popupOscarRx(700,960,'<%=serverURL%>/oscarEncounter/ViewRequest.do?requestId=<%=id%>')">
+                                        <%=followUpDate%>
+                                    </a>
+
                                 </td>
                             </tr>
                         <%}%>

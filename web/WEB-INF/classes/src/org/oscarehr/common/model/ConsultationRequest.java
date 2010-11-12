@@ -48,6 +48,7 @@ public class ConsultationRequest extends AbstractModel<Integer> implements Seria
 	private Integer id;
 	
 	@Column(name = "referalDate")
+        @Temporal(TemporalType.DATE)
 	private Date referralDate;
 	
 	private Integer serviceId;
@@ -77,6 +78,9 @@ public class ConsultationRequest extends AbstractModel<Integer> implements Seria
 	private String concurrentProblems;
 	private String urgency;
 	private boolean patientWillBook;
+        
+        @Temporal(TemporalType.DATE)
+        private Date followUpDate;
 	
 	@Override
     public Integer getId() {
@@ -217,5 +221,19 @@ public class ConsultationRequest extends AbstractModel<Integer> implements Seria
 
 	public void setPatientWillBook(boolean patientWillBook) {
     	this.patientWillBook = patientWillBook;
+    }
+
+    /**
+     * @return the followUpDate
+     */
+    public Date getFollowUpDate() {
+        return followUpDate;
+    }
+
+    /**
+     * @param followUpDate the followUpDate to set
+     */
+    public void setFollowUpDate(Date followUpDate) {
+        this.followUpDate = followUpDate;
     }
 }

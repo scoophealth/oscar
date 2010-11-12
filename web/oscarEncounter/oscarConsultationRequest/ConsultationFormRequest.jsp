@@ -117,6 +117,18 @@
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/global.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery_oscar_defaults.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/share/javascript/prototype.js"></script>
+<link rel="stylesheet" type="text/css" media="all"
+	href="<%=request.getContextPath()%>/share/calendar/calendar.css" title="win2k-cold-1" />
+<!-- main calendar program -->
+<script type="text/javascript" src="<%=request.getContextPath()%>/share/calendar/calendar.js"></script>
+<!-- language for the calendar -->
+<script type="text/javascript"
+	src="<%=request.getContextPath()%>/share/calendar/lang/calendar-en.js"></script>
+<!-- the following script defines the Calendar.setup helper function, which makes
+       adding a calendar a matter of 1 or 2 lines of code. -->
+<script type="text/javascript"
+	src="<%=request.getContextPath()%>/share/calendar/calendar-setup.js"></script>
 <title><bean:message
 	key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.title" />
 </title>
@@ -198,7 +210,7 @@ text-align: right;
 
 <link type="text/javascript" src="../consult.js" />
 
-<SCRIPT LANGUAGE="JavaScript">
+<script language="JavaScript" type="text/javascript">
 
 var servicesName = new Array();   		// used as a cross reference table for name and number
 var services = new Array();				// the following are used as a 2D table for makes and models
@@ -273,7 +285,8 @@ function disableEditing()
 		form.clinicalInformation.disabled = disableFields;	
 		form.concurrentProblems.disabled = disableFields;	
 		form.currentMedications.disabled = disableFields;	
-		form.allergies.disabled = disableFields;	
+		form.allergies.disabled = disableFields;
+                form.annotation.disabled = disableFields;
 
 		disableIfExists(form.update, disableFields);	
 		disableIfExists(form.updateAndPrint, disableFields);	
@@ -477,12 +490,15 @@ function onSelectSpecialist(SelectedSpec)	{
             	form.phone.value = (aSpeci.phoneNum);
             	form.fax.value = (aSpeci.specFax);					// load the text fields with phone fax and address
             	form.address.value = (aSpeci.specAddress);
-
+                
             	jQuery.getJSON("getProfessionalSpecialist.json", {id: aSpeci.specNbr}, 
                     function(xml)
                     {
                 		var hasUrl=xml.eDataUrl!=null&&xml.eDataUrl!="";
                 		enableDisableRemoteReferralButton(form, !hasUrl);
+                               
+                                var annotation = document.getElementById("annotation");
+                                annotation.value = xml.annotation;
                 	}
             	);
             	
@@ -490,6 +506,7 @@ function onSelectSpecialist(SelectedSpec)	{
             }
         }
 	}
+        
 //-----------------------------------------------------------------
 
 /////////////////////////////////////////////////////////////////////
@@ -747,7 +764,7 @@ function fetchAttached() {
 
 		if (requestId != null)
 		{
-			EctViewRequestAction.fillFormValues(thisForm, consultUtil);
+			EctViewRequestAction.fillFormValues(thisForm, new Integer(requestId));
 		}
 		else if (segmentId != null)
 		{
@@ -758,6 +775,7 @@ function fetchAttached() {
 			//  new request
 			if (demo != null)
 			{
+                                EctViewRequestAction.fillFormValues(thisForm,consultUtil);
 				thisForm.setAllergies(demographic.RxInfo.getAllergies());
 
 				if (props.getProperty("currentMedications", "").equalsIgnoreCase("otherMedications"))
@@ -985,6 +1003,12 @@ function fetchAttached() {
 							%>						
 							</td>
 						</tr>
+                                                <tr>
+                                                    <td class="tite4">Referrer Instructions</td>
+                                                    <td align="right" class="tite2">
+                                                        <textarea id="annotation" style="color: blue;" readonly></textarea>
+                                                    </td>
+                                                </tr>
 						<tr>
 							<td class="tite4"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formUrgency" /></td>
 							<td align="right" class="tite2">
@@ -1064,7 +1088,7 @@ function fetchAttached() {
 													month = "0" + month;
 												}
 												%>
-												<html:option value="<%=month%>"><%=month%></html:option>
+												<html:option value="<%=String.valueOf(i)%>"><%=month%></html:option>
 												<%
 											}
 										%>
@@ -1082,7 +1106,7 @@ function fetchAttached() {
 													dayOfWeek = "0" + dayOfWeek;
 												}
 												%>
-												<html:option value="<%=dayOfWeek%>"><%=dayOfWeek%></html:option>
+                                                                                                <html:option value="<%=String.valueOf(i)%>"><%=dayOfWeek%></html:option>
 												<%
 											}
 										%>
@@ -1220,7 +1244,14 @@ function fetchAttached() {
 							<td colspan="2" class="tite3"><html:textarea cols="50"
 								rows="3" property="appointmentNotes"></html:textarea></td>
 						</tr>
-
+                                                <tr>
+							<td colspan="2" class="tite4"><bean:message
+								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formLastFollowup" />:
+							</td>
+						</tr>
+						<tr>
+                                                    <td colspan="2" class="tite3"><img alt="calendar" id="followUpDate_cal" src="../../images/cal.gif">&nbsp;<html:text styleId="followUpDate" property="followUpDate" readonly="true" ondblclick="this.value='';"/>
+						</tr>
 
 					</table>
 					</td>
@@ -1431,11 +1462,10 @@ function fetchAttached() {
 	</table>
 </html:form>
 </body>
-<script type="text/javascript" src="../../share/javascript/prototype.js" />
 
 <script type="text/javascript" language="javascript">
 
-
+Calendar.setup( { inputField : "followUpDate", ifFormat : "%Y/%m/%d", showsTime :false, button : "followUpDate_cal", singleClick : true, step : 1 } );
 </script>
 </html:html>
 

@@ -117,6 +117,7 @@ function BackToOscar() {
                            thisForm.seteDataOscarKey( (String) request.getAttribute("eDataOscarKey"));
                            thisForm.seteDataServiceKey( (String) request.getAttribute("eDataServiceKey"));
                            thisForm.seteDataServiceName( (String) request.getAttribute("eDataServiceName"));
+                           thisForm.setAnnotation((String)request.getAttribute("annotation"));
                            }
                         %>
 						<html:hidden name="EctConAddSpecialistForm" property="specId" />
@@ -132,7 +133,11 @@ function BackToOscar() {
 						<tr>
 							<td><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.address" />
 							</td>
-							<td colspan="5"><html:textarea name="EctConAddSpecialistForm" property="address" cols="30" rows="3" /> <%=oscarVariables.getProperty("consultation_comments","") %>
+							<td><html:textarea name="EctConAddSpecialistForm" property="address" cols="30" rows="3" /> <%=oscarVariables.getProperty("consultation_comments","") %>
+							</td>
+                                                        <td><bean:message key="oscarEncounter.oscarConsultationRequest.config.EditSpecialists.Annotation" />
+							</td>
+							<td colspan="4"><html:textarea name="EctConAddSpecialistForm" property="annotation" cols="30" rows="3" />
 							</td>
 						</tr>
 						<tr>

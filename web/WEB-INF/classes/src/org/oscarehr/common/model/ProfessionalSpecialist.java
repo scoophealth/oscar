@@ -79,6 +79,7 @@ public class ProfessionalSpecialist extends AbstractModel<Integer> implements Se
 	private String eDataOscarKey;
 	private String eDataServiceKey;
 	private String eDataServiceName;
+        private String annotation;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastUpdated=new Date();
@@ -204,6 +205,20 @@ public class ProfessionalSpecialist extends AbstractModel<Integer> implements Se
 
 	public void seteDataServiceName(String eDataServiceName) {
     	this.eDataServiceName = StringUtils.trimToNull(eDataServiceName);
+    }
+
+    /**
+     * @return the annotation
+     */
+    public String getAnnotation() {
+        return annotation;
+    }
+
+    /**
+     * @param annotation the annotation to set
+     */
+    public void setAnnotation(String annotation) {
+        this.annotation = StringUtils.trimToNull(annotation);
     }
 	
 	

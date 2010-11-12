@@ -29,9 +29,9 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -45,13 +45,13 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.commons.lang.time.DateUtils;
 import org.oscarehr.common.IsPropertiesOn;
 import org.oscarehr.common.dao.ClinicDAO;
 import org.oscarehr.common.dao.ConsultationRequestDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.Hl7TextInfoDao;
 import org.oscarehr.common.dao.ProfessionalSpecialistDao;
-import org.oscarehr.common.hl7.v2.oscar_to_oscar.DataTypeUtils;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.OruR01;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.RefI12;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.SendingUtils;
@@ -67,14 +67,11 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.WebUtils;
 
-import oscar.OscarProperties;
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
-import oscar.oscarDB.DBHandler;
 import oscar.oscarLab.ca.all.pageUtil.LabPDFCreator;
 import oscar.oscarLab.ca.on.CommonLabResultData;
 import oscar.oscarLab.ca.on.LabResultData;
-import oscar.oscarMessenger.util.MsgStringQuote;
 import oscar.util.ParameterActionForward;
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.v26.message.ORU_R01;
@@ -89,89 +86,59 @@ public class EctConsultationFormRequestAction extends Action {
 	@Override
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		EctConsultationFormRequestForm frm = (EctConsultationFormRequestForm) form;
-
-		String referalDate = frm.getReferalDate();
-		String serviceId = frm.getService();
-		String specId = frm.getSpecialist();
-
-		String appointmentDate = frm.getAppointmentYear() + "/" + frm.getAppointmentMonth() + "/" + frm.getAppointmentDay();
+		EctConsultationFormRequestForm frm = (EctConsultationFormRequestForm) form;		
 
 		String appointmentHour = frm.getAppointmentHour();
 		String appointmentPm = frm.getAppointmentPm();
 
-		if (appointmentPm.equals("PM")) {
+		if (appointmentPm.equals("PM") && Integer.parseInt(appointmentHour) < 12 ) {
 			appointmentHour = Integer.toString(Integer.parseInt(appointmentHour) + 12);
 		}
+                else if( appointmentHour.equals("12") ) {
+                    appointmentHour = "0";
+                }		
 
-		String appointmentTime = appointmentHour + ":" + frm.getAppointmentMinute();
-
-		String reason = frm.getReasonForConsultation();
-		String clinicalInfo = frm.getClinicalInformation();
-		String currentMeds = frm.getCurrentMedications();
-		String allergies = frm.getAllergies();
-		String concurrentProblems = frm.getConcurrentProblems();
 		String sendTo = frm.getSendTo();
 		String submission = frm.getSubmission();
 		String providerNo = frm.getProviderNo();
 		String demographicNo = frm.getDemographicNo();
-		String status = frm.getStatus();
-		String statusText = frm.getAppointmentNotes();
-
-		String pwb = frm.patientWillBook;
-
-		String urg = frm.getUrgency();
 
 		String requestId = "";
 
-		MsgStringQuote str = new MsgStringQuote();
+                ConsultationRequestDao consultationRequestDao=(ConsultationRequestDao)SpringUtils.getBean("consultationRequestDao");
+                String[] format = new String[] {"yyyy-MM-dd","yyyy/MM/dd"};
 
 		if (submission.startsWith("Submit")) {
 
-			try {
-				
+			try {				
+                                ConsultationRequest consult = new ConsultationRequest();
+                                Date date = DateUtils.parseDate(frm.getReferalDate(), format);
+                                consult.setReferralDate(date);
+                                consult.setServiceId(new Integer(frm.getService()));
+                                consult.setSpecialistId(new Integer(frm.getSpecialist()));
+                                date = DateUtils.parseDate(frm.getAppointmentYear() + "-" + frm.getAppointmentMonth() + "-" + frm.getAppointmentDay(), format);
+                                consult.setAppointmentDate(date);
+                                date = DateUtils.setHours(date, new Integer(appointmentHour));
+                                date = DateUtils.setMinutes(date, new Integer(frm.getAppointmentMinute()));
+                                consult.setAppointmentTime(date);
+                                consult.setReasonForReferral(frm.getReasonForConsultation());
+                                consult.setClinicalInfo(frm.getClinicalInformation());
+                                consult.setCurrentMeds(frm.getCurrentMedications());
+                                consult.setAllergies(frm.getAllergies());
+                                consult.setProviderNo(frm.getProviderNo());
+                                consult.setDemographicId(new Integer(frm.getDemographicNo()));
+                                consult.setStatus(frm.getStatus());
+                                consult.setStatusText(frm.getAppointmentNotes());
+                                consult.setSendTo(frm.getSendTo());
+                                consult.setConcurrentProblems(frm.getConcurrentProblems());
+                                consult.setUrgency(frm.getUrgency());
+                                consult.setPatientWillBook(new Boolean(frm.getPatientWillBook()));
+                                date = DateUtils.parseDate(frm.getFollowUpDate(), format);
+                                consult.setFollowUpDate(date);
 
-				String sql = "insert into consultationRequests (referalDate,serviceId,specId,appointmentDate,appointmentTime,reason,clinicalInfo,currentMeds,allergies,providerNo,demographicNo,status,statusText,sendTo,concurrentProblems,urgency,patientWillBook) "
-				        + " values ('"
-				        + str.q(referalDate)
-				        + "','"
-				        + str.q(serviceId)
-				        + "','"
-				        + str.q(specId)
-				        + "','"
-				        + str.q(appointmentDate)
-				        + "','"
-				        + str.q(appointmentTime)
-				        + "','"
-				        + str.q(reason)
-				        + "','"
-				        + str.q(clinicalInfo)
-				        + "','"
-				        + str.q(currentMeds)
-				        + "','"
-				        + str.q(allergies) + "','" + str.q(providerNo) + "','" + str.q(demographicNo) + "','" + str.q(status) + "','" + str.q(statusText) + "','" + str.q(sendTo) + "','" + str.q(concurrentProblems) + "','" + urg + "'," + pwb + ")";
+                                consultationRequestDao.persist(consult);
 
-				DBHandler.RunSQL(sql);
-
-				/* select the correct db specific command */
-
-				String db_type = OscarProperties.getInstance().getProperty("db_type").trim();
-				String dbSpecificCommand;
-
-				if (db_type.equalsIgnoreCase("mysql")) {
-					dbSpecificCommand = "SELECT LAST_INSERT_ID()";
-				} else if (db_type.equalsIgnoreCase("postgresql")) {
-					dbSpecificCommand = "SELECT CURRVAL('consultationrequests_numeric')";
-				} else {
-					throw new SQLException("ERROR: Database " + db_type + " unrecognized.");
-				}
-
-				ResultSet rs = DBHandler.GetSQL(dbSpecificCommand);
-
-				if (rs.next()) {
-
-					requestId = rs.getString(1);
-
+                                        requestId = String.valueOf(consult.getId());
 					// now that we have consultation id we can save any attached docs as well
 					// format of input is D2|L2 for doc and lab
 					String[] docs = frm.getDocuments().split("\\|");
@@ -182,14 +149,11 @@ public class EctConsultationFormRequestAction extends Action {
 							else if (docs[idx].charAt(0) == 'L') ConsultationAttachLabs.attachLabConsult(providerNo, docs[idx].substring(1), requestId);
 						}
 					}
-
-				}
-
 			}
+                        catch (ParseException e) {
+                                MiscUtils.getLogger().error("Invalid Date", e);
+                        }
 
-			catch (SQLException e) {
-				MiscUtils.getLogger().error("Error", e);
-			}
 
 			request.setAttribute("transType", "2");
 
@@ -199,17 +163,35 @@ public class EctConsultationFormRequestAction extends Action {
 
 			requestId = frm.getRequestId();
 
-			try {
-				
-
-				String sql = "update consultationRequests set  serviceId = '" + str.q(serviceId) + "',  specId = '" + str.q(specId) + "',  appointmentDate = '" + str.q(appointmentDate) + "',  appointmentTime = '" + str.q(appointmentTime)
-				        + "',  reason = '" + str.q(reason) + "',  clinicalInfo = '" + str.q(clinicalInfo) + "',  currentMeds = '" + str.q(currentMeds) + "',  allergies = '" + str.q(allergies) + "',  status = '" + str.q(status) + "',  statusText = '"
-				        + str.q(statusText) + "',  sendTo = '" + str.q(sendTo) + "',  urgency = '" + urg + "',  concurrentProblems = '" + str.q(concurrentProblems) + "',  patientWillBook = " + str.q(pwb) + "  where requestId = '" + str.q(requestId) + "'";
-				DBHandler.RunSQL(sql);
-
+			try {				                                
+                                ConsultationRequest consult = consultationRequestDao.find(new Integer(requestId));
+                                Date date = DateUtils.parseDate(frm.getReferalDate(), format);
+                                consult.setReferralDate(date);
+                                consult.setServiceId(new Integer(frm.getService()));
+                                consult.setSpecialistId(new Integer(frm.getSpecialist()));
+                                date = DateUtils.parseDate(frm.getAppointmentYear() + "-" + frm.getAppointmentMonth() + "-" + frm.getAppointmentDay(), format);                                
+                                consult.setAppointmentDate(date);
+                                date = DateUtils.setHours(date, new Integer(appointmentHour));
+                                date = DateUtils.setMinutes(date, new Integer(frm.getAppointmentMinute()));                                
+                                consult.setAppointmentTime(date);
+                                consult.setReasonForReferral(frm.getReasonForConsultation());
+                                consult.setClinicalInfo(frm.getClinicalInformation());
+                                consult.setCurrentMeds(frm.getCurrentMedications());
+                                consult.setAllergies(frm.getAllergies());
+                                consult.setProviderNo(frm.getProviderNo());
+                                consult.setDemographicId(new Integer(frm.getDemographicNo()));
+                                consult.setStatus(frm.getStatus());
+                                consult.setStatusText(frm.getAppointmentNotes());
+                                consult.setSendTo(frm.getSendTo());
+                                consult.setConcurrentProblems(frm.getConcurrentProblems());
+                                consult.setUrgency(frm.getUrgency());
+                                consult.setPatientWillBook(new Boolean(frm.getPatientWillBook()));
+                                date = DateUtils.parseDate(frm.getFollowUpDate(), format);
+                                consult.setFollowUpDate(date);
+                                consultationRequestDao.merge(consult);
 			}
 
-			catch (SQLException e) {
+			catch (ParseException e) {
 				MiscUtils.getLogger().error("Error", e);
 			}
 

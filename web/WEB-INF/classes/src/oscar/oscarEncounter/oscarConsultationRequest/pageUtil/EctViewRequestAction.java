@@ -52,6 +52,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Calendar;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -68,9 +69,13 @@ import org.oscarehr.common.hl7.v2.oscar_to_oscar.DataTypeUtils;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.OscarToOscarUtils;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.RefI12;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.Hl7TextMessage;
 import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.common.model.ConsultationRequest;
+import org.oscarehr.common.dao.ConsultationRequestDao;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -97,6 +102,73 @@ public class EctViewRequestAction extends Action {
 		return mapping.findForward("success");
 	}
 
+        public static void fillFormValues(EctConsultationFormRequestForm thisForm, Integer requestId) {
+            ConsultationRequestDao consultDao = (ConsultationRequestDao)SpringUtils.getBean("consultationRequestDao");
+            ConsultationRequest consult = consultDao.find(requestId);
+
+            thisForm.setAllergies(consult.getAllergies());
+            thisForm.setReasonForConsultation(consult.getReasonForReferral());
+            thisForm.setClinicalInformation(consult.getClinicalInfo());
+            thisForm.setCurrentMedications(consult.getCurrentMeds());
+            Date date = consult.getReferralDate();            
+            thisForm.setReferalDate(DateFormatUtils.ISO_DATE_FORMAT.format(date));
+            thisForm.setSendTo(consult.getSendTo());
+            thisForm.setService(consult.getServiceId().toString());
+            thisForm.setStatus(consult.getStatus());
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(consult.getAppointmentDate());            
+            thisForm.setAppointmentDay(String.valueOf(cal.get(Calendar.DAY_OF_MONTH)));
+            thisForm.setAppointmentMonth(String.valueOf(cal.get(Calendar.MONTH)+1));
+            thisForm.setAppointmentYear(String.valueOf(cal.get(Calendar.YEAR)));
+            cal.setTime(consult.getAppointmentTime());
+            Integer hr = cal.get(Calendar.HOUR_OF_DAY);
+            hr = hr == 0 ? 12 : hr;
+            thisForm.setAppointmentHour(String.valueOf(hr));
+            thisForm.setAppointmentMinute(String.valueOf(cal.get(Calendar.MINUTE)));
+            
+            String appointmentPm;            
+            if (cal.get(Calendar.HOUR_OF_DAY) > 11) {
+                appointmentPm = "PM";
+            } else {
+                appointmentPm = "AM";
+            }
+            thisForm.setAppointmentPm(appointmentPm);
+            
+            thisForm.setConcurrentProblems(consult.getConcurrentProblems());
+            thisForm.setAppointmentNotes(consult.getStatusText());
+            thisForm.setUrgency(consult.getUrgency());
+            thisForm.setPatientWillBook(String.valueOf(consult.isPatientWillBook()));
+            
+            date = consult.getFollowUpDate();
+            if( date != null ) {
+                thisForm.setFollowUpDate(DateFormatUtils.ISO_DATE_FORMAT.format(date));
+            }
+            else {
+                thisForm.setFollowUpDate("");
+            }
+
+            DemographicDao demoDao = (DemographicDao)SpringUtils.getBean("demographicDao");
+            Demographic demo = demoDao.getDemographicById(consult.getDemographicId());
+
+            thisForm.setPatientAddress(demo.getAddress());
+            thisForm.setPatientDOB(demo.getFormattedDob());
+            thisForm.setPatientHealthNum(demo.getHin());
+            thisForm.setPatientHealthCardVersionCode(demo.getVer());
+            thisForm.setPatientHealthCardType(demo.getHcType());
+            thisForm.setPatientFirstName(demo.getFirstName());
+            thisForm.setPatientLastName(demo.getLastName());
+            thisForm.setPatientPhone(demo.getPhone());
+            thisForm.setPatientSex(demo.getSex());
+            thisForm.setPatientWPhone(demo.getPhone2());
+            thisForm.setPatientAge(demo.getAge());
+
+            ProviderDao provDao = (ProviderDao)SpringUtils.getBean("providerDao");
+            Provider prov = provDao.getProvider(demo.getProviderNo());
+            thisForm.setProviderName(prov.getFormattedName());
+
+            thisForm.seteReferral(false);
+        }
+
 	public static void fillFormValues(EctConsultationFormRequestForm thisForm, EctConsultationFormRequestUtil consultUtil)
 	{
         thisForm.setAllergies(consultUtil.allergies);
@@ -118,7 +190,7 @@ public class EctViewRequestAction extends Action {
         thisForm.setUrgency(consultUtil.urgency);
         thisForm.setPatientWillBook(consultUtil.pwb);
 
-        if( !consultUtil.teamVec.contains(consultUtil.sendTo) ) {
+        if( consultUtil.sendTo != null && !consultUtil.teamVec.contains(consultUtil.sendTo) ) {
             consultUtil.teamVec.add(consultUtil.sendTo);
         }
         
@@ -209,5 +281,6 @@ public class EctViewRequestAction extends Action {
         thisForm.setProfessionalSpecialistName(professionalSpecialist.getLastName()+", "+professionalSpecialist.getFirstName());
         thisForm.setProfessionalSpecialistAddress(professionalSpecialist.getStreetAddress());
         thisForm.setProfessionalSpecialistPhone(professionalSpecialist.getPhoneNumber());
+
 	}	
 }

@@ -94,8 +94,6 @@ public class EctDisplayConsultAction extends EctDisplayAction {
             if (timeperiod != null){
                    countback = Integer.parseInt(timeperiod);
                    countback = countback * -1;
-                   cal.add(Calendar.MONTH,countback );
-
             }
             cal.add(Calendar.MONTH,countback );
             Date cutoffDate = cal.getTime();

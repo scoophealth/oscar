@@ -129,7 +129,7 @@ public final class EctConsultationFormRequestForm extends ActionForm {
 	private String professionalSpecialistName;
 	private String professionalSpecialistPhone;
 	private String professionalSpecialistAddress;
-
+        private String followUpDate;
 	private boolean eReferral = false;
 	private Integer hl7TextMessageId;
 
@@ -542,4 +542,18 @@ public final class EctConsultationFormRequestForm extends ActionForm {
 
 		return (StringEscapeUtils.escapeHtml(sb.toString()));
 	}
+
+    /**
+     * @return the followUpDate
+     */
+    public String getFollowUpDate() {
+        return followUpDate;
+    }
+
+    /**
+     * @param followUpDate the followUpDate to set
+     */
+    public void setFollowUpDate(String followUpDate) {
+        this.followUpDate = followUpDate;
+    }
 }

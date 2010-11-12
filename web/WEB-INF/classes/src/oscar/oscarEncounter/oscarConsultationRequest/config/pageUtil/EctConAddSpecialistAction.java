@@ -105,6 +105,7 @@ public class EctConAddSpecialistAction extends Action {
         professionalSpecialist.seteDataOscarKey(addSpecailistForm.geteDataOscarKey());
         professionalSpecialist.seteDataServiceKey(addSpecailistForm.geteDataServiceKey());
         professionalSpecialist.seteDataServiceName(addSpecailistForm.geteDataServiceName());
+        professionalSpecialist.setAnnotation(addSpecailistForm.getAnnotation());
     }
 }
 
