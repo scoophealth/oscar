@@ -1,21 +1,11 @@
 package org.oscarehr.PMmodule.dao;
 
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.lang.StringEscapeUtils;
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Expression;
-import org.hibernate.criterion.LogicalExpression;
-import org.hibernate.criterion.Restrictions;
 import org.oscarehr.PMmodule.model.ClientMerge;
-import org.oscarehr.common.model.Demographic;
-import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
-
-import com.quatro.common.KeyConstants;
 
 public class MergeClientDao extends HibernateDaoSupport {
 	

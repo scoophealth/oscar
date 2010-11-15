@@ -46,8 +46,7 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -68,7 +67,7 @@ import oscar.util.UtilDateUtilities;
  */
 public class GeneratePatientLettersAction extends Action {
     
-    private static Log log = LogFactory.getLog(GeneratePatientLettersAction.class);
+    private static Logger log = MiscUtils.getLogger();
     
     /**
      * Creates a new instance of GeneratePatientLettersAction

@@ -32,9 +32,9 @@ package org.oscarehr.PMmodule.dao;
 import java.util.List;
 import java.util.ListIterator;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.model.JointAdmission;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
@@ -43,7 +43,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  */
 public class JointAdmissionDAO extends HibernateDaoSupport {
 
-    private Log log = LogFactory.getLog(JointAdmissionDAO.class);
+    private Logger log=MiscUtils.getLogger();
     
     /** Creates a new instance of JointAdmissionDAO */
     public JointAdmissionDAO() {

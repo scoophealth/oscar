@@ -34,8 +34,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -60,7 +59,7 @@ import oscar.util.SqlUtils;
 import oscar.util.StringUtils;
 
 public class BillingReProcessBillAction extends Action {
-    private static Log _log = LogFactory.getLog(BillingReProcessBillAction.class);
+    private static final Logger logger = MiscUtils.getLogger();
 
   //Misc misc = new Misc();
   MSPReconcile msp = new MSPReconcile();
@@ -81,12 +80,12 @@ public class BillingReProcessBillAction extends Action {
     
     WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext());
     BillingmasterDAO billingmasterDAO = (BillingmasterDAO) ctx.getBean("BillingmasterDAO"); 
-    _log.debug("RETRIEVING Using "+billingmasterNo);
+    logger.debug("RETRIEVING Using "+billingmasterNo);
     Billingmaster billingmaster = billingmasterDAO.getBillingMasterByBillingMasterNo(billingmasterNo);
     Billing bill = billingmasterDAO.getBilling(billingmaster.getBillingNo());
     
     
-    _log.debug("type "+bill.getBillingtype());
+    logger.debug("type "+bill.getBillingtype());
 
 
     BillingFormData billform = new BillingFormData();
@@ -242,7 +241,7 @@ public class BillingReProcessBillAction extends Action {
       //BillingCodeData bcd = new BillingCodeData();
       //BillingService billingService = bcd.getBillingCodeByCode(billingServiceCode, new Date());
       String codePrice = request.getParameter("billingAmount"); //billingService.getValue();
-      _log.debug("codePrice=" + codePrice+" amount on form "+request.getParameter("billingAmount"));
+      logger.debug("codePrice=" + codePrice+" amount on form "+request.getParameter("billingAmount"));
       
       if("E".equals(payment_mode)){
           codePrice = "0.00";
@@ -315,12 +314,12 @@ public class BillingReProcessBillAction extends Action {
         billingmaster.setWcbId(Integer.parseInt(request.getParameter("WCBid")));
         }catch(Exception e){}
         bill.setProviderNo(providerNo);
-        _log.debug("WHAT IS BILL <ASTER "+billingmaster.getBillingmasterNo());
+        logger.debug("WHAT IS BILL <ASTER "+billingmaster.getBillingmasterNo());
         billingmasterDAO.update(billingmaster);
         billingmasterDAO.update(bill);
         
-        _log.debug("type 2"+bill.getBillingtype());
-        _log.debug("WHAT IS BILL <ASTER2 "+billingmaster.getBillingmasterNo());
+        logger.debug("type 2"+bill.getBillingtype());
+        logger.debug("WHAT IS BILL <ASTER2 "+billingmaster.getBillingmasterNo());
         
         try {
       
@@ -344,7 +343,7 @@ public class BillingReProcessBillAction extends Action {
         dao.createBillingHistoryArchive(billingmasterNo);
       }
       if (secondSQL != null) {
-        _log.debug(secondSQL);
+        logger.debug(secondSQL);
         DBHandler.RunSQL(secondSQL);
       }
 
@@ -361,7 +360,7 @@ public class BillingReProcessBillAction extends Action {
       }
     }
     catch (SQLException e3) {
-      _log.info(e3.getMessage());
+      logger.info(e3.getMessage());
     }
 
     request.setAttribute("billing_no", billingmasterNo);
@@ -403,7 +402,7 @@ public class BillingReProcessBillAction extends Action {
    */
   public String convertDate8Char(String s) {
     String sdate = "00000000", syear = "", smonth = "", sday = "";
-    _log.debug("s=" + s);
+    logger.debug("s=" + s);
     if (s != null) {
 
       if (s.indexOf("-") != -1) {
@@ -420,13 +419,13 @@ public class BillingReProcessBillAction extends Action {
           sday = "0" + sday;
         }
 
-        _log.debug("Year" + syear + " Month" + smonth + " Day" + sday);
+        logger.debug("Year" + syear + " Month" + smonth + " Day" + sday);
         sdate = syear + smonth + sday;
 
       }else {
         sdate = s;
       }
-      _log.debug("sdate:" + sdate);
+      logger.debug("sdate:" + sdate);
     }else {
       sdate = "00000000";
 

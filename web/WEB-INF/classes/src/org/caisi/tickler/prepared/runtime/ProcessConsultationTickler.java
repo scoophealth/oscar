@@ -30,8 +30,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -45,10 +44,11 @@ import org.caisi.tickler.prepared.PreparedTickler;
 import org.caisi.tickler.prepared.seaton.consultation.ConsultationConfiguration;
 import org.caisi.tickler.prepared.seaton.consultation.ConsultationsConfigBean;
 import org.caisi.tickler.prepared.seaton.consultation.ProcessConsultationBean;
+import org.oscarehr.util.MiscUtils;
 
 public class ProcessConsultationTickler extends AbstractPreparedTickler implements PreparedTickler {
 
-	private static Log log = LogFactory.getLog(ProcessConsultationTickler.class);
+	private static Logger log = MiscUtils.getLogger();
 	
 	private ConsultationManager consultationMgr;
 	private TicklerManager ticklerMgr;

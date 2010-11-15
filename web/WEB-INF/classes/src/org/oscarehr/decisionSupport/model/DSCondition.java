@@ -6,18 +6,19 @@
 package org.oscarehr.decisionSupport.model;
 
 import java.util.Hashtable;
-import org.oscarehr.decisionSupport.model.conditionValue.DSValue;
 import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
+import org.oscarehr.decisionSupport.model.conditionValue.DSValue;
+import org.oscarehr.util.MiscUtils;
 
 /**
  *
  * @author apavel
  */
 public class DSCondition {
-    private static final Log _log = LogFactory.getLog(DSCondition.class);
+    private static final Logger _log = MiscUtils.getLogger();
 
     /**
      * @return the param

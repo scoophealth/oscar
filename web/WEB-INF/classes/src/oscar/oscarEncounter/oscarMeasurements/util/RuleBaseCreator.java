@@ -29,21 +29,21 @@ import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.drools.RuleBase;
 import org.drools.io.RuleBaseLoader;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
+import org.oscarehr.util.MiscUtils;
 
 /**
  * Class used to create Drools XML files
  * @author jaygallagher
  */
 public class RuleBaseCreator {
-    private static final Log log = LogFactory.getLog(RuleBaseCreator.class);
+    private static final Logger log=MiscUtils.getLogger();
     
     Namespace namespace = Namespace.getNamespace("http://drools.org/rules");
     Namespace javaNamespace = Namespace.getNamespace("java", "http://drools.org/semantics/java");

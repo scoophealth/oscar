@@ -34,8 +34,7 @@ import java.util.TimerTask;
 
 import javax.xml.bind.JAXBException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.service.GenericIntakeManager;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.LoggedInInfo;
@@ -47,7 +46,7 @@ import oscar.ocan.service.OcanDataProcessor.OcanProcess;
 
 public class OcanSubmissionTask extends TimerTask {
 
-	private static final Log log = LogFactory.getLog(OcanSubmissionTask.class);
+	private static final Logger logger = MiscUtils.getLogger();
 
 	private GenericIntakeManager genericIntakeManager;
 	private OcanDataProcessor ocanDataProcessor;
@@ -67,7 +66,7 @@ public class OcanSubmissionTask extends TimerTask {
 	public void run() {
 		LoggedInInfo.setLoggedInInfoToCurrentClassAndMethod();
 		try {
-			log.info("start ocan submission task");
+			logger.info("start ocan submission task");
 
 			OcanProcess process = ocanDataProcessor.createOcanProcess();
 
@@ -85,15 +84,12 @@ public class OcanSubmissionTask extends TimerTask {
 				List<Map<String, String>> intakes = genericIntakeManager.getIntakeListforOcan(after);
 
 				if (intakes == null || intakes.size() == 0) {
-					log.warn("getIntakeListforOcan() returned null or empty list - no data for submission.");
+					logger.warn("getIntakeListforOcan() returned null or empty list - no data for submission.");
 					return;
 				}
 
 				for (Map<String, String> intakeMap : intakes) {
 					MiscUtils.checkShutdownSignaled();
-
-//					log.info("client:\n" + intakeMap.get("client"));
-//					log.info("staff:\n" + intakeMap.get("staff"));
 
 					try {
 						ocanDataProcessor.createOcanRecord(process,
@@ -102,7 +98,7 @@ public class OcanSubmissionTask extends TimerTask {
 								intakeMap.get("clientId"));
 
 					} catch (Exception e) {
-						log.error("createOcanRecord() thrown an exception, skipping the record.", e);
+						logger.error("createOcanRecord() thrown an exception, skipping the record.", e);
 						continue;
 					}
 				}
@@ -110,18 +106,18 @@ public class OcanSubmissionTask extends TimerTask {
 
 			ocanDataProcessor.finishOcanProcess(process);
 
-			log.info("finish ocan submission task");
+			logger.info("finish ocan submission task");
 
 		} catch (ShutdownException e) {
-			log.debug("OcanSubmissionTask noticed shutdown signaled.");
+			logger.debug("OcanSubmissionTask noticed shutdown signaled.");
 		} catch (FileNotFoundException e) {
-			log.error("finishOcanProcess() thrown an exception, terminating the submission.", e);
+			logger.error("finishOcanProcess() thrown an exception, terminating the submission.", e);
 		} catch (JAXBException e) {
-			log.error("finishOcanProcess() thrown an exception, terminating the submission.", e);
+			logger.error("finishOcanProcess() thrown an exception, terminating the submission.", e);
 		} catch (NumberFormatException e) {
-			log.error("finishOcanProcess() thrown an exception, terminating the submission.", e);
+			logger.error("finishOcanProcess() thrown an exception, terminating the submission.", e);
 		} catch (ParseException e) {
-			log.error("finishOcanProcess() thrown an exception, terminating the submission.", e);
+			logger.error("finishOcanProcess() thrown an exception, terminating the submission.", e);
 		} finally {
 			LoggedInInfo.loggedInInfo.remove();
 			DbConnectionFilter.releaseAllThreadDbResources();

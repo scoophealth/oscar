@@ -36,8 +36,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.util.MiscUtils;
 
@@ -57,7 +56,7 @@ import oscar.oscarProvider.data.ProviderData;
 public class TeleplanFileWriter {
     
     
-    private static Log log = LogFactory.getLog(TeleplanFileWriter.class);
+    private static Logger log = MiscUtils.getLogger();
     
     
     StringBuilder mspFileStr = null;

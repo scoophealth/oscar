@@ -39,12 +39,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.MiscUtils;
 
 
 /**
@@ -52,7 +52,7 @@ import org.apache.struts.action.ActionMapping;
  * @author  Jay Gallagher
  */
 public class CheckSurveillanceAction extends Action {
-   private static Log log = LogFactory.getLog(CheckSurveillanceAction.class);
+   private static Logger log = MiscUtils.getLogger();
    
    /** Creates a new instance of checkSurveillanceAction */
    public CheckSurveillanceAction() {

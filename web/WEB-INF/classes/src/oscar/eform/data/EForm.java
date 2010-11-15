@@ -33,12 +33,12 @@ import java.util.Hashtable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionMessages;
 import org.oscarehr.common.OtherIdManager;
 import org.oscarehr.common.dao.EFormDataDao;
 import org.oscarehr.common.model.EFormData;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.eform.EFormLoader;
@@ -54,7 +54,7 @@ public class EForm extends EFormBase {
 	private static String appointment_no = "-1";
 	private static String appt_provider = "";
 	private static HashMap sql_params = new HashMap();
-	private static Log log = LogFactory.getLog(EForm.class);
+	private static Logger log = MiscUtils.getLogger();
 	private String parentAjaxId = null;
 	private HashMap<String, String> fieldValues = new HashMap<String, String>();
 	private int needValueInForm = 0;

@@ -2,14 +2,14 @@ package org.oscarehr.common.model;
 
 import java.util.Date;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
+import org.oscarehr.util.MiscUtils;
 
 public class Stay {
 	
-	private static final Log LOG = LogFactory.getLog(Stay.class);
+	private static final Logger logger = MiscUtils.getLogger();
 
 	private Interval interval;
 
@@ -20,9 +20,8 @@ public class Stay {
 		try {
 			interval = new Interval(admissionDateTime, dischargeDateTime);
 		} catch (IllegalArgumentException e) {
-			LOG.error(e);
-			LOG.error("admission: " + admission + " discharge: " + discharge);
-			LOG.error("admission datetime: " + admissionDateTime + " discharge datetime: " + dischargeDateTime);
+			logger.error("admission: " + admission + " discharge: " + discharge, e);
+			logger.error("admission datetime: " + admissionDateTime + " discharge datetime: " + dischargeDateTime);
 			
 			throw e;
 		}

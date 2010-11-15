@@ -37,8 +37,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.oscarehr.util.MiscUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
@@ -57,7 +56,7 @@ import oscar.util.StringUtils;
 @Repository
 @Transactional(propagation=Propagation.REQUIRES_NEW)
 public class BillingmasterDAO {
-    private static Log log = LogFactory.getLog(BillingmasterDAO.class);
+    private static Logger log = MiscUtils.getLogger();
 
     @PersistenceContext
     protected EntityManager entityManager = null;

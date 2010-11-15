@@ -23,9 +23,8 @@
 package org.oscarehr.billing.CA.dao;
 
 import org.oscarehr.billing.CA.model.GstControl;
-import org.springframework.stereotype.Repository;
-
 import org.oscarehr.common.dao.AbstractDao;
+import org.springframework.stereotype.Repository;
 
 /**
  *

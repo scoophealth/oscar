@@ -41,8 +41,7 @@ import java.util.List;
 
 import org.apache.commons.collections.OrderedMapIterator;
 import org.apache.commons.collections.map.ListOrderedMap;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.drools.RuleBase;
 import org.drools.WorkingMemory;
 import org.drools.io.RuleBaseLoader;
@@ -61,7 +60,7 @@ import oscar.oscarEncounter.oscarMeasurements.util.TargetColour;
  */
 public class MeasurementFlowSheet {
 
-    private static Log log = LogFactory.getLog(MeasurementFlowSheet.class);
+    private static Logger log = MiscUtils.getLogger();
     String name = null;
     private String displayName = null;
     private String warningColour = null;

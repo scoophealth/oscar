@@ -3,12 +3,12 @@ package org.oscarehr.PMmodule.web.reports.custom;
 import java.io.File;
 
 import org.apache.commons.digester.Digester;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
 
 public class UCRConfigurationManager {
 
-	static Log logger = LogFactory.getLog(UCRConfigurationManager.class);
+	private static Logger logger = MiscUtils.getLogger();
 	static Digester digester = new Digester();
 	static UCRConfiguration config;
 	

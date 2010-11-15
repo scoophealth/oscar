@@ -29,8 +29,7 @@ import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.util.MiscUtils;
@@ -44,7 +43,7 @@ import oscar.entities.WCB;
  * @author jaygallagher
  */
 public class WCBTeleplanSubmission {
-    private static Log log = LogFactory.getLog(WCBTeleplanSubmission.class);
+    private static Logger log = MiscUtils.getLogger();
     
     private DemographicDao demographicDao = null;
     

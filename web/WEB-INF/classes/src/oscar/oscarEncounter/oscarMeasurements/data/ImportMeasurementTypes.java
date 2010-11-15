@@ -32,11 +32,11 @@ package oscar.oscarEncounter.oscarMeasurements.data;
 import java.io.InputStream;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementTypesBean;
 import oscar.oscarEncounter.oscarMeasurements.bean.EctValidationsBean;
@@ -48,7 +48,7 @@ import oscar.oscarEncounter.oscarMeasurements.util.EctFindMeasurementTypeUtil;
  */
 public class ImportMeasurementTypes {
     
-    private static Log log = LogFactory.getLog(ImportMeasurementTypes.class);
+    private static Logger log = MiscUtils.getLogger();
     
     /**
      * Creates a new instance of ImportMeasurementTypes

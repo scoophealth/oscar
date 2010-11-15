@@ -40,14 +40,14 @@ import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicPrevention;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
 import oscar.oscarDemographic.data.DemographicData;
@@ -59,7 +59,7 @@ import oscar.util.UtilDateUtilities;
  * @author Jay Gallagher
  */
 public class PreventionData {
-	private static Log log = LogFactory.getLog(PreventionData.class);
+	private static Logger log = MiscUtils.getLogger();
 
 	/*
 	 * create table preventions( id int(10) NOT NULL auto_increment primary key, demographic_no int(10) NOT NULL default '0', creation_date datetime, prevention_date date,

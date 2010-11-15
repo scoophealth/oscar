@@ -5,25 +5,26 @@
 
 package org.oscarehr.decisionSupport.model.impl.drools;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.drools.FactException;
 import org.drools.RuleBase;
 import org.drools.WorkingMemory;
 import org.jdom.Element;
 import org.jdom.Namespace;
-import org.jdom.output.Format;
-import org.jdom.output.XMLOutputter;
-import org.oscarehr.decisionSupport.model.DSParameter;
 import org.oscarehr.decisionSupport.model.DSCondition;
 import org.oscarehr.decisionSupport.model.DSConsequence;
 import org.oscarehr.decisionSupport.model.DSDemographicAccess;
 import org.oscarehr.decisionSupport.model.DSGuideline;
+import org.oscarehr.decisionSupport.model.DSParameter;
 import org.oscarehr.decisionSupport.model.DecisionSupportException;
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarEncounter.oscarMeasurements.util.RuleBaseCreator;
 
 
@@ -32,7 +33,7 @@ import oscar.oscarEncounter.oscarMeasurements.util.RuleBaseCreator;
  * @author apavel
  */
 public class DSGuidelineDrools extends DSGuideline {
-    private static final Log log = LogFactory.getLog(RuleBaseCreator.class);
+    private static final Logger log=MiscUtils.getLogger();
     
     Namespace namespace = Namespace.getNamespace("http://drools.org/rules");
     Namespace javaNamespace = Namespace.getNamespace("java", "http://drools.org/semantics/java");

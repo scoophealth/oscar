@@ -7,9 +7,11 @@ package org.oscarehr.phr.indivo.model;
 
 import java.math.BigInteger;
 import java.util.Date;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.datatype.DatatypeConfigurationException;
+
 import org.indivo.IndivoException;
 import org.indivo.client.ActionNotPerformedException;
 import org.indivo.xml.phr.annotation.Annotation;
@@ -23,6 +25,7 @@ import org.indivo.xml.phr.urns.DocumentClassificationUrns;
 import org.oscarehr.phr.PHRConstants;
 import org.oscarehr.phr.model.PHRDocument;
 import org.w3c.dom.Element;
+
 import oscar.oscarProvider.data.ProviderData;
 /**
  *

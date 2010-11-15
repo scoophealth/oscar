@@ -39,8 +39,7 @@ import java.util.GregorianCalendar;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.oscarehr.util.MiscUtils;
 
 /**
@@ -48,7 +47,7 @@ import org.oscarehr.util.MiscUtils;
  * @author Jay Gallagher
  */
 public class Prevention {
-   private static Log log = LogFactory.getLog(Prevention.class); 
+   private static Logger log = MiscUtils.getLogger(); 
       
    String sex;
    String name= null;  // Not really needed but handy for testing

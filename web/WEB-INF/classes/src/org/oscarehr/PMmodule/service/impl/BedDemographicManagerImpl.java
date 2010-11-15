@@ -24,8 +24,7 @@ package org.oscarehr.PMmodule.service.impl;
 
 import java.util.Date;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.dao.BedDAO;
 import org.oscarehr.PMmodule.dao.BedDemographicDao;
 import org.oscarehr.PMmodule.dao.ClientDao;
@@ -41,6 +40,7 @@ import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.Room;
 import org.oscarehr.PMmodule.service.BedDemographicManager;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -49,7 +49,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class BedDemographicManagerImpl implements BedDemographicManager {
 
-	private static final Log log = LogFactory.getLog(BedDemographicManagerImpl.class);
+	private static final Logger log=MiscUtils.getLogger();
 	
 	private static <T extends Exception> void handleException(T e) throws T {
 		log.error(e);

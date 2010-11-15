@@ -24,13 +24,13 @@ package org.oscarehr.PMmodule.dao;
 
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.model.Formintakea;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 public class IntakeADao extends HibernateDaoSupport {
-    private Log log = LogFactory.getLog(IntakeADao.class);
+    private Logger log=MiscUtils.getLogger();
 
     public Formintakea getCurrIntakeAByDemographicNo(String demographicNo) {
         Formintakea result = null;

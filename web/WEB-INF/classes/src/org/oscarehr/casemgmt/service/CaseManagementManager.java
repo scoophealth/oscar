@@ -38,8 +38,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.apache.struts.util.LabelValueBean;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.dao.ClientDao;
@@ -92,6 +91,7 @@ import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.dx.dao.DxResearchDAO;
 import org.oscarehr.dx.model.DxResearch;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import oscar.OscarProperties;
@@ -136,7 +136,7 @@ public class CaseManagementManager {
 
 	private boolean enabled;
 
-	private static final Log logger = LogFactory.getLog(CaseManagementManager.class);
+	private static final Logger logger = MiscUtils.getLogger();
 
 	/*
 	* check to see if issue has been saved for this demo beforeif it has return issue; else return null

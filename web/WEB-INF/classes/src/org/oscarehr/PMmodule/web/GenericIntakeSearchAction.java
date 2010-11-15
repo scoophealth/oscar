@@ -31,8 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.ws.WebServiceException;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -61,7 +60,7 @@ import com.quatro.model.LookupCodeValue;
 
 public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 
-	private static Log LOG = LogFactory.getLog(GenericIntakeSearchAction.class);
+	private static Logger LOG = MiscUtils.getLogger();
 
 	private static final List<LookupCodeValue> genders = new ArrayList<LookupCodeValue>();
 

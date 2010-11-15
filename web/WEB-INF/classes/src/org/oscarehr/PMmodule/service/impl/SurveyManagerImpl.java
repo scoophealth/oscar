@@ -28,8 +28,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.apache.struts.util.LabelValueBean;
 import org.oscarehr.PMmodule.dao.SurveyDAO;
 import org.oscarehr.PMmodule.dao.SurveySecurityDao;
@@ -52,7 +51,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class SurveyManagerImpl implements SurveyManager, CustomReportDataSource {
 
-	Log log = LogFactory.getLog(SurveyManagerImpl.class);
+	Logger log=MiscUtils.getLogger();
 	
 	private SurveyDAO surveyDAO;
 	

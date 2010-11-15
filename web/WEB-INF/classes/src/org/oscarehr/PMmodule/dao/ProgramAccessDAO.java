@@ -27,16 +27,16 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.time.DateUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.model.AccessType;
 import org.oscarehr.PMmodule.model.ProgramAccess;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.TimeClearedHashMap;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 public class ProgramAccessDAO extends HibernateDaoSupport {
 
-    private static Log log = LogFactory.getLog(ProgramAccessDAO.class);
+    private static Logger log = MiscUtils.getLogger();
 
 	private static Map<Long, List<ProgramAccess>> programAccessListByProgramIdCache=Collections.synchronizedMap(new TimeClearedHashMap<Long, List<ProgramAccess>>(DateUtils.MILLIS_PER_HOUR, DateUtils.MILLIS_PER_HOUR));
 

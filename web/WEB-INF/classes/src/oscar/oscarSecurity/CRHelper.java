@@ -18,7 +18,6 @@ import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
-import oscar.oscarDB.DBHandler;
 
 public class CRHelper implements RolesProvider {
 	private static Logger log = Logger.getLogger(CRHelper.class);

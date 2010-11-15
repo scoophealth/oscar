@@ -25,17 +25,17 @@ package org.oscarehr.PMmodule.utility;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.oscarehr.common.model.Demographic;
+import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.model.Formintakea;
 import org.oscarehr.PMmodule.service.ClientManager;
 import org.oscarehr.PMmodule.service.IntakeAManager;
+import org.oscarehr.common.model.Demographic;
 import org.oscarehr.util.DbConnectionFilter;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class CopyHealthCardInfoToDemographics {
-	protected final Log log = LogFactory.getLog(getClass());
+	protected final Logger log = MiscUtils.getLogger();
 	    
     public CopyHealthCardInfoToDemographics() throws Exception {
     	int totalUpdated = 0;

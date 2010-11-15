@@ -4,8 +4,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.dao.SecUserRoleDao;
@@ -17,6 +16,7 @@ import org.oscarehr.common.dao.SecRoleDao;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.SecRole;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBPreparedHandler;
@@ -26,7 +26,7 @@ import com.quatro.model.security.Security;
 
 public class StudentImporter {
 
-	private static Log logger = LogFactory.getLog(StudentImporter.class);
+	private static Logger logger = MiscUtils.getLogger();
 	
 	static ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
 	static SecurityDao securityDao = (SecurityDao)SpringUtils.getBean("securityDao");

@@ -31,12 +31,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.util.UtilDateUtilities;
 
@@ -44,7 +44,7 @@ import oscar.util.UtilDateUtilities;
 
 public class EctIncomingEncounterAction extends Action {
     
-  private static Log log = LogFactory.getLog(EctIncomingEncounterAction.class);
+  private static Logger log = MiscUtils.getLogger();
     
   public ActionForward execute(ActionMapping mapping,
 				 ActionForm form,

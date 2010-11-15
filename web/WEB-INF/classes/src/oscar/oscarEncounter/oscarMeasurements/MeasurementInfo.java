@@ -36,8 +36,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBean;
@@ -48,7 +47,7 @@ import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandle
  * @author jay
  */
 public class MeasurementInfo {
-    private static Log log = LogFactory.getLog(MeasurementInfo.class);
+    private static Logger log = MiscUtils.getLogger();
     
     ArrayList warning = null;
     Hashtable warningHash = new Hashtable();

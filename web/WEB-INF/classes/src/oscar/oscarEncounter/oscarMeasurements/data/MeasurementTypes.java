@@ -32,8 +32,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Hashtable;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
@@ -44,7 +43,7 @@ import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementTypesBean;
  * @author Jay Gallagher
  */
 public class MeasurementTypes {
-    private static Log log = LogFactory.getLog(MeasurementTypes.class);
+    private static Logger log = MiscUtils.getLogger();
     static MeasurementTypes measurementTypes = new MeasurementTypes();
     boolean loaded = false;
     Hashtable byId = null;

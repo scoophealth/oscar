@@ -40,8 +40,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -54,7 +53,7 @@ import oscar.util.UtilDateUtilities;
  * @author jay
  */
 public class DxReference {
-    private static final Log _log = LogFactory.getLog(DxReference.class);
+    private static final Logger _log = MiscUtils.getLogger();
     BillingDxCodeDAO dxCode = (BillingDxCodeDAO) SpringUtils.getBean("BillingDxCodeDAO");
 
     /** Creates a new instance of DxReference */

@@ -8,14 +8,13 @@ package org.oscarehr.phr.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionRedirect;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.phr.PHRAuthentication;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
 import oscar.oscarDemographic.data.DemographicData;
@@ -25,7 +24,7 @@ import oscar.oscarDemographic.data.DemographicData;
  * @author apavel
  */
 public class PHRViewPatientRecord extends DispatchAction {
-    private static Log _log = LogFactory.getLog(PHRGenericSendToPhrAction.class);
+    private static final Logger log2 = MiscUtils.getLogger();
 
     @Override
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {

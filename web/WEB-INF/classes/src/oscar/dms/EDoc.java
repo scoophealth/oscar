@@ -31,8 +31,7 @@ import java.io.OutputStream;
 import java.util.Date;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.apache.struts.upload.FormFile;
 import org.oscarehr.util.MiscUtils;
 
@@ -41,7 +40,7 @@ import oscar.oscarTags.TagObject;
 import oscar.util.UtilDateUtilities;
 
 public class EDoc extends TagObject implements Comparable {
-	private static Log _log = LogFactory.getLog(EDoc.class);
+	private static final Logger logger = MiscUtils.getLogger();
 
 	private String docId;
 	private String description = "";
@@ -149,7 +148,7 @@ public class EDoc extends TagObject implements Comparable {
 		try {
 			os = new FileOutputStream(getFilePath());
 		} catch (FileNotFoundException fnfe) {
-			_log.error("Could not write to the document container", fnfe);
+			logger.error("Could not write to the document container", fnfe);
 			throw fnfe;
 		}
 		return os;

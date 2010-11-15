@@ -35,8 +35,7 @@ import javax.xml.ws.WebServiceException;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -74,7 +73,7 @@ import oscar.OscarProperties;
 
 public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 
-	private static Log LOG = LogFactory.getLog(GenericIntakeEditAction.class);
+	private static Logger LOG = MiscUtils.getLogger();
 	// Forwards
 	private static final String EDIT = "edit";
 	private static final String PRINT = "print";

@@ -24,13 +24,13 @@ package org.caisi.dao;
 
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.caisi.model.IssueAdmin;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 public class IssueAdminDAO extends HibernateDaoSupport {
-    private Log log = LogFactory.getLog(IssueAdminDAO.class);
+    private Logger log=MiscUtils.getLogger();
 
     public List getIssueAdmins() {
         return getHibernateTemplate().find("from IssueAdmin");

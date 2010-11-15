@@ -15,7 +15,6 @@ import java.util.List;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import com.quatro.model.LookupTableDefValue;
-import com.quatro.dao.LookupDao;
 
 public class ORGDao extends HibernateDaoSupport {
 

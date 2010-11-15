@@ -25,25 +25,23 @@
 
 package oscar.oscarEncounter.oscarConsultationRequest.pageUtil;
 
-import java.util.Date;
-import java.util.Vector;
-import java.util.List;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Vector;
 
 import org.apache.commons.lang.time.DateFormatUtils;
-
-import org.oscarehr.util.MiscUtils;
-import org.oscarehr.common.model.ConsultationRequest;
-import org.oscarehr.common.dao.ConsultationRequestDao;
-import org.oscarehr.common.model.Demographic;
-import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.PMmodule.dao.ProviderDao;
-import org.oscarehr.common.model.Provider;
-import org.oscarehr.common.dao.ProfessionalSpecialistDao;
-import org.oscarehr.common.model.ProfessionalSpecialist;
+import org.oscarehr.common.dao.ConsultationRequestDao;
 import org.oscarehr.common.dao.ConsultationServiceDao;
+import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.dao.ProfessionalSpecialistDao;
+import org.oscarehr.common.model.ConsultationRequest;
 import org.oscarehr.common.model.ConsultationServices;
-
+import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.ProfessionalSpecialist;
+import org.oscarehr.common.model.Provider;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class EctViewConsultationRequestsUtil {         

@@ -25,12 +25,12 @@ package org.oscarehr.PMmodule.utility;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.oscarehr.util.DbConnectionFilter;
+import org.oscarehr.util.MiscUtils;
 
 public class MigrateStaffAssignments {
-	protected final Log log = LogFactory.getLog(getClass());
+	private static  final Logger log = MiscUtils.getLogger();
     protected int nurseRoleId = 0;
     protected int doctorRoleId = 0;
     

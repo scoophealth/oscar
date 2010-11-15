@@ -27,15 +27,15 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.model.FormInfo;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 public class FormsDAO extends HibernateDaoSupport {
 
-    private Log log = LogFactory.getLog(FormsDAO.class);
+    private Logger log=MiscUtils.getLogger();
 
     public void saveForm(Object o) {
         this.getHibernateTemplate().save(o);

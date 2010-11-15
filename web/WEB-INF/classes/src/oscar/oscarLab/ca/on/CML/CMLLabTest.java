@@ -34,8 +34,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
@@ -47,7 +46,7 @@ import oscar.util.UtilDateUtilities;
  * @author Jay Gallagher
  */
 public class CMLLabTest {
-    private static Log log = LogFactory.getLog(CMLLabTest.class);
+    private static Logger log = MiscUtils.getLogger();
     
     public String locationId = null; //  2. (e.g. 70 = CML Mississauga)
     public String printDate  = null; //  3. YYYYMMDD

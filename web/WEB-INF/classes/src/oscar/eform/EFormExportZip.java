@@ -27,8 +27,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.eform.actions.DisplayImageAction;
@@ -40,7 +39,7 @@ import oscar.eform.upload.ImageUploadAction;
  * @author apavel & not Jay - Jay is too lazy to make this, so he makes Paul do the work for him
  */
 public class EFormExportZip {
-    private Log _log = LogFactory.getLog(EFormExportZip.class);
+    private static final Logger _log = MiscUtils.getLogger();
 
     public void exportForms(List<EForm> eForms, OutputStream os) throws IOException, Exception {
         ZipOutputStream zos = new ZipOutputStream(os);

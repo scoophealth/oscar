@@ -24,18 +24,18 @@ package org.oscarehr.survey.service.impl;
 
 import java.util.Iterator;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.oscarehr.survey.dao.SurveyTestDAO;
 import org.oscarehr.survey.model.SurveyTestData;
 import org.oscarehr.survey.model.SurveyTestInstance;
 import org.oscarehr.survey.service.SurveyTestManager;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 public class SurveyTestManagerImpl implements SurveyTestManager {
 
-	private Log log = LogFactory.getLog(getClass());
+	private static Logger log = MiscUtils.getLogger();
 
 	private SurveyTestDAO surveyTestDAO;
 	

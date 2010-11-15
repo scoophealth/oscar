@@ -31,8 +31,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -45,9 +44,10 @@ import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.ClientManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.web.formbean.ActivityReportFormBean;
+import org.oscarehr.util.MiscUtils;
 
 public class ActivityReportAction extends DispatchAction {
-	private static Log log = LogFactory.getLog(ActivityReportAction.class);
+	private static Logger log = MiscUtils.getLogger();
 	private  final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 	
 	private ProgramManager programManager;

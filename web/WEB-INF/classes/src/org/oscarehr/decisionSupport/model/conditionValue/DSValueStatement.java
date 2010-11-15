@@ -5,9 +5,10 @@
 
 package org.oscarehr.decisionSupport.model.conditionValue;
 
-import org.oscarehr.decisionSupport.model.*;
 import java.util.ArrayList;
+
 import org.apache.commons.lang.StringUtils;
+import org.oscarehr.decisionSupport.model.DecisionSupportException;
 
 /**
  *

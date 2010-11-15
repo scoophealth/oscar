@@ -42,8 +42,7 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.indivo.IndivoException;
 import org.indivo.xml.JAXBUtils;
 import org.indivo.xml.phr.annotation.DocumentReferenceType;
@@ -71,7 +70,7 @@ import oscar.oscarProvider.data.ProviderMyOscarIdData;
  * @author jay
  */
 public class PHRMessage  extends PHRDocument implements Serializable{
-    private static Log log = LogFactory.getLog(PHRMessage.class);
+    private static Logger log = MiscUtils.getLogger();
     //for status received msgs
     public static final int STATUS_NEW = 1;
     public static final int STATUS_READ = 2;

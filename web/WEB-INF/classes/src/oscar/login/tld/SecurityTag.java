@@ -40,7 +40,6 @@ import javax.servlet.jsp.tagext.Tag;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
-import oscar.oscarDB.DBHandler;
 import oscar.util.OscarRoleObjectPrivilege;
 
 public class SecurityTag implements Tag {

@@ -33,12 +33,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.entities.Provider;
 import oscar.oscarBilling.ca.bc.MSP.MSPReconcile;
@@ -49,7 +49,7 @@ import oscar.oscarDemographic.data.DemographicData;
 
 public final class BillingViewAction
     extends Action {
-    private static Log log = LogFactory.getLog(BillingViewAction.class);
+    private static Logger log = MiscUtils.getLogger();
 
   public ActionForward execute(ActionMapping mapping,
                                ActionForm form,

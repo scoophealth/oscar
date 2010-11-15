@@ -28,8 +28,7 @@ import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -37,17 +36,18 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.DynaActionForm;
 import org.apache.struts.actions.DispatchAction;
-import org.oscarehr.common.model.Demographic;
 import org.oscarehr.PMmodule.model.FormFollowUp;
-import org.oscarehr.common.model.Provider;
 import org.oscarehr.PMmodule.service.ClientManager;
 import org.oscarehr.PMmodule.service.FormsManager;
 import org.oscarehr.PMmodule.service.LogManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
+import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.Provider;
+import org.oscarehr.util.MiscUtils;
 
 public class FollowUpAction extends DispatchAction {
-	private static Log log = LogFactory.getLog(FollowUpAction.class);
+	private static Logger log = MiscUtils.getLogger();
 	private  final SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
 	private  final SimpleDateFormat timeFormatter = new SimpleDateFormat("hh:mm a");
 	

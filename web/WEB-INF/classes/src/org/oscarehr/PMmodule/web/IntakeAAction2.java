@@ -31,8 +31,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -52,9 +51,10 @@ import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.PMmodule.web.formbean.IntakeAFormBean;
 import org.oscarehr.PMmodule.web.formbean.IntakeFormBean;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.util.MiscUtils;
 
 public class IntakeAAction2 extends BaseAction {
-    private static Log log = LogFactory.getLog(IntakeAAction2.class);
+    private static Logger log = MiscUtils.getLogger();
     private final SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
     private AdmissionManager admissionManager;
     private ClientManager clientManager;

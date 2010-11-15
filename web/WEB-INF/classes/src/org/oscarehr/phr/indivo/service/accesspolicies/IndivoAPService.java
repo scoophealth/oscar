@@ -5,22 +5,18 @@
 
 package org.oscarehr.phr.indivo.service.accesspolicies;
 
-import com.sun.xacml.AbstractPolicy;
-import com.sun.xacml.PolicySet;
-import com.sun.xacml.combine.PolicyCombiningAlgorithm;
 import java.io.InputStream;
-//import java.lang.String; ??
-import java.lang.String;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+import org.apache.log4j.Logger;
 import org.indivo.security.ProfileUtils;
 import org.indivo.security.SecurityUtils;
 import org.indivo.xml.JAXBUtils;
@@ -37,8 +33,14 @@ import org.oscarehr.phr.indivo.service.impl.IndivoServiceImpl;
 import org.oscarehr.phr.model.PHRAction;
 import org.oscarehr.phr.model.PHRDocument;
 import org.oscarehr.phr.service.PHRService;
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarProvider.data.ProviderData;
 import oscar.util.StringUtils;
+
+import com.sun.xacml.AbstractPolicy;
+import com.sun.xacml.PolicySet;
+import com.sun.xacml.combine.PolicyCombiningAlgorithm;
 
 /**
  *
@@ -56,7 +58,7 @@ public class IndivoAPService extends IndivoServiceImpl {
      * All this occurs in one stage for sending demographic access policies
      */
     
-    private static Log log = LogFactory.getLog(IndivoAPService.class); ///IndivoServiceImpl.class
+    private static Logger log = MiscUtils.getLogger(); ///IndivoServiceImpl.class
     
     public static final String LEVEL_NOT_SET = "";
     public static final String LEVEL_PATIENT = "org:indivo:profile:patient";

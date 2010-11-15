@@ -26,14 +26,14 @@ package org.oscarehr.common.dao;
 
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.oscarehr.common.model.TicklerLink;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 public class TicklerLinkDAO extends HibernateDaoSupport {
 
-	private static Log log = LogFactory.getLog(TicklerLinkDAO.class);
+	private static Logger log = MiscUtils.getLogger();
 
 	public TicklerLink getTicklerLink(Long id) {
 	    TicklerLink noteLink = (TicklerLink) this.getHibernateTemplate().get(TicklerLink.class, id);

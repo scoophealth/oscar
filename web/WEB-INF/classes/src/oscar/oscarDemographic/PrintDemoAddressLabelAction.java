@@ -11,8 +11,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -25,7 +24,7 @@ import oscar.OscarDocumentCreator;
 
 public class PrintDemoAddressLabelAction extends OscarAction {
 
-    private static Log logger = LogFactory.getLog(PrintDemoAddressLabelAction.class);
+    private static Logger logger = MiscUtils.getLogger();
 
     public PrintDemoAddressLabelAction() {
     }

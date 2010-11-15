@@ -26,7 +26,6 @@
 package org.oscarehr.common.dao;
 
 import org.oscarehr.common.model.ConsultationServices;
-
 import org.springframework.stereotype.Repository;
 
 /**

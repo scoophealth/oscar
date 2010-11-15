@@ -33,12 +33,12 @@ import java.util.Date;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.indivo.xml.attributes.RoleType;
 import org.indivo.xml.phr.types.AuthorType;
 import org.indivo.xml.talk.AuthenticateResultType;
 import org.oscarehr.phr.PHRAuthentication;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarEncounter.data.EctProviderData;
 
@@ -47,7 +47,7 @@ import oscar.oscarEncounter.data.EctProviderData;
  * @author jay
  */
 public class IndivoAuthentication implements PHRAuthentication {
-    private static Log log = LogFactory.getLog(IndivoAuthentication.class);
+    private static Logger log = MiscUtils.getLogger();
     AuthenticateResultType authResult= null;
     String providerNo = null;
     

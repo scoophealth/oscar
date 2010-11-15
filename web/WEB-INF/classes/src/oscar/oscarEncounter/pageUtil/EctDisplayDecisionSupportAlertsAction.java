@@ -12,13 +12,12 @@ import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.apache.struts.util.MessageResources;
 import org.oscarehr.decisionSupport.model.DSConsequence;
 import org.oscarehr.decisionSupport.model.DSGuideline;
 import org.oscarehr.decisionSupport.service.DSService;
-import org.oscarehr.decisionSupport.web.DSGuidelineAction;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -31,7 +30,7 @@ import oscar.util.StringUtils;
  */
 public class EctDisplayDecisionSupportAlertsAction extends EctDisplayAction {
     private String cmd = "Guidelines";
-    private static Log _log = LogFactory.getLog(DSGuidelineAction.class);
+    private static final Logger logger = MiscUtils.getLogger();
 
   public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
 
@@ -98,7 +97,7 @@ public class EctDisplayDecisionSupportAlertsAction extends EctDisplayAction {
                     Dao.addItem(item);
                 }
             } catch (Exception e) {
-                _log.error("Unable to evaluate patient against a DS guideline '" + dsGuideline.getTitle() + "' of UUID '" + dsGuideline.getUuid() + "'", e);
+                logger.error("Unable to evaluate patient against a DS guideline '" + dsGuideline.getTitle() + "' of UUID '" + dsGuideline.getUuid() + "'", e);
             }
         }
 

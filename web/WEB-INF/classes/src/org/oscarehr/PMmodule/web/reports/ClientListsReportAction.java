@@ -32,9 +32,9 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.dao.ClientDao;
 import org.oscarehr.PMmodule.model.Program;
-import org.oscarehr.common.model.Provider;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
+import org.oscarehr.common.model.Provider;
 
 public class ClientListsReportAction extends DispatchAction {
 

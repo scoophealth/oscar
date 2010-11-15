@@ -35,8 +35,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteLinkDAO;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
@@ -53,7 +52,7 @@ import oscar.util.UtilDateUtilities;
 
 // all SQL statements here
 public final class EDocUtil extends SqlUtilBaseS {
-    static Log log = LogFactory.getLog(EDocUtil.class);
+    static Logger log=MiscUtils.getLogger();
 
     public static final String PUBLIC = "public";
     public static final String PRIVATE = "private";

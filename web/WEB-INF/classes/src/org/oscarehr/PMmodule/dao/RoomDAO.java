@@ -25,10 +25,10 @@ package org.oscarehr.PMmodule.dao;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.model.Room;
 import org.oscarehr.PMmodule.model.RoomType;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
@@ -36,7 +36,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  */
 public class RoomDAO extends HibernateDaoSupport {
 
-	private static final Log log = LogFactory.getLog(RoomDAO.class);
+	private static final Logger log=MiscUtils.getLogger();
 
 	/**
 	 * Does room with id exist

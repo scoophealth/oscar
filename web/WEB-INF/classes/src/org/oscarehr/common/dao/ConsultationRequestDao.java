@@ -30,10 +30,7 @@ import java.util.List;
 import javax.persistence.Query;
 
 import org.apache.commons.lang.time.DateFormatUtils;
-
 import org.oscarehr.common.model.ConsultationRequest;
-import org.oscarehr.common.model.Provider;
-import org.oscarehr.common.model.Demographic;
 import org.springframework.stereotype.Repository;
 
 @Repository

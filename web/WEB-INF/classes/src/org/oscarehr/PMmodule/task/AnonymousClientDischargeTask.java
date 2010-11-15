@@ -4,16 +4,16 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimerTask;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class AnonymousClientDischargeTask extends TimerTask {
 
-    private static final Log logger = LogFactory.getLog(AnonymousClientDischargeTask.class);
+    private static final Logger logger = MiscUtils.getLogger();
     
     public void run() {    	
 		LoggedInInfo.setLoggedInInfoToCurrentClassAndMethod();

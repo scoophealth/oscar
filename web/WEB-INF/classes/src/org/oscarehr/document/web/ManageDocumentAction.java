@@ -48,8 +48,7 @@ import javax.servlet.http.HttpSession;
 
 import net.sf.json.JSONObject;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -83,7 +82,7 @@ import com.sun.pdfview.PDFPage;
  */
 public class ManageDocumentAction extends DispatchAction {
 
-    private static Log log = LogFactory.getLog(ManageDocumentAction.class);
+    private static Logger log = MiscUtils.getLogger();
 
     private DocumentDAO documentDAO = null;
     private ProviderInboxRoutingDao  providerInboxRoutingDAO = null;

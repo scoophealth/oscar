@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.oscarehr.common.dao.DemographicDao;
+import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.model.ProgramClientRestriction;
+import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
@@ -18,7 +18,7 @@ public class ProgramClientRestrictionDAO extends HibernateDaoSupport {
     private ProgramDao programDao;
     private ProviderDao providerDao;
 
-    private static Log log = LogFactory.getLog(ProgramClientRestrictionDAO.class);
+    private static Logger log = MiscUtils.getLogger();
 
     public Collection<ProgramClientRestriction> find(int programId, int demographicNo) {
 

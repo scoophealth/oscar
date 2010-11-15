@@ -39,8 +39,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Hashtable;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDemographic.data.DemographicData;
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBean;
@@ -54,7 +54,7 @@ import oscar.util.UtilDateUtilities;
  * @author jay
  */
 public class FluReport implements PreventionReport {
-    private static Log log = LogFactory.getLog(FluReport.class);
+    private static Logger log = MiscUtils.getLogger();
     /** Creates a new instance of FluReport */
     public FluReport() {
     }

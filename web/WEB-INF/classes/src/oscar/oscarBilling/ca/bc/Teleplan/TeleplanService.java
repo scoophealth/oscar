@@ -33,15 +33,15 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
 
 /**
  *
  * @author jay
  */
 public class TeleplanService {
-    static Log log = LogFactory.getLog(TeleplanService.class);
+    static Logger log=MiscUtils.getLogger();
     
     /** Creates a new instance of TeleplanService */
     public TeleplanService() {

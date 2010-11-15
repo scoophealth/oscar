@@ -82,10 +82,10 @@ import oscar.log.LogAction;
 import oscar.log.LogConst;
 import oscar.oscarEncounter.pageUtil.EctSessionBean;
 import oscar.oscarSurveillance.SurveillanceMaster;
+import oscar.service.OscarSuperManager;
 import oscar.util.UtilDateUtilities;
 
 import com.lowagie.text.DocumentException;
-import oscar.service.OscarSuperManager;
 
 /*
  * Updated by Eugene Petruhin on 12 and 13 jan 2009 while fixing #2482832 & #2494061

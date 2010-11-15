@@ -9,8 +9,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -52,7 +51,7 @@ import oscar.util.StringUtils;
 public class TeleplanCorrectionActionWCB
         extends org.apache.struts.action.Action {
 
-    static Log log = LogFactory.getLog(TeleplanCorrectionActionWCB.class);
+    static Logger log=MiscUtils.getLogger();
     private static final String sql_biling = "update_wcb_billing", //set it to be billed again in billing
              sql_demographic = "update_wcb_demographic", //update demographic information
              sql_wcb = "update_wcb_wcb", //updates wcb form

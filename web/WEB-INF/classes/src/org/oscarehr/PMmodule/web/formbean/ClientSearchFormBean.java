@@ -27,11 +27,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
 
 public class ClientSearchFormBean {
-	private static Log log = LogFactory.getLog(ClientSearchFormBean.class);
+	private static Logger log = MiscUtils.getLogger();
 
 	private SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
 	private Calendar calendar = Calendar.getInstance();

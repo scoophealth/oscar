@@ -3,8 +3,6 @@ package org.oscarehr.casemgmt.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -14,8 +12,6 @@ import org.oscarehr.casemgmt.service.OnCallManager;
 import org.oscarehr.casemgmt.web.formbeans.OnCallQuestionnaireFormBean;
 
 public class OnCallQuestionnaireAction extends DispatchAction {
-	Log logger = LogFactory.getLog(OnCallQuestionnaireAction.class);
-	
 	private OnCallManager mgr;
 	
 	public void setOnCallManager(OnCallManager mgr) {

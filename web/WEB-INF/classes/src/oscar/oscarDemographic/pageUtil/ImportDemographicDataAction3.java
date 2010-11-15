@@ -54,8 +54,7 @@ import java.util.zip.ZipInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -83,6 +82,7 @@ import oscar.dms.EDocUtil;
 import oscar.oscarDemographic.data.DemographicData;
 import oscar.oscarDemographic.data.DemographicExt;
 import oscar.oscarDemographic.data.DemographicRelationship;
+import oscar.oscarDemographic.data.DemographicData.DemographicAddResult;
 import oscar.oscarEncounter.data.EctProgram;
 import oscar.oscarEncounter.oscarMeasurements.data.ImportExportMeasurements;
 import oscar.oscarEncounter.oscarMeasurements.data.Measurements;
@@ -94,6 +94,7 @@ import oscar.oscarProvider.data.ProviderData;
 import oscar.oscarRx.data.RxAllergyImport;
 import oscar.oscarRx.data.RxPrescriptionImport;
 import oscar.service.OscarSuperManager;
+import oscar.util.StringUtils;
 import oscar.util.UtilDateUtilities;
 import cds.OmdCdsDocument;
 import cds.AllergiesAndAdverseReactionsDocument.AllergiesAndAdverseReactions;
@@ -112,8 +113,6 @@ import cds.PersonalHistoryDocument.PersonalHistory;
 import cds.ProblemListDocument.ProblemList;
 import cds.ReportsReceivedDocument.ReportsReceived;
 import cds.RiskFactorsDocument.RiskFactors;
-import oscar.oscarDemographic.data.DemographicData.DemographicAddResult;
-import oscar.util.StringUtils;
 
 /**
  *
@@ -121,7 +120,7 @@ import oscar.util.StringUtils;
  */
 	public class ImportDemographicDataAction3 extends Action {
 	
-	Log logger = LogFactory.getLog(ImportDemographicDataAction3.class);
+	private static final Logger logger = MiscUtils.getLogger();
 		
 	boolean matchProviderNames = true;
 	String admProviderNo = null;

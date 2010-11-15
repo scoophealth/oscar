@@ -43,8 +43,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Logger;
 import org.apache.xmlrpc.XmlRpcClientLite;
 import org.oscarehr.common.dao.UserPropertyDAO;
@@ -1713,7 +1711,7 @@ public class RxUtil {
         return vec;
     }
 
-    private static Log log2 = LogFactory.getLog(RxMyDrugrefInfoAction.class);
+    private static final Logger log2 = MiscUtils.getLogger();
     public static Object callWebserviceLite(String procedureName, Vector params) throws Exception{
         log2.debug("#CALLmyDRUGREF-"+procedureName);
         Object object = null;

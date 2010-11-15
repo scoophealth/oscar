@@ -27,11 +27,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Properties;
 
 import org.oscarehr.util.MiscUtils;
 
-import oscar.oscarDB.DBHandler;
 import oscar.oscarDB.DBPreparedHandler;
 
 

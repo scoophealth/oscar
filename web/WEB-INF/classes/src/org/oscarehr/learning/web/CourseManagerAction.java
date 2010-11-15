@@ -12,8 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.sf.json.JSONArray;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -30,6 +29,7 @@ import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.SecRole;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 /**
@@ -40,7 +40,7 @@ import org.oscarehr.util.SpringUtils;
  */
 public class CourseManagerAction extends DispatchAction {
 
-	private static Log logger = LogFactory.getLog(CourseManagerAction.class);
+	private static Logger logger = MiscUtils.getLogger();
 	private static ProgramDao programDao = (ProgramDao) SpringUtils.getBean("programDao");
 	private static ProgramManager programManager = (ProgramManager) SpringUtils.getBean("programManager");
 	private static DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");

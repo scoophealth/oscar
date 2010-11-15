@@ -3,14 +3,13 @@ package com.quatro.dao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
-import java.util.List;
 import java.util.Calendar;
+import java.util.List;
 
-import org.caisi.dao.ProviderDAO;
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
+import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.PMmodule.model.Program;
+import org.oscarehr.common.model.Facility;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import oscar.MyDateFormat;
@@ -19,20 +18,12 @@ import oscar.oscarDB.DBPreparedHandler;
 import oscar.oscarDB.DBPreparedHandlerParam;
 
 import com.quatro.common.KeyConstants;
-import com.quatro.model.Attachment;
 import com.quatro.model.FieldDefValue;
 import com.quatro.model.LookupCodeValue;
 import com.quatro.model.LookupTableDefValue;
 import com.quatro.model.LstOrgcd;
 import com.quatro.model.security.SecProvider;
 import com.quatro.util.Utility;
-
-import org.oscarehr.PMmodule.dao.ProviderDao;
-import org.oscarehr.PMmodule.model.Program;
-import org.oscarehr.common.model.Facility;
-import org.oscarehr.util.MiscUtils;
-
-import java.util.Calendar;
 
 public class LookupDao extends HibernateDaoSupport {
 

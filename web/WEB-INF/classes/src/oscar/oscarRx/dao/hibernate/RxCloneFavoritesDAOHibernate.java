@@ -8,15 +8,17 @@ package oscar.oscarRx.dao.hibernate;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import org.hibernate.Criteria;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.criterion.Expression;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
-import oscar.oscarRx.model.Favorites;
-import oscar.oscarRx.dao.RxCloneFavoritesDAO;
-import oscar.oscarRx.model.Favoritesprivilege;
 import org.oscarehr.common.model.Provider;
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+
+import oscar.oscarRx.dao.RxCloneFavoritesDAO;
+import oscar.oscarRx.model.Favorites;
+import oscar.oscarRx.model.Favoritesprivilege;
 
 /**
  *

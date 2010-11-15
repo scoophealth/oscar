@@ -11,8 +11,6 @@
 package com.quatro.model.security;
 
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Provider entity.

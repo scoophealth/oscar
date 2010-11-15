@@ -5,27 +5,28 @@
 
 package org.oscarehr.decisionSupport.model;
 
-import org.oscarehr.decisionSupport.model.conditionValue.DSValue;
-import org.oscarehr.decisionSupport.model.impl.drools.DSGuidelineDrools;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.oscarehr.decisionSupport.model.conditionValue.DSValue;
+import org.oscarehr.decisionSupport.model.impl.drools.DSGuidelineDrools;
+import org.oscarehr.util.MiscUtils;
 /**
  *
  * @author apavel
  */
 public class DSGuidelineFactory {
-    protected static Log _log = LogFactory.getLog(DSGuidelineFactory.class);
+    private static Logger _log = MiscUtils.getLogger();
     public DSGuideline createGuidelineFromXml(String xml) throws DecisionSupportParseException {
        if (xml == null || xml.equals("")) throw new DecisionSupportParseException("Xml not set");
         SAXBuilder parser = new SAXBuilder();

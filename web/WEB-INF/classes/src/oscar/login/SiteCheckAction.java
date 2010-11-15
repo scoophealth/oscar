@@ -30,7 +30,6 @@ import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.PMmodule.web.BaseAction;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.SpringUtils;
-import org.springframework.context.ApplicationContext;
 
 import oscar.log.LogAction;
 import oscar.log.LogConst;

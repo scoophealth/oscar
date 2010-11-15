@@ -3,7 +3,9 @@ package org.oscarehr.casemgmt.web;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
+
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
+
 import oscar.oscarRx.data.RxPrescriptionData;
 
 public interface NoteDisplay {

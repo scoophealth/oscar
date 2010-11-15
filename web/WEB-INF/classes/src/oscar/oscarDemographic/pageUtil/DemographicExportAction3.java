@@ -91,6 +91,7 @@ import oscar.oscarReport.pageUtil.RptDemographicReportForm;
 import oscar.oscarRx.data.RxPatientData;
 import oscar.oscarRx.data.RxPrescriptionData;
 import oscar.service.OscarSuperManager;
+import oscar.util.StringUtils;
 import oscar.util.UtilDateUtilities;
 import cds.OmdCdsDocument;
 import cds.AllergiesAndAdverseReactionsDocument.AllergiesAndAdverseReactions;
@@ -108,7 +109,6 @@ import cds.PatientRecordDocument.PatientRecord;
 import cds.ProblemListDocument.ProblemList;
 import cds.ReportsReceivedDocument.ReportsReceived;
 import cds.RiskFactorsDocument.RiskFactors;
-import oscar.util.StringUtils;
 
 /**
  *

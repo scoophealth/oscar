@@ -34,8 +34,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -47,9 +46,10 @@ import org.oscarehr.PMmodule.utility.DateUtils;
 import org.oscarehr.PMmodule.utility.UtilDateUtilities;
 import org.oscarehr.PMmodule.utility.Utility;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.util.MiscUtils;
 
 public class IntakeAReport1Action extends BaseAction {
-    private static Log log = LogFactory.getLog(IntakeAReport1Action.class);
+    private static Logger log = MiscUtils.getLogger();
 
     HttpSession session = null;
 

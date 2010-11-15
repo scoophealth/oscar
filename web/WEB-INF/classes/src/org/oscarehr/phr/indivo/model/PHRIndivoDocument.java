@@ -7,12 +7,14 @@ package org.oscarehr.phr.indivo.model;
 
 import java.util.Date;
 import java.util.GregorianCalendar;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
+
 import org.indivo.IndivoException;
 import org.indivo.xml.JAXBUtils;
 import org.indivo.xml.attributes.RoleType;
@@ -22,6 +24,7 @@ import org.indivo.xml.phr.document.IndivoDocumentType;
 import org.indivo.xml.phr.types.AuthorType;
 import org.oscarehr.phr.model.PHRAction;
 import org.oscarehr.phr.model.PHRDocument;
+
 import oscar.oscarProvider.data.ProviderData;
 
 /**

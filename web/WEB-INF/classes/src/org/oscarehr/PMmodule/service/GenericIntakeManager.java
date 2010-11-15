@@ -33,8 +33,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.Map.Entry;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.dao.AdmissionDao;
 import org.oscarehr.PMmodule.dao.GenericIntakeDAO;
 import org.oscarehr.PMmodule.dao.GenericIntakeNodeDAO;
@@ -52,6 +51,7 @@ import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.web.adapter.IntakeNodeHtmlAdapter;
 import org.oscarehr.PMmodule.web.adapter.ocan.OcanXmlAdapterFactory;
 import org.oscarehr.common.model.ReportStatistic;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
@@ -63,7 +63,7 @@ public class GenericIntakeManager {
 	private AdmissionDao admissionDao;
 	private OcanXmlAdapterFactory adapterFactory = new OcanXmlAdapterFactory();
 
-	Log logger = LogFactory.getLog(GenericIntakeManager.class);
+	private static Logger logger = MiscUtils.getLogger();
 	
 	public void setGenericIntakeNodeDAO(
 			GenericIntakeNodeDAO genericIntakeNodeDAO) {

@@ -25,8 +25,7 @@ package org.oscarehr.PMmodule.dao;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.Query;
@@ -35,13 +34,14 @@ import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import oscar.OscarProperties;
 import oscar.util.SqlUtils;
 
 public class ProviderDao extends HibernateDaoSupport {
-	private static Log log = LogFactory.getLog(ProviderDao.class);
+	private static Logger log = MiscUtils.getLogger();
 
 	public boolean providerExists(String providerNo) {
 		boolean exists = (((Long) getHibernateTemplate().iterate(

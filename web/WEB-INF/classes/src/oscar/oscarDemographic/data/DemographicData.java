@@ -34,8 +34,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 
@@ -43,14 +42,14 @@ import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
 
 public class DemographicData {
-	private static Log _log = LogFactory.getLog(DemographicData.class);
+	private static final Logger logger = MiscUtils.getLogger();
 
 	public DemographicData() {
 	}
 
 	public String getDemographicFirstLastName(String demographicNo) {
 		String fullName = "";
-		_log.debug("test");
+		logger.debug("test");
 		MiscUtils.getLogger().debug("test");
 		try {
 			
@@ -66,7 +65,7 @@ public class DemographicData {
 			rs.close();
 
 		} catch (SQLException sqe) {
-			_log.error("Could not get demographic first/last name", sqe);
+			logger.error("Could not get demographic first/last name", sqe);
 		}
 		return fullName;
 	}

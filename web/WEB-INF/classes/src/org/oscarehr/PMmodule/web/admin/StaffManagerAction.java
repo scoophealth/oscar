@@ -31,8 +31,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -53,9 +52,10 @@ import org.oscarehr.common.dao.SecRoleDao;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.MiscUtils;
 
 public class StaffManagerAction extends BaseAction {
-	private static Log log = LogFactory.getLog(StaffManagerAction.class);
+	private static Logger log = MiscUtils.getLogger();
 	
 	private FacilityDao facilityDao=null;
 

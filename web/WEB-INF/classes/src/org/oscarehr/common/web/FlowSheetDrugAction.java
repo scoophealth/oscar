@@ -1,24 +1,23 @@
 package org.oscarehr.common.web;
 
 import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
-
-
 import org.oscarehr.common.dao.FlowSheetDrugDAO;
 import org.oscarehr.common.model.FlowSheetDrug;
 import org.oscarehr.common.model.FlowSheetDx;
+import org.oscarehr.util.MiscUtils;
 
 public class FlowSheetDrugAction extends DispatchAction {
 
-    private static final Log log2 = LogFactory.getLog(FlowSheetDrugAction.class);
+    private static final Logger log2 = MiscUtils.getLogger();
     private FlowSheetDrugDAO flowSheetDrugDAO;
 
     public void setFlowSheetDrugDAO(FlowSheetDrugDAO flowSheetDrugDAO) {

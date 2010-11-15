@@ -26,8 +26,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.dao.BedDAO;
 import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.dao.ProgramTeamDAO;
@@ -40,6 +39,7 @@ import org.oscarehr.PMmodule.model.BedType;
 import org.oscarehr.PMmodule.model.JointAdmission;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.Room;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -48,7 +48,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class BedManager {
 
-    private static final Log log = LogFactory.getLog(BedManager.class);
+    private static final Logger log=MiscUtils.getLogger();
     private static <T extends Exception> void handleException(T e) throws T {
         log.error(e);
         throw e;

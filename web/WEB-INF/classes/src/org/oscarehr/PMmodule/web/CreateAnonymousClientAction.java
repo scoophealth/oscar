@@ -2,14 +2,14 @@ package org.oscarehr.PMmodule.web;
 
 import java.util.Date;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.ClientManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 /**
@@ -25,7 +25,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class CreateAnonymousClientAction {
 
-	static Log logger = LogFactory.getLog(CreateAnonymousClientAction.class);
+	private static Logger logger = MiscUtils.getLogger();
 	
 	public static Demographic generateAnonymousClient(int programId) {
 		logger.info("Create Anonymous Client!");

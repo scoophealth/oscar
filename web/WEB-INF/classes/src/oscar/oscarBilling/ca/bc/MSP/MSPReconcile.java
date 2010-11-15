@@ -43,8 +43,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Vector;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 
@@ -59,7 +58,7 @@ import oscar.util.StringUtils;
 import oscar.util.UtilMisc;
 
 public class MSPReconcile {
-  private static Log log = LogFactory.getLog(MSPReconcile.class);
+  private static Logger log = MiscUtils.getLogger();
 
 
   //Accounting Report Types

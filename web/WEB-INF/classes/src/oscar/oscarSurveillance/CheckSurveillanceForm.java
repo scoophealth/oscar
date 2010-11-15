@@ -31,16 +31,16 @@
 package oscar.oscarSurveillance;
 
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
+import org.oscarehr.util.MiscUtils;
 
 /**
  *
  * @author  Jay Gallagher
  */
 public class CheckSurveillanceForm extends ActionForm {
-   private static Log log = LogFactory.getLog(CheckSurveillanceForm.class);
+   private static Logger log = MiscUtils.getLogger();
    
    String proceed =null;
    String demographicNo = null;

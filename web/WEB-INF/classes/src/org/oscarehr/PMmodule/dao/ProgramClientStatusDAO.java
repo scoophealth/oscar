@@ -24,15 +24,15 @@ package org.oscarehr.PMmodule.dao;
 
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.oscarehr.PMmodule.model.ProgramClientStatus;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 public class ProgramClientStatusDAO extends HibernateDaoSupport {
 
-    private Log log = LogFactory.getLog(ProgramClientStatusDAO.class);
+    private Logger log=MiscUtils.getLogger();
 
     public List<ProgramClientStatus> getProgramClientStatuses(Integer programId) {
         return this.getHibernateTemplate().find("from ProgramClientStatus pcs where pcs.programId=?", programId);

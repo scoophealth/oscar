@@ -35,8 +35,7 @@ import javax.activation.MimetypesFileTypeMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DownloadAction;
@@ -50,7 +49,7 @@ import oscar.OscarProperties;
  */
 public class EctStreamStyleSheet extends DownloadAction{
     
-    private static Log log = LogFactory.getLog(EctStreamStyleSheet.class);
+    private static Logger log = MiscUtils.getLogger();
     
     /** Creates a new instance of DisplayImageAction */
     public EctStreamStyleSheet() {

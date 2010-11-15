@@ -31,8 +31,7 @@ package oscar.oscarBilling.ca.bc.Teleplan;
 
 import java.sql.ResultSet;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
@@ -42,7 +41,7 @@ import oscar.oscarDB.DBHandler;
  * @author jay
  */
 public class TeleplanSequenceDAO {
-    static Log log = LogFactory.getLog(TeleplanSequenceDAO.class);
+    static Logger log=MiscUtils.getLogger();
     
     /** Creates a new instance of TeleplanSequenceDAO */
     public TeleplanSequenceDAO() {

@@ -9,10 +9,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
+
 import javax.persistence.Query;
-import org.springframework.stereotype.Repository;
+
 import org.oscarehr.common.model.Queue;
 import org.oscarehr.util.MiscUtils;
+import org.springframework.stereotype.Repository;
 
 /**
  *

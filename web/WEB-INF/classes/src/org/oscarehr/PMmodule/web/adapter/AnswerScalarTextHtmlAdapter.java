@@ -21,8 +21,6 @@ package org.oscarehr.PMmodule.web.adapter;
 import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.model.IntakeNode;
 
-import ca.uhn.hl7v2.util.MessageIterator.Index;
-
 public class AnswerScalarTextHtmlAdapter extends AbstractAnswerScalarHtmlAdapter {
 	
 	private static final String CLASS_INTAKE_INPUT = "intakeInput";

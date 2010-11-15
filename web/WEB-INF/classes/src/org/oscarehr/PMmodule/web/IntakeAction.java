@@ -27,8 +27,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -39,10 +38,11 @@ import org.oscarehr.PMmodule.service.IntakeCManager;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
 import org.oscarehr.PMmodule.web.formbean.PreIntakeForm;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.util.MiscUtils;
 
 public class IntakeAction extends BaseAction {
 
-    private static Log log = LogFactory.getLog(IntakeAction.class);
+    private static Logger log = MiscUtils.getLogger();
     private ClientManager clientManager;
     private IntakeAManager intakeAManager;
     private IntakeCManager intakeCManager;

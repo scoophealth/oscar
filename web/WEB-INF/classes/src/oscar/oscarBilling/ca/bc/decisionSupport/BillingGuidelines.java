@@ -32,11 +32,10 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.HashMap;
+import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.oscarehr.decisionSupport.model.DSConsequence;
 import org.oscarehr.decisionSupport.model.DSGuideline;
 import org.oscarehr.decisionSupport.model.DSGuidelineFactory;
@@ -52,7 +51,7 @@ import oscar.OscarProperties;
  */
 public class BillingGuidelines  {
 
-    private static Log log = LogFactory.getLog(BillingGuidelines.class);
+    private static Logger log = MiscUtils.getLogger();
 
     private List<DSGuideline> billingGuideLines = null ;
     

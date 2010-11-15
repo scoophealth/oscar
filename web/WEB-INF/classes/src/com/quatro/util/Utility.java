@@ -12,7 +12,6 @@ package com.quatro.util;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -23,8 +22,6 @@ import java.util.TimeZone;
 
 import org.oscarehr.PMmodule.model.FieldDefinition;
 import org.oscarehr.util.MiscUtils;
-
-import com.quatro.common.KeyConstants;
 
 public class Utility {
     public static boolean IsEmpty(String pStr)

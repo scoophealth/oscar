@@ -61,8 +61,6 @@ import java.util.Hashtable;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 
-import oscar.oscarDB.DBHandler;
-
 /**
  * This class is used to interface with the DemographicExt table.
  *

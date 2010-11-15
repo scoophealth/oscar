@@ -34,8 +34,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -50,7 +49,7 @@ import oscar.oscarDemographic.data.DemographicData;
  * @author Jay Gallagher
  */
 public class PreventionDisplayConfig {
-    private static Log log = LogFactory.getLog(PreventionDisplayConfig.class);
+    private static Logger log = MiscUtils.getLogger();
     static PreventionDisplayConfig preventionDisplayConfig = new PreventionDisplayConfig();
    
     Hashtable prevHash = null;

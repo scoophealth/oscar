@@ -34,11 +34,11 @@ import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
 
 public class Utility {
-	private static Log log = LogFactory.getLog(Utility.class);
+	private static Logger log = MiscUtils.getLogger();
 
 	// ################################################################################
 	public Utility() {

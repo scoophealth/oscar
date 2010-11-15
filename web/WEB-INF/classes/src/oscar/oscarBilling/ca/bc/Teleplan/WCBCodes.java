@@ -28,8 +28,8 @@ package oscar.oscarBilling.ca.bc.Teleplan;
 import java.util.Arrays;
 
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
 
@@ -39,7 +39,7 @@ import oscar.OscarProperties;
  */
 public class WCBCodes {
 
-    private static Log log = LogFactory.getLog(WCBCodes.class);
+    private static Logger log = MiscUtils.getLogger();
     private static WCBCodes wcbCodes = new WCBCodes();
     String[] formRequiredCodes = null;
 

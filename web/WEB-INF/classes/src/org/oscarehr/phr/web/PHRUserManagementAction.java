@@ -36,20 +36,19 @@ import java.util.Hashtable;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionRedirect;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.phr.PHRAuthentication;
-import org.oscarehr.phr.PHRConstants;
 import org.oscarehr.phr.dao.PHRActionDAO;
 import org.oscarehr.phr.dao.PHRDocumentDAO;
 import org.oscarehr.phr.indivo.service.accesspolicies.IndivoAPService;
 import org.oscarehr.phr.model.PHRAction;
 import org.oscarehr.phr.service.PHRService;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDemographic.data.DemographicData;
 
@@ -62,7 +61,7 @@ import oscar.oscarDemographic.data.DemographicData;
  */
 public class PHRUserManagementAction extends DispatchAction {  
     
-    private static Log log = LogFactory.getLog(PHRUserManagementAction.class);
+    private static Logger log = MiscUtils.getLogger();
     
     PHRDocumentDAO phrDocumentDAO;
     PHRActionDAO phrActionDAO;

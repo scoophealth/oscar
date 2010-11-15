@@ -26,19 +26,19 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.dao.ClientDao;
 import org.oscarehr.PMmodule.dao.IntakeADao;
 import org.oscarehr.PMmodule.model.Formintakea;
 import org.oscarehr.PMmodule.service.IntakeAManager;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 public class IntakeAManagerImpl extends BaseIntakeManager implements IntakeAManager {
 	
-	private static Log log = LogFactory.getLog(IntakeAManagerImpl.class);
+	private static Logger log = MiscUtils.getLogger();
 	
 	private IntakeADao dao;
 	private ClientDao clientDao;

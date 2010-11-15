@@ -10,12 +10,11 @@
  *******************************************************************************/
 package com.quatro.dao.security;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import com.quatro.model.ReportValue;
-import com.quatro.model.security.*;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+
+import com.quatro.model.security.SecSiteValue;
 public class SecSiteDao extends HibernateDaoSupport {
 
 	  public void Save(SecSiteValue secSiteVal)

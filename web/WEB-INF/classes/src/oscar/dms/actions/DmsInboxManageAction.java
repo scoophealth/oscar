@@ -26,8 +26,6 @@
 
 package oscar.dms.actions;
 
-import com.quatro.dao.security.SecObjectNameDao;
-import com.quatro.model.security.Secobjectname;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -55,21 +53,25 @@ import org.oscarehr.PMmodule.utility.UtilDateUtilities;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DocumentResultsDao;
 import org.oscarehr.common.dao.ProviderInboxRoutingDao;
+import org.oscarehr.common.dao.QueueDao;
 import org.oscarehr.common.dao.QueueDocumentLinkDao;
+import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.ProviderInboxItem;
 import org.oscarehr.common.model.QueueDocumentLink;
-import org.oscarehr.util.SpringUtils;
-import oscar.dms.EDoc;
-import org.oscarehr.common.dao.QueueDao;
-import org.oscarehr.common.model.Demographic;
 import org.oscarehr.document.dao.DocumentDAO;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
+
+import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
 import oscar.oscarLab.ca.all.Hl7textResultsData;
 import oscar.oscarLab.ca.on.CommonLabResultData;
 import oscar.oscarLab.ca.on.LabResultData;
 import oscar.oscarProvider.data.ProviderData;
 import oscar.util.OscarRoleObjectPrivilege;
+
+import com.quatro.dao.security.SecObjectNameDao;
+import com.quatro.model.security.Secobjectname;
 
 /**
  *

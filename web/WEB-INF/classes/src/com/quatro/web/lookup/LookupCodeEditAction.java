@@ -11,9 +11,10 @@
 package com.quatro.web.lookup;
 
 import java.sql.SQLException;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
-import java.util.Calendar;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -22,8 +23,6 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
-import org.apache.struts.actions.DispatchAction;
-import org.oscarehr.PMmodule.web.BaseAction;
 import org.oscarehr.PMmodule.web.admin.BaseAdminAction;
 
 import oscar.MyDateFormat;

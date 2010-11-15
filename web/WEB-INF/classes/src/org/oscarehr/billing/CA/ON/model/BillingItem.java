@@ -24,6 +24,7 @@ package org.oscarehr.billing.CA.ON.model;
 
 import java.io.Serializable;
 import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

@@ -27,15 +27,15 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
+import org.oscarehr.util.MiscUtils;
 
 public final class BillingCreateBillingForm extends ActionForm {
-  private static final Log _log = LogFactory.getLog(BillingCreateBillingForm.class);
+  private static final Logger _log = MiscUtils.getLogger();
 
   private String[] service;
   private String xml_provider, xml_location, xml_billtype;

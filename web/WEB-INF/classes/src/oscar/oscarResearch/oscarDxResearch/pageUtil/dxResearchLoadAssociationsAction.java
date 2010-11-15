@@ -13,8 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -39,7 +38,7 @@ import com.Ostermiller.util.ExcelCSVPrinter;
 
 public class dxResearchLoadAssociationsAction extends DispatchAction {
 
-	private static Log logger = LogFactory.getLog(dxResearchLoadAssociationsAction.class);
+	private static Logger logger = MiscUtils.getLogger();
 	private DxDao dxDao = (DxDao) SpringUtils.getBean("dxDao");
 
     public ActionForward getAllAssociations(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)

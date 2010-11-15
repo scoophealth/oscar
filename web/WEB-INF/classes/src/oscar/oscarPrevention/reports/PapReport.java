@@ -40,8 +40,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Hashtable;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBean;
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler;
@@ -54,7 +54,7 @@ import oscar.util.UtilDateUtilities;
  * @author jay
  */
 public class PapReport implements PreventionReport {
-    private static Log log = LogFactory.getLog(PapReport.class);
+    private static Logger log = MiscUtils.getLogger();
     /** Creates a new instance of PapReport */
     public PapReport() {
     }

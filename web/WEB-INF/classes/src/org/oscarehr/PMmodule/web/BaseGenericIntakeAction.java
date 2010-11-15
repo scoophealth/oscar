@@ -4,8 +4,7 @@ import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.AgencyManager;
 import org.oscarehr.PMmodule.service.BedCheckTimeManager;
@@ -26,12 +25,13 @@ import org.oscarehr.PMmodule.service.RoomManager;
 import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.util.MiscUtils;
 
 import com.quatro.service.LookupManager;
 
 abstract class BaseGenericIntakeAction extends BaseAction {
 	
-	private static Log LOG = LogFactory.getLog(BaseGenericIntakeAction.class);
+	private static Logger LOG = MiscUtils.getLogger();
 
 	// Parameters
 	protected static final String METHOD = "method";

@@ -32,8 +32,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
 
@@ -42,7 +42,7 @@ import oscar.OscarProperties;
  * @author  Jay Gallagher
  */
 public class SurveyInfo {
-   private static Log log = LogFactory.getLog(SurveyInfo.class);
+   private static Logger log = MiscUtils.getLogger();
    
    /** Creates a new instance of SurveyInfo */
    public SurveyInfo() {

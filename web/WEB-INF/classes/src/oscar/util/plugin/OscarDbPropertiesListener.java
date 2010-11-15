@@ -7,12 +7,12 @@ import java.util.Properties;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
 
 
 public class OscarDbPropertiesListener implements ServletContextListener {
-	private static Log log = LogFactory.getLog(OscarDbPropertiesListener.class);
+	private static Logger log = MiscUtils.getLogger();
 
 	public void contextInitialized(ServletContextEvent event) {
 		String contextPath = event.getServletContext().getInitParameter("contextPath");

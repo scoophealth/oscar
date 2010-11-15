@@ -116,4 +116,3 @@ import git into gerrit
 - cp test.git/config test2.git/config
 - in mysql : insert into projects (use_contributor_agreements,submit_type,name) values ('N','M','test2');
 - gerrit.sh start
-

@@ -31,8 +31,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.entities.BillingStatusType;
@@ -43,7 +42,7 @@ import oscar.util.UtilDateUtilities;
 
 
 public class BillingFormData {
-  protected static Log _log = LogFactory.getLog(BillingFormData.class);
+  private static Logger _log = MiscUtils.getLogger();
 
   public ArrayList getPaymentTypes() {
     ArrayList types = new ArrayList();

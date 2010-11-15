@@ -36,8 +36,7 @@ import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -55,7 +54,7 @@ import oscar.OscarProperties;
  */
 public class PHRExchangeAction extends DispatchAction {
     
-    private static Log log = LogFactory.getLog(PHRExchangeAction.class);
+    private static Logger log = MiscUtils.getLogger();
     PHRService phrService = null;
     
     /**

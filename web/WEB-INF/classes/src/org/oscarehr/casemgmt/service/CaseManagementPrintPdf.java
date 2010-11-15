@@ -27,20 +27,21 @@ package org.oscarehr.casemgmt.service;
 
 import java.awt.Color;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.HashMap;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
+import org.oscarehr.util.MiscUtils;
 
-import oscar.oscarClinic.ClinicData;
 import oscar.OscarProperties;
+import oscar.oscarClinic.ClinicData;
 
 import com.lowagie.text.Chunk;
 import com.lowagie.text.Document;
@@ -54,9 +55,8 @@ import com.lowagie.text.Rectangle;
 import com.lowagie.text.pdf.BaseFont;
 import com.lowagie.text.pdf.ColumnText;
 import com.lowagie.text.pdf.PdfContentByte;
-import com.lowagie.text.pdf.PdfWriter;
 import com.lowagie.text.pdf.PdfPageEventHelper;
-import java.io.OutputStream;
+import com.lowagie.text.pdf.PdfWriter;
 
 /**
  *
@@ -64,7 +64,7 @@ import java.io.OutputStream;
  */
 public class CaseManagementPrintPdf {
     
-    private static Log log = LogFactory.getLog(CaseManagementPrintPdf.class);
+    private static Logger log = MiscUtils.getLogger();
     
     private HttpServletRequest request;
     private OutputStream os;

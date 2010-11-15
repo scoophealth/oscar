@@ -5,7 +5,7 @@
 
 package org.oscarehr.decisionSupport.model.conditionValue;
 
-import org.oscarehr.decisionSupport.model.*;
+import org.oscarehr.decisionSupport.model.DecisionSupportException;
 
 /**
  *

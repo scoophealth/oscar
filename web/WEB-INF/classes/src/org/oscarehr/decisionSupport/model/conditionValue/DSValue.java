@@ -5,21 +5,22 @@
 
 package org.oscarehr.decisionSupport.model.conditionValue;
 
-import org.oscarehr.decisionSupport.model.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
+import org.oscarehr.decisionSupport.model.DecisionSupportException;
+import org.oscarehr.util.MiscUtils;
 
 /**
  *
  * @author apavel
  */
 public abstract class DSValue {
-    private static final Log _log = LogFactory.getLog(DSValue.class);
+    private static final Logger _log = MiscUtils.getLogger();
 
     private String valueType;
     private String valueUnit;

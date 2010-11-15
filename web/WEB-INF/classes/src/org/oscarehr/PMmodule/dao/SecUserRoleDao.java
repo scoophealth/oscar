@@ -24,14 +24,14 @@ package org.oscarehr.PMmodule.dao;
 
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.model.SecUserRole;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 public class SecUserRoleDao extends HibernateDaoSupport {
 
-    private static Log log = LogFactory.getLog(SecUserRoleDao.class);
+    private static Logger log = MiscUtils.getLogger();
 
     public List<SecUserRole> getUserRoles(String providerNo) {
         if (providerNo == null) {

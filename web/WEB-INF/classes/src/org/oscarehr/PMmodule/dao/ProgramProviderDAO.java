@@ -28,17 +28,17 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.time.DateUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.caisi.model.FacilityMessage;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.common.model.Facility;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.TimeClearedHashMap;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 public class ProgramProviderDAO extends HibernateDaoSupport {
 
-    private Log log = LogFactory.getLog(ProgramProviderDAO.class);
+    private Logger log=MiscUtils.getLogger();
 
 	private static Map<String, List<ProgramProvider>> programProviderByProviderProgramIdCache = Collections.synchronizedMap(new TimeClearedHashMap<String, List<ProgramProvider>>(DateUtils.MILLIS_PER_HOUR, DateUtils.MILLIS_PER_HOUR));
 	

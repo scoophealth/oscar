@@ -25,9 +25,9 @@ package org.oscarehr.casemgmt.dao;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.oscarehr.casemgmt.model.CaseManagementCPP;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /*
@@ -35,7 +35,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  */
 public class CaseManagementCPPDAO extends HibernateDaoSupport {
 
-    private Log log = LogFactory.getLog(CaseManagementCPPDAO.class);
+    private Logger log=MiscUtils.getLogger();
     
     public CaseManagementCPP getCPP(String demographic_no) {
         List results = this.getHibernateTemplate().find("from CaseManagementCPP cpp where cpp.demographic_no = ? order by update_date desc", new Object[] {demographic_no});

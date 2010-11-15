@@ -8,9 +8,10 @@ package org.oscarehr.decisionSupport.model;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+import org.apache.log4j.Logger;
 import org.jdom.JDOMException;
+import org.oscarehr.util.MiscUtils;
 
 /**
  *
@@ -28,7 +29,7 @@ public abstract class DSGuideline {
         private char getStatusChar() { return this.statusChar; }
     }*/
 
-    protected static Log _log = LogFactory.getLog(DSGuideline.class);
+    private static Logger _log = MiscUtils.getLogger();
     protected int id;
     protected String uuid;
     protected Integer version;

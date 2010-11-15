@@ -34,8 +34,7 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
@@ -46,7 +45,7 @@ import oscar.oscarDB.DBHandler;
  * @author  Jay Gallagher
  */
 public class ProcessSurveyFile{
-   private static Log log = LogFactory.getLog(ProcessSurveyFile.class);
+   private static Logger log = MiscUtils.getLogger();
    
    
    

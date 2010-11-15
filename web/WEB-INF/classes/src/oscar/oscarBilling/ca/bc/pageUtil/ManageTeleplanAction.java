@@ -41,14 +41,14 @@ import java.util.Map.Entry;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
@@ -72,7 +72,7 @@ import oscar.util.UtilDateUtilities;
  */
 public class ManageTeleplanAction extends DispatchAction {
     
-    private static Log log = LogFactory.getLog(ManageTeleplanAction.class);
+    private static Logger log = MiscUtils.getLogger();
     
     /** Creates a new instance of ManageTeleplanAction */
     public ManageTeleplanAction() {

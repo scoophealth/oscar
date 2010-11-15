@@ -34,8 +34,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.filter.ElementFilter;
@@ -48,7 +47,7 @@ import org.oscarehr.util.MiscUtils;
  */
 public class LimitedUseLookup {
 
-    private static Log log = LogFactory.getLog(LimitedUseLookup.class);
+    private static Logger log = MiscUtils.getLogger();
 
     static Hashtable<String, ArrayList> luLookup = new Hashtable();
     static boolean loaded = false;

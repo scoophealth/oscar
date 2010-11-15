@@ -34,8 +34,7 @@ import java.util.Hashtable;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -53,7 +52,7 @@ import oscar.oscarReport.data.ManageLetters;
  */
 public class DownloadPatientLettersAction extends Action {
     
-    private static Log log = LogFactory.getLog(ManagePatientLettersAction.class);
+    private static Logger log = MiscUtils.getLogger();
     
     /** Creates a new instance of GeneratePatientLetters */
     public DownloadPatientLettersAction() {   

@@ -31,8 +31,7 @@ package oscar.oscarEncounter.oscarMeasurements.bean;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
@@ -43,7 +42,7 @@ import oscar.oscarEncounter.oscarMeasurements.data.MeasurementTypes;
  * @author jay
  */
 public class EctMeasurementTypeBeanHandler {
-    private static Log log = LogFactory.getLog(EctMeasurementTypeBeanHandler.class);
+    private static Logger log = MiscUtils.getLogger();
     
     /** Creates a new instance of EctMeasurementTypeBeanHandler */
     public EctMeasurementTypeBeanHandler() {

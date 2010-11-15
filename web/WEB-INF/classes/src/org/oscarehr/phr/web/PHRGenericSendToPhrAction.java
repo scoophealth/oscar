@@ -12,8 +12,7 @@ import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -21,9 +20,9 @@ import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.casemgmt.web.CaseManagementEntryAction;
-import org.oscarehr.phr.model.PHRBinaryData;
 import org.oscarehr.phr.model.PHRDocument;
 import org.oscarehr.phr.service.PHRService;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.dms.EDoc;
@@ -39,7 +38,7 @@ import oscar.oscarProvider.data.ProviderData;
  * @author apavel
  */
 public class PHRGenericSendToPhrAction extends DispatchAction {
-    private static Log _log = LogFactory.getLog(PHRGenericSendToPhrAction.class);
+    private static final Logger logger= MiscUtils.getLogger();
     private PHRService phrService;
 
     @Override
@@ -175,7 +174,7 @@ public class PHRGenericSendToPhrAction extends DispatchAction {
             return mapping.findForward("loginPage");
             
         } catch (Exception e) {
-            _log.error("Could not send document to PHR", e);
+            logger.error("Could not send document to PHR", e);
             request.setAttribute("error_msg", "Error: " + e.getMessage());
             return mapping.findForward("loginPage");
         }

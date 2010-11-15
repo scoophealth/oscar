@@ -31,7 +31,6 @@ import org.apache.struts.action.DynaActionForm;
 import org.oscarehr.PMmodule.service.LogManager;
 import org.oscarehr.PMmodule.web.admin.BaseAdminAction;
 import org.oscarehr.util.MiscUtils;
-import org.apache.struts.actions.DispatchAction;
 
 import com.quatro.common.KeyConstants;
 import com.quatro.model.security.NoAccessException;
@@ -39,13 +38,8 @@ import com.quatro.model.security.SecProvider;
 import com.quatro.model.security.Security;
 import com.quatro.model.security.Secuserrole;
 import com.quatro.service.LookupManager;
-import com.quatro.service.ORGManager;
-import com.quatro.service.security.RolesManager;
-import com.quatro.service.security.SecurityManager;
 import com.quatro.service.security.UsersManager;
-import com.quatro.model.LookupCodeValue;
-import com.quatro.service.LookupManager;
-import com.quatro.util.*;
+import com.quatro.util.Utility;
 public class UserManagerAction extends BaseAdminAction {
 
 	private LogManager logManager;

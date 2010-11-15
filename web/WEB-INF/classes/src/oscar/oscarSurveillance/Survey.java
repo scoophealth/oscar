@@ -38,8 +38,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Random;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
@@ -49,7 +48,7 @@ import oscar.oscarDB.DBHandler;
  * @author  Jay Gallagher
  */
 public class Survey {
-   private static Log log = LogFactory.getLog(Survey.class);
+   private static Logger log = MiscUtils.getLogger();
    
    static long seed = 0;
    

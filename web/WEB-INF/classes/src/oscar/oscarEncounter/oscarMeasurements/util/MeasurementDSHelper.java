@@ -32,8 +32,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDemographic.data.DemographicData;
@@ -45,7 +44,7 @@ import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandle
  * @author jay
  */
 public class MeasurementDSHelper {
-    private static Log log = LogFactory.getLog(MeasurementDSHelper.class);
+    private static Logger log = MiscUtils.getLogger();
     
     EctMeasurementsDataBean mdb = null;
     java.util.Date dob = null;

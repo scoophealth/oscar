@@ -22,13 +22,10 @@
 
 package org.oscarehr.PMmodule.dao;
 
-import org.apache.commons.logging.LogFactory;
 import org.oscarehr.PMmodule.model.Log;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 public class LogDAO extends HibernateDaoSupport {
-
-    private static org.apache.commons.logging.Log log = LogFactory.getLog(LogDAO.class);
 
     public void saveLog(Log logObj) {
         this.getHibernateTemplate().save(logObj);

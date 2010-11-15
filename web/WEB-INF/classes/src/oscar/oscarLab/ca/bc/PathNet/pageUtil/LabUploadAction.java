@@ -50,7 +50,6 @@ import org.apache.struts.upload.FormFile;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
-import oscar.oscarDB.DBHandler;
 import oscar.oscarLab.FileUploadCheck;
 import oscar.oscarLab.ca.bc.PathNet.Connection;
 import oscar.oscarLab.ca.bc.PathNet.HL7.Message;

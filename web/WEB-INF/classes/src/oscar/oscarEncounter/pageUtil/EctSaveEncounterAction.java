@@ -34,8 +34,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -54,7 +53,7 @@ import oscar.util.UtilDateUtilities;
 
 public class EctSaveEncounterAction
     extends Action {
-    static Log log = LogFactory.getLog(EctSaveEncounterAction.class); 
+    static Logger log=MiscUtils.getLogger(); 
   
   private String getLatestID(String demoNo) throws
     SQLException  {

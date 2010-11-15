@@ -27,12 +27,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -40,7 +40,7 @@ import com.quatro.model.security.Secrole;
 
 public class GetProviderRoles {
 	
-		protected final Log log = LogFactory.getLog(getClass());
+		private static  final Logger log = MiscUtils.getLogger();
 		
 	    protected ApplicationContext ctx = null;
 	    

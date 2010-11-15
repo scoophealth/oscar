@@ -36,8 +36,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -60,7 +59,7 @@ import oscar.oscarRx.util.TimingOutCallback.TimeoutException;
 
 public final class RxMyDrugrefInfoAction extends DispatchAction {
 
-    private static Log log2 = LogFactory.getLog(RxMyDrugrefInfoAction.class);
+    private static final Logger log2 = MiscUtils.getLogger();
     //return interactions about current pending prescriptions
     public ActionForward findInteractingDrugList (ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)throws IOException, ServletException {
         MiscUtils.getLogger().debug("in findInteractingDrugList");

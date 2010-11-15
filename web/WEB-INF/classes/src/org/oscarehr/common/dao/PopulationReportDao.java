@@ -33,8 +33,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.Map.Entry;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.joda.time.Days;
 import org.joda.time.MutablePeriod;
@@ -43,6 +42,7 @@ import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.Stay;
 import org.oscarehr.util.DbConnectionFilter;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.EncounterUtil.EncounterType;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
@@ -53,7 +53,7 @@ public class PopulationReportDao extends HibernateDaoSupport {
     public static final int MEDIUM = 1;
     public static final int HIGH = 2;
 
-    private static final Log LOG = LogFactory.getLog(PopulationReportDao.class);
+    private static final Logger logger = MiscUtils.getLogger();
 
     private static final String HQL_CURRENT_POP_SIZE = "select count(distinct a.ClientId) from Admission a where " + "a.ProgramId in (select p.id from Program p where lower(p.programStatus) = 'active' and lower(p.type) = 'bed') and " + "a.ClientId in (select d.DemographicNo from Demographic d where lower(d.PatientStatus) = 'ac') and " + "a.DischargeDate is null";
 
@@ -103,7 +103,7 @@ public class PopulationReportDao extends HibernateDaoSupport {
                 clientIdToStayMap.get(clientId).add(stay);
             }
             catch (IllegalArgumentException e) {
-                LOG.error("client id: " + clientId);
+                logger.error("client id: " + clientId);
             }
         }
 

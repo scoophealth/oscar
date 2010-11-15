@@ -26,7 +26,6 @@
 package org.oscarehr.common.dao;
 
 import java.util.List;
-import org.oscarehr.common.model.Queue;
 
 import org.oscarehr.common.model.QueueDocumentLink;
 import org.oscarehr.util.MiscUtils;

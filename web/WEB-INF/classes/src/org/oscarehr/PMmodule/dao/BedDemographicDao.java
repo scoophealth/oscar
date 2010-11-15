@@ -27,13 +27,13 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.time.DateUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.model.BedDemographic;
 import org.oscarehr.PMmodule.model.BedDemographicHistorical;
 import org.oscarehr.PMmodule.model.BedDemographicPK;
 import org.oscarehr.PMmodule.model.BedDemographicStatus;
 import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
@@ -41,7 +41,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  */
 public class BedDemographicDao extends HibernateDaoSupport {
 
-    private static final Log log = LogFactory.getLog(BedDemographicDao.class);
+    private static final Logger log=MiscUtils.getLogger();
 
     public boolean bedDemographicStatusExists(Integer bedDemographicStatusId) {
         boolean exists = (((Long)getHibernateTemplate().iterate("select count(*) from BedDemographicStatus bds where bds.id = " + bedDemographicStatusId).next()) == 1);

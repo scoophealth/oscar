@@ -30,20 +30,15 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
 import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
-import org.hibernate.JDBCException;
 import org.hibernate.Query;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Expression;
@@ -52,25 +47,21 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
 import org.oscarehr.PMmodule.model.Admission;
-import org.oscarehr.common.model.Demographic;
-import org.oscarehr.common.model.DemographicExt;
-import org.oscarehr.PMmodule.model.ProgramProvider;
-import org.oscarehr.common.model.Provider;
 import org.oscarehr.PMmodule.web.formbean.ClientListsReportFormBean;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
+import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.DemographicExt;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.DbConnectionFilter;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import oscar.MyDateFormat;
-
-import com.quatro.common.KeyConstants;
-import com.quatro.util.Utility;
-import oscar.OscarProperties;
 import oscar.util.SqlUtils;
 
 public class ClientDao extends HibernateDaoSupport {
 
-	private Log log = LogFactory.getLog(ClientDao.class);
+	private Logger log=MiscUtils.getLogger();
 
 	private static final int LIST_PROCESSING_CHUNK_SIZE=64;
 

@@ -33,8 +33,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -52,7 +51,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 public class PHRDocumentDAOHibernate extends HibernateDaoSupport
 		implements PHRDocumentDAO {
 	
-	private static Log log = LogFactory.getLog(PHRDocumentDAOHibernate.class);
+	private static Logger log = MiscUtils.getLogger();
         
         
         public boolean hasIndex(String idx){

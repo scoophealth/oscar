@@ -28,8 +28,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.EncounterFormDao;
 import org.oscarehr.common.model.EncounterForm;
 import org.oscarehr.util.MiscUtils;
@@ -39,7 +38,7 @@ import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
 
 public class FrmData {
-    private static final Log _log = LogFactory.getLog(FrmData.class);
+    private static final Logger _log = MiscUtils.getLogger();
     private static EncounterFormDao encounterFormDao=(EncounterFormDao)SpringUtils.getBean("encounterFormDao");
     
     public class Form {

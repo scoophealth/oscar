@@ -52,13 +52,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
 
 public class DateUtils {
 
 
-  private static Log cat = LogFactory.getLog(DateUtils.class);
+  private static Logger cat = MiscUtils.getLogger();
 
   private static SimpleDateFormat sdf;
 

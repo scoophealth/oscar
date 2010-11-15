@@ -1,6 +1,7 @@
 package oscar.appt.status.dao;
 
 import java.util.List;
+
 import oscar.appt.status.model.AppointmentStatus;
 
 public interface AppointmentStatusDAO {

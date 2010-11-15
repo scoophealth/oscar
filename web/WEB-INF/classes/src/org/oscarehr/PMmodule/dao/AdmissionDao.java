@@ -25,22 +25,20 @@ package org.oscarehr.PMmodule.dao;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.AdmissionSearchBean;
-import org.oscarehr.common.model.Demographic;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 public class AdmissionDao extends HibernateDaoSupport {
 
-    private Log log = LogFactory.getLog(AdmissionDao.class);
+    private Logger log=MiscUtils.getLogger();
     
     public List<Admission> getAdmissions_archiveView(Integer programId, Integer demographicNo) {
         Admission admission = null;

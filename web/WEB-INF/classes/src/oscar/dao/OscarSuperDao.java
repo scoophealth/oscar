@@ -3,25 +3,19 @@ package oscar.dao;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 
-
-
 /**
- * Oscar super DAO implementation created to extract database access code from
- * JSP files. This class should be extended by a scope named DAO class, i.e.
- * AppointmentDao. Do not access methods of this class directly - use
- * OscarSuperManager methods instead.
+ * Oscar super DAO implementation created to extract database access code from JSP files. This class should be extended by a scope named DAO class, i.e. AppointmentDao. Do not access methods of this class directly - use OscarSuperManager methods instead.
  * 
  * @author Eugene Petruhin
- * 
  */
 public abstract class OscarSuperDao extends JdbcDaoSupport {
 
-    private static final Log _log = LogFactory.getLog(OscarSuperDao.class);
+	private static final Logger logger = MiscUtils.getLogger();
 
 	protected abstract String[][] getDbQueries();
 
@@ -31,10 +25,8 @@ public abstract class OscarSuperDao extends JdbcDaoSupport {
 	 * Executes a parameterized select query identified by a key.<br>
 	 * Returned collection item is an automatically populated Map.
 	 * 
-	 * @param queryName
-	 *            sql query key
-	 * @param params
-	 *            sql query parameters
+	 * @param queryName sql query key
+	 * @param params sql query parameters
 	 * @return List of Map objects created for each result set row
 	 */
 	@SuppressWarnings("unchecked")
@@ -44,15 +36,11 @@ public abstract class OscarSuperDao extends JdbcDaoSupport {
 
 	/**
 	 * Executes a parameterized select query identified by a key.<br>
-	 * Returned collection item is a value object populated by a row mapper
-	 * identified by the same key.
+	 * Returned collection item is a value object populated by a row mapper identified by the same key.
 	 * 
-	 * @param queryName
-	 *            sql query key
-	 * @param params
-	 *            sql query parameters
-	 * @return List of value objects created for each result set row by a row
-	 *         mapper
+	 * @param queryName sql query key
+	 * @param params sql query parameters
+	 * @return List of value objects created for each result set row by a row mapper
 	 */
 	@SuppressWarnings("unchecked")
 	public List executeRowMappedSelectQuery(String queryName, Object[] params) {
@@ -62,10 +50,8 @@ public abstract class OscarSuperDao extends JdbcDaoSupport {
 	/**
 	 * Executes a parameterized insert/update/delete query identified by a key.<br>
 	 * 
-	 * @param queryName
-	 *            sql query key
-	 * @param params
-	 *            sql query parameters
+	 * @param queryName sql query key
+	 * @param params sql query parameters
 	 * @return number of affected rows
 	 */
 	public int executeUpdateQuery(String queryName, Object[] params) {
@@ -75,12 +61,11 @@ public abstract class OscarSuperDao extends JdbcDaoSupport {
 	/**
 	 * Retrieves a sql query associated with a query name or reports an error.
 	 * 
-	 * @param key
-	 *            query name
+	 * @param key query name
 	 * @return sql query
 	 */
 	private String getSqlQueryByKey(String key) {
-                _log.debug("Calling query "+key);
+		logger.debug("Calling query " + key);
 		for (String[] query : getDbQueries()) {
 			if (query[0].equals(key)) {
 				return query[1];
@@ -92,8 +77,7 @@ public abstract class OscarSuperDao extends JdbcDaoSupport {
 	/**
 	 * Retrieves a row mapper associated with a query name or reports an error.
 	 * 
-	 * @param key
-	 *            query name
+	 * @param key query name
 	 * @return row mapper
 	 */
 	private RowMapper getRowMapperByKey(String key) {

@@ -36,8 +36,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -62,7 +61,7 @@ import oscar.oscarDemographic.data.DemographicData;
 import oscar.util.SqlUtils;
 
 public class BillingCreateBillingAction extends Action {
-  private static final Log log = LogFactory.getLog(BillingCreateBillingAction.class);
+  private static final Logger log=MiscUtils.getLogger();
 
   private ServiceCodeValidationLogic vldt = new ServiceCodeValidationLogic();
   private ArrayList patientDX = new ArrayList(); //List of disease codes for current patient

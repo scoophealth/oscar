@@ -33,6 +33,7 @@ import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.dx.model.DxResearch;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDemographic.data.DemographicData;
 import oscar.oscarDemographic.data.DemographicExt;
@@ -58,7 +59,6 @@ import cdsdiabetes.MedicationsAndTreatmentsDocument.MedicationsAndTreatments;
 import cdsdiabetes.PatientRecordDocument.PatientRecord;
 import cdsdiabetes.ProblemListDocument.ProblemList;
 import cdsdiabetes.ReportInformationDocument.ReportInformation;
-import org.oscarehr.util.SpringUtils;
 
 
 /**

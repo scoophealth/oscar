@@ -51,8 +51,7 @@ import javax.persistence.PersistenceException;
 
 import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.commons.lang.WordUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
@@ -61,7 +60,7 @@ import org.oscarehr.util.SpringUtils;
 import oscar.oscarDB.DBHandler;
 
 public class SqlUtils {
-	private static Log logger = LogFactory.getLog(SqlUtils.class);
+	private static Logger logger = MiscUtils.getLogger();
 
 	private enum DatabaseTypes {
 		MYSQL, ORACLE, POSTGRESQL

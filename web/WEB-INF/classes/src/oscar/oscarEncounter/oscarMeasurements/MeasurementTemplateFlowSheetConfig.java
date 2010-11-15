@@ -41,8 +41,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.drools.RuleBase;
 import org.jdom.Attribute;
 import org.jdom.Document;
@@ -67,7 +66,7 @@ import oscar.oscarEncounter.oscarMeasurements.util.TargetColour;
  */
 public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
 
-    private static Log log = LogFactory.getLog(MeasurementTemplateFlowSheetConfig.class);
+    private static Logger log = MiscUtils.getLogger();
 
     private List<File> flowSheets;
     

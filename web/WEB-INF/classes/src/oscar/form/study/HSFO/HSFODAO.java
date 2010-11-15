@@ -40,8 +40,6 @@ import java.util.List;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 
-import oscar.oscarDB.DBHandler;
-
 /**
  *Class used by the HSFO Study
  * 

@@ -24,14 +24,14 @@ package org.oscarehr.PMmodule.dao;
 
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.caisi.model.Role;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 public class RoleDAO extends HibernateDaoSupport {
 
-    private Log log = LogFactory.getLog(RoleDAO.class);
+    private Logger log=MiscUtils.getLogger();
 
     public List<Role> getRoles() {
         @SuppressWarnings("unchecked")

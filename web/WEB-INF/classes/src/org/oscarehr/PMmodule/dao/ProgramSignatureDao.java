@@ -24,14 +24,14 @@ package org.oscarehr.PMmodule.dao;
 
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.model.ProgramSignature;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 public class ProgramSignatureDao extends HibernateDaoSupport {
 
-    private static final Log log = LogFactory.getLog(ProgramSignatureDao.class);
+    private static final Logger log=MiscUtils.getLogger();
 
     //get the creator of the program
     public ProgramSignature getProgramFirstSignature(Integer programId) {

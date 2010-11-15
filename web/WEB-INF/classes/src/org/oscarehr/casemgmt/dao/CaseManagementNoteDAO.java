@@ -40,8 +40,7 @@ import java.util.UUID;
 
 import javax.persistence.PersistenceException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
@@ -61,7 +60,7 @@ import oscar.util.SqlUtils;
 
 public class CaseManagementNoteDAO extends HibernateDaoSupport {
 
-	private static Log log = LogFactory.getLog(CaseManagementNoteDAO.class);
+	private static Logger log = MiscUtils.getLogger();
 
 	@SuppressWarnings("unchecked")
     public List<Provider> getEditors(CaseManagementNote note) {

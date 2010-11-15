@@ -43,8 +43,7 @@ import org.apache.commons.httpclient.methods.multipart.FilePart;
 import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
 import org.apache.commons.httpclient.methods.multipart.Part;
 import org.apache.commons.httpclient.methods.multipart.StringPart;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
@@ -54,7 +53,7 @@ import oscar.OscarProperties;
  * @author jay
  */
 public class TeleplanAPI {
-    static Log log = LogFactory.getLog(TeleplanAPI.class);
+    static Logger log=MiscUtils.getLogger();
     	
     public static String ExternalActionLogon      = "AsignOn";
     public static String ExternalActionLogoff     = "AsignOff";

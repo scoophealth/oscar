@@ -21,6 +21,7 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.namespace.QName;
 
+import org.apache.xerces.jaxp.datatype.DatatypeFactoryImpl;
 
 import oscar.ocan.domain.client.AnswerGroup;
 import oscar.ocan.domain.client.OCANClientSelfAssessment;
@@ -81,8 +82,6 @@ import oscar.ocan.domain.submission.ServiceOrg;
 import oscar.ocan.domain.submission.SideEffectsDetailList;
 import oscar.ocan.domain.submission.SymptomList;
 import oscar.ocan.domain.submission.TimeLivedInCanada;
-
-import org.apache.xerces.jaxp.datatype.DatatypeFactoryImpl;
 
 public class OcanDataProcessor {
 

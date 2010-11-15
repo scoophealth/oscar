@@ -37,15 +37,15 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.oscarehr.common.model.Demographic;
+import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.model.IntakeNode;
+import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.ReportStatistic;
 import org.oscarehr.util.AccumulatorMap;
 import org.oscarehr.util.DbConnectionFilter;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import oscar.util.SqlUtils;
@@ -55,7 +55,7 @@ import oscar.util.SqlUtils;
  */
 public class GenericIntakeDAO extends HibernateDaoSupport {
 
-	private static final Log LOG = LogFactory.getLog(GenericIntakeDAO.class);
+	private static final Logger LOG = MiscUtils.getLogger();
 
 	@SuppressWarnings("unchecked")
 	public List<Object[]> getOcanIntakesAfterDate(Calendar after) {

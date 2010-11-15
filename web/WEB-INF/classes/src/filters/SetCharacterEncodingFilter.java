@@ -19,6 +19,7 @@ package filters;
 
 
 import java.io.IOException;
+
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -56,7 +57,7 @@ import org.oscarehr.util.MiscUtils;
  * user's session.</p>
  *
  * @author Craig McClanahan
- * @version $Revision: 1.2 $ $Date: 2010-10-22 00:45:37 $
+ * @version $Revision: 1.3 $ $Date: 2010-11-15 01:27:32 $
  */
 
 public class SetCharacterEncodingFilter implements Filter {

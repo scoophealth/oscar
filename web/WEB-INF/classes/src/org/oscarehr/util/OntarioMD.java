@@ -28,6 +28,7 @@ package org.oscarehr.util;
 import java.io.InputStream;
 import java.util.Hashtable;
 import java.util.Iterator;
+
 import org.apache.commons.collections.OrderedMap;
 import org.apache.commons.collections.map.LinkedMap;
 import org.apache.commons.httpclient.HttpClient;
@@ -38,6 +39,7 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.filter.ElementFilter;
 import org.jdom.input.SAXBuilder;
+
 import oscar.OscarProperties;
 
 /**

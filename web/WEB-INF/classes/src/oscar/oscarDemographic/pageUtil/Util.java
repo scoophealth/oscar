@@ -22,8 +22,9 @@ import java.util.zip.ZipOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.xmlbeans.XmlCalendar;
-import oscar.util.StringUtils;
 import org.oscarehr.util.MiscUtils;
+
+import oscar.util.StringUtils;
 import oscar.util.UtilDateUtilities;
 
 /**

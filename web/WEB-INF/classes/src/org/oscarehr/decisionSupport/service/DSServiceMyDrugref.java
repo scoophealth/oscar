@@ -10,14 +10,16 @@ import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.decisionSupport.model.DSGuideline;
 import org.oscarehr.decisionSupport.model.DSGuidelineFactory;
 import org.oscarehr.decisionSupport.model.DSGuidelineProviderMapping;
 import org.oscarehr.decisionSupport.model.DecisionSupportException;
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarRx.pageUtil.RxMyDrugrefInfoAction;
 
 /**
@@ -25,7 +27,7 @@ import oscar.oscarRx.pageUtil.RxMyDrugrefInfoAction;
  * @author apavel
  */
 public class DSServiceMyDrugref extends DSService {
-    private static Log _log = LogFactory.getLog(DSServiceMyDrugref.class);
+    private static final Logger logger = MiscUtils.getLogger();
     private UserPropertyDAO  userPropertyDAO;
 
     public DSServiceMyDrugref() {
@@ -38,13 +40,13 @@ public class DSServiceMyDrugref extends DSService {
         params.addElement(this.getMyDrugrefId(providerNo));
         RxMyDrugrefInfoAction myDrugrefAction = new RxMyDrugrefInfoAction();
         try {
-            _log.debug("CALLING MYDRUGREF");
+            logger.debug("CALLING MYDRUGREF");
             Vector<Hashtable> providerGuidelines = (Vector) myDrugrefAction.callWebserviceLite("GetGuidelineIds", params);
             if (providerGuidelines == null) {
-                _log.error("Could not get provider decision support guidelines from MyDrugref.");
+                logger.error("Could not get provider decision support guidelines from MyDrugref.");
                 return;
             }
-            _log.debug("MyDrugref call returned: " + providerGuidelines.size() + " guidelines");
+            logger.debug("MyDrugref call returned: " + providerGuidelines.size() + " guidelines");
             ArrayList<String> guidelinesToFetch = new ArrayList();
             for (Hashtable providerGuideline: providerGuidelines) {
 
@@ -52,8 +54,8 @@ public class DSServiceMyDrugref extends DSService {
                 String versionNumberStr = (String) providerGuideline.get("version");
                 Integer versionNumber = Integer.parseInt(versionNumberStr);
 
-                _log.debug("uuid: " + uuid);
-                _log.debug("version: " + versionNumber);
+                logger.debug("uuid: " + uuid);
+                logger.debug("version: " + versionNumber);
 
                 DSGuideline matchedGuideline = dsGuidelineDAO.getDSGuidelineByUUID(uuid);
                 if (matchedGuideline == null) {
@@ -86,7 +88,7 @@ public class DSServiceMyDrugref extends DSService {
                 dsGuidelineDAO.delete(uuidLeft);
             }
         } catch (Exception e) {
-            _log.error("Unable to fetch guidelines from MyDrugref", e);
+            logger.error("Unable to fetch guidelines from MyDrugref", e);
         }
 
     }
@@ -100,10 +102,10 @@ public class DSServiceMyDrugref extends DSService {
         Vector<Hashtable> fetchedGuidelines = (Vector<Hashtable>) myDrugrefAction.callWebserviceLite("GetGuidelines", params);
         ArrayList newGuidelines = new ArrayList();
         for (Hashtable fetchedGuideline: fetchedGuidelines) {
-            _log.debug("Title: " + (String) fetchedGuideline.get("name"));
-            _log.debug("Author: " + (String) fetchedGuideline.get("author"));
-            _log.debug("UUID: " + (String) fetchedGuideline.get("uuid"));
-            _log.debug("Version: " + (String) fetchedGuideline.get("version"));
+            logger.debug("Title: " + (String) fetchedGuideline.get("name"));
+            logger.debug("Author: " + (String) fetchedGuideline.get("author"));
+            logger.debug("UUID: " + (String) fetchedGuideline.get("uuid"));
+            logger.debug("Version: " + (String) fetchedGuideline.get("version"));
 
             DSGuidelineFactory factory = new DSGuidelineFactory();
             DSGuideline newGuideline = factory.createBlankGuideline();
@@ -125,7 +127,7 @@ public class DSServiceMyDrugref extends DSService {
                 
             } catch (Exception e) {
                 DecisionSupportException newException = new DecisionSupportException("Error parsing drug with with title: '" + (String) fetchedGuideline.get("name") + "' uuid: '" + (String) fetchedGuideline.get("uuid") + "'", e);
-                _log.error(newException);
+                logger.error(newException);
                 newGuideline.setStatus('F');
                 newGuideline.setDateDecomissioned(new Date());
             }

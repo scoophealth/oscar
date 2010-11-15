@@ -8,7 +8,6 @@ import org.apache.struts.validator.ValidatorForm;
 import oscar.MyDateFormat;
 
 import com.quatro.model.IncidentValue;
-import com.quatro.util.KeyValueBean;
 
 public class IncidentForm extends ValidatorForm{
 	

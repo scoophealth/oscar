@@ -39,8 +39,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.Hashtable;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDemographic.data.DemographicData;
@@ -70,7 +69,7 @@ public class ChildImmunizationReport implements PreventionReport{
 
 
 
-    private static Log log = LogFactory.getLog(ChildImmunizationReport.class);
+    private static Logger log = MiscUtils.getLogger();
     /** Creates a new instance of ChildImmunizationReport */
     public ChildImmunizationReport() {
     }

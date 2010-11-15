@@ -22,31 +22,30 @@
 
 package org.oscarehr.billing.CA.ON.dao;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Calendar;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Query;
 
-import org.springframework.stereotype.Repository;
-
+import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.billing.CA.ON.model.BillingClaimHeader1;
 import org.oscarehr.billing.CA.ON.model.BillingItem;
-import org.oscarehr.common.dao.AbstractDao;
-
-import oscar.oscarBilling.ca.on.data.BillingDataHlp;
-import org.oscarehr.common.dao.DemographicDao;
-import org.oscarehr.common.model.Demographic;
 import org.oscarehr.billing.CA.ON.model.BillingPercLimit;
-import org.oscarehr.PMmodule.dao.ProviderDao;
-import org.oscarehr.common.model.Provider;
-import org.oscarehr.common.dao.BillingServiceDao;
-import org.oscarehr.common.model.BillingService;
 import org.oscarehr.billing.CA.dao.GstControlDao;
 import org.oscarehr.billing.CA.model.GstControl;
+import org.oscarehr.common.dao.AbstractDao;
+import org.oscarehr.common.dao.BillingServiceDao;
+import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.model.BillingService;
+import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.Provider;
+import org.springframework.stereotype.Repository;
+
 import oscar.OscarProperties;
+import oscar.oscarBilling.ca.on.data.BillingDataHlp;
 
 /**
  *

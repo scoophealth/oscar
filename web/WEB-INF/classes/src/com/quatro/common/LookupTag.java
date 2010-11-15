@@ -17,7 +17,6 @@ import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.tagext.TagSupport;
 import org.apache.struts.taglib.html.*;
 */
-import javax.servlet.ServletRequest;
 import javax.servlet.jsp.JspException;
 
 import org.apache.struts.taglib.TagUtils;

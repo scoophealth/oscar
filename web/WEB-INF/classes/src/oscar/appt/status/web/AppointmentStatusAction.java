@@ -1,16 +1,17 @@
 package oscar.appt.status.web;
 
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.validator.LazyValidatorForm;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -19,7 +20,7 @@ import oscar.appt.status.service.AppointmentStatusMgr;
 
 public class AppointmentStatusAction extends DispatchAction {
 
-    private Log logger = LogFactory.getLog(this.getClass());
+    private static final Logger logger = MiscUtils.getLogger();
 
     public ActionForward view(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         logger.warn("view");

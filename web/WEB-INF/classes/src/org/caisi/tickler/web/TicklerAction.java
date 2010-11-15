@@ -30,8 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -52,6 +51,7 @@ import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SessionConstants;
 
 import oscar.OscarProperties;
@@ -61,7 +61,7 @@ import oscar.OscarProperties;
  * Updated by Eugene Petruhin on 19 dec 2008 while fixing #2422864 & #2317933 & #2379840
  */
 public class TicklerAction extends DispatchAction {
-    private static Log log = LogFactory.getLog(TicklerAction.class);
+    private static Logger log = MiscUtils.getLogger();
     private TicklerManager ticklerMgr = null;
     private ProviderManager providerMgr = null;
     private PreparedTicklerManager preparedTicklerMgr = null;
