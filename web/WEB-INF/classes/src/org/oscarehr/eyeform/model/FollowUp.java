@@ -46,7 +46,16 @@ public class FollowUp extends AbstractModel<Integer> {
 	@Transient
 	private Provider provider;
 	
+	private String type;
 	
+	
+	
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
 	public Provider getProvider() {
 		return provider;
 	}

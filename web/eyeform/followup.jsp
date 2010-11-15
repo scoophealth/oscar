@@ -31,8 +31,12 @@ Follow Up/Consult
 		
 		<table border="0">
            <tbody><tr>
-            <td width="25%">Follow up:
-
+            <td width="25%">
+            <html:select property="followup.type">
+            	<html:option value="followup">Follow up</html:option>
+            	<html:option value="consult">Consult</html:option>
+            </html:select>
+           
              <html:text property="followup.timespan" size="4"  styleId="width: 25px;" styleClass="special"/>
              <html:select property="followup.timeframe" styleId="width: 50px;" styleClass="special">
              	<html:option value="days">days</html:option>

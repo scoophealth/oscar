@@ -449,7 +449,8 @@
         pastOcularHistoryLabel = "oscarEncounter.eyeform.pastOcularHistory.title";
         patientLogLabel = "oscarEncounter.eyeform.patientLog.title";
         ocularMedicationsLabel = "oscarEncounter.eyeform.ocularMedications.title";          
-            
+		currentHistoryLabel = "oscarEncounter.eyeform.currentHistory.title";
+         
         insertTemplateError = "<bean:message key="oscarEncounter.templateError.msg"/>";
         unsavedNoteWarning = "<bean:message key="oscarEncounter.unsavedNoteWarning.msg"/>";
         sessionExpiredError = "<bean:message key="oscarEncounter.sessionExpiredError.msg"/>";

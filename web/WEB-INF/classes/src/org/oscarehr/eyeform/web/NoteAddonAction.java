@@ -11,9 +11,11 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.eyeform.dao.EyeFormDao;
 import org.oscarehr.eyeform.dao.FollowUpDao;
 import org.oscarehr.eyeform.dao.ProcedureBookDao;
 import org.oscarehr.eyeform.dao.TestBookRecordDao;
+import org.oscarehr.eyeform.model.EyeForm;
 import org.oscarehr.eyeform.model.FollowUp;
 import org.oscarehr.eyeform.model.ProcedureBook;
 import org.oscarehr.eyeform.model.TestBookRecord;
@@ -67,6 +69,28 @@ public class NoteAddonAction extends DispatchAction {
 	 * procedure/test
 	 */
 	public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		return null;
+	}
+	
+	public ActionForward saveFlags(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		String appointmentNo = request.getParameter("appointmentNo");
+	
+		String ack1Checked = request.getParameter("ack1_checked");
+		String ack2Checked = request.getParameter("ack2_checked");
+		String ack3Checked = request.getParameter("ack3_checked");
+		
+		
+		EyeFormDao dao = (EyeFormDao)SpringUtils.getBean("EyeFormDao");
+		
+		EyeForm eyeform = dao.getByAppointmentNo(Integer.parseInt(appointmentNo));
+		
+	
+		System.out.println("ack1_checked="+ack1Checked);
+		System.out.println("ack2_checked="+ack2Checked);
+		System.out.println("ack3_checked="+ack3Checked);
+		
+		System.out.println("appointmentNo="+appointmentNo);
+		
 		return null;
 	}
 }

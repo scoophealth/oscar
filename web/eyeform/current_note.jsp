@@ -3,41 +3,26 @@
 <%@ taglib prefix="display" uri="http://displaytag.sf.net"%>
 
 
-<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>	
+<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
+
+<%
+				Integer noteId = (Integer)request.getAttribute("noteId");
+				String aptNo = request.getParameter("appointmentNo");
+				String demographicNo = request.getParameter("demographicNo");
+			%>         
+				
 <script>
-function setDischarge(){
-	if (document.inputForm.ack1.checked==true){
-		document.inputForm.dischargeFlag.value='true';
-		document.inputForm.ack1.value='checked';
-	}
-	else {
-		document.inputForm.dischargeFlag.value='false';
-		document.inputForm.ack1.value='';
-	}
+
+function setDischarge(){	
+	saveFlags();
 }
 
 function setStat(){
-	if (document.inputForm.ack2.checked==true){
-		document.inputForm.statFlag.value='true';
-		document.inputForm.ack2.value='checked';
-	}
-	else {
-		document.inputForm.statFlag.value='false';
-		document.inputForm.ack2.value='';
-	}
+	saveFlags();
 }
 
-function setOpt(){
-	if (document.inputForm.ack3.checked==true){
-		document.inputForm.optFlag.value='true';
-		document.inputForm.ack3.value='checked';
-	}
-	else {
-		document.inputForm.optFlag.value='false';
-		document.inputForm.ack3.value='';
-	}
-
-
+function setOpt(){	
+	saveFlags();
 }
 
 function popupPageOne(varpage,name) {
@@ -81,6 +66,23 @@ function saveNoteAndSendTickler() {
 	
  }
 
+
+function saveFlags() {
+
+	var ack1El = document.getElementById("ack1");
+	var ack2El = document.getElementById("ack2");
+	var ack3El = document.getElementById("ack3");
+	
+	jQuery.ajax({
+		type: 'GET',
+		url: ctx+'/eyeform/NoteData.do?method=saveFlags&ack1_checked=' + ack1El.checked + '&ack2_checked=' + ack2El.checked + '&ack3_checked=' + ack3El.checked + '&appointmentNo=' + <%=aptNo%> ,
+		success: function (){},
+		dataType: 'html'	
+	});
+	
+	
+ }
+
 </script>
 
 <span note_addon="saveEyeformNote"></span>
@@ -98,11 +100,7 @@ function saveNoteAndSendTickler() {
             
             
             <span>&nbsp;&nbsp;</span>
-			<%
-				Integer noteId = (Integer)request.getAttribute("noteId");
-				String aptNo = request.getParameter("appointmentNo");
-				String demographicNo = request.getParameter("demographicNo");
-			%>            
+			   
             <a href="javascript:void(0)" onclick="popupPageOne('<c:out value="${ctx}"/>/eyeform/FollowUp.do?method=form&amp;followup.demographicNo=<%=demographicNo %>&amp;noteId=<%=noteId%>&amp;followup.appointmentNo=<%=aptNo%>','eyeFollowUp');">[arrange follow up/consult]</a>
             &nbsp;            	
         </div>
@@ -228,6 +226,22 @@ function saveNoteAndSendTickler() {
 </div>
 </td>
 </tr>
+
+<tr><td>&nbsp;</td></tr>
+
+ <tr>
+            <td>          	 
+            	<input type="checkbox" style="width: 10%;" value="checked" id="ack1" onchange="setDischarge()" />            
+            	Discharge
+           <br>   	 
+            	<input type="checkbox" style="width: 10%;" id="ack2" value="checked" onchange="setStat();" />            	            	
+            	STAT/PRN
+           <br>
+            	<input type="checkbox" style="width: 10%;" value="checked" id="ack3" onchange="setOpt();" />            	
+            	optom routine
+            </td>
+</tr>
+
 
 <tr><td>&nbsp;</td></tr>
 
