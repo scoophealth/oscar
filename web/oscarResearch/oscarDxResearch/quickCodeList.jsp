@@ -1,4 +1,3 @@
-<%@page pageEncoding="ISO-8859-1"%> 
 <%@ page
 	import="java.math.*, java.util.*, java.sql.*, oscar.*, java.net.*, oscar.oscarResearch.oscarDxResearch.bean.*"%>
 <%

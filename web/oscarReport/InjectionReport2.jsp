@@ -23,8 +23,6 @@
  * Ontario, Canada 
  */
 -->
-
-<%@ page language="java"%>
 <%@ page
 	import="java.util.*,oscar.oscarReport.data.*,oscar.util.*,oscar.oscarDB.*,java.sql.*,oscar.oscarDemographic.data.*,oscar.oscarPrevention.*"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>

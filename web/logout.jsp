@@ -24,7 +24,7 @@
  */
 --%>
 
-<%@ page language="java" import="java.util.HashMap, oscar.log.*"
+<%@page import="java.util.HashMap, oscar.log.*"
 	errorPage="errorpage.jsp"%>
 <%
   if(oscar.oscarSecurity.CRHelper.isCRFrameworkEnabled()) net.sf.cookierevolver.CRFactory.getManager().recordLogout(request);

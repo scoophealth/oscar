@@ -1,6 +1,6 @@
 <!-- Source:web/PMmodule/Admin/Organization/ProgramView/ORGTree.jsp -->
-<%@page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
+<%@page contentType="text/html; charset=ISO-8859-1"
+	%>
 <%@ include file="../../../taglibs.jsp"%>
 <%@page import="com.quatro.common.KeyConstants;"%>
 

@@ -16,8 +16,6 @@
  * 
  */
 -->
-
-<%@ page language="java"%>
 <%@ page
 	import="oscar.form.*, oscar.form.data.*, java.util.*, oscar.util.*"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>

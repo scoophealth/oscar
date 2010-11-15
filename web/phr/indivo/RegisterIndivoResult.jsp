@@ -3,8 +3,6 @@
     Created on : 9-Jun-2008, 11:03:24 AM
     Author     : apavel
 --%>
-
-<%@page contentType="text/html" pageEncoding="ISO-8859-1"%> 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
    <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>

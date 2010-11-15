@@ -23,9 +23,6 @@
  * Ontario, Canada 
  */
 -->
-
-<%@ page language="java"%>
-
 <%@ page import="java.util.*, org.w3c.dom.*, oscar.util.*"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>

@@ -28,7 +28,6 @@
  */
 -->
 <%@page contentType="text/xml"%>
-<%@page pageEncoding="ISO-8859-1"%> 
 <%@page
 	import="oscar.oscarEncounter.oscarMeasurements.bean.*,oscar.oscarEncounter.oscarMeasurements.data.*"%>
 <%

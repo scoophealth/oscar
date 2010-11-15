@@ -8,12 +8,7 @@
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jstl/fmt" prefix="fmt" %>
 
-<%@ page import="oscar.oscarDemographic.data.DemographicData"%>
-
-<%@page contentType="text/html"%>
-<%@page pageEncoding="ISO-8859-1"%> 
-
-<%@ page import="org.oscarehr.phr.PHRAuthentication"%>
+<%@ page import="oscar.oscarDemographic.data.DemographicData"%><%@ page import="org.oscarehr.phr.PHRAuthentication"%>
 <%@ page import="oscar.oscarProvider.data.ProviderData"%>
 <%@ page import="java.util.*"%>
 <%

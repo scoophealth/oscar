@@ -23,7 +23,6 @@
  * Ontario, Canada
  */
 -->
-<%@ page language="java" %>
 <%@ page import="java.util.*" %>
 <%@ page import="oscar.oscarMDS.data.*,oscar.oscarLab.ca.on.*,oscar.util.StringUtils,oscar.util.UtilDateUtilities" %>
 <%@ page import="org.apache.commons.collections.MultiHashMap" %>

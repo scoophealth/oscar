@@ -11,12 +11,7 @@
 <%@ taglib uri="/WEB-INF/phr-tag.tld" prefix="phr" %>
 <%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite" %>
 
-<%@ page import="oscar.oscarDemographic.data.DemographicData"%>
-
-<%@page contentType="text/html"%>
-<%@page pageEncoding="ISO-8859-1"%> 
-
-<%@ page import="org.oscarehr.phr.PHRAuthentication"%>
+<%@ page import="oscar.oscarDemographic.data.DemographicData"%><%@ page import="org.oscarehr.phr.PHRAuthentication"%>
 <%@ page import="org.oscarehr.phr.model.PHRAction"%>
 <%@ page import="oscar.oscarProvider.data.ProviderData"%>
 <%@ page import="org.oscarehr.phr.PHRConstants"%>

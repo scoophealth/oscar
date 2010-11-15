@@ -30,7 +30,6 @@
   if(request.getParameter("oox")!=null) oox = Integer.parseInt(request.getParameter("oox"));
   if(request.getParameter("ooy")!=null) ooy = Integer.parseInt(request.getParameter("ooy"));
 %>
-<%@ page language="java"%>
 <%@ page
 	import="java.util.*, java.net.*, oscar.util.*, oscar.form.graphic.*"
 	errorPage="errorpage.jsp"%>

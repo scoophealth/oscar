@@ -29,8 +29,6 @@
  *
  */
  --%>
-
-<%@ page language="java"%>
 <%@ page
 	import="oscar.util.*, oscar.form.*, oscar.form.data.*,java.util.*,oscar.oscarPrevention.*"%>
 <%@ page

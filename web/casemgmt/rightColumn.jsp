@@ -1,4 +1,3 @@
-<%@page contentType="text/html"%>
 <!-- 
 /*
 * 

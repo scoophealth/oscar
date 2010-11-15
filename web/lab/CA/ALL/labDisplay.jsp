@@ -1,4 +1,4 @@
-<%@ page language="java" errorPage="../../../provider/errorpage.jsp" %>
+<%@page errorPage="../../../provider/errorpage.jsp" %>
 <%@ page import="java.util.*,
 		 java.sql.*,
 		 oscar.oscarDB.*,

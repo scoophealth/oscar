@@ -3,7 +3,6 @@
   if(session.getValue("user") == null)    response.sendRedirect("../logout.jsp");
   int oox=0, ooy=0;
 %>
-<%@ page language="java"%>
 <%@ page
 	import="java.util.*, java.sql.*, java.net.*, oscar.util.*, oscar.form.graphic.*"
 	errorPage="errorpage.jsp"%>

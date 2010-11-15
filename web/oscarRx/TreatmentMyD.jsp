@@ -19,8 +19,7 @@
  * McMaster University 
  * Hamilton 
  * Ontario, Canada 
---%><%@page contentType="text/html" pageEncoding="ISO-8859-1"%> 
-<%@ page import="java.util.*,oscar.oscarRx.data.*,oscar.oscarRx.pageUtil.*,java.text.DateFormatSymbols,java.io.*,org.apache.xmlrpc.*"%>
+--%><%@ page import="java.util.*,oscar.oscarRx.data.*,oscar.oscarRx.pageUtil.*,java.text.DateFormatSymbols,java.io.*,org.apache.xmlrpc.*"%>
 <%
 
 RxSessionBean bean = (RxSessionBean) session.getAttribute("RxSessionBean");

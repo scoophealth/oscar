@@ -1,4 +1,3 @@
-<%@page contentType="text/html" pageEncoding="ISO-8859-1"%>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%@ taglib uri="http://jakarta.apache.org/struts/tags-html"

@@ -1,5 +1,5 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<%@page contentType="text/html" pageEncoding="ISO-8859-1"%> <%
+<%@page %> <%
   if(session.getAttribute("user") == null)    response.sendRedirect("../logout.jsp");
 
   String DONOTBOOK = "Do_Not_Book";

@@ -25,9 +25,6 @@
 
 <%@ include file="/casemgmt/taglibs.jsp" %>
 <%@ page errorPage="/casemgmt/error.jsp" %>
-<%@ page language="java"%>
-
-
 <% if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp"); %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"

@@ -22,11 +22,7 @@
  * Hamilton
  * Ontario, Canada
  */
--->
-
-<%@page contentType="text/html"%>
-<%@page pageEncoding="ISO-8859-1"%> 
-<%@ include file="/casemgmt/taglibs.jsp"%>
+--><%@ include file="/casemgmt/taglibs.jsp"%>
 <%@page import="java.util.*" %>
 <%
 if(session.getValue("user") == null)

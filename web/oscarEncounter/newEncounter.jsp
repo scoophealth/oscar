@@ -1,5 +1,3 @@
-<%@page contentType="text/html"%>
-<%@page pageEncoding="ISO-8859-1"%> 
 <%@page
 	import="java.util.Collections, java.util.Arrays, java.util.ArrayList, java.sql.ResultSet, java.sql.SQLException, oscar.oscarDB.DBHandler"%>
 

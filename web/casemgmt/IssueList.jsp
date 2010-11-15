@@ -23,10 +23,7 @@
 // * Ontario, Canada 
 // *
 // -----------------------------------------------------------------------------------------------------------------------
---%>
-<%@page contentType="text/html"%>
-<%@page pageEncoding="ISO-8859-1"%> 
-<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
+--%><%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
 <%@page import="org.oscarehr.casemgmt.model.*"%>
 <%@page import="java.util.ArrayList"%>
 

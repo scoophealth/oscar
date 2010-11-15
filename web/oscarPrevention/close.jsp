@@ -1,5 +1,3 @@
-<%@page contentType="text/html"%>
-<%@page pageEncoding="ISO-8859-1"%> 
 <html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>

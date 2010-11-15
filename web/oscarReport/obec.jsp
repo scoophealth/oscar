@@ -24,7 +24,6 @@
  * Ontario, Canada 
  */
 -->
-<%@ page language="java"%>
 <%@ page
 	import="java.math.*, java.util.*, java.sql.*, oscar.*, oscar.util.DateUtils, java.net.*"
 	errorPage="errorpage.jsp"%>

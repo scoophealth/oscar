@@ -1,5 +1,3 @@
-<%@page contentType="text/html"%>
-<%@page pageEncoding="ISO-8859-1"%> 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 
 <h3><bean:message key="oscarEncounter.LeftNavBar.ErrorH3" /></h3>

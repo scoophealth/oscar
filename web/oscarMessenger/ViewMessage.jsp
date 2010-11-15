@@ -30,7 +30,7 @@ String providerview = request.getParameter("providerview")==null?"all":request.g
 boolean bFirstDisp=true; //this is the first time to display the window
 if (request.getParameter("bFirstDisp")!=null) bFirstDisp= (request.getParameter("bFirstDisp")).equals("true");
 %>
-<%@ page language="java"
+<%@ page 
 	import="oscar.oscarDemographic.data.*, java.util.Enumeration"%>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>

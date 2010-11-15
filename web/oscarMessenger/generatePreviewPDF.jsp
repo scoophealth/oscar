@@ -22,11 +22,7 @@
  * Hamilton 
  * Ontario, Canada 
  */
---%>
-<%@page contentType="text/html"%>
-<%@page pageEncoding="ISO-8859-1"%> 
-<%@ page language="java"%>
-<%@ page
+--%><%@ page
 	import="oscar.oscarMessenger.docxfer.send.*,oscar.oscarMessenger.docxfer.util.*, 
                 oscar.oscarEncounter.data.*, oscar.oscarEncounter.pageUtil.EctSessionBean, oscar.oscarRx.pageUtil.RxSessionBean,
                 oscar.oscarRx.data.RxPatientData, oscar.oscarMessenger.pageUtil.MsgSessionBean, oscar.oscarDemographic.data.*"%>

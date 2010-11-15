@@ -20,11 +20,7 @@
  * Hamilton
  * Ontario, Canada
  THIS FILE GET INTERACTION FROM MYDRUGREF
---%>
-
-<%@page contentType="text/html"%>
-<%@page pageEncoding="ISO-8859-1"%> 
-<%@ page import="java.util.*,oscar.oscarRx.data.*,oscar.oscarRx.pageUtil.*"%>
+--%><%@ page import="java.util.*,oscar.oscarRx.data.*,oscar.oscarRx.pageUtil.*"%>
 <%
 RxSessionBean bean = (RxSessionBean) session.getAttribute("RxSessionBean");
 if ( bean == null ){

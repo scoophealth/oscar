@@ -1,4 +1,4 @@
-<%@page contentType="text/html; charset=iso-8859-1" language="java"
+<%@page contentType="text/html; charset=iso-8859-1" 
 	import="java.sql.*" errorPage=""%>
 <%@taglib uri="http://displaytag.sf.net" prefix="display"%>
 <%@taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>

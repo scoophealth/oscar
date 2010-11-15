@@ -1,5 +1,5 @@
 <%@ include file="/ticklerPlus/taglibs.jsp"%>
-<%@ page language="java" isErrorPage="true"%>
+<%@page isErrorPage="true"%>
 
 
 <%@page import="org.oscarehr.util.MiscUtils"%><html>

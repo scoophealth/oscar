@@ -22,11 +22,7 @@
  * Hamilton
  * Ontario, Canada
  */
--->
-
-<%@page contentType="text/html"%>
-<%@page pageEncoding="ISO-8859-1"%> 
-<%@ page import="java.sql.*"%>
+--><%@ page import="java.sql.*"%>
 <%@ page errorPage="/common/error.jsp"%>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"

@@ -30,7 +30,6 @@
     response.setHeader("Pragma","no-cache"); //HTTP 1.0
     response.setDateHeader ("Expires", 0); //prevents caching at the proxy 
 %>
-<%@ page language="java"%>
 <%@ page
 	import="java.util.*,oscar.util.*, org.apache.struts.action.*, oscar.oscarWaitingList.bean.*"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>

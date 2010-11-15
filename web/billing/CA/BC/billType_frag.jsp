@@ -24,7 +24,7 @@
   * Ontario, Canada
   */
 -->
-<%@page contentType="text/html; charset=iso-8859-1" language="java"
+<%@page contentType="text/html; charset=iso-8859-1" 
 	import="java.sql.*" errorPage=""%>
 <%@page
 	import="java.math.*, java.util.*, java.sql.*, oscar.*, java.net.*,oscar.oscarBilling.ca.bc.MSP.*,oscar.oscarBilling.ca.bc.data.*;"%>

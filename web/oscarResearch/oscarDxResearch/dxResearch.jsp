@@ -23,7 +23,6 @@
  * Ontario, Canada 
  */
 --%>
-<%@ page language="java"%>
 <%@ page
 	import="oscar.oscarResearch.oscarDxResearch.util.dxResearchCodingSystem"%>
 <%@ page

@@ -23,8 +23,6 @@
  * Ontario, Canada 
  */
 --%>
-
-<%@ page language="java"%>
 <%@ page import="oscar.oscarEncounter.data.EctPatientData"%>
 
 <%

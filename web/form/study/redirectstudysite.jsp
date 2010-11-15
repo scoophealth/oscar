@@ -27,7 +27,6 @@
 	if(session.getValue("user") == null || !( ((String) session.getValue("userprofession")).equalsIgnoreCase("doctor") ))
 		response.sendRedirect("../../logout.jsp");
 %>
-<%@ page language="java"%>
 <%@ page import="java.sql.*, oscar.oscarDB.*"%>
 
 <%

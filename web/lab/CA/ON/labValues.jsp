@@ -1,4 +1,4 @@
-<%@ page language="java" errorPage="../provider/errorpage.jsp"%>
+<%@page errorPage="../provider/errorpage.jsp"%>
 <%@ page
 	import="java.util.*,oscar.oscarLab.ca.on.*,oscar.oscarDemographic.data.*"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>

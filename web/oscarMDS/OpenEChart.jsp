@@ -1,4 +1,3 @@
-<%@page contentType="text/html"%>
 <%@ page import="java.util.*"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <!--  

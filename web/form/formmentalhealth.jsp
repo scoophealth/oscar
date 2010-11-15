@@ -23,8 +23,6 @@
  * Ontario, Canada
  */
 --%>
-
-<%@ page language="java"%>
 <%@ page import="oscar.form.*"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%

@@ -1,5 +1,3 @@
-<%@page contentType="text/html"%>
-<%@page pageEncoding="ISO-8859-1"%> 
 <%@ page import="java.lang.*" errorPage="errorpage.jsp"%>
 <%
 	if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");

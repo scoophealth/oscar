@@ -2,11 +2,7 @@
 REQUREMENTS: (2 PARAMS)
 1.  pathtophr - example: ../../phr/ (tail slash requrement) (as of July 22, 2009 - not needed)
 2.  forwardto - where to go after user is authenticated
---%>
-
-<%@page contentType="text/html"%>
-<%@page pageEncoding="ISO-8859-1"%> 
-<%--
+--%><%--
 The taglib directive below imports the JSTL library. If you uncomment it,
 you must also add the JSTL library to the project. The Add Library... action
 on Libraries node in Projects view can be used to add the JSTL 1.1 library.

@@ -1,5 +1,3 @@
-<%@page contentType="text/html"%>
-<%@page pageEncoding="ISO-8859-1"%> 
 <%@page import="oscar.oscarReport.data.DemographicSets,java.util.ArrayList"%>
 
 <%

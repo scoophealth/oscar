@@ -36,7 +36,6 @@
 <%
 	String styleClass = "data2";
 %>
-<%@ page language="java"%>
 <%@ page
 	import="java.util.*,oscar.util.*, oscar.oscarWaitingList.bean.*"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>

@@ -22,7 +22,7 @@
 */
 --%>
 
-<%@ page language="java" errorPage="/casemgmt/error.jsp"%>
+<%@page errorPage="/casemgmt/error.jsp"%>
 <%@ taglib uri="http://jakarta.apache.org/struts/tags-bean" prefix="bean"%>
 <%@ taglib uri="http://jakarta.apache.org/struts/tags-bean-el" prefix="bean-el"%>
 <%@ taglib uri="http://jakarta.apache.org/struts/tags-html" prefix="html"%>

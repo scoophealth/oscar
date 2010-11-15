@@ -27,10 +27,7 @@
  * Created on December 21, 2006, 11:23 AM
  *
  */
- --%>
-<%@page contentType="text/html"%>
-<%@page pageEncoding="ISO-8859-1"%> 
-<%@ page
+ --%><%@ page
 	import="oscar.util.*, oscar.form.*, oscar.form.data.*,java.util.*,oscar.oscarPrevention.*"%>
 
 <% 

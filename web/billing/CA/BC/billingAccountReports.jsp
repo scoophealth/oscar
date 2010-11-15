@@ -28,7 +28,6 @@
   * Ontario, Canada
   */
 -->
-<%@page language="java" contentType="text/html"%>
 <%@page
 	import="java.math.*,java.util.*, java.sql.*, oscar.*, java.net.*,oscar.oscarBilling.ca.bc.MSP.*,oscar.util.*"%>
 <%@taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>

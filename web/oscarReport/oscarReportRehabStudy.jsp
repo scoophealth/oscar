@@ -31,7 +31,6 @@ GregorianCalendar now = new GregorianCalendar();
 GregorianCalendar cal = (GregorianCalendar) now.clone();
 String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DATE) ;
 %>
-<%@ page language="java"%>
 <%@ page import="java.util.*,oscar.oscarReport.data.*, java.net.*"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>

@@ -23,10 +23,7 @@
 // * Ontario, Canada 
 // *
 // -----------------------------------------------------------------------------------------------------------------------
---%>
-<%@page contentType="text/html"%>
-<%@page pageEncoding="ISO-8859-1"%> 
-<%@ page
+--%><%@ page
 	import="org.oscarehr.casemgmt.web.formbeans.CaseManagementEntryFormBean"%>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@ include file="/casemgmt/taglibs.jsp"%>

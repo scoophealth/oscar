@@ -23,10 +23,7 @@
  * Ontario, Canada 
  */
 --%>
-
-<%@ page language="java"%>
 <%@ page import="oscar.form.*"%>
-<%@page contentType="text/html"%>
 <%@page pageEncoding="UTF-8"%>
 <%
     int demoNo = Integer.parseInt(request.getParameter("demographic_no"));

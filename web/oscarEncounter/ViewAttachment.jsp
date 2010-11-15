@@ -1,4 +1,3 @@
-<%@ page language="java"%>
 <%@ page
 	import="oscar.oscarEncounter.immunization.data.*,oscar.util.UtilXML"%>
 <%@ page

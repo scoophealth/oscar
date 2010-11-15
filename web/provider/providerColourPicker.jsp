@@ -22,11 +22,7 @@
  * Hamilton 
  * Ontario, Canada 
  */
--->
-
-<%@page contentType="text/html"%>
-<%@page pageEncoding="ISO-8859-1"%> 
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+--><%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ page import="oscar.oscarProvider.data.*"%>
 

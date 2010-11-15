@@ -24,9 +24,6 @@
  */
 -->
 <%@page import="oscar.util.*, oscar.*, java.util.*"%>
-
-<%@ page language="java"%>
-
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 
 <%

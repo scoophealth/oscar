@@ -23,8 +23,6 @@
  * Ontario, Canada 
  */
 -->
-
-<%@ page language="java"%>
 <%@ page import="java.util.ResourceBundle"%>
 <jsp:useBean id="oscarVariables" class="java.util.Properties"
 	scope="session" />

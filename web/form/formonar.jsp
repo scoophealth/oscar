@@ -17,8 +17,6 @@
  * Yi Li
  */
 --%>
-
-<%@ page language="java"%>
 <%@ page import="oscar.form.*"%>
 <%
     int demoNo = Integer.parseInt(request.getParameter("demographic_no"));

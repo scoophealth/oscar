@@ -41,10 +41,6 @@ then it will not show up in section #3. Will have to use sections #1 and #2 to
 detect those and search the source.
 
 --%>
-
-
-
-<%@page contentType="text/html" pageEncoding="ISO-8859-1"%> 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
 

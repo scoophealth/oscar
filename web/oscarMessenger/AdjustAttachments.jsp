@@ -24,7 +24,7 @@
  */
 --%>
 
-<%@ page language="java" contentType='text/xml'
+<%@page contentType='text/xml'
 	import="oscar.oscarMessenger.docxfer.send.*, oscar.oscarMessenger.docxfer.util.*"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>

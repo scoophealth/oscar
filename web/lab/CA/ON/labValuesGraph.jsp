@@ -1,4 +1,3 @@
-<%@ page language="java" %>
 <%@ page
     import="java.util.*,oscar.oscarLab.ca.on.*,oscar.oscarDemographic.data.*"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>

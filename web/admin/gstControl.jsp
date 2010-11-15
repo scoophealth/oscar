@@ -1,7 +1,3 @@
-<%@page contentType="text/html"%>
-<%@page pageEncoding="ISO-8859-1"%> 
-
-<%@ page language="java"%>
 <%@ page
 	import="java.util.*,oscar.oscarReport.data.*, java.util.Properties, oscar.oscarBilling.ca.on.administration.*"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>

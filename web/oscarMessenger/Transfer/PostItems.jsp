@@ -24,7 +24,7 @@
  */
 --%>
 
-<%@ page language="java" contentType='text/xml'
+<%@page contentType='text/xml'
 	import="oscar.oscarMessenger.docxfer.send.*, oscar.oscarMessenger.docxfer.util.*"%>
 <%
 

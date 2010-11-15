@@ -46,9 +46,7 @@ trusted truejava.lang.Boolean ? i think
  -check for trusted key and hide if not trusted.
 
 
---%><%@page contentType="text/html"%>
-<%@page pageEncoding="ISO-8859-1"%> 
-<%@ page import="java.util.*,oscar.oscarRx.data.*,java.text.DateFormatSymbols,oscar.oscarRx.pageUtil.*,java.io.*,org.apache.xmlrpc.*, oscar.util.StringUtils,java.util.Random"%>
+--%><%@ page import="java.util.*,oscar.oscarRx.data.*,java.text.DateFormatSymbols,oscar.oscarRx.pageUtil.*,java.io.*,org.apache.xmlrpc.*, oscar.util.StringUtils,java.util.Random"%>
 
 <%
     Vector<Hashtable> warnings = (Vector)request.getAttribute("warnings");

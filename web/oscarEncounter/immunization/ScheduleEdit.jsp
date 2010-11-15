@@ -23,8 +23,6 @@
  * Ontario, Canada 
  */
 -->
-
-<%@ page language="java"%>
 <%@ page
 	import="oscar.oscarEncounter.immunization.data.EctImmImmunizationData"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
