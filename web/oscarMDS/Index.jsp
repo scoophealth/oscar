@@ -31,7 +31,7 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%@page import="org.oscarehr.common.hl7.v2.oscar_to_oscar.OscarToOscarUtils"%>
-<%@page import="org.oscarehr.util.MiscUtils"%>
+<%@page import="org.oscarehr.util.MiscUtils, org.apache.commons.lang.StringEscapeUtils"%>
 
 <%
 
@@ -135,7 +135,7 @@ Event.observe(window,'scroll',function(){//check for scrolling
                            var typeDocLab=initTypeDocLab('<%=typeDocLab%>');   //{DOC=[357, 317, 316], HL7=[38, 33, 30, 28]}
                            var docType=initDocType('<%=docType%>');   //{357=DOC, 38=HL7, 317=DOC, 316=DOC, 33=HL7, 30=HL7, 28=HL7}
                            var patientDocs=initPatientDocs('<%=patientDocs%>');//{2=[316, 30, 28], 1=[33], -1=[357, 317, 38]}
-                           var patientIdNames=initPatientIdNames('<%=patientIdNamesStr%>');//;2=TEST2, PATIENT2;1=Zrrr, Srrr;-1=Not, Assigned
+                           var patientIdNames=initPatientIdNames('<%=StringEscapeUtils.escapeJavaScript(patientIdNamesStr)%>');//;2=TEST2, PATIENT2;1=Zrrr, Srrr;-1=Not, Assigned
                            //var patientIdStr='<%=patientIdStr%>';//2,1,-1,
                            var docStatus=initDocStatus('<%=docStatus%>');//{357=A, 38=N, 317=A, 316=A, 33=N, 30=N, 28=N}
                            var normals=initNormals('<%=normals%>');//[357, 317, 316, 38, 33, 30, 28]
