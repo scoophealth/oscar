@@ -8014,6 +8014,7 @@ create table queue_document_link (
     id int(10) not null auto_increment,
     queue_id int(10) not null,
     document_id int(10) not null,
+    status char(1) ,
     primary key (id)
 );
 
