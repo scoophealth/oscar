@@ -1213,7 +1213,7 @@ INSERT INTO validations(name, maxValue, minValue, maxLength) values( 'Integer: 1
 INSERT INTO validations(name, maxValue, minValue, maxLength) values( 'Integer: 1 to 4', 4, 1, 1);
 INSERT INTO validations(name, maxValue, minValue, maxLength) values( 'Integer: 1 to 3', 3, 1, 1);
 
-insert into queue values(1,'default');
+
 
 insert into `secRole` values(1, 'receptionist', 'receptionist');
 insert into `secRole` values(2, 'doctor', 'doctor');
@@ -1304,7 +1304,6 @@ insert into `secObjectName` (`objectName`) values ('_newCasemgmt.medicalHistory'
 insert into `secObjectName` (`objectName`) values ('_newCasemgmt.calculators');
 insert into `secObjectName` (`objectName`) values ('_newCasemgmt.templates');
 insert into `secObjectName` (`objectName`) values ('_newCasemgmt.cpp');
-insert into  secObjectName values('_queue.1','default',0);
 insert into `secObjectName` (`objectName`) values ('_eform.doctor');
 
 
