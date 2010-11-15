@@ -42,7 +42,7 @@ Notice on your package explorer you new have the new project like any other prev
 
 
 ---------------
-Getting updated
+Getting updates
 ---------------
 To get updates from the remote repository. First right click on the project and do a team -> fetch from. 
 
@@ -55,7 +55,7 @@ Right click on the project and go to team -> merge. Click on origin/master on th
 
 
 --------------
-making updates
+Making changes
 --------------
 Now say you've created new files in the project and altered some existing ones.
 
@@ -69,4 +69,4 @@ If this is the first time you've pushed, you'll need to fill in a push specifica
 
 If you go to the gerrit web page you should see the change is pending review now.
 
-
+Note that at this point, you and the central repository are not in sync, the files at the central repository must be approved first. Even after the changes on the central repository are approved, you must follow the "getting updates" again before you and the central repository are in sync (yes even if the files happen to be the same on the 2 servers, the pointers are not in sync until you merge).  
