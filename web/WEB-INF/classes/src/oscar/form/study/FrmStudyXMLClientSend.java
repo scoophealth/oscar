@@ -136,13 +136,8 @@ public class FrmStudyXMLClientSend {
 
 	private void sendJaxmMsg (String aMsg, String u) throws java.sql.SQLException  {
 		try	{
-			//System.setProperty("javax.net.ssl.trustStore", "c:\\root\\oscarComm\\oscarComm.keystore");
-			//System.setProperty("javax.net.ssl.trustStore", "/root/oscarComm/compete.keystore");
 			System.setProperty("javax.net.ssl.trustStore", u);
-            //System.setProperty("javax.net.debug", "ssl,handshake,trustmanager");
 
-			//URL endPoint = new URL (" https://67.69.12.115:8443");
-			//javax.xml.soap.SOAPConnectionFactory=com.sun.xml.messaging.saaj.client.p2p.HttpSOAPConnectionFactory
 			SOAPConnectionFactory scf = SOAPConnectionFactory.newInstance();
 			SOAPConnection connection = scf.createConnection();
 
@@ -157,22 +152,14 @@ public class FrmStudyXMLClientSend {
 
 			SOAPHeaderElement headerElement = header.addHeaderElement(envelope.createName("OSCAR", "DT", "http://www.oscarhome.org/"));
 		    headerElement.addTextNode("header");
-			//SOAPBodyElement bodyElement = body.addBodyElement(envelope.createName("Text", "jaxm", "http://java.sun.com/jaxm"));
 
 			SOAPBodyElement bodyElement = body.addBodyElement(envelope.createName("Service"));
 		    bodyElement.addTextNode("compete");
 
 			AttachmentPart ap1 = message.createAttachmentPart();
 			ap1.setContent(aMsg, "text/plain");
-			//DOMSource aSource = new DOMSource(UtilXML.parseXML(aMsg) );
-			//ap1.setContent(aSource, "text/xml");
-		    //URL url = new URL("../../../../webapps/oscar_sfhc/images/sfhc.jpg");
-		    //AttachmentPart ap1 = message.createAttachmentPart(new DataHandler(url));
-		    //message.addAttachmentPart(ap1);
 
 			message.addAttachmentPart(ap1);
-
-			//AttachmentPart ap2 = message.createAttachmentPart("hello", "text/plain; charset=ISO-8859-1");	//message.addAttachmentPart(ap2);
 			
 			URLEndpoint endPoint = new URLEndpoint (URLService);  //"https://67.69.12.115:8443/OscarComm/DummyReceiver");
 			SOAPMessage reply = connection.call(message, endPoint);
