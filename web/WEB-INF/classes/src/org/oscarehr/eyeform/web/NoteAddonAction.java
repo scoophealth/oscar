@@ -83,13 +83,7 @@ public class NoteAddonAction extends DispatchAction {
 		EyeFormDao dao = (EyeFormDao)SpringUtils.getBean("EyeFormDao");
 		
 		EyeForm eyeform = dao.getByAppointmentNo(Integer.parseInt(appointmentNo));
-		
 	
-		System.out.println("ack1_checked="+ack1Checked);
-		System.out.println("ack2_checked="+ack2Checked);
-		System.out.println("ack3_checked="+ack3Checked);
-		
-		System.out.println("appointmentNo="+appointmentNo);
 		
 		return null;
 	}
