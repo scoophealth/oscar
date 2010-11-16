@@ -43,6 +43,7 @@ else if (orderByRequest.equals("file_name")) orderBy = EFormUtil.FILE_NAME;
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath()%>/share/javascript/boxover.js"></script>
+<meta http-equiv="Cache-Control" content="no-cache" />
 <title><bean:message key="eform.uploadhtml.title" /></title>
 <link rel="stylesheet" href="<%=request.getContextPath()%>/share/css/OscarStandardLayout.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/share/css/eformStyle.css">

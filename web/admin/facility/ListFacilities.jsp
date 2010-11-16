@@ -14,6 +14,7 @@
 
 <html:html locale="true">
     <head>
+        <meta http-equiv="Cache-Control" content="no-cache" />
         <title>Facilities</title>
         <link rel="stylesheet" type="text/css" href='<html:rewrite page="/css/tigris.css" />' />
         <link rel="stylesheet" type="text/css" href='<html:rewrite page="/css/displaytag.css" />' />
@@ -56,7 +57,7 @@
             </display:table>
         </html:form>
 <!--
-        <p><a href="< :rewrite action="/FacilityManager.do"/>?method=add">
+        <p><a href="< tml:rewrite action="/FacilityManager.do"/>?method=add">
         Add new facility </a></p>
 -->
     </body>

@@ -13,6 +13,7 @@
 
 <html:html locale="true">
     <head>
+        <meta http-equiv="Cache-Control" content="no-cache" />
         <title>Edit Facility</title>
         <link rel="stylesheet" type="text/css" href='<html:rewrite page="/css/tigris.css" />' />
         <link rel="stylesheet" type="text/css" href='<html:rewrite page="/css/displaytag.css" />' />
@@ -66,7 +67,9 @@
             <input type="hidden" name="method" value="save" />
             <html:hidden property="facility.orgId" />
             <html:hidden property="facility.sectorId" />
-            <html:hidden property="facility.ocanServiceOrgNumber" />
+<!-- Ronnie
+            < :hidden property="facility.ocanServiceOrgNumber" />
+-->
             <table width="100%" border="1" cellspacing="2" cellpadding="3">
                 <tr class="b">
                     <td>Facility Id:</td>

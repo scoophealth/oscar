@@ -69,6 +69,7 @@ if (request.getAttribute("submitted") != null) {
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+<meta http-equiv="Cache-Control" content="no-cache" />
 <title><bean:message key="eform.edithtml.msgEditEform" /></title>
 <link rel="stylesheet" href="../share/css/OscarStandardLayout.css">
 <link rel="stylesheet" href="../share/css/eformStyle.css">
