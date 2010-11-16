@@ -61,7 +61,6 @@
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="billing.billingDigSearch.title" /></title>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <script LANGUAGE="JavaScript">
 <!--
 function CodeAttach(File2) {

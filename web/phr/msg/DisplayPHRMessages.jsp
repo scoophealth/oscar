@@ -73,7 +73,6 @@ request.setAttribute("pageMethod",pageMethod);
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
         <html:base />
         <link rel="stylesheet" type="text/css" href="../../oscarMessenger/encounterStyles.css">
         <title>

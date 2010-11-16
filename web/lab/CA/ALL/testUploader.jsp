@@ -26,7 +26,6 @@ if(outcome != null){
 <html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Lab Upload Utility</title>
 <link rel="stylesheet" type="text/css" href="../../../share/css/OscarStandardLayout.css">
 <script type="text/javascript" src="../../../share/javascript/Oscar.js"></script>

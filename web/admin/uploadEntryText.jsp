@@ -8,7 +8,6 @@ if(session.getAttribute("user") == null) response.sendRedirect("../../logout.jsp
 
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
         <title><bean:message key="admin.admin.uploadEntryTxt"/></title>
         <link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css">
     </head>

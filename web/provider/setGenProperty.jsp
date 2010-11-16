@@ -40,7 +40,6 @@ if(session.getValue("user") == null)
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <html:base />
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title><bean-el:message key="${providertitle}" /></title>
 
 <link rel="stylesheet" type="text/css"

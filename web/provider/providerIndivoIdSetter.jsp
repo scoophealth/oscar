@@ -43,7 +43,6 @@ String domain = "@myoscar.org";
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <html:base />
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title><bean:message key="provider.setMyOscarLogin.title" /></title>
 
 <link rel="stylesheet" type="text/css"

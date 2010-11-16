@@ -41,7 +41,6 @@
 -->
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
         <title>myDrugref login details</title>
         <link rel="stylesheet" href="<%=request.getContextPath()%>/share/css/OscarStandardLayout.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/share/css/eformStyle.css">

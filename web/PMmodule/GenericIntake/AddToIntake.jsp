@@ -109,7 +109,6 @@ String pSize        = request.getParameter("pSize");
 <html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Add To Intake</title>
 <script type="text/javascript" src="<html:rewrite page="/js/jquery.js"/>"></script>
 <script type="text/javascript">

@@ -79,7 +79,6 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
     <head>
         <html:base/>
         <title><%=handler.getPatientName()+" Lab Results"%></title>
-        <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
         <script language="javascript" type="text/javascript" src="../../../share/javascript/Oscar.js" ></script>
         <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
         <script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/prototype.js"></script>

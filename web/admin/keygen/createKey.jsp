@@ -79,7 +79,6 @@ if (message != null){
 <%@page import="org.oscarehr.common.hl7.v2.oscar_to_oscar.OscarToOscarUtils"%><html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Oscar - Key Pair Creation</title>
 <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/share/css/OscarStandardLayout.css">
 <script type="text/javascript">

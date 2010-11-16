@@ -61,7 +61,6 @@
 
 <%@page import="org.oscarehr.util.MiscUtils"%><html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
         <title>Link to Lab Requisition</title>
     </head>
     <body>

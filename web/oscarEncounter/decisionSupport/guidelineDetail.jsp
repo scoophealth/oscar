@@ -23,7 +23,6 @@ pageContext.setAttribute("provider_no", request.getParameter("provider_no"));
 
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
         <title>GuidelineList</title>
         <link rel="stylesheet" href="decisionSupport.css" type="text/css"></link>
     </head>

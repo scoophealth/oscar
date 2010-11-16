@@ -38,7 +38,6 @@ ArrayList aList = raData.getRAData(billingNo);
 <html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>JSP Page</title>
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 </head>

@@ -43,7 +43,6 @@ String userlastname = (String) session.getAttribute("userlastname");
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Billing Summary</title>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <script type="text/javascript"
 	src="../../../share/javascript/prototype.js"></script>
 <script type="text/javascript" src="../../../share/javascript/nifty.js"></script>
