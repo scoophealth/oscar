@@ -66,6 +66,7 @@
 <%@page import="oscar.OscarProperties"%><html:html locale="true">
 <head>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/global.js"></script>
+<meta http-equiv="Cache-Control" content="no-cache" />
 <title><bean:message key="admin.admin.title" /> Start Time : <%=oscar.OscarProperties.getInstance().getStartTime()%></title>
 <link rel="stylesheet" type="text/css"
 	href="../share/css/OscarStandardLayout.css" />
