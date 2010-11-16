@@ -85,6 +85,7 @@ public class GrepStuffDirectoryWalker extends DirectoryWalker {
 			checkContains(relativePath, fileContentsLowered, "latin-1", "use utf-8");
 			checkContains(relativePath, fileContentsLowered, "ascii", "use utf-8");
 			checkContains(relativePath, fileContentsLowered, "8859-1", "use utf-8");
+			checkContains(relativePath, fileContentsLowered, "http-equiv", "http headers instead");
 		}
 
 		// --- check for database sql problems ---

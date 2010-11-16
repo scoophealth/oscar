@@ -49,7 +49,6 @@
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/checkPassword.js.jsp"></script>
-<meta http-equiv="Cache-Control" content="no-cache" />
 <title><bean:message key="admin.securityupdatesecurity.title" /></title>
 <link rel="stylesheet" type="text/css" href="bcArStyle.css">
 <!-- calendar stylesheet -->
