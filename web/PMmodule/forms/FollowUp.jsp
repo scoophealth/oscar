@@ -30,7 +30,6 @@
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>INTAKE B. COUNSELLOR ASSESSMENT</title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <link rel="stylesheet" type="text/css"
 	href="<html:rewrite page="/css/intakeB.css"/>" />
 <script language="JavaScript"

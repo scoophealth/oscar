@@ -48,7 +48,6 @@ String AbnFlag = "";
 <html:base />
 <title><%=lab.pName%> <bean:message
 	key="oscarMDS.segmentDisplay.title" /></title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <script language="javascript" type="text/javascript"
 	src="../../../share/javascript/Oscar.js"></script>
 <link rel="stylesheet" type="text/css"

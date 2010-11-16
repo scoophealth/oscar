@@ -35,7 +35,6 @@
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>HSFO Registration Template</title>
 <html:base />
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 <script language="JavaScript" type="text/javascript">
  function popupXmlMsg(path){

@@ -330,8 +330,6 @@ function calculateFee(){
 }
 
 </script>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-
 <style type="text/css">
         td.bCellData{ font-weight:bold; font-family: Arial,Helvetica,sans-serif; }
         th.bHeaderData{ font-weight:bold; font-family: Arial,Helvetica,sans-serif; }

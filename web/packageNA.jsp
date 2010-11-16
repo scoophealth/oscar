@@ -31,7 +31,6 @@
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <html:base />
 <title><bean:message key="packageNA.title" /></title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </head>
 <% String pkg = request.getParameter("pkg")==null?"":request.getParameter("pkg"); 
    String pkgname = pkg.compareTo("oscarRx")==0?"packageNA.msg.oscarRx":pkg.compareTo("oscarComm")==0?"packageNA.msg.oscarComm":"packageNA.msg.oscarComm"; %>
