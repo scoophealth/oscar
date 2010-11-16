@@ -1529,10 +1529,6 @@ function updateSideNav(doclabid, inqueue){
 }
 function getRowIdFromDocLabId(doclabid){
         var rowid;
-        //console.log('getRowIdFromDocLabId '+doclabid);
-        if(doclabid_sql){
-        //console.log("doclabid_sql");
-        //console.log(doclabid_sql);
 
         for(var i=0;i<doclabid_seq.length;i++){
             if(doclabid==doclabid_seq[i]){
@@ -1540,8 +1536,6 @@ function getRowIdFromDocLabId(doclabid){
                 break;
             }
         }
-
-}
     return rowid;
     }
 
