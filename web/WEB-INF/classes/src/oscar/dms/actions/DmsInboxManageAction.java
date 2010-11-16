@@ -319,7 +319,7 @@ public class DmsInboxManageAction extends DispatchAction {
         Integer n=qdl.getQueueId();
         docQueue.put(i.toString(), n.toString());
     }
-    ArrayList labdocs = comLab.populateLabResultsDataInboxIndexPage(searchProviderNo, demographicNo, request.getParameter("fname"), request.getParameter("lname"), request.getParameter("hnum"), ackStatus,scannedDocStatus);
+    ArrayList labdocs = comLab.populateLabResultsData(searchProviderNo, demographicNo, request.getParameter("fname"), request.getParameter("lname"), request.getParameter("hnum"), ackStatus,scannedDocStatus);
 
     ArrayList validlabdocs=new ArrayList();
 
