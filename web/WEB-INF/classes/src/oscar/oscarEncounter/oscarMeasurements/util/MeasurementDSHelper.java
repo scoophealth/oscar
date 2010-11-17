@@ -55,6 +55,10 @@ public class MeasurementDSHelper {
     /** Creates a new instance of MeasurementDSHelper */
     public MeasurementDSHelper() {
     }
+
+    public void log(String logMessage){
+        log.debug(logMessage);
+    }
     
     public MeasurementDSHelper(String demo){
         log.debug("sdfsdf ==" +demo);

@@ -78,6 +78,10 @@ public class MeasurementInfo {
         
         return list;
     }
+
+    public void log(String logMessage){
+        log.debug(logMessage);
+    }
     
     public ArrayList getWarnings(){
         if (warning == null){
