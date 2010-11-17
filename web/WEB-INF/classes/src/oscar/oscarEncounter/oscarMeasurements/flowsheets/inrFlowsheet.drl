@@ -15,7 +15,7 @@
         <java:condition>m.getLastDateRecordedInMonths("COUM") &gt;= 3</java:condition>
         
         <java:consequence>              
-              System.out.println("COUM 1 getting called");
+              m.log("COUM 1 getting called");
               m.addRecommendation("COUM","LAST WEEKLY WARFARIN DOSE MEASUREMENT WAS : "+m.getLastDateRecordedInMonths("COUM")+" months");
         </java:consequence>
     </rule>
@@ -26,7 +26,7 @@
         </parameter>
         <java:condition>m.getLastDateRecordedInMonths("INR") &gt;= 3</java:condition>        
         <java:consequence>              
-              System.out.println("INR 1 getting called");
+              m.log("INR 1 getting called");
               m.addWarning("INR","INR hasn't been reviewed in "+m.getLastDateRecordedInMonths("INR")+" months");
         </java:consequence>
     </rule>

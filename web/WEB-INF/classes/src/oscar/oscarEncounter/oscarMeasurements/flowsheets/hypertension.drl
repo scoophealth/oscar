@@ -38,7 +38,7 @@
         <java:condition>m.getLastDateRecordedInMonths("BP") &gt;= 3</java:condition>
         <java:condition>m.getLastDateRecordedInMonths("BP") &lt; 6</java:condition>
         <java:consequence>              
-              System.out.println("BP 1 getting called");
+              m.log("BP 1 getting called");
               m.addRecommendation("BP","BP hasn't been reviewed in "+m.getLastDateRecordedInMonths("BP")+" months");
         </java:consequence>
     </rule>
@@ -49,7 +49,7 @@
         </parameter>
         <java:condition>m.getLastDateRecordedInMonths("BP") &gt;= 6</java:condition>        
         <java:consequence>              
-              System.out.println("BP 2 getting called");
+              m.log("BP 2 getting called");
               m.addWarning("BP","BP hasn't been reviewed in "+m.getLastDateRecordedInMonths("BP")+" months");
         </java:consequence>
     </rule>
@@ -60,7 +60,7 @@
         </parameter>
         <java:condition>m.getLastDateRecordedInMonths("BP") ==  -1</java:condition>
         <java:consequence>              
-              System.out.println("BP 3 getting called");
+              m.log("BP 3 getting called");
               m.addWarning("BP","BP hasn't been reviewed");
         </java:consequence>
     </rule>
@@ -76,7 +76,7 @@
         <java:condition>m.getLastDateRecordedInMonths("NOSK") &lt; 6</java:condition>
         <java:condition>m.getLastValueAsInt("NOSK") != 0</java:condition>
         <java:consequence>              
-              System.out.println("NOSK 1 getting called");
+              m.log("NOSK 1 getting called");
               m.addRecommendation("NOSK","Number of Cigarettes hasn't been recorded in "+m.getLastDateRecordedInMonths("NOSK")+" months");
         </java:consequence>
     </rule>
@@ -88,7 +88,7 @@
         <java:condition>m.getLastDateRecordedInMonths("NOSK") &gt;= 6</java:condition> 
         <java:condition>m.getLastValueAsInt("NOSK") != 0</java:condition>
         <java:consequence>              
-              System.out.println("NOSK 2 getting called");
+              m.log("NOSK 2 getting called");
               m.addWarning("NOSK","Number of Cigarettes hasn't been recorded in "+m.getLastDateRecordedInMonths("NOSK")+" months");
         </java:consequence>
     </rule>
@@ -99,7 +99,7 @@
         </parameter>
         <java:condition>m.getLastDateRecordedInMonths("NOSK") ==  -1</java:condition>
         <java:consequence>              
-              System.out.println("NOSK 3 getting called");
+              m.log("NOSK 3 getting called");
               m.addWarning("NOSK","Number of Cigarrettes has never been recorded, if non smoker enter zero");
         </java:consequence>
     </rule>
@@ -112,7 +112,7 @@
         <java:condition>m.getLastDateRecordedInMonths("DIER") &gt;= 3</java:condition>
         <java:condition>m.getLastDateRecordedInMonths("DIER") &lt; 6</java:condition>
         <java:consequence>              
-              System.out.println("DIER 1 getting called");
+              m.log("DIER 1 getting called");
               m.addRecommendation("DIER","Diet/Exercise hasn't been recorded in "+m.getLastDateRecordedInMonths("DIER")+" months");
         </java:consequence>
     </rule>
@@ -123,7 +123,7 @@
         </parameter>
         <java:condition>m.getLastDateRecordedInMonths("DIER") &gt;= 6</java:condition>        
         <java:consequence>              
-              System.out.println("DIER 2 getting called");
+              m.log("DIER 2 getting called");
               m.addWarning("DIER","Diet/ Exercise hasn't been recorded in "+m.getLastDateRecordedInMonths("DIER")+" months");
         </java:consequence>
     </rule>
@@ -134,7 +134,7 @@
         </parameter>
         <java:condition>m.getLastDateRecordedInMonths("DIER") ==  -1</java:condition>
         <java:consequence>              
-              System.out.println("DIER 3 getting called");
+              m.log("DIER 3 getting called");
               m.addWarning("DIER","Diet/Excercise has not been recorded");
         </java:consequence>
     </rule>
@@ -149,7 +149,7 @@
         <java:condition>m.getLastDateRecordedInMonths("SODI") &gt;= 3</java:condition>
         <java:condition>m.getLastDateRecordedInMonths("SODI") &lt; 6</java:condition>
         <java:consequence>              
-              System.out.println("SODI 1 getting called");
+              m.log("SODI 1 getting called");
               m.addRecommendation("SODI","Salt Intake hasn't been reviewed in "+m.getLastDateRecordedInMonths("SODI")+" months");
         </java:consequence>
     </rule>
@@ -160,7 +160,7 @@
         </parameter>
         <java:condition>m.getLastDateRecordedInMonths("SODI") &gt;= 6</java:condition>        
         <java:consequence>              
-              System.out.println("SODI 2 getting called");
+              m.log("SODI 2 getting called");
               m.addWarning("SODI","Salt Intake hasn't been reviewed in "+m.getLastDateRecordedInMonths("SODI")+" months");
         </java:consequence>
     </rule>
@@ -171,7 +171,7 @@
         </parameter>
         <java:condition>m.getLastDateRecordedInMonths("SODI") ==  -1</java:condition>
         <java:consequence>              
-              System.out.println("SODI 3 getting called");
+              m.log("SODI 3 getting called");
               m.addWarning("SODI","Salt Intake hasn't been reviewed");
         </java:consequence>
     </rule>
@@ -185,7 +185,7 @@
         <java:condition>m.getLastDateRecordedInMonths("DRPW") &gt;= 3</java:condition>
         <java:condition>m.getLastDateRecordedInMonths("DRPW") &lt; 6</java:condition>
         <java:consequence>              
-              System.out.println("DRPW 1 getting called");
+              m.log("DRPW 1 getting called");
               m.addRecommendation("DRPW","The Number of Drinks per week hasn't been reviewed in "+m.getLastDateRecordedInMonths("DRPW")+" months");
         </java:consequence>
     </rule>
@@ -196,7 +196,7 @@
         </parameter>
         <java:condition>m.getLastDateRecordedInMonths("DRPW") &gt;= 6</java:condition>        
         <java:consequence>              
-              System.out.println("DRPW 2 getting called");
+              m.log("DRPW 2 getting called");
               m.addWarning("DRPW","The Number of Drinks per week hasn't been reviewed in "+m.getLastDateRecordedInMonths("DRPW")+" months");
         </java:consequence>
     </rule>
@@ -207,7 +207,7 @@
         </parameter>
         <java:condition>m.getLastDateRecordedInMonths("DRPW") ==  -1</java:condition>
         <java:consequence>              
-              System.out.println("DRPW 3 getting called");
+              m.log("DRPW 3 getting called");
               m.addWarning("DRPW","The Number of Drinks per week hasn't been reviewed");
         </java:consequence>
     </rule>
@@ -221,7 +221,7 @@
         <java:condition>m.getLastDateRecordedInMonths("WT") &gt;= 3</java:condition>
         <java:condition>m.getLastDateRecordedInMonths("WT") &lt; 6</java:condition>
         <java:consequence>              
-              System.out.println("WT 1 getting called");
+              m.log("WT 1 getting called");
               m.addRecommendation("WT","Weight hasn't been reviewed in "+m.getLastDateRecordedInMonths("WT")+" months");
         </java:consequence>
     </rule>
@@ -232,7 +232,7 @@
         </parameter>
         <java:condition>m.getLastDateRecordedInMonths("WT") &gt;= 6</java:condition>        
         <java:consequence>              
-              System.out.println("WT 2 getting called");
+              m.log("WT 2 getting called");
               m.addWarning("WT","Weight hasn't been reviewed in "+m.getLastDateRecordedInMonths("WT")+" months");
         </java:consequence>
     </rule>
@@ -243,7 +243,7 @@
         </parameter>
         <java:condition>m.getLastDateRecordedInMonths("WT") ==  -1</java:condition>
         <java:consequence>              
-              System.out.println("WT 3 getting called");
+              m.log("WT 3 getting called");
               m.addWarning("WT","Weight hasn't been reviewed");
         </java:consequence>
     </rule>
@@ -260,7 +260,7 @@
         <java:condition>m.getLastDateRecordedInMonths("BMI") &gt;= 10</java:condition>
         <java:condition>m.getLastDateRecordedInMonths("BMI") &lt; 12</java:condition>
         <java:consequence>              
-              System.out.println("BMI 1 getting called");
+              m.log("BMI 1 getting called");
               m.addRecommendation("BMI","BMI hasn't been recorded in "+m.getLastDateRecordedInMonths("BMI")+" months");
         </java:consequence>
     </rule>
@@ -271,7 +271,7 @@
         </parameter>
         <java:condition>m.getLastDateRecordedInMonths("BMI") &gt;= 12</java:condition>        
         <java:consequence>              
-              System.out.println("BMI 2 getting called");
+              m.log("BMI 2 getting called");
               m.addWarning("BMI","BMI hasn't been recorded in "+m.getLastDateRecordedInMonths("BMI")+" months");
         </java:consequence>
     </rule>
@@ -282,7 +282,7 @@
         </parameter>
         <java:condition>m.getLastDateRecordedInMonths("BMI") ==  -1</java:condition>
         <java:consequence>              
-              System.out.println("BMI 3 getting called");
+              m.log("BMI 3 getting called");
               m.addWarning("BMI","no BMI has been recorded");
         </java:consequence>
     </rule>
@@ -294,7 +294,7 @@
         <java:condition>m.getLastDateRecordedInMonths("ACR") &gt;= 10</java:condition>
         <java:condition>m.getLastDateRecordedInMonths("ACR") &lt; 12</java:condition>
         <java:consequence>              
-              System.out.println("ACR 1 getting called");
+              m.log("ACR 1 getting called");
               m.addRecommendation("ACR","An Alb: creat ratio value hasn't been recorded in "+m.getLastDateRecordedInMonths("ACR")+" months");
         </java:consequence>
     </rule>
@@ -305,7 +305,7 @@
         </parameter>
         <java:condition>m.getLastDateRecordedInMonths("ACR") &gt;= 12</java:condition>        
         <java:consequence>              
-              System.out.println("ACR 2 getting called");
+              m.log("ACR 2 getting called");
               m.addWarning("ACR","An Alb: creat ratio value hasn't been recorded in "+m.getLastDateRecordedInMonths("ACR")+" months");
         </java:consequence>
     </rule>
@@ -316,7 +316,7 @@
         </parameter>
         <java:condition>m.getLastDateRecordedInMonths("ACR") ==  -1</java:condition>
         <java:consequence>              
-              System.out.println("ACR 3 getting called");
+              m.log("ACR 3 getting called");
               m.addWarning("ACR","An Alb: creat ratio value has not been recorded");
         </java:consequence>
     </rule>
@@ -328,7 +328,7 @@
         <java:condition>m.getLastDateRecordedInMonths("TCHD") &gt;= 10</java:condition>
         <java:condition>m.getLastDateRecordedInMonths("TCHD") &lt; 12</java:condition>
         <java:consequence>              
-              System.out.println("TCHD 1 getting called");
+              m.log("TCHD 1 getting called");
               m.addRecommendation("TCHD","TC/HDL hasn't been recorded in "+m.getLastDateRecordedInMonths("TCHD")+" months");
         </java:consequence>
     </rule>
@@ -339,7 +339,7 @@
         </parameter>
         <java:condition>m.getLastDateRecordedInMonths("TCHD") &gt;= 12</java:condition>        
         <java:consequence>              
-              System.out.println("TCHD 2 getting called");
+              m.log("TCHD 2 getting called");
               m.addWarning("TCHD","TC/HDL hasn't been recorded in "+m.getLastDateRecordedInMonths("TCHD")+" months");
         </java:consequence>
     </rule>
@@ -350,7 +350,7 @@
         </parameter>
         <java:condition>m.getLastDateRecordedInMonths("TCHD") ==  -1</java:condition>
         <java:consequence>              
-              System.out.println("TCHD 3 getting called");
+              m.log("TCHD 3 getting called");
               m.addWarning("TCHD","TC/HDL has not been recorded");
         </java:consequence>
     </rule>
@@ -361,7 +361,7 @@
         <java:condition>m.getLastDateRecordedInMonths("LDL") &gt;= 10</java:condition>
         <java:condition>m.getLastDateRecordedInMonths("LDL") &lt; 12</java:condition>
         <java:consequence>              
-              System.out.println("LDL 1 getting called");
+              m.log("LDL 1 getting called");
               m.addRecommendation("LDL","LDL hasn't been recorded in "+m.getLastDateRecordedInMonths("LDL")+" months");
         </java:consequence>
     </rule>
@@ -372,7 +372,7 @@
         </parameter>
         <java:condition>m.getLastDateRecordedInMonths("LDL") &gt;= 12</java:condition>        
         <java:consequence>              
-              System.out.println("LDL 2 getting called");
+              m.log("LDL 2 getting called");
               m.addWarning("LDL","LDL hasn't been recorded in "+m.getLastDateRecordedInMonths("LDL")+" months");
         </java:consequence>
     </rule>
@@ -383,7 +383,7 @@
         </parameter>
         <java:condition>m.getLastDateRecordedInMonths("LDL") ==  -1</java:condition>
         <java:consequence>              
-              System.out.println("LDL 3 getting called");
+              m.log("LDL 3 getting called");
               m.addWarning("LDL","LDL has not been recorded");
         </java:consequence>
     </rule>
@@ -394,7 +394,7 @@
         <java:condition>m.getLastDateRecordedInMonths("TG") &gt;= 10</java:condition>
         <java:condition>m.getLastDateRecordedInMonths("TG") &lt; 12</java:condition>
         <java:consequence>              
-              System.out.println("TG 1 getting called");
+              m.log("TG 1 getting called");
               m.addRecommendation("TG","Triglycerides hasn't been recorded in "+m.getLastDateRecordedInMonths("TG")+" months");
         </java:consequence>
     </rule>
@@ -405,7 +405,7 @@
         </parameter>
         <java:condition>m.getLastDateRecordedInMonths("TG") &gt;= 12</java:condition>        
         <java:consequence>              
-              System.out.println("TG 2 getting called");
+              m.log("TG 2 getting called");
               m.addWarning("TG","Triglycerides hasn't been recorded in "+m.getLastDateRecordedInMonths("TG")+" months");
         </java:consequence>
     </rule>
@@ -416,7 +416,7 @@
         </parameter>
         <java:condition>m.getLastDateRecordedInMonths("TG") ==  -1</java:condition>
         <java:consequence>              
-              System.out.println("TG 3 getting called");
+              m.log("TG 3 getting called");
               m.addWarning("TG","Triglycerides has not been recorded");
         </java:consequence>
     </rule>
@@ -427,7 +427,7 @@
         <java:condition>m.getLastDateRecordedInMonths("EGFR") &gt;= 10</java:condition>
         <java:condition>m.getLastDateRecordedInMonths("EGFR") &lt; 12</java:condition>
         <java:consequence>              
-              System.out.println("EGFR 1 getting called");
+              m.log("EGFR 1 getting called");
               m.addRecommendation("EGFR","An eGFR value hasn't been recorded in "+m.getLastDateRecordedInMonths("EGFR")+" months");
         </java:consequence>
     </rule>
@@ -438,7 +438,7 @@
         </parameter>
         <java:condition>m.getLastDateRecordedInMonths("EGFR") &gt;= 12</java:condition>        
         <java:consequence>              
-              System.out.println("EGFR 2 getting called");
+              m.log("EGFR 2 getting called");
               m.addWarning("EGFR","An eGFR value hasn't been recorded in "+m.getLastDateRecordedInMonths("EGFR")+" months");
         </java:consequence>
     </rule>
@@ -449,7 +449,7 @@
         </parameter>
         <java:condition>m.getLastDateRecordedInMonths("EGFR") ==  -1</java:condition>
         <java:consequence>              
-              System.out.println("EGFR 3 getting called");
+              m.log("EGFR 3 getting called");
               m.addWarning("EGFR","An eGFR value has not been recorded");
         </java:consequence>
     </rule>
