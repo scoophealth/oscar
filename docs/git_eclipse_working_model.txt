@@ -22,6 +22,12 @@ On the main registration screen :
 
 At this point, if your eclipse was already running, you need to stop it and start it again. Eclipse caches ssh key information. (really, it does)
 
+------
+Plugin
+------
+Follow the instructions at http://www.eclipse.org/egit/ to install the git eclipse plugin. At the time of this writing I was using 0.9.3.
+
+
 ------------
 ~/.gitconfig
 ------------
@@ -32,11 +38,7 @@ You need a file in your home directory calls .gitconfig, in that file you need a
 	[core]
    		  	editor = nano
 
-
-------
-Plugin
-------
-Follow the instructions at http://www.eclipse.org/egit/ to install the git eclipse plugin. At the time of this writing I was using 0.9.3.
+As a note, you can also edit this file in your eclipse->preferences->team->git, it opens the file in an editor panel for you.
 
 
 --------------
