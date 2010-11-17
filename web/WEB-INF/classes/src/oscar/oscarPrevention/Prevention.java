@@ -77,7 +77,11 @@ public class Prevention {
    public Prevention(String demographicNo) {
             
    }
-          
+
+   public void log(String logMessage){
+      log.debug(name+" :"+logMessage);
+   }
+         
    public void setSex(String s){ sex = s; }   
    public String getSex(){ return sex; }
    public java.lang.String getName() { return name; }
@@ -296,10 +300,17 @@ public class Prevention {
    public int getAgeInMonthsLastPreventionTypeGiven(String preventionType){
       return getNumMonths(DOB,getLastPreventionDate(preventionType));         
    }
+
+   private String getStrDate(Date d){
+       if (d == null){
+           return null;
+       }
+       return d.toString();
+   }
    
    private int getNumMonths(Date dStart, Date dEnd) {
         int i = 0;
-        log.debug("Getting the number of months between "+dStart.toString()+ " and "+dEnd.toString() );        
+        log.debug("Getting the number of months between "+getStrDate(dStart)+ " and "+getStrDate(dEnd) );
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(dStart);
         while (calendar.getTime().before(dEnd) || calendar.getTime().equals(dEnd)) {
