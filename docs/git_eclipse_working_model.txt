@@ -22,6 +22,16 @@ On the main registration screen :
 
 At this point, if your eclipse was already running, you need to stop it and start it again. Eclipse caches ssh key information. (really, it does)
 
+------------
+~/.gitconfig
+------------
+You need a file in your home directory calls .gitconfig, in that file you need at least the [user] section, below is my .gitconfig for reference
+	[user]
+   		  	name = Ted Leung
+       		email = r6squeegee@gmail.com
+	[core]
+   		  	editor = nano
+
 
 ------
 Plugin
