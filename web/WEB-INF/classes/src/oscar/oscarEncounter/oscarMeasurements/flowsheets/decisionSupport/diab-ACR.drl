@@ -16,7 +16,7 @@
         <java:condition>m.isMale() == true </java:condition>       
         <java:condition>m.getDataAsDouble() &gt;= 2.0</java:condition> 
         <java:consequence>     
-              System.out.println("ACR RULES IS GETTING RUN");           
+              m.log("ACR RULES IS GETTING RUN");
               m.setIndicationColor("HIGH");
         </java:consequence>
     </rule>
@@ -28,7 +28,7 @@
         <java:condition>m.isFemale() == true </java:condition>       
         <java:condition>m.getDataAsDouble() &gt;= 2.0</java:condition> 
         <java:consequence>     
-              System.out.println("ACR RULES IS GETTING RUN");           
+              m.log("ACR RULES IS GETTING RUN");
               m.setIndicationColor("HIGH");
         </java:consequence>
     </rule>

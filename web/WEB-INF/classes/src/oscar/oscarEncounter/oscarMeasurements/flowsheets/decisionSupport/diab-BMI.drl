@@ -16,7 +16,7 @@
         <java:condition>m.getDataAsDouble() &gt;= 25.0</java:condition>       
         <java:condition>m.getDataAsDouble() &lt; 30</java:condition> 
         <java:consequence>     
-              System.out.println("BMI RULES IS GETTING RUN");           
+              m.log("BMI RULES IS GETTING RUN");
               m.setIndicationColor("HIGH");
         </java:consequence>
     </rule>
@@ -27,7 +27,7 @@
         </parameter>      
         <java:condition>m.getDataAsDouble() &gt; 30</java:condition> 
         <java:consequence>     
-              System.out.println("BMI RULES IS GETTING RUN");           
+              m.log("BMI RULES IS GETTING RUN");
               m.setIndicationColor("HIGH 1");
         </java:consequence>
     </rule>
@@ -38,7 +38,7 @@
         </parameter>      
         <java:condition>m.getDataAsDouble() &lt; 18.5</java:condition> 
         <java:consequence>     
-              System.out.println("BMI RULES IS GETTING RUN");           
+              m.log("BMI RULES IS GETTING RUN");
               m.setIndicationColor("LOW");
         </java:consequence>
     </rule>

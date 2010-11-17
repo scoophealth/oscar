@@ -16,7 +16,7 @@
             
         <java:condition>m.getDataAsDouble() &lt; 2</java:condition> 
         <java:consequence>     
-              System.out.println("INR RULES IS GETTING RUN");           
+              m.log("INR RULES IS GETTING RUN");
               m.setIndicationColor("LOW");
         </java:consequence>
     </rule>
@@ -28,7 +28,7 @@
         <java:condition>m.getDataAsDouble() &gt;= 4</java:condition> 
         <java:condition>m.getDataAsDouble() &lt; 5</java:condition> 
         <java:consequence>     
-              System.out.println("INR RULES IS GETTING RUN");           
+              m.log("INR RULES IS GETTING RUN");
               m.setIndicationColor("HIGH");
         </java:consequence>
     </rule>
@@ -39,7 +39,7 @@
         </parameter>      
         <java:condition>m.getDataAsDouble() &gt;= 5</java:condition> 
         <java:consequence>     
-              System.out.println("INR RULES IS GETTING RUN");           
+              m.log("INR RULES IS GETTING RUN");
               m.setIndicationColor("HIGH 1");
         </java:consequence>
     </rule>

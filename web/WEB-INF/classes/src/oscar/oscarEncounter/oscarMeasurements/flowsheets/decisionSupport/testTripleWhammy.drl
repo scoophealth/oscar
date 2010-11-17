@@ -16,7 +16,7 @@
         <java:condition>m.setMeasurement("LDL") == true</java:condition>       
         <java:condition>m.getDataAsDouble() &lt; 2.0</java:condition>       
         <java:consequence>     
-              System.out.println("LDL RULES IS GETTING RUN"+m.getDataAsDouble());           
+              m.log("LDL RULES IS GETTING RUN"+m.getDataAsDouble());
               m.setInRange(true);
         </java:consequence>
     </rule>
@@ -27,7 +27,7 @@
         </parameter>
         <java:condition>m.setMeasurement("LDL") == false</java:condition>       
         <java:consequence>     
-              System.out.println("LDL_1 RULES IS GETTING RUN"+m.getDataAsDouble());           
+              m.log("LDL_1 RULES IS GETTING RUN"+m.getDataAsDouble());
               m.setInRange(false);
         </java:consequence>
     </rule>
@@ -40,7 +40,7 @@
         </parameter>
         <java:condition>m.setMeasurement("BP") == false</java:condition>       
         <java:consequence>     
-              System.out.println("NO BP records");           
+              m.log("NO BP records");
               m.setInRange(false);
         </java:consequence>
     </rule>
@@ -53,7 +53,7 @@
         <java:condition>m.getNumberFromSplit("/",0) &lt; 131</java:condition>   
         <java:condition>m.isInRange() == true</java:condition>
         <java:consequence>     
-              System.out.println("BP RULES IS GETTING RUN"+m.getDataAsDouble());           
+              m.log("BP RULES IS GETTING RUN"+m.getDataAsDouble());
               m.setInRange(true);
         </java:consequence>
     </rule>
@@ -66,7 +66,7 @@
         <java:condition>m.setMeasurement("BP") == true</java:condition>       
         <java:condition>m.getNumberFromSplit("/",0) &gt;= 131</java:condition>   
         <java:consequence>     
-              System.out.println("BP2 RULES IS GETTING RUN"+m.getDataAsDouble());           
+              m.log("BP2 RULES IS GETTING RUN"+m.getDataAsDouble());
               m.setInRange(false);
         </java:consequence>
     </rule>
@@ -81,7 +81,7 @@
         </parameter>
         <java:condition>m.setMeasurement("A1C") == false</java:condition>       
         <java:consequence>     
-              System.out.println("No A1C Records");           
+              m.log("No A1C Records");
               m.setInRange(false);
         </java:consequence>
     </rule>
@@ -96,7 +96,7 @@
         <java:condition>m.getDataAsDouble() &gt;= 2.0</java:condition>
         <java:condition>m.isInRange() == true</java:condition>      
         <java:consequence>     
-              System.out.println("A1C RULES IS GETTING RUN"+m.getDataAsDouble());           
+              m.log("A1C RULES IS GETTING RUN"+m.getDataAsDouble());
               m.setInRange(true);
         </java:consequence>
     </rule>
@@ -108,7 +108,7 @@
         <java:condition>m.setMeasurement("A1C") == true</java:condition>       
         <java:condition>m.getDataAsDouble() &gt;= 7.0</java:condition>              
         <java:consequence>     
-              System.out.println("A1C_1_2 RULES IS GETTING RUN"+m.getDataAsDouble());           
+              m.log("A1C_1_2 RULES IS GETTING RUN"+m.getDataAsDouble());
               m.setInRange(false);
         </java:consequence>
     </rule>
@@ -122,7 +122,7 @@
         <java:condition>m.getDataAsDouble() &lt; 0.07</java:condition>       
         <java:condition>m.isInRange() == true</java:condition> 
         <java:consequence>     
-              System.out.println("A1C RULES IS GETTING RUN"+m.getDataAsDouble());           
+              m.log("A1C RULES IS GETTING RUN"+m.getDataAsDouble());
               m.setInRange(true);
         </java:consequence>
     </rule>
@@ -136,7 +136,7 @@
         <java:condition>m.getDataAsDouble() &gt;= 0.07</java:condition>  
         <java:condition>m.getDataAsDouble() &lt;= 2.0</java:condition>    
         <java:consequence>     
-              System.out.println("A1C RULES IS GETTING RUN"+m.getDataAsDouble());           
+              m.log("A1C RULES IS GETTING RUN"+m.getDataAsDouble());
               m.setInRange(false);
         </java:consequence>
     </rule>
