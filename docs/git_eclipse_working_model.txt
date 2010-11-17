@@ -82,3 +82,12 @@ If this is the first time you've pushed, you'll need to fill in a push specifica
 If you go to the gerrit web page you should see the change is pending review now.
 
 Note that at this point, you and the central repository are not in sync, the files at the central repository must be approved first. Even after the changes on the central repository are approved, you must follow the "getting updates" again before you and the central repository are in sync (yes even if the files happen to be the same on the 2 servers, the pointers are not in sync until you merge).  
+
+------------------------------------------------
+When to commit locally and when to push remotely
+------------------------------------------------
+Generally speaking you should commit locally for independent small units of work. So as an example if you are working on a feature, you may have incremental phases in completion of that feature. You should commit at each phase, the code should at least compile and run.
+
+Generally speaking pushing remotely can be done for any commit. There should be no need to bundle up multiple commits into one big push. The difference between a push and commit maybe more important if you're working off line as you can only push while online.
+
+The reason for the above is because of the review model of gerrit. You don't want to do one big commit because it will be a nightmare to review and approve. Think about the example of converting 300 DBHandler calls into maybe 100 JPA objects. If that was 1 commit, it would take for ever to review and verify that commit. If you made 300 separate commits, the review process could at least proceed incrementally and in manageable size chunks. The push is for a similar reason, if you had 300 separate commits and you pushed all at once at the end of 6 months, there will be a sudden flood of 300 commits to review and it would be a huge backlog. If you pushed those 300 commits over a 6 month period, review of the commits could have started as soon as the first push was done. 
