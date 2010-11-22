@@ -52,11 +52,15 @@ Configure Gerrit (from your client / developer machine)
 		- now cut and paste the contents of "~/.ssh/id_rsa.pub" into the text area on the web page.
 		- click add and it should list it as an added key on the screen.
 	- now on the bottom of the screen there's a link that says "continue" click that, now you should be at the your "code review dashboard" screen.
-- on the top left of the screen, click on admin -> groups. Create a new group called "code approvers"
+- on the top left of the screen, click on admin -> groups. Create a new group called "code approvers", Create a second group called "code submitters"
 - on the top left of the screen, click on admin -> projects. Then select "all projects", then select "access".
 	- add the new permissions category="code review", group name="code approvers", range=+2/-2
 	- add the new permissions category="verified", group name="code approvers", range=+1/-1
 	- add the new permissions category="submit", group name="code approvers", range=+1
+	- add the new permissions category="Code Review", group name="code submitters", range=+1/-1
+	- add the new permissions category="Forge Identity", group name="code submitters", range=+1
+	- add the new permissions category="Read Access", group name="code submitters", range=+2
+	- remove permissions for "Registered Users" : "Forge Identity","Code Review", and "Submit" 
 
 Add a project (from client / developer machine)
 - from the command line, do a "ssh -p 29418 r6squeegee@127.0.0.1 gerrit create-project --name foo" (where foo is your project name).
