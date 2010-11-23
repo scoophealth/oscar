@@ -72,7 +72,7 @@ Now say you've created new files in the project and altered some existing ones.
 
 If you right click on the project, go to team -> commit. You'll see the commit screen. Notice on eclipse it will list the tracked and untracked file and by default they will be "git added" and "git commited" at the same time. Now when you commit, it's commited locally. This means no one else except you has these changes still.
 
-Now to share these changes with everyone else, i.e. commited to the main repository... (You must have commited locally first, you need to understand git's local/remote/distributed repositories.) 
+Now to share these changes with everyone else, i.e. committed to the main repository... (You must have committed locally first) 
 
 Now, right click on the project, go to team -> push. 
 
@@ -91,3 +91,36 @@ Generally speaking you should commit locally for independent small units of work
 Generally speaking pushing remotely can be done for any commit. There is generally no need to bundle up multiple commits into one big push. The difference between a push and commit maybe more important if you're working offline as you can only push while online.
 
 The reason for the above is because of the review model of gerrit. You don't want to do one big commit because it will be a nightmare to review and approve. Think about the example of converting 300 DBHandler calls into maybe 100 JPA objects. If that was 1 commit, it would take for ever to review and verify that commit. If you made 300 separate commits, the review process could at least proceed incrementally and in manageable size chunks. The push is for a similar reason, if you had 300 separate commits and you pushed all at once at the end of 6 months, there will be a sudden flood of 300 commits to review and it would be a huge backlog. If you pushed those 300 commits over a 6 month period, review of the commits could have started as soon as the first push was done. 
+
+
+--------------
+ChangeId Hooks
+--------------
+Change ID Hook will add a change ID to every commit you make. The benefit of this is if you change / fix a commit and resubmit it, gerrit will use the changeId to replace the previous commit. The problem with this is that it only works on the command line git for now, eclipse does not yet support hooks. 
+
+To install the changeId hook, you need to first grab a copy from the test project. On the command line, while in the test repository do "scp -p -P 29418 r6squeegee@source.oscartools.org:hooks/commit-msg .git/hooks/commit-msg". This will effecitvely enable the changeId hook for the test project. Now to make it work for any other project just copy the .git/hooks/commit-msg to the other projects. You need to make sure the file is chmoded +x as it's a shell script.
+
+
+-----------------------
+Fixing previous commits
+-----------------------
+The easiest way to fix a previous commit is to continue working the way we did in CVS... i.e. make another commit with the changes/fixes. For those who are more adventurous there is a native git/gerrit routine to do this but the commands are also not supported in eclipse.
+
+From the command line :
+- make sure your work space has the gerrit changes you want to fix. If you don't you can explicitly fetch the branches by looking at the URL's of the commit on the gerrit pages.
+- set one branch to the end of the set of changes, i.e. master.
+- create and switch to another branch to the commit that needs to be fixed, i.e. "git branch -b fix 4dj45" where 4dj45 is the first part of the SHA of the commit.
+- make the changes you need to make
+- "git commit -a --amend" the change.
+- switch back to the end point, i.e. git checkout master
+- rebase from the amended commit to here, i.e. "git rebase -i fix", 
+	- it will bring up a list of subsequent commits, change the "pick" on each commit to "edit"
+	- it will then iterate through all the commits,
+		- it will checkout the next commit, warn you about conflicts, you need to
+		- resolve any conflict, make any changes you need
+		- then "git commit -a --amend"
+		- then "git rebase --continue"  
+- git push origin HEAD:refs/for/master
+- git branch -D fix
+
+Now if you have changeId's enabled, the above will replace the previous commits, if you don't the commits will show up in git as a string of new commits and the old commits should just be abandoned.       
