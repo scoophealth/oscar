@@ -106,8 +106,14 @@ Importing existing repository From CVS
 --------------------------------------
 On the gerrit server do the following : 
 
+get the cvs repositories
+------------------------
+The reason we want to do this instead of convertin over pserver is because we want to clean up the repositories before converting them, i.e. for the integrator remove the HNR subproject, and for oscar remove the directories which won't exist after a maven conversion, i.e. libs, oscardocs etc.
+- rsync -av rsync://oscarmcmaster.cvs.sourceforge.net/cvsroot/oscarmcmaster/* .
+
 convert cvs to git
 ------------------
+The below commands were based off a pserver run, but we should be doing a local repository run for most of the projects as per the above comment about getting the cvs repositories.
 - cd /tmp
 - CVSROOT=:pserver:anonymous@oscarmcmaster.cvs.sourceforge.net:/cvsroot/oscarmcmaster cvs login
 - git cvsimport -v -d :pserver:anonymous@oscarmcmaster.cvs.sourceforge.net:/cvsroot/oscarmcmaster -C test2  oscar_mcmaster/docs
