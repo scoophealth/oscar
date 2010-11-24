@@ -75,7 +75,6 @@ Vector vec = reportItem.getNameList(n);
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><%=bDeletedList? "Deleted" : ""%> Report List</title>
-<meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
 <LINK REL="StyleSheet" HREF="../web.css" TYPE="text/css">
 <script language="JavaScript">
