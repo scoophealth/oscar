@@ -47,9 +47,6 @@ String [][] dbQueries=new String[][] {
 };
 studyBean.doConfigure(dbQueries);
 %>
-
-
-<% response.setHeader("Cache-Control","no-cache");%>
 <%
 out.println("Please wait ...<br>");
 out.flush();

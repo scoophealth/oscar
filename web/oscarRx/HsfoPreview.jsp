@@ -5,8 +5,6 @@
 <%@ page import="oscar.oscarProvider.data.*"%>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@ page import="oscar.*,java.lang.*"%>
-<% response.setHeader("Cache-Control","no-cache");%>
-
 <!-- added by vic, hsfo
 /*
  *

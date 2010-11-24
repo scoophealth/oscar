@@ -2,9 +2,6 @@
 <%
 String _appPath = request.getContextPath();
 %>
-<%
-response.setHeader("Cache-Control", "max-age=60");
-%>
 
 <%@ include file="/taglibs.jsp"%>
 

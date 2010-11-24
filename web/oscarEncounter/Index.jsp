@@ -79,8 +79,6 @@ You have no rights to access the data!
  	LogAction.addLog((String) session.getAttribute("user"), LogConst.READ, LogConst.CON_ECHART, demographic$, ip);
 %>
 <%
-
-  response.setHeader("Cache-Control","no-cache");
   //The oscarEncounter session manager, if the session bean is not in the context it looks for a session cookie with the appropriate name and value, if the required cookie is not available
   //it dumps you out to an erros page.
 

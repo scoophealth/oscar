@@ -3,8 +3,6 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%@ page
 	import="oscar.oscarRx.pageUtil.*,oscar.oscarRx.data.*,java.util.*"%>
-<% response.setHeader("Cache-Control","no-cache");%>
-
 <!--
 /*
  *

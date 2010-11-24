@@ -81,8 +81,6 @@ String level1 = CddmLevels.CUMULATIVE;
 String level2 = CddmLevels.MEDICATIONS;
  */
 %>
-<% response.setHeader("Cache-Control","no-cache");%>
-
 <!--  
 /*
  * 

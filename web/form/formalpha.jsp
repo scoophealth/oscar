@@ -29,7 +29,6 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%@ page import="oscar.form.*"%>
 <html:html locale="true">
-<% response.setHeader("Cache-Control","no-cache");%>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="oscarEncounter.formAlpha.title" /></title>

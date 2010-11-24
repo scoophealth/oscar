@@ -10,8 +10,6 @@
 	reverse="<%=true%>">
 	<%response.sendRedirect("../noRights.html");%>
 </security:oscarSec>
-
-<% response.setHeader("Cache-Control","no-cache");%>
 <logic:notPresent name="RxSessionBean" scope="session">
 	<logic:redirect href="error.html" />
 </logic:notPresent>

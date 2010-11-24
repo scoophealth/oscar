@@ -35,7 +35,6 @@
 <link rel="stylesheet" type="text/css" media="print" href="print.css" />
 <link rel="stylesheet" type="text/css" href="encounterPrintStyles.css" />
 <%
-    response.setHeader("Cache-Control","no-cache");
     //The oscarEncounter session manager, if the session bean is not in the context it looks for a session cookie with the appropriate name and value, if the required cookie is not available
     //it dumps you out to an erros page.
 

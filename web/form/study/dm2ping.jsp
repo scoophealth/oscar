@@ -57,9 +57,6 @@ String [][] dbQueries=new String[][] {
 };
 studyBean.doConfigure(dbQueries);
 %>
-
-
-<% response.setHeader("Cache-Control","no-cache");%>
 <%
 String actorTicket = null;
 String actor = "clinic@citizenhealth.ca";

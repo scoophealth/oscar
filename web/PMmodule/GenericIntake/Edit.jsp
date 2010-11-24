@@ -28,8 +28,6 @@
 <%@ page import="org.oscarehr.PMmodule.web.ProgramUtils" %>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 <%@ page import="org.oscarehr.util.SessionConstants" %>
-<% response.setHeader("Cache-Control","no-cache");%>
-
 <%
     GenericIntakeEditFormBean intakeEditForm = (GenericIntakeEditFormBean) session.getAttribute("genericIntakeEditForm");
     Intake intake = intakeEditForm.getIntake();

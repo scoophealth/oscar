@@ -5,8 +5,6 @@
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 <%@ page import="java.util.*,oscar.oscarRx.data.*,oscar.oscarRx.pageUtil.*,oscar.oscarRx.util.*"%>
 <%@page import="org.oscarehr.util.MiscUtils"%>
-<% response.setHeader("Cache-Control","no-cache");%>
-
 <%long start = System.currentTimeMillis();%>
 
 <!--

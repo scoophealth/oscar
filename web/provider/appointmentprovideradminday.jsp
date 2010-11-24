@@ -1,5 +1,3 @@
-<% response.setHeader("Cache-Control","no-cache");%>
-
 <%!
 //multisite starts =====================
 private boolean bMultisites = org.oscarehr.common.IsPropertiesOn.isMultisitesEnable();	

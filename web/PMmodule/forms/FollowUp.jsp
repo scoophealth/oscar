@@ -23,9 +23,6 @@
  -->
 
 <%@ include file="/taglibs.jsp"%>
-
-<% response.setHeader("Cache-Control","no-cache");%>
-
 <html:html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>

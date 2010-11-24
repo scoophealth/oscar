@@ -126,8 +126,6 @@ props.setProperty("c_lastVisited", "pg1");
  */
 -->
 <html:html locale="true">
-<% response.setHeader("Cache-Control","no-cache");%>
-
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>B.C. Health Passport</title>

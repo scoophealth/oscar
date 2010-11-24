@@ -66,7 +66,6 @@
  */
 -->
 <html:html locale="true">
-<% response.setHeader("Cache-Control","no-cache");%>
 <head>
     <title>Antenatal Record 2</title>
     <html:base/>

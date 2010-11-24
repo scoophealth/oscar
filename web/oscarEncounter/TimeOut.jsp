@@ -29,7 +29,6 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%
-    response.setHeader("Cache-Control","no-cache");
     oscar.oscarEncounter.pageUtil.EctSessionBean sessionbean = null;
     if((sessionbean=(oscar.oscarEncounter.pageUtil.EctSessionBean)request.getSession().getAttribute("EctSessionBean"))==null) {
         response.sendRedirect("error.jsp");

@@ -37,7 +37,6 @@
 <%@page import="org.oscarehr.casemgmt.web.CaseManagementViewAction"%>
 <%@page import="org.oscarehr.casemgmt.web.NoteDisplay"%>
 <%
-	response.setHeader("Cache-Control", "no-cache");
 	Logger logger=Logger.getLogger("CaseManagementView.jsp");
 	
 	@SuppressWarnings("unchecked")

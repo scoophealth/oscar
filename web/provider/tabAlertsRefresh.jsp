@@ -1,5 +1,3 @@
-<% response.setHeader("Cache-Control","no-cache");%>
-
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <!--

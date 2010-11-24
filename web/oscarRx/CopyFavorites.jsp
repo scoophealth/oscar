@@ -1,8 +1,6 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
-<% response.setHeader("Cache-Control", "no-cache");%>
-<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%><%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 <%@ page import="oscar.oscarRx.service.RxPrescriptionMgr,oscar.oscarRx.model.*,java.util.*"%>
 
 <!--  

@@ -18,7 +18,6 @@
 <%@ taglib uri="/WEB-INF/streethealth.tld" prefix="sh"%>
 
 <%
-	response.setHeader("Cache-Control", "no-cache");
 String project_home = request.getContextPath().substring(1);
 %>
 

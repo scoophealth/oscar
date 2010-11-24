@@ -11,8 +11,6 @@
 	String strLimit2="10";  
 	if(request.getParameter("limit1")!=null) strLimit1 = request.getParameter("limit1");  
 	if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
-
-	response.setHeader("Cache-Control","no-cache");
 %>
 
 <%

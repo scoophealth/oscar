@@ -1,4 +1,3 @@
-<% response.setHeader("Cache-Control", "no-cache");%>
 <%@page import="java.math.*, java.util.*,  oscar.*, java.net.*,oscar.oscarBilling.ca.bc.data.*,org.oscarehr.common.model.*,oscar.util.*" %>
 <%@page import="org.springframework.web.context.WebApplicationContext,org.springframework.web.context.support.WebApplicationContextUtils, oscar.entities.*" %><%
         if (session.getAttribute("user") == null) {

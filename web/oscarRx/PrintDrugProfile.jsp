@@ -3,7 +3,6 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%@ taglib uri="/WEB-INF/oscarProperties-tag.tld" prefix="oscarProp"%>
 <%@ page import="oscar.oscarRx.data.*"%>
-<% response.setHeader("Cache-Control","no-cache");%>
 <logic:notPresent name="RxSessionBean" scope="session">
 	<logic:redirect href="error.html" />
 </logic:notPresent>

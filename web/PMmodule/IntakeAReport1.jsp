@@ -20,8 +20,6 @@
 <%@page import="org.oscarehr.PMmodule.model.Formintakea"%>
 
 <%
-	response.setHeader("Cache-Control", "no-cache");
-
 	String numOfIntakeAs = "";
 	if (request.getAttribute("numOfIntakeAs") != null) {
 		numOfIntakeAs = (String) request.getAttribute("numOfIntakeAs");

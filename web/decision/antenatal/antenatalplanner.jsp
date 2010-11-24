@@ -49,7 +49,6 @@ plannerBean.doConfigure(dbQueries);
 %>
  
 <html>
-<% response.setHeader("Cache-Control","no-cache");%>
 <head>
     <title>Antenatal Planner</title>
 <script type="text/javascript" language="Javascript">

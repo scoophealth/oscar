@@ -49,9 +49,6 @@ if(session.getAttribute("user") == null || !( ((String) session.getAttribute("us
   };
   studyBean.doConfigure(dbQueries);
 %>
-
-
-<% response.setHeader("Cache-Control","no-cache");%>
 <%
     String demoNo = request.getParameter("demographic_no");
     Properties demo = new Properties();

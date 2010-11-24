@@ -6,8 +6,6 @@
 <%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@ page import="org.apache.log4j.Logger" %>
 <%@ page import="oscar.*,java.lang.*,java.util.Date"%>
-<% response.setHeader("Cache-Control","no-cache");%>
-
 <!--
 /*
  *

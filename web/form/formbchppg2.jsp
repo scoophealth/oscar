@@ -142,8 +142,6 @@ if (props == null || (props.getProperty("pg2_medName1", "").equals("") && props.
  */
 -->
 <html:html locale="true">
-<% response.setHeader("Cache-Control","no-cache");%>
-
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>B.C. Health Passport</title>

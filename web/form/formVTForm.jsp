@@ -27,7 +27,6 @@
 <%@ page import="oscar.oscarEncounter.oscarMeasurements.pageUtil.*"%>
 <%@ page import="java.util.Vector;"%>
 <%
-    response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
     response.setHeader("Pragma","no-cache"); //HTTP 1.0
     response.setDateHeader ("Expires", 0); //prevents caching at the proxy   
     //String milesServerErrMsg = request.getAttribute("decisionSupportURL")==null?"(Miles server is not available)":"";

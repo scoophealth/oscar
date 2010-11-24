@@ -30,8 +30,6 @@
 
 
 <html:html locale="true">
-<% response.setHeader("Cache-Control","no-cache");%>
-
 <link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" /> 
 <script type="text/javascript" src="../share/calendar/calendar.js"></script>
 <script type="text/javascript" src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>                                                            

@@ -28,7 +28,6 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 
 <html:html locale="true">
-<% response.setHeader("Cache-Control","no-cache");%>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Head Circumference Graph</title>

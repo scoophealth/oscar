@@ -40,7 +40,6 @@
     String user_no = (String) session.getAttribute("user");
     String color ="";
     int Count=0;    
-    response.setHeader("Cache-Control", "no-cache");
     response.setHeader("Pragma", "no-cache");
     response.setDateHeader("Expires", 0);
 %>

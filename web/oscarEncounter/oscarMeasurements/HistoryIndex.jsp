@@ -38,7 +38,6 @@
 <%@ page import="oscar.oscarEncounter.oscarMeasurements.data.*"%>
 <%@ page import="java.util.Vector"%>
 <%
-    response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
     response.setHeader("Pragma","no-cache"); //HTTP 1.0
     response.setDateHeader ("Expires", 0); //prevents caching at the proxy   
     EctSessionBean bean = (EctSessionBean)request.getSession().getAttribute("EctSessionBean");

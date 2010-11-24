@@ -18,12 +18,7 @@ reverse="<%=true%>">
 	<%
 		response.sendRedirect("../noRights.html");
 	%>
-</security:oscarSec>
-
-<%
-	response.setHeader("Cache-Control", "no-cache");
-%>
-<logic:notPresent name="RxSessionBean" scope="session">
+</security:oscarSec><logic:notPresent name="RxSessionBean" scope="session">
 	<logic:redirect href="error.html" />
 </logic:notPresent>
 <logic:present name="RxSessionBean" scope="session">

@@ -19,8 +19,6 @@
 <%@ page import="java.util.Date"%>
 
 <%
-	response.setHeader("Cache-Control", "no-cache");
-
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	
 	String[][] dataList = new String[335][15];

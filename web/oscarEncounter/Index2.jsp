@@ -159,7 +159,6 @@ if (request.getParameter("casetoEncounter")==null)
 <!-- add by caisi end-->
 
 <%
-  response.setHeader("Cache-Control","no-cache");
   //need these variables for the forms
   oscar.util.UtilDateUtilities dateConvert = new oscar.util.UtilDateUtilities();
   String demoNo = bean.demographicNo;

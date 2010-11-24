@@ -37,7 +37,6 @@
 <%@ page import="oscar.oscarEncounter.oscarMeasurements.bean.*"%>
 <%@ page import="java.util.Vector"%>
 <%
-    response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
     response.setHeader("Pragma","no-cache"); //HTTP 1.0
     response.setDateHeader ("Expires", 0); //prevents caching at the proxy 
     java.text.SimpleDateFormat sf=new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
