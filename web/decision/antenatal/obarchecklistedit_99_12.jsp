@@ -38,7 +38,6 @@
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>ANTENATAL CHECK LIST</title>
 <link rel="stylesheet" href="antenatalrecord.css">
-<meta http-equiv="Pragma" content="no-cache">
 <script language="JavaScript">
 <!--		
 

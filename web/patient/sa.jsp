@@ -55,7 +55,6 @@
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>ANTENATAL RECORD</title>
 <link rel="stylesheet" href="antenatalrecord.css">
-<meta http-equiv="Pragma" content="no-cache">
 </head>
 <body bgcolor="#c4e9f6" bgproperties="fixed" topmargin="0"
 	leftmargin="1" rightmargin="1">

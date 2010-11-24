@@ -83,7 +83,6 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 <title>Doctor Appointment Access - appointmentprovideradminday</title>
 <link rel="stylesheet" href="../receptionist/receptionistapptstyle.css"
 	type="text/css">
-<meta http-equiv="Pragma" content="no-cache">
 </head>
 <script language="JavaScript">
 <!--

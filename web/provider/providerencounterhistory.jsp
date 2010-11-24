@@ -36,7 +36,6 @@
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <link rel="stylesheet" href="../web.css">
-<meta http-equiv="Pragma" content="no-cache">
 <script language="JavaScript">
 <!--
 

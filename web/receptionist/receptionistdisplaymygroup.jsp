@@ -36,7 +36,6 @@
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message
 	key="receptionist.receptionistdisplaymygroup.title" /></title>
-<meta http-equiv="Pragma" content="no-cache">
 <script language="javascript">
 <!--
 

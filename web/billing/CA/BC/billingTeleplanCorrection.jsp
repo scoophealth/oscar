@@ -156,8 +156,6 @@
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 
 <title>oscarBillingBC Correction</title>
-<meta http-equiv="Pragma" content="no-cache">
-
 <script language="JavaScript">
 
 <!--

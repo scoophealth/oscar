@@ -309,7 +309,6 @@ if("unpaid".equals(action)) {
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>ON Billing Report</title>
-<meta http-equiv="Pragma" content="no-cache">
 <link rel="stylesheet" href="../../web.css">
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 <!-- calendar stylesheet -->

@@ -41,8 +41,6 @@
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="admin.admindisplaymygroup.title" /></title>
 </head>
-<meta http-equiv="Pragma" content="no-cache">
-
 <script language="javascript">
 <!-- start javascript ---- check to see if it is really empty in database
 

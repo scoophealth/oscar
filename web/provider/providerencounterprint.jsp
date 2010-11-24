@@ -32,7 +32,6 @@
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>ENCOUNTER PRINT</title>
-<meta http-equiv="Pragma" content="no-cache">
 <script language="JavaScript">
 <!--
 

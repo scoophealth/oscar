@@ -60,7 +60,6 @@
 	key="demographic.demographicappthistory.title" /></title>
 <link rel="stylesheet" type="text/css"
 	href="../share/css/OscarStandardLayout.css">
-<meta http-equiv="Pragma" content="no-cache">
 <script type="text/javascript">
 <!--
 

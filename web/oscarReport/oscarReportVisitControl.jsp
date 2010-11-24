@@ -69,7 +69,6 @@ GregorianCalendar now=new GregorianCalendar();
 	key="oscarReport.oscarReportVisitControl.title" /></title>
 <link rel="stylesheet" href="oscarReport.css">
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
-<meta http-equiv="Pragma" content="no-cache">
 <script language="JavaScript">
 <!-- 
 

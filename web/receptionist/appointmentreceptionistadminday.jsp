@@ -96,7 +96,6 @@
 <title><bean:message
 	key="receptionist.appointmentreceptionistadminday.title" /></title>
 <link rel="stylesheet" href="receptionistapptstyle.css" type="text/css">
-<meta http-equiv="Pragma" content="no-cache">
 </head>
 <script language="JavaScript">
 

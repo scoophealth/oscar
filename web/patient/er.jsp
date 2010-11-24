@@ -52,7 +52,6 @@
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>PATIENT SUMMARY</title>
 <link rel="stylesheet" href="../web.css">
-<meta http-equiv="Pragma" content="no-cache">
 </head>
 <body background="../images/gray_bg.jpg" bgproperties="fixed"
 	onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">

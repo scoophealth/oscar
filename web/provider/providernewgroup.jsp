@@ -35,8 +35,6 @@
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="provider.providernewgroup.title" /></title>
-<meta http-equiv="Pragma" content="no-cache">
-
 <script language="javascript">
 <!-- start javascript 
 function setfocus() {

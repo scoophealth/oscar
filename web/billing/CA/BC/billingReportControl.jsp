@@ -70,7 +70,6 @@ GregorianCalendar now=new GregorianCalendar();
 <title>Billing Report</title>
 
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
-<meta http-equiv="Pragma" content="no-cache">
 <script language="JavaScript">
 <!--
 

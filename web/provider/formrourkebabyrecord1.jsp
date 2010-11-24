@@ -35,7 +35,6 @@
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Rourke Baby Record</title>
-<meta http-equiv="Pragma" content="no-cache">
 <script language="JavaScript">
 <!--		
 function setfocus() {

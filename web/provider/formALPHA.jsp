@@ -37,7 +37,6 @@
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>FORM ALPHA</title>
 <link rel="stylesheet" href="antenatalrecord1.css">
-<meta http-equiv="Pragma" content="no-cache">
 <script language="JavaScript">
 <!--		
 var saveTemp=0;

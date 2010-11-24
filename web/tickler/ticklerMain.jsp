@@ -133,8 +133,6 @@ GregorianCalendar now=new GregorianCalendar();
 <%@page import="oscar.oscarDB.DBHandler"%><html:html locale="true">
 <head>
 <title><bean:message key="tickler.ticklerMain.title"/></title>
-      <meta http-equiv="Pragma" content="no-cache">
-
 <!--Table Sorting Code -->      
 <script type='text/javascript' src='<c:out value="${ctx}"/>/commons/scripts/sort_table/common.js'></script>
 <script type='text/javascript' src='<c:out value="${ctx}"/>/commons/scripts/sort_table/css.js'></script>

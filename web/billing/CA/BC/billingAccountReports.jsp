@@ -77,7 +77,6 @@
 <script type="text/javascript"
 	src="../../../share/calendar/calendar-setup.js"></script>
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
-<meta http-equiv="Pragma" content="no-cache">
 <script language="JavaScript">
 <!--
 function popupPage(vheight,vwidth,varpage) { //open a new popup window

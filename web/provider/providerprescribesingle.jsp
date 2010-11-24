@@ -36,7 +36,6 @@
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Single Prescribe</title>
-<meta http-equiv="Pragma" content="no-cache">
 <script LANGUAGE="JavaScript">
 <!--
 function start(){

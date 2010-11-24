@@ -136,7 +136,6 @@ if(billNoRow != null && billNoRow.length > 0){
    <script type="text/javascript" src="../../../share/calendar/calendar-setup.js"></script>
    <script type="text/javascript" src="../../../share/javascript/prototype.js"></script>
    <script type="text/javascript" src="../../../share/javascript/Oscar.js"></script>   
-      <meta http-equiv="Pragma" content="no-cache">
         <script language="JavaScript">
         if('<%=request.getAttribute("close")%>' == 'true'){
           window.close();

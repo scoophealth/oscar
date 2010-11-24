@@ -101,7 +101,6 @@ GregorianCalendar now=new GregorianCalendar();
 }
 -->
 </style>
-      <meta http-equiv="Pragma" content="no-cache">
       <script language="JavaScript">
 <!--
 function popupPage(vheight,vwidth,varpage) { //open a new popup window
