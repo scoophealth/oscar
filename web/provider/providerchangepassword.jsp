@@ -44,8 +44,6 @@
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/checkPassword.js.jsp"></script>
 <title><bean:message key="provider.providerchangepassword.title" /></title>
-<meta http-equiv="Cache-Control" content="no-cache">
-
 <script language="javascript">
 function setfocus(el) {
 	this.focus();

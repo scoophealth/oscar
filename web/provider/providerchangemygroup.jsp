@@ -38,8 +38,6 @@
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="provider.providerchangemygroup.title" /></title>
-<meta http-equiv="Cache-Control" content="no-cache">
-
 <script language="javascript">
 <!-- start javascript ---- check to see if it is really empty in database
 function setfocus() {

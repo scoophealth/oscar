@@ -127,7 +127,6 @@ BigDecimal adjTotal = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
 <%@page import="org.oscarehr.common.model.Site"%>
 <%@page import="org.oscarehr.common.model.Provider"%><html>
     <head>
-        <meta http-equiv="Cache-Control" content="no-cache">
         <title>Bill Status</title>
         <script type="text/javascript" src="../../../share/javascript/Oscar.js"></script>
 		<link rel="stylesheet" type="text/css" href="billingON.css" />

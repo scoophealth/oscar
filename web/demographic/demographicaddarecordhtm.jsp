@@ -104,7 +104,6 @@
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message
 	key="demographic.demographicaddrecordhtm.title" /></title>
-<meta http-equiv="Cache-Control" content="no-cache">
 <!-- calendar stylesheet -->
 <link rel="stylesheet" type="text/css" media="all"
 	href="../share/calendar/calendar.css" title="win2k-cold-1" />

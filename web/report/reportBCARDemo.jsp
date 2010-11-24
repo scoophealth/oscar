@@ -34,7 +34,6 @@
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="oscarReport.oscarReportscpbDemo.title" /></title>
-<meta http-equiv="Cache-Control" content="no-cache">
 <LINK REL="StyleSheet" HREF="../web.css" TYPE="text/css">
 <!-- calendar stylesheet -->
 <link rel="stylesheet" type="text/css" media="all"

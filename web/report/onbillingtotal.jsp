@@ -45,7 +45,6 @@
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Billing Total - ON</title>
-<meta http-equiv="Cache-Control" content="no-cache">
 <meta http-equiv=Expires content=-1>
 </head>
 <body>

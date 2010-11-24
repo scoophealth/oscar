@@ -28,7 +28,6 @@
 <title>OSCAR - <bean:message key="report.tabulardaysheetreport.title"/>=</title>
 <link rel="stylesheet" href="../media/css/oscar.css">
 <link rel="stylesheet" href="../media/css/reporting.css">
-<meta http-equiv="Cache-Control" content="no-cache">
 <meta http-equiv=Expires content=-1>
 <link rel="stylesheet" href="../web.css">
 <script language="JavaScript">

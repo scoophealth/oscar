@@ -44,9 +44,6 @@
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Change Waiting List Name</title>
 </head>
-
-<meta http-equiv="Cache-Control" content="no-cache">
-
 <script language="JavaScript">
 
 function resetFields(actionType){

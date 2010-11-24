@@ -43,7 +43,6 @@
 	href="<c:out value="${ctx}"/>/css/print.css" media="print" />
 <html:base />
 <title>Case Management</title>
-<meta http-equiv="Cache-Control" content="no-cache">
 <%! String refresh = oscar.OscarProperties.getInstance().getProperty("refresh.encounterLayout.jsp", "-1"); %>
 <%="-1".equals(refresh)?"":"<meta http-equiv=\"refresh\" content=\""+refresh+";\">"%>
 </head>

@@ -58,7 +58,6 @@
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message
 	key="oscarMDS.segmentDisplay.patientSearch.title" /></title>
-<meta http-equiv="Cache-Control" content="no-cache">
 <script language="JavaScript">
 <!--
 function setfocus() {

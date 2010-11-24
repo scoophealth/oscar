@@ -51,7 +51,6 @@
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="billing.billingCalendarPopup.title" /></title>
-<meta http-equiv="Cache-Control" content="no-cache">
 <script language="JavaScript">
 <!--
 

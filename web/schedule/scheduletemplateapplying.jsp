@@ -112,7 +112,6 @@
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message
 	key="schedule.scheduletemplateapplying.title" /></title>
-<meta http-equiv="Cache-Control" content="no-cache">
 <link rel="stylesheet" href="../web.css" />
 <script type="text/javascript" src="../share/javascript/prototype.js"></script>
 <script language="JavaScript">

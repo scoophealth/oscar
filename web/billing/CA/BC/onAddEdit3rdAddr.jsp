@@ -147,7 +147,6 @@
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Add/Edit Service Code</title>
-<meta http-equiv="Cache-Control" content="no-cache">
 <link rel="stylesheet" type="text/css" href="billingON.css" />
 <link rel="StyleSheet" type="text/css" href="../web.css" />
 <!-- calendar stylesheet -->

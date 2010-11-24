@@ -45,7 +45,6 @@
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>SCHEDULE SETTING</title>
-<meta http-equiv="Cache-Control" content="no-cache">
 <link rel="stylesheet" href="../web.css" />
 
 <script language="JavaScript">

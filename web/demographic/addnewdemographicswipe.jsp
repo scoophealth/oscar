@@ -28,7 +28,6 @@
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>PATIENT DETAIL INFO</title>
-<meta http-equiv="Cache-Control" content="no-cache">
 <link rel="stylesheet" href="../web.css" />
 <script LANGUAGE="JavaScript">
 <!--

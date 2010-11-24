@@ -78,7 +78,6 @@ You have no rights to access the data!
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message
 	key="demographic.demographiceditdemographic.title" /></title>
-<meta http-equiv="Cache-Control" content="no-cache">
 <link rel="stylesheet" type="text/css"
 	href="../oscarEncounter/encounterStyles.css">
 

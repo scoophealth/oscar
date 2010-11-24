@@ -88,7 +88,6 @@
 <title><bean:message key="admin.updatedemographicprovider.title" />
 </title>
 </head>
-<meta http-equiv="Cache-Control" content="no-cache">
 <script language="javascript">
 <!-- start javascript ---- check to see if it is really empty in database
 

@@ -111,7 +111,6 @@
 <title><bean:message
 	key="demographic.demographiceditdemographic.title" /></title>
 <html:base />
-<meta http-equiv="Cache-Control" content="no-cache">
 <!-- calendar stylesheet -->
 <link rel="stylesheet" type="text/css" media="all"
 	href="../share/calendar/calendar.css" title="win2k-cold-1" />

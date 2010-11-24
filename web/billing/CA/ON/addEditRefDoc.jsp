@@ -163,7 +163,6 @@
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Add/Edit Service Code</title>
-<meta http-equiv="Cache-Control" content="no-cache">
 <script language="JavaScript">
 
       <!--

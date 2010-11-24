@@ -85,7 +85,6 @@ vecTableField = tableObj.getTableNameCaption(tableName);
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Report List</title>
-<meta http-equiv="Cache-Control" content="no-cache">
 <LINK REL="StyleSheet" HREF="../web.css" TYPE="text/css">
 <script language="JavaScript">
 

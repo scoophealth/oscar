@@ -431,7 +431,6 @@
  <![endif]-->
     <html:base />
     <title><bean:message key="oscarEncounter.Index.title"/> - <oscar:nameage demographicNo="<%=(String) request.getAttribute(\"demographicNo\")%>"/></title>
-    <meta http-equiv="Cache-Control" content="no-cache">
     <script type="text/javascript">
             
         socHistoryLabel = "oscarEncounter.socHistory.title";

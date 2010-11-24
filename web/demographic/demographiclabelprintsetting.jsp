@@ -54,8 +54,6 @@
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message
 	key="demographic.demographiclabelprintsetting.title" /></title>
-<meta http-equiv="Cache-Control" content="no-cache">
-
 <!-- RJ added 07/06/2006 -->
 <script src="../share/javascript/prototype.js" language="javascript"
 	type="text/javascript"></script>

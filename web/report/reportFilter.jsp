@@ -55,7 +55,6 @@ Vector vec = reportFilter.getNameList(reportId, n);
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><%=bDeletedList? "Deleted" : ""%> Report List</title>
-<meta http-equiv="Cache-Control" content="no-cache">
 <LINK REL="StyleSheet" HREF="../web.css" TYPE="text/css">
 <!-- calendar stylesheet -->
 <link rel="stylesheet" type="text/css" media="all"

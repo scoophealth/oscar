@@ -62,7 +62,6 @@ Use returnForm and returnItem request params and this page will fill in that inp
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <html:base />
 <title>CALENDAR</title>
-<meta http-equiv="Cache-Control" content="no-cache">
 <script language="JavaScript">
 
 

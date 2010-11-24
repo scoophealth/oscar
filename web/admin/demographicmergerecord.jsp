@@ -78,7 +78,6 @@ if( outcome !=null){
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>DEMOGRAPHIC - MERGE RECORDS</title>
-<meta http-equiv="Cache-Control" content="no-cache">
 <script language="JavaScript">
 
         function setfocus() {

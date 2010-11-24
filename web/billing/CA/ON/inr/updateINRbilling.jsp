@@ -69,7 +69,6 @@ ResultSet rsPatient = apptMainBean.queryResults(demono, "search_demographic_deta
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>UPDATE INR BILLING</title>
-<meta http-equiv="Cache-Control" content="no-cache">
 <script language="JavaScript">
 <!--
 
