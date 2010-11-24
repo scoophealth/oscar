@@ -43,14 +43,14 @@ public final class ResponseDefaultsFilter implements Filter
 		chain.doFilter(request, new ResponseDefaultsChangeDetectingWrapper(response));
 	}
 
-	private void setCaching(HttpServletRequest request, HttpServletResponse response)
+	private static void setCaching(HttpServletRequest request, HttpServletResponse response)
 	{
 		// so the caching scheme will be as follows :
 		// *.jsp should never be cached, presumably it's jsp because it's dynamic (and other jsp like pages)
 		// everything else is allowed to be cached, but we won't explicity set the expires, we'll just let the browser sort it out, I don't want to mess with date formatting right now
 		
 		String requestUri=request.getRequestURI();
-		if (requestUri.endsWith(".jsp") || requestUri.endsWith(".json") || requestUri.endsWith(".jsf")) response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+		if (requestUri.endsWith(".jsp") || requestUri.endsWith(".json") || requestUri.endsWith(".jsf") || requestUri.endsWith(".do")) response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
 	}
 
 	private static void setEncoding(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException
