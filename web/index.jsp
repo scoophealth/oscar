@@ -72,7 +72,6 @@ Boolean isMobileOptimized = session.getAttribute("mobileOptimized") != null;
     <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
         <html:base/>
-        <META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=ISO-8859-1">
         <% if (isMobileOptimized) { %><meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width"/><% } %>
         <title>
             <% if (props.getProperty("logintitle", "").equals("")) { %>

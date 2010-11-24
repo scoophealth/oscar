@@ -53,7 +53,6 @@ function deleteAssociation(id){
   }
 }
 </script>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 <title>Manage Procedure and Tray Fee Associations</title>
 </head>
 <body>

@@ -74,7 +74,6 @@
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Untitled Document</title>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"></meta>
 <link rel="stylesheet" type="text/css"
 	href="<html:rewrite page="/css/intakeA.css"/>"></link>
 <script language="JavaScript"

@@ -21,7 +21,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"></meta>
 <title>Generic Intake Report</title>
 <link rel="stylesheet" type="text/css" media="all" href="../../share/css/extractedFromPages.css"  />
 </head>

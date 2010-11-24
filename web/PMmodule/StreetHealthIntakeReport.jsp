@@ -27,7 +27,6 @@ String project_home = request.getContextPath().substring(1);
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Street Health Mental Health Report</title>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
 <html:base />
 </head>
 <body>

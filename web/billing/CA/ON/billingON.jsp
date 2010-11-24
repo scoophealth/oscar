@@ -373,7 +373,6 @@
 <%@page import="org.oscarehr.common.model.ProviderPreference"%><html>
 <head>
 <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="PRIVATE" />
-<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=ISO-8859-1" />
 <title>HospitalBilling</title>
 <style type="text/css">
 <!--

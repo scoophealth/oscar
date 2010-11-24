@@ -68,7 +68,6 @@ String[] docType = {"D","L"};
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<meta content="text/html;  charset=ISO-8859-1" http-equiv="Content-Type">
 <title><bean:message
 	key="oscarEncounter.oscarConsultationRequest.AttachDocPopup.title" /></title>
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">

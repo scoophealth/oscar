@@ -42,9 +42,7 @@
 <nested:define id="rowTwoSize" name="caseManagementViewForm" property="ectWin.rowTwoSize"/>
 --%>
 <html:html locale="true">
-  <head>      
-    <meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
-  	<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>	
+  <head>  	<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>	
 	<link rel="stylesheet" href="<c:out value="${ctx}"/>/css/casemgmt.css" type="text/css">
     <link rel="stylesheet" href="<c:out value="${ctx}"/>/oscarEncounter/encounterStyles.css" type="text/css">         
     <link rel="stylesheet" type="text/css" href="<c:out value="${ctx}"/>/css/print.css" media="print">
