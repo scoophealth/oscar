@@ -38,8 +38,7 @@ if (wPhoneExt != null)
 
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Register Indivo</title>
+                <title>Register Indivo</title>
         <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/phr/phr.css">
         <style type="text/css" language="JavaScript">
             .headingTop {

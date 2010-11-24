@@ -9,7 +9,6 @@
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/prototype.js"/>"></script>
         <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/Oscar.js"/>"></script>
         <script type="text/javascript" src="../share/yui/js/yahoo-dom-event.js"></script>

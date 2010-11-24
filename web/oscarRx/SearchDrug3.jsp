@@ -150,8 +150,7 @@
 
 <html:html locale="true">
     <head>
-        <meta content="text/html; charset=UTF-8"http-equiv="Content-Type">
-        <script type="text/javascript" src="<%=request.getContextPath()%>/js/global.js"></script>
+            <script type="text/javascript" src="<%=request.getContextPath()%>/js/global.js"></script>
 
         <title><bean:message key="SearchDrug.title" /></title>
         <link rel="stylesheet" type="text/css" href="styles.css">

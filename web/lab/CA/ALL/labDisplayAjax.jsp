@@ -72,10 +72,7 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
 
         <html:base/>
         <title><%=handler.getPatientName()+" Lab Results"%></title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
-
-        <script language="JavaScript">
+                <script language="JavaScript">
          popupStart=function(vheight,vwidth,varpage,windowname) {
             var page = varpage;
             windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes";
