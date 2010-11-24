@@ -43,7 +43,6 @@
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/checkPassword.js.jsp"></script>
-<meta http-equiv="Cache-Control" content="no-cache" />
 <title><bean:message key="admin.securityaddarecord.title" /></title>
 <!-- calendar stylesheet -->
 <link rel="stylesheet" type="text/css" media="all"

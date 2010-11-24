@@ -43,7 +43,6 @@
 <%@page import="org.oscarehr.PMmodule.dao.ProviderDao"%><html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<meta http-equiv="Cache-Control" content="no-cache" />
 <title><bean:message key="admin.providerupdateprovider.title" /></title>
 <link rel="stylesheet" href="../web.css">
 <script LANGUAGE="JavaScript">
