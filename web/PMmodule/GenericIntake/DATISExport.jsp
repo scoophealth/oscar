@@ -1,5 +1,3 @@
-<%@page contentType="text/html; charset=ISO-8859-1"
-    %>
 <%@ include file="/taglibs.jsp"%>
 <%@page
 	import="java.util.*,org.oscarehr.PMmodule.service.*,org.oscarehr.util.SpringUtils,org.oscarehr.common.model.Facility, org.springframework.web.context.support.*,org.springframework.web.context.*"%>
