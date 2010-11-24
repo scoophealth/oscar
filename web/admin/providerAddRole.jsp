@@ -117,7 +117,6 @@ String curUser_no = (String)session.getAttribute("user");
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Add/Edit Role</title>
-<meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT" />
 <script type="text/javascript" language="JavaScript">
 
       <!--

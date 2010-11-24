@@ -40,7 +40,6 @@
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Teleplan Billing Report Generator</title>
-<meta http-equiv="Content-Type" content="text/html">
 </head>
 
 <body bgcolor="#FFFFFF" text="#000000">

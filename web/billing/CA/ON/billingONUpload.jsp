@@ -30,7 +30,6 @@ session.setAttribute("homepath", props.getProperty("project_home", ""));
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Upload MOH Files</title>
-<meta http-equiv="Content-Type" content="text/html">
 <link rel="stylesheet" type="text/css" href="billingON.css" />
 
 <script type="text/javascript">

@@ -372,7 +372,6 @@
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.common.model.ProviderPreference"%><html>
 <head>
-<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="PRIVATE" />
 <title>HospitalBilling</title>
 <style type="text/css">
 <!--

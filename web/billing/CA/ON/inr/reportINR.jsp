@@ -54,7 +54,6 @@ user_no = (String) session.getAttribute("user");
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>INR Billing</title>
-<meta http-equiv="Content-Type" content="text/html;">
 <script language="JavaScript">
 <!--
 function openBrWindow(theURL,winName,features) {

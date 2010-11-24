@@ -344,7 +344,6 @@
 <head>
     <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>	
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="PRIVATE" />
 <title>HospitalBilling</title>
 <link rel="stylesheet" type="text/css" href="billingON.css" />
 

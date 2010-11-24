@@ -50,7 +50,6 @@
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="dms.documentGetFile.title" /></title>
-<meta http-equiv="Content-Type" content="text/html;">
 </head>
 <frameset rows="21,*" frameborder="NO" border="0"
 	frames.opera/cache4/pacing="0" cols="*">
