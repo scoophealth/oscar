@@ -101,7 +101,6 @@ GregorianCalendar now=new GregorianCalendar();
 }
 -->
 </style>
-      <meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
       <meta http-equiv="Pragma" content="no-cache">
       <script language="JavaScript">
 <!--

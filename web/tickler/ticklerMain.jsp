@@ -133,7 +133,6 @@ GregorianCalendar now=new GregorianCalendar();
 <%@page import="oscar.oscarDB.DBHandler"%><html:html locale="true">
 <head>
 <title><bean:message key="tickler.ticklerMain.title"/></title>
-      <meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
       <meta http-equiv="Pragma" content="no-cache">
 
 <!--Table Sorting Code -->      

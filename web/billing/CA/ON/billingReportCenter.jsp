@@ -60,7 +60,6 @@ String xml_appointment_date = request.getParameter("xml_appointment_date")==null
 <title>Billing Report</title>
 <link rel="stylesheet" href="../web.css">
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
-<meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
 <meta http-equiv="Pragma" content="no-cache">
 <script language="JavaScript">
 <!--

@@ -183,7 +183,6 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 	key="provider.appointmentprovideradminmonth.title" /></title>
 <link rel="stylesheet" href="../receptionist/receptionistapptstyle.css"
 	type="text/css">
-<meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
 <meta http-equiv="Pragma" content="no-cache">
 
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
