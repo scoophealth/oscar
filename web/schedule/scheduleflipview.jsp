@@ -84,7 +84,6 @@ sites = siteDao.getAllSites();
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="schedule.scheduleflipview.title" /></title>
-<meta http-equiv=Expires content=-1>
 <link rel="stylesheet" href="../web.css" type="text/css">
 
 <script language="JavaScript">

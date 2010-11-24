@@ -50,7 +50,6 @@
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>ENCOUNTER APPT SHEET</title>
-<meta http-equiv=Expires content=-1>
 <link rel="stylesheet" href="../web.css">
 <script language="JavaScript">
 <!--

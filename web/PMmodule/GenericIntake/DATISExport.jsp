@@ -29,9 +29,6 @@ request.setAttribute("facilities", facilities);
 		return false;
 	}
 </script>
-<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
-<META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
-<META HTTP-EQUIV="EXPIRES" CONTENT="-1">
 <title>DATIS Export</title>
 </head>
 <body>

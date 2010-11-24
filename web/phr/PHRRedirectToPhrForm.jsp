@@ -13,8 +13,6 @@
 <html>
     <head>
         <title>Redirecting</title>
-        <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
-        <META HTTP-EQUIV="Expires" CONTENT="-1">
         <script type="text/javascript" language="JavaScript">
             function onloadd() {
                 document.forms["autosubmit"].submit();

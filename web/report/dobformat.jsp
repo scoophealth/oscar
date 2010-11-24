@@ -46,7 +46,6 @@
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>SCRAMBLE SHEET</title>
-<meta http-equiv=Expires content=-1>
 </head>
 <body>
 busy ... busy ... busy
