@@ -1,52 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" "http://java.sun.com/dtd/web-app_2_3.dtd">
-<!--
-    Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
-    This software is published under the GPL GNU General Public License.
-    This program is free software; you can redistribute it and/or
-    modify it under the terms of the GNU General Public License
-    as published by the Free Software Foundation; either version 2
-    of the License, or (at your option) any later version.
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-    GNU General Public License for more details. You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-
-    <OSCAR TEAM>
-
-    This software was written for the
-    Department of Family Medicine
-    McMaster University
-    Hamilton
-    Ontario, Canada
--->
+	<!--
+		Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. This software is published under the GPL GNU General Public License. This program is free software; you can redistribute it and/or modify it under the terms
+		of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+		the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with this program; if not, write to the Free
+		Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. <OSCAR TEAM> This software was written for the Department of Family Medicine McMaster University Hamilton Ontario, Canada
+	-->
 <web-app id="WebApp_ID">
 	<display-name>oscar_mcmaster</display-name>
-   <context-param>
-        <param-name>contextConfigLocation</param-name>
-        <param-value>/WEB-INF/applicationContext*.xml</param-value>
-    </context-param>
-    <!--  filter to set character encoding on each request -->
-    <filter>
-        <filter-name>SetCharacterEncoding</filter-name>
-        <filter-class>filters.SetCharacterEncodingFilter</filter-class>
-        <init-param>
-            <param-name>encoding</param-name>
-            <param-value>ISO-8859-1</param-value>
-        </init-param>
-        <init-param>
-            <param-name>ignore</param-name>
-            <param-value>false</param-value>
-        </init-param>
-    </filter>
-    <filter>
-	<filter-name>ComponentFilter</filter-name>
-	<filter-class>
-		org.caisi.comp.web.WebComponentFilter
-	</filter-class>
-  	</filter>
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>/WEB-INF/applicationContext*.xml</param-value>
+	</context-param>
+
+	<filter>
+		<filter-name>ComponentFilter</filter-name>
+		<filter-class>
+			org.caisi.comp.web.WebComponentFilter
+		</filter-class>
+	</filter>
 
 	<filter>
 		<filter-name>DbConnectionFilter</filter-name>
@@ -106,7 +78,7 @@
 		<filter-class>org.oscarehr.PMmodule.web.PMMFilter</filter-class>
 	</filter>
 
-    <filter-mapping>
+	<filter-mapping>
 		<filter-name>ComponentFilter</filter-name>
 		<url-pattern>/mod/*</url-pattern>
 	</filter-mapping>
@@ -142,12 +114,12 @@
 	<listener>
 		<listener-class>oscar.login.Startup</listener-class>
 	</listener>
-    <listener>
-        <listener-class>org.oscarehr.common.web.OscarSpringContextLoaderListener</listener-class>
-    </listener>
-    <listener>
-        <listener-class>org.oscarehr.util.ContextStartupListener</listener-class>
-    </listener>
+	<listener>
+		<listener-class>org.oscarehr.common.web.OscarSpringContextLoaderListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>org.oscarehr.util.ContextStartupListener</listener-class>
+	</listener>
 
 	<servlet>
 		<servlet-name>action</servlet-name>
@@ -184,7 +156,7 @@
 		<servlet-class>oscar.form.pdfservlet.FrmPDFServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
-        <servlet>
+	<servlet>
 		<servlet-name>pdfCustomedCreator</servlet-name>
 		<servlet-class>oscar.form.pdfservlet.FrmCustomedPDFServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
@@ -223,49 +195,49 @@
 		<servlet-class>oscar.DocumentUploadServlet</servlet-class>
 		<load-on-startup>0</load-on-startup>
 	</servlet>
-    <servlet>
-        <servlet-name>FileUpload</servlet-name>
-        <servlet-class>FileUpload</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>FileUpload2</servlet-name>
-        <servlet-class>FileUpload2</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>Uploader</servlet-name>
-        <servlet-class>Uploader</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>newUploader</servlet-name>
-        <servlet-class>oscar.newOscarLab.Uploader</servlet-class>
-    </servlet>
+	<servlet>
+		<servlet-name>FileUpload</servlet-name>
+		<servlet-class>FileUpload</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>FileUpload2</servlet-name>
+		<servlet-class>FileUpload2</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>Uploader</servlet-name>
+		<servlet-class>Uploader</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>newUploader</servlet-name>
+		<servlet-class>oscar.newOscarLab.Uploader</servlet-class>
+	</servlet>
 	<servlet>
 		<servlet-name>HsfoQuartzSchedulerServlet</servlet-name>
 		<servlet-class>oscar.form.study.HSFO.pageUtil.HsfoQuartzServlet</servlet-class>
 		<load-on-startup>0</load-on-startup>
 	</servlet>
-    <servlet>
-        <servlet-name>PatientListByAppointment</servlet-name>
-        <servlet-class>oscar.oscarReport.data.PatientListByAppt</servlet-class>
-    </servlet>
-    <servlet>
-	 	<servlet-name>RxCloneService</servlet-name>
-	 	<servlet-class>oscar.oscarRx.server.service.RxCloneServiceImpl</servlet-class>
-    </servlet>
-    <servlet>
-	 	<servlet-name>ImageRenderingServlet</servlet-name>
-	 	<servlet-class>org.oscarehr.ui.servlet.ImageRenderingServlet</servlet-class>
-    </servlet>
-    <servlet>
-	 	<servlet-name>ContentRenderingServlet</servlet-name>
-	 	<servlet-class>org.oscarehr.ui.servlet.ContentRenderingServlet</servlet-class>
-    </servlet>
+	<servlet>
+		<servlet-name>PatientListByAppointment</servlet-name>
+		<servlet-class>oscar.oscarReport.data.PatientListByAppt</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>RxCloneService</servlet-name>
+		<servlet-class>oscar.oscarRx.server.service.RxCloneServiceImpl</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>ImageRenderingServlet</servlet-name>
+		<servlet-class>org.oscarehr.ui.servlet.ImageRenderingServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>ContentRenderingServlet</servlet-name>
+		<servlet-class>org.oscarehr.ui.servlet.ContentRenderingServlet</servlet-class>
+	</servlet>
 	<servlet>
 		<servlet-name>eformViewForPdfGenerationServlet</servlet-name>
 		<servlet-class>org.oscarehr.web.eform.EformViewForPdfGenerationServlet</servlet-class>
 	</servlet>
 
-    <servlet>
+	<servlet>
 		<servlet-name>DATISExportTest</servlet-name>
 		<servlet-class>org.oscarehr.PMmodule.exporter.TestServlet</servlet-class>
 		<load-on-startup>0</load-on-startup>
@@ -285,7 +257,7 @@
 		<url-pattern>/PMmodule/exportfiles</url-pattern>
 	</servlet-mapping>
 
-    <servlet-mapping>
+	<servlet-mapping>
 		<servlet-name>action</servlet-name>
 		<url-pattern>*.do</url-pattern>
 	</servlet-mapping>
@@ -297,7 +269,7 @@
 		<servlet-name>pdfCreator</servlet-name>
 		<url-pattern>/form/createpdf</url-pattern>
 	</servlet-mapping>
-        <servlet-mapping>
+	<servlet-mapping>
 		<servlet-name>pdfCustomedCreator</servlet-name>
 		<url-pattern>/form/createcustomedpdf</url-pattern>
 	</servlet-mapping>
@@ -329,69 +301,56 @@
 		<servlet-name>DocumentUploadServlet</servlet-name>
 		<url-pattern>/servlet/oscar.DocumentUploadServlet</url-pattern>
 	</servlet-mapping>
-        <servlet-mapping>
-                <servlet-name>PatientListByAppointment</servlet-name>
-                <url-pattern>/patientlistbyappt</url-pattern>
-        </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>FileUpload</servlet-name>
-        <url-pattern>/FileUpload</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>FileUpload2</servlet-name>
-        <url-pattern>/FileUpload2</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>Uploader</servlet-name>
-        <url-pattern>/Uploader</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>newUploader</servlet-name>
-        <url-pattern>/newUploader</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-	 	<servlet-name>RxCloneService</servlet-name>
-	 	<url-pattern>/oscar.oscarRx.CloneRx/service/rxcloneservice</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-	 	<servlet-name>ImageRenderingServlet</servlet-name>
-	 	<url-pattern>/imageRenderingServlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-	 	<servlet-name>ContentRenderingServlet</servlet-name>
-	 	<url-pattern>/contentRenderingServlet/*</url-pattern>
-    </servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>PatientListByAppointment</servlet-name>
+		<url-pattern>/patientlistbyappt</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>FileUpload</servlet-name>
+		<url-pattern>/FileUpload</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>FileUpload2</servlet-name>
+		<url-pattern>/FileUpload2</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>Uploader</servlet-name>
+		<url-pattern>/Uploader</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>newUploader</servlet-name>
+		<url-pattern>/newUploader</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>RxCloneService</servlet-name>
+		<url-pattern>/oscar.oscarRx.CloneRx/service/rxcloneservice</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>ImageRenderingServlet</servlet-name>
+		<url-pattern>/imageRenderingServlet</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>ContentRenderingServlet</servlet-name>
+		<url-pattern>/contentRenderingServlet/*</url-pattern>
+	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>eformViewForPdfGenerationServlet</servlet-name>
 		<url-pattern>/eformViewForPdfGenerationServlet</url-pattern>
 	</servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>jsp</servlet-name>
-        <url-pattern>*.json</url-pattern>
-    </servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>jsp</servlet-name>
+		<url-pattern>*.json</url-pattern>
+	</servlet-mapping>
 
-    <session-config>
-    	<session-timeout>120</session-timeout> <!-- 120minutes -->
-    </session-config>
+	<session-config>
+		<session-timeout>120</session-timeout> <!-- 120minutes -->
+	</session-config>
 
-    <welcome-file-list>
+	<welcome-file-list>
 		<welcome-file>index.jsp</welcome-file>
 		<welcome-file>index.html</welcome-file>
 		<welcome-file>index.htm</welcome-file>
 	</welcome-file-list>
-
-<!-- Previously added because of a security audit, reasons for adding was to hide code which is not relavent in an open source project. 
-	
-    <error-page>
-	   <error-code>404</error-code>
-	   <location>/404.jsp</location>
-	</error-page>
-
-    <error-page>
-	   <error-code>500</error-code>
-	   <location>/500.jsp</location>
-	</error-page>
--->
 
 	<taglib>
 		<taglib-uri>/WEB-INF/struts-bean.tld</taglib-uri>
@@ -407,12 +366,12 @@
 	</taglib>
 
 	<taglib>
-       <taglib-uri>/WEB-INF/struts-menu.tld</taglib-uri>
-       <taglib-location>/WEB-INF/struts-menu.tld</taglib-location>
-     </taglib>
-     <taglib>
-       <taglib-uri>/WEB-INF/struts-menu-el.tld</taglib-uri>
-       <taglib-location>/WEB-INF/struts-menu-el.tld</taglib-location>
-     </taglib>
+		<taglib-uri>/WEB-INF/struts-menu.tld</taglib-uri>
+		<taglib-location>/WEB-INF/struts-menu.tld</taglib-location>
+	</taglib>
+	<taglib>
+		<taglib-uri>/WEB-INF/struts-menu-el.tld</taglib-uri>
+		<taglib-location>/WEB-INF/struts-menu-el.tld</taglib-location>
+	</taglib>
 
 </web-app>
