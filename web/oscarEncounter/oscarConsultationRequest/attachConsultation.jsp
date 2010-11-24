@@ -41,7 +41,6 @@ String userlastname = (String) session.getAttribute("userlastname");
 <%@ page import="oscar.oscarLab.ca.all.Hl7textResultsData"%>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@page import="org.oscarehr.util.SessionConstants"%>
-<%@ page contentType="text/html; charset=ISO-8859-1"%>
 <%
 
 //preliminary JSP code

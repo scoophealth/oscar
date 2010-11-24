@@ -1,6 +1,5 @@
 
-<%@page import="org.oscarehr.util.MiscUtils"%><%@ page contentType="text/html; charset=ISO-8859-1"%>
-<%@page import="java.io.FileInputStream"%>
+<%@page import="org.oscarehr.util.MiscUtils"%><%@page import="java.io.FileInputStream"%>
 <%@page import="java.io.OutputStream"%>
 <%@page import="java.io.File"%>
 <!--

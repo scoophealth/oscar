@@ -28,7 +28,6 @@ if(session.getAttribute("user") == null) response.sendRedirect("../../logout.jsp
 %>
 
 
-<%--@ page contentType="text/xml" --%>
 <%@ page import="java.lang.reflect.*, java.sql.*"%>
 
 <%@page import="org.oscarehr.util.MiscUtils"%><jsp:useBean id="studyMapping" class="java.util.Properties" scope="page" />
