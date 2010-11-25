@@ -32,8 +32,6 @@
     String user_no = (String) session.getAttribute("user");
     String color ="";
     int Count=0;    
-    response.setHeader("Pragma", "no-cache");
-    response.setDateHeader("Expires", 0);
 %>
 
 <link rel="stylesheet" type="text/css" href="dxResearch.css">

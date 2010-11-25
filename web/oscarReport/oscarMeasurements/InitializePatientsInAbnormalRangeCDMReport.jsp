@@ -33,9 +33,6 @@
 <%@ page import="oscar.oscarReport.oscarMeasurements.pageUtil.*"%>
 <%@ page import="java.util.*, java.sql.*, java.text.*, java.net.*;"%>
 <%
-    response.setHeader("Pragma","no-cache"); //HTTP 1.0
-    response.setDateHeader ("Expires", 0); //prevents caching at the proxy   
-
     GregorianCalendar now=new GregorianCalendar(); 
     int curYear = now.get(Calendar.YEAR);
     int curMonth = (now.get(Calendar.MONTH)+1);

@@ -34,12 +34,7 @@
 <%@ page import="oscar.oscarEncounter.oscarMeasurements.pageUtil.*"%>
 <%@ page import="java.util.Vector;"%>
 <%
-    response.setHeader("Pragma","no-cache"); //HTTP 1.0
-    response.setDateHeader ("Expires", 0); //prevents caching at the proxy   
-    
     String demo = (String) request.getAttribute("demographicNo"); //bean.getDemographicNo();
-                               
-    
 %>
 
 <html:html locale="true">

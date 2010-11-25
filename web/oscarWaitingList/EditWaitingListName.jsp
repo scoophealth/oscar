@@ -26,8 +26,6 @@
 -->
 <%
     if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
-    response.setHeader("Pragma","no-cache"); //HTTP 1.0
-    response.setDateHeader ("Expires", 0); //prevents caching at the proxy 
 %>
 <%@ page
 	import="java.util.*,oscar.util.*, org.apache.struts.action.*, oscar.oscarWaitingList.bean.*"%>

@@ -33,12 +33,6 @@
 <%@ page
 	import="java.lang.*,oscar.oscarEncounter.oscarMeasurements.pageUtil.*"%>
 
-<%
-    response.setHeader("Pragma","no-cache"); //HTTP 1.0
-    response.setDateHeader ("Expires", 0); //prevents caching at the proxy 
-
-%>
-
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>

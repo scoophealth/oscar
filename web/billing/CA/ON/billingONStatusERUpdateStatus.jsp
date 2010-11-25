@@ -8,9 +8,6 @@
 	import="oscar.oscarBilling.ca.on.data.*, java.sql.*, oscar.*, java.net.*"
 	errorPage="../errorpage.jsp"%>
 <% 
-response.setHeader("Pragma","no-cache"); //HTTP 1.0
-response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
-
 	String id = request.getParameter("id");
 	String val = request.getParameter("val");;
 	JdbcBillingErrorRepImpl dbObj = new JdbcBillingErrorRepImpl();

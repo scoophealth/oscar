@@ -35,8 +35,6 @@
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title></title>
 <%
-    response.setHeader("Pragma","no-cache"); //HTTP 1.0
-    response.setDateHeader ("Expires", 0); //prevents caching at the proxy 
     WLWaitingListUtil.add2WaitingList(request.getParameter("listId"), request.getParameter("waitingListNote"), request.getParameter("demographicNo"), request.getParameter("onListSince"));
     response.sendRedirect("../demographic/demographiccontrol.jsp?demographic_no=" + request.getParameter("demographicNo") + "&displaymode=edit&dboperation=search_detail");    
 %>

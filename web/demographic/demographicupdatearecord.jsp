@@ -36,8 +36,6 @@
 -->
 <%
     if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
-    response.setHeader("Pragma","no-cache"); //HTTP 1.0
-    response.setDateHeader ("Expires", 0); //prevents caching at the proxy 
 %>
 
 <%@page import="org.apache.commons.lang.StringUtils"%>

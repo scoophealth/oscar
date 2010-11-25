@@ -34,12 +34,9 @@
 
 
 <%
-    response.setHeader("Pragma","no-cache"); //HTTP 1.0
-    response.setDateHeader ("Expires", 0); //prevents caching at the proxy 
     String waitingListId = request.getParameter("listId");
     //String removeFlag = request.getParameter("remove");
     WLWaitingListUtil.removeFromWaitingList(waitingListId, request.getParameter("demographicNo"));
-
 %>
 
 <html:html locale="true">
