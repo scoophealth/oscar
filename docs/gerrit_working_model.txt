@@ -39,7 +39,8 @@ Install Gerrit (on the server)
 - create a self signed certificate, change the number of days to something huge like 10 years.
 - change your linux to start gerrit upon boot up. To start gerrit : "cd ~/review_site", "./bin/gerrit.sh start". Note the funny directory change / reference in the preceeding 2 commands, it has to be that way or gerrit doesn't figure out where it's installed. (You can configure more to make it work but the prior 2 commands is the easiest way).
 - Note that we have accepted the default ports 8080 and 29418, I see no reason to change these.
-- At this point, gerrit may or may not have auto started itself, check the ps listing to find out. Start gerrit if you have to.
+- edit the file review_site/etc/gerrit.config, in the seciont "ssdh" add "threads=8"
+- At this point, gerrit may or may not have auto started itself, you need to either start or restart gerrit because of the above configuration change.
 
 
 Configure Gerrit (from your client / developer machine)
