@@ -525,6 +525,80 @@ public class ProviderPropertyAction extends DispatchAction {
          return actionmapping.findForward("genRxProfileView");
     }
 
+      public ActionForward viewShowPatientDOB(ActionMapping actionmapping,
+                               ActionForm actionform,
+                               HttpServletRequest request,
+                               HttpServletResponse response) {
+
+         DynaActionForm frm = (DynaActionForm)actionform;
+         String provider = (String) request.getSession().getAttribute("user");
+         UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.RX_SHOW_PATIENT_DOB);
+
+         String propValue="";
+         if (prop == null){
+             prop = new UserProperty();
+         }else{
+            propValue=prop.getValue();
+         }
+
+         //String [] propertyArray= new String[7];
+         boolean checked;
+         if(propValue.equalsIgnoreCase("yes"))
+             checked=true;
+         else
+             checked=false;
+
+         prop.setChecked(checked);
+         request.setAttribute("rxShowPatientDOBProperty", prop);
+         request.setAttribute("providertitle","provider.setShowPatientDOB.title"); //=Select if you want to use Rx3
+         request.setAttribute("providermsgPrefs","provider.setShowPatientDOB.msgPrefs"); //=Preferences
+         request.setAttribute("providermsgProvider","provider.setShowPatientDOB.msgProfileView"); //=Use Rx3
+         request.setAttribute("providermsgEdit","provider.setShowPatientDOB.msgEdit"); //=Do you want to use Rx3?
+         request.setAttribute("providerbtnSubmit","provider.setShowPatientDOB.btnSubmit"); //=Save
+         request.setAttribute("providermsgSuccess","provider.setShowPatientDOB.msgSuccess"); //=Rx3 Selection saved
+         request.setAttribute("method","saveShowPatientDOB");
+
+         frm.set("rxShowPatientDOBProperty", prop);
+         return actionmapping.findForward("genShowPatientDOB");
+     }
+
+   public ActionForward saveShowPatientDOB(ActionMapping actionmapping,ActionForm actionform,HttpServletRequest request,HttpServletResponse response){
+
+        String provider=(String) request.getSession().getAttribute("user");
+
+        DynaActionForm frm=(DynaActionForm)actionform;
+        UserProperty UShowPatientDOB=(UserProperty)frm.get("rxShowPatientDOBProperty");
+
+        boolean checked=false;
+        if(UShowPatientDOB!=null)
+            checked = UShowPatientDOB.isChecked();
+        UserProperty prop=this.userPropertyDAO.getProp(provider, UserProperty.RX_SHOW_PATIENT_DOB);
+        if(prop==null){
+            prop=new UserProperty();
+            prop.setName(UserProperty.RX_SHOW_PATIENT_DOB);
+            prop.setProviderNo(provider);
+        }
+        String showPatientDOB="no";
+        if(checked)
+            showPatientDOB="yes";
+        prop.setValue(showPatientDOB);
+        this.userPropertyDAO.saveProp(prop);
+
+         request.setAttribute("status", "success");
+         request.setAttribute("rxShowPatientDOBProperty",prop);
+         request.setAttribute("providertitle","provider.setShowPatientDOB.title"); //=Select if you want to use Rx3
+         request.setAttribute("providermsgPrefs","provider.setShowPatientDOB.msgPrefs"); //=Preferences
+         request.setAttribute("providermsgProvider","provider.setShowPatientDOB.msgProfileView"); //=Use Rx3
+         request.setAttribute("providermsgEdit","provider.setShowPatientDOB.msgEdit"); //=Do you want to use Rx3?
+         request.setAttribute("providerbtnSubmit","provider.setShowPatientDOB.btnSubmit"); //=Save
+         if(checked)
+            request.setAttribute("providermsgSuccess","provider.setShowPatientDOB.msgSuccess_selected"); //=Rx3 is selected
+         else
+            request.setAttribute("providermsgSuccess","provider.setShowPatientDOB.msgSuccess_unselected"); //=Rx3 is unselected
+         request.setAttribute("method","saveShowPatientDOB");
+         return actionmapping.findForward("genShowPatientDOB");
+    }
+
       public ActionForward viewUseRx3(ActionMapping actionmapping,
                                ActionForm actionform,
                                HttpServletRequest request,
