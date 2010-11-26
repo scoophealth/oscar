@@ -6,7 +6,13 @@
 <%@ page import="oscar.oscarProvider.data.*, oscar.log.*"%>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@ page import="org.apache.log4j.Logger" %>
-<%@ page import="oscar.*,java.lang.*,java.util.Date"%>
+
+<%@ page import="oscar.*,java.lang.*,java.util.Date,oscar.oscarRx.util.RxUtil,org.springframework.web.context.WebApplicationContext,
+         org.springframework.web.context.support.WebApplicationContextUtils,
+         org.oscarehr.common.dao.UserPropertyDAO,org.oscarehr.common.model.UserProperty"%>
+
+
+
 <!--
 /*
  *
@@ -128,8 +134,18 @@ OscarProperties props = OscarProperties.getInstance();
 String pracNo = provider.getPractitionerNo();
 String strUser = (String)session.getAttribute("user");
 ProviderData user = new ProviderData(strUser);
+
+String patientDOBStr=RxUtil.DateToString(patient.getDOB(), "MMM d, yyyy") ;
+boolean showPatientDOB=false;
+
+//check if user prefer to show dob in print
+WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext());
+UserPropertyDAO userPropertyDAO = (UserPropertyDAO) ctx.getBean("UserPropertyDAO");
+UserProperty prop = userPropertyDAO.getProp(signingProvider, UserProperty.RX_SHOW_PATIENT_DOB);
+if(prop!=null && prop.getValue().equalsIgnoreCase("yes")){
+    showPatientDOB=true;
+}
 %>
-<!--test-->
 <html:form action="/form/formname" styleId="preview2Form">
 
     <p id="pharmInfo" style="float:right;">
@@ -166,6 +182,8 @@ ProviderData user = new ProviderData(strUser);
                                                     </c:otherwise>
                                             </c:choose> <input type="hidden" name="patientName"
                                                     value="<%= StringEscapeUtils.escapeHtml(patient.getFirstName())+ " " +StringEscapeUtils.escapeHtml(patient.getSurname()) %>" />
+                                            <input type="hidden" name="patientDOB" value="<%= StringEscapeUtils.escapeHtml(patientDOBStr) %>" />
+                                            <input type="hidden" name="showPatientDOB" value="<%=showPatientDOB%>"
                                             <input type="hidden" name="patientAddress"
                                                     value="<%= StringEscapeUtils.escapeHtml(patient.getAddress()) %>" />
                                             <input type="hidden" name="patientCityPostal"
@@ -206,7 +224,7 @@ ProviderData user = new ProviderData(strUser);
                                             <table width=100% cellspacing=0 cellpadding=0>
                                                     <tr>
                                                             <td align=left valign=top><br>
-                                                            <%= patient.getFirstName() %> <%= patient.getSurname() %><br>
+                                                                <%= patient.getFirstName() %> <%= patient.getSurname() %> <%if(showPatientDOB){%>&nbsp;&nbsp; DOB:<%= StringEscapeUtils.escapeHtml(patientDOBStr) %> <%}%><br>
                                                             <%= patient.getAddress() %><br>
                                                             <%= patient.getCity() %> <%= patient.getPostal() %><br>
                                                             <%= patient.getPhone() %><br>
