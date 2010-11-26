@@ -157,6 +157,7 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 		private String patientCityPostal;
 		private String patientAddress;
 		private String patientName;
+                private String patientDOB;
 		private String sigDoctorName;
 		private String rxDate;
 		private String promoText;
@@ -166,7 +167,8 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 		public EndPage() {
 		}
 
-		public EndPage(String clinicName, String clinicTel, String clinicFax, String patientPhone, String patientCityPostal, String patientAddress, String patientName, String sigDoctorName, String rxDate, String origPrintDate, String numPrint) {
+        public EndPage(String clinicName, String clinicTel, String clinicFax, String patientPhone, String patientCityPostal, String patientAddress,
+                String patientName,String patientDOB, String sigDoctorName, String rxDate,String origPrintDate,String numPrint) {
 			this.clinicName = clinicName;
 			this.clinicTel = clinicTel;
 			this.clinicFax = clinicFax;
@@ -174,6 +176,7 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 			this.patientCityPostal = patientCityPostal;
 			this.patientAddress = patientAddress;
 			this.patientName = patientName;
+                        this.patientDOB=patientDOB;
 			this.sigDoctorName = sigDoctorName;
 			this.rxDate = rxDate;
 			this.promoText = OscarProperties.getInstance().getProperty("FORMS_PROMOTEXT");
@@ -204,11 +207,20 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 
 
 				float height = page.height();
-
-				// header table for patient's information.
+                boolean showPatientDOB=false;
+                //head.writeSelectedRows(0, 1,document.leftMargin(), page.height() - document.topMargin()+ head.getTotalHeight(),writer.getDirectContent());
+                if(this.patientDOB!=null && this.patientDOB.length()>0){
+                    showPatientDOB=true;
+                }
+                //header table for patient's information.
 				PdfPTable head = new PdfPTable(1);
 				String newline = System.getProperty("line.separator");
-				String hStr = this.patientName + "                                     " + this.rxDate + newline + this.patientAddress + newline + this.patientCityPostal + newline + this.patientPhone;
+                String hStr=this.patientName;
+                if(showPatientDOB){
+                     hStr+="   DOB:"+this.patientDOB+"                               " + this.rxDate + newline;}
+                else{hStr+="                            " + this.rxDate + newline;}
+
+                hStr+=this.patientAddress + newline + this.patientCityPostal + newline + this.patientPhone;
 				BaseFont bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
 				Phrase hPhrase = new Phrase(hStr, new Font(bf, 10));
 				head.addCell(hPhrase);
@@ -383,6 +395,14 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 		String sigDoctorName = req.getParameter("sigDoctorName");
 		String rxDate = req.getParameter("rxDate");
 		String rx = req.getParameter("rx");
+        String patientDOB=req.getParameter("patientDOB");
+        String showPatientDOB=req.getParameter("showPatientDOB");
+        boolean isShowDemoDOB=false;
+        if(showPatientDOB!=null&&showPatientDOB.equalsIgnoreCase("true")){
+            isShowDemoDOB=true;
+        }
+        if(!isShowDemoDOB)
+            patientDOB="";
 		if (rx == null) {
 			rx = "";
 		}
@@ -466,7 +486,7 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 			document.setMargins(15, pageSize.width() - 285f + 5f, 140, 60);// left, right, top , bottom
 
 			writer = PdfWriter.getInstance(document, baosPDF);
-			writer.setPageEvent(new EndPage(clinicName, clinicTel, clinicFax, patientPhone, patientCityPostal, patientAddress, patientName, sigDoctorName, rxDate, origPrintDate, numPrint));
+			writer.setPageEvent(new EndPage(clinicName, clinicTel, clinicFax, patientPhone, patientCityPostal, patientAddress, patientName,patientDOB, sigDoctorName, rxDate, origPrintDate, numPrint));
 			document.addTitle(title);
 			document.addSubject("");
 			document.addKeywords("pdf, itext");
