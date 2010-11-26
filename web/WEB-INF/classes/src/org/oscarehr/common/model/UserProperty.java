@@ -51,7 +51,7 @@ public class UserProperty implements Serializable {
     public final static String DEFAULT_SEX= "default_sex";
 
     public final static String EFORM_FAVOURITE_GROUP = "favourite_eform_group";
-
+    public final static String RX_SHOW_PATIENT_DOB="rx_show_patient_dob";
     private long id;
     private String name;
     private String value;
