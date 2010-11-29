@@ -133,8 +133,10 @@ public class EctConsultationFormRequestAction extends Action {
                                 consult.setConcurrentProblems(frm.getConcurrentProblems());
                                 consult.setUrgency(frm.getUrgency());
                                 consult.setPatientWillBook(new Boolean(frm.getPatientWillBook()));
-                                date = DateUtils.parseDate(frm.getFollowUpDate(), format);
-                                consult.setFollowUpDate(date);
+                                if( frm.getFollowUpDate() != null && !frm.getFollowUpDate().equals("") ) {
+                                    date = DateUtils.parseDate(frm.getFollowUpDate(), format);
+                                    consult.setFollowUpDate(date);
+                                }
 
                                 consultationRequestDao.persist(consult);
 
@@ -186,8 +188,10 @@ public class EctConsultationFormRequestAction extends Action {
                                 consult.setConcurrentProblems(frm.getConcurrentProblems());
                                 consult.setUrgency(frm.getUrgency());
                                 consult.setPatientWillBook(new Boolean(frm.getPatientWillBook()));
-                                date = DateUtils.parseDate(frm.getFollowUpDate(), format);
-                                consult.setFollowUpDate(date);
+                                if( frm.getFollowUpDate() != null && !frm.getFollowUpDate().equals("") ) {
+                                    date = DateUtils.parseDate(frm.getFollowUpDate(), format);
+                                    consult.setFollowUpDate(date);
+                                }
                                 consultationRequestDao.merge(consult);
 			}
 
