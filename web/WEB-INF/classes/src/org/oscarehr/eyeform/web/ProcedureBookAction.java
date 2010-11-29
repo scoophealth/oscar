@@ -6,8 +6,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -20,7 +19,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class ProcedureBookAction extends DispatchAction {
 
-	static Log logger = LogFactory.getLog(ProcedureBookAction.class);
+	static Logger logger = Logger.getLogger(ProcedureBookAction.class);
 	
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         return form(mapping, form, request, response);
