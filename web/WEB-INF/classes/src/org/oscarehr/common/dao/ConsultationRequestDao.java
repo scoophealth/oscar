@@ -65,7 +65,7 @@ public class ConsultationRequestDao extends AbstractDao<ConsultationRequest> {
         }
 
         public List getConsults(String team, boolean showCompleted, Date startDate, Date endDate, String orderby, String desc, String searchDate) {
-            StringBuilder sql = new StringBuilder("select cr from ConsultationRequest cr, Demographic d, Provider p where d.DemographicNo = cr.demographicId and p.ProviderNo = cr.providerNo ");
+            StringBuilder sql = new StringBuilder("select cr from ConsultationRequest cr, Demographic d, Provider p, ProfessionalSpecialist specialist, ConsultationServices service where d.DemographicNo = cr.demographicId and p.ProviderNo = d.ProviderNo and specialist.id = cr.specialistId and service.id = cr.serviceId ");
 
             if( !showCompleted ) {
                sql.append("and cr.status != 4 ");
@@ -96,14 +96,22 @@ public class ConsultationRequestDao extends AbstractDao<ConsultationRequest> {
                 sql.append("order by cr.referralDate desc ");
             }else if(orderby.equals("1")){               //1 = msgStatus
                 sql.append("order by cr.status " + orderDesc);
-            }else if(orderby.equals("2")){               //2 = msgPatient
-                sql.append("order by d.LastName, d.FirstName " + orderDesc);
-            }else if(orderby.equals("3")){               //3 = msgProvider
-                sql.append("order by p.LastName, p.FirstName " + orderDesc);
-            }else if(orderby.equals("6")){               //5 = msgRefDate
+             }else if(orderby.equals("2")){               //2 = msgTeam
+                sql.append("order by cr.sendTo " + orderDesc);
+            }else if(orderby.equals("3")){               //3 = msgPatient
+                sql.append("order by d.LastName " + orderDesc);
+            }else if(orderby.equals("4")){               //4 = msgProvider
+                sql.append("order by p.LastName " + orderDesc);
+            }else if(orderby.equals("5")){               //5 = msgService Desc
+                sql.append("order by service.serviceDesc " + orderDesc);
+            }else if(orderby.equals("6")){               //6 = msgSpecialist Name
+                sql.append("order by specialist.lastName " + orderDesc);
+            }else if(orderby.equals("7")){               //7 = msgRefDate
                 sql.append("order by cr.referralDate " + orderDesc);
-            }else if(orderby.equals("7")){               //6 = Appointment Date
+            }else if(orderby.equals("8")){               //8 = Appointment Date
                 sql.append("order by cr.appointmentDate " + orderDesc);
+            }else if(orderby.equals("9")){               //9 = FollowUp Date
+                sql.append("order by cr.followUpDate " + orderDesc);
             }else{
                 sql.append("order by cr.referralDate desc");
             }
