@@ -432,7 +432,7 @@ table.ele td{
                                overDueList.add(dis.demographicNo);
                             }
 
-                            if( dis.state != null && dis.bonusStatus.equals("Y")) {
+                            if( dis.state != null && dis.billStatus.equals("Y")) {
                               setBill = true;
                             }
                             %>

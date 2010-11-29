@@ -132,6 +132,7 @@ public class ChildImmunizationReport implements PreventionReport{
              PreventionReportDisplay prd = new PreventionReportDisplay();
              prd.demographicNo = demo;
              prd.bonusStatus = "N";
+             prd.billStatus = "N";
              if (totalImmunizations == 0){// no info
                 prd.rank = 1;
                 prd.lastDate = "------";
@@ -227,6 +228,7 @@ public class ChildImmunizationReport implements PreventionReport{
                     log.debug("twoYearsAfterDOB date "+twoYearsAfterDOB+ " "+lastDate.before(twoYearsAfterDOB) );
                     if (!refused && (totalImmunizations >= recommTotal  ) && lastDate.before(twoYearsAfterDOB) && ( ageInMonths > 24 )){//&& endOfYear.after(prevDate)){                  
                        prd.bonusStatus = "Y";
+                       prd.billStatus = "Y";
                        done++;
                     }
                 }

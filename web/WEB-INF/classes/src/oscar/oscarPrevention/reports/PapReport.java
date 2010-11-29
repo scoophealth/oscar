@@ -76,6 +76,7 @@ public class PapReport implements PreventionReport {
              PreventionReportDisplay prd = new PreventionReportDisplay();
              prd.demographicNo = demo;
              prd.bonusStatus = "N";
+             prd.billStatus = "N";
              if(ineligible(prevs)){
                 prd.rank = 5;
                 prd.lastDate = "------"; 
@@ -164,6 +165,7 @@ public class PapReport implements PreventionReport {
                 
                 if (!dateIsRefused && bonusStartDate.before(prevDate) && asofDate.after(prevDate)){
                    prd.bonusStatus = "Y";
+                   prd.billStatus = "Y";
                    done++;
                 }
                 //outcomes        

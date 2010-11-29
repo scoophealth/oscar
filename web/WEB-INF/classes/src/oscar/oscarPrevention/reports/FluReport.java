@@ -77,6 +77,7 @@ public class FluReport implements PreventionReport {
              PreventionReportDisplay prd = new PreventionReportDisplay();
              prd.demographicNo = demo;
              prd.bonusStatus = "N";
+             prd.billStatus = "N";
              
              Date[] begendDates =  getStartEndDate(asofDate);
              Date beginingOfYear  =begendDates[0]; 
@@ -168,9 +169,15 @@ public class FluReport implements PreventionReport {
                 log.debug("bonusEl start date "+beginingOfYear+ " "+beginingOfYear.before(prevDate));
                 log.debug("bonusEl end date "+endOfYear+ " "+endOfYear.after(prevDate));                
                 log.debug("ASOFDATE "+asofDate);
-                if (!refused && beginingOfYear.before(prevDate) && endOfYear.after(prevDate) && isOfAge(demo,asofDate)){
-                   prd.bonusStatus = "Y";
-                   done++;
+                if (beginingOfYear.before(prevDate) && endOfYear.after(prevDate) && isOfAge(demo,asofDate)){
+                    if( refused ) {
+                        prd.billStatus = "Y";
+                    }
+                    else {
+                        prd.bonusStatus = "Y";
+                        prd.billStatus = "Y";
+                        done++;
+                    }
                 }
                 //outcomes        
                 log.debug("due Date "+dueDate.toString()+" cutoffDate "+cutoffDate.toString()+" prevDate "+prevDate.toString());

@@ -74,6 +74,7 @@ public class MammogramReport implements PreventionReport{
              PreventionReportDisplay prd = new PreventionReportDisplay();
              prd.demographicNo = demo;
              prd.bonusStatus = "N";
+             prd.billStatus = "N";
              Date prevDate = null;
              if(ineligible(prevs)){
                 prd.rank = 5;
@@ -130,6 +131,7 @@ public class MammogramReport implements PreventionReport{
 
                 if (!refused && bonusStartDate.before(prevDate) && asofDate.after(prevDate) && !result.equalsIgnoreCase("pending")){
                    prd.bonusStatus = "Y";
+                   prd.billStatus = "Y";
                    done++;
                 }
                 
