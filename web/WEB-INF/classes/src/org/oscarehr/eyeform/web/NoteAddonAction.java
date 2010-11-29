@@ -1,5 +1,7 @@
 package org.oscarehr.eyeform.web;
 
+import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,6 +13,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.eyeform.dao.EyeFormDao;
 import org.oscarehr.eyeform.dao.FollowUpDao;
 import org.oscarehr.eyeform.dao.ProcedureBookDao;
@@ -36,7 +39,7 @@ public class NoteAddonAction extends DispatchAction {
 		FollowUpDao followUpDao = (FollowUpDao)SpringUtils.getBean("FollowUpDAO");
 		TestBookRecordDao testDao = (TestBookRecordDao)SpringUtils.getBean("TestBookDAO");
 		ProcedureBookDao procedureBookDao = (ProcedureBookDao)SpringUtils.getBean("ProcedureBookDAO");
-		
+		EyeFormDao eyeformDao = (EyeFormDao)SpringUtils.getBean("eyeFormDao");
 		ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
 		DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
 		
@@ -53,6 +56,8 @@ public class NoteAddonAction extends DispatchAction {
 		List<ProcedureBook> procedures = procedureBookDao.getByAppointmentNo(Integer.parseInt(appointmentNo));
 		request.setAttribute("procedures",procedures);
 		
+		EyeForm eyeform = eyeformDao.getByAppointmentNo(Integer.parseInt(appointmentNo));
+		request.setAttribute("eyeform", eyeform);
 		
 		
 		return mapping.findForward("current_note");
@@ -67,12 +72,9 @@ public class NoteAddonAction extends DispatchAction {
 	 * ack3
 	 * 
 	 * procedure/test
-	 */
-	public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		return null;
-	}
+	 */	
 	
-	public ActionForward saveFlags(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+	public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		String appointmentNo = request.getParameter("appointmentNo");
 	
 		String ack1Checked = request.getParameter("ack1_checked");
@@ -84,7 +86,50 @@ public class NoteAddonAction extends DispatchAction {
 		
 		EyeForm eyeform = dao.getByAppointmentNo(Integer.parseInt(appointmentNo));
 	
+		if(eyeform == null) {
+			eyeform = new EyeForm();
+			eyeform.setDate(new Date());
+			eyeform.setAppointmentNo(Integer.parseInt(appointmentNo));			
+		}
+		
+		eyeform.setDischarge(ack1Checked);
+		eyeform.setStat(ack2Checked);
+		eyeform.setOpt(ack3Checked);
+		
+		dao.save(eyeform);
 		
 		return null;
 	}
+	
+	public ActionForward getNoteText(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+    	String appointmentNo = request.getParameter("appointmentNo");
+    	
+    	EyeFormDao dao = (EyeFormDao)SpringUtils.getBean("EyeFormDao");
+    	
+    	EyeForm eyeform = dao.getByAppointmentNo(Integer.parseInt(appointmentNo));
+    	StringBuilder sb = new StringBuilder();
+    	
+    	if(eyeform != null) {
+    		if(eyeform.getDischarge()!=null&&eyeform.getDischarge().equals("true")) {
+    			sb.append("Discharge");    		
+    			sb.append("\n");
+    		}
+    		
+    		if(eyeform.getStat()!=null&&eyeform.getStat().equals("true")) {
+    			sb.append("Stat");    		
+    			sb.append("\n");
+    		}
+    		
+    		if(eyeform.getOpt()!=null&&eyeform.getOpt().equals("true")) {
+    			sb.append("Opt");    		
+    			sb.append("\n");
+    		}
+    	
+    	}
+    	
+    	try {
+    		response.getWriter().print(sb.toString());
+    	}catch(IOException e) {e.printStackTrace();}
+    	return null;
+    }
 }

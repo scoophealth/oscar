@@ -2,6 +2,7 @@ package org.oscarehr.eyeform.model;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,6 +21,7 @@ public class EyeForm extends AbstractModel<Integer>{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
+	@Column(name="appointment_no")
 	private int appointmentNo;
 	
 	private String discharge;

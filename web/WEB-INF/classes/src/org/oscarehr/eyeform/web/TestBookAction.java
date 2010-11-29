@@ -1,5 +1,8 @@
 package org.oscarehr.eyeform.web;
 
+import java.io.IOException;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -8,7 +11,9 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.validator.DynaValidatorForm;
+import org.oscarehr.eyeform.dao.ProcedureBookDao;
 import org.oscarehr.eyeform.dao.TestBookRecordDao;
+import org.oscarehr.eyeform.model.ProcedureBook;
 import org.oscarehr.eyeform.model.TestBookRecord;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
@@ -49,5 +54,24 @@ public class TestBookAction extends DispatchAction {
     	dao.save(data);
     	
     	return mapping.findForward("success");
+    }
+    
+    public ActionForward getNoteText(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+    	String appointmentNo = request.getParameter("appointmentNo");
+    	TestBookRecordDao dao = (TestBookRecordDao)SpringUtils.getBean("TestBookDAO");
+    	
+    	List<TestBookRecord> tests = dao.getByAppointmentNo(Integer.parseInt(appointmentNo));
+    	StringBuilder sb = new StringBuilder();
+    	
+    	for(TestBookRecord f:tests) {    		
+    		sb.append(f.getTestname()).append(" ").append(f.getEye()).append(" ").append(f.getUrgency());
+    		sb.append("\n");
+    	}
+    	
+    	try {
+    		response.getWriter().print(sb.toString());
+    	}catch(IOException e) {e.printStackTrace();}
+    	
+    	return null;
     }
 }

@@ -13,24 +13,27 @@
       
      	//link save button
        
-		jQuery("#save_measurements").live('click',function(e){
+		jQuery("#save_measurements").live('click',function(e){				
 			e.preventDefault();
 			touchColor();
 			
 			//save all measurements
-			var postData = "";
-			jQuery("input[measurement]").each(function() {
-				if(postData.length > 0) {
-					postData += "&";
+			var postData = "";			
+			jQuery("input[measurement]").each(function() {				
+				var className = jQuery(this).attr("class");
+				if(className == 'examfieldwhite') {				
+					if(postData.length > 0) {
+						postData += "&";
+					}
+					var name = jQuery(this).attr("measurement");
+					var value = jQuery(this).val();
+					var data = name + "=" + value;
+					postData += data;
 				}
-				var name = jQuery(this).attr("measurement");
-				var value = jQuery(this).val();
-				var data = name + "=" + value;
-				postData += data;
 			});
 
 			jQuery.ajax({type:'POST',url:ctx+'/oscarEncounter/MeasurementData.do?action=saveValues&demographicNo='+demographicNo,data:postData,success: function(){
-				alert('test');
+				alert('Saved.');
 			}});
 		});
 		

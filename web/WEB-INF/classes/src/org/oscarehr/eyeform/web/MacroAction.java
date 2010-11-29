@@ -38,17 +38,19 @@ public class MacroAction extends DispatchAction {
 
     public ActionForward form(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
     	ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
+    	MacroDao dao = (MacroDao)SpringUtils.getBean("MacroDAO");
+		
     	request.setAttribute("providers",providerDao.getActiveProviders());
     	
     	DynaValidatorForm f = (DynaValidatorForm)form;
-    	/*
-    	OcularProc procedure = (OcularProc)f.get("proc");
-    	if(procedure.getId() != null && procedure.getId().intValue()>0) {
-    		procedure = dao.find(procedure.getId()); 
+    	
+    	Macro macro = (Macro)f.get("macro");
+    	if(macro.getId() != null && macro.getId().intValue()>0) {
+    		macro = dao.find(macro.getId()); 
     	}
     	
-    	f.set("proc", procedure);
-    	*/
+    	f.set("macro", macro);
+    	
         return mapping.findForward("form");
     }
     

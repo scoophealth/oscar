@@ -1,5 +1,8 @@
 package org.oscarehr.eyeform.web;
 
+import java.io.IOException;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -9,6 +12,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.validator.DynaValidatorForm;
 import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.eyeform.dao.FollowUpDao;
 import org.oscarehr.eyeform.model.FollowUp;
 import org.oscarehr.util.SpringUtils;
@@ -55,5 +59,28 @@ public class FollowUpAction extends DispatchAction {
     	
     	
     	return mapping.findForward("success");
+    }
+    
+    public ActionForward getNoteText(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+    	String appointmentNo = request.getParameter("appointmentNo");
+    	
+    	FollowUpDao dao = (FollowUpDao)SpringUtils.getBean("FollowUpDAO");
+    	ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
+    	
+    	
+    	List<FollowUp> followUps = dao.getByAppointmentNo(Integer.parseInt(appointmentNo));
+    	StringBuilder sb = new StringBuilder();
+    	
+    	for(FollowUp f:followUps) {
+    		Provider p = providerDao.getProvider(f.getFollowupProvider());
+    		sb.append(f.getType()).append(" ").append(f.getTimespan()).append(" ").append(f.getTimeframe());
+    		sb.append(" ").append(p.getFormattedName()).append(" ").append(f.getUrgency());
+    		sb.append("\n");
+    	}
+    	
+    	try {
+    		response.getWriter().print(sb.toString());
+    	}catch(IOException e) {e.printStackTrace();}
+    	return null;
     }
 }

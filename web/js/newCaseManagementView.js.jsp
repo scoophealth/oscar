@@ -484,7 +484,15 @@ function showEdit(e,title, noteId, editors, date, revision, note, url, container
     var limit = containerDiv + "threshold";
     var editElem = "showEditNote";
     var pgHeight = pageHeight();
-    var coords = Position.page($("topContent"));
+    
+    var coords = null;
+    if(document.getElementById("measurements_div") == null) {
+    	 coords = Position.page($("topContent"));
+    } else {
+   		coords = Position.page($("measurements_div"));
+    }
+    
+  //  var coords = Position.page($("topContent"));
     var top = coords[1];
     var right = Math.round(coords[0]/0.66);
     var height = $("showEditNote").getHeight();

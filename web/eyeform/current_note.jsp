@@ -40,28 +40,36 @@ function popupPageOne(varpage,name) {
 function saveEyeformNote() {
 	//alert("save function called for eyeform - " + savedNoteId);
 	//do the ajax call to save form values 
-	jQuery.ajax({
-		type: 'POST',
-		url: ctx+'/eyeform/NoteData.do?method=save',
-		data: jQuery("form[name='caseManagementEntryForm']").serialize(),
-		success: function (){},
-		dataType: 'html'	
-	});
-	
+	saveFlags();
+
+	var notetext = '';
+	//get consults/procedures/tests/checkboxes to generate text
+	jQuery.ajax({ url: ctx+"/eyeform/FollowUp.do?method=getNoteText&appointmentNo="+<%=aptNo%>, async:false, success: function(data){
+        notetext += data;
+        if(data.length>0) {notetext+='\n';}
+    }});
+	jQuery.ajax({ url: ctx+"/eyeform/ProcedureBook.do?method=getNoteText&appointmentNo="+<%=aptNo%>, async:false, success: function(data){
+        notetext += data;
+        if(data.length>0) {notetext+='\n';}
+    }});
+	jQuery.ajax({ url: ctx+"/eyeform/TestBook.do?method=getNoteText&appointmentNo="+<%=aptNo%>, async:false, success: function(data){
+        notetext += data;
+        if(data.length>0) {notetext+='\n';}
+    }});
+	jQuery.ajax({ url: ctx+"/eyeform/NoteData.do?method=getNoteText&appointmentNo="+<%=aptNo%>, async:false, success: function(data){
+        notetext += data;
+        if(data.length>0) {notetext+='\n';}
+    }});
+
+	alert(notetext);
  }
 
 
 function saveNoteAndSendTickler() {
 	//alert("save function called for eyeform - " + savedNoteId);
-	//do the ajax call to save form values 
+	//do the ajax call to save form values 	
+	saveFlags();
 	
-	jQuery.ajax({
-		type: 'POST',
-		url: ctx+'/eyeform/NoteData.do?method=save',
-		data: jQuery("form[name='caseManagementEntryForm']").serialize(),
-		success: function (){alert('saved');},
-		dataType: 'html'	
-	});
 	
 	
  }
@@ -75,7 +83,7 @@ function saveFlags() {
 	
 	jQuery.ajax({
 		type: 'GET',
-		url: ctx+'/eyeform/NoteData.do?method=saveFlags&ack1_checked=' + ack1El.checked + '&ack2_checked=' + ack2El.checked + '&ack3_checked=' + ack3El.checked + '&appointmentNo=' + <%=aptNo%> ,
+		url: ctx+'/eyeform/NoteData.do?method=save&ack1_checked=' + ack1El.checked + '&ack2_checked=' + ack2El.checked + '&ack3_checked=' + ack3El.checked + '&appointmentNo=' + <%=aptNo%> ,
 		success: function (){},
 		dataType: 'html'	
 	});
@@ -101,7 +109,7 @@ function saveFlags() {
             
             <span>&nbsp;&nbsp;</span>
 			   
-            <a href="javascript:void(0)" onclick="popupPageOne('<c:out value="${ctx}"/>/eyeform/FollowUp.do?method=form&amp;followup.demographicNo=<%=demographicNo %>&amp;noteId=<%=noteId%>&amp;followup.appointmentNo=<%=aptNo%>','eyeFollowUp');">[arrange follow up/consult]</a>
+            <a href="javascript:void(0)" onclick="popupPageOne('<c:out value="${ctx}"/>/eyeform/FollowUp.do?method=form&amp;followup.demographicNo=<%=demographicNo %>&amp;noteId=<%=noteId%>&amp;followup.appointmentNo=<%=aptNo%>','eyeFollowUp');">[arrange]</a>
             &nbsp;            	
         </div>
 
@@ -228,16 +236,33 @@ function saveFlags() {
 </tr>
 
 <tr><td>&nbsp;</td></tr>
-
+<%
+	org.oscarehr.eyeform.model.EyeForm eyeform = (org.oscarehr.eyeform.model.EyeForm)request.getAttribute("eyeform");
+	String a1c = (eyeform!=null&&eyeform.getDischarge()!=null&&eyeform.getDischarge().equals("true"))?"checked":"";
+	String a2c = (eyeform!=null&&eyeform.getStat() != null&&eyeform.getStat().equals("true"))?"checked":"";
+	String a3c = (eyeform!=null&&eyeform.getOpt() != null&&eyeform.getOpt().equals("true"))?"checked":"";	
+%>
  <tr>
             <td>          	 
-            	<input type="checkbox" style="width: 10%;" value="checked" id="ack1" onchange="setDischarge()" />            
-            	Discharge
-           <br>   	 
-            	<input type="checkbox" style="width: 10%;" id="ack2" value="checked" onchange="setStat();" />            	            	
+				<%if(a1c.equals("checked")) {  %>
+            	<input type="checkbox" style="width: 10%;" value="true" id="ack1" onchange="setDischarge()" checked="checked"/>
+            	<%} else { %>
+            	<input type="checkbox" style="width: 10%;" value="true" id="ack1" onchange="setDischarge()" />            	
+            	<% } %>            
+            	Discharge            	            
+           <br>   
+           		<%if(a2c.equals("checked")) {  %>	 
+            	<input type="checkbox" style="width: 10%;" id="ack2" value="true" onchange="setStat();" checked="checked"/>
+            	<% } else { %>
+            	<input type="checkbox" style="width: 10%;" id="ack2" value="true" onchange="setStat();"/>            	
+            	<% } %>            	            	
             	STAT/PRN
            <br>
-            	<input type="checkbox" style="width: 10%;" value="checked" id="ack3" onchange="setOpt();" />            	
+           		<%if(a3c.equals("checked")) {  %>	 
+            	<input type="checkbox" style="width: 10%;" value="true" id="ack3" onchange="setOpt();" checked="checked" />
+            	<%} else { %>
+            	<input type="checkbox" style="width: 10%;" value="true" id="ack3" onchange="setOpt();" />            	
+            	<% } %>            	
             	optom routine
             </td>
 </tr>
@@ -284,7 +309,7 @@ function saveFlags() {
            
            <tr>
             <td nowrap="nowrap" width="40%">
-            	<input tabindex="251" value="Generate Note" onclick="AjaxSubmitAction('sendEyeNoTickler');return false;" id="stickler0" style="color: black;" type="submit">			
+            	<input tabindex="251" value="Generate Note" onclick="saveEyeformNote();return false;" id="stickler0" style="color: black;" type="button">			
             </td>
            </tr>
            

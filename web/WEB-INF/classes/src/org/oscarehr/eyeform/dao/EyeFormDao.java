@@ -1,5 +1,6 @@
 package org.oscarehr.eyeform.dao;
 
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 import org.oscarehr.common.dao.AbstractDao;
@@ -25,8 +26,13 @@ public class EyeFormDao extends AbstractDao<EyeForm> {
 		Query query = entityManager.createQuery("select x from "+modelClass.getSimpleName()+" x where x.appointmentNo=?1");
 		query.setParameter(1, appointmentNo);
 		
+		EyeForm eyeform = null;
 	
-		return (EyeForm)query.getSingleResult();
+		try {
+			eyeform = (EyeForm)query.getSingleResult();
+		} catch(NoResultException e) {}
+	
+		return eyeform;
 		
 	}
 }

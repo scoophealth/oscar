@@ -48,6 +48,8 @@ public class FollowUp extends AbstractModel<Integer> {
 	
 	private String type;
 	
+	private String urgency;
+	private String comment;
 	
 	
 	public String getType() {
@@ -130,6 +132,19 @@ public class FollowUp extends AbstractModel<Integer> {
 	public void setDemographicNo(int demographicNo) {
 		this.demographicNo = demographicNo;
 	}
+	public String getUrgency() {
+		return urgency;
+	}
+	public void setUrgency(String urgency) {
+		this.urgency = urgency;
+	}
+	public String getComment() {
+		return comment;
+	}
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+	
 	
 	
 	

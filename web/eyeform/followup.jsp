@@ -36,26 +36,42 @@ Follow Up/Consult
             	<html:option value="followup">Follow up</html:option>
             	<html:option value="consult">Consult</html:option>
             </html:select>
-           
-             <html:text property="followup.timespan" size="4"  styleId="width: 25px;" styleClass="special"/>
-             <html:select property="followup.timeframe" styleId="width: 50px;" styleClass="special">
-             	<html:option value="days">days</html:option>
-            	<html:option value="weeks">weeks</html:option>
-            	<html:option value="months">months</html:option>
-            </html:select>
-            </td> 
-			<td width="45%">
-            Doctor:
-            
+            </td>
+            <td width="25%">
+             Doctor:
             <html:select property="followup.followupProvider">
             	<c:forEach var="item" items="${providers}">
             		<option value="<c:out value="${item.providerNo}"/>"><c:out value="${item.formattedName}"/></option>
             	</c:forEach>            	
 			</html:select>
-	  		
-            </td>
-            </tr>
+			</td>
+			</tr>
+			<tr>
+			<td colspan="2">
+			
            
+             <html:text property="followup.timespan" size="4"  styleId="width: 25px;" styleClass="special"/>
+             
+             <html:select property="followup.timeframe" styleId="width: 50px;" styleClass="special">
+             	<html:option value="days">days</html:option>
+            	<html:option value="weeks">weeks</html:option>
+            	<html:option value="months">months</html:option>
+            </html:select>
+            </td> 			                       
+            </tr>
+           <tr>
+           <td>
+            <html:select property="followup.urgency" styleId="width: 50px;" styleClass="special">
+             	<html:option value="routine">routine</html:option>
+            	<html:option value="asap">ASAP</html:option>            	
+            </html:select>
+           </td>
+           </tr>
+           <tr>
+           <td>
+           	Comment:<html:textarea rows="5" cols="40" property="followup.comment"></html:textarea>		
+           </td>
+           </tr>
             <tr>
             <td><br/><html:submit value="submit"/></td>
             </tr>
