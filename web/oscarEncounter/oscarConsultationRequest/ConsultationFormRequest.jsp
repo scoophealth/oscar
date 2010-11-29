@@ -1000,7 +1000,7 @@ function fetchAttached() {
 						</tr>
                                                 <tr>
                                                     <td class="tite4">
-                                                        <bean:message key="ooscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formInstructions" />
+                                                        <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formInstructions" />
                                                     </td>
                                                     <td align="right" class="tite2">
                                                         <textarea id="annotation" style="color: blue;" readonly></textarea>
