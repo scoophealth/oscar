@@ -6,6 +6,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -19,6 +21,8 @@ import org.oscarehr.util.SpringUtils;
 
 public class FollowUpAction extends DispatchAction {
 
+	static Log logger = LogFactory.getLog(FollowUpAction.class);
+	
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         return form(mapping, form, request, response);
     }
@@ -80,7 +84,7 @@ public class FollowUpAction extends DispatchAction {
     	
     	try {
     		response.getWriter().print(sb.toString());
-    	}catch(IOException e) {e.printStackTrace();}
+    	}catch(IOException e) {logger.error(e);}
     	return null;
     }
 }

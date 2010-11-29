@@ -6,20 +6,22 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.validator.DynaValidatorForm;
-import org.oscarehr.eyeform.dao.ProcedureBookDao;
 import org.oscarehr.eyeform.dao.TestBookRecordDao;
-import org.oscarehr.eyeform.model.ProcedureBook;
 import org.oscarehr.eyeform.model.TestBookRecord;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 public class TestBookAction extends DispatchAction {
 
+	static Log logger = LogFactory.getLog(TestBookAction.class);
+	
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         return form(mapping, form, request, response);
     }
@@ -70,7 +72,7 @@ public class TestBookAction extends DispatchAction {
     	
     	try {
     		response.getWriter().print(sb.toString());
-    	}catch(IOException e) {e.printStackTrace();}
+    	}catch(IOException e) {logger.error(e);}
     	
     	return null;
     }
