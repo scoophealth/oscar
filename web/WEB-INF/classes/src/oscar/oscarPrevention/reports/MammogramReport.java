@@ -155,6 +155,7 @@ public class MammogramReport implements PreventionReport{
                    prd.numMonths = numMonths;
                    prd.color = "yellow"; //FF00FF
                    if(!prd.bonusStatus.equals("Y")){
+                       prd.billStatus = "Y";
                       doneWithGrace++;
                    }
                    
