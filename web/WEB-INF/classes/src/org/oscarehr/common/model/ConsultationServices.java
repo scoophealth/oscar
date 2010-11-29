@@ -34,6 +34,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.JoinTable;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.FetchType;
+
+import java.util.List;
 
 /**
  *
@@ -52,6 +58,10 @@ public class ConsultationServices extends AbstractModel<Integer> implements Seri
     private String serviceDesc;
     @Column(name = "active")
     private String active;
+
+    @ManyToMany(fetch=FetchType.EAGER)
+    @JoinTable( name="serviceSpecialists", joinColumns=@JoinColumn(name="serviceId"), inverseJoinColumns = @JoinColumn(name="specId") )
+    private List<ProfessionalSpecialist> specialists;
 
     public ConsultationServices() {
     }
@@ -111,6 +121,20 @@ public class ConsultationServices extends AbstractModel<Integer> implements Seri
     @Override
     public String toString() {
         return "org.oscarehr.common.model.ConsultationServices[serviceId=" + serviceId + "]";
+    }
+
+    /**
+     * @return the specialists
+     */
+    public List<ProfessionalSpecialist> getSpecialists() {
+        return specialists;
+    }
+
+    /**
+     * @param specialists the specialists to set
+     */
+    public void setSpecialists(List<ProfessionalSpecialist> specialists) {
+        this.specialists = specialists;
     }
 
 }
