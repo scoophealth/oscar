@@ -94,14 +94,7 @@ public class FluReport implements PreventionReport {
                 prd.state = "Ineligible"; 
                 prd.numMonths = "------";
                 prd.color = "grey";
-                inList++;
-             }else if(ineligible(prevs)){
-                prd.rank = 5;
-                prd.lastDate = "------"; 
-                prd.state = "Ineligible"; 
-                prd.numMonths = "------";
-                prd.color = "grey";
-                inList++;
+                inList++;             
              }else if (noFutureItems.size() == 0){// no info
                 prd.rank = 1;
                 prd.lastDate = "------";
@@ -115,9 +108,9 @@ public class FluReport implements PreventionReport {
                 
               
                 
-                if ( h.get("refused") != null && ((String) h.get("refused")).equals("1")){
-                   refused = true;
-                }
+//                if ( h.get("refused") != null && ((String) h.get("refused")).equals("1")){
+//                   refused = true;
+//                }
                 
                 String prevDateStr = (String) h.get("prevention_date");
                 
@@ -292,7 +285,7 @@ public class FluReport implements PreventionReport {
         Calendar bonusEl = Calendar.getInstance();
         bonusEl.setTime(asofDate); 
         int year = bonusEl.get(Calendar.YEAR);
-        Calendar cal = new GregorianCalendar(year, Calendar.JANUARY, 1);
+        Calendar cal = new GregorianCalendar(year, Calendar.DECEMBER, 31);
         cal.add(Calendar.YEAR,-65);
         Date cutoff = cal.getTime();
         log.debug("FLU CUT OFFDOB YEAR IS "+cutoff);
