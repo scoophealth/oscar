@@ -245,43 +245,43 @@ function setOrder(val){
 					<bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgUrgency"/>
                                 </th>
                                 <th align="left" class="VCRheads">
-                                   <a href=# onclick="setOrder('3'); return false;">
-                                   Team
+                                   <a href=# onclick="setOrder('2'); return false;">
+                                       <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgTeam"/>
                                    </a>
                                 </th>
                                 <th align="left" class="VCRheads" width="75">
-                                   <a href=# onclick="setOrder('2'); return false;">
+                                   <a href=# onclick="setOrder('3'); return false;">
                                    <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgPatient"/>
                                    </a>
                                 </th>
                                 <th align="left" class="VCRheads">
-                                   <a href=# onclick="setOrder('3'); return false;">
+                                   <a href=# onclick="setOrder('4'); return false;">
                                    <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgProvider"/>
                                    </a>
                                 </th>
                                 <th align="left" class="VCRheads">
-                                   <a href=# onclick="setOrder('4'); return false;">
+                                   <a href=# onclick="setOrder('5'); return false;">
                                    <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgService"/>
                                    </a>
                                 </th>
                                 <th align="left" class="VCRheads">
-                                   <a href=# onclick="setOrder('5'); return false;">
-                                   Consultant
-                                   </a>
-                                </th>
-                                <th align="left" class="VCRheads">
                                    <a href=# onclick="setOrder('6'); return false;">
-                                   <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgRefDate"/>
+                                       <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgConsultant"/>
                                    </a>
                                 </th>
                                 <th align="left" class="VCRheads">
                                    <a href=# onclick="setOrder('7'); return false;">
-                                   <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgAppointmentDate"/>
+                                   <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgRefDate"/>
                                    </a>
                                 </th>
                                 <th align="left" class="VCRheads">
                                    <a href=# onclick="setOrder('8'); return false;">
-                                        Last Followup
+                                   <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgAppointmentDate"/>
+                                   </a>
+                                </th>
+                                <th align="left" class="VCRheads">
+                                   <a href=# onclick="setOrder('9'); return false;">
+                                       <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgFollowUpDate"/>
                                    </a>
                                 </th>
                             </tr>
