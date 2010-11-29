@@ -94,7 +94,7 @@ public class EctConsultationFormRequestAction extends Action {
 		if (appointmentPm.equals("PM") && Integer.parseInt(appointmentHour) < 12 ) {
 			appointmentHour = Integer.toString(Integer.parseInt(appointmentHour) + 12);
 		}
-                else if( appointmentHour.equals("12") ) {
+                else if( appointmentHour.equals("12") && appointmentPm.equals("AM") ) {
                     appointmentHour = "0";
                 }		
 
