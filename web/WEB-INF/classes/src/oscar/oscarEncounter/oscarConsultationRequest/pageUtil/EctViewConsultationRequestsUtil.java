@@ -69,6 +69,7 @@ public class EctViewConsultationRequestsUtil {
       status = new Vector<String>();
       patient = new Vector<String>();
       provider = new Vector<String>();
+      providerNo = new Vector();
       teams = new Vector<String>();
       service = new Vector<String>();
       vSpecialist = new Vector<String>();
@@ -112,6 +113,7 @@ public class EctViewConsultationRequestsUtil {
               service.add(services.getServiceDesc());
               vSpecialist.add(specialist.getLastName() + ", " + specialist.getFirstName());
               urgency.add(consult.getUrgency());
+			  providerNo.add(prov.getProviderNo());
 			  siteName.add(consult.getSiteName());
               teams.add(consult.getSendTo());
               cal.setTime(consult.getAppointmentDate());
@@ -199,6 +201,7 @@ public class EctViewConsultationRequestsUtil {
    public Vector<String> patientWillBook;
    public Vector<String> urgency;
    public Vector<String> followUpDate;
+   public Vector<String> providerNo;   
    public Vector<String> siteName;
    
 }
