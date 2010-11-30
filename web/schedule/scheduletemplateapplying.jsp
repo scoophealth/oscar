@@ -89,9 +89,6 @@
 	<%isSiteAccessPrivacy=true; %>
 </security:oscarSec>
 
-
-<%!  boolean bMultisites=org.oscarehr.common.IsPropertiesOn.isMultisitesEnable(); %>
-<%!  String [] bgColors; %>
 <%!  List<String> excludedSites = new ArrayList<String>(); %>
 <%
   
