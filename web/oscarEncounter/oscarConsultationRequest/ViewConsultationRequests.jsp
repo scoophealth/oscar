@@ -377,7 +377,7 @@ function setOrder(val){
                             for (int i = 0; i < theRequests.ids.size(); i++){
                              //multisites. skip record if not belong to same site/team
                              if (isSiteAccessPrivacy || isTeamAccessPrivacy) {
-                             	if(providerMap.get((String) theRequests.providerNo.elementAt(i))== null)  continue;
+                             	if(providerMap.get((String) theRequests.provider.elementAt(i))== null)  continue;
                              }	
                             	
                             String id      = (String) theRequests.ids.elementAt(i);
