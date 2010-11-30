@@ -31,7 +31,9 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
+import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.Site;
@@ -137,4 +139,125 @@ public class SiteDao extends HibernateDaoSupport {
 			return null;
 	}
 
+	public List<String> getGroupBySiteLocation(String location) {
+		List<String> groupList = new ArrayList<String>();
+		Session sess = getSession();
+		try {
+			SQLQuery  q = sess.createSQLQuery(
+					"select distinct g.mygroup_no from mygroup g	" +
+					" inner join provider p on p.provider_no = g.provider_no and p.status = 1 " +
+					" inner join providersite ps on ps.provider_no = g.provider_no " +
+					" inner join site s on s.site_id = ps.site_id " +
+					" where  s.name = :sitename ") ;
+			q.setParameter("sitename", location);
+			q.addScalar("mygroup_no", Hibernate.STRING);			
+			groupList = q.list();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				sess.close();
+			} catch (HibernateException e) {
+				e.printStackTrace();
+			}
+		}		
+		return groupList;
+	}
+	
+	public List<String> getProviderNoBySiteLocation(String location) {
+		List<String> pList = new ArrayList<String>();
+		Session sess = getSession();
+		try {
+			SQLQuery  q = sess.createSQLQuery(
+					"select distinct p.provider_no	" +
+					" from provider p " +
+					" inner join providersite ps on ps.provider_no = p.provider_no " +
+					" inner join site s on s.site_id = ps.site_id " +
+					" where  s.name = :sitename ") ;
+			q.setParameter("sitename", location);
+			q.addScalar("provider_no", Hibernate.STRING);			
+			pList = q.list();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				sess.close();
+			} catch (HibernateException e) {
+				e.printStackTrace();
+			}
+		}		
+		return pList;
+	}
+	
+	public List<String> getProviderNoBySiteManagerProviderNo(String providerNo) {
+		List<String> pList = new ArrayList<String>();
+		Session sess = getSession();
+		try {
+			SQLQuery  q = sess.createSQLQuery(
+					"select distinct p.provider_no	" +
+					" from provider p " +
+					" inner join providersite ps on ps.provider_no = p.provider_no " +
+					" where ps.site_id in (select site_id from providersite where provider_no = :providerno)");
+			q.setParameter("providerno", providerNo);
+			q.addScalar("provider_no", Hibernate.STRING);			
+			pList = q.list();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				sess.close();
+			} catch (HibernateException e) {
+				e.printStackTrace();
+			}
+		}		
+		return pList;
+	}	
+	
+	public List<String> getGroupBySiteManagerProviderNo(String providerNo) {
+		List<String> groupList = new ArrayList<String>();
+		Session sess = getSession();
+		try {
+			SQLQuery  q = sess.createSQLQuery(
+					"select distinct g.mygroup_no from mygroup g	" +
+					" inner join provider p on p.provider_no = g.provider_no and p.status = 1 " +
+					" inner join providersite ps on ps.provider_no = g.provider_no " +
+					" where ps.site_id in (select site_id from providersite where provider_no = :providerno)");
+			q.setParameter("providerno", providerNo);
+			q.addScalar("mygroup_no", Hibernate.STRING);			
+			groupList = q.list();
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				sess.close();
+			} catch (HibernateException e) {
+				e.printStackTrace();
+			}
+		}		
+		return groupList;
+	}
+	
+	public String getSiteNameByAppointmentNo(String appointmentNo) {
+		String siteName="";
+		Session sess = getSession();
+		try {
+			SQLQuery  q = sess.createSQLQuery("select location from appointment where appointment_no = :appointmentno");
+			q.setParameter("appointmentno", appointmentNo);
+			q.addScalar("location", Hibernate.STRING);			
+			siteName = (String)q.list().get(0);
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				sess.close();
+			} catch (HibernateException e) {
+				e.printStackTrace();
+			}
+		}		
+		return siteName;		
+	}
 }
