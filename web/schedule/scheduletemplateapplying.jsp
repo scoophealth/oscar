@@ -1,35 +1,3 @@
-<%!  boolean bMultisites=org.oscarehr.common.IsPropertiesOn.isMultisitesEnable(); %>
-<%!  String [] bgColors; %>
-<%
-  
-  String weekdaytag[] = {"SUN","MON","TUE","WED","THU","FRI","SAT"};
-  boolean bAlternate =(request.getParameter("alternate")!=null&&request.getParameter("alternate").equals("checked") )?true:false;
-  boolean bOrigAlt = false;
-
-  OscarProperties props = OscarProperties.getInstance();
-  
-  boolean bMoreAddr = bMultisites
-  						? true
-  						: (props.getProperty("scheduleSiteID", "").equals("") ? false : true);
-  String [] addr;
-  if (bMultisites) {
-	//multisite starts =====================	  
-	  SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
-      List<Site> sites = siteDao.getActiveSitesByProviderNo((String)request.getParameter("provider_no")); 
-	  addr = new String[sites.size()+1];
-	  bgColors = new String[sites.size()+1];
-      for (int i=0; i<sites.size(); i++) {
-		  addr[i]=sites.get(i).getName();
-		  bgColors[i]=sites.get(i).getBgColor();
-      }
-	  addr[sites.size()]="NONE";
-	  bgColors[sites.size()]="white";
-	//multisite ends =====================	 
-  } else {
-  	  addr = props.getProperty("scheduleSiteID", "").split("\\|");
-  }
-  
-%>
 <%@ page
 	import="java.util.*, java.net.*, java.sql.*, oscar.*, oscar.util.*, java.text.*, java.lang.*, org.apache.struts.util.*"
 	errorPage="../appointment/errorpage.jsp"%>
@@ -89,6 +57,9 @@
 	<%isSiteAccessPrivacy=true; %>
 </security:oscarSec>
 
+
+<%!  boolean bMultisites=org.oscarehr.common.IsPropertiesOn.isMultisitesEnable(); %>
+<%!  String [] bgColors; %>
 <%!  List<String> excludedSites = new ArrayList<String>(); %>
 <%
   
