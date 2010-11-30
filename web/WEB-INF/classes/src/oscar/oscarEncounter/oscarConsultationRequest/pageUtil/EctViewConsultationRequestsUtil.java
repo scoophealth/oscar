@@ -198,6 +198,7 @@ public class EctViewConsultationRequestsUtil {
    public Vector<String> apptDate;
    public Vector<String> patientWillBook;
    public Vector<String> urgency;
-   public Vector<String> followUpDate;;
+   public Vector<String> followUpDate;
+   public Vector<String> siteName;
    
 }
