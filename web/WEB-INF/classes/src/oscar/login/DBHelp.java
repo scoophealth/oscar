@@ -16,7 +16,7 @@ import oscar.oscarDB.DBHandler;
 import oscar.util.SqlUtils;
 
 /**
- * @deprecated Use JPA instead, no new code should be written against this class.
+ * deprecated Use JPA instead, no new code should be written against this class.
  */
 public final class DBHelp {
     private static final Logger logger = MiscUtils.getLogger();

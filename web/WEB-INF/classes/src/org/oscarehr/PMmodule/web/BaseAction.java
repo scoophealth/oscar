@@ -62,7 +62,7 @@ import com.quatro.service.security.SecurityManager;
 import com.quatro.service.security.UserAccessManager;
 
 /**
- * @deprecated do not use this class anymore, there's no good reason for this classes existance. Action classes should generally speaking stand on their own without a common super class. If utilities are required, then a utility class should be made, not a super class.
+ * deprecated do not use this class anymore, there's no good reason for this classes existance. Action classes should generally speaking stand on their own without a common super class. If utilities are required, then a utility class should be made, not a super class.
  */
 public abstract class BaseAction extends DispatchAction {
 	

@@ -61,6 +61,10 @@ public class GrepStuffDirectoryWalker extends DirectoryWalker {
 			}
 			
 			checkContains(relativePath, fileContents, "DBHandler.", "use jpa");
+			checkContains(relativePath, fileContents, "DBPreparedHandler", "use jpa");
+			checkContains(relativePath, fileContents, "DBHelp", "use jpa");
+			checkContains(relativePath, fileContents, ".selectIntList(", "use jpa");
+			checkContains(relativePath, fileContents, ".selectStringList(", "use jpa");
 			checkContains(relativePath, fileContents, "OscarSuperManager", "use jpa");
 			checkContains(relativePath, fileContents, "org.apache.commons.logging.Log", "use log4j logger");
 			checkContains(relativePath, fileContents, "com.sun.", "classes are not always available, usually org.apache will have standard libraries to replace these");
@@ -74,6 +78,9 @@ public class GrepStuffDirectoryWalker extends DirectoryWalker {
 			checkContains(relativePath, fileContents, "WeakHashMap()", "use generics");
 			checkContains(relativePath, fileContents, "StringBuffer", "very very rare that this is required, usually StringBuilder is the better choice");
 			checkContains(relativePath, fileContents, "com.Ostermiller", "use org.apache libraries instead, duplicated libs and apache is... more standard (if that's a word)");
+			checkContains(relativePath, fileContents, "BaseGenericIntakeAction", "do not use the BaseAction concept, just extends struts directly, no mass imports should be done like that, no one can tell what is used when that happens.");
+			checkContains(relativePath, fileContents, "BaseAction", "do not use the BaseAction concept, just extends struts directly, no mass imports should be done like that, no one can tell what is used when that happens.");
+			checkContains(relativePath, fileContents, "ProfessionalSpecialists", "Use the new ProfessionalSpecialist JPA object instead.");
 
 			checkContains(relativePath, fileContents, "Vector", "excessively rare that this is required, usually ArrayList is the better choice");
 

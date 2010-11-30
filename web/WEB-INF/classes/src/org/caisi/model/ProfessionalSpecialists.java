@@ -23,7 +23,7 @@
 package org.caisi.model;
 
 /**
- * @deprecated use ProfessionalSpecialist.java instead
+ * deprecated use ProfessionalSpecialist.java instead
 */		
 public class ProfessionalSpecialists extends BaseObject {
 	private Long specId;

@@ -614,7 +614,7 @@ public class SqlUtils {
 	}
 
 	/**
-	 * @deprecated use jpa native queries instead 
+	 * deprecated use jpa native queries instead 
 	 */
 	public static List<Integer> selectIntList(String sqlCommand) {
 		Connection c = null;
@@ -641,7 +641,7 @@ public class SqlUtils {
 	}
 
 	/**
-	 * @deprecated use jpa native queries instead 
+	 * deprecated use jpa native queries instead 
 	 */
 	public static List<String> selectStringList(String sqlCommand) {
 		Connection c = null;
