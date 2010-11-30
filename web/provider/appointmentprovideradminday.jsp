@@ -85,7 +85,7 @@ if (bMultisites) {
 <%
 	long loadPage = System.currentTimeMillis();
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
-    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    //String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 %>
 <security:oscarSec roleName="<%=roleName$%>" objectName="_appointment" rights="r" reverse="<%=true%>" >
 <%response.sendRedirect("../logout.jsp");%>
@@ -1283,7 +1283,6 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
           <a href=# onClick="goZoomView('<%=curProvider_no[nProvider]%>','<%=curProviderName[nProvider]%>')" onDblClick="goFilpView('<%=curProvider_no[nProvider]%>')" title="<bean:message key="provider.appointmentProviderAdminDay.zoomView"/>" >
           <!--a href="providercontrol.jsp?year=<%=strYear%>&month=<%=strMonth%>&day=<%=strDay%>&view=1&curProvider=<%=curProvider_no[nProvider]%>&curProviderName=<%=curProviderName[nProvider]%>&displaymode=day&dboperation=searchappointmentday" title="<bean:message key="provider.appointmentProviderAdminDay.zoomView"/>"-->
           <%=curProviderName[nProvider]%></a></b>
-          <%=bMultisites?curScheduleMultisite[nProvider]:""%>
       <% } %>
 
           <% if (!userAvail) {%>
@@ -1625,7 +1624,6 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
           <a href=# onClick="goZoomView('<%=curProvider_no[nProvider]%>','<%=curProviderName[nProvider]%>')" onDblClick="goFilpView('<%=curProvider_no[nProvider]%>')" title="<bean:message key="provider.appointmentProviderAdminDay.zoomView"/>" >
           <!--a href="providercontrol.jsp?year=<%=strYear%>&month=<%=strMonth%>&day=<%=strDay%>&view=1&curProvider=<%=curProvider_no[nProvider]%>&curProviderName=<%=curProviderName[nProvider]%>&displaymode=day&dboperation=searchappointmentday" title="<bean:message key="provider.appointmentProviderAdminDay.zoomView"/>"-->
           <%=curProviderName[nProvider]%></a></b>
-          <%=bMultisites?curScheduleMultisite[nProvider]:""%>
       <% } %>
 
           <% if(!userAvail) { %>
