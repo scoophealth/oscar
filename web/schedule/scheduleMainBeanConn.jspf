@@ -25,11 +25,13 @@
 --%>
 
 <%
+  String curProv_no = (String) session.getAttribute("user");
+
   //operation available to the client -- dboperation
   String [][] dbQueries=new String[][] {
     {"search_provider", "select provider_no, first_name, last_name from provider where status='1' and provider_type=? order by last_name" }, 
-    {"site_search_provider", "select provider_no, first_name, last_name from provider p where status='1' and provider_type=? and exists(select * from providersite s where p.provider_no = s.provider_no and s.site_id IN (SELECT site_id from providersite where provider_no=" + curProvider_no + ")) order by last_name" }, 
-    {"team_search_provider", "select provider_no, first_name, last_name from provider p where status='1' and provider_type=? and team in (select team from provider where provider_no=" + curProvider_no + ") and (not(team is null or team  = '') or provider_no=" + curProvider_no + ") order by last_name" },     
+    {"site_search_provider", "select provider_no, first_name, last_name from provider p where status='1' and provider_type=? and exists(select * from providersite s where p.provider_no = s.provider_no and s.site_id IN (SELECT site_id from providersite where provider_no=" + curProv_no + ")) order by last_name" }, 
+    {"team_search_provider", "select provider_no, first_name, last_name from provider p where status='1' and provider_type=? and team in (select team from provider where provider_no=" + curProv_no + ") and (not(team is null or team  = '') or provider_no=" + curProv_no + ") order by last_name" },     
     
 //    {"search_provider", "select provider_no, first_name, last_name from provider where  provider_type='doctor' order by ?" }, 
 
