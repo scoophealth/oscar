@@ -3,6 +3,27 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+
+<%
+    if(session.getAttribute("user") == null ) response.sendRedirect("../logout.jsp");
+    String curProvider_no = (String) session.getAttribute("user");
+
+    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    
+    boolean isSiteAccessPrivacy=false;
+    boolean isTeamAccessPrivacy=false; 
+%>
+
+<security:oscarSec objectName="_site_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false">
+	<%isSiteAccessPrivacy=true; %>
+</security:oscarSec>
+
+<security:oscarSec objectName="_team_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false">
+	<%isTeamAccessPrivacy =true; %>
+</security:oscarSec>
+
 <%
 GstReport gstReport = new GstReport(); 
 Properties props = new Properties();
@@ -21,7 +42,17 @@ BigDecimal earned;
 BigDecimal billed;
 BigDecimal gst = new BigDecimal(0);
 Vector list = gstReport.getGST(providerNo, startDate, endDate);
-List pList = (Vector)(new JdbcBillingPageUtil()).getCurProviderStr();
+
+List pList = new Vector();;
+if (isTeamAccessPrivacy) {
+	pList= (Vector)(new JdbcBillingPageUtil()).getCurTeamProviderStr(curProvider_no);
+}
+else if (isSiteAccessPrivacy) {
+	pList= (Vector)(new JdbcBillingPageUtil()).getCurSiteProviderStr(curProvider_no);
+}
+else {
+	pList= (Vector)(new JdbcBillingPageUtil()).getCurProviderStr();
+}
 %>
 <link rel="stylesheet" type="text/css" media="all"
 	href="../share/calendar/calendar.css" title="win2k-cold-1" />

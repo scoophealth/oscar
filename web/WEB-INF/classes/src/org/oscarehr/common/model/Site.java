@@ -44,8 +44,26 @@ public class Site implements java.io.Serializable {
 	private String city;
 	private String province;
 	private String postal;
+	private Integer providerIdFrom;
+	private Integer providerIdTo;
 	private byte status;
 	private Set<Provider> providers;
+
+	public Integer getProviderIdFrom() {
+		return providerIdFrom;
+	}
+
+	public void setProviderIdFrom(Integer providerIdFrom) {
+		this.providerIdFrom = providerIdFrom;
+	}
+
+	public Integer getProviderIdTo() {
+		return providerIdTo;
+	}
+
+	public void setProviderIdTo(Integer providerIdTo) {
+		this.providerIdTo = providerIdTo;
+	}
 
 	public Set<Provider> getProviders() {
 		return providers;
@@ -67,7 +85,7 @@ public class Site implements java.io.Serializable {
 
 	public Site(String name, String shortName, String phone, String fax,
 			String bgColor, String address, String city, String province,
-			String postal, byte status) {
+			String postal, byte status , int providerIdFrom, int providerIdTo) {
 		this.name = name;
 		this.shortName = shortName;
 		this.phone = phone;
@@ -78,6 +96,8 @@ public class Site implements java.io.Serializable {
 		this.province = province;
 		this.postal = postal;
 		this.status = status;
+		this.providerIdFrom = providerIdFrom;
+		this.providerIdTo = providerIdTo;
 	}
 
 	public Integer getSiteId() {

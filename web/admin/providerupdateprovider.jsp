@@ -36,10 +36,12 @@
  * Ontario, Canada 
  */
 -->
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 
 <%@page import="org.oscarehr.common.dao.SiteDao"%>
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@page import="org.oscarehr.common.model.Site"%>
+<%@page import="oscar.login.*"%>
 <%@page import="org.oscarehr.PMmodule.dao.ProviderDao"%><html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
@@ -54,6 +56,31 @@ function setfocus() {
 //-->
 </script>
 </head>
+
+<%
+    if(session.getAttribute("user") == null ) response.sendRedirect("../logout.jsp");
+    String curProvider_no = (String) session.getAttribute("user");
+
+    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+	List<Integer> siteIDs = new ArrayList<Integer>();
+    boolean isSiteAccessPrivacy=false;
+%>
+
+<security:oscarSec objectName="_site_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false">
+	<%
+	isSiteAccessPrivacy=true; 
+	DBHelp dbObj = new DBHelp();
+	String sqlString = "SELECT site_id from providersite where provider_no=" + curProvider_no;
+	ResultSet siters = dbObj.searchDBRecord(sqlString);
+
+	while (siters.next()) {
+		siteIDs.add(siters.getInt("site_id"));
+	}
+	
+	siters.close();
+	%>
+</security:oscarSec>
 
 <body background="../images/gray_bg.jpg" bgproperties="fixed"
 	onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
@@ -118,7 +145,8 @@ SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(a
 List<Site> sites = siteDao.getAllActiveSites(); 
 for (int i=0; i<sites.size(); i++) {
 %>		
-	<input type="checkbox" name="sites" value="<%= sites.get(i).getSiteId() %>" <%= psites.contains(sites.get(i))?"checked='checked'":"" %>><%= sites.get(i).getName() %><br />
+	<input type="checkbox" name="sites" value="<%= sites.get(i).getSiteId() %>" <%= psites.contains(sites.get(i))?"checked='checked'":"" %> <%=((!isSiteAccessPrivacy) || siteIDs.contains(sites.get(i).getSiteId()) ? "" : " disabled ") %>>
+	<%= sites.get(i).getName() %><br />
 <%
 }
 %>

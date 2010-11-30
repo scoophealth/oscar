@@ -26,11 +26,29 @@
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 
 <%
   if(session.getValue("user") == null)
     response.sendRedirect("../login.htm");
 %>
+
+<%
+    if(session.getAttribute("user") == null ) response.sendRedirect("../logout.jsp");
+    String curProvider_no = (String) session.getAttribute("user");
+
+    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    
+    boolean isSiteAccessPrivacy=false;
+%>
+
+<security:oscarSec objectName="_site_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false">
+	<%isSiteAccessPrivacy=true; %>
+</security:oscarSec>
+
+
+
 <%@ page import="java.util.*,java.sql.*"
 	errorPage="../provider/errorpage.jsp"%>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
@@ -78,7 +96,14 @@
    ResultSet rsgroup = null;
    boolean bNewNo=false;
    String oldNo="";
-   rsgroup = apptMainBean.queryResults("searchmygroupall");
+   if (isSiteAccessPrivacy)
+   {
+	   rsgroup = apptMainBean.queryResults(curProvider_no,"site_searchmygroupall");
+   }
+   else
+   {
+   		rsgroup = apptMainBean.queryResults("searchmygroupall");
+   }
    while (rsgroup.next()) { 
      if(!(rsgroup.getString("mygroup_no").equals(oldNo)) ) {
        bNewNo=bNewNo?false:true; oldNo=rsgroup.getString("mygroup_no");

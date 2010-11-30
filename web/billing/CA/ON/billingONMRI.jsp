@@ -17,16 +17,51 @@
  */
  -->
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%@ page import="oscar.login.DBHelp"%>
+
 <%
+	if(session.getAttribute("user") == null ) response.sendRedirect("../logout.jsp");
+	String curProvider_no = (String) session.getAttribute("user");
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    
     boolean isTeamBillingOnly=false;
+    boolean isSiteAccessPrivacy=false;
+    boolean isTeamAccessPrivacy=false; 
 %>
 <security:oscarSec objectName="_team_billing_only" roleName="<%=roleName$ %>" rights="r" reverse="false">
 <% isTeamBillingOnly=true; %>
 </security:oscarSec>
+<security:oscarSec objectName="_site_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false">
+	<%isSiteAccessPrivacy=true; %>
+</security:oscarSec>
+<security:oscarSec objectName="_team_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false">
+	<%isTeamAccessPrivacy=true; %>
+</security:oscarSec>
 
 
+<% 
+HashMap<String,String> providerMap = new HashMap<String,String>();
+//multisites function
+if (isSiteAccessPrivacy || isTeamAccessPrivacy) {
+	String sqlStr = "select provider_no from provider ";
+	if (isSiteAccessPrivacy) 
+		sqlStr = "select distinct p.provider_no from provider p inner join providersite s on s.provider_no = p.provider_no " 
+		 + " where s.site_id in (select site_id from providersite where provider_no = " + curProvider_no + ")";
+	if (isTeamAccessPrivacy) 
+		sqlStr = "select distinct p.provider_no from provider p where team in (select team from provider "
+				+ " where team is not null and team <> '' and provider_no = " + curProvider_no + ")";
+	DBHelp dbObj = new DBHelp();
+	ResultSet rs = dbObj.searchDBRecord(sqlStr);
+	while (rs.next()) {
+		providerMap.put(rs.getString("provider_no"),"true");
+	}
+	rs.close();
+}
+%>
+
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%>
 <%@ page import="java.util.*,java.sql.*,oscar.*,oscar.util.*,java.net.*"
 	errorPage="errorpage.jsp"%>
 <%@ page import="oscar.oscarBilling.ca.on.pageUtil.*"%>
@@ -171,7 +206,17 @@ obj.visibility=v; }
 		<td width="220">Select Provider</td>
 		<td width="254"><select name="provider">
 			<%
-			List providerStr = isTeamBillingOnly ? prep.getTeamProviderBillingStr(user_no) : prep.getProviderBillingStr();
+			List providerStr; 
+			
+			if (isTeamBillingOnly || isTeamAccessPrivacy) {
+				providerStr = prep.getTeamProviderBillingStr(user_no);
+			}
+			else if (isSiteAccessPrivacy) {
+				providerStr = prep.getSiteProviderBillingStr(user_no);
+			}
+			else {
+				providerStr = prep.getProviderBillingStr();
+			}
 			
 			
 			if(providerStr.size() == 1) {
@@ -248,6 +293,12 @@ obj.visibility=v; }
 					pro_name = proName.getProperty(pro_no);
 					String bgColor = count%2==0?yearColor:"ivory";
 					if(!updatedate.equals(createdate)) bgColor = "silver";
+					
+				    //multisites. skip record if not belong to same site/team
+				    if (isSiteAccessPrivacy || isTeamAccessPrivacy) {
+				    	if(providerMap.get(pro_no)== null)  continue;
+				    }
+
 %>
 
 	<tr bgcolor="<%=bgColor%>"

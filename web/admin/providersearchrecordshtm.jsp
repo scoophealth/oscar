@@ -26,6 +26,22 @@
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+
+<%
+    if(session.getAttribute("user") == null ) response.sendRedirect("../logout.jsp");
+    String curProvider_no = (String) session.getAttribute("user");
+
+    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    
+    boolean isSiteAccessPrivacy=false;
+%>
+
+<security:oscarSec objectName="_site_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false">
+	<%isSiteAccessPrivacy=true; %>
+</security:oscarSec>
+
 
 <html:html locale="true">
 <head>
@@ -101,8 +117,17 @@
 
 		<td valign="middle" rowspan="2" ALIGN="left"><input type="text"
 			NAME="keyword" SIZE="17" MAXLENGTH="100"> <INPUT
-			TYPE="hidden" NAME="orderby" VALUE="last_name"> <INPUT
-			TYPE="hidden" NAME="dboperation" VALUE="provider_search_titlename">
+			TYPE="hidden" NAME="orderby" VALUE="last_name"> 
+			<%if (isSiteAccessPrivacy)  {%>	 
+				<INPUT	TYPE="hidden" NAME="dboperation" VALUE="site_provider_search_titlename">
+			<%}
+			  else	  {
+			 %>
+				<INPUT	TYPE="hidden" NAME="dboperation" VALUE="provider_search_titlename">
+			 <%
+			  }
+			%>				
+			
 		<INPUT TYPE="hidden" NAME="limit1" VALUE="0"> <INPUT
 			TYPE="hidden" NAME="limit2" VALUE="10"> <INPUT TYPE="hidden"
 			NAME="displaymode" VALUE="Provider_Search"> <INPUT

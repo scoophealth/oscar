@@ -1,6 +1,8 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+
 <%@ page
 	import="java.util.*, oscar.oscarProvider.data.*"%>
 
@@ -32,6 +34,18 @@
   }
   suggestProviderNo = "000000".substring(suggestProviderNo.length()) + suggestProviderNo;
 %>
+
+<%
+    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    
+    boolean isSiteAccessPrivacy=false;
+%>
+
+<security:oscarSec objectName="_site_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false">
+	<%isSiteAccessPrivacy=true; %>
+</security:oscarSec>
+
 <!--
 /*
  *
@@ -143,7 +157,7 @@ function upCaseCtrl(ctrl) {
 		</td>
 		<td>
 <% SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
-List<Site> sites = siteDao.getAllActiveSites(); 
+List<Site> sites = ( isSiteAccessPrivacy ? siteDao.getActiveSitesByProviderNo(curProvider_no) : siteDao.getAllActiveSites()); 
 for (int i=0; i<sites.size(); i++) {
 %>		
 	<input type="checkbox" name="sites" value="<%= sites.get(i).getSiteId() %>"><%= sites.get(i).getName() %><br />

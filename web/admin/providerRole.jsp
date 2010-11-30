@@ -24,7 +24,7 @@
 <%@ page errorPage="../errorpage.jsp" %>
 <%@ page import="java.util.*" %>
 <%@ page import="java.sql.*" %>
-<%@ page import="oscar.util.*" %>
+<%@ page import="oscar.util.*,oscar.*" %>
 <%@ page import="oscar.login.*" %>
 <%@ page import="oscar.log.*" %>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
@@ -37,6 +37,14 @@ String curUser_no = (String)session.getAttribute("user");
 %>
 <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.userAdmin,_admin.torontoRfq" rights="r" reverse="<%=true%>" >
 <%response.sendRedirect("../logout.jsp");%>
+</security:oscarSec>
+
+<%    
+    boolean isSiteAccessPrivacy=false;
+%>
+
+<security:oscarSec objectName="_site_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false">
+	<%isSiteAccessPrivacy=true; %>
 </security:oscarSec>
 
 <%
@@ -70,7 +78,17 @@ if( newCaseManagement ) {
 
 // get role from database
 Vector vecRoleName = new Vector();
-String	sql   = "select * from secRole order by role_name";
+String	sql;
+String adminRoleName = "";
+if (isSiteAccessPrivacy) {
+	//multisites ,remove admin role from dropdown list
+	OscarProperties props = OscarProperties.getInstance();
+	adminRoleName = props.getProperty("multioffice.admin.role.name", "");
+	sql   = "select * from secRole where role_name <> '" + adminRoleName + "' order by role_name";
+}
+else {
+	sql   = "select * from secRole order by role_name";
+}
 ResultSet rs = dbObj.searchDBRecord(sql);
 while (rs.next()) {
 	vecRoleName.add(dbObj.getString(rs,"role_name"));
@@ -292,8 +310,23 @@ if(temp.length>1) {
 	lastName = keyword + "%";
 	firstName = "%";
 }
-String query = "select u.id, u.role_name, p.provider_no, p.first_name, p.last_name from provider p LEFT JOIN secUserRole u ON ";
-query += " p.provider_no=u.provider_no where p.last_name like '" + lastName + "' and p.first_name like '" + firstName + "' and p.status='1' order by p.first_name, p.last_name, u.role_name";
+
+
+String query; 
+
+if (isSiteAccessPrivacy){
+	//multisites: only select providers have same site with current user
+	query = "select u.id, u.role_name, p.provider_no, p.first_name, p.last_name from provider p LEFT JOIN secUserRole u ON ";
+	query += " p.provider_no=u.provider_no LEFT JOIN providersite ps ON p.provider_no = ps.provider_no ";
+	query += " where p.last_name like '" + lastName + "' and p.first_name like '" + firstName + "' and p.status='1' ";
+	query += " and not exists(select * from secUserRole scr where scr.provider_no =  p.provider_no and scr.role_name = '" + adminRoleName + "') " ;
+	query += " and ps.site_id in (select site_id from providersite where provider_no = " + curUser_no + ")  order by p.first_name, p.last_name, u.role_name";
+}
+else {
+	query = "select u.id, u.role_name, p.provider_no, p.first_name, p.last_name from provider p LEFT JOIN secUserRole u ON ";
+	query += " p.provider_no=u.provider_no where p.last_name like '" + lastName + "' and p.first_name like '" + firstName + "' and p.status='1' order by p.first_name, p.last_name, u.role_name";
+}
+//System.out.println(query);
 rs = dbObj.searchDBRecord(query);
 Vector<Properties> vec = new Vector<Properties>();
 while (rs.next()) {

@@ -279,6 +279,7 @@ CREATE TABLE consultationRequests (
   concurrentProblems text,
   urgency char(2) default NULL,
   patientWillBook tinyint(1),
+  site_name varchar(255) null,
   PRIMARY KEY  (requestId)
 ) ;
 
@@ -7989,6 +7990,8 @@ CREATE TABLE `site` (
   `province` varchar(25) default '',
   `postal` varchar(10) default '',
   `status` tinyint(4) NOT NULL default '0',
+  `providerId_from` int null,
+  `providerId_to` int null,
   PRIMARY KEY  (`site_id`),
   UNIQUE KEY `unique_name` (`name`),
   UNIQUE KEY `unique_shortname` (`short_name`)

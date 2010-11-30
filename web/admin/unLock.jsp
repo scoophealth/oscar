@@ -37,6 +37,15 @@ String curUser_no = (String)session.getAttribute("user");
 </security:oscarSec>
 
 <%
+    boolean isSiteAccessPrivacy=false;
+%>
+
+<security:oscarSec objectName="_site_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false">
+	<%isSiteAccessPrivacy=true; %>
+</security:oscarSec>
+
+
+<%
   String ip = request.getRemoteAddr();
   String msg = "Unlock";
   //LoginList llist = null;
@@ -54,6 +63,25 @@ String curUser_no = (String)session.getAttribute("user");
       msg = "The login account " + userName + " was unlocked.";
     }
   } 
+  
+  //multi-office limit
+  if (isSiteAccessPrivacy && vec.size() > 0) {
+	  DBHelp dbObj = new DBHelp(); 
+	  String sqlString = "select user_name from security p inner join providersite s ON p.provider_no = s.provider_no WHERE s.site_id IN (SELECT site_id from providersite where provider_no=" + curUser_no + ")";
+	  
+	  ResultSet rs = dbObj.searchDBRecord(sqlString);
+	  List<String> userList = new ArrayList<String>();
+	  if (rs.next()) {
+		  userList.add(rs.getString(1));
+	  }
+	  
+	  for(int i=0; i<vec.size(); i++) {
+		  if (!userList.contains((String)vec.get(i))) {
+			  vec.remove((String)vec.get(i));
+		  }
+	  }
+  }
+  
 %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>

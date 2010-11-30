@@ -61,7 +61,39 @@ public class JdbcBillingPageUtil {
 
 		return retval;
 	}
+	
+	public List getCurSiteProviderStr(String provider_no) {
+		List retval = new Vector();
+		String sql = "select provider_no,last_name,first_name,ohip_no,comments from provider p "
+				+ "where status='1' and ohip_no!='' " +
+						"and exists(select * from providersite s where p.provider_no = s.provider_no and s.site_id IN (SELECT site_id from providersite where provider_no="+provider_no+"))" +
+						" order by last_name, first_name";
+		String proid = "";
+		String proFirst = "";
+		String proLast = "";
+		String proOHIP = "";
+		String specialty_code;
+		String billinggroup_no;
+		ResultSet rslocal = dbObj.searchDBRecord(sql);
+		try {
+			while (rslocal.next()) {
+				proid = rslocal.getString("provider_no");
+				proLast = rslocal.getString("last_name");
+				proFirst = rslocal.getString("first_name");
+				proOHIP = rslocal.getString("ohip_no");
+				billinggroup_no = getXMLStringWithDefault(rslocal.getString("comments"), "xml_p_billinggroup_no",
+						"0000");
+				specialty_code = getXMLStringWithDefault(rslocal.getString("comments"), "xml_p_specialty_code", "00");
+				retval.add(proid + "|" + proLast + "|" + proFirst + "|" + proOHIP + "|" + billinggroup_no + "|"
+						+ specialty_code);
+			}
+		} catch (SQLException e) {
+			_logger.error("getCurProviderStr(sql = " + sql + ")");
+		}
 
+		return retval;
+	}
+	
 	public List getCurProviderStr() {
 		List retval = new Vector();
 		String sql = "select provider_no,last_name,first_name,ohip_no,comments from provider "

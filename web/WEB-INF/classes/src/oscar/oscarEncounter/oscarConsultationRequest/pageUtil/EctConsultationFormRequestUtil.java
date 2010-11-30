@@ -35,6 +35,8 @@ import oscar.util.UtilDateUtilities;
 
 public class EctConsultationFormRequestUtil {
 
+	private boolean bMultisites=org.oscarehr.common.IsPropertiesOn.isMultisitesEnable();
+	
     public boolean estPatient(String demo) {
 
         demoNo = demo;
@@ -117,6 +119,53 @@ public class EctConsultationFormRequestUtil {
         }
         return verdict;
     }
+    
+    public boolean estTeamsBySite(String providerNo) {
+
+        boolean verdict = true;
+        teamVec = new Vector();
+        try {
+            String sql = "select distinct team from provider p inner join providersite s on s.provider_no = p.provider_no " +
+            		" where s.site_id in (select site_id from providersite where provider_no = '" + providerNo + "') order by team ";
+            ResultSet rs = DBHandler.GetSQL(sql);
+
+            while (rs.next()) {
+                String teamName = oscar.Misc.getString(rs, "team");
+                if (!teamName.equals("")) {
+                    teamVec.add(teamName);
+                }
+            }
+            rs.close();
+            
+        } catch (SQLException e) {
+            MiscUtils.getLogger().error("Error", e);
+            verdict = false;
+        }
+        return verdict;
+    }
+        
+    public boolean estTeamsByTeam(String providerNo) {
+
+        boolean verdict = true;
+        teamVec = new Vector();
+        try {
+            String sql = "select distinct team from provider where provider_no = '" + providerNo + "' order by team ";
+            ResultSet rs = DBHandler.GetSQL(sql);
+
+            while (rs.next()) {
+                String teamName = oscar.Misc.getString(rs, "team");
+                if (!teamName.equals("")) {
+                    teamVec.add(teamName);
+                }
+            }
+            rs.close();
+            
+        } catch (SQLException e) {
+            MiscUtils.getLogger().error("Error", e);
+            verdict = false;
+        }
+        return verdict;
+    }    
 
     public boolean estRequestFromId(String id) {
 
@@ -148,6 +197,9 @@ public class EctConsultationFormRequestUtil {
                 }
                 estPatient(oscar.Misc.getString(rs, "demographicNo"));
                 String date = oscar.Misc.getString(rs, "appointmentDate");
+                if (bMultisites) {
+                	siteName = oscar.Misc.getString(rs, "site_name");
+                }
                 int fir = date.indexOf('-');
                 int las = date.lastIndexOf('-');
                 appointmentYear = date.substring(0, fir);
@@ -357,4 +409,5 @@ public class EctConsultationFormRequestUtil {
     public String demoNo;
     public String pwb;
     public String mrp = "";
+    public String siteName;
 }

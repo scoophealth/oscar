@@ -17,21 +17,33 @@
  * Yi Li
  */
  -->
- 
+ <%! boolean bMultisites = org.oscarehr.common.IsPropertiesOn.isMultisitesEnable(); %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%@ page import="java.math.*, java.util.*, oscar.util.*"%>
 <%
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
     boolean isTeamBillingOnly=false;
+    boolean isSiteAccessPrivacy=false;
+    boolean isTeamAccessPrivacy=false; 
 %>
 <security:oscarSec objectName="_team_billing_only" roleName="<%=roleName$ %>" rights="r" reverse="false">
 <% isTeamBillingOnly=true; %>
 </security:oscarSec>
+<security:oscarSec objectName="_site_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false">
+	<%isSiteAccessPrivacy=true; %>
+</security:oscarSec>
+<security:oscarSec objectName="_team_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false">
+	<%isTeamAccessPrivacy=true; %>
+</security:oscarSec>
+
+
 
 <% 
 if(session.getAttribute("user") == null) response.sendRedirect("../../../logout.jsp");
 String user_no = (String) session.getAttribute("user");
 %>
+
 
 <%@ page
 	import="java.util.*, java.sql.*, oscar.*, oscar.util.*, java.net.*"
@@ -121,8 +133,12 @@ if(request.getParameter("submit")!=null && request.getParameter("submit").equals
 	//bhObj.setBatch_date(rs.getString("batch_date"));
 	
 	dbObj.setBatchHeaderObj(bhObj);
-	dbObj.createBillingFileStr("0", "(status='O' or status='W' or status='I')");
-
+	if (bMultisites) {
+		dbObj.createSiteBillingFileStr("0", "(status='O' or status='W' or status='I')");
+	}
+	else {
+		dbObj.createBillingFileStr("0", "(status='O' or status='W' or status='I')");
+	}
 	htmlValue = "<font color='red'>" + errorMsg + "</font>" + dbObj.getHtmlValue();
 	request.setAttribute("html",htmlValue);
 }
@@ -201,8 +217,17 @@ String xml_appointment_date = request.getParameter("xml_appointment_date")==null
 		BillingReviewPrep prep = new BillingReviewPrep();
 			
 			
-		List providerStr = isTeamBillingOnly? prep.getTeamProviderBillingStr(user_no) : prep.getProviderBillingStr();
-		
+		List providerStr; 
+			
+		if (isTeamBillingOnly || isTeamAccessPrivacy) {
+			providerStr = prep.getTeamProviderBillingStr(user_no);
+		}
+		else if (isSiteAccessPrivacy) {
+			providerStr = prep.getSiteProviderBillingStr(user_no);
+		}
+		else {
+			providerStr = prep.getProviderBillingStr();
+		}
 		
 		for (int i = 0; i < providerStr.size(); i++) {
 			String temp[] = ((String) providerStr.get(i)).split("\\|");

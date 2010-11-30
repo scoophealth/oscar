@@ -49,5 +49,8 @@ public class IsPropertiesOn {
 	public static boolean isMultisitesEnable() {
 		return propertiesOn("multisites");
 	}
-	
+
+	public static boolean isProviderFormalizeEnable() {
+		return propertiesOn("multioffice.formalize.provider.id");
+	}
 }

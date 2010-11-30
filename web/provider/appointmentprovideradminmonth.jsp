@@ -28,21 +28,21 @@
 private	List<Site> sites; 
 private boolean bMultisites = org.oscarehr.common.IsPropertiesOn.isMultisitesEnable();
 
+private List<Site> curUserSites = new ArrayList<Site>();
+private String [] curScheduleMultisite;
+private List<String> siteProviderNos = new ArrayList<String>();
+private List<String> siteGroups = new ArrayList<String>();
+private String selectedSite = null;
+private HashMap<String,String> siteBgColor = new HashMap<String,String>();
+private HashMap<String,String> CurrentSiteMap = new HashMap<String,String>();
 private String getSiteHTML(String reason, List<Site> sites) {
 	 if (reason==null||reason.trim().length()==0) 
 		 return "";
 	 else 
 		 return "<span style='background-color:"+ApptUtil.getColorFromLocation(sites, reason)+"'>"+ApptUtil.getShortNameFromLocation(sites, reason)+"</span>";	
 }
-%>
-<%
-if (bMultisites) {
-	SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
-	sites = siteDao.getAllSites();
-}
 //multisite ends =====================
 %>
-
 
 <!--oscarMessenger Code block -->
 <%@ taglib uri="/WEB-INF/msg-tag.tld" prefix="oscarmessage"%>
@@ -64,7 +64,7 @@ if (bMultisites) {
   curUser_no = (String) session.getAttribute("user");
   userfirstname = (String) session.getAttribute("userfirstname");
   userlastname = (String) session.getAttribute("userlastname");
-  mygroupno = (String) session.getAttribute("groupno");  
+  mygroupno = ((String) request.getParameter("mygroup_no") == null ? (String) session.getAttribute("groupno") : (String) request.getParameter("mygroup_no"));  
 if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
   n_t_w_w = (String) session.getAttribute("newticklerwarningwindow");
 }
@@ -78,10 +78,93 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
   int endHour=Integer.parseInt(((String) session.getAttribute("endhour")).trim());
   int everyMin=Integer.parseInt(((String) session.getAttribute("everymin")).trim());
   int view=0;
-  String providerview = request.getParameter("providerview")==null?(mygroupno.equals(".default")?curProvider_no:("_grp_"+mygroupno)):request.getParameter("providerview") ;
+  
+  boolean isMygroupnoNumber = true;
+  
+  if (mygroupno!=null) {
+      try {
+          Integer.parseInt(mygroupno);
+      }
+      catch (NumberFormatException ex) {
+    	  isMygroupnoNumber = false;
+      }	  
+  }
+  else {
+	  isMygroupnoNumber = false;
+  }
+  
+  String providerview;
+  
+  if (isMygroupnoNumber) {
+	  providerview = request.getParameter("providerview")==null?(mygroupno.equals(".default")?curProvider_no:mygroupno):request.getParameter("providerview") ;
+  }
+  else {
+	  providerview = request.getParameter("providerview")==null?(mygroupno.equals(".default")?curProvider_no:("_grp_"+mygroupno)):request.getParameter("providerview") ;
+  }
   //String providerview = request.getParameter("providerview")==null?curProvider_no:request.getParameter("providerview") ;
   int NameMaxLen = 15;
 %>
+<%
+//multisite starts =====================
+	boolean isSiteAccessPrivacy=false;
+	boolean isTeamAccessPrivacy=false; 
+%>
+<security:oscarSec objectName="_site_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false">
+	<%isSiteAccessPrivacy=true; %>
+</security:oscarSec>
+<security:oscarSec objectName="_team_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false">
+	<%isTeamAccessPrivacy=true; %>
+</security:oscarSec>
+
+<% 
+if (bMultisites) {
+	SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
+	sites = siteDao.getAllActiveSites(); 
+	
+	String requestSite = (String) request.getParameter("site") ;
+	if (requestSite!=null) 
+	{
+		requestSite = (requestSite.equals("none") ? null : requestSite);
+		session.setAttribute("site_selected", requestSite );
+	}
+	selectedSite = (requestSite == null ? (String)session.getAttribute("site_selected") : requestSite) ;
+	
+	System.out.println("selectedSite:" + selectedSite + "  providerview: " + providerview + " mygroupno: " + mygroupno);
+
+	if (isSiteAccessPrivacy || isTeamAccessPrivacy) {
+		//user has Access Privacy, set user provider and group list
+		String siteManagerProviderNo = (String) session.getAttribute("user");
+		curUserSites = siteDao.getActiveSitesByProviderNo(siteManagerProviderNo);
+		if (selectedSite==null) {
+			siteProviderNos = siteDao.getProviderNoBySiteManagerProviderNo(siteManagerProviderNo);
+			siteGroups = siteDao.getGroupBySiteManagerProviderNo(siteManagerProviderNo);
+		}
+	}
+	else {
+		//get all active site as user site list
+		curUserSites = sites;
+	}
+	
+	for (Site s : curUserSites) {
+		CurrentSiteMap.put(s.getName(),"Y");
+	}
+	// a site has been seleceted
+	if (selectedSite != null) {
+		//get site provider list
+		siteProviderNos = siteDao.getProviderNoBySiteLocation(selectedSite);
+		siteGroups = siteDao.getGroupBySiteLocation(selectedSite);
+	}
+	
+	//get all sites bgColors
+	for (Site st : sites) {
+		siteBgColor.put(st.getName(),st.getBgColor());
+	}
+	
+
+}
+//multisite ends =======================
+%>
+
 <%@ page
 	import="java.lang.*, java.util.*, java.text.*,java.net.*,java.sql.*,oscar.*"
 	errorPage="errorpage.jsp"%>
@@ -475,6 +558,39 @@ function refreshTabAlerts(id) {
 
 
 <% boolean isTeamOnly=false; %>
+
+	<!--  multi-site , add site dropdown list -->
+ <%if (bMultisites) { %>		
+	   <script>
+			function changeSite(sel) {
+				sel.style.backgroundColor=sel.options[sel.selectedIndex].style.backgroundColor;
+				var siteName = sel.options[sel.selectedIndex].value;
+				var newGroupNo = "<%=(mygroupno == null ? "all" : mygroupno)%>";
+				var providerview = "<%=providerview%>" ;
+				if(providerview.indexOf("_grp_")!=-1 ) 
+        		{				
+        		
+        			window.open("providercontrol.jsp?year=<%=year%>&month=<%=month%>&day=1&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=month&dboperation=searchappointmentmonth" + "&site=" + siteName +"&mygroup_no="+newGroupNo,"_self");	
+	            }
+	            else
+		        {
+					window.open("providercontrol.jsp?year=<%=year%>&month=<%=month%>&day=1&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=month&dboperation=searchappointmentmonth" + "&site=" + siteName + "&providerview=" + providerview,"_self");
+		        }
+			}
+      </script>
+      
+    	<select id="site" name="site" onchange="changeSite(this)" style="background-color: <%=( selectedSite == null || siteBgColor.get(selectedSite) == null ? "#FFFFFF" : siteBgColor.get(selectedSite))%>">
+    		<option value="none" style="background-color:white">---all clinic---</option>
+    	<%
+    	for (int i=0; i<curUserSites.size(); i++) {
+    	%>
+    		<option value="<%= curUserSites.get(i).getName() %>" style="background-color:<%= curUserSites.get(i).getBgColor() %>" 
+    				<%=(curUserSites.get(i).getName().equals(selectedSite)) ? " selected " : "" %> >
+    			<%= curUserSites.get(i).getName() %>
+    		</option>
+    	<% } %>
+    	</select>
+<%} %>    	
 				<select name="provider_no" onChange="selectprovider(this)">
 					<option value="all" <%=providerview.equals("all")?"selected":""%>><bean:message
 						key="provider.appointmentprovideradminmonth.formAllProviders" /></option>
@@ -499,20 +615,24 @@ function refreshTabAlerts(id) {
 <%
 	resultList = oscarSuperManager.find("providerDao", "searchmygroupno", new Object[] {});
 	for (Map group : resultList) {
+		if (!bMultisites || siteGroups == null || siteGroups.size() == 0 || siteGroups.contains(group.get("mygroup_no"))) {  		
 %>
 					<option value="<%="_grp_"+group.get("mygroup_no")%>"
-						<%=mygroupno.equals(group.get("mygroup_no"))?"selected":""%>><bean:message
+						<%=(providerview.indexOf("_grp_") != -1 && mygroupno.equals(group.get("mygroup_no")))?"selected":""%>><bean:message
 						key="provider.appointmentprovideradminmonth.formGRP" />: <%=group.get("mygroup_no")%></option>
 <%
+		}
 	}
 
 	resultList = oscarSuperManager.find("providerDao", "searchprovider", new Object[] {});
 	for (Map provider : resultList) {
+		if (!bMultisites || siteProviderNos  == null || siteProviderNos.size() == 0 || siteProviderNos.contains(provider.get("provider_no"))) { 
 		providerNameBean.setDef(String.valueOf(provider.get("provider_no")), provider.get("last_name")+","+provider.get("first_name"));
 %>
 					<option value="<%=provider.get("provider_no")%>"
 						<%=providerview.equals(provider.get("provider_no"))?"selected":""%>><%=providerNameBean.getShortDef(String.valueOf(provider.get("provider_no")), "", NameMaxLen)%></option>
 <%
+		}
 	}
 %>
 </security:oscarSec>
@@ -567,9 +687,14 @@ function refreshTabAlerts(id) {
    		
    	} else
     if(providerview.equals("all") || providerview.startsWith("_grp_",0)) {
-      param[0] = year+"-"+month+"-"+"1";
-      param[1] = cal.get(Calendar.YEAR)+"-"+(cal.get(Calendar.MONTH)+1)+"-"+"1";
-      resultList = oscarSuperManager.find("providerDao", "search_scheduledate_datep", param);
+	      param[0] = year+"-"+month+"-"+"1";
+	      param[1] = cal.get(Calendar.YEAR)+"-"+(cal.get(Calendar.MONTH)+1)+"-"+"1";
+		  if (selectedSite == null) {  
+		      resultList = oscarSuperManager.find("providerDao", "search_scheduledate_datep", param);
+	    	}
+	    	else	{
+	    	  resultList = oscarSuperManager.find("providerDao", "site_search_scheduledate_datep", new String[]{param[0], param[1], selectedSite});	
+	      }
     } else {
       String[] param1 = new String[3];
       param1[0] = year+"-"+month+"-"+"1";
@@ -611,6 +736,7 @@ function refreshTabAlerts(id) {
       if(String.valueOf(date.get("available")).equals("0")) continue;
     }
     if(isTeamOnly || !providerview.startsWith("_grp_",0) || myGrpBean.containsKey(String.valueOf(date.get("provider_no"))) ) {
+    	if (bMultisites && CurrentSiteMap.get((String)date.get("reason")) != null && ( selectedSite == null || (selectedSite != null && selectedSite.equals((String)date.get("reason"))))) {
 %> <br>
 <% if (bMultisites) { out.print(getSiteHTML((String)date.get("reason"), sites)); } %>
 					<span class='datepname'>&nbsp;<%=providerNameBean.getShortDef(String.valueOf(date.get("provider_no")),"",NameMaxLen )%></span><span
@@ -618,7 +744,7 @@ function refreshTabAlerts(id) {
 <% if (!bMultisites) { %>						
 						<span class='datepreason'><%=date.get("reason") %></span>
 <% } %>
-<%  }  } %>
+<%  } } } %>
 					</a></font></td>
 					<%
                   }

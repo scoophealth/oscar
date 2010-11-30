@@ -431,6 +431,34 @@ public class JdbcBillingRAImpl {
 		return ret;
 	}
 	
+	public List getSiteRahd(String status, String provider_no) {
+		List ret = new Vector();
+		String sql = "select r.raheader_no, r.totalamount, r.status, r.paymentdate, r.payable, r.records, r.claims, r.readdate "
+				+ "from raheader r, radetail t, provider p where r.raheader_no=t.raheader_no and p.ohip_no=t.providerohip_no and r.status <> '" + status + "' "
+				+ " and exists(select * from providersite s where p.provider_no = s.provider_no and s.site_id IN (SELECT site_id from providersite where provider_no='"+provider_no+"'))"
+				+ " group by r.raheader_no"
+				+ " order by r.paymentdate desc, r.readdate desc";
+		ResultSet rsdemo = dbObj.searchDBRecord(sql);
+		try {
+			while (rsdemo.next()) {
+				Properties prop = new Properties();
+				prop.setProperty("raheader_no", rsdemo.getString("raheader_no"));
+				prop.setProperty("readdate", rsdemo.getString("readdate"));
+				prop.setProperty("paymentdate", rsdemo.getString("paymentdate"));
+				prop.setProperty("payable", rsdemo.getString("payable"));
+				prop.setProperty("claims", rsdemo.getString("claims"));
+				prop.setProperty("records", rsdemo.getString("records"));
+				prop.setProperty("totalamount", rsdemo.getString("totalamount"));
+				prop.setProperty("status", rsdemo.getString("status"));
+				ret.add(prop);
+			}
+			rsdemo.close();
+		} catch (SQLException e) {
+			_logger.error("getAllRahd(sql = " + sql + ")");
+		}
+		return ret;
+	}	
+	
 	private String getPointNum(String strNum) {
 		String ret = null;
 		if (strNum.length() > 2) {

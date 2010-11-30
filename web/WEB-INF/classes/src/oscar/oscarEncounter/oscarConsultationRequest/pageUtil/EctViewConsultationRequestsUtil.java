@@ -62,6 +62,8 @@ public class EctViewConsultationRequestsUtil {
       return estConsultationVecByTeam(team,showCompleted,null,null,null,null,null);
    }  
             
+   private boolean bMultisites=org.oscarehr.common.IsPropertiesOn.isMultisitesEnable();
+   
    public boolean estConsultationVecByTeam(String team,boolean showCompleted,Date startDate, Date endDate,String orderby,String desc,String searchDate) {       
       ids = new Vector<String>();
       status = new Vector<String>();
@@ -73,6 +75,7 @@ public class EctViewConsultationRequestsUtil {
       urgency = new Vector<String>();
       date = new Vector<String>();
       demographicNo = new Vector<String>();
+      siteName = new Vector<String>();
       this.patientWillBook = new Vector<String>();
       apptDate = new Vector<String>();
       followUpDate = new Vector<String>();
@@ -109,6 +112,7 @@ public class EctViewConsultationRequestsUtil {
               service.add(services.getServiceDesc());
               vSpecialist.add(specialist.getLastName() + ", " + specialist.getFirstName());
               urgency.add(consult.getUrgency());
+			  siteName.add(consult.getSiteName());
               teams.add(consult.getSendTo());
               cal.setTime(consult.getAppointmentDate());
               date1 = cal.getTime();

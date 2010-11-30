@@ -26,12 +26,70 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%@page import="oscar.oscarEncounter.pageUtil.*,java.text.*,java.util.*"%>
+<%@ page import="oscar.login.DBHelp"%>
+<%@ page import="java.sql.ResultSet"%>
+<%@page import="org.oscarehr.common.dao.SiteDao"%>
 <%@page import="org.oscarehr.common.dao.UserPropertyDAO, org.oscarehr.common.model.UserProperty, org.springframework.web.context.support.WebApplicationContextUtils" %>
+<%@page import="org.oscarehr.common.model.Site"%>
 
 <%
-    if(session.getAttribute("user") == null) response.sendRedirect("../../logout.jsp");
-    //EctSessionBean bean = (EctSessionBean) request.getSession().getAttribute("EctSessionBean");
+    if(session.getAttribute("user") == null ) response.sendRedirect("../../logout.jsp");
+    String curProvider_no = (String) session.getAttribute("user");
+
+    if(session.getAttribute("userrole") == null )  response.sendRedirect("../../logout.jsp");
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    
+    boolean isSiteAccessPrivacy=false;
+    boolean isTeamAccessPrivacy=false; 
+    boolean bMultisites=org.oscarehr.common.IsPropertiesOn.isMultisitesEnable();
+    List<String> mgrSite = new ArrayList<String>();
+%>
+<security:oscarSec objectName="_site_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false">
+	<%isSiteAccessPrivacy=true; %>
+</security:oscarSec>
+<security:oscarSec objectName="_team_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false">
+	<%isTeamAccessPrivacy=true; %>
+</security:oscarSec>
+
+<% 
+HashMap<String,String> providerMap = new HashMap<String,String>();
+//multisites function
+if (isSiteAccessPrivacy || isTeamAccessPrivacy) {
+	String sqlStr = "select provider_no from provider ";
+	if (isSiteAccessPrivacy) 
+		sqlStr = "select distinct p.provider_no from provider p inner join providersite s on s.provider_no = p.provider_no " 
+		 + " where s.site_id in (select site_id from providersite where provider_no = " + curProvider_no + ")";
+	if (isTeamAccessPrivacy) 
+		sqlStr = "select distinct p.provider_no from provider p where team in (select team from provider "
+				+ " where team is not null and team <> '' and provider_no = " + curProvider_no + ")";
+	DBHelp dbObj = new DBHelp();
+	ResultSet rs = dbObj.searchDBRecord(sqlStr);
+	while (rs.next()) {
+		providerMap.put(rs.getString("provider_no"),"true");
+	}
+	rs.close();
+}
+%>
+
+<%
+	//multi-site office , save all bgcolor to Hashmap
+	HashMap<String,String> siteBgColor = new HashMap<String,String>();
+	HashMap<String,String> siteShortName = new HashMap<String,String>();
+	if (bMultisites) {
+    	SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
+    	
+    	List<Site> sites = siteDao.getAllSites();
+    	for (Site st : sites) {
+    		siteBgColor.put(st.getName(),st.getBgColor());
+    		siteShortName.put(st.getName(),st.getShortName());
+    	}
+    	List<Site> providerSites = siteDao.getActiveSitesByProviderNo(curProvider_no);
+    	for (Site st : providerSites) {
+    		mgrSite.add(st.getName());
+    	}
+	}
 %>
 
 <html:html locale="true">
@@ -57,7 +115,16 @@
   
   oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestUtil consultUtil;
   consultUtil = new  oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestUtil();
-  consultUtil.estTeams();
+  
+  if (isTeamAccessPrivacy) {
+	  consultUtil.estTeamsByTeam(curProvider_no);
+  }
+  else if (isSiteAccessPrivacy) {
+	  consultUtil.estTeamsBySite(curProvider_no);
+  }
+  else {
+  	consultUtil.estTeams();
+  }
   
 String protocol = "http";
 if (request.isSecure()){
@@ -284,6 +351,13 @@ function setOrder(val){
                                        <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgFollowUpDate"/>
                                    </a>
                                 </th>
+ 			    <% if (bMultisites) { %>                                
+                                <th align="left" class="VCRheads">
+                                   <a href=# onclick="setOrder('10'); return false;">
+                                   <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgSiteName"/>
+                                   </a>
+                                </th>            
+                            <%} %>                                   
                             </tr>
                         <%                                                        
                             oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctViewConsultationRequestsUtil theRequests;                            
@@ -301,6 +375,11 @@ function setOrder(val){
                             }
 
                             for (int i = 0; i < theRequests.ids.size(); i++){
+                             //multisites. skip record if not belong to same site/team
+                             if (isSiteAccessPrivacy || isTeamAccessPrivacy) {
+                             	if(providerMap.get((String) theRequests.providerNo.elementAt(i))== null)  continue;
+                             }	
+                            	
                             String id      = (String) theRequests.ids.elementAt(i);
                             String status  = (String) theRequests.status.elementAt(i);
                             String patient = (String) theRequests.patient.elementAt(i);
@@ -314,11 +393,18 @@ function setOrder(val){
                             String sendTo = theRequests.teams.elementAt(i);
                             String specialist = theRequests.vSpecialist.elementAt(i);
                             String followUpDate = theRequests.followUpDate.elementAt(i);
-                            
+                            String siteName = ""; 
+                            if (bMultisites) {
+                            	siteName = (String) theRequests.siteName.elementAt(i);
+                            }
                             if(status.equals("1") && dateGreaterThan(date, Calendar.WEEK_OF_YEAR, -1)){
                                 tickerList.add(demo);
                             }
-
+                            
+                            //multisites. skip record if not belong to same site
+                            if (isSiteAccessPrivacy || isTeamAccessPrivacy) {
+                             	if(!mgrSite.contains(siteName))  continue;
+                             }	
                             overdue = false;
                                                                                                                 
                             if (timeperiod != null){ 
@@ -408,6 +494,11 @@ function setOrder(val){
                                     </a>
 
                                 </td>
+                                <% if (bMultisites) { %>   
+                                <td bgcolor="<%=(siteBgColor.get(siteName)==null || siteBgColor.get(siteName).length()== 0 ? "#FFFFFF" : siteBgColor.get(siteName))%>">
+                                    <%=siteShortName.get(siteName)%>
+                                </td>                      
+                                <%} %>          
                             </tr>
                         <%}%>
                         </table>

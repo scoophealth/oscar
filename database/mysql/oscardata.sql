@@ -1727,3 +1727,29 @@ INSERT INTO `country_codes` VALUES (1,'AFGHANISTAN','AF','en'),(2,'LAND ISLANDS'
 INSERT INTO `appointment_status` VALUES (1,'t','To Do','#FDFEC7','starbill.gif',1,0),(2,'T','Daysheet Printed','#FDFEC7','todo.gif',1,0),(3,'H','Here','#00ee00','here.gif',1,1),(4,'P','Picked','#FFBBFF','picked.gif',1,1),(5,'E','Empty Room','#FFFF33','empty.gif',1,1),(11,'N','No Show','#cccccc','noshow.gif',1,0),(12,'C','Cancelled','#999999','cancel.gif',1,0),(13,'B','Billed','#3ea4e1','billed.gif',1,0),(6,'a','Customized 1','#897DF8','1.gif',1,1),(7,'b','Customized 2','#897DF8','2.gif',1,1),(8,'c','Customized 3','#897DF8','3.gif',0,1),(9,'d','Customized 4','#897DF8','4.gif',1,1),(10,'e','Customized 5','#897DF8','5.gif',1,1);
 
 insert into gstControl set gstPercent = 5;
+
+-- create security objects for multi-office control
+insert into `secObjectName` 
+	(objectName, `description`, orgapplicable)
+	values
+	('_team_access_privacy', 'restrict access to only the same team of a provider', 0);
+
+insert into `secObjectName` 
+	(objectName, `description`, orgapplicable)
+	values
+	('_site_access_privacy', 'restrict access to only the assigned sites of a provider', 0);
+
+-- create new roles for multi-office control
+insert into `secRole` 
+	(role_no, role_name, `description`)
+SELECT 
+	 (SELECT MAX(role_no) from `secRole`)  +  1 AS role_no
+	,'Site Manager' AS role_name
+	,'Site Manager' AS `description`;
+
+insert into `secRole` 
+	(role_no, role_name, `description`)
+SELECT 
+	 (SELECT MAX(role_no) from `secRole`)  +  1 AS role_no
+	,'Partner Doctor' AS role_name
+	,'Partner Doctor' AS `description`;

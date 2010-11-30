@@ -27,9 +27,20 @@
 --%>
 
 <%
+    if(session.getAttribute("user") == null ) response.sendRedirect("../logout.jsp");
+    String curProvider_no = (String) session.getAttribute("user");
+
+%>
+
+<%
   String [][] dbQueries=new String[][] {
     {"search_provider", "select provider_no, last_name, first_name from provider where provider_type='doctor' and status='1' order by last_name"}, 
-    {"search_group", "select mygroup_no from mygroup group by mygroup_no order by mygroup_no"}, 
+    {"site_search_provider", "select provider_no, first_name, last_name from provider p where status='1' and exists(select * from providersite s where p.provider_no = s.provider_no and s.site_id IN (SELECT site_id from providersite where provider_no=" + curProvider_no + ")) order by last_name" }, 
+    {"team_search_provider", "select provider_no, first_name, last_name from provider p where status='1' and team in (select team from provider where provider_no=" + curProvider_no + ") and (not(team is null or team  = '') or provider_no=" + curProvider_no + ") order by last_name" },     
+    
+    {"search_group", "select mygroup_no from mygroup group by mygroup_no order by mygroup_no"},
+    {"site_search_group", "select mygroup_no from mygroup g WHERE exists(SELECT * FROM providersite ps where ps.provider_no = g.provider_no and site_id in (select site_id from providersite where provider_no = 5544 )) group by mygroup_no order by mygroup_no"},
+    
     {"drop_reporttemp", "DROP TABLE ?" }, 
     {"create_reporttemp", "create table reporttemp ( edb date not null,last_name varchar(30) not null,first_name varchar(30) not null,family_doctor varchar(20) not null,address varchar(60),phone varchar(20))" }, 
     {"delete_reporttemp", "delete from reporttemp where demographic_no like ? " }, 

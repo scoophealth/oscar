@@ -3,6 +3,11 @@
 <%@ page
 	import="java.sql.*, oscar.login.*, java.util.*,oscar.*,oscar.oscarDB.*,oscar.util.SqlUtils,oscar.oscarProvider.data.ProviderBillCenter"
 	errorPage="errorpage.jsp"%>
+	
+<%@page import="org.oscarehr.common.dao.SiteDao"%>
+<%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
+<%@page import="org.oscarehr.common.model.Site"%>
+	
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
 <!--  
@@ -78,7 +83,70 @@
   param[18]=new DBPreparedHandlerParam(request.getParameter("practitionerNo"));
   param[19]=new DBPreparedHandlerParam((String)session.getAttribute("user"));
   param[20]=new DBPreparedHandlerParam(request.getParameter("provider_no"));
+//multi-office provide id formalize check, can be turn off on properties multioffice.formalize.provider.id
+  boolean isProviderFormalize = true;
+  String  errMsgProviderFormalize = "admin.provideraddrecord.msgAdditionFailure";
+  Integer min_value = 0;
+  Integer max_value = 0;
+  	
+  if (org.oscarehr.common.IsPropertiesOn.isProviderFormalizeEnable()) {
+
+  	String StrProviderId = request.getParameter("provider_no");
+  	OscarProperties props = OscarProperties.getInstance();
+
+  	String[] provider_sites = {};
+  	
+  	// get provider id ranger
+  	if (request.getParameter("provider_type").equalsIgnoreCase("doctor")) {
+  		//provider is doctor, get provider id range from Property
+  		min_value = new Integer(props.getProperty("multioffice.formalize.doctor.minimum.provider.id", ""));
+  		max_value = new Integer(props.getProperty("multioffice.formalize.doctor.maximum.provider.id", ""));
+  	}
+  	else {
+  		//non-doctor role
+  		provider_sites = request.getParameterValues("sites");
+  		provider_sites = (provider_sites == null ? new String[] {} : provider_sites);
+  		
+  		if (provider_sites.length > 1) {
+  			//non-doctor can only have one site
+  			isProviderFormalize = false;
+  			errMsgProviderFormalize = "admin.provideraddrecord.msgFormalizeProviderIdMultiSiteFailure";
+  		}
+  		else {
+  			if (provider_sites.length == 1) {
+  				//get provider id range from site
+  				String provider_site_id =  provider_sites[0];
+  				SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
+  				Site provider_site = siteDao.getById(new Integer(provider_site_id));
+  				min_value = provider_site.getProviderIdFrom();
+  				max_value = provider_site.getProviderIdTo();
+  			}
+  		}
+  	}
+
+  	if (isProviderFormalize) {
+  		try {
+  			    Integer providerId = Integer.parseInt(StrProviderId);
+
+  			    if (request.getParameter("provider_type").equalsIgnoreCase("doctor") ||  provider_sites.length == 1) {
+  				    if  (!(providerId >= min_value && providerId <=max_value)) {
+  				    	// providerId is not in the range
+  						isProviderFormalize = false;
+  						errMsgProviderFormalize = "admin.provideraddrecord.msgFormalizeProviderIdFailure";
+  				    }
+			    
+  			    }
+
+  		} catch(NumberFormatException e) {
+  			//providerId is not a number
+  			isProviderFormalize = false;
+  			errMsgProviderFormalize = "admin.provideraddrecord.msgFormalizeProviderIdFailure";
+  		}
+  	}
+
+  }
   
+  if (!org.oscarehr.common.IsPropertiesOn.isProviderFormalizeEnable() || isProviderFormalize) {  
     DBPreparedHandlerParam[] paramArch =new DBPreparedHandlerParam[] {new DBPreparedHandlerParam(request.getParameter("provider_no"))};
     apptMainBean.queryExecuteUpdate(paramArch, "provider_archive_record");
 
@@ -106,7 +174,17 @@
 <h1><bean:message key="admin.providerupdate.msgUpdateFailure" /><%= request.getParameter("provider_no") %>.</h1>
 <%  
   } 
-%>
+}
+else {
+	if (!isProviderFormalize) {
+		//output ProviderFormalize error message 	
+	%>
+		<h1><bean:message key="<%=errMsgProviderFormalize%>" />  </h1>
+		Provider # range from : <%=min_value %> To : <%=max_value %>
+	<%		
+	}
+}
+%> 
 <p></p>
 <%@ include file="footer2htm.jsp"%>
 </center>

@@ -78,6 +78,9 @@ public class ConsultationRequest extends AbstractModel<Integer> implements Seria
 	private String concurrentProblems;
 	private String urgency;
 	private boolean patientWillBook;
+	
+	@Column(name = "site_name")
+	private String siteName;
         
         @Temporal(TemporalType.DATE)
         private Date followUpDate;
@@ -213,6 +216,14 @@ public class ConsultationRequest extends AbstractModel<Integer> implements Seria
 
 	public void setUrgency(String urgency) {
     	this.urgency = StringUtils.trimToNull(urgency);
+    }
+	
+	public String getSiteName() {
+    	return siteName;
+    }
+
+	public void setSiteName(String siteName) {
+    	this.siteName = siteName;
     }
 
 	public boolean isPatientWillBook() {

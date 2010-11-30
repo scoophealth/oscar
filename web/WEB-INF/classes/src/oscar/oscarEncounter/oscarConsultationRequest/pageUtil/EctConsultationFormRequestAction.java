@@ -82,7 +82,7 @@ import com.lowagie.text.DocumentException;
 public class EctConsultationFormRequestAction extends Action {
 
 	private static final Logger logger=MiscUtils.getLogger();
-	
+	private boolean bMultisites=org.oscarehr.common.IsPropertiesOn.isMultisitesEnable();
 	@Override
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -132,6 +132,7 @@ public class EctConsultationFormRequestAction extends Action {
                                 consult.setSendTo(frm.getSendTo());
                                 consult.setConcurrentProblems(frm.getConcurrentProblems());
                                 consult.setUrgency(frm.getUrgency());
+								consult.setSiteName(frm.getSiteName());
                                 consult.setPatientWillBook(new Boolean(frm.getPatientWillBook()));
                                 if( frm.getFollowUpDate() != null && !frm.getFollowUpDate().equals("") ) {
                                     date = DateUtils.parseDate(frm.getFollowUpDate(), format);
@@ -187,6 +188,7 @@ public class EctConsultationFormRequestAction extends Action {
                                 consult.setSendTo(frm.getSendTo());
                                 consult.setConcurrentProblems(frm.getConcurrentProblems());
                                 consult.setUrgency(frm.getUrgency());
+								consult.setSiteName(frm.getSiteName());
                                 consult.setPatientWillBook(new Boolean(frm.getPatientWillBook()));
                                 if( frm.getFollowUpDate() != null && !frm.getFollowUpDate().equals("") ) {
                                     date = DateUtils.parseDate(frm.getFollowUpDate(), format);

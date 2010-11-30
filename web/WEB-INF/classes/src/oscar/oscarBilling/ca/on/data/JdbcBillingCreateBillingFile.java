@@ -25,10 +25,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.common.dao.SiteDao;
+import org.oscarehr.common.model.Site;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
 
@@ -84,11 +88,21 @@ public class JdbcBillingCreateBillingFile {
 	private java.util.Date today;
 	private String totalAmount;
 	private String value;
-
+	private String clinicBgColor;
+	private HashMap<String,String> clinicShortName;
+	
 	public JdbcBillingCreateBillingFile() {
 		formatter = new SimpleDateFormat("yyyyMMdd"); // yyyyMMddHmm");
 		today = new java.util.Date();
 		output = formatter.format(today);
+		
+		//multisite, get site short name
+		clinicShortName = new HashMap<String,String>();
+		SiteDao siteDao = (SiteDao)SpringUtils.getBean("siteDao");
+		List<Site> sites = siteDao.getAllSites();
+		for (Site s : sites) {
+			clinicShortName.put(s.getName(), s.getShortName());
+		}
 	}
 
 	private String buildBatchHeader() {
@@ -196,6 +210,31 @@ public class JdbcBillingCreateBillingFile {
 		return ret;
 	}
 
+	private String buildSiteHTMLContentHeader() {
+		String ret = null;
+		ret = "<script type=\"text/JavaScript\">\n<!--\nfunction popupPage(vheight,vwidth,varpage) {\n  var page = \"\" + varpage;\n";
+		ret += "  windowprops = \"height=\"+vheight+\",width=\"+vwidth+\",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0\";\n";
+		ret += "  var popup=window.open(page, \"billcorrection\", windowprops);\n";
+		ret += "    if (popup != null) {\n";
+		ret += "    if (popup.opener == null) {\n";
+		ret += "      popup.opener = self;\n";
+		ret += "    }\n";
+		ret += "    popup.focus();\n";
+		ret += "  }\n";
+		ret += "}\n//-->\n</script>\n";
+		ret += "\n<table width='100%' border='0' cellspacing='0' cellpadding='2' class='myIvory'>\n"
+				+ "<tr><td colspan='4' class='myGreen'>OHIP Invoice for OHIP No." + bhObj.getProvider_reg_num()
+				+ "</td><td colspan='5' class='myGreen'>Payment date of " + output + "\n</td></tr>";
+		ret += "\n<tr><td class='myGreen'>ACCT NO</td>"
+				+ "<td width='25%' class='myGreen'>NAME</td><td class='myGreen'>HEALTH #</td>"
+				+ "<td class='myGreen'>BILLDATE</td><td class='myGreen'>CODE</td>"
+				+ "<td align='right' class='myGreen'>BILLED</td>"
+				+ "<td align='right' class='myGreen'>DX</td><td align='right' class='myGreen'>Comment</td>"
+				+ "<td align='centre' class='myGreen'>SITE</td></tr>";;
+		return ret;
+	}
+
+	
 	private String buildHTMLContentRecord(int invCount) {
 		String ret = null;
 		if (invCount == 0) {
@@ -229,6 +268,40 @@ public class JdbcBillingCreateBillingFile {
 		return ret;
 	}
 
+	private String buildSiteHTMLContentRecord(int invCount) {
+		String ret = null;
+		if (invCount == 0) {
+			ret = "\n<tr><td class='myIvory'><a href=# onclick=\"popupPage(720,640,'billingONCorrection.jsp?billing_no="
+					+ ch1Obj.getId()
+					+ "');return false;\">"
+					+ ch1Obj.getId()
+					+ "</a></td>"
+					+ "<td class='myIvory'><a href=# onclick=\"popupPage(720,740,'../../../demographic/demographiccontrol.jsp?demographic_no="
+					+ ch1Obj.getDemographic_no()
+					+ "&displaymode=edit&dboperation=search_detail');return false;\">"
+					+ ch1Obj.getDemographic_name()
+					+ "</a></td><td class='myIvory'>"
+					+ ch1Obj.getHin() + ch1Obj.getVer()
+					+ "</td><td class='myIvory'>"
+					+ ch1Obj.getBilling_date()
+					+ "</td><td class='myIvory'>"
+					+ itemObj.getService_code()
+					+ "</td><td align='right' class='myIvory'>"
+					+ itemObj.getFee()
+					+ "</td><td align='right' class='myIvory'>"
+					+ itemObj.getDx()
+					+ "</td><td class='myIvory'> &nbsp; &nbsp;" + referral + hcFlag + m_Flag + " </td>" 
+					+ "<td bgcolor='" + clinicBgColor + "'> " + clinicShortName.get(ch1Obj.getClinic()) + "</td></tr>";
+		} else {
+			ret = "\n<tr><td class='myIvory'>&nbsp;</td> <td class='myIvory'>&nbsp;</td>"
+					+ "<td class='myIvory'>&nbsp;</td> <td class='myIvory'>&nbsp;</td>" + "<td class='myIvory'>"
+					+ itemObj.getService_code() + "</td><td align='right' class='myIvory'>" + itemObj.getFee()
+					+ "</td><td align='right' class='myIvory'>" + itemObj.getDx()
+					+ "</td><td class='myIvory'>&nbsp;</td>" 
+					+ "<td bgcolor='" + clinicBgColor + "'> " + clinicShortName.get(ch1Obj.getClinic()) + "</td></tr>";
+		}
+		return ret;
+	}
 	private String buildHTMLContentTrailer() {
 		htmlContent += "\n<tr><td colspan='8' class='myIvory'>&nbsp;</td></tr><tr><td colspan='4' class='myIvory'>OHIP No: "
 				+ bhObj.getProvider_reg_num()
@@ -247,6 +320,24 @@ public class JdbcBillingCreateBillingFile {
 		return htmlCode;
 	}
 
+	private String buildSiteHTMLContentTrailer() {
+		htmlContent += "\n<tr><td colspan='9' class='myIvory'>&nbsp;</td></tr><tr><td colspan='4' class='myIvory'>OHIP No: "
+				+ bhObj.getProvider_reg_num()
+				+ ": "
+				+ pCount
+				+ " RECORDS PROCESSED</td><td colspan='5' class='myIvory'>TOTAL: "
+				+ BigTotal.toString()
+				+ "\n</td></tr>" + "\n</table>";
+		// writeFile(value);
+		String checkSummary = errorMsg.equals("") ? "\n<table border='0' width='100%' bgcolor='green'><tr><td>Pass</td></tr></table>"
+				: "\n<table border='0' width='100%' bgcolor='orange'><tr><td>Please correct the errors and run this simulation again!</td></tr></table>";
+		htmlValue += htmlContent + checkSummary;
+		htmlHeader = "<html><body><style type='text/css'><!-- .myGreen{  font-family: Arial, Helvetica, sans-serif;  font-size: 12px; font-style: normal;  line-height: normal;  font-weight: normal;  font-variant: normal;  text-transform: none;  color: #003366;  text-decoration: none; --></style>";
+		htmlFooter = "</body></html>";
+		htmlCode = htmlHeader + htmlValue + htmlFooter;
+		return htmlCode;
+	}
+	
 	private String buildItem() {
 		String ret = "\n" + itemObj.getTransc_id() + itemObj.getRec_id() + itemObj.getService_code() + space(2)
 				+ rightJustify("0", 6, itemObj.getFee().replaceAll("\\.", ""))
@@ -310,6 +401,14 @@ public class JdbcBillingCreateBillingFile {
 	private String printErrorPartMsg() {
 		String ret = "";
 		ret = errorPartMsg.length() > 0 ? ("\n<tr bgcolor='yellow'><td colspan='8'><font color='red'>" + errorPartMsg + "</font></td></tr>")
+				: "";
+		errorPartMsg = "";
+		return ret;
+	}
+	
+	private String printSiteErrorPartMsg() {
+		String ret = "";
+		ret = errorPartMsg.length() > 0 ? ("\n<tr bgcolor='yellow'><td colspan='9'><font color='red'>" + errorPartMsg + "</font></td></tr>")
 				: "";
 		errorPartMsg = "";
 		return ret;
@@ -471,6 +570,173 @@ public class JdbcBillingCreateBillingFile {
 		}
 	}
 
+	public void createSiteBillingFileStr(String bid, String status) {
+		
+		SiteDao siteDao = (SiteDao)SpringUtils.getBean("siteDao");
+		
+		try {
+			if (!"0".equals(bid)) { // for simulation only
+				getBatchHeaderObj(bid);
+			}
+			checkBatchHeader();
+			batchHeader = buildBatchHeader();
+			htmlValue = buildSiteHTMLContentHeader();
+			// start here
+			value = batchHeader;
+			BillingONDataHelp dbObj = new BillingONDataHelp();
+			// (status='O' or status='W')
+			query = "select * from billing_on_cheader1 where provider_no='" + providerNo + "' and  " + status + " "
+					+ dateRange + " and pay_program in ('HCP', 'WCB', 'RMB') order by billing_date, billing_time";
+			_logger.info("createBillingFileStr(sql = " + query + ")");
+			ResultSet rs = dbObj.searchDBRecord(query);
+			while (rs.next()) {
+				// recreate judge
+				String bNo = "" + rs.getInt("id");
+				if(propBillingNo != null && !propBillingNo.containsKey(bNo)) {
+					continue;
+				}
+				
+				patientCount++;
+				ch1Obj = new BillingClaimHeader1Data();
+				ch1Obj.setId(bNo);
+				ch1Obj.setTransc_id(rs.getString("transc_id"));
+				ch1Obj.setRec_id(rs.getString("rec_id"));
+				ch1Obj.setHin(rs.getString("hin"));
+				ch1Obj.setVer(rs.getString("ver"));
+				ch1Obj.setDob(rs.getString("dob"));
+
+				ch1Obj.setPay_program(rs.getString("pay_program"));
+				ch1Obj.setPayee(rs.getString("payee"));
+				ch1Obj.setRef_num(rs.getString("ref_num"));
+				ch1Obj.setFacilty_num(rs.getString("facilty_num"));
+				ch1Obj.setAdmission_date(rs.getString("admission_date"));
+				ch1Obj.setRef_lab_num(rs.getString("ref_lab_num"));
+				ch1Obj.setMan_review(rs.getString("man_review"));
+				ch1Obj.setLocation(rs.getString("location"));
+
+				ch1Obj.setDemographic_no(rs.getString("demographic_no"));
+				ch1Obj.setProviderNo(rs.getString("provider_no"));
+				ch1Obj.setAppointment_no(rs.getString("appointment_no"));
+				ch1Obj.setDemographic_name(rs.getString("demographic_name"));
+				// String temp[] =
+				// getPatientLF(val.getParameter("demographic_name"));
+				// ch1Obj.setLast_name(rs.getString("transc_id"));
+				// ch1Obj.setFirst_name(rs.getString("transc_id"));
+				ch1Obj.setSex(rs.getString("sex"));
+				ch1Obj.setProvince(rs.getString("province"));
+
+				ch1Obj.setBilling_date(rs.getString("billing_date"));
+				ch1Obj.setBilling_time(rs.getString("billing_time"));
+				// ch1Obj.setUpdate_datetime(rs.getString("transc_id"));
+				ch1Obj.setTotal(rs.getString("total"));
+				ch1Obj.setPaid(rs.getString("paid"));
+				ch1Obj.setStatus(rs.getString("status"));
+				ch1Obj.setComment(rs.getString("comment1"));
+				ch1Obj.setVisittype(rs.getString("visittype"));
+				ch1Obj.setProvider_ohip_no(rs.getString("provider_ohip_no"));
+				ch1Obj.setProvider_rma_no(rs.getString("provider_rma_no"));
+				ch1Obj.setApptProvider_no(rs.getString("apptProvider_no"));
+				ch1Obj.setAsstProvider_no(rs.getString("asstProvider_no"));
+				ch1Obj.setCreator(rs.getString("creator"));
+				
+				ch1Obj.setClinic(rs.getString("clinic"));
+				if (ch1Obj.getClinic() == null || ch1Obj.getClinic().equalsIgnoreCase("null")) {
+					ch1Obj.setClinic("");
+					clinicBgColor = "FFFFFF";
+				}
+				else {
+					clinicBgColor = siteDao.getByLocation(ch1Obj.getClinic()).getBgColor();
+					clinicBgColor = (clinicBgColor == null || clinicBgColor.equalsIgnoreCase("null") ? "FFFFFF" : clinicBgColor);
+				}
+				
+				// invNo = rs.getString("id");
+				// ohipVer = rs.getString("organization_spec_code");
+				// inPatient = rs.getString("clinic_no");
+				// if there is no clinic no for a clinic, it should be an empty
+				// str
+				// inPatient = "0".equals(inPatient) ? " " : inPatient;
+				// demoName = rs.getString("demographic_name");
+				// hin = rs.getString("hin");
+				// dob = rs.getString("dob");
+				// visitDate = rs.getDate("visitdate");
+				// visitType = rs.getString("visittype");
+				// outPatient = rs.getString("clinic_ref_code");
+				// specCode = rs.getString("status");
+				// content = rs.getString("content");
+				value += buildHeader1();
+				htmlContent += printSiteErrorPartMsg();
+				// build billing detail
+				invCount = 0;
+				query = "select * from billing_on_item where ch1_id=" + ch1Obj.getId()
+						+ " and status!='D' and status!='S'";
+				_logger.info("createBillingFileStr(sql = " + query + ")");
+				ResultSet rs2 = dbObj.searchDBRecord(query);
+				while (rs2.next()) {
+					itemObj = new BillingItemData();
+					recordCount++;
+					// int count = 0;
+
+					itemObj.setTransc_id(rs2.getString("transc_id"));
+					itemObj.setRec_id(rs2.getString("rec_id"));
+					itemObj.setService_code(rs2.getString("service_code"));
+					itemObj.setFee(rs2.getString("fee"));
+					itemObj.setSer_num(rs2.getString("ser_num"));
+					itemObj.setService_date(rs2.getString("service_date"));
+					diagcode = rs2.getString("dx");
+					diagcode = ":::".equals(diagcode) ? "   " : diagcode;
+					itemObj.setDx(diagcode);
+					itemObj.setDx1(rs2.getString("dx1"));
+					itemObj.setDx2(rs2.getString("dx2"));
+					itemObj.setStatus(rs2.getString("status"));
+
+					// serviceCode = rs2.getString("service_code");
+					fee = rs2.getString("fee");
+					// appt = rs2.getDate("appointment_date").toString();
+					// billingUnit = rs2.getString("billingunit");
+					// count = 6 - fee.length();
+					// apptDate =
+					// UtilDateUtilities.DateToString(rs2.getDate("appointment_date"),
+					// "yyyyMMdd");
+					dFee = Double.parseDouble(fee);
+					bdFee = new BigDecimal((double) dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
+					BigTotal = BigTotal.add(bdFee);
+					_logger.info("createBillingFileStr(BigTotal = " + BigTotal + ")");
+					checkItem();
+					value += buildItem();
+					_logger.info("createBillingFileStr(value = " + value + ")");
+					htmlContent += buildSiteHTMLContentRecord(invCount);
+					htmlContent += printSiteErrorPartMsg();
+					invCount++;
+				}
+				checkNoDetailRecord(invCount);
+				htmlContent += printSiteErrorPartMsg();
+				if (eFlag.compareTo("1") == 0) {
+					updateHeader1BilledBatchId(ch1Obj.getId(), bhObj.getId());
+				}
+			}
+			hcCount = hcCount + healthcardCount;
+			pCount = pCount + patientCount;
+			rCount = rCount + recordCount;
+			// percent = new BigDecimal((double) 0.01).setScale(2,
+			// BigDecimal.ROUND_HALF_UP);
+			// BigTotal = BigTotal.multiply(percent);
+			BigTotal = BigTotal.setScale(2, BigDecimal.ROUND_HALF_UP);
+			value += buildTrailer();
+
+			htmlCode = buildSiteHTMLContentTrailer();
+			// writeHtml(htmlCode);
+			ohipReciprocal = String.valueOf(hcCount);
+			ohipRecord = String.valueOf(rCount);
+			ohipClaim = String.valueOf(pCount);
+			totalAmount = BigTotal.toString();
+			if (eFlag.compareTo("1") == 0) {
+				updateBatchHeaderSum(bhObj.getId(), "" + healthcardCount, "" + patientCount, "" + recordCount);
+			}
+		} catch (SQLException e) {
+			_logger.error("JdbcBillingCreateBillingFile(sql = " + query + ")");
+		}
+	}
+	
 	public String getHtmlCode() {
 		return htmlCode;
 	}

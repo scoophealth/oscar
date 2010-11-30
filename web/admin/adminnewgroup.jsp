@@ -26,6 +26,7 @@
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 
 <%
   
@@ -34,6 +35,20 @@
 	errorPage="../provider/errorpage.jsp"%>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
+
+<%
+    if(session.getAttribute("user") == null ) response.sendRedirect("../logout.jsp");
+    String curProvider_no = (String) session.getAttribute("user");
+
+    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    
+    boolean isSiteAccessPrivacy=false;
+%>
+
+<security:oscarSec objectName="_site_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false">
+	<%isSiteAccessPrivacy=true; %>
+</security:oscarSec>
 
 <html:html locale="true">
 <head>
@@ -120,10 +135,19 @@ function validate() {
 					type="text" name="mygroup_no" size="10" maxlength="10"> <font
 					size="-2">(Max. 10 chars.)</font></td>
 			</tr>
-			<%
+
+	
+<%
    ResultSet rsgroup = null;
    int i=0;
-   rsgroup = apptMainBean.queryResults("searchproviderall");
+   if (isSiteAccessPrivacy)
+   { 
+	  rsgroup = apptMainBean.queryResults(curProvider_no,"site_searchproviderall");
+   }
+   else
+   {
+	  rsgroup = apptMainBean.queryResults("searchproviderall");
+   }
    while (rsgroup.next()) { 
      i++;
 %>

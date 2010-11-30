@@ -101,6 +101,10 @@
 					<html:option value="YT" >YT-Yukon</html:option>	
 	</nested:select></td></tr>
 	<tr><td>Postal Code:</td><td><nested:text property="site.postal"></nested:text></td></tr>
+   <% if (org.oscarehr.common.IsPropertiesOn.isProviderFormalizeEnable()) { %>  	
+		<tr><td>ProviderID From:</td><td><nested:text property="site.providerIdFrom"></nested:text></td></tr>
+		<tr><td>ProviderID To:</td><td><nested:text property="site.providerIdTo"></nested:text></td></tr>
+	<% } %>
 	</table>
 
 	<nested:hidden property="site.siteId"/>

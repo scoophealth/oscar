@@ -28,6 +28,18 @@
 	<%response.sendRedirect("../logout.jsp");%>
 </security:oscarSec>
 
+<%
+    if(session.getAttribute("user") == null ) response.sendRedirect("../logout.jsp");
+    String curProvider_no = (String) session.getAttribute("user");
+    
+    boolean isSiteAccessPrivacy=false;
+%>
+
+<security:oscarSec objectName="_site_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false">
+	<%isSiteAccessPrivacy=true; %>
+</security:oscarSec>
+
+
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ page
@@ -164,7 +176,15 @@
 		<td><select name="provider_no">
 			<option value="">-- select one --</option>
 <%
-	List<Map> resultList = oscarSuperManager.find("adminDao", "provider_search_providerno", new Object[] {});
+	List<Map> resultList ; 
+    if (isSiteAccessPrivacy) {
+    	Object[] param =new Object[1];
+    	param[0] = curProvider_no;
+    	resultList = oscarSuperManager.find("adminDao", "site_provider_search_providerno", param);
+    }
+    else {
+    	resultList = oscarSuperManager.find("adminDao", "provider_search_providerno", new Object[] {});
+    }
 	for (Map provider : resultList) {
 %>
 			<option value="<%=provider.get("provider_no")%>"><%=provider.get("last_name")+", "+provider.get("first_name")%></option>

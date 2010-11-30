@@ -38,7 +38,12 @@
         <property name="status" type="byte">
             <column name="status" not-null="true" />
         </property>
-
+        <property name="providerIdFrom" type="integer">
+            <column name="providerId_from"/>
+        </property>
+        <property name="providerIdTo" type="integer">
+            <column name="providerId_to"/>
+        </property>
 		<set name="providers" table="providersite" cascade="all" lazy="false" fetch="join" inverse="true">
            <key column="site_id"/>
            <many-to-many column="provider_no" class="Provider"/>

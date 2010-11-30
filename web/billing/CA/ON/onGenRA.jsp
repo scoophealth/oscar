@@ -21,11 +21,18 @@
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
     boolean isTeamBillingOnly=false;
+    boolean isSiteAccessPrivacy=false;
+    boolean isTeamAccessPrivacy=false; 
 %>
 <security:oscarSec objectName="_team_billing_only" roleName="<%=roleName$ %>" rights="r" reverse="false">
 <% isTeamBillingOnly=true; %>
 </security:oscarSec>
-
+<security:oscarSec objectName="_site_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false">
+	<%isSiteAccessPrivacy=true; %>
+</security:oscarSec>
+<security:oscarSec objectName="_team_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false">
+	<%isTeamAccessPrivacy=true; %>
+</security:oscarSec>
 
 <% 
     if(session.getAttribute("user") == null) response.sendRedirect("../../../logout.jsp");
@@ -132,8 +139,18 @@ function checkReconcile(url){
 	</tr>
 
 	<% 
-List aL = isTeamBillingOnly? dbObj.getTeamRahd("D", (String) session.getAttribute("user")) : dbObj.getAllRahd("D");
 
+List aL;
+
+if (isTeamBillingOnly || isTeamAccessPrivacy) {
+	aL = dbObj.getTeamRahd("D", (String) session.getAttribute("user"));
+}
+else if (isSiteAccessPrivacy) {
+	aL = dbObj.getSiteRahd("D", (String) session.getAttribute("user"));
+}
+else {
+	aL =  dbObj.getAllRahd("D");
+}
 
 for(int i = 0; i < aL.size(); i++) {
 	Properties pro = (Properties) aL.get(i);
