@@ -35,6 +35,14 @@
 <jsp:useBean id="scheduleMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
 <%@ include file="scheduleMainBeanConn.jspf"%>
+<%
+    if(session.getAttribute("user") == null ) response.sendRedirect("../logout.jsp");
+    String curProvider_no = (String) session.getAttribute("user");
+
+    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+%>
+
 <%  
   GregorianCalendar now=new GregorianCalendar();
   int year = now.get(Calendar.YEAR);
