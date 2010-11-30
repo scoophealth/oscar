@@ -39,9 +39,6 @@
 <%@page import="org.oscarehr.common.dao.SiteDao"%>
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@page import="org.oscarehr.common.model.Site"%><html:html locale="true">
-<%  if(!scheduleMainBean.getBDoConfigure()) { %>
-<%@ include file="scheduleMainBeanConn.jspf"%>
-<% } %>
 
 <%
     if(session.getAttribute("user") == null ) response.sendRedirect("../logout.jsp");
@@ -52,6 +49,12 @@
     
     boolean isSiteAccessPrivacy=false;
 %>
+
+<%  if(!scheduleMainBean.getBDoConfigure()) { %>
+<%@ include file="scheduleMainBeanConn.jspf"%>
+<% } %>
+
+
 
 <security:oscarSec objectName="_site_access_privacy" roleName="<%=CurRoleName%>" rights="r" reverse="false">
 	<%isSiteAccessPrivacy=true; %>
