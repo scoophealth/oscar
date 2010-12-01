@@ -154,12 +154,12 @@ public class SiteDao extends HibernateDaoSupport {
 			groupList = q.list();
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			MiscUtils.getLogger().error("Error", e);
 		} finally {
 			try {
 				sess.close();
 			} catch (HibernateException e) {
-				e.printStackTrace();
+				MiscUtils.getLogger().error("Error", e);
 			}
 		}		
 		return groupList;
@@ -180,12 +180,12 @@ public class SiteDao extends HibernateDaoSupport {
 			pList = q.list();
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			MiscUtils.getLogger().error("Error", e);
 		} finally {
 			try {
 				sess.close();
 			} catch (HibernateException e) {
-				e.printStackTrace();
+				MiscUtils.getLogger().error("Error", e);
 			}
 		}		
 		return pList;
@@ -204,12 +204,12 @@ public class SiteDao extends HibernateDaoSupport {
 			q.addScalar("provider_no", Hibernate.STRING);			
 			pList = q.list();
 		} catch (Exception e) {
-			e.printStackTrace();
+			MiscUtils.getLogger().error("Error", e);
 		} finally {
 			try {
 				sess.close();
 			} catch (HibernateException e) {
-				e.printStackTrace();
+				MiscUtils.getLogger().error("Error", e);
 			}
 		}		
 		return pList;
@@ -229,12 +229,12 @@ public class SiteDao extends HibernateDaoSupport {
 			groupList = q.list();
 		
 		} catch (Exception e) {
-			e.printStackTrace();
+			MiscUtils.getLogger().error("Error", e);
 		} finally {
 			try {
 				sess.close();
 			} catch (HibernateException e) {
-				e.printStackTrace();
+				MiscUtils.getLogger().error("Error", e);
 			}
 		}		
 		return groupList;
@@ -250,12 +250,12 @@ public class SiteDao extends HibernateDaoSupport {
 			siteName = (String)q.list().get(0);
 		
 		} catch (Exception e) {
-			e.printStackTrace();
+			MiscUtils.getLogger().error("Error", e);
 		} finally {
 			try {
 				sess.close();
 			} catch (HibernateException e) {
-				e.printStackTrace();
+				MiscUtils.getLogger().error("Error", e);
 			}
 		}		
 		return siteName;		
