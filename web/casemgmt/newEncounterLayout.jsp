@@ -169,6 +169,21 @@
            
        }
 
+       function addRightNavDiv(name) {
+    	   var div = document.createElement("div");
+           div.className = "leftBox";
+           div.style.display = "block";
+           div.style.visiblity = "hidden";
+           div.id = name;                
+           $("rightNavBar").appendChild(div);
+           
+       }
+
+       function removeNavDiv(name) {
+    	   var tmpEl = document.getElementById(name);          
+           tmpEl.parentNode.removeChild(tmpEl);
+       }
+       
 
        var appointmentNo = <%=request.getParameter("appointmentNo")%>;
               

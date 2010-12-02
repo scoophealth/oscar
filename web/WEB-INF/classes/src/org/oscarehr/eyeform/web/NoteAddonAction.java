@@ -12,6 +12,8 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
+import org.caisi.model.Tickler;
+import org.caisi.service.TicklerManager;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.eyeform.dao.EyeFormDao;
@@ -22,6 +24,7 @@ import org.oscarehr.eyeform.model.EyeForm;
 import org.oscarehr.eyeform.model.FollowUp;
 import org.oscarehr.eyeform.model.ProcedureBook;
 import org.oscarehr.eyeform.model.TestBookRecord;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 public class NoteAddonAction extends DispatchAction {
@@ -134,4 +137,39 @@ public class NoteAddonAction extends DispatchAction {
     	}catch(IOException e) {logger.error(e);}
     	return null;
     }
+	
+	/*
+	 * appointmentNo
+	 * test
+	 * recip
+	 */
+	
+	public ActionForward sendTickler(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		String aptNo = request.getParameter("appointmentNo");
+		String text = request.getParameter("text");
+		String recipient = request.getParameter("recip");
+		String demographicNo = request.getParameter("demographicNo");
+				
+		
+		Tickler t = new Tickler();
+		t.setAssignee(providerDao.getProvider(recipient));
+		//t.setDemographic(demographic)
+		t.setDemographic_no(demographicNo);
+		t.setMessage(text);
+		t.setPriority("Normal");
+		t.setProvider(LoggedInInfo.loggedInInfo.get().loggedInProvider);
+		//t.setProgram(program);
+		t.setProgram_id(Integer.valueOf((String)request.getSession().getAttribute("programId_oscarView")));
+		t.setService_date(new Date());
+		t.setStatus('A');
+		t.setTask_assigned_to(recipient);
+		t.setUpdate_date(new Date());
+		
+		TicklerManager ticklerMgr = (TicklerManager)SpringUtils.getBean("ticklerManagerT");
+		ticklerMgr.addTickler(t);
+		
+		
+		
+	    return null;
+	}
 }

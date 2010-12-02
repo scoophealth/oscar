@@ -59,7 +59,8 @@
 
 
        init();
-                         
+                  
+       
        jQuery.ajax({url:ctx+"/eyeform/NoteData.do?method=getCurrentNoteData&demographicNo="+demographicNo+"&noteId="+savedNoteId+"&appointmentNo="+appointmentNo,dataType: "html",success: function(data) {
 			jQuery("#current_note_addon").append(data);
        }});
@@ -75,6 +76,10 @@
        
        addLeftNavDiv("macro");	      
        popColumn(ctx + "/oscarEncounter/displayMacro.do?hC=009999&appointment_no="+appointmentNo,"macro","macro", "leftNavBar", this);
+       
+       
+       removeNavDiv('issues');
+       removeNavDiv('Guidelines');
        
      });
 
