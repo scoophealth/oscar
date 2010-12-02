@@ -129,8 +129,6 @@ if (bMultisites) {
 	}
 	selectedSite = (requestSite == null ? (String)session.getAttribute("site_selected") : requestSite) ;
 	
-	System.out.println("selectedSite:" + selectedSite + "  providerview: " + providerview + " mygroupno: " + mygroupno);
-
 	if (isSiteAccessPrivacy || isTeamAccessPrivacy) {
 		//user has Access Privacy, set user provider and group list
 		String siteManagerProviderNo = (String) session.getAttribute("user");
