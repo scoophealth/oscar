@@ -77,7 +77,7 @@ public class GrepStuffDirectoryWalker extends DirectoryWalker {
 			checkContains(relativePath, fileContents, "TreeMap()", "use generics");
 			checkContains(relativePath, fileContents, "WeakHashMap()", "use generics");
 			checkContains(relativePath, fileContents, "StringBuffer", "very very rare that this is required, usually StringBuilder is the better choice");
-			checkContains(relativePath, fileContents, "com.Ostermiller", "use org.apache libraries instead, duplicated libs and apache is... more standard (if that's a word)");
+			// checkContains(relativePath, fileContents, "com.Ostermiller", "use org.apache libraries instead, duplicated libs and apache is... more standard (if that's a word)");
 			checkContains(relativePath, fileContents, "BaseGenericIntakeAction", "do not use the BaseAction concept, just extends struts directly, no mass imports should be done like that, no one can tell what is used when that happens.");
 			checkContains(relativePath, fileContents, "BaseAction", "do not use the BaseAction concept, just extends struts directly, no mass imports should be done like that, no one can tell what is used when that happens.");
 			checkContains(relativePath, fileContents, "ProfessionalSpecialists", "Use the new ProfessionalSpecialist JPA object instead.");
