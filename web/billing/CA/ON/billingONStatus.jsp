@@ -51,6 +51,7 @@ on Libraries node in Projects view can be used to add the JSTL 1.1 library.
 	//multi-site office , save all bgcolor to Hashmap
 	HashMap<String,String> siteBgColor = new HashMap<String,String>();
 	HashMap<String,String> siteShortName = new HashMap<String,String>();
+	int patientCount = 0;
 	if (bMultisites) {
     	SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
     	
@@ -621,6 +622,11 @@ if(statusType.equals("_")) { %>
     			   && !ch1Obj.getClinic().equals(curSite) && isSiteAccessPrivacy) // only applies on user have siteAccessPrivacy (SiteManager)
 				continue; // multisite: skip if the line doesn't belong to the selected clinic    		   
     		   
+	       if (bMultisites && selectedSite != null && (!selectedSite.equals(ch1Obj.getClinic())))
+	    	   continue;
+	       
+	       patientCount ++;
+			       
     	   // ra code
     	   if(raCode.trim().length() == 2) {
     		   if(!raData.isErrorCode(ch1Obj.getId(), raCode)) {
@@ -671,8 +677,7 @@ if(statusType.equals("_")) { %>
                else {
                    settleDate = settleDate.substring(0, settleDate.indexOf(" "));
                }
-	       if (bMultisites && selectedSite != null && (!selectedSite.equals(ch1Obj.getClinic())))
-	    	   continue;
+	      
        %>       
           <tr <%=color %>> 
              <td align="center"><%= ch1Obj.getBilling_date()%>  <%--=ch1Obj.getBilling_time()--%></td>  <!--SERVICE DATE-->
@@ -709,8 +714,8 @@ if(statusType.equals("_")) { %>
        
           <tr class="myYellow"> 
              <td>Count:</td>  
-             <td align="center"><%=bList.size()%></td> 
-             <td align="center"><%=bList.size()%></td> 
+             <td align="center"><%=patientCount%></td> 
+             <td align="center"><%=patientCount%></td> 
              <td>&nbsp;</td> <!--STAT-->
              <td>&nbsp;</td>
              <td>Total:</td><!--CODE-->
