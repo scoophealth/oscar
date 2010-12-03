@@ -66,7 +66,7 @@ public class EctDisplayMacroAction extends EctDisplayAction {
     String winName = "macro" + bean.demographicNo;
     String pathview, pathedit;
     
-    pathview = "javascript:alert('Not yet available');";
+    pathview = request.getContextPath() + "/eyeform/Macro.do?method=list";
     pathedit = request.getContextPath() + "/eyeform/Macro.do?method=list";
     
     

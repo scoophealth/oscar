@@ -80,6 +80,11 @@
        
        removeNavDiv('issues');
        removeNavDiv('Guidelines');
+       removeNavDiv('RiskFactors');
+       
+       //addRightNavDiv("OcularMeds");	
+       //popColumn(ctx + "/oscarEncounter/displayMacro.do?hC=009999&appointment_no="+appointmentNo,"OcularMeds","OcularMeds", "rightNavBar", this);
+       
        
      });
 

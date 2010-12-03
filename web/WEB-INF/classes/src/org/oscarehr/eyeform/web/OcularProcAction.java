@@ -1,5 +1,7 @@
 package org.oscarehr.eyeform.web;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -24,6 +26,16 @@ public class OcularProcAction extends DispatchAction {
         return form(mapping, form, request, response);
     }
 
+    public ActionForward list(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+    	OcularProcDao dao = (OcularProcDao)SpringUtils.getBean("OcularProcDAO");
+    	String demographicNo = request.getParameter("demographicNo");
+    	
+    	List<OcularProc> procs = dao.getByDemographicNo(Integer.parseInt(demographicNo));
+    	request.setAttribute("procs", procs);
+    	
+        return mapping.findForward("list");
+    }
+    
     public ActionForward form(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
     	ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
     	OcularProcDao dao = (OcularProcDao)SpringUtils.getBean("OcularProcDAO");

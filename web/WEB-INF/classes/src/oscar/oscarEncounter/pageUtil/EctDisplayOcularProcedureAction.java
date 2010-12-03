@@ -65,7 +65,7 @@ public class EctDisplayOcularProcedureAction extends EctDisplayAction {
     String winName = "OcularProcedure" + bean.demographicNo;
     String pathview, pathedit;
     
-    pathview = "javascript:alert('Not yet available');";
+    pathview = request.getContextPath() + "/eyeform/OcularProc.do?method=list&demographicNo=" + bean.demographicNo;
     pathedit = request.getContextPath() + "/eyeform/OcularProc.do?proc.demographicNo=" + bean.demographicNo + "&proc.appointmentNo=" + appointmentNo;
     
     

@@ -13,7 +13,9 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.validator.DynaValidatorForm;
 import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.eyeform.dao.OcularProcDao;
 import org.oscarehr.eyeform.dao.SpecsHistoryDao;
+import org.oscarehr.eyeform.model.OcularProc;
 import org.oscarehr.eyeform.model.SpecsHistory;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
@@ -26,6 +28,16 @@ public class SpecsHistoryAction extends DispatchAction {
 
     public ActionForward cancel(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         return form(mapping, form, request, response);
+    }
+    
+    public ActionForward list(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+    	String demographicNo = request.getParameter("demographicNo");
+    	SpecsHistoryDao dao = (SpecsHistoryDao)SpringUtils.getBean("SpecsHistoryDAO");
+    	
+    	List<SpecsHistory> specs = dao.getByDemographicNo(Integer.parseInt(demographicNo));
+    	request.setAttribute("specs", specs);
+    	
+        return mapping.findForward("list");
     }
 
     public ActionForward form(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {

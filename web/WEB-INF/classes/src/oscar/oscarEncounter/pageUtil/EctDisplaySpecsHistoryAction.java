@@ -65,7 +65,7 @@ public class EctDisplaySpecsHistoryAction extends EctDisplayAction {
     String winName = "SpecsHistory" + bean.demographicNo;
     String pathview, pathedit;
     
-    pathview = "javascript:alert('Not yet available');";
+    pathview = request.getContextPath() + "/eyeform/SpecsHistory.do?method=list&demographicNo=" + bean.demographicNo;
     pathedit = request.getContextPath() + "/eyeform/SpecsHistory.do?specs.demographicNo=" + bean.demographicNo + "&specs.appointmentNo=" + appointmentNo;
     
     
