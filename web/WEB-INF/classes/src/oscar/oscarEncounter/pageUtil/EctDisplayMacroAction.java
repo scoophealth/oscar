@@ -67,8 +67,9 @@ public class EctDisplayMacroAction extends EctDisplayAction {
     String pathview, pathedit;
     
     pathview = request.getContextPath() + "/eyeform/Macro.do?method=list";
-    pathedit = request.getContextPath() + "/eyeform/Macro.do?method=list";
-    
+    //pathedit = request.getContextPath() + "/eyeform/Macro.do?method=list";
+    pathedit = request.getContextPath() + "/eyeform/Macro.do?method=addMacro";
+   
     
     String url = "popupPage(500,900,'" + winName + "','" + pathview + "')";
     Dao.setLeftHeading(messages.getMessage(request.getLocale(), "global.macro"));

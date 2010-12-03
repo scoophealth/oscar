@@ -75,7 +75,7 @@ function fixCheckboxes(form) {
 <html:form action="/eyeform/Macro.do" onsubmit="fixCheckboxes(this); return true;">
 	<input name="method" value="save" type="hidden">
 	<table style="border: 0px none;">
-
+	<html:hidden property="macro.id"/>
 	<tbody><tr>
 	<td>
 	<input value="Save" type="submit">

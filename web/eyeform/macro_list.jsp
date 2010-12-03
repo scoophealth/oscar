@@ -1,3 +1,4 @@
+<%@ include file="/taglibs.jsp"%>
 <html>
 <head>
 <title>Macros</title>
@@ -9,6 +10,16 @@
 	<input type="hidden" name="editTarget" value="">
 	<h1>Eyeform Macros</h1>
 
+	<table border="0">
+		<tr>
+			<td>Name</td>			
+		</tr>
+		<c:forEach var="macro" items="${macros}">
+			<tr>
+				<td><a href="<html:rewrite action="/eyeform/Macro.do?method=form&macro.id="/><c:out value="${macro.id}"/>"><c:out value="${macro.label }"/></a></td>
+			</tr>
+		</c:forEach>
+	</table>
 	
 	<table style="border:0px">
 	<tr>
