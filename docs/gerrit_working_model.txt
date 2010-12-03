@@ -90,6 +90,17 @@ Review Work Flow
 ----------------
 Reviewer logins in, select one of the branches, click review, if it's good set verified=+1, review=+2, then click publish and submit, and it's into the main branch.
 
+---------------
+Review Criteria
+---------------
+The following are guide lines for evaluating submissions. This is in no way an exhaustive list.
+	- Code must compile and run.
+	- If the time frame is after code freeze, it must only be bug fixes, features can be submitted but will not be approved till after.
+	- Is the submission an end user feature, if it is, is the feature outlined in this versions development plan (as per ISO requirement)
+	- Does the submission include automated tests, i.e. junit tests for DAO's and logic methods, possibly in the future httpUnit for jsp's.
+	- Should and does the submission include documentation on the feature, applies to all features; end user, administrative, and developer features.
+	- general sanity of the code itself, i.e. coding standards, reusability, maintainability, readability, industry standards, proper decomosition etc.	 
+
 ------------------
 Server maintenance
 ------------------
