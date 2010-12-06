@@ -4695,4 +4695,4 @@ CREATE TABLE `formRourke2009` (
   `p1_signature1m` varchar(250) ,
   `p2_signature6m` varchar(250) ,
   PRIMARY KEY (`ID`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM;
