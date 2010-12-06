@@ -20,12 +20,15 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 
+import org.apache.log4j.Logger;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
 
 public class Utilities {
        
+	private static final Logger logger=MiscUtils.getLogger();
+	
     private Utilities() {
     	// utils shouldn't be instantiated
     }
@@ -101,6 +104,7 @@ public class Utilities {
                 place = new StringBuilder(place).insert(place.length(),"/").toString();
             retVal = place+"LabUpload."+filename.replaceAll(".enc", "")+"."+(new Date()).getTime();
             
+            logger.debug("saveFile place="+place+", retVal="+retVal);
             //write the  file to the file specified
             OutputStream os = new FileOutputStream(retVal);
             
@@ -113,11 +117,11 @@ public class Utilities {
             //close the stream
             stream.close();
         }catch (FileNotFoundException fnfe) {
-            MiscUtils.getLogger().error("Error", fnfe);
+        	logger.error("Error", fnfe);
             return retVal;
             
         }catch (IOException ioe) {
-            MiscUtils.getLogger().error("Error", ioe);
+        	logger.error("Error", ioe);
             return retVal;
         }
         return retVal;
