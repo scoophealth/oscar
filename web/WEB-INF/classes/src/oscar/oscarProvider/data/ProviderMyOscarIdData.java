@@ -29,138 +29,123 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
 
 /**
- * Manages MyOscar Login Id for provider 
- * 
+ * Manages MyOscar Login Id for provider
  */
-public class ProviderMyOscarIdData {
-    
-    static private String strColName = "MyOscarId";    
-    private String provider;
-    
-    /** Creates a new instance of ProviderColourUpdater */
-   public ProviderMyOscarIdData(String p) {
-       provider = p;       
-    }
-   
-   public ProviderMyOscarIdData() {
-         
-    }
-   
-   /**
-    *Retrieve myOscar login id for current provider first by querying property table 
-    */
-   public static String getMyOscarId(String providerNo) {
-       String sql;
-       String myOscarId = "";
-       ResultSet rs;
-       DBHandler db;
-       
-       try {
-        
-       
-        sql = "SELECT value FROM property WHERE name = '" + strColName + "' AND provider_no = '" + providerNo + "'";
-        rs = DBHandler.GetSQL(sql);
-            
-        if( rs.next() ) {
-            myOscarId = oscar.Misc.getString(rs, "value");
-        }
-                
-        
-       }
-       catch( SQLException ex ) {
-           MiscUtils.getLogger().error("Error", ex);           
-       }
-       
-       return myOscarId;
-   }
-      /**
-       *set myOscar login id in property table
-       */
-   public boolean setId(String id) {
-       DBHandler db;
-       String sql;
-       ResultSet rs;
-       boolean ret = true;
-       
-       try {
-                  
-        if( idIsSet() )
-           sql = "UPDATE property SET value = '" + id + "' WHERE name = '" + strColName + "' AND provider_no = '" + provider + "'";
-        else
-           sql = "INSERT INTO property (name,value,provider_no) VALUES('" + strColName + "', '" + id + "', '" + provider + "')";
-        
-        
-        DBHandler.RunSQL(sql);
-       
-       }catch( SQLException ex ) {
-           MiscUtils.getLogger().debug("Error adding provider myOscar Login Id: " + ex.getMessage());
-           ret = false;
-       }
-       
-       return ret;
-   }
- 
-   public boolean idIsSet() throws SQLException {
-       DBHandler db;
-       String sql;
-       ResultSet rs;       
-              
-       
-       sql = "SELECT value FROM property WHERE name = '" + strColName + "' AND provider_no = '" + provider + "'";
-       
-       rs = DBHandler.GetSQL(sql);
-       
-       return rs.next();              
-       
-   }
-   
-   //get provider number knowing the indivo id
-  public String getProviderNo(String myOscarId) {
-      String sql = "";
-      String providerNo = "";
-      ResultSet rs = null;
-      DBHandler db;
-      
-      try {
-          
-          
-          sql = "SELECT provider_no FROM property WHERE name = '" + strColName + "' AND value = '" + myOscarId+ "'";
-          MiscUtils.getLogger().debug(sql);
-          rs = DBHandler.GetSQL(sql);
-          
-          if( rs.next() ) {
-              providerNo = oscar.Misc.getString(rs, "provider_no");
-          }
-      } catch( SQLException ex ) {
-          MiscUtils.getLogger().error("Error", ex);
-      }
-      return providerNo;
-  }
-  
-    public static List<String> listMyOscarProviderNums() {
-      String sql;
-      String myOscarId = "";
-      ArrayList providerList = new ArrayList();
-      oscar.oscarProvider.data.ProviderData.getProviderName("sdf");
-      try {
-          
+public final class ProviderMyOscarIdData {
 
-          sql = "SELECT provider_no FROM property WHERE name = '" + strColName + "'";
-          ResultSet rs = DBHandler.GetSQL(sql);
-           
-          while (rs.next()) {
-              providerList.add(rs.getString("provider_no"));
-          }
-   
-      } catch (SQLException sqe) {
-          MiscUtils.getLogger().error("Error", sqe);        
-      }
-      
-      return providerList;
-    }
+	private static final Logger logger = MiscUtils.getLogger();
+
+	private static String strColName = "MyOscarId";
+
+	private ProviderMyOscarIdData() {
+		// this is a utility class not an object, it shouldn't be instantiated.
+	}
+
+	/**
+	 *Retrieve myOscar login id for current provider first by querying property table
+	 */
+	public static String getMyOscarId(String providerNo) {
+		String sql;
+		String myOscarId = "";
+		ResultSet rs;
+
+		try {
+
+			sql = "SELECT value FROM property WHERE name = '" + strColName + "' AND provider_no = '" + providerNo + "'";
+			rs = DBHandler.GetSQL(sql);
+
+			if (rs.next()) {
+				myOscarId = oscar.Misc.getString(rs, "value");
+			}
+
+		} catch (SQLException ex) {
+			logger.error("Error", ex);
+		}
+
+		return myOscarId;
+	}
+
+	/**
+	 *set myOscar login id in property table
+	 */
+	public static boolean setId(String providerId, String id) {
+		String sql;
+		boolean ret = true;
+
+		try {
+
+			if (idIsSet(providerId)) sql = "UPDATE property SET value = '" + id + "' WHERE name = '" + strColName + "' AND provider_no = '" + providerId + "'";
+			else sql = "INSERT INTO property (name,value,provider_no) VALUES('" + strColName + "', '" + id + "', '" + providerId + "')";
+
+			DBHandler.RunSQL(sql);
+
+		} catch (SQLException ex) {
+			logger.error("Error adding provider myOscar Login Id: " + ex.getMessage());
+			ret = false;
+		}
+
+		return ret;
+	}
+
+	public static boolean idIsSet(String providerId) throws SQLException {
+		String sql;
+		ResultSet rs;
+
+		sql = "SELECT value FROM property WHERE name = '" + strColName + "' AND provider_no = '" + providerId + "'";
+
+		rs = DBHandler.GetSQL(sql);
+
+		return rs.next();
+
+	}
+
+	// get provider number knowing the indivo id
+	public static String getProviderNo(String myOscarId) {
+		String sql = "";
+		String providerNo = "";
+		ResultSet rs = null;
+
+		try {
+
+			sql = "SELECT provider_no FROM property WHERE name = '" + strColName + "' AND value = '" + myOscarId + "'";
+			MiscUtils.getLogger().debug(sql);
+			rs = DBHandler.GetSQL(sql);
+
+			if (rs.next()) {
+				providerNo = oscar.Misc.getString(rs, "provider_no");
+			}
+		} catch (SQLException ex) {
+			logger.error("Error", ex);
+		}
+		return providerNo;
+	}
+
+	public static List<String> listMyOscarProviderNums() {
+		String sql;
+		ArrayList<String> providerIdList = new ArrayList<String>();
+		
+		// hrmmm this line looks particularly odd, I wonder why he added this here...
+		oscar.oscarProvider.data.ProviderData.getProviderName("sdf");
+		
+		try {
+
+			sql = "SELECT provider_no FROM property WHERE name = '" + strColName + "'";
+			ResultSet rs = DBHandler.GetSQL(sql);
+
+			while (rs.next()) {
+				providerIdList.add(rs.getString("provider_no"));
+			}
+
+		} catch (SQLException sqe) {
+			logger.error("Error", sqe);
+		}
+
+		return providerIdList;
+	}
 }

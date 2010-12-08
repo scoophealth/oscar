@@ -66,9 +66,7 @@ public class indivoCheck extends TagSupport {
         boolean conditionMet = false ;
        
         try {            
-            ProviderMyOscarIdData prov = new ProviderMyOscarIdData(providerNo);
-                        
-            if( prov.idIsSet() ) {
+            if( ProviderMyOscarIdData.idIsSet(providerNo) ) {
                 if( demoNo != null ) {
                    DemographicData.Demographic demo = new DemographicData().getDemographic(demoNo); 
                    String pin = demo.getIndivoId();

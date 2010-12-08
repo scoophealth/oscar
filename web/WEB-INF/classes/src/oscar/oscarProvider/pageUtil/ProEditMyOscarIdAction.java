@@ -39,6 +39,7 @@ import oscar.oscarProvider.data.ProviderMyOscarIdData;
 
 public class ProEditMyOscarIdAction extends Action {
 
+    @Override
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
         throws Exception
     {
@@ -50,8 +51,6 @@ public class ProEditMyOscarIdAction extends Action {
         DynaActionForm frm = (DynaActionForm)form;
         String loginId = (String)frm.get("myOscarLoginId") + (String)frm.get("myOscarDomain");       
                 
-        ProviderMyOscarIdData myOscarId = new ProviderMyOscarIdData();
-        
         if( ProviderMyOscarIdData.getMyOscarId(providerNo).equals(loginId) ) {
             ActionMessages errors = new ActionMessages();
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("provider.setMyOscarLogin.msgNotUnique"));
@@ -59,7 +58,7 @@ public class ProEditMyOscarIdAction extends Action {
             forward = new String("failure");
             
         }
-        else if( myOscarId.setId(loginId)) {
+        else if( ProviderMyOscarIdData.setId(providerNo,loginId)) {
             request.setAttribute("status",new String("complete"));
             forward = new String("success");
         }
