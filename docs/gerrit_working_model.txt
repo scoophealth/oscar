@@ -148,3 +148,8 @@ import git into gerrit
 - cp test.git/hooks test2.git/hooks
 - in mysql : insert into projects (use_contributor_agreements,submit_type,name) values ('N','M','test2');
 - gerrit.sh start
+
+
+clean up cvs stuff
+------------------
+- If you clone the git repository you'll now find a bunch of .cvsignores lying around, you need to manually convert these to .gitignores
