@@ -132,11 +132,19 @@ The below commands were based off a pserver run, but we should be doing a local 
 - CVSROOT=:pserver:anonymous@oscarmcmaster.cvs.sourceforge.net:/cvsroot/oscarmcmaster cvs login
 - git cvsimport -v -d :pserver:anonymous@oscarmcmaster.cvs.sourceforge.net:/cvsroot/oscarmcmaster -C test2  oscar_mcmaster/docs
 
+or
+
+- rsync -av rsync://myoscar.cvs.sourceforge.net/cvsroot/myoscar/* .
+- then do the gitcvsimport from the local directory
+
+
 import git into gerrit
 ----------------------
 - gerrit.sh stop
 - cd /var/gerrit/review_site/git
 - cp -r /tmp/test2/.git test2.git
 - cp test.git/config test2.git/config
+- rm test2.git/hooks/*.sample
+- cp test.git/hooks test2.git/hooks
 - in mysql : insert into projects (use_contributor_agreements,submit_type,name) values ('N','M','test2');
 - gerrit.sh start
