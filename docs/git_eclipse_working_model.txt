@@ -46,7 +46,7 @@ Add Repository
 --------------
 On the package explorer tab (or what ever your favourite explorer is), right click and select import -> "projects from git" -> clone.
 
-The repository details should be provided for your git/gerrit installation, for my example I will use "ssh://r6squeegee@source.osrcartools.org:29418/test". Just continue with the screen flow, most options should be obvious or defaults should be fine.
+The repository details should be provided for your git/gerrit installation, for my example I will use "ssh://r6squeegee@source.osccartools.org:29418/test". Just continue with the screen flow, most options should be obvious or defaults should be fine.
 
 Now back on the import screen, select the new repository (click on it again even though it's highlighted to make the next button available). Continue with the screen flow, most of the defaults should be fine.
 
