@@ -1,6 +1,12 @@
 package org.oscarehr.casemgmt.util;
 
-public interface ExtPrint {
+import java.io.IOException;
 
-	public void print();
+import org.oscarehr.casemgmt.service.CaseManagementPrintPdf;
+
+import com.lowagie.text.DocumentException;
+
+public interface ExtPrint  {
+
+	public void printExt(CaseManagementPrintPdf engine) throws IOException, DocumentException;
 }

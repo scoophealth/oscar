@@ -85,6 +85,7 @@
        //addRightNavDiv("OcularMeds");	
        //popColumn(ctx + "/oscarEncounter/displayMacro.do?hC=009999&appointment_no="+appointmentNo,"OcularMeds","OcularMeds", "rightNavBar", this);
        
+       addPrintOption('Measurements','extPrintMeasurements');
        
      });
 

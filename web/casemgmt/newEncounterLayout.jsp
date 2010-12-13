@@ -185,8 +185,16 @@
        }
        
 
+       function addPrintOption(name,bean) {
+    	   var test1Str = "<img style=\"cursor: pointer;\" title=\"Print "+name+"\" id=\"img"+name+"\" alt=\"Print "+name+"\" onclick=\"return printInfo(this, 'extPrint"+name+"');\" src=\"" + ctx + "/oscarEncounter/graphics/printer.png\">&nbsp;"+name;
+           jQuery("#printDateRow").before("<tr><td></td><td>" + test1Str + "</tr></tr>");           
+           jQuery("form[name='caseManagementEntryForm']").append("<input name=\"extPrint"+name+"\" id=\"extPrint"+name+"\" value=\"false\" type=\"hidden\"/>");
+           jQuery.ajax({ url: ctx+"/casemgmt/ExtPrintRegistry.do?method=register&name="+name+"&bean="+bean, async:false, success: function(data){               
+           }});      
+       }
+       
        var appointmentNo = <%=request.getParameter("appointmentNo")%>;
-              
+      
    </script>
  
    
@@ -618,7 +626,7 @@ function doscroll(){
           <div id="printOps" class="printOps">
               <h3 style="margin-bottom:5px; text-align:center;"><bean:message key="oscarEncounter.Index.PrintDialog"/></h3>
               <form id="frmPrintOps" action="" onsubmit="return false;">
-              		<table>
+              		<table id="printElementsTable">
               			<tr>
               				<td><input type="radio" id="printopSelected" name="printop" value="selected"><bean:message key="oscarEncounter.Index.PrintSelect"/></td>
               				<td>
@@ -636,7 +644,8 @@ function doscroll(){
 								<img style="cursor: pointer;" title="<bean:message key="oscarEncounter.print.title"/>" id='imgPrintRx' alt="<bean:message key="oscarEncounter.togglePrintRx.title"/>" onclick="return printInfo(this, 'printRx');" src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png'>&nbsp;<bean:message key="oscarEncounter.Rx.title" />
               				</td>
               			</tr>
-              			<tr>
+              			<!--  extension point -->              			
+              			<tr id="printDateRow">
               				<td><input type="radio" id="printopDates" name="printop" value="dates"><bean:message key="oscarEncounter.Index.PrintDates"/>&nbsp;<a style="font-variant:small-caps;" href="#" onclick="return printToday(event);"><bean:message key="oscarEncounter.Index.PrintToday"/></a></td>
               				<td></td>
               			</tr>

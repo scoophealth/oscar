@@ -78,16 +78,46 @@ public class CaseManagementPrintPdf {
     
     private SimpleDateFormat formatter;
     
-    private final int LINESPACING = 1;
-    private final float LEADING = 12;
-    private final float FONTSIZE = 10;
-    private final int NUMCOLS = 2;
+    public final int LINESPACING = 1;
+    public final float LEADING = 12;
+    public final float FONTSIZE = 10;
+    public final int NUMCOLS = 2;
     
     /** Creates a new instance of CaseManagementPrintPdf */
     public CaseManagementPrintPdf(HttpServletRequest request, OutputStream os) {
         this.request = request;
         this.os = os;
         formatter = new SimpleDateFormat("dd-MMM-yyyy");           
+    }
+    
+    public HttpServletRequest getRequest() {
+    	return request;
+    }
+    
+    public OutputStream getOutputStream() {
+    	return os;
+    }
+    
+    public Font getFont() {
+    	return font;
+    }
+    public SimpleDateFormat getFormatter() {
+    	return formatter;
+    }
+    
+    public Document getDocument() {
+    	return document;
+    }
+    
+    public boolean getNewPage() {
+    	return newPage;
+    }
+    public void setNewPage(boolean b) {
+    	this.newPage = b;
+    }
+    
+    public BaseFont getBaseFont() {
+    	return bf;
     }
     
     public void printDocHeaderFooter() throws IOException, DocumentException {

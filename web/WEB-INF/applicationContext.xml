@@ -319,4 +319,7 @@
 			<ref local="rxCloneDao" />
 		</property>
 	</bean>
+	
+	<bean id="extPrintMeasurements" class="org.oscarehr.casemgmt.service.MeasurementPrint" autowire="byName"/>
+
 </beans>

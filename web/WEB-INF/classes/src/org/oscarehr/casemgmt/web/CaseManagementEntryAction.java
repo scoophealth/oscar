@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -65,6 +66,8 @@ import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.model.CaseManagementTmpSave;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CaseManagementPrintPdf;
+import org.oscarehr.casemgmt.util.ExtPrint;
+import org.oscarehr.casemgmt.util.ExtPrintRegistry;
 import org.oscarehr.casemgmt.web.CaseManagementViewAction.IssueDisplay;
 import org.oscarehr.casemgmt.web.formbeans.CaseManagementEntryFormBean;
 import org.oscarehr.common.model.DxAssociation;
@@ -2289,12 +2292,30 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 				othermeds = cpp.get("OMeds");
 			}
 		}
-
+		
 		CaseManagementPrintPdf printer = new CaseManagementPrintPdf(request, os);
 		printer.printDocHeaderFooter();
 		printer.printCPP(cpp);
 		printer.printRx(demoNo, othermeds);
 		printer.printNotes(notes);
+		
+		/* check extensions */
+		Enumeration<String> e=request.getParameterNames();
+		while(e.hasMoreElements()) {
+			String name = e.nextElement();
+			if(name.startsWith("extPrint")) {
+				if(request.getParameter(name).equals("true")) {
+					ExtPrint printBean = (ExtPrint)SpringUtils.getBean(name);
+					if(printBean != null) {
+						printBean.printExt(printer);			
+					}
+				}
+			}
+		}
+		
+
+		
+
 		printer.finish();
 	}
 

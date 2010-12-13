@@ -14,4 +14,8 @@ public class ExtPrintRegistry {
 	public static Map<String,String> getEntries() {
 		return entries;
 	}
+	
+	public static String getEntry(String name) {
+		return entries.get(name);
+	}
 }
