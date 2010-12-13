@@ -204,25 +204,19 @@
 		</copy>
 	</target>
 
-
-
-	<target name="compileTasks" depends="init">
-		<javac fork="true" memoryinitialsize="128m" memorymaximumsize="256m" srcdir="tasks/src" destdir="tasks/classes" deprecation="on" debug="on" target="${JAVA_TARGET_VERSION}" source="1.5">
-			<classpath>
-				<fileset dir="tasks/lib">
-					<include name="*.jar" />
-				</fileset>
-			</classpath>
-		</javac>
-	</target>
-
 	<path id="classpath.path.translate">
 		<fileset dir="tasks/lib">
 			<include name="*.jar" />
 		</fileset>
+		<path refid="classpath.path"/>
 		<pathelement location="tasks/classes" />
 	</path>
 
+	<target name="compileTasks" depends="init">
+		<javac fork="true" memoryinitialsize="128m" memorymaximumsize="256m" srcdir="tasks/src" destdir="tasks/classes" deprecation="on" debug="on" target="${JAVA_TARGET_VERSION}" source="1.5">
+			<classpath refid="classpath.path.translate" />
+		</javac>
+	</target>
 
 	<target name="english2French" description="Resource Compare" depends="init">
 		<taskdef name="languageCompareTask" classname="ResourceCompareTask" classpath="tasks/classes" classpathref="classpath.path.translate" />
