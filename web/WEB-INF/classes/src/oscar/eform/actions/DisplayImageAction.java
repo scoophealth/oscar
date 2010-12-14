@@ -131,6 +131,12 @@ public class DisplayImageAction extends DownloadAction{
                     contentType = "image/x-cmu-raster";
                 }else if(extension(file.getName()).equalsIgnoreCase("gif")){ // for GIF
                     contentType = "image/gif";
+                }else if(extension(file.getName()).equalsIgnoreCase("js")){ // for GIF
+                    contentType = "text/javascript";
+                }else if(extension(file.getName()).equalsIgnoreCase("css")){ // for GIF
+                    contentType = "text/css";
+                }else if(extension(file.getName()).equalsIgnoreCase("html") || extension(file.getName()).equalsIgnoreCase("htm")){ // for HTML
+                    contentType = "text/html";
                 }else{
                     throw new Exception("please check the file type or update mimetypes.default file to include the "+"."+extension(file.getName()));
                 }
