@@ -77,6 +77,8 @@
        addLeftNavDiv("macro");	      
        popColumn(ctx + "/oscarEncounter/displayMacro.do?hC=009999&appointment_no="+appointmentNo,"macro","macro", "leftNavBar", this);
        
+       addLeftNavDiv("diagrams");	      
+       popColumn(ctx + "/oscarEncounter/displayDiagrams.do?hC=009999&appointment_no="+appointmentNo,"diagrams","diagrams", "leftNavBar", this);
        
        removeNavDiv('issues');
        removeNavDiv('Guidelines');
