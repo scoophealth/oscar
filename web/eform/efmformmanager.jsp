@@ -235,9 +235,9 @@ else if (orderByRequest.equals("file_name")) orderBy = EFormUtil.FILE_NAME;
         <th><bean:message key="eform.uploadhtml.editform" /></th>
     </tr>
     <%
-  ArrayList eForms = EFormUtil.listEForms(orderBy, EFormUtil.CURRENT);
+    ArrayList<HashMap<String, ? extends Object>> eForms = EFormUtil.listEForms(orderBy, EFormUtil.CURRENT);
   for (int i=0; i<eForms.size(); i++) {
-      Hashtable curForm = (Hashtable) eForms.get(i);
+	  HashMap<String, ? extends Object> curForm = eForms.get(i);
 %>
     <tr style="background-color: <%= ((i%2) == 1)?"#F2F2F2":"white"%>;">
         <td width="25%" style="padding-left: 4px;"><a href="#"

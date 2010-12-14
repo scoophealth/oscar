@@ -34,7 +34,7 @@
 
 <%
   ArrayList groups = EFormUtil.getEFormGroups();
-  ArrayList forms = EFormUtil.listEForms(EFormUtil.NAME, EFormUtil.CURRENT);
+  ArrayList<HashMap<String, ? extends Object>> forms = EFormUtil.listEForms(EFormUtil.NAME, EFormUtil.CURRENT);
   String groupView = (String) request.getParameter("group_view");
   if (groupView == null) {
       groupView = (String) request.getAttribute("group_view");
@@ -151,8 +151,9 @@ else if (orderByRequest.equals("file_name")) orderBy = EFormUtil.FILE_NAME;
 					<td align="right" nowrap><strong><bean:message
 						key="eform.groups.addToGroup" /></strong></td>
 					<td nowrap><html:select property="fid">
-						<%                             for (int i=0; i<forms.size(); i++) {
-                                   Hashtable curhash = (Hashtable) forms.get(i);
+						<%                             
+							for (int i=0; i<forms.size(); i++) {
+							HashMap<String, ? extends Object> curhash = forms.get(i);
 %>
 						<html:option value='<%= (String) curhash.get("fid")%>'><%= (String) curhash.get("formName")%> | <%= (String) curhash.get("formDate")%></html:option>
 						<% } %>
@@ -221,10 +222,10 @@ else if (orderByRequest.equals("file_name")) orderBy = EFormUtil.FILE_NAME;
 	</tr>
 	<%
   if (!groupView.equals("")) {
-      ArrayList eForms = EFormUtil.listEForms(orderBy, EFormUtil.CURRENT, groupView);
+      ArrayList<HashMap<String, ? extends Object>> eForms = EFormUtil.listEForms(orderBy, EFormUtil.CURRENT, groupView);
       if (eForms.size() > 0) {
         for (int i=0; i<eForms.size(); i++) {
-          Hashtable curForm = (Hashtable) eForms.get(i);
+        	HashMap<String, ? extends Object> curForm = eForms.get(i);
 %>
 	<tr style="background-color: <%= ((i%2) == 1)?"#F2F2F2":"white"%>;">
 		<td style="padding-left: 4px;"><a href="#"

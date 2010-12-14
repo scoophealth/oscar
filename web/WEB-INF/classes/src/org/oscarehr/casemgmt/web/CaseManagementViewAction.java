@@ -758,8 +758,8 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
 		// add eforms to notes list as single line items
 		String roleName = (String) request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
-		ArrayList<Hashtable<String, Object>> eForms = EFormUtil.listPatientEForms(EFormUtil.DATE, EFormUtil.CURRENT, demoNo, roleName);
-		for (Hashtable<String, Object> eform : eForms) {
+		ArrayList<HashMap<String, ? extends Object>> eForms = EFormUtil.listPatientEForms(EFormUtil.DATE, EFormUtil.CURRENT, demoNo, roleName);
+		for (HashMap<String, ? extends Object> eform : eForms) {
 			notesToDisplay.add(new NoteDisplayNonNote(eform));
 		}
 

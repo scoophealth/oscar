@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
@@ -117,7 +118,7 @@ public class EFormUtil {
 		return (runSQLinsert(sql));
 	}
 
-	public static ArrayList listEForms(String sortBy, String deleted) {
+	public static ArrayList<HashMap<String, ? extends Object>> listEForms(String sortBy, String deleted) {
 
 		// sends back a list of forms that were uploaded (those that can be added to the patient)
 		String sql = "";
@@ -129,10 +130,10 @@ public class EFormUtil {
 			sql = "SELECT * FROM eform ORDER BY " + sortBy;
 		}
 		ResultSet rs = getSQL(sql);
-		ArrayList results = new ArrayList();
+		ArrayList<HashMap<String, ? extends Object>> results = new ArrayList<HashMap<String, ? extends Object>>();
 		try {
 			while (rs.next()) {
-				Hashtable curht = new Hashtable();
+				HashMap<String, Object> curht = new HashMap<String, Object>();
 				curht.put("fid", rsGetString(rs, "fid"));
 				curht.put("formName", rsGetString(rs, "form_name"));
 				curht.put("formSubject", rsGetString(rs, "subject"));
@@ -150,12 +151,12 @@ public class EFormUtil {
 		return (results);
 	}
 
-	public static ArrayList<Hashtable<String, Object>> listEForms(String sortBy, String deleted, String userRoles) {
-		ArrayList<Hashtable<String, Object>> results = new ArrayList<Hashtable<String, Object>>();
-		ArrayList<Hashtable<String, Object>> eForms = listEForms(sortBy, deleted);
+	public static ArrayList<HashMap<String, ? extends Object>> listEForms(String sortBy, String deleted, String userRoles) {
+		ArrayList<HashMap<String, ? extends Object>> results = new ArrayList<HashMap<String, ? extends Object>>();
+		ArrayList<HashMap<String, ? extends Object>> eForms = listEForms(sortBy, deleted);
 		if (eForms.size() > 0) {
 			for (int i = 0; i < eForms.size(); i++) {
-				Hashtable<String, Object> curForm = eForms.get(i);
+				HashMap<String, ? extends Object> curForm = eForms.get(i);
 				// filter eform by role type
 				if (curForm.get("roleType") != null && !curForm.get("roleType").equals("")) {
 					// ojectName: "_admin,_admin.eform"
@@ -202,7 +203,7 @@ public class EFormUtil {
 		return fileList;
 	}
 
-	public static ArrayList<Hashtable<String, Object>> listPatientEForms(String sortBy, String deleted, String demographic_no, String userRoles) {
+	public static ArrayList<HashMap<String,? extends Object>> listPatientEForms(String sortBy, String deleted, String demographic_no, String userRoles) {
 
 		Boolean current = null;
 		if (deleted.equals("deleted")) current = false;
@@ -214,7 +215,7 @@ public class EFormUtil {
 		else if (SUBJECT.equals(sortBy)) Collections.sort(allEformDatas, EFormData.FORM_SUBJECT_COMPARATOR);
 		else Collections.sort(allEformDatas, EFormData.FORM_DATE_COMPARATOR);
 
-		ArrayList<Hashtable<String, Object>> results = new ArrayList<Hashtable<String, Object>>();
+		ArrayList<HashMap<String, ? extends Object>> results = new ArrayList<HashMap<String, ? extends Object>>();
 		try {
 			for (EFormData eFormData : allEformDatas) {
 				// filter eform by role type
@@ -228,7 +229,7 @@ public class EFormUtil {
 						continue;
 					}
 				}
-				Hashtable<String, Object> curht = new Hashtable<String, Object>();
+				HashMap<String, Object> curht = new HashMap<String, Object>();
 				curht.put("fdid", eFormData.getId().toString());
 				curht.put("fid", eFormData.getFormId().toString());
 				curht.put("formName", eFormData.getFormName());
@@ -496,7 +497,7 @@ public class EFormUtil {
 		runSQL(sql);
 	}
 
-	public static ArrayList listEForms(String sortBy, String deleted, String group, String userRoles) {
+	public static ArrayList<HashMap<String,? extends Object>> listEForms(String sortBy, String deleted, String group, String userRoles) {
 		// sends back a list of forms that were uploaded (those that can be added to the patient)
 		String sql = "";
 		if (deleted.equals("deleted")) {
@@ -507,10 +508,10 @@ public class EFormUtil {
 			sql = "SELECT * FROM eform AND eform.fid=eform_groups.fid AND eform_groups.group_name='" + group + "' ORDER BY " + sortBy;
 		}
 		ResultSet rs = getSQL(sql);
-		ArrayList results = new ArrayList();
+		ArrayList<HashMap<String, ? extends Object>> results = new ArrayList<HashMap<String, ? extends Object>>();
 		try {
 			while (rs.next()) {
-				Hashtable curht = new Hashtable();
+				HashMap<String,String> curht = new HashMap<String,String>();
 				curht.put("fid", rsGetString(rs, "fid"));
 				curht.put("formName", rsGetString(rs, "form_name"));
 				curht.put("formSubject", rsGetString(rs, "subject"));
@@ -527,7 +528,7 @@ public class EFormUtil {
 		return (results);
 	}
 
-	public static ArrayList listPatientEForms(String sortBy, String deleted, String demographic_no, String groupName, String userRoles) {
+	public static ArrayList<HashMap<String,? extends Object>> listPatientEForms(String sortBy, String deleted, String demographic_no, String groupName, String userRoles) {
 		// sends back a list of forms added to the patient
 		String sql = "";
 		if (deleted.equals("deleted")) {
@@ -538,7 +539,7 @@ public class EFormUtil {
 			sql = "SELECT * FROM eform_data, eform_groups WHERE eform_data.patient_independent=0 AND eform_data.demographic_no=" + demographic_no + " AND eform_data.fid=eform_groups.fid AND eform_groups.group_name='" + groupName + "' ORDER BY " + sortBy;
 		}
 		ResultSet rs = getSQL(sql);
-		ArrayList results = new ArrayList();
+		ArrayList<HashMap<String,? extends Object>> results = new ArrayList<HashMap<String,? extends Object>>();
 		try {
 			while (rs.next()) {
 				// filter eform by role type
@@ -551,7 +552,7 @@ public class EFormUtil {
 						continue;
 					}
 				}
-				Hashtable curht = new Hashtable();
+				HashMap<String,String> curht = new HashMap<String,String>();
 				curht.put("fdid", oscar.Misc.getString(rs, "fdid"));
 				curht.put("fid", rsGetString(rs, "fid"));
 				curht.put("formName", rsGetString(rs, "form_name"));

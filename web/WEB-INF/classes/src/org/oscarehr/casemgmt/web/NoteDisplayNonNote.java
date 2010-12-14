@@ -2,7 +2,7 @@ package org.oscarehr.casemgmt.web;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Hashtable;
+import java.util.HashMap;
 
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
@@ -27,7 +27,7 @@ public class NoteDisplayNonNote implements NoteDisplay {
 	private boolean isEncounterForm = false;
 	private String linkInfo;
 
-	public NoteDisplayNonNote(Hashtable<String, Object> eform) {
+	public NoteDisplayNonNote(HashMap<String, ? extends Object> eform) {
 		date = (Date) eform.get("formDateAsDate");
 		note = eform.get("formName") + " : " + eform.get("formSubject");
 		provider = providerDao.getProvider((String) eform.get("providerNo"));

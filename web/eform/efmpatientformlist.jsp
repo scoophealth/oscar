@@ -185,18 +185,19 @@ function updateAjax() {
 						<th><bean:message key="eform.showmyform.msgAction" /></th>
 					</tr>
 					<%
-						ArrayList eForms;
-							if (groupView.equals(""))
-							{
-								eForms = EFormUtil.listPatientEForms(orderBy, EFormUtil.CURRENT, demographic_no, roleName$);
-							}
-							else
-							{
-								eForms = EFormUtil.listPatientEForms(orderBy, EFormUtil.CURRENT, demographic_no, groupView, roleName$);
-							}
-							for (int i = 0; i < eForms.size(); i++)
-							{
-								Hashtable curform = (Hashtable)eForms.get(i);
+						ArrayList<HashMap<String,? extends Object>> eForms;
+						if (groupView.equals(""))
+						{
+							eForms = EFormUtil.listPatientEForms(orderBy, EFormUtil.CURRENT, demographic_no, roleName$);
+						}
+						else
+						{
+							eForms = EFormUtil.listPatientEForms(orderBy, EFormUtil.CURRENT, demographic_no, groupView, roleName$);
+						}
+						
+						for (int i = 0; i < eForms.size(); i++)
+						{
+							HashMap<String,? extends Object> curform = eForms.get(i);
 					%>
 					<tr bgcolor="<%=((i % 2) == 1)?"#F2F2F2":"white"%>">
 						<%

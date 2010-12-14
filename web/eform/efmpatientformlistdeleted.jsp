@@ -146,11 +146,10 @@ function updateAjax() {
 				<th><bean:message key="eform.showmyform.msgAction" /></th>
 			</tr>
 			<%
-    ArrayList forms = null;
-    forms = EFormUtil.listPatientEForms(orderBy, EFormUtil.DELETED, demographic_no, null);
-    for (int i=0; i< forms.size(); i++) {
-        Hashtable curform = (Hashtable) forms.get(i);
-%>
+			ArrayList<HashMap<String, ? extends Object>> forms = EFormUtil.listPatientEForms(orderBy, EFormUtil.DELETED, demographic_no, null);
+			    for (int i=0; i< forms.size(); i++) {
+			    	HashMap<String, ? extends Object> curform = forms.get(i);
+			%>
 			<tr bgcolor="<%= ((i%2) == 1)?"#F2F2F2":"white"%>">
 				<td><a href="#"
 					ONCLICK="popupPage('efmshowform_data.jsp?fdid=<%= curform.get("fdid")%>', '<%="FormPD" + i%>'); return false;"

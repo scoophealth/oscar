@@ -28,7 +28,7 @@ package oscar.oscarEncounter.pageUtil;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Hashtable;
+import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -62,19 +62,19 @@ public class EctDisplayDiagramAction extends EctDisplayAction {
         
         winName = "AllDiagrams" + bean.demographicNo;
               
-        ArrayList eforms = EFormUtil.listEForms("eform_groups.group_name", "current", "Eye Form", null);
+        ArrayList<HashMap<String, ? extends Object>> eforms = EFormUtil.listEForms("eform_groups.group_name", "current", "Eye Form", null);
         for(int x=0;x<eforms.size();x++) {
-        	Hashtable ht = (Hashtable)eforms.get(x);
+        	HashMap<String, ? extends Object> ht = eforms.get(x);
         	//url = "popupPage(700,1000, '" + winName + "','" + request.getContextPath() + "/eform/efmformadd_data.jsp?fid=" + ht.get("fid") +"&demographic_no=" + bean.demographicNo + "&appointment=" + appointmentNo + "')";
         	url = "popupPage(700,1000,'"+winName+"', '"+ request.getContextPath() +"/eform/efmformadd_data.jsp?fid="+ht.get("fid")+"&demographic_no=" + bean.demographicNo + "&appointment=" + appointmentNo+"')";        	               	
         	Dao.addPopUpUrl(url);
         	Dao.addPopUpText((String)ht.get("formName"));
         }
         
-        ArrayList patientEforms = EFormUtil.listPatientEForms("eform_data.form_date", "current", bean.demographicNo, "Eye Form", null);
+        ArrayList<HashMap<String,? extends Object>> patientEforms = EFormUtil.listPatientEForms("eform_data.form_date", "current", bean.demographicNo, "Eye Form", null);
         for(int x=0;x<patientEforms.size();x++) {
         	NavBarDisplayDAO.Item item = Dao.Item();
-        	java.util.Hashtable form = (java.util.Hashtable)patientEforms.get(x);
+        	HashMap<String,? extends Object> form = patientEforms.get(x);
         	String strDate = (String)form.get("formDate");
         	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         	try {
