@@ -159,7 +159,7 @@ function updateAjax() {
       </tr>      
       
 <%
-  ArrayList<HashMap<String, ? extends Object> eForms;
+  ArrayList<HashMap<String, ? extends Object>> eForms;
   if (groupView.equals("") || groupView.equals("default")) {
       eForms = EFormUtil.listEForms(orderBy, EFormUtil.CURRENT, roleName$);
   } else {
