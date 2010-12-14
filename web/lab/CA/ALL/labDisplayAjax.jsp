@@ -95,7 +95,7 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
         }
 
          printPDF=function(doclabid){
-            document.forms['acknowledgeForm_'+doclabid].action=oscar.OscarProperties props = oscar.OscarProperties.getInstance();"../lab/CA/ALL/PrintPDF.do";
+            document.forms['acknowledgeForm_'+doclabid].action="../lab/CA/ALL/PrintPDF.do";
             document.forms['acknowledgeForm_'+doclabid].submit();
         }
 
