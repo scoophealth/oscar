@@ -7,7 +7,8 @@
 		 oscar.oscarLab.ca.all.parsers.*,
 		 oscar.oscarLab.LabRequestReportLink,
 		 oscar.oscarMDS.data.ReportStatus,oscar.log.*,
-		 org.apache.commons.codec.binary.Base64" %>
+		 org.apache.commons.codec.binary.Base64,
+                 oscar.OscarProperties" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
@@ -15,7 +16,7 @@
 <%@ taglib uri="/WEB-INF/oscarProperties-tag.tld" prefix="oscarProperties"%>
 <%@ taglib uri="/WEB-INF/indivo-tag.tld" prefix="indivo"%>
 <%
-
+oscar.OscarProperties props = oscar.OscarProperties.getInstance();
 String segmentID = request.getParameter("segmentID");
 String providerNo = request.getParameter("providerNo");
 String searchProviderNo = request.getParameter("searchProviderNo");
@@ -120,7 +121,9 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
 .AbnormalRes a:visited { color: red }
 .AbnormalRes a:active { color: red }
 .NormalRes   { font-weight: bold; font-size: 8pt; color: black; font-family: 
-               Verdana, Arial, Helvetica }
+                      confirmAck=function() {
+            return confirm('<bean:message key="oscarMDS.index.msgConfirmAcknowledge"/>');
+        } Verdana, Arial, Helvetica }
 .NormalRes a:link { color: black }
 .NormalRes a:hover { color: black }
 .NormalRes a:visited { color: black }
@@ -133,7 +136,9 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
 .HiLoRes a:active { color: blue }
 .CorrectedRes { font-weight: bold; font-size: 8pt; color: #E000D0; font-family: 
                Verdana, Arial, Helvetica }
-.CorrectedRes a:link { color: #6da997 }
+.CorrectedRes         confirmAck=function() {
+            return confirm('<bean:message key="oscarMDS.index.msgConfirmAcknowledge"/>');
+        }a:link { color: #6da997 }
 .CorrectedRes a:hover { color: #6da997 }
 .CorrectedRes a:visited { color: #6da997 }
 .CorrectedRes a:active { color: #6da997 }
@@ -147,7 +152,9 @@ div.Field a:active { color: black }
                Verdana, Arial, Helvetica }
 div.Field2   { font-weight: bold; font-size: 8pt; color: #ffffff; font-family: 
                Verdana, Arial, Helvetica }
-div.FieldData { font-weight: normal; font-size: 8pt; color: black; font-family: 
+div.FieldData {         confirmAck=function() {
+            return confirm('<bean:message key="oscarMDS.index.msgConfirmAcknowledge"/>');
+        }font-weight: normal; font-size: 8pt; color: black; font-family:
                Verdana, Arial, Helvetica }
 div.Field3   { font-weight: normal; font-size: 8pt; color: black; font-style: italic; 
                font-family: Verdana, Arial, Helvetica }
@@ -174,7 +181,9 @@ div.Title2 a:active { color: black }
                border-bottom-width: medium }
 .Cell3       { background-color: #add9c7; border-left: thin solid #dbfdeb; 
                border-right: thin solid #5d9987; 
-               border-top: thin solid #dbfdeb; 
+                      confirmAck=function() {
+            return confirm('<bean:message key="oscarMDS.index.msgConfirmAcknowledge"/>');
+        } border-top: thin solid #dbfdeb;
                border-bottom: thin solid #5d9987 }
 .CellHdr     { background-color: #cbe5d7; border-right-style: none; border-right-width: 
                medium; border-bottom-style: none; border-bottom-width: medium }
@@ -276,9 +285,13 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                                     }
                                                             }});
         }
-        function  confirmAck() {
-            return confirm('<bean:message key="oscarMDS.index.msgConfirmAcknowledge"/>');
-        }
+        function confirmAck(){
+		<% if (props.getProperty("confirmAck", "").equals("yes")) { %>
+            		return confirm('<bean:message key="oscarMDS.index.msgConfirmAcknowledge"/>');
+            	<% } else { %>
+            		return true;
+            	<% } %>
+	}
         function confirmAckUnmatched(){
             return confirm('<bean:message key="oscarMDS.index.msgConfirmAcknowledgeUnmatched"/>');
         }

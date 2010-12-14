@@ -8,7 +8,8 @@
 		 oscar.oscarLab.LabRequestReportLink,
 		 oscar.oscarMDS.data.ReportStatus,oscar.log.*,
                  oscar.oscarDB.DBHandler,
-		 org.apache.commons.codec.binary.Base64" %>
+		 org.apache.commons.codec.binary.Base64,
+                 oscar.OscarProperties" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
@@ -16,7 +17,7 @@
 <%@ taglib uri="/WEB-INF/oscarProperties-tag.tld" prefix="oscarProperties"%>
 <%@ taglib uri="/WEB-INF/indivo-tag.tld" prefix="indivo"%>
 <%
-
+oscar.OscarProperties props = oscar.OscarProperties.getInstance();
 String segmentID = request.getParameter("segmentID");
 String providerNo = request.getParameter("providerNo");
 String searchProviderNo = request.getParameter("searchProviderNo");
@@ -94,7 +95,7 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
         }
 
          printPDF=function(doclabid){
-            document.forms['acknowledgeForm_'+doclabid].action="../lab/CA/ALL/PrintPDF.do";
+            document.forms['acknowledgeForm_'+doclabid].action=oscar.OscarProperties props = oscar.OscarProperties.getInstance();"../lab/CA/ALL/PrintPDF.do";
             document.forms['acknowledgeForm_'+doclabid].submit();
         }
 
@@ -152,9 +153,13 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
                                                                     }
                                                             }});
         }
-        confirmAck=function() {
-            return confirm('<bean:message key="oscarMDS.index.msgConfirmAcknowledge"/>');
-        }
+        function confirmAck(){
+		<% if (props.getProperty("confirmAck", "").equals("yes")) { %>
+            		return confirm('<bean:message key="oscarMDS.index.msgConfirmAcknowledge"/>');
+            	<% } else { %>
+            		return true;
+            	<% } %>
+	}
         confirmAckUnmatched=function(){
             return confirm('<bean:message key="oscarMDS.index.msgConfirmAcknowledgeUnmatched"/>');
         }
