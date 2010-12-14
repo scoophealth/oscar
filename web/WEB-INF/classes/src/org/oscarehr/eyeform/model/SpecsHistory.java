@@ -164,5 +164,13 @@ public class SpecsHistory {
 		}catch(ParseException e) {}
 	}	
 	
-	
+	private String getPrefix(String data) {
+		if(data.startsWith("-")) return data;
+		return "+"+data;
+	}
+	public String toString() {
+		String od = getPrefix(this.getOdSph()) + getPrefix(this.getOdCyl()) + "x" + getPrefix(this.getOdAxis());
+		String os = getPrefix(this.getOsSph()) + getPrefix(this.getOsCyl()) + "x" + getPrefix(this.getOsAxis());
+		return od + "  " + os;
+	}
 }
