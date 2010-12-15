@@ -214,7 +214,6 @@ span.ge{
 
 
 </style>
-<a id="save_measurements" href="">[save]</a>
 <table>
 <tr><td><span class="ge">Photos:</span></td></tr>
 <tr>

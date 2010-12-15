@@ -1975,6 +1975,14 @@ function savePage(method, chain) {
 		eval(func + "()");
 	});
 	
+	
+	jQuery("[submit_addon]").each(function()
+    		   {
+    		     jQuery("#"+jQuery(this).attr('submit_addon')).click();
+    		   }
+    		 );
+       
+	
     /*var frm = document.forms["caseManagementViewForm"];
     var url = ctx + "/CaseManagementView.do";
     var objAjax = new Ajax.Request (

@@ -89,7 +89,11 @@
        popColumn(ctx + "/CaseManagementView.do?hc=009999&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=OcularMedication&title="+ocularMedsLabel+"&cmd=OcularMedication","OcularMedication","OcularMedication", "rightNavBar", this);
        
        addPrintOption('Measurements','extPrintMeasurements');
+   
+       jQuery("form[name='caseManagementEntryForm']").append('<span submit_addon="save_measurements"></span>');
+       
        
      });
 
  
+   
