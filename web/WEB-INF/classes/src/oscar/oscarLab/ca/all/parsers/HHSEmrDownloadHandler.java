@@ -1,14 +1,36 @@
 /*
- * DefaultGenericHandler.java
  *
- * Created on June 8, 2007, 2:17 PM
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
  *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
+ * <OSCAR TEAM>
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
-
 package oscar.oscarLab.ca.all.parsers;
 
+import ca.uhn.hl7v2.HL7Exception;
+import ca.uhn.hl7v2.model.Group;
+import ca.uhn.hl7v2.model.Segment;
+import ca.uhn.hl7v2.model.Structure;
+import ca.uhn.hl7v2.parser.Parser;
+import ca.uhn.hl7v2.parser.PipeParser;
+import ca.uhn.hl7v2.util.Terser;
+import ca.uhn.hl7v2.validation.impl.NoValidation;
 import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
@@ -31,6 +53,8 @@ public class HHSEmrDownloadHandler extends DefaultGenericHandler implements Mess
     /** Creates a new instance of CMLHandler */
     public HHSEmrDownloadHandler(){
         super();
+
+
     }
     
     @Override
@@ -41,10 +65,35 @@ public class HHSEmrDownloadHandler extends DefaultGenericHandler implements Mess
     @Override
     public ArrayList getHeaders(){
        headerList = new ArrayList<String>();
+
+       String[] noms = msg.getNames();
+       for(String s:noms){
+           logger.debug(s);
+       }
+
        
        for (int i = 0; i < getOBRCount();i++){
             headerList.add(getOBRName(i));
             logger.debug("ADDING to header "+getOBRName(i));
+       }
+       logger.debug("AFTER");
+       try{
+
+       logger.debug("Current Group "+((Group) terser.getFinder().getCurrentGroup()).getName());
+
+       Structure[] strs =   terser.getFinder().getCurrentChildReps(); //((Group) terser.getFinder().getCurrentGroup().get("RESPONSE")).getAll("ORDER_OBSERVATION");
+        for(Structure str:strs){
+            logger.debug(str.getClass().getName()+"  "+str.getName());
+            Group obrseg = (Group) str;
+
+            Structure[] structChilds = obrseg.getAll("OBX");
+            for(Structure ss:structChilds){
+                logger.debug(ss.getClass().getName()+" "+str.getName());
+            }
+        }
+       }catch(Exception e){
+           logger.debug(e);
+
        }
        return headerList; 
     } 
@@ -53,61 +102,107 @@ public class HHSEmrDownloadHandler extends DefaultGenericHandler implements Mess
          return headerList.get(i);
      }
 
+     private void findOBX(Group group,ArrayList list) throws Exception{
+        String[] noms = group.getNames();
+        for (String nom:noms){
+            Structure[] obxS = group.getAll(nom);
+            for(Structure ss : obxS){
+                if (ss instanceof Segment){
+                    if ("OBX".equals(ss.getName())){
+                        list.add((Segment)ss);
+                       //System.out.println(ss.getName()+" s "+segmentView((Segment)ss));
+                    }
+                }else{
+                    findOBX((Group) ss,list);
+                }
+            }
+        }
+    }
     
     
-//    public void init(String hl7Body) throws HL7Exception {
-//        
-//        Parser p = new PipeParser();
-//        p.setValidationContext(new NoValidation());
+    public void init(String hl7Body) throws HL7Exception {
+        
+        Parser p = new PipeParser();
+        p.setValidationContext(new NoValidation());
 
-//        // force parsing as a generic message by changing the message structure
-//        hl7Body = hl7Body.replaceAll("R01", "");
-//        msg = p.parse(hl7Body.replaceAll( "\n", "\r\n"));
-//        
-//        terser = new Terser(msg);
-//        
-//        int obrCount = getOBRCount();
-//        int count;
-//        int obrNum;
-//        boolean obrFlag;
-//        String segmentName;
-//        String[] segments = terser.getFinder().getRoot().getNames();
-//        obrGroups = new ArrayList();
-//        
-//        /*
-//         *  Fill the OBX array list for use by future methods
-//         */
-//        for (int i=0; i < obrCount; i++){
-//            ArrayList obxSegs = new ArrayList();
-//            count = 0;
-//            
-//            obrNum = i+1;
-//            obrFlag = false;
-//            
-//            for (int k=0; k < segments.length; k++){
-//                
-//                segmentName = segments[k].substring(0, 3);
-//                
-//                if (obrFlag && segmentName.equals("OBX")){
-//                    
-//                    // make sure to count all of the obx segments in the group
-//                    Structure[] segs = terser.getFinder().getRoot().getAll(segments[k]);
-//                    for (int l=0; l < segs.length; l++){
-//                        Segment obxSeg = (Segment) segs[l];
-//                        obxSegs.add(obxSeg);
-//                    }
-//                    
-//                }else if (obrFlag && segmentName.equals("OBR")){
-//                    break;
-//                }else if ( segments[k].equals("OBR"+obrNum) || ( obrNum==1 && segments[k].equals("OBR"))){
-//                    obrFlag = true;
-//                }
-//                
-//            }
-//            obrGroups.add(obxSegs);
-//        }
-//        
-//    }
+        // force parsing as a generic message by changing the message structure
+        
+        msg = p.parse(hl7Body.replaceAll( "\n", "\r\n"));
+        
+        terser = new Terser(msg);
+        
+        int obrCount = getOBRCount();
+        int count;
+        int obrNum;
+        boolean obrFlag;
+        String segmentName;
+        String[] segments = terser.getFinder().getRoot().getNames();
+        obrGroups = new ArrayList();
+        
+        /*
+         *  Fill the OBX array list for use by future methods
+         */
+
+        logger.debug("Current Group "+((Group) terser.getFinder().getCurrentGroup()).getName());
+
+
+
+        try{
+        Structure[] strs = ((Group) terser.getFinder().getRoot().get("RESPONSE")).getAll("ORDER_OBSERVATION");
+        for (Structure str:strs){
+            System.out.println("NEW OBX");
+            ArrayList obrGroup = new ArrayList();
+            findOBX((Group) str,obrGroup);
+            obrGroups.add(obrGroup);
+        }
+        }catch(Exception e){e.printStackTrace();}
+
+
+    //Group root = terser.getFinder().getRoot();
+    //groupDisplay(root,"");
+    System.out.println("END GROUP PRINT");
+
+
+
+    /*
+        logger.debug("obr Count "+obrCount);
+        for (int i=0; i < obrCount; i++){
+            ArrayList obxSegs = new ArrayList();
+            count = 0;
+            
+            obrNum = i+1;
+            obrFlag = false;
+            logger.debug("segment len "+segments.length);
+
+            for (int k=0; k < segments.length; k++){
+                
+                segmentName = segments[k].substring(0, 3);
+                logger.debug("Segment Name "+segmentName+"  OBR flag "+obrFlag);
+                if (obrFlag && segmentName.equals("OBX")){
+                    
+                    // make sure to count all of the obx segments in the group
+                    Structure[] segs = terser.getFinder().getRoot().getAll(segments[k]);
+                    logger.debug("segment length "+segs.length);
+                    for (int l=0; l < segs.length; l++){
+                        Segment obxSeg = (Segment) segs[l];
+                        obxSegs.add(obxSeg);
+                    }
+                    
+                }else if (obrFlag && segmentName.equals("OBR")){
+                    logger.debug("breaking");
+                    break;
+                }else if ( segments[k].equals("OBR"+obrNum) || ( obrNum==1 && segments[k].equals("OBR"))){
+                    logger.debug("setting obr Flag true obrNum "+obrNum+" segment  "+segments[k]);
+                    obrFlag = true;
+                }
+                
+            }
+            logger.debug("obxSegs size "+obxSegs.size() );
+            obrGroups.add(obxSegs);
+        }
+        */
+        
+    }
 //    
 //    public String getMsgType(){
 //        return(null);
