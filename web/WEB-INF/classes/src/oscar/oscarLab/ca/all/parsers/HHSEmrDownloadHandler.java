@@ -155,7 +155,9 @@ public class HHSEmrDownloadHandler extends DefaultGenericHandler implements Mess
             findOBX((Group) str,obrGroup);
             obrGroups.add(obrGroup);
         }
-        }catch(Exception e){e.printStackTrace();}
+        }catch(Exception e){
+            logger.error("Error in adding OBX elements to obrGroup ", e);
+        }
 
 
     //Group root = terser.getFinder().getRoot();
