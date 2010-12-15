@@ -84,8 +84,9 @@
        removeNavDiv('Guidelines');
        removeNavDiv('RiskFactors');
        
-       //addRightNavDiv("OcularMeds");	
-       //popColumn(ctx + "/oscarEncounter/displayMacro.do?hC=009999&appointment_no="+appointmentNo,"OcularMeds","OcularMeds", "rightNavBar", this);
+       var ocularMedsLabel = "oscarEncounter.NavBar.OcularMeds";
+       addRightNavDiv("OcularMedication");	
+       popColumn(ctx + "/CaseManagementView.do?hc=009999&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=OcularMedication&title="+ocularMedsLabel+"&cmd=OcularMedication","OcularMedication","OcularMedication", "rightNavBar", this);
        
        addPrintOption('Measurements','extPrintMeasurements');
        
