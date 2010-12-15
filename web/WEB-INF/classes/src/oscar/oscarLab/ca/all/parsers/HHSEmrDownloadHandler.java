@@ -110,7 +110,6 @@ public class HHSEmrDownloadHandler extends DefaultGenericHandler implements Mess
                 if (ss instanceof Segment){
                     if ("OBX".equals(ss.getName())){
                         list.add((Segment)ss);
-                       //System.out.println(ss.getName()+" s "+segmentView((Segment)ss));
                     }
                 }else{
                     findOBX((Group) ss,list);
@@ -150,7 +149,7 @@ public class HHSEmrDownloadHandler extends DefaultGenericHandler implements Mess
         try{
         Structure[] strs = ((Group) terser.getFinder().getRoot().get("RESPONSE")).getAll("ORDER_OBSERVATION");
         for (Structure str:strs){
-            System.out.println("NEW OBX");
+            logger.debug("NEW OBX");
             ArrayList obrGroup = new ArrayList();
             findOBX((Group) str,obrGroup);
             obrGroups.add(obrGroup);
@@ -162,7 +161,7 @@ public class HHSEmrDownloadHandler extends DefaultGenericHandler implements Mess
 
     //Group root = terser.getFinder().getRoot();
     //groupDisplay(root,"");
-    System.out.println("END GROUP PRINT");
+    logger.debug("END GROUP PRINT");
 
 
 
