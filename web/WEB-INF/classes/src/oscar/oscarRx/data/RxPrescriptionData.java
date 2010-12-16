@@ -1058,6 +1058,13 @@ public class RxPrescriptionData {
             special_instruction=s;
         }
 
+
+        public boolean isLongTerm(){
+            return longTerm;
+        }
+
+
+
         public boolean isDiscontinuedLatest(){
             return this.discontinuedLatest;
         }
@@ -1636,11 +1643,12 @@ public class RxPrescriptionData {
                     ret += "Month";
                 }
 
-                if (this.getDuration().equals("")) {
-                } else {
+                try{
                     if (this.getDuration()!=null && !this.getDuration().equalsIgnoreCase("null") && Integer.parseInt(this.getDuration()) > 1) {
                         ret += "s";
                     }
+                }catch(Exception durationCalcException){
+                    logger.error("Error with duration:",durationCalcException);
                 }
                 ret += "  ";
                 ret += this.getQuantity();
