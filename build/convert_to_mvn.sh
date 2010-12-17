@@ -114,6 +114,3 @@ mkdir -p mvn/local_repo
 
 # plugin-framework... oh boy... we can't get rid of this quick enough
 ./mvn_install.sh -DgroupId=pluginframework -DartifactId=pluginframework -Dversion=0.9.13 -Dfile=../web/WEB-INF/lib/pluginframework-0.9.13.jar
-
-# standard.jar ... no comment, refactoring needed in the future
-./mvn_install.sh -DgroupId=standard -DartifactId=standard -Dversion=UNKNOWN -Dfile=../web/WEB-INF/lib/standard.jar
