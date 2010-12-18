@@ -2767,3 +2767,13 @@ CREATE TABLE `GroupNoteLink` (
   KEY `active` (`active`)
 );
 
+
+create table OcanConnexOption (
+	id int primary key auto_increment,
+	LHINCode varchar(3) NOT NULL,
+	orgLHIN varchar(100) NOT NULL,
+	orgName varchar(100) NOT NULL,
+	orgNumber varchar(5) NOT NULL,
+	programName varchar(100) NOT NULL,
+	programNumber varchar(5) NOT NULL
+);
