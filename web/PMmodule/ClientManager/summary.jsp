@@ -517,7 +517,7 @@ function openSurvey() {
 			<td><c:out value="${ocanStaffForm.assessmentStatus}" /></td>
 			<td>
 				<input type="button" value="Update" onclick="document.location='ClientManager/ocan_form.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>'" />
-				<input type="button" value="Blank Form" onclick="window.open('<html:rewrite page="/ocan/OCAN Part II Staff Assessment_v1.0.1.pdf"/>')"/>			
+				<input type="button" value="Blank Form" onclick="window.open('<html:rewrite page="/ocan/OCAN_2.0_FULL_v2.0.5.pdf"/>')"/>			
 				<input type="button" value="Print Preview" onclick="document.location='ClientManager/ocan_form.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>&print=true'" />
 			</td>
 		</c:if>

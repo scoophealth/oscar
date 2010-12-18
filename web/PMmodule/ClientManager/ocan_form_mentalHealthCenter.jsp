@@ -4,6 +4,7 @@
 <%@page import="org.oscarehr.PMmodule.web.OcanForm"%>
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
 
+
 <%
 	int currentDemographicId=Integer.parseInt(request.getParameter("demographicId"));	
 	int prepopulationLevel = OcanForm.PRE_POPULATION_LEVEL_ALL;
@@ -12,6 +13,24 @@
 
 	int centerNumber = Integer.parseInt(request.getParameter("center_num"));
 %>
+
+<script type="text/javascript">
+$('document').ready(function() {
+	//load mental health centres orgnaization name
+	var demographicId='<%=currentDemographicId%>';
+	var cenCount = $("#center_count").val();
+	var LHIN_code = $("#serviceUseRecord_orgLHIN<%=centerNumber%>").val(); 
+	var item=$("#center_block_orgName<%=centerNumber%>");
+	if(LHIN_code != null && LHIN_code!="") {
+		$.get('ocan_form_getOrgName.jsp?demographicId='+demographicId+'&center_num=<%=centerNumber%>'+'&LHIN_code='+LHIN_code, function(data) {
+			item.append(data);					 
+		});				
+	} 
+});
+</script>
+
+
+
 <div id="center_<%=centerNumber%>">
 	<table>
 	<tr>
@@ -46,81 +65,45 @@
 		<tr>
 			<td class="genericTableHeader">Organizations LHIN</td>
 			<td class="genericTableData">
-				<select name="serviceUseRecord_orgLHIN<%=centerNumber %>" class="{validate: {required:true}}">					
+				<select name="serviceUseRecord_orgLHIN<%=centerNumber %>" id="serviceUseRecord_orgLHIN<%=centerNumber %>" onchange="changeOrgLHIN(this);" class="{validate: {required:true}}">					
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "serviceUseRecord_orgLHIN"+centerNumber, OcanForm.getOcanFormOptions("LHIN code"), prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>	
 		
 		<tr>
-			<td class="genericTableHeader">Organization Name</td>
-			<td class="genericTableData">
-			<!--  
-				<input type="text" id="serviceUseRecord_orgName<%=centerNumber %>" name="serviceUseRecord_orgName<%=centerNumber %>"value="<%=LoggedInInfo.loggedInInfo.get().currentFacility.getName() %>" readonly=readonly onfocus="this.blur();"/>
-			-->
-				<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"serviceUseRecord_orgName"+centerNumber,1,30, prepopulationLevel)%>
+			<td colspan="2">
+				
+				<div id="center_block_orgName<%=centerNumber %>">
+					<!-- results from adding/removing organization name will go into this block -->
+				</div>
 			</td>
-		</tr>
+		</tr>	
+		
+		
+		
 		<tr>
 			<td class="genericTableHeader">Organization Name - Other</td>
 			<td class="genericTableData">
 				<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"serviceUseRecord_orgNameOther"+centerNumber,1,30, prepopulationLevel)%>
 			</td>
 		</tr>
-		<tr>
-			<td class="genericTableHeader">Organization Number</td>
-			<td class="genericTableData">
-			<!--  
-				<input type="text" id="serviceUseRecord_orgNumber<%=centerNumber %>" name="serviceUseRecord_orgNumber<%=centerNumber %>" value="<%=LoggedInInfo.loggedInInfo.get().currentFacility.getOcanServiceOrgNumber() %>" readonly=readonly onfocus="this.blur();"/>
-			-->
-				<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"serviceUseRecord_orgNumber"+centerNumber,1,30, prepopulationLevel)%>
-			</td>
-		</tr>
+		
 		<tr>
 			<td class="genericTableHeader">Organization Number - Other</td>
 			<td class="genericTableData">
 				<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"serviceUseRecord_orgNumberOther"+centerNumber,1,30, prepopulationLevel)%>
 			</td>
 		</tr>
-		<!--    
-		<tr>
-			<td class="genericTableHeader">Program Name</td>
-			<td class="genericTableData">
-				<select name="admissionId<%=centerNumber %>">
-					<%
-						for (Admission admission : OcanForm.getAdmissions(currentDemographicId))
-						{
-							String selected="";
-							
-							if (ocanStaffForm.getAdmissionId()!=null && ocanStaffForm.getAdmissionId().intValue()==admission.getId().intValue()) selected="selected=\"selected\"";
-							
-							%>
-								<option <%=selected%> value="<%=admission.getId()%>"><%=OcanForm.getEscapedAdmissionSelectionDisplay(admission)%></option>
-							<%
-						}
-					%>
-				</select>
-			</td>
-		</tr>
-		-->
-		<tr>
-			<td class="genericTableHeader">Program Name</td>
-			<td class="genericTableData">
-				<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"serviceUseRecord_programName"+centerNumber,1,30, prepopulationLevel)%>
-			</td>
-		</tr>
+		
+		
 		<tr>
 			<td class="genericTableHeader">Program Name - Other</td>
 			<td class="genericTableData">
 				<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"serviceUseRecord_programNameOther"+centerNumber,1,30, prepopulationLevel)%>
 			</td>
 		</tr>
-		<tr>
-			<td class="genericTableHeader">Program Number</td>
-			<td class="genericTableData">
-				<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"serviceUseRecord_programNumber"+centerNumber,1,30, prepopulationLevel)%>
-			</td>
-		</tr>
+		
 		<tr>
 			<td class="genericTableHeader">Program Number - Other</td>
 			<td class="genericTableData">

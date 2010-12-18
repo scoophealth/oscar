@@ -76,32 +76,92 @@ $('document').ready(function() {
 	} 
 });
 
+
+
 </script>
 
 <script>
 function changeOrgLHIN(selectBox) {
-	//annie
 		var newCount = $("#center_count").val(); 
 
 		var selectBoxId = selectBox.id;
 		var priority = selectBoxId.charAt(selectBoxId.length-1);
 		var selectBoxValue = selectBox.options[selectBox.selectedIndex].value;
-		
+
 		var demographicId='<%=currentDemographicId%>';
 
 		//do we need to add..loop through existing blocks, and see if we need more...create on the way.
 			
 			if(document.getElementById("serviceUseRecord_orgName" + priority) == null) {
-				$.get('ocan_form_getOrgName.jsp?demographicId='+demographicId+'&center_num='+priority+'&lhin_num='+selectBoxValue, function(data) {
+				$.get('ocan_form_getOrgName.jsp?demographicId='+demographicId+'&center_num='+priority+'&LHIN_code='+selectBoxValue, function(data) {
 					  $("#center_block_orgName"+priority).append(data);					 
 					});														
 			}
-
-		//do we need to remove. If there's any blocks > newCount..we need to delete them.
+		
 			if(document.getElementById("serviceUseRecord_orgName" + priority) != null) {
-				$("#center_block_orgName"+priority).remove();
+				$("#center_programNumber"+priority).remove();
+				$("#center_programName"+priority).remove();
+				$("#center_orgName"+priority).remove();			
+								
+				$.get('ocan_form_getOrgName.jsp?demographicId='+demographicId+'&center_num='+priority+'&LHIN_code='+selectBoxValue, function(data) {
+					  $("#center_block_orgName"+priority).append(data);					 
+					});	
 			}
+
 }
+
+function changeOrgName(selectBox) {
+	var newCount = $("#center_count").val(); 
+	
+	var LHIN_code = $("#serviceUseRecord_orgLHIN"+newCount).val();
+	var selectBoxId = selectBox.id;
+	var priority = selectBoxId.charAt(selectBoxId.length-1);
+	var selectBoxValue = selectBox.options[selectBox.selectedIndex].value;
+   
+	var demographicId='<%=currentDemographicId%>';
+	
+		if(document.getElementById("serviceUseRecord_programName" + priority) == null) {
+			$.get('ocan_form_getProgramName.jsp?demographicId='+demographicId+'&center_num='+priority+'&LHIN_code='+LHIN_code+'&orgName='+selectBoxValue, function(data) {
+				  $("#center_block_orgName"+priority).append(data);					 
+				});														
+		}
+		if(document.getElementById("serviceUseRecord_programName" + priority) != null) {
+			$("#center_programName"+priority).remove();
+			$("#center_programNumber"+priority).remove();
+			$.get('ocan_form_getProgramName.jsp?demographicId='+demographicId+'&center_num='+priority+'&LHIN_code='+LHIN_code+'&orgName='+selectBoxValue, function(data) {
+				  $("#center_block_orgName"+priority).append(data);					 
+				});	
+		}
+}
+
+function changeProgramName(selectBox) {
+	var newCount = $("#center_count").val(); 
+		
+	var selectBoxId = selectBox.id;
+	var priority = selectBoxId.charAt(selectBoxId.length-1);
+	var selectBoxValue = selectBox.options[selectBox.selectedIndex].value;
+	
+	var LHIN_code = $("#serviceUseRecord_orgLHIN"+priority).val();
+	var orgName = $("#serviceUseRecord_orgName"+priority).val();
+	var programName = $("#serviceUseRecord_programName"+priority).val();
+	
+	var demographicId='<%=currentDemographicId%>';
+
+	if(document.getElementById("serviceUseRecord_programNumber" + priority) == null) {
+			$.get('ocan_form_getProgramNumber.jsp?demographicId='+demographicId+'&center_num='+priority+'&LHIN_code='+LHIN_code+'&orgName='+orgName+'&programName='+programName, function(data) {
+				  $("#center_block_orgName"+priority).append(data);					 
+				});														
+		}
+		if(document.getElementById("serviceUseRecord_programNumber" + priority) != null) {
+			$("#center_programNumber"+priority).remove();
+			$.get('ocan_form_getProgramNumber.jsp?demographicId='+demographicId+'&center_num='+priority+'&LHIN_code='+LHIN_code+'&orgName='+orgName+'&programName='+programName, function(data) {
+				  $("#center_block_orgName"+priority).append(data);					 
+				});	
+		}
+}
+
+
+
 
 function changeNumberOfMedications() {
 	var newCount = $("#medications_count").val(); 
@@ -156,7 +216,7 @@ function changeNumberOfcentres() {
 <script>
 $("document").ready(function() {
 
-	$("#generate_summary_of_actions").click(function(){
+	$("#generate_summary_of_actions").click(function(){ 
 		$("#summary_of_actions_block").innerHTML='';
 		var count=0;
 		var domains = '';
