@@ -2,6 +2,7 @@ package org.oscarehr.PMmodule.web;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -12,12 +13,14 @@ import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.OcanClientFormDao;
 import org.oscarehr.common.dao.OcanClientFormDataDao;
+import org.oscarehr.common.dao.OcanConnexOptionDao;
 import org.oscarehr.common.dao.OcanFormOptionDao;
 import org.oscarehr.common.dao.OcanStaffFormDao;
 import org.oscarehr.common.dao.OcanStaffFormDataDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.OcanClientForm;
 import org.oscarehr.common.model.OcanClientFormData;
+import org.oscarehr.common.model.OcanConnexOption;
 import org.oscarehr.common.model.OcanFormOption;
 import org.oscarehr.common.model.OcanStaffForm;
 import org.oscarehr.common.model.OcanStaffFormData;
@@ -37,6 +40,7 @@ public class OcanForm {
 	private static OcanStaffFormDataDao ocanStaffFormDataDao = (OcanStaffFormDataDao) SpringUtils.getBean("ocanStaffFormDataDao");	
 	private static OcanClientFormDao ocanClientFormDao = (OcanClientFormDao) SpringUtils.getBean("ocanClientFormDao");
 	private static OcanClientFormDataDao ocanClientFormDataDao = (OcanClientFormDataDao) SpringUtils.getBean("ocanClientFormDataDao");
+	private static OcanConnexOptionDao ocanConnexOptionDao = (OcanConnexOptionDao) SpringUtils.getBean("ocanConnexOptionDao");
 	
 	
 	public static Demographic getDemographic(String demographicId)
@@ -110,6 +114,30 @@ public class OcanForm {
 	{
 		List<OcanFormOption> results=ocanFormOptionDao.findByVersionAndCategory("1.2", category);
 		return(results);
+	}
+	
+	public static List<OcanConnexOption> getOcanConnexOrgOptions(String LHIN_code)
+	{
+		List<OcanConnexOption> results=ocanConnexOptionDao.findByLHINCode(LHIN_code);
+		return(results);
+	}
+	
+	public static List<OcanConnexOption> getOcanConnexProgramOptions(String LHIN_code, String orgName)
+	{
+		List<OcanConnexOption> results=ocanConnexOptionDao.findByLHINCodeOrgName(LHIN_code, orgName);
+		return(results);
+	}
+	
+	public static String getOcanConnexOrgNumber(String LHIN_code, String orgName)
+	{
+		List<OcanConnexOption> results=ocanConnexOptionDao.findByLHINCodeOrgName(LHIN_code, orgName);
+		return(results.get(0).getOrgNumber());
+	}
+	
+	public static String getOcanConnexProgramNumber(String LHIN_code, String orgName, String programName)
+	{
+		List<OcanConnexOption> results=ocanConnexOptionDao.findByLHINCodeOrgNameProgramName(LHIN_code, orgName, programName);
+		return(results.get(0).getProgramNumber());
 	}
 	
 	private static List<OcanStaffFormData> getStaffAnswers(Integer ocanStaffFormId, String question, int prepopulationLevel)
@@ -227,6 +255,71 @@ public class OcanForm {
 		return(sb.toString());
 	}
 	
+	
+	public static String renderAsConnexOrgNameSelectOptions(Integer ocanStaffFormId, String question, List<OcanConnexOption> options, int prepopulationLevel)
+	{
+		return renderAsConnexOrgNameSelectOptions(ocanStaffFormId,question, options, prepopulationLevel, false);
+	}
+	public static String renderAsConnexOrgNameSelectOptions(Integer ocanStaffFormId, String question, List<OcanConnexOption> options, int prepopulationLevel, boolean clientForm)
+	{
+		List<OcanStaffFormData> existingStaffAnswers=null;
+		List<OcanClientFormData> existingClientAnswers=null;
+		if(!clientForm)
+			existingStaffAnswers = getStaffAnswers(ocanStaffFormId, question, prepopulationLevel);
+		else
+			existingClientAnswers = getClientAnswers(ocanStaffFormId, question, prepopulationLevel);
+
+		StringBuilder sb=new StringBuilder();
+
+		sb.append("<option value=\"\">Select an answer</option>");
+		for (OcanConnexOption option : options)
+		{
+			String htmlEscapedName=StringEscapeUtils.escapeHtml(option.getOrgName());
+			
+			String selected=null;
+			if(!clientForm)
+				selected=(OcanStaffFormData.containsAnswer(existingStaffAnswers, option.getOrgName())?"selected=\"selected\"":"");
+			else
+				selected=(OcanClientFormData.containsAnswer(existingClientAnswers, option.getOrgName())?"selected=\"selected\"":"");
+			
+			sb.append("<option "+selected+" value=\""+StringEscapeUtils.escapeHtml(option.getOrgName())+"\" title=\""+htmlEscapedName+"\">"+htmlEscapedName+"</option>");
+		}
+		
+		return(sb.toString());
+	}
+	
+	public static String renderAsConnexProgramNameSelectOptions(Integer ocanStaffFormId, String question, List<OcanConnexOption> options, int prepopulationLevel)
+	{
+		return renderAsConnexProgramNameSelectOptions(ocanStaffFormId,question, options, prepopulationLevel, false);
+	}
+	public static String renderAsConnexProgramNameSelectOptions(Integer ocanStaffFormId, String question, List<OcanConnexOption> options, int prepopulationLevel, boolean clientForm)
+	{
+		List<OcanStaffFormData> existingStaffAnswers=null;
+		List<OcanClientFormData> existingClientAnswers=null;
+		if(!clientForm)
+			existingStaffAnswers = getStaffAnswers(ocanStaffFormId, question, prepopulationLevel);
+		else
+			existingClientAnswers = getClientAnswers(ocanStaffFormId, question, prepopulationLevel);
+
+		StringBuilder sb=new StringBuilder();
+
+		sb.append("<option value=\"\">Select an answer</option>");
+		for (OcanConnexOption option : options)
+		{
+			String htmlEscapedName=StringEscapeUtils.escapeHtml(option.getProgramName());
+			
+			String selected=null;
+			if(!clientForm)
+				selected=(OcanStaffFormData.containsAnswer(existingStaffAnswers, option.getProgramName())?"selected=\"selected\"":"");
+			else
+				selected=(OcanClientFormData.containsAnswer(existingClientAnswers, option.getProgramName())?"selected=\"selected\"":"");
+			
+			sb.append("<option "+selected+" value=\""+StringEscapeUtils.escapeHtml(option.getOrgName())+"\" title=\""+htmlEscapedName+"\">"+htmlEscapedName+"</option>");
+		}
+		
+		return(sb.toString());
+	}
+	
 	public static String renderAsProvinceSelectOptions(OcanStaffForm ocanStaffForm)
 	{
 		String province = ocanStaffForm.getProvince();
@@ -246,6 +339,7 @@ public class OcanForm {
 		
 		return(sb.toString());
 	}
+	
 	public static String renderAsDomainSelectOptions(Integer ocanStaffFormId, String question, List<OcanFormOption> options, String[] valuesToInclude, int prepopulationLevel)
 	{
 		List<OcanStaffFormData> existingAnswers=getStaffAnswers(ocanStaffFormId, question ,prepopulationLevel);
@@ -312,6 +406,7 @@ public class OcanForm {
 		return(sb.toString());
 	}	
 	
+	
 	public static String renderAsTextArea(Integer ocanStaffFormId, String question, int rows, int cols, int prepopulationLevel)
 	{
 		return renderAsTextArea(ocanStaffFormId, question, rows, cols, prepopulationLevel, false);
@@ -354,6 +449,26 @@ public class OcanForm {
 			sb.append(existingAnswers.get(0).getAnswer());
 		}
 		sb.append("</textarea>");
+		return(sb.toString());
+	}
+	
+	public static String renderAsOrgProgramNumberTextField(Integer ocanStaffFormId, String question, String answer, int size, int prepopulationLevel)
+	{
+		return renderAsOrgProgramNumberTextField(ocanStaffFormId, question, answer, size, prepopulationLevel, false);
+	}
+	
+	public static String renderAsOrgProgramNumberTextField(Integer ocanStaffFormId, String question, String answer, int size, int prepopulationLevel, boolean clientForm)
+	{
+		List<OcanStaffFormData> existingAnswers=getStaffAnswers(ocanStaffFormId, question, prepopulationLevel);
+
+		String value = "";
+		if(existingAnswers.size()>0) {
+			value = existingAnswers.get(0).getAnswer();
+		}
+		StringBuilder sb=new StringBuilder();
+
+		sb.append("<input type=\"text\" name=\""+question+"\" id=\""+question+"\" size=\"" + size + "\" value=\""+answer+"\"/>");
+		
 		return(sb.toString());
 	}
 	
