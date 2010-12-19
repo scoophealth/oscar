@@ -18,10 +18,6 @@
 --
 -- Table structure for table `OcanConnexOption`
 --
-
-DROP TABLE IF EXISTS `OcanConnexOption`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
 CREATE TABLE `OcanConnexOption` (
   `id` int(11) NOT NULL auto_increment,
   `LHINCode` varchar(3) NOT NULL,
@@ -31,8 +27,7 @@ CREATE TABLE `OcanConnexOption` (
   `programName` varchar(100) NOT NULL,
   `programNumber` varchar(5) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=541 DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
+);
 
 --
 -- Dumping data for table `OcanConnexOption`
