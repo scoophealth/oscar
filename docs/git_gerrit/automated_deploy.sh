@@ -1,28 +1,28 @@
 #!/bin/bash
 
-#####
-Paths
-#####
+#######
+# Paths
+#######
 
 WORKING_ROOT=~/myoscar
 SERVER_NAME=myoscar_server
 
-SRC_DIR=${WORKING_ROOT}/${SERVER_NAME}
+SRC_DIR=${WORKING_ROOT}/git/${SERVER_NAME}
 
-JAVA_HOME=${WORKING_ROOT}/jdk1.6.0_23
+export JAVA_HOME=${WORKING_ROOT}/jdk1.6.0_23
 PATH=${PATH}:${JAVA_HOME}/bin
 
-MAVEN_HOME=${WORKING_ROOT}/apache-maven-2.2.1
+export MAVEN_HOME=${WORKING_ROOT}/apache-maven-2.2.1
 PATH=${PATH}:${MAVEN_HOME}/bin
 
-CATALINA_HOME=${WORKING_ROOT}/apache-tomcat-6.0.29
+export CATALINA_HOME=${WORKING_ROOT}/apache-tomcat-6.0.29
 PATH=${PATH}:${CATALINA_HOME}/bin
 
-CATALINA_BASE=${WORKING_ROOT}/catalina_base
+export CATALINA_BASE=${WORKING_ROOT}/catalina_base
 
-######
-Script
-######
+########
+# Script
+########
 
 pushd ${SRC_DIR}
 
