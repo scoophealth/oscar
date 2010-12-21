@@ -38,7 +38,7 @@ pushd ${SRC_DIR}
 	mvn clean install
 	
 	# copy the built result to catalina base
-	cd ${CATALINA_BASE}
+	cd ${CATALINA_BASE}/webapps
 	rm -rf ${SERVER_NAME}
 	mkdir ${SERVER_NAME}
 	cd ${SERVER_NAME}
