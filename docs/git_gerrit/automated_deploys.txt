@@ -1,0 +1,11 @@
+This document is for automated checkouts for the purpose of daily builds. (We will use the Integrator project as an example here.)
+
+0) make sure you setup a good working directory like /opt/git
+1) manually clone a repository : git clone git://oscarmcmaster.git.sourceforge.net/gitroot/oscarmcmaster/integrator
+
+2) make need a cron job that 
+	a) updates repository
+	b) clean compiles (including cleaning maven repo ~/.m2/repository)
+	c) if build succeeds deploy
+	
+	

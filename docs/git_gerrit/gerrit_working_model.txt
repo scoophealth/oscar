@@ -85,6 +85,13 @@ Original intent of this section is replication of gerrit to sourceforge, this sh
 
 and it appears to all work! amazing :)
 
+------------------------------
+Public / Anonymous Read Access
+------------------------------
+There's a script provided here called start_git_daemon.sh, if you changed the directories, you will need to edit this file to make the directories match.
+
+Run this script and it will start git-daemon in the background to allows public access to all the repositories. You also might want to have this script run upon server startup.
+
 ----------------
 Review Work Flow
 ----------------
