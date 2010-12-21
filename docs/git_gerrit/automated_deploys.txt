@@ -1,11 +1,18 @@
 This document is for automated checkouts for the purpose of daily builds. (We will use the Integrator project as an example here.)
 
-0) make sure you setup a good working directory like /opt/git
-1) manually clone a repository : git clone git://oscarmcmaster.git.sourceforge.net/gitroot/oscarmcmaster/integrator
+Install prerequisites like Java, Tomcat, Maven, MySql.
 
-2) make need a cron job that 
+Install the server once like a normal deployment with database configured and everything and all working.
+
+Then... the following is to automate redeployment :
+
+0) make sure you setup a good working directory like ~/myoscar/git
+1) manually clone a repository : git clone git://192.168.1.241/myoscar_server
+
+2) make need a cron job that (automated_deploy.sh is a script to help)
 	a) updates repository
 	b) clean compiles (including cleaning maven repo ~/.m2/repository)
-	c) if build succeeds deploy
+	c) resets the database
+	d) if build succeeds deploy
 	
 	
