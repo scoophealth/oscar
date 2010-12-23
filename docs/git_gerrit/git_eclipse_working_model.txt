@@ -109,7 +109,7 @@ The easiest way to fix a previous commit is to continue working the way we did i
 From the command line :
 - make sure your work space has the gerrit changes you want to fix. If you don't you can explicitly fetch the branches by looking at the URL's of the commit on the gerrit pages.
 - set one branch to the end of the set of changes, i.e. master.
-- create and switch to another branch to the commit that needs to be fixed, i.e. "git branch -b fix 4dj45" where 4dj45 is the first part of the SHA of the commit.
+- create and switch to another branch to the commit that needs to be fixed, i.e. "git checkout -b fix 4dj45" where 4dj45 is the first part of the SHA of the commit.
 - make the changes you need to make
 - "git commit -a --amend" the change.
 - switch back to the end point, i.e. git checkout master
