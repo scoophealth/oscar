@@ -37,22 +37,28 @@ pushd ${SRC_DIR}
 	# build the code
 	mvn clean install
 	
-	# copy the built result to catalina base
-	cd ${CATALINA_BASE}/webapps
-	rm -rf ${SERVER_NAME}
-	mkdir ${SERVER_NAME}
-	cd ${SERVER_NAME}
-	unzip ${SRC_DIR}/${SERVER_NAME}-0.0-SNAPSHOT.war
+	if [ $? = 0 ];
+	then
 	
-	# stop tomcat
-	catalina.sh stop
-	
-	# reset database
-	mysql -e "drop database ${SERVER_NAME}"
-	mysql -e "create database ${SERVER_NAME}"
-	mysql -e "source ${SRC_DIR}/docs/freshIndivo.sql"
-	
-	# start tomcat
-	catalina.sh start
+		# copy the built result to catalina base
+		cd ${CATALINA_BASE}/webapps
+		rm -rf ${SERVER_NAME}
+		mkdir ${SERVER_NAME}
+		cd ${SERVER_NAME}
+		unzip ${SRC_DIR}/target/${SERVER_NAME}-3.1-SNAPSHOT.war
+		
+		# stop tomcat, sleep to allow tomcat to shutdown before restarting
+		catalina.sh stop
+		sleep 20 
+		
+		# reset database
+		mysql -e "drop database ${SERVER_NAME}"
+		mysql -e "create database ${SERVER_NAME}"
+		mysql -e "source ${SRC_DIR}/docs/freshIndivo.sql"
+		
+		# start tomcat
+		catalina.sh start
+		
+	fi
 	
 popd 
