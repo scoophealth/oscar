@@ -113,11 +113,11 @@ function changeOrgLHIN(selectBox) {
 function changeOrgName(selectBox) {
 	var newCount = $("#center_count").val(); 
 	
-	var LHIN_code = $("#serviceUseRecord_orgLHIN"+newCount).val();
 	var selectBoxId = selectBox.id;
 	var priority = selectBoxId.charAt(selectBoxId.length-1);
 	var selectBoxValue = selectBox.options[selectBox.selectedIndex].value;
-   
+	var LHIN_code = $("#serviceUseRecord_orgLHIN"+priority).val();
+	
 	var demographicId='<%=currentDemographicId%>';
 	
 		if(document.getElementById("serviceUseRecord_programName" + priority) == null) {
@@ -133,33 +133,6 @@ function changeOrgName(selectBox) {
 				});	
 		}
 }
-
-function changeProgramName(selectBox) {
-	var newCount = $("#center_count").val(); 
-		
-	var selectBoxId = selectBox.id;
-	var priority = selectBoxId.charAt(selectBoxId.length-1);
-	var selectBoxValue = selectBox.options[selectBox.selectedIndex].value;
-	
-	var LHIN_code = $("#serviceUseRecord_orgLHIN"+priority).val();
-	var orgName = $("#serviceUseRecord_orgName"+priority).val();
-	var programName = $("#serviceUseRecord_programName"+priority).val();
-	
-	var demographicId='<%=currentDemographicId%>';
-
-	if(document.getElementById("serviceUseRecord_programNumber" + priority) == null) {
-			$.get('ocan_form_getProgramNumber.jsp?demographicId='+demographicId+'&center_num='+priority+'&LHIN_code='+LHIN_code+'&orgName='+orgName+'&programName='+programName, function(data) {
-				  $("#center_block_orgName"+priority).append(data);					 
-				});														
-		}
-		if(document.getElementById("serviceUseRecord_programNumber" + priority) != null) {
-			$("#center_programNumber"+priority).remove();
-			$.get('ocan_form_getProgramNumber.jsp?demographicId='+demographicId+'&center_num='+priority+'&LHIN_code='+LHIN_code+'&orgName='+orgName+'&programName='+programName, function(data) {
-				  $("#center_block_orgName"+priority).append(data);					 
-				});	
-		}
-}
-
 
 
 
@@ -410,7 +383,7 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Was this OCAN completed by OCAN Lead?</td>
 			<td class="genericTableData">
-				<select name="completedByOCANLead" id="completedByOCANLead">
+				<select name="completedByOCANLead" id="completedByOCANLead" class="{validate: {required:true}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "completedByOCANLead", OcanForm.getOcanFormOptions("OCAN Lead Assessment"),prepopulationLevel)%>
 				</select>					
 			</td>			
@@ -475,7 +448,14 @@ $("document").ready(function(){
 		<tr>
 			<td colspan="2">Consumer Information</td>
 		</tr>
-		
+		<tr>
+			<td class="genericTableHeader">Anonymous ?</td>
+			<td class="genericTableData">
+				<select name="consumerAnonymous" id="consumerAnonymous" >
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "consumerAnonymous", OcanForm.getOcanFormOptions("Consumer Self-Assessment completed"),prepopulationLevel)%>
+				</select>					
+			</td>
+		</tr>
 		<tr>
 			<td class="genericTableHeader">Last Name</td>
 			<td class="genericTableData">

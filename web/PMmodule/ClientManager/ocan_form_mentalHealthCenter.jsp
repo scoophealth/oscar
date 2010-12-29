@@ -47,13 +47,23 @@ $('document').ready(function() {
 		<tr>
 			<td class="genericTableHeader">Staff Worker Name </td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"serviceUseRecord_staffWorker"+centerNumber,1,30, prepopulationLevel)%>
+				<% String input = "";
+				input = OcanForm.renderAsTextField(ocanStaffForm.getId(),"serviceUseRecord_staffWorker"+centerNumber,64, prepopulationLevel);
+				input = input.substring(0,input.length()-2);
+				input = input.concat(" class=\"{validate: {required:true}}\"/>");
+				%>
+				<%=input %>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Staff Worker Phone Number </td>
-			<td class="genericTableData">
-				<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"serviceUseRecord_phoneNumber"+centerNumber,1,30, prepopulationLevel)%>
+			<td class="{validate: {required:true}}">
+				<% input = "";
+				input = OcanForm.renderAsTextField(ocanStaffForm.getId(),"serviceUseRecord_phoneNumber"+centerNumber,32, prepopulationLevel);
+				input = input.substring(0,input.length()-2);
+				input = input.concat(" class=\"{validate: {required:true}}\"/>");
+				%>
+				<%=input %>
 			</td>
 		</tr>
 		<tr>
@@ -92,7 +102,7 @@ $('document').ready(function() {
 		<tr>
 			<td class="genericTableHeader">Organization Number - Other</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"serviceUseRecord_orgNumberOther"+centerNumber,1,30, prepopulationLevel)%>
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"serviceUseRecord_orgNumberOther"+centerNumber,4, prepopulationLevel)%>
 			</td>
 		</tr>
 		
@@ -107,7 +117,7 @@ $('document').ready(function() {
 		<tr>
 			<td class="genericTableHeader">Program Number - Other</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"serviceUseRecord_programNumberOther"+centerNumber,1,30, prepopulationLevel)%>
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"serviceUseRecord_programNumberOther"+centerNumber,4, prepopulationLevel)%>
 			</td>
 		</tr>
 		
@@ -163,7 +173,7 @@ $('document').ready(function() {
 		<tr>
 			<td class="genericTableHeader">Accepted</td>
 			<td class="genericTableData">
-				<select name="serviceUseRecord_accepted<%=centerNumber %>" class="{validate: {required:true}}">
+				<select name="serviceUseRecord_accepted<%=centerNumber %>" >
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "serviceUseRecord_accepted"+centerNumber, OcanForm.getOcanFormOptions("Yes No"),prepopulationLevel)%>
 				</select>					
 			</td>
