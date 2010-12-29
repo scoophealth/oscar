@@ -550,3 +550,19 @@ insert into OcanConnexOption (LHINCode,orgLHIN,orgName,orgNumber,programName,pro
 insert into OcanConnexOption (LHINCode,orgLHIN,orgName,orgNumber,programName,programNumber) values("14","North West","Wassay-Gezhig Na-Nahn-Dah-We-Igamig Kenora Area Health Access Centre","2007","Wassay-Gezhig Na-Nahn-Dah-We-Igamig - Mental/ Emotional Health and Wellness","2071");
 insert into OcanConnexOption (LHINCode,orgLHIN,orgName,orgNumber,programName,programNumber) values("14","North West","Wesway","406","Alzheimer Respite Service","2059");
 insert into OcanConnexOption (LHINCode,orgLHIN,orgName,orgNumber,programName,programNumber) values("14","North West","White Fish Bay Health Services","2019","White Fish Bay Health Services","2068");
+
+
+insert into OcanConnexOption (LHINCode,orgLHIN,orgName,orgNumber,programName,programNumber) values("1","Erie St. Clair","Other","000","Other","0000");
+insert into OcanConnexOption (LHINCode,orgLHIN,orgName,orgNumber,programName,programNumber) values("2","South West","Other","000","Other","0000");
+insert into OcanConnexOption (LHINCode,orgLHIN,orgName,orgNumber,programName,programNumber) values("3","Waterloo Wellington","Other","000","Other","0000");
+insert into OcanConnexOption (LHINCode,orgLHIN,orgName,orgNumber,programName,programNumber) values("4","Hamilton Niagara Haldimand Brant","Other","000","Other","0000");
+insert into OcanConnexOption (LHINCode,orgLHIN,orgName,orgNumber,programName,programNumber) values("5","Central West","Other","000","Other","0000");
+insert into OcanConnexOption (LHINCode,orgLHIN,orgName,orgNumber,programName,programNumber) values("6","Mississauga Halton","Other","000","Other","0000");
+insert into OcanConnexOption (LHINCode,orgLHIN,orgName,orgNumber,programName,programNumber) values("7","Toronto Central","Other","000","Other","0000");
+insert into OcanConnexOption (LHINCode,orgLHIN,orgName,orgNumber,programName,programNumber) values("8","Central","Other","000","Other","0000");
+insert into OcanConnexOption (LHINCode,orgLHIN,orgName,orgNumber,programName,programNumber) values("9","Central East","Other","000","Other","0000");
+insert into OcanConnexOption (LHINCode,orgLHIN,orgName,orgNumber,programName,programNumber) values("10","South East","Other","000","Other","0000");
+insert into OcanConnexOption (LHINCode,orgLHIN,orgName,orgNumber,programName,programNumber) values("11","Champlain","Other","000","Other","0000");
+insert into OcanConnexOption (LHINCode,orgLHIN,orgName,orgNumber,programName,programNumber) values("12","North Simcoe Muskoka","Other","000","Other","0000");
+insert into OcanConnexOption (LHINCode,orgLHIN,orgName,orgNumber,programName,programNumber) values("13","North East","Other","000","Other","0000");
+insert into OcanConnexOption (LHINCode,orgLHIN,orgName,orgNumber,programName,programNumber) values("14","North West","Other","000","Other","0000");
