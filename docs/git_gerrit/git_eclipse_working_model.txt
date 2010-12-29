@@ -64,6 +64,8 @@ At this point notice your work place hasn't changed. The remote changes were put
 
 Right click on the project and go to team -> merge. Click on origin/master on the remote branches. Now you'll see your local work space with the changes.
 
+As a short cut, "team -> pull" will do all the above (fetch from and a merge) in one step 
+
 
 --------------
 Making changes
@@ -82,6 +84,7 @@ If you go to the gerrit web page you should see the change is pending review now
 
 Note that at this point, you and the central repository are not in sync, the files at the central repository must be approved first. Even after the changes on the central repository are approved, you must follow the "getting updates" again before you and the central repository are in sync (yes even if the files happen to be the same on the 2 servers, the pointers are not in sync until you merge).  
 
+As a note, you should try to do a "team -> pull" before doing a commit, this will help ensure there are no commit conflicts, if there are your commit will not be mergable by gerrit and you'll have to go through a rebase of your commit before it can be merged.
 
 ------------------------------------------------
 When to commit locally and when to push remotely
