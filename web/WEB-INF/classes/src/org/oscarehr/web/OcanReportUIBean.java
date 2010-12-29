@@ -13,7 +13,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.xmlbeans.XmlOptions;
 import org.oscarehr.PMmodule.dao.AdmissionDao;
 import org.oscarehr.PMmodule.model.Admission;
@@ -27,129 +28,137 @@ import org.oscarehr.common.model.OcanClientForm;
 import org.oscarehr.common.model.OcanClientFormData;
 import org.oscarehr.common.model.OcanStaffForm;
 import org.oscarehr.common.model.OcanStaffFormData;
-import org.oscarehr.ocan.ActionDocument;
-import org.oscarehr.ocan.OCANv2SubmissionFileDocument;
+import org.oscarehr.ocan.ClientPhoneDocument.ClientPhone;
+import org.oscarehr.ocan.ClientHealthCardInfoDocument.ClientHealthCardInfo;
+import org.oscarehr.ocan.ClientCultureDocument.ClientCulture;
+
+import org.oscarehr.ocan.ClientDOBDocument.ClientDOB;
 import org.oscarehr.ocan.AboriginalOriginDocument.AboriginalOrigin;
+import org.oscarehr.ocan.CitizenshipStatusDocument.CitizenshipStatus;
+import org.oscarehr.ocan.ClientHopesForFutureDocument.ClientHopesForFuture;
+import org.oscarehr.ocan.ClientNeedToGetThereDocument.ClientNeedToGetThere;
+import org.oscarehr.ocan.ClientViewMentalHealthDocument.ClientViewMentalHealth;
+import org.oscarehr.ocan.ClientSpiritualityImportanceDocument.ClientSpiritualityImportance;
+import org.oscarehr.ocan.ClientCultureHeritageImportanceDocument.ClientCultureHeritageImportance;
+import org.oscarehr.ocan.ResidenceTypeDocument.ResidenceType;
+import org.oscarehr.ocan.ResidenceSupportDocument.ResidenceSupport;
+import org.oscarehr.ocan.LivingArrangementTypeDocument.LivingArrangementType;
+import org.oscarehr.ocan.EmployStatusDocument.EmployStatus;
+import org.oscarehr.ocan.EducationProgramStatusDocument.EducationProgramStatus;
+import org.oscarehr.ocan.PhysicalHealthConcernDocument.PhysicalHealthConcern;
+import org.oscarehr.ocan.HospitalizedPastTwoYearsDocument.HospitalizedPastTwoYears;
+import org.oscarehr.ocan.CommunityTreatOrderDocument.CommunityTreatOrder;
+import org.oscarehr.ocan.SuicideAttemptDocument.SuicideAttempt;
+import org.oscarehr.ocan.SuicideThoughtsDocument.SuicideThoughts;
+import org.oscarehr.ocan.SafetyConcernSelfDocument.SafetyConcernSelf;
+import org.oscarehr.ocan.StageOfChangeAlcoholDocument.StageOfChangeAlcohol;
+import org.oscarehr.ocan.StageOfChangeDrugsDocument.StageOfChangeDrugs;
+import org.oscarehr.ocan.StageOfChangeAddictionsDocument.StageOfChangeAddictions;
+import org.oscarehr.ocan.ChangedSocialPatternsDocument.ChangedSocialPatterns;
+import org.oscarehr.ocan.HighestEducationLevelDocument.HighestEducationLevel;
+import org.oscarehr.ocan.SourceOfIncomeDocument.SourceOfIncome;
+import org.oscarehr.ocan.MedicalConditionDocument.MedicalCondition;
+import org.oscarehr.ocan.ConcernAreaDocument.ConcernArea;
+import org.oscarehr.ocan.SymptomDocument.Symptom;
+import org.oscarehr.ocan.DiagnosticDocument.Diagnostic;
+import org.oscarehr.ocan.OtherIllnessDocument.OtherIllness;
+import org.oscarehr.ocan.SafetyToSelfRiskDocument.SafetyToSelfRisk;
+import org.oscarehr.ocan.AddictionTypeDocument.AddictionType;
+import org.oscarehr.ocan.GenderDocument.Gender;
+import org.oscarehr.ocan.MaritalStatusDocument.MaritalStatus;
+import org.oscarehr.ocan.ServiceUseRecordListDocument.ServiceUseRecordList;
+import org.oscarehr.ocan.ServiceUseRecordDocument.ServiceUseRecord;
+import org.oscarehr.ocan.OCANLeadDocument.OCANLead;
+import org.oscarehr.ocan.StaffWorkerDocument.StaffWorker;
+import org.oscarehr.ocan.ServiceDeliveryLHINDocument.ServiceDeliveryLHIN;
+import org.oscarehr.ocan.ReferralSourceDocument.ReferralSource;
 import org.oscarehr.ocan.AcceptedDocument.Accepted;
+import org.oscarehr.ocan.ExitDispositionDocument.ExitDisposition;
+import org.oscarehr.ocan.ContactInfoDocument.ContactInfo;
+import org.oscarehr.ocan.PowerAttorneyPersonalCareDocument.PowerAttorneyPersonalCare;
+import org.oscarehr.ocan.PowerAttorneyPropertyDocument.PowerAttorneyProperty;
+import org.oscarehr.ocan.LegalGuardianDocument.LegalGuardian;
+import org.oscarehr.ocan.AreasOfConcernDocument.AreasOfConcern;
+import org.oscarehr.ocan.AgeOnsetMentalDocument.AgeOnsetMental;
+import org.oscarehr.ocan.AgeHospitalizationDocument.AgeHospitalization;
+import org.oscarehr.ocan.FirstEntryDateDocument.FirstEntryDate;
+import org.oscarehr.ocan.CompletedByOCANLeadDocument.CompletedByOCANLead;
+import org.oscarehr.ocan.ActionDocument;
+import org.oscarehr.ocan.LegalStatusDocument;
+import org.oscarehr.ocan.OCANv2SubmissionFileDocument;
+import org.oscarehr.ocan.SubmitOrganizationRecordDocument.SubmitOrganizationRecord;
 import org.oscarehr.ocan.ActionDocument.Action;
 import org.oscarehr.ocan.ActionListDocument.ActionList;
-import org.oscarehr.ocan.AddictionTypeDocument.AddictionType;
 import org.oscarehr.ocan.AddictionTypeListDocument.AddictionTypeList;
 import org.oscarehr.ocan.AdditionalElementsDocument.AdditionalElements;
-import org.oscarehr.ocan.AgeHospitalizationDocument.AgeHospitalization;
-import org.oscarehr.ocan.AgeOnsetMentalDocument.AgeOnsetMental;
-import org.oscarehr.ocan.AreasOfConcernDocument.AreasOfConcern;
-import org.oscarehr.ocan.BarriersFindingWorkDocument.BarriersFindingWork;
-import org.oscarehr.ocan.BarriersFindingWorkListDocument.BarriersFindingWorkList;
-import org.oscarehr.ocan.ChangedSocialPatternsDocument.ChangedSocialPatterns;
-import org.oscarehr.ocan.CitizenshipStatusDocument.CitizenshipStatus;
 import org.oscarehr.ocan.ClientAddressDocument.ClientAddress;
 import org.oscarehr.ocan.ClientCapacityDocument.ClientCapacity;
 import org.oscarehr.ocan.ClientContactDocument.ClientContact;
-import org.oscarehr.ocan.ClientCultureDocument.ClientCulture;
-import org.oscarehr.ocan.ClientCultureHeritageImportanceDocument.ClientCultureHeritageImportance;
-import org.oscarehr.ocan.ClientDOBDocument.ClientDOB;
-import org.oscarehr.ocan.ClientHealthCardInfoDocument.ClientHealthCardInfo;
-import org.oscarehr.ocan.ClientHopesForFutureDocument.ClientHopesForFuture;
 import org.oscarehr.ocan.ClientIDDocument.ClientID;
 import org.oscarehr.ocan.ClientNameDocument.ClientName;
-import org.oscarehr.ocan.ClientNeedToGetThereDocument.ClientNeedToGetThere;
-import org.oscarehr.ocan.ClientPhoneDocument.ClientPhone;
+//import org.oscarehr.ocan.ClientOHIPDocument.ClientOHIP;
 import org.oscarehr.ocan.ClientRecordDocument.ClientRecord;
-import org.oscarehr.ocan.ClientSpiritualityImportanceDocument.ClientSpiritualityImportance;
-import org.oscarehr.ocan.ClientViewMentalHealthDocument.ClientViewMentalHealth;
-import org.oscarehr.ocan.CommunityTreatOrderDocument.CommunityTreatOrder;
-import org.oscarehr.ocan.CompletedByOCANLeadDocument.CompletedByOCANLead;
-import org.oscarehr.ocan.ConcernAreaDocument.ConcernArea;
 import org.oscarehr.ocan.ConcernAreaListDocument.ConcernAreaList;
-import org.oscarehr.ocan.ConsumerSelfAxCompletedDocument.ConsumerSelfAxCompleted;
-import org.oscarehr.ocan.ContactInfoDocument.ContactInfo;
-import org.oscarehr.ocan.DiagnosticDocument.Diagnostic;
 import org.oscarehr.ocan.DiagnosticListDocument.DiagnosticList;
 import org.oscarehr.ocan.DiscrimExpListDocument.DiscrimExpList;
 import org.oscarehr.ocan.DoctorContactDocument.DoctorContact;
-import org.oscarehr.ocan.DomainActionsDocument.DomainActions;
-import org.oscarehr.ocan.DomainCommentsDocument.DomainComments;
 import org.oscarehr.ocan.DomainDocument.Domain;
 import org.oscarehr.ocan.DrinkAlcoholDocument.DrinkAlcohol;
 import org.oscarehr.ocan.DrugUseDocument.DrugUse;
 import org.oscarehr.ocan.DrugUseListDocument.DrugUseList;
-import org.oscarehr.ocan.EducationProgramStatusDocument.EducationProgramStatus;
-import org.oscarehr.ocan.EmployStatusDocument.EmployStatus;
 import org.oscarehr.ocan.ExitDispositionDocument.ExitDisposition;
-import org.oscarehr.ocan.FirstEntryDateDocument.FirstEntryDate;
 import org.oscarehr.ocan.FormalHelpNeedDocument.FormalHelpNeed;
 import org.oscarehr.ocan.FormalHelpRecvdDocument.FormalHelpRecvd;
-import org.oscarehr.ocan.GenderDocument.Gender;
-import org.oscarehr.ocan.HighestEducationLevelDocument.HighestEducationLevel;
-import org.oscarehr.ocan.HospitalizedPastTwoYearsDocument.HospitalizedPastTwoYears;
 import org.oscarehr.ocan.ImmigExpListDocument.ImmigExpList;
 import org.oscarehr.ocan.InformalHelpRecvdDocument.InformalHelpRecvd;
-import org.oscarehr.ocan.LegalGuardianDocument.LegalGuardian;
-import org.oscarehr.ocan.LegalIssuesDocument.LegalIssues;
 import org.oscarehr.ocan.LegalStatusDocument.LegalStatus;
 import org.oscarehr.ocan.LegalStatusListDocument.LegalStatusList;
-import org.oscarehr.ocan.LivingArrangementTypeDocument.LivingArrangementType;
 import org.oscarehr.ocan.MISFunctionDocument.MISFunction;
-import org.oscarehr.ocan.MaritalStatusDocument.MaritalStatus;
-import org.oscarehr.ocan.MedicalConditionDocument.MedicalCondition;
 import org.oscarehr.ocan.MedicalConditionListDocument.MedicalConditionList;
 import org.oscarehr.ocan.MedicationDetailDocument.MedicationDetail;
 import org.oscarehr.ocan.MedicationListDocument.MedicationList;
 import org.oscarehr.ocan.NeedRatingDocument.NeedRating;
 import org.oscarehr.ocan.OCANDomainsDocument.OCANDomains;
-import org.oscarehr.ocan.OCANLeadDocument.OCANLead;
 import org.oscarehr.ocan.OCANv2SubmissionFileDocument.OCANv2SubmissionFile;
 import org.oscarehr.ocan.OCANv2SubmissionRecordDocument.OCANv2SubmissionRecord;
+//import org.oscarehr.ocan.OrganizationRecordDocument.OrganizationRecord;
 import org.oscarehr.ocan.OtherAgencyContactDocument.OtherAgencyContact;
-import org.oscarehr.ocan.OtherIllnessDocument.OtherIllness;
 import org.oscarehr.ocan.OtherIllnessListDocument.OtherIllnessList;
 import org.oscarehr.ocan.OtherPractitionerContactDocument.OtherPractitionerContact;
-import org.oscarehr.ocan.PhysicalHealthConcernDocument.PhysicalHealthConcern;
-import org.oscarehr.ocan.PowerAttorneyPersonalCareDocument.PowerAttorneyPersonalCare;
-import org.oscarehr.ocan.PowerAttorneyPropertyDocument.PowerAttorneyProperty;
-import org.oscarehr.ocan.PrefLangDocument.PrefLang;
 import org.oscarehr.ocan.PresentingIssueDocument.PresentingIssue;
 import org.oscarehr.ocan.PresentingIssueListDocument.PresentingIssueList;
 import org.oscarehr.ocan.ProgramDocument.Program;
 import org.oscarehr.ocan.PsychiatristContactDocument.PsychiatristContact;
-import org.oscarehr.ocan.ReasonConsumerSelfAxNotCompletedListDocument.ReasonConsumerSelfAxNotCompletedList;
 import org.oscarehr.ocan.ReasonForOCANDocument.ReasonForOCAN;
+import org.oscarehr.ocan.PrefLangDocument.PrefLang;
+import org.oscarehr.ocan.ServiceLangDocument.ServiceLang;
+import org.oscarehr.ocan.LegalIssuesDocument.LegalIssues;
 import org.oscarehr.ocan.ReferralDocument.Referral;
 import org.oscarehr.ocan.ReferralListDocument.ReferralList;
-import org.oscarehr.ocan.ReferralSourceDocument.ReferralSource;
-import org.oscarehr.ocan.ResidenceSupportDocument.ResidenceSupport;
-import org.oscarehr.ocan.ResidenceTypeDocument.ResidenceType;
-import org.oscarehr.ocan.SafetyConcernSelfDocument.SafetyConcernSelf;
-import org.oscarehr.ocan.SafetyToSelfRiskDocument.SafetyToSelfRisk;
+//import org.oscarehr.ocan.RiskUnemploymentListDocument.RiskUnemploymentList;
 import org.oscarehr.ocan.SafetyToSelfRiskListDocument.SafetyToSelfRiskList;
 import org.oscarehr.ocan.ServiceDeliveryLHINDocument.ServiceDeliveryLHIN;
-import org.oscarehr.ocan.ServiceLangDocument.ServiceLang;
 import org.oscarehr.ocan.ServiceOrgDocument.ServiceOrg;
+import org.oscarehr.ocan.SubmitOrgDocument.SubmitOrg;
 import org.oscarehr.ocan.ServiceRecipientLHINDocument.ServiceRecipientLHIN;
 import org.oscarehr.ocan.ServiceRecipientLocationDocument.ServiceRecipientLocation;
-import org.oscarehr.ocan.ServiceUseRecordDocument.ServiceUseRecord;
-import org.oscarehr.ocan.ServiceUseRecordListDocument.ServiceUseRecordList;
-import org.oscarehr.ocan.SourceOfIncomeDocument.SourceOfIncome;
-import org.oscarehr.ocan.StaffWorkerDocument.StaffWorker;
-import org.oscarehr.ocan.StageOfChangeAddictionsDocument.StageOfChangeAddictions;
-import org.oscarehr.ocan.StageOfChangeAlcoholDocument.StageOfChangeAlcohol;
-import org.oscarehr.ocan.StageOfChangeDrugsDocument.StageOfChangeDrugs;
-import org.oscarehr.ocan.SubmitOrgDocument.SubmitOrg;
-import org.oscarehr.ocan.SubmitOrganizationRecordDocument.SubmitOrganizationRecord;
-import org.oscarehr.ocan.SuicideAttemptDocument.SuicideAttempt;
-import org.oscarehr.ocan.SuicideThoughtsDocument.SuicideThoughts;
-import org.oscarehr.ocan.SymptomDocument.Symptom;
+//import org.oscarehr.ocan.SideEffectsDetailListDocument.SideEffectsDetailList;
 import org.oscarehr.ocan.SymptomListDocument.SymptomList;
 import org.oscarehr.ocan.TimeLivedInCanadaDocument.TimeLivedInCanada;
+import org.oscarehr.ocan.ConsumerSelfAxCompletedDocument.ConsumerSelfAxCompleted;
+import org.oscarehr.ocan.ReasonConsumerSelfAxNotCompletedListDocument.ReasonConsumerSelfAxNotCompletedList;
+import org.oscarehr.ocan.DomainCommentsDocument.DomainComments;
+import org.oscarehr.ocan.DomainActionsDocument.DomainActions;
+import org.oscarehr.ocan.BarriersFindingWorkListDocument.BarriersFindingWorkList;
+import org.oscarehr.ocan.BarriersFindingWorkDocument.BarriersFindingWork;
 import org.oscarehr.ocan.VisitEmergencyDepartmentDocument.VisitEmergencyDepartment;
+
 import org.oscarehr.util.LoggedInInfo;
-import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class OcanReportUIBean {
 
-	private static Logger logger = MiscUtils.getLogger();
+	static Log logger = LogFactory.getLog(OcanReportUIBean.class);
 
 	private static OcanStaffFormDao ocanStaffFormDao = (OcanStaffFormDao) SpringUtils.getBean("ocanStaffFormDao");
 	private static OcanStaffFormDataDao ocanStaffFormDataDao = (OcanStaffFormDataDao) SpringUtils.getBean("ocanStaffFormDataDao");	
@@ -202,7 +211,7 @@ public class OcanReportUIBean {
 		}
 		submissionFile.setOCANv2SubmissionRecordArray(submissionRecordList.toArray(new OCANv2SubmissionRecord[submissionRecordList.size()]));
 		submissionFileDoc.setOCANv2SubmissionFile(submissionFile);
-	
+
 	/*	
 		for(OcanStaffForm ocanStaffForm:ocanStaffForms) {
 			List<OcanStaffFormData> formData = ocanStaffFormDataDao.findByForm(ocanStaffForm.getId());
@@ -265,6 +274,7 @@ public class OcanReportUIBean {
 		ocanSubmissionRecord.setCompletionDate(convertToOcanXmlDate(ocanStaffForm.getCompletionDate()));
 		ocanSubmissionRecord.setAssessmentStatus(OCANv2SubmissionRecord.AssessmentStatus.COMPLETE);
 		ocanSubmissionRecord.setIARViewingConsent(OCANv2SubmissionRecord.IARViewingConsent.Enum.forString("TRUE"));
+		
 		
 		ocanSubmissionRecord.setSubmitOrganizationRecord(convertSubmitOrganizationRecord(ocanStaffForm,ocanStaffFormData));
 		ocanSubmissionRecord.setClientRecord(convertClientRecord(ocanStaffForm,ocanStaffFormData));
@@ -364,11 +374,15 @@ public class OcanReportUIBean {
 	
 		NeedRating needRating = convertNeedRating(domainNumber,ocanStaffForm,ocanStaffFormData, ocanClientForm, ocanClientFormData);
 		domain.setNeedRating(needRating);
-		
+		//if(needRating.getStaff() != 0 && needRating.getStaff() != 9) {
+			//2,3a,3b
 			domain.setInformalHelpRecvd(convertInformalHelpRecvd(domainNumber,ocanStaffForm,ocanStaffFormData));
 			domain.setFormalHelpRecvd(convertFormalHelpRecvd(domainNumber,ocanStaffForm,ocanStaffFormData));
 			domain.setFormalHelpNeed(convertFormalHelpNeed(domainNumber,ocanStaffForm,ocanStaffFormData));			
-				
+			
+		//}
+		
+		
 		switch(domainNumber) {
 		
 		case 1:
@@ -391,13 +405,13 @@ public class OcanReportUIBean {
 			domain.setPhysicalHealthConcern(PhysicalHealthConcern.Enum.forString(getStaffAnswer("6_physical_health_concerns",ocanStaffFormData)));
 			
 			ConcernAreaList concernAreaList = getConcernAreaList(ocanStaffFormData);
-			
+			//if(concernAreaList.getConcernAreaList().size()>0) {
 			if(concernAreaList.getConcernAreaArray().length>0) {
 				domain.setConcernAreaList(concernAreaList);
 			}
 			
 			MedicationList medicationList = getMedicationList(ocanStaffFormData);
-			
+			//if(medicationList.getMedicationDetailList().size()>0) {
 			if(medicationList.getMedicationDetailArray().length>0) {
 				domain.setMedicationList(medicationList);
 			}
@@ -418,7 +432,7 @@ public class OcanReportUIBean {
 			domain.setVisitEmergencyDepartment(VisitEmergencyDepartment.Enum.forString(getStaffAnswer("visitEmergencyDepartment",ocanStaffFormData)));
 			domain.setPsychiatricAdditionalInfo(getStaffAnswer("7_psychiatric_history_addl_info",ocanStaffFormData));
 			SymptomList symptomList = getSymptomList(ocanStaffFormData);
-			
+			//if(symptomList.getSymptomList().size()>0) {
 			if(symptomList.getSymptomArray().length>0) {
 				domain.setSymptomList(symptomList);
 			}			
@@ -426,13 +440,13 @@ public class OcanReportUIBean {
 		
 		case 8:
 			DiagnosticList diagnosticList = getDiagnosticList(ocanStaffFormData);
-			
+			//if(diagnosticList.getDiagnosticList().size()>0) {
 			if(diagnosticList.getDiagnosticArray().length>0) {
 				domain.setDiagnosticList(diagnosticList);
 			}	
 			
 			OtherIllnessList otherIllnessList = getOtherIllnessList(ocanStaffFormData);
-			
+			//if(otherIllnessList.getOtherIllnessList().size()>0) {
 			if(otherIllnessList.getOtherIllnessArray().length>0) {
 				domain.setOtherIllnessList(otherIllnessList);
 			}
@@ -446,7 +460,7 @@ public class OcanReportUIBean {
 			domain.setSafetyConcernSelf(SafetyConcernSelf.Enum.forString(getStaffAnswer("safety_concerns",ocanStaffFormData)));
 
 			SafetyToSelfRiskList safetyToSelfRiskList = getSafetyToSelfRiskList(ocanStaffFormData);
-			
+			//if(safetyToSelfRiskList.getSafetyToSelfRiskList().size()>0) {
 			if(safetyToSelfRiskList.getSafetyToSelfRiskArray().length>0) {
 				domain.setSafetyToSelfRiskList(safetyToSelfRiskList);
 			}
@@ -468,7 +482,7 @@ public class OcanReportUIBean {
 		case 14:
 			
 			AddictionTypeList addictionTypeList = getAddictionTypeList(ocanStaffFormData);
-			
+			//if(addictionTypeList.getAddictionTypeList().size()>0) {
 			if(addictionTypeList.getAddictionTypeArray().length>0) {
 				domain.setAddictionTypeList(addictionTypeList);
 			}
@@ -543,6 +557,7 @@ public class OcanReportUIBean {
 			formalHelpNeed.setStaff(Byte.valueOf(staffAnswer));	
 		else 
 			formalHelpNeed.setStaff(Byte.valueOf("0"));
+				
 		return formalHelpNeed;
 	}
 
@@ -731,7 +746,6 @@ public class OcanReportUIBean {
 		}
 		symptomList.setSymptomComments(getStaffAnswer("7_comments",ocanStaffFormData));		
 		symptomList.setSymptomArray(mc_list.toArray(new Symptom.Enum[answers.size()]));
-		
 		//symptomList.setSymptomArray(answers.toArray(new String[answers.size()]));
 		//symptomList.setOtherSymptom(getStaffAnswer("symptom_checklist_other",ocanStaffFormData));
 		return symptomList;
@@ -843,6 +857,7 @@ public class OcanReportUIBean {
 		*/
 		return drugUseList;
 	}
+	
 	
 	
 	public static AddictionTypeList getAddictionTypeList(List<OcanStaffFormData> ocanStaffFormData) {
@@ -1000,10 +1015,17 @@ public class OcanReportUIBean {
 			clientRecord.setCompletedByOCANLead(CompletedByOCANLead.Enum.forString(getStaffAnswer("completedByOCANLead",ocanStaffFormData)));
 		}
 		clientRecord.setClientName(convertClientName(ocanStaffForm,ocanStaffFormData));
+		
 		clientRecord.setClientAddress(convertClientAddress(ocanStaffForm,ocanStaffFormData));
-		clientRecord.setClientEmailAddress(getStaffAnswer("email",ocanStaffFormData));
+		if(!"TRUE".equalsIgnoreCase(getStaffAnswer("consumerAnonymous",ocanStaffFormData))) {
+				clientRecord.setClientEmailAddress(getStaffAnswer("email",ocanStaffFormData));
+		}else{
+			clientRecord.setClientEmailAddress("");
+		}
 		clientRecord.setClientPhone(convertClientPhone(ocanStaffForm,ocanStaffFormData));
 		clientRecord.setClientHealthCardInfo(convertClientHealthCardInfo(ocanStaffForm,ocanStaffFormData));
+		
+		
 		clientRecord.setClientCulture(ClientCulture.Enum.forString(getStaffAnswer("culture",ocanStaffFormData)));
 		clientRecord.setConsumerSelfAxCompleted(ConsumerSelfAxCompleted.Enum.forString(getStaffAnswer("consumerSelfAxCompleted",ocanStaffFormData)));
 		clientRecord.setReasonConsumerSelfAxNotCompletedList(convertReasonConsumerSelfAxNotCompletedList(ocanStaffFormData));
@@ -1015,7 +1037,13 @@ public class OcanReportUIBean {
 		clientRecord.setServiceRecipientLHIN(ServiceRecipientLHIN.Enum.forString(getStaffAnswer("service_recipient_lhin",ocanStaffFormData)));
 		clientRecord.setClientDOB(convertClientDOB(ocanStaffForm, ocanStaffFormData));		
 		clientRecord.setGender(Gender.Enum.forString(ocanStaffForm.getGender()));		
-		clientRecord.setMaritalStatus(MaritalStatus.Enum.forString(getStaffAnswer("marital_status",ocanStaffFormData)));
+		
+		if(!"TRUE".equalsIgnoreCase(getStaffAnswer("consumerAnonymous",ocanStaffFormData))) {
+			clientRecord.setMaritalStatus(MaritalStatus.Enum.forString(getStaffAnswer("marital_status",ocanStaffFormData)));
+		}else{
+			clientRecord.setMaritalStatus(MaritalStatus.Enum.forString(""));
+		}
+		
 		clientRecord.setServiceUseRecordList(convertServiceUseRecordList(ocanStaffFormData));
 		clientRecord.setClientCapacity(convertClientCapacity(ocanStaffForm,ocanStaffFormData));
 		clientRecord.setAgeOnsetMental(convertAgeOnsetMental(ocanStaffForm,ocanStaffFormData));
@@ -1096,19 +1124,19 @@ public class OcanReportUIBean {
 	
 	public static ClientAddress convertClientAddress(OcanStaffForm ocanStaffForm, List<OcanStaffFormData> ocanStaffFormData) {
 		ClientAddress clientAddress = ClientAddress.Factory.newInstance();
-		
-		clientAddress.setLine1(ocanStaffForm.getAddressLine1());
-		clientAddress.setLine2(ocanStaffForm.getAddressLine2());
-		clientAddress.setCity(ocanStaffForm.getCity());
-		clientAddress.setProvince(ClientAddress.Province.Enum.forString(ocanStaffForm.getProvince()));
-		clientAddress.setPostalCode(ocanStaffForm.getPostalCode());
-		/*
-		clientAddress.setLine1("");
-		clientAddress.setLine2("");
-		clientAddress.setCity("");
-		clientAddress.setProvince("");
-		clientAddress.setPostalCode("");
-		*/
+		if(!"TRUE".equalsIgnoreCase(getStaffAnswer("consumerAnonymous",ocanStaffFormData))) {
+			clientAddress.setLine1(ocanStaffForm.getAddressLine1());
+			clientAddress.setLine2(ocanStaffForm.getAddressLine2());
+			clientAddress.setCity(ocanStaffForm.getCity());
+			clientAddress.setProvince(ClientAddress.Province.Enum.forString(ocanStaffForm.getProvince()));
+			clientAddress.setPostalCode(ocanStaffForm.getPostalCode());
+		} else {			
+			clientAddress.setLine1("");
+			clientAddress.setLine2("");
+			clientAddress.setCity("");
+			clientAddress.setProvince(ClientAddress.Province.Enum.forString(""));
+			clientAddress.setPostalCode("");
+		}
 		return clientAddress;
 	}
 	
@@ -1142,16 +1170,27 @@ public class OcanReportUIBean {
 	
 	public static ClientPhone convertClientPhone(OcanStaffForm ocanStaffForm, List<OcanStaffFormData> ocanStaffFormData) {
 		ClientPhone clientPhone = ClientPhone.Factory.newInstance();	
-		clientPhone.setNumber(ocanStaffForm.getPhoneNumber());
-		clientPhone.setExtension(getStaffAnswer("extension",ocanStaffFormData));
+		if(!"TRUE".equalsIgnoreCase(getStaffAnswer("consumerAnonymous",ocanStaffFormData))) {
+			clientPhone.setNumber(ocanStaffForm.getPhoneNumber());
+			clientPhone.setExtension(getStaffAnswer("extension",ocanStaffFormData));
+		}else{
+			clientPhone.setNumber("");
+			clientPhone.setExtension("");
+		}
 		return clientPhone;
 	}
 	
 	public static ClientHealthCardInfo convertClientHealthCardInfo(OcanStaffForm ocanStaffForm,List<OcanStaffFormData> ocanStaffFormData) {
 		ClientHealthCardInfo clientHealthCardInfo = ClientHealthCardInfo.Factory.newInstance();	
-		clientHealthCardInfo.setNumber(ocanStaffForm.getHcNumber());
-		clientHealthCardInfo.setVersion(ocanStaffForm.getHcVersion());
-		clientHealthCardInfo.setIssuingTerritory(ClientHealthCardInfo.IssuingTerritory.Enum.forString(getStaffAnswer("issuingTerritory",ocanStaffFormData)));
+		if(!"TRUE".equalsIgnoreCase(getStaffAnswer("consumerAnonymous",ocanStaffFormData))) {
+			clientHealthCardInfo.setNumber(ocanStaffForm.getHcNumber());
+			clientHealthCardInfo.setVersion(ocanStaffForm.getHcVersion());
+			clientHealthCardInfo.setIssuingTerritory(ClientHealthCardInfo.IssuingTerritory.Enum.forString(getStaffAnswer("issuingTerritory",ocanStaffFormData)));
+		}else{
+			clientHealthCardInfo.setNumber("");
+			clientHealthCardInfo.setVersion("");
+			clientHealthCardInfo.setIssuingTerritory(ClientHealthCardInfo.IssuingTerritory.Enum.forString(""));
+		}
 		return clientHealthCardInfo;
 	}
 	public static ClientDOB convertClientDOB(OcanStaffForm ocanStaffForm, List<OcanStaffFormData> ocanStaffFormData) {
@@ -1435,8 +1474,14 @@ public class OcanReportUIBean {
 	
 	public static String getFilename(int year, int month, int increment) {
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
-	
-		return "OCAN" +  year + ( (month<10)?("0"+month):(month) )+ loggedInInfo.loggedInInfo.get().currentFacility.getOcanServiceOrgNumber() +  ( (increment<10)?("0"+increment):(increment) ) + ".xml";
+		GregorianCalendar cal=new GregorianCalendar();
+		year = cal.get(GregorianCalendar.YEAR);
+		month = cal.get(GregorianCalendar.MONTH)+1;
+		int date = cal.get(GregorianCalendar.DATE);
+		int hour = cal.get(GregorianCalendar.HOUR_OF_DAY);
+		int min = cal.get(GregorianCalendar.MINUTE);
+		 
+		return "OCAN" +  year + ( (month<10)?("0"+month):(month) )+ ((date<10)?("0"+date):(date)) + ((hour<10)?("0"+hour):(hour))+ ((min<10)?("0"+min):(min))+loggedInInfo.loggedInInfo.get().currentFacility.getOcanServiceOrgNumber() +  ( (increment<10)?(".00"+increment):(increment) ) + ".xml";
 	}
 	
 	private static Date getStartDate(int year, int month) {

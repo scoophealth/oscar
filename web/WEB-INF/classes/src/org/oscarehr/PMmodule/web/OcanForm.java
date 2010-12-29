@@ -314,7 +314,7 @@ public class OcanForm {
 			else
 				selected=(OcanClientFormData.containsAnswer(existingClientAnswers, option.getProgramName())?"selected=\"selected\"":"");
 			
-			sb.append("<option "+selected+" value=\""+StringEscapeUtils.escapeHtml(option.getOrgName())+"\" title=\""+htmlEscapedName+"\">"+htmlEscapedName+"</option>");
+			sb.append("<option "+selected+" value=\""+StringEscapeUtils.escapeHtml(option.getProgramName())+"\" title=\""+htmlEscapedName+"\">"+htmlEscapedName+"</option>");
 		}
 		
 		return(sb.toString());
@@ -467,7 +467,7 @@ public class OcanForm {
 		}
 		StringBuilder sb=new StringBuilder();
 
-		sb.append("<input type=\"text\" name=\""+question+"\" id=\""+question+"\" size=\"" + size + "\" value=\""+answer+"\"/>");
+		sb.append("<input type=\"text\" name=\""+question+"\" id=\""+question+"\" readonly size=\"" + size + "\" value=\""+answer+"\"/>");
 		
 		return(sb.toString());
 	}
@@ -487,7 +487,7 @@ public class OcanForm {
 		}
 		StringBuilder sb=new StringBuilder();
 
-		sb.append("<input type=\"text\" name=\""+question+"\" id=\""+question+"\" size=\"" + size + "\" value=\""+value+"\"/>");
+		sb.append("<input type=\"text\" name=\""+question+"\" id=\""+question+"\" size=\"" + size + "\" maxlength=\"" + size +"\" value=\""+value+"\"/>");
 		
 		return(sb.toString());
 	}
