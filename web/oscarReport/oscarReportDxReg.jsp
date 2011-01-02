@@ -41,7 +41,8 @@ objectName="_admin,_admin.reporting" rights="r" reverse="<%=true%>">
 <%@page import="org.oscarehr.common.dao.DxresearchDAO"%>
 <%@page import="org.oscarehr.common.model.Dxresearch"%>
 <%@page import="oscar.oscarResearch.oscarDxResearch.util.*"%>
-<%@page import="java.util.*"%>
+<%@page import="java.util.*, java.sql.*"%>
+<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 
 
 <html:html locale="true">
@@ -212,7 +213,7 @@ objectName="_admin,_admin.reporting" rights="r" reverse="<%=true%>">
                                     <th>Total Number(s): <%= (Integer) session.getAttribute("Counter")%></th>
                                 </tr>
                             </thead>
-                       </table>
+                        </table>
                         Filter: &nbsp;&nbsp;
                         <label>
                             <input type="radio" name="SearchBy" value="radio" id="SearchBy_0" <%="patientRegistedDistincted".equals(radiostatus)?"checked":""%> onclick="javascript:this.form.action='<%= request.getContextPath()%>/report/DxresearchReport.do?method=patientRegistedDistincted'">
@@ -220,18 +221,58 @@ objectName="_admin,_admin.reporting" rights="r" reverse="<%=true%>">
                         <label>
                             <input type="radio" name="SearchBy" value="radio" id="SearchBy_1" <%="patientRegistedAll".equals(radiostatus)?"checked":""%> onclick="javascript:this.form.action='<%= request.getContextPath()%>/report/DxresearchReport.do?method=patientRegistedAll'">
                             ALL</label>
-                         <label>
+                        <label>
                             <input type="radio" name="SearchBy" value="radio" id="SearchBy_0" <%="patientRegistedActive".equals(radiostatus)?"checked":""%> onclick="javascript:this.form.action='<%= request.getContextPath()%>/report/DxresearchReport.do?method=patientRegistedActive'">
                             Active</label>
                         <label>
                             <input type="radio" name="SearchBy" value="radio" id="SearchBy_0" <%="patientRegistedDeleted".equals(radiostatus)?"checked":""%> onclick="javascript:this.form.action='<%= request.getContextPath()%>/report/DxresearchReport.do?method=patientRegistedDeleted'">
                             Deleted</label>
-                         <label>
+                        <label>
                             <input type="radio" name="SearchBy" value="radio" id="SearchBy_1" <%="patientRegistedResolve".equals(radiostatus)?"checked":""%> onclick="javascript:this.form.action='<%= request.getContextPath()%>/report/DxresearchReport.do?method=patientRegistedResolve'">
                             Resolved</label>
 
 
-                           
+                        <select id="provider_no" name="provider_no">
+
+                            <security:oscarSec roleName="<%=roleName$%>"
+                                               objectName="_team_schedule_only" rights="r" reverse="false">
+                                <%
+                                        String provider_no = curUser_no;
+                                        List<Map> resultList = oscarSuperManager.find("providerDao", "searchloginteam", new Object[]{provider_no, provider_no});
+                                        for (Map provider : resultList) {
+                                %>
+                                <option value="<%=provider.get("provider_no")%>" <%=mygroupno.equals(provider.get("provider_no"))?"selected":""%>>
+                                    <%=provider.get("last_name")+", "+provider.get("first_name")%></option>
+                                    <%
+                                            }
+                                    %>
+
+                            </security:oscarSec>
+                            <security:oscarSec roleName="<%=roleName$%>"
+                                               objectName="_team_schedule_only" rights="r" reverse="true">
+                                <%
+                                        List<Map> resultList = oscarSuperManager.find("providerDao", "searchmygroupno", new Object[] {});
+                                        for (Map group : resultList) {
+                                %>
+                                <option value="<%="_grp_"+group.get("mygroup_no")%>"
+                                        <%=mygroupno.equals(group.get("mygroup_no"))?"selected":""%>><%=group.get("mygroup_no")%></option>
+                                <%
+                                        }
+
+                                        resultList = oscarSuperManager.find("providerDao", "searchprovider", new Object[] {});
+                                        for (Map provider : resultList) {
+                                %>
+                                <option value="<%=provider.get("provider_no")%>" <%=mygroupno.equals(provider.get("provider_no"))?"selected":""%>>
+                                    <%=provider.get("last_name")+", "+provider.get("first_name")%></option>
+                                    <%
+                                            }
+                                    %>
+                                </security:oscarSec>
+                                <option value="*"><bean:message
+                                        key="report.reportindex.formAllProviders" />
+                                </option>
+                        </select>
+
                         &nbsp;&nbsp;
                         <nested:submit style="border:1px solid #666666;">Search Patients</nested:submit>
                     </nested:form>
