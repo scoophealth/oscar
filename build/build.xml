@@ -127,6 +127,7 @@
 		<include name="**/*.txt" />
 		<include name="**/*.pdf" />
 		<include name="**/*.jrxml" />
+                <include name="**/*.jasper" />
 		<include name="**/*.html" />
 	</patternset>
 
