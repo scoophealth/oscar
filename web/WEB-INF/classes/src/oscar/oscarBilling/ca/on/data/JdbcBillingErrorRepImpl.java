@@ -58,6 +58,59 @@ public class JdbcBillingErrorRepImpl {
 		return retval;
 	}
 
+        public List getErrorRecords(List<BillingProviderData> list, String fromDate, String toDate, String filename) {
+		List retval = new Vector();
+		BillingErrorRepData obj = null;
+		String sqlFilename = "".equals(filename) ? "" : (" and report_name='" + filename + "' ");
+		if(list == null) return retval;
+		String sql = "select * from billing_on_eareport";
+		for(int i = 0; i < list.size() ; i++) {
+			BillingProviderData val = list.get(i);
+			if(i == 0) sql += " where ((providerohip_no='" + val.getOhipNo() + "' and group_no='"
+				+ val.getBillingGroupNo() + "' and specialty='" + val.getSpecialtyCode() + "')";
+			else sql+= " or (providerohip_no='" + val.getOhipNo() + "' and group_no='"
+				+ val.getBillingGroupNo() + "' and specialty='" + val.getSpecialtyCode() + "')";
+		}
+		sql += ") and code_date>='" + fromDate + "' and code_date<='" + toDate + "'" + sqlFilename + " order by code_date";
+
+		// _logger.info("getErrorRecords(sql = " + sql + ")");
+		ResultSet rs = dbObj.searchDBRecord(sql);
+
+		try {
+			while (rs.next()) {
+				obj = new BillingErrorRepData();
+				obj.setId("" + rs.getInt("id"));
+				obj.setBilling_no("" + rs.getInt("billing_no"));
+				obj.setProviderohip_no(rs.getString("providerohip_no"));
+				obj.setGroup_no(rs.getString("group_no"));
+				obj.setSpecialty(rs.getString("specialty"));
+				obj.setProcess_date(rs.getString("process_date"));
+				obj.setHin(rs.getString("hin"));
+				obj.setVer(rs.getString("ver"));
+				obj.setDob(rs.getString("dob"));
+				obj.setRef_no(rs.getString("ref_no"));
+				obj.setFacility(rs.getString("facility"));
+				obj.setAdmitted_date(rs.getString("admitted_date"));
+				obj.setClaim_error(rs.getString("claim_error"));
+				obj.setCode(rs.getString("code"));
+				obj.setFee(rs.getString("fee"));
+				obj.setUnit(rs.getString("unit"));
+				obj.setCode_date(rs.getString("code_date"));
+				obj.setDx(rs.getString("dx"));
+				obj.setExp(rs.getString("exp"));
+				obj.setCode_error(rs.getString("code_error"));
+				obj.setReport_name(rs.getString("report_name"));
+				obj.setStatus(rs.getString("status"));
+				obj.setComment(rs.getString("comment"));
+				retval.add(obj);
+			}
+		} catch (SQLException e) {
+			_logger.error("getErrorRecords(sql = " + sql + ")");
+		}
+
+		return retval;
+	}
+
 	public boolean deleteErrorReport(BillingErrorRepData val) {
 		boolean retval = false;
 		String sql = "delete from billing_on_eareport where providerohip_no='" + val.getProviderohip_no()

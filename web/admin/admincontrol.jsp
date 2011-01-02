@@ -43,7 +43,7 @@ if(session.getAttribute("user") == null ) //|| !((String) session.getValue("user
 <%
     if(session.getAttribute("user") == null ) response.sendRedirect("../logout.jsp");
     String curProvider_no = (String) session.getAttribute("user");
-    
+
     boolean isSiteAccessPrivacy=false;
 %>
 
@@ -170,6 +170,7 @@ if(session.getAttribute("user") == null ) //|| !((String) session.getValue("user
     {"site_preference_search_titlename", "select p.* from preference p INNER JOIN providersite s ON p.provider_no = s.provider_no where p."+fieldname+ " "+regularexp+" ?  AND s.site_id IN (SELECT site_id from providersite where provider_no= ? ) " +orderby + " "+limit},
     {"site_security_search_titlename", "select p.* from security p INNER JOIN providersite s ON p.provider_no = s.provider_no where p."+fieldname+ " "+regularexp+" ?  AND s.site_id IN (SELECT site_id from providersite where provider_no= " + curProvider_no + " ) " +orderby + " "+limit},
     {"site_provider_search_titlename", "select p.provider_no,p.first_name,p.last_name,p.specialty,p.sex,p.team,p.phone,p.status from provider p where "+fieldname+ " "+regularexp+" ? and exists(select * from providersite s where p.provider_no = s.provider_no and s.site_id IN (SELECT site_id from providersite where provider_no=" + curProvider_no + ")) "  +orderby + " "+limit},
+    {"demographic_admin_reports","SELECT demographic_no,first_name,last_name,roster_status,sex,chart_no,year_of_birth,month_of_birth,date_of_birth,provider_no FROM demographic WHERE LOWER(last_name) REGEXP ?  AND patient_status NOT IN ('IN','DE','IC','ID','MO','FI') ORDER BY last_name, first_name"},
   };
 	}else{
 	dbQueries=new String[][] {
@@ -220,6 +221,7 @@ if(session.getAttribute("user") == null ) //|| !((String) session.getValue("user
     {"site_preference_search_titlename", "select p.* from preference p INNER JOIN providersite s ON p.provider_no = s.provider_no where p."+fieldname+ " "+regularexp+" ?  AND s.site_id IN (SELECT site_id from providersite where provider_no=?) " +orderby + " "+limit},
     {"site_security_search_titlename", "select p.* from security p INNER JOIN providersite s ON p.provider_no = s.provider_no where p."+fieldname+ " "+regularexp+" ?  AND s.site_id IN (SELECT site_id from providersite where provider_no= " + curProvider_no + " ) " +orderby + " "+limit},
     {"site_provider_search_titlename", "select p.provider_no,p.first_name,p.last_name,p.specialty,p.sex,p.team,p.phone,p.status from provider p where "+fieldname+ " "+regularexp+" ? and exists(select * from providersite s where p.provider_no = s.provider_no and s.site_id IN (SELECT site_id from providersite where provider_no=" + curProvider_no + ")) "  +orderby + " "+limit},
+    {"demographic_admin_reports","SELECT demographic_no,first_name,last_name,roster_status,sex,chart_no,year_of_birth,month_of_birth,date_of_birth,provider_no FROM demographic WHERE LOWER(last_name) REGEXP ?  AND patient_status NOT IN ('IN','DE','IC','ID','MO','FI') ORDER BY last_name, first_name"},
   };
 }
 
@@ -243,6 +245,7 @@ if(session.getAttribute("user") == null ) //|| !((String) session.getValue("user
     {"Preference_Search" , "preferencesearchresults.jsp"},
     {"Preference_Delete" , "preferencedelete.jsp"},
     {"Preference_Update_Record" , "preferenceupdate.jsp"},
+    {"Demographic_Admin_Reports" , "../demographic/demographicsearch2reportresults.jsp"},
 
     {"displaymygroup" , "admindisplaymygroup.jsp"},
     {"newgroup" , "adminnewgroup.jsp"},

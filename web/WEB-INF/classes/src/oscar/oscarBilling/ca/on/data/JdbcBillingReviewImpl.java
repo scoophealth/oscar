@@ -21,11 +21,13 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
+import org.apache.struts.util.LabelValueBean;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBPreparedHandler;
@@ -157,30 +159,30 @@ public class JdbcBillingReviewImpl {
 		return retval;
 	}
 
-	// invoice report
+	//invoice report
 	public List getBill(String billType, String statusType, String providerNo, String startDate, String endDate,
-			String demoNo, String serviceCode, String dx, String visitType) {
+			String demoNo, String serviceCodes, String dx, String visitType) {
 		List retval = new Vector();
 		BillingClaimHeader1Data ch1Obj = null;
-		String temp = demoNo + " " + providerNo + " " + statusType + " " + startDate + " " + endDate + " " + billType + " " + visitType ;
+		String temp = demoNo + " " + providerNo + " " + statusType + " " + startDate + " " + endDate + " "
+			+ billType + " " + visitType + " " + serviceCodes;
 		temp = temp.trim().startsWith("and") ? temp.trim().substring(3) : temp;
 
-		String sql = "select id,pay_program,billing_on_cheader1.demographic_no,demographic_name,billing_date,billing_time,status,"
-				+ "provider_no,provider_ohip_no,apptProvider_no,timestamp1,total,paid,clinic from billing_on_cheader1 " +
-                                "where " + temp
-				+ " order by billing_date, billing_time";
+		String sql = "SELECT ch1.id,pay_program,demographic_no,demographic_name,billing_date,billing_time," +
+				"ch1.status,provider_no,provider_ohip_no,apptProvider_no,timestamp1,total,paid,clinic," +
+				"bi.fee, bi.service_code, bi.dx " +
+				"FROM billing_on_cheader1 ch1 LEFT JOIN billing_on_item bi ON ch1.id=bi.ch1_id " +
+				"WHERE " + temp + serviceCodes + " and bi.status!='D' " +
+				" ORDER BY billing_date, billing_time";
 
 		_logger.info("getBill(sql = " + sql + ")");
 		ResultSet rs = dbObj.searchDBRecord(sql);
-                
-		try {
-			while (rs.next()) {
 
-				boolean bSameBillCh1 = false;
-				sql = "select fee, service_code, dx from billing_on_item where ch1_id=" + rs.getInt("id")
-						+ " and service_code like '" + serviceCode + "' and status!='D'" + dx;
-				ResultSet rs1 = dbObj.searchDBRecord(sql);
-				while (rs1.next()) {
+		if(rs != null) {
+			try {
+				while (rs.next()) {
+
+					boolean bSameBillCh1 = false;
 					ch1Obj = new BillingClaimHeader1Data();
 					ch1Obj.setId("" + rs.getInt("id"));
 					ch1Obj.setDemographic_no("" + rs.getInt("demographic_no"));
@@ -192,37 +194,29 @@ public class JdbcBillingReviewImpl {
 					ch1Obj.setProvider_ohip_no(rs.getString("provider_ohip_no"));
 					ch1Obj.setApptProvider_no(rs.getString("apptProvider_no"));
 					ch1Obj.setUpdate_datetime(rs.getString("timestamp1"));
-					
+
 					ch1Obj.setClinic(rs.getString("clinic"));
-					
+
 					// ch1Obj.setTotal(rs.getString("total"));
 					ch1Obj.setPay_program(rs.getString("pay_program"));
-					if (!bSameBillCh1) {
-                                            ch1Obj.setPaid(rs.getString("paid")); 
-                                            sql = "select value from billing_on_ext where key_val = 'payDate' and billing_no = " + rs.getInt("id");
-                                            ResultSet rs2 = dbObj.searchDBRecord(sql);
-                                            if( rs2.next() ) {
-                                                ch1Obj.setSettle_date(rs2.getString("value"));
-                                            }
-                                            rs2.close();
-                                        }
-                                        else 
-                                            ch1Obj.setPaid("0.00"); 
+					if (!bSameBillCh1)
+						ch1Obj.setPaid(rs.getString("paid"));
+					else
+						ch1Obj.setPaid("0.00");
 
-					ch1Obj.setTotal(rs1.getString("fee"));
-					ch1Obj.setRec_id(rs1.getString("dx"));
-					ch1Obj.setTransc_id(rs1.getString("service_code"));
-					
+					ch1Obj.setTotal(rs.getString("fee"));
+					ch1Obj.setRec_id(rs.getString("dx"));
+					ch1Obj.setTransc_id(rs.getString("service_code"));
 
-					
 					retval.add(ch1Obj);
-                                        bSameBillCh1 = true; 
+					bSameBillCh1 = true;
 				}
-				rs1.close();
+				//				rs1.close();
+				//			}
+				rs.close();
+			} catch (SQLException e) {
+				_logger.error("getBill(sql = " + sql + ")");
 			}
-			rs.close();
-		} catch (SQLException e) {
-			_logger.error("getBill(sql = " + sql + ")");
 		}
 		return retval;
 	}
@@ -299,5 +293,59 @@ public class JdbcBillingReviewImpl {
 		}
 
 		return retval;
+	}
+
+        public List<LabelValueBean> listBillingForms() {
+		List<LabelValueBean> res = null;
+		try {
+	        String sql = "select distinct servicetype, servicetype_name from ctl_billingservice" +
+    			" where status!='D' and servicetype is not null AND LENGTH(TRIM(servicetype))>0";
+			_logger.trace("billing forms list: "+sql);
+			ResultSet rs = dbObj.searchDBRecord(sql);
+	        if(rs!=null && rs.next()) {
+	        	res = new ArrayList<LabelValueBean>();
+		        do {
+		            String servicetype     = rs.getString("servicetype");
+		            String servicetypename = rs.getString("servicetype_name");
+		            res.add(new LabelValueBean(servicetypename,servicetype));
+		        } while (rs.next());
+
+	        }
+		} catch (SQLException ex) {
+			_logger.error("Error getting billing forms list", ex);
+		}
+		return res;
+	}
+
+       public List<String> mergeServiceCodes(String serviceCodes, String billingForm) {
+		List<String> serviceCodeList = null;
+
+		if(serviceCodes != null && serviceCodes.length() > 0) {
+			String[] serviceArray = serviceCodes.split(",");
+			serviceCodeList = new ArrayList<String>();
+			for(int i=0;i < serviceArray.length; i++) {
+				serviceCodeList.add("bi.service_code like '%" + serviceArray[i].trim() +"%'");
+			}
+		}
+
+		if(billingForm != null && billingForm.length() > 0) {
+			String sql = "select distinct service_code from ctl_billingservice " +
+    			" where status!='D' and servicetype='" + billingForm +"'";
+			_logger.trace("billing forms list: "+sql);
+			try {
+				ResultSet rs = dbObj.searchDBRecord(sql);
+		        if(rs != null && rs.next()) {
+			        if(serviceCodeList == null) serviceCodeList = new ArrayList<String>();
+		        	do {
+			            String serviceCode     = rs.getString("service_code");
+			            serviceCodeList.add("bi.service_code='"+serviceCode+"'");
+		        	} while (rs.next());
+		        }
+			} catch (SQLException ex) {
+				_logger.error("Error getting billing forms list", ex);
+			}
+		}
+
+		return serviceCodeList;
 	}
 }

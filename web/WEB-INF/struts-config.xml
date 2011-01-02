@@ -482,6 +482,7 @@
 		<form-bean name="followUpForm2" type="org.apache.struts.validator.DynaValidatorForm">
 			<form-property name="followup" type="org.oscarehr.eyeform.model.FollowUp" />
 		</form-bean>
+                <form-bean name="PatientEndYearStatementForm" type="oscar.oscarBilling.ca.on.pageUtil.PatientEndYearStatementForm" />
 
 	</form-beans>
 
@@ -2146,6 +2147,10 @@
 		<action parameter="method" path="/PMmodule/Admin/MigrateCaisiRoles" scope="request" type="org.springframework.web.struts.DelegatingActionProxy">
 			<forward name="success" path="/PMmodule/Admin/migrateCaisiRoles.jsp" redirect="true" />
 		</action>
+                <action input="/billing/CA/ON/endYearStatement.jsp" name="PatientEndYearStatementForm" path="/billing/CA/ON/endYearStatement" scope="request" type="oscar.oscarBilling.ca.on.pageUtil.PatientEndYearStatementAction" validate="false">
+                    <forward name="success" path="/billing/CA/ON/endYearStatement.jsp"/>
+                    <forward name="failure" path="/billing/CA/ON/endYearStatement.jsp"/>
+                </action>
 
 	</action-mappings>
 	<controller processorClass="org.apache.struts.tiles.TilesRequestProcessor" maxFileSize="20M" />

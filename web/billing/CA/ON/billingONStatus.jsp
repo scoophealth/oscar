@@ -16,7 +16,8 @@
  * Yi Li
  */
  -->
-<%! boolean bMultisites = org.oscarehr.common.IsPropertiesOn.isMultisitesEnable(); %><%@ page import="java.math.*,java.util.*, java.sql.*, oscar.*, java.net.*,oscar.util.*,oscar.oscarBilling.ca.on.pageUtil.*,oscar.oscarBilling.ca.on.data.*" %>
+<%! boolean bMultisites = org.oscarehr.common.IsPropertiesOn.isMultisitesEnable(); %>
+<%@ page import="java.math.*,java.util.*, java.sql.*, oscar.*, java.net.*,oscar.util.*,oscar.oscarBilling.ca.on.pageUtil.*,oscar.oscarBilling.ca.on.data.*,org.apache.struts.util.LabelValueBean" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
@@ -97,6 +98,7 @@ String visitType = request.getParameter("visitType");
 String filename = request.getParameter("demographicNo");
 
 String selectedSite = (String) request.getParameter("site");
+String billingForm = request.getParameter("billing_form");
 
 if ( statusType == null ) { statusType = "O"; } 
 if ( "_".equals(statusType) ) { demoNo = "";}
@@ -107,11 +109,8 @@ if ( providerNo == null ) { providerNo = "" ; }
 if ( raCode == null ) { raCode = "" ; } 
 if ( dx == null ) { dx = "" ; } 
 if ( visitType == null ) { visitType = "-" ; } 
-if ( serviceCode != null && serviceCode.equals("")) { 
-	serviceCode = "%"; 
-} else if(serviceCode == null || serviceCode.equals("-")) {
-	serviceCode = null;
-}
+if ( serviceCode == null || serviceCode.equals("")) serviceCode = "%";
+if ( billingForm == null ) { billingForm = "-" ; }
 
 List pList = isTeamBillingOnly
 		? (Vector)(new JdbcBillingPageUtil()).getCurTeamProviderStr((String) session.getAttribute("user"))
@@ -119,13 +118,13 @@ List pList = isTeamBillingOnly
 
 BillingStatusPrep sObj = new BillingStatusPrep();
 List bList = null;
-if(serviceCode == null && dx.length()<2 && visitType.length()<2) {
+if((serviceCode == null || billingForm == null) && dx.length()<2 && visitType.length()<2) {
 	bList = bSearch ? sObj.getBills(strBillType, statusType, providerNo, startDate, endDate, demoNo) : new Vector();
 	//serviceCode = "-";
 	serviceCode = "%";
 } else {
 	serviceCode = (serviceCode == null || serviceCode.length()<2)? "%" : serviceCode; 
-	bList = bSearch ? sObj.getBills(strBillType, statusType,  providerNo, startDate,  endDate,  demoNo, serviceCode, dx, visitType) : new Vector();
+	bList = bSearch ? sObj.getBills(strBillType, statusType,  providerNo, startDate,  endDate,  demoNo, serviceCode, dx, visitType, billingForm) : new Vector();
 }
 
 
@@ -478,7 +477,7 @@ function changeSite(sel) {
 		<input type="submit" name="Submit" value="Create Report">
         <div>         
           <font size="-1">Dx:</font><input type="text" name="dx" size="3" value="<%=dx%>"/>
-          <font size="-1">Serv. Code:</font><input type="text" name="serviceCode" size="5" value="<%=serviceCode%>"/>
+          <font size="-1">Serv. Code:</font><input type="text" name="serviceCode" size="14" value="<%=serviceCode%>"/>
           <font size="-1">Demographic:</font><input type="text" name="demographicNo" size="5" value="<%=demoNo%>"/>
           <font size="-1">RA Code:</font><input type="text" name="raCode" size="2" value="<%=raCode%>"/>
 			<select name="visitType">
@@ -490,7 +489,27 @@ function changeSite(sel) {
 				<option value="04" <%=visitType.startsWith("04")?"selected":""%>>Nursing Home</option>
 				<option value="05" <%=visitType.startsWith("05")?"selected":""%>>Home Visit</option>
 			</select>
-            
+            <font size="-1">Billing Form:&nbsp;&nbsp;
+                <select name="billing_form">
+                    <option value="---" selected="selected"> --- </option>
+                    <%
+                                List<LabelValueBean> forms = sObj.listBillingForms();
+                                String selected = "";
+                                for (LabelValueBean form : forms) {
+                                    if (billingForm != null) {
+                                        if (billingForm.equals(form.getValue())) {
+                                            selected = "selected";
+                                        } else {
+                                            selected = "";
+                                        }
+                                    }
+                    %>
+                    <option value="<%= form.getValue()%>" <%= selected%> ><%= form.getLabel()%></option>
+                    <%
+                                }
+                    %>
+
+                </select>
         </div>     
         </td>                           
       </tr>
@@ -549,8 +568,14 @@ if(statusType.equals("_")) { %>
             provInfo = aLProviders.get(idx).split("\\|");
             providerNo = provInfo[0].trim();
 
-	BillingProviderData providerObj = (new JdbcBillingPageUtil()).getProviderObj(providerNo);
-	List lPat = (new JdbcBillingErrorRepImpl()).getErrorRecords(providerObj, startDate, endDate, filename);
+	List lPat = null;
+        if(providerNo.equals("all")) {
+            List<BillingProviderData> providerObj = (new JdbcBillingPageUtil()).getProviderObjList(providerNo);
+            lPat = (new JdbcBillingErrorRepImpl()).getErrorRecords(providerObj, startDate, endDate, filename);
+        } else {
+            BillingProviderData providerObj = (new JdbcBillingPageUtil()).getProviderObj(providerNo);
+            lPat = (new JdbcBillingErrorRepImpl()).getErrorRecords(providerObj, startDate, endDate, filename);
+            }
     boolean nC = false;
 	String invoiceNo = "";
 	

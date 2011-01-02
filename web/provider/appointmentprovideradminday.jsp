@@ -1,6 +1,6 @@
 <% response.setHeader("Cache-Control","no-cache");%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
-<%@page import="org.oscarehr.common.model.Provider"%>
+<%@page import="org.oscarehr.common.model.Provider,org.oscarehr.common.dao.BillingDao,org.oscarehr.common.model.BillingONCHeader1"%>
 
 <%
 	if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
@@ -1346,6 +1346,7 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
              <%=(hourCursor<10?"0":"") +hourCursor+ ":"%><%=(minuteCursor<10?"0":"")+minuteCursor%>&nbsp;</a></td>
             <td class="hourmin" width='1%' <%=dateTimeCodeBean.get("color"+hourmin.toString())!=null?("bgcolor="+dateTimeCodeBean.get("color"+hourmin.toString()) ):""%> title='<%=dateTimeCodeBean.get("description"+hourmin.toString())%>'><font color='<%=(dateTimeCodeBean.get("color"+hourmin.toString())!=null && !dateTimeCodeBean.get("color"+hourmin.toString()).equals(bgcolordef) )?"black":"white" %>'><%=hourmin.toString() %></font></td>
 <%
+        //BillingDao billDao = (BillingDao) SpringUtils.getBean("billingDao");
         while (bFirstTimeRs?it.hasNext():true) { //if it's not the first time to parse the standard time, should pass it by
                   appointment = bFirstTimeRs?it.next():appointment;
                   len = bFirstTimeRs&&!bFirstFirstR?lenLimitedS:lenLimitedL;
@@ -1435,7 +1436,6 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
           	  String sitename = String.valueOf(appointment.get("location")).trim();
           	  bFirstTimeRs=true;
 			    as.setApptStatus(status);
-			    
 			 //multi-site. if a site have been selected, only display appointment in that site   
 			 if (!bMultisites || (selectedSite == null && CurrentSiteMap.get(sitename) != null) || sitename.equals(selectedSite)) {   
         %>

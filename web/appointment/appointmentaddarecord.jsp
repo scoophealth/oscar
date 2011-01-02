@@ -1,5 +1,5 @@
 <%@ page
-	import="java.sql.*, java.util.*, oscar.MyDateFormat, oscar.oscarWaitingList.bean.*, oscar.oscarWaitingList.WaitingList, oscar.oscarDemographic.data.*, org.oscarehr.common.OtherIdManager"
+	import="java.sql.*, java.util.*, oscar.MyDateFormat, oscar.oscarWaitingList.bean.*, oscar.oscarWaitingList.WaitingList, oscar.oscarDemographic.data.*, org.oscarehr.common.OtherIdManager, org.oscarehr.common.dao.BillingDao, java.text.SimpleDateFormat, org.caisi.model.Tickler, org.caisi.service.TicklerManager,org.oscarehr.util.SpringUtils"
 	errorPage="errorpage.jsp"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -49,12 +49,13 @@
 	param[3]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("end_time"));
           
 	//the keyword(name) must match the demographic_no if it has been changed
+        DemographicData.Demographic demo = null;
     if (request.getParameter("demographic_no") != null && !(request.getParameter("demographic_no").equals(""))) {
         DemographicMerged dmDAO = new DemographicMerged();
         param[16] = dmDAO.getHead(request.getParameter("demographic_no"));
 
 		DemographicData demData = new DemographicData();
-		DemographicData.Demographic demo = demData.getDemographic(param[16]);
+		demo = demData.getDemographic(param[16]);
 		param[4] = demo.getLastName()+","+demo.getFirstName();
     } else {
         param[16] = "0";
@@ -113,6 +114,7 @@
 	self.opener.refresh();
 	self.close();
 </script>
+
 <%
 		String[] param2 = new String[7];
 		param2[0]=param[0]; //provider_no
@@ -128,6 +130,32 @@
 			Integer apptNo = (Integer)resultList.get(0).get("appointment_no");
 			String mcNumber = request.getParameter("appt_mc_number");
 			OtherIdManager.saveIdAppointment(apptNo, "appt_mc_number", mcNumber);
+		}
+                if(demo != null && request.getParameter("dboperation").equals("add_apptrecord")) {
+			BillingDao billingDao = (BillingDao) SpringUtils.getBean("billingDao");
+			java.util.Date appointmentDate = (new SimpleDateFormat("yyyy-MM-dd")).parse(param[1]);
+			List<Integer> unpaidNumbers = billingDao.listUnpaidInvoices(Integer.parseInt(demo.getDemographicNo()), appointmentDate);
+			if(unpaidNumbers == null || unpaidNumbers.size()>0) {
+				Tickler tickler = new Tickler();
+				tickler.setStatus('A');
+				tickler.setCreator((String) request.getSession().getAttribute("user"));
+				tickler.setDemographic_no(demo.getDemographicNo());
+				tickler.setPriority("Normal");
+				tickler.setService_date(appointmentDate);
+				tickler.setTask_assigned_to(param[0]);
+				tickler.setUpdate_date(new java.util.Date());
+				String message = null;
+				if(unpaidNumbers.size() == 1) message = "Patient "+demo.getChartNo()+" "+demo.getFirstName()+" "+demo.getLastName()+" needs to pay invoice #";
+				else message = "Patient "+demo.getChartNo()+" "+demo.getFirstName()+" "+demo.getLastName()+" needs to pay invoices ##";
+				for (Integer num : unpaidNumbers) {
+					message += num.toString()+" ";
+				}
+				tickler.setMessage(message);
+
+		        org.caisi.service.TicklerManager tcm = (org.caisi.service.TicklerManager) WebApplicationContextUtils.getWebApplicationContext(
+			       		 pageContext.getServletContext()).getBean("ticklerManagerT");
+		        tcm.addTickler(tickler);
+		    }
 		}
 	} else {
 %>

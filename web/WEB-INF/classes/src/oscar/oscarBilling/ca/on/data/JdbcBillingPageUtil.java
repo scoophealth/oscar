@@ -18,6 +18,7 @@ package oscar.oscarBilling.ca.on.data;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
@@ -170,8 +171,9 @@ public class JdbcBillingPageUtil {
 
 	public BillingProviderData getProviderObj(String providerNo) {
 		BillingProviderData pObj = null;
-		String sql = "select provider_no,last_name,first_name,ohip_no,rma_no,comments from provider "
-				+ "where provider_no='" + providerNo + "' and status='1'  ";
+		String sql = "select provider_no,last_name,first_name,ohip_no,rma_no,comments from provider ";
+                sql += "where status='1'";
+                if(!providerNo.equals("all")) sql += " and provider_no='" + providerNo + "'";
 		_logger.info("getProviderObj(sql = " + sql + ")");
 		ResultSet rslocal = dbObj.searchDBRecord(sql);
 		String specialty_code;
@@ -194,6 +196,37 @@ public class JdbcBillingPageUtil {
 			_logger.error("getProviderObj(sql = " + sql + ")");
 		}
 		return pObj;
+	}
+
+        public List<BillingProviderData> getProviderObjList(String providerNo) {
+		BillingProviderData pObj = null;
+		List<BillingProviderData> res = new ArrayList<BillingProviderData>();
+		String sql = "select provider_no,last_name,first_name,ohip_no,rma_no,comments from provider ";
+		sql += "where status='1'";
+		if(!providerNo.equals("all")) sql += " and provider_no='" + providerNo + "'";
+		_logger.info("getProviderObj(sql = " + sql + ")");
+		ResultSet rslocal = dbObj.searchDBRecord(sql);
+		String specialty_code;
+		String billinggroup_no;
+		try {
+			while (rslocal.next()) {
+				pObj = new BillingProviderData();
+				billinggroup_no = getXMLStringWithDefault(rslocal.getString("comments"), "xml_p_billinggroup_no",
+						"0000");
+				specialty_code = getXMLStringWithDefault(rslocal.getString("comments"), "xml_p_specialty_code", "00");
+				pObj.setProviderNo(rslocal.getString("provider_no"));
+				pObj.setLastName(rslocal.getString("last_name"));
+				pObj.setFirstName(rslocal.getString("first_name"));
+				pObj.setOhipNo(rslocal.getString("ohip_no"));
+				pObj.setRmaNo(rslocal.getString("rma_no"));
+				pObj.setSpecialtyCode(specialty_code);
+				pObj.setBillingGroupNo(billinggroup_no);
+				res.add(pObj);
+			}
+		} catch (SQLException e) {
+			_logger.error("getProviderObj(sql = " + sql + ")");
+		}
+		return res;
 	}
 
 	public List getProvider(String diskId) {
