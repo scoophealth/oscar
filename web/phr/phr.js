@@ -9,7 +9,7 @@ function phrActionPopup(url, windowName){
   var page = url;
   windowprops = "height="+height+",width="+width+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=" + top + ",left=" + left;
   var popup=window.open(url, windowName, windowprops);  
-  if (popup != null){  zz
+  if (popup != null){
     if (popup.opener == null){  
       popup.opener = self;  
     }  
