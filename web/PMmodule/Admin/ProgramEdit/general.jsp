@@ -237,6 +237,7 @@ Program p = (Program)request.getAttribute("oldProgram");
 			<html:option value="no">No</html:option>
 			<html:option value="appointment">Appointment View</html:option>
 			<html:option value="case-management">Case-management View</html:option>
+                        <html:option value="mymeds">MyMeds View</html:option>
 		</html:select> (Selecting "No" allows users to switch views)</td>
 	</tr>
 	<tr class="b">
