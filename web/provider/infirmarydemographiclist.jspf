@@ -1,7 +1,11 @@
 <%@ page import="oscar.*, org.oscarehr.util.*"%>
 
 <logic:equal name="infirmaryView_isOscar" value="false">
-<%	
+    <logic:equal parameter="GoToMyMedsView" value="true">
+        <c:import url="../mymeds/providerLogin.do?" />
+    </logic:equal>
+    <logic:notEqual parameter="GoToMyMedsView" value="true">
+<%
 	session.setAttribute("case_program_id", session.getAttribute(SessionConstants.CURRENT_PROGRAM_ID));
 	java.util.Date todayDate=new java.util.Date();
 	todayDate.setHours(23);
@@ -11,8 +15,7 @@
 	if (((String)session.getAttribute(SessionConstants.CURRENT_PROGRAM_ID)).equalsIgnoreCase("0"))
 	{%>
 	<p><b>No Assigned Program.</b></p>
-	<%}else
-	if (session.getAttribute("infirmaryView_date")!=null && todayDate.before((java.util.Date) session.getAttribute("infirmaryView_date")))
+	<%}else	if (session.getAttribute("infirmaryView_date")!=null && todayDate.before((java.util.Date) session.getAttribute("infirmaryView_date")))
 	{ %>
 	<p><b>Future clients list is unavailable.</b></p>
 	<%}
@@ -179,4 +182,5 @@ if ((k/2)*2==k){ %>
 	<%
 	}
 }%>
+</logic:notEqual>
 </logic:equal>
