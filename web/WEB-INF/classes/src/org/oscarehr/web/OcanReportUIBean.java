@@ -13,8 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.apache.xmlbeans.XmlOptions;
 import org.oscarehr.PMmodule.dao.AdmissionDao;
 import org.oscarehr.PMmodule.model.Admission;
@@ -154,12 +153,14 @@ import org.oscarehr.ocan.BarriersFindingWorkDocument.BarriersFindingWork;
 import org.oscarehr.ocan.VisitEmergencyDepartmentDocument.VisitEmergencyDepartment;
 
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class OcanReportUIBean {
 
-	static Log logger = LogFactory.getLog(OcanReportUIBean.class);
-
+	//static Log logger = LogFactory.getLog(OcanReportUIBean.class);
+	private static Logger logger = MiscUtils.getLogger();
+	
 	private static OcanStaffFormDao ocanStaffFormDao = (OcanStaffFormDao) SpringUtils.getBean("ocanStaffFormDao");
 	private static OcanStaffFormDataDao ocanStaffFormDataDao = (OcanStaffFormDataDao) SpringUtils.getBean("ocanStaffFormDataDao");	
 	private static OcanClientFormDao ocanClientFormDao = (OcanClientFormDao) SpringUtils.getBean("ocanClientFormDao");
