@@ -1261,7 +1261,10 @@
 			<forward name="error" path="/provider/providerColourErr.jsp" />
 			<forward name="eject" path="/index.jsp" />
 		</action>
-		<action input="/oscarEncounter/Index.jsp" path="/oscarResearch/oscarDxResearch/setupDxResearch" scope="request" type="oscar.oscarResearch.oscarDxResearch.pageUtil.dxSetupResearchAction">
+		<action  path="/mymeds/providerLogin" scope="request" parameter="method" type="org.mymeds.web.MyMedsLoginAction">
+			<forward name="providerLogin" path="/mymeds/login/providerLogin.jsp" />
+		</action>
+                <action input="/oscarEncounter/Index.jsp" path="/oscarResearch/oscarDxResearch/setupDxResearch" scope="request" type="oscar.oscarResearch.oscarDxResearch.pageUtil.dxSetupResearchAction">
 			<forward name="success" path="/oscarResearch/oscarDxResearch/dxResearch.jsp" />
 		</action>
 		<action input="/oscarResearch/oscarDxResearch/dxResearch.jsp" name="dxResearchForm" path="/oscarResearch/oscarDxResearch/dxResearch" scope="request" type="oscar.oscarResearch.oscarDxResearch.pageUtil.dxResearchAction">
