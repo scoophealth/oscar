@@ -1,6 +1,12 @@
 <%@ page import="oscar.OscarProperties"%>
 
+<%@ include file="/casemgmt/taglibs.jsp" %>
+
 <%@ taglib uri="http://jakarta.apache.org/struts/tags-html" prefix="html"%>
+
+
+<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>	
+<link rel="stylesheet" href="<c:out value="${ctx}"/>/oscarEncounter/encounterStyles.css" type="text/css">
 
 
 <script>
@@ -161,7 +167,7 @@ function clearPosterior(){
 	padding:1px !important;
 	margin:0px;
 	border: 0px;
-	font-size: 8pt;
+	font-size: 9px;
 }
 
 .examfieldgrey
@@ -177,13 +183,35 @@ function clearPosterior(){
 .slidey { margin-bottom: 6px;font-size: 10pt;}
 .slidey .title {
         margin-top: 1px;
-        font-size:10pt;
+       
         list-style-type: none;
-        font-family: Trebuchet MS, Lucida Sans Unicode, Arial, sans-serif;
+       /* font-family: Trebuchet MS, Lucida Sans Unicode, Arial, sans-serif; */
+        
         overflow: hidden;
         background-color: #f6f6ff;
         text-align:left;
-        padding: 0px; }
+        padding: 0px; 
+  
+         /*font-size: 1.0em;*/
+        font-size: 9px;
+        /*font-variant:small-caps;*/
+        
+        font-weight: bold;
+       
+ 
+       font-family: Verdana,Tahoma,Arial,sans-serif;
+       font-style:normal;
+       text-transform:none;
+       text-decoration:none;
+       letter-spacing:normal;
+       word-spacing:0;
+       line-height:11px;
+       vertical-align:baseline;
+        
+        
+        
+        
+  }
 
 .slidey .title2 {
         margin-top: 1px;
@@ -214,20 +242,9 @@ span.ge{
 
 
 </style>
-<table>
-<tr><td><span class="ge">Photos:</span></td></tr>
-<tr>
-<td>
-<div class="slidey">
-        <div class="title">
-            <a style="font-weight: bold;" href="javascript:void(0)" tabindex="31" id="a_19" onclick="togglediv(this);">Digital Photos:</a>            
-        </div>
-        <div id="s_19" class="slideblock">
-	        <a href="#" onclick="window.open('<html:rewrite page="/dms/documentReport.jsp"/>?function=demographic&doctype=lab&functionid=14&curUser=<%=session.getAttribute("user")%>&mode=add&parentAjaxId=docs&appointment_no='+appointmentNo);return false;">Add Photos</a>
-        </div>              
-</div>
-</td>
-</tr>
+
+<table border="0" width="100%">
+
 <tr><td><span class="ge">Examination:</span></td></tr>
 <tr>
 <td>

@@ -1753,3 +1753,10 @@ SELECT
 	 (SELECT MAX(role_no) from `secRole`)  +  1 AS role_no
 	,'Partner Doctor' AS role_name
 	,'Partner Doctor' AS `description`;
+
+
+insert into issue (code,description,role,update_date,priority,type) values ('PastOcularHistory','Past Ocular History','nurse',now(),NULL,'system');
+insert into issue (code,description,role,update_date,priority,type) values ('DiagnosticNotes','Diagnostic Notes','nurse',now(),NULL,'system');
+insert into issue (code,description,role,update_date,priority,type) values ('OcularMedication','Ocular Medication','nurse',now(),NULL,'system');
+insert into issue (code,description,role,update_date,priority,type) values ('PatientLog','Patient Log','nurse',now(),NULL,'system');
+

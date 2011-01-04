@@ -33,6 +33,8 @@ import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.util.MessageResources;
+import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.eyeform.dao.OcularProcDao;
 import org.oscarehr.eyeform.model.OcularProc;
 import org.oscarehr.util.MiscUtils;
@@ -81,12 +83,20 @@ public class EctDisplayOcularProcedureAction extends EctDisplayAction {
         
 
     OcularProcDao opDao = (OcularProcDao)SpringUtils.getBean("OcularProcDAO");
+    ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
+    
+    
     List<OcularProc> ops = opDao.getByAppointmentNo(Integer.parseInt(appointmentNo));
 
     for(OcularProc op:ops) {
     	NavBarDisplayDAO.Item item = Dao.Item();                  
     	item.setDate(op.getDate());
-    	String itemHeader = StringUtils.maxLenString(op.getProcedureName(), MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);                      
+    	
+    	Provider provider = providerDao.getProvider(op.getDoctor());
+    	
+    	String title = provider.getTeam() + " " + op.getEye() + " " + op.getProcedureName();
+    	
+    	String itemHeader = StringUtils.maxLenString(title, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);                      
         item.setLinkTitle(itemHeader);        
         item.setTitle(itemHeader);
         int hash = Math.abs(winName.hashCode());        

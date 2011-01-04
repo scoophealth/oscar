@@ -81,7 +81,15 @@ public class EctDisplayDiagramAction extends EctDisplayAction {
         		item.setDate(formatter.parse(strDate));
         	}catch(Exception e) {item.setDate(new Date());}
         	
-        	String itemHeader = StringUtils.maxLenString((String)form.get("formName"), MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);                      
+        	String formName = (String)form.get("formName");
+        	String formSubject = (String)form.get("formSubject");
+        	
+        	String header = formSubject;
+        	if(header == null || header.length()==0) {
+        		header = formName;
+        	}
+        	
+        	String itemHeader = StringUtils.maxLenString(header, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);                      
             item.setLinkTitle(itemHeader);        
             item.setTitle(itemHeader);
             int hash = Math.abs(winName.hashCode());        

@@ -33,6 +33,7 @@ import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.util.MessageResources;
+import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.eyeform.dao.SpecsHistoryDao;
 import org.oscarehr.eyeform.model.SpecsHistory;
 import org.oscarehr.util.MiscUtils;
@@ -81,12 +82,17 @@ public class EctDisplaySpecsHistoryAction extends EctDisplayAction {
         
 
     SpecsHistoryDao shDao = (SpecsHistoryDao)SpringUtils.getBean("SpecsHistoryDAO");
+    ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
+    
     List<SpecsHistory> shs = shDao.getByAppointmentNo(Integer.parseInt(appointmentNo));
 
     for(SpecsHistory sh:shs) {
     	NavBarDisplayDAO.Item item = Dao.Item();                  
     	item.setDate(sh.getDate());
-    	String itemHeader = StringUtils.maxLenString("Specs", MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);                      
+    	
+    	String title = sh.getType() + " - " + providerDao.getProvider(sh.getProvider()).getFormattedName();
+    	
+    	String itemHeader = StringUtils.maxLenString(title, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);                      
         item.setLinkTitle(itemHeader);        
         item.setTitle(itemHeader);
         int hash = Math.abs(winName.hashCode());        

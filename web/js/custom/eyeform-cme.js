@@ -38,7 +38,7 @@
 		});
 		
 		
-       jQuery("#cppBoxes").append("<div id=\"measurements_div\"></div>");
+       jQuery("#cppBoxes").append("<div id=\"measurements_div\" style=\"width:100%\"></div>");
 
      
        jQuery.ajax({url:ctx+"/eyeform/exam.jsp?demographic_no="+demographicNo+"&appointment_no="+appointmentNo,dataType: "html",success: function(data) {
@@ -92,7 +92,12 @@
    
        jQuery("form[name='caseManagementEntryForm']").append('<span submit_addon="save_measurements"></span>');
        
-       
+       jQuery.ajax({url:ctx+"/eyeform/NoteData.do?method=getReferralDoctor&demographicNo="+demographicNo,dataType: "html",success: function(data) {
+			jQuery("#encounterHeaderExt").append("Referring Dr:"+data);
+      }});
+       jQuery.ajax({url:ctx+"/eyeform/NoteData.do?method=getAppointmentReason&appointmentNo="+appointmentNo,dataType: "html",success: function(data) {
+			jQuery("#encounterHeaderExt").append("\tAppointment Reason:"+data);
+     }});
      });
 
  

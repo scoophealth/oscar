@@ -138,10 +138,11 @@ try
 			</div>	
 			<!--Reminders cell -->
 			<div id="divR2I2" class="topBox"
-				style="clear: right; float: right; width: 49%; margin-right: 3px;">
-		
+				style="clear: right; float: right; width: 49%; margin-right: 3px;">		
 			</div>
 		</div>
+		<!--  any extras go here -->
+		<h2 style="visibility:hidden">test</h2>
 	</div>
 	
 	
