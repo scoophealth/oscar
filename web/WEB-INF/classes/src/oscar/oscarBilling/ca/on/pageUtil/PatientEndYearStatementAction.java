@@ -2,25 +2,19 @@ package oscar.oscarBilling.ca.on.pageUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.text.DateFormat;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -33,12 +27,7 @@ import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarDocumentCreator;
-import oscar.oscarBilling.ca.bc.MSP.MSPReconcile;
-import oscar.oscarBilling.ca.bc.MSP.MSPReconcile.BillSearch;
-import oscar.oscarBilling.ca.on.data.BillingCodeData;
 import oscar.oscarBilling.ca.on.data.BillingONDataHelp;
-import oscar.oscarBilling.ca.on.data.JdbcBillingReviewImpl;
-import oscar.oscarDemographic.data.DemographicData;
 import oscar.OscarAction;
 
 /**
@@ -163,7 +152,7 @@ public class PatientEndYearStatementAction extends OscarAction {
 			   summary = (PatientEndYearStatementBean) request.getSession().getAttribute("summary");
 			   OscarDocumentCreator osc = new OscarDocumentCreator();
 			   String docFmt = "pdf";
-			   HashMap reportParams = new HashMap();
+			   HashMap reportParams = new HashMap<String,Object>();
 			   reportParams.put("patientId", summary.getPatientNo());
 			   reportParams.put("patientName", summary.getPatientName());
 			   reportParams.put("hin", summary.getHin());
