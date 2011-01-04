@@ -95,8 +95,8 @@ public class MyMedsLoginAction  extends DispatchAction {
             request.setAttribute("providerNames",ps);
             return mapping.findForward("providerLogin");
        }
-
-        public ActionForward setMyMedsPreference(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+       //setting preference to show mymeds
+       /* public ActionForward setMyMedsPreference(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
             String preference=request.getParameter("preference");
             String providerNo=request.getParameter("providerNo");
             if(preference!=null){
@@ -116,5 +116,5 @@ public class MyMedsLoginAction  extends DispatchAction {
                 userPropertyDAO.saveProp(prop);
             }
             return null;
-        }
+        }*/
 }
