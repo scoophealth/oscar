@@ -20,9 +20,7 @@ import org.apache.struts.util.LabelValueBean;
 import org.caisi.service.InfirmBedProgramManager;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.DemographicDao;
-import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.Demographic;
-import org.oscarehr.common.model.UserProperty;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -68,10 +66,10 @@ public class MyMedsLoginAction  extends DispatchAction {
             logger.debug("bpm="+bpm+";programId="+programId+";dt="+dt+";archiveView="+archiveView);
             if(bpm==null)
                 logger.debug("bpm is NULL");
-            List demographicBeans = new ArrayList();
+            List<LabelValueBean> demographicBeans = new ArrayList<LabelValueBean>();
             demographicBeans=bpm.getDemographicByBedProgramIdBeans(programId,dt,archiveView);
-            List<Demographic> ds=new ArrayList();
-            HashMap<String,String> ps=new HashMap();
+            List<Demographic> ds=new ArrayList<Demographic>();
+            HashMap<String,String> ps=new HashMap<String,String>();
             DemographicDao demographicDao = (DemographicDao)ctx.getBean("demographicDao");
             ProviderDao providerDao=(ProviderDao)ctx.getBean("providerDao");
             for(int i=0;i<demographicBeans.size();i++){
