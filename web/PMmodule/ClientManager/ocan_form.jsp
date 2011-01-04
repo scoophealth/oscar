@@ -1582,7 +1582,7 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Do you currently have any legal issues</td>
 			<td class="genericTableData">
-				<select name="legal_issues">
+				<select name="legal_issues" class="{validate: {required:true}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "legal_issues", OcanForm.getOcanFormOptions("Legal Issues"),prepopulationLevel)%>
 				</select>					
 			</td>
