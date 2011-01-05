@@ -8156,6 +8156,8 @@ CREATE TABLE `eyeform_followup` (
   `followup_provider` varchar(100) ,
   `date` timestamp ,
   `type` varchar(25),
+  `urgency` varchar(50),
+  `comment` text,
   PRIMARY KEY (`id`)
 );
 
