@@ -44,6 +44,7 @@
         <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/effects.js"/>"></script>
         <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/controls.js"/>"></script>
         <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/Oscar.js"/>"></script>
+        <script type="text/javascript" src="<c:out value="${ctx}/web/js/global.js"/>"></script>
         <script type="text/javascript">
             function backToOscar(providerNo){
                 var url="<c:out value="${ctx}"/>" + "/mymeds/providerLogin.do";
@@ -77,7 +78,7 @@
                         <option>Phone</option>
                         <option>DOB(yyyy/mm/dd)</option>
                         <option>Address</option>
-                        <option>Health Ins.No.</option>
+                        <option>Patient No.</option>
                         <option>Chart No.</option>
                     </select>
                     <input type="text" name="searchDemo"><input type="submit" value="Search"/><br>
@@ -92,7 +93,7 @@
                 <td>
                     <table>
                         <tr><td align="center" colspan="7">Patients</td></tr>
-                        <tr><td class="colname" align="center">HIN</td><td  class="colname" align="center">Name</td>
+                        <tr><td class="colname" align="center">Patient No.</td><td  class="colname" align="center">Name</td>
                             <td  class="colname" align="center">Gender</td><td  class="colname" id="dobname" align="center">DOB (yyyy/mm/dd)</td>
                             <td  class="colname" align="center">Doctor</td><td  class="colname" align="center">Pat Status</td>
                             <td  class="colname" align="center">Phone</td><!--td align="center">Most Recently Viewed</td--></tr>
@@ -108,7 +109,7 @@
                                 String pStatus=demo.getPatientStatus();
                                 String tel=demo.getPhone();
                                 %>
-                                <tr><td align="center"><%=hin%></td><td align="left" ><a href="javascript:void(0);" onclick=""><%=demographic_name%></a></td><td align="center" ><%=gender%></td><td align="center" ><%=dob%></td><td align="left" ><%=pName%></td><td align="center" ><%=pStatus%></td><td align="center" ><%=tel%></td></tr>
+                                <tr><td align="center"><%=hin%></td><td align="left" ><a href="javascript:void(0);" onclick="popupFocusPage(360,780,('../mymeds/casemgmt.do'));"><%=demographic_name%></a></td><td align="center" ><%=gender%></td><td align="center" ><%=dob%></td><td align="left" ><%=pName%></td><td align="center" ><%=pStatus%></td><td align="center" ><%=tel%></td></tr>
                         <%}%>
                     </table>
                 </td>
