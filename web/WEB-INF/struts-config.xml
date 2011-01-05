@@ -1264,6 +1264,9 @@
 		<action  path="/mymeds/providerLogin" scope="request" parameter="method" type="org.mymeds.web.MyMedsLoginAction">
 			<forward name="providerLogin" path="/mymeds/login/providerLogin.jsp" />
 		</action>
+                <action  path="/mymeds/casemgmt" scope="request" parameter="method" type="org.mymeds.casemanagement.CaseMgmtAction">
+			<forward name="casemgmt" path="/mymeds/casemgmt/index.jsp" />
+		</action>
                 <action input="/oscarEncounter/Index.jsp" path="/oscarResearch/oscarDxResearch/setupDxResearch" scope="request" type="oscar.oscarResearch.oscarDxResearch.pageUtil.dxSetupResearchAction">
 			<forward name="success" path="/oscarResearch/oscarDxResearch/dxResearch.jsp" />
 		</action>
