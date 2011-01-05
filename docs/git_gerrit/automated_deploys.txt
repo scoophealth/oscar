@@ -16,3 +16,5 @@ Then... the following is to automate redeployment :
 	d) if build succeeds deploy to tomcat
 	
 There's a sample script automated_deploy.sh which can be used as a template for what to do.	
+
+There's a sample script automated_deploy_cron_logger.sh which is a wrapper which helps log what the cron is doing. It requires the cron_logs directory as per the script contents.

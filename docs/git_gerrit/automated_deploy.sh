@@ -49,7 +49,8 @@ pushd ${SRC_DIR}
 		
 		# stop tomcat, sleep to allow tomcat to shutdown before restarting
 		catalina.sh stop
-		sleep 20 
+		sleep 20
+		mv ${CATALINA_BASE}/logs/catalina.out ${CATALINA_BASE}/logs/catalina.out.`date -I` 
 		
 		# reset database
 		mysql -e "drop database ${SERVER_NAME}"
