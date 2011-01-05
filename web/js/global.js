@@ -34,7 +34,20 @@ function popupPage(vheight,vwidth,varpage) {
     }
   }
 }
-
+//popup and focus
+//allow to specify pageTitle
+function popupFocusPage(vheight,vwidth,varpage,pageTitle){
+            var page = "" + varpage;
+            var windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,"+
+                "screenX=50,screenY=50,top=0,left=0";
+            var popup=window.open(page, pageTitle, windowprops);
+            if (popup != null) {
+                        if (popup.opener == null) {
+                            popup.opener = self;
+                        }
+                        popup.focus();
+            }
+}
 // Prompt user if exiting without saving
 function onExit() {
     if(confirm("Are you sure you wish to exit without saving your changes?")==true)
