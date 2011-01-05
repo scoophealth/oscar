@@ -280,6 +280,7 @@ CREATE TABLE consultationRequests (
   urgency char(2) default NULL,
   patientWillBook tinyint(1),
   followUpDate date default NULL,
+  site_name varchar(255),
   PRIMARY KEY  (requestId)
 ) ;
 
