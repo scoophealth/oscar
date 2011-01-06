@@ -1,4 +1,5 @@
 $("document").ready(function() {
+	
 	$("input[name='immigration_issues'][value='4']").change(function(){
 		if($("input[name='immigration_issues'][value='4']").attr('checked') == true) {
 			$("input[name='immigration_issues'][value='3']").attr('checked',true);
@@ -14,6 +15,8 @@ $("document").ready(function() {
 		$("input[name='immigration_issues'][value='3']").attr('readonly','readonly');
 		$("input[name='immigration_issues'][value='3']").attr('disabled','disabled');
 	}
+	
+	
 	
 	$("input[name='presenting_issues'][value='OTH']").change(function() {
 		if($("input[name='presenting_issues'][value='OTH']").attr('checked') == true) {
@@ -148,6 +151,33 @@ $("document").ready(function() {
 	
 	});
 	
+	$("#hospitalized_mental_illness").change(function() { 
+		if($("#hospitalized_mental_illness").val()=='TRUE'){ 
+			$("#hospitalized_mental_illness_admissions").attr('disabled','');
+			$("#hospitalized_mental_illness_admissions").val("");
+			$("#hospitalized_mental_illness_days").attr('disabled','');
+			$("#hospitalized_mental_illness_days").val("");
+		} else {
+			$("#hospitalized_mental_illness_admissions").attr('disabled','disabled');
+			$("#hospitalized_mental_illness_admissions").val("");	
+			$("#hospitalized_mental_illness_days").attr('disabled','disabled');
+			$("#hospitalized_mental_illness_days").val("");
+		}
+	});	
+	
+	$("#hospitalized_mental_illness").each(function() { 
+		if($("#hospitalized_mental_illness").val()=='TRUE'){ 
+			$("#hospitalized_mental_illness_admissions").attr('disabled','');
+			$("#hospitalized_mental_illness_days").attr('disabled','');
+		} else {
+			$("#hospitalized_mental_illness_admissions").attr('disabled','disabled');
+			$("#hospitalized_mental_illness_admissions").val("");
+			$("#hospitalized_mental_illness_days").attr('disabled','disabled');
+			$("#hospitalized_mental_illness_days").val("");
+		}
+	});
+			
+			
 	$("#6_physical_health_concerns").change(function() { 
 		if($("#6_physical_health_concerns").val()=='TRUE'){ 
 			$("input[name='6_physical_health_details'][value='118254002']").attr('disabled','');
@@ -545,14 +575,15 @@ function submitOcanForm() {
 		
 	}	
 	
-	if($("#reasonForAssessment").val() == 'OTHR') {
-			if($("#reason_for_assessment_other").val().length == 0) {
-				alert('Reason for Reason for OCAN -- please specify other');
-				$("#reason_for_assessment_other").focus();
-				return false;
-			}			
+	
+	if($("#reasonForAssessment").val() == 'OTHR') {		
+		if($("#reason_for_assessment_other").val().length==0) {			
+			alert('Reason for assessment - Please specify other');
+			$("#reason_for_assessment_other").focus();
+			return false;
+		}		
 	}
-		
+	
 		
 	if($("#consumerSelfAxCompleted").val() == 'FALSE') {
 		if($("input[name='reasonConsumerSelfAxNotCompletedList'][value='CMFLVL']").attr('checked') == false &&
@@ -578,39 +609,8 @@ function submitOcanForm() {
 		
 	}	
 	
-	if($("#reasonForAssessment").val() == 'OTHR') {		
-		if($("#reason_for_assessment_other").val().length==0) {			
-			alert('Reason for assessment - Please specify other');
-			$("#reason_for_assessment_other").focus();
-			return false;
-		}		
-	}
-	
-	if($("#power_attorney_property").val() == 'TRUE') {
-		if($("#power_attorney_property_additional_information").val().length == 0) {
-			alert('Client Capacity - please provider additional information');
-			$("#power_attorney_property_additional_information").focus();
-			return false;
-		}
-	}
 	
 	
-	if($("#power_attorney_personal_care").val() == 'TRUE') {
-		if($("#power_attorney_personal_care_additional_information").val().length == 0) {
-			alert('Client Capacity - please provider additional information');
-			$("#power_attorney_personal_care_additional_information").focus();
-			return false;
-		}
-	}
-	
-	if($("#court_appointed_guardian").val() == 'TRUE') {
-		if($("#court_appointed_guardian_additional_information").val().length == 0) {
-			alert('Client Capacity - please provider additional information');
-			$("#court_appointed_guardian_additional_information").focus();
-			return false;
-		}
-	}
-
 	if($("input[name='immigration_issues'][value='8']").attr('checked') == true) {
 		if($("#immigration_issues_other").val().length == 0) {
 			alert('Immigration issues - please provider other');
@@ -699,6 +699,21 @@ function submitOcanForm() {
 	}	
 	
 
+		
+	if($("#hospitalized_mental_illness").val()=='TRUE') {
+		if($("#hospitalized_mental_illness_admissions").val().length == 0) {
+			alert('Please input - Total Number of Admissions for Mental Health Reasons');
+			$("#hospitalized_mental_illness_admissions").focus();
+			return false;
+		}
+		if($("#hospitalized_mental_illness_days").val().length == 0) {
+			alert('Please input - Total Number of Hospitalization Days for Mental Health Reasons');
+			$("#hospitalized_mental_illness_days").focus();
+			return false;
+		}
+	}	
+	
+	
 	
 	var ppCount=0;
 	$("input[name='presenting_issues']").each(function(){	
@@ -709,6 +724,7 @@ function submitOcanForm() {
 	
 	if(ppCount==0) {
 		alert('You must choose atleast 1 presenting issue');
+		$("input[name='presenting_issues']").focus();
 		return false;
 	}
 	

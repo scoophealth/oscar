@@ -26,7 +26,7 @@
 		<tr>
 			<td class="genericTableHeader">Specify</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),referralNumber+"_summary_of_referral_optimal_spec",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),referralNumber+"_summary_of_referral_optimal_spec",128,prepopulationLevel)%>
 			</td>
 		</tr>		
 		
@@ -42,7 +42,7 @@
 		<tr>
 			<td class="genericTableHeader">Actual Specify</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),referralNumber+"_summary_of_referral_actual_spec",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),referralNumber+"_summary_of_referral_actual_spec",128,prepopulationLevel)%>
 			</td>
 		</tr>		
 		<tr>

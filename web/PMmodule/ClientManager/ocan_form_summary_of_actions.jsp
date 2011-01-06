@@ -40,7 +40,7 @@
 		</select>
 	</td>
 	<td>
-		<%=OcanForm.renderAsSoATextArea(ocanStaffForm.getId(),x+"_summary_of_actions_action",5,30,prepopulationLevel)%>							
+		<%=OcanForm.renderAsSoATextArea(ocanStaffForm.getId(),x+"_summary_of_actions_action",5,50,prepopulationLevel)%>							
 	</td>
 </tr>		
 

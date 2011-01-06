@@ -17,7 +17,7 @@
 		<tr>
 			<td class="genericTableHeader">Medication</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "medication_"+medicationNumber+"_medication", 25,prepopulationLevel)%>	
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "medication_"+medicationNumber+"_medication", 128,prepopulationLevel)%>	
 			</td>								
 		</tr>
 		<tr>
@@ -31,7 +31,7 @@
 		<tr>
 			<td class="genericTableHeader">Dosage</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "medication_"+medicationNumber+"_dosage", 25,prepopulationLevel)%>	
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "medication_"+medicationNumber+"_dosage", 128,prepopulationLevel)%>	
 			</td>								
 		</tr>
 		<tr>

@@ -41,7 +41,10 @@ $("document").ready(function() {
 	$.validator.addMethod('postalCode', function (value) { 
 	    return /^((\d{5}-\d{4})|(\d{5})|()|([A-Z]\d[A-Z]\s\d[A-Z]\d))$/.test(value); 
 	}, 'Please enter a valid US or Canadian postal code.');
-	
+
+	$.validator.addMethod('digitalNumber', function(value) {
+		 return /^((\d|\d{2}|\d{3}|\d{4}|()))$/.test(value);		  
+	}, 'Digits only');
 });
 
 
@@ -312,6 +315,8 @@ $("document").ready(function(){
 		}
 	});
 	*/
+
+	
 	//autism
 	$("input[name='6_medical_conditions'][value='408856003']").change(function(){
 		if($(this).attr("checked")) {
@@ -416,7 +421,7 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">If Other, Specify</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"reason_for_assessment_other",5,30, prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"reason_for_assessment_other",128, prepopulationLevel)%>
 			</td>
 		</tr>
 		
@@ -440,7 +445,7 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Consumer Self-Assessment Completed by Consumer - Other</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"otherReason",5,30, prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"otherReason",128, prepopulationLevel)%>
 			</td>
 		</tr>
 				
@@ -459,43 +464,43 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Last Name</td>
 			<td class="genericTableData">
-				<input type="text" name="lastName" id="lastName" value="<%=ocanStaffForm.getLastName()%>" class="{validate: {required:true}}"/>
+				<input type="text" name="lastName" id="lastName" value="<%=ocanStaffForm.getLastName()%>" size="32" maxlength="32"/>
 			</td>			
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Middle Initial</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"middle",1,30, prepopulationLevel)%>
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"middle",32, prepopulationLevel)%>
 			</td>			
 		</tr>
 		<tr>
 			<td class="genericTableHeader">First Name</td>
 			<td class="genericTableData">
-				<input type="text" name="firstName" id="firstName" value="<%=ocanStaffForm.getFirstName()%>" class="{validate: {required:true}}"/>
+				<input type="text" name="firstName" id="firstName" value="<%=ocanStaffForm.getFirstName()%>" size="32" maxlength="32" />
 			</td>
 		</tr>	
 		<tr>
 			<td class="genericTableHeader">Preferred Name</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"preferred",1,30, prepopulationLevel)%>
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"preferred",32, prepopulationLevel)%>
 			</td>
 		</tr>			
 		<tr>
 			<td class="genericTableHeader">Address Line 1</td>
 			<td class="genericTableData">
-				<input type="text" name="addressLine1" id="addressLine1" value="<%=ocanStaffForm.getAddressLine1()%>" />
+				<input type="text" name="addressLine1" id="addressLine1" value="<%=ocanStaffForm.getAddressLine1()%>" size="64" maxlength="64"/>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Address Line 2</td>
 			<td class="genericTableData">
-				<input type="text" name="addressLine2" id="addressLine2" value="<%=ocanStaffForm.getAddressLine2()%>" />
+				<input type="text" name="addressLine2" id="addressLine2" value="<%=ocanStaffForm.getAddressLine2()%>" size="64" maxlength="64"/>
 			</td>
 		</tr>						
 		<tr>
 			<td class="genericTableHeader">City</td>
 			<td class="genericTableData">
-				<input type="text" name="city" id="city" value="<%=ocanStaffForm.getCity()%>" />
+				<input type="text" name="city" id="city" value="<%=ocanStaffForm.getCity()%>" size="32" maxlength="32"/>
 			</td>
 		</tr>	
 		
@@ -511,26 +516,26 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Postal Code</td>
 			<td class="genericTableData">
-				<input type="text" name="postalCode" id="postalCode" value="<%=ocanStaffForm.getPostalCode()%>" class="{validate: {postalCode:true}}"/>
+				<input type="text" name="postalCode" id="postalCode" value="<%=ocanStaffForm.getPostalCode()%>" size="8" maxlength="8" class="{validate: {postalCode:true}}"/>
 			</td>
 		</tr>	
 		
 		<tr>
 			<td class="genericTableHeader">Phone Number</td>
 			<td class="genericTableData">
-				<input type="text" name="phoneNumber" id="phoneNumber" value="<%=ocanStaffForm.getPhoneNumber()%>" />
+				<input type="text" name="phoneNumber" id="phoneNumber" value="<%=ocanStaffForm.getPhoneNumber()%>" size="32" maxlength="32"/>
 			</td>
 		</tr>	
 		<tr>
 			<td class="genericTableHeader">Ext: </td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"extension",1,30, prepopulationLevel)%>
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"extension",16, prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Email address</td>
 			<td class="genericTableData">
-				<input type="text" name="email" id="email" value="<%=ocanStaffForm.getEmail()%>" />
+				<input type="text" name="email" id="email" value="<%=ocanStaffForm.getEmail()%>" size="64" maxlength="64"/>
 			</td>
 		</tr>	
 		<tr>
@@ -550,8 +555,8 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Health Card # and Version Code</td>
 			<td class="genericTableData">
-				<input type="text" name="hcNumber" id="hcNumber" value="<%=ocanStaffForm.getHcNumber()%>" />
-				<input type="text" name="hcVersion" id="hcVersion" value="<%=ocanStaffForm.getHcVersion()%>" />
+				<input type="text" name="hcNumber" id="hcNumber" value="<%=ocanStaffForm.getHcNumber()%>" size="32" maxlength="32"/>
+				<input type="text" name="hcVersion" id="hcVersion" value="<%=ocanStaffForm.getHcVersion()%>" size="8" maxlength="8"/>
 			</td>
 		</tr>
 		<tr>
@@ -641,25 +646,25 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Name</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"familyDoctorName",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"familyDoctorName",32,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Address Line 1</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"familyDoctorAddress1",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"familyDoctorAddress1",64,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Address Line 2</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"familyDoctorAddress2",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"familyDoctorAddress2",64,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">City</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"familyDoctorCity",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"familyDoctorCity",32,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
@@ -683,19 +688,19 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Phone Number</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"familyDoctorPhoneNumber",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"familyDoctorPhoneNumber",32,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Ext</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"familyDoctorPhoneNumberExt",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"familyDoctorPhoneNumberExt",16,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Email Address</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"familyDoctorEmail",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"familyDoctorEmail",64,prepopulationLevel)%>
 			</td>
 		</tr>		
 		<tr>
@@ -721,25 +726,25 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Name</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"psychiatristName",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"psychiatristName",32,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Address Line 1</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"psychiatristAddress1",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"psychiatristAddress1",64,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Address Line 2</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"psychiatristAddress2",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"psychiatristAddress2",64,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">City</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"psychiatristCity",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"psychiatristCity",32,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
@@ -765,19 +770,19 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Phone Number</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"psychiatristPhoneNumber",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"psychiatristPhoneNumber",32,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Ext</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"psychiatristPhoneNumberExt",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"psychiatristPhoneNumberExt",16,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Email Address</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"psychiatristEmail",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"psychiatristEmail",64,prepopulationLevel)%>
 			</td>
 		</tr>	
 		
@@ -815,25 +820,25 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Name</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"1_otherContactName",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"1_otherContactName",32,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Address Line 1</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"1_otherContactAddress1",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"1_otherContactAddress1",64,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Address Line 2</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"1_otherContactAddress2",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"1_otherContactAddress2",64,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">City</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"1_otherContactCity",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"1_otherContactCity",32,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
@@ -859,19 +864,19 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Phone Number</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"1_otherContactPhoneNumber",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"1_otherContactPhoneNumber",32,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Ext</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"1_otherContactPhoneNumberExt",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"1_otherContactPhoneNumberExt",16,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Email Address</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"1_otherContactEmail",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"1_otherContactEmail",64,prepopulationLevel)%>
 			</td>
 		</tr>	
 		
@@ -898,25 +903,25 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Name</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"2_otherContactName",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"2_otherContactName",32,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Address Line 1</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"2_otherContactAddress1",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"2_otherContactAddress1",64,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Address Line 2</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"2_otherContactAddress2",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"2_otherContactAddress2",64,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">City</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"2_otherContactCity",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"2_otherContactCity",32,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
@@ -943,19 +948,19 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Phone Number</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"2_otherContactPhoneNumber",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"2_otherContactPhoneNumber",32,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Ext</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"2_otherContactPhoneNumberExt",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"2_otherContactPhoneNumberExt",16,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Email Address</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"2_otherContactEmail",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"2_otherContactEmail",64,prepopulationLevel)%>
 			</td>
 		</tr>			
 		<tr>
@@ -982,25 +987,25 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Name</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"3_otherContactName",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"3_otherContactName",32,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Address Line 1</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"3_otherContactAddress1",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"3_otherContactAddress1",64,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Address Line 2</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"3_otherContactAddress2",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"3_otherContactAddress2",64,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">City</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"3_otherContactCity",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"3_otherContactCity",32,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
@@ -1027,19 +1032,19 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Phone Number</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"3_otherContactPhoneNumber",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"3_otherContactPhoneNumber",32,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Ext</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"3_otherContactPhoneNumberExt",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"3_otherContactPhoneNumberExt",16,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Email Address</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"3_otherContactEmail",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"3_otherContactEmail",64,prepopulationLevel)%>
 			</td>
 		</tr>	
 		
@@ -1069,25 +1074,25 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Name</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"1_otherAgencyName",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"1_otherAgencyName",32,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Address Line 1</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"1_otherAgencyAddress1",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"1_otherAgencyAddress1",64,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Address Line 2</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"1_otherAgencyAddress2",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"1_otherAgencyAddress2",64,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">City</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"1_otherAgencyCity",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"1_otherAgencyCity",32,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
@@ -1114,19 +1119,19 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Phone Number</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"1_otherAgencyPhoneNumber",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"1_otherAgencyPhoneNumber",32,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Ext</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"1_otherAgencyPhoneNumberExt",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"1_otherAgencyPhoneNumberExt",16,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Email Address</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"1_otherAgencyEmail",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"1_otherAgencyEmail",64,prepopulationLevel)%>
 			</td>
 		</tr>		
 		<tr>
@@ -1145,25 +1150,25 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Name</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"2_otherAgencyName",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"2_otherAgencyName",32,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Address Line 1</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"2_otherAgencyAddress1",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"2_otherAgencyAddress1",64,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Address Line 2</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"2_otherAgencyAddress2",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"2_otherAgencyAddress2",64,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">City</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"2_otherAgencyCity",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"2_otherAgencyCity",32,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
@@ -1189,19 +1194,19 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Phone Number</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"2_otherAgencyPhoneNumber",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"2_otherAgencyPhoneNumber",32,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Ext</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"2_otherAgencyPhoneNumberExt",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"2_otherAgencyPhoneNumberExt",16,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Email Address</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"2_otherAgencyEmail",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"2_otherAgencyEmail",64,prepopulationLevel)%>
 			</td>
 		</tr>		
 		<tr>
@@ -1219,25 +1224,25 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Name</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"3_otherAgencyName",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"3_otherAgencyName",32,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Address Line 1</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"3_otherAgencyAddress1",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"3_otherAgencyAddress1",64,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Address Line 2</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"3_otherAgencyAddress2",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"3_otherAgencyAddress2",64,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">City</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"3_otherAgencyCity",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"3_otherAgencyCity",32,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
@@ -1263,19 +1268,19 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Phone Number</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"3_otherAgencyPhoneNumber",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"3_otherAgencyPhoneNumber",32,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Ext</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"3_otherAgencyPhoneNumberExt",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"3_otherAgencyPhoneNumberExt",16,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Email Address</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"3_otherAgencyEmail",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"3_otherAgencyEmail",64,prepopulationLevel)%>
 			</td>
 		</tr>		
 		<tr>
@@ -1307,25 +1312,25 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Power of Attorney</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"power_attorney_property_name",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"power_attorney_property_name",5,50,prepopulationLevel)%>
 			</td>
 		</tr>		
 		<tr>
 			<td class="genericTableHeader">Address (Power of Attorney)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"power_attorney_property_address",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"power_attorney_property_address",5,50,prepopulationLevel)%>
 			</td>
 		</tr>	
 		<tr>
 			<td class="genericTableHeader">Phone (Power of Attorney)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"power_attorney_property_phone",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"power_attorney_property_phone",32,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Ext: </td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"power_attorney_property_phoneExt",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"power_attorney_property_phoneExt",16,prepopulationLevel)%>
 			</td>
 		</tr>		
 		
@@ -1340,25 +1345,25 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Power of Attorney or SDM Name (Personal Care)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"power_attorney_personal_care_name",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"power_attorney_personal_care_name",5,50,prepopulationLevel)%>
 			</td>
 		</tr>		
 		<tr>
 			<td class="genericTableHeader">Address (Personal Care)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"power_attorney_personal_care_address",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"power_attorney_personal_care_address",5,50,prepopulationLevel)%>
 			</td>
 		</tr>	
 		<tr>
 			<td class="genericTableHeader">Phone (Personal Care)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"power_attorney_personal_care_phone",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"power_attorney_personal_care_phone",32,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Ext: </td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"power_attorney_personal_care_phoneExt",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"power_attorney_personal_care_phoneExt",16,prepopulationLevel)%>
 			</td>
 		</tr>
 		
@@ -1373,25 +1378,25 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Name (Guardian)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"guardian_name",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"guardian_name",1,50,prepopulationLevel)%>
 			</td>
 		</tr>		
 		<tr>
 			<td class="genericTableHeader">Address (Guardian)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"guardian_address",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"guardian_address",1,50,prepopulationLevel)%>
 			</td>
 		</tr>	
 		<tr>
 			<td class="genericTableHeader">Phone (Guardian)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"guardian_phone",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"guardian_phone",32,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Ext: </td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"guardian_phoneExt",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"guardian_phoneExt",16,prepopulationLevel)%>
 			</td>
 		</tr>
 		
@@ -1418,7 +1423,12 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Age in Years for Onset of Mental Illness </td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"ageOnsetMental_year",1,30,prepopulationLevel)%>
+			<%  input = OcanForm.renderAsTextField(ocanStaffForm.getId(),"ageOnsetMental_year",4,prepopulationLevel);
+				input = input.substring(0,input.length()-2);
+				input = input.concat(" class=\"{validate: {digitalNumber:true}}\"/> ");
+				%>
+				<%=input %>
+				
 			</td>
 		</tr>
 		<!-- duplication? removed. 
@@ -1442,7 +1452,11 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Age of first Psychiatric Hospitalization </td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"ageHospitalization_year",1,30,prepopulationLevel)%>
+			<%  input = OcanForm.renderAsTextField(ocanStaffForm.getId(),"ageHospitalization_year",4,prepopulationLevel);
+				input = input.substring(0,input.length()-2);
+				input = input.concat(" class=\"{validate: {digitalNumber:true}}\"/> ");
+				%>
+				<%=input %>
 			</td>
 		</tr>
 		<!-- duplication? removed.
@@ -1532,7 +1546,7 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Can you tell me about your immigration experience?</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"immigration_experience",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"immigration_experience",5,50,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
@@ -1544,7 +1558,7 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Immigration Issues - Other</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"immigration_issues_other",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"immigration_issues_other",128,prepopulationLevel)%>
 			</td>
 		</tr>
 		
@@ -1557,7 +1571,7 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Discrimination - Other</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"discrimination_other",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"discrimination_other",128,prepopulationLevel)%>
 			</td>
 		</tr>						
 		
@@ -1598,7 +1612,7 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Comments</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"commments",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"commments",5,50,prepopulationLevel)%>
 			</td>
 		</tr>						
 	 	
@@ -1645,21 +1659,21 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Comments</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"1_comments",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"1_comments",5,50,prepopulationLevel)%>
 			</td>
 		</tr>			
 		
 		<tr>
 			<td class="genericTableHeader">Action(s)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"1_actions",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"1_actions",5,50,prepopulationLevel)%>
 			</td>
 		</tr>					
 			
 		<tr>
 			<td class="genericTableHeader">By Whom?</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "1_by_whom", 25,prepopulationLevel)%>						
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "1_by_whom", 128,prepopulationLevel)%>						
 			</td>
 		</tr>				
 		
@@ -1682,7 +1696,7 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Where do you live - Other</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "1_where_live_other", 25,prepopulationLevel)%>						
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "1_where_live_other", 128,prepopulationLevel)%>						
 			</td>
 		</tr>	
 				
@@ -1746,21 +1760,21 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Comments</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"2_comments",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"2_comments",5,50,prepopulationLevel)%>
 			</td>
 		</tr>			
 		
 		<tr>
 			<td class="genericTableHeader">Action(s)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"2_actions",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"2_actions",5,50,prepopulationLevel)%>
 			</td>
 		</tr>					
 			
 		<tr>
 			<td class="genericTableHeader">By Whom?</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "2_by_whom", 25,prepopulationLevel)%>						
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "2_by_whom", 128,prepopulationLevel)%>						
 			</td>
 		</tr>				
 		
@@ -1814,21 +1828,21 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Comments</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"3_comments",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"3_comments",5,50,prepopulationLevel)%>
 			</td>
 		</tr>			
 		
 		<tr>
 			<td class="genericTableHeader">Action(s)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"3_actions",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"3_actions",5,50,prepopulationLevel)%>
 			</td>
 		</tr>					
 			
 		<tr>
 			<td class="genericTableHeader">By Whom?</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "3_by_whom", 25,prepopulationLevel)%>						
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "3_by_whom", 128,prepopulationLevel)%>						
 			</td>
 		</tr>				
 		
@@ -1881,21 +1895,21 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Comments</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"4_comments",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"4_comments",5,50,prepopulationLevel)%>
 			</td>
 		</tr>			
 		
 		<tr>
 			<td class="genericTableHeader">Action(s)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"4_actions",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"4_actions",5,50,prepopulationLevel)%>
 			</td>
 		</tr>					
 			
 		<tr>
 			<td class="genericTableHeader">By Whom?</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "4_by_whom", 25,prepopulationLevel)%>						
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "4_by_whom", 128,prepopulationLevel)%>						
 			</td>
 		</tr>				
 		
@@ -1949,21 +1963,21 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Comments</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"5_comments",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"5_comments",5,50,prepopulationLevel)%>
 			</td>
 		</tr>			
 		
 		<tr>
 			<td class="genericTableHeader">Action(s)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"5_actions",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"5_actions",5,50,prepopulationLevel)%>
 			</td>
 		</tr>					
 			
 		<tr>
 			<td class="genericTableHeader">By Whom?</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "5_by_whom", 25,prepopulationLevel)%>						
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "5_by_whom", 128,prepopulationLevel)%>						
 			</td>
 		</tr>				
 		
@@ -1994,7 +2008,7 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Are you currently in school - Other</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(), "5_education_program_status_other", 3,50,prepopulationLevel)%>						
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "5_education_program_status_other", 128,prepopulationLevel)%>						
 			</td>
 		</tr>	
 		<tr>
@@ -2006,7 +2020,7 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Barriers - Other</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(), "5_barriersFindingWork_Other", 3,50,prepopulationLevel)%>						
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "5_barriersFindingWork_Other", 128,prepopulationLevel)%>						
 			</td>
 		</tr>
 		<tr>
@@ -2059,21 +2073,21 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Comments</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"6_comments",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"6_comments",5,50,prepopulationLevel)%>
 			</td>
 		</tr>			
 		
 		<tr>
 			<td class="genericTableHeader">Action(s)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"6_actions",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"6_actions",5,50,prepopulationLevel)%>
 			</td>
 		</tr>					
 			
 		<tr>
 			<td class="genericTableHeader">By Whom?</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "6_by_whom", 25,prepopulationLevel)%>						
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "6_by_whom", 128,prepopulationLevel)%>						
 			</td>
 		</tr>				
 		
@@ -2093,19 +2107,19 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Medical Conditions - Specify (Autism)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"6_medical_conditions_autism",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"6_medical_conditions_autism",128,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Medical Conditions - Other</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"6_medical_conditions_other",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"6_medical_conditions_other",128,prepopulationLevel)%>
 			</td>
 		</tr>	
 		<tr>
 			<td class="genericTableHeader">Medical Conditions - Comments</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"6_medical_conditions_comments",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"6_medical_conditions_comments",5,50,prepopulationLevel)%>
 			</td>
 		</tr>					
 		<tr>
@@ -2126,7 +2140,7 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">If Yes, please indicate the areas where you have concerns - Other</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"6_physical_health_details_other",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"6_physical_health_details_other",128,prepopulationLevel)%>
 			</td>
 		</tr>								
 	
@@ -2141,7 +2155,7 @@ This information is collected from a variety of sources, including self-report, 
 		<tr>
 			<td class="genericTableHeader">Medications - Additional Information</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"medications_additionalInfo",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"medications_additionalInfo",3,50,prepopulationLevel)%>
 			</td>
 		</tr>	
 
@@ -2203,21 +2217,21 @@ This information is collected from a variety of sources, including self-report, 
 		<tr>
 			<td class="genericTableHeader">Comments</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"7_comments",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"7_comments",5,50,prepopulationLevel)%>
 			</td>
 		</tr>			
 		
 		<tr>
 			<td class="genericTableHeader">Action(s)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"7_actions",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"7_actions",3,50,prepopulationLevel)%>
 			</td>
 		</tr>					
 			
 		<tr>
 			<td class="genericTableHeader">By Whom?</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "7_by_whom", 25,prepopulationLevel)%>						
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "7_by_whom", 128,prepopulationLevel)%>						
 			</td>
 		</tr>				
 		
@@ -2235,7 +2249,7 @@ This information is collected from a variety of sources, including self-report, 
 		<tr>
 			<td class="genericTableHeader">Have you been hospitalized due to your mental health during the past two years?</td>
 			<td class="genericTableData">
-				<select name="hospitalized_mental_illness" class="{validate: {required:true}}">
+				<select name="hospitalized_mental_illness" id="hospitalized_mental_illness" class="{validate: {required:true}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "hospitalized_mental_illness", OcanForm.getOcanFormOptions("Hospitalized Mental Illness"),prepopulationLevel)%>
 				</select>					
 			</td>
@@ -2243,13 +2257,22 @@ This information is collected from a variety of sources, including self-report, 
 		<tr>
 			<td class="genericTableHeader">If Yes, Total Number of Admissions for Mental Health Reasons</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "hospitalized_mental_illness_admissions", 25,prepopulationLevel)%>						
+			<%  String input1 = OcanForm.renderAsTextField(ocanStaffForm.getId(),"hospitalized_mental_illness_admissions",4,prepopulationLevel);
+				input1 = input1.substring(0,input1.length()-2);
+				input1 = input1.concat(" class=\"{validate: {digitalNumber:true}}\"/> ");
+				%>
+				<%=input1 %>
+				
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">If Yes, Total Number of Hospitalization Days for Mental Health Reasons</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "hospitalized_mental_illness_days", 25,prepopulationLevel)%>						
+			<%  String input2 = OcanForm.renderAsTextField(ocanStaffForm.getId(),"hospitalized_mental_illness_days",4,prepopulationLevel);
+				input2 = input2.substring(0,input2.length()-2);
+				input2 = input2.concat(" class=\"{validate: {digitalNumber:true}}\"/> ");
+				%>
+				<%=input2 %>			
 			</td>
 		</tr>	
 		<tr>
@@ -2272,7 +2295,7 @@ This information is collected from a variety of sources, including self-report, 
 		<tr>
 			<td class="genericTableHeader">Psychiatric History - Additional Information</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"7_psychiatric_history_addl_info",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"7_psychiatric_history_addl_info",3,50,prepopulationLevel)%>
 			</td>
 		</tr>			
 		<tr>
@@ -2284,7 +2307,7 @@ This information is collected from a variety of sources, including self-report, 
 		<tr>
 			<td class="genericTableHeader">Symptom Checklist - Other</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"symptom_checklist_other",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"symptom_checklist_other",5,50,prepopulationLevel)%>
 			</td>
 		</tr>										
 
@@ -2332,21 +2355,21 @@ This information is collected from a variety of sources, including self-report, 
 		<tr>
 			<td class="genericTableHeader">Comments</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"8_comments",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"8_comments",5,50,prepopulationLevel)%>
 			</td>
 		</tr>			
 		
 		<tr>
 			<td class="genericTableHeader">Action(s)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"8_actions",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"8_actions",3,50,prepopulationLevel)%>
 			</td>
 		</tr>					
 			
 		<tr>
 			<td class="genericTableHeader">By Whom?</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "8_by_whom", 25,prepopulationLevel)%>						
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "8_by_whom", 128,prepopulationLevel)%>						
 			</td>
 		</tr>				
 		
@@ -2415,21 +2438,21 @@ This information is collected from a variety of sources, including self-report, 
 		<tr>
 			<td class="genericTableHeader">Comments</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"9_comments",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"9_comments",5,50,prepopulationLevel)%>
 			</td>
 		</tr>			
 		
 		<tr>
 			<td class="genericTableHeader">Action(s)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"9_actions",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"9_actions",3,50,prepopulationLevel)%>
 			</td>
 		</tr>					
 			
 		<tr>
 			<td class="genericTableHeader">By Whom?</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "9_by_whom", 25,prepopulationLevel)%>						
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "9_by_whom", 128,prepopulationLevel)%>						
 			</td>
 		</tr>				
 		
@@ -2484,21 +2507,21 @@ This information is collected from a variety of sources, including self-report, 
 		<tr>
 			<td class="genericTableHeader">Comments</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"10_comments",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"10_comments",5,50,prepopulationLevel)%>
 			</td>
 		</tr>			
 		
 		<tr>
 			<td class="genericTableHeader">Action(s)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"10_actions",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"10_actions",3,50,prepopulationLevel)%>
 			</td>
 		</tr>					
 			
 		<tr>
 			<td class="genericTableHeader">By Whom?</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "10_by_whom", 25,prepopulationLevel)%>						
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "10_by_whom", 128,prepopulationLevel)%>						
 			</td>
 		</tr>				
 		
@@ -2545,7 +2568,7 @@ This information is collected from a variety of sources, including self-report, 
 		<tr>
 			<td class="genericTableHeader">Risks - Other</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"risks_other",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"risks_other",128,prepopulationLevel)%>
 			</td>
 		</tr>			
 					
@@ -2593,21 +2616,21 @@ This information is collected from a variety of sources, including self-report, 
 		<tr>
 			<td class="genericTableHeader">Comments</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"11_comments",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"11_comments",5,50,prepopulationLevel)%>
 			</td>
 		</tr>			
 		
 		<tr>
 			<td class="genericTableHeader">Action(s)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"11_actions",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"11_actions",3,50,prepopulationLevel)%>
 			</td>
 		</tr>					
 			
 		<tr>
 			<td class="genericTableHeader">By Whom?</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "11_by_whom", 25,prepopulationLevel)%>						
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "11_by_whom", 128,prepopulationLevel)%>						
 			</td>
 		</tr>				
 		
@@ -2663,21 +2686,21 @@ This information is collected from a variety of sources, including self-report, 
 		<tr>
 			<td class="genericTableHeader">Comments</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"12_comments",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"12_comments",5,50,prepopulationLevel)%>
 			</td>
 		</tr>			
 		
 		<tr>
 			<td class="genericTableHeader">Action(s)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"12_actions",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"12_actions",3,50,prepopulationLevel)%>
 			</td>
 		</tr>					
 			
 		<tr>
 			<td class="genericTableHeader">By Whom?</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "12_by_whom", 25,prepopulationLevel)%>						
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "12_by_whom", 128,prepopulationLevel)%>						
 			</td>
 		</tr>				
 		
@@ -2691,7 +2714,12 @@ This information is collected from a variety of sources, including self-report, 
 		<tr>
 			<td class="genericTableHeader">Number of Drinks</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "num_drinks", 25,prepopulationLevel)%>						
+			<%  input = OcanForm.renderAsTextField(ocanStaffForm.getId(),"num_drinks",4,prepopulationLevel);
+				input = input.substring(0,input.length()-2);
+				input = input.concat(" class=\"{validate: {digitalNumber:true}}\"/> ");
+				%>
+				<%=input %>
+					
 			</td>
 		</tr>							
 					
@@ -2715,7 +2743,7 @@ This information is collected from a variety of sources, including self-report, 
 		<tr>
 			<td class="genericTableHeader">How has drinking had an impact on your life?</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"drinking_impact",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"drinking_impact",3,50,prepopulationLevel)%>
 			</td>
 		</tr>				
 					
@@ -2761,21 +2789,21 @@ This information is collected from a variety of sources, including self-report, 
 		<tr>
 			<td class="genericTableHeader">Comments</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"13_comments",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"13_comments",5,50,prepopulationLevel)%>
 			</td>
 		</tr>			
 		
 		<tr>
 			<td class="genericTableHeader">Action(s)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"13_actions",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"13_actions",3,50,prepopulationLevel)%>
 			</td>
 		</tr>					
 			
 		<tr>
 			<td class="genericTableHeader">By Whom?</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "13_by_whom", 25,prepopulationLevel)%>						
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "13_by_whom", 128,prepopulationLevel)%>						
 			</td>
 		</tr>				
 		
@@ -2806,7 +2834,7 @@ This information is collected from a variety of sources, including self-report, 
 		<tr>
 			<td class="genericTableHeader">How has the substance(s) of choice had an impact on your life?</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"drug_impact",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"drug_impact",3,50,prepopulationLevel)%>
 			</td>
 		</tr>			
 		
@@ -2853,21 +2881,21 @@ This information is collected from a variety of sources, including self-report, 
 		<tr>
 			<td class="genericTableHeader">Comments</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"14_comments",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"14_comments",5,50,prepopulationLevel)%>
 			</td>
 		</tr>			
 		
 		<tr>
 			<td class="genericTableHeader">Action(s)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"14_actions",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"14_actions",3,50,prepopulationLevel)%>
 			</td>
 		</tr>					
 			
 		<tr>
 			<td class="genericTableHeader">By Whom?</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "14_by_whom", 25,prepopulationLevel)%>						
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "14_by_whom", 128,prepopulationLevel)%>						
 			</td>
 		</tr>				
 		
@@ -2886,7 +2914,7 @@ This information is collected from a variety of sources, including self-report, 
 		<tr>
 			<td class="genericTableHeader">Type of Addiction - Other</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"addiction_type_other",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"addiction_type_other",128,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
@@ -2901,7 +2929,7 @@ This information is collected from a variety of sources, including self-report, 
 		<tr>
 			<td class="genericTableHeader">How has the addiction had an impact on your life?</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"addiction_impact",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"addiction_impact",3,50,prepopulationLevel)%>
 			</td>
 		</tr>			
 								
@@ -2950,21 +2978,21 @@ This information is collected from a variety of sources, including self-report, 
 		<tr>
 			<td class="genericTableHeader">Comments</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"15_comments",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"15_comments",5,50,prepopulationLevel)%>
 			</td>
 		</tr>			
 		
 		<tr>
 			<td class="genericTableHeader">Action(s)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"15_actions",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"15_actions",3,50,prepopulationLevel)%>
 			</td>
 		</tr>					
 			
 		<tr>
 			<td class="genericTableHeader">By Whom?</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "15_by_whom", 25,prepopulationLevel)%>						
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "15_by_whom", 128,prepopulationLevel)%>						
 			</td>
 		</tr>				
 		
@@ -3025,21 +3053,21 @@ This information is collected from a variety of sources, including self-report, 
 		<tr>
 			<td class="genericTableHeader">Comments</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"16_comments",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"16_comments",5,50,prepopulationLevel)%>
 			</td>
 		</tr>			
 		
 		<tr>
 			<td class="genericTableHeader">Action(s)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"16_actions",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"16_actions",3,50,prepopulationLevel)%>
 			</td>
 		</tr>					
 			
 		<tr>
 			<td class="genericTableHeader">By Whom?</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "16_by_whom", 25,prepopulationLevel)%>						
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "16_by_whom", 128,prepopulationLevel)%>						
 			</td>
 		</tr>				
 		
@@ -3093,21 +3121,21 @@ This information is collected from a variety of sources, including self-report, 
 		<tr>
 			<td class="genericTableHeader">Comments</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"17_comments",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"17_comments",5,50,prepopulationLevel)%>
 			</td>
 		</tr>			
 		
 		<tr>
 			<td class="genericTableHeader">Action(s)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"17_actions",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"17_actions",3,50,prepopulationLevel)%>
 			</td>
 		</tr>					
 			
 		<tr>
 			<td class="genericTableHeader">By Whom?</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "17_by_whom", 25,prepopulationLevel)%>						
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "17_by_whom", 128,prepopulationLevel)%>						
 			</td>
 		</tr>				
 		
@@ -3161,21 +3189,21 @@ This information is collected from a variety of sources, including self-report, 
 		<tr>
 			<td class="genericTableHeader">Comments</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"18_comments",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"18_comments",5,50,prepopulationLevel)%>
 			</td>
 		</tr>			
 		
 		<tr>
 			<td class="genericTableHeader">Action(s)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"18_actions",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"18_actions",3,50,prepopulationLevel)%>
 			</td>
 		</tr>					
 			
 		<tr>
 			<td class="genericTableHeader">By Whom?</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "18_by_whom", 25,prepopulationLevel)%>						
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "18_by_whom", 128,prepopulationLevel)%>						
 			</td>
 		</tr>				
 		
@@ -3229,21 +3257,21 @@ This information is collected from a variety of sources, including self-report, 
 		<tr>
 			<td class="genericTableHeader">Comments</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"19_comments",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"19_comments",5,50,prepopulationLevel)%>
 			</td>
 		</tr>			
 		
 		<tr>
 			<td class="genericTableHeader">Action(s)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"19_actions",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"19_actions",3,50,prepopulationLevel)%>
 			</td>
 		</tr>					
 			
 		<tr>
 			<td class="genericTableHeader">By Whom?</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "19_by_whom", 25,prepopulationLevel)%>						
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "19_by_whom", 128,prepopulationLevel)%>						
 			</td>
 		</tr>				
 		
@@ -3297,21 +3325,21 @@ This information is collected from a variety of sources, including self-report, 
 		<tr>
 			<td class="genericTableHeader">Comments</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"20_comments",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"20_comments",5,50,prepopulationLevel)%>
 			</td>
 		</tr>			
 		
 		<tr>
 			<td class="genericTableHeader">Action(s)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"20_actions",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"20_actions",3,50,prepopulationLevel)%>
 			</td>
 		</tr>					
 			
 		<tr>
 			<td class="genericTableHeader">By Whom?</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "20_by_whom", 25,prepopulationLevel)%>						
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "20_by_whom", 128,prepopulationLevel)%>						
 			</td>
 		</tr>				
 		
@@ -3375,21 +3403,21 @@ This information is collected from a variety of sources, including self-report, 
 		<tr>
 			<td class="genericTableHeader">Comments</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"21_comments",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"21_comments",5,50,prepopulationLevel)%>
 			</td>
 		</tr>			
 		
 		<tr>
 			<td class="genericTableHeader">Action(s)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"21_actions",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"21_actions",3,50,prepopulationLevel)%>
 			</td>
 		</tr>					
 			
 		<tr>
 			<td class="genericTableHeader">By Whom?</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "21_by_whom", 25,prepopulationLevel)%>						
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "21_by_whom", 128,prepopulationLevel)%>						
 			</td>
 		</tr>				
 		
@@ -3444,21 +3472,21 @@ This information is collected from a variety of sources, including self-report, 
 		<tr>
 			<td class="genericTableHeader">Comments</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"22_comments",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"22_comments",5,50,prepopulationLevel)%>
 			</td>
 		</tr>			
 		
 		<tr>
 			<td class="genericTableHeader">Action(s)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"22_actions",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"22_actions",3,50,prepopulationLevel)%>
 			</td>
 		</tr>					
 			
 		<tr>
 			<td class="genericTableHeader">By Whom?</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "22_by_whom", 25,prepopulationLevel)%>						
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "22_by_whom", 128,prepopulationLevel)%>						
 			</td>
 		</tr>				
 		
@@ -3513,21 +3541,21 @@ This information is collected from a variety of sources, including self-report, 
 		<tr>
 			<td class="genericTableHeader">Comments</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"23_comments",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"23_comments",5,50,prepopulationLevel)%>
 			</td>
 		</tr>			
 		
 		<tr>
 			<td class="genericTableHeader">Action(s)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"23_actions",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"23_actions",3,50,prepopulationLevel)%>
 			</td>
 		</tr>					
 			
 		<tr>
 			<td class="genericTableHeader">By Whom?</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "23_by_whom", 25,prepopulationLevel)%>						
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "23_by_whom", 128,prepopulationLevel)%>						
 			</td>
 		</tr>				
 		
@@ -3550,7 +3578,7 @@ This information is collected from a variety of sources, including self-report, 
 		<tr>
 			<td class="genericTableHeader">What is your primary source of income - Other</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"income_source_type_other",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"income_source_type_other",128,prepopulationLevel)%>
 			</td>
 		</tr>
 		
@@ -3596,21 +3624,21 @@ This information is collected from a variety of sources, including self-report, 
 		<tr>
 			<td class="genericTableHeader">Comments</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"24_comments",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"24_comments",5,50,prepopulationLevel)%>
 			</td>
 		</tr>			
 		
 		<tr>
 			<td class="genericTableHeader">Action(s)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"24_actions",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"24_actions",3,50,prepopulationLevel)%>
 			</td>
 		</tr>					
 			
 		<tr>
 			<td class="genericTableHeader">By Whom?</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "24_by_whom", 25,prepopulationLevel)%>						
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "24_by_whom", 128,prepopulationLevel)%>						
 			</td>
 		</tr>				
 		
@@ -3629,31 +3657,31 @@ This information is collected from a variety of sources, including self-report, 
 		<tr>
 			<td class="genericTableHeader">What are your hopes for the future?</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"hopes_future",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"hopes_future",5,50,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">What do you think you need in order to get there?</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"hope_future_need",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"hope_future_need",5,50,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">How do you view your mental health?</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"view_mental_health",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"view_mental_health",5,50,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Is spirituality an important part of your life?</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"sprituality",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"sprituality",5,50,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Is culture (heritage) an important part of your life?</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"culture_heritage",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"culture_heritage",5,50,prepopulationLevel)%>
 			</td>
 		</tr>
 		
@@ -3667,7 +3695,7 @@ This information is collected from a variety of sources, including self-report, 
 		<tr>
 			<td class="genericTableHeader">Presenting Issues - Other</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"presenting_issues_other",5,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"presenting_issues_other",128,prepopulationLevel)%>
 			</td>
 		</tr>
 			

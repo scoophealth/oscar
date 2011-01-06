@@ -69,7 +69,7 @@ $('document').ready(function() {
 		<tr>
 			<td class="genericTableHeader">Ext </td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"serviceUseRecord_ext"+centerNumber,1,30, prepopulationLevel)%>
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"serviceUseRecord_ext"+centerNumber,16, prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
@@ -95,7 +95,7 @@ $('document').ready(function() {
 		<tr>
 			<td class="genericTableHeader">Organization Name - Other</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"serviceUseRecord_orgNameOther"+centerNumber,1,30, prepopulationLevel)%>
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"serviceUseRecord_orgNameOther"+centerNumber,128, prepopulationLevel)%>
 			</td>
 		</tr>
 		
@@ -110,7 +110,7 @@ $('document').ready(function() {
 		<tr>
 			<td class="genericTableHeader">Program Name - Other</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"serviceUseRecord_programNameOther"+centerNumber,1,30, prepopulationLevel)%>
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"serviceUseRecord_programNameOther"+centerNumber,128, prepopulationLevel)%>
 			</td>
 		</tr>
 		
@@ -132,14 +132,14 @@ $('document').ready(function() {
 		<tr>
 			<td class="genericTableHeader">Functional Center Name - Other</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"serviceUseRecord_functionNameOther"+centerNumber,1,30, prepopulationLevel)%>
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"serviceUseRecord_functionNameOther"+centerNumber,128, prepopulationLevel)%>
 			</td>
 		</tr>
 
 		<tr>
 			<td class="genericTableHeader">Functional Center Number - Other</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"serviceUseRecord_functionNumberOther"+centerNumber,1,30, prepopulationLevel)%>
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"serviceUseRecord_functionNumberOther"+centerNumber,16, prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
