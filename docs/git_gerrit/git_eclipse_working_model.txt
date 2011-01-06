@@ -99,9 +99,12 @@ The reason for the above is because of the review model of gerrit. You don't wan
 --------------
 ChangeId Hooks
 --------------
-Change ID Hook will add a change ID to every commit you make. The benefit of this is if you change / fix a commit and resubmit it, gerrit will use the changeId to replace the previous commit. The problem with this is that it only works on the command line git for now, eclipse does not yet support hooks. 
+Change ID Hook will add a change ID to every commit you make. The benefit of this is if you change / fix a commit and resubmit it, gerrit will use the changeId to replace the previous commit. 
 
-To install the changeId hook, you need to first grab a copy from the test project. On the command line, while in the test repository do "scp -p -P 29418 r6squeegee@source.oscartools.org:hooks/commit-msg .git/hooks/commit-msg". This will effecitvely enable the changeId hook for the test project. Now to make it work for any other project just copy the .git/hooks/commit-msg to the other projects. You need to make sure the file is chmoded +x as it's a shell script.
+To install the changeId hook for git command line usage, you need to first grab a copy from the test project. On the command line, while in the test repository do "scp -p -P 29418 r6squeegee@source.oscartools.org:hooks/commit-msg .git/hooks/commit-msg". This will effecitvely enable the changeId hook for the test project. Now to make it work for any other project just copy the .git/hooks/commit-msg to the other projects. You need to make sure the file is chmoded +x as it's a shell script.
+
+For Eclipse, the newer versions of the git plugin has a check box option on the commit screen to auto generate changeId's - cool eh? 
+
 
 
 -----------------------
