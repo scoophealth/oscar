@@ -40,17 +40,17 @@ pushd ${SRC_DIR}
 	if [ $? = 0 ];
 	then
 	
+		# stop tomcat, sleep to allow tomcat to shutdown before restarting
+		catalina.sh stop
+		sleep 30
+		mv ${CATALINA_BASE}/logs/catalina.out ${CATALINA_BASE}/logs/catalina.out.`date -I` 
+		
 		# copy the built result to catalina base
 		cd ${CATALINA_BASE}/webapps
 		rm -rf ${SERVER_NAME}
 		mkdir ${SERVER_NAME}
 		cd ${SERVER_NAME}
 		unzip ${SRC_DIR}/target/${SERVER_NAME}-3.1-SNAPSHOT.war
-		
-		# stop tomcat, sleep to allow tomcat to shutdown before restarting
-		catalina.sh stop
-		sleep 20
-		mv ${CATALINA_BASE}/logs/catalina.out ${CATALINA_BASE}/logs/catalina.out.`date -I` 
 		
 		# reset database
 		mysql -e "drop database ${SERVER_NAME}"
