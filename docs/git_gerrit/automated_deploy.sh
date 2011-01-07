@@ -42,7 +42,7 @@ pushd ${SRC_DIR}
 	
 		# stop tomcat, sleep to allow tomcat to shutdown before restarting
 		catalina.sh stop
-		sleep 30
+		sleep 60
 		mv ${CATALINA_BASE}/logs/catalina.out ${CATALINA_BASE}/logs/catalina.out.`date -I` 
 		
 		# copy the built result to catalina base
