@@ -188,7 +188,7 @@ public class MDSHandler implements MessageHandler {
             }
             return(timeStamp);
         }catch(Exception e){
-            return("");
+            return getMsgDate();
         }
     }
     
