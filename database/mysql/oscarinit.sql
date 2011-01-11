@@ -8188,6 +8188,9 @@ CREATE TABLE `eyeform_macro` (
   `billing_refund` varchar(50) COLLATE utf8_bin ,
   `billing_gst` varchar(50) COLLATE utf8_bin ,
   `test_records` text COLLATE utf8_bin,
+  `discharge` varchar(20) COLLATE uft8_bin,
+  `stat` varchar(20) COLLATE uft8_bin,
+  `opt` varchar(20) COLLATE uft8_bin,
   PRIMARY KEY (`id`)
 );
 

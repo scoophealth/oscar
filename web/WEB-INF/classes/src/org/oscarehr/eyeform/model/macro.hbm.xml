@@ -23,17 +23,11 @@
         <property name="followupUnit" type="string">
             <column name="followup_unit" length="50" />
         </property>
-        <!--      <many-to-one
-			name="followupDoctor"
-			column="followup_doctor"
-			class="org.oscarehr.common.model.Provider"
-			not-null="false"
-			lazy="false"
-		>
-		</many-to-one>
--->
-        <property name="followupReason" type="string">
-            <column name="followup_reason" />
+        <property name="followupDoctorId" type="string">
+            <column name="followup_doctor" />
+        </property>        
+        <property name="ticklerRecipient" type="string">
+            <column name="tickler_staff" />
         </property>
         <!-- 
        <many-to-one
@@ -89,6 +83,16 @@
         </property>
         <property name="testRecords" type="string">
             <column name="test_records" length="65535" />
+        </property>
+        
+        <property name="dischargeFlag" type="string">
+            <column name="discharge" length="20" />
+        </property>
+        <property name="statFlag" type="string">
+            <column name="stat" length="20" />
+        </property>
+        <property name="optFlag" type="string">
+            <column name="opt" length="20" />
         </property>
     </class>
 </hibernate-mapping>

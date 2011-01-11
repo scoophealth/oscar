@@ -14,7 +14,7 @@ public class Macro {
 	private short followupNo;
 	private String followupUnit;
 	private Provider followupDoctor;
-	private Integer followupDoctorId;
+	private String followupDoctorId;
 	private String followupReason;
 	private String billingVisitType;
 	private String billingVisitLocation;
@@ -64,10 +64,10 @@ public class Macro {
 	public void setDischargeFlag(String dischargeFlag) {
 		this.dischargeFlag = dischargeFlag;
 	}
-	public Integer getFollowupDoctorId() {
+	public String getFollowupDoctorId() {
 		return followupDoctorId;
 	}
-	public void setFollowupDoctorId(Integer followupDoctorId) {
+	public void setFollowupDoctorId(String followupDoctorId) {
 		this.followupDoctorId = followupDoctorId;
 	}
 	public List<Provider> getTicklerStaff() {

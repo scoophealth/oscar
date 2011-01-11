@@ -2620,7 +2620,8 @@ function autoCompleteShowMenuCPP(element, update) {
         var msnote;
         var pos;
 
-        for( idx = 0; idx <= numNotes; ++idx ) {
+        for( idx = 0; idx <= numNotes; ++idx ) {    
+        	if($("nc"+idx) == null) continue;    
             notesDiv = $("nc" + idx).down('div');
             noteId = notesDiv.id.substr(1);  //get note id
             if(noteId==0) continue;

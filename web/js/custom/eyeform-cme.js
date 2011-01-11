@@ -92,13 +92,25 @@
    
        jQuery("form[name='caseManagementEntryForm']").append('<span submit_addon="save_measurements"></span>');
        
-       jQuery.ajax({url:ctx+"/eyeform/NoteData.do?method=getReferralDoctor&demographicNo="+demographicNo,dataType: "html",success: function(data) {
-			jQuery("#encounterHeaderExt").append("Referring Dr:"+data);
-      }});
        jQuery.ajax({url:ctx+"/eyeform/NoteData.do?method=getAppointmentReason&appointmentNo="+appointmentNo,dataType: "html",success: function(data) {
-			jQuery("#encounterHeaderExt").append("\tAppointment Reason:"+data);
-     }});
+			jQuery("#encounterHeaderExt").append("&nbsp;&nbsp;Reason:<b>"+data+"</b>");
+       }});
+       
+       jQuery.ajax({url:ctx+"/eyeform/NoteData.do?method=getReferralDoctor&demographicNo="+demographicNo,dataType: "html",success: function(data) {
+			jQuery("#encounterHeaderExt").append("&nbsp;&nbsp;Ref:<b>"+data+"</b>");
+      }});
+       
      });
 
  
+   
+   function runMacro(macroId,appointmentNo) {
+	   jQuery.ajax({ url: ctx+"/CaseManagementView.do?method=run_macro&id="+macroId+"&appointmentNo="+appointmentNo +"&noteId="+savedNoteId + "&demographicNo="+demographicNo, dataType:'script', async:false});
+	   jQuery.ajax({url:ctx+"/eyeform/NoteData.do?method=getCurrentNoteData&demographicNo="+demographicNo+"&noteId="+savedNoteId+"&appointmentNo="+appointmentNo,dataType: "html",async:false, success: function(data) {
+			jQuery("#current_note_addon").html(data);
+      }});
+	   jQuery.ajax({ url: ctx+"/CaseManagementView.do?method=run_macro_script&id="+macroId+"&appointmentNo="+appointmentNo +"&noteId="+savedNoteId + "&demographicNo="+demographicNo, dataType:'script', async:false});
+	   
+   }
+  
    

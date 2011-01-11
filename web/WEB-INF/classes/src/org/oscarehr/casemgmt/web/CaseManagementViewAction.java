@@ -34,7 +34,6 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -87,6 +86,12 @@ import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.GroupNoteLink;
 import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.dx.model.DxResearch;
+import org.oscarehr.eyeform.dao.FollowUpDao;
+import org.oscarehr.eyeform.dao.MacroDao;
+import org.oscarehr.eyeform.dao.TestBookRecordDao;
+import org.oscarehr.eyeform.model.FollowUp;
+import org.oscarehr.eyeform.model.Macro;
+import org.oscarehr.eyeform.model.TestBookRecord;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -1333,6 +1338,94 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
 	}
 
+	public ActionForward run_macro_script(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		MacroDao macroDao = (MacroDao)SpringUtils.getBean("MacroDAO");
+		Macro macro = macroDao.find(Integer.parseInt(request.getParameter("id")));
+		logger.info("loaded macro " + macro.getLabel());	
+		StringBuilder sb = new StringBuilder();
+		
+		//impression text
+		sb.append("var noteTa = document.getElementById('caseNote_note"+request.getParameter("noteId")+"');");
+		sb.append("var noteTaVal = noteTa.value;");
+		sb.append("noteTaVal = noteTaVal + '"+macro.getImpression()+"';");
+		sb.append("noteTa.value = noteTaVal;");
+		
+		//checkboxes
+		if(macro.getDischargeFlag().equals("dischargeFlag")) {
+			sb.append("jQuery(\"#ack1\").attr(\"checked\",true);");			
+		}
+		if(macro.getStatFlag().equals("statFlag")) {
+			sb.append("jQuery(\"#ack2\").attr(\"checked\",true);");
+		}
+		if(macro.getOptFlag().equals("optFlag")) {
+			sb.append("jQuery(\"#ack3\").attr(\"checked\",true);");
+		}
+		
+		//send tickler
+		if(macro.getTicklerRecipient().length()>0) {
+			sb.append("saveNoteAndSendTickler();");
+		} else {
+			sb.append("saveEyeformNote();");	
+		}
+		
+		//billing
+		
+		response.getWriter().println(sb.toString());
+		
+		return null;
+	}
+	
+	public ActionForward run_macro(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		MacroDao macroDao = (MacroDao)SpringUtils.getBean("MacroDAO");
+		Macro macro = macroDao.find(Integer.parseInt(request.getParameter("id")));
+		logger.info("loaded macro " + macro.getLabel());
+		
+		StringBuilder sb = new StringBuilder();
+		
+		
+		//follow up - need to add it, then force a reload
+		int followUpNo = macro.getFollowupNo();
+		String followUpUnit = macro.getFollowupUnit();
+		String followUpDr = macro.getFollowupDoctorId();
+		if(followUpDr.length()>0) {
+			FollowUp f = new FollowUp();
+			f.setAppointmentNo(Integer.parseInt(request.getParameter("appointmentNo")));
+			f.setDate(new Date());
+			f.setDemographicNo(Integer.parseInt(request.getParameter("demographicNo")));
+			f.setProvider(LoggedInInfo.loggedInInfo.get().loggedInProvider);
+			f.setTimeframe(followUpUnit);
+			f.setTimespan(followUpNo);
+			f.setType("followup");
+			f.setUrgency("routine");
+			f.setFollowupProvider(followUpDr);
+			FollowUpDao dao = (FollowUpDao)SpringUtils.getBean("FollowUpDAO");
+	    	dao.save(f);
+		}				
+		
+		//tests
+		TestBookRecordDao testDao = (TestBookRecordDao)SpringUtils.getBean("TestBookDAO");
+		String[] tests = macro.getTestRecords().split("\n");
+		for(String test:tests) {
+			String[] parts = test.trim().split("\\|");
+			if(parts.length==4) {
+				TestBookRecord rec = new TestBookRecord();
+				rec.setAppointmentNo(Integer.parseInt(request.getParameter("appointmentNo")));
+				rec.setComment(parts[3]);
+				rec.setDate(new Date());
+				rec.setDemographicNo(Integer.parseInt(request.getParameter("demographicNo")));
+				rec.setEye(parts[1]);
+				rec.setProvider(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+				rec.setStatus(null);
+				rec.setTestname(parts[0]);
+				rec.setUrgency(parts[2]);
+				testDao.save(rec);
+			}
+		}
+		
+		
+		return null;
+	}
+	
 	protected Map getUnlockedNotesMap(HttpServletRequest request) {
 		Map map = (Map) request.getSession().getAttribute("unlockedNoteMap");
 		if (map == null) {
