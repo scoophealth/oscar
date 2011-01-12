@@ -19,6 +19,8 @@ On the main registration screen :
 		- now cut and paste the contents of "~/.ssh/id_rsa.pub" into the text area on the web page.
 		- click add and it should list it as an added key on the screen.
 	- now on the bottom of the screen there's a link that says "continue" click that, now you should be at the your "code review dashboard" screen.
+	
+At this point you will have an account but to prevent spam/bots we have to manually enable write access to each account. You will need to email devel so we know you've signed up for an account so we can give you write access. You may wish to say hi to everyone and give a brief into into who you are too so we all have a better idea as to who everyone else is. :)
 
 At this point, if your eclipse was already running, you need to stop it and start it again. Eclipse caches ssh key information. (really, it does)
 
@@ -72,7 +74,7 @@ Making changes
 --------------
 Now say you've created new files in the project and altered some existing ones.
 
-If you right click on the project, go to team -> commit. You'll see the commit screen. Notice on eclipse it will list the tracked and untracked file and by default they will be "git added" and "git commited" at the same time. Now when you commit, it's commited locally. This means no one else except you has these changes still.
+If you right click on the project, go to team -> commit. You'll see the commit screen. Notice on eclipse it will list the tracked and untracked file and by default they will be "git added" and "git committed" at the same time. Now when you commit, it's commited locally. This means no one else except you has these changes still.
 
 Now to share these changes with everyone else, i.e. committed to the main repository... (You must have committed locally first) 
 
@@ -80,7 +82,7 @@ Now, right click on the project, go to team -> push.
 
 If this is the first time you've pushed, you'll need to fill in a push specification. source ref="HEAD", destincation ref="refs/for/master", select add spec, check the box on the bottom saying save spec... so you don't have to do this again. Just click "finish" (next doesn't show anything interesting).
 
-If you go to the gerrit web page you should see the change is pending review now.
+If you go to the gerrit web page you should see the change is pending review now. If you receive a permissions error here, it maybe because your account hasn't been authorised yet, to prevent spam/bots we try to make sure only real humans get write access to the repository. You can email the devel list if you think we've missed your account / access.
 
 Note that at this point, you and the central repository are not in sync, the files at the central repository must be approved first. Even after the changes on the central repository are approved, you must follow the "getting updates" again before you and the central repository are in sync (yes even if the files happen to be the same on the 2 servers, the pointers are not in sync until you merge).  
 
@@ -110,7 +112,7 @@ For Eclipse, the newer versions of the git plugin has a check box option on the 
 -----------------------
 Fixing previous commits
 -----------------------
-The easiest way to fix a previous commit is to continue working the way we did in CVS... i.e. make another commit with the changes/fixes. For those who are more adventurous there is a native git/gerrit routine to do this but the commands are also not supported in eclipse.
+The easiest way to fix a previous commit is to continue working the way we did in CVS... i.e. make another commit with the changes/fixes. For those who are more adventurous the following is a native git/gerrit routine to do this but the commands are also not supported in eclipse.
 
 From the command line :
 - make sure your work space has the gerrit changes you want to fix. If you don't you can explicitly fetch the branches by looking at the URL's of the commit on the gerrit pages.
