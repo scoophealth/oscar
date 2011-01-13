@@ -72,12 +72,12 @@ public class OcanStaffFormData extends AbstractModel<Integer> implements Seriali
 	protected void jpaPreventDelete() {
 		throw (new UnsupportedOperationException("Remove is not allowed for this type of item."));
 	}
-
+/*
 	@PreUpdate
 	protected void jpaPreventUpdate() {
 		throw (new UnsupportedOperationException("Update is not allowed for this type of item."));
 	}
-
+*/
 	/**
 	 * @return true if the list of cdsClientFormData contains the answer specified. 
 	 */

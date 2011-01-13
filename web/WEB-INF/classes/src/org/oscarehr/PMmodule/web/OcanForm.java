@@ -1,8 +1,8 @@
 package org.oscarehr.PMmodule.web;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -54,14 +54,15 @@ public class OcanForm {
 		return ocanStaffForm;
 	}
 	
-	public static OcanStaffForm getOcanStaffForm(Integer clientId, int prepopulationLevel)
+		
+	public static OcanStaffForm getOcanStaffForm(Integer clientId, int prepopulationLevel,String ocanType)
 	{
 		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 		
 		OcanStaffForm ocanStaffForm=null;
 		
 		if(prepopulationLevel != OcanForm.PRE_POPULATION_LEVEL_NONE) {
-			ocanStaffForm=ocanStaffFormDao.findLatestByFacilityClient(loggedInInfo.currentFacility.getId(), clientId);
+			ocanStaffForm=ocanStaffFormDao.findLatestByFacilityClient(loggedInInfo.currentFacility.getId(), clientId, ocanType);
 		}
 
 		if (ocanStaffForm==null)
@@ -82,6 +83,7 @@ public class OcanForm {
 				ocanStaffForm.setHcNumber(demographic.getHin());
 				ocanStaffForm.setHcVersion(demographic.getVer());
 				ocanStaffForm.setDateOfBirth(demographic.getFormattedDob());
+				ocanStaffForm.setClientDateOfBirth(demographic.getFormattedDob());
 				ocanStaffForm.setGender(convertGender(demographic.getSex()));
 			}				             
 		}
@@ -150,15 +152,16 @@ public class OcanForm {
 		return(ocanStaffFormDataDao.findByQuestion(ocanStaffFormId, question));
 	}
 	
-	private static List<OcanClientFormData> getClientAnswers(Integer ocanClientFormId, String question, int prepopulationLevel)
+	private static List<OcanStaffFormData> getClientAnswers(Integer ocanClientFormId, String question, int prepopulationLevel)
 	{
 		if(prepopulationLevel != OcanForm.PRE_POPULATION_LEVEL_ALL) {
-			return(new ArrayList<OcanClientFormData>()); 
+			return(new ArrayList<OcanStaffFormData>()); 
 		}
 		
-		if (ocanClientFormId==null) return(new ArrayList<OcanClientFormData>()); 
+		if (ocanClientFormId==null) return(new ArrayList<OcanStaffFormData>()); 
 			
-		return(ocanClientFormDataDao.findByQuestion(ocanClientFormId, question));
+		//return(ocanClientFormDataDao.findByQuestion(ocanClientFormId, question));
+		return(ocanStaffFormDataDao.findByQuestion(ocanClientFormId, question));
 	}
 	
 	public static String renderAsDate(Integer ocanStaffFormId, String question, boolean required, int prepopulationLevel)
@@ -176,7 +179,7 @@ public class OcanForm {
 			List<OcanStaffFormData> existingAnswers=getStaffAnswers(ocanStaffFormId, question, prepopulationLevel);
 			if(existingAnswers.size()>0) {value = existingAnswers.get(0).getAnswer();}
 		} else {
-			List<OcanClientFormData> existingAnswers=getClientAnswers(ocanStaffFormId, question, prepopulationLevel);
+			List<OcanStaffFormData> existingAnswers=getClientAnswers(ocanStaffFormId, question, prepopulationLevel);
 			if(existingAnswers.size()>0) {value = existingAnswers.get(0).getAnswer();}
 		}
 		if(required) {className="{validate: {required:true}}";}
@@ -230,7 +233,7 @@ public class OcanForm {
 	public static String renderAsSelectOptions(Integer ocanStaffFormId, String question, List<OcanFormOption> options, int prepopulationLevel, boolean clientForm)
 	{
 		List<OcanStaffFormData> existingStaffAnswers=null;
-		List<OcanClientFormData> existingClientAnswers=null;
+		List<OcanStaffFormData> existingClientAnswers=null;
 		if(!clientForm)
 			existingStaffAnswers = getStaffAnswers(ocanStaffFormId, question, prepopulationLevel);
 		else
@@ -247,7 +250,7 @@ public class OcanForm {
 			if(!clientForm)
 				selected=(OcanStaffFormData.containsAnswer(existingStaffAnswers, option.getOcanDataCategoryValue())?"selected=\"selected\"":"");
 			else
-				selected=(OcanClientFormData.containsAnswer(existingClientAnswers, option.getOcanDataCategoryValue())?"selected=\"selected\"":"");
+				selected=(OcanStaffFormData.containsAnswer(existingClientAnswers, option.getOcanDataCategoryValue())?"selected=\"selected\"":"");
 			
 			sb.append("<option "+selected+" value=\""+StringEscapeUtils.escapeHtml(option.getOcanDataCategoryValue())+"\" title=\""+htmlEscapedName+"\">"+htmlEscapedName+"</option>");
 		}
@@ -263,7 +266,7 @@ public class OcanForm {
 	public static String renderAsConnexOrgNameSelectOptions(Integer ocanStaffFormId, String question, List<OcanConnexOption> options, int prepopulationLevel, boolean clientForm)
 	{
 		List<OcanStaffFormData> existingStaffAnswers=null;
-		List<OcanClientFormData> existingClientAnswers=null;
+		List<OcanStaffFormData> existingClientAnswers=null;
 		if(!clientForm)
 			existingStaffAnswers = getStaffAnswers(ocanStaffFormId, question, prepopulationLevel);
 		else
@@ -280,7 +283,7 @@ public class OcanForm {
 			if(!clientForm)
 				selected=(OcanStaffFormData.containsAnswer(existingStaffAnswers, option.getOrgName())?"selected=\"selected\"":"");
 			else
-				selected=(OcanClientFormData.containsAnswer(existingClientAnswers, option.getOrgName())?"selected=\"selected\"":"");
+				selected=(OcanStaffFormData.containsAnswer(existingClientAnswers, option.getOrgName())?"selected=\"selected\"":"");
 			
 			sb.append("<option "+selected+" value=\""+StringEscapeUtils.escapeHtml(option.getOrgName())+"\" title=\""+htmlEscapedName+"\">"+htmlEscapedName+"</option>");
 		}
@@ -295,7 +298,7 @@ public class OcanForm {
 	public static String renderAsConnexProgramNameSelectOptions(Integer ocanStaffFormId, String question, List<OcanConnexOption> options, int prepopulationLevel, boolean clientForm)
 	{
 		List<OcanStaffFormData> existingStaffAnswers=null;
-		List<OcanClientFormData> existingClientAnswers=null;
+		List<OcanStaffFormData> existingClientAnswers=null;
 		if(!clientForm)
 			existingStaffAnswers = getStaffAnswers(ocanStaffFormId, question, prepopulationLevel);
 		else
@@ -312,7 +315,7 @@ public class OcanForm {
 			if(!clientForm)
 				selected=(OcanStaffFormData.containsAnswer(existingStaffAnswers, option.getProgramName())?"selected=\"selected\"":"");
 			else
-				selected=(OcanClientFormData.containsAnswer(existingClientAnswers, option.getProgramName())?"selected=\"selected\"":"");
+				selected=(OcanStaffFormData.containsAnswer(existingClientAnswers, option.getProgramName())?"selected=\"selected\"":"");
 			
 			sb.append("<option "+selected+" value=\""+StringEscapeUtils.escapeHtml(option.getProgramName())+"\" title=\""+htmlEscapedName+"\">"+htmlEscapedName+"</option>");
 		}
@@ -339,6 +342,27 @@ public class OcanForm {
 		
 		return(sb.toString());
 	}
+	
+	public static String renderAsAssessmentStatusSelectOptions(OcanStaffForm ocanStaffForm)
+	{
+		String assessmentStatus = ocanStaffForm.getAssessmentStatus();
+		if(assessmentStatus==null) assessmentStatus = "In Progress";
+		List<OcanFormOption> options = getOcanFormOptions("OCAN Assessment Status");
+		
+		StringBuilder sb=new StringBuilder();
+
+		for (OcanFormOption option : options)
+		{
+			String htmlEscapedName=StringEscapeUtils.escapeHtml(option.getOcanDataCategoryName());
+			//String lengthLimitedEscapedName=limitLengthAndEscape(option.getOcanDataCategoryName());
+			String selected=assessmentStatus.equals(option.getOcanDataCategoryValue())?"selected=\"selected\"":"";
+
+			sb.append("<option "+selected+" value=\""+StringEscapeUtils.escapeHtml(option.getOcanDataCategoryValue())+"\" title=\""+htmlEscapedName+"\">"+htmlEscapedName+"</option>");
+		}
+		
+		return(sb.toString());
+	}
+	
 	
 	public static String renderAsDomainSelectOptions(Integer ocanStaffFormId, String question, List<OcanFormOption> options, String[] valuesToInclude, int prepopulationLevel)
 	{
@@ -415,7 +439,7 @@ public class OcanForm {
 	public static String renderAsTextArea(Integer ocanStaffFormId, String question, int rows, int cols, int prepopulationLevel, boolean clientForm)
 	{
 		List<OcanStaffFormData> existingAnswers= null;
-		List<OcanClientFormData> existingClientAnswers=null;
+		List<OcanStaffFormData> existingClientAnswers=null;
 
 		StringBuilder sb=new StringBuilder();
 
@@ -736,5 +760,22 @@ public class OcanForm {
 		return(sb.toString());
 	}
 
-
+	public static Date getAssessmentCompletionDate(Date completionDate, Date clientCompletionDate) {
+		if(clientCompletionDate==null || completionDate.after(clientCompletionDate)) {
+			return completionDate;
+		} else {
+			return clientCompletionDate;
+		}
+	}
+	
+	public static Date getAssessmentStartDate(Date startDate, Date clientStartDate) {
+		if(clientStartDate==null || startDate.before(clientStartDate)) {
+			return startDate;
+		} else {
+			return clientStartDate;
+		}
+	}	
+	
+	
+	
 }

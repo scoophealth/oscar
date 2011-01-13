@@ -30,6 +30,8 @@ public class OcanStaffForm extends AbstractModel<Integer> implements Serializabl
 	private Integer id;
 
 	private String ocanFormVersion=null;
+	private String ocanType=null;
+	
 	private String providerNo = null;
 	private boolean signed=false;
 
@@ -43,33 +45,43 @@ public class OcanStaffForm extends AbstractModel<Integer> implements Serializabl
 	
 	private String lastName;
 	private String firstName;
-	private String addressLine1;
-	private String addressLine2;
-	private String city;
+	private String addressLine1="";
+	private String addressLine2="";
+	private String city="";
 	private String province;
-	private String postalCode;
-	private String phoneNumber;
-	private String email;
-	private String hcNumber;
-	private String hcVersion;
+	private String postalCode="";
+	private String phoneNumber="";
+	private String email="";
+	private String hcNumber="";
+	private String hcVersion="";
 	private String dateOfBirth;
+	private String clientDateOfBirth;
 	private String gender;
 	
 	private String assessmentStatus;
 	private Date startDate;
 	private Date completionDate;
+	private Date clientStartDate;
+	private Date clientCompletionDate;
+	
+
 	private String reasonForAssessment;
 	
 	private String providerName;
 	
 	public OcanStaffForm() {
-		province = "ON";		
+		province = "ON";
+		setAssessmentStatus("In Progress");
 	}
 	
 	public Integer getId() {
 		return id;
 	}
 
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	
 	public Date getCreated() {
 		return created;
 	}
@@ -81,6 +93,14 @@ public class OcanStaffForm extends AbstractModel<Integer> implements Serializabl
 	public void setOcanFormVersion(String cdsFormVersion) {
     	this.ocanFormVersion = cdsFormVersion;
     }
+
+	public String getOcanType() {
+		return ocanType;
+	}
+
+	public void setOcanType(String ocanType) {
+		this.ocanType = ocanType;
+	}
 
 	public String getProviderNo() {
     	return providerNo;
@@ -147,13 +167,13 @@ public class OcanStaffForm extends AbstractModel<Integer> implements Serializabl
 	{
 		throw(new UnsupportedOperationException("Remove is not allowed for this type of item."));
 	}
-
+/*
 	@PreUpdate
 	protected void jpaPreventUpdate()
 	{
 		throw(new UnsupportedOperationException("Update is not allowed for this type of item."));
 	}
-
+*/
 	public String getLastName() {
 		return lastName;
 	}
@@ -249,7 +269,15 @@ public class OcanStaffForm extends AbstractModel<Integer> implements Serializabl
 	public void setDateOfBirth(String dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
 	}
+	
+	public String getClientDateOfBirth() {
+		return clientDateOfBirth;
+	}
 
+	public void setClientDateOfBirth(String clientDateOfBirth) {
+		this.clientDateOfBirth = clientDateOfBirth;
+	}
+	
 	public void setCreated(Date created) {
 		this.created = created;
 	}
@@ -277,6 +305,22 @@ public class OcanStaffForm extends AbstractModel<Integer> implements Serializabl
 	public void setCompletionDate(Date completionDate) {
 		this.completionDate = completionDate;
 	}
+	
+	public Date getClientStartDate() {
+		return clientStartDate;
+	}
+
+	public void setClientStartDate(Date clientStartDate) {
+		this.clientStartDate = clientStartDate;
+	}
+
+	public Date getClientCompletionDate() {
+		return clientCompletionDate;
+	}
+
+	public void setClientCompletionDate(Date clientCompletionDate) {
+		this.clientCompletionDate = clientCompletionDate;
+	}
 
 	public String getFormattedStartDate() {
 		Date d = getStartDate();
@@ -291,7 +335,20 @@ public class OcanStaffForm extends AbstractModel<Integer> implements Serializabl
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		return formatter.format(d);
 	}
-
+	public String getFormattedClientStartDate() {
+		Date d = getClientStartDate();
+		if(d==null) {return "";}
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		return formatter.format(d);
+	}
+	
+	public String getFormattedClientCompletionDate() {
+		Date d = getClientCompletionDate();
+		if(d==null) {return "";}
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		return formatter.format(d);
+	}
+	
 	public String getReasonForAssessment() {
 		return reasonForAssessment;
 	}

@@ -17,6 +17,7 @@ import org.apache.log4j.Logger;
 import org.apache.xmlbeans.XmlOptions;
 import org.oscarehr.PMmodule.dao.AdmissionDao;
 import org.oscarehr.PMmodule.model.Admission;
+import org.oscarehr.PMmodule.web.OcanForm;
 import org.oscarehr.common.dao.FacilityDao;
 import org.oscarehr.common.dao.OcanClientFormDao;
 import org.oscarehr.common.dao.OcanClientFormDataDao;
@@ -173,7 +174,7 @@ public class OcanReportUIBean {
 		//get all submitted/completed forms where the completion date is in the year/month specified
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 		
-		List<OcanStaffForm> ocanStaffForms = ocanStaffFormDao.findLatestSignedOcanForms(loggedInInfo.currentFacility.getId(), "1.2", getStartDate(year,month), getEndDate(year,month));
+		List<OcanStaffForm> ocanStaffForms = ocanStaffFormDao.findLatestSignedOcanForms(loggedInInfo.currentFacility.getId(), "1.2", getStartDate(year,month), getEndDate(year,month),"FULL");
 		logger.info("# of staff forms found for time period = " + ocanStaffForms.size());
 		
 		OCANv2SubmissionFileDocument submissionFileDoc = OCANv2SubmissionFileDocument.Factory.newInstance();		
@@ -194,19 +195,23 @@ public class OcanReportUIBean {
 			}
 			
 			//Only download one latest completed OCAN for one client 
-			int clientId_1 = staffForm.getClientId().intValue();
-			if(clientId_0!=clientId_1) {
-				clientId_0 = clientId_1;
-			} else {
-				continue;
-			}
+			//One client could have more than one completed OCAN,so remove this part.
+			//int clientId_1 = staffForm.getClientId().intValue();
+			//if(clientId_0!=clientId_1) {
+			//	clientId_0 = clientId_1;
+			//} else {
+			//	continue;
+			//}
 			
 			//check for a clientform
-			OcanClientForm clientForm = ocanClientFormDao.findLatestSignedOcanForm(loggedInInfo.currentFacility.getId(),staffForm.getClientId(), "1.2", getStartDate(year,month), getEndDate(year,month));
+			//merge clientform with staffform, so remove the following code.
+			//OcanClientForm clientForm = ocanClientFormDao.findLatestSignedOcanForm(loggedInInfo.currentFacility.getId(),staffForm.getClientId(), "1.2", getStartDate(year,month), getEndDate(year,month));
+			//List<OcanClientFormData> clientFormData = null;
+			//if(clientForm != null) {
+			//	clientFormData = ocanClientFormDataDao.findByForm(clientForm.getId());
+			//}	
+			OcanClientForm clientForm = null;
 			List<OcanClientFormData> clientFormData = null;
-			if(clientForm != null) {
-				clientFormData = ocanClientFormDataDao.findByForm(clientForm.getId());
-			}			
 			OCANv2SubmissionRecord submissionRecord = convertOcanForm(staffForm,ocanStaffFormDataDao.findByForm(staffForm.getId()),clientForm,clientFormData);
 			submissionRecordList.add(submissionRecord);			
 		}
@@ -268,15 +273,16 @@ public class OcanReportUIBean {
 	public static OCANv2SubmissionRecord convertOcanForm(OcanStaffForm ocanStaffForm, List<OcanStaffFormData> ocanStaffFormData, OcanClientForm ocanClientForm, List<OcanClientFormData> ocanClientFormData) {
 		OCANv2SubmissionRecord ocanSubmissionRecord = OCANv2SubmissionRecord.Factory.newInstance();
 		
-		ocanSubmissionRecord.setOCANType(OCANv2SubmissionRecord.OCANType.Enum.forString("FULL"));
+		ocanSubmissionRecord.setOCANType(OCANv2SubmissionRecord.OCANType.Enum.forString(ocanStaffForm.getOcanType()));
 		ocanSubmissionRecord.setAssessmentID(String.valueOf(ocanStaffForm.getId()));
 		ocanSubmissionRecord.setAssessmentRevision("1");
-		ocanSubmissionRecord.setStartDate(convertToOcanXmlDate(ocanStaffForm.getStartDate()));
-		ocanSubmissionRecord.setCompletionDate(convertToOcanXmlDate(ocanStaffForm.getCompletionDate()));
+
+		ocanSubmissionRecord.setStartDate(convertToOcanXmlDate(OcanForm.getAssessmentStartDate(ocanStaffForm.getStartDate(),ocanStaffForm.getClientStartDate())));
+		ocanSubmissionRecord.setCompletionDate(convertToOcanXmlDate(OcanForm.getAssessmentCompletionDate(ocanStaffForm.getCompletionDate(),ocanStaffForm.getClientCompletionDate())));
+						
 		ocanSubmissionRecord.setAssessmentStatus(OCANv2SubmissionRecord.AssessmentStatus.COMPLETE);
 		ocanSubmissionRecord.setIARViewingConsent(OCANv2SubmissionRecord.IARViewingConsent.Enum.forString("TRUE"));
-		
-		
+				
 		ocanSubmissionRecord.setSubmitOrganizationRecord(convertSubmitOrganizationRecord(ocanStaffForm,ocanStaffFormData));
 		ocanSubmissionRecord.setClientRecord(convertClientRecord(ocanStaffForm,ocanStaffFormData));
 		ocanSubmissionRecord.setOCANDomains(convertOCANDomains(ocanStaffForm,ocanStaffFormData, ocanClientForm, ocanClientFormData));
@@ -516,15 +522,22 @@ public class OcanReportUIBean {
 		String staffAnswer = getStaffAnswer(domainNumber+"_1",ocanStaffFormData);
 		needRating.setStaff(Byte.valueOf(staffAnswer));
 		if(getStaffAnswer("consumerSelfAxCompleted",ocanStaffFormData).equals("TRUE")) {
-			if(ocanClientForm != null) {
-				String clientAnswer = getClientAnswer(domainNumber+"_1",ocanClientFormData);
-				if(clientAnswer.length()>0)
-					needRating.setClient(Byte.valueOf(clientAnswer));
-				else
-					needRating.setClient((byte)-1);
+			// merge clientform with staffform, so don't need the following code.
+			//if(ocanClientForm != null) {
+			//	String clientAnswer = getClientAnswer(domainNumber+"_1",ocanClientFormData);
+			//	if(clientAnswer.length()>0)
+			//		needRating.setClient(Byte.valueOf(clientAnswer));
+			//	else
+			//		needRating.setClient((byte)-1);
+			//} else {
+			//	needRating.setClient((byte)-1);
+			//}
+			String clientAnswer = getStaffAnswer("client_"+domainNumber+"_1",ocanStaffFormData);
+			if(clientAnswer.length()>0) {
+				needRating.setClient(Byte.valueOf(clientAnswer));
 			} else {
 				needRating.setClient((byte)-1);
-			}
+			}			
 		} else {
 			needRating.setClient((byte)-1);
 		}
@@ -567,15 +580,16 @@ public class OcanReportUIBean {
 		
 		domainComments.setStaff(getStaffAnswer(domainNumber+"_comments",ocanStaffFormData));
 		if(getStaffAnswer("consumerSelfAxCompleted",ocanStaffFormData).equals("TRUE")) {
-			if(ocanClientForm != null) {
-				String clientAnswer = getClientAnswer(domainNumber+"_comments",ocanClientFormData);
-				if(clientAnswer.length()>0)
-					domainComments.setClient(clientAnswer);
-				else
-					domainComments.setClient("");
-			} else {
-				domainComments.setClient("");
-			}
+			//if(ocanClientForm != null) {
+			//	String clientAnswer = getClientAnswer(domainNumber+"_comments",ocanClientFormData);
+			//	if(clientAnswer.length()>0)
+			//		domainComments.setClient(clientAnswer);
+			//	else
+			//		domainComments.setClient("");
+			//} else {
+			//	domainComments.setClient("");
+			//}
+			domainComments.setClient(getStaffAnswer("client_"+domainNumber+"_comments",ocanStaffFormData));
 		} else {
 			domainComments.setClient("");
 		}

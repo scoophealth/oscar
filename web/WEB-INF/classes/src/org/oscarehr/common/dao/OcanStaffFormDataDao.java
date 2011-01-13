@@ -28,6 +28,26 @@ public class OcanStaffFormDataDao extends AbstractDao<OcanStaffFormData>{
 		return (results);
 	}
 	
+	public OcanStaffFormData findLatestByQuestion(Integer ocanStaffFormId, String question) {
+
+		String sqlCommand = "select x from OcanStaffFormData x where x.ocanStaffFormId=?1 and x.question=?2 order by ocanStaffFormId Desc";
+
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, ocanStaffFormId);
+		query.setParameter(2, question);
+
+		@SuppressWarnings("unchecked")
+		List<OcanStaffFormData> results=query.getResultList();
+		
+		if(results.isEmpty()) {
+			return null;
+		} else {
+			return results.get(0);
+		}
+			
+		
+	}
+	
 	public List<OcanStaffFormData> findByForm(Integer ocanStaffFormId) {
 
 		String sqlCommand = "select x from OcanStaffFormData x where x.ocanStaffFormId=?1";
@@ -58,5 +78,5 @@ public class OcanStaffFormDataDao extends AbstractDao<OcanStaffFormData>{
 		return (getSingleResultOrNull(query));
 	}
 
-	
+    
 }
