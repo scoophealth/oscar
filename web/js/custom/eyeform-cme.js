@@ -13,13 +13,27 @@
       
      	//link save button
        
-		jQuery("#save_measurements").live('click',function(e){				
+		jQuery("#save_measurements").live('click',function(e){	
 			e.preventDefault();
 			touchColor();
 			
 			//save all measurements
 			var postData = "";			
-			jQuery("input[measurement]").each(function() {				
+			jQuery("input[measurement]").each(function() {					
+				var className = jQuery(this).attr("class");
+								
+				
+				if(className == 'examfieldwhite') {	
+					if(postData.length > 0) {
+						postData += "&";
+					}
+					var name = jQuery(this).attr("measurement");
+					var value = jQuery(this).val();
+					var data = name + "=" + value;
+					postData += data;
+				}
+			});
+			jQuery("textarea[measurement]").each(function() {					
 				var className = jQuery(this).attr("class");
 				if(className == 'examfieldwhite') {				
 					if(postData.length > 0) {
@@ -30,10 +44,9 @@
 					var data = name + "=" + value;
 					postData += data;
 				}
-			});
-
+			});			
 			jQuery.ajax({type:'POST',url:ctx+'/oscarEncounter/MeasurementData.do?action=saveValues&demographicNo='+demographicNo,data:postData,success: function(){
-				alert('Saved.');
+				//alert('Saved.');
 			}});
 		});
 		
@@ -46,6 +59,12 @@
 			//create comma separated list of the measurement types (from attribute)
 			var types='';
 			jQuery("input[measurement]").each(function() {
+				if(types.length > 0) {
+					types += ',';
+				}
+				types += jQuery(this).attr("measurement");
+			});
+			jQuery("textarea[measurement]").each(function() {
 				if(types.length > 0) {
 					types += ',';
 				}

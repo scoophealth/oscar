@@ -243,6 +243,8 @@ span.ge{
 
 </style>
 
+<span style="display:none;"><a id="save_measurements" href="#">SAVE</a></span>
+
 <table border="0" width="100%">
 
 <tr><td><span class="ge">Examination:</span></td></tr>
@@ -444,29 +446,29 @@ span.ge{
         	</tr>
         	<tr>
         	<td ></td>
-        	<td ><input type="text" tabindex="91" name="od_iop_nct" onchange="syncFields(this)" class="examfieldgrey" onfocus="whiteField(this);"/></td>
+        	<td ><input type="text" tabindex="91" measurement="od_iop_nct" onchange="syncFields(this)" class="examfieldgrey" onfocus="whiteField(this);"/></td>
         	<td ></td>
         	<td width="34%" nowrap="nowrap">NCT()</td>
         	<td ></td>
-        	<td ><input type="text" tabindex="93" name="os_iop_nct" onchange="syncFields(this)" class="examfieldgrey" onfocus="whiteField(this);"/></td>
+        	<td ><input type="text" tabindex="93" measurement="os_iop_nct" onchange="syncFields(this)" class="examfieldgrey" onfocus="whiteField(this);"/></td>
         	<td ></td>
         	</tr>
         	<tr>
         	<td ></td>
-        	<td ><input type="text" tabindex="94" name="od_iop_applanation" onchange="syncFields(this)" class="examfieldgrey" onfocus="whiteField(this);"/></td>
+        	<td ><input type="text" tabindex="94" measurement="od_iop_applanation" onchange="syncFields(this)" class="examfieldgrey" onfocus="whiteField(this);"/></td>
         	<td ></td>
         	<td width="34%">Applanation()</td>
         	<td ></td>
-        	<td ><input type="text" tabindex="95" name="os_iop_applanation" onchange="syncFields(this)" class="examfieldgrey" onfocus="whiteField(this);"/></td>
+        	<td ><input type="text" tabindex="95" measurement="os_iop_applanation" onchange="syncFields(this)" class="examfieldgrey" onfocus="whiteField(this);"/></td>
         	<td></td>
         	</tr>
         	<tr>
         	<td></td>
-        	<td><input type="text" tabindex="96" name="od_cct" onchange="syncFields(this)" class="examfieldgrey" onfocus="whiteField(this);"/></td>
+        	<td><input type="text" tabindex="96" measurement="od_cct" onchange="syncFields(this)" class="examfieldgrey" onfocus="whiteField(this);"/></td>
         	<td></td>
         	<td width="34%">CCT</td>
         	<td ></td>
-        	<td><input type="text" tabindex="97" name="os_cct" onchange="syncFields(this)" class="examfieldgrey" onfocus="whiteField(this);"/></td>
+        	<td><input type="text" tabindex="97" measurement="os_cct" onchange="syncFields(this)" class="examfieldgrey" onfocus="whiteField(this);"/></td>
         	<td ></td>
         	</tr>
         </table>
@@ -492,32 +494,32 @@ span.ge{
         	<td width="33%">OS</td>
         	</tr>
         	<tr>
-        	<td width="33%"><input type="text" tabindex="101" name="od_color_vision" onchange="syncFields(this)" class="examfieldgrey" onfocus="whiteField(this);"/></td>
+        	<td width="33%"><input type="text" tabindex="101" measurement="od_color_vision" onchange="syncFields(this)" class="examfieldgrey" onfocus="whiteField(this);"/></td>
         	<td width="34%">color vision</td>
-        	<td width="33%"><input type="text" tabindex="102" name="os_color_vision" onchange="syncFields(this)" class="examfieldgrey" onfocus="whiteField(this);"/></td>
+        	<td width="33%"><input type="text" tabindex="102" measurement="os_color_vision" onchange="syncFields(this)" class="examfieldgrey" onfocus="whiteField(this);"/></td>
         	</tr>
         	<tr>
-        	<td width="33%"><input type="text" tabindex="103" name="od_pupil" onchange="syncFields(this)" class="examfieldgrey" onfocus="whiteField(this);"/></td>
+        	<td width="33%"><input type="text" tabindex="103" measurement="od_pupil" onchange="syncFields(this)" class="examfieldgrey" onfocus="whiteField(this);"/></td>
         	<td width="34%">Pupil</td>
-        	<td width="33%"><input type="text" tabindex="104" name="os_pupil" onchange="syncFields(this)" class="examfieldgrey" onfocus="whiteField(this);"/></td>
+        	<td width="33%"><input type="text" tabindex="104" measurement="os_pupil" onchange="syncFields(this)" class="examfieldgrey" onfocus="whiteField(this);"/></td>
         	</tr>
         	<tr>
-        	<td width="33%"><input type="text" tabindex="105" name="od_amsler_grid" onchange="syncFields(this)" class="examfieldgrey" onfocus="whiteField(this);"/></td>
+        	<td width="33%"><input type="text" tabindex="105" measurement="od_amsler_grid" onchange="syncFields(this)" class="examfieldgrey" onfocus="whiteField(this);"/></td>
         	<td width="34%">Amsler Grid</td>
-        	<td width="33%"><input type="text" tabindex="106" name="os_amsler_grid" onchange="syncFields(this)" class="examfieldgrey" onfocus="whiteField(this);"/></td>
+        	<td width="33%"><input type="text" tabindex="106" measurement="os_amsler_grid" onchange="syncFields(this)" class="examfieldgrey" onfocus="whiteField(this);"/></td>
         	</tr>
         	<tr>
-        	<td width="33%"><input type="text" tabindex="107" name="od_pam" onchange="syncFields(this)" class="examfieldgrey" onfocus="whiteField(this);"/></td>
+        	<td width="33%"><input type="text" tabindex="107" measurement="od_pam" onchange="syncFields(this)" class="examfieldgrey" onfocus="whiteField(this);"/></td>
         	<td width="34%">PAM</td>
-        	<td width="33%"><input type="text" tabindex="108" name="os_pam" onchange="syncFields(this)" class="examfieldgrey" onfocus="whiteField(this);"/></td>
+        	<td width="33%"><input type="text" tabindex="108" measurement="os_pam" onchange="syncFields(this)" class="examfieldgrey" onfocus="whiteField(this);"/></td>
         	</tr>
         	<tr>
         	<td width="33%">
-        	<input type="text" tabindex="109" name="od_confrontation" onchange="syncFields(this)" class="examfieldgrey" onfocus="whiteField(this);"/></td>
+        	<input type="text" tabindex="109" measurement="od_confrontation" onchange="syncFields(this)" class="examfieldgrey" onfocus="whiteField(this);"/></td>
         	
         	<td width="34%">Confrontation</td>
         	<td width="33%">
-        	<input type="text" tabindex="110" name="os_confrontation" onchange="syncFields(this)" class="examfieldgrey" onfocus="whiteField(this);"/></td>
+        	<input type="text" tabindex="110" measurement="os_confrontation" onchange="syncFields(this)" class="examfieldgrey" onfocus="whiteField(this);"/></td>
         	
         	<tr>
         </table>
@@ -536,7 +538,7 @@ span.ge{
             
         </div>
         <div id="s_25" class="slideblock">
-        <textarea name="EOM" tabindex="121" onchange="syncFields(this)" cols="80" rows="2" class="examfieldgrey" onfocus="whiteField(this);"></textarea>
+        <textarea measurement="EOM" tabindex="121" onchange="syncFields(this)" cols="80" rows="2" class="examfieldgrey" onfocus="whiteField(this);"></textarea>
         
         </div>
     </div>

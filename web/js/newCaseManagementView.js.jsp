@@ -1977,7 +1977,7 @@ function savePage(method, chain) {
 	
 	
 	jQuery("[submit_addon]").each(function()
-    		   {
+    		   {    		   	
     		     jQuery("#"+jQuery(this).attr('submit_addon')).click();
     		   }
     		 );
