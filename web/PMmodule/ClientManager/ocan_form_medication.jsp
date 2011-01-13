@@ -7,8 +7,8 @@
 <%
 	int currentDemographicId=Integer.parseInt(request.getParameter("demographicId"));	
 	int prepopulationLevel = OcanForm.PRE_POPULATION_LEVEL_ALL;
-	
-	OcanStaffForm ocanStaffForm=OcanForm.getOcanStaffForm(currentDemographicId, prepopulationLevel);		
+	String ocanType = request.getParameter("ocanType");
+	OcanStaffForm ocanStaffForm=OcanForm.getOcanStaffForm(currentDemographicId, prepopulationLevel,ocanType);		
 
 	int medicationNumber = Integer.parseInt(request.getParameter("medication_num"));
 %>

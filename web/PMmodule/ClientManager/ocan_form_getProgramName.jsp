@@ -7,12 +7,12 @@
 <%
 	int currentDemographicId=Integer.parseInt(request.getParameter("demographicId"));	
 	int prepopulationLevel = OcanForm.PRE_POPULATION_LEVEL_ALL;
-	
+	String ocanType = request.getParameter("ocanType");
 	int centerNumber = Integer.parseInt(request.getParameter("center_num"));
 	String LHIN_code = request.getParameter("LHIN_code");
 	String orgName = request.getParameter("orgName");
 	
-	OcanStaffForm ocanStaffForm=OcanForm.getOcanStaffForm(currentDemographicId, prepopulationLevel);		
+	OcanStaffForm ocanStaffForm=OcanForm.getOcanStaffForm(currentDemographicId, prepopulationLevel,ocanType);		
 	
 %>
 

@@ -37,6 +37,13 @@ $("document").ready(function() {
 		}		
 	});
 	
+	$("#assessment_status").each(function() {
+		if($("#assessment_status").val() == 'Completed') {
+			$("#assessment_status").attr('disabled','disabled');			
+		}
+	});
+	
+			
 	$("#reasonForAssessment").change(function() {
 		if($("#reasonForAssessment").val() == 'OTHR') {
 			$("#reason_for_assessment_other").attr('disabled','');
@@ -45,6 +52,22 @@ $("document").ready(function() {
 			$("#reason_for_assessment_other").attr('disabled','disabled');
 			$("#reason_for_assessment_other").val("");
 		}
+		
+		var demographicId1=$("#clientId").val();;
+		var reasonForAssessment1 = $("#reasonForAssessment").val();
+		var params={demographicId1:demographicId1,reasonForAssessment1:reasonForAssessment1};
+
+		$("#reasonForAssessmentBlock")
+		.load("ocan_check_assessment_type.jsp?", params, function(data){
+			
+			 $('#reasonForAssessmentBlock').hide();
+
+			if(data.match("false")){				
+				alert("You can not create a new initial assessment for this client for now. It already exists in the system.");
+				$("#reasonForAssessment").val('').attr("selected", "selected");
+			}
+		});
+
 	});
 	
 	$("#reasonForAssessment").each(function() {
@@ -54,6 +77,7 @@ $("document").ready(function() {
 			$("#reason_for_assessment_other").attr('disabled','disabled');
 			$("#reason_for_assessment_other").val("");
 		}
+		
 	});
 	
 	$("#consumerSelfAxCompleted").change(function() {
@@ -502,7 +526,7 @@ $("document").ready(function() {
 
 function submitOcanForm() {
 	var status = document.getElementById('assessment_status').value;
-	if(status == 'Active') {
+	if(status != 'Completed') {
 		$('#ocan_staff_form').unbind('submit').submit();		
 		return true;
 	}
@@ -510,7 +534,7 @@ function submitOcanForm() {
 		alert('Validation failed. Please check all required fields highlighted');
 		return false;
 	}
-
+	
 	if(!validateStartAndCompletionDates()) {
 		return false;
 	}
@@ -537,13 +561,7 @@ function submitOcanForm() {
 			return false;
 		}		
 	}
-	/*
-	if($("#clientDOBType").val().length == 0) {	
-		alert('Date of Birth - Please choose the type of date of birth');
-		$("#clientDOBType").focus();
-		return false;				
-	}
-	*/
+	
 	
 	var newCount = $("#center_count").val(); 
 	var ocanLeadNumber = 0;
@@ -606,8 +624,8 @@ function submitOcanForm() {
 				$("#otherReason").focus();
 				return false;
 			}
-		
 	}	
+		
 	
 	
 	
@@ -729,7 +747,16 @@ function submitOcanForm() {
 	}
 	
 	
-	//alert('submitting');
+	if($("#assessment_status").val() == 'Completed') {
+		var r = comfirm("Are you sure you have completed this assessment?");
+		if(r == true) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+		
 	return true;
 }
 

@@ -359,7 +359,7 @@ New User Created Form:&nbsp;
 <div class="tabs">
 <table cellpadding="3" cellspacing="0" border="0">
 	<tr>
-		<th title="Programs">Ocan Staff Assessment Form History</th>
+		<th title="Programs">FULL Ocan Staff Assessment Form History</th>
 	</tr>
 </table>
 </div>
@@ -375,7 +375,7 @@ New User Created Form:&nbsp;
 		</tr>
 	</thead>
 	<c:forEach var="form" items="${ocanStaffForms}">
-		<tr>		
+		<tr>			
 			<td width="20%"><c:out value="${form.created}" /></td>
 			<td width="10%"><c:out value="${form.formattedStartDate}" /></td>
 			<td width="10%"><c:out value="${form.formattedCompletionDate}" /></td>	
@@ -384,12 +384,13 @@ New User Created Form:&nbsp;
 			<c:set var="form" value="${form}" scope="request" />
 			<%
 				OcanStaffForm ocanStaffForm=(OcanStaffForm)request.getAttribute("form");
-				String ocanStaffFormUrl="ClientManager/ocan_form.jsp?demographicId="+currentDemographic.getDemographicNo()+ "&ocanStaffFormId="+ocanStaffForm.getId();
+				String fullOcanStaffFormUrl="ClientManager/ocan_form.jsp?ocanType=FULL&demographicId="+currentDemographic.getDemographicNo()+ "&ocanStaffFormId="+ocanStaffForm.getId();
+				
 			%>
 			<!--  
 			<td><input type="button" value="Print Preview" onclick="printOcanStaffForm('<c:out value="${client.demographicNo}" />','<c:out value="${form.id}" />')" /></td>	
 		-->
-			<td><input type="button" value="Print Preview" onclick="document.location='<%=ocanStaffFormUrl+"&print=true"%>'" /></td>
+			<td><a href="<%=fullOcanStaffFormUrl%>">Update FULL OCAN Data</a><input type="button" value="Print Preview" onclick="document.location='<%=fullOcanStaffFormUrl+"&print=true"%>'" /></td>
 		</tr>
 	</c:forEach>
 </table>
@@ -400,7 +401,7 @@ New User Created Form:&nbsp;
 <div class="tabs">
 <table cellpadding="3" cellspacing="0" border="0">
 	<tr>
-		<th title="Programs">Ocan Consumer Self-Assessment Form History</th>
+		<th title="Programs">FULL Ocan Consumer Self-Assessment Form History</th>
 	</tr>
 </table>
 </div>
@@ -410,19 +411,22 @@ New User Created Form:&nbsp;
 			<th>Creation Date</th>
 			<th>Start Date</th>
 			<th>Completion Date</th>
-			<th>Staff</th>
-			<th>Status</th>
+			<th>Staff</th>			
 			<th>Actions</th>
 		</tr>
 	</thead>
-	<c:forEach var="form" items="${ocanClientForms}">
+	<c:forEach var="form" items="${ocanStaffForms}">
 		<tr>		
 			<td width="20%"><c:out value="${form.created}" /></td>
-			<td width="10%"><c:out value="${form.formattedStartDate}" /></td>
-			<td width="10%"><c:out value="${form.formattedCompletionDate}" /></td>			
+			<td width="10%"><c:out value="${form.formattedClientStartDate}" /></td>
+			<td width="10%"><c:out value="${form.formattedClientCompletionDate}" /></td>			
 			<td><c:out value="${form.providerName}" /></td>
-			<td><c:out value="${form.assessmentStatus}" /></td>
-			<td><input type="button" value="Print Preview" onclick="printOcanClientForm('<c:out value="${client.demographicNo}" />','<c:out value="${form.id}" />')" /></td>	
+			<c:set var="form" value="${form}" scope="request" />
+			<%
+				OcanStaffForm ocanStaffForm=(OcanStaffForm)request.getAttribute("form");
+				String fullOcanClientFormUrl="ClientManager/ocan_client_form.jsp?ocanType=FULL&demographicId="+currentDemographic.getDemographicNo()+ "&ocanStaffFormId="+ocanStaffForm.getId();			
+			%>
+			<td><a href="<%=fullOcanClientFormUrl%>">Update FULL OCAN Data</a><input type="button" value="Print Preview" onclick="printOcanClientForm('<c:out value="${client.demographicNo}" />','<c:out value="${form.id}" />')" /></td>	
 		</tr>
 	</c:forEach>
 </table>

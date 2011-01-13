@@ -1,5 +1,5 @@
 
-<%@page import="org.oscarehr.common.model.OcanClientForm"%>
+<%@page import="org.oscarehr.common.model.OcanStaffForm"%>
 <%@page import="org.oscarehr.PMmodule.web.OcanFormAction"%>
 <%@page import="org.oscarehr.util.WebUtils"%>
 <%@page import="java.util.Arrays"%>
@@ -12,35 +12,41 @@
 	Integer clientId=Integer.valueOf(parameters.get("clientId")[0]);	
 	parameters.remove("clientId");
 	
-	String startDate = parameters.get("startDate")[0];
-	String completionDate = parameters.get("completionDate")[0];
+	boolean signed=WebUtils.isChecked(request, "signed");	
+	parameters.remove("signed");
 	
-	String assessmentStatus = parameters.get("assessment_status")[0];
+	String startDate = parameters.get("clientStartDate")[0];
+	String completionDate = parameters.get("clientCompletionDate")[0];
 	
+	//String assessmentStatus = parameters.get("assessment_status")[0];
+	String ocanStaffFormId = parameters.get("ocanStaffFormId")[0];
 
-	OcanClientForm ocanClientForm=OcanFormAction.createOcanClientForm(clientId);
+	OcanStaffForm ocanClientForm=OcanFormAction.createOcanStaffForm(ocanStaffFormId,clientId,signed);
 	ocanClientForm.setLastName(request.getParameter("lastName"));
 	ocanClientForm.setFirstName(request.getParameter("firstName"));	
-	ocanClientForm.setDateOfBirth(request.getParameter("dateOfBirth"));	
-	ocanClientForm.setAssessmentStatus(assessmentStatus);
+	//ocanClientForm.setDateOfBirth(request.getParameter("dateOfBirth"));
+	ocanClientForm.setClientDateOfBirth(request.getParameter("client_date_of_birth"));
+	ocanClientForm.setOcanType(request.getParameter("ocanType"));
 
 	java.text.SimpleDateFormat formatter = new java.text.SimpleDateFormat("yyyy-MM-dd");
 	
 	try {
-		ocanClientForm.setStartDate(formatter.parse(startDate));
+		ocanClientForm.setClientStartDate(formatter.parse(startDate));
+		ocanClientForm.setStartDate(formatter.parse(request.getParameter("startDate")));
 	}catch(java.text.ParseException e){}
 	try {
-		ocanClientForm.setCompletionDate(formatter.parse(completionDate));
+		ocanClientForm.setClientCompletionDate(formatter.parse(completionDate));
+		ocanClientForm.setCompletionDate(formatter.parse(request.getParameter("completionDate")));
 	}catch(java.text.ParseException e){}
 	
 	
-	OcanFormAction.saveOcanClientForm(ocanClientForm);
+	OcanFormAction.saveOcanStaffForm(ocanClientForm);
 	
 	parameters.remove("lastName");
 	parameters.remove("firstName");	
-	parameters.remove("dateOfBirth");
-	parameters.remove("startDate");
-	parameters.remove("completionDate");
+	parameters.remove("client_date_of_birth");
+	parameters.remove("clientStartDate");
+	parameters.remove("clientCompletionDate");
 	
 	
 	for (Map.Entry<String, String[]> entry : parameters.entrySet())
@@ -49,7 +55,7 @@
 		{
 			for (String value : entry.getValue())
 			{
-				OcanFormAction.addOcanClientFormData(ocanClientForm.getId(), entry.getKey(), value);				
+				OcanFormAction.addOcanStaffFormData(ocanClientForm.getId(), entry.getKey(), value);				
 			}
 		}
 	}

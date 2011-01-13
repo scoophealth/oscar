@@ -8,16 +8,18 @@
 
 
 <%
-	int currentDemographicId=Integer.parseInt(request.getParameter("demographicId"));	
+	int currentDemographicId=Integer.parseInt(request.getParameter("demographicId"));
+	String ocanType = request.getParameter("ocanType");
 	int prepopulationLevel = OcanForm.PRE_POPULATION_LEVEL_ALL;
 	
 	OcanStaffForm ocanStaffForm = null;
 	if(request.getParameter("ocanStaffFormId")!=null && request.getParameter("ocanStaffFormId")!="") {
 		ocanStaffForm=OcanForm.getOcanStaffForm(Integer.valueOf(request.getParameter("ocanStaffFormId")));
 	}else {
-		ocanStaffForm=OcanForm.getOcanStaffForm(currentDemographicId,prepopulationLevel);		
+		ocanStaffForm=OcanForm.getOcanStaffForm(currentDemographicId,prepopulationLevel,ocanType);		
 	}
 	
+
 	boolean printOnly=request.getParameter("print")!=null;
 	if (printOnly) request.setAttribute("noMenus", true);
 	
@@ -211,7 +213,7 @@ $("document").ready(function() {
 		$("#summary_of_actions_domains").val(domains);
 		var demographicId='<%=currentDemographicId%>';
 		$.get('ocan_form_summary_of_actions.jsp?demographicId='+demographicId+'&size='+count+'&domains='+domains, function(data) {
-			  $("#summary_of_actions_block").innerHTML=data;					 
+			  $("#summary_of_actions_block").append(data);					 
 			});		
 	});
 	
@@ -274,8 +276,6 @@ function changeNumberOfReferrals() {
 		}
 	}
 }
-
-
 
 
 </script>
@@ -363,12 +363,23 @@ $("document").ready(function(){
 
 
 <form id="ocan_staff_form" name="ocan_staff_form" action="ocan_form_action.jsp" method="post" onsubmit="return submitOcanForm()">
-	<input type="hidden" id="assessment_status" name="assessment_status" value=""/>
-	<h3>OCAN Staff Assessment (v2.0)</h3>
-
+	<h3>FULL OCAN 2.0 Staff Assessment</h3>	
 	<br />
-	
+	<input type="hidden" name="client_date_of_birth" id="client_date_of_birth" value="<%=ocanStaffForm.getClientDateOfBirth()%>" class="{validate: {required:true}}"/>
+	<input type="hidden" id="clientStartDate" name="clientStartDate" value="<%=ocanStaffForm.getFormattedClientStartDate()%>"/>
+	<input type="hidden" id="clientCompletionDate" name="clientCompletionDate" value="<%=ocanStaffForm.getFormattedClientCompletionDate()%>"/>
+	<input type="hidden" name="ocanStaffFormId" id="ocanStaffFormId" value="<%=ocanStaffForm.getId()%>" class="{validate: {required:true}}"/>
+		
 	<table style="margin-left:auto;margin-right:auto;background-color:#f0f0f0;border-collapse:collapse">
+		
+		<tr>
+			<td class="genericTableHeader">OCAN Assessment Status</td>
+			<td class="genericTableData">
+				<select name="assessment_status" id="assessment_status">
+					<%=OcanForm.renderAsAssessmentStatusSelectOptions(ocanStaffForm)%>
+				</select>							
+			</td>			
+		</tr>
 		<tr>
 			<td class="genericTableHeader">Start Date</td>
 			<td class="genericTableData">
@@ -382,6 +393,12 @@ $("document").ready(function(){
 				<input id="completionDate" name="completionDate" onfocus="this.blur()" readonly="readonly" class="{validate: {required:true}}" type="text" value="<%=ocanStaffForm.getFormattedCompletionDate()%>"> <img title="Calendar" id="cal_completionDate" src="../../images/cal.gif" alt="Calendar" border="0"><script type="text/javascript">Calendar.setup({inputField:'completionDate',ifFormat :'%Y-%m-%d',button :'cal_completionDate',align :'cr',singleClick :true,firstDay :1});</script>					
 			</td>
 		</tr>
+		
+		
+		<tr><td colspan="2">
+		<h3>Consumer Information Summary</h3>
+		</td></tr>
+		
 		<tr>
 			<td colspan="2">OCAN Lead Assessment</td>
 		</tr>
@@ -397,6 +414,16 @@ $("document").ready(function(){
 		<tr>
 			<td colspan="2">Reason for OCAN</td>
 		</tr>
+		<tr>
+			<td colspan="2">			
+				<div id="reasonForAssessmentBlock">
+							
+							
+				
+				</div>
+			</td>
+		</tr>
+		
 		<tr>
 			<td class="genericTableHeader">Reason for OCAN</td>
 			<td class="genericTableData">
@@ -537,7 +564,8 @@ $("document").ready(function(){
 			<td class="genericTableData">
 				<input type="text" name="email" id="email" value="<%=ocanStaffForm.getEmail()%>" size="64" maxlength="64"/>
 			</td>
-		</tr>	
+		</tr>
+		
 		<tr>
 			<td class="genericTableHeader">Date of Birth (YYYY-MM-DD)</td>
 			<td class="genericTableData">
@@ -1614,7 +1642,11 @@ $("document").ready(function(){
 			<td class="genericTableData">
 						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"commments",5,50,prepopulationLevel)%>
 			</td>
-		</tr>						
+		</tr>
+		
+		<tr><td colspan="2">	
+		<h3>Staff Assessment</h3>
+		</td></tr>					
 	 	
 		<tr>
 			<td colspan="2">1. Accommodation</td>
@@ -3706,7 +3738,7 @@ This information is collected from a variety of sources, including self-report, 
 			<td colspan="2">Summary of Actions</td>
 		</tr>	
 		<tr>
-			<td colspan="2"><input type="button" value="Generate Summary" name="generate_summary_of_actions" id="generate_summary_of_actions"/></td>
+			<td colspan="2"><input type="button" value="Generate Summary" name="generate_summary_of_actions" id="generate_summary_of_actions" /></td>
 			<%=OcanForm.renderAsHiddenField(ocanStaffForm.getId(), "summary_of_actions_count",prepopulationLevel)%>
 			<%=OcanForm.renderAsHiddenField(ocanStaffForm.getId(), "summary_of_actions_domains",prepopulationLevel)%>		
 		</tr>
@@ -3744,17 +3776,17 @@ This information is collected from a variety of sources, including self-report, 
 		<tr style="background-color:white">
 			<td colspan="2">
 				<br />
-				<input type="hidden" name="clientId" value="<%=currentDemographicId%>" />
+				<input type="hidden" name="clientId" id="clientId" value="<%=currentDemographicId%>" />
+				<input type="hidden" name="ocanType" id="ocanType" value="<%=ocanType%>" />
 				Sign <input type="checkbox" name="signed" />
 				&nbsp;&nbsp;&nbsp;&nbsp;
 				<%
 					if (!printOnly)
 					{
 						%>
-				<input type="submit" name="submit" value="Submit"  onclick="document.getElementById('assessment_status').value='Complete';"/>
+				<input type="submit" name="submit" value="Save"/>
 				&nbsp;&nbsp;&nbsp;&nbsp;
-				<input type="submit" name="submit" value="Save Draft"  onclick="document.getElementById('assessment_status').value='Active'; document.getElementById('completionDate').value=''"/>
-				&nbsp;&nbsp;&nbsp;&nbsp;
+				
 				<%
 					}
 				%>
