@@ -5,7 +5,7 @@ This document doesn't isn't required in that if you already have experience usin
 This document is very brief, you should have a basic understanding of GIT before doing this. This basically just explains the tools setup to use GIT, not what GIT is. You need to understand the concept of remote and local repositories.
 
 -------------------
-Register For Gerrit
+Register For Gerrit (required)
 -------------------
 Go to the gerrit web site and register your user. The gerrit url should be provided. For this example I will use https://source.oscartools.org:8080 and my email r6squeegee@gmail.com (you'll need to use your own where ever you see my account name).
 
@@ -25,13 +25,13 @@ At this point you will have an account but to prevent spam/bots we have to manua
 At this point, if your eclipse was already running, you need to stop it and start it again. Eclipse caches ssh key information. (really, it does)
 
 ------
-Plugin
+Plugin (required if using eclipse)
 ------
 Follow the instructions at http://www.eclipse.org/egit/ to install the git eclipse plugin. At the time of this writing I was using 0.9.3.
 
 
 ------------
-~/.gitconfig
+~/.gitconfig (required, even if using git from command line)
 ------------
 You need a file in your home directory calls .gitconfig, in that file you need at least the [user] section, below is my .gitconfig for reference
 	[user]
@@ -44,8 +44,10 @@ As a note, you can also edit this file in your eclipse->preferences->team->git, 
 
 
 --------------
-Add Repository
+Add Repository 
 --------------
+Also known as "cvs checkout" or "git clone ssh://r6squeegee@source.oscartools.org:29418/test".
+
 On the package explorer tab (or what ever your favourite explorer is), right click and select import -> "projects from git" -> clone.
 
 The repository details should be provided for your git/gerrit installation, for my example I will use "ssh://r6squeegee@source.oscartools.org:29418/test". Just continue with the screen flow, most options should be obvious or defaults should be fine.
@@ -58,20 +60,19 @@ Notice on your package explorer you new have the new project like any other prev
 ---------------
 Getting updates
 ---------------
-To get updates from the remote repository. First right click on the project and do a team -> fetch from. 
+Also known as "cvs update" or "git pull".
 
-If this is the first time you've done this you'll need to configure the remote repository. On the first screen my option is "origin: ssh//r6squeegee@localhost:29418/foo". On the next screen just accept the defaults. If you follow the next dialogs it will tell you if anything was retrieved.
+The closest thing to a CVS update is a git pull. It will retrieve the latest from the server and merge them into your working directory.
 
-At this point notice your work place hasn't changed. The remote changes were put into your local repository but your local work space hasn't been affected.
-
-Right click on the project and go to team -> merge. Click on origin/master on the remote branches. Now you'll see your local work space with the changes.
-
-As a short cut, "team -> pull" will do all the above (fetch from and a merge) in one step 
+In more detail, a pull actually does a fetch and then a merge for you. To do this manally/separately :
+Right click on the project and do a team -> fetch from. If this is the first time you've done this you'll need to configure the remote repository. On the first screen my option is "origin: ssh//r6squeegee@localhost:29418/foo". On the next screen just accept the defaults. If you follow the next dialogs it will tell you if anything was retrieved. At this point notice your work place hasn't changed. The remote changes were put into your local repository but your local work space hasn't been affected. Right click on the project and go to team -> merge. Click on origin/master on the remote branches. Now you'll see your local work space with the changes.
 
 
 --------------
 Making changes
 --------------
+Also known as "cvs commit" or "git commit -a; git push".
+
 Now say you've created new files in the project and altered some existing ones.
 
 If you right click on the project, go to team -> commit. You'll see the commit screen. Notice on eclipse it will list the tracked and untracked file and by default they will be "git added" and "git committed" at the same time. Now when you commit, it's commited locally. This means no one else except you has these changes still.
@@ -93,13 +94,13 @@ When to commit locally and when to push remotely
 ------------------------------------------------
 Generally speaking you should commit locally for independent small units of work. So as an example if you are working on a feature, you may have incremental phases in completion of that feature. You should commit at each phase, the code should at least compile and run.
 
-Generally speaking pushing remotely can be done for any commit. There is generally no need to bundle up multiple commits into one big push. The difference between a push and commit maybe more important if you're working offline as you can only push while online.
+Generally speaking pushing remotely can be done for any commit. There is generally no need to bundle up multiple commits into one big push. The difference between a push and commit maybe more important if you're working off line as you can only push while online.
 
 The reason for the above is because of the review model of gerrit. You don't want to do one big commit because it will be a nightmare to review and approve. Think about the example of converting 300 DBHandler calls into maybe 100 JPA objects. If that was 1 commit, it would take for ever to review and verify that commit. If you made 300 separate commits, the review process could at least proceed incrementally and in manageable size chunks. The push is for a similar reason, if you had 300 separate commits and you pushed all at once at the end of 6 months, there will be a sudden flood of 300 commits to review and it would be a huge backlog. If you pushed those 300 commits over a 6 month period, review of the commits could have started as soon as the first push was done. 
 
 
 --------------
-ChangeId Hooks
+ChangeId Hooks (more advanced optional topic)
 --------------
 Change ID Hook will add a change ID to every commit you make. The benefit of this is if you change / fix a commit and resubmit it, gerrit will use the changeId to replace the previous commit. 
 
@@ -110,7 +111,7 @@ For Eclipse, the newer versions of the git plugin has a check box option on the 
 
 
 -----------------------
-Fixing previous commits
+Fixing previous commits (more advanced optional topic)
 -----------------------
 The easiest way to fix a previous commit is to continue working the way we did in CVS... i.e. make another commit with the changes/fixes. For those who are more adventurous the following is a native git/gerrit routine to do this but the commands are also not supported in eclipse.
 
