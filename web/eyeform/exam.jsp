@@ -348,11 +348,11 @@ span.ge{
         <div class="title">
             <a style="font-weight: bold;" tabindex="60" href="javascript:void(0)" id="a_22" onclick="togglediv(this);">Vision Manifest:</a>
             <span>&nbsp;&nbsp;</span>
-            <c:if test="${requestScope.hisFlag=='false'}">
+            
             <a href="javascript:void(0)" tabindex="61" onclick="copyAR();"> [copy AR] </a>
             <span>&nbsp;&nbsp;</span>
             <a href="javascript:void(0)" tabindex="62" onclick="copySpecs();"> [copy Specs] </a>
-            </c:if>
+           
         </div>
         <div id="s_22" class="slideblock">
             <table class="exam" width="100%">
@@ -536,7 +536,7 @@ span.ge{
             
         </div>
         <div id="s_25" class="slideblock">
-        <input type="text"area name="EOM" tabindex="121" onchange="syncFields(this)" cols="100" rows="2" class="examfieldgrey" onfocus="whiteField(this);"></input type="text"area>
+        <textarea name="EOM" tabindex="121" onchange="syncFields(this)" cols="80" rows="2" class="examfieldgrey" onfocus="whiteField(this);"></textarea>
         
         </div>
     </div>
@@ -551,10 +551,10 @@ span.ge{
         <div class="title">
             <a style="font-weight: bold;" tabindex="125" href="javascript:void(0)" id="a_26" onclick="togglediv(this);">Anterior Segment:</a>
             <span>&nbsp;&nbsp;</span>
-            <c:if test="${requestScope.hisFlag=='false'}">
+
             <a href="javascript:void(0)" tabindex="126" onclick="setAnterior();return false;">[normal]</a>
             <a href="javascript:void(0)" tabindex="127" onclick="clearAnterior();return false;">[clear]</a>            
-            </c:if>
+
         </div>
         <div id="s_26" class="slideblock">
         <table class="exam" width="100%">
@@ -564,19 +564,19 @@ span.ge{
         	<td>OS<td>
         	</tr>
         	<tr>
-        	<td><input type="text" size="6" tabindex="130" measurement="od_cornea" onchange="syncFields(this)" class="examfieldgrey" onfocus="whiteField(this);"/></td>
+        	<td><input type="text" size="25" tabindex="130" measurement="od_cornea" onchange="syncFields(this)" class="examfieldgrey" onfocus="whiteField(this);"/></td>
         	<td>Cornea</td>
-        	<td><input type="text" size="6" tabindex="131" measurement="os_cornea" onchange="syncFields(this)" class="examfieldgrey" onfocus="whiteField(this);"/><td>
+        	<td><input type="text" size="25" tabindex="131" measurement="os_cornea" onchange="syncFields(this)" class="examfieldgrey" onfocus="whiteField(this);"/><td>
         	</tr>
         	<tr>
-        	<td><input type="text" size="6" tabindex="132" measurement="od_conjuctiva_sclera" onchange="syncFields(this)" class="examfieldgrey" onfocus="whiteField(this);"/></td>
+        	<td><input type="text" size="25" tabindex="132" measurement="od_conjuctiva_sclera" onchange="syncFields(this)" class="examfieldgrey" onfocus="whiteField(this);"/></td>
         	<td>Conjuctiva/Sclera</td>
-        	<td><input type="text" size="6" tabindex="133" measurement="os_conjuctiva_sclera" onchange="syncFields(this)" class="examfieldgrey" onfocus="whiteField(this);"/><td>
+        	<td><input type="text" size="25" tabindex="133" measurement="os_conjuctiva_sclera" onchange="syncFields(this)" class="examfieldgrey" onfocus="whiteField(this);"/><td>
         	</tr>
         	<tr>
-        	<td><input type="text" size="6"  tabindex="134" measurement="od_anterior_chamber" onchange="syncFields(this)" class="examfieldgrey" onfocus="whiteField(this);"/></td>
+        	<td><input type="text" size="25"  tabindex="134" measurement="od_anterior_chamber" onchange="syncFields(this)" class="examfieldgrey" onfocus="whiteField(this);"/></td>
         	<td>Anterior Chamber</td>
-        	<td><input type="text"  size="6" tabindex="135" measurement="os_anterior_chamber" onchange="syncFields(this)" class="examfieldgrey" onfocus="whiteField(this);"/><td>
+        	<td><input type="text"  size="25" tabindex="135" measurement="os_anterior_chamber" onchange="syncFields(this)" class="examfieldgrey" onfocus="whiteField(this);"/><td>
         	</tr>
         	<tr>
         	<td>
@@ -632,15 +632,15 @@ span.ge{
         	</tr>
         	
         	<tr>
-        	<td><input type="text" size="6" tabindex="146" measurement="od_iris" onchange="syncFields(this)" class="examfieldgrey" onfocus="whiteField(this);"/></td>
+        	<td><input type="text" size="25" tabindex="146" measurement="od_iris" onchange="syncFields(this)" class="examfieldgrey" onfocus="whiteField(this);"/></td>
         	<td>Iris</td>
-        	<td><input type="text" size="6" tabindex="147" measurement="os_iris" onchange="syncFields(this)" class="examfieldgrey" onfocus="whiteField(this);"/><td>
+        	<td><input type="text" size="25" tabindex="147" measurement="os_iris" onchange="syncFields(this)" class="examfieldgrey" onfocus="whiteField(this);"/><td>
         	</tr>
         	
         	<tr>
-        	<td><input type="text" size="6" tabindex="148" measurement="od_lens" onchange="syncFields(this)" class="examfieldgrey" onfocus="whiteField(this);"/></td>
+        	<td><input type="text" size="25" tabindex="148" measurement="od_lens" onchange="syncFields(this)" class="examfieldgrey" onfocus="whiteField(this);"/></td>
         	<td>Lens</td>
-        	<td><input type="text" size="6" tabindex="149" measurement="os_lens" onchange="syncFields(this)" class="examfieldgrey" onfocus="whiteField(this);"/><td>
+        	<td><input type="text" size="25" tabindex="149" measurement="os_lens" onchange="syncFields(this)" class="examfieldgrey" onfocus="whiteField(this);"/><td>
         	</tr>
         	
         	
@@ -656,10 +656,10 @@ span.ge{
         <div class="title">
             <a style="font-weight: bold;" tabindex="160" href="javascript:void(0)" id="a_27" onclick="togglediv(this);">Posterior Segment:</a>
             <span>&nbsp;&nbsp;</span>
-            <c:if test="${requestScope.hisFlag=='false'}">
+            
             <a href="javascript:void(0)" tabindex="161" onclick="setPosterior();return false;">[normal]</a>
             <a href="javascript:void(0)" tabindex="162" onclick="clearPosterior();return false;">[clear]</a>
-            </c:if>
+           
         </div>
         <div id="s_27" class="slideblock">
         <table class="exam" width="100%">
@@ -705,10 +705,9 @@ span.ge{
         <div class="title">
             <a style="font-weight: bold;" tabindex="175" href="javascript:void(0)" id="a_28" onclick="togglediv(this);">External:</a>
             <span>&nbsp;&nbsp;</span>
-            <c:if test="${requestScope.hisFlag=='false'}">
             <a href="javascript:void(0)" tabindex="176" onclick="setExternal();return false;">[normal]</a>
             <a href="javascript:void(0)" tabindex="177" onclick="clearExternal();return false;">[clear]</a>
-            </c:if>
+            
         </div>
         <div id="s_28" class="slideblock">
         <table class="exam" width="100%">
