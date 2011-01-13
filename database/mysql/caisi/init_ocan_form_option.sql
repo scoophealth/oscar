@@ -27,6 +27,10 @@ INSERT INTO `OcanFormOption` VALUES (1203,'1.2','Number Of Centres','5','5'), (1
 INSERT INTO `OcanFormOption` VALUES (1209,'1.2','Symptoms Checklist','2073000','Delusions'), (1210,'1.2','Symptoms Checklist','247783009','Grandiosity'),(1211,'1.2','Symptoms Checklist','7011001','Hallucinations');
 INSERT INTO `OcanFormOption` VALUES (1212,'1.2','Diagnostic - Other Illness','OCIL','Other Chronic Illnesses');
 
+INSERT INTO `OcanFormOption` VALUES (1213,'1.2','OCAN Assessment Status','In Progress','In Progress');
+INSERT INTO `OcanFormOption` VALUES (1214,'1.2','OCAN Assessment Status','Completed','Completed');
+INSERT INTO `OcanFormOption` VALUES (1215,'1.2','OCAN Assessment Status','Cancelled','Cancelled');
+
 
 /*!40000 ALTER TABLE `OcanFormOption` ENABLE KEYS */;
 UNLOCK TABLES;
