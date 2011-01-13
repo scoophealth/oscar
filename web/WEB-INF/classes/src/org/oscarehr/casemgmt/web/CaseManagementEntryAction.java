@@ -2307,7 +2307,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 				if(request.getParameter(name).equals("true")) {
 					ExtPrint printBean = (ExtPrint)SpringUtils.getBean(name);
 					if(printBean != null) {
-						printBean.printExt(printer);			
+						printBean.printExt(printer,request);			
 					}
 				}
 			}

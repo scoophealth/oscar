@@ -89,7 +89,9 @@
        popColumn(ctx + "/CaseManagementView.do?hc=009999&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=OcularMedication&title="+ocularMedsLabel+"&cmd=OcularMedication","OcularMedication","OcularMedication", "rightNavBar", this);
        
        addPrintOption('Measurements','extPrintMeasurements');
-   
+       addPrintOption('OcularProcedures','extPrintOcularProcedures');
+       addPrintOption('SpecsHistory','extPrintSpecsHistory');
+       
        jQuery("form[name='caseManagementEntryForm']").append('<span submit_addon="save_measurements"></span>');
        
        jQuery.ajax({url:ctx+"/eyeform/NoteData.do?method=getAppointmentReason&appointmentNo="+appointmentNo,dataType: "html",success: function(data) {

@@ -402,6 +402,9 @@ try
 	<input type="hidden" name="printCPP" id="printCPP" value="false">
 	<input type="hidden" name="printRx" id="printRx" value="false">
 	<input type="hidden" name="encType" id="encType" value="">
+	<input type="hidden" name="pStartDate" id="pStartDate" value="">
+	<input type="hidden" name="pEndDate" id="pEndDate" value="">
+	
 
 	<div id="mainContent" style="background-color: #FFFFFF; width: 100%; margin-right: -2px; display: inline; float: left;">
 	<div id="issueList" style="background-color: #FFFFFF; height: 440px; width: 350px; position: absolute; z-index: 1; display: none; overflow: auto;">

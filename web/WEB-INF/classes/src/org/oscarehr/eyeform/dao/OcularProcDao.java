@@ -17,6 +17,10 @@ public class OcularProcDao extends HibernateDaoSupport {
 		return getHibernateTemplate().find("from OcularProc op where op.demographicNo = ?",demographicNo);
 	}
 	
+	public List<OcularProc> getByDateRange(int demographicNo,Date startDate, Date endDate) {
+		return getHibernateTemplate().find("from OcularProc op where op.demographicNo = ? and op.date >= ? and op.date <=?",new Object[] {demographicNo,startDate,endDate});
+	}
+	
 	public List<OcularProc> getByAppointmentNo(int appointmentNo) {
 		return getHibernateTemplate().find("from OcularProc op where op.appointmentNo = ?",appointmentNo);
 	}

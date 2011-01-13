@@ -1,10 +1,12 @@
 package oscar.oscarEncounter.oscarMeasurements.dao;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -143,4 +145,27 @@ public class MeasurementsHibernateDao extends HibernateDaoSupport implements
         	}
         	return map;
         }
+        
+        public List<Measurements> getMeasurements(String demo) {
+        	 
+        	String queryStr = "From Measurements m WHERE m.demographicNo = " + demo +" ORDER BY m.dateObserved DESC";
+        	logger.info(queryStr);
+
+        	List<Measurements> rs = getHibernateTemplate().find(queryStr);
+
+        	
+        	return rs;        	
+        }
+    	
+    	public List<Measurements> getMeasurements(String demo,Date startDate, Date endDate) {
+    		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        	
+        	
+        	String queryStr = "From Measurements m WHERE m.demographicNo = " + demo +" AND m.dateObserved >= '"+formatter.format(startDate)+"' AND m.dateObserved <= '"+formatter.format(endDate)+"' ORDER BY m.dateObserved DESC";
+        	logger.info(queryStr);
+
+        	List<Measurements> rs = getHibernateTemplate().find(queryStr);
+
+        	return rs;        	        	
+    	}
 }
