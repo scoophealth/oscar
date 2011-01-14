@@ -185,10 +185,13 @@ public boolean patientHasOutstandingPrivateBills(String demographicNo){
     String newticklerwarningwindow=null;
     String default_pmm=null;
     String programId_oscarView=null;
-    
+	String ocanWarningWindow=null;
+	
 if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
 	newticklerwarningwindow = (String) session.getAttribute("newticklerwarningwindow");
 	default_pmm = (String)session.getAttribute("default_pmm");
+	ocanWarningWindow = (String)session.getAttribute("ocanWarningWindow");
+	
 	//Disable schedule view associated with the program
 	//Made the default program id "0";
 	//programId_oscarView= (String)session.getAttribute("programId_oscarView");
@@ -607,17 +610,22 @@ popupPage(300,400, "receptionistfindprovider.jsp?pyear=" +p+ "&pmonth=" +m+ "&pd
 
 //popup a new tickler warning window
 function load() {
-if ("<%=newticklerwarningwindow%>"=="enabled") {
-if (IsPopupBlocker()) {
-    alert("You have a popup blocker, so you can not see the new tickler warning window. Please disable the pop blocker in your google bar, yahoo bar or IE ...");
-} else{
-var pu=window.open("../UnreadTickler.do",'viewUnreadTickler',"height=120,width=250,location=no,scrollbars=no,menubars=no,toolbars=no,resizable=yes,top=500,left=700");
-if(window.focus)
-	pu.focus();
-}
-}
-popupPageOfChangePassword();
-refreshAllTabAlerts();
+	var ocan = "<%=ocanWarningWindow%>";
+	if(ocan!="null") {
+		alert(ocan);
+	}
+	if ("<%=newticklerwarningwindow%>"=="enabled") {
+		if (IsPopupBlocker()) {
+		    alert("You have a popup blocker, so you can not see the new tickler warning window. Please disable the pop blocker in your google bar, yahoo bar or IE ...");
+		} else{
+				var pu=window.open("../UnreadTickler.do",'viewUnreadTickler',"height=120,width=250,location=no,scrollbars=no,menubars=no,toolbars=no,resizable=yes,top=500,left=700");
+				if(window.focus)
+					pu.focus();
+			}
+	}
+
+	popupPageOfChangePassword();
+	refreshAllTabAlerts();
 }
 
 function IsPopupBlocker() {
