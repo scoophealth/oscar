@@ -8267,3 +8267,17 @@ CREATE TABLE `testbookrecord` (
   `status` varchar(2) ,
   PRIMARY KEY (`id`)
 );
+
+
+CREATE TABLE `issue` (
+  `issue_id` int(10) NOT NULL auto_increment,
+  `code` varchar(20) NOT NULL,
+  `description` varchar(255) NOT NULL,
+  `role` varchar(100) NOT NULL,
+  `update_date` datetime NOT NULL,
+  `priority` CHAR(10) DEFAULT NULL,
+  `type` VARCHAR(32) DEFAULT NULL,
+  PRIMARY KEY  (`issue_id`),
+  index(code)
+);
+

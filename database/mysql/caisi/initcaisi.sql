@@ -1588,18 +1588,6 @@ CREATE TABLE `intake_answer` (
 -- Table structure for table `issue`
 --
 
-CREATE TABLE `issue` (
-  `issue_id` int(10) NOT NULL auto_increment,
-  `code` varchar(20) NOT NULL default '',
-  `description` varchar(255) NOT NULL default '',
-  `role` varchar(100) NOT NULL default '',
-  `update_date` datetime NOT NULL default '0000-00-00 00:00:00',
-  `priority` CHAR(10) DEFAULT NULL,
-  `type` VARCHAR(32) DEFAULT NULL,
-  PRIMARY KEY  (`issue_id`),
-	index(code)
-);
-
 --
 -- Table structure for table `program`
 --
