@@ -7,6 +7,9 @@
                divR2I1:    ctx + "/CaseManagementView.do?hc=996633&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=DiagnosticNotes&title=" + diagnosticNotesLabel + "&cmd=divR2I1" + "&appointment_no="+appointmentNo,
                divR2I2:    ctx + "/CaseManagementView.do?hc=996633&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=PastOcularHistory&title=" + pastOcularHistoryLabel + "&cmd=divR2I2" + "&appointment_no="+appointmentNo,              
        };
+//	  jQuery.ajax({url:ctx+"/casemgmt/RegisterCppCode.do?method=register&code=CurrentHistory,DiagnosticNotes,PastOcularHistory",dataType: "html",success: function(data) {			
+//      }});
+	   
 	   
        //add diagnostic notes, past ocular history, patient log, ocular medications
        //add a row       

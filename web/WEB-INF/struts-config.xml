@@ -1999,6 +1999,10 @@
 
 		<action path="/casemgmt/ExtPrintRegistry" type="org.oscarehr.casemgmt.web.ExtPrintRegistryAction" parameter="method" scope="request">			
 		</action>
+		
+		<action path="/casemgmt/RegisterCppCode" type="org.oscarehr.casemgmt.web.RegisterCppCode" parameter="method" scope="request">			
+		</action>
+		
 		<!-- END OSCAR Report By Template -->
 
 		<action path="/ArchiveView" type="org.springframework.web.struts.DelegatingActionProxy" scope="request" parameter="method">

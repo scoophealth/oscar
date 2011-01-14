@@ -86,6 +86,7 @@ import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.GroupNoteLink;
 import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.dx.model.DxResearch;
+import org.oscarehr.eyeform.EyeformInit;
 import org.oscarehr.eyeform.dao.FollowUpDao;
 import org.oscarehr.eyeform.dao.MacroDao;
 import org.oscarehr.eyeform.dao.TestBookRecordDao;
@@ -116,6 +117,10 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	private GroupNoteDao groupNoteDao = (GroupNoteDao) SpringUtils.getBean("groupNoteDao");
 	private DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
 
+	static {
+		//temporary..need something generic;
+		EyeformInit.init();
+	}
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		CaseManagementViewFormBean caseForm = (CaseManagementViewFormBean) form;
 		caseForm.setFilter_provider("");
@@ -1571,6 +1576,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			else if ("MedHistory".equals(caseManagementIssue.getIssue().getCode())) return (Colour.medicalHistory);
 			else if ("Concerns".equals(caseManagementIssue.getIssue().getCode())) return (Colour.ongoingConcerns);
 			else if ("Reminders".equals(caseManagementIssue.getIssue().getCode())) return (Colour.reminders);
+			else return Colour.prevention;
 		}
 
 		logger.error("Missing cpp colour : noteId=" + noteDisplay.getNoteId());
