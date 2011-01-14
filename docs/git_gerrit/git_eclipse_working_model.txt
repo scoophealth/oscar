@@ -22,6 +22,8 @@ On the main registration screen :
 	
 At this point you will have an account but to prevent spam/bots we have to manually enable write access to each account. You will need to email devel so we know you've signed up for an account so we can give you write access. You may wish to say hi to everyone and give a brief into into who you are too so we all have a better idea as to who everyone else is. :)
 
+On the top right of the gerrit web pages there's a "Settings" option. In settings, the lest menu will have a "watched projects" option. This will allow you to receive emails when ever anyone commits to the selected projects. This is also a convenient place to see a list of available projects on the system.
+
 At this point, if your eclipse was already running, you need to stop it and start it again. Eclipse caches ssh key information. (really, it does)
 
 ------
