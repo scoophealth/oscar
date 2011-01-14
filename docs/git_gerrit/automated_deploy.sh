@@ -27,8 +27,7 @@ export CATALINA_BASE=${WORKING_ROOT}/catalina_base
 pushd ${SRC_DIR}
 
 	# get latest code
-	git fetch origin
-	git merge origin
+	git pull
 	
 	# clear out local maven repo
 	# Nah we don't need to do this, we're not hudson checking the build, we're just a deployment
