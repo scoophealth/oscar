@@ -46,19 +46,19 @@ function saveEyeformNote() {
 	//get consults/procedures/tests/checkboxes to generate text
 	jQuery.ajax({ url: ctx+"/eyeform/FollowUp.do?method=getNoteText&appointmentNo="+<%=aptNo%>, async:false, success: function(data){
         notetext += data;
-        if(data.length>0) {notetext+='\n';}
+       // if(data.length>0) {notetext+='\n';}
     }});
 	jQuery.ajax({ url: ctx+"/eyeform/ProcedureBook.do?method=getNoteText&appointmentNo="+<%=aptNo%>, async:false, success: function(data){
         notetext += data;
-        if(data.length>0) {notetext+='\n';}
+        //if(data.length>0) {notetext+='\n';}
     }});
 	jQuery.ajax({ url: ctx+"/eyeform/TestBook.do?method=getNoteText&appointmentNo="+<%=aptNo%>, async:false, success: function(data){
         notetext += data;
-        if(data.length>0) {notetext+='\n';}
+        //if(data.length>0) {notetext+='\n';}
     }});
 	jQuery.ajax({ url: ctx+"/eyeform/NoteData.do?method=getNoteText&appointmentNo="+<%=aptNo%>, async:false, success: function(data){
         notetext += data;
-        if(data.length>0) {notetext+='\n';}
+       // if(data.length>0) {notetext+='\n';}
     }});
 
 	

@@ -121,17 +121,17 @@ public class NoteAddonAction extends DispatchAction {
     	
     	if(eyeform != null) {
     		if(eyeform.getDischarge()!=null&&eyeform.getDischarge().equals("true")) {
-    			sb.append("Discharge");    		
+    			sb.append("Patient is discharged from my active care.");    		
     			sb.append("\n");
     		}
     		
     		if(eyeform.getStat()!=null&&eyeform.getStat().equals("true")) {
-    			sb.append("Stat");    		
+    			sb.append("Follow up as needed with me STAT or PRN if symptoms are worse.");    		
     			sb.append("\n");
     		}
     		
     		if(eyeform.getOpt()!=null&&eyeform.getOpt().equals("true")) {
-    			sb.append("Opt");    		
+    			sb.append("Routine eye care by an optometrist is recommended.");    		
     			sb.append("\n");
     		}
     	
