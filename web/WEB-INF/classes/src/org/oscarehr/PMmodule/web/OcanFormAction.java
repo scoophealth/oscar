@@ -138,20 +138,15 @@ public class OcanFormAction {
 		boolean result = false;
 		
 		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-		List<OcanStaffForm> ocanStaffForm = ocanStaffFormDao.findCompletedInitialOcan(loggedInInfo.currentFacility.getId(),clientId);	
-		if(ocanStaffForm.isEmpty()) {
+		OcanStaffForm ocanStaffForm = ocanStaffFormDao.findLatestCompletedInitialOcan(loggedInInfo.currentFacility.getId(),clientId);	
+		if(ocanStaffForm!=null) {
 				result = true;
 		}	
 		
 		OcanStaffForm ocanStaffForm1 = ocanStaffFormDao.findLatestCompletedDischargedAssessment(loggedInInfo.currentFacility.getId(), clientId);
 		if(ocanStaffForm1!=null) {
 			Date completionDate = OcanForm.getAssessmentCompletionDate(ocanStaffForm1.getCompletionDate(),ocanStaffForm1.getClientCompletionDate());
-						
-			Calendar cal = Calendar.getInstance(); 
-			cal.add(Calendar.MONTH,-3);
-			if(cal.getTime().after(completionDate)) {
-				result = true;
-			}
+			result = OcanForm.afterCurrentDateAddMonth(completionDate, -3);				
 		}
 		
 		return result;
@@ -163,7 +158,7 @@ public class OcanFormAction {
 		
 		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 		
-		List<OcanStaffForm> ocanStaffFormList1 = ocanStaffFormDao.findCompletedInitialOcan(loggedInInfo.currentFacility.getId(),clientId);	
+		OcanStaffForm ocanStaffForm1 = ocanStaffFormDao.findLatestCompletedInitialOcan(loggedInInfo.currentFacility.getId(),clientId);	
 		
 		OcanStaffForm ocanStaffForm = null;
 		ocanStaffForm = ocanStaffFormDao.findLatestCompletedReassessment(loggedInInfo.currentFacility.getId(),clientId);	
@@ -171,19 +166,13 @@ public class OcanFormAction {
 		Date startDate = null;
 		if(ocanStaffForm!=null) {
 			startDate = OcanForm.getAssessmentStartDate(ocanStaffForm.getStartDate(),ocanStaffForm.getClientStartDate());
-		} else if(ocanStaffFormList1.size()>0) {
-			OcanStaffForm ocanStaffForm1 = ocanStaffFormList1.get(0);
+		} else if(ocanStaffForm1!=null) {			
 			startDate = OcanForm.getAssessmentStartDate(ocanStaffForm1.getStartDate(),ocanStaffForm1.getClientStartDate());			
 		} else {
 			return result;
 		}
 		
-		Calendar cal = Calendar.getInstance(); 			
-		cal.add(Calendar.MONTH, -6);
-		if(cal.getTime().after(startDate)) {
-			result = true;
-		}
-		
-		return result;		
+		return OcanForm.afterCurrentDateAddMonth(startDate, -6);		
+			
 	}
 }

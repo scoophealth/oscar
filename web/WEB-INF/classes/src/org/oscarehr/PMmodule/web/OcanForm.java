@@ -1,6 +1,7 @@
 package org.oscarehr.PMmodule.web;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -776,6 +777,61 @@ public class OcanForm {
 		}
 	}	
 	
+	public static boolean afterCurrentDateAddMonth(Date date1, int month) {
+		Calendar cal = Calendar.getInstance(); 
+		cal.add(Calendar.MONTH,month);
+		if(cal.getTime().after(date1)) {
+			return true;
+		} else {
+			return false;
+		}
+			
+	}
 	
+	public static String getOcanWarningMessage(Integer facilityId) {
+				
+		StringBuffer messages = new StringBuffer();
+		messages.append("You need to do OCAN reassessment for the clients whose IDs are: ");
+		
+		int doReassessment = 0;
+		
+		List<Demographic> demographicList = demographicDao.getDemographics();
+		ocanStaffFormDao.findAllByFacility(facilityId);
+		for(Demographic demographic: demographicList) {
+			Integer clientId = demographic.getDemographicNo();
+			if(isItTimeToDoReassessment(facilityId, clientId)){
+				messages.append(clientId+" , ");
+				doReassessment ++;
+			}		
+		}
+		if(doReassessment>0) {
+			messages.delete(messages.length()-3, messages.length());
+			return messages.toString();
+		} else {
+			return null;
+		}
+	}
+	
+	public static boolean isItTimeToDoReassessment(Integer facilityId,Integer clientId) {
+		
+		boolean result = false;
+		
+		OcanStaffForm ocanStaffForm1 = ocanStaffFormDao.findLatestCompletedInitialOcan(facilityId,clientId);	
+		
+		OcanStaffForm ocanStaffForm = null;
+		ocanStaffForm = ocanStaffFormDao.findLatestCompletedReassessment(facilityId,clientId);	
+				
+		Date startDate = null;
+		if(ocanStaffForm!=null) {
+			startDate = OcanForm.getAssessmentStartDate(ocanStaffForm.getStartDate(),ocanStaffForm.getClientStartDate());
+		} else if(ocanStaffForm1!=null) {			
+			startDate = OcanForm.getAssessmentStartDate(ocanStaffForm1.getStartDate(),ocanStaffForm1.getClientStartDate());			
+		} else {
+			return result;
+		}
+		
+		return OcanForm.afterCurrentDateAddMonth(startDate, -6);		
+			
+	}
 	
 }
