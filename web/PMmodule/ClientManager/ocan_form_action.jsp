@@ -91,7 +91,6 @@
 	
 	for (Map.Entry<String, String[]> entry : parameters.entrySet())
 	{
-		System.out.println(entry.getKey());
 		if (entry.getValue()!=null)
 		{
 			for (String value : entry.getValue())
