@@ -25,7 +25,6 @@ questr=oscar.caisi.CaisiUtil.removeAttr(questr,"infirmaryView_isOscar=");
 //remove "GoToCaisiViewFromOscarView" from querystring
 questr=oscar.caisi.CaisiUtil.removeAttr(questr,"GoToCaisiViewFromOscarView=");
 
-questr=oscar.caisi.CaisiUtil.removeAttr(questr,"GoToMyMedsView=");
 session.setAttribute("infirmaryView_OscarQue",questr);
 
 %>
@@ -135,8 +134,6 @@ function submitStatus(ctrl) {// only place other than infirmaction.java to set i
 		</caisi:isModuleLoad>
 	</caisi:ProgramExclusiveView>
 </logic:equal>
- <div align="right"><a href='providercontrol.jsp?infirmaryView_isOscar=false&GoToCaisiViewFromOscarView=false&GoToMyMedsView=true&<%=session.getAttribute("infirmaryView_OscarQue") %>'>|
-		MyMeds View</a></div>
 </td>
 </tr>
 </table>

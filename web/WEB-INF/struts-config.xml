@@ -1261,12 +1261,6 @@
 			<forward name="error" path="/provider/providerColourErr.jsp" />
 			<forward name="eject" path="/index.jsp" />
 		</action>
-		<action  path="/mymeds/providerLogin" scope="request" parameter="method" type="org.mymeds.web.MyMedsLoginAction">
-			<forward name="providerLogin" path="/mymeds/login/providerLogin.jsp" />
-		</action>
-                <action  path="/mymeds/casemgmt" scope="request" parameter="method" type="org.mymeds.casemanagement.CaseMgmtAction">
-			<forward name="casemgmt" path="/mymeds/casemgmt/index.jsp" />
-		</action>
                 <action input="/oscarEncounter/Index.jsp" path="/oscarResearch/oscarDxResearch/setupDxResearch" scope="request" type="oscar.oscarResearch.oscarDxResearch.pageUtil.dxSetupResearchAction">
 			<forward name="success" path="/oscarResearch/oscarDxResearch/dxResearch.jsp" />
 		</action>
@@ -2091,6 +2085,7 @@
 		<action path="/phr/Logout" name="FrmForm" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
 		</action>
 		<action path="/phrExchange" name="FrmForm" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
+                    <forward name="success" path="/oscarRx/displayMedsFromPhr.jsp" />
 		</action>
 		<action path="/phr/UserManagement" name="FrmForm" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
 			<forward name="registrationResult" path="/phr/indivo/RegisterIndivoResult.jsp" />

@@ -1,10 +1,7 @@
 <%@ page import="oscar.*, org.oscarehr.util.*"%>
 
 <logic:equal name="infirmaryView_isOscar" value="false">
-    <logic:equal parameter="GoToMyMedsView" value="true">
-        <c:import url="../mymeds/providerLogin.do?" />
-    </logic:equal>
-    <logic:notEqual parameter="GoToMyMedsView" value="true">
+
 <%
 	session.setAttribute("case_program_id", session.getAttribute(SessionConstants.CURRENT_PROGRAM_ID));
 	java.util.Date todayDate=new java.util.Date();
@@ -182,5 +179,4 @@ if ((k/2)*2==k){ %>
 	<%
 	}
 }%>
-</logic:notEqual>
 </logic:equal>
