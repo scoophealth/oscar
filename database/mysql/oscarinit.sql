@@ -6145,10 +6145,10 @@ CREATE TABLE mdsZRG (
 --
 CREATE TABLE measurements(
   id int UNSIGNED AUTO_INCREMENT,
-  type varchar(4) NOT NULL,
+  type varchar(50) NOT NULL,
   demographicNo int(10) NOT NULL default '0', 
   providerNo varchar(6) NOT NULL default '',
-  dataField  varchar(20) NOT NULL,
+  dataField  varchar(50) NOT NULL,
   measuringInstruction varchar(255) NOT NULL,  
   comments varchar(255) NOT NULL, 
   dateObserved datetime NOT NULL, 
