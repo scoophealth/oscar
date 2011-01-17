@@ -790,7 +790,7 @@ public class OcanForm {
 	
 	public static String getOcanWarningMessage(Integer facilityId) {
 				
-		StringBuffer messages = new StringBuffer();
+		StringBuilder messages = new StringBuilder();
 		messages.append("You need to do OCAN reassessment for the clients whose IDs are: ");
 		
 		int doReassessment = 0;
