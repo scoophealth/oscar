@@ -1,0 +1,69 @@
+OSCAR Change Request
+====================
+
+Change Description (incl. Benefits)
+-----------------------------------
+
+
+
+Risk analysis results
+---------------------
+
+
+
+Design verification results
+---------------------------
+
+
+
+Change Risk Analysis and reporting
+==================================
+
+OSCAR Interaction points
+------------------------
+
+
+
+Integration risks
+-----------------
+
+
+
+Risk if not incorporated
+------------------------
+
+
+
+Design Verification (Testing) Process and reporting
+===================================================
+
+Minimum testing requirements/process
+------------------------------------
+
+
+
+Report structure/content
+------------------------
+
+
+
+OSCAR McMaster Response
+=======================
+
+Response timing requirements
+----------------------------
+
+
+
+Response format and methodology
+-------------------------------
+
+
+
+Training
+========
+
+Training requirements to support changes
+----------------------------------------
+
+
