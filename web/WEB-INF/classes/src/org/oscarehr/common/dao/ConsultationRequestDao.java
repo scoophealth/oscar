@@ -66,7 +66,7 @@ public class ConsultationRequestDao extends AbstractDao<ConsultationRequest> {
         }
 
         public List getConsults(String team, boolean showCompleted, Date startDate, Date endDate, String orderby, String desc, String searchDate) {
-            StringBuilder sql = new StringBuilder("select cr from ConsultationRequest cr, Demographic d, Provider p, ProfessionalSpecialist specialist, ConsultationServices service where d.DemographicNo = cr.demographicId and p.ProviderNo = d.ProviderNo and specialist.id = cr.specialistId and service.id = cr.serviceId ");
+            StringBuilder sql = new StringBuilder("select cr from ConsultationRequest cr left outer join cr.professionalSpecialist specialist, ConsultationServices service, Demographic d left outer join d.provider p where d.DemographicNo = cr.demographicId and service.id = cr.serviceId ");
 
             if( !showCompleted ) {
                sql.append("and cr.status != 4 ");

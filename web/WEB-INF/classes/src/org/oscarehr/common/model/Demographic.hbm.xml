@@ -65,5 +65,9 @@
 			<element column="demographic_no" type="integer" />
 		</set>
 
+                <many-to-one name="provider" class="org.oscarehr.common.model.Provider"
+			column="provider_no" update="false" not-found='ignore' insert="false"
+			lazy="false" />
+
 	</class>
 </hibernate-mapping>
