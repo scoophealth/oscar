@@ -31,6 +31,7 @@ import javax.persistence.Query;
 
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.oscarehr.common.model.ConsultationRequest;
+import org.oscarehr.common.model.ConsultationRequestExt;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -119,5 +120,6 @@ public class ConsultationRequestDao extends AbstractDao<ConsultationRequest> {
             Query query = entityManager.createQuery(sql.toString());
             
             return query.getResultList();
-        }
+        }                
+               
 }

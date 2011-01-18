@@ -32,6 +32,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Enumeration;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -49,6 +50,7 @@ import org.apache.struts.action.ActionMapping;
 import org.oscarehr.common.IsPropertiesOn;
 import org.oscarehr.common.dao.ClinicDAO;
 import org.oscarehr.common.dao.ConsultationRequestDao;
+import org.oscarehr.common.dao.ConsultationRequestExtDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.Hl7TextInfoDao;
 import org.oscarehr.common.dao.ProfessionalSpecialistDao;
@@ -58,6 +60,7 @@ import org.oscarehr.common.hl7.v2.oscar_to_oscar.SendingUtils;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.OruR01.ObservationData;
 import org.oscarehr.common.model.Clinic;
 import org.oscarehr.common.model.ConsultationRequest;
+import org.oscarehr.common.model.ConsultationRequestExt;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Hl7TextInfo;
 import org.oscarehr.common.model.ProfessionalSpecialist;
@@ -106,6 +109,8 @@ public class EctConsultationFormRequestAction extends Action {
 		String requestId = "";
 
                 ConsultationRequestDao consultationRequestDao=(ConsultationRequestDao)SpringUtils.getBean("consultationRequestDao");
+                ConsultationRequestExtDao consultationRequestExtDao=(ConsultationRequestExtDao)SpringUtils.getBean("consultationRequestExtDao");
+                
                 String[] format = new String[] {"yyyy-MM-dd","yyyy/MM/dd"};
 
 		if (submission.startsWith("Submit")) {
@@ -142,6 +147,15 @@ public class EctConsultationFormRequestAction extends Action {
                                 consultationRequestDao.persist(consult);
 
                                         requestId = String.valueOf(consult.getId());
+                                        
+                                Enumeration e = request.getParameterNames();
+                                while(e.hasMoreElements()) {
+                                	String name = (String)e.nextElement();
+                                	if(name.startsWith("ext_")) {
+                                		String value = request.getParameter(name);
+                                		consultationRequestExtDao.persist(createExtEntry(requestId,name.substring(name.indexOf("_")+1),value));
+                                	}
+                                }
 					// now that we have consultation id we can save any attached docs as well
 					// format of input is D2|L2 for doc and lab
 					String[] docs = frm.getDocuments().split("\\|");
@@ -195,6 +209,16 @@ public class EctConsultationFormRequestAction extends Action {
                                     consult.setFollowUpDate(date);
                                 }
                                 consultationRequestDao.merge(consult);
+                                
+                                consultationRequestExtDao.clear(Integer.parseInt(requestId));
+                                Enumeration e = request.getParameterNames();
+                                while(e.hasMoreElements()) {
+                                	String name = (String)e.nextElement();
+                                	if(name.startsWith("ext_")) {
+                                		String value = request.getParameter(name);
+                                		consultationRequestExtDao.persist(createExtEntry(requestId,name.substring(name.indexOf("_")+1),value));
+                                	}
+                                }
 			}
 
 			catch (ParseException e) {
@@ -250,7 +274,15 @@ public class EctConsultationFormRequestAction extends Action {
 		forward.addParameter("de", demographicNo);
 		return forward;
 	}
-
+	
+	private ConsultationRequestExt createExtEntry(String requestId, String name,String value) {
+		ConsultationRequestExt obj = new ConsultationRequestExt();
+		obj.setDateCreated(new Date());
+		obj.setKey(name);
+		obj.setValue(value);
+		obj.setRequestId(Integer.parseInt(requestId));
+		return obj;
+	}
 	private void doHl7Send(Integer consultationRequestId) throws InvalidKeyException, SignatureException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeySpecException, IOException, HL7Exception, ServletException {
 		
 	    ConsultationRequestDao consultationRequestDao=(ConsultationRequestDao)SpringUtils.getBean("consultationRequestDao");

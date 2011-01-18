@@ -18,7 +18,7 @@
        
 		jQuery("#save_measurements").live('click',function(e){	
 			e.preventDefault();
-			touchColor();
+			touchColor();			
 			
 			//save all measurements
 			var postData = "";			
@@ -26,7 +26,7 @@
 				var className = jQuery(this).attr("class");
 								
 				
-				if(className == 'examfieldwhite') {	
+				if(className == 'examfieldwhite') {						
 					if(postData.length > 0) {
 						postData += "&";
 					}
@@ -47,7 +47,7 @@
 					var data = name + "=" + value;
 					postData += data;
 				}
-			});			
+			});						
 			jQuery.ajax({type:'POST',url:ctx+'/oscarEncounter/MeasurementData.do?action=saveValues&demographicNo='+demographicNo,data:postData,success: function(){
 				//alert('Saved.');
 			}});

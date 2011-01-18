@@ -141,6 +141,11 @@
 
 		OscarProperties props = OscarProperties.getInstance();
 %><head>
+<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
+<script>
+	var ctx = '<%=request.getContextPath()%>';
+	var requestId = '<%=request.getParameter("requestId")%>';
+</script>	
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/global.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery_oscar_defaults.js"></script>
@@ -156,6 +161,23 @@
        adding a calendar a matter of 1 or 2 lines of code. -->
 <script type="text/javascript"
 	src="<%=request.getContextPath()%>/share/calendar/calendar-setup.js"></script>
+	
+   <script src="<c:out value="${ctx}/js/jquery.js"/>"></script>
+   <script>
+     jQuery.noConflict();
+   </script>
+   
+	
+   <%
+      
+ 	String customScript = OscarProperties.getInstance().getProperty("cme_js");
+   if(customScript != null && customScript.length()>0) {
+	%>
+		<script src="<c:out value="${ctx}"/>/js/custom/<%=customScript%>-conreq.js"></script>	
+	<%   	   
+   }      
+   %>
+   
 <title><bean:message
 	key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.title" />
 </title>
@@ -777,6 +799,12 @@ function fetchAttached() {
 
 }
 
+function addCCName(){
+        if (document.EctConsultationFormRequestForm.ext_cc.value.length<=0)
+                document.EctConsultationFormRequestForm.ext_cc.value=document.EctConsultationFormRequestForm.docName.value;
+        else document.EctConsultationFormRequestForm.ext_cc.value+="; "+document.EctConsultationFormRequestForm.docName.value;
+}
+
 </script>
 <%=WebUtils.popErrorMessagesAsAlert(session)%>
 <link rel="stylesheet" type="text/css" href="../encounterStyles.css">
@@ -1258,7 +1286,7 @@ function fetchAttached() {
 							<td class="tite3"><%=thisForm.getPatientHealthNum()%>&nbsp;<%=thisForm.getPatientHealthCardVersionCode()%>&nbsp;<%=thisForm.getPatientHealthCardType()%>
 							</td>
 						</tr>
-						<tr>
+						<tr id="conReqSendTo">
 							<td class="tite4"><bean:message
 								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgSendTo" />:
 							</td>
@@ -1276,7 +1304,7 @@ function fetchAttached() {
 								%>
 							</html:select></td>
 						</tr>
-
+						
 <!--add for special encounter-->
 <plugin:hideWhenCompExists componentName="specialencounterComp" reverse="true">
 <special:SpecialEncounterTag moduleName="eyeform">
@@ -1373,7 +1401,7 @@ function fetchAttached() {
 
 					</td>
 				</tr>
-				<tr>
+				<tr id="trConcurrentProblems">
 					<td colspan=2><html:textarea cols="90" rows="3"
 						property="concurrentProblems">
 
@@ -1430,6 +1458,9 @@ if (defaultSiteId!=0) aburl2+="&site="+defaultSiteId;
 					<td colspan=2><html:textarea cols="90" rows="3"
 						property="allergies"></html:textarea></td>
 				</tr>
+				
+				
+				
 
 				<tr>
 					<td colspan=2><input type="hidden" name="submission" value="">
