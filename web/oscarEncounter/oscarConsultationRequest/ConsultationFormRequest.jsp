@@ -261,7 +261,7 @@ text-align: right;
 
 <script language="JavaScript" type="text/javascript">
 
-var servicesName = new Array();   		// used as a cross reference table for name and number
+var servicesName = new Object();   		// used as a cross reference table for name and number
 var services = new Array();				// the following are used as a 2D table for makes and models
 var specialists = new Array();
 
@@ -280,7 +280,8 @@ function initMaster() {
 //==========
 function K( serviceNumber, service ){
 
-	servicesName[service] = new ServicesName(serviceNumber);
+	//servicesName[service] = new ServicesName(serviceNumber);
+        servicesName[service] = serviceNumber;
 	services[serviceNumber] = new Service( );
 }
 //-------------------------------------------------------------------
@@ -499,7 +500,19 @@ function initService(ser){
 	var isSel = 0;
 	var strSer = new String(ser);
 
-	for (aIdx in servicesName){
+        $H(servicesName).each(function(pair){
+              var opt = document.createElement("option");
+              opt.textContent = pair.key;
+              opt.value = pair.value;
+              if( pair.value == strSer ) {
+                opt.selected = true;
+                fillSpecialistSelect1( pair.value );
+              }
+              $("service").options.add(opt);
+
+        });
+
+/*	for (aIdx in servicesName){
 	   var serNBR = servicesName[aIdx].serviceNumber;
    	   document.EctConsultationFormRequestForm.service.options[ i ] = new Option( aIdx, serNBR );
 	   if (serNBR == strSer){
@@ -513,8 +526,8 @@ function initService(ser){
 	      document.EctConsultationFormRequestForm.service.options[ 0 ].selected = true;
 	   }
 	   i++;
+	}*/
 	}
-}
 //-------------------------------------------------------------------
 
 /////////////////////////////////////////////////////////////////////
@@ -582,6 +595,11 @@ function enableDisableRemoteReferralButton(form, disabled)
 	if (button!=null) button.disabled=disabled;
 	button=form.submitAndSendElectronically;
 	if (button!=null) button.disabled=disabled;
+
+        var button=form.updateAndSendElectronicallyTop;
+	if (button!=null) button.disabled=disabled;
+	button=form.submitAndSendElectronicallyTop;
+	if (button!=null) button.disabled=disabled;
 }
 
 //-->
@@ -637,6 +655,7 @@ function checkForm(submissionVal,formName){
      document.EctConsultationFormRequestForm.service.focus();
      return false;
   }
+  $("saved").value = "true";
   document.forms[formName].submission.value=submissionVal;
   document.forms[formName].submit();
   return true;
@@ -874,6 +893,7 @@ function addCCName(){
 	<input type="hidden" name="demographicNo" value="<%=demo%>">
 	<input type="hidden" name="requestId" value="<%=requestId%>">
 	<input type="hidden" name="documents" value="">
+        <input type="hidden" id="saved" value="false">
 	<!--  -->
 	<table class="MainTable" id="scrollNumber1" name="encounterTable">
 		<tr class="MainTableTopRow">
@@ -1008,6 +1028,51 @@ function addCCName(){
 
 				<!----Start new rows here-->
 				<tr>
+					<td class="tite4" colspan=2>
+					<%
+						if (request.getAttribute("id") != null)
+								{
+					%>
+						<input name="update" type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdate"/>" onclick="return checkForm('Update Consultation Request','EctConsultationFormRequestForm');" />
+						<input name="updateAndPrint" type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndPrint"/>" onclick="return checkForm('Update Consultation Request And Print Preview','EctConsultationFormRequestForm');" />
+						<input name="updateAndSendElectronicallyTop" type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndSendElectronicReferral"/>" onclick="return checkForm('Update_esend','EctConsultationFormRequestForm');" />
+						<%
+							if (props.getProperty("faxEnable", "").equalsIgnoreCase("yes"))
+										{
+						%>
+						<input name="updateAndFax" type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndFax"/>" onclick="return checkForm('Update And Fax','EctConsultationFormRequestForm');" />
+						<%
+							}
+						%>
+					<%
+						}
+								else
+								{
+					%>
+						<input name="submitSaveOnly" type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmit"/>" onclick="return checkForm('Submit Consultation Request','EctConsultationFormRequestForm'); " />
+						<input name="submitAndPrint" type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmitAndPrint"/>" onclick="return checkForm('Submit Consultation Request And Print Preview','EctConsultationFormRequestForm'); " />
+						<input name="submitAndSendElectronicallyTop" type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmitAndSendElectronicReferral"/>" onclick="return checkForm('Submit_esend','EctConsultationFormRequestForm');" />
+						<%
+							if (props.getProperty("faxEnable", "").equalsIgnoreCase("yes"))
+										{
+						%>
+						<input name="submitAndFax" type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmitAndFax"/>" onclick="return checkForm('Submit And Fax','EctConsultationFormRequestForm');" />
+						<%
+							}
+						%>
+					<%
+						}
+
+						if (thisForm.iseReferral())
+						{
+							%>
+								<input type="button" value="Send eResponse" onclick="$('saved').value='true';document.location='<%=thisForm.getOruR01UrlString(request)%>'" />
+							<%
+						}
+						%>
+					</td>
+                                </tr>
+                                <tr>
 					<td>
 
 					<table border=0 width="100%">
@@ -1031,7 +1096,7 @@ function addCCName(){
 							<td class="tite4"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formService" />:
 							</td>
 							<td align="right" class="tite1">
-								<html:select property="service" onchange="fillSpecialistSelect(this);">
+								<html:select styleId="service" property="service" onchange="fillSpecialistSelect(this);">
 								<!-- <option value="-1">------ <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formServSelect"/> ------</option>
 					<option/>
 				    	<option/>
@@ -1501,7 +1566,7 @@ if (defaultSiteId!=0) aburl2+="&site="+defaultSiteId;
 						if (thisForm.iseReferral())
 						{
 							%>
-								<input type="button" value="Send eResponse" onclick="document.location='<%=thisForm.getOruR01UrlString(request)%>'" />
+								<input type="button" value="Send eResponse" onclick="$('saved').value='true';document.location='<%=thisForm.getOruR01UrlString(request)%>'" />
 							<%
 						}
 						%>
