@@ -95,26 +95,43 @@ public class EctViewConsultationRequestsUtil {
           ConsultationServices services;
           Calendar cal = Calendar.getInstance();
           Date date1, date2;
-
+          String providerId, providerName, specialistName;
           List consultList = consultReqDao.getConsults(team, showCompleted, startDate, endDate, orderby, desc, searchDate);
+
           for( int idx = 0; idx < consultList.size(); ++idx ) {
               consult = (ConsultationRequest)consultList.get(idx);
               demo = demoDao.getDemographicById(consult.getDemographicId());
-              prov = providerDao.getProvider(demo.getProviderNo());
-              specialist = specialistDao.find(consult.getSpecialistId());
               services = serviceDao.find(consult.getServiceId());
+
+              providerId = demo.getProviderNo();
+              if( providerId != null && !providerId.equals("")) {
+                  prov = providerDao.getProvider(demo.getProviderNo());
+                  providerName = prov.getFormattedName();
+                  providerNo.add(prov.getProviderNo());
+              }
+              else {
+                  providerName = "N/A";
+                  providerNo.add("-1");
+              }
+
+              if( consult.getProfessionalSpecialist() == null ) {
+                  specialistName = "N/A";
+              }
+              else {
+                  specialist = consult.getProfessionalSpecialist();
+                  specialistName = specialist.getLastName() + ", " + specialist.getFirstName();
+              }
 
               demographicNo.add(consult.getDemographicId().toString());
               date.add(DateFormatUtils.ISO_DATE_FORMAT.format(consult.getReferralDate()));
               ids.add(consult.getId().toString());
               status.add(consult.getStatus());
               patient.add(demo.getFormattedName());
-              provider.add(prov.getFormattedName());
+              provider.add(providerName);
               service.add(services.getServiceDesc());
-              vSpecialist.add(specialist.getLastName() + ", " + specialist.getFirstName());
+              vSpecialist.add(specialistName);
               urgency.add(consult.getUrgency());
-			  providerNo.add(prov.getProviderNo());
-			  siteName.add(consult.getSiteName());
+              siteName.add(consult.getSiteName());
               teams.add(consult.getSendTo());
               cal.setTime(consult.getAppointmentDate());
               date1 = cal.getTime();
@@ -160,25 +177,32 @@ public class EctViewConsultationRequestsUtil {
           ConsultationRequest consult;
           Provider prov;
           Demographic demo;
-          ProfessionalSpecialist specialist;
           ConsultationServices services;
+          String providerId, providerName;
 
           List consultList = consultReqDao.getConsults(demoNo);
           for( int idx = 0; idx < consultList.size(); ++idx ) {
               consult = (ConsultationRequest)consultList.get(idx);
               demo = demoDao.getDemographicById(consult.getDemographicId());
+              providerId = demo.getProviderNo();
+              if( providerId != null && !providerId.equals("")) {
               prov = providerDao.getProvider(demo.getProviderNo());
-              specialist = specialistDao.find(consult.getSpecialistId());
+                providerName = prov.getFormattedName();
+              }
+              else {
+                  providerName = "N/A";
+              }
+
               services = serviceDao.find(consult.getServiceId());
 
               ids.add(consult.getId().toString());
               status.add(consult.getStatus());
               patient.add(demo.getFormattedName());
-              provider.add(prov.getFormattedName());
+              provider.add(providerName);
               service.add(services.getServiceDesc());
               urgency.add(consult.getUrgency());
               patientWillBook.add(""+consult.isPatientWillBook());
-              date.add(DateFormatUtils.ISO_DATE_FORMAT.format(consult.getAppointmentDate()));
+              date.add(DateFormatUtils.ISO_DATE_FORMAT.format(consult.getReferralDate()));
           }
       } catch(Exception e) {         
          MiscUtils.getLogger().error("Error", e);         
