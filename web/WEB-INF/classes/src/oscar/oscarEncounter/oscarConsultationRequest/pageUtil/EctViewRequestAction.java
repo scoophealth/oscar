@@ -50,9 +50,9 @@ package oscar.oscarEncounter.oscarConsultationRequest.pageUtil;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Calendar;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -123,6 +123,7 @@ public class EctViewRequestAction extends Action {
             cal.setTime(consult.getAppointmentTime());
             Integer hr = cal.get(Calendar.HOUR_OF_DAY);
             hr = hr == 0 ? 12 : hr;
+            hr = hr > 12 ? hr - 12: hr;
             thisForm.setAppointmentHour(String.valueOf(hr));
             thisForm.setAppointmentMinute(String.valueOf(cal.get(Calendar.MINUTE)));
             
@@ -163,7 +164,7 @@ public class EctViewRequestAction extends Action {
             thisForm.setPatientAge(demo.getAge());
 
             ProviderDao provDao = (ProviderDao)SpringUtils.getBean("providerDao");
-            Provider prov = provDao.getProvider(demo.getProviderNo());
+            Provider prov = provDao.getProvider(consult.getProviderNo());
             thisForm.setProviderName(prov.getFormattedName());
 
             thisForm.seteReferral(false);
