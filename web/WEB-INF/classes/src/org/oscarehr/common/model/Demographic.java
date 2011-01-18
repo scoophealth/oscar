@@ -96,6 +96,8 @@ public class Demographic implements Serializable {
 	private int hsAlertCount = 0;
         private String displayName=null;
 
+        private Provider provider;
+
     /**
      * @return the rosterDate
      */
@@ -968,5 +970,19 @@ public class Demographic implements Serializable {
 	public void setSpokenLanguage(String spokenLanguage) {
 		this.spokenLanguage = spokenLanguage;
 	}
+
+     /**
+     * @return the provider
+     */
+    public Provider getProvider() {
+        return provider;
+}
+
+    /**
+     * @param provider the provider to set
+     */
+    public void setProvider(Provider provider) {
+        this.provider = provider;
+    }
 
 }
