@@ -35,6 +35,10 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.FetchType;
+import javax.persistence.CascadeType;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -53,8 +57,9 @@ public class ConsultationRequest extends AbstractModel<Integer> implements Seria
 	
 	private Integer serviceId;
 
-	@Column(name = "specId")
-	private Integer specialistId;
+        @ManyToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
+        @JoinColumn(name="specId")
+        private ProfessionalSpecialist professionalSpecialist;
 
 	@Temporal(TemporalType.DATE)
 	private Date appointmentDate;	
@@ -104,14 +109,6 @@ public class ConsultationRequest extends AbstractModel<Integer> implements Seria
 
 	public void setServiceId(Integer serviceId) {
     	this.serviceId = serviceId;
-    }
-
-	public Integer getSpecialistId() {
-    	return specialistId;
-    }
-
-	public void setSpecialistId(Integer specialistId) {
-    	this.specialistId = specialistId;
     }
 
 	public Date getAppointmentDate() {
@@ -246,5 +243,23 @@ public class ConsultationRequest extends AbstractModel<Integer> implements Seria
      */
     public void setFollowUpDate(Date followUpDate) {
         this.followUpDate = followUpDate;
+    }
+
+    /**
+     * @return the professionalSpecialist
+     */
+    public ProfessionalSpecialist getProfessionalSpecialist() {
+        return professionalSpecialist;
+}
+
+    /**
+     * @param professionalSpecialist the professionalSpecialist to set
+     */
+    public void setProfessionalSpecialist(ProfessionalSpecialist professionalSpecialist) {
+        this.professionalSpecialist = professionalSpecialist;
+    }
+
+    public Integer getSpecialistId() {
+        return this.professionalSpecialist.getId();
     }
 }
