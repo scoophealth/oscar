@@ -116,12 +116,12 @@ public class EForm extends EFormBase {
 		this.roleType = (String) loaded.get("roleType");
 	}
 
-	public void setAppointmentNo(String appointment_no) {
-		if (!blank(appointment_no)) this.appointment_no = appointment_no;
+	public void setAppointmentNo(String appt_no) {
+        this.appointment_no = blank(appt_no) ? "-1" : appt_no;
 	}
 
-	public void setApptProvider(String appt_provider) {
-		if (!blank(appt_provider)) this.appt_provider = appt_provider;
+	public void setApptProvider(String appt_prvd) {
+        this.appt_provider = blank(appt_prvd) ? "" : appt_prvd;
 	}
 
 	public void setAction(String pAjaxId) {
@@ -499,7 +499,8 @@ public class EForm extends EFormBase {
 			}
 			pointer++;
 		} else {
-			html.insert(pointer, " value=\"" + output + "\"");
+			String quote = output.contains("\"") ? "'" : "\"";
+			html.insert(pointer, " value="+quote+output+quote);
 		}
 		return (html);
 	}
@@ -523,8 +524,11 @@ public class EForm extends EFormBase {
 	}
 
 	private String getSqlParams(String key) {
-		if (sql_params.containsKey(key)) return (String) sql_params.get(key);
-		else return "";
+		if (sql_params.containsKey(key)) {
+		    String val = (String) sql_params.get(key);
+		    return val==null ? "" : val.replace("\"", "\\\"");
+		}
+		return "";
 	}
 
 	private void setSqlParams(String key, String value) {
