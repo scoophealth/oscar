@@ -169,12 +169,12 @@ public class OcanReportUIBean {
 	private static FacilityDao facilityDao = (FacilityDao)SpringUtils.getBean("facilityDao");
 	private static AdmissionDao admissionDao = (AdmissionDao)SpringUtils.getBean("admissionDao");
 	
-	public static void writeXmlExportData(int year, int month, int increment, OutputStream out) {
+	public static void writeXmlExportData(int startYear, int startMonth, int endYear, int endMonth, int increment, OutputStream out, String ocanType) {
 		
 		//get all submitted/completed forms where the completion date is in the year/month specified
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 		
-		List<OcanStaffForm> ocanStaffForms = ocanStaffFormDao.findLatestSignedOcanForms(loggedInInfo.currentFacility.getId(), "1.2", getStartDate(year,month), getEndDate(year,month),"FULL");
+		List<OcanStaffForm> ocanStaffForms = ocanStaffFormDao.findLatestSignedOcanForms(loggedInInfo.currentFacility.getId(), "1.2", getStartDate(startYear,startMonth), getEndDate(endYear,endMonth),ocanType);
 		logger.info("# of staff forms found for time period = " + ocanStaffForms.size());
 		
 		OCANv2SubmissionFileDocument submissionFileDoc = OCANv2SubmissionFileDocument.Factory.newInstance();		
@@ -212,7 +212,7 @@ public class OcanReportUIBean {
 			//}	
 			OcanClientForm clientForm = null;
 			List<OcanClientFormData> clientFormData = null;
-			OCANv2SubmissionRecord submissionRecord = convertOcanForm(staffForm,ocanStaffFormDataDao.findByForm(staffForm.getId()),clientForm,clientFormData);
+			OCANv2SubmissionRecord submissionRecord = convertOcanForm(staffForm,ocanStaffFormDataDao.findByForm(staffForm.getId()),clientForm,clientFormData, ocanType);
 			submissionRecordList.add(submissionRecord);			
 		}
 		submissionFile.setOCANv2SubmissionRecordArray(submissionRecordList.toArray(new OCANv2SubmissionRecord[submissionRecordList.size()]));
@@ -270,7 +270,7 @@ public class OcanReportUIBean {
 		
 	}
 	
-	public static OCANv2SubmissionRecord convertOcanForm(OcanStaffForm ocanStaffForm, List<OcanStaffFormData> ocanStaffFormData, OcanClientForm ocanClientForm, List<OcanClientFormData> ocanClientFormData) {
+	public static OCANv2SubmissionRecord convertOcanForm(OcanStaffForm ocanStaffForm, List<OcanStaffFormData> ocanStaffFormData, OcanClientForm ocanClientForm, List<OcanClientFormData> ocanClientFormData, String ocanType) {
 		OCANv2SubmissionRecord ocanSubmissionRecord = OCANv2SubmissionRecord.Factory.newInstance();
 		
 		ocanSubmissionRecord.setOCANType(OCANv2SubmissionRecord.OCANType.Enum.forString(ocanStaffForm.getOcanType()));
@@ -284,23 +284,26 @@ public class OcanReportUIBean {
 		ocanSubmissionRecord.setIARViewingConsent(OCANv2SubmissionRecord.IARViewingConsent.Enum.forString("TRUE"));
 				
 		ocanSubmissionRecord.setSubmitOrganizationRecord(convertSubmitOrganizationRecord(ocanStaffForm,ocanStaffFormData));
-		ocanSubmissionRecord.setClientRecord(convertClientRecord(ocanStaffForm,ocanStaffFormData));
-		ocanSubmissionRecord.setOCANDomains(convertOCANDomains(ocanStaffForm,ocanStaffFormData, ocanClientForm, ocanClientFormData));
-		ocanSubmissionRecord.setAdditionalElements(convertAdditionalElements(ocanStaffForm,ocanStaffFormData));
+		ocanSubmissionRecord.setClientRecord(convertClientRecord(ocanStaffForm,ocanStaffFormData,ocanType));
+		ocanSubmissionRecord.setOCANDomains(convertOCANDomains(ocanStaffForm,ocanStaffFormData, ocanClientForm, ocanClientFormData, ocanType));
+		ocanSubmissionRecord.setAdditionalElements(convertAdditionalElements(ocanStaffForm,ocanStaffFormData,ocanType));
 		return ocanSubmissionRecord;
 	}
 	
-	public static AdditionalElements convertAdditionalElements(OcanStaffForm ocanStaffForm, List<OcanStaffFormData> ocanStaffFormData) {
+	public static AdditionalElements convertAdditionalElements(OcanStaffForm ocanStaffForm, List<OcanStaffFormData> ocanStaffFormData, String ocanType) {
 		AdditionalElements additionalElements = AdditionalElements.Factory.newInstance();
-		additionalElements.setClientHopesForFuture(convertClientHopesForFuture(ocanStaffForm,ocanStaffFormData));
-		additionalElements.setClientNeedToGetThere(convertClientNeedToGetThere(ocanStaffForm,ocanStaffFormData));
-		additionalElements.setClientViewMentalHealth(convertClientViewMentalHealth(ocanStaffForm,ocanStaffFormData));
-		additionalElements.setClientSpiritualityImportance(convertClientSpiritualityImportance(ocanStaffForm,ocanStaffFormData));
-		additionalElements.setClientCultureHeritageImportance(convertClientCultureHeritageImportance(ocanStaffForm,ocanStaffFormData));
-
+		if(!"CORE".equals(ocanType)) {
+			additionalElements.setClientHopesForFuture(convertClientHopesForFuture(ocanStaffForm,ocanStaffFormData, ocanType));
+			additionalElements.setClientNeedToGetThere(convertClientNeedToGetThere(ocanStaffForm,ocanStaffFormData, ocanType));
+			additionalElements.setClientViewMentalHealth(convertClientViewMentalHealth(ocanStaffForm,ocanStaffFormData, ocanType));
+			additionalElements.setClientSpiritualityImportance(convertClientSpiritualityImportance(ocanStaffForm,ocanStaffFormData, ocanType));
+			additionalElements.setClientCultureHeritageImportance(convertClientCultureHeritageImportance(ocanStaffForm,ocanStaffFormData, ocanType));
+		}
+		
 		PresentingIssueList presentingIssueList = getPresentingIssueList(ocanStaffFormData);
 		additionalElements.setPresentingIssueList(presentingIssueList);
 		
+	if("FULL".equals(ocanType)) {
 		ActionList actionList = ActionList.Factory.newInstance();
 		List<Action> actions = new ArrayList<Action>();
 		
@@ -339,7 +342,7 @@ public class OcanReportUIBean {
 		}
 		referralList.setReferralArray(referrals.toArray(new Referral[referrals.size()]));
 		additionalElements.setReferralList(referralList);
-		
+		}
 		
 		return additionalElements;
 	}
@@ -360,27 +363,79 @@ public class OcanReportUIBean {
 		return presentingIssueList;
 	}
 	
-	public static OCANDomains convertOCANDomains(OcanStaffForm ocanStaffForm, List<OcanStaffFormData> ocanStaffFormData, OcanClientForm ocanClientForm, List<OcanClientFormData> ocanClientFormData) {
+	public static OCANDomains convertOCANDomains(OcanStaffForm ocanStaffForm, List<OcanStaffFormData> ocanStaffFormData, OcanClientForm ocanClientForm, List<OcanClientFormData> ocanClientFormData, String ocanType) {
 		OCANDomains ocanDomains = OCANDomains.Factory.newInstance();
 		
-		List<Domain> domainList = new ArrayList<Domain>();
-		
-		for(int x=0;x<24;x++) {
-			domainList.add(convertOCANDomain(x+1,ocanStaffForm,ocanStaffFormData,ocanClientForm, ocanClientFormData));
-			ocanDomains.setDomainArray((Domain[])domainList.toArray(new Domain[domainList.size()]));
+		if("FULL".equals(ocanType) || "SELF".equals(ocanType)) {
+			List<Domain> domainList = new ArrayList<Domain>();
+			
+			for(int x=0;x<24;x++) {
+				domainList.add(convertOCANDomain(x+1,ocanStaffForm,ocanStaffFormData,ocanClientForm, ocanClientFormData, ocanType));
+				ocanDomains.setDomainArray((Domain[])domainList.toArray(new Domain[domainList.size()]));		
 			}
+		} else {
+			ocanDomains.setResidenceType(convertResidenceType(ocanStaffForm,ocanStaffFormData));			
+			ocanDomains.setResidenceSupport(ResidenceSupport.Enum.forString(getStaffAnswer("1_any_support",ocanStaffFormData)));
+			ocanDomains.setLivingArrangementType(LivingArrangementType.Enum.forString(getStaffAnswer("1_live_with_anyone",ocanStaffFormData)));			
+			
+			ocanDomains.setEmployStatus(EmployStatus.Enum.forString(getStaffAnswer("5_current_employment_status",ocanStaffFormData)));
+			ocanDomains.setEducationProgramStatus(convertEducationProgramStatus(ocanStaffForm,ocanStaffFormData));				
+			
+			ocanDomains.setHospitalizedPastTwoYears(HospitalizedPastTwoYears.Enum.forString(getStaffAnswer("hospitalized_mental_illness",ocanStaffFormData)));
+			String totalAdmissions = getStaffAnswer("hospitalized_mental_illness_admissions",ocanStaffFormData);
+			if(totalAdmissions!=null&&totalAdmissions.length()>0) {
+				ocanDomains.setTotalAdmissions(new BigInteger(totalAdmissions));
+			} else {
+				ocanDomains.setTotalAdmissions(BigInteger.valueOf(0));
+			}
+			String totalHospitalDays = getStaffAnswer("hospitalized_mental_illness_days",ocanStaffFormData);
+			if(totalHospitalDays!=null&&totalHospitalDays.length()>0) {
+				ocanDomains.setTotalHospitalDays(new BigInteger(totalHospitalDays));
+			} else {
+				ocanDomains.setTotalHospitalDays(BigInteger.valueOf(0));
+			}
+			ocanDomains.setCommunityTreatOrder(CommunityTreatOrder.Enum.forString(getStaffAnswer("community_treatment_orders",ocanStaffFormData)));
+						 
+			ocanDomains.setVisitEmergencyDepartment(VisitEmergencyDepartment.Enum.forString(getStaffAnswer("visitEmergencyDepartment",ocanStaffFormData)));
+			
+			DiagnosticList diagnosticList = getDiagnosticList(ocanStaffFormData);			
+			if(diagnosticList.getDiagnosticArray().length>0) {
+				ocanDomains.setDiagnosticList(diagnosticList);
+			} else {
+				ocanDomains.setDiagnosticList(null);
+			}
+			
+			OtherIllnessList otherIllnessList = getOtherIllnessList(ocanStaffFormData);			
+			if(otherIllnessList.getOtherIllnessArray().length>0) {
+				ocanDomains.setOtherIllnessList(otherIllnessList);
+			} else {
+				ocanDomains.setOtherIllnessList(null);
+			}
+			
+			ocanDomains.setHighestEducationLevel(HighestEducationLevel.Enum.forString(getStaffAnswer("level_of_education",ocanStaffFormData)));
 		
+			ocanDomains.setSourceOfIncome(convertSourceOfIncome(ocanStaffForm,ocanStaffFormData));
+			
+		}
 		return ocanDomains;
 	}
 
-	public static Domain convertOCANDomain(int domainNumber,OcanStaffForm ocanStaffForm, List<OcanStaffFormData> ocanStaffFormData, OcanClientForm ocanClientForm, List<OcanClientFormData> ocanClientFormData) {
+	public static Domain convertOCANDomain(int domainNumber,OcanStaffForm ocanStaffForm, List<OcanStaffFormData> ocanStaffFormData, OcanClientForm ocanClientForm, List<OcanClientFormData> ocanClientFormData, String ocanType) {
 		Domain domain = Domain.Factory.newInstance();
-		domain.setName(Domain.Name.Enum.forString(getDomainName(domainNumber)));
-		domain.setDomainComments(convertDomainComments(String.valueOf(domainNumber),ocanStaffFormData,ocanClientForm, ocanClientFormData));
-		domain.setDomainActions(convertDomainActions(String.valueOf(domainNumber),ocanStaffFormData));
+		
+		if("FULL".equals(ocanType) || "SELF".equals(ocanType)) {
+			domain.setName(Domain.Name.Enum.forString(getDomainName(domainNumber)));
+			domain.setDomainComments(convertDomainComments(String.valueOf(domainNumber),ocanStaffFormData,ocanClientForm, ocanClientFormData, ocanType));
+		}
+		
+		if("FULL".equals(ocanType))
+			domain.setDomainActions(convertDomainActions(String.valueOf(domainNumber),ocanStaffFormData));
 	
-		NeedRating needRating = convertNeedRating(domainNumber,ocanStaffForm,ocanStaffFormData, ocanClientForm, ocanClientFormData);
-		domain.setNeedRating(needRating);
+		if(!"CORE".equals(ocanType)) {
+			NeedRating needRating = convertNeedRating(domainNumber,ocanStaffForm,ocanStaffFormData, ocanClientForm, ocanClientFormData, ocanType);
+			domain.setNeedRating(needRating);
+		}
+		if("FULL".equals(ocanType)) {
 		//if(needRating.getStaff() != 0 && needRating.getStaff() != 9) {
 			//2,3a,3b
 			domain.setInformalHelpRecvd(convertInformalHelpRecvd(domainNumber,ocanStaffForm,ocanStaffFormData));
@@ -388,7 +443,7 @@ public class OcanReportUIBean {
 			domain.setFormalHelpNeed(convertFormalHelpNeed(domainNumber,ocanStaffForm,ocanStaffFormData));			
 			
 		//}
-		
+		}
 		
 		switch(domainNumber) {
 		
@@ -401,11 +456,14 @@ public class OcanReportUIBean {
 		case 5:
 			domain.setEmployStatus(EmployStatus.Enum.forString(getStaffAnswer("5_current_employment_status",ocanStaffFormData)));
 			domain.setEducationProgramStatus(convertEducationProgramStatus(ocanStaffForm,ocanStaffFormData));				
-			domain.setBarriersFindingWorkList(convertBarriersFindingWorkList(ocanStaffForm,ocanStaffFormData));				
 			
+			if("FULL".equals(ocanType)) {
+			domain.setBarriersFindingWorkList(convertBarriersFindingWorkList(ocanStaffForm,ocanStaffFormData));				
+			}
 			break;
 		
 		case 6:
+			if("FULL".equals(ocanType)) { 
 			MedicalConditionList medicalConditionList = getMedicalConditionList(ocanStaffFormData);
 			domain.setMedicalConditionList(medicalConditionList);				
 
@@ -422,7 +480,7 @@ public class OcanReportUIBean {
 			if(medicationList.getMedicationDetailArray().length>0) {
 				domain.setMedicationList(medicationList);
 			}
-								
+			}					
 			break;
 			
 		case 7:
@@ -430,22 +488,31 @@ public class OcanReportUIBean {
 			String totalAdmissions = getStaffAnswer("hospitalized_mental_illness_admissions",ocanStaffFormData);
 			if(totalAdmissions!=null&&totalAdmissions.length()>0) {
 				domain.setTotalAdmissions(new BigInteger(totalAdmissions));
+			} else {
+				domain.setTotalAdmissions(BigInteger.valueOf(0));
 			}
 			String totalHospitalDays = getStaffAnswer("hospitalized_mental_illness_days",ocanStaffFormData);
 			if(totalHospitalDays!=null&&totalHospitalDays.length()>0) {
 				domain.setTotalHospitalDays(new BigInteger(totalHospitalDays));
+			} else {
+				domain.setTotalHospitalDays(BigInteger.valueOf(0));
 			}
 			domain.setCommunityTreatOrder(CommunityTreatOrder.Enum.forString(getStaffAnswer("community_treatment_orders",ocanStaffFormData)));
+						 
 			domain.setVisitEmergencyDepartment(VisitEmergencyDepartment.Enum.forString(getStaffAnswer("visitEmergencyDepartment",ocanStaffFormData)));
-			domain.setPsychiatricAdditionalInfo(getStaffAnswer("7_psychiatric_history_addl_info",ocanStaffFormData));
-			SymptomList symptomList = getSymptomList(ocanStaffFormData);
-			//if(symptomList.getSymptomList().size()>0) {
-			if(symptomList.getSymptomArray().length>0) {
-				domain.setSymptomList(symptomList);
-			}			
+			
+			if("FULL".equals(ocanType)) {	
+				domain.setPsychiatricAdditionalInfo(getStaffAnswer("7_psychiatric_history_addl_info",ocanStaffFormData));
+				SymptomList symptomList = getSymptomList(ocanStaffFormData);
+				//if(symptomList.getSymptomList().size()>0) {
+				if(symptomList.getSymptomArray().length>0) {
+					domain.setSymptomList(symptomList);
+				}	
+			}
 			break;
-		
+	 
 		case 8:
+			
 			DiagnosticList diagnosticList = getDiagnosticList(ocanStaffFormData);
 			//if(diagnosticList.getDiagnosticList().size()>0) {
 			if(diagnosticList.getDiagnosticArray().length>0) {
@@ -461,7 +528,7 @@ public class OcanReportUIBean {
 			break;
 			
 		case 10:
-			
+			if("FULL".equals(ocanType)) {
 			domain.setSuicideAttempt(SuicideAttempt.Enum.forString(getStaffAnswer("suicide_past",ocanStaffFormData)));
 			domain.setSuicideThoughts(SuicideThoughts.Enum.forString(getStaffAnswer("suicidal_thoughts",ocanStaffFormData)));
 			domain.setSafetyConcernSelf(SafetyConcernSelf.Enum.forString(getStaffAnswer("safety_concerns",ocanStaffFormData)));
@@ -471,23 +538,28 @@ public class OcanReportUIBean {
 			if(safetyToSelfRiskList.getSafetyToSelfRiskArray().length>0) {
 				domain.setSafetyToSelfRiskList(safetyToSelfRiskList);
 			}
+			}
 			break;
 			
-		case 12:			
+		case 12:	
+			if("FULL".equals(ocanType)) {
 			domain.setDrinkAlcohol(getDrinkAlcohol(ocanStaffFormData));
 			domain.setStageOfChangeAlcohol(StageOfChangeAlcohol.Enum.forString(getStaffAnswer("state_of_change_alcohol",ocanStaffFormData)));
 			domain.setDrinkingImpact(getStaffAnswer("drinking_impact",ocanStaffFormData));
+			}
 			break;
 		
 		case 13:
+			if("FULL".equals(ocanType)) {
 			DrugUseList drugUseList = getDrugUseList(ocanStaffFormData);
 			domain.setDrugUseList(drugUseList);
 			domain.setStageOfChangeDrugs(StageOfChangeDrugs.Enum.forString(getStaffAnswer("state_of_change_drug",ocanStaffFormData)));
 			domain.setDrugsImpact(getStaffAnswer("drug_impact",ocanStaffFormData));
+			}
 			break;
 			
 		case 14:
-			
+			if("FULL".equals(ocanType)) {
 			AddictionTypeList addictionTypeList = getAddictionTypeList(ocanStaffFormData);
 			//if(addictionTypeList.getAddictionTypeList().size()>0) {
 			if(addictionTypeList.getAddictionTypeArray().length>0) {
@@ -496,11 +568,13 @@ public class OcanReportUIBean {
 			
 			domain.setStageOfChangeAddictions(StageOfChangeAddictions.Enum.forString(getStaffAnswer("14_state_of_change",ocanStaffFormData)));
 			domain.setAddictionImpact(getStaffAnswer("addiction_impact",ocanStaffFormData));
-			
+			}
 			break;
 			
 		case 15:
+			if("FULL".equals(ocanType)) {
 			domain.setChangedSocialPatterns(ChangedSocialPatterns.Enum.forString(getStaffAnswer("social_patterns",ocanStaffFormData)));
+			}
 			break;
 			
 		case 20:
@@ -517,30 +591,42 @@ public class OcanReportUIBean {
 	}
 	
 	
-	public static NeedRating convertNeedRating(int domainNumber,OcanStaffForm ocanStaffForm, List<OcanStaffFormData> ocanStaffFormData, OcanClientForm ocanClientForm, List<OcanClientFormData> ocanClientFormData) {
+	public static NeedRating convertNeedRating(int domainNumber,OcanStaffForm ocanStaffForm, List<OcanStaffFormData> ocanStaffFormData, OcanClientForm ocanClientForm, List<OcanClientFormData> ocanClientFormData, String ocanType) {
 		NeedRating needRating = NeedRating.Factory.newInstance();
-		String staffAnswer = getStaffAnswer(domainNumber+"_1",ocanStaffFormData);
-		needRating.setStaff(Byte.valueOf(staffAnswer));
-		if(getStaffAnswer("consumerSelfAxCompleted",ocanStaffFormData).equals("TRUE")) {
-			// merge clientform with staffform, so don't need the following code.
-			//if(ocanClientForm != null) {
-			//	String clientAnswer = getClientAnswer(domainNumber+"_1",ocanClientFormData);
-			//	if(clientAnswer.length()>0)
-			//		needRating.setClient(Byte.valueOf(clientAnswer));
-			//	else
-			//		needRating.setClient((byte)-1);
-			//} else {
-			//	needRating.setClient((byte)-1);
-			//}
+		
+		if("FULL".equals(ocanType)) {
+			String staffAnswer = getStaffAnswer(domainNumber+"_1",ocanStaffFormData);
+			needRating.setStaff(Byte.valueOf(staffAnswer));
+			if(getStaffAnswer("consumerSelfAxCompleted",ocanStaffFormData).equals("TRUE")) {
+				// merge clientform with staffform, so don't need the following code.
+				//if(ocanClientForm != null) {
+				//	String clientAnswer = getClientAnswer(domainNumber+"_1",ocanClientFormData);
+				//	if(clientAnswer.length()>0)
+				//		needRating.setClient(Byte.valueOf(clientAnswer));
+				//	else
+				//		needRating.setClient((byte)-1);
+				//} else {
+				//	needRating.setClient((byte)-1);
+				//}
+				String clientAnswer = getStaffAnswer("client_"+domainNumber+"_1",ocanStaffFormData);
+				if(clientAnswer.length()>0) {
+					needRating.setClient(Byte.valueOf(clientAnswer));
+				} else {
+					needRating.setClient((byte)-1);
+				}			
+			} else {
+				needRating.setClient((byte)-1);
+			}
+		} else if("SELF".equals(ocanType)) {
 			String clientAnswer = getStaffAnswer("client_"+domainNumber+"_1",ocanStaffFormData);
 			if(clientAnswer.length()>0) {
 				needRating.setClient(Byte.valueOf(clientAnswer));
 			} else {
 				needRating.setClient((byte)-1);
-			}			
-		} else {
-			needRating.setClient((byte)-1);
+			}
+			
 		}
+		
 		return needRating;
 	}
 
@@ -575,24 +661,28 @@ public class OcanReportUIBean {
 		return formalHelpNeed;
 	}
 
-	public static DomainComments convertDomainComments(String domainNumber,List<OcanStaffFormData> ocanStaffFormData, OcanClientForm ocanClientForm, List<OcanClientFormData> ocanClientFormData) {
+	public static DomainComments convertDomainComments(String domainNumber,List<OcanStaffFormData> ocanStaffFormData, OcanClientForm ocanClientForm, List<OcanClientFormData> ocanClientFormData, String ocanType) {
 		DomainComments domainComments = DomainComments.Factory.newInstance();
-		
-		domainComments.setStaff(getStaffAnswer(domainNumber+"_comments",ocanStaffFormData));
-		if(getStaffAnswer("consumerSelfAxCompleted",ocanStaffFormData).equals("TRUE")) {
-			//if(ocanClientForm != null) {
-			//	String clientAnswer = getClientAnswer(domainNumber+"_comments",ocanClientFormData);
-			//	if(clientAnswer.length()>0)
-			//		domainComments.setClient(clientAnswer);
-			//	else
-			//		domainComments.setClient("");
-			//} else {
-			//	domainComments.setClient("");
-			//}
+		if("FULL".equals(ocanType)) {
+			domainComments.setStaff(getStaffAnswer(domainNumber+"_comments",ocanStaffFormData));
+			if(getStaffAnswer("consumerSelfAxCompleted",ocanStaffFormData).equals("TRUE")) {
+				//if(ocanClientForm != null) {
+				//	String clientAnswer = getClientAnswer(domainNumber+"_comments",ocanClientFormData);
+				//	if(clientAnswer.length()>0)
+				//		domainComments.setClient(clientAnswer);
+				//	else
+				//		domainComments.setClient("");
+				//} else {
+				//	domainComments.setClient("");
+				//}
+				domainComments.setClient(getStaffAnswer("client_"+domainNumber+"_comments",ocanStaffFormData));
+			} else {
+				domainComments.setClient("");
+			}
+		} else if("SELF".equals(ocanType)) {
 			domainComments.setClient(getStaffAnswer("client_"+domainNumber+"_comments",ocanStaffFormData));
-		} else {
-			domainComments.setClient("");
 		}
+		
 		return domainComments;
 	}
 	
@@ -919,39 +1009,54 @@ public class OcanReportUIBean {
 		return submitOrg;
 	}
 	
-	public static ClientHopesForFuture convertClientHopesForFuture(OcanStaffForm ocanStaffForm,List<OcanStaffFormData> ocanStaffFormData) {
+	public static ClientHopesForFuture convertClientHopesForFuture(OcanStaffForm ocanStaffForm,List<OcanStaffFormData> ocanStaffFormData, String ocanType) {
 		ClientHopesForFuture chff = ClientHopesForFuture.Factory.newInstance();
-		chff.setStaff(getStaffAnswer("hopes_future",ocanStaffFormData));
-		chff.setClient(getStaffAnswer("hopes_future",ocanStaffFormData));		
+		
+		if("FULL".equals(ocanType))
+			chff.setStaff(getStaffAnswer("hopes_future",ocanStaffFormData));
+		
+		chff.setClient(getStaffAnswer("client_hopes_future",ocanStaffFormData));		
 		return chff;
 	}
 	
-	public static ClientNeedToGetThere convertClientNeedToGetThere(OcanStaffForm ocanStaffForm,List<OcanStaffFormData> ocanStaffFormData) {
+	public static ClientNeedToGetThere convertClientNeedToGetThere(OcanStaffForm ocanStaffForm,List<OcanStaffFormData> ocanStaffFormData, String ocanType) {
 		ClientNeedToGetThere cntgt = ClientNeedToGetThere.Factory.newInstance();
-		cntgt.setStaff(getStaffAnswer("hope_future_need",ocanStaffFormData));
-		cntgt.setClient(getStaffAnswer("hope_future_need",ocanStaffFormData));		
+		
+		if("FULL".equals(ocanType))
+			cntgt.setStaff(getStaffAnswer("hope_future_need",ocanStaffFormData));
+		
+		cntgt.setClient(getStaffAnswer("client_hope_future_need",ocanStaffFormData));		
 		return cntgt;
 	}
 	
-	public static ClientViewMentalHealth convertClientViewMentalHealth(OcanStaffForm ocanStaffForm,List<OcanStaffFormData> ocanStaffFormData) {
+	public static ClientViewMentalHealth convertClientViewMentalHealth(OcanStaffForm ocanStaffForm,List<OcanStaffFormData> ocanStaffFormData, String ocanType) {
 		ClientViewMentalHealth cntgt = ClientViewMentalHealth.Factory.newInstance();
-		cntgt.setStaff(getStaffAnswer("view_mental_health",ocanStaffFormData));
-		cntgt.setClient(getStaffAnswer("view_mental_health",ocanStaffFormData));		
+		
+		if("FULL".equals(ocanType))
+			cntgt.setStaff(getStaffAnswer("view_mental_health",ocanStaffFormData));
+		
+		cntgt.setClient(getStaffAnswer("client_view_mental_health",ocanStaffFormData));		
 		return cntgt;
 	}
 		
-	public static ClientSpiritualityImportance convertClientSpiritualityImportance(OcanStaffForm ocanStaffForm,List<OcanStaffFormData> ocanStaffFormData) {
+	public static ClientSpiritualityImportance convertClientSpiritualityImportance(OcanStaffForm ocanStaffForm,List<OcanStaffFormData> ocanStaffFormData, String ocanType) {
 		ClientSpiritualityImportance cntgt = ClientSpiritualityImportance.Factory.newInstance();
-		cntgt.setStaff(getStaffAnswer("sprituality",ocanStaffFormData));
-		cntgt.setClient(getStaffAnswer("sprituality",ocanStaffFormData));		
+		
+		if("FULL".equals(ocanType))
+			cntgt.setStaff(getStaffAnswer("sprituality",ocanStaffFormData));
+		
+		cntgt.setClient(getStaffAnswer("client_sprituality",ocanStaffFormData));		
 		return cntgt;
 	}
 	
 	
-	public static ClientCultureHeritageImportance convertClientCultureHeritageImportance(OcanStaffForm ocanStaffForm,List<OcanStaffFormData> ocanStaffFormData) {
+	public static ClientCultureHeritageImportance convertClientCultureHeritageImportance(OcanStaffForm ocanStaffForm,List<OcanStaffFormData> ocanStaffFormData, String ocanType) {
 		ClientCultureHeritageImportance cntgt = ClientCultureHeritageImportance.Factory.newInstance();
-		cntgt.setStaff(getStaffAnswer("culture_heritage",ocanStaffFormData));
-		cntgt.setClient(getStaffAnswer("culture_heritage",ocanStaffFormData));		
+		
+		if("FULL".equals(ocanType))
+			cntgt.setStaff(getStaffAnswer("culture_heritage",ocanStaffFormData));
+		
+		cntgt.setClient(getStaffAnswer("client_culture_heritage",ocanStaffFormData));		
 		return cntgt;
 	}
 	
@@ -1021,7 +1126,7 @@ public class OcanReportUIBean {
 	
 		
 	
-	public static ClientRecord convertClientRecord(OcanStaffForm ocanStaffForm, List<OcanStaffFormData> ocanStaffFormData) {
+	public static ClientRecord convertClientRecord(OcanStaffForm ocanStaffForm, List<OcanStaffFormData> ocanStaffFormData, String ocanType) {
 		ClientRecord clientRecord = ClientRecord.Factory.newInstance();
 		clientRecord.setClientID(convertClientID(ocanStaffForm,ocanStaffFormData));
 		
@@ -1042,8 +1147,11 @@ public class OcanReportUIBean {
 		
 		
 		clientRecord.setClientCulture(ClientCulture.Enum.forString(getStaffAnswer("culture",ocanStaffFormData)));
-		clientRecord.setConsumerSelfAxCompleted(ConsumerSelfAxCompleted.Enum.forString(getStaffAnswer("consumerSelfAxCompleted",ocanStaffFormData)));
-		clientRecord.setReasonConsumerSelfAxNotCompletedList(convertReasonConsumerSelfAxNotCompletedList(ocanStaffFormData));
+		
+		if("FULL".equals(ocanType)) {
+				clientRecord.setConsumerSelfAxCompleted(ConsumerSelfAxCompleted.Enum.forString(getStaffAnswer("consumerSelfAxCompleted",ocanStaffFormData)));
+				clientRecord.setReasonConsumerSelfAxNotCompletedList(convertReasonConsumerSelfAxNotCompletedList(ocanStaffFormData));
+		}
 		//END OF PHI
 		
 		clientRecord.setReasonForOCAN(convertReasonForOCAN(ocanStaffForm,ocanStaffFormData));
@@ -1068,6 +1176,7 @@ public class OcanReportUIBean {
 		clientRecord.setCitizenshipStatus(CitizenshipStatus.Enum.forString(getStaffAnswer("citizenship_status",ocanStaffFormData)));
 		clientRecord.setTimeLivedInCanada(convertTimeLivedInCanada(ocanStaffForm,ocanStaffFormData));
 		
+		if("FULL".equals(ocanType)) {
 		List<String> immigrationExpAnswers = getMultipleStaffAnswer("immigration_issues",ocanStaffFormData);
 		if(immigrationExpAnswers.size()>0) {
 			ImmigExpList immigExpList = ImmigExpList.Factory.newInstance();
@@ -1099,6 +1208,7 @@ public class OcanReportUIBean {
 			if(discrimExpList!=null) {
 				clientRecord.setDiscrimExpList(discrimExpList);
 			}
+		}
 		}
 		
 		clientRecord.setPrefLang(PrefLang.Enum.forString(getStaffAnswer("preferred_language",ocanStaffFormData)));
