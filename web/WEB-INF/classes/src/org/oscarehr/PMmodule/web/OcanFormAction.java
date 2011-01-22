@@ -133,46 +133,5 @@ public class OcanFormAction {
 		ocanClientFormDataDao.persist(ocanClientFormData);
 	}
 	
-	public static boolean canCreateInitialAssessment(Integer clientId) {
-		
-		boolean result = false;
-		
-		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-		OcanStaffForm ocanStaffForm = ocanStaffFormDao.findLatestCompletedInitialOcan(loggedInInfo.currentFacility.getId(),clientId);	
-		if(ocanStaffForm!=null) {
-				result = true;
-		}	
-		
-		OcanStaffForm ocanStaffForm1 = ocanStaffFormDao.findLatestCompletedDischargedAssessment(loggedInInfo.currentFacility.getId(), clientId);
-		if(ocanStaffForm1!=null) {
-			Date completionDate = OcanForm.getAssessmentCompletionDate(ocanStaffForm1.getCompletionDate(),ocanStaffForm1.getClientCompletionDate());
-			result = OcanForm.afterCurrentDateAddMonth(completionDate, -3);				
-		}
-		
-		return result;
-	}
-	
-	public static boolean isItTimeToDoReassessment(Integer clientId) {
-		
-		boolean result = false;
-		
-		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-		
-		OcanStaffForm ocanStaffForm1 = ocanStaffFormDao.findLatestCompletedInitialOcan(loggedInInfo.currentFacility.getId(),clientId);	
-		
-		OcanStaffForm ocanStaffForm = null;
-		ocanStaffForm = ocanStaffFormDao.findLatestCompletedReassessment(loggedInInfo.currentFacility.getId(),clientId);	
-				
-		Date startDate = null;
-		if(ocanStaffForm!=null) {
-			startDate = OcanForm.getAssessmentStartDate(ocanStaffForm.getStartDate(),ocanStaffForm.getClientStartDate());
-		} else if(ocanStaffForm1!=null) {			
-			startDate = OcanForm.getAssessmentStartDate(ocanStaffForm1.getStartDate(),ocanStaffForm1.getClientStartDate());			
-		} else {
-			return result;
-		}
-		
-		return OcanForm.afterCurrentDateAddMonth(startDate, -6);		
-			
-	}
+
 }

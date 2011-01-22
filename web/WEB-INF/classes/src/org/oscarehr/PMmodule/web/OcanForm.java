@@ -788,6 +788,40 @@ public class OcanForm {
 			
 	}
 	
+	public static boolean canCreateInitialAssessment(Integer clientId) {
+		
+		boolean result = false;
+		
+		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+		
+		OcanStaffForm ocanStaffForm = ocanStaffFormDao.findLatestCompletedInitialOcan(loggedInInfo.currentFacility.getId(),clientId);	
+		if(ocanStaffForm!=null) {						
+			OcanStaffForm ocanStaffForm1 = ocanStaffFormDao.findLatestCompletedDischargedAssessment(loggedInInfo.currentFacility.getId(), clientId);
+			if(ocanStaffForm1!=null) {
+				Date completionDate = getAssessmentCompletionDate(ocanStaffForm1.getCompletionDate(),ocanStaffForm1.getClientCompletionDate());
+				result = afterCurrentDateAddMonth(completionDate, -3);				
+			}
+		} else {
+			result = true;
+		}
+		
+		return result;
+	}
+
+	public static boolean haveInitialAssessment(Integer clientId) {
+		
+		boolean result = false;
+		
+		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+		
+		OcanStaffForm ocanStaffForm = ocanStaffFormDao.findLatestCompletedInitialOcan(loggedInInfo.currentFacility.getId(),clientId);	
+		if(ocanStaffForm!=null) {						
+			result = true;
+		} 
+		
+		return result;
+	}
+
 	public static String getOcanWarningMessage(Integer facilityId) {
 				
 		StringBuilder messages = new StringBuilder();
@@ -833,5 +867,6 @@ public class OcanForm {
 		return OcanForm.afterCurrentDateAddMonth(startDate, -6);		
 			
 	}
+	
 	
 }
