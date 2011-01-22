@@ -36,18 +36,28 @@
 <%@include file="/layouts/caisi_html_top.jspf"%>
 
 
-<h1>OCAN Export Report</h1>
+<h1>OCAN Export Report - v2.0.6</h1>
 
 				
 <form method="post" action="ocan_report_export.jsp">
 	<table class="borderedTableAndCells">
 		<tr>
-			<td>OCAN Report - v2.0.6</td>
-			<td></td>
+			<td>OCAN Type </td>			
+			<td >
+				<select name="ocanType" id="ocanType">
+					<option value="FULL">FULL</option>
+					<option value="SELF">SELF+CORE</option>
+					<option value="CORE">CORE</option>
+				</select>
+			</td>
 		</tr>
 		
 		<tr>
-			<td>Date Selection</td>
+			<td colspan="2">Date Selection  </td>
+			<td></td>
+		</tr>
+		<tr>			
+			<td>The Assessment Start Date From</td>
 			<td>
 				<select name="startYear">
 				<%
@@ -85,6 +95,44 @@
 				</select>
 			</td>
 		</tr>
+
+		<tr>
+			<td >To </td>
+			<td>
+				<select name="endYear">
+				<%					
+					int year2=cal.get(GregorianCalendar.YEAR);
+					year2 = year2 + 5;
+					for(int i=0;i<5;i++)
+					{	
+						%>
+						<option value="<%=year2-i%>"><%=year2-i %> </option>
+						<%
+					}
+					year2 = year2 - 5;
+					for (int i=0; i<10; i++)
+					{
+						%>
+							<option value="<%=year2-i%>"><%=year2-i%></option>
+						<%
+					}
+				%>
+				</select>
+				-
+				<select name="endMonth">
+				<%					
+					for (int i=1; i<13; i++)
+					{
+						%>
+							<option value="<%=i%>" title="<%=months[i-1]%>"><%=i%></option>
+						<%
+					}
+				%>
+				</select>
+			</td>
+		</tr>
+
+
 
 		<tr>
 			<td></td>
