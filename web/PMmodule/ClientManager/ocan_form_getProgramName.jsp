@@ -8,25 +8,36 @@
 	int currentDemographicId=Integer.parseInt(request.getParameter("demographicId"));	
 	int prepopulationLevel = OcanForm.PRE_POPULATION_LEVEL_ALL;
 	String ocanType = request.getParameter("ocanType");
+	int ocanStaffFormId =0;
+	if(request.getParameter("ocanStaffFormId")!=null && request.getParameter("ocanStaffFormId")!="") {
+		ocanStaffFormId = Integer.parseInt(request.getParameter("ocanStaffFormId"));
+	}
 	int centerNumber = Integer.parseInt(request.getParameter("center_num"));
 	String LHIN_code = request.getParameter("LHIN_code");
 	String orgName = request.getParameter("orgName");
 	
-	OcanStaffForm ocanStaffForm=OcanForm.getOcanStaffForm(currentDemographicId, prepopulationLevel,ocanType);		
-	
+	//OcanStaffForm ocanStaffForm=OcanForm.getOcanStaffForm(currentDemographicId, prepopulationLevel,ocanType);		
+	OcanStaffForm ocanStaffForm = null;
+	if(ocanStaffFormId != 0) {
+		ocanStaffForm=OcanForm.getOcanStaffForm(Integer.valueOf(request.getParameter("ocanStaffFormId")));
+	}else {
+		ocanStaffForm=OcanForm.getOcanStaffForm(currentDemographicId,prepopulationLevel,ocanType);		
+	}
 %>
 
 <script type="text/javascript">
 $('document').ready(function() {
 	//load mental health centres orgnaization name
 	var demographicId='<%=currentDemographicId%>';
+	var ocanType='<%=ocanType%>';
+	var ocanStaffFormId = '<%=ocanStaffFormId%>';
 	var cenCount = $("#center_count").val();
 	var LHIN_code = $("#serviceUseRecord_orgLHIN<%=centerNumber%>").val(); 
 	var orgName = $("#serviceUseRecord_orgName<%=centerNumber%>").val();
 	var programName = $("#serviceUseRecord_programName<%=centerNumber%>").val();
 	var item = $("#center_block_orgName<%=centerNumber%>");
 	if(programName!=null && programName!="") {
-		$.get('ocan_form_getProgramNumber.jsp?demographicId='+demographicId+'&center_num=<%=centerNumber%>'+'&LHIN_code='+LHIN_code+'&orgName='+orgName+'&programName='+programName, function(data) {
+		$.get('ocan_form_getProgramNumber.jsp?ocanStaffFormId='+ocanStaffFormId+'&ocanType='+ocanType+'&demographicId='+demographicId+'&center_num=<%=centerNumber%>'+'&LHIN_code='+LHIN_code+'&orgName='+orgName+'&programName='+programName, function(data) {
 				  item.append(data);					 
 				});	
 	}

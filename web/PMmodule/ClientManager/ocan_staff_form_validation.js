@@ -62,10 +62,16 @@ $("document").ready(function() {
 			
 			 $('#reasonForAssessmentBlock').hide();
 
-			if(data.match("false")){				
+			if(data.match("ia_false")){				
 				alert("You can not create a new initial assessment for this client for now. It already exists in the system.");
 				$("#reasonForAssessment").val('').attr("selected", "selected");
-			}
+			} else if(data.match("ra_false")){				
+				alert("You can not do reassessment for this client for now because this client still does not have an initial assessment.");
+				$("#reasonForAssessment").val('').attr("selected", "selected");
+			} else if(data.match("ia_exists_false")){				
+				alert("You must create an initial assessment first.");
+				$("#reasonForAssessment").val('').attr("selected", "selected");
+			} 
 		});
 
 	});

@@ -11,9 +11,12 @@
 	int currentDemographicId=Integer.parseInt(request.getParameter("demographicId"));
 	String ocanType = request.getParameter("ocanType");
 	int prepopulationLevel = OcanForm.PRE_POPULATION_LEVEL_ALL;
-	
-	OcanStaffForm ocanStaffForm = null;
+	int ocanStaffFormId =0;
 	if(request.getParameter("ocanStaffFormId")!=null && request.getParameter("ocanStaffFormId")!="") {
+		ocanStaffFormId = Integer.parseInt(request.getParameter("ocanStaffFormId"));
+	}
+	OcanStaffForm ocanStaffForm = null;
+	if(ocanStaffFormId != 0) {
 		ocanStaffForm=OcanForm.getOcanStaffForm(Integer.valueOf(request.getParameter("ocanStaffFormId")));
 	}else {
 		ocanStaffForm=OcanForm.getOcanStaffForm(currentDemographicId,prepopulationLevel,ocanType);		
@@ -58,9 +61,11 @@ $("document").ready(function() {
 $('document').ready(function(){
 	//we want to load initial meds
 	var demographicId='<%=currentDemographicId%>';
+	var ocanType='<%=ocanType%>';
+	var ocanStaffFormId = '<%=ocanStaffFormId%>';
 	var medCount = $("#medications_count").val();
 	for(var x=1;x<=medCount;x++) {
-		$.get('ocan_form_medication.jsp?demographicId='+demographicId+'&medication_num='+x, function(data) {
+		$.get('ocan_form_medication.jsp?ocanStaffFormId='+ocanStaffFormId+'&ocanType='+ocanType+'&demographicId='+demographicId+'&medication_num='+x, function(data) {
 			  $("#medication_block").append(data);					 
 			});				
 	} 
@@ -73,9 +78,11 @@ $('document').ready(function(){
 $('document').ready(function() {
 	//load mental health centres
 	var demographicId='<%=currentDemographicId%>';
+	var ocanType='<%=ocanType%>';
+	var ocanStaffFormId = '<%=ocanStaffFormId%>';
 	var cenCount = $("#center_count").val();
 	for(var x=1;x<=cenCount;x++) {
-		$.get('ocan_form_mentalHealthCenter.jsp?demographicId='+demographicId+'&center_num='+x, function(data) {
+		$.get('ocan_form_mentalHealthCenter.jsp?ocanStaffFormId='+ocanStaffFormId+'&ocanType='+ocanType+'&demographicId='+demographicId+'&center_num='+x, function(data) {
 			  $("#center_block").append(data);					 
 			});				
 	} 
@@ -94,11 +101,12 @@ function changeOrgLHIN(selectBox) {
 		var selectBoxValue = selectBox.options[selectBox.selectedIndex].value;
 
 		var demographicId='<%=currentDemographicId%>';
-
+		var ocanType='<%=ocanType%>';
+		var ocanStaffFormId = '<%=ocanStaffFormId%>';
 		//do we need to add..loop through existing blocks, and see if we need more...create on the way.
 			
 			if(document.getElementById("serviceUseRecord_orgName" + priority) == null) {
-				$.get('ocan_form_getOrgName.jsp?demographicId='+demographicId+'&center_num='+priority+'&LHIN_code='+selectBoxValue, function(data) {
+				$.get('ocan_form_getOrgName.jsp?ocanStaffFormId='+ocanStaffFormId+'&ocanType='+ocanType+'&demographicId='+demographicId+'&center_num='+priority+'&LHIN_code='+selectBoxValue, function(data) {
 					  $("#center_block_orgName"+priority).append(data);					 
 					});														
 			}
@@ -108,7 +116,7 @@ function changeOrgLHIN(selectBox) {
 				$("#center_programName"+priority).remove();
 				$("#center_orgName"+priority).remove();			
 								
-				$.get('ocan_form_getOrgName.jsp?demographicId='+demographicId+'&center_num='+priority+'&LHIN_code='+selectBoxValue, function(data) {
+				$.get('ocan_form_getOrgName.jsp?ocanStaffFormId='+ocanStaffFormId+'&ocanType='+ocanType+'&demographicId='+demographicId+'&center_num='+priority+'&LHIN_code='+selectBoxValue, function(data) {
 					  $("#center_block_orgName"+priority).append(data);					 
 					});	
 			}
@@ -124,16 +132,18 @@ function changeOrgName(selectBox) {
 	var LHIN_code = $("#serviceUseRecord_orgLHIN"+priority).val();
 	
 	var demographicId='<%=currentDemographicId%>';
+	var ocanType='<%=ocanType%>';
+	var ocanStaffFormId = '<%=ocanStaffFormId%>';
 	
 		if(document.getElementById("serviceUseRecord_programName" + priority) == null) {
-			$.get('ocan_form_getProgramName.jsp?demographicId='+demographicId+'&center_num='+priority+'&LHIN_code='+LHIN_code+'&orgName='+selectBoxValue, function(data) {
+			$.get('ocan_form_getProgramName.jsp?ocanStaffFormId='+ocanStaffFormId+'&ocanType='+ocanType+'&demographicId='+demographicId+'&center_num='+priority+'&LHIN_code='+LHIN_code+'&orgName='+selectBoxValue, function(data) {
 				  $("#center_block_orgName"+priority).append(data);					 
 				});														
 		}
 		if(document.getElementById("serviceUseRecord_programName" + priority) != null) {
 			$("#center_programName"+priority).remove();
 			$("#center_programNumber"+priority).remove();
-			$.get('ocan_form_getProgramName.jsp?demographicId='+demographicId+'&center_num='+priority+'&LHIN_code='+LHIN_code+'&orgName='+selectBoxValue, function(data) {
+			$.get('ocan_form_getProgramName.jsp?ocanStaffFormId='+ocanStaffFormId+'&ocanType='+ocanType+'&demographicId='+demographicId+'&center_num='+priority+'&LHIN_code='+LHIN_code+'&orgName='+selectBoxValue, function(data) {
 				  $("#center_block_orgName"+priority).append(data);					 
 				});	
 		}
@@ -145,11 +155,12 @@ function changeNumberOfMedications() {
 	var newCount = $("#medications_count").val(); 
 
 	var demographicId='<%=currentDemographicId%>';
-
+	var ocanType='<%=ocanType%>';
+	var ocanStaffFormId = '<%=ocanStaffFormId%>';
 	//do we need to add..loop through existing blocks, and see if we need more...create on the way.
 	for(var x=1;x<=newCount;x++) {		
 		if(document.getElementById("medication_" + x) == null) {
-			$.get('ocan_form_medication.jsp?demographicId='+demographicId+'&medication_num='+x, function(data) {
+			$.get('ocan_form_medication.jsp?ocanStaffFormId='+ocanStaffFormId+'&ocanType='+ocanType+'&demographicId='+demographicId+'&medication_num='+x, function(data) {
 				  $("#medication_block").append(data);					 
 				});														
 		}
@@ -169,11 +180,12 @@ function changeNumberOfcentres() {
 	var newCount = $("#center_count").val(); 
 
 	var demographicId='<%=currentDemographicId%>';
-
+	var ocanType='<%=ocanType%>';
+	var ocanStaffFormId = '<%=ocanStaffFormId%>';
 	//do we need to add..loop through existing blocks, and see if we need more...create on the way.
 	for(var x=1;x<=newCount;x++) {		
 		if(document.getElementById("center_" + x) == null) {
-			$.get('ocan_form_mentalHealthCenter.jsp?demographicId='+demographicId+'&center_num='+x, function(data) {
+			$.get('ocan_form_mentalHealthCenter.jsp?ocanStaffFormId='+ocanStaffFormId+'&ocanType='+ocanType+'&demographicId='+demographicId+'&center_num='+x, function(data) {
 				  $("#center_block").append(data);					 
 				});														
 		}
@@ -212,7 +224,9 @@ $("document").ready(function() {
 		$("#summary_of_actions_count").val(count);
 		$("#summary_of_actions_domains").val(domains);
 		var demographicId='<%=currentDemographicId%>';
-		$.get('ocan_form_summary_of_actions.jsp?demographicId='+demographicId+'&size='+count+'&domains='+domains, function(data) {
+		var ocanType='<%=ocanType%>';
+		var ocanStaffFormId = '<%=ocanStaffFormId%>';
+		$.get('ocan_form_summary_of_actions.jsp?ocanStaffFormId='+ocanStaffFormId+'&ocanType='+ocanType+'&demographicId='+demographicId+'&size='+count+'&domains='+domains, function(data) {
 			  $("#summary_of_actions_block").append(data);					 
 			});		
 	});
@@ -234,8 +248,9 @@ $("document").ready(function(){
 	var summaryOfActionsCount = $("#summary_of_actions_count").val();
 	var summaryOfActionsDomains = $("#summary_of_actions_domains").val();
 	var demographicId='<%=currentDemographicId%>';
-	
-	$.get('ocan_form_summary_of_actions.jsp?demographicId='+demographicId+'&size='+summaryOfActionsCount+'&domains='+summaryOfActionsDomains, function(data) {
+	var ocanType='<%=ocanType%>';
+	var ocanStaffFormId = '<%=ocanStaffFormId%>';
+	$.get('ocan_form_summary_of_actions.jsp?ocanStaffFormId='+ocanStaffFormId+'&ocanType='+ocanType+'&demographicId='+demographicId+'&size='+summaryOfActionsCount+'&domains='+summaryOfActionsDomains, function(data) {
 		  $("#summary_of_actions_block").append(data);					 
 		});		
 	
@@ -247,9 +262,11 @@ $("document").ready(function(){
 $('document').ready(function(){
 	//we want to load initial meds
 	var demographicId='<%=currentDemographicId%>';
+	var ocanType='<%=ocanType%>';
+	var ocanStaffFormId = '<%=ocanStaffFormId%>';
 	var medCount = $("#referrals_count").val();
 	for(var x=1;x<=medCount;x++) {
-		$.get('ocan_form_referral.jsp?demographicId='+demographicId+'&referral_num='+x, function(data) {
+		$.get('ocan_form_referral.jsp?ocanStaffFormId='+ocanStaffFormId+'&ocanType='+ocanType+'&demographicId='+demographicId+'&referral_num='+x, function(data) {
 			  $("#referral_block").append(data);					 
 			});				
 	} 
@@ -259,11 +276,12 @@ function changeNumberOfReferrals() {
 	var newCount = $("#referrals_count").val(); 
 
 	var demographicId='<%=currentDemographicId%>';
-
+	var ocanType='<%=ocanType%>';
+	var ocanStaffFormId = '<%=ocanStaffFormId%>';
 	//do we need to add..loop through existing blocks, and see if we need more...create on the way.
 	for(var x=1;x<=newCount;x++) {		
 		if(document.getElementById("referral_" + x) == null) {
-			$.get('ocan_form_referral.jsp?demographicId='+demographicId+'&referral_num='+x, function(data) {
+			$.get('ocan_form_referral.jsp?ocanStaffFormId='+ocanStaffFormId+'&ocanType='+ocanType+'&demographicId='+demographicId+'&referral_num='+x, function(data) {
 				  $("#referral_block").append(data);					 
 				});														
 		}
@@ -363,8 +381,18 @@ $("document").ready(function(){
 
 
 <form id="ocan_staff_form" name="ocan_staff_form" action="ocan_form_action.jsp" method="post" onsubmit="return submitOcanForm()">
+	<% if("FULL".equals(ocanType)) { %>
 	<h3>FULL OCAN 2.0 Staff Assessment</h3>	
 	<br />
+	<% } %>
+	<% if("SELF".equals(ocanType)) { %>
+	<h3>SELF+CORE OCAN 2.0 Staff Assessment</h3>	
+	<br />
+	<% } %>
+	<% if("CORE".equals(ocanType)) { %>
+	<h3>CORE OCAN 2.0 Staff Assessment</h3>	
+	<br />
+	<% } %>
 	<input type="hidden" name="client_date_of_birth" id="client_date_of_birth" value="<%=ocanStaffForm.getClientDateOfBirth()%>" class="{validate: {required:true}}"/>
 	<input type="hidden" id="clientStartDate" name="clientStartDate" value="<%=ocanStaffForm.getFormattedClientStartDate()%>"/>
 	<input type="hidden" id="clientCompletionDate" name="clientCompletionDate" value="<%=ocanStaffForm.getFormattedClientCompletionDate()%>"/>
@@ -393,7 +421,7 @@ $("document").ready(function(){
 				<input id="completionDate" name="completionDate" onfocus="this.blur()" readonly="readonly" class="{validate: {required:true}}" type="text" value="<%=ocanStaffForm.getFormattedCompletionDate()%>"> <img title="Calendar" id="cal_completionDate" src="../../images/cal.gif" alt="Calendar" border="0"><script type="text/javascript">Calendar.setup({inputField:'completionDate',ifFormat :'%Y-%m-%d',button :'cal_completionDate',align :'cr',singleClick :true,firstDay :1});</script>					
 			</td>
 		</tr>
-		
+	
 		
 		<tr><td colspan="2">
 		<h3>Consumer Information Summary</h3>
@@ -416,9 +444,7 @@ $("document").ready(function(){
 		</tr>
 		<tr>
 			<td colspan="2">			
-				<div id="reasonForAssessmentBlock">
-							
-							
+				<div id="reasonForAssessmentBlock">		
 				
 				</div>
 			</td>
@@ -452,6 +478,8 @@ $("document").ready(function(){
 			</td>
 		</tr>
 		
+<% if("FULL".equals(ocanType)) { %>
+		
 		<tr>
 			<td colspan="2">Consumer Self Assessment Completion</td>
 		</tr>
@@ -475,7 +503,8 @@ $("document").ready(function(){
 						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"otherReason",128, prepopulationLevel)%>
 			</td>
 		</tr>
-				
+
+	<% } %>					
 		
 		<tr>
 			<td colspan="2">Consumer Information</td>
@@ -633,15 +662,7 @@ $("document").ready(function(){
 		<tr>
 			<td colspan="2">Mental Health Functional Centre Use (for the last 6 Months)</td>
 		</tr>
-		
-		
-		
-		
-		
-		
-		
-		
-		
+			
 		<tr>
 			<td class="genericTableHeader">Number of Mental Health Functional Centres?</td>
 			<td class="genericTableData">
@@ -1570,7 +1591,8 @@ $("document").ready(function(){
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "months_in_canada", OcanForm.getOcanFormOptions("Months in Canada"),prepopulationLevel)%>
 				</select>		
 			</td>
-		</tr>				
+		</tr>
+<% if("FULL".equals(ocanType)) { %>						
 		<tr>
 			<td class="genericTableHeader">Can you tell me about your immigration experience?</td>
 			<td class="genericTableData">
@@ -1602,7 +1624,7 @@ $("document").ready(function(){
 						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"discrimination_other",128,prepopulationLevel)%>
 			</td>
 		</tr>						
-		
+<% } %>		
 		<tr>
 			<td class="genericTableHeader">Service recipient preferred language?</td>
 			<td class="genericTableData">
@@ -1636,6 +1658,8 @@ $("document").ready(function(){
 				<%=OcanForm.renderLegalStatusOptions(ocanStaffForm.getId(), "legal_status", OcanForm.getOcanFormOptions("Legal History Type"),prepopulationLevel,false)%>						
 			</td>
 		</tr>		
+	
+	<% if("FULL".equals(ocanType)) { %>
 	  
 		<tr>
 			<td class="genericTableHeader">Comments</td>
@@ -1715,7 +1739,7 @@ $("document").ready(function(){
 				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "1_review_date",false,prepopulationLevel)%>				
 			</td>
 		</tr>
-		
+<% }  %>	
 		<tr>
 			<td class="genericTableHeader">Where do you live?</td>
 			<td class="genericTableData">
@@ -1748,8 +1772,10 @@ $("document").ready(function(){
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "1_live_with_anyone", OcanForm.getOcanFormOptions("Living Arrangement Type"),prepopulationLevel)%>
 				</select>					
 			</td>
-		</tr>				
-	
+		</tr>	
+					
+<% if("FULL".equals(ocanType)) { %>	
+
 		<tr>
 			<td colspan="2">2. Food</td>
 		</tr>			
@@ -2019,7 +2045,7 @@ $("document").ready(function(){
 				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "5_review_date",false,prepopulationLevel)%>				
 			</td>
 		</tr>		
-	
+<% } %>
 		<tr>
 			<td class="genericTableHeader">What is your current employment status?</td>
 			<td class="genericTableData">
@@ -2043,6 +2069,9 @@ $("document").ready(function(){
 				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "5_education_program_status_other", 128,prepopulationLevel)%>						
 			</td>
 		</tr>	
+		
+<% if("FULL".equals(ocanType)) { %>
+		
 		<tr>
 			<td class="genericTableHeader">Barriers in finding and/or maintaining a work/volunteer/education role (Select all that apply)</td>
 			<td class="genericTableData">
@@ -2273,7 +2302,7 @@ This information is collected from a variety of sources, including self-report, 
 				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "7_review_date",false,prepopulationLevel)%>				
 			</td>
 		</tr>	
-		
+	<% } %>	
 		<tr>
 			<td colspan="2">Psychiatric History</td>
 		</tr>
@@ -2324,6 +2353,9 @@ This information is collected from a variety of sources, including self-report, 
 				</select>					
 			</td>
 		</tr>	
+		
+<% if("FULL".equals(ocanType)) { %>
+		
 		<tr>
 			<td class="genericTableHeader">Psychiatric History - Additional Information</td>
 			<td class="genericTableData">
@@ -2411,7 +2443,7 @@ This information is collected from a variety of sources, including self-report, 
 				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "8_review_date",false,prepopulationLevel)%>				
 			</td>
 		</tr>	
-
+	<% } %>
 		<tr>
 			<td class="genericTableHeader">Diagnostic Categories (Select all that apply)</td>
 			<td class="genericTableData">
@@ -2426,7 +2458,7 @@ This information is collected from a variety of sources, including self-report, 
 			</td>
 		</tr>		
 
-
+<% if("FULL".equals(ocanType)) { %>
 
 		<tr>
 			<td colspan="2">9. Psychological Distress</td>
@@ -3381,7 +3413,9 @@ This information is collected from a variety of sources, including self-report, 
 				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "20_review_date",false,prepopulationLevel)%>				
 			</td>
 		</tr>	
-		
+	
+	<% } %>
+	
 		<tr>
 			<td class="genericTableHeader">What is your highest level of education?</td>
 			<td class="genericTableData">
@@ -3391,7 +3425,7 @@ This information is collected from a variety of sources, including self-report, 
 			</td>
 		</tr>
 		
-		
+	<% if("FULL".equals(ocanType)) { %>	
 		
 		<tr>
 			<td colspan="2">21. Telephone</td>
@@ -3598,6 +3632,8 @@ This information is collected from a variety of sources, including self-report, 
 			</td>
 		</tr>		
 
+	<% } %>
+	
 		<tr>
 			<td class="genericTableHeader">What is your primary source of income?</td>
 			<td class="genericTableData">
@@ -3613,6 +3649,8 @@ This information is collected from a variety of sources, including self-report, 
 						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"income_source_type_other",128,prepopulationLevel)%>
 			</td>
 		</tr>
+		
+	<% if("FULL".equals(ocanType)) { %>
 		
 		<tr>
 			<td colspan="2">24. Benefits</td>
@@ -3684,7 +3722,7 @@ This information is collected from a variety of sources, including self-report, 
 		<tr>
 			<td colspan="2" vheight="4"></td>
 		</tr>
-		
+	<% } if(!"CORE".equals(ocanType)) { %>	
 		
 		<tr>
 			<td class="genericTableHeader">What are your hopes for the future?</td>
@@ -3717,6 +3755,8 @@ This information is collected from a variety of sources, including self-report, 
 			</td>
 		</tr>
 		
+	<% } %>
+	
 		<tr>
 			<td class="genericTableHeader">Presenting Issues (Select all that apply)</td>
 			<td class="genericTableData">
@@ -3731,6 +3771,17 @@ This information is collected from a variety of sources, including self-report, 
 			</td>
 		</tr>
 			
+	<% if(!"FULL".equals(ocanType)) { %>
+	  
+		<tr>
+			<td class="genericTableHeader">Comments</td>
+			<td class="genericTableData">
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"commments",5,50,prepopulationLevel)%>
+			</td>
+		</tr>
+	
+	<% } %>	
+	<% if("FULL".equals(ocanType)) { %>
 		<tr>
 			<td colspan="2" vheight="4"></td>
 		</tr>
@@ -3773,6 +3824,7 @@ This information is collected from a variety of sources, including self-report, 
 				</div>
 			</td>
 		</tr>
+	<% } %>	
 		<tr style="background-color:white">
 			<td colspan="2">
 				<br />
