@@ -1,0 +1,139 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<OCANv2SubmissionFile tool_revision="2.0.5" schema_version="2.0.6" ID="File-01" timestamp="2009-03-16T00:00:00Z">
+
+	<!-- assessment record# 1: this assessment shows all TAGs have their values populated -->
+	<OCANv2SubmissionRecord OCANType="CORE" assessmentID="1001" assessmentRevision="1" startDate="2009-01-16Z" completionDate="2009-01-31Z" assessmentStatus="Complete" IARViewingConsent="TRUE">
+		<submitOrganizationRecord>
+			<submitOrg name="NE LHIN Test Org" number="123"/>
+		</submitOrganizationRecord>
+		<clientRecord>
+			<clientID orgClientID="123000"/>
+			<completedByOCANLead>TRUE</completedByOCANLead>
+			<reasonForOCAN value="OTHR" other="detail text for other reason for OCAN"/>
+			<clientName first="Mike" middle="K." last="Hilton" preferred="Micky"/>
+			<clientAddress line1="123 Yonge St." line2="unit #4444" city="Toronto" province="ON" postalCode="L1L2K2"/>
+			<clientPhone number="416-555-9999" extension="1234"/>
+			<clientEmailAddress>micky@server.com</clientEmailAddress>
+			<clientDOB value="2001-03-15Z" type=""/>
+			<clientHealthCardInfo number="1111-222-333" version="XY" issuingTerritory="ON"/>
+			<serviceRecipientLocation>010-52</serviceRecipientLocation>
+			<serviceRecipientLHIN>12</serviceRecipientLHIN>
+			<gender>F</gender>
+			<maritalStatus>125681006</maritalStatus>
+			<serviceUseRecordList>
+				<serviceUseRecord>
+					<OCANLead>TRUE</OCANLead>
+					<staffWorker name="Joe Anderson" phoneNumber="416-111-6666" extension="7878"/>
+					<serviceOrg LHIN="2" name="Other" number="123" nameOther="Service Org 1 name" numberOther="5555"/>
+					<program name="Other" number="1234" nameOther="Intensive Case Management" numberOther="3025"/>
+					<MISFunction value="725 10 76 99" nameOther="Other MISFunction Name" numberOther="111-222-333" subFunction="any sub function name"/>
+					<serviceDeliveryLHIN>12</serviceDeliveryLHIN>
+					<referralSource>018-01</referralSource>
+					<requestForServiceDate>2001-01-01Z</requestForServiceDate>
+					<serviceDecisionDate>2001-01-01Z</serviceDecisionDate>
+					<accepted>TRUE</accepted>
+					<serviceInitiationDate>2001-01-01Z</serviceInitiationDate>
+					<exitDate>2001-01-01Z</exitDate>
+					<exitDisposition>019-01</exitDisposition>
+				</serviceUseRecord>
+				<serviceUseRecord>
+					<OCANLead>FALSE</OCANLead>
+					<staffWorker name="Joe Leno" phoneNumber="416-222-6666" extension="4545"/>
+					<serviceOrg LHIN="2" name="Other" number="123" nameOther="Service Org 2 name" numberOther="7777"/>
+					<program name="Other" number="1234" nameOther="Intensive Case Management" numberOther="3025"/>
+					<MISFunction value="725 10 76 99" nameOther="Other MISFunction Name" numberOther="111-222-333" subFunction="any sub function name"/>
+					<serviceDeliveryLHIN>12</serviceDeliveryLHIN>
+					<referralSource>018-01</referralSource>
+					<requestForServiceDate>2001-01-01Z</requestForServiceDate>
+					<serviceDecisionDate>2001-01-01Z</serviceDecisionDate>
+					<accepted>TRUE</accepted>
+					<serviceInitiationDate>2001-01-01Z</serviceInitiationDate>
+					<exitDate>2001-01-01Z</exitDate>
+					<exitDisposition>019-01</exitDisposition>
+				</serviceUseRecord>
+			</serviceUseRecordList>
+			<clientContact>
+				<doctorContact doctor="TRUE" lastSeen="LS-6">
+					<contactInfo contactName="doctor name" addressLine1="doctor address line 1" addressLine2="doctor address line 2" city="doctor city" province="ON" postalCode="L1L2K2" phoneNumber="416-111-2222" extension="1234" emailAddress="doctor@clinic.ca"/>
+				</doctorContact>
+				<psychiatristContact psychiatrist="TRUE" lastSeen="LS-12">
+					<contactInfo contactName="psychiatrist name" addressLine1="psychiatrist address line 1" addressLine2="psychiatrist address line 2" city="psychiatrist city" province="ON" postalCode="L1L2K2" phoneNumber="416-111-2222" extension="1234" emailAddress="psychiatrist@clinic.ca"/>
+				</psychiatristContact>
+				<otherPractitionerContact otherContact="TRUE" practitionerType="3111" lastSeen="LS-1">
+					<contactInfo contactName="other contact#1 name" addressLine1="other contact#1 address line 1" addressLine2="other contact#1 address line 2" city="other contact#1 city" province="ON" postalCode="L1L2K2" phoneNumber="416-111-2222" extension="1234" emailAddress="othercontact#1@clinic.ca"/>
+				</otherPractitionerContact>
+				<otherPractitionerContact otherContact="TRUE" practitionerType="3112" lastSeen="LS-13">
+					<contactInfo contactName="other contact#2 name" addressLine1="other contact#2 address line 1" addressLine2="other contact#2 address line 2" city="other contact#2 city" province="ON" postalCode="L1L2K2" phoneNumber="416-111-2222" extension="1234" emailAddress="othercontact#2@clinic.ca"/>
+				</otherPractitionerContact>
+				<otherPractitionerContact otherContact="TRUE" practitionerType="4217" lastSeen="LS-6">
+					<contactInfo contactName="other contact#3 name" addressLine1="other contact#3 address line 1" addressLine2="other contact#3 address line 2" city="other contact#3 city" province="ON" postalCode="L1L2K2" phoneNumber="416-111-2222" extension="1234" emailAddress="othercontact#3@clinic.ca"/>
+				</otherPractitionerContact>
+				<otherAgencyContact otherAgency="TRUE" lastSeen="LS-12">
+					<contactInfo contactName="other agency#1 name" addressLine1="other agency#1 address line 1" addressLine2="other agency#1 address line 2" city="other agency#1 city" province="ON" postalCode="L1L2K2" phoneNumber="416-111-2222" extension="1234" emailAddress="otheragency#1@clinic.ca"/>
+				</otherAgencyContact>
+				<otherAgencyContact otherAgency="TRUE" lastSeen="LS-12">
+					<contactInfo contactName="other agency#2 name" addressLine1="other agency#2 address line 1" addressLine2="other agency#2 address line 2" city="other agency#2 city" province="ON" postalCode="L1L2K2" phoneNumber="416-111-2222" extension="1234" emailAddress="agency#2@clinic.ca"/>
+				</otherAgencyContact>
+			</clientContact>
+			<clientCapacity>
+				<powerAttorneyPersonalCare personalCare="TRUE" name="Mike Hantash" address="1230 Yonge Cr. unit #44, Toronto, ON, X1M 2K3" phoneNumber="416-222-5555" extension="1357" />
+				<powerAttorneyProperty property="TRUE" name="Steve Solo" address="5665 Bay Blvd. unit #12, Toronto, ON, X1M 2K3" phoneNumber="416-444-9999" extension="5656" />
+				<legalGuardian guardian="TRUE" name="Nick Anderson" address="655 Dundas St. unit #23, Toronto, ON, X1M 2K3" phoneNumber="416-888-6666" extension="8909" />
+				<areasOfConcern financeProperty="TRUE" treatmentDecisions="FALSE" />
+			</clientCapacity>
+			<ageOnsetMental years="22" ageType="EST" />
+			<ageHospitalization years="19" ageType="EST" />
+			<firstEntryDate entryYear="1992" entryMonth="3" ageType="EST" />
+			<clientCulture>15086000</clientCulture>
+			<aboriginalOrigin>011-02</aboriginalOrigin>
+			<citizenshipStatus>CDN</citizenshipStatus>
+			<timeLivedInCanada years="3" months="8"/>
+			<prefLang>fra</prefLang>
+			<serviceLang>eng</serviceLang>
+			<legalIssues>Civil</legalIssues>
+			<legalStatusList>
+				<legalStatus>013-01</legalStatus>
+				<legalStatus>013-02</legalStatus>
+				<legalStatus>013-03</legalStatus>
+				<legalStatus>013-08</legalStatus>
+				<legalStatus>013-09</legalStatus>
+			</legalStatusList>
+			<generalComments>any free text for general comments</generalComments>
+		</clientRecord>
+
+		<OCANDomains>
+				<residenceType value="OTH" other="detail text for other reason for residenceType"/>
+				<residenceSupport>UNK</residenceSupport>
+				<livingArrangementType>CDA</livingArrangementType>
+				<employStatus>224366004</employStatus>
+				<educationProgramStatus value="OTH" other="other text for educationProgramStatus"/>
+				<hospitalizedPastTwoYears>TRUE</hospitalizedPastTwoYears>
+				<totalAdmissions>5</totalAdmissions>
+				<totalHospitalDays>78</totalHospitalDays>
+				<visitEmergencyDepartment>UNK</visitEmergencyDepartment>
+				<communityTreatOrder>CDA</communityTreatOrder>
+				<diagnosticList>
+					<diagnostic>2776000</diagnostic>
+					<diagnostic>MDGMC</diagnostic>
+					<diagnostic>87858002</diagnostic>
+					<diagnostic>SRD</diagnostic>
+					<diagnostic>UNK</diagnostic>
+				</diagnosticList>
+				<otherIllnessList>
+					<otherIllness>016A-01</otherIllness>
+					<otherIllness>016A-02</otherIllness>
+				</otherIllnessList>
+				<highestEducationLevel>HLES-6</highestEducationLevel>
+				<sourceOfIncome value="OTH" other="other source of income free text"/>
+		</OCANDomains>
+
+		<additionalElements>
+			<presentingIssueList otherIssues="other issues free text">
+				<presentingIssue type="017-05"/>
+				<presentingIssue type="017-06"/>
+				<presentingIssue type="OTH"/>
+			</presentingIssueList>
+		</additionalElements>
+	</OCANv2SubmissionRecord>
+
+</OCANv2SubmissionFile>

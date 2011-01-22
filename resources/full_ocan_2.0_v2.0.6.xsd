@@ -94,6 +94,8 @@
 						<xsd:simpleType>
 							<xsd:restriction base="xsd:string">
 								<xsd:enumeration value="FULL"/>	<!-- Full OCAN -->
+								<xsd:enumeration value="SELF" />	<!-- Core + Self OCAN -->
+								<xsd:enumeration value="CORE"/>	<!-- Core OCAN -->
 							</xsd:restriction>
 						</xsd:simpleType>
 					</xsd:attribute>
@@ -2659,6 +2661,33 @@
 				<xsd:restriction base="xsd:anyType">
 					<xsd:sequence>
 						<xsd:element ref="ocan:domain" maxOccurs="unbounded"/>
+						
+						<!-- 01: accommodation -->
+						<xsd:element ref="ocan:residenceType" minOccurs="1"/>
+						<xsd:element ref="ocan:residenceSupport" minOccurs="1"/>
+						<xsd:element ref="ocan:livingArrangementType" minOccurs="1"/>
+
+						<!-- 05: daytime activities -->
+						<xsd:element ref="ocan:employStatus" minOccurs="1"/>
+						<xsd:element ref="ocan:educationProgramStatus" minOccurs="1"/>
+
+						<!-- 07: psychotic symptoms -->
+						<xsd:element ref="ocan:hospitalizedPastTwoYears" minOccurs="1"/>
+						<xsd:element ref="ocan:totalAdmissions" minOccurs="1"/>
+						<xsd:element ref="ocan:totalHospitalDays" minOccurs="1"/>
+						<xsd:element ref="ocan:visitEmergencyDepartment" minOccurs="1"/>
+						<xsd:element ref="ocan:communityTreatOrder" minOccurs="1"/>
+
+						<!-- 08: condition and treatment -->
+						<xsd:element ref="ocan:diagnosticList" minOccurs="1"/>
+						<xsd:element ref="ocan:otherIllnessList" minOccurs="1"/>
+
+						<!-- 20: basic education -->
+						<xsd:element ref="ocan:highestEducationLevel" minOccurs="1"/>
+
+						<!-- 23: money -->
+						<xsd:element ref="ocan:sourceOfIncome" minOccurs="1"/>
+						
 					</xsd:sequence>
 				</xsd:restriction>
 			</xsd:complexContent>
