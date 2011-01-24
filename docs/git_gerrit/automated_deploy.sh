@@ -54,7 +54,7 @@ pushd ${SRC_DIR}
 		# reset database
 		mysql -e "drop database ${SERVER_NAME}"
 		mysql -e "create database ${SERVER_NAME}"
-		mysql -e "source ${SRC_DIR}/docs/freshIndivo.sql"
+		mysql ${SERVER_NAME} -e "source docs/freshIndivo.sql"
 		
 		# start tomcat
 		catalina.sh start
