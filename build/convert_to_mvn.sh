@@ -54,6 +54,9 @@ mkdir -p mvn/local_repo
 ./mvn_install.sh -DgroupId=org.indivo -DartifactId=indivo-security-model -Dversion=3.2-SNAPSHOT -Dfile=../web/WEB-INF/lib/indivo-security-model-3.2-SNAPSHOT.jar
 
 # jcharts doesn't have right version in maven
+./mvn_install.sh -DgroupId=mysql -DartifactId=mysql-connector-java -Dversion=3.0.11 -Dfile=../web/WEB-INF/lib/mysql-connector-java-3.0.11-stable-bin.jar
+
+# jcharts doesn't have right version in maven
 ./mvn_install.sh -DgroupId=net.sf.jcharts -DartifactId=krysalis-jCharts -Dversion=0.7.5 -Dfile=../web/WEB-INF/lib/jCharts-0.7.5.jar
 
 # cds isn't in maven
