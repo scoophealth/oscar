@@ -668,16 +668,22 @@
 				<artifactId>maven-antrun-plugin</artifactId>
 				<executions>
 					<execution>
-						<id>set_build_time</id>
+						<id>set_timestamp</id>
 						<phase>process-classes</phase>
-						<configuration>
-							<tasks>
-								<ant antfile="ant_pom_tasks.xml" target="set_build_time" />
-							</tasks>
-						</configuration>
 						<goals>
 							<goal>run</goal>
 						</goals>
+						<configuration>
+							<tasks>
+								<tstamp>
+									<format property="build.dateTime.value" pattern="yyyy-MM-dd hh:mm aa" />
+								</tstamp>
+
+								<echo message="build time : ${build.dateTime.value}" />
+
+								<replace file="target/classes/build.properties" token="${build.dateTime}" value="${build.dateTime.value}" />
+							</tasks>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
