@@ -29,4 +29,11 @@ public class SpecsHistoryDao extends HibernateDaoSupport {
 	public SpecsHistory find(int id) {
 		return (SpecsHistory)getHibernateTemplate().get(SpecsHistory.class, id);
 	}
+	
+	public List<SpecsHistory> getHistory(int demographicNo,Date endDate,String status) {
+		if(status != null)
+			return getHibernateTemplate().find("from SpecsHistory op where op.demographicNo = ? and op.date <=? and op.status=? order by op.id desc",new Object[] {demographicNo,endDate,status});
+		else
+			return getHibernateTemplate().find("from SpecsHistory op where op.demographicNo = ? and op.date <=? order by op.id desc",new Object[] {demographicNo,endDate});
+	}
 }

@@ -54,7 +54,9 @@ public class EctDisplayConsultAction extends EctDisplayAction {
     private String cmd = "consultation";
  
     public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
-            
+
+    	String appointmentNo = bean.appointmentNo;
+    	
        boolean a = true;
        Vector v = OscarRoleObjectPrivilege.getPrivilegeProp("_newCasemgmt.consultations");
        String roleName = (String)request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
@@ -70,7 +72,7 @@ public class EctDisplayConsultAction extends EctDisplayAction {
             
             //set the right hand heading link\
             winName = "newConsult" + bean.demographicNo;
-            url = "popupPage(700,960,'" + winName + "','" + request.getContextPath() + "/oscarEncounter/oscarConsultationRequest/ConsultationFormRequest.jsp?de=" + bean.demographicNo + "&teamVar='); return false;";
+            url = "popupPage(700,960,'" + winName + "','" + request.getContextPath() + "/oscarEncounter/oscarConsultationRequest/ConsultationFormRequest.jsp?de=" + bean.demographicNo + "&teamVar=&appNo="+appointmentNo+"'); return false;";
             Dao.setRightURL(url);        
             Dao.setRightHeadingID(cmd);  //no menu so set div id to unique id for this action 
             

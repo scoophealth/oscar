@@ -604,4 +604,17 @@ public class ProgramDao extends HibernateDaoSupport {
     	Program p2 = getProgram(programId2);
     	return(p1.getFacilityId()==p2.getFacilityId());
     }
+    
+    public Program getProgramBySiteSpecificField(String value) {
+        Program result = null;
+
+        @SuppressWarnings("unchecked")
+        List<Program> results = getHibernateTemplate().find("from Program p where p.siteSpecificField = ?", new Object[]{value});
+
+        if (!results.isEmpty()) {
+            result = results.get(0);
+        }
+
+        return result;
+    }
 }

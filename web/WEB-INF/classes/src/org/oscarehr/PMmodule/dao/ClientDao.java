@@ -789,4 +789,27 @@ public class ClientDao extends HibernateDaoSupport {
 	}
 
 
+    public List<Demographic> getClientsByChartNo(String chartNo) {
+    	String queryStr = " FROM Demographic d where d.ChartNo=?";
+	    @SuppressWarnings("unchecked")
+		List<Demographic> rs = getHibernateTemplate().find(queryStr,new Object[]{chartNo});
+
+		if (log.isDebugEnabled()) {
+			log.debug("getClientsByChartNo: # of results=" + rs.size());
+		}
+
+		return rs;
+    }
+    
+    public List<Demographic> getClientsByHealthCard(String num, String type) {
+    	String queryStr = " FROM Demographic d where d.Hin=? and d.HcType=?";
+	    @SuppressWarnings("unchecked")
+		List<Demographic> rs = getHibernateTemplate().find(queryStr,new Object[]{num,type});
+
+		if (log.isDebugEnabled()) {
+			log.debug("getClientsByHealthCard: # of results=" + rs.size());
+		}
+
+		return rs;
+    }
 }

@@ -1992,7 +1992,8 @@
 		</action>
 		
 		<action path="/eyeform/Eyeform" type="org.oscarehr.eyeform.web.EyeformAction" parameter="method" scope="request" validate="false" input="/eyeform/followup.jsp" name="followUpForm2">
-			<forward name="conreqcc" path="/eyeform/conreqcc.jsp" />			
+			<forward name="conreqcc" path="/eyeform/conreqcc.jsp" />
+			<forward name="conspecial" path="/eyeform/conspecial.jsp" />				
 		</action>
 
 		<action path="/casemgmt/ExtPrintRegistry" type="org.oscarehr.casemgmt.web.ExtPrintRegistryAction" parameter="method" scope="request">			

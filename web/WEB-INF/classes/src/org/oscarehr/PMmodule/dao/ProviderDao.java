@@ -287,4 +287,20 @@ public class ProviderDao extends HibernateDaoSupport {
     public void saveProvider( Provider provider) {        
         this.getHibernateTemplate().save(provider);
     }
+    
+	public Provider getProviderByPractitionerNo(String practitionerNo) {
+		if (practitionerNo == null || practitionerNo.length() <= 0) {
+			throw new IllegalArgumentException();
+		}
+
+		List<Provider> providerList = getHibernateTemplate().find("From Provider p where p.practitionerNo=?",new Object[]{practitionerNo});
+	
+		if(providerList.size()>1) {
+			logger.warn("Found more than 1 provider with practitionerNo="+practitionerNo);
+		}
+		if(providerList.size()>0)
+			return providerList.get(0);
+
+		return null;
+	}
 }

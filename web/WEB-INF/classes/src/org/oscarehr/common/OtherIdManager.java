@@ -35,6 +35,7 @@ import org.oscarehr.util.SpringUtils;
 public class OtherIdManager {
 	final public static Integer DEMOGRAPHIC = 1;
 	final public static Integer APPOINTMENT = 2;
+	final public static Integer PROVIDER 	= 3;
 
 	private static OtherIdDAO otherIdDao = (OtherIdDAO) SpringUtils.getBean("otherIdDao");
 
@@ -89,6 +90,11 @@ public class OtherIdManager {
     private static OtherId getOtherIdObj(Integer tableName, Integer tableId, String otherKey) {
 		return otherIdDao.getOtherId(tableName, tableId, otherKey);
     }
+    
+    public static OtherId searchTable(Integer tableName, String otherKey, String otherValue) {
+    	return otherIdDao.searchTable(tableName, otherKey, otherValue);
+    }
+
 
 	private static void setDelete(OtherId otherId) {
 		if (otherId!=null) {

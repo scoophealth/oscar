@@ -46,6 +46,14 @@ public class OtherIdDAO extends HibernateDaoSupport {
 				new Object[] {tableName, tableId, otherKey});
 		return otherIdList.size()>0 ? otherIdList.get(0) : null;
 	}
+	
+	public OtherId searchTable(Integer tableName, String otherKey, String otherValue){
+		//Get a list of OtherIds in reverse order
+		List<OtherId> otherIdList = this.getHibernateTemplate().find(
+				"from OtherId where tableName=? and otherKey=? and otherId=? and deleted=false order by id desc limit 1",
+				new Object[] {tableName, otherKey, otherValue});
+		return otherIdList.size()>0 ? otherIdList.get(0) : null;
+	}
 
 	public void save(OtherId otherId) {
 	this.getHibernateTemplate().saveOrUpdate(otherId);

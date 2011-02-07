@@ -145,6 +145,8 @@
 <script>
 	var ctx = '<%=request.getContextPath()%>';
 	var requestId = '<%=request.getParameter("requestId")%>';
+	var demographicNo = '<%=demo%>';
+	var appointmentNo = '<%=appNo%>';
 </script>	
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/global.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.js"></script>
@@ -887,12 +889,15 @@ function addCCName(){
 				</SCRIPT>
 			<%
 		}
+		
+		
 	%>
 
 	<input type="hidden" name="providerNo" value="<%=providerNo%>">
 	<input type="hidden" name="demographicNo" value="<%=demo%>">
 	<input type="hidden" name="requestId" value="<%=requestId%>">
 	<input type="hidden" name="documents" value="">
+	<input type="hidden" name="ext_appNo" value="<%=request.getParameter("appNo") %>">
         <input type="hidden" id="saved" value="false">
 	<!--  -->
 	<table class="MainTable" id="scrollNumber1" name="encounterTable">

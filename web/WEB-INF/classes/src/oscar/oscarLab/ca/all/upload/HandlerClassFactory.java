@@ -52,8 +52,11 @@ public final class HandlerClassFactory {
             for (int i = 0; i < items.size(); i++){
                 Element e = (Element) items.get(i);
                 msgType = e.getAttributeValue("name");
-                if (msgType.equals(type))
+                String className = e.getAttributeValue("className");
+                if (msgType.equals(type) && (className.indexOf(".")==-1) )
                     msgHandler = "oscar.oscarLab.ca.all.upload.handlers."+e.getAttributeValue("className");
+                if (msgType.equals(type) && (className.indexOf(".")!=-1) )
+                	msgHandler = className;
             }
         }catch(Exception e){
             logger.error("Could not parse config file", e);
