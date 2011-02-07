@@ -28,6 +28,7 @@ cp -r ../web/WEB-INF/classes/src/{*.java,com,filters,net,org,oscar} ${main_dir}/
 
 # copy resources over 
 cp ../web/WEB-INF/classes/{*.properties,*.xml,src/*.properties} ${main_dir}/resources
+cp -r ../web/WEB-INF/classes/hapi_libs ${main_dir}/resources
 pushd ../web/WEB-INF/classes/src/
 zip -qr /tmp/xml.zip {com,oscar,org,META-INF} -i \*.xml \*.drl
 popd
