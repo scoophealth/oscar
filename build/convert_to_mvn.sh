@@ -118,3 +118,6 @@ mkdir -p mvn/local_repo
 
 # plugin-framework... oh boy... we can't get rid of this quick enough
 ./mvn_install.sh -DgroupId=pluginframework -DartifactId=pluginframework -Dversion=0.9.13 -Dfile=../web/WEB-INF/lib/pluginframework-0.9.13.jar
+
+# rx.jar gah, why do we keep adding these things?
+./mvn_install.sh -DgroupId=rx -DartifactId=rx -Dversion=UNKNOWN -Dfile=../web/WEB-INF/lib/rx.jar

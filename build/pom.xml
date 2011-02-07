@@ -622,6 +622,13 @@
 			<version>0.9.13</version>
 		</dependency>
 
+		<!-- *sigh* I have no clue what this is -->
+		<dependency>
+			<groupId>rx</groupId>
+			<artifactId>rx</artifactId>
+			<version>UNKNOWN</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
