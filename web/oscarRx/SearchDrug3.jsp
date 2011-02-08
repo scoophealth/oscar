@@ -1,4 +1,3 @@
-<%@page pageEncoding="UTF-8"%> 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
@@ -50,6 +49,8 @@
 <%
             String usefav=request.getParameter("usefav");
             String favid=request.getParameter("favid");
+            int demoNo=bean.getDemographicNo();
+            String providerNo=bean.getProviderNo();
             //String reRxDrugId=request.getParameter("reRxDrugId");
             HashMap hm=(HashMap)session.getAttribute("profileViewSpec");
             boolean show_current=true;
@@ -95,7 +96,7 @@
 
             RxPharmacyData pharmacyData = new RxPharmacyData();
             RxPharmacyData.Pharmacy pharmacy;
-            pharmacy = pharmacyData.getPharmacyFromDemographic(Integer.toString(bean.getDemographicNo()));
+            pharmacy = pharmacyData.getPharmacyFromDemographic(Integer.toString(demoNo));
             String prefPharmacy = "";
             if (pharmacy != null) {
                 prefPharmacy = pharmacy.name;
@@ -177,7 +178,6 @@
         <script type="text/javascript" src="<c:out value="${ctx}/share/yui/js/datasource-min.js"/>"></script>
         <script type="text/javascript" src="<c:out value="${ctx}/share/yui/js/autocomplete-min.js"/>"></script>
 
-
         <script type="text/javascript">
             function resetReRxDrugList(){
                 var url="<c:out value="${ctx}"/>" + "/oscarRx/deleteRx.do?parameterValue=clearReRxDrugList";
@@ -208,7 +208,7 @@
                var top = winY+70;
                var left = winX+110;
                var url = "searchDrug.do?rx2=true&searchString="+$('searchString').value;
-               popup2(600, 800, top, left, url, 'windowNameRxSearch<%=bean.getDemographicNo()%>');
+               popup2(600, 800, top, left, url, 'windowNameRxSearch<%=demoNo%>');
 
            }
 
@@ -356,7 +356,7 @@ function ts_resortTable(lnk,clid) {
     sortfn = ts_sort_caseinsensitive;
     if (itm.match(/^\d\d[\/-]\d\d[\/-]\d\d\d\d$/)) sortfn = ts_sort_date;
     if (itm.match(/^\d\d[\/-]\d\d[\/-]\d\d$/)) sortfn = ts_sort_date;
-    if (itm.match(/^[Â£$]/)) sortfn = ts_sort_currency;
+    if (itm.match(/^[£$]/)) sortfn = ts_sort_currency;
     if (itm.match(/^[\d\.]+$/)) sortfn = ts_sort_numeric;
     SORT_COLUMN_INDEX = column;
     var firstRow = new Array();
@@ -675,9 +675,15 @@ body {
                                                     &nbsp;&nbsp;
                                                     <a href="javascript:void(0);"name="cmdRePrescribe"  onclick="javascript:RePrescribeLongTerm();" style="width: 200px" ><bean:message key="SearchDrug.msgReprescribeLongTermMed"/></a>
                                                     &nbsp;&nbsp;
-                                                    <a href="javascript:popupWindow(720,920,'chartDrugProfile.jsp?demographic_no=<%=bean.getDemographicNo()%>','PrintDrugProfile2')">Timeline Drug Profile</a>
+                                                    <a href="javascript:popupWindow(720,920,'chartDrugProfile.jsp?demographic_no=<%=demoNo%>','PrintDrugProfile2')">Timeline Drug Profile</a>
                                                     &nbsp;&nbsp;
                                                     <a href="javascript: void(0);" onclick="callReplacementWebService('GetmyDrugrefInfo.do?method=view','interactionsRxMyD');" >DS run</a>
+                                                    <oscar:oscarPropertiesCheck property="MY_OSCAR" value="yes">
+                                                            <indivo:indivoRegistered demographic="<%=String.valueOf(demoNo)%>" provider="<%=providerNo%>">
+                                                                    &nbsp;
+                                                                    <a href="javascript: popupFocusPage(720,920,'./synchroniseWithPHR.jsp?providerNo=<%=providerNo%>&demoNo=<%=demoNo%>','PHR');">PHR</a>
+                                                            </indivo:indivoRegistered>
+                                                    </oscar:oscarPropertiesCheck>
                                                 </div>
 
                                             </td>
@@ -1100,7 +1106,7 @@ function changeLt(drugId){
     function rxPageSizeSelect(){
                var ran_number=Math.round(Math.random()*1000000);
                var url="GetRxPageSizeInfo.do?method=view";
-               var params = "demographicNo=<%=bean.getDemographicNo()%>&rand="+ran_number;  //hack to get around ie caching the page
+               var params = "demographicNo=<%=demoNo%>&rand="+ran_number;  //hack to get around ie caching the page
                new Ajax.Request(url, {method: 'post',parameters:params});
     }
     
@@ -1392,20 +1398,20 @@ function popForm2(scriptId){
          var ele = $(textId);
          var url = "TreatmentMyD.jsp"
          var ran_number=Math.round(Math.random()*1000000);
-         var params = "demographicNo=<%=bean.getDemographicNo()%>&cond="+ele.value+"&rand="+ran_number;  //hack to get around ie caching the page
+         var params = "demographicNo=<%=demoNo%>&cond="+ele.value+"&rand="+ran_number;  //hack to get around ie caching the page
          new Ajax.Updater(id,url, {method:'get',parameters:params,asynchronous:true});
          $('treatmentsMyD').toggle();
      }
 
      function callAdditionWebService(url,id){
          var ran_number=Math.round(Math.random()*1000000);
-         var params = "demographicNo=<%=bean.getDemographicNo()%>&rand="+ran_number;  //hack to get around ie caching the page
+         var params = "demographicNo=<%=demoNo%>&rand="+ran_number;  //hack to get around ie caching the page
          var updater=new Ajax.Updater(id,url, {method:'get',parameters:params,insertion: Insertion.Bottom,evalScripts:true});
      }
 
      function callReplacementWebService(url,id){
               var ran_number=Math.round(Math.random()*1000000);
-              var params = "demographicNo=<%=bean.getDemographicNo()%>&rand="+ran_number;  //hack to get around ie caching the page
+              var params = "demographicNo=<%=demoNo%>&rand="+ran_number;  //hack to get around ie caching the page
               var updater=new Ajax.Updater(id,url, {method:'get',parameters:params,evalScripts:true});
          }
           //callReplacementWebService("InteractionDisplay.jsp",'interactionsRx');
@@ -1443,7 +1449,7 @@ YAHOO.example.FnMultipleFields = function(){
                     var url = "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=createNewRx"; //"prescribe.jsp";
                     var ran_number=Math.round(Math.random()*1000000);
                     var name=encodeURIComponent(arr.name);
-                    var params = "demographicNo=<%=bean.getDemographicNo()%>&drugId="+arr.id+"&text="+name+"&randomId="+ran_number;  //hack to get around ie caching the page
+                    var params = "demographicNo=<%=demoNo%>&drugId="+arr.id+"&text="+name+"&randomId="+ran_number;  //hack to get around ie caching the page
                    new Ajax.Updater('rxText',url, {method:'get',parameters:params,evalScripts:true,
                         insertion: Insertion.Bottom,onSuccess:function(transport){
                             updateCurrentInteractions();
@@ -1588,7 +1594,7 @@ function setSearchedDrug(drugId,name){
     var url = "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=createNewRx";
     var ran_number=Math.round(Math.random()*1000000);
     name=encodeURIComponent(name);
-    var params = "demographicNo=<%=bean.getDemographicNo()%>&drugId="+drugId+"&text="+name+"&randomId="+ran_number;
+    var params = "demographicNo=<%=demoNo%>&drugId="+drugId+"&text="+name+"&randomId="+ran_number;
     new Ajax.Updater('rxText',url, {method:'get',parameters:params,asynchronous:true,evalScripts:true,insertion: Insertion.Bottom,onSuccess:function(transport){
                             updateCurrentInteractions();
             }});
@@ -1744,7 +1750,7 @@ function updateQty(element){
          function getRenalDosingInformation(divId,atcCode){
                var url = "RenalDosing.jsp";
                var ran_number=Math.round(Math.random()*1000000);
-               var params = "demographicNo=<%=bean.getDemographicNo()%>&atcCode="+atcCode+"&divId="+divId+"&rand="+ran_number;
+               var params = "demographicNo=<%=demoNo%>&atcCode="+atcCode+"&divId="+divId+"&rand="+ran_number;
                new Ajax.Updater(divId,url, {method:'get',parameters:params,insertion: Insertion.Bottom,asynchronous:true});
          }
          function getLUC(divId,randomId,din){
