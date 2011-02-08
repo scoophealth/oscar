@@ -47,13 +47,13 @@ public class OcanFormAction {
 	{
 		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 		OcanStaffForm ocanStaffForm=new OcanStaffForm();
-		if(ocanStaffFormId==null || "".equals(ocanStaffFormId) || "null".equals(ocanStaffFormId)) {
+		if(ocanStaffFormId==null || "".equals(ocanStaffFormId) || "null".equals(ocanStaffFormId) || "0".equals(ocanStaffFormId)) {
 			
 			//ocanStaffForm.setAdmissionId(admissionId);
+			ocanStaffForm.setAssessmentId(ocanStaffForm.getId());
 			ocanStaffForm.setOcanFormVersion("1.2");		
 			ocanStaffForm.setClientId(clientId);
-			ocanStaffForm.setFacilityId(loggedInInfo.currentFacility.getId());
-			ocanStaffForm.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
+			ocanStaffForm.setFacilityId(loggedInInfo.currentFacility.getId());			
 			ocanStaffForm.setSigned(signed);
 		} else {
 			ocanStaffForm = OcanForm.getOcanStaffForm(Integer.valueOf(ocanStaffFormId));
@@ -61,14 +61,14 @@ public class OcanFormAction {
 		return(ocanStaffForm);
 	}
 	
-	public static void saveOcanStaffForm(OcanStaffForm ocanStaffForm) {
-		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-		ocanStaffForm.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
-		ocanStaffForm.setProviderName(loggedInInfo.loggedInProvider.getFormattedName());
+	public static void saveOcanStaffForm(OcanStaffForm ocanStaffForm) {			
 		if(ocanStaffFormDao.findOcanStaffFormById(ocanStaffForm.getId())==null) {
 			ocanStaffFormDao.persist(ocanStaffForm);
-		} else {
+			ocanStaffForm.setAssessmentId(ocanStaffForm.getId());
 			ocanStaffFormDao.merge(ocanStaffForm);
+		} else {
+			ocanStaffForm.setId(null);
+			ocanStaffFormDao.persist(ocanStaffForm);
 		}
 		
 	}
@@ -76,24 +76,41 @@ public class OcanFormAction {
 	public static void addOcanStaffFormData(Integer ocanStaffFormId, String question, String answer)
 	{
 		answer=StringUtils.trimToNull(answer);
-		if (answer==null) return;
+		if (answer==null || answer=="") return;
 		OcanStaffFormData ocanStaffFormData;
-		if(ocanStaffFormDataDao.findByQuestion(ocanStaffFormId, question).isEmpty()) {
+		//if(ocanStaffFormDataDao.findByQuestion(ocanStaffFormId, question).isEmpty()) {
 			ocanStaffFormData=new OcanStaffFormData();
 			ocanStaffFormData.setOcanStaffFormId(ocanStaffFormId);
 			ocanStaffFormData.setQuestion(question);
 			ocanStaffFormData.setAnswer(answer);			
 			ocanStaffFormDataDao.persist(ocanStaffFormData); //create
-		} else {
-			ocanStaffFormData = ocanStaffFormDataDao.findLatestByQuestion(ocanStaffFormId, question);
-			ocanStaffFormData.setOcanStaffFormId(ocanStaffFormId);
-			ocanStaffFormData.setQuestion(question);
-			ocanStaffFormData.setAnswer(answer);			
-			ocanStaffFormDataDao.merge(ocanStaffFormData); //update
-		}
+		//} else {
+		//	ocanStaffFormData = ocanStaffFormDataDao.findLatestByQuestion(ocanStaffFormId, question);
+		//	ocanStaffFormData.setOcanStaffFormId(ocanStaffFormId);
+		//	ocanStaffFormData.setQuestion(question);
+		//	ocanStaffFormData.setAnswer(answer);			
+		//	ocanStaffFormDataDao.merge(ocanStaffFormData); //update
+		//}
 		
 	}
-	
+/*	
+	public static void updateOcanStaffFormData(Integer ocanStaffFormId, String question, String answer)
+	{
+		OcanStaffFormData ocanStaffFormData;
+		
+		ocanStaffFormData=new OcanStaffFormData();
+		ocanStaffFormData.setOcanStaffFormId(ocanStaffFormId);
+		ocanStaffFormData.setQuestion(question);
+		ocanStaffFormData.setAnswer(answer);
+		
+		if(ocanStaffFormDataDao.findByQuestion(ocanStaffFormId, question).size()<=0) {
+			ocanStaffFormDataDao.persist(ocanStaffFormData); //create	
+		} else {
+			ocanStaffFormData.setId(ocanStaffFormDataDao.findByQuestion(ocanStaffFormId, question).get(0).getId());
+			ocanStaffFormDataDao.merge(ocanStaffFormData); //update	
+		}
+	}
+*/	
 	
 	
 	

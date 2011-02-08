@@ -28,15 +28,21 @@ public class OcanStaffForm extends AbstractModel<Integer> implements Serializabl
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-
+ 
+	private Integer assessmentId;
+	
 	private String ocanFormVersion=null;
 	private String ocanType=null;
 	
 	private String providerNo = null;
+	private String clientFormProviderNo = null;
 	private boolean signed=false;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date created = new Date();
+	private Date created;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date clientFormCreated;
 	
 	private Integer facilityId=null;
 	private Integer clientId=null;
@@ -68,6 +74,9 @@ public class OcanStaffForm extends AbstractModel<Integer> implements Serializabl
 	private String reasonForAssessment;
 	
 	private String providerName;
+	private String clientFormProviderName;
+	
+	private int submissionId;
 	
 	public OcanStaffForm() {
 		province = "ON";
@@ -82,8 +91,21 @@ public class OcanStaffForm extends AbstractModel<Integer> implements Serializabl
 		this.id = id;
 	}
 	
+	public Integer getAssessmentId() {
+		return assessmentId;
+	}
+
+	public void setAssessmentId(Integer assessmentId) {
+		this.assessmentId = assessmentId;
+	}
+
 	public Date getCreated() {
 		return created;
+	}
+
+	
+	public Date getClientFormCreated() {
+		return clientFormCreated;
 	}
 
 	public String getOcanFormVersion() {
@@ -109,6 +131,15 @@ public class OcanStaffForm extends AbstractModel<Integer> implements Serializabl
 	public void setProviderNo(String providerNo) {
     	this.providerNo = providerNo;
     }
+
+	
+	public String getClientFormProviderNo() {
+		return clientFormProviderNo;
+	}
+
+	public void setClientFormProviderNo(String clientFormProviderNo) {
+		this.clientFormProviderNo = clientFormProviderNo;
+	}
 
 	public boolean isSigned() {
     	return signed;
@@ -282,6 +313,10 @@ public class OcanStaffForm extends AbstractModel<Integer> implements Serializabl
 		this.created = created;
 	}
 
+	public void setClientFormCreated(Date clientFormCreated) {
+		this.clientFormCreated = clientFormCreated;
+	}
+	
 	public String getAssessmentStatus() {
 		return assessmentStatus;
 	}
@@ -372,5 +407,26 @@ public class OcanStaffForm extends AbstractModel<Integer> implements Serializabl
 	public void setProviderName(String providerName) {
 		this.providerName = providerName;
 	}
+
+
+	public String getClientFormProviderName() {
+		return clientFormProviderName;
+	}
+
+	public void setClientFormProviderName(String clientFormProviderName) {
+		this.clientFormProviderName = clientFormProviderName;
+	}
+	
+
+
+	public int getSubmissionId() {
+		return submissionId;
+	}
+
+	public void setSubmissionId(int submissionId) {
+		this.submissionId = submissionId;
+	}
+	
+
 	
 }

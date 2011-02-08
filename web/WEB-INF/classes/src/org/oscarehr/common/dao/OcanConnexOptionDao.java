@@ -89,6 +89,20 @@ public class OcanConnexOptionDao extends AbstractDao<OcanConnexOption> {
 		return (results);
 	}
 	
+	public OcanConnexOption findByID(Integer connexOptionId) {
+		// build sql string
+		String sqlCommand = "select x from OcanConnexOption x where x.id=?1";
+
+		// set parameters
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, connexOptionId);
+				
+		// run query
+		@SuppressWarnings("unchecked")
+		OcanConnexOption result = (OcanConnexOption)query.getSingleResult();
+
+		return result;
+	}
 	
 	
 }

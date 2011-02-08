@@ -1387,15 +1387,28 @@ public class ClientManagerAction extends BaseAction {
 			
 			//FULL OCAN Staff/Client Assessment
 			OcanStaffForm ocanStaffForm = ocanStaffFormDao.findLatestByFacilityClient(facilityId,Integer.valueOf(demographicNo),"FULL");
-			request.setAttribute("ocanStaffForm", ocanStaffForm);
+			if(ocanStaffForm!=null && ocanStaffForm.getAssessmentStatus().equals("In Progress"))
+				request.setAttribute("ocanStaffForm", ocanStaffForm);
+			else
+				request.setAttribute("ocanStaffForm",null);
 			
-			//FULL OCAN Staff/Client Assessment
+			//OcanClientForm ocanClientForm = ocanClientFormDao.findLatestByFacilityClient(facilityId,Integer.valueOf(demographicNo));
+			//request.setAttribute("ocanClientForm", ocanClientForm);	
+			
+			//SELF+CORE OCAN Staff/Client Assessment
 			OcanStaffForm selfOcanStaffForm = ocanStaffFormDao.findLatestByFacilityClient(facilityId,Integer.valueOf(demographicNo),"SELF");
-			request.setAttribute("selfOcanStaffForm", selfOcanStaffForm);
+			if(selfOcanStaffForm!=null && selfOcanStaffForm.getAssessmentStatus().equals("In Progress"))
+				request.setAttribute("selfOcanStaffForm", selfOcanStaffForm);
+			else
+				request.setAttribute("selfOcanStaffForm",null);
 			
 			//FULL OCAN Staff/Client Assessment
 			OcanStaffForm coreOcanStaffForm = ocanStaffFormDao.findLatestByFacilityClient(facilityId,Integer.valueOf(demographicNo),"CORE");
-			request.setAttribute("coreOcanStaffForm", coreOcanStaffForm);
+			if(coreOcanStaffForm!=null && coreOcanStaffForm.getAssessmentStatus().equals("In Progress"))
+				request.setAttribute("coreOcanStaffForm", coreOcanStaffForm);
+			else
+				request.setAttribute("coreOcanStaffForm",null);
+			
 			
 			
 			//CDS
