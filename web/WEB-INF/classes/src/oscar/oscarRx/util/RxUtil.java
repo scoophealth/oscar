@@ -1731,7 +1731,15 @@ public class RxUtil {
         }
         return object;
     }
-
+    public static <T> HashMap<Long,T>  createKeyValPair(List<T> lst){
+        HashMap<Long,T> ret=new HashMap<Long,T>();
+        Long rand;
+        for(T t:lst){
+            rand = Math.round(Math.random() * 1000000);
+            ret.put(rand, t);
+        }
+        return ret;
+    }
     public static void p(String str, String s) {
         MiscUtils.getLogger().debug(str + "=" + s);
     }
