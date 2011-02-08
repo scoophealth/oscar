@@ -53,7 +53,8 @@ PHRAuthentication phrAuth = (PHRAuthentication) session.getAttribute(PHRAuthenti
                 window.close();
             }
             function onloadd() {
-                document.getElementById("phrPassword").focus();
+                if(document.getElementById("phrPassword"))
+                    document.getElementById("phrPassword").focus();
             }
         </script>
         <style type="text/css">
