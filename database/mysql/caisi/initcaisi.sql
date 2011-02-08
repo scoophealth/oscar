@@ -2614,13 +2614,16 @@ create table OcanFormOption
 create table OcanStaffForm
 (
         id int primary key auto_increment,
+        assessmentId int,
         ocanFormVersion varchar(16) not null,
         ocanType varchar(20) not null,
         index(ocanFormVersion),
-        providerNo varchar(6) not null,
+        providerNo varchar(6),
+        clientFormProviderNo varchar(6),
         signed tinyint not null,
         index(signed),
-        created datetime not null,
+        created datetime,
+        clientFormCreated datetime,
         facilityId int not null,
         clientId int not null,
         index(facilityId, clientId),
@@ -2650,6 +2653,8 @@ create table OcanStaffForm
 	clientCompletionDate date,
 	gender varchar(10),
 	providerName varchar(100),
+	clientFormProviderName varchar(100),
+	submissionId int,
 	index(startDate),
 	index(completionDate)
 );
@@ -2768,4 +2773,14 @@ create table OcanConnexOption (
 	orgNumber varchar(5) NOT NULL,
 	programName varchar(100) NOT NULL,
 	programNumber varchar(5) NOT NULL
+);
+
+
+create table OcanSubmissionLog (
+submissionId int primary key auto_increment,
+submitDateTime timestamp,
+result varchar(255),
+transactionId varchar(100),
+resultMessage text,
+submissionData longtext
 );
