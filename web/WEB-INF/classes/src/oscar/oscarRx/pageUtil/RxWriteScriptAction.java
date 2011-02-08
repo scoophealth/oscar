@@ -50,9 +50,12 @@ import org.apache.struts.util.MessageResources;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
+import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.UserPropertyDAO;
+import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -957,6 +960,22 @@ public final class RxWriteScriptAction extends DispatchAction {
 		return null;
 	}
 
+        public ActionForward getDemoNameAndHIN(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, Exception {
+            String demoNo=request.getParameter("demoNo").trim();
+            DemographicDao demographicDAO=(DemographicDao)SpringUtils.getBean("demographicDao") ;
+            Demographic d=demographicDAO.getDemographic(demoNo);
+            HashMap hm=new HashMap();
+            if(d!=null){
+                hm.put("patientName", d.getDisplayName());
+                hm.put("patientHIN", d.getHin());
+            }else{
+                hm.put("patientName", "Unknown");
+                hm.put("patientHIN", "Unknown");
+            }
+            JSONObject jo=JSONObject.fromObject(hm);
+            response.getOutputStream().write(jo.toString().getBytes());
+            return null;
+        }
 	public ActionForward changeToLongTerm(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, Exception {
 		String strId = request.getParameter("ltDrugId");
 		if (strId != null) {
