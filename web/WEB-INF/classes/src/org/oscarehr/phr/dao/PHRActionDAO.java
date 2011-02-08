@@ -57,7 +57,21 @@ public class PHRActionDAO extends HibernateDaoSupport {
 		List<PHRAction> list = getHibernateTemplate().find(sql, f);
 		return list;
 	}
+        public List<PHRAction> getActionByPhrIndex(String phrIndex){
+            String sql="from PHRAction a where a.phrIndex=?";
+            List<PHRAction> list=getHibernateTemplate().find(sql,new String(phrIndex));
+            if(list==null || list.isEmpty()){
+                return null;
+            }else
+                return list;
+        }
+        public Boolean isActionPresentByPhrIndex(String phrIndex){
+            List<PHRAction> l=getActionByPhrIndex(phrIndex);
+            if(l==null)
+                return false;
+            else return true;
 
+        }
 	public PHRAction getActionById(String id) {
 		String sql = "from PHRAction a where a.id = ? ";
 
