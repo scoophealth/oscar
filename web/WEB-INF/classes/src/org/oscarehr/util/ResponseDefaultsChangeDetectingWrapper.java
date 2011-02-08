@@ -22,20 +22,24 @@ public class ResponseDefaultsChangeDetectingWrapper extends HttpServletResponseW
 	@Override
 	public void setCharacterEncoding(String encoding)
 	{
-		getResponse().setCharacterEncoding(encoding);
+		super.setCharacterEncoding(encoding);
+		
 		warnWithStackTrace("Some one is switching the encoding on me! : " + encoding);		
 	}
 
 	@Override
 	public void setContentType(String contentType)
 	{
-		getResponse().setContentType(contentType);
+		super.setContentType(contentType);
+		
 		if (contentType.contains("charset")) warnWithStackTrace("Some one is switching the encoding on me! : " + contentType);		
 	}
 	
 	@Override
 	public void setHeader(String key, String value)
 	{
+		super.setHeader(key, value);
+
 		if ("Content-Type".equals(key) && value.contains("charset")) warnWithStackTrace("Some one is switching the encoding : " + value);		
 		else if ("Cache-Control".equals(key)) warnWithStackTrace("Some one is setting the cache control. "+value);
 	}
