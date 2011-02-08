@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
+import org.oscarehr.phr.model.PHRMedication;
 
 import org.oscarehr.util.MiscUtils;
 
@@ -52,12 +53,32 @@ public class RxSessionBean {
     private List<String> reRxDrugIdList=new ArrayList();
     private HashMap randomIdDrugIdPair=new HashMap();
     private List<HashMap<String,String>> listMedHistory=new ArrayList();
+    private HashMap<Long,PHRMedication> pairPHRMed=new HashMap<Long,PHRMedication>();
+    private HashMap<Long,PHRMedication> pairPrevViewedPHRMed=new HashMap<Long,PHRMedication>();//viewed meds but not saved, rethrieved from phr_document 
 
 
 
 
 
     //--------------------------------------------------------------------------
+    public HashMap<Long,PHRMedication> getPairPHRMed(){
+        return pairPHRMed;
+    }
+    public void setPairPHRMed(HashMap<Long,PHRMedication> l){
+        pairPHRMed=l;
+    }
+    public void clearPairPHRMed(){
+        pairPHRMed=new HashMap<Long,PHRMedication>();
+    }
+    public HashMap<Long,PHRMedication> getPairPrevViewedPHRMed(){
+        return pairPrevViewedPHRMed;
+    }
+    public void setPairPrevViewedPHRMed(HashMap<Long,PHRMedication> l){
+        pairPrevViewedPHRMed=l;
+    }
+    public void clearPairPrevViewedPHRMed(){
+        pairPrevViewedPHRMed=new HashMap<Long,PHRMedication>();
+    }
     public List<HashMap<String,String>> getListMedHistory(){
         return listMedHistory;
     }
