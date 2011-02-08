@@ -599,6 +599,79 @@ public class ProviderPropertyAction extends DispatchAction {
          return actionmapping.findForward("genShowPatientDOB");
     }
 
+   public ActionForward viewUseMyMeds(ActionMapping actionmapping,
+                               ActionForm actionform,
+                               HttpServletRequest request,
+                               HttpServletResponse response) {
+         DynaActionForm frm = (DynaActionForm)actionform;
+         String provider = (String) request.getSession().getAttribute("user");
+         UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.USE_MYMEDS);
+
+         String propValue="";
+         if (prop == null){
+             prop = new UserProperty();
+         }else{
+            propValue=prop.getValue();
+         }
+
+         //String [] propertyArray= new String[7];
+         boolean checked;
+         if(propValue.equalsIgnoreCase("yes"))
+             checked=true;
+         else
+             checked=false;
+
+         prop.setChecked(checked);
+         request.setAttribute("useMyMedsProperty", prop);
+         request.setAttribute("providertitle","provider.setUseMyMeds.title"); //=Select if you want to use MyMeds
+         request.setAttribute("providermsgPrefs","provider.setUseMyMeds.msgPrefs"); //=Preferences
+         request.setAttribute("providermsgProvider","provider.setUseMyMeds.msgProfileView"); //=Use MyMeds
+         request.setAttribute("providermsgEdit","provider.setUseMyMeds.msgEdit"); //=Do you want to use MyMeds?
+         request.setAttribute("providerbtnSubmit","provider.setUseMyMeds.btnSubmit"); //=Save
+         request.setAttribute("providermsgSuccess","provider.setUseMyMeds.msgSuccess"); //=MyMeds Selection saved
+         request.setAttribute("method","saveUseMyMeds");
+
+         frm.set("useMyMedsProperty", prop);
+         return actionmapping.findForward("genUseMyMeds");
+     }
+
+      public ActionForward saveUseMyMeds(ActionMapping actionmapping,ActionForm actionform,HttpServletRequest request,HttpServletResponse response){
+        String provider=(String) request.getSession().getAttribute("user");
+
+        DynaActionForm frm=(DynaActionForm)actionform;
+        UserProperty UUseMyMeds=(UserProperty)frm.get("useMyMedsProperty");
+        //UserProperty UUseRx3=(UserProperty)request.getAttribute("rxUseRx3Property");
+
+        boolean checked=false;
+        if(UUseMyMeds!=null)
+            checked = UUseMyMeds.isChecked();
+        UserProperty prop=this.userPropertyDAO.getProp(provider, UserProperty.USE_MYMEDS);
+        if(prop==null){
+            prop=new UserProperty();
+            prop.setName(UserProperty.USE_MYMEDS);
+            prop.setProviderNo(provider);
+        }
+        String useMyMeds="no";
+        if(checked)
+            useMyMeds="yes";
+        prop.setValue(useMyMeds);
+        this.userPropertyDAO.saveProp(prop);
+
+         request.setAttribute("status", "success");
+         request.setAttribute("useMyMedsProperty",prop);
+         request.setAttribute("providertitle","provider.setUseMyMeds.title"); //=Select if you want to use Rx3
+         request.setAttribute("providermsgPrefs","provider.setUseMyMeds.msgPrefs"); //=Preferences
+         request.setAttribute("providermsgProvider","provider.setUseMyMeds.msgProfileView"); //=Use Rx3
+         request.setAttribute("providermsgEdit","provider.setUseMyMeds.msgEdit"); //=Check if you want to use Rx3
+         request.setAttribute("providerbtnSubmit","provider.setUseMyMeds.btnSubmit"); //=Save
+         if(checked)
+            request.setAttribute("providermsgSuccess","provider.setUseMyMeds.msgSuccess_selected"); //=Rx3 is selected
+         else
+            request.setAttribute("providermsgSuccess","provider.setUseMyMeds.msgSuccess_unselected"); //=Rx3 is unselected
+         request.setAttribute("method","saveUseMyMeds");
+         return actionmapping.findForward("genUseMyMeds");
+    }
+
       public ActionForward viewUseRx3(ActionMapping actionmapping,
                                ActionForm actionform,
                                HttpServletRequest request,
