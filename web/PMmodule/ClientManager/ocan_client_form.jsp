@@ -11,10 +11,13 @@
 	int currentDemographicId=Integer.parseInt(request.getParameter("demographicId"));	
 	String ocanType = request.getParameter("ocanType");
 	int prepopulationLevel = OcanForm.PRE_POPULATION_LEVEL_ALL;
-	
+	int ocanStaffFormId =0;
+	if(request.getParameter("ocanStaffFormId")!=null && request.getParameter("ocanStaffFormId")!="") {
+		ocanStaffFormId = Integer.parseInt(request.getParameter("ocanStaffFormId"));
+	}
 	//OcanClientForm ocanClientForm=OcanForm.getOcanClientForm(currentDemographicId,prepopulationLevel);		
 	OcanStaffForm ocanClientForm = null;
-	if(request.getParameter("ocanStaffFormId")!=null && request.getParameter("ocanStaffFormId")!="") {
+	if(ocanStaffFormId != 0) {
 		ocanClientForm=OcanForm.getOcanStaffForm(Integer.valueOf(request.getParameter("ocanStaffFormId")));
 	}else {
 		ocanClientForm=OcanForm.getOcanStaffForm(currentDemographicId,prepopulationLevel,ocanType);		
@@ -60,6 +63,7 @@ function submitOcanClientForm() {
 	<input type="hidden" id="startDate" name="startDate" value="<%=ocanClientForm.getFormattedStartDate()%>"/>
 	<input type="hidden" id="completionDate" name="completionDate" value="<%=ocanClientForm.getFormattedCompletionDate()%>"/>
 	<input type="hidden" name="ocanStaffFormId" id="ocanStaffFormId" value="<%=ocanClientForm.getId()%>" class="{validate: {required:true}}"/>
+	<input type="hidden" name="assessmentId" id="assessmentId" value="<%=ocanClientForm.getAssessmentId()%>" class="{validate: {required:true}}"/>
 	
 	<h3>OCAN Consumer Self-Assessment (v2.0)</h3>
 
@@ -98,7 +102,7 @@ function submitOcanClientForm() {
 		</tr>			
 
 		<tr>
-			<td class="genericTableHeader">1. Does the person lack a current place to stay?</td>
+			<td class="genericTableHeader">1. What kind of place do you live in? </td>
 			<td class="genericTableData">
 				<select name="client_1_1" id="client_1_1">
 					<%=OcanForm.renderAsSelectOptions(ocanClientForm.getId(), "client_1_1", OcanForm.getOcanFormOptions("Camberwell Need"),prepopulationLevel,true)%>
@@ -119,7 +123,7 @@ function submitOcanClientForm() {
 		</tr>			
 
 		<tr>
-			<td class="genericTableHeader">1. Does the person have difficulty in getting enough to eat?</td>
+			<td class="genericTableHeader">1. Do you get enough to eat? </td>
 			<td class="genericTableData">
 				<select name="client_2_1" id="client_2_1">
 					<%=OcanForm.renderAsSelectOptions(ocanClientForm.getId(), "client_2_1", OcanForm.getOcanFormOptions("Camberwell Need"),prepopulationLevel,true)%>
@@ -140,7 +144,7 @@ function submitOcanClientForm() {
 		</tr>			
 
 		<tr>
-			<td class="genericTableHeader">1. Does the person have difficulty looking after the home?</td>
+			<td class="genericTableHeader">1. Are you able to look after your home?</td>
 			<td class="genericTableData">
 				<select name="client_3_1" id="client_3_1" >
 					<%=OcanForm.renderAsSelectOptions(ocanClientForm.getId(), "client_3_1", OcanForm.getOcanFormOptions("Camberwell Need"),prepopulationLevel,true)%>
@@ -162,7 +166,7 @@ function submitOcanClientForm() {
 		</tr>			
 
 		<tr>
-			<td class="genericTableHeader">1. Does the person have difficulty with self-care?</td>
+			<td class="genericTableHeader">1. Do you have problems keeping clean and tidy?</td>
 			<td class="genericTableData">
 				<select name="client_4_1" id="client_4_1">
 					<%=OcanForm.renderAsSelectOptions(ocanClientForm.getId(), "client_4_1", OcanForm.getOcanFormOptions("Camberwell Need"),prepopulationLevel,true)%>
@@ -184,7 +188,7 @@ function submitOcanClientForm() {
 		</tr>			
 
 		<tr>
-			<td class="genericTableHeader">1. Does the person have difficulty with regular, appropriate daytime activities?</td>
+			<td class="genericTableHeader">1. How do you spend your day?</td>
 			<td class="genericTableData">
 				<select name="client_5_1" id="client_5_1">
 					<%=OcanForm.renderAsSelectOptions(ocanClientForm.getId(), "client_5_1", OcanForm.getOcanFormOptions("Camberwell Need"),prepopulationLevel,true)%>
@@ -206,7 +210,7 @@ function submitOcanClientForm() {
 		</tr>			
 
 		<tr>
-			<td class="genericTableHeader">1. Does the person have any physical disability or any physical illness?</td>
+			<td class="genericTableHeader">1. How well do you feel physically?</td>
 			<td class="genericTableData">
 				<select name="client_6_1" id="client_6_1">
 					<%=OcanForm.renderAsSelectOptions(ocanClientForm.getId(), "client_6_1", OcanForm.getOcanFormOptions("Camberwell Need"),prepopulationLevel,true)%>
@@ -226,7 +230,7 @@ function submitOcanClientForm() {
 		</tr>			
 
 		<tr>
-			<td class="genericTableHeader">1. Does the person have any psychotic symptoms?</td>
+			<td class="genericTableHeader">1.  Do you ever hear voices or have problems with your thoughts? </td>
 			<td class="genericTableData">
 				<select name="client_7_1"  id="client_7_1">
 					<%=OcanForm.renderAsSelectOptions(ocanClientForm.getId(), "client_7_1", OcanForm.getOcanFormOptions("Camberwell Need"),prepopulationLevel,true)%>
@@ -249,7 +253,7 @@ function submitOcanClientForm() {
 		</tr>			
 
 		<tr>
-			<td class="genericTableHeader">1. Has the person had clear verbal or written information about condition and treatment?</td>
+			<td class="genericTableHeader">1. Have you been given clear information about your medication?</td>
 			<td class="genericTableData">
 				<select name="client_8_1" id="client_8_1" >
 					<%=OcanForm.renderAsSelectOptions(ocanClientForm.getId(), "client_8_1", OcanForm.getOcanFormOptions("Camberwell Need"),prepopulationLevel,true)%>
@@ -270,7 +274,7 @@ function submitOcanClientForm() {
 		</tr>			
 
 		<tr>
-			<td class="genericTableHeader">1. Does the person suffer from current psychological distress?</td>
+			<td class="genericTableHeader">1. Have you recently felt very sad or low?</td>
 			<td class="genericTableData">
 				<select name="client_9_1"  id="client_9_1" >
 					<%=OcanForm.renderAsSelectOptions(ocanClientForm.getId(), "client_9_1", OcanForm.getOcanFormOptions("Camberwell Need"),prepopulationLevel,true)%>
@@ -290,7 +294,7 @@ function submitOcanClientForm() {
 		</tr>			
 
 		<tr>
-			<td class="genericTableHeader">1. Is the person a danger to him- or herself?</td>
+			<td class="genericTableHeader">1. Do you ever have thoughts of harming yourself?</td>
 			<td class="genericTableData">
 				<select name="client_10_1" id="client_10_1">
 					<%=OcanForm.renderAsSelectOptions(ocanClientForm.getId(), "client_10_1", OcanForm.getOcanFormOptions("Camberwell Need"),prepopulationLevel,true)%>
@@ -311,7 +315,7 @@ function submitOcanClientForm() {
 		</tr>			
 
 		<tr>
-			<td class="genericTableHeader">1. Is the person a current or potential risk to other's people safety?</td>
+			<td class="genericTableHeader">1. Do you think you could be a danger to other people's safety?</td>
 			<td class="genericTableData">
 				<select name="client_11_1" id="client_11_1" >
 					<%=OcanForm.renderAsSelectOptions(ocanClientForm.getId(), "client_11_1", OcanForm.getOcanFormOptions("Camberwell Need"),prepopulationLevel,true)%>
@@ -332,7 +336,7 @@ function submitOcanClientForm() {
 		</tr>			
 
 		<tr>
-			<td class="genericTableHeader">1.  Does the person drink excessively, or have a problem controlling his or her drinking?</td>
+			<td class="genericTableHeader">1.  Does drinking cause you any problems?</td>
 			<td class="genericTableData">
 				<select name="client_12_1" id="client_12_1" >
 					<%=OcanForm.renderAsSelectOptions(ocanClientForm.getId(), "client_12_1", OcanForm.getOcanFormOptions("Camberwell Need"),prepopulationLevel,true)%>
@@ -352,7 +356,7 @@ function submitOcanClientForm() {
 		</tr>			
 
 		<tr>
-			<td class="genericTableHeader">1. Does the person have problems with drug misuse?</td>
+			<td class="genericTableHeader">1. Do you take any drugs that aren't prescribed?</td>
 			<td class="genericTableData">
 				<select name="client_13_1" id="client_13_1" >
 					<%=OcanForm.renderAsSelectOptions(ocanClientForm.getId(), "client_13_1", OcanForm.getOcanFormOptions("Camberwell Need"),prepopulationLevel,true)%>
@@ -372,7 +376,7 @@ function submitOcanClientForm() {
 		</tr>			
 
 		<tr>
-			<td class="genericTableHeader">1. Does the person have problems with addictions?</td>
+			<td class="genericTableHeader">1. Do you have any other addictions - such as gambling? </td>
 			<td class="genericTableData">
 				<select name="client_14_1" id="client_14_1" >
 					<%=OcanForm.renderAsSelectOptions(ocanClientForm.getId(), "client_14_1", OcanForm.getOcanFormOptions("Camberwell Need"),prepopulationLevel,true)%>
@@ -393,7 +397,7 @@ function submitOcanClientForm() {
 		</tr>			
 
 		<tr>
-			<td class="genericTableHeader">1.  Does the person need help with social contact?</td>
+			<td class="genericTableHeader">1.  Are you happy with your social life?</td>
 			<td class="genericTableData">
 				<select name="client_15_1" id="client_15_1" >
 					<%=OcanForm.renderAsSelectOptions(ocanClientForm.getId(), "client_15_1", OcanForm.getOcanFormOptions("Camberwell Need"),prepopulationLevel,true)%>
@@ -414,7 +418,7 @@ function submitOcanClientForm() {
 		</tr>			
 
 		<tr>
-			<td class="genericTableHeader">1.  Does the person have any difficulty in finding a partner or in maintaining a close relationship?</td>
+			<td class="genericTableHeader">1.  Do you have a partner? </td>
 			<td class="genericTableData">
 				<select name="client_16_1" id="client_16_1" >
 					<%=OcanForm.renderAsSelectOptions(ocanClientForm.getId(), "client_16_1", OcanForm.getOcanFormOptions("Camberwell Need"),prepopulationLevel,true)%>
@@ -434,7 +438,7 @@ function submitOcanClientForm() {
 		</tr>			
 
 		<tr>
-			<td class="genericTableHeader">1. Does the person have problems with his or her sex life?</td>
+			<td class="genericTableHeader">1. How is your sex life? </td>
 			<td class="genericTableData">
 				<select name="client_17_1" id="client_17_1" >
 					<%=OcanForm.renderAsSelectOptions(ocanClientForm.getId(), "client_17_1", OcanForm.getOcanFormOptions("Camberwell Need"),prepopulationLevel,true)%>
@@ -454,7 +458,7 @@ function submitOcanClientForm() {
 		</tr>			
 
 		<tr>
-			<td class="genericTableHeader">1. Does the person have difficulty looking after his or her children?</td>
+			<td class="genericTableHeader">1. Do you have any children under 18?</td>
 			<td class="genericTableData">
 				<select name="client_18_1" id="client_18_1" >
 					<%=OcanForm.renderAsSelectOptions(ocanClientForm.getId(), "client_18_1", OcanForm.getOcanFormOptions("Camberwell Need"),prepopulationLevel,true)%>
@@ -476,7 +480,7 @@ function submitOcanClientForm() {
 		</tr>			
 
 		<tr>
-			<td class="genericTableHeader">1. Does the person have difficulty looking after other dependents?</td>
+			<td class="genericTableHeader">1. Do you have any dependents other than children under 18, such as an elderly parent or beloved pet? </td>
 			<td class="genericTableData">
 				<select name="client_19_1" id="client_19_1" >
 					<%=OcanForm.renderAsSelectOptions(ocanClientForm.getId(), "client_19_1", OcanForm.getOcanFormOptions("Camberwell Need"),prepopulationLevel,true)%>
@@ -496,7 +500,7 @@ function submitOcanClientForm() {
 		</tr>			
 
 		<tr>
-			<td class="genericTableHeader">1. Does the person lack basic skills in numeracy and literacy?</td>
+			<td class="genericTableHeader">1. Any difficulty in reading, writing or understanding English?</td>
 			<td class="genericTableData">
 				<select name="client_20_1" id="client_20_1" >
 					<%=OcanForm.renderAsSelectOptions(ocanClientForm.getId(), "client_20_1", OcanForm.getOcanFormOptions("Camberwell Need"),prepopulationLevel,true)%>
@@ -517,7 +521,7 @@ function submitOcanClientForm() {
 		</tr>			
 
 		<tr>
-			<td class="genericTableHeader">1. Does the person lack basic skills in getting access to or using a telephone?</td>
+			<td class="genericTableHeader">1. Do you know how to use a telephone? </td>
 			<td class="genericTableData">
 				<select name="client_21_1" id="client_21_1" >
 					<%=OcanForm.renderAsSelectOptions(ocanClientForm.getId(), "client_21_1", OcanForm.getOcanFormOptions("Camberwell Need"),prepopulationLevel,true)%>
@@ -538,7 +542,7 @@ function submitOcanClientForm() {
 		</tr>			
 
 		<tr>
-			<td class="genericTableHeader">1. Does the person have any problems using public transport?</td>
+			<td class="genericTableHeader">1. How do you find using the bus, streetcar or train? </td>
 			<td class="genericTableData">
 				<select name="client_22_1" id="client_22_1" >
 					<%=OcanForm.renderAsSelectOptions(ocanClientForm.getId(), "client_22_1", OcanForm.getOcanFormOptions("Camberwell Need"),prepopulationLevel,true)%>
@@ -559,7 +563,7 @@ function submitOcanClientForm() {
 		</tr>			
 
 		<tr>
-			<td class="genericTableHeader">1. Does the person have problems budgeting his or her money?</td>
+			<td class="genericTableHeader">1. How do you find budgeting your money?</td>
 			<td class="genericTableData">
 				<select name="client_23_1" id="client_23_1" >
 					<%=OcanForm.renderAsSelectOptions(ocanClientForm.getId(), "client_23_1", OcanForm.getOcanFormOptions("Camberwell Need"),prepopulationLevel,true)%>
@@ -580,7 +584,7 @@ function submitOcanClientForm() {
 		</tr>			
 
 		<tr>
-			<td class="genericTableHeader">1.  Is the person definitely receiving all the benefits that he or she is entitled to?</td>
+			<td class="genericTableHeader">1.  Are you getting all the money you are entitled to?</td>
 			<td class="genericTableData">
 				<select name="client_24_1" id="client_24_1" >
 					<%=OcanForm.renderAsSelectOptions(ocanClientForm.getId(), "client_24_1", OcanForm.getOcanFormOptions("Camberwell Need"),prepopulationLevel,true)%>

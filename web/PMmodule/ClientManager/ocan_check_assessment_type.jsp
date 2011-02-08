@@ -19,10 +19,10 @@
 			out.print("ia_false");
 		}
 	} else if("RA".equals(reasonForAssessment)) { 
-		if(OcanForm.isItTimeToDoReassessment(loggedInInfo.currentFacility.getId(),clientId)) { 
-			out.print("ra_true");
-		} else {
+		if(OcanForm.canCreateInitialAssessment(clientId)) { 
 			out.print("ra_false");
+		} else {
+			out.print("ra_true");
 		}
 	} else if("DIS".equals(reasonForAssessment) || "OTHR".equals(reasonForAssessment) || 
 			"SC".equals(reasonForAssessment) || "REV".equals(reasonForAssessment) || 

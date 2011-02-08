@@ -66,7 +66,7 @@ $("document").ready(function() {
 				alert("You can not create a new initial assessment for this client for now. It already exists in the system.");
 				$("#reasonForAssessment").val('').attr("selected", "selected");
 			} else if(data.match("ra_false")){				
-				alert("You can not do reassessment for this client for now because this client still does not have an initial assessment.");
+				alert("You can not do reassessment for this client for now.");
 				$("#reasonForAssessment").val('').attr("selected", "selected");
 			} else if(data.match("ia_exists_false")){				
 				alert("You must create an initial assessment first.");
@@ -572,7 +572,7 @@ function submitOcanForm() {
 	var newCount = $("#center_count").val(); 
 	var ocanLeadNumber = 0;
 	for(var x=1;x<=newCount;x++) { 
-		if($("#exitDate"+x).val().length != 0) {		
+		if($("#serviceUseRecord_exitDate"+x).val().length != 0) {		
 			if($("#serviceUseRecord_exitDisposition"+x).val().length==0) {			
 				alert('Exit Disposition - Please specify one');
 				$("#serviceUseRecord_exitDisposition"+x).focus();

@@ -155,29 +155,29 @@ $('document').ready(function() {
 		<tr>
 			<td class="genericTableHeader">Service Delivery LHIN</td>
 			<td class="genericTableData">
-				<select name="service_delivery_lhin<%=centerNumber %>" class="{validate: {required:true}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "service_delivery_lhin"+centerNumber, OcanForm.getOcanFormOptions("LHIN code"),prepopulationLevel)%>
+				<select name="serviceUseRecord_service_delivery_lhin<%=centerNumber %>" class="{validate: {required:true}}">
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "serviceUseRecord_service_delivery_lhin"+centerNumber, OcanForm.getOcanFormOptions("LHIN code"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>						
 		<tr>
 			<td class="genericTableHeader">Referral Source</td>
 			<td class="genericTableData">
-				<select name="source_of_referral<%=centerNumber %>" class="{validate: {required:true}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "source_of_referral"+centerNumber, OcanForm.getOcanFormOptions("Referral Source"),prepopulationLevel)%>
+				<select name="serviceUseRecord_source_of_referral<%=centerNumber %>" class="{validate: {required:true}}">
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "serviceUseRecord_source_of_referral"+centerNumber, OcanForm.getOcanFormOptions("Referral Source"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>	
 		<tr>
 			<td class="genericTableHeader">Request for Service Date (YYYY-MM-DD)</td>
 			<td class="genericTableData" class="{validate: {required:true}}">
-				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "requestForServiceDate"+centerNumber,false,prepopulationLevel)%>				
+				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "serviceUseRecord_requestForServiceDate"+centerNumber,false,prepopulationLevel)%>				
 			</td>
 		</tr>	
 		<tr>
 			<td class="genericTableHeader">Service Decision Date (YYYY-MM-DD)</td>
 			<td class="genericTableData" class="{validate: {required:true}}">
-				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "serviceDecisionDate"+centerNumber,false,prepopulationLevel)%>				
+				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "serviceUseRecord_serviceDecisionDate"+centerNumber,false,prepopulationLevel)%>				
 			</td>
 		</tr>	
 		<tr>
@@ -191,13 +191,13 @@ $('document').ready(function() {
 		<tr>
 			<td class="genericTableHeader">Service Initiation Date (YYYY-MM-DD)</td>
 			<td class="genericTableData" class="{validate: {required:true}}">
-				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "serviceInitiationDate"+centerNumber,false,prepopulationLevel)%>				
+				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "serviceUseRecord_serviceInitiationDate"+centerNumber,false,prepopulationLevel)%>				
 			</td>
 		</tr>		
 		<tr>
 			<td class="genericTableHeader">Exit Date (YYYY-MM-DD)</td>
 			<td class="genericTableData" class="{validate: {required:true}}">
-				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "exitDate"+centerNumber,false,prepopulationLevel)%>				
+				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "serviceUseRecord_exitDate"+centerNumber,false,prepopulationLevel)%>				
 			</td>
 		</tr>	
 		<tr>

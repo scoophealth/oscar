@@ -366,21 +366,31 @@ New User Created Form:&nbsp;
 <table class="simple" cellspacing="2" cellpadding="3">
 	<thead>
 		<tr>
+			<th>Assessment ID</th>
 			<th>Creation Date</th>
 			<th>Start Date</th>
 			<th>Completion Date</th>
 			<th>Staff</th>
 			<th>Status</th>
+			<th>(Self)Creation Date</th>
+			<th>(Self)Start Date</th>
+			<th>(Self)Completion Date</th>
+			<th>(Self)Staff</th>
 			<th>Actions</th>
 		</tr>
 	</thead>
 	<c:forEach var="form" items="${ocanStaffForms}">
 		<tr>			
-			<td width="20%"><c:out value="${form.created}" /></td>
+			<td><c:out value="${form.assessmentId}" /></td>
+			<td width="10%"><c:out value="${form.created}" /></td>
 			<td width="10%"><c:out value="${form.formattedStartDate}" /></td>
 			<td width="10%"><c:out value="${form.formattedCompletionDate}" /></td>	
 			<td><c:out value="${form.providerName}" /></td>
 			<td><c:out value="${form.assessmentStatus}" /></td>
+			<td width="10%"><c:out value="${form.clientFormCreated}" /></td>
+			<td width="10%"><c:out value="${form.formattedClientStartDate}" /></td>
+			<td width="10%"><c:out value="${form.formattedClientCompletionDate}" /></td>	
+			<td><c:out value="${form.clientFormProviderName}" /></td>
 			<c:set var="form" value="${form}" scope="request" />
 			<%
 				OcanStaffForm ocanStaffForm=(OcanStaffForm)request.getAttribute("form");
@@ -411,21 +421,31 @@ New User Created Form:&nbsp;
 <table class="simple" cellspacing="2" cellpadding="3">
 	<thead>
 		<tr>
+			<th>Assessment ID</th>
 			<th>Creation Date</th>
 			<th>Start Date</th>
 			<th>Completion Date</th>
 			<th>Staff</th>
 			<th>Status</th>
+			<th>(Self)Creation Date</th>
+			<th>(Self)Start Date</th>
+			<th>(Self)Completion Date</th>
+			<th>(Self)Staff</th>
 			<th>Actions</th>
 		</tr>
 	</thead>
 	<c:forEach var="form" items="${selfOcanStaffForms}">
 		<tr>			
-			<td width="20%"><c:out value="${form.created}" /></td>
+			<td><c:out value="${form.assessmentId}" /></td>
+			<td width="10%"><c:out value="${form.created}" /></td>
 			<td width="10%"><c:out value="${form.formattedStartDate}" /></td>
 			<td width="10%"><c:out value="${form.formattedCompletionDate}" /></td>	
 			<td><c:out value="${form.providerName}" /></td>
 			<td><c:out value="${form.assessmentStatus}" /></td>
+			<td width="10%"><c:out value="${form.clientFormCreated}" /></td>
+			<td width="10%"><c:out value="${form.formattedClientStartDate}" /></td>
+			<td width="10%"><c:out value="${form.formattedClientCompletionDate}" /></td>	
+			<td><c:out value="${form.clientFormProviderName}" /></td>
 			<c:set var="form" value="${form}" scope="request" />
 			<%
 				OcanStaffForm ocanStaffForm=(OcanStaffForm)request.getAttribute("form");
@@ -454,20 +474,23 @@ New User Created Form:&nbsp;
 <table class="simple" cellspacing="2" cellpadding="3">
 	<thead>
 		<tr>
+			<th>Assessment ID</th>
 			<th>Creation Date</th>
 			<th>Start Date</th>
 			<th>Completion Date</th>
 			<th>Staff</th>
-			<th>Status</th>
+			<th>Status</th>									
 			<th>Actions</th>
 		</tr>
 	</thead>
 	<c:forEach var="form" items="${coreOcanStaffForms}">
 		<tr>			
-			<td width="20%"><c:out value="${form.created}" /></td>
+			<td><c:out value="${form.assessmentId}" /></td>
+			<td width="10%"><c:out value="${form.created}" /></td>
 			<td width="10%"><c:out value="${form.formattedStartDate}" /></td>
 			<td width="10%"><c:out value="${form.formattedCompletionDate}" /></td>	
 			<td><c:out value="${form.providerName}" /></td>
+			
 			<td><c:out value="${form.assessmentStatus}" /></td>
 			<c:set var="form" value="${form}" scope="request" />
 			<%

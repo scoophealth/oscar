@@ -36,11 +36,11 @@ $('document').ready(function() {
 	var orgName = $("#serviceUseRecord_orgName<%=centerNumber%>").val();
 	var programName = $("#serviceUseRecord_programName<%=centerNumber%>").val();
 	var item = $("#center_block_orgName<%=centerNumber%>");
-	if(programName!=null && programName!="") {
-		$.get('ocan_form_getProgramNumber.jsp?ocanStaffFormId='+ocanStaffFormId+'&ocanType='+ocanType+'&demographicId='+demographicId+'&center_num=<%=centerNumber%>'+'&LHIN_code='+LHIN_code+'&orgName='+orgName+'&programName='+programName, function(data) {
-				  item.append(data);					 
-				});	
-	}
+	//if(programName!=null && programName!="") {
+	//	$.get('ocan_form_getProgramNumber.jsp?ocanStaffFormId='+ocanStaffFormId+'&ocanType='+ocanType+'&demographicId='+demographicId+'&center_num=<%=centerNumber%>'+'&LHIN_code='+LHIN_code+'&orgName='+orgName+'&programName='+programName, function(data) {
+	//			  item.append(data);					 
+	//			});	
+	//}
 });
 
 
@@ -87,13 +87,19 @@ function changeProgramName(selectProgramBox) {
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Program Name </td>
-			<td class="genericTableData">
-			
-			<select name="serviceUseRecord_programName<%=centerNumber %>" id="serviceUseRecord_programName<%=centerNumber %>" onchange="changeProgramName(this);" class="{validate: {required:true}}">					
-				<%=OcanForm.renderAsConnexProgramNameSelectOptions(ocanStaffForm.getId(), "serviceUseRecord_programName"+centerNumber, OcanForm.getOcanConnexProgramOptions(LHIN_code,orgName), prepopulationLevel)%>
-			</select>	
+			<td class="genericTableData">			
+				<%=OcanForm.renderAsOrgProgramNumberTextField(ocanStaffForm.getId(), "serviceUseRecord_programName"+centerNumber, OcanForm.getOcanConnexProgramName(LHIN_code,orgName), 100, prepopulationLevel)%>
 			</td>
 		</tr>
 		
+		
+		
+		
+		<tr>
+			<td class="genericTableHeader">Program Number</td>
+			<td class="genericTableData">			
+				<%=OcanForm.renderAsOrgProgramNumberTextField(ocanStaffForm.getId(),"serviceUseRecord_programNumber"+centerNumber,OcanForm.getOcanConnexProgramNumber(LHIN_code, orgName), 10, prepopulationLevel)%>
+			</td>
+		</tr>
 	</table>
 </div>

@@ -1,8 +1,10 @@
+<%@page import="org.oscarehr.common.model.OcanStaffFormData"%>
 <%@page import="org.oscarehr.common.model.OcanStaffForm"%>
 <%@page import="org.oscarehr.PMmodule.model.Admission"%>
 <%@page import="org.oscarehr.common.model.Demographic"%>
 <%@page import="org.oscarehr.PMmodule.web.OcanForm"%>
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
+<%@page import="java.util.List"%>
 
 <%@include file="/layouts/caisi_html_top-jquery.jspf"%>
 
@@ -11,15 +13,27 @@
 	int currentDemographicId=Integer.parseInt(request.getParameter("demographicId"));
 	String ocanType = request.getParameter("ocanType");
 	int prepopulationLevel = OcanForm.PRE_POPULATION_LEVEL_ALL;
-	int ocanStaffFormId =0;
+	int ocanStaffFormId =0; boolean newForm=false;
+	int referralCount = 0;
 	if(request.getParameter("ocanStaffFormId")!=null && request.getParameter("ocanStaffFormId")!="") {
 		ocanStaffFormId = Integer.parseInt(request.getParameter("ocanStaffFormId"));
 	}
 	OcanStaffForm ocanStaffForm = null;
 	if(ocanStaffFormId != 0) {
 		ocanStaffForm=OcanForm.getOcanStaffForm(Integer.valueOf(request.getParameter("ocanStaffFormId")));
-	}else {
+	}else {		
 		ocanStaffForm=OcanForm.getOcanStaffForm(currentDemographicId,prepopulationLevel,ocanType);		
+		
+		//If this is a new form, prepopulate referral from last completed assessment.
+		if(ocanStaffForm.getAssessmentId()==null) {
+			newForm = true;
+			OcanStaffForm lastCompletedForm = OcanForm.getLastCompletedOcanForm(currentDemographicId);
+			if(lastCompletedForm!=null) {
+				List<OcanStaffFormData> existingAnswers = OcanForm.getStaffAnswers(lastCompletedForm.getId(),"referrals_count",prepopulationLevel);
+				if(existingAnswers.size()>0)
+					referralCount = Integer.valueOf(existingAnswers.get(0).getAnswer()).intValue();
+			}
+		}		
 	}
 	
 
@@ -112,7 +126,7 @@ function changeOrgLHIN(selectBox) {
 			}
 		
 			if(document.getElementById("serviceUseRecord_orgName" + priority) != null) {
-				$("#center_programNumber"+priority).remove();
+				
 				$("#center_programName"+priority).remove();
 				$("#center_orgName"+priority).remove();			
 								
@@ -142,7 +156,7 @@ function changeOrgName(selectBox) {
 		}
 		if(document.getElementById("serviceUseRecord_programName" + priority) != null) {
 			$("#center_programName"+priority).remove();
-			$("#center_programNumber"+priority).remove();
+			
 			$.get('ocan_form_getProgramName.jsp?ocanStaffFormId='+ocanStaffFormId+'&ocanType='+ocanType+'&demographicId='+demographicId+'&center_num='+priority+'&LHIN_code='+LHIN_code+'&orgName='+selectBoxValue, function(data) {
 				  $("#center_block_orgName"+priority).append(data);					 
 				});	
@@ -265,6 +279,10 @@ $('document').ready(function(){
 	var ocanType='<%=ocanType%>';
 	var ocanStaffFormId = '<%=ocanStaffFormId%>';
 	var medCount = $("#referrals_count").val();
+	var newForm = '<%=newForm%>';
+	if(ocanStaffFormId ==0 && newForm==true) {
+		medCount = <%=referralCount%>;
+	}	
 	for(var x=1;x<=medCount;x++) {
 		$.get('ocan_form_referral.jsp?ocanStaffFormId='+ocanStaffFormId+'&ocanType='+ocanType+'&demographicId='+demographicId+'&referral_num='+x, function(data) {
 			  $("#referral_block").append(data);					 
@@ -393,10 +411,11 @@ $("document").ready(function(){
 	<h3>CORE OCAN 2.0 Staff Assessment</h3>	
 	<br />
 	<% } %>
-	<input type="hidden" name="client_date_of_birth" id="client_date_of_birth" value="<%=ocanStaffForm.getClientDateOfBirth()%>" class="{validate: {required:true}}"/>
+	<input type="hidden" name="client_date_of_birth" id="client_date_of_birth" value="<%=ocanStaffForm.getClientDateOfBirth()%>" />
 	<input type="hidden" id="clientStartDate" name="clientStartDate" value="<%=ocanStaffForm.getFormattedClientStartDate()%>"/>
 	<input type="hidden" id="clientCompletionDate" name="clientCompletionDate" value="<%=ocanStaffForm.getFormattedClientCompletionDate()%>"/>
 	<input type="hidden" name="ocanStaffFormId" id="ocanStaffFormId" value="<%=ocanStaffForm.getId()%>" class="{validate: {required:true}}"/>
+	<input type="hidden" name="assessmentId" id="assessmentId" value="<%=ocanStaffForm.getAssessmentId()%>" class="{validate: {required:true}}"/>
 		
 	<table style="margin-left:auto;margin-right:auto;background-color:#f0f0f0;border-collapse:collapse">
 		
@@ -597,8 +616,8 @@ $("document").ready(function(){
 		
 		<tr>
 			<td class="genericTableHeader">Date of Birth (YYYY-MM-DD)</td>
-			<td class="genericTableData">
-				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "date_of_birth",false,prepopulationLevel)%>				
+			<td class="genericTableData">					
+				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "date_of_birth",false,ocanStaffForm.getDateOfBirth(),prepopulationLevel)%>
 			</td>
 		</tr>		
 		<tr>
@@ -3813,7 +3832,7 @@ This information is collected from a variety of sources, including self-report, 
 			<td class="genericTableHeader">Number of Referrals?</td>
 			<td class="genericTableData">
 				<select name="referrals_count" id="referrals_count" onchange="changeNumberOfReferrals();">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "referrals_count", OcanForm.getOcanFormOptions("Years in Canada"),prepopulationLevel)%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(),"referrals_count", OcanForm.getOcanFormOptions("Years in Canada"),String.valueOf(referralCount),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>													

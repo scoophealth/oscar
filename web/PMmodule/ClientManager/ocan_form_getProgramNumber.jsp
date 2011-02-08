@@ -31,7 +31,7 @@
 		<tr>
 			<td class="genericTableHeader">Program Number</td>
 			<td class="genericTableData">			
-				<%=OcanForm.renderAsOrgProgramNumberTextField(ocanStaffForm.getId(),"serviceUseRecord_programNumber"+centerNumber,OcanForm.getOcanConnexProgramNumber(LHIN_code, orgName, programName), 10, prepopulationLevel)%>
+				<%=OcanForm.renderAsOrgProgramNumberTextField(ocanStaffForm.getId(),"serviceUseRecord_programNumber"+centerNumber,OcanForm.getOcanConnexProgramNumber(LHIN_code, orgName), 10, prepopulationLevel)%>
 			</td>
 		</tr>
 		

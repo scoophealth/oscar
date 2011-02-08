@@ -533,8 +533,8 @@ function openSurvey() {
 	<tr>
 		<td width="20%">FULL OCAN 2.0 Consumer Self-Assessment</td>
 		<c:if test="${ocanStaffForm != null}">
-			<td><c:out value="${ocanStaffForm.created}" /></td>
-			<td><c:out value="${ocanStaffForm.providerName}" /></td>
+			<td><c:out value="${ocanStaffForm.clientFormCreated}" /></td>
+			<td><c:out value="${ocanStaffForm.clientFormProviderName}" /></td>
 			<td>N/A</td>
 			<td>
 				<input type="button" value="Update" onclick="document.location='ClientManager/ocan_client_form.jsp?ocanType=FULL&demographicId=<%=currentDemographic.getDemographicNo()%>'" />
@@ -576,8 +576,8 @@ function openSurvey() {
 	<tr>
 		<td width="20%">SELF+CORE OCAN 2.0 Consumer Self-Assessment</td>
 		<c:if test="${selfOcanStaffForm != null}">
-			<td><c:out value="${selfOcanStaffForm.created}" /></td>
-			<td><c:out value="${selfOcanStaffForm.providerName}" /></td>
+			<td><c:out value="${selfOcanStaffForm.clientFormCreated}" /></td>
+			<td><c:out value="${selfOcanStaffForm.clientFormProviderName}" /></td>
 			<td>N/A</td>
 			<td>
 				<input type="button" value="Update" onclick="document.location='ClientManager/ocan_client_form.jsp?ocanType=SELF&demographicId=<%=currentDemographic.getDemographicNo()%>'" />

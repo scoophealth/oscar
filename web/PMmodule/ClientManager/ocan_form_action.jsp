@@ -1,10 +1,15 @@
 
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="org.oscarehr.common.model.OcanStaffForm"%>
+<%@page import="org.oscarehr.common.model.OcanStaffFormData"%>
+<%@page import="org.oscarehr.PMmodule.web.OcanForm"%>
 <%@page import="org.oscarehr.PMmodule.web.OcanFormAction"%>
 <%@page import="org.oscarehr.util.WebUtils"%>
 <%@page import="java.util.Arrays"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="java.util.Map"%>
+<%@page import="java.util.Date"%>
+<%@page import="java.util.List"%>
 <%
 	@SuppressWarnings("unchecked")
 	HashMap<String,String[]> parameters=new HashMap(request.getParameterMap());
@@ -35,6 +40,7 @@
 	OcanStaffForm ocanStaffForm=OcanFormAction.createOcanStaffForm(ocanStaffFormId, clientId, signed);
 	
 	
+	
 	ocanStaffForm.setLastName(request.getParameter("lastName"));
 	ocanStaffForm.setFirstName(request.getParameter("firstName"));
 	ocanStaffForm.setAddressLine1(request.getParameter("addressLine1"));
@@ -62,14 +68,19 @@
 	
 	try {
 		ocanStaffForm.setStartDate(formatter.parse(startDate));
-		ocanStaffForm.setClientStartDate(formatter.parse(request.getParameter("clientStartDate")));
+		//ocanStaffForm.setClientStartDate(formatter.parse(request.getParameter("clientStartDate")));
 	}catch(java.text.ParseException e){}
 	try {
 		ocanStaffForm.setCompletionDate(formatter.parse(completionDate));
-		ocanStaffForm.setClientCompletionDate(formatter.parse(request.getParameter("clientCompletionDate")));
+		//ocanStaffForm.setClientCompletionDate(formatter.parse(request.getParameter("clientCompletionDate")));
 	}catch(java.text.ParseException e){}
 	
-	OcanFormAction.saveOcanStaffForm(ocanStaffForm);
+	ocanStaffForm.setCreated(new Date());
+	LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+	ocanStaffForm.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
+	ocanStaffForm.setProviderName(loggedInInfo.loggedInProvider.getFormattedName());		
+	
+	OcanFormAction.saveOcanStaffForm(ocanStaffForm);	
 	
 	parameters.remove("lastName");
 	parameters.remove("firstName");
@@ -88,17 +99,34 @@
 	parameters.remove("reasonForAssessment");
 	parameters.remove("gender");
 	
+	Integer ocanStaffFormId_Int=0;
+	if(ocanStaffFormId!=null && !"".equals(ocanStaffFormId) && !"null".equals(ocanStaffFormId)) {
+		ocanStaffFormId_Int = Integer.parseInt(ocanStaffFormId);
+	}		
+	
+	List<OcanStaffFormData> oldData = OcanForm.getOcanFormDataByFormId(ocanStaffFormId_Int);
+	if(oldData.size()>0) {
+		for(OcanStaffFormData d : oldData) {	
+			if(d.getQuestion().contains("client_"))
+				OcanFormAction.addOcanStaffFormData(ocanStaffForm.getId(),d.getQuestion(),d.getAnswer());
+		}
+	
+	} 
 	
 	for (Map.Entry<String, String[]> entry : parameters.entrySet())
 	{
 		if (entry.getValue()!=null)
+
 		{
-			for (String value : entry.getValue())
+			System.out.println(entry.getKey());
+			if (entry.getValue()!=null)
 			{
-				OcanFormAction.addOcanStaffFormData(ocanStaffForm.getId(), entry.getKey(), value);				
+				for (String value : entry.getValue())
+				{
+					OcanFormAction.addOcanStaffFormData(ocanStaffForm.getId(), entry.getKey(), value);				
+				}
 			}
 		}
-	}
 	
 	response.sendRedirect(request.getContextPath()+"/PMmodule/ClientManager.do?id="+clientId);
 %>
