@@ -33,6 +33,7 @@ import java.io.Serializable;
  */
 public class UserProperty implements Serializable {
 
+    public final static String MYOSCAR_ID="MyOscarId";
     public final static String STALE_NOTEDATE = "cme_note_date";
     public final static String MYDRUGREF_ID = "mydrugref_id";
     public final static String ONTARIO_MD_USERNAME = "ontario_md_username";
@@ -45,6 +46,7 @@ public class UserProperty implements Serializable {
     public final static String RX_DEFAULT_QUANTITY = "rx_default_quantity";
     public final static String RX_PROFILE_VIEW = "rx_profile_view";
     public final static String RX_USE_RX3 = "rx_use_rx3";
+    public final static String USE_MYMEDS = "use_mymeds";
     public final static String DMFLOW_SHEET_VIEW = "DMFlowsheet_view";
     public final static String DOC_DEFAULT_QUEUE="doc_default_queue";
     public final static String HC_TYPE= "HC_Type";
