@@ -14,6 +14,8 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
+import oscar.oscarRx.data.RxPrescriptionData;
+import oscar.oscarRx.util.RxUtil;
 
 import oscar.util.UtilDateUtilities;
 
@@ -100,7 +102,9 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 	@Column(name = "outside_provider_ohip")
 	private String outsideProviderOhip = null;
 	@Column(name = "hide_from_drug_profile")
-	private boolean hideFromDrugProfile;
+	private Boolean hideFromDrugProfile;
+        @Column(name = "custom_note")
+	private Boolean customNote=false;
 
 	// ///
 	@Transient
@@ -123,6 +127,104 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 	public static final String COST = "cost";
 	public static final String DRUG_INTERACTION = "drugInteraction";
 	public static final String OTHER = "other";
+        
+        public Drug(){}
+        public Drug (RxPrescriptionData.Prescription drug){
+            id=drug.getDrugId();
+            this.providerNo=drug.getProviderNo();
+            this.demographicId=drug.getDemographicNo();
+            this.rxDate=drug.getRxDate();
+            this.endDate=drug.getEndDate();
+            this.writtenDate=drug.getWrittenDate();
+            this.brandName=drug.getBrandName();
+            this.gcnSeqNo=drug.getGCN_SEQNO();
+            this.customName=drug.getCustomName();
+            this.takeMin=drug.getTakeMin();
+            this.takeMax=drug.getTakeMax();
+            this.freqCode=drug.getFrequencyCode();
+            this.duration=drug.getDuration();
+            this.durUnit=drug.getDurationUnit();
+            this.quantity=drug.getQuantity();
+            this.repeat=drug.getRepeat();
+            this.lastRefillDate=drug.getLastRefillDate();
+            this.noSubs=drug.getNosubs();
+            this.prn=drug.getPrn();
+            this.special=drug.getSpecial();
+            this.special_instruction=drug.getSpecialInstruction();
+            this.archived=drug.isArchived();
+            this.archivedReason=drug.getLastArchReason();
+            this.archivedDate=drug.getArchivedDate();
+            this.genericName=drug.getGenericName();
+            this.atc=drug.getAtcCode();
+            if(drug.getScript_no()==null || drug.getScript_no().trim().length()==0)
+                this.scriptNo=null;
+            else
+                this.scriptNo=Integer.parseInt(drug.getScript_no());
+            this.regionalIdentifier=drug.getRegionalIdentifier();
+            this.unit=drug.getUnit();
+            this.method=drug.getMethod();
+            this.route=drug.getRoute();
+            this.drugForm=drug.getDrugForm();
+            this.createDate=drug.getRxCreatedDate();
+            this.dosage=drug.getDosage();
+            this.customInstructions=drug.getCustomInstr();
+            this.unitName=drug.getUnitName();
+            this.longTerm=drug.isLongTerm();
+            this.pastMed=drug.isPastMed();
+            if(drug.getPatientCompliance()>0)
+                this.patientCompliance=true;
+            else
+                this.patientCompliance=false;
+            this.outsideProviderName=drug.getOutsideProviderName();
+            this.outsideProviderOhip=drug.getOutsideProviderOhip();
+            this.hideFromDrugProfile=false;
+            this.customNote=drug.isCustomNote();
+
+        }
+        private void setId(Integer i){
+            this.id=i;
+        }
+        public boolean isCustom() {
+            boolean b = false;
+
+            if (this.customName != null && !this.customName.equalsIgnoreCase("null")) {
+                b = true;
+            } else if (this.gcnSeqNo == 0) {
+                b = true;
+            }
+            return b;
+        }
+        public String getDrugName() {
+            String ret;
+            if (this.isCustom()) {
+
+                if (this.customName != null) {
+                    ret = this.customName + " ";
+                } else {
+                    ret = "Unknown ";
+                }
+            } else {
+                ret = this.getBrandName() + " ";
+            }
+            return ret;
+        }
+
+        public Boolean isHideFromDrugProfile() {
+		if (hideFromDrugProfile == null) hideFromDrugProfile = false;
+		return hideFromDrugProfile;
+	}
+	public void setHideFromDrugProfile(Boolean c) {
+		this.hideFromDrugProfile = c;
+	}
+        public String getDosageDisplay() {
+            String ret = "";
+            if (this.getTakeMin() != this.getTakeMax()) {
+                ret += RxUtil.FloatToString(this.getTakeMin()) + "-" + RxUtil.FloatToString(this.getTakeMax());
+            } else {
+                ret += RxUtil.FloatToString(this.getTakeMin());
+            }
+            return ret;
+        }
 
 	public boolean isDeleted() {
 		if (isArchived() && DELETED.equals(getArchivedReason())) {
@@ -411,7 +513,14 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 	public void setLongTerm(Boolean longTerm) {
 		this.longTerm = longTerm;
 	}
+        public Boolean isCustomNote() {
+		if (customNote == null) customNote = false;
+		return customNote;
+	}
 
+	public void setCustomNote(Boolean c) {
+		this.customNote = c;
+	}
 	public Boolean getPastMed() {
 		return pastMed;
 	}
