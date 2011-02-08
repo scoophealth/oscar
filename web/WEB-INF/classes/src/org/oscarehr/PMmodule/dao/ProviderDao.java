@@ -99,7 +99,16 @@ public class ProviderDao extends HibernateDaoSupport {
 		}
 		return rs;
 	}
-
+        public List<Provider> getProviderFromFirstLastName(String firstname,String lastname){
+            firstname=firstname.trim();
+            lastname=lastname.trim();
+            String s="From Provider p where p.FirstName=? and p.LastName=?";
+            ArrayList paramList=new ArrayList();
+            paramList.add(firstname);
+            paramList.add(lastname);
+            Object params[]=paramList.toArray(new Object[paramList.size()]);
+            return getHibernateTemplate().find(s,params);
+        }
     public List getActiveProviders(Integer programId) {
         ArrayList paramList = new ArrayList();
 
