@@ -24,6 +24,7 @@ import java.util.List;
 import javax.persistence.Query;
 
 import org.oscarehr.common.model.Drug;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -33,6 +34,15 @@ public class DrugDao extends AbstractDao<Drug> {
 		super(Drug.class);
 	}
 
+    public boolean addNewDrug(Drug d){
+       try{
+            entityManager.persist(d);
+        }catch(Exception e){
+            MiscUtils.getLogger().error(e);
+            return false;
+        }
+       return true;
+    }
     public List<Drug> findByPrescriptionId(Integer prescriptionId) {
 
     	String sqlCommand = "select x from Drug x where x.scriptNo=?1";
