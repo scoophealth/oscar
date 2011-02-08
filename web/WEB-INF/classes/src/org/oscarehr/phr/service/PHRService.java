@@ -35,6 +35,7 @@ import org.oscarehr.phr.PHRAuthentication;
 import org.oscarehr.phr.dao.PHRActionDAO;
 import org.oscarehr.phr.dao.PHRDocumentDAO;
 import org.oscarehr.phr.model.PHRDocument;
+import org.oscarehr.phr.model.PHRMedication;
 import org.oscarehr.phr.model.PHRMessage;
 
 import oscar.dms.EDoc;
@@ -55,7 +56,10 @@ public interface PHRService {
     PHRAuthentication authenticate(String providerNo,String password) throws Exception;
     boolean validAuthentication(PHRAuthentication auth);
     boolean canAuthenticate(String providerNo);
-    void retrieveDocuments(PHRAuthentication auth,String providerNo) throws Exception; 
+    void retrieveDocuments(PHRAuthentication auth,String providerNo) throws Exception;
+    //void retrieveMedications (PHRAuthentication auth,String providerNo,String demoId,String demoPhrId) throws Exception;
+    public void saveMed(PHRMedication m) throws Exception;
+    public List<PHRMedication> retrieveSaveMedToDisplay(PHRAuthentication auth, String providerNo,String demoId,String demoPhrId) throws Exception;
     void setPhrDocumentDAO(PHRDocumentDAO phrDocumentDAO);
  
     public void sendAddMedication(EctProviderData.Provider prov, String demographicNo, String demographicPhrId, RxPrescriptionData.Prescription drug) throws Exception;
