@@ -31,6 +31,7 @@ package org.oscarehr.phr.dao;
 import java.util.List;
 
 import org.oscarehr.phr.model.PHRDocument;
+import org.oscarehr.phr.model.PHRMedication;
 
 /**
  *
@@ -43,7 +44,7 @@ public interface PHRDocumentDAO {
     public List getDocumentsReceived(String docType,String providerNo);
     public List getDocumentsSent(String docType,String providerNo);
     public List getDocumentsArchived(String docType,String providerNo);
-    
+    public List<PHRDocument> getDocumentsByReceiverSenderStatusClassification(Integer receiverType, Integer senderType, String phrClassification, String receiverOscar,Integer status);
     public PHRDocument getDocumentById(String id);
     public PHRDocument getDocumentByIndex(String idx);
     

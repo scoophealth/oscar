@@ -39,6 +39,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.oscarehr.phr.dao.PHRDocumentDAO;
 import org.oscarehr.phr.model.PHRDocument;
+import org.oscarehr.phr.model.PHRMedication;
 import org.oscarehr.phr.model.PHRMessage;
 import org.oscarehr.util.MiscUtils;
 import org.springframework.orm.hibernate3.HibernateCallback;
@@ -108,7 +109,14 @@ public class PHRDocumentDAOHibernate extends HibernateDaoSupport
             List list = getHibernateTemplate().find(sql,f);
             return list;
         }
-        
+        public List<PHRDocument> getDocumentsByReceiverSenderStatusClassification(Integer receiverType, Integer senderType, String phrClassification, String receiverOscar,Integer status){
+            
+            String sql="from PHRDocument d where d.phrClassification=? and d.receiverOscar=? and d.status=? and d.senderType=? and d.receiverType=? order by d.dateSent desc";
+            Object[] f={phrClassification,receiverOscar,status,senderType,receiverType};
+
+            List<PHRDocument> ret=getHibernateTemplate().find(sql,f);
+            return ret;
+        }
         public PHRDocument getDocumentById(String id){
             // for messages 'urn:org:indivo:document:classification:message' 
             String sql ="from PHRDocument d where d.id = ? ";
@@ -125,7 +133,7 @@ public class PHRDocumentDAOHibernate extends HibernateDaoSupport
         public PHRDocument getDocumentByIndex(String idx){
             // for messages 'urn:org:indivo:document:classification:message' 
             String sql ="from PHRDocument d where d.phrIndex = ? ";
-           
+
             List<PHRDocument> list = getHibernateTemplate().find(sql,idx);
             
             if (list == null || list.size() == 0){

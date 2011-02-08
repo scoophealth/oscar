@@ -290,7 +290,37 @@ public class IndivoServiceImpl implements PHRService {
 			}
 		}
 	}
+        public void saveMed(PHRMedication m) throws Exception{    
+                PHRDocument phrdoc = new PHRDocument();
+		BeanUtils.copyProperties(phrdoc, m);
+		phrDocumentDAO.save(phrdoc);//save to phr document table!
+                //Drug d=m.getDrug();
+                //DrugDao drugDao = (DrugDao) SpringUtils.getBean("drugDao");
+                //drugDao.addNewDrug(d);
+        }
+        //retrieve meds from phr and save in phr_document table
+        public List<PHRMedication> retrieveSaveMedToDisplay(PHRAuthentication auth, String providerNo,String demoId,String demoPhrId) throws Exception{
+            TalkClient client = getTalkClient();
+            List<PHRMedication> listMed=new ArrayList<PHRMedication>();
+            ReadDocumentHeaderListResultType readResult = client.readDocumentHeaders(auth.getToken(), demoPhrId, org.indivo.xml.phr.urns.DocumentClassificationUrns.MEDICATION, true);
+            List<DocumentHeaderType> docHeaders = readResult.getDocumentHeader();
+            for(DocumentHeaderType header : docHeaders){
 
+                String index = header.getDocumentIndex();
+                boolean importStatus = checkImportStatus(index);//check if document has been imported before
+                Boolean sendByOscarBefore= isMedSentBefore(index);//check if this document was sent by this oscar before.
+                if(importStatus&&!sendByOscarBefore){
+                        ReadDocumentResultType resultDoc = client.readDocument(auth.getToken(), demoPhrId, index);
+                        IndivoDocumentType document = resultDoc.getIndivoDocument();
+                        PHRMedication med = new PHRMedication(document,demoId,demoPhrId,providerNo);
+                        listMed.add(med);
+                        saveMed(med);
+                }
+            }
+            return listMed;
+        }
+
+        //seems to be getting all documents from myoscar, need to change this part
 	public void retrieveDocuments(PHRAuthentication auth, String providerNo) throws Exception {
 		logger.debug("In retrieveDocuments");
 		TalkClient client = getTalkClient();
@@ -332,7 +362,7 @@ public class IndivoServiceImpl implements PHRService {
 				mess.checkImportStatus();
 				PHRDocument phrdoc = new PHRDocument();
 				BeanUtils.copyProperties(phrdoc, mess);
-				phrDocumentDAO.save(phrdoc);
+				phrDocumentDAO.save(phrdoc);//save to phr document table!
 			} else {
 				logger.debug("need to check for updates on this message");
 			}
@@ -382,12 +412,13 @@ public class IndivoServiceImpl implements PHRService {
 					logger.debug("message is going to " + msg.getRecipient());
 					// client.sendMessage(auth.getToken(),msg.getRecipient(),msg.getPriorThreadMessageId(),msg.getSubject(),msg.getMessageContent().getAny().getTextContent() );
 					updated = true;
-				} else if (action.getActionType() == PHRAction.ACTION_ADD) {
+				} else if (action.getActionType() == PHRAction.ACTION_ADD) {//dealing with medication type document
+                                     
 					// if adding
 					IndivoDocumentType doc = action.getIndivoDocument();
 					if (action.getPhrClassification().equals(PHRConstants.DOCTYPE_BINARYDATA())) doc = PHRBinaryData.mountDocument(action.getOscarId(), doc);
 					if (action.getPhrClassification().equals(PHRConstants.DOCTYPE_ANNOTATION())) {
-						try {
+						try {                                                   
 							String referenceIndex = PHRIndivoAnnotation.getAnnotationReferenceIndex(doc);// temporarily stored
 							PHRAction referencedDocumentAction = phrActionDAO.getActionById(referenceIndex);
 							if (referencedDocumentAction == null) throw new Exception("Cannot find annotated document");
@@ -435,6 +466,7 @@ public class IndivoServiceImpl implements PHRService {
 					updated = true;
 
 				} else if (action.getActionType() == PHRAction.ACTION_UPDATE) {
+                                        logger.debug("else 2");
 					if (action.getPhrIndex() == null && !action.getPhrClassification().equals(PHRConstants.DOCTYPE_ACCESSPOLICIES())) throw new Exception("Error: PHR index not set");
 
 					if (action.getPhrClassification().equals(PHRConstants.DOCTYPE_ACCESSPOLICIES())) action = apService.packageAccessPolicy(auth, action);
@@ -519,7 +551,10 @@ public class IndivoServiceImpl implements PHRService {
 
 		return docVersion;
 	}
-
+        //check if this medication has been sent by this oscar
+        public Boolean isMedSentBefore(String documentIndex){
+            return phrActionDAO.isActionPresentByPhrIndex(documentIndex);
+        }
 	public boolean checkImportStatus(String documentIndex) {
 		return !phrDocumentDAO.hasIndex(documentIndex);
 	}
