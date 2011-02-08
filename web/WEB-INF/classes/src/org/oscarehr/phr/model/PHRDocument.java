@@ -57,13 +57,21 @@ public class PHRDocument implements Serializable{
     
     public static final String PHR_ROLE_PROVIDER = "provider";
     public static final String PHR_ROLE_DEMOGRAPHIC = "patient";
-    
+
+    public static final int STATUS_RECIEVED_SAVED_IN_OSCAR_TABLE = 6;
+    public static final int STATUS_RECIEVED_NOT_SAVED_IN_OSCAR_TABLE = 5;
     public static final int STATUS_NOT_SENT_DELETED = PHRAction.STATUS_NOT_SENT_DELETED;
     public static final int STATUS_NOT_AUTHORIZED = PHRAction.STATUS_NOT_AUTHORIZED;
     public static final int STATUS_SENT = PHRAction.STATUS_SENT;
     public static final int STATUS_SEND_PENDING = PHRAction.STATUS_SEND_PENDING;
     public static final int STATUS_NOT_SET = PHRAction.STATUS_NOT_SET;
-    
+    public static final String CLASSIFICATION_MED = "urn:org:indivo:document:classification:medical:medication";
+    public static final String CLASSIFICATION_MSG = "urn:org:indivo:document:classification:message";
+
+    public static final String  CODE_ATC= "ATC";
+    public static final String  CODE_GCN_SEQNO= "GCN_SEQNO";
+    public static final String  CODE_REGIONALIDENTIFIER= "RegionalIdentifier";
+
     private int id;
     private String phrIndex;
     private String phrClassification;
