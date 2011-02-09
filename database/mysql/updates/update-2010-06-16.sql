@@ -1,0 +1,1 @@
+alter table publicKeys add column matchingProfessionalSpecialistId int;

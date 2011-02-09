@@ -1,0 +1,1 @@
+alter table Facility add enableCdsForms tinyint(1) not null after enableDigitalSignatures;

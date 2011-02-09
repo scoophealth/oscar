@@ -1,0 +1,92 @@
+Communicating with oscar requires 2 main pieces.
+1) the oscar encryption / data encapsulation protocol
+2) the HL7 data structure usage
+
+---------------------------------------
+Oscar encryption encapsulation protocol
+---------------------------------------
+
+- data is sent as http
+- content is a multipart post with the following parameters
+	- importFile
+	- key
+	- signature
+	- service
+	- use_http_response_code=true
+	
+- service : is a simple String denoting whom is connected to your system (in the event multiple oscar systems send data to you).
+- importFile : is AES encrypted data, It is encrypted with what we will refer to as the "sendersSecretKey"
+	- sendersSecretKey : is a 128 bit AES key that is dynamically generated with each send by the client.
+- key : is a base64 encoded copy of the sendersSecretKey that's has been encrypted using the receiversOscarKey with "RSA/ECB/PKCS1Padding"
+- signature : is a base64 encoded copy of a digital signature of the importFile contents, created with "MD5WithRSA" using the services publicKey
+- use_http_response_code : is a parameter which makes it use http response codes, so http:200 means everything is okay, other numbers mean error based on the code returned. Note that the existance of this parameter means true even if the value=false. In general you always want this option on.
+
+Have a look at the oscar_to_oscar_example_post.bin file. Note that the file is not all text, one of the multi-part-parts is binary data. Note also that this example file is missing the use_http_response_code parameter as it was added in a subsequent revision but the example should be sufficient to give you an idea of what is required. 
+
+The contents of the import file when properly decoded is the data in oscar_to_oscar_example_edata.hl7
+
+------------------
+eData exchange hl7
+------------------
+This outlines the hl7 used with eData Exchange. The hl7 described here is the contents of the importFile parameter if decrypted properly.
+
+We are using the ORU_R01 message structure to send arbitrary data between systems.
+
+The oscar_to_oscar_example_edata.hl7 file contains an example of the hl7 that is sent and received by oscar for general edata. The image oscar_to_oscar_example_edata_results.jpg shows you a screen capture of the example hl7 data decoded and rendered. The oscar_to_oscar_example_image.jpg is the binary image of the smiley face uploaded. The text data is as you see it in the screen capture.
+
+At a high level :
+	We use 2 NTE segments to hold the data. One NTE is used for the text data and the other is used for the binary data / file.
+	- NTE -> CommentType -> Text = dataName
+	- NTE -> CommentType -> NameOfCodingSystem = fileName, for binary data this is the filename uploaded, for text data it is always "textData.txt", you can distinguish between the text and binary data using this filename.
+	- NTE -> Comment -> base64 encoded bytes representing the text or binary data. Note that both text and binary are base 64 encoded not just the binary data. The data is broken into 64k segments so more than one comment may exist for larger data. 
+
+	We use PID for the patient information.
+	
+	We use ROL to send information on the sender and intended receiver of the data. 
+	- ROL -> RoleRol -> Identifier = either "SENDER" or "RECEIVER" to distinguish between the 2.
+
+
+-------------
+eReferral hl7
+-------------
+This outlines the HL7 used with eReferrals. The hl7 described here is the contents of the importFile parameter if decrypted properly.
+
+We are using the REF_I12 message structure to send referrals.
+
+The oscar_to_oscar_example_ereferral.hl7 file contains an example of the hl7 sent and received by oscar for eReferrals. The image oscar_to_oscar_example_ereferral_results.jpg shows you how oscar has rendered the HL7 information. Note that in this screen capture, not all fields are relevant but it should give you an indication of the data sent and how it was encoded into the hl7 structure.
+
+At a high level :
+	We use RF1 to pass along a referral identifier and date only. There is not too much data in this segment.
+	
+	We use PRD to send information about the sender and intended receiver of the data
+	- PRD -> ProviderRole -> Identifier = "RP" or "RT" as per the HL7 recommended values.
+	- PRD -> ProviderRole -> Text = a text description of RP/RT, should not be coded against, code against the Identifier, this just helps reading during debugging.
+	- PRD -> XAD = the Providers office address if available. Note this may be blank if no office address is available.
+	
+	We use PID for the patient information.
+	
+	PV1 - is empty but present. There's no useful data in this segment but some HL7 parsers get confused as to where the NTE's are with out it so an empty PV1 should always exist.
+	
+	We use NTE segments to represent the different chunks of text data in the referral form. So as an example the "Reason for consultation" is represented as one NTE. 
+	- NTE -> CommentType -> Text = the portion of text, i.e. "REASON_FOR_CONSULTATION", "CLINICAL_INFORMATION", "CONCURRENT_PROBLEMS", "CURRENT_MEDICATIONS", "ALLERGIES"
+	- NTE -> Comment = base64 encoded text. The text is broken into 64k chunks so for large amounts of text there maybe more than one comment in an NTE.
+	
+When responding to an eReferral, just use the eData exchange to send a response.
+
+
+----------------------
+Patient Kiosk Check-In
+----------------------
+This outlines the HL7 used with eReferrals. The hl7 described here is the contents of the importFile parameter if decrypted properly.
+
+We are using ADT message with event A10, the message structure is ADTA09.
+
+The file oscar_to_oscar_example_kiosk_check_in.hl7 contains an example of the hl7 sent and received.
+
+	- PID is used to contain the information obtained from the health card. The PID layout is the same as in the oscar_to_oscar_example_ereferral.hl7 example except the data is limited to what ever is available on the health card.
+	- PV1 is used to confirm that this message is signifying that the client is no in the waiting room. It should generally always look identical to this example.
+
+It is important to note that information received in the PID is not always as complete as from other messages. As an example, a BC health card may contain only a portion of a persons birthday such as the year and month.
+
+For people sending PID information, you should not send invalid data, i.e. for a BC health card which only has year and month for a birthday, you must only set the year and month, do not set the day to 00 or XX or any invalid value, leave it empty.
+

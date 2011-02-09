@@ -1,0 +1,1 @@
+alter table relationships add column facility_id int after id;

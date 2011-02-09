@@ -1,0 +1,36 @@
+This is a tres brief document on how to setup tomcat with eclipse.
+
+For this example we will use the integrator project (because the oscar project is not "ready").
+
+Pre-requisites : Eclipse, Tomcat, Java all installed
+
+-----------------------
+Setup Tomcat In Eclipse
+-----------------------
+- On your eclipse top menu : Window -> Show View -> Other -> Servers
+- Follow through the menu/question prompts.
+
+There, you're done, you can right click on tomcat and start and stop it now.
+
+-------------------
+New Project example
+-------------------
+- On Eclipse, create a new project, in the project wizard select Web -> Dynamic Web Project.
+- In the resulting directory, add /WebContent/index.jsp (WebContent should already exist).
+- Right click on the Servers -> Tomcat V6.0 (or what ever you have) -> Add and Remove, add your new project.
+- Right click on the Servers -> Tomcat V6.0 -> restart (or start if you didn't previously)
+
+Done, go to a web browser and look at http://127.0.0.1:8080/test_web/index.jsp and you should see your index page (test_web was my project/context name).
+
+-----------------------------
+Existing Project - integrator
+-----------------------------
+- Check out the new integrator code....
+- add the integrator to your server -> tomcat V6.0 ... 
+- restart the tomcat and it should work (kind of, you need to setup your recaptcha key for the web login if you use that).
+
+As for how I did that with the integrator, it's a maven project. To build the eclipse project setup for regular java from maven its : mvn eclipse:eclipse
+for a web project it's : mvn eclipse:eclipse -Dwtpversion=1.5 (where the 1.5 is what ever WTP version you're running)
+
+I've commited the eclipse settings so everyone gets them now.
+

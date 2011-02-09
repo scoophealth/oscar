@@ -1,0 +1,1 @@
+ALTER TABLE hl7TextMessage ADD COLUMN fileUploadCheck_id int(10) NOT NULL;

@@ -1,0 +1,1 @@
+alter table drugs add custom_note tinyint(1) after unitName;

@@ -1,0 +1,1 @@
+insert into encounterForm (form_name,form_value,form_table) Values('Antenatal Lab Req','../form/formlabreq07.jsp?labType=AnteNatal&demographic_no=','');

@@ -1,0 +1,2 @@
+update consultationRequests c left outer join professionalSpecialists p on p.specId = c.specId set c.specId = NULL where p.specId is null;
+update consultationRequests set patientWillBook = false where patientWillBook != true and patientWillBook != false;
