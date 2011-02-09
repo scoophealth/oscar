@@ -1,0 +1,1 @@
+alter table Facility add column allowSims tinyint(1) unsigned NOT NULL default 1

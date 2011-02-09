@@ -1,0 +1,1 @@
+delete from CdsFormOption where cdsDataCategory in ('032-01','032-02','032-03','032-04','036-01','036-02','036-03');

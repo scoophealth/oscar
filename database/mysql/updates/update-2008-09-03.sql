@@ -1,0 +1,1 @@
+create table favoritesprivilege (id int(4) PRIMARY KEY NOT NULL auto_increment,provider_no varchar(6),opentopublic tinyint(1),writeable tinyint(1));

@@ -1,0 +1,1 @@
+ALTER TABLE hsfo_patient ADD RxDx int(10);

@@ -1,0 +1,1 @@
+alter table studylogin change current current1 tinyint(1) default NULL;
