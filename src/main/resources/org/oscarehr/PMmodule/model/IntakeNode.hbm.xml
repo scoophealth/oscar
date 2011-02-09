@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--
+		Copyright (C) 2007. Centre for Research on Inner City Health, St.
+		Michael's Hospital, Toronto, Ontario, Canada. This program is free
+		software; you can redistribute it and/or modify it under the terms of
+		the GNU General Public License as published by the Free Software
+		Foundation; either version 2 of the License, or (at your option) any
+		later version. This program is distributed in the hope that it will be
+		useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+		General Public License for more details. You should have received a
+		copy of the GNU General Public License along with this program; if
+		not, write to the Free Software Foundation, Inc., 51 Franklin Street,
+		Fifth Floor, Boston, MA 02110-1301, USA.
+	-->
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping package="org.oscarehr.PMmodule.model">
+	<class name="IntakeNode" table="intake_node">
+		<meta attribute="sync-DAO">false</meta>
+
+		<id name="id" type="integer" column="intake_node_id">
+			<generator class="native" />
+		</id>
+
+		<property name="pos" column="pos" type="integer" />
+
+		<many-to-one name="nodeTemplate" class="IntakeNodeTemplate"
+			column="intake_node_template_id" not-null="true" lazy="false" />
+
+		<many-to-one name="label" cascade="all" class="IntakeNodeLabel"
+			column="intake_node_label_id" not-null="false" lazy="false" />
+
+		<many-to-one name="parent" class="IntakeNode" column="parent_intake_node_id"
+			not-null="false" insert="true" update="false" />
+
+		<property name="mandatory" column="mandatory" type="boolean" />
+		
+		<property name="repeating" column="repeating" type="boolean" />
+		
+		<property name="commonList" column="common_list" type="boolean" />
+
+		<property name="eq_to_id" column="eq_to_id" type="integer" />
+
+		<property name="form_version" column="form_version" type="integer" />
+
+		<property name="publish_date" column="publish_date" type="calendar" />
+
+		<property name="publish_by" column="publish_by" type="string"
+			length="60" />
+
+		<list name="children" cascade="all" inverse="false">
+			<key column="parent_intake_node_id" not-null="false" />
+			<list-index column="pos" />
+			<one-to-many class="IntakeNode" />
+		</list>
+
+		<set name="intakes" inverse="true" sort="natural">
+			<key column="intake_node_id" />
+			<one-to-many class="Intake" />
+		</set>
+
+		<set name="answers" inverse="true" sort="natural">
+			<key column="intake_node_id" />
+			<one-to-many class="IntakeAnswer" />
+		</set>
+				
+		<property name="formType" column="form_type" type="integer" />
+		
+		<property name="questionId" column="question_id" type="string" />
+		
+		<property name="validations" column="validations" type="string" />
+
+	</class>
+</hibernate-mapping>

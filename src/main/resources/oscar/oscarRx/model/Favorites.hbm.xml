@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="oscar.oscarRx.model">
+	<class name="Favorites" table="favorites">
+		<meta attribute="sync-DAO">false</meta>
+		<id name="Id" type="integer" column="favoriteid">
+			<generator class="native" />
+		</id>
+
+		<property name="ProviderNo" column="provider_no" type="string"
+			not-null="true" length="6" />
+		<property name="Favoritename" column="favoritename" type="string"
+			not-null="true" length="50" />
+		<property name="Bn" column="BN" type="string" not-null="false"
+			length="30" />
+		<property name="GcnSeqno" column="GCN_SEQNO" type="big_decimal"
+			not-null="true" length="10" />
+		<property name="CustomName" column="customName" type="string"
+			not-null="false" length="60" />
+		<property name="Takemin" column="takemin" type="java.lang.Float"
+			not-null="false" length="12" />
+		<property name="Takemax" column="takemax" type="java.lang.Float"
+			not-null="false" length="12" />
+		<property name="Freqcode" column="freqcode" type="string"
+			not-null="false" length="6" />
+		<property name="Duration" column="duration" type="string"
+			not-null="false" length="4" />
+		<property name="Durunit" column="durunit" type="string"
+			not-null="false" length="1" />
+		<property name="Quantity" column="quantity" type="string"
+			not-null="false" length="20" />
+		<property name="Repeat" column="`repeat`" type="java.lang.Byte"
+			not-null="false" length="3" />
+		<property name="Nosubs" column="nosubs" type="boolean"
+			not-null="true" />
+		<property name="Prn" column="prn" type="boolean" not-null="true" />
+		<property name="Special" column="special" type="string"
+			not-null="true" length="255" />
+		<property name="Gn" column="GN" type="string" not-null="false"
+			length="255" />
+		<property name="Atc" column="ATC" type="string" not-null="false"
+			length="255" />
+		<property name="RegionalIdentifier" column="regional_identifier"
+			type="string" not-null="false" length="100" />
+		<property name="Unit" column="unit" type="string" not-null="false"
+			length="5" />
+		<property name="Method" column="method" type="string"
+			not-null="false" length="5" />
+		<property name="Route" column="route" type="string" not-null="false"
+			length="5" />
+		<property name="DrugForm" column="drug_form" type="string" not-null="false"
+			length="50" />
+		<property name="Dosage" column="dosage" type="string"
+			not-null="false" />
+		<property name="CustomInstructions" column="custom_instructions"
+			type="boolean" not-null="false" />
+		<property name="UnitName" column="unitName" type="string"
+			not-null="false" length="10" />
+
+
+	</class>
+</hibernate-mapping>

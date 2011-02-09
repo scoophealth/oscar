@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.quatro.model.security.SecSiteValue" table="secsite">
+		<id name="siteId" type="java.lang.String">
+			<column name="siteid" />
+			<generator class="assigned" />
+		</id>
+		<property name="description" type="java.lang.String" length="80">
+		</property>
+		<property name="active" type="boolean" />
+		<property name="siteKey" type="int">
+		</property>
+		<property name="createdBy" type="java.lang.String" />
+		<property name="createdDate" type="java.util.Date" />
+		<property name="lastAccessed" type="java.util.Date" />
+	</class>
+</hibernate-mapping>

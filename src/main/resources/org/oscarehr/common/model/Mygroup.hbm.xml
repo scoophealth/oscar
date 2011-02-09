@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 1, 2010 12:29:42 PM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="org.oscarehr.common.model.Mygroup" table="mygroup">
+        <composite-id name="id" class="org.oscarehr.common.model.MygroupId">
+            <key-property name="mygroupNo" type="string">
+                <column name="mygroup_no" length="10" />
+            </key-property>
+            <key-property name="providerNo" type="string">
+                <column name="provider_no" length="6" />
+            </key-property>
+        </composite-id>
+        <property name="lastName" type="string">
+            <column name="last_name" length="30" not-null="true" />
+        </property>
+        <property name="firstName" type="string">
+            <column name="first_name" length="30" not-null="true" />
+        </property>
+        <property name="vieworder" type="string">
+            <column name="vieworder" length="2" />
+        </property>
+    </class>
+</hibernate-mapping>

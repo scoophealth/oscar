@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<guideline title="428Message" >
+<conditions>
+	<condition type="dxcodes" any="icd9:428"/>
+	<condition type="billedFor" any="13050,14050,14051,14052">
+			<param key="payer" value="MSP"/>
+			<param key="notInDays" value="365"/>
+
+	</condition>
+</conditions>
+<consequence>
+<warning strength="warning">Service code 14051 can be billed</warning>
+</consequence>
+</guideline>

@@ -1,1 +1,0 @@
-ALTER TABLE `issue` ADD COLUMN `priority` CHAR(10) DEFAULT NULL;

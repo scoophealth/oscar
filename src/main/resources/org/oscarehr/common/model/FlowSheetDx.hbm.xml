@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--
+		/* * * Copyright (c) 2001-2002. Department of Family Medicine,
+		McMaster University. All Rights Reserved. * * This software is
+		published under the GPL GNU General Public License. * This program is
+		free software; you can redistribute it and/or * modify it under the
+		terms of the GNU General Public License * as published by the Free
+		Software Foundation; either version 2 * of the License, or (at your
+		option) any later version. * * This program is distributed in the hope
+		that it will be useful, * but WITHOUT ANY WARRANTY; without even the
+		implied warranty of * MERCHANTABILITY or FITNESS FOR A PARTICULAR
+		PURPOSE. See the * GNU General Public License for more details. * *
+		You should have received a copy of the GNU General Public License *
+		along with this program; if not, write to the Free Software *
+		Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+		USA. * * * <OSCAR TEAM> * * This software was written for the *
+		Department of Family Medicine * McMaster University * Hamilton *
+		Ontario, Canada */ create table oscar_annotation( id int(10) NOT NULL
+		auto_increment primary key, table_id int(10), table_name int(10),
+		provider_no varchar(6), demographic_no int(10), create_date datetime,
+		observation_date datetime, deleted char(1) default '0', note text,
+		uuid char(36) ) ; public class OscarAnnotation { -private long id;
+		private long tableId; private String tableName; //hmm should this be a
+		long with CONST VALUES HARDCODED? private String providerNo; private
+		String demographicNo; private Date createDate; private Date
+		observationDate; private boolean deleted; private String text; private
+		String uuid;
+                
+                
+
+create table flowsheet_dx (
+      id int(10) NOT NULL auto_increment primary key,  
+      flowsheet varchar(40),
+      dx_code varchar(40),
+      dx_code_type varchar(40),
+      provider_no varchar(6),
+      demographic_no int(10),
+      create_date datetime,
+      archived char(1) default '0',
+      archived_date datetime
+      
+     
+    ) ; 
+
+	-->
+
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+	<class name="org.oscarehr.common.model.FlowSheetDx" table="flowsheet_dx">
+		<id name="id" unsaved-value="0">
+			<generator class="native" />
+		</id>
+		<property name="flowsheet" />
+		<property column="dx_code" name="dxCode"  />
+                <property column="dx_code_type" name="dxCodeType"  />
+		<property column="provider_no" name="providerNo" />
+		<property column="demographic_no" name="demographicNo" />
+		<property column="create_date" name="createDate" />
+		<property name="archived" />
+                <property column="archived_date" name="archivedDate"/>
+	</class>
+</hibernate-mapping>

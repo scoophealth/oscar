@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+	<class name="com.quatro.model.ReportFilterValue" table="report_filter">
+		<id name="fieldNo" column="fieldno" unsaved-value="0">
+			<generator class="native" />
+		</id>
+		<property name="reportNo" />
+		<property name="fieldName" />
+		<property name="fieldDesc" />
+		<property name="fieldType" />
+		<property name="lookupTable" column="lookup_table" />
+		<property name="op" column="operator" />
+		<property name="tree" column="lookup_tree" />
+		<property name="fieldSQL" />
+		<property name="note" />
+	</class>
+</hibernate-mapping>

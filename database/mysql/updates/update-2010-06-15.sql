@@ -1,1 +1,0 @@
-alter table hl7TextInfo change accessionNum accessionNum varchar(20);

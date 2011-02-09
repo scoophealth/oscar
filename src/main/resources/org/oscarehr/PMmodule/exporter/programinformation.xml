@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fields>
+	<field name="CASE_NO" type="text" colpos="1" maxsize="15"></field>
+	<field name="DATIS_KEY" type="text" colpos="16" maxsize="12"></field>
+	<field name="ADMISSION_NO" type="integer" colpos="28" maxsize="8"></field>
+	<field name="PROGRAM_ID" type="text" colpos="36" maxsize="3"></field>
+	<field name="PRG_START_DATE" type="datetime" colpos="39" maxsize="10"  dateformat="dd/MM/yyyy"></field>
+	<field name="PRG_START_TIME" type="text" colpos="49" maxsize="5"></field>
+	<field name="PRG_END_DATE" type="datetime" colpos="54" maxsize="10"  dateformat="dd/MM/yyyy"></field>
+	<field name="PRG_END_TIME" type="text" colpos="64" maxsize="5"></field>
+	<field name="REASON_DISCHARGE_ID" type="selectnumeric" colpos="69" maxsize="3"></field>
+	<field name="TOTAL_SESSIONS" type="integer" colpos="72" maxsize="8"></field>
+	<field name="TOTAL_HOURS_DS_MANUAL" type="double" colpos="80" maxsize="8"></field>
+	<field name="TOTAL_HOURS_IS_MANUAL" type="double" colpos="88" maxsize="8"></field>
+	<field name="WMS_REGISTRATION_NO" type="integer" colpos="96" maxsize="8"></field>
+</fields>

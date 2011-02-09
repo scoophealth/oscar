@@ -1,1 +1,0 @@
-drop table app_config;

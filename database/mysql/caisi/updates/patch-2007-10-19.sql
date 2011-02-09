@@ -1,1 +1,0 @@
-update custom_filter set start_date='1900-01-01' where start_date='0001-01-01';

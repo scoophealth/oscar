@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.quatro.model.security.Security" table="security">
+		<id name="securityNo" type="java.lang.Integer">
+			<column name="security_no" precision="6" scale="0" />
+			<generator class="native" />
+		</id>
+		<property name="userName" type="java.lang.String">
+			<column name="user_name" length="30" unique="true" />
+		</property>
+		<property name="password" type="java.lang.String">
+			<column name="password" length="80" />
+		</property>
+		<property name="providerNo" type="java.lang.String">
+			<column name="provider_no" length="6" />
+		</property>
+		<property name="pin" type="java.lang.String">
+			<column name="pin" length="6" />
+		</property>
+		<property name="BRemotelockset" type="java.lang.Integer">
+			<column name="b_remoteLockSet" precision="1" scale="0"
+				default="1" />
+		</property>
+		<property name="BLocallockset" type="java.lang.Integer">
+			<column name="b_localLockSet" precision="1" scale="0" default="1" />
+		</property>
+		<property name="dateExpiredate" type="java.util.Date">
+			<column name="date_expireDate" length="7" default="01-JAN-2999" />
+		</property>
+		<property name="BExpireset" type="java.lang.Integer">
+			<column name="b_expireSet" precision="1" scale="0" default="1" />
+		</property>
+		<!-- 
+		<property name="lastUpdateDate" column="lastUpdateDate"></property>
+		<property name="lastUpdateUser" column="lastUpdateUser"></property>
+		-->
+	</class>
+</hibernate-mapping>

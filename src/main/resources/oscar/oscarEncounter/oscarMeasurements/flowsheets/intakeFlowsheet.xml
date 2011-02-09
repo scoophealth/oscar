@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+	<!--
+		Copyright (c) 2001-2002. Department of Family Medicine, McMaster
+		University. All Rights Reserved. This software is published under the
+		GPL GNU General Public License. This program is free software; you can
+		redistribute it and/or modify it under the terms of the GNU General
+		Public License as published by the Free Software Foundation; either
+		version 2 of the License, or (at your option) any later version. This
+		program is distributed in the hope that it will be useful, but WITHOUT
+		ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+		FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+		for more details. * * You should have received a copy of the GNU
+		General Public License along with this program; if not, write to the
+		Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+		MA 02111-1307, USA.
+	-->
+<flowsheet name="intake" display_name="Intake flowsheet"
+	ds_rules="intake.drl" is_universal="true" is_medical="false"
+	warning_colour="#E00000" recommendation_colour="yellow">
+
+	<indicator key="LOW" colour="#9999FF" />
+	<indicator key="HIGH" colour="orange" />
+	<indicator key="HIGH 1" colour="#E00000" />
+
+	<item measurement_type="Regn" display_name="Registration Assessment completed"
+		guideline="all clients must have registration intake completed in CAISI"
+		graphable="no" value_name="Completed" />
+	<measurement type="Regn" typeDesc="Regn"
+		typeDisplayName="Registration Assessment completed"
+		measuringInstrc="all clients must have registration intake completed in CAISI">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+
+	<item measurement_type="Quat" display_name="Most recent admission in Quattro"
+		guideline="" graphable="no" value_name="Entered" />
+	<measurement type="Quat" typeDesc="Quat"
+		typeDisplayName="Most recent admission in Quattro" measuringInstrc="Most recent admission in Quattro">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+
+	<item measurement_type="CAIS" display_name="Entered into CAISI"
+		guideline="" graphable="no" value_name="Entered" />
+	<measurement type="CAIS" typeDesc="CAIS" typeDisplayName="Entered into CAISI"
+		measuringInstrc="Entered into CAISI">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+
+	<item measurement_type="info" display_name="Information Package given to client"
+		guideline="" graphable="no" value_name="Given to client" />
+	<measurement type="info" typeDesc="info"
+		typeDisplayName="Information Package given to client" measuringInstrc="Information Package given to client">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+
+	<item measurement_type="pink"
+		display_name="Application for Social Assistance (Pink form) filled out"
+		guideline="" graphable="no" value_name="Completed" />
+	<measurement type="pink" typeDesc="pink"
+		typeDisplayName="Application for Social Assistance (Pink form) filled out"
+		measuringInstrc="Application for Social Assistance (Pink form) filled out">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+
+	<item measurement_type="ROI"
+		display_name="Consent to Release Information (Form 3) completed"
+		guideline="" graphable="no" value_name="Completed" />
+	<measurement type="ROI" typeDesc="ROI"
+		typeDisplayName="Consent to Release Information (Form 3) completed"
+		measuringInstrc="Consent to Release Information (Form 3) completed">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+
+	<item measurement_type="Cons" display_name="other consents completed"
+		guideline="" graphable="no" value_name="Completed" />
+	<measurement type="Cons" typeDesc="Cons"
+		typeDisplayName="other consents completed" measuringInstrc="other consents completed">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+
+	<item measurement_type="Ornt" display_name="Orientation to Current Program Completed"
+		guideline="" graphable="no" value_name="Completed" />
+	<measurement type="Ornt" typeDesc="Ornt"
+		typeDisplayName="Orientation to Current Program Completed"
+		measuringInstrc="Orientation to Current Program Completed">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+
+	<item measurement_type="Insp" display_name="reviewed by supervisor"
+		guideline="" graphable="no" value_name="Completed" />
+	<measurement type="Insp" typeDesc="Insp" typeDisplayName="reviewed by supervisor"
+		measuringInstrc="reviewed by supervisor">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+
+</flowsheet>

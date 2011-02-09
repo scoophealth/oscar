@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--
+		Copyright (c) 2001-2002. Centre for Research on Inner City Health, St.
+		Michael's Hospital, Toronto. All Rights Reserved. This software is
+		published under the GPL GNU General Public License. This program is
+		free software; you can redistribute it and/or modify it under the
+		terms of the GNU General Public License as published by the Free
+		Software Foundation; either version 2 of the License, or (at your
+		option) any later version. This program is distributed in the hope
+		that it will be useful, but WITHOUT ANY WARRANTY; without even the
+		implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+		PURPOSE. See the GNU General Public License for more details. You
+		should have received a copy of the GNU General Public License along
+		with this program; if not, write to the Free Software Foundation,
+		Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. OSCAR
+		TEAM This software was written for Centre for Research on Inner City
+		Health, St. Michael's Hospital, Toronto, Ontario, Canada
+	-->
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping package="org.oscarehr.PMmodule.model">
+	<class name="Formintakea" table="formintakea">
+		<id column="ID" name="Id" type="java.lang.Long">
+			<generator class="native" />
+		</id>
+		<property column="radio_sex" length="36" name="RadioSex"
+			not-null="false" type="string" />
+		<property column="effDate" length="10" name="EffDate"
+			not-null="false" type="string" />
+		<property column="cbox_sharing" length="1" name="CboxSharing"
+			not-null="false" type="string" />
+		<property column="namesOfMedication" length="120"
+			name="NamesOfMedication" not-null="false" type="string" />
+		<property column="radio_hasDoctor" length="36" name="RadioHasdoctor"
+			not-null="false" type="string" />
+		<property column="healthIssueDetails" length="255"
+			name="HealthIssueDetails" not-null="false" type="string" />
+		<property column="cbox_ODSP" length="1" name="CboxOdsp"
+			not-null="false" type="string" />
+		<property column="cbox_fortYork" length="1" name="CboxFortyork"
+			not-null="false" type="string" />
+		<property column="cbox_idNone" length="1" name="CboxIdnone"
+			not-null="false" type="string" />
+		<property column="reactionToMedication" length="255"
+			name="ReactionToMedication" not-null="false" type="string" />
+		<property column="seatonNotToured" length="255" name="SeatonNotToured"
+			not-null="false" type="string" />
+		<property column="radio_otherHealthConcern" length="36"
+			name="RadioOtherhealthconcern" not-null="false" type="string" />
+		<property column="cbox_oNeillHouse" length="1" name="CboxOneillhouse"
+			not-null="false" type="string" />
+		<property column="contactName" length="70" name="ContactName"
+			not-null="false" type="string" />
+		<property column="radio_didNotReceiveHealthCare" length="36"
+			name="RadioDidnotreceivehealthcare" not-null="false" type="string" />
+		<property column="cbox_treatPhysicalHealth" length="1"
+			name="CboxTreatphysicalhealth" not-null="false" type="string" />
+		<property column="cbox_idFiled" length="1" name="CboxIdfiled"
+			not-null="false" type="string" />
+		<property column="cbox_treatInjury" length="1" name="CboxTreatinjury"
+			not-null="false" type="string" />
+		<property column="cbox_OAS" length="1" name="CboxOas"
+			not-null="false" type="string" />
+		<property column="cbox_OtherIncome" length="1" name="CboxOtherincome"
+			not-null="false" type="string" />
+		<property column="cbox_newClient" length="1" name="CboxNewclient"
+			not-null="false" type="string" />
+		<property column="radio_seeDoctor" length="36" name="RadioSeedoctor"
+			not-null="false" type="string" />
+		<property column="radio_mentalHealthConcerns" length="36"
+			name="RadioMentalhealthconcerns" not-null="false" type="string" />
+		<property column="radio_objectToRegularDoctorIn4Wks" length="36"
+			name="RadioObjecttoregulardoctorin4wks" not-null="false" type="string" />
+		<property column="helpObtainMedication" length="255"
+			name="HelpObtainMedication" not-null="false" type="string" />
+		<property column="summary" length="255" name="Summary"
+			not-null="false" type="string" />
+		<property column="day" length="2" name="Day" not-null="false"
+			type="string" />
+		<property column="cbox_speakFrench" length="1" name="CboxSpeakfrench"
+			not-null="false" type="string" />
+		<property column="cbox_isStatement6Read" length="1"
+			name="CboxIsstatement6read" not-null="false" type="string" />
+		<property column="hasWhatID" length="120" name="HasWhatID"
+			not-null="false" type="string" />
+		<property column="doctorPhone" length="24" name="DoctorPhone"
+			not-null="false" type="string" />
+		<property column="radio_hasDrinkingProblem" length="36"
+			name="RadioHasdrinkingproblem" not-null="false" type="string" />
+		<property column="cbox_downsviewDells" length="1"
+			name="CboxDownsviewdells" not-null="false" type="string" />
+		<property column="cbox_longTermProgram" length="1"
+			name="CboxLongtermprogram" not-null="false" type="string" />
+		<property column="cbox_goToOthers" length="1" name="CboxGotoothers"
+			not-null="false" type="string" />
+		<property column="speakOther" length="36" name="SpeakOther"
+			not-null="false" type="string" />
+		<property column="lastIssueDate" length="120" name="LastIssueDate"
+			not-null="false" type="string" />
+		<property column="refugeeNum" length="24" name="RefugeeNum"
+			not-null="false" type="string" />
+		<property column="radio_hasBehaviorProblem" length="36"
+			name="RadioHasbehaviorproblem" not-null="false" type="string" />
+		<property column="radio_needRegularDoctor" length="36"
+			name="RadioNeedregulardoctor" not-null="false" type="string" />
+		<property column="goToOthers" length="255" name="GoToOthers"
+			not-null="false" type="string" />
+		<property column="radio_helpObtainMedication" length="36"
+			name="RadioHelpobtainmedication" not-null="false" type="string" />
+		<property column="cbox_assistInHealth" length="1"
+			name="CboxAssistinhealth" not-null="false" type="string" />
+		<property column="cbox_goToWalkInClinic" length="1"
+			name="CboxGotowalkinclinic" not-null="false" type="string" />
+		<property column="cbox_noID" length="1" name="CboxNoid"
+			not-null="false" type="string" />
+		<property column="cbox_pamphletIssued" length="1"
+			name="CboxPamphletissued" not-null="false" type="string" />
+		<property column="cbox_isStatementRead" length="1"
+			name="CboxIsstatementread" not-null="false" type="string" />
+		<property column="cbox_noRecord" length="1" name="CboxNorecord"
+			not-null="false" type="string" />
+		<property column="cbox_OW" length="1" name="CboxOw" not-null="false"
+			type="string" />
+		<property column="assessCompleteTime" length="36"
+			name="AssessCompleteTime" not-null="false" type="string" />
+		<property column="assessDate" length="24" name="AssessDate"
+			not-null="false" type="string" />
+		<property column="cbox_hearingImpair" length="1"
+			name="CboxHearingimpair" not-null="false" type="string" />
+		<property column="cbox_visualImpair" length="1"
+			name="CboxVisualimpair" not-null="false" type="string" />
+		<property column="cbox_birchmountResidence" length="1"
+			name="CboxBirchmountresidence" not-null="false" type="string" />
+		<property column="cbox_EI" length="1" name="CboxEi" not-null="false"
+			type="string" />
+		<property column="radio_hasDrugProblem" length="36"
+			name="RadioHasdrugproblem" not-null="false" type="string" />
+		<property column="cbox_visitHealthCenter" length="1"
+			name="CboxVisithealthcenter" not-null="false" type="string" />
+		<property column="citzenshipCardNum" length="24"
+			name="CitzenshipCardNum" not-null="false" type="string" />
+		<property column="cbox_rotaryClub" length="1" name="CboxRotaryclub"
+			not-null="false" type="string" />
+		<property column="cbox_healthCard" length="1" name="CboxHealthcard"
+			not-null="false" type="string" />
+		<property column="clientSurname" length="50" name="ClientSurname"
+			not-null="false" type="string" />
+		<property column="treatOtherReasons" length="255"
+			name="TreatOtherReasons" not-null="false" type="string" />
+		<property column="mobilityImpair" length="255" name="MobilityImpair"
+			not-null="false" type="string" />
+		<property column="radio_seatonTour" length="36" name="RadioSeatontour"
+			not-null="false" type="string" />
+		<property column="radio_healthIssue" length="36"
+			name="RadioHealthissue" not-null="false" type="string" />
+		<property column="cbox_assistInHousing" length="1"
+			name="CboxAssistinhousing" not-null="false" type="string" />
+		<property column="amtReceived" length="36" name="AmtReceived"
+			not-null="false" type="string" />
+		<property column="cbox_visitHealthOffice" length="1"
+			name="CboxVisithealthoffice" not-null="false" type="string" />
+		<property column="completedBy" length="120" name="CompletedBy"
+			not-null="false" type="string" />
+		<property column="contactPhone" length="24" name="ContactPhone"
+			not-null="false" type="string" />
+		<property column="cbox_immigrant" length="1" name="CboxImmigrant"
+			not-null="false" type="string" />
+		<property column="healthCardVer" length="2" name="HealthCardVer"
+			not-null="false" type="string" />
+		<property column="doctorName2" length="50" name="DoctorName2"
+			not-null="false" type="string" />
+		<property column="cbox_dateOfReadmission" length="1"
+			name="CboxDateofreadmission" not-null="false" type="string" />
+		<property column="cbox_treatOtherReasons" length="1"
+			name="CboxTreatotherreasons" not-null="false" type="string" />
+		<property column="cbox_visitOthers" length="1" name="CboxVisitothers"
+			not-null="false" type="string" />
+		<property column="commentsOnID" length="255" name="CommentsOnID"
+			not-null="false" type="string" />
+		<property column="assessStartTime" length="24" name="AssessStartTime"
+			not-null="false" type="string" />
+		<property column="immigrantNum" length="24" name="ImmigrantNum"
+			not-null="false" type="string" />
+		<property column="cbox_insulin" length="1" name="CboxInsulin"
+			not-null="false" type="string" />
+		<property column="radio_seeSameDoctor" length="36"
+			name="RadioSeesamedoctor" not-null="false" type="string" />
+		<property column="radio_speakToResearcher" length="36"
+			name="RadioSpeaktoresearcher" not-null="false" type="string" />
+		<property column="cbox_assistInIdentification" length="1"
+			name="CboxAssistinidentification" not-null="false" type="string" />
+		<property column="cbox_speakEnglish" length="1"
+			name="CboxSpeakenglish" not-null="false" type="string" />
+		<property column="contactRelationship" length="120"
+			name="ContactRelationship" not-null="false" type="string" />
+		<property column="cbox_treatMentalHealth" length="1"
+			name="CboxTreatmentalhealth" not-null="false" type="string" />
+		<property column="datesAtSeaton" length="70" name="DatesAtSeaton"
+			not-null="false" type="string" />
+		<property column="sinNum" length="24" name="SinNum" not-null="false"
+			type="string" />
+		<property column="radio_rateOverallHealth" length="36"
+			name="RadioRateoverallhealth" not-null="false" type="string" />
+		<property column="healthCardNum" length="24" name="HealthCardNum"
+			not-null="false" type="string" />
+		<property column="office" length="50" name="Office" not-null="false"
+			type="string" />
+		<property column="radio_needSeatonService" length="36"
+			name="RadioNeedseatonservice" not-null="false" type="string" />
+		<property column="cbox_bleeding" length="1" name="CboxBleeding"
+			not-null="false" type="string" />
+		<property column="cbox_regularCheckup" length="1"
+			name="CboxRegularcheckup" not-null="false" type="string" />
+		<property column="workerNum" length="36" name="WorkerNum"
+			not-null="false" type="string" />
+		<property column="cbox_visitWalkInClinic" length="1"
+			name="CboxVisitwalkinclinic" not-null="false" type="string" />
+		<property column="cbox_hasDiabetes" length="1" name="CboxHasdiabetes"
+			not-null="false" type="string" />
+		<property column="birthCertificateNum" length="24"
+			name="BirthCertificateNum" not-null="false" type="string" />
+		<property column="clientFirstName" length="50" name="ClientFirstName"
+			not-null="false" type="string" />
+		<property column="month" length="2" name="Month" not-null="false"
+			type="string" />
+		<property column="radio_allergicToMedication" length="36"
+			name="RadioAllergictomedication" not-null="false" type="string" />
+		<property column="cbox_CPP" length="1" name="CboxCpp"
+			not-null="false" type="string" />
+		<property column="cbox_hostel_fusion_care" length="1"
+			name="CboxHostelFusionCare" not-null="false" type="string" />
+		<property column="frequencyOfSeeingDoctor" length="8"
+			name="FrequencyOfSeeingDoctor" not-null="false" type="string" />
+		<property column="cbox_otherID" length="1" name="CboxOtherid"
+			not-null="false" type="string" />
+		<property column="cbox_assistInEducation" length="1"
+			name="CboxAssistineducation" not-null="false" type="string" />
+		<property column="cbox_annexHarm" length="1" name="CboxAnnexharm"
+			not-null="false" type="string" />
+		<property column="cbox_visitEmergencyRoom" length="1"
+			name="CboxVisitemergencyroom" not-null="false" type="string" />
+		<property column="cbox_mobilityImpair" length="1"
+			name="CboxMobilityimpair" not-null="false" type="string" />
+		<property column="cbox_HealthOffice" length="1"
+			name="CboxHealthoffice" not-null="false" type="string" />
+		<property column="cbox_epilepsy" length="1" name="CboxEpilepsy"
+			not-null="false" type="string" />
+		<property column="radio_pamphletIssued" length="36"
+			name="RadioPamphletissued" not-null="false" type="string" />
+		<property column="formEdited" length="19" name="FormEdited"
+			not-null="false" type="timestamp" />
+		<property column="otherSpecify" length="120" name="OtherSpecify"
+			not-null="false" type="string" />
+		<property column="cbox_citzenshipCard" length="1"
+			name="CboxCitzenshipcard" not-null="false" type="string" />
+		<property column="cbox_assistInAddictions" length="1"
+			name="CboxAssistinaddictions" not-null="false" type="string" />
+		<property column="cbox_assistInFinance" length="1"
+			name="CboxAssistinfinance" not-null="false" type="string" />
+		<property column="radio_active" length="36" name="RadioActive"
+			not-null="false" type="string" />
+		<property column="provider_no" length="11" name="ProviderNo"
+			not-null="false" type="java.lang.Long" />
+		<property column="cbox_Employment" length="1" name="CboxEmployment"
+			not-null="false" type="string" />
+		<property column="mentalHealthConcerns" length="255"
+			name="MentalHealthConcerns" not-null="false" type="string" />
+		<property column="radio_takeMedication" length="36"
+			name="RadioTakemedication" not-null="false" type="string" />
+		<property column="cbox_hostel" length="1" name="CboxHostel"
+			not-null="false" type="string" />
+		<property column="doctorAddress" length="120" name="DoctorAddress"
+			not-null="false" type="string" />
+		<property column="doctorName" length="50" name="DoctorName"
+			not-null="false" type="string" />
+		<property column="cbox_goToHealthCenter" length="1"
+			name="CboxGotohealthcenter" not-null="false" type="string" />
+		<property column="radio_appmtSeeDoctorIn3Mths" length="36"
+			name="RadioAppmtseedoctorin3mths" not-null="false" type="string" />
+		<property column="cbox_assistInLegal" length="1"
+			name="CboxAssistinlegal" not-null="false" type="string" />
+		<property column="everAtSeatonBefore" length="24"
+			name="EverAtSeatonBefore" not-null="false" type="string" />
+		<property column="cbox_sinCard" length="1" name="CboxSincard"
+			not-null="false" type="string" />
+		<property column="radio_hasMentalIllness" length="36"
+			name="RadioHasmentalillness" not-null="false" type="string" />
+		<property column="otherIdentification" length="70"
+			name="OtherIdentification" not-null="false" type="string" />
+		<property column="cbox_birthCertificate" length="1"
+			name="CboxBirthcertificate" not-null="false" type="string" />
+		<property column="cbox_assistInImmigration" length="1"
+			name="CboxAssistinimmigration" not-null="false" type="string" />
+		<property column="contactAddress" length="255" name="ContactAddress"
+			not-null="false" type="string" />
+		<property column="cbox_speakOther" length="1" name="CboxSpeakother"
+			not-null="false" type="string" />
+		<property column="pamphletNotIssued" length="255"
+			name="PamphletNotIssued" not-null="false" type="string" />
+		<property column="radio_hasHealthProblem" length="36"
+			name="RadioHashealthproblem" not-null="false" type="string" />
+		<property column="dateOfReadmission" length="24"
+			name="DateOfReadmission" not-null="false" type="string" />
+		<property column="radio_onlineCheck" length="36"
+			name="RadioOnlinecheck" not-null="false" type="string" />
+		<property column="allergicToMedicationName" length="255"
+			name="AllergicToMedicationName" not-null="false" type="string" />
+		<property column="formCreated" length="10" name="FormCreated"
+			not-null="false" type="date" />
+		<property column="demographic_no" length="11" name="DemographicNo"
+			not-null="true" type="java.lang.Long" />
+		<property column="cbox_goToEmergencyRoom" length="1"
+			name="CboxGotoemergencyroom" not-null="false" type="string" />
+		<property column="frequencyOfSeeingEmergencyRoomDoctor"
+			length="8" name="FrequencyOfSeeingEmergencyRoomDoctor" not-null="false"
+			type="string" />
+		<property column="cbox_WSIB" length="1" name="CboxWsib"
+			not-null="false" type="string" />
+		<property column="cbox_refugee" length="1" name="CboxRefugee"
+			not-null="false" type="string" />
+		<property column="doctorPhoneExt" length="8" name="DoctorPhoneExt"
+			not-null="false" type="string" />
+		<property column="year" length="4" name="Year" not-null="false"
+			type="string" />
+		<property column="cbox_assistInEmployment" length="1"
+			name="CboxAssistinemployment" not-null="false" type="string" />
+		<property column="otherHealthConerns" length="255"
+			name="OtherHealthConerns" not-null="false" type="string" />
+		<property column="enterSeatonDate" length="24" name="EnterSeatonDate"
+			not-null="false" type="string" />
+		<property column="reasonToSeaton" length="255" name="ReasonToSeaton"
+			not-null="false" type="string" />
+	</class>
+</hibernate-mapping>

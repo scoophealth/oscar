@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>zxing</groupId>
+  <artifactId>zxing-j2se</artifactId>
+  <version>1.5</version>
+  <versioning>
+    <versions>
+      <version>1.5</version>
+    </versions>
+    <lastUpdated>20110209052129</lastUpdated>
+  </versioning>
+</metadata>

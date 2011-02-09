@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+
+
+
+<rule-set name="DiabetesBMI"
+          xmlns="http://drools.org/rules"
+          xmlns:java="http://drools.org/semantics/java"
+          xmlns:xs="http://www.w3.org/2001/XMLSchema-instance"
+          xs:schemaLocation="http://drools.org/rules rules.xsd
+                             http://drools.org/semantics/java java.xsd">
+
+    <rule name="BMI 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.util.MeasurementDSHelper</class>
+        </parameter>
+        <java:condition>m.getDataAsDouble() &gt;= 25.0</java:condition>       
+        <java:condition>m.getDataAsDouble() &lt; 30</java:condition> 
+        <java:consequence>     
+              m.log("BMI RULES IS GETTING RUN");
+              m.setIndicationColor("HIGH");
+        </java:consequence>
+    </rule>
+
+    <rule name="BMI 2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.util.MeasurementDSHelper</class>
+        </parameter>      
+        <java:condition>m.getDataAsDouble() &gt; 30</java:condition> 
+        <java:consequence>     
+              m.log("BMI RULES IS GETTING RUN");
+              m.setIndicationColor("HIGH 1");
+        </java:consequence>
+    </rule>
+
+    <rule name="BMI 3">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.util.MeasurementDSHelper</class>
+        </parameter>      
+        <java:condition>m.getDataAsDouble() &lt; 18.5</java:condition> 
+        <java:consequence>     
+              m.log("BMI RULES IS GETTING RUN");
+              m.setIndicationColor("LOW");
+        </java:consequence>
+    </rule>
+
+</rule-set>
+
+

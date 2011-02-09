@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+	<class name="com.quatro.model.security.UserAccessValue" table="v_user_access"
+		mutable="false">
+		<composite-id>
+			<key-property name="functionCd" column="objectname" />
+			<key-property name="orgCd" column="orgcd" />
+		</composite-id>
+		<property name="providerNo" column="provider_no" />
+		<property name="privilege" column="privilege" />
+		<property name="orgCdcsv" column="orgCdcsv"></property>
+		<property name="orgApplicable" column="orgapplicable" />
+	</class>
+	<sql-query name="user_access">
+		<return alias="uav" class="com.quatro.model.security.UserAccessValue" />
+
+		select a.provider_no as {uav.providerNo}, c.code as {uav.orgCd},
+		c.codecsv as {uav.orgCdcsv}, b.objectname as
+		{uav.functionCd},d.orgapplicable as {uav.orgApplicable},
+		max(b.privilege) as {uav.privilege} from secUserRole a,
+		secObjPrivilege b, lst_orgcd c, secObjectName d where a.provider_no =
+		? and a.role_name = b.roleusergroup and a.orgcd = c.code and
+		b.objectname=d.objectname and a.activeyn=1 and c.activeyn=1 group by
+		a.provider_no, c.code, c.codecsv, b.objectname, d.orgapplicable
+	</sql-query>
+</hibernate-mapping>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+	<!--
+		Document : RenalDosing.xml Created on : December 18, 2006, 1:44 PM
+		Author : jay Description: Purpose of the document follows.
+	-->
+
+<root>
+	<medication name="metformin" atccode="A10BA02">
+		<dose clcrrange="50-60">give 50% of dose</dose>
+        <dose clcrrange="10-49">give 25% of dose</dose>
+        <dose clcrrange="&lt;10">AVOID</dose>
+        <moreinfo>    
+            Normal dose: 500-850 mg BID
+            
+            When CLcr&lt; 50 mL/min:  Monitor blood glucose BID to QID with any medication change until stable.
+        </moreinfo>
+    </medication>
+    
+    <medication name="digoxin" atccode="C01AA05">
+        <dose clcrrange="10-50">give 25-75% of dose q36h</dose>
+        <dose clcrrange="&lt;10">give 10-25% of dose q48h</dose>
+        <moreinfo>    
+            Normal Maintenance dose: 0.0625 mg to 0.125 mg"
+        </moreinfo>    
+    </medication>
+    
+    <medication name="spironolactone" atccode="C03DA01">
+        <dose clcrrange="&lt;10">AVOID</dose>
+        <moreinfo>		
+            If potassium increases to 5.5 mmol/L, decrease spironolactone dose; if patient is taking some combination of an ACE inhibitor, an ARB, an aldosterone-receptor blocker, discontinue one and recheck potassium.
+            
+            The dose of spironolactone should not exceed 25 mg daily when used with an ACE inhibitor or ARB; this combination of drugs should be avoided when GFR &lt; 30 mL/min.  
+            
+            Prescribe thiazide or loop diuretics (loop diuretics necessary when estimated GFR is &lt; 30 mL/min.
+        </moreinfo>
+    </medication>
+    
+    <medication name="nitrofurantoin" atccode="J01XE01">
+        <dose clcrrange="&lt;60">AVOID</dose>
+        <moreinfo>			
+            Nitrofurantoin is not effective when CLcr&lt;60 mL/min and risk of toxicity is increased.
+        </moreinfo>	
+    </medication>
+    
+    <medication name="sulfamethoxazole-trimethoprim" atccode="J01EE01">
+        <dose clcrrange="30-50">Administer q12-24h or reduce dose by 25%</dose>
+        <dose clcrrange="15-29">Administer q18-24h or reduce dose by 50%</dose>
+        <dose clcrrange="&lt;15">Not recommended</dose>
+    </medication>
+    
+    <medication name="allopurinol" atccode="M04AA01">
+        <dose clcrrange="&gt;99">no adjustment needed</dose>
+        <dose clcrrange="80-99">300 mg daily</dose>
+        <dose clcrrange="60-79">250 mg daily</dose>
+        <dose clcrrange="40-59">200 mg daily</dose>
+        <dose clcrrange="30-39">150 mg daily</dose>
+        <dose clcrrange="20-29">100 mg daily</dose>
+        <dose clcrrange="10-19">100 mg q2days</dose>
+    </medication>
+    
+    <medication name="ciprofloxacin" atccode="J01MA02">
+        <dose clcrrange="5-30">250-500 mg po q18h</dose>
+    </medication>
+    
+    <medication name="levofloxacin" atccode="J01MA12">
+        <dose clcrrange="10-50">Administer 500 mg stat, then 250 mg q24-48h</dose>
+        <dose clcrrange="&lt;10">Administer 500 mg stat, then 250 mg q48h</dose>
+        
+    </medication>
+</root>

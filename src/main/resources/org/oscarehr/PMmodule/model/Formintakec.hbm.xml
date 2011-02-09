@@ -1,0 +1,517 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--
+		Copyright (c) 2001-2002. Centre for Research on Inner City Health, St.
+		Michael's Hospital, Toronto. All Rights Reserved. This software is
+		published under the GPL GNU General Public License. This program is
+		free software; you can redistribute it and/or modify it under the
+		terms of the GNU General Public License as published by the Free
+		Software Foundation; either version 2 of the License, or (at your
+		option) any later version. This program is distributed in the hope
+		that it will be useful, but WITHOUT ANY WARRANTY; without even the
+		implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+		PURPOSE. See the GNU General Public License for more details. You
+		should have received a copy of the GNU General Public License along
+		with this program; if not, write to the Free Software Foundation,
+		Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. OSCAR
+		TEAM This software was written for Centre for Research on Inner City
+		Health, St. Michael's Hospital, Toronto, Ontario, Canada
+	-->
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping package="org.oscarehr.PMmodule.model">
+	<class name="Formintakec" table="formintakec">
+		<id column="ID" name="Id" type="java.lang.Long">
+			<generator class="native" />
+		</id>
+		<property column="cboxReferralByPolice" length="2"
+			name="CboxReferralByPolice" not-null="false" type="string" />
+		<property column="radioGender" length="16" name="RadioGender"
+			not-null="false" type="string" />
+		<property column="cboxSocialServiceIssueOther" length="2"
+			name="CboxSocialServiceIssueOther" not-null="false" type="string" />
+		<property column="cboxBase2ndIncomeNone" length="2"
+			name="CboxBase2ndIncomeNone" not-null="false" type="string" />
+		<property column="cboxCurrHasSIn" length="2" name="CboxCurrHasSIn"
+			not-null="false" type="string" />
+		<property column="cboxReferralByFredVictorCentreOther"
+			length="2" name="CboxReferralByFredVictorCentreOther" not-null="false"
+			type="string" />
+		<property column="cboxReferralByDetentionCenter" length="2"
+			name="CboxReferralByDetentionCenter" not-null="false" type="string" />
+		<property column="currDescriptionOfHousing" length="255"
+			name="CurrDescriptionOfHousing" not-null="false" type="string" />
+		<property column="cboxBaseUseHealthBus" length="2"
+			name="CboxBaseUseHealthBus" not-null="false" type="string" />
+		<property column="dateOfHospitalization" length="10"
+			name="DateOfHospitalization" not-null="false" type="string" />
+		<property column="cboxHousingIssue" length="2" name="CboxHousingIssue"
+			not-null="false" type="string" />
+		<property column="cboxBaseHasCommunity" length="2"
+			name="CboxBaseHasCommunity" not-null="false" type="string" />
+		<property column="cboxBaseHasFriends" length="2"
+			name="CboxBaseHasFriends" not-null="false" type="string" />
+		<property column="cboxRelocationExit" length="2"
+			name="CboxRelocationExit" not-null="false" type="string" />
+		<property column="cbox2ndPersonalityDisorder" length="2"
+			name="Cbox2ndPersonalityDisorder" not-null="false" type="string" />
+		<property column="cboxBase2ndIncomeSocialAssistance" length="2"
+			name="CboxBase2ndIncomeSocialAssistance" not-null="false" type="string" />
+		<property column="cbox2ndMedicalMentalDisorder" length="2"
+			name="Cbox2ndMedicalMentalDisorder" not-null="false" type="string" />
+		<property column="cboxReferralByCriminalJusticeSystem"
+			length="2" name="CboxReferralByCriminalJusticeSystem" not-null="false"
+			type="string" />
+		<property column="cboxThreatIssue" length="2" name="CboxThreatIssue"
+			not-null="false" type="string" />
+		<property column="cboxSubstanceAnxietyDisorder" length="2"
+			name="CboxSubstanceAnxietyDisorder" not-null="false" type="string" />
+		<property column="referralComment" length="255" name="ReferralComment"
+			not-null="false" type="string" />
+		<property column="cboxBase2ndIncomeEi" length="2"
+			name="CboxBase2ndIncomeEi" not-null="false" type="string" />
+		<property column="cboxCurrHasSupportUnknown" length="2"
+			name="CboxCurrHasSupportUnknown" not-null="false" type="string" />
+		<property column="cboxReferralBySelf" length="2"
+			name="CboxReferralBySelf" not-null="false" type="string" />
+		<property column="cboxPhysicalIssueOther" length="2"
+			name="CboxPhysicalIssueOther" not-null="false" type="string" />
+		<property column="cboxCurrLivingWithSpouse" length="2"
+			name="CboxCurrLivingWithSpouse" not-null="false" type="string" />
+		<property column="cboxReferralByOtherInstitution" length="2"
+			name="CboxReferralByOtherInstitution" not-null="false" type="string" />
+		<property column="cboxPhysicalHospitalization" length="2"
+			name="CboxPhysicalHospitalization" not-null="false" type="string" />
+		<property column="currWhyClientDoNotAccessSocialServices"
+			length="255" name="CurrWhyClientDoNotAccessSocialServices" not-null="false"
+			type="string" />
+		<property column="cboxFinancialIssue" length="2"
+			name="CboxFinancialIssue" not-null="false" type="string" />
+		<property column="cboxIsolationIssueOther" length="2"
+			name="CboxIsolationIssueOther" not-null="false" type="string" />
+		<property column="cboxCurrLivingWithUnknown" length="2"
+			name="CboxCurrLivingWithUnknown" not-null="false" type="string" />
+		<property column="cbox2ndIncomeOther" length="2"
+			name="Cbox2ndIncomeOther" not-null="false" type="string" />
+		<property column="cboxCurrHasUnknown" length="2"
+			name="CboxCurrHasUnknown" not-null="false" type="string" />
+		<property column="cboxReferralByPhysician" length="2"
+			name="CboxReferralByPhysician" not-null="false" type="string" />
+		<property column="cbox2ndDisassociativeDisorder" length="2"
+			name="Cbox2ndDisassociativeDisorder" not-null="false" type="string" />
+		<property column="cboxImmigrationIssueOther" length="2"
+			name="CboxImmigrationIssueOther" not-null="false" type="string" />
+		<property column="entryDate" length="10" name="EntryDate"
+			not-null="false" type="string" />
+		<property column="admissionDate" length="10" name="AdmissionDate"
+			not-null="false" type="string" />
+		<property column="cboxCurrHasCommunity" length="2"
+			name="CboxCurrHasCommunity" not-null="false" type="string" />
+		<property column="cboxDailyActivityIssue" length="2"
+			name="CboxDailyActivityIssue" not-null="false" type="string" />
+		<property column="cboxCurrLivingWithParents" length="2"
+			name="CboxCurrLivingWithParents" not-null="false" type="string" />
+		<property column="cboxIdentificationIssueOther" length="2"
+			name="CboxIdentificationIssueOther" not-null="false" type="string" />
+		<property column="radioBaseEmploymentStatus" length="16"
+			name="RadioBaseEmploymentStatus" not-null="false" type="string" />
+		<property column="radioCanadianBorn" length="16"
+			name="RadioCanadianBorn" not-null="false" type="string" />
+		<property column="cboxBaseLivingWithNonrelatives" length="2"
+			name="CboxBaseLivingWithNonrelatives" not-null="false" type="string" />
+		<property column="cboxCurrIncomeMgmentDoNotNeedTrustee"
+			length="2" name="CboxCurrIncomeMgmentDoNotNeedTrustee" not-null="false"
+			type="string" />
+		<property column="cboxBase2ndIncomeFamily" length="2"
+			name="CboxBase2ndIncomeFamily" not-null="false" type="string" />
+		<property column="radioCurrEmploymentStatus" length="16"
+			name="RadioCurrEmploymentStatus" not-null="false" type="string" />
+		<property column="cboxSuicideExit" length="2" name="CboxSuicideExit"
+			not-null="false" type="string" />
+		<property column="cboxReferralByStreetNurseOther" length="2"
+			name="CboxReferralByStreetNurseOther" not-null="false" type="string" />
+		<property column="dayOfBirth" length="2" name="DayOfBirth"
+			not-null="false" type="string" />
+		<property column="cboxDualDisorder" length="2" name="CboxDualDisorder"
+			not-null="false" type="string" />
+		<property column="cbox2ndIncomeODSp" length="2"
+			name="Cbox2ndIncomeODSp" not-null="false" type="string" />
+		<property column="cboxPsychiatricHospitalization" length="2"
+			name="CboxPsychiatricHospitalization" not-null="false" type="string" />
+		<property column="cbox2ndSomatoformDisorder" length="2"
+			name="Cbox2ndSomatoformDisorder" not-null="false" type="string" />
+		<property column="cboxPreAdmission" length="2" name="CboxPreAdmission"
+			not-null="false" type="string" />
+		<property column="cboxReferralByStreetHealthReceptionOther"
+			length="2" name="CboxReferralByStreetHealthReceptionOther" not-null="false"
+			type="string" />
+		<property column="cbox2ndAnxietyDisorder" length="2"
+			name="Cbox2ndAnxietyDisorder" not-null="false" type="string" />
+		<property column="radioCurrParticipateInEduction" length="16"
+			name="RadioCurrParticipateInEduction" not-null="false" type="string" />
+		<property column="cbox2ndChildhoodDisorder" length="2"
+			name="Cbox2ndChildhoodDisorder" not-null="false" type="string" />
+		<property column="cboxCurrIncomeMgmentHasTrustee" length="2"
+			name="CboxCurrIncomeMgmentHasTrustee" not-null="false" type="string" />
+		<property column="radioCountryOfOrigin" length="16"
+			name="RadioCountryOfOrigin" not-null="false" type="string" />
+		<property column="cboxOtherChronicIllness" length="2"
+			name="CboxOtherChronicIllness" not-null="false" type="string" />
+		<property column="cboxMOHLTCDisorder" length="2"
+			name="CboxMOHLTCDisorder" not-null="false" type="string" />
+		<property column="cboxPTSd" length="2" name="CboxPTSd"
+			not-null="false" type="string" />
+		<property column="cboxBase2ndIncomeDisabilityAssistance"
+			length="2" name="CboxBase2ndIncomeDisabilityAssistance" not-null="false"
+			type="string" />
+		<property column="lengthOfHospitalization" length="25"
+			name="LengthOfHospitalization" not-null="false" type="string" />
+		<property column="radioCurrPrimaryIncomeSource" length="16"
+			name="RadioCurrPrimaryIncomeSource" not-null="false" type="string" />
+		<property column="baseWhyClientDoNotAccessSocialServices"
+			length="255" name="BaseWhyClientDoNotAccessSocialServices" not-null="false"
+			type="string" />
+		<property column="cbox2ndIncomeInformalOther" length="2"
+			name="Cbox2ndIncomeInformalOther" not-null="false" type="string" />
+		<property column="cbox2ndIncomeEi" length="2" name="Cbox2ndIncomeEi"
+			not-null="false" type="string" />
+		<property column="cbox2ndGenderIdentityDisorder" length="2"
+			name="Cbox2ndGenderIdentityDisorder" not-null="false" type="string" />
+		<property column="cboxBaseDoNotAccessHealthCare" length="2"
+			name="CboxBaseDoNotAccessHealthCare" not-null="false" type="string" />
+		<property column="currSocialServiceClientAccesses" length="255"
+			name="CurrSocialServiceClientAccesses" not-null="false" type="string" />
+		<property column="cbox2ndIncomeUnknown" length="2"
+			name="Cbox2ndIncomeUnknown" not-null="false" type="string" />
+		<property column="radioBaseHealthCareAccess" length="16"
+			name="RadioBaseHealthCareAccess" not-null="false" type="string" />
+		<property column="cboxBase2ndIncomeODSp" length="2"
+			name="CboxBase2ndIncomeODSp" not-null="false" type="string" />
+		<property column="cboxCurrUseWalkinClinic" length="2"
+			name="CboxCurrUseWalkinClinic" not-null="false" type="string" />
+		<property column="cboxReferralByPsychiatrists" length="2"
+			name="CboxReferralByPsychiatrists" not-null="false" type="string" />
+		<property column="cboxReferralByMentalOrg" length="2"
+			name="CboxReferralByMentalOrg" not-null="false" type="string" />
+		<property column="radioBasePrimaryResidenceType" length="16"
+			name="RadioBasePrimaryResidenceType" not-null="false" type="string" />
+		<property column="cbox2ndIncomeDisabilityAssistance" length="2"
+			name="Cbox2ndIncomeDisabilityAssistance" not-null="false" type="string" />
+		<property column="cboxAddictionIssue" length="2"
+			name="CboxAddictionIssue" not-null="false" type="string" />
+		<property column="cboxBase2ndIncomePanhandlingOther" length="2"
+			name="CboxBase2ndIncomePanhandlingOther" not-null="false" type="string" />
+		<property column="cboxCurrIncomeMgmentUnknown" length="2"
+			name="CboxCurrIncomeMgmentUnknown" not-null="false" type="string" />
+		<property column="cboxLegalIssue" length="2" name="CboxLegalIssue"
+			not-null="false" type="string" />
+		<property column="radioResistTreatment" length="16"
+			name="RadioResistTreatment" not-null="false" type="string" />
+		<property column="cbox2ndSchizophrenia" length="2"
+			name="Cbox2ndSchizophrenia" not-null="false" type="string" />
+		<property column="radioBaseSocialServiceAccess" length="16"
+			name="RadioBaseSocialServiceAccess" not-null="false" type="string" />
+		<property column="radioCurrSocialServiceAccess" length="16"
+			name="RadioCurrSocialServiceAccess" not-null="false" type="string" />
+		<property column="radioBaseResidenceStatus" length="16"
+			name="RadioBaseResidenceStatus" not-null="false" type="string" />
+		<property column="cbox2ndIncomeEmployment" length="2"
+			name="Cbox2ndIncomeEmployment" not-null="false" type="string" />
+		<property column="cbox2ndAnxietyDisorderFromSubstance"
+			length="2" name="Cbox2ndAnxietyDisorderFromSubstance" not-null="false"
+			type="string" />
+		<property column="radioCurrPrimaryResidenceType" length="16"
+			name="RadioCurrPrimaryResidenceType" not-null="false" type="string" />
+		<property column="radioCurrPrimaryIncomeSourceOther" length="16"
+			name="RadioCurrPrimaryIncomeSourceOther" not-null="false" type="string" />
+		<property column="cboxReferralByProbation" length="2"
+			name="CboxReferralByProbation" not-null="false" type="string" />
+		<property column="radioCurrLegalStatus" length="16"
+			name="RadioCurrLegalStatus" not-null="false" type="string" />
+		<property column="cboxProblemsWithPolice2" length="2"
+			name="CboxProblemsWithPolice2" not-null="false" type="string" />
+		<property column="formCreated" length="10" name="FormCreated"
+			not-null="false" type="date" />
+		<property column="cbox2ndIncomeSocialAssistance" length="2"
+			name="Cbox2ndIncomeSocialAssistance" not-null="false" type="string" />
+		<property column="cboxBaseUseHospitalEmergency" length="2"
+			name="CboxBaseUseHospitalEmergency" not-null="false" type="string" />
+		<property column="cboxReferralByPublic" length="2"
+			name="CboxReferralByPublic" not-null="false" type="string" />
+		<property column="cboxReferralByHospital" length="2"
+			name="CboxReferralByHospital" not-null="false" type="string" />
+		<property column="cboxBaseLivingWithSpousePlus" length="2"
+			name="CboxBaseLivingWithSpousePlus" not-null="false" type="string" />
+		<property column="cboxWithdrawalExit" length="2"
+			name="CboxWithdrawalExit" not-null="false" type="string" />
+		<property column="cboxCurrLivingWithSelf" length="2"
+			name="CboxCurrLivingWithSelf" not-null="false" type="string" />
+		<property column="cbox2ndCognitiveDisorder" length="2"
+			name="Cbox2ndCognitiveDisorder" not-null="false" type="string" />
+		<property column="cboxBaseIncomeMgmentUnknown" length="2"
+			name="CboxBaseIncomeMgmentUnknown" not-null="false" type="string" />
+		<property column="cboxBaseHasHealthCard" length="2"
+			name="CboxBaseHasHealthCard" not-null="false" type="string" />
+		<property column="radioCurrHighestEductionLevel" length="16"
+			name="RadioCurrHighestEductionLevel" not-null="false" type="string" />
+		<property column="cboxReferralByPsychiatricHospital" length="2"
+			name="CboxReferralByPsychiatricHospital" not-null="false" type="string" />
+		<property column="cboxCurrLivingWithNonrelatives" length="2"
+			name="CboxCurrLivingWithNonrelatives" not-null="false" type="string" />
+		<property column="cboxFamilyLawIssues1" length="2"
+			name="CboxFamilyLawIssues1" not-null="false" type="string" />
+		<property column="cboxProblemsWithPolice1" length="2"
+			name="CboxProblemsWithPolice1" not-null="false" type="string" />
+		<property column="cboxBaseHasRegularHealthProvider" length="2"
+			name="CboxBaseHasRegularHealthProvider" not-null="false" type="string" />
+		<property column="cboxFamilyLawIssues2" length="2"
+			name="CboxFamilyLawIssues2" not-null="false" type="string" />
+		<property column="cboxCurrUseShelterClinic" length="2"
+			name="CboxCurrUseShelterClinic" not-null="false" type="string" />
+		<property column="clientNum" length="16" name="ClientNum"
+			not-null="false" type="string" />
+		<property column="cbox2ndImpulsiveDisorder" length="2"
+			name="Cbox2ndImpulsiveDisorder" not-null="false" type="string" />
+		<property column="radioIsAboriginal" length="16"
+			name="RadioIsAboriginal" not-null="false" type="string" />
+		<property column="baseSocialServiceClientAccesses" length="255"
+			name="BaseSocialServiceClientAccesses" not-null="false" type="string" />
+		<property column="cboxBase2ndIncomeOther" length="2"
+			name="CboxBase2ndIncomeOther" not-null="false" type="string" />
+		<property column="cboxBaseIncomeMgmentNeedsTrusteeButDoNotWant"
+			length="2" name="CboxBaseIncomeMgmentNeedsTrusteeButDoNotWant"
+			not-null="false" type="string" />
+		<property column="cbox2ndSleepDisorder" length="2"
+			name="Cbox2ndSleepDisorder" not-null="false" type="string" />
+		<property column="cboxBaseHasNonStatus" length="2"
+			name="CboxBaseHasNonStatus" not-null="false" type="string" />
+		<property column="cboxHealthCareIssueOther" length="2"
+			name="CboxHealthCareIssueOther" not-null="false" type="string" />
+		<property column="radioCurrHealthCareAccess" length="16"
+			name="RadioCurrHealthCareAccess" not-null="false" type="string" />
+		<property column="cboxBaseHasCertificate" length="2"
+			name="CboxBaseHasCertificate" not-null="false" type="string" />
+		<property column="cboxBaseLivingWithSelf" length="2"
+			name="CboxBaseLivingWithSelf" not-null="false" type="string" />
+		<property column="cboxCurrIncomeMgmentNeedsTrustee" length="2"
+			name="CboxCurrIncomeMgmentNeedsTrustee" not-null="false" type="string" />
+		<property column="cboxBase2ndIncomeUnknown" length="2"
+			name="CboxBase2ndIncomeUnknown" not-null="false" type="string" />
+		<property column="radioLanguageEnglish" length="16"
+			name="RadioLanguageEnglish" not-null="false" type="string" />
+		<property column="yearArrivedInCanada" length="16"
+			name="YearArrivedInCanada" not-null="false" type="string" />
+		<property column="cboxDateOfBirthUnknown" length="2"
+			name="CboxDateOfBirthUnknown" not-null="false" type="string" />
+		<property column="cboxOtherIssue" length="2" name="CboxOtherIssue"
+			not-null="false" type="string" />
+		<property column="cboxCurrHasHealthCard" length="2"
+			name="CboxCurrHasHealthCard" not-null="false" type="string" />
+		<property column="cboxCurrHasSomeone" length="2"
+			name="CboxCurrHasSomeone" not-null="false" type="string" />
+		<property column="cboxCurrHasRegularHealthProvider" length="2"
+			name="CboxCurrHasRegularHealthProvider" not-null="false" type="string" />
+		<property column="cbox2ndDevelopmentalDisorder" length="2"
+			name="Cbox2ndDevelopmentalDisorder" not-null="false" type="string" />
+		<property column="cboxBase2ndIncomeInformalOther" length="2"
+			name="CboxBase2ndIncomeInformalOther" not-null="false" type="string" />
+		<property column="cboxOCd" length="2" name="CboxOCd"
+			not-null="false" type="string" />
+		<property column="cboxCurrUseHospitalEmergency" length="2"
+			name="CboxCurrUseHospitalEmergency" not-null="false" type="string" />
+		<property column="cboxBaseLivingWithUnknown" length="2"
+			name="CboxBaseLivingWithUnknown" not-null="false" type="string" />
+		<property column="cbox2ndFactitiousDisorder" length="2"
+			name="Cbox2ndFactitiousDisorder" not-null="false" type="string" />
+		<property column="cboxBaseHasSomeone" length="2"
+			name="CboxBaseHasSomeone" not-null="false" type="string" />
+		<property column="cboxRelationalIssue" length="2"
+			name="CboxRelationalIssue" not-null="false" type="string" />
+		<property column="cboxBaseHasNativeCard" length="2"
+			name="CboxBaseHasNativeCard" not-null="false" type="string" />
+		<property column="radioBaseLegalStatus" length="16"
+			name="RadioBaseLegalStatus" not-null="false" type="string" />
+		<property column="cbox2ndIncomeFamily" length="2"
+			name="Cbox2ndIncomeFamily" not-null="false" type="string" />
+		<property column="cboxCurrHasRelatives" length="2"
+			name="CboxCurrHasRelatives" not-null="false" type="string" />
+		<property column="cboxCurrHasCertificate" length="2"
+			name="CboxCurrHasCertificate" not-null="false" type="string" />
+		<property column="monthOfBirth" length="2" name="MonthOfBirth"
+			not-null="false" type="string" />
+		<property column="cboxBaseHasSIn" length="2" name="CboxBaseHasSIn"
+			not-null="false" type="string" />
+		<property column="clientSurname" length="40" name="ClientSurname"
+			not-null="false" type="string" />
+		<property column="cbox2ndAnxietyDisorderOCd" length="2"
+			name="Cbox2ndAnxietyDisorderOCd" not-null="false" type="string" />
+		<property column="staffName" length="60" name="StaffName"
+			not-null="false" type="string" />
+		<property column="cboxReferralByStreetIDWorkerOther" length="2"
+			name="CboxReferralByStreetIDWorkerOther" not-null="false" type="string" />
+		<property column="cbox2ndSubstanceDisorder" length="2"
+			name="Cbox2ndSubstanceDisorder" not-null="false" type="string" />
+		<property column="radioCurrNeedSocialServices" length="16"
+			name="RadioCurrNeedSocialServices" not-null="false" type="string" />
+		<property column="radioBaseHighestEductionLevel" length="16"
+			name="RadioBaseHighestEductionLevel" not-null="false" type="string" />
+		<property column="cboxBaseHasSupportUnknown" length="2"
+			name="CboxBaseHasSupportUnknown" not-null="false" type="string" />
+		<property column="radioCurrResidenceStatus" length="16"
+			name="RadioCurrResidenceStatus" not-null="false" type="string" />
+		<property column="cboxBaseIncomeMgmentDoNotNeedTrustee"
+			length="2" name="CboxBaseIncomeMgmentDoNotNeedTrustee" not-null="false"
+			type="string" />
+		<property column="countryOfOrigin" length="60" name="CountryOfOrigin"
+			not-null="false" type="string" />
+		<property column="cboxCurrHasFriends" length="2"
+			name="CboxCurrHasFriends" not-null="false" type="string" />
+		<property column="radioBasePrimaryIncomeSource" length="16"
+			name="RadioBasePrimaryIncomeSource" not-null="false" type="string" />
+		<property column="cbox2ndAnxietyDisorderOther" length="2"
+			name="Cbox2ndAnxietyDisorderOther" not-null="false" type="string" />
+		<property column="cboxEducationalIssue" length="2"
+			name="CboxEducationalIssue" not-null="false" type="string" />
+		<property column="radioBasePrimaryIncomeSourceOther" length="16"
+			name="RadioBasePrimaryIncomeSourceOther" not-null="false" type="string" />
+		<property column="radioBaseParticipateInEduction" length="16"
+			name="RadioBaseParticipateInEduction" not-null="false" type="string" />
+		<property column="cboxCurrLivingWithRelatives" length="2"
+			name="CboxCurrLivingWithRelatives" not-null="false" type="string" />
+		<property column="baseDescriptionOfHousing" length="255"
+			name="BaseDescriptionOfHousing" not-null="false" type="string" />
+		<property column="cboxReferralByCourt" length="2"
+			name="CboxReferralByCourt" not-null="false" type="string" />
+		<property column="cbox2ndIncomePanhandlingOther" length="2"
+			name="Cbox2ndIncomePanhandlingOther" not-null="false" type="string" />
+		<property column="cboxReferralByOtherAgency" length="2"
+			name="CboxReferralByOtherAgency" not-null="false" type="string" />
+		<property column="cboxCaseFile" length="2" name="CboxCaseFile"
+			not-null="false" type="string" />
+		<property column="cboxCurrLivingWithChildren" length="2"
+			name="CboxCurrLivingWithChildren" not-null="false" type="string" />
+		<property column="cboxReferralByMentalHealthWorker" length="2"
+			name="CboxReferralByMentalHealthWorker" not-null="false" type="string" />
+		<property column="cboxCurrIncomeMgmentNeedsTrusteeButDoNotWant"
+			length="2" name="CboxCurrIncomeMgmentNeedsTrusteeButDoNotWant"
+			not-null="false" type="string" />
+		<property column="clientFirstName" length="40" name="ClientFirstName"
+			not-null="false" type="string" />
+		<property column="cboxBankingIssueOther" length="2"
+			name="CboxBankingIssueOther" not-null="false" type="string" />
+		<property column="cboxBase2ndIncomeEmployment" length="2"
+			name="CboxBase2ndIncomeEmployment" not-null="false" type="string" />
+		<property column="cboxNAExit" length="2" name="CboxNAExit"
+			not-null="false" type="string" />
+		<property column="cbox2ndIncomeNone" length="2"
+			name="Cbox2ndIncomeNone" not-null="false" type="string" />
+		<property column="cboxNa" length="2" name="CboxNa" not-null="false"
+			type="string" />
+		<property column="cboxBaseHasRelatives" length="2"
+			name="CboxBaseHasRelatives" not-null="false" type="string" />
+		<property column="cboxCurrHasNonStatus" length="2"
+			name="CboxCurrHasNonStatus" not-null="false" type="string" />
+		<property column="cboxEmploymentIssue" length="2"
+			name="CboxEmploymentIssue" not-null="false" type="string" />
+		<property column="yearOfBirth" length="4" name="YearOfBirth"
+			not-null="false" type="string" />
+		<property column="cboxBase2ndIncomePension" length="2"
+			name="CboxBase2ndIncomePension" not-null="false" type="string" />
+		<property column="cboxCurrLivingWithSpousePlus" length="2"
+			name="CboxCurrLivingWithSpousePlus" not-null="false" type="string" />
+		<property column="cboxPreferredLanguageUnknown" length="2"
+			name="CboxPreferredLanguageUnknown" not-null="false" type="string" />
+		<property column="cbox2ndAnxietyDisorderPSd" length="2"
+			name="Cbox2ndAnxietyDisorderPSd" not-null="false" type="string" />
+		<property column="cboxSexualAbuseIssue" length="2"
+			name="CboxSexualAbuseIssue" not-null="false" type="string" />
+		<property column="formEdited" length="19" name="FormEdited"
+			not-null="false" type="timestamp" />
+		<property column="cboxBaseUseShelterClinic" length="2"
+			name="CboxBaseUseShelterClinic" not-null="false" type="string" />
+		<property column="cboxCurrAccessHealthCareUnknown" length="2"
+			name="CboxCurrAccessHealthCareUnknown" not-null="false" type="string" />
+		<property column="cbox2ndIncomePension" length="2"
+			name="Cbox2ndIncomePension" not-null="false" type="string" />
+		<property column="provider_no" length="11" name="ProviderNo"
+			not-null="false" type="java.lang.Long" />
+		<property column="cboxCurrDoNotAccessHealthCare" length="2"
+			name="CboxCurrDoNotAccessHealthCare" not-null="false" type="string" />
+		<property column="cboxCurrUseHealthBus" length="2"
+			name="CboxCurrUseHealthBus" not-null="false" type="string" />
+		<property column="cboxBaseLivingWithParents" length="2"
+			name="CboxBaseLivingWithParents" not-null="false" type="string" />
+		<property column="cboxBaseHasUnknown" length="2"
+			name="CboxBaseHasUnknown" not-null="false" type="string" />
+		<property column="radioBaseNeedSocialServices" length="16"
+			name="RadioBaseNeedSocialServices" not-null="false" type="string" />
+		<property column="cboxNoneListedIssue" length="2"
+			name="CboxNoneListedIssue" not-null="false" type="string" />
+		<property column="cbox2ndUnknown" length="2" name="Cbox2ndUnknown"
+			not-null="false" type="string" />
+		<property column="cboxReferralBySafeBeds" length="2"
+			name="CboxReferralBySafeBeds" not-null="false" type="string" />
+		<property column="cbox2ndAdjustDisorder" length="2"
+			name="Cbox2ndAdjustDisorder" not-null="false" type="string" />
+		<property column="cboxHospitalizationUnknown" length="2"
+			name="CboxHospitalizationUnknown" not-null="false" type="string" />
+		<property column="cboxConcurrentDisorder" length="2"
+			name="CboxConcurrentDisorder" not-null="false" type="string" />
+		<property column="cbox2ndEatingDisorder" length="2"
+			name="Cbox2ndEatingDisorder" not-null="false" type="string" />
+		<property column="cboxCompleteWithReferral" length="2"
+			name="CboxCompleteWithReferral" not-null="false" type="string" />
+		<property column="cboxBaseUseWalkinClinic" length="2"
+			name="CboxBaseUseWalkinClinic" not-null="false" type="string" />
+		<property column="monthlyProgressReport" length="255"
+			name="MonthlyProgressReport" not-null="false" type="string" />
+		<property column="cboxOtherAnxietyDisorder" length="2"
+			name="CboxOtherAnxietyDisorder" not-null="false" type="string" />
+		<property column="cboxBaseIncomeMgmentHasTrustee" length="2"
+			name="CboxBaseIncomeMgmentHasTrustee" not-null="false" type="string" />
+		<property column="demographic_no" length="11" name="DemographicNo"
+			not-null="true" type="java.lang.Long" />
+		<property column="cboxBaseIncomeMgmentNeedsTrustee" length="2"
+			name="CboxBaseIncomeMgmentNeedsTrustee" not-null="false" type="string" />
+		<property column="radioRaceCaucasian" length="16"
+			name="RadioRaceCaucasian" not-null="false" type="string" />
+		<property column="cboxMentalIssue" length="2" name="CboxMentalIssue"
+			not-null="false" type="string" />
+		<property column="preferredLanguage" length="30"
+			name="PreferredLanguage" not-null="false" type="string" />
+		<property column="cbox2ndMoodDisorder" length="2"
+			name="Cbox2ndMoodDisorder" not-null="false" type="string" />
+		<property column="radioPrimaryDiagnosis" length="16"
+			name="RadioPrimaryDiagnosis" not-null="false" type="string" />
+		<property column="cboxCurrHasNativeCard" length="2"
+			name="CboxCurrHasNativeCard" not-null="false" type="string" />
+		<property column="cboxBaseLivingWithChildren" length="2"
+			name="CboxBaseLivingWithChildren" not-null="false" type="string" />
+		<property column="cboxBaseLivingWithSpouse" length="2"
+			name="CboxBaseLivingWithSpouse" not-null="false" type="string" />
+		<property column="radioTreatmentOrders" length="16"
+			name="RadioTreatmentOrders" not-null="false" type="string" />
+		<property column="cboxReferralByOtherPeople" length="2"
+			name="CboxReferralByOtherPeople" not-null="false" type="string" />
+		<property column="cboxBaseAccessHealthCareUnknown" length="2"
+			name="CboxBaseAccessHealthCareUnknown" not-null="false" type="string" />
+		<property column="cboxCompleteWithoutReferral" length="2"
+			name="CboxCompleteWithoutReferral" not-null="false" type="string" />
+		<property column="cboxDeathExit" length="2" name="CboxDeathExit"
+			not-null="false" type="string" />
+		<property column="cboxBaseLivingWithRelatives" length="2"
+			name="CboxBaseLivingWithRelatives" not-null="false" type="string" />
+		<property column="currAddress" length="255" name="CurrAddress"
+			not-null="false" type="string" />
+		<property column="currPhone" length="255" name="CurrPhone"
+			not-null="false" type="string" />
+		<property column="pastAddresses" length="3000" name="PastAddresses"
+			not-null="false" type="text" />
+		<property column="contactsInfo" length="3000" name="ContactsInfo"
+			not-null="false" type="text" />
+		<property column="ids" length="3000" name="Ids" not-null="false"
+			type="text" />
+		<property column="hospitalizations" length="3000" name="hospitalizations"
+			not-null="false" type="text" />
+	</class>
+</hibernate-mapping>

@@ -1,1 +1,0 @@
-alter table Facility add enableDigitalSignatures tinyint(1) not null;

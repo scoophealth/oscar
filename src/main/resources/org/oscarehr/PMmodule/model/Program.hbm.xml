@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--
+		Copyright (c) 2001-2002. Centre for Research on Inner City Health, St.
+		Michael's Hospital, Toronto. All Rights Reserved. This software is
+		published under the GPL GNU General Public License. This program is
+		free software; you can redistribute it and/or modify it under the
+		terms of the GNU General Public License as published by the Free
+		Software Foundation; either version 2 of the License, or (at your
+		option) any later version. This program is distributed in the hope
+		that it will be useful, but WITHOUT ANY WARRANTY; without even the
+		implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+		PURPOSE. See the GNU General Public License for more details. You
+		should have received a copy of the GNU General Public License along
+		with this program; if not, write to the Free Software Foundation,
+		Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. OSCAR
+		TEAM This software was written for Centre for Research on Inner City
+		Health, St. Michael's Hospital, Toronto, Ontario, Canada
+	-->
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping package="org.oscarehr.PMmodule.model">
+	<class name="Program" table="program">
+		<id name="id" unsaved-value="0">
+			<generator class="native" />
+		</id>
+		<property name="facilityId" />
+		<property name="shelterId" column="shelter_id" />
+		<property name="userDefined" column="userDefined" type="boolean" length="1" />
+		<property name="numOfMembers" type="integer" formula="(select count(*) from admission a where a.program_id = id and a.admission_status = 'current')" />
+<!--
+		<property name="numOfIntakes" lazy="true" type="integer" formula="(select count(*) from intake itk where itk.program_id = id and (sysdate between itk.creation_date and itk.end_date or itk.end_date is null))" />
+-->
+		<property name="queueSize" type="integer" formula="(select count(*) from program_queue a where a.program_id = id and a.status = 'active')" />
+		<property name="maxAllowed" />
+		<property name="type" />
+		<property name="description" />
+		<property name="functionalCentreId" />
+		<property name="address" />
+		<property name="phone" />
+		<property name="fax" />
+		<property name="url" />
+		<property name="email" />
+		<property name="emergencyNumber" />
+		<property name="location" />
+		<property name="name" />
+		<property name="holdingTank" />
+		<property name="allowBatchAdmission" />
+		<property name="allowBatchDischarge" />
+		<property name="hic" />
+		<property name="programStatus" />
+		<property name="intakeProgram" />
+		<property name="bedProgramLinkId" />
+		<property name="manOrWoman" />
+		<property name="transgender" />
+		<property name="firstNation" />
+		<property name="bedProgramAffiliated" />
+		<property name="alcohol" />
+		<property name="abstinenceSupport" />
+		<property name="physicalHealth" />
+		<property name="mentalHealth" />
+		<property name="housing" />
+		<property name="exclusiveView" />
+		<property name="ageMin" />
+		<property name="ageMax" />
+		<property name="capacity_funding" column="capacity_funding" type="integer" not-null="false" length="10" />
+		<property name="capacity_space" column="capacity_space" type="integer" not-null="false" length="10" />        
+	        <property name="maximumServiceRestrictionDays" />
+        	<property name="defaultServiceRestrictionDays" />
+<!--
+		<property name="orgCd" formula="(select l1.codetree from lst_orgcd l1 where l1.code='P'||id)" update="false"/>
+-->
+		<property name="facilityDesc" formula="(select fac.name from Facility fac where fac.id=facilityId)"></property>		
+<!--
+		<property name="genderDesc" formula="(select l2.progdesc from lst_gender l2 where l2.code=manOrWoman)"></property>
+-->
+<!--
+		<property name="capacity_actual" type="integer" 
+			formula="(select sum(r.beds) from v_room_beds r where r.program_id=id)" />
+-->
+		<property name="lastUpdateDate" column="lastupdatedate"></property>
+		<property name="lastUpdateUser" column="lastupdateuser"></property>
+		<property name="siteSpecificField" />
+    </class>
+</hibernate-mapping>

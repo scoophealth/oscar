@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>patientSiteVisit</groupId>
+  <artifactId>patientSiteVisit</artifactId>
+  <version>0.0-SNAPSHOT</version>
+  <versioning>
+    <snapshot>
+      <localCopy>true</localCopy>
+    </snapshot>
+    <lastUpdated>20110209052051</lastUpdated>
+  </versioning>
+</metadata>

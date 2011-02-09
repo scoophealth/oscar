@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--
+
+		* Copyright (c) 2001-2002. Department of Family Medicine, McMaster
+		University. All Rights Reserved. * This software is published under
+		the GPL GNU General Public License. * This program is free software;
+		you can redistribute it and/or * modify it under the terms of the GNU
+		General Public License * as published by the Free Software Foundation;
+		either version 2 * of the License, or (at your option) any later
+		version. * This program is distributed in the hope that it will be
+		useful, * but WITHOUT ANY WARRANTY; without even the implied warranty
+		of * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the *
+		GNU General Public License for more details. * You should have
+		received a copy of the GNU General Public License * along with this
+		program; if not, write to the Free Software * Foundation, Inc., 59
+		Temple Place - Suite 330, Boston, MA 02111-1307, USA. * * Jason
+		Gallagher * * This software was written for the * Department of Family
+		Medicine * McMaster University * Hamilton * Ontario, Canada * * * *
+		Created on April 27, 2007, 4:24 PM *
+	-->
+<!DOCTYPE hibernate-mapping PUBLIC
+"-//Hibernate/Hibernate Mapping DTD//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping package="org.oscarehr.phr.model">
+	<class name="PHRAction" table="phr_actions">
+		<id column="id" name="id" type="integer">
+			<generator class="native" />
+		</id>
+
+
+		<property column="datetime_queued" name="dateQueued" type="java.util.Date" />
+		<property column="datetime_sent" name="dateSent" type="java.util.Date" />
+		<property column="sender_oscar" name="senderOscar" length="11"
+			type="string" />
+		<property column="sender_type" name="senderType" length="1"
+			type="integer" />
+		<property column="sender_phr" name="senderPhr" length="255"
+			type="string" />
+		<property column="receiver_oscar" name="receiverOscar"
+			length="11" type="string" />
+		<property column="receiver_type" name="receiverType" length="1"
+			type="integer" />
+		<property column="receiver_phr" name="receiverPhr" length="255"
+			type="string" />
+		<property column="action_type" name="actionType" length="1"
+			type="integer" />
+		<property column="phr_classification" name="phrClassification"
+			length="250" type="string" />
+		<property column="oscar_id" name="oscarId" length="100" type="string" />
+		<property column="phr_index" name="phrIndex" length="70"
+			type="string" />
+		<property column="doc_content" name="docContent" type="text" />
+		<property column="status" name="status" length="1" type="integer" />
+		<property column="phr_type" name="phrType" length="100" type="string" />
+	</class>
+</hibernate-mapping>
+	<!--
+
+		private int id; private Date dateQueued; private Date dateSent;
+		private String senderOscar; private int senderType; private String
+		senderPhr; private String receiverOscar; private int receiverType;
+		private String receiverPhr; private int actionType; private String
+		phrClassification; private String oscarId; private String phrIndex;
+		//if updating private String docContent; private int sent; private
+		String phrType; | Field | Type | Null | Key | Default | Extra | | id |
+		int(11) | | PRI | NULL | auto_increment | | datetime_queued | datetime
+		| YES | | NULL | | | datetime_sent | datetime | YES | | NULL | | |
+		sender_oscar | varchar(11) | YES | | NULL | | | sender_type | int(1) |
+		YES | | NULL | | | sender_phr | varchar(255) | YES | | NULL | | |
+		receiver_oscar | varchar(11) | YES | | NULL | | | receiver_type |
+		int(1) | YES | | NULL | | | receiver_phr | varchar(255) | YES | | NULL
+		| | | action_type | int(1) | YES | | 0 | | | phr_classification |
+		varchar(250) | YES | | NULL | | | oscar_id | varchar(100) | YES | |
+		NULL | | | phr_index | varchar(70) | YES | | NULL | | | doc_content |
+		text | YES | | NULL | | | sent | tinyint(1) | YES | | 0 | | | phr_type
+		| varchar(100) | YES | | NULL | |
+	-->

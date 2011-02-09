@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+	<class name="com.quatro.model.ReportDateSPValue" table="report_date_sp">
+		<id name="reportNo">
+			<generator class="assigned" />
+		</id>
+		<property name="startDate" type="java.util.Date" />
+		<property name="endDate" type="java.util.Date" />
+		<property name="asOfDate" type="java.util.Date" />
+		<property name="startDate_S" />
+		<property name="endDate_S" />
+		<property name="asOfDate_S" />
+		<property name="spToRun" />
+	</class>
+</hibernate-mapping>

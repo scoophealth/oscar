@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+
+<rule-set name="inrFlowsheet"
+          xmlns="http://drools.org/rules"
+          xmlns:java="http://drools.org/semantics/java"
+          xmlns:xs="http://www.w3.org/2001/XMLSchema-instance"
+          xs:schemaLocation="http://drools.org/rules rules.xsd
+                             http://drools.org/semantics/java java.xsd">
+
+
+    <rule name="COUM 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("COUM") &gt;= 3</java:condition>
+        
+        <java:consequence>              
+              m.log("COUM 1 getting called");
+              m.addRecommendation("COUM","LAST WEEKLY WARFARIN DOSE MEASUREMENT WAS : "+m.getLastDateRecordedInMonths("COUM")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="INR 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("INR") &gt;= 3</java:condition>        
+        <java:consequence>              
+              m.log("INR 1 getting called");
+              m.addWarning("INR","INR hasn't been reviewed in "+m.getLastDateRecordedInMonths("INR")+" months");
+        </java:consequence>
+    </rule>
+
+
+    
+</rule-set>
+
+

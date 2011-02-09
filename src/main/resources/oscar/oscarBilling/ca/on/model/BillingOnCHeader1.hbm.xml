@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--
+		Copyright (c) 2001-2002. Centre for Research on Inner City Health, St.
+		Michael's Hospital, Toronto. All Rights Reserved. This software is
+		published under the GPL GNU General Public License. This program is
+		free software; you can redistribute it and/or modify it under the
+		terms of the GNU General Public License as published by the Free
+		Software Foundation; either version 2 of the License, or (at your
+		option) any later version. This program is distributed in the hope
+		that it will be useful, but WITHOUT ANY WARRANTY; without even the
+		implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+		PURPOSE. See the GNU General Public License for more details. You
+		should have received a copy of the GNU General Public License along
+		with this program; if not, write to the Free Software Foundation,
+		Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. OSCAR
+		TEAM This software was written for Centre for Research on Inner City
+		Health, St. Michael's Hospital, Toronto, Ontario, Canada
+	-->
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping package="oscar.oscarBilling.ca.on.model">
+	<class name="BillingOnCHeader1" table="billing_on_cheader1">
+		<id name="id" unsaved-value="0">
+			<generator class="native" />
+		</id>
+                <property name="header_id" />
+                <property name="transc_id" />
+                <property name="rec_id" />
+                <property name="hin" />
+                <property name="ver" />
+                <property name="dob" />
+                <property name="pay_program" />
+                <property name="payee" />
+                <property name="ref_num" />
+                <property name="facilty_num" />
+                <property name="admission_date" />
+                <property name="ref_lab_num" />
+                <property name="man_review" />
+                <property name="location" />
+                <property name="demographic_no" />
+                <property name="provider_no" />
+                <property name="appointment_no" />
+                <property name="demographic_name" />
+                <property name="sex" />
+                <property name="province" />
+                <property name="billing_date" />
+                <property name="billing_time" />
+                <property name="total" />
+                <property name="paid" />
+                <property name="status" />
+                <property name="comment1" />
+                <property name="visittype" />
+                <property name="provider_ohip_no" />
+                <property name="provider_rma_no" />
+                <property name="apptProvider_no" />
+                <property name="asstProvider_no" />
+                <property name="creator" />
+                <property name="timestamp1" />
+                <property name="clinic" />
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>org.indivo</groupId>
+  <artifactId>indivo-security-model</artifactId>
+  <version>3.2-SNAPSHOT</version>
+  <versioning>
+    <versions>
+      <version>3.2-SNAPSHOT</version>
+    </versions>
+    <lastUpdated>20110209052014</lastUpdated>
+  </versioning>
+</metadata>

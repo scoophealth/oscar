@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+	<class name="com.quatro.model.ReportDateValue" table="report_date">
+		<id name="sessionId" column="sessionid" type="string">
+			<generator class="assigned" />
+		</id>
+		<property name="startDate" type="java.util.Date" />
+		<property name="endDate" type="java.util.Date" />
+		<property name="asOfDate" type="java.util.Date" />
+		<property name="startDate_S" />
+		<property name="endDate_S" />
+		<property name="asOfDate_S" />
+	</class>
+</hibernate-mapping>

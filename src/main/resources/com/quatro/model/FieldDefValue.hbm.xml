@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+	<class name="com.quatro.model.FieldDefValue" table="app_lookuptable_fields"
+		mutable="false">
+		<composite-id>
+			<key-property column="tableid" name="tableId" type="string" />
+			<key-property column="fieldname" name="fieldName" type="string" />
+		</composite-id>
+		<property name="fieldDesc" column="fielddesc" />
+		<property name="fieldType" column="fieldtype" />
+		<property name="editable" column="edityn" />
+		<property name="lookupTable" column="lookuptable" />
+		<property name="fieldSQL" column="fieldsql" />
+		<property name="fieldIndex" column="fieldindex" />
+		<property name="auto" column="autoyn" />
+		<property name="unique" column="uniqueyn" />
+		<property name="genericIdx" column="genericidx" />
+		<property name="fieldLength" column="fieldlength" />
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--
+		Copyright (c) 2001-2002. Centre for Research on Inner City Health, St.
+		Michael's Hospital, Toronto. All Rights Reserved. This software is
+		published under the GPL GNU General Public License. This program is
+		free software; you can redistribute it and/or modify it under the
+		terms of the GNU General Public License as published by the Free
+		Software Foundation; either version 2 of the License, or (at your
+		option) any later version. This program is distributed in the hope
+		that it will be useful, but WITHOUT ANY WARRANTY; without even the
+		implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+		PURPOSE. See the GNU General Public License for more details. You
+		should have received a copy of the GNU General Public License along
+		with this program; if not, write to the Free Software Foundation,
+		Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. OSCAR
+		TEAM This software was written for Centre for Research on Inner City
+		Health, St. Michael's Hospital, Toronto, Ontario, Canada
+	-->
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping package="org.oscarehr.PMmodule.model">
+	<class name="ProgramClientRestriction" table="program_client_restriction">
+		<meta attribute="sync-DAO">false</meta>
+		<id name="id" type="integer" column="id" unsaved-value="0">
+			<generator class="native" />
+		</id>
+		<property name="programId" column="program_id" type="integer"
+			not-null="false" length="10" />
+		<property name="demographicNo" column="demographic_no" type="integer"
+			not-null="false" length="10" />
+		<property name="providerNo" column="provider_no" type="string"
+			not-null="false" length="6" />
+		<property name="commentId" column="comments" type="string"
+			not-null="true" length="255" />
+		<property name="comments"
+			formula="(select a.description from lst_service_restriction a where a.id=comments)" />
+		<property name="startDate" column="start_date" type="timestamp"
+			not-null="true" />
+		<property name="endDate" column="end_date" type="timestamp"
+			not-null="true" />
+		<property name="enabled" column="is_enabled" type="boolean"
+			not-null="true" />
+		<property name="earlyTerminationProvider" column="early_termination_provider" />
+	</class>
+</hibernate-mapping>
+
+        

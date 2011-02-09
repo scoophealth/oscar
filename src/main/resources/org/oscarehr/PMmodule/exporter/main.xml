@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fields>
+	<field name="CASE_NO" type="text" colpos="1" maxsize="15"></field>
+	<field name="FIRSTNAME_initial" type="text" colpos="16" maxsize="30"></field>
+	<field name="DOB" type="datetime" colpos="46" maxsize="10" dateformat="dd/MM/yyyy"></field>
+	<field name="GENDER_ID" type="text" colpos="56" maxsize="2"></field>
+	<field name="LASTNAME_AT_BIRTH_initial" type="text" colpos="58" maxsize="30"></field>
+	<field name="DATIS_KEY" type="text" colpos="88" maxsize="12"></field>
+	<field name="PREFERRED_LANG_ID" type="selectnumeric" colpos="100" maxsize="2"></field>
+	<field name="ETHNICITY_ID" type="selectnumeric" colpos="102" maxsize="3"></field>
+	<field name="ADMISSION_NO" type="integer" colpos="105" maxsize="8"></field>
+	<field name="SITE_NO" type="text" colpos="113" maxsize="5"></field>
+	<field name="ADMISSION_DATE" type="datetime" colpos="118" maxsize="10" dateformat="dd/MM/yyyy"></field>
+	<field name="ADMISSION_TIME" type="text" colpos="128" maxsize="5"></field>
+	<field name="COND_SURR_CONTACT_ID" type="selectnumeric" colpos="133" maxsize="3"></field>
+	<field name="LEGAL_STATUS_ID" type="selectnumeric" colpos="136" maxsize="3"></field>
+	<field name="YOUNG_OFFENDER" type="selectynu" colpos="139" maxsize="1"></field>
+	<field name="NON_MEDICAL_IDU_ID" type="selectnumeric" colpos="140" maxsize="3"></field>
+	<field name="REL_STS_ID" type="selectnumeric" colpos="143" maxsize="3"></field>
+	<field name="EMP_STS_ID" type="selectnumeric" colpos="146" maxsize="3"></field>
+	<field name="INCOME_SRC_ID" type="selectnumeric" colpos="149" maxsize="3"></field>
+	<field name="EDUCATION_ID" type="selectnumeric" colpos="152" maxsize="3"></field>
+	<field name="CLIENT_TYPE_ID" type="selectnumeric" colpos="155" maxsize="3"></field>
+	<field name="REFERRED_ON" type="datetime" colpos="158" maxsize="10" dateformat="dd/MM/yyyy"></field>
+	<field name="REFERRAL_SRC_ID1" type="selectnumeric" colpos="168" maxsize="3"></field>
+	<field name="REFERRAL_SRC_ID2" type="selectnumeric" colpos="171" maxsize="3"></field>
+	<field name="REFERRAL_AGCY_ID1" type="text" colpos="174" maxsize="12"></field>
+	<field name="REFERRAL_AGCY_ID2" type="text" colpos="186" maxsize="12"></field>
+	<field name="COUNTY_ID" type="selectnumeric" colpos="198" maxsize="4"></field>
+	<field name="POSTAL_CODE" type="text" colpos="202" maxsize="7"></field>
+	<field name="PPS1_ID" type="selectnumeric" colpos="209" maxsize="3"></field>
+	<field name="PPS2_ID" type="selectnumeric" colpos="212" maxsize="3"></field>
+	<field name="PPS3_ID" type="selectnumeric" colpos="215" maxsize="3"></field>
+	<field name="PPS4_ID" type="selectnumeric" colpos="218" maxsize="3"></field>
+	<field name="PPS5_ID" type="selectnumeric" colpos="221" maxsize="3"></field>
+	<field name="PPS1_FREQ_ID" type="selectnumeric" colpos="224" maxsize="3"></field>
+	<field name="PPS2_FREQ_ID" type="selectnumeric" colpos="227" maxsize="3"></field>
+	<field name="PPS3_FREQ_ID" type="selectnumeric" colpos="230" maxsize="3"></field>
+	<field name="PPS4_FREQ_ID" type="selectnumeric" colpos="233" maxsize="3"></field>
+	<field name="PPS5_FREQ_ID" type="selectnumeric" colpos="236" maxsize="3"></field>
+	<field name="sub12_None" type="selectyn" colpos="239" maxsize="1"></field>
+	<field name="sub12_alcohol" type="selectyn" colpos="240" maxsize="1"></field>
+	<field name="sub12_cocaine" type="selectyn" colpos="241" maxsize="1"></field>
+	<field name="sub12_Amphet" type="selectyn" colpos="242" maxsize="1"></field>
+	<field name="sub12_cannabis" type="selectyn" colpos="243" maxsize="1"></field>
+	<field name="sub12_benzo" type="selectyn" colpos="244" maxsize="1"></field>
+	<field name="sub12_barbit" type="selectyn" colpos="245" maxsize="1"></field>
+	<field name="sub12_heroin_opium" type="selectyn" colpos="246" maxsize="1"></field>
+	<field name="sub12_presc_op" type="selectyn" colpos="247" maxsize="1"></field>
+	<field name="sub12_otc_codeine" type="selectyn" colpos="248" maxsize="1"></field>
+	<field name="sub12_halluc" type="selectyn" colpos="249" maxsize="1"></field>
+	<field name="sub12_glue_inh" type="selectyn" colpos="250" maxsize="1"></field>
+	<field name="sub12_tobacco" type="selectyn" colpos="251" maxsize="1"></field>
+	<field name="sub12_other_psych" type="selectyn" colpos="252" maxsize="1"></field>
+	<field name="sub12_steroids" type="selectyn" colpos="253" maxsize="1"></field>
+	<field name="sub12_undiff" type="selectyn" colpos="254" maxsize="1"></field>
+	<field name="sub12_crack" type="selectyn" colpos="255" maxsize="1"></field>
+	<field name="sub12_ecstasy" type="selectyn" colpos="256" maxsize="1"></field>
+	<field name="sub12_unknown" type="selectyn" colpos="257" maxsize="1"></field>
+	<field name="sub12_filler1" type="selectyn" colpos="258" maxsize="1"></field>
+	<field name="sub12_filler2" type="selectyn" colpos="259" maxsize="1"></field>
+	<field name="sub12_filler3" type="selectyn" colpos="260" maxsize="1"></field>
+	<field name="sub12_filler4" type="selectyn" colpos="261" maxsize="1"></field>
+	<field name="GAMBLING" type="selectynu" colpos="262" maxsize="1"></field>
+	<field name="TREATMENT_PLAN_ID" type="selectnumeric" colpos="263" maxsize="3"></field>
+	<field name="G_bingo" type="selectyn" colpos="266" maxsize="1"></field>
+	<field name="G_slot" type="selectyn" colpos="267" maxsize="1"></field>
+	<field name="G_Gaming_machines" type="selectyn" colpos="268" maxsize="1"></field>
+	<field name="G_card_table" type="selectyn" colpos="269" maxsize="1"></field>
+	<field name="G_Illegal" type="selectyn" colpos="270" maxsize="1"></field>
+	<field name="G_horse" type="selectyn" colpos="271" maxsize="1"></field>
+	<field name="G_Sports_betting" type="selectyn" colpos="272" maxsize="1"></field>
+	<field name="G_Lottery" type="selectyn" colpos="273" maxsize="1"></field>
+	<field name="G_scratch" type="selectyn" colpos="274" maxsize="1"></field>
+	<field name="G_Internet" type="selectyn" colpos="275" maxsize="1"></field>
+	<field name="G_stockmarket_realest" type="selectyn" colpos="276" maxsize="1"></field>
+	<field name="G_Betting_games" type="selectyn" colpos="277" maxsize="1"></field>
+	<field name="G_betting_outcomes" type="selectyn" colpos="278" maxsize="1"></field>
+	<field name="G_other" type="selectyn" colpos="279" maxsize="1"></field>
+	<field name="G_none" type="selectyn" colpos="280" maxsize="1"></field>
+	<field name="G_unknown" type="selectyn" colpos="281" maxsize="1"></field>
+	<field name="G_filler1" type="selectyn" colpos="282" maxsize="1"></field>
+	<field name="G_filler2" type="selectyn" colpos="283" maxsize="1"></field>
+	<field name="G_filler3" type="selectyn" colpos="284" maxsize="1"></field>
+	<field name="G_filler4" type="selectyn" colpos="285" maxsize="1"></field>
+	<field name="G_filler5" type="selectnumeric" colpos="286" maxsize="1"></field>
+	<field name="OVERNIGHT_HOSP" type="integer" colpos="287" maxsize="8"></field>
+	<field name="DIAG_MH_12_MONTHS" type="selectynu" colpos="295" maxsize="1"></field>
+	<field name="DIAG_MH_LIFETIME" type="selectynu" colpos="296" maxsize="1"></field>
+	<field name="HOSP_MH_12_MONTHS" type="selectynu" colpos="297" maxsize="1"></field>
+	<field name="HOSP_MH_LIFETIME" type="selectynu" colpos="298" maxsize="1"></field>
+	<field name="RCV_MH_CURRENT" type="selectynu" colpos="299" maxsize="1"></field>
+	<field name="RCV_MH_12_MONTHS" type="selectynu" colpos="300" maxsize="1"></field>
+	<field name="RCV_MH_LIFETIME" type="selectynu" colpos="301" maxsize="1"></field>
+	<field name="MED_MH_CURRENT" type="selectynu" colpos="302" maxsize="1"></field>
+	<field name="MED_MH_12_MONTHS" type="selectynu" colpos="303" maxsize="1"></field>
+	<field name="MED_MH_LIFETIME" type="selectynu" colpos="304" maxsize="1"></field>
+	<field name="VISUAL" type="selectynu" colpos="305" maxsize="1"></field>
+	<field name="HEARING" type="selectynu" colpos="306" maxsize="1"></field>
+	<field name="MOBILITY" type="selectynu" colpos="307" maxsize="1"></field>
+	<field name="PREGNANT" type="selectynu" colpos="308" maxsize="1"></field>
+	<field name="METHADONE" type="selectynu" colpos="309" maxsize="1"></field>
+	<field name="DISCHARGE_DT" type="datetime" colpos="310" maxsize="10" dateformat="dd/MM/yyyy"></field>
+	<field name="DISCHARGE_TM" type="text" colpos="320" maxsize="5"></field>
+	<field name="REASON_TERMINATION_ID" type="selectnumeric" colpos="325" maxsize="3"></field>
+	<field name="REFERRED1_TO_ST_ID" type="selectnumeric" colpos="328" maxsize="3"></field>
+	<field name="REFERRED1_ON" type="datetime" colpos="331" maxsize="10" dateformat="dd/MM/yyyy"></field>
+	<field name="REFERRED1_TO_AGCY_ID" type="text" colpos="341" maxsize="12"></field>
+	<field name="REFERRED2_TO_ST_ID" type="selectnumeric" colpos="353" maxsize="3"></field>
+	<field name="REFERRED2_ON" type="datetime" colpos="356" maxsize="10" dateformat="dd/MM/yyyy"></field>
+	<field name="REFERRED2_TO_AGCY_ID" type="text" colpos="366" maxsize="12"></field>
+	<field name="REFERRED3_TO_ST_ID" type="selectnumeric" colpos="378" maxsize="3"></field>
+	<field name="REFERRED3_ON" type="datetime" colpos="381" maxsize="10" dateformat="dd/MM/yyyy"></field>
+	<field name="REFERRED3_TO_AGCY_ID" type="text" colpos="391" maxsize="12"></field>
+	<field name="REFERRED4_TO_ST_ID" type="selectnumeric" colpos="403" maxsize="3"></field>
+	<field name="REFERRED4_ON" type="datetime" colpos="406" maxsize="10" dateformat="dd/MM/yyyy"></field>
+	<field name="REFERRED4_TO_AGCY_ID" type="text" colpos="416" maxsize="12"></field>
+</fields>

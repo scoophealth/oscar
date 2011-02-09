@@ -1,0 +1,146 @@
+<?xml version="1.0"?>
+
+
+
+<rule-set name="ReportA1C"
+          xmlns="http://drools.org/rules"
+          xmlns:java="http://drools.org/semantics/java"
+          xmlns:xs="http://www.w3.org/2001/XMLSchema-instance"
+          xs:schemaLocation="http://drools.org/rules rules.xsd
+                             http://drools.org/semantics/java java.xsd">
+
+    <rule name="LDL">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.util.MeasurementDSHelper</class>
+        </parameter>
+        <java:condition>m.setMeasurement("LDL") == true</java:condition>       
+        <java:condition>m.getDataAsDouble() &lt; 2.0</java:condition>       
+        <java:consequence>     
+              m.log("LDL RULES IS GETTING RUN"+m.getDataAsDouble());
+              m.setInRange(true);
+        </java:consequence>
+    </rule>
+
+    <rule name="LDL_1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.util.MeasurementDSHelper</class>
+        </parameter>
+        <java:condition>m.setMeasurement("LDL") == false</java:condition>       
+        <java:consequence>     
+              m.log("LDL_1 RULES IS GETTING RUN"+m.getDataAsDouble());
+              m.setInRange(false);
+        </java:consequence>
+    </rule>
+
+
+
+    <rule name="BP_3">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.util.MeasurementDSHelper</class>
+        </parameter>
+        <java:condition>m.setMeasurement("BP") == false</java:condition>       
+        <java:consequence>     
+              m.log("NO BP records");
+              m.setInRange(false);
+        </java:consequence>
+    </rule>
+
+   <rule name="BP">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.util.MeasurementDSHelper</class>
+        </parameter>
+        <java:condition>m.setMeasurement("BP") == true</java:condition>       
+        <java:condition>m.getNumberFromSplit("/",0) &lt; 131</java:condition>   
+        <java:condition>m.isInRange() == true</java:condition>
+        <java:consequence>     
+              m.log("BP RULES IS GETTING RUN"+m.getDataAsDouble());
+              m.setInRange(true);
+        </java:consequence>
+    </rule>
+
+
+    <rule name="BP_2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.util.MeasurementDSHelper</class>
+        </parameter>
+        <java:condition>m.setMeasurement("BP") == true</java:condition>       
+        <java:condition>m.getNumberFromSplit("/",0) &gt;= 131</java:condition>   
+        <java:consequence>     
+              m.log("BP2 RULES IS GETTING RUN"+m.getDataAsDouble());
+              m.setInRange(false);
+        </java:consequence>
+    </rule>
+
+
+    
+
+  
+    <rule name="A1C_3">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.util.MeasurementDSHelper</class>
+        </parameter>
+        <java:condition>m.setMeasurement("A1C") == false</java:condition>       
+        <java:consequence>     
+              m.log("No A1C Records");
+              m.setInRange(false);
+        </java:consequence>
+    </rule>
+
+
+    <rule name="A1C_1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.util.MeasurementDSHelper</class>
+        </parameter>
+        <java:condition>m.setMeasurement("A1C") == true</java:condition>       
+        <java:condition>m.getDataAsDouble() &lt; 7.0</java:condition> 
+        <java:condition>m.getDataAsDouble() &gt;= 2.0</java:condition>
+        <java:condition>m.isInRange() == true</java:condition>      
+        <java:consequence>     
+              m.log("A1C RULES IS GETTING RUN"+m.getDataAsDouble());
+              m.setInRange(true);
+        </java:consequence>
+    </rule>
+
+    <rule name="A1C_1_2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.util.MeasurementDSHelper</class>
+        </parameter>
+        <java:condition>m.setMeasurement("A1C") == true</java:condition>       
+        <java:condition>m.getDataAsDouble() &gt;= 7.0</java:condition>              
+        <java:consequence>     
+              m.log("A1C_1_2 RULES IS GETTING RUN"+m.getDataAsDouble());
+              m.setInRange(false);
+        </java:consequence>
+    </rule>
+
+    
+    <rule name="A1C_2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.util.MeasurementDSHelper</class>
+        </parameter>
+        <java:condition>m.setMeasurement("A1C") == true</java:condition>       
+        <java:condition>m.getDataAsDouble() &lt; 0.07</java:condition>       
+        <java:condition>m.isInRange() == true</java:condition> 
+        <java:consequence>     
+              m.log("A1C RULES IS GETTING RUN"+m.getDataAsDouble());
+              m.setInRange(true);
+        </java:consequence>
+    </rule>
+
+
+    <rule name="A1C_2_2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.util.MeasurementDSHelper</class>
+        </parameter>
+        <java:condition>m.setMeasurement("A1C") == true</java:condition>       
+        <java:condition>m.getDataAsDouble() &gt;= 0.07</java:condition>  
+        <java:condition>m.getDataAsDouble() &lt;= 2.0</java:condition>    
+        <java:consequence>     
+              m.log("A1C RULES IS GETTING RUN"+m.getDataAsDouble());
+              m.setInRange(false);
+        </java:consequence>
+    </rule>
+
+</rule-set>
+
+

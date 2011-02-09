@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+
+
+
+<rule-set name="ReportA1C"
+          xmlns="http://drools.org/rules"
+          xmlns:java="http://drools.org/semantics/java"
+          xmlns:xs="http://www.w3.org/2001/XMLSchema-instance"
+          xs:schemaLocation="http://drools.org/rules rules.xsd
+                             http://drools.org/semantics/java java.xsd">
+
+    <rule name="A1C_1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.util.MeasurementDSHelper</class>
+        </parameter>
+        <java:condition>m.setMeasurement("A1C") == true</java:condition>       
+        <java:condition>m.getDataAsDouble() &gt; 7.9</java:condition>       
+        <java:consequence>     
+              m.log("A1C RULES IS GETTING RUN"+m.getDataAsDouble());
+              m.setInRange(true);
+        </java:consequence>
+    </rule>
+
+     <rule name="A1C_2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.util.MeasurementDSHelper</class>
+        </parameter>
+        <java:condition>m.setMeasurement("A1C") == true</java:condition>       
+        <java:condition>m.getDataAsDouble() &lt;= 2.0</java:condition>       
+        <java:condition>m.getDataAsDouble() &gt; 0.079</java:condition>       
+        <java:consequence>     
+              m.log("A1C RULES IS GETTING RUN"+m.getDataAsDouble());
+              m.setInRange(true);
+        </java:consequence>
+    </rule>
+
+</rule-set>
+
+

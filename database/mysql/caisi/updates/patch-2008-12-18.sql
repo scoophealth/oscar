@@ -1,1 +1,0 @@
-alter table Facility add column enableHealthNumberRegistry tinyint(1) not null;

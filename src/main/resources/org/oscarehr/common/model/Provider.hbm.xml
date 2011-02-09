@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--
+		Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. This software is published under the GPL GNU General Public License. This program is free software; you can redistribute it and/or
+		modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT
+		ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with this program; if
+		not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. OSCAR TEAM This software was written for Centre for Research on Inner City Health, St. Michael's Hospital, Toronto, Ontario, Canada
+	-->
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping package="org.oscarehr.common.model">
+	<class name="Provider" table="provider">
+		<id column="provider_no" name="ProviderNo" type="string">
+			<generator class="assigned" />
+		</id>
+
+		<property column="comments" name="Comments" not-null="false" type="string" />
+		<property column="phone" length="20" name="Phone" not-null="false" type="string" />
+		<property column="billing_no" length="20" name="BillingNo" not-null="false" type="string" />
+		<property column="work_phone" length="50" name="WorkPhone" not-null="false" type="string" />
+		<property column="address" length="40" name="Address" not-null="false" type="string" />
+		<property column="team" length="20" name="Team" not-null="false" type="string" />
+		<property column="status" length="1" name="Status" not-null="false" type="string" />
+		<property column="last_name" length="30" name="LastName" not-null="true" type="string" />
+		<property column="provider_type" length="15" name="ProviderType" not-null="true" type="string" />
+		<property column="sex" length="1" name="Sex" not-null="true" type="string" />
+		<property column="ohip_no" length="20" name="OhipNo" not-null="false" type="string" />
+		<property column="specialty" length="20" name="Specialty" not-null="true" type="string" />
+		<property column="dob" length="10" name="Dob" not-null="false" type="date" />
+		<property column="hso_no" length="10" name="HsoNo" not-null="false" type="string" />
+		<property column="provider_activity" length="3" name="ProviderActivity" not-null="false" type="string" />
+		<property column="first_name" length="30" name="FirstName" not-null="true" type="string" />
+		<property column="rma_no" length="20" name="RmaNo" not-null="false" type="string" />
+		<property column="signed_confidentiality" name="SignedConfidentiality" not-null="true" type="date" />
+		<property name="email" />
+		<property column="practitionerNo" length="20" name="practitionerNo" not-null="false" type="string" />
+		<property name="title" />
+
+		<set name="sites" table="providersite" cascade="all" lazy="false" fetch="join">
+			<key column="provider_no" />
+			<many-to-many column="site_id" class="Site" />
+		</set>
+	</class>
+</hibernate-mapping>

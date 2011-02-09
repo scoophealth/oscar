@@ -1,0 +1,49 @@
+<!DOCTYPE hibernate-mapping PUBLIC	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping package="com.quatro.model">
+	<class name="Attachment" table="attachment">
+		<meta attribute="sync-DAO">false</meta>
+
+		<id name="id" type="integer" column="docid">
+			<generator class="native" />
+		</id>
+		<property name="subject" column="subject" type="string"
+			not-null="false" length="256" />
+		<property name="privacyCd" column="privacycd" type="string"
+			not-null="false" length="3" />
+		<property name="providerNo" column="providerno" type="string"
+			length="6" not-null="true"></property>
+		<property name="providerDesc" type="string"
+			formula="(select lst.last_name||', '||lst.first_name from provider lst where lst.provider_no=providerNo)" />
+		<property name="checkOut" column="checkout" type="integer"
+			length="1"></property>
+		<property name="checkoutUserId" column="checkoutuserid" type="string"
+			length="6"></property>
+		<property name="checkoutUserDesc" type="string"
+			formula="(select lst.last_name||', '||lst.first_name from provider lst where lst.provider_no=checkoutUserId)"></property>
+		<property name="checkOutDate" column="checkoutdate" type="calendar" />
+		<property name="docType" column="doctype" type="string"
+			length="3"></property>
+		<property name="docDesc" type="string"
+			formula="(select lst.description from lst_documentcategory lst where lst.code=docType)"></property>
+		<property name="fileName" column="filename" type="string"
+			length="128"></property>
+		<property name="moduleId" column="moduleid" type="integer"
+			length="1"></property>
+		<property name="moduleDesc" type="string"
+			formula="(select lst.description from app_module lst where lst.module_id=moduleId)"></property>
+		<property name="fileCount" type="java.lang.Integer"
+			formula="(select count(*) from attachment lst where lst.refno=refNo and lst.filesize=fileSize and lst.filename=fileName)"></property>
+		<property name="refNo" column="refno" type="string" length="12"></property>
+		<property name="fileType" column="filetype" type="string"
+			length="5"></property>
+		<property name="viewId" column="viewid" type="string" length="36"></property>
+		<property name="viewRefNo" column="viewrefno" type="string"
+			length="12"></property>
+		<property name="revDate" column="revdatetime" type="calendar"
+			not-null="true" />
+		<property name="refProgramId" column="refprogramid" type="integer"
+			length="10"></property>
+		<property name="fileSize" column="filesize"></property>
+	</class>
+</hibernate-mapping>

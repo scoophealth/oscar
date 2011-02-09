@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="oscar.appt.status.model">
+	<class name="AppointmentStatus" table="appointment_status">
+		<meta attribute="sync-DAO">false</meta>
+		<id name="Id" type="integer" column="id">
+			<generator class="native" />
+		</id>
+
+		<property name="Status" column="status" type="string"
+			not-null="true" length="2" />
+		<property name="Description" column="description" type="string"
+			not-null="true" length="30" />
+		<property name="Color" column="color" type="string" not-null="true"
+			length="7" />
+		<property name="Icon" column="icon" type="string" not-null="true"
+			length="30" />
+		<property name="Active" column="active" type="integer"
+			not-null="true" length="1" />
+		<property name="Editable" column="editable" type="integer"
+			not-null="false" length="1" />
+
+
+	</class>
+</hibernate-mapping>

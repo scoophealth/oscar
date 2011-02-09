@@ -1,1 +1,0 @@
-ALTER TABLE preference ADD COLUMN default_caisi_pmm varchar(10) default 'disabled';

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+	<!--
+		Document : example.xml Created on : June 16, 2006, 11:28 PM Author :
+		jay Description: Purpose of the document follows. The goal of the
+		Denominator is to return a list of demographic # that will be used in
+		the numerator query The goal of the Numerator is NFI
+	-->
+
+<ClinicalIdicatorReport>
+	<Numerator></Numerator>
+	<Denominator name="Diabetes Registry">select distinct demographic_no from
+		dxresearch where dxresearch_code in ('250') and coding_system = 'icd9'</Denominator>
+
+</ClinicalIdicatorReport>
