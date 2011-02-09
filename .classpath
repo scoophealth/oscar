@@ -113,7 +113,6 @@
 	<classpathentry kind="var" path="M2_REPO/org/indivo/indivo-client-java/3.0-SNAPSHOT/indivo-client-java-3.0-SNAPSHOT.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/indivo/indivo-core/3.0-SNAPSHOT/indivo-core-3.0-SNAPSHOT.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/indivo/indivo-model-core/3.0-SNAPSHOT/indivo-model-core-3.0-SNAPSHOT.jar"/>
-	<classpathentry kind="var" path="M2_REPO/org/indivo/indivo-model-phr/3.0-SNAPSHOT/indivo-model-phr-3.0-SNAPSHOT.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/indivo/indivo-protocol/3.0-SNAPSHOT/indivo-protocol-3.0-SNAPSHOT.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/indivo/indivo-security-core/3.2-SNAPSHOT/indivo-security-core-3.2-SNAPSHOT.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/indivo/indivo-security-model/3.2-SNAPSHOT/indivo-security-model-3.2-SNAPSHOT.jar"/>
