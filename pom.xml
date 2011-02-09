@@ -3,7 +3,7 @@
 	<groupId>org.oscarehr</groupId>
 	<artifactId>oscar</artifactId>
 	<packaging>war</packaging>
-	<version>0.0-SNAPSHOT</version>
+	<version>SNAPSHOT</version>
 	<name>oscar</name>
 	<url>http://www.oscarcanada.org</url>
 
