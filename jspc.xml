@@ -38,7 +38,7 @@
 		<!-- ant-contrib needed for the if statements -->
 		<taskdef resource="net/sf/antcontrib/antcontrib.properties">
 		  <classpath>
-		    <pathelement location="../tasks/lib/ant-contrib-1.0b3.jar"/>
+		    <pathelement location="utils/tasks/lib/ant-contrib-1.0b3.jar"/>
 		  </classpath>
 		</taskdef>
 
