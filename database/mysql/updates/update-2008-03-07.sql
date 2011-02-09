@@ -1,1 +1,0 @@
-alter table document add column program_id int after doccreator;

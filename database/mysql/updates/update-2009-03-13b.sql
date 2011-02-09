@@ -1,1 +1,0 @@
-alter table scheduletemplatecode add column `bookinglimit` int not null default 1;

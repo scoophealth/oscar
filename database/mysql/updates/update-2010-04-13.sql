@@ -1,1 +1,0 @@
-delete from msgDemoMap where demographic_no = 0;

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+If:
+icd9 code 250 is in the disease registry
+AND
+icd9 code 401 is not in the disease registry
+AND
+Any of the billing codes (13050,14050,14051,14052) Payer MSP have not been billed in the past 365 days.
+
+-->
+<guideline title="250Message" >
+<conditions>
+	<condition type="dxcodes" any="icd9:250"/>
+	<condition type="dxcodes" not="icd9:401"/>
+	<condition type="billedFor" any="13050,14050,14051,14052">
+			<param key="payer" value="MSP"/>
+			<param key="notInDays" value="365"/>
+	</condition>
+</conditions>
+<consequence>
+<warning strength="warning">Service code 14050 can be billed</warning>
+</consequence>
+</guideline>

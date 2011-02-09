@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : PreventionItems.xml
+    Created on : October 26, 2005, 3:06 PM
+    Author     : Jay Gallagher
+    Description:
+        Xml configuration used in the Prevention Module to set up the types of preventions available.
+-->
+
+<preventions>
+
+	<item
+		desc="DTaP=diphtheria, tetanus and acellular pertussis for children under 18 years of age; IPV=inactivated poliovirus; haemophilus influenzae type B for children under 5 years of age: combination given at 2, 4, 18 months and 4-6 years"
+		name="TdP-IPV-Hib"
+		link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html"
+		layout="injection" atc="J07CA06" minAge="0" maxAge="6"
+		showIfMinRecordNum="1" />
+
+        <item
+		desc="DTaP=diphtheria, tetanus and acellular pertussis for children under 18 years of age; IPV=inactivated poliovirus; Hib=haemophilus influenzae type B for children under 5 years of age: combination given at 2, 4, 18 months and 4-6 years "
+		name="DTaP-IPV-Hib"
+		link="http://www.phac-aspc.gc.ca/"
+		layout="injection" atc="J07CA06" minAge="0" maxAge="6"
+		showIfMinRecordNum="1" />
+
+      <item
+		desc="DIPHTHERIA-PERTUSSIS-POLIOMYELITIS-TETANUS (6 wks - 2 yrs)"
+		name="DTaP-HBV-IPV-Hib"
+		link="http://www.phac-aspc.gc.ca/"
+		layout="injection" atc="J07CA02" minAge="0" maxAge="6"
+		showIfMinRecordNum="1" />
+
+
+	<item
+		desc="DTaP=diphtheria, tetanus and acellular pertussis for children under 18 years of age; IPV=inactivated poliovirus"
+		name="DTaP-IPV"
+		link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#DTaPIPV"
+		layout="injection" atc="J07CA02" minAge="0" maxAge="6"
+		showIfMinRecordNum="1" />
+
+	<item
+		desc="Hib=haemophilus influenzae type B for children under 5 years of age"
+		name="Hib"
+		link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#Hib"
+		layout="injection" atc="J07AG51" minAge="0" maxAge="6"
+		showIfMinRecordNum="1" />
+
+<!-- For eva.caisi.ca -->
+	<item
+		desc="HIV = all pregnant women, opt out routine screening of all adults"
+		name="HIV"
+	    link="http://www.cdc.gov/std/treatment/"
+	    layout="PAPMAM"
+	    minAge="13"
+	    maxAge="75"
+	    showIfMinRecordNum="1" />
+
+	<item
+		desc="HepB screen= Hepatitis B serology (hep B sAg + anti-HBc or anti-HBs) in those with multiple sex partners, MSM, and injection drug users"
+		name="HepB screen"
+		link="http://www.cdc.gov/std/treatment/"
+		layout="PAPMAM"
+		minAge="15"
+		maxAge="24"
+		showIfMinRecordNum="1" />
+		
+	<item
+		desc="HepC screen = Hep C Ab serology in contacts of multiple sex partners, traumatic anal intercourse with infected person, IVDU"
+		name="HepC screen"
+		link="http://www.cdc.gov/std/treatment/"
+		layout="PAPMAM"
+		minAge="15"
+		maxAge="24"
+		showIfMinRecordNum="1" />
+		
+	<item		
+		desc="VDRL = VDRL screening for syphillis; pregnant women at the first prenatal visit (and 3rd trimester and delivery high-risk groups), all sex workers, in correctional facilities, diagnosed with another STD, MSM with high-risk behaviors"
+		name="VDRL"
+		link="http://www.cdc.gov/std/treatment/"
+		layout="PAPMAM"
+		minAge="15"
+		maxAge="25"
+		showIfMinRecordNum="1" />
+		
+	<item
+		desc="Chlamydia = chlamydia urine PCR; sexually active women age 25 years or younger (including pregnant women), women older than 25 years with: new sex partner in prior 60 days, more than one sex partner, inconsistent condom use, unmarried, or history of STD; men: asymptomatic screening may or may not benefit "
+		name="chlamydia"
+		link="http://www.cdc.gov/std/treatment/"
+		layout="PAPMAM"
+		minAge="12"
+		maxAge="25"
+		showIfMinRecordNum="1" />
+		
+	<item
+		desc= "ghonorrhea = ghonorrhea urine PCR in men with symptoms or asymptomatic women: Sexually active younger than 25 years, pregnancy, inconsistent condom use, multiple partners, partner with multiple contacts, sexual contact with partner with culture-proven STD, repeated episodes of STD, Sex work or drug use"
+		name="ghonorrhea PCR"
+		link="http://www.cdc.gov/std/treatment/"
+		layout="PAPMAM"
+		minAge="12"
+		maxAge="25"
+		showIfMinRecordNum="1" />
+	<!-- eva.caisi.ca -->
+
+
+
+	<item desc="Pneu-C=pneumococcal 7-valent conjugate" name="Pneu-C"
+		link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#PneuC"
+		layout="injection" atc="J07AL" minAge="0" maxAge="2"
+		showIfMinRecordNum="1" />
+
+	<item desc="MMR=measles, mumps and rubella" name="MMR"
+		link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#MMR"
+		layout="injection" atc="J07BD52" minAge="0" maxAge="6"
+		showIfMinRecordNum="1" />
+
+
+	<item desc="MenC-C=meningocococcal C conjugate" name="MenC-C"
+		link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#MenC"
+		layout="injection" atc="J07AH07" minAge="0" maxAge="19"
+		showIfMinRecordNum="1" />
+
+	<item desc="VZ=varicella zoster" name="VZ"
+		link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#Var"
+		layout="injection" atc="J07BK01" minAge="0" maxAge="2"
+		showIfMinRecordNum="1" />
+
+	<item desc="Hep B=Hepatitis B" name="HepB"
+		link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#HepB"
+		layout="injection" atc="J07BC01" minAge="0" maxAge="1"
+		showIfMinRecordNum="1" />
+
+	<item
+		desc="dTap=diphtheria, tatanus and acellular pertussis adult/adolescent formulation"
+		name="dTap"
+		link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#dTap"
+		layout="injection" atc="J07AJ52" minAge="0" maxAge="6"
+		showIfMinRecordNum="1" />
+
+	<item desc="Td=tetanus and diphtheria adult type formulation"
+		name="Td"
+		link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#dTap"
+		layout="injection" atc="J07CA01" minAge="0" showIfMinRecordNum="1" />
+
+	<item desc="Flu=influenza vaccine" name="Flu"
+		link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#Flu"
+		layout="injection" atc="J07BB01" minAge="0" />
+
+	<item desc="Hep A=Hepatitis A" name="HepA" link="" layout="injection"
+		atc="J07BC02" showIfMinRecordNum="1" />
+	<item desc="Hep AB=Hepatitis AB" name="HepAB" link="" layout="injection"
+		atc="J07BC20" showIfMinRecordNum="1" />
+
+        <item desc="Dukoral" name="CHOLERA" link="" layout="injection"
+		atc="J07AE01" showIfMinRecordNum="1" />
+        
+
+	<item desc="Rabies=Rabies" name="Rabies" link="" layout="injection"
+		atc="J07BG01" showIfMinRecordNum="1" />
+
+	<item desc="Typhoid=Typhoid" name="Typhoid" link="" layout="injection"
+		atc="J07AP01" showIfMinRecordNum="1" />
+
+	<item 
+		desc="Women ages of 9 and 26 years are recommended to receive human papillomavirus vaccine" 
+		name="HPV Vaccine"
+		link="http://www.cdc.gov/std/treatment/" 
+		layout="injection" 
+		minAge="9"
+		maxAge="26" sex = "F"
+   		showIfMinRecordNum="1" />
+
+
+	<item desc="TB=Tuberculosis" name="Tuberculosis" link="" layout="injection"
+		atc="J07AN01" showIfMinRecordNum="1" />
+
+	<item desc="Pneumovax" name="Pneumovax" link="" layout="injection"
+		atc="J07AL02" showIfMinRecordNum="1" />
+
+	<item desc="TdP" name="TdP" link="" layout="injection" atc="J07AJ52"
+		showIfMinRecordNum="1" />
+
+	<item desc="IPV" name="IPV" link="" layout="injection" atc="J07BF03"
+		showIfMinRecordNum="1" />
+
+	<item desc="PAP=" name="PAP" link="" layout="PAPMAM" minAge="20"
+		maxAge="65" sex="F" showIfMinRecordNum="1" />
+
+	<item desc="Mammorgram" name="MAM" link="" layout="PAPMAM" minAge="50"
+		maxAge="70" sex="F" showIfMinRecordNum="1" />
+
+	<item desc="PSA" name="PSA" link="" layout="PAPMAM" minAge="50"
+		maxAge="70" sex="M" showIfMinRecordNum="1" />
+
+	<item desc="Fecal Occult Blood Test" name="FOBT" link="" layout="PAPMAM"
+		minAge="49" maxAge="80" showIfMinRecordNum="1" />
+
+	<item desc="Colonoscopy" name="COLONOSCOPY" link="" layout="PAPMAM"
+		showIfMinRecordNum="1" />
+
+        <item desc="H1N1 Vaccination" name="H1N1" layout="h1n1"
+            minAge="0" atc="J07BB02" />
+
+	<item desc="Other Layout A" name="OtherA" link="" layout="injection"
+		showIfMinRecordNum="1" />
+
+	<item desc="Other Layout B" name="OtherB" link="" layout="PAPMAM"
+		showIfMinRecordNum="1" />
+
+</preventions>
+

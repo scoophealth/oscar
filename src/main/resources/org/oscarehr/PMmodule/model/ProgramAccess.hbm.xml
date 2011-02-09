@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--
+		Copyright (c) 2001-2002. Centre for Research on Inner City Health, St.
+		Michael's Hospital, Toronto. All Rights Reserved. This software is
+		published under the GPL GNU General Public License. This program is
+		free software; you can redistribute it and/or modify it under the
+		terms of the GNU General Public License as published by the Free
+		Software Foundation; either version 2 of the License, or (at your
+		option) any later version. This program is distributed in the hope
+		that it will be useful, but WITHOUT ANY WARRANTY; without even the
+		implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+		PURPOSE. See the GNU General Public License for more details. You
+		should have received a copy of the GNU General Public License along
+		with this program; if not, write to the Free Software Foundation,
+		Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. OSCAR
+		TEAM This software was written for Centre for Research on Inner City
+		Health, St. Michael's Hospital, Toronto, Ontario, Canada
+	-->
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping package="org.oscarehr.PMmodule.model">
+	<class name="ProgramAccess" table="program_access">
+		<id column="id" name="Id" type="java.lang.Long" unsaved-value="0">
+			<generator class="native" />
+		</id>
+		<property column="program_id" length="11" name="ProgramId"
+			not-null="false" type="java.lang.Long" />
+		<property column="access_type_id" name="AccessTypeId"
+			not-null="false" type="string" />
+		<property column="all_roles" name="AllRoles" not-null="false"
+			type="boolean" />
+		<many-to-one name="AccessType" class="org.oscarehr.PMmodule.model.AccessType"
+			column="access_type_id" update="false" insert="false" lazy="false" />
+<!-- 			
+		<set name="roles" table="program_access_roles" lazy="false">
+			<key column="id" />
+			<many-to-many column="role_id" class="org.caisi.model.Role" />
+		</set>
+-->		
+		<set name="roles" table="program_access_roles" lazy="false">
+			<key column="id" />
+			<many-to-many column="role_id" class="com.quatro.model.security.Secrole" />
+		</set>
+				
+	</class>
+</hibernate-mapping>

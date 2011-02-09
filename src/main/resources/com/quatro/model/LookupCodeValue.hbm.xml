@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+	<class name="com.quatro.model.LookupCodeValue" mutable="false">
+		<id name="code" />
+		<property name="prefix" />
+		<property name="description" />
+		<property name="parentCode" />
+		<property name="active" type="boolean" />
+		<property name="buf1" />
+		<property name="codeTree" />
+		<property name="codecsv" />
+		<property name="orderByIndex" />
+	</class>
+</hibernate-mapping>

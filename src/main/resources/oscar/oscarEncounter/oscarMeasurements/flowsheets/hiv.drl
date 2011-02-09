@@ -1,0 +1,963 @@
+<?xml version="1.0"?>
+
+<!--
+        3 month recommendations / 6 month warnings
+        -=measurement_type="CD4"
+        -=measurement_type="VLOA"
+        ?=measurement_type="Hb"
+        -=measurement_type="ALT"
+        6 month recom / 9 month warning
+        +measurement_type="FBS"*
+        +measurement_type="TCHL"*
+        +measurement_type="LDL"
+        +measurement_type="HDL"
+        +measurement_type="TG"
+        yearly recom  / year 1/2 warning 
+        -measurement_type="VB12"
+        -measurement_type="FTST"
+        -measurement_type="VDRL"
+        -measurement_type="TOXP"
+        -measurement_type="HpAI"
+        -measurement_type="HpBS"
+        -measurement_type="HpBA"
+        -measurement_type="HpCA"
+        -measurement_type="CMVI"
+        -measurement_type="G6PD"
+        6 month recom / 9 month warning
+        -measurement_type="URBH"
+        -measurement_type="USSH"
+        -measurement_type="UDUS"
+        -measurement_type="UAIP"
+        -measurement_type="UHTP"
+
+
+
+
+should colour be in drools file or some other way
+-->
+<rule-set name="HIVFlowSheet"
+          xmlns="http://drools.org/rules"
+          xmlns:java="http://drools.org/semantics/java"
+          xmlns:xs="http://www.w3.org/2001/XMLSchema-instance"
+          xs:schemaLocation="http://drools.org/rules rules.xsd
+                             http://drools.org/semantics/java java.xsd">
+
+    <rule name="CD4 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("CD4") &gt;= 3</java:condition>
+        <java:condition>m.getLastDateRecordedInMonths("CD4") &lt; 6</java:condition>
+        <java:consequence>              
+              m.log("CD4 1 getting called");
+              m.addRecommendation("CD4","CD4 hasn't been reviewed in "+m.getLastDateRecordedInMonths("CD4")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="CD4 2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("CD4") &gt;= 6</java:condition>        
+        <java:consequence>              
+              m.log("CD4 2 getting called");
+              m.addWarning("CD4","CD4 hasn't been reviewed in "+m.getLastDateRecordedInMonths("CD4")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="CD4 3">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("CD4") ==  -1</java:condition>
+        <java:consequence>              
+              m.log("CD4 3 getting called");
+              m.addWarning("CD4","CD4 hasn't been reviewed");
+        </java:consequence>
+    </rule>
+
+
+    <rule name="VLOA 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("VLOA") &gt;= 3</java:condition>
+        <java:condition>m.getLastDateRecordedInMonths("VLOA") &lt; 6</java:condition>
+        <java:consequence>              
+              m.log("VLOA 1 getting called");
+              m.addRecommendation("VLOA","A Viral Load hasn't been recorded in "+m.getLastDateRecordedInMonths("VLOA")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="VLOA 2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("VLOA") &gt;= 6</java:condition>        
+        <java:consequence>              
+              m.log("VLOA 2 getting called");
+              m.addWarning("VLOA","A Viral Load hasn't been recorded in "+m.getLastDateRecordedInMonths("VLOA")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="VLOA 3">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("VLOA") ==  -1</java:condition>
+        <java:consequence>              
+              m.log("VLOA 3 getting called");
+              m.addWarning("VLOA","no Viral Load values has been recorded");
+        </java:consequence>
+    </rule>
+
+    <rule name="Hb 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("Hb") &gt;= 3</java:condition>
+        <java:condition>m.getLastDateRecordedInMonths("Hb") &lt; 6</java:condition>
+        <java:consequence>              
+              m.log("Hb 1 getting called");
+              m.addRecommendation("Hb","Hb changes haven't been recorded in "+m.getLastDateRecordedInMonths("Hb")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="Hb 2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("Hb") &gt;= 6</java:condition>        
+        <java:consequence>              
+              m.log("Hb 2 getting called");
+              m.addWarning("Hb","Hb changes haven't been recorded in "+m.getLastDateRecordedInMonths("Hb")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="Hb 3">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("Hb") ==  -1</java:condition>
+        <java:consequence>              
+              m.log("Hb 3 getting called");
+              m.addWarning("Hb","no Hb changes have been recorded");
+        </java:consequence>
+    </rule>
+
+    <rule name="ALT 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("ALT") &gt;= 3</java:condition>
+        <java:condition>m.getLastDateRecordedInMonths("ALT") &lt; 6</java:condition>
+        <java:consequence>              
+              m.log("ALT 1 getting called");
+              m.addRecommendation("ALT","ALT hasn't been recorded in "+m.getLastDateRecordedInMonths("ALT")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="ALT 2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("ALT") &gt;= 6</java:condition>        
+        <java:consequence>              
+              m.log("ALT 2 getting called");
+              m.addWarning("ALT","ALT hasn't been recorded in "+m.getLastDateRecordedInMonths("ALT")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="ALT 3">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("ALT") ==  -1</java:condition>
+        <java:consequence>              
+              m.log("ALT 3 getting called");
+              m.addWarning("ALT","no ALT has been recorded");
+        </java:consequence>
+    </rule>
+
+    
+<rule name="FBS 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("FBS") &gt;= 6</java:condition>
+        <java:condition>m.getLastDateRecordedInMonths("FBS") &lt; 9</java:condition>
+
+        <java:consequence>              
+              m.log("FBS 1 getting called");
+              m.addRecommendation("FBS","FBS hasn't been recorded in "+m.getLastDateRecordedInMonths("FBS")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="FBS 2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("FBS") &gt;= 9</java:condition>        
+        <java:consequence>              
+              m.log("FBS 2 getting called");
+              m.addWarning("FBS","FBS hasn't been recorded in "+m.getLastDateRecordedInMonths("FBS")+" months");
+        </java:consequence>
+
+    </rule>
+
+    <rule name="FBS 3">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("FBS") ==  -1</java:condition>
+        <java:consequence>              
+              m.log("FBS 3 getting called");
+              m.addWarning("FBS","no FBS has been recorded");
+        </java:consequence>
+
+    </rule>
+
+    
+
+    <rule name="TCHL 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("TCHL") &gt;= 6</java:condition>
+        <java:condition>m.getLastDateRecordedInMonths("TCHL") &lt; 9</java:condition>
+
+        <java:consequence>              
+              m.log("TCHL 1 getting called");
+              m.addRecommendation("TCHL","Total Cholesterol hasn't been recorded in "+m.getLastDateRecordedInMonths("TCHL")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="TCHL 2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("TCHL") &gt;= 9</java:condition>        
+        <java:consequence>              
+              m.log("TCHL 2 getting called");
+              m.addWarning("TCHL","Total Cholesterol hasn't been recorded in "+m.getLastDateRecordedInMonths("TCHL")+" months");
+        </java:consequence>
+
+    </rule>
+
+    <rule name="TCHL 3">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("TCHL") ==  -1</java:condition>
+        <java:consequence>              
+              m.log("TCHL 3 getting called");
+              m.addWarning("TCHL","no Total Cholesterol has been recorded");
+        </java:consequence>
+
+    </rule>
+
+    
+
+<rule name="LDL 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("LDL") &gt;= 6</java:condition>
+        <java:condition>m.getLastDateRecordedInMonths("LDL") &lt; 9</java:condition>
+
+        <java:consequence>              
+              m.log("LDL 1 getting called");
+              m.addRecommendation("LDL","LDL hasn't been recorded in "+m.getLastDateRecordedInMonths("LDL")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="LDL 2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("LDL") &gt;= 9</java:condition>        
+        <java:consequence>              
+              m.log("LDL 2 getting called");
+              m.addWarning("LDL","LDL hasn't been recorded in "+m.getLastDateRecordedInMonths("LDL")+" months");
+        </java:consequence>
+
+    </rule>
+
+    <rule name="LDL 3">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("LDL") ==  -1</java:condition>
+        <java:consequence>              
+              m.log("LDL 3 getting called");
+              m.addWarning("LDL","no LDL has been recorded");
+        </java:consequence>
+
+    </rule>
+
+    
+
+<rule name="HDL 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("HDL") &gt;= 6</java:condition>
+        <java:condition>m.getLastDateRecordedInMonths("HDL") &lt; 9</java:condition>
+
+        <java:consequence>              
+              m.log("HDL 1 getting called");
+              m.addRecommendation("HDL","HDL hasn't been recorded in "+m.getLastDateRecordedInMonths("HDL")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="HDL 2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("HDL") &gt;= 9</java:condition>        
+        <java:consequence>              
+              m.log("HDL 2 getting called");
+              m.addWarning("HDL","HDL hasn't been recorded in "+m.getLastDateRecordedInMonths("HDL")+" months");
+        </java:consequence>
+
+    </rule>
+
+    <rule name="HDL 3">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("HDL") ==  -1</java:condition>
+        <java:consequence>              
+              m.log("HDL 3 getting called");
+              m.addWarning("HDL","no HDL has been recorded");
+        </java:consequence>
+
+    </rule>
+
+    
+
+<rule name="TG 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("TG") &gt;= 6</java:condition>
+        <java:condition>m.getLastDateRecordedInMonths("TG") &lt; 9</java:condition>
+
+        <java:consequence>              
+              m.log("TG 1 getting called");
+              m.addRecommendation("TG","triglyceride hasn't been recorded in "+m.getLastDateRecordedInMonths("TG")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="TG 2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("TG") &gt;= 9</java:condition>        
+        <java:consequence>              
+              m.log("TG 2 getting called");
+              m.addWarning("TG","triglyceride hasn't been recorded in "+m.getLastDateRecordedInMonths("TG")+" months");
+        </java:consequence>
+
+    </rule>
+
+    <rule name="TG 3">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("TG") ==  -1</java:condition>
+        <java:consequence>              
+              m.log("TG 3 getting called");
+              m.addWarning("TG","no triglyceride has been recorded");
+        </java:consequence>
+
+    </rule>
+
+    
+
+<rule name="URBH 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("URBH") &gt;= 6</java:condition>
+        <java:condition>m.getLastDateRecordedInMonths("URBH") &lt; 9</java:condition>
+
+        <java:consequence>              
+              m.log("URBH 1 getting called");
+              m.addRecommendation("URBH","URBH hasn't been recorded in "+m.getLastDateRecordedInMonths("URBH")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="URBH 2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("URBH") &gt;= 9</java:condition>        
+        <java:consequence>              
+              m.log("URBH 2 getting called");
+              m.addWarning("URBH","URBH hasn't been recorded in "+m.getLastDateRecordedInMonths("URBH")+" months");
+        </java:consequence>
+
+    </rule>
+
+    <rule name="URBH 3">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("URBH") ==  -1</java:condition>
+        <java:consequence>              
+              m.log("URBH 3 getting called");
+              m.addWarning("URBH","no URBH has been recorded");
+        </java:consequence>
+
+    </rule>
+
+    
+
+<rule name="USSH 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("USSH") &gt;= 6</java:condition>
+        <java:condition>m.getLastDateRecordedInMonths("USSH") &lt; 9</java:condition>
+
+        <java:consequence>              
+              m.log("USSH 1 getting called");
+              m.addRecommendation("USSH","USSH hasn't been recorded in "+m.getLastDateRecordedInMonths("USSH")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="USSH 2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("USSH") &gt;= 9</java:condition>        
+        <java:consequence>              
+              m.log("USSH 2 getting called");
+              m.addWarning("USSH","USSH hasn't been recorded in "+m.getLastDateRecordedInMonths("USSH")+" months");
+        </java:consequence>
+
+    </rule>
+
+    <rule name="USSH 3">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("USSH") ==  -1</java:condition>
+        <java:consequence>              
+              m.log("USSH 3 getting called");
+              m.addWarning("USSH","no USSH has been recorded");
+        </java:consequence>
+
+    </rule>
+
+    
+
+<rule name="UDUS 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("UDUS") &gt;= 6</java:condition>
+        <java:condition>m.getLastDateRecordedInMonths("UDUS") &lt; 9</java:condition>
+
+        <java:consequence>              
+              m.log("UDUS 1 getting called");
+              m.addRecommendation("UDUS","UDUS hasn't been recorded in "+m.getLastDateRecordedInMonths("UDUS")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="UDUS 2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("UDUS") &gt;= 9</java:condition>        
+        <java:consequence>              
+              m.log("UDUS 2 getting called");
+              m.addWarning("UDUS","UDUS hasn't been recorded in "+m.getLastDateRecordedInMonths("UDUS")+" months");
+        </java:consequence>
+
+    </rule>
+
+    <rule name="UDUS 3">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("UDUS") ==  -1</java:condition>
+        <java:consequence>              
+              m.log("UDUS 3 getting called");
+              m.addWarning("UDUS","no UDUS has been recorded");
+        </java:consequence>
+
+    </rule>
+    
+    
+
+<rule name="UAIP 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("UAIP") &gt;= 6</java:condition>
+        <java:condition>m.getLastDateRecordedInMonths("UAIP") &lt; 9</java:condition>
+
+        <java:consequence>              
+              m.log("UAIP 1 getting called");
+              m.addRecommendation("UAIP","UAIP hasn't been recorded in "+m.getLastDateRecordedInMonths("UAIP")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="UAIP 2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("UAIP") &gt;= 9</java:condition>        
+        <java:consequence>              
+              m.log("UAIP 2 getting called");
+              m.addWarning("UAIP","UAIP hasn't been recorded in "+m.getLastDateRecordedInMonths("UAIP")+" months");
+        </java:consequence>
+
+    </rule>
+
+    <rule name="UAIP 3">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("UAIP") ==  -1</java:condition>
+        <java:consequence>              
+              m.log("UAIP 3 getting called");
+              m.addWarning("UAIP","no UAIP has been recorded");
+        </java:consequence>
+
+    </rule>
+
+    
+
+<rule name="UHTP 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("UHTP") &gt;= 6</java:condition>
+        <java:condition>m.getLastDateRecordedInMonths("UHTP") &lt; 9</java:condition>
+
+        <java:consequence>              
+              m.log("UHTP 1 getting called");
+              m.addRecommendation("UHTP","UHTP hasn't been recorded in "+m.getLastDateRecordedInMonths("UHTP")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="UHTP 2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("UHTP") &gt;= 9</java:condition>        
+        <java:consequence>              
+              m.log("UHTP 2 getting called");
+              m.addWarning("UHTP","UHTP hasn't been recorded in "+m.getLastDateRecordedInMonths("UHTP")+" months");
+        </java:consequence>
+
+    </rule>
+
+    <rule name="UHTP 3">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("UHTP") ==  -1</java:condition>
+        <java:consequence>              
+              m.log("UHTP 3 getting called");
+              m.addWarning("UHTP","no UHTP has been recorded");
+        </java:consequence>
+
+    </rule>
+
+    
+
+<rule name="VB12 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("VB12") &gt;= 12</java:condition>
+        <java:condition>m.getLastDateRecordedInMonths("VB12") &lt; 18</java:condition>
+
+        <java:consequence>              
+              m.log("VB12 1 getting called");
+              m.addRecommendation("VB12","Vit B12 hasn't been recorded in "+m.getLastDateRecordedInMonths("VB12")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="VB12 2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("VB12") &gt;= 18</java:condition>        
+        <java:consequence>              
+              m.log("VB12 2 getting called");
+              m.addWarning("VB12","Vit B12 hasn't been recorded in "+m.getLastDateRecordedInMonths("VB12")+" months");
+        </java:consequence>
+
+    </rule>
+
+    <rule name="VB12 3">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("VB12") ==  -1</java:condition>
+        <java:consequence>              
+              m.log("VB12 3 getting called");
+              m.addWarning("VB12","no Vit B12 has been recorded");
+        </java:consequence>
+
+    </rule>
+
+    
+
+<rule name="FTST 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("FTST") &gt;= 12</java:condition>
+        <java:condition>m.getLastDateRecordedInMonths("FTST") &lt; 18</java:condition>
+
+        <java:consequence>              
+              m.log("FTST 1 getting called");
+              m.addRecommendation("FTST","Free Testost hasn't been recorded in "+m.getLastDateRecordedInMonths("FTST")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="FTST 2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("FTST") &gt;= 18</java:condition>        
+        <java:consequence>              
+              m.log("FTST 2 getting called");
+              m.addWarning("FTST","Free Testost hasn't been recorded in "+m.getLastDateRecordedInMonths("FTST")+" months");
+        </java:consequence>
+
+    </rule>
+
+    <rule name="FTST 3">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("FTST") ==  -1</java:condition>
+        <java:consequence>              
+              m.log("FTST 3 getting called");
+              m.addWarning("FTST","no Free Testost has been recorded");
+        </java:consequence>
+
+    </rule>
+    
+    
+
+<rule name="VDRL 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("VDRL") &gt;= 12</java:condition>
+        <java:condition>m.getLastDateRecordedInMonths("VDRL") &lt; 18</java:condition>
+
+        <java:consequence>              
+              m.log("VDRL 1 getting called");
+              m.addRecommendation("VDRL","VDRL hasn't been recorded in "+m.getLastDateRecordedInMonths("VDRL")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="VDRL 2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("VDRL") &gt;= 18</java:condition>        
+        <java:consequence>              
+              m.log("VDRL 2 getting called");
+              m.addWarning("VDRL","VDRL hasn't been recorded in "+m.getLastDateRecordedInMonths("VDRL")+" months");
+        </java:consequence>
+
+    </rule>
+
+    <rule name="VDRL 3">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("VDRL") ==  -1</java:condition>
+        <java:consequence>              
+              m.log("VDRL 3 getting called");
+              m.addWarning("VDRL","no VDRL has been recorded");
+        </java:consequence>
+
+    </rule>
+
+    
+
+<rule name="TOXP 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("TOXP") &gt;= 12</java:condition>
+        <java:condition>m.getLastDateRecordedInMonths("TOXP") &lt; 18</java:condition>
+
+        <java:consequence>              
+              m.log("TOXP 1 getting called");
+              m.addRecommendation("TOXP","Toxoplasma lgG hasn't been recorded in "+m.getLastDateRecordedInMonths("TOXP")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="TOXP 2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("TOXP") &gt;= 18</java:condition>        
+        <java:consequence>              
+              m.log("TOXP 2 getting called");
+              m.addWarning("TOXP","Toxoplasma lgG hasn't been recorded in "+m.getLastDateRecordedInMonths("TOXP")+" months");
+        </java:consequence>
+
+    </rule>
+
+    <rule name="TOXP 3">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("TOXP") ==  -1</java:condition>
+        <java:consequence>              
+              m.log("TOXP 3 getting called");
+              m.addWarning("TOXP","no Toxoplasma lgG has been recorded");
+        </java:consequence>
+
+    </rule>
+
+    
+
+<rule name="HpAI 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("HpAI") &gt;= 12</java:condition>
+        <java:condition>m.getLastDateRecordedInMonths("HpAI") &lt; 18</java:condition>
+
+        <java:consequence>              
+              m.log("HpAI 1 getting called");
+              m.addRecommendation("HpAI","Hep A lgG hasn't been recorded in "+m.getLastDateRecordedInMonths("HpAI")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="HpAI 2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("HpAI") &gt;= 18</java:condition>        
+        <java:consequence>              
+              m.log("HpAI 2 getting called");
+              m.addWarning("HpAI","Hep A lgG hasn't been recorded in "+m.getLastDateRecordedInMonths("HpAI")+" months");
+        </java:consequence>
+
+    </rule>
+
+    <rule name="HpAI 3">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("HpAI") ==  -1</java:condition>
+        <java:consequence>              
+              m.log("HpAI 3 getting called");
+              m.addWarning("HpAI","no Hep A lgG has been recorded");
+        </java:consequence>
+
+    </rule>
+
+    
+
+<rule name="HpBS 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("HpBS") &gt;= 12</java:condition>
+        <java:condition>m.getLastDateRecordedInMonths("HpBS") &lt; 18</java:condition>
+
+        <java:consequence>              
+              m.log("HpBS 1 getting called");
+              m.addRecommendation("HpBS","Hep BS Ag hasn't been recorded in "+m.getLastDateRecordedInMonths("HpBS")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="HpBS 2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("HpBS") &gt;= 18</java:condition>        
+        <java:consequence>              
+              m.log("HpBS 2 getting called");
+              m.addWarning("HpBS","Hep BS Ag hasn't been recorded in "+m.getLastDateRecordedInMonths("HpBS")+" months");
+        </java:consequence>
+
+    </rule>
+
+    <rule name="HpBS 3">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("HpBS") ==  -1</java:condition>
+        <java:consequence>              
+              m.log("HpBS 3 getting called");
+              m.addWarning("HpBS","no Hep BS Ag has been recorded");
+        </java:consequence>
+
+    </rule>
+
+
+    
+
+<rule name="HpBA 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("HpBA") &gt;= 12</java:condition>
+        <java:condition>m.getLastDateRecordedInMonths("HpBA") &lt; 18</java:condition>
+
+        <java:consequence>              
+              m.log("HpBA 1 getting called");
+              m.addRecommendation("HpBA","Hep BS Ab hasn't been recorded in "+m.getLastDateRecordedInMonths("HpBA")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="HpBA 2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("HpBA") &gt;= 18</java:condition>        
+        <java:consequence>              
+              m.log("HpBA 2 getting called");
+              m.addWarning("HpBA","Hep BS Ab hasn't been recorded in "+m.getLastDateRecordedInMonths("HpBA")+" months");
+        </java:consequence>
+
+    </rule>
+
+    <rule name="HpBA 3">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("HpBA") ==  -1</java:condition>
+        <java:consequence>              
+              m.log("HpBA 3 getting called");
+              m.addWarning("HpBA","no Hep BS Ab has been recorded");
+        </java:consequence>
+
+    </rule>
+
+    
+
+<rule name="HpCA 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("HpCA") &gt;= 12</java:condition>
+        <java:condition>m.getLastDateRecordedInMonths("HpCA") &lt; 18</java:condition>
+
+        <java:consequence>              
+              m.log("HpCA 1 getting called");
+              m.addRecommendation("HpCA","Hep C Ab hasn't been recorded in "+m.getLastDateRecordedInMonths("HpCA")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="HpCA 2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("HpCA") &gt;= 18</java:condition>        
+        <java:consequence>              
+              m.log("HpCA 2 getting called");
+              m.addWarning("HpCA","Hep C Ab hasn't been recorded in "+m.getLastDateRecordedInMonths("HpCA")+" months");
+        </java:consequence>
+
+    </rule>
+
+    <rule name="HpCA 3">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("HpCA") ==  -1</java:condition>
+        <java:consequence>              
+              m.log("HpCA 3 getting called");
+              m.addWarning("HpCA","no Hep C Ab has been recorded");
+        </java:consequence>
+
+    </rule>
+
+    
+
+<rule name="CMVI 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("CMVI") &gt;= 12</java:condition>
+        <java:condition>m.getLastDateRecordedInMonths("CMVI") &lt; 18</java:condition>
+
+        <java:consequence>              
+              m.log("CMVI 1 getting called");
+              m.addRecommendation("CMVI","CMV lgG hasn't been recorded in "+m.getLastDateRecordedInMonths("CMVI")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="CMVI 2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("CMVI") &gt;= 18</java:condition>        
+        <java:consequence>              
+              m.log("CMVI 2 getting called");
+              m.addWarning("CMVI","CMV lgG hasn't been recorded in "+m.getLastDateRecordedInMonths("CMVI")+" months");
+        </java:consequence>
+
+    </rule>
+
+    <rule name="CMVI 3">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("CMVI") ==  -1</java:condition>
+        <java:consequence>              
+              m.log("CMVI 3 getting called");
+              m.addWarning("CMVI","no CMV lgG has been recorded");
+        </java:consequence>
+
+    </rule>
+
+
+    
+
+    <rule name="G6PD 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("G6PD") &gt;= 12</java:condition>
+        <java:condition>m.getLastDateRecordedInMonths("G6PD") &lt; 18</java:condition>
+
+        <java:consequence>              
+              m.log("G6PD 1 getting called");
+              m.addRecommendation("G6PD","G6PD hasn't been recorded in "+m.getLastDateRecordedInMonths("G6PD")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="G6PD 2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("G6PD") &gt;= 18</java:condition>        
+        <java:consequence>              
+              m.log("G6PD 2 getting called");
+              m.addWarning("G6PD","G6PD hasn't been recorded in "+m.getLastDateRecordedInMonths("G6PD")+" months");
+        </java:consequence>
+
+    </rule>
+
+    <rule name="G6PD 3">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("G6PD") ==  -1</java:condition>
+        <java:consequence>              
+              m.log("G6PD 3 getting called");
+              m.addWarning("G6PD","no G6PD has been recorded");
+        </java:consequence>
+
+    </rule>
+
+</rule-set>

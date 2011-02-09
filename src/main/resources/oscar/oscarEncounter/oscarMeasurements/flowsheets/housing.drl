@@ -1,0 +1,152 @@
+<?xml version="1.0"?>
+
+<rule-set name="HousingFlowsheet"
+          xmlns="http://drools.org/rules"
+          xmlns:java="http://drools.org/semantics/java"
+          xmlns:xs="http://www.w3.org/2001/XMLSchema-instance"
+          xs:schemaLocation="http://drools.org/rules rules.xsd
+                             http://drools.org/semantics/java java.xsd">
+
+    <rule name="Hass 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("Hass") &gt;= 12</java:condition>
+        <java:consequence>
+              m.addWarning("Hass","Question not answered in "+m.getLastDateRecordedInMonths("Hass")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="Hass 2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("Hass") == -1</java:condition>
+        <java:consequence>
+              m.addWarning("Hass","Question not answered");
+        </java:consequence>
+    </rule>
+
+    <rule name="CnAp 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("CnAp") &gt;= 12</java:condition>
+        <java:consequence>
+              m.addWarning("CnAp","Question not answered in "+m.getLastDateRecordedInMonths("CnAp")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="CnAp 2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("CnAp") == -1</java:condition>
+        <java:consequence>
+              m.addWarning("CnAp","Question not answered");
+        </java:consequence>
+    </rule>
+
+    <rule name="HAP 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("HAP") &gt;= 12</java:condition>
+        <java:consequence>
+              m.addWarning("HAP","Question not answered in "+m.getLastDateRecordedInMonths("HAP")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="HAP 2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("HAP") == -1</java:condition>
+        <java:consequence>
+              m.addWarning("HAP","Question not answered");
+        </java:consequence>
+    </rule>
+
+    <rule name="CCAC 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("CCAC") &gt;= 12</java:condition>
+        <java:consequence>
+              m.addWarning("CCAC","Question not answered in "+m.getLastDateRecordedInMonths("CCAC")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="CCAC 2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("CCAC") == -1</java:condition>
+        <java:consequence>
+              m.addWarning("CCAC","Question not answered");
+        </java:consequence>
+    </rule>
+
+    <rule name="CMSP 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("CMSP") &gt;= 12</java:condition>
+        <java:consequence>
+              m.addWarning("CMSP","Question not answered in "+m.getLastDateRecordedInMonths("CMSP")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="CMSP 2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("CMSP") == -1</java:condition>
+        <java:consequence>
+              m.addWarning("CMSP","Question not answered");
+        </java:consequence>
+    </rule>
+
+    <rule name="HVIS 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("HVIS") &gt;= 12</java:condition>
+        <java:consequence>
+              m.addWarning("HVIS","Question not answered in "+m.getLastDateRecordedInMonths("HVIS")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="HVIS 2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("HVIS") == -1</java:condition>
+        <java:consequence>
+              m.addWarning("HVIS","Question not answered");
+        </java:consequence>
+    </rule>
+
+    <rule name="Hsup 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("Hsup") &gt;= 12</java:condition>
+        <java:consequence>
+              m.addWarning("Hsup","Question not answered in "+m.getLastDateRecordedInMonths("Hsup")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="Hsup 2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("Hsup") == -1</java:condition>
+        <java:consequence>
+              m.addWarning("Hsup","Question not answered");
+        </java:consequence>
+    </rule>
+
+</rule-set>
+
+

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.quatro.model.security.Secprivilege" table="secPrivilege">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" precision="2" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="privilege" type="java.lang.String">
+            <column name="privilege" length="5" not-null="true" unique="true" />
+        </property>
+        <property name="description" type="java.lang.String">
+            <column name="description" length="80" />
+        </property>
+    </class>
+</hibernate-mapping>

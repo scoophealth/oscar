@@ -1,1 +1,0 @@
-alter table casemgmt_note add index(observation_date);

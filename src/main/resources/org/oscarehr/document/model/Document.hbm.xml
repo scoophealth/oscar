@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="org.oscarehr.document.model"
+	auto-import="false">
+	<class name="Document" table="document">
+		<meta attribute="sync-DAO">false</meta>
+		<id name="id" column="document_no">
+			<generator class="native" />
+		</id>
+
+		<property name="doctype" column="doctype" type="string"
+			not-null="false" length="20" />
+		<property name="docdesc" column="docdesc" type="string"
+			not-null="true" length="255" />
+		<property name="docxml" column="docxml" type="string"
+			not-null="false" />
+		<property name="docfilename" column="docfilename" type="string"
+			not-null="true" length="255" />
+		<property name="doccreator" column="doccreator" type="string"
+			not-null="true" length="30" />
+		<property name="updatedatetime" column="updatedatetime" type="timestamp"
+			not-null="false" length="19" />
+		<property name="status" column="status" type="string"
+			not-null="true" length="1" />
+		<property name="contenttype" column="contenttype" type="string"
+			not-null="true" length="60" />
+		<property name="public" column="public1" type="java.lang.Byte"
+			not-null="true" length="1" />
+		<property name="observationdate" column="observationdate"
+			type="date" not-null="false" length="10" />
+
+
+	</class>
+</hibernate-mapping>

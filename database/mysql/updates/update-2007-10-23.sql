@@ -1,1 +1,0 @@
-ALTER TABLE appointment ADD COLUMN updatedatetime datetime DEFAULT NULL AFTER createdatetime;

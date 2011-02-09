@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--
+		Copyright (C) 2007. Centre for Research on Inner City Health, St.
+		Michael's Hospital, Toronto, Ontario, Canada. This program is free
+		software; you can redistribute it and/or modify it under the terms of
+		the GNU General Public License as published by the Free Software
+		Foundation; either version 2 of the License, or (at your option) any
+		later version. This program is distributed in the hope that it will be
+		useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+		General Public License for more details. You should have received a
+		copy of the GNU General Public License along with this program; if
+		not, write to the Free Software Foundation, Inc., 51 Franklin Street,
+		Fifth Floor, Boston, MA 02110-1301, USA.
+	-->
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping package="org.oscarehr.PMmodule.model">
+	<class name="Intake" table="intake">
+		<meta attribute="sync-DAO">false</meta>
+
+		<id name="id" type="integer" column="intake_id">
+			<generator class="native" />
+		</id>
+
+		<property name="clientId" column="client_id" type="integer"
+			not-null="true" length="10" />
+		<property name="staffId" column="staff_id" type="string"
+			not-null="true" length="6" />
+		<property name="createdOn" column="creation_date" type="calendar"
+			not-null="true" />
+		<property name="intakeStatus" column="intake_status" type="string"
+			not-null="true" length="10" />
+		<property name="intakeLocation" column="intake_location"
+			type="integer" not-null="false" length="10" />
+		<property name="facilityId" column="facility_id" type="integer"
+			not-null="false" length="11" />
+
+		<many-to-one name="node" column="intake_node_id" class="IntakeNode"
+			not-null="true" />
+
+		<set name="answers" inverse="true" cascade="save-update" sort="natural"
+			lazy="false">
+			<key column="intake_id" />
+			<one-to-many class="IntakeAnswer" />
+		</set>
+	</class>
+</hibernate-mapping>

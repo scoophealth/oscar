@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+	<class name="com.quatro.model.DocTextValue" table="report_doctext"
+		mutable="false">
+		<id name="docId" column="docid" />
+		<property name="docTextBlob" type="blob" column="docdata" />
+	</class>
+</hibernate-mapping>

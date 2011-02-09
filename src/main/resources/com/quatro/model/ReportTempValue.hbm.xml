@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+	<class name="com.quatro.model.ReportTempValue" table="report_template">
+		<id name="templateNo" unsaved-value="0">
+			<generator class="native" />
+		</id>
+		<property name="reportNo" />
+		<property name="reportOptionID" />
+		<property name="desc" column="description" />
+		<property name="startDate" type="java.sql.Date" />
+		<property name="endDate" type="java.sql.Date" />
+		<property name="startPayPeriod" />
+		<property name="endPayPeriod" />
+		<property name="updateDate" type="java.sql.Date" />
+		<property name="loginId" />
+		<property name="privateTemplate" column="privateyn" />
+	</class>
+</hibernate-mapping>

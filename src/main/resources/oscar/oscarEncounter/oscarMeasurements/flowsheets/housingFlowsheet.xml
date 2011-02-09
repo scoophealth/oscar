@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+	<!--
+		Copyright (c) 2001-2002. Department of Family Medicine, McMaster
+		University. All Rights Reserved. This software is published under the
+		GPL GNU General Public License. This program is free software; you can
+		redistribute it and/or modify it under the terms of the GNU General
+		Public License as published by the Free Software Foundation; either
+		version 2 of the License, or (at your option) any later version. This
+		program is distributed in the hope that it will be useful, but WITHOUT
+		ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+		FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+		for more details. * * You should have received a copy of the GNU
+		General Public License along with this program; if not, write to the
+		Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+		MA 02111-1307, USA.
+	-->
+<flowsheet name="agencyHousing" display_name="Housing flowsheet"
+	ds_rules="housing.drl" is_universal="true" is_medical="false"
+	warning_colour="#E00000" recommendation_colour="yellow">
+
+	<indicator key="LOW" colour="#9999FF" />
+	<indicator key="HIGH" colour="orange" />
+	<indicator key="HIGH 1" colour="#E00000" />
+
+	<item measurement_type="Hass" display_name="Housing Assessment"
+		guideline="All clients" graphable="no" value_name="Completed" />
+
+	<item measurement_type="CnAp" display_name="Connection Application"
+		guideline="clients with disability should have ODSP" graphable="no"
+		value_name="Completed" />
+
+	<item measurement_type="HAP" display_name="HAP Application Completed"
+		guideline="over 65 or 60-64 and meet earning requirements" graphable="no"
+		value_name="Completed" />
+
+	<item measurement_type="CCAC" display_name="CCAC Placement Application Completed"
+		guideline="65 or over and in Canada for 10 years or more are eligible"
+		graphable="no" value_name="Completed" />
+	<item measurement_type="CMSP" display_name="Community Support Application"
+		guideline="" graphable="no" value_name="Completed" />
+
+
+	<item measurement_type="HVIS" display_name="Housing Visits Log"
+		guideline="" graphable="no" value_name="Completed" />
+
+	<measurement type="Hass" typeDesc="Hass"
+		typeDisplayName="Housing Assessment Obtained" measuringInstrc="Housing Assessment Obtained">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+
+	<measurement type="CnAp" typeDesc="CnAp"
+		typeDisplayName="Connection Application Obtained" measuringInstrc="Connection Application Obtained">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+
+	<measurement type="HAP" typeDesc="HAP"
+		typeDisplayName="HAP Application Completed" measuringInstrc="HAP Application Completed">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+
+	<measurement type="CCAC" typeDesc="CCAC"
+		typeDisplayName="CCAC Placement Application Completed"
+		measuringInstrc="CCAC Placement Application Completed">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+
+
+	<measurement type="CMSP" typeDesc="CMSP"
+		typeDisplayName="Community Support Application" measuringInstrc="Community Support Application">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+
+	<measurement type="HVIS" typeDesc="HVIS"
+		typeDisplayName="Housing Visits Log Completed" measuringInstrc="Housing Visits Log Completed">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+
+	<measurement type="Hsup" typeDesc="Hsup" typeDisplayName="reviewed by supervisor"
+		measuringInstrc="reviewed by supervisor">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+	<item measurement_type="Hsup" display_name="reviewed by supervisor"
+		guideline="" graphable="no" value_name="Completed" />
+
+</flowsheet>

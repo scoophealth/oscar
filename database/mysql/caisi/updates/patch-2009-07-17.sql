@@ -1,1 +1,0 @@
-alter table Facility drop column integratorLastPushTime;

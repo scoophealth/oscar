@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+	<class name="com.quatro.model.ReportValue" table="v_user_report"
+		mutable="false">
+		<id name="reportNo"></id>
+		<property name="title" />
+		<property name="description" />
+		<property name="reportGroupId" />
+		<property name="accessType" column="access_type" />
+		<property name="reportGroupDesc" />
+		<property name="dateOption" />
+		<property name="datePart" />
+		<property name="notes" />
+		<property name="tableName" />
+		<property name="author" column="updatedby" />
+		<property name="updatedDate" type="java.util.Date" />
+		<property name="orgApplicable" />
+		<property name="reportType" />
+		<property name="providerNo" column="provider_no" />
+		<set name="options" lazy="false" order-by="optionTitle">
+			<key column="reportNo" not-null="true" />
+			<one-to-many class="com.quatro.model.ReportOptionValue"></one-to-many>
+		</set>
+	</class>
+</hibernate-mapping>

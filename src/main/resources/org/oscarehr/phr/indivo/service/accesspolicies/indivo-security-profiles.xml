@@ -1,0 +1,1464 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:ProfileCollection xmlns:ns2="http://indivo.org/xml/security">
+	<ProfileList>
+		<Title>Primary Care Provider</Title>
+		<Id>org:indivo:profile:primary-care-provider</Id>
+		<Source>CHBoston</Source>
+		<Description>Allows your primary care provider to read your
+			record, update and add documents, and send you secure messages.</Description>
+		<Subject>Person</Subject>
+		<RuleList>org:indivo:rule:send-message</RuleList>
+		<RuleList>org:indivo:rule:query-record</RuleList>
+		<RuleList>org:indivo:rule:add-update-all</RuleList>
+		<RuleList>org:indivo:rule:read-all</RuleList>
+		<RuleList>org:indivo:rule:deny-read-sensitive</RuleList>
+		<RuleList>org:indivo:rule:deny-write-sensitive</RuleList>
+	</ProfileList>
+	<ProfileList>
+		<Title>Family Member</Title>
+		<Id>org:indivo:profile:family-member</Id>
+		<Source>CHBoston</Source>
+		<Description>Allows a family member to read and annotate your
+			medical documents, and send you secure messages.</Description>
+		<Subject>Person</Subject>
+		<RuleList>org:indivo:rule:read-all</RuleList>
+		<RuleList>org:indivo:rule:query-record</RuleList>
+		<RuleList>org:indivo:rule:send-message</RuleList>
+		<RuleList>org:indivo:rule:add-annotations</RuleList>
+		<RuleList>org:indivo:rule:deny-read-sensitive</RuleList>
+	</ProfileList>
+	<ProfileList>
+		<Title>School</Title>
+		<Id>org:indivo:profile:school</Id>
+		<Source>CHBoston</Source>
+		<Description>Allows a school to read your immunization records
+			and contact information, as well as send you secure messages.</Description>
+		<Subject>Service</Subject>
+		<RuleList>org:indivo:rule:read-immunizations</RuleList>
+		<RuleList>org:indivo:rule:read-contact-info</RuleList>
+		<RuleList>org:indivo:rule:query-record</RuleList>
+		<RuleList>org:indivo:rule:send-message</RuleList>
+	</ProfileList>
+	<ProfileList>
+		<Title>Subscription Agent</Title>
+		<Id>org:indivo:profile:subscription-agent</Id>
+		<Source>CHBoston</Source>
+		<Description>Allows a subscription agent to read your
+			subscription and contact information, and add or update documents
+			from its external database.</Description>
+		<Subject>Service</Subject>
+		<RuleList>org:indivo:rule:send-message</RuleList>
+		<RuleList>org:indivo:rule:query-record</RuleList>
+		<RuleList>org:indivo:rule:read-subscription</RuleList>
+		<RuleList>org:indivo:rule:add-update-all</RuleList>
+		<RuleList>org:indivo:rule:read-contact-info</RuleList>
+		<RuleList>org:indivo:rule:deny-write-sensitive</RuleList>
+	</ProfileList>
+	<ProfileList>
+		<Title>Patient</Title>
+		<Id>org:indivo:profile:patient</Id>
+		<Source>CHBoston</Source>
+		<Description>Allows your patient to communicate with you and see
+			your contact information.</Description>
+		<Subject>Person</Subject>
+		<RuleList>org:indivo:rule:send-message</RuleList>
+		<RuleList>org:indivo:rule:read-contact-info</RuleList>
+	</ProfileList>
+	<ProfileList>
+		<Title>Research Administrator</Title>
+		<Id>org:indivo:profile:research-administrator</Id>
+		<Source>CHBoston</Source>
+		<Description>Allows an administrator to help manage your record
+			as part of a research project.</Description>
+		<Subject>Person</Subject>
+		<RuleList>org:indivo:rule:send-message</RuleList>
+		<RuleList>org:indivo:rule:query-record</RuleList>
+		<RuleList>org:indivo:rule:read-subscription</RuleList>
+		<RuleList>org:indivo:rule:add-update-all</RuleList>
+		<RuleList>org:indivo:rule:add-update-surveys</RuleList>
+		<RuleList>org:indivo:rule:read-surveys</RuleList>
+		<RuleList>org:indivo:rule:read-contact-info</RuleList>
+		<RuleList>org:indivo:rule:deny-write-sensitive</RuleList>
+		<RuleList>org:indivo:rule:read-metadata</RuleList>
+	</ProfileList>
+	<ProfileList>
+		<Title>Friend</Title>
+		<Id>org:indivo:profile:friend</Id>
+		<Source>CHBoston</Source>
+		<Description>Allows a friend to send you secure messages and
+			read your contact information.</Description>
+		<Subject>Person</Subject>
+		<RuleList>org:indivo:rule:send-message</RuleList>
+		<RuleList>org:indivo:rule:read-contact-info</RuleList>
+		<RuleList>org:indivo:rule:query-record</RuleList>
+	</ProfileList>
+	<RuleList>
+		<Title>Add Annotations</Title>
+		<Id>org:indivo:rule:add-annotations</Id>
+		<Source>CHBoston</Source>
+		<Description>Grants permission to add annotations.</Description>
+		<Style>Permissive</Style>
+		<Policy>
+			<Policy PolicyId="GeneratedPolicy"
+				RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:deny-overrides">
+				<Description>org:indivo:rule:add-annotations</Description>
+				<Target>
+					<Subjects>
+						<Subject>
+							<SubjectMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:rfc822Name-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">SUBJECT_ID</AttributeValue>
+								<SubjectAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id"
+									DataType="urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name" />
+							</SubjectMatch>
+						</Subject>
+					</Subjects>
+					<Resources>
+						<Resource>
+							<ResourceMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:regexp-string-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:resource:recordRoot</AttributeValue>
+								<ResourceAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ResourceMatch>
+						</Resource>
+						<Resource>
+							<ResourceMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:regexp-string-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:document:classification:annotation\[.+\]</AttributeValue>
+								<ResourceAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ResourceMatch>
+						</Resource>
+					</Resources>
+					<Actions>
+						<Action>
+							<ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:action:addDocument</AttributeValue>
+								<ActionAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ActionMatch>
+						</Action>
+						<Action>
+							<ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:action:updateDocument</AttributeValue>
+								<ActionAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ActionMatch>
+						</Action>
+					</Actions>
+				</Target>
+				<Rule Effect="Permit" RuleId="GeneratedRule" />
+			</Policy>
+		</Policy>
+	</RuleList>
+	<RuleList>
+		<Title>Add and Update All Documents</Title>
+		<Id>org:indivo:rule:add-update-all</Id>
+		<Source>CHBoston</Source>
+		<Description>Grants permission to add and update all document
+			types.</Description>
+		<Style>Permissive</Style>
+		<Policy>
+			<Policy PolicyId="GeneratedPolicy"
+				RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:deny-overrides">
+				<Description>org:indivo:rule:add-update-all</Description>
+				<Target>
+					<Subjects>
+						<Subject>
+							<SubjectMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:rfc822Name-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">SUBJECT_ID</AttributeValue>
+								<SubjectAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id"
+									DataType="urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name" />
+							</SubjectMatch>
+						</Subject>
+					</Subjects>
+					<Resources>
+						<AnyResource />
+					</Resources>
+					<Actions>
+						<Action>
+							<ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:action:addDocument</AttributeValue>
+								<ActionAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ActionMatch>
+						</Action>
+						<Action>
+							<ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:action:updateDocument</AttributeValue>
+								<ActionAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ActionMatch>
+						</Action>
+					</Actions>
+				</Target>
+				<Rule Effect="Permit" RuleId="GeneratedRule" />
+			</Policy>
+		</Policy>
+	</RuleList>
+	<RuleList>
+		<Title>Add and Update Clinical Note Documents</Title>
+		<Id>org:indivo:rule:add-update-clinical-notes</Id>
+		<Source>CHBoston</Source>
+		<Description>Grants permission to add and update your clinical
+			notes.</Description>
+		<Style>Permissive</Style>
+		<Policy>
+			<Policy PolicyId="GeneratedPolicy"
+				RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:deny-overrides">
+				<Description>org:indivo:rule:add-update-clinical-notes</Description>
+				<Target>
+					<Subjects>
+						<Subject>
+							<SubjectMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:rfc822Name-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">SUBJECT_ID</AttributeValue>
+								<SubjectAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id"
+									DataType="urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name" />
+							</SubjectMatch>
+						</Subject>
+					</Subjects>
+					<Resources>
+						<Resource>
+							<ResourceMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:regexp-string-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:resource:recordRoot</AttributeValue>
+								<ResourceAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ResourceMatch>
+						</Resource>
+						<Resource>
+							<ResourceMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:regexp-string-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:document:classification:medical:note\[.+\]</AttributeValue>
+								<ResourceAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ResourceMatch>
+						</Resource>
+					</Resources>
+					<Actions>
+						<Action>
+							<ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:action:addDocument</AttributeValue>
+								<ActionAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ActionMatch>
+						</Action>
+						<Action>
+							<ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:action:updateDocument</AttributeValue>
+								<ActionAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ActionMatch>
+						</Action>
+					</Actions>
+				</Target>
+				<Rule Effect="Permit" RuleId="GeneratedRule" />
+			</Policy>
+		</Policy>
+	</RuleList>
+	<RuleList>
+		<Title>Add and Update Contact Information Documents</Title>
+		<Id>org:indivo:rule:add-update-contact-info</Id>
+		<Source>CHBoston</Source>
+		<Description>Grants permission to add and update your contact
+			information.</Description>
+		<Style>Permissive</Style>
+		<Policy>
+			<Policy PolicyId="GeneratedPolicy"
+				RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:deny-overrides">
+				<Description>org:indivo:rule:add-update-contact-info</Description>
+				<Target>
+					<Subjects>
+						<Subject>
+							<SubjectMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:rfc822Name-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">SUBJECT_ID</AttributeValue>
+								<SubjectAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id"
+									DataType="urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name" />
+							</SubjectMatch>
+						</Subject>
+					</Subjects>
+					<Resources>
+						<Resource>
+							<ResourceMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:regexp-string-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:resource:recordRoot</AttributeValue>
+								<ResourceAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ResourceMatch>
+						</Resource>
+						<Resource>
+							<ResourceMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:regexp-string-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:document:classification:contact\[.+\]</AttributeValue>
+								<ResourceAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ResourceMatch>
+						</Resource>
+					</Resources>
+					<Actions>
+						<Action>
+							<ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:action:addDocument</AttributeValue>
+								<ActionAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ActionMatch>
+						</Action>
+						<Action>
+							<ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:action:updateDocument</AttributeValue>
+								<ActionAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ActionMatch>
+						</Action>
+					</Actions>
+				</Target>
+				<Rule Effect="Permit" RuleId="GeneratedRule" />
+			</Policy>
+		</Policy>
+	</RuleList>
+	<RuleList>
+		<Title>Add and Update Demographics Information Documents</Title>
+		<Id>org:indivo:rule:add-update-demographics</Id>
+		<Source>CHBoston</Source>
+		<Description>Grants permission to add and update your
+			demographic information.</Description>
+		<Style>Permissive</Style>
+		<Policy>
+			<Policy PolicyId="GeneratedPolicy"
+				RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:deny-overrides">
+				<Description>org:indivo:rule:add-update-demographics</Description>
+				<Target>
+					<Subjects>
+						<Subject>
+							<SubjectMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:rfc822Name-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">SUBJECT_ID</AttributeValue>
+								<SubjectAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id"
+									DataType="urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name" />
+							</SubjectMatch>
+						</Subject>
+					</Subjects>
+					<Resources>
+						<Resource>
+							<ResourceMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:regexp-string-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:resource:recordRoot</AttributeValue>
+								<ResourceAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ResourceMatch>
+						</Resource>
+						<Resource>
+							<ResourceMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:regexp-string-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:document:classification:demographics\[.+\]</AttributeValue>
+								<ResourceAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ResourceMatch>
+						</Resource>
+					</Resources>
+					<Actions>
+						<Action>
+							<ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:action:addDocument</AttributeValue>
+								<ActionAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ActionMatch>
+						</Action>
+						<Action>
+							<ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:action:updateDocument</AttributeValue>
+								<ActionAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ActionMatch>
+						</Action>
+					</Actions>
+				</Target>
+				<Rule Effect="Permit" RuleId="GeneratedRule" />
+			</Policy>
+		</Policy>
+	</RuleList>
+	<RuleList>
+		<Title>Add and Update Immunization Documents</Title>
+		<Id>org:indivo:rule:add-update-immunizations</Id>
+		<Source>CHBoston</Source>
+		<Description>Grants permission to add and update your
+			immunization documents.</Description>
+		<Style>Permissive</Style>
+		<Policy>
+			<Policy PolicyId="GeneratedPolicy"
+				RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:deny-overrides">
+				<Description>org:indivo:rule:add-update-immunizations</Description>
+				<Target>
+					<Subjects>
+						<Subject>
+							<SubjectMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:rfc822Name-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">SUBJECT_ID</AttributeValue>
+								<SubjectAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id"
+									DataType="urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name" />
+							</SubjectMatch>
+						</Subject>
+					</Subjects>
+					<Resources>
+						<Resource>
+							<ResourceMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:regexp-string-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:resource:recordRoot</AttributeValue>
+								<ResourceAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ResourceMatch>
+						</Resource>
+						<Resource>
+							<ResourceMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:regexp-string-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:document:classification:medical:immunization\[.+\]</AttributeValue>
+								<ResourceAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ResourceMatch>
+						</Resource>
+					</Resources>
+					<Actions>
+						<Action>
+							<ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:action:addDocument</AttributeValue>
+								<ActionAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ActionMatch>
+						</Action>
+						<Action>
+							<ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:action:updateDocument</AttributeValue>
+								<ActionAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ActionMatch>
+						</Action>
+					</Actions>
+				</Target>
+				<Rule Effect="Permit" RuleId="GeneratedRule" />
+			</Policy>
+		</Policy>
+	</RuleList>
+	<RuleList>
+		<Title>Add and Update Laboratory Result Documents</Title>
+		<Id>org:indivo:rule:add-update-labs</Id>
+		<Source>CHBoston</Source>
+		<Description>Grants permission to add and update your laboratory
+			result documents.</Description>
+		<Style>Permissive</Style>
+		<Policy>
+			<Policy PolicyId="GeneratedPolicy"
+				RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:deny-overrides">
+				<Description>org:indivo:rule:add-update-labs</Description>
+				<Target>
+					<Subjects>
+						<Subject>
+							<SubjectMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:rfc822Name-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">SUBJECT_ID</AttributeValue>
+								<SubjectAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id"
+									DataType="urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name" />
+							</SubjectMatch>
+						</Subject>
+					</Subjects>
+					<Resources>
+						<Resource>
+							<ResourceMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:regexp-string-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:resource:recordRoot</AttributeValue>
+								<ResourceAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ResourceMatch>
+						</Resource>
+						<Resource>
+							<ResourceMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:regexp-string-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:document:classification:medical:lab-test\[.+\]</AttributeValue>
+								<ResourceAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ResourceMatch>
+						</Resource>
+					</Resources>
+					<Actions>
+						<Action>
+							<ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:action:addDocument</AttributeValue>
+								<ActionAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ActionMatch>
+						</Action>
+						<Action>
+							<ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:action:updateDocument</AttributeValue>
+								<ActionAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ActionMatch>
+						</Action>
+					</Actions>
+				</Target>
+				<Rule Effect="Permit" RuleId="GeneratedRule" />
+			</Policy>
+		</Policy>
+	</RuleList>
+	<RuleList>
+		<Title>Add Metadata</Title>
+		<Id>org:indivo:rule:add-update-metadata</Id>
+		<Source>CHBoston</Source>
+		<Description>Grants permission to add and update your metadata.</Description>
+		<Style>Permissive</Style>
+		<Policy>
+			<Policy PolicyId="GeneratedPolicy"
+				RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:deny-overrides">
+				<Description>org:indivo:rule:add-update-metadata</Description>
+				<Target>
+					<Subjects>
+						<Subject>
+							<SubjectMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:rfc822Name-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">SUBJECT_ID</AttributeValue>
+								<SubjectAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id"
+									DataType="urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name" />
+							</SubjectMatch>
+						</Subject>
+					</Subjects>
+					<Resources>
+						<Resource>
+							<ResourceMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:regexp-string-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:resource:recordRoot</AttributeValue>
+								<ResourceAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ResourceMatch>
+						</Resource>
+						<Resource>
+							<ResourceMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:regexp-string-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:document:classification:metadata\[.+\]</AttributeValue>
+								<ResourceAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ResourceMatch>
+						</Resource>
+					</Resources>
+					<Actions>
+						<Action>
+							<ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:action:addDocument</AttributeValue>
+								<ActionAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ActionMatch>
+						</Action>
+						<Action>
+							<ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:action:updateDocument</AttributeValue>
+								<ActionAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ActionMatch>
+						</Action>
+					</Actions>
+				</Target>
+				<Rule Effect="Permit" RuleId="GeneratedRule" />
+			</Policy>
+		</Policy>
+	</RuleList>
+	<RuleList>
+		<Title>Add and Update Survey Documents</Title>
+		<Id>org:indivo:rule:add-update-surveys</Id>
+		<Source>CHBoston</Source>
+		<Description>Grants permission to add and update your surveys.</Description>
+		<Style>Permissive</Style>
+		<Policy>
+			<Policy PolicyId="GeneratedPolicy"
+				RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:deny-overrides">
+				<Description>org:indivo:rule:add-update-surveys</Description>
+				<Target>
+					<Subjects>
+						<Subject>
+							<SubjectMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:rfc822Name-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">SUBJECT_ID</AttributeValue>
+								<SubjectAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id"
+									DataType="urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name" />
+							</SubjectMatch>
+						</Subject>
+					</Subjects>
+					<Resources>
+						<Resource>
+							<ResourceMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:regexp-string-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:resource:recordRoot</AttributeValue>
+								<ResourceAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ResourceMatch>
+						</Resource>
+						<Resource>
+							<ResourceMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:regexp-string-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:document:classification:survey\[.+\]</AttributeValue>
+								<ResourceAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ResourceMatch>
+						</Resource>
+					</Resources>
+					<Actions>
+						<Action>
+							<ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:action:addDocument</AttributeValue>
+								<ActionAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ActionMatch>
+						</Action>
+						<Action>
+							<ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:action:updateDocument</AttributeValue>
+								<ActionAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ActionMatch>
+						</Action>
+					</Actions>
+				</Target>
+				<Rule Effect="Permit" RuleId="GeneratedRule" />
+			</Policy>
+		</Policy>
+	</RuleList>
+	<RuleList>
+		<Title>Deny Reads of Sensitive Documents</Title>
+		<Id>org:indivo:rule:deny-read-sensitive</Id>
+		<Source>CHBoston</Source>
+		<Description>Denies read access to your credentials, actor
+			attributes, and policies.</Description>
+		<Style>Restrictive</Style>
+		<Policy>
+			<Policy PolicyId="GeneratedPolicy"
+				RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:deny-overrides">
+				<Description>org:indivo:rule:deny-read-sensitive</Description>
+				<Target>
+					<Subjects>
+						<Subject>
+							<SubjectMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:rfc822Name-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">SUBJECT_ID</AttributeValue>
+								<SubjectAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id"
+									DataType="urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name" />
+							</SubjectMatch>
+						</Subject>
+					</Subjects>
+					<Resources>
+						<Resource>
+							<ResourceMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:regexp-string-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:document:classification:credentials\[.+\]</AttributeValue>
+								<ResourceAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ResourceMatch>
+						</Resource>
+						<Resource>
+							<ResourceMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:regexp-string-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:document:classification:accessPolicies\[.+\]</AttributeValue>
+								<ResourceAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ResourceMatch>
+						</Resource>
+						<Resource>
+							<ResourceMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:regexp-string-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:document:classification:actorAttributes\[.+\]</AttributeValue>
+								<ResourceAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ResourceMatch>
+						</Resource>
+					</Resources>
+					<Actions>
+						<Action>
+							<ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:action:read</AttributeValue>
+								<ActionAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ActionMatch>
+						</Action>
+					</Actions>
+				</Target>
+				<Rule Effect="Deny" RuleId="GeneratedRule" />
+			</Policy>
+		</Policy>
+	</RuleList>
+	<RuleList>
+		<Title>Deny Writes of Sensitive Documents</Title>
+		<Id>org:indivo:rule:deny-write-sensitive</Id>
+		<Source>CHBoston</Source>
+		<Description>Denies write access to your credentials, actor
+			attributes, and policies.</Description>
+		<Style>Restrictive</Style>
+		<Policy>
+			<Policy PolicyId="GeneratedPolicy"
+				RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:deny-overrides">
+				<Description>org:indivo:rule:deny-write-sensitive</Description>
+				<Target>
+					<Subjects>
+						<Subject>
+							<SubjectMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:rfc822Name-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">SUBJECT_ID</AttributeValue>
+								<SubjectAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id"
+									DataType="urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name" />
+							</SubjectMatch>
+						</Subject>
+					</Subjects>
+					<Resources>
+						<Resource>
+							<ResourceMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:regexp-string-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:document:classification:credentials\[.+\]</AttributeValue>
+								<ResourceAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ResourceMatch>
+						</Resource>
+						<Resource>
+							<ResourceMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:regexp-string-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:document:classification:accessPolicies\[.+\]</AttributeValue>
+								<ResourceAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ResourceMatch>
+						</Resource>
+						<Resource>
+							<ResourceMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:regexp-string-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:document:classification:actorAttributes\[.+\]</AttributeValue>
+								<ResourceAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ResourceMatch>
+						</Resource>
+					</Resources>
+					<Actions>
+						<Action>
+							<ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:action:addDocument</AttributeValue>
+								<ActionAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ActionMatch>
+						</Action>
+						<Action>
+							<ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:action:updateDocument</AttributeValue>
+								<ActionAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ActionMatch>
+						</Action>
+					</Actions>
+				</Target>
+				<Rule Effect="Deny" RuleId="GeneratedRule" />
+			</Policy>
+		</Policy>
+	</RuleList>
+	<RuleList>
+		<Title>Query Record</Title>
+		<Id>org:indivo:rule:query-record</Id>
+		<Source>CHBoston</Source>
+		<Description>Grants permission to query your record.</Description>
+		<Style>Permissive</Style>
+		<Policy>
+			<Policy PolicyId="GeneratedPolicy"
+				RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:deny-overrides">
+				<Description>org:indivo:rule:query-record</Description>
+				<Target>
+					<Subjects>
+						<Subject>
+							<SubjectMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:rfc822Name-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">SUBJECT_ID</AttributeValue>
+								<SubjectAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id"
+									DataType="urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name" />
+							</SubjectMatch>
+						</Subject>
+					</Subjects>
+					<Resources>
+						<Resource>
+							<ResourceMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:regexp-string-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:resource:recordRoot</AttributeValue>
+								<ResourceAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ResourceMatch>
+						</Resource>
+					</Resources>
+					<Actions>
+						<Action>
+							<ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:action:query</AttributeValue>
+								<ActionAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ActionMatch>
+						</Action>
+					</Actions>
+				</Target>
+				<Rule Effect="Permit" RuleId="GeneratedRule" />
+			</Policy>
+		</Policy>
+	</RuleList>
+	<RuleList>
+		<Title>Read All Documents</Title>
+		<Id>org:indivo:rule:read-all</Id>
+		<Source>CHBoston</Source>
+		<Description>Grants permission to view all your documents.</Description>
+		<Style>Permissive</Style>
+		<Policy>
+			<Policy PolicyId="GeneratedPolicy"
+				RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:deny-overrides">
+				<Description>org:indivo:rule:read-all</Description>
+				<Target>
+					<Subjects>
+						<Subject>
+							<SubjectMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:rfc822Name-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">SUBJECT_ID</AttributeValue>
+								<SubjectAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id"
+									DataType="urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name" />
+							</SubjectMatch>
+						</Subject>
+					</Subjects>
+					<Resources>
+						<AnyResource />
+					</Resources>
+					<Actions>
+						<Action>
+							<ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:action:read</AttributeValue>
+								<ActionAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ActionMatch>
+						</Action>
+					</Actions>
+				</Target>
+				<Rule Effect="Permit" RuleId="GeneratedRule" />
+			</Policy>
+		</Policy>
+	</RuleList>
+	<RuleList>
+		<Title>View Clinical Note Documents</Title>
+		<Id>org:indivo:rule:read-clinical-notes</Id>
+		<Source>CHBoston</Source>
+		<Description>Grants permission to view your clinical notes.</Description>
+		<Style>Permissive</Style>
+		<Policy>
+			<Policy PolicyId="GeneratedPolicy"
+				RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:deny-overrides">
+				<Description>org:indivo:rule:read-clinical-notes</Description>
+				<Target>
+					<Subjects>
+						<Subject>
+							<SubjectMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:rfc822Name-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">SUBJECT_ID</AttributeValue>
+								<SubjectAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id"
+									DataType="urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name" />
+							</SubjectMatch>
+						</Subject>
+					</Subjects>
+					<Resources>
+						<Resource>
+							<ResourceMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:regexp-string-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:resource:recordRoot</AttributeValue>
+								<ResourceAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ResourceMatch>
+						</Resource>
+						<Resource>
+							<ResourceMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:regexp-string-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:document:classification:medical:note\[.+\]</AttributeValue>
+								<ResourceAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ResourceMatch>
+						</Resource>
+					</Resources>
+					<Actions>
+						<Action>
+							<ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:action:read</AttributeValue>
+								<ActionAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ActionMatch>
+						</Action>
+					</Actions>
+				</Target>
+				<Rule Effect="Permit" RuleId="GeneratedRule" />
+			</Policy>
+		</Policy>
+	</RuleList>
+	<RuleList>
+		<Title>View Contact Information Documents</Title>
+		<Id>org:indivo:rule:read-contact-info</Id>
+		<Source>CHBoston</Source>
+		<Description>Grants permission to view your contact information.</Description>
+		<Style>Permissive</Style>
+		<Policy>
+			<Policy PolicyId="GeneratedPolicy"
+				RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:deny-overrides">
+				<Description>org:indivo:rule:read-contact-info</Description>
+				<Target>
+					<Subjects>
+						<Subject>
+							<SubjectMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:rfc822Name-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">SUBJECT_ID</AttributeValue>
+								<SubjectAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id"
+									DataType="urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name" />
+							</SubjectMatch>
+						</Subject>
+					</Subjects>
+					<Resources>
+						<Resource>
+							<ResourceMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:regexp-string-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:resource:recordRoot</AttributeValue>
+								<ResourceAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ResourceMatch>
+						</Resource>
+						<Resource>
+							<ResourceMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:regexp-string-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:document:classification:contact\[.+\]</AttributeValue>
+								<ResourceAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ResourceMatch>
+						</Resource>
+					</Resources>
+					<Actions>
+						<Action>
+							<ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:action:read</AttributeValue>
+								<ActionAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ActionMatch>
+						</Action>
+					</Actions>
+				</Target>
+				<Rule Effect="Permit" RuleId="GeneratedRule" />
+			</Policy>
+		</Policy>
+	</RuleList>
+	<RuleList>
+		<Title>View Demographics Information Documents</Title>
+		<Id>org:indivo:rule:read-demographics</Id>
+		<Source>CHBoston</Source>
+		<Description>Grants permission to view your demographic
+			information.</Description>
+		<Style>Permissive</Style>
+		<Policy>
+			<Policy PolicyId="GeneratedPolicy"
+				RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:deny-overrides">
+				<Description>org:indivo:rule:read-demographics</Description>
+				<Target>
+					<Subjects>
+						<Subject>
+							<SubjectMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:rfc822Name-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">SUBJECT_ID</AttributeValue>
+								<SubjectAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id"
+									DataType="urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name" />
+							</SubjectMatch>
+						</Subject>
+					</Subjects>
+					<Resources>
+						<Resource>
+							<ResourceMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:regexp-string-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:resource:recordRoot</AttributeValue>
+								<ResourceAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ResourceMatch>
+						</Resource>
+						<Resource>
+							<ResourceMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:regexp-string-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:document:classification:demographics\[.+\]</AttributeValue>
+								<ResourceAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ResourceMatch>
+						</Resource>
+					</Resources>
+					<Actions>
+						<Action>
+							<ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:action:read</AttributeValue>
+								<ActionAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ActionMatch>
+						</Action>
+					</Actions>
+				</Target>
+				<Rule Effect="Permit" RuleId="GeneratedRule" />
+			</Policy>
+		</Policy>
+	</RuleList>
+	<RuleList>
+		<Title>View Immunization Documents</Title>
+		<Id>org:indivo:rule:read-immunizations</Id>
+		<Source>CHBoston</Source>
+		<Description>Grants permission to view your immunization
+			documents.</Description>
+		<Style>Permissive</Style>
+		<Policy>
+			<Policy PolicyId="GeneratedPolicy"
+				RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:deny-overrides">
+				<Description>org:indivo:rule:read-immunizations</Description>
+				<Target>
+					<Subjects>
+						<Subject>
+							<SubjectMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:rfc822Name-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">SUBJECT_ID</AttributeValue>
+								<SubjectAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id"
+									DataType="urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name" />
+							</SubjectMatch>
+						</Subject>
+					</Subjects>
+					<Resources>
+						<Resource>
+							<ResourceMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:regexp-string-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:resource:recordRoot</AttributeValue>
+								<ResourceAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ResourceMatch>
+						</Resource>
+						<Resource>
+							<ResourceMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:regexp-string-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:document:classification:medical:immunization\[.+\]</AttributeValue>
+								<ResourceAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ResourceMatch>
+						</Resource>
+					</Resources>
+					<Actions>
+						<Action>
+							<ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:action:read</AttributeValue>
+								<ActionAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ActionMatch>
+						</Action>
+					</Actions>
+				</Target>
+				<Rule Effect="Permit" RuleId="GeneratedRule" />
+			</Policy>
+		</Policy>
+	</RuleList>
+	<RuleList>
+		<Title>View Laboratory Result Documents</Title>
+		<Id>org:indivo:rule:read-labs</Id>
+		<Source>CHBoston</Source>
+		<Description>Grants permission to view your laboratory result
+			documents.</Description>
+		<Style>Permissive</Style>
+		<Policy>
+			<Policy PolicyId="GeneratedPolicy"
+				RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:deny-overrides">
+				<Description>org:indivo:rule:read-labs</Description>
+				<Target>
+					<Subjects>
+						<Subject>
+							<SubjectMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:rfc822Name-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">SUBJECT_ID</AttributeValue>
+								<SubjectAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id"
+									DataType="urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name" />
+							</SubjectMatch>
+						</Subject>
+					</Subjects>
+					<Resources>
+						<Resource>
+							<ResourceMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:regexp-string-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:resource:recordRoot</AttributeValue>
+								<ResourceAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ResourceMatch>
+						</Resource>
+						<Resource>
+							<ResourceMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:regexp-string-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:document:classification:medical:lab-test\[.+\]</AttributeValue>
+								<ResourceAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ResourceMatch>
+						</Resource>
+					</Resources>
+					<Actions>
+						<Action>
+							<ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:action:read</AttributeValue>
+								<ActionAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ActionMatch>
+						</Action>
+					</Actions>
+				</Target>
+				<Rule Effect="Permit" RuleId="GeneratedRule" />
+			</Policy>
+		</Policy>
+	</RuleList>
+	<RuleList>
+		<Title>View Messages</Title>
+		<Id>org:indivo:rule:read-message</Id>
+		<Source>CHBoston</Source>
+		<Description>Grants permission to view your messages.</Description>
+		<Style>Permissive</Style>
+		<Policy>
+			<Policy PolicyId="GeneratedPolicy"
+				RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:deny-overrides">
+				<Description>org:indivo:rule:read-message</Description>
+				<Target>
+					<Subjects>
+						<Subject>
+							<SubjectMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:rfc822Name-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">SUBJECT_ID</AttributeValue>
+								<SubjectAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id"
+									DataType="urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name" />
+							</SubjectMatch>
+						</Subject>
+					</Subjects>
+					<Resources>
+						<Resource>
+							<ResourceMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:regexp-string-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:resource:recordRoot</AttributeValue>
+								<ResourceAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ResourceMatch>
+						</Resource>
+						<Resource>
+							<ResourceMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:regexp-string-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:document:classification:message\[.+\]</AttributeValue>
+								<ResourceAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ResourceMatch>
+						</Resource>
+					</Resources>
+					<Actions>
+						<Action>
+							<ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:action:read</AttributeValue>
+								<ActionAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ActionMatch>
+						</Action>
+					</Actions>
+				</Target>
+				<Rule Effect="Permit" RuleId="GeneratedRule" />
+			</Policy>
+		</Policy>
+	</RuleList>
+	<RuleList>
+		<Title>View Metadata</Title>
+		<Id>org:indivo:rule:read-metadata</Id>
+		<Source>CHBoston</Source>
+		<Description>Grants permission to view your metadata.</Description>
+		<Style>Permissive</Style>
+		<Policy>
+			<Policy PolicyId="GeneratedPolicy"
+				RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:deny-overrides">
+				<Description>org:indivo:rule:read-metadata</Description>
+				<Target>
+					<Subjects>
+						<Subject>
+							<SubjectMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:rfc822Name-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">SUBJECT_ID</AttributeValue>
+								<SubjectAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id"
+									DataType="urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name" />
+							</SubjectMatch>
+						</Subject>
+					</Subjects>
+					<Resources>
+						<Resource>
+							<ResourceMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:regexp-string-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:resource:recordRoot</AttributeValue>
+								<ResourceAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ResourceMatch>
+						</Resource>
+						<Resource>
+							<ResourceMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:regexp-string-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:document:classification:metadata\[.+\]</AttributeValue>
+								<ResourceAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ResourceMatch>
+						</Resource>
+					</Resources>
+					<Actions>
+						<Action>
+							<ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:action:read</AttributeValue>
+								<ActionAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ActionMatch>
+						</Action>
+					</Actions>
+				</Target>
+				<Rule Effect="Permit" RuleId="GeneratedRule" />
+			</Policy>
+		</Policy>
+	</RuleList>
+	<RuleList>
+		<Title>View Susbcription Documents</Title>
+		<Id>org:indivo:rule:read-subscription</Id>
+		<Source>CHBoston</Source>
+		<Description>Grants permission to view your subscription
+			documents.</Description>
+		<Style>Permissive</Style>
+		<Policy>
+			<Policy PolicyId="GeneratedPolicy"
+				RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:deny-overrides">
+				<Description>org:indivo:rule:read-subscription</Description>
+				<Target>
+					<Subjects>
+						<Subject>
+							<SubjectMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:rfc822Name-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">SUBJECT_ID</AttributeValue>
+								<SubjectAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id"
+									DataType="urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name" />
+							</SubjectMatch>
+						</Subject>
+					</Subjects>
+					<Resources>
+						<Resource>
+							<ResourceMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:regexp-string-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:resource:recordRoot</AttributeValue>
+								<ResourceAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ResourceMatch>
+						</Resource>
+						<Resource>
+							<ResourceMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:regexp-string-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:document:classification:subscription\[.+\]</AttributeValue>
+								<ResourceAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ResourceMatch>
+						</Resource>
+					</Resources>
+					<Actions>
+						<Action>
+							<ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:action:read</AttributeValue>
+								<ActionAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ActionMatch>
+						</Action>
+					</Actions>
+				</Target>
+				<Rule Effect="Permit" RuleId="GeneratedRule" />
+			</Policy>
+		</Policy>
+	</RuleList>
+	<RuleList>
+		<Title>View Survey Documents</Title>
+		<Id>org:indivo:rule:read-surveys</Id>
+		<Source>CHBoston</Source>
+		<Description>Grants permission to view your surveys.</Description>
+		<Style>Permissive</Style>
+		<Policy>
+			<Policy PolicyId="GeneratedPolicy"
+				RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:deny-overrides">
+				<Description>org:indivo:rule:read-surveys</Description>
+				<Target>
+					<Subjects>
+						<Subject>
+							<SubjectMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:rfc822Name-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">SUBJECT_ID</AttributeValue>
+								<SubjectAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id"
+									DataType="urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name" />
+							</SubjectMatch>
+						</Subject>
+					</Subjects>
+					<Resources>
+						<Resource>
+							<ResourceMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:regexp-string-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:resource:recordRoot</AttributeValue>
+								<ResourceAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ResourceMatch>
+						</Resource>
+						<Resource>
+							<ResourceMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:regexp-string-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:document:classification:survey\[.+\]</AttributeValue>
+								<ResourceAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ResourceMatch>
+						</Resource>
+					</Resources>
+					<Actions>
+						<Action>
+							<ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:action:read</AttributeValue>
+								<ActionAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ActionMatch>
+						</Action>
+					</Actions>
+				</Target>
+				<Rule Effect="Permit" RuleId="GeneratedRule" />
+			</Policy>
+		</Policy>
+	</RuleList>
+	<RuleList>
+		<Title>Send Messages</Title>
+		<Id>org:indivo:rule:send-message</Id>
+		<Source>CHBoston</Source>
+		<Description>Grants permission to send you messages.</Description>
+		<Style>Permissive</Style>
+		<Policy>
+			<Policy PolicyId="GeneratedPolicy"
+				RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:deny-overrides">
+				<Description>org:indivo:rule:send-message</Description>
+				<Target>
+					<Subjects>
+						<Subject>
+							<SubjectMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:rfc822Name-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">SUBJECT_ID</AttributeValue>
+								<SubjectAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id"
+									DataType="urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name" />
+							</SubjectMatch>
+						</Subject>
+					</Subjects>
+					<Resources>
+						<Resource>
+							<ResourceMatch
+								MatchId="urn:oasis:names:tc:xacml:1.0:function:regexp-string-match">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:document:classification:message</AttributeValue>
+								<ResourceAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ResourceMatch>
+						</Resource>
+					</Resources>
+					<Actions>
+						<Action>
+							<ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:org:indivo:action:sendMessage</AttributeValue>
+								<ActionAttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"
+									DataType="http://www.w3.org/2001/XMLSchema#string" />
+							</ActionMatch>
+						</Action>
+					</Actions>
+				</Target>
+				<Rule Effect="Permit" RuleId="GeneratedRule" />
+			</Policy>
+		</Policy>
+	</RuleList>
+</ns2:ProfileCollection>

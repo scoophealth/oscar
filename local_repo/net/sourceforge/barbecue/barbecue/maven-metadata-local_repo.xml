@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>net.sourceforge.barbecue</groupId>
+  <artifactId>barbecue</artifactId>
+  <version>1.0.6b</version>
+  <versioning>
+    <versions>
+      <version>1.0.6b</version>
+    </versions>
+    <lastUpdated>20110209052158</lastUpdated>
+  </versioning>
+</metadata>

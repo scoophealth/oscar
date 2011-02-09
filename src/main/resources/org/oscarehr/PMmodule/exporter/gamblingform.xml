@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fields>
+	<field name="CASE_NO" type="text" colpos="1" maxsize="15" question="Case_no: Agency unique client identifier = chart number"></field>
+	<field name="ADMISSION_NO" type="number" colpos="16" maxsize="2" question="Admission Number: IF CLIENT IS NOT ADMITTED, ADMISSION _NO = 0, OTHER WISE >0"></field>
+	<field name="Q1" type="number" colpos="18" maxsize="8" question="Reason for Seeking Help"></field>
+	<field name="Q2_1" type="number" colpos="26" maxsize="8" question="Number of Years Gambling Has Negatively Affected Life - Years"></field>
+	<field name="Q2_2" type="number" colpos="34" maxsize="8" question="Number of Years Gambling Has Negatively Affected Life - Months"></field>
+	<field name="Q3_1" type="number" colpos="42" maxsize="8" question="Length of Time Since Last Gambled - Number"></field>
+	<field name="Q3_2" type="number" colpos="50" maxsize="8" question="Length of Time Since Last Gambled. Years/Months/Weeks/Days"></field>
+	<field name="Q3_3" type="number" colpos="58" maxsize="8" question=""></field>
+	<field name="Q4" type="number" colpos="66" maxsize="8" question="Disclosure of Gambling Problem"></field>
+	<field name="Q5A_1" type="number" colpos="74" maxsize="8" question="Frequency of Gambling Activity in Past 12 Months-Cards"></field>
+	<field name="Q5A_2" type="number" colpos="82" maxsize="8" question="Frequency of Gambling Activity in Past 12 Months - Mah-jong"></field>
+	<field name="Q5A_3" type="number" colpos="90" maxsize="8" question="Frequency of Gambling Activity in Past 12 Months - Keno"></field>
+	<field name="Q5A_4" type="number" colpos="98" maxsize="8" question="Frequency of Gambling Activity in Past 12 Months - Roulette"></field>
+	<field name="Q5A_5" type="number" colpos="106" maxsize="8" question="Frequency of Gambling Activity in Past 12 Months- Horses, Dogs, Other Animals"></field>
+	<field name="Q5A_6" type="number" colpos="114" maxsize="8" question="Frequency of Gambling Activity in Past 12 Months - Sports"></field>
+	<field name="Q5A_7" type="number" colpos="122" maxsize="8" question="Frequency of Gambling Activity in Past 12 Months - Dice Games"></field>
+	<field name="Q5A_8" type="number" colpos="130" maxsize="8" question="Frequency of Gambling Activity in Past 12 Months - Lottery Tickets"></field>
+	<field name="Q5A_9" type="number" colpos="138" maxsize="8" question="Frequency of Gambling Activity in Past 12 Months - Scratch Tickets"></field>
+	<field name="Q5A_10" type="number" colpos="146" maxsize="8" question="Frequency of Gambling Activity in Past 12 Months - Tear Open Tickets"></field>
+	<field name="Q5A_11" type="number" colpos="154" maxsize="8" question="Frequency of Gambling Activity in Past 12 Months - Bingo"></field>
+	<field name="Q5A_12" type="number" colpos="162" maxsize="8" question="Frequency of Gambling Activity in Past 12 Months - Stock Options/Commodities Market"></field>
+	<field name="Q5A_13" type="number" colpos="170" maxsize="8" question="Frequency of Gambling Activity in Past 12 Months - VLTs"></field>
+	<field name="Q5A_14" type="number" colpos="178" maxsize="8" question="Frequency of Gambling Activity in Past 12 Months - Non-VLT Machines"></field>
+	<field name="Q5A_15" type="number" colpos="186" maxsize="8" question="Frequency of Gambling Activity in Past 12 Months - Internet"></field>
+	<field name="Q5A_16" type="number" colpos="194" maxsize="8" question="Frequency of Gambling Activity in Past 12 Months - Pool, Golf, Other Game of Skill"></field>
+	<field name="Q5A_17" type="number" colpos="202" maxsize="8" question="Frequency of Gambling Activity in Past 12 Months - Sports Pools"></field>
+	<field name="Q5A_18" type="number" colpos="210" maxsize="8" question="Frequency of Gambling Activity in Past 12 Months - Random Events/Informal Bets"></field>
+	<field name="Q5A_19_1" type="text" colpos="218" maxsize="50" question="Other Type of Gambling Activity"></field>
+	<field name="Q5A_19_2" type="number" colpos="268" maxsize="8" question="Frequency of Gambling Activity in Past 12 Months - Other"></field>
+	<field name="Q5B_1" type="number" colpos="276" maxsize="8" question="Problem Gambling Activities- Major"></field>
+	<field name="Q5B_2" type="number" colpos="284" maxsize="8" question="Problem Gambling Activities - 1st"></field>
+	<field name="Q5B_3" type="number" colpos="292" maxsize="8" question="Problem Gambling Activities - 2nd"></field>
+	<field name="Q6A_1" type="number" colpos="300" maxsize="8" question="Frequency of Gambling Location in Past 12 Months - Commercial Casino"></field>
+	<field name="Q6A_2" type="number" colpos="308" maxsize="8" question="Frequency of Gambling Location in Past 12 Months - Charity Gaming Club"></field>
+	<field name="Q6A_3" type="number" colpos="316" maxsize="8" question="Frequency of Gambling Location in Past 12 Months - Bingo Hall"></field>
+	<field name="Q6A_4" type="number" colpos="324" maxsize="8" question="Frequency of Gambling Location in Past 12 Months - Race Track"></field>
+	<field name="Q6A_5" type="number" colpos="332" maxsize="8" question="Frequency of Gambling Location in Past 12 Months - Off-track Betting Location"></field>
+	<field name="Q6A_6" type="number" colpos="340" maxsize="8" question="Frequency of Gambling Location in Past 12 Months - Internet"></field>
+	<field name="Q6A_7" type="number" colpos="348" maxsize="8" question="Frequency of Gambling Location in Past 12 Months - Television"></field>
+	<field name="Q6A_8" type="number" colpos="356" maxsize="8" question="Frequency of Gambling Location in Past 12 Months - Telephone"></field>
+	<field name="Q6A_9" type="number" colpos="364" maxsize="8" question="Frequency of Gambling Location in Past 12 Months - Lottery Kiosk/Outlet"></field>
+	<field name="Q6A_10" type="number" colpos="372" maxsize="8" question="Frequency of Gambling Location in Past 12 Months - Family/Friends Setting"></field>
+	<field name="Q6A_11" type="number" colpos="380" maxsize="8" question="Frequency of Gambling Location in Past 12 Months - Social Club"></field>
+	<field name="Q6A_12" type="number" colpos="388" maxsize="8" question="Frequency of Gambling Location in Past 12 Months - Restaurant/Bar"></field>
+	<field name="Q6A_13" type="number" colpos="396" maxsize="8" question="Frequency of Gambling Location in Past 12 Months - School Setting"></field>
+	<field name="Q6A_14" type="number" colpos="404" maxsize="8" question="Frequency of Gambling Location in Past 12 Months - Work Setting"></field>
+	<field name="Q6A_15" type="number" colpos="412" maxsize="8" question="Frequency of Gambling Location in Past 12 Months - Senior’s Centre/Home"></field>
+	<field name="Q6A_16" type="number" colpos="420" maxsize="8" question="Frequency of Gambling Location in Past 12 Months - Custody/Correctional Setting"></field>
+	<field name="Q6A_17" type="number" colpos="428" maxsize="8" question="Frequency of Gambling Location in Past 12 Months - Somewhere Else in Community"></field>
+	<field name="Q6B_1" type="number" colpos="436" maxsize="8" question="Problem Gambling Locations - Major"></field>
+	<field name="Q6B_2" type="number" colpos="444" maxsize="8" question="Problem Gambling Locations - 1st"></field>
+	<field name="Q6B_3" type="number" colpos="452" maxsize="8" question="Problem Gambling Locations - 2nd"></field>
+	<field name="Q7A" type="number" colpos="460" maxsize="8" question="Percentage of Time Gambled- In Ontario"></field>
+	<field name="Q7B" type="number" colpos="468" maxsize="8" question="Percentage of Time Gambled - In Another Province"></field>
+	<field name="Q7C" type="number" colpos="476" maxsize="8" question="Percentage of Time Gambled - Outside Canada"></field>
+</fields>

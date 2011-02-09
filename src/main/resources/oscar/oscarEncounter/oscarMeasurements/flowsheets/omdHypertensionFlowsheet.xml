@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--
+		Copyright (c) 2001-2002. Department of Family Medicine, McMaster
+		University. All Rights Reserved. This software is published under the
+		GPL GNU General Public License. This program is free software; you can
+		redistribute it and/or modify it under the terms of the GNU General
+		Public License as published by the Free Software Foundation; either
+		version 2 of the License, or (at your option) any later version. This
+		program is distributed in the hope that it will be useful, but WITHOUT
+		ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+		FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+		for more details. * * You should have received a copy of the GNU
+		General Public License along with this program; if not, write to the
+		Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+		MA 02111-1307, USA. Document : hypertensionFlowsheet.xml Created on :
+		April 23, 2006, 12:47 PM Author : Jay Gallagher Description: Define
+		hypertension flowsheet
+	-->
+<flowsheet name="hyptension" display_name="Hypertension Flowsheet" ds_rules="hypertension.drl" dxcode_triggers="icd9:401" warning_colour="#E00000" recommendation_colour="yellow">
+    <indicator key="LOW" colour="#9999FF" />
+    <indicator key="HIGH" colour="orange" />
+    <indicator key="HIGH 1" colour="#E00000" />
+    <item measurement_type="FBS" display_name="Fasting Glucose" guideline="" graphable="yes" value_name="Value" >
+        <ruleset>
+            <rule indicationColor="HIGH">
+                <condition type="getDataAsDouble" param="FBS" value="&gt;6" />
+            </rule>
+        </ruleset>
+    </item>
+    <measurement type="FBS" typeDesc="Glucose FBS" typeDisplayName="FBS" measuringInstrc="FBS">
+        <validationRule name="Numeric Value: 0 to 50" maxValue="50" minValue="0" isDate="" isNumeric="1" regularExp="" maxLength="" minLength=""/>
+    </measurement>
+
+
+        <!--Target = Every 2 years BP < 160; Annually if BP >= 160 CAn do this but haven't -->
+    <item measurement_type="ACR" display_name="Alb: creat ratio" guideline="Target: &lt; 2.0 M : &lt;2.8 F" graphable="yes" value_name="ACR" >
+        <rules>
+            <recommendation strength="warning" >
+                <condition type="monthrange" param="ACR" value="&gt;24" />
+            </recommendation>
+            <recommendation strength="warning" >
+                <condition type="monthrange" param="ACR" value="-1" />
+            </recommendation>
+        </rules>
+        <ruleset>
+            <rule indicationColor="HIGH">
+                <condition type="isMale"  value="true" />
+                <condition type="getDataAsDouble" param="ACR" value="&gt;2.0" />
+            </rule>
+            <rule indicationColor="HIGH">
+                <condition type="isFemale"  value="true" />
+                <condition type="getDataAsDouble" param="ACR" value="&gt;2.8" />
+            </rule>
+        </ruleset>
+    </item>
+    <item measurement_type="EGFR" display_name="eGFR" guideline=""
+		graphable="yes" value_name="eGFR" >
+        <rules>
+            <recommendation strength="warning" >
+                <condition type="monthrange" param="EGFR" value="&gt;12" />
+            </recommendation>
+            <recommendation strength="warning" >
+                <condition type="monthrange" param="EGFR" value="-1" />
+            </recommendation>
+        </rules>
+    </item>
+    <item measurement_type="TCHD" display_name="Ratio (TC/HDL)"
+		guideline="Ratio &lt; 4.0" graphable="yes" value_name="TC/HDL" >
+        <ruleset>
+            <rule indicationColor="HIGH">
+                <condition type="getDataAsDouble" param="TCHD" value="&gt;5" />
+            </rule>
+        </ruleset>
+    </item>
+    <item measurement_type="LDL" display_name="LDL" guideline="LDL &lt; 2.5"
+		graphable="yes" value_name="LDL" >
+        <ruleset>
+            <rule indicationColor="HIGH">
+                <condition type="getDataAsDouble" param="LDL" value="&gt;3.5" />
+            </rule>
+        </ruleset>
+    </item>
+    <item measurement_type="TG" display_name="Triglycerides"
+		guideline="Target: &lt; 2.0 mmol/L" graphable="yes" value_name="TG" />
+    <item measurement_type="BP" display_name="BP" guideline="Target &lt; 130/80"
+		graphable="yes" value_name="BP" >
+        <ruleset>
+            <rule indicationColor="HIGH">
+                <condition type="getNumberFromSplit" param="BP" value="&gt;140/&gt;90" />
+            </rule>
+        </ruleset>
+    </item>
+    <item measurement_type="SKST" display_name="Smoking Status" guideline="" graphable="no" value_name="Smoker" />
+    <measurement type="SKST" typeDesc="Smoking Status" typeDisplayName="Smoking Status" measuringInstrc="">
+        <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+    </measurement>
+    <item measurement_type="POSK" display_name="Smoking Packs Per Day" guideline="" graphable="yes" value_name="Packs per day" />
+    <measurement type="POSK" typeDesc="Smoking" typeDisplayName="Packs of Cigarettes per day" measuringInstrc="Packs per day">
+        <validationRule name="Numeric Value: 0 to 50" maxValue="50" minValue="0" isDate="" isNumeric="1" regularExp="" maxLength="" minLength=""/>
+    </measurement>
+    <item measurement_type="DIER" display_name="Diet/ Exercise"
+		guideline="Proper diet; activity 2.5 hrs/wk" graphable="no"
+		value_name="Reviewed" />
+
+	<!-- new items -->
+    <item measurement_type="SODI" display_name="Salt Intake"
+		guideline="" graphable="no" value_name="On Low Sodium Diet" />
+    <item measurement_type="DRPW" display_name="Drinks per Week"
+		guideline="" graphable="no" value_name="# drinks per week" >
+        <ruleset>
+            <rule indicationColor="HIGH">
+                <condition type="isMale"  value="true" />
+                <condition type="getDataAsDouble" param="DRPW" value="&gt;14" />
+            </rule>
+            <rule indicationColor="HIGH">
+                <condition type="isFemale"  value="true" />
+                <condition type="getDataAsDouble" param="DRPW" value="&gt;8" />
+            </rule>
+        </ruleset>
+    </item>
+    <item measurement_type="WAIS" display_name="Waist Circumference"
+		guideline="" graphable="yes" value_name="cm" >
+        <ruleset>
+            <rule indicationColor="HIGH">
+                <condition type="isMale"  value="true" />
+                <condition type="getDataAsDouble" param="WAIS" value="&gt;100" />
+            </rule>
+            <rule indicationColor="HIGH">
+                <condition type="isFemale"  value="true" />
+                <condition type="getDataAsDouble" param="WAIS" value="&gt;90" />
+            </rule>
+        </ruleset>
+    </item>
+    <item measurement_type="WT" display_name="Weight" guideline="" graphable="no" value_name="Kg" />
+    <item measurement_type="HT" display_name="Height" guideline="" graphable="yes" value_name="Height" />
+    <measurement type="HT" typeDesc="Height" typeDisplayName="Ht" measuringInstrc="in cm (nnn) Range:0-300">
+        <validationRule name="Numeric Value: 0 to 300" maxValue="300" minValue="0" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+    </measurement>
+	<!-- annual items -->
+    <item measurement_type="BMI" display_name="BMI"
+		guideline="Target: 18.5 - 24.9 (kg/m&lt;sup&gt;2&lt;/sup&gt;)"
+		graphable="yes" value_name="BMI" >
+        <ruleset>
+            <rule indicationColor="HIGH">
+                <condition type="getDataAsDouble" param="BMI" value="&gt;27" />
+            </rule>
+        </ruleset>
+    </item>
+    <item measurement_type="HSMG" display_name="Self Management Goal" guideline="" graphable="no" value_name="Goal" />
+    <measurement type="HSMG" typeDesc="HTN Self Management Goal" typeDisplayName="Self Management Goal" measuringInstrc="">
+        <validationRule name="No Validations" maxValue="0" minValue="0" isDate="0" isNumeric="0" regularExp="" maxLength="0" minLength="0"/>
+    </measurement>
+    <item measurement_type="HSMC" display_name="Self Management Challenges" guideline="" graphable="no" value_name="Challenges" />
+    <measurement type="HSMC" typeDesc="HTN Self Management Challenges" typeDisplayName="Self Management Challenges" measuringInstrc="">
+        <validationRule name="No Validations" maxValue="0" minValue="0" isDate="0" isNumeric="0" regularExp="" maxLength="0" minLength="0"/>
+    </measurement>
+    <item measurement_type="HRMS" display_name="Review med use and side effects" guideline="" graphable="no" value_name="Reviewed" />
+    <measurement type="HRMS" typeDesc="HTN Review of Medication use and side effects" typeDisplayName="Review med use and side effects" measuringInstrc="">
+        <validationRule name="No Validations" maxValue="0" minValue="0" isDate="0" isNumeric="0" regularExp="" maxLength="0" minLength="0"/>
+    </measurement>
+    <item measurement_type="FRAM" display_name="Framingham 10 year CAD" guideline="" graphable="no" value_name="Risk" />
+    <measurement type="FRAM" typeDesc="Framingham 10 year CAD" typeDisplayName="Framingham 10 year CAD" measuringInstrc="">
+        <validationRule name="No Validations" maxValue="0" minValue="0" isDate="0" isNumeric="0" regularExp="" maxLength="0" minLength="0"/>
+    </measurement>
+    <item prevention_type="Flu" display_name="Flu Vaccine" guideline="Annually"
+		graphable="no" />
+    <item prevention_type="Pneumovax" display_name="Pneumococcal vaccine"
+		guideline="" graphable="no" />
+
+    <measurement type="BP" typeDesc="BP" typeDisplayName="Blood Pressure"
+		measuringInstrc="sitting position">
+        <validationRule name="Blood Pressure" regularExp="[0-9]{2,3}/{1}[0-9]{2,3}" />
+    </measurement>
+    <measurement type="NOSK" typeDesc="Smoking"
+		typeDisplayName="Number of Cigarettes per day" measuringInstrc="Cigarettes per day">
+        <validationRule name="Numeric Value: 0 to 300"
+			maxValue="300" minValue="0" isNumeric="1" />
+    </measurement>
+    <measurement type="DIER" typeDesc="Diet and Exercise"
+		typeDisplayName="Diet and Exercise" measuringInstrc="Reviewed">
+        <validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+    </measurement>
+    <measurement type="SODI" typeDesc="Salt Intake"
+		typeDisplayName="Salt Intake" measuringInstrc="On Low Sodium Diet">
+        <validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+    </measurement>
+    <measurement type="DRPW" typeDesc="Drinks per Week"
+		typeDisplayName="Drinks per Week" measuringInstrc="Number of Drinks per week">
+        <validationRule name="Numeric Value: 0 to 100"
+			maxValue="300" minValue="0" isNumeric="1" />
+    </measurement>
+    <measurement type="WT" typeDesc="Weight" typeDisplayName="Wt"
+		measuringInstrc="in kg (nnn.n) Range:0-300 Interval:3mo.">
+        <validationRule name="Numeric Value: 0 to 300"
+			maxValue="300" minValue="0" isNumeric="1" />
+    </measurement>
+    <measurement type="BMI" typeDesc="BMI" typeDisplayName="Body Mass Index" measuringInstrc="BMI" >
+        <validationRule name="Numeric Value: 0 to 100" maxValue="100" minValue="0" isNumeric="1" />
+    </measurement>
+    <measurement type="ACR" typeDesc="ACR" typeDisplayName="Alb creat ratio" measuringInstrc="">
+        <validationRule name="Numeric Value: 0 to 300" maxValue="300" minValue="0" isNumeric="1" />
+    </measurement>
+    <measurement type="TCHD" typeDesc="TC/HDL" typeDisplayName="LIPIDS TD/HDL" measuringInstrc="monitor every 1-3 year">
+        <validationRule name="Numeric Value: 0 to 50" maxValue="50" minValue="0" isNumeric="1" />
+    </measurement>
+    <measurement type="LDL" typeDesc="LDL" typeDisplayName="LIPIDS LDL" measuringInstrc="monitor every 1-3 year">
+        <validationRule name="Numeric Value: 0 to 50" maxValue="50" minValue="0" isNumeric="1" />
+    </measurement>
+    <measurement type="TG" typeDesc="TG" typeDisplayName="LIPIDS TG" measuringInstrc="monitor every 1-3 year">
+        <validationRule name="Numeric Value: 0 to 50" maxValue="50" minValue="0" isNumeric="1" />
+    </measurement>
+    <measurement type="EGFR" typeDesc="EGFR" typeDisplayName="EGFR" measuringInstrc="">
+        <validationRule name="Numeric Value: 0 to 500" maxValue="500" minValue="0" isNumeric="1" />
+    </measurement>
+    <measurement type="BMED" typeDesc="BP Med Changes" typeDisplayName="Blood Pressure Medication Changes" measuringInstrc="Changed">
+        <validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+    </measurement>
+    <measurement type="TCHL" typeDesc="Total Cholestorol" typeDisplayName="Total Cholestorol" measuringInstrc="in mmol/L (nn.n) Range:2.0-12.0">
+        <validationRule name="Numeric Value: 2.0 to 12.0"
+			maxValue="12" minValue="2" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+    </measurement>
+    <measurement type="WAIS" typeDesc="Waist" typeDisplayName="Waist" measuringInstrc="Waist Circum in cm">
+        <validationRule name="Numeric Value: 0 to 300" maxValue="300" minValue="0" isNumeric="1" />
+    </measurement>
+</flowsheet>

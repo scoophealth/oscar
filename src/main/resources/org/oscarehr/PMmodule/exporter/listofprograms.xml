@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fields>
+	<field name="PROGRAM_ID" type="text" colpos="1" maxsize="3"></field>
+	<field name="PROGRAM_NAME" type="text" colpos="4" maxsize="50"></field>
+	<field name="PSC_CODE" type="selectnumeric" colpos="54" maxsize="3"></field>
+	<field name="PROGRAM_TYPE_ID" type="selectnumeric" colpos="57" maxsize="3"></field>
+</fields>

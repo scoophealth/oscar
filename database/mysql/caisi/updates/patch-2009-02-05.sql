@@ -1,1 +1,0 @@
-alter table casemgmt_note add column `archived` boolean default false after locked;

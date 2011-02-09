@@ -1,1 +1,0 @@
-alter table demographicExt modify key_val varchar(64);

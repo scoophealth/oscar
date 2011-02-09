@@ -1,1 +1,0 @@
-create index IssueGroupIssues_issue_id on IssueGroupIssues(issue_id);

@@ -1,1 +1,0 @@
-alter table billingservice add column termination_date date default '9999-12-31';

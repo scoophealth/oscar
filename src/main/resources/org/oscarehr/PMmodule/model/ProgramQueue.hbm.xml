@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--
+		Copyright (c) 2001-2002. Centre for Research on Inner City Health, St.
+		Michael's Hospital, Toronto. All Rights Reserved. This software is
+		published under the GPL GNU General Public License. This program is
+		free software; you can redistribute it and/or modify it under the
+		terms of the GNU General Public License as published by the Free
+		Software Foundation; either version 2 of the License, or (at your
+		option) any later version. This program is distributed in the hope
+		that it will be useful, but WITHOUT ANY WARRANTY; without even the
+		implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+		PURPOSE. See the GNU General Public License for more details. You
+		should have received a copy of the GNU General Public License along
+		with this program; if not, write to the Free Software Foundation,
+		Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. OSCAR
+		TEAM This software was written for Centre for Research on Inner City
+		Health, St. Michael's Hospital, Toronto, Ontario, Canada
+	-->
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping package="org.oscarehr.PMmodule.model">
+	<class name="ProgramQueue" table="program_queue">
+		<id column="queue_id" name="Id" type="java.lang.Long">
+			<generator class="native" />
+		</id>
+		<property column="client_id" length="11" name="ClientId"
+			not-null="true" type="java.lang.Long" />
+		<property column="referral_date" length="19" name="ReferralDate"
+			not-null="false" type="timestamp" />
+		<property column="provider_no" length="11" name="ProviderNo"
+			not-null="true" type="java.lang.Long" />
+		<property column="notes" length="255" name="Notes" not-null="false"
+			type="string" />
+		<property column="program_id" length="11" name="ProgramId"
+			not-null="true" type="java.lang.Long" />
+		<property column="status" length="30" name="Status" not-null="false"
+			type="string" />
+		<property column="temporary_admission_flag" name="TemporaryAdmission"
+			not-null="false" type="boolean" />
+		<property column="referral_id" length="11" name="ReferralId"
+			not-null="false" type="java.lang.Long" />
+		<property column="present_problems" length="255" name="presentProblems"
+			not-null="false" type="string" />
+		<property name="ProgramName" type="string"
+			formula="(select p.name from program p where p.id = program_id)" />
+		<property name="ProviderLastName" type="string"
+			formula="(select p.last_name from provider p where p.provider_no = provider_no)" />
+		<property name="ProviderFirstName" type="string"
+			formula="(select p.first_name from provider p where p.provider_no = provider_no)" />
+		<property name="ClientLastName" type="string"
+			formula="(select p.last_name from demographic p where p.demographic_no = client_id)" />
+		<property name="ClientFirstName" type="string"
+			formula="(select p.first_name from demographic p where p.demographic_no = client_id)" />
+
+		<property name="HeadClientId" type="java.lang.Long"
+			formula="(select j.head_client_id from joint_admissions j where j.archived = 0 and j.client_id = client_id)" />
+
+	</class>
+</hibernate-mapping>

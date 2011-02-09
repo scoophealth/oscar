@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. 
+  This software is published under the GPL GNU General Public License.
+  This program is free software; you can redistribute it and/or
+  modify it under the terms of the GNU General Public License
+  as published by the Free Software Foundation; either version 2
+  of the License, or (at your option) any later version. 
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
+ 
+    Document   : diabetesFlowsheet.xml
+    Created on : February 8, 2006, 7:00 PM
+    Author     : Jay Gallagher
+    Description:
+        Define diabetes flowsheet
+        "E00000"
+-->
+<flowsheet name="physFunction" 
+           display_name="Physical Function Flowsheet" 
+           ds_rules="diab.drl" 
+           dxcode_triggers="icd9:847,icd9:427,icd9:428,icd9:491,icd9:436,icd9:300,icd9:250,icd9:492,icd9:428,icd9:401,icd9:724,icd9:340,icd9:715,icd9:733,icd9:332,icd9:714,icd9:436" 
+           warning_colour="#FF6160"
+           recommendation_colour="yellow"
+           top_HTML="physicalFunction.html">
+    
+    <indicator key="LOW" colour="#9999FF"/>
+    <indicator key="HIGH" colour="orange"/>
+    <indicator key="HIGH 1" colour="#E00000"/>
+    
+    <item
+        measurement_type="Exer"
+        display_name="# minutes of Exercise per Week"
+        guideline="Target &gt; 150 mins per Week"
+        graphable="yes"
+        value_name="# of Mins">
+        <rules>  
+            <recommendation strength="warning" monthrange="&gt;6"/>
+            <recommendation strength="warning" monthrange="-1"/>
+        </rules>
+        </item>
+          
+        
+    <item
+        measurement_type="FAHS"
+        display_name="Risk Of Falling"
+        guideline="Has Fallen or has risk factors for Falling"
+        graphable="no"
+        value_name="Risk of Falling"
+        >        
+         <rules>  
+            <recommendation strength="warning" monthrange="&gt;6"/>
+            <recommendation strength="warning" monthrange="-1"/>
+        </rules>
+        </item>
+        
+        <item
+        measurement_type="TUG"
+        display_name="Timed Up and Go"
+        guideline="Time to stand up, walk 3m, turn around, walk back to chair,sit down"
+        graphable="yes"
+        value_name="# of Seconds"
+        >   
+         <rules>  
+            <recommendation strength="warning" monthrange="&gt;6"/>
+            <recommendation strength="warning" monthrange="-1"/>
+        </rules>
+        </item>
+        <item
+        measurement_type="RPHR"
+        display_name="Personal Health Record reviewed"
+        guideline="Personal Health Record reviewed"
+        graphable="no"
+        value_name="PHR Reviewed"
+        >   
+         <rules>  
+            <recommendation strength="warning" monthrange="&gt;6"/>
+            <recommendation strength="warning" monthrange="-1"/>
+        </rules>
+        </item>
+       
+        <item
+        measurement_type="CDMP"
+        display_name="Attended CDM Self Management Program"
+        guideline="Attend Chronic Disease Self-Management Program"
+        graphable="no"
+        value_name="Attend CDSMP"
+        >
+             <rules>  
+            <recommendation strength="warning" monthrange="&gt;24"/>
+            <recommendation strength="warning" monthrange="-1"/>
+        </rules>
+        </item>
+        
+    <measurement type="Exer" typeDesc="Exercise" typeDisplayName="Exercise" measuringInstrc="[min/week 0-1200]">
+<validationRule name="Numeric Value: 0 to 1200" maxValue="1200" minValue="0" isDate="" isNumeric="1" regularExp="" maxLength="" minLength=""/>
+</measurement>
+
+<measurement type="FAHS" typeDesc="Risk of Falling" typeDisplayName="Risk of Falling" measuringInstrc="">
+<validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength=""/>
+</measurement>
+
+<measurement type="TUG" typeDesc="Timed Up and Go" typeDisplayName="Timed Up and Go" measuringInstrc="Number of Seconds">
+<validationRule name="Numeric Value: 0 to 2500" maxValue="2500" minValue="0" isDate="" isNumeric="1" regularExp="" maxLength="" minLength=""/>
+</measurement>
+        
+        
+        <measurement type="RPHR" typeDesc="Review PHR" typeDisplayName="Review PHR" measuringInstrc="">
+<validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength=""/>
+</measurement>
+
+<measurement type="CDMP" typeDesc="Attended CDM Self Management Program" typeDisplayName="Attended CDM Self Management Program" measuringInstrc="">
+<validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength=""/>
+</measurement>
+        
+</flowsheet>

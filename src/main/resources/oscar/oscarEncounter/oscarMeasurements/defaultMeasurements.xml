@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+	<!--
+		Document : defaultMeasurements.xml Created on : September 29, 2006,
+		3:44 PM Author : jay Description: Purpose of the document follows.
+	-->
+
+<defaultMeasurements>
+	<measurement type="FLUF" typeDesc="Flu prevention follow up"
+		typeDisplayName="Flu Follow up" measuringInstrc="">
+		<validationRule name="No Validations" />
+	</measurement>
+	<measurement type="PAPF" typeDesc="Pap prevention follow up"
+		typeDisplayName="Pap Follow up" measuringInstrc="">
+		<validationRule name="No Validations" />
+	</measurement>
+	<measurement type="MAMF" typeDesc="Mammogram prevention follow up"
+		typeDisplayName="Mammogram Follow up" measuringInstrc="">
+		<validationRule name="No Validations" />
+	</measurement>
+	<measurement type="CIMF" typeDesc="Child Immunization prevention follow up"
+		typeDisplayName="Child Immunization Follow up" measuringInstrc="">
+		<validationRule name="No Validations" />
+	</measurement>
+	<measurement type="FOBF" typeDesc="FOBT prevention follow up"
+		typeDisplayName="FOBT Follow up" measuringInstrc="">
+		<validationRule name="No Validations" />
+	</measurement>
+</defaultMeasurements>

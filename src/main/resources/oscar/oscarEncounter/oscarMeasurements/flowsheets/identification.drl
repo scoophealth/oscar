@@ -1,0 +1,151 @@
+<?xml version="1.0"?>
+
+<rule-set name="IdentificationFlowsheet"
+          xmlns="http://drools.org/rules"
+          xmlns:java="http://drools.org/semantics/java"
+          xmlns:xs="http://www.w3.org/2001/XMLSchema-instance"
+          xs:schemaLocation="http://drools.org/rules rules.xsd
+                             http://drools.org/semantics/java java.xsd">
+
+    <rule name="OHIP 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("OHIP") &gt;= 12</java:condition>
+        <java:consequence>
+              m.addWarning("OHIP","Question not answered in "+m.getLastDateRecordedInMonths("OHIP")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="OHIP 2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("OHIP") == -1</java:condition>
+        <java:consequence>
+              m.addWarning("OHIP","Question not answered");
+        </java:consequence>
+    </rule>
+
+    <rule name="SIN 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("SIN") &gt;= 12</java:condition>
+        <java:consequence>
+              m.addWarning("SIN","Question not answered in "+m.getLastDateRecordedInMonths("SIN")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="SIN 2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("SIN") == -1</java:condition>
+        <java:consequence>
+              m.addWarning("SIN","Question not answered");
+        </java:consequence>
+    </rule>
+
+    <rule name="BCRT 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("BCRT") &gt;= 12</java:condition>
+        <java:consequence>
+              m.addWarning("BCRT","Question not answered in "+m.getLastDateRecordedInMonths("BCRT")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="BCRT 2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("BCRT") == -1</java:condition>
+        <java:consequence>
+              m.addWarning("BCRT","Question not answered");
+        </java:consequence>
+    </rule>
+
+    <rule name="LAND 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("LAND") &gt;= 12</java:condition>
+        <java:consequence>
+              m.addWarning("LAND","Question not answered in "+m.getLastDateRecordedInMonths("LAND")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="LAND 2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("LAND") == -1</java:condition>
+        <java:consequence>
+              m.addWarning("LAND","Question not answered");
+        </java:consequence>
+    </rule>
+
+    <rule name="Citz 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("Citz") &gt;= 12</java:condition>
+        <java:consequence>
+              m.addWarning("LAND","Question not answered in "+m.getLastDateRecordedInMonths("Citz")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="Citz 2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("Citz") == -1</java:condition>
+        <java:consequence>
+              m.addWarning("Citz","Question not answered");
+        </java:consequence>
+    </rule>
+
+    <rule name="Othi 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("Othi") &gt;= 12</java:condition>
+        <java:consequence>
+              m.addWarning("LAND","Question not answered in "+m.getLastDateRecordedInMonths("Othi")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="Othi 2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("Othi") == -1</java:condition>
+        <java:consequence>
+              m.addWarning("Othi","Question not answered");
+        </java:consequence>
+    </rule>
+
+    <rule name="Isup 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("Isup") &gt;= 12</java:condition>
+        <java:consequence>
+              m.addWarning("LAND","Question not answered in "+m.getLastDateRecordedInMonths("Isup")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="Isup 2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("Isup") == -1</java:condition>
+        <java:consequence>
+              m.addWarning("Isup","Question not answered");
+        </java:consequence>
+    </rule>
+</rule-set>
+
+

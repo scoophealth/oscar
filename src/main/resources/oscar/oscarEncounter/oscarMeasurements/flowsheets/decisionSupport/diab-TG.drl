@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+
+
+
+<rule-set name="DiabetesTG"
+          xmlns="http://drools.org/rules"
+          xmlns:java="http://drools.org/semantics/java"
+          xmlns:xs="http://www.w3.org/2001/XMLSchema-instance"
+          xs:schemaLocation="http://drools.org/rules rules.xsd
+                             http://drools.org/semantics/java java.xsd">
+
+    <rule name="TG 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.util.MeasurementDSHelper</class>
+        </parameter>       
+        <java:condition>m.getDataAsDouble() &gt;= 2.0</java:condition> 
+        <java:consequence>     
+              m.log("TG RULES IS GETTING RUN");
+              m.setIndicationColor("HIGH");
+        </java:consequence>
+    </rule>
+    
+</rule-set>
+
+

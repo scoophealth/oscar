@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>net.sf.cookierevolver</groupId>
+  <artifactId>cookierevolver</artifactId>
+  <version>0.2.5</version>
+  <versioning>
+    <versions>
+      <version>0.2.5</version>
+    </versions>
+    <lastUpdated>20110209052043</lastUpdated>
+  </versioning>
+</metadata>

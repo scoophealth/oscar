@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+
+
+
+<rule-set name="ReportA1C"
+          xmlns="http://drools.org/rules"
+          xmlns:java="http://drools.org/semantics/java"
+          xmlns:xs="http://www.w3.org/2001/XMLSchema-instance"
+          xs:schemaLocation="http://drools.org/rules rules.xsd
+                             http://drools.org/semantics/java java.xsd">
+
+    <rule name="BP">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.util.MeasurementDSHelper</class>
+        </parameter>
+        <java:condition>m.setMeasurement("BP") == true</java:condition>       
+        <java:condition>m.getNumberFromSplit("/",0) &gt; 140</java:condition>
+        <java:condition>m.getNumberFromSplit("/",1) &gt; 90</java:condition>
+        <java:condition>m.getLastDateRecordedInMths() &lt; 7</java:condition>
+        <java:consequence>     
+              m.log("BP RULES IS GETTING RUN"+m.getDataAsDouble());
+              m.setInRange(true);
+        </java:consequence>
+    </rule>
+
+</rule-set>
+
+

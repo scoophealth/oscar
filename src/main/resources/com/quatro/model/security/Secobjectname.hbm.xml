@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.quatro.model.security.Secobjectname" table="secObjectName" >
+        <id name="objectname" type="java.lang.String">
+            <column name="objectName" length="100" />
+            <generator class="assigned" />
+        </id>
+        <property name="description" type="java.lang.String">
+            <column name="description" length="60" />
+        </property>
+        <property name="orgapplicable" type="java.lang.Integer">
+            <column name="orgapplicable" precision="1" scale="0" />
+        </property>
+    </class>
+</hibernate-mapping>

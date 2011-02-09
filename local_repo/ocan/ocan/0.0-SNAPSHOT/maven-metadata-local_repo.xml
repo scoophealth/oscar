@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>ocan</groupId>
+  <artifactId>ocan</artifactId>
+  <version>0.0-SNAPSHOT</version>
+  <versioning>
+    <snapshot>
+      <localCopy>true</localCopy>
+    </snapshot>
+    <lastUpdated>20110209052120</lastUpdated>
+  </versioning>
+</metadata>

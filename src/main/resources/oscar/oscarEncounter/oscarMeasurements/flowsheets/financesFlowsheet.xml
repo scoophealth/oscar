@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+	<!--
+		Copyright (c) 2001-2002. Department of Family Medicine, McMaster
+		University. All Rights Reserved. This software is published under the
+		GPL GNU General Public License. This program is free software; you can
+		redistribute it and/or modify it under the terms of the GNU General
+		Public License as published by the Free Software Foundation; either
+		version 2 of the License, or (at your option) any later version. This
+		program is distributed in the hope that it will be useful, but WITHOUT
+		ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+		FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+		for more details. * * You should have received a copy of the GNU
+		General Public License along with this program; if not, write to the
+		Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+		MA 02111-1307, USA.
+	-->
+<flowsheet name="agencyFinances" display_name="Finances flowsheet"
+	ds_rules="finances.drl" is_universal="true" is_medical="false"
+	warning_colour="#E00000" recommendation_colour="yellow">
+
+	<indicator key="LOW" colour="#9999FF" />
+	<indicator key="HIGH" colour="orange" />
+	<indicator key="HIGH 1" colour="#E00000" />
+
+	<item measurement_type="OW" display_name="OW Obtained" guideline=""
+		graphable="no" value_name="Obtained OW" />
+
+	<item measurement_type="ODSP" display_name="ODSP Obtained"
+		guideline="clients with disability should have ODSP" graphable="no"
+		value_name="Obtained ODSP" />
+
+	<item measurement_type="CPP" display_name="CPP Obtained"
+		guideline="over 65 or 60-64 and meet earning requirements" graphable="no"
+		value_name="Obtained CPP" />
+
+	<item measurement_type="OAS" display_name="OAS Obtained"
+		guideline="65 or over and in Canada for 10 years or more are eligible"
+		graphable="no" value_name="Obtained OAS" />
+	<item measurement_type="GAIN" display_name="GAINS Obtained"
+		guideline="" graphable="no" value_name="Obtained GAINS" />
+
+	<item measurement_type="Empl" display_name="Employment Obtained"
+		guideline="" graphable="no" value_name="Obtained Employment" />
+
+	<item measurement_type="FTHR" display_name="Other Income Obtained"
+		guideline="" graphable="no" value_name="Obtained Other income" />
+
+	<measurement type="OW" typeDesc="OW" typeDisplayName="OW Obtained"
+		measuringInstrc="OW Obtained">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+
+	<measurement type="ODSP" typeDesc="ODSP" typeDisplayName="ODSP Obtained"
+		measuringInstrc="ODSP Obtained">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+
+	<measurement type="CPP" typeDesc="CPP" typeDisplayName="CPP Obtained"
+		measuringInstrc="CPP Obtained">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+
+	<measurement type="OAS" typeDesc="OAS" typeDisplayName="OAS Obtained"
+		measuringInstrc="OAS Obtained">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+
+
+	<measurement type="GAIN" typeDesc="GAIN" typeDisplayName="GAIN Obtained"
+		measuringInstrc="GAIN Obtained">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+
+	<measurement type="Empl" typeDesc="Empl" typeDisplayName="Employment Obtained"
+		measuringInstrc="Employment Obtained">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+
+	<measurement type="FTHR" typeDesc="FTHR" typeDisplayName="Other Income Obtained"
+		measuringInstrc="Other Income Obtained">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+
+	<item measurement_type="PGT" display_name="Public Guardian and Trustee Found"
+		guideline="not competent to make decisions about treatment, finances or placement"
+		graphable="no" value_name="PGT Obtained" />
+
+	<measurement type="PGT" typeDesc="PGT"
+		typeDisplayName="Public Guardian and Trustee Found" measuringInstrc="Public Guardian and Trustee Found">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+
+
+	<item measurement_type="SPDT" display_name="Special Diet Allowance Obtained"
+		guideline="OW or ODSP recipients with particular health conditions are eligible"
+		graphable="no" value_name="Obtained Special Diet Allowance" ds_rules="" />
+	<measurement type="SPDT" typeDesc="SPDT"
+		typeDisplayName="Special Diet Allowance Obtained" measuringInstrc="Special Diet Allowance Obtained">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+
+	<item measurement_type="Fsup" display_name="reviewed by supervisor"
+		guideline="" graphable="no" value_name="Reviewed" />
+	<measurement type="Fsup" typeDesc="Fsup" typeDisplayName="reviewed by supervisor"
+		measuringInstrc="reviewed by supervisor">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+
+</flowsheet>

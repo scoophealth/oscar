@@ -1,0 +1,192 @@
+<?xml version="1.0"?>
+
+<rule-set name="FinancesFlowsheet"
+          xmlns="http://drools.org/rules"
+          xmlns:java="http://drools.org/semantics/java"
+          xmlns:xs="http://www.w3.org/2001/XMLSchema-instance"
+          xs:schemaLocation="http://drools.org/rules rules.xsd
+                             http://drools.org/semantics/java java.xsd">
+
+    <rule name="Regn 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("Regn") &gt;= 12</java:condition>
+        <java:consequence>
+              m.addWarning("Regn","Question not answered in "+m.getLastDateRecordedInMonths("Regn")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="Regn 2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("Regn") == -1</java:condition>
+        <java:consequence>
+              m.addWarning("Regn","Question not answered");
+        </java:consequence>
+    </rule>
+
+    <rule name="Quat 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("Quat") &gt;= 12</java:condition>
+        <java:consequence>
+              m.addWarning("Quat","Question not answered in "+m.getLastDateRecordedInMonths("Quat")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="Quat 2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("Quat") == -1</java:condition>
+        <java:consequence>
+              m.addWarning("Quat","Question not answered");
+        </java:consequence>
+    </rule>
+
+    <rule name="CPP 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("CPP") &gt;= 12</java:condition>
+        <java:consequence>
+              m.addWarning("CPP","Question not answered in "+m.getLastDateRecordedInMonths("CPP")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="CAIS 2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("CAIS") == -1</java:condition>
+        <java:consequence>
+              m.addWarning("CAIS","Question not answered");
+        </java:consequence>
+    </rule>
+
+    <rule name="info 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("info") &gt;= 12</java:condition>
+        <java:consequence>
+              m.addWarning("info","Question not answered in "+m.getLastDateRecordedInMonths("info")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="info 2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("info") == -1</java:condition>
+        <java:consequence>
+              m.addWarning("info","Question not answered");
+        </java:consequence>
+    </rule>
+
+    <rule name="pink 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("pink") &gt;= 12</java:condition>
+        <java:consequence>
+              m.addWarning("pink","Question not answered in "+m.getLastDateRecordedInMonths("pink")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="pink 2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("pink") == -1</java:condition>
+        <java:consequence>
+              m.addWarning("pink","Question not answered");
+        </java:consequence>
+    </rule>
+
+
+    <rule name="ROI 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("ROI") &gt;= 12</java:condition>
+        <java:consequence>
+              m.addWarning("ROI","Question not answered in "+m.getLastDateRecordedInMonths("ROI")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="ROI 2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("ROI") == -1</java:condition>
+        <java:consequence>
+              m.addWarning("ROI","Question not answered");
+        </java:consequence>
+    </rule>
+
+    <rule name="Cons 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("Cons") &gt;= 12</java:condition>
+        <java:consequence>
+              m.addWarning("Cons","Question not answered in "+m.getLastDateRecordedInMonths("Cons")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="Cons 2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("Cons") == -1</java:condition>
+        <java:consequence>
+              m.addWarning("Cons","Question not answered");
+        </java:consequence>
+    </rule>
+
+    <rule name="Ornt 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("Ornt") &gt;= 12</java:condition>
+        <java:consequence>
+              m.addWarning("Ornt","Question not answered in "+m.getLastDateRecordedInMonths("Ornt")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="Ornt 2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("Ornt") == -1</java:condition>
+        <java:consequence>
+              m.addWarning("Ornt","Question not answered");
+        </java:consequence>
+    </rule>
+
+    <rule name="Insp 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("Insp") &gt;= 12</java:condition>
+        <java:consequence>
+              m.addWarning("Insp","Question not answered in "+m.getLastDateRecordedInMonths("Insp")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="Insp 2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("Insp") == -1</java:condition>
+        <java:consequence>
+              m.addWarning("Insp","Question not answered");
+        </java:consequence>
+    </rule>
+</rule-set>
+
+

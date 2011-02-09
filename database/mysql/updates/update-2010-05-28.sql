@@ -1,1 +1,0 @@
-alter table publicKeys change type type varchar(100) not null;

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. 
+  This software is published under the GPL GNU General Public License.
+  This program is free software; you can redistribute it and/or
+  modify it under the terms of the GNU General Public License
+  as published by the Free Software Foundation; either version 2
+  of the License, or (at your option) any later version. 
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
+  -->
+<flowsheet name="ASTH" display_name="ASTHMA" warning_colour="#E00000" recommendation_colour="yellow" dxcode_triggers="icd9:493" ds_rules="diab.drl" top_HTML="">
+    <indicator key="HIGH 1" colour="#E00000" />
+    <indicator key="HIGH" colour="orange" />
+    <indicator key="LOW" colour="#9999FF" />
+    <item measurement_type="ALPA" display_name="Asthma Limits Physical Activity" guideline="" graphable="yes" value_name="Asthma Limits Physical Activity" >
+        <ruleset>
+            <rule indicationColor="HIGH">
+                <condition type="isDataEqualTo" param="ALPA" value="Yes" />
+            </rule>
+        </ruleset>
+    </item>
+    <measurement type="ALPA" typeDesc="Asthma Limits Physical Activity" typeDisplayName="Asthma Limits Physical Activity" measuringInstrc="">
+        <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+    </measurement>
+    <item measurement_type="ANR" display_name="Need Reliever" guideline="" graphable="yes" value_name="Frequency/Week" >
+        <ruleset>
+            <rule indicationColor="HIGH">
+                <condition type="getDataAsDouble" param="ANR" value="&gt;4" />
+            </rule>
+        </ruleset>
+    </item>
+    <measurement type="ANR" typeDesc="Asthma Needs Reliever   " typeDisplayName="Asthma Needs Reliever   " measuringInstrc="frequency per week">
+        <validationRule name="Numeric Value: 0 to 2500" maxValue="2500" minValue="0" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+    </measurement>
+    <item measurement_type="ASYM" display_name="Asthma Symptoms" guideline="dyspnea, cough, wheeze, chest tightness" graphable="yes" value_name="Frequency/Week">
+        <ruleset>
+            <rule indicationColor="HIGH">
+                <condition type="getDataAsDouble" param="ASYM" value="&gt;4" />
+            </rule>
+        </ruleset>
+    </item>
+    <measurement type="ASYM" typeDesc="Asthma Symptoms" typeDisplayName="Asthma Symptoms" measuringInstrc="frequency per week">
+        <validationRule name="Numeric Value: 0 to 2500" maxValue="2500" minValue="0" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+    </measurement>
+    <item measurement_type="ASWA" display_name="Absense since  last office visit" guideline="School/Work" graphable="yes" value_name="Has Absense" >
+        <ruleset>
+            <rule indicationColor="HIGH">
+                <condition type="isDataEqualTo" param="ASWA" value="Yes" />
+            </rule>
+        </ruleset>
+    </item>
+    <measurement type="ASWA" typeDesc="Asthma Absence School Work" typeDisplayName="Asthma Absence School Work" measuringInstrc="">
+        <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+    </measurement>
+    <item measurement_type="ANSY" display_name="Night Time Symptoms" guideline="" graphable="yes" value_name="Frequency/Week" >
+        <ruleset>
+            <rule indicationColor="HIGH">
+                <condition type="getDataAsDouble" value="&gt;0" /> <!--  param="ANSY" -->
+            </rule>
+        </ruleset>
+    </item>
+    <measurement type="ANSY" typeDesc="Asthma Night Time Symtoms" typeDisplayName="Asthma Night Time Symtoms" measuringInstrc="frequency per week">
+        <validationRule name="Numeric Value: 0 to 2500" maxValue="2500" minValue="0" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+    </measurement>
+    <item measurement_type="FEV1" display_name="Forced Expiratory Volume in 1 second" guideline="greater than 90 percent personal or predicted or personal best" graphable="yes" value_name="90% personal or predicted best" >
+        <ruleset>
+            <rule indicationColor="HIGH">
+                <condition type="isDataEqualTo" param="ASWA" value="Yes" />
+            </rule>
+        </ruleset>
+    </item>
+    <measurement type="FEV1" typeDesc="Forced Expiratory Volume 1 Second" typeDisplayName="" measuringInstrc="Forced Expiratory Volume 1 Second">
+        <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+    </measurement>
+    <item measurement_type="AELV" display_name="Exacerbations since last visit" guideline="Requiring clinical evaluations" graphable="yes" value_name="Has" >
+        <ruleset>
+            <rule indicationColor="HIGH">
+                <condition type="isDataEqualTo" param="AELV" value="Yes" />
+            </rule>
+        </ruleset>
+    </item>
+    <measurement type="AELV" typeDesc="Exacerbations since last visit requiring clincal evaluation" typeDisplayName="Exacerbations since last visit requiring clincal evaluation" measuringInstrc="">
+        <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+    </measurement>
+    <item measurement_type="SPIR" display_name="Spirometry" guideline="" graphable="yes" value_name="Spirometry" >
+        <rules>
+            <recommendation strength="warning" >
+                <condition type="monthrange" param="SPIR" value="&gt;6" />
+            </recommendation>
+            <recommendation strength="warning" >
+                <condition type="monthrange" param="SPIR" value="-1" />
+            </recommendation>
+        </rules>
+    </item>
+    <measurement type="SPIR" typeDesc="Spirometry" typeDisplayName="Spirometry" measuringInstrc="">
+        <validationRule name="Numeric Value: 0 to 2500" maxValue="2500" minValue="0" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+    </measurement>
+    <item measurement_type="PEFR" display_name="PEFR value" guideline="best of 3" graphable="yes" value_name="PEFR value" />
+    <measurement type="PEFR" typeDesc="PEFR value" typeDisplayName="PEFR value" measuringInstrc="">
+        <validationRule name="Numeric Value: 0 to 2500" maxValue="2500" minValue="0" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+    </measurement>
+    <item measurement_type="ARAD" display_name="Asthma Definition" guideline="" graphable="yes" value_name="Reviewed" />
+    <measurement type="ARAD" typeDesc="Review Asthma Definition" typeDisplayName="" measuringInstrc="Review Asthma Definition">
+        <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+    </measurement>
+    <item measurement_type="ARMA" display_name="Medication Adherence" guideline="" graphable="yes" value_name="Reviewed" />
+    <measurement type="ARMA" typeDesc="Asthma Review Med Adherence" typeDisplayName="" measuringInstrc="Asthma Review Med Adherence">
+        <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+    </measurement>
+    <item measurement_type="ARDT" display_name="Device Technique Optimal" guideline="" graphable="no" value_name="Reviewed" />
+    <measurement type="ARDT" typeDesc="Asthma  Review Device Technique optimal" typeDisplayName="Asthma  Review Device Technique optimal" measuringInstrc="">
+        <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+    </measurement>
+    <item measurement_type="SMCS" display_name="Smoking Cessation" guideline="" graphable="yes" value_name="Reviewed" />
+    <measurement type="SMCS" typeDesc="Smoking Cessation" typeDisplayName="Smoking Cessation" measuringInstrc="">
+        <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+    </measurement>
+    <item measurement_type="ASTA" display_name="Trigger Avoidance" guideline="" graphable="yes" value_name="Reviewed" />
+    <measurement type="ASTA" typeDesc="Asthma Trigger Avoidance" typeDisplayName="Asthma Trigger Avoidance" measuringInstrc="">
+        <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+    </measurement>
+    <item measurement_type="AENC" display_name="Environmental Control" guideline="" graphable="yes" value_name="Reviewed" />
+    <measurement type="AENC" typeDesc="Asthma Environmental Control" typeDisplayName="Asthma Environmental Control" measuringInstrc="">
+        <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+    </measurement>
+    <item measurement_type="ACOS" display_name="Coping Strategies" guideline="" graphable="yes" value_name="Reviewed" />
+    <measurement type="ACOS" typeDesc="Asthma Coping Strategies" typeDisplayName="Asthma Coping Strategies" measuringInstrc="">
+        <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+    </measurement>
+    <item measurement_type="AACP" display_name="Action Plan" guideline="" graphable="yes" value_name="Provided/Revised/Reviewed" />
+    <measurement type="AACP" typeDesc="Asthma Action Plan " typeDisplayName="Asthma Action Plan " measuringInstrc="">
+        <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+    </measurement>
+    <item measurement_type="AEDR" display_name="Education Referral" guideline="" graphable="yes" value_name="Referred" />
+    <measurement type="AEDR" typeDesc="Asthma Education Referral" typeDisplayName="Asthma Education Referral" measuringInstrc="">
+        <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+    </measurement>
+    <item measurement_type="ASPR" display_name="Specialist Referral" guideline="" graphable="yes" value_name="Referred" />
+    <measurement type="ASPR" typeDesc="Asthma Specialist Referral" typeDisplayName="Asthma Specialist Referral" measuringInstrc="">
+        <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+    </measurement>
+    <item measurement_type="LHAD" display_name="Lung Related Hospital Admission" guideline="" value_name="Admission" />
+    <measurement type="LHAD" typeDesc="Lung Related Hospital Admission" typeDisplayName="Lung Related Hospital Admission" measuringInstrc="">
+        <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+    </measurement>
+    <item measurement_type="OUTR" display_name="Outside Spirometry Referral" guideline="" value_name="Referred" />
+    <measurement type="OUTR" typeDesc="Outside Spirometry Referral" typeDisplayName="Outside Spirometry Referral" measuringInstrc="">
+        <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+    </measurement>
+</flowsheet>

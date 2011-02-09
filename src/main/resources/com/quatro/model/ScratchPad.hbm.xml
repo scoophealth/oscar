@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+	<class name="com.quatro.model.ScratchPad" table="scratch_pad">
+		<id name="id" unsaved-value="0">
+			<generator class="native" />
+		</id>
+		<property name="providerNo" column="provider_no" />
+		<property name="date_time" type="java.util.Date" />
+		<property name="scratch_text" />
+	</class>
+</hibernate-mapping>

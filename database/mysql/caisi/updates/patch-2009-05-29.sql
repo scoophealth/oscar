@@ -1,1 +1,0 @@
-alter table IntegratorConsent add expiry date after clientConsentStatus;

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+	<!--
+		Copyright (c) 2001-2002. Department of Family Medicine, McMaster
+		University. All Rights Reserved. This software is published under the
+		GPL GNU General Public License. This program is free software; you can
+		redistribute it and/or modify it under the terms of the GNU General
+		Public License as published by the Free Software Foundation; either
+		version 2 of the License, or (at your option) any later version. This
+		program is distributed in the hope that it will be useful, but WITHOUT
+		ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+		FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+		for more details. * * You should have received a copy of the GNU
+		General Public License along with this program; if not, write to the
+		Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+		MA 02111-1307, USA.
+	-->
+<flowsheet name="agencySocialLegal" display_name="Other Service Components Flowsheet"
+	ds_rules="socialLegal.drl" is_universal="true" is_medical="false"
+	warning_colour="#E00000" recommendation_colour="yellow">
+
+	<indicator key="LOW" colour="#9999FF" />
+	<indicator key="HIGH" colour="orange" />
+	<indicator key="HIGH 1" colour="#E00000" />
+
+	<item measurement_type="HltA" display_name="Health addressed"
+		guideline="address health with all clients even if no health issues"
+		graphable="no" value_name="Addressed" />
+	<measurement type="HltA" typeDesc="HltA" typeDisplayName="Health addressed"
+		measuringInstrc="address health with all clients even if no health issues">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+
+	<item measurement_type="MHA" display_name="Mental Health addressed"
+		guideline="address mental health with all clients even if no apparent mental health issues"
+		graphable="no" value_name="Addressed" />
+
+	<measurement type="MHA" typeDesc="MHA" typeDisplayName="Mental Health addressedr"
+		measuringInstrc="address health with all clients even if no health issues">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+
+	<item measurement_type="SUA" display_name="Substance Use addressed"
+		guideline="address substance use with all clients even if no apparent problems"
+		graphable="no" value_name="Addressed" />
+	<measurement type="SUA" typeDesc="SUA" typeDisplayName="Substance Use addressed"
+		measuringInstrc="address substance use with all clients even if no apparent problems">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+
+	<item measurement_type="Lwil" display_name="Living Will filled out"
+		guideline="client wants advance directive for medical care" graphable="no"
+		value_name="Copy in file" />
+	<measurement type="Lwil" typeDesc="Lwil" typeDisplayName="Living Will filled out"
+		measuringInstrc="client wants advance directive for medical care">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+
+	<item measurement_type="SoCm" display_name="Social/Community Supports addressed"
+		guideline="address Social and Community supports with all clients even if none desired"
+		graphable="no" value_name="Addressed" />
+	<measurement type="SoCm" typeDesc="SoCm"
+		typeDisplayName="Social/Community Supports addressed"
+		measuringInstrc="address Social and Community supports with all clients even if none desired">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+
+	<item measurement_type="EdTr" display_name="Education/Training addressed"
+		guideline="address education and training with all clients even if none desired"
+		graphable="no" value_name="Addressed" />
+	<measurement type="EdTr" typeDesc="EdTr"
+		typeDisplayName="Education/Training addressed"
+		measuringInstrc="address education and training with all clients even if none desired">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+
+	<item measurement_type="EmpA" display_name="Employment addressed"
+		guideline="address employment with all clients even if employment not applicable"
+		graphable="no" value_name="Addressed" />
+	<measurement type="EmpA" typeDesc="EmpA" typeDisplayName="Employment addressed"
+		measuringInstrc="address employment with all clients even if employment not applicable">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+
+	<item measurement_type="LegA" display_name="legal Issues addressed"
+		guideline="address legal issues with all clients even if no apparent problems"
+		graphable="no" value_name="Addressed" />
+	<measurement type="LegA" typeDesc="LegA" typeDisplayName="legal Issues addressed"
+		measuringInstrc="address legal issues with all clients even if no apparent problems">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+
+	<item measurement_type="Osup" display_name="reviewed by supevisor"
+		guideline="" graphable="no" value_name="Reviewed" />
+	<measurement type="Osup" typeDesc="Osup" typeDisplayName="reviewed by supervisor"
+		measuringInstrc="reviewed by supervisor">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+
+</flowsheet>
