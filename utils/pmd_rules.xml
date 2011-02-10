@@ -9,17 +9,21 @@
 		our basic custom rules
 	</description>
 
+	<!-- 
 	<rule ref="rulesets/basic.xml">
 		<exclude name="CollapsibleIfStatements" />
 		<exclude name="EmptyCatchBlock" />
 	</rule>
-	
+	 -->
+	 
 	<rule ref="rulesets/unusedcode.xml" />
 	
 	<rule ref="rulesets/imports.xml" />
 	
+	<!--
 	<rule ref="rulesets/braces.xml">
 		<exclude name="IfStmtsMustUseBraces" />
 		<exclude name="IfElseStmtsMustUseBraces" />
 	</rule>
+	 -->
 </ruleset>
