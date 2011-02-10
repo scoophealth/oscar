@@ -688,10 +688,11 @@
 					</execution>
 				</executions>
 			</plugin>
-			<!-- 
+ 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-pmd-plugin</artifactId>
+				<!-- 
 				<executions>
 					<execution>
 						<phase>process-sources</phase>
@@ -701,6 +702,7 @@
 						</goals>
 					</execution>
 				</executions>
+				 -->
 				<configuration>
 					<sourceEncoding>ISO-8859-1</sourceEncoding>
 					<targetJdk>1.6</targetJdk>
@@ -709,7 +711,7 @@
 					</rulesets>
 				</configuration>
 			</plugin>
- 			-->
+
 		</plugins>
 	</build>
 
