@@ -185,6 +185,10 @@ function showHideBillPref() {
 
 <%
 	ProviderPreference providerPreference=ProviderPreferencesUIBean.getLoggedInProviderPreference();
+
+	if (providerPreference == null) {
+	    providerPreference = new ProviderPreference();
+	}
 %>
 
 <body bgproperties="fixed"  onLoad="setfocus();showHideBillPref();" topmargin="0"leftmargin="0" rightmargin="0" style="font-family:sans-serif">
