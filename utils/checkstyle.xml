@@ -47,6 +47,31 @@
 	<!-- can't use right now due to GPL header false alarms 
    	<module name="StrictDuplicateCode">
     -->
+
+	<module name="SuppressionFilter">
+	    <property name="file" value="utils/checkstyle_suppressions.xml"/>
+	</module>
+
+
+	<module name="RegexpMultiline">
+		<property name="format" value="System\.(out|err)" />
+	</module>
+
+	<module name="RegexpMultiline">
+		<property name="format" value="(8859|latin-1|ascii)" />
+	</module>
+
+	<module name="RegexpMultiline">
+		<property name="format" value="printStackTrace" />
+	</module>
+
+	<module name="RegexpMultiline">
+		<property name="format" value="org\.apache\.commons\.logging\.Log" />
+	</module>
+
+	<module name="RegexpMultiline">
+		<property name="format" value="http-equiv=&quot;(content-type|Cache-Control)" />
+	</module>
     
     <module name="TreeWalker">
 
@@ -73,33 +98,8 @@
 	       <property name="message" value="Line has trailing spaces."/>
 	    </module>
 	 	-->
-		<module name="GenericIllegalRegexp">
-		   <property name="format" value="System\.out"/>
-		</module>
-		<module name="GenericIllegalRegexp">
-		   <property name="format" value="System\.err"/>
-		</module>
-		<module name="GenericIllegalRegexp">
-		   <property name="format" value="8859"/>
-		</module>
-		<module name="GenericIllegalRegexp">
-		   <property name="format" value="printStackTrace"/>
-		</module>
-		<module name="GenericIllegalRegexp">
-		   <property name="format" value="org\.apache\.commons\.logging\.Log"/>
-		</module>
-		<module name="GenericIllegalRegexp">
-		   <property name="format" value="latin-1"/>
-		</module>
-		<module name="GenericIllegalRegexp">
-		   <property name="format" value="ascii"/>
-		</module>
-		<module name="GenericIllegalRegexp">
-		   <property name="format" value="http-equiv=.content-type"/>
-		</module>
-		<module name="GenericIllegalRegexp">
-		   <property name="format" value="http-equiv=.Cache-Control"/>
-		</module>
+
+
 		<!--
 		<module name="GenericIllegalRegexp">
 		   <property name="format" value="//.*todo"/>
@@ -232,3 +232,4 @@
     </module>
 
 </module>
+
