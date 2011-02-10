@@ -24,7 +24,6 @@ import org.oscarehr.integration.hl7.model.PatientId;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarLab.ca.all.parsers.MessageHandler;
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.parser.GenericParser;
 import ca.uhn.hl7v2.parser.Parser;

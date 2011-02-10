@@ -8,7 +8,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.PreRemove;
-import javax.persistence.PreUpdate;
 
 /**
  * This entity represents key value pairs associated with the OcanStafftForm object.

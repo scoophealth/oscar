@@ -3,7 +3,6 @@ package org.oscarehr.eyeform.dao;
 import java.util.Date;
 import java.util.List;
 
-import org.oscarehr.eyeform.model.OcularProc;
 import org.oscarehr.eyeform.model.SpecsHistory;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 

@@ -1,6 +1,5 @@
 package oscar.oscarBilling.ca.on.pageUtil;
 
-import java.util.Date;
 
 /**
 * @author Eugene Katyukhin

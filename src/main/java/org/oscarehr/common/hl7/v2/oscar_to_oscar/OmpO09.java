@@ -182,7 +182,7 @@ public final class OmpO09 {
 		
 		Prescription prescription=new Prescription();
 		prescription.setDate_prescribed(new Date());
-		prescription.setId(777l);
+		prescription.setId(777L);
 		prescription.setRxComments("this is a fake prescription");
 		
 		ArrayList<Drug> drugs=new ArrayList<Drug>();

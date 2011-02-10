@@ -1,6 +1,5 @@
 package oscar.form.study.HSFO.pageUtil;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,7 +12,6 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.xmlbeans.XmlException;
 
 import oscar.oscarDemographic.data.DemographicData;
 
