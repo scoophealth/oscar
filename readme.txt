@@ -29,6 +29,8 @@ This is a standard maven project. "mvn package" should create a target directory
 
 To test jsp compilations "ant -f jspc.xml" can be run, it presumes you have just run "mvn package" and that the target directory and corresponding war file is present.
 
+For developers, if you are doing testing and need to skip the junit test, pmd checks, and checkstyle checks, do "mvn -Dmaven.test.skip=true -Dcheckstyle.skip=true -Dpmd.skip=true package". You should always try to run it with full checks before committing though.
+
 -------------
 NetBeans Note
 -------------

@@ -21,7 +21,6 @@ import com.lowagie.text.DocumentException;
 import com.lowagie.text.Font;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.Phrase;
-import com.lowagie.text.pdf.PdfPTable;
 
 public class OcularProcPrint implements ExtPrint {
 

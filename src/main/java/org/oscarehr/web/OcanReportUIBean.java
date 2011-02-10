@@ -25,7 +25,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.ws.security.WSPasswordCallback;
 import org.apache.xmlbeans.XmlOptions;
-import org.oscarehr.PMmodule.caisi_integrator.CxfClientUtils;
 import org.oscarehr.PMmodule.dao.AdmissionDao;
 import org.oscarehr.PMmodule.dao.OcanSubmissionLogDao;
 import org.oscarehr.PMmodule.model.Admission;
@@ -42,10 +41,9 @@ import org.oscarehr.common.model.OcanClientForm;
 import org.oscarehr.common.model.OcanClientFormData;
 import org.oscarehr.common.model.OcanStaffForm;
 import org.oscarehr.common.model.OcanStaffFormData;
-import org.oscarehr.ocan.ActionDocument;
-import org.oscarehr.ocan.OCANv2SubmissionFileDocument;
 import org.oscarehr.ocan.AboriginalOriginDocument.AboriginalOrigin;
 import org.oscarehr.ocan.AcceptedDocument.Accepted;
+import org.oscarehr.ocan.*;
 import org.oscarehr.ocan.ActionDocument.Action;
 import org.oscarehr.ocan.ActionListDocument.ActionList;
 import org.oscarehr.ocan.AddictionTypeDocument.AddictionType;
@@ -166,11 +164,11 @@ import ca.on.iar.definition.SubmissionPortType;
 import ca.on.iar.definition.SubmissionService;
 import ca.on.iar.types.IARSubmission;
 import ca.on.iar.types.SubmissionContent;
-import ca.on.iar.types.SubmissionResultType;
-import ca.on.iar.types.TransmissionHeaderType;
 import ca.on.iar.types.SubmissionContent.Record;
+import ca.on.iar.types.SubmissionResultType;
 import ca.on.iar.types.SubmissionResultType.Result;
 import ca.on.iar.types.SubmissionType.Text;
+import ca.on.iar.types.TransmissionHeaderType;
 import ca.on.iar.types.TransmissionHeaderType.Application;
 import ca.on.iar.types.TransmissionHeaderType.Organization;
 
@@ -523,7 +521,7 @@ public class OcanReportUIBean implements CallbackHandler {
 					
 				}			
 				
-			}catch(IOException e) {e.printStackTrace();}
+			}catch(IOException e) { logger.error("error", e)}
 		}
 		*/
 		try {

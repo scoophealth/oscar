@@ -139,7 +139,7 @@ public class HnrDataValidation extends AbstractModel<Integer> {
 			crc32.update(b);
 			setValidationCrc(crc32.getValue());
 		} else {
-			setValidationCrc(-1l);
+			setValidationCrc(-1L);
 		}
 	}
 

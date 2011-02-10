@@ -106,7 +106,6 @@ import org.oscarehr.common.model.CdsClientForm;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.IntegratorConsent;
-import org.oscarehr.common.model.OcanClientForm;
 import org.oscarehr.common.model.OcanStaffForm;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.survey.model.oscar.OscarFormInstance;

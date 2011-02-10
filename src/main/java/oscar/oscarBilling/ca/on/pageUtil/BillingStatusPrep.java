@@ -1,7 +1,5 @@
 package oscar.oscarBilling.ca.on.pageUtil;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +7,6 @@ import org.apache.log4j.Logger;
 import org.apache.struts.util.LabelValueBean;
 
 import oscar.oscarBilling.ca.on.data.JdbcBillingReviewImpl;
-import oscar.oscarDB.DBHandler;
 
 public class BillingStatusPrep {
 	private static final Logger _logger = Logger.getLogger(BillingStatusPrep.class);

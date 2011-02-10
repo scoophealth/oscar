@@ -41,7 +41,7 @@ public class Utility {
 	private static Logger log = MiscUtils.getLogger();
 
 	// ################################################################################
-	public Utility() {
+	private Utility() {
 	}
 
 	/*

@@ -12,7 +12,6 @@ import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.casemgmt.service.CaseManagementPrintPdf;
 import org.oscarehr.casemgmt.util.ExtPrint;
 import org.oscarehr.eyeform.dao.SpecsHistoryDao;
-import org.oscarehr.eyeform.model.OcularProc;
 import org.oscarehr.eyeform.model.SpecsHistory;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;

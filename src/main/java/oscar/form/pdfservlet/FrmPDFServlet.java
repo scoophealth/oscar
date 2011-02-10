@@ -141,7 +141,7 @@ public class FrmPDFServlet extends HttpServlet {
             PrintWriter writer = res.getWriter();
             writer.println("Exception from: " + this.getClass().getName() + " " + dex.getClass().getName() + "<br>");
             writer.println("<pre>");
-            dex.printStackTrace(writer);
+            writer.println(dex.getMessage());
             writer.println("</pre>");
         } finally {
             if (baosPDF != null) {

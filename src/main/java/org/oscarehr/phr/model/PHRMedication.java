@@ -429,7 +429,7 @@ public class PHRMedication extends PHRDocument{
                     medType.setInstructions("<pre>" + drug.getSpecial() + "</pre>");
                     medType.setProvider(contactInfo);
         }catch(Exception e){
-            e.printStackTrace();
+            log.error("Error", e);
         }        
         return medType;
     }
