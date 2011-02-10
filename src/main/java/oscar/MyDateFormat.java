@@ -141,7 +141,7 @@ public class MyDateFormat {
 		int hour=0;
 		
 		aXX_XXampm=aXX_XXampm.trim().toLowerCase();
-		int i1=aXX_XXampm.indexOf(58); //":" ascii is 58
+		int i1=aXX_XXampm.indexOf(58); //":" a s c i i is 58
 		if(i1>0) {
 			hour=Integer.parseInt(aXX_XXampm.substring(0,i1).trim());
 			temp=aXX_XXampm.substring(i1+1); //temp xxam or xx
@@ -421,7 +421,7 @@ public class MyDateFormat {
 		int hour=0;
 		
 		aXX_XX_XX=aXX_XX_XX.trim().toLowerCase();
-		int i1=aXX_XX_XX.indexOf(58); //":" ascii is 58
+		int i1=aXX_XX_XX.indexOf(58); //":" a s c i i is 58
 		if(i1>0) {
 			hour=Integer.parseInt(aXX_XX_XX.substring(0,i1).trim());
 			temp=aXX_XX_XX.substring(i1+1).trim(); //temp XX:XX or x:xx
