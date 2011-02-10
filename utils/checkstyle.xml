@@ -85,6 +85,21 @@
 		<module name="GenericIllegalRegexp">
 		   <property name="format" value="printStackTrace"/>
 		</module>
+		<module name="GenericIllegalRegexp">
+		   <property name="format" value="org\.apache\.commons\.logging\.Log"/>
+		</module>
+		<module name="GenericIllegalRegexp">
+		   <property name="format" value="latin-1"/>
+		</module>
+		<module name="GenericIllegalRegexp">
+		   <property name="format" value="ascii"/>
+		</module>
+		<module name="GenericIllegalRegexp">
+		   <property name="format" value="http-equiv=.content-type"/>
+		</module>
+		<module name="GenericIllegalRegexp">
+		   <property name="format" value="http-equiv=.Cache-Control"/>
+		</module>
 		<!--
 		<module name="GenericIllegalRegexp">
 		   <property name="format" value="//.*todo"/>
