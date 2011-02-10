@@ -51,7 +51,7 @@ public class ProviderPreference extends AbstractModel<String> implements Seriali
 	private Integer startHour=8;
 	private Integer endHour=18;
 	private Integer everyMin=15;
-	private String myGroupNo;	
+	private String myGroupNo ="";	
 	private String colourTemplate="deepblue";
 	private String newTicklerWarningWindow="disabled";
 	private String defaultServiceType="no";
