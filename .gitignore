@@ -3,3 +3,4 @@
 /eclipse-target
 /override.properties
 /override_log4j.xml
+/deploy.sh

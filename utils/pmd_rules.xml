@@ -14,9 +14,9 @@
 		<exclude name="CollapsibleIfStatements" />
 		<exclude name="EmptyCatchBlock" />
 	</rule>
-	 -->
 	 
 	<rule ref="rulesets/unusedcode.xml" />
+	 -->
 	
 	<rule ref="rulesets/imports.xml" />
 	
