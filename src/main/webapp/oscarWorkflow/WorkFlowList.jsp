@@ -81,7 +81,7 @@
               document.getElementById(fields_to_turn_on[i]).style.display = ''; 
            }
        }catch(e){
-        e.printStackTrace();
+        alert(e);
        }
           
     

@@ -30,7 +30,10 @@
                             
                             if (debugOn){
                                 out.write("<pre>");
-                                throwable.printStackTrace(new PrintWriter(out));
+                                for (StackTraceElement ste : throwable.getStackTrace())
+                                {
+                                	out.write(ste.toString());
+                                }
                                 out.write("</pre>");
                             }
                         }

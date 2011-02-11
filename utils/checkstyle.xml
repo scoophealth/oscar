@@ -47,6 +47,11 @@
 	<!-- can't use right now due to GPL header false alarms 
    	<module name="StrictDuplicateCode">
     -->
+    
+	<module name="org.oscarehr.utils.checkstyle.IllegalFilename">
+		<property name="illegalRegex" value=".*\.(GIF|PNG|JPG|class)"/>
+	</module>
+    
 
 	<module name="SuppressionFilter">
 	    <property name="file" value="utils/checkstyle_suppressions.xml"/>
@@ -58,7 +63,7 @@
 	</module>
 
 	<module name="RegexpMultiline">
-		<property name="format" value="(8859|latin-1|ascii)" />
+		<property name="format" value="8859|latin-1|ascii" />
 	</module>
 
 	<module name="RegexpMultiline">
