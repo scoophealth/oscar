@@ -52,6 +52,7 @@ pushd ${SRC_DIR}
 		unzip ${SRC_DIR}/target/${SERVER_NAME}-3.1-SNAPSHOT.war
 		
 		# reset database
+		cd ${SRC_DIR}
 		mysql -e "drop database ${SERVER_NAME}"
 		mysql -e "create database ${SERVER_NAME}"
 		mysql ${SERVER_NAME} -e "source docs/freshIndivo.sql"
