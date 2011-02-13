@@ -160,3 +160,17 @@ import git into gerrit
 clean up cvs stuff
 ------------------
 - If you clone the git repository you'll now find a bunch of .cvsignores lying around, you need to manually convert these to .gitignores
+
+
+convert old branches
+--------------------
+As per the cvsimport documentation, we should never commit to converted branches, therefore, we must create new ones. I'm assuming this implies we can not create childs of converted branches either.
+Conversion routine would therefore be as follows:
+
+- On the Gerrit Web UI, Admin->Projects->oscar->Branches, BranchName=new_RELEASE_10_06, InitialRevision=548fe7c2c3927c436a6ab3b9032c6884b0232825 (the first converted master, so we're creating a proper git branch off the master which should be safe)
+- On client workstation do a git pull so it knows of the new branch and shows up on the list of branches.
+- On client workstation do a "git checkout RELEASE_10_06", then copy the entire directory to a temporary location like /tmp/10_06, but remove the .git directory (this is important).
+- On client workstation do a "git checkout new_RELEASE_10_06", then delete the entire working directory contents (except the .git) and copy back all the files from /tmp/10_06. i.e. you're setting the working directory contents to the branch contents, but leaving git to say you're working off the new and valid branch. 
+- now do a "git add -A" and "git push origin HEAD:refs/for/new_RELEASE_10_06"
+
+Note that hudson verification may now fail because it's using the wrong build system, you can go to review the commit, remove hudson as a "failed" reviewer, then just review and approve the commit. 
