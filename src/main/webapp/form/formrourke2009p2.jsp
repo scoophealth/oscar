@@ -1168,7 +1168,7 @@ description layer</div>
 				<tr>
 					<td valign="top" class="edcol" colspan="2"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p2_headUpOk,p2_headUpNo');" /></td>
+						onclick="del('p2_headUpTummyOk,p2_headUpTummyNo');" /></td>
 					<td>&nbsp;</td>
 				</tr>
 				<tr>
