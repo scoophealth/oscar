@@ -24,7 +24,7 @@
  */
 -->
 
-<%@page import="oscar.OscarProperties, oscar.util.BuildInfo, javax.servlet.http.Cookie, oscar.oscarSecurity.CookieSecurity, oscar.login.UAgentInfo" %>
+<%@page import="oscar.OscarProperties, javax.servlet.http.Cookie, oscar.oscarSecurity.CookieSecurity, oscar.login.UAgentInfo" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
@@ -149,7 +149,7 @@ Boolean isMobileOptimized = session.getAttribute("mobileOptimized") != null;
                     %><bean:message key="<%=key%>"/>        
                 </td>
                 <td  class="topbar" align="center" >
-                    <span id="buildInfo">build date: <%= BuildInfo.getBuildDate() %> <br/> build tag: <%=BuildInfo.getBuildTag()%> </span>
+                    <span id="buildInfo">build date: <%= OscarProperties.getBuildDate() %> <br/> build tag: <%=OscarProperties.getBuildTag()%> </span>
                     <%=props.getProperty("logintitle", "")%>
                     <% if (props.getProperty("logintitle", "").equals("")) { %>
                     <bean:message key="loginApplication.alert"/>

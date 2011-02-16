@@ -15,7 +15,7 @@ import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
-import oscar.util.BuildInfo;
+import oscar.OscarProperties;
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.DataTypeException;
 import ca.uhn.hl7v2.model.v26.group.REF_I12_PATIENT_VISIT;
@@ -48,7 +48,7 @@ public final class RefI12 {
 		REF_I12 referralMsg=new REF_I12();
 
 		DataTypeUtils.fillMsh(referralMsg.getMSH(), new Date(), clinic.getClinicName(), "REF", "I12", "REF_I12", DataTypeUtils.HL7_VERSION_ID);
-		DataTypeUtils.fillSft(referralMsg.getSFT(), BuildInfo.getBuildTag(), BuildInfo.getBuildDate());
+		DataTypeUtils.fillSft(referralMsg.getSFT(), OscarProperties.getBuildTag(), OscarProperties.getBuildDate());
 
 		fillRf1(referralMsg.getRF1(), null, null, null, null, consultationRequest.getId(), consultationRequest.getReferralDate(), null, null);
 
