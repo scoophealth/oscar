@@ -66,6 +66,7 @@
                 <property name="archived" type="boolean" column="archived" />
                 <property name="position" type="integer" column="position" />
 
+		<property name="appointmentNo" type="integer" column="appointmentNo"/>
 	</class>
 
 	<sql-query name="mostRecent">
@@ -81,7 +82,7 @@
 		reporter_caisi_role as {cmn.reporter_caisi_role}, reporter_program_team as
 		{cmn.reporter_program_team}, history as {cmn.history},
 		uuid as {cmn.uuid}, password as {cmn.password}, locked as {cmn.locked}, archived as {cmn.archived},
-                position as {cmn.position},
+                position as {cmn.position}, appointmentNo as {cmn.appointmentNo}, 
 		(select r.role_name from secRole r where r.role_no =
 		reporter_caisi_role) as {cmn.roleName},
 		(select p.name from program p where p.id = program_no) as {cmn.programName},
@@ -108,7 +109,7 @@
 		reporter_caisi_role as {cmn.reporter_caisi_role}, reporter_program_team as
 		{cmn.reporter_program_team}, history as {cmn.history},
 		uuid as {cmn.uuid}, password as {cmn.password}, locked as {cmn.locked}, archived as {cmn.archived},
-                position as {cmn.position},
+                position as {cmn.position}, appointmentNo as {cmn.appointmentNo},
 		(select r.role_name from secRole r where r.role_no =
 		reporter_caisi_role) as {cmn.roleName},
 		(select p.name from program p where p.id = program_no) as {cmn.programName},
@@ -135,6 +136,7 @@
 		reporter_caisi_role as {cmn.reporter_caisi_role}, reporter_program_team as
 		{cmn.reporter_program_team}, history as {cmn.history},
 		uuid as {cmn.uuid}, password as {cmn.password}, locked as {cmn.locked}, archived as {cmn.archived},
+		appointmentNo as {cmn.appointmentNo}, 
 		(select r.role_name from secRole r where r.role_no =
 		reporter_caisi_role) as {cmn.roleName},
 		(select p.name from program p where p.id = program_no) as {cmn.programName},

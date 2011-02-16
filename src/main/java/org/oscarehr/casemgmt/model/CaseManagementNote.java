@@ -22,8 +22,6 @@
 
 package org.oscarehr.casemgmt.model;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
@@ -35,10 +33,8 @@ import java.util.Set;
 import org.caisi.model.BaseObject;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteLinkDAO;
 import org.oscarehr.common.model.Provider;
-import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
 import oscar.oscarRx.data.RxPrescriptionData;
 
 
@@ -79,6 +75,8 @@ public class CaseManagementNote extends BaseObject {
 	private int hashCode = Integer.MIN_VALUE;
 	private int position = 0;
 
+	private int appointmentNo;
+	
 	CaseManagementNoteLinkDAO caseManagementNoteLinkDao = (CaseManagementNoteLinkDAO) SpringUtils.getBean("CaseManagementNoteLinkDAO");
 
 	@Override
@@ -490,13 +488,15 @@ public class CaseManagementNote extends BaseObject {
             return null;
     }
    
-    protected static ResultSet getSQL(String sql) {
-        ResultSet rs = null;
-        try {
-            rs = DBHandler.GetSQL(sql);
-        } catch (SQLException sqe) {
-            MiscUtils.getLogger().error("Error", sqe);
-        }
-        return (rs);
-    }
+ 
+
+	public int getAppointmentNo() {
+		return appointmentNo;
+	}
+
+	public void setAppointmentNo(int appointmentNo) {
+		this.appointmentNo = appointmentNo;
+	}
+    
+    
 }
