@@ -662,7 +662,12 @@
 
 								<echo message="build time : ${build.dateTime.value}" />
 
-								<replace file="target/classes/build.properties" token="${build.dateTime}" value="${build.dateTime.value}" />
+								<replace file="target/classes/oscar_mcmaster.properties" token="${build.dateTime}" value="${build.dateTime.value}" />
+
+								<property environment="env" />
+								<echo message="JOB_NAME - BUILD_NUMBER : ${env.JOB_NAME} - ${env.BUILD_NUMBER}" />
+								<replace file="target/classes/oscar_mcmaster.properties" token="${build.JOB_NAME}" value="${env.JOB_NAME}" />
+								<replace file="target/classes/oscar_mcmaster.properties" token="${build.BUILD_NUMBER}" value="${env.BUILD_NUMBER}" />
 							</tasks>
 						</configuration>
 					</execution>
