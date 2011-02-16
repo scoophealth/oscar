@@ -337,6 +337,7 @@ CREATE TABLE `casemgmt_note` (
   `archived` boolean default false,
   `position` int(10) default 0,
   `uuid` char(36) default NULL,
+  `appointmentNo` int(10),
   PRIMARY KEY  (`note_id`),
   KEY `FKA8D537806CCA0FC` (`provider_no`),
 	index(demographic_no),

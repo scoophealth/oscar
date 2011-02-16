@@ -80,7 +80,7 @@ public class PhsStarHandler extends BasePhsStarHandler {
 			OtherId otherId = OtherIdManager.searchTable(OtherIdManager.DEMOGRAPHIC,"TRN",internalIds.get("TRN").getId());
 			if(otherId != null) {
 				logger.debug("Found demographic:"+otherId.getTableId());
-				return otherId.getTableId();
+				return Integer.parseInt(otherId.getTableId());
 			}
 		}
 		

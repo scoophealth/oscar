@@ -8028,7 +8028,7 @@ create table queue_document_link (
 CREATE TABLE `other_id` (
 	id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	table_name int NOT NULL,
-	table_id int NOT NULL,
+	table_id varchar(30) NOT NULL,
 	other_key varchar(30) NOT NULL,
 	other_id varchar(30) NOT NULL,
 	deleted boolean NOT NULL
