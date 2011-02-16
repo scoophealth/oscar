@@ -14,7 +14,7 @@ import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.MiscUtils;
 
-import oscar.util.BuildInfo;
+import oscar.OscarProperties;
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.DataTypeException;
 import ca.uhn.hl7v2.model.v26.group.ORU_R01_ORDER_OBSERVATION;
@@ -65,7 +65,7 @@ public final class OruR01 {
 		ORU_R01 observationMsg = new ORU_R01();
 
 		DataTypeUtils.fillMsh(observationMsg.getMSH(), new Date(), clinic.getClinicName(), "ORU", "R01", "ORU_R01", DataTypeUtils.HL7_VERSION_ID);
-		DataTypeUtils.fillSft(observationMsg.getSFT(), BuildInfo.getBuildTag(), BuildInfo.getBuildDate());
+		DataTypeUtils.fillSft(observationMsg.getSFT(), OscarProperties.getBuildTag(), OscarProperties.getBuildDate());
 
 		ORU_R01_PATIENT_RESULT patientResult = observationMsg.getPATIENT_RESULT(0);
 		DataTypeUtils.fillPid(patientResult.getPATIENT().getPID(), 1, demographic);

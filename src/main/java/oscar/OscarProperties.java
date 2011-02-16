@@ -243,10 +243,14 @@ public class OscarProperties extends Properties {
 		return getProperty("db_driver");
 	}
 
-	public String getBuildDate() {
-		return getProperty("builddate");
+	public static String getBuildDate() {
+		return oscarProperties.getProperty("buildDateTime");
 	}
 	
+	public static String getBuildTag() {
+		return oscarProperties.getProperty("buildtag");
+	}
+
 	public boolean isOscarLearning() {
 		return isPropertyActive("OSCAR_LEARNING");
 	}
