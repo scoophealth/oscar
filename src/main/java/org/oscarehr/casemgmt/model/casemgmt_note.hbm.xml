@@ -66,6 +66,7 @@
                 <property name="archived" type="boolean" column="archived" />
                 <property name="position" type="integer" column="position" />
 
+		<property name="appointmentNo" type="integer" column="appointmentNo"/>
 	</class>
 
 	<sql-query name="mostRecent">
