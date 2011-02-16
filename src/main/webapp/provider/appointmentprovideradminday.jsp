@@ -719,7 +719,7 @@ if( viewall == null ) {
 }
 String _scheduleDate = strYear+"-"+strMonth+"-"+strDay;
 
-if(providerBean.get(mygroupno) != null) { //single appointed provider view
+if(mygroupno != null && providerBean.get(mygroupno) != null) { //single appointed provider view
      numProvider=1;
      curProvider_no = new String [numProvider];
      curProviderName = new String [numProvider];
