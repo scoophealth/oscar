@@ -15,7 +15,7 @@ import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.MiscUtils;
 
-import oscar.util.BuildInfo;
+import oscar.OscarProperties;
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.v26.datatype.CQ;
 import ca.uhn.hl7v2.model.v26.datatype.CWE;
@@ -43,7 +43,7 @@ public final class OmpO09 {
 		OMP_O09 prescriptionMsg = new OMP_O09();
 
 		DataTypeUtils.fillMsh(prescriptionMsg.getMSH(), new Date(), clinic.getClinicName(), "OMP", "O09", "OMP_O09", DataTypeUtils.HL7_VERSION_ID);
-		DataTypeUtils.fillSft(prescriptionMsg.getSFT(), BuildInfo.getBuildTag(), BuildInfo.getBuildDate());
+		DataTypeUtils.fillSft(prescriptionMsg.getSFT(), OscarProperties.getBuildTag(), OscarProperties.getBuildDate());
 
 		OMP_O09_PATIENT patient=prescriptionMsg.getPATIENT();
 		DataTypeUtils.fillPid(patient.getPID(), 1, demographic);
