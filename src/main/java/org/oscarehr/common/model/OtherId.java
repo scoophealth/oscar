@@ -43,12 +43,14 @@ package org.oscarehr.common.model;
 public class OtherId {
     private Integer	id;
     private Integer	tableName=0;
-    private String	tableId="";
-    private String	otherKey="";
-    private String	otherId="";
+    private String	tableId=null;
+    private String	otherKey=null;
+    private String	otherId=null;
     private Boolean	deleted=false;
 
-	public OtherId() {}
+	public OtherId() {
+		//default constructor
+	}
 
 	public OtherId(Integer tableName, Integer tableId, String otherKey, String otherId) {
 		this.tableName = tableName;
