@@ -28,7 +28,7 @@
  
 -->
 <%@page
-	import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarLab.ca.on.*,oscar.util.*,oscar.oscarLab.*,oscar.scratch.*,org.safehaus.uuid.UUIDGenerator"%>
+	import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarLab.ca.on.*,oscar.util.*,oscar.oscarLab.*,oscar.scratch.*"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
@@ -48,7 +48,7 @@
   Hashtable hashtable = scratchData.getLatest(user_no);
   
   
-  String uuid = UUIDGenerator.getInstance().generateTimeBasedUUID().toString();
+  String uuid = String.valueOf(System.nanoTime());
   String text = "";
   String id = "";
   
