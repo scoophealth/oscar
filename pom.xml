@@ -697,9 +697,9 @@
 					<configLocation>utils/checkstyle.xml</configLocation>
 					<failsOnError>true</failsOnError>
 					<consoleOutput>true</consoleOutput>
-					<sourceDirectory>src/main</sourceDirectory>
-					<includes>**/*</includes>
-					<excludes>**/*.jar, **/*.xml, **/*.tld, **/*.jpg, **/*.png, **/*.gif, **/*.pdf, **/*.swf, **/*.js, **/*.css, webapp/share/calendar/**, **/*.dtd, **/*svg.jsp</excludes>
+					<sourceDirectory>.</sourceDirectory>
+					<includes>src/main/**/*,database/**/*.sql</includes>
+					<excludes>**/*.jar, **/*.txt, **/*.rpt, **/*.fla, **/*.xml, **/*.dtd, **/*.xslt, **/*.doc, **/*.bak, **/*.tld, **/*.jpg, **/*.png, **/*.gif, **/*.pdf, **/*.swf, **/*.js, **/*.css, src/main/webapp/share/calendar/**, **/*svg.jsp</excludes>
 				</configuration>
 				<executions>
 					<execution>
