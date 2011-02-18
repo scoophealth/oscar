@@ -107,9 +107,23 @@
 	</module>
 
 	<module name="org.oscarehr.utils.checkstyle.TrackingRegexpCheck">
+		<property name="fileExtensions" value=".java"/>
+		<property name="illegalRegex" value=".*=\s*&quot;&quot;\s*;.*"/>
+		<property name="violationDescription" value="Please don't use blank strings to represent no value, use null instead."/>
+		<property name="dataStoreFilename" value="utils/TrackingRegexpCheck_java_jsp.data.xml"/>
+	</module>
+
+	<module name="org.oscarehr.utils.checkstyle.TrackingRegexpCheck">
 		<property name="fileExtensions" value=".sql"/>
 		<property name="illegalRegex" value=".*\s+default\s+.*|.*\s+DEFAULT\s+.*|.*\s+Default\s+.*"/>
 		<property name="violationDescription" value="Don't put defaults in table definitions, put them in the JPA objects."/>
+		<property name="dataStoreFilename" value="utils/TrackingRegexpCheck_sql.data.xml"/>
+	</module>
+
+	<module name="org.oscarehr.utils.checkstyle.TrackingRegexpCheck">
+		<property name="fileExtensions" value=".sql"/>
+		<property name="illegalRegex" value=".*0000-00-00.*|.*''.*"/>
+		<property name="violationDescription" value="Use null for no value, don't use 0000-00-00 nor empty string"/>
 		<property name="dataStoreFilename" value="utils/TrackingRegexpCheck_sql.data.xml"/>
 	</module>
 
