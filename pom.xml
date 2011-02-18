@@ -671,6 +671,21 @@
 							</tasks>
 						</configuration>
 					</execution>
+
+					<execution>
+						<!-- We're doing jspc this way because the codehaus jspc seems to be abandonded, it doesn't go beyond jdk 1.5 and the documentation is sparse, and the source code links to a broken page and I can't find the goals it supports. -->
+						<id>jspc</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<tasks>
+								<property name="build.compiler" value="extJavac"/>
+								<ant antfile="jspc.xml" target="jspc" />
+							</tasks>
+						</configuration>
+					</execution>
 				</executions>
 			</plugin>
 
@@ -682,9 +697,9 @@
 					<configLocation>utils/checkstyle.xml</configLocation>
 					<failsOnError>true</failsOnError>
 					<consoleOutput>true</consoleOutput>
-					<sourceDirectory>src/main</sourceDirectory>
-					<includes>**/*</includes>
-					<excludes>**/*.jar, **/*.xml, **/*.tld, **/*.jpg, **/*.png, **/*.gif, **/*.pdf, **/*.swf, **/*.js, **/*.css, webapp/share/calendar/**, **/*.dtd, **/*svg.jsp</excludes>
+					<sourceDirectory>.</sourceDirectory>
+					<includes>src/main/**/*,database/**/*.sql</includes>
+					<excludes>**/*.jar, **/*.txt, **/*.rpt, **/*.fla, **/*.xml, **/*.dtd, **/*.xslt, **/*.doc, **/*.bak, **/*.tld, **/*.jpg, **/*.png, **/*.gif, **/*.pdf, **/*.swf, **/*.js, **/*.css, src/main/webapp/share/calendar/**, **/*svg.jsp</excludes>
 				</configuration>
 				<executions>
 					<execution>
@@ -725,7 +740,7 @@
 					</rulesets>
 				</configuration>
 			</plugin>
-
+			
 		</plugins>
 	</build>
 
