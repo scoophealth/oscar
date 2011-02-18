@@ -56,35 +56,80 @@
 		<property name="illegalRegex" value=".*\.(GIF|PNG|JPG|class)"/>
 	</module>
 
+
 	<module name="org.oscarehr.utils.checkstyle.TrackingRegexpCheck">
-		<property name="illegalRegex" value=".*DBHandler\..*"/>
+		<property name="fileExtensions" value=".java,.jsp,.jspf,.jsf"/>
+		<property name="illegalRegex" value=".*DBHandler\..*|.*getConnection\(.*|.*DBHandler\..*|.*DBPreparedHandler.*|.*DBHelp.*|.*\.selectIntList.*|.*\.selectStringList.*|.*OscarSuperManager.*|.*HibernateDaoSupport.*"/>
 		<property name="violationDescription" value="use jpa instead"/>
 		<property name="dataStoreFilename" value="utils/TrackingRegexpCheck_java_jsp.data.xml"/>
 	</module>
 
 	<module name="org.oscarehr.utils.checkstyle.TrackingRegexpCheck">
-		<property name="illegalRegex" value=".*getConnection\(.*"/>
-		<property name="violationDescription" value="use jpa instead"/>
+		<property name="fileExtensions" value=".java,.jsp,.jspf,.jsf"/>
+		<property name="illegalRegex" value=".*org.apache.commons.logging.Log.*"/>
+		<property name="violationDescription" value="use log4j instead"/>
 		<property name="dataStoreFilename" value="utils/TrackingRegexpCheck_java_jsp.data.xml"/>
+	</module>
+
+	<module name="org.oscarehr.utils.checkstyle.TrackingRegexpCheck">
+		<property name="fileExtensions" value=".java,.jsp,.jspf,.jsf"/>
+		<property name="illegalRegex" value=".*com\.sun\.*"/>
+		<property name="violationDescription" value="best to avoid these as they are not always available, check apache for parallel libs, also sun is no more..."/>
+		<property name="dataStoreFilename" value="utils/TrackingRegexpCheck_java_jsp.data.xml"/>
+	</module>
+
+	<module name="org.oscarehr.utils.checkstyle.TrackingRegexpCheck">
+		<property name="fileExtensions" value=".java,.jsp,.jspf,.jsf"/>
+		<property name="illegalRegex" value=".*ArrayList\s*\(\).*|.*Vector\s*\(\).*|.*HashSet\s*\(\).*|.*HashMap\s*\(\).*|.*Hashtable\s*\(\).*|.*TreeSet\s*\(\).*|.*TreeMap\s*\(\).*|.*WeakHashMap\s*\(\).*"/>
+		<property name="violationDescription" value="use generics"/>
+		<property name="dataStoreFilename" value="utils/TrackingRegexpCheck_java_jsp.data.xml"/>
+	</module>
+
+	<module name="org.oscarehr.utils.checkstyle.TrackingRegexpCheck">
+		<property name="fileExtensions" value=".java,.jsp,.jspf,.jsf"/>
+		<property name="illegalRegex" value=".*LogManager\.getLogger\s*\(.*"/>
+		<property name="violationDescription" value="not really an error, but MiscUtils.getLogger() is probably a better choice."/>
+		<property name="dataStoreFilename" value="utils/TrackingRegexpCheck_java_jsp.data.xml"/>
+	</module>
+
+	<module name="org.oscarehr.utils.checkstyle.TrackingRegexpCheck">
+		<property name="fileExtensions" value=".java,.jsp,.jspf,.jsf"/>
+		<property name="illegalRegex" value=".*StringBuffer.*|.*Hashtable.*|.*Vector.*"/>
+		<property name="violationDescription" value="not really an error, but 99% of the time StringBuilder/HashMap/ArrayList is a better choice unless mandated by another API."/>
+		<property name="dataStoreFilename" value="utils/TrackingRegexpCheck_java_jsp.data.xml"/>
+	</module>
+
+	<module name="org.oscarehr.utils.checkstyle.TrackingRegexpCheck">
+		<property name="fileExtensions" value=".java"/>
+		<property name="illegalRegex" value=".*BaseGenericIntakeAction.*|.*BaseAction.*"/>
+		<property name="violationDescription" value="The base action pattern is terrible, it makes a bloat super class that no one has any idea what is being used where, extend struts directly instead."/>
+		<property name="dataStoreFilename" value="utils/TrackingRegexpCheck_java_jsp.data.xml"/>
+	</module>
+
+	<module name="org.oscarehr.utils.checkstyle.TrackingRegexpCheck">
+		<property name="fileExtensions" value=".sql"/>
+		<property name="illegalRegex" value=".*\s+default\s+.*|.*\s+DEFAULT\s+.*|.*\s+Default\s+.*"/>
+		<property name="violationDescription" value="Don't put defaults in table definitions, put them in the JPA objects."/>
+		<property name="dataStoreFilename" value="utils/TrackingRegexpCheck_sql.data.xml"/>
 	</module>
 
 	<module name="RegexpMultiline">
+		<property name="fileExtensions" value=".java,.jsp,.jspf,.jsf"/>
 		<property name="format" value="System\.(out|err)" />
 	</module>
 
 	<module name="RegexpMultiline">
+		<property name="fileExtensions" value=".java,.jsp,.jspf,.jsf,.html,.htm"/>
 		<property name="format" value="8859|latin-1|ascii" />
 	</module>
 
 	<module name="RegexpMultiline">
+		<property name="fileExtensions" value=".java,.jsp,.jspf,.jsf"/>
 		<property name="format" value="printStackTrace" />
 	</module>
 
 	<module name="RegexpMultiline">
-		<property name="format" value="org\.apache\.commons\.logging\.Log" />
-	</module>
-
-	<module name="RegexpMultiline">
+		<property name="fileExtensions" value=".java,.jsp,.jspf,.jsf,.html,.htm"/>
 		<property name="format" value="http-equiv=&quot;(content-type|Cache-Control)" />
 	</module>
     
