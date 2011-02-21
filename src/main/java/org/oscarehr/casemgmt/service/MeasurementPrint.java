@@ -90,7 +90,7 @@ public class MeasurementPrint implements ExtPrint {
         	if(newDate) {        		        		
         		p = new Paragraph();
         		phrase = new Phrase(engine.LEADING, "", engine.getFont());              
-        		Chunk chunk = new Chunk("Documentation Date: " + engine.getFormatter().format(measurement.getDateObserved()) + "\n", obsfont);
+        		Chunk chunk = new Chunk("Documentation Date: " + engine.getFormatter().format(measurement.getDateObserved()) + "\n\n", obsfont);
         		phrase.add(chunk);                    
         		p.add(phrase);
         		table = new PdfPTable(2);
