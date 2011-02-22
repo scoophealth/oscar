@@ -49,7 +49,7 @@
 <%@page import="oscar.oscarRx.data.RxPrescriptionData"%>
 <%@page import="org.oscarehr.casemgmt.dao.CaseManagementNoteLinkDAO"%>
 <%@page import="org.oscarehr.common.dao.ProfessionalSpecialistDao"%>
-
+<%@page import="oscar.OscarProperties"%>
 <%@page import="org.oscarehr.util.MiscUtils"%>
 <%@page import="oscar.util.UtilDateUtilities"%>
 <%@page import="org.oscarehr.casemgmt.web.NoteDisplayNonNote"%>
@@ -560,8 +560,9 @@ try
 			}
 
 			boolean editWarn = !note.isSigned() && !note.getProviderNo().equals(provNo);
+			String hideCppNotes = OscarProperties.getInstance().getProperty("encounter.hide_cpp_notes","false");
 	%>
-		<div id="nc<%=idx+1%>" class="note<%=note.isDocument()||note.isCpp()||note.isEformData()||note.isEncounterForm()?"":" noteRounded"%>">
+		<div id="nc<%=idx+1%>" style="display:<%=note.isCpp()&&hideCppNotes.equals("true")?"none":"block" %>" class="note<%=note.isDocument()||note.isCpp()||note.isEformData()||note.isEncounterForm()?"":" noteRounded"%>">
 			<input type="hidden" id="signed<%=note.getNoteId()%>" value="<%=note.isSigned()%>"> 
 			<input type="hidden" id="full<%=note.getNoteId()%>" value="<%=fulltxt || (note.getNoteId() !=null && note.getNoteId().equals(savedId))%>"> 
 			<input type="hidden" id="bgColour<%=note.getNoteId()%>" value="<%=bgColour%>">

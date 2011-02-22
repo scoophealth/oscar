@@ -263,9 +263,6 @@ function saveFlags() {
 %>
 
 
-
-<tr><td>&nbsp;</td></tr>
-
 <tr>
 <td colspan="3">
 <div>

@@ -52,6 +52,8 @@ public class MeasurementDataAction extends DispatchAction {
 	public ActionForward saveValues(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String demographicNo = request.getParameter("demographicNo");
 		String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
+		String strAppointmentNo = request.getParameter("appointmentNo");
+		int appointmentNo = Integer.parseInt(strAppointmentNo);
 		
 		Enumeration e = request.getParameterNames();
 		Map<String,String> measurements = new HashMap<String,String>();
@@ -59,7 +61,7 @@ public class MeasurementDataAction extends DispatchAction {
 		while(e.hasMoreElements()) {
 			String key = (String)e.nextElement();
 			String values[] = request.getParameterValues(key);
-			if(key.equals("action") || key.equals("demographicNo"))
+			if(key.equals("action") || key.equals("demographicNo") || key.equals("appointmentNo"))
 				continue;
 			if(values.length>0 && values[0]!=null && values[0].length()>0) {
 				measurements.put(key,values[0]);
@@ -72,6 +74,7 @@ public class MeasurementDataAction extends DispatchAction {
 				m.setMeasuringInstruction("");
 				m.setProviderNo(providerNo);
 				m.setType(key);
+				m.setAppointmentNo(appointmentNo);
 				measurementsDao.addMeasurements(m);
 			}
 		}

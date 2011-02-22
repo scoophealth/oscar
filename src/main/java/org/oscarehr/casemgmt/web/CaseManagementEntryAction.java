@@ -430,6 +430,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
 	public ActionForward issueNoteSave(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String strNote = request.getParameter("value");
+		String appointmentNo = request.getParameter("appointmentNo");
+		
 		// strNote = strNote.trim();
 		logger.debug("Saving: " + strNote);
 		strNote = org.apache.commons.lang.StringUtils.trimToNull(strNote);
@@ -504,7 +506,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			team = "0";
 		}
 		note.setReporter_program_team(team);
-
+		note.setAppointmentNo(Integer.parseInt(appointmentNo));
 		// update note issues
 		String sessionFrmName = "caseManagementEntryForm" + demo;
 		CaseManagementEntryFormBean sessionFrm = (CaseManagementEntryFormBean) request.getSession().getAttribute(sessionFrmName);

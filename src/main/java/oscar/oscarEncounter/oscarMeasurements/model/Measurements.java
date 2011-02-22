@@ -6,6 +6,8 @@ import oscar.oscarEncounter.oscarMeasurements.model.base.BaseMeasurements;
 
 public class Measurements extends BaseMeasurements {
 	private static final long serialVersionUID = 1L;
+	
+	private int appointmentNo;
 
 /*[CONSTRUCTOR MARKER BEGIN]*/
 	public Measurements () {
@@ -45,7 +47,16 @@ public class Measurements extends BaseMeasurements {
 			dateEntered);
 	}
 
+	public int getAppointmentNo() {
+		return appointmentNo;
+	}
+
+	public void setAppointmentNo(int appointmentNo) {
+		this.appointmentNo = appointmentNo;
+	}
+
 /*[CONSTRUCTOR MARKER END]*/
 
+	
 
 }
