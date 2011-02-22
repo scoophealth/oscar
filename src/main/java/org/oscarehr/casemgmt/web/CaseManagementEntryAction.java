@@ -69,6 +69,7 @@ import org.oscarehr.casemgmt.service.CaseManagementPrintPdf;
 import org.oscarehr.casemgmt.util.ExtPrint;
 import org.oscarehr.casemgmt.web.CaseManagementViewAction.IssueDisplay;
 import org.oscarehr.casemgmt.web.formbeans.CaseManagementEntryFormBean;
+import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.model.DxAssociation;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.LoggedInInfo;
@@ -84,7 +85,6 @@ import oscar.log.LogAction;
 import oscar.log.LogConst;
 import oscar.oscarEncounter.pageUtil.EctSessionBean;
 import oscar.oscarSurveillance.SurveillanceMaster;
-import oscar.service.OscarSuperManager;
 import oscar.util.UtilDateUtilities;
 
 import com.lowagie.text.DocumentException;
@@ -469,7 +469,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
 		if (provider != null) note.setProvider(provider);
 
-		String logAction = "";
+		String logAction = new String();
 		if (archived == null || archived.equalsIgnoreCase("false")) {
 			note.setArchived(false);
 		} else {
@@ -506,12 +506,14 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			team = "0";
 		}
 		note.setReporter_program_team(team);
-		note.setAppointmentNo(Integer.parseInt(appointmentNo));
+		if(appointmentNo != null) {
+			note.setAppointmentNo(Integer.parseInt(appointmentNo));
+		}
 		// update note issues
 		String sessionFrmName = "caseManagementEntryForm" + demo;
 		CaseManagementEntryFormBean sessionFrm = (CaseManagementEntryFormBean) request.getSession().getAttribute(sessionFrmName);
-		Set issueSet = new HashSet();
-		Set noteSet = new HashSet();
+		Set<CaseManagementIssue> issueSet = new HashSet<CaseManagementIssue>();
+		Set<CaseManagementNote> noteSet = new HashSet<CaseManagementNote>();
 		String[] issue_id = request.getParameterValues("issue_id");
 		CheckBoxBean[] existingCaseIssueList = sessionFrm.getIssueCheckList();
 		ArrayList<CheckBoxBean> caseIssueList = new ArrayList<CheckBoxBean>();
@@ -532,7 +534,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		// we need the defining issue as originally passed in
 		String reloadQuery = request.getParameter("reloadUrl");
 		String[] params = reloadQuery.split("&");
-		String cppStrIssue = "";
+		String cppStrIssue = new String();
 		for (int p = 0; p < params.length; ++p) {
 			String[] keyVal = params[p].split("=");
 			if (keyVal[0].equalsIgnoreCase("issue_code")) {
@@ -871,7 +873,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		Set<CaseManagementIssue> issueset = new HashSet<CaseManagementIssue>();
 		// wherever this is populated, it's not here...
 		Set<CaseManagementNote> noteSet = new HashSet<CaseManagementNote>();
-		String ongoing = "";
+		String ongoing = new String();
 		Boolean useNewCaseMgmt = new Boolean((String) request.getSession().getAttribute("newCaseManagement"));
 		if (useNewCaseMgmt) {
 			ongoing = saveCheckedIssues_newCme(request, demo, note, issuelist, checkedlist, issueset, noteSet, ongoing);
@@ -898,7 +900,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			note.setIncludeissue(true);
 			/* add the related issues to note */
 
-			String issueString = "";
+			String issueString = new String();
 			issueString = createIssueString(issueset);
 			// insert the string before signiture
 
@@ -920,8 +922,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		String strBeanName = "casemgmt_oscar_bean" + demo;
 		EctSessionBean sessionBean = (EctSessionBean) request.getSession().getAttribute(strBeanName);
 		String verify = request.getParameter("verify");
-		OscarSuperManager oscarSuperManager = (OscarSuperManager) SpringUtils.getBean("oscarSuperManager");
-
+		OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
+		
 		Date now = new Date();
 		String roleName = caseManagementMgr.getRoleName(providerNo, note.getProgram_no());
 
@@ -934,8 +936,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			// only update appt if there is one
 			if (sessionBean.appointmentNo != null && !sessionBean.appointmentNo.equals("")) {
 				String apptStatus = updateApptStatus(sessionBean.status, "verify");
-				oscarSuperManager.update("appointmentDao", "archive_appt", new Object[] { sessionBean.appointmentNo });
-				oscarSuperManager.update("appointmentDao", "updatestatusc", new Object[] { apptStatus, providerNo, sessionBean.appointmentNo });
+				appointmentDao.archiveAppointment(Integer.parseInt(sessionBean.appointmentNo));
+				appointmentDao.updateAppointmentStatus(Integer.parseInt(sessionBean.appointmentNo), apptStatus, providerNo);
 			}
 
 		} else if (note.isSigned()) {
@@ -947,8 +949,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			// only update appt if there is one
 			if (sessionBean.appointmentNo != null && !sessionBean.appointmentNo.equals("")) {
 				String apptStatus = updateApptStatus(sessionBean.status, "sign");
-				oscarSuperManager.update("appointmentDao", "archive_appt", new Object[] { sessionBean.appointmentNo });
-				oscarSuperManager.update("appointmentDao", "updatestatusc", new Object[] { apptStatus, providerNo, sessionBean.appointmentNo });
+				appointmentDao.archiveAppointment(Integer.parseInt(sessionBean.appointmentNo));
+				appointmentDao.updateAppointmentStatus(Integer.parseInt(sessionBean.appointmentNo), apptStatus, providerNo);
 			}
 		}
 

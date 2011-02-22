@@ -4,7 +4,9 @@ import java.util.List;
 
 import javax.persistence.Query;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.oscarehr.common.model.Appointment;
+import org.oscarehr.common.model.AppointmentArchive;
 import org.oscarehr.common.model.Facility;
 import org.springframework.stereotype.Repository;
 
@@ -42,4 +44,26 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 		return query.getResultList();		
 	}
 	
+	
+	public void archiveAppointment(int appointmentNo) {
+		Appointment appointment = this.find(appointmentNo);
+		if(appointment!=null) {
+			AppointmentArchive apptArchive = new AppointmentArchive(appointment.getId());
+			try {
+				BeanUtils.copyProperties(apptArchive, appointment);
+			}catch(Exception e) {
+				//should log the error
+			}
+			entityManager.persist(apptArchive);
+		}
+	}
+	
+	public void updateAppointmentStatus(int appointmentNo, String status, String user) {
+		Appointment appointment = this.find(appointmentNo);
+		if(appointment != null) {
+			appointment.setStatus(status);
+			appointment.setLastUpdateUser(user);
+			merge(appointment);
+		}
+	}
 }

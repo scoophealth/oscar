@@ -112,7 +112,7 @@
        
        var ocularMedsLabel = "oscarEncounter.NavBar.OcularMeds";
        addRightNavDiv("OcularMedication");	
-       popColumn(ctx + "/CaseManagementView.do?hc=009999&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=OcularMedication&title="+ocularMedsLabel+"&cmd=OcularMedication","OcularMedication","OcularMedication", "rightNavBar", this);
+       popColumn(ctx + "/CaseManagementView.do?hc=009999&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=OcularMedication&title="+ocularMedsLabel+"&cmd=OcularMedication&appointment_no="+appointmentNo,"OcularMedication","OcularMedication", "rightNavBar", this);
        
        addPrintOption('Measurements','extPrintMeasurements');
        addPrintOption('OcularProcedures','extPrintOcularProcedures');
