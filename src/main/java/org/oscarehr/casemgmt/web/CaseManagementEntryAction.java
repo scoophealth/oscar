@@ -1013,6 +1013,11 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			note.setCreate_date(now);
 			newNote = true;
 		}
+		
+		if(sessionBean.appointmentNo != null) {
+			note.setAppointmentNo(Integer.parseInt(sessionBean.appointmentNo));
+		}
+			
 
 		/* save note including add signature */
 		String savedStr = caseManagementMgr.saveNote(cpp, note, providerNo, userName, lastSavedNoteString, roleName);
@@ -1260,7 +1265,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		if (noteId.substring(0, 1).equals("0")) {
 			note = new CaseManagementNote();
 			note.setDemographic_no(demo);
-			history = "";
+			history = new String();
 			newNote = true;
 		} else {
 			note = this.caseManagementMgr.getNote(request.getParameter("nId"));
@@ -1326,9 +1331,9 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
 		String sessionName = "caseManagementEntryForm" + demo;
 		CaseManagementEntryFormBean sessionFrm = (CaseManagementEntryFormBean) request.getSession().getAttribute(sessionName);
-		List issuelist = new ArrayList();
-		Set issueset = new HashSet();
-		Set noteSet = new HashSet();
+		List<CaseManagementIssue> issuelist = new ArrayList<CaseManagementIssue>();
+		Set<CaseManagementIssue> issueset = new HashSet<CaseManagementIssue>();
+		Set<CaseManagementNote> noteSet = new HashSet<CaseManagementNote>();
 
 		int numIssues = Integer.parseInt(request.getParameter("numIssues"));
 		// CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
@@ -1421,7 +1426,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		List<CaseManagementNote> cmnList = caseManagementMgr.getNotesByUUID(cmn.getUuid());
 		Long firstNoteId;
 		Long lastNoteId;
-		List<Long> noteIdList = new ArrayList();
+		List<Long> noteIdList = new ArrayList<Long>();
 		for (CaseManagementNote note : cmnList) {
 			noteIdList.add(note.getId());
 		}
@@ -1628,12 +1633,12 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
 		// remove issues which we already have - we don't want duplicates unless asked for
 		List existingIssues = caseManagementMgr.filterIssues(caseManagementMgr.getIssues(Integer.parseInt(demono)), programId);
-		List filteredSearchResults;
+		List<Issue> filteredSearchResults;
 
 		if (request.getParameter("amp;all") != null) {
-			filteredSearchResults = new ArrayList(searchResults);
+			filteredSearchResults = new ArrayList<Issue>(searchResults);
 		} else {
-			filteredSearchResults = new ArrayList();
+			filteredSearchResults = new ArrayList<Issue>();
 			Map existingIssuesMap = convertIssueListToMap(existingIssues);
 			for (Iterator iter = searchResults.iterator(); iter.hasNext();) {
 				Issue issue = (Issue) iter.next();
@@ -1681,7 +1686,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		List searchResults;
 		searchResults = caseManagementMgr.searchIssues(providerNo, programId, search);
 
-		List filteredSearchResults = new ArrayList();
+		List<Issue> filteredSearchResults = new ArrayList<Issue>();
 
 		// remove issues which we already have - we don't want duplicates
 		List existingIssues = caseManagementMgr.filterIssues(caseManagementMgr.getIssues(Integer.parseInt(demono)), programId);
@@ -1951,7 +1956,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			this.caseManagementMgr.saveCaseIssue(curIssues[idx].getIssue());
 
 			// update form with new issue list
-			Set issueset = new HashSet();
+			Set<CaseManagementIssue> issueset = new HashSet<CaseManagementIssue>();
 			for (int i = 0; i < curIssues.length; ++i) {
 				if (curIssues[i].getChecked().equalsIgnoreCase("on")) issueset.add(curIssues[i].getIssue());
 			}
@@ -2062,7 +2067,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		String inds = (String) cform.getLineId();
 
 		Integer ind = new Integer(inds);
-		List iss = new ArrayList();
+		List<CaseManagementIssue> iss = new ArrayList<CaseManagementIssue>();
 		oldList[ind.intValue()].getIssue().setUpdate_date(new Date());
 		iss.add(oldList[ind.intValue()].getIssue());
 		caseManagementMgr.saveAndUpdateCaseIssues(iss);
@@ -2347,15 +2352,15 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 	}
 
 	protected Map getUnlockedNotesMap(HttpServletRequest request) {
-		Map map = (Map) request.getSession().getAttribute("unlockedNoteMap");
+		Map<Long,Boolean> map = (Map<Long,Boolean>) request.getSession().getAttribute("unlockedNoteMap");
 		if (map == null) {
-			map = new HashMap();
+			map = new HashMap<Long,Boolean>();
 		}
 		return map;
 	}
 
 	private List manageLockedNotes(List notes, boolean removeLockedNotes, Map unlockedNotesMap) {
-		List notesNoLocked = new ArrayList();
+		List<CaseManagementNote> notesNoLocked = new ArrayList<CaseManagementNote>();
 		for (Iterator iter = notes.iterator(); iter.hasNext();) {
 			CaseManagementNote note = (CaseManagementNote) iter.next();
 			if (note.isLocked()) {
@@ -2396,7 +2401,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		oscar.oscarEncounter.pageUtil.EctSessionBean bean = (oscar.oscarEncounter.pageUtil.EctSessionBean) request.getSession().getAttribute(strBeanName);
 
 		if (bean != null) {
-			String encounterText = "";
+			String encounterText = new String();
 			String apptDate = convertDateFmt(bean.appointmentDate, request);
 			if (bean.eChartTimeStamp == null) {
 				encounterText = "\n[" + UtilDateUtilities.DateToString(bean.currentDate, "dd-MMM-yyyy", request.getLocale()) + " .: " + bean.reason + "] \n";
@@ -2427,7 +2432,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 	}
 
 	protected String convertDateFmt(String strOldDate, HttpServletRequest request) {
-		String strNewDate = "";
+		String strNewDate = new String();
 		if (strOldDate != null && strOldDate.length() > 0) {
 			SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd", request.getLocale());
 			try {

@@ -484,6 +484,12 @@
 		</form-bean>
                 <form-bean name="PatientEndYearStatementForm" type="oscar.oscarBilling.ca.on.pageUtil.PatientEndYearStatementForm" />
 
+		<form-bean name="eyeformPlanForm" type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property name="followup" type="org.oscarehr.eyeform.model.FollowUp" />
+			<form-property name="test" type="org.oscarehr.eyeform.model.TestBookRecord" />
+			<form-property name="proc" type="org.oscarehr.eyeform.model.ProcedureBook" />
+		</form-bean>
+
 	</form-beans>
 
 	<global-forwards>
@@ -866,6 +872,7 @@
 		<action path="/oscarEncounter/displayOcularProcedure" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayOcularProcedureAction"></action>
 		<action path="/oscarEncounter/displaySpecsHistory" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplaySpecsHistoryAction"></action>
 		<action path="/oscarEncounter/displayMacro" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayMacroAction"></action>
+		<action path="/oscarEncounter/displayAppointmentHistory" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayAppointmentHistoryAction"></action>		
 		<action path="/oscarEncounter/displayConsultation" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayConsultAction"></action>
 		<action path="/oscarEncounter/displayAllergy" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayAllergyAction"></action>
 		<action path="/oscarEncounter/displayRx" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayRxAction"></action>
@@ -1988,6 +1995,12 @@
 
 		<action path="/eyeform/FollowUp" type="org.oscarehr.eyeform.web.FollowUpAction" parameter="method" scope="request" validate="false" input="/eyeform/followup.jsp" name="followUpForm2">
 			<forward name="form" path="/eyeform/followup.jsp" />
+			<forward name="success" path="/eyeform/success.jsp" />
+		</action>
+		
+		<action path="/eyeform/EyeformPlan" type="org.oscarehr.eyeform.web.PlanAction" parameter="method" scope="request" validate="false" input="/eyeform/plan_new.jsp" name="eyeformPlanForm">
+			<forward name="form" path="/eyeform/plan_new.jsp" />
+			<forward name="edit" path="/eyeform/plan_edit.jsp" />
 			<forward name="success" path="/eyeform/success.jsp" />
 		</action>
 		

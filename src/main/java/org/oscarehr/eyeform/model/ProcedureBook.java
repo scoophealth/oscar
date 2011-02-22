@@ -2,21 +2,47 @@ package org.oscarehr.eyeform.model;
 
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+
+import org.oscarehr.common.model.AbstractModel;
 import org.oscarehr.common.model.Demographic;
 
-public class ProcedureBook {
+@Entity
+@Table(name="procedurebook")
+public class ProcedureBook extends AbstractModel<Integer> {
+	
+	@Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
+	
+	@Column(name="eyeform_id")
 	private long eyeformId;
+	
 	private String provider;
-	private String status;
+	
+	@Column(name="appointment_no")
 	private int appointmentNo;
+	
+	@Transient
 	private Demographic demographic;
+	@Column(name="procedure_name")
 	private String procedureName;
 	private String eye;
 	private String location;
-	private String urgency;
 	private String comment;
-	private Date date;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date date = new Date();
+	
+	@Column(name="demographic_no")
 	private int demographicNo;
 	
 	
@@ -44,12 +70,7 @@ public class ProcedureBook {
 	public void setProvider(String provider) {
 		this.provider = provider;
 	}
-	public String getStatus() {
-		return status;
-	}
-	public void setStatus(String status) {
-		this.status = status;
-	}
+	
 	public int getAppointmentNo() {
 		return appointmentNo;
 	}
@@ -80,12 +101,7 @@ public class ProcedureBook {
 	public void setLocation(String location) {
 		this.location = location;
 	}
-	public String getUrgency() {
-		return urgency;
-	}
-	public void setUrgency(String urgency) {
-		this.urgency = urgency;
-	}
+	
 	public String getComment() {
 		return comment;
 	}

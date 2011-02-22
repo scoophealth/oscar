@@ -1420,7 +1420,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 				rec.setDemographicNo(Integer.parseInt(request.getParameter("demographicNo")));
 				rec.setEye(parts[1]);
 				rec.setProvider(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
-				rec.setStatus(null);
+				//rec.setStatus(null);
 				rec.setTestname(parts[0]);
 				rec.setUrgency(parts[2]);
 				testDao.save(rec);

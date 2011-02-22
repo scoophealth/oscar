@@ -2,21 +2,40 @@ package org.oscarehr.eyeform.model;
 
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+
+import org.oscarehr.common.model.AbstractModel;
 import org.oscarehr.common.model.Demographic;
 
-public class TestBookRecord {
-	private Integer id;
+@Entity
+@Table(name="testbookrecord")
+public class TestBookRecord extends AbstractModel<Integer> {
+	@Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;	
 	private String testname;
 	private String provider;
-	private String status;
+	@Column(name="appointment_no")
 	private int appointmentNo;
-	private Demographic demographic;	
+	@Transient
+	private Demographic demographic;
+	@Column(name="demographic_no")
 	private int demographicNo;
+	@Column(name="eyeform_id")
 	private long eyeformId;
 	private String eye;
 	private String urgency;
 	private String comment;
-	private Date date;
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date date = new Date();
 	
 	
 	
@@ -50,12 +69,7 @@ public class TestBookRecord {
 	public void setProvider(String provider) {
 		this.provider = provider;
 	}
-	public String getStatus() {
-		return status;
-	}
-	public void setStatus(String status) {
-		this.status = status;
-	}
+	
 	public int getAppointmentNo() {
 		return appointmentNo;
 	}

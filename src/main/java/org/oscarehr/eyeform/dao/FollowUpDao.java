@@ -43,4 +43,8 @@ public class FollowUpDao extends AbstractDao<FollowUp> {
 	    List<FollowUp> results=query.getResultList();
 	    return(results);
 	}
+	
+	public void deleteById(int id) {
+		entityManager.remove(find(id));
+	}
 }

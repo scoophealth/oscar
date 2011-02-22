@@ -101,6 +101,10 @@
        
        addLeftNavDiv("diagrams");	      
        popColumn(ctx + "/oscarEncounter/displayDiagrams.do?hC=009999&appointment_no="+appointmentNo,"diagrams","diagrams", "leftNavBar", this);
+
+       addLeftNavDiv("appointmentHistory");	      
+       popColumn(ctx + "/oscarEncounter/displayAppointmentHistory.do?hC=009999&cmd=appointmentHistory","appointmentHistory","appointmentHistory", "leftNavBar", this);
+       
        
        removeNavDiv('issues');
        removeNavDiv('Guidelines');
