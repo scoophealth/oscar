@@ -74,6 +74,12 @@
 			length="19"
 		/>
 
+		<property
+			name="appointmentNo"
+			column="appointmentNo"
+			type="int"
+			not-null="true"			
+		/>
 
 	</class>	
 </hibernate-mapping>

@@ -1179,7 +1179,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		}
 
 		// set save Url
-		String addUrl = request.getContextPath() + "/CaseManagementEntry.do?method=issueNoteSave&providerNo=" + providerNo + "&demographicNo=" + demoNo + "&noteId=";
+		String addUrl = request.getContextPath() + "/CaseManagementEntry.do?method=issueNoteSave&providerNo=" + providerNo + "&demographicNo=" + demoNo + "&appointmentNo="+appointmentNo + "&noteId=";
 		request.setAttribute("addUrl", addUrl);
 		request.setAttribute("cppIssue", cppIssues.toString());
 

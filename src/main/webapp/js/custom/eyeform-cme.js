@@ -47,8 +47,8 @@
 					var data = name + "=" + value;
 					postData += data;
 				}
-			});						
-			jQuery.ajax({type:'POST',url:ctx+'/oscarEncounter/MeasurementData.do?action=saveValues&demographicNo='+demographicNo,data:postData,success: function(){
+			});	
+			jQuery.ajax({type:'POST',url:ctx+'/oscarEncounter/MeasurementData.do?action=saveValues&demographicNo='+demographicNo+'&appointmentNo='+appointmentNo,data:postData,success: function(){
 				//alert('Saved.');
 			}});
 		});
