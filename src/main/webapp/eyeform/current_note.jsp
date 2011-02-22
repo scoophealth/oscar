@@ -1,3 +1,28 @@
+<!--  
+/*
+ * 
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License. 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either version 2 
+ * of the License, or (at your option) any later version. * 
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+ * 
+ * <OSCAR TEAM>
+ * 
+ * This software was written for the 
+ * Department of Family Medicine 
+ * McMaster University 
+ * Hamilton 
+ * Ontario, Canada 
+ */
+-->
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jstl/fmt" prefix="fmt" %>
 <%@ taglib prefix="display" uri="http://displaytag.sf.net"%>
@@ -122,7 +147,12 @@ function saveFlags() {
 </script>
 
 <span note_addon="saveEyeformNote"></span>
+<span><a href="javascript:void(0)" onclick="popupPageOne('<c:out value="${ctx}"/>/eyeform/EyeformPlan.do?method=form&amp;followup.demographicNo=<%=demographicNo %>&amp;noteId=<%=noteId%>&amp;followup.appointmentNo=<%=aptNo%>','eyeFormPlan');">[New Plan]</a></span>
+<span><a href="javascript:void(0)" onclick="popupPageOne('<c:out value="${ctx}"/>/eyeform/EyeformPlan.do?method=edit&amp;appointmentNo=<%=aptNo%>','eyeFormPlan');">[Edit Plan]</a></span>
 
+<table width="100%">
+<tr>
+<td width="85%">
 <table border="0">
            <tbody>
            
@@ -130,17 +160,7 @@ function saveFlags() {
 <td colspan="3">
 <div>
 
-        <div>
-            
-            <b>Follow Up/Consult:</b>
-            
-            
-            <span>&nbsp;&nbsp;</span>
-			   
-            <a href="javascript:void(0)" onclick="popupPageOne('<c:out value="${ctx}"/>/eyeform/FollowUp.do?method=form&amp;followup.demographicNo=<%=demographicNo %>&amp;noteId=<%=noteId%>&amp;followup.appointmentNo=<%=aptNo%>','eyeFollowUp');">[arrange]</a>
-            &nbsp;            	
-        </div>
-
+       
         <div>
             <display:table name="requestScope.followUps"
             requestURI="/EyeForm.do" class="display" id="tb" pagesize="5">
@@ -148,16 +168,13 @@ function saveFlags() {
                 <display:setProperty name="paging.banner.one_item_found" value=""/>
                 <display:setProperty name="paging.banner.all_items_found" value=""/>
                 <display:setProperty name="paging.banner.some_items_found" value=""/>
-                
-                <display:column title="Time Span">
-                                        <c:out value="${tb.timespan}"/>
+                              
+                               <display:column title="Type">
+                                <c:out value="${tb.type}"/>
                                 </display:column>
-                                <display:column title="Time Frame">
-                                <c:out value="${tb.timeframe}"/>
-                                </display:column>
-                                <display:column title="Date">
-                                <c:out value="${tb.date}"/>
-                                </display:column>
+                                <display:column title="Timespan">
+                                	<c:out value="${tb.timespan}"/>&nbsp;<c:out value="${tb.timeframe}"/>
+                                </display:column>                                
                                 <display:column title="Provider">
                                 <c:out value="${tb.provider.formattedName}"/>
                                 </display:column>
@@ -179,19 +196,6 @@ function saveFlags() {
 <div>
 
         <div>
-            
-            <b>Book Procedure:</b>
-            
-            
-            <span>&nbsp;&nbsp;</span>
-			<%
-				noteId = (Integer)request.getAttribute("noteId");
-			%>            
-            <a href="javascript:void(0)" onclick="popupPageOne('<c:out value="${ctx}"/>/eyeform/ProcedureBook.do?method=form&amp;data.appointmentNo=<%=aptNo%>&amp;data.demographicNo=<%=demographicNo %>&amp;noteId=<%=noteId%>','eyeProbook');">[arrange procedure]</a>
-            &nbsp;            	
-        </div>
-
-        <div>
 			<display:table name="requestScope.procedures"
             	requestURI="/EyeForm.do" class="display" id="tb" pagesize="5">
 
@@ -205,9 +209,7 @@ function saveFlags() {
 				<display:column title="Eye" >
 		      		<c:out value="${tb.eye}"/>
 				</display:column>
-				<display:column title="Urgency" >
-		      		<c:out value="${tb.urgency}"/>
-				</display:column>
+				
 				<display:column title="Location" >
 		      		<c:out value="${tb.location}"/>
 				</display:column>
@@ -224,18 +226,7 @@ function saveFlags() {
 <tr>
 <td colspan="3">
 <div>
-        <div>
-            
-
-            <b>Book Test:</b>
-
-           
-            <span>&nbsp;&nbsp;</span>
-            
-            <a href="javascript:void(0)" onclick="popupPageOne('<c:out value="${ctx}"/>/eyeform/TestBook.do?method=form&amp;data.appointmentNo=<%=aptNo%>&amp;data.demographicNo=<%=demographicNo %>','eyeTestbook');">[arrange test]</a>
-            	&nbsp;
-            	
-        </div>
+       
         <div>
 			<display:table name="requestScope.testBookRecords"
             	requestURI="/EyeForm.do" class="display" id="tb2" pagesize="5">
@@ -270,30 +261,7 @@ function saveFlags() {
 	String a2c = (eyeform!=null&&eyeform.getStat() != null&&eyeform.getStat().equals("true"))?"checked":"";
 	String a3c = (eyeform!=null&&eyeform.getOpt() != null&&eyeform.getOpt().equals("true"))?"checked":"";	
 %>
- <tr>
-            <td>          	 
-				<%if(a1c.equals("checked")) {  %>
-            	<input type="checkbox" style="width: 10%;" value="true" id="ack1" onchange="setDischarge()" checked="checked"/>
-            	<%} else { %>
-            	<input type="checkbox" style="width: 10%;" value="true" id="ack1" onchange="setDischarge()" />            	
-            	<% } %>            
-            	Discharge            	            
-           <br>   
-           		<%if(a2c.equals("checked")) {  %>	 
-            	<input type="checkbox" style="width: 10%;" id="ack2" value="true" onchange="setStat();" checked="checked"/>
-            	<% } else { %>
-            	<input type="checkbox" style="width: 10%;" id="ack2" value="true" onchange="setStat();"/>            	
-            	<% } %>            	            	
-            	STAT/PRN
-           <br>
-           		<%if(a3c.equals("checked")) {  %>	 
-            	<input type="checkbox" style="width: 10%;" value="true" id="ack3" onchange="setOpt();" checked="checked" />
-            	<%} else { %>
-            	<input type="checkbox" style="width: 10%;" value="true" id="ack3" onchange="setOpt();" />            	
-            	<% } %>            	
-            	optom routine
-            </td>
-</tr>
+
 
 
 <tr><td>&nbsp;</td></tr>
@@ -343,6 +311,44 @@ function saveFlags() {
            
       </table>
 
+</td>
+<td width="15%" valign="top">
+<table>
+ <tr>
+            <td nowrap="nowrap">          	 
+				<%if(a1c.equals("checked")) {  %>
+            	<input type="checkbox" style="width: 10%;" value="true" id="ack1" onchange="setDischarge()" checked="checked"/>
+            	<%} else { %>
+            	<input type="checkbox" style="width: 10%;" value="true" id="ack1" onchange="setDischarge()" />            	
+            	<% } %>            
+            	Discharge            	            
+           </td>
+           </tr>
+           <tr>
+           <td nowrap="nowrap">
+           		<%if(a2c.equals("checked")) {  %>	 
+            	<input type="checkbox" style="width: 10%;" id="ack2" value="true" onchange="setStat();" checked="checked"/>
+            	<% } else { %>
+            	<input type="checkbox" style="width: 10%;" id="ack2" value="true" onchange="setStat();"/>            	
+            	<% } %>            	            	
+            	STAT/PRN
+           </td>
+           </tr>
+           <tr>
+           <td nowrap="nowrap">
+           		<%if(a3c.equals("checked")) {  %>	 
+            	<input type="checkbox" style="width: 10%;" value="true" id="ack3" onchange="setOpt();" checked="checked" />
+            	<%} else { %>
+            	<input type="checkbox" style="width: 10%;" value="true" id="ack3" onchange="setOpt();" />            	
+            	<% } %>            	
+            	optom routine
+            </td>
+           
+</tr>
+</table>
+</td>
+</tr>
+</table>
 
 </span>
 

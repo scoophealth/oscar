@@ -46,8 +46,7 @@ public class FollowUp extends AbstractModel<Integer> {
 	@Transient
 	private Provider provider;
 	
-	private String type;
-	
+	private String type;	
 	private String urgency;
 	private String comment;
 	
