@@ -5,14 +5,18 @@ import java.util.List;
 import javax.persistence.Query;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.log4j.Logger;
 import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.AppointmentArchive;
 import org.oscarehr.common.model.Facility;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class OscarAppointmentDao extends AbstractDao<Appointment> {
 
+	Logger logger = MiscUtils.getLogger();
+	
 	public OscarAppointmentDao() {
 		super(Appointment.class);
 	}
@@ -52,7 +56,7 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 			try {
 				BeanUtils.copyProperties(apptArchive, appointment);
 			}catch(Exception e) {
-				//should log the error
+				logger.error(e);
 			}
 			entityManager.persist(apptArchive);
 		}
