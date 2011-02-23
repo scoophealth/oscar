@@ -56,7 +56,7 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 			try {
 				BeanUtils.copyProperties(apptArchive, appointment);
 			}catch(Exception e) {
-				logger.error(e);
+				logger.error("Error copying values to archive bean",e);
 			}
 			entityManager.persist(apptArchive);
 		}
