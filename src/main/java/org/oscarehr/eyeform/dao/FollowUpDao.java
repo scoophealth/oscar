@@ -22,19 +22,7 @@ public class FollowUpDao extends AbstractDao<FollowUp> {
 			entityManager.persist(obj);
 		}
 	}
-	/*
-	public List<ProcedureBook> getByDemographicNo(int demographicNo) {
-		return getHibernateTemplate().find("from OcularProc op where op.demographicNo = ?",demographicNo);
-	}
-	*/
-	
-	public FollowUp find(int id) {
-		Query query = entityManager.createQuery("select x from "+modelClass.getSimpleName()+" x where x.id=?1");
-	    query.setParameter(1, id);
-	    return(getSingleResultOrNull(query));
-		//return (FollowUp)getHibernateTemplate().get(FollowUp.class, id);
-	}
-	
+
 	public List<FollowUp> getByAppointmentNo(int appointmentNo) {
 		Query query = entityManager.createQuery("select x from "+modelClass.getSimpleName()+" x where x.appointmentNo=?1");
 		query.setParameter(1, appointmentNo);
@@ -42,9 +30,5 @@ public class FollowUpDao extends AbstractDao<FollowUp> {
 		@SuppressWarnings("unchecked")
 	    List<FollowUp> results=query.getResultList();
 	    return(results);
-	}
-	
-	public void deleteById(int id) {
-		entityManager.remove(find(id));
 	}
 }
