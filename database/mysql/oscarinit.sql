@@ -6153,6 +6153,7 @@ CREATE TABLE measurements(
   comments varchar(255) NOT NULL, 
   dateObserved datetime NOT NULL, 
   dateEntered datetime NOT NULL,
+  appointmentNo int(10) NOT NULL,
   PRIMARY KEY(id),
   KEY type (type),
   KEY measuringInstruction (measuringInstruction),
