@@ -23,14 +23,6 @@ public class TestBookRecordDao extends AbstractDao<TestBookRecord> {
 		}
 	}
 	
-	
-	public TestBookRecord find(int id) {
-		Query query = entityManager.createQuery("select x from "+modelClass.getSimpleName()+" x where x.id=?1");
-	    query.setParameter(1, id);
-	    return(getSingleResultOrNull(query));
-		//return (FollowUp)getHibernateTemplate().get(FollowUp.class, id);
-	}
-	
 	public List<TestBookRecord> getByAppointmentNo(int appointmentNo) {
 		Query query = entityManager.createQuery("select x from "+modelClass.getSimpleName()+" x where x.appointmentNo=?1");
 		query.setParameter(1, appointmentNo);
@@ -38,9 +30,5 @@ public class TestBookRecordDao extends AbstractDao<TestBookRecord> {
 		@SuppressWarnings("unchecked")
 	    List<TestBookRecord> results=query.getResultList();
 	    return(results);
-	}
-
-	public void deleteById(int id) {
-		entityManager.remove(find(id));
 	}
 }

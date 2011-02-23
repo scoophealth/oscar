@@ -106,7 +106,7 @@ public class PlanAction extends DispatchAction {
     		followUp.setComment(request.getParameter("followup"+id+".comment"));
     		followUp.setTimeframe(request.getParameter("followup"+id+".timeframe"));
     		if(followUp.getTimespan()==0) {
-    			followUpDao.deleteById(Integer.parseInt(id));
+    			followUpDao.remove(Integer.parseInt(id));    			
     		} else {
     			followUpDao.merge(followUp);
     		}
@@ -120,7 +120,7 @@ public class PlanAction extends DispatchAction {
     		proc.setLocation(request.getParameter("proc"+id+".location"));
     		proc.setComment(request.getParameter("proc"+id+".comment"));
     		if(proc.getProcedureName().equals("")) {
-    			procBookDao.deleteById(Integer.parseInt(id));
+    			procBookDao.remove(Integer.parseInt(id));
     		} else {
     			procBookDao.merge(proc);
     		}
@@ -134,7 +134,7 @@ public class PlanAction extends DispatchAction {
     		test.setUrgency(request.getParameter("test"+id+".urgency"));
     		test.setComment(request.getParameter("test"+id+".comment"));
     		if(test.getTestname().equals("")) {
-    			testBookDao.deleteById(Integer.parseInt(id));
+    			testBookDao.remove(Integer.parseInt(id));
     		} else {
     			testBookDao.merge(test);
     		}
