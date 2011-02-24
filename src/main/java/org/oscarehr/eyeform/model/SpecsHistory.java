@@ -173,4 +173,27 @@ public class SpecsHistory {
 		String os = getPrefix(this.getOsSph()) + getPrefix(this.getOsCyl()) + "x" + getPrefix(this.getOsAxis());
 		return od + "<br/>" + os;
 	}
+	
+	public String toString2() {
+		StringBuilder sb = new StringBuilder();
+        sb.append(getOdSph() == null ? "" : getOdSph());
+        sb.append(getOdCyl() == null ? "" : getOdCyl());
+        if (getOdAxis() != null && getOdAxis().trim().length() != 0)                
+        	sb.append("x" + getOdAxis());
+        if (getOdAdd() != null && getOdAdd().trim().length() != 0)               
+        	sb.append("add" + getOdAdd());
+        if (getOdPrism() != null && getOdPrism().trim().length() != 0)                
+        	sb.append("prism" + getOdPrism());
+        sb.append(" " + getType() + " " + getDoctor());
+        sb.append("\n");
+        sb.append(getOsSph() == null ? "" : getOsSph());
+        sb.append(getOsCyl() == null ? "" : getOsCyl());
+        if (getOsAxis() != null && getOsAxis().trim().length() != 0)                
+        	sb.append("x" + getOsAxis());
+        if (getOsAdd() != null && getOsAdd().trim().length() != 0)               
+        	sb.append("add" + getOsAdd());
+        if (getOsPrism() != null && getOsPrism().trim().length() != 0)                
+        	sb.append("prism" + getOsPrism());
+		return sb.toString();
+	}
 }

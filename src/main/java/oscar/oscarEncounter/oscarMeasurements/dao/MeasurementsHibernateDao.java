@@ -167,4 +167,12 @@ public class MeasurementsHibernateDao extends HibernateDaoSupport implements
 
         	return rs;        	        	
     	}
+    	
+    	public List<Measurements> getMeasurementsByAppointment(int appointmentNo) {
+    		String queryStr = "From Measurements m WHERE m.appointmentNo = " + appointmentNo + " ORDER BY m.dateObserved DESC";
+        	    		
+        	List<Measurements> rs = getHibernateTemplate().find(queryStr);
+
+        	return rs;     
+    	}
 }

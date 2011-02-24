@@ -310,9 +310,9 @@ function navBarLoader() {
             var rightNavBar = [
                   ctx + "/oscarEncounter/displayAllergy.do?hC=<%=Colour.allergy%>",
                   ctx + "/oscarEncounter/displayRx.do?hC=<%=Colour.rx%>&numToDisplay=12",
-                  ctx + "/CaseManagementView.do?hc=<%=Colour.omed%>&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=OMeds&title=" + oMedsLabel + "&cmd=OMeds",
-                  ctx + "/CaseManagementView.do?hc=<%=Colour.riskFactors%>&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=RiskFactors&title=" + riskFactorsLabel + "&cmd=RiskFactors",
-                  ctx + "/CaseManagementView.do?hc=<%=Colour.familyHistory%>&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=FamHistory&title=" + famHistoryLabel + "&cmd=FamHistory",
+                  ctx + "/CaseManagementView.do?hc=<%=Colour.omed%>&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=OMeds&title=" + oMedsLabel + "&cmd=OMeds" + "&appointment_no="+appointmentNo,
+                  ctx + "/CaseManagementView.do?hc=<%=Colour.riskFactors%>&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=RiskFactors&title=" + riskFactorsLabel + "&cmd=RiskFactors"+ "&appointment_no="+appointmentNo,
+                  ctx + "/CaseManagementView.do?hc=<%=Colour.familyHistory%>&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=FamHistory&title=" + famHistoryLabel + "&cmd=FamHistory"+ "&appointment_no="+appointmentNo,
                   ctx + "/oscarEncounter/displayIssues.do?hC=<%=Colour.issues%>",
                   ctx + "/oscarEncounter/displayDecisionSupportAlerts.do?providerNo=" + providerNo + "&demographicNo=" + demographicNo
               ];

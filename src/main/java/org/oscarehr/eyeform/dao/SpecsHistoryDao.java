@@ -35,4 +35,8 @@ public class SpecsHistoryDao extends HibernateDaoSupport {
 		else
 			return getHibernateTemplate().find("from SpecsHistory op where op.demographicNo = ? and op.date <=? order by op.id desc",new Object[] {demographicNo,endDate});
 	}
+	
+	public List<SpecsHistory> getAllPreviousAndCurrent(int demographicNo, int appointmentNo) {
+		return getHibernateTemplate().find("from SpecsHistory op where op.demographicNo = ? and op.appointmentNo <= ?",new Object[] {demographicNo,appointmentNo});
+	}
 }
