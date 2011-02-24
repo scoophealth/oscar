@@ -56,6 +56,24 @@
 
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.js"></script> 
+   <script>
+     jQuery.noConflict();
+   </script>
+<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
+<script>
+	var ctx = '<%=request.getContextPath()%>';
+</script>
+   <%
+      
+ 	String customScript = OscarProperties.getInstance().getProperty("cme_js");
+   if(customScript != null && customScript.length()>0) {
+	%>
+		<script src="<c:out value="${ctx}"/>/js/custom/<%=customScript%>-apphistory.js"></script>	
+	<%   	   
+   }      
+   %>
+   
 <title><bean:message
 	key="demographic.demographicappthistory.title" /></title>
 <link rel="stylesheet" type="text/css"
@@ -77,6 +95,22 @@ function popupPageNew(vheight,vwidth,varpage) {
 
 //-->
 
+
+</script>
+
+<script>
+	function printVisit() {
+		var sels = document.getElementsByName('sel');
+		var ids = "";
+		for(var x=0;x<sels.length;x++) {
+			if(sels[x].checked) {
+				if(ids.length>0)
+					ids+= ",";
+				ids += sels[x].value;
+			}
+		}		
+		location.href=ctx+"/eyeform/Eyeform.do?method=print&apptNos="+ids;                
+	}
 
 </script>
 
@@ -121,8 +155,8 @@ function popupPageNew(vheight,vwidth,varpage) {
           <%}%>   
     --></td>
 		<td class="MainTableRightColumn">
-		<table width="95%" border="0" bgcolor="#ffffff">
-			<tr bgcolor="<%=deepColor%>">
+		<table width="95%" border="0" bgcolor="#ffffff" id="apptHistoryTbl">
+			<tr  bgcolor="<%=deepColor%>">				
 				<TH width="10%"><b><bean:message
 					key="demographic.demographicappthistory.msgApptDate" /></b></TH>
 				<TH width="10%"><b><bean:message
@@ -164,7 +198,7 @@ function popupPageNew(vheight,vwidth,varpage) {
       nItems++; //to calculate if it is the end of records
        
 %> 
-<tr bgcolor="<%=bodd?weakColor:"white"%>">
+<tr bgcolor="<%=bodd?weakColor:"white"%>" appt_no="<%=rs.getString("appointment_no")%>">	  
       <td align="center"><a href=# onClick ="popupPageNew(360,680,'../appointment/appointmentcontrol.jsp?appointment_no=<%=apptMainBean.getString(rs,"appointment_no")%>&displaymode=edit&dboperation=search');return false;" ><%=apptMainBean.getString(rs,"appointment_date")%></a></td>
       <td align="center"><%=apptMainBean.getString(rs,"start_time")%></td>
       <td align="center"><%=apptMainBean.getString(rs,"end_time")%></td>
@@ -182,7 +216,6 @@ function popupPageNew(vheight,vwidth,varpage) {
   }
   
 %>
-
 		</table>
 		<br>
 		<%
