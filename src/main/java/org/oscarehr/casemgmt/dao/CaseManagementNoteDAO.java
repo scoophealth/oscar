@@ -442,4 +442,14 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 
         return rs;
     }
+    
+	public List<CaseManagementNote> getMostRecentNotesByAppointmentNo(int appointmentNo) {
+		String hql = "select cmn from CaseManagementNote cmn where cmn.appointmentNo = ?";
+		List<CaseManagementNote> tmp = this.getHibernateTemplate().find(hql, appointmentNo);
+		List<CaseManagementNote> mostRecents = new ArrayList<CaseManagementNote>();
+		for(CaseManagementNote note:tmp) {
+			mostRecents.add(this.getMostRecentNote(note.getUuid()));
+		}
+		return mostRecents;
+	}
 }
