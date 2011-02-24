@@ -1,6 +1,10 @@
 package org.oscarehr.eyeform.web;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -13,14 +17,24 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.PMmodule.dao.ClientDao;
 import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.casemgmt.dao.AllergyDAO;
+import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
+import org.oscarehr.casemgmt.model.Allergy;
+import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.dao.ConsultationRequestExtDao;
+import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.dao.ProfessionalSpecialistDao;
+import org.oscarehr.common.model.Appointment;
+import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.common.service.PdfRecordPrinter;
+import org.oscarehr.eyeform.MeasurementFormatter;
 import org.oscarehr.eyeform.dao.EyeFormDao;
 import org.oscarehr.eyeform.dao.FollowUpDao;
 import org.oscarehr.eyeform.dao.OcularProcDao;
@@ -38,13 +52,30 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarEncounter.oscarMeasurements.dao.MeasurementsDao;
+import oscar.oscarEncounter.oscarMeasurements.model.Measurements;
+import oscar.util.UtilDateUtilities;
+
+import com.lowagie.text.DocumentException;
 
 public class EyeformAction extends DispatchAction {
 
 	static Logger logger = MiscUtils.getLogger();
+	static String[] cppIssues = {"CurrentHistory","PastOcularHistory","MedHistory","OMeds","OcularMedication","DiagnosticNotes"};
 	
-	CaseManagementManager cmm;
-	  
+	CaseManagementManager cmm = null;
+	OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
+	ClientDao demographicDao= (ClientDao)SpringUtils.getBean("clientDao");
+	ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
+	CaseManagementNoteDAO caseManagementNoteDao = (CaseManagementNoteDAO)SpringUtils.getBean("CaseManagementNoteDAO");
+	OcularProcDao ocularProcDao = (OcularProcDao)SpringUtils.getBean("OcularProcDAO");
+	SpecsHistoryDao specsHistoryDao = (SpecsHistoryDao)SpringUtils.getBean("SpecsHistoryDAO");
+	AllergyDAO allergyDao = (AllergyDAO)SpringUtils.getBean("AllergyDAO");
+	FollowUpDao followUpDao = (FollowUpDao)SpringUtils.getBean("FollowUpDAO");
+	ProcedureBookDao procedureBookDao = (ProcedureBookDao)SpringUtils.getBean("ProcedureBookDAO");
+	TestBookRecordDao testBookDao = (TestBookRecordDao)SpringUtils.getBean("TestBookDAO");
+	EyeFormDao eyeFormDao = (EyeFormDao)SpringUtils.getBean("EyeFormDao");	   		
+	MeasurementsDao measurementsDao = (MeasurementsDao) SpringUtils.getBean("measurementsDao");
+	
 	   public ActionForward getConReqCC(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		   String requestId = request.getParameter("requestId");
 		   ConsultationRequestExtDao dao = (ConsultationRequestExtDao)SpringUtils.getBean("consultationRequestExtDao");
@@ -196,8 +227,7 @@ public class EyeformAction extends DispatchAction {
            }
            
            //get the checkboxes
-           EyeFormDao dao = (EyeFormDao)SpringUtils.getBean("EyeFormDao");	   		
-           EyeForm eyeform = dao.getByAppointmentNo(appNo);
+           EyeForm eyeform = eyeFormDao.getByAppointmentNo(appNo);
            
            
 			if (eyeform.getDischarge() != null
@@ -252,4 +282,126 @@ public class EyeformAction extends DispatchAction {
 		   return text + "\n" + sb.toString();
 	   }
 	   
+	   public ActionForward print(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		   response.setContentType("application/pdf"); // octet-stream
+			response.setHeader("Content-Disposition", "attachment; filename=\"Encounter-" + UtilDateUtilities.getToday("yyyy-MM-dd.hh.mm.ss") + ".pdf\"");
+			doPrint(request, response.getOutputStream());
+			return null;
+	   }
+	   
+		
+	   public void doPrint(HttpServletRequest request, OutputStream os) throws IOException, DocumentException {
+			String ids[] = request.getParameter("apptNos").split(",");
+			String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
+
+			PdfRecordPrinter printer = new PdfRecordPrinter(request, os);
+			
+			
+			//loop through each visit..concatenate into 1 PDF			
+			for(int x=0;x<ids.length;x++) {
+				int appointmentNo = Integer.parseInt(ids[x]);
+				Appointment appointment = appointmentDao.find(appointmentNo);
+				Demographic demographic = demographicDao.getClientByDemographicNo(appointment.getDemographicNo());				
+				printer.setDemographic(demographic);
+				printer.setAppointment(appointment);
+				printer.printDocHeaderFooter();
+					
+				//get cpp items by appointmentNo (current history,past ocular hx,
+				//medical hx, ocular meds, other meds, diagnostic notes			
+				printCppItem(printer,"Current History","CurrentHistory",demographic.getDemographicNo(), appointmentNo, false);
+				printCppItem(printer,"Past Ocular History","PastOcularHistory",demographic.getDemographicNo(), appointmentNo, true);
+				printCppItem(printer,"Medical History","MedHistory",demographic.getDemographicNo(), appointmentNo, true);
+				printCppItem(printer,"Ocular Medication","OcularMedication",demographic.getDemographicNo(), appointmentNo, true);
+				printCppItem(printer,"Other Meds","OMeds",demographic.getDemographicNo(), appointmentNo, true);
+				printCppItem(printer,"Diagnostic Notes","DiagnosticNotes",demographic.getDemographicNo(), appointmentNo, false);
+				printer.setNewPage(true);
+				
+				//ocular procs
+				List<OcularProc> ocularProcs = ocularProcDao.getAllPreviousAndCurrent(demographic.getDemographicNo(),appointmentNo);
+				printer.printOcularProcedures(ocularProcs);
+				
+				//specs history
+				List<SpecsHistory> specsHistory = specsHistoryDao.getAllPreviousAndCurrent(demographic.getDemographicNo(),appointmentNo);
+				printer.printSpecsHistory(specsHistory);
+				
+				//allergies
+				List<Allergy> allergies = allergyDao.getAllergies(String.valueOf(demographic.getDemographicNo()));
+				printer.printAllergies(allergies);
+				
+				//rx
+				printer.printRx(String.valueOf(demographic.getDemographicNo()));
+				
+				//measurements
+				List<Measurements> measurements = measurementsDao.getMeasurementsByAppointment(appointmentNo);
+				MeasurementFormatter formatter = new MeasurementFormatter(measurements);
+				printer.printEyeformMeasurements(formatter);
+				
+				//impression
+				List<CaseManagementNote> notes = caseManagementNoteDao.getMostRecentNotesByAppointmentNo(appointmentNo);
+				notes = filterOutCpp(notes);				
+				printer.printNotes(notes);
+				
+				//plan - followups/consults, procedures booked, tests booked, checkboxes
+				List<FollowUp> followUps = followUpDao.getByAppointmentNo(appointmentNo);
+				List<ProcedureBook> procedureBooks = procedureBookDao.getByAppointmentNo(appointmentNo);
+				List<TestBookRecord> testBooks = testBookDao.getByAppointmentNo(appointmentNo);
+				EyeForm eyeform = eyeFormDao.getByAppointmentNo(appointmentNo);
+		        printer.printEyeformPlan(followUps, procedureBooks, testBooks,eyeform);
+				
+			}
+			
+			printer.finish();							
+					   
+	   }
+	   
+	   public void printCppItem(PdfRecordPrinter printer, String header, String issueCode, int demographicNo, int appointmentNo, boolean includePrevious) throws DocumentException,IOException {
+		   Collection<CaseManagementNote> notes = null;
+		   if(!includePrevious) {
+			    notes = filterNotesByAppointment(caseManagementNoteDao.findNotesByDemographicAndIssueCode(demographicNo, new String[] {issueCode}),appointmentNo);			   
+		   } else {
+			   notes = filterNotesByPreviousOrCurrentAppointment(caseManagementNoteDao.findNotesByDemographicAndIssueCode(demographicNo, new String[] {issueCode}),appointmentNo);								
+		   }
+		   if(notes.size()>0) {
+			   printer.printCPPItem(header, notes);
+			   printer.printBlankLine();
+		   }
+	   }
+
+	   public Collection<CaseManagementNote> filterNotesByAppointment(Collection<CaseManagementNote> notes, int appointmentNo) {
+		   List<CaseManagementNote> filteredNotes = new ArrayList<CaseManagementNote>();
+		   for(CaseManagementNote note:notes) {
+			   if(note.getAppointmentNo() == appointmentNo) {
+				   filteredNotes.add(note);
+			   }
+		   }
+		   return filteredNotes;
+	   }
+	   
+	   public Collection<CaseManagementNote> filterNotesByPreviousOrCurrentAppointment(Collection<CaseManagementNote> notes, int appointmentNo) {
+		   List<CaseManagementNote> filteredNotes = new ArrayList<CaseManagementNote>();
+		   for(CaseManagementNote note:notes) {
+			   if(note.getAppointmentNo() <= appointmentNo) {
+				   filteredNotes.add(note);
+			   }
+		   }
+		   return filteredNotes;
+	   }
+	   
+	   public List<CaseManagementNote> filterOutCpp(Collection<CaseManagementNote> notes) {
+		   List<CaseManagementNote> filteredNotes = new ArrayList<CaseManagementNote>();
+		   for(CaseManagementNote note:notes) {
+			   boolean skip=false;
+			 for(CaseManagementIssue issue:note.getIssues()) {
+				 for(int x=0;x<cppIssues.length;x++) {
+					 if(issue.getIssue().getCode().equals(cppIssues[x])) {
+						 skip=true;
+					 }
+				 }
+			 }
+			 if(!skip) {
+				 filteredNotes.add(note);
+			 }
+		   }
+		   return filteredNotes;
+	   }
 }
