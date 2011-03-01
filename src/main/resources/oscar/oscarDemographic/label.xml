@@ -46,7 +46,7 @@
 	<title>
 		<band height="60">
 			<textField>
-				<reportElement positionType="Float" mode="Opaque" x="0"
+				<reportElement positionType="Float" mode="Opaque" x="17"
 					y="0" width="330" height="14" />
 				<textElement>
 					<font size="12" isBold="true" isUnderline="true" />
@@ -54,7 +54,7 @@
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{last_name} + "," + $F{first_name} + "   " + "CHART#:" + $F{chart_no}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement positionType="Float" mode="Opaque" x="0"
+				<reportElement positionType="Float" mode="Opaque" x="17"
 					y="15" width="330" height="14" />
 				<textElement>
 					<font size="12" />
@@ -62,7 +62,7 @@
 				<textFieldExpression class="java.lang.String"><![CDATA["HIN:" + $F{hin} + " " + $F{ver} + "   " + "SEX:" + $F{sex} + "	   " + "DOB:" +$F{date_of_birth} + "/" + $F{month_of_birth} + "/" + $F{year_of_birth}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement positionType="Float" mode="Opaque" x="0"
+				<reportElement positionType="Float" mode="Opaque" x="17"
 					y="30" width="330" height="14" />
 				<textElement>
 					<font size="12" />
@@ -70,7 +70,7 @@
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{address} + " " + $F{city} + "," + $F{province} + " " + $F{postal}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement positionType="Float" mode="Opaque" x="0"
+				<reportElement positionType="Float" mode="Opaque" x="17"
 					y="45" width="330" height="14">
 					<printWhenExpression>
 						Boolean.valueOf($F{doc_name} != null)
@@ -82,7 +82,7 @@
 				<textFieldExpression class="java.lang.String"><![CDATA["HOME: " + $F{phone} + "   " + "Dr. " + $F{doc_name}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement positionType="Float" mode="Opaque" x="0"
+				<reportElement positionType="Float" mode="Opaque" x="17"
 					y="45" width="330" height="14">
 					<printWhenExpression>
 						Boolean.valueOf($F{doc_name} == null)
