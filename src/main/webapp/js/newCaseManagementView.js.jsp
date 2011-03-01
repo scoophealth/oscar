@@ -8,6 +8,8 @@
     var case_program_id;
     var caisiEnabled = false;
     var passwordEnabled = false;
+    var requireIssue = true;
+    var requireObsDate = true;
 
        var X       = 10;
     var small   = 60;
@@ -1875,16 +1877,16 @@ function ajaxSaveNote(div,noteId,noteTxt) {
     }
 
     if( caisiEnabled ) {
-        if( !issueIsAssigned() ) {
+        if(requireIssue && !issueIsAssigned() ) {
             alert(assignIssueError);
             return false;
         }
-/*
-        if( $("observationDate").value.length == 0 ) {
+
+        if( requireObsDate && $("observationDate").value.length == 0 ) {
             alert(assignObservationDateError);
             return false;
         }
-*/
+
         if($("encTypeSelect0") != null && $("encTypeSelect0").options[$("encTypeSelect0").selectedIndex].value.length == 0 ) {
         	alert(assignEncTypeError);
         	return false;
@@ -1943,16 +1945,16 @@ function savePage(method, chain) {
     }
 
     if( caisiEnabled ) {
-        if( !issueIsAssigned() ) {
+        if( requireIssue && !issueIsAssigned() ) {
             alert(assignIssueError);
             return false;
         }
-/*
-        if( $("observationDate").value.length == 0 ) {
+
+        if( requireObsDate && $("observationDate").value.length == 0 ) {
             alert(assignObservationDateError);
             return false;
         }
-*/
+
         if($("encTypeSelect0") != null && $("encTypeSelect0").options[$("encTypeSelect0").selectedIndex].value.length == 0 ) {
         	alert(assignEncTypeError);
         	return false;

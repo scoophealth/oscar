@@ -111,6 +111,22 @@ try
     <caisi:isModuleLoad moduleName="caisi">
         caisiEnabled = true;
     </caisi:isModuleLoad>
+
+    <%
+    oscar.OscarProperties props = oscar.OscarProperties.getInstance();
+    String requireIssue = props.getProperty("caisi.require_issue","true");
+    if(requireIssue != null && requireIssue.equals("false")) {
+    %>
+    	requireIssue = false;
+    <% } %>
+
+<%
+    String requireObsDate = props.getProperty("caisi.require_observation_date","true");
+    if(requireObsDate != null && requireObsDate.equals("false")) {
+    %>
+    	requireObsDate = false;
+    <% } %>
+	
     <c:if test="${sessionScope.passwordEnabled=='true'}">
 
         passwordEnabled = true;
