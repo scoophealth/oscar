@@ -144,6 +144,23 @@ public class AdmissionDao extends HibernateDaoSupport {
 
         return rs;
     }
+    
+    public List<Admission> getAdmissionsASC(Integer demographicNo) {
+        if (demographicNo == null || demographicNo <= 0) {
+            throw new IllegalArgumentException();
+        }
+
+        String queryStr = "FROM Admission a WHERE a.ClientId=? ORDER BY a.AdmissionDate ASC";
+        @SuppressWarnings("unchecked")
+        List<Admission> rs = getHibernateTemplate().find(queryStr, new Object[] { demographicNo });
+
+        if (log.isDebugEnabled()) {
+            log.debug("getAdmissions for clientId " + demographicNo + ", # of admissions: " + rs.size());
+        }
+
+        return rs;
+    }
+
 
    /**
     * results are ordered by admission date descending

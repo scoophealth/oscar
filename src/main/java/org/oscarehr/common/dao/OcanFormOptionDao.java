@@ -40,7 +40,7 @@ public class OcanFormOptionDao extends AbstractDao<OcanFormOption> {
 	 */
 	public List<OcanFormOption> findByVersionAndCategory(String formVersion, String mainCatgeory) {
 		// build sql string
-		String sqlCommand = "select x from OcanFormOption x where x.ocanFormVersion=?1 and x.ocanDataCategory=?2 order by x.id";
+		String sqlCommand = "select x from OcanFormOption x where x.ocanFormVersion=?1 and x.ocanDataCategory=?2 order by x.ocanDataCategoryName";
 
 		// set parameters
 		Query query = entityManager.createQuery(sqlCommand);
