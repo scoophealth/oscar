@@ -1,5 +1,6 @@
 package org.oscarehr.common.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Query;
@@ -45,7 +46,11 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 		String sql = "select a from Appointment a where a.demographicNo=? order by a.appointmentDate DESC, a.startTime DESC";
 		Query query = entityManager.createQuery(sql);
 		query.setParameter(1, demographicNo);
-		return query.getResultList();		
+		
+		@SuppressWarnings("unchecked")
+		List<Appointment> rs =  query.getResultList();
+		
+		return rs;
 	}
 	
 	
@@ -70,4 +75,27 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 			merge(appointment);
 		}
 	}
+	
+    public List<Appointment> getAllByDemographicNo(Integer demographicNo) {
+        String sql = "SELECT a FROM Appointment a WHERE a.demographicNo = "+demographicNo+" ORDER BY a.id";       
+        Query query = entityManager.createQuery(sql);
+		
+        @SuppressWarnings("unchecked")
+		List<Appointment> rs = query.getResultList();
+		
+		return rs;
+    }
+
+    public List<Appointment> findByDateRange(Date startTime, Date endTime) {
+		String sql = "SELECT a FROM Appointment a WHERE a.appointmentDate >=? and a.appointmentDate < ?";
+
+    	Query query = entityManager.createQuery(sql);
+		query.setParameter(1, startTime);
+		query.setParameter(2, endTime);
+		@SuppressWarnings("unchecked")
+        List<Appointment> rs = query.getResultList();
+
+        return rs;
+    }
+    
 }

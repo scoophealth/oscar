@@ -94,7 +94,9 @@ import org.oscarehr.common.dao.EFormValueDao;
 import org.oscarehr.common.dao.FacilityDao;
 import org.oscarehr.common.dao.GroupNoteDao;
 import org.oscarehr.common.dao.IntegratorConsentDao;
+import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.dao.PreventionDao;
+import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.EFormData;
@@ -102,7 +104,6 @@ import org.oscarehr.common.model.EFormValue;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.GroupNoteLink;
 import org.oscarehr.common.model.IntegratorConsent;
-import org.oscarehr.common.model.OscarAppointment;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.IntegratorConsent.ConsentStatus;
@@ -115,7 +116,6 @@ import org.oscarehr.util.ShutdownException;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
-import oscar.appt.AppointmentDao;
 import oscar.facility.IntegratorControlDao;
 import oscar.oscarBilling.ca.on.dao.BillingOnItemDao;
 import oscar.oscarBilling.ca.on.model.BillingOnCHeader1;
@@ -151,7 +151,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	private DrugDao drugDao = (DrugDao) SpringUtils.getBean("drugDao");
 	private SecUserRoleDao secUserRoleDao = (SecUserRoleDao) SpringUtils.getBean("secUserRoleDao");
 	private AdmissionDao admissionDao = (AdmissionDao) SpringUtils.getBean("admissionDao");
-    private AppointmentDao appointmentDao = (AppointmentDao) SpringUtils.getBean("appointmentDao");
+    private OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao"); 
     private IntegratorControlDao integratorControlDao = (IntegratorControlDao) SpringUtils.getBean("integratorControlDao");
     private MeasurementsHibernateDao measurementsDao = (MeasurementsHibernateDao) SpringUtils.getBean("measurementsDao");
     private MeasurementsExtDao measurementsExtDao = (MeasurementsExtDao) SpringUtils.getBean("measurementsExtDao");
@@ -758,33 +758,33 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	private void pushAppointments(Facility facility, DemographicWs demographicService, Integer demographicId) throws ShutdownException {
             logger.debug("pushing appointments facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
-            List<OscarAppointment> appointments = appointmentDao.getAllByDemographicNo(demographicId);
+            List<Appointment> appointments = appointmentDao.getAllByDemographicNo(demographicId);
             if (appointments.size()==0) return;
 
             ArrayList<CachedAppointment> cachedAppointments = new ArrayList<CachedAppointment>();
-            for (OscarAppointment appointment : appointments) {
+            for (Appointment appointment : appointments) {
                 MiscUtils.checkShutdownSignaled();
 
                 CachedAppointment cachedAppointment = new CachedAppointment();
                 FacilityIdIntegerCompositePk facilityIdIntegerCompositePk = new FacilityIdIntegerCompositePk();
-                facilityIdIntegerCompositePk.setCaisiItemId(appointment.getAppointment_no());
+                facilityIdIntegerCompositePk.setCaisiItemId(appointment.getId());
                 cachedAppointment.setFacilityIdIntegerCompositePk(facilityIdIntegerCompositePk);
 
-                cachedAppointment.setAppointmentDate(appointment.getAppointment_date());
+                cachedAppointment.setAppointmentDate(appointment.getAppointmentDate());
                 cachedAppointment.setCaisiDemographicId(demographicId);
-                cachedAppointment.setCaisiProviderId(appointment.getProvider_no());
-                cachedAppointment.setCreateDatetime(appointment.getCreatedatetime());
-                cachedAppointment.setEndTime(appointment.getEnd_time());
+                cachedAppointment.setCaisiProviderId(appointment.getProviderNo());
+                cachedAppointment.setCreateDatetime(appointment.getCreateDateTime());
+                cachedAppointment.setEndTime(appointment.getEndTime());
                 cachedAppointment.setLocation(appointment.getLocation());
                 cachedAppointment.setNotes(appointment.getNotes());
                 cachedAppointment.setReason(appointment.getReason());
                 cachedAppointment.setRemarks(appointment.getRemarks());
                 cachedAppointment.setResources(appointment.getResources());
-                cachedAppointment.setStartTime(appointment.getStart_time());
+                cachedAppointment.setStartTime(appointment.getStartTime());
                 cachedAppointment.setStatus(appointment.getStatus());
                 cachedAppointment.setStyle(appointment.getStyle());
                 cachedAppointment.setType(appointment.getType());
-                cachedAppointment.setUpdateDatetime(appointment.getUpdatedatetime());
+                cachedAppointment.setUpdateDatetime(appointment.getUpdateDateTime());
 
                 cachedAppointments.add(cachedAppointment);
             }

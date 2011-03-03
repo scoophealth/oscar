@@ -8,14 +8,14 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.DataTypeUtils;
+import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.Demographic;
-import org.oscarehr.common.model.OscarAppointment;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
-import oscar.appt.AppointmentDao;
 import oscar.appt.status.model.AppointmentStatus;
 import oscar.dao.ProviderDao;
 import ca.uhn.hl7v2.HL7Exception;
@@ -29,7 +29,7 @@ public final class AdtA09Handler {
 
 	private static final String WAITING_ROOM = "WAITING_ROOM";
 	private static final String PATIENT_CLASS = "P";
-	private static AppointmentDao appointmentDao = (AppointmentDao) SpringUtils.getBean("appointmentDao");
+	private static OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");        
 	private static DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
 	private static int checkInLateAllowance=Integer.parseInt(OscarProperties.getInstance().getProperty(AdtA09Handler.class.getSimpleName()+".CHECK_IN_LATE_ALLOWANCE"));
 	private static int checkInEarlyAllowance=Integer.parseInt(OscarProperties.getInstance().getProperty(AdtA09Handler.class.getSimpleName()+".CHECK_IN_EARLY_ALLOWANCE"));	
@@ -56,7 +56,7 @@ public final class AdtA09Handler {
 
 		// so this only sorts out the day ranges i.e. we could have just done a select from today but this way we bridge 
 		// people checking in at 11:50pm for an appointment at 1:00am.
-		List<OscarAppointment> appointments = appointmentDao.findByDateRange(startTime.getTime(), endTime.getTime());
+		List<Appointment> appointments = appointmentDao.findByDateRange(startTime.getTime(), endTime.getTime());
 		logger.debug("Qualifying appointments found : "+appointments.size());
 		
 		// adt messages can come in the form of pull PID's or just the chart number to switch
@@ -87,13 +87,13 @@ public final class AdtA09Handler {
 		}
 	}
 
-	private static void switchMatchingAppointment(Demographic demographic, List<OscarAppointment> appointments) throws SQLException {
+	private static void switchMatchingAppointment(Demographic demographic, List<Appointment> appointments) throws SQLException {
 	    // look through all appointments for matching demographic
 		// set the here flag on matching
 		// of not match throw exception.
 
-		for (OscarAppointment appointment : appointments) {
-			logger.debug("checking appointment : "+appointment.getAppointment_no());
+		for (Appointment appointment : appointments) {
+			logger.debug("checking appointment : "+appointment.getId());
 			
 			if (!isValidAppointmentStatusForMatch(appointment)) continue;
 			
@@ -106,13 +106,13 @@ public final class AdtA09Handler {
 		throw (new IllegalStateException("Some one checking in who has no appointment."));
     }
 
-	private static void switchMatchingAppointment(String chartNo, List<OscarAppointment> appointments) throws SQLException {
+	private static void switchMatchingAppointment(String chartNo, List<Appointment> appointments) throws SQLException {
 	    // look through all appointments for matching demographic
 		// set the here flag on matching
 		// of not match throw exception.
 
-		for (OscarAppointment appointment : appointments) {
-			logger.debug("checking appointment : "+appointment.getAppointment_no());
+		for (Appointment appointment : appointments) {
+			logger.debug("checking appointment : "+appointment.getId());
 			
 			if (!isValidAppointmentStatusForMatch(appointment)) continue;
 			
@@ -125,7 +125,7 @@ public final class AdtA09Handler {
 		throw (new IllegalStateException("Some one checking in who has no appointment."));
     }
 
-	private static boolean isValidAppointmentStatusForMatch(OscarAppointment appointment)
+	private static boolean isValidAppointmentStatusForMatch(Appointment appointment)
 	{
 		if ("H".equals(appointment.getStatus())) return(false);
 		else if ("N".equals(appointment.getStatus())) return(false);
@@ -146,20 +146,20 @@ public final class AdtA09Handler {
 		if (!WAITING_ROOM.equals(room)) throw (new UnsupportedOperationException("PV1 doesn't match expectations : room=" + room));
 	}
 
-	private static boolean chartNoMatches(OscarAppointment appointment, String chartNo) {
-		Demographic appointmentDemographic = demographicDao.getDemographicById(appointment.getDemographic_no());
+	private static boolean chartNoMatches(Appointment appointment, String chartNo) {
+		Demographic appointmentDemographic = demographicDao.getDemographicById(appointment.getDemographicNo());
 
 		if (appointmentDemographic==null)
 	    {
-			logger.debug("appointmentDemographic was null, appointment_no="+appointment.getAppointment_no());
+			logger.debug("appointmentDemographic was null, appointment_no="+appointment.getId());
 			return(false);	    	
 	    }
 		
 		return(chartNo.equals(appointmentDemographic.getChartNo()));
     }
 
-	private static boolean demographicMatches(OscarAppointment appointment, Demographic demographic) {
-		Demographic appointmentDemographic = demographicDao.getDemographicById(appointment.getDemographic_no());
+	private static boolean demographicMatches(Appointment appointment, Demographic demographic) {
+		Demographic appointmentDemographic = demographicDao.getDemographicById(appointment.getDemographicNo());
 		return (demographicMatches(appointmentDemographic, demographic));
 	}
 
@@ -228,8 +228,8 @@ public final class AdtA09Handler {
 		return (true);
 	}
 
-	private static void switchAppointmentStatus(OscarAppointment appointment) throws SQLException {
-		ProviderDao.updateAppointmentStatus(appointment.getAppointment_no(), AppointmentStatus.APPOINTMENT_STATUS_HERE);
+	private static void switchAppointmentStatus(Appointment appointment) throws SQLException {
+		ProviderDao.updateAppointmentStatus(appointment.getId(), AppointmentStatus.APPOINTMENT_STATUS_HERE);
 	}
 
 }

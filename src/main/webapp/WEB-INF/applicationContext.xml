@@ -123,7 +123,6 @@
 
         <bean id="queueDocumentLinkDAO" class="org.oscarehr.common.dao.QueueDocumentLinkDao" autowire="byName"/>
 	<bean id="integratorControlDao" class="oscar.facility.IntegratorControlDao" autowire="byName" />
-	<bean id="appointmentDao" class="oscar.appt.AppointmentDao" autowire="byName" />
 
 	<!-- Dao classes that implement OscarSuperDao -->
 	<bean id="appointmentSuperDao" class="oscar.dao.AppointmentDao" autowire="byName" />
