@@ -91,7 +91,7 @@ public class OcanStaffFormDao extends AbstractDao<OcanStaffForm> {
 
 	public OcanStaffForm getLastCompletedOcanForm(Integer facilityId, Integer clientId) {
 
-		String sqlCommand = "select * from OcanStaffForm where facilityId=?1 and clientId=?2 and assessmentStatus=?3 order by created desc limit 1";
+		String sqlCommand = "select * from OcanStaffForm where facilityId=?1 and clientId=?2 and assessmentStatus=?3 order by created desc , id desc limit 1";
 
 		Query query = entityManager.createNativeQuery(sqlCommand, modelClass);
 		query.setParameter(1, facilityId);
@@ -104,7 +104,7 @@ public class OcanStaffFormDao extends AbstractDao<OcanStaffForm> {
 
     public List<OcanStaffForm> findByFacilityClient(Integer facilityId, Integer clientId, String ocanType) {
 
-		String sqlCommand = "select x from OcanStaffForm x where x.facilityId=?1 and x.clientId=?2 and x.ocanType=?3 order by x.created desc";
+		String sqlCommand = "select x from OcanStaffForm x where x.facilityId=?1 and x.clientId=?2 and x.ocanType=?3 order by x.assessmentId desc, x.created desc, x.id desc";
 
 		Query query = entityManager.createQuery(sqlCommand);
 		query.setParameter(1, facilityId);
@@ -128,9 +128,9 @@ public class OcanStaffFormDao extends AbstractDao<OcanStaffForm> {
     
     public List<OcanStaffForm> findLatestSignedOcanForms(Integer facilityId, String formVersion, Date startDate, Date endDate,String ocanType) {
 		
-		String sqlCommand="select x from OcanStaffForm x where x.facilityId=?1 and x.assessmentStatus=?2 and x.ocanFormVersion=?3 and x.startDate>=?4 and x.startDate<?5 and x.ocanType=?6 order by x.assessmentId ASC, x.created DESC";
-
-		Query query = entityManager.createQuery(sqlCommand);
+    	String sqlCommand="select x from OcanStaffForm x where x.facilityId=?1 and x.assessmentStatus=?2 and x.ocanFormVersion=?3 and x.startDate>=?4 and x.startDate<?5 and x.ocanType=?6 order by x.clientId ASC, x.assessmentId DESC, x.created DESC, x.id DESC";
+		
+    	Query query = entityManager.createQuery(sqlCommand);
 		query.setParameter(1, facilityId);
 		query.setParameter(2, "Completed");
 		query.setParameter(3, formVersion);
