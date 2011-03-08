@@ -1,0 +1,33 @@
+OSCAR Change Request Process v1.0
+
+To make a change in oscar and submit it for inclusion into the distribution you must first fill out a
+Change Request (Change Request Template is available in this directory).  And submit it to the technical 
+committee for review.  (Currently this is done on sourceforge as a feature request)
+
+The Technical Committee has a two week turn around on submissions.  Submissions are first reviewed by the 
+code review developers.  The code review developers can approve a request if it's minor and there is no reason
+to reject it.  If the code review developers would like more input on the Change Request, it's deferred to the 
+Technical Committee workgroup meeting.  
+
+States of a Change Request. 
+=========================
+
+-Hasn't been looked at.  (Represented on sourceforge as Status:Open Resolution:None)
+   This means that the request hasn't been looked at and is still considered new.    
+
+-Approved but not completed (Represented on sourceforge as Status:Pending Resolution:accepted)
+   This is a green light from the technical committee to move ahead with development 
+
+-Deferred to tech group. (Represented on sourceforge as Status:Pending Resolution:remind)
+   This means the request has been scheduled for review at the next Technical Committee meeting.
+
+-Need more info. (Represented on sourceforge as Status:Pending Resolution:postponed)
+   This means the Techincal Committee has reviewed the request and is requesting more information about the 
+   change.
+
+-Approved and completed (Represented on sourceforge as Status:Closed Resolution:fixed)
+   This status means the code has been committed to the repository and has been approved to be included in the
+   next release
+
+-Rejected (Represented on sourceforge as Status:Deleted Resolution:rejected,invalid,out of date)
+   This status means the change request has been rejected.
