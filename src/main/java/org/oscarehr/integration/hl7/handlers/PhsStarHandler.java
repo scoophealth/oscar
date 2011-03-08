@@ -110,7 +110,7 @@ public class PhsStarHandler extends BasePhsStarHandler {
 	 * 
 	 * @throws HL7Exception
 	 */
-	private void createDemographic() throws HL7Exception {
+	private Integer createDemographic() throws HL7Exception {
 		logger.info("creating new patient record for " + getLastName() + "," + getFirstName());
 		Demographic demo = new Demographic();
 		demo.setLastName(getLastName());
@@ -153,6 +153,8 @@ public class PhsStarHandler extends BasePhsStarHandler {
 		if(tempMrn != null) {			
 			OtherIdManager.saveIdDemographic(demographicNo, "TMR", tempMrn.getId());		
 		}
+		
+		return demographicNo;
 	}
 	
 	/**
@@ -458,7 +460,7 @@ public class PhsStarHandler extends BasePhsStarHandler {
         	
         	Integer demographicNo = this.doKeyMatching(extractInternalPatientIds());
         	if(demographicNo == null) {
-           		createDemographic();
+           		demographicNo = createDemographic();
         	}
         	
         	createNewAppointment(demographicNo);
