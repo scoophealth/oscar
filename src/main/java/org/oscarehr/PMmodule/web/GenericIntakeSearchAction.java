@@ -381,10 +381,10 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 			}
 		}
 		catch (MalformedURLException e) {
-			LOG.error(e);
+			LOG.error("Error", e);
 		}
 		catch (WebServiceException e) {
-			LOG.error(e);
+			LOG.error("Error", e);
 		}
 	}
 

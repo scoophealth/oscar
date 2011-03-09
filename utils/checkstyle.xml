@@ -114,6 +114,13 @@
 	</module>
 
 	<module name="org.oscarehr.utils.checkstyle.TrackingRegexpCheck">
+		<property name="fileExtensions" value=".java,.jsp,.jspf,.jsf"/>
+		<property name="illegalRegex" value=".*\.(error|warn|debug|fatal)\s*\((e[0-9]*|ex[0-9]*|[a-zA-Z]+xception)\);"/>
+		<property name="violationDescription" value="Do not pass an exception to a logger method with out a string, it'll treat the exception as a string if you do."/>
+		<property name="dataStoreFilename" value="utils/TrackingRegexpCheck_java_jsp.data.xml"/>
+	</module>
+
+	<module name="org.oscarehr.utils.checkstyle.TrackingRegexpCheck">
 		<property name="fileExtensions" value=".sql"/>
 		<property name="illegalRegex" value=".*\s+default\s+.*|.*\s+DEFAULT\s+.*|.*\s+Default\s+.*"/>
 		<property name="violationDescription" value="Don't put defaults in table definitions, put them in the JPA objects."/>

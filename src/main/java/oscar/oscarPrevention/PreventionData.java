@@ -417,7 +417,7 @@ public class PreventionData {
 				remotePreventions = demographicWs.getLinkedCachedDemographicPreventionsByDemographicId(demographicId);
 			}
 			catch (Exception e) {
-				log.error(e);
+				log.error("Error", e);
 			}
 		}
 
@@ -457,7 +457,7 @@ public class PreventionData {
 						remoteFacility = CaisiIntegratorManager.getRemoteFacility(cachedDemographicPrevention.getFacilityPreventionPk().getIntegratorFacilityId());
 					}
 					catch (Exception e) {
-						log.error(e);
+						log.error("Error", e);
 					}
 					if (remoteFacility!=null) remoteFacilityName=remoteFacility.getName();
 					h.put("remoteFacilityName", remoteFacilityName);

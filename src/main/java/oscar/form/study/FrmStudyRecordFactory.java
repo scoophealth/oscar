@@ -36,11 +36,11 @@ public class FrmStudyRecordFactory {
             Class classDefinition = Class.forName( fullName );         
             myClass = (FrmStudyRecord) classDefinition.newInstance(); 
         } catch (InstantiationException e) {
-            MiscUtils.getLogger().debug(e);
+            MiscUtils.getLogger().debug("debug", e);
         } catch (IllegalAccessException e) {
-            MiscUtils.getLogger().debug(e);
+            MiscUtils.getLogger().debug("debug", e);
         } catch (ClassNotFoundException e) {
-            MiscUtils.getLogger().debug(e);
+            MiscUtils.getLogger().debug("debug", e);
         }
         
         return myClass;

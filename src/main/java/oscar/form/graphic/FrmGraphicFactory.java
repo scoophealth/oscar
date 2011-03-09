@@ -39,11 +39,11 @@ public class FrmGraphicFactory {
             Class classDefinition = Class.forName( name );         
             pdfGraph = (FrmPdfGraphic) classDefinition.newInstance(); 
         } catch (InstantiationException e) {
-            MiscUtils.getLogger().debug(e);
+            MiscUtils.getLogger().debug("debug", e);
         } catch (IllegalAccessException e) {
-            MiscUtils.getLogger().debug(e);
+            MiscUtils.getLogger().debug("debug", e);
         } catch (ClassNotFoundException e) {
-            MiscUtils.getLogger().debug(e);
+            MiscUtils.getLogger().debug("debug", e);
         }
         
         return pdfGraph;

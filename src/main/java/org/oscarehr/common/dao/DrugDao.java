@@ -38,7 +38,7 @@ public class DrugDao extends AbstractDao<Drug> {
        try{
             entityManager.persist(d);
         }catch(Exception e){
-            MiscUtils.getLogger().error(e);
+            MiscUtils.getLogger().error("Error", e);
             return false;
         }
        return true;

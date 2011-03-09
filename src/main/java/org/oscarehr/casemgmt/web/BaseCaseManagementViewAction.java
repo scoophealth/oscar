@@ -148,7 +148,7 @@ public class BaseCaseManagementViewAction extends DispatchAction {
 				os.close();
 				return filename;
 			}catch(Exception e) {
-				log.warn(e);
+				log.warn("Warning", e);
 			}
 		}
 		return null;

@@ -215,7 +215,7 @@ public class MigrateCaisiRolesAction extends BaseAdminAction {
 			rs.close();
 			
 		}catch(SQLException e) {
-			logger.error(e);
+			logger.error("Error", e);
 		}
 		
 		if(canContinue) {
@@ -225,7 +225,7 @@ public class MigrateCaisiRolesAction extends BaseAdminAction {
 		try {
 			response.getWriter().print(JSONObject.fromObject(result));
 		}catch(IOException e) {
-			logger.error(e);
+			logger.error("Error", e);
 		}
 		
 		return null;
@@ -376,14 +376,14 @@ public class MigrateCaisiRolesAction extends BaseAdminAction {
 			
 		} catch(SQLException e) {
 			MiscUtils.getLogger().error("Error", e);
-			logger.error(e);
+			logger.error("Error", e);
 			result.setStatus("error");
 		}
 		
 		try {
 			response.getWriter().print(JSONObject.fromObject(result));
 		}catch(IOException e) {
-			logger.error(e);
+			logger.error("Error", e);
 		}
 		return null;
 	}

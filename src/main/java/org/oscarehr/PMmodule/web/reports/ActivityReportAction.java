@@ -87,7 +87,7 @@ public class ActivityReportAction extends DispatchAction {
 			searchBean.setStartDate(formatter.parse(formBean.getStartDate()));
 			searchBean.setEndDate(formatter.parse(formBean.getEndDate()));
 		}catch(Exception e) {
-			log.error(e);
+			log.error("Error", e);
 		}
 		
 		Map summaryMap = new LinkedHashMap();
