@@ -156,18 +156,91 @@ public class OcanStaffFormDao extends AbstractDao<OcanStaffForm> {
 	
     }
     
+    public List<OcanStaffForm> findUnsubmittedOcanFormsByOcanType(Integer facilityId, String ocanType) {
+
+        String sqlCommand="select x from OcanStaffForm x where x.facilityId=?1 and x.assessmentStatus=?2 and x.ocanType=?3 and x.submissionId=0 order by x.clientId ASC, x.assessmentId DESC, x.created DESC, x.id DESC";
+
+        Query query = entityManager.createQuery(sqlCommand);
+        query.setParameter(1, facilityId);
+        query.setParameter(2, "Completed");
+        query.setParameter(3, ocanType);
+
+        @SuppressWarnings("unchecked")
+        List<OcanStaffForm> results=query.getResultList();
+        //Because staff could modify completed assessment. So it one assessment ID could have multiple assessment records.
+        //Only export the one with latest update.
+        List<OcanStaffForm> list = new ArrayList<OcanStaffForm>();
+        int assessmentId_0=0;
+        for(OcanStaffForm res:results) {
+                int assessmentId_1 = res.getAssessmentId().intValue();
+                if(assessmentId_0!=assessmentId_1) {
+                        assessmentId_0 = assessmentId_1;
+                        list.add(res);
+                }
+        }
+
+        // Multiple ocan forms with same assessmentId, only the latest updated one can be submitted.
+        // Don't need to display other assessments with same assessment ID as submitted one's,
+        // but the submission ID is 0.
+        List<OcanStaffForm> list1 = new ArrayList<OcanStaffForm>();
+        for(OcanStaffForm form: list1) {
+                if(findSubmittedOcanFormsByAssessmentId(form.getAssessmentId()).size() > 0) {
+                        continue;
+                } else {
+                        list1.add(form);
+                }
+        }
+        return list1;  
+}
+   
+    
     public List<OcanStaffForm> findUnsubmittedOcanForms(Integer facilityId) {
 		
-		String sqlCommand="select x from OcanStaffForm x where x.facilityId=?1 and x.assessmentStatus=?2 and x.submissionId=0 order by x.created DESC";
+    	 String sqlCommand="select x from OcanStaffForm x where x.facilityId=?1 and x.assessmentStatus=?2 and x.submissionId=0 order by x.clientId ASC, x.assessmentId DESC, x.created DESC, x.id DESC";
 
-		Query query = entityManager.createQuery(sqlCommand);
-		query.setParameter(1, facilityId);
-		query.setParameter(2, "Completed");
-		
-		@SuppressWarnings("unchecked")
-		List<OcanStaffForm> results=query.getResultList();
-		return(results);				
+         Query query = entityManager.createQuery(sqlCommand);
+         query.setParameter(1, facilityId);
+         query.setParameter(2, "Completed");
+
+         @SuppressWarnings("unchecked")
+         List<OcanStaffForm> results=query.getResultList();
+         //Because staff could modify completed assessment. So it one assessment ID could have multiple assessment records.
+         //Only export the one with latest update.
+         List<OcanStaffForm> list = new ArrayList<OcanStaffForm>();
+         int assessmentId_0=0;
+         for(OcanStaffForm res:results) {
+                 int assessmentId_1 = res.getAssessmentId().intValue();
+                 if(assessmentId_0!=assessmentId_1) {
+                         assessmentId_0 = assessmentId_1;
+                         list.add(res);
+                 }
+         }
+
+         // Multiple ocan forms with same assessmentId, only the latest updated one can be submitted.
+         // Don't need to display other assessments with same assessment ID as submitted one's,
+         // but the submission ID is 0.
+         List<OcanStaffForm> list1 = new ArrayList<OcanStaffForm>();
+         for(OcanStaffForm form: list1) {
+                 if(findSubmittedOcanFormsByAssessmentId(form.getAssessmentId()).size() > 0) {
+                         continue;
+                 } else {
+                         list1.add(form);
+                 }
+         }
+         return list1;  
+			
     }
+    
+    public List<OcanStaffForm> findSubmittedOcanFormsByAssessmentId(Integer assessmentId) {
+
+        String sqlCommand = "select x from OcanStaffForm x where x.assessmentId=?1 and x.submissionId!=0 ";
+                Query query = entityManager.createQuery(sqlCommand);
+                query.setParameter(1, assessmentId);
+                @SuppressWarnings("unchecked")
+                List<OcanStaffForm> results=query.getResultList();
+                return results;
+    }
+
     
     public List<OcanStaffForm> findAllByFacility(Integer facilityId) {
 
@@ -195,5 +268,16 @@ public class OcanStaffFormDao extends AbstractDao<OcanStaffForm> {
 		return (results);
     }
     
-    
+    public OcanStaffForm findLatestByAssessmentId(Integer facilityId,Integer assessmentId) {
+        String sqlCommand = "select * from OcanStaffForm x where x.facilityId=?1 and x.assessmentId=?2 order by x.created DESC, x.id DESC limit 1";
+
+        Query query = entityManager.createNativeQuery(sqlCommand, modelClass);
+
+                query.setParameter(1, facilityId);
+                query.setParameter(2, assessmentId);
+
+                return getSingleResultOrNull(query);
+
+    }
+
 }
