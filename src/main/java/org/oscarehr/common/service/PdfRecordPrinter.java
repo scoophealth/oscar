@@ -626,19 +626,19 @@ public class PdfRecordPrinter {
     		getDocument().add(p);
         } 
     	
-    	if(eyeform.getDischarge()!=null && eyeform.getDischarge().equals("true")) {
+    	if(eyeform != null && eyeform.getDischarge()!=null && eyeform.getDischarge().equals("true")) {
     		Paragraph p = new Paragraph();    		
     		p.add("Patient is discharged from my active care.\n");    		
     		getDocument().add(p);
     	}
     	
-    	if(eyeform.getOpt()!=null && eyeform.getOpt().equals("true")) {
+    	if(eyeform != null && eyeform.getOpt()!=null && eyeform.getOpt().equals("true")) {
     		Paragraph p = new Paragraph();    		
     		p.add("Routine eye care by an optometrist is recommended.\n");    		
     		getDocument().add(p);
     	}
     	
-    	if(eyeform.getStat()!=null && eyeform.getStat().equals("true")) {
+    	if(eyeform != null && eyeform.getStat()!=null && eyeform.getStat().equals("true")) {
     		Paragraph p = new Paragraph();    		
     		p.add("Follow up as needed with me STAT or PRN if symptoms are worse.\n");    		
     		getDocument().add(p);
@@ -664,58 +664,94 @@ public class PdfRecordPrinter {
         getDocument().add(p);
         
         p = new Paragraph();        
-        p.add(new Phrase("VISION ASSESSMENT:  ",getFont()));        
-        p.add(new Phrase("Auto-refraction ",boldFont));
-        p.add(new Phrase(mf.getVisionAssessmentAutoRefraction(),getFont()));
-        p.add(new Phrase(" Keratometry ",boldFont));
-        p.add(new Phrase(mf.getVisionAssessmentKeratometry(),getFont()));
-        p.add(new Phrase(" Distance vision (sc) ",boldFont));
-        p.add(new Phrase(mf.getVisionAssessmentVision("distance", "sc"),getFont()));
-        p.add(new Phrase(" Distance vision (cc) ",boldFont));
-        p.add(new Phrase(mf.getVisionAssessmentVision("distance", "cc"),getFont()));
-        p.add(new Phrase(" Distance vision (ph) ",boldFont));
-        p.add(new Phrase(mf.getVisionAssessmentVision("distance", "ph"),getFont()));
-        p.add(new Phrase(" Near vision (sc) ",boldFont));
-        p.add(new Phrase(mf.getVisionAssessmentVision("near", "sc"),getFont()));
-        p.add(new Phrase(" Near vision (cc) ",boldFont));
-        p.add(new Phrase(mf.getVisionAssessmentVision("near", "cc"),getFont()));
+        p.add(new Phrase("VISION ASSESSMENT:  ",getFont()));   
+        if(mf.getVisionAssessmentAutoRefraction().length()>0) {
+        	p.add(new Phrase("Auto-refraction ",boldFont));
+        	p.add(new Phrase(mf.getVisionAssessmentAutoRefraction(),getFont()));
+        }
+        if(mf.getVisionAssessmentKeratometry().length()>0) {
+        	p.add(new Phrase(" Keratometry ",boldFont));
+        	p.add(new Phrase(mf.getVisionAssessmentKeratometry(),getFont()));
+        }
+        if(mf.getVisionAssessmentVision("distance", "sc").length()>0) {
+        	p.add(new Phrase(" Distance vision (sc) ",boldFont));
+        	p.add(new Phrase(mf.getVisionAssessmentVision("distance", "sc"),getFont()));
+        }
+        if(mf.getVisionAssessmentVision("distance", "cc").length()>0) {
+        	p.add(new Phrase(" Distance vision (cc) ",boldFont));
+        	p.add(new Phrase(mf.getVisionAssessmentVision("distance", "cc"),getFont()));
+        }
+        if(mf.getVisionAssessmentVision("distance", "ph").length()>0) {
+        	p.add(new Phrase(" Distance vision (ph) ",boldFont));
+        	p.add(new Phrase(mf.getVisionAssessmentVision("distance", "ph"),getFont()));
+        }
+        if(mf.getVisionAssessmentVision("near", "sc").length()>0) {
+        	p.add(new Phrase(" Near vision (sc) ",boldFont));
+        	p.add(new Phrase(mf.getVisionAssessmentVision("near", "sc"),getFont()));
+        }
+        if(mf.getVisionAssessmentVision("near", "cc").length()>0) {
+        	p.add(new Phrase(" Near vision (cc) ",boldFont));
+        	p.add(new Phrase(mf.getVisionAssessmentVision("near", "cc"),getFont()));
+        }
         p.add(new Phrase("\n\n"));
         getDocument().add(p);
         
         p = new Paragraph();        
-        p.add(new Phrase("MANIFEST VISION:  ",getFont()));        
-        p.add(new Phrase("Manifest distance ",boldFont));
-        p.add(new Phrase(mf.getManifestDistance(),getFont()));
-        p.add(new Phrase(" Manifest near ",boldFont));
-        p.add(new Phrase(mf.getManifestNear(),getFont()));
-        p.add(new Phrase(" Cycloplegic refraction ",boldFont));
-        p.add(new Phrase(mf.getCycloplegicRefraction(),getFont()));
+        p.add(new Phrase("MANIFEST VISION:  ",getFont()));
+        if(mf.getManifestDistance().length()>0) {
+        	p.add(new Phrase("Manifest distance ",boldFont));
+        	p.add(new Phrase(mf.getManifestDistance(),getFont()));
+        }
+        if(mf.getManifestNear().length()>0) {
+        	p.add(new Phrase(" Manifest near ",boldFont));
+        	p.add(new Phrase(mf.getManifestNear(),getFont()));
+        }
+        if(mf.getCycloplegicRefraction().length()>0) {
+        	p.add(new Phrase(" Cycloplegic refraction ",boldFont));
+        	p.add(new Phrase(mf.getCycloplegicRefraction(),getFont()));
+        }
         p.add(new Phrase("\n\n"));
         getDocument().add(p);
         
         p = new Paragraph();        
-        p.add(new Phrase("INTRAOCULAR PRESSURE:  ",getFont()));        
-        p.add(new Phrase("NCT ",boldFont));
-        p.add(new Phrase(mf.getNCT(),getFont()));
-        p.add(new Phrase(" Applanation ",boldFont));
-        p.add(new Phrase(mf.getApplanation(),getFont()));
-        p.add(new Phrase(" Central corneal thickness ",boldFont));
-        p.add(new Phrase(mf.getCCT(),getFont()));
+        p.add(new Phrase("INTRAOCULAR PRESSURE:  ",getFont()));
+        if(mf.getNCT().length()>0) {
+        	p.add(new Phrase("NCT ",boldFont));
+        	p.add(new Phrase(mf.getNCT(),getFont()));
+        }
+        if(mf.getApplanation().length()>0) {
+        	p.add(new Phrase(" Applanation ",boldFont));
+        	p.add(new Phrase(mf.getApplanation(),getFont()));
+        }
+        if(mf.getCCT().length()>0) {
+        	p.add(new Phrase(" Central corneal thickness ",boldFont));
+        	p.add(new Phrase(mf.getCCT(),getFont()));
+        }
         p.add(new Phrase("\n\n"));
         getDocument().add(p);
         
         p = new Paragraph();        
-        p.add(new Phrase("OTHER EXAM:  ",getFont()));        
-        p.add(new Phrase("Colour vision ",boldFont));
-        p.add(new Phrase(mf.getColourVision(),getFont()));
-        p.add(new Phrase(" Pupil ",boldFont));
-        p.add(new Phrase(mf.getPupil(),getFont()));
-        p.add(new Phrase(" Amsler grid ",boldFont));
-        p.add(new Phrase(mf.getAmslerGrid(),getFont()));
-        p.add(new Phrase(" Potential acuity meter ",boldFont));
-        p.add(new Phrase(mf.getPAM(),getFont()));
-        p.add(new Phrase(" Confrontation fields ",boldFont));
-        p.add(new Phrase(mf.getConfrontation(),getFont()));        
+        p.add(new Phrase("OTHER EXAM:  ",getFont()));  
+        if(mf.getColourVision().length()>0) {
+        	p.add(new Phrase("Colour vision ",boldFont));
+        	p.add(new Phrase(mf.getColourVision(),getFont()));
+        }
+        if(mf.getPupil().length()>0) {
+        	p.add(new Phrase(" Pupil ",boldFont));
+        	p.add(new Phrase(mf.getPupil(),getFont()));
+        }
+        if(mf.getAmslerGrid().length()>0) {
+        	p.add(new Phrase(" Amsler grid ",boldFont));
+        	p.add(new Phrase(mf.getAmslerGrid(),getFont()));
+        }
+        if(mf.getPAM().length()>0) {
+        	p.add(new Phrase(" Potential acuity meter ",boldFont));
+        	p.add(new Phrase(mf.getPAM(),getFont()));
+        }
+        if(mf.getConfrontation().length()>0) {
+        	p.add(new Phrase(" Confrontation fields ",boldFont));
+        	p.add(new Phrase(mf.getConfrontation(),getFont()));
+        }
         p.add(new Phrase("\n\n"));
         getDocument().add(p);
         
@@ -726,83 +762,139 @@ public class PdfRecordPrinter {
         getDocument().add(p);
         
         p = new Paragraph();        
-        p.add(new Phrase("ANTERIOR SEGMENT:  ",getFont()));        
-        p.add(new Phrase("Cornea ",boldFont));
-        p.add(new Phrase(mf.getCornea(),getFont()));
-        p.add(new Phrase(" Conjunctiva/Sclera ",boldFont));
-        p.add(new Phrase(mf.getConjuctivaSclera(),getFont()));
-        p.add(new Phrase(" Anterior chamber ",boldFont));
-        p.add(new Phrase(mf.getAnteriorChamber(),getFont()));
-        p.add(new Phrase(" Angle ",boldFont));
-        p.add(new Phrase(mf.getAngle(),getFont()));
-        p.add(new Phrase(" Iris ",boldFont));
-        p.add(new Phrase(mf.getIris(),getFont()));
-        p.add(new Phrase(" Lens ",boldFont));
-        p.add(new Phrase(mf.getLens(),getFont()));        
+        p.add(new Phrase("ANTERIOR SEGMENT:  ",getFont()));
+        if(mf.getCornea().length()>0) {
+        	p.add(new Phrase("Cornea ",boldFont));
+        	p.add(new Phrase(mf.getCornea(),getFont()));
+        }
+        if(mf.getConjuctivaSclera().length()>0) {
+        	p.add(new Phrase(" Conjunctiva/Sclera ",boldFont));
+        	p.add(new Phrase(mf.getConjuctivaSclera(),getFont()));
+        }
+        if(mf.getAnteriorChamber().length()>0) {
+        	p.add(new Phrase(" Anterior chamber ",boldFont));
+        	p.add(new Phrase(mf.getAnteriorChamber(),getFont()));
+        }
+        if(mf.getAngle().length()>0) {
+        	p.add(new Phrase(" Angle ",boldFont));
+        	p.add(new Phrase(mf.getAngle(),getFont()));
+        }
+        if(mf.getIris().length()>0) {
+        	p.add(new Phrase(" Iris ",boldFont));
+        	p.add(new Phrase(mf.getIris(),getFont()));
+        }
+        if(mf.getLens().length()>0) {
+        	p.add(new Phrase(" Lens ",boldFont));
+        	p.add(new Phrase(mf.getLens(),getFont()));
+        }
         p.add(new Phrase("\n\n"));
         getDocument().add(p);
         
         p = new Paragraph();        
-        p.add(new Phrase("POSTERIOR SEGMENT:  ",getFont()));        
-        p.add(new Phrase("Optic disc ",boldFont));
-        p.add(new Phrase(mf.getDisc(),getFont()));
-        p.add(new Phrase(" C/D ratio ",boldFont));
-        p.add(new Phrase(mf.getCdRatio(),getFont()));
-        p.add(new Phrase(" Macula ",boldFont));
-        p.add(new Phrase(mf.getMacula(),getFont()));
-        p.add(new Phrase(" Retina ",boldFont));
-        p.add(new Phrase(mf.getRetina(),getFont()));
-        p.add(new Phrase(" Vitreous ",boldFont));
-        p.add(new Phrase(mf.getVitreous(),getFont()));        
+        p.add(new Phrase("POSTERIOR SEGMENT:  ",getFont()));
+        if(mf.getDisc().length()>0) {
+        	p.add(new Phrase("Optic disc ",boldFont));
+        	p.add(new Phrase(mf.getDisc(),getFont()));
+        }
+        if(mf.getCdRatio().length()>0) {
+        	p.add(new Phrase(" C/D ratio ",boldFont));
+        	p.add(new Phrase(mf.getCdRatio(),getFont()));
+        }
+        if(mf.getMacula().length()>0) {
+        	p.add(new Phrase(" Macula ",boldFont));
+        	p.add(new Phrase(mf.getMacula(),getFont()));
+        }
+        if(mf.getRetina().length()>0) {
+        	p.add(new Phrase(" Retina ",boldFont));
+        	p.add(new Phrase(mf.getRetina(),getFont()));
+        }
+        if(mf.getVitreous().length()>0) {
+        	p.add(new Phrase(" Vitreous ",boldFont));
+        	p.add(new Phrase(mf.getVitreous(),getFont()));
+        }
         p.add(new Phrase("\n\n"));
         getDocument().add(p);
         
         p = new Paragraph();        
-        p.add(new Phrase("EXTERNAL/ORBIT:  ",getFont()));        
-        p.add(new Phrase("Face ",boldFont));
-        p.add(new Phrase(mf.getFace(),getFont()));
-        p.add(new Phrase(" Upper lid ",boldFont));
-        p.add(new Phrase(mf.getUpperLid(),getFont()));
-        p.add(new Phrase(" Lower lid ",boldFont));
-        p.add(new Phrase(mf.getLowerLid(),getFont()));
-        p.add(new Phrase(" Punctum ",boldFont));
-        p.add(new Phrase(mf.getPunctum(),getFont()));
-        p.add(new Phrase(" Lacrimal lake ",boldFont));
-        p.add(new Phrase(mf.getLacrimalLake(),getFont()));
-        p.add(new Phrase(" Retropulsion ",boldFont));
-        p.add(new Phrase(mf.getRetropulsion(),getFont()));
-        p.add(new Phrase(" Hertel ",boldFont));
-        p.add(new Phrase(mf.getHertel(),getFont())); 
+        p.add(new Phrase("EXTERNAL/ORBIT:  ",getFont()));  
+        if(mf.getFace().length()>0) {
+        	p.add(new Phrase("Face ",boldFont));
+        	p.add(new Phrase(mf.getFace(),getFont()));
+        }
+        if(mf.getUpperLid().length()>0) {
+        	p.add(new Phrase(" Upper lid ",boldFont));
+        	p.add(new Phrase(mf.getUpperLid(),getFont()));
+        }
+        if(mf.getLowerLid().length()>0) {
+        	p.add(new Phrase(" Lower lid ",boldFont));
+        	p.add(new Phrase(mf.getLowerLid(),getFont()));
+        }
+        if(mf.getPunctum().length()>0) {
+        	p.add(new Phrase(" Punctum ",boldFont));
+        	p.add(new Phrase(mf.getPunctum(),getFont()));
+        }
+        if(mf.getLacrimalLake().length()>0) {
+        	p.add(new Phrase(" Lacrimal lake ",boldFont));
+        	p.add(new Phrase(mf.getLacrimalLake(),getFont()));
+        }
+        if(mf.getRetropulsion().length()>0) {
+        	p.add(new Phrase(" Retropulsion ",boldFont));
+        	p.add(new Phrase(mf.getRetropulsion(),getFont()));
+        }
+        if(mf.getHertel().length()>0) {
+        	p.add(new Phrase(" Hertel ",boldFont));
+        	p.add(new Phrase(mf.getHertel(),getFont()));
+        }
         p.add(new Phrase("\n\n"));
         getDocument().add(p);
         
         p = new Paragraph();        
-        p.add(new Phrase("NASOLACRIMAL DUCT:  ",getFont()));        
-        p.add(new Phrase("Lacrimal irrigation ",boldFont));
-        p.add(new Phrase(mf.getLacrimalIrrigation(),getFont()));
-        p.add(new Phrase(" Nasolacrimal duct ",boldFont));
-        p.add(new Phrase(mf.getNLD(),getFont()));
-        p.add(new Phrase(" Dye disappearance ",boldFont));
-        p.add(new Phrase(mf.getDyeDisappearance(),getFont()));       
+        p.add(new Phrase("NASOLACRIMAL DUCT:  ",getFont()));  
+        if(mf.getLacrimalIrrigation().length()>0) {
+        	p.add(new Phrase("Lacrimal irrigation ",boldFont));
+        	p.add(new Phrase(mf.getLacrimalIrrigation(),getFont()));
+        }
+        if(mf.getNLD().length()>0) {
+        	p.add(new Phrase(" Nasolacrimal duct ",boldFont));
+        	p.add(new Phrase(mf.getNLD(),getFont()));
+        }
+        if(mf.getDyeDisappearance().length()>0) {
+        	p.add(new Phrase(" Dye disappearance ",boldFont));
+        	p.add(new Phrase(mf.getDyeDisappearance(),getFont()));
+        }
         p.add(new Phrase("\n\n"));
         getDocument().add(p);
  
         p = new Paragraph();        
-        p.add(new Phrase("EYELID MEASUREMENT:  ",getFont()));        
-        p.add(new Phrase("Margin reflex distance ",boldFont));
-        p.add(new Phrase(mf.getMarginReflexDistance(),getFont()));
-        p.add(new Phrase(" Levator function ",boldFont));
-        p.add(new Phrase(mf.getLevatorFunction(),getFont()));
-        p.add(new Phrase(" Inferior scleral show ",boldFont));
-        p.add(new Phrase(mf.getInferiorScleralShow(),getFont()));
-        p.add(new Phrase(" Lagophthalmos ",boldFont));
-        p.add(new Phrase(mf.getLagophthalmos(),getFont())); 
-        p.add(new Phrase(" Blink ",boldFont));
-        p.add(new Phrase(mf.getBlink(),getFont()));
-        p.add(new Phrase(" Cranial Nerve VII function ",boldFont));
-        p.add(new Phrase(mf.getCNVii(),getFont()));        
-        p.add(new Phrase(" Bell's phenonmenon ",boldFont));
-        p.add(new Phrase(mf.getBells(),getFont()));       
+        p.add(new Phrase("EYELID MEASUREMENT:  ",getFont()));    
+        if(mf.getMarginReflexDistance().length()>0) {
+        	p.add(new Phrase("Margin reflex distance ",boldFont));
+        	p.add(new Phrase(mf.getMarginReflexDistance(),getFont()));
+        }
+        if(mf.getLevatorFunction().length()>0) {
+        	p.add(new Phrase(" Levator function ",boldFont));
+        	p.add(new Phrase(mf.getLevatorFunction(),getFont()));
+        }
+        if(mf.getInferiorScleralShow().length()>0) {
+        	p.add(new Phrase(" Inferior scleral show ",boldFont));
+        	p.add(new Phrase(mf.getInferiorScleralShow(),getFont()));
+        }
+        if(mf.getLagophthalmos().length()>0) {
+        	p.add(new Phrase(" Lagophthalmos ",boldFont));
+        	p.add(new Phrase(mf.getLagophthalmos(),getFont()));
+        }
+        if(mf.getBlink().length()>0) {
+        	p.add(new Phrase(" Blink ",boldFont));
+        	p.add(new Phrase(mf.getBlink(),getFont()));
+        }
+        if(mf.getCNVii().length()>0) {
+        	p.add(new Phrase(" Cranial Nerve VII function ",boldFont));
+        	p.add(new Phrase(mf.getCNVii(),getFont()));
+        }
+        if(mf.getBells().length()>0) {
+        	p.add(new Phrase(" Bell's phenonmenon ",boldFont));
+        	p.add(new Phrase(mf.getBells(),getFont()));
+        }
         p.add(new Phrase("\n\n"));
         getDocument().add(p);
         

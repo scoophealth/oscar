@@ -30,7 +30,15 @@ public class MeasurementDataAction extends DispatchAction {
 	public ActionForward getLatestValues(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String demographicNo = request.getParameter("demographicNo");
 		String typeStr = request.getParameter("types");
-		
+		String appointmentNo = request.getParameter("appointmentNo");
+		String fresh =request.getParameter("fresh");
+		HashMap<String,Boolean> freshMap = new HashMap<String,Boolean>();
+		if(fresh!=null) {
+			String tmp[] = fresh.split(",");
+			for(int x=0;x<tmp.length;x++) {
+				freshMap.put(tmp[x],true);
+			}
+		}
 		if(typeStr == null || typeStr.length() == 0) {
 			//error
 		}
@@ -41,7 +49,10 @@ public class MeasurementDataAction extends DispatchAction {
 		StringBuilder script = new StringBuilder();
 		for(String key:measurementMap.keySet()) {
 			Measurements value = measurementMap.get(key);
-			script.append("jQuery(\"input[measurement='"+key+"']\").val(\""+value.getDataField()+"\");\n");
+			if((freshMap.get(key)==null) ||(freshMap.get(key) != null && value.getAppointmentNo() == Integer.parseInt(appointmentNo))) {
+				script.append("jQuery(\"input[measurement='"+key+"']\").val(\""+value.getDataField()+"\");\n");
+				script.append("jQuery(\"textarea[measurement='"+key+"']\").val(\""+value.getDataField()+"\");\n");	
+			}			
 		}
 		
 		response.getWriter().print(script);
