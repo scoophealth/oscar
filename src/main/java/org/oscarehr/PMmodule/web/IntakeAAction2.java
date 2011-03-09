@@ -216,7 +216,7 @@ public class IntakeAAction2 extends BaseAction {
                 try {
                     admissionManager.processInitialAdmission(intakea.getDemographicNo().intValue(), getProviderNo(request), admissionProgram, "initial admission", null);
                 } catch (Exception e) {
-                    log.warn(e);
+                    log.warn("warn", e);
                 }
             } else {
                 ActionMessages messages = new ActionMessages();
@@ -256,7 +256,7 @@ public class IntakeAAction2 extends BaseAction {
                     try {
                         admissionManager.processInitialAdmission(intakea.getDemographicNo().intValue(), getProviderNo(request), serviceProgram, "initial admission", null);
                     } catch (Exception e) {
-                        log.warn(e);
+                        log.warn("warn", e);
                     }
                 }
             }

@@ -469,7 +469,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 		}
 		catch (AdmissionException e) {
 			MiscUtils.getLogger().error("Error", e);
-			LOG.error(e);
+			LOG.error("Error", e);
 
 			ActionMessages messages = new ActionMessages();
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("message", e.getMessage()));
@@ -517,10 +517,10 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 				}
 			}
 			catch (MalformedURLException e) {
-				LOG.error(e);
+				LOG.error("Error", e);
 			}
 			catch (WebServiceException e) {
-				LOG.error(e);
+				LOG.error("Error", e);
 			}
 		}
 /*

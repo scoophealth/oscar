@@ -92,7 +92,7 @@ public class HHSEmrDownloadHandler extends DefaultGenericHandler implements Mess
             }
         }
        }catch(Exception e){
-           logger.debug(e);
+           logger.debug("debug", e);
 
        }
        return headerList; 

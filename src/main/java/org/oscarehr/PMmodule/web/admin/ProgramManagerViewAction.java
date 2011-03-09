@@ -356,12 +356,12 @@ public class ProgramManagerViewAction extends BaseAction {
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.success"));
 			saveMessages(request, messages);
 		} catch (ProgramFullException e) {
-			logger.error(e);
+			logger.error("Error", e);
 			ActionMessages messages = new ActionMessages();
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.full"));
 			saveMessages(request, messages);
 		} catch (AdmissionException e) {
-			logger.error(e);
+			logger.error("Error", e);
 			ActionMessages messages = new ActionMessages();
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.error", e.getMessage()));
 			saveMessages(request, messages);
@@ -414,12 +414,12 @@ public class ProgramManagerViewAction extends BaseAction {
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.success"));
 			saveMessages(request, messages);
 		} catch (ProgramFullException e) {
-			logger.error(e);
+			logger.error("Error", e);
 			ActionMessages messages = new ActionMessages();
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.full"));
 			saveMessages(request, messages);
 		} catch (AdmissionException e) {
-			logger.error(e);
+			logger.error("Error", e);
 			ActionMessages messages = new ActionMessages();
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.error", e.getMessage()));
 			saveMessages(request, messages);

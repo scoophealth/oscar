@@ -152,7 +152,7 @@ public class ClientSearchFormBean {
 			calendar.setTime(d);
 			return String.valueOf(calendar.get(Calendar.YEAR));
 		}catch(Exception e) {
-			log.error(e);
+			log.error("Error", e);
 		}
 		return null;
 	}
@@ -165,7 +165,7 @@ public class ClientSearchFormBean {
 			if(value.length()==1) {value= "0" + value;}
  			return value;
 		}catch(Exception e) {
-			log.error(e);
+			log.error("Error", e);
 		}
 		return null;
 	}
@@ -178,7 +178,7 @@ public class ClientSearchFormBean {
 			if(value.length()==1) {value= "0" + value;}
 			return value;
 		}catch(Exception e) {
-			log.error(e);
+			log.error("Error", e);
 		}
 		return null;
 	}

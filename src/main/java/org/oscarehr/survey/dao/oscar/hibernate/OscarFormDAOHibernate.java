@@ -110,7 +110,7 @@ public class OscarFormDAOHibernate extends HibernateDaoSupport implements
 		try {
 			model = SurveyDocument.Factory.parse(new StringReader(form.getSurveyData()));
 		}catch(Exception e) {
-			logger.error(e);
+			logger.error("Error", e);
 			return null;
 		}
 		
@@ -167,7 +167,7 @@ public class OscarFormDAOHibernate extends HibernateDaoSupport implements
 		try {
 			model = SurveyDocument.Factory.parse(new StringReader(form.getSurveyData()));
 		}catch(Exception e) {
-			logger.error(e);
+			logger.error("Error", e);
 			return null;
 		}
 		
@@ -338,7 +338,7 @@ public class OscarFormDAOHibernate extends HibernateDaoSupport implements
 		try {
 			model = SurveyDocument.Factory.parse(new StringReader(form.getSurveyData()));
 		}catch(Exception e) {
-			logger.error(e);
+			logger.error("Error", e);
 			return null;
 		}
 		
@@ -479,7 +479,7 @@ public class OscarFormDAOHibernate extends HibernateDaoSupport implements
 		try {
 			model = SurveyDocument.Factory.parse(new StringReader(form.getSurveyData()));
 		}catch(Exception e) {
-			logger.error(e);
+			logger.error("Error", e);
 			return;
 		}
 		

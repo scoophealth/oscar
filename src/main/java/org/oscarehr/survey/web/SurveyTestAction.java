@@ -122,7 +122,7 @@ public class SurveyTestAction extends AbstractSurveyAction {
         	model = SurveyDocument.Factory.parse(new StringReader(xml));
         	request.getSession().setAttribute("model",model);
         }catch(Exception e) {
-        	log.error(e);
+        	log.error("Error", e);
         	//postMessage(request,"");
         	return mapping.findForward("manager");
         }
