@@ -53,7 +53,7 @@
 	}
 	String admission_year = admissionDate.substring(0,4);
 	String admission_month = admissionDate.substring(5,7);
-	
+	 
 	boolean printOnly=request.getParameter("print")!=null;
 	if (printOnly) request.setAttribute("noMenus", true);
 	
