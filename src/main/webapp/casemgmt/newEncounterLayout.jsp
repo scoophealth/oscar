@@ -203,8 +203,8 @@
  	String customScript = (String)request.getAttribute("cme_js");
    if(customScript != null && customScript.length()>0) {
 	%>
+		<script src="<c:out value="${ctx}"/>/js/custom/<%=customScript%>.js"></script>
 		<script src="<c:out value="${ctx}"/>/js/custom/<%=customScript%>-cme.js"></script>
-	
 	<%   	   
    }      
    %>

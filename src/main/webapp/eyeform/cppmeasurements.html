@@ -1,0 +1,47 @@
+<div id="divR1" style="width:100%;">
+	<table style="border: 1px solid rgb(102, 102, 102);" bgcolor="#ccccff">
+		<tbody>
+			<tr>
+				<td>
+					<table id="rowOne" width="100%">
+						<tbody>
+							<tr>
+								<td>
+									<div class="fieldtitle"><b>Current History</b></div>
+								</td>
+								<td>
+									<div class="fieldtitle"><b>Family history</b></div>
+								</td>
+								<td>
+									<div class="fieldtitle"><b>Diagnostics Notes</b></div>
+								</td>
+								<td>
+									<div style="font-size: 8pt; text-align: right; vertical-align: bottom;">
+								        <a onmouseover="javascript:window.status='Minimize'; return true;" href="javascript:rowOneX();" title="tooltipsClose">X</a>|
+								        <a onmouseover="javascript:window.status='Small Size'; return true;" href="javascript:rowOneSmall();" title="tooltipSmall">S</a>|
+								        <a onmouseover="javascript:window.status='Medium Size'; return true;" href="javascript:rowOneNormal();" title="tooltipNormal">N</a> |
+								        <a onmouseover="javascript:window.status='Large Size'; return true;" href="javascript:rowOneLarge();" title="tooltipLarge">L</a> |
+								        <a onmouseover="javascript:window.status='Full Size'; return true;" href="javascript:rowOneFull();" title="tooltipFull">F</a> |
+								        <a onmouseover="javascript:window.status='Full Size'; return true;" href="javascript:reset();" title="tooltipReset">R</a>
+    								</div>
+								</td>
+							</tr>
+							
+							<tr>
+								<td>
+									<div class="fieldcontent"><textarea name="cpp_currentHis" measurement="cpp_currentHis" class="examfieldwhite" tabindex="6" cols="30" onchange="setSaveflag(true)" style="height: 60px; overflow: auto;"></textarea></div>
+								</td>
+								<td>
+									<div class="fieldcontent"><textarea name="cpp_familyHis" measurement="cpp_familyHis" class="examfieldwhite" tabindex="7" cols="30" onchange="setSaveflag(true)" style="height: 60px; overflow: auto;"></textarea></div>
+								</td>
+								<td colspan="2">
+									<div class="fieldcontent"><textarea name="cpp_diagnostics" measurement="cpp_diagnostics" class="examfieldwhite" tabindex="8" cols="30" onchange="setSaveflag(true)" style="height: 60px; overflow: auto;"></textarea></div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
