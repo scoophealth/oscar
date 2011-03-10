@@ -23,8 +23,7 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.ws.BindingProvider;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.apache.ws.security.WSPasswordCallback;
 import org.apache.xmlbeans.XmlOptions;
 import org.oscarehr.PMmodule.caisi_integrator.CxfClientUtils;
@@ -162,6 +161,7 @@ import org.oscarehr.ocan.TimeLivedInCanadaDocument.TimeLivedInCanada;
 import org.oscarehr.ocan.VisitEmergencyDepartmentDocument.VisitEmergencyDepartment;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
 import ca.on.iar.definition.SubmissionPortType;
@@ -179,8 +179,8 @@ import ca.on.iar.types.TransmissionHeaderType.Organization;
 import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 
 public class OcanReportUIBean implements CallbackHandler {
-
-	static Log logger = LogFactory.getLog(OcanReportUIBean.class);
+	
+	private static Logger logger = MiscUtils.getLogger();
 
 	private static OcanStaffFormDao ocanStaffFormDao = (OcanStaffFormDao) SpringUtils.getBean("ocanStaffFormDao");
 	private static OcanStaffFormDataDao ocanStaffFormDataDao = (OcanStaffFormDataDao) SpringUtils.getBean("ocanStaffFormDataDao");	
