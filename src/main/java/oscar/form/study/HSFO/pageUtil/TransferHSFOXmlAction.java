@@ -83,7 +83,7 @@ public class TransferHSFOXmlAction extends Action
 						tfutil.getLoginPasswd(), rs);
 			} catch (Exception e)
 			{
-				logger.error(e);
+				logger.error("Error", e);
 				throw e;
 			}
 		}

@@ -78,7 +78,7 @@ public class CourseManagerAction extends DispatchAction {
 			programDao.saveProgram(p);
 			result="Course sucessfully created.";
 		}catch(Exception e) {
-			logger.error(e);
+			logger.error("Error", e);
 			result = "Error Occured: " + e.getMessage();
 		}
 						

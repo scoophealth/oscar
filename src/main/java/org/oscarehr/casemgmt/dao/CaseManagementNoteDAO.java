@@ -320,7 +320,7 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 			criteria.add(Restrictions.between("update_date", startDate, endDate));
 		}
 		catch (ParseException e) {
-			log.warn(e);
+			log.warn("Warning", e);
 		}
 
 		criteria.addOrder(Order.desc("update_date"));

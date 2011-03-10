@@ -78,7 +78,7 @@ public class ClientImageAction extends DispatchAction {
 				clientImageManager.saveClientImage(clientImage);
 				
 			}catch(Exception e) {
-				log.error(e);
+				log.error("Error", e);
 				//post error to page
 			}
 			

@@ -596,7 +596,7 @@ public class GenericIntakeManager {
 
 							ia.setValue(value);
 						} catch (IllegalStateException e) {
-							logger.warn(e);
+							logger.warn("Warning", e);
 						}
 					}
 				}

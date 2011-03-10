@@ -309,7 +309,7 @@ public class OcanReportUIBean implements CallbackHandler {
 			options.setSaveImplicitNamespaces(implicitNamespaces);
 			submissionDoc.save(sos,options);
 		}catch(IOException e) {
-			logger.error(e);
+			logger.error("Error", e);
 			return 0;
 		}
 		
@@ -335,7 +335,7 @@ public class OcanReportUIBean implements CallbackHandler {
 			DatatypeFactory dtf = DatatypeFactory.newInstance();
 			cal = dtf.newXMLGregorianCalendar(gc);
 		}catch(Exception e) {
-			logger.error(e);
+			logger.error("Error", e);
 		}
 		
 		TransmissionHeaderType th = new TransmissionHeaderType();
@@ -396,7 +396,7 @@ public class OcanReportUIBean implements CallbackHandler {
 			log.setTransactionId(res.getTransactionId());
 			log.setResultMessage(result.getDetailMessage());
 		} catch(Exception e) {
-			logger.error(e);
+			logger.error("Error", e);
 			return 0;
 		}
 		
@@ -534,7 +534,7 @@ public class OcanReportUIBean implements CallbackHandler {
 			options.setSaveImplicitNamespaces(implicitNamespaces);
 			submissionFileDoc.save(out,options);
 		}catch(IOException e) {
-			logger.error(e);
+			logger.error("Error", e);
 		}
 		
 		

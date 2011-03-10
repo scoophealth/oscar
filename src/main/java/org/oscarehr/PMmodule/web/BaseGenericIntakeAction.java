@@ -103,7 +103,7 @@ abstract class BaseGenericIntakeAction extends BaseAction {
 			try {
 				clientId = Integer.valueOf(clientId_str);
 			} catch (NumberFormatException e) {
-				LOG.error(e);
+				LOG.error("Error", e);
 			}
 		}
 		return clientId;
@@ -123,7 +123,7 @@ abstract class BaseGenericIntakeAction extends BaseAction {
 			try {
 				programId = Integer.valueOf(programIdParam);
 			} catch (NumberFormatException e) {
-				LOG.error(e);
+				LOG.error("Error", e);
 			}
 		}
 		

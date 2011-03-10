@@ -41,7 +41,7 @@ public class CreateAnonymousClientAction {
 		try {
 			admissionManager.processAdmission(d.getDemographicNo(), LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(), externalProgram, "anonymous discharge", "anonymous admission");
 		}catch(Exception e) {
-			logger.error(e);
+			logger.error("Error", e);
 			return d;
 		}
 		

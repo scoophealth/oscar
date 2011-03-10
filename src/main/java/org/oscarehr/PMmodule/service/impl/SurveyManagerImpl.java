@@ -74,7 +74,7 @@ public class SurveyManagerImpl implements SurveyManager, CustomReportDataSource 
 					results.add(form);
 				}
 			} catch(SQLException e) {
-				log.error(e);
+				log.error("Error", e);
 			}
 			
 		}
@@ -133,7 +133,7 @@ public class SurveyManagerImpl implements SurveyManager, CustomReportDataSource 
 					results.add(form);
 				}
 			} catch(SQLException e) {
-				log.error(e);
+				log.error("Error", e);
 			}
 		}
 		return results;

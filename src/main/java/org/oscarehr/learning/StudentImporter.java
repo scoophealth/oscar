@@ -139,7 +139,7 @@ public class StudentImporter {
 					p.setUrl("");
 					programDao.saveProgram(p);
 				}catch(Exception e) {
-					logger.error(e);					
+					logger.error("Error", e);					
 				}		
 				
 				//logger.info("need to assign provider to program: " + p.getId());
@@ -154,7 +154,7 @@ public class StudentImporter {
 				
 				total ++ ;
 			}catch(Exception e) {
-				logger.error(e);
+				logger.error("Error", e);
 			}
 			
 		}
