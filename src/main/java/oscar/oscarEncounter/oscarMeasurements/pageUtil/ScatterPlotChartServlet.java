@@ -202,7 +202,7 @@ public class ScatterPlotChartServlet extends HttpServlet
                         }
                         catch(Exception e)
                         {
-                                MiscUtils.getLogger().debug(e);
+                                MiscUtils.getLogger().debug("debug", e);
                         }                                                                        
                         
                     }

@@ -89,7 +89,7 @@ public class QueueDao extends AbstractDao<Queue>{
             q.setName(qn);
             entityManager.persist(q);
         }catch(Exception e){
-            MiscUtils.getLogger().error(e);
+            MiscUtils.getLogger().error("Error", e);
             return false;
         }
        return true;

@@ -557,7 +557,7 @@ public class IntakeCAction2 extends BaseAction {
 		try {
 			admissionDate = DATE_FORMAT.parse(intakec.getAdmissionDate());
 		} catch (ParseException e) {
-			log.warn(e);
+			log.warn("Warning", e);
 		}
 
 		long admissionProgramId = formBean.getAdmissionProgram();
@@ -580,7 +580,7 @@ public class IntakeCAction2 extends BaseAction {
 				try {
 					admissionManager.processInitialAdmission(intakec.getDemographicNo().intValue(), providerNo, admissionProgram, "initial admission", admissionDate);
 				} catch (Exception e) {
-					log.warn(e);
+					log.warn("Warning", e);
 				}
 			} else {
 				ActionMessages messages = new ActionMessages();
@@ -618,7 +618,7 @@ public class IntakeCAction2 extends BaseAction {
 					try {
 						admissionManager.processInitialAdmission(intakec.getDemographicNo().intValue(), providerNo, serviceProgram, "initial admission", admissionDate);
 					} catch (Exception e) {
-						log.warn(e);
+						log.warn("Warning", e);
 					}
 				}
 			}

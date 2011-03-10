@@ -248,7 +248,7 @@ public class SurveyExecuteAction extends DispatchAction {
             model = SurveyDocument.Factory.parse(new StringReader(xml));
             request.getSession().setAttribute("model", model);
         } catch (Exception e) {
-            log.error(e);
+            log.error("Error", e);
             postMessage(request, "");
             if (type != null && type.equals("provider")) {
                 //return mapping.findForward("close");
@@ -725,7 +725,7 @@ public class SurveyExecuteAction extends DispatchAction {
 	            
 	            client.setBirthDay(cal);
             } catch (ParseException e) {
-	            log.error(e);
+	            log.error("Error", e);
             }
         }
         clientManager.saveClient(client);

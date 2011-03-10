@@ -50,7 +50,7 @@ public class BedManager {
 
     private static final Logger log=MiscUtils.getLogger();
     private static <T extends Exception> void handleException(T e) throws T {
-        log.error(e);
+        log.error("Error", e);
         throw e;
     }
 

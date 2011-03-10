@@ -160,7 +160,7 @@ public class RecommitHSFOAction extends DispatchActionSupport {
                         message = tfutil.soapHttpCall(tfutil.getSiteID().intValue(), tfutil.getUserId(), tfutil.getLoginPasswd(), rstr);
                     }
                     catch (Exception e) {
-                        logger.error(e);
+                        logger.error("Error", e);
                         throw e;
                     }
                     String msg = "Code: " + (String)message.get(0) + " " + (String)message.get(1);

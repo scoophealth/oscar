@@ -241,7 +241,7 @@ public class SurveyManagerAction extends AbstractSurveyAction {
         	SurveyDocument model = SurveyDocument.Factory.parse(new StringReader(xml));
         	surveyForm.set("model",model);
         }catch(Exception e) {
-        	log.error(e);
+        	log.error("Error", e);
         	postMessage(request,"survey.edit_error",e.getMessage());
         	return list(mapping,form,request,response);
         }
@@ -909,7 +909,7 @@ public class SurveyManagerAction extends AbstractSurveyAction {
         	surveyManager.saveSurvey(survey);
 		}catch(Exception e) {
 			postMessage(request,"survey.import_error",e.getMessage());
-			log.error(e);
+			log.error("Error", e);
 		}
 		return list(mapping,form,request,response);
 	}
@@ -937,7 +937,7 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 			options.setSavePrettyPrintIndent(4);
 			survey.save(response.getWriter(),options);
 		}catch(Exception e) {
-			log.error(e);
+			log.error("Error", e);
 		}
 		
 		return null;

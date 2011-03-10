@@ -64,14 +64,8 @@ public class PreparedTicklerManager {
 		
 		try {
 			 pt = (PreparedTickler)cl.loadClass(className).newInstance();
-		}catch(ClassNotFoundException e) {
-			log.warn(e);
-		}catch(InstantiationException e) {
-			log.warn(e);
-		}catch(IllegalAccessException e) {
-			log.warn(e);
-		}catch(ClassCastException e) {
-			log.warn(e);
+		}catch(Exception e) {
+			log.warn("Warning", e);
 		}
 
 		return pt;

@@ -134,9 +134,8 @@ public class Startup implements ServletContextListener {
 				p.setProperty("OSCAR_START_TIME", "" + System.currentTimeMillis());
 
 			} catch (Exception e) {
-				logger.error("*** No Property File ***");
-				logger.error("Property file not found at:");
-				logger.error(propFileName);
+				String s="Property file not found at:"+propFileName;
+				logger.error(s, e);
 			}
 
 			// CHECK FOR DEFAULT PROPERTIES

@@ -26,7 +26,8 @@
 			}
                         
 			Throwable throwable=errorData.getThrowable();
-			if (throwable!=null){ logger.error(throwable);
+			if (throwable!=null){ 
+				logger.error("Error", throwable);
                             
                             if (debugOn){
                                 out.write("<pre>");
@@ -41,6 +42,6 @@
 	}
 	catch (Exception e)
 	{
-		logger.error(e);
+		logger.error("Error", e);
 	}
 %>

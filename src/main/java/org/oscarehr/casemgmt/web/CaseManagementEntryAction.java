@@ -424,7 +424,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		try {
 			this.caseManagementMgr.deleteTmpSave(providerNo, demoNo, programId);
 		} catch (Throwable e) {
-			logger.warn(e);
+			logger.warn("Warning", e);
 		}
 	}
 
@@ -493,7 +493,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		try {
 			role = String.valueOf((programManager.getProgramProvider(note.getProviderNo(), note.getProgram_no())).getRole().getId());
 		} catch (Throwable e) {
-			logger.error(e);
+			logger.error("Error", e);
 			role = "0";
 		}
 
@@ -502,7 +502,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		try {
 			team = String.valueOf((admissionManager.getAdmission(note.getProgram_no(), Integer.valueOf(note.getDemographic_no()))).getTeamId());
 		} catch (Throwable e) {
-			logger.error(e);
+			logger.error("Error", e);
 			team = "0";
 		}
 		note.setReporter_program_team(team);
@@ -847,7 +847,6 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		try {
 			role = String.valueOf((programManager.getProgramProvider(note.getProviderNo(), note.getProgram_no())).getRole().getId());
 		} catch (Throwable e) {
-			// log.error(e);
 			role = "0";
 		}
 		/*
@@ -858,7 +857,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		try {
 			team = String.valueOf((admissionManager.getAdmission(note.getProgram_no(), Integer.valueOf(note.getDemographic_no()))).getTeamId());
 		} catch (Throwable e) {
-			logger.error(e);
+			logger.error("Error", e);
 			team = "0";
 		}
 		note.setReporter_program_team(team);
@@ -1034,7 +1033,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		try {
 			this.caseManagementMgr.deleteTmpSave(providerNo, note.getDemographic_no(), note.getProgram_no());
 		} catch (Throwable e) {
-			logger.warn(e);
+			logger.warn("warn", e);
 		}
 
 		String logAction;
@@ -1317,7 +1316,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		try {
 			role = String.valueOf((programManager.getProgramProvider(note.getProviderNo(), note.getProgram_no())).getRole().getId());
 		} catch (Throwable e) {
-			logger.error(e);
+			logger.error("Error", e);
 			role = "0";
 		}
 
@@ -1327,7 +1326,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		try {
 			team = String.valueOf((admissionManager.getAdmission(note.getProgram_no(), Integer.valueOf(note.getDemographic_no()))).getTeamId());
 		} catch (Throwable e) {
-			logger.error(e);
+			logger.error("Error", e);
 			team = "0";
 		}
 
@@ -1389,7 +1388,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		try {
 			this.caseManagementMgr.deleteTmpSave(providerNo, note.getDemographic_no(), note.getProgram_no());
 		} catch (Throwable e) {
-			logger.warn(e);
+			logger.warn("Warning", e);
 		}
 
 		request.getSession().setAttribute(sessionName, sessionFrm);
@@ -1576,7 +1575,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			logger.debug("CANCEL P:" + providerNo + " D:" + demo + " PROG:" + programNo);
 			this.caseManagementMgr.deleteTmpSave(providerNo, demo, programNo);
 		} catch (Throwable e) {
-			logger.warn(e);
+			logger.warn("Warning", e);
 		}
 
 		return mapping.findForward("windowClose");
