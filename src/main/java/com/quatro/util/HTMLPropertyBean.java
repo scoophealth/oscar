@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.quatro.util;
 
+
 public class HTMLPropertyBean {
 	String readOnly;
 	String visible;
