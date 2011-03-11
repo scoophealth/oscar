@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.integration.hl7.model.PatientId;
+import org.oscarehr.integration.hl7.model.StaffId;
 import org.oscarehr.util.MiscUtils;
 
 import ca.uhn.hl7v2.HL7Exception;
@@ -65,6 +66,24 @@ public class BasePhsStarHandler {
 		}		
 		return ids;
 	}
+	
+	protected Map<String,StaffId> extractStaffIds() throws HL7Exception {
+		Map<String,StaffId> ids = new LinkedHashMap<String,StaffId>();
+		int x=0;
+		while(true) {
+			String identifier = t.get("STF-2("+x+")-1");
+			String typeCode = t.get("STF-2("+x+")-3");
+			
+			if(identifier == null)
+				break;
+			
+			StaffId tmp = new StaffId(identifier, typeCode);
+			ids.put(typeCode,tmp);
+			x++;
+		}		
+		return ids;
+	}
+	
 	
 	protected PatientId extractPatientAccountNumber() throws HL7Exception {
 		PatientId id = null;

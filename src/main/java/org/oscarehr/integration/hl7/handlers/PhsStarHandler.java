@@ -21,6 +21,7 @@ import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.OtherId;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.integration.hl7.model.PatientId;
+import org.oscarehr.integration.hl7.model.StaffId;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -418,6 +419,69 @@ public class PhsStarHandler extends BasePhsStarHandler {
 	}
 	
 	/**
+	 * MFI - Master File Identification
+	 * MFE - Master File Entry
+	 * STF - Staff Identification 
+	 * PRA - Practitioner Detail
+	 * ZST - <unknown>
+	 * ZRA - <unknown>
+	 * @throws HL7Exception
+	 */
+	public void handleStaffMasterFile() throws HL7Exception {
+		String mfIdentifierId = 		this.extractOrEmpty("MFI-1-1");
+		String mfIdentifierText = 		this.extractOrEmpty("MFI-1-2");
+		String mfIdentifierCodeSys =	this.extractOrEmpty("MFI-1-3");
+		String mfIdentifierAltId = 		this.extractOrEmpty("MFI-1-4");
+		String mfIdentifierAltText = 	this.extractOrEmpty("MFI-1-5");
+		String mfIdentifierAltCodeSys = this.extractOrEmpty("MFI-1-6");
+		
+		String fileLevelEventCode	=	this.extractOrEmpty("MFI-3");
+		String effectiveDateTime	=	this.extractOrEmpty("MFI-5");
+		String responseLevelCode	= 	this.extractOrEmpty("MFI-6");
+		
+		String recordLevelEventCode	=	this.extractOrEmpty("MFE-1");
+		String recordEffectiveDateTime	=	this.extractOrEmpty("MFE-3");
+		String practId					=	this.extractOrEmpty("MFE-4-1");
+		
+		String stfPractId	= this.extractOrEmpty("STF-1");
+		
+		Map<String,StaffId> staffIds = this.extractStaffIds();
+		
+		String lastName = this.extractOrEmpty("STF-3-1");
+		String firstName = this.extractOrEmpty("STF-3-2");
+		String middleName = this.extractOrEmpty("STF-3-3");
+		
+		String staffType = this.extractOrEmpty("STF-4");
+		
+		String active = this.extractOrEmpty("STF-7");
+		
+		//home extra fields here
+		//[NNN] [(999)]999-9999 [X99999] [B99999] [C any text] ^ <telecommunication use code (ID)> ^ <telecommunication equipment type (ID)> ^ <email address (ST)> ^ <county code (NM)> ^ <area/city code (NM)> ^ <phone number (NM) ^ <extension (NM)> ^ <any text (st)> 
+		String phone = this.extractOrEmpty("STF-10-1");
+		String phoneLoc = this.extractOrEmpty("STF-10-2");
+		String phoneType = this.extractOrEmpty("STF-10-3");
+		
+		//11 is address
+		//<street address (ST)> ^ <other designation (ST)> ^ <city (ST)> ^ <state or province (ST)> ^ <zip or postal code (ST)> ^ <country (ID)> ^ <address type (ID)> ^ <other geographic designation (ST)> ^ <county/parish code (IS)> ^ <census tract (IS)>
+
+		
+		String jobTitle = this.extractOrEmpty("STF-18");
+		
+		
+		String praPractId = this.extractOrEmpty("PRA-1-1");
+		
+		//pra-3 category - ADM??
+		
+		//pra-5 specialty - huh?
+		
+		
+		
+		
+		
+		//logger.info("mfId="+mfId);
+	}
+	
+	/**
 	 * This method is the entry point.
 	 * 
 	 * Logic to choose which message type we have, and to handle it.
@@ -504,6 +568,10 @@ public class PhsStarHandler extends BasePhsStarHandler {
         	updateAppointmentStatus("E");
         }
         
+        //MFN M02 is Master file - staff practitioner
+        if(msgType.equals("MFN") && triggerEvent.equals("M02")) {
+        	handleStaffMasterFile();
+        }
         
 	}
 	
