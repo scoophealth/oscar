@@ -20,6 +20,16 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  */
 public class BillingreferralDao extends HibernateDaoSupport {
 
+	 public Billingreferral getByReferralNo(String referral_no) {
+		 String sql = "From Billingreferral br WHERE br.referralNo=?";
+		 
+		 @SuppressWarnings("unchecked")
+		 List<Billingreferral> brs = this.getHibernateTemplate().find(sql,referral_no);
+		 if(!brs.isEmpty())
+			 return brs.get(0);
+		 return null;
+	 }
+	 
     public List getBillingreferral(String referral_no) {
 
         List cList = null;

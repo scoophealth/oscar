@@ -5,9 +5,10 @@ jQuery(document).ready(function(){
 		jQuery("#conReqSendTo").after(data);
 	}});
 	
-	jQuery.ajax({url:ctx+"/eyeform/Eyeform.do?method=specialConRequest&requestId="+requestId+"&demographicNo="+demographicNo+"&appNo="+appointmentNo,dataType: "html",success: function(data) {
-		//alert(data);
+	jQuery.ajax({url:ctx+"/eyeform/conspecial.jsp",dataType: "html",success: function(data) {
 		jQuery("#trConcurrentProblems").after(data);
 	}});	
+	
+	jQuery.getScript(ctx+"/eyeform/Eyeform.do?method=specialConRequest&requestId="+requestId+"&demographicNo="+demographicNo+"&appNo="+appointmentNo,function(data,status){alert(data);});	
 	
 });

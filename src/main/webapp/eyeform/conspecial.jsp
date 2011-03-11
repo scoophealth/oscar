@@ -1,4 +1,4 @@
-<tr>
+<tr>	
             <td colspan=2 class="tite4">
             <table width="100%">
                     <tr>
@@ -6,18 +6,18 @@
                            Ocular Examination:
                         </td>
                         <td>
-                            <input type="button" class="btn" value="current hx" onclick="currentProAdd('cHis',document.forms[0].specialProblems);" />&nbsp;
-                            <input type="button" class="btn" value="past ocular hx" onclick="currentProAdd('pHis',document.forms[0].specialProblems);" />&nbsp;
-                            <input type="button" class="btn" value="ocular meds" onclick="currentProAdd('oMeds',document.forms[0].specialProblems);" />&nbsp;
+                            <input type="button" class="btn" value="current hx" onclick="currentProAdd('cHis','ext_specialProblem');" />&nbsp;
+                            <input type="button" class="btn" value="past ocular hx" onclick="currentProAdd('pHis','ext_specialProblem');" />&nbsp;
+                            <input type="button" class="btn" value="ocular meds" onclick="currentProAdd('oMeds','ext_specialProblem');" />&nbsp;
 
-                            <input type="button" class="btn" value="diagnostic notes" onclick="currentProAdd('dTest',document.forms[0].specialProblems);" />&nbsp;
-                            <input type="button" class="btn" value="past ocular proc" onclick="currentProAdd('oProc',document.forms[0].specialProblems);" />&nbsp;
-                            <input type="button" class="btn" value="specs hx" onclick="currentProAdd('specs',document.forms[0].specialProblems);" />&nbsp;
+                            <input type="button" class="btn" value="diagnostic notes" onclick="currentProAdd('dTest','ext_specialProblem');" />&nbsp;
+                            <input type="button" class="btn" value="past ocular proc" onclick="currentProAdd('oProc','ext_specialProblem');" />&nbsp;
+                            <input type="button" class="btn" value="specs hx" onclick="currentProAdd('specs','ext_specialProblem');" />&nbsp;
 
-                            <input type="button" class="btn" value="impression" onclick="currentProAdd('impress',document.forms[0].specialProblems);" />&nbsp;
-                            <input type="button" class="btn" value="follow-up" onclick="currentProAdd('followup',document.forms[0].specialProblems);" />&nbsp;
-                            <input type="button" class="btn" value="proc" onclick="currentProAdd('probooking',document.forms[0].specialProblems);" />
-                            <input type="button" class="btn" value="test" onclick="currentProAdd('testbooking',document.forms[0].specialProblems);" />&nbsp;
+                            <input type="button" class="btn" value="impression" onclick="currentProAdd('impress','ext_specialProblem');" />&nbsp;
+                            <input type="button" class="btn" value="follow-up" onclick="currentProAdd('followup','ext_specialProblem');" />&nbsp;
+                            <input type="button" class="btn" value="proc" onclick="currentProAdd('probooking','ext_specialProblem');" />
+                            <input type="button" class="btn" value="test" onclick="currentProAdd('testbooking','ext_specialProblem');" />&nbsp;
 
                          </td>
                     </tr>
@@ -35,7 +35,7 @@
 							<input style="vertical-align: middle;" type="button" value="add" onclick="addSpecialExam();">
                 		</td>
                			 <td>
-                			<textarea cols="62" rows="8"  name="ext_specialProblem"><%=request.getAttribute("ext_specialProblem") %></textarea>
+                			<textarea cols="62" rows="8" id="ext_specialProblem" name="ext_specialProblem"></textarea>
                 		</td>
                 	</tr>
                 </table>

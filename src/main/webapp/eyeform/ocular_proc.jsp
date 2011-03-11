@@ -27,6 +27,7 @@ Enter Ocular Procedure
 		<html:hidden property="proc.demographicNo"/>
 		<html:hidden property="proc.appointmentNo"/>
 		<html:hidden property="proc.id"/>
+		<html:hidden property="proc.status"/>
 		
 
 		<tr>

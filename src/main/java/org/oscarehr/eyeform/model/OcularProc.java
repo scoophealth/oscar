@@ -19,6 +19,9 @@ public class OcularProc {
 	private Date updateTime;
 	private int appointmentNo;
 	
+	public OcularProc() {
+		status="A";			
+	}
 	
 	public int getAppointmentNo() {
 		return appointmentNo;
