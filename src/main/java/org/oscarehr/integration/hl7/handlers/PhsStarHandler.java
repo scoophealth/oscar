@@ -222,8 +222,12 @@ public class PhsStarHandler extends BasePhsStarHandler {
 			logger.error("Unable to retrieve patient data..cannot make appointment");
 			return;
 		}
-		//match provider		
-		Provider provider = providerDao.getProviderByPractitionerNo(getApptPractitionerNo());
+		//match provider - STAR id is linked from OtherId table
+		Provider provider = null;
+		OtherId otherId = OtherIdManager.searchTable(OtherIdManager.PROVIDER,"STAR",getApptPractitionerNo());
+		if(otherId != null) {
+			provider = providerDao.getProvider(otherId.getTableId());
+		}
 		if(provider == null) {
 			logger.error("Unable to match provider..cannot make appointment");
 			return;
