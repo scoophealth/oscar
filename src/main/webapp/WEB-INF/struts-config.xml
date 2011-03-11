@@ -481,6 +481,7 @@
 				
 		<form-bean name="followUpForm2" type="org.apache.struts.validator.DynaValidatorForm">
 			<form-property name="followup" type="org.oscarehr.eyeform.model.FollowUp" />
+			<form-property name="cp" type="org.oscarehr.eyeform.model.ConsultationReport" />
 		</form-bean>
                 <form-bean name="PatientEndYearStatementForm" type="oscar.oscarBilling.ca.on.pageUtil.PatientEndYearStatementForm" />
 
@@ -872,7 +873,8 @@
 		<action path="/oscarEncounter/displayOcularProcedure" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayOcularProcedureAction"></action>
 		<action path="/oscarEncounter/displaySpecsHistory" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplaySpecsHistoryAction"></action>
 		<action path="/oscarEncounter/displayMacro" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayMacroAction"></action>
-		<action path="/oscarEncounter/displayAppointmentHistory" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayAppointmentHistoryAction"></action>		
+		<action path="/oscarEncounter/displayAppointmentHistory" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayAppointmentHistoryAction"></action>
+		<action path="/oscarEncounter/displayConReport" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayConReportAction"></action>		
 		<action path="/oscarEncounter/displayConsultation" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayConsultAction"></action>
 		<action path="/oscarEncounter/displayAllergy" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayAllergyAction"></action>
 		<action path="/oscarEncounter/displayRx" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayRxAction"></action>
@@ -2006,7 +2008,9 @@
 		
 		<action path="/eyeform/Eyeform" type="org.oscarehr.eyeform.web.EyeformAction" parameter="method" scope="request" validate="false" input="/eyeform/followup.jsp" name="followUpForm2">
 			<forward name="conreqcc" path="/eyeform/conreqcc.jsp" />
-			<forward name="conspecial" path="/eyeform/conspecial.jsp" />				
+			<forward name="conspecial" path="/eyeform/conspecialScript.jsp" />
+			<forward name="conspecialhtml" path="/eyeform/conspecial.jsp" />
+			<forward name="conReport" path="/eyeform/conreplyGen.jsp" />						
 		</action>
 
 		<action path="/casemgmt/ExtPrintRegistry" type="org.oscarehr.casemgmt.web.ExtPrintRegistryAction" parameter="method" scope="request">			

@@ -45,12 +45,17 @@
 
 package oscar.util;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
 
 import javax.servlet.jsp.PageContext;
 
+import org.oscarehr.common.dao.SecObjPrivilegeDao;
+import org.oscarehr.common.model.SecObjPrivilege;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -94,7 +99,62 @@ public class OscarRoleObjectPrivilege {
         }
         return ret;
     }
-    /**
+
+	public static ArrayList<Object> getPrivilegePropAsArrayList(String objName) {
+        ArrayList<Object> ret = new ArrayList<Object>();
+        Properties prop = new Properties();
+       
+        SecObjPrivilegeDao dao = (SecObjPrivilegeDao)SpringUtils.getBean("secObjPrivilegeDao");
+        String [] objectNames  = getVecObjectName(objName);
+        ArrayList<String> objects = new ArrayList<String>();
+
+        for(String t:objectNames) {
+        	objects.add(t);          
+        }
+           
+        List<SecObjPrivilege> privileges= dao.findByObjectNames(objects);
+           
+        ArrayList<String> roleInObj = new ArrayList<String>();
+        for(SecObjPrivilege sop:privileges) {
+        	prop.setProperty(sop.getId().getRoleUserGroup(), sop.getPrivilege());
+        	roleInObj.add(sop.getId().getRoleUserGroup());
+        }
+        ret.add(prop);
+        ret.add(roleInObj);           
+       
+        return ret;
+    }
+	
+	   public static boolean checkPrivilege(String roleName, Properties propPrivilege, ArrayList roleInObj) {
+	        return checkPrivilege( roleName,  propPrivilege,  roleInObj,rights);
+	    }
+	    public static boolean checkPrivilege(String roleName, Properties propPrivilege, ArrayList roleInObj,String rightCustom) {
+	        boolean ret = false;
+	        Properties propRoleName = getVecRole(roleName);
+	        for (int i = 0; i < roleInObj.size(); i++) {
+	            if (!propRoleName.containsKey(roleInObj.get(i)))
+	                continue;
+
+	            String singleRoleName = (String) roleInObj.get(i);
+	            String strPrivilege = propPrivilege.getProperty(singleRoleName, "");
+	            ArrayList<String> vecPrivilName = getVecPrivilegeAsArrayList(strPrivilege);
+
+	            boolean[] check = { false, false };
+	            for (int j = 0; j < vecPrivilName.size(); j++) {
+	                check = checkRights(vecPrivilName.get(j), rightCustom);
+
+	                if (check[0]) { // get the rights, stop comparing
+	                    return true;
+	                }
+	                if (check[1]) { // get the only rights, stop and return the result
+	                    return check[0];
+	                }
+	            }
+	        }
+	        return ret;
+	    }
+	
+	/**
      *returns the providers roles as properties object
      */
     private static Properties getVecRole(String roleName) {
@@ -114,6 +174,17 @@ public class OscarRoleObjectPrivilege {
 
     private static Vector getVecPrivilege(String privilege) {
         Vector vec = new Vector();
+        String[] temp = privilege.split("\\|");
+        for (int i = 0; i < temp.length; i++) {
+            if ("".equals(temp[i]))
+                continue;
+            vec.add(temp[i]);
+        }
+        return vec;
+    }
+    
+    private static ArrayList<String> getVecPrivilegeAsArrayList(String privilege) {
+        ArrayList<String> vec = new ArrayList<String>();
         String[] temp = privilege.split("\\|");
         for (int i = 0; i < temp.length; i++) {
             if ("".equals(temp[i]))

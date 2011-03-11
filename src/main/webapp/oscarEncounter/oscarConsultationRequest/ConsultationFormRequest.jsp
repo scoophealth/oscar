@@ -175,6 +175,7 @@
  	String customScript = OscarProperties.getInstance().getProperty("cme_js");
    if(customScript != null && customScript.length()>0) {
 	%>
+		<script src="<c:out value="${ctx}"/>/js/custom/<%=customScript%>.js"></script>
 		<script src="<c:out value="${ctx}"/>/js/custom/<%=customScript%>-conreq.js"></script>	
 	<%   	   
    }      
