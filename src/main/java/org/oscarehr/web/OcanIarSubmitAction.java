@@ -23,7 +23,7 @@ public class OcanIarSubmitAction extends DispatchAction {
 		try {
 			response.getWriter().println(submissionId_full);
 		}catch(IOException e) {
-			logger.error(e);
+			logger.error("Error",e);
 		}
 		
 		int submissionId_self = OcanReportUIBean.sendSubmissionToIAR(OcanReportUIBean.generateOCANSubmission("SELF"));
@@ -31,7 +31,7 @@ public class OcanIarSubmitAction extends DispatchAction {
 		try {
 			response.getWriter().println(submissionId_self);
 		}catch(IOException e) {
-			logger.error(e);
+			logger.error("Error:",e);
 		}
 		
 		int submissionId_core = OcanReportUIBean.sendSubmissionToIAR(OcanReportUIBean.generateOCANSubmission("CORE"));
@@ -39,7 +39,7 @@ public class OcanIarSubmitAction extends DispatchAction {
 		try {
 			response.getWriter().println(submissionId_core);
 		}catch(IOException e) {
-			logger.error(e);
+			logger.error("Error:",e);
 		}
 		
 		return null;
