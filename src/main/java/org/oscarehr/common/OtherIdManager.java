@@ -39,6 +39,10 @@ public class OtherIdManager {
 
 	private static OtherIdDAO otherIdDao = (OtherIdDAO) SpringUtils.getBean("otherIdDao");
 
+	public static void merge(OtherId otherId) {
+		otherIdDao.save(otherId);
+	}
+	
     public static String getDemoOtherId(Integer demographicNo, String otherKey) {
 		String oid = "";
 		OtherId oidObj = getOtherIdObj(DEMOGRAPHIC, demographicNo, otherKey);
@@ -50,6 +54,16 @@ public class OtherIdManager {
 		return getDemoOtherId(getNumeric(demographicNo), otherKey);
     }
 
+    public static OtherId getDemoOtherIdAsOtherId(Integer demographicNo, String otherKey) {
+		OtherId oidObj = getOtherIdObj(DEMOGRAPHIC, demographicNo, otherKey);
+		return oidObj;
+    }
+
+    public static OtherId getDemoOtherIdAsOtherId(String demographicNo, String otherKey) {
+		return getDemoOtherIdAsOtherId(getNumeric(demographicNo), otherKey);
+    }
+
+    
     public static String getApptOtherId(Integer appointmentNo, String otherKey) {
 		String oid = "";
 		OtherId oidObj = getOtherIdObj(APPOINTMENT, appointmentNo, otherKey);

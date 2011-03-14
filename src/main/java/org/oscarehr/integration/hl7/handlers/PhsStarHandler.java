@@ -75,10 +75,10 @@ public class PhsStarHandler extends BasePhsStarHandler {
 		
 		//search by Temporary MRN
 		logger.debug("Searching by Temporary MRN");
-		PatientId trn = internalIds.get("TMR");
-		if(trn != null) {
+		PatientId tmr = internalIds.get("TMR");
+		if(tmr != null) {
 			logger.debug("Temporary MRN found in message");			
-			OtherId otherId = OtherIdManager.searchTable(OtherIdManager.DEMOGRAPHIC,"TRN",internalIds.get("TRN").getId());
+			OtherId otherId = OtherIdManager.searchTable(OtherIdManager.DEMOGRAPHIC,"TMR",internalIds.get("TMR").getId());
 			if(otherId != null) {
 				logger.debug("Found demographic:"+otherId.getTableId());
 				return Integer.parseInt(otherId.getTableId());
@@ -148,6 +148,7 @@ public class PhsStarHandler extends BasePhsStarHandler {
 		clientDao.saveClient(demo);
 		
 		Integer demographicNo = demo.getDemographicNo();
+		logger.debug("new patient saved with demographicNo="+demographicNo);
 		
 		//save temporary MRN if available
 		PatientId tempMrn = internalIds.get("TMR");
@@ -168,7 +169,8 @@ public class PhsStarHandler extends BasePhsStarHandler {
 		logger.info("Updating patient record " + demographicNo);
 		Demographic demo = clientDao.getClientByDemographicNo(demographicNo);
 		if(demo == null) {
-			throw new HL7Exception("couldn't find the record to update");
+			logger.error("couldn't find the patient record to update - " + demographicNo);
+			throw new HL7Exception("couldn't find the record to update - " + demographicNo);		
 		}
 		
 		//update the details
@@ -203,10 +205,16 @@ public class PhsStarHandler extends BasePhsStarHandler {
 		//save 		
 		clientDao.saveClient(demo);
 				
-		//save temporary MRN
+		//save temporary MRN (might want to check to see if this key already exists)
 		PatientId tempMrn = internalIds.get("TMR");
-		if(tempMrn != null && OtherIdManager.getDemoOtherId(demographicNo, "TMR")==null) {			
-			OtherIdManager.saveIdDemographic(demographicNo, "TMR", tempMrn.getId());
+		if(tempMrn != null && OtherIdManager.getDemoOtherId(demographicNo, "TMR")==null) {
+			if(OtherIdManager.getDemoOtherId(demographicNo, "TMR")!= null) {
+				OtherIdManager.saveIdDemographic(demographicNo, "TMR", tempMrn.getId());
+			} else {
+				OtherId oid = OtherIdManager.getDemoOtherIdAsOtherId(demographicNo, "TMR");
+				oid.setOtherId(tempMrn.getId());
+				OtherIdManager.merge(oid);
+			}
 		}
 
 	}
@@ -220,7 +228,7 @@ public class PhsStarHandler extends BasePhsStarHandler {
 		Demographic demographic = clientDao.getClientByDemographicNo(demographicNo);
 		if(demographic == null) {
 			logger.error("Unable to retrieve patient data..cannot make appointment");
-			return;
+			throw new HL7Exception("Unable to retrieve patient data..cannot make appointment");
 		}
 		//match provider - STAR id is linked from OtherId table
 		Provider provider = null;
@@ -229,8 +237,8 @@ public class PhsStarHandler extends BasePhsStarHandler {
 			provider = providerDao.getProvider(otherId.getTableId());
 		}
 		if(provider == null) {
-			logger.error("Unable to match provider..cannot make appointment");
-			return;
+			logger.error("Unable to match provider..cannot make appointment - " + getApptPractitionerNo());
+			throw new HL7Exception ("Unable to match provider..cannot make appointment - " + getApptPractitionerNo());
 		}
 		//create appt
 		Appointment appt = new Appointment();
@@ -252,7 +260,7 @@ public class PhsStarHandler extends BasePhsStarHandler {
 		if(p != null) {
 			appt.setProgramId(p.getId());
 		} else {
-			appt.setProgramId(0);
+			throw new HL7Exception("System not configured to accept messages for runit " + getApptResourceUnit());
 		}
 		
 		//TODO: fix the bug in schedule
@@ -265,7 +273,7 @@ public class PhsStarHandler extends BasePhsStarHandler {
 	
 		if(appointmentDao.checkForConflict(appt)) {
 			logger.error("Conflict");
-			return;
+			throw new HL7Exception("Unable to schedule this appointment due to conflict");
 		}
 		
 		//save it
@@ -303,7 +311,7 @@ public class PhsStarHandler extends BasePhsStarHandler {
 				admission.setProgram(p);
 				admission.setProgramId(p.getId());
 				//PHS user
-				admission.setProviderNo("000001");
+				admission.setProviderNo("000001"); //This needs to not be hardcoded
 				admission.setClientStatusId(0);
 				admission.setTeamId(0);
 				admission.setRadioDischargeReason("0");
@@ -586,7 +594,7 @@ public class PhsStarHandler extends BasePhsStarHandler {
 	public String getAddress() {
 		try {
 			String address1 = this.extractOrEmpty("PID-11-1");
-			String address2 = this.extractOrEmpty("PID-11-1");
+			String address2 = this.extractOrEmpty("PID-11-2");
 			return address1 + " " + address2;
 		}catch(Exception e) {
 			return "";
