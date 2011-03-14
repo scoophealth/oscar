@@ -57,11 +57,14 @@ public class BasePhsStarHandler {
 			String authority = t.get("PID-3("+x+")-4");
 			String typeId = t.get("PID-3("+x+")-5");
 			
-			if(identifier == null)
-				break;
+			if(identifier != null) {
+				PatientId tmp = new PatientId(identifier, authority, typeId);
+				ids.put(typeId,tmp);
+			}
 			
-			PatientId tmp = new PatientId(identifier, authority, typeId);
-			ids.put(typeId,tmp);
+			if(identifier == null && t.get("PID-3("+(x+1)+")-1")==null) {
+				break;
+			}
 			x++;
 		}		
 		return ids;
