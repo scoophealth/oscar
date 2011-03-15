@@ -33,8 +33,10 @@ public class AllergyDAO extends HibernateDaoSupport {
         return (Allergy)this.getHibernateTemplate().get(Allergy.class, allergyid);
     }
 
-    public List getAllergies(String demographic_no) {
-        return this.getHibernateTemplate().find("from Allergy a where a.archived != '1' and a.demographic_no = ? ", new Object[] {demographic_no});
+    public List<Allergy> getAllergies(String demographic_no) {
+    	@SuppressWarnings("unchecked")
+        List<Allergy> allergies =  this.getHibernateTemplate().find("from Allergy a where a.archived != '1' and a.demographic_no = ? ", new Object[] {demographic_no});
+        return allergies;
     }
 
 }

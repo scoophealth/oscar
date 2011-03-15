@@ -1,14 +1,10 @@
-<%@ taglib uri="http://jakarta.apache.org/struts/tags-html"
-	prefix="html"%>
-<%@ taglib uri="http://jakarta.apache.org/struts/tags-nested"
-	prefix="nested"%>
-<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
-
+<%@ include file="/taglibs.jsp"%>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 
 <%@page import="org.oscarehr.eyeform.model.*"%>
+<%@page import="org.oscarehr.eyeform.web.EyeformAction"%>
 <html:html>
 <head>
 <html:base />
@@ -130,19 +126,18 @@ function confirmPrint(btn) {
 }
     
     
-    con_cHis='';
-	con_oHis='';
-	con_pHis='';
-	con_diag='';
-	con_impress=''
-	con_mHis='';
-	con_ongoing='';
-	con_fHis='';
-	con_oMeds='';
-	con_probook='';
-	con_testbook='';
-	con_ocularpro='';
-	con_follow='';
+    con_cHis='<%=request.getAttribute("currentHistory")%>';
+	con_oHis='<%=request.getAttribute("otherMeds")%>';
+	con_pHis='<%=request.getAttribute("pastOcularHistory")%>';
+	con_diag='<%=request.getAttribute("diagnosticNotes")%>';
+	con_impress='<%=request.getAttribute("impression")%>';
+	con_mHis='<%=request.getAttribute("medHistory")%>';
+	con_fHis='<%=request.getAttribute("famHistory")%>';
+	con_oMeds='<%=request.getAttribute("ocularMedication")%>';
+	con_probook='<%=request.getAttribute("probooking")%>';
+	con_testbook='<%=request.getAttribute("testbooking")%>';
+	con_ocularpro='<%=request.getAttribute("ocularProc")%>';
+	con_follow='<%=request.getAttribute("followup")%>';
 	con_aller='<%=StringEscapeUtils.escapeJavaScript(aller) %>';
 	con_presc='<%=StringEscapeUtils.escapeJavaScript(presc) %>';
 
@@ -160,65 +155,65 @@ function confirmPrint(btn) {
     
  
  	function printsubmit(){
- 		document.inputForm.target='_top';
- 		document.inputForm.method.value='printConRequest';
- 		document.inputForm.submit();
+ 		document.eyeForm.target='_top';
+ 		document.eyeForm.method.value='printConRequest';
+ 		document.eyeForm.submit();
  	}
  	function savesubmit(){
- 		document.inputForm.method.value='saveConRequest';
+ 		document.eyeForm.method.value='saveConRequest';
  		window.close()
- 		document.inputForm.submit();
+ 		document.eyeForm.submit();
  	}
 	function checkform(){
-		if (document.inputForm.referalNo.value=='')
+		if (document.eyeForm.referralNo.value=='')
 		{
 			alert("Please choose the referal doctor.");
 			return false;
 		}else return true;
 	}
 	function addDoc(){
-		if (document.inputForm.elements["cp.ccText"].value.length<=0)
-			document.inputForm.elements["cp.ccText"].value=document.inputForm.cldoctor.value;
-		else document.inputForm.elements["cp.ccText"].value=document.inputForm.elements["cp.ccText"].value+"; "+document.inputForm.cldoctor.value;
+		if (document.eyeForm.elements["cp.cc"].value.length<=0)
+			document.eyeForm.elements["cp.cc"].value=document.eyeForm.clDoctor.value;
+		else document.eyeForm.elements["cp.cc"].value=document.eyeForm.elements["cp.cc"].value+"; "+document.eyeForm.clDoctor.value;
 	}
 	function addFamDoc(){
-		if (document.inputForm.elements["cp.ccText"].value.length<=0)
-			document.inputForm.elements["cp.ccText"].value=document.inputForm.famdoctor.value;
-		else document.inputForm.elements["cp.ccText"].value=document.inputForm.elements["cp.ccText"].value+"; "+document.inputForm.famdoctor.value;
+		if (document.eyeForm.elements["cp.cc"].value.length<=0)
+			document.eyeForm.elements["cp.cc"].value=document.eyeForm.famDoctor.value;
+		else document.eyeForm.elements["cp.cc"].value=document.eyeForm.elements["cp.cc"].value+"; "+document.eyeForm.famDoctor.value;
 	}
 	function clinicalInfoAdd(str,name){
 		if (name!=null && trim(name)!='')
-			document.inputForm.elements["cp.clinicalInfo"].value+=str+" "+name+"\n";
+			document.eyeForm.elements["cp.clinicalInfo"].value+=name;
 	}
 	function ocluarproAdd(str,name){
 		if (name!=null && trim(name)!='')
-			document.inputForm.elements["cp.clinicalInfo"].value+=str+"\n"+name;
+			document.eyeForm.elements["cp.clinicalInfo"].value+=name;
 	}
 	
 	function allergiesAdd(){
 		if (con_aller!=null && trim(con_aller)!='')
-			document.inputForm.elements["cp.allergies"].value+="Allergies:"+con_aller+"\n";
+			document.eyeForm.elements["cp.allergies"].value+="Allergies:"+con_aller+"\n";
 	}
 	
 	function prescriptionsAdd(){
 		if (con_presc!=null && trim(con_presc)!='')
-			document.inputForm.elements["cp.allergies"].value+="Current Prescriptions:\n"+con_presc+"\n";
+			document.eyeForm.elements["cp.allergies"].value+="Current Prescriptions:\n"+con_presc+"\n";
 	}
 	function currentMedsAdd(str){
 		if (str!=null && trim(str)!='')
-			document.inputForm.elements["cp.allergies"].value+="Current Medications:\n"+str+"\n";
+			document.eyeForm.elements["cp.allergies"].value+="Current Medications:\n"+str+"\n";
 	}
 	function ocularHisAdd(str){
 		if (str!=null && trim(str)!='')
-			document.inputForm.elements["cp.allergies"].value+="Past Ocular History:\n"+str+"\n";
+			document.eyeForm.elements["cp.allergies"].value+="Past Ocular History:\n"+str+"\n";
 	}
 	
 	function impressionAdd(){
 		if (con_impress!=null && trim(con_impress)!='')
-			document.inputForm.elements["cp.impression"].value+=con_impress+"\n";
+			document.eyeForm.elements["cp.impression"].value+=con_impress+"\n";
 	}
 	function planAdd(val){
-		document.inputForm.elements["cp.plan"].value+=val;
+		document.eyeForm.elements["cp.plan"].value+=val;
 	
 	}
 	function addExam(ob){
@@ -247,7 +242,7 @@ function confirmPrint(btn) {
 				temps+=(trim(specs['os_'+val+'_add'])=='')?'':(' add '+trim(specs['os_'+val+'_add']));
 				temps+=(trim(specs['os_'+val+'_prism'])=='')?'\n':(' prism '+trim(specs['os_'+val+'_prism'])+'\n');
 				if (trim(temps)!='\n      \n')
-					document.inputForm.elements['cp.examination'].value+='Specs:'+temps;
+					document.eyeForm.elements['cp.examination'].value+='Specs:'+temps;
 				break;
 			case "ar":
 				
@@ -259,7 +254,7 @@ function confirmPrint(btn) {
 				temps+=(trim(osMap['os_'+val+'_cyl'])=='')?'':(trim(osMap['os_'+val+'_cyl']));
 				temps+=(trim(osMap['os_'+val+'_axis'])=='')?'\n':('x'+trim(osMap['os_'+val+'_axis'])+'\n');
 				if (trim(temps)!='\n   \n')
-					document.inputForm.elements['cp.examination'].value+='AR:'+temps;
+					document.eyeForm.elements['cp.examination'].value+='AR:'+temps;
 				break;
 				
 			case "k":
@@ -273,7 +268,7 @@ function confirmPrint(btn) {
 				temps+=(trim(osMap['os_'+val+'2'])=='')?'':('x'+trim(osMap['os_'+val+'2']));
 				temps+=(trim(osMap['os_'+val+'2_axis'])=='')?'\n':('@'+trim(osMap['os_'+val+'2_axis'])+'\n');
 				if (trim(temps)!='\n  \n')
-					document.inputForm.elements['cp.examination'].value+='K:'+temps;
+					document.eyeForm.elements['cp.examination'].value+='K:'+temps;
 				break;
 			case "manifest_refraction":
 				
@@ -287,7 +282,7 @@ function confirmPrint(btn) {
 				temps+=(trim(osMap['os_'+val+'_axis'])=='')?'':('x'+trim(osMap['os_'+val+'_axis']));
 				temps+=(trim(osMap['os_'+val+'_add'])=='')?'\n':(' add '+trim(osMap['os_'+val+'_add'])+'\n');
 				if (trim(temps)!='\n                    \n')
-					document.inputForm.elements['cp.examination'].value+='Manifest refraction:'+temps;
+					document.eyeForm.elements['cp.examination'].value+='Manifest refraction:'+temps;
 				break;
 			case "cycloplegic_refraction":
 				
@@ -301,12 +296,12 @@ function confirmPrint(btn) {
 				temps+=(trim(osMap['os_'+val+'_axis'])=='')?'':('x'+trim(osMap['os_'+val+'_axis']));
 				temps+=(trim(osMap['os_'+val+'_add'])=='')?'\n':(' add '+trim(osMap['os_'+val+'_add'])+'\n');
 				if (trim(temps)!='\n                       \n')
-				document.inputForm.elements['cp.examination'].value+='Cycloplegic refraction:'+temps;
+				document.eyeForm.elements['cp.examination'].value+='Cycloplegic refraction:'+temps;
 				break;
 			case "EOM":
 				temps+=(ouMap['EOM']=='')?'':'EOM:'+(trim(ouMap['EOM'])+'\n');
 				if (trim(temps)!='')
-					document.inputForm.elements['cp.examination'].value+=temps;
+					document.eyeForm.elements['cp.examination'].value+=temps;
 				break;
 			case "cd_ratio_horizontal":
 				
@@ -314,14 +309,14 @@ function confirmPrint(btn) {
 				temps+='          ';
 				temps+=(trim(osMap['os_'+val])=='')?'\n':('OS '+trim(osMap['os_'+val])+'\n');
 				if (trim(temps)!='' && trim(temps)!='\n')
-					document.inputForm.elements['cp.examination'].value+='c/d ratio:'+temps;
+					document.eyeForm.elements['cp.examination'].value+='c/d ratio:'+temps;
 				break;
 			case "angle":
 				temps+=(trim(odMap['od_'+val+'_middle1'])=='')?'':('OD '+trim(odMap['od_'+val+'_middle1'])+'\n');
 				temps+='      ';
 				temps+=(trim(osMap['os_'+val+'_middle1'])=='')?'\n':('OS '+trim(osMap['os_'+val+'_middle1'])+'\n');
 				if (trim(temps)!='' && trim(temps)!='\n')
-					document.inputForm.elements['cp.examination'].value+='angle:'+temps;
+					document.eyeForm.elements['cp.examination'].value+='angle:'+temps;
 				break;
 			default:
 				var ts="";
@@ -331,7 +326,7 @@ function confirmPrint(btn) {
 				temps+=ts+' ';
 				temps+=(trim(osMap['os_'+val])=='')?'\n':('OS '+trim(osMap['os_'+val])+'\n');
 				if (trim(temps)!=null && trim(temps)!='' && trim(temps)!='\n')
-					document.inputForm.elements['cp.examination'].value+=val+':'+temps;
+					document.eyeForm.elements['cp.examination'].value+=val+':'+temps;
 		}
 		return;
 	}
@@ -366,8 +361,8 @@ function confirmPrint(btn) {
         window.open(page, name, windowprops);
     }
     function sendTickler(){
-    	var req="<%=request.getContextPath()%>/EyeForm.do?method=specialRepTickler&demographicNo=<%=request.getAttribute("demographicNo")%>";
-    	if (document.inputForm.ack.checked==true){
+    	var req="<%=request.getContextPath()%>/eyeform/Eyeform.do?method=specialRepTickler&demographicNo=<%=request.getAttribute("demographicNo")%>";
+    	if (document.eyeForm.ack.checked==true){
     		req+='&docFlag=true';
     		popupPageSmall(req,'sendTickler');
     	}else{
@@ -395,9 +390,22 @@ function confirmPrint(btn) {
 </head>
 <body topmargin="0" leftmargin="0" vlink="#0000FF">
 
-<nested:form action="/eyeform/Eyeform">
-	<input type="hidden" name="method" value="saveConReport"/>
+<html:form action="/eyeform/Eyeform">
+	<input type="hidden" name="method" value="saveConRequest"/>
+	<input type="hidden" name="demographicNo" value="<%=EyeformAction.getField(request,"demographicNo")%>"/>
+	<input type="hidden" name="referralNo" value=""/>
+	<input type="hidden" name="otherDocId" value=""/>
+	<input type="hidden" name="famDoctor" value=""/>
+	<input type="hidden" name="apptno" value=""/>
 
+	<html:hidden property="cp.demographicNo"/>
+	<html:hidden property="cp.providerNo"/>
+	<html:hidden property="cp.appointmentNo"/>	
+	<html:hidden property="cp.urgency"/>	
+	<html:hidden property="cp.reason"/>	
+	
+	
+	
 	<table class="MainTable" id="scrollNumber1" name="encounterTable">
 		<tr class="MainTableTopRow">
 			<td class="MainTableTopRowLeftColumn">Consultation report</td>
@@ -406,7 +414,7 @@ function confirmPrint(btn) {
 				<tr>
 					<td class="Header"
 						style="padding-left: 1px; padding-right: 1px; border-right: 1px solid #003399; text-align: left; font-size: 80%; font-weight: bold; width: 100%;"
-						NOWRAP>NAME </td>
+						NOWRAP><c:out value="${demographicName}"/> </td>
 				</tr>
 			</table>
 			</td>
@@ -424,7 +432,7 @@ function confirmPrint(btn) {
 
 							</tr>
 							<tr>
-								<td><nested:write property="cp.provider" /></td>
+								<td>TODO_CREATED_BY</td>
 							</tr>
 						</table>
 					</c:if></td>
@@ -458,7 +466,7 @@ function confirmPrint(btn) {
 					<td class="tite4" colspan="2">
 					<table>
 						<tr>
-							<td class="stat"></td>
+							<td class="stat"><html:radio property="cp.status" value="Completed,and sent" /></td>
 							<td class="stat">Completed,and sent</td>
 						</tr>
 					</table>
@@ -479,8 +487,9 @@ function confirmPrint(btn) {
 
 						<tr>
 							<td class="tite4">to:</td>
-							<td align="left" class="tite1">Ref Doc Name<a
-								href="javascript:referralScriptAttach2('referalNo','referal_doc_name')"><span
+							<td align="left" class="tite1"><input type="text"
+								name="referral_doc_name" /><a
+								href="javascript:referralScriptAttach2('referralNo','referral_doc_name')"><span
 								style="font-size: 10;">Search #</span></a></td>
 					</table>
 					</td>
@@ -489,7 +498,7 @@ function confirmPrint(btn) {
 						<tr>
 							<td class="tite4">re:</td>
 
-							<td class="tite1"><nested:write property="cp.reason" /></td>
+							<td class="tite1"><c:out value="${reason}"/></td>
 						</tr>
 					</table>
 					</td>
@@ -500,7 +509,7 @@ function confirmPrint(btn) {
 					<table width="100%">
 						<tr>
 
-							<td class="tite4">Family doctor:TODO <input type="button" class="btn"
+							<td class="tite4">Family doctor:<c:out value="${famDoctor }"/> <input type="button" class="btn"
 								onclick="addFamDoc();" value="add to cc"></td>
 							<td></td>
 						</tr>
@@ -509,8 +518,9 @@ function confirmPrint(btn) {
 					<td class="tite4">
 					<table width="100%">
 						<tr>
-							<td class="tite1" colspan="2">cc other doctor: TODO <a
-								href="javascript:referralScriptAttach2('otherdocid','cldoctor')"><span
+							<td class="tite1" colspan="2">cc other doctor:<input type="text"
+								style="width:120px;" name="clDoctor" /><a
+								href="javascript:referralScriptAttach2('otherDocId','clDoctor')"><span
 								style="font-size: 10;">Search #</span></a> <input type="button"
 								class="btn" onclick="addDoc();" value="add to cc"></td>
 						</tr>
@@ -617,9 +627,9 @@ function confirmPrint(btn) {
 					<table style="width: 100%">
 						<tr>
 							<td width="26%">FROMLIST-TODO <input name="exadd" class="btn" value="add"
-								onclick="addExam(document.inputForm.fromlist);" type="button">
+								onclick="addExam(document.eyeForm.fromlist);" type="button">
 							</td>
-							<td width="74%"><nested:textarea rows="7" style="width:100%"
+							<td width="74%"><html:textarea rows="7" style="width:100%"
 								property="cp.examination" /></td>
 						</tr>
 					</table>
@@ -676,7 +686,8 @@ function confirmPrint(btn) {
 				</c:if>
 				<tr>
 					<td colspan="2" align="right">
-					TODO
+					<input type="button" value="print review"
+							onclick="if (checkform())printsubmit();else return false;">
 					<input type="button" value="save and close"
 						onclick="if (checkform())savesubmit();else return false;">
 					</td>
@@ -688,7 +699,7 @@ function confirmPrint(btn) {
 			</td>
 		</tr>
 	</table>
-</nested:form>
+</html:form>
 
 </body>
 </html:html>

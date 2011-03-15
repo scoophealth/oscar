@@ -8293,7 +8293,7 @@ create table consultationRequestExt(
 );
 
 
-create table EyeformConsulationReport (
+create table EyeformConsultationReport (
  id int(10) NOT NULL auto_increment,
  `date` date,
  referralId integer,

@@ -479,7 +479,7 @@
 			<form-property name="data" type="org.oscarehr.eyeform.model.TestBookRecord" />
 		</form-bean>
 				
-		<form-bean name="followUpForm2" type="org.apache.struts.validator.DynaValidatorForm">
+		<form-bean name="eyeForm" type="org.apache.struts.validator.DynaValidatorForm">
 			<form-property name="followup" type="org.oscarehr.eyeform.model.FollowUp" />
 			<form-property name="cp" type="org.oscarehr.eyeform.model.ConsultationReport" />
 		</form-bean>
@@ -1995,7 +1995,7 @@
 			<forward name="success" path="/eyeform/success.jsp" />
 		</action>
 
-		<action path="/eyeform/FollowUp" type="org.oscarehr.eyeform.web.FollowUpAction" parameter="method" scope="request" validate="false" input="/eyeform/followup.jsp" name="followUpForm2">
+		<action path="/eyeform/FollowUp" type="org.oscarehr.eyeform.web.FollowUpAction" parameter="method" scope="request" validate="false" input="/eyeform/followup.jsp" name="eyeForm">
 			<forward name="form" path="/eyeform/followup.jsp" />
 			<forward name="success" path="/eyeform/success.jsp" />
 		</action>
@@ -2006,7 +2006,7 @@
 			<forward name="success" path="/eyeform/success.jsp" />
 		</action>
 		
-		<action path="/eyeform/Eyeform" type="org.oscarehr.eyeform.web.EyeformAction" parameter="method" scope="request" validate="false" input="/eyeform/followup.jsp" name="followUpForm2">
+		<action path="/eyeform/Eyeform" type="org.oscarehr.eyeform.web.EyeformAction" parameter="method" scope="request" validate="false" input="/eyeform/followup.jsp" name="eyeForm">
 			<forward name="conreqcc" path="/eyeform/conreqcc.jsp" />
 			<forward name="conspecial" path="/eyeform/conspecialScript.jsp" />
 			<forward name="conspecialhtml" path="/eyeform/conspecial.jsp" />
