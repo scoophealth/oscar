@@ -341,7 +341,7 @@ public class PhsStarHandler extends BasePhsStarHandler {
 			return;
 		}
 		
-		Appointment appt = appointmentDao.find(otherId.getTableId());
+		Appointment appt = appointmentDao.find(Integer.valueOf(otherId.getTableId()));
 		
 		if(appt == null) {
 			logger.warn("couldn't load up the appt");
@@ -382,7 +382,7 @@ public class PhsStarHandler extends BasePhsStarHandler {
 			return;
 		}
 		
-		Appointment appt = appointmentDao.find(otherId.getTableId());
+		Appointment appt = appointmentDao.find(Integer.parseInt(otherId.getTableId()));
 		
 		if(appt == null) {
 			logger.warn("couldn't load up the appt");
@@ -416,7 +416,7 @@ public class PhsStarHandler extends BasePhsStarHandler {
 			return;
 		}
 		
-		Appointment appt = appointmentDao.find(otherId.getTableId());
+		Appointment appt = appointmentDao.find(Integer.parseInt(otherId.getTableId()));
 		
 		if(appt == null) {
 			logger.warn("couldn't load up the appt");
