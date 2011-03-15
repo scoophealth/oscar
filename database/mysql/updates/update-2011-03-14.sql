@@ -1,3 +1,6 @@
+drop table if exists EyeformConsultationReport;
+drop table if exists EyeformConsulationReport;
+
 create table EyeformConsultationReport (
  id int(10) NOT NULL auto_increment,
  `date` date,
