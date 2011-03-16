@@ -177,9 +177,25 @@ function addNotes(){
 
 
 function printIframe(){
-   preview.focus();
-   preview.print();
-}
+	var browserName=navigator.appName; 
+	   if (browserName=="Microsoft Internet Explorer")
+			{
+	              try 
+	            { 
+	                iframe = document.getElementById('preview'); 
+	                iframe.contentWindow.document.execCommand('print', false, null); 
+	            } 
+	            catch(e) 
+	            { 
+	                window.print(); 
+	            } 
+			}
+			else
+			{
+				preview.focus();
+				preview.print();
+			}	
+	}
 
 
 function printPaste2Parent(){
