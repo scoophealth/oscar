@@ -70,6 +70,51 @@ public class BasePhsStarHandler {
 		return ids;
 	}
 	
+	
+	protected String getHealthCardVer() throws HL7Exception {
+		int x=0;
+		while(true) {
+			String identifier = t.get("PID-3("+x+")-1");
+			String authority = t.get("PID-3("+x+")-4");
+			String typeId = t.get("PID-3("+x+")-5");
+			String renewDate = t.get("PID-3("+x+")-8");
+			String ver = t.get("PID-3("+x+")-10");
+			
+			
+			if(identifier == null && t.get("PID-3("+(x+1)+")-1")==null) {
+				break;
+			}
+			
+			if(typeId != null && typeId.equals("JHN")) {
+				return ver;
+			}
+			x++;
+		}		
+		return null;
+	}
+	
+	protected String getHealthCardRenewDate() throws HL7Exception {
+		int x=0;
+		while(true) {
+			String identifier = t.get("PID-3("+x+")-1");
+			String authority = t.get("PID-3("+x+")-4");
+			String typeId = t.get("PID-3("+x+")-5");
+			String renewDate = t.get("PID-3("+x+")-8");
+			String ver = t.get("PID-3("+x+")-10");
+			
+			
+			if(identifier == null && t.get("PID-3("+(x+1)+")-1")==null) {
+				break;
+			}
+			
+			if(typeId != null && typeId.equals("JHN")) {
+				return renewDate;
+			}
+			x++;
+		}		
+		return null;
+	}
+	
 	protected Map<String,StaffId> extractStaffIds() throws HL7Exception {
 		Map<String,StaffId> ids = new LinkedHashMap<String,StaffId>();
 		int x=0;
@@ -158,7 +203,7 @@ public class BasePhsStarHandler {
 	}
 	
 	/*
-	 * Doesn't seem to work with HL7 v2.2
+	 * Doesn't seem to work with HL7 v2.2 (Under INSURANCE group for some reason)
 	 */
 	protected void extractAdditionalDemographicData() throws HL7Exception {
 		logger.info("PD1");
