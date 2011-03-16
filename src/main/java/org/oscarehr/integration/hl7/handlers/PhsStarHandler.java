@@ -142,8 +142,20 @@ public class PhsStarHandler extends BasePhsStarHandler {
 		if(hc != null) {
 			demo.setHin(hc.getId());
 			demo.setHcType(hc.getAuthority());
+			String ver = this.getHealthCardVer();
+			if(ver != null) {
+				demo.setVer(ver);
+			}
+			String renew = this.getHealthCardRenewDate();
+			if(renew != null) {
+				Date tmp = this.convertToDate(renew);
+				demo.setHcRenewDate(tmp);
+			}
 		}
-		
+			
+		if(this.getPrimaryPractitionerId() != null && this.getPrimaryPractitionerId().length()>0) {
+			demo.setFamilyDoctor("<rdohip>"+getPrimaryPractitionerId()+"</rdohip><rd>" + this.getPrimaryPractitionerLastName() + ", "+this.getPrimaryPractitionerFirstName()+"</rd>");
+		}
 		//save 		
 		clientDao.saveClient(demo);
 		
@@ -189,6 +201,11 @@ public class PhsStarHandler extends BasePhsStarHandler {
 		demo.setProvince(getProvince());
 		demo.setSex(getSex());
 		
+		//TODO: will this overwrite other values? should probably parse the XML and add if missing
+		if(this.getPrimaryPractitionerId() != null && this.getPrimaryPractitionerId().length()>0) {
+			demo.setFamilyDoctor("<rdohip>"+getPrimaryPractitionerId()+"</rdohip><rd>" + this.getPrimaryPractitionerLastName() + ", "+this.getPrimaryPractitionerFirstName()+"</rd>");
+		}
+		
 		//set MRN
 		Map<String,PatientId> internalIds = this.extractInternalPatientIds();
 		if(internalIds.get("MR")!=null) {
@@ -200,6 +217,15 @@ public class PhsStarHandler extends BasePhsStarHandler {
 		if(hc != null) {
 			demo.setHin(hc.getId());
 			demo.setHcType(hc.getAuthority());
+			String ver = this.getHealthCardVer();
+			if(ver != null) {
+				demo.setVer(ver);
+			}
+			String renew = this.getHealthCardRenewDate();
+			if(renew != null) {
+				Date tmp = this.convertToDate(renew);
+				demo.setHcRenewDate(tmp);
+			}
 		}
 		
 		//save 		
@@ -335,6 +361,9 @@ public class PhsStarHandler extends BasePhsStarHandler {
 		}
 		if(ids.get("AN")!=null) {
 			otherId = OtherIdManager.searchTable(OtherIdManager.APPOINTMENT,"AN",ids.get("AN").getId());
+			if(otherId==null) {
+				otherId = OtherIdManager.searchTable(OtherIdManager.APPOINTMENT,"AN",extractPatientAccountNumber().getId());					
+			}
 		}
 		if(otherId == null) {
 			logger.warn("Could not find appt to reschedule");
@@ -375,8 +404,12 @@ public class PhsStarHandler extends BasePhsStarHandler {
 			}
 			if(ids.get("AN")!=null) {
 				otherId = OtherIdManager.searchTable(OtherIdManager.APPOINTMENT,"AN",ids.get("AN").getId());
+				if(otherId==null) {
+					otherId = OtherIdManager.searchTable(OtherIdManager.APPOINTMENT,"AN",extractPatientAccountNumber().getId());					
+				}
 			}
 		}
+		
 		if(otherId == null) {
 			logger.warn("Could not find appt to reschedule");
 			return;
@@ -408,6 +441,9 @@ public class PhsStarHandler extends BasePhsStarHandler {
 			}
 			if(ids.get("AN")!=null) {
 				otherId = OtherIdManager.searchTable(OtherIdManager.APPOINTMENT,"AN",ids.get("AN").getId());
+				if(otherId==null) {
+					otherId = OtherIdManager.searchTable(OtherIdManager.APPOINTMENT,"AN",extractPatientAccountNumber().getId());					
+				}
 			}			
 		}
 		
@@ -507,6 +543,7 @@ public class PhsStarHandler extends BasePhsStarHandler {
         t = new Terser(msg);
     	String msgType = t.get("/MSH-9-1");
     	String triggerEvent = t.get("/MSH-9-2");
+    	logger.info("\n"+hl7Body);
     	logger.info("msg = " + msgType + " " + triggerEvent);    	
     	
     	//ADT A14 is PENDING ADMIT
@@ -1033,4 +1070,32 @@ public class PhsStarHandler extends BasePhsStarHandler {
 		return false;
 	}
 
+	public String getPrimaryPractitionerId() {
+		try {
+			String var = this.extractOrEmpty("/INSURANCE/PD1-4-1");
+			return var;
+		}catch(Exception e) {
+			return "";
+		}
+	}
+	
+	public String getPrimaryPractitionerLastName() {
+		try {
+			String var = this.extractOrEmpty("/INSURANCE/PD1-4-2");
+			return var;
+		}catch(Exception e) {
+			return "";
+		}
+	}
+	
+	public String getPrimaryPractitionerFirstName() {
+		try {
+			String var = this.extractOrEmpty("/INSURANCE/PD1-4-3");
+			return var;
+		}catch(Exception e) {
+			return "";
+		}
+	}	
+	
+	
 }
