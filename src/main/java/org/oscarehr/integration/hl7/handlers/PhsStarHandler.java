@@ -360,10 +360,10 @@ public class PhsStarHandler extends BasePhsStarHandler {
 			otherId = OtherIdManager.searchTable(OtherIdManager.APPOINTMENT,"TAN",ids.get("TAN").getId());
 		}
 		if(ids.get("AN")!=null) {
-			otherId = OtherIdManager.searchTable(OtherIdManager.APPOINTMENT,"AN",ids.get("AN").getId());
-			if(otherId==null) {
-				otherId = OtherIdManager.searchTable(OtherIdManager.APPOINTMENT,"AN",extractPatientAccountNumber().getId());					
-			}
+			otherId = OtherIdManager.searchTable(OtherIdManager.APPOINTMENT,"AN",ids.get("AN").getId());			
+		}
+		if(otherId==null && extractPatientAccountNumber() != null) {
+			otherId = OtherIdManager.searchTable(OtherIdManager.APPOINTMENT,"AN",extractPatientAccountNumber().getId());					
 		}
 		if(otherId == null) {
 			logger.warn("Could not find appt to reschedule");
@@ -403,12 +403,13 @@ public class PhsStarHandler extends BasePhsStarHandler {
 				otherId = OtherIdManager.searchTable(OtherIdManager.APPOINTMENT,"TAN",ids.get("TAN").getId());
 			}
 			if(ids.get("AN")!=null) {
-				otherId = OtherIdManager.searchTable(OtherIdManager.APPOINTMENT,"AN",ids.get("AN").getId());
-				if(otherId==null) {
-					otherId = OtherIdManager.searchTable(OtherIdManager.APPOINTMENT,"AN",extractPatientAccountNumber().getId());					
-				}
+				otherId = OtherIdManager.searchTable(OtherIdManager.APPOINTMENT,"AN",ids.get("AN").getId());				
+			}
+			if(otherId==null && extractPatientAccountNumber() != null) {
+				otherId = OtherIdManager.searchTable(OtherIdManager.APPOINTMENT,"AN",extractPatientAccountNumber().getId());					
 			}
 		}
+				
 		
 		if(otherId == null) {
 			logger.warn("Could not find appt to reschedule");
@@ -440,11 +441,11 @@ public class PhsStarHandler extends BasePhsStarHandler {
 				otherId = OtherIdManager.searchTable(OtherIdManager.APPOINTMENT,"TAN",ids.get("TAN").getId());
 			}
 			if(ids.get("AN")!=null) {
-				otherId = OtherIdManager.searchTable(OtherIdManager.APPOINTMENT,"AN",ids.get("AN").getId());
-				if(otherId==null) {
-					otherId = OtherIdManager.searchTable(OtherIdManager.APPOINTMENT,"AN",extractPatientAccountNumber().getId());					
-				}
+				otherId = OtherIdManager.searchTable(OtherIdManager.APPOINTMENT,"AN",ids.get("AN").getId());				
 			}			
+			if(otherId==null && extractPatientAccountNumber() != null) {
+				otherId = OtherIdManager.searchTable(OtherIdManager.APPOINTMENT,"AN",extractPatientAccountNumber().getId());					
+			}
 		}
 		
 		if(otherId == null) {
@@ -1072,29 +1073,41 @@ public class PhsStarHandler extends BasePhsStarHandler {
 
 	public String getPrimaryPractitionerId() {
 		try {
+			String var = this.extractOrEmpty("/PD1-4-1");
+			return var;
+		}catch(Exception e) {/*swallow exception*/}
+		try {
 			String var = this.extractOrEmpty("/INSURANCE/PD1-4-1");
 			return var;
-		}catch(Exception e) {
-			return "";
-		}
+		}catch(Exception ee) {/*swallow exception*/}			
+		return new String();
+		
 	}
 	
 	public String getPrimaryPractitionerLastName() {
 		try {
+			String var = this.extractOrEmpty("/PD1-4-2");
+			return var;
+		}catch(Exception e) {/*swallow exception*/}
+		try {
 			String var = this.extractOrEmpty("/INSURANCE/PD1-4-2");
 			return var;
-		}catch(Exception e) {
-			return "";
-		}
+		}catch(Exception ee) {/*swallow exception*/}			
+		return new String();
+		
 	}
 	
 	public String getPrimaryPractitionerFirstName() {
 		try {
+			String var = this.extractOrEmpty("/PD1-4-3");
+			return var;
+		}catch(Exception e) {/*swallow exception*/}
+		try {
 			String var = this.extractOrEmpty("/INSURANCE/PD1-4-3");
 			return var;
-		}catch(Exception e) {
-			return "";
-		}
+		}catch(Exception ee) {/*swallow exception*/}			
+		return new String();
+		
 	}	
 	
 	
