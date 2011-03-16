@@ -366,6 +366,7 @@ New User Created Form:&nbsp;
 <table class="simple" cellspacing="2" cellpadding="3">
 	<thead>
 		<tr>
+			<th>Form ID</th>
 			<th>Assessment ID</th>
 			<th>Creation Date</th>
 			<th>Start Date</th>
@@ -381,6 +382,7 @@ New User Created Form:&nbsp;
 	</thead>
 	<c:forEach var="form" items="${ocanStaffForms}">
 		<tr>			
+			<td><c:out value="${form.id}" /></td>
 			<td><c:out value="${form.assessmentId}" /></td>
 			<td width="10%"><c:out value="${form.created}" /></td>
 			<td width="10%"><c:out value="${form.formattedStartDate}" /></td>
@@ -421,6 +423,7 @@ New User Created Form:&nbsp;
 <table class="simple" cellspacing="2" cellpadding="3">
 	<thead>
 		<tr>
+			<th>Form ID</th>
 			<th>Assessment ID</th>
 			<th>Creation Date</th>
 			<th>Start Date</th>
@@ -436,6 +439,7 @@ New User Created Form:&nbsp;
 	</thead>
 	<c:forEach var="form" items="${selfOcanStaffForms}">
 		<tr>			
+			<td><c:out value="${form.id}" /></td>
 			<td><c:out value="${form.assessmentId}" /></td>
 			<td width="10%"><c:out value="${form.created}" /></td>
 			<td width="10%"><c:out value="${form.formattedStartDate}" /></td>
@@ -474,6 +478,7 @@ New User Created Form:&nbsp;
 <table class="simple" cellspacing="2" cellpadding="3">
 	<thead>
 		<tr>
+			<th>Form ID</th>
 			<th>Assessment ID</th>
 			<th>Creation Date</th>
 			<th>Start Date</th>
@@ -485,6 +490,7 @@ New User Created Form:&nbsp;
 	</thead>
 	<c:forEach var="form" items="${coreOcanStaffForms}">
 		<tr>			
+			<td><c:out value="${form.id}" /></td>
 			<td><c:out value="${form.assessmentId}" /></td>
 			<td width="10%"><c:out value="${form.created}" /></td>
 			<td width="10%"><c:out value="${form.formattedStartDate}" /></td>
