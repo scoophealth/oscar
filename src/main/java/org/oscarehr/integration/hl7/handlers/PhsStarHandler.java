@@ -1,6 +1,5 @@
 package org.oscarehr.integration.hl7.handlers;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -16,8 +15,10 @@ import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.common.OtherIdManager;
 import org.oscarehr.common.dao.OscarAppointmentDao;
+import org.oscarehr.common.dao.OscarLogDao;
 import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.OscarLog;
 import org.oscarehr.common.model.OtherId;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.integration.hl7.model.PatientId;
@@ -40,6 +41,7 @@ public class PhsStarHandler extends BasePhsStarHandler {
 	ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
 	ProgramDao programDao = (ProgramDao)SpringUtils.getBean("programDao");
 	AdmissionDao admissionDao = (AdmissionDao)SpringUtils.getBean("admissionDao");
+	OscarLogDao logDao = (OscarLogDao)SpringUtils.getBean("oscarLogDao");
 	
 	public PhsStarHandler() {
 		logger.setLevel(Level.DEBUG);
@@ -328,32 +330,34 @@ public class PhsStarHandler extends BasePhsStarHandler {
 			//check to see if they are admitted to program already
 			if(admissionDao.getCurrentAdmission(p.getId(), demographicNo) == null) {
 				logger.info("need to do admission");
-				Admission admission = new Admission();
-				admission.setAdmissionDate(new Date());
-				admission.setAdmissionNotes("PHS");
-				admission.setAdmissionStatus("current");
-				admission.setClient(demographic);
-				admission.setClientId(demographicNo);
-				admission.setProgram(p);
-				admission.setProgramId(p.getId());
-				//PHS user
-				admission.setProviderNo("000001"); //This needs to not be hardcoded
-				admission.setClientStatusId(0);
-				admission.setTeamId(0);
-				admission.setRadioDischargeReason("0");
-				admissionDao.saveAdmission(admission);
+				doAdmit(demographic,p,"000001");
 			}
 		}
 		
 	}
-	
+
+	private void doAdmit(Demographic demographic, Program p, String providerNo) {
+		Admission admission = new Admission();
+		admission.setAdmissionDate(new Date());
+		admission.setAdmissionNotes("PHS");
+		admission.setAdmissionStatus("current");
+		admission.setClient(demographic);
+		admission.setClientId(demographic.getDemographicNo());
+		admission.setProgram(p);
+		admission.setProgramId(p.getId());
+		admission.setProviderNo(providerNo);
+		admission.setClientStatusId(0);
+		admission.setTeamId(0);
+		admission.setRadioDischargeReason("0");
+		admissionDao.saveAdmission(admission);		
+	}
 	/**
 	 * Reschedule an existing appointment. We match on Temporary Account Number or Account Number.
 	 * 
 	 * @throws HL7Exception
 	 */
 	public void rescheduleAppointment() throws HL7Exception {
-		//find appt by TAN or AN
+		//find appointment by TAN or AN
 		Map<String,PatientId> ids = this.extractInternalPatientIds();
 		OtherId otherId = null;
 		if(ids.get("TAN")!=null) {
@@ -377,12 +381,55 @@ public class PhsStarHandler extends BasePhsStarHandler {
 			return;
 		}
 		
+		Demographic demographic = clientDao.getClientByDemographicNo(appt.getDemographicNo());
+		
+		//match provider - STAR id is linked from OtherId table
+		Provider provider = null;
+		OtherId pOtherId = OtherIdManager.searchTable(OtherIdManager.PROVIDER,"STAR",getApptPractitionerNo());
+		if(pOtherId != null) {
+			provider = providerDao.getProvider(pOtherId.getTableId());
+		}
+		if(provider == null) {
+			logger.error("Unable to match provider..cannot make appointment - " + getApptPractitionerNo());
+			throw new HL7Exception ("Unable to match provider..cannot make appointment - " + getApptPractitionerNo());
+		}
+		
+		appt.setProviderNo(provider.getProviderNo());		
 		appt.setAppointmentDate(getApptStartDate());
 		appt.setStartTime(getApptStartDate());
 		appt.setEndTime(getApptEndDate());
+		appt.setUpdateDateTime(new Date());			
+		appt.setLocation(getApptLocation());		
 		appt.setUpdateDateTime(new Date());
+		appt.setType(getApptType());
+		appt.setReason(getApptReason());	
 		
+		Program p = programDao.getProgramBySiteSpecificField(getApptResourceUnit());
+		if(p != null) {
+			appt.setProgramId(p.getId());
+		} else {
+			throw new HL7Exception("System not configured to accept messages for runit " + getApptResourceUnit());
+		}		
+		//TODO: fix the bug in schedule
+		appt.setProgramId(0);
+		
+		
+		if(appointmentDao.checkForConflict(appt)) {
+			logger.error("Conflict");
+			throw new HL7Exception("Unable to schedule this appointment due to conflict");
+		}
+				
 		appointmentDao.merge(appt);
+		
+		//admit if necessary
+		if(p != null && p.getId()>0) {
+			//check to see if they are admitted to program already
+			if(admissionDao.getCurrentAdmission(p.getId(), demographic.getDemographicNo()) == null) {
+				logger.info("need to do admission");
+				doAdmit(demographic,p,"000001");
+			}
+		}
+		
 	}
 	
 	/**
@@ -544,6 +591,9 @@ public class PhsStarHandler extends BasePhsStarHandler {
         t = new Terser(msg);
     	String msgType = t.get("/MSH-9-1");
     	String triggerEvent = t.get("/MSH-9-2");
+    	String controlId = t.get("/MSH-10-1");
+    	
+    	logger.info("hl7 message id is " + controlId);
     	logger.info("\n"+hl7Body);
     	logger.info("msg = " + msgType + " " + triggerEvent);    	
     	
@@ -565,7 +615,8 @@ public class PhsStarHandler extends BasePhsStarHandler {
         		logger.error("Patient not found!");
         		return;
         	}
-        	updateDemographic(demographicNo);        	
+        	updateDemographic(demographicNo);
+        	this.logPatientMessage(controlId,msgType+"^"+triggerEvent,hl7Body,demographicNo);
         }
         
         //SIU S12 is NEW APPOINTMENT
@@ -578,12 +629,15 @@ public class PhsStarHandler extends BasePhsStarHandler {
         	}
         	
         	createNewAppointment(demographicNo);
+        	this.logPatientMessage(controlId,msgType+"^"+triggerEvent,hl7Body,demographicNo);
         }
         
         //SIU S13 is RESCHEDULED APPOINTMENT
         if(msgType.equals("SIU") && triggerEvent.equals("S13")) {
         	logger.info("Reschedule Appointment");        	
+        	Integer demographicNo = this.doKeyMatching(extractInternalPatientIds());
         	rescheduleAppointment();
+        	this.logPatientMessage(controlId,msgType+"^"+triggerEvent,hl7Body,demographicNo);
         }
         
       
@@ -596,7 +650,9 @@ public class PhsStarHandler extends BasePhsStarHandler {
         //SIU S15 is CANCEL APPOINTMENT status='C'
         if(msgType.equals("SIU") && triggerEvent.equals("S15")) {
         	logger.info("cancel appointment");        	
+        	Integer demographicNo = this.doKeyMatching(extractInternalPatientIds());
         	updateAppointmentStatus("C");
+        	this.logPatientMessage(controlId,msgType+"^"+triggerEvent,hl7Body,demographicNo);
         }
         
         
@@ -610,12 +666,15 @@ public class PhsStarHandler extends BasePhsStarHandler {
         	updateDemographic(demographicNo);
         	updateAppointmentAccountNumber();
         	updateAppointmentStatus("H");
+        	this.logPatientMessage(controlId,msgType+"^"+triggerEvent,hl7Body,demographicNo);
         }
         
       
         //ADT A03 is DISCHARGE A PATIENT (they are done!). 
         if(msgType.equals("ADT") && triggerEvent.equals("A03")) {        	
+        	Integer demographicNo = this.doKeyMatching(extractInternalPatientIds());
         	updateAppointmentStatus("E");
+        	this.logPatientMessage(controlId,msgType+"^"+triggerEvent,hl7Body,demographicNo);
         }
         
         //MFN M02 is Master file - staff practitioner
@@ -843,233 +902,7 @@ public class PhsStarHandler extends BasePhsStarHandler {
 		}		
 	}
 
-	
-	public String audit() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
-	
-	public String getAccessionNum() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
-	public String getAge() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
-	public String getCCDocs() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
-	public String getClientRef() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
-	public String getDOB() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
-	public String getDocName() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
-	public ArrayList getDocNums() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
-	public ArrayList<String> getHeaders() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
-	public String getHealthNum() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
-	public String getHomePhone() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
-	public String getMsgDate() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
-	public String getMsgPriority() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
-	public String getMsgType() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
-	public String getOBRComment(int i, int j) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
-	public int getOBRCommentCount(int i) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	
-	public int getOBRCount() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	
-	public String getOBRName(int i) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
-	public String getOBXAbnormalFlag(int i, int j) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
-	public String getOBXComment(int i, int j, int k) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
-	public int getOBXCommentCount(int i, int j) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	
-	public int getOBXCount(int i) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	
-	public int getOBXFinalResultCount() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	
-	public String getOBXIdentifier(int i, int j) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
-	public String getOBXName(int i, int j) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
-	public String getOBXReferenceRange(int i, int j) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
-	public String getOBXResult(int i, int j) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
-	public String getOBXResultStatus(int i, int j) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
-	public String getOBXUnits(int i, int j) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
-	public String getOBXValueType(int i, int j) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
-	public String getObservationHeader(int i, int j) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
-	public String getOrderStatus() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
-	public String getPatientLocation() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
-	public String getPatientName() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
-	public String getServiceDate() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	public String getTimeStamp(int i, int j) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
-	public String getWorkPhone() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	
-	public boolean isOBXAbnormal(int i, int j) {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
 	public String getPrimaryPractitionerId() {
 		try {
@@ -1109,6 +942,16 @@ public class PhsStarHandler extends BasePhsStarHandler {
 		return new String();
 		
 	}	
+	
+	protected void logPatientMessage(String messageId,String messageType,String message, int demographicNo) {
+		OscarLog log = new OscarLog();
+		log.setAction("incoming_hl7");
+		log.setContentId(messageId);
+		log.setContent(messageType);		
+		log.setData(message);
+		log.setDemographicId(demographicNo);		
+		logDao.persist(log);
+	}
 	
 	
 }
