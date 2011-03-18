@@ -330,7 +330,8 @@ public class ClientDao extends HibernateDaoSupport {
 			criteria.add(Expression.eq("Ver", bean.getHealthCardVersion()));
 		}
 		
-		
+
+		if(!bean.isSearchOutsideDomain()) {
 
 // -------- start splice from 1.31 for 2270307
 		DetachedCriteria subq = DetachedCriteria.forClass(Admission.class)
@@ -378,6 +379,7 @@ public class ClientDao extends HibernateDaoSupport {
 			}	
 		}
 		*/
+			
 		if(bean.getDateFrom() != null && bean.getDateFrom().length() > 0) {
 	    	Date dt = MyDateFormat.getSysDate(bean.getDateFrom().trim());
 	    	subq.add(Restrictions.ge("AdmissionDate",dt ));
@@ -387,10 +389,11 @@ public class ClientDao extends HibernateDaoSupport {
 	    	subq.add(Restrictions.le("AdmissionDate",dt1));
 	    }
 	    
+	
 	    
 	    criteria.add(Property.forName("DemographicNo").in(subq));
 // -------- end splice from 1.31
-		
+		}	
 		
 		active = bean.getActive();
 		if("1".equals(active)) {

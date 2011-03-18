@@ -30,6 +30,10 @@ public class BillingreferralDao extends HibernateDaoSupport {
 		 return null;
 	 }
 	 
+	 public Billingreferral getById(int id) {
+		 return (Billingreferral)this.getHibernateTemplate().get(Billingreferral.class, id);
+	 }
+	 
     public List getBillingreferral(String referral_no) {
 
         List cList = null;
