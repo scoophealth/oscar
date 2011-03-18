@@ -346,6 +346,23 @@ if (isMobileOptimized) { %>
 <script language="javascript" type="text/javascript" src="../share/javascript/Oscar.js" ></script>
 <script type="text/javascript" src="../share/javascript/prototype.js"></script>
 <script type="text/javascript" src="../phr/phr.js"></script>
+
+<script src="<c:out value="../js/jquery.js"/>"></script>
+<script>
+	jQuery.noConflict();
+</script>
+   
+   <% 
+ 	String customScript = OscarProperties.getInstance().getProperty("cme_js");
+    if(customScript != null && customScript.length()>0) {
+	%>
+		<script src="../js/custom/<%=customScript%>.js"></script>
+		<script src="../js/custom/<%=customScript%>-main.js"></script>	
+	<%   	   
+    }      
+    %>
+      
+   
 <script language="JavaScript">
 function storeApptNo(apptNo) {
 	var url = "storeApptInSession.jsp?appointment_no="+apptNo;
