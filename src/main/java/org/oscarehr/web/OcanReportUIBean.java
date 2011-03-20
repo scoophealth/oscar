@@ -400,22 +400,6 @@ public class OcanReportUIBean implements CallbackHandler {
 		is.getTransmissionHeader().setSubmissionId(String.valueOf(log.getId()));		
 		logger.info("the submissionId is " + log.getId());		
 		
-		//XMLBeanStreamSerializer serializer = new XMLBeanStreamSerializer();
-		/*
-		try {
-
-	    JAXBContext context = JAXBContext.newInstance(IARSubmission.class);
-        Marshaller marshaller = context.createMarshaller();
-        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-        marshaller.setProperty("com.sun.xml.bind.namespacePrefixMapper", new NamespacePrefixmapperImpl() );  
-        marshaller.marshal(is, sstemout);
-        
-		}
-		catch(Exception e) {
-			logger.error(e);
-		}
-*/		
-		//if(true) return 0;
 		
 		try {
 			String user = OscarProperties.getInstance().getProperty("ocan.iar.user");		     
@@ -495,7 +479,7 @@ public class OcanReportUIBean implements CallbackHandler {
 			options.setSaveImplicitNamespaces(implicitNamespaces);
 			submissionDoc.save(sos,options);
 		}catch(IOException e) {
-			logger.error(e);
+			logger.error("Error", e);
 			return;
 		}
 		
@@ -522,7 +506,7 @@ public class OcanReportUIBean implements CallbackHandler {
 			DatatypeFactory dtf = DatatypeFactory.newInstance();
 			cal = dtf.newXMLGregorianCalendar(gc);
 		}catch(Exception e) {
-			logger.error(e);
+			logger.error("Error", e);
 		}
 		
 		TransmissionHeaderType th = new TransmissionHeaderType();
@@ -573,7 +557,7 @@ public class OcanReportUIBean implements CallbackHandler {
 	        log.setTransactionId("");
 		}
 		catch(Exception e) {
-			logger.error(e);
+			logger.error("Error", e);
 		}
 	
 		logDao.merge(log);
@@ -642,64 +626,7 @@ public class OcanReportUIBean implements CallbackHandler {
 		submissionFile.setOCANv2SubmissionRecordArray(submissionRecordList.toArray(new OCANv2SubmissionRecord[submissionRecordList.size()]));
 		submissionFileDoc.setOCANv2SubmissionFile(submissionFile);
 		
-		/*
-		//submissionFileDoc.getDomNode().getOwnerDocument().getElementById("Domains");
-		XmlCursor cursor = submissionFileDoc.newCursor();
-		OCANv2SubmissionRecord[] records = submissionFileDoc.getOCANv2SubmissionFile().getOCANv2SubmissionRecordArray();
-		for(int i=0; i<records.length; i++) {
-			OCANv2SubmissionRecord record = records[i]; 			
-			Domain[] domains = record.getOCANDomains().getDomainArray();
-			cursor = record.getOCANDomains().newCursor();
-			for(int j=0; j<domains.length; j++) {					
-				//record.getOCANDomains().removeDomain(0);
-								
-				String elementName = cursor.getName().getLocalPart();
-				String chars = cursor.getChars();
-				if("domain".equals(elementName)) {
-					cursor.removeChars(chars.length());		
-				}
-				cursor.toNextToken();
-			}
-			
-		}
-		cursor.dispose();
-		*/
-		/*	
-		for(OcanStaffForm ocanStaffForm:ocanStaffForms) {
-			List<OcanStaffFormData> formData = ocanStaffFormDataDao.findByForm(ocanStaffForm.getId());
-			//convertOcanStaffForm(ocanStaffForm);
-			try {
-				ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("staff_form-"+ocanStaffForm.getId() + ".dat"));
-				oos.writeObject(ocanStaffForm);
-				oos.flush();
-				oos.close();
-				
-				oos = new ObjectOutputStream(new FileOutputStream("staff_form_data-"+ocanStaffForm.getId() + ".dat"));
-				oos.writeObject(formData);
-				oos.flush();
-				oos.close();
-								
-				
-				OcanClientForm clientForm = ocanClientFormDao.findLatestSignedOcanForm(loggedInInfo.currentFacility.getId(),ocanStaffForm.getClientId(), "1.2", getStartDate(year,month), getEndDate(year,month));
-				List<OcanClientFormData> clientFormData = null;
-				if(clientForm != null) {
-					clientFormData = ocanClientFormDataDao.findByForm(clientForm.getId());
-					
-					oos = new ObjectOutputStream(new FileOutputStream("client_form-"+clientForm.getId() + ".dat"));
-					oos.writeObject(clientForm);
-					oos.flush();
-					oos.close();
-					
-					oos = new ObjectOutputStream(new FileOutputStream("client_form_data-"+clientForm.getId() + ".dat"));
-					oos.writeObject(clientFormData);
-					oos.flush();
-					oos.close();
-					
-				}			
-				
-			}catch(IOException e) {logger.error(e);}
-		}
-		*/
+
 		try {
 			XmlOptions options = new XmlOptions();
 			options.setUseDefaultNamespace();
