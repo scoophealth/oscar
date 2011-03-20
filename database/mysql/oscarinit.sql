@@ -7947,7 +7947,7 @@ CREATE TABLE `view` (
   `value` text,
   `role` varchar(255) NOT NULL default '',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 CREATE TABLE `dsGuidelines` (
   `id` int(11) NOT NULL auto_increment,
@@ -7962,14 +7962,14 @@ CREATE TABLE `dsGuidelines` (
   `dateDecomissioned` datetime DEFAULT NULL,
   `status` varchar(1) DEFAULT 'A',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM;
+);
 
 CREATE TABLE `dsGuidelineProviderMap` (
   `mapid` int(11) NOT NULL auto_increment,
   `provider_no` varchar(11) NOT NULL,
   `guideline_uuid` varchar(60) NOT NULL,
   PRIMARY KEY (`mapid`)
-) ENGINE=MyISAM;
+);
 
 create table flowsheet_dx (
       id int(10) NOT NULL auto_increment primary key,
@@ -8000,14 +8000,14 @@ CREATE TABLE `site` (
   PRIMARY KEY  (`site_id`),
   UNIQUE KEY `unique_name` (`name`),
   UNIQUE KEY `unique_shortname` (`short_name`)
-) TYPE=MyISAM;
+);
 
 
 CREATE TABLE `providersite` (
   `provider_no` varchar(6) NOT NULL,
   `site_id` int(11) NOT NULL,
   PRIMARY KEY  (`provider_no`,`site_id`)
-) TYPE=MyISAM;
+);
 
 DROP TABLE IF EXISTS queue;
 create table queue (

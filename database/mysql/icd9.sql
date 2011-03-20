@@ -13,7 +13,7 @@ CREATE TABLE icd9 (
   icd9 varchar(7) NOT NULL default '',
   description varchar(200) NOT NULL default '',
   PRIMARY KEY  (id)
-) TYPE=MyISAM;
+);
 
 --
 -- Dumping data for table `icd9`
