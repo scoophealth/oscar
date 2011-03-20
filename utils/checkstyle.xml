@@ -134,6 +134,13 @@
 		<property name="dataStoreFilename" value="utils/TrackingRegexpCheck_sql.data.xml"/>
 	</module>
 
+	<module name="org.oscarehr.utils.checkstyle.TrackingRegexpCheck">
+		<property name="fileExtensions" value=".sql"/>
+		<property name="illegalRegex" value=".*(MyISAM|MYISAM|myisam|INNODB|Innodb|innodb).*"/>
+		<property name="violationDescription" value="Do not specify the database type in the sql scripts, allow people to set the type in the my.cnf"/>
+		<property name="dataStoreFilename" value="utils/TrackingRegexpCheck_sql.data.xml"/>
+	</module>
+
 	<module name="RegexpMultiline">
 		<property name="fileExtensions" value=".java,.jsp,.jspf,.jsf"/>
 		<property name="format" value="System\.(out|err)" />
