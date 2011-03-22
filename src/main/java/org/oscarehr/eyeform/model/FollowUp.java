@@ -17,7 +17,7 @@ import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Provider;
 
 @Entity
-@Table(name="eyeform_followup")
+@Table(name="EyeformFollowUp")
 public class FollowUp extends AbstractModel<Integer> {
 
 	@Id

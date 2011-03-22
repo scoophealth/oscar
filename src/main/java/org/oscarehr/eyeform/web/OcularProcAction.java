@@ -1,5 +1,6 @@
 package org.oscarehr.eyeform.web;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -42,14 +43,13 @@ public class OcularProcAction extends DispatchAction {
     	
     	request.setAttribute("providers",providerDao.getActiveProviders());
     	
-    	DynaValidatorForm f = (DynaValidatorForm)form;
-    	OcularProc procedure = (OcularProc)f.get("proc");
-    	if(procedure.getId() != null && procedure.getId().intValue()>0) {
-    		procedure = dao.find(procedure.getId()); 
+    	if(request.getParameter("proc.id") != null) {
+    		int procId = Integer.parseInt(request.getParameter("proc.id"));
+    		OcularProc procedure = dao.find(procId);
+    		DynaValidatorForm f = (DynaValidatorForm)form;	
+    		f.set("proc", procedure);
     	}
-    	
-    	f.set("proc", procedure);
-    	
+    	    	
         return mapping.findForward("form");
     }
     
@@ -57,11 +57,23 @@ public class OcularProcAction extends DispatchAction {
     	DynaValidatorForm f = (DynaValidatorForm)form;
     	OcularProc procedure = (OcularProc)f.get("proc");
     	
-    	OcularProcDao dao = (OcularProcDao)SpringUtils.getBean("OcularProcDAO");
-    	procedure.setProvider(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());	
-    	if(procedure.getId() == 0)
+    	OcularProcDao dao = (OcularProcDao)SpringUtils.getBean("ocularProcDao");
+    	procedure.setProvider(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+    	
+    	if(request.getParameter("proc.id") != null && request.getParameter("proc.id").length()>0) {    		
+    		procedure.setId(Integer.parseInt(request.getParameter("proc.id")));
+    	}
+    	
+    	if(procedure.getId() != null && procedure.getId() == 0) {
     		procedure.setId(null);
-    	dao.save(procedure);
+    	}
+    	procedure.setUpdateTime(new Date());
+    	
+    	if(procedure.getId() == null) {
+    		dao.persist(procedure);
+    	} else {
+    		dao.merge(procedure);
+    	}
     	
     	return mapping.findForward("success");
     }
