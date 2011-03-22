@@ -91,6 +91,12 @@
    </script>
    
    <script>
+   
+   function reorderNavBarElements(idToMove, afterThisId) {
+	   var clone = jQuery("#"+idToMove).clone();
+       jQuery("#"+idToMove).remove();
+       clone.insertAfter(jQuery("#"+afterThisId));
+   }
 
    function makeElement(type, attributes) {
 	   var element = document.createElement(type);
