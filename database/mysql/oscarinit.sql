@@ -8138,7 +8138,7 @@ create table ProviderPreferenceAppointmentScreenForm(providerNo varchar(6) not n
 create table ProviderPreferenceAppointmentScreenEForm(providerNo varchar(6) not null, appointmentScreenEForm int not null);
 
 
-CREATE TABLE `eyeform` (
+CREATE TABLE `Eyeform` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `appointment_no` int(11)  ,
   `discharge` varchar(20),
@@ -8149,7 +8149,7 @@ CREATE TABLE `eyeform` (
 );
 
 
-CREATE TABLE `eyeform_followup` (
+CREATE TABLE `EyeformFollowUp` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `appointment_no` int(11)  ,
   `demographic_no` int(11) ,
@@ -8164,57 +8164,57 @@ CREATE TABLE `eyeform_followup` (
 );
 
 
-CREATE TABLE `eyeform_macro` (
+CREATE TABLE `EyeformMacro` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `label` varchar(255) NOT NULL,
-  `display_order` tinyint(4) NOT NULL,
+  `displayOrder` tinyint(4) NOT NULL,
   `impression` text,
-  `followup_no` smallint(5),
-  `followup_unit` varchar(50),
-  `followup_doctor` varchar(6),
-  `followup_reason` varchar(255) ,
-  `tickler_staff` varchar(6) ,
-  `billing_visit_type` varchar(50) ,
-  `billing_visit_location` varchar(50) ,
-  `billing_codes` text,
-  `billing_dxcode` varchar(50),
-  `billing_total` varchar(50) ,
-  `billing_comment` varchar(255),
-  `billing_billtype` varchar(50)  ,
-  `billing_pay_method` varchar(50) ,
-  `billing_billto` varchar(50) ,
-  `billing_remitto` varchar(50) ,
-  `billing_gstBilledTotal` varchar(50)  ,
-  `billing_payment` varchar(50),
-  `billing_refund` varchar(50),
-  `billing_gst` varchar(50),
-  `test_records` text,
-  `discharge` varchar(20),
-  `stat` varchar(20),
-  `opt` varchar(20),
+  `followupNo` smallint(5),
+  `followupUnit` varchar(50),
+  `followupDoctor` varchar(6),
+  `followupReason` varchar(255) ,
+  `ticklerStaff` varchar(6) ,
+  `billingVisitType` varchar(50) ,
+  `billingVisitLocation` varchar(50) ,
+  `billingCodes` text,
+  `billingDxcode` varchar(50),
+  `billingTotal` varchar(50) ,
+  `billingComment` varchar(255),
+  `billingBilltype` varchar(50)  ,
+  `billingPayMethod` varchar(50) ,
+  `billingBillto` varchar(50) ,
+  `billingRemitto` varchar(50) ,
+  `billingGstBilledTotal` varchar(50)  ,
+  `billingPayment` varchar(50),
+  `billingRefund` varchar(50),
+  `billingGst` varchar(50),
+  `testRecords` text,
+  `dischargeFlag` varchar(20),
+  `statFlag` varchar(20),
+  `optFlag` varchar(20),
   PRIMARY KEY (`id`)
 );
 
 
-CREATE TABLE `ocularprocedurehis` (
+CREATE TABLE `EyeformOcularProcedure` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `demographic_no` int(11) NOT NULL ,
+  `demographicNo` int(11) NOT NULL ,
   `provider` varchar(60) ,
   `date` date NOT NULL ,
   `eye` varchar(2) NOT NULL ,
-  `procedure_name` varchar(100) NOT NULL ,
-  `procedure_type` varchar(30) ,
-  `procedure_note` text,
+  `procedureName` varchar(100) NOT NULL ,
+  `procedureType` varchar(30) ,
+  `procedureNote` text,
   `doctor` varchar(30) ,
   `location` varchar(30) ,
-  `update_time` datetime ,
+  `updateTime` datetime ,
   `status` varchar(2) ,
-  `appointment_no` int(11) ,
+  `appointmentNo` int(11) ,
   PRIMARY KEY (`id`)
 );
 
 
-CREATE TABLE `procedurebook` (
+CREATE TABLE `EyeformProcedureBook` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `eyeform_id` bigint(20) ,
   `demographic_no` int(11) ,
@@ -8231,30 +8231,30 @@ CREATE TABLE `procedurebook` (
 );
 
 
-CREATE TABLE `specshis` (
+CREATE TABLE `EyeformSpecsHistory` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `demographic_no` int(11) NOT NULL ,
+  `demographicNo` int(11) NOT NULL ,
   `provider` varchar(60) ,
   `date` date ,
   `doctor` varchar(30) ,
   `type` varchar(30) ,
-  `od_sph` varchar(10),
-  `od_cyl` varchar(10) ,
-  `od_axis` varchar(10) ,
-  `od_add` varchar(10) ,
-  `od_prism` varchar(10) ,
-  `os_sph` varchar(10) ,
-  `os_cyl` varchar(10) ,
-  `os_axis` varchar(10) ,
-  `os_add` varchar(10) ,
-  `os_prism` varchar(10) ,
-  `update_time` datetime ,
+  `odSph` varchar(10),
+  `odCyl` varchar(10) ,
+  `odAxis` varchar(10) ,
+  `odAdd` varchar(10) ,
+  `odPrism` varchar(10) ,
+  `osSph` varchar(10) ,
+  `osCyl` varchar(10) ,
+  `osAxis` varchar(10) ,
+  `osAdd` varchar(10) ,
+  `osPrism` varchar(10) ,
+  `updateTime` datetime ,
   `status` varchar(2) ,
-  `appointment_no` int(11) ,
+  `appointmentNo` int(11) ,
   PRIMARY KEY (`id`)
 );
 
-CREATE TABLE `testbookrecord` (
+CREATE TABLE `EyeformTestBook` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `testname` varchar(60) ,
   `appointment_no` int(11) ,
