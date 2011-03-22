@@ -79,7 +79,19 @@
 			});
 
 			//make a call to update the existing values
-			jQuery.ajax({dataType: "script", url:ctx+"/oscarEncounter/MeasurementData.do?demographicNo="+demographicNo+"&types="+types+"&action=getLatestValues"});
+			jQuery.ajax({dataType: "script", url:ctx+"/oscarEncounter/MeasurementData.do?demographicNo="+demographicNo+"&types="+types+"&action=getLatestValues&appointmentNo="+appointmentNo,async:false});
+			
+			//expand the sections where there's a while field
+			jQuery(".slideblock").each(function() { 
+				var id = jQuery(this).attr('id');
+				var expand=false;
+				jQuery("#"+id+" .examfieldwhite").each(function(){
+					expand=true;
+				});
+				if(expand == true) {
+					togglediv(document.getElementById(id));
+				}				
+			});
 						
        }});
 

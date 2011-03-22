@@ -31,6 +31,10 @@ public class MeasurementDataAction extends DispatchAction {
 		String demographicNo = request.getParameter("demographicNo");
 		String typeStr = request.getParameter("types");
 		String appointmentNo = request.getParameter("appointmentNo");
+		int apptNo = 0;
+		if(appointmentNo != null && appointmentNo.length()>0) {
+			apptNo = Integer.parseInt(appointmentNo);
+		}
 		String fresh =request.getParameter("fresh");
 		HashMap<String,Boolean> freshMap = new HashMap<String,Boolean>();
 		if(fresh!=null) {
@@ -50,11 +54,12 @@ public class MeasurementDataAction extends DispatchAction {
 		for(String key:measurementMap.keySet()) {
 			Measurements value = measurementMap.get(key);
 			if((freshMap.get(key)==null) ||(freshMap.get(key) != null && value.getAppointmentNo() == Integer.parseInt(appointmentNo))) {
-				script.append("jQuery(\"input[measurement='"+key+"']\").val(\""+value.getDataField()+"\");\n");
-				script.append("jQuery(\"textarea[measurement='"+key+"']\").val(\""+value.getDataField()+"\");\n");	
+				script.append("jQuery(\"[measurement='"+key+"']\").val(\""+value.getDataField()+"\");\n");
+				if(apptNo>0 && apptNo == value.getAppointmentNo()) {
+					script.append("jQuery(\"[measurement='"+key+"']\").addClass('examfieldwhite');\n");
+				}
 			}			
 		}
-		
 		response.getWriter().print(script);
 		return null;
 	}
