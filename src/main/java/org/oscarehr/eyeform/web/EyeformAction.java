@@ -18,6 +18,8 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.validator.DynaValidatorForm;
+import org.caisi.dao.TicklerDAO;
+import org.caisi.model.Tickler;
 import org.oscarehr.PMmodule.dao.ClientDao;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.casemgmt.dao.AllergyDAO;
@@ -38,6 +40,7 @@ import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.Billingreferral;
 import org.oscarehr.common.model.Clinic;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.DemographicExt;
 import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.Site;
@@ -90,6 +93,7 @@ public class EyeformAction extends DispatchAction {
 	BillingreferralDao brDao = (BillingreferralDao)SpringUtils.getBean("BillingreferralDAO");
 	ClinicDAO clinicDao = (ClinicDAO)SpringUtils.getBean("clinicDAO");
 	SiteDao siteDao = (SiteDao)SpringUtils.getBean("siteDao");
+	TicklerDAO ticklerDao = (TicklerDAO)SpringUtils.getBean("ticklerDAOT");
 	
 	   public ActionForward getConReqCC(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		   String requestId = request.getParameter("requestId");
@@ -481,26 +485,27 @@ public class EyeformAction extends DispatchAction {
 		   String demoNo = request.getParameter("demographicNo");		
 		   String appointmentNo = request.getParameter("appNo");
 			
-		   Integer appNo = new Integer(0);
-			if (appointmentNo != null && appointmentNo.trim().length() > 0)
-				appNo = new Integer(appointmentNo);
-			request.setAttribute("demographicNo", demoNo);
-			Integer demographicNo = new Integer(demoNo);
-			Date now = new Date();
-			String providerNo = (String) request.getSession().getAttribute("user");
-			String provider = providerDao.getProviderName(providerNo);
-			Demographic demo = demographicDao.getClientByDemographicNo(demographicNo);
-			String demoName = demo.getFormattedName();
-			request.setAttribute("demographicName", demoName);
-			//demographic_ext Family_Doctor
+		   Integer demographicNo = new Integer(demoNo);		
+		   Integer appNo = new Integer(0);			
+		   if (appointmentNo != null && appointmentNo.trim().length() > 0)
+				appNo = new Integer(appointmentNo);			
+		   
+		   		  
+		   Provider provider = LoggedInInfo.loggedInInfo.get().loggedInProvider;				  
+		   Demographic demographic = demographicDao.getClientByDemographicNo(demographicNo);
+						
+		   request.setAttribute("demographicNo", demoNo);		   
+		   request.setAttribute("demographicName", demographic.getFormattedName());
+		   
+			//demographic_ext 
 			String famName = new String();
-/*
-			for(int x=0;x<demo.getExtras().length;x++) {
-				if(demo.getExtras()[x].getKey().equals("Family_Doctor")) {
-					famName = demo.getExtras()[x].getValue();
-				}
+			
+			DemographicExt famExt = demographicDao.getDemographicExt(demographic.getDemographicNo(),"Family_Doctor");
+			if(famExt != null) {
+				famName = famExt.getValue();
 			}
-*/			
+			request.setAttribute("famName", famName);
+		
 			ConsultationReport cp = new ConsultationReport();
 			String refNo = null;
 			String referraldoc = new String();
@@ -509,35 +514,41 @@ public class EyeformAction extends DispatchAction {
 					&& "new".equalsIgnoreCase(request.getParameter("flag"))) {
 				
 				cp.setDemographicNo(demographicNo);
-				cp.setProviderNo(provider);				
+				cp.setProviderNo(provider.getProviderNo());				
 				cp.setAppointmentNo(appNo);
-				cp.setDate(now);
-				String reason = demoName + " ";
-				cp.setReason(reason);
+				cp.setDate(new Date());
+				cp.setReason(demographic.getFormattedName() + " ");
 				cp.setUrgency("Non-urgent");
 				cp.setStatus("Incomplete");
 				request.setAttribute("newFlag", "true");
 			} else {
 				String cpId = request.getParameter("conReportNo");
-				if ("saved".equalsIgnoreCase((String) request.getAttribute("savedflag")))
+				if ("saved".equalsIgnoreCase((String) request.getAttribute("savedflag"))) {
 					cpId = (String) request.getAttribute("cpId");
+				}
 				ConsultationReportDao crDao = (ConsultationReportDao)SpringUtils.getBean("consultationReportDao");
 				cp = crDao.find(new Integer(cpId));
 				request.setAttribute("newFlag", "false");
 				appNo = cp.getAppointmentNo();
 
-				Billingreferral refdoc = brDao.getByReferralNo(String.valueOf(cp.getReferralId()));
-				referraldoc = refdoc.getLastName() + "," + refdoc.getFirstName();
-				refNo = refdoc.getReferralNo();
+				Billingreferral refdoc = brDao.getById(cp.getReferralId());
+				if(refdoc != null) {
+					referraldoc = refdoc.getLastName() + "," + refdoc.getFirstName();
+					request.setAttribute("referral_doc_name", referraldoc);
+					cp.setReferralNo(refdoc.getReferralNo());
+					refNo = refdoc.getReferralNo();
+				}
 			}
-
-			 DynaValidatorForm crForm = (DynaValidatorForm) form;
-	         crForm.set("cp", cp);
+			
+			request.setAttribute("providerName",providerDao.getProvider(cp.getProviderNo()).getFormattedName());
+			 
+			DynaValidatorForm crForm = (DynaValidatorForm) form;	         
+			crForm.set("cp", cp);
 	         
 			//loades latest eyeform
 			
 			if ("".equalsIgnoreCase(refNo)) {
-				String referal = demo.getFamilyDoctor();
+				String referal = demographic.getFamilyDoctor();
 
 				if (referal != null && !"".equals(referal.trim())) {
 					Integer ref = getRefId(referal);
@@ -548,22 +559,23 @@ public class EyeformAction extends DispatchAction {
 					if(refList.size()>0) {
 						Billingreferral tmp = ((Billingreferral)refList.get(0));
 						referraldoc = tmp.getLastName() + "," + tmp.getFirstName();
+						request.setAttribute("referral_doc_name", referraldoc);
+						cp.setReferralNo(tmp.getReferralNo());
 					}					
 				}
 			}
 			
-			request.setAttribute("reason", cp.getReason());
-			
-			request.setAttribute("currentHistory",StringEscapeUtils.escapeJavaScript(getFormattedCppItem("Current History:", "CurrentHistory", demo.getDemographicNo(), appNo, false)));			   
-			request.setAttribute("pastOcularHistory",StringEscapeUtils.escapeJavaScript(getFormattedCppItem("Past Ocular History:", "PastOcularHistory", demo.getDemographicNo(), appNo, true))); 		   
-			request.setAttribute("medHistory",StringEscapeUtils.escapeJavaScript(getFormattedCppItem("Medical History:", "MedHistory", demo.getDemographicNo(), appNo, true))); 		   
-			request.setAttribute("famHistory",StringEscapeUtils.escapeJavaScript(getFormattedCppItem("Family History:", "FamHistory", demo.getDemographicNo(), appNo, true))); 		   
-			request.setAttribute("ocularMedication",StringEscapeUtils.escapeJavaScript(getFormattedCppItem("Current Medications:", "OcularMedication", demo.getDemographicNo(), appNo, true)));
-			request.setAttribute("otherMeds",StringEscapeUtils.escapeJavaScript(getFormattedCppItem("Other Medications:", "OMeds", demo.getDemographicNo(), appNo, true))); 		   
-			request.setAttribute("diagnosticNotes",StringEscapeUtils.escapeJavaScript(getFormattedCppItem("Diagnostic Notes:", "DiagnosticNotes", demo.getDemographicNo() , appNo, true)));
+			request.setAttribute("reason", cp.getReason());			
+			request.setAttribute("currentHistory",StringEscapeUtils.escapeJavaScript(getFormattedCppItem("Current History:", "CurrentHistory", demographic.getDemographicNo(), appNo, false)));			   
+			request.setAttribute("pastOcularHistory",StringEscapeUtils.escapeJavaScript(getFormattedCppItem("Past Ocular History:", "PastOcularHistory", demographic.getDemographicNo(), appNo, true))); 		   
+			request.setAttribute("medHistory",StringEscapeUtils.escapeJavaScript(getFormattedCppItem("Medical History:", "MedHistory", demographic.getDemographicNo(), appNo, true))); 		   
+			request.setAttribute("famHistory",StringEscapeUtils.escapeJavaScript(getFormattedCppItem("Family History:", "FamHistory", demographic.getDemographicNo(), appNo, true))); 		   
+			request.setAttribute("ocularMedication",StringEscapeUtils.escapeJavaScript(getFormattedCppItem("Current Medications:", "OcularMedication", demographic.getDemographicNo(), appNo, true)));
+			request.setAttribute("otherMeds",StringEscapeUtils.escapeJavaScript(getFormattedCppItem("Other Medications:", "OMeds", demographic.getDemographicNo(), appNo, true))); 		   
+			request.setAttribute("diagnosticNotes",StringEscapeUtils.escapeJavaScript(getFormattedCppItem("Diagnostic Notes:", "DiagnosticNotes", demographic.getDemographicNo() , appNo, true)));
 			
 			SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
-			   List<OcularProc> ocularProcs = ocularProcDao.getHistory(demo.getDemographicNo(), new Date(), "A");
+			   List<OcularProc> ocularProcs = ocularProcDao.getHistory(demographic.getDemographicNo(), new Date(), "A");
 			   StringBuffer ocularProc = new StringBuffer();
 			   for(OcularProc op:ocularProcs) {
 	               ocularProc.append(sf.format(op.getDate()) + " ");
@@ -634,11 +646,8 @@ public class EyeformAction extends DispatchAction {
 	           if (probook.length() > 0)			
 	        	   probook.insert(0, "Procedure booking:");           				
 	           request.setAttribute("probooking", StringEscapeUtils.escapeJavaScript(probook.toString()));
-			
-	           
-			   
-	          
-			return mapping.findForward("conReport");
+				           				         			
+	           return mapping.findForward("conReport");
 	   }
 	   
 		public ActionForward saveConRequest(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -646,15 +655,22 @@ public class EyeformAction extends DispatchAction {
 
 			DynaValidatorForm crForm = (DynaValidatorForm) form;
 			ConsultationReport cp = (ConsultationReport) crForm.get("cp");
-			String referralNo = request.getParameter("referralNo");
+			String id = request.getParameter("cp.id");
+			if(id != null && id.length()>0) {
+				cp.setId(Integer.parseInt(id));
+			}
 			@SuppressWarnings("unchecked")
-			List<Billingreferral> brs = brDao.getBillingreferral(referralNo);
+			List<Billingreferral> brs = brDao.getBillingreferral(cp.getReferralNo());
 			cp.setReferralId(brs.get(0).getBillingreferralNo());
 			if(cp.getDate()==null){
 				cp.setDate(new Date());
 			}
 			ConsultationReportDao dao = (ConsultationReportDao)SpringUtils.getBean("consultationReportDao");
-			dao.persist(cp);
+			if(cp.getId() != null && cp.getId()>0) {
+				dao.merge(cp);
+			} else {
+				dao.persist(cp);
+			}
 			request.setAttribute("cpId", cp.getId().toString());
 			request.setAttribute("savedflag", "saved");
 			return prepareConReport(mapping, form, request, response);
@@ -710,13 +726,39 @@ public class EyeformAction extends DispatchAction {
 			Demographic demographic = demographicDao.getClientByDemographicNo(cp.getDemographicNo());			
 			request.setAttribute("demographic",demographic);
 			
+			String id = request.getParameter("cp.id");
+			if(id != null && id.length()>0) {
+				cp.setId(Integer.parseInt(id));
+			}
+			@SuppressWarnings("unchecked")
+			List<Billingreferral> brs = brDao.getBillingreferral(cp.getReferralNo());
+			cp.setReferralId(brs.get(0).getBillingreferralNo());
+			if(cp.getDate()==null){
+				cp.setDate(new Date());
+			}
+			ConsultationReportDao dao = (ConsultationReportDao)SpringUtils.getBean("consultationReportDao");
+			if(cp.getId() != null && cp.getId()>0) {
+				dao.merge(cp);
+			} else {
+				dao.persist(cp);
+			}
+			
+			cp.setCc(divycc(cp.getCc()));
+			cp.setClinicalInfo(divy(cp.getClinicalInfo()));
+			cp.setConcurrentProblems(divy(cp.getConcurrentProblems()));
+			cp.setCurrentMeds(divy(cp.getCurrentMeds()));
+			cp.setExamination(dive(cp.getExamination()));
+			cp.setImpression(divy(cp.getImpression()));
+			cp.setAllergies(divy(cp.getAllergies()));
+			cp.setPlan(divy(cp.getPlan()));
+			
 			SimpleDateFormat sf = new SimpleDateFormat("MM/dd/yyyy");
 			request.setAttribute("date", sf.format(new Date()));
 			
-			String referralNo = request.getParameter("referralNo");
-			@SuppressWarnings("unchecked")
-			List<Billingreferral> brs = brDao.getBillingreferral(referralNo);
-			request.setAttribute("refer", brs.get(0));
+			String referralNo = cp.getReferralNo();
+			Billingreferral br = brDao.getByReferralNo(referralNo);
+			request.setAttribute("refer", br);
+						
 			request.setAttribute("cp", cp);		
 			
 			
@@ -833,4 +875,108 @@ public class EyeformAction extends DispatchAction {
 
 			return clinicArr;
 		}
+		
+		public ActionForward specialRepTickler(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+			log.debug("specialRepTickler");
+
+			String demoNo = request.getParameter("demographicNo");
+			String docFlag = request.getParameter("docFlag");
+			String bsurl = request.getContextPath();
+			if ("true".equalsIgnoreCase(docFlag))
+				sendDocTickler("REP", demoNo, (String) request.getSession().getAttribute("user"), bsurl);
+
+			return mapping.findForward("success");
+		}
+		
+		public void sendDocTickler(String flag, String demoNo, String providerNo, String bsurl) {
+			Tickler tkl = new Tickler();
+			Date now = new Date();
+
+			tkl.setCreator(providerNo);
+			tkl.setDemographic_no(demoNo);
+			tkl.setPriority("Normal");
+			tkl.setService_date(now);
+			tkl.setStatus('A');
+			tkl.setTask_assigned_to(providerNo);
+			tkl.setUpdate_date(now);
+			
+			StringBuilder mes = new StringBuilder();
+			mes.append("Remember to <a href=\"javascript:void(0)\" onclick=\"window.open(\'");
+			String[] slist = bsurl.trim().split("/");
+			mes.append("/");
+			mes.append(slist[1]);
+			if ("REQ".equalsIgnoreCase(flag)) {
+				mes.append("/oscarEncounter/oscarConsultationRequest/DisplayDemographicConsultationRequests.jsp?de=");
+				mes.append(demoNo);
+				mes.append("\',\'conRequest\',\'height=700,width=700,scrollbars=yes,menubars=no,toolbars=no,resizable=yes\');\">");
+				mes.append("complete the consultation request.");
+			} else if ("REP".equalsIgnoreCase(flag)) {
+				mes.append("/eyeform/ConsultationReportList.do?method=list&cr.demographicNo=");
+				mes.append(demoNo);
+				mes.append("\',\'conReport\',\'height=700,width=700,scrollbars=yes,menubars=no,toolbars=no,resizable=yes\');\">");
+				mes.append("complete the consultation report.");
+			}
+			mes.append("</a>");
+			tkl.setMessage(mes.toString());
+			ticklerDao.saveTickler(tkl);
+		}
+		
+		public String divy(String str) {
+			StringBuilder stringBuffer = new StringBuilder();
+			stringBuffer.append(str);
+			int j = 0;
+			int i = 0;
+			while (i < stringBuffer.length()) {
+				if (stringBuffer.charAt(i) == '\n') {
+					stringBuffer.insert(i, "<BR>");
+					i = i + 4;
+				}
+
+				i++;
+			}
+			return stringBuffer.toString();
+
+		}
+
+		public String dive(String str) {
+			// add "\n" to string
+			StringBuilder stringBuffer = new StringBuilder();
+			stringBuffer.append(str);
+			int j = 0;
+			int i = 0;
+			while (i < stringBuffer.length()) {
+				if (stringBuffer.charAt(i) == '\n') {
+					j = 0;
+				}
+				i++;
+				if (j > 75) {
+					stringBuffer.insert(i, "\n");
+					i++;
+					j = 0;
+				}
+
+				j++;
+			}
+			return stringBuffer.toString();
+		}
+
+		public String divycc(String str) {
+			StringBuilder stringBuffer = new StringBuilder();
+			stringBuffer.append(str);
+			int j = 0;
+			int i = 0;
+			while (i < stringBuffer.length()) {
+
+				if (stringBuffer.charAt(i) == ';') {
+					j++;
+					if (j % 2 == 0) {
+						stringBuffer.insert(i + 1, "<BR>");
+						i = i + 4;
+					}
+				}
+				i++;
+			}
+			return stringBuffer.toString();
+		}
+
 }

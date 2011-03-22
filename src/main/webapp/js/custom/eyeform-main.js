@@ -1,4 +1,4 @@
 //navlist
 jQuery(document).ready(function(){
-	jQuery("#navlist").append("<li><a href=\"#\">ConReport</a></li>");
+	jQuery("#navlist").append("<li><a href=\"../eyeform/ConsultationReportList.do\">ConReport</a></li>");
 });
