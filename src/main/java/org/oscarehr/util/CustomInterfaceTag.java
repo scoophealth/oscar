@@ -21,6 +21,10 @@ public class CustomInterfaceTag extends TagSupport {
 		OscarProperties props = OscarProperties.getInstance();
 		String customJs = props.getProperty("cme_js");
 		
+		if(customJs == null || customJs.length() == 0) {
+			customJs="default";
+		}
+		
 		if(customJs != null && customJs.length()>0) {
 			JspWriter out = super.pageContext.getOut();
 			String contextPath = this.pageContext.getServletContext().getContextPath();
