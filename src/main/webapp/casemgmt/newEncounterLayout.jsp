@@ -193,8 +193,11 @@
            }});      
        }
        
+       <%if(request.getParameter("appointmentNo") != null && request.getParameter("appointmentNo").length()>0) { %>
        var appointmentNo = <%=request.getParameter("appointmentNo")%>;
-      
+        <% } else { %>
+        var appointmentNo = 0;
+        <%}%>
    </script>
  
  	<oscar:customInterface section="cme"/>
