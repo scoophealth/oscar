@@ -165,4 +165,15 @@
   </attribute>
 </tag>
 
+<tag>
+  <name>customInterface</name>
+  <tagclass>org.oscarehr.util.CustomInterfaceTag</tagclass>
+  <bodycontent>empty</bodycontent>
+  <attribute>
+    <name>section</name>
+    <required>true</required>
+    <rtexprvalue>false</rtexprvalue>
+  </attribute>
+</tag>
+
 </taglib>

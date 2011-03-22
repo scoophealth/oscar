@@ -352,15 +352,7 @@ if (isMobileOptimized) { %>
 	jQuery.noConflict();
 </script>
    
-   <% 
- 	String customScript = OscarProperties.getInstance().getProperty("cme_js");
-    if(customScript != null && customScript.length()>0) {
-	%>
-		<script src="../js/custom/<%=customScript%>.js"></script>
-		<script src="../js/custom/<%=customScript%>-main.js"></script>	
-	<%   	   
-    }      
-    %>
+<oscar:customInterface section="main"/>
       
    
 <script language="JavaScript">

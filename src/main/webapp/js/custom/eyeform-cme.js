@@ -1,6 +1,10 @@
  
    jQuery(document).ready(function(){
 	   
+	   //need to test this on IE. Would like to make this configurable somewhere in prefs.
+	   window.resizeTo(screen.width,screen.height);
+	   
+	   
 	   issueNoteUrls = {
 			   divR1I1:    ctx + "/CaseManagementView.do?hc=996633&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=CurrentHistory&title=" + currentHistoryLabel + "&cmd=divR1I1"+ "&appointment_no="+appointmentNo ,
                divR1I2:    ctx + "/CaseManagementView.do?hc=996633&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=MedHistory&title=" + medHistoryLabel + "&cmd=divR1I2"+ "&appointment_no="+appointmentNo ,
