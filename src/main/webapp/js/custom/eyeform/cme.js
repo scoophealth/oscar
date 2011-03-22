@@ -3,6 +3,12 @@
 	   
 	   //need to test this on IE. Would like to make this configurable somewhere in prefs.
 	   window.resizeTo(screen.width,screen.height);
+	  
+	   //header	 
+	   jQuery.ajax({url:ctx+"/eyeform/encounterHeader.jsp?appointmentNo="+appointmentNo,dataType: "html",success: function(data) {			
+		   jQuery("#encounterHeader").html(data);      
+	   }});
+	   
 	   
 	   
 	   issueNoteUrls = {
@@ -11,15 +17,8 @@
                divR2I1:    ctx + "/CaseManagementView.do?hc=996633&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=DiagnosticNotes&title=" + diagnosticNotesLabel + "&cmd=divR2I1" + "&appointment_no="+appointmentNo,
                divR2I2:    ctx + "/CaseManagementView.do?hc=996633&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=PastOcularHistory&title=" + pastOcularHistoryLabel + "&cmd=divR2I2" + "&appointment_no="+appointmentNo,              
        };
-//	  jQuery.ajax({url:ctx+"/casemgmt/RegisterCppCode.do?method=register&code=CurrentHistory,DiagnosticNotes,PastOcularHistory",dataType: "html",success: function(data) {			
-//      }});
-	   
-	   
-       //add diagnostic notes, past ocular history, patient log, ocular medications
-       //add a row       
       
-     	//link save button
-       
+     	//link save button       
 		jQuery("#save_measurements").live('click',function(e){	
 			e.preventDefault();
 			touchColor();			
@@ -126,14 +125,7 @@
        addPrintOption('SpecsHistory','extPrintSpecsHistory');
        
        jQuery("form[name='caseManagementEntryForm']").append('<span submit_addon="save_measurements"></span>');
-       
-       jQuery.ajax({url:ctx+"/eyeform/NoteData.do?method=getAppointmentReason&appointmentNo="+appointmentNo,dataType: "html",success: function(data) {
-			jQuery("#encounterHeaderExt").append("&nbsp;&nbsp;Reason:<b>"+data+"</b>");
-       }});
-       
-       jQuery.ajax({url:ctx+"/eyeform/NoteData.do?method=getReferralDoctor&demographicNo="+demographicNo,dataType: "html",success: function(data) {
-			jQuery("#encounterHeaderExt").append("&nbsp;&nbsp;Ref:<b>"+data+"</b>");
-      }});
+              
        
      });
 

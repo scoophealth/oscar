@@ -69,32 +69,41 @@
     String pAge = Integer.toString(UtilDateUtilities.calcAge(bean.yearOfBirth,bean.monthOfBirth,bean.dateOfBirth));
 
     java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
+    
+    //referring doctor
+    org.oscarehr.common.dao.DemographicDao dao = (org.oscarehr.common.dao.DemographicDao)org.oscarehr.util.SpringUtils.getBean("demographicDao");
+	org.oscarehr.common.model.Demographic d= dao.getDemographic(demoNo);
+	String familyDoctorXml = d.getFamilyDoctor();
+	String rd = "";
+	if(familyDoctorXml != null) {
+		rd = oscar.SxmlMisc.getXmlContent(familyDoctorXml,"rd");
+	}
+	
+	//appointment reason
+	String apptNo = request.getParameter("appointmentNo");
+	String reason = new String();
+	if(apptNo != null && apptNo.length()>0) {
+		oscar.dao.AppointmentDao appointmentDao = (oscar.dao.AppointmentDao)org.oscarehr.util.SpringUtils.getBean("appointmentSuperDao");
+		java.util.List<java.util.Map> result = appointmentDao.executeSelectQuery("search", new Object[] {apptNo});
+		if(result.size()>0) {
+			java.util.Map mresult = result.get(0);
+			reason = (String)mresult.get("reason");
+		}
+	}
     %>
 
     <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
-<div style="padding-left:2px; text-align:left; font-size: 12px; color:<%=inverseUserColour%>; background-color:<%=userColour%>" id="encounterHeader">
-    <span style="border-bottom: medium solid <%=famDocColour%>"><bean:message key="oscarEncounter.Index.msgMRP"/>&nbsp;&nbsp;
-    <%=famDocName%> <%=famDocSurname%>  </span>
-
-    <span class="Header" style="color:<%=inverseUserColour%>; background-color:<%=userColour%>">
+   
+    <span class="Header" style="color:<%=inverseUserColour%>; background-color:<%=userColour%>; font-weight:normal;">
         <%
             String winName = "Master" + bean.demographicNo;
-            String url;
-            if (vLocale.getCountry().equals("BR"))
-                url = "/demographic/demographiccontrol.jsp?demographic_no=" + bean.demographicNo + "&amp;displaymode=edit&amp;dboperation=search_detail_ptbr";
-            else
-                url = "/demographic/demographiccontrol.jsp?demographic_no=" + bean.demographicNo + "&amp;displaymode=edit&amp;dboperation=search_detail";
+            String url = "/demographic/demographiccontrol.jsp?demographic_no=" + bean.demographicNo + "&amp;displaymode=edit&amp;dboperation=search_detail";
         %>
-        <a href="#" onClick="popupPage(700,1000,'<%=winName%>','<c:out value="${ctx}"/><%=url%>'); return false;" title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>"><%=bean.patientLastName %>, <%=bean.patientFirstName%></a> <%=bean.patientSex%> <%=bean.patientAge%>  <%=bean.phone%>
-		<span id="encounterHeaderExt"></span>
-		<a href="javascript:popupPage(400,850,'ApptHist','<c:out value="${ctx}"/>/demographic/demographiccontrol.jsp?demographic_no=<%=bean.demographicNo%>&amp;last_name=<%=bean.patientLastName%>&amp;first_name=<%=bean.patientFirstName%>&amp;orderby=appointment_date&amp;displaymode=appt_history&amp;dboperation=appt_history&amp;limit1=0&amp;limit2=25')" style="font-size: 11px;text-decoration:none;" title="<bean:message key="oscarEncounter.Header.nextApptMsg"/>"><span style="margin-left:20px;"><bean:message key="oscarEncounter.Header.nextAppt"/>: <oscar:nextAppt demographicNo="<%=bean.demographicNo%>"/></span></a>
-
-        &nbsp;&nbsp;        
-
-        <% if(oscar.OscarProperties.getInstance().hasProperty("ONTARIO_MD_INCOMINGREQUESTOR")){%>
-           <a href="javascript:void(0)" onClick="popupPage(600,175,'Calculators','<c:out value="${ctx}"/>/common/omdDiseaseList.jsp?sex=<%=bean.patientSex%>&age=<%=pAge%>'); return false;" ><bean:message key="oscarEncounter.Header.OntMD"/></a>
-        <%}%>
-   </span>
-</div>
-
+        <span style="font-weight:bold;">
+        	<a href="#" onClick="popupPage(700,1000,'<%=winName%>','<c:out value="${ctx}"/><%=url%>'); return false;" title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>"><%=bean.patientLastName %>, <%=bean.patientFirstName%></a> <%=bean.patientSex%> <%=bean.patientAge%>
+       	</span>  
+	<bean:message key="oscarEncounter.Index.msgMRP"/>:&nbsp;<span style="font-weight:bold;"><%=famDocName%> <%=famDocSurname%></span> 
+	REF:&nbsp;<span style="font-weight:bold;"><%=rd%></span>  
+ 	REASON:&nbsp;<span style="font-weight:bold;"><%=reason%></span>
+ </span> 
 
