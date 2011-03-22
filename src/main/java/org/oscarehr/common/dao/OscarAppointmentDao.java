@@ -79,7 +79,7 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 	
 	@Override
 	public void merge(Appointment appointment) {
-		archiveAppointment(appointment.getId());
+		//archiveAppointment(appointment.getId());
 		super.merge(appointment);
 	}
 	

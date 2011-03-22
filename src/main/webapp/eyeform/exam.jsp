@@ -149,6 +149,32 @@ function clearPosterior(){
 	setfieldvalue("os_cd_ratio_horizontal","");
 }
 
+function setExternal(){
+	setfieldvalue("od_face","normal");
+	setfieldvalue("os_face","normal");
+	setfieldvalue("od_upper_lid","normal");
+	setfieldvalue("os_upper_lid","normal");
+	setfieldvalue("od_lower_lid","normal");
+	setfieldvalue("os_lower_lid","normal");
+	setfieldvalue("od_punctum","normal");
+	setfieldvalue("os_punctum","normal");
+	setfieldvalue("od_lacrimal_lake","normal");
+	setfieldvalue("os_lacrimal_lake","normal");	
+}
+
+function clearExternal(){
+	setfieldvalue("od_face","");
+	setfieldvalue("os_face","");
+	setfieldvalue("od_upper_lid","");
+	setfieldvalue("os_upper_lid","");
+	setfieldvalue("od_lower_lid","");
+	setfieldvalue("os_lower_lid","");
+	setfieldvalue("od_punctum","");
+	setfieldvalue("os_punctum","");
+	setfieldvalue("od_lacrimal_lake","");
+	setfieldvalue("os_lacrimal_lake","");	
+	
+}
 </script>
 
 <style type="text/css">
@@ -272,15 +298,15 @@ span.ge{
             <td >Axis</td>
             </tr>
 			<tr>
-            <td><input type="text" tabindex="32"  class="examfieldgrey" size="6" measurement="od_ar_sph" onfocus="whiteField(this);"/></td>
-            <td><input type="text" tabindex="33"  class="examfieldgrey" size="6" measurement="od_ar_cyl" onfocus="whiteField(this);"/></td>
-            <td><input type="text" tabindex="34"  class="examfieldgrey" size="6" measurement="od_ar_axis" onfocus="whiteField(this);"/></td>
+            <td><input type="text" tabindex="32"  class="examfieldgrey" size="7" measurement="od_ar_sph" onfocus="whiteField(this);"/></td>
+            <td><input type="text" tabindex="33"  class="examfieldgrey" size="7" measurement="od_ar_cyl" onfocus="whiteField(this);"/></td>
+            <td><input type="text" tabindex="34"  class="examfieldgrey" size="7" measurement="od_ar_axis" onfocus="whiteField(this);"/></td>
             
             
             <td >AR</td>
-            <td ><input type="text" tabindex="35" class="examfieldgrey" size="6" measurement="os_ar_sph" onfocus="whiteField(this);"/></td>
-            <td ><input type="text"  tabindex="36" class="examfieldgrey" size="6" measurement="os_ar_cyl" onfocus="whiteField(this);"/></td>
-            <td ><input type="text"  tabindex="37" class="examfieldgrey" size="6" measurement="os_ar_axis" onfocus="whiteField(this);"/></td>
+            <td ><input type="text" tabindex="35" class="examfieldgrey" size="7" measurement="os_ar_sph" onfocus="whiteField(this);"/></td>
+            <td ><input type="text"  tabindex="36" class="examfieldgrey" size="7" measurement="os_ar_cyl" onfocus="whiteField(this);"/></td>
+            <td ><input type="text"  tabindex="37" class="examfieldgrey" size="7" measurement="os_ar_axis" onfocus="whiteField(this);"/></td>
             
 			</tr>
 			<tr>
@@ -293,15 +319,15 @@ span.ge{
             <td >K2-Axis</td>
             </tr>
 			<tr>
-            <td ><input type="text"  tabindex="38"  class="examfieldgrey" size="6" measurement="od_k1" onfocus="whiteField(this);"/></td>
-            <td ><input type="text"  tabindex="39"  class="examfieldgrey" size="6" measurement="od_k2" onfocus="whiteField(this);"/></td>
-            <td ><input type="text"  tabindex="40"  class="examfieldgrey" size="6"  measurement="od_k2_axis" onfocus="whiteField(this);"/></td>
+            <td ><input type="text"  tabindex="38"  class="examfieldgrey" size="7" measurement="od_k1" onfocus="whiteField(this);"/></td>
+            <td ><input type="text"  tabindex="39"  class="examfieldgrey" size="7" measurement="od_k2" onfocus="whiteField(this);"/></td>
+            <td ><input type="text"  tabindex="40"  class="examfieldgrey" size="7"  measurement="od_k2_axis" onfocus="whiteField(this);"/></td>
             
             
             <td >K</td>
-            <td ><input type="text"  tabindex="41"  class="examfieldgrey" size="6" measurement="os_k1" onfocus="whiteField(this);"/></td>
-            <td ><input type="text"  tabindex="42"  class="examfieldgrey" size="6" measurement="os_k2" onfocus="whiteField(this);"/></td>
-            <td ><input type="text"  tabindex="43"  class="examfieldgrey" size="6" measurement="os_k2_axis" onfocus="whiteField(this);"/></td>
+            <td ><input type="text"  tabindex="41"  class="examfieldgrey" size="7" measurement="os_k1" onfocus="whiteField(this);"/></td>
+            <td ><input type="text"  tabindex="42"  class="examfieldgrey" size="7" measurement="os_k2" onfocus="whiteField(this);"/></td>
+            <td ><input type="text"  tabindex="43"  class="examfieldgrey" size="7" measurement="os_k2_axis" onfocus="whiteField(this);"/></td>
             
 			</tr>
 			<tr>
@@ -314,23 +340,23 @@ span.ge{
             <td >ph</td>
             </tr>
             <tr>
-            <td ><input type="text"  tabindex="44"  class="examfieldgrey" size="6" measurement="od_sc_distance" onfocus="whiteField(this);"/></td>
-            <td ><input type="text"  tabindex="45"  class="examfieldgrey" size="6" measurement="od_cc_distance" onfocus="whiteField(this);"/></td>
-            <td ><input type="text"  tabindex="46"  class="examfieldgrey" size="6" measurement="od_ph_distance" onfocus="whiteField(this);"/></td>
+            <td ><input type="text"  tabindex="44"  class="examfieldgrey" size="7" measurement="od_sc_distance" onfocus="whiteField(this);"/></td>
+            <td ><input type="text"  tabindex="45"  class="examfieldgrey" size="7" measurement="od_cc_distance" onfocus="whiteField(this);"/></td>
+            <td ><input type="text"  tabindex="46"  class="examfieldgrey" size="7" measurement="od_ph_distance" onfocus="whiteField(this);"/></td>
             <td >Distance</td>
-            <td ><input type="text"  tabindex="47"  class="examfieldgrey" size="6" measurement="os_sc_distance" onfocus="whiteField(this);"/></td>
-            <td ><input type="text"  tabindex="48"  class="examfieldgrey" size="6" measurement="os_cc_distance" onfocus="whiteField(this);"/></td>
-            <td ><input type="text"  tabindex="49"  class="examfieldgrey" size="6" measurement="os_ph_distance" onfocus="whiteField(this);"/></td>
+            <td ><input type="text"  tabindex="47"  class="examfieldgrey" size="7" measurement="os_sc_distance" onfocus="whiteField(this);"/></td>
+            <td ><input type="text"  tabindex="48"  class="examfieldgrey" size="7" measurement="os_cc_distance" onfocus="whiteField(this);"/></td>
+            <td ><input type="text"  tabindex="49"  class="examfieldgrey" size="7" measurement="os_ph_distance" onfocus="whiteField(this);"/></td>
             
             </tr>
             
             <tr>
-            <td><input type="text"  tabindex="50"  class="examfieldgrey" size="6" measurement="od_sc_near" onfocus="whiteField(this);"/></td>
-            <td><input type="text"  tabindex="51"  class="examfieldgrey" size="6" measurement="od_cc_near" onfocus="whiteField(this);"/></td>
+            <td><input type="text"  tabindex="50"  class="examfieldgrey" size="7" measurement="od_sc_near" onfocus="whiteField(this);"/></td>
+            <td><input type="text"  tabindex="51"  class="examfieldgrey" size="7" measurement="od_cc_near" onfocus="whiteField(this);"/></td>
             <td></td>
            <td>Near</td>
-            <td><input type="text"  tabindex="52"  class="examfieldgrey" size="6" measurement="os_sc_near" onfocus="whiteField(this);"/></td>
-            <td><input type="text"  tabindex="53"  class="examfieldgrey" size="6" measurement="os_cc_near" onfocus="whiteField(this);"/></td>
+            <td><input type="text"  tabindex="52"  class="examfieldgrey" size="7" measurement="os_sc_near" onfocus="whiteField(this);"/></td>
+            <td><input type="text"  tabindex="53"  class="examfieldgrey" size="7" measurement="os_cc_near" onfocus="whiteField(this);"/></td>
             <td></td>
             </tr>
 			 
