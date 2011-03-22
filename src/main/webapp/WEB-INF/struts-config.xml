@@ -490,6 +490,10 @@
 			<form-property name="test" type="org.oscarehr.eyeform.model.TestBookRecord" />
 			<form-property name="proc" type="org.oscarehr.eyeform.model.ProcedureBook" />
 		</form-bean>
+		
+		<form-bean name="consultationReportForm" type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property name="cr" type="org.oscarehr.eyeform.web.ConsultationReportFormBean" />			
+		</form-bean>
 
 	</form-beans>
 
@@ -2011,7 +2015,12 @@
 			<forward name="conspecial" path="/eyeform/conspecialScript.jsp" />
 			<forward name="conspecialhtml" path="/eyeform/conspecial.jsp" />
 			<forward name="conReport" path="/eyeform/conreplyGen.jsp" />
-			<forward name="printReport" path="/eyeform/conreportprint.jsp"/>						
+			<forward name="printReport" path="/eyeform/conreportprint.jsp"/>
+			<forward name="success" path="/eyeform/success.jsp" />						
+		</action>
+		
+		<action path="/eyeform/ConsultationReportList" type="org.oscarehr.eyeform.web.ConReportListAction" parameter="method" scope="request" validate="false" input="/eyeform/conreportlist.jsp" name="consultationReportForm">
+			<forward name="list" path="/eyeform/conreportlist.jsp" />							
 		</action>
 
 		<action path="/casemgmt/ExtPrintRegistry" type="org.oscarehr.casemgmt.web.ExtPrintRegistryAction" parameter="method" scope="request">			
