@@ -26,6 +26,7 @@
 <%@ taglib uri="/WEB-INF/special_tag.tld" prefix="special" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 <!--  
 /*
  * 
@@ -64,15 +65,8 @@
 <script>
 	var ctx = '<%=request.getContextPath()%>';
 </script>
-   <%
-      
- 	String customScript = OscarProperties.getInstance().getProperty("cme_js");
-   if(customScript != null && customScript.length()>0) {
-	%>
-		<script src="<c:out value="${ctx}"/>/js/custom/<%=customScript%>-apphistory.js"></script>	
-	<%   	   
-   }      
-   %>
+
+<oscar:customInterface section="apphistory"/>
    
 <title><bean:message
 	key="demographic.demographicappthistory.title" /></title>
