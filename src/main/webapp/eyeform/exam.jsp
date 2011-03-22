@@ -538,7 +538,7 @@ span.ge{
             
         </div>
         <div id="s_25" class="slideblock">
-        <textarea measurement="EOM" tabindex="121" onchange="syncFields(this)" cols="80" rows="2" class="examfieldgrey" onfocus="whiteField(this);"></textarea>
+        <textarea measurement="EOM" tabindex="121" onchange="syncFields(this)" cols="100" rows="4" class="examfieldgrey" onfocus="whiteField(this);"></textarea>
         
         </div>
     </div>

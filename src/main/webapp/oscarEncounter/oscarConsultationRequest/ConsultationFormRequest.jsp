@@ -32,6 +32,7 @@
 <%@ taglib uri="http://www.caisi.ca/plugin-tag" prefix="plugin" %>
 <%@ taglib uri="/WEB-INF/special_tag.tld" prefix="special" %>
 <!-- end -->
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 
 <%
 	if (session.getAttribute("user") == null) response.sendRedirect("../../logout.jsp");
@@ -170,16 +171,7 @@
    </script>
    
 	
-   <%
-      
- 	String customScript = OscarProperties.getInstance().getProperty("cme_js");
-   if(customScript != null && customScript.length()>0) {
-	%>
-		<script src="<c:out value="${ctx}"/>/js/custom/<%=customScript%>.js"></script>
-		<script src="<c:out value="${ctx}"/>/js/custom/<%=customScript%>-conreq.js"></script>	
-	<%   	   
-   }      
-   %>
+	<oscar:customInterface section="conreq"/>
    
 <title><bean:message
 	key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.title" />
