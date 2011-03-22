@@ -165,9 +165,9 @@ function confirmPrint(btn) {
  		document.eyeForm.submit();
  	}
 	function checkform(){
-		if (document.eyeForm.referralNo.value=='')
+		if (document.eyeForm.elements['cp.referralNo'].value=='')
 		{
-			alert("Please choose the referal doctor.");
+			alert("Please choose the referral doctor.");
 			return false;
 		}else return true;
 	}
@@ -398,12 +398,14 @@ function confirmPrint(btn) {
 	<input type="hidden" name="famDoctor" value=""/>
 	<input type="hidden" name="apptno" value=""/>
 
+	<html:hidden property="cp.id"/>
 	<html:hidden property="cp.demographicNo"/>
 	<html:hidden property="cp.providerNo"/>
 	<html:hidden property="cp.appointmentNo"/>	
 	<html:hidden property="cp.urgency"/>	
 	<html:hidden property="cp.reason"/>	
-	
+	<html:hidden property="cp.referralId"/>
+	<html:hidden property="cp.referralNo"/>		
 	
 	
 	<table class="MainTable" id="scrollNumber1" name="encounterTable">
@@ -432,7 +434,7 @@ function confirmPrint(btn) {
 
 							</tr>
 							<tr>
-								<td>TODO_CREATED_BY</td>
+								<td><c:out value="${providerName}" /></td>
 							</tr>
 						</table>
 					</c:if></td>
@@ -487,9 +489,14 @@ function confirmPrint(btn) {
 
 						<tr>
 							<td class="tite4">to:</td>
+							<%
+								String referralDocName = (String)request.getAttribute("referral_doc_name");
+								if(referralDocName==null)
+									referralDocName=new String();
+							%>
 							<td align="left" class="tite1"><input type="text"
-								name="referral_doc_name" /><a
-								href="javascript:referralScriptAttach2('referralNo','referral_doc_name')"><span
+								name="referral_doc_name" value="<%=referralDocName%>"/><a
+								href="javascript:referralScriptAttach2('cp.referralNo','referral_doc_name')"><span
 								style="font-size: 10;">Search #</span></a></td>
 					</table>
 					</td>

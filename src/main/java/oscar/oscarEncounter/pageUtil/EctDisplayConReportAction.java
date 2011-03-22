@@ -27,20 +27,29 @@ package oscar.oscarEncounter.pageUtil;
 
  
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.util.MessageResources;
+import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.common.dao.BillingreferralDao;
+import org.oscarehr.eyeform.dao.ConsultationReportDao;
+import org.oscarehr.eyeform.model.ConsultationReport;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.util.OscarRoleObjectPrivilege;
+import oscar.util.StringUtils;
 
 //import oscar.oscarSecurity.CookieSecurity;
 
 public class EctDisplayConReportAction extends EctDisplayAction {
     private static final String cmd = "conReport";
     
+    BillingreferralDao brDao = (BillingreferralDao)SpringUtils.getBean("BillingreferralDAO");
+	
  public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
      
 	 boolean a = true;
@@ -60,10 +69,9 @@ public class EctDisplayConReportAction extends EctDisplayAction {
     String winName = "ConReport" + bean.demographicNo;
     String pathview, pathedit;
     
-    pathview = request.getContextPath() + "/eyeform/Eyeform.do?method=list&demographicNo=" + bean.demographicNo;
+    pathview = request.getContextPath() + "/eyeform/ConsultationReportList.do?method=list&cr.demographicNo=" + bean.demographicNo;
     pathedit = request.getContextPath() + "/eyeform/Eyeform.do?method=prepareConReport&demographicNo="+bean.demographicNo + "&appNo="+appointmentNo + "&flag=new";
-    
-    
+        
     String url = "popupPage(500,900,'" + winName + "','" + pathview + "')";
     Dao.setLeftHeading(messages.getMessage(request.getLocale(), "global.viewConReport"));
     Dao.setLeftURL(url);        
@@ -73,9 +81,25 @@ public class EctDisplayConReportAction extends EctDisplayAction {
     url = "popupPage(500,600,'" + winName + "','" + pathedit + "'); return false;";
     Dao.setRightURL(url);
     Dao.setRightHeadingID(cmd); //no menu so set div id to unique id for this action
- 
-
-     Dao.sortItems(NavBarDisplayDAO.DATESORT);
+    
+    ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");	
+    ConsultationReportDao crDao = (ConsultationReportDao)SpringUtils.getBean("consultationReportDao");
+	
+    List<ConsultationReport> crs = crDao.getByDemographic(Integer.parseInt(bean.demographicNo));
+    for(ConsultationReport cr:crs) {
+    	NavBarDisplayDAO.Item item = Dao.Item();                  
+    	item.setDate(cr.getDate());
+    	
+    	String title = brDao.getById(cr.getReferralId()).getFormattedName();
+    	String itemHeader = StringUtils.maxLenString(title, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);                      
+        item.setLinkTitle(itemHeader);        
+        item.setTitle(itemHeader);
+        int hash = Math.abs(winName.hashCode());        
+        url = "popupPage(500,900,'" + hash + "','" + request.getContextPath() + "/eyeform/Eyeform.do?method=prepareConReport&conReportNo="+ cr.getId() +"&demographicNo="+bean.demographicNo+"'); return false;";        
+        item.setURL(url);               
+        Dao.addItem(item);
+    }
+    //Dao.sortItems(NavBarDisplayDAO.DATESORT);
  }catch( Exception e ) {
      MiscUtils.getLogger().error("Error", e);
      return false;

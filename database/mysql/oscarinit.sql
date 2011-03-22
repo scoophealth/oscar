@@ -8295,7 +8295,7 @@ create table consultationRequestExt(
 
 create table EyeformConsultationReport (
  id int(10) NOT NULL auto_increment,
- `date` date,
+ `date` datetime,
  referralId integer,
  greeting integer,
  appointmentNo integer,
