@@ -3,17 +3,32 @@ package org.oscarehr.eyeform.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import org.oscarehr.common.model.AbstractModel;
 import org.oscarehr.common.model.Provider;
 
-public class Macro {
+@Entity
+@Table(name="EyeformMacro")
+public class Macro extends AbstractModel<Integer>{
 
+	@Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private String label;
 	private int displayOrder;
 	private String impression;
 	private short followupNo;
 	private String followupUnit;
+	@Transient
 	private Provider followupDoctor;
+	@Column(name="followupDoctor")
 	private String followupDoctorId;
 	private String followupReason;
 	private String billingVisitType;
@@ -31,11 +46,14 @@ public class Macro {
 	private String billingRefund;
 	private String billingGst;
 	private String testRecords;
+	
+	@Transient
 	private List<Provider> ticklerStaff = new ArrayList<Provider>();
 	
 	private String statFlag;
 	private String optFlag;
 	private String dischargeFlag;
+	@Transient
 	private String ticklerRecipient;
 	
 	

@@ -16,7 +16,7 @@ import org.oscarehr.common.model.AbstractModel;
 import org.oscarehr.common.model.Demographic;
 
 @Entity
-@Table(name="procedurebook")
+@Table(name="EyeformProcedureBook")
 public class ProcedureBook extends AbstractModel<Integer> {
 	
 	@Id

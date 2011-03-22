@@ -1,24 +1,26 @@
 package org.oscarehr.eyeform.dao;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Query;
+
+import org.oscarehr.common.dao.AbstractDao;
 import org.oscarehr.eyeform.model.Macro;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.springframework.stereotype.Repository;
 
-public class MacroDao extends HibernateDaoSupport {
+@Repository
+public class MacroDao extends AbstractDao<Macro> {
 
-	public void save(Macro obj) {
-		this.getHibernateTemplate().saveOrUpdate(obj);
-	}
-	
-	public Macro find(int id) {
-		return (Macro)getHibernateTemplate().get(Macro.class, id);
+	public MacroDao() {
+		super(Macro.class);
 	}
 	
 	public List<Macro> getAll() {
-		List<Macro> results = new ArrayList<Macro>();
-		results = this.getHibernateTemplate().find("FROM Macro m");
-		return results;
+		String sql="select x from "+modelClass.getSimpleName()+" x";
+		Query query = entityManager.createQuery(sql);
+		
+		@SuppressWarnings("unchecked")
+	    List<Macro> results=query.getResultList();
+	    return(results);		   
 	}
 }

@@ -3,20 +3,41 @@ package org.oscarehr.eyeform.model;
 import java.text.ParseException;
 import java.util.Date;
 
-public class OcularProc {
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
+import org.oscarehr.common.model.AbstractModel;
+
+@Entity
+@Table(name="EyeformOcularProcedure")
+public class OcularProc extends AbstractModel<Integer> {
+
+	@Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
+	
 	private int demographicNo;
 	private String provider;
 	private String status;
+	
+	@Temporal(TemporalType.DATE)
 	private Date date;
+	
 	private String eye;
 	private String procedureName;
 	private String procedureType;
 	private String procedureNote;
 	private String doctor;
 	private String location;
+	
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date updateTime;
+	
 	private int appointmentNo;
 	
 	public OcularProc() {
