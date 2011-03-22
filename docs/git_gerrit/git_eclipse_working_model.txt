@@ -134,4 +134,30 @@ From the command line :
 - git push origin HEAD:refs/for/master
 - git branch -D fix
 
-Now if you have changeId's enabled, the above will replace the previous commits, if you don't the commits will show up in git as a string of new commits and the old commits should just be abandoned.       
+Now if you have changeId's enabled, the above will replace the previous commits, if you don't the commits will show up in git as a string of new commits and the old commits should just be abandoned.
+
+--------------------------------
+Rebasing to fix dependency chain
+--------------------------------
+Here's a real example of what happend, 2 people 2 commit chains but one early conflict in the chain. Here's a picto-diagram of the commits :
+
+master +-> ted1 -> ted2 -> ted3
+       |
+       `-> marc1 -> marc2 -> marc3
+       
+As it turns out ted1 & marc1 were virtually identical fixes for the same problem but the problem is that the 2 commits ted1 & marc1 conflicted. ted1's commit was approved in gerrit, which now meant marc1's commit could not be. This meant marc2/3 were also not approvable.
+
+The solution is to rebase marc1 through 3 off of the new master (ted1) then recommit. This is very similar to the previous section about "fixin previous commits".
+
+At the point marc, needs to :
+- do a fetch from gerrit
+- git rebase ted1 (instead of ted1 use the sha1 for that commit)
+- it notifys you of the conflict in marc1 and says you can fix it or skip it, I chose to skip it since it was an identical fix. 
+- git push
+
+that's it, at this point if you have changeId's the commit entries in gerrit should be replaces and the dependency chain from marc2 should come off ted1.
+
+Note this method is easily extrapolateable to other similar dependency chain fixing purposes. 
+
+
+       
