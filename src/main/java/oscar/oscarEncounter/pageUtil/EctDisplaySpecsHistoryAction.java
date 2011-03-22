@@ -90,11 +90,12 @@ public class EctDisplaySpecsHistoryAction extends EctDisplayAction {
     	NavBarDisplayDAO.Item item = Dao.Item();                  
     	item.setDate(sh.getDate());
     	
-    	String title = sh.getType() + " - " + providerDao.getProvider(sh.getProvider()).getFormattedName();
-    	
-    	String itemHeader = StringUtils.maxLenString(title, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);                      
-        item.setLinkTitle(itemHeader);        
-        item.setTitle(itemHeader);
+    	String title = sh.getType() + " - " + providerDao.getProvider(sh.getProvider()).getFormattedName();    	
+    	String itemHeader = StringUtils.maxLenString(title, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);      
+    	item.setTitle(itemHeader);
+    	    	
+        item.setLinkTitle(sh.toString3());        
+        
         int hash = Math.abs(winName.hashCode());        
         url = "popupPage(500,900,'" + hash + "','" + request.getContextPath() + "/eyeform/SpecsHistory.do?specs.id="+ sh.getId() +"'); return false;";        
         item.setURL(url);               

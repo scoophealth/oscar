@@ -1213,7 +1213,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		 * oscar.OscarProperties p = oscar.OscarProperties.getInstance(); String noteSort = p.getProperty("CMESort", ""); if (noteSort.trim().equalsIgnoreCase("UP")) request.setAttribute("Notes", sortNotes(notes, "observation_date_asc")); else
 		 * request.setAttribute("Notes", sortNotes(notes, "observation_date_desc"));
 		 */
-
+		
 		return mapping.findForward("listNotes");
 	}
 
