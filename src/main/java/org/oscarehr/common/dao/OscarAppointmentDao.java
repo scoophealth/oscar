@@ -70,10 +70,17 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 	public void updateAppointmentStatus(int appointmentNo, String status, String user) {
 		Appointment appointment = this.find(appointmentNo);
 		if(appointment != null) {
+			archiveAppointment(appointmentNo);
 			appointment.setStatus(status);
 			appointment.setLastUpdateUser(user);
-			merge(appointment);
+			merge(appointment);			
 		}
+	}
+	
+	@Override
+	public void merge(Appointment appointment) {
+		archiveAppointment(appointment.getId());
+		super.merge(appointment);
 	}
 	
     public List<Appointment> getAllByDemographicNo(Integer demographicNo) {
