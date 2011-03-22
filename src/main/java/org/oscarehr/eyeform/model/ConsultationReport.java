@@ -9,8 +9,11 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import org.oscarehr.common.model.AbstractModel;
+import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.Provider;
 
 @Entity
 @Table(name="EyeformConsultationReport")
@@ -20,7 +23,7 @@ public class ConsultationReport extends AbstractModel<Integer> {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date date;
 	
 	private int referralId;
@@ -51,7 +54,24 @@ public class ConsultationReport extends AbstractModel<Integer> {
 	private String urgency;
 	private int patientWillBook;
 	
+	@Transient
+	private Demographic demographic = null;
+	@Transient
+	private Provider provider = null;
+	@Transient
+	private String referralNo;
 	
+	
+	public ConsultationReport() {
+		date = new Date();
+	}
+	
+	
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+
 	public Date getDate() {
 		return date;
 	}
@@ -285,6 +305,35 @@ public class ConsultationReport extends AbstractModel<Integer> {
 	public void setDemographicNo(int demographicNo) {
 		this.demographicNo = demographicNo;
 	}
+
+
+	public Demographic getDemographic() {
+		return demographic;
+	}
+
+
+	public void setDemographic(Demographic demographic) {
+		this.demographic = demographic;
+	}
+
+
+	public Provider getProvider() {
+		return provider;
+	}
+
+
+	public void setProvider(Provider provider) {
+		this.provider = provider;
+	}
+
+	public String getReferralNo() {
+		return referralNo;
+	}
+
+	public void setReferralNo(String referralNo) {
+		this.referralNo = referralNo;
+	}
+	
 	
 	
 }

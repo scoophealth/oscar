@@ -164,7 +164,9 @@ public class Billingreferral  implements java.io.Serializable {
     }
 
 
-
+    public String getFormattedName() {
+    	return getLastName() + "," + getFirstName();
+    }
 
 }
 
