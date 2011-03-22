@@ -1102,9 +1102,12 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     }
                     
                     cdsDt.DateFullOrPartial collDate = labResults.addNewCollectionDateTime();
-                    String dateTime = labMea.getExtVal("datetime");
-                    collDate.setDateTime(Util.calDate(dateTime));
-                    if (UtilDateUtilities.StringToDate(data,"yyyy-MM-dd HH:mm:ss")==null) {
+                    Date dateTime = labMea.getMeasure().getDateObserved();
+                    String sDateTime = labMea.getExtVal("datetime");
+                    if (dateTime!=null) collDate.setDateTime(Util.calDate(dateTime));
+                    else collDate.setDateTime(Util.calDate(sDateTime));
+
+                    if (dateTime==null && sDateTime==null) {
                         err.add("Error! No Collection Datetime for Lab Test "+labResults.getLabTestCode()+" for Patient "+this.demographicNo);
                     }
                     
