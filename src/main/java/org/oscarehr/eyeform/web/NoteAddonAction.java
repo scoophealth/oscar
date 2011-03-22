@@ -3,7 +3,6 @@ package org.oscarehr.eyeform.web;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,7 +16,6 @@ import org.caisi.model.Tickler;
 import org.caisi.service.TicklerManager;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.DemographicDao;
-import org.oscarehr.common.model.Demographic;
 import org.oscarehr.eyeform.dao.EyeFormDao;
 import org.oscarehr.eyeform.dao.FollowUpDao;
 import org.oscarehr.eyeform.dao.ProcedureBookDao;
@@ -28,9 +26,6 @@ import org.oscarehr.eyeform.model.ProcedureBook;
 import org.oscarehr.eyeform.model.TestBookRecord;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
-
-import oscar.SxmlMisc;
-import oscar.dao.AppointmentDao;
 
 public class NoteAddonAction extends DispatchAction {
 
@@ -178,35 +173,4 @@ public class NoteAddonAction extends DispatchAction {
 	    return null;
 	}
 	
-	
-	public ActionForward getReferralDoctor(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		String demographicNo = request.getParameter("demographicNo");
-		DemographicDao dao = (DemographicDao)SpringUtils.getBean("demographicDao");
-		Demographic d= dao.getDemographic(demographicNo);
-		String familyDoctorXml = d.getFamilyDoctor();
-		String rd = "";
-		if(familyDoctorXml != null) {
-			rd = SxmlMisc.getXmlContent(familyDoctorXml,"rd");
-		}
-		try {
-			response.getWriter().println(rd);
-		}catch(IOException e) {}
-		return null;
-	}
-	
-	public ActionForward getAppointmentReason(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		String appointmentNo = request.getParameter("appointmentNo");
-		AppointmentDao appointmentDao = (AppointmentDao)SpringUtils.getBean("appointmentSuperDao");
-		List<Map> result = appointmentDao.executeSelectQuery("search", new Object[] {appointmentNo});
-		String reason = "";
-		if(result.size()>0) {
-			Map mresult = result.get(0);
-			reason = (String)mresult.get("reason");
-		}
-		
-		try {
-			response.getWriter().println(reason);
-		}catch(IOException e) {}
-		return null;
-	}
 }
