@@ -27,15 +27,20 @@ import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
+import org.oscarehr.common.IsPropertiesOn;
 import org.oscarehr.common.dao.BillingreferralDao;
+import org.oscarehr.common.dao.ClinicDAO;
 import org.oscarehr.common.dao.ConsultationRequestExtDao;
 import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.dao.ProfessionalSpecialistDao;
+import org.oscarehr.common.dao.SiteDao;
 import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.Billingreferral;
+import org.oscarehr.common.model.Clinic;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.common.model.Site;
 import org.oscarehr.common.service.PdfRecordPrinter;
 import org.oscarehr.eyeform.MeasurementFormatter;
 import org.oscarehr.eyeform.dao.ConsultationReportDao;
@@ -50,12 +55,14 @@ import org.oscarehr.eyeform.model.EyeForm;
 import org.oscarehr.eyeform.model.FollowUp;
 import org.oscarehr.eyeform.model.OcularProc;
 import org.oscarehr.eyeform.model.ProcedureBook;
+import org.oscarehr.eyeform.model.SatelliteClinic;
 import org.oscarehr.eyeform.model.SpecsHistory;
 import org.oscarehr.eyeform.model.TestBookRecord;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
+import oscar.OscarProperties;
 import oscar.oscarEncounter.oscarMeasurements.dao.MeasurementsDao;
 import oscar.oscarEncounter.oscarMeasurements.model.Measurements;
 import oscar.util.UtilDateUtilities;
@@ -81,6 +88,8 @@ public class EyeformAction extends DispatchAction {
 	EyeFormDao eyeFormDao = (EyeFormDao)SpringUtils.getBean("EyeFormDao");	   		
 	MeasurementsDao measurementsDao = (MeasurementsDao) SpringUtils.getBean("measurementsDao");
 	BillingreferralDao brDao = (BillingreferralDao)SpringUtils.getBean("BillingreferralDAO");
+	ClinicDAO clinicDao = (ClinicDAO)SpringUtils.getBean("clinicDAO");
+	SiteDao siteDao = (SiteDao)SpringUtils.getBean("siteDao");
 	
 	   public ActionForward getConReqCC(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		   String requestId = request.getParameter("requestId");
@@ -638,9 +647,12 @@ public class EyeformAction extends DispatchAction {
 			DynaValidatorForm crForm = (DynaValidatorForm) form;
 			ConsultationReport cp = (ConsultationReport) crForm.get("cp");
 			String referralNo = request.getParameter("referralNo");
+			@SuppressWarnings("unchecked")
 			List<Billingreferral> brs = brDao.getBillingreferral(referralNo);
 			cp.setReferralId(brs.get(0).getBillingreferralNo());
-			// cp.setDate(new Date()); only record the created time
+			if(cp.getDate()==null){
+				cp.setDate(new Date());
+			}
 			ConsultationReportDao dao = (ConsultationReportDao)SpringUtils.getBean("consultationReportDao");
 			dao.persist(cp);
 			request.setAttribute("cpId", cp.getId().toString());
@@ -687,5 +699,138 @@ public class EyeformAction extends DispatchAction {
 				val = (String)request.getAttribute(name);
 			}
 			return val;
+		}
+		
+		
+		
+		public ActionForward printConRequest(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+			log.debug("printConreport");
+			DynaValidatorForm crForm = (DynaValidatorForm) form;
+			ConsultationReport cp = (ConsultationReport) crForm.get("cp");
+			Demographic demographic = demographicDao.getClientByDemographicNo(cp.getDemographicNo());			
+			request.setAttribute("demographic",demographic);
+			
+			SimpleDateFormat sf = new SimpleDateFormat("MM/dd/yyyy");
+			request.setAttribute("date", sf.format(new Date()));
+			
+			String referralNo = request.getParameter("referralNo");
+			@SuppressWarnings("unchecked")
+			List<Billingreferral> brs = brDao.getBillingreferral(referralNo);
+			request.setAttribute("refer", brs.get(0));
+			request.setAttribute("cp", cp);		
+			
+			
+			Provider internalProvider = providerDao.getProvider(demographic.getProviderNo());
+			if(internalProvider != null) {
+				request.setAttribute("internalDrName", internalProvider.getFirstName() + " " + internalProvider.getLastName());						
+			} else {
+//				request.setAttribute("internalDrName", );									
+			}
+			
+			String specialty = new String();
+			String mdStr = new String();
+			if (internalProvider != null)				
+				specialty = internalProvider.getSpecialty();
+			if (specialty != null && !"".equalsIgnoreCase(specialty.trim())) {
+				if ("MD".equalsIgnoreCase(specialty.substring(0, 2)))
+					mdStr = "Dr.";
+				specialty = ", " + specialty.trim();
+			} else
+				specialty = new String();
+			request.setAttribute("specialty", specialty);
+			
+			Clinic clinic = clinicDao.getClinic();
+			// prepare the satellite clinic address
+			OscarProperties props = OscarProperties.getInstance();
+			String sateliteFlag = "false";
+
+			if (IsPropertiesOn.isMultisitesEnable()) {				
+				Integer appt_no= (Integer) crForm.get("apptNo");
+				String location = null;
+				if (appt_no != null) {
+					Appointment appt = appointmentDao.find(appt_no);
+					if (appt != null)
+						location = appt.getLocation();
+				}
+
+				List<Site> sites = siteDao.getActiveSitesByProviderNo(internalProvider.getProviderNo());
+
+				ArrayList<SatelliteClinic> clinicArr = new ArrayList<SatelliteClinic>();
+				Site defaultSite = null;
+				for (int i = 0; i < sites.size(); i++) {
+					Site s = sites.get(i);
+					SatelliteClinic sc = new SatelliteClinic();
+					sc.setClinicId(s.getSiteId());
+					sc.setClinicName(s.getName());
+					sc.setClinicAddress(s.getAddress());
+					sc.setClinicCity(s.getCity());
+					sc.setClinicProvince(s.getProvince());
+					sc.setClinicPostal(s.getPostal());
+					sc.setClinicPhone(s.getPhone());
+					sc.setClinicFax(s.getFax());
+					clinicArr.add(sc);
+					if (s.getName().equals(location))
+						defaultSite = s;
+				}
+
+				sateliteFlag = "true";
+				request.setAttribute("clinicArr", clinicArr);
+				if (defaultSite != null)
+					request.setAttribute("sateliteId", defaultSite.getSiteId().toString());
+
+			} else {
+				if (props.getProperty("clinicSatelliteName") != null) {
+					ArrayList<SatelliteClinic> clinicArr = getSateliteClinics(props);
+					if (clinicArr.size() > 0) {
+						sateliteFlag = "true";
+						request.setAttribute("clinicArr", clinicArr);
+						SatelliteClinic sc = clinicArr.get(0);
+						clinic.setClinicName(sc.getClinicName());
+						clinic.setClinicAddress(sc.getClinicAddress());
+						clinic.setClinicCity(sc.getClinicCity());
+						clinic.setClinicProvince(sc.getClinicProvince());
+						clinic.setClinicPostal(sc.getClinicPostal());
+						clinic.setClinicPhone(sc.getClinicPhone());
+						clinic.setClinicFax(sc.getClinicFax());
+					}
+				}
+			}
+
+			request.setAttribute("sateliteFlag", sateliteFlag);
+			request.setAttribute("clinic", clinic);
+			
+			return mapping.findForward("printReport");
+		}
+		
+		public ArrayList<SatelliteClinic> getSateliteClinics(OscarProperties props) {
+			ArrayList<SatelliteClinic> clinicArr = new ArrayList<SatelliteClinic>();
+			String[] temp0 = props.getProperty("clinicSatelliteName", "").split(
+					"\\|");
+			String[] temp1 = props.getProperty("clinicSatelliteAddress", "").split(
+					"\\|");
+			String[] temp2 = props.getProperty("clinicSatelliteCity", "").split(
+					"\\|");
+			String[] temp3 = props.getProperty("clinicSatelliteProvince", "")
+					.split("\\|");
+			String[] temp4 = props.getProperty("clinicSatellitePostal", "").split(
+					"\\|");
+			String[] temp5 = props.getProperty("clinicSatellitePhone", "").split(
+					"\\|");
+			String[] temp6 = props.getProperty("clinicSatelliteFax", "").split(
+					"\\|");
+			for (int i = 0; i < temp0.length; i++) {
+				SatelliteClinic sc = new SatelliteClinic();
+				sc.setClinicId(new Integer(i));
+				sc.setClinicName(temp0[i]);
+				sc.setClinicAddress(temp1[i]);
+				sc.setClinicCity(temp2[i]);
+				sc.setClinicProvince(temp3[i]);
+				sc.setClinicPostal(temp4[i]);
+				sc.setClinicPhone(temp5[i]);
+				sc.setClinicFax(temp6[i]);
+				clinicArr.add(sc);
+			}
+
+			return clinicArr;
 		}
 }

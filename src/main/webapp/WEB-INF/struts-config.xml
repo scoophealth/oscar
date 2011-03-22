@@ -2010,7 +2010,8 @@
 			<forward name="conreqcc" path="/eyeform/conreqcc.jsp" />
 			<forward name="conspecial" path="/eyeform/conspecialScript.jsp" />
 			<forward name="conspecialhtml" path="/eyeform/conspecial.jsp" />
-			<forward name="conReport" path="/eyeform/conreplyGen.jsp" />						
+			<forward name="conReport" path="/eyeform/conreplyGen.jsp" />
+			<forward name="printReport" path="/eyeform/conreportprint.jsp"/>						
 		</action>
 
 		<action path="/casemgmt/ExtPrintRegistry" type="org.oscarehr.casemgmt.web.ExtPrintRegistryAction" parameter="method" scope="request">			
