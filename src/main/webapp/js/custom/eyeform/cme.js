@@ -10,6 +10,7 @@
 	   }});
 	   
 	   
+       
 	   
 	   issueNoteUrls = {
 			   divR1I1:    ctx + "/CaseManagementView.do?hc=996633&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=CurrentHistory&title=" + currentHistoryLabel + "&cmd=divR1I1"+ "&appointment_no="+appointmentNo ,
@@ -84,45 +85,51 @@
 
 
        init();
-                  
+       
+       //left nav bar
+       removeNavDiv('preventions');     
+       reorderNavBarElements('tickler','Dx');
+       reorderNavBarElements('msgs','tickler');
+       reorderNavBarElements('labs','msgs');       
+	   addLeftNavDiv("diagrams");	      
+       popColumn(ctx + "/oscarEncounter/displayDiagrams.do?hC=11CC00&appointment_no="+appointmentNo,"diagrams","diagrams", "leftNavBar", this);
+       reorderNavBarElements('diagrams','eforms');
+       reorderNavBarElements('docs','diagrams');
+       addLeftNavDiv("photos");	      
+       popColumn(ctx + "/oscarEncounter/displayPhotos.do?hC=476BB3&appointment_no="+appointmentNo,"photos","photos", "leftNavBar", this);
+       reorderNavBarElements('photos','docs');
+       addLeftNavDiv("appointmentHistory");	      
+       popColumn(ctx + "/oscarEncounter/displayAppointmentHistory.do?hC=009999&cmd=appointmentHistory","appointmentHistory","appointmentHistory", "leftNavBar", this);              
+       reorderNavBarElements('appointmentHistory','measurements');    
+       reorderNavBarElements('consultations','appointmentHistory');           
+       addLeftNavDiv("conReport");	      
+       popColumn(ctx + "/oscarEncounter/displayConReport.do?hC=009999&cmd=conReport&appointment_no="+appointmentNo,"conReport","conReport", "leftNavBar", this);       
+       addLeftNavDiv("macro");	      
+       popColumn(ctx + "/oscarEncounter/displayMacro.do?hC=009999&appointment_no="+appointmentNo,"macro","macro", "leftNavBar", this);
+       
+       //right nav bar
+       removeNavDiv('issues');
+       removeNavDiv('Guidelines');
+       removeNavDiv('RiskFactors');
+       removeNavDiv('Rx');
+       removeNavDiv('OMeds');  
+       addRightNavDiv("specshistory");	                         
+       popColumn(ctx + "/oscarEncounter/displaySpecsHistory.do?hC=009999&appointment_no="+appointmentNo,"specshistory","specsHistory", "rightNavBar", this);   
+       addRightNavDiv("Rx");
+       popColumn(ctx + "/oscarEncounter/displayRx.do?hC=C3C3C3&numToDisplay=12","Rx","Rx","rightNavBar",this);
+       addRightNavDiv("OMeds");
+       popColumn(ctx + "/CaseManagementView.do?hc=CCDDAA&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=OMeds&title=" + oMedsLabel + "&cmd=OMeds" + "&appointment_no="+appointmentNo,"OMeds","OMeds","rightNavBar",this);
+       var ocularMedsLabel = "oscarEncounter.NavBar.OcularMeds";
+       addRightNavDiv("OcularMedication");	
+       popColumn(ctx + "/CaseManagementView.do?hc=CCDDAA&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=OcularMedication&title="+ocularMedsLabel+"&cmd=OcularMedication&appointment_no="+appointmentNo +"&noheight=true","OcularMedication","OcularMedication", "rightNavBar", this);       
+       addRightNavDiv("ocularprocedure");	                         
+       popColumn(ctx + "/oscarEncounter/displayOcularProcedure.do?hC=009999&appointment_no="+appointmentNo,"ocularprocedure","ocularProcedure", "rightNavBar", this);
+            
        
        jQuery.ajax({url:ctx+"/eyeform/NoteData.do?method=getCurrentNoteData&demographicNo="+demographicNo+"&noteId="+savedNoteId+"&appointmentNo="+appointmentNo,dataType: "html",success: function(data) {
 			jQuery("#current_note_addon").append(data);
        }});
-       	   	  
-       
-        
-       
-	   addLeftNavDiv("ocularprocedure");	                         
-       popColumn(ctx + "/oscarEncounter/displayOcularProcedure.do?hC=009999&appointment_no="+appointmentNo,"ocularprocedure","ocularProcedure", "leftNavBar", this);
-
-       addLeftNavDiv("specshistory");	                         
-       popColumn(ctx + "/oscarEncounter/displaySpecsHistory.do?hC=009999&appointment_no="+appointmentNo,"specshistory","specsHistory", "leftNavBar", this);
-       
-       addLeftNavDiv("macro");	      
-       popColumn(ctx + "/oscarEncounter/displayMacro.do?hC=009999&appointment_no="+appointmentNo,"macro","macro", "leftNavBar", this);
-       
-       addLeftNavDiv("diagrams");	      
-       popColumn(ctx + "/oscarEncounter/displayDiagrams.do?hC=009999&appointment_no="+appointmentNo,"diagrams","diagrams", "leftNavBar", this);
-
-       addLeftNavDiv("appointmentHistory");	      
-       popColumn(ctx + "/oscarEncounter/displayAppointmentHistory.do?hC=009999&cmd=appointmentHistory","appointmentHistory","appointmentHistory", "leftNavBar", this);
-       
-       addLeftNavDiv("conReport");	      
-       popColumn(ctx + "/oscarEncounter/displayConReport.do?hC=009999&cmd=conReport&appointment_no="+appointmentNo,"conReport","conReport", "leftNavBar", this);
-       
-       
-       removeNavDiv('issues');
-       removeNavDiv('Guidelines');
-       removeNavDiv('RiskFactors');
-       
-       var ocularMedsLabel = "oscarEncounter.NavBar.OcularMeds";
-       addRightNavDiv("OcularMedication");	
-       popColumn(ctx + "/CaseManagementView.do?hc=009999&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=OcularMedication&title="+ocularMedsLabel+"&cmd=OcularMedication&appointment_no="+appointmentNo,"OcularMedication","OcularMedication", "rightNavBar", this);
-       
-       addPrintOption('Measurements','extPrintMeasurements');
-       addPrintOption('OcularProcedures','extPrintOcularProcedures');
-       addPrintOption('SpecsHistory','extPrintSpecsHistory');
+       	   	         
        
        jQuery("form[name='caseManagementEntryForm']").append('<span submit_addon="save_measurements"></span>');
               

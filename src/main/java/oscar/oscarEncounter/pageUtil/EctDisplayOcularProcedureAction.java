@@ -46,6 +46,8 @@ import oscar.util.StringUtils;
 //import oscar.oscarSecurity.CookieSecurity;
 
 public class EctDisplayOcularProcedureAction extends EctDisplayAction {
+	ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
+    
     private static final String cmd = "ocularProcedure";
     
  public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
@@ -80,7 +82,7 @@ public class EctDisplayOcularProcedureAction extends EctDisplayAction {
     url = "popupPage(500,600,'" + winName + "','" + pathedit + "'); return false;";
     Dao.setRightURL(url);
     Dao.setRightHeadingID(cmd); //no menu so set div id to unique id for this action
-        
+   
 
     OcularProcDao opDao = (OcularProcDao)SpringUtils.getBean("OcularProcDAO");
     ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
@@ -94,11 +96,12 @@ public class EctDisplayOcularProcedureAction extends EctDisplayAction {
     	
     	Provider provider = providerDao.getProvider(op.getDoctor());
     	
-    	String title = provider.getTeam() + " " + op.getEye() + " " + op.getProcedureName();
-    	
-    	String itemHeader = StringUtils.maxLenString(title, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);                      
-        item.setLinkTitle(itemHeader);        
+    	String title = provider.getTeam() + " " + op.getEye() + " " + op.getProcedureName();    	
+    	String itemHeader = StringUtils.maxLenString(title, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);                              
         item.setTitle(itemHeader);
+        
+        item.setLinkTitle(provider.getTeam() + ";" + op.getProcedureNote());
+        
         int hash = Math.abs(winName.hashCode());        
         url = "popupPage(500,900,'" + hash + "','" + request.getContextPath() + "/eyeform/OcularProc.do?proc.id="+ op.getId() +"'); return false;";        
         item.setURL(url);               
