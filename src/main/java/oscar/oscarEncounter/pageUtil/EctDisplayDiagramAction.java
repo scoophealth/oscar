@@ -35,7 +35,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.struts.util.MessageResources;
 
 import oscar.eform.EFormUtil;
-import oscar.util.StringUtils;
 
 //import oscar.oscarSecurity.CookieSecurity;
 
@@ -51,8 +50,8 @@ public class EctDisplayDiagramAction extends EctDisplayAction {
         
         //set link for lefthand module title
         String winName = "Diagrams" + bean.demographicNo;
-        String url = "popupPage(700,599,'" + winName + "','" + request.getContextPath() + "/lab/DemographicLab.jsp?demographicNo=" + bean.demographicNo + "'); return false;";
-       // Dao.setLeftURL(url);
+        String url = "popupPage(500,950,'" + winName + "', '" + request.getContextPath() + "/eform/efmpatientformlist.jsp?group_view=Eye+Form&demographic_no="+bean.demographicNo+"&apptProvider="+bean.getCurProviderNo()+"&appointment="+bean.appointmentNo+"&parentAjaxId=" + cmd + "')";
+        Dao.setLeftURL(url);
         
         //we're going to display popup menu of 2 selections - row display and grid display
         String menuId = "4";
@@ -89,9 +88,11 @@ public class EctDisplayDiagramAction extends EctDisplayAction {
         		header = formName;
         	}
         	
-        	String itemHeader = StringUtils.maxLenString(header, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);                      
-            item.setLinkTitle(itemHeader);        
-            item.setTitle(itemHeader);
+        	//String itemHeader = StringUtils.maxLenString(header, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);                              
+            item.setTitle((String)form.get("formName"));
+            
+            item.setLinkTitle(header);
+            
             int hash = Math.abs(winName.hashCode());        
             url = "popupPage(500,900,'" + hash + "','" + request.getContextPath() + "/eform/efmshowform_data.jsp?fdid="+form.get("fdid")+"&parentAjaxId=eforms" +"'); return false;";        
             item.setURL(url);               

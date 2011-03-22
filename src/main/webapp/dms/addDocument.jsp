@@ -60,6 +60,9 @@ String defaultType = (String) props.getProperty("eDocAddTypeDefault", "");
 String defaultDesc = "Enter Title"; //if defaultType isn't defined, this value is used for the title/description
 String defaultHtml = "Enter Link URL";
 
+if(request.getParameter("defaultDocType") != null) {
+	defaultType = request.getParameter("defaultDocType");
+}
 Hashtable docerrors = new Hashtable();
 if (request.getAttribute("docerrors") != null) {
     docerrors = (Hashtable) request.getAttribute("docerrors");
@@ -92,7 +95,7 @@ formdata = (AddEditDocumentForm) request.getAttribute("completedForm");
 } else {
     formdata.setFunction(module);  //"module" and "function" are the same
     formdata.setFunctionId(moduleid);
-    formdata.setDocType((String) props.getProperty("eDocAddTypeDefault", ""));
+    formdata.setDocType(defaultType);
     formdata.setDocDesc(defaultType.equals("")?defaultDesc:defaultType);
     formdata.setDocCreator(user_no);
     formdata.setObservationDate(UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy/MM/dd"));

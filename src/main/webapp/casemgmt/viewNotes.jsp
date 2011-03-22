@@ -44,7 +44,7 @@
 </div>
         
         <c:choose>
-            <c:when test='${param.title == "oscarEncounter.oMeds.title" || param.title == "oscarEncounter.riskFactors.title" || param.title == "oscarEncounter.famHistory.title"}'>
+            <c:when test='${param.title == "oscarEncounter.oMeds.title" || param.title == "oscarEncounter.riskFactors.title" || param.title == "oscarEncounter.famHistory.title"|| param.noheight == "true"}'>
                 <div style="clear: both; overflow: auto;">
             </c:when>
             <c:otherwise>

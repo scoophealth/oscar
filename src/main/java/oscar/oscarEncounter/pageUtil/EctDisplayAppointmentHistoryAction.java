@@ -65,8 +65,8 @@ public class EctDisplayAppointmentHistoryAction extends EctDisplayAction {
     //set right hand heading link
     winName = "AddSpecsHistory" + bean.demographicNo;
     url = "popupPage(500,600,'" + winName + "','" + pathedit + "'); return false;";
-   // Dao.setRightURL(url);
-   // Dao.setRightHeadingID(cmd); //no menu so set div id to unique id for this action
+    Dao.setRightURL("return false;");
+    Dao.setRightHeadingID(cmd); //no menu so set div id to unique id for this action
         
 
     SpecsHistoryDao shDao = (SpecsHistoryDao)SpringUtils.getBean("SpecsHistoryDAO");

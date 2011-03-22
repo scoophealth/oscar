@@ -870,6 +870,7 @@
 		<action path="/oscarEncounter/displayMessages" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayMsgAction"></action>
 		<action path="/oscarEncounter/displayBilling" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayBillingAction"></action>
 		<action path="/oscarEncounter/displayDocuments" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayDocsAction"></action>
+		<action path="/oscarEncounter/displayPhotos" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayPhotosAction"></action>		
 		<action path="/oscarEncounter/displayMeasurements" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayMeasurementsAction"></action>
 		<action path="/oscarEncounter/displayTickler" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayTicklerAction"></action>
 		<action path="/oscarEncounter/displayDisease" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayDxAction"></action>
