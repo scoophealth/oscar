@@ -3,12 +3,29 @@ package org.oscarehr.eyeform.model;
 import java.text.ParseException;
 import java.util.Date;
 
-public class SpecsHistory {
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
+import org.oscarehr.common.model.AbstractModel;
+import org.oscarehr.util.MiscUtils;
+
+@Entity
+@Table(name="EyeformSpecsHistory")
+public class SpecsHistory extends AbstractModel<Integer>{
+
+	@Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private int demographicNo;
 	private String provider;
 	private String status;
+	@Temporal(TemporalType.DATE)
 	private Date date;
 	private String doctor;
 	private String type;
@@ -17,17 +34,20 @@ public class SpecsHistory {
 	private String odAxis;
 	private String odAdd;
 	private String odPrism;
-	private String sdSph;
 	private String osSph;
 	private String osCyl;
 	private String osAxis;
 	private String osAdd;
 	private String osPrism;
-	private Date updateTime;
-	private String dateStr;
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date updateTime;	
 	private int appointmentNo;
+	@Transient
+	private String dateStr;
 	
-	
+	public SpecsHistory() {
+		status="A";
+	}
 	
 	public int getAppointmentNo() {
 		return appointmentNo;
@@ -114,12 +134,7 @@ public class SpecsHistory {
 	public void setOdPrism(String odPrism) {
 		this.odPrism = odPrism;
 	}
-	public String getSdSph() {
-		return sdSph;
-	}
-	public void setSdSph(String sdSph) {
-		this.sdSph = sdSph;
-	}
+	
 	public String getOsCyl() {
 		return osCyl;
 	}
@@ -161,13 +176,17 @@ public class SpecsHistory {
 		java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
 		try {
 			setDate(sdf.parse(d));
-		}catch(ParseException e) {}
+		}catch(ParseException e) {
+			MiscUtils.getLogger().error("Error",e);
+		}
 	}	
 	
 	private String getPrefix(String data) {
 		if(data.startsWith("-")) return data;
 		return "+"+data;
 	}
+	
+	@Override
 	public String toString() {
 		String od = getPrefix(this.getOdSph()) + getPrefix(this.getOdCyl()) + "x" + getPrefix(this.getOdAxis());
 		String os = getPrefix(this.getOsSph()) + getPrefix(this.getOsCyl()) + "x" + getPrefix(this.getOsAxis());

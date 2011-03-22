@@ -16,7 +16,7 @@ import org.oscarehr.common.model.AbstractModel;
 import org.oscarehr.common.model.Demographic;
 
 @Entity
-@Table(name="testbookrecord")
+@Table(name="EyeformTestBook")
 public class TestBookRecord extends AbstractModel<Integer> {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

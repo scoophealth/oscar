@@ -2,6 +2,7 @@ package org.oscarehr.eyeform.web;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +21,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class SpecsHistoryAction extends DispatchAction {
 	
+	@Override
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         return form(mapping, form, request, response);
     }
@@ -44,13 +46,12 @@ public class SpecsHistoryAction extends DispatchAction {
     	
     	request.setAttribute("providers",providerDao.getActiveProviders());
     	
-    	DynaValidatorForm f = (DynaValidatorForm)form;
-    	SpecsHistory specs = (SpecsHistory)f.get("specs");
-    	if(specs.getId() != null && specs.getId().intValue()>0) {
-    		specs = dao.find(specs.getId()); 
+    	if(request.getParameter("specs.id") != null) {
+    		int shId = Integer.parseInt(request.getParameter("specs.id"));
+    		SpecsHistory specs = dao.find(shId);
+    		DynaValidatorForm f = (DynaValidatorForm)form;	
+    		f.set("specs", specs);
     	}
-    	
-    	f.set("specs", specs);
     	
         return mapping.findForward("form");
     }
@@ -63,7 +64,21 @@ public class SpecsHistoryAction extends DispatchAction {
     	}
     	SpecsHistoryDao dao = (SpecsHistoryDao)SpringUtils.getBean("SpecsHistoryDAO");
     	specs.setProvider(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());	
-    	dao.save(specs);
+    	
+    	if(request.getParameter("specs.id") != null && request.getParameter("specs.id").length()>0) {    		
+    		specs.setId(Integer.parseInt(request.getParameter("specs.id")));
+    	}
+    	
+    	if(specs.getId() != null && specs.getId() == 0) {
+    		specs.setId(null);
+    	}
+    	specs.setUpdateTime(new Date());
+    	
+    	if(specs.getId() == null) {
+    		dao.persist(specs);
+    	} else {
+    		dao.merge(specs);
+    	}
     	
     	return mapping.findForward("success");
     }

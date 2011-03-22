@@ -14,7 +14,7 @@ import javax.persistence.TemporalType;
 import org.oscarehr.common.model.AbstractModel;
 
 @Entity
-@Table(name="eyeform")
+@Table(name="Eyeform")
 public class EyeForm extends AbstractModel<Integer>{
 
 	@Id
