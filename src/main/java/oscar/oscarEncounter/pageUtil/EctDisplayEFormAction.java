@@ -64,6 +64,12 @@ public class EctDisplayEFormAction extends EctDisplayAction {
 		if(!a) {
 			 return true; //eforms link won't show up on new CME screen.
 		} else {
+			
+		 	String omitTypeStr = request.getParameter("omit");
+		 	String[] omitTypes = new String[0];
+		 	if(omitTypeStr!=null) {
+		 		omitTypes = omitTypeStr.split(",");
+		 	}
 		      
 	        //set lefthand module heading and link
 	        String winName = "eForm" + bean.demographicNo;
@@ -105,6 +111,16 @@ public class EctDisplayEFormAction extends EctDisplayAction {
 	
 			for (EFormData eFormData : eFormDatas)
 			{
+				boolean skip=false;
+		        for(int x=0;x<omitTypes.length;x++) {
+		        	if(omitTypes[x].equals(eFormData.getFormName())) {
+		        		skip=true;
+		        		break;
+		        	}
+		        }
+		        if(skip)
+		        	continue;
+		        
 	            NavBarDisplayDAO.Item item = Dao.Item();
 	            winName = eFormData.getFormName() + bean.demographicNo;            
 	            hash = Math.abs(winName.hashCode());            

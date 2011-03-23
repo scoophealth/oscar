@@ -98,7 +98,14 @@
        init();
        
        //left nav bar
-       removeNavDiv('preventions');     
+       removeNavDiv('preventions'); 
+       removeNavDiv('docs');
+       addLeftNavDiv("docs");	  
+       popColumn(ctx + "/oscarEncounter/displayDocuments.do?hC=476BB3&appointment_no="+appointmentNo+"&omit=photo","docs","docs", "leftNavBar", this);
+       removeNavDiv('eforms');
+       addLeftNavDiv("eforms");	  
+       popColumn(ctx + "/oscarEncounter/displayEForms.do?hC=11CC00&appointment_no="+appointmentNo+"&omit=Ant+Segment,Retina,Eye+Saggital,Eye+Lid%2FNLD","eforms","eforms", "leftNavBar", this);       
+      
        reorderNavBarElements('tickler','Dx');
        reorderNavBarElements('msgs','tickler');
        reorderNavBarElements('labs','msgs');       
