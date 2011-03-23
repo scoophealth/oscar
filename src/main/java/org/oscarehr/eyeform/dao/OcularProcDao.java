@@ -71,7 +71,7 @@ public class OcularProcDao extends AbstractDao<OcularProc> {
 	}
 	
 	public List<OcularProc> getAllPreviousAndCurrent(int demographicNo, int appointmentNo) {
-		String sql="select x from "+modelClass.getSimpleName()+" x where x.demographicNo = ? and x.appointmentNo=<=?";
+		String sql="select x from "+modelClass.getSimpleName()+" x where x.demographicNo = ? and x.appointmentNo<=?";
 		Query query = entityManager.createQuery(sql);
 		query.setParameter(1, demographicNo);	    
 		query.setParameter(2, appointmentNo);

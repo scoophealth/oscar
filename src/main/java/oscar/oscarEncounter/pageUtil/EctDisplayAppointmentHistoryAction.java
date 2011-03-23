@@ -90,7 +90,7 @@ public class EctDisplayAppointmentHistoryAction extends EctDisplayAction {
         item.setLinkTitle(itemHeader);        
         item.setTitle(itemHeader);
         int hash = Math.abs(winName.hashCode());        
-        url = "popupPage(500,900,'" + hash + "','" + request.getContextPath() + "/eyeform/SpecsHistory.do?specs.id="+ sh.getId() +"'); return false;";        
+        url = "popupPage(500,900,'" + hash + "','" + request.getContextPath() + "/eyeform/Eyeform.do?method=print&apptNos="+sh.getId()+"'); return false;";        
         item.setURL(url);               
         Dao.addItem(item);
         index++;
