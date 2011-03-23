@@ -61,6 +61,11 @@ public class EctDisplayDocsAction extends EctDisplayAction {
  		return true; //Prevention link won't show up on new CME screen.
  	} else {
  	  
+ 	String omitTypeStr = request.getParameter("omit");
+ 	String[] omitTypes = new String[0];
+ 	if(omitTypeStr!=null) {
+ 		omitTypes = omitTypeStr.split(",");
+ 	}
 	//add for inbox manager
 	boolean inboxflag=oscar.util.plugin.IsPropertiesOn.propertiesOn("inboxmnger");
     //set lefthand module heading and link
@@ -104,7 +109,17 @@ public class EctDisplayDocsAction extends EctDisplayAction {
         EDoc curDoc = (EDoc) docList.get(i);
         String dispFilename = curDoc.getFileName();
         String dispStatus   = String.valueOf(curDoc.getStatus());
-
+        
+        boolean skip=false;
+        for(int x=0;x<omitTypes.length;x++) {
+        	if(omitTypes[x].equals(curDoc.getType())) {
+        		skip=true;
+        		break;
+        	}
+        }
+        if(skip)
+        	continue;
+        
         if( dispStatus.equals("A") )
             dispStatus = "active";
          else if( dispStatus.equals("H") )
