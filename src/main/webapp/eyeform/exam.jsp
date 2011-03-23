@@ -272,8 +272,6 @@ span.ge{
 <span style="display:none;"><a id="save_measurements" href="#">SAVE</a></span>
 
 <table border="0" width="100%">
-
-<tr><td><span class="ge">Examination:</span></td></tr>
 <tr>
 <td>
 <div class="slidey">
@@ -897,7 +895,4 @@ span.ge{
     </div>
 </td>
 </tr>
-
-
-
 </table>
