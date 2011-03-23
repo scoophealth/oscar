@@ -135,7 +135,7 @@ public class MeasurementsHibernateDao extends HibernateDaoSupport implements
         	}
         	
         	String queryStr = "From Measurements m WHERE m.demographicNo = " + demo +" AND type IN (" + sb.toString() +") ORDER BY type,m.dateObserved";
-        	logger.info(queryStr);
+        	logger.debug(queryStr);
 
         	List<Measurements> rs = getHibernateTemplate().find(queryStr);
 
@@ -148,7 +148,7 @@ public class MeasurementsHibernateDao extends HibernateDaoSupport implements
         public List<Measurements> getMeasurements(String demo) {
         	 
         	String queryStr = "From Measurements m WHERE m.demographicNo = " + demo +" ORDER BY m.dateObserved DESC";
-        	logger.info(queryStr);
+        	logger.debug(queryStr);
 
         	List<Measurements> rs = getHibernateTemplate().find(queryStr);
 
@@ -161,7 +161,7 @@ public class MeasurementsHibernateDao extends HibernateDaoSupport implements
         	
         	
         	String queryStr = "From Measurements m WHERE m.demographicNo = " + demo +" AND m.dateObserved >= '"+formatter.format(startDate)+"' AND m.dateObserved <= '"+formatter.format(endDate)+"' ORDER BY m.dateObserved DESC";
-        	logger.info(queryStr);
+        	logger.debug(queryStr);
 
         	List<Measurements> rs = getHibernateTemplate().find(queryStr);
 

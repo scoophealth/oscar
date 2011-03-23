@@ -1,15 +1,16 @@
 package org.oscarehr.eyeform.web;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
-import org.apache.struts.validator.DynaValidatorForm;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.eyeform.dao.FollowUpDao;
@@ -19,10 +20,13 @@ import org.oscarehr.eyeform.model.FollowUp;
 import org.oscarehr.eyeform.model.ProcedureBook;
 import org.oscarehr.eyeform.model.TestBookRecord;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class PlanAction extends DispatchAction {
 
+	Logger logger = MiscUtils.getLogger();
+	
 	protected FollowUpDao followUpDao = (FollowUpDao)SpringUtils.getBean("FollowUpDAO");
 	protected ProcedureBookDao procBookDao = (ProcedureBookDao)SpringUtils.getBean("ProcedureBookDAO");
 	protected TestBookRecordDao testBookDao = (TestBookRecordDao)SpringUtils.getBean("TestBookDAO");
@@ -38,7 +42,24 @@ public class PlanAction extends DispatchAction {
     }
 
     public ActionForward form(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {    	
-    	request.setAttribute("providers",providerDao.getActiveProviders());    	    
+    	request.setAttribute("providers",providerDao.getActiveProviders()); 
+    	
+    	String strAppointmentNo = request.getParameter("followup.appointmentNo");
+    	int appointmentNo = Integer.parseInt(strAppointmentNo);
+    	    	  
+    	//get all follow ups, procs, and tests for this appointment
+    	List<FollowUp> followUps = followUpDao.getByAppointmentNo(appointmentNo);
+    	request.setAttribute("followUps", followUps);
+    	request.setAttribute("followup_num", followUps.size());
+    	
+    	List<ProcedureBook> procedures = procBookDao.getByAppointmentNo(appointmentNo);
+    	request.setAttribute("procedures", procedures);
+    	request.setAttribute("procedure_num", procedures.size());
+    	
+    	List<TestBookRecord> tests = testBookDao.getByAppointmentNo(appointmentNo);
+    	request.setAttribute("tests", tests);    	
+    	request.setAttribute("test_num", tests.size());
+    	
         return mapping.findForward("form");
     }
 
@@ -60,6 +81,7 @@ public class PlanAction extends DispatchAction {
     }
     
     public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+    	/*
        	DynaValidatorForm f = (DynaValidatorForm)form;
     	FollowUp followUp = (FollowUp)f.get("followup");
     	ProcedureBook proc = (ProcedureBook)f.get("proc");
@@ -88,7 +110,127 @@ public class PlanAction extends DispatchAction {
     		testBookDao.save(test);
     	}
     	
+    	*/
+    	int demographicNo = Integer.parseInt(request.getParameter("followup.demographicNo"));
+    	int appointmentNo = Integer.parseInt(request.getParameter("followup.appointmentNo"));
     	
+    	int maxFollowUp = Integer.parseInt(request.getParameter("followup_num"));
+    	for(int x=1;x<=maxFollowUp;x++) {
+    		String id = request.getParameter("followup_"+x+".id");
+    		if(id != null) {
+    			String timespan = request.getParameter("followup_"+x+".timespan");
+    			if(timespan.length() == 0) {
+    				continue;
+    			}
+    			try {
+    				Integer.parseInt(timespan);
+    			}catch(NumberFormatException e) {
+    				continue;
+    			}
+    			FollowUp fu = new FollowUp();
+    			if(id.length()>0 && Integer.parseInt(id)>0) {
+    				fu = followUpDao.find(Integer.parseInt(id));
+    			} else {
+    				fu.setDate(new Date());
+    				fu.setDemographicNo(demographicNo);
+    				fu.setAppointmentNo(appointmentNo);
+    			}
+    			fu.setComment(request.getParameter("followup_"+x+".comment"));    			
+    			fu.setFollowupProvider(request.getParameter("followup_"+x+".followupProvider"));
+    			fu.setTimeframe(request.getParameter("followup_"+x+".timeframe"));
+    			fu.setTimespan(Integer.parseInt(request.getParameter("followup_"+x+".timespan")));
+    			fu.setType(request.getParameter("followup_"+x+".type"));
+    			fu.setUrgency(request.getParameter("followup_"+x+".urgency"));
+    			
+    			if(fu.getId() == null)
+    				followUpDao.persist(fu);
+    			else
+    				followUpDao.merge(fu);
+    		}
+    	}
+    	
+    	//handle removes
+    	String[] ids = request.getParameterValues("followup.delete");
+    	if(ids != null) {
+    		for(String id:ids) {
+    			int followUpId = Integer.parseInt(id);
+    			followUpDao.remove(followUpId);
+    		}
+    	}
+    	
+    	
+    	//PROCEDURES
+    	int maxProcedure = Integer.parseInt(request.getParameter("procedure_num"));
+    	for(int x=1;x<=maxProcedure;x++) {
+    		String id = request.getParameter("procedure_"+x+".id");
+    		if(id != null) {    			
+    			ProcedureBook proc = new ProcedureBook();    			
+    			if(id.length()>0 && Integer.parseInt(id)>0) {
+    				proc = procBookDao.find(Integer.parseInt(id));
+    			} else {
+    				proc.setDate(new Date());
+        			proc.setDemographicNo(demographicNo);
+    				proc.setAppointmentNo(appointmentNo);
+        			
+    			}
+    			proc.setComment(request.getParameter("procedure_"+x+".comment"));    			
+    			proc.setEye(request.getParameter("procedure_"+x+".eye"));
+    			proc.setProcedureName(request.getParameter("procedure_"+x+".procedureName"));
+    			proc.setLocation(request.getParameter("procedure_"+x+".location"));
+    			proc.setUrgency(request.getParameter("procedure_"+x+".urgency"));
+    			proc.setProvider(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+    			if(proc.getId() == null)
+    				procBookDao.persist(proc);
+    			else
+    				procBookDao.merge(proc);
+    		}
+    	}
+    	
+    	//handle removes
+    	ids = request.getParameterValues("procedure.delete");
+    	if(ids != null) {
+    		for(String id:ids) {
+    			int procedureId = Integer.parseInt(id);
+    			procBookDao.remove(procedureId);
+    		}
+    	}
+    	
+    	//TESTS
+    	//PROCEDURES
+    	int maxTest = Integer.parseInt(request.getParameter("test_num"));
+    	for(int x=1;x<=maxTest;x++) {
+    		String id = request.getParameter("test_"+x+".id");
+    		if(id != null) {    			
+    			TestBookRecord test = new TestBookRecord();    	    			    			
+    			if(id.length()>0 && Integer.parseInt(id)>0) {
+    				test = testBookDao.find(Integer.parseInt(id));
+    			} else {
+    				test.setDate(new Date());
+        			test.setDemographicNo(demographicNo);
+    				test.setAppointmentNo(appointmentNo);
+        			
+    			}
+    			test.setComment(request.getParameter("test_"+x+".comment"));    			
+    			test.setEye(request.getParameter("test_"+x+".eye"));
+    			test.setTestname(request.getParameter("test_"+x+".testname"));
+    			test.setUrgency(request.getParameter("test_"+x+".urgency"));
+    			
+    			test.setProvider(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+    			if(test.getId() == null)
+    				testBookDao.persist(test);
+    			else
+    				testBookDao.merge(test);
+    		}
+    	}
+    	
+    	//handle removes
+    	ids = request.getParameterValues("test.delete");
+    	if(ids != null) {
+    		for(String id:ids) {
+    			int testId = Integer.parseInt(id);
+    			testBookDao.remove(testId);
+    		}
+    	}    	    	
     	
     	return mapping.findForward("success");    	
     }
@@ -97,47 +239,54 @@ public class PlanAction extends DispatchAction {
     public ActionForward save_edit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
     	//try to get all the follow ups in the form
     	String[] ids = request.getParameterValues("followup.id");
-    	for(String id:ids) {
-    		FollowUp followUp = followUpDao.find(Integer.parseInt(id));
-    		followUp.setType(request.getParameter("followup"+id+".type"));
-    		followUp.setTimespan(Integer.parseInt(request.getParameter("followup"+id+".timespan")));
-    		followUp.setFollowupProvider(request.getParameter("followup"+id+".followupProvider"));
-    		followUp.setUrgency(request.getParameter("followup"+id+".urgency"));
-    		followUp.setComment(request.getParameter("followup"+id+".comment"));
-    		followUp.setTimeframe(request.getParameter("followup"+id+".timeframe"));
-    		if(followUp.getTimespan()==0) {
-    			followUpDao.remove(Integer.parseInt(id));    			
-    		} else {
-    			followUpDao.merge(followUp);
-    		}
+    	if(ids != null) {
+	    	for(String id:ids) {
+	    		FollowUp followUp = followUpDao.find(Integer.parseInt(id));
+	    		followUp.setType(request.getParameter("followup"+id+".type"));
+	    		followUp.setTimespan(Integer.parseInt(request.getParameter("followup"+id+".timespan")));
+	    		followUp.setFollowupProvider(request.getParameter("followup"+id+".followupProvider"));
+	    		followUp.setUrgency(request.getParameter("followup"+id+".urgency"));
+	    		followUp.setComment(request.getParameter("followup"+id+".comment"));
+	    		followUp.setTimeframe(request.getParameter("followup"+id+".timeframe"));
+	    		if(followUp.getTimespan()==0) {
+	    			followUpDao.remove(Integer.parseInt(id));    			
+	    		} else {
+	    			followUpDao.merge(followUp);
+	    		}
+	    	}
     	}
     	
     	ids = request.getParameterValues("procedures.id");
-    	for(String id:ids) {
-    		ProcedureBook proc = procBookDao.find(Integer.parseInt(id));
-    		proc.setProcedureName(request.getParameter("proc"+id+".procedureName"));
-    		proc.setEye(request.getParameter("proc"+id+".eye"));
-    		proc.setLocation(request.getParameter("proc"+id+".location"));
-    		proc.setComment(request.getParameter("proc"+id+".comment"));
-    		if(proc.getProcedureName().equals("")) {
-    			procBookDao.remove(Integer.parseInt(id));
-    		} else {
-    			procBookDao.merge(proc);
-    		}
+    	if(ids != null) {
+	    	for(String id:ids) {
+	    		ProcedureBook proc = procBookDao.find(Integer.parseInt(id));
+	    		proc.setProcedureName(request.getParameter("proc"+id+".procedureName"));
+	    		proc.setEye(request.getParameter("proc"+id+".eye"));
+	    		proc.setUrgency(request.getParameter("proc"+id+".urgency"));
+	    		proc.setLocation(request.getParameter("proc"+id+".location"));
+	    		proc.setComment(request.getParameter("proc"+id+".comment"));
+	    		if(proc.getProcedureName().equals("")) {
+	    			procBookDao.remove(Integer.parseInt(id));
+	    		} else {
+	    			procBookDao.merge(proc);
+	    		}
+	    	}
     	}
     	
     	ids = request.getParameterValues("tests.id");
-    	for(String id:ids) {
-    		TestBookRecord test = testBookDao.find(Integer.parseInt(id));
-    		test.setTestname(request.getParameter("test"+id+".testname"));
-    		test.setEye(request.getParameter("test"+id+".eye"));
-    		test.setUrgency(request.getParameter("test"+id+".urgency"));
-    		test.setComment(request.getParameter("test"+id+".comment"));
-    		if(test.getTestname().equals("")) {
-    			testBookDao.remove(Integer.parseInt(id));
-    		} else {
-    			testBookDao.merge(test);
-    		}
+    	if(ids != null) {
+	    	for(String id:ids) {
+	    		TestBookRecord test = testBookDao.find(Integer.parseInt(id));
+	    		test.setTestname(request.getParameter("test"+id+".testname"));
+	    		test.setEye(request.getParameter("test"+id+".eye"));
+	    		test.setUrgency(request.getParameter("test"+id+".urgency"));
+	    		test.setComment(request.getParameter("test"+id+".comment"));
+	    		if(test.getTestname().equals("")) {
+	    			testBookDao.remove(Integer.parseInt(id));
+	    		} else {
+	    			testBookDao.merge(test);
+	    		}
+	    	}
     	}
     	
     	return mapping.findForward("success");
@@ -201,6 +350,21 @@ public class PlanAction extends DispatchAction {
     public static String printProcedureEye(ProcedureBook proc) {
     	StringBuilder sb = new StringBuilder();
     	String[] values = {"OU","OD","OS","OD then OS","OS then OD"};
+    	
+    	for(String val:values) {
+    		if(proc.getEye().equals(val)) {
+    			sb.append("<option value=\""+val+"\" selected=\"selected\">"+val+"</option>");
+    		} else {
+    			sb.append("<option value=\""+val+"\">"+val+"</option>");
+    		}
+    	}
+    	
+    	return sb.toString();
+    }
+    
+    public static String printProcedureUrgency(ProcedureBook proc) {
+    	StringBuilder sb = new StringBuilder();
+    	String[] values = {"Routine","ASAP","Urgent"};
     	
     	for(String val:values) {
     		if(proc.getEye().equals(val)) {

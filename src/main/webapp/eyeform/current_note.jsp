@@ -57,6 +57,13 @@ function popupPageOne(varpage,name) {
     window.open(page, name, windowprops);
 }
 
+function popupPageOne(varpage,name,height,width) {
+    var page = "" + varpage;
+    windowprops = "height="+height+",width="+width+",location=no,"
+      + "scrollbars=yes,menubars=no,toolbars=no,resizable=yes,top=0,left=0";
+    window.open(page, name, windowprops);
+}
+
 
 </script>
 
@@ -146,11 +153,16 @@ function saveFlags() {
 
 </script>
 
-<span note_addon="saveEyeformNote"></span>
-<span><a href="javascript:void(0)" onclick="popupPageOne('<c:out value="${ctx}"/>/eyeform/EyeformPlan.do?method=form&amp;followup.demographicNo=<%=demographicNo %>&amp;noteId=<%=noteId%>&amp;followup.appointmentNo=<%=aptNo%>','eyeFormPlan');">[New Plan]</a></span>
-<span><a href="javascript:void(0)" onclick="popupPageOne('<c:out value="${ctx}"/>/eyeform/EyeformPlan.do?method=edit&amp;appointmentNo=<%=aptNo%>','eyeFormPlan');">[Edit Plan]</a></span>
+<style>
+.plan td {
+	font-size: 9px;
+}
+</style>
 
-<table width="100%">
+<span note_addon="saveEyeformNote"></span>
+<span><a href="javascript:void(0)" onclick="popupPageOne('<c:out value="${ctx}"/>/eyeform/EyeformPlan.do?method=form&amp;followup.demographicNo=<%=demographicNo %>&amp;noteId=<%=noteId%>&amp;followup.appointmentNo=<%=aptNo%>','eyeFormPlan',600,1200);">[Arrange Plan]</a></span>
+
+<table width="100%" class="plan">
 <tr>
 <td width="85%">
 <table border="0">
@@ -159,96 +171,38 @@ function saveFlags() {
 <tr>
 <td colspan="3">
 <div>
+	<c:forEach items="${followUps}" var="item">
+		<span><c:out value="${item.typeStr}"/>&nbsp;<c:out value="${item.timespan}"/>&nbsp;<c:out value="${item.timeframe}"/>&nbsp;Dr.&nbsp;<c:out value="${item.provider.firstName}"/>&nbsp;<c:out value="${item.provider.lastName}"/> | <c:out value="${item.urgency}"/> | <c:out value="${item.commentStr}"/></span>
+		<br/>
+	</c:forEach>
+</div>
+</td>
+</tr>
+        
+<tr>
+<td colspan="3">
+<div>
+	
+	<c:if test="${not empty procedures}">Procs:<br/></c:if>
 
-       
-        <div>
-            <display:table name="requestScope.followUps"
-            requestURI="/EyeForm.do" class="display" id="tb" pagesize="5">
-
-                <display:setProperty name="paging.banner.one_item_found" value=""/>
-                <display:setProperty name="paging.banner.all_items_found" value=""/>
-                <display:setProperty name="paging.banner.some_items_found" value=""/>
-                              
-                               <display:column title="Type">
-                                <c:out value="${tb.type}"/>
-                                </display:column>
-                                <display:column title="Timespan">
-                                	<c:out value="${tb.timespan}"/>&nbsp;<c:out value="${tb.timeframe}"/>
-                                </display:column>                                
-                                <display:column title="Provider">
-                                <c:out value="${tb.provider.formattedName}"/>
-                                </display:column>
-                               
-			</display:table>           
-        </div>
+	<c:forEach items="${procedures}" var="item">
+		<span><c:out value="${item.eye}"/>&nbsp;<c:out value="${item.procedureName}"/> at <c:out value="${item.location}"/> | <c:out value="${item.urgency}"/> | <c:out value="${item.commentStr}"/></span><br/>
+	</c:forEach>
+ 
 </div>
 </td>
 </tr>
 
-           </tbody>
-    
-
-<% //book procedure, book test %>
-
-<tr><td>&nbsp;</td></tr>
 <tr>
 <td colspan="3">
 <div>
 
-        <div>
-			<display:table name="requestScope.procedures"
-            	requestURI="/EyeForm.do" class="display" id="tb" pagesize="5">
+	<c:if test="${not empty testBookRecords}">Diags:<br/></c:if>
 
-                <display:setProperty name="paging.banner.one_item_found" value=""/>
-                <display:setProperty name="paging.banner.all_items_found" value=""/>
-                <display:setProperty name="paging.banner.some_items_found" value=""/>
-                
-                 <display:column title="Procedure">
-                 	<c:out value="${tb.procedureName}"/>
-                 </display:column>
-				<display:column title="Eye" >
-		      		<c:out value="${tb.eye}"/>
-				</display:column>
-				
-				<display:column title="Location" >
-		      		<c:out value="${tb.location}"/>
-				</display:column>
-				<display:column title="comment" >
-		      		<c:out value="${tb.comment}"/>
-				</display:column>
-				                 
-            </display:table>            
-        </div>
-</div>
-</td>
-</tr>
-<tr><td>&nbsp;</td></tr>
-<tr>
-<td colspan="3">
-<div>
-       
-        <div>
-			<display:table name="requestScope.testBookRecords"
-            	requestURI="/EyeForm.do" class="display" id="tb2" pagesize="5">
+	<c:forEach items="${testBookRecords}" var="item">
+		<span><c:out value="${item.eye}"/>&nbsp;<c:out value="${item.testname}"/> | <c:out value="${item.urgency}"/> | <c:out value="${item.commentStr}"/></span><br/>
+	</c:forEach>
 
-                <display:setProperty name="paging.banner.one_item_found" value=""/>
-                <display:setProperty name="paging.banner.all_items_found" value=""/>
-                <display:setProperty name="paging.banner.some_items_found" value=""/>
-                                 
-            	<display:column title="Test Name"  >
-			   		<c:out value="${tb2.testname}"/>
-				</display:column>
-				<display:column title="Eye" >
-		      		<c:out value="${tb2.eye}"/>
-				</display:column>
-				<display:column title="Urgency" >
-		      		<c:out value="${tb2.urgency}"/>
-				</display:column>
-				<display:column title="comment" >
-		      		<c:out value="${tb2.comment}"/>
-				</display:column>
-            </display:table>                    
-        </div>
 
 </div>
 </td>

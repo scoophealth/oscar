@@ -16,6 +16,8 @@ import org.oscarehr.common.model.AbstractModel;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Provider;
 
+import oscar.util.StringUtils;
+
 @Entity
 @Table(name="EyeformFollowUp")
 public class FollowUp extends AbstractModel<Integer> {
@@ -145,6 +147,17 @@ public class FollowUp extends AbstractModel<Integer> {
 	}
 	
 	
+	public String getTypeStr() {
+		if(getType().equals("followup")) {
+			return "Follow Up";
+		}
+		if(getType().equals("consult")) {
+			return "Consult";
+		}
+		return new String();
+	}
 	
-	
+	public String getCommentStr() {
+		return StringUtils.maxLenString(getComment(), 28, 25, "...");  
+	}
 }

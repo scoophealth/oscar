@@ -123,6 +123,15 @@
 			</select>
 			</td>
 		</tr>
+		
+		<tr>
+			<td class="genericTableHeader">Urgency</td>
+			<td class="genericTableData">
+			<select name="proc<%=proc.getId()%>.urgency">
+					<%=PlanAction.printProcedureUrgency(proc) %>
+			</select>
+			</td>
+		</tr>
 				
 		<tr>
 			<td class="genericTableHeader">Location</td>
