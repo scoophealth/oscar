@@ -157,13 +157,10 @@ try
 				style="clear: right; float: right; width: 49%; margin-right: 3px;">		
 			</div>
 		</div>
-		<!--  any extras go here -->
-		<h2 style="visibility:hidden">test</h2>
+		<span style="visibility:hidden">test</span>
 	</div>
 	
-	
-	<div id="notCPP"
-		style="height: 70%; margin-left: 2px; background-color: #FFFFFF;">
+	<div id="notCPP" style="height: 70%; margin-left: 2px; background-color: #FFFFFF;">	
   <html:form action="/CaseManagementView" method="post">
 	<html:hidden property="demographicNo" value="<%=demographicNo%>" />
 	<html:hidden property="providerNo" value="<%=provNo%>" />
