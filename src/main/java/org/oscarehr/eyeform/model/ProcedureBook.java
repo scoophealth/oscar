@@ -15,6 +15,8 @@ import javax.persistence.Transient;
 import org.oscarehr.common.model.AbstractModel;
 import org.oscarehr.common.model.Demographic;
 
+import oscar.util.StringUtils;
+
 @Entity
 @Table(name="EyeformProcedureBook")
 public class ProcedureBook extends AbstractModel<Integer> {
@@ -38,6 +40,7 @@ public class ProcedureBook extends AbstractModel<Integer> {
 	private String eye;
 	private String location;
 	private String comment;
+	private String urgency;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date date = new Date();
@@ -114,7 +117,15 @@ public class ProcedureBook extends AbstractModel<Integer> {
 	public void setDate(Date date) {
 		this.date = date;
 	}
+	public String getUrgency() {
+		return urgency;
+	}
+	public void setUrgency(String urgency) {
+		this.urgency = urgency;
+	}
 	
-	
+	public String getCommentStr() {
+		return StringUtils.maxLenString(getComment(), 28, 25, "...");  
+	}
 	
 }

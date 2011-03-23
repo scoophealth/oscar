@@ -24,6 +24,10 @@
  */
 -->
 <%@page import="org.oscarehr.eyeform.model.SpecsHistory"%>
+<%@page import="org.oscarehr.eyeform.model.FollowUp"%>
+<%@page import="org.oscarehr.eyeform.model.ProcedureBook"%>
+<%@page import="org.oscarehr.eyeform.model.TestBookRecord"%>
+<%@page import="java.util.List"%>
 
 <%@ include file="/taglibs.jsp"%>
 
@@ -37,7 +41,127 @@
 		<script type="text/javascript" src="<%=request.getContextPath()%>/share/calendar/calendar.js"></script>
 		<script type="text/javascript" src="<%=request.getContextPath()%>/share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
 		<script type="text/javascript" src="<%=request.getContextPath()%>/share/calendar/calendar-setup.js"></script>
-		
+		<script src="<c:out value="../js/jquery.js"/>"></script>
+<script>
+	jQuery.noConflict();
+</script>
+
+<script>
+function addFollowUp() {
+	var total = jQuery("#followup_num").val();
+	total++;
+	jQuery("#followup_num").val(total);
+	jQuery.ajax({url:'plan_followup.jsp?id='+total,async:false, success:function(data) {
+		  jQuery("#followup_container").append(data);					 	
+	}});		
+}
+
+function deleteFollowUp(id) {	
+	//var deleteList = jQuery("input[name='followup.delete']").val();
+	var followUpId = jQuery("input[name='followup_"+id+".id']").val();
+	//jQuery("input[name='followup.delete']").val(deleteList += ','+followUpId);
+	jQuery("form[name='eyeformPlanForm']").append("<input type=\"hidden\" name=\"followup.delete\" value=\""+followUpId+"\"/>");
+	jQuery("#followup_"+id).remove();	
+	
+}
+
+function addProcedure() {
+	var total = jQuery("#procedure_num").val();
+	total++;
+	jQuery("#procedure_num").val(total);
+	jQuery.ajax({url:'plan_procedure.jsp?id='+total,async:false, success:function(data) {
+		  jQuery("#procedure_container").append(data);					 	
+	}});		
+}
+
+function deleteProcedure(id) {	
+	var procedureId = jQuery("input[name='procedure_"+id+".id']").val();
+	jQuery("form[name='eyeformPlanForm']").append("<input type=\"hidden\" name=\"procedure.delete\" value=\""+procedureId+"\"/>");
+	jQuery("#procedure_"+id).remove();		
+}
+
+function addTest() {
+	var total = jQuery("#test_num").val();
+	total++;
+	jQuery("#test_num").val(total);
+	jQuery.ajax({url:'plan_test.jsp?id='+total,async:false, success:function(data) {
+		  jQuery("#test_container").append(data);					 	
+	}});		
+}
+
+function deleteTest(id) {	
+	var testId = jQuery("input[name='test_"+id+".id']").val();
+	jQuery("form[name='eyeformPlanForm']").append("<input type=\"hidden\" name=\"test.delete\" value=\""+testId+"\"/>");
+	jQuery("#test_"+id).remove();		
+}
+
+function setSelect(id,type,name,val) {
+	jQuery("select[name='"+type+"_"+id+"."+name+"']").each(function() {
+		jQuery(this).val(val);					
+	});
+}
+
+function setInput(id,type,name,val) {
+	jQuery("input[name='"+type+"_"+id+"."+name+"']").each(function() {
+		jQuery(this).val(val);					
+	});
+}
+
+jQuery(document).ready(function() {
+<%
+	@SuppressWarnings("unchecked")
+	List<FollowUp> followUps = (List<FollowUp>) request.getAttribute("followUps");
+	if(followUps != null) {
+		for(FollowUp fu:followUps) {
+			%>
+				addFollowUp();
+				var num = jQuery("#followup_num").val();
+				setInput(num,'followup','id','<%=fu.getId()%>');
+				setSelect(num,'followup','type','<%=fu.getType()%>');
+				setSelect(num,'followup','followupProvider','<%=fu.getFollowupProvider()%>');
+				setInput(num,'followup','timespan','<%=fu.getTimespan()%>');
+				setSelect(num,'followup','timeframe','<%=fu.getTimeframe()%>');
+				setSelect(num,'followup','urgency','<%=fu.getUrgency()%>');
+				setInput(num,'followup','comment','<%=fu.getComment()%>');
+			<%
+		}		
+	}
+	
+	@SuppressWarnings("unchecked")
+	List<ProcedureBook> procedures = (List<ProcedureBook>) request.getAttribute("procedures");
+	if(procedures != null) {
+		for(ProcedureBook proc:procedures) {
+			%>
+				addProcedure();
+				var num = jQuery("#procedure_num").val();
+				setInput(num,'procedure','id','<%=proc.getId()%>');
+				setSelect(num,'procedure','urgency','<%=proc.getUrgency()%>');
+				setSelect(num,'procedure','eye','<%=proc.getEye()%>');
+				setInput(num,'procedure','procedureName','<%=proc.getProcedureName()%>');
+				setInput(num,'procedure','location','<%=proc.getLocation()%>');
+				setInput(num,'procedure','comment','<%=proc.getComment()%>');					
+			<%
+		}		
+	}
+	
+	@SuppressWarnings("unchecked")
+	List<TestBookRecord> tests = (List<TestBookRecord>) request.getAttribute("tests");
+	if(tests != null) {
+		for(TestBookRecord test:tests) {
+			%>
+				addTest();
+				var num = jQuery("#test_num").val();
+				setInput(num,'test','id','<%=test.getId()%>');
+				setSelect(num,'test','eye','<%=test.getEye()%>');				
+				setInput(num,'test','testname','<%=test.getComment()%>');
+				setSelect(num,'test','urgency','<%=test.getUrgency()%>');				
+				setInput(num,'test','comment','<%=test.getComment()%>');	
+			<%
+		}		
+	}
+%>
+});
+</script>		
 </head>
 <body>
 <center><b>Impression Plan</b></center>
@@ -49,132 +173,29 @@
  
 		<input type="hidden" name="method" value="save"/>		
 		
-		<html:hidden property="followup.demographicNo"/>		
-		<html:hidden property="followup.appointmentNo"/>		
-		
-		<table border="0">
-           <tbody>
-           <tr>
-	            <td width="25%">
-		            <html:select property="followup.type">
-		            	<html:option value="followup">Follow up</html:option>
-		            	<html:option value="consult">Consult</html:option>
-		            </html:select>
-	            </td>
-				<td width="30%">				           
-		             <html:text property="followup.timespan" size="4"  styleId="width: 25px;" styleClass="special"/>		             
-		             <html:select property="followup.timeframe" styleId="width: 50px;" styleClass="special">
-		             	<html:option value="days">days</html:option>
-		            	<html:option value="weeks">weeks</html:option>
-		            	<html:option value="months">months</html:option>
-		            </html:select>
-	            </td> 		            
-	            <td width="25%">	             
-		            <html:select property="followup.followupProvider">
-		            	<c:forEach var="item" items="${providers}">
-		            		<option value="<c:out value="${item.providerNo}"/>"><c:out value="${item.formattedName}"/></option>
-		            	</c:forEach>            	
-					</html:select>
-				</td>
-         		<td width="20%">
-		            <html:select property="followup.urgency" styleId="width: 50px;" styleClass="special">
-		             	<html:option value="routine">routine</html:option>
-		            	<html:option value="asap">ASAP</html:option>            	
-		            </html:select>
-	           </td>				
-			</tr>
-           
-           <tr>
-	           <td colspan="5">
-	           	Comment:<br/><html:textarea rows="5" cols="60" property="followup.comment"></html:textarea>		
-	           </td>
-           </tr>
-            
-           </tbody>
-			</table>				
-<br/>
+		<input type="hidden" name="followup.demographicNo" value="<%=request.getParameter("followup.demographicNo")%>"/>		
+		<input type="hidden" name="followup.appointmentNo" value="<%=request.getParameter("followup.appointmentNo")%>"/>				
+
+<!-- follow up section -->
+<div id="followup_container"></div>
+<input type="hidden" id="followup_num" name="followup_num" value="0"/>	
+<a href="#" onclick="addFollowUp();">[Add]</a>				
+
+<br/><br/>
 <b>Book Procedure:</b>
 <br />
-	<table>
-		<tr>
-			<td class="genericTableHeader">Procedure name</td>
-			<td class="genericTableData">
-				<html:text property="proc.procedureName" size="35"/>
-			</td>
-		</tr>
-		
-		
-		<tr>
-			<td class="genericTableHeader">Eye</td>
-			<td class="genericTableData">
-				<html:select property="proc.eye">
-					<html:option value="OU">OU</html:option>
-					<html:option value="OD">OD</html:option>
-					<html:option value="OS">OS</html:option>
-					<html:option value="OD then OS">OD then OS</html:option>
-					<html:option value="OS then OD">OS then OD</html:option>
-				</html:select>
-			</td>
-		</tr>
-				
-		<tr>
-			<td class="genericTableHeader">Location</td>
-			<td class="genericTableData">
-					<html:text property="proc.location" size="35"/>		
-			</td>
-		</tr>
-		<tr>
-			<td class="genericTableHeader">Comment</td>
-			<td class="genericTableData">
-					<html:textarea rows="5" cols="40" property="proc.comment"></html:textarea>		
-			</td>
-		</tr>
-		</table>
-<br/>
-
-<b>Book Test:</b>
+<!-- procedure section -->
+<div id="procedure_container"></div>
+<input type="hidden" id="procedure_num" name="procedure_num" value="0"/>	
+<a href="#" onclick="addProcedure();">[Add]</a>	
+<br/><br/>
+<b>Book Diagnostics:</b>
 <br />
-
-	<table>
-		<tr>
-			<td class="genericTableHeader">Test name</td>
-			<td class="genericTableData">
-				<html:text property="test.testname" size="35"/>
-			</td>
-		</tr>
-		
-		
-		<tr>
-			<td class="genericTableHeader">Eye</td>
-			<td class="genericTableData">
-				<html:select property="test.eye">
-					<html:option value="OU">OU</html:option>
-					<html:option value="OD">OD</html:option>
-					<html:option value="OS">OS</html:option>
-					<html:option value="n/a">n/a</html:option>			
-				</html:select>
-			</td>
-		</tr>
-						
-		<tr>
-			<td class="genericTableHeader">Comment</td>
-			<td class="genericTableData">
-					<html:textarea rows="5" cols="40" property="test.comment"></html:textarea>		
-			</td>
-		</tr>
-
-		<tr>
-			<td class="genericTableHeader">Urgency</td>
-			<td class="genericTableData">
-				<html:select property="test.urgency">
-					<html:option value="routine">routine</html:option>
-					<html:option value="ASAP">ASAP</html:option>
-					<html:option value="PTNV">PTNV</html:option>					
-				</html:select>
-			</td>
-		</tr>		
-	</table>
-
+<!-- test/diag section -->
+<div id="test_container"></div>
+<input type="hidden" id="test_num" name="test_num" value="0"/>	
+<a href="#" onclick="addTest();">[Add]</a>	
+<br/>
 <br/>
 	<html:submit value="Submit" />
 	&nbsp;&nbsp;

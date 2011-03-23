@@ -15,6 +15,8 @@ import javax.persistence.Transient;
 import org.oscarehr.common.model.AbstractModel;
 import org.oscarehr.common.model.Demographic;
 
+import oscar.util.StringUtils;
+
 @Entity
 @Table(name="EyeformTestBook")
 public class TestBookRecord extends AbstractModel<Integer> {
@@ -108,5 +110,7 @@ public class TestBookRecord extends AbstractModel<Integer> {
 		this.date = date;
 	}
 	
-	
+	public String getCommentStr() {
+		return StringUtils.maxLenString(getComment(), 28, 25, "...");  
+	}
 }
