@@ -34,7 +34,7 @@
 <%--This is included in documentReport.jsp - wasn't meant to be displayed as a separate page --%>
 <%
 String user_no = (String) session.getAttribute("user");
-String appointment = request.getParameter("appointment_no");
+String appointment = request.getParameter("appointmentNo");
 
 String module = "";
 String moduleid = "";
@@ -56,6 +56,7 @@ if (request.getParameter("curUser") != null) {
 OscarProperties props = OscarProperties.getInstance();
 
 AddEditDocumentForm formdata = new AddEditDocumentForm();
+formdata.setAppointmentNo(appointment);
 String defaultType = (String) props.getProperty("eDocAddTypeDefault", "");
 String defaultDesc = "Enter Title"; //if defaultType isn't defined, this value is used for the title/description
 String defaultHtml = "Enter Link URL";
@@ -100,7 +101,7 @@ formdata = (AddEditDocumentForm) request.getAttribute("completedForm");
     formdata.setDocCreator(user_no);
     formdata.setObservationDate(UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy/MM/dd"));
     formdata.setHtml(defaultHtml);
-    formdata.setAppointment(appointment);
+    formdata.setAppointmentNo(appointment);
 }
 ArrayList doctypes = EDocUtil.getDoctypes(formdata.getFunction());
 %>
@@ -223,6 +224,7 @@ function checkDefaultDate(object, defaultValue) {
 	<input type="hidden" name="functionid" value="<%=moduleid%>" size="20">
 	<input type="hidden" name="parentAjaxId" value="<%=parentAjaxId%>">
 	<input type="hidden" name="curUser" value="<%=curUser%>">
+	<input type="hidden" name="appointmentNo" value="<%=formdata.getAppointmentNo()%>"/>
 	<select name="docType" onchange="checkSel(this)"
 		<% if (docerrors.containsKey("typemissing")) {%> class="warning" <%}%>>
 		<option value=""><bean:message key="dms.addDocument.formSelect" /></option>
@@ -276,6 +278,7 @@ function checkDefaultDate(object, defaultValue) {
 	<input type="hidden" name="functionid" value="<%=moduleid%>" size="20">
 	<input type="hidden" name="observationDate"
 		value="<%=formdata.getObservationDate()%>">
+		<input type="hidden" name="appointmentNo" value="<%=formdata.getAppointmentNo()%>"/>
 	<select name="docType" onchange="checkSel(this)"
 		<% if (linkhtmlerrors.containsKey("typemissing")) {%> class="warning"
 		<%}%>>
@@ -300,6 +303,7 @@ function checkDefaultDate(object, defaultValue) {
 		value="<%=formdata.getHtml()%>" onfocus="checkDefaultValue(this)">
 	<input type="hidden" name="docCreator"
 		value="<%=formdata.getDocCreator()%>" size="20">
+		<input type="hidden" name="appointmentNo" value="<%=formdata.getAppointmentNo()%>"/>
 	<br />
 	<input type="hidden" name="mode" value="addLink">
 	<input type="SUBMIT" name="Submit" value="Add">

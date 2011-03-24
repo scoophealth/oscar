@@ -73,6 +73,7 @@ public class AddEditDocumentAction extends DispatchAction {
 		String user = (String) request.getSession().getAttribute("user");
 		EDoc newDoc = new EDoc("", "", fileName, "", user, user, fm.getSource(), 'A', oscar.util.UtilDateUtilities.getToday("yyyy-MM-dd"), "", "", "demographic", "-1", 0);
 		newDoc.setDocPublic("0");
+		newDoc.setAppointmentNo(Integer.parseInt(fm.getAppointmentNo()));
 		fileName = newDoc.getFileName();
 		// save local file;
 		if (docFile.getFileSize() == 0) {
@@ -140,6 +141,7 @@ public class AddEditDocumentAction extends DispatchAction {
 		String user = (String) request.getSession().getAttribute("user");
 		EDoc newDoc = new EDoc("", "", fileName, "", user, user, fm.getSource(), 'A', oscar.util.UtilDateUtilities.getToday("yyyy-MM-dd"), "", "", "demographic", "-1");
 		newDoc.setDocPublic("0");
+		newDoc.setAppointmentNo(Integer.parseInt(fm.getAppointmentNo()));
 		fileName = newDoc.getFileName();
 		// save local file;
 		if (docFile.getFileSize() == 0) {
@@ -176,6 +178,7 @@ public class AddEditDocumentAction extends DispatchAction {
 				redirect.addParameter("function", request.getParameter("function"));
 				redirect.addParameter("functionid", request.getParameter("functionid"));
 				redirect.addParameter("curUser", request.getParameter("curUser"));
+				redirect.addParameter("appointmentNo",request.getParameter("appointmentNo"));
 				String parentAjaxId = request.getParameter("parentAjaxId");
 				// if we're called with parent ajax id inform jsp that parent needs to be updated
 				if (!parentAjaxId.equals("")) {
@@ -188,6 +191,7 @@ public class AddEditDocumentAction extends DispatchAction {
 				request.setAttribute("functionid", request.getParameter("functionid"));
 				request.setAttribute("parentAjaxId", request.getParameter("parentAjaxId"));
 				request.setAttribute("curUser", request.getParameter("curUser"));
+				request.setAttribute("appointmentNo",request.getParameter("appointmentNo"));
 				return mapping.findForward("failAdd");
 			}
 		} else {
@@ -219,6 +223,7 @@ public class AddEditDocumentAction extends DispatchAction {
 
 			EDoc newDoc = new EDoc(fm.getDocDesc(), fm.getDocType(), fileName1, "", fm.getDocCreator(), fm.getResponsibleId(), fm.getSource(), 'A', fm.getObservationDate(), "", "", fm.getFunction(), fm.getFunctionId());
 			newDoc.setDocPublic(fm.getDocPublic());
+			newDoc.setAppointmentNo(Integer.parseInt(fm.getAppointmentNo()));
 			// new file name with date attached
 			String fileName2 = newDoc.getFileName();
 			// save local file
@@ -230,8 +235,8 @@ public class AddEditDocumentAction extends DispatchAction {
 			if (programIdStr != null) newDoc.setProgramId(Integer.valueOf(programIdStr));
 
 			// if the document was added in the context of an appointment
-			if(fm.getAppointment() != null && fm.getAppointment().length()>0) {
-				newDoc.setAppointmentNo(Integer.parseInt(fm.getAppointment()));
+			if(fm.getAppointmentNo() != null && fm.getAppointmentNo().length()>0) {
+				newDoc.setAppointmentNo(Integer.parseInt(fm.getAppointmentNo()));
 			}
 			// ---
 			String doc_no = EDocUtil.addDocumentSQL(newDoc);
@@ -322,6 +327,7 @@ public class AddEditDocumentAction extends DispatchAction {
 			EDoc newDoc = new EDoc(fm.getDocDesc(), fm.getDocType(), fileName, "", fm.getDocCreator(), fm.getResponsibleId(), fm.getSource(), 'A', fm.getObservationDate(), reviewerId, reviewDateTime, fm.getFunction(), fm.getFunctionId());
 			newDoc.setDocId(fm.getMode());
 			newDoc.setDocPublic(fm.getDocPublic());
+			newDoc.setAppointmentNo(Integer.parseInt(fm.getAppointmentNo()));
 			fileName = newDoc.getFileName();
 			if (docFile.getFileSize() != 0) {
 				// save local file

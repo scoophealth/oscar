@@ -61,6 +61,8 @@ public class EctDisplayPhotosAction extends EctDisplayAction {
  		return true; //The link of tickler won't show up on new CME screen.
  	} else {
  	  
+ 	String appointmentNo = request.getParameter("appointment_no");
+ 		
 	//add for inbox manager
 	boolean inboxflag=oscar.util.plugin.IsPropertiesOn.propertiesOn("inboxmnger");
     //set lefthand module heading and link
@@ -81,7 +83,7 @@ public class EctDisplayPhotosAction extends EctDisplayAction {
     winName = "addPhoto" + bean.demographicNo;
     url = "popupPage(500,1115,'" + winName + "','" + request.getContextPath() + "/dms/documentReport.jsp?" +
             "function=demographic&doctype=lab&functionid=" + bean.demographicNo + "&curUser=" + bean.providerNo + "&mode=add" +
-            "&parentAjaxId=" + cmd + "&defaultDocType=photo');return false;";
+            "&parentAjaxId=" + cmd + "&defaultDocType=photo&appointmentNo="+appointmentNo+"');return false;";
 
     if (inboxflag){
     	url="popupPage(300,600,'" + winName + "','" + request.getContextPath()+
