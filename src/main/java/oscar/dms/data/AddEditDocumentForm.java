@@ -45,7 +45,7 @@ public class AddEditDocumentForm extends ActionForm {
     private boolean reviewDoc = false;
     private String html = "";
     
-    private String appointment = "";
+    private String appointmentNo = "0";
     
     public AddEditDocumentForm() {
     }
@@ -178,12 +178,12 @@ public class AddEditDocumentForm extends ActionForm {
         this.filedata = Filedata;
     }
 
-	public String getAppointment() {
-		return appointment;
+	public String getAppointmentNo() {
+		return appointmentNo;
 	}
 
-	public void setAppointment(String appointment) {
-		this.appointment = appointment;
+	public void setAppointmentNo(String appointment) {
+		this.appointmentNo = appointment;
 	}
     
     

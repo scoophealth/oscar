@@ -34,7 +34,11 @@ String userfirstname = (String) session.getAttribute("userfirstname");
 String userlastname = (String) session.getAttribute("userlastname");
 
 String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.DISP_DOCUMENT;
-String appointment = request.getParameter("appointment_no");
+String appointment = request.getParameter("appointmentNo");
+int appointmentNo = 0;
+if(appointment != null && appointment.length()>0) {
+	appointmentNo = Integer.parseInt(appointment);
+}
 %>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
@@ -294,8 +298,12 @@ function popup1(height, width, url, windowName){
 		</td>
 	</tr>
 	<tr>
-		<td class="MainTableRightColumn" colspan="2" valign="top"><jsp:include
-			page="addDocument.jsp" /> <html:form action="/dms/combinePDFs">
+		<td class="MainTableRightColumn" colspan="2" valign="top">
+			<jsp:include page="addDocument.jsp">
+				<jsp:param name="appointmentNo" value="<%=appointmentNo%>"/>
+			</jsp:include> 
+			
+			<html:form action="/dms/combinePDFs">
 			<input type="hidden" name="curUser" value="<%=curUser%>">
 			<input type="hidden" name="demoId" value="<%=moduleid%>">
 			<div class="documentLists"><%-- STUFF TO DISPLAY --%> <%
