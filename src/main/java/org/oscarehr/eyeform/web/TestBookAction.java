@@ -78,20 +78,26 @@ public class TestBookAction extends DispatchAction {
     
     public ActionForward getTicklerText(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
     	String appointmentNo = request.getParameter("appointmentNo");
+ 
+    	String text = getTicklerText(Integer.parseInt(appointmentNo));
+    	
+    	try {
+    		response.getWriter().print(text);
+    	}catch(IOException e) {logger.error(e);}
+    	
+    	return null;
+    }
+    
+    public static String getTicklerText(int appointmentNo) {
     	TestBookRecordDao dao = (TestBookRecordDao)SpringUtils.getBean("TestBookDAO");
     	
-    	List<TestBookRecord> tests = dao.getByAppointmentNo(Integer.parseInt(appointmentNo));
+    	List<TestBookRecord> tests = dao.getByAppointmentNo(appointmentNo);
     	StringBuilder sb = new StringBuilder();
     	
     	for(TestBookRecord f:tests) {    		
     		sb.append("diag:" + f.getTestname()).append(" ").append(f.getEye()).append(" ").append(f.getComment());
     		sb.append("<br/>");
     	}
-    	
-    	try {
-    		response.getWriter().print(sb.toString());
-    	}catch(IOException e) {logger.error(e);}
-    	
-    	return null;
+    	return sb.toString();
     }
 }

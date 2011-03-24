@@ -53,7 +53,7 @@ public class Macro extends AbstractModel<Integer>{
 	private String statFlag;
 	private String optFlag;
 	private String dischargeFlag;
-	@Transient
+	@Column(name="ticklerStaff")
 	private String ticklerRecipient;
 	
 	

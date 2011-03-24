@@ -78,9 +78,20 @@ public class ProcedureBookAction extends DispatchAction {
     
     public ActionForward getTicklerText(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
     	String appointmentNo = request.getParameter("appointmentNo");
+    	
+    	String text = getTicklerText(Integer.parseInt(appointmentNo));
+    	
+    	try {
+    		response.getWriter().print(text);
+    	}catch(IOException e) {logger.error(e);}
+    	
+    	return null;
+    }
+    
+    public static String getTicklerText(int appointmentNo) {
     	ProcedureBookDao dao = (ProcedureBookDao)SpringUtils.getBean("ProcedureBookDAO");
     	
-    	List<ProcedureBook> procedures = dao.getByAppointmentNo(Integer.parseInt(appointmentNo));
+    	List<ProcedureBook> procedures = dao.getByAppointmentNo(appointmentNo);
     	StringBuilder sb = new StringBuilder();
     	
     	for(ProcedureBook f:procedures) {
@@ -91,11 +102,6 @@ public class ProcedureBookAction extends DispatchAction {
     		sb.append("<span "+style+" title=\""+f.getComment()+"\">proc:").append(f.getProcedureName()).append(" ").append(f.getEye()).append(" ").append(f.getLocation()).append(" ").append(f.getUrgency()).append("</span>");
     		sb.append("<br/>");
     	}
-    	
-    	try {
-    		response.getWriter().print(sb.toString());
-    	}catch(IOException e) {logger.error(e);}
-    	
-    	return null;
+    	return sb.toString();
     }
 }
