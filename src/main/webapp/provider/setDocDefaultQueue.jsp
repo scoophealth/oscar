@@ -23,7 +23,6 @@
  * Ontario, Canada
  */
 -->
-<%@page pageEncoding="UTF-8"%>
 <%@ include file="/casemgmt/taglibs.jsp"%>
 
 <%

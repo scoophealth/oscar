@@ -24,7 +24,6 @@
  */
 --%>
 <%@ page import="oscar.form.*"%>
-<%@page pageEncoding="UTF-8"%>
 <%
     int demoNo = Integer.parseInt(request.getParameter("demographic_no"));
     int formId = Integer.parseInt(request.getParameter("formId"));    
