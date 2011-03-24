@@ -141,7 +141,7 @@ function fixCheckboxes(form) {
 	</tr>
 	<tr><td>send tickler to </td><td>
 			<html:select property="macro.ticklerRecipient">
-				<option value="">Nobody</option>
+				<html:option value="">Nobody</html:option>
 				<html:options collection="providers" property="providerNo" labelProperty="formattedName" /> 
 			</html:select>
     </td></tr>

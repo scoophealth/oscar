@@ -19,12 +19,15 @@
 
 package org.oscarehr.common.dao;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Query;
 
 import org.oscarehr.common.model.BillingService;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.stereotype.Repository;
 
 import oscar.util.UtilDateUtilities;
@@ -127,6 +130,61 @@ public class BillingServiceDao extends AbstractDao<BillingService> {
 		bs.setRegion(region);
 		entityManager.persist(bs);
 		return retval;
+	}
+
+	public Date getLatestServiceDate(Date endDate, String serviceCode) {
+		String sql = "select max(bs.billingserviceDate) from BillingService bs where bs.billingserviceDate <= ? and bs.serviceCode = ?";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter(1, endDate);
+		query.setParameter(2, serviceCode);
+		Date date = (Date)query.getSingleResult();
+		return date;
+	}
+	
+	public Object[] getUnitPrice(String bcode, String referralDate) {
+		String sql = "select bs from BillingService bs where bs.serviceCode = ? and bs.billingserviceDate = ?";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter(1,bcode);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = new Date();
+		try {
+			date = sdf.parse(referralDate);
+		}catch(ParseException e) {
+			MiscUtils.getLogger().error("error",e);			
+		}
+		query.setParameter(2, getLatestServiceDate(date,bcode));
+		
+		@SuppressWarnings("unchecked")
+		List<BillingService> results = query.getResultList();
+		
+		if (results.size() > 0) {
+			BillingService bs = results.get(0);
+			return (Object[]) new Object[] {bs.getValue(),bs.getGstFlag()};
+		} else
+			return null;
+	}
+	
+	public String getUnitPercentage(String bcode, String referralDate) {		
+		String sql = "select bs from BillingService bs where bs.serviceCode = ? and bs.billingserviceDate = ?";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter(1,bcode);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = new Date();
+		try {
+			date = sdf.parse(referralDate);
+		}catch(ParseException e) {
+			MiscUtils.getLogger().error("error",e);			
+		}
+		query.setParameter(2, getLatestServiceDate(date,bcode));
+		
+		@SuppressWarnings("unchecked")
+		List<BillingService> results = query.getResultList();
+		
+		if(results.size()>0) {
+			return results.get(0).getPercentage();
+		} else {
+			return null;
+		}				
 	}
 
 	// /
