@@ -6,7 +6,6 @@
      * @license         Mit Style License
      */
 -->
-<%@page pageEncoding="UTF-8"%>
 <%@page import="oscar.dms.data.*,oscar.oscarProvider.data.*,java.util.*,oscar.oscarLab.ca.on.CommonLabResultData,org.oscarehr.util.SpringUtils,org.oscarehr.common.dao.QueueDao" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
