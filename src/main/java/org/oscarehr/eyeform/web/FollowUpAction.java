@@ -88,13 +88,20 @@ public class FollowUpAction extends DispatchAction {
     }
     
     public ActionForward getTicklerText(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-    	String appointmentNo = request.getParameter("appointmentNo");
-    	
+    	String appointmentNo = request.getParameter("appointmentNo");    	
+    	String text = getTicklerText(Integer.parseInt(appointmentNo));
+    	    	    
+    	try {
+    		response.getWriter().print(text);
+    	}catch(IOException e) {logger.error(e);}
+    	return null;
+    }
+    
+    public static String getTicklerText(int appointmentNo) {
     	FollowUpDao dao = (FollowUpDao)SpringUtils.getBean("FollowUpDAO");
     	ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
     	
-    	
-    	List<FollowUp> followUps = dao.getByAppointmentNo(Integer.parseInt(appointmentNo));
+    	List<FollowUp> followUps = dao.getByAppointmentNo(appointmentNo);
     	StringBuilder sb = new StringBuilder();
     	
     	for(FollowUp f:followUps) {
@@ -107,10 +114,6 @@ public class FollowUpAction extends DispatchAction {
     		sb.append(" ").append(p.getFormattedName());
     		sb.append("<br/>");
     	}
-    	
-    	try {
-    		response.getWriter().print(sb.toString());
-    	}catch(IOException e) {logger.error(e);}
-    	return null;
+    	return sb.toString();
     }
 }
