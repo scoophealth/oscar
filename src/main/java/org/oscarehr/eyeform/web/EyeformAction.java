@@ -34,6 +34,8 @@ import org.oscarehr.common.dao.BillingreferralDao;
 import org.oscarehr.common.dao.ClinicDAO;
 import org.oscarehr.common.dao.ConsultationRequestExtDao;
 import org.oscarehr.common.dao.DocumentResultsDao;
+import org.oscarehr.common.dao.EFormGroupDao;
+import org.oscarehr.common.dao.EFormValueDao;
 import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.dao.ProfessionalSpecialistDao;
 import org.oscarehr.common.dao.SiteDao;
@@ -43,6 +45,8 @@ import org.oscarehr.common.model.Clinic;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DemographicExt;
 import org.oscarehr.common.model.Document;
+import org.oscarehr.common.model.EFormGroup;
+import org.oscarehr.common.model.EFormValue;
 import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.Site;
@@ -433,7 +437,29 @@ public class EyeformAction extends DispatchAction {
 		        	String servletUrl  = request.getRequestURL().toString();
 		        	String url = servletUrl.substring(0,servletUrl.indexOf(request.getContextPath())+request.getContextPath().length());
 		        	printer.printPhotos(url,documents);
-		        }		        
+		        }
+		        
+		        //diagrams
+		        EFormValueDao eFormValueDao = (EFormValueDao) SpringUtils.getBean("EFormValueDao");
+		        EFormGroupDao eFormGroupDao = (EFormGroupDao) SpringUtils.getBean("EFormGroupDao");
+		        List<EFormGroup> groupForms = eFormGroupDao.getByGroupName("Eye form");
+		        List<EFormValue> values = eFormValueDao.findByApptNo(appointmentNo);
+		        List<EFormValue> diagrams = new ArrayList<EFormValue>();
+		        for(EFormValue value:values) {
+		        	int formId = value.getFormId();
+		        	boolean include=false;
+		        	for(EFormGroup group:groupForms) {
+		        		if(group.getFormId() == formId) {
+		        			include=true;
+		        			break;
+		        		}
+		        	}
+		        	if(include)
+		        		diagrams.add(value);
+		        }
+		        
+		        printer.printDiagrams(diagrams);
+		       
 			}
 			
 			printer.finish();							

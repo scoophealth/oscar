@@ -219,11 +219,11 @@
         <ap-output>${rx}</ap-output>
     </databaseap>
     <databaseap>
-    </databaseap>
-        <databaseap>
-        <ap-name>today_rx</ap-name>        <ap-sql>SELECT GROUP_CONCAT(CONCAT(p.date_prescribed,' ',SUBSTRING_INDEX(p.textView, '\n\n', -1)),'\n' ORDER BY p.date_prescribed DESC SEPARATOR '') AS rx FROM prescription p WHERE p.demographic_no=${demographic} and p.date_prescribed=LEFT(now(),10) </ap-sql>
+        <ap-name>today_rx</ap-name>        
+        <ap-sql>SELECT GROUP_CONCAT(CONCAT(p.date_prescribed,' ',SUBSTRING_INDEX(p.textView, '\n\n', -1)),'\n' ORDER BY p.date_prescribed DESC SEPARATOR '') AS rx FROM prescription p WHERE p.demographic_no=${demographic} and p.date_prescribed=LEFT(now(),10) </ap-sql>
         <ap-output>${rx}</ap-output>
     </databaseap>
+    <databaseap>
         <ap-name>druglist_generic</ap-name>
         <ap-sql>SELECT GROUP_CONCAT(DISTINCT if(LENGTH(d.GN) &gt; 4, GN, d.customName) , if(d.takemax &gt; d.takemin, CONCAT(' ',d.takemin,'-',d.takemax,' '), CONCAT(' ',d.takemin,' ')) , d.freqcode , if(d.prn=1,' prn','') ORDER BY d.rx_date DESC SEPARATOR '\n' ) AS rxgen
                 FROM drugs d WHERE d.demographic_no=${demographic} AND d.end_date &gt; DATE_ADD(CURDATE(), INTERVAL -1 WEEK);</ap-sql>
@@ -306,6 +306,11 @@
         <ap-name>appt_provider_id</ap-name>
         <ap-sql>SELECT '${appt_provider}' AS id</ap-sql>
         <ap-output>${id}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>appt_no</ap-name>
+        <ap-sql>SELECT ${appt_no} as appt_no</ap-sql>
+        <ap-output>${appt_no}</ap-output>
     </databaseap>
 
 <!-- Clinic information -->

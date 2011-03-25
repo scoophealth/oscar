@@ -116,9 +116,11 @@ public class GraphicalCanvasToImage {
 			drawSymbolPattern(ig2,x,y,sym,strokeColor,symbolSize);		
 		}
 	}
-	public void convertToImage(InputStream image, int width, int height, String drawData, String outputFormat, OutputStream out) throws IOException {
-		BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);    	
-        BufferedImage img = ImageIO.read(image);          
+	public void convertToImage(InputStream image, String drawData, String outputFormat, OutputStream out) throws IOException {
+		 BufferedImage img = ImageIO.read(image); 
+        int width = img.getWidth();
+        int height = img.getHeight();
+        BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);          
      	Graphics2D ig2 = bi.createGraphics();
      	ig2.drawImage(img,0,0,null);
      	       
@@ -130,9 +132,9 @@ public class GraphicalCanvasToImage {
               
      	ImageIO.write(bi, outputFormat, out);      
 	}
-	public void convertToImage(String imageFile, int width, int height, String drawData, String outputFormat, OutputStream out) throws IOException {   
+	public void convertToImage(String imageFile, String drawData, String outputFormat, OutputStream out) throws IOException {   
 		FileInputStream istream = new FileInputStream(imageFile);
-		convertToImage(istream,width,height,drawData,outputFormat,out);
+		convertToImage(istream,drawData,outputFormat,out);
 	}
 
 }
