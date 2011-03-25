@@ -156,7 +156,7 @@ public class ManageLinkedClients {
 		temp = StringUtils.trimToNull(demographic.getHin());
 		parameters.setHin(temp);
 
-		if (demographic.getBirthDay()!=null) parameters.setBirthDate(demographic.getBirthDay().getTime());
+		if (demographic.getBirthDay()!=null) parameters.setBirthDate(demographic.getBirthDay());
 		
 		return parameters;
 	}
@@ -278,7 +278,7 @@ public class ManageLinkedClients {
 		temp = StringUtils.trimToNull(demographic.getHin());
 		parameters.setHin(temp);
 
-		if (demographic.getBirthDay()!=null) parameters.setBirthDate(demographic.getBirthDay().getTime());
+		if (demographic.getBirthDay()!=null) parameters.setBirthDate(demographic.getBirthDay());
 		
 		return parameters;
 	}

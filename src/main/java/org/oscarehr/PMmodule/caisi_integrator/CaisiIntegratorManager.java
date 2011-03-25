@@ -29,6 +29,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang.time.DateUtils;
+import org.apache.cxf.endpoint.Client;
+import org.apache.cxf.frontend.ClientProxy;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicNote;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.CachedProgram;
@@ -58,7 +60,9 @@ import org.oscarehr.common.model.IntegratorConsent;
 import org.oscarehr.common.model.IntegratorConsent.ConsentStatus;
 import org.oscarehr.hnr.ws.MatchingClientParameters;
 import org.oscarehr.hnr.ws.MatchingClientScore;
+import org.oscarehr.util.CxfClientUtils;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.TimeClearedHashMap;
 
 /**
@@ -90,7 +94,8 @@ public class CaisiIntegratorManager {
 	}
 
 	private static void addAuthenticationInterceptor(Facility facility, Object wsPort) {
-		CxfClientUtils.addWSS4JAuthentication(facility.getIntegratorUser(), facility.getIntegratorPassword(), wsPort);
+		Client cxfClient = ClientProxy.getClient(wsPort);
+		cxfClient.getOutInterceptors().add(new AuthenticationOutWSS4JInterceptorForIntegrator(facility.getIntegratorUser(), facility.getIntegratorPassword()));
 	}
 
 	private static URL buildURL(Facility facility, String servicePoint) throws MalformedURLException {
@@ -343,10 +348,10 @@ public class CaisiIntegratorManager {
 	protected static SetConsentTransfer makeSetConsentTransfer(IntegratorConsent consent) {
 		SetConsentTransfer consentTransfer = new SetConsentTransfer();
 		consentTransfer.setConsentStatus(consent.getClientConsentStatus().name());
-		consentTransfer.setCreatedDate(consent.getCreatedDate());
+		consentTransfer.setCreatedDate(MiscUtils.toCalendar(consent.getCreatedDate()));
 		consentTransfer.setDemographicId(consent.getDemographicId());
 		consentTransfer.setExcludeMentalHealthData(consent.isExcludeMentalHealthData());
-		consentTransfer.setExpiry(consent.getExpiry());
+		consentTransfer.setExpiry(MiscUtils.toCalendar(consent.getExpiry()));
 
 		for (Entry<Integer, Boolean> entry : consent.getConsentToShareData().entrySet()) {
 			FacilityConsentPair pair = new FacilityConsentPair();

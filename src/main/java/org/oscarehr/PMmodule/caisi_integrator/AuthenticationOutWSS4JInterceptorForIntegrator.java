@@ -22,13 +22,13 @@ import org.oscarehr.util.LoggedInInfo;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-public class AuthenticationOutWSS4JInterceptor extends WSS4JOutInterceptor implements CallbackHandler {
+public class AuthenticationOutWSS4JInterceptorForIntegrator extends WSS4JOutInterceptor implements CallbackHandler {
 	private static final String REQUESTING_CAISI_PROVIDER_NO_KEY = "requestingCaisiProviderNo";
 	private static QName REQUESTING_CAISI_PROVIDER_NO_QNAME = new QName("http://oscarehr.org/caisi", REQUESTING_CAISI_PROVIDER_NO_KEY, "caisi");
 
 	private String password = null;
 
-	public AuthenticationOutWSS4JInterceptor(String user, String password) {
+	public AuthenticationOutWSS4JInterceptorForIntegrator(String user, String password) {
 		this.password = password;
 
 		HashMap<String, Object> properties = new HashMap<String, Object>();

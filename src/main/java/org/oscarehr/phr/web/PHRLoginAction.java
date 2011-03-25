@@ -49,75 +49,71 @@ import org.oscarehr.util.MiscUtils;
  *
  * @author jay
  */
-public class PHRLoginAction extends DispatchAction {
-     private static Logger log = MiscUtils.getLogger();
-     PHRService phrService;
-    
-    /**
-     * Creates a new instance of PHRLoginAction
-     */
-    public PHRLoginAction() {
-    }
-    
-    public void setPhrService(PHRService phrService){
-        this.phrService = phrService;
-    }
-     
-    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-       HttpSession session = request.getSession();
-       
-       String providerNo = (String) session.getAttribute("user");
-       PHRAuthentication phrAuth = null;
-       String forwardTo = (String) request.getParameter("forwardto");
-       //ActionForward af = new ActionForward();
-       //af.setPath(forwardTo);
-       //af.setRedirect(true);
-       ActionForward ar = new ActionForward(forwardTo);
-       request.setAttribute("forwardToOnSuccess", request.getParameter("forwardToOnSuccess"));
-       //log.debug("Request URI: " + forwardTo);
-       //log.debug("from request uri: " + (String) request.getParameter("forwardto"));
-       //log.debug("referrer header: " + request.getHeader("referer"));
-       if (!phrService.canAuthenticate(providerNo)) {
-           //TODO: Need to add message about how to set up a account
-           request.setAttribute("phrUserLoginErrorMsg", "You have not registered for MyOSCAR");
-           request.setAttribute("phrTechLoginErrorMsg", "No MyOSCAR information in the database");
-           return ar;
-       }
-       
-       try {
-           phrAuth = phrService.authenticate(providerNo, request.getParameter("phrPassword"));
-       } catch (Exception e) {
-           MiscUtils.getLogger().error("Error", e);
-            /*if ((e.getCause() != null && e.getCause().getClass() == java.net.ConnectException.class)
-            || (e.getCause() != null && e.getCause().getClass() == java.net.NoRouteToHostException.class)
-            || (e.getCause() != null && e.getCause().getClass(). == )) {*/
-           if (e.getCause() != null && e.getCause().getClass().getName().indexOf("java.") != -1) {
-                //server probably offline
-                log.warn("Connection to MyOSCAR server refused");
-                request.setAttribute("phrUserLoginErrorMsg", "Error contacting MyOSCAR server, please try again later");
-                request.setAttribute("phrTechLoginErrorMsg", e.getMessage());
-                return ar;
-            }
-            //assume wrong password at this point, but could be due to problems on the server
-            //log.warn("indivo Exception cause: " + e.getMessage());
-            //log.warn("canonical name: " + e.getClass().getCanonicalName());
-            //log.warn("getname: " + e.getCause().getClass().getName());
-            //log.warn("getname2: " + e.getClass().getName());
-            //log.warn("service server wrong");
-           
-           //server probably offline
-           log.debug("exception");
-           request.setAttribute("phrUserLoginErrorMsg", "Incorrect password");
-           request.setAttribute("phrTechLoginErrorMsg", e.getMessage());
-           return ar;
-       }
-       session.setAttribute(PHRAuthentication.SESSION_PHR_AUTH, phrAuth);
-       //set next PHR Exchange for next available time
-       Calendar cal = Calendar.getInstance();
-       cal.roll(Calendar.HOUR_OF_DAY, false);
-       session.setAttribute(phrService.SESSION_PHR_EXCHANGE_TIME, cal.getTime());
-       ActionRedirect arr = new ActionRedirect(forwardTo);
-       log.debug("Correct user/pass, auth success");
-       return arr;
-    } 
+public class PHRLoginAction extends DispatchAction
+{
+	private static Logger log = MiscUtils.getLogger();
+	PHRService phrService;
+
+	/**
+	 * Creates a new instance of PHRLoginAction
+	 */
+	public PHRLoginAction()
+	{
+	}
+
+	public void setPhrService(PHRService phrService)
+	{
+		this.phrService = phrService;
+	}
+
+	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception
+	{
+		HttpSession session = request.getSession();
+
+		String providerNo = (String)session.getAttribute("user");
+		PHRAuthentication phrAuth = null;
+		String forwardTo = (String)request.getParameter("forwardto");
+		//ActionForward af = new ActionForward();
+		//af.setPath(forwardTo);
+		//af.setRedirect(true);
+		ActionForward ar = new ActionForward(forwardTo);
+		request.setAttribute("forwardToOnSuccess", request.getParameter("forwardToOnSuccess"));
+		//log.debug("Request URI: " + forwardTo);
+		//log.debug("from request uri: " + (String) request.getParameter("forwardto"));
+		//log.debug("referrer header: " + request.getHeader("referer"));
+		if (!phrService.canAuthenticate(providerNo))
+		{
+			//TODO: Need to add message about how to set up a account
+			request.setAttribute("phrUserLoginErrorMsg", "You have not registered for MyOSCAR");
+			request.setAttribute("phrTechLoginErrorMsg", "No MyOSCAR information in the database");
+			return ar;
+		}
+
+		try
+		{
+			phrAuth = phrService.authenticate(providerNo, request.getParameter("phrPassword"));
+
+			if (phrAuth == null)
+			{
+				request.setAttribute("phrUserLoginErrorMsg", "Incorrect user/password");
+				return ar;
+			}
+		}
+		catch (Exception e)
+		{
+			MiscUtils.getLogger().error("Error", e);
+			request.setAttribute("phrUserLoginErrorMsg", "Error contacting MyOSCAR server, please try again later");
+			request.setAttribute("phrTechLoginErrorMsg", e.getMessage());
+			return ar;
+		}
+		
+		session.setAttribute(PHRAuthentication.SESSION_PHR_AUTH, phrAuth);
+		//set next PHR Exchange for next available time
+		Calendar cal = Calendar.getInstance();
+		cal.roll(Calendar.HOUR_OF_DAY, false);
+		session.setAttribute(phrService.SESSION_PHR_EXCHANGE_TIME, cal.getTime());
+		ActionRedirect arr = new ActionRedirect(forwardTo);
+		log.debug("Correct user/pass, auth success");
+		return arr;
+	}
 }
