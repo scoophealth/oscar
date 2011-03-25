@@ -1611,7 +1611,7 @@ public class ClientManagerAction extends BaseAction {
 							programName.append(cachedProgram.getName());
 
 							clientReferral.setProgramName(programName.toString());
-							clientReferral.setReferralDate(remoteReferral.getReferralDate());
+							clientReferral.setReferralDate(MiscUtils.toDate(remoteReferral.getReferralDate()));
 
 							Provider tempProvider = providerDao.getProvider(remoteReferral.getSourceCaisiProviderId());
 							clientReferral.setProviderFirstName(tempProvider.getFirstName());

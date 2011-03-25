@@ -30,21 +30,131 @@ package org.oscarehr.phr;
 
 import java.util.Date;
 
-/**
- *
- * @author jay
- */
-public interface PHRAuthentication {
-   
-    static final String SESSION_PHR_AUTH = "PHR_AUTH";
-    
-    public String getToken();
-    public String getUserId();    
-    public String getRole();
-    public Date getExpirationDate();
-    public String getName();
-    public String getNamePHRFormat();
-    public void setProviderNo(String s);
-    public String getProviderNo();
-    
+import javax.xml.datatype.XMLGregorianCalendar;
+
+import org.apache.log4j.Logger;
+import org.indivo.xml.attributes.RoleType;
+import org.indivo.xml.phr.types.AuthorType;
+import org.indivo.xml.talk.AuthenticateResultType;
+import org.oscarehr.util.MiscUtils;
+
+import oscar.oscarEncounter.data.EctProviderData;
+
+public class PHRAuthentication
+{
+
+	public static final String SESSION_PHR_AUTH = "PHR_AUTH";
+
+	private static Logger log = MiscUtils.getLogger();
+	AuthenticateResultType authResult = null;
+	String providerNo = null;
+
+	private Long myOscarUserId;
+	private String myOscarUserName;
+	private String myOscarPassword;
+
+	public PHRAuthentication()
+	{
+	}
+
+	public PHRAuthentication(AuthenticateResultType authResult)
+	{
+		this.authResult = authResult;
+	}
+
+	public String getToken()
+	{
+		return authResult.getActorTicket();
+	}
+
+	public String getUserId()
+	{
+		return authResult.getActorId();
+	}
+
+	public String getRole()
+	{
+		return authResult.getCurrentRole();
+	}
+
+	public Date getExpirationDate()
+	{
+		Date date = null;
+		XMLGregorianCalendar cal = authResult.getExpirationDate();
+		if (cal != null)
+		{
+			date = cal.toGregorianCalendar().getTime();
+		}
+		else
+		{
+			log.debug("cal was null");
+		}
+		return date;
+	}
+
+	public String getName()
+	{
+		EctProviderData.Provider prov = new EctProviderData().getProvider(providerNo);
+		return prov.getSurname() + ", " + prov.getFirstName();
+	}
+
+	public String getNamePHRFormat()
+	{
+		EctProviderData.Provider prov = new EctProviderData().getProvider(providerNo);
+		return prov.getFirstName() + " " + prov.getSurname();
+	}
+
+	public void setProviderNo(String s)
+	{
+		providerNo = s;
+	}
+
+	public String getProviderNo()
+	{
+		return providerNo;
+	}
+
+	public AuthorType getAuthorType()
+	{
+		org.indivo.xml.phr.types.ObjectFactory objectFactory = new org.indivo.xml.phr.types.ObjectFactory();
+		AuthorType authorType = objectFactory.createAuthorType();
+		authorType.setIndivoId(this.getUserId());
+		authorType.setName(this.getNamePHRFormat());
+		org.indivo.xml.attributes.ObjectFactory attributeObjectFactory = new org.indivo.xml.attributes.ObjectFactory();
+		RoleType roleType = attributeObjectFactory.createRoleType();
+		roleType.setValue(this.getRole());
+		authorType.setRole(roleType);
+		return authorType;
+	}
+
+	public String getMyOscarUserName()
+	{
+		return myOscarUserName;
+	}
+
+	public void setMyOscarUserName(String myOscarUserName)
+	{
+		this.myOscarUserName = myOscarUserName;
+	}
+
+	public Long getMyOscarUserId()
+	{
+		return myOscarUserId;
+	}
+
+	public void setMyOscarUserId(Long myOscarUserId)
+	{
+		this.myOscarUserId = myOscarUserId;
+	}
+
+	public String getMyOscarPassword()
+	{
+		return myOscarPassword;
+	}
+
+	public void setMyOscarPassword(String myOscarPassword)
+	{
+		this.myOscarPassword = myOscarPassword;
+	}
+
 }

@@ -429,7 +429,7 @@ public class PreventionData {
 
 		if (remotePreventions != null) {
 			for (CachedDemographicPrevention cachedDemographicPrevention : remotePreventions) {
-				Date preventionDate = cachedDemographicPrevention.getPreventionDate();
+				Date preventionDate = MiscUtils.toDate(cachedDemographicPrevention.getPreventionDate());
 
 				PreventionItem pItem = new PreventionItem(cachedDemographicPrevention.getPreventionType(), preventionDate);
 				pItem.setRemoteEntry(true);
@@ -469,7 +469,7 @@ public class PreventionData {
 					h.put("prevention_date_asDate", cachedDemographicPrevention.getPreventionDate());
 
 					if (demographicDateOfBirth != null) {
-						String age = UtilDateUtilities.calcAgeAtDate(demographicDateOfBirth, cachedDemographicPrevention.getPreventionDate());
+						String age = UtilDateUtilities.calcAgeAtDate(demographicDateOfBirth, MiscUtils.toDate(cachedDemographicPrevention.getPreventionDate()));
 						h.put("age", age);
 					}
 					else

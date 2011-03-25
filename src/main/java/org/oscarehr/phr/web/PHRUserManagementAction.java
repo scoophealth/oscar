@@ -31,7 +31,7 @@ package org.oscarehr.phr.web;
 
 
 import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -100,11 +100,13 @@ public class PHRUserManagementAction extends DispatchAction {
         String ticket     = auth.getToken();*/
         ActionRedirect ar = new ActionRedirect(mapping.findForward("registrationResult").getPath());
         PHRAuthentication phrAuth = (PHRAuthentication) request.getSession().getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
-        if (phrAuth == null || phrAuth.getToken() == null || phrAuth.getToken().equals("")) {
+        if (phrAuth == null || phrAuth.getMyOscarUserId() == null) {
             ar.addParameter("failmessage", "Permission Denied: You must be logged into myOSCAR to register users");
             return ar;
         }
-        Hashtable ht = new Hashtable();
+        
+//---        
+        HashMap<String, Object> ht = new HashMap<String, Object>();
         Enumeration paramNames = request.getParameterNames();
         while (paramNames.hasMoreElements()) {
             String param = (String) paramNames.nextElement();
@@ -113,7 +115,7 @@ public class PHRUserManagementAction extends DispatchAction {
             else
                 ht.put(param, request.getParameterValues(param));
         }
-        ht.put("registeringProviderNo", (String) request.getSession().getAttribute("user"));
+        ht.put("registeringProviderNo", request.getSession().getAttribute("user"));
         try {
             phrService.sendUserRegistration(ht, (String) request.getSession().getAttribute("user"));
             //if all is well, add the "pin" in the demographic screen

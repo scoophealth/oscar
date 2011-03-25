@@ -28,6 +28,7 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
@@ -89,6 +90,11 @@ public class RxUtil {
 
     public static String DateToString(Date Expression) {
         return DateToString(Expression, defaultPattern);
+    }
+
+    public static String DateToString(Calendar Expression) {
+        if (Expression==null) return DateToString(null, defaultPattern);
+    	return DateToString(Expression.getTime(), defaultPattern);
     }
 
     public static String DateToString(Date Expression, String pattern) {

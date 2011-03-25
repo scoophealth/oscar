@@ -26,6 +26,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Properties;
 import java.util.Vector;
 
@@ -130,6 +132,25 @@ public class MiscUtils {
 		return (cal);
 	}
 
+	public static GregorianCalendar toCalendar(Date date)
+	{
+		if (date==null) return(null);
+		
+		GregorianCalendar cal=new GregorianCalendar();
+		cal.setTime(date);
+		return(cal);
+	}
+	
+	/**
+	 * Null safe toDate
+	 */
+	public static Date toDate(Calendar cal)
+	{
+		if (cal==null) return(null);
+		
+		return(cal.getTime());
+	}
+	
 	/**
 	 * This method should only really be called once per context in the context startup listener.
 	 * 
