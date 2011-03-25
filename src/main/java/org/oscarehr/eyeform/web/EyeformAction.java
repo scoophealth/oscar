@@ -33,6 +33,7 @@ import org.oscarehr.common.IsPropertiesOn;
 import org.oscarehr.common.dao.BillingreferralDao;
 import org.oscarehr.common.dao.ClinicDAO;
 import org.oscarehr.common.dao.ConsultationRequestExtDao;
+import org.oscarehr.common.dao.DocumentResultsDao;
 import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.dao.ProfessionalSpecialistDao;
 import org.oscarehr.common.dao.SiteDao;
@@ -41,6 +42,7 @@ import org.oscarehr.common.model.Billingreferral;
 import org.oscarehr.common.model.Clinic;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DemographicExt;
+import org.oscarehr.common.model.Document;
 import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.Site;
@@ -424,6 +426,14 @@ public class EyeformAction extends DispatchAction {
 				EyeForm eyeform = eyeFormDao.getByAppointmentNo(appointmentNo);
 		        printer.printEyeformPlan(followUps, procedureBooks, testBooks,eyeform);
 				
+		        //photos
+		        DocumentResultsDao documentDao = (DocumentResultsDao)SpringUtils.getBean("documentResultsDao");
+		        List<Document> documents = documentDao.getPhotosByAppointmentNo(appointmentNo);
+		        if(documents.size()>0) {
+		        	String servletUrl  = request.getRequestURL().toString();
+		        	String url = servletUrl.substring(0,servletUrl.indexOf(request.getContextPath())+request.getContextPath().length());
+		        	printer.printPhotos(url,documents);
+		        }		        
 			}
 			
 			printer.finish();							
