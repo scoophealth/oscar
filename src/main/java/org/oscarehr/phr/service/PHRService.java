@@ -32,13 +32,14 @@ import java.io.StringReader;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -47,16 +48,9 @@ import org.indivo.IndivoException;
 import org.indivo.client.ActionNotPerformedException;
 import org.indivo.client.TalkClient;
 import org.indivo.client.TalkClientImpl;
-import org.indivo.xml.JAXBUtils;
-import org.indivo.xml.phr.DocumentGenerator;
 import org.indivo.xml.phr.DocumentUtils;
 import org.indivo.xml.phr.DocumentVersionGenerator;
-import org.indivo.xml.phr.RecordGenerator;
 import org.indivo.xml.phr.annotation.DocumentReferenceType;
-import org.indivo.xml.phr.contact.ContactInformation;
-import org.indivo.xml.phr.contact.ContactInformationType;
-import org.indivo.xml.phr.demographics.Demographics;
-import org.indivo.xml.phr.demographics.DemographicsType;
 import org.indivo.xml.phr.document.DocumentClassificationType;
 import org.indivo.xml.phr.document.DocumentHeaderType;
 import org.indivo.xml.phr.document.DocumentVersionType;
@@ -64,21 +58,24 @@ import org.indivo.xml.phr.document.IndivoDocumentType;
 import org.indivo.xml.phr.document.VersionBodyType;
 import org.indivo.xml.phr.message.MessageType;
 import org.indivo.xml.phr.record.IndivoRecordType;
-import org.indivo.xml.phr.urns.ContentTypeQNames;
-import org.indivo.xml.phr.urns.DocumentClassificationUrns;
 import org.indivo.xml.talk.AddDocumentResultType;
 import org.indivo.xml.talk.ReadDocumentHeaderListResultType;
 import org.indivo.xml.talk.ReadDocumentResultType;
 import org.indivo.xml.talk.ReadResultType;
 import org.indivo.xml.talk.SendMessageResultType;
 import org.indivo.xml.talk.UpdateDocumentResultType;
+import org.oscarehr.myoscar_server.ws.AccountWs;
 import org.oscarehr.myoscar_server.ws.LoginWs;
+import org.oscarehr.myoscar_server.ws.MedicalDataTransfer;
+import org.oscarehr.myoscar_server.ws.MedicalDataType;
+import org.oscarehr.myoscar_server.ws.MedicalDataWs;
 import org.oscarehr.myoscar_server.ws.PersonTransfer;
+import org.oscarehr.myoscar_server.ws.Relation;
+import org.oscarehr.myoscar_server.ws.Role;
 import org.oscarehr.phr.PHRAuthentication;
 import org.oscarehr.phr.PHRConstants;
 import org.oscarehr.phr.dao.PHRActionDAO;
 import org.oscarehr.phr.dao.PHRDocumentDAO;
-import org.oscarehr.phr.indivo.IndivoUtil;
 import org.oscarehr.phr.indivo.model.PHRIndivoAnnotation;
 import org.oscarehr.phr.indivo.model.PHRIndivoDocument;
 import org.oscarehr.phr.indivo.service.accesspolicies.IndivoAPService;
@@ -89,6 +86,8 @@ import org.oscarehr.phr.model.PHRMedication;
 import org.oscarehr.phr.model.PHRMessage;
 import org.oscarehr.phr.util.MyOscarServerWebServicesManager;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.XmlUtils;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import oscar.OscarProperties;
@@ -100,11 +99,11 @@ import oscar.oscarProvider.data.ProviderMyOscarIdData;
 import oscar.oscarRx.data.RxPrescriptionData;
 
 public class PHRService {
-    //What the key in the session is (value is PHRAuthentication type)
-    public static final String SESSION_PHR_EXCHANGE_TIME = "PHR_EXCHANGE_TIME";
-    //What the key in OscarProperties is - in seconds (value is int)
-    public static final String OSCAR_PROPS_EXCHANGE_INTERVAL = "MY_OSCAR_EXCHANGE_INTERVAL";
-    
+	// What the key in the session is (value is PHRAuthentication type)
+	public static final String SESSION_PHR_EXCHANGE_TIME = "PHR_EXCHANGE_TIME";
+	// What the key in OscarProperties is - in seconds (value is int)
+	public static final String OSCAR_PROPS_EXCHANGE_INTERVAL = "MY_OSCAR_EXCHANGE_INTERVAL";
+
 	private static final Logger logger = MiscUtils.getLogger();
 	protected PHRDocumentDAO phrDocumentDAO;
 	protected PHRActionDAO phrActionDAO;
@@ -117,7 +116,7 @@ public class PHRService {
 			return true;
 		}
 	}
-
+	
 	public boolean validAuthentication(PHRAuthentication auth) {
 
 		if (auth == null) {
@@ -143,34 +142,34 @@ public class PHRService {
 
 		PHRAuthentication phrAuth = null;
 		phrAuth = authenticateIndivoId(indivoId, password);
-		if (phrAuth!=null) phrAuth.setProviderNo(providerNo);
+		if (phrAuth != null) phrAuth.setProviderNo(providerNo);
 		return phrAuth;
 	}
 
 	// used to authenticate demographics and perhaps admin account
 	private PHRAuthentication authenticateIndivoId(String indivoId, String password) throws Exception {
 		// Caution: does not set provider number in PHRAuthentication object
-//		PHRAuthentication phrAuth = null;
-//		TalkClient client = getTalkClient(); // also throws Exception
-//		AuthenticateResultType authResult = client.authenticate(indivoId, password);
-//		// Throws IndivoException & ActionNotPerformedException
-//		// could be incorrect password or server down
-//		// distinguish like this: if (e.getCause() != null && e.getCause().getClass() == java.net.ConnectException.class)
-//		logger.debug("actor ticket " + authResult.getActorTicket());
-//		phrAuth = new PHRAuthentication(authResult);
+		// PHRAuthentication phrAuth = null;
+		// TalkClient client = getTalkClient(); // also throws Exception
+		// AuthenticateResultType authResult = client.authenticate(indivoId, password);
+		// // Throws IndivoException & ActionNotPerformedException
+		// // could be incorrect password or server down
+		// // distinguish like this: if (e.getCause() != null && e.getCause().getClass() == java.net.ConnectException.class)
+		// logger.debug("actor ticket " + authResult.getActorTicket());
+		// phrAuth = new PHRAuthentication(authResult);
 
-		LoginWs loginWs=MyOscarServerWebServicesManager.getLoginWs();
-		PersonTransfer personTransfer=loginWs.login(indivoId, password);
-		
-		logger.debug("MyOscar Login result : "+personTransfer==null?"failed":"success, userId="+personTransfer.getId());
-		
-		if (personTransfer==null) return(null);
-		
+		LoginWs loginWs = MyOscarServerWebServicesManager.getLoginWs();
+		PersonTransfer personTransfer = loginWs.login(indivoId, password);
+
+		logger.debug("MyOscar Login result : " + personTransfer == null ? "failed" : "success, userId=" + personTransfer.getId());
+
+		if (personTransfer == null) return (null);
+
 		PHRAuthentication phrAuth = new PHRAuthentication();
 		phrAuth.setMyOscarUserName(indivoId);
 		phrAuth.setMyOscarUserId(personTransfer.getId());
 		phrAuth.setMyOscarPassword(password);
-		
+
 		return phrAuth;
 
 		/*
@@ -302,37 +301,66 @@ public class PHRService {
 			}
 		}
 	}
-        public void saveMed(PHRMedication m) throws Exception{    
-                PHRDocument phrdoc = new PHRDocument();
+
+	public void saveMed(PHRMedication m) throws Exception {
+		PHRDocument phrdoc = new PHRDocument();
 		BeanUtils.copyProperties(phrdoc, m);
-		phrDocumentDAO.save(phrdoc);//save to phr document table!
-                //Drug d=m.getDrug();
-                //DrugDao drugDao = (DrugDao) SpringUtils.getBean("drugDao");
-                //drugDao.addNewDrug(d);
-        }
-        //retrieve meds from phr and save in phr_document table
-        public List<PHRMedication> retrieveSaveMedToDisplay(PHRAuthentication auth, String providerNo,String demoId,String demoPhrId) throws Exception{
-            TalkClient client = getTalkClient();
-            List<PHRMedication> listMed=new ArrayList<PHRMedication>();
-            ReadDocumentHeaderListResultType readResult = client.readDocumentHeaders(auth.getToken(), demoPhrId, org.indivo.xml.phr.urns.DocumentClassificationUrns.MEDICATION, true);
-            List<DocumentHeaderType> docHeaders = readResult.getDocumentHeader();
-            for(DocumentHeaderType header : docHeaders){
+		phrDocumentDAO.save(phrdoc);// save to phr document table!
+		// Drug d=m.getDrug();
+		// DrugDao drugDao = (DrugDao) SpringUtils.getBean("drugDao");
+		// drugDao.addNewDrug(d);
+	}
 
-                String index = header.getDocumentIndex();
-                boolean importStatus = checkImportStatus(index);//check if document has been imported before
-                Boolean sendByOscarBefore= isMedSentBefore(index);//check if this document was sent by this oscar before.
-                if(importStatus&&!sendByOscarBefore){
-                        ReadDocumentResultType resultDoc = client.readDocument(auth.getToken(), demoPhrId, index);
-                        IndivoDocumentType document = resultDoc.getIndivoDocument();
-                        PHRMedication med = new PHRMedication(document,demoId,demoPhrId,providerNo);
-                        listMed.add(med);
-                        saveMed(med);
-                }
-            }
-            return listMed;
-        }
+	// retrieve meds from phr and save in phr_document table
+	public List<PHRMedication> retrieveSaveMedToDisplay(PHRAuthentication auth, String providerNo, String demoId, String demoPhrId) throws Exception {
+//		TalkClient client = getTalkClient();
+//		List<PHRMedication> listMed = new ArrayList<PHRMedication>();
+//		ReadDocumentHeaderListResultType readResult = client.readDocumentHeaders(auth.getToken(), demoPhrId, org.indivo.xml.phr.urns.DocumentClassificationUrns.MEDICATION, true);
+//		List<DocumentHeaderType> docHeaders = readResult.getDocumentHeader();
+//		for (DocumentHeaderType header : docHeaders) {
+//
+//			String index = header.getDocumentIndex();
+//			boolean importStatus = checkImportStatus(index);// check if document has been imported before
+//			Boolean sendByOscarBefore = isMedSentBefore(index);// check if this document was sent by this oscar before.
+//			if (importStatus && !sendByOscarBefore) {
+//				ReadDocumentResultType resultDoc = client.readDocument(auth.getToken(), demoPhrId, index);
+//				IndivoDocumentType document = resultDoc.getIndivoDocument();
+//				PHRMedication med = new PHRMedication(document, demoId, demoPhrId, providerNo);
+//				listMed.add(med);
+//				saveMed(med);
+//			}
+//		}
+//		return listMed;
+		
+		MedicalDataWs medicalDataWs=MyOscarServerWebServicesManager.getMedicalDataWs(auth.getMyOscarUserId(), auth.getMyOscarPassword());
+		ArrayList<PHRMedication> phrMedications=new ArrayList<PHRMedication>();
+		
+		int startIndex=0;
+		int itemsToReturn=100;
+		List<MedicalDataTransfer> medicationTransfers=null;
+		do
+		{
+			medicationTransfers=medicalDataWs.getMedicalDataList(Long.parseLong(demoPhrId), MedicalDataType.MEDICATION.name(), true, startIndex, itemsToReturn);
+			startIndex=startIndex+itemsToReturn;
+			
+			for (MedicalDataTransfer medicalDataTransfer : medicationTransfers)
+			{
+				boolean importStatus = checkImportStatus(medicalDataTransfer.getId().toString());// check if document has been imported before
+				Boolean sendByOscarBefore = isMedSentBefore(medicalDataTransfer.getId().toString());// check if this document was sent by this oscar before.
+				if (importStatus && !sendByOscarBefore) {
+					Document doc=XmlUtils.toDocument(medicalDataTransfer.getData());
+					PHRMedication med = new PHRMedication(doc, demoId, demoPhrId, providerNo);
+					phrMedications.add(med);
+					saveMed(med);
+				}
+			}
+		}
+		while (medicationTransfers.size()>=itemsToReturn && startIndex<5000); // 5000 is an arbitary limit for now
+		
+		return(phrMedications);
+	}
 
-        //seems to be getting all documents from myoscar, need to change this part
+	// seems to be getting all documents from myoscar, need to change this part
 	public void retrieveDocuments(PHRAuthentication auth, String providerNo) throws Exception {
 		logger.debug("In retrieveDocuments");
 		TalkClient client = getTalkClient();
@@ -374,7 +402,7 @@ public class PHRService {
 				mess.checkImportStatus();
 				PHRDocument phrdoc = new PHRDocument();
 				BeanUtils.copyProperties(phrdoc, mess);
-				phrDocumentDAO.save(phrdoc);//save to phr document table!
+				phrDocumentDAO.save(phrdoc);// save to phr document table!
 			} else {
 				logger.debug("need to check for updates on this message");
 			}
@@ -424,13 +452,13 @@ public class PHRService {
 					logger.debug("message is going to " + msg.getRecipient());
 					// client.sendMessage(auth.getToken(),msg.getRecipient(),msg.getPriorThreadMessageId(),msg.getSubject(),msg.getMessageContent().getAny().getTextContent() );
 					updated = true;
-				} else if (action.getActionType() == PHRAction.ACTION_ADD) {//dealing with medication type document
-                                     
+				} else if (action.getActionType() == PHRAction.ACTION_ADD) {// dealing with medication type document
+
 					// if adding
 					IndivoDocumentType doc = action.getIndivoDocument();
 					if (action.getPhrClassification().equals(PHRConstants.DOCTYPE_BINARYDATA())) doc = PHRBinaryData.mountDocument(action.getOscarId(), doc);
 					if (action.getPhrClassification().equals(PHRConstants.DOCTYPE_ANNOTATION())) {
-						try {                                                   
+						try {
 							String referenceIndex = PHRIndivoAnnotation.getAnnotationReferenceIndex(doc);// temporarily stored
 							PHRAction referencedDocumentAction = phrActionDAO.getActionById(referenceIndex);
 							if (referencedDocumentAction == null) throw new Exception("Cannot find annotated document");
@@ -478,7 +506,7 @@ public class PHRService {
 					updated = true;
 
 				} else if (action.getActionType() == PHRAction.ACTION_UPDATE) {
-                                        logger.debug("else 2");
+					logger.debug("else 2");
 					if (action.getPhrIndex() == null && !action.getPhrClassification().equals(PHRConstants.DOCTYPE_ACCESSPOLICIES())) throw new Exception("Error: PHR index not set");
 
 					if (action.getPhrClassification().equals(PHRConstants.DOCTYPE_ACCESSPOLICIES())) action = apService.packageAccessPolicy(auth, action);
@@ -563,10 +591,12 @@ public class PHRService {
 
 		return docVersion;
 	}
-        //check if this medication has been sent by this oscar
-        public Boolean isMedSentBefore(String documentIndex){
-            return phrActionDAO.isActionPresentByPhrIndex(documentIndex);
-        }
+
+	// check if this medication has been sent by this oscar
+	public Boolean isMedSentBefore(String documentIndex) {
+		return phrActionDAO.isActionPresentByPhrIndex(documentIndex);
+	}
+
 	public boolean checkImportStatus(String documentIndex) {
 		return !phrDocumentDAO.hasIndex(documentIndex);
 	}
@@ -616,7 +646,7 @@ public class PHRService {
 	}
 
 	private TalkClient getTalkClient() throws IndivoException {
-		HashMap<String,String> m = new HashMap<String,String>();
+		HashMap<String, String> m = new HashMap<String, String>();
 		String indivoServer = OscarProperties.getInstance().getProperty("INDIVO_SERVER");
 		m.put(TalkClient.SERVER_LOCATION, indivoServer);
 		m.put(TalkClient.CERT_TRUST_KEY, "all");
@@ -633,90 +663,73 @@ public class PHRService {
 
 	}
 
-	public void sendUserRegistration(HashMap<String,Object> phrRegistrationForm, String whoIsAdding) throws Exception {
-		String iUsername = (String) phrRegistrationForm.get("username");
-		String iPassword = (String) phrRegistrationForm.get("password");
-		String iRole = (String) phrRegistrationForm.get("role");
-		String iFirstName = (String) phrRegistrationForm.get("firstName");
-		String iLastName = (String) phrRegistrationForm.get("lastName");
-		String iAddress = (String) phrRegistrationForm.get("address");
-		String iCity = (String) phrRegistrationForm.get("city");
-		String iProvince = (String) phrRegistrationForm.get("province");
-		String iPostal = (String) phrRegistrationForm.get("postal");
-		String iPhone = (String) phrRegistrationForm.get("phone");
-		String iPhone2 = (String) phrRegistrationForm.get("phone2");
-		String iEmail = (String) phrRegistrationForm.get("email");
-		String iDob = (String) phrRegistrationForm.get("dob");
+	/**
+	 * @return the myOscarUserId of the created user.
+	 * @throws Exception
+	 */
+	public PersonTransfer sendUserRegistration(HashMap<String,Object> phrRegistrationForm, String whoIsAdding) throws Exception {
 		String iRegisteringProviderNo = (String) phrRegistrationForm.get("registeringProviderNo");
-
-		String[] iGrantProviders = (String[]) phrRegistrationForm.get("list:grantProviders");
-
-		if (iGrantProviders == null) iGrantProviders = new String[0];
-
-		ContactInformationType indiContact = IndivoUtil.generateContactInformationType(iFirstName, iLastName, iAddress, iCity, iProvince, iPostal, iPhone, iPhone2, iEmail);
-		DemographicsType indiDemographics = IndivoUtil.generateDemographicType(iDob);
-
+		
 		// Login to Indivo as Admin
 		HashMap<String,String> adminLoginInfo = this.getAdminLogin();
-		PHRAuthentication adminAuth = null;
-		String adminAuthName = adminLoginInfo.get("firstName") + " " + adminLoginInfo.get("lastName");
 
-		// adminAuth = new TestAuthentication("ticket", "admin@indivohealth.org", "Admin A", "administrator", "000000");
-		try {
-			adminAuth = this.authenticateIndivoId((String) adminLoginInfo.get("username"), (String) adminLoginInfo.get("password"));
-		} catch (Exception e) {
-			logger.error("Could not authenticate as admin");
-			throw e;
+		LoginWs loginWs=MyOscarServerWebServicesManager.getLoginWs();
+		String adminUser=adminLoginInfo.get("username");
+		String adminPassword=adminLoginInfo.get("password");
+		PersonTransfer admin=loginWs.login(adminUser, adminPassword);
+		if (admin==null) throw(new Exception("Could not authenticate as admin"));
+		
+		AccountWs accountWs=MyOscarServerWebServicesManager.getAccountWs(admin.getId(), adminPassword);
+		PersonTransfer newAccount=new PersonTransfer();
+		newAccount.setUserName((String) phrRegistrationForm.get("username"));
+		newAccount.setRole(Role.PATIENT);
+		newAccount.setFirstName((String) phrRegistrationForm.get("firstName"));
+		newAccount.setLastName((String) phrRegistrationForm.get("lastName"));
+		newAccount.setStreetAddress1((String) phrRegistrationForm.get("address"));
+		newAccount.setCity((String) phrRegistrationForm.get("city"));
+		newAccount.setProvince((String) phrRegistrationForm.get("province"));
+		newAccount.setPostalCode((String) phrRegistrationForm.get("postal"));
+		newAccount.setPhone1((String) phrRegistrationForm.get("phone"));
+		newAccount.setPhone2((String) phrRegistrationForm.get("phone2"));
+		newAccount.setEmailAddress((String) phrRegistrationForm.get("email"));		
+
+		String iDob = (String) phrRegistrationForm.get("dob");
+		if (iDob!=null)
+		{
+			String[] split=iDob.split("[/\\-\\.]");
+			if (split.length==3)
+			{
+				GregorianCalendar cal=new GregorianCalendar(Integer.parseInt(split[0]),Integer.parseInt(split[1])-1,Integer.parseInt(split[2]));
+				newAccount.setBirthDate(cal);
+			}
 		}
-		try {
-			// Create a record:
-			String[] iRoles = new String[1];
-			iRoles[0] = iRole; // at the moment this feature doesn't appear to be implemented, more investigation needed
-			logger.debug("Creating user: \n" + adminAuth.getUserId() + ", \n" + adminLoginInfo.get("firstName") + ", \n" + adminLoginInfo.get("lastName") + ", \n" + adminAuth.getRole() + ", \n" + iUsername + ", \n" + iPassword + ", \n" + iRole + ", \n" + iRoles.toString() + ");");
-			IndivoRecordType newRecord = RecordGenerator.generateDefaultRecord(adminAuth.getUserId(), adminAuthName, adminAuth.getRole(), iUsername, iPassword, iRole, iRoles, null, null);
-			// ----Prepare Contact and Demographic docs (cast to IndivoDocumentType)
-
-			// Contact Document
-			DocumentGenerator docGenerator = new DocumentGenerator();
-			JAXBContext contactInfoContext = JAXBContext.newInstance(ContactInformationType.class.getPackage().getName());
-			Element indiContactEle = JAXBUtils.marshalToElement((JAXBElement) new ContactInformation(indiContact), contactInfoContext);
-			IndivoDocumentType indiContactDocument = docGenerator.generateDefaultDocument(adminAuth.getUserId(), adminAuthName, adminAuth.getRole(), DocumentClassificationUrns.CONTACT, ContentTypeQNames.CONTACT, indiContactEle);
-
-			// Demographic Document
-			JAXBContext demographicsInfoContext = JAXBContext.newInstance(DemographicsType.class.getPackage().getName());
-			Element indiDemographicsEle = JAXBUtils.marshalToElement((JAXBElement) new Demographics(indiDemographics), demographicsInfoContext);
-			IndivoDocumentType indiDemographicsDocument = docGenerator.generateDefaultDocument(adminAuth.getUserId(), adminAuthName, adminAuth.getRole(), DocumentClassificationUrns.DEMOGRAPHICS, ContentTypeQNames.DEMOGRAPHICS, indiDemographicsEle);
-
-			newRecord.getIndivoDocument().add(indiContactDocument);
-			newRecord.getIndivoDocument().add(indiDemographicsDocument);
-
-			logger.debug("DONE......------------" + iGrantProviders.length);
-
-			TalkClient talkClient = getTalkClient();
-			talkClient.createRecord(adminAuth.getToken(), iUsername, newRecord);
-
-			PHRAuthentication authNewUser = this.authenticateIndivoId(iUsername, iPassword);
-
+		
+		String newAccountPassword = (String) phrRegistrationForm.get("password");
+		
+		// if no password is set, we'll make one up, the nano time is to ensure it's not guessable.
+		if (newAccountPassword==null || newAccountPassword.length()==0) newAccountPassword=newAccount.getUserName()+System.nanoTime();
+		
+		newAccount=accountWs.addPerson(newAccount, newAccountPassword);
+		
+		if (newAccount==null) throw(new Exception("Error creating new Myoscar Account."));
+		
+		String[] iGrantProviders = (String[]) phrRegistrationForm.get("list:grantProviders");
+		if (iGrantProviders != null)
+		{
 			IndivoAPService apUtil = new IndivoAPService(this);
 
-			// do mutual sharing with indicated providers
-			for (int i = 0; i < iGrantProviders.length; i++) {
-				// get provider IndivoId
+			for (String grantToProvider : iGrantProviders)
+			{
 				ProviderData providerData = new ProviderData();
-				providerData.setProviderNo(iGrantProviders[i]);
+				providerData.setProviderNo(grantToProvider);
 				String permissionRecipientProviderId = providerData.getMyOscarId();
 
-				apUtil.sendAddAccessPolicy(authNewUser, permissionRecipientProviderId, IndivoAPService.LEVEL_PROVIDER);
-				apUtil.proposeAccessPolicy(iGrantProviders[i], authNewUser.getUserId(), IndivoAPService.LEVEL_PATIENT, iRegisteringProviderNo);
+				accountWs.createRelationshipByUserName(newAccount.getUserName(), permissionRecipientProviderId, Relation.PRIMARY_CARE_PROVIDER);				
+				apUtil.proposeAccessPolicy(permissionRecipientProviderId, newAccount.getUserName(), Relation.PATIENT.name(), iRegisteringProviderNo);
 			}
-
-		} catch (JAXBException jaxbe) {
-			logger.error("Failed to marshall account details");
-			throw jaxbe;
-		} catch (Exception e) {
-			logger.error("Indivo failed to create the new record");
-			throw e;
 		}
+		
+		return(newAccount);
 	}
 
 	// private void getDocument(
@@ -731,7 +744,7 @@ public class PHRService {
 	}
 
 	private HashMap<String, String> getAdminLogin() {
-		HashMap<String, String> loginInfo = new HashMap<String,String>();
+		HashMap<String, String> loginInfo = new HashMap<String, String>();
 		OscarProperties props = OscarProperties.getInstance();
 		loginInfo.put("username", props.getProperty("myOSCAR.admin.username"));
 		loginInfo.put("password", props.getProperty("myOSCAR.admin.password"));
@@ -760,5 +773,19 @@ public class PHRService {
 	public PHRDocumentDAO getPhrDocumentDAO() {
 		return phrDocumentDAO;
 	}
-    
+
+	public static void main(String... argv)
+	{
+		String a="2011-02-03";
+		String b="2011/02/03";
+		String c="2011.02.03";
+		String d="2011#02#03";
+		
+		String regex="[/\\-\\.]";
+		
+		logger.info(Arrays.toString(a.split(regex)));
+		logger.info(Arrays.toString(b.split(regex)));
+		logger.info(Arrays.toString(c.split(regex)));
+		logger.info(Arrays.toString(d.split(regex)));
+	}
 }

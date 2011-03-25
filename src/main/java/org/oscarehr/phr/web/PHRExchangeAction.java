@@ -153,9 +153,11 @@ public class PHRExchangeAction extends DispatchAction {
                     try{
                         request.getSession().setAttribute(phrService.SESSION_PHR_EXCHANGE_TIME, null);
                         long startTime = System.currentTimeMillis();
+//---                        
                         List<PHRMedication> listDrugsToDisplay=phrService.retrieveSaveMedToDisplay(auth,providerNo,demoId,demoPhrId);
                         HashMap<Long,PHRMedication> drugsToDisplay =RxUtil.createKeyValPair(listDrugsToDisplay);
                         bean.setPairPHRMed(drugsToDisplay);
+//---
                         //phrService.retrieveUploadDocs(auth,providerNo);
                         request.getSession().setAttribute(phrService.SESSION_PHR_EXCHANGE_TIME, getNextExchangeTime());
                         log.info("Time taken to perform doPhrExchangeMedication: " + (System.currentTimeMillis()-startTime) + "ms");

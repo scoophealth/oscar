@@ -32,6 +32,8 @@ import java.util.Date;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import org.apache.jcs.JCS;
+import org.apache.jcs.access.exception.CacheException;
 import org.apache.log4j.Logger;
 import org.indivo.xml.attributes.RoleType;
 import org.indivo.xml.phr.types.AuthorType;
@@ -45,23 +47,45 @@ public class PHRAuthentication
 
 	public static final String SESSION_PHR_AUTH = "PHR_AUTH";
 
-	private static Logger log = MiscUtils.getLogger();
+	private static Logger logger = MiscUtils.getLogger();
 	AuthenticateResultType authResult = null;
 	String providerNo = null;
 
 	private Long myOscarUserId;
 	private String myOscarUserName;
 	private String myOscarPassword;
+	
+	private JCS myOscarDataCache=null;
 
 	public PHRAuthentication()
 	{
+		try {
+	        myOscarDataCache=JCS.getInstance(getClass().getName()+'.'+System.identityHashCode(this));
+        } catch (CacheException e) {
+	        logger.error("Error", e);
+        }
 	}
 
 	public PHRAuthentication(AuthenticateResultType authResult)
 	{
+		this();
 		this.authResult = authResult;
 	}
 
+	public Object getFromCache(String category, String key)
+	{
+		return(myOscarDataCache.get(category+':'+key));
+	}
+	
+	public void putInCache(String category, String key, Object value)
+	{
+		try {
+	        myOscarDataCache.put(category+':'+key, value);
+        } catch (CacheException e) {
+	        logger.error("Error", e);
+        }
+	}
+	
 	public String getToken()
 	{
 		return authResult.getActorTicket();
@@ -87,7 +111,7 @@ public class PHRAuthentication
 		}
 		else
 		{
-			log.debug("cal was null");
+			logger.debug("cal was null");
 		}
 		return date;
 	}
@@ -156,5 +180,4 @@ public class PHRAuthentication
 	{
 		this.myOscarPassword = myOscarPassword;
 	}
-
 }

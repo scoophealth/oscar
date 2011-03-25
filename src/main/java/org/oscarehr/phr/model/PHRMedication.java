@@ -66,6 +66,7 @@ import org.indivo.xml.phr.urns.DocumentClassificationUrns;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.phr.PHRConstants;
 import org.oscarehr.util.MiscUtils;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import oscar.oscarEncounter.data.EctProviderData;
 import oscar.oscarRx.data.RxPrescriptionData;
@@ -86,6 +87,11 @@ public class PHRMedication extends PHRDocument{
         super();
         setReceiverInfo(demoId, demoPhrId);
         parseDocument(doc,providerNo);
+    }
+    public PHRMedication(Document doc,String demoId,String demoPhrId,String providerNo) throws Exception{
+        super();
+        setReceiverInfo(demoId, demoPhrId);
+//        parseDocument(doc,providerNo);
     }
     private MedicationType med;
     private Drug drug;

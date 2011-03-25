@@ -23,9 +23,9 @@ import oscar.OscarProperties;
 
 public class MyOscarServerWebServicesManager
 {
-	private static Logger logger = MiscUtils.getLogger();
-	private static String myoscarServerBaseUrl = (String)OscarProperties.getInstance().get("myoscar_server_base_url");
-
+	private static final Logger logger = MiscUtils.getLogger();
+	private static final String myoscarServerBaseUrl = (String)OscarProperties.getInstance().get("myoscar_server_base_url");
+	
 	private static URL buildURL(String servicePoint)
 	{
 		String urlString = myoscarServerBaseUrl + '/' + servicePoint + "?wsdl";
