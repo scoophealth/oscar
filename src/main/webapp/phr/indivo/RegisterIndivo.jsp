@@ -125,7 +125,6 @@ if (wPhoneExt != null)
                     Personal Information
                 </div>
                 <table>
-                    <html-el:hidden property="role" value="patient"/>
                     <tr>
                         <td>Name (First, Last):</td>
                         <td>
@@ -163,7 +162,7 @@ if (wPhoneExt != null)
                     </tr>
                     <tr>
                         <td>Date of Birth</td>
-                        <td><html-el:text property="dob" value="<%=demographic.getDob(\"/\")%>" size="10"/></td>
+                        <td><html-el:text property="dob" value="<%=demographic.getDob(\"/\")%>" size="10"/> (YYYY-MM-DD)</td>
                     </tr>
                 </table>
             </div>
