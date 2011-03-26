@@ -922,7 +922,8 @@ public class EyeformAction extends DispatchAction {
 			if ("true".equalsIgnoreCase(docFlag))
 				sendDocTickler("REP", demoNo, (String) request.getSession().getAttribute("user"), bsurl);
 
-			return mapping.findForward("success");
+			response.getWriter().println("alert('tickler sent');");
+			return null;
 		}
 		
 		public void sendDocTickler(String flag, String demoNo, String providerNo, String bsurl) {
@@ -1216,4 +1217,7 @@ public class EyeformAction extends DispatchAction {
 			response.getWriter().println("alert('tickler sent');");
 			return null;
 		}
+		
+		
+			
 }
