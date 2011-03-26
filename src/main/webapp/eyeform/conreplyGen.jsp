@@ -55,6 +55,13 @@ select {
 			}
 		}
 %>
+
+<%
+	request.setAttribute("sections",EyeformAction.getMeasurementSections());
+	request.setAttribute("headers",EyeformAction.getMeasurementHeaders());
+	request.setAttribute("providers",EyeformAction.getActiveProviders());
+%>
+
 <style type="text/css">
 /* Used for "import from enctounter" button */
 input.btn {
@@ -385,7 +392,24 @@ function confirmPrint(btn) {
      rs('att',('<%=(String)session.getAttribute("oscar_context_path")%>/billing/CA/ON/searchRefDoc.jsp?param='+t0+'&param2='+t1),600,600,1);
 	}
   </script>
+   <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
+   <script src="<c:out value="${ctx}/js/jquery.js"/>"></script>
+   <script>
+     jQuery.noConflict();
+   </script>   
+	
+	<oscar:customInterface section="conreport"/>
 
+<script>
+var ctx;
+var appointmentNo;
+
+jQuery(document).ready(function() {
+	ctx = '<%=request.getContextPath()%>';
+	demoNo = '<%=demographicNo%>';
+	appointmentNo = document.eyeForm.elements['cp.appointmentNo'].value;
+});
+</script>
 
 </head>
 <body topmargin="0" leftmargin="0" vlink="#0000FF">
@@ -631,11 +655,35 @@ function confirmPrint(btn) {
 
 				<tr>
 					<td colspan=2 style="width: 100%">
-					<table style="width: 100%">
+					<table>
 						<tr>
-							<td width="26%">FROMLIST-TODO <input name="exadd" class="btn" value="add"
-								onclick="addExam(document.eyeForm.fromlist);" type="button">
-							</td>
+               		<td>
+                			<select name="fromlist1" multiple="multiple" size="9" ondblclick="addSection(document.eyeForm.elements['fromlist1'],document.eyeForm.elements['fromlist2']);">                				
+                				<c:forEach var="item" items="${sections}">
+                					<option value="<c:out value="${item.value}"/>"><c:out value="${item.label}"/></option>
+                				</c:forEach>
+                			</select>
+                		</td>
+                		<td valign="middle">
+                			<input type="button" value=">>" onclick="addSection(document.eyeForm.elements['fromlist1'],document.eyeForm.elements['fromlist2']);"/>
+                		</td>
+                		<td>
+                			<select id="fromlist2" name="fromlist2" multiple="multiple" size="9" ondblclick="addExam(ctx,'fromlist2',document.eyeForm.elements['cp.examination'],appointmentNo);">
+                				<c:forEach var="item" items="${headers}">
+                					<option value="<c:out value="${item.value}"/>"><c:out value="${item.label}"/></option>
+                				</c:forEach>
+                			</select>                			
+							<input style="vertical-align: middle;" type="button" value="add" onclick="addExam(ctx,'fromlist2',document.eyeForm.elements['cp.examination'],appointmentNo);">
+						</td>              																				
+						</tr>
+					</table>
+					</td>
+				</tr>
+				
+				<tr>
+					<td colspan=2 style="width: 100%">
+					<table style="width: 100%">
+						<tr>										
 							<td width="74%"><html:textarea rows="7" style="width:100%"
 								property="cp.examination" /></td>
 						</tr>
@@ -688,7 +736,7 @@ function confirmPrint(btn) {
 					<tr>
 						<td colspan="2"><input type="checkbox" name="ack" checked>
 						remind me to complete it <input type="button" name="sendtickler"
-							value="send tickler" onclick="sendTickler();"></td>
+							value="send tickler" onclick="sendConReportTickler(ctx,demoNo);"></td>
 					</tr>
 				</c:if>
 				<tr>
