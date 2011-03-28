@@ -86,8 +86,6 @@ import org.oscarehr.phr.model.PHRMedication;
 import org.oscarehr.phr.model.PHRMessage;
 import org.oscarehr.phr.util.MyOscarServerWebServicesManager;
 import org.oscarehr.util.MiscUtils;
-import org.oscarehr.util.XmlUtils;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import oscar.OscarProperties;
@@ -161,7 +159,7 @@ public class PHRService {
 		LoginWs loginWs = MyOscarServerWebServicesManager.getLoginWs();
 		PersonTransfer personTransfer = loginWs.login(indivoId, password);
 
-		logger.debug("MyOscar Login result : " + personTransfer == null ? "failed" : "success, userId=" + personTransfer.getId());
+		logger.debug("MyOscar Login result : " + (personTransfer == null ? "failed" : "success, userId=" + personTransfer.getId()));
 
 		if (personTransfer == null) return (null);
 
@@ -348,8 +346,7 @@ public class PHRService {
 				boolean importStatus = checkImportStatus(medicalDataTransfer.getId().toString());// check if document has been imported before
 				Boolean sendByOscarBefore = isMedSentBefore(medicalDataTransfer.getId().toString());// check if this document was sent by this oscar before.
 				if (importStatus && !sendByOscarBefore) {
-					Document doc=XmlUtils.toDocument(medicalDataTransfer.getData());
-					PHRMedication med = new PHRMedication(doc, demoId, demoPhrId, providerNo);
+					PHRMedication med = new PHRMedication(medicalDataTransfer, demoId, demoPhrId, providerNo);
 					phrMedications.add(med);
 					saveMed(med);
 				}

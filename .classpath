@@ -5,6 +5,7 @@
 	<classpathentry excluding="**/*.java" kind="src" path="src/test/resources"/>
 	<classpathentry including="**/*.java" kind="src" path="src/main/java"/>
 	<classpathentry excluding="**/*.java" kind="src" path="src/main/resources"/>
+	<classpathentry kind="src" path="src/main/webapp"/>
 	<classpathentry kind="var" path="M2_REPO/javax/activation/activation/1.1/activation-1.1.jar"/>
 	<classpathentry kind="var" path="M2_REPO/javax/xml/bind/jaxb-api/2.2.1/jaxb-api-2.2.1.jar"/>
 	<classpathentry kind="var" path="M2_REPO/javax/xml/jaxm-api/UNKNOWN/jaxm-api-UNKNOWN.jar"/>
@@ -61,7 +62,7 @@
 	<classpathentry kind="var" path="M2_REPO/commons-logging/commons-logging/1.0.4/commons-logging-1.0.4.jar"/>
 	<classpathentry kind="var" path="M2_REPO/commons-pool/commons-pool/1.3/commons-pool-1.3.jar"/>
 	<classpathentry kind="var" path="M2_REPO/commons-validator/commons-validator/1.1.4/commons-validator-1.1.4.jar"/>
-	<classpathentry kind="var" path="M2_REPO/org/apache/jcs/jcs/1.3/jcs-1.3.jar" />
+	<classpathentry kind="var" path="M2_REPO/org/apache/jcs/jcs/1.3/jcs-1.3.jar"/>
 	<classpathentry kind="var" path="M2_REPO/net/sf/cookierevolver/cookierevolver/0.2.5/cookierevolver-0.2.5.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/apache/cxf/cxf-api/2.3.2/cxf-api-2.3.2.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/apache/cxf/cxf-bundle/2.3.2/cxf-bundle-2.3.2.jar"/>
