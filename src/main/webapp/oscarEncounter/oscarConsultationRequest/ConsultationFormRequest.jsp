@@ -147,6 +147,7 @@
 	var ctx = '<%=request.getContextPath()%>';
 	var requestId = '<%=request.getParameter("requestId")%>';
 	var demographicNo = '<%=demo%>';
+	var demoNo = '<%=demo%>';
 	var appointmentNo = '<%=appNo%>';
 </script>	
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/global.js"></script>

@@ -18,6 +18,278 @@ public class MeasurementFormatter {
 			mmap.put(m.getType(), m);
 		}
 	}
+		
+	public String getVisionAssessment(Map<String,Boolean> includeMap) {
+		StringBuilder sb = new StringBuilder();
+		if(includeMap.get("Auto-refraction") != null && this.getVisionAssessmentAutoRefraction().length()>0) {
+			sb.append("Auto-refraction ");
+			sb.append(this.getVisionAssessmentAutoRefraction());
+		}
+		if(includeMap.get("Keratometry") != null && this.getVisionAssessmentKeratometry().length()>0) {
+			sb.append("Keratometry ");
+			sb.append(this.getVisionAssessmentKeratometry());
+		}
+		if(includeMap.get("Distance vision (sc)") != null && this.getVisionAssessmentVision("distance", "sc").length()>0) {
+			sb.append("Distance vision (sc) ");
+			sb.append(this.getVisionAssessmentVision("distance", "sc"));
+		}
+		if(includeMap.get("Distance vision (cc)") != null && this.getVisionAssessmentVision("distance", "cc").length()>0) {
+			sb.append("Distance vision (cc) ");
+			sb.append(this.getVisionAssessmentVision("distance", "cc"));
+		}
+		if(includeMap.get("Distance vision (ph)") != null && this.getVisionAssessmentVision("distance", "ph").length()>0) {
+			sb.append("Distance vision (ph)");
+			sb.append(this.getVisionAssessmentVision("distance", "ph"));
+		}
+		if(includeMap.get("Near vision (sc)") != null && this.getVisionAssessmentVision("near", "sc").length()>0) {
+			sb.append("Near vision (sc) ");
+			sb.append(this.getVisionAssessmentVision("near", "sc"));
+		}
+		if(includeMap.get("Near vision (cc)") != null && this.getVisionAssessmentVision("near", "cc").length()>0) {
+			sb.append("Near vision (cc) ");
+			sb.append(this.getVisionAssessmentVision("near", "cc"));
+		}
+		if(sb.length()>0) {
+			sb.insert(0, "VISION ASSESSMENT:");
+		}
+		return sb.toString();
+	}
+	
+	public String getManifestVision(Map<String,Boolean> includeMap) {
+		StringBuilder sb = new StringBuilder();
+		if(includeMap.get("Manifest distance") != null && getManifestDistance().length()>0) {
+			sb.append("Manifest distance ");
+			sb.append(getManifestDistance());
+		}
+		if(includeMap.get("Manifest near") != null && getManifestNear().length()>0) {
+			sb.append("Manifest near ");
+			sb.append(getManifestNear());
+		}
+		if(includeMap.get("Cycloplegic refraction") != null && this.getCycloplegicRefraction().length()>0) {
+			sb.append("Cycloplegic refraction ");
+			sb.append(this.getCycloplegicRefraction());
+		}
+		if(sb.length()>0) {
+			sb.insert(0,"MANIFEST VISION:");
+		}
+		return sb.toString();
+	}
+	
+	public String getIntraocularPressure(Map<String,Boolean> includeMap) {
+		StringBuilder sb = new StringBuilder();
+		
+		if(includeMap.get("NCT") != null && this.getNCT().length()>0) {
+			sb.append("NCT ");
+			sb.append(this.getNCT());
+		}
+		if(includeMap.get("Applanation") != null && this.getApplanation().length()>0) {
+			sb.append("Applanation ");
+			sb.append(this.getApplanation());
+		}
+		if(includeMap.get("Central corneal thickness") != null && this.getCCT().length()>0) {
+			sb.append("Central corneal thickness ");
+			sb.append(this.getCCT());
+		}
+		if(sb.length()>0) {
+			sb.insert(0,"INTRAOCULAR PRESSURE:");
+		}
+		return sb.toString();
+	}
+	
+	public String getOtherExam(Map<String,Boolean> includeMap) {
+		StringBuilder sb = new StringBuilder();
+		
+		if(includeMap.get("Colour vision") != null && this.getColourVision().length()>0) {
+			sb.append("Colour vision ");
+			sb.append(this.getColourVision());
+		}
+		if(includeMap.get("Pupil") != null && this.getPupil().length()>0) {
+			sb.append("Pupil ");
+			sb.append(this.getPupil());
+		}
+		if(includeMap.get("Amsler grid") != null && this.getAmslerGrid().length()>0) {
+			sb.append("Amsler grid ");
+			sb.append(this.getAmslerGrid());
+		}
+		if(includeMap.get("Potential acuity meter") != null && this.getPAM().length()>0) {
+			sb.append("Potential acuity meter ");
+			sb.append(this.getPAM());
+		}
+		if(includeMap.get("Confrontation fields") != null && this.getConfrontation().length()>0) {
+			sb.append("Confrontation fields ");
+			sb.append(this.getConfrontation());
+		}
+		
+		if(sb.length()>0) {
+			sb.insert(0,"OTHER EXAM:");
+		}
+		return sb.toString();
+	}
+
+	public String getEOMStereo(Map<String,Boolean> includeMap) {
+		StringBuilder sb = new StringBuilder();
+		if(includeMap.get("EOM") != null && this.getEomStereo().length()>0) {
+			sb.append("EOM/Stereo ");
+			sb.append(this.getEomStereo());
+		}
+				
+		return sb.toString();
+	}
+	
+	public String getAnteriorSegment(Map<String,Boolean> includeMap) {
+		StringBuilder sb = new StringBuilder();
+		if(includeMap.get("Cornea") != null && this.getCornea().length()>0) {
+			sb.append("Cornea ");
+			sb.append(this.getCornea());
+		}		
+		if(includeMap.get("Conjunctiva/Sclera") != null && this.getConjuctivaSclera().length()>0) {
+			sb.append("Conjunctiva/Sclera ");
+			sb.append(this.getConjuctivaSclera());
+		}
+		if(includeMap.get("Anterior chamber") != null && this.getAnteriorChamber().length()>0) {
+			sb.append("Anterior chamber ");
+			sb.append(this.getAnteriorChamber());
+		}
+		if(includeMap.get("Angle") != null && this.getAngle().length()>0) {
+			sb.append("Angle ");
+			sb.append(this.getAngle());
+		}
+		if(includeMap.get("Iris") != null && this.getIris().length()>0) {
+			sb.append("Iris ");
+			sb.append(this.getIris());
+		}
+		if(includeMap.get("Lens") != null && this.getLens().length()>0) {
+			sb.append("Lens ");
+			sb.append(this.getLens());
+		}
+		
+		if(sb.length()>0) {
+			sb.insert(0,"ANTERIOR SEGMENT:");
+		}
+		return sb.toString();
+	}
+	
+	public String getPosteriorSegment(Map<String,Boolean> includeMap) {
+		StringBuilder sb = new StringBuilder();
+		if(includeMap.get("Optic disc") != null && this.getDisc().length()>0) {
+			sb.append("Optic disc ");
+			sb.append(this.getDisc());
+		}
+		if(includeMap.get("C/D ratio") != null && this.getCdRatio().length()>0) {
+			sb.append("C/D ratio ");
+			sb.append(this.getCdRatio());
+		}	
+		if(includeMap.get("Macula") != null && this.getMacula().length()>0) {
+			sb.append("Macula ");
+			sb.append(this.getMacula());
+		}	
+		if(includeMap.get("Retina") != null && this.getRetina().length()>0) {
+			sb.append("Retina ");
+			sb.append(this.getRetina());
+		}	
+		if(includeMap.get("Vitreous") != null && this.getVitreous().length()>0) {
+			sb.append("Vitreous ");
+			sb.append(this.getVitreous());
+		}	
+		if(sb.length()>0) {
+			sb.insert(0,"POSTERIOR SEGMENT:");
+		}
+		return sb.toString();
+	}
+	
+	public String getExternalOrbit(Map<String,Boolean> includeMap) {
+		StringBuilder sb = new StringBuilder();
+		if(includeMap.get("Face") != null && this.getFace().length()>0) {
+			sb.append("Face ");
+			sb.append(this.getFace());
+		}
+		if(includeMap.get("Upper lid") != null && this.getUpperLid().length()>0) {
+			sb.append("Upper lid ");
+			sb.append(this.getUpperLid());
+		}
+		if(includeMap.get("Lower lid") != null && this.getLowerLid().length()>0) {
+			sb.append("Lower lid ");
+			sb.append(this.getLowerLid());
+		}
+		if(includeMap.get("Punctum") != null && this.getPunctum().length()>0) {
+			sb.append("Punctum ");
+			sb.append(this.getPunctum());
+		}
+		if(includeMap.get("Lacrimal lake") != null && this.getLacrimalLake().length()>0) {
+			sb.append("Lacrimal lake ");
+			sb.append(this.getLacrimalLake());
+		}
+		if(includeMap.get("Retropulsion") != null && this.getRetropulsion().length()>0) {
+			sb.append("Retropulsion ");
+			sb.append(this.getRetropulsion());
+		}
+		if(includeMap.get("Hertel") != null && this.getHertel().length()>0) {
+			sb.append("Hertel ");
+			sb.append(this.getHertel());
+		}
+		
+		if(sb.length()>0) {
+			sb.insert(0,"EXTERNAL/ORBIT:");
+		}
+		return sb.toString();
+	}
+	
+	public String getNasalacrimalDuct(Map<String,Boolean> includeMap) {
+		StringBuilder sb = new StringBuilder();
+		if(includeMap.get("Lacrimal irrigation") != null && this.getLacrimalIrrigation().length()>0) {
+			sb.append("Lacrimal irrigation ");
+			sb.append(this.getLacrimalIrrigation());
+		}
+		if(includeMap.get("Nasolacrimal duct") != null && this.getNLD().length()>0) {
+			sb.append("Nasolacrimal duct ");
+			sb.append(this.getNLD());
+		}
+		if(includeMap.get("Dye disappearance") != null && this.getDyeDisappearance().length()>0) {
+			sb.append("Dye disappearance ");
+			sb.append(this.getDyeDisappearance());
+		}
+		
+		if(sb.length()>0) {
+			sb.insert(0,"NASOLACRIMAL DUCT:");
+		}
+		return sb.toString();
+	}
+	
+	public String getEyelidMeasurement(Map<String,Boolean> includeMap) {
+		StringBuilder sb = new StringBuilder();
+		if(includeMap.get("Margin reflex distance") != null && this.getMarginReflexDistance().length()>0) {
+			sb.append("Margin reflex distance ");
+			sb.append(this.getMarginReflexDistance());
+		}
+		if(includeMap.get("Levator function") != null && this.getLevatorFunction().length()>0) {
+			sb.append("Levator function ");
+			sb.append(this.getLevatorFunction());
+		}
+		if(includeMap.get("Inferior scleral show") != null && this.getInferiorScleralShow().length()>0) {
+			sb.append("Inferior scleral show ");
+			sb.append(this.getInferiorScleralShow());
+		}
+		if(includeMap.get("Lagophthalmos") != null && this.getLagophthalmos().length()>0) {
+			sb.append("Lagophthalmos ");
+			sb.append(this.getLagophthalmos());
+		}
+		if(includeMap.get("Blink reflex") != null && this.getBlink().length()>0) {
+			sb.append("Blink ");
+			sb.append(this.getBlink());
+		}
+		if(includeMap.get("Cranial nerve VII function") != null && this.getCNVii().length()>0) {
+			sb.append("Cranial nerve VII function ");
+			sb.append(this.getCNVii());
+		}
+		if(includeMap.get("Bells phenomenon") != null && this.getBells().length()>0) {
+			sb.append("Bell's phenomenon ");
+			sb.append(this.getBells());
+		}
+		if(sb.length()>0) {
+			sb.insert(0,"EYELID MEASUREMENT:");
+		}
+		return sb.toString();
+	}
 	
 	public String getVisionAssessmentAutoRefraction() {
 		StringBuilder sb = new StringBuilder();		
@@ -118,6 +390,7 @@ public class MeasurementFormatter {
 		return sb.toString();
 	}
 	
+	//TODO: No ADD HERE?
 	public String getCycloplegicRefraction() {
 		StringBuilder sb = new StringBuilder();
 		if(isPresent("od_cycloplegic_refraction_sph")) {
@@ -276,9 +549,11 @@ public class MeasurementFormatter {
 	}
 	
 	public String getEomStereo() {
-		StringBuilder sb = new StringBuilder();				
-		sb.append(getValue("EOM"));				
-		sb.append(".");	
+		StringBuilder sb = new StringBuilder();	
+		if(isPresent("EOM")) {
+			sb.append(getValue("EOM"));				
+			sb.append(".");
+		}
 		return sb.toString();
 	}	
 	

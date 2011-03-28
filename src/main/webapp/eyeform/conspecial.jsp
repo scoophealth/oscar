@@ -1,3 +1,10 @@
+<%@ include file="/taglibs.jsp"%>
+<%@page import="org.oscarehr.eyeform.web.EyeformAction"%>
+<%
+	request.setAttribute("sections",EyeformAction.getMeasurementSections());
+	request.setAttribute("headers",EyeformAction.getMeasurementHeaders());
+	request.setAttribute("providers",EyeformAction.getActiveProviders());
+%>
 <tr>	
             <td colspan=2 class="tite4">
             <table width="100%">
@@ -30,17 +37,40 @@
                 <table>
                 	<tr>
                 		<td>
-                			<select name="fromlist" multiple="multiple" size="9" ondblclick="addSpecialExam();">
+                			<select name="fromlist1" multiple="multiple" size="9" ondblclick="addSection(document.EctConsultationFormRequestForm.elements['fromlist1'],document.EctConsultationFormRequestForm.elements['fromlist2']);">                				
+                				<c:forEach var="item" items="${sections}">
+                					<option value="<c:out value="${item.value}"/>"><c:out value="${item.label}"/></option>
+                				</c:forEach>
                 			</select>
-							<input style="vertical-align: middle;" type="button" value="add" onclick="addSpecialExam();">
                 		</td>
+                		<td valign="middle">
+                			<input type="button" value=">>" onclick="addSection(document.EctConsultationFormRequestForm.elements['fromlist1'],document.EctConsultationFormRequestForm.elements['fromlist2']);"/>
+                		</td>
+                		<td>
+                			<select id="fromlist2" name="fromlist2" multiple="multiple" size="9" ondblclick="a();">
+                				<c:forEach var="item" items="${headers}">
+                					<option value="<c:out value="${item.value}"/>"><c:out value="${item.label}"/></option>
+                				</c:forEach>
+                			</select>                			
+							<input style="vertical-align: middle;" type="button" value="add" onclick="addExam(ctx,'fromlist2',document.EctConsultationFormRequestForm.elements['ext_specialProblem'],appointmentNo);">
+						</td>                		
+                	</tr>
+                </table>
+            </td>
+       </tr>
+       
+       <tr>
+            <td colspan="2">
+                <table>
+                	<tr>                		
                			 <td>
-                			<textarea cols="62" rows="8" id="ext_specialProblem" name="ext_specialProblem"></textarea>
+                			<textarea cols="90" rows="8" id="ext_specialProblem" name="ext_specialProblem"></textarea>
                 		</td>
                 	</tr>
                 </table>
             </td>
        </tr>
+       
        
        <tr>
 	       <td colspan=2 class="tite4">
@@ -61,11 +91,14 @@
        					<td><input type="checkbox" name="ackdoc" checked> remind me to complete it</td>
 					    <td>
 					    	<input type="checkbox" name="ackfront" checked>remind
-						    <select name="providerl">       
+						    <select name="providerl">  
+						    	<c:forEach var="item" items="${providers}">
+						    		<option value="<c:out value="${item.providerNo}"/>"><c:out value="${item.formattedName}"/></option>
+						    	</c:forEach>     
        						</select>
 					      to arrange it
        					</td>
-				       <td><input type="button" name="sendtickler" value="send tickler" onclick="sendSepcialTickler();"></td>
+				       <td><input type="button" name="sendtickler" value="send tickler" onclick="sendConRequestTickler(ctx,demoNo);"></td>
        				</tr>
        			</table>
       		 </td>
