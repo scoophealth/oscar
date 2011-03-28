@@ -14,21 +14,24 @@ import javax.servlet.jsp.tagext.TagSupport;
 import org.apache.log4j.Logger;
 import org.oscarehr.phr.PHRAuthentication;
 
-/**
- *
- * @author Paul
- */
-public class IfNotPHRAuthenticated extends TagSupport {
-    
-    Logger log = Logger.getLogger(IfTimeToExchange.class);
-    
-    public int doStartTag() {
-        PHRAuthentication phrAuth = (PHRAuthentication) pageContext.getSession().getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
-        if (phrAuth == null || phrAuth.getToken() == null || phrAuth.getToken().equals("")) {
-            return SKIP_PAGE;
-        }
-        return SKIP_BODY;
-    }
-   
-    
+public class IfNotPHRAuthenticated extends TagSupport
+{
+
+	Logger log = Logger.getLogger(IfTimeToExchange.class);
+
+	@Override
+	public int doStartTag()
+	{
+		PHRAuthentication phrAuth = (PHRAuthentication)pageContext.getSession().getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
+		//        if (phrAuth == null || phrAuth.getToken() == null || phrAuth.getToken().equals("")) {
+		//            return SKIP_PAGE;
+		//        }
+
+		if (phrAuth == null || phrAuth.getMyOscarUserId() == null || phrAuth.getMyOscarPassword() == null)
+		{
+			return SKIP_PAGE;
+		}
+		return SKIP_BODY;
+	}
+
 }

@@ -26,7 +26,6 @@ import javax.xml.ws.BindingProvider;
 import org.apache.log4j.Logger;
 import org.apache.ws.security.WSPasswordCallback;
 import org.apache.xmlbeans.XmlOptions;
-import org.oscarehr.PMmodule.caisi_integrator.CxfClientUtils;
 import org.oscarehr.PMmodule.dao.AdmissionDao;
 import org.oscarehr.PMmodule.dao.OcanSubmissionLogDao;
 import org.oscarehr.PMmodule.model.Admission;
@@ -159,6 +158,7 @@ import org.oscarehr.ocan.SymptomDocument.Symptom;
 import org.oscarehr.ocan.SymptomListDocument.SymptomList;
 import org.oscarehr.ocan.TimeLivedInCanadaDocument.TimeLivedInCanada;
 import org.oscarehr.ocan.VisitEmergencyDepartmentDocument.VisitEmergencyDepartment;
+import org.oscarehr.util.CxfClientUtils;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -409,7 +409,7 @@ public class OcanReportUIBean implements CallbackHandler {
 				    BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
 				    "https://iarintest.ccim.on.ca/iar/services/SubmissionService"); 
 			CxfClientUtils.configureClientConnection(port);
-			CxfClientUtils.configureWSSecurity(port,user,OcanReportUIBean.class);
+			CxfClientUtils.configureWSSecurity(port, user, new OcanReportUIBean());
 			CxfClientUtils.configureLogging(port);
 			
 			SubmissionResultType result=port.submitAssessment(is);

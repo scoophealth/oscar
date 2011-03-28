@@ -598,6 +598,16 @@ public final class DateUtils {
 		return((int) (ms/org.apache.commons.lang.time.DateUtils.MILLIS_PER_DAY));
 	}
 
+	public static Integer calculateDayDifference(Calendar date1, Date date2)
+	{
+		return(calculateDayDifference(date1, MiscUtils.toCalendar(date2)));
+	}
+
+	public static Integer calculateDayDifference(Date date1, Calendar date2)
+	{
+		return(calculateDayDifference(MiscUtils.toCalendar(date1), date2));
+	}
+
 	/**
 	 * date2-date1
 	 * 
@@ -605,15 +615,7 @@ public final class DateUtils {
 	 */
 	public static Integer calculateDayDifference(Date date1, Date date2)
 	{
-		if (date1==null || date2==null) return(null);
-		
-		Calendar cal1=new GregorianCalendar();
-		cal1.setTime(date1);
-		
-		Calendar cal2=new GregorianCalendar();
-		cal2.setTime(date2);
-		
-		return(calculateDayDifference(cal1, cal2));
+		return(calculateDayDifference(MiscUtils.toCalendar(date1), MiscUtils.toCalendar(date2)));
 	}
 
 }

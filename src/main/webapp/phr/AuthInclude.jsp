@@ -24,10 +24,11 @@ String providerNo = (String) request.getSession().getAttribute("user");
 ProviderData providerData = new ProviderData();
 providerData.setProviderNo(providerNo);
 String providerPhrId = providerData.getMyOscarId();
-PHRAuthentication phrAuth = (PHRAuthentication) session.getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
 //this particular <logic:present statement does not search parameters in request scope for some reason
 pageContext.setAttribute("phrUserLoginErrorMsg", request.getAttribute("phrUserLoginErrorMsg"));
 pageContext.setAttribute("phrTechLoginErrorMsg", request.getAttribute("phrTechLoginErrorMsg"));
+
+PHRAuthentication phrAuth = (PHRAuthentication) session.getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
 %>
 
    <style type="text/css">

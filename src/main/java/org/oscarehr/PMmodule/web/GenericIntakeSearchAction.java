@@ -121,13 +121,11 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 			intakeSearchBean.setHealthCardNumber(demographicTransfer.getHin());
 			intakeSearchBean.setHealthCardVersion(demographicTransfer.getHinVersion());
 			intakeSearchBean.setLastName(demographicTransfer.getLastName());
-
+ 
 			if (demographicTransfer.getBirthDate() != null) {
-				GregorianCalendar cal = new GregorianCalendar();
-				cal.setTime(demographicTransfer.getBirthDate());
-				intakeSearchBean.setYearOfBirth(String.valueOf(cal.get(Calendar.YEAR)));
-				intakeSearchBean.setMonthOfBirth(String.valueOf(cal.get(Calendar.MONTH)));
-				intakeSearchBean.setDayOfBirth(String.valueOf(cal.get(Calendar.DAY_OF_MONTH)));
+				intakeSearchBean.setYearOfBirth(String.valueOf(demographicTransfer.getBirthDate().get(Calendar.YEAR)));
+				intakeSearchBean.setMonthOfBirth(String.valueOf(demographicTransfer.getBirthDate().get(Calendar.MONTH)));
+				intakeSearchBean.setDayOfBirth(String.valueOf(demographicTransfer.getBirthDate().get(Calendar.DAY_OF_MONTH)));
 			}
 		} catch (MalformedURLException e) {
 			LOG.error("Unexpected Error.", e);
@@ -200,7 +198,7 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 				temp = StringUtils.trimToNull(intakeSearchBean.getDayOfBirth());
 				if (temp != null) cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(temp));
 
-				parameters.setBirthDate(cal.getTime());
+				parameters.setBirthDate(cal);
 			}
 
 			List<MatchingDemographicTransferScore> integratedMatches = demographicWs.getMatchingDemographics(parameters);
@@ -256,12 +254,7 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 			demographic.setFirstName(demographicTransfer.getFirstName());
 			demographic.setLastName(demographicTransfer.getLastName());
 			
-			if (demographicTransfer.getBirthDate()!=null)
-			{
-				GregorianCalendar cal = new GregorianCalendar();
-				cal.setTime(demographicTransfer.getBirthDate());
-				demographic.setBirthDay(cal);
-			}
+			if (demographicTransfer.getBirthDate()!=null) demographic.setBirthDay(demographicTransfer.getBirthDate());
 			
 			if (demographicTransfer.getGender()!=null) demographic.setSex(demographicTransfer.getGender().name());
 	

@@ -60,7 +60,7 @@ public class ReferralHistoryDisplay {
 			logger.error("unexpected error", e);
 		}
 
-		referralDate = referral.getReferralDate();
+		referralDate = MiscUtils.toDate(referral.getReferralDate());
 		
 		// no completion date available yet
 		// completionDate=referral.getCompletionDate();
