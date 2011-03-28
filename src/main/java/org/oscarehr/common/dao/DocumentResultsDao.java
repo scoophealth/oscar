@@ -314,4 +314,14 @@ public class DocumentResultsDao extends AbstractDao<Document>{
         }
         return labResults;
     } 
+    
+    public List<Document> getPhotosByAppointmentNo(int appointmentNo) {
+    	Query query = this.entityManager.createNamedQuery("Document.findPhotosByAppointmentNo");
+    	query.setParameter("appointmentNo", appointmentNo);
+    	
+    	@SuppressWarnings("unchecked")
+    	List<Document> results =  query.getResultList();
+    	
+    	return results;
+    }
 }

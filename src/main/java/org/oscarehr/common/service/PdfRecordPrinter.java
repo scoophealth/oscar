@@ -38,6 +38,7 @@ import com.lowagie.text.DocumentException;
 import com.lowagie.text.Element;
 import com.lowagie.text.Font;
 import com.lowagie.text.HeaderFooter;
+import com.lowagie.text.Image;
 import com.lowagie.text.PageSize;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.Phrase;
@@ -898,5 +899,35 @@ public class PdfRecordPrinter {
         p.add(new Phrase("\n\n"));
         getDocument().add(p);
         
+    }
+    
+    public void printPhotos(String contextPath, List<org.oscarehr.common.model.Document> photos) throws DocumentException {
+    	Font obsfont = new Font(getBaseFont(), FONTSIZE, Font.UNDERLINE);                
+        
+        Paragraph p = new Paragraph();
+        p.setAlignment(Paragraph.ALIGN_LEFT);
+        Phrase phrase = new Phrase(LEADING, "\n\n", getFont());
+        p.add(phrase);
+        phrase = new Phrase(LEADING, "Photos:", obsfont);        
+        p.add(phrase);
+        getDocument().add(p);        
+        
+    	for(org.oscarehr.common.model.Document doc:photos) {
+    		Image img = null;
+    		try {
+    			String location = oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR").trim() + doc.getDocfilename();
+    			img = Image.getInstance(location);    			
+    		} catch(IOException e) {
+    			MiscUtils.getLogger().error("error:",e);
+    			continue;
+    		}
+    		img.scaleToFit(getDocument().getPageSize().width()-getDocument().leftMargin()-getDocument().rightMargin(), getDocument().getPageSize().height());
+    		       
+    		getDocument().add(img);
+    		p = new Paragraph(); 
+    		p.add(new Phrase("Description:"+doc.getDocdesc(),getFont()));
+    		getDocument().add(p);
+    		   		
+        }
     }
 }
