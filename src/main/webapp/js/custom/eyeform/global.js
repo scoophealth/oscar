@@ -7,11 +7,22 @@ function sendConRequestTickler(ctx,demographicNo){
         		req+='&frontFlag=true&providerNo=';                        
         		req+=document.EctConsultationFormRequestForm.providerl.value;                
         	}               
-        	alert(req);
+        	//alert(req);
         	jQuery.ajax({url:req,dataType:'script'});     
         }else {                
         	alert("Please check the checkbox before click this button!");
         }
+}
+
+function sendConReportTickler(ctx,demographicNo){
+	var req=ctx+"/eyeform/Eyeform.do?method=specialRepTickler&demographicNo="+demographicNo;
+	if (document.eyeForm.ack.checked==true){
+		req+='&docFlag=true';
+		//alert(req);
+		jQuery.ajax({url:req,dataType:'script'});    
+	}else{
+		alert("Please check the checkbox before click this button!");
+	}
 }
 
 

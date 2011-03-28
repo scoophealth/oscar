@@ -47,7 +47,7 @@
                 			<input type="button" value=">>" onclick="addSection(document.EctConsultationFormRequestForm.elements['fromlist1'],document.EctConsultationFormRequestForm.elements['fromlist2']);"/>
                 		</td>
                 		<td>
-                			<select id="fromlist2" name="fromlist2" multiple="multiple" size="9" ondblclick="a();">
+                			<select id="fromlist2" name="fromlist2" multiple="multiple" size="9" ondblclick="addExam(ctx,'fromlist2',document.EctConsultationFormRequestForm.elements['ext_specialProblem'],appointmentNo);">
                 				<c:forEach var="item" items="${headers}">
                 					<option value="<c:out value="${item.value}"/>"><c:out value="${item.label}"/></option>
                 				</c:forEach>
