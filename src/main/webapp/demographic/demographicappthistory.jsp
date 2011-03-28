@@ -66,7 +66,7 @@
 	var ctx = '<%=request.getContextPath()%>';
 </script>
 
-<oscar:customInterface section="apphistory"/>
+<oscar:customInterface section="appthistory"/>
    
 <title><bean:message
 	key="demographic.demographicappthistory.title" /></title>
