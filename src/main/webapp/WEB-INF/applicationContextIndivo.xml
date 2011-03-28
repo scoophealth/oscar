@@ -5,7 +5,7 @@
        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd"
 	default-autowire="no">
 
-	<bean id="phrService" class="org.oscarehr.phr.indivo.service.impl.IndivoServiceImpl">
+	<bean id="phrService" class="org.oscarehr.phr.service.PHRService">
 		<property name="phrDocumentDAO">
 			<ref bean="phrDocumentDAO" />
 		</property>

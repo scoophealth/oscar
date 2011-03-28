@@ -1,7 +1,6 @@
 package org.oscarehr.PMmodule.web;
 
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -47,19 +46,18 @@ public class ManageHnrClientAction {
 				Demographic demographic = demographicDao.getDemographicById(clientId);
 
 				if (hnrClient.getBirthDate() != null) 
-					{
-					GregorianCalendar cal=new GregorianCalendar();
-					cal.setTime(hnrClient.getBirthDate());
-					demographic.setBirthDay(cal);
-					}
+				{
+					demographic.setBirthDay(hnrClient.getBirthDate());
+				}
+				
 				if (hnrClient.getCity() != null) demographic.setCity(hnrClient.getCity());
 				if (hnrClient.getFirstName() != null) demographic.setFirstName(hnrClient.getFirstName());
 				if (hnrClient.getGender()!=null) demographic.setSex(hnrClient.getGender().name());
 				if (hnrClient.getHin() != null) demographic.setHin(hnrClient.getHin());
 				if (hnrClient.getHinVersion() != null) demographic.setVer(hnrClient.getHinVersion());
 				if (hnrClient.getHinType() != null) demographic.setHcType(hnrClient.getHinType());
-				if (hnrClient.getHinValidStart() != null) demographic.setEffDate(hnrClient.getHinValidStart());
-				if (hnrClient.getHinValidEnd() != null) demographic.setHcRenewDate(hnrClient.getHinValidEnd());
+				if (hnrClient.getHinValidStart() != null) demographic.setEffDate(MiscUtils.toDate(hnrClient.getHinValidStart()));
+				if (hnrClient.getHinValidEnd() != null) demographic.setHcRenewDate(MiscUtils.toDate(hnrClient.getHinValidEnd()));
 
 				if (hnrClient.getImage() != null) {
 					ClientImage clientImage = clientImageDAO.getClientImage(clientId);
@@ -138,12 +136,12 @@ public class ManageHnrClientAction {
 					// do nothing, this is on a best attempt basis. until genders are defined constants.
 				}
 				
-				if (demographic.getBirthDay() != null) hnrClient.setBirthDate(demographic.getBirthDay().getTime());
+				if (demographic.getBirthDay() != null) hnrClient.setBirthDate(demographic.getBirthDay());
 				if (demographic.getHin() != null) hnrClient.setHin(demographic.getHin());
 				if (demographic.getVer() != null) hnrClient.setHinVersion(demographic.getVer());
 				if (demographic.getHcType() != null) hnrClient.setHinType(demographic.getHcType().toLowerCase());
-				if (demographic.getEffDate() != null) hnrClient.setHinValidStart(demographic.getEffDate());
-				if (demographic.getHcRenewDate() != null) hnrClient.setHinValidEnd(demographic.getHcRenewDate());
+				if (demographic.getEffDate() != null) hnrClient.setHinValidStart(MiscUtils.toCalendar(demographic.getEffDate()));
+				if (demographic.getHcRenewDate() != null) hnrClient.setHinValidEnd(MiscUtils.toCalendar(demographic.getHcRenewDate()));
 			}
 
 			ClientImage clientImage = clientImageDAO.getClientImage(clientId);

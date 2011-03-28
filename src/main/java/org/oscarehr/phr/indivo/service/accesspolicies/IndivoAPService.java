@@ -29,7 +29,6 @@ import org.indivo.xml.security.ProfileCollection;
 import org.indivo.xml.security.ProfileCollectionType;
 import org.oscarehr.phr.PHRAuthentication;
 import org.oscarehr.phr.PHRConstants;
-import org.oscarehr.phr.indivo.service.impl.IndivoServiceImpl;
 import org.oscarehr.phr.model.PHRAction;
 import org.oscarehr.phr.model.PHRDocument;
 import org.oscarehr.phr.service.PHRService;
@@ -46,7 +45,7 @@ import com.sun.xacml.combine.PolicyCombiningAlgorithm;
  *
  * @author apavel
  */
-public class IndivoAPService extends IndivoServiceImpl {
+public class IndivoAPService extends PHRService {
     
     /*Setting a provider access policy occurs in 4 stages:
      * 1.  ProposeAccessPolicy - Adds proposal to the actions
