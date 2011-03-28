@@ -573,9 +573,26 @@ try
 			}
 
 			boolean editWarn = !note.isSigned() && !note.getProviderNo().equals(provNo);
-			String hideCppNotes = OscarProperties.getInstance().getProperty("encounter.hide_cpp_notes","false");
+			boolean hideCppNotes = OscarProperties.getInstance().isPropertyActive("encounter.hide_cpp_notes");
+			boolean hideDocumentNotes = OscarProperties.getInstance().isPropertyActive("encounter.hide_document_notes");
+			boolean hideEformNotes = OscarProperties.getInstance().isPropertyActive("encounter.hide_eform_notes");			
+			//boolean hideMetaData = OscarProperties.getInstance().isPropertyActive("encounter.hide_metadata");
+			
+			String noteDisplay = "block";
+			if(note.isCpp() && hideCppNotes) {
+				noteDisplay="none";
+			}
+			if(note.isDocument() && hideDocumentNotes) {
+				noteDisplay="none";
+			}
+			if(note.isEformData() && hideEformNotes) {
+				noteDisplay="none";
+			}
+			
+			//String metaDisplay = (hideMetaData)?"none":"block";			
+			
 	%>
-		<div id="nc<%=idx+1%>" style="display:<%=note.isCpp()&&hideCppNotes.equals("true")?"none":"block" %>" class="note<%=note.isDocument()||note.isCpp()||note.isEformData()||note.isEncounterForm()?"":" noteRounded"%>">
+		<div id="nc<%=idx+1%>" style="display:<%=noteDisplay %>" class="note<%=note.isDocument()||note.isCpp()||note.isEformData()||note.isEncounterForm()?"":" noteRounded"%>">
 			<input type="hidden" id="signed<%=note.getNoteId()%>" value="<%=note.isSigned()%>"> 
 			<input type="hidden" id="full<%=note.getNoteId()%>" value="<%=fulltxt || (note.getNoteId() !=null && note.getNoteId().equals(savedId))%>"> 
 			<input type="hidden" id="bgColour<%=note.getNoteId()%>" value="<%=bgColour%>">
