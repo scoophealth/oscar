@@ -1,6 +1,8 @@
 package org.oscarehr.common.service;
 
 import java.awt.Color;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
@@ -17,8 +19,10 @@ import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.casemgmt.model.Allergy;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
+import org.oscarehr.common.dao.EFormValueDao;
 import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.EFormValue;
 import org.oscarehr.eyeform.MeasurementFormatter;
 import org.oscarehr.eyeform.model.EyeForm;
 import org.oscarehr.eyeform.model.FollowUp;
@@ -30,6 +34,7 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
+import oscar.eform.util.GraphicalCanvasToImage;
 import oscar.oscarClinic.ClinicData;
 
 import com.lowagie.text.Chunk;
@@ -52,7 +57,7 @@ import com.lowagie.text.pdf.PdfWriter;
 
 public class PdfRecordPrinter {
 
-    private static Logger log = MiscUtils.getLogger();
+    private static Logger logger = MiscUtils.getLogger();
     
     private HttpServletRequest request;
     private OutputStream os;
@@ -902,32 +907,100 @@ public class PdfRecordPrinter {
     }
     
     public void printPhotos(String contextPath, List<org.oscarehr.common.model.Document> photos) throws DocumentException {
-    	Font obsfont = new Font(getBaseFont(), FONTSIZE, Font.UNDERLINE);                
-        
-        Paragraph p = new Paragraph();
-        p.setAlignment(Paragraph.ALIGN_LEFT);
-        Phrase phrase = new Phrase(LEADING, "\n\n", getFont());
-        p.add(phrase);
-        phrase = new Phrase(LEADING, "Photos:", obsfont);        
-        p.add(phrase);
-        getDocument().add(p);        
+    	writer.setStrictImageSequence(true);
+    	
+    	if(photos.size()>0) {
+	    	Font obsfont = new Font(getBaseFont(), FONTSIZE, Font.UNDERLINE);                        
+	        Paragraph p = new Paragraph();
+	        p.setAlignment(Paragraph.ALIGN_LEFT);
+	        Phrase phrase = new Phrase(LEADING, "\n\n", getFont());
+	        p.add(phrase);
+	        phrase = new Phrase(LEADING, "Photos:", obsfont);        
+	        p.add(phrase);
+	        getDocument().add(p);
+    	}
         
     	for(org.oscarehr.common.model.Document doc:photos) {
     		Image img = null;
     		try {
     			String location = oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR").trim() + doc.getDocfilename();
+    			logger.info("adding image " + location);
     			img = Image.getInstance(location);    			
     		} catch(IOException e) {
     			MiscUtils.getLogger().error("error:",e);
     			continue;
     		}
     		img.scaleToFit(getDocument().getPageSize().width()-getDocument().leftMargin()-getDocument().rightMargin(), getDocument().getPageSize().height());
-    		       
-    		getDocument().add(img);
-    		p = new Paragraph(); 
+    		
+    		Chunk chunk = new Chunk(img,getDocument().getPageSize().width()-getDocument().leftMargin()-getDocument().rightMargin(), getDocument().getPageSize().height());
+    		
+    		Paragraph p = new Paragraph(); 
+    		p.add(img);    		
     		p.add(new Phrase("Description:"+doc.getDocdesc(),getFont()));
     		getDocument().add(p);
-    		   		
+
+    		
         }
+    }
+    
+    public void printDiagrams(List<EFormValue> diagrams) throws DocumentException {
+    	writer.setStrictImageSequence(true);
+
+    	EFormValueDao eFormValueDao = (EFormValueDao) SpringUtils.getBean("EFormValueDao");
+        
+        if(diagrams.size()>0) {
+        	Font obsfont = new Font(getBaseFont(), FONTSIZE, Font.UNDERLINE);                        
+	        Paragraph p = new Paragraph();
+	        p.setAlignment(Paragraph.ALIGN_LEFT);
+	        Phrase phrase = new Phrase(LEADING, "\n\n", getFont());
+	        p.add(phrase);
+	        phrase = new Phrase(LEADING, "Diagrams:", obsfont);        
+	        p.add(phrase);
+	        getDocument().add(p);
+        }
+        
+        for(EFormValue value:diagrams) {
+	    	//this is a form from our group, and our appt
+	    	String imgPath = OscarProperties.getInstance().getProperty("eform_image");
+	    	EFormValue imageName = eFormValueDao.findByFormDataIdAndKey(value.getFormDataId(),"image");
+	    	EFormValue drawData = eFormValueDao.findByFormDataIdAndKey(value.getFormDataId(),"DrawData");
+	    	EFormValue subject = eFormValueDao.findByFormDataIdAndKey(value.getFormDataId(),"subject");
+	    	
+	    	String image = imgPath + File.separator + imageName.getVarValue();
+	    	logger.debug("image for eform is " + image);
+	    	GraphicalCanvasToImage convert = new GraphicalCanvasToImage();
+	    	File tempFile = null;
+	    	try {
+	    		tempFile = File.createTempFile("graphicImg", ".png");		    	
+	    		FileOutputStream fos = new FileOutputStream(tempFile);
+	    		convert.convertToImage(image, drawData.getVarValue(), "PNG", fos);
+	    		logger.debug("converted image is " + tempFile.getName());
+	    		fos.close();		        			    		
+	    	}catch(IOException e) {
+	    		logger.error("Error",e);
+	    		if(tempFile!=null) {
+	    			tempFile.delete();
+	    		}
+	    		continue;
+	    	}
+	    	
+	   		Image img = null;
+    		try {
+    			logger.info("adding diagram " + tempFile.getAbsolutePath());
+    			img = Image.getInstance(tempFile.getAbsolutePath() );    			
+    		} catch(IOException e) {
+    			logger.error("error:",e);
+    			continue;
+    		}
+    		img.scaleToFit(getDocument().getPageSize().width()-getDocument().leftMargin()-getDocument().rightMargin(), getDocument().getPageSize().height());
+    		       
+    		Paragraph p = new Paragraph(); 
+    		p.add(img);    		
+    		p.add(new Phrase("Subject:"+subject.getVarValue(),getFont()));
+    		getDocument().add(p);
+    		   			    	
+	    	tempFile.deleteOnExit();
+        }
+    	
     }
 }
