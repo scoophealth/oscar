@@ -70,7 +70,7 @@ public class indivoCheck extends TagSupport {
                 if( demoNo != null ) {
                    DemographicData.Demographic demo = new DemographicData().getDemographic(demoNo); 
                    String pin = demo.getIndivoId();
-                   if( pin != null && pin.indexOf('@') > 0 ) 
+                   if( pin != null ) 
                         conditionMet = true;
                 }
                 else

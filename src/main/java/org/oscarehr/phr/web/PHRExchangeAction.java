@@ -204,8 +204,9 @@ public class PHRExchangeAction extends DispatchAction {
             try{
                 request.getSession().setAttribute(phrService.SESSION_PHR_EXCHANGE_TIME, null);
                 long startTime = System.currentTimeMillis();
-                phrService.sendQueuedDocuments(auth,providerNo) ;
-                phrService.retrieveDocuments(auth,providerNo);
+log.error("NEED TO FIX THE BELOW 2 LINES");
+//                phrService.sendQueuedDocuments(auth,providerNo) ;
+//                phrService.retrieveDocuments(auth,providerNo);
                 //phrService.retrieveUploadDocs(auth,providerNo);
                 request.getSession().setAttribute(phrService.SESSION_PHR_EXCHANGE_TIME, getNextExchangeTime());
                 log.info("Time taken to perform OSCAR-myOSCAR exchange: " + (System.currentTimeMillis()-startTime) + "ms");

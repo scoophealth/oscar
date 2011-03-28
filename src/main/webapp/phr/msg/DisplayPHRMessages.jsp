@@ -291,11 +291,13 @@ request.setAttribute("pageMethod",pageMethod);
                                                     <a href="javascript:window.close()" class="messengerButtons">Exit</a>
                                         </td></tr></table>
                                     </td>
-                                    <%PHRAuthentication phrAuth = (PHRAuthentication) session.getAttribute(PHRAuthentication.SESSION_PHR_AUTH);%>
+                                    <%
+                                    	PHRAuthentication phrAuth = (PHRAuthentication) session.getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
+                                    %>
                                     <logic:present name="<%=PHRAuthentication.SESSION_PHR_AUTH%>">
                                         <td class="myoscarLoginElementAuth">
                                             <div>
-                                                Status: <b>Logged in as <%=providerName%></b> (<%=phrAuth.getUserId()%>)
+                                                Status: <b>Logged in as <%=phrAuth.getMyOscarUserName()%></b> (<%=phrAuth.getMyOscarUserId()%>)
                                                 <form action="../../phr/Logout.do" name="phrLogout" method="POST"  style="margin: 0px; padding: 0px;">
                                                     <input type="hidden" name="forwardto" value="<%=request.getServletPath()%>?method=<%=(String) request.getParameter("method")%>">
                                                     <center><a href="javascript: document.forms['phrLogout'].submit()">Logout</a><div class="statusDiv" id="statusDiv"></div></center>
