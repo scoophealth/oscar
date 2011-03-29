@@ -45,23 +45,25 @@ public class PHRAuthentication
 
 	public static final String SESSION_PHR_AUTH = "PHR_AUTH";
 
-	private static Logger log = MiscUtils.getLogger();
+	private static Logger logger = MiscUtils.getLogger();
 	AuthenticateResultType authResult = null;
 	String providerNo = null;
 
 	private Long myOscarUserId;
 	private String myOscarUserName;
 	private String myOscarPassword;
-
+	
 	public PHRAuthentication()
 	{
+		// nothing for now
 	}
 
 	public PHRAuthentication(AuthenticateResultType authResult)
 	{
+		this();
 		this.authResult = authResult;
 	}
-
+	
 	public String getToken()
 	{
 		return authResult.getActorTicket();
@@ -87,7 +89,7 @@ public class PHRAuthentication
 		}
 		else
 		{
-			log.debug("cal was null");
+			logger.debug("cal was null");
 		}
 		return date;
 	}
@@ -156,5 +158,4 @@ public class PHRAuthentication
 	{
 		this.myOscarPassword = myOscarPassword;
 	}
-
 }

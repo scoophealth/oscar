@@ -42,6 +42,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionRedirect;
 import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.myoscar_server.ws.PersonTransfer;
 import org.oscarehr.phr.PHRAuthentication;
 import org.oscarehr.phr.dao.PHRActionDAO;
 import org.oscarehr.phr.dao.PHRDocumentDAO;
@@ -104,8 +105,7 @@ public class PHRUserManagementAction extends DispatchAction {
             ar.addParameter("failmessage", "Permission Denied: You must be logged into myOSCAR to register users");
             return ar;
         }
-        
-//---        
+                
         HashMap<String, Object> ht = new HashMap<String, Object>();
         Enumeration paramNames = request.getParameterNames();
         while (paramNames.hasMoreElements()) {
@@ -117,12 +117,12 @@ public class PHRUserManagementAction extends DispatchAction {
         }
         ht.put("registeringProviderNo", request.getSession().getAttribute("user"));
         try {
-            phrService.sendUserRegistration(ht, (String) request.getSession().getAttribute("user"));
+            PersonTransfer newAccount=phrService.sendUserRegistration(ht, (String) request.getSession().getAttribute("user"));
             //if all is well, add the "pin" in the demographic screen
             String demographicNo = request.getParameter("demographicNo");
             
             DemographicData dd = new DemographicData();
-            dd.setDemographicPin(demographicNo, request.getParameter("username"));
+            dd.setDemographicPin(demographicNo, newAccount.getId().toString());
         } catch (Exception e) {
             log.error("Failed to register myOSCAR user", e);
             if (e.getClass().getName().indexOf("ActionNotPerformedException") != -1) {

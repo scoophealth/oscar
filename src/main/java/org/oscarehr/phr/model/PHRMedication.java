@@ -29,8 +29,11 @@
 
 package org.oscarehr.phr.model;
 
+import java.io.IOException;
 import java.io.StringReader;
 import java.math.BigInteger;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -43,8 +46,9 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
-import org.apache.log4j.Logger;
+import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.log4j.Logger;
 import org.indivo.IndivoException;
 import org.indivo.client.ActionNotPerformedException;
 import org.indivo.xml.JAXBUtils;
@@ -64,462 +68,590 @@ import org.indivo.xml.phr.types.DurationType;
 import org.indivo.xml.phr.urns.ContentTypeQNames;
 import org.indivo.xml.phr.urns.DocumentClassificationUrns;
 import org.oscarehr.common.model.Drug;
+import org.oscarehr.myoscar_server.ws.MedicalDataTransfer;
+import org.oscarehr.myoscar_server.ws.MedicalDataType;
 import org.oscarehr.phr.PHRConstants;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.XmlMapWrapper;
+import org.oscarehr.util.XmlUtils;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.xml.sax.SAXException;
+
 import oscar.oscarEncounter.data.EctProviderData;
 import oscar.oscarRx.data.RxPrescriptionData;
 import oscar.oscarRx.util.RxUtil;
 
 /**
- *
  * @author apavel
  */
-public class PHRMedication extends PHRDocument{
-    private static Logger log = MiscUtils.getLogger();
-    /** Creates a new instance of PHRMessage */
-    public PHRMedication() {
-        //super();
-    }
+public class PHRMedication extends PHRDocument {
+	private static Logger logger = MiscUtils.getLogger();
 
-    public PHRMedication(IndivoDocumentType doc,String demoId,String demoPhrId,String providerNo) throws Exception{
-        super();
-        setReceiverInfo(demoId, demoPhrId);
-        parseDocument(doc,providerNo);
-    }
-    private MedicationType med;
-    private Drug drug;
-    public Drug getDrug(){
-        return drug;
-    }
-    public void setDrug(Drug d){
-        drug=d;
-    }
-    private void setReceiverInfo(String demoId,String demoPhrId){
-        this.setReceiverOscar(demoId);
-        this.setReceiverPhr(demoPhrId);
-    }
-    private void parseDocument(IndivoDocumentType document,String providerNo) throws Exception{
-        log.debug("------------------start parseDocument----------------------");
-        JAXBContext docContext = JAXBContext.newInstance("org.indivo.xml.phr.document");
-        byte[] docContentBytes = JAXBUtils.marshalToByteArray((JAXBElement) new IndivoDocument(document), docContext);
-        String docContent = new String(docContentBytes);
-        
-        log.debug("docContent="+docContent);
+	/** Don't make this static, remember sdf's are note thread safe. */
+	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
 
-        DocumentHeaderType docHeaderType = document.getDocumentHeader();
-        DocumentClassificationType theType = docHeaderType.getDocumentClassification();
-        String classification = theType.getClassification();
-        String documentIndex  = docHeaderType.getDocumentIndex();
-        AuthorType author=docHeaderType.getAuthor();
-        String phr_id=author.getIndivoId();
-        if (docHeaderType.getCreationDateTime() == null)
-            this.setDateSent(null);
-        else {
-            this.setDateSent(docHeaderType.getCreationDateTime().toGregorianCalendar().getTime());
-            log.debug("Date Created set to "+docHeaderType.getCreationDateTime().toGregorianCalendar().getTime());
-        }
-        this.setPhrClassification(classification);
-        this.setPhrIndex(documentIndex);
-        JAXBContext messageContext = JAXBContext.newInstance("org.indivo.xml.phr.medication");
-        med = (MedicationType) org.indivo.xml.phr.DocumentUtils.getDocumentAnyObject(document,messageContext.createUnmarshaller());
-            createDrugFromPhrMed(providerNo);
-            this.setPhrClassification(PHRConstants.DOCTYPE_MEDICATION());
-            this.setReceiverType(this.TYPE_DEMOGRAPHIC);
-            this.setSenderOscar(null);//outside provider's oscar id is not useful
-            this.setSenderType(this.TYPE_PROVIDER);
-            this.setSenderPhr(phr_id);
-            this.setSent(this.STATUS_NOT_SET);//need to change
-            this.setDocContent(docContent);
-            this.setDateExchanged(new Date());        
-    }
-    //sending new meds to PHR
-    public PHRMedication(EctProviderData.Provider prov, String demographicNo, String demographicPhrId, RxPrescriptionData.Prescription drug) throws JAXBException, ActionNotPerformedException, IndivoException  {
-        //super();
-        IndivoDocumentType document = getPhrMedicationDocument(prov, drug);
-        JAXBContext docContext = JAXBContext.newInstance(IndivoDocumentType.class.getPackage().getName());
-        byte[] docContentBytes = JAXBUtils.marshalToByteArray((JAXBElement) new IndivoDocument(document), docContext);
-        String docContentStr = new String(docContentBytes);
-        
-        this.setPhrClassification(PHRConstants.DOCTYPE_MEDICATION());
-        this.setReceiverOscar(demographicNo);
-        this.setReceiverType(this.TYPE_DEMOGRAPHIC);
-        this.setReceiverPhr(demographicPhrId);
-        this.setSenderOscar(prov.getProviderNo());
-        this.setSenderType(this.TYPE_PROVIDER);
-        this.setSenderPhr(prov.getIndivoId());
-        this.setSent(this.STATUS_SEND_PENDING);
-        this.setDocContent(docContentStr);
-    }
-    
-    //when adding a new medication
-    private IndivoDocumentType getPhrMedicationDocument(EctProviderData.Provider prov, RxPrescriptionData.Prescription drug) throws JAXBException, IndivoException {
-        String providerFullName = prov.getFirstName() + " " + prov.getSurname();
-        MedicationType medType = createPhrMedication(prov, drug);
-        org.indivo.xml.phr.DocumentGenerator generator = new org.indivo.xml.phr.DocumentGenerator();
-        org.indivo.xml.JAXBUtils jaxbUtils = new org.indivo.xml.JAXBUtils();
-        org.indivo.xml.phr.medication.ObjectFactory medFactory = new org.indivo.xml.phr.medication.ObjectFactory();
-        Medication med = medFactory.createMedication(medType);
+	/** Creates a new instance of PHRMessage */
+	public PHRMedication() {
+		// super();
+	}
 
-        Element element = jaxbUtils.marshalToElement(med, JAXBContext.newInstance("org.indivo.xml.phr.medication"));            
-        IndivoDocumentType document = generator.generateDefaultDocument(prov.getIndivoId(), providerFullName, PHRDocument.PHR_ROLE_PROVIDER, DocumentClassificationUrns.MEDICATION, ContentTypeQNames.MEDICATION, element);
-        return document;
-    }
+	public PHRMedication(IndivoDocumentType doc, String demoId, String demoPhrId, String providerNo) throws Exception {
+		setReceiverInfo(demoId, demoPhrId);
+		parseDocument(doc, providerNo);
+	}
 
-    public void initMedication(){
-        try {
-            JAXBContext docContext = JAXBContext.newInstance("org.indivo.xml.phr.document");
-            Unmarshaller unmarshaller = docContext.createUnmarshaller();
-            StringReader strr = new StringReader(this.getDocContent());
-            JAXBElement docEle = (JAXBElement) unmarshaller.unmarshal(strr);
-            IndivoDocumentType doc = (IndivoDocumentType) docEle.getValue();
-            JAXBContext medContext = JAXBContext.newInstance("org.indivo.xml.phr.medication");
-            try {
-                med = (MedicationType) org.indivo.xml.phr.DocumentUtils.getDocumentAnyObject(doc,medContext.createUnmarshaller());
-            } catch (IndivoException ex) {
-                java.util.logging.Logger.getLogger(PHRMedication.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        } catch (JAXBException ex) {
-            java.util.logging.Logger.getLogger(PHRMedication.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    //create drug from medtype, but lose lots of drug information because set to custom drug
-     public void createDrugFromPhrMed(String providerNo){
-                drug=new Drug();
-                drug.setHideFromDrugProfile(med.isHideFromDrugProfile());
-                drug.setProviderNo(providerNo);
-                if(this.getReceiverOscar()!=null)
-                    drug.setDemographicId(Integer.parseInt(this.getReceiverOscar()));
-                else
-                    drug.setDemographicId(0);
-                DurationType dt=med.getPrescriptionDuration();
-                if(dt!=null){
-                    drug.setRxDate(dt.getStartDate().toGregorianCalendar().getTime());
-                    drug.setEndDate(dt.getEndDate().toGregorianCalendar().getTime());
-                } else{
-                    drug.setRxDate(RxUtil.StringToDate("0000-00-00", "yyyy-MM-dd"));
-                    drug.setEndDate(RxUtil.StringToDate("0000-00-00", "yyyy-MM-dd"));
-                }
-                drug.setBrandName(med.getBrandName());
-                drug.setFreqCode(med.getFrequency());
-                String durUnit=null;
-                CodedValueType durationUnit=med.getDurationUnit();
-                if(durationUnit!=null && durationUnit.getCode()!=null){
-                    durUnit=durationUnit.getCode();
-                }
-                drug.setDurUnit(durUnit);
-                String duration=med.getDuration();
-                if(duration!=null){
-                    if(durUnit!=null){
-                        duration=duration.replace(durUnit, "").trim();
-                    }else{
-                        drug.setDuration(duration.trim());
-                    }                                                   
-                }
-                drug.setQuantity(med.getQuantity());
-                List<RefillType> rft=med.getRefillHistory();
-                RefillType refill=null;
-                if(rft!=null && rft.size()>0){
-                    refill=rft.get(rft.size()-1);
-                }
-                if(refill!=null){
-                    drug.setLastRefillDate(refill.getFillDate().toGregorianCalendar().getTime());
-                }
-                else
-                    drug.setLastRefillDate(RxUtil.StringToDate("0000-00-00", "yyyy-MM-dd"));
-                if(med.isPrn()!=null) drug.setPrn(med.isPrn());
-                else drug.setPrn(false);
-                drug.setSpecialInstruction(med.getSpecialInstruction());
-                if(med.isArchived()!=null) drug.setArchived(med.isArchived());
-                else drug.setArchived(false);
-                drug.setGenericName(med.getGenericName());
-                List<CodedValueType> code=med.getCode();
-                for(CodedValueType c: code){
-                    String cs=c.getCode();
-                    CodingSystemReferenceType sys=c.getCodingSystem();
-                    if(sys.getShortDescription().equals(PHRDocument.CODE_ATC)){
-                        drug.setAtc(cs);
-                    }else if(sys.getShortDescription().equals(PHRDocument.CODE_GCN_SEQNO)){
-                        drug.setGcnSeqNo(Integer.parseInt(cs));
-                    }else if(sys.getShortDescription().equals(PHRDocument.CODE_REGIONALIDENTIFIER)){
-                        drug.setRegionalIdentifier(cs);
-                    }
-                }
-                if(med.getScriptNo()!=null)   drug.setScriptNo(med.getScriptNo().intValue());
-                else drug.setScriptNo(0);          
-                drug.setMethod(med.getMethod());
-                CodedValueType cvt=med.getRoute();
-                if(cvt!=null)       drug.setRoute(cvt.getCode());
-                else drug.setRoute("");
-                drug.setDrugForm(med.getDrugForm());
-                if(med.getCreateDate()!=null)       drug.setCreateDate(med.getCreateDate().toGregorianCalendar().getTime());
-                else drug.setCreateDate(RxUtil.StringToDate("0000-00-00", "yyyy-MM-dd"));
-                drug.setUnitName(med.getUnitNameOscar());
-                drug.setLongTerm(med.isLongTerm());
-                drug.setCustomNote(med.isCustomNote());
-                drug.setPastMed(med.isPastMed());
-                drug.setPatientCompliance(med.isPatientCompliance());
-                if(med.getWrittenDate()!=null)  drug.setWrittenDate(med.getWrittenDate().toGregorianCalendar().getTime());
-                else drug.setWrittenDate(RxUtil.StringToDate("0000-00-00", "yyyy-MM-dd"));
-                List<NameType> pnames = med.getProvider().getPersonName();
-                NameType nt=new NameType();
-                if(pnames!=null && pnames.size()>0){
-                    nt=pnames.get(0);//assume every medication has only one provider.
-                    //drug.setOutsideProviderName(med.getOutsideProviderName());
-                    drug.setOutsideProviderName(nt.getFirstName()+" "+nt.getLastName());
-                }
-                //drug.setOutsideProviderOhip(med.getOutsideProviderOhip());//not sending OHIP
-                drug.setArchivedReason(med.getArchivedReason());
-                if(med.getArchivedDate()!=null)      drug.setArchivedDate(med.getArchivedDate().toGregorianCalendar().getTime());
-                else drug.setArchivedDate(RxUtil.StringToDate("0000-00-00", "yyyy-MM-dd"));
-                String dose=med.getDose();
-                CodedValueType doseUnit=med.getDoseUnit();
-                if(dose!=null){
-                    if(doseUnit!=null){
-                        String doUnit=doseUnit.getCode();
-                        if(doUnit!=null){
-                            drug.setDosage(dose.replace(doUnit, ""));
-                            drug.setUnit(doUnit);
-                        }else{
-                            drug.setDosage(dose);
-                        }
-                    }else{
-                        drug.setDosage(dose);
-                    }
-                }
-                if(med.getTakeMin()!=null)  drug.setTakeMin(med.getTakeMin());
-                else drug.setTakeMin(0);
-                if(med.getTakeMax()!=null) drug.setTakeMax(med.getTakeMax());
-                else drug.setTakeMax(0);
-                if(med.isSubstitutionPermitted()!=null) drug.setNoSubs(med.isSubstitutionPermitted());
-                else drug.setNoSubs(false);
-                if(med.getRefills()!=null)     drug.setRepeat(Integer.parseInt(med.getRefills()));
-                else drug.setRepeat(0);
-                if(med.isCustomInstructions()!=null) drug.setCustomInstructions(med.isCustomInstructions());
-                else drug.setCustomInstructions(false);
-                drug.setCustomName(med.getCustomName());
-                
-                if(med.getInstructions()!=null ) drug.setSpecial(med.getInstructions().replace("<pre>", "").replace("</pre>", "").trim());
-                else drug.setSpecial("");
-    }
+	public PHRMedication(MedicalDataTransfer medicalDataTransfer, String demoId, String demoPhrId, String providerNo) throws Exception {
+		setReceiverInfo(demoId, demoPhrId);
+		parseDocument(medicalDataTransfer, providerNo);
+	}
 
-    private MedicationType createPhrMedication2(EctProviderData.Provider prov, Drug drug) {
-        NameType name = new NameType();
-        name.setFirstName(prov.getFirstName());
-        name.setLastName(prov.getSurname());
+	private MedicationType med;
+	private Drug drug;
 
-        ConciseContactInformationType contactInfo = new ConciseContactInformationType();
-        contactInfo.getPersonName().add(name);
+	public Drug getDrug() {
+		return drug;
+	}
 
-        MedicationType medType = new MedicationType();
-        medType.setPrescription(true);
+	public void setDrug(Drug d) {
+		drug = d;
+	}
 
-        if(drug.isCustomInstructions() == false ) {
-            medType.setDose(drug.getDosageDisplay() + " " + drug.getUnit());
-            CodedValueType unit=new CodedValueType();
-            unit.setCode(drug.getUnit());
-            medType.setDoseUnit(unit);
+	private void setReceiverInfo(String demoId, String demoPhrId) {
+		this.setReceiverOscar(demoId);
+		this.setReceiverPhr(demoPhrId);
+	}
 
-            medType.setDuration(drug.getDuration() + " " + drug.getDurUnit());
-            unit.setCode(drug.getDurUnit());
-            medType.setDurationUnit(unit);
-            medType.setRefills(String.valueOf(drug.getRepeat()));
-            medType.setSubstitutionPermitted(drug.isNoSubs());
-        }
-        else
-            medType.setDose(ResourceBundle.getBundle("oscarResources").getString("Send2Indivo.prescription.Instruction"));
+	private void parseDocument(IndivoDocumentType document, String providerNo) throws Exception {
+		logger.debug("------------------start parseDocument----------------------");
+		JAXBContext docContext = JAXBContext.newInstance("org.indivo.xml.phr.document");
+		byte[] docContentBytes = JAXBUtils.marshalToByteArray((JAXBElement) new IndivoDocument(document), docContext);
+		String docContent = new String(docContentBytes);
 
-        try{        GregorianCalendar gc=new GregorianCalendar();                    
-                    XMLGregorianCalendar d2;
-                    if(drug.getWrittenDate()!=null){
-                        gc.setTime(drug.getWrittenDate());
-                        d2=DatatypeFactory.newInstance().newXMLGregorianCalendar(gc);
-                        medType.setWrittenDate(d2);
-                    }
-                    if(drug.getCreateDate()!=null){
-                        gc.setTime(drug.getCreateDate());
+		logger.debug("docContent=" + docContent);
 
-                        d2=DatatypeFactory.newInstance().newXMLGregorianCalendar(gc);
+		DocumentHeaderType docHeaderType = document.getDocumentHeader();
+		DocumentClassificationType theType = docHeaderType.getDocumentClassification();
+		String classification = theType.getClassification();
+		String documentIndex = docHeaderType.getDocumentIndex();
+		AuthorType author = docHeaderType.getAuthor();
+		String phr_id = author.getIndivoId();
+		if (docHeaderType.getCreationDateTime() == null) this.setDateSent(null);
+		else {
+			this.setDateSent(docHeaderType.getCreationDateTime().toGregorianCalendar().getTime());
+			logger.debug("Date Created set to " + docHeaderType.getCreationDateTime().toGregorianCalendar().getTime());
+		}
+		this.setPhrClassification(classification);
+		this.setPhrIndex(documentIndex);
+		JAXBContext messageContext = JAXBContext.newInstance("org.indivo.xml.phr.medication");
+		med = (MedicationType) org.indivo.xml.phr.DocumentUtils.getDocumentAnyObject(document, messageContext.createUnmarshaller());
+		createDrugFromPhrMed(providerNo);
+		this.setPhrClassification(PHRConstants.DOCTYPE_MEDICATION());
+		this.setReceiverType(this.TYPE_DEMOGRAPHIC);
+		this.setSenderOscar(null);// outside provider's oscar id is not useful
+		this.setSenderType(this.TYPE_PROVIDER);
+		this.setSenderPhr(phr_id);
+		this.setSent(this.STATUS_NOT_SET);// need to change
+		this.setDocContent(docContent);
+		this.setDateExchanged(new Date());
+	}
 
-                       medType.setCreateDate(d2);
-                    }
-                    if(drug.getArchivedDate()!=null){
-                        gc.setTime(drug.getArchivedDate());
-                        d2=DatatypeFactory.newInstance().newXMLGregorianCalendar(gc);
-                        medType.setArchivedDate(d2);
-                    }
-                    DurationType rxDuration=new DurationType();
-                    if(drug.getRxDate()!=null){
-                        gc.setTime(drug.getRxDate());
-                        d2=DatatypeFactory.newInstance().newXMLGregorianCalendar(gc);
-                        rxDuration.setStartDate(d2);
-                    }
-                    if(drug.getEndDate()!=null){
-                        gc.setTime(drug.getEndDate());
-                        d2=DatatypeFactory.newInstance().newXMLGregorianCalendar(gc);
-                        rxDuration.setEndDate(d2);
-                    }
-                    medType.setPrescriptionDuration(rxDuration);
-                    if(drug.getLastRefillDate()!=null){
-                        gc.setTime(drug.getLastRefillDate());
-                        d2=DatatypeFactory.newInstance().newXMLGregorianCalendar(gc);
-                        RefillType rt=new RefillType();
-                        rt.setFillDate(d2);
-                        medType.getRefillHistory().add(rt);
-                    }
-                    medType.setBrandName(drug.getBrandName());
-                    
-                    //GCN_SEQN
-                    CodedValueType gcncode=new CodedValueType();
-                    CodingSystemReferenceType gcncsrt=new CodingSystemReferenceType();
-                    gcncode.setCode(String.valueOf(drug.getGcnSeqNo()));                    
-                    gcncsrt.setShortDescription(PHRDocument.CODE_GCN_SEQNO);
-                    gcncode.setCodingSystem(gcncsrt);
-                    medType.getCode().add(gcncode);
+	private void parseDocument(MedicalDataTransfer medicalDataTransfer, String providerNo) throws Exception {
+		logger.debug("------------------start parseDocument----------------------");
 
-                    //ATC
-                    CodedValueType atccode=new CodedValueType();
-                    CodingSystemReferenceType atccsrt=new CodingSystemReferenceType();
-                    atccode.setCode(drug.getAtc());
-                    
-                    atccsrt.setShortDescription(PHRDocument.CODE_ATC);
-                    atccode.setCodingSystem(atccsrt);
-                    medType.getCode().add(atccode);
+		if (medicalDataTransfer.getDateOfData() != null) setDateSent(medicalDataTransfer.getDateOfData().getTime());
 
-                    //Regional Identifier
-                    CodedValueType ricode=new CodedValueType();
-                    CodingSystemReferenceType ricsrt=new CodingSystemReferenceType();
-                    ricode.setCode(drug.getRegionalIdentifier());
-                    ricsrt.setShortDescription(PHRDocument.CODE_REGIONALIDENTIFIER);
-                    ricode.setCodingSystem(ricsrt);
-                    medType.getCode().add(ricode);
-                    medType.setCustomName(drug.getCustomName());
-                    medType.setTakeMin(drug.getTakeMin());
-                    medType.setTakeMax(drug.getTakeMax());
-                    medType.setQuantity(drug.getQuantity());
-                    medType.setPrn(drug.isPrn());
-                    medType.setSpecialInstruction(drug.getSpecialInstruction());
-                    medType.setArchived(drug.isArchived());
-                    medType.setGenericName(drug.getGenericName());
-                    medType.setScriptNo(BigInteger.valueOf(drug.getScriptNo()));
-                    medType.setMethod(drug.getMethod());
-                    medType.setDrugForm(drug.getDrugForm());
-                    medType.setFrequency(drug.getFreqCode());
-                    CodedValueType cvt=new CodedValueType();
-                    cvt.setCode(drug.getRoute());
-                    CodingSystemReferenceType routecsrt=new CodingSystemReferenceType();
-                    routecsrt.setServiceLocation("English CA");
-                    routecsrt.setShortDescription("text");
-                    cvt.setCodingSystem(routecsrt);
-                    cvt.setHistoricalValue(null);
-                    medType.setRoute(cvt);
+		setPhrClassification(MedicalDataType.MEDICATION.name());
+		setPhrIndex(medicalDataTransfer.getId().toString());
 
-                    
-                    medType.setCustomInstructions(drug.isCustomInstructions());
-                    medType.setCustomNote(drug.isCustomNote());
-                    medType.setLongTerm(drug.isLongTerm());
-                    medType.setPastMed(drug.getPastMed());
-                    medType.setPatientCompliance(drug.getPatientCompliance());
-                    medType.setOutsideProviderName(drug.getOutsideProviderName());
-                    medType.setOutsideProviderOhip(drug.getOutsideProviderOhip());
-                    medType.setArchivedReason(drug.getArchivedReason());
-                    medType.setHideFromDrugProfile(drug.isHideFromDrugProfile());
-                    medType.setUnitNameOscar(drug.getUnitName());
-                    medType.setName(drug.getDrugName());
-                    medType.setInstructions("<pre>" + drug.getSpecial() + "</pre>");
-                    medType.setProvider(contactInfo);
-        }catch(Exception e){
-            log.error("Error", e);
-        }        
-        return medType;
-    }
-    private MedicationType createPhrMedication(EctProviderData.Provider prov, RxPrescriptionData.Prescription drug) {
-        Drug d=new Drug(drug);
-        return createPhrMedication2(prov,d);
-        /*NameType name = new NameType();
-        name.setFirstName(prov.getFirstName());
-        name.setLastName(prov.getSurname());
+		createDrugFromMedicalDataTransfer(providerNo, medicalDataTransfer);
 
-        ConciseContactInformationType contactInfo = new ConciseContactInformationType();
-        contactInfo.getPersonName().add(name);
-        
-        MedicationType medType = new MedicationType();
-        medType.setPrescription(true);
-        
-        if( drug.getCustomInstr() == false ) {
-            medType.setDose(drug.getDosageDisplay() + " " + drug.getUnit());            
-            medType.setDuration(drug.getDuration() + " " + drug.getDurationUnit());
-            //CodedValueType cvt = new CodedValueType();
-            //CodingSystemReferenceType csrt = new CodingSystemReferenceType();
-            //csrt.setServiceLocation("");
-            //cvt.setCodingSystem(csrt);
-            //cvt.setCode("");
-            //cvt.setHistoricalValue(drug.getDurationUnit());
-            //medType.setDurationUnit(cvt);
-            medType.setRefills(String.valueOf(drug.getRepeat()));
-            medType.setSubstitutionPermitted(drug.getNosubs());
-        }
-        else
-            medType.setDose(ResourceBundle.getBundle("oscarResources").getString("Send2Indivo.prescription.Instruction"));*/
-/*
-        medType.setWrittenDate();
-        medType.setBrandName(drug.getBrandName());
-        medType.setGCN_SEQNO(drug.getGCN_SEQNO());
-        medType.setCustomName(drug.getCustomName());
-        medType.setTakeMin(drug.getTakeMinString());
-        medType.setTakeMax(drug.getTakeMaxString());
-        medType.setQuantity(drug.getQuantity());
-        medType.setPrn(drug.getPrn());
-        medType.setSpecialInstruction(drug.getSpecialInstruction());
-        medType.setArchived(drug.isArchived());
-        medType.setGenericName(drug.getGenericName());
-        medType.setATC(drug.getAtcCode());
-        medType.setScriptNo(drug.getScript_no());
-        medType.setRegionalIdentifier(drug.getRegionalIdentifier());
-        medType.setMethod(drug.getMethod());
-        medType.setDrugForm(drug.getDrugForm());
-        medType.setCreateDate(drug.getRxCreatedDate());
-        medType.setCustomInstructions(drug.getCustomInstr());
-        medType.setCustomNote(drug.isCustomNote());
-        medType.setLongTerm(drug.isLongTerm());
-        medType.setPastMed(drug.isPastMed());
-        medType.setPatientCompliance(drug);
-        medType.setOutsideProviderName(drug.getOutsideProviderName());
-        medType.setOutsideProviderOhip(drug.getOutsideProviderOhip());
-        medType.setArchivedReason(drug.getLastArchReason());
-        medType.setArchivedDate(drug.getArchivedDate());
-        medType.setHideFromDrugProfile(drug);
+		setPhrClassification(PHRConstants.DOCTYPE_MEDICATION());
+		setReceiverType(TYPE_DEMOGRAPHIC);
+		setSenderOscar(null);// outside provider's oscar id is not useful
+		setSenderType(TYPE_PROVIDER);
+		setSenderPhr(medicalDataTransfer.getObserverOfDataPersonId().toString());
+		setSent(STATUS_NOT_SET);// need to change
+		setDocContent(medicalDataTransfer.getData());
+		setDateExchanged(new Date());
+	}
 
-*//*
-        medType.setName(drug.getDrugName());
-        medType.setInstructions("<pre>" + drug.getSpecial() + "</pre>");        
-        medType.setProvider(contactInfo);
-        return medType;*/
-    }
-    
-    /*
-     *For updating a document on the IndivoServer:  
-     IndivoServer --> OSCAR  (sends back the latest doc)
-     OSCARmySQLdb --> OSCAR--> IndivoServer (OSCAR sends back the appended version of the doc)
-        try {
-            IndivoDocumentType currentDoc = new IndivoDocumentType();  //the new version of the doc
-            //DocumentHeaderType docHeaderType = currentDoc.getDocumentHeader();
-            //String docIndex = docHeaderType.getDocumentIndex();
-            Element documentElement = DocumentUtils.getDocumentAnyElement(currentDoc);
-            //Retrieve current file record from indivo
-            ReadDocumentResultType readResult = client.readDocument(auth.getToken(), demographicPhrId, oldDrugPhrId);
-            IndivoDocumentType phrDoc = readResult.getIndivoDocument();
-            DocumentVersionType version = phrDoc.getDocumentVersion().get(phrDoc.getDocumentVersion().size() - 1);
-            
-            VersionBodyType body = version.getVersionBody();
-            body.setAny(documentElement);
-            version.setVersionBody(body);
-            client.updateDocument(sessionTicket, recipientId, docIndex, version);            
-        } catch(ActionNotPerformedException anpe) {
-            aMiscUtils.getLogger().error("Error", npe);
-        } catch(IndivoException ie ) {
-            iMiscUtils.getLogger().error("Error", e);
-        } */
+	// sending new meds to PHR
+	public PHRMedication(EctProviderData.Provider prov, String demographicNo, String demographicPhrId, RxPrescriptionData.Prescription drug) throws JAXBException, ActionNotPerformedException, IndivoException {
+		// super();
+		IndivoDocumentType document = getPhrMedicationDocument(prov, drug);
+		JAXBContext docContext = JAXBContext.newInstance(IndivoDocumentType.class.getPackage().getName());
+		byte[] docContentBytes = JAXBUtils.marshalToByteArray((JAXBElement) new IndivoDocument(document), docContext);
+		String docContentStr = new String(docContentBytes);
+
+		this.setPhrClassification(PHRConstants.DOCTYPE_MEDICATION());
+		this.setReceiverOscar(demographicNo);
+		this.setReceiverType(this.TYPE_DEMOGRAPHIC);
+		this.setReceiverPhr(demographicPhrId);
+		this.setSenderOscar(prov.getProviderNo());
+		this.setSenderType(this.TYPE_PROVIDER);
+		this.setSenderPhr(prov.getIndivoId());
+		this.setSent(this.STATUS_SEND_PENDING);
+		this.setDocContent(docContentStr);
+	}
+
+	// when adding a new medication
+	private IndivoDocumentType getPhrMedicationDocument(EctProviderData.Provider prov, RxPrescriptionData.Prescription drug) throws JAXBException, IndivoException {
+		String providerFullName = prov.getFirstName() + " " + prov.getSurname();
+		MedicationType medType = createPhrMedication(prov, drug);
+		org.indivo.xml.phr.DocumentGenerator generator = new org.indivo.xml.phr.DocumentGenerator();
+		org.indivo.xml.JAXBUtils jaxbUtils = new org.indivo.xml.JAXBUtils();
+		org.indivo.xml.phr.medication.ObjectFactory medFactory = new org.indivo.xml.phr.medication.ObjectFactory();
+		Medication med = medFactory.createMedication(medType);
+
+		Element element = jaxbUtils.marshalToElement(med, JAXBContext.newInstance("org.indivo.xml.phr.medication"));
+		IndivoDocumentType document = generator.generateDefaultDocument(prov.getIndivoId(), providerFullName, PHRDocument.PHR_ROLE_PROVIDER, DocumentClassificationUrns.MEDICATION, ContentTypeQNames.MEDICATION, element);
+		return document;
+	}
+
+	public void initMedication() {
+		try {
+			JAXBContext docContext = JAXBContext.newInstance("org.indivo.xml.phr.document");
+			Unmarshaller unmarshaller = docContext.createUnmarshaller();
+			StringReader strr = new StringReader(this.getDocContent());
+			JAXBElement docEle = (JAXBElement) unmarshaller.unmarshal(strr);
+			IndivoDocumentType doc = (IndivoDocumentType) docEle.getValue();
+			JAXBContext medContext = JAXBContext.newInstance("org.indivo.xml.phr.medication");
+			try {
+				med = (MedicationType) org.indivo.xml.phr.DocumentUtils.getDocumentAnyObject(doc, medContext.createUnmarshaller());
+			} catch (IndivoException ex) {
+				java.util.logging.Logger.getLogger(PHRMedication.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		} catch (JAXBException ex) {
+			java.util.logging.Logger.getLogger(PHRMedication.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
+
+	// create drug from medtype, but lose lots of drug information because set to custom drug
+	public void createDrugFromPhrMed(String providerNo) {
+		drug = new Drug();
+		drug.setHideFromDrugProfile(med.isHideFromDrugProfile());
+		drug.setProviderNo(providerNo);
+		if (this.getReceiverOscar() != null) drug.setDemographicId(Integer.parseInt(this.getReceiverOscar()));
+		else drug.setDemographicId(0);
+		DurationType dt = med.getPrescriptionDuration();
+		if (dt != null) {
+			drug.setRxDate(dt.getStartDate().toGregorianCalendar().getTime());
+			drug.setEndDate(dt.getEndDate().toGregorianCalendar().getTime());
+		} else {
+			drug.setRxDate(RxUtil.StringToDate("0000-00-00", "yyyy-MM-dd"));
+			drug.setEndDate(RxUtil.StringToDate("0000-00-00", "yyyy-MM-dd"));
+		}
+		drug.setBrandName(med.getBrandName());
+		drug.setFreqCode(med.getFrequency());
+		String durUnit = null;
+		CodedValueType durationUnit = med.getDurationUnit();
+		if (durationUnit != null && durationUnit.getCode() != null) {
+			durUnit = durationUnit.getCode();
+		}
+		drug.setDurUnit(durUnit);
+		String duration = med.getDuration();
+		if (duration != null) {
+			if (durUnit != null) {
+				duration = duration.replace(durUnit, "").trim();
+			} else {
+				drug.setDuration(duration.trim());
+			}
+		}
+		drug.setQuantity(med.getQuantity());
+		List<RefillType> rft = med.getRefillHistory();
+		RefillType refill = null;
+		if (rft != null && rft.size() > 0) {
+			refill = rft.get(rft.size() - 1);
+		}
+		if (refill != null) {
+			drug.setLastRefillDate(refill.getFillDate().toGregorianCalendar().getTime());
+		} else drug.setLastRefillDate(RxUtil.StringToDate("0000-00-00", "yyyy-MM-dd"));
+		if (med.isPrn() != null) drug.setPrn(med.isPrn());
+		else drug.setPrn(false);
+		drug.setSpecialInstruction(med.getSpecialInstruction());
+		if (med.isArchived() != null) drug.setArchived(med.isArchived());
+		else drug.setArchived(false);
+		drug.setGenericName(med.getGenericName());
+		List<CodedValueType> code = med.getCode();
+		for (CodedValueType c : code) {
+			String cs = c.getCode();
+			CodingSystemReferenceType sys = c.getCodingSystem();
+			if (sys.getShortDescription().equals(PHRDocument.CODE_ATC)) {
+				drug.setAtc(cs);
+			} else if (sys.getShortDescription().equals(PHRDocument.CODE_GCN_SEQNO)) {
+				drug.setGcnSeqNo(Integer.parseInt(cs));
+			} else if (sys.getShortDescription().equals(PHRDocument.CODE_REGIONALIDENTIFIER)) {
+				drug.setRegionalIdentifier(cs);
+			}
+		}
+		if (med.getScriptNo() != null) drug.setScriptNo(med.getScriptNo().intValue());
+		else drug.setScriptNo(0);
+		drug.setMethod(med.getMethod());
+		CodedValueType cvt = med.getRoute();
+		if (cvt != null) drug.setRoute(cvt.getCode());
+		else drug.setRoute("");
+		drug.setDrugForm(med.getDrugForm());
+		if (med.getCreateDate() != null) drug.setCreateDate(med.getCreateDate().toGregorianCalendar().getTime());
+		else drug.setCreateDate(RxUtil.StringToDate("0000-00-00", "yyyy-MM-dd"));
+		drug.setUnitName(med.getUnitNameOscar());
+		drug.setLongTerm(med.isLongTerm());
+		drug.setCustomNote(med.isCustomNote());
+		drug.setPastMed(med.isPastMed());
+		drug.setPatientCompliance(med.isPatientCompliance());
+		if (med.getWrittenDate() != null) drug.setWrittenDate(med.getWrittenDate().toGregorianCalendar().getTime());
+		else drug.setWrittenDate(RxUtil.StringToDate("0000-00-00", "yyyy-MM-dd"));
+		List<NameType> pnames = med.getProvider().getPersonName();
+		NameType nt = new NameType();
+		if (pnames != null && pnames.size() > 0) {
+			nt = pnames.get(0);// assume every medication has only one provider.
+			// drug.setOutsideProviderName(med.getOutsideProviderName());
+			drug.setOutsideProviderName(nt.getFirstName() + " " + nt.getLastName());
+		}
+		// drug.setOutsideProviderOhip(med.getOutsideProviderOhip());//not sending OHIP
+		drug.setArchivedReason(med.getArchivedReason());
+		if (med.getArchivedDate() != null) drug.setArchivedDate(med.getArchivedDate().toGregorianCalendar().getTime());
+		else drug.setArchivedDate(RxUtil.StringToDate("0000-00-00", "yyyy-MM-dd"));
+		String dose = med.getDose();
+		CodedValueType doseUnit = med.getDoseUnit();
+		if (dose != null) {
+			if (doseUnit != null) {
+				String doUnit = doseUnit.getCode();
+				if (doUnit != null) {
+					drug.setDosage(dose.replace(doUnit, ""));
+					drug.setUnit(doUnit);
+				} else {
+					drug.setDosage(dose);
+				}
+			} else {
+				drug.setDosage(dose);
+			}
+		}
+		if (med.getTakeMin() != null) drug.setTakeMin(med.getTakeMin());
+		else drug.setTakeMin(0);
+		if (med.getTakeMax() != null) drug.setTakeMax(med.getTakeMax());
+		else drug.setTakeMax(0);
+		if (med.isSubstitutionPermitted() != null) drug.setNoSubs(med.isSubstitutionPermitted());
+		else drug.setNoSubs(false);
+		if (med.getRefills() != null) drug.setRepeat(Integer.parseInt(med.getRefills()));
+		else drug.setRepeat(0);
+		if (med.isCustomInstructions() != null) drug.setCustomInstructions(med.isCustomInstructions());
+		else drug.setCustomInstructions(false);
+		drug.setCustomName(med.getCustomName());
+
+		if (med.getInstructions() != null) drug.setSpecial(med.getInstructions().replace("<pre>", "").replace("</pre>", "").trim());
+		else drug.setSpecial("");
+	}
+
+	public void createDrugFromMedicalDataTransfer(String providerNo, MedicalDataTransfer medicalDataTransfer) throws IOException, SAXException, ParserConfigurationException {
+		Document doc = XmlUtils.toDocument(medicalDataTransfer.getData());
+		XmlMapWrapper docAsMap = new XmlMapWrapper(doc);
+
+		String tempString;
+		Node tempNode = null;
+
+		drug = new Drug();
+
+		drug.setHideFromDrugProfile(docAsMap.getBooleanValue("HideFromDrugProfile"));
+		drug.setProviderNo(providerNo);
+
+		if (this.getReceiverOscar() != null) drug.setDemographicId(Integer.parseInt(this.getReceiverOscar()));
+		else drug.setDemographicId(0);
+
+		tempNode = docAsMap.getNode("PrescriptionDuration");
+		if (tempNode != null) {
+			tempString = XmlUtils.getChildNodeTextContents(tempNode, "StartDate");
+			if (tempString != null) {
+				try {
+					Date date = sdf.parse(tempString);
+					drug.setRxDate(date);
+				} catch (ParseException e) {
+					logger.error("Error parsing date : " + tempString, e);
+				}
+			}
+
+			tempString = XmlUtils.getChildNodeTextContents(tempNode, "EndDate");
+			if (tempString != null) {
+				try {
+					Date date = sdf.parse(tempString);
+					drug.setEndDate(date);
+				} catch (ParseException e) {
+					logger.error("Error parsing date : " + tempString, e);
+				}
+			}
+		}
+
+		drug.setBrandName(docAsMap.getString("BrandName"));
+		drug.setFreqCode(docAsMap.getString("Frequency"));
+
+		tempNode = docAsMap.getNode("DurationUnit");
+		if (tempNode != null) {
+			tempString = XmlUtils.getChildNodeTextContents(tempNode, "Code");
+			drug.setDurUnit(tempString);
+		}
+
+		tempString = docAsMap.getString("Duration");
+		if (tempNode != null) {
+			if (drug.getDurUnit() != null) {
+				tempString = tempString.replace(drug.getDurUnit(), "").trim();
+			} else {
+				drug.setDuration(tempString.trim());
+			}
+		}
+
+		drug.setQuantity(docAsMap.getString("Quantity"));
+
+		for (Node node : docAsMap.getChildNodes("RefillHistory")) {
+			tempString = XmlUtils.getChildNodeTextContents(node, "FillDate");
+			try {
+				Date date = sdf.parse(tempString);
+
+				Date drugDate = drug.getLastRefillDate();
+				if (date.after(drugDate)) drug.setLastRefillDate(date);
+			} catch (ParseException e) {
+				logger.error("Error parsing date : " + tempString, e);
+			}
+		}
+
+		drug.setPrn(docAsMap.getBooleanValue("Prn"));
+		drug.setSpecialInstruction(docAsMap.getString("SpecialInstruction"));
+		drug.setArchived(docAsMap.getBooleanValue("Archived"));
+		drug.setGenericName(docAsMap.getString("GenericName"));
+
+		for (Node node : docAsMap.getChildNodes("Code")) {
+			String cs = XmlUtils.getChildNodeTextContents(node, "Code");
+			Node sys = XmlUtils.getChildNode(node, "CodingSystem");
+			if (cs != null && sys != null) {
+				String shortDesc = XmlUtils.getChildNodeTextContents(sys, "ShortDescription");
+				if (PHRDocument.CODE_ATC.equals(shortDesc)) {
+					drug.setAtc(cs);
+				} else if (PHRDocument.CODE_GCN_SEQNO.equals(shortDesc)) {
+					drug.setGcnSeqNo(Integer.parseInt(cs));
+				} else if (PHRDocument.CODE_REGIONALIDENTIFIER.equals(shortDesc)) {
+					drug.setRegionalIdentifier(cs);
+				}
+			}
+		}
+
+        drug.setScriptNo(docAsMap.getInteger("ScriptNo"));
+		drug.setMethod(docAsMap.getString("Method"));
+		
+		tempNode=docAsMap.getNode("Route");
+		if (tempNode != null) drug.setRoute(XmlUtils.getChildNodeTextContents(tempNode, "Code"));
+		
+		drug.setDrugForm(docAsMap.getString("DrugForm"));		
+		drug.setCreateDate(medicalDataTransfer.getDateOfData().getTime());
+		drug.setUnitName(docAsMap.getString("UnitNameOscar"));
+		drug.setLongTerm(docAsMap.getBooleanValue("LongTerm"));
+		drug.setCustomNote(docAsMap.getBooleanValue("CustomNote"));
+		drug.setPastMed(docAsMap.getBooleanValue("PastMed"));
+		drug.setPatientCompliance(docAsMap.getBooleanValue("PatientCompliance"));
+        drug.setWrittenDate(docAsMap.getDate("WrittenDate"));
+		drug.setOutsideProviderName(medicalDataTransfer.getObserverOfDataPersonFirstName() + " " + medicalDataTransfer.getObserverOfDataPersonLastName());
+		drug.setArchivedReason(docAsMap.getString("ArchivedReason"));
+		drug.setArchivedDate(docAsMap.getDate("ArchivedDate"));
+
+		String dose = docAsMap.getString("Dose");
+		Node doseUnit = docAsMap.getNode("DoseUnit");
+		if (dose != null) {
+			if (doseUnit != null) {
+				String doUnit = XmlUtils.getChildNodeTextContents(doseUnit, "Code");
+				if (doUnit != null) {
+					drug.setDosage(dose.replace(doUnit, ""));
+					drug.setUnit(doUnit);
+				} else {
+					drug.setDosage(dose);
+				}
+			} else {
+				drug.setDosage(dose);
+			}
+		}
+
+		Float tempFloat=docAsMap.getFloat("TakeMin");
+		if (tempFloat != null) drug.setTakeMin(tempFloat);		
+		
+		tempFloat=docAsMap.getFloat("TakeMax");
+		if (tempFloat != null) drug.setTakeMax(tempFloat);
+
+		drug.setNoSubs(docAsMap.getBooleanValue("SubstitutionPermitted"));
+		
+		Integer tempInt=docAsMap.getInteger("Refills");
+		if (tempInt != null) drug.setRepeat(tempInt);
+
+		drug.setCustomInstructions(docAsMap.getBooleanValue("CustomInstructions"));
+		drug.setCustomName(docAsMap.getString("CustomName"));
+
+		tempString=docAsMap.getString("Instructions");
+		if (tempString!=null)
+		{
+			tempString=tempString.replace("<pre>", "").replace("</pre>", "").trim();
+			drug.setSpecial(tempString);
+		}
+	}
+
+	private MedicationType createPhrMedication2(EctProviderData.Provider prov, Drug drug) {
+		NameType name = new NameType();
+		name.setFirstName(prov.getFirstName());
+		name.setLastName(prov.getSurname());
+
+		ConciseContactInformationType contactInfo = new ConciseContactInformationType();
+		contactInfo.getPersonName().add(name);
+
+		MedicationType medType = new MedicationType();
+		medType.setPrescription(true);
+
+		if (drug.isCustomInstructions() == false) {
+			medType.setDose(drug.getDosageDisplay() + " " + drug.getUnit());
+			CodedValueType unit = new CodedValueType();
+			unit.setCode(drug.getUnit());
+			medType.setDoseUnit(unit);
+
+			medType.setDuration(drug.getDuration() + " " + drug.getDurUnit());
+			unit.setCode(drug.getDurUnit());
+			medType.setDurationUnit(unit);
+			medType.setRefills(String.valueOf(drug.getRepeat()));
+			medType.setSubstitutionPermitted(drug.isNoSubs());
+		} else medType.setDose(ResourceBundle.getBundle("oscarResources").getString("Send2Indivo.prescription.Instruction"));
+
+		try {
+			GregorianCalendar gc = new GregorianCalendar();
+			XMLGregorianCalendar d2;
+			if (drug.getWrittenDate() != null) {
+				gc.setTime(drug.getWrittenDate());
+				d2 = DatatypeFactory.newInstance().newXMLGregorianCalendar(gc);
+				medType.setWrittenDate(d2);
+			}
+			if (drug.getCreateDate() != null) {
+				gc.setTime(drug.getCreateDate());
+
+				d2 = DatatypeFactory.newInstance().newXMLGregorianCalendar(gc);
+
+				medType.setCreateDate(d2);
+			}
+			if (drug.getArchivedDate() != null) {
+				gc.setTime(drug.getArchivedDate());
+				d2 = DatatypeFactory.newInstance().newXMLGregorianCalendar(gc);
+				medType.setArchivedDate(d2);
+			}
+			DurationType rxDuration = new DurationType();
+			if (drug.getRxDate() != null) {
+				gc.setTime(drug.getRxDate());
+				d2 = DatatypeFactory.newInstance().newXMLGregorianCalendar(gc);
+				rxDuration.setStartDate(d2);
+			}
+			if (drug.getEndDate() != null) {
+				gc.setTime(drug.getEndDate());
+				d2 = DatatypeFactory.newInstance().newXMLGregorianCalendar(gc);
+				rxDuration.setEndDate(d2);
+			}
+			medType.setPrescriptionDuration(rxDuration);
+			if (drug.getLastRefillDate() != null) {
+				gc.setTime(drug.getLastRefillDate());
+				d2 = DatatypeFactory.newInstance().newXMLGregorianCalendar(gc);
+				RefillType rt = new RefillType();
+				rt.setFillDate(d2);
+				medType.getRefillHistory().add(rt);
+			}
+			medType.setBrandName(drug.getBrandName());
+
+			// GCN_SEQN
+			CodedValueType gcncode = new CodedValueType();
+			CodingSystemReferenceType gcncsrt = new CodingSystemReferenceType();
+			gcncode.setCode(String.valueOf(drug.getGcnSeqNo()));
+			gcncsrt.setShortDescription(PHRDocument.CODE_GCN_SEQNO);
+			gcncode.setCodingSystem(gcncsrt);
+			medType.getCode().add(gcncode);
+
+			// ATC
+			CodedValueType atccode = new CodedValueType();
+			CodingSystemReferenceType atccsrt = new CodingSystemReferenceType();
+			atccode.setCode(drug.getAtc());
+
+			atccsrt.setShortDescription(PHRDocument.CODE_ATC);
+			atccode.setCodingSystem(atccsrt);
+			medType.getCode().add(atccode);
+
+			// Regional Identifier
+			CodedValueType ricode = new CodedValueType();
+			CodingSystemReferenceType ricsrt = new CodingSystemReferenceType();
+			ricode.setCode(drug.getRegionalIdentifier());
+			ricsrt.setShortDescription(PHRDocument.CODE_REGIONALIDENTIFIER);
+			ricode.setCodingSystem(ricsrt);
+			medType.getCode().add(ricode);
+			medType.setCustomName(drug.getCustomName());
+			medType.setTakeMin(drug.getTakeMin());
+			medType.setTakeMax(drug.getTakeMax());
+			medType.setQuantity(drug.getQuantity());
+			medType.setPrn(drug.isPrn());
+			medType.setSpecialInstruction(drug.getSpecialInstruction());
+			medType.setArchived(drug.isArchived());
+			medType.setGenericName(drug.getGenericName());
+			medType.setScriptNo(BigInteger.valueOf(drug.getScriptNo()));
+			medType.setMethod(drug.getMethod());
+			medType.setDrugForm(drug.getDrugForm());
+			medType.setFrequency(drug.getFreqCode());
+			CodedValueType cvt = new CodedValueType();
+			cvt.setCode(drug.getRoute());
+			CodingSystemReferenceType routecsrt = new CodingSystemReferenceType();
+			routecsrt.setServiceLocation("English CA");
+			routecsrt.setShortDescription("text");
+			cvt.setCodingSystem(routecsrt);
+			cvt.setHistoricalValue(null);
+			medType.setRoute(cvt);
+
+			medType.setCustomInstructions(drug.isCustomInstructions());
+			medType.setCustomNote(drug.isCustomNote());
+			medType.setLongTerm(drug.isLongTerm());
+			medType.setPastMed(drug.getPastMed());
+			medType.setPatientCompliance(drug.getPatientCompliance());
+			medType.setOutsideProviderName(drug.getOutsideProviderName());
+			medType.setOutsideProviderOhip(drug.getOutsideProviderOhip());
+			medType.setArchivedReason(drug.getArchivedReason());
+			medType.setHideFromDrugProfile(drug.isHideFromDrugProfile());
+			medType.setUnitNameOscar(drug.getUnitName());
+			medType.setName(drug.getDrugName());
+			medType.setInstructions("<pre>" + drug.getSpecial() + "</pre>");
+			medType.setProvider(contactInfo);
+		} catch (Exception e) {
+			logger.error("Error", e);
+		}
+		return medType;
+	}
+
+	private MedicationType createPhrMedication(EctProviderData.Provider prov, RxPrescriptionData.Prescription drug) {
+		Drug d = new Drug(drug);
+		return createPhrMedication2(prov, d);
+		/*
+		 * NameType name = new NameType(); name.setFirstName(prov.getFirstName()); name.setLastName(prov.getSurname());
+		 * 
+		 * ConciseContactInformationType contactInfo = new ConciseContactInformationType(); contactInfo.getPersonName().add(name);
+		 * 
+		 * MedicationType medType = new MedicationType(); medType.setPrescription(true);
+		 * 
+		 * if( drug.getCustomInstr() == false ) { medType.setDose(drug.getDosageDisplay() + " " + drug.getUnit()); medType.setDuration(drug.getDuration() + " " + drug.getDurationUnit()); //CodedValueType cvt = new CodedValueType();
+		 * //CodingSystemReferenceType csrt = new CodingSystemReferenceType(); //csrt.setServiceLocation(""); //cvt.setCodingSystem(csrt); //cvt.setCode(""); //cvt.setHistoricalValue(drug.getDurationUnit()); //medType.setDurationUnit(cvt);
+		 * medType.setRefills(String.valueOf(drug.getRepeat())); medType.setSubstitutionPermitted(drug.getNosubs()); } else medType.setDose(ResourceBundle.getBundle("oscarResources").getString("Send2Indivo.prescription.Instruction"));
+		 */
+		/*
+		 * medType.setWrittenDate(); medType.setBrandName(drug.getBrandName()); medType.setGCN_SEQNO(drug.getGCN_SEQNO()); medType.setCustomName(drug.getCustomName()); medType.setTakeMin(drug.getTakeMinString());
+		 * medType.setTakeMax(drug.getTakeMaxString()); medType.setQuantity(drug.getQuantity()); medType.setPrn(drug.getPrn()); medType.setSpecialInstruction(drug.getSpecialInstruction()); medType.setArchived(drug.isArchived());
+		 * medType.setGenericName(drug.getGenericName()); medType.setATC(drug.getAtcCode()); medType.setScriptNo(drug.getScript_no()); medType.setRegionalIdentifier(drug.getRegionalIdentifier()); medType.setMethod(drug.getMethod());
+		 * medType.setDrugForm(drug.getDrugForm()); medType.setCreateDate(drug.getRxCreatedDate()); medType.setCustomInstructions(drug.getCustomInstr()); medType.setCustomNote(drug.isCustomNote()); medType.setLongTerm(drug.isLongTerm());
+		 * medType.setPastMed(drug.isPastMed()); medType.setPatientCompliance(drug); medType.setOutsideProviderName(drug.getOutsideProviderName()); medType.setOutsideProviderOhip(drug.getOutsideProviderOhip());
+		 * medType.setArchivedReason(drug.getLastArchReason()); medType.setArchivedDate(drug.getArchivedDate()); medType.setHideFromDrugProfile(drug);
+		 *//*
+			 * medType.setName(drug.getDrugName()); medType.setInstructions("<pre>" + drug.getSpecial() + "</pre>"); medType.setProvider(contactInfo); return medType;
+			 */
+	}
+
+	/*
+	 * For updating a document on the IndivoServer: IndivoServer --> OSCAR (sends back the latest doc) OSCARmySQLdb --> OSCAR--> IndivoServer (OSCAR sends back the appended version of the doc) try { IndivoDocumentType currentDoc = new IndivoDocumentType();
+	 * //the new version of the doc //DocumentHeaderType docHeaderType = currentDoc.getDocumentHeader(); //String docIndex = docHeaderType.getDocumentIndex(); Element documentElement = DocumentUtils.getDocumentAnyElement(currentDoc); //Retrieve current
+	 * file record from indivo ReadDocumentResultType readResult = client.readDocument(auth.getToken(), demographicPhrId, oldDrugPhrId); IndivoDocumentType phrDoc = readResult.getIndivoDocument(); DocumentVersionType version =
+	 * phrDoc.getDocumentVersion().get(phrDoc.getDocumentVersion().size() - 1);
+	 * 
+	 * VersionBodyType body = version.getVersionBody(); body.setAny(documentElement); version.setVersionBody(body); client.updateDocument(sessionTicket, recipientId, docIndex, version); } catch(ActionNotPerformedException anpe) {
+	 * aMiscUtils.getLogger().error("Error", npe); } catch(IndivoException ie ) { iMiscUtils.getLogger().error("Error", e); }
+	 */
 }
-
-
