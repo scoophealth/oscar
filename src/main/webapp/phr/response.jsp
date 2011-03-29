@@ -109,7 +109,7 @@ PHRAuthentication phrAuth = (PHRAuthentication) session.getAttribute(PHRAuthenti
                <br/>
                    <logic:present name="<%=PHRAuthentication.SESSION_PHR_AUTH%>">
                        <div class="myoscarLoginElementAuth">
-                           Status: <b>Logged in as <%=providerName%></b> (<%=phrAuth.getUserId()%>)<br/>
+                           Status: <b>Logged in as <%=providerName%></b> (<%=phrAuth.getMyOscarUserId()%>)<br/>
                            <center>Closing Window... <a href="javascript:;" onclick="closeWindow()">close</a></center>
                            <%-- if no errors and logged in, close window--%>
                            <%if (!errors) {%>
