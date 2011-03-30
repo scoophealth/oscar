@@ -45,6 +45,24 @@ insert into measurementMap (loinc_code, ident_code, name, lab_type) VALUES ('313
 insert into measurementMap (loinc_code, ident_code, name, lab_type) VALUES ('14682-9', 'SCR', 'Creatinine', 'FLOWSHEET');
 insert into measurementMap (loinc_code, ident_code, name, lab_type) VALUES ('8280-0', 'WC', 'Waist Circumference', 'FLOWSHEET');
 
+insert into measurementMap (loinc_code, ident_code, name, lab_type) VALUES ('6301-6','INR','INR','MUHC'); 
+insert into measurementMap (loinc_code, ident_code, name, lab_type) VALUES ('4548-4','HA1C','Hb A1c','MUHC'); 
+insert into measurementMap (loinc_code, ident_code, name, lab_type) VALUES ('33914-3','NGFR','eGFR','MUHC'); 
+insert into measurementMap (loinc_code, ident_code, name, lab_type) VALUES ('14646-4','HDL','HDL','MUHC'); 
+insert into measurementMap (loinc_code, ident_code, name, lab_type) VALUES ('X100666','VDRL','VDRL','MUHC'); 
+insert into measurementMap (loinc_code, ident_code, name, lab_type) VALUES ('14685-2','B12','Vitamin B12','MUHC'); 
+insert into measurementMap (loinc_code, ident_code, name, lab_type) VALUES ('22748-8','LDL','LDL','MUHC'); 
+insert into measurementMap (loinc_code, ident_code, name, lab_type) VALUES ('22748-8','LDL','LDL','MUHC'); 
+insert into measurementMap (loinc_code, ident_code, name, lab_type) VALUES ('14682-9','CR','Creatinine','MUHC'); 
+insert into measurementMap (loinc_code, ident_code, name, lab_type) VALUES ('1751-7','ALB','Albumin','MUHC'); 
+insert into measurementMap (loinc_code, ident_code, name, lab_type) VALUES ('14879-1','PO4','Phosphate','MUHC'); 
+insert into measurementMap (loinc_code, ident_code, name, lab_type) VALUES ('2000-8','CA','Calcium','MUHC'); 
+insert into measurementMap (loinc_code, ident_code, name, lab_type) VALUES ('1742-6','ALT','ALT','MUHC'); 
+insert into measurementMap (loinc_code, ident_code, name, lab_type) VALUES ('14927-8','TRIG','Triglycerides','MUHC'); 
+insert into measurementMap (loinc_code, ident_code, name, lab_type) VALUES ('9322-9','CHHD','Total Cholesterol/HDL Cholesterol Ratio','MUHC'); 
+insert into measurementMap (loinc_code, ident_code, name, lab_type) VALUES ('9318-7','UMIC',' U Microalb/Creat Ratio','MUHC'); 
+
+
 /*!40000 ALTER TABLE `measurementMap` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
