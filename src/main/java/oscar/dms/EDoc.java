@@ -31,6 +31,7 @@ import java.io.OutputStream;
 import java.util.Date;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.log4j.Logger;
 import org.apache.struts.upload.FormFile;
 import org.oscarehr.util.MiscUtils;
@@ -409,5 +410,11 @@ public class EDoc extends TagObject implements Comparable {
 
 	public void setNumberOfPages(int n) {
 		this.numberOfPages = n;
+	}
+	
+	@Override
+    public String toString()
+	{
+		return(ReflectionToStringBuilder.toString(this));
 	}
 }

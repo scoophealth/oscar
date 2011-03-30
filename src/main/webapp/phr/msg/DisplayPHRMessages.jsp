@@ -1,3 +1,4 @@
+<%@page import="org.oscarehr.myoscar_server.ws.MedicalDataType"%>
 <%@ page import="java.util.ArrayList"%>
 <%@ page import="java.net.URLEncoder"%>
 
@@ -14,7 +15,6 @@
 <%@ page import="oscar.oscarDemographic.data.DemographicData"%><%@ page import="org.oscarehr.phr.PHRAuthentication"%>
 <%@ page import="org.oscarehr.phr.model.PHRAction"%>
 <%@ page import="oscar.oscarProvider.data.ProviderData"%>
-<%@ page import="org.oscarehr.phr.PHRConstants"%>
 <%@ page import="org.oscarehr.phr.model.PHRMessage"%>
 <%@ page import="org.oscarehr.phr.dao.PHRActionDAO, org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@ page import="java.util.*"%>
@@ -45,9 +45,9 @@ pageContext.setAttribute("STATUS_ON_HOLD", PHRAction.STATUS_ON_HOLD);
 pageContext.setAttribute("ACTION_ADD", PHRAction.ACTION_ADD);
 pageContext.setAttribute("ACTION_UPDATE", PHRAction.ACTION_UPDATE);
 
-pageContext.setAttribute("TYPE_BINARYDATA", PHRConstants.DOCTYPE_BINARYDATA());
-pageContext.setAttribute("TYPE_MEDICATION", PHRConstants.DOCTYPE_MEDICATION());
-pageContext.setAttribute("TYPE_ACCESSPOLICIES", PHRConstants.DOCTYPE_ACCESSPOLICIES());
+pageContext.setAttribute("TYPE_BINARYDATA", MedicalDataType.BINARY_DOCUMENT.name());
+pageContext.setAttribute("TYPE_MEDICATION", MedicalDataType.MEDICATION.name());
+pageContext.setAttribute("TYPE_ACCESSPOLICIES", "RELATIONSHIP");
 
 String pageMethod = request.getParameter("method");
 if (pageMethod.equals("delete") || pageMethod.equals("resend")) 

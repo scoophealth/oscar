@@ -33,6 +33,7 @@ import java.util.Locale;
 import java.util.Vector;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.log4j.Logger;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
@@ -2501,4 +2502,11 @@ if (getSpecial() == null || getSpecial().length() < 4) {
         }
 
     }
+    
+	@Override
+    public String toString()
+	{
+		return(ReflectionToStringBuilder.toString(this));
+	}
+
 }

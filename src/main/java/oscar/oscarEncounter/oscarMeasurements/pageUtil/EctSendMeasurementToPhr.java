@@ -18,7 +18,6 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.indivo.IndivoException;
-import org.oscarehr.phr.PHRConstants;
 import org.oscarehr.phr.model.PHRMeasurement;
 import org.oscarehr.phr.service.PHRService;
 
@@ -51,8 +50,8 @@ public class EctSendMeasurementToPhr extends Action {
         for (String measurementType: measurementTypeList) {
             List<EctMeasurementsDataBean> measurements =  hd.getMeasurementObjectByType(measurementType, demographicNo);
             for (EctMeasurementsDataBean measurement: measurements) {
-                if (!phrService.isIndivoRegistered(PHRConstants.DOCTYPE_MEASUREMENT(), measurement.getId()+"")) {
-                      PHRMeasurement phrMeasurement = new PHRMeasurement(provider, demographicNo, patientMyOscarId, measurement);
+                if (!phrService.isIndivoRegistered(measurementType, measurement.getId()+"")) {
+                      PHRMeasurement phrMeasurement = new PHRMeasurement(provider, demographicNo, patientMyOscarId, measurementType, measurement);
                       phrService.sendAddDocument(phrMeasurement, measurement.getId() + "");
                 }
                 

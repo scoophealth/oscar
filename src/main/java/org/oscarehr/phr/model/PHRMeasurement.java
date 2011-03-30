@@ -26,7 +26,6 @@ import org.indivo.xml.phr.urns.DocumentClassificationUrns;
 import org.indivo.xml.phr.vital.ResultType;
 import org.indivo.xml.phr.vital.VitalSign;
 import org.indivo.xml.phr.vital.VitalSignType;
-import org.oscarehr.phr.PHRConstants;
 import org.oscarehr.util.MiscUtils;
 import org.w3c.dom.Element;
 
@@ -51,14 +50,14 @@ public class PHRMeasurement extends PHRDocument{
     }
 
     //sending new meds to PHR
-    public PHRMeasurement(EctProviderData.Provider provider, String demographicNo, String demographicPhrId, EctMeasurementsDataBean measurement) throws JAXBException, ActionNotPerformedException, IndivoException  {
+    public PHRMeasurement(EctProviderData.Provider provider, String demographicNo, String demographicPhrId, String dataType, EctMeasurementsDataBean measurement) throws JAXBException, ActionNotPerformedException, IndivoException  {
         //super();
         IndivoDocumentType document = getPhrMeasurementDocument(provider, measurement);
         JAXBContext docContext = JAXBContext.newInstance(IndivoDocumentType.class.getPackage().getName());
         byte[] docContentBytes = JAXBUtils.marshalToByteArray((JAXBElement) new IndivoDocument(document), docContext);
         String docContentStr = new String(docContentBytes);
         
-        this.setPhrClassification(PHRConstants.DOCTYPE_MEASUREMENT());
+        this.setPhrClassification(dataType);
         this.setReceiverOscar(demographicNo);
         this.setReceiverType(this.TYPE_DEMOGRAPHIC);
         this.setReceiverPhr(demographicPhrId);

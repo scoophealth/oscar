@@ -30,7 +30,7 @@ import org.indivo.xml.phr.types.AuthorType;
 import org.indivo.xml.phr.urns.ContentTypeQNames;
 import org.indivo.xml.phr.urns.DocumentClassificationUrns;
 import org.oscarehr.common.model.Provider;
-import org.oscarehr.phr.PHRConstants;
+import org.oscarehr.myoscar_server.ws.MedicalDataType;
 import org.w3c.dom.Element;
 
 import oscar.dms.EDoc;
@@ -79,7 +79,7 @@ public class PHRBinaryData extends PHRDocument {
 	private void setConstructorData(String recipientOscarId, int recipientType, String recipientPhrId, IndivoDocumentType indivoDoc) throws IndivoException, JAXBException {
 	    byte[] docContentBytes = JAXBUtils.marshalToByteArray((JAXBElement) new IndivoDocument(indivoDoc), JAXBContext.newInstance(IndivoDocumentType.class.getPackage().getName()));
         String docContentStr = new String(docContentBytes);
-        this.setPhrClassification(PHRConstants.DOCTYPE_BINARYDATA());
+        this.setPhrClassification(MedicalDataType.BINARY_DOCUMENT.name());
         this.setSenderType(PHRDocument.TYPE_PROVIDER);
         this.setReceiverOscar(recipientOscarId);
         this.setReceiverType(recipientType);
@@ -88,9 +88,8 @@ public class PHRBinaryData extends PHRDocument {
     }
     
     public static IndivoDocumentType mountDocument(String oscarId, IndivoDocumentType doc) throws JAXBException, IndivoException {
-        EDocUtil docUtil = new EDocUtil();
-        EDoc eDoc = docUtil.getDoc(oscarId);
-        byte[] data = docUtil.getFile(eDoc.getFilePath());
+        EDoc eDoc = EDocUtil.getDoc(oscarId);
+        byte[] data = EDocUtil.getFile(eDoc.getFilePath());
         JAXBContext binaryDataContext = JAXBContext.newInstance(BinaryData.class.getPackage().getName());
         BinaryDataType bdt = (BinaryDataType) DocumentUtils.getDocumentAnyObject(doc, binaryDataContext.createUnmarshaller());
         bdt.setData(data);
@@ -99,7 +98,7 @@ public class PHRBinaryData extends PHRDocument {
         IndivoDocumentType indivoDoc = getPhrBinaryDataDocument(author.getName(), author.getIndivoId(), author.getRole().getValue(), bdt);
         return indivoDoc;
     }
-    
+        
     private BinaryDataType getPhrBinaryData(String mimeType, String fileDesc, String filename, byte[] data) {
         BinaryDataType binaryDataType = new BinaryDataType();
         binaryDataType.setMimeType(mimeType);
