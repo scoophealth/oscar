@@ -519,6 +519,17 @@ public final class DateUtils {
 	}
 
 	/**
+	 * null safe method for converting a date object to calendar object.
+	 */
+	public static GregorianCalendar toGregorianCalendar(Date date) {
+		if (date==null) return(null);
+		
+		GregorianCalendar gregorianCalendar=new GregorianCalendar();
+		gregorianCalendar.setTimeInMillis(date.getTime());
+		return(gregorianCalendar);
+	}
+	
+	/**
 	 * null safe method for converting an iso date from string to calendar.
 	 */
 	public static GregorianCalendar toGregorianCalendarDate(String isoDateString) {

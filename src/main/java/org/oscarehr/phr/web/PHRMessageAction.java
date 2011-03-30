@@ -40,7 +40,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
-import org.oscarehr.phr.PHRConstants;
+import org.oscarehr.myoscar_server.ws.MedicalDataType;
 import org.oscarehr.phr.dao.PHRActionDAO;
 import org.oscarehr.phr.dao.PHRDocumentDAO;
 import org.oscarehr.phr.model.PHRAction;
@@ -99,7 +99,7 @@ public class PHRMessageAction extends DispatchAction {
         String ticket     = auth.getToken();*/
         clearSessionVariables(request);
         String providerNo = (String) request.getSession().getAttribute("user");
-        List docs = phrDocumentDAO.getDocumentsReceived(PHRConstants.DOCTYPE_MESSAGE(), providerNo);
+        List docs = phrDocumentDAO.getDocumentsReceived("MESSAGE", providerNo);
         ArrayList<PHRMessage> messages = null;
         List<PHRAction> actionsPendingApproval = phrActionDAO.getActionsByStatus(PHRAction.STATUS_APPROVAL_PENDING, providerNo);
         if(docs != null) {
@@ -127,17 +127,17 @@ public class PHRMessageAction extends DispatchAction {
         String ticket     = auth.getToken();*/
         clearSessionVariables(request);
         String providerNo = (String) request.getSession().getAttribute("user");
-        List docs = phrDocumentDAO.getDocumentsSent(PHRConstants.DOCTYPE_MESSAGE(), providerNo);
+        List docs = phrDocumentDAO.getDocumentsSent("MESSAGE", providerNo);
         
-        List messageActions = phrActionDAO.getPendingActionsByProvider(PHRConstants.DOCTYPE_MESSAGE(), PHRAction.ACTION_ADD, providerNo);
-        List otherActions = phrActionDAO.getPendingActionsByProvider(PHRConstants.DOCTYPE_MEDICATION(), -1, providerNo);
-        otherActions.addAll(phrActionDAO.getPendingActionsByProvider(PHRConstants.DOCTYPE_BINARYDATA(), -1, providerNo));
+        List messageActions = phrActionDAO.getPendingActionsByProvider("MESSAGE", PHRAction.ACTION_ADD, providerNo);
+        List otherActions = phrActionDAO.getPendingActionsByProvider(MedicalDataType.MEDICATION.name(), -1, providerNo);
+        otherActions.addAll(phrActionDAO.getPendingActionsByProvider(MedicalDataType.BINARY_DOCUMENT.name(), -1, providerNo));
         ArrayList<Integer> statusList = new ArrayList();
         statusList.add(PHRAction.STATUS_ON_HOLD);
         statusList.add(PHRAction.STATUS_NOT_AUTHORIZED);
         statusList.add(PHRAction.STATUS_SEND_PENDING);
         statusList.add(PHRAction.STATUS_OTHER_ERROR);
-        otherActions.addAll(phrActionDAO.getActionsByStatus(statusList, providerNo, PHRConstants.DOCTYPE_ACCESSPOLICIES()));
+        otherActions.addAll(phrActionDAO.getActionsByStatus(statusList, providerNo, "RELATIONSHIP"));
         request.getSession().setAttribute("indivoSentMessages", docs);
         request.getSession().setAttribute("indivoMessageActions", messageActions);
         request.getSession().setAttribute("indivoOtherActions", otherActions);
@@ -152,7 +152,7 @@ public class PHRMessageAction extends DispatchAction {
         String ticket     = auth.getToken();*/
         clearSessionVariables(request);
         String providerNo = (String) request.getSession().getAttribute("user");
-        List docs = phrDocumentDAO.getDocumentsArchived(PHRConstants.DOCTYPE_MESSAGE(), providerNo);
+        List docs = phrDocumentDAO.getDocumentsArchived("MESSAGE", providerNo);
         request.getSession().setAttribute("indivoArchivedMessages", docs);
         
         return mapping.findForward("view");

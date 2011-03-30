@@ -35,7 +35,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.oscarehr.phr.PHRConstants;
+import org.oscarehr.myoscar_server.ws.MedicalDataType;
 import org.oscarehr.phr.model.PHRDocument;
 import org.oscarehr.phr.service.PHRService;
 import org.oscarehr.util.LoggedInInfo;
@@ -85,10 +85,10 @@ public class SendDocToPhrAction extends Action {
 		PHRService phrService = (PHRService) SpringUtils.getBean("phrService");
 		
 		try {
-	    	if (phrService.isIndivoRegistered(PHRConstants.DOCTYPE_BINARYDATA(), doc.getDocId())) {
+	    	if (phrService.isIndivoRegistered(MedicalDataType.BINARY_DOCUMENT.name(), doc.getDocId())) {
 	    		// update
 	    		logger.debug("called update");
-	    		String phrIndex = phrService.getPhrIndex(PHRConstants.DOCTYPE_BINARYDATA(), doc.getDocId());
+	    		String phrIndex = phrService.getPhrIndex(MedicalDataType.BINARY_DOCUMENT.name(), doc.getDocId());
 	    		phrService.sendUpdateBinaryData(prov, demo.getChartNo(), PHRDocument.TYPE_DEMOGRAPHIC, demo.getPin(), doc, phrIndex);
 	    	} else {
 	    		// add

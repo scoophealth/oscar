@@ -28,7 +28,6 @@ import org.indivo.xml.phr.document.IndivoDocumentType;
 import org.indivo.xml.security.ProfileCollection;
 import org.indivo.xml.security.ProfileCollectionType;
 import org.oscarehr.phr.PHRAuthentication;
-import org.oscarehr.phr.PHRConstants;
 import org.oscarehr.phr.model.PHRAction;
 import org.oscarehr.phr.model.PHRDocument;
 import org.oscarehr.phr.service.PHRService;
@@ -81,7 +80,7 @@ public class IndivoAPService extends PHRService {
         PHRAction action = new PHRAction();
         action.setActionType(PHRAction.ACTION_UPDATE);
         action.setStatus(PHRAction.STATUS_APPROVAL_PENDING);
-        action.setPhrClassification(PHRConstants.DOCTYPE_ACCESSPOLICIES());
+        action.setPhrClassification("RELATIONSHIP");
         action.setDateQueued(new Date());
         action.setReceiverOscar(providerOscarId);
         //TOTHINK: might have to get Id later
@@ -137,7 +136,7 @@ public class IndivoAPService extends PHRService {
     
     //PROVIDER needs to be authed with the indivoServer, and providerNo must be set in the auth object
     public void packageAllAccessPolicies(PHRAuthentication auth) throws Exception {
-        List<PHRAction> policiesOnHold = phrActionDAO.getActionsByStatus(PHRAction.STATUS_ON_HOLD, auth.getProviderNo(), PHRConstants.DOCTYPE_ACCESSPOLICIES());
+        List<PHRAction> policiesOnHold = phrActionDAO.getActionsByStatus(PHRAction.STATUS_ON_HOLD, auth.getProviderNo(), "RELATIONSHIP");
         for (PHRAction curPolicy: policiesOnHold) {
             packageAccessPolicy(auth, curPolicy);
         }
