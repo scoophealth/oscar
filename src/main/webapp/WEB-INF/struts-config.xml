@@ -2132,6 +2132,8 @@
 			<forward name="success" path="/appointment/appointmentstatussetting.jsp" />
 			<forward name="edit" path="/appointment/appointmentstatusedit.jsp" />
 		</action>
+                <action path="/oscarRx/updateDrugrefDB"  type="oscar.oscarRx.pageUtil.RxUpdateDrugref" scope="request" parameter="method">
+                </action>
 		<action path="/oscarRx/copyFavorite" name="rxCopyForm" type="org.springframework.web.struts.DelegatingActionProxy" scope="request" parameter="dispatch">
 			<forward name="success" path="/oscarRx/CopyFavorites.jsp" />
 			<forward name="edit" path="/appointment/appointmentstatusedit.jsp" />
