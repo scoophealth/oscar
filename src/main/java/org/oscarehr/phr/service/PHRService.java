@@ -631,7 +631,7 @@ public class PHRService {
 		}
 		// update action if updated phr indexes in the attached document reference
 		if (msg.getReferencedIndivoDocuments().size() > 0) {
-			action.setIndivoDocument(PHRMessage.getPhrMessageDocument(auth.getUserId(), auth.getNamePHRFormat(), msg));
+			action.setIndivoDocument(PHRMessage.getPhrMessageDocument(auth.getMyOscarUserId().toString(), auth.getNamePHRFormat(), msg));
 			phrActionDAO.update(action);
 		}
 
