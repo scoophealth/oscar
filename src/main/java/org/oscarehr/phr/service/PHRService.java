@@ -80,6 +80,8 @@ import org.oscarehr.phr.model.PHRMessage;
 import org.oscarehr.phr.util.MyOscarServerWebServicesManager;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.XmlUtils;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import oscar.OscarProperties;
 import oscar.dms.EDoc;
@@ -95,7 +97,7 @@ public class PHRService {
 	public static final String SESSION_PHR_EXCHANGE_TIME = "PHR_EXCHANGE_TIME";
 	// What the key in OscarProperties is - in seconds (value is int)
 	public static final String OSCAR_PROPS_EXCHANGE_INTERVAL = "MY_OSCAR_EXCHANGE_INTERVAL";
-	
+
 	private static final Logger logger = MiscUtils.getLogger();
 	protected PHRDocumentDAO phrDocumentDAO;
 	protected PHRActionDAO phrActionDAO;
@@ -173,8 +175,8 @@ public class PHRService {
 	}
 
 	public Integer sendAddBinaryData(ProviderData sender, String recipientOscarId, int recipientType, String recipientPhrId, EDoc document) throws Exception {
-		logger.debug("sendAddBinaryData:"+sender+", "+recipientOscarId+", "+recipientType+", "+recipientPhrId+", "+document);
-		
+		logger.debug("sendAddBinaryData:" + sender + ", " + recipientOscarId + ", " + recipientType + ", " + recipientPhrId + ", " + document);
+
 		PHRBinaryData phrBinaryData = new PHRBinaryData(sender, recipientOscarId, recipientType, recipientPhrId, document);
 		PHRAction action = phrBinaryData.getAction(PHRAction.ACTION_ADD, PHRAction.STATUS_SEND_PENDING);
 		action.setOscarId(document.getDocId());
@@ -183,7 +185,7 @@ public class PHRService {
 	}
 
 	public void sendAddAnnotation(ProviderData sender, String recipientOscarId, String recipientPhrId, String documentReferenceOscarActionId, String message) throws Exception {
-		logger.debug("sendAddAnnotation:"+sender+", "+recipientOscarId+", "+recipientPhrId+", "+documentReferenceOscarActionId+", "+message);
+		logger.debug("sendAddAnnotation:" + sender + ", " + recipientOscarId + ", " + recipientPhrId + ", " + documentReferenceOscarActionId + ", " + message);
 
 		PHRIndivoAnnotation phrAnnotation = new PHRIndivoAnnotation(sender, recipientOscarId, recipientPhrId, documentReferenceOscarActionId, message);
 		PHRAction action = phrAnnotation.getAction(PHRAction.ACTION_ADD, PHRAction.STATUS_SEND_PENDING);
@@ -195,7 +197,7 @@ public class PHRService {
 	}
 
 	public void sendUpdateBinaryData(ProviderData sender, String recipientOscarId, int recipientType, String recipientPhrId, EDoc document, String phrDocIndex) throws Exception {
-		logger.debug("sendUpdateBinaryData:"+sender+", "+recipientOscarId+", "+recipientType+", "+recipientPhrId+", "+document+", "+phrDocIndex);
+		logger.debug("sendUpdateBinaryData:" + sender + ", " + recipientOscarId + ", " + recipientType + ", " + recipientPhrId + ", " + document + ", " + phrDocIndex);
 
 		PHRBinaryData phrBinaryData = new PHRBinaryData(sender, recipientOscarId, recipientType, recipientPhrId, document);
 		PHRAction action = phrBinaryData.getAction(PHRAction.ACTION_UPDATE, PHRAction.STATUS_SEND_PENDING);
@@ -209,7 +211,7 @@ public class PHRService {
 	}
 
 	public void sendAddMedication(EctProviderData.Provider prov, String demographicNo, String demographicPhrId, RxPrescriptionData.Prescription drug) throws Exception {
-		logger.debug("sendAddMedication:"+prov+", "+demographicNo+", "+demographicPhrId+", "+drug);
+		logger.debug("sendAddMedication:" + prov + ", " + demographicNo + ", " + demographicPhrId + ", " + drug);
 
 		PHRMedication medication = new PHRMedication(prov, demographicNo, demographicPhrId, drug);
 		PHRAction action = medication.getAction(PHRAction.ACTION_ADD, PHRAction.STATUS_SEND_PENDING);
@@ -219,7 +221,7 @@ public class PHRService {
 	}
 
 	public void sendUpdateMedication(EctProviderData.Provider prov, String demographicNo, String demographicPhrId, RxPrescriptionData.Prescription drug, String phrDrugIndex) throws Exception {
-		logger.debug("sendAddMedication:"+prov+", "+demographicNo+", "+demographicPhrId+", "+drug+", "+phrDrugIndex);
+		logger.debug("sendAddMedication:" + prov + ", " + demographicNo + ", " + demographicPhrId + ", " + drug + ", " + phrDrugIndex);
 
 		PHRMedication medication = new PHRMedication(prov, demographicNo, demographicPhrId, drug);
 		PHRAction action = medication.getAction(PHRAction.ACTION_UPDATE, PHRAction.STATUS_SEND_PENDING);
@@ -231,7 +233,7 @@ public class PHRService {
 	}
 
 	public void sendAddDocument(PHRDocument document, String oscarId) {
-		logger.debug("sendAddDocument:"+document+", "+oscarId);
+		logger.debug("sendAddDocument:" + document + ", " + oscarId);
 
 		PHRAction action = document.getAction(PHRAction.ACTION_ADD, PHRAction.STATUS_SEND_PENDING);
 		action.setOscarId(oscarId);
@@ -240,7 +242,7 @@ public class PHRService {
 	}
 
 	public void sendUpdateDocument(PHRDocument document, String phrIndex, String oscarIndex) {
-		logger.debug("sendUpdateDocument:"+document+", "+phrIndex+", "+oscarIndex);
+		logger.debug("sendUpdateDocument:" + document + ", " + phrIndex + ", " + oscarIndex);
 
 		PHRAction action = document.getAction(PHRAction.ACTION_UPDATE, PHRAction.STATUS_SEND_PENDING);
 		// set which phrIndex to update
@@ -255,7 +257,7 @@ public class PHRService {
 	}
 
 	public void sendAddMessage(String subject, String priorThreadMessage, String messageBody, ProviderData sender, String recipientOscarId, int recipientType, String recipientPhrId, List<String> attachmentActionIds) throws Exception {
-		logger.debug("sendAddMessage:"+subject+", "+priorThreadMessage+", "+messageBody+", "+sender+", "+recipientOscarId+", "+recipientType+", "+recipientPhrId+", "+attachmentActionIds);
+		logger.debug("sendAddMessage:" + subject + ", " + priorThreadMessage + ", " + messageBody + ", " + sender + ", " + recipientOscarId + ", " + recipientType + ", " + recipientPhrId + ", " + attachmentActionIds);
 
 		PHRMessage message = new PHRMessage(subject, priorThreadMessage, messageBody, sender, recipientOscarId, recipientType, recipientPhrId, attachmentActionIds);
 		PHRAction action = message.getAction(PHRAction.ACTION_ADD, PHRAction.STATUS_SEND_PENDING);
@@ -263,7 +265,7 @@ public class PHRService {
 	}
 
 	public void sendUpdateMessage(PHRMessage msg) throws Exception {
-		logger.debug("sendUpdateMessage:"+msg);
+		logger.debug("sendUpdateMessage:" + msg);
 
 		PHRAction action = msg.getAction2(PHRAction.ACTION_UPDATE, PHRAction.STATUS_SEND_PENDING);
 		phrActionDAO.save(action);
@@ -426,8 +428,9 @@ public class PHRService {
 
 		// TalkClient client = getTalkClient();
 		for (PHRAction action : actions) {
-			
+
 			boolean updated = false;
+			Long resultId =null;
 			// handle messages differently
 			logger.debug("ACTION classification " + action.getPhrClassification() + " action type " + action.getActionType());
 			try {
@@ -440,8 +443,25 @@ public class PHRService {
 					IndivoDocumentType doc = action.getIndivoDocument();
 					if (action.getPhrClassification().equals(MedicalDataType.BINARY_DOCUMENT.name())) {
 						doc = PHRBinaryData.mountDocument(action.getOscarId(), doc);
-					}
-					if (action.getPhrClassification().equals("ANNOTATION")) {
+
+						MedicalDataWs medicalDataWs = MyOscarServerWebServicesManager.getMedicalDataWs(auth.getMyOscarUserId(), auth.getMyOscarPassword());
+						logger.debug("sending medical data : " + action.getOscarId() + ", " + action.getDateSent() + ", " + action.getPhrClassification() + ", " + auth.getMyOscarUserId() + ", " + doc);
+
+						GregorianCalendar dataTime = new GregorianCalendar();
+
+						EDoc edoc = EDocUtil.getDoc(action.getOscarId());
+
+						org.w3c.dom.Document xmlDocument = XmlUtils.newDocument("BinaryDocument");
+						XmlUtils.appendChildToRoot(xmlDocument, "Filename", edoc.getFileName());
+						XmlUtils.appendChildToRoot(xmlDocument, "FileDescription", edoc.getDescription());
+						XmlUtils.appendChildToRoot(xmlDocument, "MimeType", edoc.getContentType());
+						XmlUtils.appendChildToRoot(xmlDocument, "Data", edoc.getFileBytes());
+						String xmlString = XmlUtils.toString(xmlDocument);
+
+						if (doc.getDocumentHeader().getCreationDateTime() != null) dataTime = doc.getDocumentHeader().getCreationDateTime().toGregorianCalendar();
+
+						resultId = medicalDataWs.addMedicalData(Long.parseLong(action.getReceiverPhr()), dataTime, action.getPhrClassification(), auth.getMyOscarUserId(), xmlString);
+					} else if (action.getPhrClassification().equals("ANNOTATION")) {
 						try {
 							String referenceIndex = PHRIndivoAnnotation.getAnnotationReferenceIndex(doc);// temporarily stored
 							PHRAction referencedDocumentAction = phrActionDAO.getActionById(referenceIndex);
@@ -456,26 +476,34 @@ public class PHRService {
 							phrActionDAO.update(action);
 							continue; // if there is an error sending annotation, screw it...move on
 						}
+					} else if (action.getPhrClassification().equals(MedicalDataType.MEDICATION.name())) {
+
+						
+						MedicalDataWs medicalDataWs = MyOscarServerWebServicesManager.getMedicalDataWs(auth.getMyOscarUserId(), auth.getMyOscarPassword());
+
+						GregorianCalendar dataTime = new GregorianCalendar();
+
+						Node medicationNode=doc.getDocumentVersion().get(0).getVersionBody().getAny();
+
+						org.w3c.dom.Document xmlDocument = XmlUtils.newDocument("Medication");
+						Node xmlDocumentRootNode=xmlDocument.getFirstChild();
+						
+						NodeList nodeList=medicationNode.getChildNodes();
+						for (int i=0; i<nodeList.getLength(); i++)
+						{
+							Node node = nodeList.item(i);
+							node=xmlDocument.importNode(node, true);
+							xmlDocumentRootNode.appendChild(node);
+						}
+						
+						String xmlString = XmlUtils.toString(xmlDocument);
+
+						logger.debug("sending medical data : " + action.getOscarId() + ", " + action.getDateSent() + ", " + action.getPhrClassification() + ", " + auth.getMyOscarUserId() + ", " + xmlString);
+
+						if (doc.getDocumentHeader().getCreationDateTime() != null) dataTime = doc.getDocumentHeader().getCreationDateTime().toGregorianCalendar();
+
+						resultId = medicalDataWs.addMedicalData(Long.parseLong(action.getReceiverPhr()), dataTime, action.getPhrClassification(), auth.getMyOscarUserId(), xmlString);
 					}
-
-
-					MedicalDataWs medicalDataWs = MyOscarServerWebServicesManager.getMedicalDataWs(auth.getMyOscarUserId(), auth.getMyOscarPassword());
-					logger.debug("sending medical data : " + action.getOscarId() + ", " + action.getDateSent() + ", " + action.getPhrClassification() + ", " + auth.getMyOscarUserId() + ", " + doc);
-
-					GregorianCalendar dataTime=new GregorianCalendar();
-					
-					EDoc edoc=EDocUtil.getDoc(action.getOscarId());
-
-					org.w3c.dom.Document xmlDocument=XmlUtils.newDocument("BinaryDocument");
-					XmlUtils.appendChildToRoot(xmlDocument, "Filename", edoc.getFileName());
-					XmlUtils.appendChildToRoot(xmlDocument, "FileDescription", edoc.getDescription());
-					XmlUtils.appendChildToRoot(xmlDocument, "MimeType", edoc.getContentType());
-					XmlUtils.appendChildToRoot(xmlDocument, "Data", edoc.getFileBytes());
-					String xmlString=XmlUtils.toString(xmlDocument);
-
-					if (doc.getDocumentHeader().getCreationDateTime()!=null) dataTime=doc.getDocumentHeader().getCreationDateTime().toGregorianCalendar();
-
-					Long resultId = medicalDataWs.addMedicalData(Long.parseLong(action.getReceiverPhr()), dataTime, action.getPhrClassification(), auth.getMyOscarUserId(), xmlString);
 
 					// AddDocumentResultType result = client.addDocument(auth.getToken(), action.getReceiverPhr(), doc);
 					String resultIndex = resultId.toString();
@@ -485,7 +513,7 @@ public class PHRService {
 					actions = PHRAction.updateIndexes(action.getPhrClassification(), action.getOscarId(), resultIndex, actions);
 					updated = true;
 					// if updating
-				
+
 				} else if (action.getPhrClassification().equalsIgnoreCase("MESSAGE") && action.getActionType() == PHRAction.ACTION_UPDATE) {
 					logger.info("excuse me but since when can you ever update a message that's been sent? no messaging system allows that.");
 
