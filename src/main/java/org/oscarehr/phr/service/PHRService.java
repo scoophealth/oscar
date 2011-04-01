@@ -432,7 +432,7 @@ public class PHRService {
 			boolean updated = false;
 			Long resultId =null;
 			// handle messages differently
-			logger.debug("ACTION classification " + action.getPhrClassification() + " action type " + action.getActionType());
+			logger.debug("ACTION classification " + action.getPhrClassification() + " action type " + action.getActionType()+", phr_action.id="+action.getId());
 			try {
 				if (action.getPhrClassification().equalsIgnoreCase("MESSAGE") && (action.getActionType() == PHRAction.ACTION_ADD || action.getActionType() == PHRAction.ACTION_UPDATE)) {
 					sendMessage(auth, action);
