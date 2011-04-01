@@ -494,6 +494,11 @@
 		<form-bean name="consultationReportForm" type="org.apache.struts.validator.DynaValidatorForm">
 			<form-property name="cr" type="org.oscarehr.eyeform.web.ConsultationReportFormBean" />			
 		</form-bean>
+		
+		<form-bean name="contactForm" type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property name="contact" type="org.oscarehr.common.model.Contact" />
+			<form-property name="pcontact" type="org.oscarehr.common.model.ProfessionalContact" />			
+		</form-bean>
 
 	</form-beans>
 
@@ -2032,6 +2037,12 @@
 		
 		<!-- END OSCAR Report By Template -->
 
+		<action path="/demographic/Contact" type="org.oscarehr.common.web.ContactAction" parameter="method" scope="request" validate="false" name="contactForm">
+			<forward name="pForm" path="/demographic/addEditProfessionalContact.jsp" />
+			<forward name="cForm" path="/demographic/addEditContact.jsp" />
+			<forward name="manage" path="/demographic/ManageContacts.jsp" />										
+		</action>
+		
 		<action path="/ArchiveView" type="org.springframework.web.struts.DelegatingActionProxy" scope="request" parameter="method">
 			<forward name="view" path="/provider/providercontrol.jsp" redirect="true" />
 		</action>

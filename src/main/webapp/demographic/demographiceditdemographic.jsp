@@ -54,6 +54,7 @@
 <%@ page import="org.springframework.web.context.*,org.springframework.web.context.support.*,org.oscarehr.common.dao.*,org.oscarehr.common.model.*,org.oscarehr.common.OtherIdManager"%>
 <%@ page import="oscar.OscarProperties"%>
 <%@ page import="org.oscarehr.phr.PHRAuthentication"%>
+<%@ page import="org.oscarehr.common.web.ContactAction" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
 <jsp:useBean id="providerBean" class="java.util.Properties"
@@ -1061,6 +1062,7 @@ if (iviewTag!=null && !"".equalsIgnoreCase(iviewTag.trim())){
 						</ul>
 						</div>
 
+						<%if(!OscarProperties.getInstance().isPropertyActive("NEW_CONTACTS_UI")) { %>
 						<div class="demographicSection" id="otherContacts">
 						<h3>&nbsp;<bean:message key="demographic.demographiceditdemographic.msgOtherContacts"/>: <b><a
 							href="javascript: function myFunction() {return false; }"
@@ -1082,7 +1084,35 @@ if (iviewTag!=null && !"".equalsIgnoreCase(iviewTag.trim())){
 
 						</ul>
 						</div>
+						
+						<% } else { %>
+						
+						<div class="demographicSection" id="otherContacts2">
+						<h3>&nbsp;<bean:message key="demographic.demographiceditdemographic.msgOtherContacts"/>: <b><a
+							href="javascript: function myFunction() {return false; }"
+							onClick="popup(700,960,'Contact.do?method=manage&demographic_no=<%=apptMainBean.getString(rs,"demographic_no")%>','ManageContacts')">
+						<bean:message key="demographic.demographiceditdemographic.msgManageContacts"/><!--i18n--></a></b></h3>
+						<ul>
+						<%
+							ContactDao contactDao = (ContactDao)SpringUtils.getBean("contactDao");
+							DemographicContactDao dContactDao = (DemographicContactDao)SpringUtils.getBean("demographicContactDao");
+							List<DemographicContact> dContacts = dContactDao.findByDemographicNo(Integer.parseInt(apptMainBean.getString(rs,"demographic_no")));
+							dContacts = ContactAction.fillContactNames(dContacts);
+							for(DemographicContact dContact:dContacts) {	
+								String sdm = (dContact.getSdm().equals("true"))?"<span title=\"SDM\" >/SDM</span>":"";
+								String ec = (dContact.getEc().equals("true"))?"<span title=\"Emergency Contact\" >/EC</span>":"";
+						%>
+																										
+								<li><span class="label"><%=dContact.getRole()%>:</span>
+                                                            <span class="info"><%=dContact.getContactName() %><%=sdm%><%=ec%></span>
+                                                        </li>																																			
 
+						<%  } %>
+
+						</ul>						
+						</div>
+						
+						<% } %>	
 						<div class="demographicSection" id="clinicStatus">
 						<h3>&nbsp;<bean:message key="demographic.demographiceditdemographic.msgClinicStatus"/></h3>
 						<ul>

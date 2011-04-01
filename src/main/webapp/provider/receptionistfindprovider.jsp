@@ -65,6 +65,18 @@
   	n_t_w_w = (String) session.getAttribute("newticklerwarningwindow");
   }
   boolean caisi = Boolean.valueOf((String)request.getParameter("caisi")).booleanValue();
+  
+  String form = null;
+  String elementName = null;
+  String elementId = null;
+ 
+  String custom = request.getParameter("custom");
+  if(custom !=null && custom.equals("true")) {
+	  form = request.getParameter("form");
+	  elementName = request.getParameter("elementName");
+	  elementId = request.getParameter("elementId");
+  }
+ 
 %>
 
 <%@page import="org.oscarehr.common.model.ProviderPreference"%>
@@ -86,9 +98,15 @@ function selectProvider(p,pn) {
 <%}%>
 }
 
-function selectProviderCaisi(p,pn) {
+function selectProviderCaisi(p,pn) {	
 	opener.document.ticklerForm.elements['tickler.task_assigned_to_name'].value=pn;
 	opener.document.ticklerForm.elements['tickler.task_assigned_to'].value=p;
+	self.close();
+}
+
+function selectProviderCustom(p,pn) {
+	opener.document.<%=form%>.elements['<%=elementName%>'].value=pn;
+	opener.document.<%=form%>.elements['<%=elementId%>'].value=p;
 	self.close();
 }
 </SCRIPT>
@@ -154,6 +172,8 @@ function selectProviderCaisi(p,pn) {
 		<td>
 		<%if(caisi) { %> <a href=#
 			onClick="selectProviderCaisi('<%=sp%>','<%=spnl+", "+spnf%>')"><%=sp%></a></td>
+		<% } else if(custom != null && custom.equals("true")) { %>
+			<a href="#" onClick="selectProviderCustom('<%=sp%>','<%=spnl+", "+spnf%>')"><%=sp%></a></td>
 		<%} else { %>
 		<a href=#
 			onClick="selectProvider('<%=sp%>','<%=URLEncoder.encode(spnl+", "+spnf)%>')"><%=sp%></a>
@@ -200,6 +220,8 @@ function selectProviderCaisi(p,pn) {
   		name = nodes[0].value;
   	}
   	selectProviderCaisi('<%=sp%>',name) ;
+  	 <%} else if(custom != null && custom.equals("true")){%>
+  	 selectProviderCustom('<%=sp%>',name);
   <%} else {%>
   selectProvider('<%=sp%>','') ;
   <%}%>
