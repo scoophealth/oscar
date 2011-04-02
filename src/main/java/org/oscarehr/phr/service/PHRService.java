@@ -41,6 +41,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.indivo.IndivoException;
 import org.indivo.client.ActionNotPerformedException;
@@ -437,6 +438,9 @@ public class PHRService {
 				if (action.getPhrClassification().equalsIgnoreCase("MESSAGE") && (action.getActionType() == PHRAction.ACTION_ADD || action.getActionType() == PHRAction.ACTION_UPDATE)) {
 					sendMessage(auth, action);
 					updated = true;
+				} else if (action.getPhrClassification().equalsIgnoreCase("RELATIONSHIP") && (action.getActionType() == PHRAction.ACTION_ADD || action.getActionType() == PHRAction.ACTION_UPDATE)) {
+					sendRelationship(auth, action);
+					updated = true;
 				} else if (action.getActionType() == PHRAction.ACTION_ADD || action.getActionType() == PHRAction.ACTION_UPDATE) {// dealing with medication type document
 
 					// if adding
@@ -606,6 +610,21 @@ public class PHRService {
 			}
 		}
 	}
+
+	private void sendRelationship(PHRAuthentication auth, PHRAction action) {
+		try {
+	        AccountWs accountWs = MyOscarServerWebServicesManager.getAccountWs(auth.getMyOscarUserId(), auth.getMyOscarPassword());
+	        
+	        String[] temp=action.getDocContent().split(",");
+	        String relatedPerson=StringUtils.trimToNull(temp[0]);
+	        String relationString=StringUtils.trimToNull(temp[1]);
+	        Relation relation=Relation.valueOf(relationString);
+	        
+	        accountWs.createRelationshipByUserName(auth.getMyOscarUserName(), relatedPerson, relation);
+        } catch (Exception e) {
+	       logger.error("Error with action entry, actionId="+action.getId(), e);
+        }	    
+    }
 
 	private void sendMessage(PHRAuthentication auth, PHRAction action) throws JAXBException, IndivoException {
 		MessageWs messageWs = MyOscarServerWebServicesManager.getMessageWs(auth.getMyOscarUserId(), auth.getMyOscarPassword());
@@ -792,7 +811,7 @@ public class PHRService {
 				String permissionRecipientProviderId = providerData.getMyOscarId();
 
 				accountWs.createRelationshipByUserName(newAccount.getUserName(), permissionRecipientProviderId, Relation.PRIMARY_CARE_PROVIDER);
-				apUtil.proposeAccessPolicy(permissionRecipientProviderId, newAccount.getUserName(), Relation.PATIENT.name(), iRegisteringProviderNo);
+				apUtil.proposeAccessPolicy(grantToProvider, newAccount.getUserName(), Relation.PATIENT.name(), iRegisteringProviderNo);
 			}
 		}
 
