@@ -21,8 +21,8 @@
     </head>
     <body onload="onloadd()">
         <form action="<bean:write name="url"/>" name="autosubmit" method="POST">
-            <input type="hidden" name="userid" value="<bean:write name="userid"/>">
-            <input type="hidden" name="ticket" value="<bean:write name="ticket"/>">
+            <input type="hidden" name="userName" value="<bean:write name="userName"/>">
+            <input type="hidden" name="password" value="<bean:write name="password"/>">
             <input type="hidden" name="viewpatient" value="<bean:write name="viewpatient"/>">
         </form>
     </body>

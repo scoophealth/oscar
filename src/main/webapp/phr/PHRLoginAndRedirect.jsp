@@ -117,7 +117,7 @@ pageContext.setAttribute("forwardToOnSuccess",request.getAttribute("forwardToOnS
                <br/>
                    <logic:present name="<%=PHRAuthentication.SESSION_PHR_AUTH%>">
                        <div class="myoscarLoginElementAuth">
-                           Status: <b>Logged in as <%=providerName%></b> (<%=phrAuth.getUserId()%>)<br/>
+                           Status: <b>Logged in as <%=providerName%></b> (<%=phrAuth.getMyOscarUserId()%>)<br/>
                            <logic:notPresent name="forwardToOnSuccess">
                                <center>Closing Window... <a href="javascript:;" onclick="closeWindow()">close</a></center>
                                <%-- if no errors and logged in, close window--%>
