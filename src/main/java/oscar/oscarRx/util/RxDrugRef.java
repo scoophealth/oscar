@@ -230,6 +230,16 @@ public class RxDrugRef {
          Vector vec = (Vector) callWebserviceLite("list_search_element",params);
          return vec;		         
      }
+     public String updateDB() throws Exception{
+         Vector params = new Vector();
+         return (String) callWebserviceLite("updateDB",params);
+         
+     }
+     public String getLastUpdateTime() throws Exception{
+         Vector params = new Vector();
+         String s = (String) callWebserviceLite("getLastUpdateTime",params);
+         return s;
+     }
 
      public Vector list_drug_element2(String searchStr) throws Exception{
          Vector params = new Vector();
@@ -326,11 +336,6 @@ public class RxDrugRef {
          Vector vec = (Vector) callWebservice("getRouteFromDrugCode",params);             
          return vec;	
       }
-     
-      
-       
-       
-       
        public Vector getStrengths(String drugCode){
          Vector params = new Vector();
          params.addElement(drugCode);
@@ -367,7 +372,7 @@ public class RxDrugRef {
          }
          return object;
      }
-     
+
      private Object callWebserviceLite(String procedureName,Vector params) throws Exception{
 
          Object object = null;

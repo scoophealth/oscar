@@ -690,6 +690,7 @@ div.logoutBox {
 		<div class="adminBox">
 		<h3>&nbsp;<bean:message key="admin.admin.misc" /></h3>
 		<ul>
+                    <li><a href="javascript:void(0);" onclick="popupPage(550,800,&quot;<html:rewrite page="/admin/updateDrugref.jsp"/>&quot;);return false;" ><bean:message key="admin.admin.UpdateDrugref"/></a></li>
                     <li><a href="javascript:void(0);" onclick="popupPage(550,800,&quot;<html:rewrite page="/admin/addQueue.jsp"/>&quot;);return false;" ><bean:message key="admin.admin.AddNewQueue"/></a></li>
 			<li><a href="#"
 				onclick='popupPage(550,800,&quot;<html:rewrite page="/admin/ManageClinic.do"/>&quot;);return false;'><bean:message key="admin.admin.clinicAdmin"/></a></li>
