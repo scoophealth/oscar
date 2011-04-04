@@ -79,11 +79,12 @@ public class QueueDocumentLinkDao extends HibernateDaoSupport {
         //if status is not I, change to I
         //if status is I, do nothing
     }
-    public void addToQueueDocumentLink(Integer qId,Integer dId){
+    public void addActiveQueueDocumentLink(Integer qId,Integer dId){
         try{
             if(!hasQueueBeenLinkedWithDocument(dId,qId)){
                QueueDocumentLink qdl = new QueueDocumentLink();
                qdl.setDocId(dId);
+               qdl.setStatus("A");
                qdl.setQueueId(qId);
                this.getHibernateTemplate().save(qdl);
            }
