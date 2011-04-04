@@ -38,7 +38,6 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
-import org.oscarehr.phr.PHRConstants;
 import org.oscarehr.phr.model.PHRAction;
 import org.oscarehr.util.MiscUtils;
 import org.springframework.orm.hibernate3.HibernateCallback;
@@ -53,25 +52,26 @@ public class PHRActionDAO extends HibernateDaoSupport {
 		String[] f = new String[3];
 		f[0] = providerNo;
 		f[1] = providerNo;
-		f[2] = PHRConstants.DOCTYPE_ACCESSPOLICIES();
+		f[2] = "RELATIONSHIP";
 		List<PHRAction> list = getHibernateTemplate().find(sql, f);
 		return list;
 	}
-        public List<PHRAction> getActionByPhrIndex(String phrIndex){
-            String sql="from PHRAction a where a.phrIndex=?";
-            List<PHRAction> list=getHibernateTemplate().find(sql,new String(phrIndex));
-            if(list==null || list.isEmpty()){
-                return null;
-            }else
-                return list;
-        }
-        public Boolean isActionPresentByPhrIndex(String phrIndex){
-            List<PHRAction> l=getActionByPhrIndex(phrIndex);
-            if(l==null)
-                return false;
-            else return true;
 
-        }
+	public List<PHRAction> getActionByPhrIndex(String phrIndex) {
+		String sql = "from PHRAction a where a.phrIndex=?";
+		List<PHRAction> list = getHibernateTemplate().find(sql, new String(phrIndex));
+		if (list == null || list.isEmpty()) {
+			return null;
+		} else return list;
+	}
+
+	public Boolean isActionPresentByPhrIndex(String phrIndex) {
+		List<PHRAction> l = getActionByPhrIndex(phrIndex);
+		if (l == null) return false;
+		else return true;
+
+	}
+
 	public PHRAction getActionById(String id) {
 		String sql = "from PHRAction a where a.id = ? ";
 
@@ -248,8 +248,3 @@ public class PHRActionDAO extends HibernateDaoSupport {
 	 * List<PHRAction> list = this.getHibernateTemplate().find(sql, f); if (list.size() > 0) return list.get(0).getPhrIndex(); return null; }
 	 */
 }
-
-
-
-    
-    

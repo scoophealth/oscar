@@ -70,7 +70,6 @@ import org.indivo.xml.phr.urns.DocumentClassificationUrns;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.myoscar_server.ws.MedicalDataTransfer;
 import org.oscarehr.myoscar_server.ws.MedicalDataType;
-import org.oscarehr.phr.PHRConstants;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.XmlMapWrapper;
 import org.oscarehr.util.XmlUtils;
@@ -147,7 +146,7 @@ public class PHRMedication extends PHRDocument {
 		JAXBContext messageContext = JAXBContext.newInstance("org.indivo.xml.phr.medication");
 		med = (MedicationType) org.indivo.xml.phr.DocumentUtils.getDocumentAnyObject(document, messageContext.createUnmarshaller());
 		createDrugFromPhrMed(providerNo);
-		this.setPhrClassification(PHRConstants.DOCTYPE_MEDICATION());
+		this.setPhrClassification(MedicalDataType.MEDICATION.name());
 		this.setReceiverType(this.TYPE_DEMOGRAPHIC);
 		this.setSenderOscar(null);// outside provider's oscar id is not useful
 		this.setSenderType(this.TYPE_PROVIDER);
@@ -162,12 +161,11 @@ public class PHRMedication extends PHRDocument {
 
 		if (medicalDataTransfer.getDateOfData() != null) setDateSent(medicalDataTransfer.getDateOfData().getTime());
 
-		setPhrClassification(MedicalDataType.MEDICATION.name());
 		setPhrIndex(medicalDataTransfer.getId().toString());
 
 		createDrugFromMedicalDataTransfer(providerNo, medicalDataTransfer);
 
-		setPhrClassification(PHRConstants.DOCTYPE_MEDICATION());
+		setPhrClassification(MedicalDataType.MEDICATION.name());
 		setReceiverType(TYPE_DEMOGRAPHIC);
 		setSenderOscar(null);// outside provider's oscar id is not useful
 		setSenderType(TYPE_PROVIDER);
@@ -185,7 +183,7 @@ public class PHRMedication extends PHRDocument {
 		byte[] docContentBytes = JAXBUtils.marshalToByteArray((JAXBElement) new IndivoDocument(document), docContext);
 		String docContentStr = new String(docContentBytes);
 
-		this.setPhrClassification(PHRConstants.DOCTYPE_MEDICATION());
+		this.setPhrClassification(MedicalDataType.MEDICATION.name());
 		this.setReceiverOscar(demographicNo);
 		this.setReceiverType(this.TYPE_DEMOGRAPHIC);
 		this.setReceiverPhr(demographicPhrId);

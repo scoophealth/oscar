@@ -38,6 +38,7 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.indivo.xml.phr.contact.ConciseContactInformationType;
 
 import oscar.oscarClinic.ClinicData;
@@ -274,4 +275,10 @@ public class PHRDocument implements Serializable{
         this.exts = exts;
     }
     
+	@Override
+    public String toString()
+	{
+		return(ReflectionToStringBuilder.toString(this));
+	}
+
 }

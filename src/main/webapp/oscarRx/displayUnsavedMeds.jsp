@@ -70,7 +70,7 @@
 <body >
         <table id="phr_drug_div">
             <tr>
-                <td><a>1111select</a></td>
+                <td><a>select</a></td>
                 <td><a>Drug Name</a></td>
                 <td><a>Rx Date</a></td>
                 <td><a>Instruction</a></td>

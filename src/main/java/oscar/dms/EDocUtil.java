@@ -772,7 +772,7 @@ public static String getLastDocumentDesc() {
         return noteId;
     }
 
-    public byte[] getFile(String fpath) {
+    public static byte[] getFile(String fpath) {
         byte[] fdata = null;
         try {
             // first we get length of file and allocate mem for file
