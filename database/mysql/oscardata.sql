@@ -1446,7 +1446,9 @@ insert into `secObjPrivilege` values('admin','_newCasemgmt.medicalHistory','x',0
 insert into `secObjPrivilege` values('admin','_newCasemgmt.calculators','x',0,'999998');
 insert into `secObjPrivilege` values('admin','_newCasemgmt.templates','x',0,'999998');
 insert into `secObjPrivilege` values('admin','_newCasemgmt.cpp','x',0,'999998');
-
+-- for defaultqueue
+insert into queue values(1,'default');
+insert into secObjectName values('_queue.1','default',0);
 
 -- for role locum
 insert into `secObjPrivilege` values('locum', '_appointment', 'x', 0, '999998');
