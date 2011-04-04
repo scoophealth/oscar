@@ -136,8 +136,22 @@ From the command line :
 
 Now if you have changeId's enabled, the above will replace the previous commits, if you don't the commits will show up in git as a string of new commits and the old commits should just be abandoned.
 
+----------------------------------------------------
+Changing a single previous commit with out ChangeIds (more advanced optional topic)
+----------------------------------------------------
+- Go to the gerrit change screen, you'll be given a download command it should look similar to :
+
+     git fetch ssh://r6squeegee@source.oscartools.org:29418/test refs/changes/62/662/2 && git checkout FETCH_HEAD
+
+- Run the command, it should fetch the commit and checkout the retrieved commit.
+- make your desired changes
+- git add and commit your files / changes as normal
+- now "git push origin HEAD:refs/changes/62/662" Note the push destination, the refs/changes/62/662 needs to match the numbers on the retrieve command.
+
+If you check with gerrit again, the commit should be amended.
+
 --------------------------------
-Rebasing to fix dependency chain
+Rebasing to fix dependency chain (more advanced optional topic)
 --------------------------------
 Here's a real example of what happend, 2 people 2 commit chains but one early conflict in the chain. Here's a picto-diagram of the commits :
 
