@@ -40,6 +40,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.indivo.xml.phr.contact.ConciseContactInformationType;
+import org.oscarehr.myoscar_server.ws.MessageTransfer;
 
 import oscar.oscarClinic.ClinicData;
 /**
@@ -279,6 +280,25 @@ public class PHRDocument implements Serializable{
     public String toString()
 	{
 		return(ReflectionToStringBuilder.toString(this));
+	}
+
+	public static PHRDocument converFromTransfer(MessageTransfer remoteMessage) {
+		PHRDocument phrDocument=new PHRDocument();
+		
+		phrDocument.setDateExchanged(new Date());
+		phrDocument.setDateSent(remoteMessage.getSendDate().getTime());
+		phrDocument.setDocContent(remoteMessage.getContents());
+		phrDocument.setDocSubject(remoteMessage.getSubject());
+		phrDocument.setPhrClassification("MESSAGE");
+		phrDocument.setPhrIndex(remoteMessage.getId().toString());
+		phrDocument.setReceiverPhr(remoteMessage.getRecipientPersonFirstName()+" "+remoteMessage.getRecipientPersonLastName()+" ("+remoteMessage.getRecipientPersonUserName()+")");
+		phrDocument.setSenderPhr(remoteMessage.getSenderPersonFirstName()+" "+remoteMessage.getSenderPersonLastName()+" ("+remoteMessage.getSenderPersonUserName()+")");
+
+		phrDocument.setStatus(PHRMessage.STATUS_NEW);
+		if (remoteMessage.getFirstViewDate()!=null) phrDocument.setStatus(PHRMessage.STATUS_READ);
+		if (remoteMessage.getFirstRepliedDate()!=null) phrDocument.setStatus(PHRMessage.STATUS_REPLIED);
+		
+		return(phrDocument);
 	}
 
 }

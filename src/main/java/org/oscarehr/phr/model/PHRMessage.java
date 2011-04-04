@@ -57,6 +57,7 @@ import org.indivo.xml.phr.message.MessageType;
 import org.indivo.xml.phr.message.TextMessage;
 import org.indivo.xml.phr.urns.ContentTypeQNames;
 import org.indivo.xml.phr.urns.DocumentClassificationUrns;
+import org.oscarehr.myoscar_server.ws.MessageTransfer;
 import org.oscarehr.util.MiscUtils;
 import org.w3c.dom.Element;
 
@@ -441,6 +442,25 @@ public class PHRMessage  extends PHRDocument implements Serializable{
             message.getReferencedIndivoDocuments().add(reference);
         }
         return message;
+    }
+
+	public static PHRMessage converFromTransfer(MessageTransfer messageTransfer) {
+		PHRMessage result=new PHRMessage();
+		
+		result.setDateExchanged(new Date());
+		result.setDateSent(messageTransfer.getSendDate().getTime());
+		result.setDocContent(messageTransfer.getContents());
+		result.setDocSubject(messageTransfer.getSubject());
+		result.setPhrClassification("MESSAGE");
+		result.setPhrIndex(messageTransfer.getId().toString());
+		result.setReceiverPhr(messageTransfer.getRecipientPersonFirstName()+" "+messageTransfer.getRecipientPersonLastName()+" ("+messageTransfer.getRecipientPersonUserName()+")");
+		result.setSenderPhr(messageTransfer.getSenderPersonFirstName()+" "+messageTransfer.getSenderPersonLastName()+" ("+messageTransfer.getSenderPersonUserName()+")");
+		
+		result.setStatus(STATUS_NEW);
+		if (messageTransfer.getFirstViewDate()!=null) result.setStatus(STATUS_READ);
+		if (messageTransfer.getFirstRepliedDate()!=null) result.setStatus(STATUS_REPLIED);
+		
+	    return result;
     }
    
 }
