@@ -431,10 +431,10 @@ public class PHRService {
 			// handle messages differently
 			logger.debug("ACTION classification " + action.getPhrClassification() + " action type " + action.getActionType());
 			try {
-				if (action.getPhrClassification().equalsIgnoreCase("MESSAGE") && action.getActionType() == PHRAction.ACTION_ADD) {
+				if (action.getPhrClassification().equalsIgnoreCase("MESSAGE") && (action.getActionType() == PHRAction.ACTION_ADD || action.getActionType() == PHRAction.ACTION_UPDATE)) {
 					sendMessage(auth, action);
 					updated = true;
-				} else if (action.getActionType() == PHRAction.ACTION_ADD) {// dealing with medication type document
+				} else if (action.getActionType() == PHRAction.ACTION_ADD || action.getActionType() == PHRAction.ACTION_UPDATE) {// dealing with medication type document
 
 					// if adding
 					IndivoDocumentType doc = action.getIndivoDocument();
