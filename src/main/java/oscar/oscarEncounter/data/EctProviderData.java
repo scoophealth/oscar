@@ -27,6 +27,7 @@ package oscar.oscarEncounter.data;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.SxmlMisc;
@@ -155,4 +156,11 @@ public class EctProviderData {
         }
         return provider;
     }
+    
+	@Override
+    public String toString()
+	{
+		return(ReflectionToStringBuilder.toString(this));
+	}
+
 }

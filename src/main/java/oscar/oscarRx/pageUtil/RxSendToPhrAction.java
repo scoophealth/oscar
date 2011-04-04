@@ -19,7 +19,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.oscarehr.phr.PHRConstants;
+import org.oscarehr.myoscar_server.ws.MedicalDataType;
 import org.oscarehr.phr.service.PHRService;
 import org.oscarehr.util.MiscUtils;
 
@@ -84,7 +84,7 @@ public class RxSendToPhrAction extends Action {
                       
                       //only add new drugs, no updating old drugs because they cannot be edited
 
-                      if (!phrService.isIndivoRegistered(PHRConstants.DOCTYPE_MEDICATION(), drug.getDrugId()+"")) {
+                      if (!phrService.isIndivoRegistered(MedicalDataType.MEDICATION.name(), drug.getDrugId()+"")) {
 
                           phrService.sendAddMedication(prov, demoNo, patientMyOscarId, drug);
                       }
