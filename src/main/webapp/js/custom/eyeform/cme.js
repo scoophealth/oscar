@@ -185,6 +185,6 @@
    function notifyIssueUpdate() {
 	   var noteAddonUrl = ctx+"/eyeform/NoteData.do?method=getCurrentNoteData&demographicNo="+demographicNo+"&noteId="+savedNoteId+"&appointmentNo="+appointmentNo;	   
        jQuery.ajax({url:noteAddonUrl,dataType: "html",success: function(data) {
-			jQuery("#current_note_addon").append(data);
+			jQuery("#current_note_addon").html(data);
        }});
    }
