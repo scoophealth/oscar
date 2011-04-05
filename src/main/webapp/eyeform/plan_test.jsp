@@ -56,7 +56,8 @@
 				<select name="test_<%=id%>.urgency">
 					<option value="routine">routine</option>
 					<option value="ASAP">ASAP</option>
-					<option value="PTNV">PTNV</option>					
+					<option value="prior to next visit">PTNV</option>
+					<option value="same day next visit">SDNV</option>					
 				</select>
 				
 				&nbsp;

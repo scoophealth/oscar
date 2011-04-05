@@ -41,9 +41,9 @@
 				&nbsp;
 				
 				<select name="procedure_<%=id%>.urgency">
-					<option value="Routine">Routine</option>
+					<option value="routine">routine</option>
 					<option value="ASAP">ASAP</option>
-					<option value="Urgent">URGENT</option>					
+					<option value="URGENT">URGENT</option>					
 				</select>
 				
 				&nbsp;	
@@ -57,13 +57,12 @@
 				</select>
 			
 				&nbsp;
-				Name:
+				Proc:
 				<input type="text" name="procedure_<%=id%>.procedureName" size="30"/>			
 				
-				<br/>
-				
-				Location:
-				<input type="text" name="procedure_<%=id%>.location" size="15"/>
+				&nbsp;
+				Loc:
+				<input type="text" name="procedure_<%=id%>.location" size="5"/>
 						
 				&nbsp;
 				Comment:	

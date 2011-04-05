@@ -136,6 +136,7 @@ function confirmPrint(btn) {
     con_cHis='<%=request.getAttribute("currentHistory")%>';
 	con_oHis='<%=request.getAttribute("otherMeds")%>';
 	con_pHis='<%=request.getAttribute("pastOcularHistory")%>';
+	con_sHis='<%=request.getAttribute("specs")%>';
 	con_diag='<%=request.getAttribute("diagnosticNotes")%>';
 	con_impress='<%=request.getAttribute("impression")%>';
 	con_mHis='<%=request.getAttribute("medHistory")%>';
@@ -549,11 +550,11 @@ jQuery(document).ready(function() {
 					<td class="tite4">
 					<table width="100%">
 						<tr>
-							<td class="tite1" colspan="2">cc other doctor:<input type="text"
+							<td class="tite1" colspan="2"><input type="button"
+								class="btn" onclick="addDoc();" value="add to cc">:<input type="text"
 								style="width:120px;" name="clDoctor" /><a
 								href="javascript:referralScriptAttach2('otherDocId','clDoctor')"><span
-								style="font-size: 10;">Search #</span></a> <input type="button"
-								class="btn" onclick="addDoc();" value="add to cc"></td>
+								style="font-size: 10;">Search #</span></a> </td>
 						</tr>
 					</table>
 					</td>
@@ -591,26 +592,17 @@ jQuery(document).ready(function() {
 					<table width="100%">
 						<tr>
 							<td width="27%" class="tite4">Clinical information:</td>
-							<td><input type="button" class="btn" value="current hx"
-								name="chis"
-								onclick="clinicalInfoAdd('Current history:',con_cHis)">
-							<input type="button" class="btn" value="past ocular hx"
-								name="phis"
-								onclick="clinicalInfoAdd('Past ocular history:',con_pHis)">
-							<input type="button" class="btn" value="medical hx" name="mhis"
-								onclick="clinicalInfoAdd('Medical history:',con_mHis)">
-							<input type="button" class="btn" value="family hx" name="fhis"
-								onclick="clinicalInfoAdd('Family history:',con_fHis)"> <input
-								type="button" class="btn" value="ocular meds" name="ohis"
-								onclick="clinicalInfoAdd('Ocular meds:',con_oMeds)"> <input
-								type="button" class="btn" value="other meds" name="ohis"
-								onclick="clinicalInfoAdd('Other meds:',con_oHis)"> <br>
-							<input type="button" class="btn" value="diagnostics notes"
-								name="dnote"
-								onclick="clinicalInfoAdd('Diagnostics notes:',con_diag)">
-
-							<input type="button" class="btn" value="ocular proc" name="opro"
-								onclick="ocluarproAdd('Ocular procedure:',con_ocularpro)">
+							<td>
+							<input type="button" class="btn" value="current hx"	name="chis"	onclick="clinicalInfoAdd('Current history:',con_cHis)">
+							<input type="button" class="btn" value="past ocular hx" name="phis"	onclick="clinicalInfoAdd('Past ocular history:',con_pHis)">
+							<input type="button" class="btn" value="medical hx" name="mhis"	onclick="clinicalInfoAdd('Medical history:',con_mHis)">
+							<input type="button" class="btn" value="family hx" name="fhis" onclick="clinicalInfoAdd('Family history:',con_fHis)">
+							<input type="button" class="btn" value="specs hx" name="shis" onclick="clinicalInfoAdd('Specs history:',con_sHis)">  
+							<br/>
+							<input type="button" class="btn" value="ocular meds" name="ohis" onclick="clinicalInfoAdd('Ocular meds:',con_oMeds)"> 
+							<input type="button" class="btn" value="other meds" name="ohis"	onclick="clinicalInfoAdd('Other meds:',con_oHis)"> 					
+							<input type="button" class="btn" value="diag notes" name="dnote" onclick="clinicalInfoAdd('Diagnostics notes:',con_diag)">
+							<input type="button" class="btn" value="ocular proc" name="opro" onclick="ocluarproAdd('Ocular procedure:',con_ocularpro)">
 							</td>
 						</tr>
 					</table>
@@ -707,7 +699,7 @@ jQuery(document).ready(function() {
 					<td colspan="2"><html:textarea rows="3" style="width:100%"
 						property="cp.impression" /></td>
 				</tr>
-
+<!-- 
 				<tr>
 					<td colspan=2 class="tite4">
 					<table width="100%">
@@ -723,11 +715,11 @@ jQuery(document).ready(function() {
 					</table>
 					</td>
 				</tr>
-
 				<tr>
 					<td colspan="2"><html:textarea rows="4" style="width:100%"
 						property="cp.plan" /></td>
 				</tr>
+-->				
 				<c:if test='${param.from!="out"}'>
 					<tr>
 						<td colspan=2 class="tite4">Send Tickler:</td>

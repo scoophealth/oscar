@@ -713,11 +713,11 @@ function importFromEnct(reqInfo,txtArea)
 					{
 						if (useNewCmgmt)
 						{
-							value = listNotes(cmgmtMgr, "SocHistory", providerNo, demo);
+							value = listNotes(cmgmtMgr, "FamHistory", providerNo, demo);
 						}
 						else
 						{
-							value = demographic.EctInfo.getSocialHistory();
+							value = demographic.EctInfo.getFamilyHistory();
 						}
 					}
 					if (pasteFmt == null || pasteFmt.equalsIgnoreCase("single"))
@@ -1428,13 +1428,14 @@ function addCCName(){
 							<input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportConcerns"/>" onclick="importFromEnct('ongoingConcerns',document.forms[0].clinicalInformation);" />&nbsp;
 							<input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportOtherMeds"/>" onclick="importFromEnct('OtherMeds',document.forms[0].clinicalInformation);" />&nbsp;
 							<input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportReminders"/>" onclick="importFromEnct('Reminders',document.forms[0].clinicalInformation);" />&nbsp;
+							<span id="clinicalInfoButtons"></span>
 							</td>
 						</tr>
 					</table>
 				</tr>
 				<tr>
 					<td colspan=2><html:textarea cols="90" rows="10"
-						property="clinicalInformation"></html:textarea></td>
+						styleId="clinicalInformation" property="clinicalInformation"></html:textarea></td>
 				</tr>
 				<tr>
 					<td colspan=2 class="tite4">
@@ -1501,16 +1502,16 @@ if (defaultSiteId!=0) aburl2+="&site="+defaultSiteId;
  	}
  %>
 							</td>
-							<td><input type="button" class="btn"
-								value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportOtherMeds"/>"
-								onclick="importFromEnct('OtherMeds',document.forms[0].currentMedications);" />
+							<td>
+								<input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportOtherMeds"/>" onclick="importFromEnct('OtherMeds',document.forms[0].currentMedications);" />
+								<span id="medsButtons"></span>
 							</td>
 						</tr>
 					</table>
 					</td>
 				</tr>
 				<tr>
-					<td colspan=2><html:textarea cols="90" rows="3"
+					<td colspan=2><html:textarea cols="90" rows="3" styleId="currentMedications"
 						property="currentMedications"></html:textarea></td>
 				</tr>
 				<tr>

@@ -35,7 +35,7 @@
 					}
 					var name = jQuery(this).attr("measurement");
 					var value = jQuery(this).val();
-					var data = name + "=" + value;
+					var data = name + "=" + encodeURIComponent(value);
 					postData += data;
 				}
 			});
@@ -47,7 +47,7 @@
 					}
 					var name = jQuery(this).attr("measurement");
 					var value = jQuery(this).val();
-					var data = name + "=" + value;
+					var data = name + "=" + encodeURIComponent(value);
 					postData += data;
 				}
 			});	
@@ -142,16 +142,17 @@
        popColumn(ctx + "/CaseManagementView.do?hc=CCDDAA&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=OcularMedication&title="+ocularMedsLabel+"&cmd=OcularMedication&appointment_no="+appointmentNo +"&noheight=true","OcularMedication","OcularMedication", "rightNavBar", this);       
        addRightNavDiv("ocularprocedure");	                         
        popColumn(ctx + "/oscarEncounter/displayOcularProcedure.do?hC=009999&appointment_no="+appointmentNo,"ocularprocedure","ocularprocedure", "rightNavBar", this);
-            
-       
-       jQuery.ajax({url:ctx+"/eyeform/NoteData.do?method=getCurrentNoteData&demographicNo="+demographicNo+"&noteId="+savedNoteId+"&appointmentNo="+appointmentNo,dataType: "html",success: function(data) {
-			jQuery("#current_note_addon").append(data);
-       }});
-       	   	         
+                   
+       notifyIssueUpdate();         
        
        jQuery("form[name='caseManagementEntryForm']").append('<span submit_addon="save_measurements"></span>');
-              
-       
+
+       jQuery("#newNoteImg").hide();
+       jQuery("#imgPrintEncounter").removeAttr('onclick');
+       jQuery("#imgPrintEncounter").live('click',function(e){
+    	   e.preventDefault();
+    	   location.href=ctx+'/eyeform/Eyeform.do?method=print&apptNos=' + appointmentNo;
+       });
      });
 
  
@@ -173,3 +174,10 @@
 	   return false;
    }
 
+
+   function notifyIssueUpdate() {
+	   var noteAddonUrl = ctx+"/eyeform/NoteData.do?method=getCurrentNoteData&demographicNo="+demographicNo+"&noteId="+savedNoteId+"&appointmentNo="+appointmentNo;	   
+       jQuery.ajax({url:noteAddonUrl,dataType: "html",success: function(data) {
+			jQuery("#current_note_addon").append(data);
+       }});
+   }

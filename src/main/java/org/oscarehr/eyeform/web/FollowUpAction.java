@@ -76,8 +76,12 @@ public class FollowUpAction extends DispatchAction {
     	
     	for(FollowUp f:followUps) {
     		Provider p = providerDao.getProvider(f.getFollowupProvider());
-    		sb.append(f.getType()).append(" ").append(f.getTimespan()).append(" ").append(f.getTimeframe());
-    		sb.append(" ").append(p.getFormattedName()).append(" ").append(f.getUrgency());
+    		sb.append(f.getType());
+    		if(f.getTimespan() > 0) {
+    			sb.append(" ").append(f.getTimespan()).append(" ").append(f.getTimeframe());
+    		}
+    		sb.append(" Dr. ").append(p.getFormattedName()).append(" ").append(f.getUrgency());
+    		sb.append(" ").append(f.getComment());
     		sb.append("\n");
     	}
     	
@@ -110,8 +114,12 @@ public class FollowUpAction extends DispatchAction {
     		if(f.getType().equals("consult")) {
     			type="consult:";
     		}
-    		sb.append(type).append(" ").append(f.getTimespan()).append(" ").append(f.getTimeframe());
-    		sb.append(" ").append(p.getFormattedName());
+    		sb.append(type);
+    		if(f.getTimespan() > 0) {
+    			sb.append(" ").append(f.getTimespan()).append(" ").append(f.getTimeframe());
+    		}
+    		sb.append(" Dr. ").append(p.getFormattedName());
+    		sb.append(" ").append(f.getComment());
     		sb.append("<br/>");
     	}
     	return sb.toString();

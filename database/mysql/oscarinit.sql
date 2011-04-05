@@ -8312,7 +8312,7 @@ create table EyeformConsultationReport (
  providerNo varchar(20),
  status varchar(255),
  sendTo varchar(255),
- examination varchar(255),
+ examination text,
  concurrentProblems varchar(255),
  impression varchar(255),
  plan varchar(255),

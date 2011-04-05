@@ -156,7 +156,7 @@ function saveFlags() {
 </style>
 
 <span note_addon="saveEyeformNote"></span>
-<span><a href="javascript:void(0)" onclick="popupPageOne('<c:out value="${ctx}"/>/eyeform/EyeformPlan.do?method=form&amp;followup.demographicNo=<%=demographicNo %>&amp;noteId=<%=noteId%>&amp;followup.appointmentNo=<%=aptNo%>','eyeFormPlan',600,1200);">[Arrange Plan]</a></span>
+<span><input type="button" onclick="popupPageOne('<c:out value="${ctx}"/>/eyeform/EyeformPlan.do?method=form&amp;followup.demographicNo=<%=demographicNo %>&amp;noteId=<%=noteId%>&amp;followup.appointmentNo=<%=aptNo%>','eyeFormPlan',600,1200);" value="Arrange Plan"/></span>
 
 <table width="100%" class="plan">
 <tr>
@@ -168,7 +168,14 @@ function saveFlags() {
 <td colspan="3">
 <div>
 	<c:forEach items="${followUps}" var="item">
-		<span><c:out value="${item.typeStr}"/>&nbsp;<c:out value="${item.timespan}"/>&nbsp;<c:out value="${item.timeframe}"/>&nbsp;Dr.&nbsp;<c:out value="${item.provider.firstName}"/>&nbsp;<c:out value="${item.provider.lastName}"/> | <c:out value="${item.urgency}"/> | <c:out value="${item.commentStr}"/></span>
+		<c:choose>
+			<c:when test="${item.timespan == 0}">
+			<span style="font-size:10pt"><c:out value="${item.typeStr}"/>&nbsp;Dr.&nbsp;<c:out value="${item.provider.firstName}"/>&nbsp;<c:out value="${item.provider.lastName}"/> | <c:out value="${item.urgency}"/> | <span title="<c:out value="${item.comment}"/>"><c:out value="${item.commentStr}"/></span></span>		
+			</c:when>
+			<c:otherwise>
+		<span style="font-size:10pt"><c:out value="${item.typeStr}"/>&nbsp;<c:out value="${item.timespan}"/>&nbsp;<c:out value="${item.timeframe}"/>&nbsp;Dr.&nbsp;<c:out value="${item.provider.firstName}"/>&nbsp;<c:out value="${item.provider.lastName}"/> | <c:out value="${item.urgency}"/> | <span title="<c:out value="${item.comment}"/>"><c:out value="${item.commentStr}"/></span></span>
+		</c:otherwise>
+		</c:choose>
 		<br/>
 	</c:forEach>
 </div>
@@ -179,10 +186,10 @@ function saveFlags() {
 <td colspan="3">
 <div>
 	
-	<c:if test="${not empty procedures}">Procs:<br/></c:if>
+	<c:if test="${not empty procedures}"><span style="font-size:10pt;font-weight:bold">Procs:</span><br/></c:if>
 
 	<c:forEach items="${procedures}" var="item">
-		<span><c:out value="${item.eye}"/>&nbsp;<c:out value="${item.procedureName}"/> at <c:out value="${item.location}"/> | <c:out value="${item.urgency}"/> | <c:out value="${item.commentStr}"/></span><br/>
+		<span style="font-size:10pt"><c:out value="${item.eye}"/>&nbsp;<c:out value="${item.procedureName}"/> at <c:out value="${item.location}"/> | <c:out value="${item.urgency}"/> | <span title="<c:out value="${item.comment}"/>"><c:out value="${item.commentStr}"/></span></span><br/>
 	</c:forEach>
  
 </div>
@@ -193,10 +200,10 @@ function saveFlags() {
 <td colspan="3">
 <div>
 
-	<c:if test="${not empty testBookRecords}">Diags:<br/></c:if>
+	<c:if test="${not empty testBookRecords}"><span style="font-size:10pt;font-weight:bold">Diags:</span><br/></c:if>
 
 	<c:forEach items="${testBookRecords}" var="item">
-		<span><c:out value="${item.eye}"/>&nbsp;<c:out value="${item.testname}"/> | <c:out value="${item.urgency}"/> | <c:out value="${item.commentStr}"/></span><br/>
+		<span style="font-size:10pt"><c:out value="${item.eye}"/>&nbsp;<c:out value="${item.testname}"/> | <c:out value="${item.urgency}"/> | <span title="<c:out value="${item.comment}"/>"><c:out value="${item.commentStr}"/></span></span><br/>
 	</c:forEach>
 
 
@@ -268,7 +275,7 @@ function saveFlags() {
             	<%} else { %>
             	<input type="checkbox" style="width: 10%;" value="true" id="ack1" onchange="setDischarge()" />            	
             	<% } %>            
-            	Discharge            	            
+            	<span style="font-size:10pt">Discharge</span>
            </td>
            </tr>
            <tr>
@@ -278,7 +285,7 @@ function saveFlags() {
             	<% } else { %>
             	<input type="checkbox" style="width: 10%;" id="ack2" value="true" onchange="setStat();"/>            	
             	<% } %>            	            	
-            	STAT/PRN
+            	<span style="font-size:10pt">STAT/PRN</span>
            </td>
            </tr>
            <tr>
@@ -288,7 +295,7 @@ function saveFlags() {
             	<%} else { %>
             	<input type="checkbox" style="width: 10%;" value="true" id="ack3" onchange="setOpt();" />            	
             	<% } %>            	
-            	optom routine
+            	<span style="font-size:10pt">optom routine</span>
             </td>
            
 </tr>

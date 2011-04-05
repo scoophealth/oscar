@@ -174,10 +174,10 @@ public class EyeformAction extends DispatchAction {
 		   		   
 		   
 		   request.setAttribute("currentHistory",StringEscapeUtils.escapeJavaScript(getFormattedCppItem("Current History:", "CurrentHistory", Integer.parseInt(demo), appNo, false)));
-		   request.setAttribute("ocularMedication",StringEscapeUtils.escapeJavaScript(getFormattedCppItem("Current Medications:", "OcularMedication", Integer.parseInt(demo), appNo, true)));
+		   request.setAttribute("ocularMedication",StringEscapeUtils.escapeJavaScript(getFormattedCppItem("Ocular Medications:", "OcularMedication", Integer.parseInt(demo), appNo, true)));
 		   request.setAttribute("pastOcularHistory",StringEscapeUtils.escapeJavaScript(getFormattedCppItem("Past Ocular History:", "PastOcularHistory", Integer.parseInt(demo), appNo, true)));
 		   request.setAttribute("diagnosticNotes",StringEscapeUtils.escapeJavaScript(getFormattedCppItem("Diagnostic Notes:", "DiagnosticNotes", Integer.parseInt(demo), appNo, true)));
-
+		   
 		   
 		   SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
 		   List<OcularProc> ocularProcs = ocularProcDao.getHistory(Integer.parseInt(demo), new Date(), "A");
@@ -202,36 +202,39 @@ public class EyeformAction extends DispatchAction {
            StringBuilder specsStr = new StringBuilder();
            for(SpecsHistory spec:specs) {
         	   String specDate = sf.format(spec.getDate());
-        	   String specDoctor = spec.getDoctor();
-        	   String specType = spec.getType();
         	   specsStr.append(specDate + " ");
 
                StringBuilder data = new StringBuilder("");
-               data.append("OD ");
+               data.append(" OD ");
                StringBuilder dataTemp = new StringBuilder("");
                dataTemp.append(spec.getOdSph() == null ? "" : spec.getOdSph());
                dataTemp.append(spec.getOdCyl() == null ? "" : spec.getOdCyl());
                if (spec.getOdAxis() != null
                                && spec.getOdAxis().trim().length() != 0)
                        dataTemp.append("x" + spec.getOdAxis());
-               if (spec.getOdAdd() != null
-                               && spec.getOdAdd().trim().length() != 0)
-                       dataTemp.append("add" + spec.getOdAdd());
-               specsStr.append(dataTemp.toString() + " " + spec.getType() + " "
-                               + spec.getDoctor() + " ");
+               if (spec.getOdAdd() != null && spec.getOdAdd().trim().length() != 0)
+                       dataTemp.append(" add " + spec.getOdAdd());
+               if(spec.getOdPrism() != null && spec.getOdPrism().length()>0) {
+            	   dataTemp.append(" prism " + spec.getOdPrism());            
+               }
+               specsStr.append(dataTemp.toString());
+               specsStr.append("\n           ");
                data.append(dataTemp);
-
+               
                String secHead = "\n      OS ";
                data.append(secHead);
                dataTemp = new StringBuilder("");
                dataTemp.append(spec.getOsSph() == null ? "" : spec.getOsSph());
                dataTemp.append(spec.getOsCyl() == null ? "" : spec.getOsCyl());
-               if (spec.getOsAxis() != null
-                       && spec.getOsAxis().trim().length() != 0)
-                       dataTemp.append("x" + spec.getOsAxis());
-               if (spec.getOsAdd() != null
-                               && spec.getOsAdd().trim().length() != 0)
-                       dataTemp.append("add" + spec.getOsAdd());
+               if (spec.getOsAxis() != null && spec.getOsAxis().trim().length() != 0)                       
+            	   dataTemp.append("x" + spec.getOsAxis());
+               if (spec.getOsAdd() != null && spec.getOsAdd().trim().length() != 0)
+            	   dataTemp.append(" add " + spec.getOsAdd());
+            	   
+               if(spec.getOsPrism() != null && spec.getOsPrism().length()>0) {             
+            	   dataTemp.append(" prism " + spec.getOsPrism());                               
+               }
+                                     
                specsStr.append(dataTemp.toString() + "\n");
                data.append(dataTemp);                             
            }
@@ -360,7 +363,8 @@ public class EyeformAction extends DispatchAction {
 			   for(CaseManagementNote note:notes) {
 				   sb.append(note.getNote()).append("\n");
 			   }
-			   return "Impression:" + "\n" + sb.toString();
+			   //return "Impression:" + "\n" + sb.toString();
+			   return sb.toString();
 		   }
 		   return new String();
 	   }
@@ -635,7 +639,55 @@ public class EyeformAction extends DispatchAction {
 	           else
 	        	   strOcularProcs = "";           
 	           request.setAttribute("ocularProc", StringEscapeUtils.escapeJavaScript(strOcularProcs));
-			   	         				          	         
+			   	         
+	           List<SpecsHistory> specs = specsHistoryDao.getHistory(demographic.getDemographicNo(), new Date(), null);
+	           StringBuilder specsStr = new StringBuilder();
+	           for(SpecsHistory spec:specs) {
+	        	   String specDate = sf.format(spec.getDate());
+	        	   specsStr.append(specDate + " ");
+
+	               StringBuilder data = new StringBuilder("");
+	               data.append(" OD ");
+	               StringBuilder dataTemp = new StringBuilder("");
+	               dataTemp.append(spec.getOdSph() == null ? "" : spec.getOdSph());
+	               dataTemp.append(spec.getOdCyl() == null ? "" : spec.getOdCyl());
+	               if (spec.getOdAxis() != null
+	                               && spec.getOdAxis().trim().length() != 0)
+	                       dataTemp.append("x" + spec.getOdAxis());
+	               if (spec.getOdAdd() != null && spec.getOdAdd().trim().length() != 0)
+	                       dataTemp.append(" add " + spec.getOdAdd());
+	               if(spec.getOdPrism() != null && spec.getOdPrism().length()>0) {
+	            	   dataTemp.append(" prism " + spec.getOdPrism());            
+	               }
+	               specsStr.append(dataTemp.toString());
+	               specsStr.append("\n           ");
+	               data.append(dataTemp);
+	               
+	               String secHead = "\n      OS ";
+	               data.append(secHead);
+	               dataTemp = new StringBuilder("");
+	               dataTemp.append(spec.getOsSph() == null ? "" : spec.getOsSph());
+	               dataTemp.append(spec.getOsCyl() == null ? "" : spec.getOsCyl());
+	               if (spec.getOsAxis() != null && spec.getOsAxis().trim().length() != 0)                       
+	            	   dataTemp.append("x" + spec.getOsAxis());
+	               if (spec.getOsAdd() != null && spec.getOsAdd().trim().length() != 0)
+	            	   dataTemp.append(" add " + spec.getOsAdd());
+	            	   
+	               if(spec.getOsPrism() != null && spec.getOsPrism().length()>0) {             
+	            	   dataTemp.append(" prism " + spec.getOsPrism());                               
+	               }
+	                                     
+	               specsStr.append(dataTemp.toString() + "\n");
+	               data.append(dataTemp);                             
+	           }
+	           String specsStr1 = "";
+	           if (specsStr != null && specs.size()>0)
+	               specsStr1  = "specs:\n" + specsStr.toString() + "\n";
+	           else
+	    	   		specsStr1 = "";
+	      
+	           request.setAttribute("specs", StringEscapeUtils.escapeJavaScript(specsStr1));
+	           
 	           //impression	           
 	           String impression = getImpression(appNo);
 	           request.setAttribute("impression", StringEscapeUtils.escapeJavaScript(impression));
@@ -1184,6 +1236,7 @@ public class EyeformAction extends DispatchAction {
 			if(exam.length()>0 && tmp.length()>0 ){
 				exam.append("\n\n");				
 			}
+			exam.append(tmp);
 			
 			tmp = formatter.getNasalacrimalDuct(headerMap);
 			if(exam.length()>0 && tmp.length()>0 ){

@@ -119,13 +119,13 @@ public class PlanAction extends DispatchAction {
     		String id = request.getParameter("followup_"+x+".id");
     		if(id != null) {
     			String timespan = request.getParameter("followup_"+x+".timespan");
-    			if(timespan.length() == 0) {
-    				continue;
-    			}
+    			//if(timespan.length() == 0) {
+    			//	continue;
+    			//}
     			try {
     				Integer.parseInt(timespan);
     			}catch(NumberFormatException e) {
-    				continue;
+    				timespan="0";
     			}
     			FollowUp fu = new FollowUp();
     			if(id.length()>0 && Integer.parseInt(id)>0) {
@@ -138,7 +138,7 @@ public class PlanAction extends DispatchAction {
     			fu.setComment(request.getParameter("followup_"+x+".comment"));    			
     			fu.setFollowupProvider(request.getParameter("followup_"+x+".followupProvider"));
     			fu.setTimeframe(request.getParameter("followup_"+x+".timeframe"));
-    			fu.setTimespan(Integer.parseInt(request.getParameter("followup_"+x+".timespan")));
+    			fu.setTimespan(Integer.parseInt(timespan));
     			fu.setType(request.getParameter("followup_"+x+".type"));
     			fu.setUrgency(request.getParameter("followup_"+x+".urgency"));
     			

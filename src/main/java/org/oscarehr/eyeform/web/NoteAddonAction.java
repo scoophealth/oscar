@@ -152,6 +152,7 @@ public class NoteAddonAction extends DispatchAction {
 				
 		
 		Tickler t = new Tickler();
+		t.setCreator(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
 		t.setAssignee(providerDao.getProvider(recipient));
 		//t.setDemographic(demographic)
 		t.setDemographic_no(demographicNo);

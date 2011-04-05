@@ -262,7 +262,13 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			note.setProvider(prov);
 			note.setDemographic_no(demono);
 
-			this.insertReason(request, note);
+			if(!OscarProperties.getInstance().isPropertyActive("encounter.empty_new_note")) {
+				this.insertReason(request, note);
+			} else {
+				note.setNote("");
+				note.setEncounter_type("");
+			}
+			
 
 			resetTemp(providerNo, demono, programIdString);
 
@@ -317,8 +323,13 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 				prov.setProviderNo(providerNo);
 				note.setProvider(prov);
 				note.setDemographic_no(demono);
-
-				this.insertReason(request, note);
+				
+				if(!OscarProperties.getInstance().isPropertyActive("encounter.empty_new_note")) {
+					this.insertReason(request, note);
+				} else {
+					note.setNote("");
+					note.setEncounter_type("");
+				}
 			}
 		}
 		current = System.currentTimeMillis();

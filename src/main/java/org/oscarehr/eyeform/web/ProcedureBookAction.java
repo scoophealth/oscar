@@ -65,7 +65,8 @@ public class ProcedureBookAction extends DispatchAction {
     	StringBuilder sb = new StringBuilder();
     	
     	for(ProcedureBook f:procedures) {    		
-    		sb.append(f.getProcedureName()).append(" ").append(f.getEye()).append(" ").append(f.getLocation());
+    		sb.append("book procedure: ").append(f.getProcedureName()).append(" ").append(f.getEye()).append(" ").append(f.getLocation());
+    		sb.append(" ").append(f.getComment());
     		sb.append("\n");
     	}
     	
@@ -99,7 +100,7 @@ public class ProcedureBookAction extends DispatchAction {
     		if(f.getUrgency().equals("Urgent")) {
     			style = "style=\"color:red;\"";
     		}
-    		sb.append("<span "+style+" title=\""+f.getComment()+"\">proc:").append(f.getProcedureName()).append(" ").append(f.getEye()).append(" ").append(f.getLocation()).append(" ").append(f.getUrgency()).append("</span>");
+    		sb.append("<span "+style+" title=\""+f.getComment()+"\">proc:").append(f.getProcedureName()).append(" ").append(f.getEye()).append(" ").append(f.getLocation()).append(" ").append(f.getUrgency()).append(" ").append(f.getComment()).append("</span>");
     		sb.append("<br/>");
     	}
     	return sb.toString();

@@ -13,6 +13,7 @@
                            Ocular Examination:
                         </td>
                         <td>
+                        <!-- 
                             <input type="button" class="btn" value="current hx" onclick="currentProAdd('cHis','ext_specialProblem');" />&nbsp;
                             <input type="button" class="btn" value="past ocular hx" onclick="currentProAdd('pHis','ext_specialProblem');" />&nbsp;
                             <input type="button" class="btn" value="ocular meds" onclick="currentProAdd('oMeds','ext_specialProblem');" />&nbsp;
@@ -22,9 +23,11 @@
                             <input type="button" class="btn" value="specs hx" onclick="currentProAdd('specs','ext_specialProblem');" />&nbsp;
 
                             <input type="button" class="btn" value="impression" onclick="currentProAdd('impress','ext_specialProblem');" />&nbsp;
+                         
                             <input type="button" class="btn" value="follow-up" onclick="currentProAdd('followup','ext_specialProblem');" />&nbsp;
                             <input type="button" class="btn" value="proc" onclick="currentProAdd('probooking','ext_specialProblem');" />
-                            <input type="button" class="btn" value="test" onclick="currentProAdd('testbooking','ext_specialProblem');" />&nbsp;
+                           <input type="button" class="btn" value="test" onclick="currentProAdd('testbooking','ext_specialProblem');" />&nbsp;
+                           -->
 
                          </td>
                     </tr>
