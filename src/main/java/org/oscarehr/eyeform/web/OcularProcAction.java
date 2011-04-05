@@ -74,7 +74,7 @@ public class OcularProcAction extends DispatchAction {
     	} else {
     		dao.merge(procedure);
     	}
-    	
+    	request.setAttribute("parentAjaxId", "ocularprocedure");
     	return mapping.findForward("success");
     }
 

@@ -296,15 +296,19 @@ public class MeasurementFormatter {
 		if(isPresent("od_ar_sph")) {
 			sb.append("OD ");
 			sb.append(getValue("od_ar_sph"));
-			sb.append((isNegative("od_ar_cyl")?"":"+") + getValue("od_ar_cyl"));
-			sb.append("x" + getValue("od_ar_axis"));
-			sb.append(";");
+			sb.append(getValue("od_ar_cyl"));
+			if(isPresent("od_ar_axis")) {
+				sb.append("x" + getValue("od_ar_axis"));
+			}
+			sb.append("; ");
 		}
 		if(isPresent("os_ar_sph")) {
 			sb.append("OS ");
 			sb.append(getValue("os_ar_sph"));
-			sb.append((isNegative("os_ar_cyl")?"":"+") + getValue("os_ar_cyl"));
-			sb.append("x" + getValue("os_ar_axis"));
+			sb.append(getValue("os_ar_cyl"));
+			if(isPresent("os_ar_axis")) {
+				sb.append("x" + getValue("os_ar_axis"));
+			}
 			sb.append(".");
 		}
 		return sb.toString();
@@ -318,7 +322,7 @@ public class MeasurementFormatter {
 			sb.append(getValue("od_k1"));
 			sb.append("x" + getValue("od_k2"));
 			sb.append("@" + getValue("od_k2_axis"));
-			sb.append(";");
+			sb.append("; ");
 		}
 		if(isPresent("os_k1")) {
 			sb.append("OS ");
@@ -336,9 +340,9 @@ public class MeasurementFormatter {
 		if(isPresent("od_"+type+"_"+ distNear))  {
 			sb.append("OD ");
 			sb.append(getValue("od_"+type+"_"+ distNear));
-			if(distNear.equals("near"))
-				sb.append("+");
-			sb.append(";");
+			//if(distNear.equals("near"))
+			//	sb.append("+");
+			sb.append("; ");
 		}
 		if(isPresent("os_"+type+"_"+ distNear)) {
 			sb.append("OS ");
@@ -355,16 +359,20 @@ public class MeasurementFormatter {
 		if(isPresent("od_manifest_refraction_sph")) {
 			sb.append("OD ");		
 			sb.append(getValue("od_manifest_refraction_sph"));
-			sb.append((isNegative("od_manifest_refraction_cyl")?"":"+") + getValue("od_manifest_refraction_cyl"));
-			sb.append("x" + getValue("od_manifest_refraction_axis"));
+			sb.append(getValue("od_manifest_refraction_cyl"));
+			if(isPresent("od_manifest_refraction_axis")) {
+				sb.append("x" + getValue("od_manifest_refraction_axis"));
+			}
 			sb.append(" (" + getValue("od_manifest_distance") + ")");
-			sb.append(";");
+			sb.append("; ");
 		}
 		if(isPresent("os_manifest_refraction_sph")) {
 			sb.append("OS ");
 			sb.append(getValue("os_manifest_refraction_sph"));
-			sb.append((isNegative("os_manifest_refraction_cyl")?"":"+") + getValue("os_manifest_refraction_cyl"));
-			sb.append("x" + getValue("os_manifest_refraction_axis"));
+			sb.append(getValue("os_manifest_refraction_cyl"));
+			if(isPresent("os_manifest_refraction_axis")) {
+				sb.append("x" + getValue("os_manifest_refraction_axis"));
+			}
 			sb.append(" (" + getValue("os_manifest_distance") + ")");
 			sb.append(".");
 		}
@@ -378,7 +386,7 @@ public class MeasurementFormatter {
 			sb.append("add +");
 			sb.append(getValue("od_manifest_refraction_add"));
 			sb.append(" ("+getValue("od_manifest_near")+"+)");
-			sb.append(";");
+			sb.append("; ");
 		}
 		if(isPresent("os_manifest_refraction_add")) {
 			sb.append("OS ");
@@ -399,7 +407,7 @@ public class MeasurementFormatter {
 			sb.append((isNegative("od_cycloplegic_refraction_cyl")?"":"+") + getValue("od_cycloplegic_refraction_cyl"));
 			sb.append("x" + getValue("od_cycloplegic_refraction_axis"));
 			sb.append(" (" + getValue("od_cycloplegic_distance") + ")");
-			sb.append(";");
+			sb.append("; ");
 		}
 		if(isPresent("os_cycloplegic_refraction_sph")) {
 			sb.append("OS ");
@@ -418,7 +426,7 @@ public class MeasurementFormatter {
 			sb.append("OD ");		
 			sb.append(getValue("od_iop_nct"));
 			
-			sb.append(";");
+			sb.append("; ");
 			sb.append("OS ");
 			sb.append(getValue("os_iop_nct"));
 			sb.append(" ");
@@ -428,7 +436,7 @@ public class MeasurementFormatter {
 			if(d1.after(d2))
 				d=d1;
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-			sb.append("[" + sdf.format(d)  + "]");
+			//sb.append("[" + sdf.format(d)  + "]");
 			sb.append(".");
 		}
 		return sb.toString();
@@ -440,7 +448,7 @@ public class MeasurementFormatter {
 			sb.append("OD ");		
 			sb.append(getValue("od_iop_applanation"));
 			
-			sb.append(";");
+			sb.append("; ");
 			sb.append("OS ");
 			sb.append(getValue("os_iop_applanation"));
 			sb.append(" ");
@@ -450,7 +458,7 @@ public class MeasurementFormatter {
 			if(d1.after(d2))
 				d=d1;
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-			sb.append("[" + sdf.format(d)  + "]");
+			//sb.append("[" + sdf.format(d)  + "]");
 			sb.append(".");
 		}
 		return sb.toString();
@@ -462,7 +470,7 @@ public class MeasurementFormatter {
 			sb.append("OD ");		
 			sb.append(getValue("od_cct"));
 			sb.append(" microns");
-			sb.append(";");
+			sb.append("; ");
 		}
 		if(isPresent("os_cct")) {
 			sb.append("OS ");
@@ -478,7 +486,7 @@ public class MeasurementFormatter {
 		if(isPresent("od_color_vision")) {
 			sb.append("OD ");		
 			sb.append(getValue("od_color_vision"));		
-			sb.append(";");
+			sb.append("; ");
 		}
 		if(isPresent("os_color_vision")) {
 			sb.append("OS ");
@@ -493,7 +501,7 @@ public class MeasurementFormatter {
 		if(isPresent("od_pupil")) {
 			sb.append("OD ");		
 			sb.append(getValue("od_pupil"));		
-			sb.append(";");
+			sb.append("; ");
 		}
 		if(isPresent("os_pupil")) {
 			sb.append("OS ");
@@ -508,7 +516,7 @@ public class MeasurementFormatter {
 		if(isPresent("od_amsler_grid")) {
 			sb.append("OD ");		
 			sb.append(getValue("od_amsler_grid"));		
-			sb.append(";");
+			sb.append("; ");
 		}
 		if(isPresent("os_amsler_grid")) {
 			sb.append("OS ");
@@ -523,7 +531,7 @@ public class MeasurementFormatter {
 		if(isPresent("od_pam")) {
 			sb.append("OD ");		
 			sb.append(getValue("od_pam"));		
-			sb.append(";");
+			sb.append("; ");
 		}
 		if(isPresent("os_pam")) {
 			sb.append("OS ");
@@ -538,7 +546,7 @@ public class MeasurementFormatter {
 		if(isPresent("od_confrontation")) {
 			sb.append("OD ");		
 			sb.append(getValue("od_confrontation"));		
-			sb.append(";");
+			sb.append("; ");
 		}
 		if(isPresent("os_confrontation")) {
 			sb.append("OS ");
@@ -563,7 +571,7 @@ public class MeasurementFormatter {
 		if(isPresent("od_cornea")) {
 			sb.append("OD ");		
 			sb.append(getValue("od_cornea"));		
-			sb.append(";");
+			sb.append("; ");
 		}
 		if(isPresent("os_cornea")) {
 			sb.append("OS ");
@@ -578,7 +586,7 @@ public class MeasurementFormatter {
 		if(isPresent("od_conjuctiva_sclera")) {
 			sb.append("OD ");		
 			sb.append(getValue("od_conjuctiva_sclera"));		
-			sb.append(";");
+			sb.append("; ");
 		}
 		if(isPresent("os_conjuctiva_sclera")) {
 			sb.append("OS ");
@@ -593,7 +601,7 @@ public class MeasurementFormatter {
 		if(isPresent("od_anterior_chamber")) {
 			sb.append("OD ");		
 			sb.append(getValue("od_anterior_chamber"));		
-			sb.append(";");
+			sb.append("; ");
 		}
 		if(isPresent("os_anterior_chamber")) {
 			sb.append("OS ");
@@ -610,13 +618,13 @@ public class MeasurementFormatter {
 			sb.append(getValue("od_angle_middle1"));
 			sb.append(" ");
 			sb.append("(superior "+getValue("od_angle_up")+", nasal "+getValue("od_angle_middle2")+", inferior "+getValue("od_angle_down")+", temporal " + getValue("od_angle_middle0") +")");
-			sb.append(";");
+			sb.append("; ");
 		}
 		if(isPresent("os_angle_middle1")) {
 			sb.append("OS ");
 			sb.append(getValue("os_angle_middle1"));
 			sb.append(" ");
-			sb.append("(superior "+getValue("od_angle_up")+", nasal "+getValue("od_angle_middle0")+", inferior "+getValue("od_angle_down")+", temporal " + getValue("od_angle_middle2") +")");		
+			sb.append("(superior "+getValue("os_angle_up")+", nasal "+getValue("os_angle_middle0")+", inferior "+getValue("os_angle_down")+", temporal " + getValue("os_angle_middle2") +")");		
 			sb.append(".");
 		}
 		return sb.toString();
@@ -627,7 +635,7 @@ public class MeasurementFormatter {
 		if(isPresent("od_iris")) {
 			sb.append("OD ");		
 			sb.append(getValue("od_iris"));		
-			sb.append(";");
+			sb.append("; ");
 		}
 		if(isPresent("os_iris")) {
 			sb.append("OS ");
@@ -642,7 +650,7 @@ public class MeasurementFormatter {
 		if(isPresent("od_lens")) {
 			sb.append("OD ");		
 			sb.append(getValue("od_lens"));		
-			sb.append(";");
+			sb.append("; ");
 		}
 		if(isPresent("os_lens")) {
 			sb.append("OS ");
@@ -657,7 +665,7 @@ public class MeasurementFormatter {
 		if(isPresent("od_disc")) {
 			sb.append("OD ");		
 			sb.append(getValue("od_disc"));		
-			sb.append(";");
+			sb.append("; ");
 		}
 		if(isPresent("os_disc")) {
 			sb.append("OS ");
@@ -672,7 +680,7 @@ public class MeasurementFormatter {
 		if(isPresent("od_cd_ratio_horizontal")) {
 			sb.append("OD ");		
 			sb.append(getValue("od_cd_ratio_horizontal"));		
-			sb.append(";");
+			sb.append("; ");
 		}
 		if(isPresent("os_cd_ratio_horizontal")) {
 			sb.append("OS ");
@@ -687,7 +695,7 @@ public class MeasurementFormatter {
 		if(isPresent("od_macula")) {
 			sb.append("OD ");		
 			sb.append(getValue("od_macula"));		
-			sb.append(";");
+			sb.append("; ");
 		}
 		if(isPresent("os_macula")) {
 			sb.append("OS ");
@@ -702,7 +710,7 @@ public class MeasurementFormatter {
 		if(isPresent("od_retina")) {
 			sb.append("OD ");		
 			sb.append(getValue("od_retina"));		
-			sb.append(";");
+			sb.append("; ");
 		}
 		if(isPresent("os_retina")) {
 			sb.append("OS ");
@@ -717,7 +725,7 @@ public class MeasurementFormatter {
 		if(isPresent("od_vitreous")) {
 			sb.append("OD ");		
 			sb.append(getValue("od_vitreous"));		
-			sb.append(";");
+			sb.append("; ");
 		}
 		if(isPresent("os_vitreous")) {
 			sb.append("OS ");
@@ -732,7 +740,7 @@ public class MeasurementFormatter {
 		if(isPresent("od_face")) {
 			sb.append("OD ");		
 			sb.append(getValue("od_face"));		
-			sb.append(";");
+			sb.append("; ");
 		}
 		if(isPresent("os_face")) {
 			sb.append("OS ");
@@ -747,7 +755,7 @@ public class MeasurementFormatter {
 		if(isPresent("od_upper_lid")) {
 			sb.append("OD ");		
 			sb.append(getValue("od_upper_lid"));		
-			sb.append(";");
+			sb.append("; ");
 		}
 		if(isPresent("os_upper_lid")) {
 			sb.append("OS ");
@@ -762,7 +770,7 @@ public class MeasurementFormatter {
 		if(isPresent("od_lower_lid")) {
 			sb.append("OD ");		
 			sb.append(getValue("od_lower_lid"));		
-			sb.append(";");
+			sb.append("; ");
 		}
 		if(isPresent("os_lower_lid")) {
 			sb.append("OS ");
@@ -777,7 +785,7 @@ public class MeasurementFormatter {
 		if(isPresent("od_punctum")) {
 			sb.append("OD ");		
 			sb.append(getValue("od_punctum"));		
-			sb.append(";");
+			sb.append("; ");
 		}
 		if(isPresent("os_punctum")) {
 			sb.append("OS ");
@@ -792,7 +800,7 @@ public class MeasurementFormatter {
 		if(isPresent("od_lacrimal_lake")) {
 			sb.append("OD ");		
 			sb.append(getValue("od_lacrimal_lake"));		
-			sb.append(";");
+			sb.append("; ");
 		}
 		if(isPresent("os_lacrimal_lake")) {
 			sb.append("OS ");
@@ -807,7 +815,7 @@ public class MeasurementFormatter {
 		if(isPresent("od_lacrimal_irrigation")) {
 			sb.append("OD ");		
 			sb.append(getValue("od_lacrimal_irrigation"));		
-			sb.append(";");
+			sb.append("; ");
 		}
 		if(isPresent("os_lacrimal_irrigation")) {
 			sb.append("OS ");
@@ -822,7 +830,7 @@ public class MeasurementFormatter {
 		if(isPresent("od_nld")) {
 			sb.append("OD ");		
 			sb.append(getValue("od_nld"));		
-			sb.append(";");
+			sb.append("; ");
 		}
 		if(isPresent("os_nld")) {
 			sb.append("OS ");
@@ -837,7 +845,7 @@ public class MeasurementFormatter {
 		if(isPresent("od_dye_disappearance")) {
 			sb.append("OD ");		
 			sb.append(getValue("od_dye_disappearance"));		
-			sb.append(";");
+			sb.append("; ");
 		}
 		if(isPresent("os_dye_disappearance")) {
 			sb.append("OS ");
@@ -852,7 +860,7 @@ public class MeasurementFormatter {
 		if(isPresent("od_mrd")) {
 			sb.append("OD ");		
 			sb.append(getValue("od_mrd"));		
-			sb.append(";");
+			sb.append("; ");
 		}
 		if(isPresent("os_mrd")) {
 			sb.append("OS ");
@@ -867,7 +875,7 @@ public class MeasurementFormatter {
 		if(isPresent("od_levator_function")) {
 			sb.append("OD ");		
 			sb.append(getValue("od_levator_function"));		
-			sb.append(";");
+			sb.append("; ");
 		}
 		if(isPresent("os_levator_function")) {
 			sb.append("OS ");
@@ -882,7 +890,7 @@ public class MeasurementFormatter {
 		if(isPresent("od_inferior_scleral_show")) {
 			sb.append("OD ");		
 			sb.append(getValue("od_inferior_scleral_show"));		
-			sb.append(";");
+			sb.append("; ");
 		}
 		if(isPresent("os_inferior_scleral_show")) {
 			sb.append("OS ");
@@ -897,7 +905,7 @@ public class MeasurementFormatter {
 		if(isPresent("od_cn_vii")) {
 			sb.append("OD ");		
 			sb.append(getValue("od_cn_vii"));		
-			sb.append(";");
+			sb.append("; ");
 		}
 		if(isPresent("os_cn_vii")) {
 			sb.append("OS ");
@@ -912,7 +920,7 @@ public class MeasurementFormatter {
 		if(isPresent("od_blink")) {
 			sb.append("OD ");		
 			sb.append(getValue("od_blink"));		
-			sb.append(";");
+			sb.append("; ");
 		}
 		if(isPresent("os_blink")) {
 			sb.append("OS ");
@@ -927,7 +935,7 @@ public class MeasurementFormatter {
 		if(isPresent("od_bells")) {
 			sb.append("OD ");		
 			sb.append(getValue("od_bells"));		
-			sb.append(";");
+			sb.append("; ");
 		}
 		if(isPresent("os_bells")) {
 			sb.append("OS ");
@@ -942,7 +950,7 @@ public class MeasurementFormatter {
 		if(isPresent("od_lagophthalmos")) {
 			sb.append("OD ");		
 			sb.append(getValue("od_lagophthalmos"));		
-			sb.append(";");
+			sb.append("; ");
 		}
 		if(isPresent("os_lagophthalmos")) {
 			sb.append("OS ");
@@ -957,7 +965,7 @@ public class MeasurementFormatter {
 		if(isPresent("od_hertel")) {
 			sb.append("OD ");		
 			sb.append(getValue("od_hertel"));		
-			sb.append(";");
+			sb.append("; ");
 		}
 		if(isPresent("os_hertel")) {
 			sb.append("OS ");
@@ -972,7 +980,7 @@ public class MeasurementFormatter {
 		if(isPresent("od_retropulsion")) {
 			sb.append("OD ");		
 			sb.append(getValue("od_retropulsion"));		
-			sb.append(";");
+			sb.append("; ");
 		}
 		if(isPresent("os_retropulsion")) {
 			sb.append("OS ");

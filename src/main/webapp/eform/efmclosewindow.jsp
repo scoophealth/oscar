@@ -36,6 +36,7 @@
         var parentAjaxId = "<%=request.getParameter("parentAjaxId")%>";
         
         if( window.opener. writeToEncounterNote ) {
+        	window.opener.reloadNav(parentAjaxId);
             //window.opener.document.forms['encForm'].elements['reloadDiv'].value = parentAjaxId;
             //window.opener.updateNeeded = true;            
             ;

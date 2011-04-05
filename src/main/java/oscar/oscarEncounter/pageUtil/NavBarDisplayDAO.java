@@ -54,7 +54,7 @@ public class NavBarDisplayDAO {
     private ArrayList PopUpMenuURLS;
     private ArrayList PopUpMenuNames;
     private String headingColour = null;
-    
+    private String reloadUrl = null;
     
     /** Creates a new instance of NavBarDisplayDAO */
     public NavBarDisplayDAO() {   
@@ -384,4 +384,14 @@ public class NavBarDisplayDAO {
         }
         return hasHeadingColour; 
     }
+
+	public String getReloadUrl() {
+    	return reloadUrl;
+    }
+
+	public void setReloadUrl(String reloadUrl) {
+    	this.reloadUrl = reloadUrl;
+    }
+    
+    
 }

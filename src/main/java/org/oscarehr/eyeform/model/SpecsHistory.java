@@ -188,9 +188,7 @@ public class SpecsHistory extends AbstractModel<Integer>{
 	
 	@Override
 	public String toString() {
-		String od = getPrefix(this.getOdSph()) + getPrefix(this.getOdCyl()) + "x" + getPrefix(this.getOdAxis());
-		String os = getPrefix(this.getOsSph()) + getPrefix(this.getOsCyl()) + "x" + getPrefix(this.getOsAxis());
-		return od + "<br/>" + os;
+		return toString3("<br/>");
 	}
 	
 	public String toString2() {
@@ -217,6 +215,9 @@ public class SpecsHistory extends AbstractModel<Integer>{
 	}
 	
 	public String toString3() {
+		return toString3("   ");
+	}
+	public String toString3(String deliminator) {
 		StringBuilder sb = new StringBuilder();
         sb.append(getOdSph() == null ? "" : getOdSph());
         sb.append(getOdCyl() == null ? "" : getOdCyl());
@@ -226,7 +227,7 @@ public class SpecsHistory extends AbstractModel<Integer>{
         	sb.append(" add " + getOdAdd());
         if (getOdPrism() != null && getOdPrism().trim().length() != 0)                
         	sb.append(" prism " + getOdPrism());
-        sb.append("   ");
+        sb.append(deliminator);
         sb.append(getOsSph() == null ? "" : getOsSph());
         sb.append(getOsCyl() == null ? "" : getOsCyl());
         if (getOsAxis() != null && getOsAxis().trim().length() != 0)                

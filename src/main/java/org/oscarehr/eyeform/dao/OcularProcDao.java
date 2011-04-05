@@ -21,7 +21,7 @@ public class OcularProcDao extends AbstractDao<OcularProc> {
 	}
 		
 	public List<OcularProc> getByDemographicNo(int demographicNo) {
-		String sql="select x from "+modelClass.getSimpleName()+" x where x.demographicNo=?1";
+		String sql="select x from "+modelClass.getSimpleName()+" x where x.demographicNo=?1 order by x.date DESC";
 		Query query = entityManager.createQuery(sql);
 		query.setParameter(1, demographicNo);
 	    

@@ -110,6 +110,8 @@ public class EctDisplayAction extends Action {
                    Dao.setHeadingColour(headingColour);
                 }
 
+                Dao.setReloadUrl(request.getRequestURL().toString() + "?" + request.getQueryString());
+                
                 if( getInfo(bean,request, Dao,messages) ) {
                     request.setAttribute("DAO",Dao);
 
