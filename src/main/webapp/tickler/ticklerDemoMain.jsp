@@ -349,7 +349,7 @@ function setup() {
 				<TD width="17%"><FONT FACE="verdana,arial,helvetica"
 					COLOR="#FFFFFF" SIZE="-2"><B><bean:message
 					key="tickler.ticklerMain.msgDemographicName" /></B></FONT></TD>
-				<TD width="17%"><FONT FACE="verdana,arial,helvetica"
+				<TD width="8%"><FONT FACE="verdana,arial,helvetica"
 					COLOR="#FFFFFF" SIZE="-2"><B><bean:message
 					key="tickler.ticklerMain.msgDoctorName" /></B></FONT></TD>
 				<TD width="9%"><FONT FACE="verdana,arial,helvetica"
@@ -368,7 +368,7 @@ function setup() {
 				<TD width="6%"><FONT FACE="verdana,arial,helvetica"
 					COLOR="#FFFFFF" SIZE="-2"><B><bean:message
 					key="tickler.ticklerMain.msgStatus" /></B></FONT></TD>
-				<TD width="30%"><FONT FACE="verdana,arial,helvetica"
+				<TD width="39%"><FONT FACE="verdana,arial,helvetica"
 					COLOR="#FFFFFF" SIZE="-2"><B><bean:message
 					key="tickler.ticklerMain.msgMessage" /></B></FONT></TD>
 			</TR>
