@@ -2015,7 +2015,7 @@
 		<action path="/eyeform/EyeformPlan" type="org.oscarehr.eyeform.web.PlanAction" parameter="method" scope="request" validate="false" input="/eyeform/plan_new.jsp" name="eyeformPlanForm">
 			<forward name="form" path="/eyeform/plan_new.jsp" />
 			<forward name="edit" path="/eyeform/plan_edit.jsp" />
-			<forward name="success" path="/eyeform/success.jsp" />
+			<forward name="success" path="/eyeform/plan_success.jsp" />
 		</action>
 		
 		<action path="/eyeform/Eyeform" type="org.oscarehr.eyeform.web.EyeformAction" parameter="method" scope="request" validate="false" input="/eyeform/followup.jsp" name="eyeForm">
