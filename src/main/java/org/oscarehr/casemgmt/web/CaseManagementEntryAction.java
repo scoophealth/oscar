@@ -538,8 +538,12 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			team = "0";
 		}
 		note.setReporter_program_team(team);
-		if(appointmentNo != null) {
-			note.setAppointmentNo(Integer.parseInt(appointmentNo));
+		if(appointmentNo != null && appointmentNo.length()>0) {
+			try {
+				note.setAppointmentNo(Integer.parseInt(appointmentNo));
+			}catch(NumberFormatException e) {
+				logger.info("no appt no");
+			}
 		}
 		// update note issues
 		String sessionFrmName = "caseManagementEntryForm" + demo;
