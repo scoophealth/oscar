@@ -137,24 +137,24 @@ try
 
 	<div id="cppBoxes">
 		<div id="divR1" style="width: 100%; height: 75px; margin: 0px; background-color: #FFFFFF;">		
-			<div id="divR1I1" class="topBox"
-				style="float: left; width: 49%; margin-left: 3px;">
+			<div id="divR1I1" class="topBox" 
+				style="float: left; width: 49%; margin-left: 3px; height: inherit;">
 			</div>
 		
 			<!-- This is the Medical History cell ...mh...-->
 			<div id="divR1I2" class="topBox"
-				style="float: right; width: 49%; margin-right: 3px;">
+				style="float: right; width: 49%; margin-right: 3px; height: inherit;">
 			</div>
 		</div>
 	
 		<div id="divR2" style="width: 100%; height: 75px; margin-top: 0px; background-color: #FFFFFF;">		
 			<!--Ongoing Concerns cell -->
 			<div id="divR2I1" class="topBox"
-				style="clear: left; float: left; width: 49%; margin-left: 3px;">	
+				style="clear: left; float: left; width: 49%; margin-left: 3px; height: inherit;">	
 			</div>	
 			<!--Reminders cell -->
 			<div id="divR2I2" class="topBox"
-				style="clear: right; float: right; width: 49%; margin-right: 3px;">		
+				style="clear: right; float: right; width: 49%; margin-right: 3px; height: inherit;">		
 			</div>
 		</div>
 		<span style="visibility:hidden">test</span>

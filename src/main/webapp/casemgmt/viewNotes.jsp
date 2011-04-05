@@ -48,7 +48,7 @@
                 <div style="clear: both; overflow: auto;">
             </c:when>
             <c:otherwise>
-                <div style="clear: both; height: 100%; overflow: auto;">
+                <div style="clear: both; height: inherit; overflow: auto;">
             </c:otherwise>
         </c:choose>
 <ul style="margin-left: 5px;">
