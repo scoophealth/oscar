@@ -1318,7 +1318,7 @@ function completeChangeToView(note,newId) {
 
 }
 
-function minView(e) {
+function minView(e) {	
     var divHeight = "1.1em";
     var txt = Event.element(e).parentNode.id;
     var nId = txt.substr(1);
@@ -1341,7 +1341,7 @@ function minView(e) {
 
     $(txt).style.overflow = "hidden";
     shrink(txt, 14);
-    //$(txt).style.height = divHeight;    c
+    //$(txt).style.height = divHeight;
 
     var txtId = "txt" + nId;
     var line = $(txtId).innerHTML.substr(0,100);
@@ -1376,20 +1376,20 @@ var idHeight;
 var curElemHeight;
 var shrinkTimer;
 function shrink(id, toScale) {
-    idHeight = $(id).getHeight();
+	idHeight = $(id).getHeight();	
     curElemHeight = idHeight;
-    var delta = Math.ceil(curElemHeight/5);
-    shrinkTimer = self.setInterval("shrinkImpl("+id+", " + toScale+", "+delta+")",1);
+    var delta = Math.ceil(curElemHeight/5);    
+    shrinkTimer = self.setInterval("shrinkImpl('"+id+"', " + toScale+", "+delta+")",1);
 }
 function shrinkImpl(id, minHeight, delta) {
-    curElemHeight -= delta;
-    if( curElemHeight <= minHeight ) {
-        $(id).style.height = minHeight;
+    curElemHeight -= delta;        
+    if( curElemHeight <= minHeight ) {    	
+        $(id).setStyle({height:minHeight + 'px'});
         window.clearInterval(shrinkTimer);
         return;
     }
-
-    $(id).style.height = curElemHeight;
+ 	$(id).setStyle('height',curElemHeight + 'px');
+   // $(id).style.height = curElemHeight;
 }
 
 //this func fires only if maximize button is clicked after fullView
