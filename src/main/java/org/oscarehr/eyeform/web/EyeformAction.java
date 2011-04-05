@@ -84,7 +84,7 @@ import com.lowagie.text.DocumentException;
 public class EyeformAction extends DispatchAction {
 
 	static Logger logger = MiscUtils.getLogger();
-	static String[] cppIssues = {"CurrentHistory","PastOcularHistory","MedHistory","OMeds","OcularMedication","DiagnosticNotes"};
+	static String[] cppIssues = {"CurrentHistory","PastOcularHistory","MedHistory","OMeds","OcularMedication","DiagnosticNotes","FamHistory"};
 	
 	CaseManagementManager cmm = null;
 	OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
@@ -382,6 +382,9 @@ public class EyeformAction extends DispatchAction {
 			
 			//loop through each visit..concatenate into 1 PDF			
 			for(int x=0;x<ids.length;x++) {
+				if(x>0) {
+					printer.setNewPage(true);
+				}
 				int appointmentNo = Integer.parseInt(ids[x]);
 				Appointment appointment = appointmentDao.find(appointmentNo);
 				Demographic demographic = demographicDao.getClientByDemographicNo(appointment.getDemographicNo());				
@@ -394,6 +397,7 @@ public class EyeformAction extends DispatchAction {
 				printCppItem(printer,"Current History","CurrentHistory",demographic.getDemographicNo(), appointmentNo, false);
 				printCppItem(printer,"Past Ocular History","PastOcularHistory",demographic.getDemographicNo(), appointmentNo, true);
 				printCppItem(printer,"Medical History","MedHistory",demographic.getDemographicNo(), appointmentNo, true);
+				printCppItem(printer,"Family History","FamHistory",demographic.getDemographicNo(), appointmentNo, true);				
 				printCppItem(printer,"Ocular Medication","OcularMedication",demographic.getDemographicNo(), appointmentNo, true);
 				printCppItem(printer,"Other Meds","OMeds",demographic.getDemographicNo(), appointmentNo, true);
 				printCppItem(printer,"Diagnostic Notes","DiagnosticNotes",demographic.getDemographicNo(), appointmentNo, false);
@@ -420,8 +424,11 @@ public class EyeformAction extends DispatchAction {
 				printer.printEyeformMeasurements(formatter);
 				
 				//impression
+				logger.info("printing notes for appt " + appointmentNo);
 				List<CaseManagementNote> notes = caseManagementNoteDao.getMostRecentNotesByAppointmentNo(appointmentNo);
-				notes = filterOutCpp(notes);				
+				logger.info("found "  + notes.size());
+				notes = filterOutCpp(notes);			
+				logger.info("filtered down to " +  notes.size());
 				printer.printNotes(notes);
 				
 				//plan - followups/consults, procedures booked, tests booked, checkboxes

@@ -132,7 +132,7 @@
        removeNavDiv('Rx');
        removeNavDiv('OMeds');  
        addRightNavDiv("specshistory");	                         
-       popColumn(ctx + "/oscarEncounter/displaySpecsHistory.do?hC=009999&appointment_no="+appointmentNo,"specshistory","specsHistory", "rightNavBar", this);   
+       popColumn(ctx + "/oscarEncounter/displaySpecsHistory.do?hC=009999&appointment_no="+appointmentNo,"specshistory","specshistory", "rightNavBar", this);   
        addRightNavDiv("Rx");
        popColumn(ctx + "/oscarEncounter/displayRx.do?hC=C3C3C3&numToDisplay=12","Rx","Rx","rightNavBar",this);
        addRightNavDiv("OMeds");
@@ -141,7 +141,7 @@
        addRightNavDiv("OcularMedication");	
        popColumn(ctx + "/CaseManagementView.do?hc=CCDDAA&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=OcularMedication&title="+ocularMedsLabel+"&cmd=OcularMedication&appointment_no="+appointmentNo +"&noheight=true","OcularMedication","OcularMedication", "rightNavBar", this);       
        addRightNavDiv("ocularprocedure");	                         
-       popColumn(ctx + "/oscarEncounter/displayOcularProcedure.do?hC=009999&appointment_no="+appointmentNo,"ocularprocedure","ocularProcedure", "rightNavBar", this);
+       popColumn(ctx + "/oscarEncounter/displayOcularProcedure.do?hC=009999&appointment_no="+appointmentNo,"ocularprocedure","ocularprocedure", "rightNavBar", this);
             
        
        jQuery.ajax({url:ctx+"/eyeform/NoteData.do?method=getCurrentNoteData&demographicNo="+demographicNo+"&noteId="+savedNoteId+"&appointmentNo="+appointmentNo,dataType: "html",success: function(data) {

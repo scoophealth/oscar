@@ -80,6 +80,7 @@ public class SpecsHistoryAction extends DispatchAction {
     		dao.merge(specs);
     	}
     	
+    	request.setAttribute("parentAjaxId", "specshistory");
     	return mapping.findForward("success");
     }
 

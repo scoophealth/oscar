@@ -189,7 +189,11 @@
     	   var tmpEl = document.getElementById(name);          
            tmpEl.parentNode.removeChild(tmpEl);
        }
-       
+
+       function reloadNav(name) {    	   
+    	   var url = jQuery("#" + name + " input[name='reloadUrl']").val();    	   
+    	   popColumn(url,name,name,null,null);   
+       }
 
        function addPrintOption(name,bean) {
     	   var test1Str = "<img style=\"cursor: pointer;\" title=\"Print "+name+"\" id=\"img"+name+"\" alt=\"Print "+name+"\" onclick=\"return printInfo(this, 'extPrint"+name+"');\" src=\"" + ctx + "/oscarEncounter/graphics/printer.png\">&nbsp;"+name;

@@ -33,8 +33,10 @@ import java.util.HashMap;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.util.MessageResources;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.eform.EFormUtil;
+import oscar.util.StringUtils;
 
 //import oscar.oscarSecurity.CookieSecurity;
 
@@ -43,7 +45,7 @@ public class EctDisplayDiagramAction extends EctDisplayAction {
     
   public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {               	             
 
-	  String appointmentNo = request.getParameter("appointment_no");
+	  	String appointmentNo = request.getParameter("appointment_no");
 		
         //set text for lefthand module title
         Dao.setLeftHeading(messages.getMessage(request.getLocale(), "oscarEncounter.LeftNavBar.Diagrams"));
@@ -78,28 +80,29 @@ public class EctDisplayDiagramAction extends EctDisplayAction {
         	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         	try {
         		item.setDate(formatter.parse(strDate));
-        	}catch(Exception e) {item.setDate(new Date());}
+        	}catch(Exception e) {MiscUtils.getLogger().error("error:",e);item.setDate(new Date());}
         	
         	String formName = (String)form.get("formName");
         	String formSubject = (String)form.get("formSubject");
         	
-        	String header = formSubject;
-        	if(header == null || header.length()==0) {
-        		header = formName;
+        	StringBuilder title = new StringBuilder();
+        	title.append(formName);
+        	if(formSubject != null && formSubject.length()>0) {
+        		title.append(" - ");
+        		title.append(formSubject);
         	}
         	
-        	//String itemHeader = StringUtils.maxLenString(header, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);                              
-            item.setTitle((String)form.get("formName"));
-            
-            item.setLinkTitle(header);
-            
+        	String itemHeader = StringUtils.maxLenString(title.toString(), MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);                              
+            item.setTitle(itemHeader);            
+            item.setLinkTitle(title.toString());
+           
             int hash = Math.abs(winName.hashCode());        
             url = "popupPage(500,900,'" + hash + "','" + request.getContextPath() + "/eform/efmshowform_data.jsp?fdid="+form.get("fdid")+"&parentAjaxId=eforms" +"'); return false;";        
             item.setURL(url);               
             Dao.addItem(item);
         }
 
-        Dao.sortItems(NavBarDisplayDAO.DATESORT);
+        Dao.sortItems(NavBarDisplayDAO.DATESORT_ASC);
         
         return true;  	
   }

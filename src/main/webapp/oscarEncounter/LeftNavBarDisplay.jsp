@@ -16,7 +16,9 @@
         if( js != null ) {            
         %>
 <%=js%>
-<% }
+<% } %>
+<input type=hidden name="reloadUrl" value="<%=dao.getReloadUrl()%>"/>
+<%
         //Do we have a '+' command to display on the right of the module header?
         String rh = dao.getRightHeadingID();
         if( !rh.equals("") ) {          

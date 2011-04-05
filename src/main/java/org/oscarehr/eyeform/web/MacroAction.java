@@ -73,6 +73,7 @@ public class MacroAction extends DispatchAction {
     		dao.merge(macro);
     	}
     	
+    	request.setAttribute("parentAjaxId", "macro");
     	return mapping.findForward("success");
     }
 

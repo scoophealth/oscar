@@ -35,6 +35,7 @@ import org.apache.struts.util.MessageResources;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.model.Appointment;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.eyeform.dao.SpecsHistoryDao;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -83,8 +84,11 @@ public class EctDisplayAppointmentHistoryAction extends EctDisplayAction {
     	NavBarDisplayDAO.Item item = Dao.Item();                  
     	//item.setDate(sh.getAppointmentDate());
     	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-    	String title = formatter.format(sh.getAppointmentDate());
     	
+    	Provider p = providerDao.getProvider(sh.getProviderNo());
+    	
+    	String title = formatter.format(sh.getAppointmentDate());
+    	title += " " + p.getTeam() + " " + sh.getReason();
     	
     	String itemHeader = StringUtils.maxLenString(title, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);                      
         item.setLinkTitle(itemHeader);        

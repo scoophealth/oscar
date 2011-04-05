@@ -45,7 +45,7 @@ import oscar.util.StringUtils;
 //import oscar.oscarSecurity.CookieSecurity;
 
 public class EctDisplaySpecsHistoryAction extends EctDisplayAction {
-    private static final String cmd = "specsHistory";
+    private static final String cmd = "specshistory";
     
  public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
      
@@ -84,13 +84,13 @@ public class EctDisplaySpecsHistoryAction extends EctDisplayAction {
     SpecsHistoryDao shDao = (SpecsHistoryDao)SpringUtils.getBean("SpecsHistoryDAO");
     ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
     
-    List<SpecsHistory> shs = shDao.getByAppointmentNo(Integer.parseInt(appointmentNo));
+    List<SpecsHistory> shs = shDao.getByDemographicNo(Integer.parseInt(bean.demographicNo));
 
     for(SpecsHistory sh:shs) {
     	NavBarDisplayDAO.Item item = Dao.Item();                  
     	item.setDate(sh.getDate());
     	
-    	String title = sh.getType() + " - " + providerDao.getProvider(sh.getProvider()).getFormattedName();    	
+    	String title = sh.getType() + " - " + sh.getDoctor();    	
     	String itemHeader = StringUtils.maxLenString(title, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);      
     	item.setTitle(itemHeader);
     	    	
@@ -102,7 +102,7 @@ public class EctDisplaySpecsHistoryAction extends EctDisplayAction {
         Dao.addItem(item);
     }
 
-     Dao.sortItems(NavBarDisplayDAO.DATESORT);
+     //Dao.sortItems(NavBarDisplayDAO.DATESORT);
  }catch( Exception e ) {
      MiscUtils.getLogger().error("Error", e);
      return false;

@@ -48,7 +48,7 @@ import oscar.util.StringUtils;
 public class EctDisplayOcularProcedureAction extends EctDisplayAction {
 	ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
     
-    private static final String cmd = "ocularProcedure";
+    private static final String cmd = "ocularprocedure";
     
  public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
      
@@ -88,7 +88,7 @@ public class EctDisplayOcularProcedureAction extends EctDisplayAction {
     ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
     
     
-    List<OcularProc> ops = opDao.getByAppointmentNo(Integer.parseInt(appointmentNo));
+    List<OcularProc> ops = opDao.getByDemographicNo(Integer.parseInt(bean.demographicNo));
 
     for(OcularProc op:ops) {
     	NavBarDisplayDAO.Item item = Dao.Item();                  
@@ -100,7 +100,7 @@ public class EctDisplayOcularProcedureAction extends EctDisplayAction {
     	String itemHeader = StringUtils.maxLenString(title, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);                              
         item.setTitle(itemHeader);
         
-        item.setLinkTitle(provider.getTeam() + ";" + op.getProcedureNote());
+        item.setLinkTitle(op.getLocation() + ";" + op.getProcedureNote());
         
         int hash = Math.abs(winName.hashCode());        
         url = "popupPage(500,900,'" + hash + "','" + request.getContextPath() + "/eyeform/OcularProc.do?proc.id="+ op.getId() +"'); return false;";        
@@ -108,7 +108,7 @@ public class EctDisplayOcularProcedureAction extends EctDisplayAction {
         Dao.addItem(item);
     }
 
-     Dao.sortItems(NavBarDisplayDAO.DATESORT);
+   //  Dao.sortItems(NavBarDisplayDAO.DATESORT);
  }catch( Exception e ) {
      MiscUtils.getLogger().error("Error", e);
      return false;
