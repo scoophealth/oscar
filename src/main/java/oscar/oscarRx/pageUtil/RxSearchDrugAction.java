@@ -94,7 +94,7 @@ public final class RxSearchDrugAction extends DispatchAction {
         
         Hashtable d = new Hashtable();
         d.put("results",vec);
-        response.setContentType("text/x-json;charset=UTF-8");
+        response.setContentType("text/x-json");
         
         JSONObject jsonArray = (JSONObject) JSONSerializer.toJSON( d );
         jsonArray.write(response.getWriter());

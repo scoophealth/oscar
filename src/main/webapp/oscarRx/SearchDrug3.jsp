@@ -639,15 +639,17 @@ body {
                                                 <span id="indicator1" style="display: none"> <!--img src="/images/spinner.gif" alt="Working..." --></span>
                                             </td>
                                             <td>
-                                                <input type="button" name="search" class="ControlPushButton" value="<bean:message key="SearchDrug.msgSearch"/>" onclick="popupRxSearchWindow();"><input id="customDrug" type="button" class="ControlPushButton" onclick="customWarning2();" value="<bean:message key="SearchDrug.msgCustomDrugRx3"/>" /><input id="customNote" type="button" class="ControlPushButton" onclick="customNoteWarning();" value="<bean:message key="SearchDrug.msgNoteRx3"/>"/><input id="reset" type="button" class="ControlPushButton" title="Clear pending prescriptions"   onclick="resetStash();" value="<bean:message key="SearchDrug.msgResetPrescriptionRx3"/>"/><input type="button" class="ControlPushButton" onclick="callTreatments('searchString','treatmentsMyD')" value="<bean:message key="SearchDrug.msgDrugOfChoiceRx3"/>"/>
+                                                <input type="button" name="search" class="ControlPushButton" style="width:48px" value="<bean:message key="SearchDrug.msgSearch"/>" onclick="popupRxSearchWindow();">
+                                                <input id="customDrug" type="button" class="ControlPushButton" style="width:86px" onclick="customWarning2();" value="<bean:message key="SearchDrug.msgCustomDrugRx3"/>" />
+                                                <input id="customNote" type="button" class="ControlPushButton" style="width:40px"   onclick="customNoteWarning();" value="<bean:message key="SearchDrug.msgNoteRx3"/>"/>
+                                                <input id="reset" type="button" class="ControlPushButton" style="width:42px" title="Clear pending prescriptions"   onclick="resetStash();" value="<bean:message key="SearchDrug.msgResetPrescriptionRx3"/>"/>
+                                                <input type="button" class="ControlPushButton" style="width:92px" onclick="callTreatments('searchString','treatmentsMyD')" value="<bean:message key="SearchDrug.msgDrugOfChoiceRx3"/>"/>
                                                 <%if (OscarProperties.getInstance().hasProperty("ONTARIO_MD_INCOMINGREQUESTOR")) {%>
                                                 <a href="javascript:goOMD();"><bean:message key="SearchDrug.msgOMDLookup"/></a>
                                                 <%}%>
-                                                <div class="buttonrow">
-                                                    <input id="saveButton" type="button"  onclick="updateSaveAllDrugsPrint();" value="<bean:message key="SearchDrug.msgSaveAndPrint"/>" />
-                                                    <input id="saveOnlyButton" type="button"  onclick="updateSaveAllDrugs();" value="<bean:message key="SearchDrug.msgSaveOnly"/>" />
-                                                    <!--input id="testEvalJS" type="button"   onclick="functionOne();" value="testEvalJS" /-->
-                                                </div>
+                                                <br>
+                                                <input id="saveButton" type="button"  class="ControlPushButton" onclick="updateSaveAllDrugsPrint();" value="<bean:message key="SearchDrug.msgSaveAndPrint"/>" />
+                                                <input id="saveOnlyButton" type="button"  class="ControlPushButton" onclick="updateSaveAllDrugs();" value="<bean:message key="SearchDrug.msgSaveOnly"/>" />
                                             </td>
                                         </tr>
                                         <tr>
@@ -726,15 +728,15 @@ body {
                                                                         <td align="left"  height="30px">
                                                                             <a href="javascript:void(0);" title="View drug profile legend" onclick="ThemeViewer();" style="font-style:normal;color:#000000" ><bean:message key="SearchDrug.msgProfileLegend"/></a>
                                                                             <a href="#"  title="<bean:message key="provider.rxChangeProfileViewMessage"/>" onclick="popupPage(230,860,'../setProviderStaleDate.do?method=viewRxProfileView');" style="color:red;vertical-align:super;text-decoration:none" ><bean:message key="provider.rxChangeProfileView"/></a>
-                                                                            <%if(show_current){%>
+                                                                            <%if(show_current){%><span>&nbsp;&nbsp;</span>
                                                                             <a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp','drugProfile');"><bean:message key="SearchDrug.msgShowCurrent"/></a>
-                                                                            <%}if(show_all){%>
+                                                                            <%}if(show_all){%><span>&nbsp;&nbsp;</span>
                                                                             <a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?show=all','drugProfile');"><bean:message key="SearchDrug.msgShowAll"/></a>
-                                                                            <%}if(active){%><a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?status=active','drugProfile');"><bean:message key="SearchDrug.msgActive"/></a>
-                                                                            <%}if(inactive){%><a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?status=inactive','drugProfile');"><bean:message key="SearchDrug.msgInactive"/></a>
-                                                                            <%}if(all){%><a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?status=all','drugProfile');"><bean:message key="SearchDrug.msgAll"/></a>
-                                                                            <%}if(longterm_acute){%><a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?longTermOnly=true&heading=Long Term Meds','drugProfile'); callAdditionWebService('ListDrugs.jsp?longTermOnly=acute&heading=Acute','drugProfile')"><bean:message key="SearchDrug.msgLongTermAcute"/></a>
-                                                                            <%}if(longterm_acute_inactive_external){%><a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?longTermOnly=true&heading=Long Term Meds','drugProfile'); callAdditionWebService('ListDrugs.jsp?longTermOnly=acute&heading=Acute&status=active','drugProfile');callAdditionWebService('ListDrugs.jsp?longTermOnly=acute&heading=Inactive&status=inactive','drugProfile');callAdditionWebService('ListDrugs.jsp?heading=External&drugLocation=external','drugProfile')"><bean:message key="SearchDrug.msgLongTermAcuteInactiveExternal"/></a>
+                                                                            <%}if(active){%><span>&nbsp;&nbsp;</span><a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?status=active','drugProfile');"><bean:message key="SearchDrug.msgActive"/></a>
+                                                                            <%}if(inactive){%><span>&nbsp;&nbsp;</span><a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?status=inactive','drugProfile');"><bean:message key="SearchDrug.msgInactive"/></a>
+                                                                            <%}if(all){%><span>&nbsp;&nbsp;</span><a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?status=all','drugProfile');"><bean:message key="SearchDrug.msgAll"/></a>
+                                                                            <%}if(longterm_acute){%><span>&nbsp;&nbsp;</span><a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?longTermOnly=true&heading=Long Term Meds','drugProfile'); callAdditionWebService('ListDrugs.jsp?longTermOnly=acute&heading=Acute','drugProfile')"><bean:message key="SearchDrug.msgLongTermAcute"/></a>
+                                                                            <%}if(longterm_acute_inactive_external){%><span>&nbsp;&nbsp;</span><a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?longTermOnly=true&heading=Long Term Meds','drugProfile'); callAdditionWebService('ListDrugs.jsp?longTermOnly=acute&heading=Acute&status=active','drugProfile');callAdditionWebService('ListDrugs.jsp?longTermOnly=acute&heading=Inactive&status=inactive','drugProfile');callAdditionWebService('ListDrugs.jsp?heading=External&drugLocation=external','drugProfile')"><bean:message key="SearchDrug.msgLongTermAcuteInactiveExternal"/></a>
                                                                             <%}%>
                                                                         </td>
                                                                         <td align="right">
@@ -767,6 +769,7 @@ body {
                     <div id="interactionsRxMyD" style="float:right;"></div>
                 </td>
             </tr>
+            <tr><td></td><td align="center" ><a href="javascript:window.scrollTo(0,0);"><bean:message key="oscarRx.BackToTop"/></a></td></tr>
 
 <tr>
     <td height="0%" style="border-bottom: 2px solid #A9A9A9; border-top: 2px solid #A9A9A9;"></td>

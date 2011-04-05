@@ -245,6 +245,7 @@
 			<form-property name="rxDefaultQuantityProperty" type="org.oscarehr.common.model.UserProperty" />
 			<form-property name="rxProfileViewProperty" type="org.oscarehr.common.model.UserProperty" />
 			<form-property name="rxUseRx3Property" type="org.oscarehr.common.model.UserProperty" />
+                        <form-property name="useMyMedsProperty" type="org.oscarehr.common.model.UserProperty" />
 			<form-property name="existingDefaultDocQueueProperty" type="org.oscarehr.common.model.UserProperty" />
 			<form-property name="newDefaultDocQueueProperty" type="org.oscarehr.common.model.UserProperty" />
                         <form-property name="rxShowPatientDOBProperty" type="org.oscarehr.common.model.UserProperty"/>
@@ -1273,6 +1274,7 @@
 			<forward name="genRxUseRx3" path="/provider/setToUseRx3.jsp" />
 			<forward name="genDefaultDocQueue" path="/provider/setDocDefaultQueue.jsp" />
 		        <forward name="genShowPatientDOB" path="/provider/setShowPatientDOB.jsp"/>
+                        <forward name="genUseMyMeds" path="/provider/setToUseMyMeds.jsp"/>
                  </action>
 		<action input="/provider/providerIndivoIdSetter.jsp" name="setMyOscarIdForm" path="/setMyOscarId" scope="request" type="oscar.oscarProvider.pageUtil.ProEditMyOscarIdAction">
 			<forward name="success" path="/provider/providerIndivoIdSetter.jsp" />
@@ -2131,6 +2133,8 @@
 		<action path="/phrExchange" name="FrmForm" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
                     <forward name="success" path="/oscarRx/displayMedsFromPhr.jsp" />
                     <forward name="displayPrevViewed" path="/oscarRx/displayUnsavedMeds.jsp"/>
+                    <forward name="displaySurveys" path="/oscarRx/displaySurveys.jsp"/>
+                    <forward name="phrNotAuthorized" path="/oscarRx/phrNotAuthorized.jsp"/>
 		</action>
 		<action path="/phr/UserManagement" name="FrmForm" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
 			<forward name="registrationResult" path="/phr/indivo/RegisterIndivoResult.jsp" />
