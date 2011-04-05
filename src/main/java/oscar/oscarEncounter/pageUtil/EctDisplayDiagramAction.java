@@ -77,9 +77,12 @@ public class EctDisplayDiagramAction extends EctDisplayAction {
         	NavBarDisplayDAO.Item item = Dao.Item();
         	HashMap<String,? extends Object> form = patientEforms.get(x);
         	String strDate = (String)form.get("formDate");
-        	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        	String strTime = (String)form.get("formTime");
+        	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        	Date formDate = null;
         	try {
-        		item.setDate(formatter.parse(strDate));
+        		formDate = formatter.parse(strDate + " " + strTime);
+        		item.setDate(formDate);
         	}catch(Exception e) {MiscUtils.getLogger().error("error:",e);item.setDate(new Date());}
         	
         	String formName = (String)form.get("formName");
@@ -97,9 +100,9 @@ public class EctDisplayDiagramAction extends EctDisplayAction {
             item.setLinkTitle(title.toString());
            
             int hash = Math.abs(winName.hashCode());        
-            url = "popupPage(500,900,'" + hash + "','" + request.getContextPath() + "/eform/efmshowform_data.jsp?fdid="+form.get("fdid")+"&parentAjaxId=eforms" +"'); return false;";        
+            url = "popupPage(500,900,'" + hash + "','" + request.getContextPath() + "/eform/efmshowform_data.jsp?fdid="+form.get("fdid")+"&parentAjaxId=diagrams" +"'); return false;";        
             item.setURL(url);               
-            Dao.addItem(item);
+            Dao.addItem(item);                        
         }
 
         Dao.sortItems(NavBarDisplayDAO.DATESORT_ASC);

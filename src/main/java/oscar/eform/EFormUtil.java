@@ -391,7 +391,7 @@ public class EFormUtil {
 			for (int i = 0; i < names.size(); i++) {
 				EFormValue eFormValue = new EFormValue();
 				eFormValue.setFormId(fid);
-				eFormValue.setFormDataId(fid);
+				eFormValue.setFormDataId(fdid);
 				eFormValue.setDemographicId(demographic_no);
 				eFormValue.setVarName(names.get(i));
 				eFormValue.setVarValue(values.get(i));
@@ -558,6 +558,7 @@ public class EFormUtil {
 				curht.put("formName", rsGetString(rs, "form_name"));
 				curht.put("formSubject", rsGetString(rs, "subject"));
 				curht.put("formDate", rsGetString(rs, "form_date"));
+				curht.put("formTime", rsGetString(rs, "form_time"));
 				curht.put("roleType", rsGetString(rs, "roleType"));
 				results.add(curht);
 			}
