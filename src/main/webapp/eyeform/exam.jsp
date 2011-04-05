@@ -269,7 +269,7 @@ span.ge{
 
 </style>
 
-<span style="display:none;"><a id="save_measurements" href="#">SAVE</a></span>
+<span style="font-size:10px"><a id="save_measurements" href="#">[Save Measurements]</a></span>
 
 <table border="0" width="100%">
 <tr>
@@ -896,3 +896,4 @@ span.ge{
 </td>
 </tr>
 </table>
+<span style="font-size:10px"><a id="save_measurements" href="#">[Save Measurements]</a></span>
