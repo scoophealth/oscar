@@ -606,20 +606,10 @@ public class ProviderPropertyAction extends DispatchAction {
          DynaActionForm frm = (DynaActionForm)actionform;
          String provider = (String) request.getSession().getAttribute("user");
          UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.USE_MYMEDS);
-
-         String propValue="";
-         if (prop == null){
-             prop = new UserProperty();
-         }else{
-            propValue=prop.getValue();
-         }
-
-         //String [] propertyArray= new String[7];
-         boolean checked;
-         if(propValue.equalsIgnoreCase("yes"))
-             checked=true;
-         else
-             checked=false;
+         if (prop == null) prop = new UserProperty();
+         
+         String propValue=prop.getValue();
+         boolean checked=Boolean.parseBoolean(propValue);
 
          prop.setChecked(checked);
          request.setAttribute("useMyMedsProperty", prop);
@@ -651,10 +641,7 @@ public class ProviderPropertyAction extends DispatchAction {
             prop.setName(UserProperty.USE_MYMEDS);
             prop.setProviderNo(provider);
         }
-        String useMyMeds="no";
-        if(checked)
-            useMyMeds="yes";
-        prop.setValue(useMyMeds);
+        prop.setValue(String.valueOf(checked));
         this.userPropertyDAO.saveProp(prop);
 
          request.setAttribute("status", "success");

@@ -483,6 +483,9 @@ function showHideBillPref() {
         <tr>
             <td align="center"><a href=# onClick ="popupPage(230,860,'providerIndivoIdSetter.jsp');return false;"><bean:message key="provider.btnSetIndivoId"/></a></td>
         </tr>
+        <tr>
+            <td align="center"><a href=# onClick ="popupPage(230,860,'../setProviderStaleDate.do?method=viewUseMyMeds');return false;"><bean:message key="provider.btnSetUseMyMeds"/></a></td>
+        </tr>
   <%             
     }
   %>
