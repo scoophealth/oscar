@@ -582,14 +582,14 @@ function changeSite(sel) {
         <TR bgcolor=#EEEEFF>
             <th style="color:#000000; font-size:xsmall; font-family:verdana,arial,helvetica;" width="3%"></th>
             <th style="color:#000000; font-size:xsmall; font-family:verdana,arial,helvetica;" width="17%"><bean:message key="tickler.ticklerMain.msgDemographicName"/></th>
-            <th style="color:#000000; font-size:xsmall; font-family:verdana,arial,helvetica;" width="17%"><bean:message key="tickler.ticklerMain.msgDoctorName"/></th>
+            <th style="color:#000000; font-size:xsmall; font-family:verdana,arial,helvetica;" width="8%"><bean:message key="tickler.ticklerMain.msgDoctorName"/></th>
             <th style="color:#000000; font-size:xsmall; font-family:verdana,arial,helvetica;" width="9%"><bean:message key="tickler.ticklerMain.msgDate"/></th>
             <th style="color:#000000; font-size:xsmall; font-family:verdana,arial,helvetica;" width="9%"><bean:message key="tickler.ticklerMain.msgCreationDate"/></th>
             <th style="color:#000000; font-size:xsmall; font-family:verdana,arial,helvetica;" width="6%"><bean:message key="tickler.ticklerMain.Priority"/></th>
             <th style="color:#000000; font-size:xsmall; font-family:verdana,arial,helvetica;" width="12%"><bean:message key="tickler.ticklerMain.taskAssignedTo"/></th>
             
             <th style="color:#000000; font-size:xsmall; font-family:verdana,arial,helvetica;" width="6%"><bean:message key="tickler.ticklerMain.msgStatus"/></th>
-            <th style="color:#000000; font-size:xsmall; font-family:verdana,arial,helvetica;" width="30%"><bean:message key="tickler.ticklerMain.msgMessage"/></th>            
+            <th style="color:#000000; font-size:xsmall; font-family:verdana,arial,helvetica;" width="39%"><bean:message key="tickler.ticklerMain.msgMessage"/></th>            
         </TR>
     </thead>
     <tfoot>

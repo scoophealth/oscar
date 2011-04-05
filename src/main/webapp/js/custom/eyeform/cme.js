@@ -154,6 +154,16 @@
        
        jQuery("form[name='caseManagementEntryForm']").append('<span submit_addon="save_measurements"></span>');
 
+       jQuery("img[id^='quitImg']").each(function(){
+    	   if(jQuery(this).attr('src') == '/oscar_eyeform/oscarEncounter/graphics/triangle_up.gif') {
+    		   var iid = jQuery(this).attr('id');
+    		   //var noteId = iid.substring(7,iid.length);
+    		   //shrink('n'+noteId,14);
+    		   jQuery(this).trigger('click');
+
+    	   }
+       });
+       
        jQuery("#newNoteImg").hide();
        jQuery("#imgPrintEncounter").removeAttr('onclick');
        jQuery("#imgPrintEncounter").live('click',function(e){
