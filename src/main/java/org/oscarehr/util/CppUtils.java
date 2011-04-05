@@ -3,7 +3,7 @@ package org.oscarehr.util;
 import java.util.Arrays;
 
 public class CppUtils {
-	public static String cppCodes[] = {"OMeds", "SocHistory", "MedHistory", "Concerns", "FamHistory", "Reminders", "RiskFactors"};
+	public static String cppCodes[] = {"OMeds", "SocHistory", "MedHistory", "Concerns", "FamHistory", "Reminders", "RiskFactors","OcularMedication"};
 	
 	public static void addCppCode(String code) {
 		String[] result = Arrays.copyOf(cppCodes, cppCodes.length+1);

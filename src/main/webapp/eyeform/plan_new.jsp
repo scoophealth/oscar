@@ -153,7 +153,7 @@ jQuery(document).ready(function() {
 				var num = jQuery("#test_num").val();
 				setInput(num,'test','id','<%=test.getId()%>');
 				setSelect(num,'test','eye','<%=test.getEye()%>');				
-				setInput(num,'test','testname','<%=test.getComment()%>');
+				setInput(num,'test','testname','<%=test.getTestname()%>');
 				setSelect(num,'test','urgency','<%=test.getUrgency()%>');				
 				setInput(num,'test','comment','<%=test.getComment()%>');	
 			<%
@@ -164,7 +164,7 @@ jQuery(document).ready(function() {
 </script>		
 </head>
 <body>
-<center><b>Impression Plan</b></center>
+<center><b>Arrange Plan</b></center>
 <br/>
 <b>Follow Up/Consult:</b>
 <br />

@@ -158,6 +158,6 @@ public class FollowUp extends AbstractModel<Integer> {
 	}
 	
 	public String getCommentStr() {
-		return StringUtils.maxLenString(getComment(), 28, 25, "...");  
+		return StringUtils.maxLenString(getComment(), 23, 20, "...");  
 	}
 }

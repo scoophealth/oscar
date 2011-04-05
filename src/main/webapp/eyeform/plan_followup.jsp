@@ -65,7 +65,7 @@
 					
 		            <select name="followup_<%=id%>.urgency" id="followup_<%=id%>.urgency">
 		             	<option value="routine">routine</option>
-		            	<option value="asap">ASAP</option>            	
+		            	<option value="ASAP">ASAP</option>            	
 		            </select>
 	           
 	           		&nbsp;

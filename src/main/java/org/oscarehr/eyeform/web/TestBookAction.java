@@ -65,7 +65,8 @@ public class TestBookAction extends DispatchAction {
     	StringBuilder sb = new StringBuilder();
     	
     	for(TestBookRecord f:tests) {    		
-    		sb.append(f.getTestname()).append(" ").append(f.getEye()).append(" ").append(f.getUrgency());
+    		sb.append("book diagnostic: ").append(f.getTestname()).append(" ").append(f.getEye()).append(" ").append(f.getUrgency());
+    		sb.append(" ").append(f.getComment());
     		sb.append("\n");
     	}
     	
@@ -95,7 +96,8 @@ public class TestBookAction extends DispatchAction {
     	StringBuilder sb = new StringBuilder();
     	
     	for(TestBookRecord f:tests) {    		
-    		sb.append("diag:" + f.getTestname()).append(" ").append(f.getEye()).append(" ").append(f.getComment());
+    		sb.append("diag:" + f.getTestname()).append(" ").append(f.getEye()).append(" ").append(f.getUrgency()).append(" ").append(f.getComment());
+    		sb.append(" ").append(f.getComment());
     		sb.append("<br/>");
     	}
     	return sb.toString();

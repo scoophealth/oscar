@@ -744,11 +744,11 @@ function updateCPPNote() {
                                 evalScripts: true,
                                 postBody: params,
                                 onSuccess: function(request) {
-                                                if( request.responseText.length > 0 )
-                                                    $(div).update(request.responseText);
-
+                                                if( request.responseText.length > 0 ) {
+                                                    $(div).update(request.responseText);                                                    
+												}
                                                  if( $("issueChange").value == "true" ) {
-                                                      ajaxUpdateIssues("edit",sigId);
+                                                 	  ajaxUpdateIssues("edit",sigId);
                                                       $("issueChange").value = false;
                                                  }
 
@@ -2137,7 +2137,7 @@ function onIssueUpdate() {
     //this request succeeded so we reset issues
     $("issueAutocomplete").value = "";
     $("newIssueId").value = "";
-
+	notifyIssueUpdate();
 }
 
 function submitIssue(event) {

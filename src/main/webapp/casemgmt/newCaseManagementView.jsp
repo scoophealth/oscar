@@ -1033,7 +1033,7 @@ try
 	    	</c:if>
 	    	
 	    	<input tabindex="15" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/system-log-out.png"/>" onclick='closeEnc(event);return false;' title='<bean:message key="global.btnExit"/>'>&nbsp; 
-	    	<input tabindex="16" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/document-print.png"/>" onclick="return printSetup(event);" title='<bean:message key="oscarEncounter.Index.btnPrint"/>'> 
+	    	<input tabindex="16" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/document-print.png"/>" onclick="return printSetup(event);" title='<bean:message key="oscarEncounter.Index.btnPrint"/>' id="imgPrintEncounter"> 
     	</span> 
     	<input type='image' id='toggleIssue' onclick="return showIssues(event);" src="<c:out value="${ctx}/oscarEncounter/graphics/issues.png"/>" title='<bean:message key="oscarEncounter.Index.btnDisplayIssues"/>'>&nbsp; 
     	<input tabindex="8" type="text" id="issueAutocomplete" name="issueSearch" style="z-index: 2;" onkeypress="return submitIssue(event);" size="25">&nbsp; <input tabindex="9" type="button" id="asgnIssues" value="<bean:message key="oscarEncounter.assign.title"/>"> 
@@ -1141,6 +1141,9 @@ catch (Exception e)
 																						 */
 	protected String insertReason(HttpServletRequest request, oscar.oscarEncounter.pageUtil.EctSessionBean bean)
 	{
+		if(OscarProperties.getInstance().isPropertyActive("encounter.empty_new_note")) {
+			return new String();
+		}
 		String encounterText = "";
 		if (bean != null)
 		{

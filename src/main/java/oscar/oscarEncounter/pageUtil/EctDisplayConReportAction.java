@@ -78,7 +78,7 @@ public class EctDisplayConReportAction extends EctDisplayAction {
     
     //set right hand heading link
     winName = "AddConReport" + bean.demographicNo;
-    url = "popupPage(500,600,'" + winName + "','" + pathedit + "'); return false;";
+    url = "popupPage(700,1000,'" + winName + "','" + pathedit + "'); return false;";
     Dao.setRightURL(url);
     Dao.setRightHeadingID(cmd); //no menu so set div id to unique id for this action
     
@@ -90,16 +90,17 @@ public class EctDisplayConReportAction extends EctDisplayAction {
     	NavBarDisplayDAO.Item item = Dao.Item();                  
     	item.setDate(cr.getDate());
     	
-    	String title = brDao.getById(cr.getReferralId()).getFormattedName();
+    	String title = brDao.getById(cr.getReferralId()).getFormattedName() + " - " + cr.getStatus();
     	String itemHeader = StringUtils.maxLenString(title, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);                      
         item.setLinkTitle(itemHeader);        
         item.setTitle(itemHeader);
         int hash = Math.abs(winName.hashCode());        
-        url = "popupPage(500,900,'" + hash + "','" + request.getContextPath() + "/eyeform/Eyeform.do?method=prepareConReport&conReportNo="+ cr.getId() +"&demographicNo="+bean.demographicNo+"'); return false;";        
+        url = "popupPage(700,1000,'" + hash + "','" + request.getContextPath() + "/eyeform/Eyeform.do?method=prepareConReport&conReportNo="+ cr.getId() +"&demographicNo="+bean.demographicNo+"'); return false;";        
         item.setURL(url);               
         Dao.addItem(item);
     }
-    //Dao.sortItems(NavBarDisplayDAO.DATESORT);
+   // Dao.sortItems(NavBarDisplayDAO.DATESORT);
+    
  }catch( Exception e ) {
      MiscUtils.getLogger().error("Error", e);
      return false;
