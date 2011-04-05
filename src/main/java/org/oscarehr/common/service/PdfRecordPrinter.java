@@ -78,7 +78,8 @@ public class PdfRecordPrinter {
     
     private Demographic demographic;
     private Appointment appointment;
-
+    private String signingProvider;
+    
     private PdfWriter writer;
     
     public PdfRecordPrinter(HttpServletRequest request, OutputStream os) throws DocumentException,IOException {
@@ -140,7 +141,17 @@ public class PdfRecordPrinter {
     	Paragraph p = new Paragraph(value,font);
     	return p;    	
     }
-    public void printDocHeaderFooter() throws IOException, DocumentException {
+    
+    
+    public String getSigningProvider() {
+    	return signingProvider;
+    }
+
+	public void setSigningProvider(String signingProvider) {
+    	this.signingProvider = signingProvider;
+    }
+
+	public void printDocHeaderFooter() throws IOException, DocumentException {
     	String headerTitle = demographic.getFormattedName() + " " + demographic.getAge() + " " + demographic.getSex() + " DOB:" + demographic.getFormattedDob();
 
     	//set up document title and header
@@ -198,13 +209,13 @@ public class PdfRecordPrinter {
         table = new PdfPTable(3);
         table.setWidthPercentage(100f);
         table.getDefaultCell().setBorder(PdfPCell.NO_BORDER);        
-        cell1 = new PdfPCell(getParagraph("Signed Provider:"));
+        cell1 = new PdfPCell(getParagraph("Signed Provider:" + ((signingProvider!=null)?signingProvider:"")));
         cell1.setBorder(PdfPCell.NO_BORDER);
         cell1.setHorizontalAlignment(Element.ALIGN_LEFT);
-        cell2 = new PdfPCell(getParagraph("RFR:"));
+        cell2 = new PdfPCell(getParagraph("RFR:" + this.appointment.getReason()));
         cell2.setHorizontalAlignment(Element.ALIGN_CENTER);
         cell2.setBorder(PdfPCell.NO_BORDER);
-        PdfPCell cell3 = new PdfPCell(getParagraph("Ref:"));
+        PdfPCell cell3 = new PdfPCell(getParagraph("Ref:" + this.getRefName(this.demographic)));
         cell3.setHorizontalAlignment(Element.ALIGN_RIGHT);
         cell3.setBorder(PdfPCell.NO_BORDER);       
         table.addCell(cell1);
@@ -235,6 +246,14 @@ public class PdfRecordPrinter {
         else
             newPage = true;
         */
+        oscar.oscarRx.data.RxPrescriptionData prescriptData = new oscar.oscarRx.data.RxPrescriptionData();
+        oscar.oscarRx.data.RxPrescriptionData.Prescription [] arr = {};
+        arr = prescriptData.getUniquePrescriptionsByPatient(Integer.parseInt(demoNo));
+       
+        if(arr.length==0) {
+        	return;
+        }
+        
         Paragraph p = new Paragraph();
         Font obsfont = new Font(bf, FONTSIZE, Font.UNDERLINE);
         Phrase phrase = new Phrase(LEADING, "", obsfont);
@@ -245,9 +264,6 @@ public class PdfRecordPrinter {
         
         Font normal = new Font(bf, FONTSIZE, Font.NORMAL);
         
-        oscar.oscarRx.data.RxPrescriptionData prescriptData = new oscar.oscarRx.data.RxPrescriptionData();
-        oscar.oscarRx.data.RxPrescriptionData.Prescription [] arr = {};
-        arr = prescriptData.getUniquePrescriptionsByPatient(Integer.parseInt(demoNo));
        
         
         Font curFont;
@@ -439,8 +455,8 @@ public class PdfRecordPrinter {
         Phrase phrase;
         Chunk chunk;
                 
-        if( newPage )
-            document.newPage();
+        //if( newPage )
+       //     document.newPage();
        // else
        //     newPage = true;
         
@@ -658,11 +674,13 @@ public class PdfRecordPrinter {
     }
     
     public void printEyeformMeasurements(MeasurementFormatter mf) throws IOException, DocumentException {
+    	/*
 		if( getNewPage() )
             getDocument().newPage();
         else
             setNewPage(true);
-        
+        */
+    	
         Font obsfont = new Font(getBaseFont(), FONTSIZE, Font.UNDERLINE);                
        
         
@@ -1088,4 +1106,24 @@ public class PdfRecordPrinter {
         }
     	
     }
+    
+	private String getRefName(Demographic d) {
+		String referral = d.getFamilyDoctor();
+		
+		if (referral == null || referral.length()==0)
+			return new String();
+		
+		int start = referral.indexOf("<rd>");
+		int end = referral.indexOf("</rd>");
+		String ref = new String();
+
+		if (start >= 0 && end >= 0) {
+			String subreferral = referral.substring(start + 4, end);
+			if (!"".equalsIgnoreCase(subreferral.trim())) {
+				ref = subreferral;
+
+			}
+		}
+		return ref;
+	}
 }

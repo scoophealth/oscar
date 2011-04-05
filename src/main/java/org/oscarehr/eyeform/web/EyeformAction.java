@@ -177,6 +177,9 @@ public class EyeformAction extends DispatchAction {
 		   request.setAttribute("ocularMedication",StringEscapeUtils.escapeJavaScript(getFormattedCppItem("Ocular Medications:", "OcularMedication", Integer.parseInt(demo), appNo, true)));
 		   request.setAttribute("pastOcularHistory",StringEscapeUtils.escapeJavaScript(getFormattedCppItem("Past Ocular History:", "PastOcularHistory", Integer.parseInt(demo), appNo, true)));
 		   request.setAttribute("diagnosticNotes",StringEscapeUtils.escapeJavaScript(getFormattedCppItem("Diagnostic Notes:", "DiagnosticNotes", Integer.parseInt(demo), appNo, true)));
+		   request.setAttribute("medicalHistory",StringEscapeUtils.escapeJavaScript(getFormattedCppItem("Medical History:", "MedHistory", Integer.parseInt(demo), appNo, true)));
+		   request.setAttribute("familyHistory",StringEscapeUtils.escapeJavaScript(getFormattedCppItem("Family History:", "FamHistory", Integer.parseInt(demo), appNo, true)));
+		   request.setAttribute("otherMeds",StringEscapeUtils.escapeJavaScript(getFormattedCppItem("Other Meds:", "OMeds", Integer.parseInt(demo), appNo, true)));
 		   
 		   
 		   SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
@@ -192,13 +195,13 @@ public class EyeformAction extends DispatchAction {
 		   }
            String strOcularProcs = ocularProc.toString();
            if (strOcularProcs != null && !"".equalsIgnoreCase(strOcularProcs.trim()))
-        	   strOcularProcs = "Past Ocular Proc:\n" + strOcularProcs + "\n";
+        	   strOcularProcs = "Past Ocular Proc:\n" + strOcularProcs;
            else
         	   strOcularProcs = "";           
            request.setAttribute("ocularProc", StringEscapeUtils.escapeJavaScript(strOcularProcs));
 		   
 		   
-           List<SpecsHistory> specs = specsHistoryDao.getHistory(Integer.parseInt(demo), new Date(), null);
+           List<SpecsHistory> specs = specsHistoryDao.getAllPreviousAndCurrent(Integer.parseInt(demo), appNo);
            StringBuilder specsStr = new StringBuilder();
            for(SpecsHistory spec:specs) {
         	   String specDate = sf.format(spec.getDate());
@@ -240,7 +243,7 @@ public class EyeformAction extends DispatchAction {
            }
            String specsStr1 = "";
            if (specsStr != null && specs.size()>0)
-               specsStr1  = "specs:\n" + specsStr.toString() + "\n";
+               specsStr1  = "specs:\n" + specsStr.toString();
            else
     	   		specsStr1 = "";
       
@@ -265,7 +268,7 @@ public class EyeformAction extends DispatchAction {
            StringBuilder followup = new StringBuilder();
            for(FollowUp ef:followUps) {		   		
 				if (ef.getTimespan() >0) {
-					followup.append((ef.getType().equals("followup")?"Follow Up":"Consult") + " in " + ef.getTimespan() + " " + ef.getTimeframe() + "\n");
+					followup.append((ef.getType().equals("followup")?"Follow Up":"Consult") + " in " + ef.getTimespan() + " " + ef.getTimeframe());
 				}								
            }
            
@@ -311,11 +314,7 @@ public class EyeformAction extends DispatchAction {
            if (probook.length() > 0)			
         	   probook.insert(0, "Procedure booking:");           				
            request.setAttribute("probooking", StringEscapeUtils.escapeJavaScript(probook.toString()));
-		
-           
-           //specs now
-           
-           
+		                    
            //measurements
            MeasurementsDao measurementsDao = (MeasurementsDao) SpringUtils.getBean("measurementsDao");                           
 		   
@@ -329,12 +328,14 @@ public class EyeformAction extends DispatchAction {
 		   } else {
 			   notes = filterNotesByPreviousOrCurrentAppointment(caseManagementNoteDao.findNotesByDemographicAndIssueCode(demographicNo, new String[] {issueCode}),appointmentNo);								
 		   }
-		   if(notes.size()>0) {
-			   StringBuilder sb = new StringBuilder();		 
+		  
+		   if(notes.size()>0) {			  
+			   StringBuilder sb = new StringBuilder();
 			   for(CaseManagementNote note:notes) {
-				   sb.append(note.getNote()).append("\n");
+				   sb.append("\n");
+				   sb.append(note.getNote());
 			   }
-			   return header + "\n" + sb.toString();
+			   return header + sb.toString();
 		   }
 		   return new String();
 	   }
@@ -394,6 +395,22 @@ public class EyeformAction extends DispatchAction {
 				Demographic demographic = demographicDao.getClientByDemographicNo(appointment.getDemographicNo());				
 				printer.setDemographic(demographic);
 				printer.setAppointment(appointment);
+				
+				//need to get notes first to set the signing provider
+				List<CaseManagementNote> notes = caseManagementNoteDao.getMostRecentNotesByAppointmentNo(appointmentNo);
+				notes = filterOutCpp(notes);			
+				if(notes.size()>0) {
+					String tmp = notes.get(0).getSigning_provider_no();
+					if(tmp != null && tmp.length()>0) {
+						Provider signingProvider = providerDao.getProvider(tmp);
+						if(signingProvider != null) {
+							printer.setSigningProvider(signingProvider.getFormattedName());
+						}
+					}					
+				}
+				
+				
+				
 				printer.printDocHeaderFooter();
 					
 				//get cpp items by appointmentNo (current history,past ocular hx,
@@ -409,38 +426,45 @@ public class EyeformAction extends DispatchAction {
 				
 				//ocular procs
 				List<OcularProc> ocularProcs = ocularProcDao.getAllPreviousAndCurrent(demographic.getDemographicNo(),appointmentNo);
-				printer.printOcularProcedures(ocularProcs);
+				if(ocularProcs.size()>0) {
+					printer.printOcularProcedures(ocularProcs);
+				}
 				
 				//specs history
 				List<SpecsHistory> specsHistory = specsHistoryDao.getAllPreviousAndCurrent(demographic.getDemographicNo(),appointmentNo);
-				printer.printSpecsHistory(specsHistory);
+				if(specsHistory.size()>0) {
+					printer.printSpecsHistory(specsHistory);
+				}
 				
 				//allergies
 				List<Allergy> allergies = allergyDao.getAllergies(String.valueOf(demographic.getDemographicNo()));
-				printer.printAllergies(allergies);
+				if(allergies.size()>0) {
+					printer.printAllergies(allergies);
+				}
 				
 				//rx
 				printer.printRx(String.valueOf(demographic.getDemographicNo()));
 				
 				//measurements
 				List<Measurements> measurements = measurementsDao.getMeasurementsByAppointment(appointmentNo);
-				MeasurementFormatter formatter = new MeasurementFormatter(measurements);
-				printer.printEyeformMeasurements(formatter);
-				
-				//impression
-				logger.info("printing notes for appt " + appointmentNo);
-				List<CaseManagementNote> notes = caseManagementNoteDao.getMostRecentNotesByAppointmentNo(appointmentNo);
-				logger.info("found "  + notes.size());
-				notes = filterOutCpp(notes);			
-				logger.info("filtered down to " +  notes.size());
-				printer.printNotes(notes);
+				if(measurements.size()>0) {
+					MeasurementFormatter formatter = new MeasurementFormatter(measurements);
+					printer.printEyeformMeasurements(formatter);
+				}
+								
+				//impression				
+				if(notes.size()>0) {					
+					printer.printNotes(notes);
+				}
 				
 				//plan - followups/consults, procedures booked, tests booked, checkboxes
+				/*
 				List<FollowUp> followUps = followUpDao.getByAppointmentNo(appointmentNo);
 				List<ProcedureBook> procedureBooks = procedureBookDao.getByAppointmentNo(appointmentNo);
 				List<TestBookRecord> testBooks = testBookDao.getByAppointmentNo(appointmentNo);
 				EyeForm eyeform = eyeFormDao.getByAppointmentNo(appointmentNo);
 		        printer.printEyeformPlan(followUps, procedureBooks, testBooks,eyeform);
+				*/
 				
 		        //photos
 		        DocumentResultsDao documentDao = (DocumentResultsDao)SpringUtils.getBean("documentResultsDao");
@@ -469,8 +493,9 @@ public class EyeformAction extends DispatchAction {
 		        	if(include)
 		        		diagrams.add(value);
 		        }
-		        
-		        printer.printDiagrams(diagrams);
+		        if(diagrams.size()>0) {
+		        	printer.printDiagrams(diagrams);
+		        }
 		       
 			}
 			
@@ -640,7 +665,7 @@ public class EyeformAction extends DispatchAction {
 	        	   strOcularProcs = "";           
 	           request.setAttribute("ocularProc", StringEscapeUtils.escapeJavaScript(strOcularProcs));
 			   	         
-	           List<SpecsHistory> specs = specsHistoryDao.getHistory(demographic.getDemographicNo(), new Date(), null);
+	           List<SpecsHistory> specs = specsHistoryDao.getAllPreviousAndCurrent(demographic.getDemographicNo(),appNo);
 	           StringBuilder specsStr = new StringBuilder();
 	           for(SpecsHistory spec:specs) {
 	        	   String specDate = sf.format(spec.getDate());
@@ -651,8 +676,7 @@ public class EyeformAction extends DispatchAction {
 	               StringBuilder dataTemp = new StringBuilder("");
 	               dataTemp.append(spec.getOdSph() == null ? "" : spec.getOdSph());
 	               dataTemp.append(spec.getOdCyl() == null ? "" : spec.getOdCyl());
-	               if (spec.getOdAxis() != null
-	                               && spec.getOdAxis().trim().length() != 0)
+	               if (spec.getOdAxis() != null && spec.getOdAxis().trim().length() != 0)
 	                       dataTemp.append("x" + spec.getOdAxis());
 	               if (spec.getOdAdd() != null && spec.getOdAdd().trim().length() != 0)
 	                       dataTemp.append(" add " + spec.getOdAdd());
@@ -682,7 +706,7 @@ public class EyeformAction extends DispatchAction {
 	           }
 	           String specsStr1 = "";
 	           if (specsStr != null && specs.size()>0)
-	               specsStr1  = "specs:\n" + specsStr.toString() + "\n";
+	               specsStr1  = "specs:\n" + specsStr.toString();
 	           else
 	    	   		specsStr1 = "";
 	      
@@ -698,19 +722,21 @@ public class EyeformAction extends DispatchAction {
 	           StringBuilder followup = new StringBuilder();
 	           for(FollowUp ef:followUps) {		   		
 					if (ef.getTimespan() >0) {
-						followup.append((ef.getType().equals("followup")?"Follow Up":"Consult") + " in " + ef.getTimespan() + " " + ef.getTimeframe() + "\n");
+						followup.append((ef.getType().equals("followup")?"Follow Up":"Consult") + " in " + ef.getTimespan() + " " + ef.getTimeframe());
 					}								
 	           }
 	           
 	           //get the checkboxes
 	           EyeForm eyeform = eyeFormDao.getByAppointmentNo(appNo);           
-	           if (eyeform.getDischarge() != null && eyeform.getDischarge().equals("true"))
-					followup.append("Patient is discharged from my active care.\n");
-	           if (eyeform.getStat() != null && eyeform.getStat().equals("true"))
-					followup.append("Follow up as needed with me STAT or PRN if symptoms are worse.\n");				
-	           if (eyeform.getOpt() != null && eyeform.getOpt().equals("true"))
-					followup.append("Routine eye care by an optometrist is recommended.\n");
-	                                 
+	           if(eyeform != null) {
+		           if (eyeform.getDischarge() != null && eyeform.getDischarge().equals("true"))
+						followup.append("Patient is discharged from my active care.\n");
+		           if (eyeform.getStat() != null && eyeform.getStat().equals("true"))
+						followup.append("Follow up as needed with me STAT or PRN if symptoms are worse.\n");				
+		           if (eyeform.getOpt() != null && eyeform.getOpt().equals("true"))
+						followup.append("Routine eye care by an optometrist is recommended.\n");
+
+	           }
 	           request.setAttribute("followup", StringEscapeUtils.escapeJavaScript(followup.toString()));
 	           
 	           
@@ -769,7 +795,9 @@ public class EyeformAction extends DispatchAction {
 			}
 			request.setAttribute("cpId", cp.getId().toString());
 			request.setAttribute("savedflag", "saved");
-			return prepareConReport(mapping, form, request, response);
+			//return prepareConReport(mapping, form, request, response);
+			request.setAttribute("parentAjaxId", "conReport");
+			return mapping.findForward("success");
 		}
 		
 		public String getRefNo(String referal) {

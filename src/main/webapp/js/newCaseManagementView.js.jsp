@@ -222,7 +222,6 @@ function setupNotes(){
     setCaretPosition($(caseNote), $(caseNote).value.length);
 
     $(caseNote).focus();
-
 }
 var minDelta =  0.93;
 var minMain;
@@ -954,11 +953,12 @@ function loadDiv(div,url,limit) {
     }
 
     function setCaretPosition(inpu, pos){
-
-	if(inpu.setSelectionRange){
+	if(inpu.setSelectionRange){		
 		inpu.focus();
 		inpu.setSelectionRange(pos,pos);
-
+		if(inpu.value.trim().length == 0) {
+			inpu.value=inpu.value.trim();
+		}
                 var ev;
                 try {
                     ev = document.createEvent('KeyEvents');
@@ -977,7 +977,7 @@ function loadDiv(div,url,limit) {
 
                 inpu.dispatchEvent(ev); // causes the scrolling
 
-	}else if (inpu.createTextRange) {
+	}else if (inpu.createTextRange) {		
 		var range = inpu.createTextRange();
 		range.collapse(true);
 		range.moveEnd('character', pos);
@@ -1933,11 +1933,13 @@ function ajaxSaveNote(div,noteId,noteTxt) {
 
 function savePage(method, chain) {
 	var noteStr;
-    noteStr = $F(caseNote);
+	noteStr = $F(caseNote);
+    /*
     if( noteStr.replace(/^\s+|\s+$/g,"").length == 0 ) {
         alert("Please enter a note before saving");
         return false;
     }
+    */
 
     if( $("observationDate") != undefined && $("observationDate").value.length > 0 && !validDate() ) {
         alert(pastObservationDateError);
@@ -2187,6 +2189,7 @@ function filterCheckBox(checkbox) {
 }
 
 function writeNewNote(newReason,txt, encType) {
+
     var origReason = reason;
     reason = newReason;
 

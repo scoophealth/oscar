@@ -444,11 +444,11 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
     }
     
 	public List<CaseManagementNote> getMostRecentNotesByAppointmentNo(int appointmentNo) {
-		String hql = "select cmn from CaseManagementNote cmn where cmn.appointmentNo = ?";
-		List<CaseManagementNote> tmp = this.getHibernateTemplate().find(hql, appointmentNo);
+		String hql = "select distinct cmn.uuid from CaseManagementNote cmn where cmn.appointmentNo = ?";
+		List<String> tmp = this.getHibernateTemplate().find(hql, appointmentNo);
 		List<CaseManagementNote> mostRecents = new ArrayList<CaseManagementNote>();
-		for(CaseManagementNote note:tmp) {
-			mostRecents.add(this.getMostRecentNote(note.getUuid()));
+		for(String uuid:tmp) {
+			mostRecents.add(this.getMostRecentNote(uuid));			
 		}
 		return mostRecents;
 	}
