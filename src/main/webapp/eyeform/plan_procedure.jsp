@@ -39,14 +39,6 @@
 				<a href="#" onclick="deleteProcedure(<%=id%>);">[Delete]</a>
 				
 				&nbsp;
-				
-				<select name="procedure_<%=id%>.urgency">
-					<option value="routine">routine</option>
-					<option value="ASAP">ASAP</option>
-					<option value="URGENT">URGENT</option>					
-				</select>
-				
-				&nbsp;	
 		
 				<select name="procedure_<%=id%>.eye">
 					<option value="OU">OU</option>
@@ -65,6 +57,16 @@
 				<input type="text" name="procedure_<%=id%>.location" size="5"/>
 						
 				&nbsp;
+				
+				
+				<select name="procedure_<%=id%>.urgency">
+					<option value="routine">routine</option>
+					<option value="ASAP">ASAP</option>
+					<option value="URGENT">URGENT</option>					
+				</select>
+				
+				&nbsp;	
+								
 				Comment:	
 				<input type="text" name="procedure_<%=id%>.comment" size="40"/>
 				

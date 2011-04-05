@@ -169,7 +169,7 @@ function confirmPrint(btn) {
  	}
  	function savesubmit(){
  		document.eyeForm.method.value='saveConRequest';
- 		window.close()
+ 		//window.close()
  		document.eyeForm.submit();
  	}
 	function checkform(){
@@ -190,10 +190,16 @@ function confirmPrint(btn) {
 		else document.eyeForm.elements["cp.cc"].value=document.eyeForm.elements["cp.cc"].value+"; "+document.eyeForm.famDoctor.value;
 	}
 	function clinicalInfoAdd(str,name){
-		if (name!=null && trim(name)!='')
+		if (str.length>0 && name!=null && trim(name)!='')			
+			document.eyeForm.elements["cp.clinicalInfo"].value+='\n';
+		
+		if (name!=null && trim(name)!='')			
 			document.eyeForm.elements["cp.clinicalInfo"].value+=name;
 	}
 	function ocluarproAdd(str,name){
+		if (str.length>0 && name!=null && trim(name)!='')			
+			document.eyeForm.elements["cp.clinicalInfo"].value+='\n';
+		
 		if (name!=null && trim(name)!='')
 			document.eyeForm.elements["cp.clinicalInfo"].value+=name;
 	}
@@ -550,11 +556,11 @@ jQuery(document).ready(function() {
 					<td class="tite4">
 					<table width="100%">
 						<tr>
-							<td class="tite1" colspan="2"><input type="button"
-								class="btn" onclick="addDoc();" value="add to cc">:<input type="text"
-								style="width:120px;" name="clDoctor" /><a
-								href="javascript:referralScriptAttach2('otherDocId','clDoctor')"><span
-								style="font-size: 10;">Search #</span></a> </td>
+							<td class="tite1" colspan="2">
+								<input type="text" style="width:120px;" name="clDoctor" />
+								<input type="button" class="btn" onclick="addDoc();" value="add to cc">
+								<a ref="javascript:referralScriptAttach2('otherDocId','clDoctor')">								
+								<span style="font-size: 10;">Search #</span></a> </td>
 						</tr>
 					</table>
 					</td>
@@ -598,7 +604,7 @@ jQuery(document).ready(function() {
 							<input type="button" class="btn" value="medical hx" name="mhis"	onclick="clinicalInfoAdd('Medical history:',con_mHis)">
 							<input type="button" class="btn" value="family hx" name="fhis" onclick="clinicalInfoAdd('Family history:',con_fHis)">
 							<input type="button" class="btn" value="specs hx" name="shis" onclick="clinicalInfoAdd('Specs history:',con_sHis)">  
-							<br/>
+							
 							<input type="button" class="btn" value="ocular meds" name="ohis" onclick="clinicalInfoAdd('Ocular meds:',con_oMeds)"> 
 							<input type="button" class="btn" value="other meds" name="ohis"	onclick="clinicalInfoAdd('Other meds:',con_oHis)"> 					
 							<input type="button" class="btn" value="diag notes" name="dnote" onclick="clinicalInfoAdd('Diagnostics notes:',con_diag)">

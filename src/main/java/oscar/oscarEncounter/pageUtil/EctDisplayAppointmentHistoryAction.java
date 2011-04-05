@@ -32,6 +32,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.util.MessageResources;
+import org.oscarehr.PMmodule.dao.ClientDao;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.model.Appointment;
@@ -72,6 +73,7 @@ public class EctDisplayAppointmentHistoryAction extends EctDisplayAction {
 
     SpecsHistoryDao shDao = (SpecsHistoryDao)SpringUtils.getBean("SpecsHistoryDAO");
     ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
+    ClientDao demographicDao = (ClientDao)SpringUtils.getBean("clientDao");
     
    
     OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");    
@@ -85,6 +87,8 @@ public class EctDisplayAppointmentHistoryAction extends EctDisplayAction {
     	//item.setDate(sh.getAppointmentDate());
     	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
     	
+    	//Demographic d = demographicDao.getClientByDemographicNo(sh.getDemographicNo());
+    	//Provider p = d.getProvider();
     	Provider p = providerDao.getProvider(sh.getProviderNo());
     	
     	String title = formatter.format(sh.getAppointmentDate());

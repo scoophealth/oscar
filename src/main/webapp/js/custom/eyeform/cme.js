@@ -84,9 +84,16 @@
 			jQuery(".slideblock").each(function() { 
 				var id = jQuery(this).attr('id');
 				var expand=false;
+				jQuery("#" + id + " [measurement]").each(function() {
+					if(jQuery(this).val().trim().length>0) {
+						expand=true;
+					}
+				});
+				/*
 				jQuery("#"+id+" .examfieldwhite").each(function(){
 					expand=true;
 				});
+				*/
 				if(expand == true) {
 					togglediv(document.getElementById(id));
 				}				

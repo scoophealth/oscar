@@ -383,16 +383,16 @@ public class MeasurementFormatter {
 		StringBuilder sb = new StringBuilder();		
 		if(isPresent("od_manifest_refraction_add")) {
 			sb.append("OD ");		
-			sb.append("add +");
+			sb.append("add ");
 			sb.append(getValue("od_manifest_refraction_add"));
-			sb.append(" ("+getValue("od_manifest_near")+"+)");
+			sb.append(" ("+getValue("od_manifest_near")+")");
 			sb.append("; ");
 		}
 		if(isPresent("os_manifest_refraction_add")) {
 			sb.append("OS ");
-			sb.append("add +");
+			sb.append("add ");
 			sb.append(getValue("os_manifest_refraction_add"));
-			sb.append(" ("+getValue("os_manifest_near")+"+)");
+			sb.append(" ("+getValue("os_manifest_near")+")");
 			sb.append(".");
 		}
 		return sb.toString();
@@ -404,17 +404,25 @@ public class MeasurementFormatter {
 		if(isPresent("od_cycloplegic_refraction_sph")) {
 			sb.append("OD ");		
 			sb.append(getValue("od_cycloplegic_refraction_sph"));
-			sb.append((isNegative("od_cycloplegic_refraction_cyl")?"":"+") + getValue("od_cycloplegic_refraction_cyl"));
-			sb.append("x" + getValue("od_cycloplegic_refraction_axis"));
-			sb.append(" (" + getValue("od_cycloplegic_distance") + ")");
+			sb.append(getValue("od_cycloplegic_refraction_cyl"));
+			if(isPresent("od_cycloplegic_refraction_axis")) {
+				sb.append("x" + getValue("od_cycloplegic_refraction_axis"));
+			}
+			if(isPresent("od_cycloplegic_distance")) {
+				sb.append(" (" + getValue("od_cycloplegic_distance") + ")");
+			}
 			sb.append("; ");
 		}
 		if(isPresent("os_cycloplegic_refraction_sph")) {
 			sb.append("OS ");
 			sb.append(getValue("os_cycloplegic_refraction_sph"));
-			sb.append((isNegative("os_cycloplegic_refraction_cyl")?"":"+") + getValue("os_cycloplegic_refraction_cyl"));
-			sb.append("x" + getValue("os_cycloplegic_refraction_axis"));
-			sb.append(" (" + getValue("os_cycloplegic_distance") + ")");
+			sb.append(getValue("os_cycloplegic_refraction_cyl"));
+			if(isPresent("os_cycloplegic_refraction_axis")) {
+				sb.append("x" + getValue("os_cycloplegic_refraction_axis"));
+			}
+			if(isPresent("os_cycloplegic_distance")) {
+				sb.append(" (" + getValue("os_cycloplegic_distance") + ")");
+			}
 			sb.append(".");	
 		}
 		return sb.toString();
@@ -435,8 +443,8 @@ public class MeasurementFormatter {
 			Date d = d2;
 			if(d1.after(d2))
 				d=d1;
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-			//sb.append("[" + sdf.format(d)  + "]");
+			SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+			sb.append("[" + sdf.format(d)  + "]");
 			sb.append(".");
 		}
 		return sb.toString();
@@ -457,8 +465,8 @@ public class MeasurementFormatter {
 			Date d = d2;
 			if(d1.after(d2))
 				d=d1;
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-			//sb.append("[" + sdf.format(d)  + "]");
+			SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+			sb.append("[" + sdf.format(d)  + "]");
 			sb.append(".");
 		}
 		return sb.toString();
@@ -613,20 +621,91 @@ public class MeasurementFormatter {
 	
 	public String getAngle() {
 		StringBuilder sb = new StringBuilder();		
-		if(isPresent("od_angle_middle1")) {
+		if(isPresent("od_angle_middle1") || isPresent("od_angle_up") || isPresent("od_angle_middle2") || isPresent("od_angle_down") || isPresent("od_angle_middle0")) {			
 			sb.append("OD ");		
 			sb.append(getValue("od_angle_middle1"));
-			sb.append(" ");
-			sb.append("(superior "+getValue("od_angle_up")+", nasal "+getValue("od_angle_middle2")+", inferior "+getValue("od_angle_down")+", temporal " + getValue("od_angle_middle0") +")");
+			if(isPresent("od_angle_up") || isPresent("od_angle_middle2") || isPresent("od_angle_down") || isPresent("od_angle_middle0")) {
+				sb.append(" (");
+			}
+			boolean flag=false;
+			if(isPresent("od_angle_up")) {
+				sb.append("superior "+getValue("od_angle_up"));
+				if(!flag) flag=true;
+			}
+			if(isPresent("od_angle_middle2")) {
+				if(flag) {					
+					sb.append(", ");
+				}
+				if(!flag) flag=true;
+				sb.append("nasal "+getValue("od_angle_middle2"));
+			}
+			if(isPresent("od_angle_down")) {
+				if(flag) {
+					sb.append(", ");
+				}
+				if(!flag) flag=true;
+				sb.append("inferior "+getValue("od_angle_down"));
+			}
+			if(isPresent("od_angle_middle0")) {
+				if(flag) {
+					sb.append(", ");
+				}
+				if(!flag) flag=true;
+				sb.append("temporal " + getValue("od_angle_middle0"));
+			}
+			
+			if(isPresent("od_angle_up") || isPresent("od_angle_middle2") || isPresent("od_angle_down") || isPresent("od_angle_middle0")) {
+				sb.append(")");
+			}
 			sb.append("; ");
 		}
-		if(isPresent("os_angle_middle1")) {
-			sb.append("OS ");
+		
+		
+		
+		
+		
+		
+		
+		if(isPresent("os_angle_middle1") || isPresent("os_angle_up") || isPresent("os_angle_middle2") || isPresent("os_angle_down") || isPresent("os_angle_middle0")) {			
+			sb.append("OS ");		
 			sb.append(getValue("os_angle_middle1"));
-			sb.append(" ");
-			sb.append("(superior "+getValue("os_angle_up")+", nasal "+getValue("os_angle_middle0")+", inferior "+getValue("os_angle_down")+", temporal " + getValue("os_angle_middle2") +")");		
-			sb.append(".");
-		}
+			
+			if(isPresent("os_angle_up") || isPresent("os_angle_middle2") || isPresent("os_angle_down") || isPresent("os_angle_middle0")) {
+				sb.append(" (");
+			}
+			boolean flag=false;
+			if(isPresent("os_angle_up")) {
+				sb.append("superior "+getValue("os_angle_up"));
+				if(!flag) flag=true;
+			}
+			if(isPresent("os_angle_middle0")) {
+				if(flag) {					
+					sb.append(", ");
+				}
+				if(!flag) flag=true;
+				sb.append("nasal "+getValue("od_angle_middle0"));
+			}
+			if(isPresent("os_angle_down")) {
+				if(flag) {
+					sb.append(", ");
+				}
+				if(!flag) flag=true;
+				sb.append("inferior "+getValue("os_angle_down"));
+			}
+			if(isPresent("os_angle_middle2")) {
+				if(flag) {
+					sb.append(", ");
+				}
+				if(!flag) flag=true;
+				sb.append("temporal " + getValue("od_angle_middle2"));
+			}
+			
+			if(isPresent("os_angle_up") || isPresent("os_angle_middle2") || isPresent("os_angle_down") || isPresent("os_angle_middle0")) {
+				sb.append(")");
+			}
+			sb.append("; ");
+		}	
+				
 		return sb.toString();
 	}
 

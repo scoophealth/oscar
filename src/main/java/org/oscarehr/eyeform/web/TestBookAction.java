@@ -96,10 +96,20 @@ public class TestBookAction extends DispatchAction {
     	StringBuilder sb = new StringBuilder();
     	
     	for(TestBookRecord f:tests) {    		
-    		sb.append("diag:" + f.getTestname()).append(" ").append(f.getEye()).append(" ").append(f.getUrgency()).append(" ").append(f.getComment());
+    		sb.append("diag:" + f.getTestname()).append(" ").append(f.getEye()).append(" ").append(getUrgencyAbbreviation(f.getUrgency())).append(" ").append(f.getComment());
     		sb.append(" ").append(f.getComment());
     		sb.append("<br/>");
     	}
     	return sb.toString();
+    }
+    
+    private static String getUrgencyAbbreviation(String value) {
+    	if(value.equals("prior to next visit")) {
+    		return "PTNV";
+    	}
+    	if(value.equals("same day next visit")) {
+    		return "SDNV";
+    	}
+    	return value;
     }
 }
