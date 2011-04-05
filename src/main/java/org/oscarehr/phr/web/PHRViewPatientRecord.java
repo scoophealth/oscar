@@ -47,7 +47,8 @@ public class PHRViewPatientRecord extends DispatchAction {
             return null;
         }
         PHRAuthentication auth = (PHRAuthentication) request.getSession().getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
-        if (auth == null || auth.getToken() == null) {
+        
+        if (auth == null || auth.getMyOscarUserId() == null) {
             request.setAttribute("forwardToOnSuccess", request.getContextPath() + "/demographic/viewPhrRecord.do?demographic_no=" + demographicNo);
             return mapping.findForward("login");
         } else {
@@ -59,10 +60,12 @@ public class PHRViewPatientRecord extends DispatchAction {
             DemographicData demographicData = new DemographicData();
             String patientMyOscarId = demographicData.getDemographic(demographicNo).getIndivoId();
            
-            request.setAttribute("userid", auth.getUserId());
-            request.setAttribute("ticket", auth.getToken());
+//            request.setAttribute("userid", auth.getUserId());
+//            request.setAttribute("ticket", auth.getToken());
+            request.setAttribute("userName", auth.getMyOscarUserName());
+            request.setAttribute("password", auth.getMyOscarPassword());
             request.setAttribute("viewpatient", patientMyOscarId);
-            request.setAttribute("url", phrPath + "/viewPatient.do");
+            request.setAttribute("url", phrPath + (phrPath.endsWith("/")?"":"/") + "patient_view_action.jsp");
             return mapping.findForward("phr");
         }
 
