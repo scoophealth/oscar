@@ -6343,7 +6343,10 @@ create table ProviderPreference
 	defaultNewOscarCme varchar(10),
 	printQrCodeOnPrescriptions tinyint not null,
 	lastUpdated datetime not null,
-	appointmentScreenFormNameDisplayLength int not null
+	appointmentScreenFormNameDisplayLength int not null,
+	defaultDoNotDeleteBilling  tinyint(1),
+	defaultDxCode varchar(4) 
+	
 );
 
 --

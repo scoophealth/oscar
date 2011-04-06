@@ -259,7 +259,7 @@ public class JdbcBillingReviewImpl {
 				ch1Obj.setUpdate_datetime(rs.getString("timestamp1"));
 				
 				ch1Obj.setClinic(rs.getString("clinic"));
-
+				ch1Obj.setAppointment_no(rs.getString("appointment_no"));
 				ch1Obj.setPay_program(rs.getString("pay_program"));
 				ch1Obj.setVisittype(rs.getString("visittype"));
 				ch1Obj.setAdmission_date(rs.getString("admission_date"));
@@ -348,4 +348,90 @@ public class JdbcBillingReviewImpl {
 
 		return serviceCodeList;
 	}
+       
+    // billing edit page
+       public List getBillingByApptNo(String apptNo) throws Exception{
+               List retval = new Vector();
+               int iRow=0;
+
+               BillingClaimHeader1Data ch1Obj = null;
+
+               DBPreparedHandler dbPH=new DBPreparedHandler();
+
+               String sql;
+               ResultSet rs;
+               sql = "select * from billing_on_cheader1 where status!='D' and appointment_no=?" ;
+           rs = dbPH.queryResults(sql, apptNo);
+               try {
+                       while (rs.next()) {
+
+                               ch1Obj = new BillingClaimHeader1Data();
+                               ch1Obj.setId("" + rs.getInt("id"));
+                               ch1Obj.setBilling_date(rs.getString("billing_date"));
+                               ch1Obj.setBilling_time(rs.getString("billing_time"));
+                               ch1Obj.setStatus(rs.getString("status"));
+                               ch1Obj.setProviderNo(rs.getString("provider_no"));
+                               ch1Obj.setAppointment_no(rs.getString("appointment_no"));
+                               ch1Obj.setApptProvider_no(rs.getString("apptProvider_no"));
+                               ch1Obj.setAsstProvider_no(rs.getString("asstProvider_no"));
+                               ch1Obj.setMan_review(rs.getString("man_review"));
+
+                               ch1Obj.setUpdate_datetime(rs.getString("timestamp1"));
+
+                               ch1Obj.setClinic(rs.getString("clinic"));
+
+                               ch1Obj.setPay_program(rs.getString("pay_program"));
+                               ch1Obj.setVisittype(rs.getString("visittype"));
+                               ch1Obj.setAdmission_date(rs.getString("admission_date"));
+                               ch1Obj.setFacilty_num(rs.getString("facilty_num"));
+                               ch1Obj.setHin(rs.getString("hin"));
+                               ch1Obj.setVer(rs.getString("ver"));
+                               ch1Obj.setProvince(rs.getString("province"));
+                               ch1Obj.setDob(rs.getString("dob"));
+                               ch1Obj.setDemographic_name(rs.getString("demographic_name"));
+                               ch1Obj.setDemographic_no(rs.getString("demographic_no"));
+
+                               ch1Obj.setTotal(rs.getString("total"));
+                               retval.add(ch1Obj);
+
+                               sql = "select * from billing_on_item where ch1_id=" + ch1Obj.getId() + " and status!='D'";
+
+                               // _logger.info("getBillingHist(sql = " + sql + ")");
+
+                               ResultSet rs2 = dbObj.searchDBRecord(sql);
+                               String dx = null;
+                               String dx1 = null;
+                               String dx2 = null;
+                               String strService = null;
+                               String strServiceDate = null;
+
+                               while (rs2.next()) {
+                                       strService += rs2.getString("service_code") + " x " + rs2.getString("ser_num") + ", ";
+                                       dx = rs2.getString("dx");
+                                       strServiceDate = rs2.getString("service_date");
+                                       dx1 = rs2.getString("dx1");
+                                       dx2 = rs2.getString("dx2");
+                               }
+                               rs2.close();
+                               BillingItemData itObj = new BillingItemData();
+                               itObj.setService_code(strService);
+                               itObj.setDx(dx);
+                               itObj.setDx1(dx1);
+                               itObj.setDx2(dx2);
+                               itObj.setService_date(strServiceDate);                                                        
+                               retval.add(itObj);
+
+                       }
+                       rs.close();
+               } catch (SQLException e) {
+                       _logger.error("getBillingHist(sql = " + sql + ")");
+               }
+
+               return retval;
+       }
+
+
+
+  
+       
 }

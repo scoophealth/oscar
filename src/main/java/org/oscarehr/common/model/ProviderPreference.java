@@ -59,6 +59,9 @@ public class ProviderPreference extends AbstractModel<String> implements Seriali
 	private String defaultNewOscarCme="disabled";
 	private boolean printQrCodeOnPrescriptions=Boolean.valueOf(OscarProperties.getInstance().getProperty("QR_CODE_ENABLED_PROVIDER_DEFAULT"));
 	private int appointmentScreenFormNameDisplayLength=3;
+	private int defaultDoNotDeleteBilling=0;
+	private String defaultDxCode=null;
+	
 	
 	@CollectionOfElements(targetElement = String.class)
 	@JoinTable(name = "ProviderPreferenceAppointmentScreenForm",joinColumns = @JoinColumn(name = "providerNo"))
@@ -202,4 +205,21 @@ public class ProviderPreference extends AbstractModel<String> implements Seriali
     	this.appointmentScreenFormNameDisplayLength = appointmentScreenFormNameDisplayLength;
     }
 
+	public int getDefaultDoNotDeleteBilling() {
+		return defaultDoNotDeleteBilling;
+	}
+
+	public void setDefaultDoNotDeleteBilling(int defaultDoNotDeleteBilling) {
+		this.defaultDoNotDeleteBilling = defaultDoNotDeleteBilling;
+	}
+
+	public String getDefaultDxCode() {
+		return defaultDxCode;
+	}
+
+	public void setDefaultDxCode(String defaultDxCode) {
+		this.defaultDxCode = defaultDxCode;
+	}
+
+	
 }

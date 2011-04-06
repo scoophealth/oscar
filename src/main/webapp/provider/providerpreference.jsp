@@ -285,6 +285,31 @@ function showHideBillPref() {
 					</td>
 				</tr>
 		
+				 <tr>
+		            <td class="preferenceLabel">
+		            <bean:message key="provider.btnCaisiBillPreferenceNotDelete"/>
+		            </td>
+		            <td class="preferenceValue">	              
+		            
+		             <%  String myCheck5 = "";
+		                 String myCheck6 = "";
+		                 String value1 = request.getParameter("caisiBillingPreferenceNotDelete");
+		                  if(value1!=null && value1.equals("1"))
+		                  { myCheck5 = "checked";
+		                          myCheck6 = "unchecked";}
+		                  else
+		                  { myCheck5 = "unchecked";
+		                          myCheck6 = "checked";}
+		
+		               %>
+		
+		                                <input type="radio" name="caisiBillingPreferenceNotDelete" value="1" <%= myCheck5 %> > Enabled
+		                                <br>
+		                                <input type="radio" name="caisiBillingPreferenceNotDelete" value="0" <%= myCheck6 %> > Disabled
+		
+		            </td>		            
+		          </tr>
+				
 			</caisi:isModuleLoad>
 		
 			<!-- QR Code on prescriptions setting -->
@@ -372,8 +397,13 @@ function showHideBillPref() {
     <TD align="center"><a href=# onClick ="popupPage(230,600,'../casemgmt/newCaseManagementEnable.jsp');return false;">Enable OSCAR CME UI</a> &nbsp;&nbsp;&nbsp; 
     </tr>
   </oscar:oscarPropertiesCheck>
-  </caisi:isModuleLoad>   
+  </caisi:isModuleLoad>  
+  
+  <tr>
+	<td align="center"><a href=# onClick ="popupPage(230,600,'providerDefaultDxCode.jsp?provider_no=<%=request.getParameter("provider_no") %>');return false;">Edit Default Billing Diagnostic Code</a>&nbsp;&nbsp;&nbsp; </td>
+	</tr>			 
   <tr> 
+  
     <TD align="center"><a href=# onClick ="popupPage(230,600,'providerchangepassword.jsp');return false;"><bean:message key="provider.btnChangePassword"/></a> &nbsp;&nbsp;&nbsp; <!--| a href=# onClick ="popupPage(350,500,'providercontrol.jsp?displaymode=savedeletetemplate');return false;"><bean:message key="provider.btnAddDeleteTemplate"/></a> | <a href=# onClick ="popupPage(200,500,'providercontrol.jsp?displaymode=savedeleteform');return false;"><bean:message key="provider.btnAddDeleteForm"/></a></td>
   </tr>
    <tr> 

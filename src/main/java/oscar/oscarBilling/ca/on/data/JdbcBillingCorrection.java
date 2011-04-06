@@ -150,6 +150,24 @@ public class JdbcBillingCorrection {
 		return obj;
 	}
 
+	
+	public List getBillingCH1NoStatusByBillNo(String id) {
+		List obj = new Vector();
+		String sql = "select id,status from billing_on_cheader1 where id=" + id;
+		ResultSet rs = dbObj.searchDBRecord(sql);
+		
+		try {
+		       while (rs.next()) {
+		       obj.add(rs.getString("id"));
+		       obj.add(rs.getString("status"));
+		       }
+		    } catch (SQLException e) {
+		       _logger.error("getBillingCH1NoStatusByAppt(sql = " + sql + ")");
+		       obj = null;
+		    }
+		    return obj;
+	}
+	
 	// 0-cheader1 obj, 1 - item1obj, 2 - item2obj, ...
 	public List getBillingRecordObj(String id) {
 		List obj = new Vector();

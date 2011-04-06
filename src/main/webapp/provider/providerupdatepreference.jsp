@@ -67,6 +67,8 @@
 	session.setAttribute("default_servicetype", providerPreference.getDefaultServiceType());
 	session.setAttribute("newticklerwarningwindow", providerPreference.getNewTicklerWarningWindow());
 	session.setAttribute("default_pmm", providerPreference.getDefaultCaisiPmm());
+	session.setAttribute("caisiBillingPreferenceNotDelete",providerPreference.getDefaultDoNotDeleteBilling());
+	session.setAttribute("defaultDxCode",providerPreference.getDefaultDxCode());
 %>
 <script LANGUAGE="JavaScript">
      self.opener.refresh1();

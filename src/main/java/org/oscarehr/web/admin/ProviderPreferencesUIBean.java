@@ -60,7 +60,22 @@ public final class ProviderPreferencesUIBean {
 			if (temp == null) providerPreference.setDefaultCaisiPmm("disabled");
 			else providerPreference.setDefaultCaisiPmm(temp);
 		}
-
+		
+		// default billing preference (edit or delete)
+		temp = StringUtils.trimToNull(request.getParameter("caisiBillingPreferenceNotDelete"));
+		if (temp != null) {
+			providerPreference.setDefaultDoNotDeleteBilling(Integer.parseInt(temp));
+		} else {
+			temp = StringUtils.trimToNull(String.valueOf(session.getAttribute("caisiBillingPreferenceNotDelete")));
+			if (temp == null) providerPreference.setDefaultDoNotDeleteBilling(0);
+			else providerPreference.setDefaultDoNotDeleteBilling(Integer.parseInt(temp));
+		}
+		
+		// default billing dxCode 
+		temp = StringUtils.trimToNull(request.getParameter("dxCode"));
+		if (temp != null) providerPreference.setDefaultDxCode(temp);
+		
+		
 		// rest
 		temp = StringUtils.trimToNull(request.getParameter("start_hour"));
 		if (temp != null) providerPreference.setStartHour(Integer.parseInt(temp));
@@ -143,5 +158,10 @@ public final class ProviderPreferencesUIBean {
 		ProviderPreference providerPreference = providerPreferenceDao.find(provider.getProviderNo());
 		if (providerPreference != null) return (providerPreference.getAppointmentScreenEForms());
 		else return (new ArrayList<Integer>());
+	}
+	
+	public static ProviderPreference getProviderPreferenceByProviderNo(String providerNo) {
+		return providerPreferenceDao.find(providerNo);
+		
 	}
 }
