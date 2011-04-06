@@ -3,8 +3,8 @@ jQuery(document).ready(function(){
 	jQuery("#apptHistoryTbl tr:first").html("<th width=\"5%\"></th>"+jQuery("#apptHistoryTbl tr:first").html());
 	jQuery("#apptHistoryTbl tr:first").html(jQuery("#apptHistoryTbl tr:first").html() + "<th width=\"15%\">Consult</th>");
 	jQuery("#apptHistoryTbl tr:gt(0)").each(function() {
-		var requestUrl = "http://localhost:8080/oscar_eyeform/oscarEncounter/oscarConsultationRequest/ConsultationFormRequest.jsp?de="+jQuery(this).attr("demographic_no")+"&teamVar=&appNo="+jQuery(this).attr("appt_no");
-		var reportUrl = "http://localhost:8080/oscar_eyeform/eyeform/Eyeform.do?method=prepareConReport&demographicNo="+jQuery(this).attr("demographic_no")+"&appNo="+jQuery(this).attr("appt_no")+"&flag=new";
+		var requestUrl = ctx + "/oscarEncounter/oscarConsultationRequest/ConsultationFormRequest.jsp?de="+jQuery(this).attr("demographic_no")+"&teamVar=&appNo="+jQuery(this).attr("appt_no");
+		var reportUrl = ctx + "/eyeform/Eyeform.do?method=prepareConReport&demographicNo="+jQuery(this).attr("demographic_no")+"&appNo="+jQuery(this).attr("appt_no")+"&flag=new";
 		jQuery(this).html("<td><input type=\"checkbox\" name=\"sel\" value=\""+jQuery(this).attr("appt_no")+"\"/></td>" + jQuery(this).html() + "<td><a href=\""+requestUrl+"\">Request</a>&nbsp;<a href=\""+reportUrl+"\">Report</a></td>");
 	});
 	
