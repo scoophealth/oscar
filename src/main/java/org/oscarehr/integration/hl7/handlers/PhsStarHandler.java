@@ -524,55 +524,62 @@ public class PhsStarHandler extends BasePhsStarHandler {
 	 * @throws HL7Exception
 	 */
 	public void handleStaffMasterFile() throws HL7Exception {
+		//MFI section is pretty straightforward., don't think we need these values.
 		String mfIdentifierId = 		this.extractOrEmpty("MFI-1-1");
 		String mfIdentifierText = 		this.extractOrEmpty("MFI-1-2");
 		String mfIdentifierCodeSys =	this.extractOrEmpty("MFI-1-3");
 		String mfIdentifierAltId = 		this.extractOrEmpty("MFI-1-4");
 		String mfIdentifierAltText = 	this.extractOrEmpty("MFI-1-5");
-		String mfIdentifierAltCodeSys = this.extractOrEmpty("MFI-1-6");
-		
+		String mfIdentifierAltCodeSys = this.extractOrEmpty("MFI-1-6");		
 		String fileLevelEventCode	=	this.extractOrEmpty("MFI-3");
 		String effectiveDateTime	=	this.extractOrEmpty("MFI-5");
 		String responseLevelCode	= 	this.extractOrEmpty("MFI-6");
 		
-		String recordLevelEventCode	=	this.extractOrEmpty("MFE-1");
-		String recordEffectiveDateTime	=	this.extractOrEmpty("MFE-3");
-		String practId					=	this.extractOrEmpty("MFE-4-1");
 		
-		String stfPractId	= this.extractOrEmpty("STF-1");
+		String recordLevelEventCode	=	this.extractOrEmpty("/MF_STAFF/MFE-1");	//handle only MAD/MUP
 		
-		Map<String,StaffId> staffIds = this.extractStaffIds();
+		if(recordLevelEventCode.equals("MDL")) {
+			//delete event.
+			logger.warn("Received an MFN delete..ignoring.");
+			return;
+		}
 		
-		String lastName = this.extractOrEmpty("STF-3-1");
-		String firstName = this.extractOrEmpty("STF-3-2");
-		String middleName = this.extractOrEmpty("STF-3-3");
+		String recordEffectiveDateTime	=	this.extractOrEmpty("/MF_STAFF/MFE-3"); //assume now
+		String practId					=	this.extractOrEmpty("/MF_STAFF/MFE-4-1"); //use 1st comp. to insert/update.pri key
 		
-		String staffType = this.extractOrEmpty("STF-4");
+		//staff segment - the meat of the info.
+		String stfPractId	= this.extractOrEmpty("/MF_STAFF/STF-1");	//same as practId .. or should be.	
+		Map<String,StaffId> staffIds = this.extractStaffIds();		
+		String lastName = this.extractOrEmpty("/MF_STAFF/STF-3-1");
+		String firstName = this.extractOrEmpty("/MF_STAFF/STF-3-2");
+		String middleName = this.extractOrEmpty("/MF_STAFF/STF-3-3");		
+		String staffType = this.extractOrEmpty("/MF_STAFF/STF-4");		 //eg. MD
+		String active = this.extractOrEmpty("/MF_STAFF/STF-7"); //eg. 'A' or 'I'
 		
-		String active = this.extractOrEmpty("STF-7");
-		
-		//home extra fields here
+		//repetition
+		//(905)555-1212X1234^WPN^PH^^^905^5551212^1234
 		//[NNN] [(999)]999-9999 [X99999] [B99999] [C any text] ^ <telecommunication use code (ID)> ^ <telecommunication equipment type (ID)> ^ <email address (ST)> ^ <county code (NM)> ^ <area/city code (NM)> ^ <phone number (NM) ^ <extension (NM)> ^ <any text (st)> 
-		String phone = this.extractOrEmpty("STF-10-1");
-		String phoneLoc = this.extractOrEmpty("STF-10-2");
-		String phoneType = this.extractOrEmpty("STF-10-3");
+		String phone = this.extractOrEmpty("/MF_STAFF/STF-10-1");
+		String phoneLoc = this.extractOrEmpty("/MF_STAFF/STF-10-2");
+		String phoneType = this.extractOrEmpty("/MF_STAFF/STF-10-3");
 		
-		//11 is address
-		//<street address (ST)> ^ <other designation (ST)> ^ <city (ST)> ^ <state or province (ST)> ^ <zip or postal code (ST)> ^ <country (ID)> ^ <address type (ID)> ^ <other geographic designation (ST)> ^ <county/parish code (IS)> ^ <census tract (IS)>
-
+		//repetitive		
+		String address = this.extractOrEmpty("/MF_STAFF/STF-11-1");
+		String address2 = this.extractOrEmpty("/MF_STAFF/STF-11-2");
+		String city = this.extractOrEmpty("/MF_STAFF/STF-11-3");
+		String province = this.extractOrEmpty("/MF_STAFF/STF-11-4");
+		String postal = this.extractOrEmpty("/MF_STAFF/STF-11-5");
+		String country = this.extractOrEmpty("/MF_STAFF/STF-11-6");
+		String type = this.extractOrEmpty("/MF_STAFF/STF-11-7"); //H,O,M
 		
-		String jobTitle = this.extractOrEmpty("STF-18");
+		String jobCode = this.extractOrEmpty("/MF_STAFF/STF-19");	//MD
 		
+		//practitioner - do we need this?
+		String praPractId = this.extractOrEmpty("/MF_STAFF/PRA-1-1"); //should be same as pract_id
+		//specialty = 1&FAMILY PRACTITIONER&99H62&1&FAMILY PRACTITIONER&99SPC
+		String praSpecialty = this.extractOrEmpty("/MF_STAFF/PRA-5-1"); //should be same as pract_id
 		
-		String praPractId = this.extractOrEmpty("PRA-1-1");
-		
-		//pra-3 category - ADM??
-		
-		//pra-5 specialty - huh?
-		
-		
-		
-		
+		logger.info("need to do a provider add/update for id " + practId);
 		
 		//logger.info("mfId="+mfId);
 	}
