@@ -257,6 +257,13 @@ $("document").ready(function() {
 		var demographicId='<%=currentDemographicId%>';
 		var ocanType='<%=ocanType%>';
 		var ocanStaffFormId = '<%=ocanStaffFormId%>';
+
+		//Remove old actions generated last time
+		for(var x=1;x<=25;x++) {     
+			$("#summary_of_actions_"+x).remove();
+		}
+		
+		//Append new generatedactions 		
 		$.get('ocan_form_summary_of_actions.jsp?ocanStaffFormId='+ocanStaffFormId+'&ocanType='+ocanType+'&demographicId='+demographicId+'&size='+count+'&domains='+domains, function(data) {
 			  $("#summary_of_actions_block").append(data);					 
 			});		
@@ -3887,9 +3894,16 @@ This information is collected from a variety of sources, including self-report, 
 			<%=OcanForm.renderAsHiddenField(ocanStaffForm.getId(), "summary_of_actions_domains",prepopulationLevel)%>		
 		</tr>
 		<tr>
-			<td colspan="2">			
-				<div id="summary_of_actions_block">
-							
+			<td colspan="2">
+			<table>     
+			<tr>
+			<td width="10%">Priority</td>
+			<td width="40%">Domain</td>
+			<td width="50%">Action(s)</td>
+			</tr>
+			</table>
+					
+			<div id="summary_of_actions_block">						
 							
 				
 				</div>

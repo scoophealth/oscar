@@ -380,6 +380,11 @@ public class BillingCorrectionPrep {
 		return ret;
 	}
 
+	public List getBillingNoStatusByBillNo(String billNo) {
+	       List ret = dbObj.getBillingCH1NoStatusByBillNo(billNo);
+	       return ret;
+	}
+	
 	// for appt unbill;
 	public boolean deleteBilling(String id, String status, String providerNo) {
 		boolean ret = dbObj.updateBillingStatus(id, status, providerNo);
