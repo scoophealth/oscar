@@ -2227,10 +2227,10 @@ if ( document.querySelectorAll ) (function(){
 	Sizzle.selectors = oldSizzle.selectors;
 	Sizzle.matches = oldSizzle.matches;
 })();
-
 if ( document.getElementsByClassName && document.documentElement.getElementsByClassName ) (function(){
 	var div = document.createElement("div");
 	div.innerHTML = "<div class='test e'></div><div class='test'></div>";
+	window.$ = _$;
 
 	// Opera can't find a second classname (in 9.6)
 	if ( div.getElementsByClassName("e").length === 0 )
@@ -2248,6 +2248,7 @@ if ( document.getElementsByClassName && document.documentElement.getElementsByCl
 			return context.getElementsByClassName(match[1]);
 		}
 	};
+	window.$ = jQuery;
 })();
 
 function dirNodeCheck( dir, cur, doneName, checkSet, nodeCheck, isXML ) {
