@@ -119,8 +119,8 @@ public class BasePhsStarHandler {
 		Map<String,StaffId> ids = new LinkedHashMap<String,StaffId>();
 		int x=0;
 		while(true) {
-			String identifier = t.get("STF-2("+x+")-1");
-			String typeCode = t.get("STF-2("+x+")-3");
+			String identifier = t.get("/MF_STAFF/STF-2("+x+")-1");
+			String typeCode = t.get("/MF_STAFF/STF-2("+x+")-3");
 			
 			if(identifier == null)
 				break;
