@@ -47,7 +47,7 @@ trusted truejava.lang.Boolean ? i think
 
 
 --%><%@ page import="java.util.*,oscar.oscarRx.data.*,java.text.DateFormatSymbols,oscar.oscarRx.pageUtil.*,java.io.*,org.apache.xmlrpc.*, oscar.util.StringUtils,java.util.Random"%>
-
+<div id="showHideTotal"></div>
 <%
     Vector<Hashtable> warnings = (Vector)request.getAttribute("warnings");
     Hashtable hiddenResources = (Hashtable) request.getSession().getAttribute("hideResources");
@@ -135,7 +135,6 @@ resources</a></div>
 <%}
 
 %>
-<div id="showHideTotal"></div>
     <%}else if(warnings == null){ %>
 <div>MyDrug to MyDrug Warning Service not available</div>
 <%  }   %>
