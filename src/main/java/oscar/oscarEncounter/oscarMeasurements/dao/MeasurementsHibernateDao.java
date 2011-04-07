@@ -175,4 +175,17 @@ public class MeasurementsHibernateDao extends HibernateDaoSupport implements
 
         	return rs;     
     	}
+    	
+    	@Override
+    	public Measurements getLatestMeasurementByDemographicNoAndType(int demographicNo, String type) {
+    		String queryStr = "From Measurements m WHERE m.demographicNo = " + demographicNo + " and m.type=? ORDER BY m.dateObserved DESC";
+    		
+    		@SuppressWarnings("unchecked")
+        	List<Measurements> rs = getHibernateTemplate().find(queryStr,new Object[]{type});
+
+        	if(!rs.isEmpty()) {
+        		return rs.get(0);
+        	}
+        	return null;
+    	}
 }

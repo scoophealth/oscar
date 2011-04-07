@@ -64,13 +64,17 @@ public class EctDisplayConReportAction extends EctDisplayAction {
  try {         
 
 	 String appointmentNo = request.getParameter("appointment_no");
-			 
+	 String cpp =request.getParameter("cpp");
+	 if(cpp==null) {
+		 cpp=new String();
+	 }
+	   
     //Set lefthand module heading and link
     String winName = "ConReport" + bean.demographicNo;
     String pathview, pathedit;
     
     pathview = request.getContextPath() + "/eyeform/ConsultationReportList.do?method=list&cr.demographicNo=" + bean.demographicNo;
-    pathedit = request.getContextPath() + "/eyeform/Eyeform.do?method=prepareConReport&demographicNo="+bean.demographicNo + "&appNo="+appointmentNo + "&flag=new";
+    pathedit = request.getContextPath() + "/eyeform/Eyeform.do?method=prepareConReport&demographicNo="+bean.demographicNo + "&appNo="+appointmentNo + "&flag=new&cpp="+cpp;
         
     String url = "popupPage(500,900,'" + winName + "','" + pathview + "')";
     Dao.setLeftHeading(messages.getMessage(request.getLocale(), "global.viewConReport"));
@@ -95,7 +99,7 @@ public class EctDisplayConReportAction extends EctDisplayAction {
         item.setLinkTitle(itemHeader);        
         item.setTitle(itemHeader);
         int hash = Math.abs(winName.hashCode());        
-        url = "popupPage(700,1000,'" + hash + "','" + request.getContextPath() + "/eyeform/Eyeform.do?method=prepareConReport&conReportNo="+ cr.getId() +"&demographicNo="+bean.demographicNo+"'); return false;";        
+        url = "popupPage(700,1000,'" + hash + "','" + request.getContextPath() + "/eyeform/Eyeform.do?method=prepareConReport&conReportNo="+ cr.getId() +"&demographicNo="+bean.demographicNo+"&cpp="+cpp+"'); return false;";        
         item.setURL(url);               
         Dao.addItem(item);
     }

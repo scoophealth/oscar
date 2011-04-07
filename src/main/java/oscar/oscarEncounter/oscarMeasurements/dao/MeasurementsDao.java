@@ -26,4 +26,6 @@ public interface MeasurementsDao {
 	public List<Measurements> getMeasurements(String demo,Date startDate, Date endDate);
 	
 	public List<Measurements> getMeasurementsByAppointment(int appointmentNo);
+	
+	public Measurements getLatestMeasurementByDemographicNoAndType(int appointmentNo, String type);
 }

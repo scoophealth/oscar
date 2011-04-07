@@ -94,6 +94,10 @@ function popupPageNew(vheight,vwidth,varpage) {
 
 <script>
 	function printVisit() {
+		printVisit('');               
+	}
+	
+	function printVisit(cpp) {
 		var sels = document.getElementsByName('sel');
 		var ids = "";
 		for(var x=0;x<sels.length;x++) {
@@ -103,7 +107,7 @@ function popupPageNew(vheight,vwidth,varpage) {
 				ids += sels[x].value;
 			}
 		}		
-		location.href=ctx+"/eyeform/Eyeform.do?method=print&apptNos="+ids;                
+		location.href=ctx+"/eyeform/Eyeform.do?method=print&apptNos="+ids+"&cpp="+cpp;                
 	}
 
 </script>

@@ -123,11 +123,11 @@
        popColumn(ctx + "/oscarEncounter/displayPhotos.do?hC=476BB3&appointment_no="+appointmentNo,"photos","photos", "leftNavBar", this);
        reorderNavBarElements('photos','docs');
        addLeftNavDiv("appointmentHistory");	      
-       popColumn(ctx + "/oscarEncounter/displayAppointmentHistory.do?hC=009999&cmd=appointmentHistory","appointmentHistory","appointmentHistory", "leftNavBar", this);              
+       popColumn(ctx + "/oscarEncounter/displayAppointmentHistory.do?hC=009999&cmd=appointmentHistory&cpp=measurements","appointmentHistory","appointmentHistory", "leftNavBar", this);              
        reorderNavBarElements('appointmentHistory','measurements');    
        reorderNavBarElements('consultations','appointmentHistory');           
        addLeftNavDiv("conReport");	      
-       popColumn(ctx + "/oscarEncounter/displayConReport.do?hC=009999&cmd=conReport&appointment_no="+appointmentNo,"conReport","conReport", "leftNavBar", this);       
+       popColumn(ctx + "/oscarEncounter/displayConReport.do?hC=009999&cmd=conReport&appointment_no="+appointmentNo + "&cpp=measurements","conReport","conReport", "leftNavBar", this);       
        addLeftNavDiv("macro");	      
        popColumn(ctx + "/oscarEncounter/displayMacro.do?hC=009999&appointment_no="+appointmentNo,"macro","macro", "leftNavBar", this);
        
@@ -167,7 +167,7 @@
        jQuery("#imgPrintEncounter").removeAttr('onclick');
        jQuery("#imgPrintEncounter").live('click',function(e){
     	   e.preventDefault();
-    	   location.href=ctx+'/eyeform/Eyeform.do?method=print&apptNos=' + appointmentNo;
+    	   location.href=ctx+'/eyeform/Eyeform.do?method=print&apptNos=' + appointmentNo + "&cpp=measurements";
        });
      });
 

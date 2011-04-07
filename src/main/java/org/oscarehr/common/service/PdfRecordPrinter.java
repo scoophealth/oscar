@@ -36,6 +36,7 @@ import org.oscarehr.util.SpringUtils;
 import oscar.OscarProperties;
 import oscar.eform.util.GraphicalCanvasToImage;
 import oscar.oscarClinic.ClinicData;
+import oscar.oscarEncounter.oscarMeasurements.model.Measurements;
 
 import com.lowagie.text.Chunk;
 import com.lowagie.text.Document;
@@ -316,6 +317,36 @@ public class PdfRecordPrinter {
         newPage = false;
         this.printNotes(notes,true);
         
+            
+        cb.endText();       
+        
+    }
+    
+    public void printCPPItem(String heading, Measurements measurement) throws IOException, DocumentException {
+        if( newPage )
+            document.newPage();
+      //  else
+      //      newPage = true;
+        
+        Font obsfont = new Font(bf, FONTSIZE, Font.UNDERLINE);
+
+        Paragraph p = null;
+        Phrase phrase = null;
+        
+      
+        p = new Paragraph();
+        p.setAlignment(Paragraph.ALIGN_LEFT);
+        phrase = new Phrase(LEADING, heading, obsfont);                                         
+        p.add(phrase);
+        document.add(p);
+        newPage = false;
+        
+        p = new Paragraph();
+        phrase = new Phrase(LEADING, "", font);                  	           
+        phrase.add(new Chunk(formatter.format(measurement.getDateObserved()) + ":"));               	
+        phrase.add(measurement.getDataField() + "\n");        
+        p.add(phrase);
+        document.add(p);
             
         cb.endText();       
         
