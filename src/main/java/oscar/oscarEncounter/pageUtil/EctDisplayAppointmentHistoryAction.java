@@ -52,6 +52,11 @@ public class EctDisplayAppointmentHistoryAction extends EctDisplayAction {
 
  try {         
 	 		
+	 String cpp =request.getParameter("cpp");
+	 if(cpp==null) {
+		 cpp=new String();
+	 }
+	 
     //Set lefthand module heading and link
     String winName = "AppointmentHistory" + bean.demographicNo;
     String pathview, pathedit;
@@ -98,7 +103,7 @@ public class EctDisplayAppointmentHistoryAction extends EctDisplayAction {
         item.setLinkTitle(itemHeader);        
         item.setTitle(itemHeader);
         int hash = Math.abs(winName.hashCode());        
-        url = "popupPage(500,900,'" + hash + "','" + request.getContextPath() + "/eyeform/Eyeform.do?method=print&apptNos="+sh.getId()+"'); return false;";        
+        url = "popupPage(500,900,'" + hash + "','" + request.getContextPath() + "/eyeform/Eyeform.do?method=print&apptNos="+sh.getId()+"&cpp="+cpp+"'); return false;";        
         item.setURL(url);               
         Dao.addItem(item);
         index++;

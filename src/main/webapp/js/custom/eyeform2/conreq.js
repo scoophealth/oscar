@@ -8,6 +8,6 @@ jQuery(document).ready(function(){
 		jQuery("#trConcurrentProblems").after(data);
 	}});	
 	
-	jQuery.getScript(ctx+"/eyeform/Eyeform.do?method=specialConRequest&requestId="+requestId+"&demographicNo="+demographicNo+"&appNo="+appointmentNo,function(data,status){});	
+	jQuery.getScript(ctx+"/eyeform/Eyeform.do?method=specialConRequest&requestId="+requestId+"&demographicNo="+demographicNo+"&appNo="+appointmentNo + "&cpp=measurements",function(data,status){});	
 	
 });
