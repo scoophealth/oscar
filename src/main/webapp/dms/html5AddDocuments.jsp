@@ -288,6 +288,7 @@
                     <option value="<%=id%>" <%=((id == queueId) ? " selected" : "")%>><%= qName%> </option>
                     <%}%>
                 </select>
+                <br/>
                 <label for="providerDrop" class="fields">Send to Provider:</label>
                 <select onchange="javascript:addProviderToPost(this);" id="providerDrop" name="providerDrop">
                     <option value="-2" <%=("-2".equals(provider) ? " selected" : "")%> >None</option>
