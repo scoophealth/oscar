@@ -2132,7 +2132,6 @@
 		</action>
 		<action path="/phrExchange" name="FrmForm" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
                     <forward name="success" path="/oscarRx/displayMedsFromPhr.jsp" />
-                    <forward name="displayPrevViewed" path="/oscarRx/displayUnsavedMeds.jsp"/>
                     <forward name="displaySurveys" path="/oscarRx/displaySurveys.jsp"/>
                     <forward name="phrNotAuthorized" path="/oscarRx/phrNotAuthorized.jsp"/>
 		</action>
