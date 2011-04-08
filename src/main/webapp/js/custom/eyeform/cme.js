@@ -183,10 +183,10 @@
 	   
    }
   
-   function runMacro2(macroId,appointmentNo) {
+   function runMacro2(macroId,appointmentNo,cpp) {
 	   //potentially need admission date.	  
 	   document.forms['caseManagementEntryForm'].sign.value='on';
-	   jQuery("form[name='caseManagementEntryForm']").append("<input type=\"hidden\" name=\"macro.id\" value=\""+macroId+"\"/>");
+	   jQuery("form[name='caseManagementEntryForm']").append("<input type=\"hidden\" name=\"macro.id\" value=\""+macroId+"\"/><input type=\"hidden\" name=\"cpp\" value=\""+cpp+"\"/>");
 	   var result =  savePage('runMacro', '');
 	   return false;
    }

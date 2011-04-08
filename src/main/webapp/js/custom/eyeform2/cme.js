@@ -129,7 +129,7 @@
        addLeftNavDiv("conReport");	      
        popColumn(ctx + "/oscarEncounter/displayConReport.do?hC=009999&cmd=conReport&appointment_no="+appointmentNo + "&cpp=measurements","conReport","conReport", "leftNavBar", this);       
        addLeftNavDiv("macro");	      
-       popColumn(ctx + "/oscarEncounter/displayMacro.do?hC=009999&appointment_no="+appointmentNo,"macro","macro", "leftNavBar", this);
+       popColumn(ctx + "/oscarEncounter/displayMacro.do?hC=009999&appointment_no="+appointmentNo  +"&cpp=measurements","macro","macro", "leftNavBar", this);
        
        //right nav bar
        removeNavDiv('issues');
@@ -182,10 +182,10 @@
 	   
    }
   
-   function runMacro2(macroId,appointmentNo) {
+   function runMacro2(macroId,appointmentNo,cpp) {
 	   //potentially need admission date.	  
 	   document.forms['caseManagementEntryForm'].sign.value='on';
-	   jQuery("form[name='caseManagementEntryForm']").append("<input type=\"hidden\" name=\"macro.id\" value=\""+macroId+"\"/>");
+	   jQuery("form[name='caseManagementEntryForm']").append("<input type=\"hidden\" name=\"macro.id\" value=\""+macroId+"\"/><input type=\"hidden\" name=\"cpp\" value=\""+cpp+"\"/>");
 	   var result =  savePage('runMacro', '');
 	   return false;
    }
