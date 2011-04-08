@@ -14,6 +14,7 @@ import java.util.List;
 
 import javax.persistence.Query;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Document;
@@ -90,12 +91,9 @@ public class DocumentResultsDao extends AbstractDao<Document>{
     }
 
     public ArrayList populateDocumentResultsDataOfAllProviders(String providerNo, String demographicNo,
-            String patientFirstName, String patientLastName, String patientHealthNumber, String status) {
+            String status) {
 
         if ( providerNo == null) { providerNo = ""; }
-        if ( patientFirstName == null) { patientFirstName = ""; }
-        if ( patientLastName == null) { patientLastName = ""; }
-        if ( patientHealthNumber == null) { patientHealthNumber = ""; }
         if ( status == null ) { status = ""; }
 
 
@@ -200,15 +198,104 @@ public class DocumentResultsDao extends AbstractDao<Document>{
         }
         return labResults;
     }
+    //retrieve documents belonging to a provider
+    public ArrayList populateDocumentResultsDataLinkToProvider(String providerNo, String demographicNo,
+            String status){
 
+        if ( status == null ) { status = ""; }
+
+
+        ArrayList labResults =  new ArrayList();
+        String sql = "";
+        try {
+            if ( demographicNo == null || providerNo==null) {
+                sql="select d from Document d, ProviderInboxItem p where d.documentNo=p.labNo and p.status like '%"+status+"%' and p.providerNo = '"
+                        +providerNo+"'"+" and p.labType='DOC' order by d.documentNo DESC";
+            } else {
+                return labResults;
+            }
+
+            logger.debug(sql);
+            Query query=entityManager.createQuery(sql);
+            List<Document> result=query.getResultList();
+            for(Document d:result){
+                LabResultData lbData = new LabResultData(LabResultData.DOCUMENT);
+                lbData.labType = LabResultData.DOCUMENT;
+                lbData.segmentID = d.getDocumentNo().toString();
+                //ocument_no | doctype | docdesc  | docxml | docfilename              | doccreator | program_id | updatedatetime      | status | contenttype | public1 | observationdate |
+                if (demographicNo == null && !providerNo.equals("0")) {
+                    lbData.acknowledgedStatus = Character.toString(d.getStatus());
+                } else {
+                    lbData.acknowledgedStatus ="U";
+                }
+
+                lbData.patientName = "Not, Assigned";//change to use internationalization
+
+                DocumentDAO documentDAO=(DocumentDAO) SpringUtils.getBean("documentDAO");
+                Demographic demo =documentDAO.getDemoFromDocNo(lbData.segmentID);
+                //ResultSet rscd= dbh.GetSQL(sqlcd);
+                lbData.isMatchedToPatient = false;
+                if(demo!=null){
+                     lbData.patientName = demo.getLastName()+ ", "+demo.getFirstName();
+                     lbData.healthNumber = demo.getHin();
+                     lbData.sex = demo.getSex();
+                     lbData.isMatchedToPatient = true;
+                     lbData.setLabPatientId(Integer.toString(demo.getDemographicNo()));
+                }
+                if(lbData.getPatientName().equalsIgnoreCase("Not, Assigned"))
+                    lbData.setLabPatientId("-1");
+                logger.debug("DOCUMENT "+lbData.isMatchedToPatient());
+
+                lbData.resultStatus = "N";//;oscar.Misc.getString(rs,"result_status");
+                if (lbData.resultStatus.equals("A"))
+                    lbData.abn = true;
+
+                lbData.dateTime = d.getObservationdate().toString();//oscar.Misc.getString(rs,"observationdate");
+                lbData.setDateObj(d.getObservationdate());
+
+                //priority
+                // Wow the following couple of lines of code will never work from what I can tell (but hey it's been a long day so maybe it does some how) it's always (true && false) which equals (false), who knows what jackson was thinking, I can't be bothered to fix it right now because I don't know what it was suppose to do.
+                String priority = "";
+                if(priority != null && !priority.equals("")){
+                    switch ( priority.charAt(0) ) {
+                        case 'C' : lbData.priority = "Critical"; break;
+                        case 'S' : lbData.priority = "Stat/Urgent"; break;
+                        case 'U' : lbData.priority = "Unclaimed"; break;
+                        case 'A' : lbData.priority = "ASAP"; break;
+                        case 'L' : lbData.priority = "Alert"; break;
+                        default: lbData.priority = "Routine"; break;
+                    }
+                }else{
+                    lbData.priority = "----";
+                }
+
+                lbData.reportStatus =  "F";//oscar.Misc.getString(rs,"report_status");
+
+                // the "C" is for corrected excelleris labs
+                if (lbData.reportStatus != null && (lbData.reportStatus.equals("F") || lbData.reportStatus.equals("C"))){
+                    lbData.finalRes = true;
+                }else{
+                    lbData.finalRes = false;
+                }
+
+                lbData.discipline = StringUtils.trimToNull(d.getDoctype());
+                
+                lbData.finalResultsCount = 0;//rs.getInt("final_result_count");
+                labResults.add(lbData);
+            }
+            //rs.close();
+            //db.CloseConn();
+        }catch(Exception e){
+            logger.error("exception in DOCPopulate:", e);
+        }
+        return labResults;
+
+
+    }
     //retrieve all documents from database
-    public ArrayList populateDocumentResultsData(String providerNo, String demographicNo,
-            String patientFirstName, String patientLastName, String patientHealthNumber, String status) {
+    public ArrayList populateDocumentResultsData(String providerNo, String demographicNo, String status) {
         
         if ( providerNo == null) { providerNo = ""; }
-        if ( patientFirstName == null) { patientFirstName = ""; }
-        if ( patientLastName == null) { patientLastName = ""; }
-        if ( patientHealthNumber == null) { patientHealthNumber = ""; }
         if ( status == null ) { status = ""; }
 
 

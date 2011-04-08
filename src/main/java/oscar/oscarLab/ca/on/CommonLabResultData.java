@@ -143,13 +143,43 @@ public class CommonLabResultData {
         if(scannedDocStatus !=null && (scannedDocStatus.equals("O")  || scannedDocStatus.equals("I")  || scannedDocStatus.equals(""))){
 
             DocumentResultsDao documentResultsDao= (DocumentResultsDao) SpringUtils.getBean("documentResultsDao");
-            ArrayList docs = documentResultsDao.populateDocumentResultsDataOfAllProviders(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
+            ArrayList docs = documentResultsDao.populateDocumentResultsDataOfAllProviders(providerNo, demographicNo, status);
             labs.addAll(docs);
         }
-
+        
         return labs;
     }
-    public ArrayList populateLabResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status,String scannedDocStatus) {
+
+    //get documents that are specific provider to show in that provider's inbox
+    public ArrayList populateLabResultsData2(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status,String scannedDocStatus) {
+        ArrayList labs = new ArrayList();
+        labs=populateLabsData( providerNo,  demographicNo,  patientFirstName,  patientLastName,  patientHealthNumber,  status, scannedDocStatus);
+        labs.addAll(populateDocumentDataSpecificProvider(providerNo,  demographicNo,  patientFirstName,  patientLastName,  patientHealthNumber,  status, scannedDocStatus));
+        return labs;
+    }
+    //return documents specific to this provider only, doesn't include documents that are not linked to any provider
+    public ArrayList populateDocumentDataSpecificProvider(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status,String scannedDocStatus){
+        ArrayList labs = new ArrayList();
+        if(scannedDocStatus !=null && (scannedDocStatus.equals("O")  || scannedDocStatus.equals("I")  || scannedDocStatus.equals(""))){
+            DocumentResultsDao documentResultsDao= (DocumentResultsDao) SpringUtils.getBean("documentResultsDao");
+            ArrayList docs = documentResultsDao.populateDocumentResultsDataLinkToProvider(providerNo, demographicNo, status);
+            return docs;
+        }
+        return labs;
+    }
+
+    public ArrayList populateDocumentData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status,String scannedDocStatus){
+        ArrayList labs = new ArrayList();
+        if(scannedDocStatus !=null && (scannedDocStatus.equals("O")  || scannedDocStatus.equals("I")  || scannedDocStatus.equals(""))){
+            DocumentResultsDao documentResultsDao= (DocumentResultsDao) SpringUtils.getBean("documentResultsDao");
+            ArrayList docs = documentResultsDao.populateDocumentResultsData(providerNo, demographicNo, status);
+            return docs;
+        }
+        return labs;
+    }
+
+
+    public ArrayList populateLabsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status,String scannedDocStatus){
         ArrayList labs = new ArrayList();
         oscar.oscarMDS.data.MDSResultsData mDSData = new oscar.oscarMDS.data.MDSResultsData();
 
@@ -182,13 +212,13 @@ public class CommonLabResultData {
                 labs.addAll(hl7Labs);
             }
         }
+        return labs;
+    }
 
-        if(scannedDocStatus !=null && (scannedDocStatus.equals("O")  || scannedDocStatus.equals("I")  || scannedDocStatus.equals(""))){          
-
-            DocumentResultsDao documentResultsDao= (DocumentResultsDao) SpringUtils.getBean("documentResultsDao");
-            ArrayList docs = documentResultsDao.populateDocumentResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
-            labs.addAll(docs);
-        }
+    public ArrayList populateLabResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status,String scannedDocStatus) {
+        ArrayList labs = new ArrayList();
+        labs=populateLabsData( providerNo,  demographicNo,  patientFirstName,  patientLastName,  patientHealthNumber,  status, scannedDocStatus);
+        labs.addAll(populateDocumentData(providerNo,  demographicNo,  patientFirstName,  patientLastName,  patientHealthNumber,  status, scannedDocStatus));
 
         return labs;
     }
