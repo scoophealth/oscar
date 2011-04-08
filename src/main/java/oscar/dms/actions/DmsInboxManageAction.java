@@ -34,8 +34,6 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Properties;
-import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -68,10 +66,13 @@ import oscar.oscarLab.ca.all.Hl7textResultsData;
 import oscar.oscarLab.ca.on.CommonLabResultData;
 import oscar.oscarLab.ca.on.LabResultData;
 import oscar.oscarProvider.data.ProviderData;
-import oscar.util.OscarRoleObjectPrivilege;
 
 import com.quatro.dao.security.SecObjectNameDao;
 import com.quatro.model.security.Secobjectname;
+import java.util.Properties;
+import java.util.Vector;
+import org.oscarehr.common.model.Queue;
+import oscar.util.OscarRoleObjectPrivilege;
 
 /**
  *
@@ -319,7 +320,7 @@ public class DmsInboxManageAction extends DispatchAction {
         Integer n=qdl.getQueueId();
         docQueue.put(i.toString(), n.toString());
     }
-    ArrayList labdocs = comLab.populateLabResultsData(searchProviderNo, demographicNo, request.getParameter("fname"), request.getParameter("lname"), request.getParameter("hnum"), ackStatus,scannedDocStatus);
+    ArrayList labdocs = comLab.populateLabResultsData2(searchProviderNo, demographicNo, request.getParameter("fname"), request.getParameter("lname"), request.getParameter("hnum"), ackStatus,scannedDocStatus);
 
     ArrayList validlabdocs=new ArrayList();
 
@@ -333,18 +334,21 @@ public class DmsInboxManageAction extends DispatchAction {
                 String queueid=docQueue.get(docid);                
                 if(queueid!=null){ 
                     queueid=queueid.trim();
-                    //if doc sent to default queue and no valid provider, include it if it's unique
-                    if(queueid.equals("1")&&!documentResultsDao.isSentToValidProvider(docid) && isSegmentIDUnique(validlabdocs,data)){
-                        validlabdocs.add(data);
+                    
+                    int queueIdInt=Integer.parseInt(queueid);
+                    
+                    //if doc sent to default queue and no valid provider, do NOT include it
+                    if(queueIdInt==Queue.DEFAULT_QUEUE_ID && !documentResultsDao.isSentToValidProvider(docid) && isSegmentIDUnique(validlabdocs,data)){
+                        //validlabdocs.add(data);
                     }
                     //if doc sent to default queue && valid provider, check if it's sent to this provider, if yes include it
-                    else if(queueid.equals("1")&&documentResultsDao.isSentToValidProvider(docid)
+                    else if(queueIdInt==Queue.DEFAULT_QUEUE_ID &&documentResultsDao.isSentToValidProvider(docid)
                             &&documentResultsDao.isSentToProvider(docid, searchProviderNo)&&isSegmentIDUnique(validlabdocs,data))
                     {
                         validlabdocs.add(data);
                     }
                     //if doc setn to non-default queue and valid provider, check if provider is in the queue or equal to the provider
-                    else if(!queueid.equals("1")&&documentResultsDao.isSentToValidProvider(docid)){
+                    else if(queueIdInt!=Queue.DEFAULT_QUEUE_ID&&documentResultsDao.isSentToValidProvider(docid)){
                         Vector vec=OscarRoleObjectPrivilege.getPrivilegeProp("_queue."+queueid);
                         if(OscarRoleObjectPrivilege.checkPrivilege(roleName, (Properties)vec.get(0), (Vector)vec.get(1))
                                 || documentResultsDao.isSentToProvider(docid, searchProviderNo)){
@@ -356,7 +360,7 @@ public class DmsInboxManageAction extends DispatchAction {
                         }
                     }
                     //if doc sent to non default queue and no valid provider, check if provider is in the non default queue
-                    else if(!queueid.equals("1")&&!documentResultsDao.isSentToValidProvider(docid)){
+                    else if(!queueid.equals(Queue.DEFAULT_QUEUE_ID)&&!documentResultsDao.isSentToValidProvider(docid)){
                         Vector vec=OscarRoleObjectPrivilege.getPrivilegeProp("_queue."+queueid);
                         if(OscarRoleObjectPrivilege.checkPrivilege(roleName, (Properties)vec.get(0), (Vector)vec.get(1))){
                             //labs is in provider's queue,do nothing
@@ -372,7 +376,7 @@ public class DmsInboxManageAction extends DispatchAction {
                            {validlabdocs.add(data);}
             }
     }
-    labdocs=validlabdocs;
+    //labdocs=validlabdocs;
     Collections.sort(labdocs);
   
     HashMap labMap = new HashMap();
@@ -646,6 +650,16 @@ public class DmsInboxManageAction extends DispatchAction {
     if ( providerNo == null ) { providerNo = ""; }
     if ( searchProviderNo == null ) { searchProviderNo = providerNo; }
 
+        StringBuilder roleName=new StringBuilder();
+        List<SecUserRole> roles=secUserRoleDao.getUserRoles(searchProviderNo);
+        for(SecUserRole r:roles){
+            if(roleName.length()!=0){
+                roleName.append(',');
+            }
+            roleName.append(r.getRoleName());
+        }
+        roleName.append(","+searchProviderNo);
+
         String patientIdNamesStr="";
         List<QueueDocumentLink> qs=queueDocumentLinkDAO.getActiveQueueDocLink();
         HashMap<Integer,List<Integer>> queueDocNos=new HashMap<Integer,List<Integer>>();
@@ -664,6 +678,11 @@ public class DmsInboxManageAction extends DispatchAction {
                 List<Integer> ListDocIds=new ArrayList<Integer>();
         for(QueueDocumentLink q:qs){
              int qid=q.getQueueId();
+             List vec=OscarRoleObjectPrivilege.getPrivilegeProp("_queue."+qid);
+             //if queue is not default and provider doesn't have access to it,continue
+             if(qid!=Queue.DEFAULT_QUEUE_ID && !OscarRoleObjectPrivilege.checkPrivilege(roleName.toString(), (Properties)vec.get(0), (List)vec.get(1))){
+                continue;
+             }
              int docid=q.getDocId();
              ListDocIds.add(docid);
              docType.put(docid,"DOC");
