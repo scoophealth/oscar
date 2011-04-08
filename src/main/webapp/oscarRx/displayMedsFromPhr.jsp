@@ -35,8 +35,14 @@
 <html>
     <c:set var="ctx" value="${pageContext.request.contextPath}" />
     <%
+    Boolean unimportedMed=(Boolean)request.getAttribute("unimportedMed");
     oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
-    HashMap<Long,PHRMedication> phrMeds=bean.getPairPHRMed();
+    HashMap<Long,PHRMedication> phrMeds=new HashMap<Long,PHRMedication>();
+    if(unimportedMed!=null && unimportedMed){
+        phrMeds=bean.getPairPrevViewedPHRMed();
+    }else{
+        phrMeds=bean.getPairPHRMed();
+    }
     int i=0;
     Set ks=phrMeds.keySet();
     Iterator itr=ks.iterator();
@@ -56,31 +62,49 @@
                  }
              }
              //console.log('selectedDrugs='+selectedDrugs);
+             $('successImport').innerHTML="";
+    }
+    function disableCB(){
+                        var result=selectedDrugs.split(",");
+                        for(var j=0;j<result.length;j++){
+                            if(result[j].length>1){
+                                if(document.getElementById("drug_"+result[j]))
+                                    document.getElementById("drug_"+result[j]).disabled=true;
+    }
+                        }
+                        resetSelectedDrugs();
+    }
+    function resetSelectedDrugs(){
+        selectedDrugs='';
     }
     function importPHRDrugs(){
         if(selectedDrugs.length>0){
             var url='./phrExchange.do';
-            var data='method=saveSelectedPHRMeds&selectedDrugs='+selectedDrugs;
+            var data='method=saveSelectedPHRMeds&selectedDrugs='+selectedDrugs+'&unimportedMed=<%=unimportedMed%>';
             new Ajax.Request(url,{method: 'get',parameters:data, onSuccess:function(transport){
-                    //console.log("success");
-                   /* var json=transport.responseText.evalJSON();
+                    //disable the checkbox
+                    var json=transport.responseText.evalJSON();
                     var s=json.success;
                     if(s!=null && s==true){
-                        $('phr_drug_div').innerHTML='<a>done importing</a>';
-                    }*/
-
+                        disableCB();
+                        //write a success message beside the import button
+                        $('successImport').innerHTML="success";
+                    }
             }})
         }
     }
 </script>
-<body >
+        <body ><%if(ks.isEmpty()){%> <a>No drugs to view</a> <%}else{%>
         <table id="phr_drug_div">
+            <tr><td><input type="button" value="import" onclick="importPHRDrugs();"></td><td id="successImport" style="color: blue" ></td></tr>
             <tr>
-                <td><a>select</a></td>
-                <td><a>Drug Name</a></td>
-                <td><a>Rx Date</a></td>
-                <td><a>Instruction</a></td>
-                <td><a>Provider Name</a></td>
+                <td align="center" ><a>Select</a></td>
+                <td align="center" ><a>Drug Name</a></td>
+                <td align="center" ><a>Rx Date</a></td>
+                <td align="center" ><a>Days To Expire</a></td>
+                <td align="center" ><a>Longterm</a></td>
+                <td align="center" ><a>Instruction</a></td>
+                <td align="center" ><a>Provider Name</a></td>
             </tr>
 
         <%while(itr.hasNext()){
@@ -90,17 +114,16 @@
             if(d!=null){
     %>
     <tr>
-        <td><input type="checkbox" id="drug_<%=i%>" name="phrDrugs" value="<%=k%>" onclick="selectDrug(this);"></td>
-        <td><a><%=d.getDrugName()%></a></td>
-        <td><a><%=oscar.util.UtilDateUtilities.DateToString(d.getRxDate())%></a></td>
-        <td><a><%=d.daysToExpire()%></a></td>
-        <td><%if(d.isLongTerm()){%><a>L</a><%} else{%><a>&nbsp;</a><%}%></td>
-        <td><a><%=RxPrescriptionData.getFullOutLine(d.getSpecial()).replaceAll(";", " ")%></a></td>
-        <td><a><%=d.getOutsideProviderName()%></a></td>
+        <td align="center" ><input type="checkbox" id="drug_<%=k%>" name="phrDrugs" value="<%=k%>" onclick="selectDrug(this);"></td>
+        <td align="center" ><a><%=d.getDrugName()%></a></td>
+        <td align="center" ><a><%=oscar.util.UtilDateUtilities.DateToString(d.getRxDate())%></a></td>
+        <td align="center" ><a><%=d.daysToExpire()%></a></td>
+        <td align="center" ><%if(d.isLongTerm()){%><a>L</a><%} else{%><a>&nbsp;</a><%}%></td>
+        <td align="left" ><a><%=RxPrescriptionData.getFullOutLine(d.getSpecial()).replaceAll(";", " ")%></a></td>
+        <td align="left" ><a><%=d.getOutsideProviderName()%></a></td>
     </tr>
         <%i++;}
         }%>
-        <input type="button" value="import" onclick="importPHRDrugs();">
-        </table>
+        </table><%}%>
     </body>
 </html>

@@ -54,6 +54,7 @@ public class PHRDocument implements Serializable{
     public static final int TYPE_PROVIDER = 1;
     public static final int TYPE_DEMOGRAPHIC = 2;
     //for status sent msgs
+    public static final String PHR_DOCUMENTS="phr_documents";
 
     
     
@@ -69,6 +70,7 @@ public class PHRDocument implements Serializable{
     public static final int STATUS_NOT_SET = PHRAction.STATUS_NOT_SET;
     public static final String CLASSIFICATION_MED = "urn:org:indivo:document:classification:medical:medication";
     public static final String CLASSIFICATION_MSG = "urn:org:indivo:document:classification:message";
+    public static final String CLASSIFICATION_SURVEY = "urn:org:indivo:document:classification:survey";
 
     public static final String  CODE_ATC= "ATC";
     public static final String  CODE_GCN_SEQNO= "GCN_SEQNO";
