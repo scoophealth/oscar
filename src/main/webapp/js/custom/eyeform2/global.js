@@ -7,7 +7,7 @@ var large   = 378;
 var full    = 649;
 
 var rowOne = ['cpp_currentHis','cpp_familyHis','cpp_diagnostics'];
-var rowTwo = ['cpp_pastOcularHis','cpp_medicalHis','cpp_none'];
+var rowTwo = ['cpp_pastOcularHis','cpp_medicalHis','cpp_ocularMeds'];
 
 function rowOneX1(){
 	for(var x=0;x<rowOne.length;x++) {
