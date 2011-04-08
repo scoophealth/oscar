@@ -42,6 +42,7 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import net.sf.json.JSONObject;
 
 import org.apache.log4j.Logger;
@@ -62,6 +63,8 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
+import oscar.log.LogAction;
+import oscar.log.LogConst;
 import oscar.oscarRx.util.RxUtil;
 
 /**
@@ -92,8 +95,14 @@ public class PHRExchangeAction extends DispatchAction {
                 response.sendRedirect("error.html");
                 return null;
         }
+        HashMap<Long,PHRMedication> meds=new HashMap<Long,PHRMedication>();
+        String unimportedMed=request.getParameter("unimportedMed");
+
         String selected=request.getParameter("selectedDrugs");
-        HashMap<Long,PHRMedication> meds=bean.getPairPHRMed();
+        if(unimportedMed.equalsIgnoreCase("true"))
+            meds=bean.getPairPrevViewedPHRMed();
+        else
+            meds=bean.getPairPHRMed();
         Set<Long> ks=meds.keySet();
         Iterator<Long> it= ks.iterator();
         String [] chosen=selected.split(",");
@@ -115,14 +124,15 @@ public class PHRExchangeAction extends DispatchAction {
                 //save it in drug table and update status to recieved and saved in other table in phr documents table
                 saveDrug=m.getDrug();
                 drugDao.addNewDrug(saveDrug);
+                    LogAction.addLog(bean.getProviderNo(),LogConst.ADD,LogConst.CON_DRUGS,""+saveDrug.getId(),
+                            request.getRemoteAddr(),""+bean.getDemographicNo(),saveDrug.getAuditString());
                 phrDoc.setStatus(PHRDocument.STATUS_RECIEVED_SAVED_IN_OSCAR_TABLE);
-            }else{
-                //update status to recieved but not saved in other table.
-                phrDoc.setStatus(PHRDocument.STATUS_RECIEVED_NOT_SAVED_IN_OSCAR_TABLE);
+                    phrDocumentDAO.update(phrDoc);
+                    LogAction.addLog(bean.getProviderNo(),LogConst.UPDATE,PHRDocument.PHR_DOCUMENTS,""+phrDoc.getId() ,
+                            request.getRemoteAddr(),""+bean.getDemographicNo(),phrDoc.getDocContent());
             }
-            phrDocumentDAO.update(phrDoc);
+
         }
-        //TODO: update the status of the phr_document table to show it's been viewed but not save. Later in UI, show a category called viewed before to show them.
         HashMap<String,Boolean> hm=new HashMap<String,Boolean>();
         hm.put("success", Boolean.TRUE);
         JSONObject jsonObject = JSONObject.fromObject(hm);
@@ -169,6 +179,7 @@ public class PHRExchangeAction extends DispatchAction {
                     }
                 }else{
                     log.error("String Auth object was null or the previous action still executing");
+                    return mapping.findForward("phrNotAuthorized");
                 }
             }
         }
@@ -193,7 +204,8 @@ public class PHRExchangeAction extends DispatchAction {
         }
         HashMap<Long,PHRMedication> drugsToDisplay =RxUtil.createKeyValPair(listDrugsToDisplay);
         bean.setPairPrevViewedPHRMed(drugsToDisplay);
-        return mapping.findForward("displayPrevViewed");
+        request.setAttribute("unimportedMed", true);
+        return mapping.findForward("success");
     }
     public ActionForward doPhrExchange(ActionMapping mapping, ActionForm  form,HttpServletRequest request, HttpServletResponse response) throws Exception {
         log.debug("-----------------Indivo Exchange has been called -------------");
