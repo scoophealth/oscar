@@ -21,8 +21,10 @@
   ArrayList<Hashtable> list = ProviderData.getProviderListOfAllTypes(true);
   ArrayList<Integer> providerList = new ArrayList<Integer>();
   for (Hashtable h : list) {
+	  try{
       String pn = (String)h.get("providerNo");
       providerList.add(Integer.valueOf(pn));
+	  }catch(Exception alphaProviderNumber){} /*No need to do anything. Just want to avoid a NumberFormatException from provider numbers with alphanumeric Characters*/
   }
 
   String suggestProviderNo = "";
@@ -32,7 +34,6 @@
           break;
       }
   }
-  suggestProviderNo = "000000".substring(suggestProviderNo.length()) + suggestProviderNo;
 %>
 
 <%
