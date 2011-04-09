@@ -159,7 +159,10 @@ public boolean patientHasOutstandingPrivateBills(String demographicNo){
 	oscar.oscarSecurity.CookieSecurity cs = new oscar.oscarSecurity.CookieSecurity();
     response.addCookie(cs.GiveMeACookie(oscar.oscarSecurity.CookieSecurity.providerCookie));
 
-    String mygroupno = (String) session.getAttribute("groupno");  
+    String mygroupno = (String) session.getAttribute("groupno"); 
+    if(mygroupno == null){
+    	mygroupno = ".default"; 
+    }
     String caisiView = null;
     caisiView = request.getParameter("GoToCaisiViewFromOscarView");
     if(caisiView!=null && "true".equals(caisiView)) {
