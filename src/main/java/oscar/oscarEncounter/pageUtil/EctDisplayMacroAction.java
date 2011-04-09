@@ -61,7 +61,11 @@ public class EctDisplayMacroAction extends EctDisplayAction {
  try {         
 
 	 String appointmentNo = request.getParameter("appointment_no");
-		
+	 String cpp =request.getParameter("cpp");
+	 if(cpp==null) {
+		 cpp=new String();
+	 }
+	 
     //Set lefthand module heading and link
     String winName = "macro" + bean.demographicNo;
     String pathview, pathedit;
@@ -93,7 +97,7 @@ public class EctDisplayMacroAction extends EctDisplayAction {
         item.setTitle(itemHeader);
         int hash = Math.abs(winName.hashCode());        
        // url = "popupPage(500,900,'" + hash + "','" + request.getContextPath() + "/eyeform/Macro.do?macro.id="+ sh.getId() +"'); return false;";
-        url = "return runMacro2("+sh.getId()+","+appointmentNo+");";       
+        url = "return runMacro2("+sh.getId()+","+appointmentNo+","+cpp+");";       
         item.setURL(url);               
         Dao.addItem(item);
     }
