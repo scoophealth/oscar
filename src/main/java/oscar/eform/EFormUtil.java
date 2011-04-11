@@ -114,7 +114,9 @@ public class EFormUtil {
 		roleType = org.apache.commons.lang.StringEscapeUtils.escapeSql(roleType);
 		if (creator == null) creator = "NULL";
 		else creator = "'" + creator + "'";
-		String sql = "INSERT INTO eform (form_name, file_name, subject, form_date, form_time, form_creator, status, form_html, patient_independent,roleType) VALUES " + "('" + formName + "', '" + fileName + "', '" + formSubject + "', '" + nowDate + "', '" + nowTime + "', " + creator + ", 1, '" + htmlStr + "', " + patientIndependent + ",'" + roleType + "')";
+		if (roleType == null) roleType = "NULL";
+		else roleType = "'" + roleType + "'";
+		String sql = "INSERT INTO eform (form_name, file_name, subject, form_date, form_time, form_creator, status, form_html, patient_independent,roleType) VALUES " + "('" + formName + "', '" + fileName + "', '" + formSubject + "', '" + nowDate + "', '" + nowTime + "', " + creator + ", 1, '" + htmlStr + "', " + patientIndependent + "," + roleType + ")";
 		return (runSQLinsert(sql));
 	}
 
