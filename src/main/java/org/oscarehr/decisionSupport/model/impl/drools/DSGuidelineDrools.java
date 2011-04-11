@@ -68,12 +68,14 @@ public class DSGuidelineDrools extends DSGuideline {
             }
 
             List<DSParameter> lDSP = this.getParameters();
-            for( DSParameter dsp: lDSP ) {
-                Class clas = Class.forName(dsp.getStrClass());
-                Constructor constructor = clas.getConstructor();
-                Object obj = constructor.newInstance();
-
-                workingMemory.assertObject(obj);
+            if (lDSP != null){
+	            for( DSParameter dsp: lDSP ) {
+	                Class clas = Class.forName(dsp.getStrClass());
+	                Constructor constructor = clas.getConstructor();
+	                Object obj = constructor.newInstance();
+	
+	                workingMemory.assertObject(obj);
+	            }
             }
 
             workingMemory.fireAllRules();
@@ -116,12 +118,12 @@ public class DSGuidelineDrools extends DSGuideline {
         ArrayList<Element> conditionElements = new ArrayList();
         ArrayList<Element> lParameterElements = new ArrayList();
         
-
-        for( DSParameter dsParameter: this.getParameters()) {
-            Element parameterElement = this.getDroolsParameter(dsParameter);
-            lParameterElements.add(parameterElement);
+        if(this.getParameters() != null){
+	        for( DSParameter dsParameter: this.getParameters()) {
+	            Element parameterElement = this.getDroolsParameter(dsParameter);
+	            lParameterElements.add(parameterElement);
+	        }
         }
-
         int paramCount=0;
        
         for (DSCondition condition: this.getConditions()) {
