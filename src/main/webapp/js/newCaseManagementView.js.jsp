@@ -411,6 +411,7 @@ function navBarLoader() {
 
                                                 //track ajax completions and display divs when last ajax call completes
                                                 //navBarObj.display(navBar,div);
+                                                notifyDivLoaded($(div).id);
                                            },
                                 onFailure: function(request) {
                                                 $(div).innerHTML = "<h3>" + div + "</h3>Error: " + request.status;
@@ -751,6 +752,7 @@ function updateCPPNote() {
                                                       $("issueChange").value = false;
                                                  }
 
+												notifyDivLoaded($(div).id);
                                            },
                                 onFailure: function(request) {
                                                 $(div).innerHTML = "<h3>" + div + "<\/h3>Error: " + request.status;
@@ -786,6 +788,7 @@ function loadDiv(div,url,limit) {
 
                                                 $(div).update(request.responseText);
                                                 //listDisplay(div,100);
+												notifyDivLoaded($(div).id);
 
                                            },
                                 onFailure: function(request) {

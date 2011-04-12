@@ -18,12 +18,27 @@
 	int appointmentNo = Integer.parseInt(request.getParameter("appointmentNo"));
 	String demographicNo = request.getParameter("demographicNo");
 	
-	String currentHistoryValue = CaseManagementViewAction.getLatestCppNote(demographicNo,currentHistory.getId(),appointmentNo,true);
-	String familyHistoryValue = CaseManagementViewAction.getLatestCppNote(demographicNo,familyHistory.getId(),appointmentNo,false);
-	String diagnosticNotesValue = CaseManagementViewAction.getLatestCppNote(demographicNo,diagnosticNotes.getId(),appointmentNo,false);
-	String pastOcularHistoryValue = CaseManagementViewAction.getLatestCppNote(demographicNo,pastOcularHistory.getId(),appointmentNo,false);
-	String medicalHistoryValue = CaseManagementViewAction.getLatestCppNote(demographicNo,medicalHistory.getId(),appointmentNo,false);
-	String ocularMedsValue = CaseManagementViewAction.getLatestCppNote(demographicNo,ocularMeds.getId(),appointmentNo,false);
+	CaseManagementNote currentHistoryNote = CaseManagementViewAction.getLatestCppNote(demographicNo,currentHistory.getId(),appointmentNo,true);
+	CaseManagementNote familyHistoryNote = CaseManagementViewAction.getLatestCppNote(demographicNo,familyHistory.getId(),appointmentNo,false);
+	CaseManagementNote diagnosticNotesNote = CaseManagementViewAction.getLatestCppNote(demographicNo,diagnosticNotes.getId(),appointmentNo,false);
+	CaseManagementNote pastOcularHistoryNote = CaseManagementViewAction.getLatestCppNote(demographicNo,pastOcularHistory.getId(),appointmentNo,false);
+	CaseManagementNote medicalHistoryNote = CaseManagementViewAction.getLatestCppNote(demographicNo,medicalHistory.getId(),appointmentNo,false);
+	CaseManagementNote ocularMedsNote = CaseManagementViewAction.getLatestCppNote(demographicNo,ocularMeds.getId(),appointmentNo,false);
+%>
+<%!
+	public String getNoteValue(CaseManagementNote note) {
+		if(note == null) {
+			return new String();
+		}
+		return note.getNote();
+	}
+
+	public long getNoteId(CaseManagementNote note) {
+		if(note == null) {
+			return 0;
+		}
+		return note.getId();
+	}
 %>
 
 <div id="divR1" style="width:100%;">
@@ -57,13 +72,13 @@
 							
 							<tr>
 								<td>
-									<div class="fieldcontent"><textarea name="cpp_currentHis" cpp="CurrentHistory" issue_id="<%=currentHistory.getId() %>" class="examfieldwhite" tabindex="6" cols="20" onchange="setSaveflag(true)" style="height: 60px; overflow: auto; width:100%"><%=currentHistoryValue%></textarea></div>
+									<div class="fieldcontent"><textarea name="cpp_currentHis" cpp="CurrentHistory" note_id="<%=getNoteId(currentHistoryNote)%>" issue_id="<%=currentHistory.getId() %>" class="examfieldwhite" tabindex="6" cols="20" onchange="setSaveflag(true)" style="height: 60px; overflow: auto; width:100%"><%=getNoteValue(currentHistoryNote)%></textarea></div>
 								</td>
 								<td>
-									<div class="fieldcontent"><textarea name="cpp_familyHis" cpp="FamHistory" issue_id="<%=familyHistory.getId() %>" class="examfieldwhite" tabindex="7" cols="20" onchange="setSaveflag(true)" style="height: 60px; overflow: auto; width:100%"><%=familyHistoryValue %></textarea></div>
+									<div class="fieldcontent"><textarea name="cpp_familyHis" cpp="FamHistory" note_id="<%=getNoteId(familyHistoryNote)%>" issue_id="<%=familyHistory.getId() %>" class="examfieldwhite" tabindex="7" cols="20" onchange="setSaveflag(true)" style="height: 60px; overflow: auto; width:100%"><%=getNoteValue(familyHistoryNote)%></textarea></div>
 								</td>
 								<td colspan="2">
-									<div class="fieldcontent"><textarea name="cpp_diagnostics" cpp="DiagnosticNotes" issue_id="<%=diagnosticNotes.getId() %>" class="examfieldwhite" tabindex="8" cols="20" onchange="setSaveflag(true)" style="height: 60px; overflow: auto; width:100%"><%=diagnosticNotesValue %></textarea></div>
+									<div class="fieldcontent"><textarea name="cpp_diagnostics" cpp="DiagnosticNotes" note_id="<%=getNoteId(diagnosticNotesNote)%>" issue_id="<%=diagnosticNotes.getId() %>" class="examfieldwhite" tabindex="8" cols="20" onchange="setSaveflag(true)" style="height: 60px; overflow: auto; width:100%"><%=getNoteValue(diagnosticNotesNote) %></textarea></div>
 								</td>
 							</tr>
 						</tbody>
@@ -96,13 +111,13 @@
 							
 							<tr>
 								<td>
-									<div class="fieldcontent"><textarea name="cpp_pastOcularHis" cpp="PastOcularHistory" issue_id="<%=pastOcularHistory.getId() %>" class="examfieldwhite" tabindex="6" cols="20" onchange="setSaveflag(true)" style="height: 60px; overflow: auto; width:100%"><%=pastOcularHistoryValue %></textarea></div>
+									<div class="fieldcontent"><textarea name="cpp_pastOcularHis" cpp="PastOcularHistory" note_id="<%=getNoteId(pastOcularHistoryNote)%>" issue_id="<%=pastOcularHistory.getId() %>" class="examfieldwhite" tabindex="6" cols="20" onchange="setSaveflag(true)" style="height: 60px; overflow: auto; width:100%"><%=getNoteValue(pastOcularHistoryNote) %></textarea></div>
 								</td>
 								<td>
-									<div class="fieldcontent"><textarea name="cpp_medicalHis" cpp="MedHistory" issue_id="<%=medicalHistory.getId() %>" class="examfieldwhite" tabindex="7" cols="20" onchange="setSaveflag(true)" style="height: 60px; overflow: auto; width:100%"><%=medicalHistoryValue %></textarea></div>
+									<div class="fieldcontent"><textarea name="cpp_medicalHis" cpp="MedHistory" note_id="<%=getNoteId(medicalHistoryNote)%>" issue_id="<%=medicalHistory.getId() %>" class="examfieldwhite" tabindex="7" cols="20" onchange="setSaveflag(true)" style="height: 60px; overflow: auto; width:100%"><%=getNoteValue(medicalHistoryNote) %></textarea></div>
 								</td>
 								<td colspan="2">
-									<div class="fieldcontent"><textarea name="cpp_ocularMeds" cpp="OcularMedication" issue_id="<%=ocularMeds.getId() %>" class="examfieldwhite" tabindex="8" cols="20" onchange="setSaveflag(true)" style="height: 60px; overflow: auto; width:100%"><%=ocularMedsValue %></textarea></div>
+									<div class="fieldcontent"><textarea name="cpp_ocularMeds" cpp="OcularMedication" note_id="<%=getNoteId(ocularMedsNote)%>" issue_id="<%=ocularMeds.getId() %>" class="examfieldwhite" tabindex="8" cols="20" onchange="setSaveflag(true)" style="height: 60px; overflow: auto; width:100%"><%=getNoteValue(ocularMedsNote) %></textarea></div>
 								</td>
 							</tr>
 						</tbody>
