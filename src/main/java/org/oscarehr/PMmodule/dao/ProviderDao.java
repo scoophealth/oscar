@@ -312,4 +312,11 @@ public class ProviderDao extends HibernateDaoSupport {
 
 		return null;
 	}
+	
+	public List<String> getUniqueTeams() {
+		@SuppressWarnings("unchecked")
+		List<String> providerList = getHibernateTemplate().find("select distinct p.Team From Provider p");
+
+		return providerList;
+	}
 }

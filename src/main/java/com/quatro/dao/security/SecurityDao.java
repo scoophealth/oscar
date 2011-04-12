@@ -326,4 +326,16 @@ public class SecurityDao extends HibernateDaoSupport {
 			throw re;
 		}
 	}
+	
+	public Security getByProviderNo(String providerNo) {
+		String sql = "select s from Security s where s.providerNo=?";
+		
+		@SuppressWarnings("unchecked")
+		List<Security> results = getHibernateTemplate().find(sql,new Object[]{providerNo});
+		
+		if(!results.isEmpty()) {
+			return results.get(0);
+		}
+		return null;
+	}
 }
