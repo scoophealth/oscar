@@ -300,6 +300,7 @@ CREATE TABLE consultationServices (
 --
 
 CREATE TABLE ctl_billingservice (
+  id int(10) not null auto_increment primary key,
   servicetype_name varchar(150) default NULL,
   servicetype varchar(10) default NULL,
   service_code varchar(10) default NULL,

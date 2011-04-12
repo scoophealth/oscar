@@ -69,4 +69,9 @@ public class UserPropertyDAO extends HibernateDaoSupport {
             return null;            
     }
     
+    public List<UserProperty> getDemographicProperties(String providerNo) {
+    	@SuppressWarnings("unchecked")
+    	List<UserProperty> list = this.getHibernateTemplate().find("from UserProperty p where  p.providerNo = ?", providerNo);
+    	return list;
+    }
 }

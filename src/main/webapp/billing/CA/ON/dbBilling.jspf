@@ -60,7 +60,7 @@
     {"search_ctlbillservice", "select distinct servicetype_name, servicetype from ctl_billingservice where status='A' and servicetype like ?"},
     {"search_ctlbillservice_detail", "select service_group_name, service_group, servicetype_name, servicetype, service_code, service_order from ctl_billingservice where status='A' and service_group=? and servicetype=?"},
     {"search_ctldiagcode_detail", "select * from ctl_diagcode where servicetype=?"},
-    {"save_ctlbillservice","insert into ctl_billingservice values(?,?,?,?,?,?,?)"},
+    {"save_ctlbillservice","insert into ctl_billingservice (servicetype_name,servicetype,service_code,service_group_name,service_group,status,service_order) values(?,?,?,?,?,?,?)"},
     {"save_ctldiagcode","insert into ctl_diagcode values(?,?,?)"},
     {"save_ctlbilltype","insert into ctl_billingtype values(?,?)"},
     {"delete_ctlbillservice","delete from ctl_billingservice where servicetype=?"},

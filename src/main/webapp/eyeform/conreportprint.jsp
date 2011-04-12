@@ -437,7 +437,7 @@
                    <nested:equal property="cp.greeting" value="1">
                     I had the pleasure of seeing <c:out value="${demographic.age}"/> year old 
                     <c:out value="${demographic.lastName}"/>,<c:out value="${demographic.firstName}"/>
-                    <c:if test="${not empty appointDate}">on <c:out value="appointDate"/></c:if> on your kind referral.<br>
+                    <c:if test="${not empty appointDate}">on <c:out value="${appointDate}"/></c:if> on your kind referral.<br>
                     </nested:equal>
                     <c:if test="${cp.greeting == 2}">
                     This is a report on my most recent assessment of <c:out value="${demographic.age}"/> year old 
@@ -547,7 +547,7 @@
             <tr>
             <td class="letterContent">
       			
-                <c:out value="${internalDrName}"/><c:out value="${specialty}"/>
+                <c:out value="${appointmentDoctor}"/>
             </td>
             </tr>
             <tr>

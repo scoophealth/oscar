@@ -14,6 +14,18 @@
 	   jQuery("#cppBoxes").html("");
 	   jQuery.ajax({url:ctx+"/eyeform/cppmeasurements.html",dataType: "html",async:false,success: function(data) {
 		   jQuery("#cppBoxes").append(data);
+/*
+			var types='';			
+			jQuery("textarea[cpp]").each(function() {
+				if(types.length > 0) {
+					types += ',';
+				}
+				types += jQuery(this).attr("cpp");
+			});
+
+			//make a call to update the existing values
+			jQuery.ajax({dataType: "script", url:ctx+"/oscarEncounter/MeasurementData.do?demographicNo="+demographicNo+"&types="+types+"&action=getLatestCppValues&appointmentNo="+appointmentNo + "&fresh=cpp_currentHis",async:false});			
+*/
 	   }});
 	   
 	   
@@ -53,6 +65,24 @@
 			jQuery.ajax({type:'POST',url:ctx+'/oscarEncounter/MeasurementData.do?action=saveValues&demographicNo='+demographicNo+'&appointmentNo='+appointmentNo,data:postData,success: function(){
 				//alert('Saved.');
 			}});
+/*			
+			jQuery("textarea[cpp]").each(function() {					
+				var className = jQuery(this).attr("class");
+					
+				if(postData.length > 0) {
+					postData += "&";
+				}
+				var name = jQuery(this).attr("cpp");
+				var value = jQuery(this).val();
+				var data = name + "=" + encodeURIComponent(value);
+				postData += data;
+				
+			});	
+			
+			jQuery.ajax({type:'POST',url:ctx+'/oscarEncounter/MeasurementData.do?action=saveCppValues&demographicNo='+demographicNo+'&appointmentNo='+appointmentNo,data:postData,success: function(){
+				//alert('Saved.');
+			}});
+*/
 		});
 		
 		
@@ -78,6 +108,7 @@
 
 			//make a call to update the existing values
 			jQuery.ajax({dataType: "script", url:ctx+"/oscarEncounter/MeasurementData.do?demographicNo="+demographicNo+"&types="+types+"&action=getLatestValues&appointmentNo="+appointmentNo + "&fresh=cpp_currentHis",async:false});
+			//jQuery.ajax({dataType: "script", url:ctx+"/oscarEncounter/MeasurementData.do?demographicNo="+demographicNo+"&types="+cppTypes+"&action=getLatestCppValues&appointmentNo="+appointmentNo + "&fresh=cpp_currentHis",async:false});
 			
 			//expand the sections where there's a while field
 			jQuery(".slideblock").each(function() { 
@@ -127,7 +158,8 @@
        reorderNavBarElements('appointmentHistory','measurements');    
        reorderNavBarElements('consultations','appointmentHistory');           
        addLeftNavDiv("conReport");	      
-       popColumn(ctx + "/oscarEncounter/displayConReport.do?hC=009999&cmd=conReport&appointment_no="+appointmentNo + "&cpp=measurements","conReport","conReport", "leftNavBar", this);       
+       popColumn(ctx + "/oscarEncounter/displayConReport.do?hC=009999&cmd=conReport&appointment_no="+appointmentNo + "&cpp=measurements","conReport","conReport", "leftNavBar", this);
+       reorderNavBarElements('conReport','consultation');
        addLeftNavDiv("macro");	      
        popColumn(ctx + "/oscarEncounter/displayMacro.do?hC=009999&appointment_no="+appointmentNo  +"&cpp=measurements","macro","macro", "leftNavBar", this);
        
@@ -169,6 +201,7 @@
     	   e.preventDefault();
     	   location.href=ctx+'/eyeform/Eyeform.do?method=print&apptNos=' + appointmentNo + "&cpp=measurements";
        });
+       jQuery("#assignIssueSection").html("<span>&nbsp;</span>");
      });
 
  

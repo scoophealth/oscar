@@ -99,7 +99,7 @@ function doSubmit() {
 	<table style="border:0;">
 	<tr>
 	<td style="text-align: right;">
-	<a style="color:red;" href="../provider/providercontrol.jsp">back to OSCAR appointment page</a> 
+	<a style="color:red;" href="#" onclick="window.close();">Close</a> 
 	</td>
 	</tr>
 	</table>
@@ -123,7 +123,10 @@ function doSubmit() {
 			<%
 				String dmname = (String)request.getAttribute("dmname");
 				if(dmname==null) {
-					dmname=new String();
+					dmname = request.getParameter("dmname");
+					if(dmname == null) {
+						dmname=new String();
+					}
 				}
 			%>			
 			<input type="text" name="dmname" disabled="disabled" value="<%=dmname%>"/>  			  			
@@ -199,7 +202,7 @@ function doSubmit() {
 	<table style="border:0;">
 	<tr>
 	<td style="text-align: center;">
-	<a href="../provider/providercontrol.jsp" >back to OSCAR appointment page</a> 
+	<a href="#" onclick="window.close();" >Close</a> 
 	</td>
 	</tr>
 	</table>
