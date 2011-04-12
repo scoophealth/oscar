@@ -1,0 +1,135 @@
+reqProvName : left, 55, 70, 0, BaseFont.HELVETICA, 10, _, 238, 80, 10
+clinicName : left, 55, 95, 0, BaseFont.HELVETICA, 8, _, 238, 105, 10
+clinicAddress : left, 55, 105, 0, BaseFont.HELVETICA, 8, _, 238, 136, 10
+
+clinicianNo : left, 22, 152, 0, BaseFont.HELVETICA, 10, _, 144, 170, 10
+cpsoNo : left, 151, 152, 0, BaseFont.HELVETICA, 10, _, 238, 170, 10
+
+ohip : left, 23, 187, 0, BaseFont.ZAPFDINGBATS, 10, \u2713
+thirdParty : left, 94, 187, 0, BaseFont.ZAPFDINGBATS, 10, \u2713
+wsib : left, 204, 187, 0, BaseFont.ZAPFDINGBATS, 10, \u2713
+
+additionalClinicalInfo : left, 22, 200, 0, BaseFont.HELVETICA, 8, _, 238, 244, 10
+
+copy2clinician : left, 22, 253, 0, BaseFont.ZAPFDINGBATS, 10, \u2713
+copyLname : left, 25, 261, 0, BaseFont.HELVETICA, 8, _, 129, 274, 10
+copyFname : left, 135, 261, 0, BaseFont.HELVETICA, 8, _, 238, 274, 10
+copyAddress : left, 22, 283, 0, BaseFont.HELVETICA, 8, _, 238, 320, 10
+
+clinicianContactUrgent : left, 247, 128, 0, BaseFont.HELVETICA, 10, _, 447, 138, 10
+
+healthNumber :  left, 242, 153, 0, BaseFont.HELVETICA, 12, _, 386, 163, 10
+version :  left, 390, 153, 0, BaseFont.HELVETICA, 12, _, 410, 163, 10
+
+male : left, 422, 164, 0, BaseFont.ZAPFDINGBATS, 10, \u2713
+female : left, 451, 164, 0, BaseFont.ZAPFDINGBATS, 10, \u2713
+
+patientBirthYear :  left, 490, 153, 0, BaseFont.HELVETICA, 12, _, 520, 163, 10
+patientBirthMth :  left, 541, 153, 0, BaseFont.HELVETICA, 12, _, 555, 163, 10
+patientBirthDay :  left, 571, 153, 0, BaseFont.HELVETICA, 12, _, 585, 163, 10
+
+province :  left, 245, 180, 0, BaseFont.HELVETICA, 12, _, 265, 190, 10
+oprn :  left, 273, 180, 0, BaseFont.HELVETICA, 12, _, 441, 190, 10
+patientPhoneNumber :  left, 451, 180, 0, BaseFont.HELVETICA, 12, _, 591, 190, 10
+
+patientLastName : left, 244, 205, 0, BaseFont.HELVETICA, 12, _, 591, 215, 10
+patientFirstName : left, 244, 233, 0, BaseFont.HELVETICA, 12, _, 591, 243, 10
+patientAddress : left, 244, 258, 0, BaseFont.HELVETICA, 12, _, 591, 320, 14
+
+b_glucose : left, 22, 357, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+b_glucose_random : left, 118, 358, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+b_glucose_fasting : left, 179, 358, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+b_hba1c : left, 22, 370, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+b_tsh : left, 22, 382, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+b_creatinine : left, 22, 395, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+b_uricAcid : left, 22, 407, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+b_sodium : left, 22, 419, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+b_potassium : left, 22, 431, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+b_chloride : left, 22, 443, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+b_ck : left, 22, 455, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+b_alt : left, 22, 467, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+b_alkPhosphatase : left, 22, 479, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+b_bilirubin : left, 22, 491, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+b_albumin : left, 22, 503, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+b_lipidAssessment : left, 22, 515, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+b_vitaminB12 : left, 22, 541, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+b_ferritin : left, 22, 553, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+b_acRatioUrine : left, 22, 565, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+b_urinalysis : left, 22, 577, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+b_neonatalBilirubin : left, 22, 590, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+b_childsAgeDays : left, 114, 593, 0, BaseFont.HELVETICA, 8, _, 134, 603, 10
+b_childsAgeHours : left, 184, 593, 0, BaseFont.HELVETICA, 8, _, 204, 603, 10
+b_cliniciansTelNo : left, 141, 605, 0, BaseFont.HELVETICA, 8, _, 238, 615, 10
+b_patients24hTelNo : left, 141, 617, 0, BaseFont.HELVETICA, 8, _, 238, 627, 10
+
+b_therapeuticDrugMonitoring : left, 22, 639, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+b_nameDrug1 : left, 110, 642, 0, BaseFont.HELVETICA, 8, _, 238, 652, 10
+b_nameDrug2 : left, 110, 654, 0, BaseFont.HELVETICA, 8, _, 238, 664, 10
+b_timeCollected1 : left, 132, 666, 0, BaseFont.HELVETICA, 8, _, 152, 676, 10
+b_timeCollected2 : left, 205, 666, 0, BaseFont.HELVETICA, 8, _, 225, 676, 10
+b_timeLastDose1 : left, 132, 678, 0, BaseFont.HELVETICA, 8, _, 152, 688, 10
+b_timeLastDose2 : left, 205, 678, 0, BaseFont.HELVETICA, 8, _, 225, 688, 10
+b_timeNextDose1 : left, 132, 691, 0, BaseFont.HELVETICA, 8, _, 152, 701, 10
+b_timeNextDose2 : left, 205, 691, 0, BaseFont.HELVETICA, 8, _, 225, 701, 10
+
+b_dateSigned : left, 178, 742, 0, BaseFont.HELVETICA, 8, _, 235, 752, 10
+
+h_cbc : left, 244, 357, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+h_prothrombinTime : left, 244, 369, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+i_pregnancyTest : left, 244, 394, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+i_mononucleosisScreen : left, 244, 406, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+i_rubella : left, 244, 419, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+i_prenatal : left, 244, 431, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+i_repeatPrenatalAntibodies : left, 244, 455, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+m_cervical : left, 244, 492, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+m_vaginal : left, 244, 504, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+m_vaginalRectal : left, 244, 516, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+m_chlamydia : left, 244, 528, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+m_chlamydiaSource : left, 350, 519, 0, BaseFont.HELVETICA, 8, _, 416, 529, 10
+m_gc : left, 244, 541, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+m_gcSource : left, 328, 531, 0, BaseFont.HELVETICA, 8, _, 416, 541, 10
+m_sputum : left, 244, 553, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+m_throat : left, 244, 565, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+m_wound : left, 244, 577, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+m_woundSource : left, 340, 568, 0, BaseFont.HELVETICA, 8, _, 416, 578, 10
+m_urine : left, 244, 589, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+m_stoolCulture : left, 244, 602, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+m_stoolOvaParasites : left, 244, 614, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+m_otherSwabsPus : left, 244, 626, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+m_otherSwabsPusSource : left, 374, 617, 0, BaseFont.HELVETICA, 7, _, 416, 627, 10
+m_blank : left, 244, 639, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+m_blankText : left, 262, 629, 0, BaseFont.HELVETICA, 8, _, 416, 639, 10
+
+m_specimenCollectionTime : left, 260, 654, 0, BaseFont.HELVETICA, 8, _, 300, 664, 10
+m_specimenCollectionDate : left, 340, 654, 0, BaseFont.HELVETICA, 8, _, 416, 664, 10
+
+v_acuteHepatitis : left, 420, 358, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+v_chronicHepatitis : left, 420, 370, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+v_immuneStatus : left, 420, 382, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+v_immune_HepatitisA : left, 471, 392, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+v_immune_HepatitisB : left, 471, 402, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+v_immune_HepatitisC : left, 471, 412, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+psa_total: left, 421, 456, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+psa_free: left, 498, 456, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+psa_insured: left, 421, 480, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+psa_uninsured: left, 421, 490, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+vitaminD_insured: left, 421, 518, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+vitaminD_uninsured: left, 421, 549, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+o_otherTests1 : left, 420, 568, 0, BaseFont.HELVETICA, 8, _, 591, 578, 10
+o_otherTests2 : left, 420, 580, 0, BaseFont.HELVETICA, 8, _, 591, 590, 10
+o_otherTests3 : left, 420, 592, 0, BaseFont.HELVETICA, 8, _, 591, 602, 10
+o_otherTests4 : left, 420, 604, 0, BaseFont.HELVETICA, 8, _, 591, 614, 10
+o_otherTests5 : left, 420, 617, 0, BaseFont.HELVETICA, 8, _, 591, 627, 10
+o_otherTests6 : left, 420, 629, 0, BaseFont.HELVETICA, 8, _, 591, 639, 10
+o_otherTests7 : left, 420, 641, 0, BaseFont.HELVETICA, 8, _, 591, 651, 10
+o_otherTests8 : left, 420, 653, 0, BaseFont.HELVETICA, 8, _, 591, 663, 10
+o_otherTests9 : left, 420, 665, 0, BaseFont.HELVETICA, 8, _, 591, 675, 10
+
+fobt_nonCCC : left, 244, 688, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+fobt_CCC : left, 347, 688, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
