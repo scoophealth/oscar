@@ -101,8 +101,7 @@
 	<bean id="BillingDxCodeDAO" class="oscar.oscarBilling.ca.bc.data.BillingDxCodeDAO" autowire="byName" />
 	<bean id="BillingreferralDAO" class="org.oscarehr.common.dao.BillingreferralDao" autowire="byName" />
 	<bean id="DxresearchDAO" class="org.oscarehr.common.dao.DxresearchDAO" autowire="byName" />
-	<bean id="Icd9DAO" class="org.oscarehr.common.dao.Icd9Dao" autowire="byName" />
-        <bean id="MyGroupDAO" class="org.oscarehr.common.dao.MyGroupDAO" autowire="byName" />
+	<bean id="Icd9DAO" class="org.oscarehr.common.dao.Icd9Dao" autowire="byName" />        
     <bean id="OcularProcDAO" class="org.oscarehr.eyeform.dao.OcularProcDao" autowire="byName" />
 	<bean id="SpecsHistoryDAO" class="org.oscarehr.eyeform.dao.SpecsHistoryDao" autowire="byName" />
 	<bean id="ProcedureBookDAO" class="org.oscarehr.eyeform.dao.ProcedureBookDao" autowire="byName" />

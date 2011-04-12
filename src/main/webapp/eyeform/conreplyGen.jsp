@@ -189,15 +189,15 @@ function confirmPrint(btn) {
 			document.eyeForm.elements["cp.cc"].value=document.eyeForm.famDoctor.value;
 		else document.eyeForm.elements["cp.cc"].value=document.eyeForm.elements["cp.cc"].value+"; "+document.eyeForm.famDoctor.value;
 	}
-	function clinicalInfoAdd(str,name){
-		if (str.length>0 && name!=null && trim(name)!='')			
+	function clinicalInfoAdd(str,name){		
+		if (document.eyeForm.elements["cp.clinicalInfo"].value.length>0 && name!=null && trim(name)!='')			
 			document.eyeForm.elements["cp.clinicalInfo"].value+='\n';
 		
 		if (name!=null && trim(name)!='')			
 			document.eyeForm.elements["cp.clinicalInfo"].value+=name;
 	}
 	function ocluarproAdd(str,name){
-		if (str.length>0 && name!=null && trim(name)!='')			
+		if (document.eyeForm.elements["cp.clinicalInfo"].value.length>0 && name!=null && trim(name)!='')			
 			document.eyeForm.elements["cp.clinicalInfo"].value+='\n';
 		
 		if (name!=null && trim(name)!='')

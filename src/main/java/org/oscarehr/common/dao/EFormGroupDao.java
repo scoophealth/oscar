@@ -24,5 +24,15 @@ public class EFormGroupDao extends AbstractDao<EFormGroup>{
 		
 		return results;
 	}
+	
+	public List<String> getGroupNames() {
+		String sql = "select distinct eg.groupName from EFormGroup eg";
+		Query query = entityManager.createQuery(sql);
+		
+		@SuppressWarnings("unchecked")
+		List<String> results = query.getResultList();
+		
+		return results;
+	}
 
 }

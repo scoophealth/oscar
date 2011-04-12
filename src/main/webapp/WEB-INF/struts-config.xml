@@ -2037,6 +2037,10 @@
 		<action path="/casemgmt/RegisterCppCode" type="org.oscarehr.casemgmt.web.RegisterCppCode" parameter="method" scope="request">			
 		</action>
 		
+		<action path="/provider/UserPreference" type="org.oscarehr.provider.web.UserPreferenceAction" parameter="method" scope="request" validate="false" input="/provider/UserPreferences.jsp">
+			<forward name="form" path="/provider/UserPreferences.jsp" />							
+		</action>
+		
 		<!-- END OSCAR Report By Template -->
 
 		<action path="/demographic/Contact" type="org.oscarehr.common.web.ContactAction" parameter="method" scope="request" validate="false" name="contactForm">

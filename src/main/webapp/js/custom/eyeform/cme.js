@@ -128,7 +128,8 @@
        reorderNavBarElements('appointmentHistory','measurements');    
        reorderNavBarElements('consultations','appointmentHistory');           
        addLeftNavDiv("conReport");	      
-       popColumn(ctx + "/oscarEncounter/displayConReport.do?hC=009999&cmd=conReport&appointment_no="+appointmentNo,"conReport","conReport", "leftNavBar", this);       
+       popColumn(ctx + "/oscarEncounter/displayConReport.do?hC=009999&cmd=conReport&appointment_no="+appointmentNo,"conReport","conReport", "leftNavBar", this);
+       reorderNavBarElements('conReport','consultation');
        addLeftNavDiv("macro");	      
        popColumn(ctx + "/oscarEncounter/displayMacro.do?hC=009999&appointment_no="+appointmentNo,"macro","macro", "leftNavBar", this);
        
@@ -170,6 +171,7 @@
     	   e.preventDefault();
     	   location.href=ctx+'/eyeform/Eyeform.do?method=print&apptNos=' + appointmentNo;
        });
+       jQuery("#assignIssueSection").html("<span>&nbsp;</span>");
      });
 
  

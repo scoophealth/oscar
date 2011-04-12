@@ -343,7 +343,7 @@ public class PdfRecordPrinter {
         
         p = new Paragraph();
         phrase = new Phrase(LEADING, "", font);                  	           
-        phrase.add(new Chunk(formatter.format(measurement.getDateObserved()) + ":"));               	
+        //phrase.add(new Chunk(formatter.format(measurement.getDateObserved()) + ":"));               	
         phrase.add(measurement.getDataField() + "\n");        
         p.add(phrase);
         document.add(p);
@@ -718,7 +718,7 @@ public class PdfRecordPrinter {
         Paragraph p = new Paragraph();
         p.setAlignment(Paragraph.ALIGN_LEFT);
         Phrase phrase = new Phrase(LEADING, "\n\n", getFont());
-        p.add(phrase);
+       // p.add(phrase);
         phrase = new Phrase(LEADING, "Ocular Examination", obsfont);        
         p.add(phrase);
         getDocument().add(p);

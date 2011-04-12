@@ -33,8 +33,10 @@ import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.util.MessageResources;
+import org.oscarehr.PMmodule.dao.ClientDao;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.BillingreferralDao;
+import org.oscarehr.common.model.Demographic;
 import org.oscarehr.eyeform.dao.ConsultationReportDao;
 import org.oscarehr.eyeform.model.ConsultationReport;
 import org.oscarehr.util.MiscUtils;
@@ -49,7 +51,8 @@ public class EctDisplayConReportAction extends EctDisplayAction {
     private static final String cmd = "conReport";
     
     BillingreferralDao brDao = (BillingreferralDao)SpringUtils.getBean("BillingreferralDAO");
-	
+    ClientDao clientDao = (ClientDao)SpringUtils.getBean("clientDao");
+    
  public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
      
 	 boolean a = true;
@@ -72,8 +75,8 @@ public class EctDisplayConReportAction extends EctDisplayAction {
     //Set lefthand module heading and link
     String winName = "ConReport" + bean.demographicNo;
     String pathview, pathedit;
-    
-    pathview = request.getContextPath() + "/eyeform/ConsultationReportList.do?method=list&cr.demographicNo=" + bean.demographicNo;
+    Demographic d= clientDao.getClientByDemographicNo(Integer.valueOf(bean.demographicNo));
+    pathview = request.getContextPath() + "/eyeform/ConsultationReportList.do?method=list&cr.demographicNo=" + bean.demographicNo + "&dmname=" + d.getFormattedName();
     pathedit = request.getContextPath() + "/eyeform/Eyeform.do?method=prepareConReport&demographicNo="+bean.demographicNo + "&appNo="+appointmentNo + "&flag=new&cpp="+cpp;
         
     String url = "popupPage(500,900,'" + winName + "','" + pathview + "')";
