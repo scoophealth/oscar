@@ -103,6 +103,7 @@ public class EyeformAction extends DispatchAction {
 	ClinicDAO clinicDao = (ClinicDAO)SpringUtils.getBean("clinicDAO");
 	SiteDao siteDao = (SiteDao)SpringUtils.getBean("siteDao");
 	TicklerDAO ticklerDao = (TicklerDAO)SpringUtils.getBean("ticklerDAOT");
+	//CppMeasurementsDao cppMeasurementsDao = (CppMeasurementsDao)SpringUtils.getBean("cppMeasurementsDao");
 	
 	   public ActionForward getConReqCC(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		   String requestId = request.getParameter("requestId");
@@ -337,7 +338,7 @@ public class EyeformAction extends DispatchAction {
 		   return mapping.findForward("conspecial");
 	   }
 	   
-	   public String getFormattedCppItemFromMeasurements(String header, String measurementType, int demographicNo, int appointmentNo, boolean includePrevious) {
+	   public String getFormattedCppItemFromMeasurements(String header, String measurementType, int demographicNo, int appointmentNo, boolean includePrevious) {	   
 		  Measurements measurement = measurementsDao.getLatestMeasurementByDemographicNoAndType(demographicNo,measurementType);
 		  if(measurement == null) {
 			  return new String();
@@ -974,7 +975,7 @@ public class EyeformAction extends DispatchAction {
 			ConsultationReport cp = (ConsultationReport) crForm.get("cp");
 			Demographic demographic = demographicDao.getClientByDemographicNo(cp.getDemographicNo());			
 			request.setAttribute("demographic",demographic);
-			
+			Appointment appointment = this.appointmentDao.find(cp.getAppointmentNo());
 			String id = request.getParameter("cp.id");
 			if(id != null && id.length()>0) {
 				cp.setId(Integer.parseInt(id));
@@ -1088,8 +1089,11 @@ public class EyeformAction extends DispatchAction {
 			}
 
 			request.setAttribute("sateliteFlag", sateliteFlag);
-			request.setAttribute("clinic", clinic);
+			request.setAttribute("clinic", clinic);						
+			request.setAttribute("appointDate", appointment.getAppointmentDate());
 			
+			Provider apptProvider = providerDao.getProvider(appointment.getProviderNo());
+			request.setAttribute("appointmentDoctor", apptProvider.getFormattedName());
 			return mapping.findForward("printReport");
 		}
 		
