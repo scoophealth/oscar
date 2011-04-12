@@ -470,7 +470,13 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		if (strNote == null || strNote.equals("")) return null;
 
 		String providerNo = getProviderNo(request);
+		if(providerNo==null) {
+			providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
+		}
 		Provider provider = getProvider(request);
+		if(provider == null) {
+			provider = LoggedInInfo.loggedInInfo.get().loggedInProvider;
+		}
 		String userName = provider != null ? provider.getFullName() : "";
 
 		String demo = getDemographicNo(request);
@@ -799,6 +805,12 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
 		LogAction.addLog((String) request.getSession().getAttribute("user"), logAction, LogConst.CON_CME_NOTE, String.valueOf(note.getId()), request.getRemoteAddr(), demo, note.getAuditString());
 
+		String f = request.getParameter("forward");
+		if(f != null && f.equals("none")) {
+			response.getWriter().println("success");
+			return null;
+		}
+		
 		ActionForward forward = mapping.findForward("listCPPNotes");
 		StringBuilder path = new StringBuilder(forward.getPath());
 		path.append("?" + reloadQuery);
