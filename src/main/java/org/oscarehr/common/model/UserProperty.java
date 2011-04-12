@@ -54,6 +54,31 @@ public class UserProperty implements Serializable {
 
     public final static String EFORM_FAVOURITE_GROUP = "favourite_eform_group";
     public final static String RX_SHOW_PATIENT_DOB="rx_show_patient_dob";
+    
+    //added to user properties with new interface
+    public final static String FAX = "fax";
+    public final static String SIGNATURE = "signature";
+    public final static String COLOUR = "colour";
+    public final static String SEX = "sex";
+    public final static String SCHEDULE_START_HOUR = "schedule.start_hour";
+    public final static String SCHEDULE_END_HOUR = "schedule.end_hour";
+    public final static String SCHEDULE_PERIOD = "schedule.period";
+    public final static String MYGROUP_NO = "mygroup_no";
+    public final static String NEW_CME = "new_cme";
+    public final static String ENCOUNTER_FORM_LENGTH = "encounter.form_length";
+    public final static String ENCOUNTER_FORM_NAME = "encounter.form_name";
+    public final static String EFORM_NAME = "encounter.eform_name";
+    public final static String RX_SHOW_QR_CODE = "rx_show_qr_code";
+    public final static String MYMEDS = "mymeds";
+    public final static String NEW_TICKLER_WARNING_WINDOW = "new_tickler_warning_window";
+    public final static String CAISI_DEFAULT_PMM = "caisi.default_pmm";
+    public final static String CAISI_PREV_BILLING = "caisi.prev_billing";
+    public final static String DEFAULT_BILLING_FORM = "default_billing_form";
+    public final static String DEFAULT_REFERRAL_TYPE = "default_referral_type";
+    public final static String DEFAULT_PAYEE = "default_payee";
+    public final static String DEFAULT_DX_CODE = "default_dx_code";
+     
+    
     private long id;
     private String name;
     private String value;

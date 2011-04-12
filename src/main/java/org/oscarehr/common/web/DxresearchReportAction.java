@@ -17,8 +17,9 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.common.dao.DxresearchDAO;
-import org.oscarehr.common.dao.MyGroupDAO;
+import org.oscarehr.common.dao.MyGroupDao;
 import org.oscarehr.common.model.DxRegistedPTInfo;
+import org.oscarehr.util.SpringUtils;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,15 +38,12 @@ public class DxresearchReportAction extends DispatchAction {
     private final static String SUCCESS = "success";
     private final static String EDIT_DESC = "editdesc";
     private DxresearchDAO dxresearchdao ;
-    private MyGroupDAO mygroupdao;
+    private MyGroupDao mygroupdao = (MyGroupDao)SpringUtils.getBean("myGroupDao");
 
     public void setDxresearchdao(DxresearchDAO dxresearchdao) {
         this.dxresearchdao = dxresearchdao;
     }
-
-    public void setMygroupdao(MyGroupDAO mygroupdao ) {
-        this.mygroupdao = mygroupdao;
-    }
+   
 
     @Override
     protected ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
