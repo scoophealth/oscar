@@ -347,8 +347,8 @@ public class MeasurementFormatter {
 		if(isPresent("os_"+type+"_"+ distNear)) {
 			sb.append("OS ");
 			sb.append(getValue("os_"+type+"_"+distNear));
-			if(distNear.equals("near"))
-				sb.append("+");
+			//if(distNear.equals("near"))
+			//	sb.append("+");
 			sb.append(".");
 		}
 		return sb.toString();
@@ -683,7 +683,7 @@ public class MeasurementFormatter {
 					sb.append(", ");
 				}
 				if(!flag) flag=true;
-				sb.append("nasal "+getValue("od_angle_middle0"));
+				sb.append("nasal "+getValue("os_angle_middle0"));
 			}
 			if(isPresent("os_angle_down")) {
 				if(flag) {
@@ -697,7 +697,7 @@ public class MeasurementFormatter {
 					sb.append(", ");
 				}
 				if(!flag) flag=true;
-				sb.append("temporal " + getValue("od_angle_middle2"));
+				sb.append("temporal " + getValue("os_angle_middle2"));
 			}
 			
 			if(isPresent("os_angle_up") || isPresent("os_angle_middle2") || isPresent("os_angle_down") || isPresent("os_angle_middle0")) {

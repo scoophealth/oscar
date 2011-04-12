@@ -35,6 +35,9 @@
 <!-- end -->
 <%@ page import="oscar.OscarProperties, oscar.oscarClinic.ClinicData, java.util.*" %>
 
+<%@page import="org.oscarehr.util.SpringUtils"%>
+<%@page import="org.oscarehr.common.model.ConsultationRequestExt"%>
+<%@page import="org.oscarehr.common.dao.ConsultationRequestExtDao"%>
 
 <%@page import="org.oscarehr.common.dao.SiteDao"%>
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
@@ -153,6 +156,9 @@
         clinic.setClinic_phone(temp5[0]);
         clinic.setClinic_fax(temp6[0]);
     }
+    
+    ConsultationRequestExtDao consultationRequestExtDao = (ConsultationRequestExtDao)SpringUtils.getBean("consultationRequestExtDao");
+    List<ConsultationRequestExt> exts =consultationRequestExtDao.getConsultationRequestExts(Integer.parseInt((String)request.getAttribute("reqId")));
 %>
     <head>
     <html:base/>
@@ -507,6 +513,18 @@ if (requestId!=null) aburl+="&requestId="+requestId; %>
 <plugin:include componentName="specialencounterComp" absoluteUrl="<%=aburl %>"></plugin:include>
 </special:SpecialEncounterTag>
 </plugin:hideWhenCompExists>
+<%
+for(ConsultationRequestExt ext:exts) {
+	if(ext.getKey().equals("cc")) {
+%>
+<tr>
+	<td class="subTitles" >cc:</td>
+	<td class="fillLine" ><%=ext.getValue()%></td>
+</tr>
+<%		
+	}
+}
+%>
                                 </table>
                             </td>
                             <td valign="top">
@@ -649,6 +667,32 @@ if (requestId!=null) aburl+="&requestId="+requestId; %>
 <plugin:include componentName="specialencounterComp" absoluteUrl="<%=aburl %>"></plugin:include>
 </special:SpecialEncounterTag>
 </plugin:hideWhenCompExists>
+<%
+for(ConsultationRequestExt ext:exts) {
+	if(ext.getKey().equals("specialProblem")) {
+		if(ext.getValue().length() > 0) {
+%>
+            <tr>
+                <td class="subTitles">
+		            Ocular Examination
+                </td>
+            </tr>
+            <tr>
+                <td class="fillLine">
+                    <%=divy(ext.getValue()) %>
+                    &nbsp;<br>
+                </td>
+            </tr>
+
+<%
+		}
+	}
+}
+%>
+
+
+
+
             <% if(getlen(reqFrm.currentMedications) > 1) {%>
             <tr>
                 <td class="subTitles">
