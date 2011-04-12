@@ -6344,7 +6344,7 @@ create table ProviderPreference
 	printQrCodeOnPrescriptions tinyint not null,
 	lastUpdated datetime not null,
 	appointmentScreenFormNameDisplayLength int not null,
-	defaultDoNotDeleteBilling  tinyint(1),
+	defaultDoNotDeleteBilling  tinyint(1) not null,
 	defaultDxCode varchar(4) 
 	
 );
