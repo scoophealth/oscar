@@ -1582,4 +1582,27 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		logger.error("Missing cpp colour : noteId=" + noteDisplay.getNoteId());
 		return (null);
 	}
+	
+	public static String getLatestCppNote(String demographicNo, long issueId, int appointmentNo, boolean filterByAppointment) {
+		CaseManagementManager caseManagementMgr = (CaseManagementManager)SpringUtils.getBean("caseManagementManager");
+		Collection<CaseManagementNote> notes = caseManagementMgr.getActiveNotes(demographicNo, new String[] {String.valueOf(issueId)});
+		List<CaseManagementNote> filteredNotes = new ArrayList<CaseManagementNote>();
+		
+		if(notes.size()==0) {
+			return new String();
+		}
+		if(filterByAppointment) {
+			for(CaseManagementNote note:notes) {
+				if(note.getAppointmentNo() == appointmentNo) {
+					filteredNotes.add(note);
+				}
+			}
+			if(filteredNotes.size()==0) {
+				return new String();
+			}
+		} else {
+			filteredNotes.addAll(notes);
+		}
+		return filteredNotes.iterator().next().getNote();
+	}
 }

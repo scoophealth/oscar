@@ -12,7 +12,7 @@
 	   //CPP
 	   issueNoteUrls = {};	   
 	   jQuery("#cppBoxes").html("");
-	   jQuery.ajax({url:ctx+"/eyeform/cppmeasurements.html",dataType: "html",async:false,success: function(data) {
+	   jQuery.ajax({url:ctx+"/eyeform/cppmeasurements.jsp?demographicNo="+demographicNo+"&appointmentNo="+appointmentNo,dataType: "html",async:false,success: function(data) {
 		   jQuery("#cppBoxes").append(data);
 /*
 			var types='';			
@@ -65,24 +65,19 @@
 			jQuery.ajax({type:'POST',url:ctx+'/oscarEncounter/MeasurementData.do?action=saveValues&demographicNo='+demographicNo+'&appointmentNo='+appointmentNo,data:postData,success: function(){
 				//alert('Saved.');
 			}});
-/*			
-			jQuery("textarea[cpp]").each(function() {					
-				var className = jQuery(this).attr("class");
-					
-				if(postData.length > 0) {
-					postData += "&";
-				}
+			
+			jQuery("textarea[cpp]").each(function() {				
 				var name = jQuery(this).attr("cpp");
 				var value = jQuery(this).val();
-				var data = name + "=" + encodeURIComponent(value);
-				postData += data;
 				
-			});	
-			
-			jQuery.ajax({type:'POST',url:ctx+'/oscarEncounter/MeasurementData.do?action=saveCppValues&demographicNo='+demographicNo+'&appointmentNo='+appointmentNo,data:postData,success: function(){
-				//alert('Saved.');
-			}});
-*/
+				var url = ctx + "/CaseManagementEntry.do?method=issueNoteSave&demographicNo="+demographicNo+"&appointmentNo="+appointmentNo+"&noteId=0";
+				var postData = "reloadUrl="+encodeURIComponent("issue_code="+name)+"&containerDiv=&issueChange=true&archived=false&value="+encodeURIComponent(value)+"&position=0&forward=none&issue_id=" + jQuery(this).attr("issue_id");
+				
+				jQuery.ajax({type:'POST',url:url,data:postData,success: function(){
+					//alert('Saved.');
+				}});
+				
+			});			
 		});
 		
 		
