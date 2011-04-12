@@ -68,6 +68,7 @@ public class SearchDemographicAutoCompleteAction extends Action {
              h.put("fomattedDob",demo.getFormattedDob());
              h.put("formattedName",demo.getFormattedName());
              h.put("demographicNo",demo.getDemographicNo());
+             h.put("status",demo.getPatientStatus());
              secondList.add(h);
         }
 
