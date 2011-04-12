@@ -172,6 +172,7 @@
     	   location.href=ctx+'/eyeform/Eyeform.do?method=print&apptNos=' + appointmentNo;
        });
        jQuery("#assignIssueSection").html("<span>&nbsp;</span>");
+       jQuery("#caseNote_note"+savedNoteId).css('height','10em');              
      });
 
  
@@ -185,10 +186,12 @@
 	   
    }
   
-   function runMacro2(macroId,appointmentNo,cpp) {
+   function runMacro2(macroId,macroName, appointmentNo,cpp) {
+	   var c = confirm('Are you sure to execute macro ['+macroName+'] and sign this form?');
+	   if(c == false) {return false;}
 	   //potentially need admission date.	  
 	   document.forms['caseManagementEntryForm'].sign.value='on';
-	   jQuery("form[name='caseManagementEntryForm']").append("<input type=\"hidden\" name=\"macro.id\" value=\""+macroId+"\"/><input type=\"hidden\" name=\"cpp\" value=\""+cpp+"\"/>");
+	   jQuery("form[name='caseManagementEntryForm']").append("<input type=\"hidden\" name=\"macro.id\" value=\""+macroId+"\"/>");
 	   var result =  savePage('runMacro', '');
 	   return false;
    }
@@ -199,4 +202,10 @@
        jQuery.ajax({url:noteAddonUrl,dataType: "html",success: function(data) {
 			jQuery("#current_note_addon").html(data);
        }});
+   }
+   
+   function notifyDivLoaded(divId) {
+	   jQuery("#"+divId + " .topLinks").each(function() {
+		  jQuery(this).css("font-size","15px"); 
+	   });
    }

@@ -807,7 +807,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
 		String f = request.getParameter("forward");
 		if(f != null && f.equals("none")) {
-			response.getWriter().println("success");
+			response.getWriter().println(note.getId());
 			return null;
 		}
 		
