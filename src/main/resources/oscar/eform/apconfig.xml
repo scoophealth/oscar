@@ -23,6 +23,21 @@
         <ap-sql>SELECT provider.ohip_no FROM provider WHERE provider.provider_no=${provider} </ap-sql>
         <ap-output>${ohip_no}</ap-output>
     </databaseap>
+     <databaseap>
+        <ap-name>current_user_specialty_code</ap-name>
+        <ap-sql>SELECT
+                 MID( comments,
+                       INSTR(comments,'&lt;xml_p_specialty_code&gt;')+22,
+                       INSTR(comments,'&lt;/xml_p_specialty_code&gt;')-INSTR(comments,'&lt;xml_p_specialty_code&gt;')-22
+                 ) AS specialty_code
+               FROM provider WHERE provider_no=${provider} </ap-sql>
+        <ap-output>${specialty_code}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>current_user_cpsid</ap-name>
+        <ap-sql>SELECT provider.practitionerNo FROM provider WHERE provider.provider_no=${provider} </ap-sql>
+        <ap-output>${practitionerNo}</ap-output>
+    </databaseap>
     <databaseap>
         <ap-name>current_user_id</ap-name>
         <ap-sql>SELECT '${provider}' AS id</ap-sql>
@@ -104,6 +119,21 @@
         <ap-name>dobc2</ap-name>
         <ap-sql>SELECT date_of_birth, month_of_birth, year_of_birth FROM demographic WHERE demographic_no=${demographic}</ap-sql>
         <ap-output>${year_of_birth}/${month_of_birth}/${date_of_birth}</ap-output>
+    </databaseap>
+     <databaseap>
+        <ap-name>dob_year</ap-name>
+        <ap-sql>SELECT year_of_birth FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+        <ap-output>${year_of_birth}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>dob_month</ap-name>
+        <ap-sql>SELECT month_of_birth FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+        <ap-output>${month_of_birth}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>dob_day</ap-name>
+        <ap-sql>SELECT date_of_birth FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+        <ap-output>${date_of_birth}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>NameAddress</ap-name>
@@ -252,6 +282,17 @@
         <ap-name>doctor_ohip_no</ap-name>
         <ap-sql>SELECT provider.ohip_no FROM provider, demographic WHERE demographic.demographic_no=${demographic} AND demographic.provider_no=provider.provider_no</ap-sql>
         <ap-output>${ohip_no}</ap-output>
+    </databaseap>
+     <databaseap>
+        <ap-name>doctor_specialty_code</ap-name>
+        <ap-sql>SELECT
+                 MID( comments,
+                       INSTR(comments,'&lt;xml_p_specialty_code&gt;')+22,
+                       INSTR(comments,'&lt;/xml_p_specialty_code&gt;')-INSTR(comments,'&lt;xml_p_specialty_code&gt;')-22
+                 ) AS specialty_code
+               FROM provider,demographic
+               WHERE demographic.demographic_no=${demographic} AND demographic.provider_no=provider.provider_no</ap-sql>
+        <ap-output>${specialty_code}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>provider_name</ap-name>
