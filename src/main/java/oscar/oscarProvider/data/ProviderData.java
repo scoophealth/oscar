@@ -577,6 +577,11 @@ public class ProviderData {
         }        
     }
    public static List searchProvider(String searchStr){
+	   return searchProvider(searchStr, false);
+   }
+   
+   
+   public static List searchProvider(String searchStr,boolean onlyActive){
        String sql="select provider_no, first_name, last_name from provider where ";
        List retList=new ArrayList();
        String firstname=null;
@@ -593,6 +598,14 @@ public class ProviderData {
            sql+="last_name like '"+lastname+"%' ";
        if(lastname!=null && firstname!=null)
            sql+="last_name like '"+lastname+ "%' AND first_name like '"+firstname+"%' ";
+       
+       if(onlyActive){
+    	   if(lastname != null) {
+    		   sql+=" and status = 1";
+    	   }else{
+    		   sql +=" status = 1";
+    	   }
+       }
        try{
            ResultSet rs=DBHandler.GetSQL(sql);
            while(rs.next()){

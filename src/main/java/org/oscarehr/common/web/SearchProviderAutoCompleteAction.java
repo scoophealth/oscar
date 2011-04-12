@@ -53,7 +53,7 @@ public class SearchProviderAutoCompleteAction extends Action{
         if(searchStr==null){
             searchStr=request.getParameter("name");
         }
-        List provList=ProviderData.searchProvider(searchStr);
+        List provList=ProviderData.searchProvider(searchStr,true);
         Hashtable d=new Hashtable();
         d.put("results", provList);
 
