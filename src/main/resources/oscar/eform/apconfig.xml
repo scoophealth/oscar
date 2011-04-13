@@ -286,13 +286,19 @@
      <databaseap>
         <ap-name>doctor_specialty_code</ap-name>
         <ap-sql>SELECT
-                 MID( comments,
-                       INSTR(comments,'&lt;xml_p_specialty_code&gt;')+22,
-                       INSTR(comments,'&lt;/xml_p_specialty_code&gt;')-INSTR(comments,'&lt;xml_p_specialty_code&gt;')-22
+                 MID( p.comments,
+                       INSTR(p.comments,'&lt;xml_p_specialty_code&gt;')+22,
+                       INSTR(p.comments,'&lt;/xml_p_specialty_code&gt;')-INSTR(p.comments,'&lt;xml_p_specialty_code&gt;')-22
                  ) AS specialty_code
-               FROM provider,demographic
-               WHERE demographic.demographic_no=${demographic} AND demographic.provider_no=provider.provider_no</ap-sql>
+               FROM provider p, demographic d
+               WHERE d.demographic_no=${demographic} AND d.provider_no=p.provider_no</ap-sql>
         <ap-output>${specialty_code}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>doctor_cpsid</ap-name>
+        <ap-sql>SELECT provider.practitionerNo FROM provider, demographic
+                WHERE demographic.demographic_no=${demographic} AND demographic.provider_no=provider.provider_no</ap-sql>
+        <ap-output>${practitionerNo}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>provider_name</ap-name>
