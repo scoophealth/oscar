@@ -41,7 +41,7 @@ import oscar.OscarProperties;
 public final class OscarSpringContextLoader extends ContextLoader {
 	
 	private static final Logger log = MiscUtils.getLogger();
-	private static final String CONTEXTNAME = "WEB-INF/applicationContext";
+	private static final String CONTEXTNAME = "classpath:applicationContext";
 	private static final String PROPERTYNAME = "ModuleNames";
 
 	@Override
