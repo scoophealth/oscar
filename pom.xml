@@ -24,6 +24,13 @@
 		</repository>
 	</repositories>
 
+	<pluginRepositories>
+        	<pluginRepository>
+			<id>local_repo</id>
+			<url>file://local_repo</url>
+        	</pluginRepository>
+	</pluginRepositories>
+
 	<dependencies>
 
 		<!-- general libraries -->
@@ -681,8 +688,29 @@
 		          <skipTests>true</skipTests>
 		        </configuration>
 		      </plugin>
-
-
+			  
+			  <plugin>
+			  	<groupId>org.oscarehr</groupId>
+        		<artifactId>oscar-il18n-check-plugin</artifactId>
+        		<version>1.0</version>
+        		<configuration>
+    				<referenceResourceFile>oscarResources_en.properties</referenceResourceFile>
+    				<otherResourceFiles>
+    					<param>oscarResources_es.properties</param>
+    					<param>oscarResources_fr.properties</param>
+    					<param>oscarResources_pt_BR.properties</param>
+    					<param>oscarResources_pl.properties</param>
+    				</otherResourceFiles>
+  				</configuration>     
+				<executions>
+					<execution>
+						<phase>process-sources</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>  		   
+      		</plugin>
 		</plugins>
 	</build>
 
