@@ -14,18 +14,6 @@
 	   jQuery("#cppBoxes").html("");
 	   jQuery.ajax({url:ctx+"/eyeform/cppmeasurements.jsp?demographicNo="+demographicNo+"&appointmentNo="+appointmentNo,dataType: "html",async:false,success: function(data) {
 		   jQuery("#cppBoxes").append(data);
-/*
-			var types='';			
-			jQuery("textarea[cpp]").each(function() {
-				if(types.length > 0) {
-					types += ',';
-				}
-				types += jQuery(this).attr("cpp");
-			});
-
-			//make a call to update the existing values
-			jQuery.ajax({dataType: "script", url:ctx+"/oscarEncounter/MeasurementData.do?demographicNo="+demographicNo+"&types="+types+"&action=getLatestCppValues&appointmentNo="+appointmentNo + "&fresh=cpp_currentHis",async:false});			
-*/
 	   }});
 	   
 	   
@@ -70,14 +58,15 @@
 				var name = jQuery(this).attr("cpp");
 				var value = jQuery(this).val();
 				
-				var url = ctx + "/CaseManagementEntry.do?method=issueNoteSave&demographicNo="+demographicNo+"&appointmentNo="+appointmentNo+"&noteId=0";
+				var url = ctx + "/CaseManagementEntry.do?method=issueNoteSave&demographicNo="+demographicNo+"&appointmentNo="+appointmentNo+"&noteId=" + jQuery(this).attr("note_id");
 				var postData = "reloadUrl="+encodeURIComponent("issue_code="+name)+"&containerDiv=&issueChange=true&archived=false&value="+encodeURIComponent(value)+"&position=0&forward=none&issue_id=" + jQuery(this).attr("issue_id");
 				
-				jQuery.ajax({type:'POST',url:url,data:postData,success: function(){
-					//alert('Saved.');
+				var textArea = jQuery(this);
+				jQuery.ajax({type:'POST',url:url,data:postData,async:false, success: function(data){
+					textArea.attr('note_id',data);
 				}});
 				
-			});			
+			});					  
 		});
 		
 		
@@ -163,7 +152,8 @@
        removeNavDiv('Guidelines');
        removeNavDiv('RiskFactors');
        removeNavDiv('Rx');
-       removeNavDiv('OMeds');  
+       removeNavDiv('OMeds');
+       removeNavDiv('FamHistory'); 
        addRightNavDiv("specshistory");	                         
        popColumn(ctx + "/oscarEncounter/displaySpecsHistory.do?hC=009999&appointment_no="+appointmentNo,"specshistory","specshistory", "rightNavBar", this);   
        addRightNavDiv("Rx");
@@ -197,6 +187,7 @@
     	   location.href=ctx+'/eyeform/Eyeform.do?method=print&apptNos=' + appointmentNo + "&cpp=measurements";
        });
        jQuery("#assignIssueSection").html("<span>&nbsp;</span>");
+       jQuery("#caseNote_note"+savedNoteId).css('height','10em');
      });
 
  
@@ -210,10 +201,12 @@
 	   
    }
   
-   function runMacro2(macroId,appointmentNo,cpp) {
+   function runMacro2(macroId,macroName, appointmentNo,cpp) {
+	   var c = confirm('Are you sure to execute macro ['+macroName+'] and sign this form?');
+	   if(c == false) {return false;}
 	   //potentially need admission date.	  
 	   document.forms['caseManagementEntryForm'].sign.value='on';
-	   jQuery("form[name='caseManagementEntryForm']").append("<input type=\"hidden\" name=\"macro.id\" value=\""+macroId+"\"/><input type=\"hidden\" name=\"cpp\" value=\""+cpp+"\"/>");
+	   jQuery("form[name='caseManagementEntryForm']").append("<input type=\"hidden\" name=\"macro.id\" value=\""+macroId+"\"/>");
 	   var result =  savePage('runMacro', '');
 	   return false;
    }
@@ -224,4 +217,10 @@
        jQuery.ajax({url:noteAddonUrl,dataType: "html",success: function(data) {
 			jQuery("#current_note_addon").html(data);
        }});
+   }
+   
+   function notifyDivLoaded(divId) {
+	   jQuery("#"+divId + " .topLinks").each(function() {
+		  jQuery(this).css("font-size","15px"); 
+	   });
    }
