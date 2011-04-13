@@ -37,6 +37,9 @@ public class NoteDisplayNonNote implements NoteDisplay {
 
 	public NoteDisplayNonNote(PatientForm patientForm) {
 		date = patientForm.created;
+		if( date == null ) {
+			date = patientForm.edited;
+		}
 		note = patientForm.formName;
 		noteId = patientForm.formId;
 		linkInfo = patientForm.formName;
