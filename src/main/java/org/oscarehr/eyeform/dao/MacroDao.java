@@ -16,7 +16,7 @@ public class MacroDao extends AbstractDao<Macro> {
 	}
 	
 	public List<Macro> getAll() {
-		String sql="select x from "+modelClass.getSimpleName()+" x";
+		String sql="select x from "+modelClass.getSimpleName()+" x order by x.displayOrder ASC";
 		Query query = entityManager.createQuery(sql);
 		
 		@SuppressWarnings("unchecked")
