@@ -66,7 +66,7 @@
                                                 // Define the schema of the delimited resultsTEST, PATIENT(1985-06-15)
                                                 oDS.responseSchema = {
                                                     resultsList : "results",
-                                                    fields : ["formattedName","fomattedDob","demographicNo"]
+                                                    fields : ["formattedName","fomattedDob","demographicNo","status"]
                                                 };
                                                 // Enable caching
                                                 oDS.maxCacheEntries = 0;

@@ -13,6 +13,7 @@ var resultFormatter2 = function(oResultData, sQuery, sResultMatch) {
     var query = sQuery.toLowerCase(),
     fname = oResultData[0],
     dob = oResultData[1],
+    status = oResultData[3],
     fnameMatchIndex = fname.toLowerCase().indexOf(query),
     displayfname= '';
     //oscarLog("in resultFormatter2");
@@ -24,7 +25,7 @@ var resultFormatter2 = function(oResultData, sQuery, sResultMatch) {
     else {
         displayfname = fname;
     }
-    return displayfname + " (" + dob+ ")" ;
+    return displayfname + " (" + dob+ ") - "+status ;
 
 };
 
