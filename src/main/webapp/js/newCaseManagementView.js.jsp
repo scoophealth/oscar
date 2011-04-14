@@ -2627,12 +2627,17 @@ function autoCompleteShowMenuCPP(element, update) {
         var noteDate = null;
         var msnote;
         var pos;
+        var imgId;
 
         for( idx = 0; idx <= numNotes; ++idx ) {    
         	if($("nc"+idx) == null) continue;    
             notesDiv = $("nc" + idx).down('div');
             noteId = notesDiv.id.substr(1);  //get note id
             if(noteId==0) continue;
+            
+            imgId = "print" + noteId;
+            if( $(imgId) == null ) continue;
+            
             if( $("obs"+noteId) != null )
                 noteDate = $("obs"+noteId).innerHTML;
             else if( $("observationDate") != null )
