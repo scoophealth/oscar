@@ -10,7 +10,7 @@
 	<bean id="propertyConfigurer" class="org.oscarehr.common.OscarPropertyPlaceholderConfigurer">
 		<property name="locations">
 			<list>
-				<value>/WEB-INF/classes/oscar_mcmaster.properties</value>
+				<value>classpath:oscar_mcmaster.properties</value>
 			</list>
 		</property>
 	</bean>
