@@ -168,13 +168,13 @@ function openNewPage(vheight,vwidth,varpage) {
 						<tr>
 							<td><input type="hidden" name="forward" value="none" /> <input
 								type="button" name="button" class=mbttn style="width: 80"
-								value="<bean:message key="oscarResearch.oscarDxResearch.btnAdd"/> >>"
+								value="<bean:message key="ADD"/> >>"
 								onClick="javascript: submitform('add');"></td>
 						</tr>
 						<tr>
 							<td><input type="button" name="button" class=mbttn
 								style="width: 80"
-								value="<< <bean:message key="oscarResearch.oscarDxResearch.btnRemove"/>"
+								value="<< <bean:message key="REMOVE"/>"
 								onClick="javascript: submitform('remove');"></td>
 						</tr>
 					</table>

@@ -246,7 +246,7 @@ function showHideBillPref() {
 							String myCheck1 = "";
 							String myCheck2 = "";
 							String myValue ="";
-							if((request.getParameter("new_tickler_warning_window")).equals("enabled")) { 
+							if("enabled".equals(request.getParameter("new_tickler_warning_window"))) { 
 								myCheck1 = "checked";
 								myCheck2 = "unchecked";
 							}
@@ -325,13 +325,13 @@ function showHideBillPref() {
 	            </td>
 			</tr>		
 		
-			<%-- Forms and EForms to display on the appointment screen --%>
+			<%-- links to display on the appointment screen --%>
 			<tr>
 				<td class="preferenceLabel">
-					<bean:message key="provider.providerpreference.appointmentScreenFormsNameDisplayLength" />
+					<bean:message key="provider.providerpreference.appointmentScreenLinkNameDisplayLength" />
 				</td>
 				<td class="preferenceValue">
-					<input type="text" name="appointmentScreenFormsNameDisplayLength" value='<%=providerPreference.getAppointmentScreenFormNameDisplayLength()%>' size="2">
+					<input type="text" name="appointmentScreenFormsNameDisplayLength" value='<%=providerPreference.getAppointmentScreenLinkNameDisplayLength()%>' size="2">
 	            </td>
 			</tr>		
 			<tr>
@@ -339,7 +339,7 @@ function showHideBillPref() {
 					<bean:message key="provider.providerpreference.formsToDisplayOnAppointmentScreen" />
 				</td>
 				<td class="preferenceValue">
-					<div style="height:10em;border:solid grey 1px;overflow:auto;width:25em">
+					<div style="height:10em;border:solid grey 1px;overflow:auto;white-space:nowrap;width:45em">
 					<%
 						List<EncounterForm> encounterForms=ProviderPreferencesUIBean.getAllEncounterForms();
 						Collection<String> checkedEncounterFormNames=ProviderPreferencesUIBean.getCheckedEncounterFormNames();
@@ -361,7 +361,7 @@ function showHideBillPref() {
 					<bean:message key="provider.providerpreference.eFormsToDisplayOnAppointmentScreen" />
 				</td>
 				<td class="preferenceValue">
-					<div style="height:10em;border:solid grey 1px;overflow:auto;width:25em">
+					<div style="height:10em;border:solid grey 1px;overflow:auto;white-space:nowrap;width:45em">
 					<%
 						List<EForm> eforms=ProviderPreferencesUIBean.getAllEForms();
 						Collection<Integer> checkedEFormIds=ProviderPreferencesUIBean.getCheckedEFormIds();
@@ -375,6 +375,53 @@ function showHideBillPref() {
 						}
 	            	%> 
 					</div>
+	            </td>
+			</tr>		
+			<tr>
+				<td class="preferenceLabel">
+					<bean:message key="provider.providerpreference.quickLinksToDisplayOnAppointmentScreen" />
+				</td>
+				<td class="preferenceValue">
+					<div style="height:10em;border:solid grey 1px;overflow:auto;white-space:nowrap;width:45em">
+					<%
+						Collection<ProviderPreference.QuickLink> quickLinks=ProviderPreferencesUIBean.getQuickLinks();
+						for(ProviderPreference.QuickLink quickLink : quickLinks)
+						{
+							%>
+								<input type="button" value="<bean:message key="REMOVE"/>" onclick="document.location='providerPreferenceQuickLinksAction.jsp?action=remove&name='+escape('<%=StringEscapeUtils.escapeHtml(quickLink.getName())%>')" /> 
+								<%=StringEscapeUtils.escapeHtml(quickLink.getName())%> : <%=StringEscapeUtils.escapeHtml(quickLink.getUrl())%> 
+								<br />
+							<%
+						}
+	            	%> 
+					</div>
+					<table style="border:none;border-collapse:collapse">
+						<tr>
+							<td style="border:none;text-align:right"><bean:message key="NAME"/></td>
+							<td style="border:none"><input type="text" name="quickLinkName" /></td>
+						</tr>
+						<tr>
+							<td style="border:none;text-align:right;vertical-align:top"><bean:message key="URL"/></td>
+							<td style="border:none">
+								<input type="text" name="quickLinkUrl" />
+								<div style="font-size:9px">(expanded tokens in the url are ${contextPath} and ${demographicId})</div>
+							</td>
+						</tr>
+						<tr>
+							<td style="border:none"></td>
+							<td style="border:none">
+								<script type="text/javascript">
+									function addQuickLink()
+									{
+										name=escape(document.UPDATEPRE.quickLinkName.value);
+										url=escape(document.UPDATEPRE.quickLinkUrl.value);
+										document.location="providerPreferenceQuickLinksAction.jsp?action=add&name="+name+"&url="+url;
+									}
+								</script>
+								<input type="button" value="<bean:message key="ADD"/>" onclick="addQuickLink()" />
+							</td>
+						</tr>
+					</table>
 	            </td>
 			</tr>		
 		

@@ -187,14 +187,14 @@ function processKey(e) {
 								value="<bean:message key="oscarResearch.oscarDxResearch.btnCodeSearch"/>"
 								onClick="javascript: ResearchScriptAttach();") > 
                                                             <input type="button" name="codeAdd" class=mbttn
-								value="<bean:message key="oscarResearch.oscarDxResearch.btnAdd"/>"
+								value="<bean:message key="ADD"/>"
 								onClick="javascript: submitform('','');">
 								<% } else { %>
 								 <input type="button" name="button" class=mbttn
 								value="<bean:message key="oscarResearch.oscarDxResearch.btnCodeSearch"/>"
 								onClick="javascript: ResearchScriptAttach();")  disabled="<%=disable%>"> 
                                                             <input type="button" name="button" class=mbttn
-								value="<bean:message key="oscarResearch.oscarDxResearch.btnAdd"/>"
+								value="<bean:message key="ADD"/>"
 								onClick="javascript: submitform('','');" disabled="<%=disable%>">
 								<% } %>
 								</td>
