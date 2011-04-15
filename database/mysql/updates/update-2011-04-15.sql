@@ -1,0 +1,2 @@
+create table ProviderPreferenceAppointmentScreenQuickLink(providerNo varchar(6) not null, name varchar(64) not null, url varchar(255) not null);
+alter table ProviderPreference change appointmentScreenFormNameDisplayLength appointmentScreenLinkNameDisplayLength int not null;

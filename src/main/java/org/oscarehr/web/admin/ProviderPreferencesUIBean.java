@@ -1,6 +1,5 @@
 package org.oscarehr.web.admin;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -27,16 +26,7 @@ public final class ProviderPreferencesUIBean {
 	private static final EncounterFormDao encounterFormDao = (EncounterFormDao) SpringUtils.getBean("encounterFormDao");
 
 	public static final ProviderPreference updateOrCreateProviderPreferences(HttpServletRequest request) {
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
-		Provider provider = loggedInInfo.loggedInProvider;
-
-		// get or create new preferences entry
-		ProviderPreference providerPreference = providerPreferenceDao.find(provider.getProviderNo());
-		if (providerPreference == null) {
-			providerPreference = new ProviderPreference();
-			providerPreference.setProviderNo(provider.getProviderNo());
-			providerPreferenceDao.persist(providerPreference);
-		}
+		ProviderPreference providerPreference = getLoggedInProviderPreference();
 
 		// update preferences based on request parameters
 		String temp;
@@ -99,7 +89,7 @@ public final class ProviderPreferencesUIBean {
 
 		// get encounterForms for appointment screen
 		temp = StringUtils.trimToNull(request.getParameter("appointmentScreenFormsNameDisplayLength"));
-		if (temp != null) providerPreference.setAppointmentScreenFormNameDisplayLength(Integer.parseInt(temp));
+		if (temp != null) providerPreference.setAppointmentScreenLinkNameDisplayLength(Integer.parseInt(temp));
 
 		String[] formNames = request.getParameterValues("encounterFormName");
 		Collection<String> formNamesList = providerPreference.getAppointmentScreenForms();
@@ -125,9 +115,23 @@ public final class ProviderPreferencesUIBean {
 		return (providerPreference);
 	}
 
+	/**
+	 * Some day we'll fix this so preferences are created when providers are created, it was suppose to be that way
+	 * but something got missed somewhere.
+	 * @return
+	 */
 	public static ProviderPreference getLoggedInProviderPreference() {
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
-		return (providerPreferenceDao.find(loggedInInfo.loggedInProvider.getProviderNo()));
+		Provider provider = loggedInInfo.loggedInProvider;
+
+		ProviderPreference providerPreference = providerPreferenceDao.find(provider.getProviderNo());
+		if (providerPreference == null) {
+			providerPreference = new ProviderPreference();
+			providerPreference.setProviderNo(provider.getProviderNo());
+			providerPreferenceDao.persist(providerPreference);
+		}
+
+		return(providerPreference);
 	}
 
 	public static List<EForm> getAllEForms() {
@@ -143,25 +147,54 @@ public final class ProviderPreferencesUIBean {
 	}
 
 	public static Collection<String> getCheckedEncounterFormNames() {
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
-		Provider provider = loggedInInfo.loggedInProvider;
-
-		ProviderPreference providerPreference = providerPreferenceDao.find(provider.getProviderNo());
-		if (providerPreference != null) return (providerPreference.getAppointmentScreenForms());
-		else return (new ArrayList<String>());
+		ProviderPreference providerPreference = getLoggedInProviderPreference();
+		return (providerPreference.getAppointmentScreenForms());
 	}
 
 	public static Collection<Integer> getCheckedEFormIds() {
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
-		Provider provider = loggedInInfo.loggedInProvider;
-
-		ProviderPreference providerPreference = providerPreferenceDao.find(provider.getProviderNo());
-		if (providerPreference != null) return (providerPreference.getAppointmentScreenEForms());
-		else return (new ArrayList<Integer>());
+		ProviderPreference providerPreference = getLoggedInProviderPreference();
+		return (providerPreference.getAppointmentScreenEForms());
 	}
 	
 	public static ProviderPreference getProviderPreferenceByProviderNo(String providerNo) {
-		return providerPreferenceDao.find(providerNo);
+		return providerPreferenceDao.find(providerNo);	
+	}
+
+	public static Collection<ProviderPreference.QuickLink> getQuickLinks() {
+		ProviderPreference providerPreference = getLoggedInProviderPreference();
+
+		return (providerPreference.getAppointmentScreenQuickLinks());
+	}
+	
+	public static void addQuickLink(String name, String url) {
+		ProviderPreference providerPreference = getLoggedInProviderPreference();
+
+		Collection<ProviderPreference.QuickLink> quickLinks=providerPreference.getAppointmentScreenQuickLinks();
 		
+		ProviderPreference.QuickLink quickLink=new ProviderPreference.QuickLink();
+		quickLink.setName(name);
+		quickLink.setUrl(url);
+		
+		quickLinks.add(quickLink);
+		
+		providerPreferenceDao.merge(providerPreference);
+	}
+
+	public static void removeQuickLink(String name) {
+		ProviderPreference providerPreference = getLoggedInProviderPreference();
+
+		Collection<ProviderPreference.QuickLink> quickLinks=providerPreference.getAppointmentScreenQuickLinks();
+
+		for (ProviderPreference.QuickLink quickLink : quickLinks)
+		{
+			if (name.equals(quickLink.getName()))
+			{
+				// it should be okay to modify the list while we're iterating through it, as long as we don't touch it after it's modified.
+				quickLinks.remove(quickLink);
+				break;
+			}
+		}
+		
+		providerPreferenceDao.merge(providerPreference);
 	}
 }

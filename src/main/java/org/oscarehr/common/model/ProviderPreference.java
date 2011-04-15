@@ -30,6 +30,7 @@ import java.util.Date;
 import java.util.HashSet;
 
 import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -46,6 +47,25 @@ import oscar.OscarProperties;
 @Entity
 public class ProviderPreference extends AbstractModel<String> implements Serializable {
 
+	@Embeddable
+	public static class QuickLink
+	{
+		private String name;
+		private String url;
+		public String getName() {
+        	return name;
+        }
+		public void setName(String name) {
+        	this.name = name;
+        }
+		public String getUrl() {
+        	return url;
+        }
+		public void setUrl(String url) {
+        	this.url = url;
+        }
+	}
+	
 	@Id
 	private String providerNo;
 	private Integer startHour=8;
@@ -58,7 +78,7 @@ public class ProviderPreference extends AbstractModel<String> implements Seriali
 	private String defaultCaisiPmm="disabled";
 	private String defaultNewOscarCme="disabled";
 	private boolean printQrCodeOnPrescriptions=Boolean.valueOf(OscarProperties.getInstance().getProperty("QR_CODE_ENABLED_PROVIDER_DEFAULT"));
-	private int appointmentScreenFormNameDisplayLength=3;
+	private int appointmentScreenLinkNameDisplayLength=3;
 	private int defaultDoNotDeleteBilling=0;
 	private String defaultDxCode=null;
 	
@@ -73,6 +93,10 @@ public class ProviderPreference extends AbstractModel<String> implements Seriali
 	@Column(name="appointmentScreenEForm")
 	private Collection<Integer> appointmentScreenEForms=new HashSet<Integer>();
 	
+	@CollectionOfElements(targetElement = QuickLink.class)
+	@JoinTable(name = "ProviderPreferenceAppointmentScreenQuickLink",joinColumns = @JoinColumn(name = "providerNo"))
+	private Collection<QuickLink> appointmentScreenQuickLinks=new HashSet<QuickLink>();
+	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastUpdated=new Date();
 	
@@ -81,6 +105,7 @@ public class ProviderPreference extends AbstractModel<String> implements Seriali
 		// forces eager fetching which can't be done normally as hibernate doesn't allow mulitple collection eager fetching
 		appointmentScreenForms.size();
 		appointmentScreenEForms.size();
+		appointmentScreenQuickLinks.size();
 	}
 	
 	@PreUpdate
@@ -197,12 +222,12 @@ public class ProviderPreference extends AbstractModel<String> implements Seriali
     	return appointmentScreenEForms;
     }
 
-	public int getAppointmentScreenFormNameDisplayLength() {
-    	return appointmentScreenFormNameDisplayLength;
+	public int getAppointmentScreenLinkNameDisplayLength() {
+    	return appointmentScreenLinkNameDisplayLength;
     }
 
-	public void setAppointmentScreenFormNameDisplayLength(int appointmentScreenFormNameDisplayLength) {
-    	this.appointmentScreenFormNameDisplayLength = appointmentScreenFormNameDisplayLength;
+	public void setAppointmentScreenLinkNameDisplayLength(int appointmentScreenLinkNameDisplayLength) {
+    	this.appointmentScreenLinkNameDisplayLength = appointmentScreenLinkNameDisplayLength;
     }
 
 	public int getDefaultDoNotDeleteBilling() {
@@ -221,5 +246,7 @@ public class ProviderPreference extends AbstractModel<String> implements Seriali
 		this.defaultDxCode = defaultDxCode;
 	}
 
-	
+	public Collection<QuickLink> getAppointmentScreenQuickLinks() {
+    	return appointmentScreenQuickLinks;
+    }
 }

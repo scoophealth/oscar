@@ -6344,7 +6344,7 @@ create table ProviderPreference
 	defaultNewOscarCme varchar(10),
 	printQrCodeOnPrescriptions tinyint not null,
 	lastUpdated datetime not null,
-	appointmentScreenFormNameDisplayLength int not null,
+	appointmentScreenLinkNameDisplayLength int not null,
 	defaultDoNotDeleteBilling  tinyint(1) not null,
 	defaultDxCode varchar(4) 
 	
@@ -8375,3 +8375,5 @@ KEY (`type`),
 KEY (`cpso`),
 KEY (`systemId`)
 );
+
+create table ProviderPreferenceAppointmentScreenQuickLink(providerNo varchar(6) not null, name varchar(64) not null, url varchar(255) not null);
