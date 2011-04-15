@@ -17,14 +17,17 @@ import org.oscarehr.util.SpringUtils;
 
 public class MacroAction extends DispatchAction {
 
+	MacroDao dao = (MacroDao)SpringUtils.getBean("MacroDAO");
+	ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
+	
+	
 	@Override
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         return form(mapping, form, request, response);
     }
 	
 	public ActionForward list(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		MacroDao dao = (MacroDao)SpringUtils.getBean("MacroDAO");
-		List<Macro> macros = dao.getAll();
+		List<Macro> macros = dao.getAll();		
 		request.setAttribute("macros", macros);
         return mapping.findForward("list");
     }
@@ -38,9 +41,7 @@ public class MacroAction extends DispatchAction {
     }
 
     public ActionForward form(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-    	ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
-    	MacroDao dao = (MacroDao)SpringUtils.getBean("MacroDAO");
-		
+    	
     	request.setAttribute("providers",providerDao.getActiveProviders());
     	
     	if(request.getParameter("macro.id") != null) {
@@ -57,7 +58,6 @@ public class MacroAction extends DispatchAction {
     	DynaValidatorForm f = (DynaValidatorForm)form;
     	
     	Macro macro = (Macro)f.get("macro");    	
-    	MacroDao dao = (MacroDao)SpringUtils.getBean("MacroDAO");
     	
     	if(request.getParameter("macro.id") != null && request.getParameter("macro.id").length()>0) {    		
     		macro.setId(Integer.parseInt(request.getParameter("macro.id")));
@@ -77,4 +77,11 @@ public class MacroAction extends DispatchAction {
     	return mapping.findForward("success");
     }
 
+    public ActionForward deleteMacro(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+    	String[] ids = request.getParameterValues("selected_id");
+    	for(int x=0;x<ids.length;x++) {
+    		dao.remove(Integer.parseInt(ids[x]));
+    	}
+        return list(mapping,form,request,response);
+    }
 }
