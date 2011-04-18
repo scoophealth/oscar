@@ -49,7 +49,8 @@ public class ProEditMyOscarIdAction extends Action {
               return mapping.findForward("eject");
 
         DynaActionForm frm = (DynaActionForm)form;
-        String loginId = (String)frm.get("myOscarLoginId") + (String)frm.get("myOscarDomain");       
+        String loginId = (String)frm.get("myOscarLoginId");
+        if (loginId.indexOf('@')==-1) loginId=loginId + (String)frm.get("myOscarDomain");       
                 
         if( ProviderMyOscarIdData.getMyOscarId(providerNo).equals(loginId) ) {
             ActionMessages errors = new ActionMessages();
