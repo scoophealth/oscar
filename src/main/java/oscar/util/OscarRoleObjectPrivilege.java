@@ -52,6 +52,7 @@ import java.util.Vector;
 
 import javax.servlet.jsp.PageContext;
 
+import org.apache.commons.lang.StringUtils;
 import org.oscarehr.common.dao.SecObjPrivilegeDao;
 import org.oscarehr.common.model.SecObjPrivilege;
 import org.oscarehr.util.MiscUtils;
@@ -62,205 +63,156 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 import oscar.oscarDB.DBHandler;
 
 public class OscarRoleObjectPrivilege {
-	
+
 	private static PageContext pageContext;
 	private static String rights = "r";
-	
+
 	public static Vector getPrivilegeProp(String objName) {
-        Vector ret = new Vector();
-        Properties prop = new Properties();
-        try {
-            
-            java.sql.ResultSet rs;
-            String [] objectNames  = getVecObjectName(objName);
-            StringBuilder objectWhere = new StringBuilder();
-            for (int i = 0; i < objectNames.length; i++){
-                if (i < (objectNames.length - 1)){
-                   objectWhere.append(" objectName = '"+objectNames[i]+"' or ");
-                }else{
-                   objectWhere.append(" objectName = '"+objectNames[i]+"'  "); 
-                }
-            }
-            
-            String sql = new String("select roleUserGroup,privilege from secObjPrivilege where "+ objectWhere.toString() +" order by priority desc");
+		Vector ret = new Vector();
+		Properties prop = new Properties();
+		try {
 
-            rs = DBHandler.GetSQL(sql);
-            Vector roleInObj = new Vector();
-            while (rs.next()) {
-                prop.setProperty(oscar.Misc.getString(rs, "roleUserGroup"), oscar.Misc.getString(rs, "privilege"));
-                roleInObj.add(oscar.Misc.getString(rs, "roleUserGroup"));
-            }
-            ret.add(prop);
-            ret.add(roleInObj);
+			java.sql.ResultSet rs;
+			String[] objectNames = getVecObjectName(objName);
+			StringBuilder objectWhere = new StringBuilder();
+			for (int i = 0; i < objectNames.length; i++) {
+				if (i < (objectNames.length - 1)) {
+					objectWhere.append(" objectName = '" + objectNames[i] + "' or ");
+				} else {
+					objectWhere.append(" objectName = '" + objectNames[i] + "'  ");
+				}
+			}
 
-            rs.close();
-        } catch (java.sql.SQLException e) {
-           MiscUtils.getLogger().error("Error", e);
-        }
-        return ret;
-    }
+			String sql = new String("select roleUserGroup,privilege from secObjPrivilege where " + objectWhere.toString() + " order by priority desc");
+
+			rs = DBHandler.GetSQL(sql);
+			Vector roleInObj = new Vector();
+			while (rs.next()) {
+				prop.setProperty(oscar.Misc.getString(rs, "roleUserGroup"), oscar.Misc.getString(rs, "privilege"));
+				roleInObj.add(oscar.Misc.getString(rs, "roleUserGroup"));
+			}
+			ret.add(prop);
+			ret.add(roleInObj);
+
+			rs.close();
+		} catch (java.sql.SQLException e) {
+			MiscUtils.getLogger().error("Error", e);
+		}
+		return ret;
+	}
 
 	public static ArrayList<Object> getPrivilegePropAsArrayList(String objName) {
-        ArrayList<Object> ret = new ArrayList<Object>();
-        Properties prop = new Properties();
-       
-        SecObjPrivilegeDao dao = (SecObjPrivilegeDao)SpringUtils.getBean("secObjPrivilegeDao");
-        String [] objectNames  = getVecObjectName(objName);
-        ArrayList<String> objects = new ArrayList<String>();
+		ArrayList<Object> ret = new ArrayList<Object>();
+		Properties prop = new Properties();
 
-        for(String t:objectNames) {
-        	objects.add(t);          
-        }
-           
-        List<SecObjPrivilege> privileges= dao.findByObjectNames(objects);
-           
-        ArrayList<String> roleInObj = new ArrayList<String>();
-        for(SecObjPrivilege sop:privileges) {
-        	prop.setProperty(sop.getId().getRoleUserGroup(), sop.getPrivilege());
-        	roleInObj.add(sop.getId().getRoleUserGroup());
-        }
-        ret.add(prop);
-        ret.add(roleInObj);           
-       
-        return ret;
-    }
-	
-	   public static boolean checkPrivilege(String roleName, Properties propPrivilege, ArrayList roleInObj) {
-	        return checkPrivilege( roleName,  propPrivilege,  roleInObj,rights);
-	    }
-	    public static boolean checkPrivilege(String roleName, Properties propPrivilege, ArrayList roleInObj,String rightCustom) {
-	        boolean ret = false;
-	        Properties propRoleName = getVecRole(roleName);
-	        for (int i = 0; i < roleInObj.size(); i++) {
-	            if (!propRoleName.containsKey(roleInObj.get(i)))
-	                continue;
+		SecObjPrivilegeDao dao = (SecObjPrivilegeDao) SpringUtils.getBean("secObjPrivilegeDao");
+		String[] objectNames = getVecObjectName(objName);
+		ArrayList<String> objects = new ArrayList<String>();
 
-	            String singleRoleName = (String) roleInObj.get(i);
-	            String strPrivilege = propPrivilege.getProperty(singleRoleName, "");
-	            ArrayList<String> vecPrivilName = getVecPrivilegeAsArrayList(strPrivilege);
+		for (String t : objectNames) {
+			objects.add(t);
+		}
 
-	            boolean[] check = { false, false };
-	            for (int j = 0; j < vecPrivilName.size(); j++) {
-	                check = checkRights(vecPrivilName.get(j), rightCustom);
+		List<SecObjPrivilege> privileges = dao.findByObjectNames(objects);
 
-	                if (check[0]) { // get the rights, stop comparing
-	                    return true;
-	                }
-	                if (check[1]) { // get the only rights, stop and return the result
-	                    return check[0];
-	                }
-	            }
-	        }
-	        return ret;
-	    }
-	
+		ArrayList<String> roleInObj = new ArrayList<String>();
+		for (SecObjPrivilege sop : privileges) {
+			prop.setProperty(sop.getId().getRoleUserGroup(), sop.getPrivilege());
+			roleInObj.add(sop.getId().getRoleUserGroup());
+		}
+		ret.add(prop);
+		ret.add(roleInObj);
+
+		return ret;
+	}
+
 	/**
-     *returns the providers roles as properties object
-     */
-    private static Properties getVecRole(String roleName) {
-        Properties prop = new Properties();
-        String[] temp = roleName.split("\\,");
-        for (int i = 0; i < temp.length; i++) {
-            prop.setProperty(temp[i], "1");
-        }
-        return prop;
-    }
-    
-    private static String[] getVecObjectName(String objectName) {
-        String[] temp = objectName.split("\\,");
-        return temp;
-    }
-    
+	 * returns the providers roles as properties object
+	 */
+	private static Properties getVecRole(String roleName) {
+		Properties prop = new Properties();
+		String[] temp = roleName.split("\\,");
+		for (int i = 0; i < temp.length; i++) {
+			prop.setProperty(temp[i], "1");
+		}
+		return prop;
+	}
 
-    private static Vector getVecPrivilege(String privilege) {
-        Vector vec = new Vector();
-        String[] temp = privilege.split("\\|");
-        for (int i = 0; i < temp.length; i++) {
-            if ("".equals(temp[i]))
-                continue;
-            vec.add(temp[i]);
-        }
-        return vec;
-    }
-    
-    private static ArrayList<String> getVecPrivilegeAsArrayList(String privilege) {
-        ArrayList<String> vec = new ArrayList<String>();
-        String[] temp = privilege.split("\\|");
-        for (int i = 0; i < temp.length; i++) {
-            if ("".equals(temp[i]))
-                continue;
-            vec.add(temp[i]);
-        }
-        return vec;
-    }
+	private static String[] getVecObjectName(String objectName) {
+		String[] temp = objectName.split("\\,");
+		return temp;
+	}
 
-    public static boolean checkPrivilege(String objName, String orgCd, String propPrivilege)
-    {
-    	try {
-            com.quatro.service.security.SecurityManager secManager =(com.quatro.service.security.SecurityManager)pageContext.getSession().getAttribute("securitymanager"); 
-            if (orgCd == null) orgCd = "";
-            String x=secManager.GetAccess(objName, orgCd);
-            return x.compareToIgnoreCase(propPrivilege) >= 0;
-        }
-        catch (Exception e) {
-            MiscUtils.getLogger().error("Error", e);
-            return(false);
-        }
-    }
-    public static boolean checkPrivilege(String roleName, Properties propPrivilege, Vector roleInObj) {
-        return checkPrivilege( roleName,  propPrivilege,  roleInObj,rights);
-    }
-    public static boolean checkPrivilege(String roleName, Properties propPrivilege, Vector roleInObj,String rightCustom) {
-        boolean ret = false;
-        Properties propRoleName = getVecRole(roleName);
-        for (int i = 0; i < roleInObj.size(); i++) {
-            if (!propRoleName.containsKey(roleInObj.get(i)))
-                continue;
+	private static ArrayList<String> getPrivilege(String privilege) {
+		ArrayList<String> vec = new ArrayList<String>();
+		if (privilege != null) {
+		String[] temp = privilege.split("\\|");
+		for (int i = 0; i < temp.length; i++) {
+				temp[i] = StringUtils.trimToNull(temp[i]);
+				if (temp[i] == null) continue;
+			vec.add(temp[i]);
+		}
+	}
 
-            String singleRoleName = (String) roleInObj.get(i);
-            String strPrivilege = propPrivilege.getProperty(singleRoleName, "");
-            Vector vecPrivilName = getVecPrivilege(strPrivilege);
+		return vec;
+	}
 
-            boolean[] check = { false, false };
-            for (int j = 0; j < vecPrivilName.size(); j++) {
-                check = checkRights((String) vecPrivilName.get(j), rightCustom);
+	public static boolean checkPrivilege(String objName, String orgCd, String propPrivilege) {
+		try {
+			com.quatro.service.security.SecurityManager secManager = (com.quatro.service.security.SecurityManager) pageContext.getSession().getAttribute("securitymanager");
+			if (orgCd == null) orgCd = "";
+			String x = secManager.GetAccess(objName, orgCd);
+			return x.compareToIgnoreCase(propPrivilege) >= 0;
+		} catch (Exception e) {
+			MiscUtils.getLogger().error("Error", e);
+			return (false);
+		}
+	}
 
-                if (check[0]) { // get the rights, stop comparing
-                    return true;
-                }
-                if (check[1]) { // get the only rights, stop and return the result
-                    return check[0];
-                }
-            }
-        }
-        return ret;
-    }
+	public static boolean checkPrivilege(String roleName, Properties propPrivilege, List<String> roleInObj) {
+		return checkPrivilege(roleName, propPrivilege, roleInObj, rights);
+	}
 
-    private static boolean[] checkRights(String privilege, String rights1) {
-        boolean[] ret = { false, false }; // (gotRights, break/continue)
-/*
-        if ("*".equals(privilege)) {
-            ret[0] = true;
-        } else if (privilege.equals(rights1.toLowerCase())
-                || (privilege.length() > 1 && privilege.startsWith("o") && privilege.substring(1).equals(
-                        rights1.toLowerCase()))) {
-            ret[0] = true;
-            if (privilege.startsWith("o"))
-                ret[1] = true; // break
-        } else if (privilege.equals("o")) { // for "o"
-            ret[0] = false;
-            ret[1] = true; // break
-        }
-*/
-        if ("x".equals(privilege)) {
-            ret[0] = true;
-        } else if (privilege.compareTo(rights1.toLowerCase()) >=0) {
-            ret[0] = true;
-        }
-        return ret;
-    }
+	public static boolean checkPrivilege(String roleName, Properties propPrivilege, List<String> roleInObj, String rightCustom) {
+		boolean ret = false;
+		Properties propRoleName = getVecRole(roleName);
+		for (int i = 0; i < roleInObj.size(); i++) {
+			if (!propRoleName.containsKey(roleInObj.get(i))) continue;
 
-    public ApplicationContext getAppContext() {
+			String singleRoleName = roleInObj.get(i);
+			String strPrivilege = propPrivilege.getProperty(singleRoleName);
+			List<String> vecPrivilName = getPrivilege(strPrivilege);
+
+			boolean[] check = { false, false };
+			for (int j = 0; j < vecPrivilName.size(); j++) {
+				check = checkRights((String) vecPrivilName.get(j), rightCustom);
+
+				if (check[0]) { // get the rights, stop comparing
+					return true;
+				}
+				if (check[1]) { // get the only rights, stop and return the result
+					return check[0];
+				}
+			}
+		}
+		return ret;
+	}
+
+	private static boolean[] checkRights(String privilege, String rights1) {
+		boolean[] ret = { false, false }; // (gotRights, break/continue)
+		/*
+		 * if ("*".equals(privilege)) { ret[0] = true; } else if (privilege.equals(rights1.toLowerCase()) || (privilege.length() > 1 && privilege.startsWith("o") && privilege.substring(1).equals( rights1.toLowerCase()))) { ret[0] = true; if
+		 * (privilege.startsWith("o")) ret[1] = true; // break } else if (privilege.equals("o")) { // for "o" ret[0] = false; ret[1] = true; // break }
+		 */
+		if ("x".equals(privilege)) {
+			ret[0] = true;
+		} else if (privilege.compareTo(rights1.toLowerCase()) >= 0) {
+			ret[0] = true;
+		}
+		return ret;
+	}
+
+	public ApplicationContext getAppContext() {
 		return WebApplicationContextUtils.getWebApplicationContext(pageContext.getServletContext());
 	}
 }
