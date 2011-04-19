@@ -71,6 +71,7 @@ import org.oscarehr.casemgmt.dao.IssueDAO;
 import org.oscarehr.casemgmt.model.CaseManagementCPP;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
+import org.oscarehr.casemgmt.model.CaseManagementNoteExt;
 import org.oscarehr.casemgmt.model.CaseManagementSearchBean;
 import org.oscarehr.casemgmt.model.CaseManagementTmpSave;
 import org.oscarehr.casemgmt.model.ClientImage;
@@ -93,6 +94,7 @@ import org.oscarehr.eyeform.dao.TestBookRecordDao;
 import org.oscarehr.eyeform.model.FollowUp;
 import org.oscarehr.eyeform.model.Macro;
 import org.oscarehr.eyeform.model.TestBookRecord;
+import org.oscarehr.provider.web.CppPreferencesUIBean;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -1146,15 +1148,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			if (!a) {
 				return mapping.findForward("success"); // The link of Medical History won't show up on new CME screen.
 			}
-		} /* else if (codes[0].equalsIgnoreCase("PastOcularHistory")) {
-			return mapping.findForward("success");
-		}  else if (codes[0].equalsIgnoreCase("OcularMedications")) {
-			return mapping.findForward("success");
-		} else if (codes[0].equalsIgnoreCase("PatientLog")) {
-			return mapping.findForward("success");
-		} else if (codes[0].equalsIgnoreCase("DiagnosticNotes")) {
-			return mapping.findForward("success");
-		}*/
+		} 
 
 		// set save url to be used by ajax editor
 		String identUrl = request.getQueryString();
@@ -1604,5 +1598,81 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			filteredNotes.addAll(notes);
 		}
 		return filteredNotes.iterator().next();
+	}
+	
+	public static String getCppAdditionalData(Long noteId, String issueCode,List<CaseManagementNoteExt> noteExts,CppPreferencesUIBean prefsBean) {
+		if(prefsBean.getEnable()== null || !prefsBean.getEnable().equals("on")) {
+			return new String();
+		}
+		String issueCodeArr[] = issueCode.split(";");
+		StringBuilder sb = new StringBuilder();
+		if(issueCodeArr[1].equals("SocHistory")) {
+			if(prefsBean.getSocialHxStartDate().equals("on")) {
+				sb.append("Start Date:"+getNoteExt(noteId, "Start Date",noteExts));
+			}
+			if(prefsBean.getSocialHxResDate().equals("on")) {
+				if(sb.length()>0) {sb.append(" ");}
+				sb.append("Resolution Date:"+getNoteExt(noteId, "Resolution Date",noteExts));
+			}
+		}
+		if(issueCodeArr[1].equals("Reminders")) {
+			if(prefsBean.getRemindersStartDate().equals("on")) {
+				sb.append("Start Date:"+getNoteExt(noteId, "Start Date",noteExts));
+			}
+			if(prefsBean.getRemindersResDate().equals("on")) {
+				if(sb.length()>0) {sb.append(" ");}
+				sb.append("Resolution Date:"+getNoteExt(noteId, "Resolution Date",noteExts));
+			}
+		}
+		if(issueCodeArr[1].equals("Concerns")) {
+			if(prefsBean.getOngoingConcernsStartDate().equals("on")) {
+				sb.append("Start Date:"+getNoteExt(noteId, "Start Date",noteExts));
+			}
+			if(prefsBean.getOngoingConcernsResDate().equals("on")) {
+				if(sb.length()>0) {sb.append(" ");}
+				sb.append("Resolution Date:"+getNoteExt(noteId, "Resolution Date",noteExts));
+			}
+			if(prefsBean.getOngoingConcernsProblemStatus().equals("on")) {
+				if(sb.length()>0) {sb.append(" ");}
+				sb.append("Status:"+getNoteExt(noteId, "Problem Status",noteExts));
+			}
+		}
+		if(issueCodeArr[1].equals("MedHistory")) {
+			if(prefsBean.getMedHxStartDate().equals("on")) {
+				sb.append("Start Date:"+getNoteExt(noteId, "Start Date",noteExts));
+			}
+			if(prefsBean.getMedHxResDate().equals("on")) {
+				if(sb.length()>0) {sb.append(" ");}
+				sb.append("Resolution Date:"+getNoteExt(noteId, "Resolution Date",noteExts));
+			}
+			if(prefsBean.getMedHxTreatment().equals("on")) {
+				if(sb.length()>0) {sb.append(" ");}
+				sb.append("Treatment:"+getNoteExt(noteId, "Treatment",noteExts));
+			}
+			if(prefsBean.getMedHxProcedureDate().equals("on")) {
+				if(sb.length()>0) {sb.append(" ");}
+				sb.append("Procedure Date:"+getNoteExt(noteId, "Procedure Date",noteExts));
+			}
+		}		
+		if(sb.length()>0) {
+			sb.insert(0, " (");
+			sb.append(")");
+		}
+		return sb.toString();
+	}
+	
+	static String getNoteExt(Long noteId, String key, List<CaseManagementNoteExt> lcme) {
+		for (CaseManagementNoteExt cme : lcme) {
+		    if (cme.getNoteId().equals(noteId) && cme.getKeyVal().equals(key) ) {		
+				String val = null;
+				if (key.contains(" Date")) {
+				    val = oscar.util.UtilDateUtilities.DateToString(cme.getDateValue(),"yyyy-MM-dd");
+				} else {
+				    val = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(cme.getValue());
+				}
+				return val;
+		    }
+		}
+		return "";
 	}
 }
