@@ -25,7 +25,9 @@
 
 package org.oscarehr.common.dao;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.oscarehr.common.model.UserProperty;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
@@ -73,5 +75,32 @@ public class UserPropertyDAO extends HibernateDaoSupport {
     	@SuppressWarnings("unchecked")
     	List<UserProperty> list = this.getHibernateTemplate().find("from UserProperty p where  p.providerNo = ?", providerNo);
     	return list;
+    }
+    
+    public Map<String,String> getProviderPropertiesAsMap(String providerNo) {
+    	Map<String,String> map = new HashMap<String,String>();
+    	@SuppressWarnings("unchecked")
+    	List<UserProperty> list = this.getHibernateTemplate().find("from UserProperty p where  p.providerNo = ?", providerNo);
+    	for(UserProperty p:list) {
+    		map.put(p.getName(), p.getValue());
+    	}
+    	return map;
+    }
+    
+    public void saveProperties(String providerNo, Map<String,String> props) {
+    	for(String key:props.keySet()) {
+    		String value = props.get(key);
+    		if(value == null) value = new String();
+    		UserProperty prop  = null;
+    		if((prop=this.getProp(providerNo, key)) != null) {
+    			prop.setValue(value);    			
+    		} else {
+    			prop = new UserProperty();
+    			prop.setName(key);
+    			prop.setProviderNo(providerNo);
+    			prop.setValue(value);    			
+    		}
+    		saveProp(prop);
+    	}
     }
 }

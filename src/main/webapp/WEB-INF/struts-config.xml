@@ -2041,6 +2041,10 @@
 			<forward name="form" path="/provider/UserPreferences.jsp" />							
 		</action>
 		
+		<action path="/provider/CppPreferences" type="org.oscarehr.provider.web.CppPreferencesAction" parameter="method" scope="request" validate="false" input="/provider/cpp_preferences.jsp">
+			<forward name="form" path="/provider/cpp_preferences.jsp" />							
+		</action>
+		
 		<!-- END OSCAR Report By Template -->
 
 		<action path="/demographic/Contact" type="org.oscarehr.common.web.ContactAction" parameter="method" scope="request" validate="false" name="contactForm">
@@ -2199,10 +2203,7 @@
 
 		<action path="/Provider/showPersonal" type="org.oscarehr.provider.web.DisplayPersonalInfoAppointmentAction" parameter="method" validate="false" scope="request">
 		</action>
-		<!--
-        <action path="/PMmodule/CaseLoad" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method">
-        </action>
--->
+		
 		<action parameter="method" path="/PMmodule/Admin/MigrateCaisiRoles" scope="request" type="org.springframework.web.struts.DelegatingActionProxy">
 			<forward name="success" path="/PMmodule/Admin/migrateCaisiRoles.jsp" redirect="true" />
 		</action>
