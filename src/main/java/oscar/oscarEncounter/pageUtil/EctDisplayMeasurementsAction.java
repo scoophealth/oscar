@@ -128,6 +128,9 @@ public class EctDisplayMeasurementsAction extends EctDisplayAction {
                 NavBarDisplayDAO.Item item = Dao.Item();
                 data = (oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBean) measures.get(0);
                 Date date = data.getDateObservedAsDate();
+                if( date == null ) {
+                	date = data.getDateEnteredAsDate();
+                }
                 String formattedDate = DateUtils.getDate(date,dateFormat, request.getLocale());
                 item.setLinkTitle(title + " " + data.getDataField() + " " + formattedDate);
                 title = padd(title, data.getDataField());
