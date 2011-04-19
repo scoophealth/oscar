@@ -126,6 +126,10 @@
 			insertAfter(prevRow,newDiv);
 		}	
    }
+   
+   function removeCppRow(rowNumber) {
+	   jQuery("#divR"+rowNumber).remove();
+   }
 
    function popColumn(url,div,params, navBar, navBarObj) {
 	   params = "reloadURL=" + url + "&numToDisplay=6&cmd=" + params;
