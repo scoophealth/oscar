@@ -25,6 +25,8 @@ public class CppPreferencesUIBean {
 	public static final String REMINDERS_START_DATE = "cpp.reminders.start_date";
 	public static final String REMINDERS_RES_DATE = "cpp.reminders.res_date";
 	
+	public static final String ENABLE = "cpp.pref.enable";
+	
 	protected UserPropertyDAO userPropertyDao = (UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
 	
 	private String providerNo;
@@ -45,6 +47,7 @@ public class CppPreferencesUIBean {
 	private String ongoingConcernsProblemStatus;
 	private String remindersStartDate;
 	private String remindersResDate;
+	private String enable;
 	
 	public Map<String,String> serialize() {
 		Map<String,String> map = new HashMap<String,String>();
@@ -63,6 +66,7 @@ public class CppPreferencesUIBean {
 		map.put(ONGOING_PROBLEM_STATUS,this.getOngoingConcernsProblemStatus());
 		map.put(REMINDERS_START_DATE,this.getRemindersStartDate());
 		map.put(REMINDERS_RES_DATE,this.getRemindersResDate());
+		map.put(ENABLE,this.getEnable());
 		return map;
 	}
 	
@@ -93,6 +97,8 @@ public class CppPreferencesUIBean {
 			setRemindersStartDate(map.get(REMINDERS_START_DATE)[0]);
 		if(map.get(REMINDERS_RES_DATE)!=null)
 			setRemindersResDate(map.get(REMINDERS_RES_DATE)[0]);
+		if(map.get(ENABLE)!=null)
+			setEnable(map.get(ENABLE)[0]);
 	}
 	
 	public void deserialize(Map<String,String> map) {
@@ -126,6 +132,8 @@ public class CppPreferencesUIBean {
 			setRemindersStartDate(map.get(REMINDERS_START_DATE));
 		if(map.get(REMINDERS_RES_DATE)!=null)
 			setRemindersResDate(map.get(REMINDERS_RES_DATE));
+		if(map.get(ENABLE)!=null)
+			setEnable(map.get(ENABLE));
 	}
 	
 	public CppPreferencesUIBean(String providerNo) {
@@ -253,6 +261,14 @@ public class CppPreferencesUIBean {
 
 	public void setRemindersResDate(String remindersResDate) {
     	this.remindersResDate = remindersResDate;
+    }
+
+	public String getEnable() {
+    	return enable;
+    }
+
+	public void setEnable(String enable) {
+    	this.enable = enable;
     }
 
 	public static String getPositionSelect(String currentValue) {
