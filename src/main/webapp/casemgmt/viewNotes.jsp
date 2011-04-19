@@ -28,6 +28,10 @@
 <%@page
 	import="java.util.List, java.util.Set, java.util.Iterator, org.oscarehr.casemgmt.model.CaseManagementIssue, org.oscarehr.casemgmt.model.CaseManagementNoteExt"%>
 <%@page import="org.oscarehr.common.model.Provider"%>
+<%@page import="org.oscarehr.provider.web.CppPreferencesUIBean"%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
+<%@page import="org.oscarehr.casemgmt.web.CaseManagementViewAction"%>
+
 <c:set var="ctx" value="${pageContext.request.contextPath}"
 	scope="request" />
 <nested:size id="num" name="Notes" />
@@ -63,15 +67,19 @@
 		
 		<li class="cpp" style="clear: both; whitespace: nowrap;">
 		<%}
-                
-		String strNoteExts = getNoteExts(note.getId(), noteExts);
+                //load up the prefs once
+                CppPreferencesUIBean prefsBean = new CppPreferencesUIBean(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+                prefsBean.loadValues();
+				String addlData = CaseManagementViewAction.getCppAdditionalData(note.getId(),(String)request.getAttribute("cppIssue"),noteExts,prefsBean);
+				
+				String strNoteExts = getNoteExts(note.getId(), noteExts);
                 List<Provider> listEditors = note.getEditors();
                 StringBuffer editors = new StringBuffer();
                 for( Provider p: listEditors) {
-                editors.append(p.getFormattedName() + ";");                     
+                	editors.append(p.getFormattedName() + ";");                     
                 }             
                 
-                String htmlNoteTxt = note.getNote();
+                String htmlNoteTxt = note.getNote() + addlData;
                 htmlNoteTxt = htmlNoteTxt.replaceAll("\n", "<br>");
                 
                 String noteTxt = note.getNote();
