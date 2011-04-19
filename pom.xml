@@ -699,9 +699,16 @@
     					<param>oscarResources_es.properties</param>
     					<param>oscarResources_fr.properties</param>
     					<param>oscarResources_pt_BR.properties</param>
-    					<param>oscarResources_pl.properties</param>
     				</otherResourceFiles>
-  				</configuration>     
+  				</configuration> 
+  				<dependencies>
+  				    <dependency>
+      					<groupId>com.google.code</groupId>
+      					<artifactId>google-api-translate-java</artifactId>
+      					<version>0.95</version>
+    				</dependency>  				
+  				</dependencies>    
+<!--
 				<executions>
 					<execution>
 						<phase>process-sources</phase>
@@ -710,6 +717,7 @@
 						</goals>
 					</execution>
 				</executions>  		   
+-->
       		</plugin>
 		</plugins>
 	</build>
