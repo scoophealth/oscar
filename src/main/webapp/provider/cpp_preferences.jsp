@@ -45,11 +45,30 @@
 <link rel="stylesheet" type="text/css" media="all" href="<c:out value="${ctx}"/>/share/calendar/calendar.css" title="win2k-cold-1">
 <script src="<c:out value="${ctx}"/>/share/javascript/prototype.js"	type="text/javascript"></script>
 <script src="<c:out value="${ctx}"/>/share/javascript/scriptaculous.js"	type="text/javascript"></script>
+<script src="<c:out value="${ctx}"/>/js/jquery.js"></script>
+<script>
+	jQuery.noConflict();
+</script>
 
 <script type="text/javascript">            
             
 	function validate() {                
+		//make sure none of the positions are duplicates
+		if(getTotalPos("R1I1") > 1) { alert("You have a duplicate for Row 1, Column 1..Please fix."); return false;}
+		if(getTotalPos("R1I2") > 1) { alert("You have a duplicate for Row 1, Column 2..Please fix."); return false;}
+		if(getTotalPos("R2I1") > 1) { alert("You have a duplicate for Row 2, Column 1..Please fix."); return false;}
+		if(getTotalPos("R2I2") > 1) { alert("You have a duplicate for Row 2, Column 2..Please fix."); return false;}		
 		return true;
+	}
+	
+	function getTotalPos(value) {
+		var total = 0;
+		jQuery("select").each(function(){
+			if(jQuery(this).val() == value) {
+				total++;
+			}
+		});
+		return total;
 	}
 </script>
 
@@ -66,8 +85,14 @@
 		<td class="MainTableLeftColumn">&nbsp;</td>
 		<td class="MainTableRightColumn">
 			<!-- form starts here -->
-			<form action="<c:out value="${ctx}"/>/provider/CppPreferences.do?method=save" method="post">
+			<form action="<c:out value="${ctx}"/>/provider/CppPreferences.do?method=save" method="post" onSubmit="return validate();">
 			<table width="100%" border="1">
+				<tr>				
+					<td colspan="2">
+						<%=CppPreferencesUIBean.getCheckbox("Enable Custom EChart",CppPreferencesUIBean.ENABLE,bean.getEnable()) %>
+					</td>
+				
+				</tr>
 				<tr>
 					<td>Social History</td>
 					<td>
