@@ -566,6 +566,9 @@ function showHideBillPref() {
   <%             
     }
   %>
+  		<tr>
+          <td align="center"><a href=# onClick ="popupPage(400,860,'../provider/CppPreferences.do');return false;"><bean:message key="provider.cppPrefs" /></a></td>
+      	</tr>
 
 </table>
 </FORM>
