@@ -1,25 +1,30 @@
 package org.oscarehr.eyeform.web;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.validator.DynaValidatorForm;
 import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.common.dao.BillingServiceDao;
 import org.oscarehr.eyeform.dao.MacroDao;
 import org.oscarehr.eyeform.model.Macro;
 import org.oscarehr.util.SpringUtils;
+
 
 public class MacroAction extends DispatchAction {
 
 	MacroDao dao = (MacroDao)SpringUtils.getBean("MacroDAO");
 	ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
-	
+	BillingServiceDao billingServiceDao = (BillingServiceDao)SpringUtils.getBean("billingServiceDao");
 	
 	@Override
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
@@ -62,6 +67,54 @@ public class MacroAction extends DispatchAction {
     	if(request.getParameter("macro.id") != null && request.getParameter("macro.id").length()>0) {    		
     		macro.setId(Integer.parseInt(request.getParameter("macro.id")));
     	}
+    	
+    	StringBuilder errors = new StringBuilder();
+    	
+    	//validate billing
+    	String bcodes = macro.getBillingCodes();
+		if (StringUtils.isNotBlank(bcodes)) {
+			macro.setBillingCodes(bcodes.trim().replace("\r", ""));
+			String[] bcs = macro.getBillingCodes().split("\n");
+			SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+			String serviceDate = sf.format(new Date());
+
+			for (String code : bcs) {
+				if (StringUtils.isBlank(code))
+					continue;
+				String[] atts = code.split("\\|");
+				Object[] price = billingServiceDao.getUnitPrice(atts[0], serviceDate);
+				if (price == null) {
+					errors.append("<br/>Invalid billing code or format: " + code);
+				}
+			}
+		}
+		
+		//validate tests
+		String tests = macro.getTestRecords().replace("\r", "");
+		StringBuilder sb = new StringBuilder();
+		if (StringUtils.isNotBlank(tests)) {
+			for (String test : tests.split("\n")) {
+				if (StringUtils.isBlank(test))
+					continue;
+				if (!test.matches(".*\\|(routine|ASAP|urgent)\\|.*")) {
+					errors.append("<br/>Invalid test_urgency attribute in test bookings.");
+				}
+				if (!test.matches(".*\\|(OU|OD|OS)\\|.*")) {
+					errors.append("<br/>Invalid test_eye attribute in test bookings.");
+				}
+				sb.append(test.trim()).append("\n");
+			}
+		}
+		macro.setTestRecords(sb.toString());
+    	
+		//addMessage(request, "Macro has been saved successfully.");
+		if(errors.toString().length()>0) {
+			request.setAttribute("errors", errors.toString());
+			request.setAttribute("providers",providerDao.getActiveProviders());
+	    	DynaValidatorForm f2 = (DynaValidatorForm)form;	
+	    	f2.set("macro", macro);	    		    	
+	        return mapping.findForward("form");
+		}
     	
     	if(macro.getId() != null && macro.getId() == 0) {
     		macro.setId(null);

@@ -8171,7 +8171,7 @@ CREATE TABLE `EyeformFollowUp` (
 CREATE TABLE `EyeformMacro` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `label` varchar(255) NOT NULL,
-  `displayOrder` tinyint(4) NOT NULL,
+  `displayOrder` int(10) NOT NULL,
   `impression` text,
   `followupNo` smallint(5),
   `followupUnit` varchar(50),
