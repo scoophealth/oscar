@@ -497,9 +497,7 @@ function initService(ser){
 	var strSer = new String(ser);
 
         $H(servicesName).each(function(pair){
-              var opt = document.createElement("option");
-              opt.textContent = pair.key;
-              opt.value = pair.value;
+              var opt = new Option( pair.key, pair.value );
               if( pair.value == strSer ) {
                 opt.selected = true;
                 fillSpecialistSelect1( pair.value );
