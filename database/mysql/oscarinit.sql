@@ -65,6 +65,7 @@ CREATE TABLE appointment (
   creator varchar(50) default NULL,
   lastupdateuser varchar(6) default NULL,
   remarks varchar(50) default NULL,
+  urgency varchar(30),
   PRIMARY KEY  (appointment_no),
   KEY appointment_date (appointment_date,start_time,demographic_no),
   KEY demographic_no (demographic_no),
@@ -8137,7 +8138,8 @@ CREATE TABLE appointmentArchive (
   updatedatetime datetime,
   creator varchar(50),
   lastupdateuser varchar(6),
-  remarks varchar(50)
+  remarks varchar(50),
+  urgency varchar(30)
 );
 
 create table ProviderPreferenceAppointmentScreenForm(providerNo varchar(6) not null, appointmentScreenForm varchar(128) not null);

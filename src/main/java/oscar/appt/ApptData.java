@@ -28,6 +28,7 @@ public class ApptData {
 	String providerLastName;
 	String providerFirstName;
 	String ohipNo;
+	String urgency;
 
 	public String getAppointment_date() {
 		return appointment_date;
@@ -230,4 +231,14 @@ public class ApptData {
 	    if (isDate) return new SimpleDateFormat("yyyy-MM-dd").parse(s);
 	    else return new SimpleDateFormat("HH:mm:ss").parse(s);
 	}
+
+	public String getUrgency() {
+    	return urgency;
+    }
+
+	public void setUrgency(String urgency) {
+    	this.urgency = urgency;
+    }
+	
+	
 }

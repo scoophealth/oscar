@@ -34,6 +34,7 @@ public class ApptUtil {
 		obj.setRemarks(request.getParameter("remarks"));
 		obj.setDuration(request.getParameter("duration"));
 		obj.setChart_no(request.getParameter("chart_no"));
+		obj.setUrgency(request.getParameter("urgency"));
 		// set up session bean
 		request.getSession().setAttribute(SESSION_APPT_BEAN, obj);
 	}

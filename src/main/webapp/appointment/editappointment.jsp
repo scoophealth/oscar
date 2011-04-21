@@ -234,6 +234,9 @@ function pasteAppt() {
 	document.EDITAPPT.notes.value = "<%=apptObj.getNotes()%>";
 	document.EDITAPPT.location.value = "<%=apptObj.getLocation()%>";
 	document.EDITAPPT.resources.value = "<%=apptObj.getResources()%>";
+	if('<%=apptObj.getUrgency()%>' == 'critical') {
+		document.EDITAPPT.urgency.checked = "checked";
+	}
 }
 <% } %>
 function onCut() {
@@ -544,6 +547,29 @@ if (bMultisites) { %>
                 <INPUT TYPE="TEXT" NAME="createDate" readonly
 					VALUE="<%=origDate%>" WIDTH="25">
             </div>
+        </li>
+        <li class="row weak">
+			<div class="label"></div>
+            <div class="input"></div>
+            <div class="space">&nbsp;</div>
+            <div class="label"><bean:message key="Appointment.formCritical" />:</div>
+            <div class="input">
+            	<%
+           			String urgencyChecked=new String();
+            		if(bFirstDisp) {
+            			if(appt.get("urgency") != null && appt.get("urgency").equals("critical")) {
+            				urgencyChecked=" checked=\"checked\" ";
+            			}
+            		} else {
+            			if(request.getParameter("urgency") != null) {
+            				if(request.getParameter("urgency").equals("critical")) {
+            					urgencyChecked=" checked=\"checked\" ";
+            				}
+            			}
+            		}
+            	%>
+            	<input type="checkbox" name="urgency" value="critical" <%=urgencyChecked%>/>
+            </div>        
         </li>
     </ul>
 <table class="buttonBar deep">
