@@ -1,57 +1,133 @@
 package org.oscarehr.web.report;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.servlet.http.HttpSession;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.myoscar_server.ws.AccountWs;
+import org.oscarehr.myoscar_server.ws.NotAuthorisedException_Exception;
+import org.oscarehr.myoscar_server.ws.PersonTransfer;
 import org.oscarehr.myoscar_server.ws.SurveyResultTransfer;
 import org.oscarehr.myoscar_server.ws.SurveyTemplateTransfer;
 import org.oscarehr.myoscar_server.ws.SurveyWs;
 import org.oscarehr.phr.PHRAuthentication;
+import org.oscarehr.phr.util.MumpsResultWrapper.Entry;
 import org.oscarehr.phr.util.MyOscarServerWebServicesManager;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
+import org.xml.sax.SAXException;
 
 import oscar.OscarProperties;
 
 public class SymptomChecklistReportUIBean {
-	
-	private static final Logger logger=MiscUtils.getLogger();
-	private static final String MYOSCAR_SYMPTOM_CHECKLIST_REPORT_TEMPLATE_NAME_KEY="MYOSCAR_SYMPTOM_CHECKLIST_REPORT_TEMPLATE_NAME";
-	
-	private static Long symptomChecklistTemplateId=null;
-	
-	private static Long getSymptomChecklistTemplateId(PHRAuthentication auth)
-	{
-		if (symptomChecklistTemplateId==null)
-		{
-			SurveyWs surveyWs=MyOscarServerWebServicesManager.getSurveyWs(auth.getMyOscarUserId(), auth.getMyOscarPassword());
-			
-			OscarProperties p=OscarProperties.getInstance();
-			String templateName=p.getProperty(MYOSCAR_SYMPTOM_CHECKLIST_REPORT_TEMPLATE_NAME_KEY);
-			
-			SurveyTemplateTransfer result=surveyWs.getSurveyTemplate(templateName, true);
-			if (result==null)
-			{
-				logger.warn("No template matching "+MYOSCAR_SYMPTOM_CHECKLIST_REPORT_TEMPLATE_NAME_KEY+"="+templateName);
-			}
-			else
-			{
-				symptomChecklistTemplateId=result.getId();
+
+	private static final Logger logger = MiscUtils.getLogger();
+	private static final String MYOSCAR_SYMPTOM_CHECKLIST_REPORT_TEMPLATE_NAME_KEY = "MYOSCAR_SYMPTOM_CHECKLIST_REPORT_TEMPLATE_NAME";
+
+	private static DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
+
+	private static Long symptomChecklistTemplateId = null;
+
+	private static Long getSymptomChecklistTemplateId(PHRAuthentication auth) {
+		if (symptomChecklistTemplateId == null) {
+			SurveyWs surveyWs = MyOscarServerWebServicesManager.getSurveyWs(auth.getMyOscarUserId(), auth.getMyOscarPassword());
+
+			OscarProperties p = OscarProperties.getInstance();
+			String templateName = p.getProperty(MYOSCAR_SYMPTOM_CHECKLIST_REPORT_TEMPLATE_NAME_KEY);
+
+			SurveyTemplateTransfer result = surveyWs.getSurveyTemplateByName(templateName, true);
+			if (result == null) {
+				logger.warn("No template matching " + MYOSCAR_SYMPTOM_CHECKLIST_REPORT_TEMPLATE_NAME_KEY + "=" + templateName);
+			} else {
+				symptomChecklistTemplateId = result.getId();
 			}
 		}
-		
-		return(symptomChecklistTemplateId);
+
+		return (symptomChecklistTemplateId);
+	}
+
+	public static ArrayList<MumpsSurveyResultsDisplayObject> getSymptomChecklistReportsResultList(HttpSession session, PHRAuthentication auth, int demographicId, int startIndex, int itemsToReturn) {
+		String sessionKey = "SymptomChecklistReportsResultList:" + demographicId + ":" + startIndex + ":" + itemsToReturn;
+
+		@SuppressWarnings("unchecked")
+        ArrayList<MumpsSurveyResultsDisplayObject> results = (ArrayList<MumpsSurveyResultsDisplayObject>) session.getAttribute(sessionKey);
+
+		if (results == null) {
+			results = getSymptomChecklistReportsResultListNoCache(auth,demographicId,startIndex,itemsToReturn);
+			session.setAttribute(sessionKey, results);
+		}
+
+		return (results);
+	}
+
+	private static ArrayList<MumpsSurveyResultsDisplayObject> getSymptomChecklistReportsResultListNoCache(PHRAuthentication auth, int demographicId, int startIndex, int itemsToReturn) {
+
+		Demographic demographic = demographicDao.getDemographicById(demographicId);
+
+		SurveyWs surveyWs = MyOscarServerWebServicesManager.getSurveyWs(auth.getMyOscarUserId(), auth.getMyOscarPassword());
+		List<SurveyResultTransfer> surveyResultTransfers = surveyWs.getSurveyResults(new Long(demographic.getPin()), getSymptomChecklistTemplateId(auth), true, true, startIndex, itemsToReturn);
+
+		ArrayList<MumpsSurveyResultsDisplayObject> results = new ArrayList<MumpsSurveyResultsDisplayObject>();
+
+		for (SurveyResultTransfer surveyResultTransfer : surveyResultTransfers) {
+			try {
+				results.add(new MumpsSurveyResultsDisplayObject(surveyResultTransfer));
+			} catch (Exception e) {
+				logger.error("Error", e);
+			}
+		}
+
+		return (results);
 	}
 	
-	public static List<SurveyResultTransfer> getSymptomChecklistReportsSelectList(PHRAuthentication auth, int demographicId, int startIndex, int itemsToReturn)
+	public static SymptomChecklistCompareDisplayObject getCompareDisplayObject(PHRAuthentication auth, String[] resultIds) throws IOException, SAXException, ParserConfigurationException, NotAuthorisedException_Exception
 	{
-		DemographicDao demographicDao=(DemographicDao) SpringUtils.getBean("demographicDao");
-		Demographic demographic=demographicDao.getDemographicById(demographicId);
+		SymptomChecklistCompareDisplayObject symptomChecklistCompareDisplayObject=new SymptomChecklistCompareDisplayObject();
+
+		//--- get survey results in question ---
+		SurveyWs surveyWs = MyOscarServerWebServicesManager.getSurveyWs(auth.getMyOscarUserId(), auth.getMyOscarPassword());
+		for (String tempResultId : resultIds)
+		{
+			SurveyResultTransfer surveyResultTransfer=surveyWs.getSurveyResult(Long.parseLong(tempResultId));
+			MumpsSurveyResultsDisplayObject mumpsSurveyResultsDisplayObject=new MumpsSurveyResultsDisplayObject(surveyResultTransfer);
+			symptomChecklistCompareDisplayObject.getResultsToCompare().add(mumpsSurveyResultsDisplayObject);
+			
+			int largestQuestion=0;
+			//--- generate question list, it should be all the same across results but just in case the first result only had a sub set of answers or bad xml for some reason ---
+			for (Entry entry : mumpsSurveyResultsDisplayObject.getMumpsResultWrapper().getEntries())
+            {
+				String questionId=entry.questionId;
+				String questionText=entry.questionText;
+				
+				// surveyId / surveyHash / intro entries should be ignored
+				if (questionId==null || !questionId.startsWith("E")) continue;
+				else largestQuestion=Math.max(largestQuestion, Integer.parseInt(questionId.substring(1)));
+				
+            	symptomChecklistCompareDisplayObject.getQuestionsList().put(questionId, questionText);
+            }
+			symptomChecklistCompareDisplayObject.setLastQuestion(largestQuestion);
+		}
 		
-		SurveyWs surveyWs=MyOscarServerWebServicesManager.getSurveyWs(auth.getMyOscarUserId(), auth.getMyOscarPassword());
-		List<SurveyResultTransfer> results=surveyWs.getSurveyResults(new Long(demographic.getPin()), getSymptomChecklistTemplateId(auth), true, true, startIndex, itemsToReturn);
-		return(results);
+		if (symptomChecklistCompareDisplayObject.getResultsToCompare().size()>0)
+		{
+			//--- get persons name ---
+			// we should get the username from the myoscar server and not the local demographics record.
+			// this will help prevent accidents when a person maybe linked to the wrong account.
+			MumpsSurveyResultsDisplayObject mumpsSurveyResultsDisplayObject=symptomChecklistCompareDisplayObject.getResultsToCompare().get(0);
+
+			Long myOscarPersonId=mumpsSurveyResultsDisplayObject.getSurveyResultTransfer().getOwningPersonId();
+			AccountWs accountWs = MyOscarServerWebServicesManager.getAccountWs(auth.getMyOscarUserId(), auth.getMyOscarPassword());
+			PersonTransfer personTransfer=accountWs.getPerson(myOscarPersonId);
+			symptomChecklistCompareDisplayObject.setPatientName(personTransfer.getFirstName()+" "+personTransfer.getLastName());
+		}
+
+		
+		return(symptomChecklistCompareDisplayObject);
 	}
 }
