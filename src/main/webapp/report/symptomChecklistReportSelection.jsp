@@ -1,6 +1,5 @@
-<%@page import="oscar.util.DateUtils"%>
-<%@page import="org.oscarehr.myoscar_server.ws.SurveyResultTransfer"%>
-<%@page import="java.util.List"%>
+<%@page import="org.oscarehr.web.report.MumpsSurveyResultsDisplayObject"%>
+<%@page import="java.util.ArrayList"%>
 <%@page import="org.oscarehr.phr.PHRAuthentication"%>
 <%@page import="org.oscarehr.web.report.SymptomChecklistReportUIBean"%>
 
@@ -11,7 +10,9 @@
 <%@include file="/layouts/html_top.jspf"%>
 
 <%
-	int PAGE_SIZE=100;
+	// we really need to page this screen but I'm being lazy right now and hope we'll get to it before some one does 200 surveys that need to be compared.
+
+	int PAGE_SIZE=200;
 	int startIndex=0;
 	String startIndexString=request.getParameter("startIndex");
 	if (startIndexString!=null) startIndex=Integer.parseInt(startIndexString);
@@ -27,28 +28,34 @@
 		return;
 	}
 	
-	List<SurveyResultTransfer> results=SymptomChecklistReportUIBean.getSymptomChecklistReportsSelectList(auth, demographicId, startIndex, PAGE_SIZE);
+	ArrayList<MumpsSurveyResultsDisplayObject> results=SymptomChecklistReportUIBean.getSymptomChecklistReportsResultList(session, auth, demographicId, startIndex, PAGE_SIZE);
 %>
 
 <h3>Select results to compare</h3>
-<table class="genericTable">
-	<tr>
-		<td class="genericTableHeader"></td>
-		<td class="genericTableHeader">Date</td>
-		<td class="genericTableHeader">DIN</td>
-	</tr>
-	<%	
-		for (SurveyResultTransfer surveyResultTransfer : results)
-		{
-			%>
-				<tr>
-					<td class="genericTableData"><input type="checkbox" /></td>
-					<td class="genericTableData"><%=DateUtils.getISODateTimeFormatNoT(surveyResultTransfer.getDateOfData())%></td>
-					<td class="genericTableData">din din</td>
-				</tr>
-			<%
-		}
-	%>
-</table>
+<br />
+<form action="symptomChecklistReportCompare.jsp">
+	<input type="submit" value="Compare Selected" />
+	<br />
+	<table class="genericTable">
+		<tr>
+			<td class="genericTableHeader">Compare</td>
+			<td class="genericTableHeader">Date</td>
+			<td class="genericTableHeader">DIN</td>
+		</tr>
+		<%	
+			for (MumpsSurveyResultsDisplayObject result : results)
+			{
+				%>
+					<tr>
+						<td class="genericTableData"><input type="checkbox" name="resultIds" value="<%=result.getSurveyResultTransfer().getId()%>" /></td>
+						<td class="genericTableData"><%=result.getDateIsoFormatted()%></td>
+						<%-- E2 is the DIN question --%>
+						<td class="genericTableData"><%=result.getMumpsResultWrapper().getFirstAnswerByQuestionId("E2")%></td>
+					</tr>
+				<%
+			}
+		%>
+	</table>
+</form>
 
 <%@include file="/layouts/html_bottom.jspf"%>
