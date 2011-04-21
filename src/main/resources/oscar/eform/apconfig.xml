@@ -346,13 +346,14 @@
     </databaseap>
     <databaseap>
         <ap-name>appt_provider_name</ap-name>
-        <ap-sql>SELECT last_name, first_name FROM provider WHERE provider_no='${appt_provider}'</ap-sql>
+        <ap-sql>SELECT p.last_name, p.first_name FROM provider p, appointment a
+                WHERE p.provider_no=a.provider_no AND a.appointment_no=${appt_no}</ap-sql>
         <ap-output>${last_name}, ${first_name}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>appt_provider_id</ap-name>
-        <ap-sql>SELECT '${appt_provider}' AS id</ap-sql>
-        <ap-output>${id}</ap-output>
+        <ap-sql>SELECT provider_no FROM appointment WHERE appointment_no=${appt_no}</ap-sql>
+        <ap-output>${provider_no}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>appt_no</ap-name>

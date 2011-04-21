@@ -52,7 +52,6 @@ public class EForm extends EFormBase {
 	private static EFormDataDao eFormDataDao = (EFormDataDao) SpringUtils.getBean("EFormDataDao");
 
 	private static String appointment_no = "-1";
-	private static String appt_provider = "";
 	private static HashMap sql_params = new HashMap();
 	private static Logger log = MiscUtils.getLogger();
 	private String parentAjaxId = null;
@@ -118,10 +117,6 @@ public class EForm extends EFormBase {
 
 	public void setAppointmentNo(String appt_no) {
         this.appointment_no = blank(appt_no) ? "-1" : appt_no;
-	}
-
-	public void setApptProvider(String appt_prvd) {
-        this.appt_provider = blank(appt_prvd) ? "" : appt_prvd;
 	}
 
 	public void setAction(String pAjaxId) {
@@ -508,9 +503,7 @@ public class EForm extends EFormBase {
 	private String replaceAllFields(String sql) {
 		sql = DatabaseAP.parserReplace("demographic", demographicNo, sql);
 		sql = DatabaseAP.parserReplace("provider", providerNo, sql);
-
 		sql = DatabaseAP.parserReplace("appt_no", appointment_no, sql);
-		sql = DatabaseAP.parserReplace("appt_provider", appt_provider, sql);
 
 		sql = DatabaseAP.parserReplace(REF_FID, getSqlParams(REF_FID), sql);
 		sql = DatabaseAP.parserReplace(VAR_NAME, getSqlParams(VAR_NAME), sql);

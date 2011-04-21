@@ -65,8 +65,6 @@ function hideDiv() {
   }
 
   thisEForm.setAppointmentNo(request.getParameter("appointment"));
-  thisEForm.setApptProvider(request.getParameter("apptProvider"));
-
   thisEForm.setContextPath(request.getContextPath());
   thisEForm.setImagePath();
   thisEForm.setDatabaseAPs();
