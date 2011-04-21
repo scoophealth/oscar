@@ -84,6 +84,10 @@ function fixCheckboxes(form) {
 	</td></tr>
 	</tbody></table>
 	
+	<c:if test="${not empty errors }">
+		<span style="color:red;"><c:out value="${errors}" escapeXml="false"/></span>
+	</c:if>
+	
 <fieldset>
 	<legend>Macro Details</legend>	
 	<table style="border: 0px none;">
