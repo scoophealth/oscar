@@ -1479,6 +1479,8 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
                   String notes = String.valueOf(appointment.get("notes")).trim();
                   String status = String.valueOf(appointment.get("status")).trim();
           	  String sitename = String.valueOf(appointment.get("location")).trim();
+          	  String urgency = (String)appointment.get("urgency");
+          	  
           	  bFirstTimeRs=true;
 			    as.setApptStatus(status);
 			 //multi-site. if a site have been selected, only display appointment in that site   
@@ -1505,6 +1507,11 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
 	                out.print("&nbsp;");
                 }
             %>
+            
+            <%if(urgency != null && urgency.equals("critical")) {             	
+            %>
+            	<img src="../images/warning-icon.png" border="0" width="14" height="14" title="Critical Appointment"/>
+            <% } %>
 <%--|--%>
         <%
         			if(demographic_no==0) {

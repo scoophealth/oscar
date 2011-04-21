@@ -194,6 +194,10 @@ function pasteAppt() {
 	document.forms[0].notes.value = "<%=apptObj.getNotes()%>";
 	//document.forms[0].location.value = "<%=apptObj.getLocation()%>";
 	document.forms[0].resources.value = "<%=apptObj.getResources()%>";
+	if('<%=apptObj.getUrgency()%>' == 'critical') {
+		document.forms[0].urgency.checked = "checked";
+	}
+	
 }
 <% } %>
 
@@ -595,6 +599,15 @@ if (bMultisites) { %>
                 <INPUT TYPE="hidden" NAME="creator" VALUE='<%=userlastname+", "+userfirstname%>'>
                 <INPUT TYPE="hidden" NAME="remarks" VALUE="">
             </div>
+        </li>
+        <li class="row weak">
+			<div class="label"></div>
+            <div class="input"></div>
+            <div class="space">&nbsp;</div>
+            <div class="label"><bean:message key="Appointment.formCritical" />:</div>
+            <div class="input">
+            	<input type="checkbox" name="urgency" value="critical"/>
+            </div>        
         </li>
     </ul>
 </div>
