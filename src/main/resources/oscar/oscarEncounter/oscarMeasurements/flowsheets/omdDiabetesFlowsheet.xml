@@ -32,8 +32,8 @@ ds_rules="diab.drl"
   
       <header display_name="Vitals">
           <item measurement_type="BP" display_name="BP" guideline="Target &gt; 130/80" graphable="yes" value_name="BP" ds_rules="diab-BP.drl" />
-          <item measurement_type="WT" display_name="Weight" guideline="" graphable="yes" value_name="Weight" />
-          <item measurement_type="HT" display_name="Height" guideline="" graphable="yes" value_name="Height" />
+          <item measurement_type="WT" display_name="Weight kg" guideline="" graphable="yes" value_name="Weight" />
+          <item measurement_type="HT" display_name="Height cm" guideline="" graphable="yes" value_name="Height" />
           <item measurement_type="BMI" display_name="BMI" guideline="Target: 18.5 - 24.9 (kg/m&lt;sup&gt;2&lt;/sup&gt;)" graphable="yes" value_name="BMI" >
             <rules>
               <recommendation strength="recommendation" >
@@ -160,7 +160,7 @@ ds_rules="diab.drl"
                   </rule>
                 </ruleset>
               </item>
-              <item measurement_type="EDNL" display_name="Education Nutritition" guideline="" graphable="no" value_name="Completed"  >
+              <item measurement_type="EDNL" display_name="Education Nutrition" guideline="" graphable="no" value_name="Completed"  >
                   <rules>
                   <recommendation strength="warning" >
                     <condition type="monthrange" param="EDNL" value="&gt;12" />
@@ -174,7 +174,7 @@ ds_rules="diab.drl"
           <header display_name="Smoking">
               <item measurement_type="SKST" display_name="Smoking Status" guideline="" graphable="no" value_name="Smoker" />
               <item measurement_type="POSK" display_name="Smoking Packs Per Day" guideline="" graphable="yes" value_name="Packs per day" />
-              <item measurement_type="MCCS" display_name="Motivation Counseling - Smoking Cessation" guideline="" graphable="no" value_name="Completed" >
+              <item measurement_type="MCCS" display_name="Motivation Counselling - Smoking Cessation" guideline="" graphable="no" value_name="Completed" >
                   <rules>
                   <recommendation strength="recommendation" >
                     <condition type="monthrange" param="MCCS" value="3-6" />
@@ -284,7 +284,7 @@ ds_rules="diab.drl"
               </rule>
             </ruleset>
           </item>
-          <item measurement_type="MCCN" display_name="Motivation Counseling - Nutrition" guideline="" graphable="no" value_name="Completed"  >
+          <item measurement_type="MCCN" display_name="Motivation Counselling - Nutrition" guideline="" graphable="no" value_name="Completed"  >
             <rules>
               <recommendation strength="recommendation" >
                 <condition type="monthrange" param="MCCN" value="3-6" />
@@ -297,7 +297,7 @@ ds_rules="diab.drl"
               </recommendation>
             </rules>
           </item>
-          <item measurement_type="MCCE" display_name="Motivation Counseling - Exercise" guideline="" graphable="no" value_name="Completed" >
+          <item measurement_type="MCCE" display_name="Motivation Counselling - Exercise" guideline="" graphable="no" value_name="Completed" >
             <rules>
               <recommendation strength="recommendation" >
                 <condition type="monthrange" param="MCCE" value="3-6" />
@@ -437,7 +437,7 @@ ds_rules="diab.drl"
               </recommendation>
             </rules>
           </item>
-          <item measurement_type="EDND" display_name="Eductation Nutrition (diabetes)" guideline="" graphable="no" value_name="Completed"  >
+          <item measurement_type="EDND" display_name="Education Nutrition (diabetes)" guideline="" graphable="no" value_name="Completed"  >
               <rules>
               <recommendation strength="warning" >
                 <condition type="monthrange" param="EDND" value="&gt;12" />
@@ -447,7 +447,7 @@ ds_rules="diab.drl"
               </recommendation>
             </rules>
           </item>
-          <item measurement_type="MCCO" display_name="Motivation Counseling - Other" guideline="" graphable="no" value_name="Completed" >
+          <item measurement_type="MCCO" display_name="Motivation Counselling - Other" guideline="" graphable="no" value_name="Completed" >
             <rules>
               <recommendation strength="recommendation" >
                 <condition type="monthrange" param="MCCO" value="3-6" />
@@ -716,22 +716,22 @@ ds_rules="diab.drl"
   </measurement>
   
   
-  <measurement type="MCCN" typeDesc="Motivation Counseling Compeleted Nutrition" typeDisplayName="Motivation Counseling Compeleted Nutrition" measuringInstrc="">
+  <measurement type="MCCN" typeDesc="Motivation Counselling Compeleted Nutrition" typeDisplayName="Motivation Counselling Compeleted Nutrition" measuringInstrc="">
     <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
   </measurement>
   
   
-  <measurement type="MCCE" typeDesc="Motivation Counseling Compeleted Exercise" typeDisplayName="Motivation Counseling Compeleted Exercise" measuringInstrc="">
+  <measurement type="MCCE" typeDesc="Motivation Counselling Compeleted Exercise" typeDisplayName="Motivation Counselling Compeleted Exercise" measuringInstrc="">
     <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
   </measurement>
   
   
-  <measurement type="MCCS" typeDesc="Motivation Counseling Compeleted Smoking Cessation" typeDisplayName="Motivation Counseling Compeleted Smoking Cessation" measuringInstrc="">
+  <measurement type="MCCS" typeDesc="Motivation Counselling Compeleted Smoking Cessation" typeDisplayName="Motivation Counselling Compeleted Smoking Cessation" measuringInstrc="">
     <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
   </measurement>
  
  
-  <measurement type="MCCO" typeDesc="Motivation Counseling Compeleted Other" typeDisplayName="Motivation Counseling Compeleted Other" measuringInstrc="">
+  <measurement type="MCCO" typeDesc="Motivation Counselling Compeleted Other" typeDisplayName="Motivation Counselling Compeleted Other" measuringInstrc="">
     <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
   </measurement>
  
