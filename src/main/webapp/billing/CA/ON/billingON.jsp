@@ -99,10 +99,10 @@
 			    ProviderPreference providerPreference=null;
 			    
                 if( apptProvider_no.equalsIgnoreCase("none") ) {
-    			    providerPreferenceDao.find(user_no);
+                	providerPreference = providerPreferenceDao.find(user_no);
                 }
                 else {
-    			    providerPreferenceDao.find(apptProvider_no);
+                	providerPreference = providerPreferenceDao.find(apptProvider_no);
                 }
 			    
 			    if (providerPreference!=null) {
