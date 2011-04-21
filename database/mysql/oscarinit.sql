@@ -6714,13 +6714,15 @@ CREATE TABLE scheduletemplate (
 --
 
 CREATE TABLE scheduletemplatecode (
+  id int(10) NOT NULL auto_increment,
   code char(1) NOT NULL default '',
   description varchar(80) default NULL,
   duration char(3) default '',
   color varchar(10) default NULL,
   confirm char(3) NOT NULL default 'No',
   bookinglimit int NOT NULL default 1,
-  KEY code (code)
+  KEY code (code),
+  PRIMARY KEY(id)
 ) ;
 
 --
