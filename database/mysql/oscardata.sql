@@ -1140,28 +1140,28 @@ INSERT INTO scheduleholiday VALUES ('2004-01-01','New Year\'s Day');
 -- Dumping data for table 'scheduletemplatecode'
 --
 
-INSERT INTO scheduletemplatecode VALUES ('A','Academic','',NULL,'N',1);
-INSERT INTO scheduletemplatecode VALUES ('B','Behavioral Science','15','#BFEFFF','N',1);
-INSERT INTO scheduletemplatecode VALUES ('2','30 Minute Appointment','30','#BFEFFF','N',1);
-INSERT INTO scheduletemplatecode VALUES ('3','45 Minute Appointment','45','#BFEFFF','N',1);
-INSERT INTO scheduletemplatecode VALUES ('P','Phone time','15','#BFEFFF','N',1);
-INSERT INTO scheduletemplatecode VALUES ('M','Monitoring','','EED2EE','N',1);
-INSERT INTO scheduletemplatecode VALUES ('6','60 Minute Appointment','60','#BFEFFF','N',1);
-INSERT INTO scheduletemplatecode VALUES ('C','Chart Audit Rounds','15',NULL,'N',1);
-INSERT INTO scheduletemplatecode VALUES ('R','Rounds','15',NULL,'N',1);
-INSERT INTO scheduletemplatecode VALUES ('E','Study Leave','15',NULL,'N',1);
-INSERT INTO scheduletemplatecode VALUES ('V','Vacation','15','FFF68F','N',1);
-INSERT INTO scheduletemplatecode VALUES ('G','PBSG Rounds','15',NULL,'N',1);
-INSERT INTO scheduletemplatecode VALUES ('H','Hospital Rounds','15',NULL,'N',1);
-INSERT INTO scheduletemplatecode VALUES ('d','Drug Rep (Chief)','15',NULL,'N',1);
-INSERT INTO scheduletemplatecode VALUES ('U','Urgent','15',NULL,'N',1);
-INSERT INTO scheduletemplatecode VALUES ('a','Administrative Work','15','#BFEFFF','N',1);
-INSERT INTO scheduletemplatecode VALUES ('t','Travel','',NULL,'N',1);
-INSERT INTO scheduletemplatecode VALUES ('m','Meeting','',NULL,'N',1);
-INSERT INTO scheduletemplatecode VALUES ('1','15 Minute Appointment','15','#BFEFFF','N',1);
-INSERT INTO scheduletemplatecode VALUES ('s','Same Day','15','FFF68F','Day',1);
-INSERT INTO scheduletemplatecode VALUES ('S','Same Day - R1','30','FFF68F','Day',1);
-INSERT INTO scheduletemplatecode VALUES ('W','Same Week','15','FFF68F','Wk','1');
+INSERT INTO scheduletemplatecode (code,description,duration,color,confirm,bookinglimit) VALUES ('A','Academic','',NULL,'N',1);
+INSERT INTO scheduletemplatecode (code,description,duration,color,confirm,bookinglimit) VALUES ('B','Behavioral Science','15','#BFEFFF','N',1);
+INSERT INTO scheduletemplatecode (code,description,duration,color,confirm,bookinglimit) VALUES ('2','30 Minute Appointment','30','#BFEFFF','N',1);
+INSERT INTO scheduletemplatecode (code,description,duration,color,confirm,bookinglimit) VALUES ('3','45 Minute Appointment','45','#BFEFFF','N',1);
+INSERT INTO scheduletemplatecode (code,description,duration,color,confirm,bookinglimit) VALUES ('P','Phone time','15','#BFEFFF','N',1);
+INSERT INTO scheduletemplatecode (code,description,duration,color,confirm,bookinglimit) VALUES ('M','Monitoring','','EED2EE','N',1);
+INSERT INTO scheduletemplatecode (code,description,duration,color,confirm,bookinglimit) VALUES ('6','60 Minute Appointment','60','#BFEFFF','N',1);
+INSERT INTO scheduletemplatecode (code,description,duration,color,confirm,bookinglimit) VALUES ('C','Chart Audit Rounds','15',NULL,'N',1);
+INSERT INTO scheduletemplatecode (code,description,duration,color,confirm,bookinglimit) VALUES ('R','Rounds','15',NULL,'N',1);
+INSERT INTO scheduletemplatecode (code,description,duration,color,confirm,bookinglimit) VALUES ('E','Study Leave','15',NULL,'N',1);
+INSERT INTO scheduletemplatecode (code,description,duration,color,confirm,bookinglimit) VALUES ('V','Vacation','15','FFF68F','N',1);
+INSERT INTO scheduletemplatecode (code,description,duration,color,confirm,bookinglimit) VALUES ('G','PBSG Rounds','15',NULL,'N',1);
+INSERT INTO scheduletemplatecode (code,description,duration,color,confirm,bookinglimit) VALUES ('H','Hospital Rounds','15',NULL,'N',1);
+INSERT INTO scheduletemplatecode (code,description,duration,color,confirm,bookinglimit) VALUES ('d','Drug Rep (Chief)','15',NULL,'N',1);
+INSERT INTO scheduletemplatecode (code,description,duration,color,confirm,bookinglimit) VALUES ('U','Urgent','15',NULL,'N',1);
+INSERT INTO scheduletemplatecode (code,description,duration,color,confirm,bookinglimit) VALUES ('a','Administrative Work','15','#BFEFFF','N',1);
+INSERT INTO scheduletemplatecode (code,description,duration,color,confirm,bookinglimit) VALUES ('t','Travel','',NULL,'N',1);
+INSERT INTO scheduletemplatecode (code,description,duration,color,confirm,bookinglimit) VALUES ('m','Meeting','',NULL,'N',1);
+INSERT INTO scheduletemplatecode (code,description,duration,color,confirm,bookinglimit) VALUES ('1','15 Minute Appointment','15','#BFEFFF','N',1);
+INSERT INTO scheduletemplatecode (code,description,duration,color,confirm,bookinglimit) VALUES ('s','Same Day','15','FFF68F','Day',1);
+INSERT INTO scheduletemplatecode (code,description,duration,color,confirm,bookinglimit) VALUES ('S','Same Day - R1','30','FFF68F','Day',1);
+INSERT INTO scheduletemplatecode (code,description,duration,color,confirm,bookinglimit) VALUES ('W','Same Week','15','FFF68F','Wk','1');
 
 --
 -- Dumping data for table 'security'
