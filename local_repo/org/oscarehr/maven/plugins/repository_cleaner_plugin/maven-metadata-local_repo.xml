@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>org.oscarehr.maven.plugins</groupId>
+  <artifactId>repository_cleaner_plugin</artifactId>
+  <version>SNAPSHOT</version>
+  <versioning>
+    <versions>
+      <version>SNAPSHOT</version>
+    </versions>
+    <lastUpdated>20110423105834</lastUpdated>
+  </versioning>
+</metadata>
