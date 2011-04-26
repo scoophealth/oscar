@@ -30,6 +30,7 @@ package org.oscarehr.phr;
 
 import java.util.Date;
 
+import javax.persistence.Transient;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.log4j.Logger;
@@ -51,6 +52,8 @@ public class PHRAuthentication
 
 	private Long myOscarUserId;
 	private String myOscarUserName;
+
+	@Transient
 	private String myOscarPassword;
 	
 	public PHRAuthentication()
