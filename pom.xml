@@ -718,7 +718,29 @@
 					</execution>
 				</executions>  		   
 -->
+
       		</plugin>
+
+			<plugin>
+				<groupId>org.oscarehr.maven.plugins</groupId>
+				<artifactId>repository_cleaner_plugin</artifactId>
+				<version>SNAPSHOT</version>
+				<configuration>
+					<directories>
+						<param>/org/oscarehr/myoscar_server</param>
+						<param>/org/oscarehr/caisi_integrator</param>
+						<param>/org/oscarehr/utils</param>
+					</directories>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>purge-local-repository-libs</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			
 		</plugins>
 	</build>
 
