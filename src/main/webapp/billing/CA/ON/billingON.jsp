@@ -114,6 +114,10 @@
 			    }
 			}
 			
+			if( ctlBillForm == null ) {
+				ctlBillForm = "";
+			}
+			
 			GregorianCalendar now = new GregorianCalendar();
 			int curYear = now.get(Calendar.YEAR);
 			int curMonth = (now.get(Calendar.MONTH) + 1);
