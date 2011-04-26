@@ -56,10 +56,10 @@ public class SymptomChecklistReportUIBean {
 		String sessionKey = "SymptomChecklistReportsResultList:" + demographicId + ":" + startIndex + ":" + itemsToReturn;
 
 		@SuppressWarnings("unchecked")
-        ArrayList<MumpsSurveyResultsDisplayObject> results = (ArrayList<MumpsSurveyResultsDisplayObject>) session.getAttribute(sessionKey);
+		ArrayList<MumpsSurveyResultsDisplayObject> results = (ArrayList<MumpsSurveyResultsDisplayObject>) session.getAttribute(sessionKey);
 
 		if (results == null) {
-			results = getSymptomChecklistReportsResultListNoCache(auth,demographicId,startIndex,itemsToReturn);
+			results = getSymptomChecklistReportsResultListNoCache(auth, demographicId, startIndex, itemsToReturn);
 			session.setAttribute(sessionKey, results);
 		}
 
@@ -85,49 +85,46 @@ public class SymptomChecklistReportUIBean {
 
 		return (results);
 	}
-	
-	public static SymptomChecklistCompareDisplayObject getCompareDisplayObject(PHRAuthentication auth, String[] resultIds) throws IOException, SAXException, ParserConfigurationException, NotAuthorisedException_Exception
-	{
-		SymptomChecklistCompareDisplayObject symptomChecklistCompareDisplayObject=new SymptomChecklistCompareDisplayObject();
 
-		//--- get survey results in question ---
-		SurveyWs surveyWs = MyOscarServerWebServicesManager.getSurveyWs(auth.getMyOscarUserId(), auth.getMyOscarPassword());
-		for (String tempResultId : resultIds)
-		{
-			SurveyResultTransfer surveyResultTransfer=surveyWs.getSurveyResult(Long.parseLong(tempResultId));
-			MumpsSurveyResultsDisplayObject mumpsSurveyResultsDisplayObject=new MumpsSurveyResultsDisplayObject(surveyResultTransfer);
-			symptomChecklistCompareDisplayObject.getResultsToCompare().add(mumpsSurveyResultsDisplayObject);
-			
-			int largestQuestion=0;
-			//--- generate question list, it should be all the same across results but just in case the first result only had a sub set of answers or bad xml for some reason ---
-			for (Entry entry : mumpsSurveyResultsDisplayObject.getMumpsResultWrapper().getEntries())
-            {
-				String questionId=entry.questionId;
-				String questionText=entry.questionText;
-				
-				// surveyId / surveyHash / intro entries should be ignored
-				if (questionId==null || !questionId.startsWith("E")) continue;
-				else largestQuestion=Math.max(largestQuestion, Integer.parseInt(questionId.substring(1)));
-				
-            	symptomChecklistCompareDisplayObject.getQuestionsList().put(questionId, questionText);
-            }
-			symptomChecklistCompareDisplayObject.setLastQuestion(largestQuestion);
-		}
-		
-		if (symptomChecklistCompareDisplayObject.getResultsToCompare().size()>0)
-		{
-			//--- get persons name ---
-			// we should get the username from the myoscar server and not the local demographics record.
-			// this will help prevent accidents when a person maybe linked to the wrong account.
-			MumpsSurveyResultsDisplayObject mumpsSurveyResultsDisplayObject=symptomChecklistCompareDisplayObject.getResultsToCompare().get(0);
+	public static SymptomChecklistCompareDisplayObject getCompareDisplayObject(PHRAuthentication auth, String[] resultIds) throws IOException, SAXException, ParserConfigurationException, NotAuthorisedException_Exception {
+		SymptomChecklistCompareDisplayObject symptomChecklistCompareDisplayObject = new SymptomChecklistCompareDisplayObject();
 
-			Long myOscarPersonId=mumpsSurveyResultsDisplayObject.getSurveyResultTransfer().getOwningPersonId();
-			AccountWs accountWs = MyOscarServerWebServicesManager.getAccountWs(auth.getMyOscarUserId(), auth.getMyOscarPassword());
-			PersonTransfer personTransfer=accountWs.getPerson(myOscarPersonId);
-			symptomChecklistCompareDisplayObject.setPatientName(personTransfer.getFirstName()+" "+personTransfer.getLastName());
+		if (resultIds != null && resultIds.length > 0) {
+			// --- get survey results in question ---
+			SurveyWs surveyWs = MyOscarServerWebServicesManager.getSurveyWs(auth.getMyOscarUserId(), auth.getMyOscarPassword());
+			for (String tempResultId : resultIds) {
+				SurveyResultTransfer surveyResultTransfer = surveyWs.getSurveyResult(Long.parseLong(tempResultId));
+				MumpsSurveyResultsDisplayObject mumpsSurveyResultsDisplayObject = new MumpsSurveyResultsDisplayObject(surveyResultTransfer);
+				symptomChecklistCompareDisplayObject.getResultsToCompare().add(mumpsSurveyResultsDisplayObject);
+
+				int largestQuestion = 0;
+				// --- generate question list, it should be all the same across results but just in case the first result only had a sub set of answers or bad xml for some reason ---
+				for (Entry entry : mumpsSurveyResultsDisplayObject.getMumpsResultWrapper().getEntries()) {
+					String questionId = entry.questionId;
+					String questionText = entry.questionText;
+
+					// surveyId / surveyHash / intro entries should be ignored
+					if (questionId == null || !questionId.startsWith("E")) continue;
+					else largestQuestion = Math.max(largestQuestion, Integer.parseInt(questionId.substring(1)));
+
+					symptomChecklistCompareDisplayObject.getQuestionsList().put(questionId, questionText);
+				}
+				symptomChecklistCompareDisplayObject.setLastQuestion(largestQuestion);
+			}
+
+			if (symptomChecklistCompareDisplayObject.getResultsToCompare().size() > 0) {
+				// --- get persons name ---
+				// we should get the username from the myoscar server and not the local demographics record.
+				// this will help prevent accidents when a person maybe linked to the wrong account.
+				MumpsSurveyResultsDisplayObject mumpsSurveyResultsDisplayObject = symptomChecklistCompareDisplayObject.getResultsToCompare().get(0);
+
+				Long myOscarPersonId = mumpsSurveyResultsDisplayObject.getSurveyResultTransfer().getOwningPersonId();
+				AccountWs accountWs = MyOscarServerWebServicesManager.getAccountWs(auth.getMyOscarUserId(), auth.getMyOscarPassword());
+				PersonTransfer personTransfer = accountWs.getPerson(myOscarPersonId);
+				symptomChecklistCompareDisplayObject.setPatientName(personTransfer.getFirstName() + " " + personTransfer.getLastName());
+			}
 		}
 
-		
-		return(symptomChecklistCompareDisplayObject);
+		return (symptomChecklistCompareDisplayObject);
 	}
 }
