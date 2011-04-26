@@ -1167,7 +1167,7 @@ if ( PatStat.equals(Dead) ) {%>
 						<div class="demographicSection" id="alert">
 						<h3>&nbsp;<bean:message
 							key="demographic.demographiceditdemographic.formAlert" /></h3>
-                                                <ul><li><b style="color: brown;"><%=alert%></b></li></ul>
+                                                <b style="color: brown;"><%=alert%></b>
 						&nbsp;
 						</div>
 
@@ -1271,9 +1271,9 @@ if ( PatStat.equals(Dead) ) {%>
 						<div class="demographicSection" id="notes">
 						<h3>&nbsp;<bean:message
 							key="demographic.demographiceditdemographic.formNotes" /></h3>
-						<ul><li>
+						
                                                     <%=notes%>&nbsp;
-                                                </li></ul>
+                                                
 						</div>
 						</div>
 						</div>
