@@ -29,12 +29,14 @@
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
 */
 --%>
+<%@ page import="org.apache.commons.lang.StringUtils" %> %>
 <%
 String country = request.getLocale() .getCountry();
 
 
 String curUser_no = (String) session.getAttribute("user");
 String mygroupno = (String) session.getAttribute("groupno");
+mygroupno = StringUtils.trimToEmpty(mygroupno);
 String billingRegion = (oscar.OscarProperties.getInstance()).getProperty("billregion");
 %>
 <%@ page
