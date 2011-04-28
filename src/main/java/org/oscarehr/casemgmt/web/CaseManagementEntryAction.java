@@ -981,7 +981,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			note.setNote(n);
 
 			// only update appt if there is one
-			if (sessionBean.appointmentNo != null && !sessionBean.appointmentNo.equals("")) {
+			if (sessionBean.appointmentNo != null && !(sessionBean.appointmentNo.equals("") || sessionBean.appointmentNo.equals("0"))) {
 				String apptStatus = updateApptStatus(sessionBean.status, "verify");
 				appointmentDao.archiveAppointment(Integer.parseInt(sessionBean.appointmentNo));
 				appointmentDao.updateAppointmentStatus(Integer.parseInt(sessionBean.appointmentNo), apptStatus, providerNo);
@@ -994,7 +994,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			note.setNote(n);
 
 			// only update appt if there is one
-			if (sessionBean.appointmentNo != null && !sessionBean.appointmentNo.equals("")) {
+			if (sessionBean.appointmentNo != null && !(sessionBean.appointmentNo.equals("") || sessionBean.appointmentNo.equals("0"))) {
 				String apptStatus = updateApptStatus(sessionBean.status, "sign");
 				appointmentDao.archiveAppointment(Integer.parseInt(sessionBean.appointmentNo));
 				appointmentDao.updateAppointmentStatus(Integer.parseInt(sessionBean.appointmentNo), apptStatus, providerNo);
