@@ -267,10 +267,7 @@ function popupEChart(vheight,vwidth,varpage) { //open a new popup window
             rs = apptMainBean.queryResults_paged(param, dboperation, iRSOffSet);
    		 }
 	  } else if(request.getParameter("search_mode").equals("search_dob")) {
-		 String[] param =new String[3];
-		 param[0] = keyword.substring(0,4);
-		 param[1] = keyword.substring(keyword.indexOf("-")+1, keyword.lastIndexOf("-"));
-		 param[2] = keyword.substring(keyword.lastIndexOf("-")+1);
+		  String[] param = searchDOBParams(keyword);
 		 rs = apptMainBean.queryResults_paged(param, dboperation, iRSOffSet);
       } else if(request.getParameter("search_mode").equals("search_address") || request.getParameter("search_mode").equals("search_phone") ||
          request.getParameter("search_mode").equals("search_hin")) {
@@ -299,13 +296,7 @@ function popupEChart(vheight,vwidth,varpage) { //open a new popup window
             rs = apptMainBean.queryResults(param, dboperation);
    		 }
 	  } else if(request.getParameter("search_mode").equals("search_dob")) {
-		 String[] param =new String[3];
-		 param[0] = keyword.substring(0,4);//+"%";//(",");
-		 param[1] = keyword.substring(keyword.indexOf("-")+1, keyword.lastIndexOf("-"));
-		 //param[1] = param[1].startsWith("0") ? param[1].substring(1) : param[1];
-		 param[2] = keyword.substring(keyword.lastIndexOf("-")+1);
-		 //param[2] = param[2].startsWith("0") ? param[2].substring(1) : param[2];
-		 
+		 String[] param = searchDOBParams(keyword);		 
 		 rs = apptMainBean.queryResults(param, dboperation);
                  
       } else if(request.getParameter("search_mode").equals("search_address") || request.getParameter("search_mode").equals("search_phone")) {
@@ -400,3 +391,27 @@ function popupEChart(vheight,vwidth,varpage) { //open a new popup window
 </center>
 </body>
 </html:html>
+<%!
+	String[] searchDOBParams(String keyword) {		
+		String[] param =new String[3];
+		
+		if( keyword.indexOf("-") != -1 ) {
+	 		param[0] = keyword.substring(0,4);
+	 		param[1] = keyword.substring(keyword.indexOf("-")+1, keyword.lastIndexOf("-"));
+	 		param[2] = keyword.substring(keyword.lastIndexOf("-")+1);
+		}
+		else if( keyword.length() == 8 ) {
+			param[0] = keyword.substring(0,4);
+			param[1] = keyword.substring(4,6);
+			param[2] = keyword.substring(6);
+		}		
+		else {
+			param[0] = "%";
+			param[1] = "%";
+			param[2] = "%";
+		}
+		
+		return param;
+	}
+
+%>
