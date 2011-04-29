@@ -69,7 +69,10 @@
                             $('dbInfo').innerHTML='Drugref has been updated on '+json.lastUpdate;
                             $('updatedb').show();
                         }
-                }})
+                },onFailure:function(transport){
+                	$('dbInfo').innerHTML='Drugref database has not been updated,please update.';
+                	$('updatedb').show(); 
+                	}})
 
     }
          function updateDB(){
