@@ -559,10 +559,25 @@ public class HHSEmrDownloadHandler extends DefaultGenericHandler implements Mess
 //        return("");
 //    }
 //    
-//    public String getOrderStatus(){
-//        //usually a message type specific location
-//        return("");
-//    }
+      public String getOrderStatus(){
+    	  //usually a message type specific
+       	  String orderStatus = "F";
+       /*try{
+          for (Object ob:obrGroups){
+              ArrayList<Segment> obxSegs = (ArrayList<Segment>) ob;
+              for(Segment obxSeg:obxSegs){
+                 String observationStatus = getString(terser.get(obxSeg, 14, 1, 1, 1 ));
+                 if ("P".equals(observationStatus)){
+                     status = "P";
+                 }
+              }
+          }
+      	}catch(Exception e){
+        	logger.error("getting orderstatus ",e);
+      	}
+       */
+        return orderStatus;
+    }
 //    
 //    public String getClientRef(){
 //        try{
