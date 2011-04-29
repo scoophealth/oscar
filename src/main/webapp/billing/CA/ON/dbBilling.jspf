@@ -76,7 +76,7 @@
     {"save_bill_record", "insert into billingdetail values('\\N',?,?,?,?,?,?,?,?)"},
     {"updatediagnostic", "update diagnosticcode set description=? where diagnostic_code=?"},
     {"searchapptstatus", "select status from appointment where appointment_no=? "}, 
-    {"updateapptstatus", "update appointment set status=?, lastupdateuser=? updatedatetime=now() where appointment_no=? "}, //provider_no=? and appointment_date=? and start_time=? and demographic_no=?"},
+    {"updateapptstatus", "update appointment set status=?, lastupdateuser=?, updatedatetime=now() where appointment_no=? "}, //provider_no=? and appointment_date=? and start_time=? and demographic_no=?"},
     {"archive_appt", "insert into appointmentArchive (select * from appointment where appointment_no=?)"},
     {"search_bill", "select * from billing where billing_no= ?"},
     {"search_bill_short", "select billing_no, clinic_no,demographic_no, provider_no,appointment_no ,organization_spec_code, demographic_name, hin, update_date, update_time, billing_date, billing_time, clinic_ref_code, total, status, dob, visitdate, visittype, provider_ohip_no,provider_rma_no,apptProvider_no, asstProvider_no, creator from billing where billing_no= ?"},
