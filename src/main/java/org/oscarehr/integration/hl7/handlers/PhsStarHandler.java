@@ -789,8 +789,15 @@ public class PhsStarHandler extends BasePhsStarHandler {
 			String authority = t.get("PV1-50-4");
 			String typeId = t.get("PV1-50-5");
 			
-			if(id == null || authority == null || typeId == null)
-				return null;
+			if(id == null || authority == null || typeId == null) {
+				//try insurance way
+				id = t.get("/INSURANCE/PV1-50-1");
+				authority = t.get("/INSURANCE/PV1-50-4");
+				typeId = t.get("/INSURANCE/PV1-50-5");
+				if(id == null || authority == null || typeId == null) {
+					return null;
+				}
+			}
 			
 			return new PatientId(id,authority,typeId);			
 		}catch(Exception e) {
