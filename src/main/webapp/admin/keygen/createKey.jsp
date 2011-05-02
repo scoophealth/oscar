@@ -156,6 +156,7 @@ if (message != null){
 				<td><select name="type" id="selection" onClick="selectOther()">
 					<option value="CML">CML</option>
 					<option value="GDML">GDML</option>
+					<option value="IHA">IHA</option>
 					<option value="ICL">ICL</option>
 					<option value="MDS">MDS</option>
 					<option value="PATHL7">EXCELLERIS</option>
