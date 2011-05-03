@@ -78,7 +78,7 @@ public class OcanStaffFormDao extends AbstractDao<OcanStaffForm> {
 	
 	public OcanStaffForm findLatestByFacilityClient(Integer facilityId, Integer clientId, String ocanType) {
 
-		String sqlCommand = "select * from OcanStaffForm where facilityId=?1 and clientId=?2 and ocanType=?4 order by created desc, id desc limit 1";
+		String sqlCommand = "select * from OcanStaffForm where facilityId=?1 and clientId=?2 and ocanType=?4 order by id desc limit 1";
 
 		Query query = entityManager.createNativeQuery(sqlCommand, modelClass);
 		query.setParameter(1, facilityId);
@@ -101,6 +101,19 @@ public class OcanStaffFormDao extends AbstractDao<OcanStaffForm> {
 		
 		return getSingleResultOrNull(query);
 	}
+
+	  public OcanStaffForm getLastCompletedOcanFormByOcanType(Integer facilityId, Integer clientId, String ocanType) {
+
+          String sqlCommand = "select * from OcanStaffForm where facilityId=?1 and clientId=?2 and assessmentStatus=?3 and ocanType=?4 order by created desc , id desc limit 1";
+
+          Query query = entityManager.createNativeQuery(sqlCommand, modelClass);
+          query.setParameter(1, facilityId);
+          query.setParameter(2, clientId);
+          query.setParameter(3, "Completed");
+          query.setParameter(4, ocanType);
+
+          return getSingleResultOrNull(query);
+  }
 
     public List<OcanStaffForm> findByFacilityClient(Integer facilityId, Integer clientId, String ocanType) {
 

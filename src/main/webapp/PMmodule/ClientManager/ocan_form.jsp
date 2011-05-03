@@ -16,6 +16,8 @@
 <%
 	int currentDemographicId=Integer.parseInt(request.getParameter("demographicId"));
 	String ocanType = request.getParameter("ocanType");
+	int prepopulate = 0;
+	prepopulate = Integer.parseInt(request.getParameter("prepopulate")==null?"0":request.getParameter("prepopulate"));
 	int prepopulationLevel = OcanForm.PRE_POPULATION_LEVEL_ALL;
 	int ocanStaffFormId =0; boolean newForm=false;
 	int referralCount = 0;
@@ -31,13 +33,24 @@
 		//If this is a new form, prepopulate referral from last completed assessment.
 		if(ocanStaffForm.getAssessmentId()==null) {
 			newForm = true;
-			OcanStaffForm lastCompletedForm = OcanForm.getLastCompletedOcanForm(currentDemographicId);
+			OcanStaffForm lastCompletedForm = OcanForm.getLastCompletedOcanFormByOcanType(currentDemographicId,ocanType);
 			if(lastCompletedForm!=null) {
 				List<OcanStaffFormData> existingAnswers = OcanForm.getStaffAnswers(lastCompletedForm.getId(),"referrals_count",prepopulationLevel);
 				if(existingAnswers.size()>0)
 					referralCount = Integer.valueOf(existingAnswers.get(0).getAnswer()).intValue();
+						
+		
+				// prepopulate the form from last completed assessment
+				if(prepopulate==1) {			
+						
+					//lastCompletedForm.setId(null);
+					lastCompletedForm.setAssessmentId(null);
+					lastCompletedForm.setAssessmentStatus("In Progress");
+						
+					ocanStaffForm = lastCompletedForm;
+				}
 			}
-		}		
+		}
 	}
 
 	DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
@@ -46,14 +59,14 @@
 	AdmissionDao admissionDao = (AdmissionDao) SpringUtils.getBean("admissionDao");	
 	List<Admission> admissions = admissionDao.getAdmissionsASC(currentDemographicId);
 	for(Admission ad : admissions) {
-		if(!"community".equalsIgnoreCase(ad.getProgramType())) {			
+		if(!"community".equalsIgnoreCase(ad.getProgramType())) {
 			admissionDate = DateFormatUtils.ISO_DATE_FORMAT.format(ad.getAdmissionDate());
 			break;			
 		}
 	}
 	String admission_year = admissionDate.substring(0,4);
 	String admission_month = admissionDate.substring(5,7);
-	 
+	
 	boolean printOnly=request.getParameter("print")!=null;
 	if (printOnly) request.setAttribute("noMenus", true);
 	
@@ -94,9 +107,10 @@ $('document').ready(function(){
 	var demographicId='<%=currentDemographicId%>';
 	var ocanType='<%=ocanType%>';
 	var ocanStaffFormId = '<%=ocanStaffFormId%>';
+	var prepopulate = '<%=prepopulate%>';
 	var medCount = $("#medications_count").val();
 	for(var x=1;x<=medCount;x++) {
-		$.get('ocan_form_medication.jsp?ocanStaffFormId='+ocanStaffFormId+'&ocanType='+ocanType+'&demographicId='+demographicId+'&medication_num='+x, function(data) {
+		$.get('ocan_form_medication.jsp?prepopulate='+prepopulate+'&ocanStaffFormId='+ocanStaffFormId+'&ocanType='+ocanType+'&demographicId='+demographicId+'&medication_num='+x, function(data) {
 			  $("#medication_block").append(data);					 
 			});				
 	} 
@@ -111,9 +125,10 @@ $('document').ready(function() {
 	var demographicId='<%=currentDemographicId%>';
 	var ocanType='<%=ocanType%>';
 	var ocanStaffFormId = '<%=ocanStaffFormId%>';
+	var prepopulate = '<%=prepopulate%>';
 	var cenCount = $("#center_count").val();
 	for(var x=1;x<=cenCount;x++) {
-		$.get('ocan_form_mentalHealthCenter.jsp?ocanStaffFormId='+ocanStaffFormId+'&ocanType='+ocanType+'&demographicId='+demographicId+'&center_num='+x, function(data) {
+		$.get('ocan_form_mentalHealthCenter.jsp?prepopulate='+prepopulate+'&ocanStaffFormId='+ocanStaffFormId+'&ocanType='+ocanType+'&demographicId='+demographicId+'&center_num='+x, function(data) {
 			  $("#center_block").append(data);					 
 			});				
 	} 
@@ -134,10 +149,11 @@ function changeOrgLHIN(selectBox) {
 		var demographicId='<%=currentDemographicId%>';
 		var ocanType='<%=ocanType%>';
 		var ocanStaffFormId = '<%=ocanStaffFormId%>';
+		var prepopulate = '<%=prepopulate%>';
 		//do we need to add..loop through existing blocks, and see if we need more...create on the way.
 			
 			if(document.getElementById("serviceUseRecord_orgName" + priority) == null) {
-				$.get('ocan_form_getOrgName.jsp?ocanStaffFormId='+ocanStaffFormId+'&ocanType='+ocanType+'&demographicId='+demographicId+'&center_num='+priority+'&LHIN_code='+selectBoxValue, function(data) {
+				$.get('ocan_form_getOrgName.jsp?prepopulate='+prepopulate+'&ocanStaffFormId='+ocanStaffFormId+'&ocanType='+ocanType+'&demographicId='+demographicId+'&center_num='+priority+'&LHIN_code='+selectBoxValue, function(data) {
 					  $("#center_block_orgName"+priority).append(data);					 
 					});														
 			}
@@ -147,7 +163,7 @@ function changeOrgLHIN(selectBox) {
 				$("#center_programName"+priority).remove();
 				$("#center_orgName"+priority).remove();			
 								
-				$.get('ocan_form_getOrgName.jsp?ocanStaffFormId='+ocanStaffFormId+'&ocanType='+ocanType+'&demographicId='+demographicId+'&center_num='+priority+'&LHIN_code='+selectBoxValue, function(data) {
+				$.get('ocan_form_getOrgName.jsp?prepopulate='+prepopulate+'&ocanStaffFormId='+ocanStaffFormId+'&ocanType='+ocanType+'&demographicId='+demographicId+'&center_num='+priority+'&LHIN_code='+selectBoxValue, function(data) {
 					  $("#center_block_orgName"+priority).append(data);					 
 					});	
 			}
@@ -165,16 +181,17 @@ function changeOrgName(selectBox) {
 	var demographicId='<%=currentDemographicId%>';
 	var ocanType='<%=ocanType%>';
 	var ocanStaffFormId = '<%=ocanStaffFormId%>';
+	var prepopulate = '<%=prepopulate%>';
 	
 		if(document.getElementById("serviceUseRecord_programName" + priority) == null) {
-			$.get('ocan_form_getProgramName.jsp?ocanStaffFormId='+ocanStaffFormId+'&ocanType='+ocanType+'&demographicId='+demographicId+'&center_num='+priority+'&LHIN_code='+LHIN_code+'&orgName='+selectBoxValue, function(data) {
+			$.get('ocan_form_getProgramName.jsp?prepopulate='+prepopulate+'&ocanStaffFormId='+ocanStaffFormId+'&ocanType='+ocanType+'&demographicId='+demographicId+'&center_num='+priority+'&LHIN_code='+LHIN_code+'&orgName='+selectBoxValue, function(data) {
 				  $("#center_block_orgName"+priority).append(data);					 
 				});														
 		}
 		if(document.getElementById("serviceUseRecord_programName" + priority) != null) {
 			$("#center_programName"+priority).remove();
 			
-			$.get('ocan_form_getProgramName.jsp?ocanStaffFormId='+ocanStaffFormId+'&ocanType='+ocanType+'&demographicId='+demographicId+'&center_num='+priority+'&LHIN_code='+LHIN_code+'&orgName='+selectBoxValue, function(data) {
+			$.get('ocan_form_getProgramName.jsp?prepopulate='+prepopulate+'&ocanStaffFormId='+ocanStaffFormId+'&ocanType='+ocanType+'&demographicId='+demographicId+'&center_num='+priority+'&LHIN_code='+LHIN_code+'&orgName='+selectBoxValue, function(data) {
 				  $("#center_block_orgName"+priority).append(data);					 
 				});	
 		}
@@ -188,10 +205,11 @@ function changeNumberOfMedications() {
 	var demographicId='<%=currentDemographicId%>';
 	var ocanType='<%=ocanType%>';
 	var ocanStaffFormId = '<%=ocanStaffFormId%>';
+	var prepopulate = '<%=prepopulate%>';
 	//do we need to add..loop through existing blocks, and see if we need more...create on the way.
 	for(var x=1;x<=newCount;x++) {		
 		if(document.getElementById("medication_" + x) == null) {
-			$.get('ocan_form_medication.jsp?ocanStaffFormId='+ocanStaffFormId+'&ocanType='+ocanType+'&demographicId='+demographicId+'&medication_num='+x, function(data) {
+			$.get('ocan_form_medication.jsp?prepopulate='+prepopulate+'&ocanStaffFormId='+ocanStaffFormId+'&ocanType='+ocanType+'&demographicId='+demographicId+'&medication_num='+x, function(data) {
 				  $("#medication_block").append(data);					 
 				});														
 		}
@@ -213,10 +231,11 @@ function changeNumberOfcentres() {
 	var demographicId='<%=currentDemographicId%>';
 	var ocanType='<%=ocanType%>';
 	var ocanStaffFormId = '<%=ocanStaffFormId%>';
+	var prepopulate = '<%=prepopulate%>';
 	//do we need to add..loop through existing blocks, and see if we need more...create on the way.
 	for(var x=1;x<=newCount;x++) {		
 		if(document.getElementById("center_" + x) == null) {
-			$.get('ocan_form_mentalHealthCenter.jsp?ocanStaffFormId='+ocanStaffFormId+'&ocanType='+ocanType+'&demographicId='+demographicId+'&center_num='+x, function(data) {
+			$.get('ocan_form_mentalHealthCenter.jsp?prepopulate='+prepopulate+'&ocanStaffFormId='+ocanStaffFormId+'&ocanType='+ocanType+'&demographicId='+demographicId+'&center_num='+x, function(data) {
 				  $("#center_block").append(data);					 
 				});														
 		}
@@ -257,16 +276,19 @@ $("document").ready(function() {
 		var demographicId='<%=currentDemographicId%>';
 		var ocanType='<%=ocanType%>';
 		var ocanStaffFormId = '<%=ocanStaffFormId%>';
-
-		//Remove old actions generated last time
-		for(var x=1;x<=25;x++) {     
-			$("#summary_of_actions_"+x).remove();
-		}
+		var prepopulate = '<%=prepopulate%>';
 		
-		//Append new generatedactions 		
-		$.get('ocan_form_summary_of_actions.jsp?ocanStaffFormId='+ocanStaffFormId+'&ocanType='+ocanType+'&demographicId='+demographicId+'&size='+count+'&domains='+domains, function(data) {
+		//Remove old actions generated last time
+		for(var x=1;x<=25;x++) {			
+				$("#summary_of_actions_"+x).remove();			
+		}
+
+		//Append new generatedactions 
+		$.get('ocan_form_summary_of_actions.jsp?prepopulate='+prepopulate+'&ocanStaffFormId='+ocanStaffFormId+'&ocanType='+ocanType+'&demographicId='+demographicId+'&size='+count+'&domains='+domains, function(data) {
 			  $("#summary_of_actions_block").append(data);					 
 			});		
+
+		
 	});
 	
 });
@@ -288,7 +310,8 @@ $("document").ready(function(){
 	var demographicId='<%=currentDemographicId%>';
 	var ocanType='<%=ocanType%>';
 	var ocanStaffFormId = '<%=ocanStaffFormId%>';
-	$.get('ocan_form_summary_of_actions.jsp?ocanStaffFormId='+ocanStaffFormId+'&ocanType='+ocanType+'&demographicId='+demographicId+'&size='+summaryOfActionsCount+'&domains='+summaryOfActionsDomains, function(data) {
+	var prepopulate = '<%=prepopulate%>';
+	$.get('ocan_form_summary_of_actions.jsp?prepopulate='+prepopulate+'&ocanStaffFormId='+ocanStaffFormId+'&ocanType='+ocanType+'&demographicId='+demographicId+'&size='+summaryOfActionsCount+'&domains='+summaryOfActionsDomains, function(data) {
 		  $("#summary_of_actions_block").append(data);					 
 		});		
 	
@@ -302,13 +325,14 @@ $('document').ready(function(){
 	var demographicId='<%=currentDemographicId%>';
 	var ocanType='<%=ocanType%>';
 	var ocanStaffFormId = '<%=ocanStaffFormId%>';
+	var prepopulate = '<%=prepopulate%>';
 	var medCount = $("#referrals_count").val();
 	var newForm = '<%=newForm%>';
 	if(ocanStaffFormId ==0 && newForm==true) {
 		medCount = <%=referralCount%>;
 	}	
 	for(var x=1;x<=medCount;x++) {
-		$.get('ocan_form_referral.jsp?ocanStaffFormId='+ocanStaffFormId+'&ocanType='+ocanType+'&demographicId='+demographicId+'&referral_num='+x, function(data) {
+		$.get('ocan_form_referral.jsp?prepopulate='+prepopulate+'&ocanStaffFormId='+ocanStaffFormId+'&ocanType='+ocanType+'&demographicId='+demographicId+'&referral_num='+x, function(data) {
 			  $("#referral_block").append(data);					 
 			});				
 	} 
@@ -320,10 +344,11 @@ function changeNumberOfReferrals() {
 	var demographicId='<%=currentDemographicId%>';
 	var ocanType='<%=ocanType%>';
 	var ocanStaffFormId = '<%=ocanStaffFormId%>';
+	var prepopulate = '<%=prepopulate%>';
 	//do we need to add..loop through existing blocks, and see if we need more...create on the way.
 	for(var x=1;x<=newCount;x++) {		
 		if(document.getElementById("referral_" + x) == null) {
-			$.get('ocan_form_referral.jsp?ocanStaffFormId='+ocanStaffFormId+'&ocanType='+ocanType+'&demographicId='+demographicId+'&referral_num='+x, function(data) {
+			$.get('ocan_form_referral.jsp?prepopulate='+prepopulate+'&ocanStaffFormId='+ocanStaffFormId+'&ocanType='+ocanType+'&demographicId='+demographicId+'&referral_num='+x, function(data) {
 				  $("#referral_block").append(data);					 
 				});														
 		}
@@ -438,8 +463,128 @@ $("document").ready(function(){
 	<input type="hidden" name="client_date_of_birth" id="client_date_of_birth" value="<%=ocanStaffForm.getClientDateOfBirth()%>" />
 	<input type="hidden" id="clientStartDate" name="clientStartDate" value="<%=ocanStaffForm.getFormattedClientStartDate()%>"/>
 	<input type="hidden" id="clientCompletionDate" name="clientCompletionDate" value="<%=ocanStaffForm.getFormattedClientCompletionDate()%>"/>
-	<input type="hidden" name="ocanStaffFormId" id="ocanStaffFormId" value="<%=ocanStaffForm.getId()%>" class="{validate: {required:true}}"/>
-	<input type="hidden" name="assessmentId" id="assessmentId" value="<%=ocanStaffForm.getAssessmentId()%>" class="{validate: {required:true}}"/>
+<% if(prepopulate==1) { %> 
+	<input type="hidden" name="ocanStaffFormId" id="ocanStaffFormId" value="" />
+	<input type="hidden" name="assessmentId" id="assessmentId" value="" />
+	
+	<!-- client data start here	 -->
+	<input type="hidden" id="clientStartDate" name="clientStartDate" value="<%=ocanStaffForm.getFormattedClientStartDate()%>" /> 
+	<input type="hidden" name="client_date_of_birth" id="client_date_of_birth" value="<%=ocanStaffForm.getClientDateOfBirth()%>" />
+	<input type="hidden" name="client_1_1" id="client_1_1" value="<%=OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_1_1", prepopulationLevel).size()>0?OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_1_1", prepopulationLevel).get(0).getAnswer():""%>" />
+	
+	<input type="hidden" name="client_1_comments" id="client_1_comments" value="<%=OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_1_comments", prepopulationLevel).size()>0?OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_1_comments", prepopulationLevel).get(0).getAnswer():""%>" />
+
+	<input type="hidden" name="client_2_1" id="client_2_1" value="<%=OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_2_1", prepopulationLevel).size()>0?OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_2_1", prepopulationLevel).get(0).getAnswer():""%>" />
+
+	<input type="hidden" name="client_2_comments" id="client_2_comments" value="<%=OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_2_comments", prepopulationLevel).size()>0?OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_2_comments", prepopulationLevel).get(0).getAnswer():""%>" />
+
+	<input type="hidden" name="client_3_1" id="client_3_1" value="<%=OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_3_1", prepopulationLevel).size()>0?OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_3_1", prepopulationLevel).get(0).getAnswer():""%>" />
+
+	<input type="hidden" name="client_3_comments" id="client_3_comments" value="<%=OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_3_comments", prepopulationLevel).size()>0?OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_3_comments", prepopulationLevel).get(0).getAnswer():""%>" />
+
+	<input type="hidden" name="client_4_1" id="client_4_1" value="<%=OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_4_1", prepopulationLevel).size()>0?OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_4_1", prepopulationLevel).get(0).getAnswer():""%>" />
+
+	<input type="hidden" name="client_4_comments" id="client_4_comments" value="<%=OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_4_comments", prepopulationLevel).size()>0?OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_4_comments", prepopulationLevel).get(0).getAnswer():""%>" />
+
+	<input type="hidden" name="client_5_1" id="client_5_1" value="<%=OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_5_1", prepopulationLevel).size()>0?OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_5_1", prepopulationLevel).get(0).getAnswer():""%>" />
+
+	<input type="hidden" name="client_5_comments" id="client_5_comments" value="<%=OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_5_comments", prepopulationLevel).size()>0?OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_5_comments", prepopulationLevel).get(0).getAnswer():""%>" />
+
+	<input type="hidden" name="client_6_1" id="client_6_1" value="<%=OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_6_1", prepopulationLevel).size()>0?OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_6_1", prepopulationLevel).get(0).getAnswer():""%>" />
+
+	<input type="hidden" name="client_6_comments" id="client_6_comments" value="<%=OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_6_comments", prepopulationLevel).size()>0?OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_6_comments", prepopulationLevel).get(0).getAnswer():""%>" />
+
+	<input type="hidden" name="client_7_1" id="client_7_1" value="<%=OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_7_1", prepopulationLevel).size()>0?OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_7_1", prepopulationLevel).get(0).getAnswer():""%>" />
+
+	<input type="hidden" name="client_7_comments" id="client_7_comments" value="<%=OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_7_comments", prepopulationLevel).size()>0?OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_7_comments", prepopulationLevel).get(0).getAnswer():""%>" />
+
+	<input type="hidden" name="client_8_1" id="client_8_1" value="<%=OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_8_1", prepopulationLevel).size()>0?OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_8_1", prepopulationLevel).get(0).getAnswer():""%>" />
+
+	<input type="hidden" name="client_8_comments" id="client_8_comments" value="<%=OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_8_comments", prepopulationLevel).size()>0?OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_8_comments", prepopulationLevel).get(0).getAnswer():""%>" />
+
+	<input type="hidden" name="client_9_1" id="client_9_1" value="<%=OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_9_1", prepopulationLevel).size()>0?OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_9_1", prepopulationLevel).get(0).getAnswer():""%>" />
+
+	<input type="hidden" name="client_9_comments" id="client_9_comments" value="<%=OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_9_comments", prepopulationLevel).size()>0?OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_9_comments", prepopulationLevel).get(0).getAnswer():""%>" />
+
+	<input type="hidden" name="client_10_1" id="client_10_1" value="<%=OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_10_1", prepopulationLevel).size()>0?OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_10_1", prepopulationLevel).get(0).getAnswer():""%>" />
+
+	<input type="hidden" name="client_10_comments" id="client_10_comments" value="<%=OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_10_comments", prepopulationLevel).size()>0?OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_10_comments", prepopulationLevel).get(0).getAnswer():""%>" />
+
+	<input type="hidden" name="client_11_1" id="client_11_1" value="<%=OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_11_1", prepopulationLevel).size()>0?OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_11_1", prepopulationLevel).get(0).getAnswer():""%>" />
+
+	<input type="hidden" name="client_11_comments" id="client_11_comments" value="<%=OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_11_comments", prepopulationLevel).size()>0?OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_11_comments", prepopulationLevel).get(0).getAnswer():""%>" />
+
+	<input type="hidden" name="client_12_1" id="client_12_1" value="<%=OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_12_1", prepopulationLevel).size()>0?OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_12_1", prepopulationLevel).get(0).getAnswer():""%>" />
+
+	<input type="hidden" name="client_12_comments" id="client_12_comments" value="<%=OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_12_comments", prepopulationLevel).size()>0?OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_12_comments", prepopulationLevel).get(0).getAnswer():""%>" />
+
+	<input type="hidden" name="client_13_1" id="client_13_1" value="<%=OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_13_1", prepopulationLevel).size()>0?OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_13_1", prepopulationLevel).get(0).getAnswer():""%>" />
+
+	<input type="hidden" name="client_13_comments" id="client_13_comments" value="<%=OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_13_comments", prepopulationLevel).size()>0?OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_13_comments", prepopulationLevel).get(0).getAnswer():""%>" />
+
+	<input type="hidden" name="client_14_1" id="client_14_1" value="<%=OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_14_1", prepopulationLevel).size()>0?OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_14_1", prepopulationLevel).get(0).getAnswer():""%>" />
+
+	<input type="hidden" name="client_14_comments" id="client_14_comments" value="<%=OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_14_comments", prepopulationLevel).size()>0?OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_14_comments", prepopulationLevel).get(0).getAnswer():""%>" />
+
+	<input type="hidden" name="client_15_1" id="client_15_1" value="<%=OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_15_1", prepopulationLevel).size()>0?OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_15_1", prepopulationLevel).get(0).getAnswer():""%>" />
+
+	<input type="hidden" name="client_15_comments" id="client_15_comments" value="<%=OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_15_comments", prepopulationLevel).size()>0?OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_15_comments", prepopulationLevel).get(0).getAnswer():""%>" />
+
+	<input type="hidden" name="client_16_1" id="client_16_1" value="<%=OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_16_1", prepopulationLevel).size()>0?OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_16_1", prepopulationLevel).get(0).getAnswer():""%>" />
+
+	<input type="hidden" name="client_16_comments" id="client_16_comments" value="<%=OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_16_comments", prepopulationLevel).size()>0?OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_16_comments", prepopulationLevel).get(0).getAnswer():""%>" />
+
+	<input type="hidden" name="client_17_1" id="client_17_1" value="<%=OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_17_1", prepopulationLevel).size()>0?OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_17_1", prepopulationLevel).get(0).getAnswer():""%>" />
+
+	<input type="hidden" name="client_17_comments" id="client_17_comments" value="<%=OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_17_comments", prepopulationLevel).size()>0?OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_17_comments", prepopulationLevel).get(0).getAnswer():""%>" />
+
+	<input type="hidden" name="client_18_1" id="client_18_1" value="<%=OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_18_1", prepopulationLevel).size()>0?OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_18_1", prepopulationLevel).get(0).getAnswer():""%>" />
+
+
+	<input type="hidden" name="client_18_comments" id="client_18_comments" value="<%=OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_18_comments", prepopulationLevel).size()>0?OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_18_comments", prepopulationLevel).get(0).getAnswer():""%>" />
+
+	<input type="hidden" name="client_19_1" id="client_19_1" value="<%=OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_19_1", prepopulationLevel).size()>0?OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_19_1", prepopulationLevel).get(0).getAnswer():""%>" />
+
+	<input type="hidden" name="client_19_comments" id="client_19_comments" value="<%=OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_19_comments", prepopulationLevel).size()>0?OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_19_comments", prepopulationLevel).get(0).getAnswer():""%>" />
+
+	<input type="hidden" name="client_20_1" id="client_20_1" value="<%=OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_20_1", prepopulationLevel).size()>0?OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_20_1", prepopulationLevel).get(0).getAnswer():""%>" />
+
+	<input type="hidden" name="client_20_comments" id="client_20_comments" value="<%=OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_20_comments", prepopulationLevel).size()>0?OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_20_comments", prepopulationLevel).get(0).getAnswer():""%>" />
+
+	<input type="hidden" name="client_21_1" id="client_21_1" value="<%=OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_21_1", prepopulationLevel).size()>0?OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_21_1", prepopulationLevel).get(0).getAnswer():""%>" />
+
+	<input type="hidden" name="client_21_comments" id="client_21_comments" value="<%=OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_21_comments", prepopulationLevel).size()>0?OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_21_comments", prepopulationLevel).get(0).getAnswer():""%>" />
+
+	<input type="hidden" name="client_22_1" id="client_22_1" value="<%=OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_22_1", prepopulationLevel).size()>0?OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_22_1", prepopulationLevel).get(0).getAnswer():""%>" />
+
+	<input type="hidden" name="client_22_comments" id="client_22_comments" value="<%=OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_22_comments", prepopulationLevel).size()>0?OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_22_comments", prepopulationLevel).get(0).getAnswer():""%>" />
+					
+	<input type="hidden" name="client_23_1" id="client_23_1" value="<%=OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_23_1", prepopulationLevel).size()>0?OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_23_1", prepopulationLevel).get(0).getAnswer():""%>" />
+		
+	<input type="hidden" name="client_23_comments" id="client_23_comments" value="<%=OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_23_comments", prepopulationLevel).size()>0?OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_23_comments", prepopulationLevel).get(0).getAnswer():""%>" />
+				
+	<input type="hidden" name="client_24_1" id="client_24_1" value="<%=OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_24_1", prepopulationLevel).size()>0?OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_24_1", prepopulationLevel).get(0).getAnswer():""%>" />
+
+	<input type="hidden" name="client_24_comments" id="client_24_comments" value="<%=OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_24_comments", prepopulationLevel).size()>0?OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_24_comments", prepopulationLevel).get(0).getAnswer():""%>" />
+		
+	<input type="hidden" name="client_hopes_future" id="client_hopes_future" value="<%=OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_hopes_future", prepopulationLevel).size()>0?OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_hopes_future", prepopulationLevel).get(0).getAnswer():""%>" />
+
+	<input type="hidden" name="client_hope_future_need" id="client_hope_future_need" value="<%=OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_hope_future_need", prepopulationLevel).size()>0?OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_hope_future_need", prepopulationLevel).get(0).getAnswer():""%>" />
+
+	<input type="hidden" name="client_view_mental_health" id="client_view_mental_health" value="<%=OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_view_mental_health", prepopulationLevel).size()>0?OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_view_mental_health", prepopulationLevel).get(0).getAnswer():""%>" />
+
+	<input type="hidden" name="client_sprituality" id="client_sprituality" value="<%=OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_sprituality", prepopulationLevel).size()>0?OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_sprituality", prepopulationLevel).get(0).getAnswer():""%>" />
+
+	<input type="hidden" name="client_culture_heritage" id="client_culture_heritage" value="<%=OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_culture_heritage", prepopulationLevel).size()>0?OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_culture_heritage", prepopulationLevel).get(0).getAnswer():""%>" />
+
+	<input type="hidden" id="clientCompletionDate" name="clientCompletionDate" value="<%=ocanStaffForm.getFormattedClientCompletionDate()%>" /> 
+	 
+	<!-- client data end here  -->
+<% } else { %>
+	<input type="hidden" name="ocanStaffFormId" id="ocanStaffFormId" value="<%=ocanStaffForm.getId()%>" />
+	<input type="hidden" name="assessmentId" id="assessmentId" value="<%=ocanStaffForm.getAssessmentId()%>" />
+<%} %>
+	<input type="hidden" name="prepopulate" id="prepopulate" value="<%=prepopulate%>" />
 		
 	<table style="margin-left:auto;margin-right:auto;background-color:#f0f0f0;border-collapse:collapse">
 		
@@ -774,7 +919,7 @@ $("document").ready(function(){
 			</td>
 		</tr>
 		<tr>
-			<td class="genericTableHeader">Postal Code (e.g. M4H 2T1)</td>
+			<td class="genericTableHeader">Postal Code</td>
 			<td class="genericTableData" >
 				<% String input = OcanForm.renderAsTextField(ocanStaffForm.getId(),"familyDoctorPostalCode",7,prepopulationLevel);
 				input = input.substring(0,input.length()-2);
@@ -860,7 +1005,7 @@ $("document").ready(function(){
 			</td>
 		</tr>
 		<tr>
-			<td class="genericTableHeader">Postal Code (e.g. M4H 2T1)</td>
+			<td class="genericTableHeader">Postal Code</td>
 			<td class="genericTableData">
 				<%
 					input = "";
@@ -966,7 +1111,7 @@ $("document").ready(function(){
 			</td>
 		</tr>
 		<tr>
-			<td class="genericTableHeader">Postal Code (e.g. M4H 2T1)</td>
+			<td class="genericTableHeader">Postal Code</td>
 			<td class="genericTableData">
 				<%
 					input = "";
@@ -1054,7 +1199,7 @@ $("document").ready(function(){
 			</td>
 		</tr>
 		<tr>
-			<td class="genericTableHeader">Postal Code (e.g. M4H 2T1)</td>
+			<td class="genericTableHeader">Postal Code</td>
 			<td class="genericTableData">
 				<%
 					input = "";
@@ -1143,7 +1288,7 @@ $("document").ready(function(){
 			</td>
 		</tr>
 		<tr>
-			<td class="genericTableHeader">Postal Code (e.g. M4H 2T1)</td>
+			<td class="genericTableHeader">Postal Code</td>
 			<td class="genericTableData">
 				<%
 					input = "";
@@ -1241,7 +1386,7 @@ $("document").ready(function(){
 			</td>
 		</tr>
 		<tr>
-			<td class="genericTableHeader">Postal Code (e.g. M4H 2T1)</td>
+			<td class="genericTableHeader">Postal Code</td>
 			<td class="genericTableData">
 				<%
 					input = "";
@@ -1322,7 +1467,7 @@ $("document").ready(function(){
 			</td>
 		</tr>
 		<tr>
-			<td class="genericTableHeader">Postal Code (e.g. M4H 2T1)</td>
+			<td class="genericTableHeader">Postal Code</td>
 			<td class="genericTableData">
 				<%
 					input = "";
@@ -1401,7 +1546,7 @@ $("document").ready(function(){
 			</td>
 		</tr>
 		<tr>
-			<td class="genericTableHeader">Postal Code (e.g. M4H 2T1)</td>
+			<td class="genericTableHeader">Postal Code</td>
 			<td class="genericTableData">
 				<%
 					input = "";
@@ -3894,16 +4039,16 @@ This information is collected from a variety of sources, including self-report, 
 			<%=OcanForm.renderAsHiddenField(ocanStaffForm.getId(), "summary_of_actions_domains",prepopulationLevel)%>		
 		</tr>
 		<tr>
-			<td colspan="2">
-			<table>     
+			<td colspan="2">	
+			<table>	
 			<tr>
-			<td width="10%">Priority</td>
-			<td width="40%">Domain</td>
-			<td width="50%">Action(s)</td>
-			</tr>
-			</table>
-					
-			<div id="summary_of_actions_block">						
+				<td width="10%">Priority</td>
+				<td width="40%">Domain</td>
+				<td width="50%">Action(s)</td>
+			</tr>	
+			</table>	
+				<div id="summary_of_actions_block">
+							
 							
 				
 				</div>

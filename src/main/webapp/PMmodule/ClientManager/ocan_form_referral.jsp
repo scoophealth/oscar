@@ -31,7 +31,7 @@
 		
 		if(ocanStaffForm.getAssessmentId()==null) {
 		//prepopulate referral from last completed assessment.
-		OcanStaffForm lastCompletedForm = OcanForm.getLastCompletedOcanForm(currentDemographicId);
+		OcanStaffForm lastCompletedForm = OcanForm.getLastCompletedOcanFormByOcanType(currentDemographicId, ocanType);
 		if(lastCompletedForm!=null) {
 			List<OcanStaffFormData> existingAnswers1 = OcanForm.getStaffAnswers(lastCompletedForm.getId(),referralNumber+"_summary_of_referral_optimal",prepopulationLevel);
 			if(existingAnswers1.size()>0)

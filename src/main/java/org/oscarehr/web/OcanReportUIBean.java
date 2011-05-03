@@ -758,12 +758,18 @@ public class OcanReportUIBean implements CallbackHandler {
 			String totalAdmissions = getStaffAnswer("hospitalized_mental_illness_admissions",ocanStaffFormData);
 			if(totalAdmissions!=null&&totalAdmissions.length()>0) {
 				ocanDomains.setTotalAdmissions(new BigInteger(totalAdmissions));
-			} 
+			} else {
+                ocanDomains.setTotalAdmissions(new BigInteger("0"));
+            }
+
 			
 			String totalHospitalDays = getStaffAnswer("hospitalized_mental_illness_days",ocanStaffFormData);
 			if(totalHospitalDays!=null&&totalHospitalDays.length()>0) {
 				ocanDomains.setTotalHospitalDays(new BigInteger(totalHospitalDays));
-			} 
+			} else {
+                ocanDomains.setTotalHospitalDays(new BigInteger("0"));
+            }
+
 			
 			ocanDomains.setCommunityTreatOrder(CommunityTreatOrder.Enum.forString(getStaffAnswer("community_treatment_orders",ocanStaffFormData)));
 						 
@@ -855,11 +861,17 @@ public class OcanReportUIBean implements CallbackHandler {
 			String totalAdmissions = getStaffAnswer("hospitalized_mental_illness_admissions",ocanStaffFormData);
 			if(totalAdmissions!=null&&totalAdmissions.length()>0) {
 				domain.setTotalAdmissions(new BigInteger(totalAdmissions));
-			} 
+			} else {
+                domain.setTotalAdmissions(new BigInteger("0"));
+            }
+
 			String totalHospitalDays = getStaffAnswer("hospitalized_mental_illness_days",ocanStaffFormData);
 			if(totalHospitalDays!=null&&totalHospitalDays.length()>0) {
 				domain.setTotalHospitalDays(new BigInteger(totalHospitalDays));
-			} 
+			}  else {
+                domain.setTotalHospitalDays(new BigInteger("0"));
+            }
+
 			domain.setCommunityTreatOrder(CommunityTreatOrder.Enum.forString(getStaffAnswer("community_treatment_orders",ocanStaffFormData)));
 						 
 			domain.setVisitEmergencyDepartment(VisitEmergencyDepartment.Enum.forString(getStaffAnswer("visitEmergencyDepartment",ocanStaffFormData)));
