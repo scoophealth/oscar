@@ -12,12 +12,31 @@
 	int ocanStaffFormId =0;
 	if(request.getParameter("ocanStaffFormId")!=null && request.getParameter("ocanStaffFormId")!="") {
 		ocanStaffFormId = Integer.parseInt(request.getParameter("ocanStaffFormId"));
-	}//OcanStaffForm ocanStaffForm=OcanForm.getOcanStaffForm(currentDemographicId, prepopulationLevel, ocanType);		
+	}
+	int prepopulate = 0;
+	prepopulate = Integer.parseInt(request.getParameter("prepopulate")==null?"0":request.getParameter("prepopulate"));
+	
 	OcanStaffForm ocanStaffForm = null;
 	if(ocanStaffFormId != 0) {
 		ocanStaffForm=OcanForm.getOcanStaffForm(Integer.valueOf(request.getParameter("ocanStaffFormId")));
 	}else {
-		ocanStaffForm=OcanForm.getOcanStaffForm(currentDemographicId,prepopulationLevel,ocanType);		
+		ocanStaffForm=OcanForm.getOcanStaffForm(currentDemographicId,prepopulationLevel,ocanType);	
+		
+		if(ocanStaffForm.getAssessmentId()==null) {
+			
+			OcanStaffForm lastCompletedForm = OcanForm.getLastCompletedOcanFormByOcanType(currentDemographicId,ocanType);
+			if(lastCompletedForm!=null) {
+				
+				// prepopulate the form from last completed assessment
+				if(prepopulate==1) {			
+						
+					lastCompletedForm.setAssessmentId(null);
+					lastCompletedForm.setAssessmentStatus("In Progress");
+						
+					ocanStaffForm = lastCompletedForm;
+				}
+			}
+		}
 	}
 	int centerNumber = Integer.parseInt(request.getParameter("center_num"));
 %>
@@ -31,8 +50,9 @@ $('document').ready(function() {
 	var cenCount = $("#center_count").val();
 	var LHIN_code = $("#serviceUseRecord_orgLHIN<%=centerNumber%>").val(); 
 	var item=$("#center_block_orgName<%=centerNumber%>");
+	var prepopulate = '<%=prepopulate%>';
 	if(LHIN_code != null && LHIN_code!="") {
-		$.get('ocan_form_getOrgName.jsp?ocanStaffFormId='+ocanStaffFormId+'&ocanType='+ocanType+'&demographicId='+demographicId+'&center_num=<%=centerNumber%>'+'&LHIN_code='+LHIN_code, function(data) {
+		$.get('ocan_form_getOrgName.jsp?prepopulate='+prepopulate+'&ocanStaffFormId='+ocanStaffFormId+'&ocanType='+ocanType+'&demographicId='+demographicId+'&center_num=<%=centerNumber%>'+'&LHIN_code='+LHIN_code, function(data) {
 			item.append(data);					 
 		});				
 	} 

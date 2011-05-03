@@ -17,12 +17,30 @@
 	String orgName = request.getParameter("orgName");
 	String programName = request.getParameter("programName");
 	
-	//OcanStaffForm ocanStaffForm=OcanForm.getOcanStaffForm(currentDemographicId, prepopulationLevel,ocanType);		
+	int prepopulate = 0;
+	prepopulate = Integer.parseInt(request.getParameter("prepopulate")==null?"0":request.getParameter("prepopulate"));
+	
 	OcanStaffForm ocanStaffForm = null;
 	if(ocanStaffFormId != 0) {
 		ocanStaffForm=OcanForm.getOcanStaffForm(Integer.valueOf(request.getParameter("ocanStaffFormId")));
 	}else {
-		ocanStaffForm=OcanForm.getOcanStaffForm(currentDemographicId,prepopulationLevel,ocanType);		
+		ocanStaffForm=OcanForm.getOcanStaffForm(currentDemographicId,prepopulationLevel,ocanType);	
+		
+		if(ocanStaffForm.getAssessmentId()==null) {
+			
+			OcanStaffForm lastCompletedForm = OcanForm.getLastCompletedOcanFormByOcanType(currentDemographicId,ocanType);
+			if(lastCompletedForm!=null) {
+				
+				// prepopulate the form from last completed assessment
+				if(prepopulate==1) {			
+						
+					lastCompletedForm.setAssessmentId(null);
+					lastCompletedForm.setAssessmentStatus("In Progress");
+						
+					ocanStaffForm = lastCompletedForm;
+				}
+			}
+		}
 	}
 %>
 
