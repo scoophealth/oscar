@@ -281,9 +281,17 @@ function validateNum(el){
 
 
 function checkSubmitType(){
-  if(document.forms[0].submit.value=="Reprocess and Resubmit Bill"){
-    window.close()
-  }
+	var billtype = document.getElementById('status').value;
+	if (billtype == 'W'){
+		if(document.forms[0].WCBid == null){
+	       alert("Please select a WCB form");
+	       return false;
+	    }
+	}	
+	
+    if(document.forms[0].submit.value=="Reprocess and Resubmit Bill"){
+       window.close()
+    }
 }
 function popup( height, width, url, windowName){
   var page = url;
@@ -439,7 +447,7 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
  }
 
 %>
-  <br><html:form  action="/billing/CA/BC/reprocessBill" onsubmit="checkSubmitType()">
+  <br><html:form  action="/billing/CA/BC/reprocessBill" onsubmit="return checkSubmitType()">
 <input type="hidden" name="update_date" value="<%=UpdateDate%>"/>
 <input type="hidden" name="demoNo" value="<%=DemoNo%>"/>
 <input type="hidden" name="billNumber" value="<%=allFields.getProperty("billing_no")%>"/> 
