@@ -201,7 +201,7 @@ div.logoutBox {
 	if (roleName$.equals("admin" + "," + curProvider_no))
 		{
 %><html:link
-	page="/admin/logout.jsp">
+	page="/logout.jsp">
 	<bean:message key="global.btnLogout" />
 </html:link>&nbsp;<%
 	}
