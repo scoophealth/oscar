@@ -296,7 +296,22 @@ public class DmsInboxManageAction extends DispatchAction {
     String demographicNo = request.getParameter("demographicNo"); // used when searching for labs by patient instead of provider
     String scannedDocStatus = request.getParameter("scannedDocument");
     scannedDocStatus = "I";
+    
+    String startDateStr = request.getParameter("startDate");
+    String endDateStr = request.getParameter("endDate");
 
+    Date startDate = null;
+    Date endDate   = null;
+    
+    try{
+       startDate = UtilDateUtilities.StringToDate(startDateStr);
+       endDate   = UtilDateUtilities.StringToDate(endDateStr);
+    }catch(Exception e){
+    	startDate = null;
+        endDate   = null;
+    }
+    
+    
     if ( ackStatus == null ) { ackStatus = "N"; } // default to new labs only
     if ( providerNo == null ) { providerNo = ""; }
     if ( searchProviderNo == null ) { searchProviderNo = providerNo; }
@@ -385,6 +400,16 @@ public class DmsInboxManageAction extends DispatchAction {
 
     for( int i = 0; i < labdocs.size(); i++ ) {
         result = (LabResultData) labdocs.get(i);
+                
+        if (startDate != null && startDate.after(result.getDateObj())){
+        	continue;
+        }
+        
+        if(endDate != null && endDate.before(result.getDateObj())){
+        	continue;
+        }
+        
+        
         labMap.put(result.segmentID, result);
         ArrayList labNums = new ArrayList();
 
