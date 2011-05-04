@@ -69,6 +69,31 @@ insert into OcanFormOption values (1243,"1.2","Year of First Entry Date","1997",
 insert into OcanFormOption values (1244,"1.2","Year of First Entry Date","1998","1998");
 insert into OcanFormOption values (1245,"1.2","Year of First Entry Date","1999","1999");
 
+insert into OcanFormOption values (1246,"1.2","Years in Canada","26","26");
+insert into OcanFormOption values (1247,"1.2","Years in Canada","27","27");
+insert into OcanFormOption values (1248,"1.2","Years in Canada","28","28");
+insert into OcanFormOption values (1249,"1.2","Years in Canada","29","29");
+insert into OcanFormOption values (1250,"1.2","Years in Canada","30","30");
+insert into OcanFormOption values (1251,"1.2","Years in Canada","31","31");
+insert into OcanFormOption values (1252,"1.2","Years in Canada","32","32");
+insert into OcanFormOption values (1253,"1.2","Years in Canada","33","33");
+insert into OcanFormOption values (1254,"1.2","Years in Canada","34","34");
+insert into OcanFormOption values (1255,"1.2","Years in Canada","35","35");
+insert into OcanFormOption values (1256,"1.2","Years in Canada","36","36");
+insert into OcanFormOption values (1257,"1.2","Years in Canada","37","37");
+insert into OcanFormOption values (1258,"1.2","Years in Canada","38","38");
+insert into OcanFormOption values (1259,"1.2","Years in Canada","39","39");
+insert into OcanFormOption values (1260,"1.2","Years in Canada","40","40");
+insert into OcanFormOption values (1261,"1.2","Years in Canada","41","41");
+insert into OcanFormOption values (1262,"1.2","Years in Canada","42","42");
+insert into OcanFormOption values (1263,"1.2","Years in Canada","43","43");
+insert into OcanFormOption values (1264,"1.2","Years in Canada","44","44");
+insert into OcanFormOption values (1265,"1.2","Years in Canada","45","45");
+insert into OcanFormOption values (1266,"1.2","Years in Canada","46","46");
+insert into OcanFormOption values (1267,"1.2","Years in Canada","47","47");
+insert into OcanFormOption values (1268,"1.2","Years in Canada","48","48");
+insert into OcanFormOption values (1269,"1.2","Years in Canada","49","49");
+insert into OcanFormOption values (1270,"1.2","Years in Canada","50","50");
 
 
 

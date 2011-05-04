@@ -796,7 +796,8 @@ function showBillFormDiv (group, selectedForm) {
     }
     }
     else {
-    alert("Error: Could not locate div with id: " + selectedFormDivGroupId);
+    //alert("Error: Could not locate div with id: " + selectedFormDivGroupId);
+    	//do nothing
     }
 }
 
@@ -810,7 +811,8 @@ function hideBillFormDiv (group, selectedForm) {
     }
     }
     else {
-    alert("Error: Could not locate div with id: " + selectedFormDivGroupId);
+    //alert("Error: Could not locate div with id: " + selectedFormDivGroupId);
+        //do nothing
     }
 }
 
