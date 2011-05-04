@@ -15,12 +15,30 @@
 	int centerNumber = Integer.parseInt(request.getParameter("center_num"));
 	String LHIN_code = request.getParameter("LHIN_code");
 	
-	//OcanStaffForm ocanStaffForm=OcanForm.getOcanStaffForm(currentDemographicId, prepopulationLevel,ocanType);		
+	int prepopulate = 0;
+	prepopulate = Integer.parseInt(request.getParameter("prepopulate")==null?"0":request.getParameter("prepopulate"));
+	
 	OcanStaffForm ocanStaffForm = null;
 	if(ocanStaffFormId != 0) {
 		ocanStaffForm=OcanForm.getOcanStaffForm(Integer.parseInt(request.getParameter("ocanStaffFormId")));
 	}else {
-		ocanStaffForm=OcanForm.getOcanStaffForm(currentDemographicId,prepopulationLevel,ocanType);		
+		ocanStaffForm=OcanForm.getOcanStaffForm(currentDemographicId,prepopulationLevel,ocanType);	
+		
+		if(ocanStaffForm.getAssessmentId()==null) {
+			
+			OcanStaffForm lastCompletedForm = OcanForm.getLastCompletedOcanFormByOcanType(currentDemographicId,ocanType);
+			if(lastCompletedForm!=null) {
+				
+				// prepopulate the form from last completed assessment
+				if(prepopulate==1) {			
+						
+					lastCompletedForm.setAssessmentId(null);
+					lastCompletedForm.setAssessmentStatus("In Progress");
+						
+					ocanStaffForm = lastCompletedForm;
+				}
+			}
+		}
 	}
 %>
 
@@ -34,8 +52,9 @@ $('document').ready(function() {
 	var LHIN_code= $("#serviceUseRecord_orgLHIN<%=centerNumber%>").val(); 
 	var orgName = $("#serviceUseRecord_orgName<%=centerNumber%>").val();
 	var item = $("#center_block_orgName<%=centerNumber%>");
+	var prepopulate = '<%=prepopulate%>';
 	if(orgName!=null && orgName!="") {
-		$.get('ocan_form_getProgramName.jsp?ocanStaffFormId='+ocanStaffFormId+'&ocanType='+ocanType+'&demographicId='+demographicId+'&center_num=<%=centerNumber%>'+'&LHIN_code='+LHIN_code+'&orgName='+orgName, function(data) {
+		$.get('ocan_form_getProgramName.jsp?prepopulate='+prepopulate+'&ocanStaffFormId='+ocanStaffFormId+'&ocanType='+ocanType+'&demographicId='+demographicId+'&center_num=<%=centerNumber%>'+'&LHIN_code='+LHIN_code+'&orgName='+orgName, function(data) {
 			  item.append(data);					 
 			});				
 	}

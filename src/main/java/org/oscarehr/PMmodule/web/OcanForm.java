@@ -853,6 +853,23 @@ public class OcanForm {
 		return result;
 	}
 
+	
+	 public static boolean haveReassessment(Integer clientId) {
+
+         boolean result = false;
+
+         LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+
+         OcanStaffForm ocanStaffForm = ocanStaffFormDao.findLatestCompletedReassessment(loggedInInfo.currentFacility.getId(),clientId);
+         if(ocanStaffForm!=null) {
+                 result = true;
+         }
+
+         return result;
+	 }
+
+
+	 
 	public static String getOcanWarningMessage(Integer facilityId) {
 				
 		StringBuilder messages = new StringBuilder();
@@ -907,6 +924,18 @@ public class OcanForm {
 		
 		return ocanStaffForm;
 	}		
+	
+	
+	 public static OcanStaffForm getLastCompletedOcanFormByOcanType(Integer clientId, String ocanType)
+     {
+             LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+
+             OcanStaffForm ocanStaffForm = ocanStaffFormDao.getLastCompletedOcanFormByOcanType(loggedInInfo.currentFacility.getId(), clientId, ocanType);
+
+             return ocanStaffForm;
+     }
+
+
 
 	public static List<OcanStaffFormData> getOcanFormDataByFormId(Integer ocanStaffFormId) {
 		return ocanStaffFormDataDao.findByForm(ocanStaffFormId);		

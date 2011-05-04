@@ -1386,28 +1386,34 @@ public class ClientManagerAction extends BaseAction {
 			
 			//FULL OCAN Staff/Client Assessment
 			OcanStaffForm ocanStaffForm = ocanStaffFormDao.findLatestByFacilityClient(facilityId,Integer.valueOf(demographicNo),"FULL");
-			if(ocanStaffForm!=null && ocanStaffForm.getAssessmentStatus().equals("In Progress"))
-				request.setAttribute("ocanStaffForm", ocanStaffForm);
-			else
-				request.setAttribute("ocanStaffForm",null);
-			
-			//OcanClientForm ocanClientForm = ocanClientFormDao.findLatestByFacilityClient(facilityId,Integer.valueOf(demographicNo));
-			//request.setAttribute("ocanClientForm", ocanClientForm);	
+			if(ocanStaffForm!=null) {
+                if(ocanStaffForm.getAssessmentStatus()!=null && ocanStaffForm.getAssessmentStatus().equals("In Progress"))
+                        request.setAttribute("ocanStaffForm", ocanStaffForm);
+			} else {
+                request.setAttribute("ocanStaffForm",null);
+			}
+
 			
 			//SELF+CORE OCAN Staff/Client Assessment
 			OcanStaffForm selfOcanStaffForm = ocanStaffFormDao.findLatestByFacilityClient(facilityId,Integer.valueOf(demographicNo),"SELF");
-			if(selfOcanStaffForm!=null && selfOcanStaffForm.getAssessmentStatus().equals("In Progress"))
-				request.setAttribute("selfOcanStaffForm", selfOcanStaffForm);
-			else
-				request.setAttribute("selfOcanStaffForm",null);
-			
-			//FULL OCAN Staff/Client Assessment
+			 if(selfOcanStaffForm!=null) {
+                 if(selfOcanStaffForm.getAssessmentStatus()!=null && selfOcanStaffForm.getAssessmentStatus().equals("In Progress")) {
+                         request.setAttribute("selfOcanStaffForm", selfOcanStaffForm);
+                 }
+			 } else {
+                 request.setAttribute("selfOcanStaffForm",null);
+			 }
+
+			//CORE OCAN Staff/Client Assessment
 			OcanStaffForm coreOcanStaffForm = ocanStaffFormDao.findLatestByFacilityClient(facilityId,Integer.valueOf(demographicNo),"CORE");
-			if(coreOcanStaffForm!=null && coreOcanStaffForm.getAssessmentStatus().equals("In Progress"))
-				request.setAttribute("coreOcanStaffForm", coreOcanStaffForm);
-			else
-				request.setAttribute("coreOcanStaffForm",null);
-			
+			 if(coreOcanStaffForm!=null) {
+                 if(coreOcanStaffForm.getAssessmentStatus()!=null && coreOcanStaffForm.getAssessmentStatus().equals("In Progress")) {
+                         request.setAttribute("coreOcanStaffForm", coreOcanStaffForm);
+                 }
+			 } else {
+                 request.setAttribute("coreOcanStaffForm",null);
+			 }
+
 			
 			
 			//CDS
