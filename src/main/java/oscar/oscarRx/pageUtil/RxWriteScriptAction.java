@@ -795,6 +795,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 					boolean isOutsideProvider = false;
 					boolean isLongTerm = false;
 					boolean isPastMed = false;
+                                        boolean isNonAuthoritative = false;
 
 					em = request.getParameterNames();
 					while (em.hasMoreElements()) {
@@ -836,6 +837,12 @@ public final class RxWriteScriptAction extends DispatchAction {
 								isLongTerm = true;
 							} else {
 								isLongTerm = false;
+							}
+                                                } else if (elem.equals("nonAuthoritativeN_" + num)) {
+							if (val.equals("on")) {
+								isNonAuthoritative = true;
+							} else {
+								isNonAuthoritative = false;
 							}
 						} else if (elem.equals("lastRefillDate_" + num)) {
 							rx.setLastRefillDate(RxUtil.StringToDate(val, "yyyy-MM-dd"));
@@ -896,6 +903,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 					}
 					rx.setPastMed(isPastMed);
 					rx.setLongTerm(isLongTerm);
+                                        rx.setNonAuthoritative(isNonAuthoritative);
 					String newline = System.getProperty("line.separator");
 					rx.setPatientCompliance(patientComplianceY, patientComplianceN);
 					String special;
