@@ -166,9 +166,13 @@
 						<td><%=drug.startDate%></td>
 						<td><%=drug.endDate%></td>
 						<td><%=drug.writtenDate%></td>
-						<td><%=drug.prescriptionDetails%></td>
-						<td>
-						<%
+                                                <td><%=drug.prescriptionDetails%>
+
+                                                    <% if (drug.nonAuthoritative) { %>
+                                                        &nbsp;<bean:message key="WriteScript.msgNonAuthoritative"></bean:message>
+                                                     <%   } %>
+                                                </td>
+                                                <%
 							if (drug.customName==null)
 									{
 						%> <a href="javascript:ShowDrugInfo('<%=drug.genericName%>');">Info</a> <%
