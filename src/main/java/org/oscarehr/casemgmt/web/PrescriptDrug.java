@@ -37,6 +37,15 @@ public class PrescriptDrug {
 	private String remoteFacilityName = null;
 	private Date createDate=null;
 	private boolean longTerm=false;
+        private boolean nonAuthoritative=false;
+
+        public boolean isNonAuthoritative() {
+		return this.nonAuthoritative;
+	}
+
+	public void setNonAuthoritative(boolean nonAuthoritative) {
+		this.nonAuthoritative = nonAuthoritative;
+	}
 
         public boolean isLongTerm(){
             return this.longTerm;
