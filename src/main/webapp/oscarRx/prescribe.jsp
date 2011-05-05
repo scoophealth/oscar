@@ -55,8 +55,9 @@ if(listRxDrugs!=null){
          if(drugName==null || drugName.equalsIgnoreCase("null"))
              drugName="" ;
 
-         boolean pastMed        = rx.getPastMed();
-         String quantity        = rx.getQuantity();
+         boolean pastMed            = rx.getPastMed();
+         boolean nonAuthoritative   = rx.isNonAuthoritative();
+         String quantity            = rx.getQuantity();
          String quantityText="";
          String unitName=rx.getUnitName();
          if(unitName==null || unitName.equalsIgnoreCase("null") || unitName.trim().length()==0){
@@ -104,7 +105,7 @@ if(listRxDrugs!=null){
 
 %>
 
-<fieldset style="margin-top:2px;width:580px;" id="set_<%=rand%>">
+<fieldset style="margin-top:2px;width:620px;" id="set_<%=rand%>">
     <a tabindex="-1" href="javascript:void(0);"  style="float:right;margin-left:5px;margin-top:0px;padding-top:0px;" onclick="$('set_<%=rand%>').remove();deletePrescribe('<%=rand%>');">X</a>
     <a tabindex="-1" href="javascript:void(0);" style="float:right;margin-top:0px;padding-top:0px;" onclick="$('rx_more_<%=rand%>').toggle();">  <span id="moreLessWord_<%=rand%>" onclick="updateMoreLess(id)" >more</span> </a>
 
@@ -156,8 +157,10 @@ if(listRxDrugs!=null){
             <input type="checkbox"  name="patientComplianceY_<%=rand%>" id="patientComplianceY_<%=rand%>" <%if(patientCompliance==1) {%> checked="true" <%}%> />
 
           <bean:message key="WriteScript.msgNo"/>
-            <input type="checkbox"  name="patientComplianceN_<%=rand%>" id="patientComplianceN_<%=rand%>" <%if(patientCompliance==-1) {%> checked="true" <%}%> /><br/>
+            <input type="checkbox"  name="patientComplianceN_<%=rand%>" id="patientComplianceN_<%=rand%>" <%if(patientCompliance==-1) {%> checked="true" <%}%> />
 
+          <bean:message key="WriteScript.msgNonAuthoritative"/>
+            <input type="checkbox" name="nonAuthoritativeN_<%=rand%>" id="nonAuthoritativeN_<%=rand%> " <%if(nonAuthoritative) {%> checked="true" <%}%> /><br/>
 
 
         <label style="float:left;width:80px;">Start Date:</label>

@@ -105,6 +105,8 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 	private Boolean hideFromDrugProfile;
         @Column(name = "custom_note")
 	private Boolean customNote=false;
+        @Column(name = "non_authoritative")
+	private Boolean nonAuthoritative = false;
 
 	// ///
 	@Transient
@@ -242,6 +244,15 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 		}
 		return false;
 	}
+
+        public Boolean isNonAuthoritative() {
+		return nonAuthoritative;
+	}
+
+	public void setNonAuthoritative(Boolean nonAuthoritative) {
+		this.nonAuthoritative = nonAuthoritative;
+	}
+
 
 	public String getProviderNo() {
 		return providerNo;

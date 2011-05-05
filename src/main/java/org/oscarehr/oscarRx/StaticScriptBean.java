@@ -55,6 +55,7 @@ public class StaticScriptBean {
 		public String brandName = null;
 		public boolean isArchived = false;
 		public boolean isLocal = true;
+                public boolean nonAuthoritative = false;
 	}
 
 	public static ArrayList<DrugDisplayData> getDrugList(int demographicId, String regionalIdentifier, String customName, String brandName) {
@@ -138,6 +139,8 @@ public class StaticScriptBean {
 		drugDisplayData.writtenDate = RxUtil.DateToString(drug.getWrittenDate());
 
 		drugDisplayData.prescriptionDetails = RxPrescriptionData.getFullOutLine(drug.getSpecial()).replaceAll(";", " ");
+
+                drugDisplayData.nonAuthoritative = drug.isNonAuthoritative();
 
 		drugDisplayData.genericName = drug.getGenericName();
 
