@@ -1065,7 +1065,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			newNote = true;
 		}
 		
-		if(sessionBean.appointmentNo != null) {
+		if(sessionBean.appointmentNo != null && sessionBean.appointmentNo.length()>0) {
 			note.setAppointmentNo(Integer.parseInt(sessionBean.appointmentNo));
 		}
 			

@@ -893,6 +893,7 @@
 		<action path="/oscarEncounter/displayDecisionSupportAlerts" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayDecisionSupportAlertsAction"></action>
 		<action path="/report/printLabDaySheetAction" type="oscar.oscarReport.pageUtil.printLabDaySheetAction"></action>
 		<action path="/oscarEncounter/displayDiagrams" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayDiagramAction"></action>
+		<action path="/oscarEncounter/displayExaminationHistory" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayExaminationHistoryAction"></action>
 		
 		<action path="/oscarEncounter/decisionSupport/guidelineAction" scope="request" parameter="method" type="org.springframework.web.struts.DelegatingActionProxy">
 			<forward name="guidelineList" path="/oscarEncounter/decisionSupport/guidelineList.jsp" />
@@ -2043,6 +2044,11 @@
 		
 		<action path="/provider/CppPreferences" type="org.oscarehr.provider.web.CppPreferencesAction" parameter="method" scope="request" validate="false" input="/provider/cpp_preferences.jsp">
 			<forward name="form" path="/provider/cpp_preferences.jsp" />							
+		</action>
+		
+		<action path="/eyeform/ExaminationHistory" type="org.oscarehr.eyeform.web.ExaminationHistoryAction" parameter="method">
+			<forward name="success" path="/eyeform/examination_history.jsp" />
+			<forward name="results" path="/eyeform/examination_history_results.jsp" />
 		</action>
 		
 		<!-- END OSCAR Report By Template -->
