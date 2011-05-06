@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -179,6 +181,34 @@ public class MeasurementsHibernateDao extends HibernateDaoSupport implements
     	@Override
     	public Measurements getLatestMeasurementByDemographicNoAndType(int demographicNo, String type) {
     		String queryStr = "From Measurements m WHERE m.demographicNo = " + demographicNo + " and m.type=? ORDER BY m.dateObserved DESC";
+    		
+    		@SuppressWarnings("unchecked")
+        	List<Measurements> rs = getHibernateTemplate().find(queryStr,new Object[]{type});
+
+        	if(!rs.isEmpty()) {
+        		return rs.get(0);
+        	}
+        	return null;
+    	}
+    	
+    	@Override
+    	public Set<Integer> getAppointmentNosByDemographicNoAndType(int demographicNo, String type, Date startDate, Date endDate) {
+    		Map<Integer,Boolean> results = new HashMap<Integer,Boolean>();
+    		
+    		String queryStr = "From Measurements m WHERE m.demographicNo = " + demographicNo + " and m.type=? and m.dateObserved>=? and m.dateObserved<=? ORDER BY m.dateObserved DESC";
+    		
+    		@SuppressWarnings("unchecked")
+        	List<Measurements> rs = getHibernateTemplate().find(queryStr,new Object[]{type,startDate,endDate});
+    		for(Measurements m:rs) {
+    			results.put(m.getAppointmentNo(), true);
+    		}
+    		
+    		return results.keySet();
+    	}
+    	
+    	@Override
+    	public Measurements getLatestMeasurementByAppointment(int appointmentNo, String type) {
+    		String queryStr = "From Measurements m WHERE m.appointmentNo = " + appointmentNo + " and m.type=? ORDER BY m.dateObserved DESC";
     		
     		@SuppressWarnings("unchecked")
         	List<Measurements> rs = getHibernateTemplate().find(queryStr,new Object[]{type});
