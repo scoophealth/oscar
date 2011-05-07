@@ -595,7 +595,7 @@ function doscroll(){
                   <textarea style="margin:10px;" cols="50" rows="15" id="noteEditTxt" name="value" ></textarea><br>
 		  <table>
 		      <tr id="Itemstartdate"><td><bean:message key="oscarEncounter.startdate.title"/>: </td>
-			<td><input type="text" id="startdate" name="startdate" value="" size="12"> (YYYY-MM-DD)</td></tr>
+			<td><input type="text" id="startdate" name="startdate" value="" size="12"> (YYYY-MM-DDd)</td></tr>
 		      <tr id="Itemresolutiondate"><td><bean:message key="oscarEncounter.resolutionDate.title"/>: </td>
 			<td><input type="text" id="resolutiondate" name="resolutiondate" value="" size="12"> (YYYY-MM-DD)</td></tr>
 		      <tr id="Itemageatonset"><td><bean:message key="oscarEncounter.ageAtOnset.title"/>: </td>
@@ -610,6 +610,18 @@ function doscroll(){
 			<td><input type="text" id="exposuredetail" name="exposuredetail" value=""></td></tr>
 		      <tr id="Itemrelationship"><td><bean:message key="oscarEncounter.relationship.title"/>: </td>
 			<td><input type="text" id="relationship" name="relationship" value=""></td></tr>
+			<tr id="Itemlifestage"><td><bean:message key="oscarEncounter.lifestage.title"/>: </td>
+				<td>
+				<select name="lifestage" id="lifestage">
+					<option value=""><bean:message key="oscarEncounter.lifestage.opt.notset"/></option>
+					<option value="N"><bean:message key="oscarEncounter.lifestage.opt.newborn"/></option>
+ 					<option value="I"><bean:message key="oscarEncounter.lifestage.opt.infant"/></option>
+ 					<option value="C"><bean:message key="oscarEncounter.lifestage.opt.child"/></option>
+ 					<option value="T"><bean:message key="oscarEncounter.lifestage.opt.adolescent"/></option> 
+					<option value="A"><bean:message key="oscarEncounter.lifestage.opt.adult"/></option>
+				</select>
+				</td>
+ 			</tr>
 		  </table><br>
                   <span style="float:right; margin-right:10px;">      
 		      <input type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/annotation.png"/>" title='<bean:message key="oscarEncounter.Index.btnAnotation"/>' id="anno"> &nbsp; &nbsp;

@@ -38,6 +38,8 @@ public class CaseManagementNoteExt {
 	public static String PROBLEMSTATUS  = "Problem Status"	;
 	public static String EXPOSUREDETAIL = "Exposure Details";
 	public static String RELATIONSHIP   = "Relationship"	;
+	public static String LIFESTAGE	    = "Life Stage"	;
+	
 	
 	//Class fields
 	private Long id;
