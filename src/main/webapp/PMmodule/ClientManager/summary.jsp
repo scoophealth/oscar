@@ -159,9 +159,7 @@ function openSurvey() {
 		<tr>
 			<th width="20%">Resources</th>
 			<td>
-				<%
-					if (session.getAttribute("userrole")!=null&&((String)session.getAttribute("userrole")).indexOf("admin")!=-1)
-					{
+				<%					
 						Integer demographicNo=currentDemographic.getDemographicNo();
 						pageContext.setAttribute("demographicNo", demographicNo);
 	
@@ -170,8 +168,7 @@ function openSurvey() {
 							%>
 								<a href="javascript:void(0);" onclick="window.open('<c:out value="${ctx}"/>/demographic/demographiccontrol.jsp?displaymode=edit&dboperation=search_detail&demographic_no=<c:out value="${demographicNo}"/>','master_file');return false;">OSCAR Master File</a> 
 							<%
-	 					}
-	 				}
+	 					}	 				
  				%>
 			</td>
 		</tr>
