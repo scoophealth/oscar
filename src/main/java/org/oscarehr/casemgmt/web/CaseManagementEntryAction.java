@@ -761,8 +761,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		/* save extra fields */
 		CaseManagementNoteExt cme = new CaseManagementNoteExt();
 		cme.setNoteId(note.getId());
-		String[] names = { "startdate", "resolutiondate", "proceduredate", "ageatonset", "problemstatus", "treatment", "exposuredetail", "relationship" };
-		String[] keys = { cme.STARTDATE, cme.RESOLUTIONDATE, cme.PROCEDUREDATE, cme.AGEATONSET, cme.PROBLEMSTATUS, cme.TREATMENT, cme.EXPOSUREDETAIL, cme.RELATIONSHIP };
+		String[] names = { "startdate", "resolutiondate", "proceduredate", "ageatonset", "problemstatus", "treatment", "exposuredetail", "relationship","lifestage" };
+		String[] keys = { cme.STARTDATE, cme.RESOLUTIONDATE, cme.PROCEDUREDATE, cme.AGEATONSET, cme.PROBLEMSTATUS, cme.TREATMENT, cme.EXPOSUREDETAIL, cme.RELATIONSHIP,cme.LIFESTAGE };
 		for (int i = 0; i < names.length; i++) {
 			String val = request.getParameter(names[i]);
 			if (filled(val)) {
