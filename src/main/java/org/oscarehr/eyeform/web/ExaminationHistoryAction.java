@@ -127,6 +127,13 @@ public class ExaminationHistoryAction extends DispatchAction {
 				MiscUtils.getLogger().warn("Warning",e);
 			}
 		}
+		
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(endDate);
+		cal.set(Calendar.HOUR_OF_DAY, 23);
+		cal.set(Calendar.MINUTE, 59);
+		cal.set(Calendar.SECOND, 59);
+		endDate = cal.getTime();
 						
 		//simple fields
 		//exclude complex ones ar,k,manifest_refraction,cycloplegic_refraction, angle, EOM
@@ -141,7 +148,13 @@ public class ExaminationHistoryAction extends DispatchAction {
 		
 		//lets get all the appointments that these fields link to
 		List<Appointment> appointments = getAppointments(demographicNo,simpleFieldNames,startDate,endDate);
-				
+		
+		int numPages = (appointments.size()/5)+1;
+		request.setAttribute("numPages", numPages);
+		
+		//narrow the window using the refpage variable (page number)
+		appointments = filterByRefPage(appointments,refPage);
+		
 		Measurements simpleFields[][] = new Measurements[simpleFieldNames.size()][appointments.size()];				
 		for(int x=0;x<simpleFields.length;x++) {
 			for(int y=0;y<simpleFields[x].length;y++) {				
@@ -154,11 +167,16 @@ public class ExaminationHistoryAction extends DispatchAction {
 		request.setAttribute("simpleFieldNames", simpleFieldNames);
 		request.setAttribute("simpleFields", simpleFields);
 		request.setAttribute("appointments", appointments);
+		if(refPage == null || refPage=="") { refPage="1";}
+		request.setAttribute("refPage", Integer.parseInt(refPage));
+		
+		
+		
 		
 		//complex fields
 		//for each appt, get the od and os for AR
 		if(fieldList.contains("ar")) {
-			logger.info("figure out AR");
+			//logger.info("figure out AR");
 			List<Map<String,String>> ars = new ArrayList<Map<String,String>>();
 			List<Appointment> appts = this.getAppointmentsForAr(demographicNo, startDate, endDate);
 			for(Appointment appt:appts) {
@@ -185,7 +203,7 @@ public class ExaminationHistoryAction extends DispatchAction {
 		}
 		
 		if(fieldList.contains("k")) {
-			logger.info("figure out k");
+			//logger.info("figure out k");
 			List<Map<String,String>> ks = new ArrayList<Map<String,String>>();
 			List<Appointment> appts = this.getAppointmentsForK(demographicNo, startDate, endDate);
 			for(Appointment appt:appts) {
@@ -213,7 +231,7 @@ public class ExaminationHistoryAction extends DispatchAction {
 		}
 		
 		if(fieldList.contains("manifest_refraction")) {
-			logger.info("figure out manifest_refraction");
+			//logger.info("figure out manifest_refraction");
 			List<Map<String,String>> manifestRefraction = new ArrayList<Map<String,String>>();
 			List<Appointment> appts = this.getAppointmentsForManifestRefraction(demographicNo, startDate, endDate);
 			for(Appointment appt:appts) {
@@ -245,7 +263,7 @@ public class ExaminationHistoryAction extends DispatchAction {
 		}	
 		
 		if(fieldList.contains("cycloplegic_refraction")) {
-			logger.info("figure out cycloplegic_refraction");
+			//logger.info("figure out cycloplegic_refraction");
 			List<Map<String,String>> cycloplegicRefraction = new ArrayList<Map<String,String>>();
 			List<Appointment> appts = this.getAppointmentsForCycloplegicRefraction(demographicNo, startDate, endDate);
 			for(Appointment appt:appts) {
@@ -277,7 +295,7 @@ public class ExaminationHistoryAction extends DispatchAction {
 		}	
 		
 		if(fieldList.contains("angle")) {
-			logger.info("figure out angle");
+			//logger.info("figure out angle");
 			List<Map<String,String>> angle = new ArrayList<Map<String,String>>();
 			List<Appointment> appts = this.getAppointmentsForCycloplegicRefraction(demographicNo, startDate, endDate);
 			for(Appointment appt:appts) {
@@ -321,6 +339,35 @@ public class ExaminationHistoryAction extends DispatchAction {
 		return mapping.findForward("results");	   
 	}
 	
+	private List<Appointment> filterByRefPage(List<Appointment> appointments, String refPage) {
+		int pageSize=5;
+		
+		if(refPage == null || refPage.equals("")) {
+			refPage="1";
+		}
+		int page = Integer.parseInt(refPage);
+		
+		//only applies to multi-page results
+		if(appointments.size()<=pageSize) {
+			return appointments;
+		}
+		
+		List<Appointment> filteredAppointments = new ArrayList<Appointment>();
+		int start = ((page-1)*pageSize);
+		int end = ((page-1)*pageSize)+pageSize;
+		
+		for(int x=0;x<appointments.size();x++) {
+			if(x<start) {
+				continue;
+			}
+			if(x>=end) {
+				break;
+			}
+			filteredAppointments.add(appointments.get(x));
+		}
+		
+		return filteredAppointments;
+	}
 	
 	
 	private List<Appointment> getAppointments(String demographicNo, List<String> fieldList, Date startDate, Date endDate) {

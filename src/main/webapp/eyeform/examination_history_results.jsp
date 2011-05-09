@@ -48,10 +48,10 @@
 	</head>
 	
 	<body>
-		<form action="<%=request.getContextPath()%>/eyeform/ExaminationHistory.do" method="POST" >
+		<form action="<%=request.getContextPath()%>/eyeform/ExaminationHistory.do" method="POST" id="inputForm" name="inputForm">
 		<input type="hidden" name="method" value="query"/>
 		<input type="hidden" name="demographicNo" value="<c:out value="${demographic.demographicNo}"/>"/>
-		<input type="hidden" name="refPage" value=""/>
+		<input type="hidden" name="refPage" value="<c:out value="${refPage}"/>"/>
 		<c:forEach var="field" items="${fields}">
 			<input type="hidden" name="fromlist2" value="<c:out value="${field}"/>"/>
 		</c:forEach>
@@ -90,8 +90,26 @@
 	 	</table>
 	 		 		 	
 		<h5>Simple field history:</h5>
-	    <span class="pagebanner">Total 1 pages.</span>
-		<span class="pagelinks">prev&nbsp;next</span>
+	    <span class="pagebanner">Total <c:out value="${numPages}"/> pages.</span>
+		<span class="pagelinks">
+		<% 
+			int numPages = (Integer)request.getAttribute("numPages");
+			int pageNumber = (Integer)request.getAttribute("refPage");
+			if(pageNumber>1) {
+				%><a href="#" onclick="document.inputForm.refPage.value=<%=(pageNumber-1)%>;return document.inputForm.submit();">prev</a><%
+			} else {
+				%>prev<%
+			}
+		%>
+		&nbsp;
+		<%
+			if(numPages > 1 && pageNumber<numPages) {
+				%><a href="#" onclick="document.inputForm.refPage.value=<%=(pageNumber+1)%>;return document.inputForm.submit();">next</a><%
+			} else {
+				%>next<%
+			}
+		%>
+		</span>
 	  
 		<table class="display">
 			<tr style="background-color: rgb(204, 204, 255);">
