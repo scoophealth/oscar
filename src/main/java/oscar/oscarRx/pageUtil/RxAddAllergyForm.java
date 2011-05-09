@@ -39,8 +39,18 @@ public final class RxAddAllergyForm extends ActionForm {
     String type = null;
     String startDate = null;
     String ageOfOnset = null;
+    String lifeStage = null;
     String severityOfReaction = null;
     String onSetOfReaction = null;
+    
+    public String getLifeStage() {
+    	return lifeStage;
+    }
+	public void setLifeStage(String lifeStage) {
+    	this.lifeStage = lifeStage;
+    }
+
+	
     ///
     public String getReactionDescription(){
         return (this.reactionDescription);

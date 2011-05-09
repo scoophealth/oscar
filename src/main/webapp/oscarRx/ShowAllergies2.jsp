@@ -153,30 +153,23 @@ String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.D
 								<td><b>Onset of Reaction</b></td>
 								<td><b>Reaction</b></td>
 								<td><b>Start Date</b></td>
+								<td><b>Life Stage</b></td>
 								<td><b>&nbsp;</b></td>
 							</thead>
 							<logic:iterate id="allergy"
 								type="oscar.oscarRx.data.RxPatientData.Patient.Allergy"
 								name="patient" property="allergies">
 								<tr>
-									<td><a
-										href="deleteAllergy2.do?ID=<%= String.valueOf(allergy.getAllergyId()) %>">
-									Delete </a></td>
+									<td><a href="deleteAllergy2.do?ID=<%= String.valueOf(allergy.getAllergyId()) %>">Delete</a></td>
 									<td><bean:write name="allergy" property="entryDate" /></td>
-									<td><bean:write name="allergy"
-										property="allergy.DESCRIPTION" /></td>
-									<td><bean:write name="allergy" property="allergy.typeDesc" />
-									</td>
-									<td><bean:write name="allergy"
-										property="allergy.severityOfReactionDesc" /></td>
-									<td><bean:write name="allergy"
-										property="allergy.onSetOfReactionDesc" /></td>
-									<td><bean:write name="allergy" property="allergy.reaction" />
-									</td>
-									<td><%=allergy.getAllergy().getStartDate()!=null?allergy.getAllergy().getStartDate():""%>
-									</td>
-									<td><a href="#" title="Annotation" onclick="window.open('../annotation/annotation.jsp?display=<%=annotation_display%>&table_id=<%=String.valueOf(allergy.getAllergyId())%>&demo=<jsp:getProperty name="patient" property="demographicNo"/>','anwin','width=400,height=250');"><img src="../images/notes.gif" border="0"></a>
-									</td>
+									<td><bean:write name="allergy" property="allergy.DESCRIPTION" /></td>
+									<td><bean:write name="allergy" property="allergy.typeDesc" /></td>
+									<td><bean:write name="allergy" property="allergy.severityOfReactionDesc" /></td>
+									<td><bean:write name="allergy" property="allergy.onSetOfReactionDesc" /></td>
+									<td><bean:write name="allergy" property="allergy.reaction" /></td>
+									<td><%=allergy.getAllergy().getStartDate()!=null?allergy.getAllergy().getStartDate():""%></td>
+									<td><bean:write name="allergy" property="allergy.lifeStageDesc"/> </td>
+									<td><a href="#" title="Annotation" onclick="window.open('../annotation/annotation.jsp?display=<%=annotation_display%>&table_id=<%=String.valueOf(allergy.getAllergyId())%>&demo=<jsp:getProperty name="patient" property="demographicNo"/>','anwin','width=400,height=250');"><img src="../images/notes.gif" border="0"></a></td>
 								</tr>
 
 							</logic:iterate>
