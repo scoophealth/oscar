@@ -65,10 +65,11 @@ public final class RxAddAllergyAction extends Action {
             String type = request.getParameter("type");
             String description = request.getParameter("reactionDescription");
             
-	    String startDate = request.getParameter("startDate");
+            String startDate = request.getParameter("startDate");
             String ageOfOnset = request.getParameter("ageOfOnset");
             String severityOfReaction = request.getParameter("severityOfReaction");
             String onSetOfReaction = request.getParameter("onSetOfReaction");
+            String lifeStage = request.getParameter("lifeStage");
 	    
             RxPatientData.Patient patient = (RxPatientData.Patient)request.getSession().getAttribute("Patient");
             RxAllergyData ald = new RxAllergyData();
@@ -88,6 +89,7 @@ public final class RxAddAllergyAction extends Action {
             allergy.setAgeOfOnset(ageOfOnset);
             allergy.setSeverityOfReaction(severityOfReaction);
             allergy.setOnSetOfReaction(onSetOfReaction);
+            allergy.setLifeStage(lifeStage);
             
             if (type != null && type.equals("13")){          
                 RxDrugData drugData = new RxDrugData();

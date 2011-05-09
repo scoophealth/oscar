@@ -54,8 +54,17 @@ public class RxAllergyData {
         String severityOfReaction = null;
         String onSetOfReaction = null;
         private String regionalIdentifier = null;
+        private String lifeStage = null;
         
-        public Allergy(){
+        public String getLifeStage() {
+        	return lifeStage;
+        }
+
+		public void setLifeStage(String lifeStage) {
+        	this.lifeStage = lifeStage;
+        }
+
+		public Allergy(){
         }
         
         public Allergy(int PickID, String DESCRIPTION, int HICL_SEQNO, int HIC_SEQNO,
@@ -268,6 +277,22 @@ public class RxAllergyData {
             if (retval == null) {retval = "Unknown";}
             return retval;
          }
+        
+        public String getLifeStageDesc(){
+        	String s = getLifeStage();
+        	if("N".equals(s)){
+        		return "Newborn"; //"oscarEncounter.lifestage.opt.newborn"; //  = Newborn: Birth to 28 days
+        	}else if ("I".equals(s)){
+        		return "Infant";  // "oscarEncounter.lifestage.opt.infant"; // = Infant: 29 days to 2 years
+        	}else if ("C".equals(s)){
+        		return "Child"; //"oscarEncounter.lifestage.opt.child"; // = Child: 2 years to 15 years
+        	}else if ("T".equals(s)){
+        		return "Adolescent"; //  "oscarEncounter.lifestage.opt.adolescent"; // = Adolescent: 16 to 17 
+        	}else if ("A".equals(s)){
+        		return "Adult";  //"oscarEncounter.lifestage.opt.adult"; // = Adult: 18 years
+        	}
+        		return "Not Set"; //"oscarEncounter.lifestage.opt.notset"; // = Not Set   		
+        }
         
         
         /**
