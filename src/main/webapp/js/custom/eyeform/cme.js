@@ -152,7 +152,7 @@
        popColumn(ctx + "/oscarEncounter/displayOcularProcedure.do?hC=009999&appointment_no="+appointmentNo,"ocularprocedure","ocularprocedure", "rightNavBar", this);
        addLeftNavDiv("examhistory");	                         
        popColumn(ctx + "/oscarEncounter/displayExaminationHistory.do?hC=009999&appointment_no="+appointmentNo,"examhistory","examhistory", "leftNavBar", this);   
-                   
+       reorderNavBarElements('examhistory','photos');
        notifyIssueUpdate();         
        
        jQuery("form[name='caseManagementEntryForm']").append('<span submit_addon="save_measurements"></span>');

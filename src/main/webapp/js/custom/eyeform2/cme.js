@@ -165,7 +165,11 @@
        //popColumn(ctx + "/CaseManagementView.do?hc=CCDDAA&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=OcularMedication&title="+ocularMedsLabel+"&cmd=OcularMedication&appointment_no="+appointmentNo +"&noheight=true","OcularMedication","OcularMedication", "rightNavBar", this);       
        addRightNavDiv("ocularprocedure");	                         
        popColumn(ctx + "/oscarEncounter/displayOcularProcedure.do?hC=009999&appointment_no="+appointmentNo,"ocularprocedure","ocularprocedure", "rightNavBar", this);
-                   
+       addLeftNavDiv("examhistory");	                         
+       popColumn(ctx + "/oscarEncounter/displayExaminationHistory.do?hC=009999&appointment_no="+appointmentNo,"examhistory","examhistory", "leftNavBar", this);   
+       reorderNavBarElements('examhistory','photos');
+       
+       
        notifyIssueUpdate();         
        
        jQuery("form[name='caseManagementEntryForm']").append('<span submit_addon="save_measurements"></span>');
