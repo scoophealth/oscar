@@ -36,6 +36,10 @@
   String demographic_no = request.getParameter("demographic_no"); 
   DemographicData demoData = new DemographicData();
   String nameAge = demoData.getNameAgeString(demographic_no);
+  DemographicData.Demographic demo = demoData.getDemographic(demographic_no);
+  String hin = demo.getHIN();
+  String mrp = demo.getProviderNo();
+  
   
   PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance();//new PreventionDisplayConfig();
   ArrayList prevList = pdc.getPreventions();
@@ -444,6 +448,8 @@ div.recommendations li {
 		<form name="printFrm" method="post" onsubmit="return onPrint();"
 			action="<rewrite:reWrite jspPage="printPrevention.do"/>">
 		<input type="hidden" name="demographic_no" value="<%=demographic_no%>">
+		<input type="hidden" name="hin" value="<%=hin%>"/>
+		<input type="hidden" name="mrp" value="<%=mrp%>" />
                 <input type="hidden" name="module" value="prevention">
 		<%                 
                  if (!oscar.OscarProperties.getInstance().getBooleanProperty("PREVENTION_CLASSIC_VIEW","yes")){
