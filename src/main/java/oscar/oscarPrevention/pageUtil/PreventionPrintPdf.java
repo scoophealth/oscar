@@ -12,6 +12,7 @@ package oscar.oscarPrevention.pageUtil;
 import java.awt.Color;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -85,11 +86,20 @@ public class PreventionPrintPdf {
         
         //set up document title and header
         String title = "Preventions for " + request.getParameter("nameAge");
+        String hin =  "HIN: "+request.getParameter("hin");
+        String mrp = request.getParameter("mrp");
+        if (mrp != null ){
+        	Properties prop = (Properties) request.getSession().getAttribute("providerBean");
+        	mrp = "MRP: "+prop.getProperty(mrp,"unknown");
+        }
+        
+        
+        
         ClinicData clinicData = new ClinicData();
         clinicData.refreshClinicData();
         String[] clinic = new String[] {clinicData.getClinicName(), clinicData.getClinicAddress(),
         clinicData.getClinicCity() + ", " + clinicData.getClinicProvince(),
-        clinicData.getClinicPostal(), clinicData.getClinicPhone(), title };
+        clinicData.getClinicPostal(), clinicData.getClinicPhone(), title,hin,mrp };
         
         //Header will be printed at top of every page beginning with p2
         Phrase headerPhrase = new Phrase(LEADING, title, font);
