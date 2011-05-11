@@ -45,8 +45,6 @@ public class EctDisplayDiagramAction extends EctDisplayAction {
     
   public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {               	             
 
-	  	String appointmentNo = request.getParameter("appointment_no");
-		
         //set text for lefthand module title
         Dao.setLeftHeading(messages.getMessage(request.getLocale(), "oscarEncounter.LeftNavBar.Diagrams"));
         
@@ -66,8 +64,7 @@ public class EctDisplayDiagramAction extends EctDisplayAction {
         ArrayList<HashMap<String, ? extends Object>> eforms = EFormUtil.listEForms("eform_groups.group_name", "current", "Eye Form", null);
         for(int x=0;x<eforms.size();x++) {
         	HashMap<String, ? extends Object> ht = eforms.get(x);
-        	//url = "popupPage(700,1000, '" + winName + "','" + request.getContextPath() + "/eform/efmformadd_data.jsp?fid=" + ht.get("fid") +"&demographic_no=" + bean.demographicNo + "&appointment=" + appointmentNo + "')";
-        	url = "popupPage(700,1000,'"+winName+"', '"+ request.getContextPath() +"/eform/efmformadd_data.jsp?fid="+ht.get("fid")+"&demographic_no=" + bean.demographicNo + "&appointment=" + appointmentNo+"')";        	               	
+        	url = "popupPage(700,1000,'"+winName+"', '"+ request.getContextPath() +"/eform/efmformadd_data.jsp?fid="+ht.get("fid")+"&demographic_no="+bean.demographicNo+"&appointment="+bean.appointmentNo+"')";
         	Dao.addPopUpUrl(url);
         	Dao.addPopUpText((String)ht.get("formName"));
         }
@@ -100,7 +97,7 @@ public class EctDisplayDiagramAction extends EctDisplayAction {
             item.setLinkTitle(title.toString());
            
             int hash = Math.abs(winName.hashCode());        
-            url = "popupPage(500,900,'" + hash + "','" + request.getContextPath() + "/eform/efmshowform_data.jsp?fdid="+form.get("fdid")+"&parentAjaxId=diagrams" +"'); return false;";        
+            url = "popupPage(500,900,'" + hash + "','" + request.getContextPath() + "/eform/efmshowform_data.jsp?fdid="+form.get("fdid")+"&appointment="+bean.appointmentNo+"&parentAjaxId=diagrams" +"'); return false;";
             item.setURL(url);               
             Dao.addItem(item);                        
         }

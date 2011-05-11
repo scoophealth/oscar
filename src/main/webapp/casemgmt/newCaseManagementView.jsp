@@ -776,7 +776,7 @@ try
 						{
 							String winName = "eforms"+demographicNo;
 							int hash = Math.abs(winName.hashCode());
-							String url = "popupPage(700,800,'"+hash+"','"+request.getContextPath()+"/eform/efmshowform_data.jsp?fdid=";
+							String url = "popupPage(700,800,'"+hash+"','"+request.getContextPath()+"/eform/efmshowform_data.jsp?appointment="+apptNo+"&fdid=";
 		
 							CaseManagementNoteLink noteLink = note.getNoteLink();
 							if (noteLink!=null) url += noteLink.getTableId();

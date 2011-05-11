@@ -70,7 +70,7 @@ public class DatabaseAP {
         while ((tagstart = strb.indexOf("${", tagstart+2)) >= 0) {
             tagend = strb.indexOf("}", tagstart);
             if (strb.substring(tagstart+2, tagend).equals(name)) {
-                strb.replace(tagstart, tagend+1, var);
+                strb.replace(tagstart, tagend+1, var==null?"":var);
             }
         }
         return strb.toString();

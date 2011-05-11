@@ -38,11 +38,13 @@ import org.apache.commons.digester.Digester;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.eform.data.DatabaseAP;
+import oscar.eform.data.EForm;
 
 public class EFormLoader {
     static private EFormLoader _instance;
     static private Vector eFormAPs = new Vector();
     static private String marker = "oscarDB";
+    static private String opener = "oscarOPEN";
     
     static public EFormLoader getInstance() {
         if (_instance == null) {
@@ -96,6 +98,33 @@ public class EFormLoader {
      
     public static String getMarker() { return marker; }
     
+    public static String getOpener() { return opener; }
+
+    public static String getOpenEform(String url, String fdid, String fname, String field, EForm efm) {
+        String fid = EFormUtil.getEFormIdByName(fname);
+        if (EFormUtil.blank(fid)) return "alert('Eform does not exist ["+fname+"]');";
+        if (EFormUtil.blank(url)) return null;
+        if (EFormUtil.blank(field)) return null;
+
+        String providerNo = efm.getProviderNo();
+        String demographicNo = efm.getDemographicNo();
+        String formId = efm.getFid();
+        String appointmentNo = efm.getAppointmentNo();
+
+        if (url.contains("efmformadd_data.jsp")) { //whole new eform
+            url += "?fid="+fid+"&demographic_no="+demographicNo+"&appointment="+appointmentNo;
+        } else if (!EFormUtil.blank(fdid)) { //filled eform, eform already linked
+            url += "?fdid="+fdid+"&appointment="+appointmentNo;
+        } else if (demographicNo.equals("-1")) { //eform viewed in admin
+            url += "?fid="+fid;
+        } else { //filled eform, but create new eform link
+            url = url.replaceFirst("efmshowform_data.jsp", "efmformadd_data.jsp");
+            url += "?fid="+fid+"&demographic_no="+demographicNo+"&appointment="+appointmentNo;
+        }
+        String link = "&eform_link="+providerNo+"_"+demographicNo+"_"+formId+"_"+field;
+        return "window.open('"+url+link+"');";
+    }
+
     public static DatabaseAP getAP(String apName) {
         //returns he DatabaseAP corresponding to the ap name
         DatabaseAP curAP = null;
@@ -144,5 +173,4 @@ public class EFormLoader {
           fs.close();
       } catch (Exception e) { MiscUtils.getLogger().error("Error", e); }
     }
-    
  }

@@ -35,6 +35,7 @@ import java.util.Enumeration;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
@@ -59,7 +60,7 @@ public class AddEFormAction extends Action {
     public ActionForward execute(ActionMapping mapping, ActionForm form,
                                 HttpServletRequest request, HttpServletResponse response) {
          logger.debug("==================SAVING ==============");
-         
+         HttpSession se = request.getSession();
          Enumeration paramNamesE = request.getParameterNames();
          //for each name="fieldname" value="myval"
          ArrayList paramNames = new ArrayList();  //holds "fieldname, ...."
@@ -67,6 +68,7 @@ public class AddEFormAction extends Action {
          String fid = request.getParameter("efmfid");
          String demographic_no = request.getParameter("efmdemographic_no");
          String provider_no = request.getParameter("efmprovider_no");
+         String eform_link = request.getParameter("eform_link");
          String subject = request.getParameter("subject");
          if (subject == null) subject="";
          String curField = "";
@@ -77,11 +79,25 @@ public class AddEFormAction extends Action {
              paramNames.add(curField);
              paramValues.add(request.getParameter(curField));
          }
-         //----names parsed
+
          EForm curForm = new EForm(fid, demographic_no, provider_no);
+
+         //add eform_link value from session attribute
+         ArrayList<String> openerNames = curForm.getOpenerNames();
+         ArrayList<String> openerValues = new ArrayList<String>();
+         for (String name : openerNames) {
+             String lnk = provider_no+"_"+demographic_no+"_"+fid+"_"+name;
+             String val = (String)se.getAttribute(lnk);
+             openerValues.add(val);
+             if (val!=null) se.removeAttribute(lnk);
+         }
+
+         //----names parsed
          ActionMessages errors = curForm.setMeasurements(paramNames, paramValues);
          curForm.setFormSubject(subject);
          curForm.setValues(paramNames, paramValues);
+         if (!openerNames.isEmpty()) curForm.setOpenerValues(openerNames, openerValues);
+	 if (eform_link!=null) curForm.setEformLink(eform_link);
          curForm.setImagePath();
          curForm.setAction();
          curForm.setNowDateTime();
@@ -93,8 +109,8 @@ public class AddEFormAction extends Action {
          }
 
          //Check if eform same as previous, if same -> not saved
-         String prev_fdid = (String)request.getSession().getAttribute("eform_data_id");
-         request.getSession().removeAttribute("eform_data_id");
+         String prev_fdid = (String)se.getAttribute("eform_data_id");
+         se.removeAttribute("eform_data_id");
          boolean sameform = false;
          if (StringUtils.filled(prev_fdid)) {
              EForm prevForm = new EForm(prev_fdid);
@@ -109,9 +125,14 @@ public class AddEFormAction extends Action {
              String fdid = eFormData.getId().toString();
              
              EFormUtil.addEFormValues(paramNames, paramValues, new Integer(fdid), new Integer(fid), new Integer(demographic_no)); //adds parsed values
-             
+
+             //post fdid to {eform_link} attribute
+             if (eform_link!=null) {
+                 se.setAttribute(eform_link, fdid);
+             }
+
              //write template message to echart
-             String program_no = new EctProgram(request.getSession()).getProgram(provider_no);
+             String program_no = new EctProgram(se).getProgram(provider_no);
              String path = request.getRequestURL().toString();
              String uri = request.getRequestURI();
              path = path.substring(0, path.indexOf(uri));
@@ -122,7 +143,7 @@ public class AddEFormAction extends Action {
          else {
              logger.debug("Warning! Form HTML exactly the same, new form data not saved.");
          }
-
+         
          return(mapping.findForward("close"));
     }
 

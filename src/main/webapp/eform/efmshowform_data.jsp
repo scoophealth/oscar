@@ -32,16 +32,22 @@
   String id = request.getParameter("fid");  
   if (id == null) {  // form exists in patient
       id = request.getParameter("fdid");
+      String appointmentNo = request.getParameter("appointment");
+      String eformLink = request.getParameter("eform_link");
+
       EForm eForm = new EForm(id);
-	  eForm.setContextPath(request.getContextPath());
+      eForm.setContextPath(request.getContextPath());
+      eForm.setOscarOPEN(request.getRequestURI());
+      if ( appointmentNo != null ) eForm.setAppointmentNo(appointmentNo);
+      if ( eformLink != null ) eForm.setEformLink(eformLink);
+
       String parentAjaxId = request.getParameter("parentAjaxId");
       if( parentAjaxId != null ) eForm.setAction(parentAjaxId);
-
-      session.setAttribute("eform_data_id", id);
       out.print(eForm.getFormHtml());
   } else {  //if form is viewed from admin screen
-      EForm eForm = new EForm(id, "1"); //form cannot be submitted, demographic_no "1" doesn't matter
-	  eForm.setContextPath(request.getContextPath());
+      EForm eForm = new EForm(id, "-1"); //form cannot be submitted, demographic_no "-1" indicate this specialty
+      eForm.setContextPath(request.getContextPath());
+      eForm.setOscarOPEN(request.getRequestURI());
       eForm.setImagePath();
       out.print(eForm.getFormHtml());
   }
