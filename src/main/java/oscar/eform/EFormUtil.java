@@ -604,10 +604,13 @@ public class EFormUtil {
 			if (belong.equalsIgnoreCase("patient")) docOwner = getInfo("docowner", template, eForm.getDemographicNo());
 			String docText = getContent(template);
 			docText = putTemplateEformHtml(eForm.getFormHtml(), docText);
-			EDoc edoc = new EDoc(docDesc, "forms", "html", docText, docOwner, eForm.getProviderNo(), "", 'H', eForm.getFormDate().toString(), "", null, belong, docOwner);
-			edoc.setContentType("text/html");
-			edoc.setDocPublic("0");
-			EDocUtil.addDocumentSQL(edoc);
+
+                        if (NumberUtils.isNumber(docOwner)) {
+                            EDoc edoc = new EDoc(docDesc,"forms","html",docText,docOwner,eForm.getProviderNo(),"",'H',eForm.getFormDate().toString(),"",null,belong,docOwner);
+                            edoc.setContentType("text/html");
+                            edoc.setDocPublic("0");
+                            EDocUtil.addDocumentSQL(edoc);
+                        }
 		}
 
 		// write to message
@@ -642,11 +645,11 @@ public class EFormUtil {
 		s = s.trim();
 		if (blank(s)) return s;
 
-		if (s.charAt(0) == '"' || s.charAt(0) == '\'') s = s.substring(1);
+                if (s.charAt(0)=='"' && s.charAt(s.length()-1)=='"') s = s.substring(1, s.length()-1);
 		if (blank(s)) return s;
 
-		if (s.charAt(s.length() - 1) == '"' || s.charAt(s.length() - 1) == '\'') s = s.substring(0, s.length() - 1);
-		return s;
+                if (s.charAt(0)=='\'' && s.charAt(s.length()-1)=='\'') s = s.substring(1, s.length()-1);
+		return s.trim();
 	}
 
 	public static String getAttribute(String key, String htmlTag) {
@@ -663,7 +666,7 @@ public class EFormUtil {
 		int keysplit = m.group().indexOf("=");
 		if (!startsWith && keysplit >= 0) value = m.group().substring(keysplit + 1, m.group().length());
 
-		return removeQuotes(value.trim()).trim();
+		return value.trim();
 	}
 
 	public static int getAttributePos(String key, String htmlTag) {
@@ -674,6 +677,10 @@ public class EFormUtil {
 		if (m == null) return pos;
 
 		return m.start();
+	}
+
+	public static boolean blank(String s) {
+		return (s == null || s.trim().equals(""));
 	}
 
 	// ------------------private
@@ -1009,10 +1016,6 @@ public class EFormUtil {
 			}
 		}
 		return sentWho;
-	}
-
-	private static boolean blank(String s) {
-		return (s == null || s.trim().equals(""));
 	}
 
 }

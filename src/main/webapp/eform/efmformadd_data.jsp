@@ -53,7 +53,10 @@ function hideDiv() {
   
   String provider_no = (String) session.getValue("user");
   String demographic_no = request.getParameter("demographic_no"); 
+  String appointment_no = request.getParameter("appointment");
   String fid = request.getParameter("fid");
+  String eform_link = request.getParameter("eform_link");
+  
   EForm thisEForm = null;
   if (fid == null || demographic_no == null) {
       //if the info is in the request attribute
@@ -64,10 +67,12 @@ function hideDiv() {
       thisEForm.setProviderNo(provider_no);  //needs provider for the action
   }
 
-  thisEForm.setAppointmentNo(request.getParameter("appointment"));
+  if (appointment_no!=null) thisEForm.setAppointmentNo(appointment_no);
+  if (eform_link!=null) thisEForm.setEformLink(eform_link);
   thisEForm.setContextPath(request.getContextPath());
   thisEForm.setImagePath();
   thisEForm.setDatabaseAPs();
+  thisEForm.setOscarOPEN(request.getRequestURI());
   thisEForm.setAction();
   out.print(thisEForm.getFormHtml());
 %>

@@ -34,15 +34,14 @@
    
    if (!window.opener.closed) {
         var parentAjaxId = "<%=request.getParameter("parentAjaxId")%>";
-        
         if( window.opener. writeToEncounterNote ) {
-        	window.opener.reloadNav(parentAjaxId);
+            window.opener.reloadNav(parentAjaxId);
             //window.opener.document.forms['encForm'].elements['reloadDiv'].value = parentAjaxId;
-            //window.opener.updateNeeded = true;            
-            ;
+            //window.opener.updateNeeded = true;
+        } else {
+            if (window.opener.location.href.indexOf("efmpatientformlist.jsp")>=0)
+                window.opener.location.reload();
         }
-        else        
-            window.opener.location.reload();
         window.opener.focus();
         window.close();
     }

@@ -44,7 +44,6 @@
 		groupView = "";
 	}
 
-	String apptProvider = request.getParameter("apptProvider");
 	String appointment = request.getParameter("appointment");
 	String parentAjaxId = request.getParameter("parentAjaxId");
 
@@ -128,22 +127,22 @@ function updateAjax() {
 			if (country.equals("BR"))
 				{
 		%> <a
-			href="../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&apptProvider=<%=apptProvider%>&appointment=<%=appointment%>&displaymode=edit&dboperation=search_detail_ptbr"><bean:message
+			href="../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&appointment=<%=appointment%>&displaymode=edit&dboperation=search_detail_ptbr"><bean:message
 			key="global.btnBack" /> &nbsp;</a> <%
  	}
  		else
  		{
  %> <a
-			href="../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&apptProvider=<%=apptProvider%>&appointment=<%=appointment%>&displaymode=edit&dboperation=search_detail"><bean:message
+			href="../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&appointment=<%=appointment%>&displaymode=edit&dboperation=search_detail"><bean:message
 			key="global.btnBack" /> &nbsp;</a> <%
  	}
  %> <br>
-		<a href="efmpatientformlist.jsp?demographic_no=<%=demographic_no%>&apptProvider=<%=apptProvider%>&appointment=<%=appointment%>&parentAjaxId=<%=parentAjaxId%>" class="current">
+		<a href="efmpatientformlist.jsp?demographic_no=<%=demographic_no%>&appointment=<%=appointment%>&parentAjaxId=<%=parentAjaxId%>" class="current">
 			<bean:message key="eform.calldeletedformdata.btnGoToForm" />
 		</a>
 		<br />
 		<a
-			href="efmpatientformlistdeleted.jsp?demographic_no=<%=demographic_no%>&apptProvider=<%=apptProvider%>&appointment=<%=appointment%>&parentAjaxId=<%=parentAjaxId%>"><bean:message
+			href="efmpatientformlistdeleted.jsp?demographic_no=<%=demographic_no%>&appointment=<%=appointment%>&parentAjaxId=<%=parentAjaxId%>"><bean:message
 			key="eform.showmyform.btnDeleted" /> </a> <security:oscarSec
 			roleName="<%=roleName$%>" objectName="_admin,_admin.eform" rights="r"
 			reverse="<%=false%>">
@@ -211,7 +210,7 @@ function updateAjax() {
 							}
 						%>
 						<td><a href="#"
-							ONCLICK="popupPage('efmshowform_data.jsp?fdid=<%=curform.get("fdid")%>', '<%="FormP" + i%>'); return false;"
+							ONCLICK="popupPage('efmshowform_data.jsp?fdid=<%=curform.get("fdid")%>&appointment=<%=appointment%>', '<%="FormP" + i%>'); return false;"
 							TITLE="<bean:message key="eform.showmyform.msgViewFrm"/>"
 							onmouseover="window.status='<bean:message key="eform.showmyform.msgViewFrm"/>'; return true"><%=curform.get("formName")%></a></td>
 						<td><%=curform.get("formSubject")%></td>
