@@ -337,11 +337,18 @@ function formatPhoneNum() {
         document.updatedelete.phone2.value = document.updatedelete.phone2.value.substring(0,3) + "-" + document.updatedelete.phone2.value.substring(4,7) + "-" + document.updatedelete.phone2.value.substring(7);
     }
 }
+
 function checkONReferralNo() {
+	<%
+		String skip = oscar.OscarProperties.getInstance().getProperty("SKIP_REFERRAL_NO_CHECK","false");
+		if(!skip.equals("true")) {
+	%>
   var referralNo = document.updatedelete.r_doctor_ohip.value ;
   if (document.updatedelete.hc_type.value == 'ON' && referralNo.length > 0 && referralNo.length != 6) {
     alert("<bean:message key="demographic.demographiceditdemographic.msgWrongReferral"/>") ;
   }
+  
+  <% } %>
 }
 
 
