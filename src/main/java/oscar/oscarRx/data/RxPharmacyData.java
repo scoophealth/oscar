@@ -88,7 +88,7 @@ public class RxPharmacyData {
     * @param email
     * @param notes
     */   
-   synchronized public void addPharmacy(String name,String address,String city,String province,String postalCode, String phone1, String phone2, String fax, String email,String notes){
+   synchronized public void addPharmacy(String name,String address,String city,String province,String postalCode, String phone1, String phone2, String fax, String email,String serviceLocationIdentifier, String notes){
       try {            
             
             ResultSet rs;
@@ -101,7 +101,7 @@ public class RxPharmacyData {
             id++;
             String ID = Integer.toString(id);
             
-            updatePharmacy(ID,name,address,city,province,postalCode,phone1,phone2, fax,email,notes);
+            updatePharmacy(ID,name,address,city,province,postalCode,phone1,phone2, fax,email, serviceLocationIdentifier, notes);
                                     
             rs.close();
         } catch (SQLException e) {
@@ -125,11 +125,11 @@ public class RxPharmacyData {
     * @param email
     * @param notes
     */   
-   public void updatePharmacy(String ID,String name,String address,String city,String province,String postalCode, String phone1, String phone2, String fax, String email,String notes){
+   public void updatePharmacy(String ID,String name,String address,String city,String province,String postalCode, String phone1, String phone2, String fax, String email, String serviceLocationIdentifier, String notes){
       try {           
                         
             String sql = "Insert into  pharmacyInfo "
-            +" (ID, name, address, city, province, postalCode, phone1, phone2, fax, email, notes, status, addDate ) "
+            +" (ID, name, address, city, province, postalCode, phone1, phone2, fax, email, serviceLocationIdentifier, notes, status, addDate) "
             +" values "
             +"( '"+ID+"',"
             +" '"+name+"',"
@@ -141,6 +141,7 @@ public class RxPharmacyData {
             +" '"+phone2+"', "
             +" '"+fax+"',"
             +" '"+email+"', "
+            +" '"+serviceLocationIdentifier+"', "       
             +" '"+notes+"', "
             +" '1', "
             +" now() )";
@@ -295,8 +296,9 @@ public class RxPharmacyData {
       public String    postalCode = null;                                                              
       public String    phone1 = null;                                                              
       public String    phone2 = null;                                                              
-      public String    fax = null;                                                              
-      public String    email = null;                                                              
+      public String    fax = null; 
+      public String    email = null;
+      public String    serviceLocationIdentifier = null;
       public String    notes = null;
       
       public Pharmacy(){
@@ -313,7 +315,8 @@ public class RxPharmacyData {
          phone1     = oscar.Misc.getString(rs,"phone1");                                        
          phone2     = oscar.Misc.getString(rs,"phone2");                                                
          fax        = oscar.Misc.getString(rs,"fax");                                             
-         email      = oscar.Misc.getString(rs,"email");                                                     
+         email      = oscar.Misc.getString(rs,"email");
+         serviceLocationIdentifier = oscar.Misc.getString(rs,"serviceLocationIdentifier");
          notes      = oscar.Misc.getString(rs,"notes");
          
       }

@@ -49,7 +49,8 @@ public final class RxManagePharmacyForm extends ActionForm {
         String    phone1 = null;                                                              
         String    phone2 = null;                                                              
         String    fax = null;                                                              
-        String    email = null;                                                              
+        String    email = null;
+        String    serviceLocationIdentifier = null;
         String    notes = null;
    
    /** Creates a new instance of RxManagePharmacyForm */
@@ -230,6 +231,23 @@ public final class RxManagePharmacyForm extends ActionForm {
     */
    public void setEmail(java.lang.String email) {
       this.email = email;
+   }
+   
+   
+    /**
+    * Getter for service location identifier.
+    * @return Value of service location identifier.
+    */
+   public java.lang.String getServiceLocationIdentifier() {
+      return serviceLocationIdentifier;
+   }
+   
+   /**
+    * Setter for Targeted Dispensing Facility.
+    * @param dispenseFacility New value of Targeted Dispensing Facility.
+    */
+   public void setServiceLocationIdentifier(java.lang.String serviceLocationIdentifier) {
+      this.serviceLocationIdentifier = serviceLocationIdentifier;
    }
    
    /**
