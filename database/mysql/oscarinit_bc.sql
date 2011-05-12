@@ -132,7 +132,7 @@ CREATE TABLE billingreferral (
   city varchar(15) default NULL,
   province varchar(20) default NULL,
   postal varchar(10) default NULL,
-  phone varchar(16) default NULL,
+  phone varchar(25) default NULL,
   fax varchar(16) default NULL,
   PRIMARY KEY  (billingreferral_no),
   KEY referral_no (referral_no)
