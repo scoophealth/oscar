@@ -278,7 +278,7 @@ public class JdbcBillingRAImpl {
 								+ servicecode + "','" + serviceno + "','" + newhin + "','" + amountsubmit + "','"
 								+ amountpaysign + amountpay + "','" + servicedate + "','" + explain + "','" + billtype + "','" + claimno
 								+ "')";
-						//int rowsAffected3 = dbObj.saveBillingRecord(sql);
+						int rowsAffected3 = dbObj.saveBillingRecord(sql);
 						// {"save_radt", "insert into radetail
 						// values('\\N',?,?,?,?,?,?,?,?,?,?,?)"},
 						// int rowsAffected3 =
