@@ -109,6 +109,7 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
                                frm.setPhone2(ph.phone2);
                                frm.setPostalCode(ph.postalCode);
                                frm.setProvince(ph.province);
+                               frm.setServiceLocationIdentifier(ph.serviceLocationIdentifier);
                             }%>
 					<table>
 						<tr>
@@ -160,6 +161,12 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
 							:</td>
 							<td><html:text property="email" /></td>
 						</tr>
+                                                <tr>
+                                                    <td><bean:message key="ManagePharmacy.txtfld.label.serviceLocationIdentifier" /> :
+                                                    </td>
+                                                    <td><html:text property="serviceLocationIdentifier" /></td>
+                                                </tr>
+                                                
 						<tr>
 							<td colspan="2"><bean:message
 								key="ManagePharmacy.txtfld.label.notes" /> :</td>
