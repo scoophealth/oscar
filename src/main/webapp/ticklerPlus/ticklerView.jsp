@@ -67,9 +67,18 @@
 		Provider assignee = (Provider)temp.getAssignee();
 		if(assignee != null) {
 			assignee_id = assignee.getProviderNo();
-			if (!((java.util.List)request.getAttribute("providers")).contains(assignee)) {
-				inactive_name = assignee.getLastName() + "," + assignee.getFirstName();
+			@SuppressWarnings("unchecked")
+			java.util.List<Provider> providers = (java.util.List<Provider>)request.getAttribute("providers");
+			boolean found=false;
+			for(Provider p:providers) {
+				if(p.getProviderNo().equals(assignee.getProviderNo())) {
+					found=true;
+					break;
+				}
 			}
+			if(!found) {
+				inactive_name = assignee.getLastName() + "," + assignee.getFirstName();
+			}						
 		}
 
 		switch(temp.getStatus()) {
