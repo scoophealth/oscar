@@ -56,6 +56,7 @@ List<String> abnormals=(List<String>)request.getAttribute("abnormals");
 Integer totalNumDocs=(Integer)request.getAttribute("totalNumDocs");
 String curUser_no = (String) session.getAttribute("user");
 final String noAckStatus="N";
+String ctx = request.getContextPath();
 %>
 
 
@@ -206,10 +207,10 @@ Event.observe(window,'scroll',function(){//check for scrolling
                                 <input type="hidden" name="status" value="<%= ackStatus %>">
                                 <input type="hidden" name="selectedProviders">
                                 <% if (demographicNo == null) { %>
-                                    <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnSearch"/>" onClick="window.location='Search.jsp?providerNo=<%= providerNo %>'">
+                                    <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnSearch"/>" onClick="window.location='<%=ctx%>/oscarMDS/Search.jsp?providerNo=<%= providerNo %>'">
                                 <% } %>
                                 <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnClose"/>" onClick="wrapUp()">
-                                <input type="button" id="topFRBtn" class="smallButton" value="Forwarding Rules" onClick="javascript:reportWindow('ForwardingRules.jsp?providerNo=<%= providerNo %>')">
+                                <input type="button" id="topFRBtn" class="smallButton" value="Forwarding Rules" onClick="javascript:reportWindow('<%=ctx%>/oscarMDS/ForwardingRules.jsp?providerNo=<%= providerNo %>')">
                                 <% if (demographicNo == null && request.getParameter("fname") != null) { %>
                                     <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnDefaultView"/>" onClick="window.location='../dms/inboxManage.do?method=prepareForIndexPage&providerNo=<%= providerNo %>'">
                                 <% } %>
@@ -219,7 +220,7 @@ Event.observe(window,'scroll',function(){//check for scrolling
                                         <input id="topFileBtn" type="button" class="smallButton" value="File" onclick="submitFile()"/>
                                     <% }
                                 }%>
-                              <input type="checkbox" name="documentCB" id="documentCB" checked onclick="syncCB(this);checkBox();" ><span name="cbText" class="categoryCB"><bean:message key="inboxmanager.documents"/></span>
+                              	<input type="checkbox" name="documentCB" id="documentCB" checked onclick="syncCB(this);checkBox();" ><span name="cbText" class="categoryCB"><bean:message key="inboxmanager.documents"/></span>
                                 <input type="checkbox" onclick="syncCB(this);checkBox();" checked id="hl7CB" name="hl7CB"><span name="cbText" class="categoryCB"><bean:message key="global.hl7"/></span>
                                 <input type="checkbox" onclick="syncCB(this);checkBox();" id="normalCB"  name="normalCB"><span name="cbText" class="categoryCB"><bean:message key="global.normal"/></span>
                                 <input type="checkbox" id="abnormalCB" onclick="syncCB(this);checkBox();" name="abnormalCB"><span name="cbText" class="categoryCB"><bean:message key="global.abnormal"/></span>
@@ -282,7 +283,7 @@ Event.observe(window,'scroll',function(){//check for scrolling
                                 boolean notAssignedDoc=false;
                             List doclabid_seq=new ArrayList();
                             int number_of_rows_per_page=20;
-                            int totalNoPages=labdocs.size()/number_of_rows_per_page;
+                            double totalNoPages=Math.ceil(labdocs.size()/number_of_rows_per_page);
                             if(labdocs.size()%number_of_rows_per_page!=0)
                                 totalNoPages+=1;
                             int total_row_index=labdocs.size()-1;
@@ -317,16 +318,28 @@ Event.observe(window,'scroll',function(){//check for scrolling
                                     discipline="";
                                 MiscUtils.getLogger().debug("result.isAbnormal()="+result.isAbnormal());
                                 doclabid_seq.add(segmentID);
+                                String classname = "";
+                                if( assignedDoc ) {
+                                	classname = "assignedDoc";                                	
+                                }
+                                else if( notAssignedDoc ) {
+                                	classname = "notAssignedDoc";
+                                }
+                                else {
+                                	classname = result.isAbnormal() ? "AbnormalRes" : "NormalRes";
+                                }
                                 %>
                         
-                                <tr id="row<%=i%>" style="display:none;" bgcolor="<%=bgcolor%>" <%if(assignedDoc){%> name="assignedDoc" <%} else if(notAssignedDoc){%> name="notAssignedDoc" <%} else{%> name="HL7lab" <%}%> class="<%= (result.isAbnormal() ? "AbnormalRes" : "NormalRes" ) %>">
+                                <tr id="row<%=i%>" style="display:none;" bgcolor="<%=bgcolor%>" class="<%=classname %>">
                                 <td nowrap>
-                                    <input type="hidden" id="totalNumberRow" value="<%=total_row_index+1%>">
-                                    <input type="checkbox" name="flaggedLabs" value="<%=segmentID%>">
+                                	<input type="checkbox" name="flaggedLabs" value="<%=segmentID%>">
+                                	<%=result.getHealthNumber() %>
+                                    <input type="hidden" id="totalNumberRow" value="<%=total_row_index+1%>"></td>
+                                    
                                     <input type="hidden" name="labType<%=segmentID+result.labType%>" value="<%=result.labType%>"/>
                                     <input type="hidden" name="ackStatus" value="<%= result.isMatchedToPatient() %>" />
                                     <input type="hidden" name="patientName" value="<%= result.patientName %>"/>
-                                    <%=result.getHealthNumber() %>
+                                    
                                 </td>
                                 <td nowrap>
                                     <% if ( result.isMDS() ){ %>
@@ -386,7 +399,7 @@ Event.observe(window,'scroll',function(){//check for scrolling
                                 <td nowrap>
                                     <% int multiLabCount = result.getMultipleAckCount(); %>
                                     <%= result.getAckCount() %>&#160<% if ( multiLabCount >= 0 ) { %>(<%= result.getMultipleAckCount() %>)<%}%>
-                                </td>
+                                </td> 
                             </tr>                         
                          <% } 
 
@@ -404,10 +417,10 @@ Event.observe(window,'scroll',function(){//check for scrolling
                                         <tr>
                                             <td align="left" valign="middle" width="30%">
                                                 <% if (demographicNo == null) { %>
-                                                    <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnSearch"/>" onClick="window.location='Search.jsp?providerNo=<%= providerNo %>'">
+                                                    <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnSearch"/>" onClick="window.location='<%=ctx%>/oscarMDS/Search.jsp?providerNo=<%= providerNo %>'">
                                                 <% } %>
                                                 <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnClose"/>" onClick="wrapUp()">
-                                                <input type="button" class="smallButton" value="Forwarding Rules" onClick="javascript:reportWindow('ForwardingRules.jsp?providerNo=<%= providerNo %>')">
+                                                <input type="button" class="smallButton" value="Forwarding Rules" onClick="javascript:reportWindow('<%=ctx%>/oscarMDS/ForwardingRules.jsp?providerNo=<%= providerNo %>')">
                                                 <% if (demographicNo == null && request.getParameter("fname") != null) { %>
                                                     <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnDefaultView"/>" onClick="window.location='../dms/inboxManage.do?method=prepareForIndexPage&providerNo=<%= providerNo %>'">
                                                 <% } %>
@@ -470,7 +483,7 @@ Event.observe(window,'scroll',function(){//check for scrolling
                                                      <col width="120">
                                                      <col width="950">
                 <tr oldclass="MainTableTopRow">
-                <td class="MainTableTopRowRightColumn" colspan="10" align="left">
+                <td style="border-right: 2px solid #A9A9A9; border-top: 2px solid #A9A9A9; background-color: #003399;"  colspan="10" align="left">
                  <table width="100%">
                     <tr>
                         <td align="center" colspan="2" class="Nav">
@@ -507,7 +520,7 @@ Event.observe(window,'scroll',function(){//check for scrolling
                                 <input type="hidden" name="status" value="<%= ackStatus %>">
                                 <input type="hidden" name="selectedProviders">
                                 <% if (demographicNo == null) { %>
-                                    <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnSearch"/>" onClick="window.location='Search.jsp?providerNo=<%= providerNo %>'">
+                                    <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnSearch"/>" onClick="window.location='<%=ctx%>/oscarMDS/Search.jsp?providerNo=<%= providerNo %>'">
                                 <% } %>
                                 <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnClose"/>" onClick="wrapUp()">
 
@@ -599,7 +612,7 @@ if(totalDocs>0||totalHL7>0){%><br><%}
                     </dt></dl>
              </td>
              <td style="width:80%;height:100%;background-color: #E0E1FF">
-                 <div id="docViews" style="width:100%;height:100%;overflow:auto;"></div>
+                 <div id="docViews" style="width:100%;height:100%;"></div>
              </td>
           </tr>
      </table>
