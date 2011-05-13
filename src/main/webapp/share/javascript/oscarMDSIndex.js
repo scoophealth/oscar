@@ -658,7 +658,7 @@ function f_filterResults(n_win, n_docel, n_body) {
                                var eles;
                                var numberPerPage=20;
                                if(type=='D'){
-                                   eles=document.getElementsByName('assignedDoc');
+                                   eles=document.getElementsByClassName('assignedDoc');
                                    var length=eles.length;
                                    var startindex=(parseInt(page)-1)*numberPerPage;
                                    var endindex=startindex+numberPerPage-1;
@@ -681,13 +681,15 @@ function f_filterResults(n_win, n_docel, n_body) {
                                        ele.setStyle({display:'none'});
                                    }
                                    //hide all labs
-                                   eles=document.getElementsByName('HL7lab');
+                                   eles=document.getElementsByClassName('NormalRes');
+                                   eles = eles.concat(document.getElementsByClassName('AbnormalRes')); 
                                    for(i=0;i<eles.length;i++){
                                         var ele=eles[i];
                                         ele.setStyle({display:'none'});
                                    }
                                }else if (type=='H'){
-                                   eles=document.getElementsByName('HL7lab');
+                            	   eles=document.getElementsByClassName('NormalRes');
+                                   eles = eles.concat(document.getElementsByClassName('AbnormalRes')); 
                                    var length=eles.length;
                                    var startindex=(parseInt(page)-1)*numberPerPage;
                                    var endindex=startindex+numberPerPage-1;
@@ -710,7 +712,7 @@ function f_filterResults(n_win, n_docel, n_body) {
                                        ele.setStyle({display:'none'});
                                    }
                                    //hide all labs
-                                   eles=document.getElementsByName('assignedDoc');
+                                   eles=document.getElementsByClassName('assignedDoc');
                                    for(i=0;i<eles.length;i++){
                                         var ele=eles[i];
                                         ele.setStyle({display:'none'});
@@ -805,9 +807,12 @@ function f_filterResults(n_win, n_docel, n_body) {
                     return new Array();
                 }
                 function setTotalRows(){
-                               var ds=document.getElementsByName('assignedDoc');
-                               var ls=document.getElementsByName('HL7lab');
-                               var nd=document.getElementsByName('notAssignedDoc');
+                               var ds=document.getElementsByClassName('assignedDoc');
+                               var ls=document.getElementsByClassName('NormalRes');
+                               ls = ls.concat(document.getElementsByClassName('AbnormalRes'));
+                               
+                               var nd=document.getElementsByClassName('notAssignedDoc');
+                               
                                for(var i=0;i<ds.length;i++){
                                    var ele=ds[i];
                                    total_rows.push(ele.id);
@@ -821,15 +826,17 @@ function f_filterResults(n_win, n_docel, n_body) {
                                    total_rows.push(ele.id);
                                }
                                total_rows=sortRowId(uniqueArray(total_rows));
+                               
                                current_category=new Array();
-                                                        current_category[0]=document.getElementsByName('assignedDoc');
-                                                        current_category[1]=document.getElementsByName('HL7lab');
+                                                        current_category[0]=document.getElementsByClassName('assignedDoc');
+                                                        current_category[1]=ls;
                                                         current_category[2]=filterAb_normal('normal');
                                                         current_category[3]=filterAb_normal('abnormal');
-                                                        current_category[4]=document.getElementsByName('notAssignedDoc');
+                                                        current_category[4]=document.getElementsByClassName('notAssignedDoc');
                                                         
                            }
                            function checkBox(){
+                        	  
                                                     //oscarLog("in checkBox");
                                                     var checkedArray=new Array();
                                                     if($('documentCB').checked==1){
@@ -849,6 +856,7 @@ function f_filterResults(n_win, n_docel, n_body) {
                                                     }
                                                     //console.log('length='+checkedArray.length);
                                          if(checkedArray.length==5){//show all
+                                        	 
                                                         var endindex= number_of_row_per_page-1;
                                                         if(endindex>=total_rows.length)
                                                             endindex=total_rows.length-1;
@@ -856,7 +864,7 @@ function f_filterResults(n_win, n_docel, n_body) {
                                                         //show all
                                                         for(var i=0;i<endindex+1;i++){
                                                             var id=total_rows[i];
-                                                            if($(id)){
+                                                            if($(id)){                                                            	
                                                                 $(id).show();
                                                             }
                                                         }
@@ -869,11 +877,13 @@ function f_filterResults(n_win, n_docel, n_body) {
                                                         current_numberofpages=Math.ceil(total_rows.length/number_of_row_per_page);
                                                         initializeNavigation();
                                                         current_category=new Array();
-                                                        current_category[0]=document.getElementsByName('assignedDoc');
-                                                        current_category[1]=document.getElementsByName('HL7lab');
+                                                        current_category[0]=document.getElementsByClassName('assignedDoc');
+                                                        var labs=document.getElementsByClassName('NormalRes');
+                                                        labs = labs.concat(document.getElementsByClassName('AbnormalRes')); 
+                                                        current_category[1]=labs;
                                                         current_category[2]=filterAb_normal('normal');
                                                         current_category[3]=filterAb_normal('abnormal');
-                                                        current_category[4]=document.getElementsByName('notAssignedDoc');
+                                                        current_category[4]=document.getElementsByClassName('notAssignedDoc');
 //                                                        console.log(current_category[0]);
 //                                                        console.log(current_category[1]);
 //                                                        console.log(current_category[2]);
@@ -887,11 +897,12 @@ function f_filterResults(n_win, n_docel, n_body) {
                                                         var type=checkedArray[i];
 
                                                         if(type=='assignedDoc'){
-                                                            var docs=document.getElementsByName('assignedDoc');
+                                                            var docs=document.getElementsByClassName('assignedDoc');                                                            
                                                             eles.push(docs);
                                                         }
-                                                        else if(type=='hl7'){
-                                                            var labs=document.getElementsByName('HL7lab');
+                                                        else if(type=='hl7'){                                                        	
+                                                            var labs=document.getElementsByClassName('NormalRes');
+                                                            labs = labs.concat(document.getElementsByClassName('AbnormalRes'));                                                            
                                                             eles.push(labs);
                                                         }
                                                         else if(type=='normal'){
@@ -903,7 +914,7 @@ function f_filterResults(n_win, n_docel, n_body) {
                                                             eles.push(abn);
                                                         }
                                                         else if(type=='notAssignedDoc'){
-                                                            var nd=document.getElementsByName('notAssignedDoc');
+                                                            var nd=document.getElementsByClassName('notAssignedDoc');
                                                             eles.push(nd);
                                                         }
                                                     }                                               
@@ -914,13 +925,16 @@ function f_filterResults(n_win, n_docel, n_body) {
                                             }
 
                                             function displayCategoryPage(page){
+                                            	
                                                 //oscarLog('in displaycategorypage, page='+page);
                                                 //write all row ids to an array
                                                 var displayrowids=new Array();
+                                                
                                                     for(var p=0;p<current_category.length;p++){
                                                         var elements=new Array();
                                                         elements=current_category[p];
                                                         //oscarLog("elements.lenght="+elements.length);
+                                                        
                                                         for(var j=0;j<elements.length;j++){
                                                             var e=elements[j];
                                                             var rowid=e.id;
@@ -943,11 +957,13 @@ function f_filterResults(n_win, n_docel, n_body) {
                                                     }
                                                     //set current displaying rows
                                                     current_rows=new Array();
+                                                    
                                                     for(var i=startIndex;i<endIndex+1;i++){
                                                         if($(displayrowids[i])){
                                                             current_rows.push(displayrowids[i]);
                                                         }
                                                     }
+                                                    
                                                     if(current_rows.length<20)//show blank row to fill in empty space 
                                                         $('blankrow').show();
                                                     else $('blankrow').hide();
@@ -977,9 +993,11 @@ function f_filterResults(n_win, n_docel, n_body) {
                                                     //oscarLog("current_numberofpages "+current_numberofpages);
                                                     if($('current_individual_pages'))   $('current_individual_pages').innerHTML="";
                                                    if(current_numberofpages>1){
+                                                	   var html = "";
                                                        for(var i=1;i<=current_numberofpages;i++){
-                                                        if($('current_individual_pages'))  $('current_individual_pages').innerHTML+='<a style="text-decoration:none;" href="javascript:void(0);" onclick="navigatePage('+i+')> [ '+i+' ] </a>';
-                                                    }
+                                                        if($('current_individual_pages'))  html+="<a style=\"text-decoration:none;\" href=\"javascript:void(0);\" onclick=\"navigatePage("+i+")\"> [ "+i+" ] </a>";
+                                                       }
+                                                       $('current_individual_pages').update(html);
                                                    }
                                             }
                                             function sortRowId(a){
@@ -1338,7 +1356,7 @@ function checkSelected() {
         }
     }
     if (aBoxIsChecked) {
-        popupStart(300, 400, 'SelectProvider.jsp', 'providerselect');
+        popupStart(300, 400, '../oscarMDS/SelectProvider.jsp', 'providerselect');
     } else {
         alert(msgSelectOneLab);
     }
@@ -1833,11 +1851,17 @@ function addDocToPatient(doclabid,patientId){//if doc is previously not assigned
                                                 else if(type=='HL7')
                                                     labs+=labdoc+",";
                                            }
+                                           if( docs.lastIndexOf(",") == docs.length-1) {
+                                        	   docs = docs.substring(0,docs.length-1);
+                                           }
+                                           if( labs.lastIndexOf(",") == labs.length-1) {
+                                        	   labs = labs.substring(0,labs.length-1);
+                                           }
                                            var url='../dms/inboxManage.do?';
                                            var data='method=previewPatientDocLab&demog='+pid+'&docs='+docs+'&labs='+labs+'&providerNo='+providerNo+'&searchProviderNo='+searchProviderNo+'&ackStatus='+ackStatus;
                                            url=url+data;
                                            var windowprops = "height=800,width=800,location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=600,screenY=200,top=0,left=0";
-                                           var w=window.open(url,"Preview Document and Lab",windowprops);
+                                           var w=window.open(url,"PreviewDocumentandLab",windowprops);
                                            if(w!=null)
                                                w.focus();
                                        }

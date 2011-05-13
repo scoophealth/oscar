@@ -44,6 +44,9 @@
 .CorrectedRollRes a:hover { color: yellow }
 .CorrectedRollRes a:visited { color: yellow }
 .CorrectedRollRes a:active { color: yellow }
+.assignedDoc { height: 25px }
+.notAssignedDoc { font-weight: bold; font-size: 8pt; color: black; font-family:
+               Verdana, Arial, Helvetica; height: 25px }               
 .AbnormalRes { font-weight: bold; font-size: 8pt; color: red; font-family:
                Verdana, Arial, Helvetica; height: 25px }
 .AbnormalRes a:link { color: red }
