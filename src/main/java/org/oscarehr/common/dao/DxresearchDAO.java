@@ -52,7 +52,8 @@ public class DxresearchDAO extends HibernateDaoSupport{
                          break;
                      }
                     }
-                 if (isDoctorPatient)
+
+		if (isDoctorPatient && demo.getPatientStatus().equalsIgnoreCase("AC"))
                     rList.add(new DxRegistedPTInfo(demo.getFirstName(),demo.getLastName(),demo.getSex(),
                                                     demo.getYearOfBirth()+"-"+demo.getMonthOfBirth()+"-"+demo.getDateOfBirth(),
                                                     demo.getPhone(),demo.getHin(),dxres.getCodingSystem(),dxres.getDxresearchCode(),
