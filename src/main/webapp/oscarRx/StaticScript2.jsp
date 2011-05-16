@@ -39,6 +39,7 @@
 <%@page import="org.oscarehr.caisi_integrator.ws.DemographicWs"%>
 <%@page import="org.oscarehr.util.SessionConstants"%>
 <%@page import="org.oscarehr.oscarRx.StaticScriptBean"%>
+<%@page import="oscar.oscarRx.util.RxUtil" %>
 <%@page import="java.util.ArrayList"%><html:html locale="true">
 <head>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/global.js"></script>
@@ -171,6 +172,18 @@
                                                     <% if (drug.nonAuthoritative) { %>
                                                         &nbsp;<bean:message key="WriteScript.msgNonAuthoritative"></bean:message>
                                                      <%   } %>
+                                                     
+                                                     <% 
+                                                        if (!((drug.pickupDate).equals("")) && !((drug.pickupDate).equals("0000-00-00")))
+                                                        {
+                                                    %>&nbsp;<bean:message key="WriteScript.msgPickUpDate"></bean:message>&nbsp;<%=drug.pickupDate%>&nbsp;
+                                                            <% 
+                                                        if (!((drug.pickupTime).equals("")) && !((drug.pickupTime).equals("12:00 AM")))
+                                                        {
+                                                        %>      &nbsp;<%=drug.pickupTime%>&nbsp;
+                                                        <% }
+                                                         } %>
+                                                    
                                                 </td>
                                                 <%
 							if (drug.customName==null)

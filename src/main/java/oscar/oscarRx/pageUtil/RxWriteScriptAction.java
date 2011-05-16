@@ -796,6 +796,8 @@ public final class RxWriteScriptAction extends DispatchAction {
 					boolean isLongTerm = false;
 					boolean isPastMed = false;
                                         boolean isNonAuthoritative = false;
+                                        Date pickupDate;
+                                        Date pickupTime;
 
 					em = request.getParameterNames();
 					while (em.hasMoreElements()) {
@@ -853,6 +855,17 @@ public final class RxWriteScriptAction extends DispatchAction {
 								rx.setRxDate(RxUtil.StringToDate("0000-00-00", "yyyy-MM-dd"));
 							} else {
 								rx.setRxDate(RxUtil.StringToDate(val, "yyyy-MM-dd"));
+							}     
+                                                } else if (elem.equals("pickupDate_" + num)) {
+							if ((val == null) || (val.equals(""))) {
+								rx.setPickupDate(null);
+                                                                rx.setPickupTime(null);
+							} else {
+								rx.setPickupDate(RxUtil.StringToDate(val, "yyyy-MM-dd"));
+							}
+                                                } else if (elem.equals("pickupTime_" + num)) {
+							if ((val != null) && (!val.equals(""))) {
+								rx.setPickupTime(RxUtil.StringToDate(val, "hh:mm"));
 							}
 						} else if (elem.equals("writtenDate_" + num)) {
 							if (val == null || (val.equals(""))) {
@@ -895,6 +908,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 								patientComplianceN = false;
 							}
 						}
+                                                
 					}
 
 					if (!isOutsideProvider) {
