@@ -107,6 +107,8 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 	private Boolean customNote=false;
         @Column(name = "non_authoritative")
 	private Boolean nonAuthoritative = false;
+        @Column(name = "pickup_datetime")
+	private Date pickupDateTime;
 
 	// ///
 	@Transient
@@ -252,8 +254,15 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 	public void setNonAuthoritative(Boolean nonAuthoritative) {
 		this.nonAuthoritative = nonAuthoritative;
 	}
+        
+        public Date getPickUpDateTime() {
+		return pickupDateTime;
+	}
 
-
+	public void setPickUpDateTime(Date pickupDateTime) {
+		this.pickupDateTime = pickupDateTime;
+	}
+        
 	public String getProviderNo() {
 		return providerNo;
 	}
