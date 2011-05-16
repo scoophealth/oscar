@@ -196,7 +196,9 @@ function checkAndValidateDate(dateStr, datePattern) {
 	if (matchArray == null) {
 		alert("Please enter the date as yyyy-mm-dd. Your current selection reads: " + dateStr);
 		return false;
-	} else {
+	}
+        
+        else {
 		var dateArr = dateStr.split('-');
 		if(validateDate(dateArr[0], dateArr[1], dateArr[2])) {
 			return true;
@@ -267,7 +269,7 @@ function calculateAge(year, month, date) {
 function validateDate(year, month, day)
 {
 	var date=new Date();
-/*
+        /*
 	// Updated by Eugene Petruhin on 01.04.2009 while fixing #2723507
 	// Never ever do the following, always set all date parts at once!
 
@@ -288,11 +290,90 @@ function validateDate(year, month, day)
 	date.setMonth(iMonth-1);
 	date.setDate(iDay);
 
-        if (iYear!=date.getFullYear()) return(false);
-        if (iMonth!=date.getMonth()+1) return(false);
-        if (iDay!=date.getDate()) return(false);
+        if (iYear!=date.getFullYear()){alert("yr"+iYear+date.getFullYear()); return(false);}
+        if (iMonth!=date.getMonth()+1){alert("mth "+iMonth+" "+date.getMonth());return(false);}
+        if (iDay!=date.getDate()){alert("day "+iDay+" "+date.getMonth());return(false);}
 	
 	return(true);
+}
+
+
+
+function isValidTime(timeStr) {
+    
+    var timePat = /^(\d{1,2})(\/|:)(\d{2})$/;
+    
+    var matchArray = timeStr.match(timePat); // is the format ok?
+
+    if (matchArray == null) {
+        alert("Time is not in a valid format, must be HH:MM (e.g. 17:00) .")
+        return false;
+    }
+    
+    var timeArr = timeStr.split(':');
+    
+    hour = timeArr[0];
+    min = timeArr[1];
+    
+    if ( hour < 0 || hour > 23 ) {
+        alert("Hour must be between 0 and 23");
+        return false;
+    }
+    
+    if (min<0 || min>59){
+        alert("Minutes must be between 0 and 59");
+        return false;
+    }
+    
+    return true;
+}
+
+
+function isValidDate(dateStr) 
+{
+
+    //default is yyyy-mm-dd
+    var datePat = /^(\d{4})(\/|-)(\d{1,2})(\/|-)(\d{1,2})$/;
+
+    var matchArray = dateStr.match(datePat); // is the format ok?
+
+    if (matchArray == null) {
+        alert("Please enter the date as yyyy-mm-dd. Your current selection reads: " + datePat);
+        return false;
+    }
+
+    var dateArr = dateStr.split('-');
+
+    year = dateArr[0];
+    month = dateArr[1]; // parse date into variables
+    day = dateArr[2];
+
+    if (month < 1 || month > 12) { // check month range
+        alert("Month must be between 1 and 12.");
+    return false;
+    }
+    
+    if (day < 1 || day > 31) {
+        alert("Day must be between 1 and 31.");
+    return false;
+    }
+
+    if ((month==4 || month==6 || month==9 || month==11) && day==31) {
+        alert("Month "+month+" doesn't have 31 days!")
+    return false
+    }
+
+    if (month == 2) { // check for february 29th
+        var isleap = (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0));
+        
+        if (day>29 || (day==29 && !isleap)) {
+        
+            alert("February " + year + " doesn't have " + day + " days!");
+        return false;
+        }
+    }
+    
+return true;  // date is valid
 }
 
 function validateBirthDay(myDate){

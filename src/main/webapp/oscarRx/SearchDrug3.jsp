@@ -177,7 +177,8 @@
         <script type="text/javascript" src="<c:out value="${ctx}/share/yui/js/animation-min.js"/>"></script>
         <script type="text/javascript" src="<c:out value="${ctx}/share/yui/js/datasource-min.js"/>"></script>
         <script type="text/javascript" src="<c:out value="${ctx}/share/yui/js/autocomplete-min.js"/>"></script>
-
+        <script type="text/javascript" src="<c:out value="${ctx}/js/checkDate.js"/>"></script>
+        
         <script type="text/javascript">
             function resetReRxDrugList(){
                 var url="<c:out value="${ctx}"/>" + "/oscarRx/deleteRx.do?parameterValue=clearReRxDrugList";

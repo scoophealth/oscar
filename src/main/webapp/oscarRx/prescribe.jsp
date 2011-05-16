@@ -171,8 +171,15 @@ if(listRxDrugs!=null){
         <label style="float:left;width:80px;">Written Date:</label>
            <input type="text" id="writtenDate_<%=rand%>"  name="writtenDate_<%=rand%>" value="<%=writtenDate%>" />
            <a href="javascript:void(0);" style="float:right;margin-top:0px;padding-top:0px;" onclick="addFav('<%=rand%>','<%=drugName%>')">Add to Favorite</a>
+       
+           <br />
+           
+           <bean:message key="WriteScript.msgPickUpDate"/>: 
+           <input type="text" id="pickupDate_<%=rand%>"  name="pickupDate_<%=rand%>" onchange="if (!isValidDate(this.value)) {this.value=null}" />
+           <bean:message key="WriteScript.msgPickUpTime"/>: 
+                <input type="text" id="pickupTime_<%=rand%>"  name="pickupTime_<%=rand%>" onchange="if (!isValidTime(this.value)) {this.value=null}" />
        </div>
-
+       
            <div id="renalDosing_<%=rand%>" ></div>
            <div id="luc_<%=rand%>" style="margin-top:2px;"/>
            <oscar:oscarPropertiesCheck property="RENAL_DOSING_DS" value="yes">
