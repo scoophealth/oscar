@@ -67,9 +67,9 @@ public final class RxManagePharmacyAction extends DispatchAction {
            RxPharmacyData pharmacy = new RxPharmacyData();
 
            if(actionType.equals("Add")){
-              pharmacy.addPharmacy(frm.getName(), frm.getAddress(), frm.getCity(), frm.getProvince(), frm.getPostalCode(), frm.getPhone1(), frm.getPhone2(), frm.getFax(), frm.getEmail(), frm.getNotes());
+              pharmacy.addPharmacy(frm.getName(), frm.getAddress(), frm.getCity(), frm.getProvince(), frm.getPostalCode(), frm.getPhone1(), frm.getPhone2(), frm.getFax(), frm.getEmail(),frm.getServiceLocationIdentifier(), frm.getNotes());
            }else if(actionType.equals("Edit")){
-              pharmacy.updatePharmacy(frm.getID(),frm.getName(), frm.getAddress(), frm.getCity(), frm.getProvince(), frm.getPostalCode(), frm.getPhone1(), frm.getPhone2(), frm.getFax(), frm.getEmail(), frm.getNotes());
+              pharmacy.updatePharmacy(frm.getID(),frm.getName(), frm.getAddress(), frm.getCity(), frm.getProvince(), frm.getPostalCode(), frm.getPhone1(), frm.getPhone2(), frm.getFax(), frm.getEmail(), frm.getServiceLocationIdentifier(), frm.getNotes());
            }else if(actionType.equals("Delete")){
               pharmacy.deletePharmacy(frm.getID());
            }
@@ -98,6 +98,7 @@ public final class RxManagePharmacyAction extends DispatchAction {
             hm.put("phone2", pharmacy.phone2);
             hm.put("postalCode", pharmacy.postalCode);
             hm.put("province", pharmacy.province);
+            hm.put("serviceLocationIdentifier", pharmacy.serviceLocationIdentifier);
             hm.put("notes", pharmacy.notes);
             MiscUtils.getLogger().debug("in getPharmacyInfo,hm="+hm);
             JSONObject jsonObject = JSONObject.fromObject(hm);
