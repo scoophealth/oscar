@@ -872,7 +872,7 @@ public class RxPrescriptionData {
         int demographic_no = bean.getDemographicNo();
         String date_prescribed = oscar.oscarRx.util.RxUtil.DateToString(oscar.oscarRx.util.RxUtil.Today(), "yyyy/MM/dd");
         String date_printed = date_prescribed;
-
+        
         StringBuilder textView = new StringBuilder();
         String retval = null;
 
@@ -910,7 +910,7 @@ public class RxPrescriptionData {
         String txt;
         for (int i = 0; i < bean.getStashSize(); i++) {
             Prescription rx = bean.getStashItem(i);
-
+            
             String fullOutLine = rx.getFullOutLine();
             if (fullOutLine == null || fullOutLine.length() < 6) {
                 logger.error("Drug full outline appears to be null or empty : " + fullOutLine, new IllegalStateException("full out line appears wrong"));
@@ -920,7 +920,7 @@ public class RxPrescriptionData {
             textView.append("\n" + txt);
         }
         // textView.append();
-
+        
         String sql = " insert into prescription " + " (provider_no,demographic_no,date_prescribed,date_printed,textView) " + " values " + " ( '" + provider_no + "', " + "   '" + demographic_no + "', " + "   '" + date_prescribed + "', " + "   '" + date_printed + "', " + "   '" + StringEscapeUtils.escapeSql(textView.toString()) + "') ";
         try {
 
@@ -984,6 +984,8 @@ public class RxPrescriptionData {
         java.util.Date rxCreatedDate = null;
         java.util.Date rxDate = null;
         java.util.Date endDate = null;
+        java.util.Date pickupDate = null;
+        java.util.Date pickupTime = null;
         java.util.Date writtenDate = null;
         java.util.Date printDate = null;
         int numPrints = 0;
@@ -1197,6 +1199,21 @@ public class RxPrescriptionData {
 
         public void setRxDate(java.util.Date RHS) {
             this.rxDate = RHS;
+        }
+        
+        public java.util.Date getPickupDate() {
+            return this.pickupDate;
+        }
+
+        public void setPickupDate(java.util.Date RHS) {
+            this.pickupDate = RHS;
+        }
+        public java.util.Date getPickupTime() {
+            return this.pickupTime;
+        }
+
+        public void setPickupTime(java.util.Date RHS) {
+            this.pickupTime = RHS;
         }
 
         public java.util.Date getEndDate() {
@@ -1863,7 +1880,7 @@ public class RxPrescriptionData {
                     // if it doesn't already exist add it.
                     if (this.getDrugId() == 0) {
 
-                        sql = "INSERT INTO drugs (provider_no, demographic_no, " + "rx_date, end_date, written_date, BN, GCN_SEQNO, customName, " + "takemin, takemax, freqcode, duration, durunit, quantity, " + "`repeat`, last_refill_date, nosubs, prn, special, GN, script_no, ATC, " + "regional_identifier, unit, method, route, drug_form, create_date, " + "outside_provider_name, outside_provider_ohip, custom_instructions, " + "dosage, unitName, long_term, custom_note, past_med, special_instruction,patient_compliance, non_authoritative) " + "VALUES ('" + this.getProviderNo() + "', " + this.getDemographicNo() + ", '" + RxUtil.DateToString(this.getRxDate()) + "', '" + RxUtil.DateToString(this.getEndDate()) + "', '" + RxUtil.DateToString(this.getWrittenDate()) + "', '" + StringEscapeUtils.escapeSql(this.getBrandName()) + "', " + this.getGCN_SEQNO() + ", '" + StringEscapeUtils.escapeSql(this.getCustomName()) + "', " + this.getTakeMin() + ", " + this.getTakeMax() + ", '" + this.getFrequencyCode() + "', '" + this.getDuration() + "', '" + this.getDurationUnit() + "', '" + this.getQuantity() + "', " + this.getRepeat() + ", '" + RxUtil.DateToString(this.getLastRefillDate()) + "', " + this.getNosubsInt() + ", " + this.getPrnInt() + ", '" + escapedSpecial + "','" + StringEscapeUtils.escapeSql(this.getGenericName()) + "','" + scriptId + "', '" + this.getAtcCode() + "', '" + this.getRegionalIdentifier() + "','" + this.getUnit() + "','" + this.getMethod() + "','" + this.getRoute() + "','" + this.getDrugForm() + "',now(),'" + this.getOutsideProviderName() + "','" + this.getOutsideProviderOhip() + "', " + this.getCustomInstr() + ",'" + this.getDosage() + "', '" + this.getUnitName() + "', " + this.getLongTerm() + ", "  + this.isCustomNote() + ", " + this.getPastMed() + ", '" +this.special_instruction+"', "+ this.getPatientCompliance() + ", "  + this.isNonAuthoritative() + ")";
+                        sql = "INSERT INTO drugs (provider_no, demographic_no, " + "rx_date, end_date, written_date, BN, GCN_SEQNO, customName, " + "takemin, takemax, freqcode, duration, durunit, quantity, " + "`repeat`, last_refill_date, nosubs, prn, special, GN, script_no, ATC, " + "regional_identifier, unit, method, route, drug_form, create_date, " + "outside_provider_name, outside_provider_ohip, custom_instructions, " + "dosage, unitName, long_term, custom_note, past_med, special_instruction,patient_compliance, non_authoritative, pickup_datetime) " + "VALUES ('" + this.getProviderNo() + "', " + this.getDemographicNo() + ", '" + RxUtil.DateToString(this.getRxDate()) + "', '" + RxUtil.DateToString(this.getEndDate()) + "', '" + RxUtil.DateToString(this.getWrittenDate()) + "', '" + StringEscapeUtils.escapeSql(this.getBrandName()) + "', " + this.getGCN_SEQNO() + ", '" + StringEscapeUtils.escapeSql(this.getCustomName()) + "', " + this.getTakeMin() + ", " + this.getTakeMax() + ", '" + this.getFrequencyCode() + "', '" + this.getDuration() + "', '" + this.getDurationUnit() + "', '" + this.getQuantity() + "', " + this.getRepeat() + ", '" + RxUtil.DateToString(this.getLastRefillDate()) + "', " + this.getNosubsInt() + ", " + this.getPrnInt() + ", '" + escapedSpecial + "','" + StringEscapeUtils.escapeSql(this.getGenericName()) + "','" + scriptId + "', '" + this.getAtcCode() + "', '" + this.getRegionalIdentifier() + "','" + this.getUnit() + "','" + this.getMethod() + "','" + this.getRoute() + "','" + this.getDrugForm() + "',now(),'" + this.getOutsideProviderName() + "','" + this.getOutsideProviderOhip() + "', " + this.getCustomInstr() + ",'" + this.getDosage() + "', '" + this.getUnitName() + "', " + this.getLongTerm() + ", "  + this.isCustomNote() + ", " + this.getPastMed() + ", '" +this.special_instruction+"', "+ this.getPatientCompliance() + ", "  + this.isNonAuthoritative() + ", '"  + RxUtil.DateToString(this.getPickupDate(),"yyyy-MM-dd") + " " + RxUtil.DateToString(this.getPickupTime(),"hh:mm") + "')";
                           MiscUtils.getLogger().debug("sql="+sql);
 
                         DBHandler.RunSQL(sql);
