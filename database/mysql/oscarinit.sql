@@ -6910,6 +6910,7 @@ create table pharmacyInfo (
    phone2 varchar(20),
    fax varchar(20),
    email varchar(100),
+   serviceLocationIdentifier varchar(255),
    notes text,
    addDate timestamp,
    status char (1) default '1'
