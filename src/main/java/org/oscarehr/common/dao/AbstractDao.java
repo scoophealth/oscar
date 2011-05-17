@@ -96,8 +96,14 @@ public abstract class AbstractDao<T extends AbstractModel<?>>
     
 	public int getCountAll()
 	{
+// new JPA way of doing it, but our hibernate is too old or doesn't support primitives yet?
+//		String sqlCommand="select count(*) from "+modelClass.getSimpleName();
+//		Query query = entityManager.createNativeQuery(sqlCommand, Integer.class);		
+//		return((Integer)query.getSingleResult());
+		
+		// older hibernate work around
 		String sqlCommand="select count(*) from "+modelClass.getSimpleName();
-		Query query = entityManager.createNativeQuery(sqlCommand, Integer.class);		
-		return((Integer)query.getSingleResult());
+		Query query = entityManager.createNativeQuery(sqlCommand);		
+		return(((Number)query.getSingleResult()).intValue());
 	}
 }
