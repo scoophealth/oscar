@@ -28,6 +28,7 @@ import org.oscarehr.integration.hl7.model.StaffId;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
+import oscar.OscarProperties;
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.parser.GenericParser;
 import ca.uhn.hl7v2.parser.Parser;
@@ -134,7 +135,9 @@ public class PhsStarHandler extends BasePhsStarHandler {
 		demo.setSex(getSex());
 		demo.setDateJoined(new Date());
 		demo.setEffDate(new Date());
-		
+		if(OscarProperties.getInstance().hasProperty("DEFAULT_PHS_PROVIDER")) {
+			demo.setProviderNo(OscarProperties.getInstance().getProperty("DEFAULT_PHS_PROVIDER"));
+		}
 		//set MRN
 		Map<String,PatientId> internalIds = this.extractInternalPatientIds();
 		if(internalIds.get("MR")!=null) {
