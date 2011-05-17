@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.StringWriter;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -20,6 +21,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import com.sun.org.apache.xml.internal.serialize.OutputFormat;
+import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 
 public class XmlUtils
 {
@@ -86,53 +90,19 @@ public class XmlUtils
 		parentNode.appendChild(child);
 	}
 
-	public static String formatXml(String s)
+	public static String toFormattedString(Document doc) throws IOException
 	{
-		int indent = 0;
-		StringBuilder sb = new StringBuilder();
-		char currentChar = ' ';
-		char previousChar = ' ';
-		char previousPreviousChar = ' ';
-		for (int i = 0; i < s.length(); i++)
-		{
-			currentChar = s.charAt(i);
-
-			sb.append(previousPreviousChar);
-
-			if (currentChar != '/' && previousChar == '<' && previousPreviousChar == '>')
-			{
-				indent++;
-				sb.append(getNewLineIndent(indent));
-			}
-			else if (currentChar == '/' && previousChar == '<')
-			{
-				if (previousPreviousChar == '>')
-				{
-					sb.append(getNewLineIndent(indent));
-				}
-
-				indent--;
-			}
-
-			previousPreviousChar = previousChar;
-			previousChar = currentChar;
-		}
-
-		sb.append(previousPreviousChar);
-		sb.append(previousChar);
-
-		return(sb.toString());
+		OutputFormat outputFormat=new OutputFormat(doc);
+		outputFormat.setIndenting(true);
+		
+		StringWriter stringWriter=new StringWriter();
+		
+		XMLSerializer xmlSerializer = new XMLSerializer(stringWriter, outputFormat);
+		xmlSerializer.serialize(doc);
+		
+		return(stringWriter.toString());
 	}
-
-	private static String getNewLineIndent(int indent)
-	{
-		StringBuilder sb = new StringBuilder();
-		sb.append('\n');
-		for (int i = 0; i < indent; i++)
-			sb.append('\t');
-		return(sb.toString());
-	}
-
+	
 	/**
 	 * only returns the first instance of this child node
 	 * @param node
@@ -145,6 +115,7 @@ public class XmlUtils
 		for (int i = 0; i < nodeList.getLength(); i++)
 		{
 			Node temp = nodeList.item(i);
+			if (temp.getNodeType()!=Node.ELEMENT_NODE) continue;
 			if (name.equals(temp.getLocalName()) || name.equals(temp.getNodeName())) return(temp);
 		}
 
@@ -159,21 +130,17 @@ public class XmlUtils
 	}
 
 	/**
-	 * Only gets the first instance of the attribute value
-	 * @param node
-	 * @param attributeName
-	 * @return
+	 * @return the attribute value or null
 	 */
-	public static String getAttribute(Node node, String attributeName)
+	public static String getAttributeValue(Node node, String attributeName)
 	{
 		NamedNodeMap attributes = node.getAttributes();
-		for (int i = 0; i < attributes.getLength(); i++)
-		{
-			Node tempNode = attributes.item(i);
-			if (attributeName.equals(tempNode.getLocalName())) return(tempNode.getNodeValue());
-		}
-
-		return(null);
+		if (attributes==null) return(null);
+		
+		Node tempNode=attributes.getNamedItem(attributeName);
+		if (tempNode==null) return(null);
+		
+		return(tempNode.getNodeValue());
 	}
 
 	public static void main(String... argv) throws Exception

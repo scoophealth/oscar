@@ -79,6 +79,11 @@ public final class WebUtils {
 		return (temp != null && (temp.equalsIgnoreCase("on") || temp.equalsIgnoreCase("true") || temp.equalsIgnoreCase("checked")));
 	}
 
+	public static String popErrorAndInfoMessagesAsHtml(HttpSession session)
+	{
+		return(popErrorMessagesAsHtml(session)+popInfoMessagesAsHtml(session));
+	}
+	
 	public static String popErrorMessagesAsHtml(HttpSession session) {
 		ArrayList<String> al = popErrorMessages(session);
 
