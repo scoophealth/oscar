@@ -105,6 +105,22 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
         return rs;
     }
     
+    public List<Appointment> findByDateRangeAndProvider(Date startTime, Date endTime,String providerNo) {
+		String sql = "SELECT a FROM Appointment a WHERE a.appointmentDate >=? and a.appointmentDate < ? and providerNo = ?";
+
+    	Query query = entityManager.createQuery(sql);
+		query.setParameter(1, startTime);
+		query.setParameter(2, endTime);
+		query.setParameter(3, providerNo);
+		
+		@SuppressWarnings("unchecked")
+        List<Appointment> rs = query.getResultList();
+
+        return rs;
+    }
+    
+    
+    
     public List<Appointment> getByProviderAndDay(Date date,String providerNo) {
     	String sql = "SELECT a FROM Appointment a WHERE a.providerNo=? and a.appointmentDate = ? and a.status != 'N' and a.status != 'C' order by a.startTime";
     	Query query = entityManager.createQuery(sql);
@@ -115,6 +131,8 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 
     	return rs;
     }
+    
+    
     
 
     

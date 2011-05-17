@@ -59,6 +59,12 @@ public class ProviderInboxRoutingDao extends HibernateDaoSupport {
         return false;
     }
     
+    
+    public int howManyDocumentsLinkedWithAProvider(String providerNo){
+         int count = DataAccessUtils.intResult(getHibernateTemplate().find("select count(*) from ProviderInboxItem where provider_no = ?",new Object[] {providerNo}));
+         return count;
+    }
+    
     public void addToProviderInbox(String providerNo,String labNo,String labType){
         
         ArrayList<String> listofAdditionalProviders = new ArrayList();

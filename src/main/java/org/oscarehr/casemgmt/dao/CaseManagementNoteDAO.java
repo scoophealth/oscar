@@ -425,7 +425,75 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 			SqlUtils.closeResources(c, null, null);
 		}
 	}
+	
+	
+	/*
+	  select issue_id from issue where code = 'Concerns';
+	 */
 
+	
+	public int getNoteCountForProviderForDateRange(String providerNo,Date startDate,Date endDate){
+		int ret = 0;
+		
+		Connection c = null;
+		try {
+			c = DbConnectionFilter.getThreadLocalDbConnection();
+		String sqlCommand = "select count(distinct uuid) from casemgmt_note where provider_no = ? and observation_date >= ? and observation_date <= ?";
+		PreparedStatement ps = c.prepareStatement(sqlCommand);
+		ps.setString(1, providerNo);
+		ps.setTimestamp(2, new Timestamp(startDate.getTime()));
+		ps.setTimestamp(3, new Timestamp(endDate.getTime()));
+		
+
+		ResultSet rs = ps.executeQuery();
+		rs.next();
+
+		ret=rs.getInt(1);
+		}catch(Exception e){
+			MiscUtils.getLogger().error("Error", e);
+		}
+		return ret;
+	}
+	
+	public int getNoteCountForProviderForDateRangeWithIssueId(String providerNo,Date startDate,Date endDate,String issueCode){
+		int ret = 0;
+		
+		Connection c = null;
+		try {
+			c = DbConnectionFilter.getThreadLocalDbConnection();
+			String sql = "select issue_id from issue where code = '"+issueCode+"' ";
+			log.debug(sql);
+			PreparedStatement ps = c.prepareStatement(sql);
+			//ps.setString(1, issueCode);
+			ResultSet rs= ps.executeQuery(sql);
+			String id = null;
+			if (rs.next()){
+				id = rs.getString("issue_id");
+			}else{
+				log.debug("Could not find issueCode "+issueCode);
+				return 0;
+			}
+			
+			log.debug("issue Code "+issueCode+" id :"+id);
+			
+			String sqlCommand = "select count(distinct uuid) from casemgmt_issue c, casemgmt_issue_notes cin, casemgmt_note cn where c.issue_id = ? and c.id = cin.id and cin.note_id = cn.note_id and cn.provider_no = ?  and observation_date >= ? and observation_date <= ?";
+			log.debug(sqlCommand);
+			ps = c.prepareStatement(sqlCommand);
+			ps.setString(1, id);
+			ps.setString(2, providerNo);
+			ps.setTimestamp(3, new Timestamp(startDate.getTime()));
+			ps.setTimestamp(4, new Timestamp(endDate.getTime()));
+			
+
+			rs = ps.executeQuery();
+			rs.next();
+
+			ret=rs.getInt(1);
+		}catch(Exception e){
+			log.error("Error counting notes for issue :"+issueCode,e);
+		}
+		return ret;
+	}
     //used by decision support to search through the notes for a string
 	public List<CaseManagementNote> searchDemographicNotes(String demographic_no, String searchString) {
 		String hql = "select distinct cmn from CaseManagementNote cmn where cmn.id in (select max(cmn.id) from cmn where cmn.demographic_no = ? GROUP BY uuid) and cmn.demographic_no = ? and cmn.note like ? and cmn.archived = 0";
