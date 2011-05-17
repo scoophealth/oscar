@@ -18,11 +18,14 @@
  */
 package org.oscarehr.common.dao;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Query;
 
+import org.apache.commons.lang.StringUtils;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.util.MiscUtils;
 import org.springframework.stereotype.Repository;
@@ -170,5 +173,21 @@ public class DrugDao extends AbstractDao<Drug> {
         }
         return getUniquePrescriptions(demographic_no);
     }
+    
+    
+    public int getNumberOfDemographicsWithRxForProvider(String providerNo,Date startDate,Date endDate,boolean distinct ){
+    	String distinctStr = "distinct";
+    	if (distinct == false){
+    		distinctStr = StringUtils.EMPTY;
+    	}
+    	
+    	Query query = entityManager.createNativeQuery("select count("+distinctStr+" demographic_no)from drugs x where x.provider_no = ? and x.written_date >= ? and x.written_date <= ?");
+		query.setParameter(1, providerNo);
+		query.setParameter(2,startDate);
+		query.setParameter(3,endDate);
+		BigInteger bint =  (BigInteger) query.getSingleResult(); 
+		return bint.intValue();
+	}
+    
 
 }
