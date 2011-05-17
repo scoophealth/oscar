@@ -19,12 +19,14 @@
 
 package org.oscarehr.common.dao;
 
+import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Query;
 
+import org.apache.commons.lang.StringUtils;
 import org.oscarehr.common.model.BillingONCHeader1;
 import org.springframework.stereotype.Repository;
 /**
@@ -44,6 +46,21 @@ public class BillingDao extends AbstractDao{
     }
 
 
+    public int getNumberOfDemographicsWithInvoicesForProvider(String providerNo,Date startDate,Date endDate,boolean distinct ){
+    	String distinctStr = "distinct";
+    	if (distinct == false){
+    		distinctStr = StringUtils.EMPTY;
+    	}
+    	
+    	Query query = entityManager.createNativeQuery("select count("+distinctStr+" demographic_no) from billing_on_cheader1 ch where ch.provider_no = ? and billing_date >= ? and billing_date <= ?");    		
+    	query.setParameter(1, providerNo);
+		query.setParameter(2,startDate);
+		query.setParameter(3,endDate);
+		BigInteger bint =  (BigInteger) query.getSingleResult(); 
+		return bint.intValue();	
+    }
+    
+   
     
     public List<BillingONCHeader1> getAllInvoices(Integer demographicNo)
 	{

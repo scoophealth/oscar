@@ -25,22 +25,33 @@
  */
 package org.oscarehr.document.dao;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Expression;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.document.model.CtlDocument;
 import org.oscarehr.document.model.Document;
+import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+
+
 
 /**
  *
  * @author jaygallagher
  */
 public class DocumentDAO extends HibernateDaoSupport {
+	
+	private static Logger log = MiscUtils.getLogger();
 
     public Document getDocument(String documentNo) {
         Document document = (Document) getHibernateTemplate().get(Document.class, Long.parseLong(documentNo));
@@ -92,5 +103,28 @@ public class DocumentDAO extends HibernateDaoSupport {
         getHibernateTemplate().update(ctlDocument);
 
     }
-    
+  
+    public int getNumberOfDocumentsAttachedToAProviderDemographics(String providerNo,Date startDate,Date endDate){
+       	String sql = "select count(*) from ctl_document c, demographic d,document doc where c.module_id = d.demographic_no and c.document_no = doc.document_no   and d.provider_no = ? and doc.observationdate >= ? and doc.observationdate <= ? ";
+       	int ret = 0;
+		Connection c = null;
+		try {
+			c = DbConnectionFilter.getThreadLocalDbConnection();
+			PreparedStatement ps = c.prepareStatement(sql);
+			ps.setString(1, providerNo);
+			ps.setTimestamp(2, new Timestamp(startDate.getTime()));
+			ps.setTimestamp(3, new Timestamp(endDate.getTime()));
+			
+			ResultSet rs = ps.executeQuery();
+			if(rs.next()){
+			   ret=rs.getInt(1);
+			}
+		}catch(Exception e){
+			log.error("Error counting documents for provider :"+providerNo,e);
+		}
+		return ret;	
+    	
+    	
+    }
+   
 }
