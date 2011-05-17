@@ -81,6 +81,20 @@ public class DemographicDao extends HibernateDaoSupport {
         List rs = (List) getHibernateTemplate().find(q, new Object[] { new Integer(programId), dt, dt, defdt });
         return rs;
     }
+    
+    public List<Demographic> getDemographicByProvider(String providerNo){
+    	return getDemographicByProvider(providerNo,true);
+    }
+        
+    
+    public List<Demographic> getDemographicByProvider(String providerNo, boolean onlyActive){
+    	String q = "From Demographic d where d.ProviderNo = ? ";
+    	if(onlyActive){
+    		q = "From Demographic d where d.ProviderNo = ? and d.PatientStatus = 'AC' ";	
+    	}
+    	List<Demographic> rs = (List) getHibernateTemplate().find(q, new Object[] { providerNo });
+    	return rs;
+    }
 
     /*
      * get demographics according to their program, admit time, discharge time, ordered by lastname and first name
