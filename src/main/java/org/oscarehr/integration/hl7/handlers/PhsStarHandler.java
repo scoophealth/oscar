@@ -14,9 +14,11 @@ import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.common.OtherIdManager;
+import org.oscarehr.common.dao.BillingreferralDao;
 import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.dao.OscarLogDao;
 import org.oscarehr.common.model.Appointment;
+import org.oscarehr.common.model.Billingreferral;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.OscarLog;
 import org.oscarehr.common.model.OtherId;
@@ -523,6 +525,15 @@ public class PhsStarHandler extends BasePhsStarHandler {
 	 * ZRA - <unknown>
 	 * @throws HL7Exception
 	 */
+	/**
+	 * MFI - Master File Identification
+	 * MFE - Master File Entry
+	 * STF - Staff Identification 
+	 * PRA - Practitioner Detail
+	 * ZST - <unknown>
+	 * ZRA - <unknown>
+	 * @throws HL7Exception
+	 */
 	public void handleStaffMasterFile() throws HL7Exception {
 		//MFI section is pretty straightforward., don't think we need these values.
 		String mfIdentifierId = 		this.extractOrEmpty("MFI-1-1");
@@ -558,10 +569,24 @@ public class PhsStarHandler extends BasePhsStarHandler {
 		
 		//repetition
 		//(905)555-1212X1234^WPN^PH^^^905^5551212^1234
-		//[NNN] [(999)]999-9999 [X99999] [B99999] [C any text] ^ <telecommunication use code (ID)> ^ <telecommunication equipment type (ID)> ^ <email address (ST)> ^ <county code (NM)> ^ <area/city code (NM)> ^ <phone number (NM) ^ <extension (NM)> ^ <any text (st)> 
-		String phone = this.extractOrEmpty("/MF_STAFF/STF-10-1");
-		String phoneLoc = this.extractOrEmpty("/MF_STAFF/STF-10-2");
-		String phoneType = this.extractOrEmpty("/MF_STAFF/STF-10-3");
+		//[NNN] [(999)]999-9999 [X99999] [B99999] [C any text] ^ <telecommunication use code (ID)> ^ <telecommunication equipment type (ID)> ^ <email address (ST)> ^ <county code (NM)> ^ <area/city code (NM)> ^ <phone number (NM) ^ <extension (NM)> ^ <any text (st)>
+		String phone = null;		
+		String fax = null;
+		
+		for(int x=0;x<3;x++) {
+			String phoneTmp = this.extractOrEmpty("/MF_STAFF/STF-10("+x+")-1");
+			if(phoneTmp != null&& phoneTmp.indexOf("C")!=-1) {
+				phoneTmp = phoneTmp.substring(0,phoneTmp.indexOf("C"));
+			}
+			String phoneType = this.extractOrEmpty("/MF_STAFF/STF-10("+x+")-3");
+			
+			if(phoneType != null && phoneType.equals("PH")) {
+				phone = phoneTmp;
+			}
+			if(phoneType != null && phoneType.equals("FX")) {
+				fax = phoneTmp;
+			}
+		}
 		
 		//repetitive		
 		String address = this.extractOrEmpty("/MF_STAFF/STF-11-1");
@@ -577,11 +602,37 @@ public class PhsStarHandler extends BasePhsStarHandler {
 		//practitioner - do we need this?
 		String praPractId = this.extractOrEmpty("/MF_STAFF/PRA-1-1"); //should be same as pract_id
 		//specialty = 1&FAMILY PRACTITIONER&99H62&1&FAMILY PRACTITIONER&99SPC
-		String praSpecialty = this.extractOrEmpty("/MF_STAFF/PRA-5-1"); //should be same as pract_id
+		String praSpecialty = this.extractOrEmpty("/MF_STAFF/PRA-5-1-2"); //should be same as pract_id
 		
 		logger.info("need to do a provider add/update for id " + practId);
 		
 		//logger.info("mfId="+mfId);
+		BillingreferralDao brDao = (BillingreferralDao)SpringUtils.getBean("BillingreferralDAO");
+		Billingreferral br = null;
+		@SuppressWarnings("unchecked")
+		List<Billingreferral> brs = brDao.getBillingreferral(practId);
+		if(brs != null && brs.size()>0) {
+			//update
+			br = brs.get(0);
+		} else {
+			//insert
+			br = new Billingreferral();
+			br.setReferralNo(practId);
+		}
+		//update fields
+		br.setLastName(lastName);
+		br.setFirstName(firstName);
+		br.setSpecialty(praSpecialty);
+		br.setAddress1(address);
+		br.setAddress2(address2);
+		br.setCity(city);
+		br.setProvince(province);
+		br.setCountry(country);
+		br.setPostal(postal);
+		br.setPhone(phone);
+		br.setFax(fax);
+		
+		brDao.updateBillingreferral(br);	
 	}
 	
 	/**
