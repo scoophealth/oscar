@@ -37,7 +37,8 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  * @author rjonasz
  */
 public class UserPropertyDAO extends HibernateDaoSupport {
-    
+	public final static String COLOR_PROPERTY = "ProviderColour";
+	
     /** Creates a new instance of UserPropertyDAO */
     public UserPropertyDAO() {
     }

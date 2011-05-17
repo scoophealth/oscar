@@ -492,6 +492,9 @@
 			<form-property name="proc" type="org.oscarehr.eyeform.model.ProcedureBook" />
 		</form-bean>
 		
+		<form-bean name="PatientEndYearStatementForm" type="oscar.oscarBilling.ca.on.pageUtil.PatientEndYearStatementForm" />
+		<form-bean name="AppointmentTypeForm" type="oscar.appt.web.AppointmentTypeForm" />
+		 
 		<form-bean name="consultationReportForm" type="org.apache.struts.validator.DynaValidatorForm">
 			<form-property name="cr" type="org.oscarehr.eyeform.web.ConsultationReportFormBean" />			
 		</form-bean>
@@ -894,6 +897,7 @@
 		<action path="/oscarEncounter/displayAllergy" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayAllergyAction"></action>
 		<action path="/oscarEncounter/displayRx" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayRxAction"></action>
 		<action path="/oscarEncounter/displayIssues" scope="request" type="org.springframework.web.struts.DelegatingActionProxy"></action>
+		<action path="/oscarEncounter/displayResolvedIssues" scope="request" type="org.springframework.web.struts.DelegatingActionProxy"></action>
 		<action path="/oscarEncounter/displayDecisionSupportAlerts" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayDecisionSupportAlertsAction"></action>
 		<action path="/report/printLabDaySheetAction" type="oscar.oscarReport.pageUtil.printLabDaySheetAction"></action>
 		<action path="/oscarEncounter/displayDiagrams" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayDiagramAction"></action>
@@ -2217,10 +2221,17 @@
 		<action parameter="method" path="/PMmodule/Admin/MigrateCaisiRoles" scope="request" type="org.springframework.web.struts.DelegatingActionProxy">
 			<forward name="success" path="/PMmodule/Admin/migrateCaisiRoles.jsp" redirect="true" />
 		</action>
-                <action input="/billing/CA/ON/endYearStatement.jsp" name="PatientEndYearStatementForm" path="/billing/CA/ON/endYearStatement" scope="request" type="oscar.oscarBilling.ca.on.pageUtil.PatientEndYearStatementAction" validate="false">
-                    <forward name="success" path="/billing/CA/ON/endYearStatement.jsp"/>
-                    <forward name="failure" path="/billing/CA/ON/endYearStatement.jsp"/>
-                </action>
+		
+        <action input="/billing/CA/ON/endYearStatement.jsp" name="PatientEndYearStatementForm" path="/billing/CA/ON/endYearStatement" scope="request" type="oscar.oscarBilling.ca.on.pageUtil.PatientEndYearStatementAction" validate="false">
+            <forward name="success" path="/billing/CA/ON/endYearStatement.jsp"/>
+            <forward name="failure" path="/billing/CA/ON/endYearStatement.jsp"/>
+        </action>
+			
+		<action name="AppointmentTypeForm" path="/appointment/appointmentTypeAction" scope="request" type="oscar.appt.web.AppointmentTypeAction" validate="false">
+			<forward name="edit" path="/appointment/appointmentTypeAction.do?oper=edit"/>
+			<forward name="success" path="/appointment/appointmentTypeList.jsp"/>
+			<forward name="failure" path="/appointment/appointmentTypeList.jsp"/>
+		</action>
 
 	</action-mappings>
 	<controller processorClass="org.apache.struts.tiles.TilesRequestProcessor" maxFileSize="20M" />

@@ -25,6 +25,7 @@
 
 package oscar.oscarEncounter.pageUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -46,7 +47,7 @@ import oscar.util.StringUtils;
  * retrieves info to display Disease entries for demographic
  */
 public class EctDisplayIssuesAction extends EctDisplayAction {
-	private String cmd = "issues";
+	private String cmd = "unresolvedIssues";
 
 	private IssueDAO issueDao=(IssueDAO) SpringUtils.getBean("IssueDAO");
 	
@@ -57,10 +58,12 @@ public class EctDisplayIssuesAction extends EctDisplayAction {
 		this.caseManagementMgr = caseManagementMgr;
 	}
 
-	public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO navBarDisplayDAO, MessageResources messages) {
+	@Override
+    public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO navBarDisplayDAO, MessageResources messages) {
 
 		// set lefthand module heading and link
-		navBarDisplayDAO.setLeftHeading(messages.getMessage(request.getLocale(), "oscarEncounter.NavBar.Issues"));
+		navBarDisplayDAO.setLeftHeading(messages.getMessage(request.getLocale(), "oscarEncounter.NavBar.unresolvedIssues"));
+		
 		navBarDisplayDAO.setLeftURL("$('check_issue').value='';document.caseManagementViewForm.submit();");
 
 		// set righthand link to same as left so we have visual consistency with other modules
@@ -69,16 +72,25 @@ public class EctDisplayIssuesAction extends EctDisplayAction {
 		navBarDisplayDAO.setRightHeadingID(cmd); // no menu so set div id to unique id for this action
 
 		// grab all of the diseases associated with patient and add a list item for each
-		List issues = null;
+		List<CaseManagementIssue> issues = null;
 		int demographicId = Integer.parseInt(bean.getDemographicNo());
 		issues = caseManagementMgr.getIssues(demographicId);
 		String programId = (String) request.getSession().getAttribute("case_program_id");
 		issues = caseManagementMgr.filterIssues(issues, programId);
-
-		for (int idx = 0; idx < issues.size(); ++idx) {
+	
+		List<CaseManagementIssue> issues_unr = new ArrayList<CaseManagementIssue>();
+		//only list unresolved issues				
+		for(CaseManagementIssue issue : issues) {
+			if(!issue.isResolved()) {
+				issues_unr.add(issue);
+			}				
+		}
+		
+		
+		for (int idx = 0; idx < issues_unr.size(); ++idx) {
 			NavBarDisplayDAO.Item item = navBarDisplayDAO.Item();
 
-			CaseManagementIssue issue = (CaseManagementIssue) issues.get(idx);
+			CaseManagementIssue issue = (CaseManagementIssue) issues_unr.get(idx);
 			String tmp = issue.getIssue().getDescription();
 
 			String strTitle = StringUtils.maxLenString(tmp, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);

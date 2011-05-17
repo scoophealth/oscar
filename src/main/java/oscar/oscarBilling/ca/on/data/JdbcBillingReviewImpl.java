@@ -180,6 +180,9 @@ public class JdbcBillingReviewImpl {
 
 		if(rs != null) {
 			try {
+				String prevId = null;
+                String prevPaid = null;
+
 				while (rs.next()) {
 
 					boolean bSameBillCh1 = false;
@@ -199,20 +202,28 @@ public class JdbcBillingReviewImpl {
 
 					// ch1Obj.setTotal(rs.getString("total"));
 					ch1Obj.setPay_program(rs.getString("pay_program"));
+					/*
 					if (!bSameBillCh1)
 						ch1Obj.setPaid(rs.getString("paid"));
 					else
 						ch1Obj.setPaid("0.00");
+					*/
+					if (!(ch1Obj.getId().equals(prevId) && rs.getString("paid").equals(prevPaid))) {
+	                        ch1Obj.setPaid(rs.getString("paid"));
+	                } else
+	                        ch1Obj.setPaid("0.00");
 
 					ch1Obj.setTotal(rs.getString("fee"));
 					ch1Obj.setRec_id(rs.getString("dx"));
 					ch1Obj.setTransc_id(rs.getString("service_code"));
 
 					retval.add(ch1Obj);
-					bSameBillCh1 = true;
+					//bSameBillCh1 = true;
+					prevId = ch1Obj.getId();
+	                prevPaid = rs.getString("paid");
+
 				}
-				//				rs1.close();
-				//			}
+				
 				rs.close();
 			} catch (SQLException e) {
 				_logger.error("getBill(sql = " + sql + ")");

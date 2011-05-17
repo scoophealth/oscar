@@ -27,6 +27,7 @@ import java.util.List;
 import javax.persistence.Query;
 
 import org.apache.commons.lang.StringUtils;
+import org.oscarehr.PMmodule.utility.Utility;
 import org.oscarehr.common.model.BillingONCHeader1;
 import org.springframework.stereotype.Repository;
 /**
@@ -78,7 +79,7 @@ public class BillingDao extends AbstractDao{
 		return results;
 	}
     
-    public Long getDebt(Integer demographicNo, Date billingDate) throws Exception {
+    public Double getDebt(Integer demographicNo, Date billingDate) throws Exception {
     	StringBuilder sb=new StringBuilder();
 		sb.append("SELECT SUM(total) - SUM(paid) FROM BillingONCHeader1 ch");
 		sb.append(" WHERE ch.demographicNo=?1 AND ch.payProgram='PAT' AND (ch.status='P' OR ch.status='O') AND ch.billingDate <= ?2");
@@ -87,7 +88,13 @@ public class BillingDao extends AbstractDao{
 		if (billingDate!=null) query.setParameter(2, (new SimpleDateFormat("yyyy-MM-dd").format(billingDate)));
 		
 		String result = (String) query.getSingleResult();
-		return (result != null ? Long.parseLong(result) : 0L);
+		 Double res = 0d;
+         if(result != null) {
+                 String strRes = Utility.toCurrency(result);
+                 res = Double.parseDouble(strRes);
+         }
+         return res;
+
     	
     }
 

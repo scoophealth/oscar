@@ -31,7 +31,7 @@
 	<div id="sig<c:out value="${Note.id}"/>">
 	<div class="sig" id="sumary<c:out value="${Note.id}"/>">
 	<div id="observation<c:out value="${Note.id}"/>"
-		style="float: right; margin-right: 3px;"><i>Date:&nbsp;<span
+		style="float: right; margin-right: 3px;"><i>Encounter Date:&nbsp;<span
 		id="obs<c:out value="${Note.id}"/>"><%=DateUtils.getDate(note.getObservation_date(),dateFormat)%></span>&nbsp;rev<a
 		href="#"
 		onclick="return showHistory('<c:out value="${Note.id}"/>', event);"><%=note.getRevision()%></a></i></div>
