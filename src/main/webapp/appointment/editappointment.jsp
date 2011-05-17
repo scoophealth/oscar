@@ -15,7 +15,7 @@
 %>
 <%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 <%@ page
-	import="oscar.oscarDemographic.data.*, java.util.*, java.sql.*, oscar.appt.*, oscar.*, org.oscarehr.common.OtherIdManager"
+	import="oscar.oscarDemographic.data.*, java.util.*, java.sql.*, oscar.appt.*, oscar.*, java.text.*, java.net.*, org.oscarehr.common.OtherIdManager"
 	errorPage="errorpage.jsp"%>
 <%@ page import="oscar.appt.status.service.AppointmentStatusMgr"
 	errorPage="errorpage.jsp"%>
@@ -242,6 +242,38 @@ function pasteAppt() {
 function onCut() {
   document.EDITAPPT.submit();
 }
+
+
+function openTypePopup () {
+    windowprops = "height=170,width=500,location=no,scrollbars=no,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=100,left=100";
+    var popup=window.open("appointmentType.jsp?type="+document.forms['EDITAPPT'].type.value, "Appointment Type", windowprops);
+    if (popup != null) {
+      if (popup.opener == null) {
+        popup.opener = self;
+      }
+      popup.focus();
+    }
+}
+
+function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
+  document.forms['EDITAPPT'].type.value = typeSel;
+  document.forms['EDITAPPT'].reason.value = reasonSel;
+  document.forms['EDITAPPT'].duration.value = durSel;
+  document.forms['EDITAPPT'].notes.value = notesSel;
+  document.forms['EDITAPPT'].duration.value = durSel;
+  document.forms['EDITAPPT'].resources.value = resSel;
+  var loc = document.forms['EDITAPPT'].location;
+  if(loc.nodeName == 'SELECT') {
+          for(c = 0;c < loc.length;c++) {
+                  if(loc.options[c].innerHTML == locSel) {
+                          loc.selectedIndex = c;
+                          loc.style.backgroundColor=loc.options[loc.selectedIndex].style.backgroundColor;
+                          break;
+                  }
+          }
+  }
+}
+
 // stop javascript -->
 </script>
 </head>
@@ -365,7 +397,32 @@ function onCut() {
                     WIDTH="25">
             </div>
             <div class="space">&nbsp;</div>
-            <div class="label"><bean:message key="Appointment.formType" />:</div>
+
+	    <div class="label">
+            <%
+                        // multisites start ==================
+                boolean bMultisites = org.oscarehr.common.IsPropertiesOn.isMultisitesEnable();
+
+            SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
+            List<Site> sites = siteDao.getActiveSitesByProviderNo((String) session.getAttribute("user"));
+            // multisites end ==================
+
+            OscarProperties props = OscarProperties.getInstance();
+            boolean bMoreAddr = bMultisites? true : props.getProperty("scheduleSiteID", "").equals("") ? false : true;
+
+            String loc = bFirstDisp?((String)appt.get("location")):request.getParameter("location");
+            String colo = bMultisites
+                                        ? ApptUtil.getColorFromLocation(sites, loc)
+                                        : bMoreAddr? ApptUtil.getColorFromLocation(props.getProperty("scheduleSiteID", ""), props.getProperty("scheduleSiteColor", ""),loc) : "white";
+            %>                                  
+                        <% if (bMultisites) { %>
+                                <INPUT TYPE="button" NAME="typeButton" VALUE="<bean:message key="Appointment.formType"/>" onClick="openTypePopup()">
+                        <% } else { %>
+                                <bean:message key="Appointment.formType"/>
+                        <% } %>
+        
+            </div>
+
             <div class="input">
                 <INPUT TYPE="TEXT" NAME="type"
 					VALUE="<%=bFirstDisp?appt.get("type"):request.getParameter("type")%>"
@@ -471,20 +528,7 @@ function onCut() {
         <li class="row weak">
             <div class="label"><bean:message key="Appointment.formLocation" />:</div>
             <div class="input">
-				<% 
-			// multisites start ==================
-			boolean bMultisites = org.oscarehr.common.IsPropertiesOn.isMultisitesEnable();
-        	SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
-          	List<Site> sites = siteDao.getActiveSitesByProviderNo((String) session.getAttribute("user")); 
-         	// multisites end ==================
-        	 
-            OscarProperties props = OscarProperties.getInstance();
-            boolean bMoreAddr = bMultisites? true : props.getProperty("scheduleSiteID", "").equals("") ? false : true;
-            String loc = bFirstDisp?((String)appt.get("location")):request.getParameter("location");
-            String colo = bMultisites
-					? ApptUtil.getColorFromLocation(sites, loc)
-    				: bMoreAddr?ApptUtil.getColorFromLocation(props.getProperty("scheduleSiteID", ""), props.getProperty("scheduleSiteColor", ""),loc) : "white";
-            %> 
+
 <% // multisites start ==================
 if (bMultisites) { %>
 				<select tabindex="4" name="location" style="background-color: <%=colo%>" onchange='this.style.backgroundColor=this.options[this.selectedIndex].style.backgroundColor'>
@@ -713,4 +757,9 @@ Currently this is only used in the mobile version -->
     </div>
 </div> <!-- end of screen to view appointment -->
 </body>
+<script type="text/javascript">
+var loc = document.forms['EDITAPPT'].location;
+if(loc.nodeName.toUpperCase() == 'SELECT') loc.style.backgroundColor=loc.options[loc.selectedIndex].style.backgroundColor;
+</script>
+
 </html:html>

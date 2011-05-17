@@ -314,11 +314,12 @@ function navBarLoader() {
                   ctx + "/CaseManagementView.do?hc=<%=Colour.omed%>&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=OMeds&title=" + oMedsLabel + "&cmd=OMeds" + "&appointment_no="+appointmentNo,
                   ctx + "/CaseManagementView.do?hc=<%=Colour.riskFactors%>&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=RiskFactors&title=" + riskFactorsLabel + "&cmd=RiskFactors"+ "&appointment_no="+appointmentNo,
                   ctx + "/CaseManagementView.do?hc=<%=Colour.familyHistory%>&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=FamHistory&title=" + famHistoryLabel + "&cmd=FamHistory"+ "&appointment_no="+appointmentNo,
-                  ctx + "/oscarEncounter/displayIssues.do?hC=<%=Colour.issues%>",
+                  ctx + "/oscarEncounter/displayIssues.do?hC=<%=Colour.unresolvedIssues%>",
+                  ctx + "/oscarEncounter/displayResolvedIssues.do?hC=<%=Colour.resolvedIssues%>",
                   ctx + "/oscarEncounter/displayDecisionSupportAlerts.do?providerNo=" + providerNo + "&demographicNo=" + demographicNo
               ];
 
-            var rightNavBarTitles = [ "allergies", "Rx", "OMeds", "RiskFactors", "FamHistory", "issues", "Guidelines" ];
+            var rightNavBarTitles = [ "allergies", "Rx", "OMeds", "RiskFactors", "FamHistory", "unresolvedIssues", "resolvedIssues", "Guidelines" ];
 
 
           var navbar = "leftNavBar";
@@ -543,7 +544,7 @@ function showEdit(e,title, noteId, editors, date, revision, note, url, container
     }
     noteIssueUl += "</ul>";
 
-    var noteInfo = "<div style='float:right;'><i>Date:&nbsp;" + date + "&nbsp;rev<a href='#' onclick='return showHistory(\"" + noteId + "\",event);'>"  + revision + "</a></i></div>" +
+    var noteInfo = "<div style='float:right;'><i>Encounter Date:&nbsp;" + date + "&nbsp;rev<a href='#' onclick='return showHistory(\"" + noteId + "\",event);'>"  + revision + "</a></i></div>" +
                     "<div><span style='float:left;'>Editors: </span>" + editorUl + noteIssueUl + "</div><br style='clear:both;'>";
 
     $("issueNoteInfo").update(noteInfo);

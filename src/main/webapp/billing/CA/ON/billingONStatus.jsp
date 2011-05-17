@@ -206,7 +206,10 @@ BigDecimal adjTotal = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
 			if(provider_no==temp_provider_no) {				
 				var provider_ohipNo="<%=temp[3]%>";
 				document.serviceform.provider_ohipNo.value=provider_ohipNo;	
-				if (shouldSubmit) document.serviceform.submit();
+				if (shouldSubmit) {
+					if(document.getElementById("xml_vdate").value.length>0 && document.getElementById("xml_appointment_date").value.length>0)
+					document.serviceform.submit();
+				}
 				else return;				
         	} 
         	<%} %>

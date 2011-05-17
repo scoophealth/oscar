@@ -66,6 +66,7 @@ import org.oscarehr.caisi_integrator.ws.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.caisi_integrator.ws.NoteIssue;
 import org.oscarehr.casemgmt.common.Colour;
+import org.oscarehr.casemgmt.dao.CaseManagementIssueDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
 import org.oscarehr.casemgmt.dao.IssueDAO;
 import org.oscarehr.casemgmt.model.CaseManagementCPP;
@@ -118,7 +119,9 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	private SecUserRoleDao secUserRoleDao = (SecUserRoleDao) SpringUtils.getBean("secUserRoleDao");
 	private GroupNoteDao groupNoteDao = (GroupNoteDao) SpringUtils.getBean("groupNoteDao");
 	private DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
-
+	private CaseManagementIssueNotesDao cmeIssueNotesDao = (CaseManagementIssueNotesDao)SpringUtils.getBean("caseManagementIssueNotesDao");
+	private CaseManagementIssueDAO cmeIssueDao = (CaseManagementIssueDAO)SpringUtils.getBean("caseManagementIssueDAO");
+	
 	static {
 		//temporary..need something generic;
 		EyeformInit.init();
@@ -724,10 +727,10 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		logger.debug("RESET FILTER " + resetFilter);
 		if (resetFilter != null && resetFilter.equals("true")) {
 			logger.debug("CASEMGMTVIEW RESET FILTER");
-			caseForm.setFilter_providers(null);
-			// caseForm.setFilter_provider("");
+			caseForm.setFilter_providers(null);			
 			caseForm.setFilter_roles(null);
 			caseForm.setNote_sort(null);
+			caseForm.setIssues(null);
 		}
 
 		logger.debug("Filter Notes");
@@ -753,7 +756,25 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		String[] roleId = caseForm.getFilter_roles();
 		if (roleId != null && roleId.length > 0) notes = applyRoleFilter(notes, roleId);
 		logger.debug("Filter on Role " + (System.currentTimeMillis() - startTime));
-
+		
+		// apply if we are filtering on issues
+		logger.debug("Filter on issues");
+		startTime = System.currentTimeMillis();
+		
+		//List<CaseManagementIssue> issues = cmeIssueDao.getIssuesByDemographic(demoNo);
+		ArrayList<CheckBoxBean> checkBoxBeanList = new ArrayList<CheckBoxBean>();
+		// addLocalIssues(checkBoxBeanList, demographicNo, hideInactiveIssues, null);
+		addLocalIssues(checkBoxBeanList, demographicId, false, Integer.valueOf(programId));
+		addRemoteIssues(checkBoxBeanList, demographicId, false);
+		addGroupIssues(checkBoxBeanList, demographicId, false);
+		sortIssues(checkBoxBeanList);
+		request.setAttribute("cme_issues", checkBoxBeanList);	
+		
+		String[] issueId = caseForm.getIssues();
+		if (issueId != null && issueId.length > 0) notes = applyIssueFilter(notes, issueId);
+		logger.debug("Filter on issue " + (System.currentTimeMillis() - startTime));
+		
+		
 		// this is a local filter and does not apply to remote notes
 		logger.debug("Pop notes with editors");
 		startTime = System.currentTimeMillis();
@@ -805,7 +826,28 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
 		return filteredNotes;
 	}
+	
+	private List applyIssueFilter(List notes, String[] issueId) {
 
+		// if no filter return everything
+		if (Arrays.binarySearch(issueId, "a") >= 0) return notes;
+
+		List filteredNotes = new ArrayList();
+
+		for (Iterator iter = notes.listIterator(); iter.hasNext();) {
+			CaseManagementNote note = (CaseManagementNote) iter.next();
+			List<CaseManagementIssue> issues = cmeIssueNotesDao.getNoteIssues((Integer.valueOf(note.getId().toString())));
+			for(CaseManagementIssue issue: issues) {				
+				if (Arrays.binarySearch(issueId, String.valueOf(issue.getId())) >= 0) {
+					filteredNotes.add(note);
+					break;
+				}
+			}
+		}
+
+		return filteredNotes;
+	}
+	
 	private List<CaseManagementNote> manageLockedNotes(List<CaseManagementNote> notes, boolean removeLockedNotes, Map unlockedNotesMap) {
 		List<CaseManagementNote> notesNoLocked = new ArrayList<CaseManagementNote>();
 		for (CaseManagementNote note : notes) {

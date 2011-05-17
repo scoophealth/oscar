@@ -1,0 +1,74 @@
+package org.oscarehr.common.model;
+
+import javax.persistence.*;
+
+@Entity
+@Table(name="appointmentType")
+public class AppointmentType extends AbstractModel<Integer> {
+        
+    @Id
+   	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
+    
+    private String name=null;
+    private String notes=null;
+    private String reason=null;
+    private String location=null;
+    private String resources=null;    
+    private int duration=15;
+      
+	@Override
+    public Integer getId() {
+		return id;
+	}
+		   
+	public String getName() {
+		return name;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getNotes() {
+		return notes;
+	}
+	
+	public void setNotes(String notes) {
+		this.notes = notes;
+	}
+
+    public String getReason() {
+		return reason;
+	}
+    
+	public void setReason(String reason) {
+		this.reason = reason;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+	
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
+    public String getResources() {
+		return resources;
+	}
+    
+	public void setResources(String resources) {
+		this.resources = resources;
+	}
+
+    public int getDuration() {
+		return duration;
+	}
+    
+	public void setDuration(int duration) {
+		this.duration = duration;
+	}
+	
+}
+

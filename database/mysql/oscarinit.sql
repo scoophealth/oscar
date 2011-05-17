@@ -57,7 +57,7 @@ CREATE TABLE appointment (
   reason varchar(80) default NULL,
   location varchar(30) default NULL,
   resources varchar(255) default NULL,
-  type varchar(10) default NULL,
+  type varchar(50) NULL,
   style varchar(10) default NULL,
   billing varchar(10) default NULL,
   status char(2) default NULL,
@@ -8403,4 +8403,15 @@ CREATE TABLE drugReason (
   KEY (drugId),
   KEY (archivedFlag),
   KEY (codingSystem,code)
+);
+
+CREATE TABLE `appointmentType` (
+  `id` int(12) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NULL,
+  `notes` varchar(80) NULL,
+  `reason` varchar(80) NULL,
+  `location` varchar(30) NULL,
+  `resources` varchar(10) NULL,
+  `duration` int(12),
+  PRIMARY KEY (`id`)
 );

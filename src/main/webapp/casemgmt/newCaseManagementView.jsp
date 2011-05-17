@@ -53,7 +53,10 @@
 <%@page import="org.oscarehr.util.MiscUtils"%>
 <%@page import="oscar.util.UtilDateUtilities"%>
 <%@page import="org.oscarehr.casemgmt.web.NoteDisplayNonNote"%>
-<%@page import="org.oscarehr.common.dao.EncounterTemplateDao"%><jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
+<%@page import="org.oscarehr.common.dao.EncounterTemplateDao"%>
+<%@page import="org.oscarehr.casemgmt.web.CheckBoxBean"%>
+
+<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request" />
 
 <%
@@ -208,14 +211,32 @@ try
 					</c:otherwise>
 				</c:choose>
 			</nested:iterate>
-		</div>
-
-		</nested:notEmpty> <nested:notEmpty name="caseManagementViewForm" property="note_sort">
+		</div>		
+		</nested:notEmpty> 
+		
+		<nested:notEmpty name="caseManagementViewForm" property="note_sort">
 			<div style="float: left; margin-left: 10px; margin-top: 0px;"><u><bean:message key="oscarEncounter.sort.title" />:</u><br>
 			<nested:write property="note_sort" /><br>
 			</div>
 		</nested:notEmpty>
 
+		<nested:notEmpty name="caseManagementViewForm" property="issues">
+		<div style="float: left; margin-left: 10px; margin-top: 0px;"><u><bean:message key="oscarEncounter.issues.title" />:</u><br>
+			<nested:iterate type="String" id="filter_issue" property="issues">
+				<c:choose>
+					<c:when test="${filter_issue == 'a'}">All</c:when>
+					<c:otherwise>
+						<nested:iterate id="issue" name="cme_issues">
+							<c:if test="${filter_issue==issue.getIssue.getId}">
+								<nested:write name="issue" property="name" />
+								<br>
+							</c:if>
+						</nested:iterate>
+					</c:otherwise>
+				</c:choose>
+			</nested:iterate>
+		</div>		
+		</nested:notEmpty> 
 		<div id="filter" style="display:none;background-color:#ddddff;padding:8px">
 			<input type="button" value="<bean:message key="oscarEncounter.showView.title" />" onclick="return filter(false);" />
 			<input type="button" value="<bean:message key="oscarEncounter.resetFilter.title" />" onclick="return filter(true);" />
@@ -230,6 +251,9 @@ try
 					</td>
 					<td style="font-size:inherit;background-color:#bbbbff;font-weight:bold">
 						<bean:message key="oscarEncounter.sort.title" />
+					</td>
+					<td style="font-size:inherit;background-color:#bbbbff;font-weight:bold">
+						<bean:message key="oscarEncounter.issues.title" />
 					</td>
 				</tr>
 				<tr>
@@ -292,6 +316,26 @@ try
 								<li><html:radio property="note_sort" value="roleName">
 									<bean:message key="oscarEncounter.role.title" />
 								</html:radio></li>
+							</ul>
+						</div>
+					</td>
+					<td style="font-size:inherit;background-color:#ccccff;border-left:solid #ddddff 4px;border-right:solid #ddddff 4px">
+						<div style="height:150px;overflow:auto">
+							<ul style="padding:0px;margin:0px;list-style:none inside none">
+								<li><html:multibox property="issues" value="a" onclick="filterCheckBox(this)"></html:multibox><bean:message key="oscarEncounter.sortAll.title" /></li>
+								<%
+									@SuppressWarnings("unchecked")
+										List issues = (List)request.getAttribute("cme_issues");
+										for (int num = 0; num < issues.size(); ++num)
+										{
+											CheckBoxBean issue_checkBoxBean = (CheckBoxBean)issues.get(num);
+											String issue_desc = issue_checkBoxBean.getIssueDisplay().getDescription();
+											String issue_id = String.valueOf(issue_checkBoxBean.getIssue().getIssue_id());
+								%>
+								<li><html:multibox property="issues" value="<%=String.valueOf(issue_checkBoxBean.getIssue().getIssue_id())%>" onclick="filterCheckBox(this)"></html:multibox><%=issue_checkBoxBean.getIssueDisplay().getDescription()%></li>
+								<%
+									}
+								%>
 							</ul>
 						</div>
 					</td>
@@ -806,7 +850,7 @@ try
 		  								%>
 											<div id="observation<%=note.getNoteId()%>" style="float: right; margin-right: 3px;">
 												<i>
-													Date:&nbsp;
+													Encounter Date:&nbsp;
 													<span id="obs<%=note.getNoteId()%>"><%=DateUtils.getDate(note.getObservationDate(), dateFormat, request.getLocale())%></span>
 													<%
 														if (note.isCpp())
@@ -853,7 +897,7 @@ try
 								<div id="sumary<%=note.getNoteId()%>">
 									<div id="observation<%=note.getNoteId()%>" style="float: right; margin-right: 3px;">
 										<i>
-											Date:&nbsp;
+											Encounter Date:&nbsp;
 											<span id="obs<%=note.getNoteId()%>"><%=DateUtils.getDate(note.getObservationDate(), dateFormat, request.getLocale())%></span>&nbsp;
 											<bean:message key="oscarEncounter.noteRev.title" />
 											<%

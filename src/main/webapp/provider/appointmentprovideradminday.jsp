@@ -2,6 +2,7 @@
 <%@page import="org.oscarehr.common.model.Provider,org.oscarehr.common.dao.BillingDao,org.oscarehr.common.model.BillingONCHeader1"%>
 <%@page import="org.oscarehr.common.model.ProviderPreference"%>
 <%@page import="org.oscarehr.web.admin.ProviderPreferencesUIBean"%>
+<%@page import="org.oscarehr.common.dao.UserPropertyDAO, org.oscarehr.common.dao.DemographicDao, org.oscarehr.common.model.UserProperty" %>
 <%
 	if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
 	String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
@@ -291,6 +292,14 @@ formatDate = UtilDateUtilities.DateToString(inform.parse(strDate), "EEE, yyyy-MM
 String strYear=""+year;
 String strMonth=month>9?(""+month):("0"+month);
 String strDay=day>9?(""+day):("0"+day);
+
+UserPropertyDAO userPropertyDao = null;
+DemographicDao demographicDao = null;
+if(view == 1) {
+    demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
+    userPropertyDao = (UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
+}
+
 Calendar apptDate = Calendar.getInstance();
 apptDate.set(year, month-1 , day);
 Calendar minDate = Calendar.getInstance();
@@ -1395,7 +1404,7 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
              <%=(hourCursor<10?"0":"") +hourCursor+ ":"%><%=(minuteCursor<10?"0":"")+minuteCursor%>&nbsp;</a></td>
             <td class="hourmin" width='1%' <%=dateTimeCodeBean.get("color"+hourmin.toString())!=null?("bgcolor="+dateTimeCodeBean.get("color"+hourmin.toString()) ):""%> title='<%=dateTimeCodeBean.get("description"+hourmin.toString())%>'><font color='<%=(dateTimeCodeBean.get("color"+hourmin.toString())!=null && !dateTimeCodeBean.get("color"+hourmin.toString()).equals(bgcolordef) )?"black":"white" %>'><%=hourmin.toString() %></font></td>
 <%
-        //BillingDao billDao = (BillingDao) SpringUtils.getBean("billingDao");
+        BillingDao billDao = (BillingDao) SpringUtils.getBean("billingDao");
         while (bFirstTimeRs?it.hasNext():true) { //if it's not the first time to parse the standard time, should pass it by
                   appointment = bFirstTimeRs?it.next():appointment;
                   len = bFirstTimeRs&&!bFirstFirstR?lenLimitedS:lenLimitedL;
@@ -1487,6 +1496,23 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
           	  
           	  bFirstTimeRs=true;
 			    as.setApptStatus(status);
+
+		Double debt = 0d;
+             	String debtMessage = "";
+             	if(billDao!=null && demographic_no>0 && cal!=null && cal.getTime()!=null) {
+                     debt = billDao.getDebt(Integer.valueOf(demographic_no),cal.getTime());
+                     if(debt >= 0.01d) {
+                                   List<Integer> unpaidNumbers = billDao.listUnpaidInvoices(Integer.valueOf(demographic_no),cal.getTime());
+                                   if(unpaidNumbers == null || unpaidNumbers.size()>0) {
+                                           if(unpaidNumbers.size() == 1) debtMessage = "Patient "+demographic_no+" "+userfirstname+" "+userlastname+" needs to pay invoice #";
+                                           else debtMessage = "Patient "+demographic_no+" "+userfirstname+" "+userlastname+" needs to pay invoices ##";
+                                           for (Integer num : unpaidNumbers) {
+                                                   debtMessage += num.toString()+" ";
+                                           }
+                               }
+                     }
+             	}
+
 			 //multi-site. if a site have been selected, only display appointment in that site   
 			 if (!bMultisites || (selectedSite == null && CurrentSiteMap.get(sitename) != null) || sitename.equals(selectedSite)) {   
         %>
@@ -1510,8 +1536,14 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
                 } else {
 	                out.print("&nbsp;");
                 }
-            %>
-            
+
+ 		if (debt != null && debt > 0) {
+             %>
+                            <span style="color:red" title="<%= debtMessage %>"><b>$</b></span>
+             <%
+                }
+             %>
+
             <%if(urgency != null && urgency.equals("critical")) {             	
             %>
             	<img src="../images/warning-icon.png" border="0" width="14" height="14" title="Critical Appointment"/>
@@ -1627,6 +1659,23 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
 	  <security:oscarSec roleName="<%=roleName$%>" objectName="_appointment.doctorLink" rights="r">
       <a href=# onClick="popupWithApptNo(700,1027,'../oscarRx/choosePatient.do?providerNo=<%=curUser_no%>&demographicNo=<%=demographic_no%>','rx',<%=appointment.get("appointment_no")%>)" title="<bean:message key="global.prescriptions"/>">|<bean:message key="global.rx"/>
       </a>
+
+
+<!-- doctor color -->
+<oscar:oscarPropertiesCheck property="ENABLE_APPT_DOC_COLOR" value="yes">
+        <%
+                String providerColor = null;
+                if(view == 1 && demographicDao != null && userPropertyDao != null) {
+                        String providerNo = (demographicDao.getDemographic(String.valueOf(demographic_no))==null?null:demographicDao.getDemographic(String.valueOf(demographic_no)).getProviderNo());
+                        UserProperty property = userPropertyDao.getProp(providerNo, userPropertyDao.COLOR_PROPERTY);
+                        if(property != null) {
+                                providerColor = property.getValue();
+                        }
+                }
+        %>
+        <%= (providerColor != null ? "<span style=\"background-color:"+providerColor+";width:5px\">&nbsp;</span>" : "") %>    
+</oscar:oscarPropertiesCheck>
+
       <%
 	  if("bc".equalsIgnoreCase(prov)){
 	  if(patientHasOutstandingPrivateBills(String.valueOf(demographic_no))){

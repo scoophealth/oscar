@@ -201,6 +201,38 @@ function pasteAppt() {
 }
 <% } %>
 
+
+	function openTypePopup () {
+		windowprops = "height=170,width=500,location=no,scrollbars=no,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=100,left=100";
+		var popup=window.open("appointmentType.jsp?type="+document.forms['ADDAPPT'].type.value, "Appointment Type", windowprops);
+		if (popup != null) {
+			if (popup.opener == null) {
+				popup.opener = self;
+			}
+			popup.focus();
+		}
+	}
+		
+	function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
+		  document.forms['ADDAPPT'].type.value = typeSel;
+		  document.forms['ADDAPPT'].reason.value = reasonSel;
+		  document.forms['ADDAPPT'].duration.value = durSel;
+		  document.forms['ADDAPPT'].notes.value = notesSel;
+		  document.forms['ADDAPPT'].duration.value = durSel;
+		  document.forms['ADDAPPT'].resources.value = resSel;
+		  var loc = document.forms['ADDAPPT'].location;
+		  if(loc.nodeName == 'SELECT') {
+		          for(c = 0;c < loc.length;c++) {
+		                  if(loc.options[c].innerHTML == locSel) {
+		                          loc.selectedIndex = c;
+		                          loc.style.backgroundColor=loc.options[loc.selectedIndex].style.backgroundColor;
+		                          break;
+		                  }
+		          }
+		  }
+	}
+		
+		
 // stop javascript -->
 
 </script>
@@ -459,7 +491,32 @@ function pasteAppt() {
                     HEIGHT="20" border="0" onChange="checkTimeTypeIn(this)">
             </div>
             <div class="space">&nbsp;</div>
-            <div class="label"><bean:message key="Appointment.formType" />:</div>
+            
+            <%		
+				    // multisites start ==================
+				    boolean bMultisites = org.oscarehr.common.IsPropertiesOn.isMultisitesEnable(
+);
+				    SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
+				    List<Site> sites = siteDao.getActiveSitesByProviderNo((String) session.getAttribute("user"));
+				    // multisites end ==================
+				
+				    OscarProperties props = OscarProperties.getInstance();
+				    boolean bMoreAddr = bMultisites? true : props.getProperty("scheduleSiteID", "").equals("") ? false : true;
+				    String tempLoc = "";
+				    if(bFirstDisp && bMoreAddr) {                
+				            tempLoc = (new JdbcApptImpl()).getLocationFromSchedule(dateString2, curProvider_no);
+				    }
+				    String loc = bFirstDisp?tempLoc:request.getParameter("location");
+				    String colo = bMultisites
+				                                        ? ApptUtil.getColorFromLocation(sites, loc)
+				                                        : bMoreAddr? ApptUtil.getColorFromLocation(props.getProperty("scheduleSiteID", ""), props.getProperty("scheduleSiteColor", ""),loc) : "white";
+					 if (bMultisites) { 
+			%>
+				    <INPUT TYPE="button" NAME="typeButton" VALUE="<bean:message key="Appointment.formType"/>" onClick="openTypePopup()">
+			<% } else { %>
+				    <div class="label"><bean:message key="Appointment.formType"/>:</div>
+			<% } %>
+			
             <div class="input">
                 <INPUT TYPE="TEXT" NAME="type"
                     VALUE='<%=bFirstDisp?"":request.getParameter("type").equals("")?"":request.getParameter("type")%>'
@@ -535,37 +592,20 @@ function pasteAppt() {
         <% } %>
         <li class="row weak">
             <div class="label"><bean:message key="Appointment.formLocation" />:</div>
-<%
-            // multisites start ==================
-            boolean bMultisites = org.oscarehr.common.IsPropertiesOn.isMultisitesEnable();
-            SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
-            List<Site> sites = siteDao.getActiveSitesByProviderNo((String) session.getAttribute("user"));
-            // multisites end ==================
 
-            OscarProperties props = OscarProperties.getInstance();
-            boolean bMoreAddr = bMultisites? true : props.getProperty("scheduleSiteID", "").equals("") ? false : true;
-			String tempLoc = "";
-            if(bFirstDisp && bMoreAddr) {
-            	tempLoc = (new JdbcApptImpl()).getLocationFromSchedule(dateString2, curProvider_no);
-            }
-            String loc = bFirstDisp?tempLoc:request.getParameter("location");
-            String colo = bMultisites
-            				? ApptUtil.getColorFromLocation(sites, loc)
-            				: bMoreAddr? ApptUtil.getColorFromLocation(props.getProperty("scheduleSiteID", ""), props.getProperty("scheduleSiteColor", ""),loc) : "white";
-%>
             <div class="input">
-<% // multisites start ==================
-if (bMultisites) { %>
-                <select tabindex="4" name="location" style="background-color: <%=colo%>" onchange='this.style.backgroundColor=this.options[this.selectedIndex].style.backgroundColor'>
-                <% for (Site s:sites) { %>
-                        <option value="<%=s.getName()%>" style="background-color: <%=s.getBgColor()%>" <%=s.getName().equals(loc)?"selected":"" %>><%=s.getName()%></option>
-                <% } %>
-                </select>
-<% } else {
-	// multisites end ==================
-%>
-                <input type="TEXT" name="location" tabindex="4" value="<%=loc%>" width="25" height="20" border="0" hspace="2">
-<% } %>
+		<% // multisites start ==================
+		if (bMultisites) { %>
+		                <select tabindex="4" name="location" style="background-color: <%=colo%>" onchange='this.style.backgroundColor=this.options[this.selectedIndex].style.backgroundColor'>
+		                <% for (Site s:sites) { %>
+		                        <option value="<%=s.getName()%>" style="background-color: <%=s.getBgColor()%>" <%=s.getName().equals(loc)?"selected":"" %>><%=s.getName()%></option>
+		                <% } %>
+		                </select>
+		<% } else {
+			// multisites end ==================
+		%>
+		                <input type="TEXT" name="location" tabindex="4" value="<%=loc%>" width="25" height="20" border="0" hspace="2">
+		<% } %>
             </div>
             <div class="space">&nbsp;</div>
             <div class="label"><bean:message key="Appointment.formResources" />:</div>
@@ -756,4 +796,8 @@ if (bMultisites) { %>
 </table>
 
 </body>
+<script type="text/javascript">
+var loc = document.forms['ADDAPPT'].location;
+if(loc.nodeName.toUpperCase() == 'SELECT') loc.style.backgroundColor=loc.options[loc.selectedIndex].style.backgroundColor;
+</script>
 </html:html>

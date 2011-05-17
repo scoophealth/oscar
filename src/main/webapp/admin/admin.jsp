@@ -405,6 +405,10 @@ div.logoutBox {
 					key="admin.admin.appointmentStatusSetting" /></a></li>
 			</oscar:oscarPropertiesCheck>
 		</ul>
+		<ul>
+			<li><a href="#" onclick ="popupPage(500,screen.width,'../appointment/appointmentTypeAction.do'); return false;"><bean:message
+						key="admin.admin.appointmentTypeList" /></a></li>
+		</ul>
 		</div>
 	</security:oscarSec>
 
