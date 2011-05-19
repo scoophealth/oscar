@@ -36,13 +36,13 @@ public class NoteDisplayNonNote implements NoteDisplay {
 	}
 
 	public NoteDisplayNonNote(PatientForm patientForm) {
-		date = patientForm.created;
+		date = patientForm.edited;
 		if( date == null ) {
-			date = patientForm.edited;
+			date = patientForm.created;
 		}
 		note = patientForm.formName;
 		noteId = patientForm.formId;
-		linkInfo = patientForm.formName;
+		linkInfo = patientForm.jsp;
 		isEncounterForm = true;
 	}
 

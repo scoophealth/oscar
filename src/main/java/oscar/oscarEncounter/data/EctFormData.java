@@ -101,6 +101,66 @@ public class EctFormData {
 		}
 
 	}
+	
+	public static ArrayList<PatientForm> getGroupedPatientFormsFromAllTables(Integer demographicId)
+	{
+		// grab all of the forms
+		EncounterFormDao encounterFormDao=(EncounterFormDao)SpringUtils.getBean("encounterFormDao");
+		List<EncounterForm> encounterForms = encounterFormDao.findAll();
+		Collections.sort(encounterForms, EncounterForm.BC_FIRST_COMPARATOR);
+		
+		// grab patient forms for all the above form types grouped by date of edit
+		ArrayList<PatientForm> allResults=new ArrayList<PatientForm>();
+		for (EncounterForm encounterForm : encounterForms) {
+			String table = StringUtils.trimToNull(encounterForm.getFormTable());
+			if (table!=null) {				
+				allResults.addAll(getGroupedPatientFormsAsArrayList(demographicId.toString(), encounterForm.getFormName(), table, encounterForm.getFormValue()));
+			}
+		}
+
+		return(allResults);
+	}
+	
+	public static ArrayList<PatientForm> getGroupedPatientFormsAsArrayList(String demoNo, String formName, String table, String jsp) {
+		table=StringUtils.trimToNull(table);
+		if (table==null) return(new ArrayList<PatientForm>());
+		
+		ArrayList<PatientForm> forms = new ArrayList<PatientForm>();
+
+		Connection c=null;
+		try {
+			c=DbConnectionFilter.getThreadLocalDbConnection();
+			
+			if (!table.equals("form")) {
+				String sql = "SELECT max(ID) ID, demographic_no, formCreated, date(formEdited) 'lastEdited', max(formEdited) 'frmEdited' FROM " + table + " WHERE demographic_no=" + demoNo + " group by lastEdited";
+
+				Statement s=c.createStatement();
+				ResultSet rs = s.executeQuery(sql);
+
+				while (rs.next()) {
+					PatientForm frm = new PatientForm(formName, rs.getInt("ID"), rs.getInt("demographic_no"), rs.getDate("formCreated"), rs.getTimestamp("frmEdited"), jsp);
+					forms.add(frm);
+				}
+			} else {
+				String sql = "SELECT form_no, demographic_no, form_date from " + table + " where demographic_no=" + demoNo + " order by form_no desc";
+
+				Statement s=c.createStatement();
+				ResultSet rs = s.executeQuery(sql);
+
+				while (rs.next()) {
+					PatientForm frm = new PatientForm(formName, rs.getInt("form_no"), rs.getInt("demographic_no"), rs.getDate("form_date"), rs.getDate("form_date"));
+					forms.add(frm);
+				}
+			}
+		} catch (SQLException e) {
+			logger.error("Unexpected error.", e);
+			throw(new PersistenceException(e));
+		} finally {
+			SqlUtils.closeResources(c, null, null);
+		}
+		
+		return(forms);
+	}
 
 	public static ArrayList<PatientForm> getAllPatientFormsFromAllTables(Integer demographicId)
 	{
@@ -187,6 +247,7 @@ public class EctFormData {
 		public Date created;
 		public Date edited;
 		public String formName;
+		public String jsp;
 		
 		// Constructor
 		public PatientForm(String formName, Integer formId, Integer demographicId, Date created, Date edited) {
@@ -196,6 +257,20 @@ public class EctFormData {
 			this.created = created;
 			this.edited = edited;
 		}
+		
+		//Constructor
+		public PatientForm(String formName, Integer formId, Integer demographicId, Date created, Date edited, String jsp) {
+			this.formName = formName;
+			this.formId = formId;
+			this.demographicId = demographicId;
+			this.created = created;
+			this.edited = edited;
+			
+			if( jsp.indexOf("/") != -1 ) {
+				jsp = jsp.substring(jsp.indexOf("/"));
+			}
+			this.jsp = jsp + String.valueOf(demographicId) + "&formId=" + String.valueOf(formId);
+		}		
 
 		public String getFormId() {
 			return formId.toString();

@@ -790,7 +790,7 @@ try
 						{
 							String winName = "encounterforms"+demographicNo;
 							int hash = Math.abs(winName.hashCode());
-							String url = "popupPage(700,800,'"+hash+"','"+request.getContextPath()+"/form/forwardshortcutname.jsp?demographic_no="+demographicNo+"&amp;formname="+StringEscapeUtils.escapeHtml(((NoteDisplayNonNote)note).getLinkInfo())+"'); return false;";
+							String url = "popupPage(700,800,'"+hash+"','"+request.getContextPath()+StringEscapeUtils.escapeHtml(((NoteDisplayNonNote)note).getLinkInfo())+"'); return false;";
 							%>
 								<a class="links" title="<bean:message key="oscarEncounter.view.eformView"/>" id="view<%=note.getNoteId()%>" href="#" onclick="<%=url%>" style="float: right; margin-right: 5px; font-size: 8px;"> <bean:message key="oscarEncounter.view" /> </a> 
 							<%
