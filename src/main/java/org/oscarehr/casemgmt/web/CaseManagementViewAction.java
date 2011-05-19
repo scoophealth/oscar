@@ -776,7 +776,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		}
 
 		// add forms to notes list as single line items
-		ArrayList<PatientForm> allPatientForms=EctFormData.getAllPatientFormsFromAllTables(demographicId);
+		ArrayList<PatientForm> allPatientForms=EctFormData.getGroupedPatientFormsFromAllTables(demographicId);
 		for (PatientForm patientForm : allPatientForms) {
 			notesToDisplay.add(new NoteDisplayNonNote(patientForm));
 		}
