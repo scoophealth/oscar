@@ -431,14 +431,12 @@
 			<artifactId>ocan</artifactId>
 			<version>0.0-SNAPSHOT</version>
 		</dependency>
-
+	
 		 <dependency>
                         <groupId>jspellchecker</groupId>
                         <artifactId>jazzy-core</artifactId>
-                        <version>1.0</version>
+                        <version>unknown</version>
                 </dependency>
-
-
 
 		<!-- patientSiteVisit.jar , suspect this is generated classes and should be removed as a jar in the future -->
 		<dependency>
