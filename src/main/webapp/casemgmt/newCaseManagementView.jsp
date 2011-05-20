@@ -227,8 +227,8 @@ try
 					<c:when test="${filter_issue == 'a'}">All</c:when>
 					<c:otherwise>
 						<nested:iterate id="issue" name="cme_issues">
-							<c:if test="${filter_issue==issue.getIssue.getId}">
-								<nested:write name="issue" property="name" />
+							<c:if test="${filter_issue==issue.issue.id}">
+								<nested:write name="issue" property="issueDisplay.description" />
 								<br>
 							</c:if>
 						</nested:iterate>
@@ -328,11 +328,9 @@ try
 										List issues = (List)request.getAttribute("cme_issues");
 										for (int num = 0; num < issues.size(); ++num)
 										{
-											CheckBoxBean issue_checkBoxBean = (CheckBoxBean)issues.get(num);
-											String issue_desc = issue_checkBoxBean.getIssueDisplay().getDescription();
-											String issue_id = String.valueOf(issue_checkBoxBean.getIssue().getIssue_id());
+											CheckBoxBean issue_checkBoxBean = (CheckBoxBean)issues.get(num);											
 								%>
-								<li><html:multibox property="issues" value="<%=String.valueOf(issue_checkBoxBean.getIssue().getIssue_id())%>" onclick="filterCheckBox(this)"></html:multibox><%=issue_checkBoxBean.getIssueDisplay().getDescription()%></li>
+								<li><html:multibox property="issues" value="<%=String.valueOf(issue_checkBoxBean.getIssue().getId())%>" onclick="filterCheckBox(this)"></html:multibox><%=issue_checkBoxBean.getIssueDisplay().getResolved().equals("resolved")?"* ":""%> <%=issue_checkBoxBean.getIssueDisplay().getDescription()%></li>
 								<%
 									}
 								%>
@@ -1088,11 +1086,15 @@ try
 	    		<img style="position: absolute;" src="<c:out value="${ctx}/oscarEncounter/graphics/busy.gif"/>" alt="<bean:message key="oscarEncounter.Index.btnWorking" />">
 	    	</span>
     	</div>
+    	<button type="button" onclick="javascript:spellCheck();">Spell Check</button>
     </div>
+    
 </div>
 </nested:form>
 </div>
 
+<script language="JavaScript" src='<c:out value="${ctx}"/>/jspspellcheck/spellcheck-caller.js'></script>
+	
 <script type="text/javascript">
     document.forms["caseManagementEntryForm"].noteId.value = "<%=savedId%>";
 
@@ -1174,8 +1176,21 @@ try
 
     //$("encMainDiv").scrollTop = $("n<%=savedId%>").offsetTop - $("encMainDiv").offsetTop;
     reason = "<%=insertReason(request, bean)%>";    //function defined bottom of file
-   </script>
+   
+ 	function spellCheck()
+    {            
+		// Build an array of form elements (not there values)
+        var elements = new Array(0);
+                
+        // Your form elements that you want to have spell checked
+        elements[elements.length] = document.getElementById(caseNote);
+                
+        // Start the spell checker
+        startSpellCheck(ctx+'/jspspellcheck/',elements);
+                
+    }
 
+</script>
 <%
 }
 catch (Exception e)

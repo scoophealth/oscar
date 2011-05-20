@@ -3,11 +3,11 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <groupId>jspellchecker</groupId>
   <artifactId>jazzy-core</artifactId>
-  <version>1.0</version>
+  <version>unknown</version>
   <versioning>
     <versions>
-      <version>1.0</version>
+      <version>unknown</version>
     </versions>
-    <lastUpdated>20110520024617</lastUpdated>
+    <lastUpdated>20110524134637</lastUpdated>
   </versioning>
 </metadata>
