@@ -678,6 +678,7 @@ if(wLReadonly.equals("")){
 				<bean:message key="demographic.demographiceditdemographic.msgWaitList"/></a></td>
 			</tr>
 <%}%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_billing" rights="r">
 			<tr class="Header">
 				<td style="font-weight: bold"><bean:message
 					key="admin.admin.billing" /></td>
@@ -756,6 +757,7 @@ if(wLReadonly.equals("")){
 			</tr>
 <%      } %>
 <% } %>
+</security:oscarSec>
 			<tr class="Header">
 				<td style="font-weight: bold"><bean:message
 					key="oscarEncounter.Index.clinicalModules" /></td>
