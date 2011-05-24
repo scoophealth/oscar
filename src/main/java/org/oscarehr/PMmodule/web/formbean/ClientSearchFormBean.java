@@ -52,6 +52,7 @@ public class ClientSearchFormBean {
 	private String dateTo;
 	private List programDomain;
 	private List genders;
+	private String chartNo;
 	
 	public ClientSearchFormBean() {
 		//setSearchOutsideDomain(true);
@@ -270,5 +271,14 @@ public class ClientSearchFormBean {
 	public void setAssignedToProviderNo(String assignedToProviderNo) {
 		this.assignedToProviderNo = assignedToProviderNo;
 	}
+
+	public String getChartNo() {
+    	return chartNo;
+    }
+
+	public void setChartNo(String chartNo) {
+    	this.chartNo = chartNo;
+    }
+	
 	
 }

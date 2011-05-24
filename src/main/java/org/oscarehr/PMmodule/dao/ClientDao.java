@@ -243,13 +243,11 @@ public class ClientDao extends HibernateDaoSupport {
 		String active = "";
 		String gender = "";
 		
-		
 		String sql = "";
 		String sql2 = "";
 		
 		@SuppressWarnings("unchecked")
-		List<Demographic> results = null;
-
+		List<Demographic> results = null;		
 		
 		if (bean.getFirstName() != null && bean.getFirstName().length() > 0) {
 			firstName = bean.getFirstName();
@@ -295,7 +293,11 @@ public class ClientDao extends HibernateDaoSupport {
 				condLastName = Restrictions.or(Restrictions.ilike("LastName", lastNameL), Restrictions.sqlRestriction(sql));
 				condAlias2 = Restrictions.or(Restrictions.ilike("Alias", lastNameL),Restrictions.sqlRestriction(sql2));
 		}	
-				
+		
+		if (bean.getChartNo() != null && bean.getChartNo().length() > 0) {
+			criteria.add(Expression.eq("ChartNo", bean.getChartNo()));
+		}	
+	
 		if (!bean.isSearchUsingSoundex()) {
 			
 			if (firstName.length() > 0) {

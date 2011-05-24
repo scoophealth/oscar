@@ -20,6 +20,7 @@
 		form.elements['criteria.firstName'].value='';
 		form.elements['criteria.lastName'].value='';
 		form.elements['criteria.dob'].value='';
+		form.elements['criteria.chartNo'].value='';
 		// form.elements['criteria.healthCardNumber'].value='';
 		// form.elements['criteria.healthCardVersion'].value='';
 		// form.elements['criteria.searchOutsideDomain'].checked = true;
@@ -72,6 +73,11 @@
 				</tr>
 			</caisi:isModuleLoad>
 
+		<tr>
+			<th>Chart No (MRN)</th>
+			<td><html:text property="criteria.chartNo" size="15" /></td>
+		</tr>
+		
 			<!--  <th>Search outside of domain <a href="javascript:void(0)" onclick="popupHelp('domain')">?</a></th>
 				-->
 			<tr>
