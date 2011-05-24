@@ -95,9 +95,15 @@ public class TestBookAction extends DispatchAction {
     	List<TestBookRecord> tests = dao.getByAppointmentNo(appointmentNo);
     	StringBuilder sb = new StringBuilder();
     	
-    	for(TestBookRecord f:tests) {    		
+    	for(TestBookRecord f:tests) {    
+    		String style = new String();
+    		if(f.getUrgency().equals("URGENT") || f.getUrgency().equals("ASAP")) {
+    			style = "style=\"color:red;\"";
+    		}
+    		sb.append("<span "+style+">");
     		sb.append("diag:" + f.getTestname()).append(" ").append(f.getEye()).append(" ").append(getUrgencyAbbreviation(f.getUrgency())).append(" ").append(f.getComment());
     		sb.append(" ").append(f.getComment());
+    		sb.append("</span>");
     		sb.append("<br/>");
     	}
     	return sb.toString();

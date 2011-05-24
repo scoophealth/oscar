@@ -97,7 +97,7 @@ public class ProcedureBookAction extends DispatchAction {
     	
     	for(ProcedureBook f:procedures) {
     		String style = new String();
-    		if(f.getUrgency().equals("Urgent")) {
+    		if(f.getUrgency().equals("URGENT") || f.getUrgency().equals("ASAP")) {
     			style = "style=\"color:red;\"";
     		}
     		sb.append("<span "+style+" title=\""+f.getComment()+"\">proc:").append(f.getProcedureName()).append(" ").append(f.getEye()).append(" ").append(f.getLocation()).append(" ").append(f.getUrgency()).append(" ").append(f.getComment()).append("</span>");
