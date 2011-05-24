@@ -144,6 +144,9 @@
        addLeftNavDiv("conReport");	      
        popColumn(ctx + "/oscarEncounter/displayConReport.do?hC=009999&cmd=conReport&appointment_no="+appointmentNo + "&cpp=measurements","conReport","conReport", "leftNavBar", this);
        reorderNavBarElements('conReport','consultation');
+       addLeftNavDiv("Billing");	      
+       popColumn(ctx + "/oscarEncounter/displayBilling.do?hC=009999&cmd=Billing&appointment_no="+appointmentNo,"Billing","Billing", "leftNavBar", this);
+       reorderNavBarElements('Billing','conReport');
        addLeftNavDiv("macro");	      
        popColumn(ctx + "/oscarEncounter/displayMacro.do?hC=009999&appointment_no="+appointmentNo  +"&cpp=measurements","macro","macro", "leftNavBar", this);
        

@@ -36,7 +36,14 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.util.MessageResources;
+import org.oscarehr.PMmodule.dao.ClientDao;
+import org.oscarehr.common.dao.OscarAppointmentDao;
+import org.oscarehr.common.model.Appointment;
+import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.Provider;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
 import oscar.oscarBilling.ca.bc.MSP.MSPReconcile;
@@ -50,6 +57,9 @@ public class EctDisplayBillingAction extends EctDisplayAction {
   
     public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {                                              
      
+    	String appointmentNo = request.getParameter("appointment_no");
+    	
+    	
         
             //set text for lefthand module title
             Dao.setLeftHeading("Billing History");
@@ -70,6 +80,18 @@ public class EctDisplayBillingAction extends EctDisplayAction {
                 Dao.setRightURL(url);
                 Dao.setRightHeadingID(cmd);  //no menu so set div id to unique id for this action
 
+                if(appointmentNo != null && appointmentNo.length()>0) {
+                	OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
+                	ClientDao clientDao = (ClientDao)SpringUtils.getBean("clientDao");
+                	Demographic d = clientDao.getClientByDemographicNo(Integer.parseInt(bean.demographicNo));
+                    Appointment appt = appointmentDao.find(Integer.parseInt(appointmentNo));
+                    String billform = OscarProperties.getInstance().getProperty("default_view");
+                    SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+                    SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm");
+                    Provider p = LoggedInInfo.loggedInInfo.get().loggedInProvider;
+                	url = "popupPage(755,1200,'"+winName+"','../billing.do?billRegion=ON&billForm="+billform+"&hotclick=&appointment_no="+appointmentNo+"&demographic_name="+d.getFormattedName()+"&status="+appt.getStatus()+"&demographic_no="+bean.demographicNo+"&providerview="+p.getProviderNo()+"&user_no="+p.getProviderNo()+"&apptProvider_no="+appt.getProviderNo()+"&appointment_date="+dateFormatter.format(appt.getAppointmentDate())+"&start_time="+timeFormatter.format(appt.getStartTime())+"&bNewForm=1');return false;";
+                	Dao.setRightURL(url);
+                }
                 ////
                 JdbcBillingReviewImpl dbObj = new JdbcBillingReviewImpl();
                 List aL = null;
