@@ -259,7 +259,7 @@ public class PdfRecordPrinter {
         Font obsfont = new Font(bf, FONTSIZE, Font.UNDERLINE);
         Phrase phrase = new Phrase(LEADING, "", obsfont);
         p.setAlignment(Paragraph.ALIGN_LEFT);
-        phrase.add("Patient Rx History");
+        phrase.add("Prescriptions");
         p.add(phrase);
         document.add(p);
         
@@ -572,9 +572,9 @@ public class PdfRecordPrinter {
         
         Paragraph p = new Paragraph();
         p.setAlignment(Paragraph.ALIGN_LEFT);
-        Phrase phrase = new Phrase(LEADING, "\n\n", getFont());
+        Phrase phrase = new Phrase(LEADING, "\n", getFont());
         p.add(phrase);
-        phrase = new Phrase(LEADING, "Ocular Procedure:", obsfont);        
+        phrase = new Phrase(LEADING, "Ocular Procedures", obsfont);        
         p.add(phrase);
         getDocument().add(p);
         
@@ -582,7 +582,7 @@ public class PdfRecordPrinter {
         	p = new Paragraph();
     		phrase = new Phrase(LEADING, "", getFont());              
     		//Chunk chunk = new Chunk("Documentation Date: " + getFormatter().format(proc.getDate()) + "\n", obsfont);
-    		Chunk chunk = new Chunk(getFormatter().format(proc.getDate()) + " " + proc.getEye() + " " + proc.getProcedureName() + " at " + proc.getLocation() + " by " + providerDao.getProviderName(proc.getDoctor()) + "\n",getFont());
+    		Chunk chunk = new Chunk(getFormatter().format(proc.getDate()) + " " + proc.getEye() + " " + proc.getProcedureName() + " at " + proc.getLocation() + " by " + providerDao.getProviderName(proc.getDoctor()) + " " + proc.getProcedureNote() + "\n",getFont());
     		phrase.add(chunk);                    
     		p.add(phrase);      		
     		getDocument().add(p);
@@ -604,7 +604,7 @@ public class PdfRecordPrinter {
         
         Paragraph p = new Paragraph();
         p.setAlignment(Paragraph.ALIGN_LEFT);
-        Phrase phrase = new Phrase(LEADING, "\n\n", getFont());
+        Phrase phrase = new Phrase(LEADING, "\n", getFont());
         p.add(phrase);
         phrase = new Phrase(LEADING, "Specs History", obsfont);        
         p.add(phrase);
@@ -647,7 +647,7 @@ public class PdfRecordPrinter {
         
         Paragraph p = new Paragraph();
         p.setAlignment(Paragraph.ALIGN_LEFT);
-        Phrase phrase = new Phrase(LEADING, "\n\n", getFont());
+        Phrase phrase = new Phrase(LEADING, "\n", getFont());
         p.add(phrase);
         phrase = new Phrase(LEADING, "Allergies", obsfont);        
         p.add(phrase);
@@ -717,7 +717,7 @@ public class PdfRecordPrinter {
         
         Paragraph p = new Paragraph();
         p.setAlignment(Paragraph.ALIGN_LEFT);
-        Phrase phrase = new Phrase(LEADING, "\n\n", getFont());
+        Phrase phrase = new Phrase(LEADING, "\n", getFont());
        // p.add(phrase);
         phrase = new Phrase(LEADING, "Ocular Examination", obsfont);        
         p.add(phrase);

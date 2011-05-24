@@ -472,10 +472,10 @@ public class EyeformAction extends DispatchAction {
 					printCppItem(printer,"Medical History","MedHistory",demographic.getDemographicNo(), appointmentNo, true);
 					printCppItem(printer,"Family History","FamHistory",demographic.getDemographicNo(), appointmentNo, true);									
 					printCppItem(printer,"Diagnostic Notes","DiagnosticNotes",demographic.getDemographicNo(), appointmentNo, false);
-					printCppItem(printer,"Ocular Medication","OcularMedication",demographic.getDemographicNo(), appointmentNo, true);
+					printCppItem(printer,"Ocular Medications","OcularMedication",demographic.getDemographicNo(), appointmentNo, true);
 					
 //				}
-				printCppItem(printer,"Other Meds","OMeds",demographic.getDemographicNo(), appointmentNo, true);
+				printCppItem(printer,"Other Medications","OMeds",demographic.getDemographicNo(), appointmentNo, true);
 				
 				printer.setNewPage(true);
 				
