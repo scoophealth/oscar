@@ -228,10 +228,10 @@ div.headPrevention a:visited { color:black; }
 }
 
 
-div.headPrevention a:active { color:blue; }
-div.headPrevention a:hover { color:blue; }
-div.headPrevention a:link { color:blue; }
-div.headPrevention a:visited { color:blue; }
+div.headPrevention a:active { color:black; }
+div.headPrevention a:hover { color:black; }
+div.headPrevention a:link { color:black; }
+div.headPrevention a:visited { color:black; }
 
 div.headPrevention p {
     background: #ddddff;
