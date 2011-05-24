@@ -28,6 +28,8 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%@page
 	import="oscar.oscarEncounter.pageUtil.*,oscar.oscarEncounter.data.*,java.util.List,org.oscarehr.eyeform.model.OcularProc"%>
+<%@page import="org.oscarehr.util.SpringUtils"%>
+<%@page import="org.oscarehr.PMmodule.dao.ProviderDao"%>
 
 <%
 if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
@@ -48,6 +50,8 @@ else
 
 
 List<OcularProc> procs = (List<OcularProc>)request.getAttribute("procs");
+ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
+
 %>
 
 <html:html locale="true">
@@ -100,9 +104,12 @@ function BackToOscar()
 	
 				<table border="0" width="80%" cellspacing="1">
 					<tr>
+						<th align="left" class="VCRheads">Date</th>
+						<th align="left" class="VCRheads">Eye</th>
 						<th align="left" class="VCRheads">Procedure Name</th>
+						<th align="left" class="VCRheads">Doctor</th>
 						<th align="left" class="VCRheads">Location</th>
-						<th align="left" class="VCRheads">Date</th>						
+						<th align="left" class="VCRheads">Notes</th>						
 					</tr>
 					<%  
                                     for (int i = 0; i < procs.size(); i++){
@@ -111,11 +118,17 @@ function BackToOscar()
                                     String location      = (String) procs.get(i).getLocation();
                                     String status      = (String) procs.get(i).getStatus();         
                                     String date = (String)procs.get(i).getDateStr();
+                                    String eye      = (String) procs.get(i).getEye();
+                                    String doctor      = providerDao.getProvider(procs.get(i).getDoctor()).getFormattedName();
+                                    String notes      = (String) procs.get(i).getProcedureNote();
                                 %>
 					<tr>
+						<td ><%=date %></td>
+						<td ><%=eye %></td>
 						<td ><%=name %></td>
+						<td ><%=doctor %></td>
 						<td ><%=location %></td>
-						<td ><%=date %></td>						
+						<td ><%=notes %></td>						
 					</tr>
 					<%}%>
 				</table>			
