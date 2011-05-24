@@ -10,4 +10,5 @@
     <handler name="IHA" className="IHAHandler"/>
     <handler name="OSCAR_TO_OSCAR_HL7_V2" className="OscarToOscarHl7V2Handler"/>
     <handler name="PHS" className="org.oscarehr.integration.hl7.handlers.upload.PhsStarHandler"/>        
+	<handler name="Epsilon" className="EpsilonHandler" />
 </message-configuration>

@@ -538,7 +538,7 @@ public class CMLHandler implements MessageHandler {
     }
     
     
-    private String formatDateTime(String plain){
+    protected String formatDateTime(String plain){
         String dateFormat = "yyyyMMddHHmmss";
         dateFormat = dateFormat.substring(0, plain.length());
         String stringFormat = "yyyy-MM-dd HH:mm:ss";
@@ -548,7 +548,7 @@ public class CMLHandler implements MessageHandler {
         return UtilDateUtilities.DateToString(date, stringFormat);
     }
     
-    private String getString(String retrieve){
+    protected String getString(String retrieve){
         if (retrieve != null){
             retrieve.replaceAll("^", " ");
             return(retrieve.trim());

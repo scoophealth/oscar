@@ -67,9 +67,17 @@ public final class MessageUploader {
 			int finalResultCount = h.getOBXFinalResultCount();
 			String obrDate = h.getMsgDate();
 
-			// reformat date
-			String format = "yyyy-MM-dd HH:mm:ss".substring(0, obrDate.length() - 1);
-			obrDate = UtilDateUtilities.DateToString(UtilDateUtilities.StringToDate(obrDate, format), "yyyy-MM-dd HH:mm:ss");
+			try {
+                                // reformat date
+                                String format = "yyyy-MM-dd HH:mm:ss".substring(0,
+                                                obrDate.length() - 1);
+                                obrDate = UtilDateUtilities.DateToString(
+                                                UtilDateUtilities.StringToDate(obrDate, format),
+                                                "yyyy-MM-dd HH:mm:ss");
+                        } catch (Exception e) {
+                                obrDate = "";
+                                logger.error("Error of parsing message date : ",e);
+                        }
 
 			int i = 0;
 			int j = 0;
