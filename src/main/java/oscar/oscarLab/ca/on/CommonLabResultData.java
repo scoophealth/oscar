@@ -66,7 +66,7 @@ public class CommonLabResultData {
     }
 
     public static String[] getLabTypes(){
-        return new String[] {"MDS","CML","BCP","HL7","DOC"};
+        return new String[] {"MDS","CML","BCP","HL7","DOC","Epsilon"};
     }
 
     public ArrayList<LabResultData> populateLabResultsData(String demographicNo, String reqId, boolean attach) {
@@ -79,12 +79,18 @@ public class CommonLabResultData {
         String mds = op.getProperty("MDS_LABS");
         String pathnet = op.getProperty("PATHNET_LABS");
         String hl7text = op.getProperty("HL7TEXT_LABS");
+	String epsilon = op.getProperty("Epsilon_LABS");
 
 
         if( cml != null && cml.trim().equals("yes")){
             ArrayList<LabResultData> cmlLabs = mDSData.populateCMLResultsData(demographicNo, reqId, attach);
             labs.addAll(cmlLabs);
         }
+        if( epsilon != null && epsilon.trim().equals("yes")){
+            ArrayList cmlLabs = mDSData.populateCMLResultsData(demographicNo, reqId, attach);
+            labs.addAll(cmlLabs);
+        }
+
         if (mds != null && mds.trim().equals("yes")){
             ArrayList<LabResultData> mdsLabs = mDSData.populateMDSResultsData2(demographicNo, reqId, attach);
             labs.addAll(mdsLabs);
@@ -116,8 +122,14 @@ public class CommonLabResultData {
         String mds = op.getProperty("MDS_LABS");
         String pathnet = op.getProperty("PATHNET_LABS");
         String hl7text = op.getProperty("HL7TEXT_LABS");
-
+ 	String epsilon = op.getProperty("Epsilon_LABS");
+	
         if(scannedDocStatus !=null && (scannedDocStatus.equals("N")  || scannedDocStatus.equals("I")  || scannedDocStatus.equals(""))){
+
+	if( epsilon != null && epsilon.trim().equals("yes")){
+            ArrayList cmlLabs = mDSData.populateEpsilonResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
+            labs.addAll(cmlLabs);
+        }
 
             if( cml != null && cml.trim().equals("yes")){
                 ArrayList cmlLabs = mDSData.populateCMLResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
@@ -189,8 +201,14 @@ public class CommonLabResultData {
         String mds = op.getProperty("MDS_LABS");
         String pathnet = op.getProperty("PATHNET_LABS");
         String hl7text = op.getProperty("HL7TEXT_LABS");
+	String epsilon = op.getProperty("Epsilon_LABS");
 
         if(scannedDocStatus !=null && (scannedDocStatus.equals("N")  || scannedDocStatus.equals("I")  || scannedDocStatus.equals(""))){
+
+	if( epsilon != null && epsilon.trim().equals("yes")){
+            ArrayList cmlLabs = mDSData.populateEpsilonResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
+            labs.addAll(cmlLabs);
+        }
 
             if( cml != null && cml.trim().equals("yes")){
                 ArrayList cmlLabs = mDSData.populateCMLResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);

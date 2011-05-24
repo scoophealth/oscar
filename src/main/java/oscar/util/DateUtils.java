@@ -105,6 +105,8 @@ public final class DateUtils {
 	}
 
 	public static String getDate(Date date, String format, Locale locale) {
+		if(date==null) return "";
+
 		SimpleDateFormat sdf = new SimpleDateFormat(format, locale);
 
 		return sdf.format(date);

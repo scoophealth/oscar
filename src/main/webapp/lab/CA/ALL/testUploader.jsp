@@ -96,6 +96,7 @@ if(outcome != null){
 					<option value="GDML">GDML</option>
 					<option value="ICL">ICL</option>
 					<option value="MDS">MDS</option>
+					<option value="Epsilon">MHL</option>
 					<option value="PATHL7"
 						<oscar:oscarPropertiesCheck property="PATHNET_LABS" value="yes">Selected</oscar:oscarPropertiesCheck>>EXCELLERIS</option>
 					<option value="OTHER">Other</option>
