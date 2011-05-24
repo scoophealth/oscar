@@ -680,7 +680,8 @@ exKeys[7] = "Relationship";
 exKeys[8] = "Life Stage";
 
 function prepareExtraFields(cpp,exts) {
-	console.log("prepare Extra Fields");
+	//commented out..this causes a problem in Firefox
+	//console.log("prepare Extra Fields"); 
     var rowIDs = new Array(9);
     for (var i=2; i<exFields.length; i++) {
 	rowIDs[i] = "Item"+exFields[i];
