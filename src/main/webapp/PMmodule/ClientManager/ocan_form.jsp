@@ -468,8 +468,6 @@ $("document").ready(function(){
 	<input type="hidden" name="assessmentId" id="assessmentId" value="" />
 	
 	<!-- client data start here	 -->
-	<input type="hidden" id="clientStartDate" name="clientStartDate" value="<%=ocanStaffForm.getFormattedClientStartDate()%>" /> 
-	<input type="hidden" name="client_date_of_birth" id="client_date_of_birth" value="<%=ocanStaffForm.getClientDateOfBirth()%>" />
 	<input type="hidden" name="client_1_1" id="client_1_1" value="<%=OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_1_1", prepopulationLevel).size()>0?OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_1_1", prepopulationLevel).get(0).getAnswer():""%>" />
 	
 	<input type="hidden" name="client_1_comments" id="client_1_comments" value="<%=OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_1_comments", prepopulationLevel).size()>0?OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_1_comments", prepopulationLevel).get(0).getAnswer():""%>" />
@@ -577,9 +575,7 @@ $("document").ready(function(){
 
 	<input type="hidden" name="client_culture_heritage" id="client_culture_heritage" value="<%=OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_culture_heritage", prepopulationLevel).size()>0?OcanForm.getStaffAnswers(ocanStaffForm.getId(), "client_culture_heritage", prepopulationLevel).get(0).getAnswer():""%>" />
 
-	<input type="hidden" id="clientCompletionDate" name="clientCompletionDate" value="<%=ocanStaffForm.getFormattedClientCompletionDate()%>" /> 
-	 
-	<!-- client data end here  -->
+		<!-- client data end here  -->
 <% } else { %>
 	<input type="hidden" name="ocanStaffFormId" id="ocanStaffFormId" value="<%=ocanStaffForm.getId()%>" />
 	<input type="hidden" name="assessmentId" id="assessmentId" value="<%=ocanStaffForm.getAssessmentId()%>" />
