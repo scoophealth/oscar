@@ -41,6 +41,7 @@ import org.oscarehr.util.MiscUtils;
 public class StringUtils {
 
     private static Logger logger = MiscUtils.getLogger();
+    public final static String ELLIPSIS = "...";
 
     /**
      * use to have a maximum string length view 

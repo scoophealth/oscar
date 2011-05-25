@@ -19,6 +19,11 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  * @author toby
  */
 public class Icd9Dao extends HibernateDaoSupport{
+	
+	public List<Icd9> getIcd9Code(String icdCode){
+		return getHibernateTemplate().find("from Icd9 dx where dx.icd9 = ?",icdCode);
+	}
+	
 
     public List<Icd9> getIcd9(String query) {
         List cList = null;
