@@ -70,11 +70,11 @@
 	
 	try {
 		ocanStaffForm.setStartDate(formatter.parse(startDate));
-		//ocanStaffForm.setClientStartDate(formatter.parse(request.getParameter("clientStartDate")));
+		ocanStaffForm.setClientStartDate(formatter.parse(request.getParameter("clientStartDate")));
 	}catch(java.text.ParseException e){}
 	try {
 		ocanStaffForm.setCompletionDate(formatter.parse(completionDate));
-		//ocanStaffForm.setClientCompletionDate(formatter.parse(request.getParameter("clientCompletionDate")));
+		ocanStaffForm.setClientCompletionDate(formatter.parse(request.getParameter("clientCompletionDate")));
 	}catch(java.text.ParseException e){}
 	
 	ocanStaffForm.setCreated(new Date());

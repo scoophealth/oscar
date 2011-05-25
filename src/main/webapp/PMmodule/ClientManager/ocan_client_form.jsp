@@ -80,6 +80,19 @@ function submitOcanClientForm() {
 	<input type="hidden" id="assessment_status" name="assessment_status" />
 	<input type="hidden" id="startDate" name="startDate" value="<%=ocanStaffForm.getFormattedStartDate()%>"/>
 	<input type="hidden" id="completionDate" name="completionDate" value="<%=ocanStaffForm.getFormattedCompletionDate()%>"/>
+	<input type="hidden" id="date_of_birth" name="date_of_birth" value="<%=ocanStaffForm.getDateOfBirth()%>"/>
+	<input type="hidden" id="addressLine1" name="addressLine1" value="<%=ocanStaffForm.getAddressLine1()%>"/>
+	<input type="hidden" id="addressLine2" name="addressLine2" value="<%=ocanStaffForm.getAddressLine2()%>"/>
+	<input type="hidden" id="city" name="city" value="<%=ocanStaffForm.getCity()%>"/>
+	<input type="hidden" id="province" name="province" value="<%=ocanStaffForm.getProvince()%>"/>
+	<input type="hidden" id="postalCode" name="postalCode" value="<%=ocanStaffForm.getPostalCode()%>"/>
+	<input type="hidden" id="city" name="city" value="<%=ocanStaffForm.getCity()%>"/>
+	<input type="hidden" id="phoneNumber" name="phoneNumber" value="<%=ocanStaffForm.getPhoneNumber()%>"/>
+	<input type="hidden" id="email" name="email" value="<%=ocanStaffForm.getEmail()%>"/>
+	<input type="hidden" id="hcNumber" name="hcNumber" value="<%=ocanStaffForm.getHcNumber()%>"/>	
+	<input type="hidden" id="hcVersion" name="hcVersion" value="<%=ocanStaffForm.getHcVersion()%>"/>
+	<input type="hidden" id="gender" name="gender" value="<%=ocanStaffForm.getGender()%>"/>
+	
 <% if(prepopulate==1) { %> 
 	<input type="hidden" name="ocanStaffFormId" id="ocanStaffFormId" value="" />
 	<input type="hidden" name="assessmentId" id="assessmentId" value="" />
