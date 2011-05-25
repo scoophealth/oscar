@@ -757,7 +757,7 @@
 		<action input="/oscarRx/ManagePharacy.jsp" name="RxManagePharmacyForm" path="/oscarRx/managePharmacy" scope="request" parameter="method" type="oscar.oscarRx.pageUtil.RxManagePharmacyAction">
 			<forward name="success" path="/oscarRx/SelectPharmacy.jsp" />
 		</action>
-		<action input="/oscarRx/ManagePharacy2.jsp" name="RxManagePharmacyForm" path="/oscarRx/managePharmacy2" scope="request" parameter="method" type="oscar.oscarRx.pageUtil.RxManagePharmacyAction">
+		<action input="/oscarRx/ManagePharacy2.jsp" name="RxManagePharmacyForm" path="/oscarRx/managePharmacy2" scope="request" parameter="method" type="RxManagePharmacyAction">
 			<forward name="success" path="/oscarRx/SelectPharmacy2.jsp" />
 		</action>
 		<action input="/oscarRx/SelectPharacy.jsp" path="/oscarRx/LinkPharmacy" scope="request" type="oscar.oscarRx.pageUtil.RxLinkPharmacyAction">
@@ -768,6 +768,10 @@
 		</action>
 		<action input="/oscarRx/SearchDrug.jsp" name="FrmForm" path="/oscarRx/SendToPhr" parameter="method" scope="request" type="org.springframework.web.struts.DelegatingActionProxy">
 			<forward name="finished" path="/phr/response.jsp"></forward>
+		</action>
+		<action input="/oscarRx/SelectReason.jsp" name="FrmForm" path="/oscarRx/RxReason" parameter="method" scope="request" type="oscar.oscarRx.pageUtil.RxReasonAction">
+		   <forward name="close" path="/oscarRx/close.html" />
+		   <forward name="success" path="/oscarRx/SelectReason.jsp" />
 		</action>
 		<action input="/oscarRx/MyDrugrefDisplay.jsp" name="FrmForm" path="/oscarRx/GetmyDrugrefInfo" parameter="method" scope="request" type="oscar.oscarRx.pageUtil.RxMyDrugrefInfoAction">
 			<forward name="success" path="/oscarRx/MyDrugrefDisplay.jsp"></forward>

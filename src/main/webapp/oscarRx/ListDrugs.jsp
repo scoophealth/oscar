@@ -40,9 +40,9 @@
 <%@page import="java.util.Enumeration"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.util.SessionConstants"%>
-<%@page import="java.util.List"%>
+<%@page import="java.util.List,oscar.util.StringUtils"%>
 <%@page import="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager"%>
-<%@page import="org.oscarehr.util.LoggedInInfo"%>
+<%@page import="org.oscarehr.util.LoggedInInfo,org.oscarehr.common.dao.DrugReasonDao,org.oscarehr.common.model.DrugReason"%>
 <%@page import="java.util.ArrayList,oscar.util.*,java.util.*,org.oscarehr.common.model.Drug,org.oscarehr.common.dao.*"%>
 <bean:define id="patient" type="oscar.oscarRx.data.RxPatientData.Patient" name="Patient" />
 <logic:notPresent name="RxSessionBean" scope="session">
@@ -81,7 +81,8 @@ if (heading != null){
             <th align="left"><b><bean:message key="SearchDrug.msgPrescription"/></b></th>
             <th align="center" width="35px"><b><bean:message key="SearchDrug.msgReprescribe"/></b></th>
             <th align="center" width="35px"><b><bean:message key="SearchDrug.msgDelete"/></b></th>
-            <th align="center" width="35px"><b>Discontinue</b></th>
+            <th align="center" width="35px"><b><bean:message key="SearchDrug.msgDiscontinue"/></b></th>
+			<th align="center" width="35px"><b><bean:message key="SearchDrug.msgReason"/></b></th>           
             <th align="center" width="15px">&nbsp;</th>
             <th align="center"><bean:message key="SearchDrug.msgLocationPrescribed"/></th>
         </tr>
@@ -91,6 +92,9 @@ if (heading != null){
             List<Drug> prescriptDrugs = caseManagementManager.getPrescriptions(patient.getDemographicNo(), showall);
             //DrugDao drugDao = (DrugDao) SpringUtils.getBean("drugDao");
             //List<Drug> prescriptDrugs = drugDao.getPrescriptions(""+patient.getDemographicNo(), showall);
+            DrugReasonDao drugReasonDao  = (DrugReasonDao) SpringUtils.getBean("drugReasonDao");
+			
+            
             List<String> reRxDrugList=bean.getReRxDrugIdList();
 
 
@@ -167,6 +171,13 @@ if (heading != null){
                 <%}else{%>
                   <%=prescriptDrug.getArchivedReason()%>
                 <%}%>
+            </td>
+            
+            <td>
+            	<% 	List<DrugReason> drugReasons  = drugReasonDao.getReasonsForDrugID(prescriptDrug.getId(),true);	%>
+           	 	<a href="javascript:void(0);"  onclick="popupRxReasonWindow(<%=patient.getDemographicNo()%>,<%=prescriptIdInt%>);"  title="<%=displayDrugReason(drugReasons) %>">
+            		<%=StringUtils.maxLenString(displayDrugReason(drugReasons), 4, 3, StringUtils.ELLIPSIS)%>
+            	</a>
             </td>
 
             <td width="10px" align="center" valign="top">
@@ -256,5 +267,24 @@ String getName(Drug prescriptDrug){
         return retval.substring(0,retval.length())+"\"";
 
     }
+
+%><%!
+
+String displayDrugReason(List<DrugReason> drugReasons){
+	StringBuilder sb = new StringBuilder();
+	boolean multiLoop = false;
+	for(DrugReason drugReason:drugReasons){
+		if(multiLoop){
+			sb.append(", ");
+		}
+		sb.append(drugReason.getCode());
+		multiLoop = true;
+	}
+	if(sb.toString().equals("")){
+		return "---";
+	}
+	
+	return sb.toString();
+}
 
 %>
