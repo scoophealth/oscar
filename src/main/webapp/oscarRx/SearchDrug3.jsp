@@ -212,6 +212,19 @@
                popup2(600, 800, top, left, url, 'windowNameRxSearch<%=demoNo%>');
 
            }
+           
+           
+           function popupRxReasonWindow(demographic,id){
+               var winX = (document.all)?window.screenLeft:window.screenX;
+               var winY = (document.all)?window.screenTop:window.screenY;
+
+               var top = winY+70;
+               var left = winX+110;
+               var url = "SelectReason.jsp?demographicNo="+demographic+"&drugId="+id;
+               popup2(575, 650, top, left, url, 'windowNameRxReason<%=demoNo%>');
+
+           }
+           
 
            var highlightMatch = function(full, snippet, matchindex) {
                 return "<a title='"+full+"'>"+full.substring(0, matchindex) +
