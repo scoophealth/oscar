@@ -53,11 +53,13 @@
   EctMeasurementTypeBeanHandler mType = new EctMeasurementTypeBeanHandler();
   
   
+
   Hashtable existingPrevention = null;
   
+
   String providerName ="";
   String provider = (String) session.getValue("user");
-  String prevDate = UtilDateUtilities.getToday("yyyy-MM-dd");
+  String prevDate = UtilDateUtilities.getToday("yyyy-MM-dd H:mm");
   String completed = "0";
   String nextDate = "";
   boolean never = false;
@@ -181,7 +183,7 @@ font-weight: bold;
 
 label.fields{
 float: left;
-width: 80px;
+width: 125px;
 font-weight: bold;
 }
 
@@ -268,7 +270,7 @@ clear: left;
                   if ( id != null ) { 
                      saveAction = "/oscarEncounter/oscarMeasurements/DeleteData2";
                      h = EctMeasurementsDataBeanHandler.getMeasurementDataById(id);
-                     prevDate = ((Date) h.get("dateObserved_date")).toString();
+					 prevDate = (String) h.get("dateObserved");
                      val = (String) h.get("value");
                      comment = (String) h.get("comments");
                   } 
@@ -293,10 +295,18 @@ clear: left;
                 
                 EctMeasurementTypesBean mtypeBean = mType.getMeasurementType(measurement);
                 if(ectMeasurementsForm != null && !ectMeasurementsForm.isEmpty()){
+
                    h = new Hashtable(ectMeasurementsForm.values);
+
                    prevDate = (String) h.get("date-"+ctr);
                    val = (String) h.get("inputValue-" + ctr);
                    comment = (String) h.get("comments-" + ctr);
+
+
+
+
+
+
                 }
                 %>
                
@@ -319,9 +329,19 @@ clear: left;
                            <input type="radio" name="<%= "value(inputMInstrc-" + ctr + ")" %>" value="<%=mtypeBean.getMeasuringInstrc()%>" checked/>
                          </div>
                          <div style="float:left;margin-left:30px;">
-                            <label for="prevDate" class="fields" >Obs Date:</label>    
-                            <input type="text" name="<%= "value(date-" + ctr + ")" %>" id="prevDate<%=ctr%>" value="<%=prevDate%>" size="9" > <a id="date<%=ctr%>"><img title="Calendar" src="../../images/cal.gif" alt="Calendar" border="0" /></a> <br>                        
-                                                               
+                            <label for="prevDate" class="fields" >Obs Date/Time:</label>    
+
+							<input type="text" name="<%= "value(date-" + ctr + ")" %>" id="prevDate<%=ctr%>" value="<%=prevDate%>" size="17" > 
+
+							<% if ( id == null ) { %>
+							<a id="date<%=ctr%>"><img title="Calendar" src="../../images/cal.gif" alt="Calendar" border="0" /></a> 
+							<%}%>
+							<br />                                                              
+
+
+
+
+
                             <label for="<%="value(inputValue-"+ctr+")"%>" class="fields"><%=h2.get("value_name")%>:</label> 
                             <% if ( mtypeBean.getValidationName() != null && mtypeBean.getValidationName().equals("Yes/No")){ %>
                             <select  id="<%= "value(inputValue-" + ctr + ")" %>" name="<%= "value(inputValue-" + ctr + ")" %>" >
@@ -378,7 +398,7 @@ clear: left;
         
     <% } %>
   <% for (int i =0; i < measurements.length; i++){ %>  
-Calendar.setup( { inputField : "prevDate<%=i%>", ifFormat : "%Y-%m-%d", showsTime :false, button : "date<%=i%>", singleClick : true, step : 1 } );
+Calendar.setup( { inputField : "prevDate<%=i%>", ifFormat : "%Y-%m-%d %H:%M", showsTime :true, button : "date<%=i%>", singleClick : true, step : 1 } );
   <%}%>
 //Calendar.setup( { inputField : "nextDate", ifFormat : "%Y-%m-%d", showsTime :false, button : "nextDateCal", singleClick : true, step : 1 } );
 </script>    
