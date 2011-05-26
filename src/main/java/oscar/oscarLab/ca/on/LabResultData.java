@@ -50,6 +50,7 @@ public class LabResultData implements Comparable{
     Logger logger = MiscUtils.getLogger();
     
     public static String CML = "CML";
+    public static String EPSILON = "Epsilon";
     public static String MDS = "MDS";
     public static String EXCELLERIS = "BCP"; //EXCELLERIS
     public static String DOCUMENT = "DOC"; //INTERNAL DOCUMENT
@@ -91,7 +92,10 @@ public class LabResultData implements Comparable{
             labType = EXCELLERIS;
         }else if (HL7TEXT.equals(labT)){
             labType = HL7TEXT;
+        }else if(EPSILON.equals(labT)){
+                labType = EPSILON;
         }
+
         
     }
     
@@ -115,7 +119,8 @@ public class LabResultData implements Comparable{
             if (prd.findPathnetAdnormalResults(this.segmentID) > 0){
                 this.abn= true;
             }
-        }else if(CML.equals(this.labType)){
+	}else if(CML.equals(this.labType)||EPSILON.equals(this.labType)){
+
             //logger.debug("cml is doc type");
             CMLLabTest cml = new CMLLabTest();
             if (cml.findCMLAdnormalResults(this.segmentID) > 0){

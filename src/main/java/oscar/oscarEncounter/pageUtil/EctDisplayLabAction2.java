@@ -47,7 +47,7 @@ import oscar.util.StringUtils;
 //import oscar.oscarSecurity.CookieSecurity;
 
 public class EctDisplayLabAction2 extends EctDisplayAction {
-    Logger logger = Logger.getLogger(EctDisplayLabAction.class);
+    Logger logger = Logger.getLogger(EctDisplayLabAction2.class);
     private static final String cmd = "labs";
     
     public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {

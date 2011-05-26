@@ -113,6 +113,87 @@ public class MDSResultsData {
         
     }
     
+
+ public ArrayList populateEpsilonResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status) {
+        //logger.info("populateCMLResultsData getting called now");
+        if ( providerNo == null) { providerNo = ""; }
+        if ( patientFirstName == null) { patientFirstName = ""; }
+        if ( patientLastName == null) { patientLastName = ""; }
+        if ( patientHealthNumber == null) { patientHealthNumber = ""; }
+        if ( status == null ) { status = ""; }
+
+
+        labResults =  new ArrayList();
+        String sql = "";
+        try {
+            
+            if ( demographicNo == null) {
+                 sql = "select lpp.id, lpp.patient_health_num, concat(lpp.patient_last_name,',',lpp.patient_first_name) as patientName, lpp.patient_sex, lpp.doc_name, lpp.collection_date, lpp.lab_status, lpp.accession_num, providerLabRouting.status "
+                        +" from labPatientPhysicianInfo lpp, providerLabRouting "
+                        +" where providerLabRouting.status like '%"+status+"%' AND providerLabRouting.provider_no like '"+(providerNo.equals("")?"%":providerNo)+"'"
+                        +" AND providerLabRouting.lab_type = 'Epsilon' "
+                        +" AND lpp.patient_last_name like '"+patientLastName+"%' and lpp.patient_first_name like '"+patientFirstName+"%' AND lpp.patient_health_num like '%"+patientHealthNumber+"%' and providerLabRouting.lab_no = lpp.id";
+            } else {
+
+                sql = "select lpp.id, lpp.patient_health_num, concat(lpp.patient_last_name,',',lpp.patient_first_name) as patientName, lpp.patient_sex, lpp.doc_name, lpp.collection_date, lpp.lab_status, lpp.accession_num "
+                        +" from labPatientPhysicianInfo lpp, patientLabRouting "
+                        +" where patientLabRouting.lab_type = 'Epsilon' and lpp.id = patientLabRouting.lab_no and patientLabRouting.demographic_no='"+demographicNo+"' "; //group by mdsMSH.segmentID";
+            }
+
+            logger.info(sql);
+            ResultSet rs = DBHandler.GetSQL(sql);
+            while(rs.next()){
+                LabResultData lbData = new LabResultData(LabResultData.CML);
+
+                lbData.labType = LabResultData.CML;
+
+                lbData.segmentID = oscar.Misc.getString(rs,"id");
+
+                if (demographicNo == null && !providerNo.equals("0")) {
+                    lbData.acknowledgedStatus = oscar.Misc.getString(rs,"status");
+                } else {
+                    lbData.acknowledgedStatus ="U";
+                }
+
+
+                lbData.healthNumber = oscar.Misc.getString(rs,"patient_health_num");
+                lbData.patientName = oscar.Misc.getString(rs,"patientName");
+                lbData.sex = oscar.Misc.getString(rs,"patient_sex");
+
+
+                lbData.resultStatus = "0"; //TODO
+                // solve lbData.resultStatus.add(db.getString(rs,"abnormalFlag"));
+
+
+                lbData.dateTime = oscar.Misc.getString(rs,"collection_date");
+                lbData.setDateObj( UtilDateUtilities.getDateFromString(lbData.dateTime, "dd-MMM-yy") );
+
+                //priority
+                lbData.priority = "----";
+
+                lbData.requestingClient = oscar.Misc.getString(rs,"doc_name");
+                lbData.reportStatus =  oscar.Misc.getString(rs,"lab_status");
+                lbData.accessionNumber = oscar.Misc.getString(rs,"accession_num");
+
+                if (lbData.reportStatus != null && lbData.reportStatus.equals("F")){
+                    lbData.finalRes = true;
+                }else{
+                    lbData.finalRes = false;
+                }
+                
+                lbData.discipline = "Hem/Chem/Other";
+                
+                labResults.add(lbData);
+            }
+            rs.close();            
+        }catch(Exception e){
+            logger.error("exception in CMLPopulate", e);
+
+        }
+
+        return labResults;
+
+}
     
     public ArrayList populateCMLResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status) {
         //logger.info("populateCMLResultsData getting called now");
