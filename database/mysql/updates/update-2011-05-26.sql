@@ -1,0 +1,1 @@
+alter table drugs add column eTreatmentType varchar(20);
