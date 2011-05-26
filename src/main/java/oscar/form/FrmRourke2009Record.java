@@ -23,21 +23,19 @@
  */
 package oscar.form;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.sql.SQLException;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Properties;
-
+import java.util.Date;
+import java.util.Calendar;
+import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
+import oscar.util.UtilDateUtilities;
+import org.oscarehr.util.SpringUtils;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.util.MiscUtils;
-import org.oscarehr.util.SpringUtils;
-
-import oscar.form.dao.Rourke2009DAO;
 import oscar.form.model.FormRourke2009;
-import oscar.util.UtilDateUtilities;
+import oscar.form.dao.Rourke2009DAO;
 
 public class FrmRourke2009Record extends FrmRecord {
     public Properties getFormRecord(int demographicNo, int existingID)
@@ -142,7 +140,7 @@ public class FrmRourke2009Record extends FrmRecord {
             return props;
         }  else {
             try {
-                String[] functions = {"getCpName", "getCbirthDate", "getCbirthWeight", "getCheadCirc", "getCLength",
+                String[] functions = {"getC_pName", "getC_birthDate", "getC_birthWeight", "getC_headCirc", "getCLength",
                     "getP1Date1w", "getP1Date2w", "getP1Date1m", "getP2Date2m", "getP2Date4m", "getP2Date6m", "getP3Date9m", "getP3Date12m", "getP3Date15m", "getP4Date18m", "getP4Date24m",
                     "getP1Hc1w", "getP1Hc2w", "getP1Hc1m", "getP2Hc2m", "getP2Hc4m", "getP2Hc6m", "getP3Hc9m", "getP3Hc12m", "getP3Hc15m", "getP4Hc18m", "getP4Hc24m",
                     "getP1Wt1w", "getP1Wt2w", "getP1Wt1m", "getP2Wt2m", "getP2Wt4m", "getP2Wt6m", "getP3Wt9m", "getP3Wt12m", "getP3Wt15m", "getP4Wt18m", "getP4Wt24m",
@@ -176,7 +174,7 @@ public class FrmRourke2009Record extends FrmRecord {
                     }
                     Calendar cal = Calendar.getInstance();
                     Date now = cal.getTime();
-                    Date dob = frmRourke.getCbirthDate();
+                    Date dob = frmRourke.getC_birthDate();
                     String age;
                     if( dob != null ) {
                         age = String.valueOf((now.getTime()-dob.getTime())/1000L/60L/60L/24L);
