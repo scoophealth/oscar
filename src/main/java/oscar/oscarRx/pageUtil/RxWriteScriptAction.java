@@ -907,6 +907,12 @@ public final class RxWriteScriptAction extends DispatchAction {
 							} else {
 								patientComplianceN = false;
 							}
+						} else if (elem.equals("eTreatmentType_"+num)){
+							if("--".equals(val)){
+							   rx.setETreatmentType(null);
+							}else{
+							   rx.setETreatmentType(val);
+							}
 						}
                                                 
 					}

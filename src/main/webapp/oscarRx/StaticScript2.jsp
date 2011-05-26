@@ -183,7 +183,22 @@
                                                         %>      &nbsp;<%=drug.pickupTime%>&nbsp;
                                                         <% }
                                                          } %>
-                                                    
+                                                    <%if(drug.eTreatmentType != null && !drug.eTreatmentType.equals("null")){ %>
+                                                    	 &nbsp;<bean:message key="WriteScript.msgETreatmentType"/>:
+                                                    	
+                                                    	<%if (drug.eTreatmentType.equals("CHRON")){%>
+                                                    		<bean:message key="WriteScript.msgETreatment.Continuous"/>
+                                                    	<%}else  if (drug.eTreatmentType.equals("ACU")){%>
+															<bean:message key="WriteScript.msgETreatment.Acute"/>
+														<%}else  if (drug.eTreatmentType.equals("ONET")){%>
+															<bean:message key="WriteScript.msgETreatment.OneTime"/>
+														<%}else  if (drug.eTreatmentType.equals("PRNL")){%>
+															<bean:message key="WriteScript.msgETreatment.LongTermPRN"/>
+														<%}else  if (drug.eTreatmentType.equals("PRNS")){%>
+															<bean:message key="WriteScript.msgETreatment.ShortTermPRN"/> 
+                                                    	<%}
+                                                    }%>
+                                                    	
                                                 </td>
                                                 <%
 							if (drug.customName==null)
