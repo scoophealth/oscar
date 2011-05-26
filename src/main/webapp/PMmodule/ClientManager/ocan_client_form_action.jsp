@@ -28,7 +28,20 @@
 	OcanStaffForm ocanClientForm=OcanFormAction.createOcanStaffForm(ocanStaffFormId,clientId,signed);
 	ocanClientForm.setLastName(request.getParameter("lastName"));
 	ocanClientForm.setFirstName(request.getParameter("firstName"));	
-	//ocanClientForm.setDateOfBirth(request.getParameter("dateOfBirth"));
+	
+	ocanClientForm.setAddressLine1(request.getParameter("addressLine1"));
+	ocanClientForm.setAddressLine2(request.getParameter("addressLine2"));
+	ocanClientForm.setCity(request.getParameter("city"));
+	ocanClientForm.setProvince(request.getParameter("province"));
+	ocanClientForm.setPostalCode(request.getParameter("postalCode"));
+	ocanClientForm.setPhoneNumber(request.getParameter("phoneNumber"));
+	ocanClientForm.setEmail(request.getParameter("email"));
+	ocanClientForm.setHcNumber(request.getParameter("hcNumber"));
+	ocanClientForm.setHcVersion(request.getParameter("hcVersion"));
+	ocanClientForm.setDateOfBirth(request.getParameter("date_of_birth"));	
+	ocanClientForm.setGender(request.getParameter("gender"));
+	
+	
 	ocanClientForm.setClientDateOfBirth(request.getParameter("client_date_of_birth"));
 	ocanClientForm.setOcanType(request.getParameter("ocanType"));
 
