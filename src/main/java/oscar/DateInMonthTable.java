@@ -68,6 +68,7 @@ public class DateInMonthTable {
 		}
 		rows=calendar.get(Calendar.WEEK_OF_MONTH);
 		cols=7;
+		rows = rows-calendar.get(Calendar.WEEK_OF_MONTH)+1;
 		monthDateGrid=new int [rows][cols];
 
 		calendar=new GregorianCalendar(curYear,curMonth, 1);
