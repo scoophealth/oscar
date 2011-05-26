@@ -15,13 +15,13 @@ p4_date18m      :       p4_hc18m
 p4_date24m      :       p4_hc24m
 
 __origX		:	125
-__origY		:	368
+__origY		:	349
 __nMaxPixX	:	392
-__nMaxPixY	:	262
+__nMaxPixY	:	239
 __fStartX	:	0
 __fEndX		:	24
-__fStartY	:	28.4
-__fEndY		:	56.8
+__fStartY	:	28
+__fEndY		:	54
 
 __finalEDB	:	c_birthDate
 __dateFormat	:	dd/MM/yyyy

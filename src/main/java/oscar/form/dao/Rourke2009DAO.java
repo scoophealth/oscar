@@ -24,8 +24,8 @@
 
 package oscar.form.dao;
 
-import org.oscarehr.common.dao.AbstractDao;
 import org.springframework.stereotype.Repository;
+import org.oscarehr.common.dao.AbstractDao;
 
 import oscar.form.model.FormRourke2009;
 

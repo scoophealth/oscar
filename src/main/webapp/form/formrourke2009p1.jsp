@@ -23,6 +23,7 @@
  * Ontario, Canada 
  */
 --%>
+
 <%@ page import="oscar.util.*, oscar.form.*, oscar.form.data.*"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -62,8 +63,10 @@
 %>
 
 <html:html locale="true">
+
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+
 <title>Rourke2009 Record 1</title>
 <link rel="stylesheet" type="text/css" href="rourkeStyle.css">
 <!-- calendar stylesheet -->
@@ -137,6 +140,55 @@
             elem.checked = false;
         }
     
+    }
+    
+  	//set as default "not discussed" for all radio buttons if no value is set for a group
+    //e.g. if no value is found for p3_formulaFeeding9m then set p3_formulaFeeding9mNotDiscussed to checked
+    function setDefault() {
+    	var currentElem;
+    	var currentgroup;
+    	var notDiscussed;
+    	var isChecked = false;
+    	var pattern = /\'.+\'/;
+    	var clickHandler;
+    	
+    	for( var idx = 0; idx < document.forms[0].elements.length; ++idx ) {
+    		if( document.forms[0].elements[idx].type == "radio") {
+    			clickHandler = document.forms[0].elements[idx].getAttributeNode('onclick');
+    			if( clickHandler != null ) {
+    				//We need to capture the group name which is present in onclick call to onCheck(this,group)
+    				currentElem = new String(pattern.exec(clickHandler.value));
+    				currentElem = currentElem.substring(1,currentElem.length-1);
+    				if( idx == 0 ) {
+    					currentgroup = currentElem;
+    				}
+    				    				
+    				if( currentgroup != currentElem ) {    					
+    					if( !isChecked ) {
+    						notDiscussed = document.getElementById(currentgroup+"NotDiscussed");
+    						if( notDiscussed != null ) {
+    							notDiscussed.checked = true;
+    						}    						
+    					}
+    					currentgroup = currentElem;
+						isChecked = false;
+    				}
+    				
+    				if( document.forms[0].elements[idx].checked ) {    					
+    					isChecked = true;
+    				}
+    			}    				
+    		}
+    	}
+    	
+    	//capture last element if necessary
+    	if( !isChecked ) {
+    		notDiscussed = document.getElementById(currentgroup+"NotDiscussed");
+			if( notDiscussed != null ) {
+				notDiscussed.checked = true;
+			} 
+    	}
+    	
     }
     
     function onCheck(a, groupName) {
@@ -319,7 +371,7 @@
 
 </script>
 
-<body bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0">
+<body bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0" onload="setDefault()">
     <div style="display:block; width:100%; text-align:center; background-color: #FFFFFF;"><img alt="copyright" src="graphics/banner.png" onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2009.formCopyRight" />')"
                                                    onMouseOut="hideLayer()">
     </div>
@@ -587,21 +639,29 @@ description layer</div>
 			<td class="column"><a><bean:message
 				key="oscarEncounter.formRourke1.msgNutrition" />*:</a></td>
 
-			<td colspan="3" valign="top">
+			<td colspan="3" valign="bottom">
 			<table cellpadding="0" cellspacing="0" width="100%">
 				<tr>
                                     <td style="padding-right: 5pt" valign="top"><img height="15"
 						width="20" src="graphics/Checkmark_L.gif"></td>
                                     <td class="edcol" valign="top">X</td>
-                                    <td>&nbsp;</td>
+                                    <td class="edcol" valign="top"><bean:message
+						key="oscarEncounter.formRourke2009.formNo" /></td>
+                                    <td class="edcol" valign="top" colspan="2"><bean:message key="oscarEncounter.formRourke2009.formNotDiscussed"/></td>                                   
                                 </tr>
                                 <tr>
-                                    <td valign="top"><input type="radio" id="p1_breastFeeding1wOk"
+                 	<td valign="top"><input type="radio" id="p1_breastFeeding1wOk"
 						name="p1_breastFeeding1wOk" onclick="onCheck(this,'p1_breastFeeding1w')"
 						<%= props.getProperty("p1_breastFeeding1wOk", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_breastFeeding1wOkConcerns"
+						name="p1_breastFeeding1wOkConcerns" onclick="onCheck(this,'p1_breastFeeding1w')"
+						<%= props.getProperty("p1_breastFeeding1wOkConcerns", "") %>></td>
 					<td valign="top"><input type="radio" id="p1_breastFeeding1wNo"
 						name="p1_breastFeeding1wNo" onclick="onCheck(this,'p1_breastFeeding1w')"
 						<%= props.getProperty("p1_breastFeeding1wNo", "") %>></td>	
+					<td valign="top"><input type="radio" id="p1_breastFeeding1wNotDiscussed"
+						name="p1_breastFeeding1wNotDiscussed" onclick="onCheck(this,'p1_breastFeeding1w')"
+						<%= props.getProperty("p1_breastFeeding1wNotDiscussed", "") %>></td>
 					<td><b><a href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><bean:message
@@ -612,48 +672,69 @@ description layer</div>
 						key="oscarEncounter.formRourke2009_1.msgBreastFeedingDescr" /></span></b></td>
 				</tr>
 				<tr>
-                                        <td valign="top"><input type="radio" id="p1_formulaFeeding1wOk"
+                    <td valign="top"><input type="radio" id="p1_formulaFeeding1wOk"
 						name="p1_formulaFeeding1wOk" onclick="onCheck(this,'p1_formulaFeeding1w')"
 						<%= props.getProperty("p1_formulaFeeding1wOk", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_formulaFeeding1wOkConcerns"
+						name="p1_formulaFeeding1wOkConcerns" onclick="onCheck(this,'p1_formulaFeeding1w')"
+						<%= props.getProperty("p1_formulaFeeding1wOkConcerns", "") %>></td>
 					<td valign="top"><input type="radio" id="p1_formulaFeeding1wNo"
 						name="p1_formulaFeeding1wNo" onclick="onCheck(this,'p1_formulaFeeding1w')"
 						<%= props.getProperty("p1_formulaFeeding1wNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_formulaFeeding1wNotDiscussed"
+						name="p1_formulaFeeding1wNotDiscussed" onclick="onCheck(this,'p1_formulaFeeding1w')"
+						<%= props.getProperty("p1_formulaFeeding1wNotDiscussed", "") %>></td>
 					<td><bean:message
 						key="oscarEncounter.formRourke2006_1.msgFormulaFeeding" /></td>
 				</tr>
 				<tr>
-                                        <td valign="top"><input type="radio" id="p1_stoolUrine1wOk"
+                    <td valign="top"><input type="radio" id="p1_stoolUrine1wOk"
 						name="p1_stoolUrine1wOk" onclick="onCheck(this,'p1_stoolUrine1w')"
 						<%= props.getProperty("p1_stoolUrine1wOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p1_stoolUrine1wNo"
-						name="p1_stoolUrine1wNo" onclick="onCheck(this,'p1_stoolUrine1w')"
-						<%= props.getProperty("p1_stoolUrine1wNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_stoolUrine1wOkConcerns"
+						name="p1_stoolUrine1wOkConcerns" onclick="onCheck(this,'p1_stoolUrine1w')"
+						<%= props.getProperty("p1_stoolUrine1wOkConcerns", "") %>></td>
+					<td>&nbsp;</td>
+					<td valign="top"><input type="radio" id="p1_stoolUrine1wNotDiscussed"
+						name="p1_stoolUrine1wNotDiscussed" onclick="onCheck(this,'p1_stoolUrine1w')"
+						<%= props.getProperty("p1_stoolUrine1wNotDiscussed", "") %>></td>
+					
 					<td><bean:message
 						key="oscarEncounter.formRourke1.formStoolPatern" /></td>
 				</tr>
-                                <tr>
-					<td class="edcol" colspan="3" valign="top"><input
+                <tr>
+					<td class="edcol" colspan="5" valign="top"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p1_breastFeeding1wOk,p1_breastFeeding1wNo,p1_formulaFeeding1wOk,p1_formulaFeeding1wNo,p1_stoolUrine1wOk,p1_stoolUrine1wNo');" /></td>
+						onclick="del('p1_breastFeeding1wOk,p1_breastFeeding1wOkConcerns,p1_breastFeeding1wNo,p1_breastFeeding1wNotDiscussed,p1_formulaFeeding1wOk,p1_formulaFeeding1wOkConcerns,p1_formulaFeeding1wNo,p1_formulaFeeding1wNotDiscussed,p1_stoolUrine1wOk,p1_stoolUrine1wOkConcerns,p1_stoolUrine1wNotDiscussed');" /></td>
                                 </tr>
 			</table>
-
+			<textarea id="p1_pNutrution1w"
+				name="p1_pNutrition1w" style="width: 100%" cols="10" rows="5"><%= props.getProperty("p1_pNutrition1w", "") %></textarea>
 			</td>
-			<td colspan="3" valign="top">
+			</td>
+			<td colspan="3" valign="bottom">
 			<table cellpadding="0" cellspacing="0" width="100%">
 				<tr>
                                     <td style="padding-right: 5pt" valign="top"><img height="15"
 						width="20" src="graphics/Checkmark_L.gif"></td>
                                     <td class="edcol" valign="top">X</td>
-                                    <td>&nbsp;</td>
+                                    <td class="edcol" valign="top"><bean:message
+										key="oscarEncounter.formRourke2009.formNo" /></td>
+                                    <td class="edcol" valign="top" colspan="2"><bean:message key="oscarEncounter.formRourke2009.formNotDiscussed"/></td> 
                                 </tr>
                                 <tr>
-                                        <td valign="top"><input type="radio" id="p1_breastFeeding2wOk"
+                    <td valign="top"><input type="radio" id="p1_breastFeeding2wOk"
 						name="p1_breastFeeding2wOk" onclick="onCheck(this,'p1_breastFeeding2w')"
 						<%= props.getProperty("p1_breastFeeding2wOk", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_breastFeeding2wOkConcerns"
+						name="p1_breastFeeding2wOkConcerns" onclick="onCheck(this,'p1_breastFeeding2w')"
+						<%= props.getProperty("p1_breastFeeding2wOkConcerns", "") %>></td>
 					<td valign="top"><input type="radio" id="p1_breastFeeding2wNo"
 						name="p1_breastFeeding2wNo" onclick="onCheck(this,'p1_breastFeeding2w')"
 						<%= props.getProperty("p1_breastFeeding2wNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_breastFeeding2wNotDiscussed"
+						name="p1_breastFeeding2wNotDiscussed" onclick="onCheck(this,'p1_breastFeeding2w')"
+						<%= props.getProperty("p1_breastFeeding2wNotDiscussed", "") %>></td>
 					<td><b><a
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()" href="javascript:showNotes()"><bean:message
@@ -664,31 +745,45 @@ description layer</div>
 						key="oscarEncounter.formRourke2009_1.msgBreastFeedingDescr" /></span></b></td>
 				</tr>
 				<tr>
-                                        <td valign="top"><input type="radio" id="p1_formulaFeeding2wOk"
+                	<td valign="top"><input type="radio" id="p1_formulaFeeding2wOk"
 						name="p1_formulaFeeding2wOk" onclick="onCheck(this,'p1_formulaFeeding2w')"
 						<%= props.getProperty("p1_formulaFeeding2wOk", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_formulaFeeding2wOkConcerns"
+						name="p1_formulaFeeding2wOkConcerns" onclick="onCheck(this,'p1_formulaFeeding2w')"
+						<%= props.getProperty("p1_formulaFeeding2wOkConcerns", "") %>></td>
 					<td valign="top"><input type="radio" id="p1_formulaFeeding2wNo"
 						name="p1_formulaFeeding2wNo" onclick="onCheck(this,'p1_formulaFeeding2w')"
 						<%= props.getProperty("p1_formulaFeeding2wNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_formulaFeeding2wNotDiscussed"
+						name="p1_formulaFeeding2wNotDiscussed" onclick="onCheck(this,'p1_formulaFeeding2w')"
+						<%= props.getProperty("p1_formulaFeeding2wNotDiscussed", "") %>></td>
 					<td><bean:message
 						key="oscarEncounter.formRourke2006_1.msgFormulaFeeding" /></td>
 				</tr>
 				<tr>
-                                        <td valign="top"><input type="radio" id="p1_stoolUrine2wOk"
+                    <td valign="top"><input type="radio" id="p1_stoolUrine2wOk"
 						name="p1_stoolUrine2wOk" onclick="onCheck(this,'p1_stoolUrine2w')"
 						<%= props.getProperty("p1_stoolUrine2wOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p1_stoolUrine2wNo"
-						name="p1_stoolUrine2wNo" onclick="onCheck(this,'p1_stoolUrine2w')"
-						<%= props.getProperty("p1_stoolUrine2wNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_stoolUrine2wOkConcerns"
+						name="p1_stoolUrine2wOkConcerns" onclick="onCheck(this,'p1_stoolUrine2w')"
+						<%= props.getProperty("p1_stoolUrine2wOkConcerns", "") %>></td>
+					<td>&nbsp;</td>
+					<td valign="top"><input type="radio" id="p1_stoolUrine2wNotDiscussed"
+						name="p1_stoolUrine2wNotDiscussed" onclick="onCheck(this,'p1_stoolUrine2w')"
+						<%= props.getProperty("p1_stoolUrine2wNotDiscussed", "") %>></td>
 					<td><bean:message
 						key="oscarEncounter.formRourke1.formStoolPatern" /></td>
 				</tr>
                                 <tr>
 					<td class="edcol" colspan="3" valign="top"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p1_breastFeeding2wOk,p1_breastFeeding2wNo,p1_formulaFeeding2wOk,p1_formulaFeeding2wNo,p1_stoolUrine2wOk,p1_stoolUrine2wNo');" /></td>
+						onclick="del('p1_breastFeeding2wOk,p1_breastFeeding2wOkConcerns,p1_breastFeeding2wNo,p1_breastFeeding2wNotDiscussed,p1_formulaFeeding2wOkConcerns,p1_formulaFeeding2wNotDiscussed,p1_formulaFeeding2wOk,p1_formulaFeeding2wNo,p1_stoolUrine2wOk,p1_stoolUrine2wOkConcerns,p1_stoolUrine2wNotDiscussed');" /></td>
                                 </tr>
 			</table>
+			
+			<textarea id="p1_pNutrution2w"
+				name="p1_pNutrition2w" style="width: 100%" cols="10" rows="5"><%= props.getProperty("p1_pNutrition2w", "") %></textarea>
+			
 			</td>
 			<td colspan="3" valign="top">
 			<table cellpadding="0" cellspacing="0" width="100%" height="100%">
@@ -696,15 +791,23 @@ description layer</div>
                                     <td style="padding-right: 5pt" valign="top"><img height="15"
 						width="20" src="graphics/Checkmark_L.gif"></td>
                                     <td class="edcol" valign="top">X</td>
-                                    <td>&nbsp;</td>
+                                    <td class="edcol" valign="top"><bean:message
+										key="oscarEncounter.formRourke2009.formNo" /></td>
+                                    <td class="edcol" valign="top" colspan="2"><bean:message key="oscarEncounter.formRourke2009.formNotDiscussed"/></td>
                                 </tr>
                                 <tr>
-                                        <td valign="top"><input type="radio" id="p1_breastFeeding1mOk"
+                    <td valign="top"><input type="radio" id="p1_breastFeeding1mOk"
 						name="p1_breastFeeding1mOk" onclick="onCheck(this,'p1_breastFeeding1m')"
 						<%= props.getProperty("p1_breastFeeding1mOk", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_breastFeeding1mOkConcerns"
+						name="p1_breastFeeding1mOkConcerns" onclick="onCheck(this,'p1_breastFeeding1m')"
+						<%= props.getProperty("p1_breastFeeding1mOkConcerns", "") %>></td>
 					<td valign="top"><input type="radio" id="p1_breastFeeding1mNo"
 						name="p1_breastFeeding1mNo" onclick="onCheck(this,'p1_breastFeeding1m')"
 						<%= props.getProperty("p1_breastFeeding1mNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_breastFeeding1mNotDiscussed"
+						name="p1_breastFeeding1mNotDiscussed" onclick="onCheck(this,'p1_breastFeeding1m')"
+						<%= props.getProperty("p1_breastFeeding1mNotDiscussed", "") %>></td>
 					<td><b><a
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()" href="javascript:showNotes()"><bean:message
@@ -715,31 +818,43 @@ description layer</div>
 						key="oscarEncounter.formRourke2009_1.msgBreastFeedingDescr" /></span></b></td>
 				</tr>
 				<tr>
-                                        <td valign="top"><input type="radio" id="p1_formulaFeeding1mOk"
+                    <td valign="top"><input type="radio" id="p1_formulaFeeding1mOk"
 						name="p1_formulaFeeding1mOk" onclick="onCheck(this,'p1_formulaFeeding1m')"
 						<%= props.getProperty("p1_formulaFeeding1mOk", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_formulaFeeding1mOkConcerns"
+						name="p1_formulaFeeding1mOkConcerns" onclick="onCheck(this,'p1_formulaFeeding1m')"
+						<%= props.getProperty("p1_formulaFeeding1mOkConcerns", "") %>></td>
 					<td valign="top"><input type="radio" id="p1_formulaFeeding1mNo"
 						name="p1_formulaFeeding1mNo" onclick="onCheck(this,'p1_formulaFeeding1m')"
 						<%= props.getProperty("p1_formulaFeeding1mNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_formulaFeeding1mNotDiscussed"
+						name="p1_formulaFeeding1mNotDiscussed" onclick="onCheck(this,'p1_formulaFeeding1m')"
+						<%= props.getProperty("p1_formulaFeeding1mNotDiscussed", "") %>></td>
 					<td><bean:message
 						key="oscarEncounter.formRourke2009_1.msgFormulaFeeding" /></td>
 				</tr>
 				<tr>
-                                        <td valign="top"><input type="radio" id="p1_stoolUrine1mOk"
+                  	<td valign="top"><input type="radio" id="p1_stoolUrine1mOk"
 						name="p1_stoolUrine1mOk" onclick="onCheck(this,'p1_stoolUrine1m')"
 						<%= props.getProperty("p1_stoolUrine1mOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p1_stoolUrine1mNo"
-						name="p1_stoolUrine1mNo" onclick="onCheck(this,'p1_stoolUrine1m')"
-						<%= props.getProperty("p1_stoolUrine1mNo", "") %>></td>					
+					<td valign="top"><input type="radio" id="p1_stoolUrine1mOkConcerns"
+						name="p1_stoolUrine1mOkConcerns" onclick="onCheck(this,'p1_stoolUrine1m')"
+						<%= props.getProperty("p1_stoolUrine1mOkConcerns", "") %>></td>
+					<td>&nbsp;</td>
+					<td valign="top"><input type="radio" id="p1_stoolUrine1mNotDiscussed"
+						name="p1_stoolUrine1mNotDiscussed" onclick="onCheck(this,'p1_stoolUrine1m')"
+						<%= props.getProperty("p1_stoolUrine1mNotDiscussed", "") %>></td>					
 					<td><bean:message
 						key="oscarEncounter.formRourke1.formStoolPatern" /></td>
 				</tr>
                                 <tr>
 					<td class="edcol" colspan="3" valign="top"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p1_breastFeeding1mOk,p1_breastFeeding1mNo,p1_formulaFeeding1mOk,p1_formulaFeeding1mNo,p1_stoolUrine1mOk,p1_stoolUrine1mNo');" /></td>
+						onclick="del('p1_breastFeeding1mOk,p1_breastFeeding1mOkConcerns,p1_breastFeeding1mNo,p1_breastFeeding1mNotDiscussed,p1_formulaFeeding1mOk,p1_formulaFeeding1mOkConcerns,p1_formulaFeeding1mNo,p1_formulaFeeding1mNotDiscussed,p1_stoolUrine1mOk,p1_stoolUrine1mOkConcerns,p1_stoolUrine1mNotDiscussed');" /></td>
                                 </tr>
 			</table>
+			<textarea id="p1_pNutrution1m"
+				name="p1_pNutrition1m" style="width: 100%" cols="10" rows="5"><%= props.getProperty("p1_pNutrition1m", "") %></textarea>
 			</td>
 		</tr>
 		<tr>
@@ -752,37 +867,40 @@ description layer</div>
 			<table style="font-size: 9pt;" cellpadding="0" cellspacing="0"
 				width="100%">
 				<tr>
-					<td colspan="12">&nbsp;</td>
+					<td colspan="16">&nbsp;</td>
 				</tr>
 				<tr>
-					<td valign="top" colspan="12"><bean:message
+					<td valign="top" colspan="16"><bean:message
 						key="oscarEncounter.formRourke2006_1.formInjuryPrev" /></td>
 				</tr>
 				<tr>
 					<td style="padding-right: 5pt" valign="top"><img height="15"
 						width="20" src="graphics/Checkmark_L.gif"></td>
 					<td class="edcol" valign="top">X</td>
-					<td>&nbsp;</td>
+					<td class="edcol" valign="top" colspan="2"><bean:message key="oscarEncounter.formRourke2009.formNotDiscussed"/></td>
 					<td style="padding-right: 5pt" valign="top"><img height="15"
 						width="20" src="graphics/Checkmark_L.gif"></td>
 					<td class="edcol" valign="top">X</td>
-					<td>&nbsp;</td>
+					<td class="edcol" valign="top" colspan="2"><bean:message key="oscarEncounter.formRourke2009.formNotDiscussed"/></td>
 					<td style="padding-right: 5pt" valign="top"><img height="15"
 						width="20" src="graphics/Checkmark_L.gif"></td>
 					<td class="edcol" valign="top">X</td>
-					<td>&nbsp;</td>
+					<td class="edcol" valign="top" colspan="2"><bean:message key="oscarEncounter.formRourke2009.formNotDiscussed"/></td>
 					<td style="padding-right: 5pt" valign="top"><img height="15"
 						width="20" src="graphics/Checkmark_L.gif"></td>
 					<td class="edcol" valign="top">X</td>
-					<td>&nbsp;</td>
+					<td class="edcol" valign="top" colspan="2"><bean:message key="oscarEncounter.formRourke2009.formNotDiscussed"/></td>
 				</tr>
 				<tr>
 					<td valign="top"><input type="radio" id="p1_carSeatOk"
 						name="p1_carSeatOk" onclick="onCheck(this,'p1_carSeat')"
 						<%= props.getProperty("p1_carSeatOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p1_carSeatNo"
-						name="p1_carSeatNo" onclick="onCheck(this,'p1_carSeat')"
-						<%= props.getProperty("p1_carSeatNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_carSeatOkConcerns"
+						name="p1_carSeatOkConcerns" onclick="onCheck(this,'p1_carSeat')"
+						<%= props.getProperty("p1_carSeatOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_carSeatNotDiscussed"
+						name="p1_carSeatNotDiscussed" onclick="onCheck(this,'p1_carSeat')"
+						<%= props.getProperty("p1_carSeatNotDiscussed", "") %>></td>
 					<td valign="top"><b><a
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()" href="javascript:showNotes()"><bean:message
@@ -790,9 +908,12 @@ description layer</div>
 					<td valign="top"><input type="radio" id="p1_sleepPosOk"
 						name="p1_sleepPosOk" onclick="onCheck(this,'p1_sleepPos')"
 						<%= props.getProperty("p1_sleepPosOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p1_sleepPosNo"
-						name="p1_sleepPosNo" onclick="onCheck(this,'p1_sleepPos')"
-						<%= props.getProperty("p1_sleepPosNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_sleepPosOkConcerns"
+						name="p1_sleepPosOkConcerns" onclick="onCheck(this,'p1_sleepPos')"
+						<%= props.getProperty("p1_sleepPosOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_sleepPosNotDiscussed"
+						name="p1_sleepPosNotDiscussed" onclick="onCheck(this,'p1_sleepPos')"
+						<%= props.getProperty("p1_sleepPosNotDiscussed", "") %>></td>
 					<td valign="top"><b><a href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><bean:message
@@ -800,9 +921,12 @@ description layer</div>
 					<td valign="top"><input type="radio" id="p1_cribSafetyOk"
 						name="p1_cribSafetyOk" onclick="onCheck(this,'p1_cribSafety')"
 						<%= props.getProperty("p1_cribSafetyOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p1_cribSafetyNo"
-						name="p1_cribSafetyNo" onclick="onCheck(this,'p1_cribSafety')"
-						<%= props.getProperty("p1_cribSafetyNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_cribSafetyOkConcerns"
+						name="p1_cribSafetyOkConcerns" onclick="onCheck(this,'p1_cribSafety')"
+						<%= props.getProperty("p1_cribSafetyOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_cribSafetyNotDiscussed"
+						name="p1_cribSafetyNotDiscussed" onclick="onCheck(this,'p1_cribSafety')"
+						<%= props.getProperty("p1_cribSafetyNotDiscussed", "") %>></td>
 					<td valign="top"><b><a href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><bean:message
@@ -811,10 +935,14 @@ description layer</div>
 						name="p1_firearmSafetyOk"
 						onclick="onCheck(this,'p1_firearmSafety')"
 						<%= props.getProperty("p1_firearmSafetyOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p1_firearmSafetyNo"
-						name="p1_firearmSafetyNo"
+					<td valign="top"><input type="radio" id="p1_firearmSafetyOkConcerns"
+						name="p1_firearmSafetyOkConcerns"
 						onclick="onCheck(this,'p1_firearmSafety')"
-						<%= props.getProperty("p1_firearmSafetyNo", "") %>></td>
+						<%= props.getProperty("p1_firearmSafetyOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_firearmSafetyNotDiscussed"
+						name="p1_firearmSafetyNotDiscussed"
+						onclick="onCheck(this,'p1_firearmSafety')"
+						<%= props.getProperty("p1_firearmSafetyNotDiscussed", "") %>></td>
 					<td valign="top"><b><a href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><bean:message
@@ -824,9 +952,12 @@ description layer</div>
 					<td valign="top"><input type="radio" id="p1_smokeSafetyOk"
 						name="p1_smokeSafetyOk" onclick="onCheck(this,'p1_smokeSafety')"
 						<%= props.getProperty("p1_smokeSafetyOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p1_smokeSafetyNo"
-						name="p1_smokeSafetyNo" onclick="onCheck(this,'p1_smokeSafety')"
-						<%= props.getProperty("p1_smokeSafetyNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_smokeSafetyOkConcerns"
+						name="p1_smokeSafetyOkConcerns" onclick="onCheck(this,'p1_smokeSafety')"
+						<%= props.getProperty("p1_smokeSafetyOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_smokeSafetyNotDiscussed"
+						name="p1_smokeSafetyNotDiscussed" onclick="onCheck(this,'p1_smokeSafety')"
+						<%= props.getProperty("p1_smokeSafetyNotDiscussed", "") %>></td>
 					<td valign="top"><a href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><bean:message
@@ -834,12 +965,16 @@ description layer</div>
 					<td>&nbsp;</td>
 					<td>&nbsp;</td>
 					<td>&nbsp;</td>
+					<td>&nbsp;</td>
 					<td valign="top"><input type="radio" id="p1_hotWaterOk"
 						name="p1_hotWaterOk" onclick="onCheck(this,'p1_hotWater')"
 						<%= props.getProperty("p1_hotWaterOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p1_hotWaterNo"
-						name="p1_hotWaterNo" onclick="onCheck(this,'p1_hotWater')"
-						<%= props.getProperty("p1_hotWaterNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_hotWaterOkConcerns"
+						name="p1_hotWaterOkConcerns" onclick="onCheck(this,'p1_hotWater')"
+						<%= props.getProperty("p1_hotWaterOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_hotWaterNotDiscussed"
+						name="p1_hotWaterNotDiscussed" onclick="onCheck(this,'p1_hotWater')"
+						<%= props.getProperty("p1_hotWaterNotDiscussed", "") %>></td>
 					<td valign="top"><i><a href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><bean:message
@@ -847,9 +982,12 @@ description layer</div>
 					<td valign="top"><input type="radio" id="p1_safeToysOk"
 						name="p1_safeToysOk" onclick="onCheck(this,'p1_safeToys')"
 						<%= props.getProperty("p1_safeToysOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p1_safeToysNo"
-						name="p1_safeToysNo" onclick="onCheck(this,'p1_safeToys')"
-						<%= props.getProperty("p1_safeToysNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_safeToysOkConcerns"
+						name="p1_safeToysOkConcerns" onclick="onCheck(this,'p1_safeToys')"
+						<%= props.getProperty("p1_safeToysOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_safeToysNotDiscussed"
+						name="p1_safeToysNotDiscussed" onclick="onCheck(this,'p1_safeToys')"
+						<%= props.getProperty("p1_safeToysNotDiscussed", "") %>></td>
 					<td valign="top"><a href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><bean:message
@@ -857,37 +995,40 @@ description layer</div>
 				</tr>
 
 				<tr>
-					<td class="edcol" colspan="3" valign="top"><input
+					<td class="edcol" colspan="4" valign="top"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p1_carSeatOk,p1_carSeatNo,p1_smokeSafetyOk,p1_smokeSafetyNo');" /></td>
-					<td class="edcol" colspan="3" valign="top"><input
+						onclick="del('p1_carSeatOk,p1_carSeatOkConcerns,p1_carSeatNotDiscussed,p1_smokeSafetyOk,p1_smokeSafetyOkConcerns,p1_smokeSafetyNotDiscussed');" /></td>
+					<td class="edcol" colspan="4" valign="top"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p1_sleepPosOk,p1_sleepPosNo');" /></td>
-					<td class="edcol" colspan="3" valign="top"><input
+						onclick="del('p1_sleepPosOk,p1_sleepPosOkConcerns,p1_sleepPosNotDiscussed');" /></td>
+					<td class="edcol" colspan="4" valign="top"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p1_cribSafetyOk,p1_cribSafetyNo,p1_hotWaterOk,p1_hotWaterNo');" /></td>
-					<td class="edcol" colspan="3" valign="top"><input
+						onclick="del('p1_cribSafetyOk,p1_cribSafetyOkConcerns,p1_cribSafetyNotDiscussed,p1_hotWaterOk,p1_hotWaterOkConcerns,p1_hotWaterNotDiscussed');" /></td>
+					<td class="edcol" colspan="4" valign="top"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p1_firearmSafetyOk,p1_firearmSafetyNo,p1_safeToysOk,p1_safeToysNo');" /></td>
+						onclick="del('p1_firearmSafetyOk,p1_firearmSafetyOkConcerns,p1_firearmSafetyNotDiscussed,p1_safeToysOk,p1_safeToysOkConcerns,p1_safeToysNotDiscussed');" /></td>
 				</tr>
 				<!-- </table>
           <br/>
           <table style="font-size:9pt;" cellpadding="0" cellspacing="0" width="100%"  >                    
           -->
 				<tr>
-					<td colspan="12">&nbsp;</td>
+					<td colspan="16">&nbsp;</td>
 				</tr>
 				<tr>
-					<td valign="top" colspan="12"><bean:message
+					<td valign="top" colspan="16"><bean:message
 						key="oscarEncounter.formRourke2006_1.formBehaviour" /></td>
 				</tr>
 				<tr>
 					<td valign="top"><input type="radio" id="p1_sleepCryOk"
 						name="p1_sleepCryOk" onclick="onCheck(this,'p1_sleepCry')"
 						<%= props.getProperty("p1_sleepCryOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p1_sleepCryNo"
-						name="p1_sleepCryNo" onclick="onCheck(this,'p1_sleepCry')"
-						<%= props.getProperty("p1_sleepCryNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_sleepCryOkConcerns"
+						name="p1_sleepCryOkConcerns" onclick="onCheck(this,'p1_sleepCry')"
+						<%= props.getProperty("p1_sleepCryOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_sleepCryNotDiscussed"
+						name="p1_sleepCryNotDiscussed" onclick="onCheck(this,'p1_sleepCry')"
+						<%= props.getProperty("p1_sleepCryNotDiscussed", "") %>></td>
 					<td valign="top"><a href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote2" />')"
 						onMouseOut="hideLayer()"><bean:message
@@ -895,18 +1036,24 @@ description layer</div>
 					<td valign="top"><input type="radio" id="p1_soothabilityOk"
 						name="p1_soothabilityOk" onclick="onCheck(this,'p1_soothability')"
 						<%= props.getProperty("p1_soothabilityOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p1_soothabilityNo"
-						name="p1_soothabilityNo" onclick="onCheck(this,'p1_soothability')"
-						<%= props.getProperty("p1_soothabilityNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_soothabilityOkConcerns"
+						name="p1_soothabilityOkConcerns" onclick="onCheck(this,'p1_soothability')"
+						<%= props.getProperty("p1_soothabilityOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_soothabilityNotDiscussed"
+						name="p1_soothabilityNotDiscussed" onclick="onCheck(this,'p1_soothability')"
+						<%= props.getProperty("p1_soothabilityNotDiscussed", "") %>></td>
 					<td valign="top"><bean:message
 						key="oscarEncounter.formRourke2006_1.formSoothability" /></td>
 					<td valign="top"><input type="radio" id="p1_homeVisitOk"
 						name="p1_homeVisitOk" onclick="onCheck(this,'p1_homeVisit')"
 						<%= props.getProperty("p1_homeVisitOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p1_homeVisitNo"
-						name="p1_homeVisitNo" onclick="onCheck(this,'p1_homeVisit')"
-						<%= props.getProperty("p1_homeVisitNo", "") %>></td>
-					<td colspan="4" valign="top"><b><a
+					<td valign="top"><input type="radio" id="p1_homeVisitOkConcerns"
+						name="p1_homeVisitOkConcerns" onclick="onCheck(this,'p1_homeVisit')"
+						<%= props.getProperty("p1_homeVisitOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_homeVisitNotDiscussed"
+						name="p1_homeVisitNotDiscussed" onclick="onCheck(this,'p1_homeVisit')"
+						<%= props.getProperty("p1_homeVisitNotDiscussed", "") %>></td>
+					<td colspan="5" valign="top"><b><a
 						href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote2" />')"
 						onMouseOut="hideLayer()"><bean:message
@@ -916,17 +1063,23 @@ description layer</div>
 					<td valign="top"><input type="radio" id="p1_bondingOk"
 						name="p1_bondingOk" onclick="onCheck(this,'p1_bonding')"
 						<%= props.getProperty("p1_bondingOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p1_bondingNo"
-						name="p1_bondingNo" onclick="onCheck(this,'p1_bonding')"
-						<%= props.getProperty("p1_bondingNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_bondingOkConcerns"
+						name="p1_bondingOkConcerns" onclick="onCheck(this,'p1_bonding')"
+						<%= props.getProperty("p1_bondingOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_bondingNotDiscussed"
+						name="p1_bondingNotDiscussed" onclick="onCheck(this,'p1_bonding')"
+						<%= props.getProperty("p1_bondingNotDiscussed", "") %>></td>
 					<td valign="top"><bean:message
 						key="oscarEncounter.formRourke2006_1.formBonding" /></td>
 					<td valign="top"><input type="radio" id="p1_pFatigueOk"
 						name="p1_pFatigueOk" onclick="onCheck(this,'p1_pFatigue')"
 						<%= props.getProperty("p1_pFatigueOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p1_pFatigueNo"
-						name="p1_pFatigueNo" onclick="onCheck(this,'p1_pFatigue')"
-						<%= props.getProperty("p1_pFatigueNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_pFatigueOkConcerns"
+						name="p1_pFatigueOkConcerns" onclick="onCheck(this,'p1_pFatigue')"
+						<%= props.getProperty("p1_pFatigueOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_pFatigueNotDiscussed"
+						name="p1_pFatigueNotDiscussed" onclick="onCheck(this,'p1_pFatigue')"
+						<%= props.getProperty("p1_pFatigueNotDiscussed", "") %>></td>
 					<td valign="top"><a href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote2" />')"
 						onMouseOut="hideLayer()"><bean:message
@@ -934,52 +1087,61 @@ description layer</div>
 					<td valign="top"><input type="radio" id="p1_famConflictOk"
 						name="p1_famConflictOk" onclick="onCheck(this,'p1_famConflict')"
 						<%= props.getProperty("p1_famConflictOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p1_famConflictNo"
-						name="p1_famConflictNo" onclick="onCheck(this,'p1_famConflict')"
-						<%= props.getProperty("p1_famConflictNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_famConflictOkConcerns"
+						name="p1_famConflictOkConcerns" onclick="onCheck(this,'p1_famConflict')"
+						<%= props.getProperty("p1_famConflictOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_famConflictNotDiscussed"
+						name="p1_famConflictNotDiscussed" onclick="onCheck(this,'p1_famConflict')"
+						<%= props.getProperty("p1_famConflictNotDiscussed", "") %>></td>
 					<td valign="top"><bean:message
 						key="oscarEncounter.formRourke2006_1.formFamConflict" /></td>
 					<td valign="top"><input type="radio" id="p1_siblingsOk"
 						name="p1_siblingsOk" onclick="onCheck(this,'p1_siblings')"
 						<%= props.getProperty("p1_siblingsOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p1_siblingsNo"
-						name="p1_siblingsNo" onclick="onCheck(this,'p1_siblings')"
-						<%= props.getProperty("p1_siblingsNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_siblingsOkConcerns"
+						name="p1_siblingsOkConcerns" onclick="onCheck(this,'p1_siblings')"
+						<%= props.getProperty("p1_siblingsOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_siblingsNotDiscussed"
+						name="p1_siblingsNotDiscussed" onclick="onCheck(this,'p1_siblings')"
+						<%= props.getProperty("p1_siblingsNotDiscussed", "") %>></td>
 					<td valign="top"><bean:message
 						key="oscarEncounter.formRourke2006_1.formSiblings" /></td>
 				</tr>
 				<tr>
-					<td colspan="3" class="edcol" colspan="2" valign="top"><input
+					<td colspan="4" class="edcol" colspan="2" valign="top"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p1_sleepCryOk,p1_sleepCryNo,p1_bondingOk,p1_bondingNo');" /></td>
-					<td colspan="3" class="edcol" colspan="2" valign="top"><input
+						onclick="del('p1_sleepCryOk,p1_sleepCryOkConcerns,p1_sleepCryNotDiscussed,p1_bondingOk,p1_bondingOkConcerns,p1_bondingNotDiscussed');" /></td>
+					<td colspan="4" class="edcol" colspan="2" valign="top"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p1_soothabilityOk,p1_soothabilityNo,p1_pFatigueOk,p1_pFatigueNo');" /></td>
-					<td colspan="3" class="edcol" colspan="2" valign="top"><input
+						onclick="del('p1_soothabilityOk,p1_soothabilityOkConcerns,p1_soothabilityNotDiscussed,p1_pFatigueOk,p1_pFatigueOkConcerns,p1_pFatigueNotDiscussed');" /></td>
+					<td colspan="4" class="edcol" colspan="2" valign="top"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p1_homeVisitOk,p1_homeVisitNo,p1_famConflictOk,p1_famConflictNo');" /></td>
-					<td colspan="3" class="edcol" colspan="2" valign="top"><input
+						onclick="del('p1_homeVisitOk,p1_homeVisitOkConcerns,p1_homeVisitNotDiscussed,p1_famConflictOk,p1_famConflictOkConcerns,p1_famConflictNotDiscussed');" /></td>
+					<td colspan="4" class="edcol" colspan="2" valign="top"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p1_siblingsOk,p1_siblingsNo');" /></td>
+						onclick="del('p1_siblingsOk,p1_siblingsOkConcerns,p1_siblingsNotDiscussed');" /></td>
 				</tr>
 				<!-- </table>
           <br/>
           <table style="font-size:9pt;" cellpadding="0" cellspacing="0" width="100%"  >
              -->
 				<tr>
-					<td colspan="12">&nbsp;</td>
+					<td colspan="16">&nbsp;</td>
 				</tr>
 				<tr>
-					<td valign="top" colspan="12"><bean:message
+					<td valign="top" colspan="16"><bean:message
 						key="oscarEncounter.formRourke2006_1.formOtherIssues" /></td>
 				</tr>
 				<tr>
 					<td valign="top"><input type="radio" id="p1_2ndSmokeOk"
 						name="p1_2ndSmokeOk" onclick="onCheck(this,'p1_2ndSmoke')"
 						<%= props.getProperty("p1_2ndSmokeOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p1_2ndSmokeNo"
-						name="p1_2ndSmokeNo" onclick="onCheck(this,'p1_2ndSmoke')"
-						<%= props.getProperty("p1_2ndSmokeNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_2ndSmokeOkConcerns"
+						name="p1_2ndSmokeOkConcerns" onclick="onCheck(this,'p1_2ndSmoke')"
+						<%= props.getProperty("p1_2ndSmokeOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_2ndSmokeNotDiscussed"
+						name="p1_2ndSmokeNotDiscussed" onclick="onCheck(this,'p1_2ndSmoke')"
+						<%= props.getProperty("p1_2ndSmokeNotDiscussed", "") %>></td>
 					<td valign="top"><b><a href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><bean:message
@@ -987,9 +1149,12 @@ description layer</div>
 					<td valign="top"><input type="radio" id="p1_altMedOk"
 						name="p1_altMedOk" onclick="onCheck(this,'p1_altMed')"
 						<%= props.getProperty("p1_altMedOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p1_altMedNo"
-						name="p1_altMedNo" onclick="onCheck(this,'p1_altMed')"
-						<%= props.getProperty("p1_altMedNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_altMedOkConcerns"
+						name="p1_altMedOkConcerns" onclick="onCheck(this,'p1_altMed')"
+						<%= props.getProperty("p1_altMedOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_altMedNotDiscussed"
+						name="p1_altMedNotDiscussed" onclick="onCheck(this,'p1_altMed')"
+						<%= props.getProperty("p1_altMedNotDiscussed", "") %>></td>
 					<td valign="top"><a href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><bean:message
@@ -997,10 +1162,13 @@ description layer</div>
 					<td valign="top"><input type="radio" id="p1_pacifierOk"
 						name="p1_pacifierOk" onclick="onCheck(this,'p1_pacifier')"
 						<%= props.getProperty("p1_pacifierOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p1_pacifierNo"
-						name="p1_pacifierNo" onclick="onCheck(this,'p1_pacifier')"
-						<%= props.getProperty("p1_pacifierNo", "") %>></td>
-					<td colspan="4" valign="top"><b><a
+					<td valign="top"><input type="radio" id="p1_pacifierOkConcerns"
+						name="p1_pacifierOkConcerns" onclick="onCheck(this,'p1_pacifier')"
+						<%= props.getProperty("p1_pacifierOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_pacifierNotDiscussed"
+						name="p1_pacifierNotDiscussed" onclick="onCheck(this,'p1_pacifier')"
+						<%= props.getProperty("p1_pacifierNotDiscussed", "") %>></td>
+					<td colspan="5" valign="top"><b><a
 						href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><bean:message
@@ -1010,9 +1178,12 @@ description layer</div>
 					<td valign="top"><input type="radio" id="p1_feverOk"
 						name="p1_feverOk" onclick="onCheck(this,'p1_fever')"
 						<%= props.getProperty("p1_feverOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p1_feverNo"
-						name="p1_feverNo" onclick="onCheck(this,'p1_fever')"
-						<%= props.getProperty("p1_feverNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_feverOkConcerns"
+						name="p1_feverOkConcerns" onclick="onCheck(this,'p1_fever')"
+						<%= props.getProperty("p1_feverOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_feverNotDiscussed"
+						name="p1_feverNotDiscussed" onclick="onCheck(this,'p1_fever')"
+						<%= props.getProperty("p1_feverNotDiscussed", "") %>></td>
 					<td valign="top"><a href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><bean:message
@@ -1020,9 +1191,12 @@ description layer</div>
 					<td valign="top"><input type="radio" id="p1_tmpControlOk"
 						name="p1_tmpControlOk" onclick="onCheck(this,'p1_tmpControl')"
 						<%= props.getProperty("p1_tmpControlOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p1_tmpControlNo"
-						name="p1_tmpControlNo" onclick="onCheck(this,'p1_tmpControl')"
-						<%= props.getProperty("p1_tmpControlNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_tmpControlOkConcerns"
+						name="p1_tmpControlOkConcerns" onclick="onCheck(this,'p1_tmpControl')"
+						<%= props.getProperty("p1_tmpControlOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_tmpControlNotDiscussed"
+						name="p1_tmpControlNotDiscussed" onclick="onCheck(this,'p1_tmpControl')"
+						<%= props.getProperty("p1_tmpControlNotDiscussed", "") %>></td>
 					<td valign="top"><a href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><bean:message
@@ -1030,41 +1204,49 @@ description layer</div>
 					<td valign="top"><input type="radio" id="p1_sunExposureOk"
 						name="p1_sunExposureOk" onclick="onCheck(this,'p1_sunExposure')"
 						<%= props.getProperty("p1_sunExposureOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p1_sunExposureNo"
-						name="p1_sunExposureNo" onclick="onCheck(this,'p1_sunExposure')"
-						<%= props.getProperty("p1_sunExposureNo", "") %>></td>
-					<td colspan="4" valign="top"><a href="javascript:showNotes()"
+					<td valign="top"><input type="radio" id="p1_sunExposureOkConcerns"
+						name="p1_sunExposureOkConcerns" onclick="onCheck(this,'p1_sunExposure')"
+						<%= props.getProperty("p1_sunExposureOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_sunExposureNotDiscussed"
+						name="p1_sunExposureNotDiscussed" onclick="onCheck(this,'p1_sunExposure')"
+						<%= props.getProperty("p1_sunExposureNotDiscussed", "") %>></td>
+					<td colspan="5" valign="top"><a href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><bean:message
 						key="oscarEncounter.formRourke2006_1.formSunExposure" />*</a></td>
 				</tr>
-                                <tr>
-                                        <td valign="top"><input type="radio" id="p1_noCoughMedOk"
+                <tr>
+                    <td valign="top"><input type="radio" id="p1_noCoughMedOk"
 						name="p1_noCoughMedOk" onclick="onCheck(this,'p1_noCoughMed')"
 						<%= props.getProperty("p1_noCoughMedOk", "") %>></td>
-                                        <td valign="top"><input type="radio" id="p1_noCoughMedNo"
-						name="p1_noCoughMedNo" onclick="onCheck(this,'p1_noCoughMed')"
-						<%= props.getProperty("p1_noCoughMedNo", "") %>></td>
-                                        <td valign="top" colspan="10"><b><a href="javascript:showNotes()"
+					<td valign="top"><input type="radio" id="p1_noCoughMedOkConcerns"
+						name="p1_noCoughMedOkConcerns" onclick="onCheck(this,'p1_noCoughMed')"
+						<%= props.getProperty("p1_noCoughMedOkConcerns", "") %>></td>
+                  	<td valign="top"><input type="radio" id="p1_noCoughMedNotDiscussed"
+						name="p1_noCoughMedNotDiscussed" onclick="onCheck(this,'p1_noCoughMed')"
+						<%= props.getProperty("p1_noCoughMedNotDiscussed", "") %>></td>
+                    <td valign="top" colspan="13"><b><a href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><bean:message
 						key="oscarEncounter.formRourke2009_1.formCough" />*</a></b></td>
-                                </tr>
+               	</tr>
 				<tr>
-					<td class="edcol" colspan="3" valign="top"><input
+					<td class="edcol" colspan="4" valign="top"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p1_2ndSmokeOk,p1_2ndSmokeNo,p1_feverOk,p1_feverNo,p1_noCoughMedOk,p1_noCoughMedNo');" /></td>
-					<td class="edcol" colspan="3" valign="top"><input
+						onclick="del('p1_2ndSmokeOk,p1_2ndSmokeOkConcerns,p1_2ndSmokeNotDiscussed,p1_feverOk,p1_feverOkConcerns,p1_feverNotDiscussed,p1_noCoughMedOk,p1_noCoughMedOkConcerns,p1_noCoughMedNotDiscussed');" /></td>
+					<td class="edcol" colspan="4" valign="top"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p1_altMedOk,p1_altMedNo,p1_tmpControlOk,p1_tmpControlNo');" /></td>
-					<td class="edcol" colspan="6" valign="top"><input
+						onclick="del('p1_altMedOk,p1_altMedOkConcerns,p1_altMedNotDiscussed,p1_tmpControlOk,p1_tmpControlOkConcerns,p1_tmpControlNotDiscussed');" /></td>
+					<td class="edcol" colspan="8" valign="top"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p1_pacifierOk,p1_pacifierNo,p1_sunExposureOk,p1_sunExposureNo');" /></td>
+						onclick="del('p1_pacifierOk,p1_pacifierOkConcerns,p1_pacifierNotDiscussed,p1_sunExposureOk,p1_sunExposureOkConcerns,p1_sunExposureNotDiscussed');" /></td>
 				</tr>
 				<tr>
-					<td colspan="12">&nbsp;</td>
+					<td colspan="16">&nbsp;</td>
 				</tr>
 			</table>
+			<textarea id="p1_pEducation"
+				name="p1_pEducation" style="width: 100%" rows="5"><%= props.getProperty("p1_pEducation", "") %></textarea>
 			</td>
 		</tr>
 		<tr>
@@ -1085,27 +1267,31 @@ description layer</div>
 			<td colspan="3" valign="top" align="center">
 			<table cellpadding="0" cellspacing="0" width="100%">
 				<tr align="center">
-					<td colspan="2"><textarea id="p1_development2w"
+					<td colspan="3"><textarea id="p1_development2w"
 						name="p1_development2w" rows="10" cols="25" class="wide"><%= props.getProperty("p1_development2w", "") %></textarea></td>
 				</tr>
                                 <tr>
 					<td style="padding-right: 5pt" valign="top"><img height="15"
 						width="20" src="graphics/Checkmark_L.gif"></td>
 					<td class="edcol" valign="top">X</td>
+					<td class="edcol" valign="top"><bean:message key="oscarEncounter.formRourke2009.formNotDiscussed"/></td>
 				</tr>
-                                <tr>
+                <tr>
 					<td valign="top"><input type="radio" id="p1_sucks2wOk"
 						name="p1_sucks2wOk" onclick="onCheck(this,'p1_sucks2w')"
 						<%= props.getProperty("p1_sucks2wOk", "") %>></td>
 					<td><input type="radio" id="p1_sucks2wNo" name="p1_sucks2wNo"
 						onclick="onCheck(this,'p1_sucks2w')"
-						<%= props.getProperty("p1_sucks2wNo", "") %>><bean:message
+						<%= props.getProperty("p1_sucks2wNo", "")%>></td>
+					<td><input type="radio" id="p1_sucks2wNotDiscussed" name="p1_sucks2wNotDiscussed"
+						onclick="onCheck(this,'p1_sucks2w')"
+						<%= props.getProperty("p1_sucks2wNotDiscussed", "") %>><bean:message
 						key="oscarEncounter.formRourke1.formSucksWell" /></td>
 				</tr>
 				<tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p1_sucks2wOk,p1_sucks2wNo');" /></td>
+						onclick="del('p1_sucks2wOk,p1_sucks2wNo,p1_sucks2wNotDiscussed');" /></td>
 				</tr>
 				<tr>
 					<td valign="top"><input type="radio"
@@ -1115,26 +1301,31 @@ description layer</div>
 					<td><input type="radio" id="p1_noParentsConcerns2wNo"
 						name="p1_noParentsConcerns2wNo"
 						onclick="onCheck(this,'p1_noParentsConcerns2w')"
-						<%= props.getProperty("p1_noParentsConcerns2wNo", "") %>><bean:message
+						<%= props.getProperty("p1_noParentsConcerns2wNo", "") %>></td>
+					<td><input type="radio" id="p1_noParentsConcerns2wNotDiscussed"
+						name="p1_noParentsConcerns2wNotDiscussed"
+						onclick="onCheck(this,'p1_noParentsConcerns2w')"
+						<%= props.getProperty("p1_noParentsConcerns2wNotDiscussed", "") %>><bean:message
 						key="oscarEncounter.formRourke1.formNoparentConcerns" /></td>
 				</tr>
 				<tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p1_noParentsConcerns2wOk,p1_noParentsConcerns2wNo');" /></td>
+						onclick="del('p1_noParentsConcerns2wOk,p1_noParentsConcerns2wNo,p1_noParentsConcerns2wNotDiscussed');" /></td>
 				</tr>
 			</table>
 			</td>
 			<td colspan="3" valign="top">
 			<table cellpadding="0" cellspacing="0" width="100%">
 				<tr align="center">
-					<td colspan="2"><textarea id="p1_development1m"
+					<td colspan="3"><textarea id="p1_development1m"
 						name="p1_development1m" rows="5" cols="25" class="wide"><%= props.getProperty("p1_development1m", "") %></textarea></td>
 				</tr>
 				<tr>
 					<td style="padding-right: 5pt" valign="top"><img height="15"
 						width="20" src="graphics/Checkmark_L.gif"></td>
 					<td class="edcol" valign="top">X</td>
+					<td class="edcol" valign="top"><bean:message key="oscarEncounter.formRourke2009.formNotDiscussed"/></td>
 				</tr>
 				<tr>
 					<td valign="top"><input type="radio" id="p1_focusGaze1mOk"
@@ -1142,13 +1333,16 @@ description layer</div>
 						<%= props.getProperty("p1_focusGaze1mOk", "") %>></td>
 					<td><input type="radio" id="p1_focusGaze1mNo"
 						name="p1_focusGaze1mNo" onclick="onCheck(this,'p1_focusGaze1m')"
-						<%= props.getProperty("p1_focusGaze1mNo", "") %>><bean:message
+						<%= props.getProperty("p1_focusGaze1mNo", "") %>></td>
+					<td><input type="radio" id="p1_focusGaze1mNotDiscussed"
+						name="p1_focusGaze1mNotDiscussed" onclick="onCheck(this,'p1_focusGaze1m')"
+						<%= props.getProperty("p1_focusGaze1mNotDiscussed", "") %>><bean:message
 						key="oscarEncounter.formRourke1.formFocusesGaze" /></td>
 				</tr>
 				<tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p1_focusGaze1mOk,p1_focusGaze1mNo');" /></td>
+						onclick="del('p1_focusGaze1mOk,p1_focusGaze1mNo,p1_focusGaze1mNotDiscussed');" /></td>
 				</tr>
 				<tr>
 					<td valign="top"><input type="radio" id="p1_startles1mOk"
@@ -1156,13 +1350,16 @@ description layer</div>
 						<%= props.getProperty("p1_startles1mOk", "") %>></td>
 					<td><input type="radio" id="p1_startles1mNo"
 						name="p1_startles1mNo" onclick="onCheck(this,'p1_startles1m')"
-						<%= props.getProperty("p1_startles1mNo", "") %>><bean:message
+						<%= props.getProperty("p1_startles1mNo", "") %>></td>
+					<td><input type="radio" id="p1_startles1mNotDiscussed"
+						name="p1_startles1mNotDiscussed" onclick="onCheck(this,'p1_startles1m')"
+						<%= props.getProperty("p1_startles1mNotDiscussed", "") %>><bean:message
 						key="oscarEncounter.formRourke1.formSuddenNoise" /></td>
 				</tr>
 				<tr>
 					<td valign="top" class="edcol" colspan="2"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p1_startles1mOk,p1_startles1mNo');" /></td>
+						onclick="del('p1_startles1mOk,p1_startles1mNo,p1_startles1mNotDiscussed');" /></td>
 				</tr>
                                 <tr>
 					<td valign="top"><input type="radio" id="p1_calms1mOk"
@@ -1170,13 +1367,16 @@ description layer</div>
 						<%= props.getProperty("p1_calms1mOk", "") %>></td>
 					<td><input type="radio" id="p1_calms1mNo"
 						name="p1_calms1mNo" onclick="onCheck(this,'p1_calms1m')"
-						<%= props.getProperty("p1_calms1mNo", "") %>><bean:message
+						<%= props.getProperty("p1_calms1mNo", "") %>></td>
+					<td><input type="radio" id="p1_calms1mNotDiscussed"
+						name="p1_calms1mNotDiscussed" onclick="onCheck(this,'p1_calms1m')"
+						<%= props.getProperty("p1_calms1mNotDiscussed", "") %>><bean:message
 						key="oscarEncounter.formRourke2009_1.formCalmes" /></td>
 				</tr>
 				<tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p1_calms1mOk,p1_calms1mNo');" /></td>
+						onclick="del('p1_calms1mOk,p1_calms1mNo,p1_calms1mNotDiscussed');" /></td>
 				</tr>
 				<tr>
 					<td valign="top"><input type="radio" id="p1_sucks1mOk"
@@ -1184,13 +1384,16 @@ description layer</div>
 						<%= props.getProperty("p1_sucks1mOk", "") %>></td>
 					<td><input type="radio" id="p1_sucks1mNo" name="p1_sucks1mNo"
 						onclick="onCheck(this,'p1_sucks1m')"
-						<%= props.getProperty("p1_sucks1mNo", "") %>><bean:message
+						<%= props.getProperty("p1_sucks1mNo", "") %>></td>
+					<td><input type="radio" id="p1_sucks1mNotDiscussed" name="p1_sucks1mNotDiscussed"
+						onclick="onCheck(this,'p1_sucks1m')"
+						<%= props.getProperty("p1_sucks1mNotDiscussed", "") %>><bean:message
 						key="oscarEncounter.formRourke1.formSucksWell" /></td>
 				</tr>
 				<tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p1_sucks1mOk,p1_sucks1mNo');" /></td>
+						onclick="del('p1_sucks1mOk,p1_sucks1mNo,p1_sucks1mNotDiscussed');" /></td>
 				</tr>
 				<tr>
 					<td valign="top"><input type="radio"
@@ -1200,13 +1403,17 @@ description layer</div>
 					<td><input type="radio" id="p1_noParentsConcerns1mNo"
 						name="p1_noParentsConcerns1mNo"
 						onclick="onCheck(this,'p1_noParentsConcerns1m')"
-						<%= props.getProperty("p1_noParentsConcerns1mNo", "") %>><bean:message
+						<%= props.getProperty("p1_noParentsConcerns1mNo", "") %>></td>
+					<td><input type="radio" id="p1_noParentsConcerns1mNotDiscussed"
+						name="p1_noParentsConcerns1mNotDiscussed"
+						onclick="onCheck(this,'p1_noParentsConcerns1m')"
+						<%= props.getProperty("p1_noParentsConcerns1mNotDiscussed", "") %>><bean:message
 						key="oscarEncounter.formRourke1.formNoparentConcerns" /></td>
 				</tr>
 				<tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p1_noParentsConcerns1mOk,p1_noParentsConcerns1mNo');" /></td>
+						onclick="del('p1_noParentsConcerns1mOk,p1_noParentsConcerns1mNo,p1_noParentsConcerns1mNotDiscussed');" /></td>
 				</tr>
 			</table>
 			</td>
@@ -1221,7 +1428,7 @@ description layer</div>
 				key="oscarEncounter.formRourke2009.msgPhysicalExaminationLegend" />
 			
 			</td>
-			<td colspan="3" valign="top">
+			<td colspan="3" valign="bottom">
 			<table cellpadding="0" cellspacing="0" width="100%">
 				<tr>
 					<td colspan="3">&nbsp;</td>
@@ -1230,22 +1437,25 @@ description layer</div>
 					<td style="padding-right: 5pt" valign="top"><img height="15"
 						width="20" src="graphics/Checkmark_L.gif"></td>
 					<td class="edcol" valign="top">X</td>
-                                        <td>&nbsp;</td>
+                    <td class="edcol" valign="top" colspan="2"><bean:message key="oscarEncounter.formRourke2009.formNotDiscussed"/></td>
 				</tr>
-                                <tr>
+                <tr>
 					<td valign="top"><input type="radio" id="p1_skin1wOk"
 						name="p1_skin1wOk" onclick="onCheck(this,'p1_skin1w')"
 						<%= props.getProperty("p1_skin1wOk", "") %>></td>
-                                        <td valign="top"><input type="radio" id="p1_skin1wNo"
+                    <td valign="top"><input type="radio" id="p1_skin1wNo"
 						name="p1_skin1wNo" onclick="onCheck(this,'p1_skin1w')"
 						<%= props.getProperty("p1_skin1wNo", "") %>></td>
-                                        <td valign="top"><bean:message
+					<td valign="top"><input type="radio" id="p1_skin1wNotDiscussed"
+						name="p1_skin1wNotDiscussed" onclick="onCheck(this,'p1_skin1w')"
+						<%= props.getProperty("p1_skin1wNotDiscussed", "") %>></td>
+                    <td valign="top"><bean:message
 						key="oscarEncounter.formRourke1.formDrySkin" /></td>
 				</tr>
                                 <tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p1_skin1wOk,p1_skin1wNo');" /></td>
+						onclick="del('p1_skin1wOk,p1_skin1wNo,p1_skin1wNotDiscussed');" /></td>
                                         <td>&nbsp;</td>
 				</tr>
                                 <tr>
@@ -1255,31 +1465,37 @@ description layer</div>
 					<td valign="top"><input type="radio" id="p1_fontanelles1wNo"
 						name="p1_fontanelles1wNo" onclick="onCheck(this,'p1_fontanelles1w')"
 						<%= props.getProperty("p1_fontanelles1wNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_fontanelles1wNotDiscussed"
+						name="p1_fontanelles1wNotDiscussed" onclick="onCheck(this,'p1_fontanelles1w')"
+						<%= props.getProperty("p1_fontanelles1wNotDiscussed", "") %>></td>
                                         <td valign="top"><bean:message
 						key="oscarEncounter.formRourke1.formFontanelles" /></td>
 				</tr>
                                 <tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p1_fontanelles1wOk,p1_fontanelles1wNo');" /></td>
+						onclick="del('p1_fontanelles1wOk,p1_fontanelles1wNo,p1_fontanelles1wNotDiscussed');" /></td>
                                         <td>&nbsp;</td>
 				</tr>
                                 <tr>
 					<td valign="top"><input type="radio" id="p1_eyes1wOk"
-						name="p1_eyes1wOk" onclick="onCheck(this,'eyes1w')"
+						name="p1_eyes1wOk" onclick="onCheck(this,'p1_eyes1w')"
 						<%= props.getProperty("p1_eyes1wOk", "") %>></td>
 					<td valign="top"><input type="radio" id="p1_eyes1wNo"
 						name="p1_eyes1wNo" onclick="onCheck(this,'p1_eyes1w')"
 						<%= props.getProperty("p1_eyes1wNo", "") %>></td>
-                                        <td valign="top"><a href="javascript:showNotes()"
+						<td valign="top"><input type="radio" id="p1_eyes1wNotDiscussed"
+						name="p1_eyes1wNotDiscussed" onclick="onCheck(this,'p1_eyes1w')"
+						<%= props.getProperty("p1_eyes1wNotDiscussed", "") %>></td>
+                    <td valign="top"><a href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><bean:message
 						key="oscarEncounter.formRourke1.formRedReflex" />*</a></td>
 				</tr>
                                 <tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p1_eyes1wOk,p1_eyes1wNo');" /></td>
+						onclick="del('p1_eyes1wOk,p1_eyes1wNo,p1_eyes1wNotDiscussed');" /></td>
                                         <td>&nbsp;</td>
 				</tr>
                                 <tr>
@@ -1289,31 +1505,37 @@ description layer</div>
 					<td valign="top"><input type="radio" id="p1_ears1wNo"
 						name="p1_ears1wNo" onclick="onCheck(this,'p1_ears1w')"
                                                 <%= props.getProperty("p1_ears1wNo", "") %>></td>
-                                        <td valign="top"><a href="javascript:showNotes()"
+                    <td valign="top"><input type="radio" id="p1_ears1wNotDiscussed"
+						name="p1_ears1wNotDiscussed" onclick="onCheck(this,'p1_ears1w')"
+                                                <%= props.getProperty("p1_ears1wNotDiscussed", "") %>></td>
+                    <td valign="top"><a href="javascript:showNotes()"
                                                 onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><i><bean:message
 						key="oscarEncounter.formRourke2006_1.formEarDrums" />*</i></a></td>
 				</tr>
                                 <tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p1_ears1wOk,p1_ears1wNo');" /></td>
+						onclick="del('p1_ears1wOk,p1_ears1wNo,p1_ears1wNotDiscussed');" /></td>
                                         <td>&nbsp;</td>
 				</tr>
-                                <tr>
+                <tr>
 					<td valign="top"><input type="radio" id="p1_heartLungs1wOk"
 						name="p1_heartLungs1wOk" onclick="onCheck(this,'p1_heartLungs1w')"
 						<%= props.getProperty("p1_heartLungs1wOk", "") %>></td>
 					<td valign="top"><input type="radio" id="p1_heartLungs1wNo"
 						name="p1_heartLungs1wNo" onclick="onCheck(this,'p1_heartLungs1w')"
 						<%= props.getProperty("p1_heartLungs1wNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_heartLungs1wNotDiscussed"
+						name="p1_heartLungs1wNotDiscussed" onclick="onCheck(this,'p1_heartLungs1w')"
+						<%= props.getProperty("p1_heartLungs1wNotDiscussed", "") %>></td>
                                         <td valign="top"><bean:message
 						key="oscarEncounter.formRourke1.formHeart" /></td>
 				</tr>
                                 <tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p1_heartLungs1wOk,p1_heartLungs1wNo');" /></td>
+						onclick="del('p1_heartLungs1wOk,p1_heartLungs1wNo,p1_heartLungs1wNotDiscussed');" /></td>
                                         <td>&nbsp;</td>
 				</tr>
                                 <tr>
@@ -1323,13 +1545,16 @@ description layer</div>
 					<td valign="top"><input type="radio" id="p1_umbilicus1wNo"
 						name="p1_umbilicus1wNo" onclick="onCheck(this,'p1_umbilicus1w')"
                                                 <%= props.getProperty("p1_umbilicus1wNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_umbilicus1wNotDiscussed"
+						name="p1_umbilicus1wNotDiscussed" onclick="onCheck(this,'p1_umbilicus1w')"
+                                                <%= props.getProperty("p1_umbilicus1wNotDiscussed", "") %>></td>                                               
                                         <td valign="top"><bean:message
 						key="oscarEncounter.formRourke1.formUmbilicus" /></td>
 				</tr>
                                 <tr>
 					<td valign="top" class="edcol" colspan="2"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p1_umbilicus1wOk,p1_umbilicus1wNo');" /></td>
+						onclick="del('p1_umbilicus1wOk,p1_umbilicus1wNo,p1_umbilicus1wNotDiscussed');" /></td>
                                         <td>&nbsp;</td>
 				</tr>
                                 <tr>
@@ -1339,13 +1564,16 @@ description layer</div>
 					<td valign="top"><input type="radio" id="p1_femoralPulses1wNo"
 						name="p1_femoralPulses1wNo" onclick="onCheck(this,'p1_femoralPulses1w')"
                                                 <%= props.getProperty("p1_femoralPulses1wNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_femoralPulses1wNotDiscussed"
+						name="p1_femoralPulses1wNotDiscussed" onclick="onCheck(this,'p1_femoralPulses1w')"
+                                                <%= props.getProperty("p1_femoralPulses1wNotDiscussed", "") %>></td>                                               
                                         <td valign="top"><bean:message
 						key="oscarEncounter.formRourke1.formFemoralPulses" /></td>
 				</tr>
                                 <tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p1_femoralPulses1wOk,p1_femoralPulses1wNo');" /></td>
+						onclick="del('p1_femoralPulses1wOk,p1_femoralPulses1wNo,p1_femoralPulses1wNotDiscussed');" /></td>
                                         <td>&nbsp;</td>
 				</tr>
                                 <tr>
@@ -1355,15 +1583,18 @@ description layer</div>
                                         <td valign="top"><input type="radio" id="p1_hips1wNo"
 						name="p1_hips1wNo" onclick="onCheck(this,'p1_hips1w')"
 						<%= props.getProperty("p1_hips1wNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_hips1wNotDiscussed"
+						name="p1_hips1wNotDiscussed" onclick="onCheck(this,'p1_hips1w')"
+						<%= props.getProperty("p1_hips1wNotDiscussed", "") %>></td>
                                         <td valign="top"><a href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><bean:message
 						key="oscarEncounter.formRourke1.formHips" />*</a></td>
 				</tr>
                                 <tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p1_hips1wOk,p1_hips1wNo');" /></td>
+						onclick="del('p1_hips1wOk,p1_hips1wNo,p1_hips1wNotDiscussed');" /></td>
                                         <td>&nbsp;</td>
 				</tr>
                                 <tr>
@@ -1373,15 +1604,18 @@ description layer</div>
 					<td valign="top"><input type="radio" id="p1_muscleTone1wNo"
 						name="p1_muscleTone1wNo" onclick="onCheck(this,'p1_muscleTone1w')"
                                                 <%= props.getProperty("p1_muscleTone1wNo", "") %>></td>
+                   	<td valign="top"><input type="radio" id="p1_muscleTone1wNotDiscussed"
+						name="p1_muscleTone1wNotDiscussed" onclick="onCheck(this,'p1_muscleTone1w')"
+                                                <%= props.getProperty("p1_muscleTone1wNotDiscussed", "") %>></td>
                                         <td valign="top"><a href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><bean:message
 						key="oscarEncounter.formRourke2006_1.formMuscleTone" />*</a></td>
 				</tr>
                                 <tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p1_muscleTone1wOk,p1_muscleTone1wNo');" /></td>
+						onclick="del('p1_muscleTone1wOk,p1_muscleTone1wNo,p1_muscleTone1wNotDiscussed');" /></td>
                                         <td>&nbsp;</td>
 				</tr>
                                 <tr>
@@ -1391,13 +1625,16 @@ description layer</div>
 					<td valign="top"><input type="radio" id="p1_testicles1wNo"
 						name="p1_testicles1wNo" onclick="onCheck(this,'p1_testicles1w')"
 						<%= props.getProperty("p1_testicles1wNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_testicles1wNotDiscussed"
+						name="p1_testicles1wNotDiscussed" onclick="onCheck(this,'p1_testicles1w')"
+						<%= props.getProperty("p1_testicles1wNotDiscussed", "") %>></td>
                                         <td valign="top"><bean:message
 						key="oscarEncounter.formRourke1.formTescicles" /></td>
 				</tr>
                                 <tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p1_testicles1wOk,p1_testicles1wNo');" /></td>
+						onclick="del('p1_testicles1wOk,p1_testicles1wNo,p1_testicles1wNotDiscussed');" /></td>
                                         <td>&nbsp;</td>
 				</tr>
 				<tr>
@@ -1407,28 +1644,33 @@ description layer</div>
 					<td valign="top"><input type="radio" id="p1_maleUrinary1wNo"
 						name="p1_maleUrinary1wNo" onclick="onCheck(this,'p1_maleUrinary1w')"
 						<%= props.getProperty("p1_maleUrinary1wNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_maleUrinary1wNotDiscussed"
+						name="p1_maleUrinary1wNotDiscussed" onclick="onCheck(this,'p1_maleUrinary1w')"
+						<%= props.getProperty("p1_maleUrinary1wNotDiscussed", "") %>></td>
                                         <td valign="top"><bean:message
 						key="oscarEncounter.formRourke1.formMaleUrinaryStream" /></td>
 				</tr>
                                 <tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p1_maleUrinary1wOk,p1_maleUrinary1wNo');" /></td>
+						onclick="del('p1_maleUrinary1wOk,p1_maleUrinary1wNo,p1_maleUrinary1wNotDiscussed');" /></td>
                                         <td>&nbsp;</td>
 				</tr>
 				
 			</table>
+			<textarea id="p1_pPhysical1w"
+				name="p1_pPhysical1w" style="width: 100%" cols="10" rows="5"><%= props.getProperty("p1_pPhysical1w", "") %></textarea>
 			</td>
-			<td colspan="3" valign="top">
+			<td colspan="3" valign="bottom">
 			<table cellpadding="0" cellspacing="0" width="100%">
 			<tr>
-					<td colspan="3">&nbsp;</td>
+					<td colspan="4">&nbsp;</td>
 				</tr>
-                                <tr>
+                <tr>
 					<td style="padding-right: 5pt" valign="top"><img height="15"
 						width="20" src="graphics/Checkmark_L.gif"></td>
 					<td class="edcol" valign="top">X</td>
-                                        <td>&nbsp;</td>
+                    <td class="edcol" valign="top" colspan="2"><bean:message key="oscarEncounter.formRourke2009.formNotDiscussed"/></td>
 				</tr>
                                 <tr>
 					<td valign="top"><input type="radio" id="p1_skin2wOk"
@@ -1437,13 +1679,16 @@ description layer</div>
                                         <td valign="top"><input type="radio" id="p1_skin2wNo"
 						name="p1_skin2wNo" onclick="onCheck(this,'p1_skin2w')"
 						<%= props.getProperty("p1_skin2wNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_skin2wNotDiscussed"
+						name="p1_skin2wNotDiscussed" onclick="onCheck(this,'p1_skin2w')"
+						<%= props.getProperty("p1_skin2wNotDiscussed", "") %>></td>
                                         <td valign="top"><bean:message
 						key="oscarEncounter.formRourke1.formDrySkin" /></td>
 				</tr>
                                 <tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p1_skin2wOk,p1_skin2wNo');" /></td>
+						onclick="del('p1_skin2wOk,p1_skin2wNo,p1_skin2wNotDiscussed');" /></td>
                                         <td>&nbsp;</td>
 				</tr>
                                 <tr>
@@ -1453,31 +1698,37 @@ description layer</div>
 					<td valign="top"><input type="radio" id="p1_fontanelles2wNo"
 						name="p1_fontanelles2wNo" onclick="onCheck(this,'p1_fontanelles2w')"
 						<%= props.getProperty("p1_fontanelles2wNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_fontanelles2wNotDiscussed"
+						name="p1_fontanelles2wNotDiscussed" onclick="onCheck(this,'p1_fontanelles2w')"
+						<%= props.getProperty("p1_fontanelles2wNotDiscussed", "") %>></td>
                                         <td valign="top"><bean:message
 						key="oscarEncounter.formRourke1.formFontanelles" /></td>
 				</tr>
                                 <tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p1_fontanelles2wOk,p1_fontanelles2wNo');" /></td>
+						onclick="del('p1_fontanelles2wOk,p1_fontanelles2wNo,p1_fontanelles2wNotDiscussed');" /></td>
                                         <td>&nbsp;</td>
 				</tr>
                                 <tr>
 					<td valign="top"><input type="radio" id="p1_eyes2wOk"
-						name="p1_eyes2wOk" onclick="onCheck(this,'eyes2w')"
+						name="p1_eyes2wOk" onclick="onCheck(this,'p1_eyes2w')"
 						<%= props.getProperty("p1_eyes2wOk", "") %>></td>
 					<td valign="top"><input type="radio" id="p1_eyes2wNo"
 						name="p1_eyes2wNo" onclick="onCheck(this,'p1_eyes2w')"
 						<%= props.getProperty("p1_eyes2wNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_eyes2wNotDiscussed"
+						name="p1_eyes2wNotDiscussed" onclick="onCheck(this,'p1_eyes2w')"
+						<%= props.getProperty("p1_eyes2wNotDiscussed", "") %>></td>
                                         <td valign="top"><a href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><bean:message
 						key="oscarEncounter.formRourke1.formRedReflex" />*</a></td>
 				</tr>
                                 <tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p1_eyes2wOk,p1_eyes2wNo');" /></td>
+						onclick="del('p1_eyes2wOk,p1_eyes2wNo,p1_eyes2wNotDiscussed');" /></td>
                                         <td>&nbsp;</td>
 				</tr>
                                 <tr>
@@ -1487,15 +1738,18 @@ description layer</div>
 					<td valign="top"><input type="radio" id="p1_ears2wNo"
 						name="p1_ears2wNo" onclick="onCheck(this,'p1_ears2w')"
                                                 <%= props.getProperty("p1_ears2wNo", "") %>></td>
+                   	<td valign="top"><input type="radio" id="p1_ears2wNotDiscussed"
+						name="p1_ears2wNotDiscussed" onclick="onCheck(this,'p1_ears2w')"
+                                                <%= props.getProperty("p1_ears2wNotDiscussed", "") %>></td>
                                         <td valign="top"><a href="javascript:showNotes()"
                                                 onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><i><bean:message
 						key="oscarEncounter.formRourke2006_1.formEarDrums" />*</i></a></td>
 				</tr>
                                 <tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p1_ears2wOk,p1_ears2wNo');" /></td>
+						onclick="del('p1_ears2wOk,p1_ears2wNo,p1_ears2wNotDiscussed');" /></td>
                                         <td>&nbsp;</td>
 				</tr>
                                 <tr>
@@ -1505,13 +1759,16 @@ description layer</div>
 					<td valign="top"><input type="radio" id="p1_heartLungs2wNo"
 						name="p1_heartLungs2wNo" onclick="onCheck(this,'p1_heartLungs2w')"
 						<%= props.getProperty("p1_heartLungs2wNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_heartLungs2wNotDiscussed"
+						name="p1_heartLungs2wNotDiscussed" onclick="onCheck(this,'p1_heartLungs2w')"
+						<%= props.getProperty("p1_heartLungs2wNotDiscussed", "") %>></td>
                                         <td valign="top"><bean:message
 						key="oscarEncounter.formRourke1.formHeart" /></td>
 				</tr>
                                 <tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p1_heartLungs2wOk,p1_heartLungs2wNo');" /></td>
+						onclick="del('p1_heartLungs2wOk,p1_heartLungs2wNo,p1_heartLungs2wNotDiscussed');" /></td>
                                         <td>&nbsp;</td>
 				</tr>
                                 <tr>
@@ -1521,13 +1778,16 @@ description layer</div>
 					<td valign="top"><input type="radio" id="p1_umbilicus2wNo"
 						name="p1_umbilicus2wNo" onclick="onCheck(this,'p1_umbilicus2w')"
                                                 <%= props.getProperty("p1_umbilicus2wNo", "") %>></td>
+                    <td valign="top"><input type="radio" id="p1_umbilicus2wNotDiscussed"
+						name="p1_umbilicus2wNotDiscussed" onclick="onCheck(this,'p1_umbilicus2w')"
+                                                <%= props.getProperty("p1_umbilicus2wNotDiscussed", "") %>></td>
                                         <td valign="top"><bean:message
 						key="oscarEncounter.formRourke1.formUmbilicus" /></td>
 				</tr>
                                 <tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p1_umbilicus2wOk,p1_umbilicus2wNo');" /></td>
+						onclick="del('p1_umbilicus2wOk,p1_umbilicus2wNo,p1_umbilicus2wNotDiscussed');" /></td>
                                         <td>&nbsp;</td>
 				</tr>
                                 <tr>
@@ -1537,13 +1797,16 @@ description layer</div>
 					<td valign="top"><input type="radio" id="p1_femoralPulses2wNo"
 						name="p1_femoralPulses2wNo" onclick="onCheck(this,'p1_femoralPulses2w')"
                                                 <%= props.getProperty("p1_femoralPulses2wNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_femoralPulses2wNotDiscussed"
+						name="p1_femoralPulses2wNotDiscussed" onclick="onCheck(this,'p1_femoralPulses2w')"
+                                                <%= props.getProperty("p1_femoralPulses2wNotDiscussed", "") %>></td>                                                
                                         <td valign="top"><bean:message
 						key="oscarEncounter.formRourke1.formFemoralPulses" /></td>
 				</tr>
                                 <tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p1_femoralPulses2wOk,p1_femoralPulses2wNo');" /></td>
+						onclick="del('p1_femoralPulses2wOk,p1_femoralPulses2wNo,p1_femoralPulses2wNotDiscussed');" /></td>
                                         <td>&nbsp;</td>
 				</tr>
                                 <tr>
@@ -1553,15 +1816,18 @@ description layer</div>
                                         <td valign="top"><input type="radio" id="p1_hips2wNo"
 						name="p1_hips2wNo" onclick="onCheck(this,'p1_hips2w')"
 						<%= props.getProperty("p1_hips2wNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_hips2wNotDiscussed"
+						name="p1_hips2wNotDiscussed" onclick="onCheck(this,'p1_hips2w')"
+						<%= props.getProperty("p1_hips2wNotDiscussed", "") %>></td>
                                         <td valign="top"><a href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><bean:message
 						key="oscarEncounter.formRourke1.formHips" />*</a></td>
 				</tr>
                                 <tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p1_hips2wOk,p1_hips2wNo');" /></td>
+						onclick="del('p1_hips2wOk,p1_hips2wNo,p1_hips2wNotDiscussed');" /></td>
                                         <td>&nbsp;</td>
 				</tr>
                                 <tr>
@@ -1571,15 +1837,18 @@ description layer</div>
 					<td valign="top"><input type="radio" id="p1_muscleTone2wNo"
 						name="p1_muscleTone2wNo" onclick="onCheck(this,'p1_muscleTone2w')"
                                                 <%= props.getProperty("p1_muscleTone2wNo", "") %>></td>
+                   	<td valign="top"><input type="radio" id="p1_muscleTone2wNotDiscussed"
+						name="p1_muscleTone2wNotDiscussed" onclick="onCheck(this,'p1_muscleTone2w')"
+                                                <%= props.getProperty("p1_muscleTone2wNotDiscussed", "") %>></td>
                                         <td valign="top"><a href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><bean:message
 						key="oscarEncounter.formRourke2006_1.formMuscleTone" />*</a></td>
 				</tr>
                                 <tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p1_muscleTone2wOk,p1_muscleTone2wNo');" /></td>
+						onclick="del('p1_muscleTone2wOk,p1_muscleTone2wNo,p1_muscleTone2wNotDiscussed');" /></td>
                                         <td>&nbsp;</td>
 				</tr>
                                 <tr>
@@ -1589,13 +1858,16 @@ description layer</div>
 					<td valign="top"><input type="radio" id="p1_testicles2wNo"
 						name="p1_testicles2wNo" onclick="onCheck(this,'p1_testicles2w')"
 						<%= props.getProperty("p1_testicles2wNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_testicles2wNotDiscussed"
+						name="p1_testicles2wNotDiscussed" onclick="onCheck(this,'p1_testicles2w')"
+						<%= props.getProperty("p1_testicles2wNotDiscussed", "") %>></td>
                                         <td valign="top"><bean:message
 						key="oscarEncounter.formRourke1.formTescicles" /></td>
 				</tr>
                                 <tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p1_testicles2wOk,p1_testicles2wNo');" /></td>
+						onclick="del('p1_testicles2wOk,p1_testicles2wNo,p1_testicles2wNotDiscussed');" /></td>
                                         <td>&nbsp;</td>
 				</tr>
 				<tr>
@@ -1605,27 +1877,33 @@ description layer</div>
 					<td valign="top"><input type="radio" id="p1_maleUrinary2wNo"
 						name="p1_maleUrinary2wNo" onclick="onCheck(this,'p1_maleUrinary2w')"
 						<%= props.getProperty("p1_maleUrinary2wNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_maleUrinary2wNotDiscussed"
+						name="p1_maleUrinary2wNotDiscussed" onclick="onCheck(this,'p1_maleUrinary2w')"
+						<%= props.getProperty("p1_maleUrinary2wNotDiscussed", "") %>></td>
                                         <td valign="top"><bean:message
 						key="oscarEncounter.formRourke1.formMaleUrinaryStream" /></td>
 				</tr>
                                 <tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p1_maleUrinary2wOk,p1_maleUrinary2wNo');" /></td>
+						onclick="del('p1_maleUrinary2wOk,p1_maleUrinary2wNo,p1_maleUrinary2wNotDiscussed');" /></td>
                                         <td>&nbsp;</td>
 				</tr>
                         </table>
+             	<textarea id="p1_pPhysical2w"
+				name="p1_pPhysical2w" style="width: 100%" cols="10" rows="5"><%= props.getProperty("p1_pPhysical2w", "") %></textarea>
 			</td>
-			<td colspan="3" valign="top">
+			</td>
+			<td colspan="3" valign="bottom">
 			<table cellpadding="0" cellspacing="0" width="100%">
 				<tr>
 					<td colspan="3">&nbsp;</td>
 				</tr>
-                                <tr>
+                <tr>
 					<td style="padding-right: 5pt" valign="top"><img height="15"
 						width="20" src="graphics/Checkmark_L.gif"></td>
 					<td class="edcol" valign="top">X</td>
-                                        <td>&nbsp;</td>
+                    <td class="edcol" valign="top" colspan="2"><bean:message key="oscarEncounter.formRourke2009.formNotDiscussed"/></td>
 				</tr>
                                 <tr>
 					<td valign="top"><input type="radio" id="p1_skin1mOk"
@@ -1634,13 +1912,16 @@ description layer</div>
                                         <td valign="top"><input type="radio" id="p1_skin1mNo"
 						name="p1_skin1mNo" onclick="onCheck(this,'p1_skin1m')"
 						<%= props.getProperty("p1_skin1mNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_skin1mNotDiscussed"
+						name="p1_skin1mNotDiscussed" onclick="onCheck(this,'p1_skin1m')"
+						<%= props.getProperty("p1_skin1mNotDiscussed", "") %>></td>
                                         <td valign="top"><bean:message
 						key="oscarEncounter.formRourke2009_1.formSkin" /></td>
 				</tr>
                                 <tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p1_skin1mOk,p1_skin1mNo');" /></td>
+						onclick="del('p1_skin1mOk,p1_skin1mNo,p1_skin1mNotDiscussed');" /></td>
                                         <td>&nbsp;</td>
 				</tr>
 				<tr>
@@ -1650,67 +1931,79 @@ description layer</div>
 					<td valign="top"><input type="radio" id="p1_fontanelles1mNo"
 						name="p1_fontanelles1mNo" onclick="onCheck(this,'p1_fontanelles1m')"
 						<%= props.getProperty("p1_fontanelles1mNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_fontanelles1mNotDiscussed"
+						name="p1_fontanelles1mNotDiscussed" onclick="onCheck(this,'p1_fontanelles1m')"
+						<%= props.getProperty("p1_fontanelles1mNotDiscussed", "") %>></td>
                                         <td valign="top"><bean:message
 						key="oscarEncounter.formRourke1.formFontanelles" /></td>
 				</tr>
                                 <tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p1_fontanelles1mOk,p1_fontanelles1mNo');" /></td>
+						onclick="del('p1_fontanelles1mOk,p1_fontanelles1mNo,p1_fontanelles1mNotDiscussed');" /></td>
                                         <td>&nbsp;</td>
 				</tr>
 				<tr>
 					<td valign="top"><input type="radio" id="p1_eyes1mOk"
-						name="p1_eyes1mOk" onclick="onCheck(this,'eyes1m')"
+						name="p1_eyes1mOk" onclick="onCheck(this,'p1_eyes1m')"
 						<%= props.getProperty("p1_eyes1mOk", "") %>></td>
 					<td valign="top"><input type="radio" id="p1_eyes1mNo"
 						name="p1_eyes1mNo" onclick="onCheck(this,'p1_eyes1m')"
 						<%= props.getProperty("p1_eyes1mNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_eyes1mNotDiscussed"
+						name="p1_eyes1mNotDiscussed" onclick="onCheck(this,'p1_eyes1m')"
+						<%= props.getProperty("p1_eyes1mNotDiscussed", "") %>></td>
                                         <td valign="top"><a href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><bean:message
 						key="oscarEncounter.formRourke1.formRedReflex" />*</a></td>
 				</tr>
                                 <tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p1_eyes1mOk,p1_eyes1mNo');" /></td>
+						onclick="del('p1_eyes1mOk,p1_eyes1mNo,p1_eyes1mNotDiscussed');" /></td>
                                         <td>&nbsp;</td>
 				</tr>
                                 <tr>
 					<td valign="top"><input type="radio" id="p1_corneal1mOk"
-						name="p1_corneal1mOk" onclick="onCheck(this,'corneal1m')"
+						name="p1_corneal1mOk" onclick="onCheck(this,'p1_corneal1m')"
 						<%= props.getProperty("p1_corneal1mOk", "") %>></td>
 					<td valign="top"><input type="radio" id="p1_corneal1mNo"
 						name="p1_corneal1mNo" onclick="onCheck(this,'p1_corneal1m')"
 						<%= props.getProperty("p1_corneal1mNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_corneal1mNotDiscussed"
+						name="p1_corneal1mNotDiscussed" onclick="onCheck(this,'p1_corneal1m')"
+						<%= props.getProperty("p1_corneal1mNotDiscussed", "") %>></td>
                                         <td valign="top"><a href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><bean:message
 						key="oscarEncounter.formRourke2006_1.formCornealReflex" />*</a></td>
 				</tr>
                                 <tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p1_corneal1mOk,p1_corneal1mNo');" /></td>
+						onclick="del('p1_corneal1mOk,p1_corneal1mNo,p1_corneal1mNotDiscussed');" /></td>
                                         <td>&nbsp;</td>
 				</tr>
                                 <tr>
 					<td valign="top"><input type="radio" id="p1_hearing1mOk"
-						name="p1_hearing1mOk" onclick="onCheck(this,'hearing1m')"
+						name="p1_hearing1mOk" onclick="onCheck(this,'p1_hearing1m')"
 						<%= props.getProperty("p1_hearing1mOk", "") %>></td>
 					<td valign="top"><input type="radio" id="p1_hearing1mNo"
 						name="p1_hearing1mNo" onclick="onCheck(this,'p1_hearing1m')"
 						<%= props.getProperty("p1_hearing1mNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_hearing1mNotDiscussed"
+						name="p1_hearing1mNotDiscussed" onclick="onCheck(this,'p1_hearing1m')"
+						<%= props.getProperty("p1_hearing1mNotDiscussed", "") %>></td>
                                         <td valign="top"><a href="javascript:showNotes()"
                                                             onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><i><bean:message
 						key="oscarEncounter.formRourke2006_1.formHearingInquiry" />*</i></a></td>
 				</tr>
                                 <tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p1_hearing1mOk,p1_hearing1mNo');" /></td>
+						onclick="del('p1_hearing1mOk,p1_hearing1mNo,p1_hearing1mNotDiscussed');" /></td>
                                         <td>&nbsp;</td>
 				</tr>
                                 <tr>
@@ -1720,13 +2013,16 @@ description layer</div>
 					<td valign="top"><input type="radio" id="p1_heart1mNo"
 						name="p1_heart1mNo" onclick="onCheck(this,'p1_heart1m')"
 						<%= props.getProperty("p1_heart1mNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_heart1mNotDiscussed"
+						name="p1_heart1mNotDiscussed" onclick="onCheck(this,'p1_heart1m')"
+						<%= props.getProperty("p1_heart1mNotDiscussed", "") %>></td>
                                         <td valign="top"><bean:message
 						key="oscarEncounter.formRourke1.formHeart1" /></td>
 				</tr>
                                 <tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p1_heart1mOk,p1_heart1mNo');" /></td>
+						onclick="del('p1_heart1mOk,p1_heart1mNo,p1_heart1mNotDiscussed');" /></td>
                                         <td>&nbsp;</td>
 				</tr>				
 				<tr>
@@ -1736,15 +2032,18 @@ description layer</div>
                                         <td valign="top"><input type="radio" id="p1_hips1mNo"
 						name="p1_hips1mNo" onclick="onCheck(this,'p1_hips1m')"
 						<%= props.getProperty("p1_hips1mNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_hips1mNotDiscussed"
+						name="p1_hips1mNotDiscussed" onclick="onCheck(this,'p1_hips1m')"
+						<%= props.getProperty("p1_hips1mNotDiscussed", "") %>></td>
                                         <td valign="top"><a href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><bean:message
 						key="oscarEncounter.formRourke1.formHips" />*</a></td>
 				</tr>
                                 <tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p1_hips1mOk,p1_hips1mNo');" /></td>
+						onclick="del('p1_hips1mOk,p1_hips1mNo,p1_hips1mNotDiscussed');" /></td>
                                         <td>&nbsp;</td>
 				</tr>
                                 <tr>
@@ -1754,42 +2053,75 @@ description layer</div>
 					<td valign="top"><input type="radio" id="p1_muscleTone1mNo"
 						name="p1_muscleTone1mNo" onclick="onCheck(this,'p1_muscleTone1m')"
                                                 <%= props.getProperty("p1_muscleTone1mNo", "") %>></td>
+                    <td valign="top"><input type="radio" id="p1_muscleTone1mNotDiscussed"
+						name="p1_muscleTone1mNotDiscussed" onclick="onCheck(this,'p1_muscleTone1m')"
+                                                <%= props.getProperty("p1_muscleTone1mNotDiscussed", "") %>></td>
                                         <td valign="top"><a href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><bean:message
 						key="oscarEncounter.formRourke2006_1.formMuscleTone" />*</a></td>
 				</tr>
-                                <tr>
-					<td valign="top" class="edcol" colspan="2"><input
+                <tr>
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p1_muscleTone1mOk,p1_muscleTone1mNo');" /></td>
+						onclick="del('p1_muscleTone1mOk,p1_muscleTone1mNo,p1_muscleTone1mNotDiscussed');" /></td>
                                         <td>&nbsp;</td>
 				</tr>
 			</table>
+			<textarea id="p1_pPhysical1m"
+				name="p1_pPhysical1m" style="width: 100%" cols="10" rows="5"><%= props.getProperty("p1_pPhysical1m", "") %></textarea>
 			</td>
 		</tr>
 		<tr>
 			<td class="column"><a><bean:message
-				key="oscarEncounter.formRourke1.msgProblemsAndPlans" /></a></td>
+				key="oscarEncounter.formRourke1.msgProblemsAndPlans" /></a>
+				<br>
+				<img height="15" width="20" src="graphics/Checkmark_Lwhite.gif">
+                <bean:message key="oscarEncounter.formRourke2009.msgProblemsLegend" />
+			</td>
 			<td colspan="3" valign="top">
 			<table cellpadding="0" cellspacing="0" width="100%">
 				<tr align="center">
-					<td colspan="2"><textarea id="p1_problems1w"
+					<td colspan="4"><textarea id="p1_problems1w"
 						name="p1_problems1w" rows="5" cols="25" class="wide"><%= props.getProperty("p1_problems1w", "") %></textarea></td>
 				</tr>
+				 <tr>
+					<td style="padding-right: 5pt" valign="top"><img height="15"
+						width="20" src="graphics/Checkmark_L.gif"></td>
+					<td class="edcol" valign="top">X</td>
+                    <td class="edcol" valign="top" colspan="2"><bean:message key="oscarEncounter.formRourke2009.formNotDone"/></td>
+				</tr>
 				<tr>
-					<td valign="top"><input type="checkbox" class="chk"
-						name="p1_pkuThyroid1w"
-						<%= props.getProperty("p1_pkuThyroid1w", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_pkuThyroid1wOk" name="p1_pkuThyroid1wOk"
+						onclick="onCheck(this,'p1_pkuThyroid1w')"
+						<%= props.getProperty("p1_pkuThyroid1wOk", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_pkuThyroid1wOkConcerns" name="p1_pkuThyroid1wOkConcerns"
+						onclick="onCheck(this,'p1_pkuThyroid1w')"
+						<%= props.getProperty("p1_pkuThyroid1wOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_pkuThyroid1wNotDiscussed" name="p1_pkuThyroid1wNotDiscussed"
+						onclick="onCheck(this,'p1_pkuThyroid1w')"
+						<%= props.getProperty("p1_pkuThyroid1wNotDiscussed", "") %>></td>
 					<td><bean:message key="oscarEncounter.formRourke1.formThyroid" /></td>
 				</tr>
 				<tr>
-					<td valign="top"><input type="checkbox" class="chk"
-						name="p1_hemoScreen1w"
-						<%= props.getProperty("p1_hemoScreen1w", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_hemoScreen1wOk"
+						name="p1_hemoScreen1wOk" onclick="onCheck(this,'p1_hemoScreen1w')"
+						<%= props.getProperty("p1_hemoScreen1wOk", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_hemoScreen1wOkConcerns"
+						name="p1_hemoScreen1wOkConcerns" onclick="onCheck(this,'p1_hemoScreen1w')"
+						<%= props.getProperty("p1_hemoScreen1wOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p1_hemoScreen1wNotDiscussed"
+						name="p1_hemoScreen1wNotDiscussed" onclick="onCheck(this,'p1_hemoScreen1w')"
+						<%= props.getProperty("p1_hemoScreen1wNotDiscussed", "") %>></td>
 					<td><b><a href="javascript:showNotes()"><bean:message
 						key="oscarEncounter.formRourke1.formHemoglobinopathy" /></a> (if at
 					risk)*</b></td>
+				</tr>
+				<tr>
+					<td valign="top" class="edcol" colspan="3"><input
+						class="delete" type="button" value="Del"
+						onclick="del('p1_pkuThyroid1wOk,p1_pkuThyroid1wOkConcerns,p1_pkuThyroid1wNotDiscussed,p1_hemoScreen1wOk,p1_hemoScreen1wOkConcerns,p1_hemoScreen1wNotDiscussed');" /></td>
+                                        <td>&nbsp;</td>
 				</tr>
 			</table>
 			</td>
@@ -1814,26 +2146,47 @@ description layer</div>
 			<td class="column"><a><bean:message
 				key="oscarEncounter.formRourke1.msgImmunization" /></a><br>
 			<bean:message key="oscarEncounter.formRourke1.msgImmunizationDesc" />
+			<br>
+				<img height="15" width="20" src="graphics/Checkmark_Lwhite.gif">
+                <bean:message key="oscarEncounter.formRourke2009.msgProblemsLegend" />
 			</td>
 			<td colspan="3" valign="top">
+				<textarea id="p1_immunization1w"
+						name="p1_immunization1w" rows="5" cols="25" class="wide"><%= props.getProperty("p1_immunization1w", "") %></textarea>
 			<table cellpadding="0" cellspacing="0" width="100%">
 				<tr>
-					<td style="text-align: center" colspan="2"><b><bean:message
+					<td style="text-align: center" colspan="3"><b><bean:message
 						key="oscarEncounter.formRourke2006_1.msgImmunizationColTitle" /></b><br />
 					<bean:message
 						key="oscarEncounter.formRourke2006_1.msgImmunizationHepatitis" />
 					</td>
 				</tr>
 				<tr>
-					<td><input type="checkbox" class="chk"
-						name="p1_hepatitisVaccine1w"
-						<%= props.getProperty("p1_hepatitisVaccine1w", "") %>></td>
+					<td style="padding-right: 5pt" valign="top"><img height="15"
+						width="20" src="graphics/Checkmark_L.gif"></td>
+					<td class="edcol" valign="top">X</td>	
+					<td>&nbsp;</td>				
+				</tr>
+				<tr>
+					<td><input type="radio" id="p1_hepatitisVaccine1wOk"
+						name="p1_hepatitisVaccine1wOk" onclick="onCheck(this,'p1_hepatitisVaccine1w')"
+						<%= props.getProperty("p1_hepatitisVaccine1wOk", "") %>></td>
+					<td><input type="radio" id="p1_hepatitisVaccine1wNo"
+						name="p1_hepatitisVaccine1wNo" onclick="onCheck(this,'p1_hepatitisVaccine1w')"
+						<%= props.getProperty("p1_hepatitisVaccine1wNo", "") %>></td>
 					<td><bean:message
 						key="oscarEncounter.formRourke2006_1.msgImmunizationHepatitisVaccine" /></td>
+				</tr>
+				<tr>
+					<td valign="top" class="edcol" colspan="3"><input
+						class="delete" type="button" value="Del"
+						onclick="del('p1_hepatitisVaccine1wOk,p1_hepatitisVaccine1wNo');" /></td>                                        
 				</tr>
 			</table>
 			</td>
 			<td colspan="3" valign="top">
+			<textarea id="p1_immunization2w"
+						name="p1_immunization2w" rows="5" cols="25" class="wide"><%= props.getProperty("p1_immunization2w", "") %></textarea>
 			<table cellpadding="0" cellspacing="0" width="100%">
 				<tr>
 					<td style="text-align: center"><b><bean:message
@@ -1842,20 +2195,36 @@ description layer</div>
 			</table>
 			</td>
 			<td colspan="3" valign="top">
+			<textarea id="p1_immunization1m"
+						name="p1_immunization1m" rows="5" cols="25" class="wide"><%= props.getProperty("p1_immunization1m", "") %></textarea>
 			<table cellpadding="0" cellspacing="0" width="100%">
 				<tr>
-					<td style="text-align: center" colspan="2"><b><bean:message
+					<td style="text-align: center" colspan="3"><b><bean:message
 						key="oscarEncounter.formRourke2006_1.msgImmunizationColTitle" /></b><br />
 					<bean:message
 						key="oscarEncounter.formRourke2006_1.msgImmunizationHepatitis" />
 					</td>
 				</tr>
 				<tr>
-					<td><input type="checkbox" class="chk"
-						name="p1_hepatitisVaccine1m"
-						<%= props.getProperty("p1_hepatitisVaccine1m", "") %>></td>
+					<td style="padding-right: 5pt" valign="top"><img height="15"
+						width="20" src="graphics/Checkmark_L.gif"></td>
+					<td class="edcol" valign="top">X</td>	
+					<td>&nbsp;</td>				
+				</tr>
+				<tr>
+					<td><input type="radio" id="p1_hepatitisVaccine1mOk"
+						name="p1_hepatitisVaccine1mOk" onclick="onCheck(this,'p1_hepatitisVaccine1m')"
+						<%= props.getProperty("p1_hepatitisVaccine1mOk", "") %>></td>
+					<td><input type="radio" id="p1_hepatitisVaccine1mNo"
+						name="p1_hepatitisVaccine1mNo" onclick="onCheck(this,'p1_hepatitisVaccine1mNo')"
+						<%= props.getProperty("p1_hepatitisVaccine1mNo", "") %>></td>
 					<td><bean:message
 						key="oscarEncounter.formRourke2006_1.msgImmunizationHepatitisVaccine" /></td>
+				</tr>
+				<tr>
+					<td valign="top" class="edcol" colspan="3"><input
+						class="delete" type="button" value="Del"
+						onclick="del('p1_hepatitisVaccine1mOk,p1_hepatitisVaccine1mNo');" /></td>                                        
 				</tr>
 			</table>
 			</td>

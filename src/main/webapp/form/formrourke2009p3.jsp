@@ -63,8 +63,10 @@
 %>
 
 <html:html locale="true">
+
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+
 <title>Rourke2009 Record 3</title>
 <link rel="stylesheet" type="text/css" href="rourkeStyle.css">
 <!-- calendar stylesheet -->
@@ -310,10 +312,59 @@
             textbox.value = date.getDate() + "/" + mth + "/" + date.getFullYear();
         }
     }
+    
+    //set as default "not discussed" for all radio buttons if no value is set for a group
+    //e.g. if no value is found for p3_formulaFeeding9m then set p3_formulaFeeding9mNotDiscussed to checked
+    function setDefault() {
+    	var currentElem;
+    	var currentgroup;
+    	var notDiscussed;
+    	var isChecked = false;
+    	var pattern = /\'.+\'/;
+    	var clickHandler;
+    	
+    	for( var idx = 0; idx < document.forms[0].elements.length; ++idx ) {
+    		if( document.forms[0].elements[idx].type == "radio") {
+    			clickHandler = document.forms[0].elements[idx].getAttributeNode('onclick');
+    			if( clickHandler != null ) {
+    				//We need to capture the group name which is present in onclick call to onCheck(this,group)
+    				currentElem = new String(pattern.exec(clickHandler.value));
+    				currentElem = currentElem.substring(1,currentElem.length-1);
+    				if( idx == 0 ) {
+    					currentgroup = currentElem;
+    				}
+    				    				
+    				if( currentgroup != currentElem ) {    					
+    					if( !isChecked ) {
+    						notDiscussed = document.getElementById(currentgroup+"NotDiscussed");
+    						if( notDiscussed != null ) {
+    							notDiscussed.checked = true;
+    						}    						
+    					}
+    					currentgroup = currentElem;
+						isChecked = false;
+    				}
+    				
+    				if( document.forms[0].elements[idx].checked ) {    					
+    					isChecked = true;
+    				}
+    			}    				
+    		}
+    	}
+    	
+    	//capture last element if necessary
+    	if( !isChecked ) {
+    		notDiscussed = document.getElementById(currentgroup+"NotDiscussed");
+			if( notDiscussed != null ) {
+				notDiscussed.checked = true;
+			} 
+    	}
+    	
+    }
 
 </script>
 
-<body bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0">
+<body bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0" onload="setDefault()">
     <div style="display:block; width:100%; text-align:center; background-color: #FFFFFF;"><img alt="copyright" src="graphics/banner.png" onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2009.formCopyRight" />')"
                                                    onMouseOut="hideLayer()">
     </div>
@@ -515,19 +566,30 @@ description layer</div>
 
 			<td colspan="3" valign="top">
 			<table cellpadding="0" cellspacing="0" width="100%">
+				<tr align="center">
+					<td colspan="5"><textarea id="p3_nutrition9m"
+						name="p3_nutrition9m" class="wide" rows="5" cols="25"><%= props.getProperty("p3_nutrition9m", "") %></textarea></td>
+				</tr>
 				<tr>
-                                            <td style="padding-right: 5pt" valign="top"><img height="15"
-                                                        width="20" src="graphics/Checkmark_L.gif"></td>
-                                            <td class="edcol" valign="top">X</td>
-                                            <td>&nbsp;</td>
-                                </tr>
-                                <tr>
-                                        <td valign="top"><input type="radio" id="p3_breastFeeding9mOk"
+                    <td style="padding-right: 5pt" valign="top"><img height="15"
+                    	width="20" src="graphics/Checkmark_L.gif"></td>
+                    <td class="edcol" valign="top">X</td>
+                    <td class="edcol" valign="top"><bean:message key="oscarEncounter.formRourke2009.formNo" /></td>
+                    <td class="edcol" valign="top" colspan="2"><bean:message key="oscarEncounter.formRourke2009.formNotDiscussed"/></td> 
+                </tr>
+                <tr>
+                	<td valign="top"><input type="radio" id="p3_breastFeeding9mOk"
 						name="p3_breastFeeding9mOk" onclick="onCheck(this,'p3_breastFeeding9m')"
 						<%= props.getProperty("p3_breastFeeding9mOk", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_breastFeeding9mOkConcerns"
+						name="p3_breastFeeding9mOkConcerns" onclick="onCheck(this,'p3_breastFeeding9m')"
+						<%= props.getProperty("p3_breastFeeding9mOkConcerns", "") %>></td>
 					<td valign="top"><input type="radio" id="p3_breastFeeding9mNo"
 						name="p3_breastFeeding9mNo" onclick="onCheck(this,'p3_breastFeeding9m')"
 						<%= props.getProperty("p3_breastFeeding9mNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_breastFeeding9mNotDiscussed"
+						name="p3_breastFeeding9mNotDiscussed" onclick="onCheck(this,'p3_breastFeeding9m')"
+						<%= props.getProperty("p3_breastFeeding9mNotDiscussed", "") %>></td>
 					<td><b><a href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><bean:message
@@ -538,219 +600,295 @@ description layer</div>
 						key="oscarEncounter.formRourke2006_1.msgBreastFeedingDescr" /></span></b></td>
 				</tr>
 				<tr>
-                                        <td valign="top"><input type="radio" id="p3_formulaFeeding9mOk"
+                   <td valign="top"><input type="radio" id="p3_formulaFeeding9mOk"
 						name="p3_formulaFeeding9mOk" onclick="onCheck(this,'p3_formulaFeeding9m')"
 						<%= props.getProperty("p3_formulaFeeding9mOk", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_formulaFeeding9mOkConcerns"
+						name="p3_formulaFeeding9mOkConcerns" onclick="onCheck(this,'p3_formulaFeeding9m')"
+						<%= props.getProperty("p3_formulaFeeding9mOkConcerns", "") %>></td>
 					<td valign="top"><input type="radio" id="p3_formulaFeeding9mNo"
 						name="p3_formulaFeeding9mNo" onclick="onCheck(this,'p3_formulaFeeding9m')"
 						<%= props.getProperty("p3_formulaFeeding9mNo", "") %>></td>					
+					<td valign="top"><input type="radio" id="p3_formulaFeeding9mNotDiscussed"
+						name="p3_formulaFeeding9mNotDiscussed" onclick="onCheck(this,'p3_formulaFeeding9m')"
+						<%= props.getProperty("p3_formulaFeeding9mNotDiscussed", "") %>></td>
 					<td><i><bean:message
 						key="oscarEncounter.formRourke2009_3.msgFormulaFeeding" /></i></td>
 				</tr>
 				<tr>
-                                        <td valign="top"><input type="radio" id="p3_bottle9mOk"
+                   	<td valign="top"><input type="radio" id="p3_bottle9mOk"
 						name="p3_bottle9mOk" onclick="onCheck(this,'p3_bottle9m')"
 						<%= props.getProperty("p3_bottle9mOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_bottle9mNo"
-						name="p3_bottle9mNo" onclick="onCheck(this,'p3_bottle9m')"
-						<%= props.getProperty("p3_bottle9mNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_bottle9mOkConcerns"
+						name="p3_bottle9mOkConcerns" onclick="onCheck(this,'p3_bottle9m')"
+						<%= props.getProperty("p3_bottle9mOkConcerns", "") %>></td>
+					<td>&nbsp;</td>
+					<td valign="top"><input type="radio" id="p3_bottle9mNotDiscussed"
+						name="p3_bottle9mNotDiscussed" onclick="onCheck(this,'p3_bottle9m')"
+						<%= props.getProperty("p3_bottle9mNotDiscussed", "") %>></td>
 					<td><bean:message
 						key="oscarEncounter.formRourke2006_2.msgBottle" /></td>
 				</tr>
 				<tr>
-                                        <td valign="top"><input type="radio" id="p3_liquids9mOk"
+                    <td valign="top"><input type="radio" id="p3_liquids9mOk"
 						name="p3_liquids9mOk" onclick="onCheck(this,'p3_liquids9m')"
 						<%= props.getProperty("p3_liquids9mOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_liquids9mNo"
-						name="p3_liquids9mNo" onclick="onCheck(this,'p3_liquids9m')"
-						<%= props.getProperty("p3_liquids9mNo", "") %>></td>					
+					<td valign="top"><input type="radio" id="p3_liquids9mOkConcerns"
+						name="p3_liquids9mOkConcerns" onclick="onCheck(this,'p3_liquids9m')"
+						<%= props.getProperty("p3_liquids9mOkConcerns", "") %>></td>
+					<td>&nbsp;</td>
+					<td valign="top"><input type="radio" id="p3_liquids9mNotDiscussed"
+						name="p3_liquids9mNotDiscussed" onclick="onCheck(this,'p3_liquids9m')"
+						<%= props.getProperty("p3_liquids9mNotDiscussed", "") %>></td>					
 					<td><bean:message
 						key="oscarEncounter.formRourke2009_2.msgLiquids" /></td>
 				</tr>
 				<tr>
-                                        <td valign="top"><input type="radio" id="p3_cereal9mOk"
+                    <td valign="top"><input type="radio" id="p3_cereal9mOk"
 						name="p3_cereal9mOk" onclick="onCheck(this,'p3_cereal9m')"
 						<%= props.getProperty("p3_cereal9mOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_cereal9mNo"
-						name="p3_cereal9mNo" onclick="onCheck(this,'p3_cereal9m')"
-						<%= props.getProperty("p3_cereal9mNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_cereal9mOkConcerns"
+						name="p3_cereal9mOkConcerns" onclick="onCheck(this,'p3_cereal9m')"
+						<%= props.getProperty("p3_cereal9mOkConcerns", "") %>></td>
+					<td>&nbsp;</td>
+					<td valign="top"><input type="radio" id="p3_cereal9mNotDiscussed"
+						name="p3_cereal9mNotDiscussed" onclick="onCheck(this,'p3_cereal9m')"
+						<%= props.getProperty("p3_cereal9mNotDiscussed", "") %>></td>
 					<td><bean:message
 						key="oscarEncounter.formRourke2006_3.msgCereal" /></td>
 				</tr>
 				<tr>
-                                        <td valign="top"><input type="radio" id="p3_introCowMilk9mOk"
+                   	<td valign="top"><input type="radio" id="p3_introCowMilk9mOk"
 						name="p3_introCowMilk9mOk" onclick="onCheck(this,'p3_introCowMilk9m')"
 						<%= props.getProperty("p3_cereal9mOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_introCowMilk9mNo"
-						name="p3_introCowMilk9mNo" onclick="onCheck(this,'p3_introCowMilk9m')"
-						<%= props.getProperty("p3_introCowMilk9mNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_introCowMilk9mOkConcerns"
+						name="p3_introCowMilk9mOkConcerns" onclick="onCheck(this,'p3_introCowMilk9m')"
+						<%= props.getProperty("p3_cereal9mOkConcerns", "") %>></td>
+					<td>&nbsp;</td>
+					<td valign="top"><input type="radio" id="p3_introCowMilk9mNotDiscussed"
+						name="p3_introCowMilk9mNotDiscussed" onclick="onCheck(this,'p3_introCowMilk9m')"
+						<%= props.getProperty("p3_introCowMilk9mNotDiscussed", "") %>></td>
 					<td><bean:message
 						key="oscarEncounter.formRourke2006_3.msgIntroCowMilk" /></td>
 				</tr>
 				<tr>
-                                        <td valign="top"><input type="radio" id="p3_egg9mOk"
+                    <td valign="top"><input type="radio" id="p3_egg9mOk"
 						name="p3_egg9mOk" onclick="onCheck(this,'p3_egg9m')"
 						<%= props.getProperty("p3_egg9mOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_egg9mNo"
-						name="p3_egg9mNo" onclick="onCheck(this,'p3_egg9m')"
-						<%= props.getProperty("p3_egg9mNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_egg9mOkConcerns"
+						name="p3_egg9mOkConcerns" onclick="onCheck(this,'p3_egg9m')"
+						<%= props.getProperty("p3_egg9mOkConcerns", "") %>></td>
+					<td>&nbsp;</td>
+					<td valign="top"><input type="radio" id="p3_egg9mNotDiscussed"
+						name="p3_egg9mNotDiscussed" onclick="onCheck(this,'p3_egg9m')"
+						<%= props.getProperty("p3_egg9mNotDiscussed", "") %>></td>
 					<td><bean:message
 						key="oscarEncounter.formRourke2006_2.msgEggWhites" /></td>
 				</tr>
 				<tr>    
-                                    <td valign="top"><input type="radio" id="p3_choking9mOk"
+                   	<td valign="top"><input type="radio" id="p3_choking9mOk"
 						name="p3_choking9mOk" onclick="onCheck(this,'p3_choking9m')"
 						<%= props.getProperty("p3_choking9mOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_choking9mNo"
-						name="p3_choking9mNo" onclick="onCheck(this,'p3_choking9m')"
-						<%= props.getProperty("p3_choking9mNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_choking9mOkConcerns"
+						name="p3_choking9mOkConcerns" onclick="onCheck(this,'p3_choking9m')"
+						<%= props.getProperty("p3_choking9mOkConcerns", "") %>></td>
+					<td>&nbsp;</td>
+					<td valign="top"><input type="radio" id="p3_choking9mNotDiscussed"
+						name="p3_choking9mNotDiscussed" onclick="onCheck(this,'p3_choking9m')"
+						<%= props.getProperty("p3_choking9mNotDiscussed", "") %>></td>
 					<td><a href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><bean:message
 						key="oscarEncounter.formRourke2006_2.msgChoking" />*</a></td>
 				</tr>
-                                <tr>
-					<td class="edcol" colspan="3" valign="top"><input
+                <tr>
+					<td class="edcol" colspan="5" valign="top"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_breastFeeding9mOk,p3_breastFeeding9mNo,p3_formulaFeeding9mOk,p3_formulaFeeding9mNo,p3_bottle9mOk,p3_bottle9mNo,p3_liquids9mOk,p3_liquids9mNo,p3_cereal9mOk,p3_cereal9mNo,p3_introCowMilk9mOk,p3_introCowMilk9mNo,p3_egg9mOk,p3_egg9mNo,p3_choking9mOk,p3_choking9mNo');" /></td>
-                                </tr>
+						onclick="del('p3_breastFeeding9mOk,p3_breastFeeding9mOkConcerns,p3_breastFeeding9mNo,p3_breastFeeding9mNotDiscussed,p3_formulaFeeding9mOk,p3_formulaFeeding9mOkConcerns,p3_formulaFeeding9mNo,p3_formulaFeeding9mNotDiscussed,p3_bottle9mOk,p3_bottle9mOkConcerns,p3_bottle9mNotDiscussed,p3_liquids9mOk,p3_liquids9mOkConcerns,p3_liquids9mNotDiscussed,p3_cereal9mOk,p3_cereal9mOkConcerns,p3_cereal9mNotDiscussed,p3_introCowMilk9mOk,p3_introCowMilk9mOkConcerns,p3_introCowMilk9mNotDiscussed,p3_egg9mOk,p3_egg9mOkConcerns,p3_egg9mNotDiscussed,p3_choking9mOk,p3_choking9mOkConcerns,p3_choking9mNotDiscussed');" /></td>
+                </tr>
 			</table>
 
 			</td>
 			<td colspan="3" valign="top">
 			<table cellpadding="0" cellspacing="0" width="100%">
 				<tr align="center">
-					<td colspan="3"><textarea id="p3_nutrition12m"
+					<td colspan="5"><textarea id="p3_nutrition12m"
 						name="p3_nutrition12m" class="wide" rows="5" cols="25"><%= props.getProperty("p3_nutrition12m", "") %></textarea></td>
 				</tr>
-                                <tr>
-                                            <td style="padding-right: 5pt" valign="top"><img height="15"
-                                                        width="20" src="graphics/Checkmark_L.gif"></td>
-                                            <td class="edcol" valign="top">X</td>
-                                            <td>&nbsp;</td>
-                                </tr>
-                                <tr>
-                                        <td valign="top"><input type="radio" id="p3_breastFeeding12mOk"
+                <tr>
+                                    <td style="padding-right: 5pt" valign="top"><img height="15"
+                                    	width="20" src="graphics/Checkmark_L.gif"></td>
+                                    <td class="edcol" valign="top">X</td>
+                                    <td class="edcol" valign="top"><bean:message key="oscarEncounter.formRourke2009.formNo" /></td>
+                    				<td class="edcol" valign="top" colspan="2"><bean:message key="oscarEncounter.formRourke2009.formNotDiscussed"/></td> 
+                </tr>
+                <tr>
+                	<td valign="top"><input type="radio" id="p3_breastFeeding12mOk"
 						name="p3_breastFeeding12mOk" onclick="onCheck(this,'p3_breastFeeding12m')"
 						<%= props.getProperty("p3_breastFeeding12mOk", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_breastFeeding12mOkConcerns"
+						name="p3_breastFeeding12mOkConcerns" onclick="onCheck(this,'p3_breastFeeding12m')"
+						<%= props.getProperty("p3_breastFeeding12mOkConcerns", "") %>></td>
 					<td valign="top"><input type="radio" id="p3_breastFeeding12mNo"
 						name="p3_breastFeeding12mNo" onclick="onCheck(this,'p3_breastFeeding12m')"
 						<%= props.getProperty("p3_breastFeeding12mNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_breastFeeding12mNotDiscussed"
+						name="p3_breastFeeding12mNotDiscussed" onclick="onCheck(this,'p3_breastFeeding12m')"
+						<%= props.getProperty("p3_breastFeeding12mNotDiscussed", "") %>></td>
 					<td><b><a href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><bean:message
 						key="oscarEncounter.formRourke1.btnBreastFeeding" />*</a></b></td>
 				</tr>
 				<tr>
-                                        <td valign="top"><input type="radio" id="p3_homoMilk12mOk"
+                   	<td valign="top"><input type="radio" id="p3_homoMilk12mOk"
 						name="p3_homoMilk12mOk" onclick="onCheck(this,'p3_homoMilk12m')"
 						<%= props.getProperty("p3_homoMilk12mOk", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_homoMilk12mOkConcerns"
+						name="p3_homoMilk12mOkConcerns" onclick="onCheck(this,'p3_homoMilk12m')"
+						<%= props.getProperty("p3_homoMilk12mOkConcerns", "") %>></td>
 					<td valign="top"><input type="radio" id="p3_homoMilk12mNo"
 						name="p3_homoMilk12mNo" onclick="onCheck(this,'p3_homoMilk12m')"
 						<%= props.getProperty("p3_homoMilk12mNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_homoMilk12mNotDiscussed"
+						name="p3_homoMilk12mNotDiscussed" onclick="onCheck(this,'p3_homoMilk12m')"
+						<%= props.getProperty("p3_homoMilk12mNotDiscussed", "") %>></td>
 					<td><bean:message
 						key="oscarEncounter.formRourke2.formHomogenizedMilk" /></td>
 				</tr>
 				<tr>
-                                        <td valign="top"><input type="radio" id="p3_cup12mOk"
+                  	<td valign="top"><input type="radio" id="p3_cup12mOk"
 						name="p3_cup12mOk" onclick="onCheck(this,'p3_cup12m')"
 						<%= props.getProperty("p3_cup12mOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_cup12mNo"
-						name="p3_cup12mNo" onclick="onCheck(this,'p3_cup12m')"
-						<%= props.getProperty("p3_cup12mNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_cup12mOkConcerns"
+						name="p3_cup12mOkConcerns" onclick="onCheck(this,'p3_cup12m')"
+						<%= props.getProperty("p3_cup12mOkConcerns", "") %>></td>
+					<td>&nbsp;</td>
+					<td valign="top"><input type="radio" id="p3_cup12mNotDiscussed"
+						name="p3_cup12mNotDiscussed" onclick="onCheck(this,'p3_cup12m')"
+						<%= props.getProperty("p3_cup12mNotDiscussed", "") %>></td>
 					<td><bean:message
 						key="oscarEncounter.formRourke2009_3.formEncourageCup" /></td>
 				</tr>
 				<tr>
-                                        <td valign="top"><input type="radio" id="p3_appetite12mOk"
+                    <td valign="top"><input type="radio" id="p3_appetite12mOk"
 						name="p3_appetite12mOk" onclick="onCheck(this,'p3_appetite12m')"
 						<%= props.getProperty("p3_appetite12mOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_appetite12mNo"
-						name="p3_appetite12mNo" onclick="onCheck(this,'p3_appetite12m')"
-						<%= props.getProperty("p3_appetite12mNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_appetite12mOkConcerns"
+						name="p3_appetite12mOkConcerns" onclick="onCheck(this,'p3_appetite12m')"
+						<%= props.getProperty("p3_appetite12mOkConcerns", "") %>></td>
+					<td>&nbsp;</td>
+					<td valign="top"><input type="radio" id="p3_appetite12mNotDiscussed"
+						name="p3_appetite12mNotDiscussed" onclick="onCheck(this,'p3_appetite12m')"
+						<%= props.getProperty("p3_appetite12mNotDiscussed", "") %>></td>
 					<td><bean:message
 						key="oscarEncounter.formRourke2.formAppetiteReduced" /></td>
 				</tr>
 				<tr>
-                                        <td valign="top"><input type="radio" id="p3_choking12mOk"
+                    <td valign="top"><input type="radio" id="p3_choking12mOk"
 						name="p3_choking12mOk" onclick="onCheck(this,'p3_choking12m')"
 						<%= props.getProperty("p3_choking12mOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_choking12mNo"
-						name="p3_choking12mNo" onclick="onCheck(this,'p3_choking12m')"
-						<%= props.getProperty("p3_choking12mNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_choking12mOkConcerns"
+						name="p3_choking12mOkConcerns" onclick="onCheck(this,'p3_choking12m')"
+						<%= props.getProperty("p3_choking12mOkConcerns", "") %>></td>
+					<td>&nbsp;</td>
+					<td valign="top"><input type="radio" id="p3_choking12mNotDiscussed"
+						name="p3_choking12mNotDiscussed" onclick="onCheck(this,'p3_choking12m')"
+						<%= props.getProperty("p3_choking12mNotDiscussed", "") %>></td>
 					<td><a href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><bean:message
 						key="oscarEncounter.formRourke2006_2.msgChoking" />*</a></td>
 				</tr>
-                                <tr>
-					<td class="edcol" colspan="3" valign="top"><input
+                <tr>
+					<td class="edcol" colspan="5" valign="top"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_breastFeeding12mOk,p3_breastFeeding12mNo,p3_homoMilk12mOk,p3_homoMilk12mNo,p3_cup12mOk,p3_cup12mNo,p3_appetite12mOk,p3_appetite12mNo,p3_choking12mOk,p3_choking12mNo');" /></td>
-                                </tr>
+						onclick="del('p3_breastFeeding12mOk,p3_breastFeeding12mOkConcerns,p3_breastFeeding12mNo,p3_breastFeeding12mNotDiscussed,p3_homoMilk12mOk,p3_homoMilk12mOkConcerns,p3_homoMilk12mNo,p3_homoMilk12mNotDiscussed,p3_cup12mOk,p3_cup12mOkConcerns,p3_cup12mNotDiscussed,p3_appetite12mOk,p3_appetite12mOkConcerns,p3_appetite12mNotDiscussed,p3_choking12mOk,p3_choking12mOkConcerns,p3_choking12mNotDiscussed');" /></td>
+               </tr>
 			</table>
 			</td>
 			<td colspan="3" valign="top">
 			<table cellpadding="0" cellspacing="0" width="100%" height="100%">
 				<tr align="center">
-					<td colspan="3"><textarea id="p3_nutrition15m"
+					<td colspan="5"><textarea id="p3_nutrition15m"
 						name="p3_nutrition15m" class="wide" rows="5" cols="25"><%= props.getProperty("p3_nutrition15m", "") %></textarea></td>
 				</tr>
                                 <tr>
-                                            <td style="padding-right: 5pt" valign="top"><img height="15"
-                                                        width="20" src="graphics/Checkmark_L.gif"></td>
-                                            <td class="edcol" valign="top">X</td>
-                                            <td>&nbsp;</td>
+                                    <td style="padding-right: 5pt" valign="top"><img height="15"
+                                    	width="20" src="graphics/Checkmark_L.gif"></td>
+                                    <td class="edcol" valign="top">X</td>
+                                    <td class="edcol" valign="top"><bean:message key="oscarEncounter.formRourke2009.formNo" /></td>
+                    				<td class="edcol" valign="top" colspan="2"><bean:message key="oscarEncounter.formRourke2009.formNotDiscussed"/></td> 
                                 </tr>
-                                <tr>
-                                        <td valign="top"><input type="radio" id="p3_breastFeeding15mOk"
+         		<tr>
+                	<td valign="top"><input type="radio" id="p3_breastFeeding15mOk"
 						name="p3_breastFeeding15mOk" onclick="onCheck(this,'p3_breastFeeding15m')"
 						<%= props.getProperty("p3_breastFeeding15mOk", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_breastFeeding15mOkConcerns"
+						name="p3_breastFeeding15mOkConcerns" onclick="onCheck(this,'p3_breastFeeding15m')"
+						<%= props.getProperty("p3_breastFeeding15mOkConcerns", "") %>></td>
 					<td valign="top"><input type="radio" id="p3_breastFeeding15mNo"
 						name="p3_breastFeeding15mNo" onclick="onCheck(this,'p3_breastFeeding15m')"
 						<%= props.getProperty("p3_breastFeeding15mNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_breastFeeding15mNotDiscussed"
+						name="p3_breastFeeding15mNotDiscussed" onclick="onCheck(this,'p3_breastFeeding15m')"
+						<%= props.getProperty("p3_breastFeeding15mNotDiscussed", "") %>></td>
 					<td><b><a href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><bean:message
 						key="oscarEncounter.formRourke1.btnBreastFeeding" />*</a></b></td>
 				</tr>
 				<tr>
-                                        <td valign="top"><input type="radio" id="p3_homoMilk15mOk"
+                   	<td valign="top"><input type="radio" id="p3_homoMilk15mOk"
 						name="p3_homoMilk15mOk" onclick="onCheck(this,'p3_homoMilk15m')"
 						<%= props.getProperty("p3_homoMilk15mOk", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_homoMilk15mOkConcerns"
+						name="p3_homoMilk15mOkConcerns" onclick="onCheck(this,'p3_homoMilk15m')"
+						<%= props.getProperty("p3_homoMilk15mOkConcerns", "") %>></td>
 					<td valign="top"><input type="radio" id="p3_homoMilk15mNo"
 						name="p3_homoMilk15mNo" onclick="onCheck(this,'p3_homoMilk15m')"
 						<%= props.getProperty("p3_homoMilk15mNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_homoMilk15mNotDiscussed"
+						name="p3_homoMilk15mNotDiscussed" onclick="onCheck(this,'p3_homoMilk15m')"
+						<%= props.getProperty("p3_homoMilk15mNotDiscussed", "") %>></td>
 					<td><bean:message
 						key="oscarEncounter.formRourke2.formHomogenizedMilk" /></td>
 				</tr>
 				<tr>
-                                        <td valign="top"><input type="radio" id="p3_choking15mOk"
+                    <td valign="top"><input type="radio" id="p3_choking15mOk"
 						name="p3_choking15mOk" onclick="onCheck(this,'p3_choking15m')"
 						<%= props.getProperty("p3_choking15mOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_choking15mNo"
-						name="p3_choking15mNo" onclick="onCheck(this,'p3_choking15m')"
-						<%= props.getProperty("p3_choking15mNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_choking15mOkConcerns"
+						name="p3_choking15mOkConcerns" onclick="onCheck(this,'p3_choking15m')"
+						<%= props.getProperty("p3_choking15mOkConcerns", "") %>></td>
+					<td>&nbsp;</td>
+					<td valign="top"><input type="radio" id="p3_choking15mNotDiscussed"
+						name="p3_choking15mNotDiscussed" onclick="onCheck(this,'p3_choking15m')"
+						<%= props.getProperty("p3_choking15mNotDiscussed", "") %>></td>
 					<td><a href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><bean:message
 						key="oscarEncounter.formRourke2006_2.msgChoking" />*</a></td>
 				</tr>
 				<tr>
-                                        <td valign="top"><input type="radio" id="p3_cup15mOk"
+                    <td valign="top"><input type="radio" id="p3_cup15mOk"
 						name="p3_cup15mOk" onclick="onCheck(this,'p3_cup15m')"
 						<%= props.getProperty("p3_cup15mOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_cup15mNo"
-						name="p3_cup15mNo" onclick="onCheck(this,'p3_cup15m')"
-						<%= props.getProperty("p3_cup15mNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_cup15mOkConcerns"
+						name="p3_cup15mOkConcerns" onclick="onCheck(this,'p3_cup15m')"
+						<%= props.getProperty("p3_cup15mOkConcerns", "") %>></td>
+					<td>&nbsp;</td>
+					<td valign="top"><input type="radio" id="p3_cup15mNotDiscussed"
+						name="p3_cup15mNotDiscussed" onclick="onCheck(this,'p3_cup15m')"
+						<%= props.getProperty("p3_cup15mNotDiscussed", "") %>></td>
 					<td><bean:message
 						key="oscarEncounter.formRourke2009_3.formEncourageCup" /></td>
 				</tr>
-                                <tr>
+                <tr>
 					<td class="edcol" colspan="3" valign="top"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_breastFeeding15mOk,p3_breastFeeding15mNo,p3_homoMilk15mOk,p3_homoMilk15mNo,p3_cup15mOk,p3_cup15mNo,p3_choking15mOk,p3_choking15mNo');" /></td>
-                                </tr>
+						onclick="del('p3_breastFeeding15mOk,p3_breastFeeding15mOkConcerns,p3_breastFeeding15mNo,p3_breastFeeding15mNotDiscussed,p3_homoMilk15mOk,p3_homoMilk15mOkConcerns,p3_homoMilk15mNo,p3_homoMilk15mNotDiscussed,p3_cup15mOk,p3_cup15mOkConcerns,p3_cup15mNotDiscussed,p3_choking15mOk,p3_choking15mOkConcerns,p3_choking15mNotDiscussed');" /></td>
+                </tr>
 			</table>
 			</td>
 		</tr>
@@ -764,48 +902,59 @@ description layer</div>
 			<table style="font-size: 8pt;" cellpadding="0" cellspacing="0"
 				width="100%">
 				<tr>
-					<td colspan="15">&nbsp;</td>
+					<td colspan="20">&nbsp;</td>
 				</tr>
 				<tr>
-					<td valign="top" colspan="15"><bean:message
+					<td valign="top" colspan="20"><bean:message
 						key="oscarEncounter.formRourke2006_1.formInjuryPrev" /></td>
 				</tr>
 				<tr>
 					<td style="padding-right: 5pt" valign="top"><img height="15"
 						width="20" src="graphics/Checkmark_L.gif"></td>
 					<td class="edcol" valign="top">X</td>
-					<td>&nbsp;</td>
+					<td class="edcol" valign="top" colspan="2"><bean:message key="oscarEncounter.formRourke2009.formNotDiscussed"/></td>
 					<td style="padding-right: 5pt" valign="top"><img height="15"
 						width="20" src="graphics/Checkmark_L.gif"></td>
 					<td class="edcol" valign="top">X</td>
-					<td>&nbsp;</td>
+					<td class="edcol" valign="top" colspan="2"><bean:message key="oscarEncounter.formRourke2009.formNotDiscussed"/></td>
 					<td style="padding-right: 5pt" valign="top"><img height="15"
 						width="20" src="graphics/Checkmark_L.gif"></td>
 					<td class="edcol" valign="top">X</td>
-					<td>&nbsp;</td>
+					<td class="edcol" valign="top" colspan="2"><bean:message key="oscarEncounter.formRourke2009.formNotDiscussed"/></td>
 					<td style="padding-right: 5pt" valign="top"><img height="15"
 						width="20" src="graphics/Checkmark_L.gif"></td>
 					<td class="edcol" valign="top">X</td>
-					<td colspan="4">&nbsp;</td>
+					<td class="edcol" valign="top" colspan="2"><bean:message key="oscarEncounter.formRourke2009.formNotDiscussed"/></td>
+					<td style="padding-right: 5pt" valign="top"><img height="15"
+						width="20" src="graphics/Checkmark_L.gif"></td>
+					<td class="edcol" valign="top">X</td>
+					<td class="edcol" valign="top" colspan="2"><bean:message key="oscarEncounter.formRourke2009.formNotDiscussed"/></td>
 				</tr>
 				<tr>
 					<td valign="top"><input type="radio" id="p3_carSeatOk"
 						name="p3_carSeatOk" onclick="onCheck(this,'p3_carSeat')"
 						<%= props.getProperty("p3_carSeatOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_carSeatNo"
-						name="p3_carSeatNo" onclick="onCheck(this,'p3_carSeat')"
-						<%= props.getProperty("p3_carSeatNo", "") %>></td>
-					<td colspan="4" valign="top"><b><a
+					<td valign="top"><input type="radio" id="p3_carSeatOkConcerns"
+						name="p3_carSeatOkConcerns" onclick="onCheck(this,'p3_carSeat')"
+						<%= props.getProperty("p3_carSeatOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_carSeatNotDiscussed"
+						name="p3_carSeatNotDiscussed" onclick="onCheck(this,'p3_carSeat')"
+						<%= props.getProperty("p3_carSeatNotDiscussed", "") %>></td>
+					<td valign="top"><b><a
 						href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><bean:message
 						key="oscarEncounter.formRourke2009_3.formCarSeat" /></a>*</b></td>
+					<td colspan="4">&nbsp;</td>
 					<td valign="top"><input type="radio" id="p3_poisonsOk"
 						name="p3_poisonsOk" onclick="onCheck(this,'p3_poisons')"
 						<%= props.getProperty("p3_poisonsOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_poisonsNo"
-						name="p3_poisonsNo" onclick="onCheck(this,'p3_poisons')"
-						<%= props.getProperty("p3_poisonsNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_poisonsOkConcerns"
+						name="p3_poisonsOkConcerns" onclick="onCheck(this,'p3_poisons')"
+						<%= props.getProperty("p3_poisonsOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_poisonsNotDiscussed"
+						name="p3_poisonsNotDiscussed" onclick="onCheck(this,'p3_poisons')"
+						<%= props.getProperty("p3_poisonsNotDiscussed", "") %>></td>
 					<td valign="top"><b><a href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><bean:message
@@ -814,56 +963,74 @@ description layer</div>
 						name="p3_firearmSafetyOk"
 						onclick="onCheck(this,'p3_firearmSafety')"
 						<%= props.getProperty("p3_firearmSafetyOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_firearmSafetyNo"
-						name="p3_firearmSafetyNo"
+					<td valign="top"><input type="radio" id="p3_firearmSafetyOkConcerns"
+						name="p3_firearmSafetyOkConcerns"
 						onclick="onCheck(this,'p3_firearmSafety')"
-						<%= props.getProperty("p3_firearmSafetyNo", "") %>></td>
-					<td colspan="4" valign="top"><b><a
+						<%= props.getProperty("p3_firearmSafetyOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_firearmSafetyNotDiscussed"
+						name="p3_firearmSafetyNotDiscussed"
+						onclick="onCheck(this,'p3_firearmSafety')"
+						<%= props.getProperty("p3_firearmSafetyNotDiscussed", "") %>></td>					
+					<td valign="top"><b><a
 						href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><bean:message
 						key="oscarEncounter.formRourke2006_1.formFireArm" />*</a></b></td>
+					<td  colspan="4">&nbsp;</td>
 				</tr>
 				<tr>
 					<td valign="top"><input type="radio" id="p3_smokeSafetyOk"
 						name="p3_smokeSafetyOk" onclick="onCheck(this,'p3_smokeSafety')"
 						<%= props.getProperty("p3_smokeSafetyOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_smokeSafetyNo"
-						name="p3_smokeSafetyNo" onclick="onCheck(this,'p3_smokeSafety')"
-						<%= props.getProperty("p3_smokeSafetyNo", "") %>></td>
-					<td colspan="4" valign="top"><a href="javascript:showNotes()"
+					<td valign="top"><input type="radio" id="p3_smokeSafetyOkConcerns"
+						name="p3_smokeSafetyOkConcerns" onclick="onCheck(this,'p3_smokeSafety')"
+						<%= props.getProperty("p3_smokeSafetyOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_smokeSafetyNotDiscussed"
+						name="p3_smokeSafetyNotDiscussed" onclick="onCheck(this,'p3_smokeSafety')"
+						<%= props.getProperty("p3_smokeSafetyNotDiscussed", "") %>></td>
+					<td valign="top"><a href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><bean:message
 						key="oscarEncounter.formRourke2006_1.formSmokeSafety" />*</a></td>
+					<td  colspan="4">&nbsp;</td>
 					<td valign="top"><input type="radio" id="p3_hotWaterOk"
 						name="p3_hotWaterOk" onclick="onCheck(this,'p3_hotWater')"
 						<%= props.getProperty("p3_hotWaterOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_hotWaterNo"
-						name="p3_hotWaterNo" onclick="onCheck(this,'p3_hotWater')"
-						<%= props.getProperty("p3_hotWaterNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_hotWaterOkConcerns"
+						name="p3_hotWaterOkConcerns" onclick="onCheck(this,'p3_hotWater')"
+						<%= props.getProperty("p3_hotWaterOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_hotWaterNotDiscussed"
+						name="p3_hotWaterNotDiscussed" onclick="onCheck(this,'p3_hotWater')"
+						<%= props.getProperty("p3_hotWaterNotDiscussed", "") %>></td>
 					<td valign="top"><i><a href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><bean:message
 						key="oscarEncounter.formRourke2006_1.formHotWater" />*</a></i></td>
-					<td colspan="6">&nbsp;</td>
+					<td colspan="8">&nbsp;</td>
 				</tr>
 				<tr>
-					<td colspan="3" valign="top"><bean:message
+					<td colspan="4" valign="top"><bean:message
 						key="oscarEncounter.formRourke2006_3.formChildProof" />
 					<td valign="top"><input type="radio" id="p3_electricOk"
 						name="p3_electricOk" onclick="onCheck(this,'p3_electric')"
 						<%= props.getProperty("p3_electricOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_electricNo"
-						name="p3_electricNo" onclick="onCheck(this,'p3_electric')"
-						<%= props.getProperty("p3_electricNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_electricOkConcerns"
+						name="p3_electricOkConcerns" onclick="onCheck(this,'p3_electric')"
+						<%= props.getProperty("p3_electricOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_electricNotDiscussed"
+						name="p3_electricNotDiscussed" onclick="onCheck(this,'p3_electric')"
+						<%= props.getProperty("p3_electricNotDiscussed", "") %>></td>
 					<td valign="top"><i><bean:message
 						key="oscarEncounter.formRourke2006_2.formElectric" /></i></td>
 					<td valign="top"><input type="radio" id="p3_fallsOk"
 						name="p3_fallsOk" onclick="onCheck(this,'p3_falls')"
 						<%= props.getProperty("p3_fallsOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_fallsNo"
-						name="p3_fallsNo" onclick="onCheck(this,'p3_falls')"
-						<%= props.getProperty("p3_fallsNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_fallsOkConcerns"
+						name="p3_fallsOkConcerns" onclick="onCheck(this,'p3_falls')"
+						<%= props.getProperty("p3_fallsOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_fallsNotDiscussed"
+						name="p3_fallsNotDiscussed" onclick="onCheck(this,'p3_falls')"
+						<%= props.getProperty("p3_fallsNotDiscussed", "") %>></td>
 					<td valign="top"><i><a href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><bean:message
@@ -871,81 +1038,102 @@ description layer</div>
 					<td valign="top"><input type="radio" id="p3_safeToysOk"
 						name="p3_safeToysOk" onclick="onCheck(this,'p3_safeToys')"
 						<%= props.getProperty("p3_safeToysOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_safeToysNo"
-						name="p3_safeToysNo" onclick="onCheck(this,'p3_safeToys')"
-						<%= props.getProperty("p3_safeToysNo", "") %>></td>
-					<td colspan="4" valign="top"><a href="javascript:showNotes()"
+					<td valign="top"><input type="radio" id="p3_safeToysOkConcerns"
+						name="p3_safeToysOkConcerns" onclick="onCheck(this,'p3_safeToys')"
+						<%= props.getProperty("p3_safeToysOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_safeToysNotDiscussed"
+						name="p3_safeToysNotDiscussed" onclick="onCheck(this,'p3_safeToys')"
+						<%= props.getProperty("p3_safeToysNotDiscussed", "") %>></td>
+					<td valign="top"><a href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><bean:message
 						key="oscarEncounter.formRourke2006_1.formSafeToys" />*</a></td>
+					<td  colspan="4">&nbsp;</td>
 				</tr>
 				<tr>
-					<td class="edcol" colspan="3" valign="top"><input
+					<td class="edcol" colspan="4" valign="top"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_carSeatOk,p3_carSeatNo,p3_smokeSafetyOk,p3_smokeSafetyNo');" /></td>
-					<td class="edcol" colspan="3" valign="top"><input
+						onclick="del('p3_carSeatOk,p3_carSeatOkConcerns,p3_carSeatNotDiscussed,p3_smokeSafetyOk,p3_smokeSafetyOkConcerns,p3_smokeSafetyNotDiscussed');" /></td>
+					<td class="edcol" colspan="4" valign="top"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_electricOk,p3_electricNo');" /></td>
-					<td class="edcol" colspan="3" valign="top"><input
+						onclick="del('p3_electricOk,p3_electricOkConcerns,p3_electricNotDiscussed');" /></td>
+					<td class="edcol" colspan="4" valign="top"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_poisonsOk,p3_poisonsNo,p3_hotWaterOk,p3_hotWaterNo,p3_fallsOk,p3_fallsNo');" /></td>
-					<td class="edcol" colspan="3" valign="top"><input
+						onclick="del('p3_poisonsOk,p3_poisonsOkConcerns,p3_poisonsNotDiscussed,p3_hotWaterOk,p3_hotWaterOkConcerns,p3_hotWaterNotDiscussed,p3_fallsOk,p3_fallsOkConcerns,p3_fallsNotDiscussed');" /></td>
+					<td class="edcol" colspan="4" valign="top"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_firearmSafetyOk,p3_firearmSafetyNo,p3_safeToysOk,p3_safeToysNo');" /></td>
+						onclick="del('p3_firearmSafetyOk,p3_firearmSafetyOkConcerns,p3_firearmSafetyNotDiscussed,p3_safeToysOk,p3_safeToysOkConcerns,p3_safeToysNotDiscussed');" /></td>
 				</tr>
 				<tr>
-					<td colspan="15">&nbsp;</td>
+					<td colspan="20">&nbsp;</td>
 				</tr>
 				<tr>
-					<td valign="top" colspan="15"><bean:message
+					<td valign="top" colspan="20"><bean:message
 						key="oscarEncounter.formRourke2006_1.formBehaviour" /></td>
 				</tr>
 				<tr>
 					<td valign="top"><input type="radio" id="p3_sleepCryOk"
 						name="p3_sleepCryOk" onclick="onCheck(this,'p3_sleepCry')"
 						<%= props.getProperty("p3_sleepCryOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_sleepCryNo"
-						name="p3_sleepCryNo" onclick="onCheck(this,'p3_sleepCry')"
-						<%= props.getProperty("p3_sleepCryNo", "") %>></td>
-					<td colspan="4" valign="top"><a href="javascript:showNotes()"
+					<td valign="top"><input type="radio" id="p3_sleepCryOkConcerns"
+						name="p3_sleepCryOkConcerns" onclick="onCheck(this,'p3_sleepCry')"
+						<%= props.getProperty("p3_sleepCryOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_sleepCryNotDiscussed"
+						name="p3_sleepCryNotDiscussed" onclick="onCheck(this,'p3_sleepCry')"
+						<%= props.getProperty("p3_sleepCryNotDiscussed", "") %>></td>
+					<td valign="top"><a href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote2" />')"
 						onMouseOut="hideLayer()"><bean:message
 						key="oscarEncounter.formRourke2006_2.formsleepCry" />**</a></td>
+					<td  colspan="4">&nbsp;</td>
 					<td valign="top"><input type="radio" id="p3_soothabilityOk"
 						name="p3_soothabilityOk" onclick="onCheck(this,'p3_soothability')"
 						<%= props.getProperty("p3_soothabilityOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_soothabilityNo"
-						name="p3_soothabilityNo" onclick="onCheck(this,'p3_soothability')"
-						<%= props.getProperty("p3_soothabilityNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_soothabilityOkConcerns"
+						name="p3_soothabilityOkConcerns" onclick="onCheck(this,'p3_soothability')"
+						<%= props.getProperty("p3_soothabilityOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_soothabilityNotDiscussed"
+						name="p3_soothabilityNotDiscussed" onclick="onCheck(this,'p3_soothability')"
+						<%= props.getProperty("p3_soothabilityNotDiscussed", "") %>></td>
 					<td valign="top"><bean:message
 						key="oscarEncounter.formRourke2006_1.formSoothability" /></td>
 					<td valign="top"><input type="radio" id="p3_homeVisitOk"
 						name="p3_homeVisitOk" onclick="onCheck(this,'p3_homeVisit')"
 						<%= props.getProperty("p3_homeVisitOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_homeVisitNo"
-						name="p3_homeVisitNo" onclick="onCheck(this,'p3_homeVisit')"
-						<%= props.getProperty("p3_homeVisitNo", "") %>></td>
-					<td colspan="4" valign="top"><b><a
+					<td valign="top"><input type="radio" id="p3_homeVisitOkConcerns"
+						name="p3_homeVisitOkConcerns" onclick="onCheck(this,'p3_homeVisit')"
+						<%= props.getProperty("p3_homeVisitOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_homeVisitNotDiscussed"
+						name="p3_homeVisitNotDiscussed" onclick="onCheck(this,'p3_homeVisit')"
+						<%= props.getProperty("p3_homeVisitNotDiscussed", "") %>></td>
+					<td valign="top"><b><a
 						href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote2" />')"
 						onMouseOut="hideLayer()"><bean:message
 						key="oscarEncounter.formRourke2009_3.formHomeVisit" />**</a></b></td>
+					<td  colspan="4">&nbsp;</td>
 				</tr>
 				<tr>
 					<td valign="top"><input type="radio" id="p3_parentingOk"
 						name="p3_parentingOk" onclick="onCheck(this,'p3_parenting')"
 						<%= props.getProperty("p3_parentingOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_parentingNo"
-						name="p3_parentingNo" onclick="onCheck(this,'p3_parenting')"
-						<%= props.getProperty("p3_parentingNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_parentingOkConcerns"
+						name="p3_parentingOkConcerns" onclick="onCheck(this,'p3_parenting')"
+						<%= props.getProperty("p3_parentingOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_parentingNotDiscussed"
+						name="p3_parentingNotDiscussed" onclick="onCheck(this,'p3_parenting')"
+						<%= props.getProperty("p3_parentingNotDiscussed", "") %>></td>
 					<td valign="top"><bean:message
 						key="oscarEncounter.formRourke2006_3.formParenting" /></td>
 					<td valign="top"><input type="radio" id="p3_pFatigueOk"
 						name="p3_pFatigueOk" onclick="onCheck(this,'p3_pFatigue')"
 						<%= props.getProperty("p3_pFatigueOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_pFatigueNo"
-						name="p3_pFatigueNo" onclick="onCheck(this,'p3_pFatigue')"
-						<%= props.getProperty("p3_pFatigueNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_pFatigueOkConcerns"
+						name="p3_pFatigueOkConcerns" onclick="onCheck(this,'p3_pFatigue')"
+						<%= props.getProperty("p3_pFatigueOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_pFatigueNotDiscussed"
+						name="p3_pFatigueNotDiscussed" onclick="onCheck(this,'p3_pFatigue')"
+						<%= props.getProperty("p3_pFatigueNotDiscussed", "") %>></td>
 					<td valign="top"><a href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote2" />')"
 						onMouseOut="hideLayer()"><bean:message
@@ -953,59 +1141,71 @@ description layer</div>
 					<td valign="top"><input type="radio" id="p3_famConflictOk"
 						name="p3_famConflictOk" onclick="onCheck(this,'p3_famConflict')"
 						<%= props.getProperty("p3_famConflictOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_famConflictNo"
-						name="p3_famConflictNo" onclick="onCheck(this,'p3_famConflict')"
-						<%= props.getProperty("p3_famConflictNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_famConflictOkConcerns"
+						name="p3_famConflictOkConcerns" onclick="onCheck(this,'p3_famConflict')"
+						<%= props.getProperty("p3_famConflictOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_famConflictNotDiscussed"
+						name="p3_famConflictNotDiscussed" onclick="onCheck(this,'p3_famConflict')"
+						<%= props.getProperty("p3_famConflictNotDiscussed", "") %>></td>
 					<td valign="top"><bean:message
 						key="oscarEncounter.formRourke2006_1.formFamConflict" /></td>
 					<td valign="top"><input type="radio" id="p3_siblingsOk"
 						name="p3_siblingsOk" onclick="onCheck(this,'p3_siblings')"
 						<%= props.getProperty("p3_siblingsOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_siblingsNo"
-						name="p3_siblingsNo" onclick="onCheck(this,'p3_siblings')"
-						<%= props.getProperty("p3_siblingsNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_siblingsOkConcerns"
+						name="p3_siblingsOkConcerns" onclick="onCheck(this,'p3_siblings')"
+						<%= props.getProperty("p3_siblingsOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_siblingsNotDiscussed"
+						name="p3_siblingsNotDiscussed" onclick="onCheck(this,'p3_siblings')"
+						<%= props.getProperty("p3_siblingsNotDiscussed", "") %>></td>
 					<td valign="top"><bean:message
 						key="oscarEncounter.formRourke2006_1.formSiblings" /></td>
 					<td valign="top"><input type="radio" id="p3_childCareOk"
 						name="p3_childCareOk" onclick="onCheck(this,'p3_childCare')"
 						<%= props.getProperty("p3_childCareOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_childCareNo"
-						name="p3_childCareNo" onclick="onCheck(this,'p3_childCare')"
-						<%= props.getProperty("p3_childCareNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_childCareOkConcerns"
+						name="p3_childCareOkConcerns" onclick="onCheck(this,'p3_childCare')"
+						<%= props.getProperty("p3_childCareOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_childCareNotDiscussed"
+						name="p3_childCareNotDiscussed" onclick="onCheck(this,'p3_childCare')"
+						<%= props.getProperty("p3_childCareNotDiscussed", "") %>></td>
 					<td valign="top"><bean:message
 						key="oscarEncounter.formRourke2006_2.formChildCare" /></td>
 				</tr>
 				<tr>
-					<td colspan="3" class="edcol" colspan="2" valign="top"><input
+					<td colspan="4" class="edcol" colspan="2" valign="top"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_sleepCryOk,p3_sleepCryNo,p3_parentingOk,p3_parentingNo');" /></td>
-					<td colspan="3" class="edcol" colspan="2" valign="top"><input
+						onclick="del('p3_sleepCryOk,p3_sleepCryOkConcerns,p3_sleepCryNotDiscussed,p3_parentingOk,p3_parentingOkConcerns,p3_parentingNotDiscussed');" /></td>
+					<td colspan="4" class="edcol" colspan="2" valign="top"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_pFatigueOk,p3_pFatigueNo');" /></td>
-					<td colspan="3" class="edcol" colspan="2" valign="top"><input
+						onclick="del('p3_pFatigueOk,p3_pFatigueOkConcerns,p3_pFatigueNotDiscussed');" /></td>
+					<td colspan="4" class="edcol" colspan="2" valign="top"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_soothabilityOk,p3_soothabilityNo,p3_famConflictOk,p3_famConflictNo');" /></td>
-					<td colspan="3" class="edcol" colspan="2" valign="top"><input
+						onclick="del('p3_soothabilityOk,p3_soothabilityOkConcerns,p3_soothabilityNotDiscussed,p3_famConflictOk,p3_famConflictOkConcerns,p3_famConflictNotDiscussed');" /></td>
+					<td colspan="4" class="edcol" colspan="2" valign="top"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_homeVisitOk,p3_homeVisitNo,p3_siblingsOk,p3_siblingsNo');" /></td>
-					<td colspan="3" class="edcol" colspan="2" valign="top"><input
+						onclick="del('p3_homeVisitOk,p3_homeVisitOkConcerns,p3_homeVisitNotDiscussed,p3_siblingsOk,p3_siblingsOkConcerns,p3_siblingsNotDiscussed');" /></td>
+					<td colspan="4" class="edcol" colspan="2" valign="top"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_childCareOk,p3_childCareNo');" /></td>
+						onclick="del('p3_childCareOk,p3_childCareOkConcerns,p3_childCareNotDiscussed');" /></td>
 				</tr>
 				<tr>
-					<td colspan="15">&nbsp;</td>
+					<td colspan="20">&nbsp;</td>
 				</tr>
 				<tr>
-					<td valign="top" colspan="15"><bean:message
+					<td valign="top" colspan="20"><bean:message
 						key="oscarEncounter.formRourke2006_1.formOtherIssues" /></td>
 				</tr>
 				<tr>
 					<td valign="top"><input type="radio" id="p3_2ndSmokeOk"
 						name="p3_2ndSmokeOk" onclick="onCheck(this,'p3_2ndSmoke')"
 						<%= props.getProperty("p3_2ndSmokeOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_2ndSmokeNo"
-						name="p3_2ndSmokeNo" onclick="onCheck(this,'p3_2ndSmoke')"
-						<%= props.getProperty("p3_2ndSmokeNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_2ndSmokeOkConcerns"
+						name="p3_2ndSmokeOkConcerns" onclick="onCheck(this,'p3_2ndSmoke')"
+						<%= props.getProperty("p3_2ndSmokeOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_2ndSmokeNotDiscussed"
+						name="p3_2ndSmokeNotDiscussed" onclick="onCheck(this,'p3_2ndSmoke')"
+						<%= props.getProperty("p3_2ndSmokeNotDiscussed", "") %>></td>
 					<td valign="top"><b><a href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><bean:message
@@ -1013,9 +1213,12 @@ description layer</div>
 					<td valign="top"><input type="radio" id="p3_teethingOk"
 						name="p3_teethingOk" onclick="onCheck(this,'p3_teething')"
 						<%= props.getProperty("p3_teethingOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_teethingNo"
-						name="p3_teethingNo" onclick="onCheck(this,'p3_teething')"
-						<%= props.getProperty("p3_teethingNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_teethingOkConcerns"
+						name="p3_teethingOkConcerns" onclick="onCheck(this,'p3_teething')"
+						<%= props.getProperty("p3_teethingOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_teethingNotDiscussed"
+						name="p3_teethingNotDiscussed" onclick="onCheck(this,'p3_teething')"
+						<%= props.getProperty("p3_teethingNotDiscussed", "") %>></td>
 					<td valign="top"><a href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><bean:message
@@ -1023,9 +1226,12 @@ description layer</div>
 					<td valign="top"><input type="radio" id="p3_altMedOk"
 						name="p3_altMedOk" onclick="onCheck(this,'p3_altMed')"
 						<%= props.getProperty("p3_altMedOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_altMedNo"
-						name="p3_altMedNo" onclick="onCheck(this,'p3_altMed')"
-						<%= props.getProperty("p3_altMedNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_altMedOkConcerns"
+						name="p3_altMedOkConcerns" onclick="onCheck(this,'p3_altMed')"
+						<%= props.getProperty("p3_altMedOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_altMedNotDiscussed"
+						name="p3_altMedNotDiscussed" onclick="onCheck(this,'p3_altMed')"
+						<%= props.getProperty("p3_altMedNotDiscussed", "") %>></td>
 					<td valign="top"><a href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><bean:message
@@ -1033,10 +1239,13 @@ description layer</div>
 					<td valign="top"><input type="radio" id="p3_pacifierOk"
 						name="p3_pacifierOk" onclick="onCheck(this,'p3_pacifier')"
 						<%= props.getProperty("p3_pacifierOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_pacifierNo"
-						name="p3_pacifierNo" onclick="onCheck(this,'p3_pacifier')"
-						<%= props.getProperty("p3_pacifierNo", "") %>></td>
-					<td colspan="4" valign="top"><i><a
+					<td valign="top"><input type="radio" id="p3_pacifierOkConcerns"
+						name="p3_pacifierOkConcerns" onclick="onCheck(this,'p3_pacifier')"
+						<%= props.getProperty("p3_pacifierOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_pacifierNotDiscussed"
+						name="p3_pacifierNotDiscussed" onclick="onCheck(this,'p3_pacifier')"
+						<%= props.getProperty("p3_pacifierNotDiscussed", "") %>></td>
+					<td colspan="5" valign="top"><i><a
 						href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><bean:message
@@ -1046,9 +1255,12 @@ description layer</div>
 					<td valign="top"><input type="radio" id="p3_feverOk"
 						name="p3_feverOk" onclick="onCheck(this,'p3_fever')"
 						<%= props.getProperty("p3_feverOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_feverNo"
-						name="p3_feverNo" onclick="onCheck(this,'p3_fever')"
-						<%= props.getProperty("p3_feverNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_feverOkConcerns"
+						name="p3_feverOkConcerns" onclick="onCheck(this,'p3_fever')"
+						<%= props.getProperty("p3_feverOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_feverNotDiscussed"
+						name="p3_feverNotDiscussed" onclick="onCheck(this,'p3_fever')"
+						<%= props.getProperty("p3_feverNotDiscussed", "") %>></td>
 					<td valign="top"><a href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><bean:message
@@ -1056,9 +1268,12 @@ description layer</div>
 					<td valign="top"><input type="radio" id="p3_activeOk"
 						name="p3_activeOk" onclick="onCheck(this,'p3_active')"
 						<%= props.getProperty("p3_activeOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_activeNo"
-						name="p3_activeNo" onclick="onCheck(this,'p3_active')"
-						<%= props.getProperty("p3_activeNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_activeOkConcerns"
+						name="p3_activeOkConcerns" onclick="onCheck(this,'p3_active')"
+						<%= props.getProperty("p3_activeOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_activeNotDiscussed"
+						name="p3_activeNotDiscussed" onclick="onCheck(this,'p3_active')"
+						<%= props.getProperty("p3_activeNotDiscussed", "") %>></td>
 					<td valign="top"><a href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><bean:message
@@ -1066,9 +1281,12 @@ description layer</div>
 					<td valign="top"><input type="radio" id="p3_readingOk"
 						name="p3_readingOk" onclick="onCheck(this,'p3_reading')"
 						<%= props.getProperty("p3_readingOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_readingNo"
-						name="p3_readingNo" onclick="onCheck(this,'p3_reading')"
-						<%= props.getProperty("p3_readingNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_readingOkConcerns"
+						name="p3_readingOkConcerns" onclick="onCheck(this,'p3_reading')"
+						<%= props.getProperty("p3_readingOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_readingNotDiscussed"
+						name="p3_readingNotDiscussed" onclick="onCheck(this,'p3_reading')"
+						<%= props.getProperty("p3_readingNotDiscussed", "") %>></td>
 					<td valign="top"><b><a href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote2" />')"
 						onMouseOut="hideLayer()"><bean:message
@@ -1076,34 +1294,43 @@ description layer</div>
 					<td valign="top"><input type="radio" id="p3_footwearOk"
 						name="p3_footwearOk" onclick="onCheck(this,'p3_footwear')"
 						<%= props.getProperty("p3_footwearOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_footwearNo"
-						name="p3_footwearNo" onclick="onCheck(this,'p3_footwear')"
-						<%= props.getProperty("p3_footwearNo", "") %>></td>
-					<td colspan="4" valign="top"><bean:message
+					<td valign="top"><input type="radio" id="p3_footwearOkConcerns"
+						name="p3_footwearOkConcerns" onclick="onCheck(this,'p3_footwear')"
+						<%= props.getProperty("p3_footwearOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_footwearNotDiscussed"
+						name="p3_footwearNotDiscussed" onclick="onCheck(this,'p3_footwear')"
+						<%= props.getProperty("p3_footwearNotDiscussed", "") %>></td>
+					<td colspan="5" valign="top"><bean:message
 						key="oscarEncounter.formRourke2006_3.formFootwear" /></td>
 				</tr>
-                                <tr>
-                                        <td valign="top"><input type="radio" id="p3_coughMedOk"
+                <tr>
+                    <td valign="top"><input type="radio" id="p3_coughMedOk"
 						name="p3_coughMedOk" onclick="onCheck(this,'p3_coughMed')"
 						<%= props.getProperty("p3_coughMedOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_coughMedNo"
-						name="p3_coughMedNo" onclick="onCheck(this,'p3_coughMed')"
-						<%= props.getProperty("p3_coughMedNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_coughMedOkConcerns"
+						name="p3_coughMedOkConcerns" onclick="onCheck(this,'p3_coughMed')"
+						<%= props.getProperty("p3_coughMedOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_coughMedNotDiscussed"
+						name="p3_coughMedNotDiscussed" onclick="onCheck(this,'p3_coughMed')"
+						<%= props.getProperty("p3_coughMedNotDiscussed", "") %>></td>
 					<td valign="top"><a href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><bean:message
 						key="oscarEncounter.formRourke2009_1.formCough" />*</a></td>
-                                        <td colspan="12">&nbsp;</td>
-                                </tr>
+                	<td colspan="16">&nbsp;</td>
+                </tr>
 				<tr>
-					<td colspan="3" valign="top"><bean:message
+					<td colspan="4" valign="top"><bean:message
 						key="oscarEncounter.formRourke2006_3.formEnvHealth" /></td>
 					<td valign="top"><input type="radio" id="p3_sunExposureOk"
 						name="p3_sunExposureOk" onclick="onCheck(this,'p3_sunExposure')"
 						<%= props.getProperty("p3_sunExposureOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_sunExposureNo"
-						name="p3_sunExposureNo" onclick="onCheck(this,'p3_sunExposure')"
-						<%= props.getProperty("p3_sunExposureNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_sunExposureOkConcerns"
+						name="p3_sunExposureOkConcerns" onclick="onCheck(this,'p3_sunExposure')"
+						<%= props.getProperty("p3_sunExposureOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_sunExposureNotDiscussed"
+						name="p3_sunExposureNotDiscussed" onclick="onCheck(this,'p3_sunExposure')"
+						<%= props.getProperty("p3_sunExposureNotDiscussed", "") %>></td>
 					<td valign="top"><a href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><bean:message
@@ -1111,9 +1338,12 @@ description layer</div>
 					<td valign="top"><input type="radio" id="p3_checkSerumOk"
 						name="p3_checkSerumOk" onclick="onCheck(this,'p3_checkSerum')"
 						<%= props.getProperty("p3_checkSerumOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_checkSerumNo"
-						name="p3_checkSerumNo" onclick="onCheck(this,'p3_checkSerum')"
-						<%= props.getProperty("p3_checkSerumNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_checkSerumOkConcerns"
+						name="p3_checkSerumOkConcerns" onclick="onCheck(this,'p3_checkSerum')"
+						<%= props.getProperty("p3_checkSerumOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_checkSerumNotDiscussed"
+						name="p3_checkSerumNotDiscussed" onclick="onCheck(this,'p3_checkSerum')"
+						<%= props.getProperty("p3_checkSerumNotDiscussed", "") %>></td>
 					<td valign="top"><i><a href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><bean:message
@@ -1121,35 +1351,41 @@ description layer</div>
 					<td valign="top"><input type="radio" id="p3_pesticidesOk"
 						name="p3_pesticidesOk" onclick="onCheck(this,'p3_pesticides')"
 						<%= props.getProperty("p3_pesticidesOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_pesticidesNo"
-						name="p3_pesticidesNo" onclick="onCheck(this,'p3_pesticides')"
-						<%= props.getProperty("p3_pesticidesNo", "") %>></td>
-					<td colspan="4" valign="top"><i><a
+					<td valign="top"><input type="radio" id="p3_pesticidesOkConcerns"
+						name="p3_pesticidesOkConcerns" onclick="onCheck(this,'p3_pesticides')"
+						<%= props.getProperty("p3_pesticidesOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_pesticidesNotDiscussed"
+						name="p3_pesticidesNotDiscussed" onclick="onCheck(this,'p3_pesticides')"
+						<%= props.getProperty("p3_pesticidesNotDiscussed", "") %>></td>
+					<td valign="top"><i><a
 						href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><bean:message
 						key="oscarEncounter.formRourke2006_2.formPesticides" />*</a></i></td>
+					<td  colspan="4">&nbsp;</td>
 
 				</tr>
 				<tr>
-					<td colspan="3" class="edcol" colspan="2" valign="top"><input
+					<td colspan="4" class="edcol" colspan="2" valign="top"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_2ndSmokeOk,p3_2ndSmokeNo,p3_feverOk,p3_feverNo,p3_coughMedOk,p3_coughMedNo');" /></td>
-					<td colspan="3" class="edcol" colspan="2" valign="top"><input
+						onclick="del('p3_2ndSmokeOk,p3_2ndSmokeOkConcerns,p3_2ndSmokeNotDiscussed,p3_feverOk,p3_feverOkConcerns,p3_feverNotDiscussed,p3_coughMedOk,p3_coughMedOkConcerns,p3_coughMedNotDiscussed');" /></td>
+					<td colspan="4" class="edcol" colspan="2" valign="top"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_teethingOk,p3_teethingNo,p3_activeOk,p3_activeNo,p3_sunExposureOk,p3_sunExposureNo');" /></td>
-					<td colspan="3" class="edcol" colspan="2" valign="top"><input
+						onclick="del('p3_teethingOk,p3_teethingOkConcerns,p3_teethingNotDiscussed,p3_activeOk,p3_activeOkConcerns,p3_activeNotDiscussed,p3_sunExposureOk,p3_sunExposureOkConcerns,p3_sunExposureNotDiscussed');" /></td>
+					<td colspan="4" class="edcol" colspan="2" valign="top"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_altMedOk,p3_altMedNo,p3_readingOk,p3_readingNo,p3_checkSerumOk,p3_checkSerumNo');" /></td>
-					<td colspan="3" class="edcol" colspan="2" valign="top"><input
+						onclick="del('p3_altMedOk,p3_altMedOkConcerns,p3_altMedNotDiscussed,p3_readingOk,p3_readingOkConcerns,p3_readingNotDiscussed,p3_checkSerumOk,p3_checkSerumOkConcerns,p3_checkSerumNotDiscussed');" /></td>
+					<td colspan="4" class="edcol" colspan="2" valign="top"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_pacifierOk,p3_pacifierNo,p3_footwearOk,p3_footwearNo,p3_pesticidesOk,p3_pesticidesNo');" /></td>
-					<td colspan="3">&nbsp;</td>
+						onclick="del('p3_pacifierOk,p3_pacifierOkConcerns,p3_pacifierNotDiscussed,p3_footwearOk,p3_footwearOkConcerns,p3_footwearNotDiscussed,p3_pesticidesOk,p3_pesticidesOkConcerns,p3_pesticidesNotDiscussed');" /></td>
+					<td colspan="4">&nbsp;</td>
 				</tr>
 				<tr>
-					<td colspan="15">&nbsp;</td>
+					<td colspan="20">&nbsp;</td>
 				</tr>
 			</table>
+			<textarea id="p3_education"
+						name="p3_education" class="wide" rows="5" cols="25"><%= props.getProperty("p3_education", "") %></textarea>
 			</td>
 		</tr>
 		<tr>
@@ -1162,159 +1398,187 @@ description layer</div>
 			<td colspan="3" valign="top" align="center">
 			<table cellpadding="0" cellspacing="0" width="100%">
 				<tr align="center">
-					<td colspan="3"><textarea id="p3_development9m"
+					<td colspan="4"><textarea id="p3_development9m"
 						name="p3_development9m" rows="5" cols="25" class="wide"><%= props.getProperty("p3_development9m", "") %></textarea></td>
 				</tr>
 				<tr>
 					<td style="padding-right: 5pt" valign="top"><img height="15"
 						width="20" src="graphics/Checkmark_L.gif"></td>
 					<td class="edcol" valign="top">X</td>
-					<td>&nbsp;</td>
+					<td class="edcol" valign="top" colspan="2"><bean:message key="oscarEncounter.formRourke2009.formNotDiscussed"/></td>
 				</tr>
 				<tr>
 					<td valign="top"><input type="radio" id="p3_hiddenToyOk"
 						name="p3_hiddenToyOk" onclick="onCheck(this,'p3_hiddenToy')"
 						<%= props.getProperty("p3_hiddenToyOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_hiddenToyNo"
-						name="p3_hiddenToyNo" onclick="onCheck(this,'p3_hiddenToy')"
-						<%= props.getProperty("p3_hiddenToyNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_hiddenToyOkConcerns"
+						name="p3_hiddenToyOkConcerns" onclick="onCheck(this,'p3_hiddenToy')"
+						<%= props.getProperty("p3_hiddenToyOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_hiddenToyNotDiscussed"
+						name="p3_hiddenToyNotDiscussed" onclick="onCheck(this,'p3_hiddenToy')"
+						<%= props.getProperty("p3_hiddenToyNotDiscussed", "") %>></td>
 					<td valign="top"><bean:message
 						key="oscarEncounter.formRourke2009_3.formhiddenToy" /></td>
 				</tr>
 				<tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_hiddenToyOk,p3_hiddenToyNo');" /></td>
+						onclick="del('p3_hiddenToyOk,p3_hiddenToyOkConcerns,p3_hiddenToyNotDiscussed');" /></td>
 					<td>&nbsp;</td>
 				</tr>
 				<tr>
 					<td valign="top"><input type="radio" id="p3_soundsOk"
 						name="p3_soundsOk" onclick="onCheck(this,'p3_sounds')"
 						<%= props.getProperty("p3_soundsOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_soundsNo"
-						name="p3_soundsNo" onclick="onCheck(this,'p3_sounds')"
-						<%= props.getProperty("p3_soundsNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_soundsOkConcerns"
+						name="p3_soundsOkConcerns" onclick="onCheck(this,'p3_sounds')"
+						<%= props.getProperty("p3_soundsOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_soundsNotDiscussed"
+						name="p3_soundsNotDiscussed" onclick="onCheck(this,'p3_sounds')"
+						<%= props.getProperty("p3_soundsNotDiscussed", "") %>></td>
 					<td valign="top"><bean:message
 						key="oscarEncounter.formRourke2009_3.formSounds" /></td>
 				</tr>
 				<tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_soundsOk,p3_soundsNo');" /></td>
+						onclick="del('p3_soundsOk,p3_soundsOkConcerns,p3_soundsNotDiscussed');" /></td>
 					<td>&nbsp;</td>
 				</tr>
-                                <tr>
+                <tr>
 					<td valign="top"><input type="radio" id="p3_responds2peopleOk"
 						name="p3_responds2peopleOk" onclick="onCheck(this,'p3_responds2people')"
 						<%= props.getProperty("p3_responds2peopleOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_responds2peopleNo"
-						name="p3_responds2peopleNo" onclick="onCheck(this,'p3_responds2people')"
-						<%= props.getProperty("p3_responds2peopleNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_responds2peopleOkConcerns"
+						name="p3_responds2peopleOkConcerns" onclick="onCheck(this,'p3_responds2people')"
+						<%= props.getProperty("p3_responds2peopleOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_responds2peopleNotDiscussed"
+						name="p3_responds2peopleNotDiscussed" onclick="onCheck(this,'p3_responds2people')"
+						<%= props.getProperty("p3_responds2peopleNotDiscussed", "") %>></td>
 					<td valign="top"><bean:message
 						key="oscarEncounter.formRourke2009_3.formResponds2people" /></td>
 				</tr>
 				<tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_responds2peopleOk,p3_responds2peopleNo');" /></td>
+						onclick="del('p3_responds2peopleOk,p3_responds2peopleOkConcerns,p3_responds2peopleNotDiscussed');" /></td>
 					<td>&nbsp;</td>
 				</tr>
 				<tr>
 					<td valign="top"><input type="radio" id="p3_makeSoundsOk"
 						name="p3_makeSoundsOk" onclick="onCheck(this,'p3_makeSounds')"
 						<%= props.getProperty("p3_makeSoundsOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_makeSoundsNo"
-						name="p3_makeSoundsNo" onclick="onCheck(this,'p3_makeSounds')"
-						<%= props.getProperty("p3_makeSoundsNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_makeSoundsOkConcerns"
+						name="p3_makeSoundsOkConcerns" onclick="onCheck(this,'p3_makeSounds')"
+						<%= props.getProperty("p3_makeSoundsOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_makeSoundsNotDiscussed"
+						name="p3_makeSoundsNotDiscussed" onclick="onCheck(this,'p3_makeSounds')"
+						<%= props.getProperty("p3_makeSoundsNotDiscussed", "") %>></td>
 					<td valign="top"><bean:message
 						key="oscarEncounter.formRourke2009_3.formMakeSounds" /></td>
 				</tr>
 				<tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_makeSoundsOk,p3_makeSoundsNo');" /></td>
+						onclick="del('p3_makeSoundsOk,p3_makeSoundsOkConcerns,p3_makeSoundsNotDiscussed');" /></td>
 					<td>&nbsp;</td>
 				</tr>
 				<tr>
 					<td valign="top"><input type="radio" id="p3_sitsOk"
 						name="p3_sitsOk" onclick="onCheck(this,'p3_sits')"
 						<%= props.getProperty("p3_sitsOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_sitsNo"
-						name="p3_sitsNo" onclick="onCheck(this,'p3_sits')"
-						<%= props.getProperty("p3_sitsNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_sitsOkConcerns"
+						name="p3_sitsOkConcerns" onclick="onCheck(this,'p3_sits')"
+						<%= props.getProperty("p3_sitsOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_sitsNotDiscussed"
+						name="p3_sitsNotDiscussed" onclick="onCheck(this,'p3_sits')"
+						<%= props.getProperty("p3_sitsNotDiscussed", "") %>></td>
 					<td valign="top"><bean:message
 						key="oscarEncounter.formRourke2006_3.formSits" /></td>
 				</tr>
 				<tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_sitsOk,p3_sitsNo');" /></td>
+						onclick="del('p3_sitsOk,p3_sitsOkConcerns,p3_sitsNotDiscussed');" /></td>
 					<td>&nbsp;</td>
 				</tr>
 				<tr>
 					<td valign="top"><input type="radio" id="p3_standsOk"
 						name="p3_standsOk" onclick="onCheck(this,'p3_stands')"
 						<%= props.getProperty("p3_standsOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_standsNo"
-						name="p3_standsNo" onclick="onCheck(this,'p3_stands')"
-						<%= props.getProperty("p3_standsNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_standsOkConcerns"
+						name="p3_standsOkConcerns" onclick="onCheck(this,'p3_stands')"
+						<%= props.getProperty("p3_standsOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_standsNotDiscussed"
+						name="p3_standsNotDiscussed" onclick="onCheck(this,'p3_stands')"
+						<%= props.getProperty("p3_standsNotDiscussed", "") %>></td>
 					<td valign="top"><bean:message
 						key="oscarEncounter.formRourke2009_3.formStands" /></td>
 				</tr>
 				<tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_standsOk,p3_standsNo');" /></td>
+						onclick="del('p3_standsOk,p3_standsOkConcerns,p3_standsNotDiscussed');" /></td>
 					<td>&nbsp;</td>
 				</tr>
 				<tr>
 					<td valign="top"><input type="radio" id="p3_thumbOk"
 						name="p3_thumbOk" onclick="onCheck(this,'p3_thumb')"
 						<%= props.getProperty("p3_thumbOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_thumbNo"
-						name="p3_thumbNo" onclick="onCheck(this,'p3_thumb')"
-						<%= props.getProperty("p3_thumbNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_thumbOkConcerns"
+						name="p3_thumbOkConcerns" onclick="onCheck(this,'p3_thumb')"
+						<%= props.getProperty("p3_thumbOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_thumbNotDiscussed"
+						name="p3_thumbNotDiscussed" onclick="onCheck(this,'p3_thumb')"
+						<%= props.getProperty("p3_thumbNotDiscussed", "") %>></td>
 					<td valign="top"><bean:message
 						key="oscarEncounter.formRourke2009_3.formThumb&Index" /></td>
 				</tr>
 				<tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_thumbOk,p3_thumbNo');" /></td>
+						onclick="del('p3_thumbOk,p3_thumbOkConcerns,p3_thumbNotDiscussed');" /></td>
 					<td>&nbsp;</td>
 				</tr>
 				<tr>
 					<td valign="top"><input type="radio" id="p3_playGamesOk"
 						name="p3_playGamesOk" onclick="onCheck(this,'p3_playGames')"
 						<%= props.getProperty("p3_playGamesOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_playGamesNo"
-						name="p3_playGamesNo" onclick="onCheck(this,'p3_playGames')"
-						<%= props.getProperty("p3_playGamesNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_playGamesOkConcerns"
+						name="p3_playGamesOkConcerns" onclick="onCheck(this,'p3_playGames')"
+						<%= props.getProperty("p3_playGamesOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_playGamesNotDiscussed"
+						name="p3_playGamesNotDiscussed" onclick="onCheck(this,'p3_playGames')"
+						<%= props.getProperty("p3_playGamesNotDiscussed", "") %>></td>
 					<td valign="top"><bean:message
 						key="oscarEncounter.formRourke2009_3.formplayGames" /></td>
 				</tr>
 				<tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_playGamesOk,p3_playGamesNo');" /></td>
+						onclick="del('p3_playGamesOk,p3_playGamesOkConcerns,p3_playGamesNotDiscussed');" /></td>
 					<td>&nbsp;</td>
 				</tr>
-                                <tr>
+               	<tr>
 					<td valign="top"><input type="radio"
 						id="p3_attention9mOk" name="p3_attention9mOk"
 						onclick="onCheck(this,'p3_attention9m')"
 						<%= props.getProperty("p3_attention9mOk", "") %>></td>
 					<td valign="top"><input type="radio"
-						id="p3_attention9mNo" name="p3_attention9mNo"
+						id="p3_attention9mOkConcerns" name="p3_attention9mOkConcerns"
 						onclick="onCheck(this,'p3_attention9m')"
-						<%= props.getProperty("p3_attention9mNo", "") %>></td>
+						<%= props.getProperty("p3_attention9mOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio"
+						id="p3_attention9mNotDiscussed" name="p3_attention9mNotDiscussed"
+						onclick="onCheck(this,'p3_attention9m')"
+						<%= props.getProperty("p3_attention9mNotDiscussed", "") %>></td>
 					<td valign="top"><bean:message
 						key="oscarEncounter.formRourke2009_3.formAttention" /></td>
 				</tr>
 				<tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_attention9mOk,p3_attention9mNo');" /></td>
+						onclick="del('p3_attention9mOk,p3_attention9mOkConcerns,p3_attention9mNotDiscussed');" /></td>
 					<td>&nbsp;</td>
 				</tr>
 				<tr>
@@ -1323,16 +1587,20 @@ description layer</div>
 						onclick="onCheck(this,'p3_noParentsConcerns9m')"
 						<%= props.getProperty("p3_noParentsConcerns9mOk", "") %>></td>
 					<td valign="top"><input type="radio"
-						id="p3_noParentsConcerns9mNo" name="p3_noParentsConcerns9mNo"
+						id="p3_noParentsConcerns9mOkConcerns" name="p3_noParentsConcerns9mOkConcerns"
 						onclick="onCheck(this,'p3_noParentsConcerns9m')"
-						<%= props.getProperty("p3_noParentsConcerns9mNo", "") %>></td>
+						<%= props.getProperty("p3_noParentsConcerns9mOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio"
+						id="p3_noParentsConcerns9mNotDiscussed" name="p3_noParentsConcerns9mNotDiscussed"
+						onclick="onCheck(this,'p3_noParentsConcerns9m')"
+						<%= props.getProperty("p3_noParentsConcerns9mNotDiscussed", "") %>></td>
 					<td valign="top"><bean:message
 						key="oscarEncounter.formRourke2009.formNoparentConcerns" /></td>
 				</tr>
 				<tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_noParentsConcerns9mOk,p3_noParentsConcerns9mNo');" /></td>
+						onclick="del('p3_noParentsConcerns9mOk,p3_noParentsConcerns9mOkConcerns,p3_noParentsConcerns9mNotDiscussed');" /></td>
 					<td>&nbsp;</td>
 				</tr>
 			</table>
@@ -1340,29 +1608,32 @@ description layer</div>
 			<td colspan="3" valign="top" align="center">
 			<table cellpadding="0" cellspacing="0" width="100%">
 				<tr align="center">
-					<td colspan="3"><textarea id="p3_development12m"
+					<td colspan="4"><textarea id="p3_development12m"
 						name="p3_development12m" rows="5" cols="25" class="wide"><%= props.getProperty("p3_development12m", "") %></textarea></td>
 				</tr>
 				<tr>
 					<td style="padding-right: 5pt" valign="top"><img height="15"
 						width="20" src="graphics/Checkmark_L.gif"></td>
 					<td class="edcol" valign="top">X</td>
-					<td>&nbsp;</td>
+					<td class="edcol" valign="top" colspan="2"><bean:message key="oscarEncounter.formRourke2009.formNotDiscussed"/></td>
 				</tr>
 				<tr>
 					<td valign="top"><input type="radio" id="p3_responds2nameOk"
 						name="p3_respondsOk" onclick="onCheck(this,'p3_responds2name')"
 						<%= props.getProperty("p3_respondsOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_responds2nameNo"
-						name="p3_respondsNo" onclick="onCheck(this,'p3_responds2name')"
-						<%= props.getProperty("p3_respondsNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_responds2nameOkConcerns"
+						name="p3_respondsOkConcerns" onclick="onCheck(this,'p3_responds2name')"
+						<%= props.getProperty("p3_respondsOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_responds2nameNotDiscussed"
+						name="p3_respondsNotDiscussed" onclick="onCheck(this,'p3_responds2name')"
+						<%= props.getProperty("p3_respondsNotDiscussed", "") %>></td>
 					<td valign="top"><bean:message
 						key="oscarEncounter.formRourke2006_3.formResponds" /></td>
 				</tr>
 				<tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_respondsOk,p3_respondsNo');" /></td>
+						onclick="del('p3_responds2nameOk,p3_responds2nameOkConcerns,p3_responds2nameNotDiscussed');" /></td>
 					<td>&nbsp;</td>
 				</tr>
 				<tr>
@@ -1370,113 +1641,135 @@ description layer</div>
 						name="p3_simpleRequestsOk"
 						onclick="onCheck(this,'p3_simpleRequests')"
 						<%= props.getProperty("p3_simpleRequestsOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_simpleRequestsNo"
-						name="p3_simpleRequestsNo"
+					<td valign="top"><input type="radio" id="p3_simpleRequestsOkConcerns"
+						name="p3_simpleRequestsOkConcerns"
 						onclick="onCheck(this,'p3_simpleRequests')"
-						<%= props.getProperty("p3_simpleRequestsNo", "") %>></td>
+						<%= props.getProperty("p3_simpleRequestsOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_simpleRequestsNotDiscussed"
+						name="p3_simpleRequestsNotDiscussed"
+						onclick="onCheck(this,'p3_simpleRequests')"
+						<%= props.getProperty("p3_simpleRequestsNotDiscussed", "") %>></td>
 					<td valign="top"><bean:message
 						key="oscarEncounter.formRourke2009_3.formSimpleReq" /></td>
 				</tr>
 				<tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_simpleRequestsOk,p3_simpleRequestsNo');" /></td>
+						onclick="del('p3_simpleRequestsOk,p3_simpleRequestsOkConcerns,p3_simpleRequestsNotDiscussed');" /></td>
 					<td>&nbsp;</td>
 				</tr>
 				<tr>
 					<td valign="top"><input type="radio" id="p3_consonantOk"
 						name="p3_consonantOk" onclick="onCheck(this,'p3_consonant')"
 						<%= props.getProperty("p3_consonantOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_consonantNo"
-						name="p3_consonantNo" onclick="onCheck(this,'p3_consonant')"
-						<%= props.getProperty("p3_consonantNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_consonantOkConcerns"
+						name="p3_consonantOkConcerns" onclick="onCheck(this,'p3_consonant')"
+						<%= props.getProperty("p3_consonantOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_consonantNotDiscussed"
+						name="p3_consonantNotDiscussed" onclick="onCheck(this,'p3_consonant')"
+						<%= props.getProperty("p3_consonantNotDiscussed", "") %>></td>
 					<td valign="top"><bean:message
 						key="oscarEncounter.formRourke2009_3.formConsonant" /></td>
 				</tr>
 				<tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_consonantOk,p3_consonantNo');" /></td>
+						onclick="del('p3_consonantOk,p3_consonantOkConcerns,p3_consonantNotDiscussed');" /></td>
 					<td>&nbsp;</td>
 				</tr>
-                                <tr>
+                <tr>
 					<td valign="top"><input type="radio" id="p3_says3wordsOk"
 						name="p3_says3wordsOk" onclick="onCheck(this,'p3_says3words')"
 						<%= props.getProperty("p3_says3wordsOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_says3wordsNo"
-						name="p3_says3wordsNo" onclick="onCheck(this,'p3_says3words')"
-						<%= props.getProperty("p3_says3wordsNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_says3wordsOkConcerns"
+						name="p3_says3wordsOkConcerns" onclick="onCheck(this,'p3_says3words')"
+						<%= props.getProperty("p3_says3wordsOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_says3wordsNotDiscussed"
+						name="p3_says3wordsNotDiscussed" onclick="onCheck(this,'p3_says3words')"
+						<%= props.getProperty("p3_says3wordsNotDiscussed", "") %>></td>
 					<td valign="top"><bean:message
 						key="oscarEncounter.formRourke2009_3.formsays3words" /></td>
 				</tr>
 				<tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_says3wordsOk,p3_says3wordsNo');" /></td>
+						onclick="del('p3_says3wordsOk,p3_says3wordsOkConcerns,p3_says3wordsNotDiscussed');" /></td>
 					<td>&nbsp;</td>
 				</tr>
 				<tr>
 					<td valign="top"><input type="radio" id="p3_shufflesOk"
 						name="p3_shufflesOk" onclick="onCheck(this,'p3_shuffles')"
 						<%= props.getProperty("p3_shufflesOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_shufflesNo"
-						name="p3_shufflesNo" onclick="onCheck(this,'p3_shuffles')"
-						<%= props.getProperty("p3_shufflesNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_shufflesOkConcerns"
+						name="p3_shufflesOkConcerns" onclick="onCheck(this,'p3_shuffles')"
+						<%= props.getProperty("p3_shufflesOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_shufflesNotDiscussed"
+						name="p3_shufflesNotDiscussed" onclick="onCheck(this,'p3_shuffles')"
+						<%= props.getProperty("p3_shufflesNotDiscussed", "") %>></td>
 					<td valign="top"><bean:message
 						key="oscarEncounter.formRourke2009_3.formCrawls" /></td>
 				</tr>
 				<tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_shufflesOk,p3_shufflesNo');" /></td>
+						onclick="del('p3_shufflesOk,p3_shufflesOkConcerns,p3_shufflesNotDiscussed');" /></td>
 					<td>&nbsp;</td>
 				</tr>
 				<tr>
 					<td valign="top"><input type="radio" id="p3_pull2standOk"
 						name="p3_pull2standOk" onclick="onCheck(this,'p3_pull2stand')"
 						<%= props.getProperty("p3_pull2standOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_pull2standNo"
-						name="p3_pull2standNo" onclick="onCheck(this,'p3_pull2stand')"
-						<%= props.getProperty("p3_pull2standNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_pull2standOkConcerns"
+						name="p3_pull2standOkConcerns" onclick="onCheck(this,'p3_pull2stand')"
+						<%= props.getProperty("p3_pull2standOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_pull2standNotDiscussed"
+						name="p3_pull2standNotDiscussed" onclick="onCheck(this,'p3_pull2stand')"
+						<%= props.getProperty("p3_pull2standNotDiscussed", "") %>></td>
 					<td valign="top"><bean:message
 						key="oscarEncounter.formRourke2006_3.formPulltoStand" /></td>
 				</tr>
 				<tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_pull2standOk,p3_pull2standNo');" /></td>
+						onclick="del('p3_pull2standOk,p3_pull2standOkConcerns,p3_pull2standNotDiscussed');" /></td>
 					<td>&nbsp;</td>
 				</tr>
 				<tr>
 					<td valign="top"><input type="radio" id="p3_showDistressOk"
 						name="p3_showDistressOk" onclick="onCheck(this,'p3_showDistress')"
 						<%= props.getProperty("p3_showDistressOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_showDistressNo"
-						name="p3_showDistressNo" onclick="onCheck(this,'p3_showDistress')"
-						<%= props.getProperty("p3_showDistressNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_showDistressOkConcerns"
+						name="p3_showDistressOkConcerns" onclick="onCheck(this,'p3_showDistress')"
+						<%= props.getProperty("p3_showDistressOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_showDistressNotDiscussed"
+						name="p3_showDistressNotDiscussed" onclick="onCheck(this,'p3_showDistress')"
+						<%= props.getProperty("p3_showDistressNotDiscussed", "") %>></td>
 					<td valign="top"><bean:message
 						key="oscarEncounter.formRourke2009_3.formShowDistress" /></td>
 				</tr>
 				<tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_showDistressOk,p3_showDistressNo');" /></td>
+						onclick="del('p3_showDistressOk,p3_showDistressOkConcerns,p3_showDistressNotDiscussed');" /></td>
 					<td>&nbsp;</td>
 				</tr>
-                                <tr>
+                <tr>
 					<td valign="top"><input type="radio" id="p3_followGazeOk"
 						name="p3_followGazeOk" onclick="onCheck(this,'p3_followGaze')"
 						<%= props.getProperty("p3_followGazeOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_followGazeNo"
-						name="p3_followGazeNo" onclick="onCheck(this,'p3_followGaze')"
-						<%= props.getProperty("p3_followGazeNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_followGazeOkConcerns"
+						name="p3_followGazeOkConcerns" onclick="onCheck(this,'p3_followGaze')"
+						<%= props.getProperty("p3_followGazeOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_followGazeNotDiscussed"
+						name="p3_followGazeNotDiscussed" onclick="onCheck(this,'p3_followGaze')"
+						<%= props.getProperty("p3_followGazeNotDiscussed", "") %>></td>
 					<td valign="top"><bean:message
 						key="oscarEncounter.formRourke2009_3.formfollowGaze" /></td>
 				</tr>
 				<tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_followGazeOk,p3_followGazeNo');" /></td>
+						onclick="del('p3_followGazeOk,p3_followGazeOkConcerns,p3_followGazeNotDiscussed');" /></td>
 					<td>&nbsp;</td>
 				</tr>
 				<tr>
@@ -1485,16 +1778,20 @@ description layer</div>
 						onclick="onCheck(this,'p3_noParentsConcerns12m')"
 						<%= props.getProperty("p3_noParentsConcerns12mOk", "") %>></td>
 					<td valign="top"><input type="radio"
-						id="p3_noParentsConcerns12mNo" name="p3_noParentsConcerns12mNo"
+						id="p3_noParentsConcerns12mOkConcerns" name="p3_noParentsConcerns12mOkConcerns"
 						onclick="onCheck(this,'p3_noParentsConcerns12m')"
-						<%= props.getProperty("p3_noParentsConcerns12mNo", "") %>></td>
+						<%= props.getProperty("p3_noParentsConcerns12mOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio"
+						id="p3_noParentsConcerns12mNotDiscussed" name="p3_noParentsConcerns12mNotDiscussed"
+						onclick="onCheck(this,'p3_noParentsConcerns12m')"
+						<%= props.getProperty("p3_noParentsConcerns12mNotDiscussed", "") %>></td>
 					<td valign="top"><bean:message
 						key="oscarEncounter.formRourke2009.formNoparentConcerns" /></td>
 				</tr>
 				<tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_noParentsConcerns12mOk,p3_noParentsConcerns12mNo');" /></td>
+						onclick="del('p3_noParentsConcerns12mOk,p3_noParentsConcerns12mOkConcerns,p3_noParentsConcerns12mNotDiscussed');" /></td>
 					<td>&nbsp;</td>
 				</tr>
 			</table>
@@ -1502,105 +1799,123 @@ description layer</div>
 			<td colspan="3" valign="top">
 			<table cellpadding="0" cellspacing="0" width="100%">
                                 <tr>
-                                    <td colspan="3"><textarea id="p3_development15m"
+                                    <td colspan="4"><textarea id="p3_development15m"
 						name="p3_development15m" rows="5" cols="25" class="wide"><%= props.getProperty("p3_development15m", "") %></textarea></td>
                                 </tr>
 				<tr>
 					<td style="padding-right: 5pt" valign="top"><img height="15"
 						width="20" src="graphics/Checkmark_L.gif"></td>
 					<td class="edcol" valign="top">X</td>
-					<td>&nbsp;</td>
+					<td class="edcol" valign="top" colspan="2"><bean:message key="oscarEncounter.formRourke2009.formNotDiscussed"/></td>
 				</tr>
 				<tr>
 					<td valign="top"><input type="radio" id="p3_says5wordsOk"
 						name="p3_says5wordsOk" onclick="onCheck(this,'p3_says5words')"
 						<%= props.getProperty("p3_says5wordsOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_says5wordsNo"
-						name="p3_says5wordsNo" onclick="onCheck(this,'p3_says5words')"
-						<%= props.getProperty("p3_says5wordsNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_says5wordsOkConcerns"
+						name="p3_says5wordsOkConcerns" onclick="onCheck(this,'p3_says5words')"
+						<%= props.getProperty("p3_says5wordsOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_says5wordsNotDiscussed"
+						name="p3_says5wordsNotDiscussed" onclick="onCheck(this,'p3_says5words')"
+						<%= props.getProperty("p3_says5wordsNotDiscussed", "") %>></td>
 					<td><bean:message
 						key="oscarEncounter.formRourke2009_3.formSays5words" /></td>
 				</tr>
 				<tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="4"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_says5wordsOk,p3_says5wordsNo');" /></td>
+						onclick="del('p3_says5wordsOk,p3_says5wordsOkConcerns,p3_says5wordsNotDiscussed');" /></td>
 					<td>&nbsp;</td>
 				</tr>				
 				<tr>
 					<td valign="top"><input type="radio" id="p3_fingerFoodsOk"
 						name="p3_fingerFoodsOk" onclick="onCheck(this,'p3_fingerFoods')"
 						<%= props.getProperty("p3_fingerFoodsOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_fingerFoodsNo"
-						name="p3_fingerFoodsNo" onclick="onCheck(this,'p3_fingerFoods')"
-						<%= props.getProperty("p3_fingerFoodsNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_fingerFoodsOkConcerns"
+						name="p3_fingerFoodsOkConcerns" onclick="onCheck(this,'p3_fingerFoods')"
+						<%= props.getProperty("p3_fingerFoodsOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_fingerFoodsNotDiscussed"
+						name="p3_fingerFoodsNotDiscussed" onclick="onCheck(this,'p3_fingerFoods')"
+						<%= props.getProperty("p3_fingerFoodsNotDiscussed", "") %>></td>
 					<td><bean:message
 						key="oscarEncounter.formRourke2006_3.formFingerFoods" /></td>
 				</tr>
 				<tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="4"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_fingerFoodsOk,p3_fingerFoodsNo');" /></td>
+						onclick="del('p3_fingerFoodsOk,p3_fingerFoodsOkConcerns,p3_fingerFoodsNotDiscussed');" /></td>
 				</tr>
-                                <tr>
+                <tr>
 					<td valign="top"><input type="radio" id="p3_walksSidewaysOk"
 						name="p3_walksSidewaysOk" onclick="onCheck(this,'p3_walksSideways')"
 						<%= props.getProperty("p3_walksSidewaysOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_walksSidewaysNo"
-						name="p3_walksSidewaysNo" onclick="onCheck(this,'p3_walksSideways')"
-						<%= props.getProperty("p3_walksSidewaysNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_walksSidewaysOkConcerns"
+						name="p3_walksSidewaysOkConcerns" onclick="onCheck(this,'p3_walksSideways')"
+						<%= props.getProperty("p3_walksSidewaysOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_walksSidewaysNotDiscussed"
+						name="p3_walksSidewaysNotDiscussed" onclick="onCheck(this,'p3_walksSideways')"
+						<%= props.getProperty("p3_walksSidewaysNotDiscussed", "") %>></td>
 					<td><bean:message
 						key="oscarEncounter.formRourke2009_3.formwalksSideways" /></td>
 				</tr>
 				<tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="4"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_walksSidewaysOk,p3_walksSidewaysNo');" /></td>
+						onclick="del('p3_walksSidewaysOk,p3_walksSidewaysOkConcerns,p3_walksSidewaysNotDiscussed');" /></td>
 				</tr>
-                                <tr>
+               	<tr>
 					<td valign="top"><input type="radio" id="p3_showsFearStrangersOk"
 						name="p3_showsFearStrangersOk" onclick="onCheck(this,'p3_showsFearStrangers')"
 						<%= props.getProperty("p3_showsFearStrangersOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_showsFearStrangersNo"
-						name="p3_showsFearStrangersNo" onclick="onCheck(this,'p3_showsFearStrangers')"
-						<%= props.getProperty("p3_showsFearStrangersNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_showsFearStrangersOkConcerns"
+						name="p3_showsFearStrangersOkConcerns" onclick="onCheck(this,'p3_showsFearStrangers')"
+						<%= props.getProperty("p3_showsFearStrangersOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_showsFearStrangersNotDiscussed"
+						name="p3_showsFearStrangersNotDiscussed" onclick="onCheck(this,'p3_showsFearStrangers')"
+						<%= props.getProperty("p3_showsFearStrangersNotDiscussed", "") %>></td>
 					<td><bean:message
 						key="oscarEncounter.formRourke2009_3.formshowsFearStrangers" /></td>
 				</tr>
 				<tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="4"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_showsFearStrangersOk,p3_showsFearStrangersNo');" /></td>
+						onclick="del('p3_showsFearStrangersOk,p3_showsFearStrangersOkConcerns,p3_showsFearStrangersNotDiscussed');" /></td>
 				</tr>
 				<tr>
 					<td valign="top"><input type="radio" id="p3_crawlsStairsOk"
 						name="p3_crawlsStairsOk" onclick="onCheck(this,'p3_crawlsStairs')"
 						<%= props.getProperty("p3_crawlsStairsOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_crawlsStairsNo"
-						name="p3_crawlsStairsNo" onclick="onCheck(this,'p3_crawlsStairs')"
-						<%= props.getProperty("p3_crawlsStairsNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_crawlsStairsOkConcerns"
+						name="p3_crawlsStairsOkConcerns" onclick="onCheck(this,'p3_crawlsStairs')"
+						<%= props.getProperty("p3_crawlsStairsOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_crawlsStairsNotDiscussed"
+						name="p3_crawlsStairsNotDiscussed" onclick="onCheck(this,'p3_crawlsStairs')"
+						<%= props.getProperty("p3_crawlsStairsNotDiscussed", "") %>></td>
 					<td><bean:message
 						key="oscarEncounter.formRourke2006_3.formCrawlsStairs" /></td>
 				</tr>
 				<tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="4"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_crawlsStairsOk,p3_crawlsStairsNo');" /></td>
+						onclick="del('p3_crawlsStairsOk,p3_crawlsStairsOkConcerns,p3_crawlsStairsNotDiscussed');" /></td>
 				</tr>
 				<tr>
 					<td valign="top"><input type="radio" id="p3_squatsOk"
 						name="p3_squatsOk" onclick="onCheck(this,'p3_squats')"
 						<%= props.getProperty("p3_squatsOk", "") %>></td>
-					<td valign="top"><input type="radio" id="p3_squatsNo"
-						name="p3_squatsNo" onclick="onCheck(this,'p3_squats')"
-						<%= props.getProperty("p3_squatsNo", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_squatsOkConcerns"
+						name="p3_squatsOkConcerns" onclick="onCheck(this,'p3_squats')"
+						<%= props.getProperty("p3_squatsOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_squatsNotDiscussed"
+						name="p3_squatsNotDiscussed" onclick="onCheck(this,'p3_squats')"
+						<%= props.getProperty("p3_squatsNotDiscussed", "") %>></td>
 					<td><bean:message
 						key="oscarEncounter.formRourke2006_3.formSquats" /></td>
 				</tr>
 				<tr>
-					<td valign="bottom" class="edcol" colspan="2"><input
+					<td valign="bottom" class="edcol" colspan="4"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_squatsOk,p3_squatsNo');" /></td>
+						onclick="del('p3_squatsOk,p3_squatsOkConcerns,p3_squatsNotDiscussed');" /></td>
 				</tr>				
 				<tr>
 					<td valign="top"><input type="radio"
@@ -1608,16 +1923,20 @@ description layer</div>
 						onclick="onCheck(this,'p3_noParentsConcerns15m')"
 						<%= props.getProperty("p3_noParentsConcerns15mOk", "") %>></td>
 					<td valign="top"><input type="radio"
-						id="p3_noParentsConcerns15mNo" name="p3_noParentsConcerns15mNo"
+						id="p3_noParentsConcerns15mOkConcerns" name="p3_noParentsConcerns15mOkConcerns"
 						onclick="onCheck(this,'p3_noParentsConcerns15m')"
-						<%= props.getProperty("p3_noParentsConcerns15mNo", "") %>></td>
+						<%= props.getProperty("p3_noParentsConcerns15mOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio"
+						id="p3_noParentsConcerns15mNotDiscussed" name="p3_noParentsConcerns15mNotDiscussed"
+						onclick="onCheck(this,'p3_noParentsConcerns15m')"
+						<%= props.getProperty("p3_noParentsConcerns15mNotDiscussed", "") %>></td>
 					<td><bean:message
 						key="oscarEncounter.formRourke2009.formNoparentConcerns" /></td>
 				</tr>
 				<tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="4"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_noParentsConcerns15mOk,p3_noParentsConcerns15mNo');" /></td>
+						onclick="del('p3_noParentsConcerns15mOk,p3_noParentsConcerns15mOkConcerns,p3_noParentsConcerns15mNotDiscussed');" /></td>
 				</tr>
 			</table>
 			</td>
@@ -1632,109 +1951,133 @@ description layer</div>
 			
 			</td>
 			<td colspan="3" valign="top">
+			<textarea id="p3_physical9m"
+						name="p3_physical9m" class="wide" rows="5" cols="25"><%= props.getProperty("p3_physical9m", "") %></textarea>
 			<table cellpadding="0" cellspacing="0" width="100%">
 				<tr>
-					<td colspan="3">&nbsp;</td>
+					<td colspan="4">&nbsp;</td>
 				</tr>
-                                <tr>
+                <tr>
 					<td style="padding-right: 5pt" valign="top"><img height="15"
 						width="20" src="graphics/Checkmark_L.gif"></td>
 					<td class="edcol" valign="top">X</td>
-					<td>&nbsp;</td>
+					<td class="edcol" valign="top" colspan="2"><bean:message key="oscarEncounter.formRourke2009.formNotDiscussed"/></td>
 				</tr>
-                                <tr>
+                <tr>
 					<td valign="top"><input type="radio"
 						id="p3_fontanelles9mOk" name="p3_fontanelles9mOk"
 						onclick="onCheck(this,'p3_fontanelles9m')"
 						<%= props.getProperty("p3_fontanelles9mOk", "") %>></td>
 					<td valign="top"><input type="radio"
-						id="p3_fontanelles9mNo" name="p3_fontanelles9mNo"
+						id="p3_fontanelles9mOkConcerns" name="p3_fontanelles9mOkConcerns"
 						onclick="onCheck(this,'p3_fontanelles9m')"
-						<%= props.getProperty("p3_fontanelles9mNo", "") %>></td>
+						<%= props.getProperty("p3_fontanelles9mOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio"
+						id="p3_fontanelles9mNotDiscussed" name="p3_fontanelles9mNotDiscussed"
+						onclick="onCheck(this,'p3_fontanelles9m')"
+						<%= props.getProperty("p3_fontanelles9mNotDiscussed", "") %>></td>
 					<td><bean:message
 						key="oscarEncounter.formRourke1.formFontanelles" /></td>
 				</tr>
 				<tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="4"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_fontanelles9mOk,p3_fontanelles9mNo');" /></td>
-                                        <td>&nbsp;</td>
+						onclick="del('p3_fontanelles9mOk,p3_fontanelles9mOkConcerns,p3_fontanelles9mNotDiscussed');" /></td>
+                    <td>&nbsp;</td>
 				</tr>
-                                <tr>
+              	<tr>
 					<td valign="top"><input type="radio"
 						id="p3_eyes9mOk" name="p3_eyes9mOk"
 						onclick="onCheck(this,'p3_eyes9m')"
 						<%= props.getProperty("p3_eyes9mOk", "") %>></td>
 					<td valign="top"><input type="radio"
-						id="p3_eyes9mNo" name="p3_eyes9mNo"
+						id="p3_eyes9mOkConcerns" name="p3_eyes9mOkConcerns"
 						onclick="onCheck(this,'p3_eyes9m')"
-						<%= props.getProperty("p3_eyes9mNo", "") %>></td>
+						<%= props.getProperty("p3_eyes9mOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio"
+						id="p3_eyes9mNotDiscussed" name="p3_eyes9mNotDiscussed"
+						onclick="onCheck(this,'p3_eyes9m')"
+						<%= props.getProperty("p3_eyes9mNotDiscussed", "") %>></td>
 					<td><a href="javascript:showNotes()"
                                                onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
                                                onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke1.formRedReflex"/>*</a></td>
 				</tr>
 				<tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="4"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_eyes9mOk,p3_eyes9mNo');" /></td>
+						onclick="del('p3_eyes9mOk,p3_eyes9mOkConcerns,p3_eyes9mNotDiscussed');" /></td>
 				</tr>
-                                <tr>
+                <tr>
 					<td valign="top"><input type="radio"
 						id="p3_corneal9mOk" name="p3_corneal9mOk"
 						onclick="onCheck(this,'p3_corneal9m')"
 						<%= props.getProperty("p3_corneal9mOk", "") %>></td>
 					<td valign="top"><input type="radio"
-						id="p3_corneal9mNo" name="p3_corneal9mNo"
+						id="p3_corneal9mOkConcerns" name="p3_corneal9mOkConcerns"
 						onclick="onCheck(this,'p3_corneal9m')"
-						<%= props.getProperty("p3_corneal9mNo", "") %>></td>
+						<%= props.getProperty("p3_corneal9mOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio"
+						id="p3_corneal9mNotDiscussed" name="p3_corneal9mNotDiscussed"
+						onclick="onCheck(this,'p3_corneal9m')"
+						<%= props.getProperty("p3_corneal9mNotDiscussed", "") %>></td>
 					<td><a href="javascript:showNotes()"
                                                onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
                                                onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_3.formCornealReflex"/>*</a></td>
 				</tr>
 				<tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="4"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_corneal9mOk,p3_corneal9mNo');" /></td>
+						onclick="del('p3_corneal9mOk,p3_corneal9mOkConcerns,p3_corneal9mNotDiscussed');" /></td>
 				</tr>
-                                <tr>
+                <tr>
 					<td valign="top"><input type="radio"
 						id="p3_hearing9mOk" name="p3_hearing9mOk"
 						onclick="onCheck(this,'p3_hearing9m')"
 						<%= props.getProperty("p3_hearing9mOk", "") %>></td>
 					<td valign="top"><input type="radio"
-						id="p3_hearing9mNo" name="p3_hearing9mNo"
+						id="p3_hearing9mOkConcerns" name="p3_hearing9mOkConcerns"
 						onclick="onCheck(this,'p3_hearing9m')"
-						<%= props.getProperty("p3_hearing9mNo", "") %>></td>
+						<%= props.getProperty("p3_hearing9mOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio"
+						id="p3_hearing9mNotDiscussed" name="p3_hearing9mNotDiscussed"
+						onclick="onCheck(this,'p3_hearing9m')"
+						<%= props.getProperty("p3_hearing9mNotDiscussed", "") %>></td>
 					<td><i><a href="javascript:showNotes()"
                                                onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
                                                onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_1.formHearingInquiry"/>*</a></i></td>
 				</tr>
 				<tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="4"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_hearing9mOk,p3_hearing9mNo');" /></td>
+						onclick="del('p3_hearing9mOk,p3_hearing9mOkConcerns,p3_hearing9mNotDiscussed');" /></td>
 				</tr>
-                                <tr>
+               	<tr>
 					<td valign="top"><input type="radio"
 						id="p3_hips9mOk" name="p3_hips9mOk"
 						onclick="onCheck(this,'p3_hips9m')"
 						<%= props.getProperty("p3_hips9mOk", "") %>></td>
 					<td valign="top"><input type="radio"
-						id="p3_hips9mNo" name="p3_hips9mNo"
+						id="p3_hips9mOkConcerns" name="p3_hips9mOkConcerns"
 						onclick="onCheck(this,'p3_hips9m')"
-						<%= props.getProperty("p3_hips9mNo", "") %>></td>
+						<%= props.getProperty("p3_hips9mOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio"
+						id="p3_hips9mNotDiscussed" name="p3_hips9mNotDiscussed"
+						onclick="onCheck(this,'p3_hips9m')"
+						<%= props.getProperty("p3_hips9mNotDiscussed", "") %>></td>
 					<td><a href="javascript:showNotes()"
                                                onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
                                                onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_2.formHips"/>*</a></td>
 				</tr>
 				<tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="4"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_hips9mOk,p3_hips9mNo');" /></td>
+						onclick="del('p3_hips9mOk,p3_hips9mOkConcerns,p3_hips9mNotDiscussed');" /></td>
 				</tr>
 			</table>
 			</td>
 			<td colspan="3" valign="top">
+			<textarea id="p3_physical12m"
+						name="p3_physical12m" class="wide" rows="5" cols="25"><%= props.getProperty("p3_physical12m", "") %></textarea>
 			<table cellpadding="0" cellspacing="0" width="100%">
                                 <tr>
 					<td colspan="3">&nbsp;</td>
@@ -1743,7 +2086,7 @@ description layer</div>
 					<td style="padding-right: 5pt" valign="top"><img height="15"
 						width="20" src="graphics/Checkmark_L.gif"></td>
 					<td class="edcol" valign="top">X</td>
-					<td>&nbsp;</td>
+					<td class="edcol" valign="top" colspan="2"><bean:message key="oscarEncounter.formRourke2009.formNotDiscussed"/></td>
 				</tr>
                                 <tr>
 					<td valign="top"><input type="radio"
@@ -1751,16 +2094,20 @@ description layer</div>
 						onclick="onCheck(this,'p3_fontanelles12m')"
 						<%= props.getProperty("p3_fontanelles12mOk", "") %>></td>
 					<td valign="top"><input type="radio"
-						id="p3_fontanelles12mNo" name="p3_fontanelles12mNo"
+						id="p3_fontanelles12mOkConcerns" name="p3_fontanelles12mOkConcerns"
 						onclick="onCheck(this,'p3_fontanelles12m')"
-						<%= props.getProperty("p3_fontanelles12mNo", "") %>></td>
+						<%= props.getProperty("p3_fontanelles12mOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio"
+						id="p3_fontanelles12mNotDiscussed" name="p3_fontanelles12mNotDiscussed"
+						onclick="onCheck(this,'p3_fontanelles12m')"
+						<%= props.getProperty("p3_fontanelles12mNotDiscussed", "") %>></td>
 					<td><bean:message
 						key="oscarEncounter.formRourke1.formFontanelles" /></td>
 				</tr>
 				<tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_fontanelles12mOk,p3_fontanelles12mNo');" /></td>
+						onclick="del('p3_fontanelles12mOk,p3_fontanelles12mOkConcerns,p3_fontanelles12mNotDiscussed');" /></td>
                                         <td>&nbsp;</td>
 				</tr>
                                 <tr>
@@ -1769,17 +2116,22 @@ description layer</div>
 						onclick="onCheck(this,'p3_eyes12m')"
 						<%= props.getProperty("p3_eyes12mOk", "") %>></td>
 					<td valign="top"><input type="radio"
-						id="p3_eyes12mNo" name="p3_eyes12mNo"
+						id="p3_eyes12mOkConcerns" name="p3_eyes12mOkConcerns"
 						onclick="onCheck(this,'p3_eyes12m')"
-						<%= props.getProperty("p3_eyes12mNo", "") %>></td>
+						<%= props.getProperty("p3_eyes12mOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio"
+						id="p3_eyes12mNotDiscussed" name="p3_eyes12mNotDiscussed"
+						onclick="onCheck(this,'p3_eyes12m')"
+						<%= props.getProperty("p3_eyes12mNotDiscussed", "") %>></td>
 					<td><a href="javascript:showNotes()"
                                                onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
                                                onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke1.formRedReflex"/>*</a></td>
 				</tr>
 				<tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_eyes12mOk,p3_eyes12mNo');" /></td>
+						onclick="del('p3_eyes12mOk,p3_eyes12mOkConcerns,p3_eyes12mNotDiscussed');" /></td>
+					<td>&nbsp;</td>
 				</tr>
                                 <tr>
 					<td valign="top"><input type="radio"
@@ -1787,17 +2139,22 @@ description layer</div>
 						onclick="onCheck(this,'p3_corneal12m')"
 						<%= props.getProperty("p3_corneal12mOk", "") %>></td>
 					<td valign="top"><input type="radio"
-						id="p3_corneal12mNo" name="p3_corneal12mNo"
+						id="p3_corneal12mOkConcerns" name="p3_corneal12mOkConcerns"
 						onclick="onCheck(this,'p3_corneal12m')"
-						<%= props.getProperty("p3_corneal12mNo", "") %>></td>
+						<%= props.getProperty("p3_corneal12mOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio"
+						id="p3_corneal12mNotDiscussed" name="p3_corneal12mNotDiscussed"
+						onclick="onCheck(this,'p3_corneal12m')"
+						<%= props.getProperty("p3_corneal12mNotDiscussed", "") %>></td>
 					<td><a href="javascript:showNotes()"
                                                onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
                                                onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_3.formCornealReflex"/>*</a></td>
 				</tr>
 				<tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_corneal12mOk,p3_corneal12mNo');" /></td>
+						onclick="del('p3_corneal12mOk,p3_corneal12mOkConcerns,p3_corneal12mNotDiscussed');" /></td>
+					<td>&nbsp;</td>
 				</tr>
                                 <tr>
 					<td valign="top"><input type="radio"
@@ -1805,17 +2162,22 @@ description layer</div>
 						onclick="onCheck(this,'p3_hearing12m')"
 						<%= props.getProperty("p3_hearing12mOk", "") %>></td>
 					<td valign="top"><input type="radio"
-						id="p3_hearing12mNo" name="p3_hearing12mNo"
+						id="p3_hearing12mOkConcerns" name="p3_hearing12mOkConcerns"
 						onclick="onCheck(this,'p3_hearing12m')"
-						<%= props.getProperty("p3_hearing12mNo", "") %>></td>
+						<%= props.getProperty("p3_hearing12mOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio"
+						id="p3_hearing12mNotDiscussed" name="p3_hearing12mNotDiscussed"
+						onclick="onCheck(this,'p3_hearing12m')"
+						<%= props.getProperty("p3_hearing12mNotDiscussed", "") %>></td>
 					<td><i><a href="javascript:showNotes()"
                                                onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
                                                onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_1.formHearingInquiry"/>*</a></i></td>
 				</tr>
 				<tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_hearing12mOk,p3_hearing12mNo');" /></td>
+						onclick="del('p3_hearing12mOk,p3_hearing12mOkConcerns,p3_hearing12mNotDiscussed');" /></td>
+					<td>&nbsp;</td>
 				</tr>
                                 <tr>
 					<td valign="top"><input type="radio"
@@ -1823,17 +2185,22 @@ description layer</div>
 						onclick="onCheck(this,'p3_tonsil12m')"
 						<%= props.getProperty("p3_tonsil12mOk", "") %>></td>
 					<td valign="top"><input type="radio"
-						id="p3_tonsil12mNo" name="p3_tonsil12mNo"
+						id="p3_tonsil12mOkConcerns" name="p3_tonsil12mOkConcerns"
 						onclick="onCheck(this,'p3_tonsil12m')"
-						<%= props.getProperty("p3_tonsil12mNo", "") %>></td>
+						<%= props.getProperty("p3_tonsil12mOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio"
+						id="p3_tonsil12mNotDiscussed" name="p3_tonsil12mNotDiscussed"
+						onclick="onCheck(this,'p3_tonsil12m')"
+						<%= props.getProperty("p3_tonsil12mNotDiscussed", "") %>></td>
 					<td><a href="javascript:showNotes()"
                                                onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
                                                onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_3.formTonsilSize"/>*</a></td>
 				</tr>
 				<tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_tonsil12mOk,p3_tonsil12mNo');" /></td>
+						onclick="del('p3_tonsil12mOk,p3_tonsil12mOkConcerns,p3_tonsil12mNotDiscussed');" /></td>
+					<td>&nbsp;</td>
 				</tr>
                                 <tr>
 					<td valign="top"><input type="radio"
@@ -1841,21 +2208,28 @@ description layer</div>
 						onclick="onCheck(this,'p3_hips12m')"
 						<%= props.getProperty("p3_hips12mOk", "") %>></td>
 					<td valign="top"><input type="radio"
-						id="p3_hips12mNo" name="p3_hips12mNo"
+						id="p3_hips12mOkConcerns" name="p3_hips12mOkConcerns"
 						onclick="onCheck(this,'p3_hips12m')"
-						<%= props.getProperty("p3_hips12mNo", "") %>></td>
+						<%= props.getProperty("p3_hips12mOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio"
+						id="p3_hips12mNotDiscussed" name="p3_hips12mNotDiscussed"
+						onclick="onCheck(this,'p3_hips12m')"
+						<%= props.getProperty("p3_hips12mNotDiscussed", "") %>></td>
 					<td><a href="javascript:showNotes()"
                                                onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
                                                onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_2.formHips"/>*</a></td>
 				</tr>
 				<tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_hips12mOk,p3_hips12mNo');" /></td>
+						onclick="del('p3_hips12mOk,p3_hips12mOkConcerns,p3_hips12mNotDiscussed');" /></td>
+					<td>&nbsp;</td>
 				</tr>
 			</table>
 			</td>
 			<td colspan="3" valign="top">
+			<textarea id="p3_physical15m"
+						name="p3_physical15m" class="wide" rows="5" cols="25"><%= props.getProperty("p3_physical15m", "") %></textarea>
 			<table cellpadding="0" cellspacing="0" width="100%">
                                  <tr>
 					<td colspan="3">&nbsp;</td>
@@ -1864,7 +2238,7 @@ description layer</div>
 					<td style="padding-right: 5pt" valign="top"><img height="15"
 						width="20" src="graphics/Checkmark_L.gif"></td>
 					<td class="edcol" valign="top">X</td>
-					<td>&nbsp;</td>
+					<td class="edcol" valign="top" colspan="2"><bean:message key="oscarEncounter.formRourke2009.formNotDiscussed"/></td>
 				</tr>
                                 <tr>
 					<td valign="top"><input type="radio"
@@ -1872,17 +2246,21 @@ description layer</div>
 						onclick="onCheck(this,'p3_fontanelles15m')"
 						<%= props.getProperty("p3_fontanelles15mOk", "") %>></td>
 					<td valign="top"><input type="radio"
-						id="p3_fontanelles15mNo" name="p3_fontanelles15mNo"
+						id="p3_fontanelles15mOkConcerns" name="p3_fontanelles15mOkConcerns"
 						onclick="onCheck(this,'p3_fontanelles15m')"
-						<%= props.getProperty("p3_fontanelles15mNo", "") %>></td>
+						<%= props.getProperty("p3_fontanelles15mOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio"
+						id="p3_fontanelles15mNotDiscussed" name="p3_fontanelles15mNotDiscussed"
+						onclick="onCheck(this,'p3_fontanelles15m')"
+						<%= props.getProperty("p3_fontanelles15mNotDiscussed", "") %>></td>
 					<td><bean:message
 						key="oscarEncounter.formRourke1.formFontanelles" /></td>
 				</tr>
 				<tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_fontanelles15mOk,p3_fontanelles15mNo');" /></td>
-                                        <td>&nbsp;</td>
+						onclick="del('p3_fontanelles15mOk,p3_fontanelles15mOkConcerns,p3_fontanelles15mNotDiscussed');" /></td>
+                   	<td>&nbsp;</td>
 				</tr>
                                 <tr>
 					<td valign="top"><input type="radio"
@@ -1890,17 +2268,22 @@ description layer</div>
 						onclick="onCheck(this,'p3_eyes15m')"
 						<%= props.getProperty("p3_eyes15mOk", "") %>></td>
 					<td valign="top"><input type="radio"
-						id="p3_eyes15mNo" name="p3_eyes15mNo"
+						id="p3_eyes15mOkConcerns" name="p3_eyes15mOkConcerns"
 						onclick="onCheck(this,'p3_eyes15m')"
-						<%= props.getProperty("p3_eyes15mNo", "") %>></td>
+						<%= props.getProperty("p3_eyes15mOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio"
+						id="p3_eyes15mNotDiscussed" name="p3_eyes15mNotDiscussed"
+						onclick="onCheck(this,'p3_eyes15m')"
+						<%= props.getProperty("p3_eyes15mNotDiscussed", "") %>></td>
 					<td><a href="javascript:showNotes()"
                                                onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
                                                onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke1.formRedReflex"/>*</a></td>
 				</tr>
 				<tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_eyes15mOk,p3_eyes15mNo');" /></td>
+						onclick="del('p3_eyes15mOk,p3_eyes15mOkConcerns,p3_eyes15mNotDiscussed');" /></td>
+					<td>&nbsp;</td>
 				</tr>
                                 <tr>
 					<td valign="top"><input type="radio"
@@ -1908,17 +2291,22 @@ description layer</div>
 						onclick="onCheck(this,'p3_corneal15m')"
 						<%= props.getProperty("p3_corneal15mOk", "") %>></td>
 					<td valign="top"><input type="radio"
-						id="p3_corneal15mNo" name="p3_corneal15mNo"
+						id="p3_corneal15mOkConcerns" name="p3_corneal15mOkConcerns"
 						onclick="onCheck(this,'p3_corneal15m')"
-						<%= props.getProperty("p3_corneal15mNo", "") %>></td>
+						<%= props.getProperty("p3_corneal15mOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio"
+						id="p3_corneal15mNotDiscussed" name="p3_corneal15mNotDiscussed"
+						onclick="onCheck(this,'p3_corneal15m')"
+						<%= props.getProperty("p3_corneal15mNotDiscussed", "") %>></td>
 					<td><a href="javascript:showNotes()"
                                                onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
                                                onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_3.formCornealReflex"/>*</a></td>
 				</tr>
 				<tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_corneal15mOk,p3_corneal15mNo');" /></td>
+						onclick="del('p3_corneal15mOk,p3_corneal15mOkConcerns,p3_corneal15mNotDiscussed');" /></td>
+					<td>&nbsp;</td>
 				</tr>
                                 <tr>
 					<td valign="top"><input type="radio"
@@ -1926,17 +2314,22 @@ description layer</div>
 						onclick="onCheck(this,'p3_hearing15m')"
 						<%= props.getProperty("p3_hearing15mOk", "") %>></td>
 					<td valign="top"><input type="radio"
-						id="p3_hearing15mNo" name="p3_hearing15mNo"
+						id="p3_hearing15mOkConcerns" name="p3_hearing15mOkConcerns"
 						onclick="onCheck(this,'p3_hearing15m')"
-						<%= props.getProperty("p3_hearing15mNo", "") %>></td>
+						<%= props.getProperty("p3_hearing15mOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio"
+						id="p3_hearing15mNotDiscussed" name="p3_hearing15mNotDiscussed"
+						onclick="onCheck(this,'p3_hearing15m')"
+						<%= props.getProperty("p3_hearing15mNotDiscussed", "") %>></td>
 					<td><i><a href="javascript:showNotes()"
                                                onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
                                                onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_1.formHearingInquiry"/>*</a></i></td>
 				</tr>
 				<tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_hearing15mOk,p3_hearing15mNo');" /></td>
+						onclick="del('p3_hearing15mOk,p3_hearing15mOkConcerns,p3_hearing15mNotDiscussed');" /></td>
+					<td>&nbsp;</td>
 				</tr>
                                 <tr>
 					<td valign="top"><input type="radio"
@@ -1944,17 +2337,22 @@ description layer</div>
 						onclick="onCheck(this,'p3_tonsil15m')"
 						<%= props.getProperty("p3_tonsil15mOk", "") %>></td>
 					<td valign="top"><input type="radio"
-						id="p3_tonsil15mNo" name="p3_tonsil15mNo"
+						id="p3_tonsil15mOkConcerns" name="p3_tonsil15mOkConcerns"
 						onclick="onCheck(this,'p3_tonsil15m')"
-						<%= props.getProperty("p3_tonsil15mNo", "") %>></td>
+						<%= props.getProperty("p3_tonsil15mOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio"
+						id="p3_tonsil15mNotDiscussed" name="p3_tonsil15mNotDiscussed"
+						onclick="onCheck(this,'p3_tonsil15m')"
+						<%= props.getProperty("p3_tonsil15mNotDiscussed", "") %>></td>
 					<td><a href="javascript:showNotes()"
                                                onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
                                                onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_3.formTonsilSize"/>*</a></td>
 				</tr>
 				<tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_tonsil15mOk,p3_tonsil15mNo');" /></td>
+						onclick="del('p3_tonsil15mOk,p3_tonsil15mOkConcerns,p3_tonsil15mNotDiscussed');" /></td>
+					<td>&nbsp;</td>
 				</tr>
                                 <tr>
 					<td valign="top"><input type="radio"
@@ -1962,33 +2360,52 @@ description layer</div>
 						onclick="onCheck(this,'p3_hips15m')"
 						<%= props.getProperty("p3_hips15mOk", "") %>></td>
 					<td valign="top"><input type="radio"
-						id="p3_hips15mNo" name="p3_hips15mNo"
+						id="p3_hips15mOkConcerns" name="p3_hips15mOkConcerns"
 						onclick="onCheck(this,'p3_hips15m')"
-						<%= props.getProperty("p3_hips15mNo", "") %>></td>
+						<%= props.getProperty("p3_hips15mOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio"
+						id="p3_hips15mNotDiscussed" name="p3_hips15mNotDiscussed"
+						onclick="onCheck(this,'p3_hips15m')"
+						<%= props.getProperty("p3_hips15mNotDiscussed", "") %>></td>
 					<td><a href="javascript:showNotes()"
                                                onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
                                                onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_2.formHips"/>*</a></td>
 				</tr>
 				<tr>
-					<td valign="top" class="edcol" colspan="2"><input
+					<td valign="top" class="edcol" colspan="3"><input
 						class="delete" type="button" value="Del"
-						onclick="del('p3_hips15mOk,p3_hips15mNo');" /></td>
+						onclick="del('p3_hips15mOk,p3_hips15mOkConcerns,p3_hips15mNotDiscussed');" /></td>
+					<td>&nbsp;</td>
 				</tr>				
 			</table>
 			</td>
 		</tr>
-		<tr>
+		<tr>			
 			<td class="column"><a><bean:message
-				key="oscarEncounter.formRourke1.msgProblemsAndPlans" /></a></td>
+				key="oscarEncounter.formRourke1.msgProblemsAndPlans" /></a>
+				<br>
+				<img height="15" width="20" src="graphics/Checkmark_Lwhite.gif">
+                <bean:message key="oscarEncounter.formRourke2009.msgProblemsLegendp2" />
+            </td>
 			<td colspan="3" valign="top">
 			<table cellpadding="0" cellspacing="0" width="100%">
 				<tr align="center">
-					<td colspan="2"><textarea id="p3_problems9m"
+					<td colspan="4"><textarea id="p3_problems9m"
 						name="p3_problems9m" rows="5" cols="25" class="wide"><%= props.getProperty("p3_problems9m", "") %></textarea></td>
 				</tr>
 				<tr>
-					<td valign="top"><input type="checkbox" class="chk"
-						name="p3_antiHB9m" <%= props.getProperty("p3_antiHB9m", "") %>></td>
+					<td style="padding-right: 5pt" valign="top"><img height="15"
+						width="20" src="graphics/Checkmark_L.gif"></td>
+					<td class="edcol" valign="top">X</td>
+					<td class="edcol" valign="top" colspan="2"><bean:message key="oscarEncounter.formRourke2009.formNotDone"/></td>
+				</tr>
+				<tr>
+					<td valign="top"><input type="radio" id="p3_antiHB9mOk"
+						name="p3_antiHB9mOk" onclick="onCheck(this,'p3_antiHB9m')" <%= props.getProperty("p3_antiHB9mOk", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_antiHB9mOkConcerns"
+						name="p3_antiHB9mOkConcerns" onclick="onCheck(this,'p3_antiHB9m')" <%= props.getProperty("p3_antiHB9mOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_antiHB9mNotDiscussed"
+						name="p3_antiHB9mNotDiscussed" onclick="onCheck(this,'p3_antiHB9m')" <%= props.getProperty("p3_antiHB9mNotDiscussed", "") %>></td>
 					<td><b><a href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><bean:message
@@ -1996,30 +2413,60 @@ description layer</div>
 					<bean:message key="oscarEncounter.formRourke2006_3.formAntiHBcond" /></td>
 				</tr>
 				<tr>
-					<td valign="top"><input type="checkbox" class="chk"
-						name="p3_hemoglobin9m"
-						<%= props.getProperty("p3_hemoglobin9m", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_hemoglobin9mOk"
+						name="p3_hemoglobin9mOk"  onclick="onCheck(this,'p3_hemoglobin9m')"
+						<%= props.getProperty("p3_hemoglobin9mOk", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_hemoglobin9mOkConcerns"
+						name="p3_hemoglobin9mOkConcerns"  onclick="onCheck(this,'p3_hemoglobin9m')"
+						<%= props.getProperty("p3_hemoglobin9mOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_hemoglobin9mNotDiscussed"
+						name="p3_hemoglobin9mNotDiscussed"  onclick="onCheck(this,'p3_hemoglobin9m')"
+						<%= props.getProperty("p3_hemoglobin9mNotDiscussed", "") %>></td>
 					<td><i><a href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><bean:message
 						key="oscarEncounter.formRourke2006_3.formHemoglobin" />*</a></i></td>
+				</tr>
+				<tr>
+					<td valign="top" class="edcol" colspan="3"><input
+						class="delete" type="button" value="Del"
+						onclick="del('p3_antiHB9mOk,p3_antiHB9mOkConcerns,p3_antiHB9mNotDiscussed,p3_hemoglobin9mOk,p3_hemoglobin9mOkConcerns,p3_hemoglobin9mNotDiscussed');" /></td>
+					<td>&nbsp;</td>
 				</tr>
 			</table>
 			</td>
 			<td colspan="3" valign="top">
 			<table cellpadding="0" cellspacing="0" width="100%">
 				<tr align="center">
-					<td colspan="2"><textarea id="p3_problems12m"
+					<td colspan="4"><textarea id="p3_problems12m"
 						name="p3_problems12m" rows="5" cols="25" class="wide"><%= props.getProperty("p3_problems12m", "") %></textarea></td>
 				</tr>
 				<tr>
-					<td valign="top"><input type="checkbox" class="chk"
-						name="p3_hemoglobin12m"
-						<%= props.getProperty("p3_hemoglobin12m", "") %>></td>
+					<td style="padding-right: 5pt" valign="top"><img height="15"
+						width="20" src="graphics/Checkmark_L.gif"></td>
+					<td class="edcol" valign="top">X</td>
+					<td class="edcol" valign="top" colspan="2"><bean:message key="oscarEncounter.formRourke2009.formNotDone"/></td>
+				</tr>
+				<tr>
+					<td valign="top"><input type="radio" id="p3_hemoglobin12mOk"
+						name="p3_hemoglobin12mOk"  onclick="onCheck(this,'p3_hemoglobin12m')"
+						<%= props.getProperty("p3_hemoglobin12mOk", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_hemoglobin12mOkConcerns"
+						name="p3_hemoglobin12mOkConcerns"  onclick="onCheck(this,'p3_hemoglobin12m')"
+						<%= props.getProperty("p3_hemoglobin12mOkConcerns", "") %>></td>
+					<td valign="top"><input type="radio" id="p3_hemoglobin12mNotDiscussed"
+						name="p3_hemoglobin12mNotDiscussed"  onclick="onCheck(this,'p3_hemoglobin12m')"
+						<%= props.getProperty("p3_hemoglobin12mNotDiscussed", "") %>></td>
 					<td><i><a href="javascript:showNotes()"
 						onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')"
 						onMouseOut="hideLayer()"><bean:message
 						key="oscarEncounter.formRourke2006_3.formHemoglobin" />*</a></i></td>
+				</tr>
+								<tr>
+					<td valign="top" class="edcol" colspan="3"><input
+						class="delete" type="button" value="Del"
+						onclick="del('p3_hemoglobin12mOk,p3_hemoglobin12mOkConcerns,p3_hemoglobin12mNotDiscussed');" /></td>
+					<td>&nbsp;</td>
 				</tr>
 			</table>
 			</td>
