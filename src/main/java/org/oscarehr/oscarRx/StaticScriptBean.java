@@ -55,9 +55,10 @@ public class StaticScriptBean {
 		public String brandName = null;
 		public boolean isArchived = false;
 		public boolean isLocal = true;
-                public boolean nonAuthoritative = false;
-                public String pickupDate=null;
-                public String pickupTime=null;
+        public boolean nonAuthoritative = false;
+        public String pickupDate=null;
+        public String pickupTime=null;
+        public String eTreatmentType=null;
                 
 	}
 
@@ -153,9 +154,11 @@ public class StaticScriptBean {
 
 		drugDisplayData.isArchived = drug.isArchived();
                 
-                drugDisplayData.pickupDate = RxUtil.DateToString(drug.getPickUpDateTime(),"yyyy-MM-dd");
+        drugDisplayData.pickupDate = RxUtil.DateToString(drug.getPickUpDateTime(),"yyyy-MM-dd");
                 
-                drugDisplayData.pickupTime = RxUtil.DateToString(drug.getPickUpDateTime(),"hh:mm aa");
+        drugDisplayData.pickupTime = RxUtil.DateToString(drug.getPickUpDateTime(),"hh:mm aa");
+        
+        drugDisplayData.eTreatmentType = drug.getETreatmentType();
                 
 		return (drugDisplayData);
 	}

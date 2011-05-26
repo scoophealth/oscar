@@ -109,6 +109,7 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 	private Boolean nonAuthoritative = false;
         @Column(name = "pickup_datetime")
 	private Date pickupDateTime;
+    private String eTreatmentType = null;
 
 	// ///
 	@Transient
@@ -183,7 +184,7 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
             this.outsideProviderOhip=drug.getOutsideProviderOhip();
             this.hideFromDrugProfile=false;
             this.customNote=drug.isCustomNote();
-
+            this.eTreatmentType = drug.getETreatmentType();
         }
         private void setId(Integer i){
             this.id=i;
@@ -255,12 +256,20 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 		this.nonAuthoritative = nonAuthoritative;
 	}
         
-        public Date getPickUpDateTime() {
+    public Date getPickUpDateTime() {
 		return pickupDateTime;
 	}
 
 	public void setPickUpDateTime(Date pickupDateTime) {
 		this.pickupDateTime = pickupDateTime;
+	}
+	
+	public void setETreatmentType(String eTreatmentType){
+		this.eTreatmentType = eTreatmentType;
+	}
+	
+	public String getETreatmentType(){
+		return eTreatmentType;
 	}
         
 	public String getProviderNo() {

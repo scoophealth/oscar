@@ -178,6 +178,22 @@ if(listRxDrugs!=null){
            <input type="text" id="pickupDate_<%=rand%>"  name="pickupDate_<%=rand%>" onchange="if (!isValidDate(this.value)) {this.value=null}" />
            <bean:message key="WriteScript.msgPickUpTime"/>: 
                 <input type="text" id="pickupTime_<%=rand%>"  name="pickupTime_<%=rand%>" onchange="if (!isValidTime(this.value)) {this.value=null}" />
+           <br/> 
+           <bean:message key="WriteScript.msgETreatmentType"/>:     
+           <select name="eTreatmentType_<%=rand%>">
+           		<option>--</option>
+				<option value="CHRON"><bean:message key="WriteScript.msgETreatment.Continuous"/></option>
+				<option value="ACU"><bean:message key="WriteScript.msgETreatment.Acute"/></option>
+				<option value="ONET"><bean:message key="WriteScript.msgETreatment.OneTime"/></option>
+				<option value="PRNL"><bean:message key="WriteScript.msgETreatment.LongTermPRN"/></option>
+				<option value="PRNS"><bean:message key="WriteScript.msgETreatment.ShortTermPRN"/></option>      
+			</select>
+                
+
+
+
+
+
        </div>
        
            <div id="renalDosing_<%=rand%>" ></div>
