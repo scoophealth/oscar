@@ -101,7 +101,11 @@
 						
        }});
 
-
+       var noteAddonUrl = ctx+"/eyeform/NoteData.do?method=getCurrentNoteData&demographicNo="+demographicNo+"&noteId="+savedNoteId+"&appointmentNo="+appointmentNo;	   
+       jQuery.ajax({url:noteAddonUrl,dataType: "html",success: function(data) {
+			jQuery("#current_note_addon").html(data);
+       }});
+       
        init();
        
        //left nav bar
@@ -137,7 +141,8 @@
        popColumn(ctx + "/oscarEncounter/displayMacro.do?hC=009999&appointment_no="+appointmentNo,"macro","macro", "leftNavBar", this);
        
        //right nav bar
-       removeNavDiv('issues');
+       removeNavDiv('unresolvedIssues');
+       removeNavDiv('resolvedIssues');
        removeNavDiv('Guidelines');
        removeNavDiv('RiskFactors');
        removeNavDiv('Rx');
