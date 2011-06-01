@@ -180,6 +180,15 @@
         <script type="text/javascript" src="<c:out value="${ctx}/js/checkDate.js"/>"></script>
         
         <script type="text/javascript">
+        //has to be in here, not prescribe.jsp for it to work in IE 6/7 and probably 8.
+        function showHideSpecInst(elementId){
+            if($(elementId).getStyle('display')=='none'){
+                Effect.BlindDown(elementId);
+            }else{
+                Effect.BlindUp(elementId);
+            }
+          }
+        
             function resetReRxDrugList(){
                 var url="<c:out value="${ctx}"/>" + "/oscarRx/deleteRx.do?parameterValue=clearReRxDrugList";
                        var data = "";
