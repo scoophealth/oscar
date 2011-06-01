@@ -88,7 +88,7 @@ public class AdmissionForDisplay {
 			logger.error("Error retrieving integrator Facility.", e);
 		}
 
-		admissionDate = dateFormatter.format(cachedAdmission.getAdmissionDate());
+		admissionDate = dateFormatter.format(cachedAdmission.getAdmissionDate().getTime());
 		facilityAdmission = "n/a";
 
 		if (cachedAdmission.getDischargeDate() != null) {

@@ -25,6 +25,7 @@
 
 <%@ page import="java.util.*"%>
 <%@ page import="org.oscarehr.PMmodule.model.ProgramQueue"%>
+<%@ page import="org.oscarehr.PMmodule.web.admin.ProgramManagerAction.RemoteQueueEntry"%>
 <%@ page import="java.net.URLEncoder"%>
 <%@page import="org.apache.commons.lang.time.DateFormatUtils"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
@@ -320,8 +321,15 @@ String reason ="";
 		</display:column>
 		<display:column property="clientName" sortable="true"
 			title="Client Name" />
-		<display:column property="referral.referralDate" sortable="true"
-			title="Referral Date" />
+		<display:column sortable="true" title="Referral Date">
+			<%
+				RemoteQueueEntry referral = (RemoteQueueEntry)pageContext.getAttribute("queue_entry");
+				java.util.Date referralDate = referral.getReferral().getReferralDate().getTime();
+				java.text.SimpleDateFormat formatter =new java.text.SimpleDateFormat("yyyy-MM-dd");
+				String referralDateStr = formatter.format(referralDate);
+			%>
+			<%=referralDateStr %>
+		</display:column>
 		<display:column property="providerName" sortable="true"
 			title="Referring Provider" />
 		<display:column property="referral.reasonForReferral" sortable="true"
