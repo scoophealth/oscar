@@ -482,6 +482,7 @@
         unlockNoteError = "<bean:message key="oscarEncounter.unlockNoteError.msg"/>";
         filterError = "<bean:message key="oscarEncounter.filterError.msg"/>";
         pastObservationDateError = "<bean:message key="oscarEncounter.pastObservationDateError.msg"/>";
+        encTimeError = "<bean:message key="oscarEncounter.encounterTimeError.msg"/>";
         assignIssueError = "<bean:message key="oscarEncounter.assignIssueError.msg"/>";
         assignObservationDateError = "<bean:message key="oscarEncounter.assignObservationDateError.msg"/>";
         assignEncTypeError = "<bean:message key="oscarEncounter.assignEncTypeError.msg"/>";

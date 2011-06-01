@@ -62,6 +62,7 @@
 <%
 try
 {
+	Facility facility = org.oscarehr.util.LoggedInInfo.loggedInInfo.get().currentFacility;
 	ProfessionalSpecialistDao professionalSpecialistDao=(ProfessionalSpecialistDao)SpringUtils.getBean("professionalSpecialistDao");
     CaseManagementManager caseManagementManager=(CaseManagementManager)SpringUtils.getBean("caseManagementManager");
       
@@ -914,7 +915,15 @@ try
 											%>
 										</i>
 									</div>
-							
+									
+									<%if(facility.isEnableEncounterTime()) { %>
+									<div style="clear: right; margin-right: 3px;float: right;">Encounter Time (hour:min):&nbsp;<span id="encTime<%=note.getNoteId()%>"><%=note.getEncounterTime()%></span></div>
+									<% }
+									if(facility.isEnableEncounterTransportationTime()) { 
+									%>
+									<div style="clear: right; margin-right: 3px; float: right;">Encounter Transportation Time (hour:min):&nbsp;<span id="encTransTime<%=note.getNoteId()%>"><%=note.getEncounterTransportationTime()%></span></div>
+									<%} %>
+									
 									<div>
 										<span style="float: left;"><bean:message key="oscarEncounter.editors.title" />:</span>
 										<ul style="list-style: none inside none; margin: 0px;">
@@ -943,7 +952,8 @@ try
 									</div>
 							
 									<div style="clear: right; margin-right: 3px; float: right;">Enc Type:&nbsp;<span id="encType<%=note.getNoteId()%>"><%=note.getEncounterType().equals("")?"":"&quot;" + note.getEncounterType() + "&quot;"%></span></div>
-				
+									
+									
 									<div style="display: block;">
 										<span style="float: left;"><bean:message key="oscarEncounter.assignedIssues.title" /></span>
 										<%
@@ -1046,7 +1056,7 @@ try
 	<div id='save' style="width: 99%; background-color: #CCCCFF; padding-top: 5px; margin-left: 2px; border-left: thin solid #000000; border-right: thin solid #000000; border-bottom: thin solid #000000;">
 		<span style="float: right; margin-right: 5px;">
 		<%
-			Facility facility = org.oscarehr.util.LoggedInInfo.loggedInInfo.get().currentFacility;
+					
 			if(facility.isEnableGroupNotes()) {
 		%>
 		<script>

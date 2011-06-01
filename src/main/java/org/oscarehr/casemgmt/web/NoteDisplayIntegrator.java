@@ -180,4 +180,16 @@ public class NoteDisplayIntegrator implements NoteDisplay {
 	public boolean isEncounterForm() {
 	    return false;
     }
+
+	@Override
+    public String getEncounterTime() {
+	    // TODO Auto-generated method stub
+	    return null;
+    }
+
+	@Override
+    public String getEncounterTransportationTime() {
+	    // TODO Auto-generated method stub
+	    return null;
+    }
 }

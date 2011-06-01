@@ -202,6 +202,8 @@ public class FacilityManagerAction extends BaseAction {
 			facility.setEnableAnonymous(WebUtils.isChecked(request, "facility.enableAnonymous"));
 			facility.setEnableGroupNotes(WebUtils.isChecked(request, "facility.enableGroupNotes"));
 			facility.setEnableOcanForms(WebUtils.isChecked(request, "facility.enableOcanForms"));
+			facility.setEnableEncounterTime(WebUtils.isChecked(request, "facility.enableEncounterTime"));
+			facility.setEnableEncounterTransportationTime(WebUtils.isChecked(request, "facility.enableEncounterTransportationTime"));
 			
 			if (facility.getId() == null || facility.getId() == 0) facilityDao.persist(facility);
 			else facilityDao.merge(facility);
