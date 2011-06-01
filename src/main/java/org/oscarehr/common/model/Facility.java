@@ -38,7 +38,8 @@ public class Facility extends AbstractModel<Integer> implements Serializable {
 	private boolean enableAnonymous = false;
 	private String ocanServiceOrgNumber;
 	private boolean enableGroupNotes = false;
-
+	private boolean enableEncounterTime = false;
+	private boolean enableEncounterTransportationTime = false;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastUpdated=new Date();
@@ -243,4 +244,21 @@ public class Facility extends AbstractModel<Integer> implements Serializable {
 		this.enableGroupNotes = enableGroupNotes;
 	}
 
+	public boolean isEnableEncounterTime() {
+    	return enableEncounterTime;
+    }
+
+	public void setEnableEncounterTime(boolean enableEncounterTime) {
+    	this.enableEncounterTime = enableEncounterTime;
+    }
+
+	public boolean isEnableEncounterTransportationTime() {
+    	return enableEncounterTransportationTime;
+    }
+
+	public void setEnableEncounterTransportationTime(boolean enableEncounterTransportationTime) {
+    	this.enableEncounterTransportationTime = enableEncounterTransportationTime;
+    }
+
+	
 }

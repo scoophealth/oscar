@@ -168,4 +168,16 @@ public class NoteDisplayNonNote implements NoteDisplay {
 		return linkInfo;
 	}
 
+	@Override
+    public String getEncounterTime() {
+	    // TODO Auto-generated method stub
+	    return null;
+    }
+
+	@Override
+    public String getEncounterTransportationTime() {
+	    // TODO Auto-generated method stub
+	    return null;
+    }
+
 }

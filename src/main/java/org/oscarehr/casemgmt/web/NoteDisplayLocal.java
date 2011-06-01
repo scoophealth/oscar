@@ -159,6 +159,39 @@ public class NoteDisplayLocal implements NoteDisplay {
 		return (editorNames);
 	}
 
+	@Override
+    public String getEncounterTime() {
+		StringBuilder et = new StringBuilder();
+		
+		if(caseManagementNote.getHourOfEncounterTime()!=null) {
+			et.append(caseManagementNote.getHourOfEncounterTime());
+			et.append(":");
+		}
+		
+		if(caseManagementNote.getMinuteOfEncounterTime()!=null) {
+			et.append(caseManagementNote.getMinuteOfEncounterTime());
+		}
+		
+		return et.toString();
+	}
+	
+	@Override
+    public String getEncounterTransportationTime() {
+		StringBuilder et = new StringBuilder();
+		
+		if(caseManagementNote.getHourOfEncTransportationTime()!=null) {
+			et.append(caseManagementNote.getHourOfEncTransportationTime());
+			et.append(":");
+		}
+		
+		if(caseManagementNote.getMinuteOfEncTransportationTime()!=null) {
+			et.append(caseManagementNote.getMinuteOfEncTransportationTime());
+		}
+		
+		return et.toString();
+	}
+	
+	
 	public ArrayList<String> getIssueDescriptions() {
 		ArrayList<String> issueDescriptions = new ArrayList<String>();
 

@@ -1877,6 +1877,7 @@ var pastObservationDateError;
 var assignObservationDateError;
 var assignIssueError;
 var savingNoteError;
+var encTimeError;
 function ajaxSaveNote(div,noteId,noteTxt) {
 
     if( $("observationDate") != null && $("observationDate").value.length > 0 && !validDate() ) {
@@ -1884,6 +1885,7 @@ function ajaxSaveNote(div,noteId,noteTxt) {
         return false;
     }
 
+	
     if( caisiEnabled ) {
         if(requireIssue && !issueIsAssigned() ) {
             alert(assignIssueError);
@@ -1953,8 +1955,8 @@ function savePage(method, chain) {
         alert(pastObservationDateError);
         return false;
     }
-
-    if( caisiEnabled ) {
+	
+    if( caisiEnabled ) {    
         if( requireIssue && !issueIsAssigned() ) {
             alert(assignIssueError);
             return false;

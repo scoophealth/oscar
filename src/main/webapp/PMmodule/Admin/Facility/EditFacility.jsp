@@ -152,6 +152,15 @@
 			<td width="20%">Enable Group Notes:</td>
 			<td><html:checkbox property="facility.enableGroupNotes" /></td>
 		</tr>
+		<tr class="b">
+			<td width="20%">Enable Mandatory Encounter Time in Encounter:</td>
+			<td><html:checkbox property="facility.enableEncounterTime" /></td>
+		</tr>
+		<tr class="b">
+			<td width="20%">Enable Mandatory Transportation Time in Encounter:</td>
+			<td><html:checkbox property="facility.enableEncounterTransportationTime" /></td>
+		</tr>
+		
 		<tr>
 			<td colspan="2"><html:submit property="submit.save" onclick="bCancel=false;">Save</html:submit>
 			<html:cancel>Cancel</html:cancel></td>

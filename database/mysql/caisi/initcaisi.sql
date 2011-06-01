@@ -21,7 +21,9 @@ create table Facility (
         enableOcanForms tinyint(1) not null,
 	enableAnonymous tinyint(1) unsigned NOT NULL default 0,
 	enableGroupNotes tinyint(1) unsigned NOT NULL default 0,
-	lastUpdated datetime not null
+	lastUpdated datetime not null,
+	enableEncounterTime tinyint(1) not null,
+	enableEncounterTransportationTime tinyint(1) not null
 );
 
 
@@ -338,6 +340,10 @@ CREATE TABLE `casemgmt_note` (
   `position` int(10) default 0,
   `uuid` char(36) default NULL,
   `appointmentNo` int(10),
+  `hourOfEncounterTime` int,
+  `minuteOfEncounterTime` int,
+  `hourOfEncTransportationTime` int,
+  `minuteOfEncTransportationTime` int,
   PRIMARY KEY  (`note_id`),
   KEY `FKA8D537806CCA0FC` (`provider_no`),
 	index(demographic_no),

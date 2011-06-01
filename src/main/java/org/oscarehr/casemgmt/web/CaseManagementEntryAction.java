@@ -856,6 +856,23 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			note.setEncounter_type(encounterType);
 		}
 
+		String hourOfEncounterTime = request.getParameter("hourOfEncounterTime");
+		if(hourOfEncounterTime != null) {
+			note.setHourOfEncounterTime(Integer.valueOf(hourOfEncounterTime));
+		}
+		String minuteOfEncounterTime = request.getParameter("minuteOfEncounterTime");
+		if(minuteOfEncounterTime != null) {
+			note.setMinuteOfEncounterTime(Integer.valueOf(minuteOfEncounterTime));
+		}
+		String hourOfEncTransportationTime = request.getParameter("hourOfEncTransportationTime");
+		if(minuteOfEncounterTime != null) {
+			note.setHourOfEncTransportationTime(Integer.valueOf(hourOfEncTransportationTime));
+		}
+		String minuteOfEncTransportationTime = request.getParameter("minuteOfEncTransportationTime");
+		if(minuteOfEncounterTime != null) {
+			note.setMinuteOfEncTransportationTime(Integer.valueOf(minuteOfEncTransportationTime));
+		}
+		
 		String sign = (String) request.getParameter("sign");
 		if (sign == null) {
 			note.setSigning_provider_no("");
@@ -1422,6 +1439,23 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
 		note.setEncounter_type(request.getParameter("encType"));
 
+		String hourOfEncounterTime = request.getParameter("hourOfEncounterTime");
+		if(hourOfEncounterTime != null) {
+			note.setHourOfEncounterTime(Integer.valueOf(hourOfEncounterTime));
+		}
+		String minuteOfEncounterTime = request.getParameter("minuteOfEncounterTime");
+		if(minuteOfEncounterTime != null) {
+			note.setMinuteOfEncounterTime(Integer.valueOf(minuteOfEncounterTime));
+		}
+		String hourOfEncTransportationTime = request.getParameter("hourOfEncTransportationTime");
+		if(minuteOfEncounterTime != null) {
+			note.setHourOfEncTransportationTime(Integer.valueOf(hourOfEncTransportationTime));
+		}
+		String minuteOfEncTransportationTime = request.getParameter("minuteOfEncTransportationTime");
+		if(minuteOfEncounterTime != null) {
+			note.setMinuteOfEncTransportationTime(Integer.valueOf(minuteOfEncTransportationTime));
+		}
+		
 		// check if previous note is doc note.
 
 		Long prevNoteId = note.getId();
