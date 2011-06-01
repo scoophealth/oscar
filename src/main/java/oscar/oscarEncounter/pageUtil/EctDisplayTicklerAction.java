@@ -105,7 +105,11 @@ public class EctDisplayTicklerAction extends EctDisplayAction {
         item.setTitle(itemHeader);
         winName = StringUtils.maxLenString(oscar.Misc.getString(rs,"message"), MAX_LEN_TITLE, MAX_LEN_TITLE, "");                
         hash = Math.abs(winName.hashCode());        
-        url = "popupPage(500,900,'" + hash + "','" + request.getContextPath() + "/tickler/ticklerDemoMain.jsp?demoview=" + bean.demographicNo + "&parentAjaxId=" + cmd + "'); return false;";        
+        if( org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable() ) {
+        	url = "popupPage(500,900,'" + hash + "','" + request.getContextPath() + "/Tickler.do?method=view&id="+oscar.Misc.getString(rs,"tickler_no")+"'); return false;";
+        } else {
+        	url = "popupPage(500,900,'" + hash + "','" + request.getContextPath() + "/tickler/ticklerDemoMain.jsp?demoview=" + bean.demographicNo + "&parentAjaxId=" + cmd + "'); return false;";
+        }        
         item.setURL(url);        
         Dao.addItem(item);
 

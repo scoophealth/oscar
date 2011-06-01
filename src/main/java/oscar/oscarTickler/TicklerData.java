@@ -54,7 +54,7 @@ public class TicklerData {
    }
    
    public ResultSet listTickler(String demographic_no, String status, String beginDate, String endDate) throws SQLException {
-       String sql = "select t.message,t.service_date, t.update_date from tickler t where t.status='A' and TO_DAYS(t.service_date) >=TO_DAYS('" + beginDate + "') and TO_DAYS(t.service_date)<=TO_DAYS('" + endDate + "') and t.demographic_no = " + demographic_no + " order by t.service_date desc";
+       String sql = "select t.tickler_no,t.message,t.service_date, t.update_date from tickler t where t.status='A' and TO_DAYS(t.service_date) >=TO_DAYS('" + beginDate + "') and TO_DAYS(t.service_date)<=TO_DAYS('" + endDate + "') and t.demographic_no = " + demographic_no + " order by t.service_date desc";
        
        ResultSet rs = DBHandler.GetSQL(sql);
        
