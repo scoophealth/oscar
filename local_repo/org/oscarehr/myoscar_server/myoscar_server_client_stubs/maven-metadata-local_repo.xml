@@ -7,6 +7,10 @@
     <versions>
       <version>SNAPSHOT</version>
     </versions>
+<<<<<<< HEAD
     <lastUpdated>20110421024257</lastUpdated>
+=======
+    <lastUpdated>20110531083719</lastUpdated>
+>>>>>>> ee14f50... updated myoscar libs for health insurance info
   </versioning>
 </metadata>
