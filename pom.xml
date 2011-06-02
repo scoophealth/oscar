@@ -732,11 +732,11 @@
 				<artifactId>repository_cleaner_plugin</artifactId>
 				<version>SNAPSHOT</version>
 				<configuration>
-					<directories>
-						<param>/org/oscarehr/myoscar_server</param>
-						<param>/org/oscarehr/caisi_integrator</param>
-						<param>/org/oscarehr/utils</param>
-					</directories>
+					<groupIdsToRemove>
+						<param>org.oscarehr.myoscar_server</param>
+						<param>org.oscarehr.caisi_integrator</param>
+						<param>org.oscarehr.utils</param>
+					</groupIdsToRemove>
 				</configuration>
 				<executions>
 					<execution>
