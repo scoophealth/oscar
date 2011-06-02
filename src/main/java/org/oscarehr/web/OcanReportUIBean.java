@@ -776,14 +776,14 @@ public class OcanReportUIBean implements CallbackHandler {
 			ocanDomains.setVisitEmergencyDepartment(VisitEmergencyDepartment.Enum.forString(getStaffAnswer("visitEmergencyDepartment",ocanStaffFormData)));
 			
 			DiagnosticList diagnosticList = getDiagnosticList(ocanStaffFormData);			
-			if(diagnosticList.getDiagnosticArray().length>0) {
+			//if(diagnosticList.getDiagnosticArray().length>0) {
 				ocanDomains.setDiagnosticList(diagnosticList);
-			} 
+			//} 
 			
 			OtherIllnessList otherIllnessList = getOtherIllnessList(ocanStaffFormData);			
-			if(otherIllnessList.getOtherIllnessArray().length>0) {
+			//if(otherIllnessList.getOtherIllnessArray().length>0) {
 				ocanDomains.setOtherIllnessList(otherIllnessList);
-			} 
+			//} 
 			
 			ocanDomains.setHighestEducationLevel(HighestEducationLevel.Enum.forString(getStaffAnswer("level_of_education",ocanStaffFormData)));
 		
