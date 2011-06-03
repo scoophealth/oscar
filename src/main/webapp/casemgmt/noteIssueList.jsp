@@ -69,6 +69,9 @@
 		id="observation<nested:write name="caseManagementEntryForm" property="caseNote.id" />"
 		style="float: right; margin-right: 3px;">
 </nested:notEmpty>
+</div>
+
+<div><span style="float: right;">
 <nested:notEmpty name="ajaxsave">
 	<i><bean:message key="oscarEncounter.encounterDate.title"/>:&nbsp;<span
 		id="obs<nested:write name="caseManagementEntryForm" property="caseNote.id" />">
@@ -89,7 +92,7 @@
 		onclick="return showHistory('<nested:write name="caseManagementEntryForm" property="caseNote.id" />', event);"><nested:write
 		name="caseManagementEntryForm" property="caseNote.revision" /></a>
 </nested:empty>
-</div> 
+</div>
 
 <div><span style="float: left;"><bean:message key="oscarEncounter.editors.title"/>:</span> <nested:equal
 	name="newNote" value="false">
@@ -111,12 +114,13 @@
 	</ul>
 </nested:equal> <nested:equal name="newNote" value="true">
 	<div style="margin: 0px;">&nbsp;</div>
-</nested:equal></div>
+</nested:equal>
+</div>
 
 <%
 Facility currentFacility = org.oscarehr.util.LoggedInInfo.loggedInInfo.get().currentFacility;
 if(currentFacility.isEnableEncounterTransportationTime()) {%>
-<div><span style="float: right;">
+<div style="clear: right; margin-right: 3px; margin: 0px;float: right;"><span>
 <nested:notEmpty name="ajaxsave">
 	<i><bean:message key="oscarEncounter.encounterTransportation.title"/>:&nbsp;
 	<span id="encTransTimeHr<nested:write name="caseManagementEntryForm" property="caseNote.id" />"	>
@@ -137,7 +141,29 @@ if(currentFacility.isEnableEncounterTransportationTime()) {%>
 </span></div>
 <%} %>
      
-
+ <% 
+if(currentFacility.isEnableEncounterTime()) { 
+%>
+<div style="clear: left; margin-left: 3px; margin: 0px;float: left;"><span>
+<nested:notEmpty name="ajaxsave">
+	<i><bean:message key="oscarEncounter.encounterTime.title"/>:&nbsp;
+	<span id="encTimeHr<nested:write name="caseManagementEntryForm" property="caseNote.id" />"	>
+		<nested:write name="caseManagementEntryForm" property="caseNote.hourOfEncounterTime" /> 
+	</span>:
+	<span id="encTimeMin<nested:write name="caseManagementEntryForm" property="caseNote.id" />"	>
+		<nested:write name="caseManagementEntryForm" property="caseNote.minuteOfEncounterTime" /> 
+	</span>	
+</nested:notEmpty>
+<nested:empty name="ajaxsave">
+	<i><bean:message key="oscarEncounter.encounterTime.title"/>:</i>&nbsp;
+	<input type="text" id="hourOfEncounterTime" name="hourOfEncounterTime" maxlength="2"	
+		style="font-style: italic; border: none; width: 20px;" 
+		value="<nested:write name="caseManagementEntryForm" property="caseNote.hourOfEncounterTime"/>">:
+	<input type="text" id="minuteOfEncounterTime" name="minuteOfEncounterTime" maxlength="2"	
+		style="font-style: italic; border: none; width: 20px;" value="<nested:write name="caseManagementEntryForm" property="caseNote.minuteOfEncounterTime"/>">	
+</nested:empty>
+</span></div>
+<%}%>
 
 <div id="current_note_addon"></div>
 
@@ -166,36 +192,13 @@ if(currentFacility.isEnableEncounterTransportationTime()) {%>
 			}
 		%>
 	</html:select>
-</nested:empty> <nested:notEmpty name="ajaxsave">
+	</nested:empty> <nested:notEmpty name="ajaxsave">
             &quot;<nested:write name="caseManagementEntryForm"
 		property="caseNote.encounter_type" />&quot;
-         </nested:notEmpty> </span></div>
- <% 
-if(currentFacility.isEnableEncounterTime()) { 
-%>
-<div><span style="float: left;">
-<nested:notEmpty name="ajaxsave">
-	<i><bean:message key="oscarEncounter.encounterTime.title"/>:&nbsp;
-	<span id="encTimeHr<nested:write name="caseManagementEntryForm" property="caseNote.id" />"	>
-		<nested:write name="caseManagementEntryForm" property="caseNote.hourOfEncounterTime" /> 
-	</span>:
-	<span id="encTimeMin<nested:write name="caseManagementEntryForm" property="caseNote.id" />"	>
-		<nested:write name="caseManagementEntryForm" property="caseNote.minuteOfEncounterTime" /> 
-	</span>	
-</nested:notEmpty>
-<nested:empty name="ajaxsave">
-	<i><bean:message key="oscarEncounter.encounterTime.title"/>:</i>&nbsp;
-	<input type="text" id="hourOfEncounterTime" name="hourOfEncounterTime" maxlength="2"	
-		style="font-style: italic; border: none; width: 20px;" 
-		value="<nested:write name="caseManagementEntryForm" property="caseNote.hourOfEncounterTime"/>">:
-	<input type="text" id="minuteOfEncounterTime" name="minuteOfEncounterTime" maxlength="2"	
-		style="font-style: italic; border: none; width: 20px;" value="<nested:write name="caseManagementEntryForm" property="caseNote.minuteOfEncounterTime"/>">	
-</nested:empty>
+    </nested:notEmpty> 
 </span></div>
-<%}%>
 
-
-         
+ 
          
 <nested:size id="numIssues" name="caseManagementEntryForm"
 	property="caseNote.issues" />
