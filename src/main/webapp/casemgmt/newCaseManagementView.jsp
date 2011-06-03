@@ -944,20 +944,19 @@ try
 											%>
 										</ul>
 									</div>
-							
-									
-									
-									<div style="clear: right; margin-right: 3px; float: right;">Enc Type:&nbsp;<span id="encType<%=note.getNoteId()%>"><%=note.getEncounterType().equals("")?"":"&quot;" + note.getEncounterType() + "&quot;"%></span></div>
-									
-									<%if(facility.isEnableEncounterTime()) { %>
-									<div style="clear: left; margin-left: 3px;float: left;">Encounter Time (hour:min):&nbsp;<span id="encTime<%=note.getNoteId()%>"><%=note.getEncounterTime()%></span></div>
-									<% } %>
+															
 									
 									<%
 									if(facility.isEnableEncounterTransportationTime()) { 
 									%>
 									<div style="clear: right; margin-right: 3px; float: right;">Encounter Transportation Time (hour:min):&nbsp;<span id="encTransTime<%=note.getNoteId()%>"><%=note.getEncounterTransportationTime()%></span></div>
 									<%} %>
+									<%if(facility.isEnableEncounterTime()) { %>
+									<div style="clear: left; margin-left: 3px;float: left;">Encounter Time (hour:min):&nbsp;<span id="encTime<%=note.getNoteId()%>"><%=note.getEncounterTime()%></span></div>
+									<% } %>
+									
+									<div style="clear: right; margin-right: 3px; float: right;">Enc Type:&nbsp;<span id="encType<%=note.getNoteId()%>"><%=note.getEncounterType().equals("")?"":"&quot;" + note.getEncounterType() + "&quot;"%></span></div>
+									
 									
 									<div style="display: block;">
 										<span style="float: left;"><bean:message key="oscarEncounter.assignedIssues.title" /></span>

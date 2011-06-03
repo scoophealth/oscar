@@ -857,19 +857,22 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		}
 
 		String hourOfEncounterTime = request.getParameter("hourOfEncounterTime");
-		if(hourOfEncounterTime != null) {
+		if(hourOfEncounterTime != null && hourOfEncounterTime!="") {
 			note.setHourOfEncounterTime(Integer.valueOf(hourOfEncounterTime));
 		}
+		
 		String minuteOfEncounterTime = request.getParameter("minuteOfEncounterTime");
-		if(minuteOfEncounterTime != null) {
+		if(minuteOfEncounterTime != null && minuteOfEncounterTime!="") {
 			note.setMinuteOfEncounterTime(Integer.valueOf(minuteOfEncounterTime));
 		}
+		
 		String hourOfEncTransportationTime = request.getParameter("hourOfEncTransportationTime");
-		if(minuteOfEncounterTime != null) {
+		if(hourOfEncTransportationTime != null && hourOfEncTransportationTime!="") {
 			note.setHourOfEncTransportationTime(Integer.valueOf(hourOfEncTransportationTime));
 		}
+		
 		String minuteOfEncTransportationTime = request.getParameter("minuteOfEncTransportationTime");
-		if(minuteOfEncounterTime != null) {
+		if(minuteOfEncTransportationTime != null && minuteOfEncTransportationTime!="") {
 			note.setMinuteOfEncTransportationTime(Integer.valueOf(minuteOfEncTransportationTime));
 		}
 		
