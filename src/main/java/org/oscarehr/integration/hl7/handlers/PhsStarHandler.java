@@ -1,5 +1,9 @@
 package org.oscarehr.integration.hl7.handlers;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -7,6 +11,9 @@ import java.util.Map;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.input.SAXBuilder;
 import org.oscarehr.PMmodule.dao.AdmissionDao;
 import org.oscarehr.PMmodule.dao.ClientDao;
 import org.oscarehr.PMmodule.dao.ProgramDao;
@@ -290,12 +297,18 @@ public class PhsStarHandler extends BasePhsStarHandler {
 		appt.setType(getApptType());
 		appt.setReason(getApptReason());	
 		
+		logger.info("resource unit = " + getApptResourceUnit());
+		logger.info("procedure = " + getProcedureName());
 		
-		Program p = programDao.getProgramBySiteSpecificField(getApptResourceUnit());
-		if(p != null) {
-			appt.setProgramId(p.getId());
-		} else {
-			throw new HL7Exception("System not configured to accept messages for runit " + getApptResourceUnit());
+		String programId = findProgram(getApptResourceUnit(),getProcedureName());
+		Program p = null;
+		if(programId != null) {
+			p = programDao.getProgram(Integer.parseInt(programId));
+			if(p != null) {
+				appt.setProgramId(p.getId());
+			} else {
+				throw new HL7Exception("System not configured to accept messages for runit " + getApptResourceUnit());
+			}
 		}
 		
 		//TODO: fix the bug in schedule
@@ -411,12 +424,18 @@ public class PhsStarHandler extends BasePhsStarHandler {
 		appt.setType(getApptType());
 		appt.setReason(getApptReason());	
 		
-		Program p = programDao.getProgramBySiteSpecificField(getApptResourceUnit());
-		if(p != null) {
-			appt.setProgramId(p.getId());
-		} else {
-			throw new HL7Exception("System not configured to accept messages for runit " + getApptResourceUnit());
-		}		
+		logger.info("resource unit = " + getApptResourceUnit());
+		logger.info("procedure = " + getProcedureName());
+		String programId = findProgram(getApptResourceUnit(),getProcedureName());
+		Program p = null;
+		if(programId != null) {
+			p = programDao.getProgram(Integer.parseInt(programId));
+			if(p != null) {
+				appt.setProgramId(p.getId());
+			} else {
+				throw new HL7Exception("System not configured to accept messages for runit " + getApptResourceUnit());
+			}
+		}
 		//TODO: fix the bug in schedule
 		appt.setProgramId(0);
 		
@@ -1116,5 +1135,62 @@ public class PhsStarHandler extends BasePhsStarHandler {
 		}catch(Exception ee) {/*swallow exception*/}			
 		return new String();
 		
+	}
+	
+	public String getProcedureName() {
+		try {
+			String var = this.extractOrEmpty("/AIS-3-1");
+			return var;
+		}catch(Exception e) {/*swallow exception*/}
+		
+		return new String();
+		
+	}
+	
+	private String findProgram(String resourceUnit, String procedure) {
+		String filename = OscarProperties.getInstance().getProperty("phs_star.program_file");
+		if(filename == null) {
+        	logger.warn("Cannot lookup program. Config file not found - " + filename);
+        	return null;
+        }
+        InputStream is = null;
+        
+        try {
+        	is = new FileInputStream(new File(filename));
+                     
+	        if(is != null) {
+		        SAXBuilder parser = new SAXBuilder();
+		        Document doc = null;
+		        try {
+		        	doc = parser.build(is);
+		        }catch(Exception e) {
+		        	logger.error("Error",e);
+		        	return null;
+		        }
+		        
+		        Element root = doc.getRootElement();
+		        @SuppressWarnings("unchecked")
+		        List<Element> items = root.getChildren();
+		        for (int i = 0; i < items.size(); i++){
+		            Element e = items.get(i);
+		            String resUnit = e.getAttributeValue("resUnit");
+		            String serviceCode = e.getAttributeValue("serviceCode");
+		            if(resUnit.equals(resourceUnit) && serviceCode.equals(procedure)) {
+		            	return e.getAttributeValue("programId");
+		            }                         
+		        }
+	        }
+        }catch(Exception e) {
+        	logger.error("error",e);        	    
+        } finally {
+        	if(is != null) {
+        		try {
+        			is.close();
+        		}catch(IOException e) {
+        			logger.error("error",e);
+        		}
+        	}
+        }
+        return null;
 	}
 }
