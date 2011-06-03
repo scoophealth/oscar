@@ -97,8 +97,7 @@
     <head>
         <script type="text/javascript" src="<%= request.getContextPath()%>/js/global.js"></script>
         <html:base />
-        <title><%=""/*lab.pLastName*/%>, <%=""/*lab.pFirstName*/%> <bean:message
-            key="oscarMDS.segmentDisplay.title" /></title>
+        <title><bean:message key="oscarRx.chartDrugProfile.title" /></title>
         <link rel="stylesheet" type="text/css" href="../../../share/css/OscarStandardLayout.css">
         <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
     </head>
