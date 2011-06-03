@@ -140,6 +140,7 @@ if(listRxDrugs!=null){
            <a> </a><a tabindex="-1" id="unitName_<%=rand%>"> </a>
            <a> </a><a tabindex="-1" href="javascript:void(0);" id="prn_<%=rand%>" onclick="setPrn('<%=rand%>');updateProperty('prnVal_<%=rand%>');"><%=prnStr%></a>
            <input id="prnVal_<%=rand%>"  style="display:none" <%if(prnStr.trim().length()==0){%>value="false"<%} else{%>value="true" <%}%> />
+           <input id="rx_save_updates_<%=rand%>" type="button" value="Save Changes" onclick="saveLinks('<%=rand%>')"/>
        </div>
        <div id="rx_more_<%=rand%>" style="display:none;padding:2px;">
           <bean:message key="WriteScript.msgPrescribedByOutsideProvider"/>
@@ -206,6 +207,17 @@ if(listRxDrugs!=null){
             </oscar:oscarPropertiesCheck>
 
 </fieldset>
+
+                <script type="text/javascript">
+                        jQuery("document").ready(function() {
+                                if ( jQuery.browser.msie ) {
+                                        jQuery('#rx_save_updates_<%=rand%>').show();
+                                } else {
+                                        jQuery('#rx_save_updates_<%=rand%>').hide();
+                                }
+                        });
+                </script>
+
 
         <script type="text/javascript">
             $('drugName_'+'<%=rand%>').value=decodeURIComponent(encodeURIComponent('<%=drugName%>'));
