@@ -738,7 +738,7 @@ public class ProgramManagerAction extends BaseAction {
 		oldProgram.setEmergencyNumber(request.getParameter("old_emergencyNumber"));
 		oldProgram.setLocation(request.getParameter("old_location"));
 		oldProgram.setProgramStatus(request.getParameter("old_programStatus"));
-		oldProgram.setBedProgramLinkId(getParameterAsInteger(request,"old_bedProgramLinkId",null));
+		oldProgram.setBedProgramLinkId(getParameterAsInteger(request,"old_bedProgramLinkId",0));
 		oldProgram.setManOrWoman(request.getParameter("old_manOrWoman"));
 		oldProgram.setAbstinenceSupport(request.getParameter("old_abstinenceSupport"));
 		oldProgram.setExclusiveView(request.getParameter("old_exclusiveView"));
