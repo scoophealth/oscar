@@ -168,6 +168,10 @@
         <script type="text/javascript" src="<c:out value="${ctx}/share/lightwindow/javascript/lightwindow.js"/>"></script>
         <!--script type="text/javascript" src="<%--c:out value="modaldbox.js"/--%>"></script-->
 
+        <script src="<c:out value="${ctx}/js/jquery.js"/>"></script>
+        <script>
+          jQuery.noConflict();
+        </script>
 
 
         <link rel="stylesheet" type="text/css" href="<c:out value="${ctx}/share/yui/css/fonts-min.css"/>" >
@@ -180,6 +184,17 @@
         <script type="text/javascript" src="<c:out value="${ctx}/js/checkDate.js"/>"></script>
         
         <script type="text/javascript">
+	        function saveLinks(randNumber) {
+	            $('method_'+randNumber).onblur();
+	            $('route_'+randNumber).onblur();
+	            $('frequency_'+randNumber).onblur();
+	            $('minimum_'+randNumber).onblur();
+	            $('maximum_'+randNumber).onblur();
+	            $('duration_'+randNumber).onblur();
+	            $('durationUnit_'+randNumber).onblur();
+	        }
+        
+        
         //has to be in here, not prescribe.jsp for it to work in IE 6/7 and probably 8.
         function showHideSpecInst(elementId){
             if($(elementId).getStyle('display')=='none'){
@@ -532,9 +547,7 @@ function checkFav(){
     }
             .highlight {
                 background-color : #99FFCC;
-                border: 1px solid #008000;
-                width: 230px;
-
+                border: 1px solid #008000;               
             }
             .rxStr a:hover{
                 color:blue;
@@ -1062,6 +1075,9 @@ function changeLt(drugId){
      function focusTo(elementId){
          $(elementId).contentEditable='true';
          $(elementId).focus();
+         //IE 6/7 bug..will this call onfocus twice?? may need to do browser check.
+		 document.getElementById(elementId).onfocus();
+
      }
 
      function updateSpecialInstruction(elementId){
