@@ -71,7 +71,7 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 					<a href="<html:rewrite page="/provider/providercontrol.jsp"/>?year=<%=curYear%>&month=<%=curMonth%>&day=1&view=0&displaymode=month&dboperation=searchappointmentmonth" TITLE="<bean:message key="provider.appointmentProviderAdminDay.viewMonthSched"/>">Mo<u>n</u>th</a>
 				</li>
 				<li>
-					<a href="#" ONCLICK ="popupPage2('http://resource.oscarmcmaster.org/oscarResource/');return false;" title="<bean:message key="global.resources"/>">R<u>e</u>sources</a>
+					<a href="#" ONCLICK ="popupPage2('http://www.oscarcanada.org/manual/oscar-caisi-documentation/');return false;" title="<bean:message key="global.resources"/>">R<u>e</u>sources</a>
 				</li>
 				<li>
 					<a href="<html:rewrite page="/PMmodule/ClientSearch2.do"/>" title="Search for patient records"><u>S</u>earch</a>
