@@ -414,6 +414,7 @@ div.recommendations li {
 			<br>
 		</oscar:oscarPropertiesCheck></td>
 		<td valign="top" class="MainTableRightColumn">
+		<a href="#" onclick="popup(600,800,'http://www.phac-aspc.gc.ca/im/is-cv/index-eng.php')">Immunization Schedules - Public Health Agency of Canada</a>
 		<%             
                 if (warnings.size() > 0 || recomendations.size() > 0  || dsProblems) { %>
 		<div class="recommendations">
@@ -482,7 +483,7 @@ div.recommendations li {
 		<p><a href="javascript: function myFunction() {return false; }"
 			onclick="javascript:popup(465,635,'AddPreventionData.jsp?prevention=<%= response.encodeURL( (String) h.get("name")) %>&amp;demographic_no=<%=demographic_no%>','addPreventionData<%=Math.abs( ((String) h.get("name")).hashCode() ) %>')">
 		<span title="<%=h.get("desc")%>" style="font-weight: bold;"><%=h.get("name")%></span>
-		</a> &nbsp; <a href="#" onclick="popup(465,635,'<%=h.get("link")%>')">#</a>
+		</a>
 		<br />
 		</p>
 		</div>
@@ -528,7 +529,7 @@ div.recommendations li {
 		<p><a href="javascript: function myFunction() {return false; }"
 			onclick="javascript:popup(465,635,'AddPreventionData.jsp?prevention=<%= response.encodeURL( (String) h.get("name")) %>&amp;demographic_no=<%=demographic_no%>','addPreventionData<%=Math.abs( ((String) h.get("name")).hashCode() ) %>')">
 		<span title="<%=h.get("desc")%>" style="font-weight: bold;"><%=h.get("name")%></span>
-		</a> &nbsp; <a href="#" onclick="popup(465,635,'<%=h.get("link")%>');">#</a>
+		</a> 
 		<br />
 		</p>
 		</div>
@@ -571,7 +572,7 @@ div.recommendations li {
 		<p><a href="javascript: function myFunction() {return false; }"
 			onclick="javascript:popup(465,635,'AddPreventionData.jsp?prevention=<%= response.encodeURL( (String) h.get("name")) %>&amp;demographic_no=<%=demographic_no%>','addPreventionData<%=Math.abs( ((String) h.get("name")).hashCode() ) %>')">
 		<span title="<%=h.get("desc")%>" style="font-weight: bold;"><%=h.get("name")%></span>
-		</a> &nbsp; <a href="<%=h.get("link")%>">#</a> <br />
+		</a>  <br />
 		</p>
 		</div>
 		<%
