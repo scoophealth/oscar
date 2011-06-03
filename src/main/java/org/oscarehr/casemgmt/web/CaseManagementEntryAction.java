@@ -57,6 +57,7 @@ import org.apache.struts.action.ActionMessages;
 import org.caisi.dao.TicklerDAO;
 import org.caisi.model.Tickler;
 import org.oscarehr.PMmodule.dao.ClientDao;
+import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.billing.CA.dao.GstControlDao;
@@ -923,7 +924,12 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		note.setReporter_caisi_role(role);
 
 		try {
-			team = String.valueOf((admissionManager.getAdmission(note.getProgram_no(), Integer.valueOf(note.getDemographic_no()))).getTeamId());
+			Admission admission = admissionManager.getAdmission(note.getProgram_no(), Integer.valueOf(note.getDemographic_no()));
+			if(admission != null) {
+				team = String.valueOf(admission.getTeamId());
+			} else {
+				team = "0";
+			}
 		} catch (Throwable e) {
 			logger.error("Error", e);
 			team = "0";
