@@ -133,6 +133,7 @@ public class TeleplanAPI {
         try{ 
             PostMethod filePost = new PostMethod(url); 
             filePost.setRequestEntity( new MultipartRequestEntity(parts, filePost.getParams()) );  
+            httpclient.executeMethod(filePost);
             
             InputStream in = filePost.getResponseBodyAsStream();
             tr = new TeleplanResponse();
