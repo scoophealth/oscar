@@ -35,8 +35,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
@@ -92,13 +96,15 @@ public class PreventionData {
 			}
 			if (insertId != -1) {
 				for (int i = 0; i < list.size(); i++) {
-					Hashtable h = (Hashtable) list.get(i);
-					String key = null;
-					if (h.keys().hasMoreElements()) key = (String) h.keys().nextElement();
-					if (key != null && h.get(key) != null) {
-						String val = (String) h.get(key);
-						addPreventionKeyValue("" + insertId, key, val);
-					}
+					HashMap<String,String> h = (HashMap<String,String>) list.get(i);
+                                        Set entries = h.entrySet();
+                                        Iterator it = entries.iterator();
+                                        while (it.hasNext()) {
+                                            Map.Entry<String,String> entry = (Map.Entry<String,String>) it.next();
+                                            if (entry.getKey()!=null && entry.getValue()!=null) {
+                                                addPreventionKeyValue("" + insertId, entry.getKey(), entry.getValue());
+                                            }
+                                        }
 				}
 			}
 		}

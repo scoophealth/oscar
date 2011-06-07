@@ -15,6 +15,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -112,14 +113,8 @@ public class Util {
         }
         return true;
     }
-
-    static public void cleanFiles(String[] filenames) {
-        for (String filename : filenames) {
-            cleanFile(filename);
-        }
-    }
     
-    static public void cleanFiles(File[] files) {
+    static public void cleanFiles(ArrayList<File> files) {
         for (File file : files) {
             cleanFile(file);
         }
@@ -168,20 +163,6 @@ public class Util {
 	    special = "";
 	}
 	return special;
-    }
-    
-    static public String getNum(String s) {
-	if (!StringUtils.filled(s)) return "0";
-	String numbers = "1234567890";
-	Integer cut = -1;
-	for (int i=0; i<s.length(); i++) {
-	    if (!numbers.contains(s.substring(i,i+1))) {
-		cut = i;
-		break;
-	    }
-	}
-	if (cut>0) s = s.substring(0,cut);
-	return s;
     }
 
     static public String fixDirName(String dirName) {
@@ -264,7 +245,7 @@ public class Util {
 	else return cdsDt.YnIndicatorsimple.N;
     }
     
-    static public boolean zipFiles(File[] files, String zipFileName, String dirName) throws Exception {
+    static public boolean zipFiles(ArrayList<File> files, String zipFileName, String dirName) throws Exception {
         try {
             if (files == null) {
                 MiscUtils.getLogger().debug("Error! No source file for zipping");

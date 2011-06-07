@@ -605,7 +605,7 @@ public class EFormUtil {
 			String docText = getContent(template);
 			docText = putTemplateEformHtml(eForm.getFormHtml(), docText);
 
-                        if (NumberUtils.isNumber(docOwner)) {
+                        if (NumberUtils.isDigits(docOwner)) {
                             EDoc edoc = new EDoc(docDesc,"forms","html",docText,docOwner,eForm.getProviderNo(),"",'H',eForm.getFormDate().toString(),"",null,belong,docOwner);
                             edoc.setContentType("text/html");
                             edoc.setDocPublic("0");
@@ -986,6 +986,8 @@ public class EFormUtil {
 	}
 
 	private static String getProviderName(String providerNo) {
+                if (blank(providerNo)) return null;
+
 		ProviderData pd = new ProviderData(providerNo);
 		String firstname = pd.getFirst_name();
 		String lastname = pd.getLast_name();
@@ -999,7 +1001,6 @@ public class EFormUtil {
 		String[] sentList = sentListTxt.split(",");
 		for (int i = 0; i < sentList.length; i++) {
 			sentList[i] = sentList[i].trim();
-			if (!NumberUtils.isNumber(sentList[i])) sentList[i] = "";
 		}
 		return sentList;
 	}

@@ -734,7 +734,7 @@ public class ProviderData {
        }
    }
 
-    public void addExternalProvider(String firstName, String lastName, String ohipNo) {
+    public void addExternalProvider(String firstName, String lastName, String ohipNo, String cpsoNo) {
         if (!filled(firstName) && !filled(lastName) && !filled(ohipNo)) return; //no information at all!
 
         //get latest external provider no
@@ -754,6 +754,7 @@ public class ProviderData {
         this.first_name = filled(firstName) ? firstName : "";
         this.last_name = filled(lastName) ? lastName : "";
         this.ohip_no = filled(ohipNo) ? ohipNo : "";
+        this.practitionerNo = filled(cpsoNo) ? cpsoNo : "";
         this.provider_type = "doctor";
         this.status = "1";
         this.specialty = "";
