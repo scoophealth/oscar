@@ -843,10 +843,19 @@ if(wLReadonly.equals("")){
       			</special:SpecialEncounterTag>
       		</plugin:hideWhenCompExists>
 			<tr>
-				<td><a
+				<td>				
+				<%if( org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable() ) {%>
+				<a
+					href="javascript: function myFunction() {return false; }"
+					onClick="popupPage(700,1000,'../Tickler.do?filter.demographic_no=<%=demographic_no%>');return false;">
+				<bean:message key="global.tickler" /></a>
+				<% }else { %>
+				<a
 					href="javascript: function myFunction() {return false; }"
 					onClick="popupPage(700,1000,'../tickler/ticklerDemoMain.jsp?demoview=<%=demographic_no%>');return false;">
-				<bean:message key="global.tickler" /></a></td>
+				<bean:message key="global.tickler" /></a>
+				<% } %>
+				</td>
 			</tr>
 			<tr>
 				<td><a
