@@ -1212,90 +1212,7 @@
         <ViolationValue>/src/main/java/oscar/oscarDemographic/data/DemographicNameAgeString.java:String retval = "";</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DeleteDemographicRelationshipAction.java:String relationID = "";</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DeleteDemographicRelationshipAction.java:String relationshipID = "";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction2.java:String aSummary = "";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction2.java:String data="";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction2.java:String mSummary = "";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction2.java:String tag_word = "";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction2.java:data = "";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction2.java:demoNo="";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction2.java:if (!filled(firstName)) firstName = "";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction2.java:if (!filled(lastName))  lastName = "";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction2.java:nullOrTextlessStr = "";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction3.java:String aSummary = "";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction3.java:String alerts = "";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction3.java:String audReport = "";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction3.java:String audSummary = "";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction3.java:String data="";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction3.java:String famHist="", socHist="", medHist="", concerns="", reminders="", riskFactors="", encounter="", annotation="", summary="";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction3.java:String mSummary = "";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction3.java:String tag_word = "";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction3.java:data = "";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction3.java:this.demographicNo="";</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DiabetesExportAction.java:String diagValue = "";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction.java:String filename = "";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction.java:String homeExt   = "";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction.java:String homePhone = "";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction.java:String ret = "";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction.java:String workExt   = "";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction.java:String workPhone = "";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction2.java:String aSummary = "";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction2.java:String address="", city="", province="", postalCode="";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction2.java:String comments="", iSummary="";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction2.java:String dNote = "";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction2.java:String demoNo="", dataGood="Yes", summaryGood="Yes", otherGood="Yes", errorImport="";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction2.java:String description="", regionalId="", reaction="", severity="", entryDate="", typeCode="";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction2.java:String lastName="", firstName="";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction2.java:String mSummary = "";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction2.java:String name="", notes="", reason="", status="", startTime="", endTime="";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction2.java:String ppId="";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction2.java:String providerNo = "";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction2.java:String quantity="", special="", route="", createDate="", dosage="", unit="";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction2.java:String ret = "";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction2.java:String socialHist="", familyHist="", medicalHist="", ongConcerns="", reminders="", encounter="";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction2.java:String testName="", abn="", minimum="", maximum="", result="", unit="", description="", location="", accession_num="", coll_date="";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction2.java:String versionCode="", hin="", hc_type="", eff_date="";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction2.java:String workPhone="", workExt="", homePhone="", homeExt="", cellPhone="", ext="", patientPhone="";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction2.java:keyword[1][0] = "";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction2.java:keyword[1][4] = "";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction2.java:keyword[2][0] = "";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction2.java:keyword[2][3] = "";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction2.java:keyword[2][4] = "";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction2.java:name[0] = "";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction2.java:name[1] = "";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction2.java:nullOrTextlessStr = "";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction2.java:providerNo = "";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction2.java:providerNo="";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction2.java:ret = "";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction2.java:workPhone=""; workExt=""; homePhone=""; homeExt=""; cellPhone=""; ext="";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction3.java:String address="", city="", province="", postalCode="";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction3.java:String auditInfoSummary = "";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction3.java:String description="", regionalId="", reaction="", severity="", entryDate="", startDate="", typeCode="";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction3.java:String entryDir = "";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction3.java:String familyHist = "";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction3.java:String iSummary="";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction3.java:String lastName="", firstName="";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction3.java:String medicalHist = "";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction3.java:String msgs = "";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction3.java:String name="", notes="", reason="", status="", startTime="", endTime="", apptProvider="";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction3.java:String official_lang = "";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction3.java:String ongConcerns = "";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction3.java:String paPhysId="";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction3.java:String prescribedBy="", outsiderName="", outsiderOhip="";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction3.java:String preventionDate="", preventionType="", refused="0", comments="";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction3.java:String primaryPhysician = "";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction3.java:String quantity="", special="", route="", drugForm="", dosage="", unit="", lastRefillDate="";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction3.java:String ret = "";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction3.java:String riskFactors = "";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction3.java:String rptInfoId="";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction3.java:String socialHist = "";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction3.java:String versionCode="", hin="", hc_type="", eff_date="";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction3.java:String workPhone="", workExt="", homePhone="", homeExt="", cellPhone="", ext="", patientPhone="";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction3.java:keyword[1][0] = "";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction3.java:keyword[1][4] = "";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction3.java:keyword[2][0] = "";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction3.java:keyword[2][4] = "";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction3.java:ret = "";</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction3.java:workPhone=""; workExt=""; homePhone=""; homeExt=""; cellPhone=""; ext="";</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/Util.java:String firstName = "";</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/Util.java:String ret = "";</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/Util.java:if (!StringUtils.filled(firstName)) firstName = "";</ViolationValue>
@@ -2180,32 +2097,6 @@
         <ViolationValue>/src/main/java/oscar/oscarDemographic/data/DemographicNameAgeString.java:static Hashtable hashtable = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDemographic/data/DemographicRelationship.java:ArrayList list = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDemographic/data/DemographicRelationship.java:Hashtable h = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction.java:ArrayList inject = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction2.java:ArrayList inject = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction2.java:ArrayList list = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction2.java:Vector err = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction2.java:Vector exs = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction3.java:ArrayList inject = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction3.java:ArrayList list = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction3.java:Vector err = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DiabetesExportAction.java:ArrayList inject = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DiabetesExportAction.java:ArrayList listOfDINS = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DiabetesExportAction.java:ArrayList&lt;LimitedUseCode&gt; luList = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DiabetesExportAction.java:this.errors = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction.java:ArrayList warnings = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction2.java:ArrayList preventionExt = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction2.java:ArrayList warnings = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction2.java:Hashtable ht = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction2.java:Vector logResult = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction3.java:ArrayList err_data = new ArrayList(); //errors: discrete data</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction3.java:ArrayList err_demo = new ArrayList(); //errors: duplicate demographics</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction3.java:ArrayList err_note = new ArrayList(); //non-errors: notes</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction3.java:ArrayList err_othe = new ArrayList(); //errors: other categories</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction3.java:ArrayList err_summ = new ArrayList(); //errors: summary</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction3.java:ArrayList preventionExt = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction3.java:ArrayList warnings = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction3.java:Hashtable ht = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction3.java:Vector logs = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/data/CPPData.java:HashMap hm = new HashMap();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/data/CPPData.java:alist = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/data/EctRemoteAttachments.java:ArrayList retval = new ArrayList();</ViolationValue>
@@ -3783,14 +3674,10 @@
         <ViolationValue>/src/main/java/oscar/oscarDemographic/data/DemographicData.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDemographic/data/DemographicRelationship.java:DBHandler.RunSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDemographic/data/DemographicRelationship.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction2.java:OscarSuperManager oscarSuperManager = (OscarSuperManager)webApplicationContext.getBean("oscarSuperManager");</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction2.java:import oscar.service.OscarSuperManager;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction3.java:OscarSuperManager oscarSuperManager = (OscarSuperManager)SpringUtils.getBean("oscarSuperManager");</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction3.java:import oscar.service.OscarSuperManager;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction2.java:OscarSuperManager oscarSuperManager = (OscarSuperManager)webApplicationContext.getBean("oscarSuperManager");</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction2.java:import oscar.service.OscarSuperManager;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction3.java:OscarSuperManager oscarSuperManager = (OscarSuperManager) SpringUtils.getBean("oscarSuperManager");</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction3.java:import oscar.service.OscarSuperManager;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction4.java:OscarSuperManager oscarSuperManager = (OscarSuperManager)SpringUtils.getBean("oscarSuperManager");</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction4.java:import oscar.service.OscarSuperManager;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction4.java:OscarSuperManager oscarSuperManager = (OscarSuperManager) SpringUtils.getBean("oscarSuperManager");</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction4.java:import oscar.service.OscarSuperManager;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/data/CPPData.java:ResultSet rs =  DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/data/EChartDAO.java:DBHandler.RunSQL(qry);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/data/EChartDAO.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
@@ -4900,62 +4787,6 @@
         <ViolationValue>/src/main/java/oscar/oscarDemographic/data/DemographicRelationship.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DeleteDemographicRelationshipAction.java:Hashtable h = (Hashtable) dr.get(i);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DeleteDemographicRelationshipAction.java:import java.util.Hashtable;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction.java:Hashtable a = (Hashtable) prevList.get(k);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction.java:Hashtable a = (Hashtable) prevList2.get(k);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction.java:Hashtable demoExt = ext.getAllValuesForDemo(demoNo);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction.java:Hashtable extraData = pd.getPreventionKeyValues((String) a.get("id"));</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction.java:Hashtable h = (Hashtable) labs.get(l);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction.java:import java.util.Hashtable;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction2.java:File makeExportLog(File[] f, Vector error) throws IOException {</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction2.java:File makeReadMe(File[] f, Vector error, HttpServletRequest req) throws IOException {</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction2.java:Hashtable a = (Hashtable) prevList.get(k);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction2.java:Hashtable a = (Hashtable) prevList2.get(k);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction2.java:Hashtable demoExt = ext.getAllValuesForDemo(demoNo);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction2.java:Hashtable extraData = pd.getPreventionById((String) a.get("id"));</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction2.java:Hashtable h = (Hashtable) labs.get(l);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction2.java:Hashtable r = (Hashtable) demoR.get(j);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction2.java:Hashtable relDemoExt = ext.getAllValuesForDemo(data);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction2.java:Vector dataPart = null;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction2.java:Vector err = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction2.java:Vector exs = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction2.java:Vector extract(String source, String separator) {</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction2.java:Vector extract(String source, String separator, boolean separatorAsHeader) {</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction2.java:import java.util.Hashtable;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction2.java:import java.util.Vector;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction3.java:File makeExportLog(File[] f, Vector error) throws IOException {</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction3.java:File makeReadMe(File[] f, Vector error, String mediaType, String noOfMedia) throws IOException {</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction3.java:Hashtable a = (Hashtable) prevList.get(k);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction3.java:Hashtable a = (Hashtable) prevList2.get(k);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction3.java:Hashtable demoExt = ext.getAllValuesForDemo(this.demographicNo);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction3.java:Hashtable extraData = pd.getPreventionById((String) a.get("id"));</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction3.java:Hashtable h = (Hashtable) labs.get(l);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction3.java:Hashtable labRoutingInfo = ProviderLabRouting.getInfo(lab_no);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction3.java:Hashtable link = LabRequestReportLink.getLinkByReport("hl7TextMessage", Long.valueOf(lab_no));</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction3.java:Hashtable r = (Hashtable) demoR.get(j);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction3.java:Hashtable relDemoExt = ext.getAllValuesForDemo(data);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction3.java:Vector err = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction3.java:import java.util.Hashtable;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction3.java:import java.util.Vector;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DiabetesExportAction.java:Hashtable demoExt = ext.getAllValuesForDemo(demoNo);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DiabetesExportAction.java:Hashtable h = (Hashtable) preventionList.get(i);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DiabetesExportAction.java:Hashtable labRoutingInfo = ProviderLabRouting.getInfo(lab_no);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DiabetesExportAction.java:Hashtable link = LabRequestReportLink.getLinkByReport("hl7TextMessage", Long.valueOf(lab_no));</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/DiabetesExportAction.java:import java.util.Hashtable;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction2.java:File makeImportLog(Vector demo, String tDir) throws IOException {</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction2.java:Hashtable ht = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction2.java:Hashtable pHash = (Hashtable) pList.get(j);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction2.java:Vector logResult = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction2.java:import java.util.Hashtable;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction2.java:import java.util.Vector;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction3.java:File makeImportLog(Vector demo, String dir) throws IOException {</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction3.java:Hashtable ht = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction3.java:Vector logs = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction3.java:Vector&lt;String&gt; getUniques(String[] arr) {</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction3.java:Vector&lt;String&gt; uniq_accs = getUniques(_accession);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction3.java:Vector&lt;String&gt; uniq_labs = getUniques(_location);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction3.java:Vector&lt;String&gt; uniques = new Vector&lt;String&gt;();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction3.java:import java.util.Hashtable;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction3.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/data/EctSplitChart.java:Vector vec = null;//</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/data/EctSplitChart.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/data/EctSplitChart.java:public Vector getSplitCharts(String demographicNo){</ViolationValue>

@@ -1488,24 +1488,13 @@
 		<action input="/demographic/AddAlternateContact.jsp" name="FrmForm" path="/demographic/DeleteRelation" scope="request" type="oscar.oscarDemographic.pageUtil.DeleteDemographicRelationshipAction">
 			<forward name="success" path="/demographic/AddAlternateContact.jsp" />
 		</action>
-		<action input="/demographic/demographicImport.jsp" name="ImportDemographicDataForm" path="/form/importUpload" scope="request" type="oscar.oscarDemographic.pageUtil.ImportDemographicDataAction">
-			<forward name="success" path="/demographic/demographicImport.jsp" />
-		</action>
-		<action input="/demographic/demographicImport.jsp" name="ImportDemographicDataForm" path="/form/importUpload2" scope="request" type="oscar.oscarDemographic.pageUtil.ImportDemographicDataAction2">
-			<forward name="success" path="/demographic/demographicImport.jsp" />
-		</action>
-		<action input="/demographic/demographicImport.jsp" name="ImportDemographicDataForm" path="/form/importUpload3" scope="request" type="oscar.oscarDemographic.pageUtil.ImportDemographicDataAction3">
+		<action input="/demographic/demographicImport.jsp" name="ImportDemographicDataForm" path="/form/importUpload" scope="request" type="oscar.oscarDemographic.pageUtil.ImportDemographicDataAction4">
 			<forward name="success" path="/demographic/demographicImport.jsp" />
 		</action>
 		<action input="/demographic/demographicImport.jsp" name="ImportDemographicDataForm" path="/form/importLogDownload" scope="request" type="oscar.oscarDemographic.pageUtil.ImportLogDownloadAction">
 			<forward name="success" path="/demographic/demographicImport.jsp" />
 		</action>
-		<action input="/demographic/demographicExport.jsp" name="DemographicExportForm" path="/demographic/DemographicExport" scope="request" type="oscar.oscarDemographic.pageUtil.DemographicExportAction">
-			<forward name="success" path="/demographic/demographicExport.jsp" />
-		</action>
-		<action input="/demographic/demographicExport.jsp" name="DemographicExportForm" path="/demographic/DemographicExport2" scope="request" type="oscar.oscarDemographic.pageUtil.DemographicExportAction2">
-		</action>
-		<action input="/demographic/demographicExport.jsp" name="DemographicExportForm" path="/demographic/DemographicExport3" scope="request" type="oscar.oscarDemographic.pageUtil.DemographicExportAction3">
+		<action input="/demographic/demographicExport.jsp" name="DemographicExportForm" path="/demographic/DemographicExport" scope="request" type="oscar.oscarDemographic.pageUtil.DemographicExportAction4">
 			<forward name="fail" path="/demographic/demographicExport.jsp" />
 		</action>
 		<action input="/demographic/diabetesExport.jsp" name="DiabetesExportForm" path="/demographic/DiabetesExport" scope="request" type="oscar.oscarDemographic.pageUtil.DiabetesExportAction">
