@@ -46,12 +46,12 @@
     function validate() {        
         var msg = "<bean:message key="provider.editRxFax.msgPhoneFormat" />";
         var strnum = document.forms[0].elements[0].value;
-        
-        if( !strnum.match(/^\d{3}-\d{3}-\d{4}$/) ) {
-            alert(msg);
-            return false;
+        if(strnum.length > 0 ) {
+	        if( !strnum.match(/^\d{3}-\d{3}-\d{4}$/) ) {
+	            alert(msg);
+	            return false;
+	        }
         }
-                    
         return true;        
     }
 </script>
