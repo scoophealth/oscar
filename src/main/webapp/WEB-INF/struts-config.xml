@@ -1264,6 +1264,10 @@
 		<action input="/provider/editSignature.jsp" name="ProEditSignatureForm" path="/EnterSignature" scope="request" type="oscar.oscarProvider.pageUtil.ProEditSignatureAction">
 			<forward name="success" path="/provider/providerSignature.jsp" />
 		</action>
+        <action input="/provider/providerPhone.jsp" name="editProviderFaxForm" path="/EditPhoneNum" scope="request" type="oscar.oscarProvider.pageUtil.ProEditPhoneNumAction">
+            <forward name="success" path="/provider/providerPhone.jsp" />
+            <forward name="eject" path="/index.jsp" />
+        </action>		
 		<action input="/provider/providerFax.jsp" name="editProviderFaxForm" path="/EditFaxNum" scope="request" type="oscar.oscarProvider.pageUtil.ProEditFaxNumAction">
 			<forward name="success" path="/provider/providerFax.jsp" />
 			<forward name="error" path="/provider/providerFaxErr.jsp" />
