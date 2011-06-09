@@ -2,6 +2,8 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
+
 <%@ page import="java.util.*,oscar.oscarRx.data.*,oscar.oscarRx.pageUtil.*, oscar.OscarProperties" %>
 <logic:notPresent name="RxSessionBean" scope="session">
     <logic:redirect href="error.html" />
@@ -45,8 +47,8 @@
 <head>
 <title><bean:message key="ChooseDrug.title.DrugSearchResults"/></title>
 <html:base/>
-<script type="text/javascript" src="<c:out value="${ctx}/share/javascript/Oscar.js"/>"></script>
-
+<script type="text/javascript" src="<c:out value="../share/javascript/Oscar.js"/>"></script>
+<script type="text/javascript" src="<c:out value="../share/javascript/prototype.js"/>"></script>
 
 <%
 RxSessionBean bean = (RxSessionBean)pageContext.findAttribute("bean");
@@ -134,6 +136,17 @@ for (int j=0; j<selRoute.length; j++) {
 	if (isEmpty()) buildRoute();
         else return false;
     }
+    
+    function callTreatments(textId,id){
+        var ele = $(textId);
+        var url = "TreatmentMyD.jsp"
+        var ran_number=Math.round(Math.random()*1000000);
+        var params = "demographicNo=<%=bean.getDemographicNo()%>&cond="+ele.value+"&rand="+ran_number;  //hack to get around ie caching the page
+        new Ajax.Updater(id,url, {method:'get',parameters:params,asynchronous:true});
+        $('treatmentsMyD').toggle();
+    }
+
+    
 </script>
 
 </head>
@@ -179,11 +192,11 @@ for (int j=0; j<selRoute.length; j++) {
                         <tr>
 			    <td>
 				<bean:message key="ChooseDrug.searchAgain"/><br>
-				<html:text property="searchString" size="16" maxlength="16"/>
+				<html:text styleId="searchString" property="searchString" size="16" maxlength="16"/>
 			    <!--<html:hidden property="otcExcluded" value="true"/>OTC Excluded-->
 			    </td>
 			    <td width=100>
-				<a href="javascript:goDOC();"><bean:message key="ChooseDrug.msgDrugOfChoice"/></a>                            
+				<a href="#" onclick="callTreatments('searchString','treatmentsMyD');return false;"><bean:message key="ChooseDrug.msgDrugOfChoice"/></a>                            
 			    </td>
 			    <td>
 				<oscar:oscarPropertiesCheck property="drugref_route_search" value="on">				
@@ -354,6 +367,11 @@ for (int j=0; j<selRoute.length; j++) {
     	<td width="100%" height="0%" style="padding: 5" bgcolor="#DCDCDC" colspan="2"></td>
   	</tr>
 </table>
+
+<div id="treatmentsMyD" style="position: absolute; left: 1px; top: 1px; width: 800px; height: 600px; display:none; z-index: 1">
+       <a href="javascript: function myFunction() {return false; }" onclick="$('treatmentsMyD').toggle();" style="text-decoration: none;">X</a>
+</div>
+
 
 </body>
 
