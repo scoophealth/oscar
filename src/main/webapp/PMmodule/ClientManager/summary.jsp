@@ -92,23 +92,6 @@ function openSurvey() {
 
 </script>
 
-<div style="text-align:right">
-	<%
-		ClientImageDAO clientImageDAO=(ClientImageDAO)SpringUtils.getBean("clientImageDAO");
-		ClientImage clientImage=clientImageDAO.getClientImage(currentDemographic.getDemographicNo());
-
-		String imagePlaceholder=ClientImage.imageMissingPlaceholderUrl;
-		String imageUrl=imagePlaceholder;
-
-		if (clientImage!=null)
-		{
-			imagePlaceholder=ClientImage.imagePresentPlaceholderUrl;
-			imageUrl="/imageRenderingServlet?source="+ImageRenderingServlet.Source.local_client.name()+"&clientId="+currentDemographic.getDemographicNo();
-		}
-	%>
-	<img style="height:96px; width:96px" src="<%=request.getContextPath()+imagePlaceholder%>" alt="client_image_<%=currentDemographic.getDemographicNo()%>" onmouseover="src='<%=request.getContextPath()+imageUrl%>'" onmouseout="src='<%=request.getContextPath()+imagePlaceholder%>'" onClick="window.open('<%=request.getContextPath()%>/casemgmt/uploadimage.jsp?demographicNo=<%=currentDemographic.getDemographicNo()%>', '', 'height=500,width=500,location=no,scrollbars=no,menubars=no,toolbars=no,resizable=yes,top=50,left=50')" />
-</div>
-
 <div class="tabs">
 <table cellpadding="3" cellspacing="0" border="0">
 	<tr>
@@ -121,6 +104,24 @@ function openSurvey() {
 	<tr>
 		<th width="20%">Client No</th>
 		<td><c:out value="${client.demographicNo}" /></td>
+		<td rowspan="4" width="98px">
+		<div style="text-align:right">
+			<%
+				ClientImageDAO clientImageDAO=(ClientImageDAO)SpringUtils.getBean("clientImageDAO");
+				ClientImage clientImage=clientImageDAO.getClientImage(currentDemographic.getDemographicNo());
+		
+				String imagePlaceholder=ClientImage.imageMissingPlaceholderUrl;
+				String imageUrl=imagePlaceholder;
+		
+				if (clientImage!=null)
+				{
+					imagePlaceholder=ClientImage.imagePresentPlaceholderUrl;
+					imageUrl="/imageRenderingServlet?source="+ImageRenderingServlet.Source.local_client.name()+"&clientId="+currentDemographic.getDemographicNo();
+				}
+			%>
+			<img style="height:96px; width:96px" src="<%=request.getContextPath()+imagePlaceholder%>" alt="client_image_<%=currentDemographic.getDemographicNo()%>" onmouseover="src='<%=request.getContextPath()+imageUrl%>'" onmouseout="src='<%=request.getContextPath()+imagePlaceholder%>'" onClick="window.open('<%=request.getContextPath()%>/casemgmt/uploadimage.jsp?demographicNo=<%=currentDemographic.getDemographicNo()%>', '', 'height=500,width=500,location=no,scrollbars=no,menubars=no,toolbars=no,resizable=yes,top=50,left=50')" />
+		</div>
+		</td>
 	</tr>
 	<tr>
 		<th width="20%">Name</th>
@@ -138,12 +139,12 @@ function openSurvey() {
 	</tr>
 	<tr>
 		<th width="20%">Gender</th>
-		<td><c:out value="${client.sexDesc}" /></td>
+		<td colspan="2"><c:out value="${client.sexDesc}" /></td>
 	</tr>
 	<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
 		<tr>
 			<th width="20%">Health Card</th>
-			<td>
+			<td colspan="2">
 				<c:out value="${client.hin}" />&nbsp;<c:out value="${client.ver}" />&nbsp;(<c:out value="${client.hcType}" />)
 				<%
 					// show the button even if integrator is disabled, this is to allow people to validate local data with integrator disabled.
@@ -158,8 +159,8 @@ function openSurvey() {
 		</tr>
 		<tr>
 			<th width="20%">Resources</th>
-			<td>
-				<%					
+			<td colspan="2">
+				<%
 						Integer demographicNo=currentDemographic.getDemographicNo();
 						pageContext.setAttribute("demographicNo", demographicNo);
 	
@@ -175,20 +176,20 @@ function openSurvey() {
 <!-- 
 		<tr>
 			<th width="20%">EMPI</th>
-			<td><span id='empi_links'>Loading...</span></td>
+			<td colspan="2"><span id='empi_links'>Loading...</span></td>
 		</tr>
 -->
 	</caisi:isModuleLoad>
 	<tr>
 		<th width="20%">Active?</th>
-		<td><logic:equal value="0" property="activeCount" name="client">No</logic:equal>
+		<td colspan="2"><logic:equal value="0" property="activeCount" name="client">No</logic:equal>
 		<logic:notEqual value="0" property="activeCount" name="client">Yes</logic:notEqual>
 		</td>
 	</tr>
 
 	<tr>
 		<th width="20%">Health and Safety</th>
-		<td>
+		<td colspan="2">
 		<table width="100%" class="simple" border="0" cellspacing="2"
 			cellpadding="3">
 			<c:choose>
@@ -224,7 +225,7 @@ function openSurvey() {
 			%>
 				<tr>
 					<th width="20%">Integrator Consent</th>
-					<td>
+					<td colspan="2">
 						<%
 							String consentString="System is unavailable";
 							boolean isIntegratorContactable=false;
@@ -271,7 +272,7 @@ function openSurvey() {
 				</tr>
 				<tr>
 					<th width="20%">Linked clients</th>
-				 	<td><input type="button" <%=isIntegratorContactable?"":"disabled=\"disabled\""%> value="Manage Linked Clients" onclick="document.location='ClientManager/manage_linked_clients.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>'" /></td>
+				 	<td colspan="2"><input type="button" <%=isIntegratorContactable?"":"disabled=\"disabled\""%> value="Manage Linked Clients" onclick="document.location='ClientManager/manage_linked_clients.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>'" /></td>
 				</tr>
 			<%
 		}		
