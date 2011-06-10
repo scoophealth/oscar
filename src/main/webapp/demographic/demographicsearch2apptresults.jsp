@@ -24,6 +24,15 @@
  */
 --%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@page import="org.oscarehr.util.MiscUtils"%>
+<%@page import="org.oscarehr.caisi_integrator.ws.CachedProvider"%>
+<%@page import="org.oscarehr.caisi_integrator.ws.FacilityIdStringCompositePk"%>
+<%@page import="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager"%>
+<%@page import="org.apache.commons.lang.time.DateFormatUtils"%>
+<%@page import="org.apache.commons.lang.StringUtils"%>
+<%@page import="oscar.util.DateUtils"%>
+<%@page import="org.oscarehr.caisi_integrator.ws.DemographicTransfer"%>
+<%@page import="org.oscarehr.caisi_integrator.ws.MatchingDemographicTransferScore"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
@@ -256,16 +265,16 @@ function addNameCaisi(demographic_no,lastname,firstname,chartno,messageID) {
             <div class="sex"><bean:message key="demographic.demographicsearch2apptresults.sex" /></div>
             <div class="dob"><bean:message key="demographic.demographicsearch2apptresults.DOB" /></div>
             <div class="doctor"><bean:message key="demographic.demographicsearch2apptresults.doctor" /></div>
-	</li>
-
+		</li>
+	<%
+	  	int rowCounter=0;
+	%>
 	<%@ include file="../demographic/zzdemographicsearchresult.jspf"%>
 	<%
-String bgColor = bodd?"#EEEEFF":"white";
+		rowCounter++;
+	  String bgColor = rowCounter%2==0?"#EEEEFF":"white";
 %>
-        <li style="background-color: <%=bgColor%>"
-		<%-- 07/10/2006 RJ Added doctor provider_no to url --%>
-onMouseOver="this.style.cursor='hand';this.style.backgroundColor='pink';"
-		onMouseout="this.style.backgroundColor='<%=bgColor%>';"
+   <li style="background-color: <%=bgColor%>" onMouseOver="this.style.cursor='hand';this.style.backgroundColor='pink';" onMouseout="this.style.backgroundColor='<%=bgColor%>';"
 		onClick="document.forms[0].demographic_no.value=<%=apptMainBean.getString(rs,"demographic_no")%>;<% if(caisi) { out.print("addNameCaisi");} else { out.print("addName");} %>('<%=apptMainBean.getString(rs,"demographic_no")%>','<%=URLEncoder.encode(apptMainBean.getString(rs,"last_name"))%>','<%=URLEncoder.encode(apptMainBean.getString(rs,"first_name"))%>','<%=URLEncoder.encode(apptMainBean.getString(rs,"chart_no"))%>','<%=request.getParameter("messageId")%>','<%=apptMainBean.getString(rs,"provider_no")%>')">
 		<%-- 07/10/2006 RJ Added doctor provider_no to url --%>
 		<div class="demoId"><input type="submit" class="mbttn" name="demographic_no"
@@ -278,9 +287,9 @@ onMouseOver="this.style.cursor='hand';this.style.backgroundColor='pink';"
 		<div class="rosterStatus"><%=apptMainBean.getString(rs,"roster_status")==null||apptMainBean.getString(rs,"roster_status").equals("")?"&nbsp;":apptMainBean.getString(rs,"roster_status")%></div>
 		<div class="sex"><%=apptMainBean.getString(rs,"sex")%></div>
 		<div class="dob"><%=apptMainBean.getString(rs,"year_of_birth")+"-"+apptMainBean.getString(rs,"month_of_birth")+"-"+apptMainBean.getString(rs,"date_of_birth")%></div>
-                <div class="doctor">
-                    <%=providerBean.getProperty(apptMainBean.getString(rs,"provider_no"))==null?"":providerBean.getProperty(apptMainBean.getString(rs,"provider_no"))%>
-                </div>
+        <div class="doctor">
+            <%=providerBean.getProperty(apptMainBean.getString(rs,"provider_no"))==null?"":providerBean.getProperty(apptMainBean.getString(rs,"provider_no"))%>
+        </div>
 	</li>
 	<%
       bufName = new StringBuffer( (apptMainBean.getString(rs,"last_name")+ ","+ apptMainBean.getString(rs,"first_name")) );
@@ -289,16 +298,65 @@ onMouseOver="this.style.cursor='hand';this.style.backgroundColor='pink';"
       bufDoctorNo = new StringBuffer( apptMainBean.getString(rs,"provider_no") ); 
     }
   }
-%>
-	<%
-  //String temp=null;
+  
+  @SuppressWarnings("unchecked")
+  List<MatchingDemographicTransferScore> integratorSearchResults=(List<MatchingDemographicTransferScore>)request.getAttribute("integratorSearchResults");
+  if (integratorSearchResults!=null) {
+	  for (MatchingDemographicTransferScore matchingDemographicTransferScore : integratorSearchResults) {
+		  rowCounter++;
+		  String bgColor = rowCounter%2==0?"#EEEEFF":"white";
+		  DemographicTransfer demographicTransfer=matchingDemographicTransferScore.getDemographicTransfer();
+		%>
+		   <li style="background-color: <%=bgColor%>" onMouseOver="this.style.cursor='hand';this.style.backgroundColor='pink';" onMouseout="this.style.backgroundColor='<%=bgColor%>';" onClick="alert('Not Finished yet')">
+				<div class="demoId">
+					<input type="submit" class="mbttn" name="demographic_no" value="remote <%=demographicTransfer.getIntegratorFacilityId()%>:<%=demographicTransfer.getCaisiDemographicId()%>" />
+                </div>
+				<div class="lastName"><%=Misc.toUpperLowerCase(demographicTransfer.getLastName())%></div>
+				<div class="firstName"><%=Misc.toUpperLowerCase(demographicTransfer.getFirstName())%></div>
+				<%
+					String ageString="";
+					String bdayString="";
+				
+					if (demographicTransfer.getBirthDate()!=null) {
+						Integer ageX=DateUtils.getAge(demographicTransfer.getBirthDate(), new GregorianCalendar());
+						ageString=ageX.toString();
+						
+						bdayString=DateFormatUtils.ISO_DATE_FORMAT.format(demographicTransfer.getBirthDate());
+					}
+				%>
+				<div class="age"><%=ageString%></div>
+				<div class="rosterStatus"></div>
+				<div class="sex"><%=demographicTransfer.getGender()%></div>
+				<div class="dob"><%=bdayString%></div>
+		        <div class="doctor">
+		        	<% 
+		        		FacilityIdStringCompositePk providerPk=new FacilityIdStringCompositePk();
+		        		providerPk.setIntegratorFacilityId(demographicTransfer.getIntegratorFacilityId());
+		        		providerPk.setCaisiItemId(demographicTransfer.getCaisiProviderId());
+		        		CachedProvider cachedProvider=CaisiIntegratorManager.getProvider(providerPk);
+		        		MiscUtils.getLogger().debug("Cached provider, pk="+providerPk.getIntegratorFacilityId()+","+providerPk.getCaisiItemId()+", cachedProvider="+cachedProvider);
+		        		
+		        		String providerName="";
+		        		
+		        		if (cachedProvider!=null)
+		        		{
+		        			providerName=cachedProvider.getLastName()+", "+cachedProvider.getFirstName();
+		        		}
+		        	%>
+		            <%=providerName%>
+		        </div>
+			</li>
+		<%	  
+	  }
+  }
+  
+  
 	for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
 		temp=e.nextElement().toString();
 		if(temp.equals("keyword") || temp.equals("dboperation") ||temp.equals("displaymode")||temp.equals("submit") ||temp.equals("chart_no")) continue;
   	out.println("<input type='hidden' name='"+temp+"' value='"+request.getParameter(temp)+"'>");
   }
   
-  //should close the pipe connected to the database here!!!
 	%>
 	</form>
 
