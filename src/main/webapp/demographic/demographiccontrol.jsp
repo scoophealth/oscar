@@ -23,6 +23,13 @@
  * Ontario, Canada
  */
 --%>
+<%@page import="org.oscarehr.util.MiscUtils"%>
+<%@page import="org.oscarehr.caisi_integrator.ws.MatchingDemographicTransferScore"%>
+<%@page import="java.util.List"%>
+<%@page import="org.oscarehr.web.DemographicSearchHelper"%>
+<%@page import="java.util.GregorianCalendar"%>
+<%@page import="org.apache.commons.lang.StringUtils"%>
+<%@page import="org.oscarehr.caisi_integrator.ws.MatchingDemographicParameters"%>
 <%
   if(session.getAttribute("user") == null)
   {
@@ -49,24 +56,51 @@
     limit="limit "+limit2+" offset "+limit1;
   }
 
-  String fieldname="", regularexp="like"; // exactly search is not required by users, e.g. regularexp="=";
-  String strDbType = oscar.OscarProperties.getInstance().getProperty("db_type").trim();
-  if (strDbType.trim().equalsIgnoreCase("mysql")) {
-    regularexp = "regexp";
-  } else if (strDbType.trim().equalsIgnoreCase("postgresql"))  {
-    regularexp = "~*";
-  }
+  String fieldname="";
+  String regularexp = "regexp";
 
-  if(request.getParameter("search_mode")!=null) {
-	  if(request.getParameter("keyword").indexOf("*")!=-1 || request.getParameter("keyword").indexOf("%")!=-1) regularexp="like";
-    if(request.getParameter("search_mode").equals("search_address")) fieldname="address";
-    if(request.getParameter("search_mode").equals("search_phone")) fieldname="phone";
-    if(request.getParameter("search_mode").equals("search_hin")) fieldname="hin";
-    if(request.getParameter("search_mode").equals("search_dob")) fieldname="year_of_birth "+regularexp+" ?"+" and month_of_birth "+regularexp+" ?"+" and date_of_birth ";
-    if(request.getParameter("search_mode").equals("search_chart_no")) fieldname="chart_no";
-    if(request.getParameter("search_mode").equals("search_name")) {
-      if(request.getParameter("keyword").indexOf(",")==-1)  fieldname="lower(last_name)";
-      else if(request.getParameter("keyword").trim().indexOf(",")==(request.getParameter("keyword").trim().length()-1)) fieldname="lower(last_name)";
+	String searchMode=request.getParameter("search_mode");
+	String keyword=request.getParameter("keyword");
+	MatchingDemographicParameters matchingDemographicParameters=null;
+	
+	MiscUtils.getLogger().debug("Search parameters, searchMode="+searchMode+", keyword="+keyword);
+	
+  if(searchMode!=null) {
+	  if(keyword.indexOf("*")!=-1 || keyword.indexOf("%")!=-1) regularexp="like";
+	  
+    if(searchMode.equals("search_address")) fieldname="address";
+    if(searchMode.equals("search_phone")) fieldname="phone";
+    if(searchMode.equals("search_hin")) {
+    	fieldname="hin";
+	  	matchingDemographicParameters=new MatchingDemographicParameters();
+    	matchingDemographicParameters.setHin(keyword);
+    }
+    if(searchMode.equals("search_dob")){
+    	fieldname="year_of_birth "+regularexp+" ?"+" and month_of_birth "+regularexp+" ?"+" and date_of_birth ";
+
+    	try
+    	{
+    		String year=keyword.substring(0, 4);
+    		String month=keyword.substring(4, 6);
+    		String day=keyword.substring(6);
+    		
+	    	GregorianCalendar cal=new GregorianCalendar(Integer.parseInt(year), Integer.parseInt(month)-1, Integer.parseInt(day));
+	    	matchingDemographicParameters=new MatchingDemographicParameters();
+	    	matchingDemographicParameters.setBirthDate(cal);
+    	}
+    	catch (Exception e){
+    		// this is okay, person imputed a bad date, we'll ignore for now
+    		matchingDemographicParameters=null;
+    	}
+    }
+    if(searchMode.equals("search_chart_no")) fieldname="chart_no";
+    if(searchMode.equals("search_name")) {
+	  	matchingDemographicParameters=new MatchingDemographicParameters();
+    	matchingDemographicParameters.setFirstName(keyword);
+    	matchingDemographicParameters.setLastName(keyword);
+
+    	if(keyword.indexOf(",")==-1)  fieldname="lower(last_name)";
+      else if(keyword.trim().indexOf(",")==(keyword.trim().length()-1)) fieldname="lower(last_name)";
       else fieldname="lower(last_name) "+regularexp+" ?"+" and lower(first_name) ";
     }
   }
@@ -154,7 +188,19 @@
 
    	apptMainBean.doCommand(request); //store request to a help class object Dict - function&params
 
+   	//--- add integrator results ---
+	if (matchingDemographicParameters!=null)
+	{
+		matchingDemographicParameters.setMaxEntriesToReturn(5);
+		matchingDemographicParameters.setMinScore(7);
+		List<MatchingDemographicTransferScore> integratorSearchResults=DemographicSearchHelper.getIntegratedSearchResults(matchingDemographicParameters);
+
+		MiscUtils.getLogger().debug("Integrator search results : "+integratorSearchResults.size());
+		request.setAttribute("integratorSearchResults", integratorSearchResults);
+	}
+   	
 	String pg=apptMainBean.whereTo();
+	MiscUtils.getLogger().debug("forward to page : "+pg);
 	if (pg!=null)
 	{
 	   	pageContext.forward(pg); //forward request&response to the target page

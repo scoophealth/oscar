@@ -631,5 +631,4 @@ public final class DateUtils {
 	{
 		return(calculateDayDifference(MiscUtils.toCalendar(date1), MiscUtils.toCalendar(date2)));
 	}
-
 }
