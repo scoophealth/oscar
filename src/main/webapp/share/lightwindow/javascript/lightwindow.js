@@ -1568,7 +1568,7 @@ lightwindow.prototype = {
 			});
 		}
 
-		if (this.element.title != 'null') {
+		if (this.element.title != null) {
 			$('lightwindow_title_bar_title').innerHTML = this.element.title;
 		} else {
 			$('lightwindow_title_bar_title').innerHTML = '';
