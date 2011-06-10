@@ -200,7 +200,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		}
 	}
 
-	public void run() {
+	@Override
+    public void run() {
 		logger.debug("CaisiIntegratorUpdateTask starting");
 
 		LoggedInInfo.setLoggedInInfoToCurrentClassAndMethod();
