@@ -102,7 +102,7 @@ if (!Util.checkDir(op.getProperty("TMP_DIR"))) { %>
                         <input type="file" name="importFile" value="">                    
                         <input type="submit" name="Submit" value="Import">
             </html:form>
-//--> <html:form action="/form/importUpload3.do" method="POST"
+//--> <html:form action="/form/importUpload.do" method="POST"
 			enctype="multipart/form-data" onsubmit="displayAndDisable()">
                         <p><html:file property="importFile" value=""/></p>
 						<%if(learningEnabled != null && learningEnabled.equalsIgnoreCase("yes")) { %>
@@ -122,7 +122,7 @@ if (!Util.checkDir(op.getProperty("TMP_DIR"))) { %>
                         <html:radio property="matchProviderNames" value="false">
                             Import as new - same provider may have multiple entries
                         </html:radio><br>
-                        <p><input type="submit" name="Submit" value="Import (CMS spec 3.0)"></p>
+                        <p><input type="submit" name="Submit" value="Import (CMS spec 4.0)"></p>
 		</html:form>
 
 		<div id="waitingMessage" style="display: none;">

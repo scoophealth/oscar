@@ -200,7 +200,7 @@ if (!userRole.toLowerCase().contains("admin")) { %>
 		    <a href="diabetesExport.jsp">Diabetes Export</a></td>
 		    <%} %>
 		<td valign="top" class="MainTableRightColumn">
-		    <html:form action="/demographic/DemographicExport3" method="get" onsubmit="return checkSelect(patientSet.value);">
+		    <html:form action="/demographic/DemographicExport" method="get" onsubmit="return checkSelect(patientSet.value);">
 		    <div>
 		    <% if (demographicNo!= null) { %>
                             <html:hidden property="demographicNo" value="<%=demographicNo%>" />
@@ -260,10 +260,11 @@ if (!userRole.toLowerCase().contains("admin")) { %>
                        <html:hidden property="pgpReady" value="<%=pgp_ready%>" />
                        
 		    <p>&nbsp;</p>
-<%  if (pgp_ready.equals("No")) { %>
-                    WARNING: PGP Encryption NOT available - unencrypted file will be exported!<br>
-<%  }%>
-                    <input type="submit" value="Export (CMS spec 3.0)" />
+<%  boolean pgpReady = pgp_ready.equals("Yes") ? true : false;
+    if (!pgpReady) { %>
+                    WARNING: PGP Encryption NOT available - cannot export!<br>
+<%  } %>
+                    <input type="submit" value="Export (CMS spec 4.0)" <%=pgpReady?"":"disabled"%> />
 		</html:form></td>
 	</tr>
 	<tr>

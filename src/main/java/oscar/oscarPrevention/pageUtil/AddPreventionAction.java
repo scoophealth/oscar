@@ -27,7 +27,7 @@
 
 package oscar.oscarPrevention.pageUtil;
 import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.HashMap;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -146,7 +146,7 @@ public class AddPreventionAction  extends Action {
          
   private void addHashtoArray(ArrayList list,String s,String key){
      if ( s != null && key != null){
-        Hashtable h = new Hashtable();
+        HashMap<String,String> h = new HashMap<String,String>();
         h.put(key,s);    
         list.add(h);
      }

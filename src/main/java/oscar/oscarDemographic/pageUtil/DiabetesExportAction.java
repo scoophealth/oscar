@@ -12,7 +12,6 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 
@@ -45,6 +44,7 @@ import oscar.oscarLab.LabRequestReportLink;
 import oscar.oscarLab.ca.all.upload.ProviderLabRouting;
 import oscar.oscarPrevention.PreventionData;
 import oscar.oscarPrevention.PreventionDisplayConfig;
+import oscar.OscarProperties;
 import oscar.oscarProvider.data.ProviderData;
 import oscar.oscarReport.data.DemographicSets;
 import oscar.oscarRx.data.RxPrescriptionData;
@@ -59,6 +59,9 @@ import cdsdiabetes.MedicationsAndTreatmentsDocument.MedicationsAndTreatments;
 import cdsdiabetes.PatientRecordDocument.PatientRecord;
 import cdsdiabetes.ProblemListDocument.ProblemList;
 import cdsdiabetes.ReportInformationDocument.ReportInformation;
+import cdsdiabetes.DiabetesDinList;
+import java.util.HashMap;
+import org.apache.commons.lang.math.NumberUtils;
 
 
 /**
@@ -80,21 +83,10 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
     this.endDate = UtilDateUtilities.StringToDate(defrm.getendDate());
     
     this.cmm = (CaseManagementManager) SpringUtils.getBean("caseManagementManager");
-    this.errors = new ArrayList();
+    this.errors = new ArrayList<String>();
     
     //Create Patient List from Patient Set
     ArrayList patientList = new DemographicSets().getDemographicSet(setName);
-    /*
-    Date asofDate = UtilDateUtilities.Today();
-    RptDemographicReportForm frm = new RptDemographicReportForm ();
-    frm.setSavedQuery(setName);
-    RptDemographicQueryLoader demoL = new RptDemographicQueryLoader();
-    frm = demoL.queryLoader(frm);
-    frm.addDemoIfNotPresent();
-    frm.setAsofDate(UtilDateUtilities.DateToString(asofDate));
-    RptDemographicQueryBuilder demoQ = new RptDemographicQueryBuilder();
-    patientList = demoQ.buildQuery(frm,UtilDateUtilities.DateToString(asofDate));
-    */
     
     //Create export files
     String tmpDir = oscar.OscarProperties.getInstance().getProperty("TMP_DIR");
@@ -103,16 +95,11 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
     } else {
         tmpDir = Util.fixDirName(tmpDir);
     }
-    File[] exportFiles = this.make(patientList, tmpDir);
+    ArrayList<File> exportFiles = this.make(patientList, tmpDir);
     
     //Create & put error.log into the file list
     File errorLog = makeErrorLog("error.log", tmpDir);
-    if (errorLog!=null) {
-	File[] tmp_f = new File[exportFiles.length+1];
-	for (int i=0; i<exportFiles.length; i++) tmp_f[i]=exportFiles[i];
-	tmp_f[tmp_f.length-1] = errorLog;
-	exportFiles = tmp_f;
-    }
+    if (errorLog!=null) exportFiles.add(errorLog);
     
     //Zip export files
     String zipName = "omd_diabetes-"+UtilDateUtilities.getToday("yyyy-MM-dd.HH.mm.ss")+".zip";
@@ -140,26 +127,19 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
     }
     
     
-    File[] make(List demographicNos, String tmpDir) throws Exception{
+    ArrayList<File> make(List<String> demographicNos, String tmpDir) throws Exception{
 	XmlOptions options = new XmlOptions();
 	options.put( XmlOptions.SAVE_PRETTY_PRINT );
 	options.put( XmlOptions.SAVE_PRETTY_PRINT_INDENT, 3 );
 	options.put( XmlOptions.SAVE_AGGRESSIVE_NAMESPACES );
 	options.setSaveOuter();
-        File[] files = new File[demographicNos.size()];
+        ArrayList<File> files = new ArrayList<File>();
 
         for (int i=0; i<demographicNos.size(); i++) {
 	    OmdCdsDiabetesDocument omdCdsDiabetesDoc = OmdCdsDiabetesDocument.Factory.newInstance();
 	    OmdCdsDiabetesDocument.OmdCdsDiabetes omdcdsdiabetes = omdCdsDiabetesDoc.addNewOmdCdsDiabetes();
 	    
-	    String demoNo = null;
-	    Object obj = demographicNos.get(i);
-	    if (obj instanceof String) {
-		demoNo = (String)obj;
-	    } else {
-		ArrayList<String> l2 = (ArrayList<String>)obj;
-		demoNo = l2.get(0);
-	    }
+	    String demoNo = demographicNos.get(i);
 	    PatientRecord patientRecord = omdcdsdiabetes.addNewPatientRecord();
 	    fillPatientRecord(patientRecord, demoNo);
 	    
@@ -170,12 +150,12 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     throw new Exception("Temporary Export Directory (as set in oscar.properties) does not exist!");
                 }
                 String inFile = "omd_diabetes"+i+"-"+UtilDateUtilities.getToday("yyyy-MM-dd.HH.mm.ss")+".xml";
-                files[i] = new File(dir,inFile);
+                files.add(new File(dir,inFile));
             }catch(Exception e){
                 MiscUtils.getLogger().error("Error", e);
             }
             try {
-                    omdCdsDiabetesDoc.save(files[i], options);
+                    omdCdsDiabetesDoc.save(files.get(files.size()-1), options);
             } catch (IOException ex) {MiscUtils.getLogger().error("Error", ex);
                     throw new Exception("Cannot write .xml file(s) to export directory.\nPlease check directory permissions.");
             }
@@ -184,7 +164,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
     }
     
     File makeErrorLog(String errorLogName, String dirName) throws IOException {
-	if (this.errors.isEmpty()) return null;
+	if (errors.isEmpty()) return null;
 
         dirName = Util.fixDirName(dirName);
 	File errorLog = new File(dirName+errorLogName);
@@ -199,21 +179,19 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
     }
 
     private List parse() throws Exception{
-        
-        String omdDmlink = "https://www.ontariomd.ca/cms/xml/ontariomd_cds_diabetes.xsd";
+	ArrayList<String> listOfDINS = new ArrayList<String>();
+        String omdDmlink = OscarProperties.getInstance().getProperty("ontariomd_cds_diabetes_link");
+        if (omdDmlink==null || omdDmlink.trim().isEmpty()) return listOfDINS;
         
         URL omdDmURL = new URL(omdDmlink);
 	BufferedReader in = new BufferedReader(
 				new InputStreamReader(
 				omdDmURL.openStream()));
 
-	ArrayList listOfDINS = new ArrayList();
-
             try {
                 SAXBuilder parser = new SAXBuilder();
                 Document doc = parser.build(in);
                 Element root = doc.getRootElement();
-                //Element formulary = root.getChild("formulary");
                 Iterator<Element> items = root.getDescendants(new ElementFilter("restriction",root.getNamespace("xs")));
 
                 while (items.hasNext()) {
@@ -227,22 +205,6 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                             listOfDINS.add(e.getAttributeValue("value"));
                         }
                     }
-                    
-                    /*List<Element> lccNoteList = pcgGroup.getChildren("lccNote");
-
-                    if (lccNoteList.size() > 0) {
-                        ArrayList<LimitedUseCode> luList = new ArrayList();
-                        for (Element lccNo : lccNoteList) {
-                            luList.add(makeLUNote(lccNo));
-                        }
-
-                        Iterator<Element> drugs = pcgGroup.getDescendants(new ElementFilter("drug"));
-                        while (drugs.hasNext()) {
-                            Element drug = drugs.next();
-                            String din = drug.getAttribute("id").getValue();
-                            luLookup.put(din, luList);
-                        }
-                    }*/
                 }
             } catch (Exception e) {
                 MiscUtils.getLogger().error("Error", e);
@@ -250,31 +212,6 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
            return listOfDINS;
         
     }
-    
-    /*
-    <xs:element name="OmdCdsDiabetes">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element ref="PatientRecord"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-    <xs:element name="PatientRecord">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element ref="ReportInformation"/>
-                <xs:element ref="Demographics"/>
-                <xs:element ref="ProblemList"/>
-                <xs:element ref="MedicationsAndTreatments" minOccurs="0" maxOccurs="unbounded"/>
-                <xs:element ref="Immunizations" minOccurs="0" maxOccurs="unbounded"/>
-                <xs:element ref="LaboratoryResults" minOccurs="0" maxOccurs="unbounded"/>
-                <xs:element ref="CareElements" minOccurs="0" maxOccurs="unbounded"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-     */
-    
-    
     
     void setCareElements(PatientRecord patientRecord, String demoNo) throws SQLException {
     	List<Measurements> measList = ImportExportMeasurements.getMeasurements(demoNo);
@@ -496,8 +433,9 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             ProviderData provider = new ProviderData(data);
             data = StringUtils.noNull(provider.getOhip_no());
 	    demo.setOHIPPhysicianId(data);
-            if (StringUtils.empty(data))
-	      errors.add("Error! No OHIP Physician ID for Patient "+demoNo);
+            if (StringUtils.empty(data)) errors.add("Error! No OHIP Physician ID for Patient "+demoNo);
+            data = provider.getPractitionerNo();
+            if (data!=null && data.length()==5) demo.setPrimaryPhysicianCPSO(data);
         }
         
         data = StringUtils.noNull(demographic.getJustHIN());
@@ -535,14 +473,15 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
         if (StringUtils.filled(data)) demo.setEmail(data);
         
         DemographicExt ext = new DemographicExt();
-        Hashtable demoExt = ext.getAllValuesForDemo(demoNo);
+        HashMap<String,String> demoExt = new HashMap<String,String>();
+        demoExt.putAll(ext.getAllValuesForDemo(demoNo));
 	
         String phoneNo = demographic.getPhone();
 	if (StringUtils.filled(phoneNo) && phoneNo.length()>=7) {
             cdsDt.PhoneNumber phoneResident = demo.addNewPhoneNumber();
             phoneResident.setPhoneNumberType(cdsDt.PhoneNumberType.R);
             phoneResident.setPhoneNumber(phoneNo);
-            data = (String) demoExt.get("hPhoneExt");
+            data = demoExt.get("hPhoneExt");
             if (data!=null) {
                 if (data.length()>5) {
                     data = data.substring(0,5);
@@ -554,24 +493,24 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
     }
     
     void setImmunizations(PatientRecord patientRecord, String demoNo) {
-        ArrayList inject = new ArrayList();
-        ArrayList preventionList = PreventionDisplayConfig.getInstance().getPreventions();
+        ArrayList<String> inject = new ArrayList<String>();
+        ArrayList<HashMap> preventionList = PreventionDisplayConfig.getInstance().getPreventions();
         for (int i=0; i<preventionList.size(); i++){
-            Hashtable h = (Hashtable) preventionList.get(i);
+            HashMap<String,String> h = preventionList.get(i);
             if (h!= null && h.get("layout")!= null && h.get("layout").equals("injection")){
-                inject.add((String)h.get("name"));
+                inject.add(h.get("name"));
             }	     	
         }
         preventionList = new PreventionData().getPreventionData(demoNo);
         for (int i=0; i<preventionList.size(); i++){
-            Hashtable h = (Hashtable) preventionList.get(i);  
-            if (h!= null && inject.contains((String)h.get("type")) ){
+            HashMap<String,String> h = preventionList.get(i);
+            if (h!= null && inject.contains(h.get("type")) ){
                 Immunizations immunizations = null;
-                Date preventionDate = UtilDateUtilities.StringToDate((String)h.get("prevention_date"),"yyyy-MM-dd");
+                Date preventionDate = UtilDateUtilities.StringToDate(h.get("prevention_date"),"yyyy-MM-dd");
                 if (preventionDate!=null) {
                     if (startDate.after(preventionDate) || endDate.before(preventionDate)) continue;
                 }
-                String data = (String) h.get("type");
+                String data = h.get("type");
                 if (StringUtils.filled(data)) {
 		    if (data.equalsIgnoreCase("Flu")) {
                         immunizations = patientRecord.addNewImmunizations();
@@ -587,7 +526,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                 if (preventionDate==null) {
                     errors.add("Error! Missing/Invalid Immunization Date (id="+h.get("id")+") for Patient "+demoNo+" ("+immunizations.getImmunizationName()+")");
                 }
-                data = (String) h.get("refused");
+                data = h.get("refused");
                 cdsDt.YnIndicator refused = immunizations.addNewRefusedFlag();
                 if (StringUtils.empty(data)) {
                     errors.add("Error! No Refused Flag for Patient "+demoNo+" ("+immunizations.getImmunizationName()+")");
@@ -618,7 +557,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	    
 	    cdsDt.DateFullOrPartial collDate = labResults.addNewCollectionDateTime();
             Date dateTime = UtilDateUtilities.StringToDate(labMea.getExtVal("datetime"),"yyyy-MM-dd HH:mm:ss");
-            collDate.setDateTime(Util.calDate(dateTime));
+            collDate.setFullDate(Util.calDate(dateTime));
             if (dateTime==null) {
                 errors.add("Error! No Collection Datetime for Lab Test "+testName+" for Patient "+demoNo);
             }
@@ -674,17 +613,14 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                 labResults.setReferenceRange(refRange);
             }
 	    
-	    if (labMea.getMeasure().getDateEntered()!=null) {
-		labResults.addNewDateTimeResultReceivedByCMS().setDateTime(Util.calDate(labMea.getMeasure().getDateEntered()));
-	    }
-	    
 	    String lab_no = labMea.getExtVal("lab_no");
 	    if (StringUtils.filled(lab_no)) {
-		Hashtable labRoutingInfo = ProviderLabRouting.getInfo(lab_no);
+		HashMap<String,String> labRoutingInfo = new HashMap<String,String>();
+                labRoutingInfo.putAll(ProviderLabRouting.getInfo(lab_no));
 		
-		String info = (String)labRoutingInfo.get("comment");
+		String info = labRoutingInfo.get("comment");
 		if (StringUtils.filled(info)) labResults.setPhysiciansNotes(info);
-		info = (String)labRoutingInfo.get("provider_no");
+		info = labRoutingInfo.get("provider_no");
 		if (!"0".equals(info)) {
 		    ProviderData pd = new ProviderData(info);
 		    if (StringUtils.filled(pd.getOhip_no())) {
@@ -693,14 +629,15 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 			Util.writeNameSimple(reviewer.addNewName(), pd.getFirst_name(), pd.getLast_name());
 		    }
 		}
-		String timestamp = (String)labRoutingInfo.get("timestamp");
+		String timestamp = labRoutingInfo.get("timestamp");
 		if (StringUtils.filled(timestamp)) {
-		    labResults.addNewDateTimeResultReviewed().setDateTime(Util.calDate(timestamp));
+		    labResults.addNewDateTimeResultReviewed().setFullDate(Util.calDate(timestamp));
 		}
 		
-		Hashtable link = LabRequestReportLink.getLinkByReport("hl7TextMessage", Long.valueOf(lab_no));
-		Date reqDate = (Date)link.get("request_date");
-		if (reqDate!=null) labResults.addNewLabRequisitionDateTime().setDateTime(Util.calDate(reqDate));
+		HashMap<String,Date> link = new HashMap<String,Date>();
+                link.putAll(LabRequestReportLink.getLinkByReport("hl7TextMessage", Long.valueOf(lab_no)));
+		Date reqDate = link.get("request_date");
+		if (reqDate!=null) labResults.addNewLabRequisitionDateTime().setFullDate(Util.calDate(reqDate));
 	    }
 	}
     }
@@ -717,36 +654,20 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             if (!din.contains(data)) continue;
                 
             MedicationsAndTreatments medications = patientRecord.addNewMedicationsAndTreatments();
-            medications.setDrugIdentificationNumber(data);
-            
+            medications.setDrugIdentificationNumber(DiabetesDinList.Enum.forString("X_"+data));
+
             if (Util.calDate(pa[p].getWrittenDate())!=null) {
                 medications.addNewPrescriptionWrittenDate().setFullDate(Util.calDate(pa[p].getWrittenDate()));
             }
             if (Util.calDate(pa[p].getRxDate())!=null) {
                 medications.addNewStartDate().setFullDate(Util.calDate(pa[p].getRxDate()));
             }
-            if (Util.calDate(pa[p].getEndDate())!=null) {
-                medications.addNewEndDate().setFullDate(Util.calDate(pa[p].getEndDate()));
-            }
-            
             String drugName = StringUtils.noNull(pa[p].getDrugName());
-            medications.setDrugName(drugName);
+            medications.setDrugName(StringUtils.noNull(pa[p].getDrugName()));
             
-            data = String.valueOf(pa[p].getRepeat());
-            medications.setNumberOfRefills(data);
-            
-            if (Util.calDate(pa[p].getLastRefillDate())!=null) {
-                medications.addNewLastRefillDate().setFullDate(Util.calDate(pa[p].getLastRefillDate()));
-            }
-            
-            data = StringUtils.noNull(pa[p].getRoute());
-            medications.setRoute(pa[p].getRoute());
-            
-            data = StringUtils.noNull(pa[p].getDrugForm());
-            medications.setForm(pa[p].getDrugForm());
-                
-            data = StringUtils.noNull(pa[p].getFreqDisplay());
-            medications.setFrequency(pa[p].getFreqDisplay());
+            medications.setRoute(StringUtils.noNull(pa[p].getRoute()));
+            medications.setForm(StringUtils.noNull(pa[p].getDrugForm()));
+            medications.setFrequency(StringUtils.noNull(pa[p].getFreqDisplay()));
                 
             data = StringUtils.noNull(pa[p].getDuration());
 	    if (StringUtils.filled(data)) {
@@ -754,24 +675,25 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		Integer fctr = 1;
 		if (durunit.equals("W")) fctr = 7;
 		else if (durunit.equals("M")) fctr = 30;
-		Integer meddur = Integer.parseInt(Util.getNum(data)) * fctr;
-		medications.setDuration(meddur.toString());
+                if (NumberUtils.isDigits(data)) {
+                    Integer meddur = Integer.parseInt(data) * fctr;
+                    medications.setDuration(meddur.toString());
+                } else {
+                    errors.add("Error! Invalid prescrption duration for Drug "+drugName+" for Patient "+demoNo);
+                }
 	    }
             
-            data = StringUtils.noNull(pa[p].getQuantity());
-            medications.setQuantity(data);
-            
-	    data = Util.extractDrugInstr(pa[p].getSpecial());
-            medications.setPrescriptionInstructions(data);
-            
-            data = StringUtils.noNull(pa[p].getDosageDisplay()) + " " + StringUtils.noNull(pa[p].getUnit());
-            medications.setDosage(data);
-            
+            medications.setQuantity(StringUtils.noNull(pa[p].getQuantity()));
+            medications.setPrescriptionInstructions(Util.extractDrugInstr(pa[p].getSpecial()));
+            medications.setDosage(StringUtils.noNull(pa[p].getDosageDisplay()));
+            medications.setDosageUnitOfMeasure(StringUtils.noNull(pa[p].getUnit()));
+            medications.setNumberOfRefills(String.valueOf(pa[p].getRepeat()));
+
             if (StringUtils.filled(pa[p].getDosage())) {
                 String strength = pa[p].getDosage();
                 int sep = strength.indexOf("/");
                 strength = sep<0 ? strength : strength.substring(0,sep);
-		if (sep>0) {
+		if (sep>=0) {
 		    strength = strength.substring(0,sep);
 		    errors.add("Note: Multiple components exist for Drug "+drugName+" for Patient "+demoNo+". Exporting 1st one as Strength.");
 		}
@@ -779,7 +701,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                 drugM.setAmount(strength.substring(0,strength.indexOf(" ")));
                 drugM.setUnitOfMeasure(strength.substring(strength.indexOf(" ")+1));
             }
-            
+
             medications.addNewLongTermMedication().setBoolean(pa[p].getLongTerm());
             medications.addNewPastMedications().setBoolean(pa[p].getPastMed());
             cdsDt.YnIndicatorAndBlank pc = medications.addNewPatientCompliance();
@@ -831,7 +753,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	    
 	    diagnosis.setValue(diagValue);
 	    diagnosis.setCodingSystem("ICD10-CA");
-	    problemList.addNewOnsetDate().setDateTime(Util.calDate(dateValue));
+	    problemList.addNewOnsetDate().setFullDate(Util.calDate(dateValue));
 	    if (dateValue==null) {
 		errors.add("Error! No Onset Date for Diabetes Diagnosis for Patient "+demoNo);
 	    }
