@@ -49,7 +49,7 @@ public class RxAllergyData {
         int AGCCS;
         int TYPECODE;
         String reaction;
-	java.util.Date startDate = null;
+        java.util.Date startDate = null;
         String ageOfOnset = null;
         String severityOfReaction = null;
         String onSetOfReaction = null;
