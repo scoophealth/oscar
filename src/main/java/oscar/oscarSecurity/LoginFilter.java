@@ -57,7 +57,8 @@ public class LoginFilter implements Filter {
 		"/loginfailed.jsp",
 		"/index.html",
 		"/eformViewForPdfGenerationServlet",
-		"/LabViewForPdfGenerationServlet"
+		"/LabViewForPdfGenerationServlet",
+		"/oscarFacesheet/token_error.jsp"
 	};
 
 	/*
@@ -81,6 +82,23 @@ public class LoginFilter implements Filter {
 			HttpServletRequest httpRequest = (HttpServletRequest) request;
 			HttpServletResponse httpResponse = (HttpServletResponse) response;
 
+			SecurityTokenManager stm = SecurityTokenManager.getInstance();
+			if(stm != null) {
+				//token is being requested
+				if(request.getParameter("request_token")!=null && request.getParameter("request_token").equals("true")) {
+					stm.requestToken(httpRequest, httpResponse, chain);
+					return;
+				}
+				
+				//token is being sent..check if it's valid..this will set the "user" attribute in the session.
+				if(request.getParameter("token")!=null || request.getAttribute("token")!=null) {
+					boolean success = stm.handleToken(httpRequest, httpResponse, chain);
+					if(!success) {
+						return;
+					}
+				}
+			}
+			
 			if (httpRequest.getSession().getAttribute("user") == null) {
 				String requestURI = httpRequest.getRequestURI();
 				String contextPath = httpRequest.getContextPath();
