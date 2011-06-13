@@ -21,7 +21,6 @@ package org.oscarehr.PMmodule.web;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
@@ -247,20 +246,8 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 			int remoteFacilityId = Integer.parseInt(request.getParameter("remoteFacilityId"));
 			int remoteDemographicId = Integer.parseInt(request.getParameter("remoteDemographicId"));
 
-			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
-			DemographicTransfer demographicTransfer = demographicWs.getDemographicByFacilityIdAndDemographicId(remoteFacilityId, remoteDemographicId);
-
-			Demographic demographic = new Demographic();
-			demographic.setFirstName(demographicTransfer.getFirstName());
-			demographic.setLastName(demographicTransfer.getLastName());
-			
-			if (demographicTransfer.getBirthDate()!=null) demographic.setBirthDay(demographicTransfer.getBirthDate());
-			
-			if (demographicTransfer.getGender()!=null) demographic.setSex(demographicTransfer.getGender().name());
-	
-			demographic.setPatientStatus("AC");
-			demographic.setDateJoined(new Date());
-			
+			Demographic demographic=CaisiIntegratorManager.makeUnpersistedDemographicObjectFromRemoteEntry(remoteFacilityId, remoteDemographicId);
+						
 			//TODO: if this is ER clerk, go to their consent form.
 			//client.setProviderNo(providerNo);
 			//clientManager.saveClient(client);
