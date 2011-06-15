@@ -103,7 +103,7 @@ function openSurvey() {
 <table class="simple" cellspacing="2" cellpadding="3">
 	<tr>
 		<th width="20%">Client No</th>
-		<td><c:out value="${client.demographicNo}" /></td>
+		<td width="80%"><c:out value="${client.demographicNo}" /></td>
 		<td rowspan="4" width="98px">
 		<div style="text-align:right">
 			<%
