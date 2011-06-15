@@ -217,8 +217,6 @@
                 ResultSet rsProg = apptMainBean.queryResults("OSCAR", "search_program");
                 if( rsProg.next() )
                     progId = rsProg.getString("id");
-                    
-                rsProg.close();
             }
             String[] caisiParam = new String[4];
             caisiParam[0] = apptMainBean.getString(rs,"demographic_no");

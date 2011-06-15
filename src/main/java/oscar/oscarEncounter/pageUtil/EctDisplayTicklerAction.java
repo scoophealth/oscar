@@ -101,7 +101,7 @@ public class EctDisplayTicklerAction extends EctDisplayAction {
             item.setColour("FF0000");
             
         itemHeader = StringUtils.maxLenString(rs.getString("message"), MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);                      
-        item.setLinkTitle(itemHeader+ " " + DateUtils.getDate(serviceDate,dateFormat,request.getLocale()));        
+        item.setLinkTitle(itemHeader+ " " + DateUtils.formatDate(serviceDate,request.getLocale()));        
         item.setTitle(itemHeader);
         winName = StringUtils.maxLenString(oscar.Misc.getString(rs,"message"), MAX_LEN_TITLE, MAX_LEN_TITLE, "");                
         hash = Math.abs(winName.hashCode());        

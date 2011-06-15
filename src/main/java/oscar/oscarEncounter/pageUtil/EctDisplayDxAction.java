@@ -90,9 +90,9 @@ public class EctDisplayDxAction extends EctDisplayAction {
             String startDate = dxBean.getStart_date();
                          
             try {
-                date = (Date)formatter.parse(dateStr);
-                Date sDate = (Date)formatter.parse(startDate);
-                serviceDateStr = DateUtils.getDate(sDate, dateFormat, request.getLocale());  
+                date = formatter.parse(dateStr);
+                Date sDate = formatter.parse(startDate);
+                serviceDateStr = DateUtils.formatDate(sDate, request.getLocale());  
                 item.setDate(date);
             }
             catch(ParseException ex ) {
