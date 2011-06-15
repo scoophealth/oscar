@@ -751,8 +751,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	private void pushAllergies(Facility facility, DemographicWs demographicService, Integer demographicId) throws SQLException {
 		logger.debug("pushing demographicAllergies facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
-		RxPatientData rx = new RxPatientData();
-		RxPatientData.Patient patient = rx.getPatient(demographicId);
+		RxPatientData.Patient patient = RxPatientData.getPatient(demographicId);
 		RxPatientData.Patient.Allergy[] allergies = patient.getAllergies();
 
 		ArrayList<CachedDemographicAllergy> cachedAllergies = new ArrayList<CachedDemographicAllergy>();
@@ -773,11 +772,11 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			cachedAllergy.setHiclSeqNo(allergy.getAllergy().getHICL_SEQNO());
 			cachedAllergy.setHicSeqNo(allergy.getAllergy().getHIC_SEQNO());
 			cachedAllergy.setLifeStage(allergy.getAllergy().getLifeStage());
-			cachedAllergy.setOnSetOfReaction(allergy.getAllergy().getOnSetOfReaction());
+			cachedAllergy.setOnSetCode(allergy.getAllergy().getOnSetOfReaction());
 			cachedAllergy.setPickId(allergy.getAllergy().getPickID());
 			cachedAllergy.setReaction(allergy.getAllergy().getReaction());
 			cachedAllergy.setRegionalIdentifier(allergy.getAllergy().getRegionalIdentifier());
-			cachedAllergy.setSeverityOfReaction(allergy.getAllergy().getSeverityOfReaction());
+			cachedAllergy.setSeverityCode(allergy.getAllergy().getSeverityOfReaction());
 			cachedAllergy.setStartDate(DateUtils.toGregorianCalendar(allergy.getAllergy().getStartDate()));
 			cachedAllergy.setTypeCode(allergy.getAllergy().getTYPECODE());
 

@@ -29,14 +29,15 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
-import org.oscarehr.phr.model.PHRMedication;
 
+import org.oscarehr.phr.model.PHRMedication;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
 import oscar.oscarRx.data.RxAllergyWarningWorker;
 import oscar.oscarRx.data.RxDrugData;
 import oscar.oscarRx.data.RxInteractionData;
+import oscar.oscarRx.data.RxPatientData;
 import oscar.oscarRx.data.RxPrescriptionData;
 
 public class RxSessionBean {
@@ -283,7 +284,7 @@ public class RxSessionBean {
 
     private void preloadAllergyWarnings(String atccode){
        try{
-         oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergies = new oscar.oscarRx.data.RxPatientData().getPatient(getDemographicNo()).getAllergies();
+         oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergies = RxPatientData.getPatient(getDemographicNo()).getAllergies();
          RxAllergyWarningWorker worker = new RxAllergyWarningWorker(this,atccode,allergies);
          addToWorkingAllergyWarnings(atccode,worker);
          worker.start();
@@ -333,7 +334,7 @@ public class RxSessionBean {
              MiscUtils.getLogger().debug("NEW ATC CODE for allergy");
              try{
                 RxDrugData drugData = new RxDrugData();
-                oscar.oscarRx.data.RxPatientData.Patient.Allergy[]  allAllergies = new oscar.oscarRx.data.RxPatientData().getPatient(getDemographicNo()).getAllergies();
+                oscar.oscarRx.data.RxPatientData.Patient.Allergy[]  allAllergies = RxPatientData.getPatient(getDemographicNo()).getAllergies();
                 allergies = drugData.getAllergyWarnings(atccode,allAllergies);
                     if (allergies != null){
                        addAllergyWarnings(atccode,allergies);

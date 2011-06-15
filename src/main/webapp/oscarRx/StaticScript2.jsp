@@ -81,7 +81,7 @@
 	Integer currentDemographicNo=bean.getDemographicNo();
         ArrayList<StaticScriptBean.DrugDisplayData> drugs=StaticScriptBean.getDrugList(currentDemographicNo, regionalIdentifier, cn,bn);
 
-	oscar.oscarRx.data.RxPatientData.Patient patient=new oscar.oscarRx.data.RxPatientData().getPatient(currentDemographicNo);
+	oscar.oscarRx.data.RxPatientData.Patient patient=RxPatientData.getPatient(currentDemographicNo);
 	String annotation_display=org.oscarehr.casemgmt.model.CaseManagementNoteLink.DISP_PRESCRIP;
 %>
 <script type="text/javascript" src="../share/javascript/prototype.js"/>"></script>

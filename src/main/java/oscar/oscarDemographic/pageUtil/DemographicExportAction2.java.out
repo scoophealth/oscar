@@ -485,7 +485,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		}
 
 		// ALLERGIES & ADVERSE REACTIONS
-		Allergy[] allergies = new RxPatientData().getPatient(demoNo).getAllergies();
+		Allergy[] allergies = RxPatientData.getPatient(demoNo).getAllergies();
 		for (int j=0; j<allergies.length; j++) {
 		    cds.AllergiesAndAdverseReactionsDocument.AllergiesAndAdverseReactions alr = patientRec.addNewAllergiesAndAdverseReactions();
 		    String aSummary = "";

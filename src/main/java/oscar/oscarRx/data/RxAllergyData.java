@@ -25,8 +25,6 @@
 
 package oscar.oscarRx.data;
 
-import java.util.Hashtable;
-
 import org.oscarehr.util.MiscUtils;
 
 public class RxAllergyData {
@@ -163,46 +161,7 @@ public class RxAllergyData {
         }
         
         public String getTypeDesc() {
-            String s;
-            /** 6 |  1 | generic
-                7 |  2 | compound
-                8 |  3 | brandname
-                9 |  4 | ther_class
-               10 |  5 | chem_class
-               13 |  6 | ingredient
-            **/
-            switch(this.TYPECODE) {
-                /*
-                *|  8 | anatomical class
-                *|  9 | chemical class
-                *| 10 | therapeutic class
-                *| 11 | generic
-                *| 12 | composite generic
-                *| 13 | branded product
-                *| 14 | ingredient
-                */
-                case 11:
-                    s = "Generic Name";
-                    break;                
-                case 12:
-                    s = "Compound";
-                    break;
-                case 13:
-                    s = "Brand Name";
-                    break;
-                case 8:
-                    s = "ATC Class";
-                    break;
-                case 10:
-                    s = "AHFS Class";
-                    break;
-                case 14:
-                    s = "Ingredient";
-                    break;
-                default:
-                    s = "";
-            }
-            return s;
+            return(RxAllergyData.getTypeDesc(this.TYPECODE));
         }
         
 	
@@ -238,18 +197,9 @@ public class RxAllergyData {
            return severityOfReaction;
         }
    
-        //TODO: NEEDS I18N
-        public String getSeverityOfReactionDesc(){           
-            String s = getSeverityOfReaction();
-            Hashtable h = new Hashtable();
-               h.put("1","Mild");
-               h.put("2","Moderate");
-               h.put("3","Severe");              
-            String retval = (String) h.get(s);
-            if (retval == null) {retval = "Unknown";}
-            return retval;
-        }
-        
+        public String getSeverityOfReactionDesc(){       
+        	return(RxAllergyData.getSeverityOfReactionDesc(getSeverityOfReaction()));
+        }        
         
         /**
          * Setter for property severityOfReaction.
@@ -268,15 +218,10 @@ public class RxAllergyData {
         }
         
         public String getOnSetOfReactionDesc(){
-            String s = getOnSetOfReaction();
-            Hashtable h = new Hashtable();
-               h.put("1","Immediate");
-               h.put("2","Gradual");
-               h.put("3","Slow");       
-            String retval = (String) h.get(s);
-            if (retval == null) {retval = "Unknown";}
-            return retval;
+            return(RxAllergyData.getOnSetOfReactionDesc(getOnSetOfReaction()));
          }
+        
+        
         
         public String getLifeStageDesc(){
         	String s = getLifeStage();
@@ -342,4 +287,63 @@ public class RxAllergyData {
             return severity;
         }
     }
+    
+    public static String getOnSetOfReactionDesc(String onsetCode){
+        if ("1".equals(onsetCode)) return("Immediate");
+        if ("2".equals(onsetCode)) return("Gradual");
+        if ("3".equals(onsetCode)) return("Slow");
+        else return("Unknown "+onsetCode);
+     }
+
+    public static String getTypeDesc(int typeCode) {
+        String s;
+        /** 6 |  1 | generic
+            7 |  2 | compound
+            8 |  3 | brandname
+            9 |  4 | ther_class
+           10 |  5 | chem_class
+           13 |  6 | ingredient
+        **/
+        switch(typeCode) {
+            /*
+            *|  8 | anatomical class
+            *|  9 | chemical class
+            *| 10 | therapeutic class
+            *| 11 | generic
+            *| 12 | composite generic
+            *| 13 | branded product
+            *| 14 | ingredient
+            */
+            case 11:
+                s = "Generic Name";
+                break;                
+            case 12:
+                s = "Compound";
+                break;
+            case 13:
+                s = "Brand Name";
+                break;
+            case 8:
+                s = "ATC Class";
+                break;
+            case 10:
+                s = "AHFS Class";
+                break;
+            case 14:
+                s = "Ingredient";
+                break;
+            default:
+                s = "";
+        }
+        return s;
+    }
+
+    //TODO: NEEDS I18N
+    public static String getSeverityOfReactionDesc(String severityCode){           
+        if ("1".equals(severityCode)) return("Mild");
+        if ("2".equals(severityCode)) return("Moderate");
+        if ("3".equals(severityCode)) return("Severe");
+        else return("Unknown "+severityCode);
+    }
+
 }

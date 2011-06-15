@@ -76,11 +76,9 @@ public final class RxShowAllergyAction extends Action {
         
         request.getSession().setAttribute("RxSessionBean", bean);
         
-        RxPatientData rx = null;
         RxPatientData.Patient patient = null;
         try {
-            rx = new RxPatientData();
-            patient = rx.getPatient(bean.getDemographicNo());
+            patient = RxPatientData.getPatient(bean.getDemographicNo());
         }
         catch (java.sql.SQLException ex) {
             throw new ServletException(ex);

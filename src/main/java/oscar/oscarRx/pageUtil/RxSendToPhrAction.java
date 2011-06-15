@@ -54,12 +54,11 @@ public class RxSendToPhrAction extends Action {
         String patientMyOscarId = demoData.getDemographic(""+bean.getDemographicNo()).getPin();
         
         
-        RxPatientData rxPatientData = new RxPatientData();
         RxPatientData.Patient patient = null;
 
         String demoNo = bean.getDemographicNo() + "";
         try {
-            patient = rxPatientData.getPatient(Integer.parseInt(demoNo));
+            patient = RxPatientData.getPatient(Integer.parseInt(demoNo));
         } catch (Exception e) {
             MiscUtils.getLogger().error("Error", e);
         }
