@@ -214,8 +214,7 @@ public class FrmToXMLUtil{
             
             
             //get drug list             
-            RxPatientData pData = new RxPatientData();            
-            RxPatientData.Patient p = pData.getPatient(Integer.parseInt(dataProps.getProperty("demographic_no")==null?"0":dataProps.getProperty("demographic_no")));
+            RxPatientData.Patient p = RxPatientData.getPatient(Integer.parseInt(dataProps.getProperty("demographic_no")==null?"0":dataProps.getProperty("demographic_no")));
             RxPrescriptionData.Prescription[] prescribedDrugs = p.getPrescribedDrugsUnique();            
             for(int i=0; i<prescribedDrugs.length; i++){                
                 SitePatientVisitRecordsDocument.SitePatientVisitRecords.SitePatientVisit.SitePatientVisitDrug drug = visit.addNewSitePatientVisitDrug();                

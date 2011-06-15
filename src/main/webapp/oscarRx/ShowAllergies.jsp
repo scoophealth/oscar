@@ -1,3 +1,7 @@
+<%@page import="org.apache.commons.lang.StringEscapeUtils"%>
+<%@page import="oscar.oscarRx.pageUtil.AllergyHelperBean"%>
+<%@page import="oscar.oscarRx.pageUtil.AllergyDisplay"%>
+<%@page import="java.util.List"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
@@ -61,9 +65,6 @@ String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.D
 
 
 <script type="text/javascript">
-
-
-
     function isEmpty(){  
         if (document.RxSearchAllergyForm.searchString.value.length == 0){
             alert("Search Field is Empty");
@@ -155,31 +156,46 @@ String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.D
 								<td><b>Start Date</b></td>
 								<td><b>&nbsp;</b></td>
 							</thead>
-							<logic:iterate id="allergy"
-								type="oscar.oscarRx.data.RxPatientData.Patient.Allergy"
-								name="patient" property="allergies">
-								<tr>
-									<td><a
-										href="deleteAllergy.do?ID=<%= String.valueOf(allergy.getAllergyId()) %>">
-									Delete </a></td>
-									<td><bean:write name="allergy" property="entryDate" /></td>
-									<td><bean:write name="allergy"
-										property="allergy.DESCRIPTION" /></td>
-									<td><bean:write name="allergy" property="allergy.typeDesc" />
-									</td>
-									<td><bean:write name="allergy"
-										property="allergy.severityOfReactionDesc" /></td>
-									<td><bean:write name="allergy"
-										property="allergy.onSetOfReactionDesc" /></td>
-									<td><bean:write name="allergy" property="allergy.reaction" />
-									</td>
-									<td><%=allergy.getAllergy().getStartDate()!=null?allergy.getAllergy().getStartDate():""%>
-									</td>
-									<td><a href="#" title="Annotation" onclick="window.open('../annotation/annotation.jsp?display=<%=annotation_display%>&table_id=<%=String.valueOf(allergy.getAllergyId())%>&demo=<jsp:getProperty name="patient" property="demographicNo"/>','anwin','width=400,height=250');"><img src="../images/notes.gif" border="0"></a>
-									</td>
-								</tr>
-
-							</logic:iterate>
+							<%
+								Integer demographicId=bean.getDemographicNo();
+								List<AllergyDisplay> displayAllergies=AllergyHelperBean.getAllergiesToDisplay(demographicId, request.getLocale());
+								for (AllergyDisplay displayAllergy : displayAllergies)
+								{
+									%>
+										<tr>
+											<td>
+												<%
+													// delete is only allowed for local allergies
+													if (displayAllergy.getRemoteFacilityId()==null)
+													{
+														%>
+															<a href="deleteAllergy.do?ID=<%=displayAllergy.getId()%>">Delete </a>
+														<%
+													}
+												%>
+											</td>
+											<td><%=StringEscapeUtils.escapeHtml(displayAllergy.getEntryDate())%></td>
+											<td><%=StringEscapeUtils.escapeHtml(displayAllergy.getDescription())%></td>
+											<td><%=StringEscapeUtils.escapeHtml(displayAllergy.getTypeDesc())%></td>
+											<td><%=StringEscapeUtils.escapeHtml(displayAllergy.getSeverityDesc())%></td>
+											<td><%=StringEscapeUtils.escapeHtml(displayAllergy.getOnSetDesc())%></td>
+											<td><%=StringEscapeUtils.escapeHtml(displayAllergy.getReaction())%></td>
+											<td><%=StringEscapeUtils.escapeHtml(displayAllergy.getStartDate())%></td>
+											<td>
+												<%
+													// annotations only avaiable for local allergies
+													if (displayAllergy.getRemoteFacilityId()==null)
+													{
+														%>
+															<a href="#" title="Annotation" onclick="window.open('../annotation/annotation.jsp?display=<%=annotation_display%>&table_id=<%=displayAllergy.getId()%>&demo=<jsp:getProperty name="patient" property="demographicNo"/>','anwin','width=400,height=250');"><img src="../images/notes.gif" border="0"></a>
+														<%
+													}
+												%>
+											</td>
+										</tr>
+									<%
+								}
+							%>
 						</table>
 						</div>
 						</td>

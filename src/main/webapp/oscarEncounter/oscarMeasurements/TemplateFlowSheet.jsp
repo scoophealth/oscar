@@ -1,3 +1,4 @@
+<%@page import="oscar.oscarRx.data.RxPatientData"%>
 <% long startTime = System.currentTimeMillis(); %><%@page import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarEncounter.oscarMeasurements.*,oscar.oscarEncounter.oscarMeasurements.bean.*,java.net.*"%>
 <%@page import="oscar.OscarProperties, oscar.util.StringUtils, org.oscarehr.common.dao.DemographicDao, org.oscarehr.common.model.Demographic" %>
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils,oscar.log.*"%>
@@ -618,7 +619,7 @@ div.recommendations li{
             <div class="wrapper" id="allergFullListing"  >
 
                 <%  oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergies;
-                    allergies = new oscar.oscarRx.data.RxPatientData().getPatient(Integer.parseInt(demographic_no)).getAllergies();
+                    allergies = RxPatientData.getPatient(Integer.parseInt(demographic_no)).getAllergies();
                     
                     if (allergies.length > 0){%>
                 <ul>

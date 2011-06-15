@@ -246,7 +246,6 @@ public final class FrmSetupFormAction extends Action {
     }
     
     private List getDrugList(String demographicNo){
-        RxPatientData pData = new RxPatientData();
         List drugs = new LinkedList();
         String fluShot = getFluShotBillingDate(demographicNo);
 
@@ -254,7 +253,7 @@ public final class FrmSetupFormAction extends Action {
             drugs.add(fluShot + "     Flu Shot");
             
         try{
-            RxPatientData.Patient p = pData.getPatient(Integer.parseInt(demographicNo));
+            RxPatientData.Patient p = RxPatientData.getPatient(Integer.parseInt(demographicNo));
             RxPrescriptionData.Prescription[] prescribedDrugs = p.getPrescribedDrugsUnique();
             if(prescribedDrugs.length==0 && fluShot==null)
                 drugs=null;
@@ -269,10 +268,9 @@ public final class FrmSetupFormAction extends Action {
     }
     
     private List getDrugAllegyList(String demographicNo){
-        RxPatientData pData = new RxPatientData();
         List allergyLst = new LinkedList();
         try{
-            RxPatientData.Patient p = pData.getPatient(Integer.parseInt(demographicNo));
+            RxPatientData.Patient p = RxPatientData.getPatient(Integer.parseInt(demographicNo));
             RxPatientData.Patient.Allergy[] allergies = p.getAllergies();
             if(allergies.length==0)
                 allergyLst=null;

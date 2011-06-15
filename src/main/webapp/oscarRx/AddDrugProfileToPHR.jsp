@@ -1,3 +1,4 @@
+<%@page import="oscar.oscarRx.data.RxPatientData"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
@@ -154,11 +155,10 @@ String level2 = CddmLevels.MEDICATIONS;
 			<tr>
 				<td>
 				<%if(connected){
-                            oscar.oscarRx.data.RxPatientData rxPatientData = new oscar.oscarRx.data.RxPatientData();
                             oscar.oscarRx.data.RxPatientData.Patient patient ;
 
                             String demoNo = request.getParameter("demoId");            
-                            patient = rxPatientData.getPatient(Integer.parseInt(demoNo));
+                            patient = RxPatientData.getPatient(Integer.parseInt(demoNo));
 
                             oscar.oscarRx.data.RxPrescriptionData.Prescription[] prescribedDrugs;                                                               
                             prescribedDrugs = patient.getPrescribedDrugsUnique();

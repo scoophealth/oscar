@@ -23,6 +23,7 @@
  * Ontario, Canada 
  */
 --%>
+<%@page import="oscar.oscarRx.data.RxPatientData"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
@@ -61,7 +62,7 @@
     arr = prescriptData.getUniquePrescriptionsByPatient(Integer.parseInt(bean.demographicNo));
 
     oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergies
-    = new oscar.oscarRx.data.RxPatientData().getPatient(Integer.parseInt(bean.demographicNo)).getAllergies();
+    = RxPatientData.getPatient(Integer.parseInt(bean.demographicNo)).getAllergies();
     
     PreventionData pd = new PreventionData();
     ArrayList prevList2 = pd.getPreventionData(bean.demographicNo);

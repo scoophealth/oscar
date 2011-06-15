@@ -1,3 +1,4 @@
+<%@page import="oscar.oscarRx.data.RxPatientData"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
@@ -113,7 +114,7 @@ else {
 }
 
 
-oscar.oscarRx.data.RxPatientData.Patient patient = new oscar.oscarRx.data.RxPatientData().getPatient(bean.getDemographicNo());
+oscar.oscarRx.data.RxPatientData.Patient patient = RxPatientData.getPatient(bean.getDemographicNo());
 
 oscar.oscarRx.data.RxPrescriptionData.Prescription rx = null;
 int i;
