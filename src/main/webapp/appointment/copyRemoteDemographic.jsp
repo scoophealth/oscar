@@ -1,3 +1,5 @@
+<%@page import="org.oscarehr.caisi_integrator.ws.DemographicWs"%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="java.net.URLEncoder"%>
 <%@page import="java.util.Enumeration"%>
 <%@page import="org.oscarehr.common.model.Demographic"%>
@@ -13,6 +15,10 @@
 	ClientDao clientDao=(ClientDao)SpringUtils.getBean("clientDao");
 	clientDao.saveClient(demographic);
 	
+	DemographicWs demographicWs=CaisiIntegratorManager.getDemographicWs();
+	LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+	demographicWs.linkDemographics(loggedInInfo.loggedInProvider.getProviderNo(), demographic.getDemographicNo(), remoteFacilityId, remoteDemographicId);
+
 	// WebUtils.dumpParameters(request);
 	// --- Dump Request Parameters Start ---
 	// duration=15
