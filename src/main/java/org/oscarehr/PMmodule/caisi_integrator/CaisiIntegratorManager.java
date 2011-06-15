@@ -442,10 +442,16 @@ public class CaisiIntegratorManager {
 		demographic.setFirstName(demographicTransfer.getFirstName());
 		demographic.setLastName(demographicTransfer.getLastName());
 		
-		if (demographicTransfer.getBirthDate()!=null) demographic.setBirthDay(demographicTransfer.getBirthDate());
-		
+		if (demographicTransfer.getBirthDate()!=null) demographic.setBirthDay(demographicTransfer.getBirthDate());		
 		if (demographicTransfer.getGender()!=null) demographic.setSex(demographicTransfer.getGender().name());
 
+		demographic.setCity(demographicTransfer.getCity());
+		demographic.setHcType(demographicTransfer.getHinType());
+		demographic.setHin(demographicTransfer.getHin());
+		demographic.setVer(demographicTransfer.getHinVersion());
+		demographic.setProvince(demographicTransfer.getProvince());
+		demographic.setSin(demographicTransfer.getSin());
+		
 		demographic.setPatientStatus("AC");
 		demographic.setDateJoined(new Date());
 		
