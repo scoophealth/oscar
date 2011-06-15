@@ -57,12 +57,87 @@ import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.util.MiscUtils;
 
+import oscar.OscarProperties;
+
 public final class DateUtils {
 
 	private static Logger logger = MiscUtils.getLogger();
 
+	private static String dateFormatString=OscarProperties.getInstance().getProperty("DATE_FORMAT");
+	private static SimpleDateFormat dateFormatter=new SimpleDateFormat(dateFormatString);
+	
+	/**
+	 * @param locale can be null
+	 * @return if date is null will return a blank string.
+	 */
+	public static String formatDate(Date date, Locale locale)
+	{
+		if (date==null) return("");
+		
+		SimpleDateFormat dateFormatter=null;
+		
+		if (locale==null) dateFormatter=new SimpleDateFormat(dateFormatString);
+		else dateFormatter=new SimpleDateFormat(dateFormatString, locale);
+		
+		return(dateFormatter.format(date));
+	}
+	
+	/**
+	 * @param locale can be null
+	 * @return if String is null will return null.
+	 * @throws ParseException 
+	 */
+	public static Date parseDate(String s, Locale locale) throws ParseException
+	{
+		if (s==null) return(null);
+		
+		SimpleDateFormat dateFormatter=null;
+		
+		if (locale==null) dateFormatter=new SimpleDateFormat(dateFormatString);
+		else dateFormatter=new SimpleDateFormat(dateFormatString, locale);
+
+		return(dateFormatter.parse(s));
+	}
+	
+	/**
+	 * @param locale can be null
+	 * @return if calendar is null will return a blank string.
+	 */
+	public static String formatDate(Calendar calendar, Locale locale)
+	{
+		if (calendar==null) return("");
+		
+		return(formatDate(calendar.getTime(), locale));
+	}
+	
+	/**
+	 * @param locale can be null
+	 * @return if String is null will return null.
+	 * @throws ParseException 
+	 */
+	public static synchronized GregorianCalendar parseDateAsCalendar(String s, Locale locale) throws ParseException
+	{
+		Date d=parseDate(s, locale);
+		
+		if (d==null) return(null);
+		
+		GregorianCalendar cal=new GregorianCalendar();
+		cal.setTime(d);
+		cal.set(Calendar.HOUR, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		return(cal);
+	}
+	
+	/**
+	 * @Deprecated use formatDate() parseDate() instead
+	 */
 	private static SimpleDateFormat sdf;
 
+	/**
+	 * @Deprecated use formatDate() parseDate() instead
+	 */
 	private static String formatDate = "dd/MM/yyyy";
 
 	public static String getISODateTimeFormatNoT(Calendar cal)
