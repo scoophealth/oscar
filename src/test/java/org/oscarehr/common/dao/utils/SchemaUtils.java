@@ -111,19 +111,20 @@ public class SchemaUtils
 	private static void runCreateTablesScript(Connection c) throws IOException, SQLException
 	{				
 		assertEquals(loadFileIntoMySQL(System.getProperty("basedir") + "/database/mysql/oscarinit.sql"),0);
-/*
+
 		assertEquals(loadFileIntoMySQL(System.getProperty("basedir") + "/database/mysql/oscarinit_on.sql"),0);
 		assertEquals(loadFileIntoMySQL(System.getProperty("basedir") + "/database/mysql/oscardata.sql"),0);
 		assertEquals(loadFileIntoMySQL(System.getProperty("basedir") + "/database/mysql/oscardata_on.sql"),0);
 		assertEquals(loadFileIntoMySQL(System.getProperty("basedir") + "/database/mysql/icd9.sql"),0);
-*/
+
 		assertEquals(loadFileIntoMySQL(System.getProperty("basedir") + "/database/mysql/caisi/initcaisi.sql"),0);
-/*		
+		
 		assertEquals(loadFileIntoMySQL(System.getProperty("basedir") + "/database/mysql/caisi/initcaisidata.sql"),0);
-		assertEquals(loadFileIntoMySQL(System.getProperty("basedir") + "/database/mysql/icd9_issue_groups.sql"),0);
+		assertEquals(loadFileIntoMySQL(System.getProperty("basedir") + "/database/mysql/caisi/populate_issue_icd9.sql"),0);
+		//		assertEquals(loadFileIntoMySQL(System.getProperty("basedir") + "/database/mysql/icd9_issue_groups.sql"),0);
 		assertEquals(loadFileIntoMySQL(System.getProperty("basedir") + "/database/mysql/measurementMapData.sql"),0);
-		assertEquals(loadFileIntoMySQL(System.getProperty("basedir") + "/database/mysql/expire_oscardoc.sql"),0);
-*/		
+//		assertEquals(loadFileIntoMySQL(System.getProperty("basedir") + "/database/mysql/expire_oscardoc.sql"),0);
+		
 	}
 	
 	/**

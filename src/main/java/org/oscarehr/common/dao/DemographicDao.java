@@ -285,5 +285,9 @@ public class DemographicDao extends HibernateDaoSupport {
     	 return q.list();
     	 
      }
+     
+     public void save(Demographic demographic){
+    	 this.getHibernateTemplate().saveOrUpdate(demographic);
+     }
  
 }

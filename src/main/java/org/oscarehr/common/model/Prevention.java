@@ -38,7 +38,7 @@ public class Prevention extends AbstractModel<Integer> implements Serializable {
 	private String preventionType = null;
 
 	private boolean deleted = false;
-	private boolean refused = false;
+	private char refused = '0';
 
 	@Column(name = "next_date")
 	@Temporal(TemporalType.DATE)
@@ -90,11 +90,25 @@ public class Prevention extends AbstractModel<Integer> implements Serializable {
 	}
 
 	public boolean isRefused() {
-		return refused;
+		if(refused == '1'){
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean isIneligible(){
+		if(refused == '2'){
+			return true;
+		}
+		return false;
 	}
 
 	public void setRefused(boolean refused) {
-		this.refused = refused;
+		this.refused = '1';
+	}
+	
+	public void setIneligible(boolean ineligible){
+		this.refused = '2';
 	}
 
 	public Date getNextDate() {
