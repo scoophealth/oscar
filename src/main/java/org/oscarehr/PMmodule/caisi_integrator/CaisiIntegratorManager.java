@@ -24,6 +24,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -36,6 +37,7 @@ import org.oscarehr.caisi_integrator.ws.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.CachedProgram;
 import org.oscarehr.caisi_integrator.ws.CachedProvider;
 import org.oscarehr.caisi_integrator.ws.ConnectException_Exception;
+import org.oscarehr.caisi_integrator.ws.DemographicTransfer;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.caisi_integrator.ws.DemographicWsService;
 import org.oscarehr.caisi_integrator.ws.DuplicateHinExceptionException;
@@ -55,6 +57,7 @@ import org.oscarehr.caisi_integrator.ws.ProviderWsService;
 import org.oscarehr.caisi_integrator.ws.ReferralWs;
 import org.oscarehr.caisi_integrator.ws.ReferralWsService;
 import org.oscarehr.caisi_integrator.ws.SetConsentTransfer;
+import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.IntegratorConsent;
 import org.oscarehr.common.model.IntegratorConsent.ConsentStatus;
@@ -425,4 +428,27 @@ public class CaisiIntegratorManager {
 		
 		return(null);
 	}
+    
+    /**
+     * The purpose of this method is to retrieve a remote demographic record and populate it in a local demographic object. It is ready to be persisted.
+     * We do not automatically persist it as there appears to be some code logic where a subsequent approval process may choose not to persist it.
+     */
+    public static Demographic makeUnpersistedDemographicObjectFromRemoteEntry(int remoteFacilityId, int remoteDemographicId) throws MalformedURLException
+    {
+		DemographicWs demographicWs = getDemographicWs();
+		DemographicTransfer demographicTransfer = demographicWs.getDemographicByFacilityIdAndDemographicId(remoteFacilityId, remoteDemographicId);
+
+		Demographic demographic = new Demographic();
+		demographic.setFirstName(demographicTransfer.getFirstName());
+		demographic.setLastName(demographicTransfer.getLastName());
+		
+		if (demographicTransfer.getBirthDate()!=null) demographic.setBirthDay(demographicTransfer.getBirthDate());
+		
+		if (demographicTransfer.getGender()!=null) demographic.setSex(demographicTransfer.getGender().name());
+
+		demographic.setPatientStatus("AC");
+		demographic.setDateJoined(new Date());
+		
+		return(demographic);
+    }
 }
