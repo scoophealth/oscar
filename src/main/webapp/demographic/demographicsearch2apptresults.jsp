@@ -232,9 +232,20 @@ function searchAll() {
 
 var fullname="";
 <%-- RJ 07/10/2006 Need to pass doctor of patient back to referrer --%>
-function addName(demographic_no, lastname, firstname, chartno, messageID, doctorNo) {  
+function addName(demographic_no, lastname, firstname, chartno, messageID, doctorNo, remoteFacilityId) {  
   fullname=lastname+","+firstname;
-  document.addform.action="<%=request.getParameter("originalpage")%>?demographic_no="+demographic_no+"&name="+fullname+"&chart_no="+chartno+"&bFirstDisp=false"+"&messageID="+messageID+"&doctor_no="+doctorNo;  //+"\"" ;
+
+   if (remoteFacilityId == '')
+   {
+	   document.addform.action="<%=request.getParameter("originalpage")%>?";
+   }
+   else
+   {
+	   document.addform.action="copyRemoteDemographic.jsp?originalPage=<%=URLEncoder.encode(request.getParameter("originalpage"))%>&";	  
+   }	  
+  
+  document.addform.action=document.addform.action+"demographic_no="+demographic_no+"&name="+fullname+"&chart_no="+chartno+"&bFirstDisp=false"+"&messageID="+messageID+"&doctor_no="+doctorNo+"&remoteFacilityId="+remoteFacilityId; 
+  
   document.addform.submit();
   return true;
 }
@@ -275,11 +286,11 @@ function addNameCaisi(demographic_no,lastname,firstname,chartno,messageID) {
 	  String bgColor = rowCounter%2==0?"#EEEEFF":"white";
 %>
    <li style="background-color: <%=bgColor%>" onMouseOver="this.style.cursor='hand';this.style.backgroundColor='pink';" onMouseout="this.style.backgroundColor='<%=bgColor%>';"
-		onClick="document.forms[0].demographic_no.value=<%=apptMainBean.getString(rs,"demographic_no")%>;<% if(caisi) { out.print("addNameCaisi");} else { out.print("addName");} %>('<%=apptMainBean.getString(rs,"demographic_no")%>','<%=URLEncoder.encode(apptMainBean.getString(rs,"last_name"))%>','<%=URLEncoder.encode(apptMainBean.getString(rs,"first_name"))%>','<%=URLEncoder.encode(apptMainBean.getString(rs,"chart_no"))%>','<%=request.getParameter("messageId")%>','<%=apptMainBean.getString(rs,"provider_no")%>')">
+		onClick="document.forms[0].demographic_no.value=<%=apptMainBean.getString(rs,"demographic_no")%>;<% if(caisi) { out.print("addNameCaisi");} else { out.print("addName");} %>('<%=apptMainBean.getString(rs,"demographic_no")%>','<%=URLEncoder.encode(apptMainBean.getString(rs,"last_name"))%>','<%=URLEncoder.encode(apptMainBean.getString(rs,"first_name"))%>','<%=URLEncoder.encode(apptMainBean.getString(rs,"chart_no"))%>','<%=request.getParameter("messageId")%>','<%=apptMainBean.getString(rs,"provider_no")%>','')">
 		<%-- 07/10/2006 RJ Added doctor provider_no to url --%>
 		<div class="demoId"><input type="submit" class="mbttn" name="demographic_no"
 			value="<%=apptMainBean.getString(rs,"demographic_no")%>"
-			onClick="<% if(caisi) {out.print("addNameCaisi");} else {out.print("addName");} %>('<%=apptMainBean.getString(rs,"demographic_no")%>','<%=URLEncoder.encode(apptMainBean.getString(rs,"last_name"))%>','<%=URLEncoder.encode(apptMainBean.getString(rs,"first_name"))%>','<%=URLEncoder.encode(apptMainBean.getString(rs,"chart_no"))%>','<%=request.getParameter("messageId")%>','<%=apptMainBean.getString(rs,"provider_no")%>')">
+			onClick="<% if(caisi) {out.print("addNameCaisi");} else {out.print("addName");} %>('<%=apptMainBean.getString(rs,"demographic_no")%>','<%=URLEncoder.encode(apptMainBean.getString(rs,"last_name"))%>','<%=URLEncoder.encode(apptMainBean.getString(rs,"first_name"))%>','<%=URLEncoder.encode(apptMainBean.getString(rs,"chart_no"))%>','<%=request.getParameter("messageId")%>','<%=apptMainBean.getString(rs,"provider_no")%>','')">
                 </div>
 		<div class="lastName"><%=Misc.toUpperLowerCase(apptMainBean.getString(rs,"last_name"))%></div>
 		<div class="firstName"><%=Misc.toUpperLowerCase(apptMainBean.getString(rs,"first_name"))%></div>
@@ -298,7 +309,7 @@ function addNameCaisi(demographic_no,lastname,firstname,chartno,messageID) {
       bufDoctorNo = new StringBuffer( apptMainBean.getString(rs,"provider_no") ); 
     }
   }
-  
+
   @SuppressWarnings("unchecked")
   List<MatchingDemographicTransferScore> integratorSearchResults=(List<MatchingDemographicTransferScore>)request.getAttribute("integratorSearchResults");
   if (integratorSearchResults!=null) {
@@ -307,9 +318,11 @@ function addNameCaisi(demographic_no,lastname,firstname,chartno,messageID) {
 		  String bgColor = rowCounter%2==0?"#EEEEFF":"white";
 		  DemographicTransfer demographicTransfer=matchingDemographicTransferScore.getDemographicTransfer();
 		%>
-		   <li style="background-color: <%=bgColor%>" onMouseOver="this.style.cursor='hand';this.style.backgroundColor='pink';" onMouseout="this.style.backgroundColor='<%=bgColor%>';" onClick="alert('Not Finished yet')">
+		   <li style="background-color: <%=bgColor%>" onMouseOver="this.style.cursor='hand';this.style.backgroundColor='pink';" onMouseout="this.style.backgroundColor='<%=bgColor%>';"
+			   onClick="document.forms[0].demographic_no.value=<%=demographicTransfer.getCaisiDemographicId()%>;addName('<%=demographicTransfer.getCaisiDemographicId()%>','<%=URLEncoder.encode(demographicTransfer.getLastName())%>','<%=URLEncoder.encode(demographicTransfer.getFirstName())%>','','<%=request.getParameter("messageId")%>','<%=demographicTransfer.getCaisiProviderId()%>','<%=demographicTransfer.getIntegratorFacilityId()%>')"
+		   >
 				<div class="demoId">
-					<input type="submit" class="mbttn" name="demographic_no" value="remote <%=demographicTransfer.getIntegratorFacilityId()%>:<%=demographicTransfer.getCaisiDemographicId()%>" />
+					<input type="submit" class="mbttn" name="demographic_no" value="Integrator <%=demographicTransfer.getIntegratorFacilityId()%>:<%=demographicTransfer.getCaisiDemographicId()%>" />
                 </div>
 				<div class="lastName"><%=Misc.toUpperLowerCase(demographicTransfer.getLastName())%></div>
 				<div class="firstName"><%=Misc.toUpperLowerCase(demographicTransfer.getFirstName())%></div>
