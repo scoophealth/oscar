@@ -91,7 +91,7 @@ public class EctDisplayRxAction extends EctDisplayAction {
                 continue;
 
             date = drug.getRxDate();
-            serviceDateStr = DateUtils.getDate(date, dateFormat, request.getLocale());
+            serviceDateStr = DateUtils.formatDate(date, request.getLocale());
 
             String tmp = drug.getFullOutLine().replaceAll(";", " ");
             String strTitle = StringUtils.maxLenString(tmp, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);

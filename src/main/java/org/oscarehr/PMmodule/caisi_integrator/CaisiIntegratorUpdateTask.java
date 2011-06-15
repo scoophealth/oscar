@@ -757,7 +757,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 		ArrayList<CachedDemographicAllergy> cachedAllergies = new ArrayList<CachedDemographicAllergy>();
 
-		for (RxPatientData.Patient.Allergy allergy : allergies) {			
+		for (RxPatientData.Patient.Allergy allergy : allergies) {
 			CachedDemographicAllergy cachedAllergy = new CachedDemographicAllergy();
 
 			FacilityIdIntegerCompositePk facilityIdIntegerCompositePk = new FacilityIdIntegerCompositePk();
@@ -784,9 +784,10 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			cachedAllergies.add(cachedAllergy);
 		}
 
-		for (ArrayList<CachedDemographicAllergy> chunk : breakListIntoSmallChunks(cachedAllergies, 50))
-		{
-			demographicService.setCachedDemographicAllergies(chunk);			
+		for (ArrayList<CachedDemographicAllergy> chunk : breakListIntoSmallChunks(cachedAllergies, 50)) {
+			if (chunk.size() > 0) {
+				demographicService.setCachedDemographicAllergies(chunk);
+			}
 		}
 	}
 
@@ -1102,7 +1103,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				tempList = new ArrayList<T>();
 				size = 0;
 			}
-			
+
 			tempList.add(o);
 		}
 

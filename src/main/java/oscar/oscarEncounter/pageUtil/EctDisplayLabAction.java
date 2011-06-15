@@ -81,7 +81,7 @@ public class EctDisplayLabAction extends EctDisplayAction {
         for( int idx = 0; idx < labs.size(); ++idx ) {
             result = (LabResultData) labs.get(idx);
             Date date = result.getDateObj();
-            String formattedDate = DateUtils.getDate(date,dateFormat,request.getLocale());               
+            String formattedDate = DateUtils.formatDate(date,request.getLocale());               
             func = new StringBuilder("popupPage(700,960,'");
             
             if ( result.isMDS() ){ 

@@ -41,7 +41,6 @@ import org.apache.struts.util.MessageResources;
  */
 public class EctDisplayAction extends Action {
     private static Hashtable Actions = null;
-    protected static String dateFormat = "dd-MMM-yyyy";
     protected static final String ELLIPSES = "...";
     protected static final int MAX_LEN_TITLE = 48;
     protected static final int CROP_LEN_TITLE = 45;
