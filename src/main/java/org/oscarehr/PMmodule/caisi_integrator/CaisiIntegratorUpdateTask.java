@@ -25,6 +25,7 @@ package org.oscarehr.PMmodule.caisi_integrator;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -48,6 +49,7 @@ import org.oscarehr.PMmodule.model.SecUserRole;
 import org.oscarehr.caisi_integrator.ws.CachedAdmission;
 import org.oscarehr.caisi_integrator.ws.CachedAppointment;
 import org.oscarehr.caisi_integrator.ws.CachedBillingOnItem;
+import org.oscarehr.caisi_integrator.ws.CachedDemographicAllergy;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicDrug;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicIssue;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicNote;
@@ -104,9 +106,9 @@ import org.oscarehr.common.model.EFormValue;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.GroupNoteLink;
 import org.oscarehr.common.model.IntegratorConsent;
+import org.oscarehr.common.model.IntegratorConsent.ConsentStatus;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.Provider;
-import org.oscarehr.common.model.IntegratorConsent.ConsentStatus;
 import org.oscarehr.dx.dao.DxResearchDAO;
 import org.oscarehr.dx.model.DxResearch;
 import org.oscarehr.util.CxfClientUtils;
@@ -129,6 +131,8 @@ import oscar.oscarEncounter.oscarMeasurements.model.Measurementmap;
 import oscar.oscarEncounter.oscarMeasurements.model.Measurements;
 import oscar.oscarEncounter.oscarMeasurements.model.MeasurementsExt;
 import oscar.oscarEncounter.oscarMeasurements.model.Measurementtype;
+import oscar.oscarRx.data.RxPatientData;
+import oscar.util.DateUtils;
 
 public class CaisiIntegratorUpdateTask extends TimerTask {
 
@@ -201,7 +205,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	}
 
 	@Override
-    public void run() {
+	public void run() {
 		logger.debug("CaisiIntegratorUpdateTask starting");
 
 		LoggedInInfo.setLoggedInInfoToCurrentClassAndMethod();
@@ -264,7 +268,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 		// start at the beginning of time so by default everything is pushed
 		Date lastDataUpdated = new Date(0);
-		if (cachedFacility != null && cachedFacility.getLastDataUpdate()!=null) lastDataUpdated = MiscUtils.toDate(cachedFacility.getLastDataUpdate());
+		if (cachedFacility != null && cachedFacility.getLastDataUpdate() != null) lastDataUpdated = MiscUtils.toDate(cachedFacility.getLastDataUpdate());
 
 		// this needs to be set now, before we do any sends, this will cause anything updated after now to be resent twice but it's better than items being missed that were updated after this started.
 		Date currentUpdateDate = new Date();
@@ -405,6 +409,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				pushDxresearchs(facility, demographicService, demographicId);
 				pushBillingItems(facility, demographicService, demographicId);
 				pushEforms(facility, demographicService, demographicId);
+				pushAllergies(facility, demographicService, demographicId);
 
 			} catch (IllegalArgumentException iae) {
 				// continue processing demographics if date values in current demographic are bad
@@ -743,6 +748,48 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		writeToIntegrator(drugsToSend, demographicService, CachedDemographicDrug.class.getName());
 	}
 
+	private void pushAllergies(Facility facility, DemographicWs demographicService, Integer demographicId) throws SQLException {
+		logger.debug("pushing demographicAllergies facilityId:" + facility.getId() + ", demographicId:" + demographicId);
+
+		RxPatientData rx = new RxPatientData();
+		RxPatientData.Patient patient = rx.getPatient(demographicId);
+		RxPatientData.Patient.Allergy[] allergies = patient.getAllergies();
+
+		ArrayList<CachedDemographicAllergy> cachedAllergies = new ArrayList<CachedDemographicAllergy>();
+
+		for (RxPatientData.Patient.Allergy allergy : allergies) {			
+			CachedDemographicAllergy cachedAllergy = new CachedDemographicAllergy();
+
+			FacilityIdIntegerCompositePk facilityIdIntegerCompositePk = new FacilityIdIntegerCompositePk();
+			facilityIdIntegerCompositePk.setCaisiItemId(allergy.getAllergyId());
+			cachedAllergy.setFacilityIdIntegerCompositePk(facilityIdIntegerCompositePk);
+
+			cachedAllergy.setAgccs(allergy.getAllergy().getAGCCS());
+			cachedAllergy.setAgcsp(allergy.getAllergy().getAGCSP());
+			cachedAllergy.setAgeOfOnset(allergy.getAllergy().getAgeOfOnset());
+			cachedAllergy.setCaisiDemographicId(demographicId);
+			cachedAllergy.setDescription(allergy.getAllergy().getDESCRIPTION());
+			cachedAllergy.setEntryDate(DateUtils.toGregorianCalendar(allergy.getEntryDate()));
+			cachedAllergy.setHiclSeqNo(allergy.getAllergy().getHICL_SEQNO());
+			cachedAllergy.setHicSeqNo(allergy.getAllergy().getHIC_SEQNO());
+			cachedAllergy.setLifeStage(allergy.getAllergy().getLifeStage());
+			cachedAllergy.setOnSetOfReaction(allergy.getAllergy().getOnSetOfReaction());
+			cachedAllergy.setPickId(allergy.getAllergy().getPickID());
+			cachedAllergy.setReaction(allergy.getAllergy().getReaction());
+			cachedAllergy.setRegionalIdentifier(allergy.getAllergy().getRegionalIdentifier());
+			cachedAllergy.setSeverityOfReaction(allergy.getAllergy().getSeverityOfReaction());
+			cachedAllergy.setStartDate(DateUtils.toGregorianCalendar(allergy.getAllergy().getStartDate()));
+			cachedAllergy.setTypeCode(allergy.getAllergy().getTYPECODE());
+
+			cachedAllergies.add(cachedAllergy);
+		}
+
+		for (ArrayList<CachedDemographicAllergy> chunk : breakListIntoSmallChunks(cachedAllergies, 50))
+		{
+			demographicService.setCachedDemographicAllergies(chunk);			
+		}
+	}
+
 	private void pushAppointments(Facility facility, DemographicWs demographicService, Integer demographicId) throws ShutdownException {
 		logger.debug("pushing appointments facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
@@ -1042,5 +1089,25 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				partList.clear();
 			}
 		}
+	}
+
+	private static <T> ArrayList<ArrayList<T>> breakListIntoSmallChunks(List<T> items, int size) {
+		ArrayList<ArrayList<T>> results = new ArrayList<ArrayList<T>>();
+
+		int itemCounter = 0;
+		ArrayList<T> tempList = new ArrayList<T>();
+		for (T o : items) {
+			if (itemCounter > size) {
+				results.add(tempList);
+				tempList = new ArrayList<T>();
+				size = 0;
+			}
+			
+			tempList.add(o);
+		}
+
+		results.add(tempList);
+
+		return (results);
 	}
 }
