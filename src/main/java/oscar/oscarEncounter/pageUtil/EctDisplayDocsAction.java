@@ -36,7 +36,9 @@ import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.log4j.Logger;
 import org.apache.struts.util.MessageResources;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.dms.EDoc;
@@ -48,135 +50,135 @@ import oscar.util.StringUtils;
 //import oscar.oscarSecurity.CookieSecurity;
 
 public class EctDisplayDocsAction extends EctDisplayAction {
-    //private static final String BGCOLOUR = "476BB3";
-    private static final String cmd = "docs";
+	private static Logger logger = MiscUtils.getLogger();
 
- public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
+	private static final String cmd = "docs";
 
-	boolean a = true;
- 	Vector v = OscarRoleObjectPrivilege.getPrivilegeProp("_newCasemgmt.documents");
-    String roleName = (String)request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
-    a = OscarRoleObjectPrivilege.checkPrivilege(roleName, (Properties) v.get(0), (Vector) v.get(1));
- 	if(!a) {
- 		return true; //Prevention link won't show up on new CME screen.
- 	} else {
- 	  
- 	String omitTypeStr = request.getParameter("omit");
- 	String[] omitTypes = new String[0];
- 	if(omitTypeStr!=null) {
- 		omitTypes = omitTypeStr.split(",");
- 	}
-	//add for inbox manager
-	boolean inboxflag=oscar.util.plugin.IsPropertiesOn.propertiesOn("inboxmnger");
-    //set lefthand module heading and link
-    String winName = "docs" + bean.demographicNo;
-    String url = "popupPage(500,1115,'" + winName + "', '" + request.getContextPath() + "/dms/documentReport.jsp?" +
-            "function=demographic&doctype=lab&functionid=" + bean.demographicNo + "&curUser=" + bean.providerNo + "')";
+	public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
 
-    Dao.setLeftHeading(messages.getMessage(request.getLocale(), "oscarEncounter.Index.msgDocuments"));
-    if (inboxflag){
-    	url="popupPage(600,1024,'" + winName + "', '" + request.getContextPath() +
-    		"/mod/docmgmtComp/DocList.do?method=list&&demographic_no=" + bean.demographicNo+ "');";
-    	Dao.setLeftHeading(messages.getMessage("oscarEncounter.Index.inboxManager"));
-    }
-    Dao.setLeftURL(url);
+		boolean a = true;
+		Vector v = OscarRoleObjectPrivilege.getPrivilegeProp("_newCasemgmt.documents");
+		String roleName = (String) request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
+		a = OscarRoleObjectPrivilege.checkPrivilege(roleName, (Properties) v.get(0), (Vector) v.get(1));
+		if (!a) {
+			return true; // Prevention link won't show up on new CME screen.
+		} else {
 
+			String omitTypeStr = request.getParameter("omit");
+			String[] omitTypes = new String[0];
+			if (omitTypeStr != null) {
+				omitTypes = omitTypeStr.split(",");
+			}
+			// add for inbox manager
+			boolean inboxflag = oscar.util.plugin.IsPropertiesOn.propertiesOn("inboxmnger");
+			// set lefthand module heading and link
+			String winName = "docs" + bean.demographicNo;
+			String url = "popupPage(500,1115,'" + winName + "', '" + request.getContextPath() + "/dms/documentReport.jsp?" + "function=demographic&doctype=lab&functionid=" + bean.demographicNo + "&curUser=" + bean.providerNo + "')";
 
-    //set the right hand heading link to call addDocument in index jsp
-    winName = "addDoc" + bean.demographicNo;
-    url = "popupPage(500,1115,'" + winName + "','" + request.getContextPath() + "/dms/documentReport.jsp?" +
-            "function=demographic&doctype=lab&functionid=" + bean.demographicNo + "&curUser=" + bean.providerNo + "&mode=add" +
-            "&parentAjaxId=" + cmd + "');return false;";
+			Dao.setLeftHeading(messages.getMessage(request.getLocale(), "oscarEncounter.Index.msgDocuments"));
+			if (inboxflag) {
+				url = "popupPage(600,1024,'" + winName + "', '" + request.getContextPath() + "/mod/docmgmtComp/DocList.do?method=list&&demographic_no=" + bean.demographicNo + "');";
+				Dao.setLeftHeading(messages.getMessage("oscarEncounter.Index.inboxManager"));
+			}
+			Dao.setLeftURL(url);
 
-    if (inboxflag){
-    	url="popupPage(300,600,'" + winName + "','" + request.getContextPath()+
-    		"/mod/docmgmtComp/FileUpload.do?method=newupload&demographic_no="+bean.demographicNo+ "');return false;";
-    }
-    Dao.setRightURL(url);
-    Dao.setRightHeadingID(cmd); //no menu so set div id to unique id for this action
+			// set the right hand heading link to call addDocument in index jsp
+			winName = "addDoc" + bean.demographicNo;
+			url = "popupPage(500,1115,'" + winName + "','" + request.getContextPath() + "/dms/documentReport.jsp?" + "function=demographic&doctype=lab&functionid=" + bean.demographicNo + "&curUser=" + bean.providerNo + "&mode=add" + "&parentAjaxId=" + cmd + "');return false;";
 
-    StringBuilder javascript = new StringBuilder("<script type=\"text/javascript\">");
-    String js = "";
-    ArrayList docList = EDocUtil.listDocs("demographic", bean.demographicNo, null, EDocUtil.PRIVATE, EDocUtil.SORT_OBSERVATIONDATE, "active");
-    String dbFormat = "yyyy-MM-dd";
-    String serviceDateStr = "";
-    String key;
-    String title;
-    int hash;
-    String BGCOLOUR = request.getParameter("hC");
-    Date date;
-    for (int i=0; i< docList.size(); i++) {
-        EDoc curDoc = (EDoc) docList.get(i);
-        String dispFilename = curDoc.getFileName();
-        String dispStatus   = String.valueOf(curDoc.getStatus());
-        
-        boolean skip=false;
-        for(int x=0;x<omitTypes.length;x++) {
-        	if(omitTypes[x].equals(curDoc.getType())) {
-        		skip=true;
-        		break;
-        	}
-        }
-        if(skip)
-        	continue;
-        
-        if( dispStatus.equals("A") )
-            dispStatus = "active";
-         else if( dispStatus.equals("H") )
-            dispStatus="html";
+			if (inboxflag) {
+				url = "popupPage(300,600,'" + winName + "','" + request.getContextPath() + "/mod/docmgmtComp/FileUpload.do?method=newupload&demographic_no=" + bean.demographicNo + "');return false;";
+			}
+			Dao.setRightURL(url);
+			Dao.setRightHeadingID(cmd); // no menu so set div id to unique id for this action
 
-        String dispDocNo    = curDoc.getDocId();
-        title = StringUtils.maxLenString(curDoc.getDescription(), MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
+			StringBuilder javascript = new StringBuilder("<script type=\"text/javascript\">");
+			String js = "";
+			ArrayList<EDoc> docList = EDocUtil.listDocs("demographic", bean.demographicNo, null, EDocUtil.PRIVATE, EDocUtil.SORT_OBSERVATIONDATE, "active");
+			String dbFormat = "yyyy-MM-dd";
+			String serviceDateStr = "";
+			String key;
+			String title;
+			int hash;
+			String BGCOLOUR = request.getParameter("hC");
+			Date date;
 
-        if (EDocUtil.getDocUrgentFlag(dispDocNo))
-        	title = StringUtils.maxLenString("!"+curDoc.getDescription(), MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
+			// --- add remote documents ---
+			LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+			if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
+				try {
+					ArrayList<EDoc> remoteDocuments = EDocUtil.getRemoteDocuments(Integer.parseInt(bean.demographicNo));
+					docList.addAll(remoteDocuments);
+				} catch (Exception e) {
+					logger.error("error getting remote documents", e);
+				}
+			}
 
-        DateFormat formatter = new SimpleDateFormat(dbFormat);
-        String dateStr = curDoc.getObservationDate();
-        NavBarDisplayDAO.Item item = Dao.Item();
-        try {
-            date = formatter.parse(dateStr);
-            serviceDateStr = DateUtils.formatDate(date, request.getLocale());
-        }
-        catch(ParseException ex ) {
-            MiscUtils.getLogger().debug("EctDisplayDocsAction: Error creating date " + ex.getMessage());
-            serviceDateStr = "Error";
-            date = null;
-        }
+			for (int i = 0; i < docList.size(); i++) {
+				EDoc curDoc = docList.get(i);
+				String dispFilename = curDoc.getFileName();
+				String dispStatus = String.valueOf(curDoc.getStatus());
 
-        String user = (String) request.getSession().getAttribute("user");
-        item.setDate(date);
-        hash = Math.abs(winName.hashCode());
-        url = "popupPage(700,800,'" + hash + "', '" + request.getContextPath() + "/dms/ManageDocument.do?method=display&doc_no="+dispDocNo+"&providerNo="+user+ "');";
-        if (inboxflag){
-        	String path=oscar.util.plugin.IsPropertiesOn.getProperty("DOCUMENT_DIR");
-        	url="popupPage(700,800,'" + hash + "', '" + request.getContextPath() +
-        		"/mod/docmgmtComp/FillARForm.do?method=showInboxDocDetails&path="+path+"&demoNo="+ bean.demographicNo+ "&name="+StringEscapeUtils.escapeJavaScript(dispFilename)+ "');";
-        }
-        item.setLinkTitle(title + serviceDateStr);
-        item.setTitle(title);
-        key = StringUtils.maxLenString(curDoc.getDescription(), MAX_LEN_KEY, CROP_LEN_KEY, ELLIPSES) + "(" + serviceDateStr + ")";
-        key = StringEscapeUtils.escapeJavaScript(key);
+				boolean skip = false;
+				for (int x = 0; x < omitTypes.length; x++) {
+					if (omitTypes[x].equals(curDoc.getType())) {
+						skip = true;
+						break;
+					}
+				}
+				if (skip) continue;
 
-        if (inboxflag){
-        	if (!EDocUtil.getDocReviewFlag(dispDocNo))
-        		item.setColour("FF0000");
-        }
-        js = "itemColours['" + key + "'] = '" + BGCOLOUR + "'; autoCompleted['" + key + "'] = \"" + url + "\"; autoCompList.push('" + key + "');";
-        javascript.append(js);
-        url += "return false;";
-        item.setURL(url);
-        Dao.addItem(item);
+				if (dispStatus.equals("A")) dispStatus = "active";
+				else if (dispStatus.equals("H")) dispStatus = "html";
 
-    }
-    javascript.append("</script>");
+				String dispDocNo = curDoc.getDocId();
+				title = StringUtils.maxLenString(curDoc.getDescription(), MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
 
-    Dao.setJavaScript(javascript.toString());
-    return true;
- 	}
-  }
+				if (EDocUtil.getDocUrgentFlag(dispDocNo)) title = StringUtils.maxLenString("!" + curDoc.getDescription(), MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
 
- public String getCmd() {
-     return cmd;
- }
+				DateFormat formatter = new SimpleDateFormat(dbFormat);
+				String dateStr = curDoc.getObservationDate();
+				NavBarDisplayDAO.Item item = Dao.Item();
+				try {
+					date = formatter.parse(dateStr);
+					serviceDateStr = DateUtils.formatDate(date, request.getLocale());
+				} catch (ParseException ex) {
+					MiscUtils.getLogger().debug("EctDisplayDocsAction: Error creating date " + ex.getMessage());
+					serviceDateStr = "Error";
+					date = null;
+				}
+
+				String user = (String) request.getSession().getAttribute("user");
+				item.setDate(date);
+				hash = Math.abs(winName.hashCode());
+				url = "popupPage(700,800,'" + hash + "', '" + request.getContextPath() + "/dms/ManageDocument.do?method=display&doc_no=" + dispDocNo + "&providerNo=" + user + (curDoc.getRemoteFacilityId()!=null?"&remoteFacilityId="+curDoc.getRemoteFacilityId():"")+"');";
+				if (inboxflag) {
+					String path = oscar.util.plugin.IsPropertiesOn.getProperty("DOCUMENT_DIR");
+					url = "popupPage(700,800,'" + hash + "', '" + request.getContextPath() + "/mod/docmgmtComp/FillARForm.do?method=showInboxDocDetails&path=" + path + "&demoNo=" + bean.demographicNo + "&name=" + StringEscapeUtils.escapeJavaScript(dispFilename) + "');";
+				}
+				item.setLinkTitle(title + serviceDateStr);
+				item.setTitle(title);
+				key = StringUtils.maxLenString(curDoc.getDescription(), MAX_LEN_KEY, CROP_LEN_KEY, ELLIPSES) + "(" + serviceDateStr + ")";
+				key = StringEscapeUtils.escapeJavaScript(key);
+
+				if (inboxflag) {
+					if (!EDocUtil.getDocReviewFlag(dispDocNo)) item.setColour("FF0000");
+				}
+				js = "itemColours['" + key + "'] = '" + BGCOLOUR + "'; autoCompleted['" + key + "'] = \"" + url + "\"; autoCompList.push('" + key + "');";
+				javascript.append(js);
+				url += "return false;";
+				item.setURL(url);
+				Dao.addItem(item);
+
+			}
+			javascript.append("</script>");
+
+			Dao.setJavaScript(javascript.toString());
+			return true;
+		}
+	}
+
+	public String getCmd() {
+		return cmd;
+	}
 }
