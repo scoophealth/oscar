@@ -63,6 +63,7 @@ public class EDoc extends TagObject implements Comparable {
 	private String observationDate = "";
 	private String reviewerId = "";
 	private String reviewDateTime = null;
+	private Date reviewDateTimeDate = null;
 	private String indivoIdx = null;
 	private boolean indivoRegistered = false;
 	private int numberOfPages = 0;
@@ -195,6 +196,14 @@ public class EDoc extends TagObject implements Comparable {
 	public String getDescription() {
 		return description;
 	}
+
+	public Date getReviewDateTimeDate() {
+    	return (reviewDateTimeDate);
+    }
+
+	public void setReviewDateTimeDate(Date reviewDateTimeDate) {
+    	this.reviewDateTimeDate = reviewDateTimeDate;
+    }
 
 	public void setDescription(String description) {
 		this.description = description;

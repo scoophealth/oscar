@@ -50,6 +50,7 @@ import org.oscarehr.caisi_integrator.ws.CachedAdmission;
 import org.oscarehr.caisi_integrator.ws.CachedAppointment;
 import org.oscarehr.caisi_integrator.ws.CachedBillingOnItem;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicAllergy;
+import org.oscarehr.caisi_integrator.ws.CachedDemographicDocument;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicDrug;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicIssue;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicNote;
@@ -119,6 +120,8 @@ import org.oscarehr.util.ShutdownException;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
+import oscar.dms.EDoc;
+import oscar.dms.EDocUtil;
 import oscar.facility.IntegratorControlDao;
 import oscar.oscarBilling.ca.on.dao.BillingOnItemDao;
 import oscar.oscarBilling.ca.on.model.BillingOnCHeader1;
@@ -410,6 +413,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				pushBillingItems(facility, demographicService, demographicId);
 				pushEforms(facility, demographicService, demographicId);
 				pushAllergies(facility, demographicService, demographicId);
+				pushDocuments(lastDataUpdated, facility, demographicService, demographicId);
 
 			} catch (IllegalArgumentException iae) {
 				// continue processing demographics if date values in current demographic are bad
@@ -600,6 +604,50 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		}
 
 		if (preventionsToSend.size() > 0) service.setCachedDemographicPreventions(preventionsToSend, preventionExtsToSend);
+	}
+
+	private void pushDocuments(Date lastDataUpdated, Facility facility, DemographicWs demographicWs, Integer demographicId) throws ShutdownException {
+		ArrayList<EDoc> allDocs = new ArrayList<EDoc>();
+
+		List<EDoc> privateDocs = EDocUtil.listDocs("demographic", demographicId.toString(), "all", EDocUtil.PRIVATE, EDocUtil.SORT_OBSERVATIONDATE, "active");
+		allDocs.addAll(privateDocs);
+
+		List<EDoc> publicDocs = EDocUtil.listDocs("demographic", demographicId.toString(), "all", EDocUtil.PUBLIC, EDocUtil.SORT_OBSERVATIONDATE, "active");
+		allDocs.addAll(publicDocs);
+
+		for (EDoc eDoc : allDocs) {
+			MiscUtils.checkShutdownSignaled();
+
+			if (lastDataUpdated.before(eDoc.getDateTimeStampAsDate())) {
+				// send this document
+				CachedDemographicDocument cachedDemographicDocument=new CachedDemographicDocument();
+				FacilityIdIntegerCompositePk facilityIdIntegerCompositePk=new FacilityIdIntegerCompositePk();
+				facilityIdIntegerCompositePk.setCaisiItemId(Integer.parseInt(eDoc.getDocId()));
+				cachedDemographicDocument.setFacilityIntegerPk(facilityIdIntegerCompositePk);
+				
+				cachedDemographicDocument.setAppointmentNo(eDoc.getAppointmentNo());
+				cachedDemographicDocument.setCaisiDemographicId(demographicId);
+				cachedDemographicDocument.setContentType(eDoc.getContentType());
+				cachedDemographicDocument.setDocCreator(eDoc.getCreatorId());
+				cachedDemographicDocument.setDocFilename(eDoc.getFileName());
+				cachedDemographicDocument.setDocType(eDoc.getType());
+				cachedDemographicDocument.setDocXml(eDoc.getHtml());
+				cachedDemographicDocument.setNumberOfPages(eDoc.getNumberOfPages());
+				cachedDemographicDocument.setObservationDate(DateUtils.toGregorianCalendarDate(eDoc.getObservationDate()));
+				cachedDemographicDocument.setProgramId(eDoc.getProgramId());
+				cachedDemographicDocument.setPublic1(Integer.parseInt(eDoc.getDocPublic()));
+				cachedDemographicDocument.setResponsible(eDoc.getResponsibleId());
+				cachedDemographicDocument.setReviewDateTime(DateUtils.toGregorianCalendar(eDoc.getReviewDateTimeDate()));
+				cachedDemographicDocument.setReviewer(eDoc.getReviewerId());
+				cachedDemographicDocument.setSource(eDoc.getSource());
+				cachedDemographicDocument.setStatus(""+eDoc.getStatus());
+				cachedDemographicDocument.setUpdateDateTime(DateUtils.toGregorianCalendar(eDoc.getDateTimeStampAsDate()));
+				
+				byte[] contents=EDocUtil.getFile(OscarProperties.getInstance().getProperty("DOCUMENT_DIR") + '/'+ eDoc.getFileName());
+				
+				demographicWs.addCachedDemographicDocumentAndContents(cachedDemographicDocument, contents);
+			}
+		}
 	}
 
 	private void pushDemographicNotes(Facility facility, DemographicWs service, Integer demographicId) {
