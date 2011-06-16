@@ -419,7 +419,7 @@ function popup1(height, width, url, windowName){
 					<td>
 					<% 
                                         
-                              String url = "ManageDocument.do?method=display&doc_no="+curdoc.getDocId()+"&providerNo="+user_no;
+                              String url = "ManageDocument.do?method=display&doc_no="+curdoc.getDocId()+"&providerNo="+user_no+(curdoc.getRemoteFacilityId()!=null?"&remoteFacilityId="+curdoc.getRemoteFacilityId():"");
                               //String url = "documentGetFile.jsp?document=" + StringEscapeUtils.escapeJavaScript(curdoc.getFileName()) + "&type=" + dStatus + "&doc_no=" + curdoc.getDocId();
                               if (curdoc.getStatus() == 'H') { %> <a
 						<%=curdoc.getStatus() == 'D' ? "style='text-decoration:line-through'" : ""%>
