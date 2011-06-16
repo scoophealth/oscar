@@ -145,6 +145,9 @@ public final class DateUtils {
 		return(DateFormatUtils.ISO_DATETIME_FORMAT.format(cal).replace('T', ' '));
 	}
 	
+	/**
+	 * @deprecated use formatDate() parseDate() instead
+	 */
 	public static SimpleDateFormat getDateFormatter() {
 
 		if (sdf == null) {
@@ -201,6 +204,9 @@ public final class DateUtils {
 
 	}
 
+	/**
+	 * @deprecated use formatDate(Date,Locale) instead.
+	 */
 	public static String formatDate(String date, String format,
 
 	String formatAtual) {
@@ -229,6 +235,9 @@ public final class DateUtils {
 
 	}
 
+	/**
+	 * @deprecated use formatDate(Date,Locale) instead.
+	 */
 	public static String formatDate(String date, String format) {
 
 		try {

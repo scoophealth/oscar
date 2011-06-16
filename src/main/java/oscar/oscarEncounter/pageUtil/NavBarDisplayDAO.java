@@ -190,7 +190,7 @@ public class NavBarDisplayDAO {
         return (Item)Items.get(idx);
     }
     
-    public Item Item() {
+    public static Item Item() {
         return new Item();
     }
     
@@ -229,7 +229,7 @@ public class NavBarDisplayDAO {
     /**
      *Item class holds list information for each row in left navbar of encounter form
      */
-    public class Item implements Comparable {
+    public static class Item implements Comparable {
         private String title;
         private String value;
         private String linkTitle;

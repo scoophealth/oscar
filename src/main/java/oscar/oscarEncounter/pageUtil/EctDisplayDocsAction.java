@@ -135,8 +135,8 @@ public class EctDisplayDocsAction extends EctDisplayAction {
         String dateStr = curDoc.getObservationDate();
         NavBarDisplayDAO.Item item = Dao.Item();
         try {
-            date = (Date)formatter.parse(dateStr);
-            serviceDateStr = DateUtils.getDate(date, dateFormat, request.getLocale());
+            date = formatter.parse(dateStr);
+            serviceDateStr = DateUtils.formatDate(date, request.getLocale());
         }
         catch(ParseException ex ) {
             MiscUtils.getLogger().debug("EctDisplayDocsAction: Error creating date " + ex.getMessage());

@@ -90,7 +90,7 @@ public class EctDisplayMsgAction extends EctDisplayAction {
                 try {                 
                     DateFormat formatter = new SimpleDateFormat(dbFormat);                                        
                     date = (Date)formatter.parse(msgDate);
-                    msgDate = DateUtils.getDate(date, dateFormat, request.getLocale());                                                                                
+                    msgDate = DateUtils.formatDate(date, request.getLocale());                                                                                
                 }
                 catch(ParseException e ) {
                         MiscUtils.getLogger().debug("EctDisplayMsgAction: Error creating date " + e.getMessage());
