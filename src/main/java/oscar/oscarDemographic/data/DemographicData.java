@@ -39,6 +39,7 @@ import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
+import oscar.oscarRx.data.RxPatientData;
 import oscar.util.UtilDateUtilities;
 
 public class DemographicData {
@@ -977,8 +978,7 @@ public class DemographicData {
 
 			public String getAllergies() {
 				try {
-					oscar.oscarRx.data.RxPatientData pData = new oscar.oscarRx.data.RxPatientData();
-					oscar.oscarRx.data.RxPatientData.Patient patient = pData.getPatient(Integer.parseInt(demographic_no));
+					oscar.oscarRx.data.RxPatientData.Patient patient = RxPatientData.getPatient(Integer.parseInt(demographic_no));
 					oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergies = {};
 					allergies = patient.getAllergies();
 					StringBuilder stringBuffer = new StringBuilder();

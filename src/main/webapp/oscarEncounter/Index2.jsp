@@ -24,6 +24,7 @@
  * Ontario, Canada
  */
 --%>
+<%@page import="oscar.oscarRx.data.RxPatientData"%>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
@@ -1404,8 +1405,8 @@ function grabEnterGetTemplate(event){
 							key="global.allergies" /></a>:&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp&nbsp;&nbsp;</div>
 						<div class="presBox" id="allergyBox">
 						<ul>
-							<%      oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergies
-                                            = new oscar.oscarRx.data.RxPatientData().getPatient(Integer.parseInt(demoNo)).getAllergies();
+							<%      
+								oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergies =RxPatientData.getPatient(Integer.parseInt(demoNo)).getAllergies();
 
                                             for (int j=0; j<allergies.length; j++){%>
 							<li><a

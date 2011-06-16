@@ -37,9 +37,14 @@ import oscar.oscarDB.DBHandler;
 
 public class RxPatientData {
    
+	private RxPatientData()
+	{
+		// prevent instantitation
+	}
+	
    /* Patient Search */
    
-   public Patient[] PatientSearch(String surname, String firstName) {
+   public static Patient[] PatientSearch(String surname, String firstName) {
       
       Patient[] arr = {};     
       ArrayList lst = new ArrayList();      
@@ -76,7 +81,7 @@ public class RxPatientData {
    
    /* Patient Information */
    
-   public Patient getPatient(int demographicNo) throws java.sql.SQLException {      
+   public static Patient getPatient(int demographicNo) throws java.sql.SQLException {      
             
       ResultSet rs;      
       Patient p = null;      
@@ -107,7 +112,7 @@ public class RxPatientData {
    }
    
    
-   public Patient getPatient(String demographicNo) throws java.sql.SQLException {      
+   public static Patient getPatient(String demographicNo) throws java.sql.SQLException {      
             
       ResultSet rs;      
       Patient p = null;      
@@ -135,7 +140,8 @@ public class RxPatientData {
       
       return p;      
    }
-   private java.util.Date calcDate(String year, String month, String day) {   
+   
+   private static java.util.Date calcDate(String year, String month, String day) {   
 	   if (year==null || month==null || day==null) return(null);
 	   
       int iYear = Integer.parseInt(year);
@@ -146,7 +152,7 @@ public class RxPatientData {
       return ret.getTime();      
    }
    
-   private int calcAge(java.util.Date DOB) {      
+   private static int calcAge(java.util.Date DOB) {      
       GregorianCalendar now = new GregorianCalendar();     
       int curYear = now.get(Calendar.YEAR);      
       int curMonth = (now.get(Calendar.MONTH) + 1);      
@@ -168,7 +174,7 @@ public class RxPatientData {
       return age;      
    }
    
-   public class Patient {      
+   public static class Patient {      
       int demographicNo;      
       String surname;      
       String firstName;      

@@ -915,7 +915,7 @@ Outside ProOhip: <%= thisForm.getOutsideProviderOhip() %><br>
 	<%
 
 // set patient info
-RxPatientData.Patient patient = new RxPatientData().getPatient(thisForm.getDemographicNo());
+RxPatientData.Patient patient = RxPatientData.getPatient(thisForm.getDemographicNo());
 
 RxDrugData drug = new RxDrugData();
 
