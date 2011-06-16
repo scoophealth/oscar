@@ -195,7 +195,7 @@
 		matchingDemographicParameters.setMinScore(7);
 		List<MatchingDemographicTransferScore> integratorSearchResults=DemographicSearchHelper.getIntegratedSearchResults(matchingDemographicParameters);
 
-		MiscUtils.getLogger().debug("Integrator search results : "+integratorSearchResults.size());
+		MiscUtils.getLogger().debug("Integrator search results : "+MiscUtils.getSize(integratorSearchResults) );
 		request.setAttribute("integratorSearchResults", integratorSearchResults);
 	}
    	

@@ -30,6 +30,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Properties;
 import java.util.Vector;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
@@ -202,6 +203,13 @@ public class MiscUtils {
 		StackTraceElement[] ste = Thread.currentThread().getStackTrace();
 		String caller = ste[2].getClassName();
 		return(Logger.getLogger(caller));
+	}
+	/*
+	 * Null safe getSize()
+	 */
+	public static Integer getSize(List list){
+		if (list == null) return null;
+		return list.size();
 	}
 
 
