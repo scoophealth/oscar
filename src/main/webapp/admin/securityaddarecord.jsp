@@ -89,10 +89,19 @@
 			setfocus('password');
 			return false;
 		}
-		if (!validatePassword(document.searchprovider.password.value)) {
-			setfocus('password');
-			return false;
-		}
+		
+		<%
+			boolean ignorePasswordReq=Boolean.parseBoolean(op.getProperty("IGNORE_PASSWORD_REQUIREMENTS"));
+			if (!ignorePasswordReq)
+			{
+				%>
+					if (!validatePassword(document.searchprovider.password.value)) {
+						setfocus('password');
+						return false;
+					}
+				<%
+			}
+		%>
 		if (document.forms[0].password.value != document.forms[0].conPassword.value) {
 			alert('<bean:message key="admin.securityrecord.msgPasswordNotConfirmed" />');
 			setfocus('conPassword');
