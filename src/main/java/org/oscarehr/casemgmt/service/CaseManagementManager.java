@@ -499,7 +499,11 @@ public class CaseManagementManager {
 		pd.setRegionalIdentifier(cachedDrug.getRegionalIdentifier());
 		pd.setCreateDate(MiscUtils.toDate(cachedDrug.getCreateDate()));
 
+		pd.setId(cachedDrug.getFacilityIdIntegerCompositePk().getCaisiItemId());
+		
 		int remoteFacilityId = cachedDrug.getFacilityIdIntegerCompositePk().getIntegratorFacilityId();
+		pd.setRemoteFacilityId(remoteFacilityId);
+		
 		CachedFacility cachedFacility = CaisiIntegratorManager.getRemoteFacility(remoteFacilityId);
 		pd.setRemoteFacilityName(cachedFacility.getName());
 
