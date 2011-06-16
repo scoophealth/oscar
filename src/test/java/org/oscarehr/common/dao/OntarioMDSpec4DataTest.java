@@ -89,6 +89,11 @@ import oscar.oscarEncounter.oscarMeasurements.dao.MeasurementsDao;
 import oscar.oscarEncounter.oscarMeasurements.model.Measurements;
 import sun.misc.CEStreamExhausted;
 
+import com.quatro.model.security.Security;
+import org.oscarehr.PMmodule.model.SecUserRole;
+import com.quatro.dao.security.SecurityDao;
+import org.oscarehr.PMmodule.dao.SecUserRoleDao;
+
 import java.util.Date;
 
 public class OntarioMDSpec4DataTest extends DaoTestFixtures {
@@ -552,6 +557,15 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
         	return caseManagementNoteExt;
 		}
 		
+		SecUserRole getSecUserRole(String providerNo,String rolename,Boolean active){
+			SecUserRole secuserrole = new SecUserRole();	
+			secuserrole.setProviderNo(providerNo);
+			secuserrole.setRoleName(rolename);
+			secuserrole.setActive(active);
+			return secuserrole;
+			
+		}
+		
 	@Test
 	public void test() {
 		setupOntarioMDSpec4Data();
@@ -577,8 +591,8 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
 		PreventionDao preventionDao = (PreventionDao) SpringUtils.getBean("preventionDao");
 		TicklerDAO ticklerDao = (TicklerDAO) SpringUtils.getBean("ticklerDAOT");
 		MeasurementsDao measurementsDao = (MeasurementsDao) SpringUtils.getBean("measurementsDao");
-
-		
+		SecurityDao securityDao = (SecurityDao) SpringUtils.getBean("securityDao");
+		SecUserRoleDao secuserroleDao = (SecUserRoleDao) SpringUtils.getBean("secUserRoleDao");
 		
 		Integer oscarProgramID = programDao.getProgramIdByProgramName("OSCAR");
 		
@@ -751,7 +765,37 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
 		programProviderDAO.saveProgramProvider(programProvider);	
 		
 		//TODO:Still need to create logins and assign roles for DRW,DRL,DRK,DRT,DRS,jc,nn,ss,lg
-		
+		Integer BRemotelockset = 1;
+		Integer BLocallockset = 1;
+		Date dateExpiredate = null;
+		Integer BExpireset = 0;
+		//DRW
+		securityDao.save(new Security("drw", "-51-282443-97-5-9410489-60-1021-45-127-12435464-32", drw.getProviderNo(),"1117",BRemotelockset, BLocallockset,  dateExpiredate,  BExpireset));
+		secuserroleDao.save(getSecUserRole(drw.getProviderNo(),"doctor",true));
+		//DRL
+		securityDao.save(new Security("drl", "-51-282443-97-5-9410489-60-1021-45-127-12435464-32", drl.getProviderNo(),"1117",BRemotelockset, BLocallockset,  dateExpiredate,  BExpireset));
+		secuserroleDao.save(getSecUserRole(drl.getProviderNo(),"doctor",true));
+		//DRK
+		securityDao.save(new Security("drk", "-51-282443-97-5-9410489-60-1021-45-127-12435464-32", drk.getProviderNo(),"1117",BRemotelockset, BLocallockset,  dateExpiredate,  BExpireset));
+		secuserroleDao.save(getSecUserRole(drk.getProviderNo(),"doctor",true));
+		//DRT
+		securityDao.save(new Security("drt", "-51-282443-97-5-9410489-60-1021-45-127-12435464-32", drt.getProviderNo(),"1117",BRemotelockset, BLocallockset,  dateExpiredate,  BExpireset));
+		secuserroleDao.save(getSecUserRole(drt.getProviderNo(),"doctor",true));
+		//DRS
+		securityDao.save(new Security("drs", "-51-282443-97-5-9410489-60-1021-45-127-12435464-32", drs.getProviderNo(),"1117",BRemotelockset, BLocallockset,  dateExpiredate,  BExpireset));
+		secuserroleDao.save(getSecUserRole(drs.getProviderNo(),"doctor",true));
+		//jc
+		securityDao.save(new Security("jc", "-51-282443-97-5-9410489-60-1021-45-127-12435464-32", jc.getProviderNo(),"1117",BRemotelockset, BLocallockset,  dateExpiredate,  BExpireset));
+		secuserroleDao.save(getSecUserRole(jc.getProviderNo(),"doctor",true));
+		//nn
+		securityDao.save(new Security("nn", "-51-282443-97-5-9410489-60-1021-45-127-12435464-32", nn.getProviderNo(),"1117",BRemotelockset, BLocallockset,  dateExpiredate,  BExpireset));
+		secuserroleDao.save(getSecUserRole(nn.getProviderNo(),"doctor",true));
+		//ss
+		securityDao.save(new Security("ss", "-51-282443-97-5-9410489-60-1021-45-127-12435464-32", ss.getProviderNo(),"1117",BRemotelockset, BLocallockset,  dateExpiredate,  BExpireset));
+		secuserroleDao.save(getSecUserRole(ss.getProviderNo(),"receptionist",true));
+		//lg
+		securityDao.save(new Security("lg", "-51-282443-97-5-9410489-60-1021-45-127-12435464-32", lg.getProviderNo(),"1117",BRemotelockset, BLocallockset,  dateExpiredate,  BExpireset));
+		secuserroleDao.save(getSecUserRole(lg.getProviderNo(),"receptionist",true));
 		
 		MiscUtils.getLogger().info("Adding Providers");
 		String lastName = null, firstName= null,  hin= null, ver= null, yearOfBirth= null, monthOfBirth= null, dateOfBirth= null, sex= null, address= null, city= null, province= null, postal= null, phone= null, patientStatus= null, rosterStatus= null, providerNo = null;
