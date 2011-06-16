@@ -29,7 +29,7 @@ String atcCode =  request.getParameter("atcCode");
 String id = request.getParameter("id");
 
 oscar.oscarRx.pageUtil.RxSessionBean rxSessionBean = (oscar.oscarRx.pageUtil.RxSessionBean) session.getAttribute("RxSessionBean");
-oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergies = new oscar.oscarRx.data.RxPatientData().getPatient(rxSessionBean.getDemographicNo()).getAllergies();
+oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergies = RxPatientData.getPatient(rxSessionBean.getDemographicNo()).getAllergies();
 
 oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergyWarnings = null;
    RxDrugData drugData = new RxDrugData();

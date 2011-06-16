@@ -42,6 +42,7 @@ import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
+import oscar.oscarRx.data.RxPatientData;
 import oscar.util.DateUtils;
 import oscar.util.OscarRoleObjectPrivilege;
 import oscar.util.StringUtils;
@@ -84,7 +85,7 @@ public class EctDisplayAllergyAction extends EctDisplayAction {
 			Locale locale=request.getLocale();
 
 			try {
-				allergies = new oscar.oscarRx.data.RxPatientData().getPatient(demographicId).getAllergies();
+				allergies = RxPatientData.getPatient(demographicId).getAllergies();
 
 				// --- get local allergies ---
 				for (int idx = 0; idx < allergies.length; ++idx) {
@@ -105,7 +106,7 @@ public class EctDisplayAllergyAction extends EctDisplayAction {
 							Date date=null;
 							if (remoteAllergy.getEntryDate()!=null) date=remoteAllergy.getEntryDate().getTime();
 
-							NavBarDisplayDAO.Item item = makeItem(date, remoteAllergy.getDescription(), remoteAllergy.getSeverityOfReaction(), locale);
+							NavBarDisplayDAO.Item item = makeItem(date, remoteAllergy.getDescription(), remoteAllergy.getSeverityCode(), locale);
 							Dao.addItem(item);
 						}
 					} catch (Exception e) {

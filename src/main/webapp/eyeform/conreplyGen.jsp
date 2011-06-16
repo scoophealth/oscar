@@ -1,3 +1,4 @@
+<%@page import="oscar.oscarRx.data.RxPatientData"%>
 <%@ include file="/taglibs.jsp"%>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -29,8 +30,7 @@ select {
 </style>
 <%
 	String demographicNo = (String) request.getAttribute("demographicNo");
-	oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergies = new oscar.oscarRx.data.RxPatientData()
-				.getPatient(Integer.parseInt(demographicNo)).getAllergies();
+	oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergies = RxPatientData.getPatient(Integer.parseInt(demographicNo)).getAllergies();
 		String aller = "";
 		for (int j = 0; j < allergies.length; j++) {
 			aller += allergies[j].getAllergy().getShortDesc(13, 8,

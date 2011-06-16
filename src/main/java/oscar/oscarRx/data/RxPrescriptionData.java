@@ -880,7 +880,7 @@ public class RxPrescriptionData {
         oscar.oscarRx.data.RxPatientData.Patient patient = null;
         oscar.oscarRx.data.RxProviderData.Provider provider = null;
         try {
-            patient = new oscar.oscarRx.data.RxPatientData().getPatient(demographic_no);
+            patient = RxPatientData.getPatient(demographic_no);
             provider = new oscar.oscarRx.data.RxProviderData().getProvider(provider_no);
         } catch (Exception e) {
             logger.error("unexpected error", e);
