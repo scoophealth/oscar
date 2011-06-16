@@ -642,6 +642,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				cachedDemographicDocument.setSource(eDoc.getSource());
 				cachedDemographicDocument.setStatus(""+eDoc.getStatus());
 				cachedDemographicDocument.setUpdateDateTime(DateUtils.toGregorianCalendar(eDoc.getDateTimeStampAsDate()));
+				cachedDemographicDocument.setDescription(eDoc.getDescription());
 				
 				byte[] contents=EDocUtil.getFile(OscarProperties.getInstance().getProperty("DOCUMENT_DIR") + '/'+ eDoc.getFileName());
 				
