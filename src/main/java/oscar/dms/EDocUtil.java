@@ -274,6 +274,7 @@ public final class EDocUtil extends SqlUtilBaseS {
                 currentdoc.setObservationDate(rsGetString(rs, "observationdate"));
 		currentdoc.setReviewerId(rsGetString(rs, "reviewer"));
 		currentdoc.setReviewDateTime(rsGetString(rs, "reviewdatetime"));
+		currentdoc.setReviewDateTimeDate(rs.getTimestamp("reviewdatetime"));
                 attachedDocs.add(currentdoc);
             }
             rs.close();
@@ -298,6 +299,7 @@ public final class EDocUtil extends SqlUtilBaseS {
                     currentdoc.setObservationDate(rsGetString(rs, "observationdate"));
 		    currentdoc.setReviewerId(rsGetString(rs, "reviewer"));
 		    currentdoc.setReviewDateTime(rsGetString(rs, "reviewdatetime"));
+			currentdoc.setReviewDateTimeDate(rs.getTimestamp("reviewdatetime"));
 
                     if (!attachedDocs.contains(currentdoc)) resultDocs.add(currentdoc);
                 }
@@ -345,6 +347,8 @@ public final class EDocUtil extends SqlUtilBaseS {
                 if (temp != null && temp.length()>0) currentdoc.setProgramId(Integer.valueOf(temp));
                 temp = rsGetString(rs, "appointment_no");
                 if (temp != null && temp.length()>0) currentdoc.setAppointmentNo(Integer.valueOf(temp));
+     
+                currentdoc.setDateTimeStampAsDate(rs.getTimestamp("updatedatetime"));
                 currentdoc.setDateTimeStamp(rsGetString(rs, "updatedatetime"));
                 currentdoc.setFileName(rsGetString(rs, "docfilename"));
                 currentdoc.setStatus(rsGetString(rs, "status").charAt(0));
@@ -352,7 +356,8 @@ public final class EDocUtil extends SqlUtilBaseS {
                 currentdoc.setObservationDate(rsGetString(rs, "observationdate"));
 		currentdoc.setReviewerId(rsGetString(rs, "reviewer"));
 		currentdoc.setReviewDateTime(rsGetString(rs, "reviewdatetime"));
-    
+		currentdoc.setReviewDateTimeDate(rs.getTimestamp("reviewdatetime"));
+
       
             rs.close();
           }
@@ -415,6 +420,7 @@ public final class EDocUtil extends SqlUtilBaseS {
                 if (temp != null && temp.length()>0) currentdoc.setProgramId(Integer.valueOf(temp));
                 temp = rsGetString(rs, "appointment_no");
                 if (temp != null && temp.length()>0) currentdoc.setAppointmentNo(Integer.valueOf(temp));
+                currentdoc.setDateTimeStampAsDate(rs.getTimestamp("updatedatetime"));
                 currentdoc.setDateTimeStamp(rsGetString(rs, "updatedatetime"));
                 currentdoc.setFileName(rsGetString(rs, "docfilename"));
                 currentdoc.setStatus(rsGetString(rs, "status").charAt(0));
@@ -422,6 +428,7 @@ public final class EDocUtil extends SqlUtilBaseS {
                 currentdoc.setObservationDate(rsGetString(rs, "observationdate"));
 		currentdoc.setReviewerId(rsGetString(rs, "reviewer"));
 		currentdoc.setReviewDateTime(rsGetString(rs, "reviewdatetime"));
+		currentdoc.setReviewDateTimeDate(rs.getTimestamp("reviewdatetime"));
                 resultDocs.add(currentdoc);
             }
             rs.close();
@@ -524,6 +531,7 @@ public final class EDocUtil extends SqlUtilBaseS {
                 currentdoc.setObservationDate(rsGetString(rs, "observationdate"));
 		currentdoc.setReviewerId(rsGetString(rs, "reviewer"));
 		currentdoc.setReviewDateTime(rsGetString(rs, "reviewdatetime"));
+		currentdoc.setReviewDateTimeDate(rs.getTimestamp("reviewdatetime"));
                 resultDocs.add(currentdoc);
             }
             rs.close();
@@ -574,12 +582,14 @@ public final class EDocUtil extends SqlUtilBaseS {
 		currentdoc.setSource(rsGetString(rs, "source"));
 		currentdoc.setResponsibleId(rsGetString(rs, "responsible"));
 		currentdoc.setSource(rsGetString(rs, "source"));
+                currentdoc.setDateTimeStampAsDate(rs.getTimestamp("updatedatetime"));
                 currentdoc.setDateTimeStamp(rsGetString(rs, "updatedatetime"));
                 currentdoc.setFileName(rsGetString(rs, "docfilename"));
                 currentdoc.setDocPublic(rsGetString(rs, "public1"));
                 currentdoc.setObservationDate(rs.getDate("observationdate"));
 		currentdoc.setReviewerId(rsGetString(rs, "reviewer"));
 		currentdoc.setReviewDateTime(rsGetString(rs, "reviewdatetime"));
+		currentdoc.setReviewDateTimeDate(rs.getTimestamp("reviewdatetime"));
                 currentdoc.setHtml(rsGetString(rs, "docxml"));
                 currentdoc.setStatus(rsGetString(rs, "status").charAt(0));
                 currentdoc.setContentType(rsGetString(rs, "contenttype"));
