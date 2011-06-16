@@ -107,8 +107,15 @@ if (heading != null){
                 //test for previous note
                 HttpSession se = request.getSession();
                 Integer tableName = caseManagementManager.getTableNameByDisplay(annotation_display);
-                CaseManagementNoteLink cml = caseManagementManager.getLatestLinkByTableId(tableName, Long.parseLong(prescriptDrug.getId().toString()));
+                
+                CaseManagementNoteLink cml = null;
                 CaseManagementNote p_cmn = null;
+
+                if (prescriptDrug.getRemoteFacilityId()!=null)
+                {
+                	cml = caseManagementManager.getLatestLinkByTableId(tableName, Long.parseLong(prescriptDrug.getId().toString()));
+                }
+                
                 if (cml!=null) {p_cmn = caseManagementManager.getNote(cml.getNoteId().toString());}
                 if (p_cmn!=null){isPrevAnnotation=true;}
 
@@ -145,7 +152,33 @@ if (heading != null){
         <tr>
             <td valign="top"><a id="rxDate_<%=prescriptIdInt%>"   <%=styleColor%> href="StaticScript2.jsp?regionalIdentifier=<%=prescriptDrug.getRegionalIdentifier()%>&amp;cn=<%=response.encodeURL(prescriptDrug.getCustomName())%>&amp;bn=<%=response.encodeURL(bn)%>"><%=oscar.util.UtilDateUtilities.DateToString(prescriptDrug.getRxDate())%></a></td>
             <td valign="top"><%=prescriptDrug.daysToExpire()%></td>
-            <td valign="top"><%if(prescriptDrug.isLongTerm()){%>*<%}else{%><a id="notLongTermDrug_<%=prescriptIdInt%>" title="<bean:message key='oscarRx.Prescription.changeDrugLongTerm'/>" onclick="changeLt('<%=prescriptIdInt%>');" href="javascript:void(0);">L</a><%}%></td>
+            <td valign="top">
+            	<%
+            		if(prescriptDrug.isLongTerm())
+            		{
+            		%>
+            			*
+            		<%
+            		}
+            		else
+            		{
+            			if (prescriptDrug.getRemoteFacilityId()==null)
+            			{
+            				%>
+		            			<a id="notLongTermDrug_<%=prescriptIdInt%>" title="<bean:message key='oscarRx.Prescription.changeDrugLongTerm'/>" onclick="changeLt('<%=prescriptIdInt%>');" href="javascript:void(0);">
+		            			L
+		            			</a>
+            				<%
+            			}
+            			else
+            			{
+		            		%>
+		            		L
+		            		<%
+            			}
+           			}
+           			%>
+            </td>
 
             <td valign="top"><a id="prescrip_<%=prescriptIdInt%>" <%=styleColor%> href="StaticScript2.jsp?regionalIdentifier=<%=prescriptDrug.getRegionalIdentifier()%>&amp;cn=<%=response.encodeURL(prescriptDrug.getCustomName())%>&amp;bn=<%=response.encodeURL(bn)%>"><%=RxPrescriptionData.getFullOutLine(prescriptDrug.getSpecial()).replaceAll(";", " ")%></a></td>
             <td width="20px" align="center" valign="top">
@@ -166,23 +199,51 @@ if (heading != null){
                 <%}%>
             </td>
             <td width="20px" align="center" valign="top">
-                <%if(!prescriptDrug.isDiscontinued()){%>
-                <a id="discont_<%=prescriptIdInt%>" href="javascript:void(0);" onclick="Discontinue(event,this);" <%=styleColor%> >Discon</a>
-                <%}else{%>
+                <%if(!prescriptDrug.isDiscontinued())
+                {
+               	 if (prescriptDrug.getRemoteFacilityId()==null)
+               	 {
+                %>
+                	<a id="discont_<%=prescriptIdInt%>" href="javascript:void(0);" onclick="Discontinue(event,this);" <%=styleColor%> >Discon</a>
+                <%
+               	 }
+                }else{%>
                   <%=prescriptDrug.getArchivedReason()%>
                 <%}%>
             </td>
             
             <td>
-            	<% 	List<DrugReason> drugReasons  = drugReasonDao.getReasonsForDrugID(prescriptDrug.getId(),true);	%>
-           	 	<a href="javascript:void(0);"  onclick="popupRxReasonWindow(<%=patient.getDemographicNo()%>,<%=prescriptIdInt%>);"  title="<%=displayDrugReason(drugReasons) %>">
-            		<%=StringUtils.maxLenString(displayDrugReason(drugReasons), 4, 3, StringUtils.ELLIPSIS)%>
-            	</a>
+            	<% 	
+            		List<DrugReason> drugReasons  = drugReasonDao.getReasonsForDrugID(prescriptDrug.getId(),true);
+            		
+            		if (prescriptDrug.getRemoteFacilityId()==null)
+            		{
+            			%>
+			           	 	<a href="javascript:void(0);"  onclick="popupRxReasonWindow(<%=patient.getDemographicNo()%>,<%=prescriptIdInt%>);"  title="<%=displayDrugReason(drugReasons) %>">
+            			<%
+            		}
+            	%>
+            	<%=StringUtils.maxLenString(displayDrugReason(drugReasons), 4, 3, StringUtils.ELLIPSIS)%>
+				<%
+		      		if (prescriptDrug.getRemoteFacilityId()==null)
+		      		{
+		      			%>
+			            	</a>
+            			<%
+            		}
+				%>
             </td>
 
             <td width="10px" align="center" valign="top">
-                <a href="javascript:void(0);" title="Annotation" onclick="window.open('../annotation/annotation.jsp?display=<%=annotation_display%>&amp;table_id=<%=prescriptIdInt%>&amp;demo=<%=bean.getDemographicNo()%>&amp;drugSpecial=<%=specialText%>','anwin','width=400,height=250');">
-                    <%if(!isPrevAnnotation){%> <img src="../images/notes.gif" alt="rxAnnotation" height="16" width="13" border="0"><%} else{%><img src="../images/filledNotes.gif" height="16" width="13" alt="rxFilledNotes" border="0"> <%}%></a>
+            	<% 	
+            		if (prescriptDrug.getRemoteFacilityId()==null)
+            		{
+            			%>
+		                <a href="javascript:void(0);" title="Annotation" onclick="window.open('../annotation/annotation.jsp?display=<%=annotation_display%>&amp;table_id=<%=prescriptIdInt%>&amp;demo=<%=bean.getDemographicNo()%>&amp;drugSpecial=<%=specialText%>','anwin','width=400,height=250');">
+		                    <%if(!isPrevAnnotation){%> <img src="../images/notes.gif" alt="rxAnnotation" height="16" width="13" border="0"><%} else{%><img src="../images/filledNotes.gif" height="16" width="13" alt="rxFilledNotes" border="0"> <%}%></a>
+            			<%
+            		}
+            	%>
             </td>
 
             <td width="10px" align="center" valign="top">
