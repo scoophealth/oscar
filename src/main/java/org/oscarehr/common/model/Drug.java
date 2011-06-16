@@ -114,6 +114,8 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 	// ///
 	@Transient
 	private String remoteFacilityName = null;
+	@Transient
+	private Integer remoteFacilityId = null;
 
 	public static final String DELETED = "deleted";
 	public static final String DOSE_CHANGE = "doseChange";
@@ -186,7 +188,7 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
             this.customNote=drug.isCustomNote();
             this.eTreatmentType = drug.getETreatmentType();
         }
-        private void setId(Integer i){
+        public void setId(Integer i){
             this.id=i;
         }
         public boolean isCustom() {
@@ -698,6 +700,12 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 		this.remoteFacilityName = remoteFacilityName;
 	}
 
+	public Integer getRemoteFacilityId() {
+    	return (remoteFacilityId);
+    }
+	public void setRemoteFacilityId(Integer remoteFacilityId) {
+    	this.remoteFacilityId = remoteFacilityId;
+    }
 	public long daysToExpire() {
 		long days = UtilDateUtilities.getNumDays(new Date(), getEndDate());
 		if (days < 0) {
