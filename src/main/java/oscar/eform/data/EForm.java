@@ -643,6 +643,21 @@ public class EForm extends EFormBase {
 
 	private int getFieldIndex(StringBuilder html, int from) {
 		if (html == null) return -1;
+		Pattern p = Pattern.compile("<input|<select|<textarea|<div");
+		Matcher matcher = p.matcher(html);
+		if (matcher.find(from)) {
+			int start = matcher.start();
+			//org.oscarehr.util.MiscUtils.getLogger().info("New code shows: " + start);
+			return start;
+		} else {
+			//org.oscarehr.util.MiscUtils.getLogger().info("New code shows: " + -1);
+
+			return -1;
+		}
+		
+		
+		/*  Code too slow, replaced with regex
+		if (html == null) return -1;
 
 		Integer[] index = new Integer[4];
 		index[0] = StringBuilderUtils.indexOfIgnoreCase(html, "<input", from);
@@ -659,6 +674,7 @@ public class EForm extends EFormBase {
 			min = min > list.get(i) ? list.get(i) : min;
 
 		return min;
+		*/
 	}
 
 	private String getFieldHeader(String html, int fieldIndex) {
