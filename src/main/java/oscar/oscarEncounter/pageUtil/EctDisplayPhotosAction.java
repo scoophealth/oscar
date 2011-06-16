@@ -126,7 +126,7 @@ public class EctDisplayPhotosAction extends EctDisplayAction {
         NavBarDisplayDAO.Item item = Dao.Item();
         try {
             date = formatter.parse(dateStr);
-            serviceDateStr = DateUtils.getDate(date, dateFormat, request.getLocale());
+            serviceDateStr = DateUtils.formatDate(date, request.getLocale());
         }
         catch(ParseException ex ) {
             MiscUtils.getLogger().debug("EctDisplayDocsAction: Error creating date " + ex.getMessage());

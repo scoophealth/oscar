@@ -116,7 +116,7 @@ public class EctDisplayFormAction extends EctDisplayAction {
 								date = null;
 							}
 
-							if (date != null) serviceDateStr = DateUtils.getDate(date, dateFormat, request.getLocale());
+							if (date != null) serviceDateStr = DateUtils.formatDate(date, request.getLocale());
 							else serviceDateStr = "";
 
 							item.setDate(date);

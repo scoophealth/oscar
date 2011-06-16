@@ -131,7 +131,7 @@ public class EctDisplayMeasurementsAction extends EctDisplayAction {
                 if( date == null ) {
                 	date = data.getDateEnteredAsDate();
                 }
-                String formattedDate = DateUtils.getDate(date,dateFormat, request.getLocale());
+                String formattedDate = DateUtils.formatDate(date, request.getLocale());
                 item.setLinkTitle(title + " " + data.getDataField() + " " + formattedDate);
                 title = padd(title, data.getDataField());
                 String tmp = "<span class=\"measureCol1\">" + title + "</span>";
