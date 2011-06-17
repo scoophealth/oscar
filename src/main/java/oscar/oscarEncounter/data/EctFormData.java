@@ -38,6 +38,9 @@ import javax.persistence.PersistenceException;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
+import org.oscarehr.caisi_integrator.ws.CachedDemographicForm;
+import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.common.dao.EncounterFormDao;
 import org.oscarehr.common.model.EncounterForm;
 import org.oscarehr.util.DbConnectionFilter;
@@ -49,18 +52,17 @@ import oscar.util.UtilDateUtilities;
 
 public class EctFormData {
 
-	private static Logger logger=MiscUtils.getLogger();
-    private static EncounterFormDao encounterFormDao=(EncounterFormDao)SpringUtils.getBean("encounterFormDao");
+	private static Logger logger = MiscUtils.getLogger();
+	private static EncounterFormDao encounterFormDao = (EncounterFormDao) SpringUtils.getBean("encounterFormDao");
 
-	
-    public static Form[] getForms() {
+	public static Form[] getForms() {
 		List<EncounterForm> results = encounterFormDao.findAll();
 		Collections.sort(results, EncounterForm.BC_FIRST_COMPARATOR);
-		
+
 		ArrayList<Form> forms = new ArrayList<Form>();
 		for (EncounterForm encounterForm : results) {
 			Form frm = new Form(encounterForm.getFormName(), encounterForm.getFormValue(), encounterForm.getFormTable(), encounterForm.isHidden());
-            forms.add(frm);
+			forms.add(frm);
 		}
 
 		return (forms.toArray(new Form[0]));
@@ -101,40 +103,39 @@ public class EctFormData {
 		}
 
 	}
-	
-	public static ArrayList<PatientForm> getGroupedPatientFormsFromAllTables(Integer demographicId)
-	{
+
+	public static ArrayList<PatientForm> getGroupedPatientFormsFromAllTables(Integer demographicId) {
 		// grab all of the forms
-		EncounterFormDao encounterFormDao=(EncounterFormDao)SpringUtils.getBean("encounterFormDao");
+		EncounterFormDao encounterFormDao = (EncounterFormDao) SpringUtils.getBean("encounterFormDao");
 		List<EncounterForm> encounterForms = encounterFormDao.findAll();
 		Collections.sort(encounterForms, EncounterForm.BC_FIRST_COMPARATOR);
-		
+
 		// grab patient forms for all the above form types grouped by date of edit
-		ArrayList<PatientForm> allResults=new ArrayList<PatientForm>();
+		ArrayList<PatientForm> allResults = new ArrayList<PatientForm>();
 		for (EncounterForm encounterForm : encounterForms) {
 			String table = StringUtils.trimToNull(encounterForm.getFormTable());
-			if (table!=null) {				
+			if (table != null) {
 				allResults.addAll(getGroupedPatientFormsAsArrayList(demographicId.toString(), encounterForm.getFormName(), table, encounterForm.getFormValue()));
 			}
 		}
 
-		return(allResults);
+		return (allResults);
 	}
-	
+
 	public static ArrayList<PatientForm> getGroupedPatientFormsAsArrayList(String demoNo, String formName, String table, String jsp) {
-		table=StringUtils.trimToNull(table);
-		if (table==null) return(new ArrayList<PatientForm>());
-		
+		table = StringUtils.trimToNull(table);
+		if (table == null) return (new ArrayList<PatientForm>());
+
 		ArrayList<PatientForm> forms = new ArrayList<PatientForm>();
 
-		Connection c=null;
+		Connection c = null;
 		try {
-			c=DbConnectionFilter.getThreadLocalDbConnection();
-			
+			c = DbConnectionFilter.getThreadLocalDbConnection();
+
 			if (!table.equals("form")) {
 				String sql = "SELECT max(ID) ID, demographic_no, formCreated, date(formEdited) 'lastEdited', max(formEdited) 'frmEdited' FROM " + table + " WHERE demographic_no=" + demoNo + " group by lastEdited";
 
-				Statement s=c.createStatement();
+				Statement s = c.createStatement();
 				ResultSet rs = s.executeQuery(sql);
 
 				while (rs.next()) {
@@ -144,7 +145,7 @@ public class EctFormData {
 			} else {
 				String sql = "SELECT form_no, demographic_no, form_date from " + table + " where demographic_no=" + demoNo + " order by form_no desc";
 
-				Statement s=c.createStatement();
+				Statement s = c.createStatement();
 				ResultSet rs = s.executeQuery(sql);
 
 				while (rs.next()) {
@@ -154,47 +155,46 @@ public class EctFormData {
 			}
 		} catch (SQLException e) {
 			logger.error("Unexpected error.", e);
-			throw(new PersistenceException(e));
+			throw (new PersistenceException(e));
 		} finally {
 			SqlUtils.closeResources(c, null, null);
 		}
-		
-		return(forms);
+
+		return (forms);
 	}
 
-	public static ArrayList<PatientForm> getAllPatientFormsFromAllTables(Integer demographicId)
-	{
+	public static ArrayList<PatientForm> getAllPatientFormsFromAllTables(Integer demographicId) {
 		// grab all of the forms
-		EncounterFormDao encounterFormDao=(EncounterFormDao)SpringUtils.getBean("encounterFormDao");
+		EncounterFormDao encounterFormDao = (EncounterFormDao) SpringUtils.getBean("encounterFormDao");
 		List<EncounterForm> encounterForms = encounterFormDao.findAll();
 		Collections.sort(encounterForms, EncounterForm.BC_FIRST_COMPARATOR);
-		
+
 		// grab all patient forms for all the above form types
-		ArrayList<PatientForm> allResults=new ArrayList<PatientForm>();
+		ArrayList<PatientForm> allResults = new ArrayList<PatientForm>();
 		for (EncounterForm encounterForm : encounterForms) {
 			String table = StringUtils.trimToNull(encounterForm.getFormTable());
-			if (table!=null) {
+			if (table != null) {
 				allResults.addAll(getPatientFormsAsArrayList(demographicId.toString(), encounterForm.getFormName(), table));
 			}
 		}
 
-		return(allResults);
+		return (allResults);
 	}
-	
+
 	public static ArrayList<PatientForm> getPatientFormsAsArrayList(String demoNo, String formName, String table) {
-		table=StringUtils.trimToNull(table);
-		if (table==null) return(new ArrayList<PatientForm>());
-		
+		table = StringUtils.trimToNull(table);
+		if (table == null) return (new ArrayList<PatientForm>());
+
 		ArrayList<PatientForm> forms = new ArrayList<PatientForm>();
 
-		Connection c=null;
+		Connection c = null;
 		try {
-			c=DbConnectionFilter.getThreadLocalDbConnection();
-			
+			c = DbConnectionFilter.getThreadLocalDbConnection();
+
 			if (!table.equals("form")) {
 				String sql = "SELECT ID, demographic_no, formCreated, formEdited FROM " + table + " WHERE demographic_no=" + demoNo + " ORDER BY ID DESC";
 
-				Statement s=c.createStatement();
+				Statement s = c.createStatement();
 				ResultSet rs = s.executeQuery(sql);
 
 				while (rs.next()) {
@@ -204,7 +204,7 @@ public class EctFormData {
 			} else {
 				String sql = "SELECT form_no, demographic_no, form_date from " + table + " where demographic_no=" + demoNo + " order by form_no desc";
 
-				Statement s=c.createStatement();
+				Statement s = c.createStatement();
 				ResultSet rs = s.executeQuery(sql);
 
 				while (rs.next()) {
@@ -214,41 +214,74 @@ public class EctFormData {
 			}
 		} catch (SQLException e) {
 			logger.error("Unexpected error.", e);
-			throw(new PersistenceException(e));
+			throw (new PersistenceException(e));
 		} finally {
 			SqlUtils.closeResources(c, null, null);
 		}
-		
-		return(forms);
+
+		return (forms);
 	}
-	
+
+	public static ArrayList<PatientForm> getRemotePatientForms(Integer demographicId, String formName, String table) {
+		ArrayList<PatientForm> forms = new ArrayList<PatientForm>();
+		try {
+			table = StringUtils.trimToNull(table);
+			if (table == null) return (new ArrayList<PatientForm>());
+
+			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
+			List<CachedDemographicForm> remoteForms = demographicWs.getLinkedCachedDemographicForms(demographicId, table);
+
+			for (CachedDemographicForm cachedDemographicForm : remoteForms)
+			{
+				Date date=cachedDemographicForm.getEditDate().getTime();
+				PatientForm frm = new PatientForm(formName, cachedDemographicForm.getFacilityIdIntegerCompositePk().getCaisiItemId(), cachedDemographicForm.getCaisiDemographicId(), date, date);
+				frm.setRemoteFacilityId(cachedDemographicForm.getFacilityIdIntegerCompositePk().getIntegratorFacilityId());
+				forms.add(frm);
+			}
+
+		} catch (Exception e) {
+			logger.error("Error retriving remote forms", e);
+		}
+
+		return (forms);
+	}
+
 	public static PatientForm[] getPatientForms(String demoNo, String table) {
-		return(getPatientFormsAsArrayList(demoNo, null, table).toArray(new PatientForm[0]));
+		return (getPatientFormsAsArrayList(demoNo, null, table).toArray(new PatientForm[0]));
+	}
+
+	public static PatientForm[] getPatientFormsFromLocalAndRemote(String demoNo, String table) {
+		ArrayList<PatientForm> results=getPatientFormsAsArrayList(demoNo, null, table);
+		ArrayList<PatientForm> remoteResults=getRemotePatientForms(Integer.parseInt(demoNo), null, table);
+		
+		results.addAll(remoteResults);
+		Collections.sort(results, PatientForm.CREATED_DATE_COMPARATOR);
+		
+		return (results.toArray(new PatientForm[0]));
 	}
 
 	/**
-	 * Due to backwards compatability hack, leave all the getter methods as returning String,
-	 * direct field access can be used to get native types. 
+	 * Due to backwards compatability hack, leave all the getter methods as returning String, direct field access can be used to get native types.
 	 */
 	public static class PatientForm {
-		
+
 		/**
 		 * This comparator sorts PatientForm descending based on the created date
 		 */
-		public static final Comparator<PatientForm> CREATED_DATE_COMPARATOR=new Comparator<PatientForm>()
-		{
+		public static final Comparator<PatientForm> CREATED_DATE_COMPARATOR = new Comparator<PatientForm>() {
 			public int compare(PatientForm o1, PatientForm o2) {
-				return(o2.created.compareTo(o1.created));
-			}	
+				return (o2.created.compareTo(o1.created));
+			}
 		};
 
 		public Integer formId;
+		private Integer remoteFacilityId;
 		public Integer demographicId;
 		public Date created;
 		public Date edited;
 		public String formName;
 		public String jsp;
-		
+
 		// Constructor
 		public PatientForm(String formName, Integer formId, Integer demographicId, Date created, Date edited) {
 			this.formName = formName;
@@ -257,20 +290,20 @@ public class EctFormData {
 			this.created = created;
 			this.edited = edited;
 		}
-		
-		//Constructor
+
+		// Constructor
 		public PatientForm(String formName, Integer formId, Integer demographicId, Date created, Date edited, String jsp) {
 			this.formName = formName;
 			this.formId = formId;
 			this.demographicId = demographicId;
 			this.created = created;
 			this.edited = edited;
-			
-			if( jsp.indexOf("/") != -1 ) {
+
+			if (jsp.indexOf("/") != -1) {
 				jsp = jsp.substring(jsp.indexOf("/"));
 			}
 			this.jsp = jsp + String.valueOf(demographicId) + "&formId=" + String.valueOf(formId);
-		}		
+		}
 
 		public String getFormId() {
 			return formId.toString();
@@ -281,16 +314,24 @@ public class EctFormData {
 		}
 
 		public String getCreated() {
-			return(UtilDateUtilities.DateToString(created, "yy/MM/dd"));
+			return (UtilDateUtilities.DateToString(created, "yy/MM/dd"));
 		}
 
 		public String getEdited() {
-			return(UtilDateUtilities.DateToString(edited, "yy/MM/dd HH:mm:ss"));
+			return (UtilDateUtilities.DateToString(edited, "yy/MM/dd HH:mm:ss"));
 		}
 
 		public String getFormName() {
-        	return formName;
-        }
-				
+			return formName;
+		}
+
+		public Integer getRemoteFacilityId() {
+			return (remoteFacilityId);
+		}
+
+		public void setRemoteFacilityId(Integer remoteFacilityId) {
+			this.remoteFacilityId = remoteFacilityId;
+		}
+
 	}
 }
