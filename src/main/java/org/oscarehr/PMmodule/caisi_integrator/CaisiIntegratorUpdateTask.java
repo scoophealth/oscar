@@ -22,16 +22,20 @@
 
 package org.oscarehr.PMmodule.caisi_integrator;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -52,6 +56,7 @@ import org.oscarehr.caisi_integrator.ws.CachedBillingOnItem;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicAllergy;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicDocument;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicDrug;
+import org.oscarehr.caisi_integrator.ws.CachedDemographicForm;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicIssue;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicNote;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicNoteCompositePk;
@@ -123,6 +128,7 @@ import oscar.OscarProperties;
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
 import oscar.facility.IntegratorControlDao;
+import oscar.form.FrmLabReq07Record;
 import oscar.oscarBilling.ca.on.dao.BillingOnItemDao;
 import oscar.oscarBilling.ca.on.model.BillingOnCHeader1;
 import oscar.oscarBilling.ca.on.model.BillingOnItem;
@@ -414,6 +420,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				pushEforms(facility, demographicService, demographicId);
 				pushAllergies(facility, demographicService, demographicId);
 				pushDocuments(lastDataUpdated, facility, demographicService, demographicId);
+				pushForms(lastDataUpdated, facility, demographicService, demographicId);
 
 			} catch (IllegalArgumentException iae) {
 				// continue processing demographics if date values in current demographic are bad
@@ -607,6 +614,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	}
 
 	private void pushDocuments(Date lastDataUpdated, Facility facility, DemographicWs demographicWs, Integer demographicId) throws ShutdownException {
+		logger.debug("pushing demographicDocuments facilityId:" + facility.getId() + ", demographicId:" + demographicId);
+
 		ArrayList<EDoc> allDocs = new ArrayList<EDoc>();
 
 		List<EDoc> privateDocs = EDocUtil.listDocs("demographic", demographicId.toString(), "all", EDocUtil.PRIVATE, EDocUtil.SORT_OBSERVATIONDATE, "active");
@@ -650,6 +659,163 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			}
 		}
 	}
+
+	private void pushForms(Date lastDataUpdated, Facility facility, DemographicWs demographicWs, Integer demographicId) throws ShutdownException, SQLException, IOException, ParseException {
+		logger.debug("pushing demographic forms facilityId:" + facility.getId() + ", demographicId:" + demographicId);
+
+		pushLabReq2007(lastDataUpdated, facility, demographicWs, demographicId);
+	}
+	
+	private void pushLabReq2007(Date lastDataUpdated, Facility facility, DemographicWs demographicWs, Integer demographicId) throws SQLException, ShutdownException, IOException, ParseException {
+		List<Properties> records=FrmLabReq07Record.getPrintRecords(demographicId);
+		
+		for (Properties p : records)
+		{
+			MiscUtils.checkShutdownSignaled();
+			
+			SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+			Date date=sdf.parse(p.getProperty("formEdited"));
+			if (lastDataUpdated.after(lastDataUpdated)) continue;
+
+			//	b_creatinine=0
+			//	ohip=1
+			//	formCreated=2011/06/17
+			//	patientFirstName=W1W1
+			//	b_timeNextDose2=
+			//	clinicCity=Hamilton
+			//	b_timeNextDose1=
+			//	b_timeLastDose2=
+			//	b_timeLastDose1=
+			//	provider_no=1234
+			//	m_vaginal=0
+			//	m_vaginalRectal=0
+			//	b_acRatioUrine=0
+			//	healthNumber=
+			//	patientCity=
+			//	b_patientsTelNo=
+			//	b_potassium=0
+			//	b_childsAgeDays=
+			//	b_glucose_random=0
+			//	b_tsh=0
+			//	b_timeCollected2=
+			//	b_timeCollected1=
+			//	b_therapeuticDrugMonitoring=0
+			//	i_rubella=1
+			//	patientAddress=
+			//	m_cervical=0
+			//	b_vitaminB12=0
+			//	m_blank=0
+			//	reqProvName=p1, p1
+			//	m_blankText=
+			//	version=
+			//	v_chronicHepatitis=0
+			//	oprn=
+			//	b_glucose_fasting=0
+			//	b_albumin=0
+			//	b_alkPhosphatase=0
+			//	aci=this is a test
+			//	patientPC=
+			//	b_urinalysis=0
+			//	h_cbc=0
+			//	form_class=0
+			//	sex=M
+			//	b_uricAcid=0
+			//	i_pregnancyTest=0
+			//	submit=0
+			//	v_acuteHepatitis=0
+			//	clinicianContactUrgent=44444
+			//	birthDate=1995/06/15
+			//	patientBirthMth=06
+			//	phoneNumber=905-
+			//	m_otherSwabsSource=
+			//	m_otherSwabsPus=0
+			//	clinicAddress=Hamilton
+			//	m_gcSource=
+			//	b_childsAgeHours=
+			//	patientLastName=W1W1
+			//	m_throat=0
+			//	b_sodium=0
+			//	m_sputum=0
+			//	b_neonatalBilirubin=0
+			//	m_fecalOccultBlood=0
+			//	m_urine=0
+			//	b_glucose=1
+			//	b_nameDrug2=
+			//	b_nameDrug1=
+			//	m_stoolOvaParasites=0
+			//	i_prenatal=0
+			//	m_gc=0
+			//	patientBirthYear=1995
+			//	h_prothrombinTime=0
+			//	m_chlamydiaSource=
+			//	b_ferritin=0
+			//	i_repeatPrenatalAntibodies=0
+			//	wcb=0
+			//	v_immuneStatus=0
+			//	province=
+			//	m_stoolCulture=0
+			//	m_woundSource=
+			//	patientBirthDay=15
+			//	demographic_no=21
+			//	i_mononucleosisScreen=0
+			//	b_lipidAssessment=0
+			//	thirdParty=0
+			//	provName=doe, doctor
+			//	m_wound=0
+			//	m_specimenCollectionTime=
+			//	ID=3
+			//	clinicName=McMaster Hospital
+			//	b_bilirubin=0
+			//	b_hba1c=1
+			//	o_otherTests16=
+			//	o_otherTests15=
+			//	o_otherTests14=
+			//	b_alt=0
+			//	o_otherTests13=
+			//	o_otherTests12=
+			//	o_otherTests11=
+			//	o_otherTests9=
+			//	o_otherTests10=
+			//	o_otherTests8=
+			//	o_otherTests7=
+			//	o_otherTests6=
+			//	clinicPC=L0R 4K3
+			//	o_otherTests5=
+			//	o_specimenCollectionDate=
+			//	formEdited=2011-06-17 12\:24\:56
+			//	o_otherTests4=
+			//	o_otherTests3=
+			//	b_cliniciansTelNo=
+			//	o_otherTests2=
+			//	o_otherTests1=
+			//	b_chloride=0
+			//	patientName=W1W1, W1W1
+			//	b_dateSigned=2011/06/17
+			//	practitionerNo=0000--00
+			//	b_ck=0
+			//	m_chlamydia=0
+			//	v_immune_HepatitisC=0
+			//	v_immune_HepatitisB=0
+			//	v_immune_HepatitisA=0
+			
+			
+			CachedDemographicForm cachedDemographicForm=new CachedDemographicForm();
+			FacilityIdIntegerCompositePk facilityIdIntegerCompositePk=new FacilityIdIntegerCompositePk();
+			facilityIdIntegerCompositePk.setCaisiItemId(Integer.parseInt(p.getProperty("ID")));
+			cachedDemographicForm.setFacilityIdIntegerCompositePk(facilityIdIntegerCompositePk);
+			
+			cachedDemographicForm.setCaisiDemographicId(demographicId);
+			cachedDemographicForm.setCaisiProviderId(p.getProperty("provider_no"));			
+			cachedDemographicForm.setEditDate(DateUtils.toGregorianCalendar(date));				
+			cachedDemographicForm.setFormName("formLabReq07");
+			
+			ByteArrayOutputStream baos=new ByteArrayOutputStream();
+			p.store(baos, null);
+			cachedDemographicForm.setFormData(baos.toString());
+			
+			demographicWs.addCachedDemographicForm(cachedDemographicForm);
+		}
+    }
 
 	private void pushDemographicNotes(Facility facility, DemographicWs service, Integer demographicId) {
 		logger.debug("pushing demographicNotes facilityId:" + facility.getId() + ", demographicId:" + demographicId);
