@@ -15,6 +15,7 @@ package oscar.form;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Properties;
 
 import org.oscarehr.common.dao.DemographicDao;
@@ -175,6 +176,11 @@ public class FrmLabReq07Record extends FrmRecord {
     public Properties getPrintRecord(int demographicNo, int existingID) throws SQLException {
         String sql = "SELECT * FROM formLabReq07 WHERE demographic_no = " + demographicNo + " AND ID = " + existingID;
         return ((new FrmRecordHelp()).getPrintRecord(sql));
+    }
+
+    public static List<Properties> getPrintRecords(int demographicNo) throws SQLException {
+        String sql = "SELECT * FROM formLabReq07 WHERE demographic_no = " + demographicNo;
+        return ((new FrmRecordHelp()).getPrintRecords(sql));
     }
 
     public String findActionValue(String submit) throws SQLException {
