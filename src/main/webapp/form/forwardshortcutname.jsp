@@ -23,6 +23,7 @@
  * Ontario, Canada
  */
 --%>
+<%@page import="org.oscarehr.util.MiscUtils"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
@@ -46,7 +47,11 @@
         String strFrm = URLDecoder.decode(request.getParameter("formname"), "UTF-8");
         String[] formPath = (new FrmData()).getShortcutFormValue(request.getParameter("demographic_no"), strFrm);
         formPath[0] = formPath[0].trim();
-        pageContext.forward(formPath[0] + request.getParameter("demographic_no")  + "&formId=" + formPath[1]);
+        
+        String remoteFacilityIdString=request.getParameter("remoteFacilityId");
+        String nextPage=formPath[0] + request.getParameter("demographic_no")  + (remoteFacilityIdString!=null?"&remoteFacilityId="+remoteFacilityIdString+"&formId="+request.getParameter("formId"):"&formId=" + formPath[1]);
+        MiscUtils.getLogger().debug("Forwarding to page : "+nextPage);
+        pageContext.forward(nextPage);
         return;
     }
 %>

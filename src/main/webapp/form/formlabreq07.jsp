@@ -51,7 +51,7 @@
    boolean readOnly = false;
    int demoNo = Integer.parseInt(request.getParameter("demographic_no"));
    int formId = Integer.parseInt(request.getParameter("formId"));
-	String provNo = (String) session.getAttribute("user");
+   String provNo = (String) session.getAttribute("user");
 	String remoteFacilityIdString=request.getParameter("remoteFacilityId");
 	
    java.util.Properties props =null;	        
@@ -65,6 +65,7 @@
 	}
 	else // it's remote
 	{
+		MiscUtils.getLogger().debug("Getting remote form : "+remoteFacilityIdString+":"+formId);
 		props=FrmLabReq07Record.getRemoteRecordProperties(Integer.parseInt(remoteFacilityIdString), formId);
 		FrmRecordHelp.convertBooleanToChecked(props);
 	}
