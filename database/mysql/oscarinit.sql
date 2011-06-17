@@ -631,6 +631,9 @@ CREATE TABLE drugs (
   archived_date datetime,
   hide_from_drug_profile tinyint(1) default '0',
   eTreatmentType varchar(20),
+  dispense_interval int(10),
+  refill_duration int(10),
+  refill_quantity int(10),
   PRIMARY KEY  (drugid)
 ) ;
 

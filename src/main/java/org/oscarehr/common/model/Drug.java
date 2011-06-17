@@ -111,6 +111,13 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 	private Date pickupDateTime;
     private String eTreatmentType = null;
 
+    @Column(name="refill_duration")
+    private int refillDuration;
+    @Column(name="refill_quantity")
+    private int refillQuantity;
+    @Column(name="dispense_interval")
+    private int dispenseInterval;
+    
 	// ///
 	@Transient
 	private String remoteFacilityName = null;
@@ -187,6 +194,9 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
             this.hideFromDrugProfile=false;
             this.customNote=drug.isCustomNote();
             this.eTreatmentType = drug.getETreatmentType();
+            this.refillDuration = drug.getRefillDuration();
+            this.refillQuantity = drug.getRefillQuantity();
+            this.dispenseInterval = drug.getDispenseInterval();
         }
         public void setId(Integer i){
             this.id=i;
@@ -257,7 +267,26 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 	public void setNonAuthoritative(Boolean nonAuthoritative) {
 		this.nonAuthoritative = nonAuthoritative;
 	}
-        
+ 
+    public int getRefillDuration() {
+    	return refillDuration;
+    }
+	public void setRefillDuration(int refillDuration) {
+    	this.refillDuration = refillDuration;
+    }
+	public int getRefillQuantity() {
+    	return refillQuantity;
+    }
+	public void setRefillQuantity(int refillQuantity) {
+    	this.refillQuantity = refillQuantity;
+    }
+	public int getDispenseInterval() {
+    	return dispenseInterval;
+    }
+	public void setDispenseInterval(int dispenseInterval) {
+    	this.dispenseInterval = dispenseInterval;
+    }
+	
     public Date getPickUpDateTime() {
 		return pickupDateTime;
 	}

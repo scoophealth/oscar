@@ -73,6 +73,9 @@ if(listRxDrugs!=null){
          String archivedDate="";
          String archivedReason="";
          boolean isOutsideProvider ;
+         int refillQuantity=rx.getRefillQuantity();
+         int refillDuration=rx.getRefillDuration();
+         int dispenseInterval=rx.getDispenseInterval();
          if(isDiscontinuedLatest){
                 archivedReason=rx.getLastArchReason();
                 archivedDate=rx.getLastArchDate();
@@ -143,6 +146,16 @@ if(listRxDrugs!=null){
            <input id="rx_save_updates_<%=rand%>" type="button" value="Save Changes" onclick="saveLinks('<%=rand%>')"/>
        </div>
        <div id="rx_more_<%=rand%>" style="display:none;padding:2px;">
+       	  <bean:message key="WriteScript.msgPrescribedRefill"/>:
+       	  &nbsp;
+       	  <bean:message key="WriteScript.msgPrescribedRefillDuration"/>
+       	  <input type="text" size="6" id="refillDuration_<%=rand%>" name="refillDuration_<%=rand%>" value="<%=refillDuration%>" />       	  
+       	  <bean:message key="WriteScript.msgPrescribedRefillQuantity"/>
+       	  <input type="text" size="6" id="refillQuantity_<%=rand%>" name="refillQuantity_<%=rand%>" value="<%=refillQuantity%>" />
+       	  <br/>       	  
+       	  <bean:message key="WriteScript.msgPrescribedDispenseInterval"/>
+       	  <input type="text" size="6" id="dispenseInterval_<%=rand%>" name="dispenseInterval_<%=rand%>" value="<%=dispenseInterval%>" />
+       	  <br/>
           <bean:message key="WriteScript.msgPrescribedByOutsideProvider"/>
           <input type="checkbox" id="ocheck_<%=rand%>" name="ocheck_<%=rand%>" onclick="$('otext_<%=rand%>').toggle();" <%if(isOutsideProvider){%> checked="true" <%}else{}%>/>
           <div id="otext_<%=rand%>" <%if(isOutsideProvider){%>style="display:table;padding:2px;"<%}else{%>style="display:none;padding:2px;"<%}%> >

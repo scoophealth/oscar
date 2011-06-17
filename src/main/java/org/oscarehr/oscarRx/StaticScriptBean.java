@@ -59,7 +59,9 @@ public class StaticScriptBean {
         public String pickupDate=null;
         public String pickupTime=null;
         public String eTreatmentType=null;
-                
+        public int dispenseInterval;
+        public int refillQuantity;
+        public int refillDuration;
 	}
 
 	public static ArrayList<DrugDisplayData> getDrugList(int demographicId, String regionalIdentifier, String customName, String brandName) {
@@ -160,6 +162,12 @@ public class StaticScriptBean {
         
         drugDisplayData.eTreatmentType = drug.getETreatmentType();
                 
+        drugDisplayData.dispenseInterval = drug.getDispenseInterval();
+        
+        drugDisplayData.refillDuration = drug.getRefillDuration();
+        
+        drugDisplayData.refillQuantity = drug.getRefillQuantity();
+        
 		return (drugDisplayData);
 	}
 }

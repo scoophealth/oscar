@@ -798,6 +798,9 @@ public final class RxWriteScriptAction extends DispatchAction {
                                         boolean isNonAuthoritative = false;
                                         Date pickupDate;
                                         Date pickupTime;
+                    int dispenseInterval;
+                    int refillDuration;
+                    int refillQuantity;
 
 					em = request.getParameterNames();
 					while (em.hasMoreElements()) {
@@ -846,6 +849,12 @@ public final class RxWriteScriptAction extends DispatchAction {
 							} else {
 								isNonAuthoritative = false;
 							}
+                                                } else if(elem.equals("refillDuration_"+num)) {
+                                                	rx.setRefillDuration(Integer.parseInt(val));
+                                                } else if(elem.equals("refillQuantity_"+num)) {
+                                                	rx.setRefillQuantity(Integer.parseInt(val));
+                                                } else if(elem.equals("dispenseInterval_"+num)) {
+                                                	rx.setDispenseInterval(Integer.parseInt(val));
 						} else if (elem.equals("lastRefillDate_" + num)) {
 							rx.setLastRefillDate(RxUtil.StringToDate(val, "yyyy-MM-dd"));
 						} else if (elem.equals("outsideProviderName_" + num)) {
