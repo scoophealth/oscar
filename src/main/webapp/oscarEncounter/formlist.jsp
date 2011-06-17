@@ -118,7 +118,7 @@ function popupPageK(page) {
                     pforms = new EctFormData.PatientForm[0];
                 }
                 else {
-                    pforms = EctFormData.getPatientForms(demoNo, table);
+                    pforms = EctFormData.getPatientFormsFromLocalAndRemote(demoNo, table);
                 }
 		int nItems = 0;
 
@@ -129,7 +129,7 @@ function popupPageK(page) {
 	<tr
 		bgcolor='<%= j%2 == 0 ? (i%2 == 0 ?weakcolor:deepcolor) : (i%2 == 0 ?"white":"#eeeeee")%>'>
 		<td><a href=#
-			onClick="popupPageK('<%=frm.getFormPage()+demoNo+"&formId="+pfrm.getFormId()+"&provNo="+provNo%>'); return false;"><%=frm.getFormName()%></a></td>
+			onClick="popupPageK('<%=frm.getFormPage()+demoNo+"&formId="+pfrm.getFormId()+"&provNo="+provNo+(pfrm.getRemoteFacilityId()!=null?"&remoteFacilityId="+pfrm.getRemoteFacilityId():"")%>'); return false;"><%=frm.getFormName()+(pfrm.getRemoteFacilityId()!=null?" (remote)":"")%></a></td>
 		<td align='center'><%=pfrm.getCreated()%></td>
 		<td align='center'><%=pfrm.getEdited()%></td>
 	</tr>
