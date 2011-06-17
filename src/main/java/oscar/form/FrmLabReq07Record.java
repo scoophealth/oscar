@@ -13,19 +13,29 @@
  */
 package oscar.form;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
+import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
+import org.oscarehr.caisi_integrator.ws.CachedDemographicForm;
+import org.oscarehr.caisi_integrator.ws.DemographicWs;
+import org.oscarehr.caisi_integrator.ws.FacilityIdIntegerCompositePk;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
 
 public class FrmLabReq07Record extends FrmRecord {
+	private static Logger logger=MiscUtils.getLogger();
+	
 	private DemographicDao demographicDao=(DemographicDao) SpringUtils.getBean("demographicDao");
 	
 	public Properties getFormRecord(int demographicNo, int existingID) throws SQLException {
@@ -191,4 +201,28 @@ public class FrmLabReq07Record extends FrmRecord {
         return ((new FrmRecordHelp()).createActionURL(where, action, demoId, formId));
     }
 
+    
+    public static Properties getRemoteRecordProperties(Integer remoteFacilityId, Integer formId) throws IOException
+    {
+    	FacilityIdIntegerCompositePk pk=new FacilityIdIntegerCompositePk();
+    	pk.setIntegratorFacilityId(remoteFacilityId);
+    	pk.setCaisiItemId(formId);
+    	
+    	DemographicWs demographicWs=CaisiIntegratorManager.getDemographicWs();
+    	CachedDemographicForm form=demographicWs.getCachedDemographicForm(pk);
+    	
+    	ByteArrayInputStream bais=new ByteArrayInputStream(form.getFormData().getBytes());
+    	
+    	Properties p=new Properties();
+    	p.load(bais);
+    	
+    	// missing
+        // props.setProperty("hcType", demographic.getHcType());
+    	// props.setProperty("demoProvider", demographic.getProviderNo());
+    	// props.setProperty("clinicProvince",oscar.Misc.getString(rs, "clinic_province"));
+
+    	logger.debug("Remote properties : "+p);
+    	
+    	return(p);
+    }
 }
