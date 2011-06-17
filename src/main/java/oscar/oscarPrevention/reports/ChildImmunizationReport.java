@@ -223,10 +223,9 @@ public class ChildImmunizationReport implements PreventionReport{
                 cal.setTime(dob);
                 cal.add(Calendar.MONTH, 30);
                 Date twoYearsAfterDOB = cal.getTime();
-                
                 if( lastDate != null ) {
                     log.debug("twoYearsAfterDOB date "+twoYearsAfterDOB+ " "+lastDate.before(twoYearsAfterDOB) );
-                    if (!refused && (totalImmunizations >= recommTotal  ) && lastDate.before(twoYearsAfterDOB) && ( ageInMonths > 24 )){//&& endOfYear.after(prevDate)){                  
+                    if (!refused && (totalImmunizations >= recommTotal  ) && lastDate.before(twoYearsAfterDOB) && ( ageInMonths >= 18 )){//&& endOfYear.after(prevDate)){                  
                        prd.bonusStatus = "Y";
                        prd.billStatus = "Y";
                        done++;
@@ -334,14 +333,13 @@ public class ChildImmunizationReport implements PreventionReport{
   
    private String letterProcessing(PreventionReportDisplay prd,String measurementType,Date asofDate){
        if (prd != null){
-          if (prd.state.equals("No Info") ){
+          if (prd.state.equals("No Info") || prd.state.equals("due") ){
               // Get LAST contact method
               EctMeasurementsDataBeanHandler measurementDataHandler = new EctMeasurementsDataBeanHandler(prd.demographicNo,measurementType);
               log.debug("getting followup data for "+prd.demographicNo);
               
               Collection followupData = measurementDataHandler.getMeasurementsDataVector();
               //NO Contact
-              
               if ( followupData.size() == 0 ){
                   prd.nextSuggestedProcedure = this.LETTER1;
                   return this.LETTER1;
@@ -389,7 +387,7 @@ public class ChildImmunizationReport implements PreventionReport{
                 //prd.lastDate = "-----";  
               
               EctMeasurementsDataBeanHandler measurementDataHandler = new EctMeasurementsDataBeanHandler(prd.demographicNo,measurementType);
-              log.debug("getting followup data for "+prd.demographicNo);
+              log.debug("2getting followup data for "+prd.demographicNo);
               Collection followupData = measurementDataHandler.getMeasurementsDataVector();
               
               if ( followupData.size() > 0 ){
