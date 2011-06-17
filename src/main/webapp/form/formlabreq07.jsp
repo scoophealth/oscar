@@ -23,6 +23,8 @@
  * Ontario, Canada 
  */
 --%>
+<%@page import="org.oscarehr.util.MiscUtils"%>
+<%@page import="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager"%>
 <%@ page
 	import="oscar.form.*, oscar.OscarProperties, java.util.Date, oscar.util.UtilDateUtilities"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
@@ -50,10 +52,25 @@
    int demoNo = Integer.parseInt(request.getParameter("demographic_no"));
    int formId = Integer.parseInt(request.getParameter("formId"));
 	String provNo = (String) session.getAttribute("user");
-	FrmRecord rec = (new FrmRecordFactory()).factory(formClass);
-   java.util.Properties props = rec.getFormRecord(demoNo, formId);
-        
-	props = ((FrmLabReq07Record) rec).getFormCustRecord(props, provNo);
+	String remoteFacilityIdString=request.getParameter("remoteFacilityId");
+	
+   java.util.Properties props =null;	        
+
+   // means it's local
+	if (remoteFacilityIdString==null)
+	{
+		FrmRecord rec = (new FrmRecordFactory()).factory(formClass);
+	   	props = rec.getFormRecord(demoNo, formId);	        
+		props = ((FrmLabReq07Record) rec).getFormCustRecord(props, provNo);
+	}
+	else // it's remote
+	{
+		props=FrmLabReq07Record.getRemoteRecordProperties(Integer.parseInt(remoteFacilityIdString), formId);
+		FrmRecordHelp.convertBooleanToChecked(props);
+	}
+	
+   MiscUtils.getLogger().debug("properties : "+props);
+   
    OscarProperties oscarProps = OscarProperties.getInstance();
 
    if (request.getParameter("labType") != null){
