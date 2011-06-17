@@ -16,7 +16,9 @@ package oscar.form;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 
 import org.oscarehr.util.MiscUtils;
@@ -204,32 +206,50 @@ public class FrmRecordHelp {
     public Properties getPrintRecord(String sql) throws SQLException {
         Properties props = new Properties();
         
-
         ResultSet rs = DBHandler.GetSQL(sql);
         if (rs.next()) {
-            ResultSetMetaData md = rs.getMetaData();
-            for (int i = 1; i <= md.getColumnCount(); i++) {
-                String name = md.getColumnName(i);
-                String value;
-
-                if (md.getColumnTypeName(i).startsWith("TINY") && md.getScale(i) == 1) {
-                    if (rs.getInt(i) == 1)
-                        value = "on";
-                    else
-                        value = "off";
-                } else if (md.getColumnTypeName(i).equalsIgnoreCase("date"))
-                    value = UtilDateUtilities.DateToString(rs.getDate(i), _dateFormat);
-                else
-                    value = oscar.Misc.getString(rs, i);
-
-                if (value != null)
-                    props.setProperty(name, value);
-            }
+        	props=getResultsAsProperties(rs);
         }
-        rs.close();
         return props;
     }
 
+    public List<Properties> getPrintRecords(String sql) throws SQLException {
+        ArrayList<Properties> results=new ArrayList<Properties>();
+
+        ResultSet rs = DBHandler.GetSQL(sql);
+        while (rs.next()) {
+        	Properties p=getResultsAsProperties(rs);            
+            results.add(p);
+        }
+        
+        return results;
+    }
+
+    private Properties getResultsAsProperties(ResultSet rs) throws SQLException
+    {
+    	Properties p=new Properties();
+        ResultSetMetaData md = rs.getMetaData();
+        for (int i = 1; i <= md.getColumnCount(); i++) {
+            String name = md.getColumnName(i);
+            String value;
+
+            if (md.getColumnTypeName(i).startsWith("TINY") && md.getScale(i) == 1) {
+                if (rs.getInt(i) == 1)
+                    value = "on";
+                else
+                    value = "off";
+            } else if (md.getColumnTypeName(i).equalsIgnoreCase("date"))
+                value = UtilDateUtilities.DateToString(rs.getDate(i), _dateFormat);
+            else
+                value = oscar.Misc.getString(rs, i);
+
+            if (value != null)
+                p.setProperty(name, value);
+        }
+        
+        return(p);
+    }
+    
     public String findActionValue(String submit) throws SQLException {
         if (submit != null && submit.equalsIgnoreCase("print")) {
             return "print";
