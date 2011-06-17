@@ -18,9 +18,11 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.commons.lang.StringUtils;
 import org.oscarehr.util.MiscUtils;
 import org.w3c.dom.Document;
 
@@ -286,5 +288,29 @@ public class FrmRecordHelp {
         }
 
         return temp;
+    }
+    
+    public static void convertBooleanToChecked(Properties p)
+    {
+    	HashSet<Object> keySet=new HashSet<Object>();
+    	keySet.addAll(p.keySet());
+    	
+    	for (Object key : keySet)
+    	{
+    		String keyName=(String) key;
+    		if (keyName.startsWith("b_"))
+    		{
+    			String value=StringUtils.trimToNull(p.getProperty(keyName));
+    			
+    			if ("1".equals(value))
+    			{
+    				p.setProperty(keyName, "checked='checked'");
+    			}
+    			else
+    			{
+    				p.setProperty(keyName, "");
+    			}
+    		}
+    	}
     }
 }
