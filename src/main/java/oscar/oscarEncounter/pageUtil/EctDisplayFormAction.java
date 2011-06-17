@@ -99,7 +99,7 @@ public class EctDisplayFormAction extends EctDisplayAction {
 
 					String table = encounterForm.getFormTable();
 					if (!table.equalsIgnoreCase("")) {
-						EctFormData.PatientForm[] pforms = new EctFormData().getPatientForms(bean.demographicNo, table);
+						EctFormData.PatientForm[] pforms = new EctFormData().getPatientFormsFromLocalAndRemote(bean.demographicNo, table);
 						// if a form has been started for the patient, create a module item for it
 						if (pforms.length > 0) {
 							NavBarDisplayDAO.Item item = Dao.Item();
@@ -125,7 +125,7 @@ public class EctDisplayFormAction extends EctDisplayAction {
 							strTitle = new StringBuilder(StringUtils.maxLenString(fullTitle, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES));
 
 							hash = Math.abs(winName.hashCode());
-							url = new StringBuilder("popupPage(700,960,'" + hash + "started', '" + request.getContextPath() + "/form/forwardshortcutname.jsp?formname=" + encounterForm.getFormName() + "&demographic_no=" + bean.demographicNo + "');");
+							url = new StringBuilder("popupPage(700,960,'" + hash + "started', '" + request.getContextPath() + "/form/forwardshortcutname.jsp?formname=" + encounterForm.getFormName() + "&demographic_no=" + bean.demographicNo + (pfrm.getRemoteFacilityId()!=null?"@remoteFacilityId="+pfrm.getRemoteFacilityId():"")+"');");
 							key = StringUtils.maxLenString(fullTitle, MAX_LEN_KEY, CROP_LEN_KEY, ELLIPSES) + "(" + serviceDateStr + ")";
 							key = StringEscapeUtils.escapeJavaScript(key);
 
