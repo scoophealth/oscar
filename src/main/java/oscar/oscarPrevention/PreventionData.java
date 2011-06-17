@@ -499,8 +499,8 @@ public class PreventionData {
 			Hashtable ht1=(Hashtable)o1;
 			Hashtable ht2=(Hashtable)o2;
 			
-			Date date1=(Date)ht1.get("prevention_date_asDate");
-			Date date2=(Date)ht2.get("prevention_date_asDate");
+			Comparable date1=(Comparable)ht1.get("prevention_date_asDate");
+			Comparable date2=(Comparable)ht2.get("prevention_date_asDate");
 			
 			if (date1!=null)
 			{
