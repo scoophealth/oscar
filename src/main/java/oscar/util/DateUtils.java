@@ -63,8 +63,8 @@ public final class DateUtils {
 
 	private static Logger logger = MiscUtils.getLogger();
 
-	private static String dateFormatString=OscarProperties.getInstance().getProperty("DATE_FORMAT");
-	private static SimpleDateFormat dateFormatter=new SimpleDateFormat(dateFormatString);
+	private static String dateFormatString=OscarProperties.getInstance().getProperty("DATE_FORMAT");	
+	private static String timeFormatString=OscarProperties.getInstance().getProperty("TIME_FORMAT");
 	
 	/**
 	 * @param locale can be null
@@ -72,14 +72,16 @@ public final class DateUtils {
 	 */
 	public static String formatDate(Date date, Locale locale)
 	{
-		if (date==null) return("");
-		
-		SimpleDateFormat dateFormatter=null;
-		
-		if (locale==null) dateFormatter=new SimpleDateFormat(dateFormatString);
-		else dateFormatter=new SimpleDateFormat(dateFormatString, locale);
-		
-		return(dateFormatter.format(date));
+		return(format(dateFormatString, date, locale));
+	}
+	
+	/**
+	 * @param locale can be null
+	 * @return if date is null will return a blank string.
+	 */
+	public static String formatTime(Date date, Locale locale)
+	{
+		return(format(timeFormatString, date, locale));
 	}
 	
 	/**
@@ -112,6 +114,17 @@ public final class DateUtils {
 	
 	/**
 	 * @param locale can be null
+	 * @return if calendar is null will return a blank string.
+	 */
+	public static String formatTime(Calendar calendar, Locale locale)
+	{
+		if (calendar==null) return("");
+		
+		return(formatTime(calendar.getTime(), locale));
+	}
+	
+	/**
+	 * @param locale can be null
 	 * @return if String is null will return null.
 	 * @throws ParseException 
 	 */
@@ -128,6 +141,22 @@ public final class DateUtils {
 		cal.set(Calendar.SECOND, 0);
 		cal.set(Calendar.MILLISECOND, 0);
 		return(cal);
+	}
+	
+	/**
+	 * @param locale can be null
+	 * @return if date is null will return a blank string.
+	 */
+	public static String format(String format, Date date, Locale locale)
+	{
+		if (date==null) return("");
+		
+		SimpleDateFormat dateFormatter=null;
+		
+		if (locale==null) dateFormatter=new SimpleDateFormat(format);
+		else dateFormatter=new SimpleDateFormat(format, locale);
+		
+		return(dateFormatter.format(date));
 	}
 	
 	/**
