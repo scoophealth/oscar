@@ -347,6 +347,13 @@
 			<version>0.0-SNAPSHOT</version>
 		</dependency>
 
+		<!-- cds cihi -->
+		<dependency>
+			<groupId>cds</groupId>
+			<artifactId>cds_cihi</artifactId>
+			<version>1.0</version>
+		</dependency>
+
 		<!-- hsfo -->
 		<dependency>
 			<groupId>hsfo</groupId>

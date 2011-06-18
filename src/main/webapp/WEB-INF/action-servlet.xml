@@ -112,6 +112,20 @@
 		<property name="surveyTestManager" ref="surveyTestManager" />
 		<property name="userManager" ref="surveyUserManager" />
 	</bean>
+	<!-- Data Export -->
+	<bean name="/demographic/cihiExport" class="oscar.oscarDemographic.pageUtil.CihiExportAction" singleton="false">
+		<property name="clinicDAO" ref="clinicDAO"></property>
+		<property name="dataExportDAO" ref="dataExportDAO"></property>
+		<property name="demographicDao" ref="demographicDao"></property>
+		<property name="oscarAppointmentDao" ref="oscarAppointmentDao"></property>
+		<property name="issueDAO" ref="IssueDAO"></property>		
+		<property name="caseManagementNoteDAO" ref="CaseManagementNoteDAO" />
+		<property name="caseManagementNoteExtDAO" ref="CaseManagementNoteExtDAO" />
+		<property name="allergyDAO" ref="AllergyDAO" />
+		<property name="hl7TextInfoDAO" ref="hl7TextInfoDao" />
+		<property name="prescriptionDao" ref="prescriptionDAO" />
+		<property name="preventionDao" ref="preventionDao"/>
+	</bean>
 	<!--  ER -->
 	<bean name="/ReceptionistReport" class="org.oscarehr.er.ReceptionistReportAction" singleton="false">
 		<property name="programManager" ref="programManager" />

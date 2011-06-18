@@ -24,6 +24,8 @@
  */
 package org.oscarehr.common.dao;
 
+import java.util.List;
+
 import javax.persistence.Query;
 
 import org.oscarehr.common.model.Hl7TextInfo;
@@ -47,6 +49,15 @@ public class Hl7TextInfoDao extends AbstractDao<Hl7TextInfo> {
 		query.setParameter(1, labId);
 
 		return(getSingleResultOrNull(query));
+    }
+    
+    @SuppressWarnings("unchecked")
+    public List<Hl7TextInfo> findByHealthCardNo(String hin) {
+    	String sql = "select hl7 from Hl7TextInfo hl7 where hl7.healthNumber = :hin";
+    	Query query = entityManager.createQuery(sql);
+    	query.setParameter("hin", hin);
+    	List<Hl7TextInfo> list = query.getResultList();
+    	return list;
     }
 
 }

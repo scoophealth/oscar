@@ -495,8 +495,9 @@ public class GDMLHandler implements MessageHandler {
         try {
             // Some examples
             DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-            java.util.Date date = (java.util.Date)formatter.parse(dob);
-            age = UtilDateUtilities.calcAge(date);
+            java.util.Date dobDate = formatter.parse(dob);
+            java.util.Date serviceDate = formatter.parse(getServiceDate());
+            age = UtilDateUtilities.calcAgeAtDate(dobDate, serviceDate);
         } catch (ParseException e) {
             logger.error("Could not get age", e);
             
