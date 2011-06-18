@@ -413,7 +413,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				pushDemographicNotes(facility, demographicService, demographicId);
 				pushDemographicDrugs(facility, providerIdsInFacility, demographicService, demographicId);
 				pushAdmissions(facility, programsInFacility, demographicService, demographicId);
-				pushAppointments(facility, demographicService, demographicId);
+				pushAppointments(lastDataUpdated, facility, demographicService, demographicId);
 				pushMeasurements(facility, demographicService, demographicId);
 				pushDxresearchs(facility, demographicService, demographicId);
 				pushBillingItems(facility, demographicService, demographicId);
@@ -1005,7 +1005,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		}
 	}
 
-	private void pushAppointments(Facility facility, DemographicWs demographicService, Integer demographicId) throws ShutdownException {
+	private void pushAppointments(Date lastDataUpdated, Facility facility, DemographicWs demographicService, Integer demographicId) throws ShutdownException {
 		logger.debug("pushing appointments facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
 		List<Appointment> appointments = appointmentDao.getAllByDemographicNo(demographicId);
@@ -1015,6 +1015,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		for (Appointment appointment : appointments) {
 			MiscUtils.checkShutdownSignaled();
 
+			if (lastDataUpdated.after(appointment.getUpdateDateTime())) continue;
+			
 			CachedAppointment cachedAppointment = new CachedAppointment();
 			FacilityIdIntegerCompositePk facilityIdIntegerCompositePk = new FacilityIdIntegerCompositePk();
 			facilityIdIntegerCompositePk.setCaisiItemId(appointment.getId());
