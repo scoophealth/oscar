@@ -61,7 +61,7 @@ public class Util {
     static public XmlCalendar calDate(String inDate) {
 	Date dateTime = null;
 	dateTime = UtilDateUtilities.StringToDate(inDate,"yyyy-MM-dd HH:mm:ss");
-	if (dateTime==null) UtilDateUtilities.StringToDate(inDate,"yyyy-MM-dd");
+	if (dateTime==null) dateTime = UtilDateUtilities.StringToDate(inDate,"yyyy-MM-dd");
 	if (dateTime==null) { //inDate may contain time only
 	    try {
 		XmlCalendar x = new XmlCalendar(inDate);

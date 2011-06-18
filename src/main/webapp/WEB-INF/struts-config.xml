@@ -224,6 +224,23 @@
 		<form-bean name="addLinkDoc" type="oscar.dms.data.AddEditDocumentForm" />
 		<form-bean name="addEditHtmlDoc" type="oscar.dms.data.AddEditDocumentForm" />
 		<form-bean name="ManagePatientLettersForm" type="oscar.oscarReport.pageUtil.ManagePatientLettersForm" />
+		<form-bean name="CihiExportForm" type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property name="patientSet" type="java.lang.String" />
+			<form-property name="extractType" type="java.lang.String" />
+			<form-property name="orgName" type="java.lang.String" />
+			<form-property name="contactLName" type="java.lang.String" />
+			<form-property name="contactFName" type="java.lang.String" />
+			<form-property name="contactPhone" type="java.lang.String" />
+			<form-property name="contactEmail" type="java.lang.String" />
+			<form-property name="contactUserName" type="java.lang.String" />
+			<form-property name="vendorId" type="java.lang.String" />
+			<form-property name="vendorBusinessName" type="java.lang.String" />
+			<form-property name="vendorCommonName" type="java.lang.String" />
+			<form-property name="vendorSoftware" type="java.lang.String" />
+			<form-property name="vendorSoftwareCommonName" type="java.lang.String" />
+			<form-property name="vendorSoftwareVer" type="java.lang.String" />
+			<form-property name="installDate" type="java.lang.String" />
+		</form-bean>
 		<form-bean name="ticklerForm" type="org.apache.struts.validator.DynaValidatorForm">
 			<form-property name="tickler" type="org.caisi.model.Tickler" />
 			<form-property name="filter" type="org.caisi.model.CustomFilter" />
@@ -1502,6 +1519,9 @@
 			<forward name="fail" path="/demographic/demographicExport.jsp" />
 		</action>
 		<action input="/demographic/diabetesExport.jsp" name="DiabetesExportForm" path="/demographic/DiabetesExport" scope="request" type="oscar.oscarDemographic.pageUtil.DiabetesExportAction">
+		</action>
+		<action input="/demographic/cihiExport.jsp" name="CihiExportForm" path="/demographic/cihiExport" parameter="method" scope="request" type="org.springframework.web.struts.DelegatingActionProxy">
+			<forward name="display" path="/demographic/cihiExport.jsp" />
 		</action>
 		<action input="/oscarReport/demographicSetEdit.jsp" name="DemographicSetEditForm" path="/report/DemographicSetEdit" scope="request" type="oscar.oscarReport.pageUtil.DemographicSetEditAction">
 			<forward name="success" path="/oscarReport/demographicSetEdit.jsp" />

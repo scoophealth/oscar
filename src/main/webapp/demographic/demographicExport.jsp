@@ -28,7 +28,8 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
-
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
+<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request" />
 <%
   if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
 
@@ -197,8 +198,10 @@ if (!userRole.toLowerCase().contains("admin")) { %>
 	<tr>
 		<td class="MainTableLeftColumn" valign="top">
 		    <% if (demographicNo== null) { %>
-		    <a href="diabetesExport.jsp">Diabetes Export</a></td>
+		    <a href="diabetesExport.jsp">Diabetes Export</a>
+		    <a href='<c:out value="${ctx}/demographic/cihiExport.do"></c:out>'>CIHI Export</a>
 		    <%} %>
+		</td>
 		<td valign="top" class="MainTableRightColumn">
 		    <html:form action="/demographic/DemographicExport" method="get" onsubmit="return checkSelect(patientSet.value);">
 		    <div>
