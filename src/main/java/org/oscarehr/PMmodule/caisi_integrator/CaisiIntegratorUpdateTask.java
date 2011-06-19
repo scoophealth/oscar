@@ -39,6 +39,8 @@ import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 import javax.xml.ws.WebServiceException;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -58,6 +60,7 @@ import org.oscarehr.caisi_integrator.ws.CachedDemographicDocument;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicDrug;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicForm;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicIssue;
+import org.oscarehr.caisi_integrator.ws.CachedDemographicLabResult;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicNote;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicNoteCompositePk;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicPrevention;
@@ -76,6 +79,7 @@ import org.oscarehr.caisi_integrator.ws.DemographicTransfer;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.caisi_integrator.ws.FacilityIdDemographicIssueCompositePk;
 import org.oscarehr.caisi_integrator.ws.FacilityIdIntegerCompositePk;
+import org.oscarehr.caisi_integrator.ws.FacilityIdLabResultCompositePk;
 import org.oscarehr.caisi_integrator.ws.FacilityIdStringCompositePk;
 import org.oscarehr.caisi_integrator.ws.FacilityWs;
 import org.oscarehr.caisi_integrator.ws.Gender;
@@ -123,6 +127,8 @@ import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.ShutdownException;
 import org.oscarehr.util.SpringUtils;
+import org.oscarehr.util.XmlUtils;
+import org.w3c.dom.Document;
 
 import oscar.OscarProperties;
 import oscar.dms.EDoc;
@@ -140,6 +146,8 @@ import oscar.oscarEncounter.oscarMeasurements.model.Measurementmap;
 import oscar.oscarEncounter.oscarMeasurements.model.Measurements;
 import oscar.oscarEncounter.oscarMeasurements.model.MeasurementsExt;
 import oscar.oscarEncounter.oscarMeasurements.model.Measurementtype;
+import oscar.oscarLab.ca.on.CommonLabResultData;
+import oscar.oscarLab.ca.on.LabResultData;
 import oscar.oscarRx.data.RxPatientData;
 import oscar.util.DateUtils;
 
@@ -421,6 +429,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				pushAllergies(facility, demographicService, demographicId);
 				pushDocuments(lastDataUpdated, facility, demographicService, demographicId);
 				pushForms(lastDataUpdated, facility, demographicService, demographicId);
+				pushLabResults(lastDataUpdated, facility, demographicService, demographicId);
 
 			} catch (IllegalArgumentException iae) {
 				// continue processing demographics if date values in current demographic are bad
@@ -667,6 +676,54 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		}
 	}
 
+	private void pushLabResults(Date lastDataUpdated, Facility facility, DemographicWs demographicWs, Integer demographicId) throws ShutdownException, ParserConfigurationException, TransformerException {
+		logger.debug("pushing pushLabResults facilityId:" + facility.getId() + ", demographicId:" + demographicId);
+
+	    CommonLabResultData comLab = new CommonLabResultData();
+	    ArrayList<LabResultData> labs = comLab.populateLabResultsData("",demographicId.toString(), "", "","","U");
+	    for (LabResultData lab : labs)
+	    {
+			MiscUtils.checkShutdownSignaled();
+
+	    	CachedDemographicLabResult cachedDemographicLabResult=makeCachedDemographicLabResult(demographicId, lab);
+	    	demographicWs.addCachedDemographicLabResult(cachedDemographicLabResult);
+	    }
+	}
+	
+	private CachedDemographicLabResult makeCachedDemographicLabResult(Integer demographicId, LabResultData lab) throws ParserConfigurationException, TransformerException
+	{
+		CachedDemographicLabResult cachedDemographicLabResult=new CachedDemographicLabResult();
+		
+		FacilityIdLabResultCompositePk pk=new FacilityIdLabResultCompositePk();
+		// our attempt at making a fake pk....
+		String key=""+demographicId+':'+lab.getSegmentID()+':'+lab.labType+':'+lab.getDateTime();
+		pk.setLabResultId(key);
+		cachedDemographicLabResult.setFacilityIdLabResultCompositePk(pk);
+
+		cachedDemographicLabResult.setCaisiDemographicId(demographicId);
+		cachedDemographicLabResult.setType(lab.labType);
+		
+		Document doc=XmlUtils.newDocument("LabResult");
+		XmlUtils.appendChildToRoot(doc, "acknowledgedStatus", lab.getAcknowledgedStatus());
+		XmlUtils.appendChildToRoot(doc, "dateTime", lab.getDateTime());
+		XmlUtils.appendChildToRoot(doc, "discipline", lab.getDiscipline());
+		XmlUtils.appendChildToRoot(doc, "healthNumber", lab.getHealthNumber());
+		XmlUtils.appendChildToRoot(doc, "labPatientId", lab.getLabPatientId());
+		XmlUtils.appendChildToRoot(doc, "patientName", lab.getPatientName());
+		XmlUtils.appendChildToRoot(doc, "priority", lab.getPriority());
+		XmlUtils.appendChildToRoot(doc, "reportStatus", lab.getReportStatus());
+		XmlUtils.appendChildToRoot(doc, "requestingClient", lab.getRequestingClient());
+		XmlUtils.appendChildToRoot(doc, "segmentID", lab.getSegmentID());
+		XmlUtils.appendChildToRoot(doc, "sex", lab.getSex());
+		XmlUtils.appendChildToRoot(doc, "ackCount", ""+lab.getAckCount());
+		XmlUtils.appendChildToRoot(doc, "multipleAckCount", ""+lab.getMultipleAckCount());
+		
+		String data=XmlUtils.toString(doc);
+		cachedDemographicLabResult.setData(data);
+		
+		return(cachedDemographicLabResult);
+	}
+	
 	private void pushForms(Date lastDataUpdated, Facility facility, DemographicWs demographicWs, Integer demographicId) throws ShutdownException, SQLException, IOException, ParseException {
 		logger.debug("pushing demographic forms facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 

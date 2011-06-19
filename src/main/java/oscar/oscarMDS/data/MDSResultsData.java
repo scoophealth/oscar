@@ -114,7 +114,7 @@ public class MDSResultsData {
     }
     
 
- public ArrayList populateEpsilonResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status) {
+ public ArrayList<LabResultData> populateEpsilonResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status) {
         //logger.info("populateCMLResultsData getting called now");
         if ( providerNo == null) { providerNo = ""; }
         if ( patientFirstName == null) { patientFirstName = ""; }
@@ -123,7 +123,7 @@ public class MDSResultsData {
         if ( status == null ) { status = ""; }
 
 
-        labResults =  new ArrayList();
+        labResults =  new ArrayList<LabResultData>();
         String sql = "";
         try {
             
@@ -195,7 +195,7 @@ public class MDSResultsData {
 
 }
     
-    public ArrayList populateCMLResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status) {
+    public ArrayList<LabResultData> populateCMLResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status) {
         //logger.info("populateCMLResultsData getting called now");
         if ( providerNo == null) { providerNo = ""; }
         if ( patientFirstName == null) { patientFirstName = ""; }
@@ -204,7 +204,7 @@ public class MDSResultsData {
         if ( status == null ) { status = ""; }
         
         
-        labResults =  new ArrayList();
+        labResults =  new ArrayList<LabResultData>();
         // select lpp.patient_health_num, concat(lpp.patient_last_name,',',lpp.patient_first_name), lpp.patient_sex, lpp.doc_name, lpp.collection_date, lpp.lab_status from labPatientPhysicianInfo lpp;
         String sql = "";
         try {
@@ -463,7 +463,7 @@ public class MDSResultsData {
     }
     //////
     
-    public ArrayList populateMDSResultsData2(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status) {
+    public ArrayList<LabResultData> populateMDSResultsData2(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status) {
         
         if ( providerNo == null) { providerNo = ""; }
         if ( patientFirstName == null) { patientFirstName = ""; }
@@ -471,7 +471,7 @@ public class MDSResultsData {
         if ( patientHealthNumber == null) { patientHealthNumber = ""; }
         if ( status == null ) { status = ""; }
         
-        labResults = new ArrayList();
+        labResults = new ArrayList<LabResultData>();
         String sql = "";
         String seqId = null;  //for debugging purposes
         

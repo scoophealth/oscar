@@ -31,7 +31,9 @@ import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.util.MessageResources;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarLab.ca.on.CommonLabResultData;
 import oscar.oscarLab.ca.on.LabResultData;
@@ -41,10 +43,14 @@ import oscar.util.StringUtils;
 //import oscar.oscarSecurity.CookieSecurity;
 
 public class EctDisplayLabAction extends EctDisplayAction {
-    private static final String cmd = "labs";
+	private static final Logger logger=MiscUtils.getLogger();
+	
+	private static final String cmd = "labs";
     
   public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {          
      
+	  logger.debug("EctDisplayLabAction");
+	  
 	  CommonLabResultData comLab = new CommonLabResultData();
         ArrayList labs = comLab.populateLabResultsData("",bean.demographicNo, "", "","","U");
         Collections.sort(labs);               

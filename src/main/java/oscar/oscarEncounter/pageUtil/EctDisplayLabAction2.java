@@ -36,6 +36,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.util.MessageResources;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
 import oscar.oscarLab.ca.on.CommonLabResultData;
@@ -47,11 +48,13 @@ import oscar.util.StringUtils;
 //import oscar.oscarSecurity.CookieSecurity;
 
 public class EctDisplayLabAction2 extends EctDisplayAction {
-    Logger logger = Logger.getLogger(EctDisplayLabAction2.class);
+	private static final Logger logger=MiscUtils.getLogger();
     private static final String cmd = "labs";
     
     public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
         
+  	  logger.debug("EctDisplayLabAction2");
+
         
     	boolean a = true;
       	Vector v = OscarRoleObjectPrivilege.getPrivilegeProp("_newCasemgmt.labResult");
@@ -63,7 +66,7 @@ public class EctDisplayLabAction2 extends EctDisplayAction {
       	    
     	 
     	CommonLabResultData comLab = new CommonLabResultData();
-        ArrayList labs = comLab.populateLabResultsData("",bean.demographicNo, "", "","","U");
+        ArrayList<LabResultData> labs = comLab.populateLabResultsData("",bean.demographicNo, "", "","","U");
         Collections.sort(labs);
         
         //set text for lefthand module title
