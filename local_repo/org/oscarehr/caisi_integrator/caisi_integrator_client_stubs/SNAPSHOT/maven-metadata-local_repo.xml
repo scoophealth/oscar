@@ -7,6 +7,10 @@
     <snapshot>
       <localCopy>true</localCopy>
     </snapshot>
+<<<<<<< HEAD
     <lastUpdated>20110618070338</lastUpdated>
+=======
+    <lastUpdated>20110619041330</lastUpdated>
+>>>>>>> 1367e55... conformance test only feature of updating local demographic info from
   </versioning>
 </metadata>

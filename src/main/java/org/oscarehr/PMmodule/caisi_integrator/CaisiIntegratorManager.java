@@ -451,6 +451,9 @@ public class CaisiIntegratorManager {
 		demographic.setVer(demographicTransfer.getHinVersion());
 		demographic.setProvince(demographicTransfer.getProvince());
 		demographic.setSin(demographicTransfer.getSin());
+		demographic.setAddress(demographicTransfer.getStreetAddress());
+		demographic.setPhone(demographicTransfer.getPhone1());
+		demographic.setPhone2(demographicTransfer.getPhone2());
 		
 		demographic.setPatientStatus("AC");
 		demographic.setDateJoined(new Date());

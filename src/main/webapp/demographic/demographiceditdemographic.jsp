@@ -2348,6 +2348,17 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
 								</td>
                                                         </tr>
 						</table>
+						<%
+							Properties properties=OscarProperties.getInstance();
+							boolean enableConformanceOnlyTestFeatures=Boolean.parseBoolean(properties.getProperty("ENABLE_CONFORMANCE_ONLY_FEATURES"));
+							if (enableConformanceOnlyTestFeatures)
+							{
+								%>
+									<input type="button" value="Update latest integrated demographics information" onclick="document.location='<%=request.getContextPath()%>/demographic/copyLinkedDemographicInfoAction.jsp?demographicId=<%=demographic$%>&<%=request.getQueryString()%>'" /> 
+									<input type="button" value="Send note to integrated provider" onclick="document.location='<%=request.getContextPath()%>/demographic/followUpSelection.jsp?demographicId=<%=demographic$%>'" /> 
+								<%								
+							}
+						%>
 						</td>
 					</tr>
 				</table>
