@@ -460,6 +460,8 @@ public class CommonLabResultData {
             labs = data.getMatchingCMLLabs(lab_no);
         }else if (lab_type.equals(LabResultData.DOCUMENT)){
             labs = lab_no;//one document is only linked to one patient.
+        }else if (lab_type.equals(LabResultData.HRM)){
+        	labs = ""; //TODO:Change this to grab the real value
         }
 
         return labs;
