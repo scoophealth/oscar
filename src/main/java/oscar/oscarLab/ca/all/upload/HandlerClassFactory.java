@@ -77,4 +77,11 @@ public final class HandlerClassFactory {
             }
         }
     }
+    
+    // this method is added to get the DefaultHandler during Private/Decryption Key upload in HRM
+    public static DefaultHandler getDefaultHandler(){
+        logger.debug("Type not specified using Default Handler");
+        return( new DefaultHandler());
+    }
+
 }

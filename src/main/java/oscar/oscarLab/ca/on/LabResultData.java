@@ -54,6 +54,7 @@ public class LabResultData implements Comparable{
     public static String MDS = "MDS";
     public static String EXCELLERIS = "BCP"; //EXCELLERIS
     public static String DOCUMENT = "DOC"; //INTERNAL DOCUMENT
+    public static String HRM = "HRM";
     
     //HL7TEXT handles all messages types recieved as a hl7 formatted string
     public static String HL7TEXT = "HL7";
@@ -94,6 +95,8 @@ public class LabResultData implements Comparable{
             labType = HL7TEXT;
         }else if(EPSILON.equals(labT)){
                 labType = EPSILON;
+        }else if (HRM.equals(labT)) {
+        		labType = HRM;
         }
 
         
@@ -160,6 +163,11 @@ public class LabResultData implements Comparable{
         return ret;
     }
     
+    public boolean isHRM(){
+    	boolean ret = false;
+    	if(HRM.equals(labType)){ ret = true; }
+    	return ret;
+    } 
     ////
     
     public static boolean isMDS(String type){
@@ -186,7 +194,11 @@ public class LabResultData implements Comparable{
         return ret;
     }
     
-    
+    public static boolean isHRM(String type){
+    	boolean ret = false;
+    	if (HRM.equals(type)){ ret = true; }
+    	return ret;
+    }
     
     
     public String getDiscipline(){
