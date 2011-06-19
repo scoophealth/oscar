@@ -46,6 +46,7 @@ import org.oscarehr.common.dao.PreventionDao;
 import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.dao.BillingDao;
 import org.oscarehr.common.dao.DemographicContactDao;
+import org.oscarehr.common.dao.DemographicQueryFavouritesDao;
 
 
 import org.oscarehr.common.model.Appointment;
@@ -55,6 +56,7 @@ import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.BillingONCHeader1;
 import org.oscarehr.common.model.DemographicContact;
+import org.oscarehr.common.model.DemographicQueryFavourite;
 import org.oscarehr.dx.model.DxResearch;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramProvider;
@@ -231,7 +233,11 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
 		return caseManagementIssue;
 	}
 	
-	Appointment getAppointment(Date apptDate, int startHour, int startMinute,int durationInMins,Date createdOn,String creator,Integer demographicNo,String providerNo,String status){
+	String getName(Demographic demographic){
+		return demographic.getLastName()+", "+demographic.getFirstName();
+	}
+	
+	Appointment getAppointment(Date apptDate, int startHour, int startMinute,int durationInMins,Date createdOn,String creator,Demographic demographic,String providerNo,String status){
 		Appointment a = new Appointment();		
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(apptDate);
@@ -243,10 +249,11 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
 		a.setEndTime(cal.getTime());
 		a.setCreateDateTime(createdOn);
 		a.setCreator(creator);
-		a.setDemographicNo(demographicNo);
+		a.setDemographicNo(demographic.getDemographicNo());
 		a.setProviderNo(providerNo);
 		a.setStatus(status);
 		a.setUpdateDateTime(createdOn);
+		a.setName(getName(demographic));
 		return a;
 	}
 	
@@ -586,6 +593,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
 		DrugDao drugDao = (DrugDao) SpringUtils.getBean("drugDao");
 		DemographicContactDao demographicContactDao = (DemographicContactDao) SpringUtils.getBean("demographicContactDao");
 		CaseManagementNoteLinkDAO CaseManagementNoteLinkDao = (CaseManagementNoteLinkDAO) SpringUtils.getBean("CaseManagementNoteLinkDAO");
+		DemographicQueryFavouritesDao demoQueryFavouriteDao = (DemographicQueryFavouritesDao) SpringUtils.getBean("demographicQueryFavouritesDao");
 		
 		ProgramDao programDao = (ProgramDao) SpringUtils.getBean("programDao");
 		PreventionDao preventionDao = (PreventionDao) SpringUtils.getBean("preventionDao");
@@ -764,7 +772,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
 		
 		programProviderDAO.saveProgramProvider(programProvider);	
 		
-		//TODO:Still need to create logins and assign roles for DRW,DRL,DRK,DRT,DRS,jc,nn,ss,lg
+		
 		Integer BRemotelockset = 1;
 		Integer BLocallockset = 1;
 		Date dateExpiredate = null;
@@ -801,6 +809,127 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
 		String lastName = null, firstName= null,  hin= null, ver= null, yearOfBirth= null, monthOfBirth= null, dateOfBirth= null, sex= null, address= null, city= null, province= null, postal= null, phone= null, patientStatus= null, rosterStatus= null, providerNo = null;
 	
 	    
+	    //PATIENT SETS
+		
+		//PAP
+		DemographicQueryFavourite demographicQueryFavourite = new DemographicQueryFavourite();
+		demographicQueryFavourite.setSelects("<?xml version=\"1.0\" encoding=\"UTF-8\"?><root><item value=\"demographic_no\"/></root>");
+		demographicQueryFavourite.setAge("4");
+		demographicQueryFavourite.setStartYear("34");
+		demographicQueryFavourite.setEndYear("71");
+		demographicQueryFavourite.setFirstName("");
+		demographicQueryFavourite.setLastName("");
+		demographicQueryFavourite.setRosterStatus("<?xml version=\"1.0\" encoding=\"UTF-8\"?><root><item value=\"RO\"/></root>");
+		demographicQueryFavourite.setSex("1");
+		demographicQueryFavourite.setProviderNo("<?xml version=\"1.0\" encoding=\"UTF-8\"?><root><item value=\""+drl.getProviderNo()+"\"/></root>");
+		demographicQueryFavourite.setPatientStatus("");
+		demographicQueryFavourite.setQueryName("DRLPAPS");
+		demographicQueryFavourite.setArchived("1");
+		
+		demoQueryFavouriteDao.persist(demographicQueryFavourite);
+		
+		//MAM
+		demographicQueryFavourite = new DemographicQueryFavourite();
+		demographicQueryFavourite.setSelects("<?xml version=\"1.0\" encoding=\"UTF-8\"?><root><item value=\"demographic_no\"/></root>");
+		demographicQueryFavourite.setAge("4");
+		demographicQueryFavourite.setStartYear("49");
+		demographicQueryFavourite.setEndYear("71");
+		demographicQueryFavourite.setFirstName("");
+		demographicQueryFavourite.setLastName("");
+		demographicQueryFavourite.setRosterStatus("<?xml version=\"1.0\" encoding=\"UTF-8\"?><root><item value=\"RO\"/></root>");
+		demographicQueryFavourite.setSex("1");
+		demographicQueryFavourite.setProviderNo("<?xml version=\"1.0\" encoding=\"UTF-8\"?><root><item value=\""+drl.getProviderNo()+"\"/></root>");
+		demographicQueryFavourite.setPatientStatus("");
+		demographicQueryFavourite.setQueryName("DRLMAM");
+		demographicQueryFavourite.setArchived("1");
+		
+		demoQueryFavouriteDao.persist(demographicQueryFavourite);
+		
+		//FOBT
+		demographicQueryFavourite = new DemographicQueryFavourite();
+		demographicQueryFavourite.setSelects("<?xml version=\"1.0\" encoding=\"UTF-8\"?><root><item value=\"demographic_no\"/></root>");
+		demographicQueryFavourite.setAge("4");
+		demographicQueryFavourite.setStartYear("49");
+		demographicQueryFavourite.setEndYear("75");
+		demographicQueryFavourite.setFirstName("");
+		demographicQueryFavourite.setLastName("");
+		demographicQueryFavourite.setRosterStatus("<?xml version=\"1.0\" encoding=\"UTF-8\"?><root><item value=\"RO\"/></root>");
+		demographicQueryFavourite.setSex("0");
+		demographicQueryFavourite.setProviderNo("<?xml version=\"1.0\" encoding=\"UTF-8\"?><root><item value=\""+drl.getProviderNo()+"\"/></root>");
+		demographicQueryFavourite.setPatientStatus("");
+		demographicQueryFavourite.setQueryName("DRLFOBT");
+		demographicQueryFavourite.setArchived("1");
+		
+		demoQueryFavouriteDao.persist(demographicQueryFavourite);
+		
+		//Plus 65
+		demographicQueryFavourite = new DemographicQueryFavourite();
+		demographicQueryFavourite.setSelects("<?xml version=\"1.0\" encoding=\"UTF-8\"?><root><item value=\"demographic_no\"/></root>");
+		demographicQueryFavourite.setAge("2");
+		demographicQueryFavourite.setStartYear("64");
+		demographicQueryFavourite.setEndYear("");
+		demographicQueryFavourite.setFirstName("");
+		demographicQueryFavourite.setLastName("");
+		demographicQueryFavourite.setRosterStatus("<?xml version=\"1.0\" encoding=\"UTF-8\"?><root><item value=\"RO\"/></root>");
+		demographicQueryFavourite.setSex("0");
+		demographicQueryFavourite.setProviderNo("<?xml version=\"1.0\" encoding=\"UTF-8\"?><root><item value=\""+drl.getProviderNo()+"\"/></root>");
+		demographicQueryFavourite.setPatientStatus("");
+		demographicQueryFavourite.setQueryName("DRLplus65");
+		demographicQueryFavourite.setArchived("1");
+		
+		demoQueryFavouriteDao.persist(demographicQueryFavourite);
+		
+		//KIDS
+		demographicQueryFavourite = new DemographicQueryFavourite();
+		demographicQueryFavourite.setSelects("<?xml version=\"1.0\" encoding=\"UTF-8\"?><root><item value=\"demographic_no\"/></root>");
+		demographicQueryFavourite.setAge("4");
+		demographicQueryFavourite.setStartYear("18m");
+		demographicQueryFavourite.setEndYear("30m");
+		demographicQueryFavourite.setFirstName("");
+		demographicQueryFavourite.setLastName("");
+		demographicQueryFavourite.setRosterStatus("<?xml version=\"1.0\" encoding=\"UTF-8\"?><root><item value=\"RO\"/></root>");
+		demographicQueryFavourite.setSex("0");
+		demographicQueryFavourite.setProviderNo("<?xml version=\"1.0\" encoding=\"UTF-8\"?><root><item value=\""+drl.getProviderNo()+"\"/></root>");
+		demographicQueryFavourite.setPatientStatus("");
+		demographicQueryFavourite.setQueryName("DRL18-30m letters");
+		demographicQueryFavourite.setArchived("1");
+		
+		demoQueryFavouriteDao.persist(demographicQueryFavourite);
+		
+/*  I dont think these are needed
+		demographicQueryFavourite = new DemographicQueryFavourite();
+		demographicQueryFavourite.setSelects("<?xml version=\"1.0\" encoding=\"UTF-8\"?><root><item value=\"demographic_no\"/></root>");
+		demographicQueryFavourite.setAge("4");
+		demographicQueryFavourite.setStartYear("18m");
+		demographicQueryFavourite.setEndYear("3");
+		demographicQueryFavourite.setFirstName("");
+		demographicQueryFavourite.setLastName("");
+		demographicQueryFavourite.setRosterStatus("<?xml version=\"1.0\" encoding=\"UTF-8\"?><root><item value=\"RO\"/></root>");
+		demographicQueryFavourite.setSex("0");
+		demographicQueryFavourite.setProviderNo("<?xml version=\"1.0\" encoding=\"UTF-8\"?><root><item value=\""+drl.getProviderNo()+"\"/></root>");
+		demographicQueryFavourite.setPatientStatus("");
+		demographicQueryFavourite.setQueryName("DRL Child Imm");
+		demographicQueryFavourite.setArchived("1");
+		
+		demoQueryFavouriteDao.persist(demographicQueryFavourite);
+	       
+			
+		demographicQueryFavourite = new DemographicQueryFavourite();
+		demographicQueryFavourite.setSelects("<?xml version=\"1.0\" encoding=\"UTF-8\"?><root><item value=\"demographic_no\"/></root>");
+		demographicQueryFavourite.setAge("4");
+		demographicQueryFavourite.setStartYear("18m");
+		demographicQueryFavourite.setEndYear("42m");
+		demographicQueryFavourite.setFirstName("");
+		demographicQueryFavourite.setLastName("");
+		demographicQueryFavourite.setRosterStatus("<?xml version=\"1.0\" encoding=\"UTF-8\"?><root><item value=\"RO\"/></root>");
+		demographicQueryFavourite.setSex("0");
+		demographicQueryFavourite.setProviderNo("<?xml version=\"1.0\" encoding=\"UTF-8\"?><root><item value=\""+drl.getProviderNo()+"\"/></root>");
+		demographicQueryFavourite.setPatientStatus("");
+		demographicQueryFavourite.setQueryName("DRL Child 30t42");
+		demographicQueryFavourite.setArchived("1");
+		
+		demoQueryFavouriteDao.persist(demographicQueryFavourite);
+	*/	
 		
 		//Patients for DRW
 		/*Patient1: Mr. Eric Idle, OHN:1123581314, Version Code: AB;DOB: 31/May/1958; Sex M: No activity for 10 years.Diagnosed with Type2 Diabetes.Adverse Reaction: Penicillin*/
@@ -1010,7 +1139,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
         
         //Aug 12, 2005 Aug 12, 2005 Aug 12, 2005     Glyburide 1 2.5 mg qd 10 10 tab oral DRW
         Date aug122005 = getDate("2005-08-12");
-        Appointment app = getAppointment(aug122005, 10, 15,15,tenYearsAgo,drw.getProviderNo(),juneElder.getDemographicNo(),drw.getProviderNo(),"t");
+        Appointment app = getAppointment(aug122005, 10, 15,15,tenYearsAgo,drw.getProviderNo(),juneElder,drw.getProviderNo(),"t");
     	appointmentDao.persist(app);
     	CaseManagementNote juneElderAugNote =getCaseManagementNote(aug122005,juneElder,drw.getProviderNo(),"Rx Glyburide",oscarProgramID, null);
     	juneElderAugNote.setAppointmentNo(app.getId());
@@ -1024,7 +1153,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
         
         //Oct 22, 2005 Oct 22, 2005 Oct 22, 2005 Glyburide 2 2.5 mg bid 80 20 2 tab oral DRW
 		Date oct222005 = getDate("2005-10-22");
-        app = getAppointment(oct222005, 10, 15,15,tenYearsAgo,drw.getProviderNo(),juneElder.getDemographicNo(),drw.getProviderNo(),"t");
+        app = getAppointment(oct222005, 10, 15,15,tenYearsAgo,drw.getProviderNo(),juneElder,drw.getProviderNo(),"t");
     	appointmentDao.persist(app);
     	CaseManagementNote juneElderOctNote =getCaseManagementNote(oct222005,juneElder,drw.getProviderNo(),"Rx Glyburide",oscarProgramID, null);
     	juneElderOctNote.setAppointmentNo(app.getId());
@@ -1037,7 +1166,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
 		
 		//Jan 6, 2006 Jan 6 2006 Jan 6, 2006 Glyburide 2 5 mg qid 160 20 3 tab oral DRW
 		Date jan62006 = getDate("2006-01-06");
-        app = getAppointment(jan62006, 10, 15,15,tenYearsAgo,drw.getProviderNo(),juneElder.getDemographicNo(),drw.getProviderNo(),"t");
+        app = getAppointment(jan62006, 10, 15,15,tenYearsAgo,drw.getProviderNo(),juneElder,drw.getProviderNo(),"t");
     	appointmentDao.persist(app);
     	CaseManagementNote juneElderJanNote =getCaseManagementNote(jan62006,juneElder,drw.getProviderNo(),"Rx Glyburide",oscarProgramID, null);
     	juneElderJanNote.setAppointmentNo(app.getId());
@@ -1051,7 +1180,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
 		//May 21, 2007 May 21, 2007 May 21, 2007 Glyburide 2 5 mg qid 240 30 3 tab oral DRW
 		
 		Date may212006 = getDate("2006-05-21");
-        app = getAppointment(may212006, 10, 15,15,tenYearsAgo,drw.getProviderNo(),juneElder.getDemographicNo(),drw.getProviderNo(),"t");
+        app = getAppointment(may212006, 10, 15,15,tenYearsAgo,drw.getProviderNo(),juneElder,drw.getProviderNo(),"t");
     	appointmentDao.persist(app);
     	CaseManagementNote juneElderMayNote =getCaseManagementNote(may212006,juneElder,drw.getProviderNo(),"Rx Glyburide",oscarProgramID, null);
     	juneElderJanNote.setAppointmentNo(app.getId());
@@ -1083,7 +1212,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
 		//Mar 23, 2008 Mar 23, 2008 Mar 23, 2008 Glyburide 2 5 mg qid 240 30 tab oral DRW
 		
 		Date mar232008 = getDate("2008-03-23");
-        app = getAppointment(mar232008, 10, 15,15,tenYearsAgo,drw.getProviderNo(),juneElder.getDemographicNo(),drw.getProviderNo(),"t");
+        app = getAppointment(mar232008, 10, 15,15,tenYearsAgo,drw.getProviderNo(),juneElder,drw.getProviderNo(),"t");
     	appointmentDao.persist(app);
     	CaseManagementNote juneElderMarNote =getCaseManagementNote(mar232008,juneElder,drw.getProviderNo(),"Rx Glyburide",oscarProgramID, null);
     	juneElderJanNote.setAppointmentNo(app.getId());
@@ -1099,7 +1228,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
 		
 		
 		
-		app = getAppointment(threeMonthsAgo, 10, 15,15,tenYearsAgo,drw.getProviderNo(),juneElder.getDemographicNo(),drw.getProviderNo(),"t");
+		app = getAppointment(threeMonthsAgo, 10, 15,15,tenYearsAgo,drw.getProviderNo(),juneElder,drw.getProviderNo(),"t");
     	appointmentDao.persist(app);
     	CaseManagementNote juneElder3MonthsAgoNote =getCaseManagementNote(mar232008,juneElder,drw.getProviderNo(),"Nardil,Celebrex,Saw Palmetto,Caduet",oscarProgramID, null);
     	juneElderJanNote.setAppointmentNo(app.getId());
@@ -1142,7 +1271,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
 		Demographic benChase = getDemographic(null,"Chase", "Anne",  "4444444444", "ZB", "1935", "08", "08", "M", address, city, province, postal, phone, "AC", "RO", drw.getProviderNo());
 		demographicDao.save(benChase);
 		admissionDao.saveAdmission(getAdmission(benChase,referenceDate, oscarProgramID));
-		app = getAppointment(eightWeeksAgo, 10, 15,15,eightWeeksAgo,drw.getProviderNo(),benChase.getDemographicNo(),drw.getProviderNo(),"t");
+		app = getAppointment(eightWeeksAgo, 10, 15,15,eightWeeksAgo,drw.getProviderNo(),benChase,drw.getProviderNo(),"t");
     	appointmentDao.persist(app);
     	zybanDate = getDate("2006-09-09");
     	drug  = getDrug(drw.getProviderNo(),	benChase.getDemographicNo(), zybanDate,getDate(zybanDate,Calendar.DAY_OF_YEAR,+1000),zybanDate,"ZYBAN 150MG",8838,null,1,1,"BID","1000","D","1000",0,false,false,"ZYBAN 150MG Take 1 TAB BID PO for 1000 days Qty:1000 Repeats:0","","BUPROPION HYDROCHLORIDE",
@@ -1153,7 +1282,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
 		Demographic catherineDeville = getDemographic(null,"Deville", "Catherine",  "5555555555", "ZC", "1947", "07", "07", "F", address, city, province, postal, phone, "AC", "RO", drw.getProviderNo());
 		demographicDao.save(catherineDeville);
 		admissionDao.saveAdmission(getAdmission(catherineDeville,referenceDate, oscarProgramID));
-		app = getAppointment(sixWeeksAgo, 10, 15,15,sixWeeksAgo,drw.getProviderNo(),catherineDeville.getDemographicNo(),drw.getProviderNo(),"t");
+		app = getAppointment(sixWeeksAgo, 10, 15,15,sixWeeksAgo,drw.getProviderNo(),catherineDeville,drw.getProviderNo(),"t");
     	appointmentDao.persist(app);
     	zybanDate = getDate("2008-02-02");
     	drug  = getDrug(drw.getProviderNo(),	catherineDeville.getDemographicNo(), zybanDate,getDate(zybanDate,Calendar.DAY_OF_YEAR,+1000),zybanDate,"ZYBAN 150MG",8838,null,1,1,"BID","1000","D","1000",0,false,false,"ZYBAN 150MG Take 1 TAB BID PO for 1000 days Qty:1000 Repeats:0","","BUPROPION HYDROCHLORIDE",
@@ -1208,7 +1337,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
 		Demographic johnHenry = getDemographic(null,"Huff", "Gina",  "8888777797", "ZX", "1961", "09", "09", "M", address, city, province, postal, phone, "AC", "RO", drw.getProviderNo());
 		demographicDao.save(johnHenry);
 		admissionDao.saveAdmission(getAdmission(johnHenry,referenceDate, oscarProgramID));
-		app = getAppointment(twoMonthsAgo, 10, 15,15,twoMonthsAgo,drw.getProviderNo(),johnHenry.getDemographicNo(),drw.getProviderNo(),"t");
+		app = getAppointment(twoMonthsAgo, 10, 15,15,twoMonthsAgo,drw.getProviderNo(),johnHenry,drw.getProviderNo(),"t");
 		app.setReason("Check BP");
     	appointmentDao.persist(app);
 		
@@ -1217,7 +1346,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
 		Demographic henryIp = getDemographic(null,"Ip", "Henry",  "1111222236", "ZI", "1940", "08", "08", "M", address, city, province, postal, phone, "AC", "RO", drw.getProviderNo());
 		demographicDao.save(henryIp);
 		admissionDao.saveAdmission(getAdmission(henryIp,referenceDate, oscarProgramID));
-		app = getAppointment(twoWeeksAgo, 10, 15,15,twoWeeksAgo,drw.getProviderNo(),henryIp.getDemographicNo(),drw.getProviderNo(),"t");
+		app = getAppointment(twoWeeksAgo, 10, 15,15,twoWeeksAgo,drw.getProviderNo(),henryIp,drw.getProviderNo(),"t");
     	appointmentDao.persist(app);
     	zybanDate = getDate("2011-01-03");
     	drug  = getDrug(drw.getProviderNo(),	henryIp.getDemographicNo(), zybanDate,getDate(zybanDate,Calendar.DAY_OF_YEAR,+1000),zybanDate,"ZYBAN 150MG",8838,null,1,1,"BID","1000","D","1000",0,false,false,"ZYBAN 150MG Take 1 TAB BID PO for 1000 days Qty:1000 Repeats:0","","BUPROPION HYDROCHLORIDE",
@@ -1241,7 +1370,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
 		Demographic nancyJackson = getDemographic(null,"Jackson", "Nancy",  "7777888897", "ZJ", "1980", "10", "10", "F", address, city, province, postal, phone, "AC", "RO", drw.getProviderNo());
 		demographicDao.save(nancyJackson);
 		admissionDao.saveAdmission(getAdmission(nancyJackson,referenceDate, oscarProgramID));
-		app = getAppointment(oneWeekAgo, 10, 15,15,oneWeekAgo,drw.getProviderNo(),nancyJackson.getDemographicNo(),drw.getProviderNo(),"t");
+		app = getAppointment(oneWeekAgo, 10, 15,15,oneWeekAgo,drw.getProviderNo(),nancyJackson,drw.getProviderNo(),"t");
     	appointmentDao.persist(app);
 		
 		
@@ -1275,7 +1404,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
 		Demographic louMalatesta = getDemographic(null,"Malatesta", "Lou",  "5555666675", "ZL", "1955", "05", "05", "M", address, city, province, postal, phone, "AC", "RO", drw.getProviderNo());
 		demographicDao.save(louMalatesta);
 		admissionDao.saveAdmission(getAdmission(louMalatesta,referenceDate, oscarProgramID));
-		app = getAppointment(oneWeekAgo, 10, 15,15,oneWeekAgo,drw.getProviderNo(),louMalatesta.getDemographicNo(),drw.getProviderNo(),"t");
+		app = getAppointment(oneWeekAgo, 10, 15,15,oneWeekAgo,drw.getProviderNo(),louMalatesta,drw.getProviderNo(),"t");
     	appointmentDao.persist(app);
     	zybanDate = getDate("2010-03-03");
     	drug  = getDrug(drw.getProviderNo(),	louMalatesta.getDemographicNo(), zybanDate,getDate(zybanDate,Calendar.DAY_OF_YEAR,+1000),zybanDate,"ZYBAN 150MG",8838,null,1,1,"BID","1000","D","1000",0,false,false,"ZYBAN 150MG Take 1 TAB BID PO for 1000 days Qty:1000 Repeats:0","","BUPROPION HYDROCHLORIDE",
@@ -1287,7 +1416,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
 		Demographic randyTurner = getDemographic(null,"Turner", "Randy",  "6666555575", "ZT", "1936", "06", "20", "M", address, city, province, postal, phone, "AC", "RO", drw.getProviderNo());
 		demographicDao.save(randyTurner);
 		admissionDao.saveAdmission(getAdmission(randyTurner,referenceDate, oscarProgramID));
-		app = getAppointment(today, 10, 15,15,today,drw.getProviderNo(),randyTurner.getDemographicNo(),drw.getProviderNo(),"t");
+		app = getAppointment(today, 10, 15,15,today,drw.getProviderNo(),randyTurner,drw.getProviderNo(),"t");
 		app.setReason("Flu Shot");
     	appointmentDao.persist(app);
 		
@@ -1311,6 +1440,8 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
     	prevention = getPrevention(getDate("2010-10-24"),"FLU",annaAnt.getDemographicNo(),drl.getProviderNo(),false,false);	
     	preventionDao.persist(prevention);	
     	
+    	prevention = getPrevention(getDate("2008-01-05"),"FOBT",annaAnt.getDemographicNo(),drl.getProviderNo(),true,false);	
+    	preventionDao.persist(prevention);	
     	
     	
         
@@ -1359,7 +1490,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
     	prevention = getPrevention(getDate("2010-01-24"),"PAP",ellenEastman.getDemographicNo(),drl.getProviderNo(),false,false);	
     	preventionDao.persist(prevention);	
         
-    	prevention = getPrevention(getDate("2009-12-22"),"PAP",ellenEastman.getDemographicNo(),drl.getProviderNo(),true,false);	
+    	prevention = getPrevention(getDate("2009-12-22"),"PAP",ellenEastman.getDemographicNo(),drl.getProviderNo(),false,true);	
     	preventionDao.persist(prevention);
 
     	prevention = getPrevention(getDate("2010-02-26"),"MAM",ellenEastman.getDemographicNo(),drl.getProviderNo(),true,false);	
@@ -1393,13 +1524,16 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
     	prevention = getPrevention(getDate("2010-09-24"),"PAP",feliciaFoster.getDemographicNo(),drl.getProviderNo(),false,false);	
     	preventionDao.persist(prevention);	
     	
-    	prevention = getPrevention(getDate("2010-09-29"),"PAP",feliciaFoster.getDemographicNo(),drl.getProviderNo(),false,false);	
+    	prevention = getPrevention(getDate("2010-09-29"),"PAP",feliciaFoster.getDemographicNo(),drl.getProviderNo(),true,false);	
     	preventionDao.persist(prevention);	
     	
     	prevention = getPrevention(getDate("2009-12-25"),"MAM",feliciaFoster.getDemographicNo(),drl.getProviderNo(),false,false);	
     	preventionDao.persist(prevention);	
     	
     	prevention = getPrevention(getDate("2010-09-24"),"FOBT",feliciaFoster.getDemographicNo(),drl.getProviderNo(),false,false);	
+    	preventionDao.persist(prevention);	
+    	
+    	prevention = getPrevention(getDate("2010-09-29"),"FOBT",feliciaFoster.getDemographicNo(),drl.getProviderNo(),true,false);	
     	preventionDao.persist(prevention);	
     	
     	prevention = getPrevention(getDate("2010-10-26"),"FLU",feliciaFoster.getDemographicNo(),drl.getProviderNo(),false,false);	
@@ -1487,7 +1621,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
     	demographicDao.save(irinaItzak);
     	admissionDao.saveAdmission(getAdmission(irinaItzak,referenceDate, oscarProgramID));
     	
-    	prevention = getPrevention(getDate("2008-04-13"),"PAP",irinaItzak.getDemographicNo(),drl.getProviderNo(),false,false);	
+    	prevention = getPrevention(getDate("2011-04-13"),"PAP",irinaItzak.getDemographicNo(),drl.getProviderNo(),false,false);	
     	preventionDao.persist(prevention);	
         
     	prevention = getPrevention(getDate("2009-04-25"),"MAM",irinaItzak.getDemographicNo(),drl.getProviderNo(),false,false);	
@@ -1516,7 +1650,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
     	prevention = getPrevention(getDate("2008-07-27"),"PAP",janeJacobs.getDemographicNo(),drl.getProviderNo(),false,false);	
     	preventionDao.persist(prevention);	
         
-    	prevention = getPrevention(getDate("2010-10-16"),"PAP",janeJacobs.getDemographicNo(),drl.getProviderNo(),true,false);	
+    	prevention = getPrevention(getDate("2010-10-16"),"PAP",janeJacobs.getDemographicNo(),drl.getProviderNo(),false,true);	
     	preventionDao.persist(prevention);	
         
     	prevention = getPrevention(getDate("2005-11-12"),"MAM",janeJacobs.getDemographicNo(),drl.getProviderNo(),false,false);	
@@ -1524,6 +1658,10 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
     	
     	prevention = getPrevention(getDate("2010-10-20"),"FLU",janeJacobs.getDemographicNo(),drl.getProviderNo(),false,true);	
     	preventionDao.persist(prevention);	
+    	
+    	prevention = getPrevention(getDate("2010-09-29"),"FOBT",janeJacobs.getDemographicNo(),drl.getProviderNo(),true,false);	
+    	preventionDao.persist(prevention);	
+    	
     	
     	measurements=  getMeasurement("PAPF",getDate("2010-09-15"),janeJacobs.getDemographicNo(),"L1",drl.getProviderNo());
     	measurementsDao.addMeasurements(measurements);
@@ -1567,6 +1705,9 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
     	preventionDao.persist(prevention);	
     	
     	prevention = getPrevention(getDate("2009-10-22"),"FLU",karlaKotts.getDemographicNo(),drl.getProviderNo(),false,true);	
+    	preventionDao.persist(prevention);	
+    	
+    	prevention = getPrevention(getDate("2010-11-29"),"FOBT",karlaKotts.getDemographicNo(),drl.getProviderNo(),true,false);	
     	preventionDao.persist(prevention);	
     	
     	measurements=  getMeasurement("PAPF",getDate("2010-09-15"),karlaKotts.getDemographicNo(),"L1",drl.getProviderNo());
@@ -1630,7 +1771,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
     	prevention = getPrevention(getDate("2010-09-24"),"FOBT",mariaMaya.getDemographicNo(),drl.getProviderNo(),false,false);	
     	preventionDao.persist(prevention);	
     	
-    	prevention = getPrevention(getDate("2008-05-19"),"COLONOSCOPY",mariaMaya.getDemographicNo(),drl.getProviderNo(),false,false);	
+    	prevention = getPrevention(getDate("2005-05-19"),"COLONOSCOPY",mariaMaya.getDemographicNo(),drl.getProviderNo(),false,false);	
     	preventionDao.persist(prevention);	
     	
     	
@@ -1712,7 +1853,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
     	demographicDao.save(serrenaSingleton);
     	admissionDao.saveAdmission(getAdmission(serrenaSingleton,referenceDate, oscarProgramID));
     	
-    	prevention = getPrevention(getDate("2008-09-24"),"PAP",serrenaSingleton.getDemographicNo(),drl.getProviderNo(),false,false);	
+    	prevention = getPrevention(getDate("2010-09-24"),"PAP",serrenaSingleton.getDemographicNo(),drl.getProviderNo(),false,false);	
     	preventionDao.persist(prevention);	
     	
     	prevention = getPrevention(getDate("2009-12-27"),"PAP",serrenaSingleton.getDemographicNo(),drl.getProviderNo(),false,true);	
@@ -1730,10 +1871,10 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
     	prevention = getPrevention(getDate("2009-11-24"),"FLU",serrenaSingleton.getDemographicNo(),drl.getProviderNo(),false,false);	
     	preventionDao.persist(prevention);	
     	
-    	measurements=  getMeasurement("PAPF",getDate("2010-11-15"),serrenaSingleton.getDemographicNo(),"L1",drl.getProviderNo());
+    	measurements=  getMeasurement("PAPF",getDate("2009-11-15"),serrenaSingleton.getDemographicNo(),"L1",drl.getProviderNo());
     	measurementsDao.addMeasurements(measurements);
     	
-    	measurements=  getMeasurement("PAPF",getDate("2010-12-17"),serrenaSingleton.getDemographicNo(),"L2",drl.getProviderNo());
+    	measurements=  getMeasurement("PAPF",getDate("2009-12-17"),serrenaSingleton.getDemographicNo(),"L2",drl.getProviderNo());
     	measurementsDao.addMeasurements(measurements);
     	
     	
@@ -1860,7 +2001,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
     	measurementsDao.addMeasurements(measurements);
     	
     	//5 Edward Edison 18-Aug-2010 M 18-Aug-2009 26-Dec-2010 3 17-Nov-2010 ? 18-Dec-2010 ?
-    	Demographic edwardEdison = getDemographic(null,"Edison", "Edward",  hin, ver, "2009", "08", "18", "M", address, city, province, postal, phone, "AC", "RO", drl.getProviderNo());
+    	Demographic edwardEdison = getDemographic(null,"Edison", "Edward",  hin, ver, "2010", "08", "18", "M", address, city, province, postal, phone, "AC", "RO", drl.getProviderNo());
     	edwardEdison.setRosterDate(getDate("2010-08-18"));
     	demographicDao.save(edwardEdison);
     	admissionDao.saveAdmission(getAdmission(edwardEdison,referenceDate, oscarProgramID));
@@ -1912,7 +2053,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
     	admissionDao.saveAdmission(getAdmission(georgeGodard,referenceDate, oscarProgramID));
     	
 
-    	prevention = getPrevention(getDate("2010-12-18"),"DTaP-IPV-Hib",georgeGodard.getDemographicNo(),drl.getProviderNo(),true,false);	
+    	prevention = getPrevention(getDate("2010-12-18"),"DTaP-IPV-Hib",georgeGodard.getDemographicNo(),drl.getProviderNo(),false,false);	
     	preventionDao.persist(prevention);	
     	
     	
@@ -1950,7 +2091,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
     	demographicDao.save(jenniferJackson);
     	admissionDao.saveAdmission(getAdmission(jenniferJackson,referenceDate, oscarProgramID));
     	
-    	prevention = getPrevention(getDate("2010-11-14"),"MMR",jenniferJackson.getDemographicNo(),drl.getProviderNo(),true,false);	
+    	prevention = getPrevention(getDate("2010-11-14"),"MMR",jenniferJackson.getDemographicNo(),drl.getProviderNo(),false,false);	
     	preventionDao.persist(prevention);	
     	
     	
@@ -1961,7 +2102,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
     	preventionDao.persist(prevention);
     	
     	
-    	prevention = getPrevention(getDate("2010-08-18"),"DTaP-IPV-Hib",jenniferJackson.getDemographicNo(),drl.getProviderNo(),true,false);	
+    	prevention = getPrevention(getDate("2010-08-18"),"DTaP-IPV-Hib",jenniferJackson.getDemographicNo(),drl.getProviderNo(),false,false);	
     	preventionDao.persist(prevention);	
     	
     	
@@ -1976,14 +2117,14 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
     	
     	
     	//10 Kate Kay 21-Aug-2008 F 21-Aug-2008 26-Dec-2010 3
-    	Demographic kateKay = getDemographic(null,"Kay", "Kate",  hin, ver, "2009", "08", "21", "F", address, city, province, postal, phone, "AC", "RO", drl.getProviderNo());
-    	kateKay.setRosterDate(getDate("2009-08-21"));
+    	Demographic kateKay = getDemographic(null,"Kay", "Kate",  hin, ver, "2008", "08", "21", "F", address, city, province, postal, phone, "AC", "RO", drl.getProviderNo());
+    	kateKay.setRosterDate(getDate("2008-08-21"));
     	demographicDao.save(kateKay);
     	admissionDao.saveAdmission(getAdmission(kateKay,referenceDate, oscarProgramID));
     	
     	
     	
-    	prevention = getPrevention(getDate("2010-12-26"),"DTaP-IPV-Hib",kateKay.getDemographicNo(),drl.getProviderNo(),true,false);	
+    	prevention = getPrevention(getDate("2010-12-26"),"DTaP-IPV-Hib",kateKay.getDemographicNo(),drl.getProviderNo(),false,false);	
     	preventionDao.persist(prevention);	
     	
     	
@@ -1995,12 +2136,12 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
     	
     	
     	//11 Leonard Lambert 21-Aug-2008 M 21-Aug-2008 26-Sep-2009 5
-    	Demographic leonardLambert = getDemographic(null,"Lambert", "Leonard",  hin, ver, "2009", "08", "21", "M", address, city, province, postal, phone, "AC", "RO", drl.getProviderNo());
-    	leonardLambert.setRosterDate(getDate("2009-08-21"));
+    	Demographic leonardLambert = getDemographic(null,"Lambert", "Leonard",  hin, ver, "2008", "08", "21", "M", address, city, province, postal, phone, "AC", "RO", drl.getProviderNo());
+    	leonardLambert.setRosterDate(getDate("2008-08-21"));
     	demographicDao.save(leonardLambert);
     	admissionDao.saveAdmission(getAdmission(leonardLambert,referenceDate, oscarProgramID));
     	
-    	prevention = getPrevention(getDate("2009-09-26"),"MMR",leonardLambert.getDemographicNo(),drl.getProviderNo(),true,false);	
+    	prevention = getPrevention(getDate("2009-09-26"),"MMR",leonardLambert.getDemographicNo(),drl.getProviderNo(),false,false);	
     	preventionDao.persist(prevention);	
     	
     	prevention = getPrevention(getDate("2009-07-26"),"MMR",leonardLambert.getDemographicNo(),drl.getProviderNo(),false,false);	
@@ -2022,7 +2163,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
     	demographicDao.save(moniqueMorales);
     	admissionDao.saveAdmission(getAdmission(moniqueMorales,referenceDate, oscarProgramID));
     	
-    	prevention = getPrevention(getDate("2010-09-26"),"MMR",moniqueMorales.getDemographicNo(),drl.getProviderNo(),true,false);	
+    	prevention = getPrevention(getDate("2010-09-26"),"MMR",moniqueMorales.getDemographicNo(),drl.getProviderNo(),false,false);	
     	preventionDao.persist(prevention);	
     	
     	prevention = getPrevention(getDate("2010-07-26"),"MMR",moniqueMorales.getDemographicNo(),drl.getProviderNo(),false,false);	
@@ -2039,7 +2180,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
     	
     	
     	//13 Nick Neilson 21-Dec-2010 F 21-Dec-2009 26-Sep-2010 2
-    	Demographic nickNeilson = getDemographic(null,"Neilson", "Nick",  hin, ver, "2010", "12", "21", "F", address, city, province, postal, phone, "AC", "RO", drl.getProviderNo());
+    	Demographic nickNeilson = getDemographic(null,"Neilson", "Nick",  hin, ver, "2009", "12", "21", "F", address, city, province, postal, phone, "AC", "RO", drl.getProviderNo());
     	nickNeilson.setRosterDate(getDate("2009-12-21"));
     	demographicDao.save(nickNeilson);
     	admissionDao.saveAdmission(getAdmission(nickNeilson,referenceDate, oscarProgramID));
@@ -2060,7 +2201,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
     	demographicDao.save(oliviaOrtega);
     	admissionDao.saveAdmission(getAdmission(oliviaOrtega,referenceDate, oscarProgramID));
     	
-    	prevention = getPrevention(getDate("2010-09-26"),"MMR",oliviaOrtega.getDemographicNo(),drl.getProviderNo(),true,false);	
+    	prevention = getPrevention(getDate("2010-09-26"),"MMR",oliviaOrtega.getDemographicNo(),drl.getProviderNo(),false,false);	
     	preventionDao.persist(prevention);	
     	
     	prevention = getPrevention(getDate("2010-07-26"),"MMR",oliviaOrtega.getDemographicNo(),drl.getProviderNo(),false,false);	
@@ -2083,7 +2224,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
     	demographicDao.save(paulPerez);
     	admissionDao.saveAdmission(getAdmission(paulPerez,referenceDate, oscarProgramID));
     	
-    	prevention = getPrevention(getDate("2010-09-26"),"MMR",paulPerez.getDemographicNo(),drl.getProviderNo(),true,false);	
+    	prevention = getPrevention(getDate("2010-09-26"),"MMR",paulPerez.getDemographicNo(),drl.getProviderNo(),false,false);	
     	preventionDao.persist(prevention);	
     	
     	prevention = getPrevention(getDate("2010-07-26"),"MMR",paulPerez.getDemographicNo(),drl.getProviderNo(),false,false);	
@@ -2104,7 +2245,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
     	demographicDao.save(raulRamirez);
     	admissionDao.saveAdmission(getAdmission(raulRamirez,referenceDate, oscarProgramID));
     	
-    	prevention = getPrevention(getDate("2010-05-23"),"MMR",raulRamirez.getDemographicNo(),drl.getProviderNo(),true,false);	
+    	prevention = getPrevention(getDate("2010-05-23"),"MMR",raulRamirez.getDemographicNo(),drl.getProviderNo(),false,false);	
     	preventionDao.persist(prevention);	
     	
     	prevention = getPrevention(getDate("2010-03-26"),"MMR",raulRamirez.getDemographicNo(),drl.getProviderNo(),false,false);	
@@ -2125,7 +2266,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
     	demographicDao.save(simonSandford);
     	admissionDao.saveAdmission(getAdmission(simonSandford,referenceDate, oscarProgramID));
     	
-    	prevention = getPrevention(getDate("2010-10-25"),"MMR",simonSandford.getDemographicNo(),drl.getProviderNo(),true,false);	
+    	prevention = getPrevention(getDate("2010-10-25"),"MMR",simonSandford.getDemographicNo(),drl.getProviderNo(),false,false);	
     	preventionDao.persist(prevention);	
     	
     	prevention = getPrevention(getDate("2010-07-26"),"MMR",simonSandford.getDemographicNo(),drl.getProviderNo(),false,false);	
@@ -2141,7 +2282,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
     	preventionDao.persist(prevention);
     	
     	//18 Tom Tolman 17-Feb-2008 M 17-Feb-2008 25-Oct-2009 3
-    	Demographic tomTolman = getDemographic(null,"Tolman", "Tom",  hin, ver, "2009", "02", "17", "M", address, city, province, postal, phone, "AC", "RO", drl.getProviderNo());
+    	Demographic tomTolman = getDemographic(null,"Tolman", "Tom",  hin, ver, "2008", "02", "17", "M", address, city, province, postal, phone, "AC", "RO", drl.getProviderNo());
     	tomTolman.setRosterDate(getDate("2008-02-17"));
     	demographicDao.save(tomTolman);
     	admissionDao.saveAdmission(getAdmission(tomTolman,referenceDate, oscarProgramID));
@@ -2161,7 +2302,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
     	demographicDao.save(ursulaUlman);
     	admissionDao.saveAdmission(getAdmission(ursulaUlman,referenceDate, oscarProgramID));
     	
-    	prevention = getPrevention(getDate("2010-12-25"),"MMR",ursulaUlman.getDemographicNo(),drl.getProviderNo(),true,false);	
+    	prevention = getPrevention(getDate("2010-12-25"),"MMR",ursulaUlman.getDemographicNo(),drl.getProviderNo(),false,false);	
     	preventionDao.persist(prevention);	
     	
     	prevention = getPrevention(getDate("2010-07-26"),"MMR",ursulaUlman.getDemographicNo(),drl.getProviderNo(),false,false);	
@@ -2182,7 +2323,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
     	demographicDao.save(vivianVernon);
     	admissionDao.saveAdmission(getAdmission(vivianVernon,referenceDate, oscarProgramID));
     	
-    	prevention = getPrevention(getDate("2010-10-20"),"MMR",vivianVernon.getDemographicNo(),drl.getProviderNo(),true,false);	
+    	prevention = getPrevention(getDate("2010-10-20"),"MMR",vivianVernon.getDemographicNo(),drl.getProviderNo(),false,false);	
     	preventionDao.persist(prevention);	
     	
     	prevention = getPrevention(getDate("2010-07-26"),"MMR",vivianVernon.getDemographicNo(),drl.getProviderNo(),false,false);	
@@ -2666,21 +2807,21 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
     	//labs
     	
     	//appts
-    	Appointment coleenCopperApp = getAppointment(getDate("2010-01-01"), 10, 10,10,tenYearsAgo,drs.getProviderNo(),coleenCopper.getDemographicNo(),drs.getProviderNo(),"t");
+    	Appointment coleenCopperApp = getAppointment(getDate("2010-01-01"), 10, 10,10,tenYearsAgo,drs.getProviderNo(),coleenCopper,drs.getProviderNo(),"t");
     	coleenCopperApp.setReason("Follow-ip Glucose");
     	coleenCopperApp.setNotes("wants information about accupuncture");
     	appointmentDao.persist(coleenCopperApp);
     	
-    	Appointment febFirstApp = getAppointment(getDate("2010-02-01"), 11, 20,15,tenYearsAgo,drs.getProviderNo(),coleenCopper.getDemographicNo(),drs.getProviderNo(),"t");
+    	Appointment febFirstApp = getAppointment(getDate("2010-02-01"), 11, 20,15,tenYearsAgo,drs.getProviderNo(),coleenCopper,drs.getProviderNo(),"t");
     	febFirstApp.setReason("Flu Immuniztion");
     	febFirstApp.setNotes("Note 1");
     	appointmentDao.persist(febFirstApp);
 
-    	app = getAppointment(getDate("2010-03-01"), 13, 30,20,tenYearsAgo,drs.getProviderNo(),coleenCopper.getDemographicNo(),drs.getProviderNo(),"t");
+    	app = getAppointment(getDate("2010-03-01"), 13, 30,20,tenYearsAgo,drs.getProviderNo(),coleenCopper,drs.getProviderNo(),"t");
     	app.setReason("Annual Checkup");
     	appointmentDao.persist(app);
     	
-    	app = getAppointment(getDate("2010-03-15"), 14, 40,10,tenYearsAgo,drs.getProviderNo(),coleenCopper.getDemographicNo(),drs.getProviderNo(),"c");
+    	app = getAppointment(getDate("2010-03-15"), 14, 40,10,tenYearsAgo,drs.getProviderNo(),coleenCopper,drs.getProviderNo(),"c");
     	app.setReason("Annual Checkup");
     	app.setNotes("Patient was out of town on vacation");
     	appointmentDao.persist(app);

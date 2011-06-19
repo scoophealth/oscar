@@ -320,7 +320,7 @@ public class RptDemographicQueryBuilder {
        if (asofRosterDate != null){
            whereClause();
            firstClause();
-           stringBuffer.append(" ( d.hc_renew_date <= '"+asofRosterDate+"')");
+           stringBuffer.append(" ( d.roster_date <= '"+asofRosterDate+"')");
            theFirstFlag = 1;
        }
 
