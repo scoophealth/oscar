@@ -199,13 +199,13 @@ public class DocumentResultsDao extends AbstractDao<Document>{
         return labResults;
     }
     //retrieve documents belonging to a provider
-    public ArrayList populateDocumentResultsDataLinkToProvider(String providerNo, String demographicNo,
+    public ArrayList<LabResultData> populateDocumentResultsDataLinkToProvider(String providerNo, String demographicNo,
             String status){
 
         if ( status == null ) { status = ""; }
 
 
-        ArrayList labResults =  new ArrayList();
+        ArrayList<LabResultData> labResults =  new ArrayList<LabResultData>();
         String sql = "";
         try {
             if ( demographicNo == null || providerNo==null) {
@@ -293,13 +293,13 @@ public class DocumentResultsDao extends AbstractDao<Document>{
 
     }
     //retrieve all documents from database
-    public ArrayList populateDocumentResultsData(String providerNo, String demographicNo, String status) {
+    public ArrayList<LabResultData> populateDocumentResultsData(String providerNo, String demographicNo, String status) {
         
         if ( providerNo == null) { providerNo = ""; }
         if ( status == null ) { status = ""; }
 
 
-        ArrayList labResults =  new ArrayList();
+        ArrayList<LabResultData> labResults =  new ArrayList<LabResultData>();
         String sql = "";
         try {
             //

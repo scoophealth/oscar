@@ -102,7 +102,7 @@ public class PathnetResultsData {
         return labResults;
     }
     /////
-    public ArrayList populatePathnetResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status) {
+    public ArrayList<LabResultData> populatePathnetResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status) {
         if ( providerNo == null) { providerNo = ""; }
         if ( patientFirstName == null) { patientFirstName = ""; }
         if ( patientLastName == null) { patientLastName = ""; }
@@ -110,7 +110,7 @@ public class PathnetResultsData {
         if ( status == null ) { status = ""; }
         
         
-        ArrayList labResults =  new ArrayList();
+        ArrayList<LabResultData> labResults =  new ArrayList<LabResultData>();
         String sql = "";
         try {
             

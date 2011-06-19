@@ -19,7 +19,7 @@
     if ( searchProviderNo == null ) { searchProviderNo = providerNo; }
     //mDSData.populateMDSResultsData2(searchProviderNo, demographicNo, request.getParameter("fname"), request.getParameter("lname"), request.getParameter("hnum"), ackStatus);
     
-    ArrayList labs = comLab.populateLabResultsData("",demographicNo, "", "","","U");
+    ArrayList<LabResultData> labs = comLab.populateLabResultsData("",demographicNo, "", "","","U");
     
     
     
