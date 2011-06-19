@@ -95,13 +95,16 @@ if(outcome != null){
 					<option value="CML">CML</option>
 					<option value="GDML">GDML</option>
 					<option value="ICL">ICL</option>
-					<option value="MDS">MDS</option>
+					<option value="MDS">Lifelabs</option>
 					<option value="Epsilon">MHL</option>
 					<option value="PATHL7"
-						<oscar:oscarPropertiesCheck property="PATHNET_LABS" value="yes">Selected</oscar:oscarPropertiesCheck>>EXCELLERIS</option>
+					<oscar:oscarPropertiesCheck property="PATHNET_LABS" value="yes">Selected</oscar:oscarPropertiesCheck>>EXCELLERIS</option>
 					<option value="OTHER">Other</option>
-                                        <option value="HHSEMR">HHS Emr Download</option>
-                                        <option value="IHA">IHA</option>
+                    <option value="HHSEMR">HHS Emr Download</option>
+                    <option value="IHA">IHA</option>
+                    <option value="ALPHA">ALPHA</option>
+					<option value="HL7">HL7</option>
+					<option value="HRMXML">HRM XML</option>
 				</select></td>
 			</tr>
 			<tr id="OTHER" style="visibility: hidden;">

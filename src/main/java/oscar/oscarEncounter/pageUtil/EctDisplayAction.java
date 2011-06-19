@@ -35,6 +35,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.util.MessageResources;
+import org.oscarehr.util.MiscUtils;
 /**
  * Base action class for populating left navbar of encounter
  * @author rjonasz
@@ -67,6 +68,7 @@ public class EctDisplayAction extends Action {
             Actions.put("Rx", "/oscarEncounter/displayRx.do");
             Actions.put("success", "/oscarEncounter/LeftNavBarDisplay.jsp");
             Actions.put("error", "/oscarEncounter/LeftNavBarError.jsp");
+            Actions.put("HRM","/oscarEncounter/displayHRM.do");
         }
     }
 
@@ -86,9 +88,10 @@ public class EctDisplayAction extends Action {
 
         request.setAttribute("navbarName", navName);
 
-        if( bean == null )
+        if( bean == null ){
+        	MiscUtils.getLogger().error("Bean is null. Returning forward :"+forward);
             return new ActionForward((String)Actions.get(forward));
-
+        }
         //Can we handle request?
         //Check attrib first so we know if we are in a chain call before a direct request
         String params = (String)request.getAttribute("cmd");
@@ -127,8 +130,10 @@ public class EctDisplayAction extends Action {
                         else
                             forward = remainingCmds;
 
-                        if( Actions.get(forward) == null )
+                        if( Actions.get(forward) == null ){
+                        	MiscUtils.getLogger().error("forward not found, returning error");
                             forward = "error";
+                        }
                     }
                     else
                         forward = "success";
@@ -136,7 +141,7 @@ public class EctDisplayAction extends Action {
                 }
             }
         }
-
+        MiscUtils.getLogger().error("Forward :"+forward+" navName :"+navName+" cmd "+cmd+" params "+params);
         return new ActionForward((String)Actions.get(forward));
     }
 

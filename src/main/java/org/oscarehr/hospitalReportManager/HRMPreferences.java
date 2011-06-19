@@ -1,0 +1,45 @@
+package org.oscarehr.hospitalReportManager;
+
+
+public class HRMPreferences {
+	
+	
+	private String userName ;
+	private String location;
+	private String privateKey;
+	private String decryptionKey;
+	
+	public HRMPreferences(){
+		
+	}
+	
+	public String getUserName() {
+		
+		return userName;
+    }
+	
+	public void setUserName(String userName) {
+    	this.userName = userName;
+    }
+	
+	public String getLocation() {
+    	return location;
+    }
+	public void setLocation(String location) {
+    	this.location = location;
+    }
+	public String getPrivateKey() {
+    	return privateKey;
+    }
+	public void setPrivateKey(String privateKey) {
+    	this.privateKey = privateKey;
+    }
+	public String getDecryptionKey() {
+    	return decryptionKey;
+    }
+	public void setDecryptionKey(String decryptionKey) {
+    	this.decryptionKey = decryptionKey;
+    }
+	
+	
+}

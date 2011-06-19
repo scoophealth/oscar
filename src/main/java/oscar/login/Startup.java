@@ -149,6 +149,13 @@ public class Startup implements ServletContextListener {
 				checkAndSetProperty(baseDocumentDir, contextPath, "oscarMeasurement_css_upload_path", "/oscarEncounter/oscarMeasurements/styles/");
 				checkAndSetProperty(baseDocumentDir, contextPath, "TMP_DIR", "/export/");
 				checkAndSetProperty(baseDocumentDir, contextPath, "form_record_path", "/form/records/");
+				
+				//HRM Directories
+				checkAndSetProperty(baseDocumentDir, contextPath,"OMD_directory" , "/hrm/OMD/");
+				checkAndSetProperty(baseDocumentDir, contextPath,"OMD_log_directory" , "/hrm/logs/");
+				checkAndSetProperty(baseDocumentDir, contextPath,"OMD_stored", "/hrm/stored/");
+				checkAndSetProperty(baseDocumentDir, contextPath,"OMD_downloads","/hrm/sftp_downloads/");
+
 			}
 
 			logger.debug("LAST LINE IN contextInitialized");

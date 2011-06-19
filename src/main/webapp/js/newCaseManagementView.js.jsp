@@ -303,10 +303,11 @@ function navBarLoader() {
                   ctx + "/oscarEncounter/displayLabs.do?hC=<%=Colour.labs%>",
                   ctx + "/oscarEncounter/displayMessages.do?hC=<%=Colour.messages%>",
                   ctx + "/oscarEncounter/displayMeasurements.do?hC=<%=Colour.measurements%>",
-                  ctx + "/oscarEncounter/displayConsultation.do?hC="
+                  ctx + "/oscarEncounter/displayConsultation.do?hC=",
+                  ctx + "/oscarEncounter/displayHRM.do?hC="
               ];
 
-            var leftNavBarTitles = [ "preventions", "tickler", "Dx", "forms", "eforms", "docs", "labs", "msgs", "measurements", "consultation"];
+            var leftNavBarTitles = [ "preventions", "tickler", "Dx", "forms", "eforms", "docs","labs", "msgs", "measurements", "consultation","HRM"];
 
             var rightNavBar = [
                   ctx + "/oscarEncounter/displayAllergy.do?hC=<%=Colour.allergy%>",

@@ -99,7 +99,8 @@ public class ProviderDao extends HibernateDaoSupport {
 		}
 		return rs;
 	}
-        public List<Provider> getProviderFromFirstLastName(String firstname,String lastname){
+	
+    public List<Provider> getProviderFromFirstLastName(String firstname,String lastname){
             firstname=firstname.trim();
             lastname=lastname.trim();
             String s="From Provider p where p.FirstName=? and p.LastName=?";
@@ -108,7 +109,19 @@ public class ProviderDao extends HibernateDaoSupport {
             paramList.add(lastname);
             Object params[]=paramList.toArray(new Object[paramList.size()]);
             return getHibernateTemplate().find(s,params);
-        }
+    }
+    
+    public List<Provider> getProviderLikeFirstLastName(String firstname,String lastname){
+    	firstname=firstname.trim();
+    	lastname=lastname.trim();
+    	String s="From Provider p where p.FirstName like ? and p.LastName like ?";
+    	ArrayList paramList=new ArrayList();
+    	paramList.add(firstname);
+    	paramList.add(lastname);
+    	Object params[]=paramList.toArray(new Object[paramList.size()]);
+    	return getHibernateTemplate().find(s,params);
+	}
+    
     public List getActiveProviders(Integer programId) {
         ArrayList paramList = new ArrayList();
 

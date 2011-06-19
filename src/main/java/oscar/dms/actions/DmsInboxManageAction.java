@@ -34,6 +34,8 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Properties;
+import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -55,6 +57,7 @@ import org.oscarehr.common.dao.QueueDao;
 import org.oscarehr.common.dao.QueueDocumentLinkDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.ProviderInboxItem;
+import org.oscarehr.common.model.Queue;
 import org.oscarehr.common.model.QueueDocumentLink;
 import org.oscarehr.document.dao.DocumentDAO;
 import org.oscarehr.util.MiscUtils;
@@ -64,15 +67,13 @@ import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
 import oscar.oscarLab.ca.all.Hl7textResultsData;
 import oscar.oscarLab.ca.on.CommonLabResultData;
+import oscar.oscarLab.ca.on.HRMResultsData;
 import oscar.oscarLab.ca.on.LabResultData;
 import oscar.oscarProvider.data.ProviderData;
+import oscar.util.OscarRoleObjectPrivilege;
 
 import com.quatro.dao.security.SecObjectNameDao;
 import com.quatro.model.security.Secobjectname;
-import java.util.Properties;
-import java.util.Vector;
-import org.oscarehr.common.model.Queue;
-import oscar.util.OscarRoleObjectPrivilege;
 
 /**
  *
@@ -392,7 +393,10 @@ public class DmsInboxManageAction extends DispatchAction {
             }
     }
     //labdocs=validlabdocs;
+    HRMResultsData hrmResult = new HRMResultsData();
+    labdocs.addAll(hrmResult.populateHRMdocumentsResultsData(searchProviderNo));//, page, pageSize));
     Collections.sort(labdocs);
+    
   
     HashMap labMap = new HashMap();
     LinkedHashMap accessionMap = new LinkedHashMap();
