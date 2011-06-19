@@ -116,7 +116,7 @@ public class EctDisplayDocsAction extends EctDisplayAction {
 
 			for (int i = 0; i < docList.size(); i++) {
 				EDoc curDoc = docList.get(i);
-				String dispFilename = curDoc.getFileName();
+				String dispFilename = org.apache.commons.lang.StringUtils.trimToEmpty(curDoc.getFileName());
 				String dispStatus = String.valueOf(curDoc.getStatus());
 
 				boolean skip = false;
