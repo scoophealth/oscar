@@ -450,6 +450,10 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		demographicTransfer.setHinVersion(demographic.getVer());
 		demographicTransfer.setCaisiProviderId(demographic.getProviderNo());
 
+		demographicTransfer.setStreetAddress(demographic.getAddress());
+		demographicTransfer.setPhone1(demographic.getPhone());
+
+		
 		try {
 			demographicTransfer.setGender(Gender.valueOf(demographic.getSex().toUpperCase()));
 		} catch (Exception e) {

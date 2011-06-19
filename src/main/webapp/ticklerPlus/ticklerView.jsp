@@ -70,6 +70,7 @@
 			@SuppressWarnings("unchecked")
 			java.util.List<Provider> providers = (java.util.List<Provider>)request.getAttribute("providers");
 			boolean found=false;
+
 			for(Provider p:providers) {
 				if(p.getProviderNo().equals(assignee.getProviderNo())) {
 					found=true;
