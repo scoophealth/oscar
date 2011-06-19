@@ -1022,7 +1022,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		for (Appointment appointment : appointments) {
 			MiscUtils.checkShutdownSignaled();
 
-			if (lastDataUpdated.after(appointment.getUpdateDateTime())) continue;
+			if (appointment.getUpdateDateTime()!=null && lastDataUpdated.after(appointment.getUpdateDateTime())) continue;
 			
 			CachedAppointment cachedAppointment = new CachedAppointment();
 			FacilityIdIntegerCompositePk facilityIdIntegerCompositePk = new FacilityIdIntegerCompositePk();

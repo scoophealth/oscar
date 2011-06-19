@@ -242,7 +242,7 @@ public class CaisiIntegratorManager {
 		return (port);
 	}
 
-    private static List<CachedProvider> getAllProviders() throws MalformedURLException {
+    public static List<CachedProvider> getAllProviders() throws MalformedURLException {
 		
     	@SuppressWarnings("unchecked")
 		List<CachedProvider> results=(List<CachedProvider>) basicDataCache.get("ALL_PROVIDERS");

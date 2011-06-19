@@ -7,10 +7,6 @@
     <versions>
       <version>SNAPSHOT</version>
     </versions>
-<<<<<<< HEAD
-    <lastUpdated>20110618070338</lastUpdated>
-=======
-    <lastUpdated>20110619041330</lastUpdated>
->>>>>>> 1367e55... conformance test only feature of updating local demographic info from
+    <lastUpdated>20110620021653</lastUpdated>
   </versioning>
 </metadata>
