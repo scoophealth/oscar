@@ -1,4 +1,7 @@
 
+<%@page import="org.apache.commons.lang.StringUtils"%>
+<%@page import="oscar.util.DateUtils"%>
+<%@page import="org.oscarehr.caisi_integrator.ws.DemographicWs"%>
 <%
   
   String curProvider_no = (String) session.getAttribute("user");
@@ -14,6 +17,8 @@
 <%@ page
 	import="java.util.*, java.sql.*, java.net.*, oscar.*, oscar.oscarDB.*"
 	errorPage="errorpage.jsp"%>
+<%@ page import="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager, org.oscarehr.caisi_integrator.ws.CachedAppointment, org.oscarehr.caisi_integrator.ws.CachedProvider, org.oscarehr.util.LoggedInInfo" %>
+<%@page import="org.oscarehr.caisi_integrator.ws.*"%>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
 <%
@@ -185,6 +190,39 @@ function popupPageNew(vheight,vwidth,varpage) {
 
   boolean bodd=false;
   int nItems=0;
+  
+  List<CachedAppointment> cachedAppointments = null;
+  if (LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled())
+  {
+	  DemographicWs demographicWs=CaisiIntegratorManager.getDemographicWs();
+		cachedAppointments=demographicWs.getLinkedCachedAppointments(Integer.parseInt(request.getParameter("demographic_no")));
+  }
+  
+  if (cachedAppointments != null) {
+	  for (CachedAppointment a : cachedAppointments) {
+		  bodd=bodd?false:true;
+		  iRow++;
+		  nItems++;
+		  FacilityIdStringCompositePk providerPk=new FacilityIdStringCompositePk();
+		  providerPk.setIntegratorFacilityId(a.getFacilityIdIntegerCompositePk().getIntegratorFacilityId());
+		  providerPk.setCaisiItemId(a.getCaisiProviderId());
+		  CachedProvider p = CaisiIntegratorManager.getProvider(providerPk);
+		  
+		  
+		  %>
+		  <tr bgcolor="<%=bodd?weakColor:"white"%>">
+      <td align="center"><%=DateUtils.formatDate(a.getAppointmentDate(), request.getLocale())%></td>
+      <td align="center"><%=DateUtils.formatTime(a.getStartTime(), request.getLocale())%></td>
+      <td align="center"><%=DateUtils.formatTime(a.getEndTime(), request.getLocale())%></td>
+      <td><%=StringUtils.trimToEmpty(a.getReason())%></td>
+      <td>
+      	<%=(p != null ? p.getLastName() +","+ p.getFirstName() : "") %> (remote)</td>
+      <td>&nbsp;<%=a.getStatus()==null?"":(a.getStatus().contains("N")?"No Show":(a.getStatus().equals("C")?"Cancelled":"") ) %></td>
+</tr>
+		  <%
+		  
+	  }
+  }
   
   if(rs==null) {
     out.println("failed!!!");
