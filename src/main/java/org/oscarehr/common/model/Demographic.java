@@ -963,6 +963,11 @@ public class Demographic implements Serializable {
 		return (cal);
 	}
 
+	// Returns birthday in the format yyyy-mm-dd
+	public String getBirthDayAsString() {
+		return getYearOfBirth() + "-" + getMonthOfBirth() + "-" + getDateOfBirth();
+	}
+	
 	public String getSpokenLanguage() {
 		return spokenLanguage;
 	}

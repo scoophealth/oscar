@@ -902,7 +902,7 @@
 		<action path="/report/printLabDaySheetAction" type="oscar.oscarReport.pageUtil.printLabDaySheetAction"></action>
 		<action path="/oscarEncounter/displayDiagrams" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayDiagramAction"></action>
 		<action path="/oscarEncounter/displayExaminationHistory" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayExaminationHistoryAction"></action>
-		
+		<action path="/oscarEncounter/displayHRM" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayHRMAction"></action>
 		<action path="/oscarEncounter/decisionSupport/guidelineAction" scope="request" parameter="method" type="org.springframework.web.struts.DelegatingActionProxy">
 			<forward name="guidelineList" path="/oscarEncounter/decisionSupport/guidelineList.jsp" />
 			<forward name="guidelineDetail" path="/oscarEncounter/decisionSupport/guidelineDetail.jsp" />
@@ -2227,6 +2227,10 @@
 			<forward name="edit" path="/appointment/appointmentTypeAction.do?oper=edit"/>
 			<forward name="success" path="/appointment/appointmentTypeList.jsp"/>
 			<forward name="failure" path="/appointment/appointmentTypeList.jsp"/>
+		</action>
+		
+		<action path="/hospitalReportManager/Display" type="org.oscarehr.hospitalReportManager.HRMDisplayReportAction" parameter="method" scope="request" validate="false">
+			<forward name="display" path="/hospitalReportManager/displayHRMReport.jsp" />
 		</action>
 
 	</action-mappings>

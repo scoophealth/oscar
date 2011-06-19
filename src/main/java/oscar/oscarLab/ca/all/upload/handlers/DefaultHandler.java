@@ -8,7 +8,10 @@
  */
 package oscar.oscarLab.ca.all.upload.handlers;
 
+import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -90,4 +93,21 @@ public class DefaultHandler implements MessageHandler {
         }
     }   
     
+    
+    //TODO: Dont think this needs to be in this class.  Better as a util method
+    public String readTextFile(String fullPathFilename) throws IOException {
+        StringBuilder sb = new StringBuilder(1024);
+        BufferedReader reader = new BufferedReader(new FileReader(fullPathFilename));
+                        
+        char[] chars = new char[1024];
+        int numRead = 0;
+        while( (numRead = reader.read(chars)) > -1){
+                sb.append(String.valueOf(chars));       
+        }
+
+        reader.close();
+
+        return sb.toString();
+    }
+
 }
