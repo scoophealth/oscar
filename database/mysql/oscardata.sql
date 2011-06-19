@@ -997,6 +997,12 @@ INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringI
 INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("DIGT", "Impaired GT", "Impaired Glucose Tolerance", "Yes/No", "7");
 INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("DARB", "ACE AARB", "ACE AARB", "Yes/No", "7");
 
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("FLUF", "Flu Follow up", "flu prevention follow up", "", "11");
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("PAPF", "Pap prevention follow up", "Pap Follow up", "", "11");
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("MAMF", "Mammogram prevention follow up", "Mammogram Follow Up", "", "11");
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("CIMF", "Child Immunization prevention follow up", "Child Immunization Follow up", "", "11");
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("FOBF", "FOBT prevention follow up", "FOBT Immunization Follow up", "", "11");
+
 --
 -- Dumping data for table 'measurementCSSLocation'
 --
@@ -1212,6 +1218,7 @@ INSERT INTO validations(name, regularExp) VALUES ("Yes/No","YES|yes|Yes|Y|NO|no|
 INSERT INTO validations(name, maxValue, minValue, maxLength) values( 'Integer: 1 to 5', 5, 1, 1);
 INSERT INTO validations(name, maxValue, minValue, maxLength) values( 'Integer: 1 to 4', 4, 1, 1);
 INSERT INTO validations(name, maxValue, minValue, maxLength) values( 'Integer: 1 to 3', 3, 1, 1);
+INSERT INTO validations(name, maxValue, minValue, maxLength,minLength,isNumeric,isDate) values( 'No Validations', 0, 0, 0, 0, 0, 0);
 
 
 

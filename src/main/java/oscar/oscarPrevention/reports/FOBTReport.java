@@ -123,7 +123,7 @@ public class FOBTReport implements PreventionReport{
                 // if prevDate is less than as of date and greater than 2 years prior 
                 Calendar bonusEl = Calendar.getInstance();
                 bonusEl.setTime(asofDate);                
-                bonusEl.add(Calendar.YEAR,-2);
+                bonusEl.add(Calendar.MONTH,-30);
                 Date bonusStartDate = bonusEl.getTime();
                 
                 log.debug("\n\n\n prevDate "+prevDate);
@@ -254,6 +254,7 @@ public class FOBTReport implements PreventionReport{
                 }catch (Exception e){}
                 
                 if (fiveyearcutoff.before(prevDate)){
+                   log.debug("Colonoscopy within 5 years: Last colonoscopy "+formatter.format(prevDate)+ " 5 year mark "+formatter.format(fiveyearcutoff) );
                    return true;   
                 }
            }

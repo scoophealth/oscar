@@ -108,10 +108,10 @@ public class FluReport implements PreventionReport {
                 boolean refused = false;
                 
               
-                
-//                if ( h.get("refused") != null && ((String) h.get("refused")).equals("1")){
-//                   refused = true;
-//                }
+                //This was commented out but it's need for spec 4
+                if ( h.get("refused") != null && ((String) h.get("refused")).equals("1")){
+                   refused = true;
+                }
                 
                 String prevDateStr = (String) h.get("prevention_date");
                 
