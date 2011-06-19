@@ -43,6 +43,7 @@ public final class ConformanceTestHelper {
 				String note = XmlUtils.getChildNodeTextContents(root, "note");
 
 				TicklerCreator t = new TicklerCreator();
+
 				logger.debug("Create tickler : " + demographicId + ", " + providerCommunication.getDestinationProviderId() + ", " + note);
 				t.createTickler(demographicId, providerCommunication.getDestinationProviderId(), note);
 
@@ -90,3 +91,4 @@ public final class ConformanceTestHelper {
 		}
 	}
 }
+

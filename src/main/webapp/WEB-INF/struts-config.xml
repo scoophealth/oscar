@@ -1835,6 +1835,9 @@
 		<action path="/PMmodule/EditIntake" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
 			<forward name="view" path="/PMmodule/edit_intake.jsp" />
 		</action>
+		<action path="/demographic/FollowUp" type="org.oscarehr.PMmodule.web.FollowUpAction" name="followUpForm" scope="request" input="/demographic/followUp.jsp">
+        	<forward name="success" path="/dms/closeWindow.html" />
+        </action>
 
 		<!-- Generic Intake -->
 		<action path="/PMmodule/GenericIntake/Search" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="genericIntakeSearchForm" scope="request">

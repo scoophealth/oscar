@@ -1,6 +1,9 @@
 
 <%-- Updated by Eugene Petruhin on 20 feb 2009 while fixing check_date() error --%>
 
+<%@page import="org.oscarehr.PMmodule.caisi_integrator.ConformanceTestHelper"%>
+<%@page import="java.util.Properties"%>
+<%@page import="oscar.OscarProperties"%>
 <%@ include file="/taglibs.jsp"%>
 <%@ page
 	import="org.caisi.model.*,org.oscarehr.PMmodule.model.*,org.springframework.context.*,org.springframework.web.context.support.*"%>
@@ -10,6 +13,13 @@
 <%
     if(session.getAttribute("userrole") == null )  response.sendRedirect("logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+
+	Properties properties=OscarProperties.getInstance();
+	boolean enableConformanceOnlyTestFeatures=Boolean.parseBoolean(properties.getProperty("ENABLE_CONFORMANCE_ONLY_FEATURES"));
+	if (enableConformanceOnlyTestFeatures)
+	{
+		ConformanceTestHelper.populateLocalTicklerWithRemoteProviderMessageFollowUps();
+	}
 %>
 <security:oscarSec roleName="<%=roleName$%>" objectName="_tasks"
 	rights="r" reverse="<%=true%>">

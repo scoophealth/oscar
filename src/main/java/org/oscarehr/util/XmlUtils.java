@@ -45,6 +45,14 @@ public class XmlUtils
 		return(baos.toString());
 	}
 
+	public static byte[] toBytes(Node node) throws TransformerException
+	{
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		writeNode(node, baos);
+
+		return(baos.toByteArray());
+	}
+
 	public static Document toDocument(String s) throws IOException, org.xml.sax.SAXException, ParserConfigurationException
 	{
 		return(toDocument(s.getBytes()));
