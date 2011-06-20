@@ -47,8 +47,9 @@ import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.dao.BillingDao;
 import org.oscarehr.common.dao.DemographicContactDao;
 import org.oscarehr.common.dao.DemographicQueryFavouritesDao;
+import org.oscarehr.common.dao.AllergyDAO;
 
-
+import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.Demographic;
@@ -96,6 +97,11 @@ import org.oscarehr.PMmodule.model.SecUserRole;
 import com.quatro.dao.security.SecurityDao;
 import org.oscarehr.PMmodule.dao.SecUserRoleDao;
 
+import org.oscarehr.document.dao.DocumentDAO;
+import org.oscarehr.document.model.CtlDocument;
+import org.oscarehr.document.model.Document;
+import org.oscarehr.document.model.CtlDocumentPK;
+
 import java.util.Date;
 
 public class OntarioMDSpec4DataTest extends DaoTestFixtures {
@@ -105,6 +111,32 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
 	public void before() throws Exception {
 		//nothing here yet. should clean up the appointment table to a known state
 	}
+	
+	Document getDocument(String doctype,String docdesc,String docxml,String docfilename,String doccreator,String responsible,String source,Integer program_id,
+			Date updatedatetime,String  status,String contenttype,Integer public1,Date observationdate,String reviewer,Date reviewdatetime,Integer number_of_pages,Integer appointment_no){
+		Document document = new Document();
+		document.setDoctype(doctype);
+		document.setDocdesc(docdesc);
+		document.setDocxml(docxml);
+		document.setDocfilename(docfilename);
+		document.setDoccreator(doccreator);
+		document.setObservationdate(observationdate);
+		document.setUpdatedatetime(updatedatetime);
+		document.setStatus(status);
+		document.setContenttype(contenttype);
+		document.setPublic(public1.byteValue());
+		return document;
+ }
+ 
+ CtlDocument getCtlDocument(String module,Integer moduleId,Integer documentNo,String status){
+  	CtlDocument ctlDocument = new CtlDocument();
+  	ctlDocument.setModuleId(moduleId);
+  	ctlDocument.setStatus(status);
+  	ctlDocument.setId(new CtlDocumentPK(documentNo,module));
+  	return ctlDocument;
+  }
+ 
+	
 	
 	DxResearch getDxResearch(String codingSystem, String code,String status,Date startDate,Date updateDate,Integer demographicNo){
 		DxResearch dxresearch = new DxResearch();
@@ -573,6 +605,43 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
 			
 		}
 		
+		Allergy getAllergy(String demographic,Date entryDate,String description,Integer hiclseqno,Integer hicSeqno,Integer agcsp,Integer agccs,Integer typeCode,String reaction, String drugrefId,String archived,Date startDate,String severityOfReaction,String onsetOfReaction,String regionalIdentifier,String lifeStage){
+	        Allergy allergy = new Allergy();
+	        allergy.setDemographicNo(demographic);
+	        allergy.setEntry_date(entryDate);
+	        allergy.setDescription(description);
+	        allergy.setHiclSeqno(hiclseqno);
+	        allergy.setHicSeqno(hicSeqno);
+	        allergy.setAgcsp(agcsp);
+	        allergy.setAgccs(agccs);
+	        allergy.setTypeCode(typeCode);
+	        allergy.setReaction(reaction);
+	        allergy.setDrugrefId(drugrefId);
+	        allergy.setArchived(archived);
+	        allergy.setStartDate(startDate);
+	        allergy.setSeverityOfReaction(severityOfReaction);
+	        allergy.setOnsetOfReaction(onsetOfReaction);
+	        allergy.setRegionalIdentifier(regionalIdentifier);
+	        allergy.setLifeStage(lifeStage);
+			return allergy;
+		}
+		
+		String justYear(Date date){
+			Format formatter = new SimpleDateFormat("yyyy");
+			return formatter.format(date);
+		}
+		
+		String justMonth(Date date){
+			Format formatter = new SimpleDateFormat("MM");
+			return formatter.format(date);
+		}
+		
+		String justDay(Date date){
+			Format formatter = new SimpleDateFormat("dd");
+			return formatter.format(date);
+		}
+		
+		
 	@Test
 	public void test() {
 		setupOntarioMDSpec4Data();
@@ -601,6 +670,8 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
 		MeasurementsDao measurementsDao = (MeasurementsDao) SpringUtils.getBean("measurementsDao");
 		SecurityDao securityDao = (SecurityDao) SpringUtils.getBean("securityDao");
 		SecUserRoleDao secuserroleDao = (SecUserRoleDao) SpringUtils.getBean("secUserRoleDao");
+		AllergyDAO allergyDao = (AllergyDAO) SpringUtils.getBean("AllergyDAO");
+		DocumentDAO documentDao = (DocumentDAO) SpringUtils.getBean("documentDAO");
 		
 		Integer oscarProgramID = programDao.getProgramIdByProgramName("OSCAR");
 		
@@ -681,6 +752,9 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
 		Date twoMonthsAgo = getDate(referenceDate,Calendar.MONTH,-2);
 		Date oneWeekAgo = getDate(referenceDate,Calendar.WEEK_OF_YEAR,-1);
 		Date tenWeeksAgo = getDate(referenceDate,Calendar.WEEK_OF_YEAR,-10);
+		Date sixtyThreeYearsAgoPlusTwoWeeks = getDate(getDate(referenceDate,Calendar.YEAR,-63),Calendar.WEEK_OF_YEAR,-2);
+		Date eightMonthsAgo = getDate(referenceDate,Calendar.MONTH,-8);
+		Date fourMonthsAgo = getDate(referenceDate,Calendar.MONTH,-4);
 		
 		
 		
@@ -948,6 +1022,10 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
 		CaseManagementNote cmn=getCaseManagementNote(tenYearsAgo,ericIdle,drw.getProviderNo(),"Type 2 Diabetes",oscarProgramID, caseManagementIssue);
         caseManagementNoteDAO.saveNote(cmn);
         
+        Allergy allergy = getAllergy(""+ericIdle.getDemographicNo(),tenYearsAgo,"PENICILLINS",0,0,0,0,10,"","42063","0",null,"1","1",null,null);
+        allergyDao.persist(allergy);
+        
+        
         
 		
 		
@@ -1079,9 +1157,19 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
         caseManagementIssueDAO.saveIssue(caseManagementIssueJuneElderAllergicRhinitis);
         caseManagementNoteDAO.saveNote(getCaseManagementNote(tenYearsAgo,juneElder,drw.getProviderNo(),"Allergic Rhinitis",oscarProgramID, caseManagementIssueJuneElderAllergicRhinitis));
 
-		//TODO: ALLERGIES
-        //TODO: ADVERSE REACTION
+		//ALLERGIES
+        allergy = getAllergy(""+juneElder.getDemographicNo(),tenYearsAgo,"PENICILLINS",0,0,0,0,10,"Causing mild rash","42063","0",null,"1","1",null,null);
+        allergyDao.persist(allergy);
         
+        
+        //ADVERSE REACTION
+        allergy = getAllergy(""+juneElder.getDemographicNo(),tenYearsAgo,"CELEBREX 100MG",0,0,0,0,13,"celebrex intolerance","8879","0",null,"3","1","02239941",null);
+        allergyDao.persist(allergy);
+        
+        allergy = getAllergy(""+juneElder.getDemographicNo(),tenYearsAgo,"CELEBREX 200MG",0,0,0,0,13,"celebrex intolerance","8878","0",null,"3","1","02239942",null);
+        allergyDao.persist(allergy);
+        
+               
         //Family History: Mother had Alzheimers, onset age 70.
         CaseManagementIssue caseManagementIssueJuneElderFamHxAlzh = getCaseMangementIssue(juneElder,famHistory,oscarProgramID,"nurse");
         caseManagementIssueDAO.saveIssue(caseManagementIssueJuneElderFamHxAlzh);
@@ -1133,8 +1221,19 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
         }catch(Exception juneElderLabReq){
         	MiscUtils.getLogger().error("Error",juneElderLabReq);
         }
-        //TODO:  Imported (attached) Text Documents: include any text file
-        //TODO:  Imported (attached) Scanned Documents: include a jpeg file
+       
+        Document document = getDocument("lab","Example text document","","exampleDoc.txt",drw.getProviderNo(),null,null,-1,tenYearsAgo,"A","text/plain",0,tenYearsAgo,null,null,0,0);
+        documentDao.save(document);
+        
+        CtlDocument cltDocument =  getCtlDocument("demographic",juneElder.getDemographicNo(),Integer.parseInt(""+document.getId()),"A");
+        MiscUtils.getLogger().info(" ctldoc "+cltDocument.toString());
+        documentDao.saveCtlDocument(cltDocument);
+        
+        document = getDocument("lab","Example text JPG","","exampleJPG.jpg",drw.getProviderNo(),null,null,-1,tenYearsAgo,"A","image/jpeg",0,tenYearsAgo,null,null,0,0);
+        documentDao.save(document);
+        
+        cltDocument =  getCtlDocument("demographic",juneElder.getDemographicNo(),Integer.parseInt(""+document.getId()),"A");
+        documentDao.saveCtlDocument(cltDocument);
         
         
         //Aug 12, 2005 Aug 12, 2005 Aug 12, 2005     Glyburide 1 2.5 mg qd 10 10 tab oral DRW
@@ -2789,7 +2888,36 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
         CaseManagementNoteLinkDao.save(caseManagementNoteLink);
         
         //Allergies
-        //TODO:allergies
+        allergy = getAllergy(""+coleenCopper.getDemographicNo(),getDate("2005-02-01"),"PENICILLIN G SOD INJ PWS 1000000UNIT/VIAL",0,0,0,0,13,"Adverse Reaction - Rash","11231","0",getDate("2005-01-01"),"1","1","01930672","A");
+        allergyDao.persist(allergy);
+        
+        CaseManagementNote coleenCopperAdverseReactionAnnotation = getCaseManagementNote(getDate("2005-02-01"),coleenCopper,drs.getProviderNo(),"Responded to Benadryl",oscarProgramID, null);
+        caseManagementNoteDAO.saveNote(coleenCopperAdverseReactionAnnotation);
+        
+        caseManagementNoteLink = new CaseManagementNoteLink();
+        caseManagementNoteLink.setTableName(3);
+        caseManagementNoteLink.setNoteId(coleenCopperAdverseReactionAnnotation.getId());
+        caseManagementNoteLink.setTableId(Long.parseLong(""+allergy.getId()));
+        
+        CaseManagementNoteLinkDao.save(caseManagementNoteLink);
+        
+        
+        
+        allergy = getAllergy(""+coleenCopper.getDemographicNo(),getDate("2005-02-01"),"PEANUTS",0,0,0,0,0,"Anaphylaxis","11231","0",null,"2","1",null,"I");
+        allergyDao.persist(allergy);
+        
+        CaseManagementNote coleenCopperAllergyAnnotation = getCaseManagementNote(getDate("2005-02-01"),coleenCopper,drs.getProviderNo(),"Carries epipen",oscarProgramID, null);
+        caseManagementNoteDAO.saveNote(coleenCopperAllergyAnnotation);
+        
+        caseManagementNoteLink = new CaseManagementNoteLink();
+        caseManagementNoteLink.setTableName(3);
+        caseManagementNoteLink.setNoteId(coleenCopperAllergyAnnotation.getId());
+        caseManagementNoteLink.setTableId(Long.parseLong(""+allergy.getId()));
+        
+        CaseManagementNoteLinkDao.save(caseManagementNoteLink);
+        
+    
+        
     	
     	//medications
         //TODO:need multiple dosage column
@@ -3209,6 +3337,490 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
     	
     	
     	
+    	//DRK Patient
+    	
+    	/*
+    	Patient: Mrs Debbie Diabetes; OHN: 1111111124, Version Code: ZE, Sex F, Address Type: Home, Street Address: 304-17 Ellerslie Ave, Municipality: North York, Province/State: Ontario, Postal Code: M3C 4M5, Home Telephone: 416-555-7459.
+DOB: 63 years old as of the Validation Execution
+Family History:Mother  Type 2 DM, died at 71 yo 
+Ongoing Problems:Hypertension, age at onset 60,Type 2 Diabetes, age at onset 55 Seasonal Rhinitis, age at onset 50 Depression (diagnosed after todays visit)
+Drug Allergies:  Amoxicillin  mild rash
+Adverse Reactions: Codeine  xs GI upset
+Past Medical and Surgical History:	TAH  BSO at 48 yo (menometrorrhagia) 
+    	 */
+    	
+    	Demographic debbieDiabetes = getDemographic("Mrs","Diabetes", "Debbie","1111111124", "ZE", justYear(sixtyThreeYearsAgoPlusTwoWeeks), justMonth(sixtyThreeYearsAgoPlusTwoWeeks), justDay(sixtyThreeYearsAgoPlusTwoWeeks), "F", "304-17 Ellerslie Ave", "North York", "Ontario", "M3C 4M5", "416.555.7459", "AC", "NR", drk.getProviderNo());
+    	demographicDao.save(debbieDiabetes);
+    	admissionDao.saveAdmission(getAdmission(debbieDiabetes,referenceDate, oscarProgramID));
+    	
+    	
+    	//Family History: Mother had Alzheimers, onset age 70.
+        CaseManagementIssue caseManagementIssueDebbieDiabetesFamHxAlzh = getCaseMangementIssue(debbieDiabetes,famHistory,oscarProgramID,"nurse");
+        caseManagementIssueDAO.saveIssue(caseManagementIssueDebbieDiabetesFamHxAlzh);
+        CaseManagementNote debbieDiabetesFamHxAlzeimersNote = getCaseManagementNote(tenYearsAgo,debbieDiabetes,drk.getProviderNo(),"Mother diagnosed with Alzheimer at age 71",oscarProgramID, caseManagementIssueDebbieDiabetesFamHxAlzh);
+        caseManagementNoteDAO.saveNote(debbieDiabetesFamHxAlzeimersNote);
+        
+        CaseManagementNoteExt  debbieDiabetesFamilyHistoryAlzeimersNoteExt = new CaseManagementNoteExt();
+        debbieDiabetesFamilyHistoryAlzeimersNoteExt.setNoteId(caseManagementIssueJeremyDoeFamHxAlzh.getId());
+        debbieDiabetesFamilyHistoryAlzeimersNoteExt.setKeyVal(CaseManagementNoteExt.AGEATONSET);
+        debbieDiabetesFamilyHistoryAlzeimersNoteExt.setValue("71");
+        
+        caseManagementNoteExtDAO.save(debbieDiabetesFamilyHistoryAlzeimersNoteExt);
+        //Type 2 Diabetes, age at onset 55 
+        dxResearchDAO.save(getDxResearch("icd9","250","A",tenYearsAgo,tenYearsAgo,debbieDiabetes.getDemographicNo()));
+		CaseManagementIssue caseManagementIssuedebbieDiabetesDM = getCaseMangementIssue(debbieDiabetes,concerns,oscarProgramID,"nurse");
+        caseManagementIssueDAO.saveIssue(caseManagementIssuedebbieDiabetesDM);
+		CaseManagementNote debbieDiabetesDMNote =getCaseManagementNote(tenYearsAgo,debbieDiabetes,drk.getProviderNo(),"Type 2 Diabetes",oscarProgramID, caseManagementIssuedebbieDiabetesDM);
+		caseManagementNoteDAO.saveNote(debbieDiabetesDMNote);
+		
+		
+        CaseManagementNoteExt  debbieDiabetesOngoingConcerndm2NoteExt = new CaseManagementNoteExt();
+        debbieDiabetesOngoingConcerndm2NoteExt.setNoteId(debbieDiabetesDMNote.getId());
+        debbieDiabetesOngoingConcerndm2NoteExt.setKeyVal(CaseManagementNoteExt.AGEATONSET);
+        debbieDiabetesOngoingConcerndm2NoteExt.setValue("55");
+        caseManagementNoteExtDAO.save(debbieDiabetesOngoingConcerndm2NoteExt);
+        
+        //Hypertension, age at onset 60
+        
+        CaseManagementIssue caseManagementIssuedebbieDiabetesHTN = getCaseMangementIssue(debbieDiabetes,concerns,oscarProgramID,"nurse");
+        caseManagementIssueDAO.saveIssue(caseManagementIssuedebbieDiabetesHTN);
+		CaseManagementNote debbieDiabetesHTNNote =getCaseManagementNote(tenYearsAgo,debbieDiabetes,drk.getProviderNo(),"Hypertension",oscarProgramID, caseManagementIssuedebbieDiabetesHTN);
+		caseManagementNoteDAO.saveNote(debbieDiabetesHTNNote);
+		
+		
+        CaseManagementNoteExt  debbieDiabetesOngoingConcernHTNNoteExt = new CaseManagementNoteExt();
+        debbieDiabetesOngoingConcernHTNNoteExt.setNoteId(debbieDiabetesDMNote.getId());
+        debbieDiabetesOngoingConcernHTNNoteExt.setKeyVal(CaseManagementNoteExt.AGEATONSET);
+        debbieDiabetesOngoingConcernHTNNoteExt.setValue("55");
+        caseManagementNoteExtDAO.save(debbieDiabetesOngoingConcernHTNNoteExt);
+        
+        //Seasonal Rhinitis, age at onset 50
+    	
+        CaseManagementIssue caseManagementIssuedebbieSeasonalRhinitis = getCaseMangementIssue(debbieDiabetes,concerns,oscarProgramID,"nurse");
+        caseManagementIssueDAO.saveIssue(caseManagementIssuedebbieSeasonalRhinitis);
+		CaseManagementNote debbieDiabetesSeasonalRhinitisNote =getCaseManagementNote(tenYearsAgo,debbieDiabetes,drk.getProviderNo(),"Seasonal Rhinitis",oscarProgramID, caseManagementIssuedebbieSeasonalRhinitis);
+		caseManagementNoteDAO.saveNote(debbieDiabetesSeasonalRhinitisNote);
+		
+		
+        CaseManagementNoteExt  debbieDiabetesOngoingConcernSeasonalRhinitisNoteExt = new CaseManagementNoteExt();
+        debbieDiabetesOngoingConcernSeasonalRhinitisNoteExt.setNoteId(debbieDiabetesDMNote.getId());
+        debbieDiabetesOngoingConcernSeasonalRhinitisNoteExt.setKeyVal(CaseManagementNoteExt.AGEATONSET);
+        debbieDiabetesOngoingConcernSeasonalRhinitisNoteExt.setValue("50");
+        caseManagementNoteExtDAO.save(debbieDiabetesOngoingConcernSeasonalRhinitisNoteExt);
+        
+        
+        //TAH
+        
+        CaseManagementIssue caseManagementIssuedebbieTAH = getCaseMangementIssue(debbieDiabetes,medHistory,oscarProgramID,"nurse");
+        caseManagementIssueDAO.saveIssue(caseManagementIssuedebbieTAH);
+		CaseManagementNote debbieDiabetesTAHNote =getCaseManagementNote(tenYearsAgo,debbieDiabetes,drk.getProviderNo(),"TAH - BSO at 48 yo (menometrorrhagia)",oscarProgramID, caseManagementIssuedebbieTAH);
+		caseManagementNoteDAO.saveNote(debbieDiabetesTAHNote);
+		
+		//Drug Allergies: Amoxicillin mild rash
+		allergy = getAllergy(""+debbieDiabetes.getDemographicNo(),tenYearsAgo,"AMINOPENICILLINS",0,0,0,0,10,"mild rash","42228","0",null,"1","1",null,null);
+        allergyDao.persist(allergy);
+		
+		//Adverse Reactions:Codeine  xs GI upset
+		allergy = getAllergy(""+debbieDiabetes.getDemographicNo(),tenYearsAgo,"CODEINE 30MG TAB",0,0,0,0,13,"xs GI upset","4704","0",null,"1","1",null,null);
+        allergyDao.persist(allergy);
+    	
+    	String eightMonthValidationVisit = "Reason for Visit: Diabetes F/U \n\nSubjective:\nPatient states she is feeling well  excited to share some good news\nSmoking Status:quit smoking 3 weeks ago\nSelf Monitoring BG: 1x/d\n2 hr PC BG: Glucometer reading today 11 mmol/L\nHypoglycemic Episodes:none\nCollaborative Goal Setting: Excercise 20min 5x/wk, reports up to 20 min 3x/wk\nSelf Management Challenges:Excess salt in diet\nMedications: reviewed, compliant, except Lipitor left at cottage, missed one wk, Continues with daily ASA. No medication S/E reported.\n\nObjective:\nBP: 140/80; HR:72 reg.; Waist Circumference 80cm; Ht: 170cm; Wt:80 kg; BMI:27.7\nH&N: HEENT normal\nChest: clear\nCVS: Normal HS,no murmurs\nAbdo: Soft, normal BS, no masses, tenderness, or bruits\n Foot Exam: skin intact, good nail care,ppp equal, good cap refill\nNeurological Exam: 10-g monofilament - normal bilat\nLabs reiewed labs ordered "+getDate(eightMonthsAgo,Calendar.MONTH,-3)+" - A1C, FPG not at target\n\nAssessment:\nDM F/U - BP, FPG,HbA1C, BMI not at target, Glucometer Calibration and eye exam due, \nPatient reluctant to increase Metformin due to concerns regarding GI S/E.\n\nPlan:\nBP MgmtL Increase to Vasotec 10 mg qd #30 rpt 6; rpt 6; RN visit for BP check2 wks; lab req for lytes and eGFR in 10 days\nDM Mgmt:R/O Metformin; Add Glyburide 5 mg qd #30 rpt 6, use and S/E reviewed. Script Provided.\nEducation Nutrition:agrees to increase nutrional compliance\nGlucometer Calibration with fasting lab visit\nBook F/U DM visit 3/12 in three months, with fasting lab and ACR one wk prior.\nReferred for retinal exam";
+    	
+    	CaseManagementNote debbieDiabetesEightMonthVisit = getCaseManagementNote(eightMonthsAgo,debbieDiabetes,drk.getProviderNo(),eightMonthValidationVisit,oscarProgramID, null);
+    	//coleenCopperNote2.setAppointmentNo(febFirstApp.getId());
+    	//coleenCopperNote2.setCreate_date(getDate("2010-02-01"));
+    	caseManagementNoteDAO.saveNote(debbieDiabetesEightMonthVisit);
+    	
+    	String fourMonthValidationVisit = "Reason for Visit: BP Check\nRN Visit\n\n\nSubjective:Self Monitoring BG: 2x/d\nSmoking Status: no\nCollaborative Goal Setting: Increase exercise to 25min 5x/wk\nHypoglycemic Episodes: 0\n\nMedication: States no concerns noted with increase in Vasotec, continues with all other medications as prescribed\n\nObjective:BP: 120/70  regular size cuff, left arm, sitting;	HR 78 reg.\nWaist Circumference: 75 cm ; Ht: 170 cm; Wt: 75 kg; BMI: 26.0\nFoot Exam: normal\nNeurological Exam: 128 Hz tuning fork D1 normal\n\nAssessment:Type 2 DMBP now at target; \nLab review: electrolytes, eGFR remain within normal limits.\n\nPlan:Lipid Mgmt: R/O Lipitor 20 mg once daily.\n BP Mgmt: Hydrochlorothiazid 25 mg, QID\nPatient advised re: above; F/U with PCP 3 months as instructed on "+eightMonthsAgo+"\nSelf-mgmt goal reinforced.";
+    			
+    	CaseManagementNote debbieDiabetesFourMonthVisit = getCaseManagementNote(fourMonthsAgo,debbieDiabetes,drk.getProviderNo(),fourMonthValidationVisit,oscarProgramID, null);
+    	//coleenCopperNote2.setAppointmentNo(febFirstApp.getId());
+    	//coleenCopperNote2.setCreate_date(getDate("2010-02-01"));
+    	caseManagementNoteDAO.saveNote(debbieDiabetesFourMonthVisit);
+    	
+    	
+    	Date eightMinus3 = getDate(eightMonthsAgo,Calendar.MONTH,-3);
+    	Date eightMinus16 = getDate(eightMonthsAgo,Calendar.MONTH,-16);
+    	Date referenceMinus1Week = getDate(referenceDate,Calendar.WEEK_OF_YEAR,-1);
+    	Date fourMinus1Week = getDate(fourMonthsAgo,Calendar.WEEK_OF_YEAR,-1);
+    	
+    	//Self Monitoring BG (Yes/No)
+    	measurements=  getMeasurement("SMBG",eightMonthsAgo,debbieDiabetes.getDemographicNo(),"Yes",drk.getProviderNo());
+    	measurements.setComments("1x/d");
+    	measurementsDao.addMeasurements(measurements);
+    	
+    	measurements=  getMeasurement("SMBG",eightMinus3,debbieDiabetes.getDemographicNo(),"No",drk.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+    	
+    	measurements=  getMeasurement("SMBG",eightMinus16,debbieDiabetes.getDemographicNo(),"Yes",drk.getProviderNo());
+    	measurements.setComments("4x/wk");
+    	measurementsDao.addMeasurements(measurements);
+    	
+    	measurements=  getMeasurement("SMBG",fourMonthsAgo,debbieDiabetes.getDemographicNo(),"Yes",drk.getProviderNo());
+    	measurements.setComments("2x/d");
+    	measurementsDao.addMeasurements(measurements);
+    	   
+    	//"# Of Hypoglycemic Episodes (since last assessed)
+    
+    	measurements=  getMeasurement("HYPE",fourMonthsAgo,debbieDiabetes.getDemographicNo(),"0",drk.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+    	
+    	measurements=  getMeasurement("HYPE",eightMonthsAgo,debbieDiabetes.getDemographicNo(),"0",drk.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+    	
+    	
+    	measurements=  getMeasurement("HYPE",eightMinus3,debbieDiabetes.getDemographicNo(),"3",drk.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+    	
+    	measurements=  getMeasurement("HYPE",eightMinus16,debbieDiabetes.getDemographicNo(),"4",drk.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+    	
+    	
+    	
+    	//Blood Pressure
+    	measurements=  getMeasurement("BP",fourMonthsAgo,debbieDiabetes.getDemographicNo(),"120/70",drk.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+    	
+    	measurements=  getMeasurement("BP",eightMonthsAgo,debbieDiabetes.getDemographicNo(),"140/80",drk.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+    	
+    	measurements=  getMeasurement("BP",eightMinus3,debbieDiabetes.getDemographicNo(),"150/80",drk.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+    	
+    	measurements=  getMeasurement("BP",eightMinus16,debbieDiabetes.getDemographicNo(),"160/90",drk.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+    	
+    	
+    	//Height
+    	measurements=  getMeasurement("HT",fourMonthsAgo,debbieDiabetes.getDemographicNo(),"170",drk.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+    	
+    	measurements=  getMeasurement("HT",eightMonthsAgo,debbieDiabetes.getDemographicNo(),"170",drk.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+    	
+    	measurements=  getMeasurement("HT",eightMinus16,debbieDiabetes.getDemographicNo(),"170",drk.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+    	
+    	
+    	//Weight
+    	measurements=  getMeasurement("WT",fourMonthsAgo,debbieDiabetes.getDemographicNo(),"75",drk.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+    	
+    	measurements=  getMeasurement("WT",eightMonthsAgo,debbieDiabetes.getDemographicNo(),"80",drk.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+    	
+    	measurements=  getMeasurement("WT",eightMinus16,debbieDiabetes.getDemographicNo(),"85",drk.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+    	
+    	//BMI (Body Mass Index)
+    	measurements=  getMeasurement("BMI",fourMonthsAgo,debbieDiabetes.getDemographicNo(),"26",drk.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+    	
+    	measurements=  getMeasurement("BMI",eightMonthsAgo,debbieDiabetes.getDemographicNo(),"27.7",drk.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+    	
+    	measurements=  getMeasurement("BMI",eightMinus16,debbieDiabetes.getDemographicNo(),"29.4",drk.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+
+    	//Waist Circumference
+    	measurements=  getMeasurement("WC",fourMonthsAgo,debbieDiabetes.getDemographicNo(),"75",drk.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+    	
+    	measurements=  getMeasurement("WC",eightMonthsAgo,debbieDiabetes.getDemographicNo(),"80",drk.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+    	
+    	measurements=  getMeasurement("WC",eightMinus16,debbieDiabetes.getDemographicNo(),"85",drk.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+
+    	//Smoking Status (Yes/No)
+    	
+    	measurements=  getMeasurement("SKST",fourMonthsAgo,debbieDiabetes.getDemographicNo(),"No",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+    	
+    	measurements=  getMeasurement("SKST",eightMonthsAgo,debbieDiabetes.getDemographicNo(),"No",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+    	
+    	measurements=  getMeasurement("SKST",eightMinus16,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
+    	measurements.setComments("Heavy Smoker");
+    	measurementsDao.addMeasurements(measurements);
+    	
+    	//Smoking Packs per Day
+    	measurements=  getMeasurement("POSK",fourMonthsAgo,debbieDiabetes.getDemographicNo(),"0",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+    	
+    	measurements=  getMeasurement("POSK",eightMonthsAgo,debbieDiabetes.getDemographicNo(),"0",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+    	
+    	measurements=  getMeasurement("POSK",eightMinus16,debbieDiabetes.getDemographicNo(),"2",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+    	
+    	
+    	//Dilated Eye Exam (Retinal Exam)
+    	measurements=  getMeasurement("EYEE",eightMonthsAgo,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
+    	measurements.setComments("Referred");
+    	measurementsDao.addMeasurements(measurements);
+    	
+    	measurements=  getMeasurement("EYEE",eightMinus3,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+    	
+    	measurements=  getMeasurement("EYEE",eightMinus16,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+    	
+    	//Foot Exam    FTE
+    	measurements=  getMeasurement("FTE",fourMonthsAgo,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
+    	measurements.setComments("Normal");
+    	measurementsDao.addMeasurements(measurements);
+
+    	measurements=  getMeasurement("FTE",eightMonthsAgo,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
+    	measurements.setComments("Completed");
+    	measurementsDao.addMeasurements(measurements);
+
+    	
+    	measurements=  getMeasurement("FTE",eightMinus3,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
+    	measurements.setComments("Normal");
+    	measurementsDao.addMeasurements(measurements);
+
+    	measurements=  getMeasurement("FTE",eightMinus16,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
+    	measurements.setComments("Normal");
+    	measurementsDao.addMeasurements(measurements);
+
+    	
+    	//Neurological Exam:  10-g monofilament  or  128 Hz tuning fork D1
+    	
+    	measurements=  getMeasurement("PANE",fourMonthsAgo,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
+    	measurements.setComments("Normal");
+    	measurementsDao.addMeasurements(measurements);
+
+    	measurements=  getMeasurement("PANE",eightMonthsAgo,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
+    	measurements.setComments("Normal");
+    	measurementsDao.addMeasurements(measurements);
+
+    	
+    	measurements=  getMeasurement("PANE",eightMinus3,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
+    	measurements.setComments("Normal");
+    	measurementsDao.addMeasurements(measurements);
+
+    	measurements=  getMeasurement("PANE",eightMinus16,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
+    	measurements.setComments("Normal");
+    	measurementsDao.addMeasurements(measurements);
+    	
+    	//Fasting Glucose Meter  lab result comparison (Calibrated Yes/No) 
+    	measurements=  getMeasurement("FGLC",eightMinus3,debbieDiabetes.getDemographicNo(),"No",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+
+    	measurements=  getMeasurement("FGLC",eightMinus16,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+    	
+    	
+    	//Education  Diabetes (Yes/No) DMME
+    	measurements=  getMeasurement("DMME",eightMinus3,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+
+    	measurements=  getMeasurement("DMME",eightMinus16,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+
+    	
+    	//Education  Nutrition (lipids) (Yes/No) EDNL
+    	measurements=  getMeasurement("EDNL",eightMinus3,debbieDiabetes.getDemographicNo(),"YEs",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+
+    	measurements=  getMeasurement("EDNL",eightMinus16,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+
+    	
+    	//Education  Nutrition (diabetes) (Yes/No) EDND
+    	measurements=  getMeasurement("EDND",eightMonthsAgo,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+
+    	measurements=  getMeasurement("EDND",eightMinus16,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+
+    	//Motivational Counseling Completed  Nutrition (Yes/No) MCCN
+    	measurements=  getMeasurement("MCCN",eightMinus3,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+
+    	//Motivational Counseling Completed  Exercise (Yes/No) MCCE
+    	measurements=  getMeasurement("MCCE",eightMinus3,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+
+    	measurements=  getMeasurement("MCCE",eightMinus16,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+
+    	
+    	//Motivational Counseling Completed  Smoking Cessation (Yes/No) MCCS
+    	measurements=  getMeasurement("MCCS",eightMinus3,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+
+    	measurements=  getMeasurement("MCCS",eightMinus16,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+
+    	//Motivational Counseling  Other (Yes/No) MCCO
+    	measurements=  getMeasurement("MCCO",eightMinus3,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+
+    	//Collaborative Goal Setting/Self Management Goals (Indicate Goal) CGSD
+    	
+    	measurements=  getMeasurement("CGSD",fourMonthsAgo,debbieDiabetes.getDemographicNo(),"Exercise to 25min 5x/wk",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+
+    	measurements=  getMeasurement("CGSD",eightMonthsAgo,debbieDiabetes.getDemographicNo(),"Excersize to 20min 5x/wk",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+
+    	
+    	measurements=  getMeasurement("CGSD",eightMinus3,debbieDiabetes.getDemographicNo(),"Increase excercise to 20min 5x/wk",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+
+    	measurements=  getMeasurement("CGSD",eightMinus16,debbieDiabetes.getDemographicNo(),"Agrees to self monitoring of glucose 2x/wk",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+    	
+    	
+    	//Self Management Challenges/Barriers to Self Management (Indicate Challenge) SMCD
+    	measurements=  getMeasurement("SMCD",eightMonthsAgo,debbieDiabetes.getDemographicNo(),"Excess salt in diet",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+
+    	
+    	measurements=  getMeasurement("SMCD",eightMinus3,debbieDiabetes.getDemographicNo(),"Financial - glucometer supplies",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+
+    	measurements=  getMeasurement("SMCD",eightMinus16,debbieDiabetes.getDemographicNo(),"Financial - glucometer supplies",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+    	
+    	//ASA (Acetylsalicylic acid) Use (Yes/No) ASAU
+    	measurements=  getMeasurement("ASAU",fourMonthsAgo,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+
+    	measurements=  getMeasurement("ASAU",eightMonthsAgo,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+
+    	
+    	measurements=  getMeasurement("ASAU",eightMinus3,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+
+    	measurements=  getMeasurement("ASAU",eightMinus16,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+    	
+    	//Influenza Vaccine 
+    	prevention = getPrevention(eightMinus3,"FLU",debbieDiabetes.getDemographicNo(),drk.getProviderNo(),false,false);	
+    	preventionDao.persist(prevention);	
+    	prevention = getPrevention(eightMinus16,"FLU",debbieDiabetes.getDemographicNo(),drk.getProviderNo(),false,false);	
+    	preventionDao.persist(prevention);	
+    	//Pneumococcal Vaccine  Pneumovax
+    	prevention = getPrevention(eightMinus3,"Pneumovax",debbieDiabetes.getDemographicNo(),drk.getProviderNo(),false,false);	
+    	preventionDao.persist(prevention);	
+    	//Erectile Dysfunction EDGI
+    	measurements=  getMeasurement("EDGI",eightMinus3,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+    	
+    	//ECG ECG
+    	measurements=  getMeasurement("ECG",eightMinus3,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+
+    	//Psychosocial  Screening TODO: where does this go?
+    	
+    	//referenceMinus1Week 
+    	//fourMinus1Week
+    	//HbA1C (Glycated haemoglobin) A1C
+
+    	measurements=  getMeasurement("A1C",referenceMinus1Week,debbieDiabetes.getDemographicNo(),"6.5",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+    	
+    	measurements=  getMeasurement("A1C",eightMinus3,debbieDiabetes.getDemographicNo(),"8.0",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+
+    	measurements=  getMeasurement("A1C",eightMinus16,debbieDiabetes.getDemographicNo(),"9.0",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+    	
+    	//Fasting Plasma Glucose/AC (or Preprandial Glucose) FBS
+    	measurements=  getMeasurement("FBS",referenceMinus1Week,debbieDiabetes.getDemographicNo(),"5.5",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+    	
+    	measurements=  getMeasurement("FBS",eightMinus3,debbieDiabetes.getDemographicNo(),"7.5",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+
+    	measurements=  getMeasurement("FBS",eightMinus16,debbieDiabetes.getDemographicNo(),"8.5",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+
+    	
+    	//2 hr PC BG FBPC
+    	measurements=  getMeasurement("FBPC",referenceMinus1Week,debbieDiabetes.getDemographicNo(),"6",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+    	
+
+    	measurements=  getMeasurement("FBPC",eightMonthsAgo,debbieDiabetes.getDemographicNo(),"11",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+
+    	measurements=  getMeasurement("FBPC",eightMinus3,debbieDiabetes.getDemographicNo(),"10",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+
+    	measurements=  getMeasurement("FBPC",eightMinus16,debbieDiabetes.getDemographicNo(),"15",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+
+    	
+    	//LDL-C LDL
+    	measurements=  getMeasurement("LDL",referenceMinus1Week,debbieDiabetes.getDemographicNo(),"3.5",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+    	
+    	measurements=  getMeasurement("LDL",eightMinus3,debbieDiabetes.getDemographicNo(),"2.0",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+
+    	measurements=  getMeasurement("LDL",eightMinus16,debbieDiabetes.getDemographicNo(),"4.0",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+    	
+    	//HDL-C HDL
+    	measurements=  getMeasurement("HDL",referenceMinus1Week,debbieDiabetes.getDemographicNo(),"4.1",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+    	
+    	measurements=  getMeasurement("HDL",eightMinus3,debbieDiabetes.getDemographicNo(),"4.2",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+
+    	measurements=  getMeasurement("HDL",eightMinus16,debbieDiabetes.getDemographicNo(),"4.2",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+    	
+    	//TC:HDL-C Ratio TCHD
+    	measurements=  getMeasurement("TCHD",referenceMinus1Week,debbieDiabetes.getDemographicNo(),"1.7",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+    	
+    	measurements=  getMeasurement("TCHD",eightMinus3,debbieDiabetes.getDemographicNo(),"1.5",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+
+    	measurements=  getMeasurement("TCHD",eightMinus16,debbieDiabetes.getDemographicNo(),"3.5",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+    	
+    	//Triglycerides TG
+    	measurements=  getMeasurement("TG",referenceMinus1Week,debbieDiabetes.getDemographicNo(),"1.4",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+    	
+    	measurements=  getMeasurement("TG",eightMinus3,debbieDiabetes.getDemographicNo(),"1.5",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+
+    	measurements=  getMeasurement("TG",eightMinus16,debbieDiabetes.getDemographicNo(),"2.5",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+    	    	
+    	
+    	//Random Urinary ACR (Albumin to Creatinine Ratio) ACR
+    	measurements=  getMeasurement("ACR",referenceMinus1Week,debbieDiabetes.getDemographicNo(),"2.4",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+    	
+    	measurements=  getMeasurement("ACR",eightMinus3,debbieDiabetes.getDemographicNo(),"2.5",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+
+    	measurements=  getMeasurement("ACR",eightMinus16,debbieDiabetes.getDemographicNo(),"3.5",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+    	    	
+    	
+    	
+    	//eGFR EGFR
+    	measurements=  getMeasurement("EGFR",fourMinus1Week,debbieDiabetes.getDemographicNo(),"55",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+    	
+    	measurements=  getMeasurement("EGFR",eightMinus3,debbieDiabetes.getDemographicNo(),"55",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+
+    	measurements=  getMeasurement("EGFR",eightMinus16,debbieDiabetes.getDemographicNo(),"65",drs.getProviderNo());
+    	measurementsDao.addMeasurements(measurements);
+    	    	
+    	
+    
     	
     	
     	

@@ -57,7 +57,7 @@
 	<bean id="CaseManagementCPPDAO" class="org.oscarehr.casemgmt.dao.CaseManagementCPPDAO" autowire="byName" />
 	<bean id="OnCallDAO" class="org.oscarehr.casemgmt.dao.OnCallDAO" autowire="byName" />
 
-	<bean id="AllergyDAO" class="org.oscarehr.casemgmt.dao.AllergyDAO" autowire="byName" />
+	<bean id="AllergyDAO" class="org.oscarehr.common.dao.AllergyDAO" autowire="byName" />
 	<bean id="prescriptionDAO" class="org.oscarehr.casemgmt.dao.PrescriptionDAO" autowire="byName" />
 	<bean id="IssueDAO" class="org.oscarehr.casemgmt.dao.IssueDAO" autowire="byName" />
 	<bean id="EchartDAO" class="org.oscarehr.casemgmt.dao.EchartDAO" autowire="byName" />
