@@ -100,7 +100,7 @@ public class DocumentDAO extends HibernateDaoSupport {
     
     public void saveCtlDocument(CtlDocument ctlDocument){
 
-        getHibernateTemplate().update(ctlDocument);
+        getHibernateTemplate().saveOrUpdate(ctlDocument);
 
     }
   
