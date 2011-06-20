@@ -742,6 +742,8 @@
 						<param>org.oscarehr.myoscar_server</param>
 						<param>org.oscarehr.caisi_integrator</param>
 						<param>org.oscarehr.utils</param>
+						<param>dm</param>
+						<param>cds</param>
 					</groupIdsToRemove>
 				</configuration>
 				<executions>
