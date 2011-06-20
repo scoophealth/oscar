@@ -227,7 +227,8 @@ public class CihiExportAction extends DispatchAction {
 	    
 	    
 	    //grab patient list from set
-		ArrayList patientList = new DemographicSets().getDemographicSet(frm.getString("patientSet"));
+	    DemographicSets demoSets = new DemographicSets(); 
+		ArrayList patientList = demoSets.getDemographicSet(frm.getString("patientSet"));
 		
 		//make all xml files, zip them and save to document directory
 		String filename = this.make(frm, patientList, tmpDir);		
@@ -824,16 +825,15 @@ public class CihiExportAction extends DispatchAction {
     	options.put( XmlOptions.SAVE_AGGRESSIVE_NAMESPACES );
     	options.setSaveOuter();
     	
-    	int idx = 0;
-    	
     	ArrayList<File> files = new ArrayList<File>();
+    	int idx = 0;
     	CiHiCdsDocument cihiDoc;
     	Set<String>xmlKeys = xmlMap.keySet();
     	
     	//Save each file
     	for( String key: xmlKeys) {    		
     		cihiDoc = xmlMap.get(key);
-    		files.set(idx, new File(tmpDir, fileNamesMap.get(key)));    		
+    		files.add(new File(tmpDir, fileNamesMap.get(key)));    		
     		
     		try {
     			cihiDoc.save(files.get(idx), options);
