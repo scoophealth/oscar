@@ -567,6 +567,7 @@ public class CommonLabResultData {
 
 	private static LabResultData toLabResultData(CachedDemographicLabResult cachedDemographicLabResult) throws IOException, SAXException, ParserConfigurationException {
 		LabResultData result = new LabResultData();
+		result.setRemoteFacilityId(cachedDemographicLabResult.getFacilityIdLabResultCompositePk().getIntegratorFacilityId());
 
 		result.labType = cachedDemographicLabResult.getType();
 

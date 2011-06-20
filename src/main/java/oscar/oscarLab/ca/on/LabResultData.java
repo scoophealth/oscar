@@ -83,7 +83,8 @@ public class LabResultData implements Comparable{
 
 	private Integer ackCount = null;
 	private Integer multiplAckCount = null;
-
+	private Integer remoteFacilityId=null;
+	
     public LabResultData() {
     }
     
@@ -397,5 +398,15 @@ public class LabResultData implements Comparable{
 	{
 		this.multiplAckCount=multipleAckCount;
 	}
+
+	public Integer getRemoteFacilityId() {
+    	return (remoteFacilityId);
+    }
+
+	public void setRemoteFacilityId(Integer remoteFacilityId) {
+    	this.remoteFacilityId = remoteFacilityId;
+    }
+	
+	
 }
 
