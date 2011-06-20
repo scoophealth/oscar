@@ -79,6 +79,9 @@ public class EctDisplayRxAction extends EctDisplayAction {
             oscar.oscarRx.data.RxPrescriptionData.Prescription drug = arr[idx];
             if( drug.isArchived() )
                 continue;
+            if(drug.isHideCpp()) {
+            	continue;
+            }
 
             NavBarDisplayDAO.Item item = Dao.Item();
 

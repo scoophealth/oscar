@@ -117,7 +117,9 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
     private int refillQuantity;
     @Column(name="dispense_interval")
     private int dispenseInterval;
-    
+    @Column(name="hide_cpp")
+    private boolean hideFromCpp;
+   
 	// ///
 	@Transient
 	private String remoteFacilityName = null;
@@ -319,6 +321,13 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 		this.demographicId = demographicId;
 	}
 
+	public boolean getHideFromCpp() {
+    	return hideFromCpp;
+    }
+	public void setHideFromCpp(boolean hideFromCpp) {
+    	this.hideFromCpp = hideFromCpp;
+    }
+	
 	public Date getRxDate() {
 		return rxDate;
 	}
