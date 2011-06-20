@@ -67,6 +67,10 @@ public class EctDisplayLabAction2 extends EctDisplayAction {
     	 
     	CommonLabResultData comLab = new CommonLabResultData();
         ArrayList<LabResultData> labs = comLab.populateLabResultsData("",bean.demographicNo, "", "","","U");
+        
+        ArrayList<LabResultData> remoteResults=CommonLabResultData.getRemoteLabs(Integer.parseInt(bean.demographicNo));
+        labs.addAll(remoteResults);
+        
         Collections.sort(labs);
         
         //set text for lefthand module title

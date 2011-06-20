@@ -80,7 +80,10 @@ public class LabResultData implements Comparable{
     public boolean finalRes = true;
     public boolean isMatchedToPatient = true;
     public String multiLabId;
-    
+
+	private Integer ackCount = null;
+	private Integer multiplAckCount = null;
+
     public LabResultData() {
     }
     
@@ -248,26 +251,6 @@ public class LabResultData implements Comparable{
         return this.dateTime;
     }
     
-    public int getAckCount(){
-        CommonLabResultData data = new CommonLabResultData();
-        return data.getAckCount(this.segmentID, this.labType);
-    }
-    
-    public int getMultipleAckCount(){
-        //String[] multiId = this.multiLabId.split(",");
-        CommonLabResultData data = new CommonLabResultData();
-        String[] multiId = data.getMatchingLabs(this.segmentID, this.labType).split(",");
-        int count = 0;
-        if (multiId.length == 1){
-            count = -1;
-        }else{
-            for (int i=0; i < multiId.length; i++){
-                count = count + data.getAckCount(multiId[i], this.labType);
-            }
-        }
-        return count;
-    }
-    
     public String getAcknowledgedStatus(){
         return this.acknowledgedStatus;
     }
@@ -375,8 +358,44 @@ public class LabResultData implements Comparable{
     	
         return(StringUtils.maxLenString(temp, 13, 10, "..."));
     }
+
+
+	public int getAckCount() {
+		if (ackCount == null) {
+			CommonLabResultData data = new CommonLabResultData();
+			ackCount = data.getAckCount(this.segmentID, this.labType);
+		}
+
+		return (ackCount);
+	}
+
+	public void setAckCount(Integer ackCount) {
+		this.ackCount = ackCount;
+	}
+
+	public int getMultipleAckCount() {
+		if (multiplAckCount == null) {
+
+			// String[] multiId = this.multiLabId.split(",");
+			CommonLabResultData data = new CommonLabResultData();
+			String[] multiId = data.getMatchingLabs(this.segmentID, this.labType).split(",");
+			int count = 0;
+			if (multiId.length == 1) {
+				count = -1;
+			} else {
+				for (int i = 0; i < multiId.length; i++) {
+					count = count + data.getAckCount(multiId[i], this.labType);
+				}
+			}
+			multiplAckCount = count;
+		}
+		
+		return(multiplAckCount);
+	}
+
+	public void setMultipleAckCount(Integer multipleAckCount)
+	{
+		this.multiplAckCount=multipleAckCount;
+	}
 }
-
-
-
 
