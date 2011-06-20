@@ -36,7 +36,7 @@ import javax.persistence.TemporalType;
 
 
 @Entity
-@Table(name="Allergies") 
+@Table(name="allergies") 
 public class Allergy extends AbstractModel<Integer> {
 	public Integer getHiclSeqno() {
     	return hiclSeqno;
