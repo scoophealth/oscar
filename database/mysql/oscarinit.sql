@@ -634,6 +634,7 @@ CREATE TABLE drugs (
   dispense_interval int(10),
   refill_duration int(10),
   refill_quantity int(10),
+  hide_cpp tinyint(1),
   PRIMARY KEY  (drugid)
 ) ;
 
