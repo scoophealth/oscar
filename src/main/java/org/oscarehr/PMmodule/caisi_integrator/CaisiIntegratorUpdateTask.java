@@ -622,7 +622,9 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 		ArrayList<EDoc> allDocs = new ArrayList<EDoc>();
 
+		logger.debug("module=demographic, moduleid="+demographicId.toString()+", view=all, EDocUtil.PRIVATE="+EDocUtil.PRIVATE+", sort="+EDocUtil.SORT_OBSERVATIONDATE+", viewstatus=active");
 		List<EDoc> privateDocs = EDocUtil.listDocs("demographic", demographicId.toString(), "all", EDocUtil.PRIVATE, EDocUtil.SORT_OBSERVATIONDATE, "active");
+		logger.debug("privateDocs:"+privateDocs.size());
 		allDocs.addAll(privateDocs);
 
 		List<EDoc> publicDocs = EDocUtil.listDocs("demographic", demographicId.toString(), "all", EDocUtil.PUBLIC, EDocUtil.SORT_OBSERVATIONDATE, "active");
@@ -631,36 +633,37 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		for (EDoc eDoc : allDocs) {
 			MiscUtils.checkShutdownSignaled();
 
-			if (lastDataUpdated.before(eDoc.getDateTimeStampAsDate())) {
-				// send this document
-				CachedDemographicDocument cachedDemographicDocument=new CachedDemographicDocument();
-				FacilityIdIntegerCompositePk facilityIdIntegerCompositePk=new FacilityIdIntegerCompositePk();
-				facilityIdIntegerCompositePk.setCaisiItemId(Integer.parseInt(eDoc.getDocId()));
-				cachedDemographicDocument.setFacilityIntegerPk(facilityIdIntegerCompositePk);
-				
-				cachedDemographicDocument.setAppointmentNo(eDoc.getAppointmentNo());
-				cachedDemographicDocument.setCaisiDemographicId(demographicId);
-				cachedDemographicDocument.setContentType(eDoc.getContentType());
-				cachedDemographicDocument.setDocCreator(eDoc.getCreatorId());
-				cachedDemographicDocument.setDocFilename(eDoc.getFileName());
-				cachedDemographicDocument.setDocType(eDoc.getType());
-				cachedDemographicDocument.setDocXml(eDoc.getHtml());
-				cachedDemographicDocument.setNumberOfPages(eDoc.getNumberOfPages());
-				cachedDemographicDocument.setObservationDate(DateUtils.toGregorianCalendarDate(eDoc.getObservationDate()));
-				cachedDemographicDocument.setProgramId(eDoc.getProgramId());
-				cachedDemographicDocument.setPublic1(Integer.parseInt(eDoc.getDocPublic()));
-				cachedDemographicDocument.setResponsible(eDoc.getResponsibleId());
-				cachedDemographicDocument.setReviewDateTime(DateUtils.toGregorianCalendar(eDoc.getReviewDateTimeDate()));
-				cachedDemographicDocument.setReviewer(eDoc.getReviewerId());
-				cachedDemographicDocument.setSource(eDoc.getSource());
-				cachedDemographicDocument.setStatus(""+eDoc.getStatus());
-				cachedDemographicDocument.setUpdateDateTime(DateUtils.toGregorianCalendar(eDoc.getDateTimeStampAsDate()));
-				cachedDemographicDocument.setDescription(eDoc.getDescription());
-				
-				byte[] contents=EDocUtil.getFile(OscarProperties.getInstance().getProperty("DOCUMENT_DIR") + '/'+ eDoc.getFileName());
-				
-				demographicWs.addCachedDemographicDocumentAndContents(cachedDemographicDocument, contents);
-			}
+			// the last update date is unreliable right now
+			// if (lastDataUpdated.after(eDoc.getDateTimeStampAsDate())) continue;
+			
+			// send this document
+			CachedDemographicDocument cachedDemographicDocument = new CachedDemographicDocument();
+			FacilityIdIntegerCompositePk facilityIdIntegerCompositePk = new FacilityIdIntegerCompositePk();
+			facilityIdIntegerCompositePk.setCaisiItemId(Integer.parseInt(eDoc.getDocId()));
+			cachedDemographicDocument.setFacilityIntegerPk(facilityIdIntegerCompositePk);
+
+			cachedDemographicDocument.setAppointmentNo(eDoc.getAppointmentNo());
+			cachedDemographicDocument.setCaisiDemographicId(demographicId);
+			cachedDemographicDocument.setContentType(eDoc.getContentType());
+			cachedDemographicDocument.setDocCreator(eDoc.getCreatorId());
+			cachedDemographicDocument.setDocFilename(eDoc.getFileName());
+			cachedDemographicDocument.setDocType(eDoc.getType());
+			cachedDemographicDocument.setDocXml(eDoc.getHtml());
+			cachedDemographicDocument.setNumberOfPages(eDoc.getNumberOfPages());
+			cachedDemographicDocument.setObservationDate(DateUtils.toGregorianCalendarDate(eDoc.getObservationDate()));
+			cachedDemographicDocument.setProgramId(eDoc.getProgramId());
+			cachedDemographicDocument.setPublic1(Integer.parseInt(eDoc.getDocPublic()));
+			cachedDemographicDocument.setResponsible(eDoc.getResponsibleId());
+			cachedDemographicDocument.setReviewDateTime(DateUtils.toGregorianCalendar(eDoc.getReviewDateTimeDate()));
+			cachedDemographicDocument.setReviewer(eDoc.getReviewerId());
+			cachedDemographicDocument.setSource(eDoc.getSource());
+			cachedDemographicDocument.setStatus("" + eDoc.getStatus());
+			cachedDemographicDocument.setUpdateDateTime(DateUtils.toGregorianCalendar(eDoc.getDateTimeStampAsDate()));
+			cachedDemographicDocument.setDescription(eDoc.getDescription());
+
+			byte[] contents = EDocUtil.getFile(OscarProperties.getInstance().getProperty("DOCUMENT_DIR") + '/' + eDoc.getFileName());
+
+			demographicWs.addCachedDemographicDocumentAndContents(cachedDemographicDocument, contents);
 		}
 	}
 
