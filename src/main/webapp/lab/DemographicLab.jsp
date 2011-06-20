@@ -1,3 +1,4 @@
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@ page import="java.util.*"%>
 <%@ page import="oscar.oscarMDS.data.*,oscar.oscarLab.ca.on.*"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
@@ -21,7 +22,12 @@
     
     ArrayList<LabResultData> labs = comLab.populateLabResultsData("",demographicNo, "", "","","U");
     
-    
+    LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+    if (loggedInInfo.currentFacility.isIntegratorEnabled())
+    {
+       ArrayList<LabResultData> remoteResults=CommonLabResultData.getRemoteLabs(Integer.parseInt(demographicNo));
+       labs.addAll(remoteResults);
+    }
     
     int pageNum = 1;
     if ( request.getParameter("pageNum") != null ) {
@@ -264,14 +270,18 @@ function checkAll(formId){
                     <center><%= (String) result.getSex() %></center>
                 </td-->
 		<td nowrap>
-		<% if ( result.isMDS() ){ %> <a
-			href="javascript:reportWindow('../oscarMDS/SegmentDisplay.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')"><%= result.getDiscipline()%></a>
+		<% 
+			String remoteFacilityIdQueryString="";
+			if (result.getRemoteFacilityId()!=null) remoteFacilityIdQueryString="&remoteFacilityId="+result.getRemoteFacilityId();
+		
+		   if ( result.isMDS() ){ %> <a
+			href="javascript:reportWindow('../oscarMDS/SegmentDisplay.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%><%=remoteFacilityIdQueryString%>')"><%= result.getDiscipline()%></a>
 		<% } else if (result.isCML()){ %> <a
-			href="javascript:reportWindow('../lab/CA/ON/CMLDisplay.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')"><%=(String) result.getDiscipline()%></a>
+			href="javascript:reportWindow('../lab/CA/ON/CMLDisplay.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%><%=remoteFacilityIdQueryString%>')"><%=(String) result.getDiscipline()%></a>
 		<% }else if (result.isHL7TEXT()) {%> <a
-			href="javascript:reportWindow('../lab/CA/ALL/labDisplay.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')"><%=(String) result.getDiscipline()%></a>
+			href="javascript:reportWindow('../lab/CA/ALL/labDisplay.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%><%=remoteFacilityIdQueryString%>')"><%=(String) result.getDiscipline()%></a>
 		<% } else {%> <a
-			href="javascript:reportWindow('../lab/CA/BC/labDisplay.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')"><%=(String) result.getDiscipline()%></a>
+			href="javascript:reportWindow('../lab/CA/BC/labDisplay.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%><%=remoteFacilityIdQueryString%>')"><%=(String) result.getDiscipline()%></a>
 		<% }%>
 		</td>
 		<td nowrap><%= (String) result.getDateTime()%></td>

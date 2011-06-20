@@ -36,6 +36,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.util.MessageResources;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
@@ -68,8 +69,12 @@ public class EctDisplayLabAction2 extends EctDisplayAction {
     	CommonLabResultData comLab = new CommonLabResultData();
         ArrayList<LabResultData> labs = comLab.populateLabResultsData("",bean.demographicNo, "", "","","U");
         
-        ArrayList<LabResultData> remoteResults=CommonLabResultData.getRemoteLabs(Integer.parseInt(bean.demographicNo));
-        labs.addAll(remoteResults);
+        LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+        if (loggedInInfo.currentFacility.isIntegratorEnabled())
+        {
+	        ArrayList<LabResultData> remoteResults=CommonLabResultData.getRemoteLabs(Integer.parseInt(bean.demographicNo));
+	        labs.addAll(remoteResults);
+        }
         
         Collections.sort(labs);
         
@@ -133,20 +138,23 @@ public class EctDisplayLabAction2 extends EctDisplayAction {
             String formattedDate = DateUtils.getDate(date,"dd-MMM-yyyy", request.getLocale());
             //String formattedDate = DateUtils.getDate(date);
             func = new StringBuilder("popupPage(700,960,'");
+
+            String remoteFacilityIdQueryString="";
+            if (result.getRemoteFacilityId()!=null) remoteFacilityIdQueryString="&remoteFacilityId="+result.getRemoteFacilityId();
             
             if ( result.isMDS() ){
                 labDisplayName = result.getDiscipline();
-                url = request.getContextPath() + "/oscarMDS/SegmentDisplay.jsp?providerNo="+bean.providerNo+"&segmentID="+result.segmentID+"&multiID="+result.multiLabId+"&status="+result.getReportStatus();
+                url = request.getContextPath() + "/oscarMDS/SegmentDisplay.jsp?providerNo="+bean.providerNo+"&segmentID="+result.segmentID+"&multiID="+result.multiLabId+"&status="+result.getReportStatus()+remoteFacilityIdQueryString;
             }else if (result.isCML()){
                 labDisplayName = result.getDiscipline();
-                url = request.getContextPath() + "/lab/CA/ON/CMLDisplay.jsp?providerNo="+bean.providerNo+"&segmentID="+result.segmentID+"&multiID="+result.multiLabId;
+                url = request.getContextPath() + "/lab/CA/ON/CMLDisplay.jsp?providerNo="+bean.providerNo+"&segmentID="+result.segmentID+"&multiID="+result.multiLabId+remoteFacilityIdQueryString;
             }else if (result.isHL7TEXT()){
                 labDisplayName = result.getDiscipline();
                 //url = request.getContextPath() + "/lab/CA/ALL/labDisplay.jsp?providerNo="+bean.providerNo+"&segmentID="+result.segmentID;
-                url = request.getContextPath() + "/lab/CA/ALL/labDisplay.jsp?providerNo="+bean.providerNo+"&segmentID="+result.segmentID+"&multiID="+result.multiLabId;
+                url = request.getContextPath() + "/lab/CA/ALL/labDisplay.jsp?providerNo="+bean.providerNo+"&segmentID="+result.segmentID+"&multiID="+result.multiLabId+remoteFacilityIdQueryString;
             }else {
                 labDisplayName = result.getDiscipline();
-                url = request.getContextPath() + "/lab/CA/BC/labDisplay.jsp?segmentID="+result.segmentID+"&providerNo="+bean.providerNo+"&multiID="+result.multiLabId;
+                url = request.getContextPath() + "/lab/CA/BC/labDisplay.jsp?segmentID="+result.segmentID+"&providerNo="+bean.providerNo+"&multiID="+result.multiLabId+remoteFacilityIdQueryString;
             }
             
             NavBarDisplayDAO.Item item = Dao.Item();
