@@ -85,7 +85,6 @@ import org.oscarehr.caisi_integrator.ws.FacilityIdStringCompositePk;
 import org.oscarehr.caisi_integrator.ws.FacilityWs;
 import org.oscarehr.caisi_integrator.ws.Gender;
 import org.oscarehr.caisi_integrator.ws.NoteIssue;
-import org.oscarehr.caisi_integrator.ws.PreventionExtTransfer;
 import org.oscarehr.caisi_integrator.ws.ProgramWs;
 import org.oscarehr.caisi_integrator.ws.ProviderTransfer;
 import org.oscarehr.caisi_integrator.ws.ProviderWs;
@@ -580,11 +579,10 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		return (false);
 	}
 
-	private void pushDemographicPreventions(Facility facility, List<String> providerIdsInFacility, DemographicWs service, Integer demographicId) throws ShutdownException {
+	private void pushDemographicPreventions(Facility facility, List<String> providerIdsInFacility, DemographicWs service, Integer demographicId) throws ShutdownException, ParserConfigurationException, TransformerException {
 		logger.debug("pushing demographicPreventions facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
 		ArrayList<CachedDemographicPrevention> preventionsToSend = new ArrayList<CachedDemographicPrevention>();
-		ArrayList<PreventionExtTransfer> preventionExtsToSend = new ArrayList<PreventionExtTransfer>();
 
 		// get all preventions
 		// for each prevention, copy fields to an integrator prevention
@@ -608,24 +606,24 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 			cachedDemographicPrevention.setNextDate(MiscUtils.toCalendar(localPrevention.getNextDate()));
 			cachedDemographicPrevention.setPreventionDate(MiscUtils.toCalendar(localPrevention.getPreventionDate()));
-
 			cachedDemographicPrevention.setPreventionType(localPrevention.getPreventionType());
-
-			preventionsToSend.add(cachedDemographicPrevention);
+			cachedDemographicPrevention.setRefused(localPrevention.isRefused());
+			cachedDemographicPrevention.setNever(localPrevention.isNever());
 
 			// add ext info
-			Integer preventionId = localPrevention.getId();
-			HashMap<String, String> localPreventionExts = preventionDao.getPreventionExt(preventionId);
-			for (Map.Entry<String, String> entry : localPreventionExts.entrySet()) {
-				PreventionExtTransfer preventionExtTransfer = new PreventionExtTransfer();
-				preventionExtTransfer.setPreventionId(preventionId);
-				preventionExtTransfer.setKey(entry.getKey());
-				preventionExtTransfer.setValue(entry.getValue());
-				preventionExtsToSend.add(preventionExtTransfer);
+			// ext info should be added to the attributes field as xml data 
+			Document doc=XmlUtils.newDocument("PreventionExt");
+			HashMap<String, String> exts=preventionDao.getPreventionExt(localPrevention.getId());
+			for (Map.Entry<String, String> entry : exts.entrySet())
+			{
+				XmlUtils.appendChildToRoot(doc, entry.getKey(), entry.getValue());
 			}
+			cachedDemographicPrevention.setAttributes(XmlUtils.toString(doc));
+				
+			preventionsToSend.add(cachedDemographicPrevention);
 		}
 
-		if (preventionsToSend.size() > 0) service.setCachedDemographicPreventions(preventionsToSend, preventionExtsToSend);
+		if (preventionsToSend.size() > 0) service.setCachedDemographicPreventions(preventionsToSend);
 	}
 
 	private void pushDocuments(Date lastDataUpdated, Facility facility, DemographicWs demographicWs, Integer demographicId) throws ShutdownException {

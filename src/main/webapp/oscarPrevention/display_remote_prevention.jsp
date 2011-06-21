@@ -1,3 +1,6 @@
+<%@page import="java.util.Map"%>
+<%@page import="java.util.HashMap"%>
+<%@page import="org.oscarehr.PMmodule.caisi_integrator.RemotePreventionHelper"%>
 <%@page import="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.DemographicWs"%>
@@ -11,7 +14,6 @@
 <%@page import="org.oscarehr.caisi_integrator.ws.CachedProvider"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.FacilityIdStringCompositePk"%>
 <%@page import="org.apache.commons.lang.time.DateFormatUtils"%>
-<%@page import="org.oscarehr.caisi_integrator.ws.CachedDemographicPrevention.Attributes"%>
 <%@page import="java.util.List"%><html xmlns="http://www.w3.org/1999/xhtml">
 	<head>	
 		<title>Remote Prevention</title>
@@ -68,9 +70,8 @@
 				<td class="tableData"><%=remotePrevention.getNextDate()!=null?DateFormatUtils.ISO_DATE_FORMAT.format(remotePrevention.getNextDate()):""%></td>
 			</tr>
 			<%
-				CachedDemographicPrevention.Attributes attributes=remotePrevention.getAttributes();
-				List<CachedDemographicPrevention.Attributes.Entry> entryList=attributes.getEntry();
-				for (CachedDemographicPrevention.Attributes.Entry entry : entryList)
+				HashMap<String,String> attributes=RemotePreventionHelper.getRemotePreventionAttributesAsHashMap(remotePrevention);
+				for (Map.Entry<String,String> entry : attributes.entrySet())
 				{
 					%>
 					<tr>
