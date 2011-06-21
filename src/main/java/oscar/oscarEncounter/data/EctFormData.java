@@ -44,6 +44,7 @@ import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.common.dao.EncounterFormDao;
 import org.oscarehr.common.model.EncounterForm;
 import org.oscarehr.util.DbConnectionFilter;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -231,9 +232,8 @@ public class EctFormData {
 			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
 			List<CachedDemographicForm> remoteForms = demographicWs.getLinkedCachedDemographicForms(demographicId, table);
 
-			for (CachedDemographicForm cachedDemographicForm : remoteForms)
-			{
-				Date date=cachedDemographicForm.getEditDate().getTime();
+			for (CachedDemographicForm cachedDemographicForm : remoteForms) {
+				Date date = cachedDemographicForm.getEditDate().getTime();
 				PatientForm frm = new PatientForm(formName, cachedDemographicForm.getFacilityIdIntegerCompositePk().getCaisiItemId(), cachedDemographicForm.getCaisiDemographicId(), date, date);
 				frm.setRemoteFacilityId(cachedDemographicForm.getFacilityIdIntegerCompositePk().getIntegratorFacilityId());
 				forms.add(frm);
@@ -251,12 +251,16 @@ public class EctFormData {
 	}
 
 	public static PatientForm[] getPatientFormsFromLocalAndRemote(String demoNo, String table) {
-		ArrayList<PatientForm> results=getPatientFormsAsArrayList(demoNo, null, table);
-		ArrayList<PatientForm> remoteResults=getRemotePatientForms(Integer.parseInt(demoNo), null, table);
-		
-		results.addAll(remoteResults);
+		ArrayList<PatientForm> results = getPatientFormsAsArrayList(demoNo, null, table);
+
+		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+		if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
+			ArrayList<PatientForm> remoteResults = getRemotePatientForms(Integer.parseInt(demoNo), null, table);
+			results.addAll(remoteResults);
+		}
+
 		Collections.sort(results, PatientForm.CREATED_DATE_COMPARATOR);
-		
+
 		return (results.toArray(new PatientForm[0]));
 	}
 
