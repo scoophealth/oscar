@@ -245,8 +245,7 @@ public final class MessageUploader {
 				demo = "0";
 				logger.info("Could not find patient for lab: " + labId + " # of possible matches :" + count);
 			} else {
-				Hl7textResultsData rd = new Hl7textResultsData();
-				rd.populateMeasurementsTable("" + labId, demo);
+				Hl7textResultsData.populateMeasurementsTable("" + labId, demo);
 			}
 
 			sql = "insert into patientLabRouting (demographic_no, lab_no,lab_type) values ('" + demo + "', '" + labId + "','HL7')";

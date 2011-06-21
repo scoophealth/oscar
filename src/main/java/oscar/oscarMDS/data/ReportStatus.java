@@ -29,79 +29,106 @@ import java.util.Locale;
 
 public class ReportStatus {
 
-    private String providerName;
+	private String providerName;
 
-    private String providerNo;
+	private String providerNo;
 
-    private String status;
+	private String status;
 
-    private String comment;
+	private String comment;
 
-    private String timestamp;
-    
-    private String segmentID;
+	private String timestamp;
 
-    public ReportStatus(String pName, String pNo, String s, String c, String t, String sID) {
-        providerName = pName;
-        providerNo = pNo;
-        status = s;
-        comment = c;
-        segmentID = sID;
-        
-        GregorianCalendar cal = new GregorianCalendar(Locale.ENGLISH);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yy HH:mm", Locale.ENGLISH);
+	private String segmentID;
 
-        // boneheaded calendar numbers months from 0
-        if (t.length() > 18) {
-            cal.set(Integer.parseInt(t.substring(0, 4)), Integer.parseInt(t.substring(5, 7)) - 1, Integer.parseInt(t
-                    .substring(8, 10)), Integer.parseInt(t.substring(11, 13)), Integer.parseInt(t.substring(14, 16)),
-                    Integer.parseInt(t.substring(17, 19)));
-        } else {
-            cal.set(Integer.parseInt(t.substring(0, 4)), Integer.parseInt(t.substring(4, 6)) - 1, Integer.parseInt(t
-                    .substring(6, 8)), Integer.parseInt(t.substring(8, 10)), Integer.parseInt(t.substring(10, 12)),
-                    Integer.parseInt(t.substring(12, 14)));
-        }
-        timestamp = dateFormat.format(cal.getTime());
-    }
+	public ReportStatus() {
+		// allow empty constructor
+	}
 
- 
-    public ReportStatus (String pName, String pNo, String s, String c, long t, String sID) {
-        providerName = pName;
-        providerNo = pNo;
-        status = s;
-        comment = c;
-        segmentID = sID;
-        
-        GregorianCalendar cal = new GregorianCalendar(Locale.ENGLISH);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yy HH:mm", Locale.ENGLISH);
-        
-        cal.setTimeInMillis(t);        
-       
-        timestamp = dateFormat.format(cal.getTime());        
-    }
-    
-    
-    public String getProviderName() {
-        return providerName;
-    }
+	public ReportStatus(String pName, String pNo, String s, String c, String t, String sID) {
+		providerName = pName;
+		providerNo = pNo;
+		status = s;
+		comment = c;
+		segmentID = sID;
 
-    public String getProviderNo() {
-        return providerNo;
-    }
+		GregorianCalendar cal = new GregorianCalendar(Locale.ENGLISH);
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yy HH:mm", Locale.ENGLISH);
 
-    public String getStatus() {
-        return status;
-    }
+		// boneheaded calendar numbers months from 0
+		if (t.length() > 18) {
+			cal.set(Integer.parseInt(t.substring(0, 4)), Integer.parseInt(t.substring(5, 7)) - 1, Integer.parseInt(t.substring(8, 10)), Integer.parseInt(t.substring(11, 13)), Integer.parseInt(t.substring(14, 16)), Integer.parseInt(t.substring(17, 19)));
+		} else {
+			cal.set(Integer.parseInt(t.substring(0, 4)), Integer.parseInt(t.substring(4, 6)) - 1, Integer.parseInt(t.substring(6, 8)), Integer.parseInt(t.substring(8, 10)), Integer.parseInt(t.substring(10, 12)), Integer.parseInt(t.substring(12, 14)));
+		}
+		timestamp = dateFormat.format(cal.getTime());
+	}
 
-    public String getComment() {
-        return comment;
-    }
+	public ReportStatus(String pName, String pNo, String s, String c, long t, String sID) {
+		providerName = pName;
+		providerNo = pNo;
+		status = s;
+		comment = c;
+		segmentID = sID;
 
-    public String getTimestamp() {
-        return timestamp;
-    }
-    
-    public String getID(){
-        return segmentID;
-    }
+		GregorianCalendar cal = new GregorianCalendar(Locale.ENGLISH);
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yy HH:mm", Locale.ENGLISH);
+
+		cal.setTimeInMillis(t);
+
+		timestamp = dateFormat.format(cal.getTime());
+	}
+
+	public String getProviderName() {
+		return providerName;
+	}
+
+	public String getProviderNo() {
+		return providerNo;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public String getTimestamp() {
+		return timestamp;
+	}
+
+	public String getID() {
+		return segmentID;
+	}
+
+	public String getSegmentID() {
+		return (segmentID);
+	}
+
+	public void setSegmentID(String segmentID) {
+		this.segmentID = segmentID;
+	}
+
+	public void setProviderName(String providerName) {
+		this.providerName = providerName;
+	}
+
+	public void setProviderNo(String providerNo) {
+		this.providerNo = providerNo;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
+	public void setTimestamp(String timestamp) {
+		this.timestamp = timestamp;
+	}
+
 }

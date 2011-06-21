@@ -99,8 +99,7 @@ public class LabPDFCreator extends PdfPageEventHelper{
         this.id = segmentId;
 
         // check for acknowledgements and set ackFlag
-        AcknowledgementData ackData = new AcknowledgementData();
-        ArrayList ackList = ackData.getAcknowledgements(id);
+        ArrayList ackList = AcknowledgementData.getAcknowledgements(id);
         if (ackList != null){
             for (int i=0; i < ackList.size(); i++){
                 ReportStatus reportStatus = (ReportStatus) ackList.get(i);
@@ -115,8 +114,7 @@ public class LabPDFCreator extends PdfPageEventHelper{
         this.handler = Factory.getHandler(id);
         
         // determine lab version
-        Hl7textResultsData data = new Hl7textResultsData();
-        String multiLabId = data.getMatchingLabs(id);
+        String multiLabId = Hl7textResultsData.getMatchingLabs(id);
         this.multiID = multiLabId.split(",");
         
         int i=0;
@@ -449,9 +447,8 @@ public class LabPDFCreator extends PdfPageEventHelper{
         
         // only create acknowledgement table if there are acknowlegements
         if (ackFlag){
-            AcknowledgementData ackData = new AcknowledgementData();
             for (int j=multiID.length-1; j >=0; j--){
-                ArrayList ackList = ackData.getAcknowledgements(multiID[j]);
+                ArrayList ackList = AcknowledgementData.getAcknowledgements(multiID[j]);
                 if (multiID[j].equals(id))
                     startFlag = true;
                 if (startFlag){

@@ -24,6 +24,7 @@ package org.oscarehr.PMmodule.caisi_integrator;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.sql.SQLException;
@@ -146,6 +147,7 @@ import oscar.oscarEncounter.oscarMeasurements.model.Measurementmap;
 import oscar.oscarEncounter.oscarMeasurements.model.Measurements;
 import oscar.oscarEncounter.oscarMeasurements.model.MeasurementsExt;
 import oscar.oscarEncounter.oscarMeasurements.model.Measurementtype;
+import oscar.oscarLab.ca.all.web.LabDisplayHelper;
 import oscar.oscarLab.ca.on.CommonLabResultData;
 import oscar.oscarLab.ca.on.LabResultData;
 import oscar.oscarRx.data.RxPatientData;
@@ -676,7 +678,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		}
 	}
 
-	private void pushLabResults(Date lastDataUpdated, Facility facility, DemographicWs demographicWs, Integer demographicId) throws ShutdownException, ParserConfigurationException, TransformerException {
+	private void pushLabResults(Date lastDataUpdated, Facility facility, DemographicWs demographicWs, Integer demographicId) throws ShutdownException, ParserConfigurationException, TransformerException, UnsupportedEncodingException {
 		logger.debug("pushing pushLabResults facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
 	    CommonLabResultData comLab = new CommonLabResultData();
@@ -690,33 +692,20 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	    }
 	}
 	
-	private CachedDemographicLabResult makeCachedDemographicLabResult(Integer demographicId, LabResultData lab) throws ParserConfigurationException, TransformerException
+	private CachedDemographicLabResult makeCachedDemographicLabResult(Integer demographicId, LabResultData lab) throws ParserConfigurationException, TransformerException, UnsupportedEncodingException
 	{
 		CachedDemographicLabResult cachedDemographicLabResult=new CachedDemographicLabResult();
 		
 		FacilityIdLabResultCompositePk pk=new FacilityIdLabResultCompositePk();
 		// our attempt at making a fake pk....
-		String key=""+demographicId+':'+lab.getSegmentID()+':'+lab.labType+':'+lab.getDateTime();
+		String key=LabDisplayHelper.makeLabKey(demographicId, lab.getSegmentID(), lab.labType, lab.getDateTime());
 		pk.setLabResultId(key);
 		cachedDemographicLabResult.setFacilityIdLabResultCompositePk(pk);
 
 		cachedDemographicLabResult.setCaisiDemographicId(demographicId);
 		cachedDemographicLabResult.setType(lab.labType);
 		
-		Document doc=XmlUtils.newDocument("LabResult");
-		XmlUtils.appendChildToRoot(doc, "acknowledgedStatus", lab.getAcknowledgedStatus());
-		XmlUtils.appendChildToRoot(doc, "dateTime", lab.getDateTime());
-		XmlUtils.appendChildToRoot(doc, "discipline", lab.getDiscipline());
-		XmlUtils.appendChildToRoot(doc, "healthNumber", lab.getHealthNumber());
-		XmlUtils.appendChildToRoot(doc, "labPatientId", lab.getLabPatientId());
-		XmlUtils.appendChildToRoot(doc, "patientName", lab.getPatientName());
-		XmlUtils.appendChildToRoot(doc, "priority", lab.getPriority());
-		XmlUtils.appendChildToRoot(doc, "reportStatus", lab.getReportStatus());
-		XmlUtils.appendChildToRoot(doc, "requestingClient", lab.getRequestingClient());
-		XmlUtils.appendChildToRoot(doc, "segmentID", lab.getSegmentID());
-		XmlUtils.appendChildToRoot(doc, "sex", lab.getSex());
-		XmlUtils.appendChildToRoot(doc, "ackCount", ""+lab.getAckCount());
-		XmlUtils.appendChildToRoot(doc, "multipleAckCount", ""+lab.getMultipleAckCount());
+		Document doc=LabDisplayHelper.labToXml(lab);
 		
 		String data=XmlUtils.toString(doc);
 		cachedDemographicLabResult.setData(data);

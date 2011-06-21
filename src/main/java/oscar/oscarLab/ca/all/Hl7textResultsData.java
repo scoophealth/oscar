@@ -1,12 +1,3 @@
-/*
- * Hl7textResultsData.java
- *
- * Created on June 19, 2007, 10:33 AM
- *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
- */
-
 package oscar.oscarLab.ca.all;
 
 import java.sql.Connection;
@@ -22,6 +13,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.util.DbConnectionFilter;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
 import oscar.oscarLab.ca.all.parsers.Factory;
@@ -29,19 +21,15 @@ import oscar.oscarLab.ca.all.parsers.MessageHandler;
 import oscar.oscarLab.ca.on.LabResultData;
 import oscar.util.UtilDateUtilities;
 
-/**
- *
- * @author wrighd
- */
 public class Hl7textResultsData {
     
-    Logger logger = Logger.getLogger(Hl7textResultsData.class);
+    private static Logger logger = MiscUtils.getLogger();
     
-    /** Creates a new instance of Hl7textResultsData */
-    public Hl7textResultsData() {
+    private Hl7textResultsData() {
+    	// no one should instantiate this
     }
     
-    public void populateMeasurementsTable(String lab_no, String demographic_no){
+    public static void populateMeasurementsTable(String lab_no, String demographic_no){
         MessageHandler h = Factory.getHandler(lab_no);
         
         java.util.Calendar calender = java.util.Calendar.getInstance();
@@ -256,7 +244,7 @@ public class Hl7textResultsData {
         
     }
     
-    public String getMatchingLabs(String lab_no){
+    public static String getMatchingLabs(String lab_no){
         String sql = "SELECT a.lab_no, a.obr_date, b.obr_date as labDate FROM hl7TextInfo a, hl7TextInfo b WHERE a.accessionNum !='' AND a.accessionNum=b.accessionNum AND b.lab_no='"+lab_no+"' ORDER BY a.obr_date, a.final_result_count, a.lab_no";
         String ret = "";
         int monthsBetween = 0;
@@ -300,7 +288,7 @@ public class Hl7textResultsData {
     /**
      *Populates ArrayList with labs attached to a consultation request
      */
-    public ArrayList<LabResultData> populateHL7ResultsData(String demographicNo, String consultationId, boolean attached) {
+    public static ArrayList<LabResultData> populateHL7ResultsData(String demographicNo, String consultationId, boolean attached) {
         String sql = "SELECT hl7.lab_no, hl7.obr_date, hl7.discipline, hl7.accessionNum, hl7.final_result_count, patientLabRouting.id " +
                 "FROM hl7TextInfo hl7, patientLabRouting " +
                 "WHERE patientLabRouting.lab_no = hl7.lab_no "+
@@ -350,7 +338,7 @@ public class Hl7textResultsData {
         return labResults;
     }
 
-    public ArrayList<LabResultData> getNotAckLabsFromLabNos(List<String> labNos){
+    public static ArrayList<LabResultData> getNotAckLabsFromLabNos(List<String> labNos){
         ArrayList<LabResultData> ret=new ArrayList();
         LabResultData lrd=new LabResultData();
         for(String labNo:labNos){
@@ -359,7 +347,8 @@ public class Hl7textResultsData {
         }
          return ret;      
     }
-    public LabResultData getNotAckLabResultDataFromLabNo(String labNo){
+    
+    public static LabResultData getNotAckLabResultDataFromLabNo(String labNo){
     LabResultData lbData = new LabResultData(LabResultData.HL7TEXT);
         String sql = "";
         try {
@@ -453,7 +442,8 @@ public class Hl7textResultsData {
         }
         return lbData;
     }
-    public ArrayList<LabResultData> populateHl7ResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status) {
+    
+    public static ArrayList<LabResultData> populateHl7ResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status) {
         
         if ( providerNo == null) { providerNo = ""; }
         if ( patientFirstName == null) { patientFirstName = ""; }
@@ -576,7 +566,7 @@ public class Hl7textResultsData {
         return labResults;
     }
     
-    String[] splitRefRange(String refRangeTxt) {
+    private static String[] splitRefRange(String refRangeTxt) {
 	refRangeTxt = refRangeTxt.trim();
 	String[] refRange = {"","",""};
 	String numeric = "-. 0123456789";
