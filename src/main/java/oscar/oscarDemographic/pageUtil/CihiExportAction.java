@@ -220,7 +220,7 @@ public class CihiExportAction extends DispatchAction {
 		//Create export files
 	    String tmpDir = properties.getProperty("TMP_DIR");
 	    if (!Util.checkDir(tmpDir)) {
-	    	tmpDir = System.clearProperty("java.io.tmpdir");
+	    	tmpDir = System.getProperty("java.io.tmpdir");
 	        MiscUtils.getLogger().error("Error! Cannot write to TMP_DIR - Check oscar.properties or dir permissions. Using " + tmpDir);
 	    }
 	    tmpDir = Util.fixDirName(tmpDir);
