@@ -38,8 +38,6 @@ public class DemographicExportForm extends ActionForm {
 
     String demographicNo;
     String patientSet;
-    String mediaType;
-    String noOfMedia;
     String pgpReady;
     
     boolean exFamilyHistory;
@@ -69,12 +67,6 @@ public class DemographicExportForm extends ActionForm {
     }
     public String getPatientSet() {
         return patientSet;
-    }
-    public String getMediaType() {
-        return mediaType;
-    }
-    public String getNoOfMedia() {
-        return noOfMedia;
     }
     public String getPgpReady() {
         return pgpReady;
@@ -128,13 +120,6 @@ public class DemographicExportForm extends ActionForm {
     }
     public void setPatientSet(String patientSet) {
         this.patientSet = patientSet;
-    }
-    public void setMediaType(String mediaType) {
-        this.mediaType = mediaType;
-    }
-    public void setNoOfMedia(String noOfMedia) {
-        if (isInteger(noOfMedia)) this.noOfMedia = noOfMedia;
-        else this.noOfMedia = "1";
     }
     public void setPgpReady(String pgpReady) {
         this.pgpReady = pgpReady;

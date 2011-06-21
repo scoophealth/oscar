@@ -145,8 +145,6 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
     DemographicExportForm defrm = (DemographicExportForm)form;
     String demographicNo = defrm.getDemographicNo();
     String setName = defrm.getPatientSet();
-    String mediaType = defrm.getMediaType();
-    String noOfMedia = defrm.getNoOfMedia();
     String pgpReady = defrm.getPgpReady();
     boolean exFamilyHistory = WebUtils.isChecked(request, "exFamilyHistory");
     boolean exPastHealth = WebUtils.isChecked(request, "exPastHealth");
@@ -310,11 +308,11 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             data = data.equals("RO") ? "1" : "0";
             Demographics.Enrolment enrolment = demo.addNewEnrolment();
             enrolment.setEnrollmentStatus(cdsDt.EnrollmentStatus.Enum.forString(data));
-            data = demographic.getHCRenewDate(); //HCRenewDate = RosterDate
+            data = demographic.getRosterDate();
             if (UtilDateUtilities.StringToDate(data)!=null) {
                 enrolment.setEnrollmentDate(Util.calDate(data));
             }
-            data = demographic.getEndDate();
+            data = demographic.getRosterTerminationDate();
             if (UtilDateUtilities.StringToDate(data)!=null) {
                 enrolment.setEnrollmentTerminationDate(Util.calDate(data));
             }
@@ -329,6 +327,11 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             else if (data.equals("IN")) personStatusCode.setPersonStatusAsEnum(cdsDt.PersonStatus.I);
             else if (data.equals("DE")) personStatusCode.setPersonStatusAsEnum(cdsDt.PersonStatus.D);
             else personStatusCode.setPersonStatusAsPlainText(data);
+
+            data = demographic.getPatientStatusDate();
+            if (StringUtils.filled(data)) {
+                demo.setPersonStatusDate(Util.calDate(data));
+            }
 
             data = StringUtils.noNull(demographic.getDob("-"));
             demo.setDateOfBirth(Util.calDate(data));
@@ -354,13 +357,14 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             }
             if (StringUtils.filled(demographic.getJustHIN())) {
                 cdsDt.HealthCard healthCard = demo.addNewHealthCard();
+
                 healthCard.setNumber(demographic.getJustHIN());
                 healthCard.setProvinceCode(Util.setProvinceCode(demographic.getHCType()));
                 if (healthCard.getProvinceCode()==null) {
                     err.add("Error! No Health Card Province Code for Patient "+demoNo);
                 }
                 if (StringUtils.filled(demographic.getVersionCode())) healthCard.setVersion(demographic.getVersionCode());
-                data = demographic.getEffDate();
+                data = demographic.getHCRenewDate();
                 if (UtilDateUtilities.StringToDate(data)!=null) {
                     healthCard.setExpirydate(Util.calDate(data));
                 }
@@ -416,7 +420,8 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             DemographicRelationship demoRel = new DemographicRelationship();
             ArrayList<HashMap> demoR = demoRel.getDemographicRelationships(demoNo);
             for (int j=0; j<demoR.size(); j++) {
-                HashMap<String,String> r = demoR.get(j);
+                HashMap<String,String> r = new HashMap<String,String>();
+                r.putAll(demoR.get(j));
                 data = r.get("demographic_no");
                 if (StringUtils.filled(data)) {
                     DemographicData.Demographic relDemo = d.getDemographic(data);
@@ -436,16 +441,22 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     String sdm = r.get("sub_decision_maker");
                     String rel = r.get("relation");
 
-                    cdsDt.PurposeEnumOrPlainText contactPurpose = contact.addNewContactPurpose();
-                    if (ec.equals("1")) contactPurpose.setPurposeAsEnum(cdsDt.PurposeEnumOrPlainText.PurposeAsEnum.EC);
-                    else if (sdm.equals("1")) contactPurpose.setPurposeAsEnum(cdsDt.PurposeEnumOrPlainText.PurposeAsEnum.SDM);
-                    else if (rel.equals("Next of Kin")) contactPurpose.setPurposeAsEnum(cdsDt.PurposeEnumOrPlainText.PurposeAsEnum.NK);
-                    else if (rel.equals("Administrative Staff")) contactPurpose.setPurposeAsEnum(cdsDt.PurposeEnumOrPlainText.PurposeAsEnum.AS);
-                    else if (rel.equals("Care Giver")) contactPurpose.setPurposeAsEnum(cdsDt.PurposeEnumOrPlainText.PurposeAsEnum.CG);
-                    else if (rel.equals("Power of Attorney")) contactPurpose.setPurposeAsEnum(cdsDt.PurposeEnumOrPlainText.PurposeAsEnum.PA);
-                    else if (rel.equals("Insurance")) contactPurpose.setPurposeAsEnum(cdsDt.PurposeEnumOrPlainText.PurposeAsEnum.IN);
-                    else if (rel.equals("Guarantor")) contactPurpose.setPurposeAsEnum(cdsDt.PurposeEnumOrPlainText.PurposeAsEnum.GT);
-                    else contactPurpose.setPurposeAsPlainText(rel);
+                    if (ec.equals("1")) {
+                        contact.addNewContactPurpose().setPurposeAsEnum(cdsDt.PurposeEnumOrPlainText.PurposeAsEnum.EC);
+                    }
+                    if (sdm.equals("1")) {
+                        contact.addNewContactPurpose().setPurposeAsEnum(cdsDt.PurposeEnumOrPlainText.PurposeAsEnum.SDM);
+                    }
+                    if (StringUtils.filled(rel)) {
+                        cdsDt.PurposeEnumOrPlainText contactPurpose = contact.addNewContactPurpose();
+                        if (rel.equals("Next of Kin")) contactPurpose.setPurposeAsEnum(cdsDt.PurposeEnumOrPlainText.PurposeAsEnum.NK);
+                        else if (rel.equals("Administrative Staff")) contactPurpose.setPurposeAsEnum(cdsDt.PurposeEnumOrPlainText.PurposeAsEnum.AS);
+                        else if (rel.equals("Care Giver")) contactPurpose.setPurposeAsEnum(cdsDt.PurposeEnumOrPlainText.PurposeAsEnum.CG);
+                        else if (rel.equals("Power of Attorney")) contactPurpose.setPurposeAsEnum(cdsDt.PurposeEnumOrPlainText.PurposeAsEnum.PA);
+                        else if (rel.equals("Insurance")) contactPurpose.setPurposeAsEnum(cdsDt.PurposeEnumOrPlainText.PurposeAsEnum.IN);
+                        else if (rel.equals("Guarantor")) contactPurpose.setPurposeAsEnum(cdsDt.PurposeEnumOrPlainText.PurposeAsEnum.GT);
+                        else contactPurpose.setPurposeAsPlainText(rel);
+                    }
 
                     if (StringUtils.filled(relDemo.getEmail())) contact.setEmailAddress(relDemo.getEmail());
                     if (StringUtils.filled(r.get("notes"))) contact.setNote(r.get("notes"));
@@ -532,8 +543,6 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                 }
                 List<CaseManagementNoteExt> cmeList = cmm.getExtByNote(cmn.getId());
 
-/*
-                if (exPersonalHistory) {
                     // PERSONAL HISTORY (SocHistory)
                     if (StringUtils.filled(socHist)) {
                         summary = socHist;
@@ -545,11 +554,8 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                             }
                         }
                         patientRec.addNewPersonalHistory().setCategorySummaryLine(summary);
-                        entries.put(this.pe+importNo, Integer.valueOf(demographicNo));
                     }
-                }
- *
- */
+                
                 if (exFamilyHistory) {
                     // FAMILY HISTORY (FamHistory)
                     if (StringUtils.filled(famHist)) {
@@ -968,7 +974,8 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                 // IMMUNIZATIONS
                 ArrayList<HashMap> prevList2 = pd.getPreventionData(demoNo);
                 for (int k =0 ; k < prevList2.size(); k++){
-                    HashMap<String,String> a = prevList2.get(k);
+                    HashMap<String,String> a = new HashMap<String,String>();
+                    a.putAll(prevList2.get(k));
                     if (a != null && inject.contains(a.get("type")) ){
                         Immunizations immu = patientRec.addNewImmunizations();
                         data = StringUtils.noNull(a.get("type"));
@@ -1059,8 +1066,13 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                             err.add("Note: Multiple components exist for Drug "+drugName+" for Patient "+demoNo+". Exporting 1st one as Strength.");
                         }
                         cdsDt.DrugMeasure drugM = medi.addNewStrength();
-                        drugM.setAmount(strength.substring(0,strength.indexOf(" ")));
-                        drugM.setUnitOfMeasure(strength.substring(strength.indexOf(" ")+1));
+                        int space = strength.indexOf(" ");
+                        if (space>0) {
+                            drugM.setAmount(strength.substring(0,space));
+                            drugM.setUnitOfMeasure(strength.substring(strength.indexOf(" ")+1));
+                        }
+                        else drugM.setAmount(strength);
+                        
                         mSummary = Util.addLine(mSummary, "Strength: ", arr[p].getGenericName()+" "+strength);
                     }
                     if (StringUtils.filled(arr[p].getDosageDisplay())) {
@@ -1088,6 +1100,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         else if (durunit.equals("M")) fctr = 30;
 
                         if (NumberUtils.isDigits(data)) {
+                            data = String.valueOf(Integer.parseInt(data)*fctr);
                             medi.setDuration(data);
                             mSummary = Util.addLine(mSummary, "Duration: ", data+" Day(s)");
                         }
@@ -1107,6 +1120,22 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     if (StringUtils.filled(arr[p].getETreatmentType())) {
                         medi.setTreatmentType(arr[p].getETreatmentType());
                         mSummary = Util.addLine(mSummary, "Treatment Type: ", arr[p].getETreatmentType());
+                    }
+                    if (StringUtils.filled(arr[p].getRxStatus())) {
+                        medi.setPrescriptionStatus(arr[p].getRxStatus());
+                        mSummary = Util.addLine(mSummary, "Prescription Status: ", arr[p].getRxStatus());
+                    }
+                    if (arr[p].getDispenseInterval()!=null) {
+                        medi.setDispenseInterval(String.valueOf(arr[p].getDispenseInterval()));
+                        mSummary = Util.addLine(mSummary, "Dispense Interval: ", arr[p].getDispenseInterval().toString());
+                    }
+                    if (arr[p].getRefillDuration()!=null) {
+                        medi.setRefillDuration(String.valueOf(arr[p].getRefillDuration()));
+                        mSummary = Util.addLine(mSummary, "Refill Duration: ", arr[p].getRefillDuration().toString());
+                    }
+                    if (arr[p].getRefillQuantity()!=null) {
+                        medi.setRefillQuantity(String.valueOf(arr[p].getRefillQuantity()));
+                        mSummary = Util.addLine(mSummary, "Refill Quantity: ", arr[p].getRefillQuantity().toString());
                     }
                     if (arr[p].getLongTerm()) {
                         medi.addNewLongTermMedication().setBoolean(arr[p].getLongTerm());
@@ -1225,8 +1254,12 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         if (StringUtils.filled(min)) refRange.setLowLimit(min);
                         if (StringUtils.filled(max)) refRange.setHighLimit(max);
                     }
-                    if (refRange.getLowLimit()!=null || refRange.getHighLimit()!=null || refRange.getReferenceRangeText()!=null) {
-                        labResults.setReferenceRange(refRange);
+                    if (refRange.getLowLimit()!=null && refRange.getHighLimit()!=null) {
+                        cds.LaboratoryResultsDocument.LaboratoryResults.ReferenceRange rr = labResults.addNewReferenceRange();
+                        rr.setLowLimit(refRange.getLowLimit());
+                        rr.setHighLimit(refRange.getHighLimit());
+                    } else if (refRange.getReferenceRangeText()!=null) {
+                        labResults.addNewReferenceRange().setReferenceRangeText(refRange.getReferenceRangeText());
                     }
 
                     String lab_no = StringUtils.noNull(labMea.getExtVal("lab_no"));
@@ -1327,6 +1360,42 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 
             if (exReportsReceived) {
                 // REPORTS RECEIVED
+                /*
+                HRMDocumentToDemographicDao hrmDocToDemographicDao = (HRMDocumentToDemographicDao) SpringUtils.getBean("HRMDocumentToDemographicDao");
+                HRMDocumentToProviderDao hrmDocToProviderDao = (HRMDocumentToProviderDao) SpringUtils.getBean("HRMDocumentToProviderDao");
+                HRMDocumentDao hrmDocDao = (HRMDocumentDao) SpringUtils.getBean("HRMDocumentDao");
+
+                List<HRMDocumentToDemographic> hrmDocToDemographics = hrmDocToDemographicDao.findByDemographicNo(demoNo);
+                for (HRMDocumentToDemographic hrmDocToDemographic : hrmDocToDemographics) {
+                    String hrmDocumentId = hrmDocToDemographic.getHrmDocumentId();
+                    List<HRMDocumentToProvider> hrmDocToProviders = hrmDocToProviderDao.findByHrmDocumentId(hrmDocumentId);
+                    List<HRMDocument> hrmDocs = hrmDocDao.findById(Integer.valueOf(hrmDocumentId));
+                    for (HRMDocument hrmDoc : hrmDocs) {
+                        hrmDoc
+
+                        ReportsReceived rpr = patientRec.addNewReportsReceived();
+                        rpr.setClass1();
+                        rpr.setContent();
+                        rpr.setEventDateTime();
+                        rpr.setFileExtensionAndVersion();
+                        rpr.setFormat();
+                        rpr.setHRMResultStatus();
+                        rpr.setMedia();
+                        rpr.setMessageUniqueID();
+                        rpr.setNotes();
+                        rpr.setOBRContentArray();
+                        rpr.setReceivedDateTime();
+                        rpr.setReportReviewedArray();
+                        rpr.setSendingFacilityId();
+                        rpr.setSendingFacilityReport();
+                        rpr.setSourceAuthorPhysician();
+                        rpr.setSourceFacility();
+                        rpr.setSubClass();
+                    }
+                }
+                 *
+                 */
+
                 ArrayList edoc_list = new EDocUtil().listDemoDocs(demoNo);
 
                 if (!edoc_list.isEmpty()) {
@@ -1407,6 +1476,12 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                             }
                             Util.writeNameSimple(rpr.addNewSourceAuthorPhysician().addNewAuthorName(), edoc.getSource());
                         }
+                        CaseManagementNoteLink cml = cmm.getLatestLinkByTableId(CaseManagementNoteLink.DOCUMENT, Long.valueOf(edoc.getDocId()));
+                        if (cml!=null) {
+                            CaseManagementNote n = cmm.getNote(cml.getNoteId().toString());
+                            if (n.getNote()!=null) rpr.setNotes(n.getNote());
+                        }
+
                     }
                 }
             }
@@ -1678,7 +1753,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	}
 	
 	//create ReadMe.txt & ExportEvent.log
-        files.add(makeReadMe(files, err, mediaType, noOfMedia));
+        files.add(makeReadMe(files, err));
         files.add(makeExportLog(files.get(0).getParentFile(), err));
 	
 	//zip all export files
@@ -1713,7 +1788,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
     return mapping.findForward(ffwd);
 }
 
-    File makeReadMe(ArrayList<File> fs, ArrayList error, String mediaType, String noOfMedia) throws IOException {
+    File makeReadMe(ArrayList<File> fs, ArrayList error) throws IOException {
         OscarProperties oscarp = oscar.OscarProperties.getInstance();
 	File readMe = new File(fs.get(0).getParentFile(), "ReadMe.txt");
 	BufferedWriter out = new BufferedWriter(new FileWriter(readMe));
@@ -1736,19 +1811,8 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	    out.write(support);
 	}
 	out.newLine();
-	out.write("Media type                         : ");
-	out.write(mediaType);
-	out.newLine();
-	out.write("Number of media                    : ");
-	out.write(noOfMedia);
-	out.newLine();
 	out.write("Date and Time stamp                : ");
 	out.write(UtilDateUtilities.getToday("yyyy-MM-dd hh:mm:ss aa"));
-	out.newLine();
-	out.write("Total byte count of export files(s): ");
-	int fileBytes=0;
-	for (File f : fs) fileBytes += f.length();
-	out.write(String.valueOf(fileBytes));
 	out.newLine();
 	out.write("Total patients files extracted     : ");
 	out.write(String.valueOf(fs.size()));

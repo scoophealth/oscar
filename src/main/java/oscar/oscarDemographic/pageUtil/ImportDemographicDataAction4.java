@@ -113,6 +113,7 @@ import cds.LaboratoryResultsDocument.LaboratoryResults;
 import cds.MedicationsAndTreatmentsDocument.MedicationsAndTreatments;
 import cds.PastHealthDocument.PastHealth;
 import cds.PatientRecordDocument.PatientRecord;
+import cds.PersonalHistoryDocument.PersonalHistory;
 import cds.ProblemListDocument.ProblemList;
 import cds.ReportsReceivedDocument.ReportsReceived;
 import cds.RiskFactorsDocument.RiskFactors;
@@ -341,14 +342,14 @@ import cds.RiskFactorsDocument.RiskFactors;
                     err_data.add("Error! No Person Status Code");
 		}
 
-                String roster_status=null, roster_date=null, end_date=null;
+                String roster_status=null, roster_date=null, term_date=null;
                 Demographics.Enrolment[] enrolments = demo.getEnrolmentArray();
                 if (enrolments.length>0) {
                     roster_status = enrolments[0].getEnrollmentStatus()!=null ? enrolments[0].getEnrollmentStatus().toString() : "";
                     if	(roster_status.equals("1")) roster_status = "RO";
                     else if (roster_status.equals("0")) roster_status = "NR";
-                    roster_date = getCalDate(enrolments[0].getEnrollmentDate(), timeShiftInDays); //roster_date=hc_renew_date in table
-                    end_date = getCalDate(enrolments[0].getEnrollmentTerminationDate(), timeShiftInDays);
+                    roster_date = getCalDate(enrolments[0].getEnrollmentDate(), timeShiftInDays);
+                    term_date = getCalDate(enrolments[0].getEnrollmentTerminationDate(), timeShiftInDays);
                 }
 		String sin = StringUtils.noNull(demo.getSIN());
 
@@ -375,12 +376,8 @@ import cds.RiskFactorsDocument.RiskFactors;
 		} else {
                     err_data.add("Error! No Unique Vendor ID Sequence");
                 }
-		if (StringUtils.filled(psDate)) {
-			dNote = Util.addLine(dNote, "Person Status Date: ", psDate);
-			err_note.add("Person Status Date imported to Patient Note");
-		}
 
-		String versionCode="", hin="", hc_type="", eff_date="";
+		String versionCode="", hin="", hc_type="", hc_renew_date="";
 		cdsDt.HealthCard healthCard = demo.getHealthCard();
 		if (healthCard!=null) {
 			hin = StringUtils.noNull(healthCard.getNumber());
@@ -392,8 +389,8 @@ import cds.RiskFactorsDocument.RiskFactors;
 				err_data.add("Error! No Province Code for health card");
 			}
 			versionCode = StringUtils.noNull(healthCard.getVersion());
-			eff_date = getCalDate(healthCard.getExpirydate());
-                        if (StringUtils.isNullOrEmpty(eff_date)) err_data.add("Error! No health card expiry date");
+			hc_renew_date = getCalDate(healthCard.getExpirydate());
+                        if (StringUtils.isNullOrEmpty(hc_renew_date)) err_data.add("Error! No health card expiry date");
 		}
 		String address="", city="", province="", postalCode="";
 		if (demo.getAddressArray().length>0) {
@@ -486,7 +483,7 @@ import cds.RiskFactorsDocument.RiskFactors;
 			demographic = dd.getDemographic(demographicNo);
 		}
 		if (demographic==null) { //demo not found, add patient
-			demoRes = dd.addDemographic(title, lastName, firstName, address, city, province, postalCode, homePhone, workPhone, year_of_birth, month_of_birth, date_of_birth, hin, versionCode, roster_status, patient_status, ""/*date_joined*/, chart_no, official_lang, spoken_lang, primaryPhysician, sex, end_date, eff_date, ""/*pcn_indicator*/, hc_type, roster_date, ""/*family_doctor*/, email, ""/*pin*/, ""/*alias*/, ""/*previousAddress*/, ""/*children*/, ""/*sourceOfIncome*/, ""/*citizenship*/, sin);
+			demoRes = dd.addDemographic(title, lastName, firstName, address, city, province, postalCode, homePhone, workPhone, year_of_birth, month_of_birth, date_of_birth, hin, versionCode, roster_status, roster_date, term_date, patient_status, psDate, ""/*date_joined*/, chart_no, official_lang, spoken_lang, primaryPhysician, sex, ""/*end_date*/, ""/*eff_date*/, ""/*pcn_indicator*/, hc_type, hc_renew_date, ""/*family_doctor*/, email, ""/*pin*/, ""/*alias*/, ""/*previousAddress*/, ""/*children*/, ""/*sourceOfIncome*/, ""/*citizenship*/, sin);
 			demographicNo = demoRes.getId();
                         entries.put(PATIENTID+importNo, Integer.valueOf(demographicNo));
 		} else if (StringUtils.nullSafeEqualsIgnoreCase(demographic.getPatientStatus(), "Contact-only")) { //replace contact
@@ -501,20 +498,21 @@ import cds.RiskFactorsDocument.RiskFactors;
 			demographic.setJustHIN(hin);
 			demographic.setVersionCode(versionCode);
 			demographic.setRosterStatus(roster_status);
+                        demographic.setRosterDate(roster_date);
+                        demographic.setRosterTerminationDate(term_date);
 			demographic.setPatientStatus(patient_status);
+                        demographic.setPatientStatusDate(psDate);
 			demographic.setChartNo(chart_no);
 			demographic.setOfficialLang(official_lang);
 			demographic.setSpokenLang(spoken_lang);
 			demographic.setFamilyDoctor(primaryPhysician);
 			demographic.setSex(sex);
-			demographic.setEndDate(end_date);
-			demographic.setEffDate(eff_date);
 			demographic.setHCType(hc_type);
-			demographic.setDateJoined(roster_date);
+                        demographic.setHCRenewDate(hc_renew_date);
 			demographic.setSin(sin);
 			dd.setDemographic(demographic);
 			err_note.add("Replaced Contact-only patient "+patientName+" (Demo no="+demographicNo+")");
-			demoRes = dd.addDemographic(title, lastName, firstName, address, city, province, postalCode, homePhone, workPhone, year_of_birth, month_of_birth, date_of_birth, hin, versionCode, roster_status, patient_status, ""/*date_joined*/, chart_no, official_lang, spoken_lang, primaryPhysician, sex, end_date, eff_date, ""/*pcn_indicator*/, hc_type, roster_date, ""/*family_doctor*/, email, ""/*pin*/, ""/*alias*/, ""/*previousAddress*/, ""/*children*/, ""/*sourceOfIncome*/, ""/*citizenship*/, sin);
+			demoRes = dd.addDemographic(title, lastName, firstName, address, city, province, postalCode, homePhone, workPhone, year_of_birth, month_of_birth, date_of_birth, hin, versionCode, roster_status, roster_date, term_date, patient_status, psDate, ""/*date_joined*/, chart_no, official_lang, spoken_lang, primaryPhysician, sex, ""/*end_date*/, ""/*eff_date*/, ""/*pcn_indicator*/, hc_type, hc_renew_date, ""/*family_doctor*/, email, ""/*pin*/, ""/*alias*/, ""/*previousAddress*/, ""/*children*/, ""/*sourceOfIncome*/, ""/*citizenship*/, sin);
 		}
 		
 		if (StringUtils.filled(demographicNo))
@@ -590,8 +588,9 @@ import cds.RiskFactorsDocument.RiskFactors;
 				String cDemoNo = dd.getDemoNoByNamePhoneEmail(cFirstName, cLastName, homePhone, workPhone, cEmail);
 				String cPatient = cLastName+","+cFirstName;
 				if (StringUtils.empty(cDemoNo)) {   //add new demographic as contact
+                                        psDate = UtilDateUtilities.DateToString(new Date(),"yyyy-MM-dd");
 					demoRes = dd.addDemographic("", cLastName, cFirstName, "", "", "", "", homePhone, workPhone, null, null,
-					null, "", "", "", "Contact-only", "", "", "", "", "", "F", "", "", "", "", "", "", cEmail, "", "", "", "", "", "", "");
+					null, "", "", "", "Contact-only", psDate, "", "", "", "", "", "", "", "F", "", "", "", "", "", "", cEmail, "", "", "", "", "", "", "");
 					cDemoNo = demoRes.getId();
 					err_note.add("Contact-only patient "+cPatient+" (Demo no="+cDemoNo+") created");
 
@@ -607,7 +606,7 @@ import cds.RiskFactorsDocument.RiskFactors;
 				}
 			}
 
-/*
+			Set<CaseManagementIssue> scmi = null;	//Declare a set for CaseManagementIssues
 			//PERSONAL HISTORY
 			PersonalHistory[] pHist = patientRec.getPersonalHistoryArray();
 			for (int i=0; i<pHist.length; i++) {
@@ -615,20 +614,14 @@ import cds.RiskFactorsDocument.RiskFactors;
 				CaseManagementNote cmNote = prepareCMNote();
 				cmNote.setIssues(scmi);
 				String socialHist = "";
-				if (StringUtils.filled(pHist[i].getCategorySummaryLine())) {
-					socialHist = Util.addLine(socialHist, pHist[i].getCategorySummaryLine().trim());
-				} else {
-					err_summ.add("No Summary for Personal History ("+(i+1)+")");
-				}
+				if (StringUtils.filled(pHist[i].getCategorySummaryLine()))
+                                    socialHist = Util.addLine(socialHist, pHist[i].getCategorySummaryLine().trim());
 				socialHist = Util.addLine(socialHist, getResidual(pHist[i].getResidualInfo()));
 				if (StringUtils.filled(socialHist)) {
 					cmNote.setNote(socialHist);
 					caseManagementManager.saveNoteSimple(cmNote);
 				}
 			}
- * 
- */
-			Set<CaseManagementIssue> scmi = null;	//Declare a set for CaseManagementIssues
 			//FAMILY HISTORY
 			FamilyHistory[] fHist = patientRec.getFamilyHistoryArray();
 			for (int i=0; i<fHist.length; i++) {
@@ -1034,9 +1027,16 @@ import cds.RiskFactorsDocument.RiskFactors;
                                 if (NumberUtils.isDigits(medArray[i].getNumberOfRefills())) drug.setRepeat(Integer.valueOf(medArray[i].getNumberOfRefills()));
 
                                 drug.setETreatmentType(medArray[i].getTreatmentType());
+                                drug.setRxStatus(medArray[i].getPrescriptionStatus());
                                 drug.setNoSubs(medArray[i].getSubstitutionNotAllowed().equalsIgnoreCase("Y"));
                                 drug.setNonAuthoritative(medArray[i].getNonAuthoritativeIndicator().equalsIgnoreCase("Y"));
                                 if (StringUtils.isNullOrEmpty(medArray[i].getNonAuthoritativeIndicator())) err_data.add("Error! No non-authoritative indicator for Medications & Treatments ("+(i+1)+")");
+                                if (NumberUtils.isDigits(medArray[i].getDispenseInterval())) drug.setDispenseInterval(Integer.parseInt(medArray[i].getDispenseInterval()));
+                                else err_data.add("Error! Invalid Dispense Interval for Medications & Treatments ("+(i+1)+")");
+                                if (NumberUtils.isDigits(medArray[i].getRefillDuration())) drug.setRefillDuration(Integer.parseInt(medArray[i].getRefillDuration()));
+                                else err_data.add("Error! Invalid Refill Duration for Medications & Treatments ("+(i+1)+")");
+                                if (NumberUtils.isDigits(medArray[i].getRefillQuantity())) drug.setRefillQuantity(Integer.parseInt(medArray[i].getRefillQuantity()));
+                                else err_data.add("Error! Invalid Refill Quantity for Medications & Treatments ("+(i+1)+")");
 
 				String take = StringUtils.noNull(medArray[i].getDosage()).trim();
                                 drug.setTakeMin(trimNaN(take));
@@ -1488,11 +1488,14 @@ import cds.RiskFactorsDocument.RiskFactors;
 						observationDate = dateTimeFullPartial(repR[i].getEventDateTime(), timeShiftInDays);
 						updateDateTime = dateTimeFullPartial(repR[i].getReceivedDateTime(), timeShiftInDays);
 
-						EDocUtil.addDocument(demographicNo,docFileName,docDesc,docType,contentType,observationDate,updateDateTime,docCreator,admProviderNo,reviewer,reviewDateTime, source);
+						int key = EDocUtil.addDocument(demographicNo,docFileName,docDesc,docType,contentType,observationDate,updateDateTime,docCreator,admProviderNo,reviewer,reviewDateTime, source);
                                                 if (binaryFormat) addOneEntry(REPORTBINARY);
                                                 else addOneEntry(REPORTTEXT);
 						if (StringUtils.filled(repR[i].getSubClass())) {
-							err_note.add("Subclass not imported - Report ("+(i+1)+")");
+                                                    CaseManagementNote cmNote = prepareCMNote();
+                                                    cmNote.setNote("Sub-class: "+repR[i].getSubClass());
+                                                    saveLinkNote(cmNote, CaseManagementNoteLink.DOCUMENT, (long)key);
+
 						}
 					}
 				}
