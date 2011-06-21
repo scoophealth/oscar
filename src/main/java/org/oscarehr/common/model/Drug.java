@@ -112,17 +112,14 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
         private Date pickupDateTime;
         private String eTreatmentType = null;
         private String rxStatus = null;
-
-	@Column(name="refill_duration")
-	private Integer refillDuration;
-	@Column(name="refill_quantity")
-	private Integer refillQuantity;
-	@Column(name="dispense_interval")
-
-	private int dispenseInterval;
 	@Column(name="hide_cpp")
 	private boolean hideFromCpp;
-
+        @Column(name="refill_duration")
+        private Integer refillDuration;
+        @Column(name="refill_quantity")
+        private Integer refillQuantity;
+        @Column(name="dispense_interval")
+        private Integer dispenseInterval;
 	// ///
 	@Transient
 	private String remoteFacilityName = null;

@@ -21,7 +21,7 @@
  * Ontario, Canada   Creates a new instance of ImportDemographicDataAction
  *
  *
- * * ImportDemographicDataAction2.java
+ * * ImportDemographicDataAction4.java
  *
  * Created on Oct 2, 2007
  */
@@ -117,6 +117,10 @@ import cds.PersonalHistoryDocument.PersonalHistory;
 import cds.ProblemListDocument.ProblemList;
 import cds.ReportsReceivedDocument.ReportsReceived;
 import cds.RiskFactorsDocument.RiskFactors;
+import org.oscarehr.hospitalReportManager.dao.HRMDocumentDao;
+import org.oscarehr.hospitalReportManager.dao.HRMDocumentSubClassDao;
+import org.oscarehr.hospitalReportManager.model.HRMDocument;
+import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 
 /**
  *
@@ -933,12 +937,23 @@ import cds.RiskFactorsDocument.RiskFactors;
 						err_note.add("Clinical notes have no signer; assigned to \"doctor oscardoc\" ("+(i+1)+")");
 					}
 					cmNote.setProviderNo(signingProvider);
-                                        cmNote.setSigning_provider_no(signingProvider);
                                     }
-                                    encounter = Util.addLine(encounter,"Signing Physician OHIP Id: ",participatingProviders[0].getOHIPPhysicianId());
+                                    if (participatingProviders[0].getDateTimeNoteCreated()!=null) {
+                                        cmNote.setCreate_date(dDateTimeFullPartial(participatingProviders[0].getDateTimeNoteCreated(), timeShiftInDays));
+                                    }
                                 }
-
-				encounter = Util.addLine(encounter,"Entered DateTime: ",dateTimeFullPartial(cNotes[i].getEnteredDateTime(), timeShiftInDays));
+                                ClinicalNotes.NoteReviewer[] noteReviewers = cNotes[i].getNoteReviewerArray();
+                                if (noteReviewers.length>0) {
+                                    if (noteReviewers[0].getName()!=null) {
+					String[] authorName = getPersonName(noteReviewers[0].getName());
+					String reviewerOHIP = noteReviewers[0].getOHIPPhysicianId();
+					String reviewer = writeProviderData(authorName[0], authorName[1], reviewerOHIP);
+                                        cmNote.setSigning_provider_no(reviewer);
+                                    }
+                                    if (noteReviewers[0].getDateTimeNoteReviewed()!=null) {
+                                        Util.addLine(encounter, "Review Date: ", dateTimeFullPartial(noteReviewers[0].getDateTimeNoteReviewed(), timeShiftInDays));
+                                    }
+                                }
 				if (StringUtils.filled(encounter)) {
 					cmNote.setNote(encounter);
 					caseManagementManager.saveNoteSimple(cmNote);
@@ -1007,7 +1022,7 @@ import cds.RiskFactorsDocument.RiskFactors;
                                 String duration = medArray[i].getDuration();
                                 drug.setDuration(duration);
                                 drug.setDurUnit("D");
-                                if (duration!=null && !NumberUtils.isDigits(duration)) duration = "0";
+                                if (duration==null || !NumberUtils.isDigits(duration)) duration = "0";
 
                                 Calendar endDate = Calendar.getInstance();
                                 endDate.setTime(drug.getRxDate());
@@ -1024,24 +1039,31 @@ import cds.RiskFactorsDocument.RiskFactors;
 				drug.setLongTerm(getYN(medArray[i].getLongTermMedication()).equals("Yes"));
 				drug.setPastMed(getYN(medArray[i].getPastMedications()).equals("Yes"));
                                 drug.setPatientCompliance(getYN(medArray[i].getPatientCompliance()));
-                                if (NumberUtils.isDigits(medArray[i].getNumberOfRefills())) drug.setRepeat(Integer.valueOf(medArray[i].getNumberOfRefills()));
 
+                                if (NumberUtils.isDigits(medArray[i].getNumberOfRefills())) drug.setRepeat(Integer.valueOf(medArray[i].getNumberOfRefills()));
                                 drug.setETreatmentType(medArray[i].getTreatmentType());
                                 drug.setRxStatus(medArray[i].getPrescriptionStatus());
-                                drug.setNoSubs(medArray[i].getSubstitutionNotAllowed().equalsIgnoreCase("Y"));
-                                drug.setNonAuthoritative(medArray[i].getNonAuthoritativeIndicator().equalsIgnoreCase("Y"));
-                                if (StringUtils.isNullOrEmpty(medArray[i].getNonAuthoritativeIndicator())) err_data.add("Error! No non-authoritative indicator for Medications & Treatments ("+(i+1)+")");
+
+                                String nosub = medArray[i].getSubstitutionNotAllowed();
+                                if (nosub!=null) drug.setNoSubs(nosub.equalsIgnoreCase("Y"));
+
+                                String non_auth = medArray[i].getNonAuthoritativeIndicator();
+                                if (non_auth!=null) drug.setNonAuthoritative(non_auth.equalsIgnoreCase("Y"));
+                                else  err_data.add("Error! No non-authoritative indicator for Medications & Treatments ("+(i+1)+")");
+
                                 if (NumberUtils.isDigits(medArray[i].getDispenseInterval())) drug.setDispenseInterval(Integer.parseInt(medArray[i].getDispenseInterval()));
                                 else err_data.add("Error! Invalid Dispense Interval for Medications & Treatments ("+(i+1)+")");
+
                                 if (NumberUtils.isDigits(medArray[i].getRefillDuration())) drug.setRefillDuration(Integer.parseInt(medArray[i].getRefillDuration()));
                                 else err_data.add("Error! Invalid Refill Duration for Medications & Treatments ("+(i+1)+")");
+                                
                                 if (NumberUtils.isDigits(medArray[i].getRefillQuantity())) drug.setRefillQuantity(Integer.parseInt(medArray[i].getRefillQuantity()));
                                 else err_data.add("Error! Invalid Refill Quantity for Medications & Treatments ("+(i+1)+")");
 
 				String take = StringUtils.noNull(medArray[i].getDosage()).trim();
-                                drug.setTakeMin(trimNaN(take));
+                                drug.setTakeMin(Util.leadingNum(take));
                                 int sep = take.indexOf("-");
-                                if (sep>0) drug.setTakeMax(trimNaN(take.substring(sep+1)));
+                                if (sep>0) drug.setTakeMax(Util.leadingNum(take.substring(sep+1)));
                                 else drug.setTakeMax(drug.getTakeMin());
                                 drug.setUnit(medArray[i].getDosageUnitOfMeasure());
                                 drug.setDemographicId(Integer.valueOf(demographicNo));
@@ -1427,8 +1449,35 @@ import cds.RiskFactorsDocument.RiskFactors;
 			}
 
 			//REPORTS RECEIVED
-			ReportsReceived[] repR = patientRec.getReportsReceivedArray();
+
+                        HRMDocumentDao hrmDocDao = (HRMDocumentDao) SpringUtils.getBean("HRMDocumentDao");
+                        HRMDocumentSubClassDao hrmDocSubClassDao = (HRMDocumentSubClassDao) SpringUtils.getBean("HRMDocumentSubClassDao");
+
+                        ReportsReceived[] repR = patientRec.getReportsReceivedArray();
 			for (int i=0; i<repR.length; i++) {
+                            if (repR[i].isSetHRMResultStatus() || repR[i].getOBRContentArray()!=null) { //HRM reports
+                                HRMDocument hrmDoc = new HRMDocument();
+
+                                if (repR[i].getHRMResultStatus()!=null) hrmDoc.setReportStatus(repR[i].getHRMResultStatus());
+                                if (repR[i].getClass1()!=null) hrmDoc.setReportType(repR[i].getClass1().toString());
+                                if (repR[i].getContent()!=null && repR[i].getContent().getTextContent()!=null)  hrmDoc.setReportFile(repR[i].getContent().getTextContent());
+                                if (repR[i].getEventDateTime()!=null) hrmDoc.setReportDate(dDateTimeFullPartial(repR[i].getEventDateTime(), timeShiftInDays));
+                                if (repR[i].getReceivedDateTime()!=null) hrmDoc.setTimeReceived(dDateTimeFullPartial(repR[i].getReceivedDateTime(), timeShiftInDays));
+                                hrmDocDao.merge(hrmDoc);
+
+                                ReportsReceived.OBRContent[] obr = repR[i].getOBRContentArray();
+                                for (int j=0; j<obr.length; j++) {
+                                    HRMDocumentSubClass hrmDocSc = new HRMDocumentSubClass();
+                                    if (obr[j].getAccompanyingSubClass()!=null) hrmDocSc.setSubClass(obr[j].getAccompanyingSubClass());
+                                    if (obr[j].getAccompanyingDescription()!=null) hrmDocSc.setSubClassDescription(obr[j].getAccompanyingDescription());
+                                    if (obr[j].getAccompanyingMnemonic()!=null) hrmDocSc.setSubClassMnemonic(obr[j].getAccompanyingMnemonic());
+                                    if (obr[j].getObservationDateTime()!=null) hrmDocSc.setSubClassDateTime(dDateTimeFullPartial(obr[j].getObservationDateTime(), timeShiftInDays));
+                                    hrmDocSc.setHrmDocumentId(hrmDoc.getId());
+                                    hrmDocSc.setActive(true);
+                                    hrmDocSubClassDao.merge(hrmDocSc);
+                                }
+                                
+                            } else { //non-HRM reports
                                 boolean binaryFormat = false;
                                 if (repR[i].getFormat()!=null) {
                                     if (repR[i].getFormat().equals(cdsDt.ReportFormat.BINARY)) binaryFormat = true;
@@ -1499,6 +1548,7 @@ import cds.RiskFactorsDocument.RiskFactors;
 						}
 					}
 				}
+                            }
 			}
 
                         /*
@@ -1825,7 +1875,6 @@ import cds.RiskFactorsDocument.RiskFactors;
                     if (id==null) id = 0;
                     out.write(fillUp(id.toString(), ' ', column1.length()));
                     out.write(" |");
-
                     String[] info = (String[]) demo.get(i);
                     String[] text = info[info.length-1].split("\n");
                     out.write(text[0]);
@@ -1839,6 +1888,7 @@ import cds.RiskFactorsDocument.RiskFactors;
                     out.write(fillUp("",'-',tableWidth)); out.newLine();
                 }
 		out.close();
+                importNo = 0;
 		return importLog;
 	}
 
@@ -2360,18 +2410,6 @@ import cds.RiskFactorsDocument.RiskFactors;
                         s.append("\n");
 		}
 	}
-
-        float trimNaN(String s) {
-            s = s.trim();
-            for (int i=0; i<s.length(); i++) {
-                if (!".0123456789".contains(s.substring(i,i+1))) {
-                    s = s.substring(0, i);
-                    break;
-                }
-            }
-            if (NumberUtils.isDigits(s)) return Float.valueOf(s);
-            else return 0;
-        }
 
         void addOneEntry(String category) {
             if (StringUtils.isNullOrEmpty(category)) return;

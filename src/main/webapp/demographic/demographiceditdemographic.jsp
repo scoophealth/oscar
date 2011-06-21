@@ -1374,6 +1374,7 @@ if(oscarVariables.getProperty("demographicExt") != null) {
 							    <td align="left">
 					<% String lang = apptMainBean.getString(rs,"official_lang"); %>
 								<select name="official_lang">
+                                                                    <option value="">--</option>
 								    <option value="English" <%=lang.equals("English")?"selected":""%> ><bean:message key="demographic.demographiceditdemographic.msgEnglish"/></option>
 								    <option value="French" <%=lang.equals("French")?"selected":""%> ><bean:message key="demographic.demographiceditdemographic.msgFrench"/></option>
 								</select>
