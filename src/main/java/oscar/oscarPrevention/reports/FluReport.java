@@ -37,9 +37,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDemographic.data.DemographicData;
@@ -72,8 +75,19 @@ public class FluReport implements PreventionReport {
 
              //search   prevention_date prevention_type  deleted   refused 
              
-             ArrayList  prevs = pd.getPreventionData("Flu",demo); 
-             ArrayList noFutureItems =  removeFutureItems(prevs, asofDate);
+             ArrayList<Map<String,Object>>  prevs = pd.getPreventionData("Flu",demo); 
+
+             LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+             if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
+            	 try {
+	                ArrayList<HashMap<String,Object>> remotePreventions=PreventionData.getLinkedRemotePreventionData("Flu", Integer.parseInt(demo));
+	                prevs.addAll(remotePreventions);
+                } catch (Exception e) {
+                	log.error("Error getting remote preventions.", e);
+                }
+             }
+             
+             ArrayList<Map<String,Object>> noFutureItems =  removeFutureItems(prevs, asofDate);
              PreventionReportDisplay prd = new PreventionReportDisplay();
              prd.demographicNo = demo;
              prd.bonusStatus = "N";
@@ -103,7 +117,7 @@ public class FluReport implements PreventionReport {
                 prd.numMonths = "------";
                 prd.color = "Magenta";
              } else{
-                Hashtable h = (Hashtable) noFutureItems.get(noFutureItems.size()-1);
+                Map<String,Object> h =  noFutureItems.get(noFutureItems.size()-1);
                 DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
                 boolean refused = false;
                 
@@ -119,7 +133,7 @@ public class FluReport implements PreventionReport {
                     log.debug("REFUSED AND PREV IS greater than one for demo "+demo);
                     for (int pr = (noFutureItems.size() -2) ; pr > -1; pr--){
                         log.debug("pr #"+pr);
-                        Hashtable h2 = (Hashtable) noFutureItems.get(pr);
+                        Map<String,Object> h2 = noFutureItems.get(pr);
                         log.debug("pr #"+pr+ "  "+((String) h2.get("refused")));
                         if ( h2.get("refused") != null && ((String) h2.get("refused")).equals("0")){
                             prevDateStr = (String) h2.get("prevention_date");
@@ -147,7 +161,6 @@ public class FluReport implements PreventionReport {
 //               
                 
                 
-                Calendar today = Calendar.getInstance(); 
                 String numMonths = "------";
                 if ( prevDate != null){
                    int num = UtilDateUtilities.getNumMonths(prevDate,asofDate);
@@ -330,19 +343,19 @@ public class FluReport implements PreventionReport {
    }
     
     
-   ArrayList removeFutureItems(ArrayList list,Date asOfDate){
-       ArrayList noFutureItems = new ArrayList();
+   ArrayList<Map<String,Object>> removeFutureItems(ArrayList<Map<String,Object>> list,Date asOfDate){
+       ArrayList<Map<String,Object>> noFutureItems = new ArrayList<Map<String,Object>>();
        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
        for (int i =0; i < list.size(); i ++){
-            Hashtable h = (Hashtable) list.get(i);       
-            String prevDateStr = (String) h.get("prevention_date");
+            Map<String,Object> map = list.get(i);       
+            String prevDateStr = (String) map.get("prevention_date");
             Date prevDate = null;
             try{
-                prevDate = (java.util.Date)formatter.parse(prevDateStr);
+                prevDate = formatter.parse(prevDateStr);
             }catch (Exception e){}
 
             if (prevDate != null && prevDate.before(asOfDate)){
-               noFutureItems.add(h);
+               noFutureItems.add(map);
             }
        }
        return noFutureItems;

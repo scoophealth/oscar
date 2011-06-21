@@ -30,9 +30,9 @@ package oscar.oscarPrevention;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.jdom.Attribute;
@@ -171,7 +171,7 @@ public class PreventionDisplayConfig {
     }
 
 
-    public String getDisplay(Hashtable setHash, String Demographic_no) {
+    public String getDisplay(Map setHash, String Demographic_no) {
         String display = "style=\"display:none;\"";
         DemographicData dData = new DemographicData();
         log.debug("demoage " + Demographic_no);
@@ -227,15 +227,7 @@ public class PreventionDisplayConfig {
         return display;
     }
 
-    public void showAllElements(Hashtable h){
-       Enumeration e = h.keys();//elements();
-       while(e.hasMoreElements()){
-          
-          log.debug(e.nextElement());
-       }
-    }
-    
-    public boolean display(Hashtable setHash, String Demographic_no,int numberOfPrevs) {
+    public boolean display(Map setHash, String Demographic_no,int numberOfPrevs) {
         boolean display = false;
         DemographicData dData = new DemographicData();
         log.debug("demoage " + Demographic_no);
