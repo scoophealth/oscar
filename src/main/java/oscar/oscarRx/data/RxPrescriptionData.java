@@ -754,7 +754,11 @@ public class RxPrescriptionData {
                     p.setPatientCompliance(rs.getInt("patient_compliance"));
                     p.setOutsideProviderName(oscar.Misc.getString(rs, "outside_provider_name"));
                     p.setOutsideProviderOhip(oscar.Misc.getString(rs, "outside_provider_ohip"));
-
+                    p.setHideCpp(rs.getBoolean("hide_cpp"));
+                    p.setDispenseInterval(rs.getInt("dispense_interval"));
+                    p.setRefillDuration(rs.getInt("refill_duration"));
+                    p.setRefillQuantity(rs.getInt("refill_quantity"));
+                    
                     if (myOscarEnabled) {
                         String tmp = indivoSql.replaceFirst("\\?", oscar.Misc.getString(rs, "drugid"));
                         rs2 = DBHandler.GetSQL(tmp);
@@ -1036,8 +1040,18 @@ public class RxPrescriptionData {
         private int refillDuration = 0;
         private int refillQuantity = 0;
         private int dispenseInterval = 0;
+        private boolean hideCpp=false;
         
-        public String getETreatmentType(){
+        
+        public boolean isHideCpp() {
+        	return hideCpp;
+        }
+
+		public void setHideCpp(boolean hideCpp) {
+        	this.hideCpp = hideCpp;
+        }
+
+		public String getETreatmentType(){
         	return eTreatmentType;
         }
         
