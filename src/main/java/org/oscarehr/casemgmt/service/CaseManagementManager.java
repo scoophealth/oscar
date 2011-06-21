@@ -367,7 +367,7 @@ public class CaseManagementManager {
 
 	public CaseManagementNoteExt getNoteExt(Long id) {
 		return this.caseManagementNoteExtDAO.getNoteExt(id);
-	}
+	}		
 
 	public List getExtByNote(Long noteId) {
 		return this.caseManagementNoteExtDAO.getExtByNote(noteId);

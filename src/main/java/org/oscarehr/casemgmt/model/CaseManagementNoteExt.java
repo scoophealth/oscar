@@ -39,6 +39,7 @@ public class CaseManagementNoteExt {
 	public static String EXPOSUREDETAIL = "Exposure Details";
 	public static String RELATIONSHIP   = "Relationship"	;
 	public static String LIFESTAGE	    = "Life Stage"	;
+	public static String HIDECPP	    = "Hide Cpp"	;
 	
 	
 	//Class fields
