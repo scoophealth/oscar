@@ -161,6 +161,18 @@
 			<td><html:checkbox property="facility.enableEncounterTransportationTime" /></td>
 		</tr>
 		
+		<tr class="b">
+			<td width="20%">Rx Interaction Warning Level:</td>
+			<td>
+				<html:select property="facility.rxInteractionWarningLevel">
+					<html:option value="0">Not Specified</html:option>
+					<html:option value="1">Low</html:option>
+					<html:option value="2">Medium</html:option>
+					<html:option value="3">High</html:option>
+				</html:select>
+			</td>
+		</tr>
+		
 		<tr>
 			<td colspan="2"><html:submit property="submit.save" onclick="bCancel=false;">Save</html:submit>
 			<html:cancel>Cancel</html:cancel></td>

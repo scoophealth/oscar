@@ -10,8 +10,12 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
 <%@ page import="java.util.*,java.text.*,java.sql.*,java.net.*" errorPage="errorpage.jsp" %>
 <%@ page import="oscar.OscarProperties" %>
+<%@ page import="org.oscarehr.common.dao.UserPropertyDAO"%>
+<%@ page import="org.oscarehr.common.model.UserProperty"%>
+<%@ page import="org.oscarehr.util.SpringUtils"%>
 <%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 <!--  
 /*
@@ -48,6 +52,7 @@
 <%@page import="org.oscarehr.common.model.EncounterForm"%><html:html locale="true">
 
 <head>
+<c:set var="ctx" value="${pageContext.request.contextPath}" />
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="provider.providerpreference.title" /></title>
 <script type="text/javascript" src="../share/javascript/prototype.js"></script>
@@ -422,8 +427,43 @@ function showHideBillPref() {
 							</td>
 						</tr>
 					</table>
+	            </td>	            
+			</tr>	
+			
+			<tr>
+				<%
+					UserPropertyDAO propertyDao = (UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
+					UserProperty prop = propertyDao.getProp(providerNo,"rxInteractionWarningLevel");
+					String warningLevel = "0";
+					if(prop!=null) {
+						warningLevel = prop.getValue();
+					}					
+				%>
+				<td class="preferenceLabel">
+					<bean:message key="provider.providerpreference.rxInteractionWarningLevel" />
+				</td>			
+				<td class="preferenceValue">
+					<select id="rxInteractionWarningLevel">
+						<option value="0" <%=(warningLevel.equals("0")?"selected=\"selected\"":"") %>>Not Specified</option>
+						<option value="1" <%=(warningLevel.equals("1")?"selected=\"selected\"":"") %>>Low</option>
+						<option value="2" <%=(warningLevel.equals("2")?"selected=\"selected\"":"") %>>Medium</option>
+						<option value="3" <%=(warningLevel.equals("3")?"selected=\"selected\"":"") %>>High</option>
+					</select>
 	            </td>
-			</tr>		
+        <script>
+Event.observe('rxInteractionWarningLevel', 'change', function(event) {
+	var value = $('rxInteractionWarningLevel').getValue();	
+	
+	new Ajax.Request('<c:out value="${ctx}"/>/provider/rxInteractionWarningLevel.do?method=update&value='+value, {
+		  method: 'get',
+		  onSuccess: function(transport) {		   
+		  }
+		});
+
+});
+
+</script>	            
+			</tr>						
 		
 		
 		</table>

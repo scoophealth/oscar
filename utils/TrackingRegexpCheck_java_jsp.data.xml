@@ -4326,6 +4326,7 @@
     </ViolationSet>
     <ViolationSet>
         <ViolationKey>.*StringBuffer.*|.*Hashtable.*|.*Vector.*</ViolationKey>
+	<ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:Hashtable ht=(Hashtable)all.get(x);</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/common/DatePickerTag.java:StringBuffer results = new StringBuffer("&lt;table");</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/common/DatePickerTag.java:StringBuffer results = new StringBuffer();</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/common/DatePickerTag.java:protected void prepareValue(StringBuffer results) throws JspException {</ViolationValue>

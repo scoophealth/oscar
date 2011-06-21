@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
+import org.jfree.util.Log;
 import org.oscarehr.common.dao.EFormDao;
 import org.oscarehr.common.dao.EncounterFormDao;
 import org.oscarehr.common.dao.ProviderPreferenceDao;
@@ -57,8 +58,15 @@ public final class ProviderPreferencesUIBean {
 			providerPreference.setDefaultDoNotDeleteBilling(Integer.parseInt(temp));
 		} else {
 			temp = StringUtils.trimToNull(String.valueOf(session.getAttribute("caisiBillingPreferenceNotDelete")));
-			if (temp == null) providerPreference.setDefaultDoNotDeleteBilling(0);
-			else providerPreference.setDefaultDoNotDeleteBilling(Integer.parseInt(temp));
+			if (temp == null) 
+				providerPreference.setDefaultDoNotDeleteBilling(0);
+			else  {
+				int defBilling = 0;
+				try {
+					defBilling = Integer.parseInt(temp);
+				} catch(NumberFormatException e) {Log.warn("warning",e);}
+				providerPreference.setDefaultDoNotDeleteBilling(defBilling);
+			}
 		}
 		
 		// default billing dxCode 
