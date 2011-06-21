@@ -108,8 +108,7 @@ public class CommonLabResultData {
 			labs.addAll(pathLabs);
 		}
 		if (hl7text != null && hl7text.trim().equals("yes")) {
-			Hl7textResultsData hl7Data = new Hl7textResultsData();
-			ArrayList<LabResultData> hl7Labs = hl7Data.populateHL7ResultsData(demographicNo, reqId, attach);
+			ArrayList<LabResultData> hl7Labs = Hl7textResultsData.populateHL7ResultsData(demographicNo, reqId, attach);
 			labs.addAll(hl7Labs);
 		}
 
@@ -154,8 +153,7 @@ public class CommonLabResultData {
 			}
 			if (hl7text != null && hl7text.trim().equals("yes")) {
 
-				Hl7textResultsData hl7Data = new Hl7textResultsData();
-				ArrayList hl7Labs = hl7Data.populateHl7ResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
+				ArrayList hl7Labs = Hl7textResultsData.populateHl7ResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
 				labs.addAll(hl7Labs);
 			}
 		}
@@ -233,8 +231,7 @@ public class CommonLabResultData {
 			}
 			if (hl7text != null && hl7text.trim().equals("yes")) {
 
-				Hl7textResultsData hl7Data = new Hl7textResultsData();
-				ArrayList<LabResultData> hl7Labs = hl7Data.populateHl7ResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
+				ArrayList<LabResultData> hl7Labs = Hl7textResultsData.populateHl7ResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
 				labs.addAll(hl7Labs);
 			}
 		}
@@ -446,8 +443,7 @@ public class CommonLabResultData {
 	public String getMatchingLabs(String lab_no, String lab_type) {
 		String labs = null;
 		if (lab_type.equals(LabResultData.HL7TEXT)) {
-			Hl7textResultsData data = new Hl7textResultsData();
-			labs = data.getMatchingLabs(lab_no);
+			labs = Hl7textResultsData.getMatchingLabs(lab_no);
 		} else if (lab_type.equals(LabResultData.MDS)) {
 			MDSResultsData data = new MDSResultsData();
 			labs = data.getMatchingLabs(lab_no);
@@ -543,8 +539,7 @@ public class CommonLabResultData {
 
 	public static void populateMeasurementsTable(String labId, String demographicNo, String labType) {
 		if (labType.equals(LabResultData.HL7TEXT)) {
-			Hl7textResultsData rd = new Hl7textResultsData();
-			rd.populateMeasurementsTable(labId, demographicNo);
+			Hl7textResultsData.populateMeasurementsTable(labId, demographicNo);
 		}
 	}
 

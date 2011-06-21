@@ -42,8 +42,7 @@ if(demographicID != null && !demographicID.equals("")&& !demographicID.equals("0
 }
 
 boolean ackFlag = false;
-AcknowledgementData ackData = new AcknowledgementData();
-ArrayList ackList = ackData.getAcknowledgements(segmentID);
+ArrayList ackList = AcknowledgementData.getAcknowledgements(segmentID);
 if (ackList != null){
     for (int i=0; i < ackList.size(); i++){
         ReportStatus reportStatus = (ReportStatus) ackList.get(i);
@@ -53,10 +52,10 @@ if (ackList != null){
         }
     }
 }
-MessageHandler handler = Factory.getHandler(segmentID);
-Hl7textResultsData data = new Hl7textResultsData();
-String multiLabId = data.getMatchingLabs(segmentID);
 
+String multiLabId = Hl7textResultsData.getMatchingLabs(segmentID);
+
+MessageHandler handler = Factory.getHandler(segmentID);
 String hl7 = Factory.getHL7Body(segmentID);
 // check for errors printing
 if (request.getAttribute("printError") != null && (Boolean) request.getAttribute("printError")){
@@ -476,7 +475,7 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
                                     ReportStatus report;
                                     boolean startFlag = false;
                                     for (int j=multiID.length-1; j >=0; j--){
-                                        ackList = ackData.getAcknowledgements(multiID[j]);
+                                        ackList = AcknowledgementData.getAcknowledgements(multiID[j]);
                                         if (multiID[j].equals(segmentID))
                                             startFlag = true;
                                         if (startFlag)

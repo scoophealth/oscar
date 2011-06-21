@@ -519,8 +519,7 @@ function sendMRP(ele){
 
 
                             <%
-                            AcknowledgementData ackData = new AcknowledgementData();
-                            ArrayList ackList = ackData.getAcknowledgements("DOC",docId);
+                            ArrayList ackList = AcknowledgementData.getAcknowledgements("DOC",docId);
 
                                             if (ackList.size() > 0){%>
                                             <fieldset>
