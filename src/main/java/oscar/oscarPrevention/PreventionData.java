@@ -28,6 +28,7 @@
 
 package oscar.oscarPrevention;
 
+import java.net.MalformedURLException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -46,6 +47,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
+import org.oscarehr.PMmodule.caisi_integrator.RemotePreventionHelper;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicPrevention;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
@@ -316,8 +318,8 @@ public class PreventionData {
 		return(demographicDateOfBirth);
 	}	
 	
-	public ArrayList getPreventionData(String preventionType, String demoNo) {
-		ArrayList list = new ArrayList();
+	public ArrayList<Map<String,Object>> getPreventionData(String preventionType, String demoNo) {
+		ArrayList<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
 		String sql = null;
 		java.util.Date dob = getDemographicDateOfBirth(demoNo);
 
@@ -328,7 +330,7 @@ public class PreventionData {
 			log.debug(sql);
 			rs = DBHandler.GetSQL(sql);
 			while (rs.next()) {
-				Hashtable h = new Hashtable();
+				Map<String,Object> h = new HashMap<String,Object>();
 				h.put("id", oscar.Misc.getString(rs, "id"));
 				h.put("refused", oscar.Misc.getString(rs, "refused"));
 				h.put("type", oscar.Misc.getString(rs, "prevention_type"));
@@ -359,6 +361,19 @@ public class PreventionData {
 		return list;
 	}
 
+	public static ArrayList<HashMap<String,Object>> getLinkedRemotePreventionData(String preventionType, Integer localDemographicId) throws MalformedURLException {
+		ArrayList<HashMap<String, Object>> allResults=RemotePreventionHelper.getLinkedPreventionDataMap(localDemographicId);
+		ArrayList<HashMap<String, Object>> filteredResults=new ArrayList<HashMap<String, Object>>();
+
+		for (HashMap<String, Object> temp : allResults) {
+			if (preventionType.equals(temp.get("type"))) {
+				filteredResults.add(temp);
+			}
+		}
+			
+		return(filteredResults);
+	}
+	
 	private static String blankIfNull(String s) {
 		if (s == null) return "";
 		return s;
@@ -496,8 +511,8 @@ public class PreventionData {
 	public static class PreventionsComparator implements Comparator
 	{
 		public int compare(Object o1, Object o2) {
-			Hashtable ht1=(Hashtable)o1;
-			Hashtable ht2=(Hashtable)o2;
+			Map ht1=(Map)o1;
+			Map ht2=(Map)o2;
 			
 			Comparable date1=(Comparable)ht1.get("prevention_date_asDate");
 			Comparable date2=(Comparable)ht2.get("prevention_date_asDate");
