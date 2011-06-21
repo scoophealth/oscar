@@ -263,8 +263,7 @@ function save() {
                     resData = (LabResultData)labs.get(idx);
                     boolean displayFlag = true;
                     if (resData.labType.equals(LabResultData.HL7TEXT)){
-                        Hl7textResultsData hl7Data = new Hl7textResultsData();
-                        if (!hl7Data.getMatchingLabs(resData.segmentID).endsWith(resData.segmentID))
+                        if (!Hl7textResultsData.getMatchingLabs(resData.segmentID).endsWith(resData.segmentID))
                             displayFlag = false;
                     }
                     

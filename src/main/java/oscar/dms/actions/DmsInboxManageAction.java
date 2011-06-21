@@ -260,9 +260,8 @@ public class DmsInboxManageAction extends DispatchAction {
                     ls.add(labids[i]);
             }
             
-            Hl7textResultsData hrd=new Hl7textResultsData();
             if(ls.size()>0)
-                labPreview=hrd.getNotAckLabsFromLabNos(ls);
+                labPreview=Hl7textResultsData.getNotAckLabsFromLabNos(ls);
         }
         
         request.setAttribute("docPreview",docPreview);
