@@ -27,8 +27,6 @@ import org.apache.xmlbeans.XmlOptions;
 
 import oscar.oscarEncounter.oscarMeasurements.data.ImportExportMeasurements;
 import oscar.oscarEncounter.oscarMeasurements.data.Measurements;
-import oscar.oscarLab.ca.all.parsers.MessageHandler;
-import oscar.oscarLab.ca.all.parsers.Factory;
 import oscar.oscarReport.data.DemographicSets;
 import oscar.oscarRx.data.RxPrescriptionData;
 import oscar.OscarProperties;
@@ -40,7 +38,6 @@ import org.oscarehr.casemgmt.dao.CaseManagementNoteExtDAO;
 import org.oscarehr.casemgmt.dao.IssueDAO;
 import org.oscarehr.casemgmt.dao.PrescriptionDAO;
 
-import org.oscarehr.common.model.Allergy;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteExt;
@@ -49,9 +46,7 @@ import org.oscarehr.common.model.*;
 import org.oscarehr.common.dao.*;
 import org.oscarehr.util.MiscUtils;
 
-import cdsDtCihi.DateFullOrDateTime;
 import cdsDtCihi.DateFullOrPartial;
-import cdsDtCihi.DrugMeasure;
 import cdsDtCihi.HealthCard;
 import cdsDtCihi.PostalZipCode;
 import cdsDtCihi.StandardCoding;
@@ -73,6 +68,7 @@ import cdscihi.PatientRecordDocument.PatientRecord;
 import cdscihi.ProblemListDocument.ProblemList;
 import cdscihi.ProcedureDocument.Procedure;
 import cdscihi.RiskFactorsDocument.RiskFactors;
+import oscar.oscarEncounter.oscarMeasurements.data.LabMeasurements;
 
 public class CihiExportAction extends DispatchAction {
 	private ClinicDAO clinicDAO;
@@ -342,6 +338,7 @@ public class CihiExportAction extends DispatchAction {
 	private void buildPatientDemographic(Demographic demo, Demographics xmlDemographics) {
 		HealthCard healthCard = xmlDemographics.addNewHealthCard();
 		healthCard.setNumber(demo.getHin());
+                if (StringUtils.isNullOrEmpty(healthCard.getNumber())) healthCard.setNumber("0");
 		healthCard.setType("HCN");		
 				
 		healthCard.setJurisdiction(cdsDtCihi.HealthCardProvinceCode.CA_ON);					
@@ -391,10 +388,11 @@ public class CihiExportAction extends DispatchAction {
 			joinedCal.setTime(joinDate);
 			xmlDemographics.setEnrollmentDate(joinedCal);
 		}
-		
-		PostalZipCode postalZipCode = xmlDemographics.addNewPostalAddress();
-		postalZipCode.setPostalCode(demo.getPostal());
-		
+
+                if (StringUtils.filled(demo.getPostal())) {
+                    PostalZipCode postalZipCode = xmlDemographics.addNewPostalAddress();
+                    postalZipCode.setPostalCode(StringUtils.noNull(demo.getPostal()).replace(" ",""));
+                }
 	}
 	
 	private void buildAppointment(Demographic demo, PatientRecord patientRecord) {
@@ -404,7 +402,7 @@ public class CihiExportAction extends DispatchAction {
 		
 		for( Appointment appt: appointmentList) {
 			Appointments appointments = patientRecord.addNewAppointments();
-			appointments.setAppointmentPurpose(appt.getReason());
+                        if (StringUtils.filled(appt.getReason())) appointments.setAppointmentPurpose(appt.getReason());
 			DateFullOrPartial dateFullorPartial = appointments.addNewAppointmentDate();			
 			cal.setTime(appt.getAppointmentDate());			
 			dateFullorPartial.setFullDate(cal);
@@ -459,12 +457,15 @@ public class CihiExportAction extends DispatchAction {
                 Iterator<CaseManagementIssue> i = noteIssueList.iterator();
                 CaseManagementIssue cIssue;                
                 hasIssue = true;
-                while( i.hasNext() ) {
+                while ( i.hasNext() ) {
                 	cIssue = i.next();
+                        if (cIssue.getIssue().getType().equals("system")) continue;
+
                 	StandardCoding standardCoding = familyHistory.addNewDiagnosisProcedureCode();
                 	standardCoding.setStandardCode(cIssue.getIssue().getCode());
                 	standardCoding.setStandardCodingSystem(properties.getProperty("dxResearch_coding_sys","icd9"));
                 	standardCoding.setStandardCodeDescription(cIssue.getIssue().getDescription());
+                        break;
                 }
 
             }
@@ -532,12 +533,15 @@ public class CihiExportAction extends DispatchAction {
                 Iterator<CaseManagementIssue> i = noteIssueList.iterator();
                 CaseManagementIssue cIssue;                
                 hasIssue = true;
-                while( i.hasNext() ) {
+                while ( i.hasNext() ) {
                 	cIssue = i.next();
+                        if (cIssue.getIssue().getType().equals("system")) continue;
+
                 	StandardCoding standardCoding = problemList.addNewDiagnosisCode();
                 	standardCoding.setStandardCode(cIssue.getIssue().getCode());
                 	standardCoding.setStandardCodingSystem(properties.getProperty("dxResearch_coding_sys","icd9"));
                 	standardCoding.setStandardCodeDescription(cIssue.getIssue().getDescription());
+                        break;
                 }
 
             }
@@ -692,56 +696,75 @@ public class CihiExportAction extends DispatchAction {
 	}
 	
 	private void buildProcedure(Demographic demo, PatientRecord patientRecord) {
-		OscarProperties properties = OscarProperties.getInstance();
-		Calendar cal = Calendar.getInstance();
-		Date procedureDate;
-		boolean hasIssue;
-		String code;
-		Procedure procedure = patientRecord.addNewProcedure();
-		List<CaseManagementNote> notesList = getCaseManagementNoteDAO().getNotesByDemographic(demo.getDemographicNo().toString());
-		for( CaseManagementNote caseManagementNote: notesList) {
-			
-			hasIssue = false;
-			Set<CaseManagementIssue> noteIssueList = caseManagementNote.getIssues();
-            if( noteIssueList != null && noteIssueList.size() > 0 ) {
-                Iterator<CaseManagementIssue> i = noteIssueList.iterator();
-                CaseManagementIssue cIssue;                
-                hasIssue = true;
-                while( i.hasNext() ) {                	
-                	cIssue = i.next();
-                	code = cIssue.getIssue().getCode();
-                	if( code.equalsIgnoreCase("Concerns") || code.equalsIgnoreCase("OMeds") || code.equalsIgnoreCase("SocHistory") || code.equalsIgnoreCase("MedHistory")
-                			|| code.equalsIgnoreCase("Reminders") || code.equalsIgnoreCase("FamHistory")) {
-                		continue;
-                	}
-                	StandardCoding procedureCode = procedure.addNewProcedureCode();
-                	procedureCode.setStandardCodingSystem(properties.getProperty("dxResearch_coding_sys","icd9"));
-                	procedureCode.setStandardCode(cIssue.getIssue().getCode());
-                	procedureCode.setStandardCodeDescription(cIssue.getIssue().getDescription());
+            OscarProperties properties = OscarProperties.getInstance();
+            Calendar cal = Calendar.getInstance();
+            Date procedureDate;
+            boolean hasIssue;
+            String code;
+            List<CaseManagementNote> notesList = getCaseManagementNoteDAO().getNotesByDemographic(demo.getDemographicNo().toString());
+            for( CaseManagementNote caseManagementNote: notesList) {
+
+                Procedure procedure = patientRecord.addNewProcedure();
+                hasIssue = false;
+                Set<CaseManagementIssue> noteIssueList = caseManagementNote.getIssues();
+                if( noteIssueList != null && noteIssueList.size() > 0 ) {
+                    Iterator<CaseManagementIssue> i = noteIssueList.iterator();
+                    CaseManagementIssue cIssue;
+                    hasIssue = true;
+                    while ( i.hasNext() ) {
+                        cIssue = i.next();
+                        if (cIssue.getIssue().getType().equals("system")) continue;
+
+                        StandardCoding procedureCode = procedure.addNewProcedureCode();
+                        procedureCode.setStandardCodingSystem(properties.getProperty("dxResearch_coding_sys","icd9"));
+                        procedureCode.setStandardCode(cIssue.getIssue().getCode());
+                        procedureCode.setStandardCodeDescription(cIssue.getIssue().getDescription());
+                        break;
+                    }
                 }
+
+                if( !hasIssue ) {
+                    String note = caseManagementNote.getNote();
+                    if (note!=null && note.length()>250)
+                        procedure.setProcedureInterventionDescription(caseManagementNote.getNote().substring(0, 249));//Description only allow 250 characters
+                }
+
+                procedureDate = caseManagementNote.getObservation_date();
+                cal.setTime(procedureDate);
+                DateFullOrPartial dateFullOrPartial = procedure.addNewProcedureDate();
+                dateFullOrPartial.setFullDate(cal);
             }
-            
-            if( !hasIssue ) {
-            	procedure.setProcedureInterventionDescription(caseManagementNote.getNote());
-            }
-            
-            procedureDate = caseManagementNote.getObservation_date();
-            cal.setTime(procedureDate);
-            DateFullOrPartial dateFullOrPartial = procedure.addNewProcedureDate();
-            dateFullOrPartial.setFullDate(cal);
-		}
 	}
 	
-	private void buildLaboratoryResults(Demographic demo, PatientRecord patientRecord) {		
-		String dateStr;		
-		MessageHandler handler;
-		LaboratoryResults labResults = patientRecord.addNewLaboratoryResults();
-		List<Hl7TextInfo> hl7TextInfoList = this.getHl7TextInfoDAO().findByHealthCardNo(demo.getHin());		
-		for( Hl7TextInfo hl7TextInfo: hl7TextInfoList ) {
-			DateFullOrDateTime dateFullOrTime = labResults.addNewCollectionDateTime();
-			handler = Factory.getHandler("" + hl7TextInfo.getLabNumber());
-			dateStr = handler.getServiceDate();
-			dateFullOrTime.setFullDateTime(Util.calDate(dateStr));				
+	private void buildLaboratoryResults(Demographic demo, PatientRecord patientRecord) throws SQLException {
+                List<LabMeasurements> labMeaList = ImportExportMeasurements.getLabMeasurements(demo.getDemographicNo().toString());
+                for (LabMeasurements labMea : labMeaList) {
+                    Date dateTime = UtilDateUtilities.StringToDate(labMea.getExtVal("datetime"),"yyyy-MM-dd HH:mm:ss");
+                    if (dateTime==null) continue;
+
+                    LaboratoryResults labResults = patientRecord.addNewLaboratoryResults();
+                    cdsDtCihi.DateFullOrDateTime collDate = labResults.addNewCollectionDateTime();
+                    collDate.setFullDate(Util.calDate(dateTime));
+
+                    String data = labMea.getExtVal("identifier");
+                    if (StringUtils.filled(data)) labResults.setLabTestCode(data);
+
+                    data = labMea.getExtVal("name");
+                    if (StringUtils.filled(data)) labResults.setTestNameReportedByLab(data);
+
+                    data = labMea.getMeasure().getDataField();
+                    if (StringUtils.filled(data)) {
+                        LaboratoryResults.Result result = labResults.addNewResult();
+                        result.setValue(data);
+                        data = labMea.getExtVal("unit");
+                        if (StringUtils.filled(data)) result.setUnitOfMeasure(data);
+                    }
+
+                    String min = labMea.getExtVal("minimum");
+                    String max = labMea.getExtVal("maximum");
+                    LaboratoryResults.ReferenceRange refRange = labResults.addNewReferenceRange();
+                    if (StringUtils.filled(min)) refRange.setLowLimit(min);
+                    if (StringUtils.filled(max)) refRange.setHighLimit(max);
 		}
 	}
 	
@@ -762,17 +785,18 @@ public class CihiExportAction extends DispatchAction {
 			DateFullOrPartial dateFullorPartial = medications.addNewPrescriptionWrittenDate();
 			dateFullorPartial.setFullDate(Util.calDate(pa[p].getRxDate()));
 						
-	        if( StringUtils.filled(pa[p].getDosage()) ) {
-	        	strength = pa[p].getDosage();
-	        	sep = strength.indexOf("/");
-	        	strength = sep<0 ? strength : strength.substring(0,sep);
-	        	if( sep > 0 ) {
-	        		strength.substring(0,sep);
-	        	}
-	        	DrugMeasure drugMeasure = medications.addNewStrength();
-	        	drugMeasure.setAmount(strength.substring(0,strength.indexOf(" ")));
-	        	drugMeasure.setUnitOfMeasure(strength.substring(strength.indexOf(" ")+1));
-	        }
+                    if (StringUtils.filled(pa[p].getDosage())) {
+                        String strength0 = pa[p].getDosage();
+                        sep = strength0.indexOf("/");
+                        strength = sep<0 ? Util.sleadingNum(strength0) : strength0.substring(0,sep);
+                        if (sep>=0) {
+                            if (sep<strength0.length()) strength0 = strength0.substring(sep+1);
+                        }
+                        cdsDtCihi.DrugMeasure drugM = medications.addNewStrength();
+                        drugM.setAmount(strength);
+                        drugM.setUnitOfMeasure(Util.trailingTxt(strength0));
+                        if (StringUtils.isNullOrEmpty(drugM.getUnitOfMeasure())) drugM.setUnitOfMeasure("unit");
+                    }
 	        
 	        dosage = StringUtils.noNull(pa[p].getDosageDisplay());
 	        medications.setDosage(dosage);

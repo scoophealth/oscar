@@ -21,6 +21,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang.math.NumberUtils;
 
 import org.apache.xmlbeans.XmlCalendar;
 import org.oscarehr.util.MiscUtils;
@@ -199,11 +200,39 @@ public class Util {
     static public String setCountrySubDivCode(String countrySubDivCode) {
 	countrySubDivCode = countrySubDivCode.trim();
 	if (StringUtils.filled(countrySubDivCode)) {
-	    if (countrySubDivCode.equals("OT")) return "non-Canada/US";
-	    if (!countrySubDivCode.substring(0,2).equals("US")) return "CA-"+countrySubDivCode;
+	    if (countrySubDivCode.equals("OT")) return "Other";
+	    if (!countrySubDivCode.startsWith("US")) return "CA-"+countrySubDivCode;
 	}
 	return "";
     }
+
+    static public String sleadingNum(String s) {
+        return String.valueOf(leadingNum(s));
+    }
+
+    static public float leadingNum(String s) {
+        s = s.trim();
+        for (int i=0; i<s.length(); i++) {
+            if (!".0123456789".contains(s.substring(i,i+1))) {
+                s = s.substring(0, i);
+                break;
+            }
+        }
+        if (NumberUtils.isDigits(s)) return Float.valueOf(s);
+        else return 0;
+    }
+
+    static public String trailingTxt(String s) {
+        s = s.trim();
+        for (int i=0; i<s.length(); i++) {
+            if (!".0123456789".contains(s.substring(i,i+1))) {
+                s = s.substring(i);
+                break;
+            }
+        }
+        return s.trim();
+    }
+
     
     static public void writeNameSimple(cdsDt.PersonNameSimpleWithMiddleName personName, String firstName, String lastName) {
 	if (!StringUtils.filled(firstName)) firstName = "";

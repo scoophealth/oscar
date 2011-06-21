@@ -46,7 +46,6 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
@@ -108,6 +107,12 @@ import cds.RiskFactorsDocument.RiskFactors;
 import java.util.HashMap;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
+import org.oscarehr.hospitalReportManager.dao.HRMDocumentDao;
+import org.oscarehr.hospitalReportManager.dao.HRMDocumentSubClassDao;
+import org.oscarehr.hospitalReportManager.dao.HRMDocumentToDemographicDao;
+import org.oscarehr.hospitalReportManager.model.HRMDocument;
+import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
+import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 import oscar.oscarRx.data.RxAllergyData.Allergy;
 
 /**
@@ -228,6 +233,8 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 
             // DEMOGRAPHICS
             DemographicData.Demographic demographic = d.getDemographic(demoNo);
+            if (demographic.getPatientStatus()!=null && demographic.getPatientStatus().equals("Contact-only")) continue;
+
             HashMap<String,String> demoExt = new HashMap<String,String>();
             demoExt.putAll(ext.getAllValuesForDemo(demoNo));
 
@@ -300,6 +307,11 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                 err.add("Error! No Gender for Patient "+demoNo);
             }
 
+            data = demographic.getSin();
+            if (StringUtils.filled(data) && data.length()==9) {
+                demo.setSIN(data);
+            }
+
             data = StringUtils.noNull(demographic.getRosterStatus());
             if (StringUtils.empty(data)) {
                 data = "";
@@ -359,7 +371,8 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                 cdsDt.HealthCard healthCard = demo.addNewHealthCard();
 
                 healthCard.setNumber(demographic.getJustHIN());
-                healthCard.setProvinceCode(Util.setProvinceCode(demographic.getHCType()));
+                if (Util.setProvinceCode(demographic.getHCType())!=null) healthCard.setProvinceCode(Util.setProvinceCode(demographic.getHCType()));
+                else healthCard.setProvinceCode(cdsDt.HealthCardProvinceCode.X_70); //Asked, unknown
                 if (healthCard.getProvinceCode()==null) {
                     err.add("Error! No Health Card Province Code for Patient "+demoNo);
                 }
@@ -555,7 +568,6 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         }
                         patientRec.addNewPersonalHistory().setCategorySummaryLine(summary);
                     }
-                
                 if (exFamilyHistory) {
                     // FAMILY HISTORY (FamHistory)
                     if (StringUtils.filled(famHist)) {
@@ -612,7 +624,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                                 bTREATMENT = true;
                             } else if (cme.getKeyVal().equals(CaseManagementNoteExt.LIFESTAGE)) {
                                 if (bLIFESTAGE) continue;
-                                if (StringUtils.filled(cme.getValue())) {
+                                if (StringUtils.filled(cme.getValue()) && "NICTA".contains(cme.getValue())) {
                                     fHist.setLifeStage(cdsDt.LifeStage.Enum.forString(cme.getValue()));
                                     summary = Util.addLine(summary, CaseManagementNoteExt.LIFESTAGE+": ", cme.getValue());
                                 }
@@ -674,7 +686,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                                 bPROCEDUREDATE = true;
                             } else if (cme.getKeyVal().equals(CaseManagementNoteExt.LIFESTAGE)) {
                                 if (bLIFESTAGE) continue;
-                                if (StringUtils.filled(cme.getValue())) {
+                                    if (StringUtils.filled(cme.getValue()) && "NICTA".contains(cme.getValue())) {
                                     pHealth.setLifeStage(cdsDt.LifeStage.Enum.forString(cme.getValue()));
                                     summary = Util.addLine(summary, CaseManagementNoteExt.LIFESTAGE+": ", cme.getValue());
                                 }
@@ -739,7 +751,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                                 bRESOLUTIONDATE = true;
                             } else if (cme.getKeyVal().equals(CaseManagementNoteExt.LIFESTAGE)) {
                                 if (bLIFESTAGE) continue;
-                                if (StringUtils.filled(cme.getValue())) {
+                                if (StringUtils.filled(cme.getValue()) && "NICTA".contains(cme.getValue())) {
                                     pList.setLifeStage(cdsDt.LifeStage.Enum.forString(cme.getValue()));
                                     summary = Util.addLine(summary, CaseManagementNoteExt.LIFESTAGE+": ", cme.getValue());
                                 }
@@ -794,7 +806,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                                 bAGEATONSET = true;
                             } else if (cme.getKeyVal().equals(CaseManagementNoteExt.LIFESTAGE)) {
                                 if (bLIFESTAGE) continue;
-                                if (StringUtils.filled(cme.getValue())) {
+                                if (StringUtils.filled(cme.getValue()) && "NICTA".contains(cme.getValue())) {
                                     rFact.setLifeStage(cdsDt.LifeStage.Enum.forString(cme.getValue()));
                                     summary = Util.addLine(summary, CaseManagementNoteExt.LIFESTAGE+": ", cme.getValue());
                                 }
@@ -846,10 +858,17 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                             ProviderData prvd = new ProviderData(cmn.getProviderNo());
                             Util.writeNameSimple(pProvider.addNewName(), StringUtils.noNull(prvd.getFirst_name()), StringUtils.noNull(prvd.getLast_name()));
                             pProvider.setOHIPPhysicianId(StringUtils.noNull(prvd.getOhip_no()));
+                            cdsDt.DateTimeFullOrPartial noteCreatedDateTime = pProvider.addNewDateTimeNoteCreated();
+                            if (cmn.getCreate_date()!=null) noteCreatedDateTime.setFullDate(Util.calDate(cmn.getCreate_date()));
+                            else noteCreatedDateTime.setFullDate(Util.calDate(new Date()));
                         }
                         if (StringUtils.filled(cmn.getSigning_provider_no())) {
                             ProviderData prvd = new ProviderData(cmn.getSigning_provider_no());
-                            cNote.addNewNoteReviewer().setOHIPPhysicianId(StringUtils.noNull(prvd.getOhip_no()));
+                            ClinicalNotes.NoteReviewer noteReviewer = cNote.addNewNoteReviewer();
+                            Util.writeNameSimple(noteReviewer.addNewName(), prvd.getFirst_name(), prvd.getLast_name());
+                            if (cmn.getUpdate_date()!=null) noteReviewer.addNewDateTimeNoteReviewed().setFullDate(Util.calDate(cmn.getUpdate_date()));
+                            else noteReviewer.addNewDateTimeNoteReviewed().setFullDate(Util.calDate(new Date()));
+                            if (StringUtils.filled(prvd.getOhip_no())) noteReviewer.setOHIPPhysicianId(prvd.getOhip_no());
                         }
                     }
                 }
@@ -947,7 +966,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         alr.addNewStartDate().setFullDate(Util.calDate(allergy.getStartDate()));
                         aSummary = Util.addLine(aSummary,"Start Date: ",UtilDateUtilities.DateToString(allergy.getStartDate()));
                     }
-                    if (allergy.getLifeStage()!=null) {
+                    if (StringUtils.filled(allergy.getLifeStage()) && "NICTA".contains(allergy.getLifeStage())) {
                         alr.setLifeStage(cdsDt.LifeStage.Enum.forString(allergy.getLifeStage()));
                         aSummary = Util.addLine(aSummary,"Life Stage at Onset: ", allergy.getLifeStageDesc());
                     }
@@ -1057,21 +1076,18 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     mSummary = Util.addLine(mSummary, "Drug Name: ", drugName);
 
                     if (StringUtils.filled(arr[p].getDosage())) {
-                        String strength = arr[p].getDosage();
-                        int sep = strength.indexOf("/");
+                        String strength0 = arr[p].getDosage();
+                        int sep = strength0.indexOf("/");
 
-                        strength = sep<0 ? strength : strength.substring(0,sep);
+                        String strength = sep<0 ? Util.sleadingNum(strength0) : strength0.substring(0,sep);
                         if (sep>=0) {
-                            strength = strength.substring(0,sep);
                             err.add("Note: Multiple components exist for Drug "+drugName+" for Patient "+demoNo+". Exporting 1st one as Strength.");
+                            if (sep<strength0.length()) strength0 = strength0.substring(sep+1);
                         }
                         cdsDt.DrugMeasure drugM = medi.addNewStrength();
-                        int space = strength.indexOf(" ");
-                        if (space>0) {
-                            drugM.setAmount(strength.substring(0,space));
-                            drugM.setUnitOfMeasure(strength.substring(strength.indexOf(" ")+1));
-                        }
-                        else drugM.setAmount(strength);
+                        drugM.setAmount(strength);
+                        drugM.setUnitOfMeasure(Util.trailingTxt(strength0));
+                        if (StringUtils.isNullOrEmpty(drugM.getUnitOfMeasure())) drugM.setUnitOfMeasure("unit");
                         
                         mSummary = Util.addLine(mSummary, "Strength: ", arr[p].getGenericName()+" "+strength);
                     }
@@ -1156,7 +1172,9 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     data = arr[p].getOutsideProviderName();
                     if (StringUtils.filled(data)) {
                         MedicationsAndTreatments.PrescribedBy pcb = medi.addNewPrescribedBy();
-                        pcb.setOHIPPhysicianId(StringUtils.noNull(arr[p].getOutsideProviderOhip()));
+                        String ohip = arr[p].getOutsideProviderOhip();
+                        if (ohip!=null && ohip.trim().length()<=6)
+                            pcb.setOHIPPhysicianId(ohip.trim());
                         Util.writeNameSimple(pcb.addNewName(), data);
                         mSummary = Util.addLine(mSummary, "Prescribed by: ", StringUtils.noNull(data));
                     } else {
@@ -1164,7 +1182,9 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         if (StringUtils.filled(data)) {
                             MedicationsAndTreatments.PrescribedBy pcb = medi.addNewPrescribedBy();
                             ProviderData prvd = new ProviderData(data);
-                            pcb.setOHIPPhysicianId(prvd.getOhip_no());
+                            String ohip = prvd.getOhip_no();
+                            if (ohip!=null && ohip.trim().length()<=6)
+                                pcb.setOHIPPhysicianId(ohip.trim());
                             Util.writeNameSimple(pcb.addNewName(), prvd.getFirst_name(), prvd.getLast_name());
                             mSummary = Util.addLine(mSummary, "Prescribed by: ", StringUtils.noNull(prvd.getFirst_name())+" "+StringUtils.noNull(prvd.getLast_name()));
                         }
@@ -1221,6 +1241,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 
                     if (dateTime==null && sDateTime==null) {
                         err.add("Error! No Collection Datetime for Lab Test "+labResults.getLabTestCode()+" for Patient "+demoNo);
+                        collDate.setFullDateTime(Util.calDate(new Date()));
                     }
 
                     labResults.setResultNormalAbnormalFlag(cdsDt.ResultNormalAbnormalFlag.U);
@@ -1248,18 +1269,11 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     String range = StringUtils.noNull(labMea.getExtVal("range"));
                     String min = StringUtils.noNull(labMea.getExtVal("minimum"));
                     String max = StringUtils.noNull(labMea.getExtVal("maximum"));
-                    LaboratoryResults.ReferenceRange refRange = LaboratoryResults.ReferenceRange.Factory.newInstance();
+                    LaboratoryResults.ReferenceRange refRange = labResults.addNewReferenceRange();
                     if (StringUtils.filled(range)) refRange.setReferenceRangeText(range);
                     else {
                         if (StringUtils.filled(min)) refRange.setLowLimit(min);
                         if (StringUtils.filled(max)) refRange.setHighLimit(max);
-                    }
-                    if (refRange.getLowLimit()!=null && refRange.getHighLimit()!=null) {
-                        cds.LaboratoryResultsDocument.LaboratoryResults.ReferenceRange rr = labResults.addNewReferenceRange();
-                        rr.setLowLimit(refRange.getLowLimit());
-                        rr.setHighLimit(refRange.getHighLimit());
-                    } else if (refRange.getReferenceRangeText()!=null) {
-                        labResults.addNewReferenceRange().setReferenceRangeText(refRange.getReferenceRangeText());
                     }
 
                     String lab_no = StringUtils.noNull(labMea.getExtVal("lab_no"));
@@ -1296,29 +1310,23 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                 for (int j=0; j<appts.size(); j++) {
                     ap = (ApptData)appts.get(j);
                     Appointments aptm = patientRec.addNewAppointments();
-                    String apNotes = "Appointment No: "+ap.getAppointment_no();
 
                     cdsDt.DateFullOrPartial apDate = aptm.addNewAppointmentDate();
                     apDate.setFullDate(Util.calDate(ap.getAppointment_date()));
-                    if (ap.getAppointment_date()!=null) {
-                        apNotes = Util.addLine(apNotes, "Date: ", UtilDateUtilities.DateToString(ap.getDateAppointmentDate(),"yyyy-MM-dd"));
-                    } else {
+                    if (ap.getAppointment_date()==null) {
                         err.add("Error! No Appointment Date ("+j+") for Patient "+demoNo);
                     }
 
                     String startTime = ap.getStart_time();
                     aptm.setAppointmentTime(Util.calDate(ap.getStart_time()));
                     addOneEntry(APPOINTMENT);
-                    if (UtilDateUtilities.StringToDate(startTime,"HH:mm:ss")!=null) {
-                        apNotes = Util.addLine(apNotes, "Start Time: ", startTime);
-                    } else {
+                    if (UtilDateUtilities.StringToDate(startTime,"HH:mm:ss")==null) {
                         err.add("Error! No Appointment Time ("+(j+1)+") for Patient "+demoNo);
                     }
 
                     long dLong = (ap.getDateEndTime().getTime()-ap.getDateStartTime().getTime())/60000+1;
                     BigInteger duration = BigInteger.valueOf(dLong); //duration in minutes
                     aptm.setDuration(duration);
-                    apNotes = Util.addLine(apNotes, "Duration: ", duration.toString())+" min";
 
                     if (StringUtils.filled(ap.getStatus())) {
                         ApptStatusData asd = new ApptStatusData();
@@ -1330,15 +1338,12 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                             msg = getResources(request).getMessage(asd.getTitle());
                         if (StringUtils.filled(msg)) {
                             aptm.setAppointmentStatus(msg);
-                            apNotes = Util.addLine(apNotes, "Status: ", msg);
-
                         } else {
-                            throw new Exception ("Error! No matching message for appointment status code: " + data);
+                            err.add("Error! No matching message for appointment status code: " + data);
                         }
                     }
                     if (StringUtils.filled(ap.getReason())) {
                         aptm.setAppointmentPurpose(ap.getReason());
-                        apNotes = Util.addLine(apNotes, "Purpose: ", ap.getReason());
                     }
                     if (StringUtils.filled(ap.getProviderNo())) {
                         Appointments.Provider prov = aptm.addNewProvider();
@@ -1346,142 +1351,131 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         ProviderData appd = new ProviderData(ap.getProviderNo());
                         if (StringUtils.filled(appd.getOhip_no())) prov.setOHIPPhysicianId(appd.getOhip_no());
                         Util.writeNameSimple(prov.addNewName(), appd.getFirst_name(), appd.getLast_name());
-                        apNotes = Util.addLine(apNotes, "Provider: ", appd.getFirst_name()+" "+appd.getLast_name());
                     }
-                    if (StringUtils.filled(ap.getNotes())) apNotes = Util.addLine(apNotes, "Notes: ", ap.getNotes());
-                    if (StringUtils.filled(apNotes)) {
-                        aptm.setAppointmentNotes(apNotes);
-                    } else {
-                        aptm.setAppointmentNotes("");
-                        err.add("Error! No Appointment Notes for Patient "+demoNo+" ("+(j+1)+")");
+                    if (StringUtils.filled(ap.getNotes())) {
+                        aptm.setAppointmentNotes(ap.getNotes());
                     }
                 }
             }
 
             if (exReportsReceived) {
                 // REPORTS RECEIVED
-                /*
-                HRMDocumentToDemographicDao hrmDocToDemographicDao = (HRMDocumentToDemographicDao) SpringUtils.getBean("HRMDocumentToDemographicDao");
-                HRMDocumentToProviderDao hrmDocToProviderDao = (HRMDocumentToProviderDao) SpringUtils.getBean("HRMDocumentToProviderDao");
-                HRMDocumentDao hrmDocDao = (HRMDocumentDao) SpringUtils.getBean("HRMDocumentDao");
-
-                List<HRMDocumentToDemographic> hrmDocToDemographics = hrmDocToDemographicDao.findByDemographicNo(demoNo);
-                for (HRMDocumentToDemographic hrmDocToDemographic : hrmDocToDemographics) {
-                    String hrmDocumentId = hrmDocToDemographic.getHrmDocumentId();
-                    List<HRMDocumentToProvider> hrmDocToProviders = hrmDocToProviderDao.findByHrmDocumentId(hrmDocumentId);
-                    List<HRMDocument> hrmDocs = hrmDocDao.findById(Integer.valueOf(hrmDocumentId));
-                    for (HRMDocument hrmDoc : hrmDocs) {
-                        hrmDoc
-
-                        ReportsReceived rpr = patientRec.addNewReportsReceived();
-                        rpr.setClass1();
-                        rpr.setContent();
-                        rpr.setEventDateTime();
-                        rpr.setFileExtensionAndVersion();
-                        rpr.setFormat();
-                        rpr.setHRMResultStatus();
-                        rpr.setMedia();
-                        rpr.setMessageUniqueID();
-                        rpr.setNotes();
-                        rpr.setOBRContentArray();
-                        rpr.setReceivedDateTime();
-                        rpr.setReportReviewedArray();
-                        rpr.setSendingFacilityId();
-                        rpr.setSendingFacilityReport();
-                        rpr.setSourceAuthorPhysician();
-                        rpr.setSourceFacility();
-                        rpr.setSubClass();
-                    }
-                }
-                 *
-                 */
-
                 ArrayList edoc_list = new EDocUtil().listDemoDocs(demoNo);
+                for (int j=0; j<edoc_list.size(); j++) {
+                    EDoc edoc = (EDoc)edoc_list.get(j);
+                    ReportsReceived rpr = patientRec.addNewReportsReceived();
+                    rpr.setFormat(cdsDt.ReportFormat.TEXT);
+                    rpr.setClass1(cdsDt.ReportClass.OTHER_LETTER);
 
-                if (!edoc_list.isEmpty()) {
-                    for (int j=0; j<edoc_list.size(); j++) {
-                        EDoc edoc = (EDoc)edoc_list.get(j);
-                        ReportsReceived rpr = patientRec.addNewReportsReceived();
-                        rpr.setFileExtensionAndVersion("");
-                        rpr.setClass1(cdsDt.ReportClass.OTHER_LETTER);
-                        rpr.setSubClass(StringUtils.noNull(edoc.getDescription()));
+                    File f = new File(edoc.getFilePath());
+                    if (!f.exists()) {
+                        err.add("Error! Document \""+f.getName()+"\" does not exist!");
+                    } else if (f.length()>Runtime.getRuntime().freeMemory()) {
+                        err.add("Error! Document \""+f.getName()+"\" too big to be exported. Not enough memory!");
+                    } else {
+                        cdsDt.ReportContent rpc = rpr.addNewContent();
+                        InputStream in = new FileInputStream(f);
+                        byte[] b = new byte[(int)f.length()];
 
+                        int offset=0, numRead=0;
+                        while ((numRead=in.read(b,offset,b.length-offset)) >= 0
+                               && offset < b.length) offset += numRead;
 
-                        File f = new File(edoc.getFilePath());
-                        if (!f.exists()) {
-                            err.add("Error! Document \""+f.getName()+"\" does not exist!");
-                        } else if (f.length()>Runtime.getRuntime().freeMemory()) {
-                            err.add("Error! Document \""+f.getName()+"\" too big to be exported. Not enough memory!");
+                        if (offset < b.length) throw new IOException("Could not completely read file " + f.getName());
+                        in.close();
+                        if (edoc.getContentType()!=null && edoc.getContentType().startsWith("text")) {
+                            String str = new String(b);
+                            rpc.setTextContent(str);
+                            rpr.setFormat(cdsDt.ReportFormat.TEXT);
+                            addOneEntry(REPORTTEXT);
                         } else {
-                            cdsDt.ReportContent rpc = rpr.addNewContent();
-                            InputStream in = new FileInputStream(f);
-                            byte[] b = new byte[(int)f.length()];
-
-                            int offset=0, numRead=0;
-                            while ((numRead=in.read(b,offset,b.length-offset)) >= 0
-                                   && offset < b.length) offset += numRead;
-
-                            if (offset < b.length) throw new IOException("Could not completely read file " + f.getName());
-                            in.close();
-                            if (edoc.getContentType()!=null && edoc.getContentType().startsWith("text")) {
-                                String str = new String(b);
-                                rpc.setTextContent(str);
-                                rpr.setFormat(cdsDt.ReportFormat.TEXT);
-                                addOneEntry(REPORTTEXT);
-                            } else {
-                                rpc.setMedia(b);
-                                rpr.setFormat(cdsDt.ReportFormat.BINARY);
-                                addOneEntry(REPORTBINARY);
-                            }
-
-                            data = Util.mimeToExt(edoc.getContentType());
-                            if (StringUtils.empty(data)) data = cutExt(edoc.getFileName());
-                            if (StringUtils.empty(data)) err.add("Error! No File Extension&Version info for Document \""+edoc.getFileName()+"\"");
-                            rpr.setFileExtensionAndVersion(data);
-
-                            data = edoc.getType();
-                            if (StringUtils.filled(data)) {
-                                if (data.trim().equalsIgnoreCase("radiology")) {
-                                    rpr.setClass1(cdsDt.ReportClass.DIAGNOSTIC_IMAGING_REPORT);
-                                } else if (data.trim().equalsIgnoreCase("pathology")) {
-                                    rpr.setClass1(cdsDt.ReportClass.DIAGNOSTIC_TEST_REPORT);
-                                } else if (data.trim().equalsIgnoreCase("consult")) {
-                                    rpr.setClass1(cdsDt.ReportClass.CONSULTANT_REPORT);
-                                } else {
-                                    rpr.setClass1(cdsDt.ReportClass.OTHER_LETTER);
-                                    rpr.setSubClass(data);
-                                }
-                            } else {
-                                err.add("Error! No Class Type for Document \""+edoc.getFileName()+"\"");
-                            }
-                            data = edoc.getObservationDate();
-                            if (UtilDateUtilities.StringToDate(data)!=null) {
-                                rpr.addNewEventDateTime().setFullDate(Util.calDate(data));
-                            } else {
-                                err.add("Note: Not exporting invalid Event Date (Reports) for Patient "+demoNo+" ("+(j+1)+")");
-                            }
-                            data = edoc.getDateTimeStamp();
-                            if (UtilDateUtilities.StringToDate(data,"yyyy-MM-dd HH:mm:ss")!=null) {
-                                rpr.addNewReceivedDateTime().setFullDateTime(Util.calDate(data));
-                            } else {
-                                err.add("Note: Not exporting invalid Received DateTime (Reports) for Patient "+demoNo+" ("+(j+1)+")");
-                            }
-                            data = edoc.getReviewDateTime();
-                            if (UtilDateUtilities.StringToDate(data,"yyyy-MM-dd HH:mm:ss")!=null) {
-                                ReportsReceived.ReportReviewed reportReviewed = rpr.addNewReportReviewed();
-                                reportReviewed.addNewDateTimeReportReviewed().setFullDate(Util.calDate(data));
-                                Util.writeNameSimple(reportReviewed.addNewName(), edoc.getReviewerName());
-                                data = edoc.getReviewerOhip();
-                                if (StringUtils.filled(data)) reportReviewed.setReviewingOHIPPhysicianId(data);
-                            }
-                            Util.writeNameSimple(rpr.addNewSourceAuthorPhysician().addNewAuthorName(), edoc.getSource());
+                            rpc.setMedia(b);
+                            rpr.setFormat(cdsDt.ReportFormat.BINARY);
+                            addOneEntry(REPORTBINARY);
                         }
+
+                        data = Util.mimeToExt(edoc.getContentType());
+                        if (StringUtils.empty(data)) data = cutExt(edoc.getFileName());
+                        if (StringUtils.empty(data)) err.add("Error! No File Extension&Version info for Document \""+edoc.getFileName()+"\"");
+                        rpr.setFileExtensionAndVersion(data);
+
+                        data = edoc.getType();
+                        if (StringUtils.filled(data)) {
+                            if (data.trim().equalsIgnoreCase("radiology")) {
+                                rpr.setClass1(cdsDt.ReportClass.DIAGNOSTIC_IMAGING_REPORT);
+                            } else if (data.trim().equalsIgnoreCase("pathology")) {
+                                rpr.setClass1(cdsDt.ReportClass.DIAGNOSTIC_TEST_REPORT);
+                            } else if (data.trim().equalsIgnoreCase("consult")) {
+                                rpr.setClass1(cdsDt.ReportClass.CONSULTANT_REPORT);
+                            } else {
+                                rpr.setClass1(cdsDt.ReportClass.OTHER_LETTER);
+                                rpr.setSubClass(data);
+                            }
+                        } else {
+                            err.add("Error! No Class Type for Document \""+edoc.getFileName()+"\"");
+                        }
+                        data = edoc.getObservationDate();
+                        if (UtilDateUtilities.StringToDate(data)!=null) {
+                            rpr.addNewEventDateTime().setFullDate(Util.calDate(data));
+                        } else {
+                            err.add("Note: Not exporting invalid Event Date (Reports) for Patient "+demoNo+" ("+(j+1)+")");
+                        }
+                        data = edoc.getDateTimeStamp();
+                        if (UtilDateUtilities.StringToDate(data,"yyyy-MM-dd HH:mm:ss")!=null) {
+                            rpr.addNewReceivedDateTime().setFullDateTime(Util.calDate(data));
+                        } else {
+                            err.add("Note: Not exporting invalid Received DateTime (Reports) for Patient "+demoNo+" ("+(j+1)+")");
+                        }
+                        data = edoc.getReviewDateTime();
+                        if (UtilDateUtilities.StringToDate(data,"yyyy-MM-dd HH:mm:ss")!=null) {
+                            ReportsReceived.ReportReviewed reportReviewed = rpr.addNewReportReviewed();
+                            reportReviewed.addNewDateTimeReportReviewed().setFullDate(Util.calDate(data));
+                            Util.writeNameSimple(reportReviewed.addNewName(), edoc.getReviewerName());
+                            data = edoc.getReviewerOhip();
+                            if (StringUtils.filled(data)) reportReviewed.setReviewingOHIPPhysicianId(data);
+                        }
+                        Util.writeNameSimple(rpr.addNewSourceAuthorPhysician().addNewAuthorName(), edoc.getSource());
+
+                        if (edoc.getDocId()==null) continue;
+                        
                         CaseManagementNoteLink cml = cmm.getLatestLinkByTableId(CaseManagementNoteLink.DOCUMENT, Long.valueOf(edoc.getDocId()));
                         if (cml!=null) {
                             CaseManagementNote n = cmm.getNote(cml.getNoteId().toString());
                             if (n.getNote()!=null) rpr.setNotes(n.getNote());
                         }
+                    }
+                }
 
+                //HRM reports
+                HRMDocumentToDemographicDao hrmDocToDemographicDao = (HRMDocumentToDemographicDao) SpringUtils.getBean("HRMDocumentToDemographicDao");
+                HRMDocumentDao hrmDocDao = (HRMDocumentDao) SpringUtils.getBean("HRMDocumentDao");
+                HRMDocumentSubClassDao hrmDocSubClassDao = (HRMDocumentSubClassDao) SpringUtils.getBean("HRMDocumentSubClassDao");
+
+                List<HRMDocumentToDemographic> hrmDocToDemographics = hrmDocToDemographicDao.findByDemographicNo(demoNo);
+                for (HRMDocumentToDemographic hrmDocToDemographic : hrmDocToDemographics) {
+                    String hrmDocumentId = hrmDocToDemographic.getHrmDocumentId();
+                    List<HRMDocument> hrmDocs = hrmDocDao.findById(Integer.valueOf(hrmDocumentId));
+                    List<HRMDocumentSubClass> hrmDocScs = hrmDocSubClassDao.getActiveSubClassesByDocumentId(Integer.valueOf(hrmDocumentId));
+                    for (HRMDocument hrmDoc : hrmDocs) {
+                        ReportsReceived rpr = patientRec.addNewReportsReceived();
+                        cdsDt.ReportClass.Enum reportClass = cdsDt.ReportClass.Enum.forString(hrmDoc.getReportType());
+                        if (reportClass!=null) rpr.setClass1(reportClass);
+                        else rpr.setClass1(cdsDt.ReportClass.OTHER_LETTER);
+
+                        rpr.addNewContent().setTextContent(StringUtils.noNull(hrmDoc.getReportFile()));
+                        rpr.setFormat(cdsDt.ReportFormat.TEXT);
+                        rpr.addNewEventDateTime().setFullDateTime(Util.calDate(hrmDoc.getReportDate()));
+                        rpr.addNewReceivedDateTime().setFullDateTime(Util.calDate(hrmDoc.getTimeReceived()));
+                        if (StringUtils.filled(hrmDoc.getReportStatus()))
+                            rpr.setHRMResultStatus(hrmDoc.getReportStatus().substring(0,1));
+
+                        for (HRMDocumentSubClass hrmDocSc : hrmDocScs) {
+                            ReportsReceived.OBRContent obr = rpr.addNewOBRContent();
+                            obr.setAccompanyingSubClass(hrmDocSc.getSubClass());
+                            obr.setAccompanyingDescription(hrmDocSc.getSubClassDescription());
+                            obr.setAccompanyingMnemonic(hrmDocSc.getSubClassMnemonic());
+                            obr.addNewObservationDateTime().setFullDateTime(Util.calDate(hrmDocSc.getSubClassDateTime()));
+                        }
                     }
                 }
             }
@@ -1757,12 +1751,14 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
         files.add(makeExportLog(files.get(0).getParentFile(), err));
 	
 	//zip all export files
-        String zipName = files.get(0).getName().replace(".xml", ".zip");
-	if (setName!=null) zipName = "export_"+setName.replace(" ","")+"_"+UtilDateUtilities.getToday("yyyyMMddHHmmss")+".zip";
+        String zipName = files.get(0).getName().replace(".xml", ".pgp");
+	if (setName!=null) zipName = "export_"+setName.replace(" ","")+"_"+UtilDateUtilities.getToday("yyyyMMddHHmmss")+".pgp";
 	if (!Util.zipFiles(files, zipName, tmpDir)) {
             logger.debug("Error! Failed to zip export files");
 	}
 
+//To be un-commented after CMS4
+/*
         if (pgpReady.equals("Yes")) {
             //PGP encrypt zip file
             PGPEncrypt pgp = new PGPEncrypt();
@@ -1779,6 +1775,13 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             Util.downloadFile(zipName, tmpDir, response);
             ffwd = "success";
         }
+ *
+ */
+//To be removed after CMS4
+        Util.downloadFile(zipName, tmpDir, response);
+        ffwd = "success";
+//To be removed after CMS4
+        
 
         //Remove zip & export files from temp dir
         Util.cleanFile(zipName, tmpDir);
@@ -1920,6 +1923,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             }
 
             out.close();
+            exportNo = 0;
             return exportLog;
     }
 

@@ -228,6 +228,14 @@
     if (roster_status!=null && roster_status.equals("TE")) {
         apptMainBean.queryExecuteUpdate(paramOne, "update_termination_date");
     }
+    if (!prev_patient_status.equals(pres_patient_status)) {
+        apptMainBean.queryExecuteUpdate(paramOne, "update_status_date");
+    }
+
+    String ros_status = request.getParameter("roster_status");
+    if (ros_status!=null && roster_status.equals("TE")) {
+        apptMainBean.queryExecuteUpdate(paramOne, "update_termination_date");
+    }
 
   int rowsAffected = apptMainBean.queryExecuteUpdate(param, dtparam, intparam, request.getParameter("dboperation"));
   if (rowsAffected ==1) {      

@@ -116,7 +116,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
     return null;
 }
 
-    void fillPatientRecord(PatientRecord patientRecord,String demoNo) throws SQLException, Exception{
+    boolean fillPatientRecord(PatientRecord patientRecord,String demoNo) throws SQLException, Exception{
 	if (setProblemList(patientRecord, demoNo)) {
 	    setReportInformation(patientRecord);
 	    setDemographicDetails(patientRecord, demoNo);
@@ -124,7 +124,9 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	    setImmunizations(patientRecord, demoNo);
 	    setLaboratoryResults(patientRecord, demoNo);
 	    setMedicationsAndTreatments(patientRecord, demoNo);
+            return true;
 	}
+        else return false;
     }
     
     
@@ -136,21 +138,23 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	options.setSaveOuter();
         ArrayList<File> files = new ArrayList<File>();
 
-        for (int i=0; i<demographicNos.size(); i++) {
+        int count = 0;
+        for (String demoNo : demographicNos) {
 	    OmdCdsDiabetesDocument omdCdsDiabetesDoc = OmdCdsDiabetesDocument.Factory.newInstance();
 	    OmdCdsDiabetesDocument.OmdCdsDiabetes omdcdsdiabetes = omdCdsDiabetesDoc.addNewOmdCdsDiabetes();
 	    
-	    String demoNo = demographicNos.get(i);
 	    PatientRecord patientRecord = omdcdsdiabetes.addNewPatientRecord();
-	    fillPatientRecord(patientRecord, demoNo);
-	    
+	    if (!fillPatientRecord(patientRecord, demoNo)) continue;
+
+
             //export file to temp directory
             try{
                 File dir = new File(tmpDir);
                 if(!dir.exists()){
                     throw new Exception("Temporary Export Directory (as set in oscar.properties) does not exist!");
                 }
-                String inFile = "omd_diabetes"+i+"-"+UtilDateUtilities.getToday("yyyy-MM-dd.HH.mm.ss")+".xml";
+                String inFile = "omd_diabetes"+count+"-"+UtilDateUtilities.getToday("yyyy-MM-dd.HH.mm.ss")+".xml";
+                count++;
                 files.add(new File(dir,inFile));
             }catch(Exception e){
                 MiscUtils.getLogger().error("Error", e);
@@ -443,12 +447,13 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	cdsDt.HealthCard healthCard = demo.addNewHealthCard();
 	healthCard.setNumber(data);
 	if (StringUtils.empty(data)) errors.add("Error! No Health Card Number for Patient "+demoNo);
-	healthCard.setProvinceCode(Util.setProvinceCode(demographic.getProvince()));
+        if (Util.setProvinceCode(demographic.getProvince())!=null) healthCard.setProvinceCode(Util.setProvinceCode(demographic.getProvince()));
+        else healthCard.setProvinceCode(cdsDt.HealthCardProvinceCode.X_70); //Asked, unknown
 	if (healthCard.getProvinceCode()==null) {
 	    errors.add("Error! No Health Card Province Code for Patient "+demoNo);
 	}
 	if (StringUtils.filled(demographic.getVersionCode())) healthCard.setVersion(demographic.getVersionCode());
-	data = demographic.getEffDate();
+	data = demographic.getHCRenewDate();
 	if (UtilDateUtilities.StringToDate(data)!=null) {
 	    healthCard.setExpirydate(Util.calDate(data));
         }
@@ -478,7 +483,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
         demoExt.putAll(ext.getAllValuesForDemo(demoNo));
 	
         String phoneNo = demographic.getPhone();
-	if (StringUtils.filled(phoneNo) && phoneNo.length()>=7) {
+	if (StringUtils.filled(phoneNo)) {
             cdsDt.PhoneNumber phoneResident = demo.addNewPhoneNumber();
             phoneResident.setPhoneNumberType(cdsDt.PhoneNumberType.R);
             phoneResident.setPhoneNumber(phoneNo);
@@ -497,14 +502,16 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
         ArrayList<String> inject = new ArrayList<String>();
         ArrayList<HashMap> preventionList = PreventionDisplayConfig.getInstance().getPreventions();
         for (int i=0; i<preventionList.size(); i++){
-            HashMap<String,String> h = preventionList.get(i);
+            HashMap<String,String> h = new HashMap<String,String>();
+            h.putAll(preventionList.get(i));
             if (h!= null && h.get("layout")!= null && h.get("layout").equals("injection")){
                 inject.add(h.get("name"));
             }	     	
         }
         preventionList = new PreventionData().getPreventionData(demoNo);
         for (int i=0; i<preventionList.size(); i++){
-            HashMap<String,String> h = preventionList.get(i);
+            HashMap<String,String> h = new HashMap<String,String>();
+            h.putAll(preventionList.get(i));
             if (h!= null && inject.contains(h.get("type")) ){
                 Immunizations immunizations = null;
                 Date preventionDate = UtilDateUtilities.StringToDate(h.get("prevention_date"),"yyyy-MM-dd");
@@ -604,14 +611,11 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             String range = labMea.getExtVal("range");
             String min = labMea.getExtVal("minimum");
             String max = labMea.getExtVal("maximum");
-            LaboratoryResults.ReferenceRange refRange = LaboratoryResults.ReferenceRange.Factory.newInstance();
+            LaboratoryResults.ReferenceRange refRange = labResults.addNewReferenceRange();
             if (StringUtils.filled(range)) refRange.setReferenceRangeText(range);
             else {
                 if (StringUtils.filled(min)) refRange.setLowLimit(min);
                 if (StringUtils.filled(max)) refRange.setHighLimit(max);
-            }
-            if (refRange.getLowLimit()!=null || refRange.getHighLimit()!=null || refRange.getReferenceRangeText()!=null) {
-                labResults.setReferenceRange(refRange);
             }
 	    
 	    String lab_no = labMea.getExtVal("lab_no");
@@ -653,9 +657,9 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             }
             String data = StringUtils.noNull(pa[p].getRegionalIdentifier());
             if (!din.contains(data)) continue;
-                
+
             MedicationsAndTreatments medications = patientRecord.addNewMedicationsAndTreatments();
-            medications.setDrugIdentificationNumber(DiabetesDinList.Enum.forString("X_"+data));
+            medications.setDrugIdentificationNumber(DiabetesDinList.Enum.forString(data));
 
             if (Util.calDate(pa[p].getWrittenDate())!=null) {
                 medications.addNewPrescriptionWrittenDate().setFullDate(Util.calDate(pa[p].getWrittenDate()));
@@ -691,16 +695,17 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             medications.setNumberOfRefills(String.valueOf(pa[p].getRepeat()));
 
             if (StringUtils.filled(pa[p].getDosage())) {
-                String strength = pa[p].getDosage();
-                int sep = strength.indexOf("/");
-                strength = sep<0 ? strength : strength.substring(0,sep);
+                String strength0 = pa[p].getDosage();
+                int sep = strength0.indexOf("/");
+                String strength = sep<0 ? Util.sleadingNum(strength0) : strength0.substring(0,sep);
 		if (sep>=0) {
-		    strength = strength.substring(0,sep);
 		    errors.add("Note: Multiple components exist for Drug "+drugName+" for Patient "+demoNo+". Exporting 1st one as Strength.");
+                    if (sep<strength0.length()) strength0 = strength0.substring(sep+1);
 		}
                 cdsDt.DrugMeasure drugM = medications.addNewStrength();
-                drugM.setAmount(strength.substring(0,strength.indexOf(" ")));
-                drugM.setUnitOfMeasure(strength.substring(strength.indexOf(" ")+1));
+                drugM.setAmount(strength);
+                drugM.setUnitOfMeasure(Util.trailingTxt(strength0));
+                if (StringUtils.isNullOrEmpty(drugM.getUnitOfMeasure())) drugM.setUnitOfMeasure("unit");
             }
 
             medications.addNewLongTermMedication().setBoolean(pa[p].getLongTerm());
@@ -718,14 +723,18 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             data = pa[p].getOutsideProviderName();
             if (StringUtils.filled(data)) {
                 MedicationsAndTreatments.PrescribedBy pcb = medications.addNewPrescribedBy();
-                pcb.setOHIPPhysicianId(StringUtils.noNull(pa[p].getOutsideProviderOhip()));
+                String ohip = pa[p].getOutsideProviderOhip();
+                if (ohip!=null && ohip.trim().length()<=6)
+                    pcb.setOHIPPhysicianId(ohip.trim());
                 Util.writeNameSimple(pcb.addNewName(), data);
             } else {
                 data = pa[p].getProviderNo();
                 if (StringUtils.filled(data)) {
                     MedicationsAndTreatments.PrescribedBy pcb = medications.addNewPrescribedBy();
                     ProviderData prvd = new ProviderData(data);
-                    pcb.setOHIPPhysicianId(prvd.getOhip_no());
+                    String ohip = prvd.getOhip_no();
+                    if (ohip!=null && ohip.trim().length()<=6)
+                        pcb.setOHIPPhysicianId(ohip.trim());
                     Util.writeNameSimple(pcb.addNewName(), prvd.getFirst_name(), prvd.getLast_name());
                 }
             }
