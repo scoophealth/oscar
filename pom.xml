@@ -739,7 +739,6 @@
 -->
 
       		</plugin>
-
 			<plugin>
 				<groupId>org.oscarehr.maven.plugins</groupId>
 				<artifactId>repository_cleaner_plugin</artifactId>
@@ -761,7 +760,6 @@
 					</execution>
 				</executions>
 			</plugin>
-			
 		</plugins>
 	</build>
 

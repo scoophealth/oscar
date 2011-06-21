@@ -27,7 +27,7 @@ package oscar.oscarEncounter.pageUtil;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Hashtable;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Vector;
 
@@ -85,7 +85,7 @@ public class EctDisplayPreventionAction extends EctDisplayAction {
         //now we list prevention modules as items
         PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance();
         ArrayList prevList = pdc.getPreventions();
-        Hashtable warningTable = p.getWarningMsgs();    
+        Map warningTable = p.getWarningMsgs();    
         
          
        
@@ -100,14 +100,14 @@ public class EctDisplayPreventionAction extends EctDisplayAction {
         String result;
         for (int i = 0 ; i < prevList.size(); i++){ 
             NavBarDisplayDAO.Item item = Dao.Item();
-            Hashtable h = (Hashtable) prevList.get(i);
+            Map h = (Map) prevList.get(i);
             String prevName = (String) h.get("name");
             ArrayList alist = pd.getPreventionData(prevName, bean.demographicNo); 
             boolean show = pdc.display(h, bean.demographicNo,alist.size()); 
             if( show ) {                                    
                 if( alist.size() > 0 ) {
-                    Hashtable hdata = (Hashtable) alist.get(alist.size()-1);
-                    Hashtable hExt = (Hashtable)pd.getPreventionKeyValues((String)hdata.get("id"));
+                    Map hdata = (Map) alist.get(alist.size()-1);
+                    Map hExt = pd.getPreventionKeyValues((String)hdata.get("id"));
                     result = (String)hExt.get("result");
 
                     date = (Date)hdata.get("prevention_date_asDate");
