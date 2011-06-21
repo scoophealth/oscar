@@ -76,7 +76,7 @@ Prescriptions
 					<c:out value="${prescription.remoteFacilityName}"/>
 				</c:if>
 			</td>
-		</c:if>
+		</c:if>		
 	</tr>
 </c:forEach>
 </table>

@@ -85,6 +85,7 @@ if (heading != null){
 			<th align="center" width="35px"><b><bean:message key="SearchDrug.msgReason"/></b></th>           
             <th align="center" width="15px">&nbsp;</th>
             <th align="center"><bean:message key="SearchDrug.msgLocationPrescribed"/></th>
+            <th align="center"><bean:message key="SearchDrug.msgHideCPP"/></th>
         </tr>
 
         <%
@@ -259,12 +260,36 @@ if (heading != null){
 
             </td>
 
+			<td>
+				<%
+					boolean hideCpp = prescriptDrug.getHideFromCpp();
+					String checked="";
+					if(hideCpp) {
+						checked="checked=\"checked\"";
+					}
+				%>
+				<input type="checkbox" id="hidecpp_<%=prescriptIdInt%>" <%=checked%>/>
+			</td>
         </tr>
+        <script>
+Event.observe('hidecpp_<%=prescriptIdInt%>', 'change', function(event) {
+	var val = $('hidecpp_<%=prescriptIdInt%>').checked;	
+	new Ajax.Request('<c:out value="${ctx}"/>/oscarRx/hideCpp.do?method=update&prescriptId=<%=prescriptIdInt%>&value='+val, {
+		  method: 'get',
+		  onSuccess: function(transport) {		   
+		  }
+		});
+
+});
+
+</script>
         <%}%>
     </table>
 
 </div>
         <br>
+
+        
         <script type="text/javascript">
 sortables_init();
             </script>
