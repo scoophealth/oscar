@@ -55,6 +55,10 @@
 <%@ page import="oscar.OscarProperties"%>
 <%@ page import="org.oscarehr.phr.PHRAuthentication"%>
 <%@ page import="org.oscarehr.common.web.ContactAction" %>
+<%@ page import="org.oscarehr.common.dao.UserPropertyDAO"%>
+<%@ page import="org.oscarehr.common.model.UserProperty"%>
+<%@ page import="org.oscarehr.util.SpringUtils"%>
+
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
 <jsp:useBean id="providerBean" class="java.util.Properties"
@@ -1189,6 +1193,22 @@ if ( PatStat.equals(Dead) ) {%>
 						&nbsp;
 						</div>
 
+						<div class="demographicSection" id="rxInteractionWarningLevel">
+						<h3>&nbsp;<bean:message
+							key="demographic.demographiceditdemographic.rxInteractionWarningLevel" /></h3>
+                              <%                              
+                              	String warningLevel = (String)demoExt.get("rxInteractionWarningLevel");
+                              	if(warningLevel==null) warningLevel="0";
+	          					String warningLevelStr = "Not Specified";
+	          					if(warningLevel.equals("1")) {warningLevelStr="Low";}
+	          					if(warningLevel.equals("2")) {warningLevelStr="Medium";}
+	          					if(warningLevel.equals("3")) {warningLevelStr="High";}
+                              %>
+						&nbsp;
+						<b><%=warningLevelStr %></b>
+						</div>
+
+
 						</div>
 						<div class="rightSection">
 						<div class="demographicSection" id="contactInformation">
@@ -2274,6 +2294,19 @@ if(oscarVariables.getProperty("demographicExt") != null) {
 if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(oscarVariables.getProperty("demographicExtJScript")); }
 %>
 
+<tr valign="top">
+<td nowrap colspan="4">
+<b><bean:message key="demographic.demographiceditdemographic.rxInteractionWarningLevel" /></b>
+<input type="hidden" name="rxInteractionWarningLevelOrig"
+									value="<%=apptMainBean.getString(demoExt.get("rxInteractionWarningLevel"))%>" />
+					<select id="rxInteractionWarningLevel" name="rxInteractionWarningLevel">
+						<option value="0" <%=(warningLevel.equals("0")?"selected=\"selected\"":"") %>>Not Specified</option>
+						<option value="1" <%=(warningLevel.equals("1")?"selected=\"selected\"":"") %>>Low</option>
+						<option value="2" <%=(warningLevel.equals("2")?"selected=\"selected\"":"") %>>Medium</option>
+						<option value="3" <%=(warningLevel.equals("3")?"selected=\"selected\"":"") %>>High</option>
+					</select>
+</td>
+</tr>
 							<tr valign="top">
 								<td nowrap colspan="4">
 								<table width="100%" bgcolor="#EEEEFF">

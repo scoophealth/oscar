@@ -107,6 +107,19 @@
                         (All patients' names, hin# & sin# will be removed in Integrator)
                         <br>
                     </td>
+                </tr>
+                
+		<tr class="b">
+			<td>Rx Interaction Warning Level:</td>
+			<td>
+				<html:select property="facility.rxInteractionWarningLevel">
+					<html:option value="0">Not Specified</html:option>
+					<html:option value="1">Low</html:option>
+					<html:option value="2">Medium</html:option>
+					<html:option value="3">High</html:option>
+				</html:select>
+			</td>
+		</tr>                
 <!--Ronnie
                 </tr>
                 <tr class="b">
