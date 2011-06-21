@@ -132,9 +132,9 @@
 	  param[23]=new DBPreparedHandlerParam(request.getParameter("pcn_indicator"));
 	  param[24]=new DBPreparedHandlerParam(request.getParameter("hc_type"));
 
-	    year = StringUtils.trimToNull(request.getParameter("hc_renew_date_year"));
-	    month = StringUtils.trimToNull(request.getParameter("hc_renew_date_month"));
-	    day = StringUtils.trimToNull(request.getParameter("hc_renew_date_date"));
+	    year = StringUtils.trimToNull(request.getParameter("roster_date_year"));
+	    month = StringUtils.trimToNull(request.getParameter("roster_date_month"));
+	    day = StringUtils.trimToNull(request.getParameter("roster_date_date"));
 		if (year!=null && month!=null && day!=null)
 		{
 			param[25] =new DBPreparedHandlerParam(MyDateFormat.getSysDate( year + "-" + month + "-" + day));

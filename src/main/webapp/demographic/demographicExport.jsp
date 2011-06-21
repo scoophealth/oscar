@@ -219,20 +219,8 @@ if (!userRole.toLowerCase().contains("admin")) { %>
 			    <%}%>
 			    </html:select>
 		    <%}%>
-		    </div><br>
-		   Media Type:
-		   <html:select property="mediaType">
-				<html:option value="Hard Disk">Hard Disk</html:option>
-				<html:option value="CD/DVD">CD/DVD</html:option>
-				<html:option value="Flash Disk">Flash Disk</html:option>
-				<html:option value="Floppy Disk">Floppy Disk</html:option>
-				<html:option value="Tape">Tape</html:option>
-			</html:select>
-		   &nbsp;
-		   Number of Media:
-		   <html:text property="noOfMedia" size="1" value="1" />
-		   
-		   <p><table border="1"><tr><td>
+		    </div>
+                    <p><table border="1"><tr><td>
 		       Export Categories:
 		       <table cellpadding="10"><tr><td>
 		       <html:checkbox property="exFamilyHistory">Family History</html:checkbox><br>
@@ -248,7 +236,7 @@ if (!userRole.toLowerCase().contains("admin")) { %>
 		       <html:checkbox property="exClinicalNotes">Clinical Notes</html:checkbox><br>
 		       <html:checkbox property="exReportsReceived">Reports Received</html:checkbox><br>
 		       <html:checkbox property="exCareElements">Care Elements</html:checkbox><br>
-		       <html:checkbox property="exAlertsAndSpecialNeeds">Audit Information</html:checkbox>
+		       <html:checkbox property="exAlertsAndSpecialNeeds">Alerts And Special Needs</html:checkbox>
 		       </td><td>
 			   <input type="button" value="Check All" onclick="checkAll(true);"/><p>
 			   <input type="button" value="Check None" onclick="checkAll(false);"/>
