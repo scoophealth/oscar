@@ -1,12 +1,3 @@
-/*
- * Hl7textResultsData.java
- *
- * Created on June 19, 2007, 10:33 AM
- *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
- */
-
 package org.oscarehr.common.dao;
 
 import java.util.ArrayList;
@@ -27,10 +18,6 @@ import org.springframework.stereotype.Repository;
 import oscar.oscarLab.ca.on.CommonLabResultData;
 import oscar.oscarLab.ca.on.LabResultData;
 
-/**
- *
- * @author jackson
- */
 @Repository
 public class DocumentResultsDao extends AbstractDao<Document>{
     

@@ -1,3 +1,8 @@
+<%@page import="org.apache.commons.lang.builder.ReflectionToStringBuilder"%>
+<%@page import="org.oscarehr.util.MiscUtils"%>
+<%@page import="org.w3c.dom.Document"%>
+<%@page import="org.oscarehr.caisi_integrator.ws.CachedDemographicLabResult"%>
+<%@page import="oscar.oscarLab.ca.all.web.LabDisplayHelper"%>
 <%@page errorPage="../../../provider/errorpage.jsp" %>
 <%@ page import="java.util.*,
 		 java.sql.*,
@@ -21,48 +26,74 @@ String segmentID = request.getParameter("segmentID");
 String providerNo = request.getParameter("providerNo");
 String searchProviderNo = request.getParameter("searchProviderNo");
 String patientMatched = request.getParameter("patientMatched");
+String remoteFacilityIdString = request.getParameter("remoteFacilityId");
+String remoteLabKey = request.getParameter("remoteLabKey");
+String demographicID = request.getParameter("demographicId");
 
-Long reqIDL = LabRequestReportLink.getIdByReport("hl7TextMessage",Long.valueOf(segmentID));
-String reqID = reqIDL==null ? "" : String.valueOf(reqIDL);
-
-//String sql = "SELECT status FROM providerLabRouting WHERE lab_no='"+segmentID+"';";
-String sql = "SELECT demographic_no FROM patientLabRouting WHERE lab_type='HL7' and lab_no='"+segmentID+"';";
-
-ResultSet rs = DBHandler.GetSQL(sql);
-String demographicID = "";
-
-while(rs.next()){
-    demographicID = oscar.Misc.getString(rs,"demographic_no");
-}
-rs.close();
 boolean isLinkedToDemographic=false;
+ArrayList<ReportStatus> ackList=null;
+String multiLabId = null;
+MessageHandler handler=null;
+String hl7 = null;
+String reqID = "";
 
-if(demographicID != null && !demographicID.equals("")&& !demographicID.equals("0")){
-    isLinkedToDemographic=true;
-    LogAction.addLog((String) session.getAttribute("user"), LogConst.READ, LogConst.CON_HL7_LAB, segmentID, request.getRemoteAddr(),demographicID);
-}else{           
-    LogAction.addLog((String) session.getAttribute("user"), LogConst.READ, LogConst.CON_HL7_LAB, segmentID, request.getRemoteAddr());
+if (remoteFacilityIdString==null) // local lab
+{
+	Long reqIDL = LabRequestReportLink.getIdByReport("hl7TextMessage",Long.valueOf(segmentID));
+	if (reqIDL!=null) reqID = String.valueOf(reqIDL);
+	
+	String sql = "SELECT demographic_no FROM patientLabRouting WHERE lab_type='HL7' and lab_no='"+segmentID+"';";
+
+	ResultSet rs = DBHandler.GetSQL(sql);
+
+	while(rs.next()){
+	    demographicID = oscar.Misc.getString(rs,"demographic_no");
+	}
+	rs.close();
+
+	if(demographicID != null && !demographicID.equals("")&& !demographicID.equals("0")){
+	    isLinkedToDemographic=true;
+	    LogAction.addLog((String) session.getAttribute("user"), LogConst.READ, LogConst.CON_HL7_LAB, segmentID, request.getRemoteAddr(),demographicID);
+	}else{           
+	    LogAction.addLog((String) session.getAttribute("user"), LogConst.READ, LogConst.CON_HL7_LAB, segmentID, request.getRemoteAddr());
+	}
+
+	ackList = AcknowledgementData.getAcknowledgements(segmentID);
+	multiLabId = Hl7textResultsData.getMatchingLabs(segmentID);
+	handler = Factory.getHandler(segmentID);
+	hl7 = Factory.getHL7Body(segmentID);
+}
+else // remote lab
+{
+	CachedDemographicLabResult remoteLabResult=LabDisplayHelper.getRemoteLab(Integer.parseInt(remoteFacilityIdString), remoteLabKey);
+	MiscUtils.getLogger().debug("retrieved remoteLab:"+ReflectionToStringBuilder.toString(remoteLabResult));
+	isLinkedToDemographic=true;
+	
+	LogAction.addLog((String) session.getAttribute("user"), LogConst.READ, LogConst.CON_HL7_LAB, "segmentId="+segmentID+", remoteFacilityId="+remoteFacilityIdString+", remoteDemographicId="+demographicID);
+	
+	Document cachedDemographicLabResultXmlData=LabDisplayHelper.getXmlDocument(remoteLabResult);
+	
+	ackList=LabDisplayHelper.getReportStatus(cachedDemographicLabResultXmlData);
+	multiLabId=LabDisplayHelper.getMultiLabId(cachedDemographicLabResultXmlData);
+	handler=LabDisplayHelper.getMessageHandler(cachedDemographicLabResultXmlData);
+	hl7=LabDisplayHelper.getHl7Body(cachedDemographicLabResultXmlData);
 }
 
 
 
 boolean ackFlag = false;
-AcknowledgementData ackData = new AcknowledgementData();
-ArrayList ackList = ackData.getAcknowledgements(segmentID);
 if (ackList != null){
     for (int i=0; i < ackList.size(); i++){
-        ReportStatus reportStatus = (ReportStatus) ackList.get(i);
+        ReportStatus reportStatus = ackList.get(i);
         if (reportStatus.getProviderNo().equals(providerNo) && reportStatus.getStatus().equals("A") ){
             ackFlag = true;//lab has been ack by this provider.
             break;
         }
     }
 }
-MessageHandler handler = Factory.getHandler(segmentID);
-Hl7textResultsData data = new Hl7textResultsData();
-String multiLabId = data.getMatchingLabs(segmentID);
 
-String hl7 = Factory.getHL7Body(segmentID);
+/********************** Converted to this sport *****************************/ 
+
 
 // check for errors printing
 if (request.getAttribute("printError") != null && (Boolean) request.getAttribute("printError")){
@@ -620,7 +651,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                     ReportStatus report;          
                                     boolean startFlag = false;
                                     for (int j=multiID.length-1; j >=0; j--){
-                                        ackList = ackData.getAcknowledgements(multiID[j]);                                        
+                                        ackList = AcknowledgementData.getAcknowledgements(multiID[j]);                                        
                                         if (multiID[j].equals(segmentID))
                                             startFlag = true;                                                              
                                         if (startFlag)
@@ -741,8 +772,9 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                             lineClass = "HiLoRes";
                                         } else if ( abnormal != null && ( abnormal.equals("A") || abnormal.startsWith("H") || handler.isOBXAbnormal( j, k) ) ){
                                             lineClass = "AbnormalRes";
-                                        }%>
-                                        <%if(handler.getOBXValueType(j,k) != null &&  handler.getOBXValueType(j,k).equalsIgnoreCase("FT")){
+                                        }
+                                                                                
+                                        if(handler.getOBXValueType(j,k) != null &&  handler.getOBXValueType(j,k).equalsIgnoreCase("FT")){
                                             String[] dividedString  =divideStringAtFirstNewline(handler.getOBXResult( j, k));
                                             %>                                         
                                             <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>" >

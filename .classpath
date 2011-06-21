@@ -226,5 +226,6 @@
 	<classpathentry kind="var" path="M2_REPO/org/apache/santuario/xmlsec/1.4.4/xmlsec-1.4.4.jar"/>
 	<classpathentry kind="var" path="M2_REPO/zxing/zxing-core/1.5/zxing-core-1.5.jar"/>
 	<classpathentry kind="var" path="M2_REPO/zxing/zxing-j2se/1.5/zxing-j2se-1.5.jar"/>
+	<classpathentry kind="var" path="M2_REPO/com/jcraft/jsch/0.1.29/jsch-0.1.29.jar"/>
 	<classpathentry kind="output" path="eclipse-target/classes"/>
 </classpath>
