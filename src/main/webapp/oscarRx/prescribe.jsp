@@ -19,13 +19,12 @@ if(listRxDrugs!=null){
          String rand            = Long.toString(rx.getRandomId());
          String instructions    = rx.getSpecial();
          String specialInstruction=rx.getSpecialInstruction();
-         String drugForm        = rx.getDrugForm();
          String startDate       = RxUtil.DateToString(rx.getRxDate(), "yyyy-MM-dd");
          String writtenDate     = RxUtil.DateToString(rx.getWrittenDate(), "yyyy-MM-dd");
          String lastRefillDate  = RxUtil.DateToString(rx.getLastRefillDate(), "yyyy-MM-dd");
          int gcn=rx.getGCN_SEQNO();//if gcn is 0, rx is customed drug.
          String customName      = rx.getCustomName();
-         int patientCompliance  = rx.getPatientCompliance();
+         Boolean patientCompliance  = rx.getPatientCompliance();
          String frequency       = rx.getFrequencyCode();
          String route           = rx.getRoute();
          String durationUnit    = rx.getDurationUnit();
@@ -39,6 +38,10 @@ if(listRxDrugs!=null){
          String brandName       = rx.getBrandName();
          String ATC             = rx.getAtcCode();
          String genericName     = rx.getGenericName();
+         String pickupDate      = RxUtil.DateToString(rx.getPickupDate(), "yyyy-MM-dd");
+         String pickupTime      = RxUtil.DateToString(rx.getPickupTime(), "hh:mm");
+         String eTreatmentType  = rx.getETreatmentType()!=null ? rx.getETreatmentType() : "";
+         String rxStatus        = rx.getRxStatus()!=null ? rx.getRxStatus() : "";
          if(ATC.trim().length()>0)
              ATC="ATC: "+ATC;
          String drugName;
@@ -168,10 +171,10 @@ if(listRxDrugs!=null){
 
 	<bean:message key="WriteScript.msgPatientCompliance"/>:
           <bean:message key="WriteScript.msgYes"/>
-            <input type="checkbox"  name="patientComplianceY_<%=rand%>" id="patientComplianceY_<%=rand%>" <%if(patientCompliance==1) {%> checked="true" <%}%> />
+            <input type="checkbox"  name="patientComplianceY_<%=rand%>" id="patientComplianceY_<%=rand%>" <%if(patientCompliance!=null && patientCompliance) {%> checked="true" <%}%> />
 
           <bean:message key="WriteScript.msgNo"/>
-            <input type="checkbox"  name="patientComplianceN_<%=rand%>" id="patientComplianceN_<%=rand%>" <%if(patientCompliance==-1) {%> checked="true" <%}%> />
+            <input type="checkbox"  name="patientComplianceN_<%=rand%>" id="patientComplianceN_<%=rand%>" <%if(patientCompliance!=null && !patientCompliance) {%> checked="true" <%}%> />
 
           <bean:message key="WriteScript.msgNonAuthoritative"/>
             <input type="checkbox" name="nonAuthoritativeN_<%=rand%>" id="nonAuthoritativeN_<%=rand%> " <%if(nonAuthoritative) {%> checked="true" <%}%> /><br/>
@@ -189,19 +192,28 @@ if(listRxDrugs!=null){
            <br />
            
            <bean:message key="WriteScript.msgPickUpDate"/>: 
-           <input type="text" id="pickupDate_<%=rand%>"  name="pickupDate_<%=rand%>" onchange="if (!isValidDate(this.value)) {this.value=null}" />
+           <input type="text" id="pickupDate_<%=rand%>"  name="pickupDate_<%=rand%>" value="<%=pickupDate%>" onchange="if (!isValidDate(this.value)) {this.value=null}" />
            <bean:message key="WriteScript.msgPickUpTime"/>: 
-                <input type="text" id="pickupTime_<%=rand%>"  name="pickupTime_<%=rand%>" onchange="if (!isValidTime(this.value)) {this.value=null}" />
+           <input type="text" id="pickupTime_<%=rand%>"  name="pickupTime_<%=rand%>" value="<%=pickupTime%>" onchange="if (!isValidTime(this.value)) {this.value=null}" />
            <br/> 
            <bean:message key="WriteScript.msgETreatmentType"/>:     
            <select name="eTreatmentType_<%=rand%>">
            		<option>--</option>
-				<option value="CHRON"><bean:message key="WriteScript.msgETreatment.Continuous"/></option>
-				<option value="ACU"><bean:message key="WriteScript.msgETreatment.Acute"/></option>
-				<option value="ONET"><bean:message key="WriteScript.msgETreatment.OneTime"/></option>
-				<option value="PRNL"><bean:message key="WriteScript.msgETreatment.LongTermPRN"/></option>
-				<option value="PRNS"><bean:message key="WriteScript.msgETreatment.ShortTermPRN"/></option>      
-			</select>
+                         <option value="CHRON" <%=eTreatmentType.equals("CHRON")?"selected":""%>><bean:message key="WriteScript.msgETreatment.Continuous"/></option>
+ 				<option value="ACU" <%=eTreatmentType.equals("ACU")?"selected":""%>><bean:message key="WriteScript.msgETreatment.Acute"/></option>
+ 				<option value="ONET" <%=eTreatmentType.equals("ONET")?"selected":""%>><bean:message key="WriteScript.msgETreatment.OneTime"/></option>
+ 				<option value="PRNL" <%=eTreatmentType.equals("PRNL")?"selected":""%>><bean:message key="WriteScript.msgETreatment.LongTermPRN"/></option>
+ 				<option value="PRNS" <%=eTreatmentType.equals("PRNS")?"selected":""%>><bean:message key="WriteScript.msgETreatment.ShortTermPRN"/></option>           </select>
+           <select name="rxStatus_<%=rand%>">
+           		<option>--</option>
+                         <option value="New" <%=rxStatus.equals("New")?"selected":""%>><bean:message key="WriteScript.msgRxStatus.New"/></option>
+                         <option value="Active" <%=rxStatus.equals("Active")?"selected":""%>><bean:message key="WriteScript.msgRxStatus.Active"/></option>
+                         <option value="Suspended" <%=rxStatus.equals("Suspended")?"selected":""%>><bean:message key="WriteScript.msgRxStatus.Suspended"/></option>
+                         <option value="Aborted" <%=rxStatus.equals("Aborted")?"selected":""%>><bean:message key="WriteScript.msgRxStatus.Aborted"/></option>
+                         <option value="Completed" <%=rxStatus.equals("Completed")?"selected":""%>><bean:message key="WriteScript.msgRxStatus.Completed"/></option>
+                         <option value="Obsolete" <%=rxStatus.equals("Obsolete")?"selected":""%>><bean:message key="WriteScript.msgRxStatus.Obsolete"/></option>
+                         <option value="Nullified" <%=rxStatus.equals("Nullified")?"selected":""%>><bean:message key="WriteScript.msgRxStatus.Nullified"/></option>
+           </select>
                 
 
 

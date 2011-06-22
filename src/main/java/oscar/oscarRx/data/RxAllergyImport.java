@@ -33,10 +33,10 @@ import org.oscarehr.util.DbConnectionFilter;
 
 public class RxAllergyImport {
    
-    public static Long save(String demographicNo, String entryDate, String description, String typeCode, String reaction, String startDate, String severity, String regionalId) throws SQLException {
+    public static Long save(String demographicNo, String entryDate, String description, String typeCode, String reaction, String startDate, String severity, String regionalId, String lifeStage) throws SQLException {
 	Long id = null;
-	String sql = "INSERT INTO allergies (demographic_no, entry_date, DESCRIPTION, TYPECODE, reaction, start_date, severity_of_reaction, regional_identifier)" +
-				   " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+	String sql = "INSERT INTO allergies (demographic_no, entry_date, DESCRIPTION, TYPECODE, reaction, start_date, severity_of_reaction, regional_identifier, life_stage)" +
+				   " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	
 	Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
 	PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -48,6 +48,7 @@ public class RxAllergyImport {
 	pstmt.setString(6, startDate);
 	pstmt.setString(7, severity);
 	pstmt.setString(8, regionalId);
+        pstmt.setString(9, lifeStage);
 	pstmt.executeUpdate();
 	ResultSet rs = pstmt.getGeneratedKeys();
 	if (rs.next()) id = rs.getLong(1);
