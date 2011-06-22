@@ -1045,10 +1045,10 @@ document.forms[1].r_doctor_ohip.value = refNo;
 					key="demographic.demographicaddrecordhtm.AddNewRosterStatus"/> " /></td>
 				<td align="right" nowrap><b><bean:message
 					key="demographic.demographicaddrecordhtm.formPCNDateJoined" />: </b></td>
-				<td align="left"><input type="text" name="hc_renew_date_year"
+				<td align="left"><input type="text" name="roster_date_year"
 					size="4" maxlength="4"> <input type="text"
-					name="hc_renew_date_month" size="2" maxlength="2"> <input
-					type="text" name="hc_renew_date_date" size="2" maxlength="2">
+					name="roster_date_month" size="2" maxlength="2"> <input
+					type="text" name="roster_date_date" size="2" maxlength="2">
 				</td>
 			</tr>
 			<tr valign="top">

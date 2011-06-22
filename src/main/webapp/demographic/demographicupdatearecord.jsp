@@ -215,8 +215,19 @@
         }
     }
 
-    int[] paramArch =new int[] {Integer.parseInt(request.getParameter("demographic_no"))};
-    apptMainBean.queryExecuteUpdate(paramArch, "archive_record");
+    int[] paramOne =new int[] {Integer.parseInt(request.getParameter("demographic_no"))};
+    apptMainBean.queryExecuteUpdate(paramOne, "archive_record");
+
+    String prev_patient_status = request.getParameter("prev_patient_status");
+    String pres_patient_status = request.getParameter("patient_status");
+    if (prev_patient_status!=null && pres_patient_status!=null && !prev_patient_status.equals(pres_patient_status)) {
+        apptMainBean.queryExecuteUpdate(paramOne, "update_status_date");
+    }
+
+    String roster_status = request.getParameter("roster_status");
+    if (roster_status!=null && roster_status.equals("TE")) {
+        apptMainBean.queryExecuteUpdate(paramOne, "update_termination_date");
+    }
 
   int rowsAffected = apptMainBean.queryExecuteUpdate(param, dtparam, intparam, request.getParameter("dboperation"));
   if (rowsAffected ==1) {      

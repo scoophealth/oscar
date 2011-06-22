@@ -51,6 +51,7 @@ public class Demographic implements Serializable {
 	private Integer demographicNo;// fields
 	private String phone;
 	private String patientStatus;
+        private Date patientStatusDate;
 	private String rosterStatus;
 	private String providerNo;
 	private String pin;
@@ -143,6 +144,7 @@ public class Demographic implements Serializable {
 		demographic.setHcType(DEFAULT_HEATH_CARD_TYPE);
 		demographic.setPcnIndicator(StringUtils.EMPTY);
 		demographic.setPatientStatus(DEFAULT_PATIENT_STATUS);
+                demographic.setPatientStatusDate(new Date());
 		demographic.setPin(StringUtils.EMPTY);
 		demographic.setRosterStatus(StringUtils.EMPTY);
 		demographic.setSex(gender == null || gender.length() == 0 ? DEFAULT_SEX : gender.substring(0, 1).toUpperCase());
@@ -235,6 +237,10 @@ public class Demographic implements Serializable {
 		return patientStatus;
 	}
 
+	public Date getPatientStatusDate() {
+		return patientStatusDate;
+	}
+
 	/**
 	 * Set the value related to the column: patient_status
 	 * 
@@ -242,6 +248,10 @@ public class Demographic implements Serializable {
 	 */
 	public void setPatientStatus(String patientStatus) {
 		this.patientStatus = patientStatus;
+	}
+
+	public void setPatientStatusDate(Date patientStatusDate) {
+		this.patientStatusDate = patientStatusDate;
 	}
 
 	/**

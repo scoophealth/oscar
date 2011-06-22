@@ -783,11 +783,11 @@ public class CihiExportAction extends DispatchAction {
 	        medications.setNumberOfRefills(String.valueOf(pa[p].getRepeat()));
 	        
 	        YnIndicatorAndBlank patientCompliance = medications.addNewPatientCompliance();
-	        if (pa[p].getPatientCompliance()==0) {
+	        if (pa[p].getPatientCompliance()==null) {
 	        	patientCompliance.setBlank(cdsDtCihi.Blank.X);	        	
 	        }
 	        else {
-	        	patientCompliance.setBoolean(pa[p].getPatientCompliance()==1);
+	        	patientCompliance.setBoolean(pa[p].getPatientCompliance());
 	        }
 		}
 		

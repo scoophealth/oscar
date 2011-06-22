@@ -922,6 +922,12 @@ public final class RxWriteScriptAction extends DispatchAction {
 							}else{
 							   rx.setETreatmentType(val);
 							}
+						} else if (elem.equals("rxStatus_"+num)){
+							if("--".equals(val)){
+							   rx.setRxStatus(null);
+							}else{
+							   rx.setRxStatus(val);
+							}
 						}
                                                 
 					}
