@@ -1,5 +1,6 @@
 package org.oscarehr.PMmodule.caisi_integrator;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
@@ -83,6 +84,8 @@ public final class ConformanceTestHelper {
 				if (demographicTransfer.getStreetAddress()!=null) demographic.setAddress(demographicTransfer.getStreetAddress());
 				if (demographicTransfer.getPhone1()!=null) demographic.setPhone(demographicTransfer.getPhone1());
 				if (demographicTransfer.getPhone2()!=null) demographic.setPhone2(demographicTransfer.getPhone2());
+				
+				demographic.setRosterDate(new Date());
 				
 				demographicDao.save(demographic);				
 			}
