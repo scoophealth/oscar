@@ -328,7 +328,12 @@ function popupEChart(vheight,vwidth,varpage) { //open a new popup window
 		<%DemographicMerged dmDAO = new DemographicMerged();
             String dem_no = apptMainBean.getString(rs,"demographic_no");    
             String head = dmDAO.getHead(dem_no);
-            if (vLocale.getCountry().equals("BR")) { %> <a
+                       
+            if(head != null && !head.equals(dem_no)) {
+            	//skip non head records
+            	continue;
+            }
+           if (vLocale.getCountry().equals("BR")) { %> <a
 			href="demographiccontrol.jsp?demographic_no=<%= head %>&displaymode=edit&dboperation=search_detail_ptbr"><%=dem_no%></a>
 		<!-- Link to Oscar Message with display mode = linkMsg2Demo --> </div> <%}else if ( fromMessenger ) {%>
 		<a
