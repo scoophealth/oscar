@@ -25,6 +25,7 @@
 -->
 <%@page
 	import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*"%>
+
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
@@ -54,6 +55,7 @@
   Integer demographicId=Integer.parseInt(demographic_no);
   pd.addRemotePreventions(p, demographicId);
   Date demographicDateOfBirth=pd.getDemographicDateOfBirth(demographic_no);
+  String demographicDob = oscar.util.UtilDateUtilities.DateToString(demographicDateOfBirth);  
   
   PreventionDS pf = PreventionDS.getInstance();
   
@@ -456,7 +458,7 @@ div.recommendations li {
                  if (!oscar.OscarProperties.getInstance().getBooleanProperty("PREVENTION_CLASSIC_VIEW","yes")){
                    ArrayList hiddenlist = new ArrayList();
                   for (int i = 0 ; i < prevList.size(); i++){ 
-                        Map h = (Map) prevList.get(i);
+                        Hashtable h = (Hashtable) prevList.get(i);
                         String prevName = (String) h.get("name");
                         ArrayList alist = pd.getPreventionData(prevName, demographic_no); 
                         pd.addRemotePreventions(alist, demographicId,prevName,demographicDateOfBirth);
@@ -554,7 +556,7 @@ div.recommendations li {
 		<%}else{  //OLD
                     if (configSets == null ){ configSets = new ArrayList(); }
                     for ( int setNum = 0; setNum < configSets.size(); setNum++){ 
-                  	  Map setHash = (Map) configSets.get(setNum);
+                  	  Hashtable setHash = (Hashtable) configSets.get(setNum);
                     String[] prevs = (String[]) setHash.get("prevList");
                     %>
 		<div class="immSet">
@@ -614,7 +616,7 @@ div.recommendations li {
 	</tr>
 </table>
 <input type="hidden" id="nameAge" name="nameAge"
-	value="<oscar:nameage demographicNo="<%=demographic_no%>"/>">
+	value="<oscar:nameage demographicNo="<%=demographic_no%>"/> DOB:<%=demographicDob%>">
 
 <%
     for (int i = 0 ; i < prevList.size(); i++){ 
