@@ -264,6 +264,8 @@
        dExt.addKey(proNo, dem, "fNationCom",    request.getParameter("fNationCom"),    "");
        dExt.addKey(proNo, dem, "given_consent", request.getParameter("given_consent"), "");
 
+       dExt.addKey(proNo, dem, "rxInteractionWarningLevel", request.getParameter("rxInteractionWarningLevel"), "");
+       
        //for the IBD clinic
 		OtherIdManager.saveIdDemographic(dem, "meditech_id", request.getParameter("meditech_id"));
      

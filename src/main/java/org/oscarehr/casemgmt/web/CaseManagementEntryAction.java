@@ -762,8 +762,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		/* save extra fields */
 		CaseManagementNoteExt cme = new CaseManagementNoteExt();
 		cme.setNoteId(note.getId());
-		String[] names = { "startdate", "resolutiondate", "proceduredate", "ageatonset", "problemstatus", "treatment", "exposuredetail", "relationship","lifestage" };
-		String[] keys = { cme.STARTDATE, cme.RESOLUTIONDATE, cme.PROCEDUREDATE, cme.AGEATONSET, cme.PROBLEMSTATUS, cme.TREATMENT, cme.EXPOSUREDETAIL, cme.RELATIONSHIP,cme.LIFESTAGE };
+		String[] names = { "startdate", "resolutiondate", "proceduredate", "ageatonset", "problemstatus", "treatment", "exposuredetail", "relationship","lifestage","hidecpp" };
+		String[] keys = { cme.STARTDATE, cme.RESOLUTIONDATE, cme.PROCEDUREDATE, cme.AGEATONSET, cme.PROBLEMSTATUS, cme.TREATMENT, cme.EXPOSUREDETAIL, cme.RELATIONSHIP,cme.LIFESTAGE,cme.HIDECPP };
 		for (int i = 0; i < names.length; i++) {
 			String val = request.getParameter(names[i]);
 			if (filled(val)) {
@@ -2372,7 +2372,18 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 				issueNotes = new ArrayList<CaseManagementNote>();
 				for (int k = 0; k < tmpNotes.size(); ++k) {
 					if (!tmpNotes.get(k).isLocked()) {
-						issueNotes.add(tmpNotes.get(k));
+						List<CaseManagementNoteExt> exts = caseManagementMgr.getExtByNote(tmpNotes.get(k).getId());
+						boolean exclude=false;
+						for(CaseManagementNoteExt ext:exts) {
+							if(ext.getKeyVal().equals("Hide Cpp")) {
+								if(ext.getValue().equals("1")) {
+									exclude=true;
+								}
+							}
+						}
+						if(!exclude) {
+							issueNotes.add(tmpNotes.get(k));
+						}
 					}
 				}
 				cpp.put(issueCodes[j], issueNotes);

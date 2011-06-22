@@ -660,8 +660,8 @@ function getCPP(issueCode) {
     return "";
 }
 
-var exFields = new Array(9);
-var exKeys = new Array(9);
+var exFields = new Array(10);
+var exKeys = new Array(10);
 exFields[0] = "startdate";
 exFields[1] = "resolutiondate";
 exFields[2] = "proceduredate";
@@ -671,6 +671,7 @@ exFields[5] = "problemstatus";
 exFields[6] = "exposuredetail";
 exFields[7] = "relationship";
 exFields[8] = "lifestage";
+exFields[9] = "hidecpp";
 exKeys[0] = "Start Date";
 exKeys[1] = "Resolution Date";
 exKeys[2] = "Procedure Date";
@@ -680,19 +681,20 @@ exKeys[5] = "Problem Status";
 exKeys[6] = "Exposure Details";
 exKeys[7] = "Relationship";
 exKeys[8] = "Life Stage";
+exKeys[9] = "Hide Cpp";
 
 function prepareExtraFields(cpp,exts) {
 	//commented out..this causes a problem in Firefox
 	//console.log("prepare Extra Fields"); 
-    var rowIDs = new Array(9);
+    var rowIDs = new Array(10);
     for (var i=2; i<exFields.length; i++) {
 	rowIDs[i] = "Item"+exFields[i];
 	$(rowIDs[i]).hide();
     }
-    if (cpp==cppNames[1]) $(rowIDs[2],rowIDs[4],rowIDs[8]).invoke("show");
-    if (cpp==cppNames[2]) $(rowIDs[3],rowIDs[4],rowIDs[7],rowIDs[8]).invoke("show");
-    if (cpp==cppNames[3]) $(rowIDs[5],rowIDs[8]).invoke("show");
-    if (cpp==cppNames[4]) $(rowIDs[3],rowIDs[6],rowIDs[8]).invoke("show");
+    if (cpp==cppNames[1]) $(rowIDs[2],rowIDs[4],rowIDs[8],rowIDs[9]).invoke("show");
+    if (cpp==cppNames[2]) $(rowIDs[3],rowIDs[4],rowIDs[7],rowIDs[8],rowIDs[9]).invoke("show");
+    if (cpp==cppNames[3]) $(rowIDs[5],rowIDs[8],rowIDs[9]).invoke("show");
+    if (cpp==cppNames[4]) $(rowIDs[3],rowIDs[6],rowIDs[8],rowIDs[9]).invoke("show");
 
     for (var i=0; i<exFields.length; i++) {
 	$(exFields[i]).value = "";
@@ -700,12 +702,12 @@ function prepareExtraFields(cpp,exts) {
 
     var extsArr = exts.split(";");
     for (var i=0; i<extsArr.length; i+=2) {
-	for (var j=0; j<exFields.length; j++) {
-	    if (extsArr[i]==exKeys[j]) {
-		$(exFields[j]).value = extsArr[i+1];
-		continue;
-	    }
-	}
+    	for (var j=0; j<exFields.length; j++) {
+			if (extsArr[i]==exKeys[j]) {	    		
+				$(exFields[j]).value = extsArr[i+1];
+				continue;
+	    	}
+		}
     }
 }
 
@@ -740,8 +742,7 @@ function updateCPPNote() {
         $("issueChange").value = true;
    }
 
-   var params = $("frmIssueNotes").serialize();
-
+   var params = $("frmIssueNotes").serialize();   
    var sigId = "sig" + caseNote.substr(13);
    var objAjax = new Ajax.Request (
                           url,
