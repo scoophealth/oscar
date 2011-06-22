@@ -72,6 +72,7 @@ public class FluReport implements PreventionReport {
              ArrayList fieldList = (ArrayList) list.get(i);       
              String demo = (String) fieldList.get(0);  
              
+             log.debug("processing patient : "+demo);
 
              //search   prevention_date prevention_type  deleted   refused 
              
