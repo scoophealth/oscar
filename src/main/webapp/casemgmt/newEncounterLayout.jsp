@@ -623,6 +623,16 @@ function doscroll(){
 				</select>
 				</td>
  			</tr>
+ 			<tr id="Itemhidecpp">
+ 				<td><bean:message key="oscarEncounter.hidecpp.title"/>: </td>				
+				<td>
+					<select id="hidecpp" name="hidecpp">
+						<option value="0">No</option>
+						<option value="1">Yes</option>
+					</select>
+					
+				</td>
+			</tr>
 		  </table><br>
                   <span style="float:right; margin-right:10px;">      
 		      <input type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/annotation.png"/>" title='<bean:message key="oscarEncounter.Index.btnAnotation"/>' id="anno"> &nbsp; &nbsp;

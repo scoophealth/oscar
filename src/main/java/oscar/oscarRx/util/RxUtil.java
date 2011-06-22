@@ -1724,7 +1724,7 @@ public class RxUtil {
 
         String server_url = OscarProperties.getInstance().getProperty("MY_DRUGREF_URL","http://mydrugref.org/backend/api");
         MiscUtils.getLogger().debug("server_url: "+server_url);
-        TimingOutCallback callback = new TimingOutCallback(10 * 1000);
+        TimingOutCallback callback = new TimingOutCallback(30 * 1000);
         try{
             log2.debug("server_url :"+server_url);
             XmlRpcClientLite server = new XmlRpcClientLite(server_url);

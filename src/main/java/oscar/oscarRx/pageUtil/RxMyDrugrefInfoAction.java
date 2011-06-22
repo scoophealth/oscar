@@ -43,11 +43,15 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.util.MessageResources;
 import org.apache.xmlrpc.XmlRpcClientLite;
+import org.oscarehr.PMmodule.dao.ClientDao;
 import org.oscarehr.common.dao.UserDSMessagePrefsDAO;
 import org.oscarehr.common.dao.UserPropertyDAO;
+import org.oscarehr.common.model.DemographicExt;
 import org.oscarehr.common.model.UserDSMessagePrefs;
 import org.oscarehr.common.model.UserProperty;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -139,6 +143,51 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
             }
         }
         Collections.sort(all, new MyDrugrefComparator());
+        
+        //filter out based on significance by facility, provider, demographic
+        int level = 0;
+        int orgLevel = LoggedInInfo.loggedInInfo.get().currentFacility.getRxInteractionWarningLevel();
+        level = orgLevel;
+        MiscUtils.getLogger().info("orgLevel="+orgLevel);
+        
+        UserProperty uprop = propDAO.getProp(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(), "rxInteractionWarningLevel");
+        if(uprop!=null) {
+        	if(uprop.getValue()!=null&&uprop.getValue().length()>0) {
+        		int providerLevel = Integer.parseInt(uprop.getValue());
+        		MiscUtils.getLogger().info("providerLevel="+providerLevel);        	        
+        		if(providerLevel>level) {
+        			level = providerLevel;
+        		}
+        	}
+        }
+
+        
+        ClientDao clientDao = (ClientDao)SpringUtils.getBean("clientDao");
+        DemographicExt demoWarn = clientDao.getDemographicExt(bean.getDemographicNo(), "rxInteractionWarningLevel");
+        if(demoWarn!=null) {
+        	if(demoWarn.getValue()!=null&&demoWarn.getValue().length()>0) {
+        		int demoLevel = Integer.valueOf(demoWarn.getValue());
+        		MiscUtils.getLogger().info("demoLevel="+demoLevel);  
+        		if(demoLevel>level) {
+        			level = demoLevel;
+        		}
+        	}
+        }
+        MiscUtils.getLogger().info("level="+level);
+        
+        
+        for(int x=0;x<all.size();x++) {
+        	 Hashtable ht=(Hashtable)all.get(x);
+        	 String significanceStr = (String)ht.get("significance");
+        	 if(significanceStr.equals("")) {significanceStr="0";}
+        	 int significance = Integer.valueOf(significanceStr);
+        	 MiscUtils.getLogger().info("significance="+significance);
+        	 if(level>0 && significance<level) {
+        		 MiscUtils.getLogger().info("filtering out");
+        		 all.remove(ht);
+        	 }
+        }
+        
         MiscUtils.getLogger().debug(all);
         //loop through all to add interaction to each warning
         try{

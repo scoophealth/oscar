@@ -40,7 +40,8 @@ public class Facility extends AbstractModel<Integer> implements Serializable {
 	private boolean enableGroupNotes = false;
 	private boolean enableEncounterTime = false;
 	private boolean enableEncounterTransportationTime = false;
-
+	private int rxInteractionWarningLevel = 0;
+	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastUpdated=new Date();
 	
@@ -260,5 +261,14 @@ public class Facility extends AbstractModel<Integer> implements Serializable {
     	this.enableEncounterTransportationTime = enableEncounterTransportationTime;
     }
 
+	public int getRxInteractionWarningLevel() {
+    	return rxInteractionWarningLevel;
+    }
+
+	public void setRxInteractionWarningLevel(int rxInteractionWarningLevel) {
+    	this.rxInteractionWarningLevel = rxInteractionWarningLevel;
+    }
+
+	
 	
 }

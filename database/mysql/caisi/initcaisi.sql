@@ -23,7 +23,8 @@ create table Facility (
 	enableGroupNotes tinyint(1) unsigned NOT NULL default 0,
 	lastUpdated datetime not null,
 	enableEncounterTime tinyint(1) not null,
-	enableEncounterTransportationTime tinyint(1) not null
+	enableEncounterTransportationTime tinyint(1) not null,
+	rxInteractionWarningLevel int(10) not null
 );
 
 
