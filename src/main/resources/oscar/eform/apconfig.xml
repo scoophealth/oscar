@@ -476,5 +476,18 @@
                 AND other_key='${other_key}' AND deleted=false ORDER BY id DESC LIMIT 1</ap-sql>
         <ap-output>${other_id}</ap-output>
     </databaseap>
+    <databaseap>
+        <ap-name>dtap_immunization_date</ap-name>
+        <ap-sql>select prevention_date from preventions p where p.prevention_type = 'dtap-ipv-hib' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date asc limit 1
+       </ap-sql>
+        <ap-output>${prevention_date}</ap-output>
+    </databaseap>
+    
+    <databaseap>
+    	<ap-name>guardian_label</ap-name>
+        <ap-sql>select d.first_name, d.last_name, d.address, d.city, d.province, d.postal from relationships r, demographic d where r.relation_demographic_no = d.demographic_no and r.demographic_no = ${demographic}
+        </ap-sql>
+        <ap-output>${first_name} ${last_name}\n${address}\n${city} ${province}\n${postal}</ap-output>    	
+    </databaseap>
 
 </eformap-config>
