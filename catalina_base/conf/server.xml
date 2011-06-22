@@ -8,8 +8,8 @@
 
 	<Service name="Catalina">
 
-		<Connector port="8080" protocol="org.apache.coyote.http11.Http11Protocol" maxThreads="4" executor="tomcatThreadPool" connectionTimeout="10000" disableUploadTimeout="true" compression="on" URIEncoding="UTF-8" />
-    	<Connector port="8081" protocol="org.apache.coyote.http11.Http11Protocol" maxThreads="4" executor="tomcatThreadPool" connectionTimeout="10000" disableUploadTimeout="true" compression="on" URIEncoding="UTF-8" SSLEnabled="true" scheme="https" secure="true" clientAuth="false" sslProtocol="TLS" keystoreFile="conf/.keystore" />
+	<Connector port="8080" protocol="org.apache.coyote.http11.Http11Protocol" maxThreads="8" executor="tomcatThreadPool" connectionTimeout="10000" disableUploadTimeout="true" compression="on" URIEncoding="UTF-8" />
+    	<Connector port="8081" protocol="org.apache.coyote.http11.Http11Protocol" maxThreads="8" executor="tomcatThreadPool" connectionTimeout="10000" disableUploadTimeout="true" compression="on" URIEncoding="UTF-8" SSLEnabled="true" scheme="https" secure="true" clientAuth="false" sslProtocol="TLS" keystoreFile="conf/.keystore" />
                
 		<Engine name="Catalina" defaultHost="localhost">
 			<Host name="localhost" appBase="webapps" unpackWARs="true" autoDeploy="true" xmlValidation="false" xmlNamespaceAware="false" />

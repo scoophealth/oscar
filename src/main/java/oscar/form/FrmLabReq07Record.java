@@ -20,6 +20,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicForm;
@@ -47,24 +48,24 @@ public class FrmLabReq07Record extends FrmRecord {
             if (demographic!=null) {
                 props.setProperty("demographic_no", String.valueOf(demographic.getDemographicNo()));
                 props.setProperty("patientName", demographic.getLastName()+", "+ demographic.getFirstName());
-                props.setProperty("healthNumber", demographic.getHin());
-                props.setProperty("version", demographic.getVer());
-                props.setProperty("hcType", demographic.getHcType());
+                props.setProperty("healthNumber", StringUtils.trimToEmpty(demographic.getHin()));
+                props.setProperty("version", StringUtils.trimToEmpty(demographic.getVer()));
+                props.setProperty("hcType", StringUtils.trimToEmpty(demographic.getHcType()));
                 props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(),
                         "yyyy/MM/dd"));
 
                 //props.setProperty("formEdited",
                 // UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                 java.util.Date dob = UtilDateUtilities.calcDate(demographic.getYearOfBirth(), demographic.getMonthOfBirth(), demographic.getDateOfBirth());
-                props.setProperty("birthDate", UtilDateUtilities.DateToString(dob, "yyyy/MM/dd"));
+                props.setProperty("birthDate", StringUtils.trimToEmpty(UtilDateUtilities.DateToString(dob, "yyyy/MM/dd")));
 
-                props.setProperty("phoneNumber", demographic.getPhone());
-                props.setProperty("patientAddress", demographic.getAddress());
-                props.setProperty("patientCity", demographic.getCity());
-                props.setProperty("patientPC", demographic.getPostal());
-                props.setProperty("province", demographic.getProvince());
-                props.setProperty("sex", demographic.getSex());
-                props.setProperty("demoProvider", demographic.getProviderNo());
+                props.setProperty("phoneNumber", StringUtils.trimToEmpty(demographic.getPhone()));
+                props.setProperty("patientAddress", StringUtils.trimToEmpty(demographic.getAddress()));
+                props.setProperty("patientCity", StringUtils.trimToEmpty(demographic.getCity()));
+                props.setProperty("patientPC", StringUtils.trimToEmpty(demographic.getPostal()));
+                props.setProperty("province", StringUtils.trimToEmpty(demographic.getProvince()));
+                props.setProperty("sex", StringUtils.trimToEmpty(demographic.getSex()));
+                props.setProperty("demoProvider", StringUtils.trimToEmpty(demographic.getProviderNo()));
             }
 
             //get local clinic information
