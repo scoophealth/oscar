@@ -96,7 +96,7 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 	@Column(name = "past_med")
 	private Boolean pastMed;
 	@Column(name = "patient_compliance")
-	private Boolean patientCompliance;
+	private Boolean patientCompliance = null;
 	@Column(name = "outside_provider_name")
 	private String outsideProviderName = null;
 	@Column(name = "outside_provider_ohip")
@@ -108,18 +108,21 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
         @Column(name = "non_authoritative")
 	private Boolean nonAuthoritative = false;
         @Column(name = "pickup_datetime")
-	private Date pickupDateTime;
-    private String eTreatmentType = null;
+        @Temporal(javax.persistence.TemporalType.DATE)
+        private Date pickupDateTime;
+        private String eTreatmentType = null;
+        private String rxStatus = null;
 
-    @Column(name="refill_duration")
-    private int refillDuration;
-    @Column(name="refill_quantity")
-    private int refillQuantity;
-    @Column(name="dispense_interval")
-    private int dispenseInterval;
-    @Column(name="hide_cpp")
-    private boolean hideFromCpp;
-   
+	@Column(name="refill_duration")
+	private Integer refillDuration;
+	@Column(name="refill_quantity")
+	private Integer refillQuantity;
+	@Column(name="dispense_interval")
+
+	private int dispenseInterval;
+	@Column(name="hide_cpp")
+	private boolean hideFromCpp;
+
 	// ///
 	@Transient
 	private String remoteFacilityName = null;
@@ -187,15 +190,13 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
             this.unitName=drug.getUnitName();
             this.longTerm=drug.isLongTerm();
             this.pastMed=drug.isPastMed();
-            if(drug.getPatientCompliance()>0)
-                this.patientCompliance=true;
-            else
-                this.patientCompliance=false;
+            this.patientCompliance=drug.getPatientCompliance();
             this.outsideProviderName=drug.getOutsideProviderName();
             this.outsideProviderOhip=drug.getOutsideProviderOhip();
             this.hideFromDrugProfile=false;
             this.customNote=drug.isCustomNote();
             this.eTreatmentType = drug.getETreatmentType();
+            this.rxStatus = drug.getRxStatus();
             this.refillDuration = drug.getRefillDuration();
             this.refillQuantity = drug.getRefillQuantity();
             this.dispenseInterval = drug.getDispenseInterval();
@@ -263,6 +264,7 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 	}
 
         public Boolean isNonAuthoritative() {
+                if (nonAuthoritative==null) return false;
 		return nonAuthoritative;
 	}
 
@@ -270,19 +272,19 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 		this.nonAuthoritative = nonAuthoritative;
 	}
  
-    public int getRefillDuration() {
+    public Integer getRefillDuration() {
     	return refillDuration;
     }
 	public void setRefillDuration(int refillDuration) {
     	this.refillDuration = refillDuration;
     }
-	public int getRefillQuantity() {
+	public Integer getRefillQuantity() {
     	return refillQuantity;
     }
 	public void setRefillQuantity(int refillQuantity) {
     	this.refillQuantity = refillQuantity;
     }
-	public int getDispenseInterval() {
+	public Integer getDispenseInterval() {
     	return dispenseInterval;
     }
 	public void setDispenseInterval(int dispenseInterval) {
@@ -305,6 +307,14 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 		return eTreatmentType;
 	}
         
+	public void setRxStatus(String status){
+		this.rxStatus = status;
+	}
+
+	public String getRxStatus(){
+		return rxStatus;
+	}
+
 	public String getProviderNo() {
 		return providerNo;
 	}

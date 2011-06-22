@@ -79,6 +79,7 @@
 	String cn=request.getParameter("cn");
         String bn=request.getParameter("bn");
 	Integer currentDemographicNo=bean.getDemographicNo();
+
         ArrayList<StaticScriptBean.DrugDisplayData> drugs=StaticScriptBean.getDrugList(currentDemographicNo, regionalIdentifier, cn,bn);
 
 	oscar.oscarRx.data.RxPatientData.Patient patient=RxPatientData.getPatient(currentDemographicNo);
@@ -198,6 +199,9 @@
 															<bean:message key="WriteScript.msgETreatment.ShortTermPRN"/> 
                                                     	<%}
                                                     }%>
+                                                    <%if(drug.rxStatus != null && !drug.rxStatus.equals("null")){ %>
+                                                    	 &nbsp;<bean:message key="WriteScript.msgRxStatus"/>: <%=drug.rxStatus%>
+                                                    <%}%>
                                                     	
                                                 </td>
                                                 <%

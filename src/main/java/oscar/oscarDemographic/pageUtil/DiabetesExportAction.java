@@ -76,6 +76,7 @@ public class DiabetesExportAction extends Action {
 
 public DiabetesExportAction(){}
 
+    @Override
 public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
     DiabetesExportForm defrm = (DiabetesExportForm)form;
     String setName = defrm.getPatientSet();
@@ -705,8 +706,8 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             medications.addNewLongTermMedication().setBoolean(pa[p].getLongTerm());
             medications.addNewPastMedications().setBoolean(pa[p].getPastMed());
             cdsDt.YnIndicatorAndBlank pc = medications.addNewPatientCompliance();
-            if (pa[p].getPatientCompliance()==0) pc.setBlank(cdsDt.Blank.X);
-            else pc.setBoolean(pa[p].getPatientCompliance()==1);
+            if (pa[p].getPatientCompliance()==null) pc.setBlank(cdsDt.Blank.X);
+            else pc.setBoolean(pa[p].getPatientCompliance());
             
             CaseManagementNoteLink cml = cmm.getLatestLinkByTableId(CaseManagementNoteLink.DRUGS, (long)pa[p].getDrugId());
             if (cml!=null) {

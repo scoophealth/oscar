@@ -45,6 +45,7 @@ public class Demographic {
   private String ver;
   private String roster_status;
   private String patient_status;
+  private Date patient_status_date;
   private Date date_joined;
   private String chart_no;
   private String providerNo;
@@ -128,6 +129,10 @@ public class Demographic {
 
   public void setPatient_status(String patient_status) {
     this.patient_status = patient_status;
+  }
+
+  public void setPatient_status_date(Date patient_status_date) {
+    this.patient_status_date = patient_status_date;
   }
 
   public void setDate_joined(Date date_joined) {
@@ -240,6 +245,10 @@ public class Demographic {
 
   public String getPatient_status() {
     return patient_status;
+  }
+
+  public Date getPatient_status_date() {
+    return patient_status_date;
   }
 
   public Date getDate_joined() {

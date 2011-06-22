@@ -2065,6 +2065,7 @@ document.updatedelete.r_doctor_ohip.value = refNo;
                                   %> <input type="text"
 									name="patient_status" value="<%=pacStatus%>"> <% } else {
                                 String patientStatus = apptMainBean.getString(rs,"patient_status"); %>
+                                <input type="hidden" name="prev_patient_status" value="<%=patientStatus%>">
 								<select name="patient_status" style="width: 120">
 									<option value="AC"
 										<%=patientStatus.equals("AC")?" selected":""%>>

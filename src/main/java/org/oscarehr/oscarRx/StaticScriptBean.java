@@ -59,9 +59,10 @@ public class StaticScriptBean {
         public String pickupDate=null;
         public String pickupTime=null;
         public String eTreatmentType=null;
-        public int dispenseInterval;
-        public int refillQuantity;
-        public int refillDuration;
+        public String rxStatus=null;
+        public Integer dispenseInterval;
+        public Integer refillQuantity;
+        public Integer refillDuration;
 	}
 
 	public static ArrayList<DrugDisplayData> getDrugList(int demographicId, String regionalIdentifier, String customName, String brandName) {
@@ -161,6 +162,8 @@ public class StaticScriptBean {
         drugDisplayData.pickupTime = RxUtil.DateToString(drug.getPickUpDateTime(),"hh:mm aa");
         
         drugDisplayData.eTreatmentType = drug.getETreatmentType();
+
+        drugDisplayData.rxStatus = drug.getRxStatus();
                 
         drugDisplayData.dispenseInterval = drug.getDispenseInterval();
         
