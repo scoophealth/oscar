@@ -28,8 +28,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
-<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
-<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request" />
+
 <%
   if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
 
@@ -121,7 +120,6 @@ function checkSelect(slct) {
 function checkAll(all) {
     var frm = document.DemographicExportForm;
     if (all) {
-	frm.exPersonalHistory.checked = true;
 	frm.exFamilyHistory.checked = true;
 	frm.exPastHealth.checked = true;
 	frm.exProblemList.checked = true;
@@ -133,10 +131,9 @@ function checkAll(all) {
 	frm.exAppointments.checked = true;
 	frm.exClinicalNotes.checked = true;
 	frm.exReportsReceived.checked = true;
-	frm.exAuditInformation.checked = true;
+	frm.exAlertsAndSpecialNeeds.checked = true;
 	frm.exCareElements.checked = true;
     } else {
-	frm.exPersonalHistory.checked = false;
 	frm.exFamilyHistory.checked = false;
 	frm.exPastHealth.checked = false;
 	frm.exProblemList.checked = false;
@@ -148,7 +145,7 @@ function checkAll(all) {
 	frm.exAppointments.checked = false;
 	frm.exClinicalNotes.checked = false;
 	frm.exReportsReceived.checked = false;
-	frm.exAuditInformation.checked = false;
+	frm.exAlertsAndSpecialNeeds.checked = false;
 	frm.exCareElements.checked = false;
     }
 }
@@ -198,10 +195,8 @@ if (!userRole.toLowerCase().contains("admin")) { %>
 	<tr>
 		<td class="MainTableLeftColumn" valign="top">
 		    <% if (demographicNo== null) { %>
-		    <a href="diabetesExport.jsp">Diabetes Export</a>
-		    <a href='<c:out value="${ctx}/demographic/cihiExport.do"></c:out>'>CIHI Export</a>
+		    <a href="diabetesExport.jsp">Diabetes Export</a></td>
 		    <%} %>
-		</td>
 		<td valign="top" class="MainTableRightColumn">
 		    <html:form action="/demographic/DemographicExport" method="get" onsubmit="return checkSelect(patientSet.value);">
 		    <div>
@@ -240,21 +235,20 @@ if (!userRole.toLowerCase().contains("admin")) { %>
 		   <p><table border="1"><tr><td>
 		       Export Categories:
 		       <table cellpadding="10"><tr><td>
-		       <html:checkbox property="exPersonalHistory">Personal History</html:checkbox><br>
 		       <html:checkbox property="exFamilyHistory">Family History</html:checkbox><br>
 		       <html:checkbox property="exPastHealth">Past Health</html:checkbox><br>
 		       <html:checkbox property="exProblemList">Problem List</html:checkbox><br>
 		       <html:checkbox property="exRiskFactors">Risk Factors</html:checkbox><br>
 		       <html:checkbox property="exAllergiesAndAdverseReactions">Allergies & Adverse Reactions</html:checkbox><br>
-		       <html:checkbox property="exMedicationsAndTreatments">Medications & Treatments</html:checkbox>
+		       <html:checkbox property="exMedicationsAndTreatments">Medications & Treatments</html:checkbox><br>
+		       <html:checkbox property="exImmunizations">Immunizations</html:checkbox>
 		       </td><td>
-		       <html:checkbox property="exImmunizations">Immunizations</html:checkbox><br>
 		       <html:checkbox property="exLaboratoryResults">Laboratory Results</html:checkbox><br>
 		       <html:checkbox property="exAppointments">Appointments</html:checkbox><br>
 		       <html:checkbox property="exClinicalNotes">Clinical Notes</html:checkbox><br>
 		       <html:checkbox property="exReportsReceived">Reports Received</html:checkbox><br>
-		       <html:checkbox property="exAuditInformation">Audit Information</html:checkbox><br>
-		       <html:checkbox property="exCareElements">Care Elements</html:checkbox>
+		       <html:checkbox property="exCareElements">Care Elements</html:checkbox><br>
+		       <html:checkbox property="exAlertsAndSpecialNeeds">Audit Information</html:checkbox>
 		       </td><td>
 			   <input type="button" value="Check All" onclick="checkAll(true);"/><p>
 			   <input type="button" value="Check None" onclick="checkAll(false);"/>

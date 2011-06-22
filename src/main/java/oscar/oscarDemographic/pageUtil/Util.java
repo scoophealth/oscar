@@ -34,11 +34,11 @@ import oscar.util.UtilDateUtilities;
  */
 public class Util {
     
-    static public String appendLine(String baseStr, String addStr) {
-	return appendLine(baseStr, "", addStr);
+    static public String addLine(String baseStr, String addStr) {
+	return addLine(baseStr, "", addStr);
     }
     
-    static public String appendLine(String baseStr, String label, String addStr) {
+    static public String addLine(String baseStr, String label, String addStr) {
 	String newStr = StringUtils.noNull(baseStr);
 	if (StringUtils.filled(newStr)) {
 	    newStr += StringUtils.filled(addStr) ? "\n"+StringUtils.noNull(label)+addStr : "";

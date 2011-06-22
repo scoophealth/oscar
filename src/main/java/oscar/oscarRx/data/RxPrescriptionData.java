@@ -116,10 +116,18 @@ public class RxPrescriptionData {
                 prescription.setLongTerm(rs.getBoolean("long_term"));
                 prescription.setCustomNote(rs.getBoolean("custom_note"));
                 prescription.setPastMed(rs.getBoolean("past_med"));
-                prescription.setPatientCompliance(rs.getInt("patient_compliance"));
+                if (rs.getObject("patient_compliance")==null) prescription.setPatientCompliance(null);
+                else prescription.setPatientCompliance(rs.getBoolean("patient_compliance"));
                 prescription.setOutsideProviderName(oscar.Misc.getString(rs, "outside_provider_name"));
                 prescription.setOutsideProviderOhip(oscar.Misc.getString(rs, "outside_provider_ohip"));
                 prescription.setSpecialInstruction(oscar.Misc.getString(rs, "special_instruction"));
+                prescription.setPickupDate(rs.getDate("pickup_datetime"));
+                prescription.setPickupTime(rs.getDate("pickup_datetime"));
+                prescription.setETreatmentType(rs.getString("eTreatmentType"));
+                prescription.setRxStatus(rs.getString("rxStatus"));
+                if (rs.getObject("dispense_interval")!=null) prescription.setDispenseInterval(rs.getInt("dispense_interval"));
+                if (rs.getObject("refill_duration")!=null) prescription.setRefillDuration(rs.getInt("refill_duration"));
+                if (rs.getObject("refill_quantity")!=null) prescription.setRefillQuantity(rs.getInt("refill_quantity"));
 
                 if (prescription.getSpecial() == null || prescription.getSpecial().length() <= 6) {
                     logger.error("I strongly suspect something is wrong, either special is null or it appears to not contain anything useful. drugId=" + drugId + ", drug.special=" + prescription.getSpecial(), new IllegalStateException("Drug special is blank or invalid"));
@@ -218,6 +226,13 @@ public class RxPrescriptionData {
         prescription.setOutsideProviderName(rePrescribe.getOutsideProviderName());
         prescription.setOutsideProviderOhip(rePrescribe.getOutsideProviderOhip());
         prescription.setSpecialInstruction(rePrescribe.getSpecialInstruction());
+        prescription.setPickupDate(rePrescribe.getPickupDate());
+        prescription.setPickupTime(rePrescribe.getPickupTime());
+        prescription.setETreatmentType(rePrescribe.getETreatmentType());
+        prescription.setRxStatus(rePrescribe.getRxStatus());
+        if (rePrescribe.getDispenseInterval()!=null) prescription.setDispenseInterval(rePrescribe.getDispenseInterval());
+        if (rePrescribe.getRefillDuration()!=null) prescription.setRefillDuration(rePrescribe.getRefillDuration());
+        if (rePrescribe.getRefillQuantity()!=null) prescription.setRefillQuantity(rePrescribe.getRefillQuantity());
 
         return prescription;
     }
@@ -277,9 +292,17 @@ public class RxPrescriptionData {
                 p.setLongTerm(rs.getBoolean("long_term"));
                 p.setCustomNote(rs.getBoolean("custom_note"));
                 p.setPastMed(rs.getBoolean("past_med"));
-                p.setPatientCompliance(rs.getInt("patient_compliance"));
+                if (rs.getObject("patient_compliance")==null) p.setPatientCompliance(null);
+                else p.setPatientCompliance(rs.getBoolean("patient_compliance"));
                 p.setOutsideProviderName(oscar.Misc.getString(rs, "outside_provider_name"));
                 p.setOutsideProviderOhip(oscar.Misc.getString(rs, "outside_provider_ohip"));
+                p.setPickupDate(rs.getDate("pickup_datetime"));
+                p.setPickupTime(rs.getDate("pickup_datetime"));
+                p.setETreatmentType(rs.getString("eTreatmentType"));
+                p.setRxStatus(rs.getString("rxStatus"));
+                if (rs.getObject("dispense_interval")!=null) p.setDispenseInterval(rs.getInt("dispense_interval"));
+                if (rs.getObject("refill_duration")!=null) p.setRefillDuration(rs.getInt("refill_duration"));
+                if (rs.getObject("refill_quantity")!=null) p.setRefillQuantity(rs.getInt("refill_quantity"));
                 lst.add(p);
             }
 
@@ -332,9 +355,17 @@ public class RxPrescriptionData {
         p.setLongTerm(rs.getBoolean("long_term"));
         p.setCustomNote(rs.getBoolean("custom_note"));
         p.setPastMed(rs.getBoolean("past_med"));
-        p.setPatientCompliance(rs.getInt("patient_compliance"));
+        if (rs.getObject("patient_compliance")==null) p.setPatientCompliance(null);
+        else p.setPatientCompliance(rs.getBoolean("patient_compliance"));
         p.setOutsideProviderName(oscar.Misc.getString(rs, "outside_provider_name"));
         p.setOutsideProviderOhip(oscar.Misc.getString(rs, "outside_provider_ohip"));
+        p.setPickupDate(rs.getDate("pickup_datetime"));
+        p.setPickupTime(rs.getDate("pickup_datetime"));
+        p.setETreatmentType(rs.getString("eTreatmentType"));
+        p.setRxStatus(rs.getString("rxStatus"));
+        if (rs.getObject("dispense_interval")!=null) p.setDispenseInterval(rs.getInt("dispense_interval"));
+        if (rs.getObject("refill_duration")!=null) p.setRefillDuration(rs.getInt("refill_duration"));
+        if (rs.getObject("refill_quantity")!=null) p.setRefillQuantity(rs.getInt("refill_quantity"));
 
         // String datesRePrinted = oscar.Misc.getString(rs,"dates_reprinted");
         // if( datesRePrinted != null && datesRePrinted.length() > 0 ) {
@@ -495,9 +526,17 @@ public class RxPrescriptionData {
                 p.setLongTerm(rs.getBoolean("long_term"));
                 p.setCustomNote(rs.getBoolean("custom_note"));
                 p.setPastMed(rs.getBoolean("past_med"));
-                p.setPatientCompliance(rs.getInt("patient_compliance"));
+                if (rs.getObject("patient_compliance")==null) p.setPatientCompliance(null);
+                else p.setPatientCompliance(rs.getBoolean("patient_compliance"));
                 p.setOutsideProviderName(oscar.Misc.getString(rs, "outside_provider_name"));
                 p.setOutsideProviderOhip(oscar.Misc.getString(rs, "outside_provider_ohip"));
+                p.setPickupDate(rs.getDate("pickup_datetime"));
+                p.setPickupTime(rs.getDate("pickup_datetime"));
+                p.setETreatmentType(rs.getString("eTreatmentType"));
+                p.setRxStatus(rs.getString("rxStatus"));
+                if (rs.getObject("dispense_interval")!=null) p.setDispenseInterval(rs.getInt("dispense_interval"));
+                if (rs.getObject("refill_duration")!=null) p.setRefillDuration(rs.getInt("refill_duration"));
+                if (rs.getObject("refill_quantity")!=null) p.setRefillQuantity(rs.getInt("refill_quantity"));
 
                 datesRePrinted = oscar.Misc.getString(rs, "dates_reprinted");
                 if (datesRePrinted != null && datesRePrinted.length() > 0) {
@@ -570,10 +609,18 @@ public class RxPrescriptionData {
                 p.setLongTerm(rs.getBoolean("long_term"));
                 p.setCustomNote(rs.getBoolean("custom_note"));
                 p.setPastMed(rs.getBoolean("past_med"));
-                p.setPatientCompliance(rs.getInt("patient_compliance"));
+                if (rs.getObject("patient_compliance")==null) p.setPatientCompliance(null);
+                else p.setPatientCompliance(rs.getBoolean("patient_compliance"));
                 p.setOutsideProviderName(oscar.Misc.getString(rs, "outside_provider_name"));
                 p.setOutsideProviderOhip(oscar.Misc.getString(rs, "outside_provider_ohip"));
                 p.setPrintDate(rs.getDate("date_printed"));
+                p.setPickupDate(rs.getDate("pickup_datetime"));
+                p.setPickupTime(rs.getDate("pickup_datetime"));
+                p.setETreatmentType(rs.getString("eTreatmentType"));
+                p.setRxStatus(rs.getString("rxStatus"));
+                if (rs.getObject("dispense_interval")!=null) p.setDispenseInterval(rs.getInt("dispense_interval"));
+                if (rs.getObject("refill_duration")!=null) p.setRefillDuration(rs.getInt("refill_duration"));
+                if (rs.getObject("refill_quantity")!=null) p.setRefillQuantity(rs.getInt("refill_quantity"));
 
                 datesRePrinted = oscar.Misc.getString(rs, "dates_reprinted");
                 if (datesRePrinted != null && datesRePrinted.length() > 0) p.setNumPrints(datesRePrinted.split(",").length + 1);
@@ -643,9 +690,17 @@ public class RxPrescriptionData {
                 p.setLongTerm(rs.getBoolean("long_term"));
                 p.setCustomNote(rs.getBoolean("custom_note"));
                 p.setPastMed(rs.getBoolean("past_med"));
-                p.setPatientCompliance(rs.getInt("patient_compliance"));
+                if (rs.getObject("patient_compliance")==null) p.setPatientCompliance(null);
+                else p.setPatientCompliance(rs.getBoolean("patient_compliance"));
                 p.setOutsideProviderName(oscar.Misc.getString(rs, "outside_provider_name"));
                 p.setOutsideProviderOhip(oscar.Misc.getString(rs, "outside_provider_ohip"));
+                p.setPickupDate(rs.getDate("pickup_datetime"));
+                p.setPickupTime(rs.getDate("pickup_datetime"));
+                p.setETreatmentType(rs.getString("eTreatmentType"));
+                p.setRxStatus(rs.getString("rxStatus"));
+                if (rs.getObject("dispense_interval")!=null) p.setDispenseInterval(rs.getInt("dispense_interval"));
+                if (rs.getObject("refill_duration")!=null) p.setRefillDuration(rs.getInt("refill_duration"));
+                if (rs.getObject("refill_quantity")!=null) p.setRefillQuantity(rs.getInt("refill_quantity"));
                 lst.add(p);
             }
 
@@ -751,14 +806,18 @@ public class RxPrescriptionData {
                     p.setLongTerm(rs.getBoolean("long_term"));
                     p.setCustomNote(rs.getBoolean("custom_note"));
                     p.setPastMed(rs.getBoolean("past_med"));
-                    p.setPatientCompliance(rs.getInt("patient_compliance"));
+                    if (rs.getObject("patient_compliance")==null) p.setPatientCompliance(null);
+                    else p.setPatientCompliance(rs.getBoolean("patient_compliance"));
                     p.setOutsideProviderName(oscar.Misc.getString(rs, "outside_provider_name"));
                     p.setOutsideProviderOhip(oscar.Misc.getString(rs, "outside_provider_ohip"));
                     p.setHideCpp(rs.getBoolean("hide_cpp"));
-                    p.setDispenseInterval(rs.getInt("dispense_interval"));
-                    p.setRefillDuration(rs.getInt("refill_duration"));
-                    p.setRefillQuantity(rs.getInt("refill_quantity"));
-                    
+                    p.setPickupDate(rs.getDate("pickup_datetime"));
+                    p.setPickupTime(rs.getDate("pickup_datetime"));
+                    p.setETreatmentType(rs.getString("eTreatmentType"));
+                    p.setRxStatus(rs.getString("rxStatus"));
+                    if (rs.getObject("dispense_interval")!=null) p.setDispenseInterval(rs.getInt("dispense_interval"));
+                    if (rs.getObject("refill_duration")!=null) p.setRefillDuration(rs.getInt("refill_duration"));
+                    if (rs.getObject("refill_quantity")!=null) p.setRefillQuantity(rs.getInt("refill_quantity"));
                     if (myOscarEnabled) {
                         String tmp = indivoSql.replaceFirst("\\?", oscar.Misc.getString(rs, "drugid"));
                         rs2 = DBHandler.GetSQL(tmp);
@@ -1008,7 +1067,7 @@ public class RxPrescriptionData {
         boolean prn = false;
         boolean longTerm = false;
         boolean pastMed = false;
-        int patientCompliance = 0;
+        Boolean patientCompliance = null;
         String special = null;
         String genericName = null;
         boolean archived = false; // ADDED BY JAY DEC 3 2002
@@ -1037,11 +1096,11 @@ public class RxPrescriptionData {
         private boolean customNote=false;
         boolean nonAuthoritative = false;
         String eTreatmentType = null;
-        private int refillDuration = 0;
-        private int refillQuantity = 0;
-        private int dispenseInterval = 0;
         private boolean hideCpp=false;
-        
+        String rxStatus = null;
+        private Integer refillDuration = 0;
+        private Integer refillQuantity = 0;
+        private Integer dispenseInterval = 0;
         
         public boolean isHideCpp() {
         	return hideCpp;
@@ -1057,6 +1116,14 @@ public class RxPrescriptionData {
         
         public void setETreatmentType(String treatmentType){
         	eTreatmentType = treatmentType;
+        }
+
+        public String getRxStatus(){
+        	return rxStatus;
+        }
+
+        public void setRxStatus(String status){
+        	rxStatus = status;
         }
 
         public boolean isCustomNote(){
@@ -1531,32 +1598,26 @@ public class RxPrescriptionData {
             this.pastMed = pm;
         }
 
-        public int getPatientCompliance() {
+        public Boolean getPatientCompliance() {
             return this.patientCompliance;
         }
 
-        public void setPatientCompliance(int pc) {
+        public void setPatientCompliance(Boolean pc) {
             this.patientCompliance = pc;
         }
 
         public boolean getPatientCompliance(String YN) {
-            boolean ret = false;
-            if (YN.equals("Y")) {
-                ret = (getPatientCompliance() == 1);
-            } else if (YN.equals("N")) {
-                ret = (getPatientCompliance() == -1);
-            }
-            return ret;
+            if (YN==null) return false;
+
+            if (YN.equalsIgnoreCase("Y")) return getPatientCompliance().equals(true);
+            if (YN.equalsIgnoreCase("N")) return getPatientCompliance().equals(false);
+            return false;
         }
 
         public void setPatientCompliance(boolean Y, boolean N) {
-            if (Y) {
-                setPatientCompliance(1);
-            } else if (N) {
-                setPatientCompliance(-1);
-            } else {
-                setPatientCompliance(0);
-            }
+            if (Y) setPatientCompliance(true);
+            else if (N) setPatientCompliance(false);
+            else setPatientCompliance(null);
         }
 
         public String getSpecial() {
@@ -1905,8 +1966,7 @@ public class RxPrescriptionData {
 
                     // if it doesn't already exist add it.
                     if (this.getDrugId() == 0) {
-                    	
-                        sql = "INSERT INTO drugs (provider_no, demographic_no, " + "rx_date, end_date, written_date, BN, GCN_SEQNO, customName, " + "takemin, takemax, freqcode, duration, durunit, quantity, " + "`repeat`, last_refill_date, nosubs, prn, special, GN, script_no, ATC, " + "regional_identifier, unit, method, route, drug_form, create_date, " + "outside_provider_name, outside_provider_ohip, custom_instructions, " + "dosage, unitName, long_term, custom_note, past_med, special_instruction,patient_compliance, non_authoritative, pickup_datetime,eTreatmentType,dispense_interval,refill_quantity,refill_duration,hide_cpp) " + "VALUES ('" + this.getProviderNo() + "', " + this.getDemographicNo() + ", '" + RxUtil.DateToString(this.getRxDate()) + "', '" + RxUtil.DateToString(this.getEndDate()) + "', '" + RxUtil.DateToString(this.getWrittenDate()) + "', '" + StringEscapeUtils.escapeSql(this.getBrandName()) + "', " + this.getGCN_SEQNO() + ", '" + StringEscapeUtils.escapeSql(this.getCustomName()) + "', " + this.getTakeMin() + ", " + this.getTakeMax() + ", '" + this.getFrequencyCode() + "', '" + this.getDuration() + "', '" + this.getDurationUnit() + "', '" + this.getQuantity() + "', " + this.getRepeat() + ", '" + RxUtil.DateToString(this.getLastRefillDate()) + "', " + this.getNosubsInt() + ", " + this.getPrnInt() + ", '" + escapedSpecial + "','" + StringEscapeUtils.escapeSql(this.getGenericName()) + "','" + scriptId + "', '" + this.getAtcCode() + "', '" + this.getRegionalIdentifier() + "','" + this.getUnit() + "','" + this.getMethod() + "','" + this.getRoute() + "','" + this.getDrugForm() + "',now(),'" + this.getOutsideProviderName() + "','" + this.getOutsideProviderOhip() + "', " + this.getCustomInstr() + ",'" + this.getDosage() + "', '" + this.getUnitName() + "', " + this.getLongTerm() + ", "  + this.isCustomNote() + ", " + this.getPastMed() + ", '" +this.special_instruction+"', "+ this.getPatientCompliance() + ", "  + this.isNonAuthoritative() + ", '"  + RxUtil.DateToString(this.getPickupDate(),"yyyy-MM-dd") + " " + RxUtil.DateToString(this.getPickupTime(),"hh:mm") + "','"+this.getETreatmentType()+"',"+this.getDispenseInterval()+","+this.getRefillQuantity()+","+this.getRefillDuration()+",0)";
+                        sql = "INSERT INTO drugs (provider_no, demographic_no, " + "rx_date, end_date, written_date, BN, GCN_SEQNO, customName, " + "takemin, takemax, freqcode, duration, durunit, quantity, " + "`repeat`, last_refill_date, nosubs, prn, special, GN, script_no, ATC, " + "regional_identifier, unit, method, route, drug_form, create_date, " + "outside_provider_name, outside_provider_ohip, custom_instructions, " + "dosage, unitName, long_term, custom_note, past_med, special_instruction,patient_compliance, non_authoritative, pickup_datetime,eTreatmentType,rxStatus,dispense_interval,refill_quantity,refill_duration,hide_cpp) " + "VALUES ('" + this.getProviderNo() + "', " + this.getDemographicNo() + ", '" + RxUtil.DateToString(this.getRxDate()) + "', '" + RxUtil.DateToString(this.getEndDate()) + "', '" + RxUtil.DateToString(this.getWrittenDate()) + "', '" + StringEscapeUtils.escapeSql(this.getBrandName()) + "', " + this.getGCN_SEQNO() + ", '" + StringEscapeUtils.escapeSql(this.getCustomName()) + "', " + this.getTakeMin() + ", " + this.getTakeMax() + ", '" + this.getFrequencyCode() + "', '" + this.getDuration() + "', '" + this.getDurationUnit() + "', '" + this.getQuantity() + "', " + this.getRepeat() + ", '" + RxUtil.DateToString(this.getLastRefillDate()) + "', " + this.getNosubsInt() + ", " + this.getPrnInt() + ", '" + escapedSpecial + "','" + StringEscapeUtils.escapeSql(this.getGenericName()) + "','" + scriptId + "', '" + this.getAtcCode() + "', '" + this.getRegionalIdentifier() + "','" + this.getUnit() + "','" + this.getMethod() + "','" + this.getRoute() + "','" + this.getDrugForm() + "',now(),'" + this.getOutsideProviderName() + "','" + this.getOutsideProviderOhip() + "', " + this.getCustomInstr() + ",'" + this.getDosage() + "', '" + this.getUnitName() + "', " + this.getLongTerm() + ", "  + this.isCustomNote() + ", " + this.getPastMed() + ", '" +this.special_instruction+"', "+ this.getPatientCompliance() + ", "  + this.isNonAuthoritative() + ", '"  + RxUtil.DateToString(this.getPickupDate(),"yyyy-MM-dd") + " " + RxUtil.DateToString(this.getPickupTime(),"hh:mm") + "','"+this.getETreatmentType()+"','"+this.getRxStatus()+"',"+this.getDispenseInterval()+","+this.getRefillQuantity()+","+this.getRefillDuration()+",0)";
                         MiscUtils.getLogger().debug("sql="+sql);
 
                         DBHandler.RunSQL(sql);
@@ -1927,7 +1987,7 @@ public class RxPrescriptionData {
                 } else { // update the database
 
                     //create_date is not updated
-                	sql = "UPDATE drugs SET " + "provider_no = '" + this.getProviderNo() + "', " + "demographic_no = " + this.getDemographicNo() + ", " + "rx_date = '" + RxUtil.DateToString(this.getRxDate()) + "', " + "end_date = '" + RxUtil.DateToString(this.getEndDate()) + "', " + "written_date = '" + RxUtil.DateToString(this.getWrittenDate()) + "', " + "BN = '" + StringEscapeUtils.escapeSql(this.getBrandName()) + "', " + "GCN_SEQNO = " + this.getGCN_SEQNO() + ", " + "customName = '" + StringEscapeUtils.escapeSql(this.getCustomName()) + "', " + "takemin = " + this.getTakeMin() + ", " + "takemax = " + this.getTakeMax() + ", " + "freqcode = '" + this.getFrequencyCode() + "', " + "duration = '" + this.getDuration() + "', " + "durunit = '" + this.getDurationUnit() + "', " + "quantity = '" + this.getQuantity() + "', " + "`repeat` = " + this.getRepeat() + ", " + "last_refill_date = '" + RxUtil.DateToString(this.getLastRefillDate()) + "', " + "nosubs = " + this.getNosubsInt() + ", " + "prn = " + this.getPrnInt() + ", " + "special = '" + escapedSpecial + "', " + "ATC = '" + this.atcCode + "', " + "regional_identifier = '" + this.regionalIdentifier + "', " + "unit = '" + this.getUnit() + "', " + "method = '" + this.getMethod() + "', " + "route = '" + this.getRoute() + "', " + "drug_form = '" + this.getDrugForm() + "', " + "dosage = '" + this.getDosage() + "', " + "outside_provider_name = '" + this.getOutsideProviderName() + "', " + "outside_provider_ohip = '" + this.getOutsideProviderOhip() + "', " + "custom_instructions = " + this.getCustomInstr() + ", " + "unitName = '" + this.getUnitName() + "', " + "long_term = " + this.getLongTerm() + ", " +"custom_note = " + this.isCustomNote() +", " + "past_med = " + this.getPastMed() + ", " +"special_instruction = '"+this.getSpecialInstruction()+"', " + "patient_compliance = " + this.getPatientCompliance() + ", eTreatmentType = '"+this.getETreatmentType()+"',dispense_interval="+this.getDispenseInterval()+", refill_quantity="+this.getRefillQuantity()+",refill_duration="+this.getRefillDuration()+",hide_cpp=" + ((this.isHideCpp())?1:0) + " WHERE drugid = " + this.getDrugId();
+                    sql = "UPDATE drugs SET " + "provider_no = '" + this.getProviderNo() + "', " + "demographic_no = " + this.getDemographicNo() + ", " + "rx_date = '" + RxUtil.DateToString(this.getRxDate()) + "', " + "end_date = '" + RxUtil.DateToString(this.getEndDate()) + "', " + "written_date = '" + RxUtil.DateToString(this.getWrittenDate()) + "', " + "BN = '" + StringEscapeUtils.escapeSql(this.getBrandName()) + "', " + "GCN_SEQNO = " + this.getGCN_SEQNO() + ", " + "customName = '" + StringEscapeUtils.escapeSql(this.getCustomName()) + "', " + "takemin = " + this.getTakeMin() + ", " + "takemax = " + this.getTakeMax() + ", " + "freqcode = '" + this.getFrequencyCode() + "', " + "duration = '" + this.getDuration() + "', " + "durunit = '" + this.getDurationUnit() + "', " + "quantity = '" + this.getQuantity() + "', " + "`repeat` = " + this.getRepeat() + ", " + "last_refill_date = '" + RxUtil.DateToString(this.getLastRefillDate()) + "', " + "nosubs = " + this.getNosubsInt() + ", " + "prn = " + this.getPrnInt() + ", " + "special = '" + escapedSpecial + "', " + "ATC = '" + this.atcCode + "', " + "regional_identifier = '" + this.regionalIdentifier + "', " + "unit = '" + this.getUnit() + "', " + "method = '" + this.getMethod() + "', " + "route = '" + this.getRoute() + "', " + "drug_form = '" + this.getDrugForm() + "', " + "dosage = '" + this.getDosage() + "', " + "outside_provider_name = '" + this.getOutsideProviderName() + "', " + "outside_provider_ohip = '" + this.getOutsideProviderOhip() + "', " + "custom_instructions = " + this.getCustomInstr() + ", " + "unitName = '" + this.getUnitName() + "', " + "long_term = " + this.getLongTerm() + ", " +"custom_note = " + this.isCustomNote() +", " + "past_med = " + this.getPastMed() + ", " +"special_instruction = '"+this.getSpecialInstruction()+"', " + "patient_compliance = " + this.getPatientCompliance() + ", eTreatmentType = '"+this.getETreatmentType()+"', rxStatus='"+this.getRxStatus()+"',dispense_interval="+this.getDispenseInterval()+", refill_quantity="+this.getRefillQuantity()+",refill_duration="+this.getRefillDuration()+",hide_cpp=" + ((this.isHideCpp())?1:0)+" WHERE drugid = " + this.getDrugId();
                     MiscUtils.getLogger().debug("sql="+sql);
                     DBHandler.RunSQL(sql);
 
@@ -2128,7 +2188,7 @@ public class RxPrescriptionData {
             this.dosage = dosage;
         }
 
-		public int getRefillDuration() {
+		public Integer getRefillDuration() {
         	return refillDuration;
         }
 
@@ -2136,7 +2196,7 @@ public class RxPrescriptionData {
         	this.refillDuration = refillDuration;
         }
 
-		public int getRefillQuantity() {
+		public Integer getRefillQuantity() {
         	return refillQuantity;
         }
 
@@ -2144,7 +2204,7 @@ public class RxPrescriptionData {
         	this.refillQuantity = refillQuantity;
         }
 
-		public int getDispenseInterval() {
+		public Integer getDispenseInterval() {
         	return dispenseInterval;
         }
 
@@ -2586,3 +2646,4 @@ if (getSpecial() == null || getSpecial().length() < 4) {
 	}
 
 }
+

@@ -107,6 +107,7 @@ import cds.ReportsReceivedDocument.ReportsReceived;
 import cds.RiskFactorsDocument.RiskFactors;
 import java.util.HashMap;
 import org.apache.commons.lang.math.NumberUtils;
+import org.apache.log4j.Logger;
 import oscar.oscarRx.data.RxAllergyData.Allergy;
 
 /**
@@ -114,6 +115,26 @@ import oscar.oscarRx.data.RxAllergyData.Allergy;
  * @author Ronnie Cheng
  */
 public class DemographicExportAction4 extends Action {
+
+        private static final Logger logger = MiscUtils.getLogger();
+        private static final String PATIENTID = "Patient";
+        private static final String ALERT = "Alert";
+        private static final String ALLERGY = "Allergy";
+        private static final String APPOINTMENT = "Appointment";
+        private static final String CAREELEMENTS = "Care";
+        private static final String CLINICALNOTE = "Clinical";
+        private static final String FAMILYHISTORY = "Family";
+        private static final String IMMUNIZATION = "Immunization";
+        private static final String LABS = "Labs";
+        private static final String MEDICATION = "Medication";
+        private static final String PASTHEALTH = "Past";
+        private static final String PROBLEMLIST = "Problem";
+        private static final String REPORTBINARY = "Binary";
+        private static final String REPORTTEXT = "Text";
+        private static final String RISKFACTOR = "Risk";
+
+        HashMap<String, Integer> entries = new HashMap<String, Integer>();
+        Integer exportNo = 0;
 
 @Override
     @SuppressWarnings("static-access")
@@ -127,7 +148,6 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
     String mediaType = defrm.getMediaType();
     String noOfMedia = defrm.getNoOfMedia();
     String pgpReady = defrm.getPgpReady();
-    boolean exPersonalHistory = WebUtils.isChecked(request, "exPersonalHistory");
     boolean exFamilyHistory = WebUtils.isChecked(request, "exFamilyHistory");
     boolean exPastHealth = WebUtils.isChecked(request, "exPastHealth");
     boolean exProblemList = WebUtils.isChecked(request, "exProblemList");
@@ -139,7 +159,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
     boolean exAppointments = WebUtils.isChecked(request, "exAppointments");
     boolean exClinicalNotes = WebUtils.isChecked(request, "exClinicalNotes");
     boolean exReportsReceived = WebUtils.isChecked(request, "exReportsReceived");
-    boolean exAuditInformation = WebUtils.isChecked(request, "exAuditInformation");
+    boolean exAlertsAndSpecialNeeds = WebUtils.isChecked(request, "exAlertsAndSpecialNeeds");
     boolean exCareElements = WebUtils.isChecked(request, "exCareElements");
 
     ArrayList<String> list = new ArrayList<String>();
@@ -182,7 +202,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
     prevList = null;
 
     RxPrescriptionData prescriptData = new RxPrescriptionData();
-    RxPrescriptionData.Prescription [] arr = null;
+    RxPrescriptionData.Prescription[] arr = null;
 
     CommonLabTestValues comLab = new CommonLabTestValues();
     PreventionData pd = new PreventionData();
@@ -191,7 +211,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
     String ffwd = "fail";
     String tmpDir = oscarp.getProperty("TMP_DIR");
     if (!Util.checkDir(tmpDir)) {
-        MiscUtils.getLogger().debug("Error! Cannot write to TMP_DIR - Check oscar.properties or dir permissions.");
+        logger.debug("Error! Cannot write to TMP_DIR - Check oscar.properties or dir permissions.");
     } else {
 	XmlOptions options = new XmlOptions();
 	options.put( XmlOptions.SAVE_PRETTY_PRINT );
@@ -219,6 +239,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             Demographics demo = patientRec.addNewDemographics();
 
             demo.setUniqueVendorIdSequence(demoNo);
+            entries.put(PATIENTID+exportNo, Integer.valueOf(demoNo));
 
             cdsDt.PersonNameStandard personName = demo.addNewNames();
             cdsDt.PersonNameStandard.LegalName legalName = personName.addNewLegalName();
@@ -417,7 +438,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 
                     cdsDt.PurposeEnumOrPlainText contactPurpose = contact.addNewContactPurpose();
                     if (ec.equals("1")) contactPurpose.setPurposeAsEnum(cdsDt.PurposeEnumOrPlainText.PurposeAsEnum.EC);
-                    else if (sdm.equals("1")) contactPurpose.setPurposeAsPlainText("Substitute Decision Maker");
+                    else if (sdm.equals("1")) contactPurpose.setPurposeAsEnum(cdsDt.PurposeEnumOrPlainText.PurposeAsEnum.SDM);
                     else if (rel.equals("Next of Kin")) contactPurpose.setPurposeAsEnum(cdsDt.PurposeEnumOrPlainText.PurposeAsEnum.NK);
                     else if (rel.equals("Administrative Staff")) contactPurpose.setPurposeAsEnum(cdsDt.PurposeEnumOrPlainText.PurposeAsEnum.AS);
                     else if (rel.equals("Care Giver")) contactPurpose.setPurposeAsEnum(cdsDt.PurposeEnumOrPlainText.PurposeAsEnum.CG);
@@ -511,20 +532,24 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                 }
                 List<CaseManagementNoteExt> cmeList = cmm.getExtByNote(cmn.getId());
 
+/*
                 if (exPersonalHistory) {
                     // PERSONAL HISTORY (SocHistory)
                     if (StringUtils.filled(socHist)) {
                         summary = socHist;
-                        summary = Util.appendLine(summary, "Notes: ", annotation);
+                        summary = Util.addLine(summary, "Notes: ", annotation);
                         for (CaseManagementIssue isu : sisu) {
                             String codeSystem = isu.getIssue().getType();
                             if (!codeSystem.equals("system")) {
-                                summary = Util.appendLine(summary, "Diagnosis: ", isu.getIssue().getDescription());
+                                summary = Util.addLine(summary, "Diagnosis: ", isu.getIssue().getDescription());
                             }
                         }
                         patientRec.addNewPersonalHistory().setCategorySummaryLine(summary);
+                        entries.put(this.pe+importNo, Integer.valueOf(demographicNo));
                     }
                 }
+ *
+ */
                 if (exFamilyHistory) {
                     // FAMILY HISTORY (FamHistory)
                     if (StringUtils.filled(famHist)) {
@@ -537,52 +562,60 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                             String codeSystem = isu.getIssue().getType();
                             if (!codeSystem.equals("system")) {
                                 if (diagnosisAssigned) {
-                                    summary = Util.appendLine(summary, "Diagnosis: ", isu.getIssue().getDescription());
+                                    summary = Util.addLine(summary, "Diagnosis: ", isu.getIssue().getDescription());
                                 } else {
                                     cdsDt.StandardCoding diagnosis = fHist.addNewDiagnosisProcedureCode();
                                     diagnosis.setStandardCodingSystem(codeSystem);
                                     diagnosis.setStandardCode(isu.getIssue().getCode());
                                     diagnosis.setStandardCodeDescription(isu.getIssue().getDescription());
-                                    summary = Util.appendLine(summary, "Diagnosis: ", diagnosis.getStandardCodeDescription());
+                                    summary = Util.addLine(summary, "Diagnosis: ", diagnosis.getStandardCodeDescription());
                                     diagnosisAssigned = true;
                                 }
                             }
                         }
-                        boolean bSTARTDATE=false, bAGEATONSET=false, bRELATIONSHIP=false, bTREATMENT=false;
+                        addOneEntry(FAMILYHISTORY);
+                        boolean bSTARTDATE=false, bAGEATONSET=false, bRELATIONSHIP=false, bTREATMENT=false, bLIFESTAGE=false;
                         for (CaseManagementNoteExt cme : cmeList) {
-                            if (cme.getKeyVal().equals(cme.STARTDATE)) {
+                            if (cme.getKeyVal().equals(CaseManagementNoteExt.STARTDATE)) {
                                 if (bSTARTDATE) continue;
                                 if (cme.getDateValue()!=null) {
                                     fHist.addNewStartDate().setFullDate(Util.calDate(cme.getDateValue()));
-                                    summary = Util.appendLine(summary, cme.STARTDATE+": ", UtilDateUtilities.DateToString(cme.getDateValue(), "yyyy-MM-dd"));
+                                    summary = Util.addLine(summary, CaseManagementNoteExt.STARTDATE+": ", UtilDateUtilities.DateToString(cme.getDateValue(), "yyyy-MM-dd"));
                                 }
                                 bSTARTDATE = true;
-                            } else if (cme.getKeyVal().equals(cme.AGEATONSET)) {
+                            } else if (cme.getKeyVal().equals(CaseManagementNoteExt.AGEATONSET)) {
                                 if (bAGEATONSET) continue;
                                 if (StringUtils.filled(cme.getValue())) {
                                     fHist.setAgeAtOnset(BigInteger.valueOf(Long.valueOf(cme.getValue())));
-                                    summary = Util.appendLine(summary, cme.AGEATONSET+": ", cme.getValue());
+                                    summary = Util.addLine(summary, CaseManagementNoteExt.AGEATONSET+": ", cme.getValue());
                                 }
                                 bAGEATONSET = true;
-                            } else if (cme.getKeyVal().equals(cme.RELATIONSHIP)) {
+                            } else if (cme.getKeyVal().equals(CaseManagementNoteExt.RELATIONSHIP)) {
                                 if (bRELATIONSHIP) continue;
                                 if (StringUtils.filled(cme.getValue())) {
                                     fHist.setRelationship(cme.getValue());
-                                    summary = Util.appendLine(summary, cme.RELATIONSHIP+": ", cme.getValue());
+                                    summary = Util.addLine(summary, CaseManagementNoteExt.RELATIONSHIP+": ", cme.getValue());
                                 }
                                 bRELATIONSHIP = true;
-                            } else if (cme.getKeyVal().equals(cme.TREATMENT)) {
+                            } else if (cme.getKeyVal().equals(CaseManagementNoteExt.TREATMENT)) {
                                 if (bTREATMENT) continue;
                                 if (StringUtils.filled(cme.getValue())) {
                                     fHist.setTreatment(cme.getValue());
-                                    summary = Util.appendLine(summary, cme.TREATMENT+": ", cme.getValue());
+                                    summary = Util.addLine(summary, CaseManagementNoteExt.TREATMENT+": ", cme.getValue());
                                 }
                                 bTREATMENT = true;
+                            } else if (cme.getKeyVal().equals(CaseManagementNoteExt.LIFESTAGE)) {
+                                if (bLIFESTAGE) continue;
+                                if (StringUtils.filled(cme.getValue())) {
+                                    fHist.setLifeStage(cdsDt.LifeStage.Enum.forString(cme.getValue()));
+                                    summary = Util.addLine(summary, CaseManagementNoteExt.LIFESTAGE+": ", cme.getValue());
+                                }
+                                bLIFESTAGE = true;
                             }
                         }
                         if (StringUtils.filled(annotation)) {
                             fHist.setNotes(annotation);
-                            summary = Util.appendLine(summary, "Notes: ", annotation);
+                            summary = Util.addLine(summary, "Notes: ", annotation);
                         }
                         fHist.setCategorySummaryLine(summary);
                     }
@@ -598,38 +631,53 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                             String codeSystem = isu.getIssue().getType();
                             if (!codeSystem.equals("system")) {
                                 if (diagnosisAssigned) {
-                                    summary = Util.appendLine(summary, "Diagnosis: ", isu.getIssue().getDescription());
+                                    summary = Util.addLine(summary, "Diagnosis: ", isu.getIssue().getDescription());
                                 } else {
                                     cdsDt.StandardCoding diagnosis = pHealth.addNewDiagnosisProcedureCode();
                                     diagnosis.setStandardCodingSystem(codeSystem);
                                     diagnosis.setStandardCode(isu.getIssue().getCode());
                                     diagnosis.setStandardCodeDescription(isu.getIssue().getDescription());
-                                    summary = Util.appendLine(summary, "Diagnosis: ", diagnosis.getStandardCodeDescription());
+                                    summary = Util.addLine(summary, "Diagnosis: ", diagnosis.getStandardCodeDescription());
                                     diagnosisAssigned = true;
                                 }
                             }
                         }
-                        boolean bSTARTDATE=false, bRESOLUTIONDATE=false, bTREATMENT=false;
+                        addOneEntry(PASTHEALTH);
+                        boolean bSTARTDATE=false, bRESOLUTIONDATE=false, bPROCEDUREDATE=false, bTREATMENT=false, bLIFESTAGE=false;;
                         for (CaseManagementNoteExt cme : cmeList) {
-                            if (cme.getKeyVal().equals(cme.STARTDATE)) {
+                            if (cme.getKeyVal().equals(CaseManagementNoteExt.STARTDATE)) {
                                 if (bSTARTDATE) continue;
                                 if (cme.getDateValue()!=null) {
                                     pHealth.addNewOnsetOrEventDate().setFullDate(Util.calDate(cme.getDateValue()));
-                                    summary = Util.appendLine(summary, "Onset/Event Date: ", UtilDateUtilities.DateToString(cme.getDateValue(), "yyyy-MM-dd"));
+                                    summary = Util.addLine(summary, "Onset/Event Date: ", UtilDateUtilities.DateToString(cme.getDateValue(), "yyyy-MM-dd"));
                                 }
                                 bSTARTDATE = true;
-                            } else if (cme.getKeyVal().equals(cme.RESOLUTIONDATE)) {
+                            } else if (cme.getKeyVal().equals(CaseManagementNoteExt.RESOLUTIONDATE)) {
                                 if (bRESOLUTIONDATE) continue;
                                 if (cme.getDateValue()!=null) {
                                     pHealth.addNewResolvedDate().setFullDate(Util.calDate(cme.getDateValue()));
-                                    summary = Util.appendLine(summary, "Resolved Date: ", UtilDateUtilities.DateToString(cme.getDateValue(), "yyyy-MM-dd"));
+                                    summary = Util.addLine(summary, "Resolved Date: ", UtilDateUtilities.DateToString(cme.getDateValue(), "yyyy-MM-dd"));
                                 }
                                 bRESOLUTIONDATE = true;
-                            } else if (cme.getKeyVal().equals(cme.TREATMENT)) {
+                            } else if (cme.getKeyVal().equals(CaseManagementNoteExt.PROCEDUREDATE)) {
+                                if (bPROCEDUREDATE) continue;
+                                if (cme.getDateValue()!=null) {
+                                    pHealth.addNewProcedureDate().setFullDate(Util.calDate(cme.getDateValue()));
+                                    summary = Util.addLine(summary, CaseManagementNoteExt.PROCEDUREDATE+": ", UtilDateUtilities.DateToString(cme.getDateValue(), "yyyy-MM-dd"));
+                                }
+                                bPROCEDUREDATE = true;
+                            } else if (cme.getKeyVal().equals(CaseManagementNoteExt.LIFESTAGE)) {
+                                if (bLIFESTAGE) continue;
+                                if (StringUtils.filled(cme.getValue())) {
+                                    pHealth.setLifeStage(cdsDt.LifeStage.Enum.forString(cme.getValue()));
+                                    summary = Util.addLine(summary, CaseManagementNoteExt.LIFESTAGE+": ", cme.getValue());
+                                }
+                                bLIFESTAGE = true;
+                            } else if (cme.getKeyVal().equals(CaseManagementNoteExt.TREATMENT)) {
                                 if (bTREATMENT) continue;
                                 if (StringUtils.filled(cme.getValue())) {
-                                    medHist = Util.appendLine(medHist, "Procedure/Intervention: ", cme.getValue());
-                                    summary = Util.appendLine(summary, "Procedure/Intervention: ", cme.getValue());
+                                    medHist = Util.addLine(medHist, "Procedure/Intervention: ", cme.getValue());
+                                    summary = Util.addLine(summary, "Procedure/Intervention: ", cme.getValue());
                                 }
                                 bTREATMENT = true;
                             }
@@ -637,7 +685,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         pHealth.setPastHealthProblemDescriptionOrProcedures(medHist);
                         if (StringUtils.filled(annotation)) {
                             pHealth.setNotes(annotation);
-                            summary = Util.appendLine(summary, "Notes: ", annotation);
+                            summary = Util.addLine(summary, "Notes: ", annotation);
                         }
                         pHealth.setCategorySummaryLine(summary);
                     }
@@ -654,39 +702,47 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                             String codeSystem = isu.getIssue().getType();
                             if (!codeSystem.equals("system")) {
                                 if (diagnosisAssigned) {
-                                    summary = Util.appendLine(summary, "Diagnosis: ", isu.getIssue().getDescription());
+                                    summary = Util.addLine(summary, "Diagnosis: ", isu.getIssue().getDescription());
                                 } else {
                                     cdsDt.StandardCoding diagnosis = pList.addNewDiagnosisCode();
                                     diagnosis.setStandardCodingSystem(codeSystem);
                                     diagnosis.setStandardCode(isu.getIssue().getCode());
                                     diagnosis.setStandardCodeDescription(isu.getIssue().getDescription());
-                                    summary = Util.appendLine(summary, "Diagnosis: ", diagnosis.getStandardCodeDescription());
+                                    summary = Util.addLine(summary, "Diagnosis: ", diagnosis.getStandardCodeDescription());
                                     diagnosisAssigned = true;
                                 }
                             }
                         }
-                        boolean bSTARTDATE=false, bRESOLUTIONDATE=false, bPROBLEMSTATUS=false;
+                        addOneEntry(PROBLEMLIST);
+                        boolean bSTARTDATE=false, bRESOLUTIONDATE=false, bPROBLEMSTATUS=false, bLIFESTAGE=false;
                         for (CaseManagementNoteExt cme : cmeList) {
-                            if (cme.getKeyVal().equals(cme.STARTDATE)) {
+                            if (cme.getKeyVal().equals(CaseManagementNoteExt.STARTDATE)) {
                                 if (bSTARTDATE) continue;
                                 pList.addNewOnsetDate().setFullDate(Util.calDate(cme.getDateValue()));
-                                summary = Util.appendLine(summary, "Onset Date: ", UtilDateUtilities.DateToString(cme.getDateValue(), "yyyy-MM-dd"));
+                                summary = Util.addLine(summary, "Onset Date: ", UtilDateUtilities.DateToString(cme.getDateValue(), "yyyy-MM-dd"));
                                 if (cme.getDateValue()==null) {
                                     err.add("Error! No Onset Date for Problem List for Patient "+demoNo);
                                 }
                                 bSTARTDATE = true;
-                            } else if (cme.getKeyVal().equals(cme.RESOLUTIONDATE)) {
+                            } else if (cme.getKeyVal().equals(CaseManagementNoteExt.RESOLUTIONDATE)) {
                                 if (bRESOLUTIONDATE) continue;
                                 if (cme.getDateValue()!=null) {
                                     pList.addNewResolutionDate().setFullDate(Util.calDate(cme.getDateValue()));
-                                    summary = Util.appendLine(summary, cme.RESOLUTIONDATE+": ", UtilDateUtilities.DateToString(cme.getDateValue(), "yyyy-MM-dd"));
+                                    summary = Util.addLine(summary, CaseManagementNoteExt.RESOLUTIONDATE+": ", UtilDateUtilities.DateToString(cme.getDateValue(), "yyyy-MM-dd"));
                                 }
                                 bRESOLUTIONDATE = true;
-                            } else if (cme.getKeyVal().equals(cme.PROBLEMSTATUS)) {
+                            } else if (cme.getKeyVal().equals(CaseManagementNoteExt.LIFESTAGE)) {
+                                if (bLIFESTAGE) continue;
+                                if (StringUtils.filled(cme.getValue())) {
+                                    pList.setLifeStage(cdsDt.LifeStage.Enum.forString(cme.getValue()));
+                                    summary = Util.addLine(summary, CaseManagementNoteExt.LIFESTAGE+": ", cme.getValue());
+                                }
+                                bLIFESTAGE = true;
+                            } else if (cme.getKeyVal().equals(CaseManagementNoteExt.PROBLEMSTATUS)) {
                                 if (bPROBLEMSTATUS) continue;
                                 if (StringUtils.filled(cme.getValue())) {
                                     pList.setProblemStatus(cme.getValue());
-                                    summary = Util.appendLine(summary, cme.PROBLEMSTATUS+": ", cme.getValue());
+                                    summary = Util.addLine(summary, CaseManagementNoteExt.PROBLEMSTATUS+": ", cme.getValue());
                                 }
                                 bPROBLEMSTATUS = true;
                             }
@@ -694,7 +750,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 
                         if (StringUtils.filled(annotation)) {
                             pList.setNotes(annotation);
-                            summary = Util.appendLine(summary, "Notes: ", annotation);
+                            summary = Util.addLine(summary, "Notes: ", annotation);
                         }
                         pList.setCategorySummaryLine(summary);
                     }
@@ -705,52 +761,61 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         RiskFactors rFact = patientRec.addNewRiskFactors();
                         rFact.setRiskFactor(riskFactors);
                         summary = "Risk Factor: "+riskFactors;
+                        addOneEntry(RISKFACTOR);
 
-                        boolean bSTARTDATE=false, bRESOLUTIONDATE=false, bAGEATONSET=false, bEXPOSUREDETAIL=false;
+                        boolean bSTARTDATE=false, bRESOLUTIONDATE=false, bAGEATONSET=false, bEXPOSUREDETAIL=false, bLIFESTAGE=false;
                         for (CaseManagementNoteExt cme : cmeList) {
-                            if (cme.getKeyVal().equals(cme.STARTDATE)) {
+                            if (cme.getKeyVal().equals(CaseManagementNoteExt.STARTDATE)) {
                                 if (bSTARTDATE) continue;
                                 if (cme.getDateValue()!=null) {
                                     rFact.addNewStartDate().setFullDate(Util.calDate(cme.getDateValue()));
-                                    summary = Util.appendLine(summary, cme.STARTDATE+": ", UtilDateUtilities.DateToString(cme.getDateValue(), "yyyy-MM-dd"));
+                                    summary = Util.addLine(summary, CaseManagementNoteExt.STARTDATE+": ", UtilDateUtilities.DateToString(cme.getDateValue(), "yyyy-MM-dd"));
                                 }
                                 bSTARTDATE = true;
-                            } else if (cme.getKeyVal().equals(cme.RESOLUTIONDATE)) {
+                            } else if (cme.getKeyVal().equals(CaseManagementNoteExt.RESOLUTIONDATE)) {
                                 if (bRESOLUTIONDATE) continue;
                                 if (cme.getDateValue()!=null) {
                                     rFact.addNewEndDate().setFullDate(Util.calDate(cme.getDateValue()));
-                                    summary = Util.appendLine(summary, "End Date: ", UtilDateUtilities.DateToString(cme.getDateValue(), "yyyy-MM-dd"));
+                                    summary = Util.addLine(summary, "End Date: ", UtilDateUtilities.DateToString(cme.getDateValue(), "yyyy-MM-dd"));
                                 }
                                 bRESOLUTIONDATE = true;
-                            } else if (cme.getKeyVal().equals(cme.AGEATONSET)) {
+                            } else if (cme.getKeyVal().equals(CaseManagementNoteExt.AGEATONSET)) {
                                 if (bAGEATONSET) continue;
                                 if (StringUtils.filled(cme.getValue())) {
                                     rFact.setAgeOfOnset(BigInteger.valueOf(Long.valueOf(cme.getValue())));
-                                    summary = Util.appendLine(summary, cme.AGEATONSET+": ", cme.getValue());
+                                    summary = Util.addLine(summary, CaseManagementNoteExt.AGEATONSET+": ", cme.getValue());
                                 }
                                 bAGEATONSET = true;
-                            } else if (cme.getKeyVal().equals(cme.EXPOSUREDETAIL)) {
+                            } else if (cme.getKeyVal().equals(CaseManagementNoteExt.LIFESTAGE)) {
+                                if (bLIFESTAGE) continue;
+                                if (StringUtils.filled(cme.getValue())) {
+                                    rFact.setLifeStage(cdsDt.LifeStage.Enum.forString(cme.getValue()));
+                                    summary = Util.addLine(summary, CaseManagementNoteExt.LIFESTAGE+": ", cme.getValue());
+                                }
+                                bLIFESTAGE = true;
+                            } else if (cme.getKeyVal().equals(CaseManagementNoteExt.EXPOSUREDETAIL)) {
                                 if (bEXPOSUREDETAIL) continue;
                                 if (StringUtils.filled(cme.getValue())) {
                                     rFact.setExposureDetails(cme.getValue());
-                                    summary = Util.appendLine(summary, cme.EXPOSUREDETAIL+": ", cme.getValue());
+                                    summary = Util.addLine(summary, CaseManagementNoteExt.EXPOSUREDETAIL+": ", cme.getValue());
                                 }
                                 bEXPOSUREDETAIL = true;
                             }
                         }
                         if (StringUtils.filled(annotation)) {
                             rFact.setNotes(annotation);
-                            summary = Util.appendLine(summary, "Notes: ", annotation);
+                            summary = Util.addLine(summary, "Notes: ", annotation);
                         }
                         for (CaseManagementIssue isu : sisu) {
                             String codeSystem = isu.getIssue().getType();
                             if (!codeSystem.equals("system")) {
-                                summary = Util.appendLine(summary, "Diagnosis: ", isu.getIssue().getDescription());
+                                summary = Util.addLine(summary, "Diagnosis: ", isu.getIssue().getDescription());
                             }
                         }
                         rFact.setCategorySummaryLine(summary);
                     }
                 }
+
                 if (exClinicalNotes) {
                     // CLINCAL NOTES
                     if (StringUtils.filled(encounter)) {
@@ -758,10 +823,12 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         for (CaseManagementIssue isu : sisu) {
                             String codeSystem = isu.getIssue().getType();
                             if (!codeSystem.equals("system")) {
-                                encounter = Util.appendLine(encounter, "Diagnosis: ", isu.getIssue().getDescription());
+                                encounter = Util.addLine(encounter, "Diagnosis: ", isu.getIssue().getDescription());
                             }
                         }
                         cNote.setMyClinicalNotesContent(encounter);
+                        addOneEntry(CLINICALNOTE);
+
                         if (cmn.getUpdate_date()!=null) {
                             cNote.addNewEnteredDateTime().setFullDateTime(Util.calDate(cmn.getUpdate_date()));
                         }
@@ -780,34 +847,38 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         }
                     }
                 }
-                // ALERTS AND SPECIAL NEEDS (Reminders)
-                if (StringUtils.filled(reminders)) {
-                    AlertsAndSpecialNeeds alerts = patientRec.addNewAlertsAndSpecialNeeds();
-                    alerts.setAlertDescription(reminders);
 
-                    boolean bSTARTDATE=false, bRESOLUTIONDATE=false;
-                    for (CaseManagementNoteExt cme : cmeList) {
-                        if (cme.getKeyVal().equals(cme.STARTDATE)) {
-                            if (bSTARTDATE) continue;
-                            if (cme.getDateValue()!=null) {
-                                alerts.addNewDateActive().setFullDate(Util.calDate(cme.getDateValue()));
-                                reminders = Util.appendLine(reminders, "Date Active: ", UtilDateUtilities.DateToString(cme.getDateValue()));
+                if (exAlertsAndSpecialNeeds) {
+                    // ALERTS AND SPECIAL NEEDS (Reminders)
+                    if (StringUtils.filled(reminders)) {
+                        AlertsAndSpecialNeeds alerts = patientRec.addNewAlertsAndSpecialNeeds();
+                        alerts.setAlertDescription(reminders);
+                        addOneEntry(ALERT);
+
+                        boolean bSTARTDATE=false, bRESOLUTIONDATE=false;
+                        for (CaseManagementNoteExt cme : cmeList) {
+                            if (cme.getKeyVal().equals(CaseManagementNoteExt.STARTDATE)) {
+                                if (bSTARTDATE) continue;
+                                if (cme.getDateValue()!=null) {
+                                    alerts.addNewDateActive().setFullDate(Util.calDate(cme.getDateValue()));
+                                    reminders = Util.addLine(reminders, "Date Active: ", UtilDateUtilities.DateToString(cme.getDateValue()));
+                                }
+                                bSTARTDATE = true;
+                            } else if (cme.getKeyVal().equals(CaseManagementNoteExt.RESOLUTIONDATE)) {
+                                if (bRESOLUTIONDATE) continue;
+                                if (cme.getDateValue()!=null) {
+                                    alerts.addNewEndDate().setFullDate(Util.calDate(cme.getDateValue()));
+                                    reminders = Util.addLine(reminders, "End Date: ", UtilDateUtilities.DateToString(cme.getDateValue()));
+                                }
+                                bRESOLUTIONDATE = true;
                             }
-                            bSTARTDATE = true;
-                        } else if (cme.getKeyVal().equals(cme.RESOLUTIONDATE)) {
-                            if (bRESOLUTIONDATE) continue;
-                            if (cme.getDateValue()!=null) {
-                                alerts.addNewEndDate().setFullDate(Util.calDate(cme.getDateValue()));
-                                reminders = Util.appendLine(reminders, "End Date: ", UtilDateUtilities.DateToString(cme.getDateValue()));
-                            }
-                            bRESOLUTIONDATE = true;
                         }
+                        if (StringUtils.filled(annotation)) {
+                            alerts.setNotes(annotation);
+                            reminders = Util.addLine(reminders, "Notes: ", annotation);
+                        }
+                        alerts.setCategorySummaryLine(reminders);
                     }
-                    if (StringUtils.filled(annotation)) {
-                        alerts.setNotes(annotation);
-                        reminders = Util.appendLine(reminders, "Notes: ", annotation);
-                    }
-                    alerts.setCategorySummaryLine(reminders);
                 }
             }
 
@@ -818,6 +889,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     AllergiesAndAdverseReactions alr = patientRec.addNewAllergiesAndAdverseReactions();
                     Allergy allergy = allergies[j].getAllergy();
                     String aSummary = "";
+                    addOneEntry(ALLERGY);
 
                     data = allergy.getDESCRIPTION();
                     if (StringUtils.filled(data)) {
@@ -829,7 +901,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         cdsDt.DrugCode drugCode = alr.addNewCode();
                         drugCode.setCodeType("DIN");
                         drugCode.setCodeValue(data);
-                        aSummary = Util.appendLine(aSummary, "DIN: ", data);
+                        aSummary = Util.addLine(aSummary, "DIN: ", data);
                     }
                     data = String.valueOf(allergy.getTYPECODE());
                     if (StringUtils.filled(data)) {
@@ -844,12 +916,12 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                                 alr.setPropertyOfOffendingAgent(cdsDt.PropertyOfOffendingAgent.ND);
                             }
                         }
-                        aSummary = Util.appendLine(aSummary,"Property of Offending Agent: ",alr.getPropertyOfOffendingAgent().toString());
+                        aSummary = Util.addLine(aSummary,"Property of Offending Agent: ",alr.getPropertyOfOffendingAgent().toString());
                     }
                     data = allergy.getReaction();
                     if (StringUtils.filled(data)) {
                         alr.setReaction(data);
-                        aSummary = Util.appendLine(aSummary, "Reaction: ", data);
+                        aSummary = Util.addLine(aSummary, "Reaction: ", data);
                     }
                     data = allergy.getSeverityOfReaction();
                     if (StringUtils.filled(data)) {
@@ -863,26 +935,26 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                             alr.setSeverity(cdsDt.AdverseReactionSeverity.MI);
                             err.add("Note: Severity Of Allergy Reaction [Unknown] exported as [Mild] for Patient "+demoNo+" ("+(j+1)+")");
                         }
-                        aSummary = Util.appendLine(aSummary,"Adverse Reaction Severity: ",alr.getSeverity().toString());
+                        aSummary = Util.addLine(aSummary,"Adverse Reaction Severity: ",alr.getSeverity().toString());
                     }
                     if (allergy.getStartDate()!=null) {
                         alr.addNewStartDate().setFullDate(Util.calDate(allergy.getStartDate()));
-                        aSummary = Util.appendLine(aSummary,"Start Date: ",UtilDateUtilities.DateToString(allergy.getStartDate()));
+                        aSummary = Util.addLine(aSummary,"Start Date: ",UtilDateUtilities.DateToString(allergy.getStartDate()));
                     }
                     if (allergy.getLifeStage()!=null) {
                         alr.setLifeStage(cdsDt.LifeStage.Enum.forString(allergy.getLifeStage()));
-                        aSummary = Util.appendLine(aSummary,"Life Stage at Onset: ", allergy.getLifeStageDesc());
+                        aSummary = Util.addLine(aSummary,"Life Stage at Onset: ", allergy.getLifeStageDesc());
                     }
 
                     if (allergies[j].getEntryDate()!=null) {
                         alr.addNewRecordedDate().setFullDate(Util.calDate(allergies[j].getEntryDate()));
-                        aSummary = Util.appendLine(aSummary,"Recorded Date: ",UtilDateUtilities.DateToString(allergies[j].getEntryDate(),"yyyy-MM-dd"));
+                        aSummary = Util.addLine(aSummary,"Recorded Date: ",UtilDateUtilities.DateToString(allergies[j].getEntryDate(),"yyyy-MM-dd"));
                     }
                     CaseManagementNoteLink cml = cmm.getLatestLinkByTableId(CaseManagementNoteLink.ALLERGIES, (long)allergies[j].getAllergyId());
                     if (cml!=null) {
                         CaseManagementNote n = cmm.getNote(cml.getNoteId().toString());
                         alr.setNotes(StringUtils.noNull(n.getNote()));
-                        aSummary = Util.appendLine(aSummary, "Notes: ", n.getNote());
+                        aSummary = Util.addLine(aSummary, "Notes: ", n.getNote());
                     }
 
                     if (StringUtils.empty(aSummary)) {
@@ -904,6 +976,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                             err.add("Error! No Immunization Name for Patient "+demoNo+" ("+(k+1)+")");
                         }
                         immu.setImmunizationName(data);
+                        addOneEntry(IMMUNIZATION);
                         String imSummary = "Immunization Name: "+data;
 
                         data = a.get("refused");
@@ -912,13 +985,13 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                             err.add("Error! No Refused Flag for Patient "+demoNo+" ("+(k+1)+")");
                         } else {
                             immu.addNewRefusedFlag().setBoolean(Util.convert10toboolean(data));
-                            imSummary = Util.appendLine(imSummary, "Refused Flag: ", Util.convert10toboolean(data)?"Y":"N");
+                            imSummary = Util.addLine(imSummary, "Refused Flag: ", Util.convert10toboolean(data)?"Y":"N");
                         }
 
                         data = a.get("prevention_date");
                         if (UtilDateUtilities.StringToDate(data)!=null) {
                             immu.addNewDate().setFullDate(Util.calDate(data));
-                            imSummary = Util.appendLine(imSummary, "Date: ", data);
+                            imSummary = Util.addLine(imSummary, "Date: ", data);
                         }
 
                         HashMap<String,String> extraData = new HashMap<String,String>();
@@ -930,12 +1003,12 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         if (StringUtils.filled(extraData.get("dose"))) immu.setDose(extraData.get("dose"));
                         if (StringUtils.filled(extraData.get("comments"))) immu.setNotes(extraData.get("comments"));
 
-                        imSummary = Util.appendLine(imSummary, "Manufacturer: ", immu.getManufacturer());
-                        imSummary = Util.appendLine(imSummary, "Lot No: ", immu.getLotNumber());
-                        imSummary = Util.appendLine(imSummary, "Route: ", immu.getRoute());
-                        imSummary = Util.appendLine(imSummary, "Site: ", immu.getSite());
-                        imSummary = Util.appendLine(imSummary, "Dose: ", immu.getDose());
-                        imSummary = Util.appendLine(imSummary, "Notes: ", immu.getNotes());
+                        imSummary = Util.addLine(imSummary, "Manufacturer: ", immu.getManufacturer());
+                        imSummary = Util.addLine(imSummary, "Lot No: ", immu.getLotNumber());
+                        imSummary = Util.addLine(imSummary, "Route: ", immu.getRoute());
+                        imSummary = Util.addLine(imSummary, "Site: ", immu.getSite());
+                        imSummary = Util.addLine(imSummary, "Dose: ", immu.getDose());
+                        imSummary = Util.addLine(imSummary, "Notes: ", immu.getNotes());
 
                         if (StringUtils.empty(imSummary)) {
                             err.add("Error! No Category Summary Line (Immunization) for Patient "+demoNo+" ("+(k+1)+")");
@@ -950,30 +1023,31 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 
             if (exMedicationsAndTreatments) {
                 // MEDICATIONS & TREATMENTS
+
                 arr = prescriptData.getUniquePrescriptionsByPatient(Integer.parseInt(demoNo));
                 for (int p = 0; p < arr.length; p++){
                     MedicationsAndTreatments medi = patientRec.addNewMedicationsAndTreatments();
                     String mSummary = "";
-
                     if (arr[p].getWrittenDate()!=null) {
                         medi.addNewPrescriptionWrittenDate().setFullDate(Util.calDate(arr[p].getWrittenDate()));
                         mSummary = "Prescription Written Date: "+UtilDateUtilities.DateToString(arr[p].getWrittenDate(),"yyyy-MM-dd");
                     }
                     if (arr[p].getRxDate()!=null) {
                         medi.addNewStartDate().setFullDate(Util.calDate(arr[p].getRxDate()));
-                        mSummary = Util.appendLine(mSummary,"Start Date: ",UtilDateUtilities.DateToString(arr[p].getRxDate(),"yyyy-MM-dd"));
+                        mSummary = Util.addLine(mSummary,"Start Date: ",UtilDateUtilities.DateToString(arr[p].getRxDate(),"yyyy-MM-dd"));
                     }
                     data = arr[p].getRegionalIdentifier();
                     if (StringUtils.filled(data)) {
                         medi.setDrugIdentificationNumber(data);
-                        mSummary = Util.appendLine(mSummary, "DIN: ", data);
+                        mSummary = Util.addLine(mSummary, "DIN: ", data);
                     }
                     String drugName = StringUtils.noNull(arr[p].getDrugName());
                     if (StringUtils.empty(drugName)) {
                         err.add("Error! No Drug Name for Patient "+demoNo+" ("+(p+1)+")");
                     }
                     medi.setDrugName(drugName);
-                    mSummary = Util.appendLine(mSummary, "Drug Name: ", drugName);
+                    addOneEntry(MEDICATION);
+                    mSummary = Util.addLine(mSummary, "Drug Name: ", drugName);
 
                     if (StringUtils.filled(arr[p].getDosage())) {
                         String strength = arr[p].getDosage();
@@ -987,24 +1061,24 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         cdsDt.DrugMeasure drugM = medi.addNewStrength();
                         drugM.setAmount(strength.substring(0,strength.indexOf(" ")));
                         drugM.setUnitOfMeasure(strength.substring(strength.indexOf(" ")+1));
-                        mSummary = Util.appendLine(mSummary, "Strength: ", arr[p].getGenericName()+" "+strength);
+                        mSummary = Util.addLine(mSummary, "Strength: ", arr[p].getGenericName()+" "+strength);
                     }
                     if (StringUtils.filled(arr[p].getDosageDisplay())) {
                         medi.setDosage(arr[p].getDosageDisplay());
                         medi.setDosageUnitOfMeasure(StringUtils.noNull(arr[p].getUnit()));
-                        mSummary = Util.appendLine(mSummary, "Dosage: ", arr[p].getDosageDisplay()+" "+StringUtils.noNull(arr[p].getUnit()));
+                        mSummary = Util.addLine(mSummary, "Dosage: ", arr[p].getDosageDisplay()+" "+StringUtils.noNull(arr[p].getUnit()));
                     }
                     if (StringUtils.filled(arr[p].getRoute())) {
                         medi.setRoute(arr[p].getRoute());
-                        mSummary = Util.appendLine(mSummary, "Route: ", arr[p].getRoute());
+                        mSummary = Util.addLine(mSummary, "Route: ", arr[p].getRoute());
                     }
                     if (StringUtils.filled(arr[p].getDrugForm())) {
                         medi.setForm(arr[p].getDrugForm());
-                        mSummary = Util.appendLine(mSummary, "Form: ", arr[p].getDrugForm());
+                        mSummary = Util.addLine(mSummary, "Form: ", arr[p].getDrugForm());
                     }
                     if (StringUtils.filled(arr[p].getFreqDisplay())) {
                         medi.setFrequency(arr[p].getFreqDisplay());
-                        mSummary = Util.appendLine(mSummary, "Frequency: ", arr[p].getFreqDisplay());
+                        mSummary = Util.addLine(mSummary, "Frequency: ", arr[p].getFreqDisplay());
                     }
                     data = arr[p].getDuration();
                     if (StringUtils.filled(data)) {
@@ -1015,39 +1089,47 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 
                         if (NumberUtils.isDigits(data)) {
                             medi.setDuration(data);
-                            mSummary = Util.appendLine(mSummary, "Duration: ", data+" Day(s)");
+                            mSummary = Util.addLine(mSummary, "Duration: ", data+" Day(s)");
                         }
                     }
                     if (StringUtils.filled(arr[p].getQuantity())) {
                         medi.setQuantity(arr[p].getQuantity());
-                        mSummary = Util.appendLine(mSummary, "Quantity: ", arr[p].getQuantity());
+                        mSummary = Util.addLine(mSummary, "Quantity: ", arr[p].getQuantity());
                     }
+                    if (arr[p].getNosubs()) medi.setSubstitutionNotAllowed("Y");
+                    else medi.setSubstitutionNotAllowed("N");
+                    mSummary = Util.addLine(mSummary, "Substitution not Allowed: ", arr[p].getNosubs()?"Yes":"No");
+
                     if (StringUtils.filled(medi.getDrugName()) || StringUtils.filled(medi.getDrugIdentificationNumber())) {
                         medi.setNumberOfRefills(String.valueOf(arr[p].getRepeat()));
-                        mSummary = Util.appendLine(mSummary, "Number of Refills: ", String.valueOf(arr[p].getRepeat()));
+                        mSummary = Util.addLine(mSummary, "Number of Refills: ", String.valueOf(arr[p].getRepeat()));
+                    }
+                    if (StringUtils.filled(arr[p].getETreatmentType())) {
+                        medi.setTreatmentType(arr[p].getETreatmentType());
+                        mSummary = Util.addLine(mSummary, "Treatment Type: ", arr[p].getETreatmentType());
                     }
                     if (arr[p].getLongTerm()) {
                         medi.addNewLongTermMedication().setBoolean(arr[p].getLongTerm());
-                        mSummary = Util.appendLine(mSummary, "Long Term Medication");
+                        mSummary = Util.addLine(mSummary, "Long Term Medication");
                     }
                     if (arr[p].getPastMed()) {
                         medi.addNewPastMedications().setBoolean(arr[p].getPastMed());
-                        mSummary = Util.appendLine(mSummary, "Past Medcation");
+                        mSummary = Util.addLine(mSummary, "Past Medcation");
                     }
                     cdsDt.YnIndicatorAndBlank pc = medi.addNewPatientCompliance();
-                    if (arr[p].getPatientCompliance()==0) {
+                    if (arr[p].getPatientCompliance()==null) {
                         pc.setBlank(cdsDt.Blank.X);
                     } else {
-                        pc.setBoolean(arr[p].getPatientCompliance()==1);
-                        if (pc.getBoolean()) mSummary = Util.appendLine(mSummary, "Patient Compliance: ", "Yes");
-                        else mSummary = Util.appendLine(mSummary, "Patient Compliance: ", "No");
+                        String patientCompliance = arr[p].getPatientCompliance() ? "Yes" : "No";
+                        pc.setBoolean(arr[p].getPatientCompliance());
+                        mSummary = Util.addLine(mSummary, "Patient Compliance: ", patientCompliance);
                     }
                     data = arr[p].getOutsideProviderName();
                     if (StringUtils.filled(data)) {
                         MedicationsAndTreatments.PrescribedBy pcb = medi.addNewPrescribedBy();
                         pcb.setOHIPPhysicianId(StringUtils.noNull(arr[p].getOutsideProviderOhip()));
                         Util.writeNameSimple(pcb.addNewName(), data);
-                        mSummary = Util.appendLine(mSummary, "Prescribed by: ", StringUtils.noNull(data));
+                        mSummary = Util.addLine(mSummary, "Prescribed by: ", StringUtils.noNull(data));
                     } else {
                         data = arr[p].getProviderNo();
                         if (StringUtils.filled(data)) {
@@ -1055,20 +1137,28 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                             ProviderData prvd = new ProviderData(data);
                             pcb.setOHIPPhysicianId(prvd.getOhip_no());
                             Util.writeNameSimple(pcb.addNewName(), prvd.getFirst_name(), prvd.getLast_name());
-                            mSummary = Util.appendLine(mSummary, "Prescribed by: ", StringUtils.noNull(prvd.getFirst_name())+" "+StringUtils.noNull(prvd.getLast_name()));
+                            mSummary = Util.addLine(mSummary, "Prescribed by: ", StringUtils.noNull(prvd.getFirst_name())+" "+StringUtils.noNull(prvd.getLast_name()));
                         }
                     }
                     data = arr[p].getSpecial();
                     if (StringUtils.filled(data)) {
                         data = Util.extractDrugInstr(data);
                         medi.setPrescriptionInstructions(data);
-                        mSummary = Util.appendLine(mSummary, "Prescription Instructions: ", data);
+                        mSummary = Util.addLine(mSummary, "Prescription Instructions: ", data);
                     }
+
+                    data = arr[p].isNonAuthoritative() ? "Y" : "N";
+                    medi.setNonAuthoritativeIndicator(data);
+                    mSummary = Util.addLine(mSummary, "Non-Authoritative: ", data);
+
+                    medi.setPrescriptionIdentifier(String.valueOf(arr[p].getDrugId()));
+                    mSummary = Util.addLine(mSummary, "Prescription Identifier: ", medi.getPrescriptionIdentifier());
+
                     CaseManagementNoteLink cml = cmm.getLatestLinkByTableId(CaseManagementNoteLink.DRUGS, (long)arr[p].getDrugId());
                     if (cml!=null) {
                         CaseManagementNote n = cmm.getNote(cml.getNoteId().toString());
                         medi.setNotes(StringUtils.noNull(n.getNote()));
-                        mSummary = Util.appendLine(mSummary, "Notes: ", n.getNote());
+                        mSummary = Util.addLine(mSummary, "Notes: ", n.getNote());
                     }
 
                     if (StringUtils.empty(mSummary)) err.add("Error! No Category Summary Line (Medications & Treatments) for Patient "+demoNo+" ("+(p+1)+")");
@@ -1089,6 +1179,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     labResults.setTestNameReportedByLab(StringUtils.noNull(labMea.getExtVal("name")));
 
                     labResults.setLaboratoryName(StringUtils.noNull(labMea.getExtVal("labname")));
+                    addOneEntry(LABS);
                     if (StringUtils.empty(labResults.getLaboratoryName())) {
                         err.add("Error! No Laboratory Name for Lab Test "+labResults.getLabTestCode()+" for Patient "+demoNo);
                     }
@@ -1177,15 +1268,16 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     cdsDt.DateFullOrPartial apDate = aptm.addNewAppointmentDate();
                     apDate.setFullDate(Util.calDate(ap.getAppointment_date()));
                     if (ap.getAppointment_date()!=null) {
-                        apNotes = Util.appendLine(apNotes, "Date: ", UtilDateUtilities.DateToString(ap.getDateAppointmentDate(),"yyyy-MM-dd"));
+                        apNotes = Util.addLine(apNotes, "Date: ", UtilDateUtilities.DateToString(ap.getDateAppointmentDate(),"yyyy-MM-dd"));
                     } else {
                         err.add("Error! No Appointment Date ("+j+") for Patient "+demoNo);
                     }
 
                     String startTime = ap.getStart_time();
                     aptm.setAppointmentTime(Util.calDate(ap.getStart_time()));
+                    addOneEntry(APPOINTMENT);
                     if (UtilDateUtilities.StringToDate(startTime,"HH:mm:ss")!=null) {
-                        apNotes = Util.appendLine(apNotes, "Start Time: ", startTime);
+                        apNotes = Util.addLine(apNotes, "Start Time: ", startTime);
                     } else {
                         err.add("Error! No Appointment Time ("+(j+1)+") for Patient "+demoNo);
                     }
@@ -1193,7 +1285,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     long dLong = (ap.getDateEndTime().getTime()-ap.getDateStartTime().getTime())/60000+1;
                     BigInteger duration = BigInteger.valueOf(dLong); //duration in minutes
                     aptm.setDuration(duration);
-                    apNotes = Util.appendLine(apNotes, "Duration: ", duration.toString())+" min";
+                    apNotes = Util.addLine(apNotes, "Duration: ", duration.toString())+" min";
 
                     if (StringUtils.filled(ap.getStatus())) {
                         ApptStatusData asd = new ApptStatusData();
@@ -1205,7 +1297,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                             msg = getResources(request).getMessage(asd.getTitle());
                         if (StringUtils.filled(msg)) {
                             aptm.setAppointmentStatus(msg);
-                            apNotes = Util.appendLine(apNotes, "Status: ", msg);
+                            apNotes = Util.addLine(apNotes, "Status: ", msg);
 
                         } else {
                             throw new Exception ("Error! No matching message for appointment status code: " + data);
@@ -1213,7 +1305,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     }
                     if (StringUtils.filled(ap.getReason())) {
                         aptm.setAppointmentPurpose(ap.getReason());
-                        apNotes = Util.appendLine(apNotes, "Purpose: ", ap.getReason());
+                        apNotes = Util.addLine(apNotes, "Purpose: ", ap.getReason());
                     }
                     if (StringUtils.filled(ap.getProviderNo())) {
                         Appointments.Provider prov = aptm.addNewProvider();
@@ -1221,9 +1313,9 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         ProviderData appd = new ProviderData(ap.getProviderNo());
                         if (StringUtils.filled(appd.getOhip_no())) prov.setOHIPPhysicianId(appd.getOhip_no());
                         Util.writeNameSimple(prov.addNewName(), appd.getFirst_name(), appd.getLast_name());
-                        apNotes = Util.appendLine(apNotes, "Provider: ", appd.getFirst_name()+" "+appd.getLast_name());
+                        apNotes = Util.addLine(apNotes, "Provider: ", appd.getFirst_name()+" "+appd.getLast_name());
                     }
-                    if (StringUtils.filled(ap.getNotes())) apNotes = Util.appendLine(apNotes, "Notes: ", ap.getNotes());
+                    if (StringUtils.filled(ap.getNotes())) apNotes = Util.addLine(apNotes, "Notes: ", ap.getNotes());
                     if (StringUtils.filled(apNotes)) {
                         aptm.setAppointmentNotes(apNotes);
                     } else {
@@ -1245,6 +1337,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         rpr.setClass1(cdsDt.ReportClass.OTHER_LETTER);
                         rpr.setSubClass(StringUtils.noNull(edoc.getDescription()));
 
+
                         File f = new File(edoc.getFilePath());
                         if (!f.exists()) {
                             err.add("Error! Document \""+f.getName()+"\" does not exist!");
@@ -1261,7 +1354,16 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 
                             if (offset < b.length) throw new IOException("Could not completely read file " + f.getName());
                             in.close();
-                            rpc.setMedia(b);
+                            if (edoc.getContentType()!=null && edoc.getContentType().startsWith("text")) {
+                                String str = new String(b);
+                                rpc.setTextContent(str);
+                                rpr.setFormat(cdsDt.ReportFormat.TEXT);
+                                addOneEntry(REPORTTEXT);
+                            } else {
+                                rpc.setMedia(b);
+                                rpr.setFormat(cdsDt.ReportFormat.BINARY);
+                                addOneEntry(REPORTBINARY);
+                            }
 
                             data = Util.mimeToExt(edoc.getContentType());
                             if (StringUtils.empty(data)) data = cutExt(edoc.getFileName());
@@ -1331,9 +1433,9 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         rCont[5] = lg.getIp();
 
                         for (int j=0; j<rName.length; j++) {
-                            audReport = Util.appendLine(audReport, rName[j]+": ", rCont[j]);
+                            audReport = Util.addLine(audReport, rName[j]+": ", rCont[j]);
                         }
-                        audReport = Util.appendLine(audReport, "------------------------------------------------------------");
+                        audReport = Util.addLine(audReport, "------------------------------------------------------------");
                     }
                     audSummary = audReport;
                         AuditInformation audInf = patientRec.addNewAuditInformation();
@@ -1366,6 +1468,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         }
                         height.setHeight(meas.getDataField());
                         height.setHeightUnit(cdsDt.Height.HeightUnit.CM);
+                        addOneEntry(CAREELEMENTS);
                     } else if (meas.getType().equals("WT") && meas.getMeasuringInstruction().equalsIgnoreCase("in kg")) { //Weight in kg
                         CareElements careElm = patientRec.addNewCareElements();
                         cdsDt.Weight weight = careElm.addNewWeight();
@@ -1375,6 +1478,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         }
                         weight.setWeight(meas.getDataField());
                         weight.setWeightUnit(cdsDt.Weight.WeightUnit.KG);
+                        addOneEntry(CAREELEMENTS);
                     } else if (meas.getType().equals("WAIS") || meas.getType().equals("WC")) { //Waist Circumference in cm
                         CareElements careElm = patientRec.addNewCareElements();
                         cdsDt.WaistCircumference waist = careElm.addNewWaistCircumference();
@@ -1384,6 +1488,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         }
                         waist.setWaistCircumference(meas.getDataField());
                         waist.setWaistCircumferenceUnit(cdsDt.WaistCircumference.WaistCircumferenceUnit.CM);
+                        addOneEntry(CAREELEMENTS);
                     } else if (meas.getType().equals("BP")) { //Blood Pressure
                         CareElements careElm = patientRec.addNewCareElements();
                         cdsDt.BloodPressure bloodp = careElm.addNewBloodPressure();
@@ -1395,6 +1500,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         bloodp.setSystolicBP(sdbp[0]);
                         bloodp.setDiastolicBP(sdbp[1]);
                         bloodp.setBPUnit(cdsDt.BloodPressure.BPUnit.MM_HG);
+                        addOneEntry(CAREELEMENTS);
                     } else if (meas.getType().equals("POSK")) { //Packs of Cigarettes per day
                         CareElements careElm = patientRec.addNewCareElements();
                         cdsDt.SmokingPacks smokp = careElm.addNewSmokingPacks();
@@ -1403,6 +1509,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                             err.add("Error! No Date for Smoking Packs (id="+meas.getId()+") for Patient "+demoNo);
                         }
                         smokp.setPerDay(new BigDecimal(meas.getDataField()));
+                        addOneEntry(CAREELEMENTS);
                     } else if (meas.getType().equals("SKST")) { //Smoking Status
                         CareElements careElm = patientRec.addNewCareElements();
                         cdsDt.SmokingStatus smoks = careElm.addNewSmokingStatus();
@@ -1411,6 +1518,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                             err.add("Error! No Date for Smoking Status (id="+meas.getId()+") for Patient "+demoNo);
                         }
                         smoks.setStatus(Util.yn(meas.getDataField()));
+                        addOneEntry(CAREELEMENTS);
                     } else if (meas.getType().equals("SMBG")) { //Self Monitoring Blood Glucose
                         CareElements careElm = patientRec.addNewCareElements();
                         cdsDt.SelfMonitoringBloodGlucose bloodg = careElm.addNewSelfMonitoringBloodGlucose();
@@ -1419,6 +1527,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                             err.add("Error! No Date for Self-monitoring Blood Glucose (id="+meas.getId()+") for Patient "+demoNo);
                         }
                         bloodg.setSelfMonitoring(Util.yn(meas.getDataField()));
+                        addOneEntry(CAREELEMENTS);
                     } else if (meas.getType().equals("DMME")) { //Diabetes Education
                         CareElements careElm = patientRec.addNewCareElements();
                         cdsDt.DiabetesEducationalSelfManagement des = careElm.addNewDiabetesEducationalSelfManagement();
@@ -1427,6 +1536,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                             err.add("Error! No Date for Diabetes Educational Self-management (id="+meas.getId()+") for Patient "+demoNo);
                         }
                         des.setEducationalTrainingPerformed(Util.yn(meas.getDataField()));
+                        addOneEntry(CAREELEMENTS);
                     } else if (meas.getType().equals("SMCD")) { //Self Management Challenges
                         CareElements careElm = patientRec.addNewCareElements();
                         cdsDt.DiabetesSelfManagementChallenges dsc = careElm.addNewDiabetesSelfManagementChallenges();
@@ -1436,6 +1546,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                             err.add("Error! No Date for Diabetes Self-management Challenges (id="+meas.getId()+") for Patient "+demoNo);
                         }
                         dsc.setChallengesIdentified(cdsDt.YnIndicatorsimple.Y);
+                        addOneEntry(CAREELEMENTS);
                     } else if (meas.getType().equals("MCCN")) { //Motivation Counseling Completed Nutrition
                         CareElements careElm = patientRec.addNewCareElements();
                         cdsDt.DiabetesMotivationalCounselling dmc = careElm.addNewDiabetesMotivationalCounselling();
@@ -1447,6 +1558,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         if (Util.yn(meas.getDataField())==cdsDt.YnIndicatorsimple.N) {
                             err.add("Note: Patient "+demoNo+" didn't do Diabetes Counselling (Nutrition) on "+UtilDateUtilities.DateToString(meas.getDateObserved(),"yyyy-MM-dd"));
                         }
+                        addOneEntry(CAREELEMENTS);
                     } else if (meas.getType().equals("MCCE")) { //Motivation Counseling Completed Exercise
                         CareElements careElm = patientRec.addNewCareElements();
                         cdsDt.DiabetesMotivationalCounselling dmc = careElm.addNewDiabetesMotivationalCounselling();
@@ -1458,6 +1570,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         if (Util.yn(meas.getDataField())==cdsDt.YnIndicatorsimple.N) {
                             err.add("Note: Patient "+demoNo+" didn't do Diabetes Counselling (Exercise) on "+UtilDateUtilities.DateToString(meas.getDateObserved(),"yyyy-MM-dd"));
                         }
+                        addOneEntry(CAREELEMENTS);
                     } else if (meas.getType().equals("MCCS")) { //Motivation Counseling Completed Smoking Cessation
                         CareElements careElm = patientRec.addNewCareElements();
                         cdsDt.DiabetesMotivationalCounselling dmc = careElm.addNewDiabetesMotivationalCounselling();
@@ -1469,6 +1582,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         if (Util.yn(meas.getDataField())==cdsDt.YnIndicatorsimple.N) {
                             err.add("Note: Patient "+demoNo+" didn't do Diabetes Counselling (Smoking Cessation) on "+UtilDateUtilities.DateToString(meas.getDateObserved(),"yyyy-MM-dd"));
                         }
+                        addOneEntry(CAREELEMENTS);
                     } else if (meas.getType().equals("MCCO")) { //Motivation Counseling Completed Other
                         CareElements careElm = patientRec.addNewCareElements();
                         cdsDt.DiabetesMotivationalCounselling dmc = careElm.addNewDiabetesMotivationalCounselling();
@@ -1480,6 +1594,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         if (Util.yn(meas.getDataField())==cdsDt.YnIndicatorsimple.N) {
                             err.add("Note: Patient "+demoNo+" didn't do Diabetes Counselling (Other) on "+UtilDateUtilities.DateToString(meas.getDateObserved(),"yyyy-MM-dd"));
                         }
+                        addOneEntry(CAREELEMENTS);
                     } else if (meas.getType().equals("EYEE")) { //Dilated Eye Exam
                         CareElements careElm = patientRec.addNewCareElements();
                         cdsDt.DiabetesComplicationScreening dcs = careElm.addNewDiabetesComplicationsScreening();
@@ -1491,6 +1606,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         if (Util.yn(meas.getDataField())==cdsDt.YnIndicatorsimple.N) {
                             err.add("Note: Patient "+demoNo+" didn't do Diabetes Complications Screening (Retinal Exam) on "+UtilDateUtilities.DateToString(meas.getDateObserved(),"yyyy-MM-dd"));
                         }
+                        addOneEntry(CAREELEMENTS);
                     } else if (meas.getType().equals("FTE")) { //Foot Exam
                         CareElements careElm = patientRec.addNewCareElements();
                         cdsDt.DiabetesComplicationScreening dcs = careElm.addNewDiabetesComplicationsScreening();
@@ -1502,6 +1618,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         if (Util.yn(meas.getDataField())==cdsDt.YnIndicatorsimple.N) {
                             err.add("Note: Patient "+demoNo+" didn't do Diabetes Complications Screening (Foot Exam) on "+UtilDateUtilities.DateToString(meas.getDateObserved(),"yyyy-MM-dd"));
                         }
+                        addOneEntry(CAREELEMENTS);
                     } else if (meas.getType().equals("FTLS")) { // Foot Exam Test Loss of Sensation (Neurological Exam)
                         CareElements careElm = patientRec.addNewCareElements();
                         cdsDt.DiabetesComplicationScreening dcs = careElm.addNewDiabetesComplicationsScreening();
@@ -1513,6 +1630,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         if (Util.yn(meas.getDataField())==cdsDt.YnIndicatorsimple.N) {
                             err.add("Note: Patient "+demoNo+" didn't do Diabetes Complications Screening (Neurological Exam) on "+UtilDateUtilities.DateToString(meas.getDateObserved(),"yyyy-MM-dd"));
                         }
+                        addOneEntry(CAREELEMENTS);
                     } else if (meas.getType().equals("CGSD")) { //Collaborative Goal Setting
                         CareElements careElm = patientRec.addNewCareElements();
                         cdsDt.DiabetesSelfManagementCollaborative dsco = careElm.addNewDiabetesSelfManagementCollaborative();
@@ -1522,6 +1640,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         }
                         dsco.setCodeValue(cdsDt.DiabetesSelfManagementCollaborative.CodeValue.X_44943_9);
                         dsco.setDocumentedGoals(meas.getDataField());
+                        addOneEntry(CAREELEMENTS);
                     } else if (meas.getType().equals("HYPE")) { //Hypoglycemic Episodes
                         CareElements careElm = patientRec.addNewCareElements();
                         cdsDt.HypoglycemicEpisodes he = careElm.addNewHypoglycemicEpisodes();
@@ -1530,6 +1649,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                             err.add("Error! No Date for Hypoglycemic Episodes (id="+meas.getId()+") for Patient "+demoNo);
                         }
                         he.setNumOfReportedEpisodes(new BigInteger(meas.getDataField()));
+                        addOneEntry(CAREELEMENTS);
                     }
                 }
             }
@@ -1548,24 +1668,24 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                 expFile += "_"+demographic.getDateOfBirth()+demographic.getMonthOfBirth()+demographic.getYearOfBirth();
                 files.add(new File(directory, expFile+".xml"));
             }catch(Exception e){
-                MiscUtils.getLogger().error("Error", e);
+                logger.error("Error", e);
             }
             try {
                     omdCdsDoc.save(files.get(files.size()-1), options);
-            } catch (IOException ex) {MiscUtils.getLogger().error("Error", ex);
+            } catch (IOException ex) {logger.error("Error", ex);
                     throw new Exception("Cannot write .xml file(s) to export directory.\n Please check directory permissions.");
 	    }
 	}
 	
 	//create ReadMe.txt & ExportEvent.log
         files.add(makeReadMe(files, err, mediaType, noOfMedia));
-        files.add(makeExportLog(files, err));
+        files.add(makeExportLog(files.get(0).getParentFile(), err));
 	
 	//zip all export files
         String zipName = files.get(0).getName().replace(".xml", ".zip");
 	if (setName!=null) zipName = "export_"+setName.replace(" ","")+"_"+UtilDateUtilities.getToday("yyyyMMddHHmmss")+".zip";
 	if (!Util.zipFiles(files, zipName, tmpDir)) {
-            MiscUtils.getLogger().debug("Error! Failed to zip export files");
+            logger.debug("Error! Failed to zip export files");
 	}
 
         if (pgpReady.equals("Yes")) {
@@ -1580,7 +1700,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                 session.setAttribute("pgp_ready", "No");
             }
         } else {
-            MiscUtils.getLogger().debug("Warning: PGP Encryption NOT available - unencrypted file exported!");
+            logger.debug("Warning: PGP Encryption NOT available - unencrypted file exported!");
             Util.downloadFile(zipName, tmpDir, response);
             ffwd = "success";
         }
@@ -1647,6 +1767,99 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	return readMe;
     }
 
+    File makeExportLog(File dir, ArrayList<String> error) throws IOException {
+            String[][] keyword = new String[2][15];
+            keyword[0][0] = PATIENTID;
+            keyword[1][0] = "ID";
+            keyword[0][1] = " "+FAMILYHISTORY;
+            keyword[1][1] = " History";
+            keyword[0][2] = " "+PASTHEALTH;
+            keyword[1][2] = " Health";
+            keyword[0][3] = " "+PROBLEMLIST;
+            keyword[1][3] = " List";
+            keyword[0][4] = " "+RISKFACTOR;
+            keyword[1][4] = " Factor";
+            keyword[0][5] = " "+ALLERGY;
+            keyword[0][6] = " "+MEDICATION;
+            keyword[0][7] = " "+IMMUNIZATION;
+            keyword[0][8] = " "+LABS;
+            keyword[0][9] = " "+APPOINTMENT;
+            keyword[0][10] = " "+CLINICALNOTE;
+            keyword[1][10] = " Note";
+            keyword[0][11] = "    Report    ";
+            keyword[1][11] = " "+REPORTTEXT;
+            keyword[1][12] = " "+REPORTBINARY;
+            keyword[0][13] = " "+CAREELEMENTS;
+            keyword[1][13] = " Elements";
+            keyword[0][14] = " "+ALERT;
+
+            for (int i=0; i<keyword[0].length; i++) {
+                if (keyword[0][i].contains("Report")) {
+                    keyword[0][i+1] = "Report2";
+                    i++;
+                    continue;
+                }
+                if (keyword[1][i]==null) keyword[1][i] = " ";
+                if (keyword[0][i].length()>keyword[1][i].length()) keyword[1][i] = fillUp(keyword[1][i], ' ', keyword[0][i].length());
+                if (keyword[0][i].length()<keyword[1][i].length()) keyword[0][i] = fillUp(keyword[0][i], ' ', keyword[1][i].length());
+            }
+
+            File exportLog = new File(dir, "ExportEvent.log");
+            BufferedWriter out = new BufferedWriter(new FileWriter(exportLog));
+            int tableWidth = 0;
+            for (int i=0; i<keyword.length; i++) {
+                for (int j=0; j<keyword[i].length; j++) {
+                    out.write(keyword[i][j]+" |");
+                    if (keyword[i][j].trim().equals("Report")) j++;
+                    if (i==1) tableWidth += keyword[i][j].length()+2;
+                }
+                out.newLine();
+            }
+            out.write(fillUp("",'-',tableWidth)); out.newLine();
+            exportNo++;
+            for (int i=0; i<exportNo; i++) {
+                for (int j=0; j<keyword[0].length; j++) {
+                    String category = keyword[0][j].trim();
+                    if (category.contains("Report")) category = keyword[1][j].trim();
+                    Integer occurs = entries.get(category+i);
+                    if (occurs==null) occurs = 0;
+                    out.write(fillUp(occurs.toString(), ' ', keyword[1][j].length()));
+                    out.write(" |");
+                }
+                out.newLine();
+                out.write(fillUp("",'-',tableWidth)); out.newLine();
+            }
+            out.newLine();
+            out.newLine();
+            out.newLine();
+            String column1 = "Patient ID";
+            out.write(column1+" |");
+            out.write("Errors/Notes");
+            out.newLine();
+            out.write(fillUp("",'-',tableWidth)); out.newLine();
+            for (int i=0; i<exportNo; i++) {
+                Integer id = entries.get(PATIENTID+i);
+                if (id==null) id = 0;
+                out.write(fillUp(id.toString(), ' ', column1.length()));
+                out.write(" |");
+
+                //write any error that has occurred
+                out.write(error.get(0));
+                out.newLine();
+                for (int j=1; j<error.size(); j++) {
+                    out.write(fillUp("",' ',column1.length()));
+                    out.write(" |");
+                    out.write(error.get(j));
+                    out.newLine();
+                }
+                out.write(fillUp("",'-',tableWidth)); out.newLine();
+            }
+
+            out.close();
+            return exportLog;
+    }
+
+/*
     File makeExportLog(ArrayList<File> fs, ArrayList<String> error) throws IOException {
 	String[] keyword = new String[13];
 	keyword[0] = "Demographics";
@@ -1714,6 +1927,8 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	
 	return exportLog;
     }
+ *
+ */
 
 
     //------------------------------------------------------------
@@ -1816,6 +2031,14 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	return tobefilled;
     }
     
+    private void addOneEntry(String category) {
+        if (StringUtils.isNullOrEmpty(category)) return;
+
+        Integer n = entries.get(category+exportNo);
+        n = n==null ? 1 : n+1;
+        entries.put(category+exportNo, n);
+    }
+
     public DemographicExportAction4() {
     }
 }

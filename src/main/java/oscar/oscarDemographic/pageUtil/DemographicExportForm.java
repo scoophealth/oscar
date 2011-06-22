@@ -42,7 +42,6 @@ public class DemographicExportForm extends ActionForm {
     String noOfMedia;
     String pgpReady;
     
-    boolean exPersonalHistory;
     boolean exFamilyHistory;
     boolean exPastHealth;
     boolean exProblemList;
@@ -54,8 +53,9 @@ public class DemographicExportForm extends ActionForm {
     boolean exAppointments;
     boolean exClinicalNotes;
     boolean exReportsReceived;
-    boolean exAuditInformation;
     boolean exCareElements;
+    boolean exAlertsAndSpecialNeeds;
+
     
     public DemographicExportForm() {
     }
@@ -78,9 +78,6 @@ public class DemographicExportForm extends ActionForm {
     }
     public String getPgpReady() {
         return pgpReady;
-    }
-    public boolean getExPersonalHistory() {
-        return exPersonalHistory;
     }
     public boolean getExFamilyHistory() {
         return exFamilyHistory;
@@ -115,8 +112,8 @@ public class DemographicExportForm extends ActionForm {
     public boolean getExReportsReceived() {
         return exReportsReceived;
     }
-    public boolean getExAuditInformation() {
-        return exAuditInformation;
+    public boolean getExAlertsAndSpecialNeeds() {
+        return exAlertsAndSpecialNeeds;
     }
     public boolean getExCareElements() {
         return exCareElements;
@@ -141,9 +138,6 @@ public class DemographicExportForm extends ActionForm {
     }
     public void setPgpReady(String pgpReady) {
         this.pgpReady = pgpReady;
-    }
-    public void setExPersonalHistory(boolean rhs) {
-        this.exPersonalHistory = rhs;
     }
     public void setExFamilyHistory(boolean rhs) {
         this.exFamilyHistory = rhs;
@@ -178,8 +172,8 @@ public class DemographicExportForm extends ActionForm {
     public void setExReportsReceived(boolean rhs) {
         this.exReportsReceived = rhs;
     }
-    public void setExAuditInformation(boolean rhs) {
-        this.exAuditInformation = rhs;
+    public void setExAlertsAndSpecialNeeds(boolean rhs) {
+        this.exAlertsAndSpecialNeeds = rhs;
     }
     public void setExCareElements(boolean rhs) {
         this.exCareElements = rhs;
