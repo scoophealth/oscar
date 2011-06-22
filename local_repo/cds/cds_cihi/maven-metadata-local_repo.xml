@@ -4,9 +4,9 @@
   <artifactId>cds_cihi</artifactId>
   <version>1.0</version>
   <versioning>
-    <snapshot>
-      <localCopy>true</localCopy>
-    </snapshot>
-    <lastUpdated>20110620052032</lastUpdated>
+    <versions>
+      <version>1.0</version>
+    </versions>
+    <lastUpdated>20110622001206</lastUpdated>
   </versioning>
 </metadata>
