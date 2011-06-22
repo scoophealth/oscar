@@ -739,11 +739,11 @@
 -->
 
       		</plugin>
-<!--       		
+       		
 			<plugin>
 				<groupId>org.oscarehr.maven.plugins</groupId>
 				<artifactId>repository_cleaner_plugin</artifactId>
-				<version>SNAPSHOT</version>
+				<version>0.1-SNAPSHOT</version>
 				<configuration>
 					<groupIdsToRemove>
 						<param>org.oscarehr.myoscar_server</param>
@@ -761,7 +761,7 @@
 					</execution>
 				</executions>
 			</plugin>
- -->
+
 		</plugins>
 	</build>
 

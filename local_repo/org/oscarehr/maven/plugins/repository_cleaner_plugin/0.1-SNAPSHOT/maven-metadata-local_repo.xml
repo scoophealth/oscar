@@ -2,12 +2,11 @@
 <metadata>
   <groupId>org.oscarehr.maven.plugins</groupId>
   <artifactId>repository_cleaner_plugin</artifactId>
-  <version>SNAPSHOT</version>
+  <version>0.1-SNAPSHOT</version>
   <versioning>
-    <versions>
-      <version>SNAPSHOT</version>
-      <version>0.1-SNAPSHOT</version>
-    </versions>
+    <snapshot>
+      <localCopy>true</localCopy>
+    </snapshot>
     <lastUpdated>20110622003330</lastUpdated>
   </versioning>
 </metadata>
