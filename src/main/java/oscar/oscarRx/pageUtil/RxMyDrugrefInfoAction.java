@@ -179,7 +179,7 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
         for(int x=0;x<all.size();x++) {
         	 Hashtable ht=(Hashtable)all.get(x);
         	 String significanceStr = (String)ht.get("significance");
-        	 if(significanceStr.equals("")) {significanceStr="0";}
+        	 if(significanceStr==null || significanceStr.equals("")) {significanceStr="0";}
         	 int significance = Integer.valueOf(significanceStr);
         	 MiscUtils.getLogger().info("significance="+significance);
         	 if(level>0 && significance<level) {
