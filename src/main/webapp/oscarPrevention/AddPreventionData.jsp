@@ -338,6 +338,7 @@ clear: left;
                    </fieldset>                                                                            
                    <fieldset >
                       <legend >Result</legend>
+             			 <label for="name">Name:</label> <input type="text" name="name" value="<%=str(((String)extraData.get("name")),"")%>"/> <br/>         
                          <label for="location">Location:</label> <input type="text" name="location" value="<%=str(((String)extraData.get("location")),"")%>"/> <br/>
                          <label for="route">Route:</label> <input type="text" name="route"   value="<%=str(((String)extraData.get("route")),"")%>"/><br/>
 			 <label for="dose">Dose:</label> <input type="text" name="dose"  value="<%=str(((String)extraData.get("dose")),"")%>"/><br/>
