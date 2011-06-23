@@ -123,6 +123,7 @@ public class AddPreventionAction  extends Action {
          addHashtoArray(extraData,request.getParameter("swineworker"),"swineworker");
          addHashtoArray(extraData,request.getParameter("poultryworker"),"poultryworker");
          addHashtoArray(extraData,request.getParameter("firstnations"),"firstnations");
+         addHashtoArray(extraData,request.getParameter("name"),"name");
                                                                                                                   
          PreventionData pd = new  PreventionData() ;         
          if (id == null || id.equals("null")){ //New                                             
