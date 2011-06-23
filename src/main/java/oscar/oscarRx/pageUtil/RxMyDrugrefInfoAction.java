@@ -24,10 +24,12 @@
 package oscar.oscarRx.pageUtil;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Vector;
@@ -43,7 +45,10 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.util.MessageResources;
 import org.apache.xmlrpc.XmlRpcClientLite;
+import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.dao.ClientDao;
+import org.oscarehr.caisi_integrator.ws.CachedDemographicDrug;
+import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.common.dao.UserDSMessagePrefsDAO;
 import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.DemographicExt;
@@ -76,6 +81,7 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
         WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServlet().getServletContext());
         UserPropertyDAO  propDAO =  (UserPropertyDAO) ctx.getBean("UserPropertyDAO");
         String provider = (String) request.getSession().getAttribute("user");
+        
         String retStr=RxUtil.findInterDrugStr(propDAO,provider,bean);
 
         bean.setInteractingDrugList(retStr);
@@ -127,6 +133,26 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
         String[] str = new String[]{"warnings_byATC,bulletins_byATC,interactions_byATC,get_guidelines"};   //NEW more efficent way of sending multiple requests at the same time.
         MessageResources mr=getResources(request);
         Locale locale = getLocale(request);
+
+        log2.debug("Interaction, local drug atc codes : "+codes);
+        
+        LoggedInInfo loggedInfo=LoggedInInfo.loggedInInfo.get();
+        if (loggedInfo.currentFacility.isIntegratorEnabled())
+        {
+        	try {
+                DemographicWs demographicWs=CaisiIntegratorManager.getDemographicWs();
+                List<CachedDemographicDrug> remoteDrugs=demographicWs.getLinkedCachedDemographicDrugsByDemographicId(bean.getDemographicNo());
+                for (CachedDemographicDrug remoteDrug: remoteDrugs)
+                {
+                	if (remoteDrug.getAtc()!=null) codes.add(remoteDrug.getAtc());
+                }
+                
+            } catch (MalformedURLException e) {
+                log2.error("Error retriving remote drugs", e);
+            }
+        }
+        
+        log2.debug("Interaction, local + remote drug atc codes : "+codes);
 
         Vector all = new Vector();
         for (String command : str){
@@ -389,6 +415,7 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
         }
 
         Vector vec = new Vector();
+        log2.debug("CALL : FETCH:"+params);
         Object obj =  callWebserviceLite("Fetch",params);
         log2.debug("RETURNED "+obj);
         if (obj instanceof Vector){

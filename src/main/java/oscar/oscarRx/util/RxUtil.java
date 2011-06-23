@@ -1583,11 +1583,11 @@ public class RxUtil {
             }
             RxPrescriptionData.Prescription[] rxs=bean.getStash();
             //acd contains all atccodes in stash
-            Vector acd=new Vector();
+            Vector<String> acd=new Vector<String>();
             for(RxPrescriptionData.Prescription rxItem:rxs){
                 acd.add(rxItem.getAtcCode());
             }
-            MiscUtils.getLogger().debug("3acd="+acd);
+            logger.debug("3acd="+acd);
 
             String[] str = new String[]{"warnings_byATC,bulletins_byATC,interactions_byATC,get_guidelines"};   //NEW more efficent way of sending multiple requests at the same time.
             Vector allInteractions = new Vector();
