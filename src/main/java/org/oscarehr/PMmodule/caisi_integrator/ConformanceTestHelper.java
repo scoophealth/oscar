@@ -71,19 +71,7 @@ public final class ConformanceTestHelper {
 				DemographicDao demographicDao=(DemographicDao) SpringUtils.getBean("demographicDao");
 				Demographic demographic=demographicDao.getDemographicById(localDemographicId);
 				
-				if (demographicTransfer.getBirthDate()!=null) demographic.setBirthDay(demographicTransfer.getBirthDate());
-				if (demographicTransfer.getCity()!=null) demographic.setCity(demographicTransfer.getCity());
-				if (demographicTransfer.getFirstName()!=null) demographic.setFirstName(demographicTransfer.getFirstName());
-				if (demographicTransfer.getGender()!=null) demographic.setSex(demographicTransfer.getGender().name());
-				if (demographicTransfer.getHin()!=null) demographic.setHin(demographicTransfer.getHin());
-				if (demographicTransfer.getHinType()!=null) demographic.setHcType(demographicTransfer.getHinType());
-				if (demographicTransfer.getHinVersion()!=null) demographic.setVer(demographicTransfer.getHinVersion());
-				if (demographicTransfer.getLastName()!=null) demographic.setLastName(demographicTransfer.getLastName());
-				if (demographicTransfer.getProvince()!=null) demographic.setProvince(demographicTransfer.getProvince());
-				if (demographicTransfer.getSin()!=null) demographic.setSin(demographicTransfer.getSin());
-				if (demographicTransfer.getStreetAddress()!=null) demographic.setAddress(demographicTransfer.getStreetAddress());
-				if (demographicTransfer.getPhone1()!=null) demographic.setPhone(demographicTransfer.getPhone1());
-				if (demographicTransfer.getPhone2()!=null) demographic.setPhone2(demographicTransfer.getPhone2());
+				CaisiIntegratorManager.copyDemographicFieldsIfNotNull(demographicTransfer, demographic);
 				
 				demographic.setRosterDate(new Date());
 				
