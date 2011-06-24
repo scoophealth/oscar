@@ -51,7 +51,7 @@ public class Demographic implements Serializable {
 	private Integer demographicNo;// fields
 	private String phone;
 	private String patientStatus;
-        private Date patientStatusDate;
+    private Date patientStatusDate;
 	private String rosterStatus;
 	private String providerNo;
 	private String pin;
@@ -78,7 +78,7 @@ public class Demographic implements Serializable {
 	private String email;
 	private String yearOfBirth;
 	private Date effDate;
-        private Date rosterDate;
+    private Date rosterDate;
 	private String links;
 	private DemographicExt[] extras;
 
@@ -347,6 +347,10 @@ public class Demographic implements Serializable {
 	 * @param province the province value
 	 */
 	public void setProvince(String province) {
+		province=StringUtils.trimToNull(province);
+		
+		province=province.toUpperCase();
+		
 		this.province = province;
 	}
 
