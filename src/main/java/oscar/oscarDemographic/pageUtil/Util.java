@@ -206,6 +206,18 @@ public class Util {
 	return "";
     }
 
+    static public String onlyNum(String s) {
+        if (s==null) return null;
+
+        for (int i=0; i<s.length(); i++) {
+            if (!"0123456789".contains(s.substring(i, i+1))) {
+                s = s.substring(0,i)+s.substring(i+1,s.length());
+                i--;
+            }
+        }
+        return s;
+    }
+
     static public String sleadingNum(String s) {
         return String.valueOf(leadingNum(s));
     }
