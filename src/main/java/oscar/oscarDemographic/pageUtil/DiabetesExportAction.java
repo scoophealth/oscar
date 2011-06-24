@@ -135,6 +135,11 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	options.put( XmlOptions.SAVE_PRETTY_PRINT );
 	options.put( XmlOptions.SAVE_PRETTY_PRINT_INDENT, 3 );
 	options.put( XmlOptions.SAVE_AGGRESSIVE_NAMESPACES );
+
+        HashMap<String,String> suggestedPrefix = new HashMap<String,String>();
+        suggestedPrefix.put("cds_dt","cdsd");
+        options.setSaveSuggestedPrefixes(suggestedPrefix);
+        
 	options.setSaveOuter();
         ArrayList<File> files = new ArrayList<File>();
 
@@ -482,7 +487,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
         HashMap<String,String> demoExt = new HashMap<String,String>();
         demoExt.putAll(ext.getAllValuesForDemo(demoNo));
 	
-        String phoneNo = demographic.getPhone();
+        String phoneNo = Util.onlyNum(demographic.getPhone());
 	if (StringUtils.filled(phoneNo)) {
             cdsDt.PhoneNumber phoneResident = demo.addNewPhoneNumber();
             phoneResident.setPhoneNumberType(cdsDt.PhoneNumberType.R);
