@@ -127,6 +127,37 @@ public class Utilities {
         return retVal;
     }    
     
+    public static String saveHRMFile(InputStream stream,String filename ){
+    	String retVal = null;
+    	String place = OscarProperties.getInstance().getProperty("OMD_hrm");
+    	
+    	try {
+    	   	if(!place.endsWith("/")){
+    	   		place = new StringBuilder(place).insert(place.length(),"/").toString();
+    	   	}
+    	   	retVal = place+"KeyUpload."+filename+"."+(new Date()).getTime();
+    	
+    	   	//write the  file to the file specified
+    	   	OutputStream os = new FileOutputStream(retVal);
+    	
+    	   	int bytesRead = 0;
+    	   	while ((bytesRead = stream.read()) != -1){
+    	   		os.write(bytesRead);
+    	   	}
+    	   	os.close();
+    	
+    	   	//close the stream
+    	   	stream.close();
+		}catch (FileNotFoundException fnfe) {
+			logger.error("Error", fnfe);
+			return retVal;
+    	}catch (IOException ioe) {
+    		logger.error("Error", ioe);
+    		return retVal;
+    	}
+    		return retVal;
+    	}    
+    
     
     /*
      *  Return a string corresponding to the data in a given InputStream

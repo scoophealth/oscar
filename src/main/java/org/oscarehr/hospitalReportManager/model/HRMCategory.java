@@ -1,11 +1,13 @@
 package org.oscarehr.hospitalReportManager.model;
 
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import org.oscarehr.common.model.AbstractModel;
 
+@Entity
 public class HRMCategory extends AbstractModel<Integer> {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
