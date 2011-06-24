@@ -1366,6 +1366,7 @@
     </ViolationSet>
     <ViolationSet>
         <ViolationKey>.*DBHandler\..*|.*getConnection\(.*|.*DBHandler\..*|.*DBPreparedHandler.*|.*DBHelp.*|.*\.selectIntList.*|.*\.selectStringList.*|.*OscarSuperManager.*|.*HibernateDaoSupport.*</ViolationKey>
+	<ViolationValue>/src/main/java/org/oscarehr/util/AppointmentUtil.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:DBPreparedHandler db = new DBPreparedHandler();</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:DBPreparedHandlerParam [] params = new DBPreparedHandlerParam[100];</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:DBPreparedHandlerParam [] pars = new DBPreparedHandlerParam[i];</ViolationValue>

@@ -187,6 +187,7 @@ public class OLISPoller {
 			if (messages != null && !(messages.size() == 1 && messages.get(0).trim().equals(""))) {
 				for (String message : messages) {
 					
+					logger.info("message:"+message);
 					// Parse the HL7 string...
 					MessageHandler h = Factory.getHandler("OLIS_HL7", message);
 					
