@@ -569,6 +569,7 @@ public class CommonLabResultData {
 		Document doc = XmlUtils.toDocument(cachedDemographicLabResult.getData());
 		Node root = doc.getFirstChild();
 		result.acknowledgedStatus = XmlUtils.getChildNodeTextContents(root, "acknowledgedStatus");
+		result.accessionNumber = XmlUtils.getChildNodeTextContents(root, "accessionNumber");
 		result.dateTime = XmlUtils.getChildNodeTextContents(root, "dateTime");
 		result.discipline = XmlUtils.getChildNodeTextContents(root, "discipline");
 		result.healthNumber = XmlUtils.getChildNodeTextContents(root, "healthNumber");
