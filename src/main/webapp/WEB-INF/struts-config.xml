@@ -41,6 +41,8 @@
 		<form-bean name="clinicForm" type="org.apache.struts.validator.DynaValidatorForm">
 			<form-property name="clinic" type="org.oscarehr.common.model.Clinic" />
 		</form-bean>
+		<form-bean name="olisPreferences" type="org.oscarehr.olis.model.OLISSystemPreferences"/>
+		
 		<form-bean name="siteForm" type="org.apache.struts.validator.DynaValidatorForm">
 			<form-property name="site" type="org.oscarehr.common.model.Site" />
 		</form-bean>
@@ -824,6 +826,21 @@
 			<forward name="failure" path="/errorpage.jsp" />
 			<forward name="success" path="/lab/CA/BC/labDisplay.jsp" />
 		</action>
+		<action input="/labDisplayOLIS.jsp" path="/lab/CA/ALL/PrintOLIS" scope="request" type="oscar.oscarLab.ca.all.pageUtil.PrintOLISLabsAction">
+            <forward name="error" path="/lab/CA/ALL/labDisplay.jsp" />
+        </action>
+        <action input="/labDisplayOLIS.jsp" path="/lab/CA/ALL/PrintOLISLab" scope="request" type="oscar.oscarLab.ca.all.pageUtil.PrintOLISLabAction">
+            <forward name="error" path="/lab/CA/ALL/labDisplay.jsp" />
+        </action>
+        <action input="/olis/Search.jsp" path="/olis/Search" scope="request" type="org.oscarehr.olis.OLISSearchAction">
+        	<forward name="results" path="/olis/Results.do" />
+        </action>
+        <action input="/olis/Search.jsp" path="/olis/Results" scope="request" type="org.oscarehr.olis.OLISResultsAction">
+        	<forward name="results" path="/olis/Results.jsp" />
+        </action>
+        <action input="/olis/Results.jsp" path="/olis/AddToInbox" scope="request" type="org.oscarehr.olis.OLISAddToInboxAction">
+        	<forward name="ajax" path="/olis/ajaxResponse.jsp" />
+        </action>
 		<action input="/CMLDisplay.jsp" path="/lab/CA/ON/Forward" scope="request" type="oscar.oscarMDS.pageUtil.ReportReassignAction">
 			<forward name="failure" path="/errorpage.jsp" />
 			<forward name="success" path="/lab/CA/ON/CMLDisplay.jsp" />
@@ -2087,6 +2104,10 @@
 			<forward name="manage" path="/demographic/ManageContacts.jsp" />										
 		</action>
 		
+		<action path="/oscarMDS/SubmitLab" type="oscar.oscarLab.ca.all.web.SubmitLabByFormAction" parameter="method" scope="request" validate="false">
+			<forward name="manage" path="/oscarMDS/CreateLab.jsp" />										
+		</action>
+				
 		<action path="/ArchiveView" type="org.springframework.web.struts.DelegatingActionProxy" scope="request" parameter="method">
 			<forward name="view" path="/provider/providercontrol.jsp" redirect="true" />
 		</action>
@@ -2123,7 +2144,10 @@
 		<action path="/admin/ManageClinic" name="clinicForm" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
 			<forward name="success" path="/admin/clinicAdmin.jsp" />
 		</action>
-
+		
+		<action path="/olis/Preferences" name="olisPreferences" type="org.oscarehr.olis.OLISPreferencesAction" parameter="method" scope="request">
+			<forward name="success" path="/olis/Preferences.jsp" />
+		</action>
 		<action path="/admin/ManageSites" name="siteForm" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
 			<forward name="list" path="/admin/sitesAdmin.jsp" />
 			<forward name="details" path="/admin/sitesAdminDetail.jsp" />
