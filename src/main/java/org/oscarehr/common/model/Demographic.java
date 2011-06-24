@@ -349,7 +349,7 @@ public class Demographic implements Serializable {
 	public void setProvince(String province) {
 		province=StringUtils.trimToNull(province);
 		
-		province=province.toUpperCase();
+		if (province!=null) province=province.toUpperCase();
 		
 		this.province = province;
 	}
