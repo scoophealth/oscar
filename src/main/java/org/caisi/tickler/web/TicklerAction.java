@@ -125,6 +125,7 @@ public class TicklerAction extends DispatchAction {
         request.setAttribute("tickler", tickler);
         // only active providers listed in the program stuff can be assigned
         if (tickler.getProgram_id()!=null) request.setAttribute("providers", providerMgr.getActiveProviders(null, tickler.getProgram_id().toString()));
+        else request.setAttribute("providers", providerMgr.getActiveProviders());
         request.setAttribute("from", getFrom(request));
 
         return mapping.findForward("view");
