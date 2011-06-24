@@ -56,7 +56,8 @@ public class LoginFilter implements Filter {
 		"/index.jsp",
 		"/loginfailed.jsp",
 		"/index.html",
-		"/eformViewForPdfGenerationServlet"
+		"/eformViewForPdfGenerationServlet",
+		"/LabViewForPdfGenerationServlet"
 	};
 
 	/*

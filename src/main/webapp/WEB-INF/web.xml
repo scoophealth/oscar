@@ -244,6 +244,17 @@
 		<servlet-name>eformViewForPdfGenerationServlet</servlet-name>
 		<servlet-class>org.oscarehr.web.eform.EformViewForPdfGenerationServlet</servlet-class>
 	</servlet>
+	
+	<servlet>
+		<servlet-name>LabViewForPdfGenerationServlet</servlet-name>
+		<servlet-class>oscar.oscarLab.ca.all.pageUtil.LabViewForPdfGenerationServlet</servlet-class>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>LabViewForPdfGenerationServlet</servlet-name>		
+		<url-pattern>/LabViewForPdfGenerationServlet</url-pattern>
+	</servlet-mapping>
+	
 
 	<servlet>
 		<servlet-name>DATISExportTest</servlet-name>
