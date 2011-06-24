@@ -591,7 +591,52 @@
 			<version>0.1.29</version>
 		</dependency>
 		
- 
+		<!-- OLIS -->
+		<dependency>
+			<groupId>ca.ssha.www</groupId>
+			<artifactId>olis-service</artifactId>
+			<version>20110623</version>
+		</dependency>
+	        <dependency>
+                        <groupId>bouncycastle</groupId>
+                        <artifactId>bcmail-jdk15</artifactId>
+                        <version>140</version>
+                </dependency>
+                <dependency>
+                        <groupId>bouncycastle</groupId>
+                        <artifactId>bcprov-jdk15</artifactId>
+                        <version>140</version>
+                </dependency>
+
+		<!-- AXIS2 (for OLIS) --> 
+
+               <dependency>
+                        <groupId>org.apache.axis2</groupId>
+                        <artifactId>axis2</artifactId>
+                        <version>1.5.4</version>
+                </dependency>
+                <dependency>
+                        <groupId>org.apache.axis2</groupId>
+                        <artifactId>axis2-transport-http</artifactId>
+                        <version>1.5.4</version>
+                </dependency>
+                <dependency>
+                        <groupId>org.apache.axis2</groupId>
+                        <artifactId>axis2-transport-local</artifactId>
+                        <version>1.5.4</version>
+                </dependency>
+                <dependency>
+                        <groupId>org.apache.ws.commons.axiom</groupId>
+                        <artifactId>axiom-api</artifactId>
+                        <version>1.2.11</version>
+                </dependency>
+                <dependency>
+                        <groupId>org.apache.ws.commons.axiom</groupId>
+                        <artifactId>axiom-impl</artifactId>
+                        <version>1.2.11</version>
+                </dependency>
+
+
 	</dependencies>
 
 	<build>
