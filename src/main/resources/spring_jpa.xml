@@ -66,5 +66,6 @@
 	<context:component-scan base-package="org.oscarehr.common.dao" />
 	<context:component-scan base-package="org.oscarehr.eyeform.dao" />
 	<context:component-scan base-package="org.oscarehr.hospitalReportManager.dao" />
+	<context:component-scan base-package="org.oscarehr.olis.dao" />
 
 </beans>
