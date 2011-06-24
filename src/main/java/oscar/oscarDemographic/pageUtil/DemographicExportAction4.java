@@ -220,6 +220,11 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	options.put( XmlOptions.SAVE_PRETTY_PRINT );
 	options.put( XmlOptions.SAVE_PRETTY_PRINT_INDENT, 3 );
 	options.put( XmlOptions.SAVE_AGGRESSIVE_NAMESPACES );
+
+        HashMap<String,String> suggestedPrefix = new HashMap<String,String>();
+        suggestedPrefix.put("cds_dt","cdsd");
+        options.setSaveSuggestedPrefixes(suggestedPrefix);
+
 	options.setSaveOuter();
         
         ArrayList<String> err = new ArrayList<String>();
@@ -394,7 +399,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     address.addNewPostalZipCode().setPostalCode(StringUtils.noNull(demographic.getPostal()).replace(" ",""));
                 }
             }
-            String phoneNo = demographic.getPhone();
+            String phoneNo = Util.onlyNum(demographic.getPhone());
             if (StringUtils.filled(phoneNo) && phoneNo.length()>=7) {
                 cdsDt.PhoneNumber phoneResident = demo.addNewPhoneNumber();
                 phoneResident.setPhoneNumberType(cdsDt.PhoneNumberType.R);
@@ -408,7 +413,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     phoneResident.setExtension(data);
                 }
             }
-            phoneNo = demographic.getPhone2();
+            phoneNo = Util.onlyNum(demographic.getPhone2());
             if (StringUtils.filled(phoneNo) && phoneNo.length()>=7) {
                 cdsDt.PhoneNumber phoneWork = demo.addNewPhoneNumber();
                 phoneWork.setPhoneNumberType(cdsDt.PhoneNumberType.W);
@@ -474,7 +479,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     if (StringUtils.filled(relDemo.getEmail())) contact.setEmailAddress(relDemo.getEmail());
                     if (StringUtils.filled(r.get("notes"))) contact.setNote(r.get("notes"));
 
-                    phoneNo = relDemo.getPhone();
+                    phoneNo = Util.onlyNum(relDemo.getPhone());
                     if (StringUtils.filled(phoneNo) && phoneNo.length()>=7) {
                         cdsDt.PhoneNumber phoneRes = contact.addNewPhoneNumber();
                         phoneRes.setPhoneNumberType(cdsDt.PhoneNumberType.R);
@@ -488,7 +493,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                             phoneRes.setExtension(data);
                         }
                     }
-                    phoneNo = relDemo.getPhone2();
+                    phoneNo = Util.onlyNum(relDemo.getPhone2());
                     if (StringUtils.filled(phoneNo) && phoneNo.length()>=7) {
                         cdsDt.PhoneNumber phoneW = contact.addNewPhoneNumber();
                         phoneW.setPhoneNumberType(cdsDt.PhoneNumberType.W);
@@ -502,7 +507,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                             phoneW.setExtension(data);
                         }
                     }
-                    phoneNo = relDemoExt.get("demo_cell");
+                    phoneNo = Util.onlyNum(relDemoExt.get("demo_cell"));
                     if (StringUtils.filled(phoneNo) && phoneNo.length()>=7) {
                         cdsDt.PhoneNumber phoneCell = contact.addNewPhoneNumber();
                         phoneCell.setPhoneNumberType(cdsDt.PhoneNumberType.C);

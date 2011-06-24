@@ -310,7 +310,7 @@ public class CihiExportAction extends DispatchAction {
 		info.setOrganizationName(frm.getString("orgName"));
 		info.setContactLastName(frm.getString("contactLName"));
 		info.setContactFirstName(frm.getString("contactFName"));
-		info.setContactPhoneNumber(frm.getString("contactPhone"));
+		info.setContactPhoneNumber(Util.onlyNum(frm.getString("contactPhone")));
 		info.setContactEmail(frm.getString("contactEmail"));
 		info.setContactUserName(frm.getString("contactUserName"));
 		info.setEMRVendorID(frm.getString("vendorId"));
@@ -847,6 +847,11 @@ public class CihiExportAction extends DispatchAction {
     	options.put( XmlOptions.SAVE_PRETTY_PRINT );
     	options.put( XmlOptions.SAVE_PRETTY_PRINT_INDENT, 3 );
     	options.put( XmlOptions.SAVE_AGGRESSIVE_NAMESPACES );
+
+        HashMap<String,String> suggestedPrefix = new HashMap<String,String>();
+        suggestedPrefix.put("cds_dt_cihi","cdsd");
+        options.setSaveSuggestedPrefixes(suggestedPrefix);
+        
     	options.setSaveOuter();
     	
     	ArrayList<File> files = new ArrayList<File>();
