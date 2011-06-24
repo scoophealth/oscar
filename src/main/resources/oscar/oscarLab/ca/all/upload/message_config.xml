@@ -5,6 +5,7 @@
 	<handler name="GDML" className="GDMLHandler" />
 	<handler name="ICL" className="ICLHandler" />
 	<handler name="MDS" className="MDSHandler" />
+	<handler name="OLIS_HL7" className="OLISHL7Handler" />   
 	<handler name="PATHL7" className="PATHL7Handler" />
     <handler name="HHSEMR" className="HHSEmrDownloadHandler"/>
     <handler name="IHA" className="IHAHandler"/>

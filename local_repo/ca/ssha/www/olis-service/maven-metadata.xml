@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>ca.ssha.www</groupId>
+  <artifactId>olis-service</artifactId>
+  <version>20110623</version>
+  <versioning>
+    <versions>
+      <version>20110623</version>
+    </versions>
+    <lastUpdated>20110623205611</lastUpdated>
+  </versioning>
+</metadata>

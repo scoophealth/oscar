@@ -1,0 +1,46 @@
+package com.indivica.olis.parameters;
+
+/**
+ * Exclude Reporting Laboratory
+ * @author jen
+ *
+ */
+public class ZBE4 implements Parameter {
+	private String universalId;
+	private String universalIdType;
+	
+	public ZBE4(String universalId, String universalIdType) {
+	    this.universalId = universalId;
+	    this.universalIdType = universalIdType;
+    }
+
+	@Override
+    public String toOlisString() {
+	    return getQueryCode() + ".6.2" + (universalId != null ? universalId : "") + "~" +
+	    	getQueryCode() + ".6.3" + (universalIdType != null ? universalIdType : "");
+    }
+
+	@Override
+    public void setValue(Object value) {
+		throw new UnsupportedOperationException();
+    }
+
+	@Override
+    public void setValue(Integer part, Object value) {
+		throw new UnsupportedOperationException();
+    }
+
+	@Override
+    public void setValue(Integer part, Integer part2, Object value) {
+	    if (part == 6 && part2 == 2)
+	    	universalId = (String) value;
+	    else if (part == 6 && part2 == 3)
+	    	universalIdType = (String) value;
+    }
+
+	@Override
+    public String getQueryCode() {
+	    return "@ZBE.4";
+    }
+
+}
