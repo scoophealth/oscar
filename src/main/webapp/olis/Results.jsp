@@ -7,12 +7,12 @@
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.js"></script>
-<link rel="stylesheet" type="text/css"
-	href="../../../share/css/OscarStandardLayout.css">
-<link rel="stylesheet" type="text/css"
-	href="../share/css/OscarStandardLayout.css">
-<script type="text/javascript" src="../../../share/javascript/Oscar.js"></script>
-<script type="text/javascript" src="../share/javascript/Oscar.js"></script>
+<script type="text/javascript">
+    jQuery.noConflict();
+</script>
+<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/share/css/OscarStandardLayout.css">
+<script type="text/javascript" src="<%=request.getContextPath()%>/share/javascript/Oscar.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/share/javascript/oscarMDSIndex.js"></script>
 	
 <script type="text/javascript">
 function addToInbox(uuid) {
@@ -21,11 +21,20 @@ function addToInbox(uuid) {
 		url: "<%=request.getContextPath() %>/olis/AddToInbox.do",
 		data: "uuid=" + uuid,
 		success: function(data) {
-			jQuery(uuid + "_result").innerHTML(data);
+			jQuery("#" + uuid + "_result").html(data);
 		}
 	});
 }
+function preview(uuid) {
+	reportWindow('<%=request.getContextPath()%>/lab/CA/ALL/labDisplayOLIS.jsp?segmentID=0&preview=true&uuid=' + uuid);
+}
 </script>
+<style type="text/css">
+.oddLine { 
+	background-color: #cccccc;
+}
+.evenLine { } 
+</style>
 	
 <title>OLIS Search Results</title>
 </head>
@@ -46,12 +55,7 @@ function addToInbox(uuid) {
 		</td>
 	</tr>
 	<tr>
-		<td colspan="2">
-			<%
-			String resp = (String) request.getAttribute("unsignedResponse");
-			if(resp == null) { resp = "";};
-			%>
-				<%=resp%>
+		<td colspan="2">			
 			<%
 			List<String> resultList = (List<String>) request.getAttribute("resultList");
 			
@@ -62,68 +66,51 @@ function addToInbox(uuid) {
 					<td colspan=8>Showing <%=resultList.size() %> result(s)</td>
 				</tr>
 				<% if (resultList.size() > 0) { %>
-				<tr>
-					<th>Health Number</th>
-					<th>Patient Name</th>
-					<th>Sex</th>
-					<th>Date of Test</th>
-					<th>Discipline</th>
-					<th>Tests</th>
-					<th></th>
-				</tr>
-				
-					<% for (String resultUuid : resultList) {
+					<tr><th></th>
+						<th></th>
+						<th>Health Number</th>
+						<th>Patient Name</th>
+						<th>Sex</th>
+						<th>Date of Test</th>
+						<th>Discipline</th>
+						<th>Tests</th>
+						<th>Ordering Practitioner</th>
+					</tr>
+					
+					<%  int lineNum = 0;
+						for (String resultUuid : resultList) {
 						OLISHL7Handler result = OLISResultsAction.searchResultsMap.get(resultUuid);
 					%>
-					<tr>
+					<tr class="<%=++lineNum % 2 == 1 ? "oddLine" : "evenLine"%>">
+						<td>
+							<div id="<%=resultUuid %>_result"></div>
+							<input type="button" onClick="addToInbox('<%=resultUuid %>'); return false;" id="<%=resultUuid %>" value="Add to Inbox" />
+						</td>
+						<td>
+							
+							<input type="button" onClick="preview('<%=resultUuid %>'); return false;" id="<%=resultUuid %>_preview" value="Preview" />
+						</td>
 						<td><%=result.getHealthNum() %></td>
 						<td><%=result.getPatientName() %></td>
 						<td><%=result.getSex() %></td>
 						<td><%=result.getTimeStamp(0, 0) %></td>
-						<td>
+						<td style="width:200px;">
 						<%
-						ArrayList<String> disciplineArray;
-						disciplineArray = result.getHeaders();
-						
-						String next = "";
-						if (disciplineArray != null && disciplineArray.size() > 0) next = disciplineArray.get(0);
-
-						int sepMark;
-						if ((sepMark = next.indexOf("<br />")) < 0) {
-							if ((sepMark = next.indexOf(" ")) < 0) sepMark = next.length();
-						}
-						String discipline = next.substring(0, sepMark).trim();
-
-						for (int i = 1; disciplineArray != null && i < disciplineArray.size(); i++) {
-
-							next = disciplineArray.get(i);
-							if ((sepMark = next.indexOf("<br />")) < 0) {
-								if ((sepMark = next.indexOf(" ")) < 0) sepMark = next.length();
-							}
-
-							if (!next.trim().equals("")) discipline = discipline + "/" + next.substring(0, sepMark);
-						}
+						String discipline = result.getCategoryList();
 						%>
 						<%=discipline %>
 						</td>
 						
-						<td>
+						<td style="width:200px;">
 						<%
 						Integer obrCount = result.getOBRCount();
-						String tests = "";
-						
-						for (int j = 0; j < obrCount; j++) {
-							tests += result.getOBRName(j);
-						}
-						
+						String tests = result.getTestList();
 						%>
 						
 						<%=tests %>
 						</td>
-						
-						<td>
-						<div id="<%=resultUuid %>_result"></div>
-						<input type="button" onClick="addToInbox('<%=resultUuid %>')" id="<%=resultUuid %>" value="Add to Inbox" /></td> 
+						<td> <%=result.getShortDocName() %> </td>
+						 
 					</tr>
 					<% } %>
 				<% } %>
@@ -134,6 +121,8 @@ function addToInbox(uuid) {
 		</td>
 	</tr></tbody>
 </table>
-
+<!-- RAW HL7 ERP
+<%=request.getAttribute("unsignedResponse") %>
+-->
 </body>
 </html>
