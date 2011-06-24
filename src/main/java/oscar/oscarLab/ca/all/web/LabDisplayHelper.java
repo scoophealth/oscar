@@ -48,6 +48,7 @@ public class LabDisplayHelper {
 	public static Document labToXml(LabResultData lab) throws ParserConfigurationException, UnsupportedEncodingException {
 		Document doc = XmlUtils.newDocument("LabResult");
 		XmlUtils.appendChildToRoot(doc, "acknowledgedStatus", lab.getAcknowledgedStatus());
+		XmlUtils.appendChildToRoot(doc, "accessionNumber", lab.accessionNumber);
 		XmlUtils.appendChildToRoot(doc, "dateTime", lab.getDateTime());
 		XmlUtils.appendChildToRoot(doc, "discipline", lab.getDiscipline());
 		XmlUtils.appendChildToRoot(doc, "healthNumber", lab.getHealthNumber());
