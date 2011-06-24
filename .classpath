@@ -51,6 +51,7 @@
 	<classpathentry kind="var" path="M2_REPO/bouncycastle/bcmail-jdk15/140/bcmail-jdk15-140.jar"/>
 	<classpathentry kind="var" path="M2_REPO/bouncycastle/bcprov-jdk15/140/bcprov-jdk15-140.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/bouncycastle/bcprov-jdk15/1.45/bcprov-jdk15-1.45.jar"/>
+	<classpathentry exported="true" kind="var" path="M2_REPO/cds/cds/0.0-SNAPSHOT/cds-0.0-SNAPSHOT.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/oscarehr/caisi_integrator/caisi_integrator_client_stubs/SNAPSHOT/caisi_integrator_client_stubs-SNAPSHOT.jar"/>
 	<classpathentry kind="var" path="M2_REPO/cds/cds/0.0-SNAPSHOT/cds-0.0-SNAPSHOT.jar"/>
 	<classpathentry kind="var" path="M2_REPO/cds/cds_cihi/1.0/cds_cihi-1.0.jar"/>

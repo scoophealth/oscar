@@ -26,6 +26,7 @@ import org.apache.xmlbeans.XmlOptions;
 
 
 import oscar.oscarEncounter.oscarMeasurements.data.ImportExportMeasurements;
+import oscar.oscarEncounter.oscarMeasurements.data.MeasurementMapConfig;
 import oscar.oscarEncounter.oscarMeasurements.data.Measurements;
 import oscar.oscarReport.data.DemographicSets;
 import oscar.oscarRx.data.RxPrescriptionData;
@@ -359,36 +360,43 @@ public class CihiExportAction extends DispatchAction {
 			endCal.setTime(endDate);
 		}
 		
+		Date joinDate = demo.getDateJoined();
+		Calendar joinedCal = Calendar.getInstance();
+		if( joinDate != null ) {			
+			joinedCal.setTime(joinDate);
+			xmlDemographics.setEnrollmentDate(joinedCal);
+		}
+		
+		PersonStatusCode personStatusCode = xmlDemographics.addNewPersonStatusCode();
 		String status = demo.getPatientStatus();
 		if( "AC".equalsIgnoreCase(status)) {
-			status = "A";
+			personStatusCode.setPersonStatusAsEnum(cdsDtCihi.PersonStatus.A);
+			if( joinDate != null ) {
+				xmlDemographics.setPersonStatusDate(joinedCal);
+			}
 		}
-		else if( "IN".equalsIgnoreCase(status)) {
-			status = "I";
+		else if( "IN".equalsIgnoreCase(status)) {  
+			personStatusCode.setPersonStatusAsEnum(cdsDtCihi.PersonStatus.I);
 			xmlDemographics.setEnrollmentTerminationDate(endCal);
+			if( endDate != null ) {
+				xmlDemographics.setPersonStatusDate(endCal);
+			}
 		}
-		else if( "DE".equalsIgnoreCase(status)) {
-			status = "D";
+		else if( "DE".equalsIgnoreCase(status)) {			
+			personStatusCode.setPersonStatusAsEnum(cdsDtCihi.PersonStatus.D);
 			if( endDate != null ) {
 				xmlDemographics.setPersonStatusDate(endCal);
 			}
 		}
 		else if( "TE".equalsIgnoreCase(status)) {
+			personStatusCode.setPersonStatusAsEnum(cdsDtCihi.PersonStatus.I);
 			if( endDate != null ) {
 				xmlDemographics.setEnrollmentTerminationDate(endCal);
+				xmlDemographics.setPersonStatusDate(endCal);
 			}
 		}
-		
-		PersonStatusCode personStatusCode = xmlDemographics.addNewPersonStatusCode();
-		personStatusCode.setPersonStatusAsPlainText(status);
 				
-		Date joinDate = demo.getDateJoined();
-		if( joinDate != null ) {
-			Calendar joinedCal = Calendar.getInstance();
-			joinedCal.setTime(joinDate);
-			xmlDemographics.setEnrollmentDate(joinedCal);
-		}
-
+		
                 if (StringUtils.filled(demo.getPostal())) {
                     PostalZipCode postalZipCode = xmlDemographics.addNewPostalAddress();
                     postalZipCode.setPostalCode(StringUtils.noNull(demo.getPostal()).replace(" ",""));
@@ -399,12 +407,20 @@ public class CihiExportAction extends DispatchAction {
 		List<Appointment> appointmentList = oscarAppointmentDao.getAppointmentHistory(demo.getDemographicNo());
 		
 		Calendar cal = Calendar.getInstance();
+		Calendar startTime = Calendar.getInstance();
+		Date startDate;
 		
 		for( Appointment appt: appointmentList) {
 			Appointments appointments = patientRecord.addNewAppointments();
-                        if (StringUtils.filled(appt.getReason())) appointments.setAppointmentPurpose(appt.getReason());
+            if (StringUtils.filled(appt.getReason())) appointments.setAppointmentPurpose(appt.getReason());
+            
 			DateFullOrPartial dateFullorPartial = appointments.addNewAppointmentDate();			
-			cal.setTime(appt.getAppointmentDate());			
+			cal.setTime(appt.getAppointmentDate());
+			
+			startDate = appt.getStartTime();
+			startTime.setTime(startDate);
+			cal.set(Calendar.HOUR_OF_DAY, startTime.get(Calendar.HOUR_OF_DAY));
+			cal.set(Calendar.MINUTE, startTime.get(Calendar.MINUTE));
 			dateFullorPartial.setFullDate(cal);
 		}
 	}
@@ -535,13 +551,13 @@ public class CihiExportAction extends DispatchAction {
                 hasIssue = true;
                 while ( i.hasNext() ) {
                 	cIssue = i.next();
-                        if (cIssue.getIssue().getType().equals("system")) continue;
+                    if (cIssue.getIssue().getType().equals("system")) continue;
 
                 	StandardCoding standardCoding = problemList.addNewDiagnosisCode();
                 	standardCoding.setStandardCode(cIssue.getIssue().getCode());
                 	standardCoding.setStandardCodingSystem(properties.getProperty("dxResearch_coding_sys","icd9"));
                 	standardCoding.setStandardCodeDescription(cIssue.getIssue().getDescription());
-                        break;
+                    break;
                 }
 
             }
@@ -739,15 +755,21 @@ public class CihiExportAction extends DispatchAction {
 	private void buildLaboratoryResults(Demographic demo, PatientRecord patientRecord) throws SQLException {
                 List<LabMeasurements> labMeaList = ImportExportMeasurements.getLabMeasurements(demo.getDemographicNo().toString());
                 for (LabMeasurements labMea : labMeaList) {
+                	String data = StringUtils.noNull(labMea.getExtVal("identifier"));
+            	    String loinc = new MeasurementMapConfig().getLoincCodeByIdentCode(data);
+            	    if( StringUtils.isNullOrEmpty(loinc) ) {
+            	    	continue;
+            	    }                	                   
+            	    
                     Date dateTime = UtilDateUtilities.StringToDate(labMea.getExtVal("datetime"),"yyyy-MM-dd HH:mm:ss");
                     if (dateTime==null) continue;
 
                     LaboratoryResults labResults = patientRecord.addNewLaboratoryResults();
-                    cdsDtCihi.DateFullOrDateTime collDate = labResults.addNewCollectionDateTime();
-                    collDate.setFullDate(Util.calDate(dateTime));
-
-                    String data = labMea.getExtVal("identifier");
+                    
                     if (StringUtils.filled(data)) labResults.setLabTestCode(data);
+                    
+                    cdsDtCihi.DateFullOrDateTime collDate = labResults.addNewCollectionDateTime();
+                    collDate.setFullDate(Util.calDate(dateTime));                    
 
                     data = labMea.getExtVal("name");
                     if (StringUtils.filled(data)) labResults.setTestNameReportedByLab(data);
