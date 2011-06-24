@@ -1,0 +1,444 @@
+package org.oscarehr.common.model;
+
+import java.io.Serializable;
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+
+@Entity
+@Table(name = "demographicArchive")
+public class DemographicArchive extends AbstractModel<Long> implements Serializable {
+        @Id
+        private Long id;
+
+	@Column(name = "demographic_no")
+	private Integer demographicNo = null;
+	@Column(name = "title")
+	private String title = null;
+	@Column(name = "last_name")
+	private String lastName = null;
+	@Column(name = "first_name")
+	private String firstName = null;
+	@Column(name = "address")
+	private String address = null;
+	@Column(name = "city")
+	private String city = null;
+	@Column(name = "province")
+	private String province = null;
+	@Column(name = "postal")
+	private String postal = null;
+	@Column(name = "phone")
+	private String phone = null;
+	@Column(name = "phone2")
+	private String phone2 = null;
+	@Column(name = "email")
+	private String email = null;
+	@Column(name = "pin")
+	private String pin = null;
+	@Column(name = "year_of_birth")
+	private String yearOfBirth = null;
+	@Column(name = "month_of_birth")
+	private String monthOfBirth = null;
+	@Column(name = "date_of_birth")
+	private String dateOfBirth = null;
+	@Column(name = "hin")
+	private String hin = null;
+	@Column(name = "ver")
+	private String ver = null;
+	@Column(name = "roster_status")
+	private String rosterStatus = null;
+	@Column(name = "roster_date")
+	@Temporal(TemporalType.DATE)
+	private Date rosterDate = null;
+	@Column(name = "roster_termination_date")
+	@Temporal(TemporalType.DATE)
+	private Date rosterTerminationDate = null;
+	@Column(name = "patient_status")
+	private String patientStatus = null;
+	@Column(name = "patient_status_date")
+	@Temporal(TemporalType.DATE)
+	private Date patientStatusDate = null;
+	@Column(name = "date_joined")
+	@Temporal(TemporalType.DATE)
+	private Date dateJoined = null;
+	@Column(name = "chart_no")
+	private String chartNo = null;
+	@Column(name = "official_lang")
+	private String officialLang = null;
+	@Column(name = "spoken_lang")
+	private String spokenLang = null;
+	@Column(name = "provider_no")
+	private String providerNo = null;
+	@Column(name = "sex")
+	private String sex = null;
+	@Column(name = "end_date")
+	@Temporal(TemporalType.DATE)
+	private Date endDate = null;
+	@Column(name = "eff_date")
+	@Temporal(TemporalType.DATE)
+	private Date effDate = null;
+	@Column(name = "pcn_indicator")
+	private String pcnIndicator = null;
+	@Column(name = "hc_type")
+	private String hcType = null;
+	@Column(name = "hc_renew_date")
+	@Temporal(TemporalType.DATE)
+	private Date hcRenewDate = null;
+	@Column(name = "family_doctor")
+	private String familyDoctor = null;
+	@Column(name = "alias")
+	private String alias = null;
+	@Column(name = "previousAddress")
+	private String previousAddress = null;
+	@Column(name = "children")
+	private String children = null;
+	@Column(name = "sourceOfIncome")
+	private String sourceOfIncome = null;
+	@Column(name = "citizenship")
+	private String citizenship = null;
+	@Column(name = "sin")
+	private String sin = null;
+	@Column(name = "country_of_origin")
+	private String countryOfOrigin = null;
+	@Column(name = "newsletter")
+	private String newsletter = null;
+	@Column(name = "anonymous")
+	private String anonymous = null;
+	@Column(name = "lastUpdateUser")
+	private String lastUpdateUser = null;
+	@Column(name = "lastUpdateDate")
+	@Temporal(TemporalType.DATE)
+	private Date lastUpdateDate = null;
+
+
+        public DemographicArchive(){}
+
+
+        public Long getId() {
+            return this.id;
+        }
+        public void setId(Long l) {
+            this.id = l;
+        }
+
+        public Integer getDemographicNo() {
+            return this.demographicNo;
+        }
+        public void setDemographicNo(Integer i) {
+            this.demographicNo = i;
+        }
+
+	public String getTitle() {
+            return this.title;
+        }
+	public void setTitle(String s) {
+            this.title = s;
+        }
+
+        public String getLastName() {
+            return this.lastName;
+        }
+        public void setLastName(String s) {
+            this.lastName = s;
+        }
+
+        public String getFirstName() {
+            return this.firstName;
+        }
+        public void setFirstName(String s) {
+            this.firstName = s;
+        }
+
+        public String getAddress() {
+            return this.address;
+        }
+        public void setAddress(String s) {
+            this.address = s;
+        }
+
+        public String getCity() {
+            return this.city;
+        }
+        public void setCity(String s) {
+            this.city = s;
+        }
+
+        public String getProvince() {
+            return this.province;
+        }
+        public void setProvince(String s) {
+            this.province = s;
+        }
+
+        public String getPostal() {
+            return this.postal;
+        }
+        public void setPostal(String s) {
+            this.postal = s;
+        }
+
+        public String getPhone() {
+            return this.phone;
+        }
+        public void setPhone(String s) {
+            this.phone = s;
+        }
+
+        public String getPhone2() {
+            return this.phone2;
+        }
+        public void setPhone2(String s) {
+            this.phone2 = s;
+        }
+
+        public String getEmail() {
+            return this.email;
+        }
+        public void setEmail(String s) {
+            this.email = s;
+        }
+
+        public String getPin() {
+            return this.pin;
+        }
+        public void setPin(String s) {
+            this.pin = s;
+        }
+
+        public String getYearOfBirth() {
+            return this.yearOfBirth;
+        }
+        public void setYearOfBirth(String s) {
+            this.yearOfBirth = s;
+        }
+
+        public String getMonthOfBirth() {
+            return this.monthOfBirth;
+        }
+        public void setMonthOfBirth(String s) {
+            this.monthOfBirth = s;
+        }
+
+        public String getDateOfBirth() {
+            return this.dateOfBirth;
+        }
+        public void setDateOfBirth(String s) {
+            this.dateOfBirth = s;
+        }
+
+        public String getHin() {
+            return this.hin;
+        }
+        public void setHin(String s) {
+            this.hin = s;
+        }
+
+        public String getVer() {
+            return this.ver;
+        }
+        public void setVer(String s) {
+            this.ver = s;
+        }
+
+        public String getRosterStatus() {
+            return this.rosterStatus;
+        }
+        public void setRosterStatus(String s) {
+            this.rosterStatus = s;
+        }
+
+        public Date getRosterDate() {
+            return this.rosterDate;
+        }
+        public void setRosterDate(Date d) {
+            this.rosterDate = d;
+        }
+
+        public Date getRosterTerminationDate() {
+            return this.rosterTerminationDate;
+        }
+        public void setRosterTerminationDate(Date d) {
+            this.rosterTerminationDate = d;
+        }
+
+        public String getPatientStatus() {
+            return this.patientStatus;
+        }
+        public void setPatientStatus(String s) {
+            this.patientStatus = s;
+        }
+
+        public Date getPatientStatusDate() {
+            return this.patientStatusDate;
+        }
+        public void setPatientStatusDate(Date d) {
+            this.patientStatusDate = d;
+        }
+
+        public Date getDateJoined() {
+            return this.dateJoined;
+        }
+        public void setDateJoined(Date d) {
+            this.dateJoined = d;
+        }
+
+        public String getChartNo() {
+            return this.chartNo;
+        }
+        public void setChartNo(String s) {
+            this.chartNo = s;
+        }
+
+        public String getOfficialLang() {
+            return this.officialLang;
+        }
+        public void setOfficialLang(String s) {
+            this.officialLang = s;
+        }
+
+        public String getSpokenLang() {
+            return this.spokenLang;
+        }
+        public void setSpokenLang(String s) {
+            this.spokenLang = s;
+        }
+
+        public String getProviderNo() {
+            return this.providerNo;
+        }
+        public void setProviderNo(String s) {
+            this.providerNo = s;
+        }
+
+        public String getSex() {
+            return this.sex;
+        }
+        public void setSex(String s) {
+            this.sex = s;
+        }
+
+        public Date getEndDate() {
+            return this.endDate;
+        }
+        public void setEndDate(Date d) {
+            this.endDate = d;
+        }
+
+        public Date getEffDate() {
+            return this.effDate;
+        }
+        public void setEffDate(Date d) {
+            this.effDate = d;
+        }
+
+        public String getPcnIndicator() {
+            return this.pcnIndicator;
+        }
+        public void setPcnIndicator(String s) {
+            this.pcnIndicator = s;
+        }
+
+        public String getHcType() {
+            return this.hcType;
+        }
+        public void setHcType(String s) {
+            this.hcType = s;
+        }
+
+        public Date getHcRenewDate() {
+            return this.hcRenewDate;
+        }
+        public void setHcRenewDate(Date d) {
+            this.hcRenewDate = d;
+        }
+
+        public String getFamilyDoctor() {
+            return this.familyDoctor;
+        }
+        public void setFamilyDoctor(String s) {
+            this.familyDoctor = s;
+        }
+
+        public String getAlias() {
+            return this.alias;
+        }
+        public void setAlias(String s) {
+            this.alias = s;
+        }
+
+        public String getPreviousAddress() {
+            return this.previousAddress;
+        }
+        public void setPreviousAddress(String s) {
+            this.previousAddress = s;
+        }
+
+        public String getChildren() {
+            return this.children;
+        }
+        public void setChildren(String s) {
+            this.children = s;
+        }
+
+        public String getSourceOfIncome() {
+            return this.sourceOfIncome;
+        }
+        public void setSourceOfIncome(String s) {
+            this.sourceOfIncome = s;
+        }
+
+        public String getCitizenship() {
+            return this.citizenship;
+        }
+        public void setCitizenship(String s) {
+            this.citizenship = s;
+        }
+
+        public String getSin() {
+            return this.sin;
+        }
+        public void setSin(String s) {
+            this.sin = s;
+        }
+
+        public String getCountryOfOrigin() {
+            return this.countryOfOrigin;
+        }
+        public void setCountryOfOrigin(String s) {
+            this.countryOfOrigin = s;
+        }
+
+        public String getNewsletter() {
+            return this.newsletter;
+        }
+        public void setNewsletter(String s) {
+            this.newsletter = s;
+        }
+
+        public String getAnonymous() {
+            return this.anonymous;
+        }
+        public void setAnonymous(String s) {
+            this.anonymous = s;
+        }
+
+        public String getLastUpdateUser() {
+            return this.lastUpdateUser;
+        }
+        public void setLastUpdateUser(String s) {
+            this.lastUpdateUser = s;
+        }
+
+        public Date getLastUpdateDate() {
+            return this.lastUpdateDate;
+        }
+        public void setLastUpdateDate(Date d) {
+            this.lastUpdateDate = d;
+        }
+}
