@@ -44,7 +44,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.ws.WebServiceException;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.dao.AdmissionDao;
 import org.oscarehr.PMmodule.dao.ProgramDao;
@@ -128,6 +127,7 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.ShutdownException;
 import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.XmlUtils;
+import org.springframework.beans.BeanUtils;
 import org.w3c.dom.Document;
 
 import oscar.OscarProperties;
@@ -313,7 +313,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			logger.debug("pushing facility record");
 
 			CachedFacility cachedFacility = new CachedFacility();
-			BeanUtils.copyProperties(cachedFacility, facility);
+			BeanUtils.copyProperties(facility, cachedFacility);
 
 			FacilityWs service = CaisiIntegratorManager.getFacilityWs();
 			service.setMyFacility(cachedFacility);
@@ -334,7 +334,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 			CachedProgram cachedProgram = new CachedProgram();
 
-			BeanUtils.copyProperties(cachedProgram, program);
+			BeanUtils.copyProperties(program, cachedProgram);
 
 			FacilityIdIntegerCompositePk pk = new FacilityIdIntegerCompositePk();
 			pk.setCaisiItemId(program.getId());
@@ -377,7 +377,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			ProviderTransfer providerTransfer = new ProviderTransfer();
 			CachedProvider cachedProvider = new CachedProvider();
 
-			BeanUtils.copyProperties(cachedProvider, provider);
+			BeanUtils.copyProperties(provider, cachedProvider);
 
 			FacilityIdStringCompositePk pk = new FacilityIdStringCompositePk();
 			pk.setCaisiItemId(provider.getProviderNo());
@@ -450,18 +450,20 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		// set demographic info
 		Demographic demographic = demographicDao.getDemographicById(demographicId);
 
-		// The following line copy 6 fields: FirstName,LastName,City,Province,Hin,Sin
-		BeanUtils.copyProperties(demographicTransfer, demographic);
+		BeanUtils.copyProperties(demographic, demographicTransfer);
 
 		demographicTransfer.setCaisiDemographicId(demographic.getDemographicNo());
 		demographicTransfer.setBirthDate(demographic.getBirthDay());
 
 		demographicTransfer.setHinType(demographic.getHcType());
 		demographicTransfer.setHinVersion(demographic.getVer());
+		demographicTransfer.setHinValidEnd(DateUtils.toGregorianCalendar(demographic.getHcRenewDate()));
+		demographicTransfer.setHinValidStart(DateUtils.toGregorianCalendar(demographic.getEffDate()));
 		demographicTransfer.setCaisiProviderId(demographic.getProviderNo());
 
 		demographicTransfer.setStreetAddress(demographic.getAddress());
-		demographicTransfer.setPhone1(demographic.getPhone());
+		demographicTransfer.setPhone1(demographic.getPhone2());
+		demographicTransfer.setPhone2(demographic.getPhone2());
 
 		
 		try {
@@ -525,7 +527,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			facilityDemographicIssuePrimaryKey.setIssueCode(issue.getCode());
 			cachedDemographicIssue.setFacilityDemographicIssuePk(facilityDemographicIssuePrimaryKey);
 
-			BeanUtils.copyProperties(cachedDemographicIssue, caseManagementIssue);
+			BeanUtils.copyProperties(caseManagementIssue, cachedDemographicIssue);
 			cachedDemographicIssue.setIssueDescription(issue.getDescription());
 			cachedDemographicIssue.setIssueRole(IntegratorRoleUtils.getIntegratorRole(issue.getRole()));
 

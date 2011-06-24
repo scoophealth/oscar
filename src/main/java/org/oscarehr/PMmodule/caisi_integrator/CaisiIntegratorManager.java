@@ -445,19 +445,30 @@ public class CaisiIntegratorManager {
 		if (demographicTransfer.getBirthDate()!=null) demographic.setBirthDay(demographicTransfer.getBirthDate());		
 		if (demographicTransfer.getGender()!=null) demographic.setSex(demographicTransfer.getGender().name());
 
-		demographic.setCity(demographicTransfer.getCity());
-		demographic.setHcType(demographicTransfer.getHinType());
-		demographic.setHin(demographicTransfer.getHin());
-		demographic.setVer(demographicTransfer.getHinVersion());
-		demographic.setProvince(demographicTransfer.getProvince());
-		demographic.setSin(demographicTransfer.getSin());
-		demographic.setAddress(demographicTransfer.getStreetAddress());
-		demographic.setPhone(demographicTransfer.getPhone1());
-		demographic.setPhone2(demographicTransfer.getPhone2());
-		
+		copyDemographicFieldsIfNotNull(demographicTransfer, demographic);
+				
 		demographic.setPatientStatus("AC");
 		demographic.setDateJoined(new Date());
 		
 		return(demographic);
+    }
+    
+    public static void copyDemographicFieldsIfNotNull(DemographicTransfer demographicTransfer, Demographic demographic)
+    {
+		if (demographicTransfer.getBirthDate()!=null) demographic.setBirthDay(demographicTransfer.getBirthDate());
+		if (demographicTransfer.getCity()!=null) demographic.setCity(demographicTransfer.getCity());
+		if (demographicTransfer.getFirstName()!=null) demographic.setFirstName(demographicTransfer.getFirstName());
+		if (demographicTransfer.getGender()!=null) demographic.setSex(demographicTransfer.getGender().name());
+		if (demographicTransfer.getHin()!=null) demographic.setHin(demographicTransfer.getHin());
+		if (demographicTransfer.getHinType()!=null) demographic.setHcType(demographicTransfer.getHinType());
+		if (demographicTransfer.getHinVersion()!=null) demographic.setVer(demographicTransfer.getHinVersion());
+		if (demographicTransfer.getHinValidStart()!=null) demographic.setEffDate(demographicTransfer.getHinValidStart().getTime());
+		if (demographicTransfer.getHinValidEnd()!=null) demographic.setHcRenewDate(demographicTransfer.getHinValidEnd().getTime());
+		if (demographicTransfer.getLastName()!=null) demographic.setLastName(demographicTransfer.getLastName());
+		if (demographicTransfer.getProvince()!=null) demographic.setProvince(demographicTransfer.getProvince());
+		if (demographicTransfer.getSin()!=null) demographic.setSin(demographicTransfer.getSin());
+		if (demographicTransfer.getStreetAddress()!=null) demographic.setAddress(demographicTransfer.getStreetAddress());
+		if (demographicTransfer.getPhone1()!=null) demographic.setPhone(demographicTransfer.getPhone1());
+		if (demographicTransfer.getPhone2()!=null) demographic.setPhone2(demographicTransfer.getPhone2());
     }
 }
