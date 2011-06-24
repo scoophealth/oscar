@@ -72,7 +72,7 @@ public class HRMDisplayReportAction extends DispatchAction {
 					}
 				} else {
 					// Medical records report
-					String[] reportSubClass = report.getFirstReportSubClass().split("^");
+					String[] reportSubClass = report.getFirstReportSubClass().split("\\^");
 					thisReportSubClassMapping = hrmSubClassDao.findApplicableSubClassMapping(report.getFirstReportClass(), reportSubClass[0], null, report.getSendingFacilityId());
 				}
 				

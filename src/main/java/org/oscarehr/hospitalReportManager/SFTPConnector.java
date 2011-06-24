@@ -1,6 +1,8 @@
 package org.oscarehr.hospitalReportManager;
 
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Date;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,7 +15,7 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.oscarehr.util.MiscUtils;
-
+import org.oscarehr.util.LoggedInInfo;
 import oscar.OscarProperties;
 
 import com.jcraft.jsch.Channel;
@@ -569,8 +571,17 @@ public class SFTPConnector {
 				MiscUtils.getLogger().debug("Closed SFTP connection");
 
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				MiscUtils.getLogger().error("error",e);
+				MiscUtils.getLogger().error("Couldn't perform SFTP fetch for HRM - notifying user of failure", e);
+				ArrayList<String> sendToProviderList = new ArrayList<String>();
+				sendToProviderList.add("999998");
+				if (LoggedInInfo.loggedInInfo != null && LoggedInInfo.loggedInInfo.get() != null && LoggedInInfo.loggedInInfo.get().loggedInProvider != null) {
+						sendToProviderList.add(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+				}
+				
+				String message = "OSCAR attempted to perform a fetch of HRM data at " + (new Date()).toString() + " but there was an error during the task.\n\nSee below for the error message:\n" + e.toString();
+
+				oscar.oscarMessenger.data.MsgMessageData messageData = new oscar.oscarMessenger.data.MsgMessageData();
+				messageData.sendMessage(message, "HRM Retrieval Error", "System", messageData.createSentToString(sendToProviderList), "-1", (String[]) sendToProviderList.toArray());
 			}
 			
 			SFTPConnector.isAutoFetchRunning = false;

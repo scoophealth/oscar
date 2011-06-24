@@ -151,10 +151,12 @@ public class Startup implements ServletContextListener {
 				checkAndSetProperty(baseDocumentDir, contextPath, "form_record_path", "/form/records/");
 				
 				//HRM Directories
+				checkAndSetProperty(baseDocumentDir, contextPath,"OMD_hrm","/hrm/");
 				checkAndSetProperty(baseDocumentDir, contextPath,"OMD_directory" , "/hrm/OMD/");
 				checkAndSetProperty(baseDocumentDir, contextPath,"OMD_log_directory" , "/hrm/logs/");
 				checkAndSetProperty(baseDocumentDir, contextPath,"OMD_stored", "/hrm/stored/");
 				checkAndSetProperty(baseDocumentDir, contextPath,"OMD_downloads","/hrm/sftp_downloads/");
+				
 
 			}
 

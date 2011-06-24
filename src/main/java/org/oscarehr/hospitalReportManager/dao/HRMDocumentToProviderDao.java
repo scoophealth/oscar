@@ -15,10 +15,22 @@ public class HRMDocumentToProviderDao extends AbstractDao<HRMDocumentToProvider>
 		super(HRMDocumentToProvider.class);
 	}
 	
-	public List<HRMDocumentToProvider> findByProviderNo(String providerNo) {
+	public List<HRMDocumentToProvider> findAllUnsigned(Integer page, Integer pageSize) {
+		String sql = "select x from " + this.modelClass.getName() + " x where (x.signedOff IS NULL or x.signedOff = 0)";
+		Query query = entityManager.createQuery(sql);
+		query.setMaxResults(pageSize);
+		query.setFirstResult(page*pageSize);
+		@SuppressWarnings("unchecked")
+		List<HRMDocumentToProvider> documentToProviders = query.getResultList();
+		return documentToProviders;
+	}
+	
+	public List<HRMDocumentToProvider> findByProviderNo(String providerNo, Integer page, Integer pageSize) {
 		String sql = "select x from " + this.modelClass.getName() + " x where x.providerNo=?";
 		Query query = entityManager.createQuery(sql);
 		query.setParameter(1, providerNo);
+		query.setMaxResults(pageSize);
+		query.setFirstResult(page*pageSize);
 		@SuppressWarnings("unchecked")
 		List<HRMDocumentToProvider> documentToProviders = query.getResultList();
 		return documentToProviders;
