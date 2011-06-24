@@ -462,7 +462,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		demographicTransfer.setCaisiProviderId(demographic.getProviderNo());
 
 		demographicTransfer.setStreetAddress(demographic.getAddress());
-		demographicTransfer.setPhone1(demographic.getPhone2());
+		demographicTransfer.setPhone1(demographic.getPhone());
 		demographicTransfer.setPhone2(demographic.getPhone2());
 
 		
