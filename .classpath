@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry including="**/*.java" kind="src" output="target/test-classes" path="src/test/java"/>
 	<classpathentry excluding="**/*.java" kind="src" output="target/test-classes" path="src/test/resources"/>
 	<classpathentry including="**/*.java" kind="src" path="src/main/java"/>
 	<classpathentry excluding="**/*.java" kind="src" path="src/main/resources"/>
+	<classpathentry kind="src" path="src/main/webapp"/>
 	<classpathentry kind="var" path="M2_REPO/javax/activation/activation/1.1/activation-1.1.jar"/>
 	<classpathentry kind="var" path="M2_REPO/javax/xml/bind/jaxb-api/2.2.1/jaxb-api-2.2.1.jar"/>
 	<classpathentry kind="var" path="M2_REPO/javax/xml/jaxm-api/UNKNOWN/jaxm-api-UNKNOWN.jar"/>
@@ -51,7 +53,6 @@
 	<classpathentry kind="var" path="M2_REPO/bouncycastle/bcmail-jdk15/140/bcmail-jdk15-140.jar"/>
 	<classpathentry kind="var" path="M2_REPO/bouncycastle/bcprov-jdk15/140/bcprov-jdk15-140.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/bouncycastle/bcprov-jdk15/1.45/bcprov-jdk15-1.45.jar"/>
-	<classpathentry exported="true" kind="var" path="M2_REPO/cds/cds/0.0-SNAPSHOT/cds-0.0-SNAPSHOT.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/oscarehr/caisi_integrator/caisi_integrator_client_stubs/SNAPSHOT/caisi_integrator_client_stubs-SNAPSHOT.jar"/>
 	<classpathentry kind="var" path="M2_REPO/cds/cds/0.0-SNAPSHOT/cds-0.0-SNAPSHOT.jar"/>
 	<classpathentry kind="var" path="M2_REPO/cds/cds_cihi/1.0/cds_cihi-1.0.jar"/>
@@ -188,6 +189,7 @@
 	<classpathentry kind="var" path="M2_REPO/org/apache/neethi/neethi/2.0.4/neethi-2.0.4.jar"/>
 	<classpathentry kind="var" path="M2_REPO/ocan/ocan/0.0-SNAPSHOT/ocan-0.0-SNAPSHOT.jar"/>
 	<classpathentry kind="var" path="M2_REPO/ocan/ocan-iar/UNKNOWN/ocan-iar-UNKNOWN.jar"/>
+	<classpathentry kind="var" path="M2_REPO/ca/ssha/www/olis-service/20110623/olis-service-20110623.jar"/>
 	<classpathentry kind="var" path="M2_REPO/oro/oro/2.0.8/oro-2.0.8.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/chip/ping/oscar-ping/UNKNOWN/oscar-ping-UNKNOWN.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/ostermiller/ostermillerutils/1.4.3/ostermillerutils-1.4.3.jar"/>
@@ -248,7 +250,5 @@
 	<classpathentry kind="var" path="M2_REPO/org/apache/santuario/xmlsec/1.4.4/xmlsec-1.4.4.jar"/>
 	<classpathentry kind="var" path="M2_REPO/zxing/zxing-core/1.5/zxing-core-1.5.jar"/>
 	<classpathentry kind="var" path="M2_REPO/zxing/zxing-j2se/1.5/zxing-j2se-1.5.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="var" path="M2_REPO/ca/ssha/www/olis-service/20110623/olis-service-20110623.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
