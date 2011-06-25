@@ -145,6 +145,17 @@ br {
 		</td>
 	</tr>
 	<tr>
+       	<td class="MainTableLeftColumn" valign="top" width="160px;">&nbsp;</td>
+        <td class="MainTableRightColumn" valign="top">
+        <% if (request.getAttribute("success") != null) { %>
+                <%=((Boolean)request.getAttribute("success")) ? "Successful" : "Error" %>
+        <% } %>
+        <form enctype="multipart/form-data" action="<%=request.getContextPath() %>/hospitalReportManager/UploadLab.do" method="post">
+	    Upload an HRM report from your computer: <input type="file" name="importFile" /> <input type="submit" name="submit" value="Upload" />
+        </form>
+        </td>
+</tr>
+	<tr>
 		<td class="MainTableBottomRowLeftColumn">&nbsp;</td>
 
 		<td class="MainTableBottomRowRightColumn">&nbsp;</td>

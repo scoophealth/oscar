@@ -393,7 +393,11 @@ public class DmsInboxManageAction extends DispatchAction {
     }
     //labdocs=validlabdocs;
     HRMResultsData hrmResult = new HRMResultsData();
-    labdocs.addAll(hrmResult.populateHRMdocumentsResultsData(searchProviderNo));//, page, pageSize));
+    
+    Integer page = 0;
+    Integer pageSize = 20;
+    
+    labdocs.addAll(hrmResult.populateHRMdocumentsResultsData(searchProviderNo, page, pageSize));
     Collections.sort(labdocs);
     
   

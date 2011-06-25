@@ -1,4 +1,4 @@
-<%@page import="java.util.*, org.oscarehr.hospitalReportManager.*"%>
+<%@page import="java.util.*, org.oscarehr.hospitalReportManager.*, org.oscarehr.hospitalReportManager.model.HRMCategory"%>
 
 <%
 	
@@ -78,7 +78,7 @@
 						<td><%=curmapping.get("id")%></td>
 						<td><%=curmapping.get("class")%></td>
 						<td align='center'><%=curmapping.get("sub_class")%></td>
-						<td><%=curmapping.get("category")%></td>
+						<td><%=((HRMCategory) curmapping.get("category")).getCategoryName() %></td>
 						
 					</tr>
 					<%

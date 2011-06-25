@@ -78,7 +78,7 @@ public class HRMResultsData {
 		return labResults;
 	}
 
-	
+	/*
 	public List<LabResultData> populateHRMdocumentsResultsData(String providerNo){
 
 
@@ -127,6 +127,6 @@ public class HRMResultsData {
 
 		return labResults;
 	}
-
+*/
 	
 }

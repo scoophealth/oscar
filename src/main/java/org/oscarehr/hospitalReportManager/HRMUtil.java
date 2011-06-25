@@ -3,13 +3,17 @@ package org.oscarehr.hospitalReportManager;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
-
 import org.apache.log4j.Logger;
+
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentDao;
+import org.oscarehr.hospitalReportManager.dao.HRMDocumentSubClassDao;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentToDemographicDao;
 import org.oscarehr.hospitalReportManager.dao.HRMSubClassDao;
+import org.oscarehr.hospitalReportManager.model.HRMCategory;
 import org.oscarehr.hospitalReportManager.model.HRMDocument;
+import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 import org.oscarehr.hospitalReportManager.model.HRMSubClass;
 import org.oscarehr.util.MiscUtils;
@@ -25,7 +29,7 @@ public class HRMUtil {
 	private static HRMDocumentDao hrmDocumentDao = (HRMDocumentDao) SpringUtils.getBean("HRMDocumentDao");
 	private static HRMDocumentToDemographicDao hrmDocumentToDemographicDao = (HRMDocumentToDemographicDao) SpringUtils.getBean("HRMDocumentToDemographicDao");
 	private static HRMSubClassDao hrmSubClassDao = (HRMSubClassDao) SpringUtils.getBean("HRMSubClassDao");
-	
+	private static HRMDocumentSubClassDao hrmDocumentSubClassDao = (HRMDocumentSubClassDao) SpringUtils.getBean("HRMDocumentSubClassDao");
 	
 	public HRMUtil() {
 		
@@ -36,12 +40,34 @@ public class HRMUtil {
 		ArrayList<HashMap<String, ? extends Object>> hrmdocslist = new ArrayList<HashMap<String, ?>>();
 		
 		List<HRMDocumentToDemographic> hrmDocResultsDemographic = hrmDocumentToDemographicDao.findByDemographicNo(demographicNo);
-		List<HRMDocument> hrmDocumentsAll = new ArrayList<HRMDocument>();
+		List<HRMDocument> hrmDocumentsAll = new LinkedList<HRMDocument>();
 		
 		
 		for (HRMDocumentToDemographic hrmDocResult : hrmDocResultsDemographic) {
 			String id = hrmDocResult.getHrmDocumentId();
 			List<HRMDocument> hrmDocuments = hrmDocumentDao.findById(Integer.parseInt(id));
+			
+			HRMCategory category = null;
+			HRMSubClass thisReportSubClassMapping = null;
+			List<HRMDocumentSubClass> subClassList = hrmDocumentSubClassDao.getSubClassesByDocumentId(hrmDocuments.get(0).getId());
+			
+			
+			HRMReport report = HRMReportParser.parseReport(hrmDocuments.get(0).getReportFile());
+			if (report.getFirstReportClass().equalsIgnoreCase("Diagnostic Imaging Report") || report.getFirstReportClass().equalsIgnoreCase("Cardio Respiratory Report")) {
+				// We'll only care about the first one, as long as there is at least one
+				if (subClassList != null && subClassList.size() > 0) {
+					HRMDocumentSubClass firstSubClass = subClassList.get(0);
+					thisReportSubClassMapping = hrmSubClassDao.findApplicableSubClassMapping(report.getFirstReportClass(), firstSubClass.getSubClass(), firstSubClass.getSubClassMnemonic(), report.getSendingFacilityId());
+				}
+			} else {
+				// Medical records report
+				String[] reportSubClass = report.getFirstReportSubClass().split("\\^");
+				thisReportSubClassMapping = hrmSubClassDao.findApplicableSubClassMapping(report.getFirstReportClass(), reportSubClass[0], null, report.getSendingFacilityId());
+			}
+			
+			if (thisReportSubClassMapping != null) {
+				category = thisReportSubClassMapping.getHrmCategory();
+			}
 			
 			
 			HashMap<String, Object> curht = new HashMap<String, Object>();
@@ -49,6 +75,7 @@ public class HRMUtil {
 			curht.put("time_received", hrmDocuments.get(0).getTimeReceived().toString());
 			curht.put("report_type", hrmDocuments.get(0).getReportType());
 			curht.put("report_status", hrmDocuments.get(0).getReportStatus());
+			curht.put("category", category);
 			
 			hrmdocslist.add(curht);
 			hrmDocumentsAll.addAll(hrmDocuments);
@@ -75,7 +102,7 @@ public class HRMUtil {
 			for (HRMSubClass hrmSubClass : hrmSubClasses) {
 	
 				HashMap<String, Object> curht = new HashMap<String, Object>();
-				curht.put("id", hrmSubClass.getId());
+				curht.put("id", hrmSubClass.getSendingFacilityId());
 				curht.put("sub_class", hrmSubClass.getSubClassName());
 				curht.put("class", hrmSubClass.getClassName());
 				curht.put("category", hrmSubClass.getHrmCategory());

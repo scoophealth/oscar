@@ -1,4 +1,4 @@
-<%@page import="java.util.*, org.oscarehr.hospitalReportManager.*"%>
+<%@page import="java.util.*, org.oscarehr.hospitalReportManager.*,org.oscarehr.hospitalReportManager.model.HRMCategory"%>
 
 <%
 	String demographic_no = request.getParameter("demographic_no");
@@ -111,7 +111,7 @@ function updateAjax() {
 						<th><a
 							href="displayHRMDocList.jsp?demographic_no=<%=demographic_no%>&group_view=<%=groupView%>&parentAjaxId=<%=parentAjaxId%>"><bean:message
 							key="hrm.displayHRMDocList.timeReceived" /></a></th>
-						
+						<th>Category</th>
 					</tr>
 					<%
 						ArrayList<HashMap<String,? extends Object>> hrmdocs;
@@ -131,11 +131,11 @@ function updateAjax() {
 					<tr bgcolor="<%=((i % 2) == 1)?"#F2F2F2":"white"%>">
 						
 						<td><a href="#"
-							ONCLICK="popupPage('/hospitalReportManager/displayHRMReport.jsp?id=<%=curhrmdoc.get("id")%>', 'HRM Report'); return false;"
+							ONCLICK="popupPage('/hospitalReportManager/Display.do?id=<%=curhrmdoc.get("id")%>', 'HRM Report'); return false;"
 							TITLE="<bean:message key="hrm.displayHRMDocList."/>"><%=curhrmdoc.get("report_type")%></a></td>
 						<td><%=curhrmdoc.get("report_status")%></td>
 						<td align='center'><%=curhrmdoc.get("time_received")%></td>
-						
+						<td><%=curhrmdoc.get("category") != null ? ((HRMCategory)curhrmdoc.get("category")).getCategoryName() : "" %>
 					</tr>
 					<%
 						}
