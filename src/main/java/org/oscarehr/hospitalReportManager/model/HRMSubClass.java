@@ -1,5 +1,7 @@
 package org.oscarehr.hospitalReportManager.model;
 
+
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -8,6 +10,7 @@ import javax.persistence.ManyToOne;
 
 import org.oscarehr.common.model.AbstractModel;
 
+@Entity
 public class HRMSubClass extends AbstractModel<Integer> {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

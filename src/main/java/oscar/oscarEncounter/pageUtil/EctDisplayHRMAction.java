@@ -42,7 +42,7 @@ public class EctDisplayHRMAction extends EctDisplayAction {
 		 	} else {
 		 	  
 		 		String winName = "docs" + bean.demographicNo;
-		 		String url = "popupPage(500,1115,'" + winName + "', '" + request.getContextPath() + "/hospitalReportManager/displayHRMDocList.jsp?" + "')";
+		 		String url = "popupPage(500,1115,'" + winName + "', '" + request.getContextPath() + "/hospitalReportManager/displayHRMDocList.jsp?demographic_no=" + bean.demographicNo + "')";
 		 		Dao.setLeftURL(url);
 			    Dao.setLeftHeading(messages.getMessage(request.getLocale(), "oscarEncounter.Index.msgHRMDocuments"));
 			  
@@ -59,7 +59,7 @@ public class EctDisplayHRMAction extends EctDisplayAction {
 			    String BGCOLOUR = request.getParameter("hC");
 			    Date date;
 			    for (HRMDocumentToDemographic hrmDemoDocResult : hrmDocListDemographic) {
-			    	List<HRMDocument> hrmDocumentList = hrmDocumentDao.findById(hrmDemoDocResult.getId());
+			    	List<HRMDocument> hrmDocumentList = hrmDocumentDao.findById(Integer.parseInt(hrmDemoDocResult.getHrmDocumentId()));
 			    	HRMDocument hrmDocument = hrmDocumentList.get(0);
 			    	String dispFilename = hrmDocument.getReportType();
 			    	String dispDocNo    = hrmDocument.getId().toString();

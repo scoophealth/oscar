@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-//import javax.xml.XMLConstants;
+import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
@@ -63,9 +63,9 @@ public class HRMReportParser {
 				// Create a SchemaFactory capable of understanding WXS schemas.
 				
 				
-				//logger.debug(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-				SchemaFactory factory = SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema");//XMLConstants.W3C_XML_SCHEMA_NS_URI);
-
+				//SchemaFactory factory = SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema");//XMLConstants.W3C_XML_SCHEMA_NS_URI);
+				SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+				
 				// Load a WXS schema, represented by a Schema instance.
 				Source schemaFile = new StreamSource(new File(SFTPConnector.OMD_directory + "report_manager_cds.xsd"));
 				Schema schema = factory.newSchema(schemaFile); //new File(SFTPConnector.OMD_directory + "report_manager_cds.xsd"));
@@ -132,7 +132,9 @@ public class HRMReportParser {
 				HRMReportParser.routeReportToProvider(sameReportDifferentRecipientReportList.get(0), report);
 			} else {
 				// New report
-				hrmDocumentDao.merge(document);
+				hrmDocumentDao.persist(document);
+				logger.debug("MERGED DOCUMENTS ID"+document.getId());
+				
 				
 				HRMReportParser.routeReportToDemographic(report, document);
 				HRMReportParser.doSimilarReportCheck(report, document);
@@ -142,6 +144,8 @@ public class HRMReportParser {
 					// Add the provider name to the list of unidentified providers for this report
 					document.setUnmatchedProviders(document.getUnmatchedProviders() + "|" + report.getDeliverToUserIdLastName() + ", " + report.getDeliverToUserIdFirstName() + " (" + report.getDeliverToUserId() + ")");
 					hrmDocumentDao.merge(document);
+					// Route this report to the "system" user so that a search for "all" in the inbox will come up with them
+					HRMReportParser.routeReportToProvider(document.getId().toString(), "-1");
 				}
 				
 				HRMReportParser.routeReportToSubClass(report, document.getId());
