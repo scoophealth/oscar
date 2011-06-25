@@ -595,8 +595,10 @@ function doscroll(){
                   <div id="winTitle"></div>
                   <textarea style="margin:10px;" cols="50" rows="15" id="noteEditTxt" name="value" ></textarea><br>
 		  <table>
+		  	  <tr id="Itemproblemdescription"><td><bean:message key="oscarEncounter.problemdescription.title"/>: </td>
+			<td><input type="text" id="problemdescription" name="problemdescription" value="" ></td></tr>
 		      <tr id="Itemstartdate"><td><bean:message key="oscarEncounter.startdate.title"/>: </td>
-			<td><input type="text" id="startdate" name="startdate" value="" size="12"> (YYYY-MM-DDd)</td></tr>
+			<td><input type="text" id="startdate" name="startdate" value="" size="12"> (YYYY-MM-DD)</td></tr>
 		      <tr id="Itemresolutiondate"><td><bean:message key="oscarEncounter.resolutionDate.title"/>: </td>
 			<td><input type="text" id="resolutiondate" name="resolutiondate" value="" size="12"> (YYYY-MM-DD)</td></tr>
 		      <tr id="Itemageatonset"><td><bean:message key="oscarEncounter.ageAtOnset.title"/>: </td>
