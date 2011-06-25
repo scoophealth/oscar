@@ -490,6 +490,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 			String text = request.getParameter("text");
 
 			// TODO: Is this to slow to do here? It's possible to do this in ajax, as in when this comes back launch an ajax request to fill in.
+			logger.debug("requesting drug from drugref id="+drugId);
 			RxDrugData.DrugMonograph dmono = drugData.getDrug2(drugId);
 
 			String brandName = text;

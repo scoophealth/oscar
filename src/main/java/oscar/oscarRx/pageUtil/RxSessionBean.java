@@ -30,6 +30,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
 
+import org.apache.log4j.Logger;
 import org.oscarehr.phr.model.PHRMedication;
 import org.oscarehr.util.MiscUtils;
 
@@ -41,6 +42,8 @@ import oscar.oscarRx.data.RxPatientData;
 import oscar.oscarRx.data.RxPrescriptionData;
 
 public class RxSessionBean {
+	private static final Logger logger=MiscUtils.getLogger();
+	
     private String providerNo = null;
     private int demographicNo = 0;
 
@@ -162,28 +165,28 @@ public class RxSessionBean {
     public int getIndexFromRx(int randomId){
         int ret=-1;
         for(int i=0;i<stash.size();i++){
-            if( ((RxPrescriptionData.Prescription)stash.get(i)).getRandomId()==randomId) {
+            if(stash.get(i).getRandomId()==randomId) {
                 ret=i;
                 break;
         }
         }
-        MiscUtils.getLogger().debug("in getIndexFromRx="+ret);
+        logger.debug("in getIndexFromRx="+ret);
         return ret;
     }
     public RxPrescriptionData.Prescription[] getStash() {
         RxPrescriptionData.Prescription[] arr = {};
 
-        arr = (RxPrescriptionData.Prescription[])stash.toArray(arr);
+        arr = stash.toArray(arr);
 
         return arr;
     }
 
     public RxPrescriptionData.Prescription getStashItem(int index) {
-        return (RxPrescriptionData.Prescription)stash.get(index);
+        return stash.get(index);
     }
 
     //return rx from its random id
-    public RxPrescriptionData.Prescription getStashItem2(int randomId) {;
+    public RxPrescriptionData.Prescription getStashItem2(int randomId) {
         RxPrescriptionData.Prescription psp=null;
         for (RxPrescriptionData.Prescription rx:stash){
             if(rx.getRandomId()==randomId){
@@ -288,7 +291,9 @@ public class RxSessionBean {
          RxAllergyWarningWorker worker = new RxAllergyWarningWorker(this,atccode,allergies);
          addToWorkingAllergyWarnings(atccode,worker);
          worker.start();
-       }catch( Exception e ){MiscUtils.getLogger().error("Error", e);}
+       }catch( Exception e ){
+      	 logger.error("Error", e);
+       }
     }
 
     public void addAllergyWarnings(String atc,oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergy){
@@ -309,7 +314,8 @@ public class RxSessionBean {
       //Check to see if Allergy checking property is on and if atccode is not null and if atccode is not "" or "null"
 
       if (OscarProperties.getInstance().getBooleanProperty("RX_ALLERGY_CHECKING","yes") && atccode != null && !atccode.equals("") && !atccode.equals("null")){
-          if (allergyWarnings.containsKey(atccode) ){
+      	logger.debug("Checking allergy reaction : "+atccode);
+      	if (allergyWarnings.containsKey(atccode) ){
 
              allergies = (oscar.oscarRx.data.RxPatientData.Patient.Allergy[]) allergyWarnings.get(atccode);
           }else if(workingAllergyWarnings.contains(atccode) ){
@@ -323,7 +329,7 @@ public class RxSessionBean {
                  } catch (InterruptedException e) {
                     // Thread was interrupted
 
-                    MiscUtils.getLogger().error("Error", e);
+                    logger.error("Error", e);
                  }
 
 
@@ -331,7 +337,7 @@ public class RxSessionBean {
              allergies = (oscar.oscarRx.data.RxPatientData.Patient.Allergy[]) allergyWarnings.get(atccode);
 
           }else{
-             MiscUtils.getLogger().debug("NEW ATC CODE for allergy");
+         	 logger.debug("NEW ATC CODE for allergy");
              try{
                 RxDrugData drugData = new RxDrugData();
                 oscar.oscarRx.data.RxPatientData.Patient.Allergy[]  allAllergies = RxPatientData.getPatient(getDemographicNo()).getAllergies();
@@ -340,7 +346,7 @@ public class RxSessionBean {
                        addAllergyWarnings(atccode,allergies);
                     }
              }catch(Exception e){
-                 MiscUtils.getLogger().error("Error", e);
+            	 logger.error("Error", e);
              }
           }
       }
@@ -372,7 +378,7 @@ public class RxSessionBean {
           RxInteractionData rxInteract =  RxInteractionData.getInstance();
           Vector atcCodes = rxData.getCurrentATCCodesByPatient(this.getDemographicNo());
 
-          MiscUtils.getLogger().debug("atccode "+atcCodes);
+          logger.debug("atccode "+atcCodes);
           RxPrescriptionData.Prescription rx;
           for(int i=0;i<this.getStashSize(); i++) {
              rx = this.getStashItem(i);
@@ -380,17 +386,17 @@ public class RxSessionBean {
                 atcCodes.add(rx.getAtcCode());
              }
           }
-          MiscUtils.getLogger().debug("atccode 2"+atcCodes);
+          logger.debug("atccode 2"+atcCodes);
           if (atcCodes != null && atcCodes.size() > 1){
              try{
                 interactions = rxInteract.getInteractions(atcCodes);
-                MiscUtils.getLogger().debug("interactions "+interactions.length);
+                logger.debug("interactions "+interactions.length);
                  for(int i =0 ; i < interactions.length;i++){
-                    MiscUtils.getLogger().debug(interactions[i].affectingatc+" "+interactions[i].effect+" "+interactions[i].affectedatc);
+               	  logger.debug(interactions[i].affectingatc+" "+interactions[i].effect+" "+interactions[i].affectedatc);
                  }
                  Arrays.sort(interactions);
               }catch(Exception e){
-                 MiscUtils.getLogger().error("Error", e);
+            	  logger.error("Error", e);
               }
           }
 
@@ -399,7 +405,7 @@ public class RxSessionBean {
        long end = System.currentTimeMillis() - start;
 
 
-       MiscUtils.getLogger().debug("took "+end+ "milliseconds vs "+end2);
+       logger.debug("took "+end+ "milliseconds vs "+end2);
        return interactions;
     }
 }

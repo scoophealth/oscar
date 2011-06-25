@@ -24,12 +24,11 @@
 package oscar.oscarRx.pageUtil;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Vector;
@@ -45,10 +44,8 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.util.MessageResources;
 import org.apache.xmlrpc.XmlRpcClientLite;
-import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
+import org.oscarehr.PMmodule.caisi_integrator.RemoteDrugAllergyHelper;
 import org.oscarehr.PMmodule.dao.ClientDao;
-import org.oscarehr.caisi_integrator.ws.CachedDemographicDrug;
-import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.common.dao.UserDSMessagePrefsDAO;
 import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.DemographicExt;
@@ -139,17 +136,9 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
         LoggedInInfo loggedInfo=LoggedInInfo.loggedInInfo.get();
         if (loggedInfo.currentFacility.isIntegratorEnabled())
         {
-        	try {
-                DemographicWs demographicWs=CaisiIntegratorManager.getDemographicWs();
-                List<CachedDemographicDrug> remoteDrugs=demographicWs.getLinkedCachedDemographicDrugsByDemographicId(bean.getDemographicNo());
-                for (CachedDemographicDrug remoteDrug: remoteDrugs)
-                {
-                	if (remoteDrug.getAtc()!=null) codes.add(remoteDrug.getAtc());
-                }
-                
-            } catch (MalformedURLException e) {
-                log2.error("Error retriving remote drugs", e);
-            }
+        	ArrayList<String> remoteDrugAtcCodes=RemoteDrugAllergyHelper.getAtcCodesFromRemoteDrugs(bean.getDemographicNo());
+        	codes.addAll(remoteDrugAtcCodes);
+            log2.debug("remote drug atc codes : "+remoteDrugAtcCodes);
         }
         
         log2.debug("Interaction, local + remote drug atc codes : "+codes);
