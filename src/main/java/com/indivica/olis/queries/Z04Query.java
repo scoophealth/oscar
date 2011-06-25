@@ -63,6 +63,14 @@ public class Z04Query implements Query {
 	public void setTestResultCodeList(List<OBX3> testResultCodeList) {
     	this.testResultCodeList = testResultCodeList;
     }
+	
+	public void addToTestRequestCodeList(OBR4 testRequestCode) {
+		this.testRequestCodeList.add(testRequestCode);
+	}
+	
+	public void addToTestResultCodeList(OBX3 testResultCode) {
+		this.testResultCodeList.add(testResultCode);
+	}
 
 	@Override
 	public QueryType getQueryType() {

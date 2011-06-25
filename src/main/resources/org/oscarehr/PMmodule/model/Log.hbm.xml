@@ -34,5 +34,6 @@
 			not-null="true" type="string" />
 		<property column="ip" length="30" name="Ip" not-null="false"
 			type="string" />
+		<property column="date" name="data" type="string" />
 	</class>
 </hibernate-mapping>
