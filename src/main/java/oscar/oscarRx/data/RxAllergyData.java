@@ -38,7 +38,7 @@ public class RxAllergyData {
     }
     
     
-    public class Allergy {
+    public static class Allergy {
         int PickID;          
         String DESCRIPTION;
         int HICL_SEQNO;
@@ -63,6 +63,7 @@ public class RxAllergyData {
         }
 
 		public Allergy(){
+				// allow default constructor
         }
         
         public Allergy(int PickID, String DESCRIPTION, int HICL_SEQNO, int HIC_SEQNO,

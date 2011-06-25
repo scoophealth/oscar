@@ -254,7 +254,7 @@ public class RxPatientData {
             rs = DBHandler.GetSQL("SELECT * FROM allergies WHERE allergyid  = " + String.valueOf(id));
             
             if(rs.next()) {               
-               allergy = new Allergy(rs.getInt("allergyid"), rs.getDate("entry_date"),               
+               allergy = new Allergy(getDemographicNo(), rs.getInt("allergyid"), rs.getDate("entry_date"),               
                oscar.Misc.getString(rs, "DESCRIPTION"),
                rs.getInt("HICL_SEQNO"), rs.getInt("HIC_SEQNO"),               
                rs.getInt("AGCSP"), rs.getInt("AGCCS"),
@@ -289,7 +289,7 @@ public class RxPatientData {
             rs = DBHandler.GetSQL("SELECT * FROM allergies WHERE demographic_no = '" + getDemographicNo() + "' and archived = '0' ORDER BY DESCRIPTION");
             
             while (rs.next()) {               
-               allergy = new Allergy(rs.getInt("allergyid"), rs.getDate("entry_date"),               
+               allergy = new Allergy(getDemographicNo(), rs.getInt("allergyid"), rs.getDate("entry_date"),               
                oscar.Misc.getString(rs, "DESCRIPTION"),
                rs.getInt("HICL_SEQNO"), rs.getInt("HIC_SEQNO"),               
                rs.getInt("AGCSP"), rs.getInt("AGCCS"),
@@ -302,6 +302,7 @@ public class RxPatientData {
                allergy.getAllergy().setOnSetOfReaction(oscar.Misc.getString(rs, "onset_of_reaction"));
                allergy.getAllergy().setRegionalIdentifier(oscar.Misc.getString(rs, "regional_identifier"));
                allergy.getAllergy().setLifeStage(oscar.Misc.getString(rs,"life_stage"));
+               allergy.getAllergy().setPickID(rs.getInt("drugref_id"));
                
                lst.add(allergy);               
             }            
@@ -385,24 +386,28 @@ public class RxPatientData {
         return new RxPrescriptionData().getPrescriptionScriptsByPatient(this.getDemographicNo());
       }         
       
-      public class Allergy {         
+      public static class Allergy {         
          int allergyId;         
          java.util.Date entryDate;         
          RxAllergyData.Allergy allergy;
+         int demographicId;
          
-         public Allergy(int allergyId, java.util.Date entryDate,RxAllergyData.Allergy allergy) {            
-            this.allergyId = allergyId;            
+         public Allergy(int demographicId, int allergyId, java.util.Date entryDate,RxAllergyData.Allergy allergy) {            
+            this.demographicId=demographicId;
+        	this.allergyId = allergyId;            
             this.entryDate = entryDate;            
             this.allergy = allergy;            
          }
          
-         public Allergy(java.util.Date entryDate, RxAllergyData.Allergy allergy) {            
+         public Allergy(int demographicId, java.util.Date entryDate, RxAllergyData.Allergy allergy) {            
+            this.demographicId=demographicId;
             this.allergyId = 0;            
             this.entryDate = entryDate;            
             this.allergy = allergy;            
          }
          
-         public Allergy(int allergyId, java.util.Date entryDate,String DESCRIPTION,int HICL_SEQNO, int HIC_SEQNO, int AGCSP, int AGCCS,int TYPECODE) {            
+         public Allergy(int demographicId, int allergyId, java.util.Date entryDate,String DESCRIPTION,int HICL_SEQNO, int HIC_SEQNO, int AGCSP, int AGCCS,int TYPECODE) {            
+            this.demographicId=demographicId;
             this.allergyId = allergyId;            
             this.entryDate = entryDate;            
             this.allergy = new RxAllergyData().getAllergy(DESCRIPTION, HICL_SEQNO,HIC_SEQNO, AGCSP, AGCCS, TYPECODE);            
@@ -430,7 +435,7 @@ public class RxPatientData {
             if (this.getAllergyId() == 0) {               
                sql = "INSERT INTO allergies (demographic_no, entry_date, "               
                + "DESCRIPTION, HICL_SEQNO, HIC_SEQNO, AGCSP, AGCCS, TYPECODE,reaction,drugref_id,start_date,age_of_onset,severity_of_reaction,onset_of_reaction,regional_identifier,life_stage) "               
-               + "VALUES (" + Patient.this.getDemographicNo() + ", '"               
+               + "VALUES (" + demographicId + ", '"               
                + oscar.oscarRx.util.RxUtil.DateToString(this.getEntryDate()) + "', '"               
                + this.allergy.getDESCRIPTION() + "', "               
                + this.allergy.getHICL_SEQNO() + ", "               

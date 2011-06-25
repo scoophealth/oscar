@@ -1624,6 +1624,11 @@ public class RxPrescriptionData {
 
             //if (special == null || special.length() < 6) {
             if (special == null || special.length() < 4) {
+            	// the reason this is here is because Tomislav/Caisi was having massive problems tracking down
+            	// drugs that randomly go missing in prescriptions, like a list of 20 drugs and 3 would be missing on the prescription.
+            	// it was tracked down to some code which required a special, but we couldn't figure out why a special was required or missing.
+            	// so now we have code to log an error when a drug is missing a special, we still don't know why it's required or missing
+            	// but at least we know which drug does it.
                 logger.error("Some one is retrieving the drug special but it appears to be blank : " + special, new IllegalStateException());
             }
 
