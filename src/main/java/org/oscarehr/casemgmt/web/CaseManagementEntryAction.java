@@ -1112,6 +1112,23 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		} catch (Throwable e) {
 			logger.warn("warn", e);
 		}
+		
+		/* Save annotation */
+		String attrib_name = request.getParameter("annotation_attribname");
+		HttpSession se = request.getSession();
+		if (attrib_name != null) {
+			CaseManagementNote cmn = (CaseManagementNote) se.getAttribute(attrib_name);
+			if (cmn != null) {
+				caseManagementMgr.saveNoteSimple(cmn);
+				CaseManagementNoteLink cml = new CaseManagementNoteLink();
+				cml.setTableName(cml.CASEMGMTNOTE);
+				cml.setTableId(note.getId());
+				cml.setNoteId(cmn.getId());
+				caseManagementMgr.saveNoteLink(cml);
+				LogAction.addLog(providerNo, LogConst.ANNOTATE, LogConst.CON_CME_NOTE, String.valueOf(cmn.getId()), request.getRemoteAddr(), demo, cmn.getNote());
+				se.removeAttribute(attrib_name);
+			}
+		}
 
 		String logAction;
 		if (newNote) {

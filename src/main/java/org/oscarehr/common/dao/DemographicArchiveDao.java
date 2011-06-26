@@ -24,9 +24,10 @@ import javax.persistence.Query;
 
 import org.oscarehr.common.model.DemographicArchive;
 import org.springframework.stereotype.Repository;
+import oscar.util.StringUtils;
 
 @Repository
-public class DemographicArchiveDao extends AbstractDao<DemographicArchive> {
+public class DemographicArchiveDao extends AbstractDao {
 
 	public DemographicArchiveDao() {
 		super(DemographicArchive.class);
@@ -45,16 +46,29 @@ public class DemographicArchiveDao extends AbstractDao<DemographicArchive> {
         return (results);
     }
 
-    public List<DemographicArchive> findByDemographicNoWithUniqueRosterStatus(Integer demographicNo) {
-        //return unique roster status with least update date in ascending order
-
-    	String sqlCommand = "select x from DemographicArchive x where x.demographicNo=?1 order by rosterStatus, lastUpdateDate";
+    public List<DemographicArchive> findRosterStatusHistoryByDemographicNo(Integer demographicNo) {
+        
+    	String sqlCommand = "select x from DemographicArchive x where x.demographicNo=?1 order by x.lastUpdateDate desc";
 
         Query query = entityManager.createQuery(sqlCommand);
         query.setParameter(1, demographicNo);
 
         @SuppressWarnings("unchecked")
         List<DemographicArchive> results = query.getResultList();
+
+        //Remove entries with identical rosterStatus
+        for (int i=1; i<results.size(); i++) {
+            String lastRS = results.get(i-1).getRosterStatus();
+            if (StringUtils.isNullOrEmpty(lastRS)) {
+                if (StringUtils.isNullOrEmpty(results.get(i).getRosterStatus())) {
+                    results.remove(i);
+                    i--;
+                }
+            } else if (results.get(i).getRosterStatus().equalsIgnoreCase(lastRS)) {
+                results.remove(i);
+                i--;
+            }
+        }
 
         return (results);
     }

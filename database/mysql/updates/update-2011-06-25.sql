@@ -4,3 +4,6 @@ create table document_storage (
 	fileContents mediumblob,
 	uploadDate Date
 );
+
+alter table demographicArchive add id bigint auto_increment primary key;
+

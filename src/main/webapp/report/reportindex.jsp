@@ -29,7 +29,7 @@
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
 */
 --%>
-<%@ page import="org.apache.commons.lang.StringUtils" %> %>
+<%@ page import="org.apache.commons.lang.StringUtils" %>
 <%
 String country = request.getLocale() .getCountry();
 
@@ -247,7 +247,7 @@ GregorianCalendar cal = (GregorianCalendar) now.clone();
 String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DATE) ;
 %>
 <form name='report'>
-<table border=0 cellspacing=0 cellpadding=0 width="100%">
+        <table border=0 cellspacing=0 cellpadding=0 width="100%">
 	<tr bgcolor="#486ebd">
 		<th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF"><bean:message
 			key="report.reportindex.msgTitle" /></font></th>

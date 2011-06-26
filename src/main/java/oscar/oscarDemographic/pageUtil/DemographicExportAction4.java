@@ -75,7 +75,6 @@ import oscar.oscarEncounter.oscarMeasurements.data.LabMeasurements;
 import oscar.oscarEncounter.oscarMeasurements.data.Measurements;
 import oscar.oscarLab.LabRequestReportLink;
 import oscar.oscarLab.ca.all.upload.ProviderLabRouting;
-import oscar.oscarLab.ca.on.CommonLabTestValues;
 import oscar.oscarPrevention.PreventionData;
 import oscar.oscarPrevention.PreventionDisplayConfig;
 import oscar.oscarProvider.data.ProviderData;
@@ -107,6 +106,10 @@ import cds.RiskFactorsDocument.RiskFactors;
 import java.util.HashMap;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
+import org.oscarehr.common.dao.DemographicArchiveDao;
+import org.oscarehr.common.dao.DrugReasonDao;
+import org.oscarehr.common.model.DemographicArchive;
+import org.oscarehr.common.model.DrugReason;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentDao;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentSubClassDao;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentToDemographicDao;
@@ -186,31 +189,6 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	list.add(demographicNo);
     }    
     
-    DemographicData d = new DemographicData();
-	OscarSuperManager oscarSuperManager = (OscarSuperManager)SpringUtils.getBean("oscarSuperManager");
-
-    ArrayList<String> inject = new ArrayList<String>();
-
-    PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance();//new PreventionDisplayConfig();         
-    ArrayList<HashMap> prevList = pdc.getPreventions();
-    for (int k =0 ; k < prevList.size(); k++){
-        HashMap<String,String> a = new HashMap<String,String>();
-        a.putAll(prevList.get(k));
-	if (a != null && a.get("layout") != null &&  a.get("layout").equals("injection")){
-	    inject.add(a.get("name"));
-	}	     	
-    }
-    
-    pdc = null;
-    prevList = null;
-
-    RxPrescriptionData prescriptData = new RxPrescriptionData();
-    RxPrescriptionData.Prescription[] arr = null;
-
-    CommonLabTestValues comLab = new CommonLabTestValues();
-    PreventionData pd = new PreventionData();
-    DemographicExt ext = new DemographicExt();
-
     String ffwd = "fail";
     String tmpDir = oscarp.getProperty("TMP_DIR");
     if (!Util.checkDir(tmpDir)) {
@@ -237,6 +215,10 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             }
 
             // DEMOGRAPHICS
+            DemographicArchiveDao demoArchiveDao = (DemographicArchiveDao)SpringUtils.getBean("demographicArchiveDao");
+            DemographicData d = new DemographicData();
+            DemographicExt ext = new DemographicExt();
+
             DemographicData.Demographic demographic = d.getDemographic(demoNo);
             if (demographic.getPatientStatus()!=null && demographic.getPatientStatus().equals("Contact-only")) continue;
 
@@ -317,33 +299,59 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                 demo.setSIN(data);
             }
 
-            data = StringUtils.noNull(demographic.getRosterStatus());
-            if (StringUtils.empty(data)) {
-                data = "";
-                err.add("Error! No Enrollment Status for Patient "+demoNo);
-            }
-            data = data.equals("RO") ? "1" : "0";
+            //Enrolment Status (Roster Status)
+            String rosterStatus = StringUtils.noNull(demographic.getRosterStatus());
+            rosterStatus = rosterStatus.equalsIgnoreCase("RO") ? "1" : "0";
             Demographics.Enrolment enrolment = demo.addNewEnrolment();
-            enrolment.setEnrollmentStatus(cdsDt.EnrollmentStatus.Enum.forString(data));
-            data = demographic.getRosterDate();
-            if (UtilDateUtilities.StringToDate(data)!=null) {
-                enrolment.setEnrollmentDate(Util.calDate(data));
+            enrolment.setEnrollmentStatus(cdsDt.EnrollmentStatus.Enum.forString(rosterStatus));
+            if (rosterStatus.equals("1")) {
+                data = demographic.getRosterDate();
+                if (UtilDateUtilities.StringToDate(data)!=null) {
+                    enrolment.setEnrollmentDate(Util.calDate(data));
+                }
+            } else {
+                data = demographic.getRosterTerminationDate();
+                if (UtilDateUtilities.StringToDate(data)!=null) {
+                    enrolment.setEnrollmentTerminationDate(Util.calDate(data));
+                }
             }
-            data = demographic.getRosterTerminationDate();
-            if (UtilDateUtilities.StringToDate(data)!=null) {
-                enrolment.setEnrollmentTerminationDate(Util.calDate(data));
+            //Enrolment Status history
+            List<DemographicArchive> DAs = demoArchiveDao.findRosterStatusHistoryByDemographicNo(Integer.valueOf(demoNo));
+            for (int i=0; i<DAs.size(); i++) {
+                String historyRS = StringUtils.noNull(DAs.get(i).getRosterStatus());
+                historyRS = historyRS.equalsIgnoreCase("RO") ? "1" : "0";
+                if (i==0 && historyRS.equals(rosterStatus)) continue;
+
+                enrolment = demo.addNewEnrolment();
+                enrolment.setEnrollmentStatus(cdsDt.EnrollmentStatus.Enum.forString(historyRS));
+                if (historyRS.equals("1")) {
+                    data = demographic.getRosterDate();
+                    if (UtilDateUtilities.StringToDate(data)!=null) {
+                        enrolment.setEnrollmentDate(Util.calDate(data));
+                    }
+                } else {
+                    data = demographic.getRosterTerminationDate();
+                    if (UtilDateUtilities.StringToDate(data)!=null) {
+                        enrolment.setEnrollmentTerminationDate(Util.calDate(data));
+                    }
+                }
             }
 
+            //Person Status (Patient Status)
             data = StringUtils.noNull(demographic.getPatientStatus());
             Demographics.PersonStatusCode personStatusCode = demo.addNewPersonStatusCode();
             if (StringUtils.empty(data)) {
                 data = "";
                 err.add("Error! No Person Status Code for Patient "+demoNo);
             }
-            if (data.equals("AC")) personStatusCode.setPersonStatusAsEnum(cdsDt.PersonStatus.A);
-            else if (data.equals("IN")) personStatusCode.setPersonStatusAsEnum(cdsDt.PersonStatus.I);
-            else if (data.equals("DE")) personStatusCode.setPersonStatusAsEnum(cdsDt.PersonStatus.D);
-            else personStatusCode.setPersonStatusAsPlainText(data);
+            if (data.equalsIgnoreCase("AC")) personStatusCode.setPersonStatusAsEnum(cdsDt.PersonStatus.A);
+            else if (data.equalsIgnoreCase("IN")) personStatusCode.setPersonStatusAsEnum(cdsDt.PersonStatus.I);
+            else if (data.equalsIgnoreCase("DE")) personStatusCode.setPersonStatusAsEnum(cdsDt.PersonStatus.D);
+            else {
+                if ("MO".equalsIgnoreCase(data)) data = "Moved";
+                else if ("FI".equalsIgnoreCase(data)) data = "Fired";
+                personStatusCode.setPersonStatusAsPlainText(data);
+            }
 
             data = demographic.getPatientStatusDate();
             if (StringUtils.filled(data)) {
@@ -996,6 +1004,19 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 
             if (exImmunizations) {
                 // IMMUNIZATIONS
+                ArrayList<String> inject = new ArrayList<String>();
+                HashMap<String,String> prevTypes = new HashMap<String,String>();
+                PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance();//new PreventionDisplayConfig();
+                ArrayList<HashMap> prevList = pdc.getPreventions();
+                for (int k =0 ; k < prevList.size(); k++){
+                    HashMap<String,String> a = new HashMap<String,String>();
+                    a.putAll(prevList.get(k));
+                    if (a != null && a.get("layout") != null &&  a.get("layout").equals("injection")){
+                        inject.add(a.get("name"));
+                        prevTypes.put(a.get("name"), a.get("healthCanadaType"));
+                    }
+                }
+                PreventionData pd = new PreventionData();
                 ArrayList<HashMap> prevList2 = pd.getPreventionData(demoNo);
                 for (int k =0 ; k < prevList2.size(); k++){
                     HashMap<String,String> a = new HashMap<String,String>();
@@ -1009,6 +1030,11 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         immu.setImmunizationName(data);
                         addOneEntry(IMMUNIZATION);
                         String imSummary = "Immunization Name: "+data;
+
+                        String prevType = prevTypes.get(a.get("type"));
+                        if (prevType!=null) {
+                            immu.setImmunizationType(cdsDt.ImmunizationType.Enum.forString(prevType));
+                        }
 
                         data = a.get("refused");
                         if (StringUtils.empty(data)) {
@@ -1054,7 +1080,8 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 
             if (exMedicationsAndTreatments) {
                 // MEDICATIONS & TREATMENTS
-
+                RxPrescriptionData prescriptData = new RxPrescriptionData();
+                RxPrescriptionData.Prescription[] arr = null;
                 arr = prescriptData.getUniquePrescriptionsByPatient(Integer.parseInt(demoNo));
                 for (int p = 0; p < arr.length; p++){
                     MedicationsAndTreatments medi = patientRec.addNewMedicationsAndTreatments();
@@ -1079,6 +1106,11 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     medi.setDrugName(drugName);
                     addOneEntry(MEDICATION);
                     mSummary = Util.addLine(mSummary, "Drug Name: ", drugName);
+
+                    DrugReasonDao drugReasonDao = (DrugReasonDao) SpringUtils.getBean("drugReasonDao");
+                    List<DrugReason> drugReasons = drugReasonDao.getReasonsForDrugID(arr[p].getDrugId(), true);
+                    if (drugReasons.size()>0 && StringUtils.filled(drugReasons.get(0).getCode()))
+                        medi.setProblemCode(drugReasons.get(0).getCode());
 
                     if (StringUtils.filled(arr[p].getDosage())) {
                         String strength0 = arr[p].getDosage();
@@ -1310,6 +1342,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 
             if (exAppointments) {
                 // APPOINTMENTS
+                OscarSuperManager oscarSuperManager = (OscarSuperManager)SpringUtils.getBean("oscarSuperManager");
                 List appts = oscarSuperManager.populate("appointmentDao", "export_appt", new String[] {demoNo});
                 ApptData ap = null;
                 for (int j=0; j<appts.size(); j++) {

@@ -258,6 +258,40 @@ function checkName() {
     }
 	return typeInOK;
 }
+function checkRosterDate() {
+        if (document.updatedelete.roster_status.value!="RO") return true;
+
+	var typeInOK = false;
+	var yyyy = document.updatedelete.roster_date_year.value;
+	var mm = document.updatedelete.roster_date_month.value;
+	var dd = document.updatedelete.roster_date_day.value;
+
+	if(checkTypeNum(yyyy) && checkTypeNum(mm) && checkTypeNum(dd) ){
+        var check_date = new Date(yyyy,(mm-1),dd);
+		var now = new Date();
+		var year=now.getFullYear();
+		var month=now.getMonth()+1;
+		var date=now.getDate();
+		//alert(yyyy + " | " + mm + " | " + dd + " " + year + " " + month + " " +date);
+
+		var young = new Date(year,month,date);
+		var old = new Date(1800,01,01);
+		//alert(check_date.getTime() + " | " + young.getTime() + " | " + old.getTime());
+		if (check_date.getTime() <= young.getTime() && check_date.getTime() >= old.getTime() && yyyy.length==4) {
+		    typeInOK = true;
+		}
+		if ( yyyy == "0000"){
+        typeInOK = false;
+      }
+}
+
+	if (!isValidDate(dd,mm,yyyy) || !typeInOK){
+      alert ("<bean:message key="demographic.search.msgWrongRosterDate"/>\n<bean:message key="demographic.demographiceditdemographic.msgWrongDate"/>");
+      typeInOK = false;
+   }
+
+	return typeInOK;
+}
 function checkDob() {
 	var typeInOK = false;
 	var yyyy = document.updatedelete.year_of_birth.value;
@@ -283,17 +317,10 @@ function checkDob() {
       }
 }
 
-
-
-	if (!typeInOK){
-      alert ("<bean:message key="demographic.search.msgWrongDOB"/>");
-   }
-
-   if (!isValidDate(dd,mm,yyyy)){
-      alert ("<bean:message key="demographic.demographiceditdemographic.msgWrongDate"/>");
+	if (!isValidDate(dd,mm,yyyy) || !typeInOK){
+      alert ("<bean:message key="demographic.search.msgWrongDOB"/>\n<bean:message key="demographic.demographiceditdemographic.msgWrongDate"/>");
       typeInOK = false;
    }
-   //alert( isValidDate(dd,mm,yyyy) );
 
 	return typeInOK;
 }
@@ -322,6 +349,7 @@ function checkHin() {
 function checkTypeInEdit() {
   if ( !checkName() ) return false;
   if ( !checkDob() ) return false;
+  if ( !checkRosterDate() ) return false;
   if ( !checkHin() ) return false;
   //if ( !checkAllDate() ) return false;
   return(true);

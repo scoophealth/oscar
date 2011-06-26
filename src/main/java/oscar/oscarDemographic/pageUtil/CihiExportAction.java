@@ -321,9 +321,11 @@ public class CihiExportAction extends DispatchAction {
 		info.setEMRSoftwareCommonName(frm.getString("vendorSoftwareCommonName"));
 		info.setEMRSoftwareVersionNumber(frm.getString("vendorSoftwareVer"));
 		Date installDate = UtilDateUtilities.StringToDate(frm.getString("installDate"));
-		Calendar installCalendar = Calendar.getInstance();
-		installCalendar.setTime(installDate);
-		info.setEMRSoftwareVersionDate(installCalendar);
+                if (installDate!=null) {
+                    Calendar installCalendar = Calendar.getInstance();
+                    installCalendar.setTime(installDate);
+                    info.setEMRSoftwareVersionDate(installCalendar);
+                }
 	}
 	
 	private void buildProvider(Provider provider, cdscihi.ProviderDocument.Provider xmlProvider, Map<String,String> fileNamesMap) {
@@ -354,48 +356,39 @@ public class CihiExportAction extends DispatchAction {
 		cdsDtCihi.Gender.Enum enumDemo = cdsDtCihi.Gender.Enum.forString(sex); 
 		xmlDemographics.setGender(enumDemo);
 					
-		Date endDate = demo.getEndDate();
-		Calendar endCal = Calendar.getInstance();
-		if( endDate != null ) {
-			endCal.setTime(endDate);
+		Date statusDate = demo.getPatientStatusDate();
+		Calendar statusCal = Calendar.getInstance();
+		if( statusDate != null ) {
+			statusCal.setTime(statusDate);
 		}
-		
-		Date joinDate = demo.getDateJoined();
-		Calendar joinedCal = Calendar.getInstance();
-		if( joinDate != null ) {			
-			joinedCal.setTime(joinDate);
-			xmlDemographics.setEnrollmentDate(joinedCal);
-		}
-		
-		PersonStatusCode personStatusCode = xmlDemographics.addNewPersonStatusCode();
+
+                PersonStatusCode personStatusCode = xmlDemographics.addNewPersonStatusCode();
 		String status = demo.getPatientStatus();
-		if( "AC".equalsIgnoreCase(status)) {
-			personStatusCode.setPersonStatusAsEnum(cdsDtCihi.PersonStatus.A);
-			if( joinDate != null ) {
-				xmlDemographics.setPersonStatusDate(joinedCal);
-			}
+		if( "AC".equalsIgnoreCase(status)) personStatusCode.setPersonStatusAsEnum(cdsDtCihi.PersonStatus.A);
+		else if( "IN".equalsIgnoreCase(status)) personStatusCode.setPersonStatusAsEnum(cdsDtCihi.PersonStatus.I);
+                else if( "DE".equalsIgnoreCase(status)) personStatusCode.setPersonStatusAsEnum(cdsDtCihi.PersonStatus.D);
+                else {
+                    if ("MO".equalsIgnoreCase(status)) status = "Moved";
+                    else if ("FI".equalsIgnoreCase(status)) status = "Fired";
+                    personStatusCode.setPersonStatusAsPlainText(status);
+                }
+                if( statusDate != null ) {
+                        xmlDemographics.setPersonStatusDate(statusCal);
 		}
-		else if( "IN".equalsIgnoreCase(status)) {  
-			personStatusCode.setPersonStatusAsEnum(cdsDtCihi.PersonStatus.I);
-			xmlDemographics.setEnrollmentTerminationDate(endCal);
-			if( endDate != null ) {
-				xmlDemographics.setPersonStatusDate(endCal);
-			}
-		}
-		else if( "DE".equalsIgnoreCase(status)) {			
-			personStatusCode.setPersonStatusAsEnum(cdsDtCihi.PersonStatus.D);
-			if( endDate != null ) {
-				xmlDemographics.setPersonStatusDate(endCal);
-			}
-		}
-		else if( "TE".equalsIgnoreCase(status)) {
-			personStatusCode.setPersonStatusAsEnum(cdsDtCihi.PersonStatus.I);
-			if( endDate != null ) {
-				xmlDemographics.setEnrollmentTerminationDate(endCal);
-				xmlDemographics.setPersonStatusDate(endCal);
-			}
-		}
-				
+
+                Date rosterDate = demo.getRosterDate();
+                Calendar rosterCal = Calendar.getInstance();
+                if( rosterDate != null ) {
+                        rosterCal.setTime(rosterDate);
+                        xmlDemographics.setEnrollmentDate(rosterCal);
+                }
+
+                Date rosterTermDate = demo.getRosterTerminationDate();
+                Calendar rosterTermCal = Calendar.getInstance();
+                if( rosterTermDate != null ) {
+                        rosterTermCal.setTime(rosterTermDate);
+                        xmlDemographics.setEnrollmentTerminationDate(rosterTermCal);
+                }
 		
                 if (StringUtils.filled(demo.getPostal())) {
                     PostalZipCode postalZipCode = xmlDemographics.addNewPostalAddress();

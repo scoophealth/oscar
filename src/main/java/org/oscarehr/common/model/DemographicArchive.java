@@ -14,9 +14,10 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "demographicArchive")
 public class DemographicArchive extends AbstractModel<Long> implements Serializable {
-        @Id
-        private Long id;
 
+        @Id
+        @Column(name = "id")
+        private Long id = null;
 	@Column(name = "demographic_no")
 	private Integer demographicNo = null;
 	@Column(name = "title")
@@ -89,7 +90,7 @@ public class DemographicArchive extends AbstractModel<Long> implements Serializa
 	private String hcType = null;
 	@Column(name = "hc_renew_date")
 	@Temporal(TemporalType.DATE)
-	private Date hcRenewDate = null;
+	Date hcRenewDate = null;
 	@Column(name = "family_doctor")
 	private String familyDoctor = null;
 	@Column(name = "alias")
@@ -117,15 +118,7 @@ public class DemographicArchive extends AbstractModel<Long> implements Serializa
 	private Date lastUpdateDate = null;
 
 
-        public DemographicArchive(){}
-
-
-        public Long getId() {
-            return this.id;
-        }
-        public void setId(Long l) {
-            this.id = l;
-        }
+        public DemographicArchive() {}
 
         public Integer getDemographicNo() {
             return this.demographicNo;
@@ -440,5 +433,13 @@ public class DemographicArchive extends AbstractModel<Long> implements Serializa
         }
         public void setLastUpdateDate(Date d) {
             this.lastUpdateDate = d;
+        }
+
+    @Override
+        public Long getId() {
+            return this.id;
+        }
+        public void setId(Long id) {
+            this.id = id;
         }
 }

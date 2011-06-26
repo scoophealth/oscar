@@ -1157,6 +1157,8 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 				} else {
 					err_data.add("Error! No Immunization Name ("+(i+1)+")");
 				}
+                                comments = Util.addLine(comments, "Immunization Type", immuArray[i].getImmunizationType().toString());
+
 				preventionDate = dateTimeFullPartial(immuArray[i].getDate(), timeShiftInDays);
 				refused = getYN(immuArray[i].getRefusedFlag()).equals("Yes") ? "1" : "0";
                                 if (immuArray[i].getRefusedFlag()==null) err_data.add("Error! No Refused Flag for Immunizations ("+(i+1)+")");
@@ -1463,7 +1465,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                                 if (repR[i].getContent()!=null && repR[i].getContent().getTextContent()!=null)  hrmDoc.setReportFile(repR[i].getContent().getTextContent());
                                 if (repR[i].getEventDateTime()!=null) hrmDoc.setReportDate(dDateTimeFullPartial(repR[i].getEventDateTime(), timeShiftInDays));
                                 if (repR[i].getReceivedDateTime()!=null) hrmDoc.setTimeReceived(dDateTimeFullPartial(repR[i].getReceivedDateTime(), timeShiftInDays));
-                                hrmDocDao.merge(hrmDoc);
+                                hrmDocDao.persist(hrmDoc);
 
                                 ReportsReceived.OBRContent[] obr = repR[i].getOBRContentArray();
                                 for (int j=0; j<obr.length; j++) {
@@ -1474,7 +1476,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                                     if (obr[j].getObservationDateTime()!=null) hrmDocSc.setSubClassDateTime(dDateTimeFullPartial(obr[j].getObservationDateTime(), timeShiftInDays));
                                     hrmDocSc.setHrmDocumentId(hrmDoc.getId());
                                     hrmDocSc.setActive(true);
-                                    hrmDocSubClassDao.merge(hrmDocSc);
+                                    hrmDocSubClassDao.persist(hrmDocSc);
                                 }
                                 
                             } else { //non-HRM reports
