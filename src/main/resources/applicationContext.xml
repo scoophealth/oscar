@@ -113,7 +113,7 @@
 	<bean id="EyeFormDao" class="org.oscarehr.eyeform.dao.EyeFormDao" autowire="byName" />
     <bean id="ocanSubmissionLogDao" class="org.oscarehr.PMmodule.dao.OcanSubmissionLogDao" autowire="byName" />
     
-    <!--  configure the scratch pad -->
+    <bean id="logDAO" class="org.oscarehr.PMmodule.dao.LogDAO" autowire="byName" />
 	<bean id="scratchPadDao" class="com.quatro.dao.ScratchPadDao" autowire="byName" />
 	<bean id="lookupDao" class="com.quatro.dao.LookupDao" autowire="byName" />
 	<bean id="documentDAO" class="org.oscarehr.document.dao.DocumentDAO" autowire="byName" />

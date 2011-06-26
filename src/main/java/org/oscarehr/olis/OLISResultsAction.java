@@ -30,11 +30,7 @@ public class OLISResultsAction extends DispatchAction {
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 
 		try {
-			String olisResultString = (String) request.getAttribute("unsignedResponse");
-			if (olisResultString == null) { 
-				olisResultString = request.getParameter("unsignedResponse");
-				request.setAttribute("unsignedResponse", olisResultString);
-			}
+			String olisResultString = (String) request.getAttribute("olisResponseContent");			
 			if(olisResultString == null) {
 				List<String> resultList = new LinkedList<String>();
 				request.setAttribute("resultList", resultList);				

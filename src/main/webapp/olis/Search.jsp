@@ -71,6 +71,14 @@
 		        }
 		        return true;
 		    }
+		    
+		    function checkBlockedConsent(form) {
+		    	value = document.forms[form + "_form"].blockedInformationConsent;
+		    	if (value != null && value == "Z") {
+		    		return confirm("You have chosen to view blocked information.  This action is recorded in the audit log.  Are you sure?")
+		    	}
+		    	return true;
+		    }
 		</script>
 		
 		<style type="text/css">
@@ -172,7 +180,7 @@ List<OLISRequestNomenclature> requestNomenclatureList = requestDao.findAll();
 		<option value="Z50">Z50 - Identify Patient by Name, Sex, and Date of Birth</option>
 	</select>
 
-	<form action="<%=request.getContextPath() %>/olis/Search.do" method="POST">
+	<form action="<%=request.getContextPath() %>/olis/Search.do" method="POST" onSubmit="checkBlockedConsent('Z01')" name="Z01_form">
 	<input type="hidden" name="queryType" value="Z01" />
 	<table id="Z01_query">
 		<tbody><tr>
@@ -193,7 +201,13 @@ List<OLISRequestNomenclature> requestNomenclatureList = requestDao.findAll();
 			<td width="30%"><select id="blockedInformationConsent" name="blockedInformationConsent"><option value="">(none)</option>
 			<option value="Z">Temporary </option>
 			</select>
+			&nbsp;&nbsp;Authorized by: <select name="blockedInformationIndividual" id="blockedInformationIndividual">
+			<option value="patient">Patient</option><option value="substitute">Substitute Decision Maker</option><option value="">Neither</option>
+			</select> 
 			</td>
+		</tr>
+		<tr>
+			<td width="20%" colspan=4><span><input class="checkbox" type="checkbox" name="consentBlockAllIndicator" id="consentBlockAllIndicator"> Enable Patient Consent Block-All Indicator?</span></td>
 		</tr>
 		<tr>
 			<th width="20%">Specimen Collector</th>
@@ -434,7 +448,7 @@ for (Object d : allDemographics) {
 
 
 
-	<form action="<%=request.getContextPath() %>/olis/Search.do" method="POST">
+	<form action="<%=request.getContextPath() %>/olis/Search.do" method="POST" onSubmit="checkBlockedConsent('Z02')" name="Z02_form">
 	<input type="hidden" name="queryType" value="Z02" />
 	<table id="Z02_query" style="display: none;">
 		<tbody><tr>
@@ -445,6 +459,9 @@ for (Object d : allDemographics) {
 			<th width="20%">Consent to View Blocked Information?</th>
 			<td width="30%"><select id="blockedInformationConsent" name="blockedInformationConsent"><option value="">(none)</option>
 			<option value="Z">Temporary </option>
+			</select>
+			<br />Authorized by: <select name="blockedInformationIndividual" id="blockedInformationIndividual">
+			<option value="patient">Patient</option><option value="substitute">Substitute Decision Maker</option><option value="">Neither</option>
 			</select>
 			</td>
 		</tr>

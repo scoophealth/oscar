@@ -55,7 +55,21 @@ function preview(uuid) {
 		</td>
 	</tr>
 	<tr>
-		<td colspan="2">			
+		<td colspan="2">
+			<%
+			if (request.getAttribute("errors") != null) {
+				// Show the errors to the user
+				for (String error : (List<String>) request.getAttribute("errors")) { %>
+					<div class="error"><%=error.replaceAll("\\n", "<br />") %></div>
+				<% }
+			}
+			%>
+			
+			<%
+			String resp = (String) request.getAttribute("olisResponseContent");
+			if(resp == null) { resp = "";};
+			%>
+				<%=resp%>
 			<%
 			List<String> resultList = (List<String>) request.getAttribute("resultList");
 			
