@@ -38,6 +38,7 @@ public class Log implements Serializable {
     private String _contentId;
     private String _content;
     private String _ip;
+    private String _data;
 
        // constructors
 	public Log () {
@@ -173,6 +174,14 @@ public class Log implements Serializable {
      */
     public void setIp (String _ip) {
         this._ip = _ip;
+    }
+    
+    public void setData(String _data) {
+    	this._data = _data;
+    }
+    
+    public String getData() {
+    	return _data;
     }
 
     public boolean equals (Object obj) {
