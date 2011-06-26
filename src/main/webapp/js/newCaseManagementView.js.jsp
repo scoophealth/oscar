@@ -660,8 +660,8 @@ function getCPP(issueCode) {
     return "";
 }
 
-var exFields = new Array(10);
-var exKeys = new Array(10);
+var exFields = new Array(11);
+var exKeys = new Array(11);
 exFields[0] = "startdate";
 exFields[1] = "resolutiondate";
 exFields[2] = "proceduredate";
@@ -672,6 +672,7 @@ exFields[6] = "exposuredetail";
 exFields[7] = "relationship";
 exFields[8] = "lifestage";
 exFields[9] = "hidecpp";
+exFields[10] = "problemdescription";
 exKeys[0] = "Start Date";
 exKeys[1] = "Resolution Date";
 exKeys[2] = "Procedure Date";
@@ -682,6 +683,7 @@ exKeys[6] = "Exposure Details";
 exKeys[7] = "Relationship";
 exKeys[8] = "Life Stage";
 exKeys[9] = "Hide Cpp";
+exKeys[10] = "Problem Description";
 
 function prepareExtraFields(cpp,exts) {
 	//commented out..this causes a problem in Firefox
@@ -693,7 +695,7 @@ function prepareExtraFields(cpp,exts) {
     }
     if (cpp==cppNames[1]) $(rowIDs[2],rowIDs[4],rowIDs[8],rowIDs[9]).invoke("show");
     if (cpp==cppNames[2]) $(rowIDs[3],rowIDs[4],rowIDs[7],rowIDs[8],rowIDs[9]).invoke("show");
-    if (cpp==cppNames[3]) $(rowIDs[5],rowIDs[8],rowIDs[9]).invoke("show");
+    if (cpp==cppNames[3]) $(rowIDs[5],rowIDs[8],rowIDs[9],rowIDs[10]).invoke("show");
     if (cpp==cppNames[4]) $(rowIDs[3],rowIDs[6],rowIDs[8],rowIDs[9]).invoke("show");
 
     for (var i=0; i<exFields.length; i++) {
