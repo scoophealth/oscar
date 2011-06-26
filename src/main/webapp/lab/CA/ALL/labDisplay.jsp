@@ -1,3 +1,4 @@
+<%@page import="java.net.URLEncoder"%>
 <%@page import="org.apache.commons.lang.builder.ReflectionToStringBuilder"%>
 <%@page import="org.oscarehr.util.MiscUtils"%>
 <%@page import="org.w3c.dom.Document"%>
@@ -36,6 +37,7 @@ String multiLabId = null;
 MessageHandler handler=null;
 String hl7 = null;
 String reqID = "";
+String remoteFacilityIdQueryString="";
 
 if (remoteFacilityIdString==null) // local lab
 {
@@ -82,6 +84,12 @@ else // remote lab
 	multiLabId=LabDisplayHelper.getMultiLabId(cachedDemographicLabResultXmlData);
 	handler=LabDisplayHelper.getMessageHandler(cachedDemographicLabResultXmlData);
 	hl7=LabDisplayHelper.getHl7Body(cachedDemographicLabResultXmlData);
+	
+	try {
+		remoteFacilityIdQueryString="&remoteFacilityId="+remoteFacilityIdString+"&remoteLabKey="+URLEncoder.encode(remoteLabKey, "UTF-8");
+	} catch (Exception e) {
+		MiscUtils.getLogger().error("Error", e);
+	}
 }
 
 
@@ -759,7 +767,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                 
                                 boolean obrFlag = false;
                                 int obxCount = handler.getOBXCount(j);
-                                for (k=0; k < obxCount; k++){ 
+                                for (k=0; k < obxCount; k++){                               	  
                                     String obxName = handler.getOBXName(j, k);
                                     if ( !handler.getOBXResultStatus(j, k).equals("DNS") /*&& !obxName.equals("")*/ && handler.getObservationHeader(j, k).equals(headers.get(i))){ // <<--  DNS only needed for MDS messages
                                         String obrName = handler.getOBRName(j);
@@ -783,7 +791,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                             String[] dividedString  =divideStringAtFirstNewline(handler.getOBXResult( j, k));
                                             %>                                         
                                             <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>" >
-                                                <td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= handler.getOBXIdentifier(j, k) %>')"><%=obxName %></a></td>
+                                                <td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= handler.getOBXIdentifier(j, k) %><%=remoteFacilityIdQueryString%>')"><%=obxName %></a></td>
                                                 <td align="right"><%= dividedString[0] %></td>
                                                 <td align="center" valign="top"><%= handler.getOBXAbnormalFlag(j, k)%></td>
                                                 <td align="left" valign="top"><%=handler.getOBXReferenceRange( j, k)%></td>
@@ -798,7 +806,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                             <%}%>
                                         <%}else{%>
                                             <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>">
-                                                <td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= handler.getOBXIdentifier(j, k) %>')"><%=obxName %></a></td>
+                                                <td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= handler.getOBXIdentifier(j, k) %><%=remoteFacilityIdQueryString%>')"><%=obxName %></a></td>
                                                 <td align="right"><%= handler.getOBXResult( j, k) %></td>
                                                 <td align="center" valign="top"><%= handler.getOBXAbnormalFlag(j, k)%></td>
                                                 <td align="left" valign="top"><%=handler.getOBXReferenceRange( j, k)%></td>

@@ -34,8 +34,6 @@
 
 String demographic_no = request.getParameter("demographic_no");
 
-CommonLabTestValues labTests = new CommonLabTestValues();
-
 LinkedHashMap nameMap = new LinkedHashMap();
 ArrayList idList = new ArrayList();
 HashMap measIdMap = new HashMap();
@@ -65,7 +63,7 @@ try{
         String name = e.getAttributeValue("name");
         if (!loinc_code.equalsIgnoreCase("NULL")){
             LinkedHashMap IdMap = new LinkedHashMap();
-            ArrayList labList = labTests.findValuesByLoinc(demographic_no, loinc_code);
+            ArrayList labList = CommonLabTestValues.findValuesByLoinc(demographic_no, loinc_code);
             for (int j=0; j < labList.size(); j++){
                 Hashtable h = (Hashtable) labList.get(j);
                 String date = ( (String) h.get("date") );
