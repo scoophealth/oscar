@@ -5,7 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.Gender;
@@ -41,7 +40,6 @@ public final class DataTypeUtils {
 	public static final int NTE_COMMENT_MAX_SIZE = 65536;
 	public static final String ACTION_ROLE_SENDER = "SENDER";
 	public static final String ACTION_ROLE_RECEIVER = "RECEIVER";
-	private static final Base64 base64 = new Base64();
 
 	/**
 	 * Don't access this formatter directly, use the getAsFormattedString method, it provides synchronisation
@@ -50,22 +48,6 @@ public final class DataTypeUtils {
 
 	private DataTypeUtils() {
 		// not meant to be instantiated by anyone, it's a util class
-	}
-
-	public static String encodeToBase64String(byte[] b) throws UnsupportedEncodingException {
-		return (new String(base64.encode(b), MiscUtils.ENCODING));
-	}
-
-	public static byte[] decodeBase64(String s) throws UnsupportedEncodingException {
-		return (base64.decode(s.getBytes(MiscUtils.ENCODING)));
-	}
-
-	public static String encodeToBase64String(String s) throws UnsupportedEncodingException {
-		return (new String(base64.encode(s.getBytes(MiscUtils.ENCODING)), MiscUtils.ENCODING));
-	}
-
-	public static String decodeBase64StoString(String s) throws UnsupportedEncodingException {
-		return (new String(base64.decode(s.getBytes(MiscUtils.ENCODING)), MiscUtils.ENCODING));
 	}
 
 	public static String getAsHl7FormattedString(Date date) {
@@ -474,7 +456,7 @@ public final class DataTypeUtils {
 		nte.getCommentType().getText().setValue(subject);
 		if (fileName != null) nte.getCommentType().getNameOfCodingSystem().setValue(fileName);
 
-		String stringData = encodeToBase64String(data);
+		String stringData = MiscUtils.encodeToBase64String(data);
 		int dataLength = stringData.length();
 		int chunks = dataLength / DataTypeUtils.NTE_COMMENT_MAX_SIZE;
 		if (dataLength % DataTypeUtils.NTE_COMMENT_MAX_SIZE != 0) chunks++;
@@ -497,7 +479,7 @@ public final class DataTypeUtils {
 		for (int i = 0; i < fts.length; i++)
 			sb.append(fts[i].getValue());
 
-		return (decodeBase64(sb.toString()));
+		return (MiscUtils.decodeBase64(sb.toString()));
 	}
 
 	/**

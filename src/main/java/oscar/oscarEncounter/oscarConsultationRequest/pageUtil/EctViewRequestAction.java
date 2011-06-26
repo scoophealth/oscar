@@ -220,7 +220,7 @@ public class EctViewRequestAction extends Action {
 		Hl7TextMessage hl7TextMessage=hl7TextMessageDao.find(Integer.parseInt(segmentId));
 		
 		String encodedMessage=hl7TextMessage.getBase64EncodedeMessage();
-		byte[] decodedMessage=DataTypeUtils.decodeBase64(encodedMessage);
+		byte[] decodedMessage=MiscUtils.decodeBase64(encodedMessage);
 		String decodedMessageString=new String(decodedMessage, MiscUtils.ENCODING);
 		
 		REF_I12 refI12=(REF_I12) OscarToOscarUtils.pipeParserParse(decodedMessageString);

@@ -705,7 +705,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		cachedDemographicLabResult.setCaisiDemographicId(demographicId);
 		cachedDemographicLabResult.setType(lab.labType);
 		
-		Document doc=LabDisplayHelper.labToXml(lab);
+		Document doc=LabDisplayHelper.labToXml(demographicId, lab);
 		
 		String data=XmlUtils.toString(doc);
 		cachedDemographicLabResult.setData(data);

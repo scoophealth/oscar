@@ -18,16 +18,14 @@
  *  Department of Family Medicine
  *  McMaster University
  *  Hamilton
- *  Ontario, Canada   Creates a new instance of CommonLabTestValues
- *
- *
- * CommonLabTestValues.java
+ *  Ontario, Canada 
  *
  * Created on May 4, 2005, 3:27 PM
  */
 
 package oscar.oscarLab.ca.on;
 
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -36,6 +34,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.util.DbConnectionFilter;
@@ -53,12 +52,13 @@ import oscar.util.UtilDateUtilities;
  */
 public class CommonLabTestValues {
     
-    Logger logger = Logger.getLogger(CommonLabTestValues.class);
+    private static Logger logger = MiscUtils.getLogger();
     
-    public CommonLabTestValues() {
+    private CommonLabTestValues() {
+    	// prevent instantiation
     }
     
-    public  String getReferenceRange(String minimum,String maximum){
+    public static String getReferenceRange(String minimum,String maximum){
         String retval ="";
         if (minimum != null && maximum != null){
             if (!minimum.equals("") && !maximum.equals("")){
@@ -75,7 +75,7 @@ public class CommonLabTestValues {
     
     
     
-    public ArrayList findUniqueLabsForPatient(String demographic){
+    public static ArrayList findUniqueLabsForPatient(String demographic){
         OscarProperties op = OscarProperties.getInstance();
         String cml = op.getProperty("CML_LABS");
         String mds = op.getProperty("MDS_LABS");
@@ -107,7 +107,7 @@ public class CommonLabTestValues {
     //"testName" : Name of test eg. CHOL/HDL RATIO, CHOLESTEROL, CREATININE
     //"labType" : Vendor of lab eg. MDS, CML, BCP(Excelleris)
     //"title" : Heading of lab group eg. CHEMISTRY, HEMATOLOGY
-    public ArrayList findUniqueLabsForPatientCML(String demographic){
+    public static ArrayList findUniqueLabsForPatientCML(String demographic){
         //Need to check which labs are active
         ArrayList labList = new ArrayList();
         String sql = "select  distinct p.lab_type, ltr.title, ltr.test_name "+
@@ -150,7 +150,7 @@ public class CommonLabTestValues {
     //"testName" : Name of test eg. CHOL/HDL RATIO, CHOLESTEROL, CREATININE
     //"labType" : Vendor of lab eg. MDS, CML, BCP(Excelleris)
     //"title" : Heading of lab group eg. CHEMISTRY, HEMATOLOGY
-    public ArrayList findUniqueLabsForPatientMDS(String demographic){
+    public static ArrayList findUniqueLabsForPatientMDS(String demographic){
         //Need to check which labs are active
         ArrayList labList = new ArrayList();
         String sql = "select distinct p.lab_type, x.observationIden, x.observationResultStatus " +
@@ -198,7 +198,7 @@ public class CommonLabTestValues {
         
         return labList;
     }
-    public ArrayList findUniqueLabsForPatientExcelleris(String demographic){
+    public static ArrayList findUniqueLabsForPatientExcelleris(String demographic){
         ArrayList labList = new ArrayList();
         String sql = "select distinct p.lab_type,x.observation_identifier "+
                 "from patientLabRouting p, hl7_msh m ,hl7_pid pi, hl7_obr r,hl7_obx x  " +
@@ -231,7 +231,8 @@ public class CommonLabTestValues {
         
         return labList;
     }
-    public ArrayList findUniqueLabsForPatientHL7Text(String demographic){
+    
+    public static ArrayList findUniqueLabsForPatientHL7Text(String demographic){
         ArrayList labList = new ArrayList();
         String sql = "SELECT lab_no FROM patientLabRouting WHERE demographic_no='"+demographic+"' AND lab_type='HL7'";
         logger.info(sql);
@@ -274,7 +275,7 @@ public class CommonLabTestValues {
      *  //second field is result
      *  //third field is observation date
      */
-    public ArrayList findValuesByLoinc(String demographicNo, String loincCode){
+    public static ArrayList findValuesByLoinc(String demographicNo, String loincCode){
         ArrayList labList = new ArrayList();
         
         String sql = "SELECT dataField, dateObserved, e1.val AS lab_no, e3.val AS abnormal FROM measurements m " +
@@ -309,7 +310,7 @@ public class CommonLabTestValues {
     
     
     //WITH MORE DATA MERGE WITH 1 AFTER April 09
-     public ArrayList findValuesByLoinc2(String demographicNo, String loincCode, Connection conn){
+     public static ArrayList findValuesByLoinc2(String demographicNo, String loincCode, Connection conn){
         ArrayList labList = new ArrayList();
         
         String sql = "SELECT dataField, dateObserved, e1.val AS lab_no, e3.val AS abnormal, e4.val as units FROM measurements m " +
@@ -354,14 +355,14 @@ public class CommonLabTestValues {
      * //fifth field is range
      * //sixth field is date : collection Date
      */
-    public ArrayList findValuesForTest(String labType, String demographicNo, String testName){
+    public static ArrayList findValuesForTest(String labType, String demographicNo, String testName){
         return findValuesForTest(labType, demographicNo, testName, "NULL");
     }
     
-    public ArrayList findValuesForTest(String labType, String demographicNo, String testName, String identCode){
+    public static ArrayList<Map<String,Serializable>> findValuesForTest(String labType, String demographicNo, String testName, String identCode){
         HashMap accessionMap = new HashMap();
-        LinkedHashMap labMap = new LinkedHashMap();
-        ArrayList labList = new ArrayList();
+        LinkedHashMap<String,Map<String,Serializable>> labMap = new LinkedHashMap<String,Map<String,Serializable>>();
+        ArrayList<Map<String,Serializable>> labList = new ArrayList<Map<String,Serializable>>();
         if (identCode != null)
             identCode = identCode.replace("_amp_", "&");
         if ( labType != null && labType.equals("CML")){
@@ -397,7 +398,7 @@ public class CommonLabTestValues {
                         }
                         if (monthsBetween < 4){
                             accessionMap.put(accessionNum, dateB);
-                            Hashtable h = new Hashtable();
+                            Hashtable<String,Serializable> h = new Hashtable<String,Serializable>();
                             h.put("testName", testNam);
                             h.put("abn",abn);
                             h.put("result",result);
@@ -446,7 +447,7 @@ public class CommonLabTestValues {
                         continue;
                     
                     // Only retieve the latest measurement for each accessionNum
-                    Hashtable ht = (Hashtable) accessionMap.get(accessionNum);
+                    Hashtable<String,Object> ht = (Hashtable<String,Object>) accessionMap.get(accessionNum);
                     if (ht == null || Integer.parseInt((String) ht.get("mapNum")) < Integer.parseInt(version)){
                         
                         int monthsBetween = 0;
@@ -472,7 +473,7 @@ public class CommonLabTestValues {
                                 units = rs2.getString("units"); //mdsZMN units
                             }
                             rs2.close();
-                            Hashtable h = new Hashtable();
+                            Hashtable<String,Serializable> h = new Hashtable<String,Serializable>();
                             h.put("testName", testNam);
                             h.put("abn",abn);
                             h.put("result",result);
@@ -527,7 +528,7 @@ public class CommonLabTestValues {
                         }
                         if (monthsBetween < 4){
                             accessionMap.put(accessionNum, dateB);
-                            Hashtable h = new Hashtable();
+                            Hashtable<String,Serializable> h = new Hashtable<String,Serializable>();
                             h.put("testName", testNam);
                             h.put("abn",abn);
                             h.put("result",result);
@@ -614,7 +615,7 @@ public class CommonLabTestValues {
      * //fifth field is range
      * //sixth field is date : collection Date
      */
-    public ArrayList findValuesForDemographic(String demographicNo){
+    public static ArrayList findValuesForDemographic(String demographicNo){
         ArrayList labList = new ArrayList();
         
         String sql = "select p.lab_no , p.lab_type, ltr.id, ltr.test_name, ltr.result,ltr.abn, ltr.minimum, ltr.maximum, ltr.units, ltr.location_id, ltr.description, lpp.accession_num, lpp.collection_date " +
