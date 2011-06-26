@@ -29,6 +29,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.Hashtable;
+import java.io.File;
+import java.io.FileInputStream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -43,10 +45,13 @@ import org.apache.struts.upload.FormFile;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
+import org.oscarehr.common.dao.DocumentStorageDao;
 import org.oscarehr.common.dao.ProviderInboxRoutingDao;
 import org.oscarehr.common.dao.QueueDocumentLinkDao;
+import org.oscarehr.common.model.DocumentStorage;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SessionConstants;
+import org.oscarehr.util.SpringUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -80,7 +85,9 @@ public class AddEditDocumentAction extends DispatchAction {
 			errors.put("uploaderror", "dms.error.uploadError");
 			throw new FileNotFoundException();
 		}
-		writeLocalFile(docFile, fileName);// write file to local dir
+		File file = writeLocalFile(docFile, fileName);// write file to local dir
+		
+		
 		newDoc.setContentType(docFile.getContentType());
 		if (fileName.endsWith(".PDF") || fileName.endsWith(".pdf")) {
 			newDoc.setContentType("application/pdf");
@@ -115,7 +122,7 @@ public class AddEditDocumentAction extends DispatchAction {
 		return mapping.findForward("fastUploadSuccess");
 
 	}
-
+	
 	public int countNumOfPages(String fileName) {// count number of pages in a local pdf file
 
 		int numOfPage = 0;
@@ -227,8 +234,9 @@ public class AddEditDocumentAction extends DispatchAction {
 			// new file name with date attached
 			String fileName2 = newDoc.getFileName();
 			// save local file
-			writeLocalFile(docFile, fileName2);
+			File file = writeLocalFile(docFile, fileName2);
 			newDoc.setContentType(docFile.getContentType());
+			
 
 			// if the document was added in the context of a program
 			String programIdStr = (String) request.getSession().getAttribute(SessionConstants.CURRENT_PROGRAM_ID);
@@ -240,6 +248,9 @@ public class AddEditDocumentAction extends DispatchAction {
 			}
 			// ---
 			String doc_no = EDocUtil.addDocumentSQL(newDoc);
+			if(oscar.OscarProperties.getInstance().getBooleanProperty("ENABLE_CONFORMANCE_ONLY_FEATURES", "true")){	
+				storeDocumentInDatabase(file, Integer.parseInt(doc_no));
+			}
 			LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD, LogConst.CON_DOCUMENT, doc_no, request.getRemoteAddr());
 			// add note if document is added under a patient
 			String module = fm.getFunction().trim();
@@ -356,20 +367,24 @@ public class AddEditDocumentAction extends DispatchAction {
 		return mapping.findForward("successEdit");
 	}
 
-	private void writeLocalFile(FormFile docFile, String fileName) throws Exception {
+	private File writeLocalFile(FormFile docFile, String fileName) throws Exception {
 		InputStream fis = null;
+		File file= null;
 		try {
 			fis = docFile.getInputStream();
-			writeLocalFile(fis, fileName);
+			file =writeLocalFile(fis, fileName);
 		} finally {
 			if (fis != null) fis.close();
 		}
+		return file;
 	}
 
-	public static void writeLocalFile(InputStream is, String fileName) throws Exception {
+	public static File writeLocalFile(InputStream is, String fileName) throws Exception {
 		FileOutputStream fos = null;
+		File file = null;
 		try {
 			String savePath = oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR") + "/" + fileName;
+			file = new File (savePath);
 			fos = new FileOutputStream(savePath);
 			byte[] buf = new byte[128 * 1024];
 			int i = 0;
@@ -381,7 +396,28 @@ public class AddEditDocumentAction extends DispatchAction {
 		} finally {
 			if (fos != null) fos.close();
 		}
+		return file;
 	}
+	
+	public int storeDocumentInDatabase(File file, Integer documentNo){
+		Integer ret = 0;
+		try{
+			FileInputStream fin = new FileInputStream(file);
+			byte fileContents[] = new byte[(int)file.length()];
+			fin.read(fileContents);
+			DocumentStorage docStor = new DocumentStorage();
+			docStor.setFileContents(fileContents);
+			docStor.setDocumentNo(documentNo);
+			docStor.setUploadDate(new Date());
+			DocumentStorageDao documentStorageDao = (DocumentStorageDao) SpringUtils.getBean("documentStorageDao");
+			documentStorageDao.persist(docStor);
+			ret = docStor.getId();
+		}catch(Exception e){
+			MiscUtils.getLogger().error("Error putting file in database",e);
+		}
+		return ret;
+	}
+
 
 	private boolean filled(String s) {
 		return (s != null && s.trim().length() > 0);
