@@ -1,3 +1,7 @@
+<%@page import="java.io.Serializable"%>
+<%@page import="org.w3c.dom.Document"%>
+<%@page import="org.oscarehr.caisi_integrator.ws.CachedDemographicLabResult"%>
+<%@page import="oscar.oscarLab.ca.all.web.LabDisplayHelper"%>
 <%@page errorPage="../provider/errorpage.jsp"%>
 <%@ page
 	import="java.util.*,oscar.oscarLab.ca.on.*,oscar.oscarDemographic.data.*"%>
@@ -10,20 +14,30 @@ String labType = request.getParameter("labType");
 String demographicNo = request.getParameter("demo");
 String testName = request.getParameter("testName");
 String identifier = request.getParameter("identifier");
+String remoteFacilityIdString = request.getParameter("remoteFacilityId");
+String remoteLabKey = request.getParameter("remoteLabKey");
+
 if (identifier == null) identifier = "NULL";
 
 String highlight = "#E0E0FF";
 
 DemographicData dData = new DemographicData();
-
 DemographicData.Demographic demographic =  dData.getDemographic(demographicNo);
 
-CommonLabTestValues comVal =  new CommonLabTestValues();
 ArrayList list = null;
 
 if (!demographicNo.equals("null")){
- list = comVal.findValuesForTest(labType, demographicNo, testName, identifier);
- 
+	if(remoteFacilityIdString==null)
+	{
+		list = CommonLabTestValues.findValuesForTest(labType, demographicNo, testName, identifier);
+	}
+	else
+	{
+		CachedDemographicLabResult remoteLab=LabDisplayHelper.getRemoteLab(Integer.parseInt(remoteFacilityIdString), remoteLabKey);
+		Document labContentsAsXml=LabDisplayHelper.getXmlDocument(remoteLab);
+		HashMap<String, ArrayList<Map<String, Serializable>>> mapOfTestValues=LabDisplayHelper.getMapOfTestValues(labContentsAsXml);
+		list=mapOfTestValues.get(identifier);
+	}
 }
 %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">

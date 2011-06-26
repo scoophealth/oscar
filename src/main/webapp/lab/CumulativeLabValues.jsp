@@ -34,10 +34,8 @@
   
   //int demographic_no = Integer.parseInt(request.getParameter("demographic_no")); 
   String demographic_no = request.getParameter("demographic_no"); 
-  
-  CommonLabTestValues labTests = new CommonLabTestValues();
-  
-  ArrayList prevList = labTests.findUniqueLabsForPatient(demographic_no);
+    
+  ArrayList prevList = CommonLabTestValues.findUniqueLabsForPatient(demographic_no);
           
 %>
 

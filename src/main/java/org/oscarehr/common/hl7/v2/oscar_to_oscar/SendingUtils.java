@@ -72,8 +72,8 @@ public final class SendingUtils {
 		
 		String filename=serviceName+'_'+System.currentTimeMillis()+".hl7";
 		multipartEntity.addPart("importFile", new ByteArrayBody(encryptedBytes, filename));		
-		multipartEntity.addPart("key", new StringBody(DataTypeUtils.encodeToBase64String(encryptedSecretKey)));
-		multipartEntity.addPart("signature", new StringBody(DataTypeUtils.encodeToBase64String(signature)));
+		multipartEntity.addPart("key", new StringBody(MiscUtils.encodeToBase64String(encryptedSecretKey)));
+		multipartEntity.addPart("signature", new StringBody(MiscUtils.encodeToBase64String(signature)));
 		multipartEntity.addPart("service", new StringBody(serviceName));
 		multipartEntity.addPart("use_http_response_code", new StringBody("true"));
 
@@ -115,7 +115,7 @@ public final class SendingUtils {
 	}
 
 	public static PublicKey getPublicOscarKey(String publicOscarKeyString) throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeySpecException {
-	    X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(DataTypeUtils.decodeBase64(publicOscarKeyString));
+	    X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(MiscUtils.decodeBase64(publicOscarKeyString));
 		KeyFactory pubKeyFactory = KeyFactory.getInstance("RSA");
 		PublicKey publicOscarKey = pubKeyFactory.generatePublic(pubKeySpec);
 	    return publicOscarKey;
@@ -126,7 +126,7 @@ public final class SendingUtils {
 	 * because it's a key we give out to other people.
 	 */
 	public static PrivateKey getPublicServiceKey(String publicServiceKeyString) throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeySpecException {
-	    PKCS8EncodedKeySpec privKeySpec = new PKCS8EncodedKeySpec(DataTypeUtils.decodeBase64(publicServiceKeyString));
+	    PKCS8EncodedKeySpec privKeySpec = new PKCS8EncodedKeySpec(MiscUtils.decodeBase64(publicServiceKeyString));
 		KeyFactory privKeyFactory = KeyFactory.getInstance("RSA");
 		PrivateKey publicServiceKey = privKeyFactory.generatePrivate(privKeySpec);
 	    return publicServiceKey;

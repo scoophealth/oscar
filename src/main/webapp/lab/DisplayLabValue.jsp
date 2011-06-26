@@ -36,10 +36,7 @@
     String testName = request.getParameter("testName");
     String identCode = request.getParameter("identCode");
    
-   
-    CommonLabTestValues labTests = new CommonLabTestValues();
-   
-    ArrayList list   = labTests.findValuesForTest(labType, demoNo, testName, identCode);
+    ArrayList list   = CommonLabTestValues.findValuesForTest(labType, demoNo, testName, identCode);
     
     SortHashtable sorter = new SortHashtable();
                       Collections.sort(list,sorter);

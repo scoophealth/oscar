@@ -29,6 +29,7 @@ import java.awt.Color;
 import java.awt.Paint;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -38,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Hashtable;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -508,8 +510,7 @@ public class MeasurementGraphAction2 extends Action {
         JFreeChart actualLabChartRef(String demographicNo, String labType, String identifier,String testName, String patientName, String chartTitle) {
             org.jfree.data.time.TimeSeriesCollection dataset = new org.jfree.data.time.TimeSeriesCollection();
             
-            CommonLabTestValues comVal =  new CommonLabTestValues();
-            ArrayList<Hashtable> list = comVal.findValuesForTest(labType, demographicNo, testName, identifier);
+            ArrayList<Map<String, Serializable>> list = CommonLabTestValues.findValuesForTest(labType, demographicNo, testName, identifier);
        
             String typeYAxisName = "";
             ArrayList<OHLCDataItem> dataItems = new ArrayList();
@@ -520,7 +521,7 @@ public class MeasurementGraphAction2 extends Action {
             
             boolean nameSet = false;
             TimeSeries newSeries = new TimeSeries(typeLegendName, Day.class);
-            for (Hashtable mdb : list) { 
+            for (Map mdb : list) { 
                 if (!nameSet){
                     typeYAxisName = (String)mdb.get("units");
                     typeLegendName = (String) mdb.get("testName");
@@ -597,21 +598,21 @@ public class MeasurementGraphAction2 extends Action {
         JFreeChart actualLabChartRefPlusMeds(String demographicNo, String labType, String identifier,String testName, String patientName, String chartTitle,String[] drugs) {
             org.jfree.data.time.TimeSeriesCollection dataset = new org.jfree.data.time.TimeSeriesCollection();
             
-            CommonLabTestValues comVal =  new CommonLabTestValues();
-            ArrayList<Hashtable> list = null;
+
+            ArrayList<Map<String, Serializable>> list = null;
             MiscUtils.getLogger().debug(" lab type >"+labType+"< >"+labType.equals("loinc")+"<"+testName+" "+identifier);
             if (labType.equals("loinc")){
               try{  
               
               Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
-              list = comVal.findValuesByLoinc2(demographicNo, identifier, conn );
+              list = CommonLabTestValues.findValuesByLoinc2(demographicNo, identifier, conn );
               MiscUtils.getLogger().debug("List ->"+list.size());
               conn.close();
               }catch(Exception ed){
             	  MiscUtils.getLogger().error("Error", ed);
               }
             }else{
-               list = comVal.findValuesForTest(labType, demographicNo, testName, identifier);
+               list = CommonLabTestValues.findValuesForTest(labType, demographicNo, testName, identifier);
             }
             String typeYAxisName = "";
             ArrayList<OHLCDataItem> dataItems = new ArrayList();
@@ -622,7 +623,7 @@ public class MeasurementGraphAction2 extends Action {
             
             boolean nameSet = false;
             TimeSeries newSeries = new TimeSeries(typeLegendName, Day.class);
-            for (Hashtable mdb : list) { 
+            for (Map mdb : list) { 
                 if (!nameSet){
                     typeYAxisName = (String)mdb.get("units");
                     typeLegendName = (String) mdb.get("testName");

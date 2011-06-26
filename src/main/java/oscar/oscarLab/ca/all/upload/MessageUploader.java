@@ -19,7 +19,6 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.Hl7TextInfoDao;
 import org.oscarehr.common.dao.Hl7TextMessageDao;
-import org.oscarehr.common.hl7.v2.oscar_to_oscar.DataTypeUtils;
 import org.oscarehr.common.model.Hl7TextInfo;
 import org.oscarehr.common.model.Hl7TextMessage;
 import org.oscarehr.util.DbConnectionFilter;
@@ -113,7 +112,7 @@ public final class MessageUploader {
 			Hl7TextMessage hl7TextMessage = new Hl7TextMessage();
 			hl7TextMessage.setFileUploadCheckId(fileId);
 			hl7TextMessage.setType(type);
-			hl7TextMessage.setBase64EncodedeMessage(DataTypeUtils.encodeToBase64String(hl7Body));
+			hl7TextMessage.setBase64EncodedeMessage(MiscUtils.encodeToBase64String(hl7Body));
 			hl7TextMessage.setServiceName(serviceName);
 			hl7TextMessageDao.persist(hl7TextMessage);
 
