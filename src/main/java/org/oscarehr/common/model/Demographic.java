@@ -51,7 +51,7 @@ public class Demographic implements Serializable {
 	private Integer demographicNo;// fields
 	private String phone;
 	private String patientStatus;
-    private Date patientStatusDate;
+        private Date patientStatusDate;
 	private String rosterStatus;
 	private String providerNo;
 	private String pin;
@@ -78,7 +78,8 @@ public class Demographic implements Serializable {
 	private String email;
 	private String yearOfBirth;
 	private Date effDate;
-    private Date rosterDate;
+        private Date rosterDate;
+        private Date rosterTerminationDate;
 	private String links;
 	private DemographicExt[] extras;
 
@@ -111,6 +112,14 @@ public class Demographic implements Serializable {
      */
     public void setRosterDate(Date rosterDate) {
         this.rosterDate = rosterDate;
+    }
+
+    public Date getRosterTerminationDate() {
+        return rosterTerminationDate;
+    }
+
+    public void setRosterTerminationDate(Date rosterTermDate) {
+        this.rosterTerminationDate = rosterTermDate;
     }
 
 	public enum PatientStatus {

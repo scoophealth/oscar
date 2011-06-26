@@ -233,8 +233,10 @@
     }
 
     String ros_status = request.getParameter("roster_status");
-    if (ros_status!=null && roster_status.equals("TE")) {
+    if (ros_status!=null && !roster_status.equals("RO")) {
         apptMainBean.queryExecuteUpdate(paramOne, "update_termination_date");
+    } else if (ros_status!=null && roster_status.equals("RO")) {
+        apptMainBean.queryExecuteUpdate(paramOne, "reset_termination_date");
     }
 
   int rowsAffected = apptMainBean.queryExecuteUpdate(param, dtparam, intparam, request.getParameter("dboperation"));

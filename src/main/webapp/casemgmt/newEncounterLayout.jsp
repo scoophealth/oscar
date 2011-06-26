@@ -637,7 +637,7 @@ function doscroll(){
 			</tr>
 		  </table><br>
                   <span style="float:right; margin-right:10px;">      
-		      <input type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/annotation.png"/>" title='<bean:message key="oscarEncounter.Index.btnAnotation"/>' id="anno"> &nbsp; &nbsp;
+		      <input type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/annotation.png"/>" title='<bean:message key="oscarEncounter.Index.btnAnnotation"/>' id="anno"> &nbsp; &nbsp;
                       <input type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/edit-cut.png"/>" title='<bean:message key="oscarEncounter.Index.btnArchive"/>' onclick="$('archived').value='true';" style="padding-right:10px;">
                       <input type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/note-save.png"/>" title='<bean:message key="oscarEncounter.Index.btnSignSave"/>' onclick="$('archived').value='false';" style="padding-right:10px;">
                       <input type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/system-log-out.png"/>" title='<bean:message key="global.btnExit"/>' onclick="this.focus();$('channel').style.visibility ='visible';$('showEditNote').style.display='none';return false;">

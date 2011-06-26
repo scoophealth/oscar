@@ -99,8 +99,10 @@
 */		cmn.setUuid(uuid); //assign same UUID to new annotation
 	    }
 	    if (tableName.equals(cml.CASEMGMTNOTE) || tableId.equals(0L)) {
+                //new casemgmt_note may be saved AFTER annotation
 		if (!attrib_name.equals("")) se.setAttribute(attrib_name, cmn);
-	    } else { //annotated subject exists                   
+            }
+	    if (!tableId.equals(0L)) {
                     cmm.saveNoteSimple(cmn);
                     cml = new CaseManagementNoteLink();
                     cml.setTableName(tableName);

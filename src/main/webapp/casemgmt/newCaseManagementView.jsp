@@ -461,6 +461,7 @@ try
 	<input type="hidden" name="encType" id="encType" value="">
 	<input type="hidden" name="pStartDate" id="pStartDate" value="">
 	<input type="hidden" name="pEndDate" id="pEndDate" value="">
+	<input type="hidden" id="annotation_attribname" name="annotation_attribname" value="">
 	
 
 	<div id="mainContent" style="background-color: #FFFFFF; width: 100%; margin-right: -2px; display: inline; float: left;">
@@ -641,7 +642,7 @@ try
 			<input type="hidden" id="signed<%=note.getNoteId()%>" value="<%=note.isSigned()%>"> 
 			<input type="hidden" id="full<%=note.getNoteId()%>" value="<%=fulltxt || (note.getNoteId() !=null && note.getNoteId().equals(savedId))%>"> 
 			<input type="hidden" id="bgColour<%=note.getNoteId()%>" value="<%=bgColour%>">
-			<input type="hidden" id="editWarn<%=note.getNoteId()%>" value="<%=editWarn%>">
+			<input type="hidden" id="editWarn<%=note.getNoteId()%>" value="<%=editWarn%>">			
 
 	  		<div id="n<%=note.getNoteId()%>">
 			<%
@@ -838,8 +839,12 @@ try
 								<a class="links" title="<bean:message key="oscarEncounter.view.eformView"/>" id="view<%=note.getNoteId()%>" href="#" onclick="<%=url%>" style="float: right; margin-right: 5px; font-size: 8px;"> <bean:message key="oscarEncounter.view" /> </a> 
 							<%
 						}	
-						
+					 	if (!note.isDocument() && !note.isCpp() && !note.isEformData() && !note.isEncounterForm()) {
+					 		String atbname = "anno" + String.valueOf(new Date().getTime());
+					 		String addr = request.getContextPath() + "/annotation/annotation.jsp?atbname=" + atbname + "&table_id=" + String.valueOf(note.getNoteId()) + "&display=EChartNote&demo=" + demographicNo;
 						%>
+							<input id="anno<%=note.getNoteId()%>" height="10px;" width="10px" type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/annotation.png"/>" title='<bean:message key="oscarEncounter.Index.btnAnnotation"/>' style='float: right; margin-right: 5px; margin-bottom: 3px;' onclick="window.open('<%=addr%>','anwin','width=400,height=250');$('annotation_attribname').value='<%=atbname%>'; return false;">
+						<%} %>
 							<%-- render the note contents here --%>
 			  				<div id="txt<%=note.getNoteId()%>" style="<%=(note.isDocument()||note.isCpp()||note.isEformData()||note.isEncounterForm())?(bgColour+";color:white;font-size:9px"):""%>">
 		  						<%=noteStr%>
@@ -890,8 +895,8 @@ try
 				 		}
 				
 						if (!note.isDocument() && !note.isCpp() && !note.isEformData() && !note.isEncounterForm())
-						{
-						%>
+						{							
+						%>							
 							<div id="sig<%=note.getNoteId()%>" class="sig" style="clear:both;<%=bgColour%>">
 								<div id="sumary<%=note.getNoteId()%>">
 									<div id="observation<%=note.getNoteId()%>" style="float: right; margin-right: 3px;">

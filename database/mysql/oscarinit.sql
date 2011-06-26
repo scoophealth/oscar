@@ -8055,6 +8055,7 @@ CREATE TABLE `other_id` (
 );
 
 CREATE TABLE demographicArchive (
+  id bigint(20) auto_increment primary key,
   demographic_no int(10),
   title varchar(10),
   last_name varchar(30),
