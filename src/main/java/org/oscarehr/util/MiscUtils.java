@@ -25,13 +25,18 @@ package org.oscarehr.util;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
-import java.util.List;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 
@@ -55,6 +60,7 @@ import org.apache.log4j.xml.DOMConfigurator;
 public class MiscUtils {
 	
 	public static final String ENCODING = "UTF-8";
+	private static final Base64 base64 = new Base64();
 	private static boolean shutdownSignaled = false;
 	private static Thread shutdownHookThread = null;
 
@@ -222,4 +228,38 @@ public class MiscUtils {
         }
         return retVec;
     }
+    
+    /**
+     * You better have a good reason for using this. This ain't something you normally do.
+     */
+	public static final byte[] serialiseToByteArray(Serializable s) throws IOException {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		ObjectOutputStream oos = new ObjectOutputStream(baos);
+		oos.writeObject(s);
+
+		return (baos.toByteArray());
+	}
+
+    /**
+     * You better have a good reason for using this. This ain't something you normally do.
+     */
+	public static final Serializable deserialiseFromByteArray(byte b[]) throws IOException, ClassNotFoundException {
+		return ((Serializable) (new ObjectInputStream(new ByteArrayInputStream(b))).readObject());
+	}
+	
+	public static String encodeToBase64String(String s) throws UnsupportedEncodingException {
+		return (new String(base64.encode(s.getBytes(ENCODING)), ENCODING));
+	}
+
+	public static String decodeBase64StoString(String s) throws UnsupportedEncodingException {
+		return (new String(base64.decode(s.getBytes(ENCODING)), ENCODING));
+	}
+	
+	public static String encodeToBase64String(byte[] b) throws UnsupportedEncodingException {
+		return (new String(base64.encode(b), ENCODING));
+	}
+
+	public static byte[] decodeBase64(String s) throws UnsupportedEncodingException {
+		return (base64.decode(s.getBytes(ENCODING)));
+	}
 }

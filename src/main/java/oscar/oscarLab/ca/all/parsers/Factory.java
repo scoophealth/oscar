@@ -18,7 +18,6 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 import org.oscarehr.common.dao.Hl7TextMessageDao;
-import org.oscarehr.common.hl7.v2.oscar_to_oscar.DataTypeUtils;
 import org.oscarehr.common.model.Hl7TextMessage;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -42,7 +41,7 @@ public final class Factory {
 			Hl7TextMessage hl7TextMessage = hl7TextMessageDao.find(Integer.parseInt(segmentID));
 
 			String type = hl7TextMessage.getType();
-			String hl7Body = DataTypeUtils.decodeBase64StoString(hl7TextMessage.getBase64EncodedeMessage());
+			String hl7Body = MiscUtils.decodeBase64StoString(hl7TextMessage.getBase64EncodedeMessage());
 			return getHandler(type, hl7Body);
 		} catch (Exception e) {
 			logger.error("Could not retrieve lab for segmentID(" + segmentID + ")", e);
@@ -57,7 +56,7 @@ public final class Factory {
 			Hl7TextMessageDao hl7TextMessageDao = (Hl7TextMessageDao) SpringUtils.getBean("hl7TextMessageDao");
 			Hl7TextMessage hl7TextMessage = hl7TextMessageDao.find(Integer.parseInt(segmentID));
 
-			ret = DataTypeUtils.decodeBase64StoString(hl7TextMessage.getBase64EncodedeMessage());
+			ret = MiscUtils.decodeBase64StoString(hl7TextMessage.getBase64EncodedeMessage());
 		} catch (Exception e) {
 			logger.error("Could not retrieve lab for segmentID(" + segmentID + ")", e);
 		}

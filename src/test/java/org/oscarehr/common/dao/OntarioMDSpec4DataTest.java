@@ -25,84 +25,63 @@ package org.oscarehr.common.dao;
 //*
 //-----------------------------------------------------------------------------------------------------------------------
 
-import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Locale;
-import java.util.Set;
 import java.util.Properties;
+import java.util.Set;
 
+import org.caisi.dao.TicklerDAO;
+import org.caisi.model.Tickler;
+import org.junit.Before;
+import org.junit.Test;
+import org.oscarehr.PMmodule.dao.AdmissionDao;
+import org.oscarehr.PMmodule.dao.ProgramDao;
+import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
 import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.PMmodule.dao.SecUserRoleDao;
 import org.oscarehr.PMmodule.model.Admission;
-import org.oscarehr.PMmodule.model.Program;
-import org.oscarehr.common.dao.DemographicDao;
-import org.oscarehr.common.dao.PreventionDao;
-import org.oscarehr.common.dao.DrugDao;
-import org.oscarehr.common.dao.BillingDao;
-import org.oscarehr.common.dao.DemographicContactDao;
-import org.oscarehr.common.dao.DemographicQueryFavouritesDao;
-import org.oscarehr.common.dao.AllergyDAO;
-
-import org.oscarehr.common.model.Allergy;
-import org.oscarehr.common.model.Appointment;
-import org.oscarehr.common.model.Provider;
-import org.oscarehr.common.model.Demographic;
-import org.oscarehr.common.model.Prevention;
-import org.oscarehr.common.model.Drug;
-import org.oscarehr.common.model.BillingONCHeader1;
-import org.oscarehr.common.model.DemographicContact;
-import org.oscarehr.common.model.DemographicQueryFavourite;
-import org.oscarehr.dx.model.DxResearch;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramProvider;
-import org.oscarehr.PMmodule.model.Admission;
+import org.oscarehr.PMmodule.model.SecUserRole;
+import org.oscarehr.casemgmt.dao.CaseManagementIssueDAO;
+import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
+import org.oscarehr.casemgmt.dao.CaseManagementNoteExtDAO;
+import org.oscarehr.casemgmt.dao.CaseManagementNoteLinkDAO;
+import org.oscarehr.casemgmt.dao.IssueDAO;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteExt;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.model.Issue;
-
-import org.oscarehr.dx.dao.DxResearchDAO;
-import org.oscarehr.PMmodule.dao.ProgramDao;
-import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
-import org.oscarehr.PMmodule.dao.AdmissionDao;
-import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
-import org.oscarehr.casemgmt.dao.CaseManagementNoteExtDAO;
-import org.oscarehr.casemgmt.dao.IssueDAO;
-import org.oscarehr.casemgmt.dao.CaseManagementIssueDAO;
-import org.oscarehr.casemgmt.dao.CaseManagementNoteLinkDAO;
-
-import org.caisi.model.Tickler;
-import org.caisi.dao.TicklerDAO;
-import org.oscarehr.util.MiscUtils;
-import org.oscarehr.util.SpringUtils;
-import org.junit.Before;
-import org.junit.Test;
-
-import oscar.dms.EDocUtil;
-import oscar.form.FrmLabReq07Record;
-import oscar.oscarEncounter.data.EctProgram;
-import oscar.oscarEncounter.oscarMeasurements.dao.MeasurementsDao;
-import oscar.oscarEncounter.oscarMeasurements.model.Measurements;
-import sun.misc.CEStreamExhausted;
-
-import com.quatro.model.security.Security;
-import org.oscarehr.PMmodule.model.SecUserRole;
-import com.quatro.dao.security.SecurityDao;
-import org.oscarehr.PMmodule.dao.SecUserRoleDao;
-
+import org.oscarehr.common.model.Allergy;
+import org.oscarehr.common.model.Appointment;
+import org.oscarehr.common.model.BillingONCHeader1;
+import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.DemographicContact;
+import org.oscarehr.common.model.DemographicQueryFavourite;
+import org.oscarehr.common.model.Drug;
+import org.oscarehr.common.model.Prevention;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.document.dao.DocumentDAO;
 import org.oscarehr.document.model.CtlDocument;
-import org.oscarehr.document.model.Document;
 import org.oscarehr.document.model.CtlDocumentPK;
+import org.oscarehr.document.model.Document;
+import org.oscarehr.dx.dao.DxResearchDAO;
+import org.oscarehr.dx.model.DxResearch;
+import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
-import java.util.Date;
+import oscar.form.FrmLabReq07Record;
+import oscar.oscarEncounter.oscarMeasurements.dao.MeasurementsDao;
+import oscar.oscarEncounter.oscarMeasurements.model.Measurements;
+
+import com.quatro.dao.security.SecurityDao;
+import com.quatro.model.security.Security;
 
 public class OntarioMDSpec4DataTest extends DaoTestFixtures {
 	

@@ -38,8 +38,7 @@ if (measurementHash != null && measurementHash.get("value") != null){
 double sCr = -1;
 Date sCrDate = null;
 
-CommonLabTestValues lab = new CommonLabTestValues();
-List labs = lab.findValuesForTest("CML",demographicNo, "CREATININE");
+List labs = CommonLabTestValues.findValuesForTest("CML",demographicNo, "CREATININE");
 if(labs != null && labs.size() >0 ){
 //SortHashtable sorter = ;
     Collections.sort(labs,new SortHashtable());
