@@ -241,7 +241,7 @@ function addName(demographic_no, lastname, firstname, chartno, messageID, doctor
    }
    else
    {
-	   document.addform.action="copyRemoteDemographic.jsp?originalPage=<%=URLEncoder.encode(request.getParameter("originalpage"))%>&";	  
+	   document.addform.action="<%=request.getContextPath()%>/appointment/copyRemoteDemographic.jsp?originalPage=<%=URLEncoder.encode(request.getParameter("originalpage"))%>&";	  
    }	  
   
   document.addform.action=document.addform.action+"demographic_no="+demographic_no+"&name="+fullname+"&chart_no="+chartno+"&bFirstDisp=false"+"&messageID="+messageID+"&doctor_no="+doctorNo+"&remoteFacilityId="+remoteFacilityId; 
