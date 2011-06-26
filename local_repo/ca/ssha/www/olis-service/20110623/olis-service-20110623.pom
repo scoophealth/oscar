@@ -5,4 +5,5 @@
   <groupId>ca.ssha.www</groupId>
   <artifactId>olis-service</artifactId>
   <version>20110623</version>
+  <description>POM was created from install:install-file</description>
 </project>
