@@ -62,6 +62,11 @@ if (remoteFacilityIdString==null) // local lab
 	multiLabId = Hl7textResultsData.getMatchingLabs(segmentID);
 	handler = Factory.getHandler(segmentID);
 	hl7 = Factory.getHL7Body(segmentID);
+	if (handler instanceof OLISHL7Handler) { 
+		%>
+		<jsp:forward page="labDisplayOLIS.jsp" />
+		<%
+	}
 }
 else // remote lab
 {

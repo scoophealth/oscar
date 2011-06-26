@@ -101,6 +101,9 @@ public class OLISPoller {
 				ZRP1 zrp1 = new ZRP1(provider.getBillingNo(), "MDL", "ON", "HL70347", provider.getLastName(), provider.getFirstName(), null);
 				providerQuery.setRequestingHic(zrp1);
 				String response = Driver.submitOLISQuery(null, providerQuery);
+				if (!response.matches("<Request xmlns=\"http://www.ssha.ca/2005/HIAL\"><Content><![CDATA[.*]]></Content></Request>")) {
+					break;
+				}
 				List<String> resultsList = olisPoller.parsePollResults(response);
 				if (resultsList.size() == 0) { continue; }
 				olisPoller.importResults(resultsList);
@@ -152,6 +155,9 @@ public class OLISPoller {
 	    	facilityQuery.setOrderingFacilityId(orc21);
 	    	
 	    	String response = Driver.submitOLISQuery(null, facilityQuery);
+	    	if (!response.matches("<Request xmlns=\"http://www.ssha.ca/2005/HIAL\"><Content><![CDATA[.*]]></Content></Request>")) {
+				return;
+			}
 			List<String> resultsList = olisPoller.parsePollResults(response);
 			if (resultsList.size() == 0) { return; }
 			olisPoller.importResults(resultsList);
