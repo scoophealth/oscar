@@ -406,7 +406,7 @@ for (Object d : allDemographics) {
 						
 						for (OLISResultNomenclature nomenclature : resultNomenclatureList) {
 						%>
-							<option value="<%=nomenclature.getId() %>"><%=nomenclature.getName().trim() %></option>
+							<option value="<%=nomenclature.getId() %>"><%=oscar.Misc.getStr(nomenclature.getName(), "").trim()%></option>
 					    <%
 						}
 						%>
@@ -417,7 +417,7 @@ for (Object d : allDemographics) {
 						
 						for (OLISRequestNomenclature nomenclature : requestNomenclatureList) {
 						%>
-							<option value="<%=nomenclature.getId() %>"><%=nomenclature.getName().trim() %></option>
+							<option value="<%=nomenclature.getId() %>"><%=oscar.Misc.getStr(nomenclature.getName(),"").trim() %></option>
 					    <%
 						}
 						%>

@@ -31,6 +31,10 @@ public class OLISResultsAction extends DispatchAction {
 
 		try {
 			String olisResultString = (String) request.getAttribute("unsignedResponse");
+			if (olisResultString == null) { 
+				olisResultString = request.getParameter("unsignedResponse");
+				request.setAttribute("unsignedResponse", olisResultString);
+			}
 			if(olisResultString == null) {
 				List<String> resultList = new LinkedList<String>();
 				request.setAttribute("resultList", resultList);				
@@ -51,10 +55,13 @@ public class OLISResultsAction extends DispatchAction {
 			if (messages != null) {
 				for (String message : messages) {
 					
+					String resultUuid = UUID.randomUUID().toString();
+										
+					tempFile = new File(System.getProperty("java.io.tmpdir") + "/olis_" + resultUuid.toString() + ".response");
+					FileUtils.writeStringToFile(tempFile, message);
+					
 					// Parse the HL7 string...
 					MessageHandler h = Factory.getHandler("OLIS_HL7", message);
-					
-					String resultUuid = UUID.randomUUID().toString();
 					
 					searchResultsMap.put(resultUuid, (OLISHL7Handler)h);
 					resultList.add(resultUuid);

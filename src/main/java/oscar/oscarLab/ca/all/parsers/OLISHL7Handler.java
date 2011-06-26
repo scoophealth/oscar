@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -305,6 +306,34 @@ public class OLISHL7Handler implements MessageHandler {
 			MiscUtils.getLogger().error("OLIS HL7 Error", e);
 		}
 		return null;
+	}
+	
+	public String getCategoryList() {
+		String result = "";
+		ArrayList<String> categories = new ArrayList<String>();
+		for (int i = 0; i < getOBRCount(); i++) {
+			categories.add(getOBRCategory(i));
+		}
+		String[] uniqueCategories = new HashSet<String>(categories)
+				.toArray(new String[0]);
+		Arrays.sort(uniqueCategories);
+		int count = 0;
+		for (String category : uniqueCategories) {
+			result += (count++ > 0 ? " / " : "") + category;
+		}
+		return result;
+	}
+
+	public String getTestList() {
+		String result = "";
+		String[] uniqueTests = new HashSet<String>(headers)
+				.toArray(new String[0]);
+		Arrays.sort(uniqueTests);
+		int count = 0;
+		for (String test : uniqueTests) {
+			result += (count++ > 0 ? " / " : "") + test;
+		}
+		return result;
 	}
 	
 	public String getPerformingFacilityName() {		
@@ -2157,6 +2186,7 @@ public class OLISHL7Handler implements MessageHandler {
 	}
 	
 	public void importSourceOrganizations(OLISHL7Handler instance) {
+		if (instance == null) { return; }
 		HashMap<String,String> foreignSource = instance.sourceOrganizations;
 		for (String key : foreignSource.keySet()) {
 			if (!sourceOrganizations.containsKey(key)) {

@@ -1,5 +1,5 @@
 <%@ page language="java" errorPage="../../../provider/errorpage.jsp" %>
-<%@ page import="java.util.*,java.sql.*,org.oscarehr.common.dao.PatientLabRoutingDao, org.oscarehr.util.SpringUtils, org.oscarehr.common.model.PatientLabRouting,oscar.oscarLab.ca.all.*,oscar.oscarLab.ca.all.util.*,oscar.oscarLab.ca.all.parsers.*,oscar.oscarLab.LabRequestReportLink,oscar.oscarMDS.data.ReportStatus,oscar.log.*,org.apache.commons.codec.binary.Base64" %>
+<%@ page import="java.util.*,java.sql.*,org.oscarehr.olis.*,org.oscarehr.common.dao.PatientLabRoutingDao, org.oscarehr.util.SpringUtils, org.oscarehr.common.model.PatientLabRouting,oscar.oscarLab.ca.all.*,oscar.oscarLab.ca.all.util.*,oscar.oscarLab.ca.all.parsers.*,oscar.oscarLab.LabRequestReportLink,oscar.oscarMDS.data.ReportStatus,oscar.log.*,org.apache.commons.codec.binary.Base64" %>
 <%@page import="org.oscarehr.util.AppointmentUtil" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -13,19 +13,14 @@ String segmentID = request.getParameter("segmentID");
 String originalSegmentID = segmentID;
 String providerNo = request.getParameter("providerNo");
 String searchProviderNo = request.getParameter("searchProviderNo");
-if ("true".equals(request.getParameter("showLatest"))) {
-	String multiLabId = Hl7textResultsData.getMatchingLabs(segmentID);
-	segmentID = multiLabId.split(",")[multiLabId.split(",").length - 1];
-}
-String multiLabId = Hl7textResultsData.getMatchingLabs(segmentID);
 
-
-Long reqIDL = LabRequestReportLink.getIdByReport("hl7TextMessage",Long.valueOf(segmentID));
+boolean preview = oscar.Misc.getStr(request.getParameter("preview"), "").equals("true");
+Long reqIDL = preview ? null : LabRequestReportLink.getIdByReport("hl7TextMessage",Long.valueOf(segmentID));
 String reqID = reqIDL==null ? "" : String.valueOf(reqIDL);
 
-PatientLabRoutingDao plrDao = (PatientLabRoutingDao) SpringUtils.getBean("PatientLabRoutingDao");
-PatientLabRouting plr = plrDao.findDemographicByLabId(Integer.valueOf(segmentID));
-String demographicID = plr.getDemographicNumber() == null ? "" : plr.getDemographicNumber().toString();
+PatientLabRoutingDao plrDao = preview ? null : (PatientLabRoutingDao) SpringUtils.getBean("patientLabRoutingDao");
+PatientLabRouting plr = preview ? null : plrDao.findDemographicByLabId(Integer.valueOf(segmentID));
+String demographicID = preview || plr.getDemographicNumber() == null ? "" : plr.getDemographicNumber().toString();
 
 
 if(demographicID != null && !demographicID.equals("")){
@@ -35,22 +30,34 @@ if(demographicID != null && !demographicID.equals("")){
 }
         
 
-
 boolean ackFlag = false;
-ArrayList ackList = AcknowledgementData.getAcknowledgements(segmentID);
-if (ackList != null){
-    for (int i=0; i < ackList.size(); i++){
-        ReportStatus reportStatus = (ReportStatus) ackList.get(i);
-        if ( reportStatus.getProviderNo().equals(providerNo) && reportStatus.getStatus().equals("A") ){
-            ackFlag = true;
-            break;
-        }
-    }
-}
+ArrayList ackList = preview ? null : AcknowledgementData.getAcknowledgements(segmentID);
+Factory f;
+MessageHandler handlerMain;
+String hl7 = "";
+
+if (!preview) {
+
+	if (ackList != null){
+	    for (int i=0; i < ackList.size(); i++){
+	        ReportStatus reportStatus = (ReportStatus) ackList.get(i);
+	        if ( reportStatus.getProviderNo().equals(providerNo) && reportStatus.getStatus().equals("A") ){
+	            ackFlag = true;
+	            break;
+	        }
+	    }
+	}
+	handlerMain = Factory.getHandler(segmentID);
+	hl7 = Factory.getHL7Body(segmentID);	
+
+} else {
+	String resultUuid = oscar.Misc.getStr(request.getParameter("uuid"), "");	
+	handlerMain = OLISResultsAction.searchResultsMap.get(resultUuid);
+} 
+	
+	
 
 
-MessageHandler handlerMain = Factory.getHandler(segmentID);
-String hl7 = Factory.getHL7Body(segmentID);
 OLISHL7Handler handler = null;
 if (handlerMain instanceof OLISHL7Handler) {
 	handler = (OLISHL7Handler) handlerMain;
@@ -58,9 +65,16 @@ if (handlerMain instanceof OLISHL7Handler) {
 else {
 	%> <jsp:forward page="labDisplay.jsp" /> <%
 }
+if (!preview && "true".equals(request.getParameter("showLatest"))) {
+
+	String multiLabId = Hl7textResultsData.getMatchingLabs(segmentID);
+	segmentID = multiLabId.split(",")[multiLabId.split(",").length - 1];
+}
+
+String multiLabId = preview ? "" :  Hl7textResultsData.getMatchingLabs(segmentID);
 
 for (String tempId : multiLabId.split(",")) {
-	if (tempId.equals(segmentID)) { continue; }
+	if (tempId.equals(segmentID) || tempId.equals("")) { continue; }
 	else {
 		try {
 			handler.importSourceOrganizations((OLISHL7Handler)Factory.getHandler(tempId));		
@@ -200,10 +214,11 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                Verdana, Arial, Helvetica }
             -->
         </style>
-        <script type="text/javascript" src="<%= request.getContextPath() %>/share/jquery/jquery-1.4.2.js"></script>
-<script type="text/javascript">
-	$.noConflict();
-</script>
+        <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.js"></script>
+		<script type="text/javascript">
+		    jQuery.noConflict();
+		</script>
+
 <script type="text/javascript" src="<%= request.getContextPath() %>/share/jquery/jquery.form.js"></script>
         
         <script type="text/javaScript">
