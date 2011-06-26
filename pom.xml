@@ -796,6 +796,7 @@
 						<param>org.oscarehr.utils</param>
 						<param>dm</param>
 						<param>cds</param>
+						<param>ca.ssha.www</param>
 					</groupIdsToRemove>
 				</configuration>
 				<executions>
