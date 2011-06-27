@@ -83,6 +83,8 @@ public class FluReport implements PreventionReport {
             	 try {
 	                ArrayList<HashMap<String,Object>> remotePreventions=PreventionData.getLinkedRemotePreventionData("Flu", Integer.parseInt(demo));
 	                prevs.addAll(remotePreventions);
+	                
+	                Collections.sort(prevs, new PreventionData.PreventionsComparator());
                 } catch (Exception e) {
                 	log.error("Error getting remote preventions.", e);
                 }

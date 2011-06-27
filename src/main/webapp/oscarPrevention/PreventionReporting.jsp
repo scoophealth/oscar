@@ -25,6 +25,7 @@
  * Ontario, Canada 
  */
 -->
+<%@page import="org.apache.commons.lang.StringUtils"%>
 <%@page import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarProvider.data.*,oscar.util.*,oscar.oscarReport.data.*,oscar.oscarPrevention.pageUtil.*,java.net.*,oscar.eform.*"%>
 <%@page import="oscar.OscarProperties, org.oscarehr.util.SpringUtils, org.oscarehr.billing.CA.ON.dao.BillingClaimDAO" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
@@ -490,7 +491,11 @@ table.ele td{
                                     ----
                               <%}%>
                           </td>
-                          <td bgcolor="<%=dis.color%>"><%=providerBean.getProperty(demo.getProviderNo()) %></td>
+                          <%
+                          	String providerName=providerBean.getProperty(demo.getProviderNo());
+                          	providerName=StringUtils.trimToEmpty(providerName);
+                          %>
+                          <td bgcolor="<%=dis.color%>"><%=providerName%></td>
                           <td bgcolor="<%=dis.color%>">                              
                               <% if( billCode != null && setBill ) {
                                   numDays = bcDAO.getDaysSinceBilled(billCode, dis.demographicNo);
