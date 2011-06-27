@@ -31,6 +31,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
@@ -319,7 +320,7 @@ public class RxPatientData {
       public Allergy addAllergy(java.util.Date entryDate,RxAllergyData.Allergy allergyCode) {         
          Allergy allergy = null;
          try {            
-            allergy = new Allergy(0, entryDate, allergyCode);            
+            allergy = new Allergy(this.demographicNo, entryDate, allergyCode);            
             allergy.Save();                               
          }catch (SQLException e) {            
             MiscUtils.getLogger().error("Error", e);                               
@@ -437,7 +438,7 @@ public class RxPatientData {
                + "DESCRIPTION, HICL_SEQNO, HIC_SEQNO, AGCSP, AGCCS, TYPECODE,reaction,drugref_id,start_date,age_of_onset,severity_of_reaction,onset_of_reaction,regional_identifier,life_stage) "               
                + "VALUES (" + demographicId + ", '"               
                + oscar.oscarRx.util.RxUtil.DateToString(this.getEntryDate()) + "', '"               
-               + this.allergy.getDESCRIPTION() + "', "               
+               + StringEscapeUtils.escapeSql(this.allergy.getDESCRIPTION()) + "', "               
                + this.allergy.getHICL_SEQNO() + ", "               
                + this.allergy.getHIC_SEQNO() + ", "               
                + this.allergy.getAGCSP() + ", "               
@@ -465,7 +466,7 @@ public class RxPatientData {
             } else {
                
                sql = "UPDATE allergies SET entry_date = '" + oscar.oscarRx.util.RxUtil.DateToString(this.getEntryDate()) + "', "
-               + "DESCRIPTION = '" + allergy.getDESCRIPTION() + "', "               
+               + "DESCRIPTION = '" + StringEscapeUtils.escapeSql(allergy.getDESCRIPTION()) + "', "               
                + "HICL_SEQNO = " + allergy.getHICL_SEQNO() + ", "               
                + "HIC_SEQNO = " + allergy.getHIC_SEQNO() + ", "               
                + "AGCSP = " + allergy.getAGCSP() + ", "
