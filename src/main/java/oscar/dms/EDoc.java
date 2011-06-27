@@ -49,6 +49,8 @@ public class EDoc extends TagObject implements Comparable {
 	private String dateTimeStamp = "";
 	private Date dateTimeStampAsDate = null;
 	private String type = "";
+        private String docClass = "";
+        private String docSubClass = "";
 	private String fileName = "";
 	private String html = "";
 
@@ -253,6 +255,22 @@ public class EDoc extends TagObject implements Comparable {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public String getDocClass() {
+		return docClass;
+	}
+
+	public void setDocClass(String docClass) {
+		this.docClass = docClass;
+	}
+
+	public String getDocSubClass() {
+		return docSubClass;
+	}
+
+	public void setDocSubClass(String docSubClass) {
+		this.docSubClass = docSubClass;
 	}
 
 	public String getFileName() {

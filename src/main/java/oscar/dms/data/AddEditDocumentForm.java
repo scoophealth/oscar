@@ -29,6 +29,8 @@ public class AddEditDocumentForm extends ActionForm {
     private String function = "";
     private String functionId = "";
     private String docType = "";
+    private String docClass = "";
+    private String docSubClass = "";
     private String docDesc = "";
     private String docCreator = "";
     private String responsibleId = "";
@@ -72,6 +74,22 @@ public class AddEditDocumentForm extends ActionForm {
 
     public void setDocType(String docType) {
         this.docType = docType;
+    }
+
+    public String getDocClass() {
+        return docClass;
+    }
+
+    public void setDocClass(String docClass) {
+        this.docClass = docClass;
+    }
+
+    public String getDocSubClass() {
+        return docSubClass;
+    }
+
+    public void setDocSubClass(String docSubClass) {
+        this.docSubClass = docSubClass;
     }
 
     public String getDocDesc() {

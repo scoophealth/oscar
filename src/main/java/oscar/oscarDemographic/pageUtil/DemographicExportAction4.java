@@ -435,7 +435,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     phoneWork.setExtension(data);
                 }
             }
-            phoneNo = demoExt.get("demo_cell");
+            phoneNo = Util.onlyNum(demoExt.get("demo_cell"));
             if (StringUtils.filled(phoneNo) && phoneNo.length()>=7) {
                 cdsDt.PhoneNumber phoneCell = demo.addNewPhoneNumber();
                 phoneCell.setPhoneNumberType(cdsDt.PhoneNumberType.C);
@@ -1403,7 +1403,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     EDoc edoc = (EDoc)edoc_list.get(j);
                     ReportsReceived rpr = patientRec.addNewReportsReceived();
                     rpr.setFormat(cdsDt.ReportFormat.TEXT);
-                    rpr.setClass1(cdsDt.ReportClass.OTHER_LETTER);
+                    //rpr.setClass1(cdsDt.ReportClass.OTHER_LETTER);
 
                     File f = new File(edoc.getFilePath());
                     if (!f.exists()) {
@@ -1437,20 +1437,15 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         if (StringUtils.empty(data)) err.add("Error! No File Extension&Version info for Document \""+edoc.getFileName()+"\"");
                         rpr.setFileExtensionAndVersion(data);
 
-                        data = edoc.getType();
+                        data = edoc.getDocClass();
                         if (StringUtils.filled(data)) {
-                            if (data.trim().equalsIgnoreCase("radiology")) {
-                                rpr.setClass1(cdsDt.ReportClass.DIAGNOSTIC_IMAGING_REPORT);
-                            } else if (data.trim().equalsIgnoreCase("pathology")) {
-                                rpr.setClass1(cdsDt.ReportClass.DIAGNOSTIC_TEST_REPORT);
-                            } else if (data.trim().equalsIgnoreCase("consult")) {
-                                rpr.setClass1(cdsDt.ReportClass.CONSULTANT_REPORT);
-                            } else {
-                                rpr.setClass1(cdsDt.ReportClass.OTHER_LETTER);
-                                rpr.setSubClass(data);
-                            }
+                            rpr.setClass1(cdsDt.ReportClass.Enum.forString(data));
                         } else {
                             err.add("Error! No Class Type for Document \""+edoc.getFileName()+"\"");
+                        }
+                        data = edoc.getDocSubClass();
+                        if (StringUtils.filled(data)) {
+                            rpr.setSubClass(data);
                         }
                         data = edoc.getObservationDate();
                         if (UtilDateUtilities.StringToDate(data)!=null) {

@@ -30,7 +30,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ page
-	import="java.util.*, oscar.util.*, oscar.OscarProperties, oscar.dms.*, oscar.dms.data.*"%>
+	import="java.util.*, oscar.util.*, oscar.OscarProperties, oscar.dms.*, oscar.dms.data.*, org.oscarehr.util.SpringUtils, org.oscarehr.common.dao.CtlDocClassDao"%>
 <%--This is included in documentReport.jsp - wasn't meant to be displayed as a separate page --%>
 <%
 String user_no = (String) session.getAttribute("user");
@@ -104,17 +104,60 @@ formdata = (AddEditDocumentForm) request.getAttribute("completedForm");
     formdata.setAppointmentNo(appointment);
 }
 ArrayList doctypes = EDocUtil.getDoctypes(formdata.getFunction());
+
+CtlDocClassDao docClassDao = (CtlDocClassDao)SpringUtils.getBean("ctlDocClassDao");
+List<String> reportClasses = docClassDao.findUniqueReportClasses();
+ArrayList<String> subClasses = new ArrayList<String>();
+ArrayList<String> consultA = new ArrayList<String>();
+ArrayList<String> consultB = new ArrayList<String>();
+for (String reportClass : reportClasses) {
+    List<String> subClassList = docClassDao.findSubClassesByReportClass(reportClass);
+    if (reportClass.equals("ConsultA")) consultA.addAll(subClassList);
+    else if (reportClass.equals("ConsultB")) consultB.addAll(subClassList);
+    else subClasses.addAll(subClassList);
+
+    if (!consultA.isEmpty() && !consultB.isEmpty()) {
+        for (String partA : consultA) {
+            for (String partB : consultB) {
+                subClasses.add(partA+" "+partB);
+            }
+        }
+    }
+}
 %>
-<script src="../share/javascript/Oscar.js"
-	type="text/javascript language='JavaScript'"></script>
+<script src="../share/javascript/Oscar.js" type="text/javascript language='JavaScript'"></script>
+<script type="text/javascript" src="../share/javascript/prototype.js"></script>
+<script type="text/javascript" src="../share/javascript/scriptaculous.js"></script>
+
 <link rel="stylesheet" type="text/css" media="all"
 	href="../share/calendar/calendar.css" title="win2k-cold-1" />
+<style type="text/css">
+    .autocomplete_style {
+        background: #fff;
+        text-align: left;
+    }
+
+    .autocomplete_style ul {
+        border: 1px solid #aaa;
+        margin: 0px;
+        padding: 2px;
+        list-style: none;
+    }
+
+    .autocomplete_style ul li.selected {
+        background-color: #ffa;
+        text-decoration: underline;
+    }
+</style>
+
 <script type="text/javascript" src="../share/calendar/calendar.js"></script>
 <script type="text/javascript"
 	src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
 <script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
 <script type="text/javascript" language="JavaScript">
 function onloadfunction() {
+    new Autocompleter.Local('docSubClass', 'docSubClass_list', docSubClassList);
+    new Autocompleter.Local('docSubClass2', 'docSubClass_list2', docSubClassList);
     if(!NiftyCheck())
         return;
 
@@ -198,6 +241,12 @@ function checkDefaultDate(object, defaultValue) {
        object.value = "";
    }
 }
+
+var docSubClassList = [
+        <% for (int i=0; i<subClasses.size(); i++) { %>
+"<%=subClasses.get(i)%>"<%=(i<subClasses.size()-1)?",":""%>
+        <% } %>
+];
 </script>
 <div class="topplane">
 <div class="docHeading" style="background-color: #d1d5bd;">
@@ -255,6 +304,25 @@ function checkDefaultDate(object, defaultValue) {
 	<input type="file" name="docFile" size="20"
 		<% if (docerrors.containsKey("uploaderror")) {%> class="warning" <%}%>>
 	<br />
+        <bean:message key="dms.addDocument.msgDocClass"/>:
+        <select name="docClass" id="docClass">
+            <option value=""><bean:message key="dms.addDocument.formSelectClass"/></option>
+<% boolean consult1Shown = false;
+for (String reportClass : reportClasses) {
+    if (reportClass.startsWith("Consult")) {
+        if (consult1Shown) continue;
+        reportClass = "Consult";
+        consult1Shown = true;
+    }
+%>
+            <option value="<%=reportClass%>"><%=reportClass%></option>
+<% } %>
+        </select>
+        &nbsp;&nbsp;&nbsp;
+        <bean:message key="dms.addDocument.msgDocSubClass"/>:
+        <input type="text" name="docSubClass" id="docSubClass" style="width:330px">
+        <div class="autocomplete_style" id="docSubClass_list"></div>
+        <br />
 	<input type="hidden" name="mode" value="add">
 	<input type="submit" name="Submit" value="Add">
 	<input type="button" name="Button"
@@ -305,6 +373,25 @@ function checkDefaultDate(object, defaultValue) {
 		value="<%=formdata.getDocCreator()%>" size="20">
 		<input type="hidden" name="appointmentNo" value="<%=formdata.getAppointmentNo()%>"/>
 	<br />
+        <bean:message key="dms.addDocument.msgDocClass"/>:
+        <select name="docClass" id="docClass">
+            <option value=""><bean:message key="dms.addDocument.formSelectClass"/></option>
+<% boolean consult2Shown = false;
+for (String reportClass : reportClasses) {
+    if (reportClass.startsWith("Consult")) {
+        if (consult2Shown) continue;
+        reportClass = "Consult";
+        consult2Shown = true;
+    }
+%>
+            <option value="<%=reportClass%>"><%=reportClass%></option>
+<% } %>
+        </select>
+        &nbsp;&nbsp;&nbsp;
+        <bean:message key="dms.addDocument.msgDocSubClass"/>:
+        <input type="text" name="docSubClass" id="docSubClass2" style="width:330px">
+        <div class="autocomplete_style" id="docSubClass_list2"></div>
+        <br />
 	<input type="hidden" name="mode" value="addLink">
 	<input type="SUBMIT" name="Submit" value="Add">
 	<input type="button" name="Button"
