@@ -231,6 +231,8 @@ public class AddEditDocumentAction extends DispatchAction {
 			EDoc newDoc = new EDoc(fm.getDocDesc(), fm.getDocType(), fileName1, "", fm.getDocCreator(), fm.getResponsibleId(), fm.getSource(), 'A', fm.getObservationDate(), "", "", fm.getFunction(), fm.getFunctionId());
 			newDoc.setDocPublic(fm.getDocPublic());
 			newDoc.setAppointmentNo(Integer.parseInt(fm.getAppointmentNo()));
+                        newDoc.setDocClass(fm.getDocClass());
+                        newDoc.setDocSubClass(fm.getDocSubClass());
 			// new file name with date attached
 			String fileName2 = newDoc.getFileName();
 			// save local file
@@ -339,6 +341,8 @@ public class AddEditDocumentAction extends DispatchAction {
 			newDoc.setDocId(fm.getMode());
 			newDoc.setDocPublic(fm.getDocPublic());
 			newDoc.setAppointmentNo(Integer.parseInt(fm.getAppointmentNo()));
+                        newDoc.setDocClass(fm.getDocClass());
+                        newDoc.setDocSubClass(fm.getDocSubClass());
 			fileName = newDoc.getFileName();
 			if (docFile.getFileSize() != 0) {
 				// save local file

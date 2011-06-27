@@ -344,6 +344,16 @@ CREATE TABLE ctl_doctype (
 ) ;
 
 --
+-- Table structure for table `ctl_doc_class`
+--
+
+CREATE TABLE ctl_doc_class (
+  id integer auto_increment primary key,
+  reportclass varchar(60) not null,
+  subclass varchar(60) not null
+);
+
+--
 -- Table structure for table `ctl_document`
 --
 
@@ -549,6 +559,8 @@ CREATE TABLE diseases (
 CREATE TABLE document (
   document_no int(6) NOT NULL auto_increment,
   doctype varchar(20) default NULL,
+  docClass varchar(60),
+  docSubClass varchar(60),
   docdesc varchar(255) NOT NULL default '',
   docxml text,
   docfilename varchar(255) NOT NULL default '',

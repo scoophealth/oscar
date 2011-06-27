@@ -112,6 +112,8 @@ public class AddEditHtmlAction extends Action {
             currentDoc = new EDoc(fm.getDocDesc(), fm.getDocType(), fileName, fm.getHtml(), fm.getDocCreator(), fm.getResponsibleId(), fm.getSource(), 'H', fm.getObservationDate(), reviewerId, reviewDateTime, fm.getFunction(), fm.getFunctionId());
             currentDoc.setContentType("text/html");
             currentDoc.setDocPublic(fm.getDocPublic());
+            currentDoc.setDocClass(fm.getDocClass());
+            currentDoc.setDocSubClass(fm.getDocSubClass());
             String docId = EDocUtil.addDocumentSQL(currentDoc);
 	    
 	    /* Save annotation */
@@ -137,6 +139,8 @@ public class AddEditHtmlAction extends Action {
             currentDoc.setDocId(fm.getMode());
             currentDoc.setContentType("text/html");
             currentDoc.setDocPublic(fm.getDocPublic());
+            currentDoc.setDocClass(fm.getDocClass());
+            currentDoc.setDocSubClass(fm.getDocSubClass());
             EDocUtil.editDocumentSQL(currentDoc, fm.getReviewDoc());
         }
         ActionRedirect redirect = new ActionRedirect(mapping.findForward("success"));

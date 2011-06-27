@@ -133,10 +133,12 @@ public final class EDocUtil extends SqlUtilBaseS {
 	 * @return the new documentId
 	 */
 	public static String addDocumentSQL(EDoc newDocument) {
-		String preparedSQL = "INSERT INTO document (doctype, docdesc, docxml, docfilename, doccreator, source, responsible, program_id, updatedatetime, status, contenttype, public1, observationdate,number_of_pages,appointment_no) VALUES (?,?,?, ?,?,?, ?,?,?, ?,?,?,?,?,?)";
-		DBPreparedHandlerParam[] param = new DBPreparedHandlerParam[15];
+		String preparedSQL = "INSERT INTO document (doctype, docClass, docSubClass, docdesc, docxml, docfilename, doccreator, source, responsible, program_id, updatedatetime, status, contenttype, public1, observationdate,number_of_pages,appointment_no) VALUES (?,?,?,?,?, ?,?,?, ?,?,?, ?,?,?,?,?,?)";
+		DBPreparedHandlerParam[] param = new DBPreparedHandlerParam[17];
 		int counter = 0;
 		param[counter++] = new DBPreparedHandlerParam(newDocument.getType());
+                param[counter++] = new DBPreparedHandlerParam(newDocument.getDocClass());
+                param[counter++] = new DBPreparedHandlerParam(newDocument.getDocSubClass());
 		param[counter++] = new DBPreparedHandlerParam(newDocument.getDescription());
 		param[counter++] = new DBPreparedHandlerParam(newDocument.getHtml());
 		param[counter++] = new DBPreparedHandlerParam(newDocument.getFileName());
@@ -188,11 +190,13 @@ public final class EDocUtil extends SqlUtilBaseS {
 
 	public static void editDocumentSQL(EDoc newDocument, boolean doReview) {
 		String doctype = org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getType());
+		String docclass = org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getDocClass());
+		String docsubclass = org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getDocSubClass());
 		String docDescription = org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getDescription());
 		String docFileName = org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getFileName());
 		String html = org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getHtml());
 
-		String editDocSql = "UPDATE document " + "SET doctype='" + doctype + "', " + "docdesc='" + docDescription + "', " + "source='" + newDocument.getSource() + "', " + "public1='" + newDocument.getDocPublic() + "', " + "responsible='" + newDocument.getResponsibleId() + "', " + "docxml='" + html + "'";
+		String editDocSql = "UPDATE document " + "SET doctype='" + doctype + "', docClass='"+docclass+"', docSubClass='"+docsubclass+ "', " + "docdesc='" + docDescription + "', " + "source='" + newDocument.getSource() + "', " + "public1='" + newDocument.getDocPublic() + "', " + "responsible='" + newDocument.getResponsibleId() + "', " + "docxml='" + html + "'";
 		if (doReview) {
 			editDocSql += ", reviewer='" + newDocument.getReviewerId() + "', " + "reviewdatetime='" + newDocument.getReviewDateTime() + "'";
 		} else {
@@ -312,7 +316,10 @@ public final class EDocUtil extends SqlUtilBaseS {
 	}
 
 	public static EDoc getEDocFromDocId(String docId) {
-		String sql = "SELECT DISTINCT c.module, c.module_id, d.doccreator, d.source, d.responsible, d.program_id, " + "d.status, d.docdesc, d.docfilename, d.doctype, d.document_no, d.updatedatetime, d.contenttype, d.observationdate, d.reviewer, d.reviewdatetime, d.appointment_no " + "FROM document d, ctl_document c WHERE " + " c.document_no=d.document_no AND c.document_no='" + docId + "'";
+		String sql = "SELECT DISTINCT c.module, c.module_id, d.doccreator, d.source, d.responsible, d.program_id, "
+                           + "d.status, d.docdesc, d.docfilename, d.doctype, d.document_no, d.updatedatetime, d.contenttype, d.observationdate, "
+                           + "d.docClass, d.docSubClass, d.reviewer, d.reviewdatetime, d.appointment_no " + "FROM document d, ctl_document c "
+                           + "WHERE c.document_no=d.document_no AND c.document_no='" + docId + "'";
 		sql = sql + " ORDER BY " + EDocUtil.SORT_OBSERVATIONDATE;// default sort
 
 		ResultSet rs = getSQL(sql);
@@ -325,6 +332,8 @@ public final class EDocUtil extends SqlUtilBaseS {
 				currentdoc.setDocId(rsGetString(rs, "document_no"));
 				currentdoc.setDescription(rsGetString(rs, "docdesc"));
 				currentdoc.setType(rsGetString(rs, "doctype"));
+                                currentdoc.setDocClass(rsGetString(rs, "docClass"));
+                                currentdoc.setDocSubClass(rsGetString(rs, "docSubClass"));
 				currentdoc.setCreatorId(rsGetString(rs, "doccreator"));
 				currentdoc.setSource(rsGetString(rs, "source"));
 				currentdoc.setResponsibleId(rsGetString(rs, "responsible"));
@@ -558,6 +567,8 @@ public final class EDocUtil extends SqlUtilBaseS {
 				currentdoc.setDocId(rsGetString(rs, "document_no"));
 				currentdoc.setDescription(rsGetString(rs, "docdesc"));
 				currentdoc.setType(rsGetString(rs, "doctype"));
+                                currentdoc.setDocClass(rsGetString(rs, "docClass"));
+                                currentdoc.setDocSubClass(rsGetString(rs, "docSubClass"));
 				currentdoc.setCreatorId(rsGetString(rs, "doccreator"));
 				currentdoc.setSource(rsGetString(rs, "source"));
 				currentdoc.setResponsibleId(rsGetString(rs, "responsible"));
@@ -660,16 +671,16 @@ public final class EDocUtil extends SqlUtilBaseS {
 		return UtilDateUtilities.now();
 	}
 
-	public static int addDocument(String demoNo, String docFileName, String docDesc, String docType, String contentType, String observationDate, String updateDateTime, String docCreator, String responsible) throws SQLException {
-		return addDocument(demoNo, docFileName, docDesc, docType, contentType, observationDate, updateDateTime, docCreator, responsible, null, null);
+	public static int addDocument(String demoNo, String docFileName, String docDesc, String docType, String docClass, String docSubClass, String contentType, String observationDate, String updateDateTime, String docCreator, String responsible) throws SQLException {
+		return addDocument(demoNo, docFileName, docDesc, docType, docClass, docSubClass, contentType, observationDate, updateDateTime, docCreator, responsible, null, null);
 	}
 
-	public static int addDocument(String demoNo, String docFileName, String docDesc, String docType, String contentType, String observationDate, String updateDateTime, String docCreator, String responsible, String reviewer, String reviewDateTime) throws SQLException {
-		return addDocument(demoNo, docFileName, docDesc, docType, contentType, observationDate, updateDateTime, docCreator, responsible, reviewer, reviewDateTime, null);
+	public static int addDocument(String demoNo, String docFileName, String docDesc, String docType, String docClass, String docSubClass, String contentType, String observationDate, String updateDateTime, String docCreator, String responsible, String reviewer, String reviewDateTime) throws SQLException {
+		return addDocument(demoNo, docFileName, docDesc, docType, docClass, docSubClass, contentType, observationDate, updateDateTime, docCreator, responsible, reviewer, reviewDateTime, null);
 	}
 
-	public static int addDocument(String demoNo, String docFileName, String docDesc, String docType, String contentType, String observationDate, String updateDateTime, String docCreator, String responsible, String reviewer, String reviewDateTime, String source) throws SQLException {
-		String add_record_string1 = "insert into document (doctype,docdesc,docfilename,doccreator,responsible,updatedatetime,status,contenttype,public1,observationdate,reviewer,reviewdatetime, source) values (?,?,?,?,?,?,'A',?,0,?,?,?,?)";
+	public static int addDocument(String demoNo, String docFileName, String docDesc, String docType, String docClass, String docSubClass, String contentType, String observationDate, String updateDateTime, String docCreator, String responsible, String reviewer, String reviewDateTime, String source) throws SQLException {
+		String add_record_string1 = "insert into document (doctype,docClass,docSubClass,docdesc,docfilename,doccreator,responsible,updatedatetime,status,contenttype,public1,observationdate,reviewer,reviewdatetime, source) values (?,?,?,?,?,?,?,?,'A',?,0,?,?,?,?)";
 		String add_record_string2 = "insert into ctl_document values ('demographic',?,?,'A')";
 		int key = 0;
 
@@ -677,16 +688,18 @@ public final class EDocUtil extends SqlUtilBaseS {
 		PreparedStatement add_record = conn.prepareStatement(add_record_string1);
 
 		add_record.setString(1, docType);
-		add_record.setString(2, docDesc);
-		add_record.setString(3, docFileName);
-		add_record.setString(4, docCreator);
-		add_record.setString(5, responsible);
-		add_record.setString(6, updateDateTime);
-		add_record.setString(7, contentType);
-		add_record.setString(8, observationDate);
-		add_record.setString(9, reviewer);
-		add_record.setString(10, reviewDateTime);
-		add_record.setString(11, source);
+                add_record.setString(2, docClass);
+                add_record.setString(3, docSubClass);
+		add_record.setString(4, docDesc);
+		add_record.setString(5, docFileName);
+		add_record.setString(6, docCreator);
+		add_record.setString(7, responsible);
+		add_record.setString(8, updateDateTime);
+		add_record.setString(9, contentType);
+		add_record.setString(10, observationDate);
+		add_record.setString(11, reviewer);
+		add_record.setString(12, reviewDateTime);
+		add_record.setString(13, source);
 
 		add_record.executeUpdate();
 		ResultSet rs = add_record.getGeneratedKeys();

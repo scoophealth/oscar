@@ -1495,7 +1495,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 						err_othe.add("Error! No report file in xml ("+(i+1)+")");
 					} else {
 						String docFileName = "ImportReport"+(i+1)+"-"+UtilDateUtilities.getToday("yyyy-MM-dd.HH.mm.ss");
-						String docType=null, contentType="", observationDate=null, updateDateTime=null, docCreator=admProviderNo;
+						String docClass=null, docSubClass=null, contentType="", observationDate=null, updateDateTime=null, docCreator=admProviderNo;
 						String reviewer=null, reviewDateTime=null, source=null;
 
 						if (StringUtils.filled(repR[i].getFileExtensionAndVersion())) {
@@ -1511,13 +1511,13 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 						f.close();
 
 						if (repR[i].getClass1()!=null) {
-							if (repR[i].getClass1().equals(cdsDt.ReportClass.DIAGNOSTIC_IMAGING_REPORT)) docType = "radiology";
-							else if (repR[i].getClass1().equals(cdsDt.ReportClass.DIAGNOSTIC_TEST_REPORT)) docType = "pathology";
-							else if (repR[i].getClass1().equals(cdsDt.ReportClass.CONSULTANT_REPORT)) docType = "consult";
-							else docType = "others";
+                                                        docClass = repR[i].getClass1().toString();
 						} else {
-							err_data.add("Error! No Class for Report ("+(i+1)+")");
+							err_data.add("Error! No Class Type for Report ("+(i+1)+")");
 						}
+                                                if (repR[i].getSubClass()!=null) {
+                                                        docSubClass = repR[i].getSubClass();
+                                                }
 
                                                 ReportsReceived.SourceAuthorPhysician authorPhysician = repR[i].getSourceAuthorPhysician();
                                                 if (authorPhysician!=null) {
@@ -1539,15 +1539,9 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 						observationDate = dateTimeFullPartial(repR[i].getEventDateTime(), timeShiftInDays);
 						updateDateTime = dateTimeFullPartial(repR[i].getReceivedDateTime(), timeShiftInDays);
 
-						int key = EDocUtil.addDocument(demographicNo,docFileName,docDesc,docType,contentType,observationDate,updateDateTime,docCreator,admProviderNo,reviewer,reviewDateTime, source);
+						int key = EDocUtil.addDocument(demographicNo,docFileName,docDesc,"",docClass,docSubClass,contentType,observationDate,updateDateTime,docCreator,admProviderNo,reviewer,reviewDateTime, source);
                                                 if (binaryFormat) addOneEntry(REPORTBINARY);
                                                 else addOneEntry(REPORTTEXT);
-						if (StringUtils.filled(repR[i].getSubClass())) {
-                                                    CaseManagementNote cmNote = prepareCMNote();
-                                                    cmNote.setNote("Sub-class: "+repR[i].getSubClass());
-                                                    saveLinkNote(cmNote, CaseManagementNoteLink.DOCUMENT, (long)key);
-
-						}
 					}
 				}
                             }

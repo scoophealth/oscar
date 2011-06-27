@@ -36,7 +36,7 @@ String userlastname = (String) session.getAttribute("userlastname");
 <jsp:useBean id="oscarVariables" class="java.util.Properties"
 	scope="page" />
 <%@ page
-	import="java.util.*, java.io.*, java.sql.*, oscar.*, oscar.util.*, java.net.*,oscar.MyDateFormat, oscar.dms.*, oscar.dms.data.*, oscar.oscarProvider.data.ProviderData"%><%
+	import="java.util.*, java.io.*, java.sql.*, oscar.*, oscar.util.*, java.net.*,oscar.MyDateFormat, oscar.dms.*, oscar.dms.data.*, oscar.oscarProvider.data.ProviderData, org.oscarehr.util.SpringUtils, org.oscarehr.common.dao.CtlDocClassDao"%><%
 String editDocumentNo = "";
 if (request.getAttribute("editDocumentNo") != null) {
     editDocumentNo = (String) request.getAttribute("editDocumentNo");
@@ -70,6 +70,8 @@ if (request.getAttribute("completedForm") != null) {
     formdata.setFunction(currentDoc.getModule());
     formdata.setFunctionId(currentDoc.getModuleId());
     formdata.setDocType(currentDoc.getType());
+    formdata.setDocClass(currentDoc.getDocClass());
+    formdata.setDocSubClass(currentDoc.getDocSubClass());
     formdata.setDocDesc(currentDoc.getDescription());
     formdata.setDocPublic((currentDoc.getDocPublic().equals("1"))?"checked":"");
     formdata.setDocCreator(currentDoc.getCreatorId());
@@ -86,6 +88,26 @@ ArrayList<Hashtable> pdList = new ProviderData().getProviderList();
 ArrayList doctypes = EDocUtil.getDoctypes(formdata.getFunction());
 String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.DISP_DOCUMENT;
 String annotation_tableid = editDocumentNo;
+
+CtlDocClassDao docClassDao = (CtlDocClassDao)SpringUtils.getBean("ctlDocClassDao");
+List<String> reportClasses = docClassDao.findUniqueReportClasses();
+ArrayList<String> subClasses = new ArrayList<String>();
+ArrayList<String> consultA = new ArrayList<String>();
+ArrayList<String> consultB = new ArrayList<String>();
+for (String reportClass : reportClasses) {
+    List<String> subClassList = docClassDao.findSubClassesByReportClass(reportClass);
+    if (reportClass.equals("ConsultA")) consultA.addAll(subClassList);
+    else if (reportClass.equals("ConsultB")) consultB.addAll(subClassList);
+    else subClasses.addAll(subClassList);
+
+    if (!consultA.isEmpty() && !consultB.isEmpty()) {
+        for (String partA : consultA) {
+            for (String partB : consultB) {
+                subClasses.add(partA+" "+partB);
+            }
+        }
+    }
+}
 %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
@@ -97,6 +119,7 @@ String annotation_tableid = editDocumentNo;
 <title>Edit Document</title>
 <script type="text/javascript" src="../share/javascript/Oscar.js"></script>
 <script type="text/javascript" src="../share/javascript/prototype.js"></script>
+<script type="text/javascript" src="../share/javascript/scriptaculous.js"></script>
 
 <link rel="stylesheet" type="text/css"
 	href="../share/css/niftyCorners.css" />
@@ -108,12 +131,31 @@ String annotation_tableid = editDocumentNo;
 <script type="text/javascript" src="../share/javascript/nifty.js"></script>
 <link rel="stylesheet" type="text/css" media="all"
 	href="../share/calendar/calendar.css" title="win2k-cold-1" />
+<style type="text/css">
+    .autocomplete_style {
+        background: #fff;
+        text-align: left;
+    }
+
+    .autocomplete_style ul {
+        border: 1px solid #aaa;
+        margin: 0px;
+        padding: 2px;
+        list-style: none;
+    }
+
+    .autocomplete_style ul li.selected {
+        background-color: #ffa;
+        text-decoration: underline;
+    }
+</style>
 <script type="text/javascript" src="../share/calendar/calendar.js"></script>
 <script type="text/javascript"
 	src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
 <script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
 <script type="text/javascript">
             window.onload=function(){
+                new Autocompleter.Local('docSubClass', 'docSubClass_list', docSubClassList);
                 if(!NiftyCheck())
                     return;
                     //Rounded("div.leftplane","top", "transparent", "#CCCCFF","small border #ccccff");
@@ -137,6 +179,12 @@ String annotation_tableid = editDocumentNo;
 		thisForm.reviewDoc.value = true;
 		thisForm.submit();
 	    }
+
+            var docSubClassList = [
+<% for (int i=0; i<subClasses.size(); i++) { %>
+            "<%=subClasses.get(i)%>"<%=(i<subClasses.size()-1)?",":""%>
+<% } %>
+            ];
         </script>
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 </head>
@@ -171,6 +219,29 @@ String annotation_tableid = editDocumentNo;
 					<%=(formdata.getDocType().equals(doctype))?" selected":""%>><%= doctype%></option>
 				<%}%>
 			</select></td>
+		</tr>
+                <tr>
+                        <td><bean:message key="dms.addDocument.msgDocClass"/>:</td>
+                        <td><select name="docClass" id="docClass">
+                                <option value=""><bean:message key="dms.addDocument.formSelectClass"/></option>
+<% boolean consultShown = false;
+for (String reportClass : reportClasses) {
+    if (reportClass.startsWith("Consult")) {
+        if (consultShown) continue;
+        reportClass = "Consult";
+        consultShown = true;
+    }
+%>
+                                <option value="<%=reportClass%>" <%=reportClass.equals(formdata.getDocClass())?"selected":""%>><%=reportClass%></option>
+<% } %>
+                            </select>
+                        </td>
+		</tr>
+                <tr>
+                        <td><bean:message key="dms.addDocument.msgDocSubClass"/>:</td>
+                        <td><input type="text" name="docSubClass" id="docSubClass" value="<%=formdata.getDocSubClass()%>" style="width:330px">
+                            <div class="autocomplete_style" id="docSubClass_list"></div>
+                        </td>
 		</tr>
 		<tr>
 			<td>Description:</td>
