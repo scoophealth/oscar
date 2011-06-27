@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicAllergy;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarRx.data.RxPatientData;
@@ -23,7 +24,10 @@ public final class AllergyHelperBean {
 
 		addLocalAllergies(demographicId, results, locale);
 
-		addIntegratorAllergies(demographicId, results, locale);
+		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+		if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
+			addIntegratorAllergies(demographicId, results, locale);
+		}
 
 		return (results);
 	}
