@@ -33,6 +33,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -517,8 +518,18 @@ public class PreventionData {
 			Comparable date1=(Comparable)ht1.get("prevention_date_asDate");
 			Comparable date2=(Comparable)ht2.get("prevention_date_asDate");
 			
-			if (date1!=null)
+			if (date1!=null && date2!=null)
 			{
+				if (date1 instanceof Calendar)
+				{
+					date1=((Calendar)date1).getTime();
+				}
+				
+				if (date2 instanceof Calendar)
+				{
+					date2=((Calendar)date2).getTime();
+				}
+
 				return(date1.compareTo(date2));
 			}
 			else
