@@ -225,6 +225,10 @@ public class FluReport implements PreventionReport {
                    prd.color = "green";
                    //done++;
                 }
+                else
+                {
+                	log.error("Mised case : refused="+refused+", prevDate="+prevDate+", dueDate="+dueDate+", cutoffDate="+cutoffDate);
+                }
              }
              
              if (asofDate.before(endOfYear) && asofDate.after(beginingOfYear)){
@@ -382,7 +386,7 @@ public class FluReport implements PreventionReport {
    //public String nextSuggestedProcedure=null   
    private String letterProcessing(PreventionReportDisplay prd,Date cuttoffDate){
        if (prd != null){
-          if (prd.state.equals("No Info") || prd.state.equals("due") || prd.state.equals("Overdue")){
+          if ("No Info".equals(prd.state) || "due".equals(prd.state) || "Overdue".equals(prd.state)){
               // Get LAST contact method
               EctMeasurementsDataBeanHandler measurementData = new EctMeasurementsDataBeanHandler(prd.demographicNo,"FLUF");
               log.debug("getting FLUF data for "+prd.demographicNo);
@@ -424,7 +428,7 @@ public class FluReport implements PreventionReport {
           
           
           
-          }else if (prd.state.equals("Refused")){  //Not sure what to do about refused
+          }else if ("Refused".equals(prd.state)){  //Not sure what to do about refused
               EctMeasurementsDataBeanHandler measurementData = new EctMeasurementsDataBeanHandler(prd.demographicNo,"FLUF");
               log.debug("getting FLUF data for "+prd.demographicNo);
               Collection fluFollowupData = measurementData.getMeasurementsDataVector();
@@ -438,9 +442,9 @@ public class FluReport implements PreventionReport {
                   prd.lastFollowup = fluData.getDateObservedAsDate();
                   prd.lastFollupProcedure = fluData.getDataField();
               }
-          }else if(prd.state.equals("Ineligible")){
+          }else if("Ineligible".equals(prd.state)){
                 // Do nothing        
-          }else if(prd.state.equals("Up to date")){
+          }else if("Up to date".equals(prd.state)){
                 //Do nothing
               EctMeasurementsDataBeanHandler measurementDataHandler = new EctMeasurementsDataBeanHandler(prd.demographicNo,"FLUF");
               log.debug("getting followup data for "+prd.demographicNo);
@@ -452,7 +456,8 @@ public class FluReport implements PreventionReport {
                   prd.lastFollupProcedure = measurementData.getDataField();
               }
           }else{
-               log.warn("NOT SURE WHAT HAPPEND IN THE LETTER PROCESSING");
+              log.warn("NOT SURE WHAT HAPPEND IN THE LETTER PROCESSING");
+        	  log.error("prd.state appears to be null or a missed case : "+prd.state);
           }
        }
        return null;         
