@@ -69,7 +69,9 @@ function preview(uuid) {
 			String resp = (String) request.getAttribute("olisResponseContent");
 			if(resp == null) { resp = "";};
 			%>
+			<!--  RAW HL7
 				<%=resp%>
+			-->
 			<%
 			List<String> resultList = (List<String>) request.getAttribute("resultList");
 			

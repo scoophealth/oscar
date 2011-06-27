@@ -32,9 +32,13 @@ public class OLISResultsAction extends DispatchAction {
 		try {
 			String olisResultString = (String) request.getAttribute("olisResponseContent");			
 			if(olisResultString == null) {
-				List<String> resultList = new LinkedList<String>();
-				request.setAttribute("resultList", resultList);				
-				return mapping.findForward("results");
+				olisResultString = oscar.Misc.getStr(request.getParameter("olisResponseContent"), "");
+				request.setAttribute("olisResponseContent", olisResultString);
+				if (olisResultString.equals("")) {
+					List<String> resultList = new LinkedList<String>();
+					request.setAttribute("resultList", resultList);				
+					return mapping.findForward("results");
+				}
 			}
 			
 			UUID uuid = UUID.randomUUID();
