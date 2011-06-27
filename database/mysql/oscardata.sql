@@ -1413,6 +1413,8 @@ insert into `secRole` (role_name, description) values('CAISI ADMIN', 'CAISI ADMI
 insert into `secRole` (role_name, description) values('Recreation Therapist', 'Recreation Therapist');
 insert into `secRole` (role_name, description) values('property staff','property staff');
 insert into `secRole` (role_name, description) values('Support Counsellor','Support Counsellor');
+insert into `secRole` (role_name, description) values('Counselling Intern', 'Counselling Intern');
+
 
 
 insert into `secUserRole` (`provider_no`,`role_name`,`orgcd`,`activeyn`) values('999998', 'doctor', 'R0000001',1);
@@ -1889,6 +1891,20 @@ insert into `secObjPrivilege` values('Recreation Therapist','_pmm.mergeRecords',
 insert into `secObjPrivilege` values('Recreation Therapist','_pmm.newClient','x',0,'999998');
 insert into `secObjPrivilege` values('Recreation Therapist','_tasks','x',0,'999998');
 
+insert into `secObjPrivilege` values('Counselling Intern','_appointment','x',0,'999998');
+insert into `secObjPrivilege` values('Counselling Intern','_casemgmt.issues','x',0,'999998');
+insert into `secObjPrivilege` values('Counselling Intern','_casemgmt.notes','x',0,'999998');
+insert into `secObjPrivilege` values('Counselling Intern','_demographic','x',0,'999998');
+insert into `secObjPrivilege` values('Counselling Intern','_eChart','x',0,'999998');
+insert into `secObjPrivilege` values('Counselling Intern','_eChart.verifyButton','x',0,'999998');
+insert into `secObjPrivilege` values('Counselling Intern','_flowsheet','x',0,'999998');
+insert into `secObjPrivilege` values('Counselling Intern','_masterLink','x',0,'999998');
+insert into `secObjPrivilege` values('Counselling Intern','_pmm.agencyInformation','x',0,'999998');
+insert into `secObjPrivilege` values('Counselling Intern','_pmm.caseManagement','x',0,'999998');
+insert into `secObjPrivilege` values('Counselling Intern','_pmm.clientSearch','x',0,'999998');
+insert into `secObjPrivilege` values('Counselling Intern','_pmm.mergeRecords','x',0,'999998');
+insert into `secObjPrivilege` values('Counselling Intern','_pmm.newClient','x',0,'999998');
+insert into `secObjPrivilege` values('Counselling Intern','_tasks','x',0,'999998');
 
 
 insert into lst_orgcd (code, description, activeyn, orderbyindex,codetree) values('R0000001','Shelter Management Information System',1,10,'R000001');

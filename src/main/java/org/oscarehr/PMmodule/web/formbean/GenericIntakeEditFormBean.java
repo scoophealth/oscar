@@ -38,7 +38,7 @@ public class GenericIntakeEditFormBean extends ActionForm {
 
 	private static final String BED_PROGRAM_LABEL = "Bed Program";
 	private static final String EXTERNAL_PROGRAM_LABEL = "External Agency Client Referred From";
-	private static final String COMMUNITY_PROGRAM_LABEL = "Residence Location";
+	private static final String COMMUNITY_PROGRAM_LABEL = "Residential Status";
 	private static final String PROGRAM_IN_DOMAIN_LABEL = "Select where the intake is being performed if different from Admission Program";
 	
 	private String method;
