@@ -17,6 +17,7 @@ import javax.crypto.spec.SecretKeySpec;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.LoggedInInfo;
 import oscar.OscarProperties;
+import oscar.oscarMessenger.data.MsgProviderData;
 
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
@@ -46,6 +47,7 @@ public class SFTPConnector {
 	private static final String OMD_ip = "207.219.74.198";
 	private static final int OMD_port = 22;
 
+	private static boolean failureMsgSentToAdmin = false;
 	
 	//this file needs chmod 444 permissions for the connection to go through
 	public static  String OMD_directory = OscarProperties.getInstance().getProperty("OMD_directory");
@@ -548,7 +550,7 @@ public class SFTPConnector {
 		return SFTPConnector.isAutoFetchRunning;
 	}
 	
-	public static void startAutoFetch() {
+	public static void startAutoFetch(boolean isManualFetch) {
 		
 		if (!isAutoFetchRunning) {
 			SFTPConnector.isAutoFetchRunning = true;
@@ -570,10 +572,18 @@ public class SFTPConnector {
 
 				MiscUtils.getLogger().debug("Closed SFTP connection");
 
+				SFTPConnector.failureMsgSentToAdmin = false;
+				
 			} catch (Exception e) {
 				MiscUtils.getLogger().error("Couldn't perform SFTP fetch for HRM - notifying user of failure", e);
 				ArrayList<String> sendToProviderList = new ArrayList<String>();
-				sendToProviderList.add("999998");
+				if (isManualFetch) {
+					sendToProviderList.add("999998");
+				} else if (!SFTPConnector.failureMsgSentToAdmin) {
+					sendToProviderList.add("999998");
+					SFTPConnector.failureMsgSentToAdmin = true;
+				}
+				
 				if (LoggedInInfo.loggedInInfo != null && LoggedInInfo.loggedInInfo.get() != null && LoggedInInfo.loggedInInfo.get().loggedInProvider != null) {
 						sendToProviderList.add(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
 				}
@@ -581,7 +591,17 @@ public class SFTPConnector {
 				String message = "OSCAR attempted to perform a fetch of HRM data at " + (new Date()).toString() + " but there was an error during the task.\n\nSee below for the error message:\n" + e.toString();
 
 				oscar.oscarMessenger.data.MsgMessageData messageData = new oscar.oscarMessenger.data.MsgMessageData();
-				messageData.sendMessage(message, "HRM Retrieval Error", "System", messageData.createSentToString(sendToProviderList), "-1", (String[]) sendToProviderList.toArray());
+				
+				ArrayList<MsgProviderData> sendToProviderListData = new ArrayList<MsgProviderData>();
+				for (String providerNo : sendToProviderList) {
+					MsgProviderData mpd = new MsgProviderData();
+					mpd.providerNo = providerNo;
+					sendToProviderListData.add(mpd);
+				}
+				String sentToString = messageData.createSentToString(sendToProviderListData);
+				
+				
+				messageData.sendMessage(message, "HRM Retrieval Error", "System", sentToString, "-1", (String[]) sendToProviderList.toArray());
 			}
 			
 			SFTPConnector.isAutoFetchRunning = false;

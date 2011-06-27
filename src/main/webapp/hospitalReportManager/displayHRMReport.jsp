@@ -7,6 +7,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <%
+HRMDocument hrmDocument = (HRMDocument) request.getAttribute("hrmDocument");
 HRMReport hrmReport = (HRMReport) request.getAttribute("hrmReport");
 Integer hrmReportId = (Integer) request.getAttribute("hrmReportId");
 
@@ -225,7 +226,8 @@ function revokeSignOffHrm(reportId) {
 	<table>
 		<tr>
 			<th>Report Date</th>
-			<td><%=(hrmReport.getFirstReportEventTime() != null ? hrmReport.getFirstReportEventTime().getTime().toString() : "") %></td>
+			<td><%=(hrmReport.getFirstReportEventTime() != null ? hrmReport.getFirstReportEventTime().getTime().toString() : 
+					((hrmReport.getFirstAccompanyingSubClassDateTime() != null ? hrmReport.getFirstAccompanyingSubClassDateTime().getTime().toString() : ""))) %></td>
 		</tr>
 		<tr>
 			<th>Demographic Info</th>
@@ -263,6 +265,12 @@ function revokeSignOffHrm(reportId) {
 				} else { %>
 					<i>No providers currently assigned</i><br />
 				<% } %>
+				<% if (hrmDocument.getUnmatchedProviders() != null && hrmDocument.getUnmatchedProviders().trim().length() > 0) {
+					String[] unmatchedProviders = hrmDocument.getUnmatchedProviders().split("|");
+					for (String unmatchedProvider : unmatchedProviders) { %>
+						<i><abbr title="From the HRM document"><%=unmatchedProvider %></abbr></i><br />
+					<% }
+				} %>
 				<div id="providerList<%=hrmReportId %>hrm"></div>
 				<input type="hidden" name="provi" id="provfind<%=hrmReportId%>hrm" />
                 <input type="text" id="autocompleteprov<%=hrmReportId%>hrm" name="demographicKeyword"/>

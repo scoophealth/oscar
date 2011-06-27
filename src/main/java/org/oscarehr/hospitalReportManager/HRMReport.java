@@ -222,6 +222,16 @@ public class HRMReport {
 		return subclassList;
 	}
 	
+	public Calendar getFirstAccompanyingSubClassDateTime() {
+		if (hrmReport.getPatientRecord().getReportsReceived().get(0).getOBRContent() != null && 
+				hrmReport.getPatientRecord().getReportsReceived().get(0).getOBRContent().get(0) != null &&
+				hrmReport.getPatientRecord().getReportsReceived().get(0).getOBRContent().get(0).getObservationDateTime() != null) {
+			return hrmReport.getPatientRecord().getReportsReceived().get(0).getOBRContent().get(0).getObservationDateTime().getDateTime().toGregorianCalendar();
+		}
+		
+		return null;
+	}
+	
 	public String getMessageUniqueId() {
 		return hrmReport.getPatientRecord().getTransactionInformation().get(0).getMessageUniqueID();
 	}

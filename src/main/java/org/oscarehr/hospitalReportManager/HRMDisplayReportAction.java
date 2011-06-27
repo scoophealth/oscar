@@ -42,6 +42,8 @@ public class HRMDisplayReportAction extends DispatchAction {
 			if (document != null) {
 				HRMReport report = HRMReportParser.parseReport(document.getReportFile());
 				
+				request.setAttribute("hrmDocument", document);
+				
 				request.setAttribute("hrmReport", report);
 				request.setAttribute("hrmReportId", document.getId());
 				request.setAttribute("hrmReportTime", document.getTimeReceived().toString());
