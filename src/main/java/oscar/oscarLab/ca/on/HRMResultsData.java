@@ -30,7 +30,9 @@ public class HRMResultsData {
 	}
 
 	public List<LabResultData> populateHRMdocumentsResultsData(String providerNo, Integer page, Integer pageSize){
-
+		if(providerNo == null || "".equals(providerNo)){
+			providerNo = "-1";
+		}
 
 		List<HRMDocumentToProvider> hrmDocResultsProvider = hrmDocumentToProviderDao.findByProviderNoLimit(providerNo, page, pageSize);
 
@@ -48,6 +50,7 @@ public class HRMResultsData {
 			lbData.acknowledgedStatus = "U";
 			lbData.reportStatus = hrmDocument.get(0).getReportStatus();
 			lbData.segmentID = hrmDocument.get(0).getId().toString();
+			lbData.setDateObj(hrmDocument.get(0).getReportDate());
 			lbData.patientName = "Not, Assigned";
 
 			// check if patient is matched

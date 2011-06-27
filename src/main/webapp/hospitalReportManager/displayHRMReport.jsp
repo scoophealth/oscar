@@ -20,8 +20,8 @@ ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
 <html>
 <head>
 <title>HRM Report</title>
-<script type="text/javascript" src="../share/jquery/jquery-1.4.2.js"></script>
-<script type="text/javascript" src="../share/jquery/jquery-ui-1.8.4.custom_full.min.js"></script>
+<script type="text/javascript" src="../js/jquery-1.3.2.min.js"></script>
+<script type="text/javascript" src="../js/jquery-ui-1.7.3.custom.min.js"></script>
 <script language="javascript" type="text/javascript" src="../share/javascript/Oscar.js" ></script>
 <script type="text/javascript" src="../share/javascript/prototype.js"></script>
 <script type="text/javascript" src="../share/javascript/effects.js"></script>
@@ -35,7 +35,7 @@ ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
 <script type="text/javascript" src="../js/demographicProviderAutocomplete.js"></script>
 
 
-<link rel="stylesheet" href="../share/jquery/jquery-ui-1.8.4.custom.css" type="text/css" />  
+<link rel="stylesheet" href="../js/jquery_css/smoothness/jquery-ui-1.7.3.custom.css" type="text/css" />  
 <link rel="stylesheet" type="text/css" href="../share/yui/css/fonts-min.css"/>
 <link rel="stylesheet" type="text/css" href="../share/yui/css/autocomplete.css"/>
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/demographicProviderAutocomplete.css"  />
@@ -258,7 +258,7 @@ function revokeSignOffHrm(reportId) {
 				<div id="provstatus<%=hrmReportId %>"></div>
 				<% if (providerLinkList != null || providerLinkList.size() >= 1) {
 					for (HRMDocumentToProvider p : providerLinkList) { %>
-						<%=providerDao.getProviderName(p.getProviderNo()) %> <%=p.getSignedOff() == 1 ? "<abbr title='" + p.getSignedOffTimestamp().toString() + "'>(Signed-Off)</abbr>" : "" %> <a href="#" onclick="removeProvFromHrm('<%=p.getId() %>', '<%=hrmReportId %>')">(remove)</a><br />
+						<%=providerDao.getProviderName(p.getProviderNo())%> <%=p.getSignedOff() !=null && p.getSignedOff()  == 1 ? "<abbr title='" + p.getSignedOffTimestamp() + "'>(Signed-Off)</abbr>" : "" %> <a href="#" onclick="removeProvFromHrm('<%=p.getId() %>', '<%=hrmReportId %>')">(remove)</a><br />
 				<%  }
 				} else { %>
 					<i>No providers currently assigned</i><br />
@@ -337,7 +337,8 @@ function revokeSignOffHrm(reportId) {
 				<input type="button" style="display: none;" value="Save" id="save<%=hrmReportId %>hrm" />
 				<%
 				if (request.getAttribute("thisProviderLink") != null) { 
-					if (((HRMDocumentToProvider) request.getAttribute("thisProviderLink")).getSignedOff() != 1) {
+					HRMDocumentToProvider hrmDocumentToProvider = (HRMDocumentToProvider) request.getAttribute("thisProviderLink");
+					if (hrmDocumentToProvider != null && hrmDocumentToProvider.getSignedOff() != null && hrmDocumentToProvider.getSignedOff() != 1) {
 				%>
 				<input type="button" id="signoff<%=hrmReportId %>" value="Sign-Off" onClick="signOffHrm('<%=hrmReportId %>')" />
 				<%  } else { %>
