@@ -449,6 +449,7 @@ public class CaisiIntegratorManager {
 				
 		demographic.setPatientStatus("AC");
 		demographic.setDateJoined(new Date());
+		demographic.setRosterDate(new Date());
 		
 		return(demographic);
     }
