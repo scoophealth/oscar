@@ -287,7 +287,7 @@ public class RxPatientData {
             ResultSet rs;            
             Allergy allergy;
             
-            rs = DBHandler.GetSQL("SELECT * FROM allergies WHERE demographic_no = '" + getDemographicNo() + "' and archived = '0' ORDER BY DESCRIPTION");
+            rs = DBHandler.GetSQL("SELECT * FROM allergies WHERE demographic_no = '" + getDemographicNo() + "' and archived = '0' ORDER BY position");
             
             while (rs.next()) {               
                allergy = new Allergy(getDemographicNo(), rs.getInt("allergyid"), rs.getDate("entry_date"),               
@@ -297,14 +297,14 @@ public class RxPatientData {
                rs.getInt("TYPECODE"));
                               
                allergy.getAllergy().setReaction(oscar.Misc.getString(rs, "reaction"));
-	       allergy.getAllergy().setStartDate(rs.getDate("start_date"));
+               allergy.getAllergy().setStartDate(rs.getDate("start_date"));
                allergy.getAllergy().setAgeOfOnset(oscar.Misc.getString(rs, "age_of_onset"));
                allergy.getAllergy().setSeverityOfReaction(oscar.Misc.getString(rs, "severity_of_reaction"));
                allergy.getAllergy().setOnSetOfReaction(oscar.Misc.getString(rs, "onset_of_reaction"));
                allergy.getAllergy().setRegionalIdentifier(oscar.Misc.getString(rs, "regional_identifier"));
                allergy.getAllergy().setLifeStage(oscar.Misc.getString(rs,"life_stage"));
                allergy.getAllergy().setPickID(rs.getInt("drugref_id"));
-               
+               allergy.getAllergy().setPosition(rs.getInt("position"));
                lst.add(allergy);               
             }            
             rs.close();            
@@ -430,12 +430,25 @@ public class RxPatientData {
             return this.allergy;            
          }
                   
+         public int getNextPosition() throws SQLException {
+        	 String sql = "SELECT Max(position) FROM allergies WHERE demographic_no=" + demographicId;               
+             ResultSet rs = DBHandler.GetSQL(sql);
+             
+             int position = 0;
+             if (rs.next()) {                  
+                position = rs.getInt(1);                  
+             }
+        	 return (position+1);
+         }
+         
          public boolean Save() throws SQLException {            
             boolean b;            
             String sql;            
-            if (this.getAllergyId() == 0) {               
+            if (this.getAllergyId() == 0) {       
+            	//need to add to the bottom of list
+            	allergy.setPosition(getNextPosition());
                sql = "INSERT INTO allergies (demographic_no, entry_date, "               
-               + "DESCRIPTION, HICL_SEQNO, HIC_SEQNO, AGCSP, AGCCS, TYPECODE,reaction,drugref_id,start_date,age_of_onset,severity_of_reaction,onset_of_reaction,regional_identifier,life_stage) "               
+               + "DESCRIPTION, HICL_SEQNO, HIC_SEQNO, AGCSP, AGCCS, TYPECODE,reaction,drugref_id,start_date,age_of_onset,severity_of_reaction,onset_of_reaction,regional_identifier,life_stage,position) "               
                + "VALUES (" + demographicId + ", '"               
                + oscar.oscarRx.util.RxUtil.DateToString(this.getEntryDate()) + "', '"               
                + StringEscapeUtils.escapeSql(this.allergy.getDESCRIPTION()) + "', "               
@@ -446,12 +459,14 @@ public class RxPatientData {
                + this.allergy.getTYPECODE() + ", '"               
                + this.allergy.getReaction() + "', '"               
                + this.allergy.getPickID() + "', '" 
-	       + oscar.oscarRx.util.RxUtil.DateToString(this.allergy.getStartDate()) + "', '"
+               + oscar.oscarRx.util.RxUtil.DateToString(this.allergy.getStartDate()) + "', '"
                + this.allergy.getAgeOfOnset() + "', '"
                + this.allergy.getSeverityOfReaction() + "', '"
                + this.allergy.getOnSetOfReaction()+"','"
                + this.allergy.getRegionalIdentifier()+"','"
-               + this.allergy.getLifeStage()+"')";
+               + this.allergy.getLifeStage()+"',"
+               + this.allergy.getPosition()               
+               +")";
                
                b = DBHandler.RunSQL(sql);
                
@@ -473,12 +488,13 @@ public class RxPatientData {
                + "AGCCS = " + allergy.getAGCCS() + ", "
                + "TYPECODE = " + allergy.getTYPECODE() + ", "
                + "reaction = '" + allergy.getReaction() + "', "               
-               + "drugref_id = '" + allergy.getPickID() + "' " 
+               + "drugref_id = '" + allergy.getPickID() + "', " 
 	       + "start_date = '" + oscar.oscarRx.util.RxUtil.DateToString(allergy.getStartDate()) + "', "
                + "age_of_onset ='"+allergy.getAgeOfOnset() + "',"
                + "severity_of_reaction = '"+allergy.getSeverityOfReaction() + "',"
                + "onset_of_reaction = '"+allergy.getOnSetOfReaction() + "', "
                + "life_stage =  '"+allergy.getLifeStage() + "', "
+               + "position = " + allergy.getPosition() + " "
                + "WHERE allergyid = " + this.getAllergyId();
                
                b = DBHandler.RunSQL(sql);               

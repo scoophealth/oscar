@@ -29,18 +29,26 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarRx.data.RxPatientData;
+import oscar.oscarRx.data.RxPatientData.Patient.Allergy;
 
 
-public final class RxShowAllergyAction extends Action {
+public final class RxShowAllergyAction extends DispatchAction {
     
+	
+	public ActionForward reorder(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {		
+		reorder(request);
+		ActionForward fwd = mapping.findForward("success-redirect");
+		return new ActionForward(fwd.getPath()+ "?demographicNo="+request.getParameter("demographicNo"),true );
+	}
     
-    public ActionForward execute(ActionMapping mapping,
+    public ActionForward unspecified(ActionMapping mapping,
     ActionForm form,
     HttpServletRequest request,
     HttpServletResponse response)
@@ -76,6 +84,10 @@ public final class RxShowAllergyAction extends Action {
         
         request.getSession().setAttribute("RxSessionBean", bean);
         
+        if(request.getParameter("method")!=null && request.getParameter("method").equals("reorder")) {
+        	reorder(request);
+        }
+        
         RxPatientData.Patient patient = null;
         try {
             patient = RxPatientData.getPatient(bean.getDemographicNo());
@@ -91,5 +103,41 @@ public final class RxShowAllergyAction extends Action {
             response.sendRedirect("error.html");
             return null;
         }
+    }
+    
+    private void reorder(HttpServletRequest request) {
+    	String direction = request.getParameter("direction");
+    	String demographicNo = request.getParameter("demographicNo");
+    	int allergyId = Integer.parseInt(request.getParameter("allergyId"));
+    	try {
+    		Allergy[] allergies = RxPatientData.getPatient(demographicNo).getAllergies();
+    		for(int x=0;x<allergies.length;x++) {
+    			if(allergies[x].getAllergyId() == allergyId) {
+    				if(direction.equals("up")) {    					
+    					if(x==0) { continue;}
+    					//move ahead
+    					int myPosition = allergies[x].getAllergy().getPosition();
+    					int swapPosition = allergies[x-1].getAllergy().getPosition();
+    					allergies[x].getAllergy().setPosition(swapPosition);
+    					allergies[x-1].getAllergy().setPosition(myPosition);
+    					allergies[x].Save();
+    					allergies[x-1].Save();
+    				}
+    				if(direction.equals("down")) {    					
+    					if(x==(allergies.length-1)) { continue;}
+    					int myPosition = allergies[x].getAllergy().getPosition();
+    					int swapPosition = allergies[x+1].getAllergy().getPosition();
+    					allergies[x].getAllergy().setPosition(swapPosition);
+    					allergies[x+1].getAllergy().setPosition(myPosition);
+    					allergies[x].Save();
+    					allergies[x+1].Save();
+    				}
+    			}
+    		}
+
+    	}catch(Exception e) {
+    		MiscUtils.getLogger().error("error",e);
+    	}
+		
     }
 }

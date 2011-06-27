@@ -53,6 +53,7 @@ public class RxAllergyData {
         String onSetOfReaction = null;
         private String regionalIdentifier = null;
         private String lifeStage = null;
+        private int position = 0;
         
         public String getLifeStage() {
         	return lifeStage;
@@ -60,6 +61,15 @@ public class RxAllergyData {
 
 		public void setLifeStage(String lifeStage) {
         	this.lifeStage = lifeStage;
+        }
+
+		
+		public int getPosition() {
+        	return position;
+        }
+
+		public void setPosition(int position) {
+        	this.position = position;
         }
 
 		public Allergy(){

@@ -37,6 +37,7 @@ CREATE TABLE allergies (
   onset_of_reaction char(1) default '0', 
   regional_identifier varchar(100),
   life_stage char(1),
+  position int(10) not null,
   PRIMARY KEY  (allergyid)
 ) ;
 
