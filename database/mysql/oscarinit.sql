@@ -651,6 +651,7 @@ CREATE TABLE drugs (
   refill_duration int(10),
   refill_quantity int(10),
   hide_cpp tinyint(1),
+  position int(10) not null,
   PRIMARY KEY  (drugid)
 ) ;
 

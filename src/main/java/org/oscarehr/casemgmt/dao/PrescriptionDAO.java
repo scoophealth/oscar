@@ -42,16 +42,15 @@ public class PrescriptionDAO extends HibernateDaoSupport {
 	}
 
 	public List<Drug> getUniquePrescriptions(String demographic_no) {
-
-
 		//List<Drug> rs=drugDao.findByDemographicIdOrderByDate(new Integer(demographic_no), false);
-                List<Drug> rs=drugDao.getUniquePrescriptions(demographic_no);
+        List<Drug> rs=drugDao.getUniquePrescriptions(demographic_no);
         return rs;
     }
 
 	public List<Drug> getPrescriptions(String demographic_no) {
-
-    	List<Drug> rs=drugDao.findByDemographicIdOrderByDate(new Integer(demographic_no), null);
+		//List<Drug> rs=drugDao.findByDemographicIdOrderByDate(new Integer(demographic_no), null);
+		List<Drug> rs=drugDao.findByDemographicIdOrderByPosition(new Integer(demographic_no), null);
 	return rs;
 	}
+	
 }

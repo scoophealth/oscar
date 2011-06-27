@@ -77,6 +77,23 @@ public class DrugDao extends AbstractDao<Drug> {
         List<Drug> results = query.getResultList();
 
         return (results);
+    }    
+    
+    public List<Drug> findByDemographicIdOrderByPosition(Integer demographicId, Boolean archived) {
+        // build sql string
+        String sqlCommand = "select x from Drug x where x.demographicId=?1 " + (archived == null ? "" : "and x.archived=?2") + " order by x.position, x.rxDate desc, x.id desc";
+
+        // set parameters
+        Query query = entityManager.createQuery(sqlCommand);
+        query.setParameter(1, demographicId);
+        if (archived != null) {
+            query.setParameter(2, archived);
+        }
+        // run query
+        @SuppressWarnings("unchecked")
+        List<Drug> results = query.getResultList();
+
+        return (results);
     }
 
     public List<Drug> findByDemographicIdSimilarDrugOrderByDate(Integer demographicId, String regionalIdentifier, String customName) {
@@ -127,7 +144,7 @@ public class DrugDao extends AbstractDao<Drug> {
     public List<Drug> getUniquePrescriptions(String demographic_no) {
 
 
-        List<Drug> rs = findByDemographicIdOrderByDate(new Integer(demographic_no), false);
+        List<Drug> rs = findByDemographicIdOrderByPosition(new Integer(demographic_no), false);
 
         List<Drug> rt = new ArrayList<Drug>();
         for (Drug drug : rs) {
