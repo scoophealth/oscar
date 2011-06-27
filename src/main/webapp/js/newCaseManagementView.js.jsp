@@ -2846,3 +2846,11 @@ function autoCompleteShowMenuCPP(element, update) {
         }
     }
     
+    function copyCppToCurrentNote() {
+    	var currentNoteId = jQuery("input[name='noteId']").val();
+    	var currentNoteText = jQuery("#caseNote_note"+currentNoteId).val();
+    	currentNoteText += "\n";
+    	currentNoteText += jQuery("#noteEditTxt").val();    	
+    	jQuery("#caseNote_note"+currentNoteId).val(currentNoteText);
+    }
+    
