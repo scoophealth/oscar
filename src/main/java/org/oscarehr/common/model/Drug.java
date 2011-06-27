@@ -120,6 +120,9 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
         private Integer refillQuantity;
         @Column(name="dispense_interval")
         private Integer dispenseInterval;
+        @Column(name="position")
+        private Integer position;
+        
 	// ///
 	@Transient
 	private String remoteFacilityName = null;
@@ -758,5 +761,12 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 		}
 		return days;
 	}
+	public Integer getPosition() {
+    	return position;
+    }
+	public void setPosition(Integer position) {
+    	this.position = position;
+    }
 
+	
 }

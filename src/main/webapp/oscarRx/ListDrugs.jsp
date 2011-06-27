@@ -86,6 +86,7 @@ if (heading != null){
             <th align="center" width="15px">&nbsp;</th>
             <th align="center"><bean:message key="SearchDrug.msgLocationPrescribed"/></th>
             <th align="center"><bean:message key="SearchDrug.msgHideCPP"/></th>
+             <th align="center"></th>
         </tr>
 
         <%
@@ -101,8 +102,8 @@ if (heading != null){
 
             long now = System.currentTimeMillis();
             long month = 1000L * 60L * 60L * 24L * 30L;
-
-            for (Drug prescriptDrug : prescriptDrugs) {
+			for (int x=0;x<prescriptDrugs.size();x++) {
+				Drug prescriptDrug = prescriptDrugs.get(x);
                 boolean isPrevAnnotation=false;
                 String styleColor = "";
                 //test for previous note
@@ -269,6 +270,14 @@ if (heading != null){
 					}
 				%>
 				<input type="checkbox" id="hidecpp_<%=prescriptIdInt%>" <%=checked%>/>
+			</td>
+			<td nowrap="nowrap">
+				<%if(!(prescriptDrugs.get(prescriptDrugs.size()-1) == prescriptDrug)) {%>
+				<img border="0" src="<%=request.getContextPath()%>/images/icon_down_sort_arrow.png" onclick="moveDrugDown(<%=prescriptDrug.getId() %>,<%=prescriptDrugs.get(x+1).getId() %>,<%=prescriptDrug.getDemographicId()%>);return false;"/>
+				<% } %>
+				<%if(!(prescriptDrugs.get(0) == prescriptDrug)) {%>
+				<img border="0" src="<%=request.getContextPath()%>/images/icon_up_sort_arrow.png" onclick="moveDrugUp(<%=prescriptDrug.getId() %>,<%=prescriptDrugs.get(x-1).getId() %>,<%=prescriptDrug.getDemographicId()%>);return false;"/>
+				<%} %>
 			</td>
         </tr>
         <script>

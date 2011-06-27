@@ -104,7 +104,7 @@ public class EctDisplayRxAction extends EctDisplayAction {
             item.setURL("return false;");
             Dao.addItem(item);
         }
-        Dao.sortItems(NavBarDisplayDAO.DATESORT_ASC);
+        //Dao.sortItems(NavBarDisplayDAO.DATESORT_ASC);
 
         return true;
         }

@@ -2223,6 +2223,9 @@
 		<action path="/oscarRx/hideCpp" type="oscar.oscarRx.web.RxHideCppAction" scope="request" parameter="method">			
 		</action>
 		
+		<action path="/oscarRx/reorderDrug" type="oscar.oscarRx.web.RxReorderAction" scope="request" parameter="method">			
+		</action>
+		
 		<action path="/oscarRx/copyFavorite2" name="rxCopyForm" type="org.springframework.web.struts.DelegatingActionProxy" scope="request" parameter="dispatch">
 			<forward name="success" path="/oscarRx/CopyFavorites2.jsp" />
 			<forward name="edit" path="/appointment/appointmentstatusedit.jsp" />

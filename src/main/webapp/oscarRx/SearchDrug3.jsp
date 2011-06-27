@@ -540,6 +540,29 @@ function checkFav(){
             }});
 
     }
+     
+
+    function moveDrugDown(drugId,swapDrugId,demographicNo) {
+    	new Ajax.Request('<c:out value="${ctx}"/>/oscarRx/reorderDrug.do?method=update&direction=down&drugId='+drugId + '&swapDrugId='+swapDrugId+'&demographicNo=' + demographicNo , {
+  		  method: 'get',
+  		  onSuccess: function(transport) {		
+  			callReplacementWebService("ListDrugs.jsp",'drugProfile');
+            resetReRxDrugList();
+            resetStash();
+  		  }
+  		});
+    }
+
+    function moveDrugUp(drugId,swapDrugId,demographicNo) {
+    	new Ajax.Request('<c:out value="${ctx}"/>/oscarRx/reorderDrug.do?method=update&direction=up&drugId='+drugId  + '&swapDrugId='+swapDrugId+'&demographicNo=' + demographicNo, {
+    		  method: 'get',
+    		  onSuccess: function(transport) {
+    			  callReplacementWebService("ListDrugs.jsp",'drugProfile');
+                  resetReRxDrugList();
+                  resetStash();
+    		  }
+    		});
+    }     
 </script>
 
 
