@@ -14,7 +14,7 @@ public class SchedulerJob extends TimerTask {
 	@Override
 	public void run() {
 		MiscUtils.getLogger().debug("===== JOB RUNNING....");
-		SFTPConnector.startAutoFetch();
+		SFTPConnector.startAutoFetch(false);
 
 	}
 }

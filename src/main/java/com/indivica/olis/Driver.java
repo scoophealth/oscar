@@ -114,6 +114,7 @@ public class Driver {
 
 		} catch (Exception e) {
 			MiscUtils.getLogger().error("Can't perform OLIS query due to exception.", e);
+			request.setAttribute("searchException", e);
 			return "";
 		}
 	}

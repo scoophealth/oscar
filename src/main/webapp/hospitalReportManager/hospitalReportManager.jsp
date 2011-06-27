@@ -120,7 +120,7 @@ br {
 <body vlink="#0000FF" class="BodyStyle">
 
 <% if (request.getParameter("fetch") != null && request.getParameter("fetch").equalsIgnoreCase("true"))
-		SFTPConnector.startAutoFetch();
+		SFTPConnector.startAutoFetch(true);
 %>
 <table class="MainTable">
 	<tr class="MainTableTopRow">
