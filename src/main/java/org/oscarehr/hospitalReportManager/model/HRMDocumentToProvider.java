@@ -18,7 +18,7 @@ public class HRMDocumentToProvider extends AbstractModel<Integer>  {
 	
 	private String providerNo;
 	private String hrmDocumentId;
-	private Integer signedOff;
+	private Integer signedOff =0;
 	private Date signedOffTimestamp;
 	
 	@Override

@@ -2286,6 +2286,12 @@
 		<action path="/hospitalReportManager/Display" type="org.oscarehr.hospitalReportManager.HRMDisplayReportAction" parameter="method" scope="request" validate="false">
 			<forward name="display" path="/hospitalReportManager/displayHRMReport.jsp" />
 		</action>
+		<action input="/hospitalReportManager/hrmKeyUploader.jsp" name="hrmKeyUploadForm" path="/hospitalReportManager/hrmKeyUploader" scope="request" type="org.oscarehr.hospitalReportManager.HRMUploadKeyAction">
+			<forward name="success" path="/hospitalReportManager/hrmPreferences.jsp" />
+		</action>
+		<action input="/hospitalReportManager/hospitalReportManager.jsp" name="hrmLabUploadForm" path="/hospitalReportManager/UploadLab" scope="request" type="org.oscarehr.hospitalReportManager.HRMUploadLabAction">
+			<forward name="success" path="/hospitalReportManager/hospitalReportManager.jsp" />
+		</action>
 
 	</action-mappings>
 	<controller processorClass="org.apache.struts.tiles.TilesRequestProcessor" maxFileSize="20M" />
