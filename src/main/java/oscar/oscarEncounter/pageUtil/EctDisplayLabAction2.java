@@ -44,9 +44,11 @@ import oscar.OscarProperties;
 import oscar.oscarLab.ca.all.web.LabDisplayHelper;
 import oscar.oscarLab.ca.on.CommonLabResultData;
 import oscar.oscarLab.ca.on.LabResultData;
+import org.oscarehr.common.dao.OscarLogDao;
 import oscar.util.DateUtils;
 import oscar.util.OscarRoleObjectPrivilege;
 import oscar.util.StringUtils;
+import org.oscarehr.util.SpringUtils;
 
 //import oscar.oscarSecurity.CookieSecurity;
 
@@ -57,6 +59,7 @@ public class EctDisplayLabAction2 extends EctDisplayAction {
 	public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
 
 		logger.debug("EctDisplayLabAction2");
+		OscarLogDao oscarLogDao = (OscarLogDao) SpringUtils.getBean("oscarLogDao");
 
 		boolean a = true;
 		Vector v = OscarRoleObjectPrivilege.getPrivilegeProp("_newCasemgmt.labResult");
@@ -164,6 +167,10 @@ public class EctDisplayLabAction2 extends EctDisplayAction {
 					labDisplayName = result.getDiscipline();
 					url = request.getContextPath() + "/lab/CA/BC/labDisplay.jsp?demographicId=" + bean.demographicNo + "&segmentID=" + result.segmentID + "&providerNo=" + bean.providerNo + "&multiID=" + result.multiLabId + remoteFacilityIdQueryString;
 				}
+				String labRead = "";
+				if(!oscarLogDao.hasRead(( (String) request.getSession().getAttribute("user")   ),"lab",result.segmentID)){
+                	labRead = "*";	
+                }
 				
 				NavBarDisplayDAO.Item item = Dao.Item();
 				logger.info("Adding link: " + labDisplayName + " : " + formattedDate);
@@ -172,7 +179,8 @@ public class EctDisplayLabAction2 extends EctDisplayAction {
 				hash = winName.hashCode();
 				hash = hash < 0 ? hash * -1 : hash;
 				func.append(hash + "','" + url + "'); return false;");
-				item.setTitle(labDisplayName);
+				
+				item.setTitle(labRead+labDisplayName+labRead);
 				item.setURL(func.toString());
 				item.setDate(date);
 				if(result.isAbnormal()){
