@@ -129,9 +129,8 @@ br {
 	<tr>
 		<td class="MainTableLeftColumn" valign="top" width="160px;">&nbsp;</td>
 		<td class="MainTableRightColumn" valign="top">
-			
 			<div>ERP Message:</div>
-			<textarea name="unsignedResponse" style="width:640px; height:640px;"></textarea>
+			<textarea name="olisResponseContent" style="width:640px; height:640px;"></textarea>
 			<div><input type="submit" value="Submit" /></div>
 		</td>
 	</tr>
