@@ -1,4 +1,4 @@
-ialter table document add docClass varchar(60);
+alter table document add docClass varchar(60);
 alter table document add docSubClass varchar(60);
 
 create table ctl_doc_class (
@@ -166,3 +166,4 @@ insert into ctl_doc_class (reportclass,subclass) values ("ConsultB","Encounter R
 insert into ctl_doc_class (reportclass,subclass) values ("ConsultB","Operative Report");
 insert into ctl_doc_class (reportclass,subclass) values ("ConsultB","Progress Report");
 
+alter table allergies add position int(10) not null;

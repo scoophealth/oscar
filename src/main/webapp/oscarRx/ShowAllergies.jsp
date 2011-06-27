@@ -81,6 +81,14 @@ String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.D
             window.location="addReaction.do?ID=0&type=0&name="+name;
         }
     }
+    
+    function moveAllergyDown(allergyId) {
+    	window.location="showAllergy.do?method=reorder&direction=down&demographicNo=" + <%=bean.getDemographicNo()%> + "&allergyId="+allergyId;
+    }
+    
+	function moveAllergyUp(allergyId) {
+		window.location="showAllergy.do?method=reorder&direction=up&demographicNo=" + <%=bean.getDemographicNo()%> + "&allergyId="+allergyId;
+    }
 </script>
 </head>
 <bean:define id="patient"
@@ -173,6 +181,12 @@ String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.D
 														<%
 													}
 												%>
+												<%if(!(displayAllergies.get(displayAllergies.size()-1) == displayAllergy)) {%>
+												<img border="0" align="bottom" src="<%=request.getContextPath()%>/images/icon_down_sort_arrow.png" onclick="moveAllergyDown(<%=displayAllergy.getId() %>);return false;"/>
+												<% } %>
+												<%if(!(displayAllergies.get(0) == displayAllergy)) {%>
+												<img border="0" align="top" src="<%=request.getContextPath()%>/images/icon_up_sort_arrow.png" onclick="moveAllergyUp(<%=displayAllergy.getId() %>);return false;"/>
+												<%} %>
 											</td>
 											<td><%=StringEscapeUtils.escapeHtml(displayAllergy.getEntryDate())%></td>
 											<td><%=StringEscapeUtils.escapeHtml(displayAllergy.getDescription())%></td>
