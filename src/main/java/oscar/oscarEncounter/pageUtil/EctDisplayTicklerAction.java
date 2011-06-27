@@ -98,7 +98,7 @@ public class EctDisplayTicklerAction extends EctDisplayAction {
         item.setDate(serviceDate);
         days = (today.getTime() - serviceDate.getTime())/(1000*60*60*24);
         if( days > 0 )
-            item.setColour("FF0000");
+            item.setColour("#FF0000");
             
         itemHeader = StringUtils.maxLenString(rs.getString("message"), MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);                      
         item.setLinkTitle(itemHeader+ " " + DateUtils.formatDate(serviceDate,request.getLocale()));        
