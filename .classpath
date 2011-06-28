@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry including="**/*.java" kind="src" output="target/test-classes" path="src/test/java"/>
-	<classpathentry excluding="**/*.java" kind="src" output="target/test-classes" path="src/test/resources"/>
+	<classpathentry including="**/*.java" kind="src" path="src/test/java"/>
+	<classpathentry excluding="**/*.java" kind="src" path="src/test/resources"/>
 	<classpathentry including="**/*.java" kind="src" path="src/main/java"/>
 	<classpathentry excluding="**/*.java" kind="src" path="src/main/resources"/>
 	<classpathentry kind="src" path="src/main/webapp"/>
@@ -250,5 +250,5 @@
 	<classpathentry kind="var" path="M2_REPO/org/apache/santuario/xmlsec/1.4.4/xmlsec-1.4.4.jar"/>
 	<classpathentry kind="var" path="M2_REPO/zxing/zxing-core/1.5/zxing-core-1.5.jar"/>
 	<classpathentry kind="var" path="M2_REPO/zxing/zxing-j2se/1.5/zxing-j2se-1.5.jar"/>
-	<classpathentry kind="output" path="target/classes"/>
+	<classpathentry kind="output" path="eclipse-target/classes"/>
 </classpath>
