@@ -13,6 +13,7 @@ import org.oscarehr.hospitalReportManager.xsd.OmdCds;
 import org.oscarehr.hospitalReportManager.xsd.PersonNameStandard;
 import org.oscarehr.hospitalReportManager.xsd.PersonNameStandard.LegalName.OtherName;
 import org.oscarehr.hospitalReportManager.xsd.ReportsReceived.OBRContent;
+import org.oscarehr.util.MiscUtils;
 
 public class HRMReport {
 
@@ -153,7 +154,13 @@ public class HRMReport {
 	}
 
 	public String getFirstReportTextContent() {
-		return hrmReport.getPatientRecord().getReportsReceived().get(0).getContent().getTextContent();
+		String result = null;
+		try {
+			result = hrmReport.getPatientRecord().getReportsReceived().get(0).getContent().getTextContent();
+		}catch(Exception e) {
+			MiscUtils.getLogger().error("error",e);
+		}
+		return result;
 	}
 	
 	public String getFirstReportClass() {
