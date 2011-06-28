@@ -145,7 +145,7 @@ function filterResults(select) {
 							<% } %>
 						</select>
 						</td>
-						<td colspan="4">
+						<td colspan="5">
 						Filter by reporting laboratory:
 						<select name="labFilter" onChange="filterResults(this)">
 							<option value="">All Labs</option>
@@ -171,6 +171,7 @@ function filterResults(select) {
 						<th>Discipline</th>
 						<th>Tests</th>
 						<th>Ordering Practitioner</th>
+						<th>Admitting Practitioner</th>
 					</tr>
 					
 					<%  int lineNum = 0;
@@ -188,8 +189,8 @@ function filterResults(select) {
 						</td>
 						<td><%=result.getHealthNum() %></td>
 						<td><%=result.getPatientName() %></td>
-						<td><%=result.getSex() %></td>
-						<td><%=result.getTimeStamp(0, 0) %></td>
+						<td align="center"><%=result.getSex() %></td>
+						<td><%=result.getSpecimenReceivedDateTime() %></td>
 						<td style="width:200px;">
 						<%
 						String discipline = result.getCategoryList();
@@ -206,6 +207,7 @@ function filterResults(select) {
 						<%=tests %>
 						</td>
 						<td> <%=result.getShortDocName() %> </td>
+						<td> <%=result.getAdmittingProviderNameShort()%></td>
 						 
 					</tr>
 					<% } %>
