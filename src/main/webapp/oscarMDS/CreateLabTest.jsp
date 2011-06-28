@@ -79,7 +79,8 @@
                  	<td><label>refRange (text):</label><input type="text" name="test_<%=id%>.refRangeText" id="test_<%=id%>.refRangeText" size="5"/></td>
                  </tr>                
                  
- 			                                                                                       
+ 			     <tr><td><label>Lab Notes:</label></td><td colspan="4"><textarea name="test_<%=id%>.labnotes" id="test_<%=id%>.labnotes" rows="5" cols="30"></textarea></td></tr>
+	                                                                                                
                                  
                 </table>
                 
@@ -87,7 +88,7 @@
 										
 		       </fieldset>
 		       <script>
-			       Calendar.setup({ inputField : "test_<%=id%>.valDate", ifFormat : "%Y-%m-%d", showsTime :true, button : "test_<%=id%>.valDate_cal" });
+			       Calendar.setup({ inputField : "test_<%=id%>.valDate", ifFormat : "%Y-%m-%d %H:%m", showsTime :true, button : "test_<%=id%>.valDate_cal" });
 
 		       </script>
 </div>
