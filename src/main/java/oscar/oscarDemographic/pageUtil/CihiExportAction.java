@@ -23,6 +23,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.validator.DynaValidatorForm;
 import org.apache.xmlbeans.XmlOptions;
+import org.apache.log4j.Logger;
 
 
 import oscar.oscarEncounter.oscarMeasurements.data.ImportExportMeasurements;
@@ -83,6 +84,8 @@ public class CihiExportAction extends DispatchAction {
 	private Hl7TextInfoDao hl7TextInfoDAO;
 	private PrescriptionDAO prescriptionDao;
 	private PreventionDao preventionDao;
+	
+	private Logger logger = MiscUtils.getLogger();
 	
 	public void setDemographicDao(DemographicDao demographicDao) {
 	    this.demographicDao = demographicDao;
@@ -355,6 +358,11 @@ public class CihiExportAction extends DispatchAction {
 		}
 		cdsDtCihi.Gender.Enum enumDemo = cdsDtCihi.Gender.Enum.forString(sex); 
 		xmlDemographics.setGender(enumDemo);
+		
+		String spokenLanguage = demo.getSpokenLanguage();
+		if (spokenLanguage != null && !"".equals(spokenLanguage.trim())){
+			xmlDemographics.setPreferredSpokenLanguage(spokenLanguage);
+		}
 					
 		Date statusDate = demo.getPatientStatusDate();
 		Calendar statusCal = Calendar.getInstance();
@@ -489,9 +497,9 @@ public class CihiExportAction extends DispatchAction {
             	familyHistory.setAgeAtOnset(BigInteger.valueOf(Long.parseLong(age)));
             }
             
-            if( !hasIssue ) {
+            //if( !hasIssue ) {  //Commenting this out.  I don't see why it's not there if it has an issue
             	familyHistory.setProblemDiagnosisProcedureDescription(caseManagementNote.getNote());
-            }
+            //}
             
             if( !"".equalsIgnoreCase(intervention)) {
             	familyHistory.setTreatment(intervention);
@@ -567,9 +575,9 @@ public class CihiExportAction extends DispatchAction {
             	dateFullOrPartial.setFullDate(cal);
             }
                         
-            if( !hasIssue ) {
+            //if( !hasIssue ) {  //Commenting out another one
             	problemList.setProblemDiagnosisDescription(caseManagementNote.getNote());
-            }
+            //}
                         
 		}
 	}
@@ -623,7 +631,7 @@ public class CihiExportAction extends DispatchAction {
 	
 	private void buildAllergies(Demographic demo, PatientRecord patientRecord) {
 		String[] severity = new String[] {"MI","MO","LT","NO"};
-		List<Allergy> allergies = allergyDAO.getAllergies(demo.getDemographicNo().toString());
+		List<Allergy> allergies = allergyDAO.getActiveAllergies(demo.getDemographicNo().toString());
 		int index;
 		Calendar cal = Calendar.getInstance();
 		Date date;
@@ -704,7 +712,7 @@ public class CihiExportAction extends DispatchAction {
 		}
 	}
 	
-	private void buildProcedure(Demographic demo, PatientRecord patientRecord) {
+	private void buildProcedure2(Demographic demo, PatientRecord patientRecord) {
             OscarProperties properties = OscarProperties.getInstance();
             Calendar cal = Calendar.getInstance();
             Date procedureDate;
@@ -732,11 +740,11 @@ public class CihiExportAction extends DispatchAction {
                     }
                 }
 
-                if( !hasIssue ) {
+                //if( !hasIssue ) {
                     String note = caseManagementNote.getNote();
                     if (note!=null && note.length()>250)
                         procedure.setProcedureInterventionDescription(caseManagementNote.getNote().substring(0, 249));//Description only allow 250 characters
-                }
+                //}
 
                 procedureDate = caseManagementNote.getObservation_date();
                 cal.setTime(procedureDate);
@@ -744,6 +752,58 @@ public class CihiExportAction extends DispatchAction {
                 dateFullOrPartial.setFullDate(cal);
             }
 	}
+	
+	@SuppressWarnings("unchecked")
+    private void buildProcedure(Demographic demo, PatientRecord patientRecord) {
+		OscarProperties properties = OscarProperties.getInstance();
+		List<Issue> issueList = issueDAO.findIssueByCode(new String[] {"MedHistory"});
+		String[] medhistory = new String[] {issueList.get(0).getId().toString()};
+		
+		Calendar cal = Calendar.getInstance();			    
+	    Date procedureDate;
+	    
+		List<CaseManagementNote> notesList = getCaseManagementNoteDAO().getActiveNotesByDemographic(demo.getDemographicNo().toString(), medhistory);
+		for( CaseManagementNote caseManagementNote: notesList) {
+			
+			Procedure procedure = patientRecord.addNewProcedure();
+        
+            Set<CaseManagementIssue> noteIssueList = caseManagementNote.getIssues();
+            if( noteIssueList != null && noteIssueList.size() > 0 ) {
+                Iterator<CaseManagementIssue> i = noteIssueList.iterator();
+                CaseManagementIssue cIssue;
+         
+                while ( i.hasNext() ) {
+                    cIssue = i.next();
+                    if (cIssue.getIssue().getType().equals("system")) continue;
+
+                    StandardCoding procedureCode = procedure.addNewProcedureCode();
+                    procedureCode.setStandardCodingSystem(properties.getProperty("dxResearch_coding_sys","icd9"));
+                    procedureCode.setStandardCode(cIssue.getIssue().getCode());
+                    procedureCode.setStandardCodeDescription(cIssue.getIssue().getDescription());
+                    break;
+                }
+            }
+			
+            procedureDate = null;
+			
+			
+			List<CaseManagementNoteExt> caseManagementNoteExtList = getCaseManagementNoteExtDAO().getExtByNote(caseManagementNote.getId());
+            String keyval;
+            for( CaseManagementNoteExt caseManagementNoteExt: caseManagementNoteExtList ) {
+                keyval = caseManagementNoteExt.getKeyVal();
+                
+                if( keyval.equals("Procedure Date")) {
+                	procedureDate = caseManagementNoteExt.getDateValue();
+                	cal.setTime(procedureDate);
+                    DateFullOrPartial dateFullOrPartial = procedure.addNewProcedureDate();
+                    dateFullOrPartial.setFullDate(cal);
+                }
+                
+            }
+            
+            procedure.setProcedureInterventionDescription(caseManagementNote.getNote());                                    
+		}
+	}  
 	
 	private void buildLaboratoryResults(Demographic demo, PatientRecord patientRecord) throws SQLException {
                 List<LabMeasurements> labMeaList = ImportExportMeasurements.getLabMeasurements(demo.getDemographicNo().toString());
