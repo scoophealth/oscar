@@ -190,7 +190,7 @@ public class HRMReportParser {
 		List<Integer> parentReportList = hrmDocumentDao.findAllWithSameNoDemographicInfoHash(mergedDocument.getReportLessDemographicInfoHash());
 		if (parentReportList != null && parentReportList.size() > 0) {
 			for (Integer id : parentReportList) {
-				if (id != null) {
+				if (id != null && id.intValue() != mergedDocument.getId().intValue()) {
 					mergedDocument.setParentReport(id);
 					hrmDocumentDao.merge(mergedDocument);
 					return;
@@ -239,6 +239,11 @@ public class HRMReportParser {
             	if (loadedReport.getHrmParentDocumentId() != null && loadedReport.getHrmDocumentId().intValue() != mergedDocument.getId().intValue()) {
             		mergedDocument.setParentReport(loadedReport.getHrmParentDocumentId());
             		hrmDocumentDao.merge(mergedDocument);
+            		return;
+            	} else if (loadedReport.getHrmParentDocumentId() == null) {
+            		mergedDocument.setParentReport(loadedReport.getHrmDocumentId());
+            		hrmDocumentDao.merge(mergedDocument);
+            		return;
             	}
             }
 		}
@@ -257,7 +262,7 @@ public class HRMReportParser {
 	    for (Demographic d : matchingDemographicListByName) {
 	    	List<HRMDocumentToDemographic> matchingHrmDocumentList = hrmDocumentToDemographicDao.findByDemographicNo(d.getDemographicNo().toString());
 	    	for (HRMDocumentToDemographic matchingHrmDocument : matchingHrmDocumentList) {
-	    		HRMDocument hrmDocument = hrmDocumentDao.find(matchingHrmDocument.getHrmDocumentId());
+	    		HRMDocument hrmDocument = hrmDocumentDao.find(Integer.parseInt(matchingHrmDocument.getHrmDocumentId()));
 	    		
 	    		HRMReport hrmReport = HRMReportParser.parseReport(hrmDocument.getReportFile());
 	    		hrmReport.setHrmDocumentId(hrmDocument.getId());

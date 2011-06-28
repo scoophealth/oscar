@@ -56,7 +56,7 @@ public class HRMModifyDocumentAction extends DispatchAction {
 		String reportId = request.getParameter("reportId");
 		
 		try {
-			HRMDocument document = hrmDocumentDao.find(Integer.getInteger(reportId));
+			HRMDocument document = hrmDocumentDao.find(Integer.parseInt(reportId));
 			if (document.getParentReport() != null) {
 				document.setParentReport(null);
 				hrmDocumentDao.merge(document);
