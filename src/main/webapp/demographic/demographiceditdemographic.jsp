@@ -25,6 +25,7 @@
  * Ontario, Canada
  */
 --%>
+<%@page import="org.oscarehr.PMmodule.caisi_integrator.ConformanceTestHelper"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%
@@ -2412,9 +2413,7 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
                                                         </tr>
 						</table>
 						<%
-							Properties properties=OscarProperties.getInstance();
-							boolean enableConformanceOnlyTestFeatures=Boolean.parseBoolean(properties.getProperty("ENABLE_CONFORMANCE_ONLY_FEATURES"));
-							if (enableConformanceOnlyTestFeatures)
+							if (ConformanceTestHelper.enableConformanceOnlyTestFeatures)
 							{
 								%>
 									<input type="button" value="Update latest integrated demographics information" onclick="document.location='<%=request.getContextPath()%>/demographic/copyLinkedDemographicInfoAction.jsp?demographicId=<%=demographic$%>&<%=request.getQueryString()%>'" /> 

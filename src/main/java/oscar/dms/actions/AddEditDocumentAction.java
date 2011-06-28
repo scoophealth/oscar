@@ -42,6 +42,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionRedirect;
 import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.upload.FormFile;
+import org.oscarehr.PMmodule.caisi_integrator.ConformanceTestHelper;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
@@ -248,7 +249,7 @@ public class AddEditDocumentAction extends DispatchAction {
 			}
 			// ---
 			String doc_no = EDocUtil.addDocumentSQL(newDoc);
-			if(oscar.OscarProperties.getInstance().getBooleanProperty("ENABLE_CONFORMANCE_ONLY_FEATURES", "true")){	
+			if(ConformanceTestHelper.enableConformanceOnlyTestFeatures){	
 				storeDocumentInDatabase(file, Integer.parseInt(doc_no));
 			}
 			LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD, LogConst.CON_DOCUMENT, doc_no, request.getRemoteAddr());
