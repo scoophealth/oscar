@@ -323,12 +323,13 @@ public class CihiExportAction extends DispatchAction {
 		info.setEMRSoftwareName(frm.getString("vendorSoftware"));
 		info.setEMRSoftwareCommonName(frm.getString("vendorSoftwareCommonName"));
 		info.setEMRSoftwareVersionNumber(frm.getString("vendorSoftwareVer"));
-		Date installDate = UtilDateUtilities.StringToDate(frm.getString("installDate"));
-                if (installDate!=null) {
-                    Calendar installCalendar = Calendar.getInstance();
-                    installCalendar.setTime(installDate);
-                    info.setEMRSoftwareVersionDate(installCalendar);
-                }
+
+                Date installDate = UtilDateUtilities.StringToDate(frm.getString("installDate"));
+                if (installDate==null) installDate = new Date();
+                
+                Calendar installCalendar = Calendar.getInstance();
+                installCalendar.setTime(installDate);
+                info.setEMRSoftwareVersionDate(installCalendar);
 	}
 	
 	private void buildProvider(Provider provider, cdscihi.ProviderDocument.Provider xmlProvider, Map<String,String> fileNamesMap) {
@@ -467,49 +468,48 @@ public class CihiExportAction extends DispatchAction {
                 }                
             }
             
-            FamilyHistory familyHistory = patientRecord.addNewFamilyHistory();
-            
             Set<CaseManagementIssue> noteIssueList = caseManagementNote.getIssues();
             if( noteIssueList != null && noteIssueList.size() > 0 ) {
                 Iterator<CaseManagementIssue> i = noteIssueList.iterator();
                 CaseManagementIssue cIssue;                
                 hasIssue = true;
+
+                FamilyHistory familyHistory = patientRecord.addNewFamilyHistory();
                 while ( i.hasNext() ) {
                 	cIssue = i.next();
                         if (cIssue.getIssue().getType().equals("system")) continue;
 
                 	StandardCoding standardCoding = familyHistory.addNewDiagnosisProcedureCode();
                 	standardCoding.setStandardCode(cIssue.getIssue().getCode());
-                	standardCoding.setStandardCodingSystem(properties.getProperty("dxResearch_coding_sys","icd9"));
+                	standardCoding.setStandardCodingSystem(properties.getProperty(cIssue.getIssue().getType()));
                 	standardCoding.setStandardCodeDescription(cIssue.getIssue().getDescription());
                         break;
                 }
+                if( startDate != null ) {
+                    DateFullOrPartial dateFullOrPartial = familyHistory.addNewStartDate();
+                    cal.setTime(startDate);
+                    dateFullOrPartial.setFullDate(cal);
+                }
 
+                if( !"".equalsIgnoreCase(age) ) {
+                    familyHistory.setAgeAtOnset(BigInteger.valueOf(Long.parseLong(age)));
+                }
+
+                //if( !hasIssue ) {  //Commenting this out.  I don't see why it's not there if it has an issue
+                    familyHistory.setProblemDiagnosisProcedureDescription(caseManagementNote.getNote());
+                //}
+
+                if( !"".equalsIgnoreCase(intervention)) {
+                    familyHistory.setTreatment(intervention);
+                }
+
+                if( !"".equalsIgnoreCase(relationship)) {
+                    familyHistory.setRelationship(relationship);
+                }
             }
                                     
-            if( startDate != null ) {
-            	DateFullOrPartial dateFullOrPartial = familyHistory.addNewStartDate();
-            	cal.setTime(startDate);
-            	dateFullOrPartial.setFullDate(cal);
-            }
-            
-            if( !"".equalsIgnoreCase(age) ) {
-            	familyHistory.setAgeAtOnset(BigInteger.valueOf(Long.parseLong(age)));
-            }
-            
-            //if( !hasIssue ) {  //Commenting this out.  I don't see why it's not there if it has an issue
-            	familyHistory.setProblemDiagnosisProcedureDescription(caseManagementNote.getNote());
-            //}
-            
-            if( !"".equalsIgnoreCase(intervention)) {
-            	familyHistory.setTreatment(intervention);
-            }
-            
-            if( !"".equalsIgnoreCase(relationship)) {
-            	familyHistory.setRelationship(relationship);
-            }
-		}
-	}
+        }
+    }
 	
 	@SuppressWarnings("unchecked")
     private void buildOngoingProblems(Demographic demo, PatientRecord patientRecord) {
@@ -543,44 +543,44 @@ public class CihiExportAction extends DispatchAction {
                 }
             }
             
-            ProblemList problemList = patientRecord.addNewProblemList();
-            
             Set<CaseManagementIssue> noteIssueList = caseManagementNote.getIssues();
             if( noteIssueList != null && noteIssueList.size() > 0 ) {
                 Iterator<CaseManagementIssue> i = noteIssueList.iterator();
                 CaseManagementIssue cIssue;                
                 hasIssue = true;
+
+                ProblemList problemList = patientRecord.addNewProblemList();
                 while ( i.hasNext() ) {
                 	cIssue = i.next();
                     if (cIssue.getIssue().getType().equals("system")) continue;
 
                 	StandardCoding standardCoding = problemList.addNewDiagnosisCode();
                 	standardCoding.setStandardCode(cIssue.getIssue().getCode());
-                	standardCoding.setStandardCodingSystem(properties.getProperty("dxResearch_coding_sys","icd9"));
+                	standardCoding.setStandardCodingSystem(cIssue.getIssue().getType());
                 	standardCoding.setStandardCodeDescription(cIssue.getIssue().getDescription());
                     break;
                 }
 
+                if( startDate != null ) {
+                    DateFullOrPartial dateFullOrPartial = problemList.addNewOnsetDate();
+                    cal.setTime(startDate);
+                    dateFullOrPartial.setFullDate(cal);
+                }
+
+                if( endDate != null ) {
+                    DateFullOrPartial dateFullOrPartial = problemList.addNewResolutionDate();
+                    cal.setTime(endDate);
+                    dateFullOrPartial.setFullDate(cal);
+                }
+
+                //if( !hasIssue ) {  //Commenting out another one
+                    problemList.setProblemDiagnosisDescription(caseManagementNote.getNote());
+                //}
+
+
             }
-                                    
-            if( startDate != null ) {
-            	DateFullOrPartial dateFullOrPartial = problemList.addNewOnsetDate();
-            	cal.setTime(startDate);
-            	dateFullOrPartial.setFullDate(cal);
-            }
-            
-            if( endDate != null ) {
-            	DateFullOrPartial dateFullOrPartial = problemList.addNewResolutionDate();
-            	cal.setTime(endDate);
-            	dateFullOrPartial.setFullDate(cal);
-            }
-                        
-            //if( !hasIssue ) {  //Commenting out another one
-            	problemList.setProblemDiagnosisDescription(caseManagementNote.getNote());
-            //}
-                        
-		}
-	}
+        }
+    }
 	
 	@SuppressWarnings("unchecked")
     private void buildRiskFactors(Demographic demo, PatientRecord patientRecord) {

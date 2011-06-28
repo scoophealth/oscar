@@ -377,7 +377,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             if (StringUtils.filled(providerNo)) {
                 Demographics.PrimaryPhysician pph = demo.addNewPrimaryPhysician();
                 ProviderData prvd = new ProviderData(providerNo);
-                pph.setOHIPPhysicianId(prvd.getOhip_no());
+                if (StringUtils.noNull(prvd.getOhip_no()).length()<=6) pph.setOHIPPhysicianId(prvd.getOhip_no());
                 Util.writeNameSimple(pph.addNewName(), prvd.getFirst_name(), prvd.getLast_name());
                 String cpso = prvd.getPractitionerNo();
                 if (cpso!=null && cpso.length()==5) pph.setPrimaryPhysicianCPSO(cpso);
@@ -667,6 +667,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                                     summary = Util.addLine(summary, "Diagnosis: ", isu.getIssue().getDescription());
                                 } else {
                                     cdsDt.StandardCoding diagnosis = pHealth.addNewDiagnosisProcedureCode();
+                                    
                                     diagnosis.setStandardCodingSystem(codeSystem);
                                     diagnosis.setStandardCode(isu.getIssue().getCode());
                                     diagnosis.setStandardCodeDescription(isu.getIssue().getDescription());
@@ -872,7 +873,8 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                             ClinicalNotes.ParticipatingProviders pProvider = cNote.addNewParticipatingProviders();
                             ProviderData prvd = new ProviderData(cmn.getProviderNo());
                             Util.writeNameSimple(pProvider.addNewName(), StringUtils.noNull(prvd.getFirst_name()), StringUtils.noNull(prvd.getLast_name()));
-                            pProvider.setOHIPPhysicianId(StringUtils.noNull(prvd.getOhip_no()));
+
+                            if (StringUtils.noNull(prvd.getOhip_no()).length()<=6) pProvider.setOHIPPhysicianId(prvd.getOhip_no());
                             cdsDt.DateTimeFullOrPartial noteCreatedDateTime = pProvider.addNewDateTimeNoteCreated();
                             if (cmn.getCreate_date()!=null) noteCreatedDateTime.setFullDate(Util.calDate(cmn.getCreate_date()));
                             else noteCreatedDateTime.setFullDate(Util.calDate(new Date()));
@@ -883,7 +885,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                             Util.writeNameSimple(noteReviewer.addNewName(), prvd.getFirst_name(), prvd.getLast_name());
                             if (cmn.getUpdate_date()!=null) noteReviewer.addNewDateTimeNoteReviewed().setFullDate(Util.calDate(cmn.getUpdate_date()));
                             else noteReviewer.addNewDateTimeNoteReviewed().setFullDate(Util.calDate(new Date()));
-                            if (StringUtils.filled(prvd.getOhip_no())) noteReviewer.setOHIPPhysicianId(prvd.getOhip_no());
+                            if (StringUtils.noNull(prvd.getOhip_no()).length()<=6) noteReviewer.setOHIPPhysicianId(prvd.getOhip_no());
                         }
                     }
                 }
@@ -1330,7 +1332,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                             if (!"0".equals(lab_provider_no)) {
                                 ProviderData pvd = new ProviderData(lab_provider_no);
                                 Util.writeNameSimple(reviewer.addNewName(), pvd.getFirst_name(), pvd.getLast_name());
-                                if (StringUtils.filled(pvd.getOhip_no())) reviewer.setOHIPPhysicianId(pvd.getOhip_no());
+                                if (StringUtils.noNull(pvd.getOhip_no()).length()<=6) reviewer.setOHIPPhysicianId(pvd.getOhip_no());
                             }
                         }
 
@@ -1389,7 +1391,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         Appointments.Provider prov = aptm.addNewProvider();
 
                         ProviderData appd = new ProviderData(ap.getProviderNo());
-                        if (StringUtils.filled(appd.getOhip_no())) prov.setOHIPPhysicianId(appd.getOhip_no());
+                        if (StringUtils.noNull(appd.getOhip_no()).length()<=6) prov.setOHIPPhysicianId(appd.getOhip_no());
                         Util.writeNameSimple(prov.addNewName(), appd.getFirst_name(), appd.getLast_name());
                     }
                     if (StringUtils.filled(ap.getNotes())) {
@@ -1444,6 +1446,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                             rpr.setClass1(cdsDt.ReportClass.Enum.forString(data));
                         } else {
                             err.add("Error! No Class Type for Document \""+edoc.getFileName()+"\"");
+                            rpr.setClass1(cdsDt.ReportClass.OTHER_LETTER);
                         }
                         data = edoc.getDocSubClass();
                         if (StringUtils.filled(data)) {
@@ -1466,8 +1469,8 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                             ReportsReceived.ReportReviewed reportReviewed = rpr.addNewReportReviewed();
                             reportReviewed.addNewDateTimeReportReviewed().setFullDate(Util.calDate(data));
                             Util.writeNameSimple(reportReviewed.addNewName(), edoc.getReviewerName());
-                            data = edoc.getReviewerOhip();
-                            if (StringUtils.filled(data)) reportReviewed.setReviewingOHIPPhysicianId(data);
+                            data = StringUtils.noNull(edoc.getReviewerOhip());
+                            if (data.length()<=6) reportReviewed.setReviewingOHIPPhysicianId(data);
                         }
                         Util.writeNameSimple(rpr.addNewSourceAuthorPhysician().addNewAuthorName(), edoc.getSource());
 
