@@ -3,7 +3,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
     
-<%@page import="org.oscarehr.hospitalReportManager.*, org.oscarehr.hospitalReportManager.model.*, java.util.List, org.oscarehr.util.SpringUtils, org.oscarehr.PMmodule.dao.ProviderDao, java.util.Date" %>
+<%@page import="java.util.LinkedList, org.oscarehr.hospitalReportManager.*, org.oscarehr.hospitalReportManager.model.*, java.util.List, org.oscarehr.util.SpringUtils, org.oscarehr.PMmodule.dao.ProviderDao, java.util.Date" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <%
@@ -205,17 +205,20 @@ function revokeSignOffHrm(reportId) {
 	<% if (request.getAttribute("hrmDuplicateNum") != null && ((Integer) request.getAttribute("hrmDuplicateNum")) > 0) { %><br /><i>OSCAR has received <%=(Integer) request.getAttribute("hrmDuplicateNum") %> duplicates of this report.</i><% } %>
 	<%
 	List<HRMDocument> allDocumentsWithRelationship = (List<HRMDocument>) request.getAttribute("allDocumentsWithRelationship");
-	if (allDocumentsWithRelationship != null && allDocumentsWithRelationship.size() > 1) {
+	if (allDocumentsWithRelationship != null && allDocumentsWithRelationship.size() >= 1) {
 	%>
 		OSCAR has detected that this is similar to the following reports: 
-		<% for (HRMDocument relationshipDocument : allDocumentsWithRelationship) { %>
+		<% 
+		List<Integer> seenBefore = new LinkedList<Integer>();
+		for (HRMDocument relationshipDocument : allDocumentsWithRelationship) { 
+			if (!seenBefore.contains(relationshipDocument.getId().intValue())) { %>
 			<span class="documentLink_status<%=relationshipDocument.getReportStatus() %>" title="<%=relationshipDocument.getReportDate().toString() %>">
-			<% if (relationshipDocument.getId().intValue() != hrmReportId.intValue()) { %><a href="<%=request.getContextPath() %>/hospitalReportManager/Display.do?id=<%=relationshipDocument.getId() %>"><% } %>
-			[<%=relationshipDocument.getId() %>] 
-			<% if (relationshipDocument.getId().intValue() != hrmReportId.intValue()) { %></a><% } %>
-			</span>
-		<% } %>
-		<input type="button" onClick="makeIndependent('<%=hrmReportId %>')" title="Make Independent" />
+			<% if (relationshipDocument.getId().intValue() != hrmReportId.intValue()) { %><a href="<%=request.getContextPath() %>/hospitalReportManager/Display.do?id=<%=relationshipDocument.getId() %>"><% } %>[<%=relationshipDocument.getId() %>]<% if (relationshipDocument.getId().intValue() != hrmReportId.intValue()) { %></a><% } %>
+			</span>&nbsp;&nbsp;
+		<% 	seenBefore.add(relationshipDocument.getId().intValue());
+			}
+		} %>
+		 <input type="button" onClick="makeIndependent('<%=hrmReportId %>')" value="Make Independent" />
 	<% } %>
 	</div>
 
@@ -306,7 +309,8 @@ function revokeSignOffHrm(reportId) {
 				<i>Stored in Database</i><br />
 					<div id="subclassstatus<%=hrmReportId %>"></div>
 					<% for (HRMDocumentSubClass subClass : subClassListFromDb) { %>
-						<abbr title="Type: <%=subClass.getSubClass() %>; Date of Observation: <%=subClass.getSubClassDateTime().toString() %>">(<%=subClass.getSubClassMnemonic() %>) <%=subClass.getSubClassDescription() %></abbr> (<a href="#" onclick="makeActiveSubClass('<%=hrmReportId %>', '<%=subClass.getId() %>')">make active</a>)<br />
+						<abbr title="Type: <%=subClass.getSubClass() %>; Date of Observation: <%=subClass.getSubClassDateTime().toString() %>">(<%=subClass.getSubClassMnemonic() %>) <%=subClass.getSubClassDescription() %></abbr>
+						<% if (!subClass.isActive()) { %> (<a href="#" onclick="makeActiveSubClass('<%=hrmReportId %>', '<%=subClass.getId() %>')">make active</a>)<% } %><br />
 					<% }
 				} %>
 			</td>

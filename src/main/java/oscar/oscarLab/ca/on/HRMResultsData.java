@@ -31,6 +31,8 @@ public class HRMResultsData {
 
 	public List<LabResultData> populateHRMdocumentsResultsData(String providerNo, Integer page, Integer pageSize){
 		if(providerNo == null || "".equals(providerNo)){
+			providerNo = "%";
+		} else if (providerNo.equalsIgnoreCase("0")) {
 			providerNo = "-1";
 		}
 
@@ -55,25 +57,30 @@ public class HRMResultsData {
 
 			// check if patient is matched
 			List<HRMDocumentToDemographic> hrmDocResultsDemographic = hrmDocumentToDemographicDao.findByHrmDocumentId(hrmDocument.get(0).getId().toString());
+			HRMReport hrmReport = HRMReportParser.parseReport(hrmDocument.get(0).getReportFile());
+			
 			if (hrmDocResultsDemographic.size()>0) {
 				Demographic demographic = demographicDao.getDemographic(hrmDocResultsDemographic.get(0).getDemographicNo());
 				if (demographic != null) {
 					lbData.patientName =  demographic.getLastName()+","+demographic.getFirstName();
+					lbData.sex = demographic.getSex();
+					lbData.healthNumber = demographic.getHin();
 					lbData.isMatchedToPatient = true;
 				}
 			} else {
-				HRMReport hrmReport = HRMReportParser.parseReport(hrmDocument.get(0).getReportFile());
 				lbData.sex = hrmReport.getGender();
 				lbData.healthNumber = hrmReport.getHCN();
 				lbData.patientName = hrmReport.getLegalName();
-				lbData.reportStatus = hrmReport.getResultStatus();
-				lbData.priority = "----";
-				lbData.requestingClient = "";
-				lbData.discipline = "HRM";
-				lbData.resultStatus = hrmReport.getResultStatus();
 				
 			}
 
+			lbData.reportStatus = hrmReport.getResultStatus();
+			lbData.priority = "----";
+			lbData.requestingClient = "";
+			lbData.discipline = "HRM";
+			lbData.resultStatus = hrmReport.getResultStatus();
+			
+			
 			labResults.add(lbData);
 
 		}
