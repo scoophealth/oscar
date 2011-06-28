@@ -441,9 +441,11 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
         data = demographic.getProviderNo();
         if (StringUtils.filled(data)) {
             ProviderData provider = new ProviderData(data);
+
             data = StringUtils.noNull(provider.getOhip_no());
-	    demo.setOHIPPhysicianId(data);
-            if (StringUtils.empty(data)) errors.add("Error! No OHIP Physician ID for Patient "+demoNo);
+	    if (data.length()<=6) demo.setOHIPPhysicianId(data);
+            else errors.add("Error! No OHIP Physician ID for Patient "+demoNo);
+
             data = provider.getPractitionerNo();
             if (data!=null && data.length()==5) demo.setPrimaryPhysicianCPSO(data);
         }
@@ -633,7 +635,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		info = labRoutingInfo.get("provider_no");
 		if (!"0".equals(info)) {
 		    ProviderData pd = new ProviderData(info);
-		    if (StringUtils.filled(pd.getOhip_no())) {
+		    if (StringUtils.noNull(pd.getOhip_no()).length()<=6) {
 			LaboratoryResults.ResultReviewer reviewer = labResults.addNewResultReviewer();
 			reviewer.setOHIPPhysicianId(pd.getOhip_no());
 			Util.writeNameSimple(reviewer.addNewName(), pd.getFirst_name(), pd.getLast_name());
