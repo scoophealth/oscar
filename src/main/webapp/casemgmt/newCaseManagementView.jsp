@@ -700,7 +700,7 @@ try
 						if (note.getRemoteFacilityId()!=null) // if it's a remote note, say where if came from on the top of the note
 						{
 					 	%> 
-						 	<div style="background-color:#ffcccc; text-align:right"><bean:message key="oscarEncounter.noteFrom.label" /> <%=note.getLocation()%></div>
+						 	<div style="background-color:#ffcccc; text-align:right"><bean:message key="oscarEncounter.noteFrom.label" />&nbsp;<%=note.getLocation()%>,<%=note.getProviderName()%></div>
 						<%
 						}
 					
