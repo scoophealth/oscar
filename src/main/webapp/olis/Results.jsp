@@ -30,8 +30,14 @@ function preview(uuid) {
 }
 
 function filterResults(select) {
-	jQuery("tr[reportingFacility=" + select.value + "]").css("display", "block");
-	jQuery("tr:not[reportingFacility=" + select.value + "]").css("display", "none");
+	if (select.value == "") { 
+		jQuery(".evenLine").show();
+		jQuery(".oddLine").show();	
+	} else {
+		jQuery(".evenLine").hide();
+		jQuery(".oddLine").hide();
+		jQuery("tr[reportingFacility='" + select.value + "']").show();
+	}
 }
 </script>
 <style type="text/css">
@@ -118,10 +124,18 @@ function filterResults(select) {
 						Filter by reporting facility:
 						<select onChange="filterResults(this)">
 							<option value="">(No filter)</option>
-							<% for (String resultUuid : resultList) {
-								OLISHL7Handler result = OLISResultsAction.searchResultsMap.get(resultUuid);
+							<%  List<String> labs = new ArrayList<String>();
+								OLISHL7Handler result;
+								String name;
+								for (String resultUuid : resultList) {
+									result = OLISResultsAction.searchResultsMap.get(resultUuid);
+									name = oscar.Misc.getStr(result.getPerformingFacilityName(), "").trim();
+									if (!name.equals("")) { labs.add(name); }
+								}
+								HashSet<String> uniqueNames = new HashSet<String>(labs);
+								for (String lab: uniqueNames) {
 							%>
-								<option value="<%=result.getReportingFacilityName() %>"><%=result.getReportingFacilityName() %></option>
+								<option value="<%=lab%>"><%=lab%></option>
 							<% } %>
 						</select>
 						</td>
@@ -139,9 +153,9 @@ function filterResults(select) {
 					
 					<%  int lineNum = 0;
 						for (String resultUuid : resultList) {
-						OLISHL7Handler result = OLISResultsAction.searchResultsMap.get(resultUuid);
+						result = OLISResultsAction.searchResultsMap.get(resultUuid);
 					%>
-					<tr class="<%=++lineNum % 2 == 1 ? "oddLine" : "evenLine"%>" reportingFacility="<%=result.getReportingFacilityName() %>">
+					<tr class="<%=++lineNum % 2 == 1 ? "oddLine" : "evenLine"%>" reportingFacility="<%=result.getPerformingFacilityName() %>">
 						<td>
 							<div id="<%=resultUuid %>_result"></div>
 							<input type="button" onClick="addToInbox('<%=resultUuid %>'); return false;" id="<%=resultUuid %>" value="Add to Inbox" />
