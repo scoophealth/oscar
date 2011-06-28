@@ -1029,6 +1029,11 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                         <tr>
                                             <td bgcolor="white">
                                                 <div class="FieldData">
+                                                <% if (handler.isReportBlocked()) { %>
+                                                	<span style="color:red; font-weight:bold">Do Not Disclose Without Explicit Patient Consent</span>    
+                                                	<br/>
+                                                <% } %>
+                                                
                                                     <strong>Report Comments: </strong>
                                                 </div>
                                             </td>
@@ -1111,10 +1116,8 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                         <% 
                                         boolean blocked = handler.isOBRBlocked(obr);
                                         if (blocked) {
-                                        	
                                         %>
-                                        <br/>                                        
-                                        <span style="font-size:8px; color:red;">(blocked by patient)</span>
+                                        <span style="font-size:8px; color:red;">(Do Not Disclose Without Explicit Patient Consent)</span>
                                         <% } %>
                                     </div>
                                 </td>

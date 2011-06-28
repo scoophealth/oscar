@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html;" %>
-<%@page import="java.util.*,oscar.oscarDB.DBHandler,java.sql.ResultSet, oscar.oscarLab.ca.all.parsers.OLISHL7Handler, org.oscarehr.olis.OLISResultsAction, org.oscarehr.util.SpringUtils" %>
+<%@page import="java.util.*,oscar.oscarDB.DBHandler,java.sql.ResultSet, oscar.oscarLab.ca.all.parsers.Factory, oscar.oscarLab.ca.all.parsers.OLISHL7Handler, oscar.oscarLab.ca.all.parsers.OLISHL7Handler.OLISError, org.oscarehr.olis.OLISResultsAction, org.oscarehr.util.SpringUtils" %>
 	
 	
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -63,9 +63,6 @@ function preview(uuid) {
 					<div class="error"><%=error.replaceAll("\\n", "<br />") %></div>
 				<% }
 			}
-			%>
-			
-			<%
 			String resp = (String) request.getAttribute("olisResponseContent");
 			if(resp == null) { resp = "";};
 			%>
@@ -73,6 +70,16 @@ function preview(uuid) {
 				<%=resp%>
 			-->
 			<%
+			OLISHL7Handler reportHandler = (OLISHL7Handler) Factory.getHandler("OLIS_HL7", resp);
+			List<OLISError> errors = reportHandler.getReportErrors();
+			if (errors.size() > 0) {
+				for (OLISError error : errors) {
+				%>
+					<div class="error"><%=error.getText().replaceAll("\\n", "<br />")%></div>
+				<%
+				}
+			}
+			
 			List<String> resultList = (List<String>) request.getAttribute("resultList");
 			
 			if (resultList != null) {
@@ -81,7 +88,11 @@ function preview(uuid) {
 				<tr>
 					<td colspan=8>Showing <%=resultList.size() %> result(s)</td>
 				</tr>
-				<% if (resultList.size() > 0) { %>
+				
+				<%
+				if (resultList.size() > 0) {
+				
+				%>
 					<tr><th></th>
 						<th></th>
 						<th>Health Number</th>
