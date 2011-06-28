@@ -110,6 +110,8 @@ import org.oscarehr.common.dao.DemographicArchiveDao;
 import org.oscarehr.common.dao.DrugReasonDao;
 import org.oscarehr.common.model.DemographicArchive;
 import org.oscarehr.common.model.DrugReason;
+import org.oscarehr.hospitalReportManager.HRMReport;
+import org.oscarehr.hospitalReportManager.HRMReportParser;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentDao;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentSubClassDao;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentToDemographicDao;
@@ -1488,20 +1490,32 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                 for (HRMDocumentToDemographic hrmDocToDemographic : hrmDocToDemographics) {
                     String hrmDocumentId = hrmDocToDemographic.getHrmDocumentId();
                     List<HRMDocument> hrmDocs = hrmDocDao.findById(Integer.valueOf(hrmDocumentId));
-                    List<HRMDocumentSubClass> hrmDocScs = hrmDocSubClassDao.getActiveSubClassesByDocumentId(Integer.valueOf(hrmDocumentId));
                     for (HRMDocument hrmDoc : hrmDocs) {
+                        if (StringUtils.isNullOrEmpty(hrmDoc.getReportFile())) continue;
+
+                        HRMReport report = HRMReportParser.parseReport(hrmDoc.getReportFile());
                         ReportsReceived rpr = patientRec.addNewReportsReceived();
-                        cdsDt.ReportClass.Enum reportClass = cdsDt.ReportClass.Enum.forString(hrmDoc.getReportType());
-                        if (reportClass!=null) rpr.setClass1(reportClass);
-                        else rpr.setClass1(cdsDt.ReportClass.OTHER_LETTER);
 
-                        rpr.addNewContent().setTextContent(StringUtils.noNull(hrmDoc.getReportFile()));
+                        rpr.setClass1(cdsDt.ReportClass.Enum.forString(report.getFirstReportClass()));
+                        rpr.setFileExtensionAndVersion(".xml");
                         rpr.setFormat(cdsDt.ReportFormat.TEXT);
-                        rpr.addNewEventDateTime().setFullDateTime(Util.calDate(hrmDoc.getReportDate()));
-                        rpr.addNewReceivedDateTime().setFullDateTime(Util.calDate(hrmDoc.getTimeReceived()));
-                        if (StringUtils.filled(hrmDoc.getReportStatus()))
-                            rpr.setHRMResultStatus(hrmDoc.getReportStatus().substring(0,1));
+                        if (report.getFirstReportSubClass()!=null) rpr.setSubClass(report.getFirstReportSubClass());
+                        if (report.getFirstReportTextContent()!=null) {
+                            rpr.addNewContent().setTextContent(report.getFirstReportTextContent());
+                        }
+                        if (report.getResultStatus()!=null) rpr.setHRMResultStatus(report.getResultStatus());
+                        if (report.getMessageUniqueId()!=null) rpr.setMessageUniqueID(report.getMessageUniqueId());
+                        if (report.getSendingFacilityId()!=null) rpr.setSendingFacilityId(report.getSendingFacilityId());
+                        if (report.getSendingFacilityReportNo()!=null) {
+                            rpr.setSendingFacilityReport(report.getSendingFacilityReportNo());
+                        }
+                        if (report.getFirstReportEventTime()!=null) {
+                            rpr.addNewEventDateTime().setFullDateTime(report.getFirstReportEventTime());
+                        }
 
+                        rpr.addNewReceivedDateTime().setFullDateTime(Util.calDate(hrmDoc.getTimeReceived()));
+
+                        List<HRMDocumentSubClass> hrmDocScs = hrmDocSubClassDao.getSubClassesByDocumentId(Integer.valueOf(hrmDocumentId));
                         for (HRMDocumentSubClass hrmDocSc : hrmDocScs) {
                             ReportsReceived.OBRContent obr = rpr.addNewOBRContent();
                             obr.setAccompanyingSubClass(hrmDocSc.getSubClass());
