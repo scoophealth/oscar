@@ -28,12 +28,25 @@ function addToInbox(uuid) {
 function preview(uuid) {
 	reportWindow('<%=request.getContextPath()%>/lab/CA/ALL/labDisplayOLIS.jsp?segmentID=0&preview=true&uuid=' + uuid);
 }
+
+function filterResults(select) {
+	jQuery("tr[reportingFacility=" + select.value + "]").css("display", "block");
+	jQuery("tr:not[reportingFacility=" + select.value + "]").css("display", "none");
+}
 </script>
 <style type="text/css">
 .oddLine { 
 	background-color: #cccccc;
 }
 .evenLine { } 
+
+.error {
+	border: 1px solid red;
+	color: red;
+	font-weight: bold;
+	margin: 10px;
+	padding: 10px;
+}
 </style>
 	
 <title>OLIS Search Results</title>
@@ -56,6 +69,13 @@ function preview(uuid) {
 	</tr>
 	<tr>
 		<td colspan="2">
+			<%
+			if (request.getAttribute("searchException") != null) {
+			%>
+				<div class="error">Could not perform the OLIS query due to the following exception:<br /><%=((Exception) request.getAttribute("searchException")).getLocalizedMessage() %></div>
+			<%
+			} %>
+			
 			<%
 			if (request.getAttribute("errors") != null) {
 				// Show the errors to the user
@@ -88,11 +108,20 @@ function preview(uuid) {
 				<tr>
 					<td colspan=8>Showing <%=resultList.size() %> result(s)</td>
 				</tr>
-				
-				<%
-				if (resultList.size() > 0) {
-				
-				%>
+				<% if (resultList.size() > 0) { %>
+					<tr>
+						<td colspan=9>
+						Filter by reporting facility:
+						<select onChange="filterResults(this)">
+							<option value="">(No filter)</option>
+							<% for (String resultUuid : resultList) {
+								OLISHL7Handler result = OLISResultsAction.searchResultsMap.get(resultUuid);
+							%>
+								<option value="<%=result.getReportingFacilityName() %>"><%=result.getReportingFacilityName() %></option>
+							<% } %>
+						</select>
+						</td>
+					</tr>
 					<tr><th></th>
 						<th></th>
 						<th>Health Number</th>
@@ -108,7 +137,7 @@ function preview(uuid) {
 						for (String resultUuid : resultList) {
 						OLISHL7Handler result = OLISResultsAction.searchResultsMap.get(resultUuid);
 					%>
-					<tr class="<%=++lineNum % 2 == 1 ? "oddLine" : "evenLine"%>">
+					<tr class="<%=++lineNum % 2 == 1 ? "oddLine" : "evenLine"%>" reportingFacility="<%=result.getReportingFacilityName() %>">
 						<td>
 							<div id="<%=resultUuid %>_result"></div>
 							<input type="button" onClick="addToInbox('<%=resultUuid %>'); return false;" id="<%=resultUuid %>" value="Add to Inbox" />
