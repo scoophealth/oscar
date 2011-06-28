@@ -12,11 +12,11 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
-import org.oscarehr.PMmodule.dao.LogDAO;
 import org.oscarehr.PMmodule.dao.ProviderDao;
-import org.oscarehr.PMmodule.model.Log;
 import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.dao.OscarLogDao;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.OscarLog;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -317,12 +317,11 @@ public class OLISSearchAction extends DispatchAction {
 
 				if (blockedInfoConsent != null && blockedInfoConsent.equalsIgnoreCase("Z")) {
 					// Log the consent override
-					LogDAO logDao = (LogDAO) SpringUtils.getBean("logDAO");
-					Log logItem = new Log();
+					OscarLogDao logDao = (OscarLogDao) SpringUtils.getBean("oScarLogDao");
+					OscarLog logItem = new OscarLog();
 					logItem.setAction("OLIS search");
 					logItem.setContent("consent override");
-					logItem.setContentId("demographicNo=" + demographicNo + ",givenby=" + blockedInfoIndividual);
-					logItem.setDateTime(new Date());
+					logItem.setContentId("demographicNo=" + demographicNo + ",givenby=" + blockedInfoIndividual);					
 					if (LoggedInInfo.loggedInInfo.get().loggedInProvider != null)
 						logItem.setProviderNo(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
 					else
@@ -330,7 +329,7 @@ public class OLISSearchAction extends DispatchAction {
 
 					logItem.setIp(request.getRemoteAddr());
 
-					logDao.saveLog(logItem);
+					logDao.persist(logItem);
 
 				}
 
@@ -404,12 +403,11 @@ public class OLISSearchAction extends DispatchAction {
 
 				if (blockedInfoConsent != null && blockedInfoConsent.equalsIgnoreCase("Z")) {
 					// Log the consent override
-					LogDAO logDao = (LogDAO) SpringUtils.getBean("logDAO");
-					Log logItem = new Log();
+					OscarLogDao logDao = (OscarLogDao) SpringUtils.getBean("oscarLogDao");
+					OscarLog logItem = new OscarLog();
 					logItem.setAction("OLIS search");
 					logItem.setContent("consent override");
-					logItem.setContentId("demographicNo=" + demographicNo + ",givenby=" + blockedInfoIndividual);
-					logItem.setDateTime(new Date());
+					logItem.setContentId("demographicNo=" + demographicNo + ",givenby=" + blockedInfoIndividual);					
 					if (LoggedInInfo.loggedInInfo.get().loggedInProvider != null)
 						logItem.setProviderNo(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
 					else
@@ -417,7 +415,7 @@ public class OLISSearchAction extends DispatchAction {
 
 					logItem.setIp(request.getRemoteAddr());
 
-					logDao.saveLog(logItem);
+					logDao.persist(logItem);
 				}
 
 

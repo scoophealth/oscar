@@ -32,11 +32,12 @@ import org.bouncycastle.cms.SignerInformation;
 import org.bouncycastle.cms.SignerInformationStore;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.encoders.Base64;
-import org.oscarehr.PMmodule.dao.LogDAO;
-import org.oscarehr.PMmodule.model.Log;
+import org.oscarehr.common.dao.OscarLogDao;
+import org.oscarehr.common.model.OscarLog;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.xml.sax.InputSource;
+
 import oscar.OscarProperties;
 import ca.ssha._2005.hial.ArrayOfError;
 import ca.ssha._2005.hial.ArrayOfString;
@@ -51,7 +52,7 @@ import com.indivica.olis.queries.Query;
 
 public class Driver {
 
-	private static LogDAO logDao = (LogDAO) SpringUtils.getBean("logDAO");
+	private static OscarLogDao logDao = (OscarLogDao) SpringUtils.getBean("oscarLogDao");
 
 	public static String submitOLISQuery(HttpServletRequest request, Query query) {
 		try {
@@ -83,12 +84,11 @@ public class Driver {
 
 
 			try {
-				Log logItem = new Log();
+				OscarLog logItem = new OscarLog();
 				logItem.setAction("OLIS");
 				logItem.setContent("query");
-				logItem.setData(olisHL7String);
-
-				logDao.saveLog(logItem);
+				
+				logDao.persist(logItem);
 
 			} catch (Exception e) {
 				MiscUtils.getLogger().error("Couldn't write log message for OLIS query", e);
