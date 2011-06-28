@@ -33,7 +33,6 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -288,7 +287,7 @@ public class CommonLabResultData {
 		return labs;
 	}
 
-	public static boolean updateReportStatus(Properties props, int labNo, String providerNo, char status, String comment, String labType) {
+	public static boolean updateReportStatus(int labNo, String providerNo, char status, String comment, String labType) {
 
 		try {
 			DBPreparedHandler db = new DBPreparedHandler();
@@ -460,7 +459,6 @@ public class CommonLabResultData {
 
 		CommonLabResultData data = new CommonLabResultData();
 
-		Properties props = OscarProperties.getInstance();
 		for (int i = 0; i < flaggedLabs.size(); i++) {
 			String[] strarr = (String[]) flaggedLabs.get(i);
 			String lab = strarr[0];
@@ -470,11 +468,11 @@ public class CommonLabResultData {
 			if (labs != null && !labs.equals("")) {
 				String[] labArray = labs.split(",");
 				for (int j = 0; j < labArray.length; j++) {
-					updateReportStatus(props, Integer.parseInt(labArray[j]), provider, 'F', "", labType);
+					updateReportStatus(Integer.parseInt(labArray[j]), provider, 'F', "", labType);
 				}
 
 			} else {
-				updateReportStatus(props, Integer.parseInt(lab), provider, 'F', "", labType);
+				updateReportStatus(Integer.parseInt(lab), provider, 'F', "", labType);
 			}
 		}
 		return true;
