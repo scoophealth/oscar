@@ -18,6 +18,7 @@ import org.oscarehr.util.XmlUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
+import oscar.OscarProperties;
 import oscar.oscarTickler.TicklerCreator;
 
 /**
@@ -25,7 +26,8 @@ import oscar.oscarTickler.TicklerCreator;
  */
 public final class ConformanceTestHelper {
 	private static Logger logger = MiscUtils.getLogger();
-
+	public static boolean enableConformanceOnlyTestFeatures=Boolean.parseBoolean(OscarProperties.getInstance().getProperty("ENABLE_CONFORMANCE_ONLY_FEATURES"));
+	
 	public static void populateLocalTicklerWithRemoteProviderMessageFollowUps() {
 		try {
 			LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();

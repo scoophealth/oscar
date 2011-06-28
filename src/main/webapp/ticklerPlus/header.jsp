@@ -14,9 +14,7 @@
     if(session.getAttribute("userrole") == null )  response.sendRedirect("logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 
-	Properties properties=OscarProperties.getInstance();
-	boolean enableConformanceOnlyTestFeatures=Boolean.parseBoolean(properties.getProperty("ENABLE_CONFORMANCE_ONLY_FEATURES"));
-	if (enableConformanceOnlyTestFeatures)
+	if (ConformanceTestHelper.enableConformanceOnlyTestFeatures)
 	{
 		ConformanceTestHelper.populateLocalTicklerWithRemoteProviderMessageFollowUps();
 	}
