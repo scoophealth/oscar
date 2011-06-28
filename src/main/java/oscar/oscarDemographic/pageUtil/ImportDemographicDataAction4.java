@@ -119,8 +119,10 @@ import cds.ReportsReceivedDocument.ReportsReceived;
 import cds.RiskFactorsDocument.RiskFactors;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentDao;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentSubClassDao;
+import org.oscarehr.hospitalReportManager.dao.HRMDocumentToDemographicDao;
 import org.oscarehr.hospitalReportManager.model.HRMDocument;
 import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
+import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 
 /**
  *
@@ -1109,6 +1111,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 				} else {
                                     drug.setProviderNo(admProviderNo);
                                 }
+                                drug.setPosition(0);
                                 drugDao.persist(drug);
                                 addOneEntry(MEDICATION);
                                 
@@ -1157,7 +1160,9 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 				} else {
 					err_data.add("Error! No Immunization Name ("+(i+1)+")");
 				}
-                                comments = Util.addLine(comments, "Immunization Type", immuArray[i].getImmunizationType().toString());
+                                if (immuArray[i].getImmunizationType()!=null) {
+                                    comments = Util.addLine(comments, "Immunization Type", immuArray[i].getImmunizationType().toString());
+                                }
 
 				preventionDate = dateTimeFullPartial(immuArray[i].getDate(), timeShiftInDays);
 				refused = getYN(immuArray[i].getRefusedFlag()).equals("Yes") ? "1" : "0";
@@ -1454,18 +1459,26 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 
                         HRMDocumentDao hrmDocDao = (HRMDocumentDao) SpringUtils.getBean("HRMDocumentDao");
                         HRMDocumentSubClassDao hrmDocSubClassDao = (HRMDocumentSubClassDao) SpringUtils.getBean("HRMDocumentSubClassDao");
+                        HRMDocumentToDemographicDao hrmDocToDemoDao = (HRMDocumentToDemographicDao) SpringUtils.getBean("HRMDocumentToDemographicDao");
 
                         ReportsReceived[] repR = patientRec.getReportsReceivedArray();
+                        List<ReportsReceived> HRMreports = new ArrayList<ReportsReceived>();
+                        String HRMfile = docDir + "HRM_"+UtilDateUtilities.getToday("yyyy-MM-dd.HH.mm.ss");
 			for (int i=0; i<repR.length; i++) {
-                            if (repR[i].isSetHRMResultStatus() || repR[i].getOBRContentArray()!=null) { //HRM reports
+                            if (repR[i].getHRMResultStatus()!=null || repR[i].getOBRContentArray()!=null) { //HRM reports
                                 HRMDocument hrmDoc = new HRMDocument();
+                                HRMDocumentToDemographic hrmDocToDemo = new HRMDocumentToDemographic();
 
+                                hrmDoc.setReportFile(HRMfile);
                                 if (repR[i].getHRMResultStatus()!=null) hrmDoc.setReportStatus(repR[i].getHRMResultStatus());
                                 if (repR[i].getClass1()!=null) hrmDoc.setReportType(repR[i].getClass1().toString());
-                                if (repR[i].getContent()!=null && repR[i].getContent().getTextContent()!=null)  hrmDoc.setReportFile(repR[i].getContent().getTextContent());
                                 if (repR[i].getEventDateTime()!=null) hrmDoc.setReportDate(dDateTimeFullPartial(repR[i].getEventDateTime(), timeShiftInDays));
                                 if (repR[i].getReceivedDateTime()!=null) hrmDoc.setTimeReceived(dDateTimeFullPartial(repR[i].getReceivedDateTime(), timeShiftInDays));
                                 hrmDocDao.persist(hrmDoc);
+
+                                hrmDocToDemo.setDemographicNo(demographicNo);
+                                hrmDocToDemo.setHrmDocumentId(hrmDoc.getId().toString());
+                                hrmDocToDemoDao.persist(hrmDocToDemo);
 
                                 ReportsReceived.OBRContent[] obr = repR[i].getOBRContentArray();
                                 for (int j=0; j<obr.length; j++) {
@@ -1478,6 +1491,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                                     hrmDocSc.setActive(true);
                                     hrmDocSubClassDao.persist(hrmDocSc);
                                 }
+                                HRMreports.add(repR[i]);
                                 
                             } else { //non-HRM reports
                                 boolean binaryFormat = false;
@@ -1546,6 +1560,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 				}
                             }
 			}
+                        HRMCreateFile.create(demo, HRMreports, HRMfile);
 
                         /*
 			//AUDIT INFORMATION
