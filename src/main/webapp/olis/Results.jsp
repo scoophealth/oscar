@@ -36,7 +36,7 @@ function filterResults(select) {
 	} else {
 		jQuery(".evenLine").hide();
 		jQuery(".oddLine").hide();
-		jQuery("tr[reportingFacility='" + select.value + "']").show();
+		jQuery("tr[patientName='" + select.value + "']").show();
 	}
 }
 </script>
@@ -121,21 +121,21 @@ function filterResults(select) {
 				<% if (resultList.size() > 0) { %>
 					<tr>
 						<td colspan=9>
-						Filter by reporting facility:
+						Filter by patient name:
 						<select onChange="filterResults(this)">
-							<option value="">(No filter)</option>
-							<%  List<String> labs = new ArrayList<String>();
+							<option value="">All Patients</option>
+							<%  List<String> names = new ArrayList<String>();
 								OLISHL7Handler result;
 								String name;
 								for (String resultUuid : resultList) {
 									result = OLISResultsAction.searchResultsMap.get(resultUuid);
-									name = oscar.Misc.getStr(result.getPerformingFacilityName(), "").trim();
-									if (!name.equals("")) { labs.add(name); }
+									name = oscar.Misc.getStr(result.getPatientName(), "").trim();
+									if (!name.equals("")) { names.add(name); }
 								}
-								HashSet<String> uniqueNames = new HashSet<String>(labs);
-								for (String lab: uniqueNames) {
+								HashSet<String> uniqueNames = new HashSet<String>(names);
+								for (String tmp: uniqueNames) {
 							%>
-								<option value="<%=lab%>"><%=lab%></option>
+								<option value="<%=tmp%>"><%=tmp%></option>
 							<% } %>
 						</select>
 						</td>
@@ -155,7 +155,7 @@ function filterResults(select) {
 						for (String resultUuid : resultList) {
 						result = OLISResultsAction.searchResultsMap.get(resultUuid);
 					%>
-					<tr class="<%=++lineNum % 2 == 1 ? "oddLine" : "evenLine"%>" reportingFacility="<%=result.getPerformingFacilityName() %>">
+					<tr class="<%=++lineNum % 2 == 1 ? "oddLine" : "evenLine"%>" patientName="<%=result.getPatientName() %>">
 						<td>
 							<div id="<%=resultUuid %>_result"></div>
 							<input type="button" onClick="addToInbox('<%=resultUuid %>'); return false;" id="<%=resultUuid %>" value="Add to Inbox" />
