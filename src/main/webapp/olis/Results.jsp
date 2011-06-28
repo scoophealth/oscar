@@ -29,15 +29,22 @@ function preview(uuid) {
 	reportWindow('<%=request.getContextPath()%>/lab/CA/ALL/labDisplayOLIS.jsp?segmentID=0&preview=true&uuid=' + uuid);
 }
 
+var patientFilter = "";
+var labFilter = "";
 function filterResults(select) {
-	if (select.value == "") { 
-		jQuery(".evenLine").show();
-		jQuery(".oddLine").show();	
-	} else {
-		jQuery(".evenLine").hide();
-		jQuery(".oddLine").hide();
-		jQuery("tr[patientName='" + select.value + "']").show();
+	if (select.name == "labFilter") {
+		labFilter = select.value;
+	} else if(select.name == "patientFilter") {
+		patientFilter = select.value;
 	}
+	var performFilter = function() {
+		var visible = (patientFilter == "" || jQuery(this).attr("patientName") == patientFilter)
+				   && (labFilter == "" || jQuery(this).attr("reportingLaboratory") == labFilter);
+		if (visible) { jQuery(this).show(); }
+		else { jQuery(this).hide(); }
+	};
+	jQuery(".evenLine").each(performFilter);
+	jQuery(".oddLine").each(performFilter);
 }
 </script>
 <style type="text/css">
@@ -120,9 +127,9 @@ function filterResults(select) {
 				</tr>
 				<% if (resultList.size() > 0) { %>
 					<tr>
-						<td colspan=9>
+						<td colspan="4">
 						Filter by patient name:
-						<select onChange="filterResults(this)">
+						<select name="patientFilter" onChange="filterResults(this)">
 							<option value="">All Patients</option>
 							<%  List<String> names = new ArrayList<String>();
 								OLISHL7Handler result;
@@ -132,8 +139,23 @@ function filterResults(select) {
 									name = oscar.Misc.getStr(result.getPatientName(), "").trim();
 									if (!name.equals("")) { names.add(name); }
 								}
-								HashSet<String> uniqueNames = new HashSet<String>(names);
-								for (String tmp: uniqueNames) {
+								for (String tmp: new HashSet<String>(names)) {
+							%>
+								<option value="<%=tmp%>"><%=tmp%></option>
+							<% } %>
+						</select>
+						</td>
+						<td colspan="4">
+						Filter by reporting laboratory.:
+						<select name="labFilter" onChange="filterResults(this)">
+							<option value="">All Labs</option>
+							<%  List<String> labs = new ArrayList<String>();
+								for (String resultUuid : resultList) {
+									result = OLISResultsAction.searchResultsMap.get(resultUuid);
+									name = oscar.Misc.getStr(result.getReportingFacilityName(), "").trim();
+									if (!name.equals("")) { labs.add(name); }
+								}
+								for (String tmp: new HashSet<String>(labs)) {
 							%>
 								<option value="<%=tmp%>"><%=tmp%></option>
 							<% } %>
@@ -155,7 +177,7 @@ function filterResults(select) {
 						for (String resultUuid : resultList) {
 						result = OLISResultsAction.searchResultsMap.get(resultUuid);
 					%>
-					<tr class="<%=++lineNum % 2 == 1 ? "oddLine" : "evenLine"%>" patientName="<%=result.getPatientName() %>">
+					<tr class="<%=++lineNum % 2 == 1 ? "oddLine" : "evenLine"%>" patientName="<%=result.getPatientName()%>" reportingLaboratory="<%=result.getReportingFacilityName()%>">
 						<td>
 							<div id="<%=resultUuid %>_result"></div>
 							<input type="button" onClick="addToInbox('<%=resultUuid %>'); return false;" id="<%=resultUuid %>" value="Add to Inbox" />
