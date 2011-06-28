@@ -164,7 +164,7 @@ public class EctDisplayLabAction2 extends EctDisplayAction {
 					labDisplayName = result.getDiscipline();
 					url = request.getContextPath() + "/lab/CA/BC/labDisplay.jsp?demographicId=" + bean.demographicNo + "&segmentID=" + result.segmentID + "&providerNo=" + bean.providerNo + "&multiID=" + result.multiLabId + remoteFacilityIdQueryString;
 				}
-
+				
 				NavBarDisplayDAO.Item item = Dao.Item();
 				logger.info("Adding link: " + labDisplayName + " : " + formattedDate);
 				item.setLinkTitle(labDisplayName + " " + formattedDate);
@@ -175,6 +175,11 @@ public class EctDisplayLabAction2 extends EctDisplayAction {
 				item.setTitle(labDisplayName);
 				item.setURL(func.toString());
 				item.setDate(date);
+				if(result.isAbnormal()){
+					item.setColour("red");
+				}
+
+				
 				// item.setBgColour(bgcolour);
 				Dao.addItem(item);
 			}
