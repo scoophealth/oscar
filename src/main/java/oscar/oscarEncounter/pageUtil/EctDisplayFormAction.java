@@ -25,11 +25,13 @@
 
 package oscar.oscarEncounter.pageUtil;
 
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
@@ -45,6 +47,7 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarEncounter.data.EctFormData;
+import oscar.oscarLab.LabRequestReportLink;
 import oscar.util.DateUtils;
 import oscar.util.OscarRoleObjectPrivilege;
 import oscar.util.StringUtils;
@@ -101,7 +104,7 @@ public class EctDisplayFormAction extends EctDisplayAction {
 					if (!table.equalsIgnoreCase("")) {
 						EctFormData.PatientForm[] pforms = new EctFormData().getPatientFormsFromLocalAndRemote(bean.demographicNo, table);
 						// if a form has been started for the patient, create a module item for it
-						if (pforms.length > 0) {
+						if (pforms.length > 0) {							
 							NavBarDisplayDAO.Item item = Dao.Item();
 							EctFormData.PatientForm pfrm = pforms[0];
 
@@ -124,6 +127,20 @@ public class EctDisplayFormAction extends EctDisplayAction {
 							fullTitle = encounterForm.getFormName();
 							strTitle = new StringBuilder(StringUtils.maxLenString(fullTitle, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES));
 
+							if(table.equals("formLabReq07")) {
+								Long reportId = null;
+								try {
+									HashMap<String,Object> res = LabRequestReportLink.getLinkByRequestId("formLabReq07",Long.valueOf(pfrm.getFormId()));
+									reportId = (Long)res.get("report_id");
+								}catch(SQLException e) {
+									logger.error("error",e);
+								}
+								if(reportId == null) {
+									strTitle.insert(0,"*");
+									strTitle.append("*");
+								}
+							}
+							
 							hash = Math.abs(winName.hashCode());
 							url = new StringBuilder("popupPage(700,960,'" + hash + "started', '" + request.getContextPath() + "/form/forwardshortcutname.jsp?formname=" + encounterForm.getFormName() + "&demographic_no=" + bean.demographicNo + (pfrm.getRemoteFacilityId()!=null?"&remoteFacilityId="+pfrm.getRemoteFacilityId()+"&formId="+pfrm.getFormId():"")+"');");
 							key = StringUtils.maxLenString(fullTitle, MAX_LEN_KEY, CROP_LEN_KEY, ELLIPSES) + "(" + serviceDateStr + ")";

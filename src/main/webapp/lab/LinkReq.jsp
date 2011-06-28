@@ -21,40 +21,43 @@
     Vector<String> req_id      = new Vector<String>();
     Vector<String> formCreated = new Vector<String>();
     Vector<String> patientName = new Vector<String>();
-    if (linkReqId==null) {
-	try {
-	    reqDateLink = LabRequestReportLink.getRequestDate(reqId);
-	    
-	    sql = "SELECT ID, formCreated, patientName FROM formLabReq07";
-	    
-	    ResultSet rs = DBHandler.GetSQL(sql);
-
-	    while (rs.next()) {
-		req_id.add(rs.getString("ID"));
-		patientName.add(rs.getString("patientName"));
-		formCreated.add(UtilDateUtilities.DateToString(rs.getDate("formCreated"),"yyyy-MM-dd"));
-	    }
-	} catch (SQLException ex) {
-		MiscUtils.getLogger().error("Error", ex);
-	}
-    } else { //Linked
-	try {
-	    sql = "SELECT formCreated FROM formLabReq07 WHERE ID="+linkReqId;
-	    
-	    ResultSet rs = DBHandler.GetSQL(sql);
-	    String req_date = "";
-	    if (rs.next()) req_date = UtilDateUtilities.DateToString(rs.getDate("formCreated"),"yyyy-MM-dd");
+    if (linkReqId == null || linkReqId.length()==0) {
+		try {
+			if(reqId != null && reqId.length()>0) {
+		    	reqDateLink = LabRequestReportLink.getRequestDate(reqId);
+			}
+		    
+		    sql = "SELECT ID, formCreated, patientName FROM formLabReq07";
+		    
+		    ResultSet rs = DBHandler.GetSQL(sql);
 	
-	    Long id = LabRequestReportLink.getIdByReport(table, Long.valueOf(rptId));
-	    if (id==null) { //new report
-		LabRequestReportLink.save("formLabReq07",Long.valueOf(linkReqId),req_date,table,Long.valueOf(rptId));
-	    } else {
-		LabRequestReportLink.update(id,"formLabReq07",Long.valueOf(linkReqId),req_date);
-	    }
-	} catch (SQLException ex) {
-		MiscUtils.getLogger().error("Error", ex);
-	}
-	response.sendRedirect("../close.html");
+		    while (rs.next()) {
+				req_id.add(rs.getString("ID"));
+				patientName.add(rs.getString("patientName"));
+				formCreated.add(UtilDateUtilities.DateToString(rs.getDate("formCreated"),"yyyy-MM-dd"));
+		    }
+		} catch (SQLException ex) {
+			MiscUtils.getLogger().error("Error", ex);
+		}
+    } else { //Make the link
+		try {
+		    sql = "SELECT formCreated FROM formLabReq07 WHERE ID="+linkReqId;
+		    
+		    ResultSet rs = DBHandler.GetSQL(sql);
+		    String req_date = "";
+		    if (rs.next()) 
+		    	req_date = UtilDateUtilities.DateToString(rs.getDate("formCreated"),"yyyy-MM-dd");
+		
+		    Long id = LabRequestReportLink.getIdByReport(table, Long.valueOf(rptId));
+		    if (id==null) { //new report
+				LabRequestReportLink.save("formLabReq07",Long.valueOf(linkReqId),req_date,table,Long.valueOf(rptId));
+		    } else {
+				LabRequestReportLink.update(id,"formLabReq07",Long.valueOf(linkReqId),req_date);
+		    }
+		} catch (SQLException ex) {
+			MiscUtils.getLogger().error("Error", ex);
+		}
+		response.sendRedirect("../close.html");
     }
 %>
 
@@ -71,7 +74,7 @@
 	<input type="hidden" name="reqid" value="<%=reqId%>" />
 	<p>&nbsp;</p>
 	Requisition Date: <%=reqDateLink%><p>
-	Link to Lab Requestion:
+	Link to Lab Requisition:
 	<select name="linkReqId">
 	    <option value="-1">---</option>
 <%

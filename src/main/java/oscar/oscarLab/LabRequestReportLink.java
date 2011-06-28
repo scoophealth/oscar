@@ -28,6 +28,7 @@ package oscar.oscarLab;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Hashtable;
 
 import oscar.oscarDB.DBHandler;
@@ -52,6 +53,25 @@ public class LabRequestReportLink {
 	}
 	return link;
     }
+
+    public static HashMap<String,Object> getLinkByRequestId(String requestTable, Long reqId) throws SQLException {
+    	HashMap<String,Object> link = new HashMap<String,Object>();
+    	
+    	
+    	String sql = "SELECT * FROM labRequestReportLink WHERE request_table='" + requestTable+"'" +
+    							    " AND request_id="  + reqId;
+    	ResultSet rs = DBHandler.GetSQL(sql);
+    	if (rs.next()) {
+    	    link.put("id", rs.getLong("id"));
+    	    link.put("request_table", rs.getString("request_table"));
+    	    link.put("request_id", rs.getLong("request_id"));
+    	    link.put("request_date", rs.getDate("request_date"));
+    	    link.put("report_table", rs.getString("report_table"));
+    	    link.put("report_id", rs.getLong("report_id"));
+    	}
+    	return link;
+    }
+        
     
     public static String getRequestDate(String id) throws SQLException {
 	
