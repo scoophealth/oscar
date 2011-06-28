@@ -146,7 +146,7 @@ function filterResults(select) {
 						</select>
 						</td>
 						<td colspan="4">
-						Filter by reporting laboratory.:
+						Filter by reporting laboratory:
 						<select name="labFilter" onChange="filterResults(this)">
 							<option value="">All Labs</option>
 							<%  List<String> labs = new ArrayList<String>();
