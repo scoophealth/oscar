@@ -100,7 +100,7 @@ public class EctDisplayConsultAction extends EctDisplayAction {
             cal.add(Calendar.MONTH,countback );
             Date cutoffDate = cal.getTime();
             
-            String red = "FF0000";
+            String red = "red";
             String dbFormat = "yyyy-MM-dd";
             String serviceDateStr;
             Date date;
