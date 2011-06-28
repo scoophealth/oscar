@@ -17,6 +17,8 @@ public class LabTest {
 	private String refRangeText;
 	private String flag;
 	private String stat;
+	private String notes;
+	
 	public Long getId() {
     	return id;
     }
@@ -94,6 +96,12 @@ public class LabTest {
     }
 	public void setStat(String stat) {
     	this.stat = stat;
+    }
+	public String getNotes() {
+    	return notes;
+    }
+	public void setNotes(String notes) {
+    	this.notes = notes;
     }
 	
 	

@@ -88,7 +88,6 @@
 	                		</select>
 	                	</td>
 	                </tr>                	               	                
-	                <tr><td><label>Lab Notes:</label></td><td><textarea name="labnotes" id="labnotes" rows="5" cols="30"></textarea></td></tr>
 	                <tr><td><label>Accession #</label></td><td><input type="text" name="accession" id="accession"/></td></tr>
                     <tr><td><label>Lab Req Date/Time:</label></td><td><input type="text" name="lab_req_date" id="lab_req_date"/><img src="<%=request.getContextPath()%>/images/cal.gif" id="lab_req_date_cal" /></td></tr>   
                 </table>
@@ -101,8 +100,7 @@
 	                <tr><td><label>Billing #</label></td><td><input type="text" name="billingNo" id="billingNo"/></td></tr>
 	                <tr><td><label>Last Name</label></td><td><input type="text" name="pLastname" id="pLastname"/></td></tr>
 	                <tr><td><label>First Name</label></td><td><input type="text" name="pFirstname" id="pFirstname"/></td></tr>
-	                <tr><td><label>CC</label></td><td><input type="text" name="cc" id="cc" size="50"/></td></tr>
-	                <tr><td><label>Physician Notes:</label></td><td><textarea name="pnotes" id="pnotes" rows="5" cols="30"></textarea></td></tr>                   
+	                <tr><td><label>CC</label></td><td><input type="text" name="cc" id="cc" size="50"/></td></tr>	                
                 </table>
             </fieldset>
 			</td></tr></table>
