@@ -19,6 +19,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Source;
@@ -119,19 +120,19 @@ public class Driver {
 		}
 	}
 
-	private static void readResponseFromXML(HttpServletRequest request,
+	public static void readResponseFromXML(HttpServletRequest request,
 			String olisResponse) {
 
 		try {
 			DocumentBuilderFactory.newInstance().newDocumentBuilder();
 			SchemaFactory factory = SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema");
 
-			Source schemaFile = new StreamSource(new File("olis/response.xsd"));
+			Source schemaFile = new StreamSource(new File(OscarProperties.getInstance().getProperty("olis_response_schema")));
 			factory.newSchema(schemaFile);
 
 			JAXBContext jc = JAXBContext.newInstance("ca.ssha._2005.hial");
 			Unmarshaller u = jc.createUnmarshaller();
-			Response root = (Response) u.unmarshal(new InputSource(new StringReader(olisResponse)));
+			Response root = ((JAXBElement<Response>) u.unmarshal(new InputSource(new StringReader(olisResponse)))).getValue();
 			
 			if (root.getErrors() != null) {
 				List<String> errorStringList = new LinkedList<String>();
