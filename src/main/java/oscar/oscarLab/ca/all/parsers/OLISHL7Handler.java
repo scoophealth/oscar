@@ -219,6 +219,15 @@ public class OLISHL7Handler implements MessageHandler {
 		}
 	}
 	
+	public String getAdmittingProviderNameShort() {
+		try {
+			return getShortName("/.PV1-17-");
+		} catch (HL7Exception e) {
+			MiscUtils.getLogger().error("OLIS HL7 Error", e);
+			return "";
+		}
+	}
+	
 	public String getAttendingProviderName() {
 		try {
 			return getFullDocName("/.PV1-7-");
