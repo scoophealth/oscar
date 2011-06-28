@@ -50,5 +50,24 @@ public class OscarLogDao extends AbstractDao<OscarLog> {
 		
 		return(results);
     }
+    
+    
+    public boolean hasRead(String providerNo, String content, String contentId){
+    	String sqlCommand="select x from "+modelClass.getSimpleName()+" x where x.action = 'read' and  x.providerNo=?1 and x.content = ?2 and x.contentId = ?3";
+    	Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, providerNo);
+		query.setParameter(2, content);
+		query.setParameter(3, contentId);
+		
+
+	    @SuppressWarnings("unchecked")
+		List<OscarLog> results=query.getResultList();
+	    if(results.size() == 0){
+	    	return false;
+	    }
+		
+		return true;
+    }
+    
 
 }

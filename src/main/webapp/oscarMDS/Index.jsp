@@ -31,7 +31,7 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%@page import="org.oscarehr.common.hl7.v2.oscar_to_oscar.OscarToOscarUtils"%>
-<%@page import="org.oscarehr.util.MiscUtils, org.apache.commons.lang.StringEscapeUtils"%>
+<%@page import="org.oscarehr.util.MiscUtils, org.apache.commons.lang.StringEscapeUtils,org.oscarehr.common.dao.OscarLogDao,org.oscarehr.util.SpringUtils"%>
 
 <%
 
@@ -57,6 +57,8 @@ Integer totalNumDocs=(Integer)request.getAttribute("totalNumDocs");
 String curUser_no = (String) session.getAttribute("user");
 final String noAckStatus="N";
 String ctx = request.getContextPath();
+
+OscarLogDao oscarLogDao = (OscarLogDao) SpringUtils.getBean("oscarLogDao");
 %>
 
 
@@ -295,6 +297,11 @@ Event.observe(window,'scroll',function(){//check for scrolling
                                 //LabResultData result = (LabResultData) labMap.get(labNoArray.get(i));
 
                                 String segmentID        =  result.segmentID;
+                                
+                                String labRead = "";
+                                if(!oscarLogDao.hasRead(( (String) session.getAttribute("user")   ),"lab",segmentID)){
+                                	labRead = "*";	
+                                }
                                 String status           =  result.acknowledgedStatus;
                                 String bgcolor = i % 2 == 0 ? "#e0e0ff" : "#ccccff" ;
                                 if (!result.isMatchedToPatient()){
@@ -345,9 +352,9 @@ Event.observe(window,'scroll',function(){//check for scrolling
                                 </td>
                                 <td nowrap>
                                     <% if ( result.isMDS() ){ %>
-                                    <a href="javascript:reportWindow('SegmentDisplay.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')"><%= result.getPatientName()%></a>
+                                    <a href="javascript:reportWindow('SegmentDisplay.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')"><%=labRead%><%= result.getPatientName()%><%=labRead%></a>
                                     <% }else if (result.isCML()){ %>
-                                    <a href="javascript:reportWindow('../lab/CA/ON/CMLDisplay.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')"><%=(String) result.getPatientName()%></a>
+                                    <a href="javascript:reportWindow('../lab/CA/ON/CMLDisplay.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')"><%=labRead%><%=(String) result.getPatientName()%><%=labRead%></a>
                                     <% }else if (result.isHL7TEXT())
                                    	{ 
                                     	String categoryType=result.getDiscipline();
@@ -355,24 +362,29 @@ Event.observe(window,'scroll',function(){//check for scrolling
                                     	if ("REF_I12".equals(categoryType))
                                     	{
 	                                    	%>
-                                      			<a href="javascript:popupConsultation('<%=segmentID%>')"><%=result.getPatientName()%></a>
+                                      			<a href="javascript:popupConsultation('<%=segmentID%>')"><%=labRead%><%=result.getPatientName()%><%=labRead%></a>
                                     		<%                                    		
                                     	}
                                     	else if (categoryType!=null && categoryType.startsWith("ORU_R01:"))
                                     	{
 	                                    	%>
-                                      			<a href="<%=request.getContextPath()%>/lab/CA/ALL/viewOruR01.jsp?segmentId=<%=segmentID%>"><%=result.getPatientName()%></a>
+                                      			<a href="<%=request.getContextPath()%>/lab/CA/ALL/viewOruR01.jsp?segmentId=<%=segmentID%>"><%=labRead%><%=result.getPatientName()%><%=labRead%></a>
                                     		<%                                    		
                                     	}
                                     	else
                                     	{
 	                                    	%>
-	                                    		<a href="javascript:reportWindow('../lab/CA/ALL/labDisplay.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')"><%=(String) result.getPatientName()%></a>
+	                                    		<a href="javascript:reportWindow('../lab/CA/ALL/labDisplay.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')"><%=labRead%><%=(String) result.getPatientName()%><%=labRead%></a>
 	                                    	<%
                                     	}
                                     }
-                                    else if (result.isDocument()){ %>
-                                    <a href="javascript:reportWindow('../dms/MultiPageDocDisplay.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>&demoName=<%=(String)result.getPatientName()%> ',660,1020)"><%=(String) result.getPatientName()%></a>
+                                    else if (result.isDocument()){ 
+	                                    labRead = "";
+	                                    if(!oscarLogDao.hasRead(( (String) session.getAttribute("user")   ),"document",segmentID)){
+	                                	labRead = "*";	
+	                                	}
+                                	%>
+                                    <a href="javascript:reportWindow('../dms/MultiPageDocDisplay.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>&demoName=<%=(String)result.getPatientName()%> ',660,1020)"><%=labRead%><%=(String) result.getPatientName()%><%=labRead%></a>
                                     
                                     <% }else if(result.isHRM()){ %>
                                     <a href="javascript:reportWindow('../hospitalReportManager/Display.do?id=<%=segmentID%>&segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>&demoName=<%=(String)result.getPatientName()%> ',660,1020)"><%=(String) result.getPatientName()%></a>
