@@ -50,5 +50,16 @@ public class AllergyDAO extends AbstractDao {
         List<Allergy> allergies = query.getResultList();
         return allergies;
     }
+    
+    public List<Allergy> getActiveAllergies(String demographic_no) {
+    	@SuppressWarnings("unchecked")
+    	String sql = "select x from Allergy x where x.archived = 0 and x.demographicNo=?1";
+    	Query query = entityManager.createQuery(sql);
+    	query.setParameter(1,demographic_no);
+    	
+        List<Allergy> allergies = query.getResultList();
+        return allergies;
+    }
+   
 
 }
