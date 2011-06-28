@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -71,6 +72,7 @@ public class OLISHL7Handler implements MessageHandler {
 		defaultSourceOrganizations.put("4009","BSD Lab9");
 		defaultSourceOrganizations.put("4010","BSD Lab10");
     }
+    
     
     public String getSourceOrganization(String org) {
     	return sourceOrganizations.containsKey(org) ? sourceOrganizations.get(org) : defaultSourceOrganizations.get(org);
@@ -224,6 +226,11 @@ public class OLISHL7Handler implements MessageHandler {
 			MiscUtils.getLogger().error("OLIS HL7 Error", e);
 			return "";
 		}
+	}
+
+	public boolean reportBlocked = false;
+	public boolean isReportBlocked() {		
+		return reportBlocked;
 	}
 	
 	public boolean isOBRBlocked(int obr) {
@@ -630,9 +637,21 @@ public class OLISHL7Handler implements MessageHandler {
 		return disciplines;
 	}
     
+	List<OLISError> errors;
+	public List<OLISError> getReportErrors() {
+		List<OLISError> result = new ArrayList<OLISError>();
+		if (errors == null) { return result; }
+		for (OLISError error : errors) {
+			if (error.segment == null || error.segment.equals("") || error.segment.equals("ERR") || error.segment.equals("SPR")) {
+				result.add(error);
+			}
+		}
+		return result;
+	}
+	
+	
 	@Override
     public void init(String hl7Body) throws HL7Exception {
-		
 		initDefaultSourceOrganizations();
 		
 		obrDiagnosis = new HashMap<Integer, Segment>();
@@ -671,9 +690,20 @@ public class OLISHL7Handler implements MessageHandler {
 		String[] segments = terser.getFinder().getRoot().getNames();
 		obrGroups = new ArrayList<ArrayList<Segment>>();
 		int k = 0;
-		/*
-		 * Fill the OBX array list for use by future methods
-		 */
+		
+		// We only need to parse a few segments if there are no OBRs.
+		if (obrCount == 0) {
+			for (; k < segments.length; k++) {
+				segmentName = segments[k].substring(0, 3);
+				if (segmentName.equals("ZPD")) {
+					parseZPDSegment();						
+				}
+				if (segmentName.equals("ERR")) {
+					parseERRSegment();
+				}
+			}
+			return;
+		}
 		for (int i = 0; i < obrCount; i++) {
 			ArrayList<Segment> obxSegs = new ArrayList<Segment>();
 			
@@ -683,129 +713,17 @@ public class OLISHL7Handler implements MessageHandler {
 			for (; k < segments.length; k++) {
 				try {
 					segmentName = segments[k].substring(0, 3);
+					if (segmentName.equals("ZPD")) {
+						parseZPDSegment();						
+					}
+					if (segmentName.equals("ERR")) {
+						parseERRSegment();
+					}
 					if (segmentName.equals("PID")) {
-						Segment pid = terser.getSegment("/.PID");
-						int rep = -1;
-						String identifier = "";
-						String value = "";
-						String attrib = "";
-
-						patientIdentifiers = new HashMap<String, String[]>();
-						while ((identifier = Terser.get(pid, 3, ++rep, 5, 1)) != null) {
-
-							value = Terser.get(pid, 3, rep, 1, 1);
-
-							attrib = Terser.get(pid, 3, rep, 4, 2);
-							if (attrib != null) {
-								attrib = attrib.substring(attrib.indexOf(":") + 1);
-							}
-
-							patientIdentifiers.put(identifier, new String[] { value, attrib });
-
-						}
-						patientAddresses = new ArrayList<HashMap<String,String>>();						
-						rep = -1;
-						HashMap<String,String> address;
-						while ((identifier = Terser.get(pid, 11, ++rep, 7, 1)) != null) {
-							address = new HashMap<String, String>();
-							value = Terser.get(pid, 11, rep, 1, 1);
-							if (stringIsNotNullOrEmpty(value)) { address.put("Street Address", value); }
-							value = Terser.get(pid, 11, rep, 2, 1);
-							if (stringIsNotNullOrEmpty(value)) { address.put("Other Designation", value); }
-							value = Terser.get(pid, 11, rep, 3, 1);
-							if (stringIsNotNullOrEmpty(value)) { address.put("City", value); }
-							value = Terser.get(pid, 11, rep, 4, 1);
-							if (stringIsNotNullOrEmpty(value)) { address.put("Province", value); }
-							value = Terser.get(pid, 11, rep, 5, 1);
-							if (stringIsNotNullOrEmpty(value)) { address.put("Postal Code", value); }
-							value = Terser.get(pid, 11, rep, 6, 1);
-							if (stringIsNotNullOrEmpty(value)) { address.put("Country", value); }
-							address.put("Address Type", addressTypeNames.get(identifier));
-							patientAddresses.add(address);
-						}
-						
-						patientHomeTelecom = new ArrayList<HashMap<String,String>>();						
-						rep = -1;
-						HashMap<String,String> telecom;
-						while ((identifier = Terser.get(pid, 13, ++rep, 2, 1)) != null) {
-							telecom = new HashMap<String, String>();
-							value = Terser.get(pid, 13, rep, 1, 1);
-							if (stringIsNotNullOrEmpty(value)) { telecom.put("phoneNumber", value); }
-							value = Terser.get(pid, 13, rep, 3, 1);
-							if (stringIsNotNullOrEmpty(value)) { 
-								value = telecomEquipType.get(value); 
-								if (stringIsNotNullOrEmpty(value)) { telecom.put("equipType", value); } 
-							}
-							value = Terser.get(pid, 13, rep, 4, 1);
-							if (stringIsNotNullOrEmpty(value)) { telecom.put("email", value); }
-							value = Terser.get(pid, 13, rep, 5, 1);
-							if (stringIsNotNullOrEmpty(value)) { telecom.put("countryCode", value); }
-							value = Terser.get(pid, 13, rep, 6, 1);
-							if (stringIsNotNullOrEmpty(value)) { telecom.put("areaCode", value); }
-							value = Terser.get(pid, 13, rep, 7, 1);
-							if (stringIsNotNullOrEmpty(value)) { telecom.put("localNumber", value); }
-							value = Terser.get(pid, 13, rep, 8, 1);
-							if (stringIsNotNullOrEmpty(value)) { telecom.put("extension", value); }
-							telecom.put("useCode", telecomUseCode.get(identifier));							
-							patientHomeTelecom.add(telecom);
-						}		
-						
-						patientWorkTelecom = new ArrayList<HashMap<String,String>>();
-						rep = -1;
-						while ((identifier = Terser.get(pid, 14, ++rep, 2, 1)) != null) {
-							telecom = new HashMap<String, String>();
-							value = Terser.get(pid, 14, rep, 1, 1);
-							if (stringIsNotNullOrEmpty(value)) { telecom.put("phoneNumber", value); }
-							value = Terser.get(pid, 14, rep, 3, 1);
-							if (stringIsNotNullOrEmpty(value)) { 
-								value = telecomEquipType.get(value); 
-								if (stringIsNotNullOrEmpty(value)) { telecom.put("equipType", value); } 
-							}
-							value = Terser.get(pid, 14, rep, 4, 1);
-							if (stringIsNotNullOrEmpty(value)) { telecom.put("email", value); }
-							value = Terser.get(pid, 14, rep, 5, 1);
-							if (stringIsNotNullOrEmpty(value)) { telecom.put("countryCode", value); }
-							value = Terser.get(pid, 14, rep, 6, 1);
-							if (stringIsNotNullOrEmpty(value)) { telecom.put("areaCode", value); }
-							value = Terser.get(pid, 14, rep, 7, 1);
-							if (stringIsNotNullOrEmpty(value)) { telecom.put("localNumber", value); }
-							value = Terser.get(pid, 14, rep, 8, 1);
-							if (stringIsNotNullOrEmpty(value)) { telecom.put("extension", value); }
-							telecom.put("useCode", telecomUseCode.get(identifier));							
-							patientWorkTelecom.add(telecom);
-						}		
-						
+						parsePIDSegment();		
 					} else if (segmentName.equals("ZBR")) {
-						try {
-							String key = "", value = "";
-							Segment zbr = null;
-							if (zbrNum == 1) {
-								zbr = terser.getSegment("/.ZBR");
-							} else {
-								zbr = (Segment) terser.getFinder().getRoot().get("ZBR" + zbrNum);
-							}
-							// ZBR||BSD
-							// Lab6^^^^^&2.16.840.1.113883.3.59.1:4006&ISO|||||||||1000.910|
-							int[] indexes = { 2, 3, 4, 6, 8 };
-							for (int index : indexes) {
-								if (getString(Terser.get(zbr, index, 0, 6, 2)).equals("")) {
-									continue;
-								}
-								key = getString(Terser.get(zbr, index, 0, 6, 2));
-								if (key != null && key.indexOf(":") > 0) {
-									key = key.substring(key.indexOf(":") + 1);
-								}
-								value = getString(Terser.get(zbr, index, 0, 1, 1));
-								sourceOrganizations.put(key, value);
-							}
-						} catch (Exception e) {
-							MiscUtils.getLogger().error("OLIS HL7 Error", e);
-						} finally { 
-							zbrNum++;
-						}
+						parseZBRSegment(zbrNum++);
 					} else if (obrFlag && segmentName.equals("OBX")) {
-						// make sure to count all of the obx segments in the
-						// group
 						Structure[] segs = terser.getFinder().getRoot().getAll(segments[k]);
 						for (int l = 0; l < segs.length; l++) {
 							Segment obxSeg = (Segment) segs[l];
@@ -836,8 +754,7 @@ public class OLISHL7Handler implements MessageHandler {
 							obrParentMap.put(parent, String.valueOf(obrNum));
 						}
 						
-					} else if (segmentName.equals("DG1")) {
-						// group
+					} else if (segmentName.equals("DG1")) {						
 						Structure[] segs = terser.getFinder().getRoot().getAll(segments[k]);
 						for (int l = 0; l < segs.length; l++) {
 							Segment dg1Seg = (Segment) segs[l];
@@ -859,6 +776,148 @@ public class OLISHL7Handler implements MessageHandler {
 			disciplines.add(getOBRCategory(i));
 		}
 	}
+
+
+	private void parseZBRSegment(int zbrNum) {
+	    try {
+	    	String key = "", value = "";
+	    	Segment zbr = null;
+	    	if (zbrNum == 1) {
+	    		zbr = terser.getSegment("/.ZBR");
+	    	} else {
+	    		zbr = (Segment) terser.getFinder().getRoot().get("ZBR" + zbrNum);
+	    	}
+	    	int[] indexes = { 2, 3, 4, 6, 8 };
+	    	for (int index : indexes) {
+	    		if (getString(Terser.get(zbr, index, 0, 6, 2)).equals("")) {
+	    			continue;
+	    		}
+	    		key = getString(Terser.get(zbr, index, 0, 6, 2));
+	    		if (key != null && key.indexOf(":") > 0) {
+	    			key = key.substring(key.indexOf(":") + 1);
+	    		}
+	    		value = getString(Terser.get(zbr, index, 0, 1, 1));
+	    		sourceOrganizations.put(key, value);
+	    	}
+	    } catch (Exception e) {
+	    	MiscUtils.getLogger().error("OLIS HL7 Error", e);
+	    }
+    }
+
+
+	private void parsePIDSegment() throws HL7Exception {
+	    Segment pid = terser.getSegment("/.PID");
+	    int rep = -1;
+	    String identifier = "";
+	    String value = "";
+	    String attrib = "";
+
+	    patientIdentifiers = new HashMap<String, String[]>();
+	    while ((identifier = Terser.get(pid, 3, ++rep, 5, 1)) != null) {
+
+	    	value = Terser.get(pid, 3, rep, 1, 1);
+
+	    	attrib = Terser.get(pid, 3, rep, 4, 2);
+	    	if (attrib != null) {
+	    		attrib = attrib.substring(attrib.indexOf(":") + 1);
+	    	}
+
+	    	patientIdentifiers.put(identifier, new String[] { value, attrib });
+
+	    }
+	    patientAddresses = new ArrayList<HashMap<String,String>>();						
+	    rep = -1;
+	    HashMap<String,String> address;
+	    while ((identifier = Terser.get(pid, 11, ++rep, 7, 1)) != null) {
+	    	address = new HashMap<String, String>();
+	    	value = Terser.get(pid, 11, rep, 1, 1);
+	    	if (stringIsNotNullOrEmpty(value)) { address.put("Street Address", value); }
+	    	value = Terser.get(pid, 11, rep, 2, 1);
+	    	if (stringIsNotNullOrEmpty(value)) { address.put("Other Designation", value); }
+	    	value = Terser.get(pid, 11, rep, 3, 1);
+	    	if (stringIsNotNullOrEmpty(value)) { address.put("City", value); }
+	    	value = Terser.get(pid, 11, rep, 4, 1);
+	    	if (stringIsNotNullOrEmpty(value)) { address.put("Province", value); }
+	    	value = Terser.get(pid, 11, rep, 5, 1);
+	    	if (stringIsNotNullOrEmpty(value)) { address.put("Postal Code", value); }
+	    	value = Terser.get(pid, 11, rep, 6, 1);
+	    	if (stringIsNotNullOrEmpty(value)) { address.put("Country", value); }
+	    	address.put("Address Type", addressTypeNames.get(identifier));
+	    	patientAddresses.add(address);
+	    }
+	    
+	    patientHomeTelecom = new ArrayList<HashMap<String,String>>();						
+	    rep = -1;
+	    HashMap<String,String> telecom;
+	    while ((identifier = Terser.get(pid, 13, ++rep, 2, 1)) != null) {
+	    	telecom = new HashMap<String, String>();
+	    	value = Terser.get(pid, 13, rep, 1, 1);
+	    	if (stringIsNotNullOrEmpty(value)) { telecom.put("phoneNumber", value); }
+	    	value = Terser.get(pid, 13, rep, 3, 1);
+	    	if (stringIsNotNullOrEmpty(value)) { 
+	    		value = telecomEquipType.get(value); 
+	    		if (stringIsNotNullOrEmpty(value)) { telecom.put("equipType", value); } 
+	    	}
+	    	value = Terser.get(pid, 13, rep, 4, 1);
+	    	if (stringIsNotNullOrEmpty(value)) { telecom.put("email", value); }
+	    	value = Terser.get(pid, 13, rep, 5, 1);
+	    	if (stringIsNotNullOrEmpty(value)) { telecom.put("countryCode", value); }
+	    	value = Terser.get(pid, 13, rep, 6, 1);
+	    	if (stringIsNotNullOrEmpty(value)) { telecom.put("areaCode", value); }
+	    	value = Terser.get(pid, 13, rep, 7, 1);
+	    	if (stringIsNotNullOrEmpty(value)) { telecom.put("localNumber", value); }
+	    	value = Terser.get(pid, 13, rep, 8, 1);
+	    	if (stringIsNotNullOrEmpty(value)) { telecom.put("extension", value); }
+	    	telecom.put("useCode", telecomUseCode.get(identifier));							
+	    	patientHomeTelecom.add(telecom);
+	    }		
+	    
+	    patientWorkTelecom = new ArrayList<HashMap<String,String>>();
+	    rep = -1;
+	    while ((identifier = Terser.get(pid, 14, ++rep, 2, 1)) != null) {
+	    	telecom = new HashMap<String, String>();
+	    	value = Terser.get(pid, 14, rep, 1, 1);
+	    	if (stringIsNotNullOrEmpty(value)) { telecom.put("phoneNumber", value); }
+	    	value = Terser.get(pid, 14, rep, 3, 1);
+	    	if (stringIsNotNullOrEmpty(value)) { 
+	    		value = telecomEquipType.get(value); 
+	    		if (stringIsNotNullOrEmpty(value)) { telecom.put("equipType", value); } 
+	    	}
+	    	value = Terser.get(pid, 14, rep, 4, 1);
+	    	if (stringIsNotNullOrEmpty(value)) { telecom.put("email", value); }
+	    	value = Terser.get(pid, 14, rep, 5, 1);
+	    	if (stringIsNotNullOrEmpty(value)) { telecom.put("countryCode", value); }
+	    	value = Terser.get(pid, 14, rep, 6, 1);
+	    	if (stringIsNotNullOrEmpty(value)) { telecom.put("areaCode", value); }
+	    	value = Terser.get(pid, 14, rep, 7, 1);
+	    	if (stringIsNotNullOrEmpty(value)) { telecom.put("localNumber", value); }
+	    	value = Terser.get(pid, 14, rep, 8, 1);
+	    	if (stringIsNotNullOrEmpty(value)) { telecom.put("extension", value); }
+	    	telecom.put("useCode", telecomUseCode.get(identifier));							
+	    	patientWorkTelecom.add(telecom);
+	    }
+    }
+
+
+	private void parseZPDSegment() throws HL7Exception {
+	    Segment zpd = terser.getSegment("/.ZPD");
+	    reportBlocked = "Y".equals(oscar.Misc.getStr(Terser.get(zpd, 3, 0, 1, 1), ""));
+    }
+
+
+	private void parseERRSegment() throws HL7Exception {
+	    Segment err = terser.getSegment("/.ERR");
+	    errors = new ArrayList<OLISError>();
+	    String segment, sequence, field, identifier, text;
+	    int rep = -1;
+	    while ((identifier = Terser.get(err, 1, ++rep, 4, 1)) != null) {
+	    	segment = Terser.get(err, 1, rep, 1, 1);
+	    	sequence = Terser.get(err, 1, rep, 1, 2);
+	    	field = Terser.get(err, 1, rep, 1, 3);
+	    	text = Terser.get(err, 1, rep, 4, 2);
+	    	errors.add(new OLISError(segment, sequence, field, identifier, text));
+	    }
+    }
 	
 	HashMap<String, Integer> obrSortMap;
 	
@@ -1771,8 +1830,7 @@ public class OLISHL7Handler implements MessageHandler {
      */
     @Override
     public String getPatientName(){
-        return(parseFullNameFromSegment("/.PID-5-"));
-        
+        return(parseFullNameFromSegment("/.PID-5-"));        
     }
     
     @Override
@@ -2346,5 +2404,99 @@ public class OLISHL7Handler implements MessageHandler {
 			result = null;
 		}
 		return result;
+	}
+	public class OLISError {
+		public OLISError(String segment, String sequence, String field, String indentifer, String text) {
+	        super();
+	        this.segment = segment;
+	        this.sequence = sequence;
+	        this.field = field;
+	        this.indentifer = indentifer;
+	        this.text = text;
+        }
+
+		String segment, sequence, field, indentifer, text;
+
+		public String getSegment() {
+        	return segment;
+        }
+
+		public void setSegment(String segment) {
+        	this.segment = segment;
+        }
+
+		public String getSequence() {
+        	return sequence;
+        }
+
+		public void setSequence(String sequence) {
+        	this.sequence = sequence;
+        }
+
+		public String getField() {
+        	return field;
+        }
+
+		public void setField(String field) {
+        	this.field = field;
+        }
+
+		public String getIndentifer() {
+        	return indentifer;
+        }
+
+		public void setIndentifer(String indentifer) {
+        	this.indentifer = indentifer;
+        }
+
+		public String getText() {
+        	return text;
+        }
+
+		public void setText(String text) {
+        	this.text = text;
+        }
+		@Override
+        public int hashCode() {
+	        final int prime = 31;
+	        int result = 1;
+	        result = prime * result + getOuterType().hashCode();
+	        result = prime * result + ((field == null) ? 0 : field.hashCode());
+	        result = prime * result + ((indentifer == null) ? 0 : indentifer.hashCode());
+	        result = prime * result + ((segment == null) ? 0 : segment.hashCode());
+	        result = prime * result + ((sequence == null) ? 0 : sequence.hashCode());
+	        return result;
+        }
+
+		/**
+		 * OLIS Errors are identified by the error code for global errors or the segment, 
+		 * sequence and field of the error for localised errors.
+		 */
+		@Override
+        public boolean equals(Object obj) {
+	        if (this == obj) return true;
+	        if (obj == null) return false;
+	        if (obj instanceof String) { 
+		    	return this.indentifer.equals(obj);
+		    }
+	        if (getClass() != obj.getClass()) return false;
+	        OLISError other = (OLISError) obj;
+	        if (!getOuterType().equals(other.getOuterType())) return false;
+	        if (field == null) {
+		        if (other.field != null) return false;
+	        } else if (!field.equals(other.field)) return false;
+	        if (segment == null) {
+		        if (other.segment != null) return false;
+	        } else if (!segment.equals(other.segment)) return false;
+	        if (sequence == null) {
+		        if (other.sequence != null) return false;
+	        } else if (!sequence.equals(other.sequence)) return false;
+	        return true;
+        }
+
+		private OLISHL7Handler getOuterType() {
+	        return OLISHL7Handler.this;
+        }
+	
 	}
 }

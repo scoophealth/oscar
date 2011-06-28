@@ -62,6 +62,9 @@ public class OLISResultsAction extends DispatchAction {
 					
 					// Parse the HL7 string...
 					MessageHandler h = Factory.getHandler("OLIS_HL7", message);
+					if (h.getOBRCount() == 0) {
+						continue;
+					}
 					
 					searchResultsMap.put(resultUuid, (OLISHL7Handler)h);
 					resultList.add(resultUuid);
