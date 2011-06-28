@@ -207,6 +207,7 @@
 		<form-bean name="PreventionReportForm" type="oscar.oscarPrevention.pageUtil.PreventionReportForm" />
 		<form-bean name="ImportDemographicDataForm" type="oscar.oscarDemographic.pageUtil.ImportDemographicDataForm" />
 		<form-bean name="newLabUploadForm" type="oscar.oscarLab.ca.all.pageUtil.LabUploadForm" />
+		<form-bean name="hrmLabUploadForm" type="oscar.oscarLab.ca.all.pageUtil.LabUploadForm" />
 		<form-bean name="oruR01UploadForm" type="oscar.oscarLab.ca.all.pageUtil.OruR01UploadForm" />
 		<form-bean name="LabUploadForm" type="oscar.oscarLab.ca.bc.PathNet.pageUtil.LabUploadForm" />
 		<form-bean name="CMLLabUploadForm" type="oscar.oscarLab.ca.on.CML.Upload.LabUploadForm" />
@@ -2295,6 +2296,9 @@
 		</action>
 		<action input="/hospitalReportManager/hospitalReportManager.jsp" name="hrmLabUploadForm" path="/hospitalReportManager/UploadLab" scope="request" type="org.oscarehr.hospitalReportManager.HRMUploadLabAction">
 			<forward name="success" path="/hospitalReportManager/hospitalReportManager.jsp" />
+		</action>
+		<action input="/hospitalReportManager/Display" path="/hospitalReportManager/Modify" type="org.oscarehr.hospitalReportManager.HRMModifyDocumentAction" parameter="method" scope="request" validate="false">
+			<forward name="ajax" path="/hospitalReportManager/ajaxResponse.jsp" />
 		</action>
 
 	</action-mappings>

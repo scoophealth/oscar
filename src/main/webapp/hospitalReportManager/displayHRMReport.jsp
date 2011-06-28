@@ -259,14 +259,16 @@ function revokeSignOffHrm(reportId) {
 			<td>
 				<div id="provstatus<%=hrmReportId %>"></div>
 				<% if (providerLinkList != null || providerLinkList.size() >= 1) {
-					for (HRMDocumentToProvider p : providerLinkList) { %>
+					for (HRMDocumentToProvider p : providerLinkList) { 
+						if (!p.getProviderNo().equalsIgnoreCase("-1")) { %>
 						<%=providerDao.getProviderName(p.getProviderNo())%> <%=p.getSignedOff() !=null && p.getSignedOff()  == 1 ? "<abbr title='" + p.getSignedOffTimestamp() + "'>(Signed-Off)</abbr>" : "" %> <a href="#" onclick="removeProvFromHrm('<%=p.getId() %>', '<%=hrmReportId %>')">(remove)</a><br />
-				<%  }
+				<%		}  
+					}
 				} else { %>
 					<i>No providers currently assigned</i><br />
 				<% } %>
-				<% if (hrmDocument.getUnmatchedProviders() != null && hrmDocument.getUnmatchedProviders().trim().length() > 0) {
-					String[] unmatchedProviders = hrmDocument.getUnmatchedProviders().split("|");
+				<% if (hrmDocument.getUnmatchedProviders() != null && hrmDocument.getUnmatchedProviders().trim().length() >= 1) {
+					String[] unmatchedProviders = hrmDocument.getUnmatchedProviders().substring(1).split("\\|");
 					for (String unmatchedProvider : unmatchedProviders) { %>
 						<i><abbr title="From the HRM document"><%=unmatchedProvider %></abbr></i><br />
 					<% }

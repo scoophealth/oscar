@@ -53,7 +53,7 @@ public class HRMDisplayReportAction extends DispatchAction {
 				HRMDocumentToDemographic demographicLink = (demographicLinkList.size() > 0 ? demographicLinkList.get(0) : null);
 				request.setAttribute("demographicLink", demographicLink);
 				
-				List<HRMDocumentToProvider> providerLinkList = hrmDocumentToProviderDao.findByHrmDocumentId(document.getId().toString());
+				List<HRMDocumentToProvider> providerLinkList = hrmDocumentToProviderDao.findByHrmDocumentIdNoSystemUser(document.getId().toString());
 				request.setAttribute("providerLinkList", providerLinkList);
 				
 				List<HRMDocumentSubClass> subClassList = hrmDocumentSubClassDao.getSubClassesByDocumentId(document.getId());
