@@ -131,6 +131,8 @@ br {
 		<td class="MainTableRightColumn" valign="top">
 			<div>ERP Message:</div>
 			<textarea name="olisResponseContent" style="width:640px; height:640px;"></textarea>
+			<div>XML Message (for simulating errors):</div>
+			<textarea name="olisXmlResponse" style="width:640px; height:640px;"></textarea>
 			<div><input type="submit" value="Submit" /></div>
 		</td>
 	</tr>

@@ -17,6 +17,8 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.util.MiscUtils;
 
+import com.indivica.olis.Driver;
+
 import oscar.oscarLab.ca.all.parsers.Factory;
 import oscar.oscarLab.ca.all.parsers.MessageHandler;
 import oscar.oscarLab.ca.all.parsers.OLISHL7Handler;
@@ -34,7 +36,13 @@ public class OLISResultsAction extends DispatchAction {
 			if(olisResultString == null) {
 				olisResultString = oscar.Misc.getStr(request.getParameter("olisResponseContent"), "");
 				request.setAttribute("olisResponseContent", olisResultString);
-				if (olisResultString.equals("")) {
+				
+				String olisXmlResponse = oscar.Misc.getStr(request.getParameter("olisXmlResponse"), "");
+				if (olisResultString.trim().equalsIgnoreCase("")) {
+					if (!olisXmlResponse.trim().equalsIgnoreCase("")) {
+						Driver.readResponseFromXML(request, olisXmlResponse);
+					}
+					
 					List<String> resultList = new LinkedList<String>();
 					request.setAttribute("resultList", resultList);				
 					return mapping.findForward("results");
