@@ -155,7 +155,9 @@ public class RxPatientData {
       return ret.getTime();      
    }
    
-   private static int calcAge(java.util.Date DOB) {      
+   private static int calcAge(java.util.Date DOB) {
+       if (DOB==null) return 0;
+
       GregorianCalendar now = new GregorianCalendar();     
       int curYear = now.get(Calendar.YEAR);      
       int curMonth = (now.get(Calendar.MONTH) + 1);      

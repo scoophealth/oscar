@@ -77,7 +77,6 @@ import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.dao.DrugReasonDao;
 import org.oscarehr.common.model.Drug;
-import org.oscarehr.common.model.DrugReason;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -1044,17 +1043,22 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 				Long allergyId = RxAllergyImport.save(demographicNo, entryDate, description, typeCode, reaction, startDate, severity, regionalId, lifeStage);
                                 addOneEntry(ALLERGY);
 
-				CaseManagementNote cmNote = prepareCMNote();
+                                //annotation
 				String note = StringUtils.noNull(aaReactArray[i].getNotes());
+				CaseManagementNote cmNote = prepareCMNote();
+				cmNote.setNote(note);
+				saveLinkNote(cmNote, CaseManagementNoteLink.ALLERGIES, allergyId);
 
-				if (StringUtils.filled(aaReactArray[i].getCategorySummaryLine())) {
-					if (StringUtils.filled(note)) note = Util.addLine(note, "- Summary -");
-					note = Util.addLine(note, aaReactArray[i].getCategorySummaryLine().trim());
-				} else {
+                                //to dumpsite
+                                String dump = "imported.cms4.2011.06";
+                                String summary = aaReactArray[i].getCategorySummaryLine();
+				if (StringUtils.empty(summary)) {
 					err_summ.add("No Summary for Allergies & Adverse Reactions ("+(i+1)+")");
 				}
-				note = Util.addLine(note, getResidual(aaReactArray[i].getResidualInfo()));
+                                dump = Util.addLine(dump, summary);
+				dump = Util.addLine(dump, getResidual(aaReactArray[i].getResidualInfo()));
 
+                                cmNote = prepareCMNote();
 				cmNote.setNote(note);
 				saveLinkNote(cmNote, CaseManagementNoteLink.ALLERGIES, allergyId);
 			}
@@ -1064,7 +1068,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 			MedicationsAndTreatments[] medArray = patientRec.getMedicationsAndTreatmentsArray();
 			for (int i=0; i<medArray.length; i++) {
                                 Drug drug = new Drug();
-                                DrugReason drugReason = new DrugReason();
+                                //no need: DrugReason drugReason = new DrugReason();
                                 drug.setCreateDate(new Date());
                                 drug.setRxDate(dDateFullPartial(medArray[i].getStartDate(), timeShiftInDays));
                                 drug.setWrittenDate(dDateTimeFullPartial(medArray[i].getPrescriptionWrittenDate(), timeShiftInDays));
@@ -1089,21 +1093,21 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 				drug.setDrugForm(medArray[i].getForm());
 				drug.setLongTerm(getYN(medArray[i].getLongTermMedication()).equals("Yes"));
 				drug.setPastMed(getYN(medArray[i].getPastMedications()).equals("Yes"));
-                                drug.setPatientCompliance(getYN(medArray[i].getPatientCompliance()));
+                                //no need: drug.setPatientCompliance(getYN(medArray[i].getPatientCompliance()));
 
                                 if (NumberUtils.isDigits(medArray[i].getNumberOfRefills())) drug.setRepeat(Integer.valueOf(medArray[i].getNumberOfRefills()));
                                 drug.setETreatmentType(medArray[i].getTreatmentType());
-                                drug.setRxStatus(medArray[i].getPrescriptionStatus());
+                                //no need: drug.setRxStatus(medArray[i].getPrescriptionStatus());
 
-                                String nosub = medArray[i].getSubstitutionNotAllowed();
-                                if (nosub!=null) drug.setNoSubs(nosub.equalsIgnoreCase("Y"));
+                                //no need: String nosub = medArray[i].getSubstitutionNotAllowed();
+                                //no need: if (nosub!=null) drug.setNoSubs(nosub.equalsIgnoreCase("Y"));
 
-                                String non_auth = medArray[i].getNonAuthoritativeIndicator();
-                                if (non_auth!=null) drug.setNonAuthoritative(non_auth.equalsIgnoreCase("Y"));
-                                else  err_data.add("Error! No non-authoritative indicator for Medications & Treatments ("+(i+1)+")");
+                                //no need: String non_auth = medArray[i].getNonAuthoritativeIndicator();
+                                //no need: if (non_auth!=null) drug.setNonAuthoritative(non_auth.equalsIgnoreCase("Y"));
+                                //no need: else  err_data.add("Error! No non-authoritative indicator for Medications & Treatments ("+(i+1)+")");
 
-                                if (NumberUtils.isDigits(medArray[i].getDispenseInterval())) drug.setDispenseInterval(Integer.parseInt(medArray[i].getDispenseInterval()));
-                                else err_data.add("Error! Invalid Dispense Interval for Medications & Treatments ("+(i+1)+")");
+                                //no need: if (NumberUtils.isDigits(medArray[i].getDispenseInterval())) drug.setDispenseInterval(Integer.parseInt(medArray[i].getDispenseInterval()));
+                                //no need: else err_data.add("Error! Invalid Dispense Interval for Medications & Treatments ("+(i+1)+")");
 
                                 if (NumberUtils.isDigits(medArray[i].getRefillDuration())) drug.setRefillDuration(Integer.parseInt(medArray[i].getRefillDuration()));
                                 else err_data.add("Error! Invalid Refill Duration for Medications & Treatments ("+(i+1)+")");
@@ -1135,16 +1139,12 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 				special += StringUtils.noNull(drug.getFreqCode());
 				special += StringUtils.noNull(drug.getDuration())+" days";
 
-				special = Util.addLine(special, medArray[i].getPrescriptionInstructions());
-                                special = Util.addLine(special, "Prescription Status: ", medArray[i].getPrescriptionStatus());
-                                special = Util.addLine(special, "Drug Description: ", medArray[i].getDrugDescription());
-                                special = Util.addLine(special, "Refill Duration: ", medArray[i].getRefillDuration()+" days");
-                                special = Util.addLine(special, "Refill Quantity: ", medArray[i].getRefillQuantity()+medArray[i].getDosageUnitOfMeasure());
-                                special = Util.addLine(special, "Dispense Interval: ", medArray[i].getDispenseInterval());
-                                special = Util.addLine(special, "Protocol Id: ", medArray[i].getProtocolIdentifier());
-                                special = Util.addLine(special, "Prescription Id: ", medArray[i].getPrescriptionIdentifier());
-                                special = Util.addLine(special, "Prior Prescription Id: ", medArray[i].getPriorPrescriptionReferenceIdentifier());
-				special += StringUtils.filled(special) ? "\n" : "";
+				//no need: special = Util.addLine(special, medArray[i].getPrescriptionInstructions());
+                                //no need: special = Util.addLine(special, "Prescription Status: ", medArray[i].getPrescriptionStatus());
+                                    //no need: special = Util.addLine(special, "Dispense Interval: ", medArray[i].getDispenseInterval());
+                                //no need: special = Util.addLine(special, "Protocol Id: ", medArray[i].getProtocolIdentifier());
+                                //no need: special = Util.addLine(special, "Prescription Id: ", medArray[i].getPrescriptionIdentifier());
+                                //no need: special = Util.addLine(special, "Prior Prescription Id: ", medArray[i].getPriorPrescriptionReferenceIdentifier());
                                 drug.setSpecial(special);
                                 
 				if (medArray[i].getPrescribedBy()!=null) {
@@ -1163,7 +1163,8 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
                                 drug.setPosition(0);
                                 drugDao.persist(drug);
                                 addOneEntry(MEDICATION);
-                                
+
+                                /* no need:
                                 if (medArray[i].getProblemCode()!=null) {
                                     drugReason.setCode(medArray[i].getProblemCode());
                                     drugReason.setDemographicNo(Integer.valueOf(demographicNo));
@@ -1173,19 +1174,28 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
                                     drugReason.setArchivedFlag(false);
                                     drugReasonDao.persist(drugReason);
                                 }
+                                 *
+                                 */
 
+                                special = Util.addLine(special, "Drug Description: ", medArray[i].getDrugDescription());
+
+                                //annotation
 				CaseManagementNote cmNote = prepareCMNote();
 				String note = StringUtils.noNull(medArray[i].getNotes());
+				cmNote.setNote(note);
+				saveLinkNote(cmNote, CaseManagementNoteLink.DRUGS, (long)drug.getId());
 
-				if (StringUtils.filled(medArray[i].getCategorySummaryLine())) {
-					if (StringUtils.filled(note)) note = Util.addLine(note, "- Summary -");
-					note = Util.addLine(note, medArray[i].getCategorySummaryLine().trim());
-				} else {
+                                //to dumpsite
+                                String dump = "imported.cms4.2011.06";
+                                String summary = medArray[i].getCategorySummaryLine();
+				if (StringUtils.empty(summary)) {
 					err_summ.add("No Summary for Medications & Treatments ("+(i+1)+")");
 				}
-				note = Util.addLine(note, getResidual(medArray[i].getResidualInfo()));
+                                dump = Util.addLine(dump, summary);
+				dump = Util.addLine(dump, getResidual(medArray[i].getResidualInfo()));
 
-				cmNote.setNote(note);
+                                cmNote = prepareCMNote();
+				cmNote.setNote(dump);
 				saveLinkNote(cmNote, CaseManagementNoteLink.DRUGS, (long)drug.getId());
 			}
 
@@ -1224,6 +1234,8 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 					err_summ.add("No Summary for Immunizations ("+(i+1)+")");
 				}
 				comments = Util.addLine(comments, immuArray[i].getNotes());
+
+
 				if (StringUtils.filled(iSummary)) {
 					comments = Util.addLine(comments, "Summary: ", iSummary);
 					err_note.add("Immunization Summary imported in [comments] ("+(i+1)+")");
@@ -1877,14 +1889,16 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
                     out.write(fillUp(id.toString(), ' ', column1.length()));
                     out.write(" |");
                     String[] info = (String[]) demo.get(i);
-                    String[] text = info[info.length-1].split("\n");
-                    out.write(text[0]);
-                    out.newLine();
-                    for (int j=1; j<text.length; j++) {
-                        out.write(fillUp("",' ',column1.length()));
-                        out.write(" |");
-                        out.write(text[j]);
+                    if (info!=null && info.length>0) {
+                        String[] text = info[info.length-1].split("\n");
+                        out.write(text[0]);
                         out.newLine();
+                        for (int j=1; j<text.length; j++) {
+                            out.write(fillUp("",' ',column1.length()));
+                            out.write(" |");
+                            out.write(text[j]);
+                            out.newLine();
+                        }
                     }
                     out.write(fillUp("",'-',tableWidth)); out.newLine();
                 }
