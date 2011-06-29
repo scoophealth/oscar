@@ -405,6 +405,10 @@ public class CaseManagementManager {
 		return this.caseManagementNoteLinkDAO.getLinkByTableId(tableName, tableId);
 	}
 
+	public CaseManagementNoteLink getLatestLinkByTableId(Integer tableName, Long tableId, String otherId) {
+		return this.caseManagementNoteLinkDAO.getLastLinkByTableId(tableName, tableId, otherId);
+	}
+	
 	public CaseManagementNoteLink getLatestLinkByTableId(Integer tableName, Long tableId) {
 		return this.caseManagementNoteLinkDAO.getLastLinkByTableId(tableName, tableId);
 	}

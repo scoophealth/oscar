@@ -29,5 +29,6 @@
 		<property column="table_name" name="tableName" />
 		<property column="table_id" name="tableId" />
 		<property column="note_id" name="noteId" />
+		<property column="other_id" name="otherId" />
 	</class>
 </hibernate-mapping>

@@ -42,6 +42,7 @@ public class CaseManagementNoteLink {
 	private Integer tableName;
 	private Long tableId;
 	private Long noteId;
+	private String otherId;
 
 	public CaseManagementNoteLink() {}
 	public CaseManagementNoteLink(Integer tableName, Long tableId, Long noteId) {
@@ -81,4 +82,12 @@ public class CaseManagementNoteLink {
 	public void setNoteId(Integer noteId) {
 	    setNoteId(noteId.longValue());
 	}
+	public String getOtherId() {
+    	return otherId;
+    }
+	public void setOtherId(String otherId) {
+    	this.otherId = otherId;
+    }
+	
+	
 }
