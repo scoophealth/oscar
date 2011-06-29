@@ -189,6 +189,7 @@ ds_rules="diab.drl"
               </item>
           </header>
           <item measurement_type="ECG" display_name="ECG" graphable="no" value_name="ECG" />
+          <item measurement_type="PSSC" display_name="Psychosocial Screening" graphable="no" value_name="Screened" />
           <item measurement_type="STRE" display_name="Stress Testing" graphable="no" value_name="StressTesting"/>
       </header>
       <header display_name="Glycemic">
@@ -560,6 +561,18 @@ ds_rules="diab.drl"
            name="Yes/No"
            regularExp="YES|yes|Yes|Y|NO|no|No|N"/>
 </measurement>
+
+ <measurement
+        type="PSSC"
+        typeDesc="Psychosocial Screening"
+        typeDisplayName="Psychosocial Screening">
+        <validationRule
+           name="Yes/No"
+           regularExp="YES|yes|Yes|Y|NO|no|No|N"/>
+</measurement>
+
+
+
 <measurement
         type="STRE"
         typeDesc="Stress Testing"
