@@ -584,7 +584,8 @@ public class SFTPConnector {
 					SFTPConnector.failureMsgSentToAdmin = true;
 				}
 				
-				if (LoggedInInfo.loggedInInfo != null && LoggedInInfo.loggedInInfo.get() != null && LoggedInInfo.loggedInInfo.get().loggedInProvider != null) {
+				if (LoggedInInfo.loggedInInfo != null && LoggedInInfo.loggedInInfo.get() != null && LoggedInInfo.loggedInInfo.get().loggedInProvider != null &&
+						!LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo().equalsIgnoreCase("999998")) {
 						sendToProviderList.add(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
 				}
 				
@@ -596,12 +597,13 @@ public class SFTPConnector {
 				for (String providerNo : sendToProviderList) {
 					MsgProviderData mpd = new MsgProviderData();
 					mpd.providerNo = providerNo;
+					mpd.locationId = "145";
 					sendToProviderListData.add(mpd);
 				}
 				String sentToString = messageData.createSentToString(sendToProviderListData);
 				
 				
-				messageData.sendMessage(message, "HRM Retrieval Error", "System", sentToString, "-1", (String[]) sendToProviderList.toArray());
+				messageData.sendMessage2(message, "HRM Retrieval Error", "System", sentToString, "-1", sendToProviderListData, null, null);
 			}
 			
 			SFTPConnector.isAutoFetchRunning = false;
