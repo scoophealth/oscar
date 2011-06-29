@@ -2,6 +2,8 @@
 <TrackingRegexpCheck>
     <ViolationSet>
         <ViolationKey>.*ArrayList\s*\(\).*|.*Vector\s*\(\).*|.*HashSet\s*\(\).*|.*HashMap\s*\(\).*|.*Hashtable\s*\(\).*|.*TreeSet\s*\(\).*|.*TreeMap\s*\(\).*|.*WeakHashMap\s*\(\).*</ViolationKey>
+        <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:List&lt;Hashtable&gt; toRemove = new ArrayList&lt;Hashtable&gt;();</ViolationValue>
+	<ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:for(Hashtable ht:toRemove) {</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:ArrayList codes = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:ArrayList list = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:ArrayList newLst=new ArrayList();</ViolationValue>
@@ -2631,6 +2633,8 @@
     </ViolationSet>
     <ViolationSet>
         <ViolationKey>.*StringBuffer.*|.*Hashtable.*|.*Vector.*</ViolationKey>
+        <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:List&lt;Hashtable&gt; toRemove = new ArrayList&lt;Hashtable&gt;();</ViolationValue>
+	<ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:for(Hashtable ht:toRemove) {</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/common/DatePickerTag.java:StringBuffer results = new StringBuffer("&lt;table");</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/common/DatePickerTag.java:StringBuffer results = new StringBuffer();</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/common/DatePickerTag.java:protected void prepareValue(StringBuffer results) throws JspException {</ViolationValue>
