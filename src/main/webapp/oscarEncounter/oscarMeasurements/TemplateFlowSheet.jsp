@@ -852,7 +852,7 @@ div.recommendations li{
     <%
         out.flush();
         for (int k = 0; k < alist.size(); k++){
-            Hashtable hdata = (Hashtable) alist.get(k);
+            Map hdata = (Map) alist.get(k);
             String com = pd.getPreventionComment(""+hdata.get("id"));
             boolean comb = false;
             if (com != null ){
@@ -875,7 +875,6 @@ div.recommendations li{
 
 <%
 }%>
-
     <%          while( !node.hasNextSibling() && node.parent != null) {
                     out.println("</div>");
                     node = node.parent;
