@@ -717,7 +717,7 @@ function openAnnotation() {
     var atbname = document.getElementById('annotation_attrib').value;
     var data = $A(arguments);
     var addr = ctx+"/annotation/annotation.jsp?atbname="+atbname+"&table_id="+data[1]+"&display="+data[2]+"&demo="+data[3];
-    window.open(addr, "anwin", "width=400,height=250");
+    window.open(addr, "anwin", "width=400,height=500");
     Event.stop(data[0]);
 }
 

@@ -201,7 +201,7 @@ String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.D
 													if (displayAllergy.getRemoteFacilityId()==null)
 													{
 														%>
-															<a href="#" title="Annotation" onclick="window.open('../annotation/annotation.jsp?display=<%=annotation_display%>&table_id=<%=displayAllergy.getId()%>&demo=<jsp:getProperty name="patient" property="demographicNo"/>','anwin','width=400,height=250');"><img src="../images/notes.gif" border="0"></a>
+															<a href="#" title="Annotation" onclick="window.open('../annotation/annotation.jsp?display=<%=annotation_display%>&table_id=<%=displayAllergy.getId()%>&demo=<jsp:getProperty name="patient" property="demographicNo"/>','anwin','width=400,height=500');"><img src="../images/notes.gif" border="0"></a>
 														<%
 													}
 												%>
