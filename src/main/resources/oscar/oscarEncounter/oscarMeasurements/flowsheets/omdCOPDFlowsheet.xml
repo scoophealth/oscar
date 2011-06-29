@@ -137,4 +137,6 @@
     <measurement type="DOLE" typeDesc="Date of last Exacerbation" typeDisplayName="Date of last Exacerbation" measuringInstrc="">
         <validationRule name="Date" maxValue="" minValue="" isDate="1" isNumeric="" regularExp="" maxLength="" minLength="" />
     </measurement>
+    <item prevention_type="Pneumovax" display_name="Pneumococcal vaccine" guideline="" graphable="no" />
+    <item prevention_type="Flu" display_name="Flu Vaccine" guideline="Annually" graphable="no" />
 </flowsheet>

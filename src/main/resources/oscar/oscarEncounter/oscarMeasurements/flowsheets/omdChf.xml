@@ -91,12 +91,11 @@
   
   
   
-  <!--
+  
   <item measurement_type="PHIN" display_name="Pharmacological Intolerance" guideline="Signs of Pharmacological Intolerance" graphable="no" value_name="Shows signs" />
   <measurement type="PHIN" typeDesc="Pharmacological Intolerance" typeDisplayName="Pharmacological Intolerance" measuringInstrc="">
     <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
   </measurement>
-  -->
     <item measurement_type="CERV" display_name="# of ER visits for HF" guideline="since last assessment" graphable="yes" value_name="# of visits" >
         <ruleset>
             <rule indicationColor="HIGH">
@@ -139,6 +138,11 @@
     <measurement type="HFMH" typeDesc="HF Mod Risk Factor Hyperlipidemia" typeDisplayName="HF Mod Risk Factor Hyperlipidemia" measuringInstrc="">
         <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
     </measurement>
+    <item measurement_type="HFMT" display_name="Discuss TMRF  Hypertension" guideline="Target Modifiable Risk Factor" graphable="yes" value_name="Discussed" />
+    <measurement type="HFMT" typeDesc="HF Mod Risk Factor Hypertension" typeDisplayName="HF Mod Risk Factor Hypertension" measuringInstrc="">
+        <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+    </measurement>
+    
     <item measurement_type="HFCG" display_name="Collaborative Goal Setting" guideline="" graphable="no" value_name="Goal" />
     <measurement type="HFCG" typeDesc="HF Collaorative Goal Setting" typeDisplayName="HF Collaorative Goal Setting" measuringInstrc="">
         <validationRule name="No Validations" maxValue="" minValue="" isDate="" isNumeric="" regularExp="" maxLength="" minLength="" />
