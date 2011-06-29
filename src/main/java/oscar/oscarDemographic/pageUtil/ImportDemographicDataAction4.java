@@ -323,6 +323,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 			err_data.add("Error! No Legal Name");
 		}
 		String title = demo.getNames().getNamePrefix()!=null ? demo.getNames().getNamePrefix().toString() : "";
+                String suffix = demo.getNames().getLastNameSuffix()!=null ? demo.getNames().getLastNameSuffix().toString() : "";
 		String sex = demo.getGender()!=null ? demo.getGender().toString() : "";
 		if (StringUtils.empty(sex)) {
 			err_data.add("Error! No Gender");
@@ -371,6 +372,10 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 		String uvID = demo.getUniqueVendorIdSequence();
 		String psDate = getCalDate(demo.getPersonStatusDate(), timeShiftInDays);
 
+                if (StringUtils.filled(suffix)) {
+                    dNote = Util.addLine(dNote, "Lastname suffix: ", suffix);
+                    err_note.add("Lastname suffix imported to Patient Note");
+                }
 		if (StringUtils.filled(uvID)) {
 			if (StringUtils.empty(chart_no)) {
 				chart_no = uvID;
