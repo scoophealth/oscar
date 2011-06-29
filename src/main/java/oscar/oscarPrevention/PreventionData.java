@@ -583,8 +583,11 @@ public class PreventionData {
 					if (ext.containsKey("reason") && !ext.get("reason").equals("")) {
 						summary += "\nReason: " + ext.get("reason");
 					}
-				}
-				else {
+				} else {
+					if (ext.containsKey("name") && !ext.get("name").equals("")) {
+						addToHashIfNotNull(h, "name", (String) ext.get("name"));
+						summary += "Name: " + ext.get("name") + "\n";
+					}
 					if (ext.containsKey("location") && !ext.get("location").equals("")) {
 						addToHashIfNotNull(h, "location", (String) ext.get("location"));
 						summary += "Location: " + ext.get("location") + "\n";

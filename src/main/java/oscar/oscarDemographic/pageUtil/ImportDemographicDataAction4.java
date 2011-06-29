@@ -396,7 +396,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 			}
 			versionCode = StringUtils.noNull(healthCard.getVersion());
 			hc_renew_date = getCalDate(healthCard.getExpirydate());
-                        if (StringUtils.isNullOrEmpty(hc_renew_date)) err_data.add("Error! No health card expiry date");
+                        if (StringUtils.empty(hc_renew_date)) err_data.add("Error! No health card expiry date");
 		}
 		String address="", city="", province="", postalCode="";
 		if (demo.getAddressArray().length>0) {
@@ -452,9 +452,9 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 	        if (demoPrimaryPhysician!=null) {
 	            String[] personName = getPersonName(demoPrimaryPhysician.getName());
 	            String personOHIP = demoPrimaryPhysician.getOHIPPhysicianId();
-                    if (StringUtils.isNullOrEmpty(personName[0])) err_data.add("Error! No Primary Physician first name");
-                    if (StringUtils.isNullOrEmpty(personName[1])) err_data.add("Error! No Primary Physician last name");
-                    if (StringUtils.isNullOrEmpty(personOHIP)) err_data.add("Error! No Primary Physician OHIP billing number");
+                    if (StringUtils.empty(personName[0])) err_data.add("Error! No Primary Physician first name");
+                    if (StringUtils.empty(personName[1])) err_data.add("Error! No Primary Physician last name");
+                    if (StringUtils.empty(personOHIP)) err_data.add("Error! No Primary Physician OHIP billing number");
                     String personCPSO = demoPrimaryPhysician.getPrimaryPhysicianCPSO();
 	            primaryPhysician = writeProviderData(personName[0], personName[1], personOHIP, personCPSO);
 	        }
@@ -616,54 +616,63 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 			//PERSONAL HISTORY
 			PersonalHistory[] pHist = patientRec.getPersonalHistoryArray();
 			for (int i=0; i<pHist.length; i++) {
-				if (i==0) scmi = getCMIssue("SocHistory");
-				CaseManagementNote cmNote = prepareCMNote();
-				cmNote.setIssues(scmi);
-				String socialHist = "";
-				if (StringUtils.filled(pHist[i].getCategorySummaryLine()))
-                                    socialHist = Util.addLine(socialHist, pHist[i].getCategorySummaryLine().trim());
-				socialHist = Util.addLine(socialHist, getResidual(pHist[i].getResidualInfo()));
-				if (StringUtils.filled(socialHist)) {
-					cmNote.setNote(socialHist);
-					caseManagementManager.saveNoteSimple(cmNote);
-				}
+                            if (i==0) scmi = getCMIssue("SocHistory");
+                            CaseManagementNote cmNote = prepareCMNote();
+                            cmNote.setIssues(scmi);
+
+                            //main field
+                            String socialHist = pHist[i].getCategorySummaryLine();
+                            String residual = getResidual(pHist[i].getResidualInfo());
+                            if (StringUtils.empty(socialHist) && StringUtils.empty(residual)) continue;
+
+                            if (StringUtils.empty(socialHist)) socialHist = "Imported Personal History";
+                            cmNote.setNote(socialHist);
+                            caseManagementManager.saveNoteSimple(cmNote);
+                            if (StringUtils.filled(residual)) {
+                                //annotation
+                                Long hostNoteId = cmNote.getId();
+                                cmNote = prepareCMNote();
+                                cmNote.setNote(residual);
+                                saveLinkNote(hostNoteId, cmNote);
+                            }
 			}
+
 			//FAMILY HISTORY
 			FamilyHistory[] fHist = patientRec.getFamilyHistoryArray();
 			for (int i=0; i<fHist.length; i++) {
 				if (i==0) scmi = getCMIssue("FamHistory");
 				CaseManagementNote cmNote = prepareCMNote();
+
+                                //diagnosis code
 				if (fHist[i].getDiagnosisProcedureCode()==null) {
 					cmNote.setIssues(scmi);
 				} else {
 					cmNote.setIssues(getCMIssue("FamHistory", fHist[i].getDiagnosisProcedureCode()));
 				}
-				String familyHist = "";
-				familyHist = Util.addLine(familyHist, fHist[i].getProblemDiagnosisProcedureDescription());
-				familyHist = Util.addLine(familyHist, getCode(fHist[i].getDiagnosisProcedureCode(),"Diagnosis"));
 
-				String summary = fHist[i].getCategorySummaryLine();
-				if (StringUtils.empty(summary)) {
-					err_summ.add("No Summary for Family History ("+(i+1)+")");
-					summary = "Family History "+(i+1);
-				}
-
-				Long hostNoteId = null;
-				cmNote.setNote(StringUtils.filled(familyHist) ? familyHist : summary);
+                                //main field
+				String familyHist = fHist[i].getProblemDiagnosisProcedureDescription();
+                                if (StringUtils.empty(familyHist)) familyHist = "Imported Family History";
+                                cmNote.setNote(familyHist);
 				caseManagementManager.saveNoteSimple(cmNote);
                                 addOneEntry(FAMILYHISTORY);
-				hostNoteId = cmNote.getId();
 
+                                //annotation
+				Long hostNoteId = cmNote.getId();
 				cmNote = prepareCMNote();
 				String note = StringUtils.noNull(fHist[i].getNotes());
-
-				if (StringUtils.filled(note)) note = Util.addLine(note, "- Summary -");
-				note = Util.addLine(note, summary);
-
+                                String summary = fHist[i].getCategorySummaryLine();
+				if (StringUtils.empty(summary)) {
+					err_summ.add("No Summary for Family History ("+(i+1)+")");
+				}
+                                String diagCode = isICD9(fHist[i].getDiagnosisProcedureCode()) ? null : getCode(fHist[i].getDiagnosisProcedureCode(),"Diagnosis/Procedure");
+                                note = Util.addLine(note, summary);
+                                note = Util.addLine(note, diagCode);
 				note = Util.addLine(note, getResidual(fHist[i].getResidualInfo()));
 				cmNote.setNote(note);
 				saveLinkNote(hostNoteId, cmNote);
 
+                                //extra fields
 				CaseManagementNoteExt cme = new CaseManagementNoteExt();
 				cme.setNoteId(hostNoteId);
 				if (fHist[i].getStartDate()!=null) {
@@ -692,48 +701,50 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
                                         caseManagementManager.saveNoteExt(cme);
                                 }
 			}
+                        
 			//PAST HEALTH
 			PastHealth[] pHealth = patientRec.getPastHealthArray();
 			for (int i=0; i< pHealth.length; i++) {
 				if (i==0) scmi = getCMIssue("MedHistory");
 				CaseManagementNote cmNote = prepareCMNote();
+
+                                //diagnosis code
 				if (pHealth[i].getDiagnosisProcedureCode()==null) {
 					cmNote.setIssues(scmi);
 				} else {
 					cmNote.setIssues(getCMIssue("MedHistory", pHealth[i].getDiagnosisProcedureCode()));
 				}
-				String medicalHist = "";
-				medicalHist = Util.addLine(medicalHist, getCode(pHealth[i].getDiagnosisProcedureCode(),"Diagnosis/Procedure"));
 
+                                //main field
+				String medicalHist = pHealth[i].getPastHealthProblemDescriptionOrProcedures();
+                                if (StringUtils.empty(medicalHist)) medicalHist = "Imported Medical History";
+                                cmNote.setNote(medicalHist);
+				caseManagementManager.saveNoteSimple(cmNote);
+                                addOneEntry(FAMILYHISTORY);
+
+                                //annotation
+                                Long hostNoteId = cmNote.getId();
+				cmNote = prepareCMNote();
+                                String note = pHealth[i].getNotes();
 				String summary = pHealth[i].getCategorySummaryLine();
 				if (StringUtils.empty(summary)) {
 					err_summ.add("No Summary for Past Health ("+(i+1)+")");
-					summary = "Medical History "+(i+1);
 				}
-
-				Long hostNoteId = null;
-				cmNote.setNote(StringUtils.filled(medicalHist) ? medicalHist : summary);
-				caseManagementManager.saveNoteSimple(cmNote);
-                                addOneEntry(PASTHEALTH);
-				hostNoteId = cmNote.getId();
-
-				cmNote = prepareCMNote();
-				String note = StringUtils.noNull(pHealth[i].getNotes());
-
-				if (StringUtils.filled(note)) note = Util.addLine(note, "- Summary -");
-				note = Util.addLine(note, summary);
-
+                                String diagCode = isICD9(pHealth[i].getDiagnosisProcedureCode()) ? null : getCode(pHealth[i].getDiagnosisProcedureCode(),"Diagnosis/Procedure");
+                                note = Util.addLine(note, summary);
+                                note = Util.addLine(note, diagCode);
 				note = Util.addLine(note, getResidual(pHealth[i].getResidualInfo()));
 				cmNote.setNote(note);
 				saveLinkNote(hostNoteId, cmNote);
 
+                                //extra fields
 				CaseManagementNoteExt cme = new CaseManagementNoteExt();
 				cme.setNoteId(hostNoteId);
-				if (StringUtils.filled(pHealth[i].getPastHealthProblemDescriptionOrProcedures())) {
-					cme.setKeyVal(CaseManagementNoteExt.TREATMENT);
-					cme.setValue(pHealth[i].getPastHealthProblemDescriptionOrProcedures());
-					caseManagementManager.saveNoteExt(cme);
-				}
+                                if (pHealth[i].getOnsetOrEventDate()!=null) {
+                                        cme.setKeyVal(CaseManagementNoteExt.STARTDATE);
+                                        cme.setDateValue(dDateFullPartial(pHealth[i].getOnsetOrEventDate(), timeShiftInDays));
+                                        caseManagementManager.saveNoteExt(cme);
+                                }
                                 if (pHealth[i].getProcedureDate()!=null) {
                                         cme.setKeyVal(CaseManagementNoteExt.PROCEDUREDATE);
                                         cme.setDateValue(dDateFullPartial(pHealth[i].getProcedureDate(), timeShiftInDays));
@@ -750,44 +761,50 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
                                         caseManagementManager.saveNoteExt(cme);
                                 }
 			}
+
 			//PROBLEM LIST
 			ProblemList[] probList = patientRec.getProblemListArray();
 			for (int i=0; i<probList.length; i++) {
 				if (i==0) scmi = getCMIssue("Concerns");
 				CaseManagementNote cmNote = prepareCMNote();
+
+                                //diagnosis code
 				if (probList[i].getDiagnosisCode()==null) {
 					cmNote.setIssues(scmi);
 				} else {
 					cmNote.setIssues(getCMIssue("Concerns", probList[i].getDiagnosisCode()));
 				}
-				String ongConcerns = "";
-				ongConcerns = Util.addLine(ongConcerns, probList[i].getProblemDescription());
-				ongConcerns = Util.addLine(ongConcerns, getCode(probList[i].getDiagnosisCode(),"Diagnosis"));
 
+                                //main field
+				String ongConcerns = probList[i].getProblemDiagnosisDescription();
+                                if (StringUtils.empty(ongConcerns)) ongConcerns = "Imported Concern";
+                                cmNote.setNote(ongConcerns);
+				caseManagementManager.saveNoteSimple(cmNote);
+                                addOneEntry(PROBLEMLIST);
+
+                                //annotation
+				Long hostNoteId = cmNote.getId();
+				cmNote = prepareCMNote();
+                                String note = probList[i].getNotes();
 				String summary = probList[i].getCategorySummaryLine();
 				if (StringUtils.empty(summary)) {
 					err_summ.add("No Summary for Problem List ("+(i+1)+")");
-					summary = "Ongoing Concerns "+(i+1);
 				}
-
-				Long hostNoteId = null;
-				cmNote.setNote(StringUtils.filled(ongConcerns) ? ongConcerns : summary);
-				caseManagementManager.saveNoteSimple(cmNote);
-                                addOneEntry(PROBLEMLIST);
-				hostNoteId = cmNote.getId();
-
-				cmNote = prepareCMNote();
-				String note = StringUtils.noNull(probList[i].getNotes());
-
-				if (StringUtils.filled(note)) note = Util.addLine(note, "- Summary -");
-				note = Util.addLine(note, summary);
-
+                                String diagCode = isICD9(probList[i].getDiagnosisCode()) ? null : getCode(probList[i].getDiagnosisCode(),"Diagnosis");
+                                note = Util.addLine(note, summary);
+                                note = Util.addLine(note, diagCode);
 				note = Util.addLine(note, getResidual(probList[i].getResidualInfo()));
 				cmNote.setNote(note);
 				saveLinkNote(hostNoteId, cmNote);
 
+                                //extra fields
 				CaseManagementNoteExt cme = new CaseManagementNoteExt();
 				cme.setNoteId(hostNoteId);
+				if (StringUtils.filled(probList[i].getProblemDescription())) {
+					cme.setKeyVal(CaseManagementNoteExt.PROBLEMDESC);
+					cme.setValue(probList[i].getProblemDescription());
+					caseManagementManager.saveNoteExt(cme);
+				}
 				if (probList[i].getOnsetDate()!=null) {
 					cme.setKeyVal(CaseManagementNoteExt.STARTDATE);
 					cme.setDateValue(dDateFullPartial(probList[i].getOnsetDate(), timeShiftInDays));
@@ -811,37 +828,35 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
                                         caseManagementManager.saveNoteExt(cme);
                                 }
 			}
+                        
 			//RISK FACTORS
 			RiskFactors[] rFactors = patientRec.getRiskFactorsArray();
 			for (int i=0; i<rFactors.length; i++) {
 				if (i==0) scmi = getCMIssue("RiskFactors");
 				CaseManagementNote cmNote = prepareCMNote();
 				cmNote.setIssues(scmi);
-				String riskFactors = "";
-				riskFactors = Util.addLine(riskFactors,"Risk Factor: ",rFactors[i].getRiskFactor());
 
+                                //main field
+				String riskFactors = rFactors[i].getRiskFactor();
+                                if (StringUtils.empty(riskFactors)) riskFactors = "Imported Risk Factor";
+                                cmNote.setNote(riskFactors);
+				caseManagementManager.saveNoteSimple(cmNote);
+                                addOneEntry(RISKFACTOR);
+
+                                //annotation
+				Long hostNoteId = cmNote.getId();
+				cmNote = prepareCMNote();
+				String note = rFactors[i].getNotes();
 				String summary = rFactors[i].getCategorySummaryLine();
 				if (StringUtils.empty(summary)) {
 					err_summ.add("No Summary for Risk Factors ("+(i+1)+")");
-					summary = "Risk Factors "+(i+1);
 				}
-
-				Long hostNoteId = null;
-				cmNote.setNote(StringUtils.filled(riskFactors) ? riskFactors : summary);
-				caseManagementManager.saveNoteSimple(cmNote);
-                                addOneEntry(RISKFACTOR);
-				hostNoteId = cmNote.getId();
-
-				cmNote = prepareCMNote();
-				String note = StringUtils.noNull(rFactors[i].getNotes());
-
-				if (StringUtils.filled(note)) note = Util.addLine(note, "- Summary -");
-				note = Util.addLine(note, summary);
-
+                                note = Util.addLine(note, summary);
 				note = Util.addLine(note, getResidual(rFactors[i].getResidualInfo()));
 				cmNote.setNote(note);
 				saveLinkNote(hostNoteId, cmNote);
 
+                                //extra fields
 				CaseManagementNoteExt cme = new CaseManagementNoteExt();
 				cme.setNoteId(hostNoteId);
 				if (rFactors[i].getStartDate()!=null) {
@@ -870,38 +885,38 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
                                         caseManagementManager.saveNoteExt(cme);
                                 }
 			}
+
 			//ALERTS & SPECIAL NEEDS
                         AlertsAndSpecialNeeds[] alerts = patientRec.getAlertsAndSpecialNeedsArray();
 			for (int i=0; i<alerts.length; i++) {
 				if (i==0) scmi = getCMIssue("Reminders");
 				CaseManagementNote cmNote = prepareCMNote();
 				cmNote.setIssues(scmi);
-				String reminders = "";
-				reminders = Util.addLine(reminders,"Alert/Special Need: ",alerts[i].getAlertDescription());
-                                if (StringUtils.isNullOrEmpty(alerts[i].getAlertDescription())) err_data.add("Error! No Alert Description ("+(i+1)+")");
 
+                                //main field
+				String reminders = alerts[i].getAlertDescription();
+                                if (StringUtils.empty(reminders)) {
+                                    err_data.add("Error! No Alert Description ("+(i+1)+")");
+                                    reminders = "Imported Alert";
+                                }
+				cmNote.setNote(reminders);
+				caseManagementManager.saveNoteSimple(cmNote);
+                                addOneEntry(ALERT);
+
+                                //annotation
+				Long hostNoteId = cmNote.getId();
+				cmNote = prepareCMNote();
+				String note = alerts[i].getNotes();
 				String summary = alerts[i].getCategorySummaryLine();
 				if (StringUtils.empty(summary)) {
 					err_summ.add("No Summary for Alerts & Special Needs ("+(i+1)+")");
-					summary = "Alerts & Special Needs "+(i+1);
 				}
-
-				Long hostNoteId = null;
-				cmNote.setNote(StringUtils.filled(reminders) ? reminders : summary);
-				caseManagementManager.saveNoteSimple(cmNote);
-                                addOneEntry(ALERT);
-				hostNoteId = cmNote.getId();
-
-				cmNote = prepareCMNote();
-				String note = StringUtils.noNull(alerts[i].getNotes());
-
-				if (StringUtils.filled(note)) note = Util.addLine(note, "- Summary -");
-				note = Util.addLine(note, summary);
-
+                                note = Util.addLine(note, summary);
 				note = Util.addLine(note, getResidual(alerts[i].getResidualInfo()));
 				cmNote.setNote(note);
 				saveLinkNote(hostNoteId, cmNote);
 
+                                //extra fields
 				CaseManagementNoteExt cme = new CaseManagementNoteExt();
 				cme.setNoteId(hostNoteId);
 				if (alerts[i].getDateActive()!=null) {
@@ -915,10 +930,12 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 					caseManagementManager.saveNoteExt(cme);
 				}
 			}
+                        
 			//CLINICAL NOTES
 			ClinicalNotes[] cNotes = patientRec.getClinicalNotesArray();
 			for (int i=0; i<cNotes.length; i++) {
 				CaseManagementNote cmNote = prepareCMNote();
+
 				if (cNotes[i].getEventDateTime()==null) cmNote.setObservation_date(new Date());
 				else cmNote.setObservation_date(dDateTimeFullPartial(cNotes[i].getEventDateTime(), timeShiftInDays));
 
@@ -1440,6 +1457,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 						}
 					}
 				}
+
 				reason = StringUtils.noNull(appArray[i].getAppointmentPurpose());
 				if (appArray[i].getProvider()!=null) {
 					String[] providerName = getPersonName(appArray[i].getProvider().getName());
@@ -1465,7 +1483,8 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
                         List<ReportsReceived> HRMreports = new ArrayList<ReportsReceived>();
                         String HRMfile = docDir + "HRM_"+UtilDateUtilities.getToday("yyyy-MM-dd.HH.mm.ss");
 			for (int i=0; i<repR.length; i++) {
-                            if (repR[i].getHRMResultStatus()!=null || repR[i].getOBRContentArray()!=null) { //HRM reports
+
+                            if (repR[i].getHRMResultStatus()!=null || repR[i].getOBRContentArray().length>0) { //HRM reports
                                 HRMDocument hrmDoc = new HRMDocument();
                                 HRMDocumentToDemographic hrmDocToDemo = new HRMDocumentToDemographic();
 
@@ -1553,79 +1572,14 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 						observationDate = dateTimeFullPartial(repR[i].getEventDateTime(), timeShiftInDays);
 						updateDateTime = dateTimeFullPartial(repR[i].getReceivedDateTime(), timeShiftInDays);
 
-						int key = EDocUtil.addDocument(demographicNo,docFileName,docDesc,"",docClass,docSubClass,contentType,observationDate,updateDateTime,docCreator,admProviderNo,reviewer,reviewDateTime, source);
+						EDocUtil.addDocument(demographicNo,docFileName,docDesc,"",docClass,docSubClass,contentType,observationDate,updateDateTime,docCreator,admProviderNo,reviewer,reviewDateTime, source);
                                                 if (binaryFormat) addOneEntry(REPORTBINARY);
                                                 else addOneEntry(REPORTTEXT);
 					}
 				}
                             }
 			}
-                        HRMCreateFile.create(demo, HRMreports, HRMfile);
-
-                        /*
-			//AUDIT INFORMATION
-			String fileTime = UtilDateUtilities.getToday("yyyy-MM-dd.HH.mm.ss");
-			String auditInfoFile = "importAuditInfo-"+fileTime;
-			String auditInfoSummary = "";
-			String contentType = "text/html";
-
-			// Read data from xml
-			AuditInformation[] audInf = patientRec.getAuditInformationArray();
-			for (int i=0; i<audInf.length; i++) {
-				if (audInf.length>1) auditInfoFile += "("+i+")";
-				String sAudInfo = audInf[i].getCategorySummaryLine();
-				if (StringUtils.empty(sAudInfo)) {
-					err_summ.add("No Summary for Audit Information ("+(i+1)+")");
-				}
-				cdsDt.ResidualInformation audRes = audInf[i].getResidualInfo();
-				if (audRes!=null) {
-					cdsDt.ResidualInformation.DataElement[] audEArr = audRes.getDataElementArray();
-					for (cdsDt.ResidualInformation.DataElement audE : audEArr) {
-						sAudInfo = Util.addLine(sAudInfo, "Name: ", audE.getName());
-						sAudInfo = Util.addLine(sAudInfo, "Data Type: ", audE.getDataType());
-						if (audE.getDescription()!=null) sAudInfo = Util.addLine(sAudInfo, "Description: ", audE.getDescription());
-						sAudInfo = Util.addLine(sAudInfo, "Content: ", audE.getContent());
-						sAudInfo = Util.addLine(sAudInfo, fillUp("",'-',40));
-					}
-				}
-				if (audInf[i].getFormat().equals(cdsDt.AuditFormat.TEXT)) {
-					if (audInf[i].getContent()!=null) {
-						sAudInfo = Util.addLine(sAudInfo, audInf[i].getContent().getTextContent());
-					}
-					if (StringUtils.filled(sAudInfo)) {
-						FileWriter f = new FileWriter(docDir + auditInfoFile);
-						f.write(sAudInfo);
-						f.close();
-					}
-				} else if (audInf[i].getFormat().equals(cdsDt.AuditFormat.FILE)) {
-					if (StringUtils.filled(sAudInfo)) {
-						auditInfoSummary = "importAuditSummary-"+fileTime;
-					try {
-						FileWriter f = new FileWriter(docDir + auditInfoSummary);
-						f.write(sAudInfo);
-						f.close();
-					} catch (IOException ex) {logger.error("Error", ex);
-					}
-					}
-					contentType = audInf[i].getFileExtensionAndVersion();
-					if (audInf[i].getContent()!=null) {
-						auditInfoFile += Util.mimeToExt(contentType);
-					try {
-						FileOutputStream f = new FileOutputStream(docDir + auditInfoFile);
-						f.write(audInf[i].getContent().getMedia());
-						f.close();
-					} catch (Exception ex) {logger.error("Error", ex);
-					}
-					}
-				}
-				/***** Write to document table *****
-				EDocUtil.addDocument(demographicNo,auditInfoFile,"Imported Audit Information","others",contentType,fileTime,fileTime,admProviderNo,admProviderNo);
-				if (StringUtils.filled(auditInfoSummary)) {
-					EDocUtil.addDocument(demographicNo,auditInfoSummary,"Imported Audit Summary","others",contentType,fileTime,fileTime,admProviderNo,admProviderNo);
-				}
-			}
-                         *
-                         */
+                        CreateHRMFile.create(demo, HRMreports, HRMfile);
 
 			//CARE ELEMENTS
 			CareElements[] careElems = patientRec.getCareElementsArray();
@@ -1638,7 +1592,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
                                         String dataUnit = ht.getHeightUnit()!=null ? "in "+ht.getHeightUnit().toString() : "";
 
                                         if (ht.getDate()==null) err_data.add("Error! No Date for Height in Care Element ("+(i+1)+")");
-                                        if (StringUtils.isNullOrEmpty(ht.getHeight())) err_data.add("Error! No value for Height in Care Element ("+(i+1)+")");
+                                        if (StringUtils.empty(ht.getHeight())) err_data.add("Error! No value for Height in Care Element ("+(i+1)+")");
                                         if (ht.getHeightUnit()==null) err_data.add("Error! No unit for Height in Care Element ("+(i+1)+")");
 					ImportExportMeasurements.saveMeasurements("HT", demographicNo, admProviderNo, dataField, dataUnit, dateObserved);
                                         addOneEntry(CAREELEMENTS);
@@ -1650,7 +1604,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
                                         String dataUnit = wt.getWeightUnit()!=null ? "in "+wt.getWeightUnit().toString() : "";
 
                                         if (wt.getDate()==null) err_data.add("Error! No Date for Weight in Care Element ("+(i+1)+")");
-                                        if (StringUtils.isNullOrEmpty(wt.getWeight())) err_data.add("Error! No value for Weight in Care Element ("+(i+1)+")");
+                                        if (StringUtils.empty(wt.getWeight())) err_data.add("Error! No value for Weight in Care Element ("+(i+1)+")");
                                         if (wt.getWeightUnit()==null) err_data.add("Error! No unit for Weight in Care Element ("+(i+1)+")");
 					ImportExportMeasurements.saveMeasurements("WT", demographicNo, admProviderNo, dataField, dataUnit, dateObserved);
                                         addOneEntry(CAREELEMENTS);
@@ -1662,7 +1616,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
                                         String dataUnit = wc.getWaistCircumferenceUnit()!=null ? "in "+wc.getWaistCircumferenceUnit().toString() : "";
 
                                         if (wc.getDate()==null) err_data.add("Error! No Date for Waist Circumference in Care Element ("+(i+1)+")");
-                                        if (StringUtils.isNullOrEmpty(wc.getWaistCircumference())) err_data.add("Error! No value for Waist Circumference in Care Element ("+(i+1)+")");
+                                        if (StringUtils.empty(wc.getWaistCircumference())) err_data.add("Error! No value for Waist Circumference in Care Element ("+(i+1)+")");
                                         if (wc.getWaistCircumferenceUnit()==null) err_data.add("Error! No unit for Waist Circumference in Care Element ("+(i+1)+")");
 					ImportExportMeasurements.saveMeasurements("WC", demographicNo, admProviderNo, dataField, dataUnit, dateObserved);
                                         addOneEntry(CAREELEMENTS);
@@ -1674,8 +1628,8 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
                                         String dataUnit = bp.getBPUnit()!=null ? "in "+bp.getBPUnit().toString() : "";
 
                                         if (bp.getDate()==null) err_data.add("Error! No Date for Blood Pressure in Care Element ("+(i+1)+")");
-                                        if (StringUtils.isNullOrEmpty(bp.getSystolicBP())) err_data.add("Error! No value for Systolic Blood Pressure in Care Element ("+(i+1)+")");
-                                        if (StringUtils.isNullOrEmpty(bp.getDiastolicBP())) err_data.add("Error! No value for Diastolic Blood Pressure in Care Element ("+(i+1)+")");
+                                        if (StringUtils.empty(bp.getSystolicBP())) err_data.add("Error! No value for Systolic Blood Pressure in Care Element ("+(i+1)+")");
+                                        if (StringUtils.empty(bp.getDiastolicBP())) err_data.add("Error! No value for Diastolic Blood Pressure in Care Element ("+(i+1)+")");
                                         if (bp.getBPUnit()==null) err_data.add("Error! No unit for Blood Pressure in Care Element ("+(i+1)+")");
 					ImportExportMeasurements.saveMeasurements("BP", demographicNo, admProviderNo, dataField, dataUnit, dateObserved);
                                         addOneEntry(CAREELEMENTS);
@@ -1785,7 +1739,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
                                         String dataCode = dc.getCodeValue()!=null ? "LOINC="+dc.getCodeValue().toString() : "";
 
                                         if (dc.getDate()==null) err_data.add("Error! No Date for Diabetes Self-management/Collaborative Goal Setting in Care Element ("+(i+1)+")");
-                                        if (StringUtils.isNullOrEmpty(dc.getDocumentedGoals())) err_data.add("Error! No Documented Goal for Diabetes Self-management/Collaborative Goal Setting in Care Element ("+(i+1)+")");
+                                        if (StringUtils.empty(dc.getDocumentedGoals())) err_data.add("Error! No Documented Goal for Diabetes Self-management/Collaborative Goal Setting in Care Element ("+(i+1)+")");
                                         if (dc.getCodeValue()==null) err_data.add("Error! No Code Value for Diabetes Self-management/Collaborative Goal Setting in Care Element ("+(i+1)+")");
 					ImportExportMeasurements.saveMeasurements("CGSD", demographicNo, admProviderNo, dataField, dateObserved);
                                         addOneEntry(CAREELEMENTS);
@@ -2059,6 +2013,20 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 		return sCmIssu;
 	}
 
+        boolean isICD9(cdsDt.StandardCoding diagCode) {
+                if (diagCode==null) return false;
+
+                String codingSystem = StringUtils.noNull(diagCode.getStandardCodingSystem()).toLowerCase();
+		return (codingSystem.contains("icd") && codingSystem.contains("9"));
+        }
+
+        boolean isICD9(cdsDt.Code diagCode) {
+                if (diagCode==null) return false;
+
+                String codingSystem = StringUtils.noNull(diagCode.getCodingSystem()).toLowerCase();
+		return (codingSystem.contains("icd") && codingSystem.contains("9"));
+        }
+
 	Set<CaseManagementIssue> getCMIssue(String cppName, cdsDt.StandardCoding diagCode) {
 		Set<CaseManagementIssue> sCmIssu = new HashSet<CaseManagementIssue>();
 		Issue isu = caseManagementManager.getIssueInfoByCode(StringUtils.noNull(cppName));
@@ -2070,9 +2038,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 			caseManagementManager.saveCaseIssue(cmIssu);
 			sCmIssu.add(cmIssu);
 		}
-		if (diagCode==null) return sCmIssu;
-
-		if (StringUtils.noNull(diagCode.getStandardCodingSystem()).equalsIgnoreCase("icd9")) {
+                if (isICD9(diagCode)) {
 			isu = caseManagementManager.getIssueInfoByCode(StringUtils.noNull(diagCode.getStandardCode()));
 			if (isu!=null) {
 				CaseManagementIssue cmIssu = new CaseManagementIssue();
@@ -2097,9 +2063,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 			caseManagementManager.saveCaseIssue(cmIssu);
 			sCmIssu.add(cmIssu);
 		}
-		if (diagCode==null) return sCmIssu;
-
-		if (StringUtils.noNull(diagCode.getCodingSystem()).equalsIgnoreCase("icd9")) {
+                if (isICD9(diagCode)) {
 			isu = caseManagementManager.getIssueInfoByCode(StringUtils.noNull(diagCode.getValue()));
 			if (isu!=null) {
 				CaseManagementIssue cmIssu = new CaseManagementIssue();
@@ -2423,7 +2387,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 	}
 
         void addOneEntry(String category) {
-            if (StringUtils.isNullOrEmpty(category)) return;
+            if (StringUtils.empty(category)) return;
 
             Integer n = entries.get(category+importNo);
             n = n==null ? 1 : n+1;
