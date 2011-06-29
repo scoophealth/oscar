@@ -126,7 +126,7 @@
 		String key = cme.getKeyVal();
 		String val = null;
 		if (key.contains(" Date")) {
-		    val = oscar.util.UtilDateUtilities.DateToString(cme.getDateValue(),"yyyy-MM-dd");
+		    val = readPartialDate(cme);
 		} else {
 		    val = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(cme.getValue());
 		}
@@ -136,4 +136,20 @@
 	}
 	return strcme.toString();
     }
+
+        String readPartialDate(CaseManagementNoteExt cme) {
+            String type = cme.getValue();
+            String val = null;
+
+            if (type!=null && !type.trim().equals("")) {
+                if (type.equals(CaseManagementNoteExt.YEARONLY))
+                    val = oscar.util.UtilDateUtilities.DateToString(cme.getDateValue(),"yyyy");
+                else if (type.equals(CaseManagementNoteExt.YEARMONTH))
+                    val = oscar.util.UtilDateUtilities.DateToString(cme.getDateValue(),"yyyy-MM");
+                else val = oscar.util.UtilDateUtilities.DateToString(cme.getDateValue(),"yyyy-MM-dd");
+            } else {
+                val = oscar.util.UtilDateUtilities.DateToString(cme.getDateValue(),"yyyy-MM-dd");
+            }
+            return val;
+        }
 %>

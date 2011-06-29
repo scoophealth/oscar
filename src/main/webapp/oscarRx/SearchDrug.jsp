@@ -419,7 +419,7 @@ function load() {
 								%>
 								</td>
 								<td width="20px" align="center"><a href="#" title="Annotation"
-									onclick="window.open('../annotation/annotation.jsp?display=<%=annotation_display%>&table_id=<%=prescriptDrug.getId()%>&demo=<%=bean.getDemographicNo()%>','anwin','width=400,height=250');"> <img src="../images/notes.gif" border="0"></a>
+									onclick="window.open('../annotation/annotation.jsp?display=<%=annotation_display%>&table_id=<%=prescriptDrug.getId()%>&demo=<%=bean.getDemographicNo()%>','anwin','width=400,height=500');"> <img src="../images/notes.gif" border="0"></a>
 									</td>
 								<%
 									if (integratorEnabled)
