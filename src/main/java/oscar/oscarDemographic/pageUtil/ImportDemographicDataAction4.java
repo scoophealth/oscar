@@ -226,6 +226,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 					while ((len=in.read(buf)) > 0) out.write(buf,0,len);
 					out.close();					
 					logs.add(importXML(ofile, warnings, request,frm.getTimeshiftInDays(),students,courseId));
+                                        importNo++;
 				}
 				entry = in.getNextEntry();
 			}
@@ -1815,6 +1816,8 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
                 }
                 out.write(fillUp("",'-',tableWidth)); out.newLine();
                 importNo++;
+
+                //general log data
                 for (int i=0; i<importNo; i++) {
                     for (int j=0; j<keyword[0].length; j++) {
                         String category = keyword[0][j].trim();
@@ -1830,6 +1833,8 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
                 out.newLine();
                 out.newLine();
                 out.newLine();
+
+                //error log
                 String column1 = "Patient ID";
                 out.write(column1+" |");
                 out.write("Errors/Notes");
