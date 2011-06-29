@@ -29,6 +29,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Vector;
@@ -190,6 +191,7 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
         }
         MiscUtils.getLogger().info("level="+level);
         
+        List<Hashtable> toRemove = new ArrayList<Hashtable>();
         
         for(int x=0;x<all.size();x++) {
         	 Hashtable ht=(Hashtable)all.get(x);
@@ -199,8 +201,13 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
         	 MiscUtils.getLogger().info("significance="+significance);
         	 if(level>0 && significance<level) {
         		 MiscUtils.getLogger().info("filtering out");
-        		 all.remove(ht);
+        		 //all.remove(ht);
+        		 toRemove.add(ht);
         	 }
+        }
+        
+        for(Hashtable ht:toRemove) {
+        	all.remove(ht);
         }
         
         MiscUtils.getLogger().debug(all);
