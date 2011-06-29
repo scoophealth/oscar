@@ -7924,6 +7924,7 @@ CREATE TABLE `casemgmt_note_link` (
   `table_name` int(6) NOT NULL,
   `table_id` int(10) NOT NULL,
   `note_id` int(10) NOT NULL,
+  `other_id` varchar(25),
   PRIMARY KEY  (`id`)
 );
 

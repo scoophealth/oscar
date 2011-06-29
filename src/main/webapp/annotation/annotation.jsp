@@ -55,6 +55,9 @@
     Long tableId = 0L;
     if (filled(tid)) tableId = Long.valueOf(tid);
     else tid = "";
+    
+    String oid = request.getParameter("other_id");
+    if(oid==null) {oid="";}
 
     HttpSession se = request.getSession();
     String user_no = (String) se.getAttribute("user");
@@ -64,7 +67,12 @@
 
     Integer tableName = cmm.getTableNameByDisplay(display);
     String note = "";
-    CaseManagementNoteLink cml = cmm.getLatestLinkByTableId(tableName, tableId);//the lastest note which should be the annotation instead of document note.
+    CaseManagementNoteLink cml = null;
+    if(oid!=null && oid.length()>0) {
+    	cml = cmm.getLatestLinkByTableId(tableName, tableId, oid);//the lastest note which should be the annotation instead of document note.
+    } else {
+    	cml = cmm.getLatestLinkByTableId(tableName, tableId);//the lastest note which should be the annotation instead of document note.
+    }
     CaseManagementNote p_cmn = null;
     if (cml!=null) {
         p_cmn = cmm.getNote(cml.getNoteId().toString());
@@ -108,6 +116,7 @@
                     cml.setTableName(tableName);
                     cml.setTableId(tableId);
                     cml.setNoteId(cmn.getId());
+                    cml.setOtherId(oid);                    
                     cmm.saveNoteLink(cml);
                     LogAction.addLog(user_no,LogConst.ANNOTATE, display, String.valueOf(tableId), request.getRemoteAddr(), demo, cmn.getNote());                
 	    }
@@ -168,6 +177,7 @@
 	<input type="hidden" name="demo" value="<%=demo%>" />
 	<input type="hidden" name="display" value="<%=display%>" />
 	<input type="hidden" name="table_id" value="<%=tid%>" />
+	<input type="hidden" name="other_id" value="<%=oid%>" />
 	<input type="hidden" name="saved" />
         <div class="header"></div>
         <div class="panel">

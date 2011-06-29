@@ -15,6 +15,10 @@
 		 oscar.oscarMDS.data.ReportStatus,oscar.log.*,
 		 org.apache.commons.codec.binary.Base64,
                  oscar.OscarProperties" %>
+<%@ page import="org.oscarehr.casemgmt.model.CaseManagementNoteLink"%>
+<%@ page import="org.oscarehr.casemgmt.model.CaseManagementNote"%>
+<%@ page import="org.oscarehr.util.SpringUtils"%>
+<%@ page import="org.oscarehr.casemgmt.service.CaseManagementManager"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
@@ -115,6 +119,11 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
     alert("The lab could not be printed due to an error. Please see the server logs for more detail.");
 </script>
 <%}
+
+
+	String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.DISP_LABTEST;
+	CaseManagementManager caseManagementManager = (CaseManagementManager) SpringUtils.getBean("caseManagementManager");
+    
 %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
@@ -759,6 +768,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                 <td width="10%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formUnits"/></td>
                                 <td width="15%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formDateTimeCompleted"/></td>
                                 <td width="6%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formNew"/></td>
+                                <td width="6%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formAnnotate"/></td>
                             </tr>
                             
                             <%
@@ -774,7 +784,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                         if(!obrFlag && !obrName.equals("") && !(obxName.contains(obrName) && obxCount < 2)){%>
                                             <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" >
                                                 <td valign="top" align="left"><%=obrName%></td>
-                                                <td colspan="6">&nbsp;</td>
+                                                <td colspan="7">&nbsp;</td>
                                             </tr>
                                             <%obrFlag = true;
                                         }
@@ -786,7 +796,13 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                         } else if ( abnormal != null && ( abnormal.equals("A") || abnormal.startsWith("H") || handler.isOBXAbnormal( j, k) ) ){
                                             lineClass = "AbnormalRes";
                                         }
-                                                                                
+                                        
+                                        boolean isPrevAnnotation = false;
+                                        CaseManagementNoteLink cml = caseManagementManager.getLatestLinkByTableId(CaseManagementNoteLink.LABTEST,Long.valueOf(segmentID),j+"-"+k);
+                                        CaseManagementNote p_cmn = null;                                        
+                                        if (cml!=null) {p_cmn = caseManagementManager.getNote(cml.getNoteId().toString());}
+                                        if (p_cmn!=null){isPrevAnnotation=true;}
+                                        
                                         if(handler.getOBXValueType(j,k) != null &&  handler.getOBXValueType(j,k).equalsIgnoreCase("FT")){
                                             String[] dividedString  =divideStringAtFirstNewline(handler.getOBXResult( j, k));
                                             %>                                         
@@ -798,6 +814,11 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                 <td align="left" valign="top"><%=handler.getOBXUnits( j, k) %></td>
                                                 <td align="center" valign="top"><%= handler.getTimeStamp(j, k) %></td>
                                                 <td align="center" valign="top"><%= handler.getOBXResultStatus( j, k) %></td>
+                                                <td align="center" valign="top">
+	                                                <a href="javascript:void(0);" title="Annotation" onclick="window.open('<%=request.getContextPath()%>/annotation/annotation.jsp?display=<%=annotation_display%>&amp;table_id=<%=segmentID%>&amp;demo=<%=demographicID%>&amp;other_id=<%=String.valueOf(j) + "-" + String.valueOf(k) %>','anwin','width=400,height=250');">
+	                                                	<%if(!isPrevAnnotation){ %><img src="../../../images/notes.gif" alt="rxAnnotation" height="16" width="13" border="0"/><%}else{ %><img src="../../../images/filledNotes.gif" alt="rxAnnotation" height="16" width="13" border="0"/> <%} %>
+	                                                </a>
+                                                </td>
                                             </tr>
                                             <%if(dividedString[1] != null){ %>
                                             <tr>
@@ -813,6 +834,11 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                 <td align="left" valign="top"><%=handler.getOBXUnits( j, k) %></td>
                                                 <td align="center" valign="top"><%= handler.getTimeStamp(j, k) %></td>
                                                 <td align="center" valign="top"><%= handler.getOBXResultStatus( j, k) %></td>
+                                                <td align="center" valign="top">
+	                                                <a href="javascript:void(0);" title="Annotation" onclick="window.open('<%=request.getContextPath()%>/annotation/annotation.jsp?display=<%=annotation_display%>&amp;table_id=<%=segmentID%>&amp;demo=<%=demographicID%>&amp;other_id=<%=String.valueOf(j) + "-" + String.valueOf(k) %>','anwin','width=400,height=250');">
+	                                                	<%if(!isPrevAnnotation){ %><img src="../../../images/notes.gif" alt="rxAnnotation" height="16" width="13" border="0"/><%}else{ %><img src="../../../images/filledNotes.gif" alt="rxAnnotation" height="16" width="13" border="0"/> <%} %>
+	                                                </a>
+                                                </td>
                                             </tr>
                                         <%}%>
                                         <%for (l=0; l < handler.getOBXCommentCount(j, k); l++){%>

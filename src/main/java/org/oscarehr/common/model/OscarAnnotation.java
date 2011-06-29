@@ -57,6 +57,7 @@ public class OscarAnnotation {
    final public int PRESCRIPTION = 3;
    final public int ANNOTATION = 4;
    final public int NOTE = 5;
+   final public int LAB = 6;
     
     private long    id;
     private long    tableId;
