@@ -213,6 +213,9 @@ List<OLISRequestNomenclature> requestNomenclatureList = requestDao.findAll();
 			<th width="20%">Specimen Collector</th>
 			<td width="30%"><select id="specimenCollector" name="specimenCollector">
 <option value=""></option>
+<option value="5552">Gamma-Dynacare</option>
+<option value="5407">CML</option>
+<option value="5687">LifeLabs</option>
 <option value="4001">BSD Lab1</option>
 <option value="4002">BSD Lab2</option>
 <option value="4003">BSD Lab3</option>
@@ -229,6 +232,9 @@ List<OLISRequestNomenclature> requestNomenclatureList = requestDao.findAll();
 			<th width="20%">Performing Laboratory</th>
 			<td width="30%"><select id="performingLaboratory" name="performingLaboratory">
 <option value=""></option>
+<option value="5552">Gamma-Dynacare</option>
+<option value="5407">CML</option>
+<option value="5687">LifeLabs</option>
 <option value="4001">BSD Lab1</option>
 <option value="4002">BSD Lab2</option>
 <option value="4003">BSD Lab3</option>
@@ -246,6 +252,9 @@ List<OLISRequestNomenclature> requestNomenclatureList = requestDao.findAll();
 			<th width="20%">Exclude Performing Laboratory</th>
 			<td width="30%"><select id="excludePerformingLaboratory" name="excludePerformingLaboratory">
 <option value=""></option>
+<option value="5552">Gamma-Dynacare</option>
+<option value="5407">CML</option>
+<option value="5687">LifeLabs</option>
 <option value="4001">BSD Lab1</option>
 <option value="4002">BSD Lab2</option>
 <option value="4003">BSD Lab3</option>
@@ -263,6 +272,9 @@ List<OLISRequestNomenclature> requestNomenclatureList = requestDao.findAll();
 			<th width="20%">Reporting Laboratory</th>
 			<td colspan="3"><select id="reportingLaboratory" name="reportingLaboratory">
 <option value=""></option>
+<option value="5552">Gamma-Dynacare</option>
+<option value="5407">CML</option>
+<option value="5687">LifeLabs</option>
 <option value="4001">BSD Lab1</option>
 <option value="4002">BSD Lab2</option>
 <option value="4003">BSD Lab3</option>
@@ -280,6 +292,9 @@ List<OLISRequestNomenclature> requestNomenclatureList = requestDao.findAll();
 			<th width="20%">Exclude Reporting Laboratory</th>
 			<td width="30%"><select id="excludeReportingLaboratory" name="excludeReportingLaboratory">
 <option value=""></option>
+<option value="5552">Gamma-Dynacare</option>
+<option value="5407">CML</option>
+<option value="5687">LifeLabs</option>
 <option value="4001">BSD Lab1</option>
 <option value="4002">BSD Lab2</option>
 <option value="4003">BSD Lab3</option>
@@ -386,6 +401,9 @@ for (Object d : allDemographics) {
 		<tr>
 			<th width="20%">Test Request Placer</th><td><select>
 <option></option>
+<option value="5552">Gamma-Dynacare</option>
+<option value="5407">CML</option>
+<option value="5687">LifeLabs</option>
 <option>BSD Lab1</option>
 <option>BSD Lab2</option>
 <option>BSD Lab3</option>
@@ -600,6 +618,9 @@ for (Object d : allDemographics) {
 			<th width="20%">Destination Laboratory</th>
 			<td width="30%"><select id="destinationLaboratory" name="destinationLaboratory">
 <option value=""></option>
+<option value="5552">Gamma-Dynacare</option>
+<option value="5407">CML</option>
+<option value="5687">LifeLabs</option>
 <option value="4001">BSD Lab1</option>
 <option value="4002">BSD Lab2</option>
 <option value="4003">BSD Lab3</option>
@@ -610,6 +631,7 @@ for (Object d : allDemographics) {
 <option value="4008">BSD Lab8</option>
 <option value="4009">BSD Lab9</option>
 <option value="4010">BSD Lab10</option>
+
 </select>
 </td>
 		</tr>
@@ -639,6 +661,9 @@ for (Object d : allDemographics) {
 			<th width="20%">Ordering Facility</th>
 			<td width="30%"><select id="orderingFacility" name="orderingFacility">
 <option value=""></option>
+<option value="5552">Gamma-Dynacare</option>
+<option value="5407">CML</option>
+<option value="5687">LifeLabs</option>
 <option value="4001">BSD Lab1</option>
 <option value="4002">BSD Lab2</option>
 <option value="4003">BSD Lab3</option>
