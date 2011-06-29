@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html;" %>
 <%@page import="java.util.*,oscar.oscarDB.DBHandler,java.sql.ResultSet, oscar.oscarLab.ca.all.parsers.Factory, oscar.oscarLab.ca.all.parsers.OLISHL7Handler, oscar.oscarLab.ca.all.parsers.OLISHL7Handler.OLISError, org.oscarehr.olis.OLISResultsAction, org.oscarehr.util.SpringUtils" %>
-	
+<%@page import="org.oscarehr.util.MiscUtils" %>
 	
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -90,14 +90,18 @@ function filterResults(select) {
 				<%=resp%>
 			-->
 			<%
-			OLISHL7Handler reportHandler = (OLISHL7Handler) Factory.getHandler("OLIS_HL7", resp);
-			List<OLISError> errors = reportHandler.getReportErrors();
-			if (errors.size() > 0) {
-				for (OLISError error : errors) {
-				%>
-					<div class="error"><%=error.getText().replaceAll("\\n", "<br />")%></div>
-				<%
+			try {
+				OLISHL7Handler reportHandler = (OLISHL7Handler) Factory.getHandler("OLIS_HL7", resp);
+				List<OLISError> errors = reportHandler.getReportErrors();
+				if (errors.size() > 0) {
+					for (OLISError error : errors) {
+					%>
+						<div class="error"><%=error.getText().replaceAll("\\n", "<br />")%></div>
+					<%
+					}
 				}
+			} catch (Exception e) {
+				MiscUtils.getLogger().error("error",e);
 			}
 			
 			List<String> resultList = (List<String>) request.getAttribute("resultList");
