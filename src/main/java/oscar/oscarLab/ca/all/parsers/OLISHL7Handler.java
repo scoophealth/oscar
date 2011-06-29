@@ -598,7 +598,10 @@ public class OLISHL7Handler implements MessageHandler {
 	HashMap<String,String> obrParentMap; 
 	
     public int getChildOBR(String parentId) { 
-    	return Integer.valueOf(obrParentMap.get(parentId));
+    	try { return Integer.valueOf(obrParentMap.get(parentId)); }
+    	catch (Exception e) { 
+    		return -1;
+    	}
     }
     
     public boolean isChildOBR(int obr) { 
@@ -1024,7 +1027,7 @@ public class OLISHL7Handler implements MessageHandler {
     public String getNatureOfAbnormalTest(char nature) {
     	switch (nature) {
 	    	case 'A': return "An age-based population";
-	    	case 'N': return "None – generic normal range";
+	    	case 'N': return "None ‚Äì generic normal range";
 	    	case 'R': return "A race-based population";
 	    	case 'S': return "A sex-based population";
 	   		default : return "";
@@ -1280,8 +1283,10 @@ public class OLISHL7Handler implements MessageHandler {
     
     @Override
     public int getOBXCount(int i){
-        ArrayList<Segment> obxSegs = obrGroups.get(i);
-        return(obxSegs.size());
+    	try {
+	        ArrayList<Segment> obxSegs = obrGroups.get(i);
+	        return(obxSegs.size());
+    	} catch (Exception e) { return 0; }
     }
    
     @Override
