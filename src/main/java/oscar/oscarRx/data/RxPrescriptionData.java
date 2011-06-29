@@ -1038,7 +1038,7 @@ public class RxPrescriptionData {
     }
 
     // erased an orfin }
-    public class Prescription {
+    public static class Prescription {
 
         int drugId;
         String providerNo;
@@ -2242,7 +2242,7 @@ public class RxPrescriptionData {
 
     }
 
-    public class Favorite {
+    public static class Favorite {
 
         int favoriteId;
         String providerNo;
@@ -2674,4 +2674,5 @@ if (getSpecial() == null || getSpecial().length() < 4) {
 	}
 
 }
+
 
