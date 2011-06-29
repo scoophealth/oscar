@@ -85,7 +85,8 @@ public class HRMReportParser {
 				logger.error("error",e);
 			}
 
-			return new HRMReport(root, hrmReportFileLocation, fileData);
+                        if (root!=null && hrmReportFileLocation!=null && fileData!=null)
+                            return new HRMReport(root, hrmReportFileLocation, fileData);
 		}
 
 		return null;

@@ -712,7 +712,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                 cdsDt.DrugMeasure drugM = medications.addNewStrength();
                 drugM.setAmount(strength);
                 drugM.setUnitOfMeasure(Util.trailingTxt(strength0));
-                if (StringUtils.isNullOrEmpty(drugM.getUnitOfMeasure())) drugM.setUnitOfMeasure("unit");
+                if (StringUtils.empty(drugM.getUnitOfMeasure())) drugM.setUnitOfMeasure("unit");
             }
 
             medications.addNewLongTermMedication().setBoolean(pa[p].getLongTerm());
