@@ -300,6 +300,29 @@ public class DemographicData {
 		return demographic;
 	}
 
+	public String getDemographicNotes(String demographicNo) {
+		String retval = "";
+		try {
+			ResultSet rs;
+			String sql = "SELECT content FROM demographiccust WHERE demographic_no = '" + demographicNo + "'";
+			rs = DBHandler.GetSQL(sql);
+			if (rs.next()) {
+				try {
+					retval = oscar.Misc.getString(rs, "content");
+				} catch (Exception eg) {
+				}
+			}
+			rs.close();
+
+		} catch (SQLException e) {
+			MiscUtils.getLogger().error("Error", e);
+		}
+                if (retval.startsWith("<unotes>")) retval = retval.substring(8);
+                if (retval.endsWith("</unotes>")) retval = retval.substring(0, retval.length()-9);
+
+		return retval;
+	}
+
 	public Demographic getDemographic(String DemographicNo) {
 		Demographic demographic = null;
 

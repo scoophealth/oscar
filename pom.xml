@@ -354,6 +354,13 @@
 			<version>1.0</version>
 		</dependency>
 
+		<!-- cds hrm -->
+		<dependency>
+			<groupId>cds</groupId>
+			<artifactId>cds_hrm</artifactId>
+			<version>1.0</version>
+		</dependency>
+
 		<!-- hsfo -->
 		<dependency>
 			<groupId>hsfo</groupId>
