@@ -48,7 +48,27 @@ public class Util {
 	}
 	return newStr;
     }
-    
+
+    static public String newSummary(String label, String item) {
+	return addSummary("", label, item);
+    }
+
+    static public String addSummary(String summary, String label, String item) {
+	if (StringUtils.isNullOrEmpty(summary)) {
+	    summary += StringUtils.filled(item) ? "<CategorySummaryLine>["+StringUtils.noNull(label)+"]:"+item : "";
+	} else {
+	    summary += StringUtils.filled(item) ? ",["+StringUtils.noNull(label)+"]:"+item : "";
+	}
+	return summary;
+    }
+
+    static public String endSummary(String summary) {
+	if (StringUtils.filled(summary) && summary.startsWith("<CategorySummaryLine>")) {
+            summary += "</CategorySummaryLine>";
+	}
+	return summary;
+    }
+
     static public XmlCalendar calDate(Date inDate) {
 	String date = UtilDateUtilities.DateToString(inDate, "yyyy-MM-dd");
 	String time = UtilDateUtilities.DateToString(inDate, "HH:mm:ss");

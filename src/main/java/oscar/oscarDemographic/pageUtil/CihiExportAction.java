@@ -345,7 +345,7 @@ public class CihiExportAction extends DispatchAction {
 	private void buildPatientDemographic(Demographic demo, Demographics xmlDemographics) {
 		HealthCard healthCard = xmlDemographics.addNewHealthCard();
 		healthCard.setNumber(demo.getHin());
-                if (StringUtils.isNullOrEmpty(healthCard.getNumber())) healthCard.setNumber("0");
+                if (StringUtils.empty(healthCard.getNumber())) healthCard.setNumber("0");
 		healthCard.setType("HCN");		
 				
 		healthCard.setJurisdiction(cdsDtCihi.HealthCardProvinceCode.CA_ON);					
@@ -454,16 +454,16 @@ public class CihiExportAction extends DispatchAction {
             String keyval;
             for( CaseManagementNoteExt caseManagementNoteExt: caseManagementNoteExtList ) {
                 keyval = caseManagementNoteExt.getKeyVal();
-                if( keyval.equals("Treatment")) {
+                if( keyval.equals(CaseManagementNoteExt.TREATMENT)) {
                     intervention = caseManagementNoteExt.getValue();
                 }
-                else if( keyval.equals("Relationship")) {
+                else if( keyval.equals(CaseManagementNoteExt.RELATIONSHIP)) {
                     relationship = caseManagementNoteExt.getValue();
                 }
-                else if( keyval.equals("Age at Onset")) {
+                else if( keyval.equals(CaseManagementNoteExt.AGEATONSET)) {
                     age = caseManagementNoteExt.getValue();
                 }
-                else if( keyval.equals("Start Date")) {
+                else if( keyval.equals(CaseManagementNoteExt.STARTDATE)) {
                     startDate = caseManagementNoteExt.getDateValue();
                 }                
             }
@@ -535,10 +535,10 @@ public class CihiExportAction extends DispatchAction {
             for( CaseManagementNoteExt caseManagementNoteExt: caseManagementNoteExtList ) {
                 keyval = caseManagementNoteExt.getKeyVal();
                 
-                if( keyval.equals("Start Date")) {
+                if( keyval.equals(CaseManagementNoteExt.STARTDATE)) {
                     startDate = caseManagementNoteExt.getDateValue();
                 }
-                else if( keyval.equals("Resolution Date")) {
+                else if( keyval.equals(CaseManagementNoteExt.RESOLUTIONDATE)) {
                     endDate = caseManagementNoteExt.getDateValue();
                 }
             }
@@ -602,10 +602,10 @@ public class CihiExportAction extends DispatchAction {
             for( CaseManagementNoteExt caseManagementNoteExt: caseManagementNoteExtList ) {
                 keyval = caseManagementNoteExt.getKeyVal();
                 
-                if( keyval.equals("Start Date")) {
+                if( keyval.equals(CaseManagementNoteExt.STARTDATE)) {
                     startDate = caseManagementNoteExt.getDateValue();
                 }
-                else if( keyval.equals("Resolution Date")) {
+                else if( keyval.equals(CaseManagementNoteExt.RESOLUTIONDATE)) {
                     endDate = caseManagementNoteExt.getDateValue();
                 }
             }
@@ -777,7 +777,7 @@ public class CihiExportAction extends DispatchAction {
                     if (cIssue.getIssue().getType().equals("system")) continue;
 
                     StandardCoding procedureCode = procedure.addNewProcedureCode();
-                    procedureCode.setStandardCodingSystem(properties.getProperty("dxResearch_coding_sys","icd9"));
+                    procedureCode.setStandardCodingSystem(cIssue.getIssue().getType());
                     procedureCode.setStandardCode(cIssue.getIssue().getCode());
                     procedureCode.setStandardCodeDescription(cIssue.getIssue().getDescription());
                     break;
@@ -787,12 +787,12 @@ public class CihiExportAction extends DispatchAction {
             procedureDate = null;
 			
 			
-			List<CaseManagementNoteExt> caseManagementNoteExtList = getCaseManagementNoteExtDAO().getExtByNote(caseManagementNote.getId());
+            List<CaseManagementNoteExt> caseManagementNoteExtList = getCaseManagementNoteExtDAO().getExtByNote(caseManagementNote.getId());
             String keyval;
             for( CaseManagementNoteExt caseManagementNoteExt: caseManagementNoteExtList ) {
                 keyval = caseManagementNoteExt.getKeyVal();
                 
-                if( keyval.equals("Procedure Date")) {
+                if( keyval.equals(CaseManagementNoteExt.PROCEDUREDATE)) {
                 	procedureDate = caseManagementNoteExt.getDateValue();
                 	cal.setTime(procedureDate);
                     DateFullOrPartial dateFullOrPartial = procedure.addNewProcedureDate();
@@ -810,7 +810,7 @@ public class CihiExportAction extends DispatchAction {
                 for (LabMeasurements labMea : labMeaList) {
                 	String data = StringUtils.noNull(labMea.getExtVal("identifier"));
             	    String loinc = new MeasurementMapConfig().getLoincCodeByIdentCode(data);
-            	    if( StringUtils.isNullOrEmpty(loinc) ) {
+            	    if( StringUtils.empty(loinc) ) {
             	    	continue;
             	    }                	                   
             	    
@@ -870,7 +870,7 @@ public class CihiExportAction extends DispatchAction {
                         cdsDtCihi.DrugMeasure drugM = medications.addNewStrength();
                         drugM.setAmount(strength);
                         drugM.setUnitOfMeasure(Util.trailingTxt(strength0));
-                        if (StringUtils.isNullOrEmpty(drugM.getUnitOfMeasure())) drugM.setUnitOfMeasure("unit");
+                        if (StringUtils.empty(drugM.getUnitOfMeasure())) drugM.setUnitOfMeasure("unit");
                     }
 	        
 	        dosage = StringUtils.noNull(pa[p].getDosageDisplay());
