@@ -214,6 +214,7 @@ function onSub() {
         prop.setProperty("ip", Misc.getString(rs,"ip"));
         prop.setProperty("provider_no", Misc.getString(rs,"provider_no"));
         prop.setProperty("demographic_no",Misc.getString(rs,"demographic_no"));
+        prop.setProperty("data", Misc.getString(rs, "data"));
         vec.add(prop);
       }
 
@@ -248,6 +249,7 @@ function onSub() {
 		<TH>Provider</TH>
 		<% } %>
                 <TH>Demo</TH>
+                <TH>Data</TH>
 	</tr>
 	<%
 String catName = "";
@@ -270,6 +272,7 @@ for (int i = 0; i < vec.size(); i++) {
                 <td>
                     <%=prop.getProperty("demographic_no")%>
                 </td>
+                <td><%=prop.getProperty("data") %>&nbsp;</td>
 	</tr>
 	<% } %>
 	<script type="text/javascript">
