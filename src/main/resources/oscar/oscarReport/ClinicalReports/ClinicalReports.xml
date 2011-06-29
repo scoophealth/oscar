@@ -372,6 +372,34 @@ and dx.demographic_no = d.demographic_no and d.patient_status = 'AC'
 description="Number of patients in the Congestive heart failure by provider" replaceKeys="provider_no"
 type="SQL">select distinct dxresearch.demographic_no from dxresearch ,demographic where dxresearch_code in ('428') and coding_system = 'icd9' and dxresearch.status = 'A' and dxresearch.demographic_no = demographic.demographic_no and demographic.provider_no = '${provider_no}' and demographic.patient_status = 'AC'
 </Denominator>
+
+
+<Denominator id="ASMReg" name="Asthma Registry"
+description="Number of patients in the Asthma" 
+type="SQL">select distinct dx.demographic_no from dxresearch dx, demographic d 
+where dx.dxresearch_code in ('493') and dx.coding_system = 'icd9' and dx.status = 'A' 
+and dx.demographic_no = d.demographic_no and d.patient_status = 'AC'
+</Denominator>
+    
+<Denominator id="ASMRegbyP" name="Asthma Registry by practice"
+description="Number of patients in the Asthma by provider" replaceKeys="provider_no"
+type="SQL">select distinct dxresearch.demographic_no from dxresearch ,demographic where dxresearch_code in ('493') and coding_system = 'icd9' and dxresearch.status = 'A' and dxresearch.demographic_no = demographic.demographic_no and demographic.provider_no = '${provider_no}' and demographic.patient_status = 'AC'
+</Denominator>
+
+<Denominator id="COPDReg" name="COPD Registry"
+description="Number of patients in the COPD" 
+type="SQL">select distinct dx.demographic_no from dxresearch dx, demographic d 
+where dx.dxresearch_code in ('416') and dx.coding_system = 'icd9' and dx.status = 'A' 
+and dx.demographic_no = d.demographic_no and d.patient_status = 'AC'
+</Denominator>
+    
+<Denominator id="COPDRegbyP" name="COPD Registry by practice"
+description="Number of patients in the COPD by provider" replaceKeys="provider_no"
+type="SQL">select distinct dxresearch.demographic_no from dxresearch ,demographic where dxresearch_code in ('416') and coding_system = 'icd9' and dxresearch.status = 'A' and dxresearch.demographic_no = demographic.demographic_no and demographic.provider_no = '${provider_no}' and demographic.patient_status = 'AC'
+</Denominator>
+
+
+    
     
 <Denominator id="HYPReg" name="Hypertension Registry"
 description="Number of patient in the Hypertension reg"
