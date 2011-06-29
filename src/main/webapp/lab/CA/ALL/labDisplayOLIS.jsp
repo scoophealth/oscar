@@ -1495,17 +1495,18 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
    												    <% 
    												    
    												    int childOBR = handler.getChildOBR(parentId) - 1;   												    
-   												    
-   												    int childLength = handler.getOBXCount(childOBR);
-   												    for (int ceIndex = 0; ceIndex < childLength; ceIndex++) {
-   												    	String ceStatus = handler.getOBXResultStatus(childOBR, ceIndex).trim();
-   	   			                                        boolean ceStrikeout = ceStatus != null && ceStatus.startsWith("W");
-   	   			                                        String ceName = handler.getOBXName(childOBR,ceIndex);
-   	   			                                        ceName = ceStrikeout ? "<s>" + ceName + "</s>" : ceName;
-   	   			                                        String ceSense = handler.getOBXCESensitivity(childOBR,ceIndex);
-   	   			                                        ceSense = ceStrikeout ? "<s>" + ceSense + "</s>" : ceSense;
-   												    	%><tr><td><%=ceName%></td><td align="center"><%=ceSense%></td></tr><%
-   													}
+   												    if (childOBR != -1) {
+	   												    int childLength = handler.getOBXCount(childOBR);
+	   												    for (int ceIndex = 0; ceIndex < childLength; ceIndex++) {
+	   												    	String ceStatus = handler.getOBXResultStatus(childOBR, ceIndex).trim();
+	   	   			                                        boolean ceStrikeout = ceStatus != null && ceStatus.startsWith("W");
+	   	   			                                        String ceName = handler.getOBXName(childOBR,ceIndex);
+	   	   			                                        ceName = ceStrikeout ? "<s>" + ceName + "</s>" : ceName;
+	   	   			                                        String ceSense = handler.getOBXCESensitivity(childOBR,ceIndex);
+	   	   			                                        ceSense = ceStrikeout ? "<s>" + ceSense + "</s>" : ceSense;
+	   												    	%><tr><td><%=ceName%></td><td align="center"><%=ceSense%></td></tr><%
+	   													}
+   												    }
    													%>
    													</table>
    												</td>
