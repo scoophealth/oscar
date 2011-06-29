@@ -25,14 +25,23 @@
 
 package oscar.oscarEncounter.pageUtil;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.util.MessageResources;
+import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
+import org.oscarehr.caisi_integrator.ws.CachedDemographicDrug;
+import org.oscarehr.caisi_integrator.ws.DemographicWs;
+import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.MiscUtils;
 
+import oscar.oscarRx.data.RxPrescriptionData.Prescription;
 import oscar.util.DateUtils;
 import oscar.util.OscarRoleObjectPrivilege;
 import oscar.util.StringUtils;
@@ -43,6 +52,7 @@ import oscar.util.StringUtils;
  */
 public class EctDisplayRxAction extends EctDisplayAction {
     private String cmd = "Rx";
+    private static final Logger logger=MiscUtils.getLogger();
 
     public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
 
@@ -71,12 +81,40 @@ public class EctDisplayRxAction extends EctDisplayAction {
         String serviceDateStr;
         Date date;
         oscar.oscarRx.data.RxPrescriptionData prescriptData = new oscar.oscarRx.data.RxPrescriptionData();
-        oscar.oscarRx.data.RxPrescriptionData.Prescription [] arr = {};
-        arr = prescriptData.getUniquePrescriptionsByPatient(Integer.parseInt(bean.demographicNo));
-        long now = System.currentTimeMillis();
+        Prescription[] arr = prescriptData.getUniquePrescriptionsByPatient(Integer.parseInt(bean.demographicNo));
+        
+        ArrayList<Prescription> uniqueDrugs=new ArrayList<Prescription>();
+        for (Prescription p : arr) uniqueDrugs.add(p);
+        
+        int demographicId=Integer.parseInt(bean.demographicNo);
+        
+		// --- get integrator drugs ---
+		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+		if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
+			try {
+				DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
+				List<CachedDemographicDrug> remoteDrugs = demographicWs.getLinkedCachedDemographicDrugsByDemographicId(demographicId);
+				logger.debug("remote Drugs : "+remoteDrugs.size());
+				
+				for (CachedDemographicDrug remoteDrug : remoteDrugs)
+				{
+					Prescription p=new Prescription(remoteDrug.getFacilityIdIntegerCompositePk().getIntegratorFacilityId(), remoteDrug.getCaisiProviderId(), demographicId);
+					p.setArchived(remoteDrug.isArchived()?"1":"0");
+					if (remoteDrug.getEndDate()!=null) p.setEndDate(remoteDrug.getEndDate().getTime());
+					if (remoteDrug.getRxDate()!=null) p.setRxDate(remoteDrug.getRxDate().getTime());
+					p.setSpecial(remoteDrug.getSpecial());
+					
+					// okay so I'm not exactly making it unique... that's the price of last minute conformance test changes.
+					uniqueDrugs.add(p);
+				}
+			} catch (Exception e) {
+				logger.error("error getting remote allergies", e);
+			}
+		}
+
+		long now = System.currentTimeMillis();
         long month = 1000L * 60L * 60L * 24L * 30L;
-        for(int idx = 0; idx < arr.length; ++idx ) {
-            oscar.oscarRx.data.RxPrescriptionData.Prescription drug = arr[idx];
+        for( Prescription drug :uniqueDrugs ) {
             if( drug.isArchived() )
                 continue;
             if(drug.isHideCpp()) {
@@ -96,11 +134,12 @@ public class EctDisplayRxAction extends EctDisplayAction {
             date = drug.getRxDate();
             serviceDateStr = DateUtils.formatDate(date, request.getLocale());
 
-            String tmp = drug.getFullOutLine().replaceAll(";", " ");
+            String tmp = "";
+            if (drug.getFullOutLine()!=null) tmp=drug.getFullOutLine().replaceAll(";", " ");
             String strTitle = StringUtils.maxLenString(tmp, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
             strTitle = "<span " + styleColor + ">" + strTitle + "</span>";
             item.setTitle(strTitle);
-            item.setLinkTitle(tmp + " " + serviceDateStr + " - " + arr[idx].getEndDate());
+            item.setLinkTitle(tmp + " " + serviceDateStr + " - " + drug.getEndDate());
             item.setURL("return false;");
             Dao.addItem(item);
         }
