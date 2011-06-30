@@ -47,9 +47,7 @@ if (props == null || props.getProperty("c_lastVisited", "").equals("")){
     
     
     // fill the vaccines
-    PreventionData pd = new PreventionData();
-    ArrayList vaccines = new ArrayList();
-    vaccines = pd.getPreventionData(""+demoNo);
+    ArrayList<Map<String,Object>> vaccines = PreventionData.getPreventionData(""+demoNo);
     int fluCount = 0;
     int pnuCount = 0;
     int tdCount = 0;
@@ -58,7 +56,7 @@ if (props == null || props.getProperty("c_lastVisited", "").equals("")){
     int otherCount = 0;
     String type = "";
     for (int i=0; i < vaccines.size(); i++){
-        Hashtable vacHash = (Hashtable) vaccines.get(i);
+   	 	Map<String,Object> vacHash = vaccines.get(i);
         type = (String) vacHash.get("type");
         
         String oldDateFormat = "yyyy-MM-dd";

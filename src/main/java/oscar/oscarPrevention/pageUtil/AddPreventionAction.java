@@ -28,6 +28,7 @@
 package oscar.oscarPrevention.pageUtil;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -95,13 +96,12 @@ public class AddPreventionAction  extends Action {
             neverWarn = "0";
          }
          
-         ArrayList extraData = new ArrayList();
-         String layout = request.getParameter("layoutType");
+         ArrayList<Map<String,String>> extraData = new ArrayList<Map<String,String>>();
                   
          addHashtoArray(extraData,request.getParameter("location"),"location");
          addHashtoArray(extraData,request.getParameter("lot"),"lot");                 
          addHashtoArray(extraData,request.getParameter("route"),"route");
-	 addHashtoArray(extraData,request.getParameter("dose"),"dose");
+         addHashtoArray(extraData,request.getParameter("dose"),"dose");
          addHashtoArray(extraData,request.getParameter("comments"),"comments");                 
          addHashtoArray(extraData,request.getParameter("result"),"result");                 
          addHashtoArray(extraData,request.getParameter("reason"),"reason");           
@@ -124,15 +124,14 @@ public class AddPreventionAction  extends Action {
          addHashtoArray(extraData,request.getParameter("poultryworker"),"poultryworker");
          addHashtoArray(extraData,request.getParameter("firstnations"),"firstnations");
          addHashtoArray(extraData,request.getParameter("name"),"name");
-                                                                                                                  
-         PreventionData pd = new  PreventionData() ;         
+                                                                                                                           
          if (id == null || id.equals("null")){ //New                                             
-            pd.insertPreventionData(sessionUser,demographic_no,prevDate,providerNo,providerName,preventionType,refused,nextDate,neverWarn,extraData);            
+        	 PreventionData.insertPreventionData(sessionUser,demographic_no,prevDate,providerNo,providerName,preventionType,refused,nextDate,neverWarn,extraData);            
          }else if (id != null &&  delete != null  ){  // Delete
-            pd.deletePreventionData(id);               
+        	 PreventionData.deletePreventionData(id);               
          }else if (id != null && delete == null ){ //Update
             addHashtoArray(extraData,id,"previousId"); 
-            pd.updatetPreventionData(id,sessionUser,demographic_no,prevDate,providerNo,providerName,preventionType,refused,nextDate,neverWarn,extraData);
+            PreventionData.updatetPreventionData(id,sessionUser,demographic_no,prevDate,providerNo,providerName,preventionType,refused,nextDate,neverWarn,extraData);
          }
 
          ServletContext servletCtx = request.getSession().getServletContext();
@@ -145,9 +144,9 @@ public class AddPreventionAction  extends Action {
    }
    
          
-  private void addHashtoArray(ArrayList list,String s,String key){
+  private void addHashtoArray(ArrayList<Map<String,String>> list,String s,String key){
      if ( s != null && key != null){
-        HashMap<String,String> h = new HashMap<String,String>();
+        Map<String,String> h = new HashMap<String,String>();
         h.put(key,s);    
         list.add(h);
      }

@@ -35,12 +35,11 @@
                 String date = request.getParameter("date");
                 
                 if (id != null) { 
-                PreventionData pd = new PreventionData();
-                ArrayList alist = pd.getPreventionDataFromExt("workflowId", id);       
+                ArrayList<Map<String,Object>> alist = PreventionData.getPreventionDataFromExt("workflowId", id);       
                 
                 for (int k = 0; k < alist.size(); k++){
-                Hashtable hdata = (Hashtable) alist.get(k);
-                Hashtable hextended = pd.getPreventionKeyValues(""+hdata.get("id"));
+               	Map<String,Object> hdata = alist.get(k);
+                Map<String,String> hextended = PreventionData.getPreventionKeyValues(""+hdata.get("id"));
                 String refused = (String) hdata.get("refused");
                 %>
 <fieldset><legend> Injection # <%=k+1%> &nbsp;
@@ -49,7 +48,7 @@
 </legend> <%if ( refused.equals("1")){ %> Refused <a
 	onclick="deleteInjection('<%=hdata.get("id")%>')"
 	href="javascript: function myFunction() {return false; }"
-	style="color: blue;"> Delete </a> <%}else{%> Given By: <%=pd.getProviderName(hdata)%>
+	style="color: blue;"> Delete </a> <%}else{%> Given By: <%=PreventionData.getProviderName(hdata)%>
 Location: <%=hextended.get("location")  %> Lot #: <%=hextended.get("lot")  %>
 Product #: <%=hextended.get("product")  %> Dosage: <%=hextended.get("dosage")  %>
 <a onclick="deleteInjection('<%=hdata.get("id")%>')"

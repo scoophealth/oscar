@@ -39,7 +39,6 @@ if(session.getValue("user") == null)
   String startStr = "";
   String endStr   = "";
   String injectionType ="";
-  PreventionData pd = new PreventionData();
     
   if (request.getParameter("startDate") != null && request.getParameter("startDate") != null && request.getParameter("startDate") != null  ){
 
@@ -55,7 +54,7 @@ if(session.getValue("user") == null)
           keyVal = "product";
       }
       
-      ArrayList list = pd.getExtValues(injectionType,sDate,eDate,keyVal);
+      ArrayList<Map<String,Object>> list = PreventionData.getExtValues(injectionType,sDate,eDate,keyVal);
       pageContext.setAttribute("list",list);
       
       startStr = UtilDateUtilities.DateToString(sDate); 
@@ -149,7 +148,7 @@ table.ele {
 </table>
 
 <%
-    ArrayList report = (ArrayList) pageContext.getAttribute("list");
+    ArrayList<Map<String,Object>> report = (ArrayList<Map<String,Object>>) pageContext.getAttribute("list");
     if (report != null){
         DemographicData demoData= new DemographicData();                       
     %>
@@ -165,10 +164,10 @@ table.ele {
 		<th>Comments</th>
 	</tr>
 	<% for (int i = 0; i < report.size(); i++){ 
-                Hashtable h = (Hashtable) report.get(i);
+				Map<String,Object> h = report.get(i);
                 String demo = (String) h.get("demographic_no");
                 DemographicData.Demographic demog = demoData.getDemographic(demo);
-                String comments = pd.getPreventionComment((String)h.get("preventions_id"));
+                String comments = PreventionData.getPreventionComment((String)h.get("preventions_id"));
                 if( comments == null ) {
                     comments = "";
                 }
