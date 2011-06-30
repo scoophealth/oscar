@@ -254,9 +254,25 @@ function addNotes(){
 
 
 function printIframe(){
-   preview.focus();
-   preview.print();
-}
+	var browserName=navigator.appName; 
+	   if (browserName=="Microsoft Internet Explorer")
+			{
+	              try 
+	            { 
+	                iframe = document.getElementById('preview'); 
+	                iframe.contentWindow.document.execCommand('print', false, null); 
+	            } 
+	            catch(e) 
+	            { 
+	                window.print(); 
+	            } 
+			}
+			else
+			{
+				preview.focus();
+				preview.print();
+			}	
+	}
 
 
 function printPaste2Parent(){
@@ -395,7 +411,7 @@ function toggleView(form) {
 			<tr>
 				<td width=420px>
 				<div class="DivContentPadding"><!-- src modified by vic, hsfo -->
-				<iframe id='preview' name='preview' width=420px height=10000px
+				<iframe id='preview' name='preview' width=420px height=1000px
 					src="<%= dx<0?"Preview2.jsp?scriptId="+request.getParameter("scriptId")+"&rePrint="+reprint:dx==7?"HsfoPreview.jsp?dxCode=7":"about:blank" %>"
 					align=center border=0 frameborder=0></iframe></div>
 				</td>
