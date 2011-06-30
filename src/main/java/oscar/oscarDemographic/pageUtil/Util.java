@@ -21,7 +21,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import javax.servlet.http.HttpServletResponse;
-import org.apache.commons.lang.math.NumberUtils;
 
 import org.apache.xmlbeans.XmlCalendar;
 import org.oscarehr.util.MiscUtils;
@@ -250,8 +249,12 @@ public class Util {
                 break;
             }
         }
-        if (NumberUtils.isDigits(s)) return Float.valueOf(s);
-        else return 0;
+        try {
+        	float f = Float.parseFloat(s);
+        	return f;
+        } catch(NumberFormatException e) {
+        	return 0;
+        }       
     }
 
     static public String trailingTxt(String s) {
