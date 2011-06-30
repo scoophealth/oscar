@@ -290,6 +290,7 @@ function checkDate(yyyy,mm,dd,err_msg) {
 	return typeInOK;
 }
 function checkRosterDates() {
+        if (document.updatedelete.roster_status.value=="") return true;
         if (document.updatedelete.roster_status.value!="RO") {
             var yyyy = document.updatedelete.roster_termination_date_year.value;
             var mm = document.updatedelete.roster_termination_date_month.value;

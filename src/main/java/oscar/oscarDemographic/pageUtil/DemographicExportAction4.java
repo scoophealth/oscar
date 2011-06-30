@@ -107,9 +107,7 @@ import java.util.HashMap;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.DemographicArchiveDao;
-import org.oscarehr.common.dao.DrugReasonDao;
 import org.oscarehr.common.model.DemographicArchive;
-import org.oscarehr.common.model.DrugReason;
 import org.oscarehr.hospitalReportManager.HRMReport;
 import org.oscarehr.hospitalReportManager.HRMReportParser;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentDao;
@@ -575,7 +573,8 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                 CaseManagementNoteLink cml = cmm.getLatestLinkByTableId(CaseManagementNoteLink.CASEMGMTNOTE, cmn.getId());
                 if (cml!=null) {
                     CaseManagementNote n = cmm.getNote(cml.getNoteId().toString());
-                    annotation = n.getNote();
+                    if (n.getNote()!=null && !n.getNote().startsWith("imported.cms4.2011.06")) //not from dumpsite
+                        annotation = n.getNote();
                 }
                 List<CaseManagementNoteExt> cmeList = cmm.getExtByNote(cmn.getId());
 
@@ -1008,8 +1007,10 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     CaseManagementNoteLink cml = cmm.getLatestLinkByTableId(CaseManagementNoteLink.ALLERGIES, (long)allergies[j].getAllergyId());
                     if (cml!=null) {
                         CaseManagementNote n = cmm.getNote(cml.getNoteId().toString());
-                        alr.setNotes(StringUtils.noNull(n.getNote()));
-                        aSummary = Util.addSummary(aSummary, "Notes", n.getNote());
+                        if (n.getNote()!=null && !n.getNote().startsWith("imported.cms4.2011.06")) {//not from dumpsite
+                            alr.setNotes(StringUtils.noNull(n.getNote()));
+                            aSummary = Util.addSummary(aSummary, "Notes", n.getNote());
+                        }
                     }
 
                     if (StringUtils.empty(aSummary)) {
@@ -1127,10 +1128,13 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     addOneEntry(MEDICATION);
                     mSummary = Util.addSummary(mSummary, "Drug Name", drugName);
 
+                    /* no need:
                     DrugReasonDao drugReasonDao = (DrugReasonDao) SpringUtils.getBean("drugReasonDao");
                     List<DrugReason> drugReasons = drugReasonDao.getReasonsForDrugID(arr[p].getDrugId(), true);
                     if (drugReasons.size()>0 && StringUtils.filled(drugReasons.get(0).getCode()))
                         medi.setProblemCode(drugReasons.get(0).getCode());
+                     *
+                     */
 
                     if (StringUtils.filled(arr[p].getDosage())) {
                         String strength0 = arr[p].getDosage();
@@ -1161,6 +1165,10 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         medi.setForm(arr[p].getDrugForm());
                         mSummary = Util.addSummary(mSummary, "Form", arr[p].getDrugForm());
                     }
+                    if (StringUtils.filled(arr[p].getSpecialInstruction())) {
+                        medi.setForm(arr[p].getSpecialInstruction());
+                        mSummary = Util.addSummary(mSummary, "Drug Description", arr[p].getSpecialInstruction());
+                    }
                     if (StringUtils.filled(arr[p].getFreqDisplay())) {
                         medi.setFrequency(arr[p].getFreqDisplay());
                         mSummary = Util.addSummary(mSummary, "Frequency", arr[p].getFreqDisplay());
@@ -1182,9 +1190,12 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         medi.setQuantity(arr[p].getQuantity());
                         mSummary = Util.addSummary(mSummary, "Quantity", arr[p].getQuantity());
                     }
+                    /* no need:
                     if (arr[p].getNosubs()) medi.setSubstitutionNotAllowed("Y");
                     else medi.setSubstitutionNotAllowed("N");
                     mSummary = Util.addSummary(mSummary, "Substitution not Allowed", arr[p].getNosubs()?"Yes":"No");
+                     *
+                     */
 
                     if (StringUtils.filled(medi.getDrugName()) || StringUtils.filled(medi.getDrugIdentificationNumber())) {
                         medi.setNumberOfRefills(String.valueOf(arr[p].getRepeat()));
@@ -1194,14 +1205,18 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         medi.setTreatmentType(arr[p].getETreatmentType());
                         mSummary = Util.addSummary(mSummary, "Treatment Type", arr[p].getETreatmentType());
                     }
+                    /* no need: 
                     if (StringUtils.filled(arr[p].getRxStatus())) {
                         medi.setPrescriptionStatus(arr[p].getRxStatus());
                         mSummary = Util.addSummary(mSummary, "Prescription Status", arr[p].getRxStatus());
                     }
+                    /* no need:
                     if (arr[p].getDispenseInterval()!=null) {
                         medi.setDispenseInterval(String.valueOf(arr[p].getDispenseInterval()));
                         mSummary = Util.addLine(mSummary, "Dispense Interval", arr[p].getDispenseInterval().toString());
                     }
+                     *
+                     */
                     if (arr[p].getRefillDuration()!=null) {
                         medi.setRefillDuration(String.valueOf(arr[p].getRefillDuration()));
                         mSummary = Util.addSummary(mSummary, "Refill Duration", arr[p].getRefillDuration().toString());
@@ -1218,6 +1233,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         medi.addNewPastMedications().setBoolean(arr[p].getPastMed());
                         mSummary = Util.addSummary(mSummary, "Past Medcation",arr[p].getPastMed()?"Yes":"No");
                     }
+                    /* no need:
                     cdsDt.YnIndicatorAndBlank pc = medi.addNewPatientCompliance();
                     if (arr[p].getPatientCompliance()==null) {
                         pc.setBlank(cdsDt.Blank.X);
@@ -1226,6 +1242,8 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         pc.setBoolean(arr[p].getPatientCompliance());
                         mSummary = Util.addSummary(mSummary, "Patient Compliance", patientCompliance);
                     }
+                     *
+                     */
                     data = arr[p].getOutsideProviderName();
                     if (StringUtils.filled(data)) {
                         MedicationsAndTreatments.PrescribedBy pcb = medi.addNewPrescribedBy();
@@ -1246,6 +1264,8 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                             mSummary = Util.addSummary(mSummary, "Prescribed by", StringUtils.noNull(prvd.getFirst_name())+" "+StringUtils.noNull(prvd.getLast_name()));
                         }
                     }
+
+                    /* no need:
                     data = arr[p].getSpecial();
                     if (StringUtils.filled(data)) {
                         data = Util.extractDrugInstr(data);
@@ -1253,18 +1273,24 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         mSummary = Util.addSummary(mSummary, "Prescription Instructions", data);
                     }
 
+                    /* no need:
                     data = arr[p].isNonAuthoritative() ? "Y" : "N";
                     medi.setNonAuthoritativeIndicator(data);
                     mSummary = Util.addSummary(mSummary, "Non-Authoritative", data);
 
+                    /* no need:
                     medi.setPrescriptionIdentifier(String.valueOf(arr[p].getDrugId()));
                     mSummary = Util.addSummary(mSummary, "Prescription Identifier", medi.getPrescriptionIdentifier());
+                     *
+                     */
 
                     CaseManagementNoteLink cml = cmm.getLatestLinkByTableId(CaseManagementNoteLink.DRUGS, (long)arr[p].getDrugId());
                     if (cml!=null) {
                         CaseManagementNote n = cmm.getNote(cml.getNoteId().toString());
-                        medi.setNotes(StringUtils.noNull(n.getNote()));
-                        mSummary = Util.addSummary(mSummary, "Notes", n.getNote());
+                        if (n.getNote()!=null && !n.getNote().startsWith("imported.cms4.2011.06")) {//not from dumpsite
+                            medi.setNotes(StringUtils.noNull(n.getNote()));
+                            mSummary = Util.addSummary(mSummary, "Notes", n.getNote());
+                        }
                     }
 
                     if (StringUtils.empty(mSummary)) err.add("Error! No Category Summary Line (Medications & Treatments) for Patient "+demoNo+" ("+(p+1)+")");
@@ -1496,7 +1522,8 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         CaseManagementNoteLink cml = cmm.getLatestLinkByTableId(CaseManagementNoteLink.DOCUMENT, Long.valueOf(edoc.getDocId()));
                         if (cml!=null) {
                             CaseManagementNote n = cmm.getNote(cml.getNoteId().toString());
-                            if (n.getNote()!=null) rpr.setNotes(n.getNote());
+                            if (n.getNote()!=null && !n.getNote().startsWith("imported.cms4.2011.06")) //not from dumpsite
+                                if (n.getNote()!=null) rpr.setNotes(n.getNote());
                         }
                     }
                 }
@@ -1537,24 +1564,24 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 
                             File f = new File(reportFile);
                             if (f.exists()) {
-                            	InputStream in = null;
-                            	try {
-	                                in = new FileInputStream(f);
-	                                byte[] b = new byte[(int)f.length()];
-	
-	                                int offset=0, numRead=0;
-	                                while ((numRead=in.read(b,offset,b.length-offset)) >= 0
-	                                       && offset < b.length) offset += numRead;
-	
-	                                if (offset < b.length) throw new IOException("Could not completely read file " + f.getName());
-	                                rpr.addNewContent().setTextContent(new String(b));
-                            	}catch(IOException e) {
-                            		MiscUtils.getLogger().error("error",e);
-                            	}  finally {
-                            		if(in != null) {
-                            			in.close();
-                            		}
-                            	}                                
+                                InputStream in = null;
+                            try{
+                                in = new FileInputStream(f);
+                                byte[] b = new byte[(int)f.length()];
+
+                                int offset=0, numRead=0;
+                                while ((numRead=in.read(b,offset,b.length-offset)) >= 0
+                                       && offset < b.length) offset += numRead;
+
+                                if (offset < b.length) throw new IOException("Could not completely read file " + f.getName());
+                                in.close();
+                                rpr.addNewContent().setTextContent(new String(b));
+                            }
+                            catch (Exception ex) {
+                                logger.error("File InputStream Error", ex);
+                            } finally {
+                                in.close();
+                            }
                             }
                         }
                         
