@@ -1130,13 +1130,18 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
                                 drug.setArchived(false);
 
                                 drug.setBrandName(medArray[i].getDrugName());
-                                String special = drug.getBrandName()!=null ? drug.getBrandName() : "";
+                                drug.setCustomName(medArray[i].getDrugDescription());
+
+                                String special = StringUtils.noNull(drug.getBrandName());
+                                if (special.equals("")) {
+                                    special = StringUtils.noNull(drug.getCustomName());
+                                    drug.setCustomInstructions(true);
+                                }
 
                                 cdsDt.DrugMeasure strength = medArray[i].getStrength();
 				if (strength!=null) {
                                         String dosage = StringUtils.noNull(strength.getAmount())+" "+StringUtils.noNull(strength.getUnitOfMeasure());
 					drug.setDosage(dosage);
-					special = Util.addLine(special, "Strength: ", dosage);
 				}
 
 				special = Util.addLine(special, "Take ", StringUtils.noNull(medArray[i].getDosage()));
@@ -1181,8 +1186,6 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
                                 }
                                  *
                                  */
-
-                                special = Util.addLine(special, "Drug Description: ", medArray[i].getDrugDescription());
 
                                 //annotation
 				CaseManagementNote cmNote = prepareCMNote();
