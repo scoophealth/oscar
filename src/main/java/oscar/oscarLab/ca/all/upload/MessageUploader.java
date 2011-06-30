@@ -208,7 +208,7 @@ public final class MessageUploader {
 			}
 
 			if (dob != null && !dob.equals("")) {
-				String[] dobArray = dob.split("-");
+				String[] dobArray = dob.trim().split("-");
 				dobYear = dobArray[0];
 				dobMonth = dobArray[1];
 				dobDay = dobArray[2];
