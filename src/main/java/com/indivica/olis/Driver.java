@@ -88,6 +88,7 @@ public class Driver {
 				OscarLog logItem = new OscarLog();
 				logItem.setAction("OLIS");
 				logItem.setContent("query");
+				logItem.setData(olisHL7String);
 				
 				logDao.persist(logItem);
 

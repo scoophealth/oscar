@@ -51,7 +51,15 @@
 		<td class="MainTableLeftColumn" valign="top">
 			</td>
 		<td class="MainTableRightColumn" valign="top">
-		
+			<% if (request.getAttribute("success") != null ) {
+				if ((Boolean) request.getAttribute("success")) { %>
+				Successfully added the mapping<br />
+			<% } else { %>
+				Error encountered while adding the mapping<br />
+			<% }
+			}%>
+			
+			<a href="<%=request.getContextPath() %>/hospitalReportManager/hrmAddClassMapping.jsp">+ Add a class mapping</a>
 				<table class="elements" width="100%">
 					<tr bgcolor=<%=deepColor%>>
 						
@@ -60,6 +68,8 @@
 						</th>
 						<th>Class Name</th>
 						<th>Sub-Class Name</th>
+						<th>Mnemonic</th>
+						<th>Description</th>
 						<th>Category</th>
 						
 					</tr>
@@ -78,6 +88,8 @@
 						<td><%=curmapping.get("id")%></td>
 						<td><%=curmapping.get("class")%></td>
 						<td align='center'><%=curmapping.get("sub_class")%></td>
+						<td><%=curmapping.get("mnemonic") %></td>
+						<td><%=curmapping.get("description") %></td>
 						<td><%=((HRMCategory) curmapping.get("category")).getCategoryName() %></td>
 						
 					</tr>

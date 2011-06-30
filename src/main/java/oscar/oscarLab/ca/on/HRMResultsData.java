@@ -29,14 +29,26 @@ public class HRMResultsData {
 	public HRMResultsData() {
 	}
 
-	public List<LabResultData> populateHRMdocumentsResultsData(String providerNo, Integer page, Integer pageSize){
+	public List<LabResultData> populateHRMdocumentsResultsData(String providerNo, Integer page, Integer pageSize, String status){
 		if(providerNo == null || "".equals(providerNo)){
 			providerNo = "%";
 		} else if (providerNo.equalsIgnoreCase("0")) {
 			providerNo = "-1";
 		}
 
-		List<HRMDocumentToProvider> hrmDocResultsProvider = hrmDocumentToProviderDao.findByProviderNoLimit(providerNo, page, pageSize);
+		Integer viewed = 1;
+		Integer signedOff = 0;
+		if (status == null || status.equalsIgnoreCase("N")) {
+			viewed = 0;
+		} else if (status != null && (status.equalsIgnoreCase("A") || status.equalsIgnoreCase("F"))) {
+			signedOff = 1;
+		}
+		
+		if (status != null && status.equalsIgnoreCase("")) {
+			viewed = 2;
+		}
+		
+		List<HRMDocumentToProvider> hrmDocResultsProvider = hrmDocumentToProviderDao.findByProviderNoLimit(providerNo, page, pageSize, viewed, signedOff);
 
 
 		ArrayList<LabResultData> labResults = new ArrayList<LabResultData>();
@@ -54,7 +66,7 @@ public class HRMResultsData {
 			lbData.segmentID = hrmDocument.get(0).getId().toString();
 			lbData.setDateObj(hrmDocument.get(0).getReportDate());
 			lbData.patientName = "Not, Assigned";
-
+			
 			// check if patient is matched
 			List<HRMDocumentToDemographic> hrmDocResultsDemographic = hrmDocumentToDemographicDao.findByHrmDocumentId(hrmDocument.get(0).getId().toString());
 			HRMReport hrmReport = HRMReportParser.parseReport(hrmDocument.get(0).getReportFile());

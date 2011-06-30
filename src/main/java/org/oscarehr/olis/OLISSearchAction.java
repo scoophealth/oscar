@@ -352,7 +352,7 @@ public class OLISSearchAction extends DispatchAction {
 
 				if (blockedInfoConsent != null && blockedInfoConsent.equalsIgnoreCase("Z")) {
 					// Log the consent override
-					OscarLogDao logDao = (OscarLogDao) SpringUtils.getBean("oScarLogDao");
+					OscarLogDao logDao = (OscarLogDao) SpringUtils.getBean("oscarLogDao");
 					OscarLog logItem = new OscarLog();
 					logItem.setAction("OLIS search");
 					logItem.setContent("consent override");
@@ -363,7 +363,7 @@ public class OLISSearchAction extends DispatchAction {
 						logItem.setProviderNo("-1");
 
 					logItem.setIp(request.getRemoteAddr());
-
+					
 					logDao.persist(logItem);
 
 				}
