@@ -67,8 +67,7 @@ public class HRMSubClassDao extends AbstractDao<HRMSubClass> {
 		Query query = entityManager.createQuery(sql);
 		query.setParameter(1, className);
 		query.setParameter(2, subClassName);
-		query.setParameter(3, subClassMnemonic);
-		query.setParameter(4, sendingFacilityId);
+		query.setParameter(3, sendingFacilityId);
 		
 		if (subClassMnemonic != null){
 			query.setParameter(4, subClassMnemonic);

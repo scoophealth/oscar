@@ -77,10 +77,15 @@ ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
 	background-color: red;
 }
 
-#metadataBox {
+#metadataBox, #commentBox {
 	clear: both;
 	border: 1px solid black;
 	margin: 20px;
+}
+
+.documentComment {
+	border: 1px solid black;
+	margin: 10px;
 }
 
 #metadataBox th {
@@ -167,6 +172,31 @@ function makeActiveSubClass(reportId, subClassId) {
 	});
 }
 
+function addComment(reportId) {
+	var comment = jQuery("#commentField_" + reportId + "_hrm").val();
+	jQuery.ajax({
+		type: "POST",
+		url: "<%=request.getContextPath() %>/hospitalReportManager/Modify.do",
+		data: "method=addComment&reportId=" + reportId + "&comment=" + comment,
+		success: function(data) {
+			if (data != null)
+				$("commentstatus" + reportId).innerHTML = data;
+		}
+	});
+}
+
+function deleteComment(commentId, reportId) {
+	jQuery.ajax({
+		type: "POST",
+		url: "<%=request.getContextPath() %>/hospitalReportManager/Modify.do",
+		data: "method=deleteComment&commentId=" + commentId,
+		success: function(data) {
+			if (data != null)
+				$("commentstatus" + reportId).innerHTML = data;
+		}
+	});
+}
+
 
 function doSignOff(reportId, isSign) {
 	var data;
@@ -223,6 +253,13 @@ function revokeSignOffHrm(reportId) {
 	</div>
 
 	<%=hrmReport.getFirstReportTextContent().replaceAll("\n", "<br />") %>
+	<%
+	String confidentialityStatement = (String) request.getAttribute("confidentialityStatement");
+	if (confidentialityStatement != null && confidentialityStatement.trim().length() > 0) {
+	%>
+	<hr />
+	<em><strong>Provider Confidentiality Statement</strong><br /><%=confidentialityStatement %></em>
+	<% } %>
 </div>
 
 <div id="infoBox">
@@ -366,6 +403,25 @@ function revokeSignOffHrm(reportId) {
 	</table>
 </div>
 
+<div id="commentBox">
+Add a comment to this report:<br />
+<textarea rows="10" cols="50" id="commentField_<%=hrmReportId %>_hrm"></textarea><br />
+<input type="button" onClick="addComment('<%=hrmReportId %>')" value="Add Comment" /><span id="commentstatus<%=hrmReportId %>"></span><br /><br />
+
+<%
+List<HRMDocumentComment> documentComments = (List<HRMDocumentComment>) request.getAttribute("hrmDocumentComments");
+
+if (documentComments != null) {
+	%>Displaying <%=documentComments.size() %> comment<%=documentComments.size() != 1 ? "s" : "" %><br />
+	<% for (HRMDocumentComment comment : documentComments) { %>
+		<div class="documentComment"><strong><%=providerDao.getProviderName(comment.getProviderNo()) %> on <%=comment.getCommentTime().toString() %> wrote...</strong><br />
+		<%=comment.getComment() %><br />
+		<a href="#" onClick="deleteComment('<%=comment.getId() %>', '<%=hrmReportId %>'); return false;">(Delete this comment)</a></div>
+	<% }
+}
+%>
+</div>
+
 <div id="metadataBox">
 	<table>
 		<tr>
@@ -390,6 +446,7 @@ function revokeSignOffHrm(reportId) {
 		</tr>
 	</table>
 </div>
+
 
 <script type="text/javascript">
 YAHOO.example.BasicRemote = function() {

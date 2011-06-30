@@ -4,13 +4,14 @@ import com.indivica.olis.parameters.PID51;
 import com.indivica.olis.parameters.PID52;
 import com.indivica.olis.parameters.PID7;
 import com.indivica.olis.parameters.PID8;
+import com.indivica.olis.parameters.ZPD1;
 
 /**
  * Z50 - Identify Patient by Name, Sex, and Date of Birth
  * @author jen
  *
  */
-public class Z50Query implements Query {
+public class Z50Query extends Query {
 
 	private PID52 firstName = new PID52(); // mandatory
 	private PID51 lastName = new PID51(); // mandatory
@@ -56,5 +57,10 @@ public class Z50Query implements Query {
 	public QueryType getQueryType() {
 		return QueryType.Z50;
 	}
+
+	@Override
+    public void setConsentToViewBlockedInformation(ZPD1 consentToViewBlockedInformation) {
+		throw new RuntimeException("Not valid for this type of query.");
+    }
 
 }

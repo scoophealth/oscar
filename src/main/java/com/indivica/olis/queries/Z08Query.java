@@ -2,13 +2,14 @@ package com.indivica.olis.queries;
 
 import com.indivica.olis.parameters.OBR22;
 import com.indivica.olis.parameters.QRD7;
+import com.indivica.olis.parameters.ZPD1;
 
 /**
  * Z08 - Retrieve Test Results Reportable to Cancer Care Ontario
  * @author jen
  *
  */
-public class Z08Query implements Query {
+public class Z08Query extends Query {
 
 	private OBR22 startEndTimestamp = new OBR22(); // mandatory
 	private QRD7 quantityLimitedRequest = null;
@@ -38,5 +39,8 @@ public class Z08Query implements Query {
 	public QueryType getQueryType() {
 		return QueryType.Z08;
 	}
-
+	@Override
+    public void setConsentToViewBlockedInformation(ZPD1 consentToViewBlockedInformation) {
+		throw new RuntimeException("Not valid for this type of query.");
+    }
 }

@@ -10,13 +10,16 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.hospitalReportManager.dao.HRMCategoryDao;
+import org.oscarehr.hospitalReportManager.dao.HRMDocumentCommentDao;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentDao;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentSubClassDao;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentToDemographicDao;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentToProviderDao;
+import org.oscarehr.hospitalReportManager.dao.HRMProviderConfidentialityStatementDao;
 import org.oscarehr.hospitalReportManager.dao.HRMSubClassDao;
 import org.oscarehr.hospitalReportManager.model.HRMCategory;
 import org.oscarehr.hospitalReportManager.model.HRMDocument;
+import org.oscarehr.hospitalReportManager.model.HRMDocumentComment;
 import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 import org.oscarehr.hospitalReportManager.model.HRMDocumentToProvider;
@@ -32,6 +35,8 @@ public class HRMDisplayReportAction extends DispatchAction {
 	HRMDocumentSubClassDao hrmDocumentSubClassDao = (HRMDocumentSubClassDao) SpringUtils.getBean("HRMDocumentSubClassDao");
 	HRMSubClassDao hrmSubClassDao = (HRMSubClassDao) SpringUtils.getBean("HRMSubClassDao");
 	HRMCategoryDao hrmCategoryDao = (HRMCategoryDao) SpringUtils.getBean("HRMCategoryDao");
+	HRMDocumentCommentDao hrmDocumentCommentDao = (HRMDocumentCommentDao) SpringUtils.getBean("HRMDocumentCommentDao");
+	HRMProviderConfidentialityStatementDao hrmProviderConfidentialityStatementDao = (HRMProviderConfidentialityStatementDao) SpringUtils.getBean("HRMProviderConfidentialityStatementDao");
 	
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		String hrmDocumentId = request.getParameter("id");
@@ -63,14 +68,23 @@ public class HRMDisplayReportAction extends DispatchAction {
 				HRMDocumentToProvider thisProviderLink = hrmDocumentToProviderDao.findByHrmDocumentIdAndProviderNo(document.getId().toString(), loggedInProviderNo);
 				request.setAttribute("thisProviderLink", thisProviderLink);
 				
+				if (thisProviderLink != null) {
+					thisProviderLink.setViewed(1);
+					hrmDocumentToProviderDao.merge(thisProviderLink);
+				}
+				
 				HRMCategory category = null;
 				HRMSubClass thisReportSubClassMapping = null;
 				
 				if (report.getFirstReportClass().equalsIgnoreCase("Diagnostic Imaging Report") || report.getFirstReportClass().equalsIgnoreCase("Cardio Respiratory Report")) {
-					// We'll only care about the first one, as long as there is at least one
 					if (subClassList != null && subClassList.size() > 0) {
-						HRMDocumentSubClass firstSubClass = subClassList.get(0);
-						thisReportSubClassMapping = hrmSubClassDao.findApplicableSubClassMapping(report.getFirstReportClass(), firstSubClass.getSubClass(), firstSubClass.getSubClassMnemonic(), report.getSendingFacilityId());
+						HRMDocumentSubClass subClass = null;
+						for (HRMDocumentSubClass sc : subClassList) {
+							if (sc.isActive())
+								subClass = sc;
+						}
+						if (subClass != null)
+							thisReportSubClassMapping = hrmSubClassDao.findApplicableSubClassMapping(report.getFirstReportClass(), subClass.getSubClass(), subClass.getSubClassMnemonic(), report.getSendingFacilityId());
 					}
 				} else {
 					// Medical records report
@@ -89,6 +103,13 @@ public class HRMDisplayReportAction extends DispatchAction {
 				List<HRMDocument> allDocumentsWithRelationship = hrmDocumentDao.findAllDocumentsWithRelationship(document.getId());
 				request.setAttribute("allDocumentsWithRelationship", allDocumentsWithRelationship);
 				
+				
+				List<HRMDocumentComment> documentComments = hrmDocumentCommentDao.getCommentsForDocument(hrmDocumentId);
+				request.setAttribute("hrmDocumentComments", documentComments);
+				
+				
+				String confidentialityStatement = hrmProviderConfidentialityStatementDao.getConfidentialityStatementForProvider(loggedInProviderNo);
+				request.setAttribute("confidentialityStatement", confidentialityStatement);
 				
 			}
 			

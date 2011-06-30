@@ -1,6 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
 <%-- This JSP is the first page you see when you enter 'report by template' --%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
@@ -15,7 +16,7 @@
 
 <%@ page import="org.oscarehr.util.SpringUtils"%>
 <%@ page import="java.util.*"%>
-<%@ page import="org.oscarehr.hospitalReportManager.SFTPConnector" %>
+<%@ page import="org.oscarehr.hospitalReportManager.SFTPConnector, org.oscarehr.hospitalReportManager.dao.HRMProviderConfidentialityStatementDao" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
@@ -155,6 +156,20 @@ br {
         </form>
         </td>
 </tr>
+	<tr>
+		<td class="MainTableLeftColumn" valign="top" width="160px;">&nbsp;</td>
+		<td class="MainTableRightColumn" valign="top">
+		<%
+		HRMProviderConfidentialityStatementDao hrmProviderConfidentialityStatementDao = (HRMProviderConfidentialityStatementDao) SpringUtils.getBean("HRMProviderConfidentialityStatementDao");
+		String statement = hrmProviderConfidentialityStatementDao.getConfidentialityStatementForProvider(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+		%>
+		<form action="<%=request.getContextPath() %>/hospitalReportManager/Statement.do" method="post">
+		Provider Confidentiality Statement:<br />
+		<textarea name="statement"><%=statement %></textarea><br />
+		<input type="submit" name="submit" value="Save Statement" /> <% if (request.getAttribute("statementSuccess") != null && (Boolean) request.getAttribute("statementSuccess")) { %>Success<% } else if (request.getAttribute("statementSuccess") != null && !((Boolean) request.getAttribute("statementSuccess")))  { %>Error<% } %>
+		</form>
+		</td>
+	</tr>
 	<tr>
 		<td class="MainTableBottomRowLeftColumn">&nbsp;</td>
 
