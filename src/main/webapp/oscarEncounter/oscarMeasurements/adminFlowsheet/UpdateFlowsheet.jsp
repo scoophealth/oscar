@@ -445,7 +445,7 @@ div.recommendations li{
                            
                             <ul style="list-style-type: none;" >
                                
-                               <li><select name="type<%=targetCount%>c1"> 
+                               <li><select name="targettype<%=targetCount%>c1"> 
                                        <option value="-1">Not Set</option>
                                         <option value="getDataAsDouble"       >Number Value</option>
                                         <option value="isMale"              > Is Male </option>
@@ -454,8 +454,8 @@ div.recommendations li{
                                         <option value="isDataEqualTo"       >  String </option>
                                    </select>
                                    
-                                   Param: <input type="text" name="param<%=targetCount%>c1" value="" />
-                                   Value: <input type="text" name="value<%=targetCount%>c1" value="" />
+                                   Param: <input type="text" name="targetparam<%=targetCount%>c1" value="" />
+                                   Value: <input type="text" name="targetvalue<%=targetCount%>c1" value="" />
                                </li>
                                
                                
