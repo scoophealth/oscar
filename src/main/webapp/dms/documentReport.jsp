@@ -290,7 +290,7 @@ function popup1(height, width, url, windowName){
 			<tr>
 				<td><bean:message key="dms.documentReport.msgDocuments"/></td>
 				<td>&nbsp;</td>
-				<td style="text-align: right;"><oscar:help keywords="2.6.1" key="app.top1"/>> | <a
+				<td style="text-align: right;"><oscar:help keywords="2.6.1" key="app.top1" /> | <a
 					href="javascript: popupStart(300, 400, 'About.jsp')"><bean:message key="global.about"/></a> | <a
 					href="javascript: popupStart(300, 400, 'License.jsp')"><bean:message key="global.license"/></a>
 				</td>
