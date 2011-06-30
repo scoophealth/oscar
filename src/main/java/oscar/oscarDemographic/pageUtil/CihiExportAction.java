@@ -930,7 +930,7 @@ public class CihiExportAction extends DispatchAction {
     	options.put( XmlOptions.SAVE_AGGRESSIVE_NAMESPACES );
 
         HashMap<String,String> suggestedPrefix = new HashMap<String,String>();
-        suggestedPrefix.put("cds_dt_cihi","cdsd");
+        suggestedPrefix.put("cds_dt","cdsd");
         options.setSaveSuggestedPrefixes(suggestedPrefix);
         
     	options.setSaveOuter();

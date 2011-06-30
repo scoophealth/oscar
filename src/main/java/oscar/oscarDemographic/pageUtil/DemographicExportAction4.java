@@ -69,7 +69,6 @@ import oscar.dms.EDocUtil;
 import oscar.oscarClinic.ClinicData;
 import oscar.oscarDemographic.data.DemographicData;
 import oscar.oscarDemographic.data.DemographicExt;
-import oscar.oscarDemographic.data.DemographicRelationship;
 import oscar.oscarEncounter.oscarMeasurements.data.ImportExportMeasurements;
 import oscar.oscarEncounter.oscarMeasurements.data.LabMeasurements;
 import oscar.oscarEncounter.oscarMeasurements.data.Measurements;
@@ -107,7 +106,9 @@ import java.util.HashMap;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.DemographicArchiveDao;
+import org.oscarehr.common.dao.DemographicContactDao;
 import org.oscarehr.common.model.DemographicArchive;
+import org.oscarehr.common.model.DemographicContact;
 import org.oscarehr.hospitalReportManager.HRMReport;
 import org.oscarehr.hospitalReportManager.HRMReportParser;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentDao;
@@ -457,12 +458,18 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             }
             demoExt = null;
 
-            DemographicRelationship demoRel = new DemographicRelationship();
-            ArrayList<HashMap> demoR = demoRel.getDemographicRelationships(demoNo);
-            for (int j=0; j<demoR.size(); j++) {
-                HashMap<String,String> r = new HashMap<String,String>();
-                r.putAll(demoR.get(j));
-                data = r.get("demographic_no");
+            DemographicContactDao contactDao = (DemographicContactDao) SpringUtils.getBean("demographicContactDao");
+            List<DemographicContact> demoContacts = contactDao.findByDemographicNo(Integer.valueOf(demoNo));
+
+
+//            DemographicRelationship demoRel = new DemographicRelationship();
+//            ArrayList<HashMap> demoR = demoRel.getDemographicRelationships(demoNo);
+            for (int j=0; j<demoContacts.size(); j++) {
+//                HashMap<String,String> r = new HashMap<String,String>();
+//                r.putAll(demoR.get(j));
+//                data = r.get("demographic_no");
+                DemographicContact demoContact = demoContacts.get(j);
+                data = demoContact.getContactId();
                 if (StringUtils.filled(data)) {
                     DemographicData.Demographic relDemo = d.getDemographic(data);
                     HashMap<String,String> relDemoExt = new HashMap<String,String>();
@@ -477,14 +484,14 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         err.add("Error! No Last Name for contact ("+j+") for Patient "+demoNo);
                     }
 
-                    String ec = r.get("emergency_contact");
-                    String sdm = r.get("sub_decision_maker");
-                    String rel = r.get("relation");
+                    String ec = demoContact.getEc();
+                    String sdm = demoContact.getSdm();
+                    String rel = demoContact.getRole();
 
-                    if (ec.equals("1")) {
+                    if (ec.equals("true")) {
                         contact.addNewContactPurpose().setPurposeAsEnum(cdsDt.PurposeEnumOrPlainText.PurposeAsEnum.EC);
                     }
-                    if (sdm.equals("1")) {
+                    if (sdm.equals("true")) {
                         contact.addNewContactPurpose().setPurposeAsEnum(cdsDt.PurposeEnumOrPlainText.PurposeAsEnum.SDM);
                     }
                     if (StringUtils.filled(rel)) {
@@ -497,9 +504,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         else if (rel.equals("Guarantor")) contactPurpose.setPurposeAsEnum(cdsDt.PurposeEnumOrPlainText.PurposeAsEnum.GT);
                         else contactPurpose.setPurposeAsPlainText(rel);
                     }
-
                     if (StringUtils.filled(relDemo.getEmail())) contact.setEmailAddress(relDemo.getEmail());
-                    if (StringUtils.filled(r.get("notes"))) contact.setNote(r.get("notes"));
 
                     phoneNo = Util.onlyNum(relDemo.getPhone());
                     if (StringUtils.filled(phoneNo) && phoneNo.length()>=7) {

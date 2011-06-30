@@ -85,7 +85,6 @@ import oscar.appt.ApptStatusData;
 import oscar.dms.EDocUtil;
 import oscar.oscarDemographic.data.DemographicData;
 import oscar.oscarDemographic.data.DemographicExt;
-import oscar.oscarDemographic.data.DemographicRelationship;
 import oscar.oscarDemographic.data.DemographicData.DemographicAddResult;
 import oscar.oscarEncounter.data.EctProgram;
 import oscar.oscarEncounter.oscarMeasurements.data.ImportExportMeasurements;
@@ -116,6 +115,8 @@ import cds.PersonalHistoryDocument.PersonalHistory;
 import cds.ProblemListDocument.ProblemList;
 import cds.ReportsReceivedDocument.ReportsReceived;
 import cds.RiskFactorsDocument.RiskFactors;
+import org.oscarehr.common.dao.DemographicContactDao;
+import org.oscarehr.common.model.DemographicContact;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentDao;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentSubClassDao;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentToDemographicDao;
@@ -541,7 +542,12 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 			if (!homeExt.equals("")) dExt.addKey(primaryPhysician, demographicNo, "hPhoneExt", homeExt);
 			if (!cellPhone.equals("")) dExt.addKey(primaryPhysician, demographicNo, "demo_cell", cellPhone);
 			if(courseId>0) dExt.addKey(primaryPhysician, demographicNo, "course", String.valueOf(courseId));
-			
+
+
+                        //Demographic Contacts
+                        DemographicContactDao contactDao = (DemographicContactDao) SpringUtils.getBean("demographicContactDao");
+                        DemographicContact demoContact = new DemographicContact();
+
 			Demographics.Contact[] contt = demo.getContactArray();
 			for (int i=0; i<contt.length; i++) {
 				String[] contactName = getPersonName(contt[i].getName());
@@ -575,17 +581,15 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 					}
 				}
 
-				boolean sdm = false;
-				boolean emc = false;
-				String rel = null;
+				String sdm = null, emc = null, rel = null;
                                 cdsDt.PurposeEnumOrPlainText[] contactPurposes = contt[i].getContactPurposeArray();
-                                if (contactPurposes.length>0) {
+                                for (cdsDt.PurposeEnumOrPlainText contactPurpose : contactPurposes) {
                                     String cPurpose = null;
-                                    if (contactPurposes[0].getPurposeAsEnum()!=null) cPurpose = contactPurposes[0].getPurposeAsEnum().toString();
-                                    else cPurpose = contactPurposes[0].getPurposeAsPlainText();
+                                    if (contactPurpose.getPurposeAsEnum()!=null) cPurpose = contactPurpose.getPurposeAsEnum().toString();
+                                    else cPurpose = contactPurpose.getPurposeAsPlainText();
 
-                                    if (cPurpose.equals("EC")) emc = true;
-                                    else if (cPurpose.equals("SDM")) sdm = true;
+                                    if (cPurpose.equals("EC")) emc = "true";
+                                    else if (cPurpose.equals("SDM")) sdm = "true";
                                     else if (cPurpose.equals("NK")) rel = "Next of Kin";
                                     else if (cPurpose.equals("AS")) rel = "Administrative Staff";
                                     else if (cPurpose.equals("CG")) rel = "Care Giver";
@@ -611,9 +615,19 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 					if (!cellPhone.equals("")) dExt.addKey("", cDemoNo, "demo_cell", cellPhone);
 				}
 				if (StringUtils.filled(cDemoNo)) {
-					DemographicRelationship demoRel = new DemographicRelationship();
-					demoRel.addDemographicRelationship(demographicNo, cDemoNo, rel, sdm, emc, ""/*notes*/, primaryPhysician, null);
-					err_note.add("Added relationship with patient "+cPatient+" (Demo no="+cDemoNo+")");
+                                    demoContact.setCreated(new Date());
+                                    demoContact.setUpdateDate(new Date());
+                                    demoContact.setDemographicNo(Integer.valueOf(demographicNo));
+                                    demoContact.setContactId(cDemoNo);
+                                    demoContact.setEc(emc);
+                                    demoContact.setSdm(sdm);
+                                    demoContact.setRole(rel);
+                                    demoContact.setCategory("personal");
+                                    contactDao.merge(demoContact);
+
+//					DemographicRelationship demoRel = new DemographicRelationship();
+//					demoRel.addDemographicRelationship(demographicNo, cDemoNo, rel, sdm, emc, ""/*notes*/, primaryPhysician, null);
+//					err_note.add("Added relationship with patient "+cPatient+" (Demo no="+cDemoNo+")");
 				}
 			}
 
