@@ -90,7 +90,7 @@ List<String> abnormals=(List<String>)request.getAttribute("abnormals");
                             </td>
                             
                             <td align="right" valign="center" width="30%">
-                                <a href="javascript:popupStart(300,400,'../oscarEncounter/Help.jsp')" style="color: #FFFFFF;"><bean:message key="global.help"/></a>
+                                <oscar:help keywords="inbox queue" key="app.top1"/>
                                 | <a href="javascript:popupStart(300,400,'../oscarEncounter/About.jsp')" style="color: #FFFFFF;" ><bean:message key="global.about"/></a>
                             </td>
                         </tr>
