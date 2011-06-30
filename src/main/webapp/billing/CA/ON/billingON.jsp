@@ -988,7 +988,7 @@ function toggleDiv(selectedBillForm, selectedBillFormName)
 		    <tr>
 			<td><b><font color="#FFFFFF">Ontario Billing</font> </b></td>
 			<td align="right">
-			    <a href=# onclick="popupPage(460,680,'billingONfavourite.jsp'); return false;">
+			    <oscar:help keywords="1.4 Billing" key="app.top1" style="color: #FFFFFF" />  <font color="#FFFFFF"> |  </font> <a href=# onclick="popupPage(460,680,'billingONfavourite.jsp'); return false;">
 				<font color="#FFFFFF">Edit</font>
 			    </a> 
 			    <select name="cutlist" id="cutlist" onchange="changeCut(this)">
