@@ -85,7 +85,7 @@ public class ConcatPDF {
      * (This was an example known as PdfCopy.java)
      * @param args the command line arguments
      */
-    public static void concat(ArrayList alist,OutputStream out) {
+    public static void concat(List<String> alist,OutputStream out) {
         
         try {
             int pageOffset = 0;
