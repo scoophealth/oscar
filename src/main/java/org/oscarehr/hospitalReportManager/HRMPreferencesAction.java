@@ -25,39 +25,36 @@ public class HRMPreferencesAction extends DispatchAction  {
 		 
 		 	String userName = request.getParameter("userName");
 	     	String location = request.getParameter("location");
-	     	String privateKey = request.getParameter("privateKey");
-	     	String decryptionKey = request.getParameter("decryptionKey");
 	     	String interval = request.getParameter("interval");
 	     	
 	     	
 	     	UserPropertyDAO userPropertyDao = (UserPropertyDAO) SpringUtils.getBean("UserPropertyDAO");
 	     	
 	     	try{
-	     		UserProperty prop = new UserProperty();
+	     		UserProperty prop;
+	     		
+	     		if ((prop = userPropertyDao.getProp("hrm_username")) == null) {
+	     			prop = new UserProperty();
+	     		}
 	     		prop.setName("hrm_username");
 	     		prop.setValue(userName);
 	     		userPropertyDao.saveProp(prop);
 	     		
-	     		
+	     		if ((prop = userPropertyDao.getProp("hrm_location")) == null) {
+	     			prop = new UserProperty();
+	     		}
 	     		prop.setName("hrm_location");
 	     		prop.setValue(location);
 	     		userPropertyDao.saveProp(prop);
 	     		
-	     		prop.setName("hrm_privateKey");
-	     		prop.setValue(privateKey);
-	     		userPropertyDao.saveProp(prop);
-	     		
-	     		prop.setName("hrm_decryptionKey");
-	     		prop.setValue(decryptionKey);
-	     		userPropertyDao.saveProp(prop);
-	     		
+	     		if ((prop = userPropertyDao.getProp("hrm_interval")) == null) {
+	     			prop = new UserProperty();
+	     		}
 	     		prop.setName("hrm_interval");
 	     		prop.setValue(interval);
+	     		userPropertyDao.saveProp(prop);
 	     		
-	     		
-	     		SFTPConnector.setDownloadsDirectory(location);
-	     		SFTPConnector.setOMD_keyLocation(privateKey);
-	     		SFTPConnector.setDecryptionKey(decryptionKey);
+	     		//SFTPConnector.setDownloadsDirectory(location);
 	     		
 	     		
 	     		

@@ -2306,6 +2306,9 @@
 		<action path="/hospitalReportManager/Mapping" type="org.oscarehr.hospitalReportManager.HRMMappingAction" scope="request" validate="false">
 			<forward name="success" path="/hospitalReportManager/hrmShowMapping.jsp" />
 		</action>
+		<action path="/hospitalReportManager/HRMPreferences" type="org.oscarehr.hospitalReportManager.HRMPreferencesAction" scope="request" validate="false">
+			<forward name="success" path="/hospitalReportManager/hrmPreferences.jsp" />
+		</action>
 
 	</action-mappings>
 	<controller processorClass="org.apache.struts.tiles.TilesRequestProcessor" maxFileSize="20M" />

@@ -21,8 +21,13 @@ public class HRMMappingAction extends DispatchAction {
 		HRMSubClassDao hrmSubClassDao = (HRMSubClassDao) SpringUtils.getBean("HRMSubClassDao");
 		
 		try {
-			String className = request.getParameter("class");
-			String subClass = request.getParameter("subClass");
+			if (request.getParameter("deleteMappingId") != null && request.getParameter("deleteMappingId").trim().length() > 0) {
+				hrmSubClassDao.remove(Integer.parseInt(request.getParameter("deleteMappingId")));
+				return mapping.findForward("success");
+			}
+			
+			String className = request.getParameter("class"); 
+			String subClass = request.getParameter("subclass");
 			String mnemonic = request.getParameter("mnemonic");
 			String description = request.getParameter("description");
 			String sendingFacilityId = request.getParameter("sendingFacilityId");

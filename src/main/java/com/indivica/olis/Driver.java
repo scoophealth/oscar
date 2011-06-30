@@ -35,6 +35,7 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.encoders.Base64;
 import org.oscarehr.common.dao.OscarLogDao;
 import org.oscarehr.common.model.OscarLog;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.xml.sax.InputSource;
@@ -89,6 +90,9 @@ public class Driver {
 				logItem.setAction("OLIS");
 				logItem.setContent("query");
 				logItem.setData(olisHL7String);
+
+				if (LoggedInInfo.loggedInInfo.get().loggedInProvider != null)
+					logItem.setProviderNo(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
 				
 				logDao.persist(logItem);
 
