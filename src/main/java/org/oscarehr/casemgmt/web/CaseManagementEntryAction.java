@@ -22,6 +22,7 @@
 
 package org.oscarehr.casemgmt.web;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -37,6 +38,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -109,7 +111,13 @@ import oscar.log.LogAction;
 import oscar.log.LogConst;
 import oscar.oscarBilling.ca.on.pageUtil.BillingSavePrep;
 import oscar.oscarEncounter.pageUtil.EctSessionBean;
+import oscar.oscarLab.ca.all.pageUtil.LabPDFCreator;
+import oscar.oscarLab.ca.all.parsers.Factory;
+import oscar.oscarLab.ca.all.parsers.MessageHandler;
+import oscar.oscarLab.ca.on.CommonLabResultData;
+import oscar.oscarLab.ca.on.LabResultData;
 import oscar.oscarSurveillance.SurveillanceMaster;
+import oscar.util.ConcatPDF;
 import oscar.util.UtilDateUtilities;
 
 import com.lowagie.text.DocumentException;
@@ -2436,7 +2444,12 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			}
 		}
 		
-		CaseManagementPrintPdf printer = new CaseManagementPrintPdf(request, os);
+		//Create new file to save form to
+        String path = OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
+        String fileName = path + "EncounterForm-"+UtilDateUtilities.getToday("yyyy-MM-dd.hh.mm.ss")+".pdf";
+        FileOutputStream out = new FileOutputStream(fileName);
+        
+		CaseManagementPrintPdf printer = new CaseManagementPrintPdf(request, out);
 		printer.printDocHeaderFooter();
 		printer.printCPP(cpp);
 		printer.printRx(demoNo, othermeds);
@@ -2455,11 +2468,39 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 				}
 			}
 		}
-		
-
-		
-
 		printer.finish();
+		
+		List<String> pdfDocs = new ArrayList<String>();
+		pdfDocs.add(fileName);
+		
+		
+		if (request.getParameter("printLabs")!=null && request.getParameter("printLabs").equalsIgnoreCase("true")) {
+			//get the labs which fall into the date range which are attached to this patient
+			CommonLabResultData comLab = new CommonLabResultData();
+			ArrayList<LabResultData> labs = comLab.populateLabResultsData("", demono, "", "", "", "U");
+			LinkedHashMap<String,LabResultData> accessionMap = new LinkedHashMap<String,LabResultData>();
+			for(int i=0;i<labs.size();i++) {
+				LabResultData result = labs.get(i);
+				if (result.accessionNumber == null || result.accessionNumber.equals("")) {
+					accessionMap.put("noAccessionNum" + i + result.labType, result);
+				} else {
+					if (!accessionMap.containsKey(result.accessionNumber + result.labType)) accessionMap.put(result.accessionNumber + result.labType, result);
+				}
+			}			
+			for(LabResultData result:accessionMap.values()) {
+				Date d = result.getDateObj();
+				//TODO:filter out the ones which aren't in our date range if there's a date range????
+				String segmentId = result.segmentID;
+				MessageHandler handler = Factory.getHandler(segmentId);				 
+				String fileName2 = OscarProperties.getInstance().getProperty("DOCUMENT_DIR")+"//"+handler.getPatientName().replaceAll("\\s", "_")+"_"+handler.getMsgDate()+"_LabReport.pdf";	                
+				OutputStream os2 = new FileOutputStream(fileName2);
+				LabPDFCreator pdfCreator = new LabPDFCreator(os2,segmentId,LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+				pdfCreator.printPdf();
+				pdfDocs.add(fileName2);
+			}
+			
+		}	
+		ConcatPDF.concat(pdfDocs,os);
 	}
 
 	private CaseManagementNote getFakedNote(CachedDemographicNote remoteNote) {

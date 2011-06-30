@@ -676,6 +676,12 @@ function doscroll(){
 								<img style="cursor: pointer;" title="<bean:message key="oscarEncounter.print.title"/>" id='imgPrintRx' alt="<bean:message key="oscarEncounter.togglePrintRx.title"/>" onclick="return printInfo(this, 'printRx');" src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png'>&nbsp;<bean:message key="oscarEncounter.Rx.title" />
               				</td>
               			</tr>
+              			<tr>
+              				<td></td>
+              				<td>
+								<img style="cursor: pointer;" title="<bean:message key="oscarEncounter.print.title"/>" id='imgPrintLabs' alt="<bean:message key="oscarEncounter.togglePrintLabs.title"/>" onclick="return printInfo(this, 'printLabs');" src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png'>&nbsp;<bean:message key="oscarEncounter.Labs.title" />
+              				</td>
+              			</tr>
               			<!--  extension point -->              			
               			<tr id="printDateRow">
               				<td><input type="radio" id="printopDates" name="printop" value="dates"><bean:message key="oscarEncounter.Index.PrintDates"/>&nbsp;<a style="font-variant:small-caps;" href="#" onclick="return printToday(event);"><bean:message key="oscarEncounter.Index.PrintToday"/></a></td>

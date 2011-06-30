@@ -2714,7 +2714,7 @@ function autoCompleteShowMenuCPP(element, update) {
         else if( $("printopAll").checked )
             printAll();
 
-        if( $F("notes2print").length == 0 && $F("printCPP") == "false" && $F("printRx") == "false" ) {
+        if( $F("notes2print").length == 0 && $F("printCPP") == "false" && $F("printRx") == "false" && $F("printLabs") == "false" ) {
             alert(nothing2PrintMsg);
             return false;
         }
