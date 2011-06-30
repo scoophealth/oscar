@@ -1703,6 +1703,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		for (CaseManagementNoteExt cme : lcme) {
 		    if (cme.getNoteId().equals(noteId) && cme.getKeyVal().equals(key) ) {		
 				String val = null;
+
 				if (key.contains(" Date")) {
 				    val = oscar.util.UtilDateUtilities.DateToString(cme.getDateValue(),"yyyy-MM-dd");
 				} else {
@@ -1713,4 +1714,20 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		}
 		return "";
 	}
+
+        static private String readPartialDate(CaseManagementNoteExt cme) {
+            String type = cme.getValue();
+            String val = null;
+
+            if (StringUtils.isNotEmpty(type)) {
+                if (type.equals(CaseManagementNoteExt.YEARONLY))
+                    val = oscar.util.UtilDateUtilities.DateToString(cme.getDateValue(),"yyyy");
+                else if (type.equals(CaseManagementNoteExt.YEARMONTH))
+                    val = oscar.util.UtilDateUtilities.DateToString(cme.getDateValue(),"yyyy-MM");
+                else val = oscar.util.UtilDateUtilities.DateToString(cme.getDateValue(),"yyyy-MM-dd");
+            } else {
+                val = oscar.util.UtilDateUtilities.DateToString(cme.getDateValue(),"yyyy-MM-dd");
+            }
+            return val;
+        }
 }

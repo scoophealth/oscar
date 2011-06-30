@@ -46,9 +46,12 @@
 <body>
 <h3 style="text-align: center;"><%=display%> Annotation Revision History</h3>
 
-<% for (CaseManagementNote cmn : lcmn) { %>
+<% for (CaseManagementNote cmn : lcmn) { 
+      String showNote = cmn.getNote();
+      if (showNote.startsWith("imported.cms4.2011.06")) showNote = showNote.substring("imported.cms4.2011.06".length());
+%>
     <div style="width: 99%; background-color: #EFEFEF; font-size: 12px; border-left: thin groove #000000; border-bottom: thin groove #000000; border-right: thin groove #000000;">
-	<%=cmn.getNote()%>
+	<%=showNote%>
 	<div style="color: #0000FF;">
 	    Documentation Date: <%=cmn.getCreate_date()%><br>
 	    Saved by <%=cmn.getProviderName()%>

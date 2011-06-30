@@ -844,7 +844,7 @@ try
 					 		String atbname = "anno" + String.valueOf(new Date().getTime());
 					 		String addr = request.getContextPath() + "/annotation/annotation.jsp?atbname=" + atbname + "&table_id=" + String.valueOf(note.getNoteId()) + "&display=EChartNote&demo=" + demographicNo;
 						%>
-							<input id="anno<%=note.getNoteId()%>" height="10px;" width="10px" type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/annotation.png"/>" title='<bean:message key="oscarEncounter.Index.btnAnnotation"/>' style='float: right; margin-right: 5px; margin-bottom: 3px;' onclick="window.open('<%=addr%>','anwin','width=400,height=250');$('annotation_attribname').value='<%=atbname%>'; return false;">
+							<input id="anno<%=note.getNoteId()%>" height="10px;" width="10px" type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/annotation.png"/>" title='<bean:message key="oscarEncounter.Index.btnAnnotation"/>' style='float: right; margin-right: 5px; margin-bottom: 3px;' onclick="window.open('<%=addr%>','anwin','width=400,height=500');$('annotation_attribname').value='<%=atbname%>'; return false;">
 						<%} %>
 							<%-- render the note contents here --%>
 			  				<div id="txt<%=note.getNoteId()%>" style="<%=(note.isDocument()||note.isCpp()||note.isEformData()||note.isEncounterForm())?(bgColour+";color:white;font-size:9px"):""%>">

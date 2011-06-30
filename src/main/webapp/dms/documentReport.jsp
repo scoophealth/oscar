@@ -489,7 +489,7 @@ function popup1(height, width, url, windowName){
 			    			}
 			    			
 			    			if(module.equals("demographic")){%>
-						    	<a href="#" title="Annotation" onclick="window.open('../annotation/annotation.jsp?display=<%=annotation_display%>&table_id=<%=curdoc.getDocId()%>&demo=<%=moduleid%>','anwin','width=400,height=250');">
+						    	<a href="#" title="Annotation" onclick="window.open('../annotation/annotation.jsp?display=<%=annotation_display%>&table_id=<%=curdoc.getDocId()%>&demo=<%=moduleid%>','anwin','width=400,height=500');">
 						      	<img src="../images/notes.gif" border="0">
 						    	</a>
 	                         <%

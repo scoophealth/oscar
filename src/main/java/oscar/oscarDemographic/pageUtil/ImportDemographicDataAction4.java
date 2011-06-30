@@ -622,20 +622,20 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
                             cmNote.setIssues(scmi);
 
                             //main field
-                            String socialHist = pHist[i].getCategorySummaryLine();
-                            String residual = getResidual(pHist[i].getResidualInfo());
-                            if (StringUtils.empty(socialHist) && StringUtils.empty(residual)) continue;
-
-                            if (StringUtils.empty(socialHist)) socialHist = "Imported Personal History";
+                            String socialHist = "Imported Personal History";
+                            String summary = pHist[i].getCategorySummaryLine();
+                            summary = Util.addLine(summary, getResidual(pHist[i].getResidualInfo()));
+                            if (StringUtils.empty(summary)) continue;
+                            
                             cmNote.setNote(socialHist);
                             caseManagementManager.saveNoteSimple(cmNote);
-                            if (StringUtils.filled(residual)) {
-                                //annotation
-                                Long hostNoteId = cmNote.getId();
-                                cmNote = prepareCMNote();
-                                cmNote.setNote(residual);
-                                saveLinkNote(hostNoteId, cmNote);
-                            }
+
+                            //to dumpsite
+                            summary = Util.addLine("imported.cms4.2011.06", summary);
+                            Long hostNoteId = cmNote.getId();
+                            cmNote = prepareCMNote();
+                            cmNote.setNote(summary);
+                            saveLinkNote(hostNoteId, cmNote);
 			}
 
 			//FAMILY HISTORY
@@ -662,15 +662,21 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 				Long hostNoteId = cmNote.getId();
 				cmNote = prepareCMNote();
 				String note = StringUtils.noNull(fHist[i].getNotes());
+                                cmNote.setNote(note);
+				saveLinkNote(hostNoteId, cmNote);
+
+                                //to dumpsite
+                                String dump = "imported.cms4.2011.06";
                                 String summary = fHist[i].getCategorySummaryLine();
 				if (StringUtils.empty(summary)) {
 					err_summ.add("No Summary for Family History ("+(i+1)+")");
 				}
                                 String diagCode = isICD9(fHist[i].getDiagnosisProcedureCode()) ? null : getCode(fHist[i].getDiagnosisProcedureCode(),"Diagnosis/Procedure");
-                                note = Util.addLine(note, summary);
-                                note = Util.addLine(note, diagCode);
-				note = Util.addLine(note, getResidual(fHist[i].getResidualInfo()));
-				cmNote.setNote(note);
+                                dump = Util.addLine(dump, summary);
+                                dump = Util.addLine(dump, diagCode);
+				dump = Util.addLine(dump, getResidual(fHist[i].getResidualInfo()));
+                                cmNote = prepareCMNote();
+				cmNote.setNote(dump);
 				saveLinkNote(hostNoteId, cmNote);
 
                                 //extra fields
@@ -727,15 +733,22 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
                                 Long hostNoteId = cmNote.getId();
 				cmNote = prepareCMNote();
                                 String note = pHealth[i].getNotes();
+				cmNote.setNote(note);
+				saveLinkNote(hostNoteId, cmNote);
+
+
+                                //to dumpsite
+                                String dump = "imported.cms4.2011.06";
 				String summary = pHealth[i].getCategorySummaryLine();
 				if (StringUtils.empty(summary)) {
 					err_summ.add("No Summary for Past Health ("+(i+1)+")");
 				}
                                 String diagCode = isICD9(pHealth[i].getDiagnosisProcedureCode()) ? null : getCode(pHealth[i].getDiagnosisProcedureCode(),"Diagnosis/Procedure");
-                                note = Util.addLine(note, summary);
-                                note = Util.addLine(note, diagCode);
-				note = Util.addLine(note, getResidual(pHealth[i].getResidualInfo()));
-				cmNote.setNote(note);
+                                dump = Util.addLine(dump, summary);
+                                dump = Util.addLine(dump, diagCode);
+				dump = Util.addLine(dump, getResidual(pHealth[i].getResidualInfo()));
+				cmNote = prepareCMNote();
+				cmNote.setNote(dump);
 				saveLinkNote(hostNoteId, cmNote);
 
                                 //extra fields
@@ -787,15 +800,22 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 				Long hostNoteId = cmNote.getId();
 				cmNote = prepareCMNote();
                                 String note = probList[i].getNotes();
-				String summary = probList[i].getCategorySummaryLine();
+				cmNote.setNote(note);
+				saveLinkNote(hostNoteId, cmNote);
+
+
+				//to dumpsite
+                                String dump = "imported.cms4.2011.06";
+                                String summary = probList[i].getCategorySummaryLine();
 				if (StringUtils.empty(summary)) {
 					err_summ.add("No Summary for Problem List ("+(i+1)+")");
 				}
                                 String diagCode = isICD9(probList[i].getDiagnosisCode()) ? null : getCode(probList[i].getDiagnosisCode(),"Diagnosis");
-                                note = Util.addLine(note, summary);
-                                note = Util.addLine(note, diagCode);
-				note = Util.addLine(note, getResidual(probList[i].getResidualInfo()));
-				cmNote.setNote(note);
+                                dump = Util.addLine(dump, summary);
+                                dump = Util.addLine(dump, diagCode);
+				dump = Util.addLine(dump, getResidual(probList[i].getResidualInfo()));
+				cmNote = prepareCMNote();
+				cmNote.setNote(dump);
 				saveLinkNote(hostNoteId, cmNote);
 
                                 //extra fields
@@ -848,13 +868,19 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 				Long hostNoteId = cmNote.getId();
 				cmNote = prepareCMNote();
 				String note = rFactors[i].getNotes();
-				String summary = rFactors[i].getCategorySummaryLine();
+				cmNote.setNote(note);
+				saveLinkNote(hostNoteId, cmNote);
+
+				//to dumpsite
+                                String dump = "imported.cms4.2011.06";
+                                String summary = rFactors[i].getCategorySummaryLine();
 				if (StringUtils.empty(summary)) {
 					err_summ.add("No Summary for Risk Factors ("+(i+1)+")");
 				}
-                                note = Util.addLine(note, summary);
-				note = Util.addLine(note, getResidual(rFactors[i].getResidualInfo()));
-				cmNote.setNote(note);
+                                dump = Util.addLine(dump, summary);
+				dump = Util.addLine(dump, getResidual(rFactors[i].getResidualInfo()));
+				cmNote = prepareCMNote();
+				cmNote.setNote(dump);
 				saveLinkNote(hostNoteId, cmNote);
 
                                 //extra fields
@@ -908,13 +934,18 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 				Long hostNoteId = cmNote.getId();
 				cmNote = prepareCMNote();
 				String note = alerts[i].getNotes();
-				String summary = alerts[i].getCategorySummaryLine();
+				cmNote.setNote(note);
+				saveLinkNote(hostNoteId, cmNote);
+
+				//to dumpsite
+                                String dump = "imported.cms4.2011.06";
+                                String summary = alerts[i].getCategorySummaryLine();
 				if (StringUtils.empty(summary)) {
 					err_summ.add("No Summary for Alerts & Special Needs ("+(i+1)+")");
 				}
-                                note = Util.addLine(note, summary);
-				note = Util.addLine(note, getResidual(alerts[i].getResidualInfo()));
-				cmNote.setNote(note);
+                                dump = Util.addLine(dump, summary);
+				dump = Util.addLine(dump, getResidual(alerts[i].getResidualInfo()));
+				cmNote.setNote(dump);
 				saveLinkNote(hostNoteId, cmNote);
 
                                 //extra fields
