@@ -199,7 +199,7 @@
             <p>&nbsp;</p>
             <p>
                 Extra note from import:<br>
-                <textarea rows="10" readonly="readonly"><%=dump%></textarea>
+                <textarea rows="10" name="dump" readonly="readonly"><%=dump%></textarea>
             </p>
 	<% if (rev>0) { %>
             <div class="revision" style="float: right;">
