@@ -283,6 +283,8 @@ public class HRMReportParser {
 		if (report.getFirstReportClass().equalsIgnoreCase("Diagnostic Imaging Report") || report.getFirstReportClass().equalsIgnoreCase("Cardio Respiratory Report")) {
 			List<List<Object>> subClassList = report.getAccompanyingSubclassList();
 
+			boolean firstClassLinked = false;
+			
 			for (List<Object> subClass : subClassList) {
 				HRMDocumentSubClass newSubClass = new HRMDocumentSubClass();
 
@@ -291,6 +293,11 @@ public class HRMReportParser {
 				newSubClass.setSubClassDescription((String) subClass.get(2));
 				newSubClass.setSubClassDateTime((Date) subClass.get(3));
 
+				if (!firstClassLinked) {
+					newSubClass.setActive(true);
+					firstClassLinked = true;
+				}
+				
 				newSubClass.setHrmDocumentId(reportId);
 
 				hrmDocumentSubClassDao.merge(newSubClass);
