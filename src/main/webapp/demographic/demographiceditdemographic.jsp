@@ -1405,6 +1405,11 @@ if(oscarVariables.getProperty("demographicExt") != null) {
 										<option value="">--</option>
 									    <option value="English" <%=spokenLang.equals("English")?"selected":""%> ><bean:message key="demographic.demographiceditdemographic.msgEnglish"/></option>
 									    <option value="French" <%=spokenLang.equals("French")?"selected":""%> ><bean:message key="demographic.demographiceditdemographic.msgFrench"/></option>
+                                                                            <option value="Chinese" <%=spokenLang.equals("Chinese")?"selected":""%> >Chinese</option>
+                                                                            <option value="Italian" <%=spokenLang.equals("Italian")?"selected":""%> >Italian</option>
+                                                                            <option value="Japanese" <%=spokenLang.equals("Japanese")?"selected":""%> >Japanese</option>
+                                                                            <option value="Korean" <%=spokenLang.equals("Korean")?"selected":""%> >Korean</option>
+                                                                            <option value="Spanish" <%=spokenLang.equals("Spanish")?"selected":""%> >Spanish</option>
 									</select>								
 							    </td>
 							</tr>
@@ -2106,7 +2111,6 @@ document.updatedelete.r_doctor_ohip.value = refNo;
                                   %> <input type="text"
 									name="patient_status" value="<%=pacStatus%>"> <% } else {
                                 String patientStatus = apptMainBean.getString(rs,"patient_status"); %>
-                                <h1><%=demographic.getPatientStatusDate()%> </h1>
                                 <input type="hidden" name="prev_patient_status" value="<%=patientStatus%>">
 								<select name="patient_status" style="width: 120">
 									<option value="AC"
