@@ -93,9 +93,7 @@ MeasurementMapConfig mmc = new MeasurementMapConfig();
 				<td align="left"><input type="button"
 					value=" <bean:message key="global.btnClose"/> "
 					onClick="window.close()"></td>
-				<td align="right"><a
-					href="javascript:popupStart(300,400,'../Help.jsp')"><bean:message
-					key="global.help" /></a> | <a
+				<td align="right"><oscar:help keywords="measurement" key="app.top1"/> | <a
 					href="javascript:popupStart(300,400,'../About.jsp')"><bean:message
 					key="global.about" /></a> | <a
 					href="javascript:popupStart(300,400,'../License.jsp')"><bean:message

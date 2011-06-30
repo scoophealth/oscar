@@ -412,8 +412,7 @@
 			<tr>
 				<td>Documents</td>
 				<td>&nbsp;</td>
-				<td style="text-align: right;"><a
-					href="javascript: popupStart(300, 400, 'Help.jsp')">Help</a> | <a
+				<td style="text-align: right;"><oscar:help keywords="document" key="app.top1"/> | <a
 					href="javascript: popupStart(300, 400, 'About.jsp')">About</a> | <a
 					href="javascript: popupStart(300, 400, 'License.jsp')">License</a>
 				</td>

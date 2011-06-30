@@ -84,9 +84,7 @@ function popupSendAttach(vheight,vwidth,varpage) { //open a new popup window
 				<td><%= bean.patientLastName %> , <%= bean.patientFirstName%>
 				</td>
 				<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-				<td style="text-align: right"><a
-					href="javascript:popupStart(300,400,'Help.jsp')"><bean:message
-					key="global.help" />p</a> | <a
+				<td style="text-align: right"><oscar:help keywords="attachment" key="app.top1"/> | <a
 					href="javascript:popupStart(300,400,'About.jsp')"><bean:message
 					key="global.about" /></a> | <a
 					href="javascript:popupStart(300,400,'License.jsp')"><bean:message
