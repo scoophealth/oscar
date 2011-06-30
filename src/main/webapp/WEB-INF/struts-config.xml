@@ -2300,6 +2300,12 @@
 		<action input="/hospitalReportManager/Display" path="/hospitalReportManager/Modify" type="org.oscarehr.hospitalReportManager.HRMModifyDocumentAction" parameter="method" scope="request" validate="false">
 			<forward name="ajax" path="/hospitalReportManager/ajaxResponse.jsp" />
 		</action>
+		<action path="/hospitalReportManager/Statement" type="org.oscarehr.hospitalReportManager.HRMStatementModifyAction" scope="request" validate="false">
+			<forward name="success" path="/hospitalReportManager/hospitalReportManager.jsp" />
+		</action>
+		<action path="/hospitalReportManager/Mapping" type="org.oscarehr.hospitalReportManager.HRMMappingAction" scope="request" validate="false">
+			<forward name="success" path="/hospitalReportManager/hrmShowMapping.jsp" />
+		</action>
 
 	</action-mappings>
 	<controller processorClass="org.apache.struts.tiles.TilesRequestProcessor" maxFileSize="20M" />

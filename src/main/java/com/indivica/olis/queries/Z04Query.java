@@ -7,6 +7,7 @@ import com.indivica.olis.parameters.OBR22;
 import com.indivica.olis.parameters.OBR4;
 import com.indivica.olis.parameters.OBX3;
 import com.indivica.olis.parameters.QRD7;
+import com.indivica.olis.parameters.ZPD1;
 import com.indivica.olis.parameters.ZRP1;
 
 /**
@@ -14,7 +15,7 @@ import com.indivica.olis.parameters.ZRP1;
  * @author jen
  *
  */
-public class Z04Query implements Query {
+public class Z04Query extends Query {
 
 	private OBR22 startEndTimestamp = new OBR22(); // mandatory
 	private QRD7 quantityLimitedRequest = null;
@@ -76,5 +77,8 @@ public class Z04Query implements Query {
 	public QueryType getQueryType() {
 		return QueryType.Z04;
 	}
-
+	@Override
+    public void setConsentToViewBlockedInformation(ZPD1 consentToViewBlockedInformation) {
+		throw new RuntimeException("Not valid for this type of query.");
+    }
 }

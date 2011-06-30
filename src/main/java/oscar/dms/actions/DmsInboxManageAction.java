@@ -397,7 +397,7 @@ public class DmsInboxManageAction extends DispatchAction {
     Integer page = 0;
     Integer pageSize = 20;
     
-    labdocs.addAll(hrmResult.populateHRMdocumentsResultsData(searchProviderNo, page, pageSize));
+    labdocs.addAll(hrmResult.populateHRMdocumentsResultsData(searchProviderNo, page, pageSize, ackStatus));
     Collections.sort(labdocs);
     
   

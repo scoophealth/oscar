@@ -30,7 +30,7 @@ import com.indivica.olis.parameters.ZRP1;
  * @author jen
  *
  */
-public class Z01Query implements Query {
+public class Z01Query extends Query {
 
 	private OBR22 startEndTimestamp = null;
 	private OBR7 earliestLatestObservationDateTime = null;
