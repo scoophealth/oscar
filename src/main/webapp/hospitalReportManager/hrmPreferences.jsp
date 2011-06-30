@@ -185,15 +185,12 @@ br {
 		<td class="MainTableLeftColumn" valign="top" width="160px;">
 		&nbsp;</td>
 		<td class="MainTableRightColumn" valign="top">
-		<tr>
-			<td>HRM Settings</td>
-		</tr>
-		<form action="<%=request.getContextPath()%>/hospitalReportManager/HRMPreferences.do">
+		<form action="<%=request.getContextPath()%>/hospitalReportManager/HRMPreferences.do" method="post">
 			
 			<table>
 			<tr>
 				<td>User Name:</td>
-				<td colspan=2><input readonly="readonly" type="text" name="userName" value=<%=userName%> ></td>
+				<td colspan=2><input readonly="readonly" type="text" name="userName" value="<%=userName%>" ></td>
 				
 			</tr>
 				<td>SFTP Download folder:</td>
@@ -223,7 +220,7 @@ br {
 			</table>
 		</form>
 		</td>
-	</tr>
+		</tr>
 	<tr>
 		<td class="MainTableBottomRowLeftColumn">&nbsp;</td>
 
