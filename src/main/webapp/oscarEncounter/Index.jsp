@@ -837,9 +837,7 @@ function removeSaveFeedback()  {
 				<td class="Header"
 					style="text-align: center; border-right: 3px solid #003399" NOWRAP>
 				<!--div class="FakeLink">
-                        </div--> <a
-					href="javascript:popupStart(300,400,'Help.jsp')"><bean:message
-					key="global.help" /></a> | <a
+                        </div--> <oscar:help keywords="echart" key="app.top1"/> | <a
 					href="javascript:popupStart(300,400,'About.jsp')"><bean:message
 					key="global.about" /></a></td>
 			</tr>

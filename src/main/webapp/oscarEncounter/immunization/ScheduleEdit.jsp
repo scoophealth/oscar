@@ -271,8 +271,7 @@ if(request.getParameter("name")!=null)
 					NOWRAP><%=bean.patientLastName %>, <%=bean.patientFirstName%>
 				<%=bean.patientSex%> <%=bean.patientAge%></td>
 				<td></td>
-				<td style="text-align: right" NOWRAP><a
-					href="javascript:popupStart(300,400,'../Help.jsp')">Help</a> |</td>
+				<td style="text-align: right" NOWRAP><oscar:help keywords="schedule" key="app.top1"/>> |</td>
 			</tr>
 		</table>
 		</td>
