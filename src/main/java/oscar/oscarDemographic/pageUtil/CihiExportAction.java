@@ -333,6 +333,8 @@ public class CihiExportAction extends DispatchAction {
 	}
 	
 	private void buildProvider(Provider provider, cdscihi.ProviderDocument.Provider xmlProvider, Map<String,String> fileNamesMap) {
+                if (provider==null || xmlProvider==null || fileNamesMap==null) return;
+                
 		xmlProvider.setPrimaryPhysicianLastName(provider.getLastName());
 		xmlProvider.setPrimaryPhysicianFirstName(provider.getFirstName());
 		String cpso = StringUtils.noNull(provider.getPractitionerNo());
@@ -935,7 +937,9 @@ public class CihiExportAction extends DispatchAction {
     	Set<String>xmlKeys = xmlMap.keySet();
     	
     	//Save each file
-    	for( String key: xmlKeys) {    		
+    	for( String key: xmlKeys) {
+                if (fileNamesMap.get(key)==null) continue;
+
     		cihiDoc = xmlMap.get(key);
     		files.add(new File(tmpDir, fileNamesMap.get(key)));    		
     		

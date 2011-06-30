@@ -32,6 +32,7 @@ import java.util.GregorianCalendar;
 import java.util.LinkedList;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
@@ -143,7 +144,8 @@ public class RxPatientData {
    }
    
    private static java.util.Date calcDate(String year, String month, String day) {   
-	   if (year==null || month==null || day==null) return(null);
+	   if (year==null || month==null || day==null) return null;
+           if (!NumberUtils.isDigits(year) || !NumberUtils.isDigits(month) || !NumberUtils.isDigits(day)) return null;
 	   
       int iYear = Integer.parseInt(year);
       int iMonth = Integer.parseInt(month) - 1;      

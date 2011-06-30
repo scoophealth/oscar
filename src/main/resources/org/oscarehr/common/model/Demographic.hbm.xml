@@ -36,12 +36,14 @@
 
 		<property column="roster_status" length="20" name="RosterStatus" type="string" />
 		<property column="patient_status" length="20" name="PatientStatus" type="string" />
+                <property column="patient_status_date" length="10" name="PatientStatusDate" type="date"/>
 		<property column="date_joined" length="10" name="DateJoined" type="date" />
 		<property column="chart_no" length="10" name="ChartNo" type="string" />
 		<property column="provider_no" length="250" name="ProviderNo" type="string" />
 		<property column="end_date" length="10" name="EndDate" type="date" />
 		<property column="eff_date" length="10" name="EffDate" type="date" />
                 <property column="roster_date" length="10" name="rosterDate" type="date"/>
+                <property column="roster_termination_date" length="10" name="rosterTerminationDate" type="date"/>
 		<property column="pcn_indicator" length="20" name="PcnIndicator" type="string" />
 		<property column="family_doctor" length="80" name="FamilyDoctor" type="string" />
 

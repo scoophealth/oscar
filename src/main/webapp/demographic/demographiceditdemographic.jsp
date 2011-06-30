@@ -259,13 +259,9 @@ function checkName() {
     }
 	return typeInOK;
 }
-function checkRosterDate() {
-        if (document.updatedelete.roster_status.value!="RO") return true;
+function checkDate(yyyy,mm,dd,err_msg) {
 
 	var typeInOK = false;
-	var yyyy = document.updatedelete.roster_date_year.value;
-	var mm = document.updatedelete.roster_date_month.value;
-	var dd = document.updatedelete.roster_date_day.value;
 
 	if(checkTypeNum(yyyy) && checkTypeNum(mm) && checkTypeNum(dd) ){
         var check_date = new Date(yyyy,(mm-1),dd);
@@ -282,48 +278,38 @@ function checkRosterDate() {
 		    typeInOK = true;
 		}
 		if ( yyyy == "0000"){
-        typeInOK = false;
-      }
-}
+                    typeInOK = false;
+                }
+        }
 
 	if (!isValidDate(dd,mm,yyyy) || !typeInOK){
-      alert ("<bean:message key="demographic.search.msgWrongRosterDate"/>\n<bean:message key="demographic.demographiceditdemographic.msgWrongDate"/>");
-      typeInOK = false;
-   }
+            alert (err_msg+"\n<bean:message key="demographic.demographiceditdemographic.msgWrongDate"/>");
+            typeInOK = false;
+        }
 
 	return typeInOK;
 }
+function checkRosterDates() {
+        if (document.updatedelete.roster_status.value=="RO") {
+            var yyyy = document.updatedelete.roster_termination_date_year.value;
+            var mm = document.updatedelete.roster_termination_date_month.value;
+            var dd = document.updatedelete.roster_termination_date_day.value;
+
+            return checkDate(yyyy,mm,dd,"<bean:message key="demographic.search.msgWrongRosterTerminationDate"/>");
+        } else {
+            var yyyy = document.updatedelete.roster_date_year.value;
+            var mm = document.updatedelete.roster_date_month.value;
+            var dd = document.updatedelete.roster_date_day.value;
+
+            return checkDate(yyyy,mm,dd,"<bean:message key="demographic.search.msgWrongRosterDate"/>");
+        }
+}
 function checkDob() {
-	var typeInOK = false;
 	var yyyy = document.updatedelete.year_of_birth.value;
 	var mm = document.updatedelete.month_of_birth.value;
 	var dd = document.updatedelete.date_of_birth.value;
 
-	if(checkTypeNum(yyyy) && checkTypeNum(mm) && checkTypeNum(dd) ){
-        var check_date = new Date(yyyy,(mm-1),dd);
-		var now = new Date();
-		var year=now.getFullYear();
-		var month=now.getMonth()+1;
-		var date=now.getDate();
-		//alert(yyyy + " | " + mm + " | " + dd + " " + year + " " + month + " " +date);
-
-		var young = new Date(year,month,date);
-		var old = new Date(1800,01,01);
-		//alert(check_date.getTime() + " | " + young.getTime() + " | " + old.getTime());
-		if (check_date.getTime() <= young.getTime() && check_date.getTime() >= old.getTime() && yyyy.length==4) {
-		    typeInOK = true;
-		}
-		if ( yyyy == "0000"){
-        typeInOK = false;
-      }
-}
-
-	if (!isValidDate(dd,mm,yyyy) || !typeInOK){
-      alert ("<bean:message key="demographic.search.msgWrongDOB"/>\n<bean:message key="demographic.demographiceditdemographic.msgWrongDate"/>");
-      typeInOK = false;
-   }
-
-	return typeInOK;
+      return checkDate(yyyy,mm,dd,"<bean:message key="demographic.search.msgWrongDOB"/>");
 }
 
 function isValidDate(day,month,year){
@@ -350,7 +336,7 @@ function checkHin() {
 function checkTypeInEdit() {
   if ( !checkName() ) return false;
   if ( !checkDob() ) return false;
-  if ( !checkRosterDate() ) return false;
+  if ( !checkRosterDates() ) return false;
   if ( !checkHin() ) return false;
   //if ( !checkAllDate() ) return false;
   return(true);
@@ -1170,11 +1156,15 @@ if (iviewTag!=null && !"".equalsIgnoreCase(iviewTag.trim())){
                                                     <li><span class="label"><bean:message
                                                             key="demographic.demographiceditdemographic.formRosterStatus" />:</span>
                                                         <span class="info"><%=apptMainBean.getString(rs,"roster_status")%></span>
-                                                    </li><li>
-                                                        <span class="label"><bean:message
+                                                    </li>
+                                                    <li><span class="label"><bean:message
                                                             key="demographic.demographiceditdemographic.DateJoined" />:</span>
                                                         <span class="info"><%=MyDateFormat.getMyStandardDate(apptMainBean.getString(rs,"roster_date"))%></span>
-							</li>
+                                                    </li>
+                                                    <li><span class="label"><bean:message
+                                                            key="demographic.demographiceditdemographic.RosterTerminationDate" />:</span>
+                                                        <span class="info"><%=MyDateFormat.getMyStandardDate(apptMainBean.getString(rs,"roster_termination_date"))%></span>
+                                                    </li>
                                                     <li><span class="label"><bean:message
 								key="demographic.demographiceditdemographic.formPatientStatus" />:</span>
                                                         <span class="info">
@@ -2061,9 +2051,6 @@ document.updatedelete.r_doctor_ohip.value = refNo;
                                    // end while %>
 								</select> <input type="button" onClick="newStatus1();" value="<bean:message key="demographic.demographiceditdemographic.btnAddNew"/>">
 								</td>
-								<td align="right" nowrap><b><bean:message
-									key="demographic.demographiceditdemographic.DateJoined" />: </b></td>
-								<td align="left">
                                                                     <%
                                                              // Put 0 on the left on dates
                                                              // Year
@@ -2081,11 +2068,29 @@ document.updatedelete.r_doctor_ohip.value = refNo;
                                                                 rosterDateMonth = decF.format(rosterDateCal.get(GregorianCalendar.MONTH)+1);
                                                                 rosterDateDay   = decF.format(rosterDateCal.get(GregorianCalendar.DAY_OF_MONTH));
                                                              }
+                                                             String rosterTerminationDateYear="";
+                                                             String rosterTerminationDateMonth="";
+                                                             String rosterTerminationDateDay="";
+                                                             if (demographic.getRosterTerminationDate()!=null){
+                                                                rosterDateCal.setTime(demographic.getRosterTerminationDate());
+                                                                rosterTerminationDateYear = decF.format(rosterDateCal.get(GregorianCalendar.YEAR));
+                                                                // Month and Day
+                                                                decF.applyPattern("00");
+                                                                rosterTerminationDateMonth = decF.format(rosterDateCal.get(GregorianCalendar.MONTH)+1);
+                                                                rosterTerminationDateDay   = decF.format(rosterDateCal.get(GregorianCalendar.DAY_OF_MONTH));
+                                                             }
                                                                     %>
 
+								<td align="right" nowrap><b><bean:message
+									key="demographic.demographiceditdemographic.DateJoined" />: </b></td>
+								<td align="left">
                                                                     <input  type="text" name="roster_date_year" size="4" maxlength="4" value="<%=rosterDateYear%>">
                                                                     <input  type="text" name="roster_date_month" size="2" maxlength="2" value="<%=rosterDateMonth%>">
                                                                     <input  type="text" name="roster_date_day" size="2" maxlength="2" value="<%=rosterDateDay%>">
+                                                                    <b><bean:message key="demographic.demographiceditdemographic.RosterTerminationDate" />: </b>
+                                                                    <input  type="text" name="roster_termination_date_year" size="4" maxlength="4" value="<%=rosterTerminationDateYear%>">
+                                                                    <input  type="text" name="roster_termination_date_month" size="2" maxlength="2" value="<%=rosterTerminationDateMonth%>">
+                                                                    <input  type="text" name="roster_termination_date_day" size="2" maxlength="2" value="<%=rosterTerminationDateDay%>">
 								</td>
 							</tr>
 							<tr valign="top">
@@ -2100,6 +2105,7 @@ document.updatedelete.r_doctor_ohip.value = refNo;
                                   %> <input type="text"
 									name="patient_status" value="<%=pacStatus%>"> <% } else {
                                 String patientStatus = apptMainBean.getString(rs,"patient_status"); %>
+                                <h1><%=demographic.getPatientStatusDate()%> </h1>
                                 <input type="hidden" name="prev_patient_status" value="<%=patientStatus%>">
 								<select name="patient_status" style="width: 120">
 									<option value="AC"
