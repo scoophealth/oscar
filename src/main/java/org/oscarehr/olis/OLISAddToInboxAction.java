@@ -11,6 +11,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarLab.FileUploadCheck;
@@ -31,7 +32,7 @@ public class OLISAddToInboxAction extends DispatchAction {
 
 		try {
 			InputStream is = new FileInputStream(fileLocation);
-			int check = FileUploadCheck.addFile(file.getName(), is, "0");
+			int check = FileUploadCheck.addFile(file.getName(), is, LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
 			if (check != FileUploadCheck.UNSUCCESSFUL_SAVE) {
 				if (msgHandler.parse("OLIS_HL7",fileLocation, check) != null) {
 					request.setAttribute("result", "Success");
