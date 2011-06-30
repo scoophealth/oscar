@@ -38,6 +38,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Hashtable;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.util.MiscUtils;
@@ -65,15 +66,14 @@ public class FOBTReport implements PreventionReport{
         int inList = 0;
         double done= 0,doneWithGrace = 0;
         ArrayList returnReport = new ArrayList();
-        PreventionData pd = new PreventionData();
         
         for (int i = 0; i < list.size(); i ++){//for each  element in arraylist 
              ArrayList fieldList = (ArrayList) list.get(i);       
              String demo = (String) fieldList.get(0);  
 
              //search   prevention_date prevention_type  deleted   refused 
-             ArrayList  prevs = pd.getPreventionData("FOBT",demo); 
-             ArrayList  colonoscopys = pd.getPreventionData("COLONOSCOPY",demo); 
+             ArrayList<Map<String,Object>> prevs = PreventionData.getPreventionData("FOBT",demo); 
+             ArrayList<Map<String,Object>> colonoscopys = PreventionData.getPreventionData("COLONOSCOPY",demo); 
              PreventionReportDisplay prd = new PreventionReportDisplay();
              prd.demographicNo = demo;
              prd.bonusStatus = "N";
@@ -93,12 +93,12 @@ public class FOBTReport implements PreventionReport{
                 prd.numMonths = "------";
                 prd.color = "Magenta";
              }else{
-                Hashtable h = (Hashtable) prevs.get(prevs.size()-1);
+            	 Map<String,Object> h = prevs.get(prevs.size()-1);
                 DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
                 String prevDateStr = (String) h.get("prevention_date");
                 
                 try{
-                   prevDate = (java.util.Date)formatter.parse(prevDateStr);
+                   prevDate = formatter.parse(prevDateStr);
                 }catch (Exception e){}
                 boolean refused = false;
                 if ( h.get("refused") != null && ((String) h.get("refused")).equals("1")){
@@ -129,7 +129,7 @@ public class FOBTReport implements PreventionReport{
                 log.debug("\n\n\n prevDate "+prevDate);
                 log.debug("bonusEl date "+bonusStartDate+ " "+bonusStartDate.before(prevDate));
                 log.debug("asofDate date"+asofDate+" "+asofDate.after(prevDate));
-                String result = pd.getExtValue((String)h.get("id"), "result");
+                String result = PreventionData.getExtValue((String)h.get("id"), "result");
 
                 if (!refused && bonusStartDate.before(prevDate) && asofDate.after(prevDate) && !result.equalsIgnoreCase("pending") ){
                    prd.bonusStatus = "Y";
@@ -219,7 +219,7 @@ public class FOBTReport implements PreventionReport{
           return h;
     }
           
-    boolean ineligible(Hashtable h){
+    boolean ineligible(Map<String,Object> h){
        boolean ret =false;
        if ( h.get("refused") != null && ((String) h.get("refused")).equals("2")){
           ret = true;
@@ -227,9 +227,9 @@ public class FOBTReport implements PreventionReport{
        return ret;
    }
     
-   boolean ineligible(ArrayList list){
+   boolean ineligible(ArrayList<Map<String,Object>> list){
        for (int i =0; i < list.size(); i ++){
-           Hashtable h = (Hashtable) list.get(i);
+    	   Map<String,Object> h =  list.get(i);
            if (ineligible(h)){
                return true;
            }
@@ -237,20 +237,20 @@ public class FOBTReport implements PreventionReport{
        return false;
    } 
    
-   boolean colonoscopywith5(ArrayList list,Date asofDate){
+   boolean colonoscopywith5(ArrayList<Map<String,Object>> list,Date asofDate){
        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
        Calendar cal = Calendar.getInstance();
        cal.setTime(asofDate);
        cal.add(Calendar.YEAR, -5);
        Date fiveyearcutoff = cal.getTime();
        for (int i =0; i < list.size(); i ++){
-           Hashtable h = (Hashtable) list.get(i);
+    	   Map<String,Object> h = list.get(i);
            if ( h.get("refused") != null && ((String) h.get("refused")).equals("0")){
                    
                 String prevDateStr = (String) h.get("prevention_date");
                 Date prevDate = null;
                 try{
-                   prevDate = (java.util.Date)formatter.parse(prevDateStr);
+                   prevDate = formatter.parse(prevDateStr);
                 }catch (Exception e){}
                 
                 if (fiveyearcutoff.before(prevDate)){

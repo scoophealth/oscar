@@ -53,8 +53,7 @@ public class PreventionTag extends TagSupport {
    }
    
    public int doStartTag() throws JspException    {
-      	PreventionData pd = new PreventionData();    
-	Prevention p = pd.getPrevention(demographicNo);  
+	Prevention p = PreventionData.getPrevention(demographicNo);  
         try{
 	PreventionDS pf = PreventionDS.getInstance();
 	pf.getMessages(p);

@@ -66,7 +66,6 @@ public class FluReport implements PreventionReport {
         int inList = 0;
         double done= 0;
         ArrayList returnReport = new ArrayList();
-        PreventionData pd = new PreventionData();
         
         for (int i = 0; i < list.size(); i ++){//for each  element in arraylist 
              ArrayList fieldList = (ArrayList) list.get(i);       
@@ -76,7 +75,7 @@ public class FluReport implements PreventionReport {
 
              //search   prevention_date prevention_type  deleted   refused 
              
-             ArrayList<Map<String,Object>>  prevs = pd.getPreventionData("Flu",demo); 
+             ArrayList<Map<String,Object>>  prevs = PreventionData.getPreventionData("Flu",demo);
 
              LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
              if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
@@ -350,7 +349,7 @@ public class FluReport implements PreventionReport {
    }
     
     
-   ArrayList<Map<String,Object>> removeFutureItems(ArrayList<Map<String,Object>> list,Date asOfDate){
+   private ArrayList<Map<String,Object>> removeFutureItems(ArrayList<Map<String,Object>> list,Date asOfDate){
        ArrayList<Map<String,Object>> noFutureItems = new ArrayList<Map<String,Object>>();
        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
        for (int i =0; i < list.size(); i ++){

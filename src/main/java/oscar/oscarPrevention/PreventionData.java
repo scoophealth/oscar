@@ -38,11 +38,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
@@ -61,10 +58,6 @@ import oscar.oscarDemographic.data.DemographicData;
 import oscar.oscarProvider.data.ProviderData;
 import oscar.util.UtilDateUtilities;
 
-/**
- * 
- * @author Jay Gallagher
- */
 public class PreventionData {
 	private static Logger log = MiscUtils.getLogger();
 
@@ -78,11 +71,12 @@ public class PreventionData {
 	 * create table preventionsExt( id int(10) NOT NULL auto_increment primary key, prevention_id int(10), keyval varchar(20), val text )
 	 */
 
-	public PreventionData() {
+	private PreventionData() {
+		// prevent instantiation
 	}
 
-	public void insertPreventionData(String creator, String demoNo, String date, String providerNo, String providerName, String preventionType, String refused, String nextDate,
-			String neverWarn, ArrayList list) {
+	public static void insertPreventionData(String creator, String demoNo, String date, String providerNo, String providerName, String preventionType, String refused, String nextDate,
+			String neverWarn, ArrayList<Map<String,String>> list) {
 		String sql = null;
 		try {
 			
@@ -99,15 +93,12 @@ public class PreventionData {
 			}
 			if (insertId != -1) {
 				for (int i = 0; i < list.size(); i++) {
-					HashMap<String,String> h = (HashMap<String,String>) list.get(i);
-                                        Set entries = h.entrySet();
-                                        Iterator it = entries.iterator();
-                                        while (it.hasNext()) {
-                                            Map.Entry<String,String> entry = (Map.Entry<String,String>) it.next();
-                                            if (entry.getKey()!=null && entry.getValue()!=null) {
-                                                addPreventionKeyValue("" + insertId, entry.getKey(), entry.getValue());
-                                            }
-                                        }
+					Map<String,String> h = list.get(i);
+					for (Map.Entry<String, String> entry : h.entrySet()) {
+						if (entry.getKey() != null && entry.getValue() != null) {
+							addPreventionKeyValue("" + insertId, entry.getKey(), entry.getValue());
+						}
+					}
 				}
 			}
 		}
@@ -117,11 +108,9 @@ public class PreventionData {
 		}
 	}
 
-	public void addPreventionKeyValue(String preventionId, String keyval, String val) {
+	public static void addPreventionKeyValue(String preventionId, String keyval, String val) {
 		String sql = null;
 		try {
-			
-			
 			sql = "Insert into preventionsExt (prevention_id,keyval,val) values " + "('" + preventionId + "','" + keyval + "','" + StringEscapeUtils.escapeSql(val) + "')";
 			log.debug(sql);
 			DBHandler.RunSQL(sql);
@@ -132,8 +121,8 @@ public class PreventionData {
 		}
 	}
 
-	public Hashtable getPreventionKeyValues(String preventionId) {
-		Hashtable h = new Hashtable();
+	public static Map<String,String> getPreventionKeyValues(String preventionId) {
+		Map<String,String> h = new HashMap<String,String>();
 		String sql = null;
 		try {
 			
@@ -156,7 +145,7 @@ public class PreventionData {
 		return h;
 	}
 
-	public void deletePreventionData(String id) {
+	public static void deletePreventionData(String id) {
 		String sql = null;
 		try {
 			
@@ -171,7 +160,7 @@ public class PreventionData {
 		}
 	}
 
-	public void setNextPreventionDate(String date, String id) {
+	public static void setNextPreventionDate(String date, String id) {
 		String sql = null;
 		try {
 			
@@ -186,10 +175,10 @@ public class PreventionData {
 		}
 	}
 
-	public String getProviderName(Hashtable hash) {
+	public static String getProviderName(Map<String,Object> hash) {
 		String name = "";
 		if (hash != null) {
-			String proNum = (String) hash.get("provider_no");
+			String proNum =  (String) hash.get("provider_no");
 			if (proNum == null || proNum.equals("-1")) {
 				name = (String) hash.get("provider_name");
 			}
@@ -200,18 +189,18 @@ public class PreventionData {
 		return name;
 	}
 
-	public void updatetPreventionData(String id, String creator, String demoNo, String date, String providerNo, String providerName, String preventionType, String refused,
-			String nextDate, String neverWarn, ArrayList list) {
+	public static void updatetPreventionData(String id, String creator, String demoNo, String date, String providerNo, String providerName, String preventionType, String refused,
+			String nextDate, String neverWarn, ArrayList<Map<String,String>> list) {
 		deletePreventionData(id);
 		insertPreventionData(creator, demoNo, date, providerNo, providerName, preventionType, refused, nextDate, neverWarn, list);
 	}
 
-	public ArrayList getPreventionData(String demoNo) {
+	public static ArrayList<Map<String,Object>> getPreventionData(String demoNo) {
 		return getPreventionData("%", demoNo);
 	}
 
-	public ArrayList getPreventionDataFromExt(String extKey, String extVal) {
-		ArrayList list = new ArrayList();
+	public static ArrayList<Map<String,Object>> getPreventionDataFromExt(String extKey, String extVal) {
+		ArrayList<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
 		String sql = null;
 		try {
 			
@@ -220,7 +209,7 @@ public class PreventionData {
 			log.debug(sql);
 			rs = DBHandler.GetSQL(sql);
 			while (rs.next()) {
-				Hashtable hash = getPreventionById(oscar.Misc.getString(rs, "prevention_id"));
+				Map<String,Object> hash = getPreventionById(oscar.Misc.getString(rs, "prevention_id"));
 				if (hash.get("deleted") != null && ((String) hash.get("deleted")).equals("0")) {
 					list.add(hash);
 				}
@@ -237,7 +226,7 @@ public class PreventionData {
          * Fetch one extended prevention key
          * Requires prevention id and keyval to return
          */
-        public String getExtValue(String id, String keyval) {
+        public static String getExtValue(String id, String keyval) {
             String sql = "select val from preventionsExt where prevention_id = ? and keyval = ?";
            
             String key = "";
@@ -269,10 +258,10 @@ public class PreventionData {
 	 * Rh injection's product #, from 2006-12-12 to 2006-12-18
 	 * 
 	 */
-	public ArrayList getExtValues(String injectionType, java.util.Date startDate, java.util.Date endDate, String keyVal) {
+	public static ArrayList<Map<String,Object>> getExtValues(String injectionType, java.util.Date startDate, java.util.Date endDate, String keyVal) {
 		String sql = "select preventions.id as preventions_id, demographic_no, prevention_date ,val from preventions, preventionsExt where preventions.id = preventionsExt.prevention_id  and prevention_type = ? and prevention_date >= ? and prevention_date <= ? and preventionsExt.keyval = ? and preventions.deleted = '0' and preventions.refused = '0' order by prevention_date";
 
-		ArrayList list = new ArrayList();
+		ArrayList<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
 		
 		try {
 			// log.debug("e-DATE: "+date);		
@@ -286,8 +275,8 @@ public class PreventionData {
 			ResultSet rs = pstmt.executeQuery();
 
 			while (rs.next()) {
-				Hashtable h = new Hashtable();
-                                h.put("preventions_id", rs.getString("preventions_id"));
+				Map<String,Object> h = new HashMap<String,Object>();
+                h.put("preventions_id", rs.getString("preventions_id"));
 				h.put("demographic_no", oscar.Misc.getString(rs, "demographic_no"));
 				h.put("val", oscar.Misc.getString(rs, "val"));
 				h.put("prevention_date", rs.getDate("prevention_date"));
@@ -296,7 +285,6 @@ public class PreventionData {
 
 			rs.close();
 			pstmt.close();
-
 		}
 		catch (Exception e) {
 			log.error(e.getMessage(), e);
@@ -305,21 +293,13 @@ public class PreventionData {
 		return list;
 	}
 
-	// //////
-
-	private Date demographicDateOfBirth=null;
-	public Date getDemographicDateOfBirth(String demoNo)
+	public static Date getDemographicDateOfBirth(String demoNo)
 	{
-		if (demographicDateOfBirth==null)
-		{
-			DemographicData dd = new DemographicData();
-			demographicDateOfBirth = dd.getDemographicDOB(demoNo);
-		}
-		
-		return(demographicDateOfBirth);
+		DemographicData dd = new DemographicData();		
+		return(dd.getDemographicDOB(demoNo));
 	}	
 	
-	public ArrayList<Map<String,Object>> getPreventionData(String preventionType, String demoNo) {
+	public static ArrayList<Map<String,Object>> getPreventionData(String preventionType, String demoNo) {
 		ArrayList<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
 		String sql = null;
 		java.util.Date dob = getDemographicDateOfBirth(demoNo);
@@ -346,7 +326,9 @@ public class PreventionData {
 					h.put("prevention_date_asDate", date);
 				}
 				catch (Exception pe) {
+					log.error("error", pe);
 				}
+				
 				String age = "N/A";
 				if (date != null) {
 					age = UtilDateUtilities.calcAgeAtDate(dob, date);
@@ -380,7 +362,7 @@ public class PreventionData {
 		return s;
 	}
 
-	public String getPreventionComment(String id) {
+	public static String getPreventionComment(String id) {
 		log.debug("Calling getPreventionComment " + id);
 		String comment = null;
 		String sql = null;
@@ -404,7 +386,7 @@ public class PreventionData {
 		return comment;
 	}
 
-	public Prevention getPrevention(String demoNo) {
+	public static Prevention getPrevention(String demoNo) {
 		DemographicData dd = new DemographicData();
 		java.util.Date dob = getDemographicDateOfBirth(demoNo);
 		String sex = dd.getDemographicSex(demoNo);
@@ -430,10 +412,11 @@ public class PreventionData {
 		return p;
 	}
 
-	private List<CachedDemographicPrevention> remotePreventions = null;
+	private static List<CachedDemographicPrevention> getRemotePreventions(Integer demographicId) {
+		
+		List<CachedDemographicPrevention> remotePreventions = null;
 
-	private List<CachedDemographicPrevention> populateRemotePreventions(Integer demographicId) {
-		if (remotePreventions == null && LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled()) {
+		if (LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled()) {
 			try {
 				DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
 				remotePreventions = demographicWs.getLinkedCachedDemographicPreventionsByDemographicId(demographicId);
@@ -446,8 +429,8 @@ public class PreventionData {
 		return (remotePreventions);
 	}
 
-	public Prevention addRemotePreventions(Prevention prevention, Integer demographicId) {
-		populateRemotePreventions(demographicId);
+	public static Prevention addRemotePreventions(Prevention prevention, Integer demographicId) {
+		List<CachedDemographicPrevention> remotePreventions = getRemotePreventions(demographicId);
 
 		if (remotePreventions != null) {
 			for (CachedDemographicPrevention cachedDemographicPrevention : remotePreventions) {
@@ -462,15 +445,14 @@ public class PreventionData {
 		return (prevention);
 	}
 
-	public ArrayList addRemotePreventions(ArrayList preventions, Integer demographicId, String preventionType, Date demographicDateOfBirth) {
-		populateRemotePreventions(demographicId);
+	public static ArrayList<Map<String,Object>> addRemotePreventions(ArrayList<Map<String,Object>> preventions, Integer demographicId, String preventionType, Date demographicDateOfBirth) {
+		List<CachedDemographicPrevention> remotePreventions = getRemotePreventions(demographicId);
 
 		if (remotePreventions != null) {
 			for (CachedDemographicPrevention cachedDemographicPrevention : remotePreventions) {
 				if (preventionType.equals(cachedDemographicPrevention.getPreventionType())) {
 					
-
-					Hashtable h = new Hashtable();
+					Map<String,Object> h = new HashMap<String,Object>();
 					h.put("integratorFacilityId", cachedDemographicPrevention.getFacilityPreventionPk().getIntegratorFacilityId());
 					h.put("integratorPreventionId", cachedDemographicPrevention.getFacilityPreventionPk().getCaisiItemId());
 					String remoteFacilityName="N/A";
@@ -509,14 +491,11 @@ public class PreventionData {
 		return(preventions);
 	}
 
-	public static class PreventionsComparator implements Comparator
+	public static class PreventionsComparator implements Comparator<Map<String,Object>>
 	{
-		public int compare(Object o1, Object o2) {
-			Map ht1=(Map)o1;
-			Map ht2=(Map)o2;
-			
-			Comparable date1=(Comparable)ht1.get("prevention_date_asDate");
-			Comparable date2=(Comparable)ht2.get("prevention_date_asDate");
+		public int compare(Map<String,Object> o1, Map<String,Object> o2) {
+			Comparable date1=(Comparable)o1.get("prevention_date_asDate");
+			Comparable date2=(Comparable)o2.get("prevention_date_asDate");
 			
 			if (date1!=null && date2!=null)
 			{
@@ -539,9 +518,9 @@ public class PreventionData {
 		}
 	}
 	
-	public Hashtable getPreventionById(String id) {
+	public static Map<String,Object> getPreventionById(String id) {
 		String sql = null;
-		Hashtable h = null;
+		Map<String,Object> h = null;
 		try {
 			
 			ResultSet rs;
@@ -549,7 +528,7 @@ public class PreventionData {
 			log.debug(sql);
 			rs = DBHandler.GetSQL(sql);
 			if (rs.next()) {
-				h = new Hashtable();
+				h = new HashMap<String,Object>();
 				log.debug("preventionType" + oscar.Misc.getString(rs, "prevention_type"));
 				addToHashIfNotNull(h, "id", oscar.Misc.getString(rs, "id"));
 				addToHashIfNotNull(h, "provider_no", oscar.Misc.getString(rs, "provider_no"));
@@ -577,7 +556,7 @@ public class PreventionData {
 				String provider = ProviderData.getProviderName(oscar.Misc.getString(rs, "provider_no"));
 				String summary = "Prevention " + oscar.Misc.getString(rs, "prevention_type") + " provided by " + provider + " on " + oscar.Misc.getString(rs, "prevention_date")
 						+ "\n";
-				Hashtable ext = getPreventionKeyValues(oscar.Misc.getString(rs, "id"));
+				Map<String,String> ext = getPreventionKeyValues(oscar.Misc.getString(rs, "id"));
 				if (ext.containsKey("result")) {
 					summary += "Result: " + ext.get("result");
 					if (ext.containsKey("reason") && !ext.get("reason").equals("")) {
@@ -585,31 +564,31 @@ public class PreventionData {
 					}
 				} else {
 					if (ext.containsKey("name") && !ext.get("name").equals("")) {
-						addToHashIfNotNull(h, "name", (String) ext.get("name"));
+						addToHashIfNotNull(h, "name",  ext.get("name"));
 						summary += "Name: " + ext.get("name") + "\n";
 					}
 					if (ext.containsKey("location") && !ext.get("location").equals("")) {
-						addToHashIfNotNull(h, "location", (String) ext.get("location"));
+						addToHashIfNotNull(h, "location",  ext.get("location"));
 						summary += "Location: " + ext.get("location") + "\n";
 					}
 					if (ext.containsKey("route") && !ext.get("route").equals("")) {
-						addToHashIfNotNull(h, "route", (String) ext.get("route"));
+						addToHashIfNotNull(h, "route",  ext.get("route"));
 						summary += "Route: " + ext.get("route") + "\n";
 					}
 					if (ext.containsKey("dose") && !ext.get("dose").equals("")) {
-						addToHashIfNotNull(h, "dose", (String) ext.get("dose"));
+						addToHashIfNotNull(h, "dose",  ext.get("dose"));
 						summary += "Dose: " + ext.get("dose") + "\n";
 					}
 					if (ext.containsKey("lot") && !ext.get("lot").equals("")) {
-						addToHashIfNotNull(h, "lot", (String) ext.get("lot"));
+						addToHashIfNotNull(h, "lot",  ext.get("lot"));
 						summary += "Lot: " + ext.get("lot") + "\n";
 					}
 					if (ext.containsKey("manufacture") && !ext.get("manufacture").equals("")) {
-						addToHashIfNotNull(h, "manufacture", (String) ext.get("manufacture"));
+						addToHashIfNotNull(h, "manufacture",  ext.get("manufacture"));
 						summary += "Manufacturer: " + ext.get("manufacture") + "\n";
 					}
 					if (ext.containsKey("comments") && !ext.get("comments").equals("")) {
-						addToHashIfNotNull(h, "comments", (String) ext.get("comments"));
+						addToHashIfNotNull(h, "comments",  ext.get("comments"));
 						summary += "Comments: " + ext.get("comments");
 					}
 				}
@@ -625,13 +604,13 @@ public class PreventionData {
 		return h;
 	}
 
-	private void addToHashIfNotNull(Hashtable h, String key, String val) {
+	private static void addToHashIfNotNull(Map<String,Object> h, String key, String val) {
 		if (val != null && !val.equalsIgnoreCase("null")) {
 			h.put(key, val);
 		}
 	}
 
-	private void addToHashIfNotNull(Hashtable h, String key, java.util.Date val) {
+	private static void addToHashIfNotNull(Map<String,Object> h, String key, java.util.Date val) {
 		if (val != null) {
 			h.put(key, val);
 		}
