@@ -164,32 +164,30 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
         int level = 0;
         int orgLevel = LoggedInInfo.loggedInInfo.get().currentFacility.getRxInteractionWarningLevel();
         level = orgLevel;
-        MiscUtils.getLogger().info("orgLevel="+orgLevel);
+        MiscUtils.getLogger().debug("orgLevel="+orgLevel);
         
         UserProperty uprop = propDAO.getProp(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(), "rxInteractionWarningLevel");
         if(uprop!=null) {
         	if(uprop.getValue()!=null&&uprop.getValue().length()>0) {
         		int providerLevel = Integer.parseInt(uprop.getValue());
-        		MiscUtils.getLogger().info("providerLevel="+providerLevel);        	        
-        		if(providerLevel>level) {
-        			level = providerLevel;
-        		}
+        		MiscUtils.getLogger().debug("providerLevel="+providerLevel);
+        		if(providerLevel>0)
+        			level = providerLevel;        		
         	}
         }
 
         
         ClientDao clientDao = (ClientDao)SpringUtils.getBean("clientDao");
-        DemographicExt demoWarn = clientDao.getDemographicExt(bean.getDemographicNo(), "rxInteractionWarningLevel");
+        DemographicExt demoWarn = clientDao.getLatestDemographicExt(bean.getDemographicNo(), "rxInteractionWarningLevel");
         if(demoWarn!=null) {
         	if(demoWarn.getValue()!=null&&demoWarn.getValue().length()>0) {
         		int demoLevel = Integer.valueOf(demoWarn.getValue());
-        		MiscUtils.getLogger().info("demoLevel="+demoLevel);  
-        		if(demoLevel>level) {
-        			level = demoLevel;
-        		}
+        		MiscUtils.getLogger().debug("demoLevel="+demoLevel);  
+        		if(demoLevel>0)
+        			level = demoLevel;        		
         	}
         }
-        MiscUtils.getLogger().info("level="+level);
+        MiscUtils.getLogger().debug("level="+level);
         
         List<Hashtable> toRemove = new ArrayList<Hashtable>();
         
@@ -198,10 +196,8 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
         	 String significanceStr = (String)ht.get("significance");
         	 if(significanceStr==null || significanceStr.equals("")) {significanceStr="0";}
         	 int significance = Integer.valueOf(significanceStr);
-        	 MiscUtils.getLogger().info("significance="+significance);
-        	 if(level>0 && significance<level) {
-        		 MiscUtils.getLogger().info("filtering out");
-        		 //all.remove(ht);
+        	 MiscUtils.getLogger().debug("significance="+significance);
+        	 if(level>0 && significance<level) {        		 
         		 toRemove.add(ht);
         	 }
         }
