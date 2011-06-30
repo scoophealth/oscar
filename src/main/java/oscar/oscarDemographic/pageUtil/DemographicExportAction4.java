@@ -2206,12 +2206,13 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
      * @return
      */
     private String convertLanguageToCode(String lang) {
-    	if(lang.equalsIgnoreCase("english")) {
-    		return "ENG";    	
-    	}
-    	if(lang.equalsIgnoreCase("french")) {
-    		return "FRE";    	
-    	}
+    	if(lang.equalsIgnoreCase("english")) return "ENG";
+    	if(lang.equalsIgnoreCase("french")) return "FRE";
+    	if(lang.equalsIgnoreCase("chinese")) return "CHI";
+        if(lang.equalsIgnoreCase("italian")) return "ITA";
+        if(lang.equalsIgnoreCase("japanese")) return "JPA";
+        if(lang.equalsIgnoreCase("korean")) return "KOR";
+        if(lang.equalsIgnoreCase("spanish")) return "SPA";
     	return null;
     }
 }

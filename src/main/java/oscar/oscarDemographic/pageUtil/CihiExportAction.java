@@ -483,7 +483,7 @@ public class CihiExportAction extends DispatchAction {
 
                 	StandardCoding standardCoding = familyHistory.addNewDiagnosisProcedureCode();
                 	standardCoding.setStandardCode(cIssue.getIssue().getCode());
-                	standardCoding.setStandardCodingSystem(properties.getProperty(cIssue.getIssue().getType()));
+                	standardCoding.setStandardCodingSystem(cIssue.getIssue().getType());
                 	standardCoding.setStandardCodeDescription(cIssue.getIssue().getDescription());
                         break;
                 }
@@ -762,18 +762,36 @@ public class CihiExportAction extends DispatchAction {
 		String[] medhistory = new String[] {issueList.get(0).getId().toString()};
 		
 		Calendar cal = Calendar.getInstance();			    
-	    Date procedureDate;
+                Date procedureDate;
+                Procedure procedure = null;
 	    
 		List<CaseManagementNote> notesList = getCaseManagementNoteDAO().getActiveNotesByDemographic(demo.getDemographicNo().toString(), medhistory);
 		for( CaseManagementNote caseManagementNote: notesList) {
 			
-			Procedure procedure = patientRecord.addNewProcedure();
-        
+                    procedureDate = null;
+			
+                    List<CaseManagementNoteExt> caseManagementNoteExtList = getCaseManagementNoteExtDAO().getExtByNote(caseManagementNote.getId());
+                    String keyval;
+                    for( CaseManagementNoteExt caseManagementNoteExt: caseManagementNoteExtList ) {
+                        keyval = caseManagementNoteExt.getKeyVal();
+                
+                        if( keyval.equals(CaseManagementNoteExt.PROCEDUREDATE)) {
+                            procedure = patientRecord.addNewProcedure();
+                                procedureDate = caseManagementNoteExt.getDateValue();
+                                cal.setTime(procedureDate);
+                            DateFullOrPartial dateFullOrPartial = procedure.addNewProcedureDate();
+                            dateFullOrPartial.setFullDate(cal);
+                            break;
+                        }
+                    }
+                    if (procedure==null) continue;
+                    if (procedure.getProcedureDate()==null) continue;
+
             Set<CaseManagementIssue> noteIssueList = caseManagementNote.getIssues();
             if( noteIssueList != null && noteIssueList.size() > 0 ) {
                 Iterator<CaseManagementIssue> i = noteIssueList.iterator();
                 CaseManagementIssue cIssue;
-         
+
                 while ( i.hasNext() ) {
                     cIssue = i.next();
                     if (cIssue.getIssue().getType().equals("system")) continue;
@@ -785,23 +803,7 @@ public class CihiExportAction extends DispatchAction {
                     break;
                 }
             }
-			
-            procedureDate = null;
-			
-			
-            List<CaseManagementNoteExt> caseManagementNoteExtList = getCaseManagementNoteExtDAO().getExtByNote(caseManagementNote.getId());
-            String keyval;
-            for( CaseManagementNoteExt caseManagementNoteExt: caseManagementNoteExtList ) {
-                keyval = caseManagementNoteExt.getKeyVal();
-                
-                if( keyval.equals(CaseManagementNoteExt.PROCEDUREDATE)) {
-                	procedureDate = caseManagementNoteExt.getDateValue();
-                	cal.setTime(procedureDate);
-                    DateFullOrPartial dateFullOrPartial = procedure.addNewProcedureDate();
-                    dateFullOrPartial.setFullDate(cal);
-                }
-                
-            }
+
             
             procedure.setProcedureInterventionDescription(caseManagementNote.getNote());                                    
 		}
