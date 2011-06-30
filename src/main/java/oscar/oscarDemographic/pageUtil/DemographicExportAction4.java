@@ -1531,16 +1531,18 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                             rpr.setClass1(cdsDt.ReportClass.MEDICAL_RECORD_REPORT);
 
                             File f = new File(reportFile);
-                            InputStream in = new FileInputStream(f);
-                            byte[] b = new byte[(int)f.length()];
+                            if (f.exists()) {
+                                InputStream in = new FileInputStream(f);
+                                byte[] b = new byte[(int)f.length()];
 
-                            int offset=0, numRead=0;
-                            while ((numRead=in.read(b,offset,b.length-offset)) >= 0
-                                   && offset < b.length) offset += numRead;
+                                int offset=0, numRead=0;
+                                while ((numRead=in.read(b,offset,b.length-offset)) >= 0
+                                       && offset < b.length) offset += numRead;
 
-                            if (offset < b.length) throw new IOException("Could not completely read file " + f.getName());
-                            in.close();
-                            rpr.addNewContent().setTextContent(new String(b));
+                                if (offset < b.length) throw new IOException("Could not completely read file " + f.getName());
+                                in.close();
+                                rpr.addNewContent().setTextContent(new String(b));
+                            }
                         }
                         
                         rpr.setFileExtensionAndVersion(".xml");
@@ -1757,6 +1759,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     }
                 }
             }
+            exportNo++;
 
 
             //export file to temp directory
@@ -1919,7 +1922,10 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             }
             out.write(fillUp("",'-',tableWidth)); out.newLine();
             exportNo++;
+
+            //general log data
             for (int i=0; i<exportNo; i++) {
+
                 for (int j=0; j<keyword[0].length; j++) {
                     String category = keyword[0][j].trim();
                     if (category.contains("Report")) category = keyword[1][j].trim();
@@ -1934,28 +1940,21 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             out.newLine();
             out.newLine();
             out.newLine();
-            String column1 = "Patient ID";
-            out.write(column1+" |");
+
+            //error log
             out.write("Errors/Notes");
             out.newLine();
             out.write(fillUp("",'-',tableWidth)); out.newLine();
-            for (int i=0; i<exportNo; i++) {
-                Integer id = entries.get(PATIENTID+i);
-                if (id==null) id = 0;
-                out.write(fillUp(id.toString(), ' ', column1.length()));
-                out.write(" |");
-
-                //write any error that has occurred
-                out.write(error.get(0));
+            
+            //write any error that has occurred
+            out.write(error.get(0));
+            out.newLine();
+            for (int j=1; j<error.size(); j++) {
+                out.write("     ");
+                out.write(error.get(j));
                 out.newLine();
-                for (int j=1; j<error.size(); j++) {
-                    out.write(fillUp("",' ',column1.length()));
-                    out.write(" |");
-                    out.write(error.get(j));
-                    out.newLine();
-                }
-                out.write(fillUp("",'-',tableWidth)); out.newLine();
             }
+            out.write(fillUp("",'-',tableWidth)); out.newLine();
 
             out.close();
             exportNo = 0;

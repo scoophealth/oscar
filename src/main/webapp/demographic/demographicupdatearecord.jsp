@@ -89,7 +89,7 @@
 	  param[28]=request.getParameter("spoken_lang");
           param[29]=(String)session.getAttribute("user");
 	
-		java.sql.Date [] dtparam = new java.sql.Date[5];
+		java.sql.Date [] dtparam = new java.sql.Date[6];
 
 		String yearTmp=StringUtils.trimToNull(request.getParameter("date_joined_year"));
 		String monthTmp=StringUtils.trimToNull(request.getParameter("date_joined_month"));
@@ -150,6 +150,18 @@
 		else
 		{
 			dtparam[4]=null;
+		}
+                yearTmp=StringUtils.trimToNull(request.getParameter("roster_termination_date_year"));
+		monthTmp=StringUtils.trimToNull(request.getParameter("roster_termination_date_month"));
+		dayTmp=StringUtils.trimToNull(request.getParameter("roster_termination_date_day"));
+
+		if( yearTmp != null && monthTmp!=null && dayTmp!=null )
+		{
+			dtparam[5]=MyDateFormat.getSysDate(yearTmp+'-'+monthTmp+'-'+dayTmp);
+		}
+		else
+		{
+			dtparam[5]=null;
 		}
          
           
@@ -222,21 +234,6 @@
     String pres_patient_status = request.getParameter("patient_status");
     if (prev_patient_status!=null && pres_patient_status!=null && !prev_patient_status.equals(pres_patient_status)) {
         apptMainBean.queryExecuteUpdate(paramOne, "update_status_date");
-    }
-
-    String roster_status = request.getParameter("roster_status");
-    if (roster_status!=null && roster_status.equals("TE")) {
-        apptMainBean.queryExecuteUpdate(paramOne, "update_termination_date");
-    }
-    if (!prev_patient_status.equals(pres_patient_status)) {
-        apptMainBean.queryExecuteUpdate(paramOne, "update_status_date");
-    }
-
-    String ros_status = request.getParameter("roster_status");
-    if (ros_status!=null && !roster_status.equals("RO")) {
-        apptMainBean.queryExecuteUpdate(paramOne, "update_termination_date");
-    } else if (ros_status!=null && roster_status.equals("RO")) {
-        apptMainBean.queryExecuteUpdate(paramOne, "reset_termination_date");
     }
 
   int rowsAffected = apptMainBean.queryExecuteUpdate(param, dtparam, intparam, request.getParameter("dboperation"));
