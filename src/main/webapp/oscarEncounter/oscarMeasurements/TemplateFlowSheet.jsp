@@ -1,20 +1,15 @@
+<% long startTime = System.currentTimeMillis(); %>
 <%@page import="oscar.oscarRx.data.RxPatientData"%>
-<% long startTime = System.currentTimeMillis(); %><%@page import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarEncounter.oscarMeasurements.*,oscar.oscarEncounter.oscarMeasurements.bean.*,java.net.*"%>
-<%@page import="oscar.OscarProperties, oscar.util.StringUtils, org.oscarehr.common.dao.DemographicDao, org.oscarehr.common.model.Demographic" %>
+<%@page  import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarEncounter.oscarMeasurements.*,oscar.oscarEncounter.oscarMeasurements.bean.*,java.net.*"%>
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils,oscar.log.*"%>
 <%@page import="org.springframework.web.context.WebApplicationContext,oscar.oscarResearch.oscarDxResearch.bean.*"%>
 <%@page import="org.oscarehr.common.dao.FlowSheetCustomizerDAO,org.oscarehr.common.model.FlowSheetCustomization"%>
 <%@page import="org.oscarehr.common.dao.FlowSheetDrugDAO,org.oscarehr.common.model.FlowSheetDrug"%>
-<%@page import="org.oscarehr.common.dao.UserPropertyDAO,org.oscarehr.common.model.UserProperty"%>
-<%@page import=" org.oscarehr.decisionSupport.model.DSConsequence,oscar.oscarBilling.ca.bc.decisionSupport.BillingGuidelines" %>
-<%@page import="org.oscarehr.util.MiscUtils" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 <%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite" %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
-<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
-<c:set var="contx" value="${pageContext.request.contextPath}" scope="request"/>
 <%
     if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
     //int demographic_no = Integer.parseInt(request.getParameter("demographic_no"));
@@ -23,7 +18,6 @@
     String demographic_no = request.getParameter("demographic_no");
     String providerNo = (String) session.getAttribute("user");
     String temp = request.getParameter("template");
-    
 %>
 <oscar:oscarPropertiesCheck property="SPEC3" value="yes">
     <security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="r" reverse="<%=true%>">
@@ -36,40 +30,8 @@
 <%
    
     LogAction.addLog((String) session.getAttribute("user"), LogConst.READ, LogConst.CON_FLOWSHEET,  temp , request.getRemoteAddr(),demographic_no);
-    WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
-    DemographicDao demographicDao = (DemographicDao) ctx.getBean("demographicDao");
-    Demographic demographic = demographicDao.getDemographic(demographic_no);
-    String mrp = demographic.getProviderNo();
     
-    List listBillingCodes = null;
-    String incentiveCodes = "";
-    if( OscarProperties.getInstance().getProperty("billregion", "").equals("ON") ) {
-        HashMap<String,String> codeMap = new HashMap<String,String>();
-        codeMap.put("diab2", "250");
-        codeMap.put("chf", "428");
-        String tempcode = codeMap.get(temp);
-        try{
-            if( tempcode != null ) {
-                List<DSConsequence> list = BillingGuidelines.getInstance(tempcode).evaluateAndGetConsequences(demographic_no, mrp);
-                for (DSConsequence dscon : list){
-                    List<Object> javaConsequence = dscon.getObjConsequence();
-                    if( javaConsequence != null ) {
-                        for( Object obj : javaConsequence ) {
-                            if( obj instanceof List ) {
-                                listBillingCodes = (List)obj;
-                            }
-                        }
-                    }
-               }
-           }
-        }catch(Exception e){
-            MiscUtils.getLogger().error("Billing Guidelines Failed", e);
-        }
     
-    }
-    if( listBillingCodes != null ) {
-        incentiveCodes = StringUtils.join(listBillingCodes, ",");
-     }
     int numElementsToShow = 4;
     Date sdate = null;
     Date edate = null;
@@ -104,6 +66,9 @@
 
     boolean dsProblems = false;
 
+    
+    WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
+            
     FlowSheetCustomizerDAO flowSheetCustomizerDAO = (FlowSheetCustomizerDAO) ctx.getBean("flowSheetCustomizerDAO");
     FlowSheetDrugDAO flowSheetDrugDAO = (FlowSheetDrugDAO) ctx.getBean("flowSheetDrugDAO");
     
@@ -121,10 +86,12 @@
     long startTimeToGetM = System.currentTimeMillis();
      
     mi.getMeasurements(measurements);
-
+    
     mFlowsheet.getMessages(mi);
 
     ArrayList recList = mi.getList();
+    
+    
     
     mFlowsheet.sortToCurrentOrder(recList);
     StringBuffer recListBuffer = new StringBuffer();
@@ -163,7 +130,7 @@
 *
 * This software was written for the
 * Department of Family Medicine
-* McMaster University test2
+* McMaster Unviersity test2
 * Hamilton
 * Ontario, Canada
 */
@@ -200,6 +167,8 @@
     border: 0px solid #FFF;   
 }
 
+
+
 div.headPrevention {
     position:relative;
     margin-left:1px;
@@ -214,12 +183,6 @@ div.headPrevention a:visited { color:black; }
 </style>
 <style type="text/css" media="screen">
     .DoNotScreen{ display:none;}
-
-    h2 {
-        cursor:pointer;
-        text-decoration:underline;
-        color:blue;
-    }
     
     div.headPrevention {
     position:relative;
@@ -229,10 +192,10 @@ div.headPrevention a:visited { color:black; }
 }
 
 
-div.headPrevention a:active { color:black; }
-div.headPrevention a:hover { color:black; }
-div.headPrevention a:link { color:black; }
-div.headPrevention a:visited { color:black; }
+div.headPrevention a:active { color:blue; }
+div.headPrevention a:hover { color:blue; }
+div.headPrevention a:link { color:blue; }
+div.headPrevention a:visited { color:blue; }
 
 div.headPrevention p {
     background: #ddddff;
@@ -242,7 +205,7 @@ div.headPrevention p {
     padding: 4px 4px;
     line-height: 1.2;
 /*text-align: justify;*/
-    height:auto;
+    height:2em;
     font-family: sans-serif;
 }
 
@@ -269,40 +232,7 @@ div.headPrevention p {
 
     }
     
-    <%if(listBillingCodes != null ) { %>
     
-    function batchBill(id) {
-
-        var url = "<c:out value="${contx}"/>" + "/billing/CA/ON/BatchBill.do";
-        url += "?clinic_view=<%=OscarProperties.getInstance().getProperty("clinic_view","")%>";
-
-        <% Iterator i = listBillingCodes.iterator();
-           String billingCode;
-           while(i.hasNext()) {
-               billingCode = (String)i.next();
-        %>
-                url += "&bill=<%=billingCode+";"+demographic_no+";"+mrp%>";
-        <%}%>
-
-        new Ajax.Request(
-            url,
-            {
-                method: 'post',
-                asynchronous: true,
-                onSuccess: function(ret) {
-                    $(id).update("Bill successfully complete");
-                },
-                onFailure: function(ret) {
-                    alert( ret.status + " Billing Failed");
-                }
-            }
-
-        );
-
-        return false;
-    }
-
-    <%}%>
    function loadDifferentElements(){
        //console.log("hapy");
         var numEle = $('numEle').value;
@@ -319,30 +249,13 @@ div.headPrevention p {
         }
         
     }
-
-    function xpand(id,e) {
-        Element.toggle(id);
-        var val = $(e).innerHTML;
-
-        if( Element.visible(id)) {            
-            val = "-" + val.substr(1);            
-        }
-        else {        
-            val = "+" + val.substr(1);
-        }
-
-        $(e).update(val);
-        
-    }
 </script>
 
 
 <style type="text/css">
 body {font-size:100%}
 
-h2 {
-    margin-bottom: 2px;
-}
+
 div.leftBox{
     width:90%;
     margin-top: 2px;
@@ -496,14 +409,6 @@ div.recommendations li{
                     <a href="TemplateFlowSheet.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>">All</a>
                     &nbsp;
                     <a href="TemplateFlowSheetPrint.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>">Custom Print</a>
-                    <% if( temp.equalsIgnoreCase("diab2") ) { %>
-                        &nbsp;
-                        <a href="TemplateFlowSheetPrint.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>&patientHandout=true">Patient Handout</a>
-                        &nbsp;
-                        <a href="TemplateFlowSheet.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>&format=flatformat">Flat View</a>
-                        &nbsp;
-                        <a href="TemplateFlowSheet.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>&format=treeformat">Tree View</a>
-                    <%}%>
                     <br>
                     #Of Elements <input type="text" size="3" id="numEle"/>
                     
@@ -613,13 +518,16 @@ div.recommendations li{
         
         
         
-       
          <div class="leftBox">
             <h3>&nbsp;Current Patient Allergy List  <a class="DoNotPrint" href="#" onclick="Element.toggle('allergFullListing'); return false;" style="font-size:x-small;" >show/hide</a></h3>
             <div class="wrapper" id="allergFullListing"  >
 
-                <%  oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergies;
+                <% 
+			oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergies;
                     allergies = RxPatientData.getPatient(Integer.parseInt(demographic_no)).getAllergies();
+
+// oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergies;
+//                    allergies = oscar.oscarRx.data.RxPatientData().getPatient(Integer.parseInt(demographic_no)).getAllergies();
                     
                     if (allergies.length > 0){%>
                 <ul>
@@ -635,6 +543,8 @@ div.recommendations li{
                 <%}%>
             </div>
         </div>
+
+
     </security:oscarSec>
     <% } %>
 <div>
@@ -667,73 +577,13 @@ div.recommendations li{
 <img src="../../oscarEncounter/GraphMeasurements.do?demographic_no=<%=demographic_no%>&type=INR&type2=COUM"/>
 <br/>
 --%>
-<% if( listBillingCodes != null ) {
-
-%>
-<div id="batchBill">You are eligible to bill code <a href="#" onclick="batchBill('batchBill');"><%=incentiveCodes%></a></div>
-<% } %>
-<div>
+<div >
 <%
-    boolean flatformat = true;
-
-    if( temp.equalsIgnoreCase("diab2") ) {
-        UserPropertyDAO userPropertyDAO = (UserPropertyDAO)ctx.getBean("UserPropertyDAO");
-        UserProperty userProperty = userPropertyDAO.getProp(providerNo, UserProperty.DMFLOW_SHEET_VIEW);
-        String formatRequest = request.getParameter("format");
-        if( formatRequest == null ) {
-            formatRequest = "";
-        }
-
-        if( userProperty != null ) {
-            if( formatRequest.equals("") ) {
-                flatformat = userProperty.getValue().equalsIgnoreCase("flatformat");
-            }
-            else {
-                flatformat = formatRequest.equalsIgnoreCase("flatformat");
-                if( !userProperty.getValue().equalsIgnoreCase(formatRequest)) {
-                    userProperty.setValue(formatRequest);
-                }
-            }
-        }
-        else if( !formatRequest.equals("") ) {
-            userProperty = new UserProperty();
-            userProperty.setName(UserProperty.DMFLOW_SHEET_VIEW);
-            userProperty.setValue(formatRequest);
-            userProperty.setProviderNo(providerNo);
-            flatformat = formatRequest.equalsIgnoreCase("flatformat");
-        }
-
-        if( userProperty != null ) {
-            userPropertyDAO.saveProp(userProperty);
-        }
-    }
     EctMeasurementTypeBeanHandler mType = new EctMeasurementTypeBeanHandler();
     long startTimeToLoopAndPrint = System.currentTimeMillis();
-    List<MeasurementTemplateFlowSheetConfig.Node>nodes = mFlowsheet.getItemHeirarchy();
-    String measure;
-    int marginLeft = 20;
-    int step = 1;
-    MeasurementTemplateFlowSheetConfig.Node node = nodes.size() > 0 ? nodes.get(0) : null;
-    int numSibling = 0;
-    while( node != null ) {
-        FlowSheetItem item = node.flowSheetItem;
-        if( node.children != null ) {
-            if( !flatformat ) {
-                ++step;
-    %>
-    <h2 onclick="xpand('<%=item.getDisplayName()%>', this);" style="margin-left:<%=String.valueOf(marginLeft * step)%>px;"><%="-" + item.getDisplayName()%></h2><div id="<%=item.getDisplayName()%>">
-    <%
-            }
-            //numSibling = 0;
-            //nodes = node.children;
-            node = node.getFirstChild();            
-        }
-        else {
-
-        measure = item.getItemName();
-    //for (String measure:measurements){
+    for (String measure:measurements){
         Hashtable h2 = mFlowsheet.getMeasurementFlowSheetInfo(measure);
-        //FlowSheetItem item =  mFlowsheet.getFlowSheetItem(measure);
+        FlowSheetItem item =  mFlowsheet.getFlowSheetItem(measure);
         
         String hidden= "";
         if (item.isHide()){
@@ -746,7 +596,10 @@ div.recommendations li{
 
             if(mtypeBean!=null) {
                 h.put("name",mtypeBean.getTypeDisplayName());
-                h.put("desc",mtypeBean.getTypeDesc());                
+                h.put("desc",mtypeBean.getTypeDesc());
+                
+                
+                
             }
             String prevName = (String) h.get("name");
             //Collection aalist = mi.getMeasurementData(measure);
@@ -764,8 +617,9 @@ div.recommendations li{
             //graphable="no"
             //value_name="Answer"
 %>
-<div class="preventionSection"  style="overflow: auto;<%=hidden%>" >
-    <div style="margin-left: <%=String.valueOf(marginLeft * step)%>px;" class="headPrevention">
+<div class="preventionSection"  style="overflow: auto;<%=hidden%>" nowrap>
+    <div class="headPrevention">
+
         <p class="noborder" <%=extraColour%> title="fade=[on] header=[<%=h2.get("display_name")%>] body=[<%=wrapWithSpanIfNotNull(mi.getWarning(measure),"red")%><%=wrapWithSpanIfNotNull(mi.getRecommendation(measure),"red")%><%=h2.get("guideline")%>]"   >
             <%if(h2.get("graphable") != null && ((String) h2.get("graphable")).equals("yes")){%>
             <%if (alist != null && alist.size() > 1) { %>
@@ -774,7 +628,7 @@ div.recommendations li{
                <img class="DoNotPrint" src="img/chart.gif" alt="Plot"/>
             <%}%>
            <%}%>
-           <a class="noborder" href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(465,635,'AddMeasurementData.jsp?measurement=<%= response.encodeURL( measure) %>&amp;demographic_no=<%=demographic_no%>&amp;template=<%= URLEncoder.encode(temp,"UTF-8") %>','addMeasurementData<%=Math.abs( ((String) h.get("name")).hashCode() ) %>')">
+            <a class="noborder" href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(465,635,'AddMeasurementData.jsp?measurement=<%= response.encodeURL( measure) %>&amp;demographic_no=<%=demographic_no%>&amp;template=<%= URLEncoder.encode(temp,"UTF-8") %>','addMeasurementData<%=Math.abs( ((String) h.get("name")).hashCode() ) %>')">
                 <span  class="noborder" style="font-weight:bold;"><%=h2.get("display_name")%></span>
             </a>
 
@@ -805,10 +659,10 @@ div.recommendations li{
             if(sdate != null && edate != null){
                 Date itDate = mdb.getDateObservedAsDate();
                 if (itDate.before(sdate) || itDate.after(edate)){
-                        hider = "display:none;";
+                        hider = "style=\"display:none\"";
                 }
             }else if ( k > num){
-                hider = "display:none;";
+                hider = "style=\"display:none;\"";
             }
 
             String indColour = "";
@@ -817,11 +671,11 @@ div.recommendations li{
             }
             
             if (request.getParameter("show") !=null && request.getParameter("show").equals("outOfRange") && indColour.equals("")){
-                hider = "display:none;";
+                hider = "style=\"display:none;\"";
             }
             
     %>
-    <div style="<%=hider%>" class="preventionProcedure"  onclick="javascript:popup(465,635,'AddMeasurementData.jsp?measurement=<%= response.encodeURL( measure) %>&amp;id=<%=hdata.get("id")%>&amp;demographic_no=<%=demographic_no%>&amp;template=<%= URLEncoder.encode(temp,"UTF-8") %>','addMeasurementData')" >
+    <div class="preventionProcedure" <%=hider%>  onclick="javascript:popup(465,635,'AddMeasurementData.jsp?measurement=<%= response.encodeURL( measure) %>&amp;id=<%=hdata.get("id")%>&amp;demographic_no=<%=demographic_no%>&amp;template=<%= URLEncoder.encode(temp,"UTF-8") %>','addMeasurementData')" >
         <p <%=indColour%> title="fade=[on] header=[<%=hdata.get("age")%> -- Date:<%=hdata.get("prevention_date")%>] body=[<%=com%>&lt;br/&gt;Entered By:<%=mdb.getProviderFirstName()%> <%=mdb.getProviderLastName()%>]"><%=h2.get("value_name")%>: <%=hdata.get("age")%> <br/>
             <%=hdata.get("prevention_date")%>&nbsp;<%=mdb.getNumMonthSinceObserved()%>M
             <%if (comb) {%>
@@ -835,11 +689,14 @@ div.recommendations li{
     String prevType = (String) h2.get("prevention_type");
     long startPrevType = System.currentTimeMillis();
     ArrayList alist = pd.getPreventionData(prevType, demographic_no);
+
+    
+
 %>
 
 
 <div class="preventionSection" style="<%=hidden%>" >
-    <div style="margin-left: <%=String.valueOf(marginLeft * step)%>px;" class="headPrevention">
+    <div class="headPrevention">
         <p title="fade=[on] header=[<%=h2.get("display_name")%>] body=[<%=wrapWithSpanIfNotNull(mi.getWarning(measure),"red")%><%=wrapWithSpanIfNotNull(mi.getRecommendation(measure),"red")%><%=h2.get("guideline")%>]">
             <a href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(465,635,'../../oscarPrevention/AddPreventionData.jsp?prevention=<%= response.encodeURL( prevType) %>&amp;demographic_no=<%=demographic_no%>','addPreventionData<%=Math.abs( prevType.hashCode() ) %>')">
                 <span title="<%=h2.get("guideline")%>" style="font-weight:bold;"><%=h2.get("display_name")%></span>
@@ -852,7 +709,7 @@ div.recommendations li{
     <%
         out.flush();
         for (int k = 0; k < alist.size(); k++){
-            Map hdata = (Map) alist.get(k);
+            Hashtable hdata = (Hashtable) alist.get(k);
             String com = pd.getPreventionComment(""+hdata.get("id"));
             boolean comb = false;
             if (com != null ){
@@ -875,25 +732,9 @@ div.recommendations li{
 
 <%
 }%>
-    <%          while( !node.hasNextSibling() && node.parent != null) {
-                    out.println("</div>");
-                    node = node.parent;
-                    step = flatformat ? step : --step;
-                }
 
-                if( node.parent == null ) {
-                    if( numSibling < nodes.size()-1) {
-                        node = nodes.get(++numSibling);
-                    }
-                    else {
-                        node = null;
-                    }
-                }
-                else {
-                    node = node.getNextSibling();
-                }
-        }
-  }
+<%}
+    
 %>
 
 
@@ -1006,5 +847,14 @@ div.recommendations li{
         }
         return ret;
     }
+    
+    
+    public void printOutStringLists(List<String> measurements){
+       for (String measurement : measurements){
+          
+       }
+    }
+    
+    
     
 %>
