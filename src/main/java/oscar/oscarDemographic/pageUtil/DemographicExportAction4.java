@@ -333,9 +333,9 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         enrolment.setEnrollmentDate(Util.calDate(data));
                     }
                 } else {
-                    data = demographic.getRosterTerminationDate();
-                    if (UtilDateUtilities.StringToDate(data)!=null) {
-                        enrolment.setEnrollmentTerminationDate(Util.calDate(data));
+                    Date terminationDate = DAs.get(i).getRosterTerminationDate();
+                    if (terminationDate!=null) {
+                        enrolment.setEnrollmentTerminationDate(Util.calDate(terminationDate));
                     }
                 }
             }
