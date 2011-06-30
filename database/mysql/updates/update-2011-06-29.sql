@@ -1,1 +1,1 @@
-alter table casemgmt_note_link add otherId varchar(25);
+alter table casemgmt_note_link add other_id varchar(25);
