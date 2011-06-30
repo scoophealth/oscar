@@ -67,6 +67,7 @@
 
     Integer tableName = cmm.getTableNameByDisplay(display);
     String note = "";
+    String dump = "";
     CaseManagementNoteLink cml = null;
     if(oid!=null && oid.length()>0) {
     	cml = cmm.getLatestLinkByTableId(tableName, tableId, oid);//the lastest note which should be the annotation instead of document note.
@@ -76,6 +77,7 @@
     CaseManagementNote p_cmn = null;
     if (cml!=null) {
         p_cmn = cmm.getNote(cml.getNoteId().toString());
+
         //get the most recent previous note from uuid.
         p_cmn=cmm.getMostRecentNote(p_cmn.getUuid());
     }
@@ -94,8 +96,13 @@
 	//get note from database
 	 //previous annotation exists
             historyNote=p_cmn;
-	    note = p_cmn.getNote();
 
+            String tmp = p_cmn.getNote();
+            if (tmp.startsWith("imported.cms4.2011.06")) {
+                dump = tmp.substring("imported.cms4.2011.06".length());
+            } else {
+                note = p_cmn.getNote();
+            }
 	}
     if (saved) {
 	String prog_no = new EctProgram(se).getProgram(user_no);
@@ -189,6 +196,11 @@
             <textarea name="note" rows="10"><%=note%></textarea>
             <input type="submit" class="rightButton blueButton top"value="Save" onclick="this.form.saved.value='true';"/> &nbsp;
             <input type="button" class="leftButton top" value="Cancel" onclick="window.close();"/>
+            <p>&nbsp;</p>
+            <p>
+                Extra note from import:<br>
+                <textarea rows="10" readonly="readonly"><%=dump%></textarea>
+            </p>
 	<% if (rev>0) { %>
             <div class="revision" style="float: right;">
 		    rev<a href="#" onclick="showHistory('<%=uuid%>','<%=display%>');"><%=rev%></a>

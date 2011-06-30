@@ -121,6 +121,7 @@ import oscar.util.ConcatPDF;
 import oscar.util.UtilDateUtilities;
 
 import com.lowagie.text.DocumentException;
+import org.apache.commons.lang.math.NumberUtils;
 
 /*
  * Updated by Eugene Petruhin on 12 and 13 jan 2009 while fixing #2482832 & #2494061
@@ -2965,4 +2966,47 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		}
 		return false;
 	}
+
+        private String checkPartial(String dateValue) {
+            if (!filled(dateValue)) return null;
+
+            dateValue = dateValue.trim();
+            dateValue = dateValue.replace("/", "-");
+            if (dateValue.length()==4 && NumberUtils.isDigits(dateValue)) return CaseManagementNoteExt.YEARONLY;
+
+            String[] dateParts = dateValue.split("-");
+            if (dateParts.length==2 && NumberUtils.isDigits(dateParts[0]) && NumberUtils.isDigits(dateParts[1])) {
+                if (dateParts[0].length()==4 &&
+                    dateParts[1].length()>=1 && dateParts[1].length()<=2) return CaseManagementNoteExt.YEARMONTH;
+            }
+            if (dateParts.length==3 &&
+                NumberUtils.isDigits(dateParts[0]) && NumberUtils.isDigits(dateParts[1]) && NumberUtils.isDigits(dateParts[2])) {
+                if (dateParts[0].length()==4 &&
+                    dateParts[1].length()>=1 && dateParts[1].length()<=2 &&
+                    dateParts[2].length()>=1 && dateParts[2].length()<=2) return ""; //full date
+            }
+            return null;
+        }
+
+        private boolean createPartialDate(String dateValue, CaseManagementNoteExt cme) {
+            if (cme==null) return false;
+
+            String type = checkPartial(dateValue);
+            if (type==null) return false;
+
+            if (type.equals(CaseManagementNoteExt.YEARONLY)) {
+                cme.setValue(type);
+                cme.setDateValue(dateValue+"-01-01");
+                return true;
+            }
+            else if(type.equals(CaseManagementNoteExt.YEARMONTH)) {
+                cme.setValue(type);
+                cme.setDateValue(dateValue+"-01");
+                return true;
+            }
+            else {
+                cme.setDateValue(dateValue);
+                return true;
+            }
+        }
 }

@@ -216,7 +216,7 @@
 								if (drug.isLocal)
 								{
 									%>
-										<input type="button" value="Annotation" title="Annotation" class="ControlPushButton" onclick="window.open('../annotation/annotation.jsp?display=<%=annotation_display%>&table_id=<%=drug.localDrugId%>&demo=<%=currentDemographicNo%>','anwin','width=400,height=250');">
+										<input type="button" value="Annotation" title="Annotation" class="ControlPushButton" onclick="window.open('../annotation/annotation.jsp?display=<%=annotation_display%>&table_id=<%=drug.localDrugId%>&demo=<%=currentDemographicNo%>','anwin','width=400,height=500');">
 									<%
 								}
 							%>

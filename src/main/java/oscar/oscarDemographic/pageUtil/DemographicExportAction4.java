@@ -616,7 +616,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                             if (cme.getKeyVal().equals(CaseManagementNoteExt.STARTDATE)) {
                                 if (bSTARTDATE) continue;
                                 if (cme.getDateValue()!=null) {
-                                    fHist.addNewStartDate().setFullDate(Util.calDate(cme.getDateValue()));
+                                    putPartialDate(fHist.addNewStartDate(), cme);
                                     summary = Util.addSummary(summary, CaseManagementNoteExt.STARTDATE, UtilDateUtilities.DateToString(cme.getDateValue(), "yyyy-MM-dd"));
                                 }
                                 bSTARTDATE = true;
@@ -687,21 +687,21 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                             if (cme.getKeyVal().equals(CaseManagementNoteExt.STARTDATE)) {
                                 if (bSTARTDATE) continue;
                                 if (cme.getDateValue()!=null) {
-                                    pHealth.addNewOnsetOrEventDate().setFullDate(Util.calDate(cme.getDateValue()));
+                                    putPartialDate(pHealth.addNewOnsetOrEventDate(), cme);
                                     summary = Util.addSummary(summary, "Onset/Event Date", UtilDateUtilities.DateToString(cme.getDateValue(), "yyyy-MM-dd"));
                                 }
                                 bSTARTDATE = true;
                             } else if (cme.getKeyVal().equals(CaseManagementNoteExt.RESOLUTIONDATE)) {
                                 if (bRESOLUTIONDATE) continue;
                                 if (cme.getDateValue()!=null) {
-                                    pHealth.addNewResolvedDate().setFullDate(Util.calDate(cme.getDateValue()));
+                                    putPartialDate(pHealth.addNewResolvedDate(), cme);
                                     summary = Util.addSummary(summary, "Resolved Date", UtilDateUtilities.DateToString(cme.getDateValue(), "yyyy-MM-dd"));
                                 }
                                 bRESOLUTIONDATE = true;
                             } else if (cme.getKeyVal().equals(CaseManagementNoteExt.PROCEDUREDATE)) {
                                 if (bPROCEDUREDATE) continue;
                                 if (cme.getDateValue()!=null) {
-                                    pHealth.addNewProcedureDate().setFullDate(Util.calDate(cme.getDateValue()));
+                                    putPartialDate(pHealth.addNewProcedureDate(), cme);
                                     summary = Util.addSummary(summary, CaseManagementNoteExt.PROCEDUREDATE, UtilDateUtilities.DateToString(cme.getDateValue(), "yyyy-MM-dd"));
                                 }
                                 bPROCEDUREDATE = true;
@@ -758,7 +758,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                                 bPROBLEMDESC = true;
                             } else if (cme.getKeyVal().equals(CaseManagementNoteExt.STARTDATE)) {
                                 if (bSTARTDATE) continue;
-                                pList.addNewOnsetDate().setFullDate(Util.calDate(cme.getDateValue()));
+                                putPartialDate(pList.addNewOnsetDate(), cme);
                                 summary = Util.addSummary(summary, "Onset Date", UtilDateUtilities.DateToString(cme.getDateValue(), "yyyy-MM-dd"));
                                 if (cme.getDateValue()==null) {
                                     err.add("Error! No Onset Date for Problem List for Patient "+demoNo);
@@ -767,7 +767,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                             } else if (cme.getKeyVal().equals(CaseManagementNoteExt.RESOLUTIONDATE)) {
                                 if (bRESOLUTIONDATE) continue;
                                 if (cme.getDateValue()!=null) {
-                                    pList.addNewResolutionDate().setFullDate(Util.calDate(cme.getDateValue()));
+                                    putPartialDate(pList.addNewResolutionDate(), cme);
                                     summary = Util.addSummary(summary, CaseManagementNoteExt.RESOLUTIONDATE, UtilDateUtilities.DateToString(cme.getDateValue(), "yyyy-MM-dd"));
                                 }
                                 bRESOLUTIONDATE = true;
@@ -809,14 +809,14 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                             if (cme.getKeyVal().equals(CaseManagementNoteExt.STARTDATE)) {
                                 if (bSTARTDATE) continue;
                                 if (cme.getDateValue()!=null) {
-                                    rFact.addNewStartDate().setFullDate(Util.calDate(cme.getDateValue()));
+                                    putPartialDate(rFact.addNewStartDate(), cme);
                                     summary = Util.addSummary(summary, CaseManagementNoteExt.STARTDATE, UtilDateUtilities.DateToString(cme.getDateValue(), "yyyy-MM-dd"));
                                 }
                                 bSTARTDATE = true;
                             } else if (cme.getKeyVal().equals(CaseManagementNoteExt.RESOLUTIONDATE)) {
                                 if (bRESOLUTIONDATE) continue;
                                 if (cme.getDateValue()!=null) {
-                                    rFact.addNewEndDate().setFullDate(Util.calDate(cme.getDateValue()));
+                                    putPartialDate(rFact.addNewEndDate(), cme);
                                     summary = Util.addSummary(summary, "End Date", UtilDateUtilities.DateToString(cme.getDateValue(), "yyyy-MM-dd"));
                                 }
                                 bRESOLUTIONDATE = true;
@@ -910,14 +910,14 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                             if (cme.getKeyVal().equals(CaseManagementNoteExt.STARTDATE)) {
                                 if (bSTARTDATE) continue;
                                 if (cme.getDateValue()!=null) {
-                                    alerts.addNewDateActive().setFullDate(Util.calDate(cme.getDateValue()));
+                                    putPartialDate(alerts.addNewDateActive(), cme);
                                     reminders = Util.addLine(reminders, "Date Active: ", UtilDateUtilities.DateToString(cme.getDateValue()));
                                 }
                                 bSTARTDATE = true;
                             } else if (cme.getKeyVal().equals(CaseManagementNoteExt.RESOLUTIONDATE)) {
                                 if (bRESOLUTIONDATE) continue;
                                 if (cme.getDateValue()!=null) {
-                                    alerts.addNewEndDate().setFullDate(Util.calDate(cme.getDateValue()));
+                                    putPartialDate(alerts.addNewEndDate(), cme);
                                     reminders = Util.addLine(reminders, "End Date: ", UtilDateUtilities.DateToString(cme.getDateValue()));
                                 }
                                 bRESOLUTIONDATE = true;
@@ -1532,16 +1532,24 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 
                             File f = new File(reportFile);
                             if (f.exists()) {
-                                InputStream in = new FileInputStream(f);
-                                byte[] b = new byte[(int)f.length()];
-
-                                int offset=0, numRead=0;
-                                while ((numRead=in.read(b,offset,b.length-offset)) >= 0
-                                       && offset < b.length) offset += numRead;
-
-                                if (offset < b.length) throw new IOException("Could not completely read file " + f.getName());
-                                in.close();
-                                rpr.addNewContent().setTextContent(new String(b));
+                            	InputStream in = null;
+                            	try {
+	                                in = new FileInputStream(f);
+	                                byte[] b = new byte[(int)f.length()];
+	
+	                                int offset=0, numRead=0;
+	                                while ((numRead=in.read(b,offset,b.length-offset)) >= 0
+	                                       && offset < b.length) offset += numRead;
+	
+	                                if (offset < b.length) throw new IOException("Could not completely read file " + f.getName());
+	                                rpr.addNewContent().setTextContent(new String(b));
+                            	}catch(IOException e) {
+                            		MiscUtils.getLogger().error("error",e);
+                            	}  finally {
+                            		if(in != null) {
+                            			in.close();
+                            		}
+                            	}                                
                             }
                         }
                         
@@ -1947,12 +1955,15 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             out.write(fillUp("",'-',tableWidth)); out.newLine();
             
             //write any error that has occurred
-            out.write(error.get(0));
-            out.newLine();
-            for (int j=1; j<error.size(); j++) {
-                out.write("     ");
-                out.write(error.get(j));
+            if (error.size()>0) {
+                out.write(error.get(0));
                 out.newLine();
+                for (int j=1; j<error.size(); j++) {
+                    out.write("     ");
+                    out.write(error.get(j));
+                    out.newLine();
+                }
+                out.write(fillUp("",'-',tableWidth)); out.newLine();
             }
             out.write(fillUp("",'-',tableWidth)); out.newLine();
 
@@ -2139,6 +2150,18 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
         Integer n = entries.get(category+exportNo);
         n = n==null ? 1 : n+1;
         entries.put(category+exportNo, n);
+    }
+
+    private void putPartialDate(cdsDt.DateFullOrPartial dfp, CaseManagementNoteExt cme) {
+        String type = cme.getValue();
+
+        if (type!=null) {
+            if (type.equals(CaseManagementNoteExt.YEARONLY)) dfp.setYearOnly(Util.calDate(cme.getDateValue()));
+            else if(type.equals(CaseManagementNoteExt.YEARMONTH)) dfp.setYearMonth(Util.calDate(cme.getDateValue()));
+            else dfp.setFullDate(Util.calDate(cme.getDateValue()));
+        } else {
+            dfp.setFullDate(Util.calDate(cme.getDateValue()));
+        }
     }
 
     public DemographicExportAction4() {
