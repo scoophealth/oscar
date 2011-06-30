@@ -857,9 +857,11 @@ public class CihiExportAction extends DispatchAction {
 		int sep;
 		
 		for(int p = 0; p<pa.length; ++p) {
+			drugname = pa[p].getBrandName();
+                        if (StringUtils.empty(drugname)) continue;
+
 			medications = patientRecord.addNewMedicationsAndTreatments();
-			
-			drugname = StringUtils.noNull(pa[p].getDrugName());			
+
 			medications.setDrugName(drugname);
 			DateFullOrPartial dateFullorPartial = medications.addNewPrescriptionWrittenDate();
 			dateFullorPartial.setFullDate(Util.calDate(pa[p].getRxDate()));
