@@ -590,6 +590,27 @@ public class ClientDao extends HibernateDaoSupport {
 
 		return result;
 	}
+	
+	public DemographicExt getLatestDemographicExt(Integer demographicNo, String key) {
+
+		if (demographicNo == null || demographicNo.intValue() <= 0) {
+			throw new IllegalArgumentException();
+		}
+
+		if (key == null || key.length() <= 0) {
+			throw new IllegalArgumentException();
+		}
+
+		List results = this.getHibernateTemplate().find("from DemographicExt d where d.demographicNo = ? and d.key = ? order by d.dateCreated DESC", new Object[] {demographicNo, key});
+		if (results.isEmpty()) return null;
+		DemographicExt result = (DemographicExt)results.get(0);
+
+		if (log.isDebugEnabled()) {
+			log.debug("getDemographicExt: demographicNo=" + demographicNo + ",key=" + key + ",found=" + (result != null));
+		}
+
+		return result;
+	}
 
 	public void updateDemographicExt(DemographicExt de) {
 
