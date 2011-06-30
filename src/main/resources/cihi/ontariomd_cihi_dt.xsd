@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2007 sp2 (http://www.altova.com) by Renato Zoratti (OntarioMD) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cdst="cds_dt_cihi" targetNamespace="cds_dt_cihi" elementFormDefault="qualified">
+	<xs:simpleType name="adverseReactionSeverity">
+		<xs:restriction base="xs:token">
+			<xs:length value="2"/>
+			<xs:enumeration value="NO"/>
+			<xs:enumeration value="MI"/>
+			<xs:enumeration value="MO"/>
+			<xs:enumeration value="LT"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="standardCoding">
+		<xs:sequence>
+			<xs:element name="StandardCodingSystem" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:token">
+						<xs:maxLength value="250"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="StandardCode" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:token">
+						<xs:maxLength value="20"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="StandardCodeDescription" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:token">
+						<xs:maxLength value="250"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="dateYYYY">
+		<xs:restriction base="xs:gYear"/>
+	</xs:simpleType>
+	<xs:simpleType name="dateYYYYMM">
+		<xs:restriction base="xs:gYearMonth"/>
+	</xs:simpleType>
+	<xs:simpleType name="dateYYYYMMDD">
+		<xs:restriction base="xs:date"/>
+	</xs:simpleType>
+	<xs:simpleType name="dateTime">
+		<xs:restriction base="xs:dateTime"/>
+	</xs:simpleType>
+	<xs:complexType name="dateFullOrPartial">
+		<xs:choice>
+			<xs:element name="YearOnly" type="cdst:dateYYYY"/>
+			<xs:element name="YearMonth" type="cdst:dateYYYYMM"/>
+			<xs:element name="FullDate" type="xs:date"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="dateFullOrDateTime">
+		<xs:choice>
+			<xs:element name="FullDate" type="xs:date"/>
+			<xs:element name="FullDateTime" type="xs:dateTime"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="drugMeasure">
+		<xs:all>
+			<xs:element name="Amount" type="xs:token"/>
+			<xs:element name="UnitOfMeasure" type="xs:token"/>
+		</xs:all>
+	</xs:complexType>
+	<xs:simpleType name="enrollmentStatus">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="1"/>
+			<xs:enumeration value="1"/>
+			<xs:enumeration value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="gender" final="list">
+		<xs:annotation>
+			<xs:documentation>Continuing Care eHealth Standards Code Tables: Administrative Gender</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="2"/>
+			<xs:whiteSpace value="collapse"/>
+			<xs:enumeration value="M"/>
+			<xs:enumeration value="F"/>
+			<xs:enumeration value="O"/>
+			<xs:enumeration value="U"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="healthCard">
+		<xs:all>
+			<xs:element name="Number">
+				<xs:simpleType>
+					<xs:restriction base="xs:token">
+						<xs:maxLength value="20"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Type" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:token">
+						<xs:maxLength value="5"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Jurisdiction" type="cdst:healthCardProvinceCode" minOccurs="0"/>
+		</xs:all>
+	</xs:complexType>
+	<xs:simpleType name="healthCardProvinceCode" final="list">
+		<xs:annotation>
+			<xs:documentation>Continuing Care eHealth Standards Code Tables: Province/State/Territory</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:whiteSpace value="collapse"/>
+			<xs:maxLength value="5"/>
+			<xs:enumeration value="CA-AB"/>
+			<xs:enumeration value="CA-BC"/>
+			<xs:enumeration value="CA-MB"/>
+			<xs:enumeration value="CA-NB"/>
+			<xs:enumeration value="CA-NL"/>
+			<xs:enumeration value="CA-NS"/>
+			<xs:enumeration value="CA-NT"/>
+			<xs:enumeration value="CA-NU"/>
+			<xs:enumeration value="CA-ON"/>
+			<xs:enumeration value="CA-PE"/>
+			<xs:enumeration value="CA-QC"/>
+			<xs:enumeration value="CA-SK"/>
+			<xs:enumeration value="CA-YT"/>
+			<xs:enumeration value="US-AK"/>
+			<xs:enumeration value="US-AL"/>
+			<xs:enumeration value="US-AR"/>
+			<xs:enumeration value="US-AZ"/>
+			<xs:enumeration value="US-CA"/>
+			<xs:enumeration value="US-CO"/>
+			<xs:enumeration value="US-CT"/>
+			<xs:enumeration value="US-CZ"/>
+			<xs:enumeration value="US-DC"/>
+			<xs:enumeration value="US-DE"/>
+			<xs:enumeration value="US-FL"/>
+			<xs:enumeration value="US-GA"/>
+			<xs:enumeration value="US-GU"/>
+			<xs:enumeration value="US-HI"/>
+			<xs:enumeration value="US-IA"/>
+			<xs:enumeration value="US-ID"/>
+			<xs:enumeration value="US-IL"/>
+			<xs:enumeration value="US-IN"/>
+			<xs:enumeration value="US-KS"/>
+			<xs:enumeration value="US-KY"/>
+			<xs:enumeration value="US-LA"/>
+			<xs:enumeration value="US-MA"/>
+			<xs:enumeration value="US-MD"/>
+			<xs:enumeration value="US-ME"/>
+			<xs:enumeration value="US-MI"/>
+			<xs:enumeration value="US-MN"/>
+			<xs:enumeration value="US-MO"/>
+			<xs:enumeration value="US-MS"/>
+			<xs:enumeration value="US-MT"/>
+			<xs:enumeration value="US-NC"/>
+			<xs:enumeration value="US-ND"/>
+			<xs:enumeration value="US-NE"/>
+			<xs:enumeration value="US-NH"/>
+			<xs:enumeration value="US-NJ"/>
+			<xs:enumeration value="US-NM"/>
+			<xs:enumeration value="US-NV"/>
+			<xs:enumeration value="US-NY"/>
+			<xs:enumeration value="US-OH"/>
+			<xs:enumeration value="US-OK"/>
+			<xs:enumeration value="US-OR"/>
+			<xs:enumeration value="US-PA"/>
+			<xs:enumeration value="US-PR"/>
+			<xs:enumeration value="US-RI"/>
+			<xs:enumeration value="US-SC"/>
+			<xs:enumeration value="US-SD"/>
+			<xs:enumeration value="US-TN"/>
+			<xs:enumeration value="US-TX"/>
+			<xs:enumeration value="US-UT"/>
+			<xs:enumeration value="US-VA"/>
+			<xs:enumeration value="US-VI"/>
+			<xs:enumeration value="US-VT"/>
+			<xs:enumeration value="US-WA"/>
+			<xs:enumeration value="US-WI"/>
+			<xs:enumeration value="US-WV"/>
+			<xs:enumeration value="US-WY"/>
+			<xs:enumeration value="-50"/>
+			<xs:enumeration value="-70"/>
+			<xs:enumeration value="-90"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="healthcarePractitionerType">
+		<xs:annotation>
+			<xs:documentation>Continuing Care eHealth Standards Code Tables: Care Practitioner Type</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="3111"/>
+			<xs:enumeration value="3112"/>
+			<xs:enumeration value="3113"/>
+			<xs:enumeration value="3121"/>
+			<xs:enumeration value="3122"/>
+			<xs:enumeration value="3123"/>
+			<xs:enumeration value="3131"/>
+			<xs:enumeration value="3132"/>
+			<xs:enumeration value="3141"/>
+			<xs:enumeration value="3142"/>
+			<xs:enumeration value="3143"/>
+			<xs:enumeration value="3144"/>
+			<xs:enumeration value="3152"/>
+			<xs:enumeration value="3214"/>
+			<xs:enumeration value="3221"/>
+			<xs:enumeration value="3222"/>
+			<xs:enumeration value="3231"/>
+			<xs:enumeration value="3232"/>
+			<xs:enumeration value="3233"/>
+			<xs:enumeration value="3235"/>
+			<xs:enumeration value="4151"/>
+			<xs:enumeration value="4152"/>
+			<xs:enumeration value="4153"/>
+			<xs:enumeration value="4154"/>
+			<xs:enumeration value="4167"/>
+			<xs:enumeration value="4212"/>
+			<xs:enumeration value="4213"/>
+			<xs:enumeration value="4215"/>
+			<xs:enumeration value="4217"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="personStatus">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="1"/>
+			<xs:enumeration value="A"/>
+			<xs:enumeration value="I"/>
+			<xs:enumeration value="D"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="postalCode">
+		<xs:restriction base="xs:token">
+			<xs:maxLength value="10"/>
+			<xs:pattern value="([a-zA-Z0-9\-])*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="postalZipCode">
+		<xs:choice>
+			<xs:element name="PostalCode" type="cdst:postalCode"/>
+			<xs:element name="ZipCode" type="cdst:zipCode"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:simpleType name="propertyOfOffendingAgent">
+		<xs:restriction base="xs:token">
+			<xs:maxLength value="2"/>
+			<xs:enumeration value="DR"/>
+			<xs:enumeration value="ND"/>
+			<xs:enumeration value="UK"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="spokenLanguageCode">
+		<xs:annotation>
+			<xs:documentation>ISO 639-2</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:maxLength value="25"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="text">
+		<xs:restriction base="xs:string">
+			<xs:whiteSpace value="preserve"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="text5">
+		<xs:restriction base="cdst:text">
+			<xs:maxLength value="5"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="text10">
+		<xs:restriction base="cdst:text">
+			<xs:maxLength value="10"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="text12">
+		<xs:restriction base="cdst:text">
+			<xs:maxLength value="12"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="text15">
+		<xs:restriction base="cdst:text">
+			<xs:maxLength value="15"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="text20">
+		<xs:restriction base="cdst:text">
+			<xs:maxLength value="20"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="text50">
+		<xs:restriction base="cdst:text">
+			<xs:maxLength value="50"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="text100">
+		<xs:restriction base="cdst:text">
+			<xs:maxLength value="100"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="text120">
+		<xs:restriction base="cdst:text">
+			<xs:maxLength value="120"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="text250">
+		<xs:restriction base="cdst:text">
+			<xs:maxLength value="250"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="text2000">
+		<xs:restriction base="cdst:text">
+			<xs:maxLength value="2000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="text1K">
+		<xs:restriction base="cdst:text">
+			<xs:maxLength value="1024"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="text32K">
+		<xs:restriction base="cdst:text">
+			<xs:minLength value="0"/>
+			<xs:maxLength value="32768"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="ynIndicator">
+		<xs:choice>
+			<xs:element name="ynIndicatorsimple" type="cdst:ynIndicatorsimple"/>
+			<xs:element name="boolean" type="xs:boolean"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:simpleType name="ynIndicatorsimple">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="Y"/>
+			<xs:enumeration value="y"/>
+			<xs:enumeration value="N"/>
+			<xs:enumeration value="n"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="blank">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value=""/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="ynIndicatorAndBlank">
+		<xs:choice>
+			<xs:element name="ynIndicatorsimple" type="cdst:ynIndicatorsimple"/>
+			<xs:element name="boolean" type="xs:boolean"/>
+			<xs:element name="blank" type="cdst:blank"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:simpleType name="zipCode">
+		<xs:restriction base="xs:token">
+			<xs:maxLength value="10"/>
+			<xs:pattern value="([0-9\-])*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="weight">
+		<xs:sequence>
+			<xs:element name="Weight" type="cdst:text1K"/>
+			<xs:element name="WeightUnit" type="cdst:text10"/>
+			<xs:element name="Date" type="cdst:dateYYYYMMDD"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="height">
+		<xs:sequence>
+			<xs:element name="Height" type="cdst:text1K"/>
+			<xs:element name="HeightUnit" type="cdst:text10"/>
+			<xs:element name="Date" type="cdst:dateYYYYMMDD"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="waistCircumference">
+		<xs:sequence>
+			<xs:element name="WaistCircumference" type="cdst:text1K"/>
+			<xs:element name="WaistCircumferenceUnit" type="cdst:text10"/>
+			<xs:element name="Date" type="cdst:dateYYYYMMDD"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="bloodPressure">
+		<xs:sequence>
+			<xs:element name="SystolicBP" type="cdst:text1K"/>
+			<xs:element name="DiastolicBP" type="cdst:text1K"/>
+			<xs:element name="Date" type="cdst:dateYYYYMMDD"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

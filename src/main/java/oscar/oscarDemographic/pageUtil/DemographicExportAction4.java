@@ -286,8 +286,8 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             }
 
             data = demographic.getSpokenLang();
-            if (StringUtils.filled(data)) {
-                demo.setPreferredSpokenLanguage(data);
+            if (StringUtils.filled(data) && convertLanguageToCode(data) != null) {
+                demo.setPreferredSpokenLanguage(convertLanguageToCode(data));
             }
 
             data = demographic.getSex();
@@ -2143,5 +2143,21 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
     }
 
     public DemographicExportAction4() {
+    }
+    
+    /**
+     * TODO: Need to extend this in the future to read off an ISO-639-2 table.
+     * 
+     * @param lang
+     * @return
+     */
+    private String convertLanguageToCode(String lang) {
+    	if(lang.equalsIgnoreCase("english")) {
+    		return "ENG";    	
+    	}
+    	if(lang.equalsIgnoreCase("french")) {
+    		return "FRE";    	
+    	}
+    	return null;
     }
 }
