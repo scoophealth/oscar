@@ -848,7 +848,6 @@ div.recommendations li{
         return ret;
     }
     
-%>
     public void printOutStringLists(List<String> measurements){
        for (String measurement : measurements){
           
