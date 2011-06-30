@@ -1409,7 +1409,12 @@ if(oscarVariables.getProperty("demographicExt") != null) {
 								</select>
 								&nbsp;&nbsp;
 								<b><bean:message key="demographic.demographiceditdemographic.msgSpoken"/>: </b>
-								<input name="spoken_lang" size="15" value="<%=apptMainBean.getString(rs,"spoken_lang")%>"/>
+								<%String spokenLang = apptMainBean.getString(rs,"spoken_lang"); %>
+									<select name="spoken_lang">
+										<option value="">--</option>
+									    <option value="English" <%=spokenLang.equals("English")?"selected":""%> ><bean:message key="demographic.demographiceditdemographic.msgEnglish"/></option>
+									    <option value="French" <%=spokenLang.equals("French")?"selected":""%> ><bean:message key="demographic.demographiceditdemographic.msgFrench"/></option>
+									</select>								
 							    </td>
 							</tr>
 							<%
