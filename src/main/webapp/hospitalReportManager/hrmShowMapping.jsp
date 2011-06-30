@@ -23,6 +23,7 @@
 
 <script type="text/javascript" language="JavaScript"
 	src="../share/javascript/Oscar.js"></script>
+
 </head>
 
 <body onunload="updateAjax()" class="BodyStyle" vlink="#0000FF">
@@ -71,6 +72,7 @@
 						<th>Mnemonic</th>
 						<th>Description</th>
 						<th>Category</th>
+						<th></th>
 						
 					</tr>
 					<%
@@ -91,7 +93,7 @@
 						<td><%=curmapping.get("mnemonic") %></td>
 						<td><%=curmapping.get("description") %></td>
 						<td><%=((HRMCategory) curmapping.get("category")).getCategoryName() %></td>
-						
+						<td><a href="<%=request.getContextPath() %>/hospitalReportManager/Mapping.do?deleteMappingId=<%=curmapping.get("mappingId") %>">Delete</a></td>
 					</tr>
 					<%
 						} %>

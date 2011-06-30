@@ -48,7 +48,7 @@ public class SFTPConnector {
 	private static final int OMD_port = 22;
 
 	private static boolean failureMsgSentToAdmin = false;
-	
+
 	//this file needs chmod 444 permissions for the connection to go through
 	public static  String OMD_directory = OscarProperties.getInstance().getProperty("OMD_directory");
 	private static  String OMD_keyLocation = OMD_directory + "mcmu_sk.ppk";
@@ -60,7 +60,7 @@ public class SFTPConnector {
 
 	//root folder for daily downloads
 	public static String downloadsDirectory= OscarProperties.getInstance().getProperty("OMD_downloads");
-	
+
 
 	public final String fileDirectory = OscarProperties.getInstance().getProperty("OMD_stored");
 
@@ -158,36 +158,36 @@ public class SFTPConnector {
 
 	public static String getOMD_keyLocation() {
 		return OMD_keyLocation;
-		
-    }
+
+	}
 
 	public static void setOMD_keyLocation(String oMD_keyLocation) {
-    	OMD_keyLocation = oMD_keyLocation;
-    }
+		OMD_keyLocation = oMD_keyLocation;
+	}
 
 	public static String getDownloadsDirectory() {
 		String dd = downloadsDirectory;
 		if (dd.equals("")||dd.equals(null)){
 			dd = "webapps/OscarDocument/hrm/sftp_downloads/";
 			return dd;
-				
+
 		} else {
 			return downloadsDirectory;
 		}
-		
-    }
+
+	}
 
 	public static void setDownloadsDirectory(String downloadsDir) {
-    	downloadsDirectory = downloadsDir;
-    }
-	
+		downloadsDirectory = downloadsDir;
+	}
+
 	public static String getDecryptionKey() {
-    	return decryptionKey;
-    }
+		return decryptionKey;
+	}
 
 	public static  void setDecryptionKey(String decryptKey) {
-    	decryptionKey = decryptKey;
-    }
+		decryptionKey = decryptKey;
+	}
 
 	/**
 	 * Call to this function with no parameter ensures that the SFTP download folder exists
@@ -217,7 +217,7 @@ public class SFTPConnector {
 		//if code gets to here then we're ensuring that specified folder exists within SFTP download folder.
 		//-also fixes the beginning if the specified folder already begins with a '/' slash it ignores the slash
 		String dir = this.downloadsDirectory
-				+ (folder == null ? "" : (folder.charAt(0) == '/' ? folder.substring(1, folder.length() - 1) : folder));
+		+ (folder == null ? "" : (folder.charAt(0) == '/' ? folder.substring(1, folder.length() - 1) : folder));
 
 		//return the full path of the existing folder
 		return checkFolder(dir);
@@ -255,7 +255,7 @@ public class SFTPConnector {
 	 * @throws SftpException
 	 */
 	@SuppressWarnings("null")
-    public String[] ls(String folder, boolean printInfo) throws SftpException {
+	public String[] ls(String folder, boolean printInfo) throws SftpException {
 		List fileList = cmd.ls(folder);
 		String[] filenames = null;
 
@@ -265,7 +265,7 @@ public class SFTPConnector {
 			if (!printInfo){
 				filenames = new String[fileList.size()];
 			}
-				
+
 			MiscUtils.getLogger().debug("ls " + folder);
 			int i = 0;
 			for (Object obj : fileList) {
@@ -545,13 +545,13 @@ public class SFTPConnector {
 	 ******************************************************/
 
 	private static boolean isAutoFetchRunning = false;
-	
+
 	public static boolean isFetchRunning() {
 		return SFTPConnector.isAutoFetchRunning;
 	}
-	
+
 	public static void startAutoFetch(boolean isManualFetch) {
-		
+
 		if (!isAutoFetchRunning) {
 			SFTPConnector.isAutoFetchRunning = true;
 			MiscUtils.getLogger().debug("Going into OMD to fetch auto data");
@@ -573,7 +573,7 @@ public class SFTPConnector {
 				MiscUtils.getLogger().debug("Closed SFTP connection");
 
 				SFTPConnector.failureMsgSentToAdmin = false;
-				
+
 			} catch (Exception e) {
 				MiscUtils.getLogger().error("Couldn't perform SFTP fetch for HRM - notifying user of failure", e);
 				ArrayList<String> sendToProviderList = new ArrayList<String>();
@@ -583,16 +583,16 @@ public class SFTPConnector {
 					sendToProviderList.add("999998");
 					SFTPConnector.failureMsgSentToAdmin = true;
 				}
-				
+
 				if (LoggedInInfo.loggedInInfo != null && LoggedInInfo.loggedInInfo.get() != null && LoggedInInfo.loggedInInfo.get().loggedInProvider != null &&
 						!LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo().equalsIgnoreCase("999998")) {
-						sendToProviderList.add(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+					sendToProviderList.add(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
 				}
-				
+
 				String message = "OSCAR attempted to perform a fetch of HRM data at " + (new Date()).toString() + " but there was an error during the task.\n\nSee below for the error message:\n" + e.toString();
 
 				oscar.oscarMessenger.data.MsgMessageData messageData = new oscar.oscarMessenger.data.MsgMessageData();
-				
+
 				ArrayList<MsgProviderData> sendToProviderListData = new ArrayList<MsgProviderData>();
 				for (String providerNo : sendToProviderList) {
 					MsgProviderData mpd = new MsgProviderData();
@@ -600,12 +600,14 @@ public class SFTPConnector {
 					mpd.locationId = "145";
 					sendToProviderListData.add(mpd);
 				}
-				String sentToString = messageData.createSentToString(sendToProviderListData);
-				
-				
-				messageData.sendMessage2(message, "HRM Retrieval Error", "System", sentToString, "-1", sendToProviderListData, null, null);
+
+				if (sendToProviderList.size() > 0) {
+					String sentToString = messageData.createSentToString(sendToProviderListData);
+
+					messageData.sendMessage2(message, "HRM Retrieval Error", "System", sentToString, "-1", sendToProviderListData, null, null);
+				}
 			}
-			
+
 			SFTPConnector.isAutoFetchRunning = false;
 		} else {
 			MiscUtils.getLogger().warn("There is currently an HRM fetch running -- will not run another until it has completed or timed out.");
@@ -627,7 +629,7 @@ public class SFTPConnector {
 
 				scheduler.deleteJob("email.send", scheduler.DEFAULT_GROUP);
 				scheduler.scheduleJob(jobDetail, trigger);
-		*/
+		 */
 	}
 
 }

@@ -108,6 +108,7 @@ public class HRMUtil {
 				curht.put("category", hrmSubClass.getHrmCategory());
 				curht.put("mnemonic", (hrmSubClass.getSubClassMnemonic() != null ? hrmSubClass.getSubClassMnemonic() : ""));
 				curht.put("description", (hrmSubClass.getSubClassDescription() != null ? hrmSubClass.getSubClassDescription() : ""));
+				curht.put("mappingId", hrmSubClass.getId());
 				
 				hrmdocslist.add(curht);
 				
