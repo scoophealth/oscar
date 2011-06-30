@@ -1,8 +1,10 @@
 package org.oscarehr.olis;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,6 +23,7 @@ import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
+
 
 import com.indivica.olis.Driver;
 import com.indivica.olis.parameters.OBR16;
@@ -63,11 +66,43 @@ public class OLISSearchAction extends DispatchAction {
 
 	private DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
 	private ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
+	
+	public static HashMap<String, Query> searchQueryMap = new HashMap<String, Query>();
 
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		String queryType = request.getParameter("queryType");
+		boolean redo = "true".equals(request.getParameter("redo"));
+		if (redo) {
+			String uuid = request.getParameter("uuid");
+			request.setAttribute("searchUuid", uuid);
+			boolean force = "true".equals(request.getParameter("force"));
+			Query q = (Query)searchQueryMap.get(uuid).clone();
+			if (force) { 
+				q.setConsentToViewBlockedInformation(new ZPD1("Z"));
 
-		if (queryType != null) {
+				String blockedInfoIndividual = request.getParameter("blockedInformationIndividual");
+				// Log the consent override
+				OscarLogDao logDao = (OscarLogDao) SpringUtils.getBean("oscarLogDao");
+				OscarLog logItem = new OscarLog();
+				logItem.setAction("OLIS search");
+				logItem.setContent("consent override");
+				logItem.setContentId("demographicNo=" + q.getDemographicNo() + ",givenby=" + blockedInfoIndividual);					
+				if (LoggedInInfo.loggedInInfo.get().loggedInProvider != null) {
+					logItem.setProviderNo(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+				}
+				else {
+					logItem.setProviderNo("-1");
+				}
+
+				logItem.setIp(request.getRemoteAddr());
+
+				logDao.persist(logItem);
+
+			}
+			Driver.submitOLISQuery(request, q);
+			
+		}
+		else if (queryType != null) {
 
 			Query query = null;
 
@@ -201,7 +236,7 @@ public class OLISSearchAction extends DispatchAction {
 
 				// Patient Identifier (PID.3 -- pull data from db and add to query)
 				String demographicNo = request.getParameter("demographic");
-
+				query.setDemographicNo(demographicNo);
 				try {
 					if (demographicNo != null && demographicNo.trim().length() > 0) {
 						Demographic demo = demographicDao.getDemographic(demographicNo);
@@ -380,6 +415,7 @@ public class OLISSearchAction extends DispatchAction {
 
 				// Patient Identifier (PID.3 -- pull data from db and add to query)
 				String demographicNo = request.getParameter("demographic");
+				query.setDemographicNo(demographicNo);
 
 				try {
 					if (demographicNo != null && demographicNo.trim().length() > 0) {
@@ -729,7 +765,9 @@ public class OLISSearchAction extends DispatchAction {
 				}
 			}
 			
-			
+			String searchUuid = UUID.randomUUID().toString();
+			searchQueryMap.put(searchUuid, query);
+			request.setAttribute("searchUuid", searchUuid);
 			Driver.submitOLISQuery(request, query);
 
 		}
