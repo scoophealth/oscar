@@ -385,6 +385,11 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                 String cpso = prvd.getPractitionerNo();
                 if (cpso!=null && cpso.length()==5) pph.setPrimaryPhysicianCPSO(cpso);
             }
+            
+            if(StringUtils.filled(demographic.getSin())) {
+            	demo.setSIN(demographic.getSin());
+            }
+            
             if (StringUtils.filled(demographic.getJustHIN())) {
                 cdsDt.HealthCard healthCard = demo.addNewHealthCard();
 
