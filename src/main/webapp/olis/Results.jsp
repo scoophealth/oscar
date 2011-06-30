@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html;" %>
-<%@page import="java.util.*,oscar.oscarDB.DBHandler,java.sql.ResultSet, oscar.oscarLab.ca.all.parsers.Factory, oscar.oscarLab.ca.all.parsers.OLISHL7Handler, oscar.oscarLab.ca.all.parsers.OLISHL7Handler.OLISError, org.oscarehr.olis.OLISResultsAction, org.oscarehr.util.SpringUtils" %>
+<%@page import="com.indivica.olis.queries.*,org.oscarehr.olis.OLISSearchAction,java.util.*,oscar.oscarDB.DBHandler,java.sql.ResultSet, oscar.oscarLab.ca.all.parsers.Factory, oscar.oscarLab.ca.all.parsers.OLISHL7Handler, oscar.oscarLab.ca.all.parsers.OLISHL7Handler.OLISError, org.oscarehr.olis.OLISResultsAction, org.oscarehr.util.SpringUtils" %>
 <%@page import="org.oscarehr.util.MiscUtils" %>
 	
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -97,12 +97,13 @@ function filterResults(select) {
 				<% }
 			}
 			String resp = (String) request.getAttribute("olisResponseContent");
-			if(resp == null) { resp = "";};
+			if(resp == null) { resp = ""; }
 			%>
 			<!--  RAW HL7
 				<%=resp%>
 			-->
 			<%
+			boolean hasBlockedContent = false;
 			try {
 				OLISHL7Handler reportHandler = (OLISHL7Handler) Factory.getHandler("OLIS_HL7", resp);
 				List<OLISError> errors = reportHandler.getReportErrors();
@@ -113,11 +114,27 @@ function filterResults(select) {
 					<%
 					}
 				}
+				hasBlockedContent = reportHandler.isReportBlocked();
 			} catch (Exception e) {
 				MiscUtils.getLogger().error("error",e);
 			}
-			
+			if (hasBlockedContent) { 
+			%>
+			<form  action="<%=request.getContextPath()%>/olis/Search.do" onsubmit="return confirm('Are you sure you want to resubmit this query with a patient consent override?')">
+				<input type="hidden" name="redo" value="true" />
+				<input type="hidden" name="uuid" value="<%=(String)request.getAttribute("searchUuid")%>" />
+				<input type="hidden" name="force" value="true" />				
+				<input type="submit" value="Submit Override Consent" /> 
+				Authorized by: 
+				<select id="blockedInformationIndividual" name="blockedInformationIndividual">
+					<option value="patient">Patient</option>
+					<option value="substitute">Substitute Decision Maker</option>					
+				</select>
+			</form>
+			<%
+			}
 			List<String> resultList = (List<String>) request.getAttribute("resultList");
+			
 			
 			if (resultList != null) {
 			%>

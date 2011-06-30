@@ -12,7 +12,7 @@ import com.indivica.olis.parameters.ZRP1;
  * @author jen
  *
  */
-public class Z02Query implements Query {
+public class Z02Query extends Query {
 
 	private ZBX1 retrieveAllTestResults = null;
 	private ZRP1 requestingHic = new ZRP1(); // mandatory
