@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
-<%@ page import="java.util.*,oscar.OscarProperties ,oscar.oscarReport.reportByTemplate.*,org.oscarehr.hospitalReportManager.*,org.oscarehr.util.SpringUtils"%>
+<%@ page import="java.util.*,oscar.OscarProperties ,oscar.oscarReport.reportByTemplate.*,org.oscarehr.hospitalReportManager.*,org.oscarehr.util.SpringUtils, org.oscarehr.common.dao.UserPropertyDAO, org.oscarehr.common.model.UserProperty"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
@@ -9,15 +9,43 @@
     if(session.getAttribute("user") == null ) response.sendRedirect("../logout.jsp");
     OscarProperties props = OscarProperties.getInstance();
     
-    String userName = ""; // = getSettings().getId().getUUID().toString();
+    UserPropertyDAO userPropertyDao = (UserPropertyDAO) SpringUtils.getBean("UserPropertyDAO");
+ 	
+    String userName = "";
+    String location = "";
+    String interval = "30";
+    String privateKey = "";
+    String decryptionKey = "";
     
-   
- 	String location = SFTPConnector.getDownloadsDirectory();
- 	String privateKey = SFTPConnector.getOMD_keyLocation();
- 	String decryptionKey = SFTPConnector.getDecryptionKey();
+    try {
+    	userName = userPropertyDao.getProp("hrm_username").getValue();
+    } catch (Exception e) {
+    	userName = "";
+    }
     
- 	//String filepath;
+    try {
+    	location = userPropertyDao.getProp("hrm_location").getValue();
+    } catch (Exception e) {
+    	location = "";
+    }
     
+    try {
+    	interval = userPropertyDao.getProp("hrm_interval").getValue();
+    } catch (Exception e) {
+    	interval = "30";
+    }
+    
+    try {
+    	privateKey = userPropertyDao.getProp("hrm_privateKey").getValue();
+    } catch (Exception e) {
+    	privateKey = "";
+    }
+    
+    try {
+    	decryptionKey = userPropertyDao.getProp("hrm_decryptionKey").getValue();
+    } catch (Exception e) {
+    	decryptionKey = "";
+    }
 %>
 <security:oscarSec roleName="<%=roleName$%>"
 	objectName="_admin,_admin.misc" rights="r" reverse="<%=true%>">
@@ -165,11 +193,11 @@ br {
 			<table>
 			<tr>
 				<td>User Name:</td>
-				<td><input readonly="readonly" type="text" name="userName" value=<%=userName%> ></td>
+				<td colspan=2><input readonly="readonly" type="text" name="userName" value=<%=userName%> ></td>
 				
 			</tr>
 				<td>SFTP Download folder:</td>
-				<td><input type="text" name="location" value=<%=location%>></td>
+				<td colspan=2><input type="text" name="location" value="<%=location%>"></td>
 			<tr>
 			
 			</tr>
@@ -182,6 +210,10 @@ br {
 				<td>Decryption Key</td>
 				<td><a href="../<%=decryptionKey%>" id="dkeyLink">View Decryption Key</a></td>
 				<td><input type="button" name="decryptionKey" value="Upload Decryption Key" onClick='popupPage(600,900,&quot;<html:rewrite page="/hospitalReportManager/hrmKeyUploader.jsp"/>&quot;);return false;' ></td>
+			</tr>
+			<tr>
+				<td>Auto Polling Interval</td>
+				<td colspan=2><input type="text" name="interval" value="<%=interval %>"></td>
 			</tr>
 			<tr>
 				<td> 

@@ -24,4 +24,12 @@ public class HRMCategoryDao extends AbstractDao<HRMCategory> {
 		return documents;
 	}
 	
+	public List<HRMCategory> findAll() {
+		String sql = "select x from " + this.modelClass.getName() + " x ";
+		Query query = entityManager.createQuery(sql);
+		@SuppressWarnings("unchecked")
+		List<HRMCategory> documents = query.getResultList();
+		return documents;
+	}
+	
 }

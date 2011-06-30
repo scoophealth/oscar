@@ -36,10 +36,20 @@ public class HRMDocumentToProviderDao extends AbstractDao<HRMDocumentToProvider>
 		return documentToProviders;
 	}
 	
-	public List<HRMDocumentToProvider> findByProviderNoLimit(String providerNo, Integer page, Integer limit) {
-		String sql = "select x from " + this.modelClass.getName() + " x where x.providerNo=?";
+	public List<HRMDocumentToProvider> findByProviderNoLimit(String providerNo, Integer page, Integer limit, Integer viewed, Integer signedOff) {
+		String sql = "";
+		if (viewed != 2)
+			sql = "select x from " + this.modelClass.getName() + " x where x.providerNo like ? and x.signedOff=? and x.viewed=?";
+		else
+			sql = "select x from " + this.modelClass.getName() + " x where x.providerNo like ? and x.signedOff=?";
+		
 		Query query = entityManager.createQuery(sql);
 		query.setParameter(1, providerNo);
+		query.setParameter(2, signedOff);
+
+		if (viewed != 2)
+			query.setParameter(3, viewed);
+
 		query.setFirstResult(page * limit);
 		query.setMaxResults(limit);
 		@SuppressWarnings("unchecked")

@@ -8,6 +8,7 @@ public class HRMPreferences {
 	private String location;
 	private String privateKey;
 	private String decryptionKey;
+	private String interval;
 	
 	public HRMPreferences(){
 		
@@ -40,6 +41,14 @@ public class HRMPreferences {
 	public void setDecryptionKey(String decryptionKey) {
     	this.decryptionKey = decryptionKey;
     }
+
+	public void setInterval(String interval) {
+	    this.interval = interval;
+    }
+	
+	public String getInterval() {
+		return interval;
+	}
 	
 	
 }

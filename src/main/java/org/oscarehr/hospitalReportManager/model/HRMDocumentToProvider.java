@@ -20,6 +20,7 @@ public class HRMDocumentToProvider extends AbstractModel<Integer>  {
 	private String hrmDocumentId;
 	private Integer signedOff =0;
 	private Date signedOffTimestamp;
+	private Integer viewed = 0;
 	
 	@Override
     public Integer getId() {
@@ -56,6 +57,14 @@ public class HRMDocumentToProvider extends AbstractModel<Integer>  {
 
 	public void setHrmDocumentId(String hrmDocumentId) {
     	this.hrmDocumentId = hrmDocumentId;
+    }
+
+	public Integer getViewed() {
+    	return viewed;
+    }
+
+	public void setViewed(Integer viewed) {
+    	this.viewed = viewed;
     }
 	
 	
