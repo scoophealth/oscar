@@ -760,6 +760,7 @@ div.logoutBox {
 			<li><a href="#" onclick='popupPage(400, 400,&quot;<html:rewrite page="/hospitalReportManager/hrmPreferences.jsp"/>&quot;);return false;'>Hospital Report Manager (HRM) Preferences</a></li>
 			<li><a href="#" onclick='popupPage(400, 400,&quot;<html:rewrite page="/hospitalReportManager/hrmShowMapping.jsp"/>&quot;);return false;'>Hospital Report Manager (HRM) Class Mappings</a></li>
 			<li><a href="#" onclick='popupPage(400, 400,&quot;<html:rewrite page="/olis/Preferences.jsp"/>&quot;);return false;'>OLIS Preferences</a></li>
+			<li><a href="#" onclick='popupPage(800, 1000,&quot;<html:rewrite page="/oscarEncounter/oscarMeasurements/adminFlowsheet/NewFlowsheet.jsp"/>&quot;);return false;'>Create New Flowsheet</a></li>
 			
 			<%
 				if (oscarVariables.getProperty("hsfo.loginSiteCode", "") != null && !"".equalsIgnoreCase(oscarVariables.getProperty("hsfo.loginSiteCode", "")))
