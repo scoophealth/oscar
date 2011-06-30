@@ -11,7 +11,6 @@ import org.oscarehr.olis.dao.OLISSystemPreferencesDao;
 import org.oscarehr.olis.model.OLISSystemPreferences;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
-import org.springframework.scheduling.timer.ScheduledTimerTask;
 
 /**
  * A job can start many tasks
@@ -26,8 +25,6 @@ public class OLISSchedulerJob extends TimerTask {
 	@Override
 	public void run() {
 		logger.info("starting OLIS poller job");
-		//lets sync the db to the running spring bean.
-		ScheduledTimerTask task = (ScheduledTimerTask)SpringUtils.getBean("olisScheduledPullTask");		
 		OLISSystemPreferencesDao olisPrefDao = (OLISSystemPreferencesDao)SpringUtils.getBean("OLISSystemPreferencesDao");
         OLISSystemPreferences olisPrefs =  olisPrefDao.getPreferences();
         if(olisPrefs == null) {
@@ -39,16 +36,18 @@ public class OLISSchedulerJob extends TimerTask {
         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyyMMddHHmmssZ");
         Date startDate = null, endDate = null;
         try {
-        	startDate = dateFormatter.parse(olisPrefs.getStartTime());
-        	endDate = dateFormatter.parse(olisPrefs.getEndTime());
+        	if (olisPrefs.getStartTime() != null && olisPrefs.getStartTime().trim().length() > 0)
+        		startDate = dateFormatter.parse(olisPrefs.getStartTime());
+        	
+        	if (olisPrefs.getEndTime() != null && olisPrefs.getEndTime().trim().length() > 0)
+        		endDate = dateFormatter.parse(olisPrefs.getEndTime());
         }catch(ParseException e) {
         	logger.error("Error",e);
-        	return;
         }
         logger.info("start date = "+ startDate);
         logger.info("end date = "+ endDate);
         
-        if(now.before(startDate) || now.after(endDate)) {
+        if((startDate != null && now.before(startDate)) || (endDate != null && now.after(endDate))) {
         	logger.info("Don't need to run right now");
         	return;
         }

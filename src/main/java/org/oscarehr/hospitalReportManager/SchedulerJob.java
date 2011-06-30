@@ -17,7 +17,7 @@ import org.oscarehr.util.SpringUtils;
 public class SchedulerJob extends TimerTask {
 
 	private static long lastRun = new Date().getTime();
-	private static boolean firstRun = false;
+	private static boolean firstRun = true;
 	
 	@Override
 	public void run() {
@@ -25,29 +25,29 @@ public class SchedulerJob extends TimerTask {
 
 		UserProperty hrmInterval = userPropertyDao.getProp("hrm_interval");
 
-		Integer intervalTime = 1800;
+		Integer intervalTime = 1800000;
 
 		try {
 			if (hrmInterval != null && hrmInterval.getValue() != null && hrmInterval.getValue().trim().length() > 0) {
-				intervalTime = Integer.parseInt(hrmInterval.getValue()) * 60;
+				intervalTime = Integer.parseInt(hrmInterval.getValue()) * 60000;
 			} 
 		} catch (Exception e) {
-			intervalTime = 1800;
+			intervalTime = 1800000;
 		}
 		
 		if (!firstRun) {
-			if (lastRun + intervalTime >= new Date().getTime()) {
+			if (lastRun + intervalTime <= new Date().getTime()) {
 				// Run now
 				SFTPConnector.startAutoFetch(false);
-				SchedulerJob.lastRun = new Date().getTime();
 			}
 		} else {
 			SFTPConnector.startAutoFetch(false);
 			SchedulerJob.firstRun = false;
 		}
 		
-		MiscUtils.getLogger().debug("===== HRM JOB RUNNING....");
-		SFTPConnector.startAutoFetch(false);
 
+		lastRun = new Date().getTime();
+		MiscUtils.getLogger().debug("===== HRM JOB RUNNING....");
+		
 	}
 }
