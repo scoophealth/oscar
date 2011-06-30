@@ -360,7 +360,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             if (StringUtils.filled(data)) demo.setPersonStatusDate(Util.calDate(data));
 
             //patient notes
-            data = d.getDemographicNotes(demographicNo);
+            data = d.getDemographicNotes(demoNo);
             if (StringUtils.filled(data)) demo.setNoteAboutPatient(data);
 
             data = StringUtils.noNull(demographic.getDob("-"));
