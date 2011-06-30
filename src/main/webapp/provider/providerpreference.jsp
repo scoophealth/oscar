@@ -448,6 +448,7 @@ function showHideBillPref() {
 						<option value="1" <%=(warningLevel.equals("1")?"selected=\"selected\"":"") %>>Low</option>
 						<option value="2" <%=(warningLevel.equals("2")?"selected=\"selected\"":"") %>>Medium</option>
 						<option value="3" <%=(warningLevel.equals("3")?"selected=\"selected\"":"") %>>High</option>
+						<option value="4" <%=(warningLevel.equals("4")?"selected=\"selected\"":"") %>>None</option>
 					</select>
 	            </td>
         <script>

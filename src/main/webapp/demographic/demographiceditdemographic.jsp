@@ -1223,6 +1223,7 @@ if ( PatStat.equals(Dead) ) {%>
 	          					if(warningLevel.equals("1")) {warningLevelStr="Low";}
 	          					if(warningLevel.equals("2")) {warningLevelStr="Medium";}
 	          					if(warningLevel.equals("3")) {warningLevelStr="High";}
+	          					if(warningLevel.equals("4")) {warningLevelStr="None";}
                               %>
 						&nbsp;
 						<b><%=warningLevelStr %></b>
@@ -2351,6 +2352,7 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
 						<option value="1" <%=(warningLevel.equals("1")?"selected=\"selected\"":"") %>>Low</option>
 						<option value="2" <%=(warningLevel.equals("2")?"selected=\"selected\"":"") %>>Medium</option>
 						<option value="3" <%=(warningLevel.equals("3")?"selected=\"selected\"":"") %>>High</option>
+						<option value="4" <%=(warningLevel.equals("4")?"selected=\"selected\"":"") %>>None</option>
 					</select>
 </td>
 </tr>
