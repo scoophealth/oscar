@@ -197,7 +197,7 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
         	 if(significanceStr==null || significanceStr.equals("")) {significanceStr="0";}
         	 int significance = Integer.valueOf(significanceStr);
         	 MiscUtils.getLogger().debug("significance="+significance);
-        	 if(level>0 && significance<level) {        		 
+        	 if((level == 4) || level>0 && significance<level) {        		 
         		 toRemove.add(ht);
         	 }
         }
