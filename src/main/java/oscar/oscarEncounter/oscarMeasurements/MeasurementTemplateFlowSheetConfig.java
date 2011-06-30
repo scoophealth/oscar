@@ -158,6 +158,7 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
         }
         flowsheets.put(m.getName(),m);
         flowsheetDisplayNames.put(m.getName(), m.getDisplayName());
+        addTriggers(m.getDxTriggers(),m.getName());
         return m.getName();
     }
 
