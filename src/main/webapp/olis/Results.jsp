@@ -47,6 +47,7 @@ function filterResults(select) {
 	jQuery(".oddLine").each(performFilter);
 }
 </script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/share/javascript/sortable.js"></script>
 <style type="text/css">
 .oddLine { 
 	background-color: #cccccc;
@@ -179,8 +180,10 @@ function filterResults(select) {
 						</select>
 						</td>
 					</tr>
-					<tr><th></th>
-						<th></th>
+					<tr><td colspan="10">
+					<table class="sortable" id="resultsTable">
+					<tr><th class="unsortable"></th>
+						<th class="unsortable"></th>
 						<th>Health Number</th>
 						<th>Patient Name</th>
 						<th>Sex</th>
@@ -226,8 +229,9 @@ function filterResults(select) {
 						<td> <%=result.getShortDocName() %> </td>
 						<td> <%=result.getAdmittingProviderNameShort()%></td>
 						 
-					</tr>
+					</tr>					
 					<% } %>
+					</table></td></tr>
 				<% } %>
 			</table>
 			<%
