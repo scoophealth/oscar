@@ -29,8 +29,7 @@
 	<td width="100%"
 		style="padding-left: 3; padding-right: 3; padding-top: 2; padding-bottom: 2"
 		height="0%" colspan="2">
-	<p class="HelpAboutLogout"><span class="FakeLink"><a
-		href="Help.htm">Help</a></span> | <span class="FakeLink"><a
+	<p class="HelpAboutLogout"><span class="FakeLink"><oscar:help keywords="2.2.4" key="app.top1"/></span> | <span class="FakeLink"><a
 		href="About.htm">About</a></span> | <span class="FakeLink"> <a
 		href="Disclaimer.htm">Disclaimer</a></span></p>
 	</td>

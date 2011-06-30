@@ -43,7 +43,7 @@
                     <td valign="top" align="right">
                         <span class="HelpAboutLogout" style="color:white;">
                             <span class="FakeLink" ><a style="color:white;" href="javascript: popupFocusPage(200,700,'./drugrefInfo.jsp','Drugref Info');" >Drugref Info</a></span> |
-                            <span class="FakeLink" style="color:white;"><oscar:help keywords="RX371" key="app.top1" style="color:white;"/></span> |
+                            <span class="FakeLink" style="color:white;"><oscar:help keywords="2.2.4" key="app.top1" style="color:white;"/></span> |
                             <span class="FakeLink" ><a style="color:white;" href="About.htm">About</a></span> |
                             <span class="FakeLink" style="color:white;"><a style="color:white;" href="Disclaimer.htm">Disclaimer</a></span>
                         </span>
