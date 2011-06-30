@@ -674,8 +674,8 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             if (Util.calDate(pa[p].getRxDate())!=null) {
                 medications.addNewStartDate().setFullDate(Util.calDate(pa[p].getRxDate()));
             }
-            String drugName = StringUtils.noNull(pa[p].getDrugName());
-            medications.setDrugName(StringUtils.noNull(pa[p].getDrugName()));
+            String drugName = StringUtils.noNull(pa[p].getBrandName());
+            medications.setDrugName(StringUtils.noNull(drugName));
             
             medications.setRoute(StringUtils.noNull(pa[p].getRoute()));
             medications.setForm(StringUtils.noNull(pa[p].getDrugForm()));

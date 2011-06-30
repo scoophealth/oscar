@@ -301,25 +301,31 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             }
 
             //Enrolment Status (Roster Status)
-            String rosterStatus = StringUtils.noNull(demographic.getRosterStatus());
-            rosterStatus = rosterStatus.equalsIgnoreCase("RO") ? "1" : "0";
-            Demographics.Enrolment enrolment = demo.addNewEnrolment();
-            enrolment.setEnrollmentStatus(cdsDt.EnrollmentStatus.Enum.forString(rosterStatus));
-            if (rosterStatus.equals("1")) {
-                data = demographic.getRosterDate();
-                if (UtilDateUtilities.StringToDate(data)!=null) {
-                    enrolment.setEnrollmentDate(Util.calDate(data));
-                }
-            } else {
-                data = demographic.getRosterTerminationDate();
-                if (UtilDateUtilities.StringToDate(data)!=null) {
-                    enrolment.setEnrollmentTerminationDate(Util.calDate(data));
+            Demographics.Enrolment enrolment;
+            String rosterStatus = demographic.getRosterStatus();
+            if (StringUtils.filled(rosterStatus)) {
+                rosterStatus = rosterStatus.equalsIgnoreCase("RO") ? "1" : "0";
+                enrolment = demo.addNewEnrolment();
+                enrolment.setEnrollmentStatus(cdsDt.EnrollmentStatus.Enum.forString(rosterStatus));
+                if (rosterStatus.equals("1")) {
+                    data = demographic.getRosterDate();
+                    if (UtilDateUtilities.StringToDate(data)!=null) {
+                        enrolment.setEnrollmentDate(Util.calDate(data));
+                    }
+                } else {
+                    data = demographic.getRosterTerminationDate();
+                    if (UtilDateUtilities.StringToDate(data)!=null) {
+                        enrolment.setEnrollmentTerminationDate(Util.calDate(data));
+                    }
                 }
             }
+            
             //Enrolment Status history
             List<DemographicArchive> DAs = demoArchiveDao.findRosterStatusHistoryByDemographicNo(Integer.valueOf(demoNo));
             for (int i=0; i<DAs.size(); i++) {
-                String historyRS = StringUtils.noNull(DAs.get(i).getRosterStatus());
+                String historyRS = DAs.get(i).getRosterStatus();
+                if (StringUtils.empty(historyRS)) continue;
+
                 historyRS = historyRS.equalsIgnoreCase("RO") ? "1" : "0";
                 if (i==0 && historyRS.equals(rosterStatus)) continue;
 
@@ -1120,10 +1126,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         medi.setDrugIdentificationNumber(data);
                         mSummary = Util.addSummary(mSummary, "DIN", data);
                     }
-                    String drugName = StringUtils.noNull(arr[p].getDrugName());
-                    if (StringUtils.empty(drugName)) {
-                        err.add("Error! No Drug Name for Patient "+demoNo+" ("+(p+1)+")");
-                    }
+                    String drugName = StringUtils.noNull(arr[p].getBrandName());
                     medi.setDrugName(drugName);
                     addOneEntry(MEDICATION);
                     mSummary = Util.addSummary(mSummary, "Drug Name", drugName);
@@ -1165,9 +1168,9 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         medi.setForm(arr[p].getDrugForm());
                         mSummary = Util.addSummary(mSummary, "Form", arr[p].getDrugForm());
                     }
-                    if (StringUtils.filled(arr[p].getSpecialInstruction())) {
-                        medi.setForm(arr[p].getSpecialInstruction());
-                        mSummary = Util.addSummary(mSummary, "Drug Description", arr[p].getSpecialInstruction());
+                    if (StringUtils.filled(arr[p].getCustomName())) {
+                        medi.setForm(arr[p].getCustomName());
+                        mSummary = Util.addSummary(mSummary, "Drug Description", arr[p].getCustomName());
                     }
                     if (StringUtils.filled(arr[p].getFreqDisplay())) {
                         medi.setFrequency(arr[p].getFreqDisplay());
