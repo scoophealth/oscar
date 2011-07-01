@@ -582,21 +582,25 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 				}
 
 				String sdm = null, emc = null, rel = null;
+                                Integer type = 2;
                                 cdsDt.PurposeEnumOrPlainText[] contactPurposes = contt[i].getContactPurposeArray();
                                 for (cdsDt.PurposeEnumOrPlainText contactPurpose : contactPurposes) {
                                     String cPurpose = null;
                                     if (contactPurpose.getPurposeAsEnum()!=null) cPurpose = contactPurpose.getPurposeAsEnum().toString();
                                     else cPurpose = contactPurpose.getPurposeAsPlainText();
 
-                                    if (cPurpose.equals("EC")) emc = "true";
-                                    else if (cPurpose.equals("SDM")) sdm = "true";
-                                    else if (cPurpose.equals("NK")) rel = "Next of Kin";
+                                    emc = cPurpose.equals("EC") ? "true" : "";
+                                    sdm = cPurpose.equals("SDM") ? "true" : "";
+                                    if (cPurpose.equals("NK")) rel = "Next of Kin";
                                     else if (cPurpose.equals("AS")) rel = "Administrative Staff";
                                     else if (cPurpose.equals("CG")) rel = "Care Giver";
                                     else if (cPurpose.equals("PA")) rel = "Power of Attorney";
                                     else if (cPurpose.equals("IN")) rel = "Insurance";
                                     else if (cPurpose.equals("GT")) rel = "Guarantor";
-                                    else rel = cPurpose;
+                                    else {
+                                        rel = cPurpose;
+                                        type = 1;
+                                    }
                                 }
 
 				String contactNote = contt[i].getNote();
@@ -622,6 +626,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
                                     demoContact.setEc(emc);
                                     demoContact.setSdm(sdm);
                                     demoContact.setRole(rel);
+                                    demoContact.setType(1); //should be "type" - display problem
                                     demoContact.setCategory("personal");
                                     contactDao.merge(demoContact);
 

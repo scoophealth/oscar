@@ -781,12 +781,12 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			if (filled(val)) {
 				cme.setKeyVal(keys[i]);
 				if (i <= 2) {
-					cme.setDateValue(val);
+                                        if (createPartialDate(val, cme)) caseManagementMgr.saveNoteExt(cme);
 				} else {
 					if (cme.getDateValue() != null) cme.setDateValue("");
 					cme.setValue(val);
+                                        caseManagementMgr.saveNoteExt(cme);
 				}
-				caseManagementMgr.saveNoteExt(cme);
 			}
 		}
 
