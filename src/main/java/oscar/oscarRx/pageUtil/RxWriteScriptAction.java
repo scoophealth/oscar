@@ -498,7 +498,15 @@ public final class RxWriteScriptAction extends DispatchAction {
 			rx.setGenericName(dmono.name); // TODO: how was this done before?
 			rx.setBrandName(brandName);
 
-			rx.setDrugForm(dmono.drugForm);
+			//there's a change there's multiple forms. Select the first one by default
+			//save the list in a separate variable to make a drop down in the interface.
+			if(dmono.drugForm.indexOf(",")!=-1) {
+				String[] forms = dmono.drugForm.split(",");
+				rx.setDrugForm(forms[0]);				
+			} else {
+				rx.setDrugForm(dmono.drugForm);
+			}
+			rx.setDrugFormList(dmono.drugForm);
 
 			// TO DO: cache the most used route from the drugs table.
 			// for now, check to see if ORAL present, if yes use that, if not use the first one.
@@ -929,6 +937,8 @@ public final class RxWriteScriptAction extends DispatchAction {
 							}else{
 							   rx.setRxStatus(val);
 							}
+						} else if (elem.equals("drugForm_"+num)){
+							rx.setDrugForm(val);
 						}
                                                 
 					}
