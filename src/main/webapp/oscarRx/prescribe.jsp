@@ -42,6 +42,8 @@ if(listRxDrugs!=null){
          String pickupTime      = RxUtil.DateToString(rx.getPickupTime(), "hh:mm");
          String eTreatmentType  = rx.getETreatmentType()!=null ? rx.getETreatmentType() : "";
          String rxStatus        = rx.getRxStatus()!=null ? rx.getRxStatus() : "";
+         String drugForm		= rx.getDrugForm();
+         
          if(ATC.trim().length()>0)
              ATC="ATC: "+ATC;
          String drugName;
@@ -214,8 +216,20 @@ if(listRxDrugs!=null){
                          <option value="Obsolete" <%=rxStatus.equals("Obsolete")?"selected":""%>><bean:message key="WriteScript.msgRxStatus.Obsolete"/></option>
                          <option value="Nullified" <%=rxStatus.equals("Nullified")?"selected":""%>><bean:message key="WriteScript.msgRxStatus.Nullified"/></option>
            </select>
-                
-
+                <br/>                
+                <bean:message key="WriteScript.msgDrugForm"/>: 
+                <%if(rx.getDrugFormList().indexOf(",")!=-1){ %>
+                <select name="drugForm_<%=rand%>">
+                	<%
+                		String[] forms = rx.getDrugFormList().split(",");
+                		for(String form:forms) {
+                	%>
+                		<option value="<%=form%>" <%=form.equals(drugForm)?"selected":"" %>><%=form%></option>
+                	<% } %>
+                </select>    
+				<%} else { %>
+					<%=drugForm%>
+				<% } %>
 
 
 

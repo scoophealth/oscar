@@ -1103,9 +1103,19 @@ public class RxPrescriptionData {
         private Integer dispenseInterval = 0;
         private int position = 0;
         
+        private String drugFormList = "";
         
         
-        public int getPosition() {
+        
+        public String getDrugFormList() {
+			return drugFormList;
+		}
+
+		public void setDrugFormList(String drugFormList) {
+			this.drugFormList = drugFormList;
+		}
+
+		public int getPosition() {
         	return position;
         }
 
