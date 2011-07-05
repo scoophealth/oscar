@@ -896,6 +896,8 @@ java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.stru
 </li>
 
 <oscar:oscarPropertiesCheck property="NOT_FOR_CAISI" value="no" defaultVal="true">
+
+<security:oscarSec roleName="<%=roleName$%>" objectName="_billing" rights="r">
 <li>
      <%if (vLocale.getCountry().equals("BR")) { %>
        <a HREF="#" ONCLICK ="popupPage2('../oscar/billing/consultaFaturamentoMedico/init.do');return false;" TITLE='<bean:message key="global.genBillReport"/>' onMouseOver="window.status='<bean:message key="global.genBillReport"/>';return true"><bean:message key="global.billing"/></a>
@@ -903,6 +905,8 @@ java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.stru
 	<a HREF="#" ONCLICK ="popupPage2('../billing/CA/<%=prov%>/billingReportCenter.jsp?displaymode=billreport&providerview=<%=curUser_no%>');return false;" TITLE='<bean:message key="global.genBillReport"/>' onMouseOver="window.status='<bean:message key="global.genBillReport"/>';return true"><bean:message key="global.billing"/></a>
      <% } %>
 </li>
+</security:oscarSec>
+
 <security:oscarSec roleName="<%=roleName$%>" objectName="_appointment.doctorLink" rights="r">
    <li>
        <a HREF="#" ONCLICK ="popupInboxManager('../dms/inboxManage.do?method=prepareForIndexPage&providerNo=<%=curUser_no%>', 'Lab');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewLabReports"/>'>
@@ -1016,11 +1020,17 @@ java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.stru
 <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
 <INPUT TYPE="text" NAME="providername" VALUE="" WIDTH="2" HEIGHT="10" border="0" size="10" maxlength="10">-
 <INPUT TYPE="SUBMIT" NAME="Go" VALUE='<bean:message key="receptionist.appointmentreceptionistadminday.btnGo"/>' onClick="findProvider(<%=year%>,<%=month%>,<%=day%>);return false;">
-
-<a href=# onClick ="popupPage(600,750,'<%=resourcebaseurl%>')"><bean:message key="global.help"/></a>
 &nbsp;&nbsp;
 </caisi:isModuleLoad>
-  <a href="javascript: function myFunction() {return false; }" onClick="popup(700,1024,'../scratch/index.jsp','scratch')"><span id="oscar_scratch"></span></a>&nbsp;
+
+  	<a href="javascript: function myFunction() {return false; }" onClick="popup(700,1024,'../scratch/index.jsp','scratch')"><span id="oscar_scratch"></span></a>&nbsp;
+
+	<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
+	<a href=# onClick ="popupPage(600,750,'<%=resourcebaseurl%>')"><bean:message key="global.help"/></a>
+	</caisi:isModuleLoad>
+	
+	| <a href="../logout.jsp"><bean:message key="global.btnLogout"/>&nbsp;</a>
+	
 </td>
 </form>
 
@@ -1175,11 +1185,11 @@ if (curProvider_no[provIndex].equals(provNum)) { %>
 </security:oscarSec>
 </select>
 
-
+&nbsp;|&nbsp;
 <% if(request.getParameter("viewall")!=null && request.getParameter("viewall").equals("1") ) { %>
-         <a href=# onClick = "review('0')" title="<bean:message key="provider.appointmentProviderAdminDay.viewProvAval"/>"><bean:message key="provider.appointmentProviderAdminDay.schedView"/></a> &nbsp;|&nbsp;
+         <a href=# onClick = "review('0')" title="<bean:message key="provider.appointmentProviderAdminDay.viewProvAval"/>"><bean:message key="provider.appointmentProviderAdminDay.schedView"/></a>;
 <% } else {  %>
-         <a href=# onClick = "review('1')" title="<bean:message key="provider.appointmentProviderAdminDay.viewAllProv"/>"><bean:message key="provider.appointmentProviderAdminDay.viewAll"/></a> &nbsp;|&nbsp;
+         <a href=# onClick = "review('1')" title="<bean:message key="provider.appointmentProviderAdminDay.viewAllProv"/>"><bean:message key="provider.appointmentProviderAdminDay.viewAll"/></a>;
 <% } %>
 </logic:notEqual>
 
@@ -1191,7 +1201,7 @@ if (curProvider_no[provIndex].equals(provNum)) { %>
 </logic:equal>
 
 <% } %>
-         <a href="../logout.jsp"><bean:message key="global.btnLogout"/> <img src="../images/next.gif"  border="0" width="10" height="9" align="absmiddle"> &nbsp;</a>
+         
          
 <!-- caisi infirmary view extension add fffffffffffff-->
 <caisi:isModuleLoad moduleName="caisi">
