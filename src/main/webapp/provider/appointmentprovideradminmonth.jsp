@@ -362,9 +362,7 @@ function refreshTabAlerts(id) {
 }
 //-->
 </SCRIPT>
-<body background="../images/gray_bg.jpg" bgproperties="fixed"
-	onLoad="refreshAllTabAlerts();" topmargin="0" leftmargin="0"
-	rightmargin="0">
+<body bgcolor="#EEEEFF"	onLoad="refreshAllTabAlerts();" topmargin="0" leftmargin="0">
 
 <div id="jumpmenu"
 	style="position: absolute; width: 140px; height: 100px; z-index: 2; left: 240px; top: 30px; visibility: hidden">
@@ -432,6 +430,8 @@ function refreshTabAlerts(id) {
 				TITLE='<bean:message key="global.genReport"/>'
 				OnMouseOver="window.status='<bean:message key="global.genReport"/>' ; return true"><bean:message
 				key="global.report" /></a></li>
+			
+			<security:oscarSec roleName="<%=roleName$%>" objectName="_billing" rights="r">
 			<li>
 			<%if (vLocale.getCountry().equals("BR")) { %> <a HREF="#"
 				ONCLICK="popupOscarRx(550,687,'../oscar/billing/consultaFaturamentoMedico/init.do');return false;"
@@ -443,6 +443,8 @@ function refreshTabAlerts(id) {
 				onMouseOver="window.status='<bean:message key="global.genBillReport"/>';return true"><bean:message
 				key="global.billing" /></a> <% } %>
 			</li>
+			</security:oscarSec>
+			
 			<security:oscarSec roleName="<%=roleName$%>"
 				objectName="_appointment.doctorLink" rights="r">
 				<li><a HREF="#"

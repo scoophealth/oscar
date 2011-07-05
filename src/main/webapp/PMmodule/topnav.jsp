@@ -60,7 +60,7 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 
 %>
 
-<table  class="topnav" id="firstTable">
+<table class="topnav" id="firstTable">
 	<tr>
 		<td valign="bottom">
 			<ul id="navlist">
@@ -79,11 +79,15 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 				<li>
 					<a HREF="#" ONCLICK ="popupPage2('<html:rewrite page="/report/reportindex.jsp"/>','reportPage');return false;" title="<bean:message key="global.genReport"/>"><u>R</u>eport</a>
 				</li>
+				
+				<security:oscarSec roleName="<%=roleName$%>" objectName="_billing" rights="r">
 				<oscar:oscarPropertiesCheck property="NOT_FOR_CAISI" value="no" defaultVal="true">
 				<li>					
 					<a HREF="#" ONCLICK ="popupPage2('<html:rewrite page="/billing"/>/CA/<%=prov%>/billingReportCenter.jsp?displaymode=billreport&providerview=<%=curUser_no%>');return false;" title="<bean:message key="global.genBillReport"/>"><u>B</u>illing</a>
 				</li>
 				</oscar:oscarPropertiesCheck>
+				</security:oscarSec>
+				
 <security:oscarSec roleName="<%=roleName$%>" objectName="_appointment.doctorLink" rights="r">
 				<oscar:oscarPropertiesCheck property="NOT_FOR_CAISI" value="no" defaultVal="true">
                                 <li>
@@ -132,7 +136,7 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
   			&nbsp;&nbsp;   
 			<a href=# onClick ="popupPage(600,750,'http://www.oscarcanada.org/manual/oscar-caisi-documentation/');return false;"><u>H</u>elp</a>
 			&nbsp;
-			<a href='<html:rewrite page="/PMmodule/ProviderInfo.do"/>'>Home</a> &nbsp;
+			<a href='<html:rewrite page="/PMmodule/ProviderInfo.do"/>'>Home</a> |
 			<a href="<html:rewrite page="/logout.jsp"/>">Lo<u>g</u>out</a>
 		</td>
 	</tr>	
