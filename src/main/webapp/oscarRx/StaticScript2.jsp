@@ -79,8 +79,9 @@
 	String cn=request.getParameter("cn");
         String bn=request.getParameter("bn");
 	Integer currentDemographicNo=bean.getDemographicNo();
+	String atc = request.getParameter("atc");
 
-        ArrayList<StaticScriptBean.DrugDisplayData> drugs=StaticScriptBean.getDrugList(currentDemographicNo, regionalIdentifier, cn,bn);
+        ArrayList<StaticScriptBean.DrugDisplayData> drugs=StaticScriptBean.getDrugList(currentDemographicNo, regionalIdentifier, cn,bn,atc);
 
 	oscar.oscarRx.data.RxPatientData.Patient patient=RxPatientData.getPatient(currentDemographicNo);
 	String annotation_display=org.oscarehr.casemgmt.model.CaseManagementNoteLink.DISP_PRESCRIP;
