@@ -42,6 +42,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -1036,8 +1037,8 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                 // IMMUNIZATIONS
                 ArrayList<String> inject = new ArrayList<String>();
                 HashMap<String,String> prevTypes = new HashMap<String,String>();
-                PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance();//new PreventionDisplayConfig();
-                ArrayList<HashMap> prevList = pdc.getPreventions();
+                PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance();
+                ArrayList<HashMap<String,String>> prevList = pdc.getPreventions();
                 for (int k =0 ; k < prevList.size(); k++){
                     HashMap<String,String> a = new HashMap<String,String>();
                     a.putAll(prevList.get(k));
@@ -1046,28 +1047,27 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         prevTypes.put(a.get("name"), a.get("healthCanadaType"));
                     }
                 }
-                PreventionData pd = new PreventionData();
-                ArrayList<HashMap> prevList2 = pd.getPreventionData(demoNo);
+                ArrayList<Map<String,Object>> prevList2 = PreventionData.getPreventionData(demoNo);
                 for (int k =0 ; k < prevList2.size(); k++){
-                    HashMap<String,String> a = new HashMap<String,String>();
+                    HashMap<String,Object> a = new HashMap<String,Object>();
                     a.putAll(prevList2.get(k));
                     if (a != null && inject.contains(a.get("type")) ){
                         Immunizations immu = patientRec.addNewImmunizations();
-                        HashMap<String,String> extraData = new HashMap<String,String>();
-                        extraData.putAll(pd.getPreventionById(a.get("id")));
-                        if (StringUtils.filled(extraData.get("manufacture"))) immu.setManufacturer(extraData.get("manufacture"));
-                        if (StringUtils.filled(extraData.get("lot"))) immu.setLotNumber(extraData.get("lot"));
-                        if (StringUtils.filled(extraData.get("route"))) immu.setRoute(extraData.get("route"));
-                        if (StringUtils.filled(extraData.get("location"))) immu.setSite(extraData.get("location"));
-                        if (StringUtils.filled(extraData.get("dose"))) immu.setDose(extraData.get("dose"));
-                        if (StringUtils.filled(extraData.get("comments"))) immu.setNotes(extraData.get("comments"));
+                        HashMap<String,Object> extraData = new HashMap<String,Object>();
+                        extraData.putAll(PreventionData.getPreventionById((String) a.get("id")));
+                        if (StringUtils.filled((String)extraData.get("manufacture"))) immu.setManufacturer((String)extraData.get("manufacture"));
+                        if (StringUtils.filled((String)extraData.get("lot"))) immu.setLotNumber((String)extraData.get("lot"));
+                        if (StringUtils.filled((String)extraData.get("route"))) immu.setRoute((String)extraData.get("route"));
+                        if (StringUtils.filled((String)extraData.get("location"))) immu.setSite((String)extraData.get("location"));
+                        if (StringUtils.filled((String)extraData.get("dose"))) immu.setDose((String)extraData.get("dose"));
+                        if (StringUtils.filled((String)extraData.get("comments"))) immu.setNotes((String)extraData.get("comments"));
 
                         String prevType = prevTypes.get(a.get("type"));
                         if (prevType!=null) {
                             immu.setImmunizationType(cdsDt.ImmunizationType.Enum.forString(prevType));
                         }
 
-                        if (StringUtils.filled(extraData.get("name"))) immu.setImmunizationName(extraData.get("name"));
+                        if (StringUtils.filled((String)extraData.get("name"))) immu.setImmunizationName((String)extraData.get("name"));
                         else
                         {
                             err.add("Error! No Immunization Name for Patient "+demoNo+" ("+(k+1)+")");
@@ -1076,7 +1076,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         addOneEntry(IMMUNIZATION);
                         String imSummary = Util.newSummary("Immunization Name",data);
 
-                        data = a.get("refused");
+                        data = (String) a.get("refused");
                         if (StringUtils.empty(data)) {
                             immu.addNewRefusedFlag();
                             err.add("Error! No Refused Flag for Patient "+demoNo+" ("+(k+1)+")");
@@ -1085,7 +1085,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                             imSummary = Util.addSummary(imSummary, "Refused Flag", Util.convert10toboolean(data)?"Y":"N");
                         }
 
-                        data = a.get("prevention_date");
+                        data = (String) a.get("prevention_date");
                         if (UtilDateUtilities.StringToDate(data)!=null) {
                             immu.addNewDate().setFullDate(Util.calDate(data));
                             imSummary = Util.addSummary(imSummary, "Date", data);
@@ -1103,11 +1103,8 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         }
                         imSummary = Util.endSummary(imSummary);
                         immu.setCategorySummaryLine(StringUtils.noNull(imSummary));
-                        extraData = null;
                     }
-                    a = null;
                 }
-                prevList2 = null;
             }
 
             if (exMedicationsAndTreatments) {

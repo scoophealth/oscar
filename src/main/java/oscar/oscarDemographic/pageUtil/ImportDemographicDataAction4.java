@@ -45,6 +45,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.UUID;
@@ -74,18 +75,26 @@ import org.oscarehr.casemgmt.model.CaseManagementNoteExt;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
+import org.oscarehr.common.dao.DemographicContactDao;
 import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.dao.DrugReasonDao;
+import org.oscarehr.common.model.DemographicContact;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.hospitalReportManager.dao.HRMDocumentDao;
+import org.oscarehr.hospitalReportManager.dao.HRMDocumentSubClassDao;
+import org.oscarehr.hospitalReportManager.dao.HRMDocumentToDemographicDao;
+import org.oscarehr.hospitalReportManager.model.HRMDocument;
+import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
+import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.appt.ApptStatusData;
 import oscar.dms.EDocUtil;
 import oscar.oscarDemographic.data.DemographicData;
-import oscar.oscarDemographic.data.DemographicExt;
 import oscar.oscarDemographic.data.DemographicData.DemographicAddResult;
+import oscar.oscarDemographic.data.DemographicExt;
 import oscar.oscarEncounter.data.EctProgram;
 import oscar.oscarEncounter.oscarMeasurements.data.ImportExportMeasurements;
 import oscar.oscarEncounter.oscarMeasurements.data.Measurements;
@@ -98,7 +107,6 @@ import oscar.oscarRx.data.RxAllergyImport;
 import oscar.service.OscarSuperManager;
 import oscar.util.StringUtils;
 import oscar.util.UtilDateUtilities;
-import cds.OmdCdsDocument;
 import cds.AlertsAndSpecialNeedsDocument.AlertsAndSpecialNeeds;
 import cds.AllergiesAndAdverseReactionsDocument.AllergiesAndAdverseReactions;
 import cds.AppointmentsDocument.Appointments;
@@ -109,20 +117,13 @@ import cds.FamilyHistoryDocument.FamilyHistory;
 import cds.ImmunizationsDocument.Immunizations;
 import cds.LaboratoryResultsDocument.LaboratoryResults;
 import cds.MedicationsAndTreatmentsDocument.MedicationsAndTreatments;
+import cds.OmdCdsDocument;
 import cds.PastHealthDocument.PastHealth;
 import cds.PatientRecordDocument.PatientRecord;
 import cds.PersonalHistoryDocument.PersonalHistory;
 import cds.ProblemListDocument.ProblemList;
 import cds.ReportsReceivedDocument.ReportsReceived;
 import cds.RiskFactorsDocument.RiskFactors;
-import org.oscarehr.common.dao.DemographicContactDao;
-import org.oscarehr.common.model.DemographicContact;
-import org.oscarehr.hospitalReportManager.dao.HRMDocumentDao;
-import org.oscarehr.hospitalReportManager.dao.HRMDocumentSubClassDao;
-import org.oscarehr.hospitalReportManager.dao.HRMDocumentToDemographicDao;
-import org.oscarehr.hospitalReportManager.model.HRMDocument;
-import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
-import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 
 /**
  *
@@ -1234,7 +1235,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 			}
 			for (int i=0; i<immuArray.length; i++) {
 				String preventionDate="", preventionType="", refused="0", comments="";
-				ArrayList<HashMap> preventionExt = new ArrayList<HashMap>();
+				ArrayList<Map<String,String>> preventionExt = new ArrayList<Map<String,String>>();
 
 				if (StringUtils.filled(immuArray[i].getImmunizationName())) {
 					preventionType = mapPreventionType(immuArray[i].getImmunizationCode());
@@ -1271,37 +1272,36 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 				comments = Util.addLine(comments, "Instructions: ", immuArray[i].getInstructions());
 				comments = Util.addLine(comments, getResidual(immuArray[i].getResidualInfo()));
 				if (StringUtils.filled(comments)) {
-					HashMap<String,String> ht = new HashMap<String,String>();
+					Map<String,String> ht = new HashMap<String,String>();
 					ht.put("comments", comments);
 					preventionExt.add(ht);
 				}
 				if (StringUtils.filled(immuArray[i].getManufacturer())) {
-					HashMap<String,String> ht = new HashMap<String,String>();
+					Map<String,String> ht = new HashMap<String,String>();
 					ht.put("manufacture", immuArray[i].getManufacturer());
 					preventionExt.add(ht);
 				}
 				if (StringUtils.filled(immuArray[i].getLotNumber())) {
-					HashMap<String,String> ht = new HashMap<String,String>();
+					Map<String,String> ht = new HashMap<String,String>();
 					ht.put("lot", immuArray[i].getLotNumber());
 					preventionExt.add(ht);
 				}
 				if (StringUtils.filled(immuArray[i].getRoute())) {
-					HashMap<String,String> ht = new HashMap<String,String>();
+					Map<String,String> ht = new HashMap<String,String>();
 					ht.put("route", immuArray[i].getRoute());
 					preventionExt.add(ht);
 				}
 				if (StringUtils.filled(immuArray[i].getSite())) {
-					HashMap<String,String> ht = new HashMap<String,String>();
+					Map<String,String> ht = new HashMap<String,String>();
 					ht.put("location", immuArray[i].getSite());
 					preventionExt.add(ht);
 				}
 				if (StringUtils.filled(immuArray[i].getDose())) {
-					HashMap<String,String> ht = new HashMap<String,String>();
+					Map<String,String> ht = new HashMap<String,String>();
 					ht.put("dose", immuArray[i].getDose());
 					preventionExt.add(ht);
 				}
-				PreventionData prevD = new PreventionData();
-				prevD.insertPreventionData(admProviderNo, demographicNo, preventionDate, defaultProvider, "", preventionType, refused, "", "", preventionExt);
+				PreventionData.insertPreventionData(admProviderNo, demographicNo, preventionDate, defaultProvider, "", preventionType, refused, "", "", preventionExt);
                                 addOneEntry(IMMUNIZATION);
 			}
 

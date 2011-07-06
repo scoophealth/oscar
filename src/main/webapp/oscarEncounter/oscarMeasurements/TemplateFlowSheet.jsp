@@ -52,17 +52,9 @@
            edate = oscar.util.UtilDateUtilities.StringToDate(request.getParameter("edate"));
         }catch(Exception e){edate = null;}
     }
-    
-    
-    
-
-    //PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance();//new PreventionDisplayConfig();
-    //ArrayList prevList = pdc.getPreventions();
-    //ArrayList configSets = pdc.getConfigurationSets();
+        
 
     long startTimeToGetP = System.currentTimeMillis();
-    PreventionData pd = new PreventionData();
-    Prevention p = pd.getPrevention(demographic_no);
 
     boolean dsProblems = false;
 
@@ -602,9 +594,7 @@ div.recommendations li{
                 
             }
             String prevName = (String) h.get("name");
-            //Collection aalist = mi.getMeasurementData(measure);
             ArrayList<EctMeasurementsDataBean> alist = mi.getMeasurementData(measure);
-            //ArrayList alist =  new ArrayList(aalist);//pd.getPreventionData((String)h.get("name"), demographic_no);
             String extraColour = "";
             if(mi.hasRecommendation(measure)){
                 extraColour = "style=\"background-color: "+mFlowsheet.getRecommendationColour()+"\" ";
@@ -688,10 +678,7 @@ div.recommendations li{
 <%}else{
     String prevType = (String) h2.get("prevention_type");
     long startPrevType = System.currentTimeMillis();
-    ArrayList alist = pd.getPreventionData(prevType, demographic_no);
-
-    
-
+    ArrayList<Map<String,Object>> alist = PreventionData.getPreventionData(prevType, demographic_no);
 %>
 
 
@@ -709,8 +696,8 @@ div.recommendations li{
     <%
         out.flush();
         for (int k = 0; k < alist.size(); k++){
-            Hashtable hdata = (Hashtable) alist.get(k);
-            String com = pd.getPreventionComment(""+hdata.get("id"));
+      	  	Map<String,Object> hdata = alist.get(k);
+            String com = PreventionData.getPreventionComment(""+hdata.get("id"));
             boolean comb = false;
             if (com != null ){
                 comments.add(com);

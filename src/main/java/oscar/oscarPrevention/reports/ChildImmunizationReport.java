@@ -38,6 +38,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.Hashtable;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.util.MiscUtils;
@@ -56,16 +57,12 @@ import oscar.util.UtilDateUtilities;
 public class ChildImmunizationReport implements PreventionReport{
 
     //Sort class for preventions used to sort final list of dtap preventions
-    class DtapComparator implements Comparator {
+    class DtapComparator implements Comparator<Map<String, Object>> {
 
-        public int compare(Object x, Object y) {
-            Hashtable hX = (Hashtable)x;
-            Hashtable hY = (Hashtable)y;
-            
-            return ((String)hX.get("prevention_date")).compareTo(((String)hY.get("prevention_date")));
+        public int compare(Map<String, Object> x, Map<String, Object> y) {
+            return ((String)x.get("prevention_date")).compareTo(((String)y.get("prevention_date")));
         }
-
-    };
+    }
 
 
 
@@ -79,7 +76,6 @@ public class ChildImmunizationReport implements PreventionReport{
         int inList = 0;
         double done= 0;
         ArrayList returnReport = new ArrayList();
-        PreventionData pd = new PreventionData();
         
         int dontInclude = 0;
           for (int i = 0; i < list.size(); i ++){//for each  element in arraylist 
@@ -88,22 +84,22 @@ public class ChildImmunizationReport implements PreventionReport{
              String demo = (String) fieldList.get(0);  
              log.debug("fieldList "+fieldList.size());
 
-             //search   prevention_date prevention_type  deleted   refused
-             ArrayList  prevs1 = pd.getPreventionData("DTap-IPV", demo);
-             ArrayList  prevsDtapIPVHIB = pd.getPreventionData("DTaP-IPV-Hib",demo);
-             ArrayList  prevs2 = pd.getPreventionData("Hib",demo);              
-             ArrayList  prevs4 = pd.getPreventionData("MMR",demo);            
+			// search prevention_date prevention_type deleted refused
+			ArrayList<Map<String, Object>> prevs1 = PreventionData.getPreventionData("DTap-IPV", demo);
+			ArrayList<Map<String, Object>> prevsDtapIPVHIB = PreventionData.getPreventionData("DTaP-IPV-Hib", demo);
+			ArrayList<Map<String, Object>> prevs2 = PreventionData.getPreventionData("Hib", demo);
+			ArrayList<Map<String, Object>> prevs4 = PreventionData.getPreventionData("MMR",demo);            
 
              //need to compile accurate dtap numbers
-             Hashtable hDtapIpv, hDtapIpvHib;
+			 Map<String, Object> hDtapIpv, hDtapIpvHib;
              boolean add;
 
              for( int idx = 0; idx < prevsDtapIPVHIB.size(); ++idx ) {
-                 hDtapIpvHib = (Hashtable) prevsDtapIPVHIB.get(idx);
+                 hDtapIpvHib = prevsDtapIPVHIB.get(idx);
                  add = true;
                  for( int idx2 = 0; idx2 < prevs1.size(); ++idx2 ) {
-                     hDtapIpv = (Hashtable)prevs1.get(idx2);
-                     if( ((String)hDtapIpvHib.get("prevention_date")).equals(((String)hDtapIpv.get("prevention_date")))) {
+                     hDtapIpv = prevs1.get(idx2);
+                     if(((String)hDtapIpvHib.get("prevention_date")).equals((hDtapIpv.get("prevention_date")))) {
                          add = false;
                          break;
                      }
@@ -139,7 +135,7 @@ public class ChildImmunizationReport implements PreventionReport{
                 prd.state = "No Info";                
                 prd.numMonths = "------";
                 prd.color = "Magenta";
-             }else if(  (  prevs1.size()> 0 &&  ineligible((Hashtable) prevs1.get(prevs1.size()-1))) || (  prevs2.size()> 0 && ineligible((Hashtable) prevs2.get(prevs2.size()-1))) || (  prevs4.size()> 0 && ineligible((Hashtable) prevs4.get(prevs4.size()-1))) ){
+             }else if(  (  prevs1.size()> 0 &&  ineligible(prevs1.get(prevs1.size()-1))) || (  prevs2.size()> 0 && ineligible(prevs2.get(prevs2.size()-1))) || (  prevs4.size()> 0 && ineligible(prevs4.get(prevs4.size()-1))) ){
                 prd.rank = 5;
                 prd.lastDate = "------"; 
                 prd.state = "Ineligible"; 
@@ -155,35 +151,18 @@ public class ChildImmunizationReport implements PreventionReport{
                 String prevDateStr = "";
                 
                 if(prevs1.size() > 0){
-                   Hashtable hDtap = (Hashtable) prevs1.get(prevs1.size()-1);   
+                	Map<String, Object> hDtap = prevs1.get(prevs1.size()-1);   
                    if ( hDtap.get("refused") != null && ((String) hDtap.get("refused")).equals("1")){
                       refused = true;
                    }                                   
                    prevDateStr = (String) hDtap.get("prevention_date");                   
                    try{
-                      lastDate = (java.util.Date)formatter.parse(prevDateStr);
+                      lastDate = formatter.parse(prevDateStr);
                    }catch (Exception e){MiscUtils.getLogger().error("Error", e);}
                 }                
-                /*if(prevs2.size() > 0){
-                   Hashtable hHib  = (Hashtable) prevs2.get(prevs2.size()-1);                
-                   if ( hHib.get("refused") != null && ((String) hHib.get("refused")).equals("1")){
-                      refused = true;
-                   }
-                   
-                   String hibDateStr = (String) hHib.get("prevention_date");
-                   Date prevDate = null;
-                   try{
-                      prevDate = (java.util.Date)formatter.parse(hibDateStr);
-                      if (prevDate.after(lastDate)){
-                         lastDate = prevDate;
-                         prevDateStr = hibDateStr;
-                      }
-                   }catch (Exception e){MiscUtils.getLogger().error("Error", e);}
-                   
-                } 
-                 */                                               
+                                               
                 if(prevs4.size() > 0){
-                   Hashtable hMMR  = (Hashtable) prevs4.get(0);  //Changed to get first MMR value instead of last value
+                	Map<String, Object> hMMR  = prevs4.get(0);  //Changed to get first MMR value instead of last value
                    if ( hMMR.get("refused") != null && ((String) hMMR.get("refused")).equals("1")){
                       refused = true;
                    }
@@ -191,7 +170,7 @@ public class ChildImmunizationReport implements PreventionReport{
                    String mmrDateStr = (String) hMMR.get("prevention_date");
                    Date prevDate = null;
                    try{
-                      prevDate = (java.util.Date)formatter.parse(mmrDateStr);
+                      prevDate = formatter.parse(mmrDateStr);
                       if (prevDate.after(lastDate)){
                          lastDate = prevDate;
                          prevDateStr = mmrDateStr;
@@ -204,19 +183,6 @@ public class ChildImmunizationReport implements PreventionReport{
                    int num = UtilDateUtilities.getNumMonths(lastDate,asofDate);
                    numMonths = ""+num+" months";
                 }
-                
-                // if all shots doneprevDate is in the previous year 
-                //Calendar bonusEl = Calendar.getInstance();
-                //bonusEl.setTime(asofDate);                                
-                //bonusEl.set(Calendar.DAY_OF_YEAR,1);
-                //Date endOfYear = bonusEl.getTime();   
-                //bonusEl.set(Calendar.YEAR,( bonusEl.get(Calendar.YEAR) - 1) );                
-                //Date beginingOfYear  = bonusEl.getTime();
-                                                
-                //log.debug("\n\n\n prevDate "+prevDate);
-                //log.debug("bonusEl date "+beginingOfYear+ " "+beginingOfYear.before(prevDate));
-                //log.debug("bonusEl date "+endOfYear+ " "+endOfYear.after(prevDate));                
-               // log.debug("ASOFDATE "+asofDate);
                                                                                                                                 
                 Date dob = dd.getDemographicDOB(demo);
                 Calendar cal = Calendar.getInstance();
@@ -304,7 +270,7 @@ public class ChildImmunizationReport implements PreventionReport{
           return h;
     }
           
-    boolean ineligible(Hashtable h){
+    boolean ineligible(Map<String, Object> h){
        boolean ret =false;
        if ( h.get("refused") != null && ((String) h.get("refused")).equals("2")){
           ret = true;

@@ -39,6 +39,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Hashtable;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.util.MiscUtils;
@@ -62,17 +63,15 @@ public class PapReport implements PreventionReport {
     public Hashtable runReport(ArrayList list,Date asofDate){
         int inList = 0;
         double done= 0,doneWithGrace = 0;
-        ArrayList returnReport = new ArrayList();
-        PreventionData pd = new PreventionData();
-        
+        ArrayList returnReport = new ArrayList();        
         
         /////
         for (int i = 0; i < list.size(); i ++){//for each  element in arraylist 
              ArrayList fieldList = (ArrayList) list.get(i);       
              String demo = (String) fieldList.get(0);  
              //search   prevention_date prevention_type  deleted   refused 
-             ArrayList  prevs = pd.getPreventionData("PAP",demo); 
-             ArrayList noFutureItems =  removeFutureItems(prevs, asofDate);
+             ArrayList<Map<String,Object>>  prevs = PreventionData.getPreventionData("PAP",demo); 
+             ArrayList<Map<String,Object>> noFutureItems =  removeFutureItems(prevs, asofDate);
              PreventionReportDisplay prd = new PreventionReportDisplay();
              prd.demographicNo = demo;
              prd.bonusStatus = "N";
@@ -92,7 +91,7 @@ public class PapReport implements PreventionReport {
                 prd.color = "Magenta";
              }else{
                 DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-                Hashtable h = (Hashtable) noFutureItems.get(noFutureItems.size()-1);
+                Map<String,Object> h = noFutureItems.get(noFutureItems.size()-1);
                 
                 boolean refused = false;
                 boolean dateIsRefused = false;
@@ -108,7 +107,7 @@ public class PapReport implements PreventionReport {
                     log.debug("REFUSED AND PREV IS greater than one for demo "+demo);
                     for (int pr = (noFutureItems.size() -2) ; pr > -1; pr--){
                         log.debug("pr #"+pr);
-                        Hashtable h2 = (Hashtable) noFutureItems.get(pr);
+                        Map<String,Object> h2 = noFutureItems.get(pr);
                         log.debug("pr #"+pr+ "  "+((String) h2.get("refused")));
                         if ( h2.get("refused") != null && ((String) h2.get("refused")).equals("0")){
                             prevDateStr = (String) h2.get("prevention_date");
@@ -120,7 +119,7 @@ public class PapReport implements PreventionReport {
                 }
                 Date prevDate = null;
                 try{
-                   prevDate = (java.util.Date)formatter.parse(prevDateStr);
+                   prevDate = formatter.parse(prevDateStr);
                 }catch (Exception e){}
                 
                 
@@ -140,9 +139,7 @@ public class PapReport implements PreventionReport {
                 
                 log.debug("cut 1 "+cutoffDate.toString()+ " cut 2 "+cutoffDate2.toString());
                
-                
-                
-                Calendar today = Calendar.getInstance(); 
+                 
                 String numMonths = "------";
                 if ( prevDate != null){
                    int num = UtilDateUtilities.getNumMonths(prevDate,asofDate);
@@ -242,7 +239,7 @@ public class PapReport implements PreventionReport {
           return h;
     }
           
-    boolean ineligible(Hashtable h){
+    boolean ineligible(Map<String,Object> h){
        boolean ret =false;
        if ( h.get("refused") != null && ((String) h.get("refused")).equals("2")){
           ret = true;
@@ -250,9 +247,9 @@ public class PapReport implements PreventionReport {
        return ret;
    }
     
-   boolean ineligible(ArrayList list){
+   boolean ineligible(ArrayList<Map<String,Object>> list){
        for (int i =0; i < list.size(); i ++){
-           Hashtable h = (Hashtable) list.get(i);
+    	   Map<String,Object> h = list.get(i);
            if (ineligible(h)){
                return true;
            }
@@ -260,15 +257,15 @@ public class PapReport implements PreventionReport {
        return false;
    } 
    
-   ArrayList removeFutureItems(ArrayList list,Date asOfDate){
-       ArrayList noFutureItems = new ArrayList();
+   private ArrayList<Map<String,Object>> removeFutureItems(ArrayList<Map<String,Object>> list,Date asOfDate){
+       ArrayList<Map<String,Object>> noFutureItems = new ArrayList<Map<String,Object>>();
        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
        for (int i =0; i < list.size(); i ++){
-            Hashtable h = (Hashtable) list.get(i);       
+    	   Map<String,Object> h = list.get(i);       
             String prevDateStr = (String) h.get("prevention_date");
             Date prevDate = null;
             try{
-                prevDate = (java.util.Date)formatter.parse(prevDateStr);
+                prevDate = formatter.parse(prevDateStr);
             }catch (Exception e){}
 
             if (prevDate != null && prevDate.before(asOfDate)){

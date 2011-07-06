@@ -38,6 +38,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Hashtable;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.util.MiscUtils;
@@ -62,15 +63,14 @@ public class MammogramReport implements PreventionReport{
         int inList = 0;
         double done= 0,doneWithGrace = 0;
         ArrayList returnReport = new ArrayList();
-        PreventionData pd = new PreventionData();
         
         for (int i = 0; i < list.size(); i ++){//for each  element in arraylist 
              ArrayList fieldList = (ArrayList) list.get(i);       
              String demo = (String) fieldList.get(0);  
 
              //search   prevention_date prevention_type  deleted   refused 
-             ArrayList  prevs = pd.getPreventionData("MAM",demo); 
-             ArrayList noFutureItems =  removeFutureItems(prevs, asofDate);
+             ArrayList<Map<String,Object>>  prevs = PreventionData.getPreventionData("MAM",demo); 
+             ArrayList<Map<String,Object>> noFutureItems =  removeFutureItems(prevs, asofDate);
              PreventionReportDisplay prd = new PreventionReportDisplay();
              prd.demographicNo = demo;
              prd.bonusStatus = "N";
@@ -90,12 +90,12 @@ public class MammogramReport implements PreventionReport{
                 prd.numMonths = "------";
                 prd.color = "Magenta";
              } else{
-                Hashtable h = (Hashtable) noFutureItems.get(noFutureItems.size()-1);
+            	 Map<String,Object> h =  noFutureItems.get(noFutureItems.size()-1);
                 DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
                 String prevDateStr = (String) h.get("prevention_date");
                 
                 try{
-                   prevDate = (java.util.Date)formatter.parse(prevDateStr);
+                   prevDate = formatter.parse(prevDateStr);
                 }catch (Exception e){}
                 boolean refused = false;
                 if ( h.get("refused") != null && ((String) h.get("refused")).equals("1")){
@@ -127,7 +127,7 @@ public class MammogramReport implements PreventionReport{
                 log.debug("\n\n\n prevDate "+prevDate);
                 log.debug("bonusEl date "+bonusStartDate+ " "+bonusEl.after(prevDate));
                 log.debug("asofDate date"+asofDate+" "+asofDate.after(prevDate));
-                String result = pd.getExtValue((String)h.get("id"), "result");
+                String result = PreventionData.getExtValue((String)h.get("id"), "result");
 
                 if (!refused && bonusStartDate.before(prevDate) && asofDate.after(prevDate) && !result.equalsIgnoreCase("pending")){
                    prd.bonusStatus = "Y";
@@ -221,7 +221,7 @@ public class MammogramReport implements PreventionReport{
           return h;
     }
           
-    boolean ineligible(Hashtable h){
+    boolean ineligible(Map<String,Object> h){
        boolean ret =false;
        if ( h.get("refused") != null && ((String) h.get("refused")).equals("2")){
           ret = true;
@@ -229,9 +229,9 @@ public class MammogramReport implements PreventionReport{
        return ret;
    }
     
-    boolean ineligible(ArrayList list){
+    boolean ineligible(ArrayList<Map<String,Object>> list){
        for (int i =0; i < list.size(); i ++){
-           Hashtable h = (Hashtable) list.get(i);
+    	   Map<String,Object> h = list.get(i);
            if (ineligible(h)){
                return true;
            }
@@ -239,15 +239,15 @@ public class MammogramReport implements PreventionReport{
        return false;
    } 
     
-   ArrayList removeFutureItems(ArrayList list,Date asOfDate){
-       ArrayList noFutureItems = new ArrayList();
+   private ArrayList<Map<String,Object>> removeFutureItems(ArrayList<Map<String,Object>> list,Date asOfDate){
+       ArrayList<Map<String,Object>> noFutureItems = new ArrayList<Map<String,Object>>();
        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
        for (int i =0; i < list.size(); i ++){
-            Hashtable h = (Hashtable) list.get(i);       
+    	   Map<String,Object> h = list.get(i);       
             String prevDateStr = (String) h.get("prevention_date");
             Date prevDate = null;
             try{
-                prevDate = (java.util.Date)formatter.parse(prevDateStr);
+                prevDate = formatter.parse(prevDateStr);
             }catch (Exception e){}
 
             if (prevDate != null && prevDate.before(asOfDate)){

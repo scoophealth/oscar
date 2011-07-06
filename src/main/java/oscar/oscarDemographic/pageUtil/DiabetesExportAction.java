@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -507,25 +508,25 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
     
     void setImmunizations(PatientRecord patientRecord, String demoNo) {
         ArrayList<String> inject = new ArrayList<String>();
-        ArrayList<HashMap> preventionList = PreventionDisplayConfig.getInstance().getPreventions();
+        ArrayList<? extends Map<String,? extends Object>> preventionList = PreventionDisplayConfig.getInstance().getPreventions();
         for (int i=0; i<preventionList.size(); i++){
-            HashMap<String,String> h = new HashMap<String,String>();
+            HashMap<String,Object> h = new HashMap<String,Object>();
             h.putAll(preventionList.get(i));
             if (h!= null && h.get("layout")!= null && h.get("layout").equals("injection")){
-                inject.add(h.get("name"));
+                inject.add((String) h.get("name"));
             }	     	
         }
-        preventionList = new PreventionData().getPreventionData(demoNo);
+        preventionList = PreventionData.getPreventionData(demoNo);
         for (int i=0; i<preventionList.size(); i++){
-            HashMap<String,String> h = new HashMap<String,String>();
+            HashMap<String,Object> h = new HashMap<String,Object>();
             h.putAll(preventionList.get(i));
             if (h!= null && inject.contains(h.get("type")) ){
                 Immunizations immunizations = null;
-                Date preventionDate = UtilDateUtilities.StringToDate(h.get("prevention_date"),"yyyy-MM-dd");
+                Date preventionDate = UtilDateUtilities.StringToDate((String)h.get("prevention_date"),"yyyy-MM-dd");
                 if (preventionDate!=null) {
                     if (startDate.after(preventionDate) || endDate.before(preventionDate)) continue;
                 }
-                String data = h.get("type");
+                String data = (String) h.get("type");
                 if (StringUtils.filled(data)) {
 		    if (data.equalsIgnoreCase("Flu")) {
                         immunizations = patientRecord.addNewImmunizations();
@@ -541,7 +542,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                 if (preventionDate==null) {
                     errors.add("Error! Missing/Invalid Immunization Date (id="+h.get("id")+") for Patient "+demoNo+" ("+immunizations.getImmunizationName()+")");
                 }
-                data = h.get("refused");
+                data = (String) h.get("refused");
                 cdsDt.YnIndicator refused = immunizations.addNewRefusedFlag();
                 if (StringUtils.empty(data)) {
                     errors.add("Error! No Refused Flag for Patient "+demoNo+" ("+immunizations.getImmunizationName()+")");

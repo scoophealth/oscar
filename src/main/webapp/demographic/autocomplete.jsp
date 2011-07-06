@@ -19,7 +19,7 @@
  * Department of Family Medicine
  * McMaster University
  * Hamilton
- * Ontario, Canada   Creates a new instance of PreventionData
+ * Ontario, Canada
  */
 --%>
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>

@@ -64,17 +64,14 @@
     oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergies
     = RxPatientData.getPatient(Integer.parseInt(bean.demographicNo)).getAllergies();
     
-    PreventionData pd = new PreventionData();
-    ArrayList prevList2 = pd.getPreventionData(bean.demographicNo);
-    
     ArrayList inject = new ArrayList();
       
-      PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance();//new PreventionDisplayConfig();         
-      ArrayList prevList  = pdc.getPreventions();
+      PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance();
+      ArrayList<HashMap<String,String>> prevList  = pdc.getPreventions();
       for (int k =0 ; k < prevList.size(); k++){
-             Hashtable a = (Hashtable) prevList.get(k);   
+             HashMap<String,String> a = prevList.get(k);   
              if (a != null && a.get("layout") != null &&  a.get("layout").equals("injection")){
-                inject.add((String) a.get("name"));
+                inject.add(a.get("name"));
              }	     	
       }
       
@@ -548,15 +545,15 @@ special needs <!--a class="hideShow" onclick="javascript:showHideItem('reminder'
 	href="javascript: function myFunction() {return false; }">hide</a></div>
 <ul>
 	<%for (int i = 0; i < inject.size(); i++ ){                 
-                 ArrayList list = pd.getPreventionData((String) inject.get(i),bean.demographicNo);                  
+                 ArrayList<Map<String,Object>> list = PreventionData.getPreventionData((String) inject.get(i),bean.demographicNo);                  
                  if ( list.size() > 0 ){%>
 	<li id="imm<%=i%>"><a class="hideShow"
 		onclick="javascript:showHideItem('imm<%=i%>')"
 		href="javascript: function myFunction() {return false; }">hide</a> <b><%=(String) inject.get(i)%></b>
 
 	<%for (int k =0 ; k < list.size(); k++){
-                        Hashtable a = (Hashtable) list.get(k);              
-                            if (a != null && inject.contains((String) a.get("type")) ){%>
+							Map<String,Object> a = list.get(k);              
+                            if (a != null && inject.contains(a.get("type")) ){%>
 	(<%=completeRefused(a.get("refused"))%>: <%=(String) a.get("prevention_date")%>)
 
 	<%}                      
