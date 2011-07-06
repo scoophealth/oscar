@@ -42,19 +42,18 @@
   String mrp = demo.getProviderNo();
   
   
-  PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance();//new PreventionDisplayConfig();
-  ArrayList prevList = pdc.getPreventions();
+  PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance();
+  ArrayList<HashMap<String,String>> prevList = pdc.getPreventions();
   
-  ArrayList configSets = pdc.getConfigurationSets();
+  ArrayList<Map<String,Object>> configSets = pdc.getConfigurationSets();
   
   
   
-  PreventionData pd = new PreventionData();    
-  Prevention p = pd.getPrevention(demographic_no);
+  Prevention p = PreventionData.getPrevention(demographic_no);
   
   Integer demographicId=Integer.parseInt(demographic_no);
-  pd.addRemotePreventions(p, demographicId);
-  Date demographicDateOfBirth=pd.getDemographicDateOfBirth(demographic_no);
+  PreventionData.addRemotePreventions(p, demographicId);
+  Date demographicDateOfBirth=PreventionData.getDemographicDateOfBirth(demographic_no);
   String demographicDob = oscar.util.UtilDateUtilities.DateToString(demographicDateOfBirth);  
   
   PreventionDS pf = PreventionDS.getInstance();
@@ -74,7 +73,7 @@
 %>
 
 <%!
-	public String getFromFacilityMsg(Map ht)
+	public String getFromFacilityMsg(Map<String,Object> ht)
 	{
 		if (ht.get("id")==null)	return("<br /><span style=\"color:#990000\">(At facility : "+ht.get("remoteFacilityName")+")<span>");
 		else return("");
@@ -396,8 +395,8 @@ div.recommendations li {
 		<div style="background-color: #EEEEFF;">
 		<ul>
 			<%for (int i = 0 ; i < prevList.size(); i++){ 
-                      Map h = (Map) prevList.get(i);
-                      String prevName = (String) h.get("name");%>
+				HashMap<String,String> h = prevList.get(i);
+                String prevName = h.get("name");%>
 			<li style="margin-top: 2px;"><a
 				href="javascript: function myFunction() {return false; }"
 				onclick="javascript:popup(465,635,'AddPreventionData.jsp?prevention=<%= java.net.URLEncoder.encode(prevName) %>&amp;demographic_no=<%=demographic_no%>','addPreventionData<%=Math.abs(prevName.hashCode()) %>')">
@@ -454,15 +453,15 @@ div.recommendations li {
                 <input type="hidden" name="module" value="prevention">
 		<%                 
                  if (!oscar.OscarProperties.getInstance().getBooleanProperty("PREVENTION_CLASSIC_VIEW","yes")){
-                   ArrayList hiddenlist = new ArrayList();
+                   ArrayList<Map<String,Object>> hiddenlist = new ArrayList<Map<String,Object>>();
                   for (int i = 0 ; i < prevList.size(); i++){ 
-                        Hashtable h = (Hashtable) prevList.get(i);
-                        String prevName = (String) h.get("name");
-                        ArrayList alist = pd.getPreventionData(prevName, demographic_no); 
-                        pd.addRemotePreventions(alist, demographicId,prevName,demographicDateOfBirth);
+                  		HashMap<String,String> h = prevList.get(i);
+                        String prevName = h.get("name");
+                        ArrayList<Map<String,Object>> alist = PreventionData.getPreventionData(prevName, demographic_no); 
+                        PreventionData.addRemotePreventions(alist, demographicId,prevName,demographicDateOfBirth);
                         boolean show = pdc.display(h, demographic_no,alist.size());                        
                         if(!show){  
-                            Hashtable h2 = new Hashtable();
+                            Map<String,Object> h2 = new HashMap<String,Object>();
                             h2.put("prev",h);
                             h2.put("list",alist);
                             hiddenlist.add(h2);
@@ -489,9 +488,9 @@ div.recommendations li {
 		</div>
 		<%              String result;
                         for (int k = 0; k < alist.size(); k++){
-                        Map hdata = (Map) alist.get(k);
-                        Map hExt = pd.getPreventionKeyValues((String)hdata.get("id"));
-                        result = (String)hExt.get("result");
+                        	Map<String,Object> hdata = alist.get(k);
+                        Map<String,String> hExt = PreventionData.getPreventionKeyValues((String)hdata.get("id"));
+                        result = hExt.get("result");
 
                         String onClickCode="javascript:popup(465,635,'AddPreventionData.jsp?id="+hdata.get("id")+"&amp;demographic_no="+demographic_no+"','addPreventionData')";
                         if (hdata.get("id")==null) onClickCode="popup(300,500,'display_remote_prevention.jsp?remoteFacilityId="+hdata.get("integratorFacilityId")+"&remotePreventionId="+hdata.get("integratorPreventionId")+"')";
@@ -510,10 +509,10 @@ div.recommendations li {
 			style="font-size: xx-small;">show/hide all other Preventions</a>
 		<div style="display: none;" id="otherElements">
 		<%for (int i = 0 ; i < hiddenlist.size(); i++){ 
-                        Map h2 = (Map) hiddenlist.get(i);
-                        Map h = (Map)  h2.get("prev");
-                        String prevName = (String) h.get("name");                        
-                        ArrayList alist = (ArrayList)  h2.get("list");
+						Map<String,Object> h2 = hiddenlist.get(i);
+						HashMap<String,String> h = (HashMap<String,String>) h2.get("prev");
+                        String prevName = h.get("name");                        
+                        ArrayList<HashMap<String,String>> alist = (ArrayList<HashMap<String,String>>)  h2.get("list");
                         %>
 		<div class="preventionSection">
 		<%
@@ -536,9 +535,9 @@ div.recommendations li {
 		<%
                             String result;
                             for (int k = 0; k < alist.size(); k++){
-                            Map hdata = (Map) alist.get(k);
-                            Map hExt = pd.getPreventionKeyValues((String)hdata.get("id"));
-                            result = (String)hExt.get("result");
+                           		Map<String,String> hdata = alist.get(k);
+                            Map<String,String> hExt = PreventionData.getPreventionKeyValues(hdata.get("id"));
+                            result = hExt.get("result");
                             %>
 		<div class="preventionProcedure"
 			onclick="javascript:popup(465,635,'AddPreventionData.jsp?id=<%=hdata.get("id")%>&amp;demographic_no=<%=demographic_no%>','addPreventionData')">
@@ -552,9 +551,13 @@ div.recommendations li {
 		<%}%>
 		</div>
 		<%}else{  //OLD
-                    if (configSets == null ){ configSets = new ArrayList(); }
+                    if (configSets == null )
+                    { 
+                  	  configSets = new ArrayList<Map<String,Object>>(); 
+                  	}
+		
                     for ( int setNum = 0; setNum < configSets.size(); setNum++){ 
-                  	  Hashtable setHash = (Hashtable) configSets.get(setNum);
+                  	  Map<String,Object> setHash = configSets.get(setNum);
                     String[] prevs = (String[]) setHash.get("prevList");
                     %>
 		<div class="immSet">
@@ -566,28 +569,28 @@ div.recommendations li {
 		<div class="preventionSet"
 			<%=pdc.getDisplay(setHash,demographic_no)%>;"  id="<%="prev"+setNum%>">
 		<%for (int i = 0; i < prevs.length ; i++) {
-                             Map h = pdc.getPrevention(prevs[i]); %>
+			HashMap<String,String> h = pdc.getPrevention(prevs[i]); %>
 		<div class="preventionSection">
 		<div class="headPrevention">
 		<p><a href="javascript: function myFunction() {return false; }"
-			onclick="javascript:popup(465,635,'AddPreventionData.jsp?prevention=<%= response.encodeURL( (String) h.get("name")) %>&amp;demographic_no=<%=demographic_no%>','addPreventionData<%=Math.abs( ((String) h.get("name")).hashCode() ) %>')">
+			onclick="javascript:popup(465,635,'AddPreventionData.jsp?prevention=<%= response.encodeURL( h.get("name")) %>&amp;demographic_no=<%=demographic_no%>','addPreventionData<%=Math.abs(h.get("name").hashCode())%>')">
 		<span title="<%=h.get("desc")%>" style="font-weight: bold;"><%=h.get("name")%></span>
 		</a>  <br />
 		</p>
 		</div>
 		<%
-                                String prevType=(String)h.get("name");
-                                ArrayList alist = pd.getPreventionData(prevType, demographic_no);
-                                pd.addRemotePreventions(alist, demographicId, prevType,demographicDateOfBirth);
-                                String result;
-                                for (int k = 0; k < alist.size(); k++){
-                              	  Map hdata = (Map) alist.get(k);
-                              	  Map hExt = pd.getPreventionKeyValues((String)hdata.get("id"));
-                                result = (String)hExt.get("result");
-                                
-                                String onClickCode="javascript:popup(465,635,'AddPreventionData.jsp?id="+hdata.get("id")+"&amp;demographic_no="+demographic_no+"','addPreventionData')";
-                                if (hdata.get("id")==null) onClickCode="popup(300,500,'display_remote_prevention.jsp?remoteFacilityId="+hdata.get("integratorFacilityId")+"&remotePreventionId="+hdata.get("integratorPreventionId")+"')";
-                                %>
+            String prevType=h.get("name");
+            ArrayList<Map<String,Object>> alist = PreventionData.getPreventionData(prevType, demographic_no);
+            PreventionData.addRemotePreventions(alist, demographicId, prevType,demographicDateOfBirth);
+            String result;
+            for (int k = 0; k < alist.size(); k++){
+            	Map<String,Object> hdata = alist.get(k);
+          	  Map<String,String> hExt = PreventionData.getPreventionKeyValues((String)hdata.get("id"));
+            result = hExt.get("result");
+            
+            String onClickCode="javascript:popup(465,635,'AddPreventionData.jsp?id="+hdata.get("id")+"&amp;demographic_no="+demographic_no+"','addPreventionData')";
+            if (hdata.get("id")==null) onClickCode="popup(300,500,'display_remote_prevention.jsp?remoteFacilityId="+hdata.get("integratorFacilityId")+"&remotePreventionId="+hdata.get("integratorPreventionId")+"')";
+        %>
 		<div class="preventionProcedure" onclick="<%=onClickCode%>">
 		<p <%=r(hdata.get("refused"),result)%>>Age: <%=hdata.get("age")%> <br />
 		<!--<%=refused(hdata.get("refused"))%>-->Date: <%=hdata.get("prevention_date")%>
@@ -618,17 +621,17 @@ div.recommendations li {
 
 <%
     for (int i = 0 ; i < prevList.size(); i++){ 
-   	 Map h = (Map) prevList.get(i);
-        String prevName = (String) h.get("name");
-        ArrayList alist = pd.getPreventionData(prevName, demographic_no); 
-        pd.addRemotePreventions(alist, demographicId, prevName,demographicDateOfBirth);
+   	 	HashMap<String,String> h = prevList.get(i);
+        String prevName = h.get("name");
+        ArrayList<Map<String,Object>> alist = PreventionData.getPreventionData(prevName, demographic_no); 
+        PreventionData.addRemotePreventions(alist, demographicId, prevName,demographicDateOfBirth);
         if( alist.size() > 0 ) { %>
 <input type="hidden" id="preventionHeader<%=i%>"
 	name="preventionHeader<%=i%>" value="<%=h.get("name")%>">
 
 <%     
             for (int k = 0; k < alist.size(); k++){
-            	Map hdata = (Map) alist.get(k);
+            	Map<String,Object> hdata = alist.get(k);
     %>
 <input type="hidden" id="preventProcedureAge<%=i%>-<%=k%>"
 	name="preventProcedureAge<%=i%>-<%=k%>"

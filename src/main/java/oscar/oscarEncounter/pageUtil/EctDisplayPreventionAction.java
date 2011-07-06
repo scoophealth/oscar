@@ -27,6 +27,7 @@ package oscar.oscarEncounter.pageUtil;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Vector;
@@ -72,8 +73,7 @@ public class EctDisplayPreventionAction extends EctDisplayAction {
         Dao.setRightHeadingID(cmd);  //no menu so set div id to unique id for this action 
         
         //list warnings first as module items
-        PreventionData pd = new PreventionData();
-        Prevention p = pd.getPrevention(bean.demographicNo);
+        Prevention p = PreventionData.getPrevention(bean.demographicNo);
         PreventionDS pf = PreventionDS.getInstance();          
         
         try{
@@ -84,7 +84,7 @@ public class EctDisplayPreventionAction extends EctDisplayAction {
                         
         //now we list prevention modules as items
         PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance();
-        ArrayList prevList = pdc.getPreventions();
+        ArrayList<HashMap<String,String>> prevList = pdc.getPreventions();
         Map warningTable = p.getWarningMsgs();    
         
          
@@ -100,15 +100,15 @@ public class EctDisplayPreventionAction extends EctDisplayAction {
         String result;
         for (int i = 0 ; i < prevList.size(); i++){ 
             NavBarDisplayDAO.Item item = Dao.Item();
-            Map h = (Map) prevList.get(i);
-            String prevName = (String) h.get("name");
-            ArrayList alist = pd.getPreventionData(prevName, bean.demographicNo); 
+            HashMap<String,String> h = prevList.get(i);
+            String prevName = h.get("name");
+            ArrayList<Map<String,Object>> alist = PreventionData.getPreventionData(prevName, bean.demographicNo); 
             boolean show = pdc.display(h, bean.demographicNo,alist.size()); 
             if( show ) {                                    
                 if( alist.size() > 0 ) {
-                    Map hdata = (Map) alist.get(alist.size()-1);
-                    Map hExt = pd.getPreventionKeyValues((String)hdata.get("id"));
-                    result = (String)hExt.get("result");
+                    Map<String,Object> hdata = alist.get(alist.size()-1);
+                    Map<String,String> hExt = PreventionData.getPreventionKeyValues((String)hdata.get("id"));
+                    result = hExt.get("result");
 
                     date = (Date)hdata.get("prevention_date_asDate");
                     item.setDate(date);
@@ -124,9 +124,9 @@ public class EctDisplayPreventionAction extends EctDisplayAction {
                     item.setDate(null);
                 }                                                                
                 
-                String title = StringUtils.maxLenString((String)h.get("name"),  MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
+                String title = StringUtils.maxLenString(h.get("name"),  MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
                 item.setTitle(title);
-                item.setLinkTitle((String)h.get("desc"));
+                item.setLinkTitle(h.get("desc"));
                 item.setURL(url);
                 
                 //if there's a warning associated with this prevention set item apart

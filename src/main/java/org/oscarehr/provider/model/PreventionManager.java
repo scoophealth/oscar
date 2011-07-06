@@ -34,7 +34,6 @@ import org.oscarehr.util.MiscUtils;
 import oscar.oscarPrevention.Prevention;
 import oscar.oscarPrevention.PreventionDS;
 import oscar.oscarPrevention.PreventionData;
-import oscar.oscarPrevention.PreventionDisplayConfig;
 
 /**
  *
@@ -44,13 +43,11 @@ public class PreventionManager {
     private static final int MAXITEMS = 500;
     private static final String PREVS = "dprv";
 
-    private PreventionDisplayConfig pdc;    
     private LRUMap demoPrevs;
     private Map<String,LRUMap>mShell;    
     private PreventionDS pf;
 
     public PreventionManager() {
-        pdc = PreventionDisplayConfig.getInstance();
         demoPrevs = new LRUMap(MAXITEMS);
         mShell = new HashMap<String,LRUMap>(1);
         mShell.put(PREVS, demoPrevs);
@@ -64,8 +61,7 @@ public class PreventionManager {
         if( ret == null ) {
             //synchronized(this) {
                 try {
-                    PreventionData prevData = new PreventionData();
-                    Prevention prev = prevData.getPrevention(demo);
+                    Prevention prev = PreventionData.getPrevention(demo);
                     pf.getMessages(prev);
                     ArrayList warnings = prev.getWarnings();
                     ret = StringUtils.join(warnings, ". ");
