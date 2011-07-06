@@ -184,7 +184,7 @@
 				if (r_doctor_ohip != null && r_doctor_ohip.length() > 0 && r_doctor_ohip.length() != 6) {
 					warningMsg += "<br/><div class='myError'>Warning: the referral doctor's no is wrong. </div><br/>";
 				}
-				if (demoDOB.length() != 8) {
+				if (StringUtils.isBlank(demoDOB) || demoDOB.length() != 8) {
 					errorFlag = "1";
 					errorMsg = errorMsg
 							+ "<br/><b><div class='myError'>Error: The patient does not have a valid DOB. </div></b><br/>";

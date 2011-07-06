@@ -115,6 +115,10 @@ insert into access_type (name, type) values("read ticklers assigned to a Support
 insert into access_type (name, type) values("write Support Counsellor issues","access");
 insert into access_type (name, type) values("read Support Counsellor issues","access");
 insert into access_type (name, type) values("read Support Counsellor notes","access");
+insert into access_type (name, type) values("read ticklers assigned to a Counselling Intern","access");
+insert into access_type (name, type) values("write Counselling Intern issues","access");
+insert into access_type (name, type) values("read Counselling Intern issues","access");
+insert into access_type (name, type) values("read Counselling Intern notes","access");
 
 -- access types for quatro shelter
 insert into access_type (name, type) values("Sex restriction override on referral","access");
@@ -1266,6 +1270,48 @@ insert into default_role_access (role_id,access_id) values ((select role_no from
 insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Support Counsellor'),(select access_id from access_type where name='perform discharges'));
 insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Support Counsellor'),(select access_id from access_type where name='perform bed assignments'));
 insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Support Counsellor'),(select access_id from access_type where name='print bed rosters and reports'));
+
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name='Counselling Intern'),(select access_id from access_type where name='read ticklers assigned to a Counselling Intern'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name='Counselling Intern'),(select access_id from access_type where name='read Counselling Intern issues'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name='Counselling Intern'),(select access_id from access_type where name='write Counselling Intern issues'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name='Counselling Intern'),(select access_id from access_type where name='read Counselling Intern notes'));
+
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Counselling Intern'),(select access_id from access_type where name='read ticklers assigned to a Counselling Intern'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Counselling Intern'),(select access_id from access_type where name='read Counselling Intern issues'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Counselling Intern'),(select access_id from access_type where name='write Counselling Intern issues'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Counselling Intern'),(select access_id from access_type where name='read Counselling Intern notes'));
+
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Counselling Intern'),(select access_id from access_type where name='read ticklers assigned to a Clinical Assistant'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Counselling Intern'),(select access_id from access_type where name='read Clinical Assistant issues'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Counselling Intern'),(select access_id from access_type where name='write Clinical Assistant issues'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Counselling Intern'),(select access_id from access_type where name='read Clinical Assistant notes'));
+
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Counselling Intern'),(select access_id from access_type where name='read ticklers assigned to a Medical Secretary'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Counselling Intern'),(select access_id from access_type where name='read Medical Secretary issues'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Counselling Intern'),(select access_id from access_type where name='write Medical Secretary issues'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Counselling Intern'),(select access_id from access_type where name='read Medical Secretary notes'));
+
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Counselling Intern'),(select access_id from access_type where name='read ticklers assigned to a secretary'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Counselling Intern'),(select access_id from access_type where name='read secretary issues'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Counselling Intern'),(select access_id from access_type where name='write secretary issues'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Counselling Intern'),(select access_id from access_type where name='read secretary notes'));
+
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Counselling Intern'),(select access_id from access_type where name='Write Ticklers'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Counselling Intern'),(select access_id from access_type where name='oscarcomm'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Counselling Intern'),(select access_id from access_type where name='medical form'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Counselling Intern'),(select access_id from access_type where name='measurements'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Counselling Intern'),(select access_id from access_type where name='eform'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Counselling Intern'),(select access_id from access_type where name='master file'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Counselling Intern'),(select access_id from access_type where name='read ticklers'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Counselling Intern'),(select access_id from access_type where name='Perform program registration intake'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Counselling Intern'),(select access_id from access_type where name='perform registration intake'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Counselling Intern'),(select access_id from access_type where name='perform admissions'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Counselling Intern'),(select access_id from access_type where name='perform discharges'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Counselling Intern'),(select access_id from access_type where name='perform bed assignments'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Counselling Intern'),(select access_id from access_type where name='print bed rosters and reports'));
+
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Case Manager'),(select access_id from access_type where name='read Counselling Intern notes'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='counsellor'),(select access_id from access_type where name='read Counselling Intern notes'));
 
 
 
