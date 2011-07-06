@@ -563,6 +563,11 @@ function checkFav(){
     		  }
     		});
     }     
+
+	function showPreviousPrints(scriptNo) {
+		popupWindow(720,700,'ShowPreviousPrints.jsp?scriptNo='+scriptNo,'ShowPreviousPrints')
+	}
+
 </script>
 
 
@@ -794,7 +799,10 @@ body {
                             } else {
                                                     %>
                                                     <%=i > 0 ? "<br style='clear:both;'><br style='clear:both;'>" : ""%><div style="float: left; width: 12%; padding-left: 20px;"><%=drug.getRxDate()%></div>
-                                                    <div style="float: left; width: 12%; padding-left: 20px;"><%=drug.getNumPrints()%>&nbsp;Prints</div>
+                                                    <div style="float: left; width: 12%; padding-left: 20px;">
+                                                    <a href="#" onclick="showPreviousPrints(<%=drug.getScript_no() %>);return false;">
+                                                    <%=drug.getNumPrints()%>&nbsp;Prints</div>
+                                                    </a>
                                                     <a style="float: left;" href="javascript:void(0);" onclick="reprint2('<%=drug.getScript_no()%>')"><%=drug.getRxDisplay()%></a>
                                                     <%
                             }
