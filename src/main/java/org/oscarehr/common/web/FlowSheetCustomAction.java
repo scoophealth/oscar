@@ -101,6 +101,10 @@ public class FlowSheetCustomAction extends DispatchAction {
                 cust.setFlowsheet(flowsheet);
                 cust.setMeasurement(prevItem);//THIS THE MEASUREMENT TO SET THIS AFTER!
                 cust.setProviderNo((String) request.getSession().getAttribute("user"));
+                if (demographicNo==null){
+                	demographicNo = "0";
+                			
+                }
                 cust.setDemographicNo(demographicNo);
                 cust.setCreateDate(new Date());
         
