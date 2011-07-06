@@ -229,6 +229,10 @@ function revokeSignOffHrm(reportId) {
 </head>
 <body>
 
+<% if (hrmReport==null) { %>
+        <h1>HRM report not found! Please check the file location.</h1>
+<%  return;
+   } %>
 <div id="hrmReportContent">
 	<div id="hrmNotice">
 	This report was received from the Hospital Report Manager (HRM) at <%=(String) request.getAttribute("hrmReportTime") %>.
