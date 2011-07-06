@@ -1308,9 +1308,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             if (exLaboratoryResults) {
                 // LABORATORY RESULTS
                 List<LabMeasurements> labMeaList = ImportExportMeasurements.getLabMeasurements(demoNo);
-
                 for (LabMeasurements labMea : labMeaList) {
-
                     LaboratoryResults labResults = patientRec.addNewLaboratoryResults();
                     labResults.setLabTestCode(StringUtils.noNull(labMea.getExtVal("identifier")));
                     labResults.setTestName(StringUtils.noNull(labMea.getExtVal("name")));
@@ -1370,8 +1368,6 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         HashMap<String,String> labRoutingInfo = new HashMap<String,String>();
                         labRoutingInfo.putAll(ProviderLabRouting.getInfo(lab_no));
 
-                        String info = labRoutingInfo.get("comment");
-                        if (StringUtils.filled(info)) labResults.setPhysiciansNotes(info);
                         String timestamp = labRoutingInfo.get("timestamp");
                         if (UtilDateUtilities.StringToDate(timestamp,"yyyy-MM-dd HH:mm:ss")!=null) {
                             LaboratoryResults.ResultReviewer reviewer = labResults.addNewResultReviewer();
@@ -1388,6 +1384,9 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         link.putAll(LabRequestReportLink.getLinkByReport("hl7TextMessage", Long.valueOf(lab_no)));
                         Date reqDate = link.get("request_date");
                         if (reqDate!=null) labResults.addNewLabRequisitionDateTime().setFullDateTime(Util.calDate(reqDate));
+
+//                      String info = labRoutingInfo.get("comment"); <--for whole report, which may contain >1 lab results
+//                        if (StringUtils.filled(info)) labResults.setPhysiciansNotes(info);
                     }
                 }
             }
