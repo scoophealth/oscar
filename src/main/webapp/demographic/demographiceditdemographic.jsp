@@ -1152,7 +1152,7 @@ if (iviewTag!=null && !"".equalsIgnoreCase(iviewTag.trim())){
 						
 						<% } %>	
 						<div class="demographicSection" id="clinicStatus">
-						<h3>&nbsp;<bean:message key="demographic.demographiceditdemographic.msgClinicStatus"/></h3>
+						<h3>&nbsp;<bean:message key="demographic.demographiceditdemographic.msgClinicStatus"/> (<a href="#" onclick="popup(600, 650, 'EnrollmentHistory.jsp?demographicNo=<%=demographic_no%>', 'enrollmentHistory'); return false;"><bean:message key="demographic.demographiceditdemographic.msgEnrollmentHistory"/></a>)</h3>
 						<ul>
                                                     <li><span class="label"><bean:message
                                                             key="demographic.demographiceditdemographic.formRosterStatus" />:</span>
