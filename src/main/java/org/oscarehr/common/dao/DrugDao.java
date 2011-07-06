@@ -116,9 +116,15 @@ public class DrugDao extends AbstractDao<Drug> {
     }
 
     public List<Drug> findByDemographicIdSimilarDrugOrderByDate(Integer demographicId, String regionalIdentifier, String customName, String brandName) {
+    	return findByDemographicIdSimilarDrugOrderByDate(demographicId,regionalIdentifier, customName,brandName, null);
+    }
+    
+    public List<Drug> findByDemographicIdSimilarDrugOrderByDate(Integer demographicId, String regionalIdentifier, String customName, String brandName, String atc) {
         // build sql string
         String sqlCommand ="";
-        if(regionalIdentifier!=null && !regionalIdentifier.equalsIgnoreCase("null") && regionalIdentifier.trim().length()!=0)
+        if(atc != null && !atc.equalsIgnoreCase("null") && atc.trim().length()!=0)
+        	sqlCommand = "select x from Drug x where x.demographicId=?1 and x.atc=?2 order by x.rxDate desc, x.id desc";
+        else if(regionalIdentifier!=null && !regionalIdentifier.equalsIgnoreCase("null") && regionalIdentifier.trim().length()!=0)
             sqlCommand="select x from Drug x where x.demographicId=?1 and x.regionalIdentifier=?2 order by x.rxDate desc, x.id desc";
         else if(customName!=null && !customName.equalsIgnoreCase("null") && customName.trim().length()!=0)
             sqlCommand="select x from Drug x where x.demographicId=?1 and x.customName=?2 order by x.rxDate desc, x.id desc";
@@ -127,7 +133,9 @@ public class DrugDao extends AbstractDao<Drug> {
         // set parameters
         Query query = entityManager.createQuery(sqlCommand);
         query.setParameter(1, demographicId);
-        if(regionalIdentifier!=null && !regionalIdentifier.equalsIgnoreCase("null") && regionalIdentifier.trim().length()!=0)
+        if(atc != null && !atc.equalsIgnoreCase("null") && atc.trim().length()!=0)
+        	query.setParameter(2, atc);
+        else if(regionalIdentifier!=null && !regionalIdentifier.equalsIgnoreCase("null") && regionalIdentifier.trim().length()!=0)
              query.setParameter(2, regionalIdentifier);
         else if(customName!=null && !customName.equalsIgnoreCase("null") && customName.trim().length()!=0)
               query.setParameter(2,customName);
