@@ -36,6 +36,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.log4j.Logger;
 import org.oscarehr.util.DbConnectionFilter;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
@@ -544,7 +545,8 @@ public class RxPrescriptionData {
                 } else {
                     p.setNumPrints(1);
                 }
-
+                p.setPrintDate(rs.getDate("date_printed"));
+                p.setDatesReprinted(datesRePrinted);
                 lst.add(p);
             }
 
@@ -1104,10 +1106,18 @@ public class RxPrescriptionData {
         private int position = 0;
         
         private String drugFormList = "";
+        private String datesReprinted = "";
         
         
-        
-        public String getDrugFormList() {
+        public String getDatesReprinted() {
+        	return datesReprinted;
+        }
+
+		public void setDatesReprinted(String datesReprinted) {
+        	this.datesReprinted = datesReprinted;
+        }
+
+		public String getDrugFormList() {
 			return drugFormList;
 		}
 
@@ -1906,18 +1916,19 @@ public class RxPrescriptionData {
                 
                 ResultSet rs;
                 String sql = "SELECT dates_reprinted, now() FROM prescription WHERE script_no = " + this.getScript_no();
-
+                String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
+                
                 rs = DBHandler.GetSQL(sql);
 
                 if (rs.next()) {
                     String dates_reprinted = oscar.Misc.getString(rs, 1);
                     String now = oscar.Misc.getString(rs, 2);
                     if (dates_reprinted != null && dates_reprinted.length() > 0) {
-                        dates_reprinted += "," + now;
+                        dates_reprinted += "," + now + ";" + providerNo;
                     } else {
-                        dates_reprinted = now;
+                        dates_reprinted = now + ";" + providerNo;
                     }
-
+                    
                     sql = "UPDATE prescription SET dates_reprinted = '" + dates_reprinted + "' WHERE script_no = " + this.getScript_no();
                     DBHandler.RunSQL(sql);
                     ret = true;
