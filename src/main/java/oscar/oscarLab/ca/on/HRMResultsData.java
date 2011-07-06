@@ -70,6 +70,7 @@ public class HRMResultsData {
 			// check if patient is matched
 			List<HRMDocumentToDemographic> hrmDocResultsDemographic = hrmDocumentToDemographicDao.findByHrmDocumentId(hrmDocument.get(0).getId().toString());
 			HRMReport hrmReport = HRMReportParser.parseReport(hrmDocument.get(0).getReportFile());
+                        if (hrmReport==null) continue;
 			
 			if (hrmDocResultsDemographic.size()>0) {
 				Demographic demographic = demographicDao.getDemographic(hrmDocResultsDemographic.get(0).getDemographicNo());

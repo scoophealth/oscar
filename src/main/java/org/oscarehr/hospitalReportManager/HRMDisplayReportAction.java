@@ -42,76 +42,77 @@ public class HRMDisplayReportAction extends DispatchAction {
 		String hrmDocumentId = request.getParameter("id");
 		
 		if (hrmDocumentId != null) {
-			HRMDocument document = hrmDocumentDao.findById(Integer.parseInt(hrmDocumentId)).get(0);
-			
-			if (document != null) {
-				HRMReport report = HRMReportParser.parseReport(document.getReportFile());
-				
-				request.setAttribute("hrmDocument", document);
-				
-				request.setAttribute("hrmReport", report);
-				request.setAttribute("hrmReportId", document.getId());
-				request.setAttribute("hrmReportTime", document.getTimeReceived().toString());
-				request.setAttribute("hrmDuplicateNum", document.getNumDuplicatesReceived());
-				
-				List<HRMDocumentToDemographic> demographicLinkList = hrmDocumentToDemographicDao.findByHrmDocumentId(document.getId().toString());
-				HRMDocumentToDemographic demographicLink = (demographicLinkList.size() > 0 ? demographicLinkList.get(0) : null);
-				request.setAttribute("demographicLink", demographicLink);
-				
-				List<HRMDocumentToProvider> providerLinkList = hrmDocumentToProviderDao.findByHrmDocumentIdNoSystemUser(document.getId().toString());
-				request.setAttribute("providerLinkList", providerLinkList);
-				
-				List<HRMDocumentSubClass> subClassList = hrmDocumentSubClassDao.getSubClassesByDocumentId(document.getId());
-				request.setAttribute("subClassList", subClassList);
-				
-				String loggedInProviderNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
-				HRMDocumentToProvider thisProviderLink = hrmDocumentToProviderDao.findByHrmDocumentIdAndProviderNo(document.getId().toString(), loggedInProviderNo);
-				request.setAttribute("thisProviderLink", thisProviderLink);
-				
-				if (thisProviderLink != null) {
-					thisProviderLink.setViewed(1);
-					hrmDocumentToProviderDao.merge(thisProviderLink);
-				}
-				
-				HRMCategory category = null;
-				HRMSubClass thisReportSubClassMapping = null;
-				
-				if (report.getFirstReportClass().equalsIgnoreCase("Diagnostic Imaging Report") || report.getFirstReportClass().equalsIgnoreCase("Cardio Respiratory Report")) {
-					if (subClassList != null && subClassList.size() > 0) {
-						HRMDocumentSubClass subClass = null;
-						for (HRMDocumentSubClass sc : subClassList) {
-							if (sc.isActive())
-								subClass = sc;
-						}
-						if (subClass != null)
-							thisReportSubClassMapping = hrmSubClassDao.findApplicableSubClassMapping(report.getFirstReportClass(), subClass.getSubClass(), subClass.getSubClassMnemonic(), report.getSendingFacilityId());
-					}
-				} else {
-					// Medical records report
-					String[] reportSubClass = report.getFirstReportSubClass().split("\\^");
-					thisReportSubClassMapping = hrmSubClassDao.findApplicableSubClassMapping(report.getFirstReportClass(), reportSubClass[0], null, report.getSendingFacilityId());
-				}
-				
-				if (thisReportSubClassMapping != null) {
-					category = thisReportSubClassMapping.getHrmCategory();
-				}
-				
-				request.setAttribute("category", category);
-				request.setAttribute("subClassMapping", thisReportSubClassMapping);
-				
-				// Get all the other HRM documents that are either a child, sibling, or parent
-				List<HRMDocument> allDocumentsWithRelationship = hrmDocumentDao.findAllDocumentsWithRelationship(document.getId());
-				request.setAttribute("allDocumentsWithRelationship", allDocumentsWithRelationship);
-				
-				
-				List<HRMDocumentComment> documentComments = hrmDocumentCommentDao.getCommentsForDocument(hrmDocumentId);
-				request.setAttribute("hrmDocumentComments", documentComments);
-				
-				
-				String confidentialityStatement = hrmProviderConfidentialityStatementDao.getConfidentialityStatementForProvider(loggedInProviderNo);
-				request.setAttribute("confidentialityStatement", confidentialityStatement);
-				
-			}
+                    HRMDocument document = hrmDocumentDao.findById(Integer.parseInt(hrmDocumentId)).get(0);
+
+                    if (document != null) {
+                        HRMReport report = HRMReportParser.parseReport(document.getReportFile());
+
+                        request.setAttribute("hrmDocument", document);
+
+                        if (report != null) {
+                            request.setAttribute("hrmReport", report);
+                            request.setAttribute("hrmReportId", document.getId());
+                            request.setAttribute("hrmReportTime", document.getTimeReceived().toString());
+                            request.setAttribute("hrmDuplicateNum", document.getNumDuplicatesReceived());
+
+                            List<HRMDocumentToDemographic> demographicLinkList = hrmDocumentToDemographicDao.findByHrmDocumentId(document.getId().toString());
+                            HRMDocumentToDemographic demographicLink = (demographicLinkList.size() > 0 ? demographicLinkList.get(0) : null);
+                            request.setAttribute("demographicLink", demographicLink);
+
+                            List<HRMDocumentToProvider> providerLinkList = hrmDocumentToProviderDao.findByHrmDocumentIdNoSystemUser(document.getId().toString());
+                            request.setAttribute("providerLinkList", providerLinkList);
+
+                            List<HRMDocumentSubClass> subClassList = hrmDocumentSubClassDao.getSubClassesByDocumentId(document.getId());
+                            request.setAttribute("subClassList", subClassList);
+
+                            String loggedInProviderNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
+                            HRMDocumentToProvider thisProviderLink = hrmDocumentToProviderDao.findByHrmDocumentIdAndProviderNo(document.getId().toString(), loggedInProviderNo);
+                            request.setAttribute("thisProviderLink", thisProviderLink);
+
+                            if (thisProviderLink != null) {
+                                thisProviderLink.setViewed(1);
+                                hrmDocumentToProviderDao.merge(thisProviderLink);
+                            }
+
+                            HRMCategory category = null;
+                            HRMSubClass thisReportSubClassMapping = null;
+
+                            if (report.getFirstReportClass().equalsIgnoreCase("Diagnostic Imaging Report") || report.getFirstReportClass().equalsIgnoreCase("Cardio Respiratory Report")) {
+                                if (subClassList != null && subClassList.size() > 0) {
+                                    HRMDocumentSubClass subClass = null;
+                                    for (HRMDocumentSubClass sc : subClassList) {
+                                        if (sc.isActive())
+                                            subClass = sc;
+                                    }
+                                    if (subClass != null)
+                                        thisReportSubClassMapping = hrmSubClassDao.findApplicableSubClassMapping(report.getFirstReportClass(), subClass.getSubClass(), subClass.getSubClassMnemonic(), report.getSendingFacilityId());
+                                }
+                            } else {
+                                // Medical records report
+                                String[] reportSubClass = report.getFirstReportSubClass().split("\\^");
+                                thisReportSubClassMapping = hrmSubClassDao.findApplicableSubClassMapping(report.getFirstReportClass(), reportSubClass[0], null, report.getSendingFacilityId());
+                            }
+
+                            if (thisReportSubClassMapping != null) {
+                                category = thisReportSubClassMapping.getHrmCategory();
+                            }
+
+                            request.setAttribute("category", category);
+                            request.setAttribute("subClassMapping", thisReportSubClassMapping);
+
+                            // Get all the other HRM documents that are either a child, sibling, or parent
+                            List<HRMDocument> allDocumentsWithRelationship = hrmDocumentDao.findAllDocumentsWithRelationship(document.getId());
+                            request.setAttribute("allDocumentsWithRelationship", allDocumentsWithRelationship);
+
+
+                            List<HRMDocumentComment> documentComments = hrmDocumentCommentDao.getCommentsForDocument(hrmDocumentId);
+                            request.setAttribute("hrmDocumentComments", documentComments);
+
+
+                            String confidentialityStatement = hrmProviderConfidentialityStatementDao.getConfidentialityStatementForProvider(loggedInProviderNo);
+                            request.setAttribute("confidentialityStatement", confidentialityStatement);
+                        }
+                    }
 			
 		}
 		
