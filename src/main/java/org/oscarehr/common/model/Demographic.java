@@ -99,8 +99,27 @@ public class Demographic implements Serializable {
         private String displayName=null;
 
         private Provider provider;
+        private String lastUpdateUser = null;
+        private Date lastUpdateDate = null;
 
-    /**
+        
+        public String getLastUpdateUser() {
+        	return lastUpdateUser;
+        }
+
+		public void setLastUpdateUser(String lastUpdateUser) {
+        	this.lastUpdateUser = lastUpdateUser;
+        }
+
+		public Date getLastUpdateDate() {
+        	return lastUpdateDate;
+        }
+
+		public void setLastUpdateDate(Date lastUpdateDate) {
+        	this.lastUpdateDate = lastUpdateDate;
+        }
+
+	/**
      * @return the rosterDate
      */
     public Date getRosterDate() {
