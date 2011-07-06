@@ -57,7 +57,7 @@ public class HRMReportParser {
 				//so we take the lab and store them temporarily in a random filename in /tmp/oscar-sftp/
 				File tmpXMLholder = new File(hrmReportFileLocation);
 
-				fileData = FileUtils.getStringFromFile(tmpXMLholder);
+				if (tmpXMLholder.exists()) fileData = FileUtils.getStringFromFile(tmpXMLholder);
 				// Parse an XML document into a DOM tree.
 				DocumentBuilder parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 				// Create a SchemaFactory capable of understanding WXS schemas.
