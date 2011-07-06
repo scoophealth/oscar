@@ -71,5 +71,9 @@
 			column="provider_no" update="false" not-found='ignore' insert="false"
 			lazy="false" />
 
+		<property column="lastUpdateUser" name="lastUpdateUser" />
+		<property column="lastUpdateDate" name="lastUpdateDate" type="date" />
+		
+
 	</class>
 </hibernate-mapping>
