@@ -138,8 +138,11 @@ public class Prevention {
       }      
    }
    
-   public int getAgeInMonths(Date DOB){            
-      return getNumMonths(DOB,Calendar.getInstance().getTime());
+   public int getAgeInMonths(Date DOB){      
+	   if(DOB!=null)
+		   return getNumMonths(DOB,Calendar.getInstance().getTime());
+	   else
+		   return 0;
    }
    
    public int getAgeInMonths(){   
@@ -150,7 +153,10 @@ public class Prevention {
    }
    
    public int getAgeInYears(){ 
-      return getNumYears(DOB,Calendar.getInstance().getTime());
+	   if(DOB !=null)
+		   return getNumYears(DOB,Calendar.getInstance().getTime());
+	   else
+		   return 0;
    }
            
    public boolean isTodayinDateRange(String startDate,String endDate){

@@ -377,7 +377,7 @@
         <td>
 			<table style="border-collapse:collapse">
 				<tr>
-					<td><label>EFF Date</label></td>
+					<td><label>HC Effective date</label></td>
 					<td><label>HC Renewal Date</label></td>
 				</tr>
 				<tr>
