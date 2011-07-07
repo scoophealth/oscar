@@ -446,6 +446,11 @@ $("document").ready(function(){
 .error {color:red;}
 </style>
 
+Client name : <%=ocanStaffForm.getLastName()%> ,&nbsp;<%=ocanStaffForm.getFirstName()%>  
+<br />
+Client date of birth : <%=ocanStaffForm.getClientDateOfBirth()%>
+<br />
+<br />
 
 <form id="ocan_staff_form" name="ocan_staff_form" action="ocan_form_action.jsp" method="post" onsubmit="return submitOcanForm()">
 	<% if("FULL".equals(ocanType)) { %>
