@@ -287,6 +287,7 @@ if (bMultisites) {
     </style>
 </head>
 <script type="text/javascript" src="../share/javascript/prototype.js"></script>
+<script language="javascript" type="text/javascript" src="../share/javascript/Oscar.js" ></script>
 <script language="JavaScript">
 <!--
 function setfocus() {
@@ -532,7 +533,20 @@ function refreshTabAlerts(id) {
 		<input type="hidden" name="Go" value=""> <INPUT TYPE="SUBMIT"
 			VALUE="<bean:message key="provider.appointmentprovideradminmonth.btnGo"/>"
 			onclick="document.forms['jumptodate'].Go.value='GO'; document.forms['jumptodate'].submit();"
-			SIZE="5"></td>
+			SIZE="5">&nbsp;&nbsp;
+
+		  <a href="javascript: function myFunction() {return false; }" onClick="popup(700,1000,'../scratch/index.jsp','scratch')"><span id="oscar_scratch"></span></a>&nbsp;
+		  
+
+		  <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
+		  <a href="#" onClick ="popupPage(600,750,'<%=resourcebaseurl%>')"><bean:message key="global.help"/></a> 
+		  </caisi:isModuleLoad>			
+			
+			| <a href="../logout.jsp"><bean:message key="provider.appointmentprovideradminmonth.btnlogOut" />  &nbsp;</a>
+			
+			
+			
+			</td>
 		</form>
 	</tr>
 </table>
@@ -637,13 +651,8 @@ function refreshTabAlerts(id) {
 %>
 </security:oscarSec>
 				</select>
-				
-				
-				
-				 <a href="../logout.jsp"><bean:message
-					key="provider.appointmentprovideradminmonth.btnlogOut" /> <img
-					src="../images/next.gif" border="0" width="10" height="9"
-					align="absmiddle"> &nbsp;</a></td>
+
+				</td>
 			</tr>
 			<tr>
 				<td align="center" VALIGN="TOP" colspan="3" bgcolor="ivory">
@@ -975,10 +984,9 @@ function refreshTabAlerts(id) {
 				<img src="../images/next.gif" WIDTH="10" HEIGHT="9" BORDER="0"
 					ALT="View Next MONTH" vspace="2">&nbsp;&nbsp;</a></td>
 				<TD ALIGN="center" BGCOLOR="ivory" width="33%"></TD>
-				<td ALIGN="RIGHT" BGCOLOR="Ivory"><a href="../logout.jsp"><bean:message
-					key="provider.appointmentprovideradminmonth.btnlogOut" /> <img
-					src="../images/next.gif" border="0" width="10" height="9"
-					align="absmiddle"> &nbsp;</a></td>
+				<td ALIGN="RIGHT" BGCOLOR="Ivory">| <a href="../logout.jsp"><bean:message
+					key="provider.appointmentprovideradminmonth.btnlogOut" /> &nbsp;</a></td>
+					
 			</tr>
 		</table>
 		</td>
