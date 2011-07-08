@@ -190,7 +190,7 @@ public class DxresearchReportAction extends DispatchAction {
       editingCodeDesc = String.format( "\"%s\"", editingCodeDesc );
       request.getSession().setAttribute( "editingCodeDesc", editingCodeDesc );
 
-      return mapping.findForward(EDIT_DESC);
+      return mapping.findForward(SUCCESS);
     }
 
     public ActionForward addSearchCode(ActionMapping mapping, ActionForm  form,
@@ -214,7 +214,7 @@ public class DxresearchReportAction extends DispatchAction {
         }
 
         String action = request.getParameter( "action" );
-        if( action != null && action.equalsIgnoreCase( "edit" ) )
+        if( action != null && action.equalsIgnoreCase( "edit" ) && newAddition != null)
         {
 //          List editingCodeList = new ArrayList();
 //          editingCodeList.add( newAddition );
