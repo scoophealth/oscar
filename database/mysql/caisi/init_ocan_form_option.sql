@@ -95,9 +95,10 @@ insert into OcanFormOption values (1268,"1.2","Years in Canada","48","48");
 insert into OcanFormOption values (1269,"1.2","Years in Canada","49","49");
 insert into OcanFormOption values (1270,"1.2","Years in Canada","50","50");
 
-
-
-
+insert into OcanFormOption values (1271,"1.2","Client Camberwell Need","0","0 - No Need");
+insert into OcanFormOption values (1272,"1.2","Client Camberwell Need","1","1 - Met Need");
+insert into OcanFormOption values (1273,"1.2","Client Camberwell Need","2","2 - Unmet Need");
+insert into OcanFormOption values (1274,"1.2","Client Camberwell Need","9","9 - I Do Not Want to Answer");
 
 
 
