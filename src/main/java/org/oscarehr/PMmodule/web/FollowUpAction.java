@@ -53,7 +53,7 @@ public class FollowUpAction extends DispatchAction {
 			Document doc = XmlUtils.newDocument("followup");
 			XmlUtils.appendChildToRoot(doc, "destinationDemographicId", ""+remoteDemographic.getCaisiDemographicId());
 			XmlUtils.appendChildToRoot(doc, "note", note);
-			byte[] data = XmlUtils.toBytes(doc);
+			byte[] data = XmlUtils.toBytes(doc,false);
 			followUp.setData(data);
 		
 			ProviderWs providerWs = CaisiIntegratorManager.getProviderWs();

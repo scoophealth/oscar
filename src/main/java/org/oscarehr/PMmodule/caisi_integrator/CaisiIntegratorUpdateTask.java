@@ -41,7 +41,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
 import javax.xml.ws.WebServiceException;
 
 import org.apache.commons.lang.StringUtils;
@@ -596,7 +595,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		return (false);
 	}
 
-	private void pushDemographicPreventions(Facility facility, List<String> providerIdsInFacility, DemographicWs service, Integer demographicId) throws ShutdownException, ParserConfigurationException, TransformerException {
+	private void pushDemographicPreventions(Facility facility, List<String> providerIdsInFacility, DemographicWs service, Integer demographicId) throws ShutdownException, ParserConfigurationException, ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException {
 		logger.debug("pushing demographicPreventions facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
 		ArrayList<CachedDemographicPrevention> preventionsToSend = new ArrayList<CachedDemographicPrevention>();
@@ -638,7 +637,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			{
 				XmlUtils.appendChildToRoot(doc, entry.getKey(), entry.getValue());
 			}
-			cachedDemographicPrevention.setAttributes(XmlUtils.toString(doc));
+			cachedDemographicPrevention.setAttributes(XmlUtils.toString(doc,false));
 				
 			preventionsToSend.add(cachedDemographicPrevention);
 			
@@ -705,7 +704,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		conformanceTestLog(facility, "EDoc", sentIds.toString());
 	}
 
-	private void pushLabResults(Date lastDataUpdated, Facility facility, DemographicWs demographicWs, Integer demographicId) throws ShutdownException, ParserConfigurationException, TransformerException, UnsupportedEncodingException {
+	private void pushLabResults(Date lastDataUpdated, Facility facility, DemographicWs demographicWs, Integer demographicId) throws ShutdownException, ParserConfigurationException, UnsupportedEncodingException, ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException {
 		logger.debug("pushing pushLabResults facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
 	    CommonLabResultData comLab = new CommonLabResultData();
@@ -726,7 +725,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		conformanceTestLog(facility, "LabResultData", sentIds.toString());
 	}
 	
-	private CachedDemographicLabResult makeCachedDemographicLabResult(Integer demographicId, LabResultData lab) throws ParserConfigurationException, TransformerException, UnsupportedEncodingException
+	private CachedDemographicLabResult makeCachedDemographicLabResult(Integer demographicId, LabResultData lab) throws ParserConfigurationException, UnsupportedEncodingException, ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException
 	{
 		CachedDemographicLabResult cachedDemographicLabResult=new CachedDemographicLabResult();
 		
@@ -741,7 +740,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		
 		Document doc=LabDisplayHelper.labToXml(demographicId, lab);
 		
-		String data=XmlUtils.toString(doc);
+		String data=XmlUtils.toString(doc,false);
 		cachedDemographicLabResult.setData(data);
 		
 		return(cachedDemographicLabResult);
