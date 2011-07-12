@@ -1,19 +1,38 @@
+/*
+ * Copyright (c) 2007-2008. MB Software Vancouver, Canada. All Rights Reserved.
+ * This software is published under the GPL GNU General Public License. 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either version 2 
+ * of the License, or (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
+ * 
+ * This software was written for 
+ * MB Software, margaritabowl.com
+ * Vancouver, B.C., Canada 
+ */
+
 package org.oscarehr.util;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.StringWriter;
+import java.util.ArrayList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.codec.binary.Base64;
 import org.w3c.dom.Document;
@@ -21,50 +40,78 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.bootstrap.DOMImplementationRegistry;
+import org.w3c.dom.ls.DOMImplementationLS;
+import org.w3c.dom.ls.LSOutput;
+import org.w3c.dom.ls.LSSerializer;
+import org.xml.sax.SAXException;
 
-import com.sun.org.apache.xml.internal.serialize.OutputFormat;
-import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
-
-public class XmlUtils
+public final class XmlUtils
 {
-	public static void writeNode(Node node, OutputStream os) throws TransformerException
+	public static void setLsSeriliserToFormatted(LSSerializer lsSerializer)
 	{
-		TransformerFactory factory = TransformerFactory.newInstance();
-		Transformer transformer = factory.newTransformer();
-
-		DOMSource domSource = new DOMSource(node);
-		StreamResult streamResult = new StreamResult(os);
-		transformer.transform(domSource, streamResult);
+		lsSerializer.getDomConfig().setParameter("format-pretty-print", true);
+	}
+	
+	public static void writeNode(Node node, OutputStream os, boolean formatted) throws ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException
+	{
+		DOMImplementationRegistry domImplementationRegistry = DOMImplementationRegistry.newInstance();
+		DOMImplementationLS domImplementationLS = (DOMImplementationLS) domImplementationRegistry.getDOMImplementation("LS");
+		
+		LSOutput lsOutput=domImplementationLS.createLSOutput();
+		lsOutput.setEncoding("UTF-8");
+		lsOutput.setByteStream(os);
+		
+		LSSerializer lsSerializer = domImplementationLS.createLSSerializer();
+		if (formatted) setLsSeriliserToFormatted(lsSerializer);
+		lsSerializer.write(node, lsOutput);		
 	}
 
-	public static String toString(Node node) throws TransformerException
+	public static byte[] toBytes(Node node, boolean formatted) throws ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException 
 	{
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		writeNode(node, baos);
-
-		return(baos.toString());
-	}
-
-	public static byte[] toBytes(Node node) throws TransformerException
-	{
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		writeNode(node, baos);
-
+		ByteArrayOutputStream baos=new ByteArrayOutputStream();
+		writeNode(node, baos, formatted);
 		return(baos.toByteArray());
 	}
 
+	public static String toString(Node node, boolean formatted) throws ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException 
+	{
+		ByteArrayOutputStream baos=new ByteArrayOutputStream();
+		writeNode(node, baos, formatted);
+		return(baos.toString());
+	}
+
+	public static Document toDocumentFromFile(String url) throws ParserConfigurationException, SAXException, IOException
+	{
+		InputStream is = XmlUtils.class.getResourceAsStream(url);
+		if (is == null) is = new FileInputStream(url);
+
+		try
+		{
+			return(XmlUtils.toDocument(is));
+		}
+		finally
+		{
+			is.close();
+		}
+	}
+	
 	public static Document toDocument(String s) throws IOException, org.xml.sax.SAXException, ParserConfigurationException
 	{
 		return(toDocument(s.getBytes()));
 	}
-	
+
 	public static Document toDocument(byte[] x) throws IOException, org.xml.sax.SAXException, ParserConfigurationException
+	{
+		ByteArrayInputStream is = new ByteArrayInputStream(x, 0, x.length);
+		return(toDocument(is));
+	}
+
+	public static Document toDocument(InputStream is) throws ParserConfigurationException, SAXException, IOException
 	{
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = factory.newDocumentBuilder();
-		ByteArrayInputStream baos = new ByteArrayInputStream(x, 0, x.length);
-		Document document = builder.parse(baos);
-		baos.close();
+		Document document = builder.parse(is);
 		return(document);
 	}
 
@@ -81,7 +128,7 @@ public class XmlUtils
 
 	public static void appendChildToRoot(Document doc, String childName, byte[] childContents)
 	{
-		appendChild(doc, doc.getFirstChild(), childName, Base64.encodeBase64String(childContents));
+		appendChild(doc, doc.getFirstChild(), childName, new String(Base64.encodeBase64(childContents)));
 	}
 
 	public static void appendChildToRoot(Document doc, String childName, String childContents)
@@ -91,26 +138,39 @@ public class XmlUtils
 
 	public static void appendChild(Document doc, Node parentNode, String childName, String childContents)
 	{
-		if (childContents==null) throw(new NullPointerException("ChildNode is null."));
-		
+		if (childContents == null) throw(new NullPointerException("ChildNode is null."));
+
 		Element child = doc.createElement(childName);
 		child.appendChild(doc.createTextNode(childContents));
 		parentNode.appendChild(child);
 	}
 
-	public static String toFormattedString(Document doc) throws IOException
+	public static void replaceChild(Document doc, Node parentNode, String childName, String childContents)
 	{
-		OutputFormat outputFormat=new OutputFormat(doc);
-		outputFormat.setIndenting(true);
+		Node node=getChildNode(parentNode, childName);
+
+		// if some one passes in null
+		if (childContents == null) 
+		{
+			// remove existing node
+			if (node!=null) parentNode.removeChild(node);
+			
+			return;
+		}
 		
-		StringWriter stringWriter=new StringWriter();
-		
-		XMLSerializer xmlSerializer = new XMLSerializer(stringWriter, outputFormat);
-		xmlSerializer.serialize(doc);
-		
-		return(stringWriter.toString());
+		// this means there's at least contents pass in,
+		if (node==null)
+		{
+			// no existing node, so we just add one
+			appendChild(doc, parentNode, childName, childContents);
+		}
+		else
+		{
+			// existing node so we update it instead.
+			node.setTextContent(childContents);
+		}
 	}
-	
+
 	/**
 	 * only returns the first instance of this child node
 	 * @param node
@@ -123,11 +183,32 @@ public class XmlUtils
 		for (int i = 0; i < nodeList.getLength(); i++)
 		{
 			Node temp = nodeList.item(i);
-			if (temp.getNodeType()!=Node.ELEMENT_NODE) continue;
+			if (temp.getNodeType() != Node.ELEMENT_NODE) continue;
 			if (name.equals(temp.getLocalName()) || name.equals(temp.getNodeName())) return(temp);
 		}
 
 		return(null);
+	}
+
+	/**
+	 * @return a list of all child nodes with this name
+	 */
+	public static ArrayList<Node> getChildNodes(Node node, String name)
+	{
+		ArrayList<Node> results=new ArrayList<Node>();
+		
+		NodeList nodeList = node.getChildNodes();
+		for (int i = 0; i < nodeList.getLength(); i++)
+		{
+			Node temp = nodeList.item(i);
+			if (temp.getNodeType() != Node.ELEMENT_NODE) continue;
+			if (name.equals(temp.getLocalName()) || name.equals(temp.getNodeName()))
+			{
+				results.add(temp);
+			}
+		}
+
+		return(results);
 	}
 
 	public static String getChildNodeTextContents(Node node, String name)
@@ -138,16 +219,53 @@ public class XmlUtils
 	}
 
 	/**
+	 * @return a list of all child node text contents with this name
+	 */
+	public static ArrayList<String> getChildNodesTextContents(Node node, String name)
+	{
+		ArrayList<String> results=new ArrayList<String>();
+		
+		NodeList nodeList = node.getChildNodes();
+		for (int i = 0; i < nodeList.getLength(); i++)
+		{
+			Node temp = nodeList.item(i);
+			if (temp.getNodeType() != Node.ELEMENT_NODE) continue;
+			if (name.equals(temp.getLocalName()) || name.equals(temp.getNodeName()))
+			{
+				results.add(temp.getTextContent());
+			}
+		}
+
+		return(results);
+	}
+
+	/**
+	 * removes any immediate child nodes with the given name.
+	 */
+	public static void removeAllChildNodes(Node node, String name)
+	{
+		// this must be done as a 2 pass algorithm. 
+		// attempt at doing it at single pass fails because the list is 
+		// being altered as we read it which leads to errors.
+		ArrayList<Node> removeList=getChildNodes(node, name);
+		
+		for (Node temp : removeList)
+		{
+				node.removeChild(temp);
+		}
+	}
+	
+	/**
 	 * @return the attribute value or null
 	 */
 	public static String getAttributeValue(Node node, String attributeName)
 	{
 		NamedNodeMap attributes = node.getAttributes();
-		if (attributes==null) return(null);
-		
-		Node tempNode=attributes.getNamedItem(attributeName);
-		if (tempNode==null) return(null);
-		
+		if (attributes == null) return(null);
+
+		Node tempNode = attributes.getNamedItem(attributeName);
+		if (tempNode == null) return(null);
+
 		return(tempNode.getNodeValue());
 	}
 
@@ -157,6 +275,9 @@ public class XmlUtils
 		appendChildToRoot(doc, "testChild1", "test child< bla< > contents");
 		appendChildToRoot(doc, "testChild2", "test child contents 2");
 
-		MiscUtils.getLogger().info(toString(doc));
+		String xml=toString(doc, true);
+		MiscUtils.getLogger().info(xml);
+		
+		doc=XmlUtils.toDocument(xml);
 	}
 }
