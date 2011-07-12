@@ -422,7 +422,7 @@ div.recommendations li{
     long startTimeToLoopAndPrint = System.currentTimeMillis();
     boolean setToPrint;
     for (String measure:measurements){
-        Hashtable h2 = mFlowsheet.getMeasurementFlowSheetInfo(measure);
+        Map h2 = mFlowsheet.getMeasurementFlowSheetInfo(measure);
         FlowSheetItem item =  mFlowsheet.getFlowSheetItem(measure);
         setToPrint = phandout.contains(measure);
         String hidden= "";

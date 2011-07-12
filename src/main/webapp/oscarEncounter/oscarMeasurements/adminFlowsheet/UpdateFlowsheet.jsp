@@ -55,7 +55,7 @@ MeasurementFlowSheet mFlowsheet = templateConfig.getFlowSheet(flowsheet,custList
 long end = System.currentTimeMillis() ;       
 long diff = end - start;
 
-Hashtable h2 = mFlowsheet.getMeasurementFlowSheetInfo(measurement);
+Map h2 = mFlowsheet.getMeasurementFlowSheetInfo(measurement);
 List<Recommendation> dsR = mFlowsheet.getDSElements((String) h2.get("measurement_type"));
 FlowSheetItem fsi =mFlowsheet.getFlowSheetItem(measurement);
 //EctMeasurementTypeBeanHandler mType = new EctMeasurementTypeBeanHandler();

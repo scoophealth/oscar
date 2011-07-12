@@ -291,7 +291,7 @@ clear: left;
                 
                 for (int i = 0; i < measurements.length; i++){
                     measurement = measurements[i];
-                    Hashtable h2 = mFlowsheet.getMeasurementFlowSheetInfo(measurement);
+                    Map h2 = mFlowsheet.getMeasurementFlowSheetInfo(measurement);
                 
                 EctMeasurementTypesBean mtypeBean = mType.getMeasurementType(measurement);
                 if(ectMeasurementsForm != null && !ectMeasurementsForm.isEmpty()){

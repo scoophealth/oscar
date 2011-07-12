@@ -4,7 +4,7 @@
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils,oscar.log.*"%>
 <%@page import="org.springframework.web.context.WebApplicationContext,oscar.oscarResearch.oscarDxResearch.bean.*"%>
 <%@page import="org.oscarehr.common.dao.FlowSheetCustomizerDAO,org.oscarehr.common.model.FlowSheetCustomization"%>
-<%@page import="org.oscarehr.common.dao.FlowSheetDrugDAO,org.oscarehr.common.model.FlowSheetDrug"%>
+<%@page import="org.oscarehr.common.dao.FlowSheetDrugDAO,org.oscarehr.common.model.FlowSheetDrug,org.oscarehr.util.MiscUtils"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
@@ -79,7 +79,12 @@
      
     mi.getMeasurements(measurements);
     
-    mFlowsheet.getMessages(mi);
+    try{
+    	mFlowsheet.getMessages(mi);
+    }catch(Exception e){
+    	MiscUtils.getLogger().error("Error getting messages for flowsheet ",e);
+    }
+
 
     ArrayList recList = mi.getList();
     
@@ -574,7 +579,7 @@ div.recommendations li{
     EctMeasurementTypeBeanHandler mType = new EctMeasurementTypeBeanHandler();
     long startTimeToLoopAndPrint = System.currentTimeMillis();
     for (String measure:measurements){
-        Hashtable h2 = mFlowsheet.getMeasurementFlowSheetInfo(measure);
+        Map h2 = mFlowsheet.getMeasurementFlowSheetInfo(measure);
         FlowSheetItem item =  mFlowsheet.getFlowSheetItem(measure);
         
         String hidden= "";

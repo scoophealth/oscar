@@ -38,6 +38,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.collections.OrderedMapIterator;
 import org.apache.commons.collections.map.ListOrderedMap;
@@ -156,7 +157,7 @@ public class MeasurementFlowSheet {
     }
   
     
-    public Hashtable getMeasurementFlowSheetInfo(String measurement) {
+    public Map getMeasurementFlowSheetInfo(String measurement) {
         if (itemList == null) {
          //DO something   itemList = new Hashtable();
         }
@@ -166,8 +167,13 @@ public class MeasurementFlowSheet {
         return item.getAllFields();
     }
     
+    //If measurement is null. Add item to the end of the flowsheet.
     public void addAfter(String measurement , FlowSheetItem item){
-        itemList.put(itemList.indexOf(measurement), item.getItemName(), item);
+    	int placement = itemList.size();
+    	if (measurement != null){
+    		placement = itemList.indexOf(measurement);
+    	}
+        itemList.put(placement, item.getItemName(), item);
     }
     
     public void setToHidden(String measurement){
