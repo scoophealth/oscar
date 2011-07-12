@@ -40,6 +40,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.drools.RuleBase;
@@ -48,8 +49,11 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.XMLOutputter;
+import org.oscarehr.common.dao.FlowSheetUserCreatedDao;
 import org.oscarehr.common.model.FlowSheetCustomization;
+import org.oscarehr.common.model.FlowSheetUserCreated;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 import org.springframework.beans.factory.InitializingBean;
 
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementTypeBeanHandler;
@@ -67,7 +71,7 @@ import oscar.oscarEncounter.oscarMeasurements.util.TargetColour;
 public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
 
     private static Logger log = MiscUtils.getLogger();
-
+    
     private List<File> flowSheets;
     
     ArrayList<String> dxTriggers = new ArrayList<String>();
@@ -152,17 +156,19 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
     }
 
     
-    public String addFlowsheet(MeasurementFlowSheet m ){
+    public String addFlowsheet(MeasurementFlowSheet m ){   	
         if( m.getName() == null || m.getName().equals("")){
-            m.setName("M"+flowsheets.size());
+            m.setName("U"+(flowsheets.size()+1));
         }
-        flowsheets.put(m.getName(),m);
+        
+        flowsheets.put(m.getName(),m);   
         flowsheetDisplayNames.put(m.getName(), m.getDisplayName());
         addTriggers(m.getDxTriggers(),m.getName());
         return m.getName();
     }
 
     void loadFlowsheets() throws FileNotFoundException {
+    	FlowSheetUserCreatedDao flowSheetUserCreatedDao = (FlowSheetUserCreatedDao) SpringUtils.getBean("flowSheetUserCreatedDao");
 
         flowsheets = new Hashtable<String, MeasurementFlowSheet>();
         EctMeasurementTypeBeanHandler mType = new EctMeasurementTypeBeanHandler();
@@ -178,9 +184,24 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
                 String[] dxTrig = d.getDxTriggers();
                 addTriggers(dxTrig, d.getName());
             }
-
             flowsheetDisplayNames.put(d.getName(), d.getDisplayName());
         }
+        List<FlowSheetUserCreated> flowSheetUserCreateds = flowSheetUserCreatedDao.getAllUserCreatedFlowSheets();
+        for(FlowSheetUserCreated flowSheetUserCreated: flowSheetUserCreateds){
+        
+        	MeasurementFlowSheet m = new MeasurementFlowSheet();
+        	m.setName(flowSheetUserCreated.getName());
+            m.parseDxTriggers(flowSheetUserCreated.getDxcodeTriggers());
+            m.setDisplayName(flowSheetUserCreated.getDisplayName());
+            m.setWarningColour(flowSheetUserCreated.getWarningColour());
+            m.setRecommendationColour(flowSheetUserCreated.getRecommendationColour());
+            flowsheets.put(m.getName(), m);
+            String[] dxTrig = m.getDxTriggers();
+            addTriggers(dxTrig, m.getName());
+            flowsheetDisplayNames.put(m.getName(), m.getDisplayName());
+            
+        }
+        
     }
 
     public ArrayList<String> getFlowsheetForDxCode(String code) {
@@ -675,7 +696,7 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
     public Element getItemFromObject(FlowSheetItem fsi){
         Element item = new Element("item");
                     
-                    Hashtable h2 = fsi.getAllFields();
+                    Map h2 = fsi.getAllFields();
 
                     addAttributeifValueNotNull(item, "prevention_type", fsi.getPreventionType());
                     addAttributeifValueNotNull(item, "measurement_type", fsi.getMeasurementType());
@@ -752,7 +773,7 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
                     
                     EctMeasurementTypesBean measurementTypesBean = mType.getMeasurementType(mstring);
 
-                    Hashtable h2 = mFlowsheet.getMeasurementFlowSheetInfo(mstring);
+                    Map h2 = mFlowsheet.getMeasurementFlowSheetInfo(mstring);
 
                     Element item = new Element("item");
                     

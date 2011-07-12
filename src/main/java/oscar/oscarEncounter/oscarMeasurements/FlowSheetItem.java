@@ -25,8 +25,8 @@
  */
 package oscar.oscarEncounter.oscarMeasurements;
 
-import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
 import org.drools.RuleBase;
 
@@ -39,7 +39,7 @@ import oscar.oscarEncounter.oscarMeasurements.util.TargetColour;
  */
 public class FlowSheetItem {
     
-    Hashtable allFields = null;
+    Map allFields = null;
     private String measurementType = null;
     private String preventionType = null;
     private String displayName = null;
@@ -85,7 +85,7 @@ public class FlowSheetItem {
         
     }
     
-    public FlowSheetItem(Hashtable hashtable){
+    public FlowSheetItem(Map hashtable){
         allFields = hashtable;
         
         measurementType = (String) allFields.get("measurement_type");
@@ -146,7 +146,7 @@ public class FlowSheetItem {
         return preventionType;
     }
     
-    public Hashtable getAllFields(){
+    public Map getAllFields(){
         return allFields;
     }
 

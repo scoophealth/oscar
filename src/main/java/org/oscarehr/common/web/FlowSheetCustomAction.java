@@ -18,8 +18,11 @@ import org.jdom.Element;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.oscarehr.common.dao.FlowSheetCustomizerDAO;
+import org.oscarehr.common.dao.FlowSheetUserCreatedDao;
 import org.oscarehr.common.model.FlowSheetCustomization;
+import org.oscarehr.common.model.FlowSheetUserCreated;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarEncounter.oscarMeasurements.FlowSheetItem;
 import oscar.oscarEncounter.oscarMeasurements.MeasurementFlowSheet;
@@ -33,6 +36,7 @@ public class FlowSheetCustomAction extends DispatchAction {
     private static final Logger logger = MiscUtils.getLogger();
 
     private FlowSheetCustomizerDAO flowSheetCustomizerDAO;
+    private FlowSheetUserCreatedDao flowSheetUserCreatedDao = (FlowSheetUserCreatedDao) SpringUtils.getBean("flowSheetUserCreatedDao");
 
     public void setFlowSheetCustomizerDAO(FlowSheetCustomizerDAO flowSheetCustomizerDAO) {
         this.flowSheetCustomizerDAO = flowSheetCustomizerDAO;
@@ -322,6 +326,55 @@ public class FlowSheetCustomAction extends DispatchAction {
         request.setAttribute("flowsheet", flowsheet);
         return mapping.findForward("success");
     }
+    
+    
+    /*first add it as a flowsheet into the current system.  The save it to the database so that it will be there on reboot */
+    public ActionForward createNewFlowSheet(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        logger.debug("IN create new flowsheet");
+        //String name let oscar create the name 
+    	String dxcodeTriggers 		= request.getParameter("dxcodeTriggers");
+    	String displayName 			= request.getParameter("displayName");
+    	String warningColour 		= request.getParameter("warningColour");
+    	String recommendationColour = request.getParameter("recommendationColour");
+    	//String topHTML 				= request.getParameter("topHTML");  // Not supported yet
+
+    	
+    	/// NEW FLOWSHEET CODE 
+    	MeasurementFlowSheet m = new MeasurementFlowSheet();
+        m.parseDxTriggers(dxcodeTriggers);
+        m.setDisplayName(displayName);
+        m.setWarningColour(warningColour);
+        m.setRecommendationColour(recommendationColour);
+        
+        //Im not sure if adding an initializing measurement is required yet
+        /*
+        Map<String,String> h = new HashMap<String,String>();
+        h.put("measurement_type","WT");
+        h.put("display_name","WT");
+        h.put("value_name","WT");
+        
+        FlowSheetItem fsi = new FlowSheetItem( h);
+        m.addListItem(fsi);
+*/
+        MeasurementTemplateFlowSheetConfig templateConfig = MeasurementTemplateFlowSheetConfig.getInstance();
+        String name =  templateConfig.addFlowsheet( m );
+        m.loadRuleBase();
+    	/// END FLOWSHEET CODE
+    	
+        FlowSheetUserCreated fsuc = new FlowSheetUserCreated();
+        fsuc.setName(name);
+        fsuc.setDisplayName(displayName);
+        fsuc.setDxcodeTriggers(dxcodeTriggers);
+        fsuc.setWarningColour(warningColour);
+        fsuc.setRecommendationColour(recommendationColour);     
+        fsuc.setArchived(false);
+        fsuc.setCreatedDate(new Date());
+        flowSheetUserCreatedDao.persist(fsuc);
+        
+        return mapping.findForward("newflowsheet");
+    }
+    
+    
     
     
     
