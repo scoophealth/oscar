@@ -460,11 +460,11 @@ public class PHRService {
 						XmlUtils.appendChildToRoot(xmlDocument, "FileDescription", edoc.getDescription());
 						XmlUtils.appendChildToRoot(xmlDocument, "MimeType", edoc.getContentType());
 						XmlUtils.appendChildToRoot(xmlDocument, "Data", edoc.getFileBytes());
-						String xmlString = XmlUtils.toString(xmlDocument);
+						String xmlString = XmlUtils.toString(xmlDocument,false);
 
 						if (doc.getDocumentHeader().getCreationDateTime() != null) dataTime = doc.getDocumentHeader().getCreationDateTime().toGregorianCalendar();
 
-						resultId = medicalDataWs.addMedicalData(Long.parseLong(action.getReceiverPhr()), dataTime, action.getPhrClassification(), auth.getMyOscarUserId(), xmlString);
+						resultId = medicalDataWs.addMedicalData(Long.parseLong(action.getReceiverPhr()), dataTime, action.getPhrClassification(), auth.getMyOscarUserId(), xmlString, true);
 					} else if (action.getPhrClassification().equals("ANNOTATION")) {
 						try {
 							String referenceIndex = PHRIndivoAnnotation.getAnnotationReferenceIndex(doc);// temporarily stored
@@ -500,13 +500,13 @@ public class PHRService {
 							xmlDocumentRootNode.appendChild(node);
 						}
 						
-						String xmlString = XmlUtils.toString(xmlDocument);
+						String xmlString = XmlUtils.toString(xmlDocument,false);
 
 						logger.debug("sending medical data : " + action.getOscarId() + ", " + action.getDateSent() + ", " + action.getPhrClassification() + ", " + auth.getMyOscarUserId() + ", " + xmlString);
 
 						if (doc.getDocumentHeader().getCreationDateTime() != null) dataTime = doc.getDocumentHeader().getCreationDateTime().toGregorianCalendar();
 
-						resultId = medicalDataWs.addMedicalData(Long.parseLong(action.getReceiverPhr()), dataTime, action.getPhrClassification(), auth.getMyOscarUserId(), xmlString);
+						resultId = medicalDataWs.addMedicalData(Long.parseLong(action.getReceiverPhr()), dataTime, action.getPhrClassification(), auth.getMyOscarUserId(), xmlString, true);
 					}
 
 					// AddDocumentResultType result = client.addDocument(auth.getToken(), action.getReceiverPhr(), doc);
