@@ -179,7 +179,8 @@ public class Hl7TextInfo extends AbstractModel<Integer> implements Serializable 
 	}
 
 	public void setReportStatus(String reportStatus) {
-		this.reportStatus = StringUtils.trimToNull(reportStatus);
+		//report_status may not be null
+		this.reportStatus = StringUtils.trimToEmpty(reportStatus);
 	}
 
 	public String getAccessionNumber() {
