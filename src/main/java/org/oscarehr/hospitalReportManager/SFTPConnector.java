@@ -1,21 +1,23 @@
 package org.oscarehr.hospitalReportManager;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Date;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
-import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.MiscUtils;
+
 import oscar.OscarProperties;
 import oscar.oscarMessenger.data.MsgProviderData;
 
@@ -31,6 +33,8 @@ import com.jcraft.jsch.SftpException;
  */
 public class SFTPConnector {
 
+	private static org.apache.log4j.Logger logger=MiscUtils.getLogger();
+	
 	private JSch jsch;
 	private ChannelSftp cmd;
 	private Session sess;
@@ -39,8 +43,6 @@ public class SFTPConnector {
 	private static final String OMD_HRM_USER = OscarProperties.getInstance().getProperty("OMD_HRM_USER");
 	private static final String OMD_HRM_IP = OscarProperties.getInstance().getProperty("OMD_HRM_IP");
 	private static final int OMD_HRM_PORT = Integer.parseInt(OscarProperties.getInstance().getProperty("OMD_HRM_PORT"));
-
-	private static boolean failureMsgSentToAdmin = false;
 
 	//this file needs chmod 444 permissions for the connection to go through
 	public static  String OMD_directory = OscarProperties.getInstance().getProperty("OMD_directory");
@@ -58,6 +60,12 @@ public class SFTPConnector {
 
 	//set when initialized, to change keys, manually do it in the main constructor
 	public static String decryptionKey=null;
+	
+	/**
+	 * String is the providerNo of people who don't want to see anymore messages.
+	 * This is cleared each time the run succeeds as it would be a new outtage after one success. 
+	 */
+	private static HashSet<String> doNotSentMsgForOuttage=new HashSet<String>();
 
 	/**
 	 * Default constructor instantiates the SFTP Connector for OMD.
@@ -114,7 +122,7 @@ public class SFTPConnector {
 	 */
 	public SFTPConnector(String host, int port, String user, String keyLocation) throws Exception {
 
-		MiscUtils.getLogger().debug("Host "+host+" port "+port+" user "+user+" keyLocation "+keyLocation);	
+		logger.debug("Host "+host+" port "+port+" user "+user+" keyLocation "+keyLocation);	
 		//decryption key
 		decryptionKey = SFTPAuthKeys.OMDdecryptionKey2;
 
@@ -245,7 +253,7 @@ public class SFTPConnector {
 				filenames = new String[fileList.size()];
 			}
 
-			MiscUtils.getLogger().debug("ls " + folder);
+			logger.debug("ls " + folder);
 			int i = 0;
 			for (Object obj : fileList) {
 
@@ -254,7 +262,7 @@ public class SFTPConnector {
 
 					//either print or store each element
 					if (printInfo) {
-						MiscUtils.getLogger().debug(lsEntry.getFilename());
+						logger.debug(lsEntry.getFilename());
 					} else {
 						String fn = lsEntry.getFilename(); //filename
 						if (fn != null && !fn.equals(".") && !fn.equals("..")) {
@@ -312,7 +320,7 @@ public class SFTPConnector {
 				cmd.get(file, fullFilePath);
 				fullPathFilenames[i++] = fullFilePath;
 				fLogger.info("Downloaded File: " + fullFilePath);
-				MiscUtils.getLogger().debug("SFTP::Downloaded file: " + fullFilePath);
+				logger.debug("SFTP::Downloaded file: " + fullFilePath);
 			}
 		}
 
@@ -344,14 +352,14 @@ public class SFTPConnector {
 		cmd.cd("/");
 
 		fLogger.info("About to delete all contents from server directory: " + serverDirectory);
-		MiscUtils.getLogger().debug("Deleting contents from directory: " + serverDirectory);
+		logger.debug("Deleting contents from directory: " + serverDirectory);
 		cmd.cd(serverDirectory);
 		for (String file : filenames) {
 			if (file != null) {
 				cmd.rm(file);
 
 				fLogger.info("Deleted file " + file + " from server");
-				MiscUtils.getLogger().debug("Deleted server file " + file);
+				logger.debug("Deleted server file " + file);
 			}
 		}
 
@@ -406,7 +414,7 @@ public class SFTPConnector {
 	 * @throws Exception
 	 */
 	public String decryptFile(String fullPath) throws Exception {
-		MiscUtils.getLogger().debug("About to decrypt: " + fullPath);
+		logger.debug("About to decrypt: " + fullPath);
 		File encryptedFile = new File(fullPath);
 		if (!encryptedFile.exists()) {
 			throw new Exception("Could not find file '" + fullPath + "' to decrypt.");
@@ -524,86 +532,89 @@ public class SFTPConnector {
 		return SFTPConnector.isAutoFetchRunning;
 	}
 
-	public static void startAutoFetch(boolean isManualFetch) {
+	public static void startAutoFetch() {
 
 		if (!isAutoFetchRunning) {
 			SFTPConnector.isAutoFetchRunning = true;
-			MiscUtils.getLogger().debug("Going into OMD to fetch auto data");
+			logger.debug("Going into OMD to fetch auto data");
 
 			String remoteDir = "Test";
 			try {
-				MiscUtils.getLogger().debug("Instantiating a new SFTP connection....");
+				logger.debug("Instantiating a new SFTP connection.");
 				SFTPConnector sftp = new SFTPConnector();
+				logger.debug("new SFTP connection established");
 
-				String[] localFilePaths = sftp.downloadDirectoryContents(remoteDir);
-
-				sftp.close();
+				String[] localFilePaths =null;
+				
+				try {
+	                localFilePaths=sftp.downloadDirectoryContents(remoteDir);
+                } finally {
+    				sftp.close();
+                }
 
 				for (String filePath : localFilePaths) {
 					HRMReport report = HRMReportParser.parseReport(filePath);
 					if (report != null) HRMReportParser.addReportToInbox(report);
 				}
 
-				MiscUtils.getLogger().debug("Closed SFTP connection");
-
-				SFTPConnector.failureMsgSentToAdmin = false;
-
+				logger.debug("Closed SFTP connection");
+				logger.debug("Clearing doNotSend list");
+				doNotSentMsgForOuttage.clear();
 			} catch (Exception e) {
-				MiscUtils.getLogger().error("Couldn't perform SFTP fetch for HRM - notifying user of failure", e);
-				ArrayList<String> sendToProviderList = new ArrayList<String>();
-				if (isManualFetch) {
-					sendToProviderList.add("999998");
-				} else if (!SFTPConnector.failureMsgSentToAdmin) {
-					sendToProviderList.add("999998");
-					SFTPConnector.failureMsgSentToAdmin = true;
-				}
-
-				if (LoggedInInfo.loggedInInfo != null && LoggedInInfo.loggedInInfo.get() != null && LoggedInInfo.loggedInInfo.get().loggedInProvider != null &&
-						!LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo().equalsIgnoreCase("999998")) {
-					sendToProviderList.add(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
-				}
-
-				String message = "OSCAR attempted to perform a fetch of HRM data at " + (new Date()).toString() + " but there was an error during the task.\n\nSee below for the error message:\n" + e.toString();
-
-				oscar.oscarMessenger.data.MsgMessageData messageData = new oscar.oscarMessenger.data.MsgMessageData();
-
-				ArrayList<MsgProviderData> sendToProviderListData = new ArrayList<MsgProviderData>();
-				for (String providerNo : sendToProviderList) {
-					MsgProviderData mpd = new MsgProviderData();
-					mpd.providerNo = providerNo;
-					mpd.locationId = "145";
-					sendToProviderListData.add(mpd);
-				}
-
-				if (sendToProviderList.size() > 0) {
-					String sentToString = messageData.createSentToString(sendToProviderListData);
-
-					messageData.sendMessage2(message, "HRM Retrieval Error", "System", sentToString, "-1", sendToProviderListData, null, null);
-				}
+				logger.error("Couldn't perform SFTP fetch for HRM - notifying user of failure", e);
+				notifyHrmError(e.getMessage());
 			}
 
 			SFTPConnector.isAutoFetchRunning = false;
 		} else {
-			MiscUtils.getLogger().warn("There is currently an HRM fetch running -- will not run another until it has completed or timed out.");
+			logger.warn("There is currently an HRM fetch running -- will not run another until it has completed or timed out.");
 		}
-
-		/*
-				Scheduler scheduler = (Scheduler) StdSchedulerFactory.getDefaultScheduler();
-
-				JobDetail jobDetail = new JobDetail();
-
-				Map m = jobDetail.getJobDataMap();
-				m.put("to", "me@bogusdomain.com");
-				m.put("subject", "quartz test");
-				m.put("body", "This is a quartz test, Hey ho");
-				m.put("smtpServer", "smtp.bogusdomain.com");
-				m.put("from", "quartz@bogusdomain.com");
-
-				SimpleTrigger trigger = new SimpleTrigger("myTrigger", scheduler.DEFAULT_GROUP, new Date(), null, 0, 0L);
-
-				scheduler.deleteJob("email.send", scheduler.DEFAULT_GROUP);
-				scheduler.scheduleJob(jobDetail, trigger);
-		 */
 	}
 
+	private static void notifyHrmError(String errorMsg) {
+	    HashSet<String> sendToProviderList = new HashSet<String>();
+
+    	String providerNoTemp="999998";
+	    if (!doNotSentMsgForOuttage.contains(providerNoTemp)) sendToProviderList.add(providerNoTemp);
+	    
+    	LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+	    if (loggedInInfo != null && loggedInInfo.loggedInProvider != null)
+	    {
+	    	// manual prompts always send to admin
+	    	sendToProviderList.add(providerNoTemp);
+	    	
+	    	providerNoTemp=loggedInInfo.loggedInProvider.getProviderNo();
+		    if (!doNotSentMsgForOuttage.contains(providerNoTemp)) sendToProviderList.add(providerNoTemp);
+	    }
+
+	    // no one wants to hear about the problem
+	    if (sendToProviderList.size()==0) return;
+	    
+	    String message = "OSCAR attempted to perform a fetch of HRM data at " + new Date() + " but there was an error during the task.\n\nSee below for the error message:\n" + errorMsg;
+
+	    oscar.oscarMessenger.data.MsgMessageData messageData = new oscar.oscarMessenger.data.MsgMessageData();
+
+	    ArrayList<MsgProviderData> sendToProviderListData = new ArrayList<MsgProviderData>();
+	    for (String providerNo : sendToProviderList) {
+	    	MsgProviderData mpd = new MsgProviderData();
+	    	mpd.providerNo = providerNo;
+	    	mpd.locationId = "145";
+	    	sendToProviderListData.add(mpd);
+	    }
+
+    	String sentToString = messageData.createSentToString(sendToProviderListData);
+    	messageData.sendMessage2(message, "HRM Retrieval Error", "System", sentToString, "-1", sendToProviderListData, null, null);
+    }
+
+	/**
+	 * adds the currently logged in user to the do not send anymore messages for this outtage list 
+	 */
+	public static void addMeToDoNotSendList()
+	{
+    	LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+	    if (loggedInInfo != null && loggedInInfo.loggedInProvider != null)
+	    {
+	    	doNotSentMsgForOuttage.add(loggedInInfo.loggedInProvider.getProviderNo());
+	    }
+	}
 }
