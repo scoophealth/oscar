@@ -28,9 +28,6 @@ import com.jcraft.jsch.SftpException;
 
 /**
  * SFTP Connector to interact with servers and return the server's reply/file data.
- * 
- * @author dritan
- * 
  */
 public class SFTPConnector {
 
@@ -57,14 +54,10 @@ public class SFTPConnector {
 	//root folder for daily downloads
 	public static String downloadsDirectory= OscarProperties.getInstance().getProperty("OMD_downloads");
 
-
 	public final String fileDirectory = OscarProperties.getInstance().getProperty("OMD_stored");
 
-	//not in use presently
-	public static final String tmpDownloadFolder = "/tmp/oscar-sftp/";
-
 	//set when initialized, to change keys, manually do it in the main constructor
-	public static String decryptionKey=""; //= "";
+	public static String decryptionKey=null;
 
 	/**
 	 * Default constructor instantiates the SFTP Connector for OMD.
@@ -123,7 +116,7 @@ public class SFTPConnector {
 
 		MiscUtils.getLogger().debug("Host "+host+" port "+port+" user "+user+" keyLocation "+keyLocation);	
 		//decryption key
-		this.decryptionKey = SFTPAuthKeys.OMDdecryptionKey2;
+		decryptionKey = SFTPAuthKeys.OMDdecryptionKey2;
 
 		//daily log file name follows "day month year . log" (with no spaces)
 		String logName = SFTPConnector.getDayMonthYearTimestamp() + ".log";
@@ -186,15 +179,6 @@ public class SFTPConnector {
 	}
 
 	/**
-	 * Call to this function with no parameter ensures that the SFTP download folder exists
-	 * 
-	 * @throws Exception
-	 */
-	private void prepareForDownload() throws Exception {
-		prepareForDownload(null);
-	}
-
-	/**
 	 * Ensure the specified folder exists within the SFTP download folder. If folder is null, then ensure that the
 	 * download folder exists.
 	 * 
@@ -203,7 +187,7 @@ public class SFTPConnector {
 	private String prepareForDownload(String folder) throws Exception {
 
 		//ensure the downloads directory exists
-		String path = checkFolder(this.downloadsDirectory);
+		String path = checkFolder(downloadsDirectory);
 
 		//if it's a simple "do i have my downloads folder" check, then we're done!
 		//no other folder is specified
@@ -212,7 +196,7 @@ public class SFTPConnector {
 
 		//if code gets to here then we're ensuring that specified folder exists within SFTP download folder.
 		//-also fixes the beginning if the specified folder already begins with a '/' slash it ignores the slash
-		String dir = this.downloadsDirectory
+		String dir = downloadsDirectory
 		+ (folder == null ? "" : (folder.charAt(0) == '/' ? folder.substring(1, folder.length() - 1) : folder));
 
 		//return the full path of the existing folder
@@ -250,7 +234,6 @@ public class SFTPConnector {
 	 * @return
 	 * @throws SftpException
 	 */
-	@SuppressWarnings("null")
 	public String[] ls(String folder, boolean printInfo) throws SftpException {
 		List fileList = cmd.ls(folder);
 		String[] filenames = null;
@@ -399,15 +382,17 @@ public class SFTPConnector {
 		FileWriter handler = null;
 		BufferedWriter out = null;
 		for (String sfile : fullPaths) {
-			decryptedContent = decryptFile(sfile);
-			filename = sfile.substring(sfile.lastIndexOf("/"));
-			String newFullPath = saveToDirectoryFullPath + filename;
-			handler = new FileWriter(newFullPath);
-			out = new BufferedWriter(handler);
-			out.write(decryptedContent);
-			out.close();
-			handler.close();
-
+			try {
+	            decryptedContent = decryptFile(sfile);
+	            filename = sfile.substring(sfile.lastIndexOf("/"));
+	            String newFullPath = saveToDirectoryFullPath + filename;
+	            handler = new FileWriter(newFullPath);
+	            out = new BufferedWriter(handler);
+	            out.write(decryptedContent);
+            } finally {
+	            if (out!=null) out.close();
+	            if (handler!=null) handler.close();
+            }
 		}
 
 	}
@@ -431,8 +416,11 @@ public class SFTPConnector {
 		int fileLength = (int) encryptedFile.length();
 		byte[] fileInBytes = new byte[fileLength];
 		FileInputStream fin = new FileInputStream(encryptedFile);
-		fin.read(fileInBytes);
-		fin.close();
+		try {
+	        fin.read(fileInBytes);
+        } finally {
+    		fin.close();
+        }
 
 		//the provided key is 32 characters long string hex representation of a 128 hex key, get the 128-bit hex bytes
 		byte keyBytes[] = toHex(this.decryptionKey);
@@ -507,16 +495,6 @@ public class SFTPConnector {
 		}
 
 		return tmpFolder.getAbsolutePath() + "/";
-	}
-
-	public static String getTempFolder() {
-		try {
-			return SFTPConnector.ensureFolderExists(SFTPConnector.tmpDownloadFolder);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			MiscUtils.getLogger().error("error",e);
-		}
-		return "";
 	}
 
 	public byte[] toHex(String encoded) {
