@@ -115,7 +115,7 @@ br {
 <body vlink="#0000FF" class="BodyStyle">
 
 <% if (request.getParameter("fetch") != null && request.getParameter("fetch").equalsIgnoreCase("true"))
-		SFTPConnector.startAutoFetch(true);
+		SFTPConnector.startAutoFetch();
 %>
 <table class="MainTable">
 	<tr class="MainTableTopRow">
@@ -149,19 +149,22 @@ br {
 	    Upload an HRM report from your computer: <input type="file" name="importFile" /> <input type="submit" name="submit" value="Upload" />
         </form>
         </td>
-</tr>
+	</tr>
 	<tr>
 		<td class="MainTableLeftColumn" valign="top" width="160px;">&nbsp;</td>
 		<td class="MainTableRightColumn" valign="top">
-		<%
-		HRMProviderConfidentialityStatementDao hrmProviderConfidentialityStatementDao = (HRMProviderConfidentialityStatementDao) SpringUtils.getBean("HRMProviderConfidentialityStatementDao");
-		String statement = hrmProviderConfidentialityStatementDao.getConfidentialityStatementForProvider(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
-		%>
-		<form action="<%=request.getContextPath() %>/hospitalReportManager/Statement.do" method="post">
-		Provider Confidentiality Statement:<br />
-		<textarea name="statement"><%=statement %></textarea><br />
-		<input type="submit" name="submit" value="Save Statement" /> <% if (request.getAttribute("statementSuccess") != null && (Boolean) request.getAttribute("statementSuccess")) { %>Success<% } else if (request.getAttribute("statementSuccess") != null && !((Boolean) request.getAttribute("statementSuccess")))  { %>Error<% } %>
-		</form>
+			<%
+			HRMProviderConfidentialityStatementDao hrmProviderConfidentialityStatementDao = (HRMProviderConfidentialityStatementDao) SpringUtils.getBean("HRMProviderConfidentialityStatementDao");
+			String statement = hrmProviderConfidentialityStatementDao.getConfidentialityStatementForProvider(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+			%>
+			<form action="<%=request.getContextPath() %>/hospitalReportManager/Statement.do" method="post">
+			Provider Confidentiality Statement:<br />
+			<textarea name="statement"><%=statement %></textarea><br />
+			<input type="submit" name="submit" value="Save Statement" /> <% if (request.getAttribute("statementSuccess") != null && (Boolean) request.getAttribute("statementSuccess")) { %>Success<% } else if (request.getAttribute("statementSuccess") != null && !((Boolean) request.getAttribute("statementSuccess")))  { %>Error<% } %>
+			</form>
+
+			<br />
+			<input type="button" value="I don't want to receive any more HRM outtage messages for this outtage instance" onclick="window.location='disable_msg_action.jsp'" />
 		</td>
 	</tr>
 	<tr>
@@ -170,4 +173,7 @@ br {
 		<td class="MainTableBottomRowRightColumn">&nbsp;</td>
 	</tr>
 </table>
+
+
+
 </html:html>

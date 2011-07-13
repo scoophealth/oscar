@@ -8,12 +8,6 @@ import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
-/**
- * A job can start many tasks
- * 
- * @author dritan
- * 
- */
 public class SchedulerJob extends TimerTask {
 
 	private static long lastRun = new Date().getTime();
@@ -38,10 +32,10 @@ public class SchedulerJob extends TimerTask {
 		if (!firstRun) {
 			if (lastRun + intervalTime <= new Date().getTime()) {
 				// Run now
-				SFTPConnector.startAutoFetch(false);
+				SFTPConnector.startAutoFetch();
 			}
 		} else {
-			SFTPConnector.startAutoFetch(false);
+			SFTPConnector.startAutoFetch();
 			SchedulerJob.firstRun = false;
 		}
 		

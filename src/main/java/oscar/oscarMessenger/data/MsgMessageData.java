@@ -24,6 +24,7 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarMessenger.data;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 
 import org.oscarehr.util.MiscUtils;
 import org.w3c.dom.Document;
@@ -264,7 +265,7 @@ public class MsgMessageData {
     //insert all the provider ids that will get the message along with the
     //message id plus a status of new
     //messageId = messageData.sendMessage(message,       subject,       userName,       sentToWho,       userNo,              providerListing );
-    public String sendMessage2(String message, String subject,String userName,String sentToWho,String userNo,java.util.ArrayList providers,String attach, String pdfAttach ){
+    public String sendMessage2(String message, String subject,String userName,String sentToWho,String userNo,ArrayList<MsgProviderData> providers,String attach, String pdfAttach ){
 
       oscar.oscarMessenger.util.MsgStringQuote str = new oscar.oscarMessenger.util.MsgStringQuote();
       String messageid=null;
@@ -295,33 +296,14 @@ public class MsgMessageData {
 
          messageid = String.valueOf(db.queryExecuteInsertReturnId(sql));
 
-         /* Choose the right command to recover the messageid inserted above */
-/*
-         OscarProperties prop = OscarProperties.getInstance();
-	 String db_type = prop.getProperty("db_type", "mysql").trim();
-	 if (db_type.equalsIgnoreCase("mysql")) {
-               rs = db.queryResults("SELECT LAST_INSERT_ID() ");
-         } else if (db_type.equalsIgnoreCase("postgresql")) {
-               rs = db.queryResults("SELECT CURRVAL('messagetbl_int_seq')");
-         } else
-               throw new java.sql.SQLException("ERROR: Database " + db_type + " unrecognized");
 
-         if(rs.next()){
-            messageid = Integer.toString( rs.getInt(1) );
-         }
-    */
-
-         for (int i =0 ; i < providers.size(); i++){
-            MsgProviderData providerData = (MsgProviderData) providers.get(i);
+         for (MsgProviderData providerData : providers){
             db.queryExecuteUpdate("insert into messagelisttbl (message,provider_no,status,remoteLocation) values ('"+messageid+"','"+providerData.providerNo+"','new','"+providerData.locationId+"')");
          }
 
       }catch (java.sql.SQLException e){MiscUtils.getLogger().error("Error", e); }
       return messageid;
-    }//=------------------------------------------------------------------------
-
-
-
+    }
 
 
 
