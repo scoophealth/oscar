@@ -39,19 +39,15 @@ public class SFTPConnector {
 	private Session sess;
 	private Logger fLogger; //file logger
 
-	/**
-	 * OMD Specifications
-	 * 
-	 */
-	private static final String OMD_user = "mcmu"; //TODO:Should this be hard coded?
-	private static final String OMD_ip = "207.219.74.198";
-	private static final int OMD_port = 22;
+	private static final String OMD_HRM_USER = OscarProperties.getInstance().getProperty("OMD_HRM_USER");
+	private static final String OMD_HRM_IP = OscarProperties.getInstance().getProperty("OMD_HRM_IP");
+	private static final int OMD_HRM_PORT = Integer.parseInt(OscarProperties.getInstance().getProperty("OMD_HRM_PORT"));
 
 	private static boolean failureMsgSentToAdmin = false;
 
 	//this file needs chmod 444 permissions for the connection to go through
 	public static  String OMD_directory = OscarProperties.getInstance().getProperty("OMD_directory");
-	private static  String OMD_keyLocation = OMD_directory + "mcmu_sk.ppk";
+	private static  String OMD_keyLocation = OMD_directory + OscarProperties.getInstance().getProperty("OMD_HRM_AUTH_KEY_FILENAME");
 	public static final String XSD_ontariomd = OMD_directory + "ontariomd_cds_dt.xsd";
 	public static final String XSD_reportmanager = OMD_directory + "report_manager_cds.xsd";
 
@@ -79,7 +75,7 @@ public class SFTPConnector {
 	 * @throws Exception
 	 */
 	public SFTPConnector() throws Exception {
-		this(SFTPConnector.OMD_ip, SFTPConnector.OMD_port, SFTPConnector.OMD_user, SFTPConnector.getOMD_keyLocation());
+		this(OMD_HRM_IP, OMD_HRM_PORT, OMD_HRM_USER, getOMD_keyLocation());
 	}
 
 	/**
