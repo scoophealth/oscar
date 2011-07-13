@@ -6,10 +6,8 @@
 
 package oscar.oscarLab.ca.all.parsers;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,16 +19,11 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
 
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.datatype.XMLGregorianCalendar;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
@@ -46,24 +39,19 @@ import org.oscarehr.hospitalReportManager.xsd.PatientRecord;
 import org.oscarehr.hospitalReportManager.xsd.PhoneNumber;
 import org.oscarehr.hospitalReportManager.xsd.ReportsReceived;
 import org.oscarehr.util.DbConnectionFilter;
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
+import org.oscarehr.util.MiscUtils;
 
-import oscar.oscarLab.ca.all.upload.handlers.HL7Handler;
 import oscar.util.UtilDateUtilities;
 import ca.uhn.hl7v2.HL7Exception;
 
 /**
- * TDIS HL7 Report Parser/Handler.
- * 
- * Handles incoming HL7 files containing ITS or DEPARTMENTAL reports as part of the OBR/OBX segments.
- * 
+ * TDIS HL7 Report Parser/Handler. Handles incoming HL7 files containing ITS or DEPARTMENTAL reports as part of the OBR/OBX segments.
  * 
  * @author dritan
  */
 public class HRMXMLHandler implements MessageHandler {
 
-	Logger logger = Logger.getLogger(HL7Handler.class);
+	private static Logger logger = MiscUtils.getLogger();
 
 	private ArrayList<String> headers = null;
 
@@ -72,23 +60,11 @@ public class HRMXMLHandler implements MessageHandler {
 
 	public void init(String hl7Body) throws HL7Exception {
 
-		//	this.version = p.getVersion(hl7Body);
+		// this.version = p.getVersion(hl7Body);
 		logger.info("A NEW HRM XML PARSER OBJECT INSTANTIATED TO PARSE HL7 FILE " + hl7Body);
 
 		try {
-			//a lot of the parsers need to refer to a file and even when they provide functions like parse(String text)
-			//it will not parse the same way because it will treat the text as a URL
-			//so we take the lab and store them temporarily in a random filename in /tmp/oscar-sftp/
-			File tmpXMLholder = new File(SFTPConnector.getTempFolder() + UUID.randomUUID() + ".hrmxml");
-			PrintWriter pw = new PrintWriter(tmpXMLholder);
-			pw.write(hl7Body);
-			pw.flush();
-			pw.close();
-			String fullName = tmpXMLholder.getAbsolutePath();
-
-			// Parse an XML document into a DOM tree.
-			DocumentBuilder parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-			Document document = parser.parse(tmpXMLholder); //new File("myXMLDocument.xml"));
+			ByteArrayInputStream byeArrayInputStream = new ByteArrayInputStream(hl7Body.getBytes());
 
 			// Create a SchemaFactory capable of understanding WXS schemas.
 			SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
@@ -99,20 +75,11 @@ public class HRMXMLHandler implements MessageHandler {
 
 			JAXBContext jc = JAXBContext.newInstance("oscar.hospitalReportManager.xsd");
 			Unmarshaller u = jc.createUnmarshaller();
-			root = (OmdCds) u.unmarshal(tmpXMLholder);
+			root = (OmdCds) u.unmarshal(byeArrayInputStream);
 			pr = root.getPatientRecord();
 
-		} catch (SAXException e) {
-			logger.error("SAX ERROR PARSING XML ",e);
-		} catch (FileNotFoundException e) {
-			logger.error("FILE NOT FOUND ERROR PARSING XML ",e);
-		} catch (IOException e) {
-			logger.error("IO ERROR PARSING XML ",e);
-		} catch (ParserConfigurationException e) {
-			logger.error("PARSER ERROR PARSING XML ",e);
-		} catch (JAXBException e) {
-			// TODO Auto-generated catch block
-			logger.error("error",e);
+		} catch (Exception e) {
+			logger.error("error", e);
 		}
 
 		headers = new ArrayList<String>();
@@ -126,20 +93,12 @@ public class HRMXMLHandler implements MessageHandler {
 
 		try {
 
-
 			// BZ 17: Original query takes about 10 seconds to execute
-			String sql = "SELECT m2.message, a.lab_no AS lab_no_A, b.lab_no AS lab_no_B, a.obr_date, b.obr_date as labDate "
-					+ "FROM hl7TextInfo a, hl7TextInfo b, hl7TextMessage m2 "
-					+ "WHERE m2.lab_id = a.lab_no AND a.accessionNum !='' "
-					+ "AND a.accessionNum=b.accessionNum "
-					+ "AND b.lab_no IN ( SELECT lab_id FROM hl7TextMessage WHERE message='"
-					+ (new String(base64.encode(hl7Body.getBytes("ASCII")), "ASCII"))
-					+ "' ) "
-					+ "ORDER BY a.obr_date, a.lab_no";
-			Connection c  = DbConnectionFilter.getThreadLocalDbConnection();
+			String sql = "SELECT m2.message, a.lab_no AS lab_no_A, b.lab_no AS lab_no_B, a.obr_date, b.obr_date as labDate " + "FROM hl7TextInfo a, hl7TextInfo b, hl7TextMessage m2 " + "WHERE m2.lab_id = a.lab_no AND a.accessionNum !='' " + "AND a.accessionNum=b.accessionNum " + "AND b.lab_no IN ( SELECT lab_id FROM hl7TextMessage WHERE message='" + (new String(base64.encode(hl7Body.getBytes("ASCII")), "ASCII")) + "' ) " + "ORDER BY a.obr_date, a.lab_no";
+			Connection c = DbConnectionFilter.getThreadLocalDbConnection();
 			PreparedStatement ps = c.prepareStatement(sql);
-			ResultSet rs= ps.executeQuery(sql);
-			
+			ResultSet rs = ps.executeQuery(sql);
+
 			while (rs.next()) {
 				// Accession numbers may be recycled, accession
 				// numbers for a lab should have lab dates within less than 4
@@ -156,19 +115,17 @@ public class HRMXMLHandler implements MessageHandler {
 				}
 
 				// only return labs up to the one being initialized
-				if (oscar.Misc.getString(rs, "lab_no_A").equals(oscar.Misc.getString(rs, "lab_no_B")))
-					break;
+				if (oscar.Misc.getString(rs, "lab_no_A").equals(oscar.Misc.getString(rs, "lab_no_B"))) break;
 			}
 			rs.close();
-			//db.CloseConn();
+			// db.CloseConn();
 		} catch (Exception e) {
 			logger.error("Exception in HL7 getMatchingLabs: ", e);
 		}
 
 		// if there have been no labs added to the database yet just return this
 		// lab
-		if (ret.size() == 0)
-			ret.add(hl7Body);
+		if (ret.size() == 0) ret.add(hl7Body);
 		return ret;
 	}
 
@@ -193,8 +150,8 @@ public class HRMXMLHandler implements MessageHandler {
 
 	public String getMsgPriority() {
 
-		//if (getString(obrSegKeySet.get(i).getPriorityOBR().getValue()).equals("S")) 
-		//return "S";
+		// if (getString(obrSegKeySet.get(i).getPriorityOBR().getValue()).equals("S"))
+		// return "S";
 
 		return "R";
 	}
@@ -213,7 +170,7 @@ public class HRMXMLHandler implements MessageHandler {
 	public String getOBRName(int i) {
 		String val = "";
 		return val;
-		//return (val = obrSegKeySet.get(i).getUniversalServiceIdentifier().getText().getValue()) == null ? " " : val;
+		// return (val = obrSegKeySet.get(i).getUniversalServiceIdentifier().getText().getValue()) == null ? " " : val;
 	}
 
 	public String getTimeStamp(int i, int j) {
@@ -222,10 +179,8 @@ public class HRMXMLHandler implements MessageHandler {
 
 	public boolean isOBXAbnormal(int i, int j) {
 		String abnormalFlag = getOBXAbnormalFlag(i, j);
-		if (abnormalFlag.equals("") || abnormalFlag.equals("N"))
-			return (false);
-		else
-			return (true);
+		if (abnormalFlag.equals("") || abnormalFlag.equals("N")) return (false);
+		else return (true);
 	}
 
 	public String getOBXAbnormalFlag(int i, int j) {
@@ -234,19 +189,10 @@ public class HRMXMLHandler implements MessageHandler {
 	}
 
 	/**
-	 * In order to match ITS Report OBXs with the OBR holding them, and to keep the output style cleaner, for ITS
-	 * Reports we need to "trick" the style output.
-	 * 
-	 * If an OBR contains an OBX segment with ITS or DPT report, then all OBXs for that OBR are considered to be report
-	 * types. Because an ITS or DPT is not a test, there is no need to write the test name "ITS/DPT REPORT" when viewing
-	 * the results. So we put "ITS/DPT REPORT" near the OBR name to classify this OBR and following OBX's as one full
-	 * ITS/DPT report.
-	 * 
-	 * A refresher of what this method computes:
-	 * 
-	 * Return the observation header which represents the observation stored in the jth OBX segment of the ith OBR
-	 * group. May be stored in either the OBR or OBX segment. It is used to separate the observations into groups. ie/
-	 * 'CHEMISTRY' 'HEMATOLOGY' '
+	 * In order to match ITS Report OBXs with the OBR holding them, and to keep the output style cleaner, for ITS Reports we need to "trick" the style output. If an OBR contains an OBX segment with ITS or DPT report, then all OBXs for that OBR are
+	 * considered to be report types. Because an ITS or DPT is not a test, there is no need to write the test name "ITS/DPT REPORT" when viewing the results. So we put "ITS/DPT REPORT" near the OBR name to classify this OBR and following OBX's as one full
+	 * ITS/DPT report. A refresher of what this method computes: Return the observation header which represents the observation stored in the jth OBX segment of the ith OBR group. May be stored in either the OBR or OBX segment. It is used to separate the
+	 * observations into groups. ie/ 'CHEMISTRY' 'HEMATOLOGY' '
 	 */
 	public String getObservationHeader(int i, int j) {
 
@@ -269,10 +215,7 @@ public class HRMXMLHandler implements MessageHandler {
 	}
 
 	/**
-	 * return the OBX name for the specified OBR index 'i' and OBX index 'j'
-	 * 
-	 * If the OBX is an ITS or DPT then return a single space to trick the full report style. See above for default call
-	 * to getOBXName()
+	 * return the OBX name for the specified OBR index 'i' and OBX index 'j' If the OBX is an ITS or DPT then return a single space to trick the full report style. See above for default call to getOBXName()
 	 */
 	public String getOBXName(int i, int j, boolean its) {
 		String ret = "";
@@ -291,9 +234,7 @@ public class HRMXMLHandler implements MessageHandler {
 	}
 
 	/**
-	 * Return the result of the jth OBX at ith OBR.
-	 * 
-	 * If it's an ITS^REPORT, the show nothing as this result will be fetched in the previous column.
+	 * Return the result of the jth OBX at ith OBR. If it's an ITS^REPORT, the show nothing as this result will be fetched in the previous column.
 	 * 
 	 * @param i
 	 * @param j
@@ -414,8 +355,8 @@ public class HRMXMLHandler implements MessageHandler {
 	public String getHomePhone() {
 		List<PhoneNumber> pnums = pr.getDemographics().getPhoneNumber();
 		for (PhoneNumber pnum : pnums) {
-			if (pnum.getPhoneNumberType().equals("R")) { //R for residential
-				return pnum.getContent().get(0).toString(); //return first instance of number
+			if (pnum.getPhoneNumberType().equals("R")) { // R for residential
+				return pnum.getContent().get(0).toString(); // return first instance of number
 			}
 		}
 		return "";
@@ -437,8 +378,8 @@ public class HRMXMLHandler implements MessageHandler {
 
 	public String getOrderStatus() {
 
-		//if (res != null && res.equals("0"))
-		//return "P";
+		// if (res != null && res.equals("0"))
+		// return "P";
 		return "F";
 	}
 
@@ -477,40 +418,29 @@ public class HRMXMLHandler implements MessageHandler {
 	private String getFullDocName(ca.uhn.hl7v2.model.v25.datatype.XCN xcn) {
 		String docName = "";
 
-		if (xcn.getPrefixEgDR().getValue() != null)
-			docName = xcn.getPrefixEgDR().getValue();
+		if (xcn.getPrefixEgDR().getValue() != null) docName = xcn.getPrefixEgDR().getValue();
 
 		if (xcn.getGivenName().getValue() != null) {
-			if (docName.equals(""))
-				docName = xcn.getGivenName().getValue();
-			else
-				docName = docName + " " + xcn.getGivenName().getValue();
+			if (docName.equals("")) docName = xcn.getGivenName().getValue();
+			else docName = docName + " " + xcn.getGivenName().getValue();
 
 		}
 		if (xcn.getSecondAndFurtherGivenNamesOrInitialsThereof().getValue() != null) {
-			if (docName.equals(""))
-				docName = xcn.getSecondAndFurtherGivenNamesOrInitialsThereof().getValue();
-			else
-				docName = docName + " " + xcn.getSecondAndFurtherGivenNamesOrInitialsThereof().getValue();
+			if (docName.equals("")) docName = xcn.getSecondAndFurtherGivenNamesOrInitialsThereof().getValue();
+			else docName = docName + " " + xcn.getSecondAndFurtherGivenNamesOrInitialsThereof().getValue();
 		}
 		if (xcn.getFamilyName().getSurname().getValue() != null) {
-			if (docName.equals(""))
-				docName = xcn.getFamilyName().getSurname().getValue();
-			else
-				docName = docName + " " + xcn.getFamilyName().getSurname().getValue();
+			if (docName.equals("")) docName = xcn.getFamilyName().getSurname().getValue();
+			else docName = docName + " " + xcn.getFamilyName().getSurname().getValue();
 
 		}
 		if (xcn.getSuffixEgJRorIII().getValue() != null) {
-			if (docName.equals(""))
-				docName = xcn.getSuffixEgJRorIII().getValue();
-			else
-				docName = docName + " " + xcn.getSuffixEgJRorIII().getValue();
+			if (docName.equals("")) docName = xcn.getSuffixEgJRorIII().getValue();
+			else docName = docName + " " + xcn.getSuffixEgJRorIII().getValue();
 		}
 		if (xcn.getDegreeEgMD().getValue() != null) {
-			if (docName.equals(""))
-				docName = xcn.getDegreeEgMD().getValue();
-			else
-				docName = docName + " " + xcn.getDegreeEgMD().getValue();
+			if (docName.equals("")) docName = xcn.getDegreeEgMD().getValue();
+			else docName = docName + " " + xcn.getDegreeEgMD().getValue();
 		}
 
 		return docName;
@@ -520,8 +450,7 @@ public class HRMXMLHandler implements MessageHandler {
 		String dateFormat = "yyyyMMddHHmmss";
 		dateFormat = dateFormat.substring(0, plain.length());
 		String stringFormat = "yyyy-MM-dd HH:mm:ss";
-		stringFormat = stringFormat.substring(0,
-				stringFormat.lastIndexOf(dateFormat.charAt(dateFormat.length() - 1)) + 1);
+		stringFormat = stringFormat.substring(0, stringFormat.lastIndexOf(dateFormat.charAt(dateFormat.length() - 1)) + 1);
 
 		Date date = UtilDateUtilities.StringToDate(plain, dateFormat);
 		return UtilDateUtilities.DateToString(date, stringFormat);
@@ -539,8 +468,7 @@ public class HRMXMLHandler implements MessageHandler {
 		if (date == null) {
 			return "";
 		}
-		return date.getYear() + "-" + date.getMonth() + "-" + date.getDay()
-				+ (!omitTime ? date.getHour() + ":" + date.getMinute() : "");
+		return date.getYear() + "-" + date.getMonth() + "-" + date.getDay() + (!omitTime ? date.getHour() + ":" + date.getMinute() : "");
 	}
 
 }

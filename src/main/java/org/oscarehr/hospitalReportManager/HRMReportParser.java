@@ -68,7 +68,7 @@ public class HRMReportParser {
 
 				// Load a WXS schema, represented by a Schema instance.
 				Source schemaFile = new StreamSource(new File(SFTPConnector.OMD_directory + "report_manager_cds.xsd"));
-				Schema schema = factory.newSchema(schemaFile); //new File(SFTPConnector.OMD_directory + "report_manager_cds.xsd"));
+				Schema schema = factory.newSchema(schemaFile); 
 
 				JAXBContext jc = JAXBContext.newInstance("org.oscarehr.hospitalReportManager.xsd");
 				Unmarshaller u = jc.createUnmarshaller();
