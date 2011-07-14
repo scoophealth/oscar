@@ -809,7 +809,7 @@
 		<action path="/oscarMDS/SendMRP" scope="request" type="oscar.oscarMDS.pageUtil.SendMostResponProvAction">
 			<forward name="failure" path="/errorpage.jsp" />
 		</action>
-		<action input="/SegmentDisplay.jsp" path="/oscarMDS/UpdateStatus" scope="request" type="oscar.oscarMDS.pageUtil.ReportStatusUpdateAction">
+		<action input="/SegmentDisplay.jsp" path="/oscarMDS/UpdateStatus" parameter="method" scope="request" type="oscar.oscarMDS.pageUtil.ReportStatusUpdateAction">
 			<forward name="failure" path="/errorpage.jsp" />
 			<forward name="success" path="/oscarMDS/Close.jsp" />
 		</action>

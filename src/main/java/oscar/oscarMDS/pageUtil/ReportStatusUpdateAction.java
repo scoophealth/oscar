@@ -31,7 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-import org.apache.struts.action.Action;
+import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -42,14 +42,18 @@ import oscar.log.LogConst;
 import oscar.oscarDB.DBHandler;
 import oscar.oscarLab.ca.on.CommonLabResultData;
 
-public class ReportStatusUpdateAction extends Action {
+public class ReportStatusUpdateAction extends DispatchAction {
     
     private static Logger logger = MiscUtils.getLogger();
     
     public ReportStatusUpdateAction() {
     }
     
-    public ActionForward execute(ActionMapping mapping,
+    public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    	return executemain(mapping, form, request, response);
+    }
+    
+    public ActionForward executemain(ActionMapping mapping,
             ActionForm form,
             HttpServletRequest request,
             HttpServletResponse response)
@@ -89,6 +93,24 @@ public class ReportStatusUpdateAction extends Action {
             logger.error("exception in ReportStatusUpdateAction",e);
             return mapping.findForward("failure");
         }
+    }
+    
+    public ActionForward addComment(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    	int labNo = Integer.parseInt(request.getParameter("segmentID"));
+    	String providerNo = request.getParameter("providerNo");
+    	char status = request.getParameter("status").charAt(0);
+        String comment = request.getParameter("comment");
+        String lab_type = request.getParameter("labType");
+        
+        try {
+        	
+        	CommonLabResultData.updateReportStatus(labNo, providerNo, status, comment,lab_type);
+        	
+        } catch(Exception e) {
+        	logger.error("exception in setting comment",e);
+            return mapping.findForward("failure");
+        }
+    	return null;
     }
     
     private static String getDemographicIdFromLab(String labType, int labNo)
