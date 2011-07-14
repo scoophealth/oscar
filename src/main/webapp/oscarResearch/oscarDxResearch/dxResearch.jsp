@@ -46,7 +46,7 @@
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<title><bean:message key="oscarResearch.oscarDxResearch.dxResearch.title" /></title>
+<script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/prototype.js"></script>
 <script language="JavaScript">
 <!--
 function setfocus() {
@@ -123,14 +123,25 @@ function processKey(e) {
 	}
 }
 
+function showdatebox(x) {
+    document.getElementById("startdatenew"+x).show();
+    document.getElementById("startdate1st"+x).hide();
+}
+
+function update_date(did, demoNo, provNo) {
+    var startdate = document.getElementById("startdatenew"+did).value;
+    alert(startdate);
+    window.location.href = "dxResearchUpdate.do?status=A&startdate="+startdate+"&did="+did+"&demographicNo="+demoNo+"&providerNo="+provNo;
+}
 
 //-->
 </script>
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+<title><bean:message key="oscarResearch.oscarDxResearch.dxResearch.title" /></title>
 </head>
 
 <body bgcolor="#FFFFFF" text="#000000" rightmargin="0" leftmargin="0"
-	topmargin="0" marginwidth="0" marginheight="0" onLoad="setfocus()">
+	topmargin="0" marginwidth="0" marginheight="0" onLoad="setfocus();">
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
 	<tr>
 		<td>
@@ -239,10 +250,10 @@ function processKey(e) {
 					<table width="100%" border="0" cellpadding="0" cellspacing="0"
 						bgcolor="#FFFFFF">
 						<tr>
-							<td class="heading" width="48%"><b><bean:message key="oscarResearch.oscarDxResearch.dxResearch.msgDiagnosis" /></b></td>
+							<td class="heading" width="45%"><b><bean:message key="oscarResearch.oscarDxResearch.dxResearch.msgDiagnosis" /></b></td>
 							<td class="heading" width="15%"><b><bean:message key="oscarResearch.oscarDxResearch.dxResearch.msgFirstVisit" /></b></td>
 							<td class="heading" width="15%"><b><bean:message key="oscarResearch.oscarDxResearch.dxResearch.msgLastVisit" /></b></td>
-							<td class="heading" width="22%"><b><bean:message key="oscarResearch.oscarDxResearch.dxResearch.msgAction" /></b></td>
+							<td class="heading" width="25%"><b><bean:message key="oscarResearch.oscarDxResearch.dxResearch.msgAction" /></b></td>
 						</tr>
 						<logic:iterate id="diagnotics" name="allDiagnostics"
 							property="dxResearchBeanVector" indexId="ctr">
@@ -259,19 +270,30 @@ function processKey(e) {
 							<logic:equal name="diagnotics" property="status" value="A">
 								<tr bgcolor="<%=color%>">
 									<td class="notResolved"><bean:write name="diagnotics" property="description" /></td>
-									<td class="notResolved"><bean:write name="diagnotics" property="start_date" /></td>
-									<td class="notResolved"><bean:write name="diagnotics" property="end_date" /></td>
+									<td class="notResolved">
+                                                                            <a href="#" onclick="showdatebox(<bean:write name="diagnotics" property="dxResearchNo" />);">
+                                                                                <div id="startdate1st<bean:write name="diagnotics" property="dxResearchNo" />"><bean:write name="diagnotics" property="start_date" /></div>
+                                                                                <input id="startdatenew<bean:write name="diagnotics" property="dxResearchNo" />" type="text" name="start_date" size="8" value="<bean:write name="diagnotics" property="start_date" />" style="display:none" />
+                                                                            </a>
+                                                                        </td>
+									<td class="notResolved">
+                                                                                <bean:write name="diagnotics" property="end_date" />
+                                                                        </td>
 									<td class="notResolved"><a
 										href='dxResearchUpdate.do?status=C&did=<bean:write name="diagnotics" property="dxResearchNo" />&demographicNo=<bean:write name="demographicNo" />&providerNo=<bean:write name="providerNo" />'><bean:message
 										key="oscarResearch.oscarDxResearch.dxResearch.btnResolve" /></a> |
 									<a
 										href='dxResearchUpdate.do?status=D&did=<bean:write name="diagnotics" property="dxResearchNo" />&demographicNo=<bean:write name="demographicNo" />&providerNo=<bean:write name="providerNo" />'><bean:message
-										key="oscarResearch.oscarDxResearch.dxResearch.btnDelete" /></a></td>
+										key="oscarResearch.oscarDxResearch.dxResearch.btnDelete" /></a> |
+									<a
+										href='#' onclick="update_date(<bean:write name="diagnotics" property="dxResearchNo" />,<bean:write name="demographicNo" />,<bean:write name="providerNo" />);"><bean:message
+										key="oscarResearch.oscarDxResearch.dxResearch.btnUpdate" /></a>
+                                                                        </td>
 								</tr>
 							</logic:equal>
 							<logic:equal name="diagnotics" property="status" value="C">
 								<tr bgcolor="<%=color%>">
-									<td><bean:write name="diagnotics" property="description" /></td>
+                                                                    <td><bean:write name="diagnotics" property="description" /></td>
 									<td><bean:write name="diagnotics" property="start_date" /></td>
 									<td><bean:write name="diagnotics" property="end_date" /></td>
 									<td><bean:message key="oscarResearch.oscarDxResearch.dxResearch.btnResolve" /> |

@@ -50,7 +50,9 @@ public class dxResearchUpdateAction extends Action {
         String did = request.getParameter("did");
         String demographicNo = request.getParameter("demographicNo");        
         String providerNo = request.getParameter("providerNo");
+        String startDate = request.getParameter("startdate");
         String nowDate = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy/MM/dd"); 
+        if (UtilDateUtilities.StringToDate(startDate, "yyyy-mm-dd")==null) startDate=null;
         
         try{
                         
@@ -61,6 +63,10 @@ public class dxResearchUpdateAction extends Action {
             }
             else if (status.equals("D")){
                 sql = "update dxresearch set update_date='"+nowDate + "', status='D' where dxresearch_no='"+did+"'";
+                DBHandler.RunSQL(sql);
+            }
+            else if (status.equals("A") && startDate!=null){
+                sql = "update dxresearch set update_date='"+nowDate+"', start_date='"+startDate+"' where dxresearch_no='"+did+"'";
                 DBHandler.RunSQL(sql);
             }
         }
