@@ -97,14 +97,18 @@ else // remote lab
 }
 
 
-
+boolean notBeenAcked = ackList.size() == 0;
 boolean ackFlag = false;
+String labStatus = "";
 if (ackList != null){
     for (int i=0; i < ackList.size(); i++){
         ReportStatus reportStatus = ackList.get(i);
-        if (reportStatus.getProviderNo().equals(providerNo) && reportStatus.getStatus().equals("A") ){
-            ackFlag = true;//lab has been ack by this provider.
-            break;
+        if (reportStatus.getProviderNo().equals(providerNo) ) {
+        	labStatus = reportStatus.getStatus();
+        	if( labStatus.equals("A") ){        
+            	ackFlag = true;//lab has been ack by this provider.
+            	break;
+        	}
         }
     }
 }
@@ -267,16 +271,20 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
             windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes";
             var popup=window.open(varpage, windowname, windowprops);
         }
-        function getComment() {    
+        function getComment(action) {    
             var ret = true;
             var commentVal = prompt('<bean:message key="oscarMDS.segmentDisplay.msgComment"/>', '');
     
-            if( commentVal == null || commentVal.length==0)
+            if( action == "addComment" && (commentVal == null || commentVal.length==0))
                 ret = false;
-            else 
+            else if( commentVal != null && commentVal.length > 0 )
                 document.acknowledgeForm.comment.value = commentVal;
-           if(ret) handleLab('acknowledgeForm','<%=segmentID%>','ackLab');
-            return ret;
+            else
+            	document.acknowledgeForm.comment.value = $("commentText").innerHTML;
+            
+           if(ret) handleLab('acknowledgeForm','<%=segmentID%>', action);
+           
+            return false;
         }
         
         function printPDF(){
@@ -309,9 +317,10 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                                         var success=json.isLinkedToDemographic;
                                                                         var demoid='';
                                                                         //check if lab is linked to a provider
-                                                                        if(success){
+                                                                        if(success){                                                                        	
                                                                             if(action=='ackLab'){
                                                                                 if(confirmAck()){
+                                                                                	$("labStatus").value = "A";
                                                                                     updateStatus(formid,labid);
                                                                                 }
                                                                             }else if(action=='msgLab'){
@@ -323,13 +332,20 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                                                 if(demoid!=null && demoid.length>0)
                                                                                     window.popup(450,600,'../../../tickler/ForwardDemographicTickler.do?docType=HL7&docId='+labid+'&demographic_no='+demoid,'tickler')
                                                                             }
+                                                                            else if( action == 'addComment' ) {
+                                                                            	addComment(formid,labid);
+                                                                            }
 
                                                                         }else{
                                                                             if(action=='ackLab'){
-                                                                                if(confirmAckUnmatched())
-                                                                                    updateStatus(formid,labid);                                                                                
-                                                                                else
+                                                                                if(confirmAckUnmatched()) {
+                                                                                	$("labStatus").value = "A";
+                                                                                    updateStatus(formid,labid);
+                                                                                }
+                                                                                else {
                                                                                     matchMe();
+                                                                                }                                                                            
+                                                                            
                                                                             }else{
                                                                                 alert("Please relate lab to a patient");
                                                                                 matchMe();
@@ -345,6 +361,11 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
             		return true;
             	<% } %>
 	}
+
+        function confirmCommentUnmatched(){
+            return confirm('<bean:message key="oscarMDS.index.msgConfirmAcknowledgeUnmatched"/>');
+        }
+        
         function confirmAckUnmatched(){
             return confirm('<bean:message key="oscarMDS.index.msgConfirmAcknowledgeUnmatched"/>');
         }
@@ -360,6 +381,16 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                 }
         }});
 
+        }
+        
+        function addComment(formid,labid) {
+        	var url='<%=request.getContextPath()%>'+"/oscarMDS/UpdateStatus.do?method=addComment";
+        	var data=$(formid).serialize(true);
+
+            new Ajax.Request(url,{method:'post',parameters:data,onSuccess:function(transport){
+            	$("commentLabel").update("comment : ");
+            	$("commentText").update(document.acknowledgeForm.comment.value); 
+        }});
         }
         </script>
 
@@ -385,12 +416,13 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                     <input type="hidden" name="segmentID" value="<%= segmentID %>"/>
                                     <input type="hidden" name="multiID" value="<%= multiLabId %>" />
                                     <input type="hidden" name="providerNo" value="<%= providerNo %>"/>
-                                    <input type="hidden" name="status" value="A"/>
+                                    <input type="hidden" name="status" value="<%=labStatus%>" id="labStatus"/>
                                     <input type="hidden" name="comment" value=""/>
                                     <input type="hidden" name="labType" value="HL7"/>
                                     <% if ( !ackFlag ) { %>
-                                    <input type="button" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>" onclick="handleLab('acknowledgeForm','<%=segmentID%>','ackLab');" >
-                                    <input type="button" value="<bean:message key="oscarMDS.segmentDisplay.btnComment"/>" onclick="return getComment();">
+                                                                        
+                                    <input type="button" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>" onclick="getComment('ackLab')" >
+                                    <input type="button" <%=notBeenAcked ? "disabled='disabled'" : ""%> value="<bean:message key="oscarMDS.segmentDisplay.btnComment"/>" onclick="return getComment('addComment');">
                                     <% } %>
                                     <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="popupStart(300, 400, '../../../oscarMDS/SelectProvider.jsp', 'providerselect')">
                                     <input type="button" value=" <bean:message key="global.btnClose"/> " onClick="window.close()">
@@ -707,9 +739,9 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                                         %>
                                                                         <font color="red"><%= ackStatus %></font>
                                                                         <% if ( ackStatus.equals("Acknowledged") ) { %>
-                                                                            <%= report.getTimestamp() %>, 
-                                                                            <%= ( report.getComment().equals("") ? "no comment" : "comment : "+report.getComment() ) %>
+                                                                            <%= report.getTimestamp() %>,                                                                             
                                                                         <% } %>
+                                                                        <span id="commentLabel"><%=report.getComment().equals("") ? "no comment" : "comment : "%></span><span id="commentText"><%=report.getComment()%></span>
                                                                         <br>
                                                                     <% } 
                                                                     if (ackList.size() == 0){
@@ -886,8 +918,8 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                             <tr>
                                 <td align="left" width="50%">
                                     <% if ( !ackFlag ) { %>
-                                    <input type="button" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge" />" onclick="handleLab('acknowledgeForm','<%=segmentID%>','ackLab');" >
-                                    <input type="button" value="<bean:message key="oscarMDS.segmentDisplay.btnComment"/>" onclick="return getComment();">
+                                    <input type="button" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge" />" onclick="getComment('ackLab');" >
+                                    <input type="button" <%=notBeenAcked ? "disabled='disabled'" : ""%> value="<bean:message key="oscarMDS.segmentDisplay.btnComment"/>" onclick="return getComment('addComment');">
                                     <% } %>
                                     <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="popupStart(300, 400, '../../../oscarMDS/SelectProvider.jsp', 'providerselect')">
                                     <input type="button" value=" <bean:message key="global.btnClose"/> " onClick="window.close()">
