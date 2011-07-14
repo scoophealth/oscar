@@ -24,10 +24,14 @@
  */
 
 package oscar.oscarReport.data;
+import java.text.ParseException;
+
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
+import oscar.oscarPrevention.reports.PreventionReportUtil;
 import oscar.oscarReport.pageUtil.RptDemographicReportForm;
+import oscar.util.DateUtils;
 import oscar.util.UtilDateUtilities;
 
 
@@ -317,12 +321,7 @@ public class RptDemographicQueryBuilder {
 
        }
 
-       if (asofRosterDate != null){
-           whereClause();
-           firstClause();
-           stringBuffer.append(" ( d.roster_date <= '"+asofRosterDate+"')");
-           theFirstFlag = 1;
-       }
+       //removed roster_status condition in place more complex check below
 
        if( getprovider ) {
            whereClause();
@@ -357,11 +356,34 @@ public class RptDemographicQueryBuilder {
               MiscUtils.getLogger().debug(stringBuffer.toString());
 
               while (rs.next()) {
-
+            	String demoNo = null;
                 java.util.ArrayList tempArr  = new java.util.ArrayList();
                 for (int i = 0; i < select.length ; i++){
                    tempArr.add( oscar.Misc.getString(rs, select[i]) );
+                   if ("demographic_no".equals(select[i])){
+                	   demoNo = oscar.Misc.getString(rs, select[i]);
+                	   MiscUtils.getLogger().debug("Demographic :"+demoNo +" is in the list");
+                   }
                 }
+                
+                // need to check if they were rostered at this point to this provider  (asofRosterDate is only set if this is being called from prevention reports)
+                if(demoNo != null && asofRosterDate != null && providers != null && providers.length > 0){
+                	//Only checking the first doc.  Only one should be included for finding the cumulative bonus
+                	try {
+	                    if(!PreventionReportUtil.wasRosteredToThisProvider(Integer.parseInt(demoNo), DateUtils.parseDate(asofRosterDate,null),providers[0])){
+	                    	MiscUtils.getLogger().info("Demographic :"+demoNo+ " was not included in returned array because they were not rostered to "+providers[0]+  " on "+asofRosterDate); 
+	                    	continue;
+	                    }else{
+	                    	MiscUtils.getLogger().info("Demographic :"+demoNo+ " was included in returned array because they were not rostered to "+providers[0]+  " on "+asofRosterDate); 
+	                    }
+                    } catch (NumberFormatException e) {
+                    	MiscUtils.getLogger().error("Error", e); 
+                    } catch (ParseException e) {
+                    	MiscUtils.getLogger().error("Error", e); 
+                    } 
+                }
+                
+                
                 searchedArray.add(tempArr);
 
               }
@@ -370,7 +392,7 @@ public class RptDemographicQueryBuilder {
 
               rs.close();
         }catch (java.sql.SQLException e){ MiscUtils.getLogger().error("Error", e); }
-
+        
 
     return searchedArray;
     }
