@@ -978,7 +978,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                             if (data.equals("13")) {
                                 alr.setPropertyOfOffendingAgent(cdsDt.PropertyOfOffendingAgent.DR);
                             } else {
-                                alr.setPropertyOfOffendingAgent(cdsDt.PropertyOfOffendingAgent.ND);
+                                alr.setPropertyOfOffendingAgent(cdsDt.PropertyOfOffendingAgent.UK);
                             }
                         }
                         aSummary = Util.addSummary(aSummary,"Property of Offending Agent",alr.getPropertyOfOffendingAgent().toString());
@@ -1229,15 +1229,13 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         medi.setRefillQuantity(String.valueOf(arr[p].getRefillQuantity()));
                         mSummary = Util.addSummary(mSummary, "Refill Quantity", arr[p].getRefillQuantity().toString());
                     }
-                    if (arr[p].getLongTerm()) {
-                        medi.addNewLongTermMedication().setBoolean(arr[p].getLongTerm());
-                        mSummary = Util.addSummary(mSummary, "Long Term Medication",arr[p].getLongTerm()?"Yes":"No");
-                    }
-                    if (arr[p].getPastMed()) {
-                        medi.addNewPastMedications().setBoolean(arr[p].getPastMed());
-                        mSummary = Util.addSummary(mSummary, "Past Medcation",arr[p].getPastMed()?"Yes":"No");
-                    }
-                    /* no need:
+
+                    medi.addNewLongTermMedication().setBoolean(arr[p].getLongTerm());
+                    mSummary = Util.addSummary(mSummary, "Long Term Medication",arr[p].getLongTerm()?"Yes":"No");
+
+                    medi.addNewPastMedications().setBoolean(arr[p].getPastMed());
+                    mSummary = Util.addSummary(mSummary, "Past Medcation",arr[p].getPastMed()?"Yes":"No");
+
                     cdsDt.YnIndicatorAndBlank pc = medi.addNewPatientCompliance();
                     if (arr[p].getPatientCompliance()==null) {
                         pc.setBlank(cdsDt.Blank.X);
@@ -1246,8 +1244,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         pc.setBoolean(arr[p].getPatientCompliance());
                         mSummary = Util.addSummary(mSummary, "Patient Compliance", patientCompliance);
                     }
-                     *
-                     */
+
                     data = arr[p].getOutsideProviderName();
                     if (StringUtils.filled(data)) {
                         MedicationsAndTreatments.PrescribedBy pcb = medi.addNewPrescribedBy();

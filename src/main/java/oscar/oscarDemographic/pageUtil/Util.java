@@ -56,14 +56,13 @@ public class Util {
         if (StringUtils.empty(summary) || StringUtils.empty(item)) return summary;
 
         if (StringUtils.filled(summary)) summary += ",";
-        summary += "["+label+"]:"+item+",";
+        summary += "["+label+"]:"+item;
 	
 	return summary;
     }
 
     static public String endSummary(String summary) {
 	if (StringUtils.filled(summary) && summary.startsWith("<CategorySummaryLine>")) {
-            if (summary.endsWith(",")) summary = summary.substring(0, summary.length()-1);
             summary += "</CategorySummaryLine>";
 	}
 	return summary;

@@ -638,7 +638,15 @@ public class CihiExportAction extends DispatchAction {
 		Calendar cal = Calendar.getInstance();
 		Date date;
         for( Allergy allergy: allergies ) {
-        	AllergiesAndAdverseReactions xmlAllergies = patientRecord.addNewAllergiesAndAdverseReactions();
+            	AllergiesAndAdverseReactions xmlAllergies = patientRecord.addNewAllergiesAndAdverseReactions();
+                Integer typeCode = allergy.getTypeCode();
+                if (typeCode == null) {
+                    xmlAllergies.setPropertyOfOffendingAgent(cdsDtCihi.PropertyOfOffendingAgent.UK);
+                } else {
+                    if (typeCode == 13) xmlAllergies.setPropertyOfOffendingAgent(cdsDtCihi.PropertyOfOffendingAgent.DR);
+                    else if(typeCode == 0) xmlAllergies.setPropertyOfOffendingAgent(cdsDtCihi.PropertyOfOffendingAgent.ND);
+                    else xmlAllergies.setPropertyOfOffendingAgent(cdsDtCihi.PropertyOfOffendingAgent.UK);
+                }
         	xmlAllergies.setPropertyOfOffendingAgent(cdsDtCihi.PropertyOfOffendingAgent.DR);
         	xmlAllergies.setOffendingAgentDescription(allergy.getDescription());
         	try {
@@ -713,7 +721,8 @@ public class CihiExportAction extends DispatchAction {
 			}
 		}
 	}
-	
+
+/*
 	private void buildProcedure2(Demographic demo, PatientRecord patientRecord) {
             OscarProperties properties = OscarProperties.getInstance();
             Calendar cal = Calendar.getInstance();
@@ -754,6 +763,8 @@ public class CihiExportAction extends DispatchAction {
                 dateFullOrPartial.setFullDate(cal);
             }
 	}
+ * 
+ */
 	
 	@SuppressWarnings("unchecked")
     private void buildProcedure(Demographic demo, PatientRecord patientRecord) {
@@ -762,50 +773,76 @@ public class CihiExportAction extends DispatchAction {
 		String[] medhistory = new String[] {issueList.get(0).getId().toString()};
 		
 		Calendar cal = Calendar.getInstance();			    
-                Date procedureDate;
-                Procedure procedure = null;
+                Date pDate;
+                Procedure procedure;
+                ProblemList problemlist;
 	    
 		List<CaseManagementNote> notesList = getCaseManagementNoteDAO().getActiveNotesByDemographic(demo.getDemographicNo().toString(), medhistory);
 		for( CaseManagementNote caseManagementNote: notesList) {
 			
-                    procedureDate = null;
+                    pDate = null;
+                    procedure = null;
+                    problemlist = null;
 			
                     List<CaseManagementNoteExt> caseManagementNoteExtList = getCaseManagementNoteExtDAO().getExtByNote(caseManagementNote.getId());
                     String keyval;
                     for( CaseManagementNoteExt caseManagementNoteExt: caseManagementNoteExtList ) {
+                        if (procedure!=null && procedure.getProcedureDate()!=null) break;
+                        if (problemlist!=null && problemlist.getOnsetDate()!=null && problemlist.getResolutionDate()!=null) break;
+
                         keyval = caseManagementNoteExt.getKeyVal();
                 
                         if( keyval.equals(CaseManagementNoteExt.PROCEDUREDATE)) {
                             procedure = patientRecord.addNewProcedure();
-                                procedureDate = caseManagementNoteExt.getDateValue();
-                                cal.setTime(procedureDate);
+                            pDate = caseManagementNoteExt.getDateValue();
+                            cal.setTime(pDate);
                             DateFullOrPartial dateFullOrPartial = procedure.addNewProcedureDate();
                             dateFullOrPartial.setFullDate(cal);
-                            break;
+                        } else
+                        if( keyval.equals(CaseManagementNoteExt.STARTDATE)) {
+                            if (problemlist==null) problemlist = patientRecord.addNewProblemList();
+                            pDate = caseManagementNoteExt.getDateValue();
+                            cal.setTime(pDate);
+                            DateFullOrPartial dateFullOrPartial = problemlist.addNewOnsetDate();
+                            dateFullOrPartial.setFullDate(cal);
+                        } else
+                        if( keyval.equals(CaseManagementNoteExt.RESOLUTIONDATE)) {
+                            if (problemlist==null) problemlist = patientRecord.addNewProblemList();
+                            pDate = caseManagementNoteExt.getDateValue();
+                            cal.setTime(pDate);
+                            DateFullOrPartial dateFullOrPartial = problemlist.addNewResolutionDate();
+                            dateFullOrPartial.setFullDate(cal);
                         }
                     }
-                    if (procedure==null) continue;
-                    if (procedure.getProcedureDate()==null) continue;
+                    if (procedure==null && problemlist==null) continue;
 
-            Set<CaseManagementIssue> noteIssueList = caseManagementNote.getIssues();
-            if( noteIssueList != null && noteIssueList.size() > 0 ) {
-                Iterator<CaseManagementIssue> i = noteIssueList.iterator();
-                CaseManagementIssue cIssue;
+                    Set<CaseManagementIssue> noteIssueList = caseManagementNote.getIssues();
+                    if( noteIssueList != null && noteIssueList.size() > 0 ) {
+                        Iterator<CaseManagementIssue> i = noteIssueList.iterator();
+                        CaseManagementIssue cIssue;
 
-                while ( i.hasNext() ) {
-                    cIssue = i.next();
-                    if (cIssue.getIssue().getType().equals("system")) continue;
+                        while ( i.hasNext() ) {
+                            cIssue = i.next();
+                            if (cIssue.getIssue().getType().equals("system")) continue;
 
-                    StandardCoding procedureCode = procedure.addNewProcedureCode();
-                    procedureCode.setStandardCodingSystem(cIssue.getIssue().getType());
-                    procedureCode.setStandardCode(cIssue.getIssue().getCode());
-                    procedureCode.setStandardCodeDescription(cIssue.getIssue().getDescription());
-                    break;
-                }
-            }
-
-            
-            procedure.setProcedureInterventionDescription(caseManagementNote.getNote());                                    
+                            if (procedure!=null) {
+                                StandardCoding procedureCode = procedure.addNewProcedureCode();
+                                procedureCode.setStandardCodingSystem(cIssue.getIssue().getType());
+                                procedureCode.setStandardCode(cIssue.getIssue().getCode());
+                                procedureCode.setStandardCodeDescription(cIssue.getIssue().getDescription());
+                                break;
+                            } else
+                            if (problemlist!=null) {
+                                StandardCoding diagnosisCode = problemlist.addNewDiagnosisCode();
+                                diagnosisCode.setStandardCodingSystem(cIssue.getIssue().getType());
+                                diagnosisCode.setStandardCode(cIssue.getIssue().getCode());
+                                diagnosisCode.setStandardCodeDescription(cIssue.getIssue().getDescription());
+                                break;
+                            }
+                        }
+                    }
+                    if (procedure!=null) procedure.setProcedureInterventionDescription(caseManagementNote.getNote());
+                    else if (problemlist!=null) problemlist.setProblemDiagnosisDescription(caseManagementNote.getNote());
 		}
 	}  
 	
