@@ -29,6 +29,28 @@ function preview(uuid) {
 	reportWindow('<%=request.getContextPath()%>/lab/CA/ALL/labDisplayOLIS.jsp?segmentID=0&preview=true&uuid=' + uuid);
 }
 
+function save(uuid) {
+	jQuery(uuid).attr("disabled", "disabled");
+	jQuery.ajax({
+		url: "<%=request.getContextPath() %>/olis/AddToInbox.do",
+		data: "uuid=" + uuid + "&file=true",
+		success: function(data) {
+			jQuery("#" + uuid + "_result").html(data);
+		}
+	});
+}
+
+function ack(uuid) {
+	jQuery(uuid).attr("disabled", "disabled");
+	jQuery.ajax({
+		url: "<%=request.getContextPath() %>/olis/AddToInbox.do?ack=true",
+		data: "uuid=" + uuid + "&ack=true",
+		success: function(data) {
+			jQuery("#" + uuid + "_result").html(data);
+		}
+	});
+}
+
 var patientFilter = "";
 var labFilter = "";
 function filterResults(select) {
@@ -184,6 +206,8 @@ function filterResults(select) {
 					<table class="sortable" id="resultsTable">
 					<tr><th class="unsortable"></th>
 						<th class="unsortable"></th>
+						<th class="unsortable"></th>
+						<th class="unsortable"></th>
 						<th>Health Number</th>
 						<th>Patient Name</th>
 						<th>Sex</th>
@@ -207,6 +231,15 @@ function filterResults(select) {
 							
 							<input type="button" onClick="preview('<%=resultUuid %>'); return false;" id="<%=resultUuid %>_preview" value="Preview" />
 						</td>
+						
+						<td>							
+							<input type="button" onClick="save('<%=resultUuid %>'); return false;" id="<%=resultUuid %>_save" value="Save/File" />
+						</td>
+						
+						<td>							
+							<input type="button" onClick="ack('<%=resultUuid %>'); return false;" id="<%=resultUuid %>_ack" value="Acknowledge" />
+						</td>
+						
 						<td><%=result.getHealthNum() %></td>
 						<td><%=result.getPatientName() %></td>
 						<td align="center"><%=result.getSex() %></td>
