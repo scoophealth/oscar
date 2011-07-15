@@ -22,7 +22,8 @@ import oscar.oscarLab.ca.all.util.Utilities;
 public class OLISHL7Handler implements MessageHandler {
 
 	Logger logger = Logger.getLogger(OLISHL7Handler.class);
-
+	private int lastSegmentId = 0;
+	
 	public OLISHL7Handler() {
 		logger.info("NEW OLISHL7Handler UPLOAD HANDLER instance just instantiated. ");
 	}
@@ -43,6 +44,7 @@ public class OLISHL7Handler implements MessageHandler {
 				if (routeToCurrentProvider) {
 					ProviderLabRouting routing = new ProviderLabRouting();
 					routing.route(results.segmentId, provNo, DbConnectionFilter.getThreadLocalDbConnection(), "HL7");
+					this.lastSegmentId = results.segmentId;
 				}
 			}
 			logger.info("Parsed OK");
@@ -52,5 +54,9 @@ public class OLISHL7Handler implements MessageHandler {
 			return null;
 		}
 		return ("success");
+	}
+	
+	public int getLastSegmentId() {
+		return this.lastSegmentId;
 	}
 }
