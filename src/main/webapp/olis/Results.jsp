@@ -214,6 +214,7 @@ function filterResults(select) {
 						<th>Date of Test</th>
 						<th>Discipline</th>
 						<th>Tests</th>
+						<th>Status</th>
 						<th>Ordering Practitioner</th>
 						<th>Admitting Practitioner</th>
 					</tr>
@@ -259,6 +260,7 @@ function filterResults(select) {
 						
 						<%=tests %>
 						</td>
+						<td><%= ( (String) ( result.getOrderStatus().equals("F") ? "Final" : result.getOrderStatus().equals("C") ? "Corrected" : "Partial") )%></td>
 						<td> <%=result.getShortDocName() %> </td>
 						<td> <%=result.getAdmittingProviderNameShort()%></td>
 						 
