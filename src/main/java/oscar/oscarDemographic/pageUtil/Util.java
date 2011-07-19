@@ -49,22 +49,23 @@ public class Util {
     }
 
     static public String newSummary(String label, String item) {
-	return addSummary("", label, item);
+	return addSummary("<CategorySummaryLine>", label, item);
     }
 
     static public String addSummary(String summary, String label, String item) {
-	if (!StringUtils.isNullOrEmpty(summary)) {
-		summary += ",";
-	}
-	summary += StringUtils.filled(item) ? "["+StringUtils.noNull(label)+"]:"+item : "";
+        if (StringUtils.empty(summary) || StringUtils.empty(item)) return summary;
+
+        if (StringUtils.filled(summary)) summary += ",";
+        summary += "["+label+"]:"+item+",";
 	
 	return summary;
     }
 
     static public String endSummary(String summary) {
-	//if (StringUtils.filled(summary) && summary.startsWith("<CategorySummaryLine>")) {
-    //        summary += "</CategorySummaryLine>";
-	//}
+	if (StringUtils.filled(summary) && summary.startsWith("<CategorySummaryLine>")) {
+            if (summary.endsWith(",")) summary = summary.substring(0, summary.length()-1);
+            summary += "</CategorySummaryLine>";
+	}
 	return summary;
     }
 

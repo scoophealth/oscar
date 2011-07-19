@@ -1638,7 +1638,7 @@ public class RxPrescriptionData {
         }
 
         public boolean getPatientCompliance(String YN) {
-            if (YN==null) return false;
+            if (YN==null || getPatientCompliance()==null) return false;
 
             if (YN.equalsIgnoreCase("Y")) return getPatientCompliance().equals(true);
             if (YN.equalsIgnoreCase("N")) return getPatientCompliance().equals(false);

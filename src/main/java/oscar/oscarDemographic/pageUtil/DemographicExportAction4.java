@@ -1310,16 +1310,20 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                 List<LabMeasurements> labMeaList = ImportExportMeasurements.getLabMeasurements(demoNo);
                 for (LabMeasurements labMea : labMeaList) {
                     LaboratoryResults labResults = patientRec.addNewLaboratoryResults();
+
+                    //lab test code, test name, test name reported by lab
                     labResults.setLabTestCode(StringUtils.noNull(labMea.getExtVal("identifier")));
                     labResults.setTestName(StringUtils.noNull(labMea.getExtVal("name")));
                     labResults.setTestNameReportedByLab(StringUtils.noNull(labMea.getExtVal("name")));
 
+                    //laboratory name
                     labResults.setLaboratoryName(StringUtils.noNull(labMea.getExtVal("labname")));
                     addOneEntry(LABS);
                     if (StringUtils.empty(labResults.getLaboratoryName())) {
                         err.add("Error! No Laboratory Name for Lab Test "+labResults.getLabTestCode()+" for Patient "+demoNo);
                     }
 
+                    // lab collection datetime
                     cdsDt.DateTimeFullOrPartial collDate = labResults.addNewCollectionDateTime();
                     Date dateTime = labMea.getMeasure().getDateObserved();
                     String sDateTime = labMea.getExtVal("datetime");
@@ -1331,11 +1335,13 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         collDate.setFullDateTime(Util.calDate(new Date()));
                     }
 
+                    //lab normal/abnormal flag
                     labResults.setResultNormalAbnormalFlag(cdsDt.ResultNormalAbnormalFlag.U);
                     data = StringUtils.noNull(labMea.getExtVal("abnormal"));
                     if (data.equals("A")) labResults.setResultNormalAbnormalFlag(cdsDt.ResultNormalAbnormalFlag.Y);
                     if (data.equals("N")) labResults.setResultNormalAbnormalFlag(cdsDt.ResultNormalAbnormalFlag.N);
 
+                    //lab unit of measure
                     data = StringUtils.noNull(labMea.getMeasure().getDataField());
                     if (StringUtils.filled(data)) {
                         LaboratoryResults.Result result = labResults.addNewResult();
@@ -1344,15 +1350,19 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         if (StringUtils.filled(data)) result.setUnitOfMeasure(data);
                     }
 
+                    //lab accession number
                     data = StringUtils.noNull(labMea.getExtVal("accession"));
                     if (StringUtils.filled(data)) {
                         labResults.setAccessionNumber(data);
                     }
 
+                    //notes from lab
                     data = StringUtils.noNull(labMea.getExtVal("comments"));
                     if (StringUtils.filled(data)) {
                         labResults.setNotesFromLab(data);
                     }
+
+                    //lab reference range
                     String range = StringUtils.noNull(labMea.getExtVal("range"));
                     String min = StringUtils.noNull(labMea.getExtVal("minimum"));
                     String max = StringUtils.noNull(labMea.getExtVal("maximum"));
@@ -1365,6 +1375,17 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 
                     String lab_no = StringUtils.noNull(labMea.getExtVal("lab_no"));
                     if (StringUtils.filled(lab_no)) {
+
+                        //lab annotation
+                        String other_id = StringUtils.noNull(labMea.getExtVal("other_id"));
+                        CaseManagementNoteLink cml = cmm.getLatestLinkByTableId(CaseManagementNoteLink.LABTEST, Long.valueOf(lab_no), other_id);
+                        if (cml!=null) {
+                            CaseManagementNote n = cmm.getNote(cml.getNoteId().toString());
+                            if (StringUtils.filled(n.getNote()) && !n.getNote().startsWith("imported.cms4.2011.06")) //not from dumpsite
+                                labResults.setPhysiciansNotes(n.getNote());
+                        }
+
+                        //lab reviewer
                         HashMap<String,String> labRoutingInfo = new HashMap<String,String>();
                         labRoutingInfo.putAll(ProviderLabRouting.getInfo(lab_no));
 
@@ -1379,14 +1400,12 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                                 if (StringUtils.noNull(pvd.getOhip_no()).length()<=6) reviewer.setOHIPPhysicianId(pvd.getOhip_no());
                             }
                         }
+//                      String info = labRoutingInfo.get("comment"); <--for whole report, may refer to >1 lab results
 
                         HashMap<String,Date> link = new HashMap<String,Date>();
                         link.putAll(LabRequestReportLink.getLinkByReport("hl7TextMessage", Long.valueOf(lab_no)));
                         Date reqDate = link.get("request_date");
                         if (reqDate!=null) labResults.addNewLabRequisitionDateTime().setFullDateTime(Util.calDate(reqDate));
-
-//                      String info = labRoutingInfo.get("comment"); <--for whole report, which may contain >1 lab results
-//                        if (StringUtils.filled(info)) labResults.setPhysiciansNotes(info);
                     }
                 }
             }
@@ -1965,9 +1984,9 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                 out.newLine();
             }
             out.write(fillUp("",'-',tableWidth)); out.newLine();
-            exportNo++;
 
             //general log data
+            if (exportNo==0) exportNo = 1;
             for (int i=0; i<exportNo; i++) {
 
                 for (int j=0; j<keyword[0].length; j++) {

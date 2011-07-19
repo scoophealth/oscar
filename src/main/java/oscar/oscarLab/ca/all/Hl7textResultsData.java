@@ -232,7 +232,15 @@ public class Hl7textResultsData {
 			pstmt.executeUpdate();
 			pstmt.clearParameters();
 		    }
-		    
+
+                    // add other_id to measurementsExt so that annotation can be linked up through casemgmt_note_link
+                    logger.debug("Inserting into measurementsExt id "+insertID+ " other_id "+ i+"-"+j);
+                    pstmt.setString(1, insertID);
+                    pstmt.setString(2, "other_id");
+                    pstmt.setString(3, i+"-"+j);
+                    pstmt.executeUpdate();
+                    pstmt.clearParameters();
+
                     pstmt.close();
                     
                 }

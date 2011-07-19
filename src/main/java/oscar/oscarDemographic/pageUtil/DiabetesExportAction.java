@@ -74,6 +74,7 @@ public class DiabetesExportAction extends Action {
     Date endDate;
     CaseManagementManager cmm;
     ArrayList<String> errors;
+    ArrayList<String> listOfDINS = new ArrayList<String>();
 
 public DiabetesExportAction(){}
 
@@ -86,12 +87,13 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
     
     this.cmm = (CaseManagementManager) SpringUtils.getBean("caseManagementManager");
     this.errors = new ArrayList<String>();
+    getListOfDINS();
     
     //Create Patient List from Patient Set
     ArrayList patientList = new DemographicSets().getDemographicSet(setName);
     
     //Create export files
-    String tmpDir = oscar.OscarProperties.getInstance().getProperty("TMP_DIR");
+    String tmpDir = OscarProperties.getInstance().getProperty("TMP_DIR");
     if (!Util.checkDir(tmpDir)) {
         MiscUtils.getLogger().debug("Error! Cannot write to TMP_DIR - Check oscar.properties or dir permissions.");
     } else {
@@ -189,12 +191,15 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	return errorLog;
     }
 
-    private List parse() throws Exception{
-	ArrayList<String> listOfDINS = new ArrayList<String>();
+    private void getListOfDINS() throws Exception{
+        if (listOfDINS.size()>0) return;
+
         String omdDmlink = OscarProperties.getInstance().getProperty("ontariomd_cds_diabetes_link");
-        if (omdDmlink==null || omdDmlink.trim().isEmpty()) return listOfDINS;
+        if (omdDmlink==null || omdDmlink.trim().isEmpty()) return;
         
         URL omdDmURL = new URL(omdDmlink);
+        if (omdDmURL.openConnection().getContentLength()<0) return;
+
 	BufferedReader in = new BufferedReader(
 				new InputStreamReader(
 				omdDmURL.openStream()));
@@ -220,8 +225,6 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             } catch (Exception e) {
                 MiscUtils.getLogger().error("Error", e);
             }
-           return listOfDINS;
-        
     }
     
     void setCareElements(PatientRecord patientRecord, String demoNo) throws SQLException {
@@ -656,7 +659,11 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
     }
     
     void setMedicationsAndTreatments(PatientRecord patientRecord, String demoNo) throws Exception {
-        List<String> din = parse();
+        if (listOfDINS.isEmpty()) {
+            errors.add("Error loading schema file! Cannot obtain DIN list! No Medication & Treatments exported!");
+            return;
+        }
+
         RxPrescriptionData.Prescription[] pa = new RxPrescriptionData().getUniquePrescriptionsByPatient(Integer.parseInt(demoNo));
         for (int p=0; p<pa.length; p++){
             Date prescribeDate = pa[p].getWrittenDate();
@@ -664,7 +671,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                 if (startDate.after(prescribeDate) || endDate.before(prescribeDate)) continue;
             }
             String data = StringUtils.noNull(pa[p].getRegionalIdentifier());
-            if (!din.contains(data)) continue;
+            if (!listOfDINS.contains(data)) continue;
 
             MedicationsAndTreatments medications = patientRecord.addNewMedicationsAndTreatments();
             medications.setDrugIdentificationNumber(DiabetesDinList.Enum.forString(data));
