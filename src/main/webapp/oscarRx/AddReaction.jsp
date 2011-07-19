@@ -116,7 +116,7 @@ String allergyId = (String) request.getAttribute("allergyId");
 
 						<tr valign="center">
 
-							<td colspan="2">Severity Of Reation : <html:select
+							<td colspan="2">Severity Of Reaction : <html:select
 								property="severityOfReaction">
 								<html:option value="1">Mild</html:option>
 								<html:option value="2">Moderate</html:option>
