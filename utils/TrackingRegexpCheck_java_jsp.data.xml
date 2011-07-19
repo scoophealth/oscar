@@ -207,34 +207,31 @@
         <ViolationValue>/src/main/java/oscar/dms/actions/AddEditDocumentAction.java:Hashtable errors = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dms/actions/AddEditHtmlAction.java:Hashtable errors = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dms/actions/CombinePDFAction.java:ArrayList alist = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:ArrayList labNums = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:ArrayList labPreview=new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:ArrayList validlabdocs=new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:ArrayList&lt;EDoc&gt; docPreview=new ArrayList();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:ArrayList labPreview = new ArrayList();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:ArrayList validlabdocs = new ArrayList();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:ArrayList&lt;EDoc&gt; docPreview = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:HashMap hm = new HashMap();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:HashMap labMap = new HashMap();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:HashMap&lt;String,String&gt; docQueue=new HashMap();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Hashtable docStatus=new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Hashtable docType=new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Hashtable patientDocs=new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Hashtable patientIdNames=new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Hashtable patientNumDoc=new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Hashtable providerDocs=new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Hashtable queueDocs=new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Hashtable&lt;String,List&lt;String&gt;&gt; ab_NormalDoc=new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Hashtable&lt;String,List&lt;String&gt;&gt; typeDocLab=new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:LinkedHashMap accessionMap = new LinkedHashMap();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:List providerList=new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:List queueList=new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:List&lt;EDoc&gt; EDocs=new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:List&lt;EDoc&gt; eDocs=new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:List&lt;String&gt; didList=new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:List&lt;String&gt; docids=new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:List&lt;String&gt; hl7ids=new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:List&lt;String&gt; ls=new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:List&lt;String&gt; segIDs=new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:abns=new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:ns=new ArrayList();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:HashMap&lt;String, String&gt; docQueue = new HashMap();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Hashtable docStatus = new Hashtable();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Hashtable docType = new Hashtable();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Hashtable patientDocs = new Hashtable();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Hashtable patientIdNames = new Hashtable();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Hashtable patientNumDoc = new Hashtable();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Hashtable providerDocs = new Hashtable();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Hashtable queueDocs = new Hashtable();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Hashtable&lt;String, List&lt;String&gt;&gt; ab_NormalDoc = new Hashtable();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Hashtable&lt;String, List&lt;String&gt;&gt; typeDocLab = new Hashtable();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:List providerList = new ArrayList();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:List queueList = new ArrayList();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:List&lt;EDoc&gt; EDocs = new ArrayList();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:List&lt;EDoc&gt; eDocs = new ArrayList();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:List&lt;String&gt; didList = new ArrayList();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:List&lt;String&gt; docids = new ArrayList();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:List&lt;String&gt; hl7ids = new ArrayList();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:List&lt;String&gt; ls = new ArrayList();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:List&lt;String&gt; segIDs = new ArrayList();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:abns = new ArrayList();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:ns = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/eform/EFormExportZip.java:ArrayList&lt;String&gt; errors = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/eform/EFormExportZip.java:Hashtable&lt;String, EForm&gt; eformTable = new Hashtable(); //stores eforms constructed from eform.properties, no HTML</ViolationValue>
         <ViolationValue>/src/main/java/oscar/eform/EFormExportZip.java:Hashtable&lt;String, EForm&gt; eformTableFailed = new Hashtable();  //stores eforms that are constructed from eform.properties that alredy exist and do not need to be imported</ViolationValue>
@@ -2745,21 +2742,21 @@
         <ViolationValue>/src/main/java/oscar/dms/actions/AddEditDocumentAction.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dms/actions/AddEditHtmlAction.java:Hashtable errors = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dms/actions/AddEditHtmlAction.java:import java.util.Hashtable;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Hashtable docStatus=new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Hashtable docType=new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Hashtable ht=(Hashtable)providers.get(i);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Hashtable ht=(Hashtable)queues.get(i);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Hashtable patientDocs=new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Hashtable patientIdNames=new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Hashtable patientNumDoc=new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Hashtable providerDocs=new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Hashtable queueDocs=new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Hashtable&lt;String,List&lt;String&gt;&gt; ab_NormalDoc=new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Hashtable&lt;String,List&lt;String&gt;&gt; typeDocLab=new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:List&lt;Hashtable&gt; queues=queueDao.getQueues();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Vector vec=OscarRoleObjectPrivilege.getPrivilegeProp("_queue."+queueid);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:if(OscarRoleObjectPrivilege.checkPrivilege(roleName, (Properties)vec.get(0), (Vector)vec.get(1))</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:if(OscarRoleObjectPrivilege.checkPrivilege(roleName, (Properties)vec.get(0), (Vector)vec.get(1))){</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Hashtable docStatus = new Hashtable();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Hashtable docType = new Hashtable();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Hashtable ht = (Hashtable) providers.get(i);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Hashtable ht = (Hashtable) queues.get(i);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Hashtable patientDocs = new Hashtable();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Hashtable patientIdNames = new Hashtable();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Hashtable patientNumDoc = new Hashtable();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Hashtable providerDocs = new Hashtable();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Hashtable queueDocs = new Hashtable();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Hashtable&lt;String, List&lt;String&gt;&gt; ab_NormalDoc = new Hashtable();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Hashtable&lt;String, List&lt;String&gt;&gt; typeDocLab = new Hashtable();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:List&lt;Hashtable&gt; queues = queueDao.getQueues();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Vector vec = OscarRoleObjectPrivilege.getPrivilegeProp("_queue." + queueid);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:if (OscarRoleObjectPrivilege.checkPrivilege(roleName, (Properties) vec.get(0), (Vector) vec.get(1)) || documentResultsDao.isSentToProvider(docid, searchProviderNo)) {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:if (OscarRoleObjectPrivilege.checkPrivilege(roleName, (Properties) vec.get(0), (Vector) vec.get(1))) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/eform/EFormExportZip.java:Hashtable&lt;String, EForm&gt; eformTable = new Hashtable(); //stores eforms constructed from eform.properties, no HTML</ViolationValue>

@@ -13,23 +13,31 @@ public class HRMCategory extends AbstractModel<Integer> {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private String categoryName;
-	
-	public HRMCategory(){
-		
+	private String subClassNameMnemonic;
+
+	public HRMCategory() {
+
 	}
-	
+
 	@Override
-    public Integer getId() {
-	    return id;
-    }
+	public Integer getId() {
+		return id;
+	}
 
 	public String getCategoryName() {
-    	return categoryName;
-    }
+		return categoryName;
+	}
 
 	public void setCategoryName(String categoryName) {
-    	this.categoryName = categoryName;
-    }
-	
-	
+		this.categoryName = categoryName;
+	}
+
+	public String getSubClassNameMnemonic() {
+		return (subClassNameMnemonic);
+	}
+
+	public void setSubClassNameMnemonic(String subClassNameMnemonic) {
+		this.subClassNameMnemonic = subClassNameMnemonic;
+	}
+
 }
