@@ -8445,6 +8445,7 @@ CREATE TABLE `appointmentType` (
 CREATE TABLE `HRMCategory` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `categoryName` varchar(255) NOT NULL,
+  subClassNameMnemonic varchar(255),
   PRIMARY KEY (`id`)
 );
 
@@ -8461,6 +8462,7 @@ CREATE TABLE `HRMDocument` (
   `reportDate` datetime ,
   `parentReport` int(11) ,
   `reportLessDemographicInfoHash` varchar(64) ,
+  hrmCategoryId int,
   PRIMARY KEY (`id`)
 ) ;
 
