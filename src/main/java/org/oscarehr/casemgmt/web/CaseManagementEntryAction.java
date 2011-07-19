@@ -144,7 +144,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		long start = System.currentTimeMillis();
 		long beginning = start;
 		long current = 0;
-		if (request.getSession().getAttribute("userrole") == null) {
+                HttpSession session = request.getSession();
+		if (session.getAttribute("userrole") == null) {
 			response.sendError(response.SC_FORBIDDEN);
 			return null;
 		}
@@ -162,7 +163,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		logger.debug("Get demo and provider no " + String.valueOf(current - start));
 		start = current;
 
-		String programIdString = (String) request.getSession().getAttribute("case_program_id");
+		String programIdString = (String) session.getAttribute("case_program_id");
 		Integer programId = null;
 		try {
 			programId = Integer.parseInt(programIdString);
@@ -191,20 +192,20 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
 		String url = "";
 		if ("casemgmt".equals(request.getAttribute("from"))) {
-			String ss = (String) request.getSession().getAttribute("casemgmt_VlCountry");
-			Properties oscarVariables = (Properties) request.getSession().getAttribute("oscarVariables");
+			String ss = (String) session.getAttribute("casemgmt_VlCountry");
+			Properties oscarVariables = (Properties) session.getAttribute("oscarVariables");
 			String province = "";
 			if (oscarVariables != null) {
 				province = ((String) oscarVariables.getProperty("billregion", "")).trim().toUpperCase();
 			}
 
 			String strBeanName = "casemgmt_oscar_bean" + demono;
-			EctSessionBean bean = (EctSessionBean) request.getSession().getAttribute(strBeanName);
+			EctSessionBean bean = (EctSessionBean) session.getAttribute(strBeanName);
 
 			if (bean.appointmentNo == null) {
 				bean.appointmentNo = "0";
 			}
-			String bsurl = (String) request.getSession().getAttribute("casemgmt_oscar_baseurl");
+			String bsurl = (String) session.getAttribute("casemgmt_oscar_baseurl");
 			Date today = new Date();
 			Calendar todayCal = Calendar.getInstance();
 			todayCal.setTime(today);
@@ -222,11 +223,11 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 				url = bsurl + "/billing.do?billRegion=" + java.net.URLEncoder.encode(province, "UTF-8") + "&billForm=" + java.net.URLEncoder.encode(default_view, "UTF-8") + "&hotclick=" + java.net.URLEncoder.encode("", "UTF-8") + "&appointment_no=" + bean.appointmentNo + "&appointment_date=" + bean.appointmentDate + "&start_time=" + Hour + ":" + Min + "&demographic_name=" + java.net.URLEncoder.encode(bean.patientLastName + "," + bean.patientFirstName, "UTF-8") + "&demographic_no=" + bean.demographicNo
 				        + "&providerview=" + bean.curProviderNo + "&user_no=" + bean.providerNo + "&apptProvider_no=" + bean.curProviderNo + "&bNewForm=1&status=t";
 			}
-			request.getSession().setAttribute("billing_url", url);
+			session.setAttribute("billing_url", url);
 		}
 
 		/* remove the remembered echart string */
-		request.getSession().setAttribute("lastSavedNoteString", null);
+		session.setAttribute("lastSavedNoteString", null);
 
 		logger.debug("Get Issues and filter them");
 		current = System.currentTimeMillis();
@@ -264,8 +265,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		// create a new note
 		if (request.getParameter("note_edit") != null && request.getParameter("note_edit").equals("new")) {
 			logger.debug("NEW NOTE GENERATED");
-			request.getSession().setAttribute("newNote", "true");
-			request.getSession().setAttribute("issueStatusChanged", "false");
+			session.setAttribute("newNote", "true");
+			session.setAttribute("issueStatusChanged", "false");
 			request.setAttribute("newNoteIdx", request.getParameter("newNoteIdx"));
 
 			note = new CaseManagementNote();
@@ -290,13 +291,13 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		else if (tmpsavenote != null && !forceNote.equals("true")) {
 			logger.debug("tempsavenote is NOT NULL");
 			if (tmpsavenote.getNote_id() > 0) {
-				request.getSession().setAttribute("newNote", "false");
+				session.setAttribute("newNote", "false");
 				request.setAttribute("noteId", String.valueOf(tmpsavenote.getNote_id()));
 				note = caseManagementMgr.getNote(String.valueOf(tmpsavenote.getNote_id()));
 				logger.debug("Restoring " + String.valueOf(note.getId()));
 			} else {
-				request.getSession().setAttribute("newNote", "true");
-				request.getSession().setAttribute("issueStatusChanged", "false");
+				session.setAttribute("newNote", "true");
+				session.setAttribute("issueStatusChanged", "false");
 				note = new CaseManagementNote();
 				note.setProviderNo(providerNo);
 				Provider prov = new Provider();
@@ -311,7 +312,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		// get an existing non-temp note?
 		else if (nId != null && Integer.parseInt(nId) > 0) {
 			logger.debug("Using nId " + nId + " to fetch note");
-			request.getSession().setAttribute("newNote", "false");
+			session.setAttribute("newNote", "false");
 			note = caseManagementMgr.getNote(nId);
 
 			if (note.getHistory() == null || note.getHistory().equals("")) {
@@ -328,8 +329,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			// A hack to load last unsigned note when not specifying a particular note to edit
 			// if there is no unsigned note load a new one
 			if ((note = getLastSaved(request, demono, providerNo)) == null) {
-				request.getSession().setAttribute("newNote", "true");
-				request.getSession().setAttribute("issueStatusChanged", "false");
+				session.setAttribute("newNote", "true");
+				session.setAttribute("issueStatusChanged", "false");
 				note = new CaseManagementNote();
 				note.setProviderNo(providerNo);
 				Provider prov = new Provider();
@@ -367,7 +368,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
 		// get issues for current demographic, based on provider rights
 
-		Boolean useNewCaseMgmt = new Boolean((String) request.getSession().getAttribute("newCaseManagement"));
+		Boolean useNewCaseMgmt = new Boolean((String) session.getAttribute("newCaseManagement"));
 
 		CheckBoxBean[] checkedList = null;
 		if (useNewCaseMgmt) {
@@ -419,15 +420,15 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		logger.debug("The End of Edit " + String.valueOf(current - beginning));
 		start = current;
 
-		LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.EDIT, LogConst.CON_CME_NOTE, String.valueOf(note.getId()), request.getRemoteAddr(), demono, note.getAuditString());
+		LogAction.addLog((String) session.getAttribute("user"), LogConst.EDIT, LogConst.CON_CME_NOTE, String.valueOf(note.getId()), request.getRemoteAddr(), demono, note.getAuditString());
 
 		String frmName = "caseManagementEntryForm" + demono;
 		logger.debug("Setting session form - " + frmName + " - " + String.valueOf(cform != null));
-		request.getSession().setAttribute(frmName, cform);
+		session.setAttribute(frmName, cform);
 
 		ActionForward fwd, finalFwd = null;
 		if (chain != null && chain.length() > 0) {
-			request.getSession().setAttribute("passwordEnabled", passwd);
+			session.setAttribute("passwordEnabled", passwd);
 			fwd = mapping.findForward(chain);
 		} else {
 			request.setAttribute("passwordEnabled", passwd);
@@ -476,6 +477,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 	public ActionForward issueNoteSave(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String strNote = request.getParameter("value");
 		String appointmentNo = request.getParameter("appointmentNo");
+                HttpSession session = request.getSession();
 		
 		// strNote = strNote.trim();
 		logger.debug("Saving: " + strNote);
@@ -530,7 +532,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		}
 
 		logger.debug("Note archived " + note.isArchived());
-		String programId = (String) request.getSession().getAttribute("case_program_id");
+		String programId = (String) session.getAttribute("case_program_id");
 		note.setProgram_no(programId);
 
 		WebApplicationContext ctx = this.getSpringContext();
@@ -566,7 +568,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		}
 		// update note issues
 		String sessionFrmName = "caseManagementEntryForm" + demo;
-		CaseManagementEntryFormBean sessionFrm = (CaseManagementEntryFormBean) request.getSession().getAttribute(sessionFrmName);
+		CaseManagementEntryFormBean sessionFrm = (CaseManagementEntryFormBean) session.getAttribute(sessionFrmName);
 		Set<CaseManagementIssue> issueSet = new HashSet<CaseManagementIssue>();
 		Set<CaseManagementNote> noteSet = new HashSet<CaseManagementNote>();
 		String[] issue_id = request.getParameterValues("issue_id");
@@ -756,7 +758,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		if (note.getCreate_date() == null) note.setCreate_date(now);
 
 		/* save note including add signature */
-		String lastSavedNoteString = (String) request.getSession().getAttribute("lastSavedNoteString");
+		String lastSavedNoteString = (String) session.getAttribute("lastSavedNoteString");
 		String roleName = caseManagementMgr.getRoleName(providerNo, note.getProgram_no());
 		CaseManagementCPP cpp = this.caseManagementMgr.getCPP(demo);
 		if (cpp == null) {
@@ -769,7 +771,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		logger.debug("Saved note " + savedStr);
 		caseManagementMgr.saveCPP(cpp, providerNo);
 		/* remember the str written into echart */
-		request.getSession().setAttribute("lastSavedNoteString", savedStr);
+		session.setAttribute("lastSavedNoteString", savedStr);
 
 		/* save extra fields */
 		CaseManagementNoteExt cme = new CaseManagementNoteExt();
@@ -790,22 +792,30 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			}
 		}
 
+
 		/* Save annotation */
+
 		String attrib_name = request.getParameter("annotation_attrib");
-		HttpSession se = request.getSession();
-		if (attrib_name != null) {
-			CaseManagementNote cmn = (CaseManagementNote) se.getAttribute(attrib_name);
-			if (cmn != null) {
-				caseManagementMgr.saveNoteSimple(cmn);
-				CaseManagementNoteLink cml = new CaseManagementNoteLink();
-				cml.setTableName(cml.CASEMGMTNOTE);
-				cml.setTableId(note.getId());
-				cml.setNoteId(cmn.getId());
-				caseManagementMgr.saveNoteLink(cml);
-				LogAction.addLog(providerNo, LogConst.ANNOTATE, LogConst.CON_CME_NOTE, String.valueOf(cmn.getId()), request.getRemoteAddr(), demo, cmn.getNote());
-				se.removeAttribute(attrib_name);
-			}
-		}
+                CaseManagementNote cmn = (CaseManagementNote) session.getAttribute(attrib_name);
+		if (cmn != null) {
+                    //new annotation created and got it in session attribute
+
+                    caseManagementMgr.saveNoteSimple(cmn);
+                    CaseManagementNoteLink cml = new CaseManagementNoteLink(CaseManagementNoteLink.CASEMGMTNOTE,note.getId(),cmn.getId());
+                    caseManagementMgr.saveNoteLink(cml);
+                    LogAction.addLog(providerNo, LogConst.ANNOTATE, LogConst.CON_CME_NOTE, String.valueOf(cmn.getId()), request.getRemoteAddr(), demo, cmn.getNote());
+                    session.removeAttribute(attrib_name);
+                    
+		} else if (!noteId.equals("0")) {
+                    //Not a new note, look for old annotation
+
+                    CaseManagementNoteLink cml = caseManagementMgr.getLatestLinkByTableId(CaseManagementNoteLink.CASEMGMTNOTE, Long.valueOf(noteId));
+                    if (cml!=null) {//old annotation exists - create new link
+
+                        CaseManagementNoteLink cml_n = new CaseManagementNoteLink(CaseManagementNoteLink.CASEMGMTNOTE,note.getId(),cml.getNoteId());
+                        caseManagementMgr.saveNoteLink(cml_n);
+                    }
+                }
 		caseManagementMgr.getEditors(note);
 
 		if (newNote) {
@@ -816,7 +826,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			logAction = LogConst.UPDATE;
 		}
 
-		LogAction.addLog((String) request.getSession().getAttribute("user"), logAction, LogConst.CON_CME_NOTE, String.valueOf(note.getId()), request.getRemoteAddr(), demo, note.getAuditString());
+		LogAction.addLog((String) session.getAttribute("user"), logAction, LogConst.CON_CME_NOTE, String.valueOf(note.getId()), request.getRemoteAddr(), demo, note.getAuditString());
 
 		String f = request.getParameter("forward");
 		if(f != null && f.equals("none")) {
@@ -834,6 +844,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		WebApplicationContext ctx = getSpringContext();
 		ProgramManager programManager = (ProgramManager) ctx.getBean("programManager");
 		AdmissionManager admissionManager = (AdmissionManager) ctx.getBean("admissionManager");
+                HttpSession session = request.getSession();
 
 		// we don't want to save empty notes!
 
@@ -844,9 +855,11 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		String demo = getDemographicNo(request);
 
 		String sessionFrmName = "caseManagementEntryForm" + demo;
-		CaseManagementEntryFormBean sessionFrm = (CaseManagementEntryFormBean) request.getSession().getAttribute(sessionFrmName);
+		CaseManagementEntryFormBean sessionFrm = (CaseManagementEntryFormBean) session.getAttribute(sessionFrmName);
 
 		CaseManagementNote note = sessionFrm.getCaseNote();
+                Long old_note_id = note.getId(); //saved for use with annotation
+                
 		note.setNote(noteTxt);
 
 		String providerNo = getProviderNo(request);
@@ -861,7 +874,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
 		boolean inCaisi = OscarProperties.getInstance().isCaisiLoaded();
 
-		String lastSavedNoteString = (String) request.getSession().getAttribute("lastSavedNoteString");
+		String lastSavedNoteString = (String) session.getAttribute("lastSavedNoteString");
 
 		// bug fix - encounter type was not being updated.
 		String encounterType = request.getParameter("caseNote.encounter_type");
@@ -921,7 +934,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
 		// if this is an update, don't overwrite the program id
 		if (note.getProgram_no() == null || note.getProgram_no().equals("") || !note.getProgram_no().equals("")) {
-			String programId = (String) request.getSession().getAttribute("case_program_id");
+			String programId = (String) session.getAttribute("case_program_id");
 			note.setProgram_no(programId);
 		}
 
@@ -931,7 +944,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			role = "0";
 		}
 		/*
-		 * if(request.getSession().getAttribute("archiveView")!="true") note.setReporter_caisi_role(role); else note.setReporter_caisi_role("1");
+		 * if(session.getAttribute("archiveView")!="true") note.setReporter_caisi_role(role); else note.setReporter_caisi_role("1");
 		 */
 		note.setReporter_caisi_role(role);
 
@@ -959,7 +972,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		// wherever this is populated, it's not here...
 		Set<CaseManagementNote> noteSet = new HashSet<CaseManagementNote>();
 		String ongoing = new String();
-		Boolean useNewCaseMgmt = new Boolean((String) request.getSession().getAttribute("newCaseManagement"));
+		Boolean useNewCaseMgmt = Boolean.valueOf((String) session.getAttribute("newCaseManagement"));
 		if (useNewCaseMgmt) {
 			ongoing = saveCheckedIssues_newCme(request, demo, note, issuelist, checkedlist, issueset, noteSet, ongoing);
 		} else {
@@ -1005,7 +1018,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
 		// update appointment and add verify message to note if verified
 		String strBeanName = "casemgmt_oscar_bean" + demo;
-		EctSessionBean sessionBean = (EctSessionBean) request.getSession().getAttribute(strBeanName);
+		EctSessionBean sessionBean = (EctSessionBean) session.getAttribute(strBeanName);
 		String verify = request.getParameter("verify");
 		OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
 		
@@ -1061,7 +1074,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		 */
 		if (inCaisi) {
 			/* get access right */
-			List accessRight = caseManagementMgr.getAccessRight(providerNo, getDemographicNo(request), (String) request.getSession().getAttribute("case_program_id"));
+			List accessRight = caseManagementMgr.getAccessRight(providerNo, getDemographicNo(request), (String) session.getAttribute("case_program_id"));
 			setCPPMedicalHistory(cpp, providerNo, accessRight);
 			cpp.setUpdate_date(now);
 			caseManagementMgr.saveCPP(cpp, providerNo);
@@ -1112,7 +1125,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		String savedStr = caseManagementMgr.saveNote(cpp, note, providerNo, userName, lastSavedNoteString, roleName);
 		addNewNoteLink(note.getId());
 		/* remember the str written into echart */
-		request.getSession().setAttribute("lastSavedNoteString", savedStr);
+		session.setAttribute("lastSavedNoteString", savedStr);
 		caseManagementMgr.getEditors(note);
 		cform.setCaseNote(note);
 
@@ -1121,23 +1134,43 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		} catch (Throwable e) {
 			logger.warn("warn", e);
 		}
-		
+
+
 		/* Save annotation */
+
 		String attrib_name = request.getParameter("annotation_attribname");
-		HttpSession se = request.getSession();
-		if (attrib_name != null) {
-			CaseManagementNote cmn = (CaseManagementNote) se.getAttribute(attrib_name);
-			if (cmn != null) {
-				caseManagementMgr.saveNoteSimple(cmn);
-				CaseManagementNoteLink cml = new CaseManagementNoteLink();
-				cml.setTableName(cml.CASEMGMTNOTE);
-				cml.setTableId(note.getId());
-				cml.setNoteId(cmn.getId());
-				caseManagementMgr.saveNoteLink(cml);
-				LogAction.addLog(providerNo, LogConst.ANNOTATE, LogConst.CON_CME_NOTE, String.valueOf(cmn.getId()), request.getRemoteAddr(), demo, cmn.getNote());
-				se.removeAttribute(attrib_name);
-			}
-		}
+                CaseManagementNote cmn = (CaseManagementNote) session.getAttribute(attrib_name);
+                if (cmn != null) {
+                        //new annotation created and got it in session attribute
+
+                        caseManagementMgr.saveNoteSimple(cmn);
+                        CaseManagementNoteLink cml = new CaseManagementNoteLink(CaseManagementNoteLink.CASEMGMTNOTE,note.getId(),cmn.getId());
+                        caseManagementMgr.saveNoteLink(cml);
+                        LogAction.addLog(providerNo, LogConst.ANNOTATE, LogConst.CON_CME_NOTE, String.valueOf(cmn.getId()), request.getRemoteAddr(), demo, cmn.getNote());
+                        session.removeAttribute(attrib_name);
+
+		} else if (old_note_id!=null) {
+                    //Not a new note, look for old annotation
+
+                    CaseManagementNoteLink cml = caseManagementMgr.getLatestLinkByTableId(CaseManagementNoteLink.CASEMGMTNOTE, old_note_id);
+                    if (cml!=null) {//old annotation exists - create new link
+
+                        CaseManagementNoteLink cml_n = new CaseManagementNoteLink(CaseManagementNoteLink.CASEMGMTNOTE,note.getId(),cml.getNoteId());
+                        caseManagementMgr.saveNoteLink(cml_n);
+                    }
+                }
+
+
+
+
+
+
+
+
+
+
+
+
 
 		String logAction;
 		if (newNote) {
@@ -1145,7 +1178,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		} else {
 			logAction = LogConst.UPDATE;
 		}
-		LogAction.addLog((String) request.getSession().getAttribute("user"), logAction, LogConst.CON_CME_NOTE, "" + Long.valueOf(note.getId()).intValue(), request.getRemoteAddr(), demo, note.getAuditString());
+		LogAction.addLog((String) session.getAttribute("user"), logAction, LogConst.CON_CME_NOTE, "" + Long.valueOf(note.getId()).intValue(), request.getRemoteAddr(), demo, note.getAuditString());
 
 		return note.getId();
 	}
@@ -1328,9 +1361,9 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		String chain = request.getParameter("chain");
 		if (chain != null && !chain.equals("")) {
 			String varName = "newNote";
-			request.getSession().setAttribute(varName, false);
+			session.setAttribute(varName, false);
 			varName = "saveNote" + demono;
-			request.getSession().setAttribute(varName, new Boolean(true)); // tell CaseManagementView we have just saved note
+			session.setAttribute(varName, new Boolean(true)); // tell CaseManagementView we have just saved note
 			ActionForward fwd = mapping.findForward(chain);
 			StringBuilder path = new StringBuilder(fwd.getPath());
 			ResourceBundle props = ResourceBundle.getBundle("oscarResources");
@@ -1351,7 +1384,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 	}
 
 	public ActionForward ajaxsave(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		if (request.getSession().getAttribute("userrole") == null) return mapping.findForward("expired");
+                HttpSession session = request.getSession();
+		if (session.getAttribute("userrole") == null) return mapping.findForward("expired");
 
 		String noteTxt = request.getParameter("noteTxt");
 		noteTxt = org.apache.commons.lang.StringUtils.trimToNull(noteTxt);
@@ -1408,7 +1442,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		note.setProviderNo(providerNo);
 		if (provider != null) note.setProvider(provider);
 
-		String programId = (String) request.getSession().getAttribute("case_program_id");
+		String programId = (String) session.getAttribute("case_program_id");
 		note.setProgram_no(programId);
 
 		WebApplicationContext ctx = this.getSpringContext();
@@ -1436,7 +1470,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		note.setReporter_program_team(team);
 
 		String sessionName = "caseManagementEntryForm" + demo;
-		CaseManagementEntryFormBean sessionFrm = (CaseManagementEntryFormBean) request.getSession().getAttribute(sessionName);
+		CaseManagementEntryFormBean sessionFrm = (CaseManagementEntryFormBean) session.getAttribute(sessionName);
 		List<CaseManagementIssue> issuelist = new ArrayList<CaseManagementIssue>();
 		Set<CaseManagementIssue> issueset = new HashSet<CaseManagementIssue>();
 		Set<CaseManagementNote> noteSet = new HashSet<CaseManagementNote>();
@@ -1511,13 +1545,13 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			logger.warn("Warning", e);
 		}
 
-		request.getSession().setAttribute(sessionName, sessionFrm);
+		session.setAttribute(sessionName, sessionFrm);
 		CaseManagementEntryFormBean newform = new CaseManagementEntryFormBean();
 		newform.setCaseNote(note);
 		newform.setIssueCheckList(checkedlist);
 		request.setAttribute("caseManagementEntryForm", newform);
 		String varName = "newNote";
-		request.getSession().setAttribute(varName, false);
+		session.setAttribute(varName, false);
 		request.setAttribute("ajaxsave", note.getId());
 		request.setAttribute("origNoteId", noteId);
 
@@ -1528,7 +1562,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			logAction = LogConst.UPDATE;
 		}
 
-		LogAction.addLog((String) request.getSession().getAttribute("user"), logAction, LogConst.CON_CME_NOTE, String.valueOf(note.getId()), request.getRemoteAddr(), demo, note.getAuditString());
+		LogAction.addLog((String) session.getAttribute("user"), logAction, LogConst.CON_CME_NOTE, String.valueOf(note.getId()), request.getRemoteAddr(), demo, note.getAuditString());
 
 		return mapping.findForward("issueList_ajax");
 		/*
@@ -1536,7 +1570,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		 * 
 		 * String oldId = cform.getCaseNote().getId() == null ? request.getParameter("newNoteIdx") : String.valueOf(cform.getCaseNote().getId()); long newId = noteSave(cform, request);
 		 * 
-		 * if( newId > -1 ) { log.debug("OLD ID " + oldId + " NEW ID " + String.valueOf(newId)); cform.setMethod("view"); request.getSession().setAttribute("newNote", false); request.getSession().setAttribute("caseManagementEntryForm", cform);
+		 * if( newId > -1 ) { log.debug("OLD ID " + oldId + " NEW ID " + String.valueOf(newId)); cform.setMethod("view"); session.setAttribute("newNote", false); session.setAttribute("caseManagementEntryForm", cform);
 		 * request.setAttribute("caseManagementEntryForm", cform); request.setAttribute("ajaxsave", newId); request.setAttribute("origNoteId", oldId); return mapping.findForward("issueList_ajax"); }
 		 * 
 		 * return null;
@@ -1583,9 +1617,11 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
 	public ActionForward saveAndExit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("saveandexit");
+
+                HttpSession session = request.getSession();
 		String providerNo = getProviderNo(request);
 		String demoNo = getDemographicNo(request);
-		if (request.getSession().getAttribute("userrole") == null) return mapping.findForward("expired");
+		if (session.getAttribute("userrole") == null) return mapping.findForward("expired");
 
 		request.setAttribute("change_flag", "false");
 
@@ -1605,9 +1641,9 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		if (error != null) {
 
 			String varName = "newNote";
-			request.getSession().setAttribute(varName, false);
+			session.setAttribute(varName, false);
 			varName = "saveNote" + demoNo;
-			request.getSession().setAttribute(varName, new Boolean(true)); // tell CaseManagementView we have just saved note
+			session.setAttribute(varName, new Boolean(true)); // tell CaseManagementView we have just saved note
 			ActionForward fwd = mapping.findForward("list");
 			StringBuilder path = new StringBuilder(fwd.getPath());
 
@@ -1682,12 +1718,13 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 	}
 
 	public ActionForward cancel(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		if (request.getSession().getAttribute("userrole") == null) return mapping.findForward("expired");
+                HttpSession session = request.getSession();
+		if (session.getAttribute("userrole") == null) return mapping.findForward("expired");
 
 		CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
 		String providerNo = getProviderNo(request);
 
-		String programNo = (String) request.getSession().getAttribute("case_program_id");
+		String programNo = (String) session.getAttribute("case_program_id");
 
 		String demo = cform.getDemographicNo();
 
@@ -1709,13 +1746,14 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 	public ActionForward addNewIssue(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("addNewIssue");
 
-		if (request.getSession().getAttribute("userrole") == null) return mapping.findForward("expired");
+                HttpSession session = request.getSession();
+		if (session.getAttribute("userrole") == null) return mapping.findForward("expired");
 
 		request.setAttribute("change_flag", "true");
 		CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
 		String demono = getDemographicNo(request);
 		String sessionFrmName = "caseManagementEntryForm" + demono;
-		CaseManagementEntryFormBean sessionFrm = (CaseManagementEntryFormBean) request.getSession().getAttribute(sessionFrmName);
+		CaseManagementEntryFormBean sessionFrm = (CaseManagementEntryFormBean) session.getAttribute(sessionFrmName);
 		CaseManagementNote note = sessionFrm.getCaseNote();
 		String noteTxt = cform.getCaseNote_note();
 		noteTxt = org.apache.commons.lang.StringUtils.trimToNull(noteTxt);
@@ -1734,12 +1772,13 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 	}
 
 	public ActionForward issueList(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		if (request.getSession().getAttribute("userrole") == null) {
+                HttpSession session = request.getSession();
+		if (session.getAttribute("userrole") == null) {
 			response.sendError(response.SC_FORBIDDEN);
 			return null;
 		}
 
-		String programId = (String) request.getSession().getAttribute("case_program_id");
+		String programId = (String) session.getAttribute("case_program_id");
 		CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
 
 		String demono = request.getParameter("amp;demographicNo");
@@ -1787,7 +1826,9 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
 	public ActionForward issueSearch(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		logger.debug("issueSearch");
-		String programId = (String) request.getSession().getAttribute("case_program_id");
+
+                HttpSession session = request.getSession();
+		String programId = (String) session.getAttribute("case_program_id");
 
 		request.setAttribute("change_flag", "true");
 		CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
@@ -1829,7 +1870,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		}
 		logger.debug("Community issue reconciliation complete");
 		String sessionFrmName = "caseManagementEntryForm" + demono;
-		CaseManagementEntryFormBean sessionFrm = (CaseManagementEntryFormBean) request.getSession().getAttribute(sessionFrmName);
+		CaseManagementEntryFormBean sessionFrm = (CaseManagementEntryFormBean) session.getAttribute(sessionFrmName);
 		sessionFrm.setNewIssueCheckList(issueList);
 		sessionFrm.setShowList("true");
 
@@ -1841,14 +1882,15 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
 	// we need to convert single issue into checkbox array so we can play nicely with CaseManagementEntryFormBean
 	public ActionForward makeIssue(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		// String programId = (String) request.getSession().getAttribute("case_program_id");
+                HttpSession session = request.getSession();
+		// String programId = (String) session.getAttribute("case_program_id");
 		// grab the issue we want to add
 		String issueId = request.getParameter("newIssueId");
 		// String providerNo = getProviderNo(request);
 
 		CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
 		String sessionFrmName = "caseManagementEntryForm" + this.getDemographicNo(request);
-		CaseManagementEntryFormBean sessionFrm = (CaseManagementEntryFormBean) request.getSession().getAttribute(sessionFrmName);
+		CaseManagementEntryFormBean sessionFrm = (CaseManagementEntryFormBean) session.getAttribute(sessionFrmName);
 
 		// check to see if this issue has already been associated with this demographic
 		boolean issueExists = false;
@@ -1877,7 +1919,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 	}
 
 	public ActionForward issueAdd(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		if (request.getSession().getAttribute("userrole") == null) return mapping.findForward("expired");
+                HttpSession session = request.getSession();
+		if (session.getAttribute("userrole") == null) return mapping.findForward("expired");
 
 		String changeDiagnosis = request.getParameter("change_diagnosis");
 		if (changeDiagnosis != null && changeDiagnosis.equalsIgnoreCase("true")) {
@@ -1894,7 +1937,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		request.setAttribute("demoDOB", getDemoDOB(demono));
 
 		String sessionFrmName = "caseManagementEntryForm" + demono;
-		CaseManagementEntryFormBean sessionFrm = (CaseManagementEntryFormBean) request.getSession().getAttribute(sessionFrmName);
+		CaseManagementEntryFormBean sessionFrm = (CaseManagementEntryFormBean) session.getAttribute(sessionFrmName);
 
 		// add checked new issues to client's issue list
 		// client's old issues
@@ -1924,7 +1967,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		}
 		k = 0;
 
-		String programIdStr = (String) request.getSession().getAttribute(SessionConstants.CURRENT_PROGRAM_ID);
+		String programIdStr = (String) session.getAttribute(SessionConstants.CURRENT_PROGRAM_ID);
 		Integer programId = null;
 		if (programIdStr != null) programId = Integer.valueOf(programIdStr);
 
@@ -2059,7 +2102,9 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
 	public ActionForward ajaxChangeDiagnosis(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		logger.debug("ajaxChangeDiagnosis");
-		if (request.getSession().getAttribute("userrole") == null) return mapping.findForward("expired");
+
+                HttpSession session = request.getSession();
+		if (session.getAttribute("userrole") == null) return mapping.findForward("expired");
 
 		// get issue we're changing
 		String strIndex = request.getParameter("change_diagnosis_id");
@@ -2067,7 +2112,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
 		String substitution = request.getParameter("newIssueId");
 		String sessionFrmName = "caseManagementEntryForm" + getDemographicNo(request);
-		CaseManagementEntryFormBean sessionFrm = (CaseManagementEntryFormBean) request.getSession().getAttribute(sessionFrmName);
+		CaseManagementEntryFormBean sessionFrm = (CaseManagementEntryFormBean) session.getAttribute(sessionFrmName);
 
 		CheckBoxBean[] curIssues = sessionFrm.getIssueCheckList();
 
@@ -2097,7 +2142,9 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
 	public ActionForward issueDelete(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("issueDelete");
-		if (request.getSession().getAttribute("userrole") == null) {
+
+                HttpSession session = request.getSession();
+		if (session.getAttribute("userrole") == null) {
 			response.sendError(response.SC_FORBIDDEN);
 			return null;
 		}
@@ -2105,7 +2152,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
 		String demono = getDemographicNo(request);
 		String sessionFrmName = "caseManagementEntryForm" + demono;
-		CaseManagementEntryFormBean sessionFrm = (CaseManagementEntryFormBean) request.getSession().getAttribute(sessionFrmName);
+		CaseManagementEntryFormBean sessionFrm = (CaseManagementEntryFormBean) session.getAttribute(sessionFrmName);
 
 		// noteSave(cform, request);
 		request.setAttribute("change_flag", "true");
@@ -2168,17 +2215,19 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
 	public ActionForward issueChange(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("issueChange");
-		if (request.getSession().getAttribute("userrole") == null) {
+
+                HttpSession session = request.getSession();
+		if (session.getAttribute("userrole") == null) {
 			response.sendError(response.SC_FORBIDDEN);
 			return null;
 		}
 		request.setAttribute("from", request.getParameter("from"));
 		request.setAttribute("change_flag", "true");
-		request.getSession().setAttribute("issueStatusChanged", "true");
+		session.setAttribute("issueStatusChanged", "true");
 		CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
 		String demono = getDemographicNo(request);
 		String sessionFrmName = "caseManagementEntryForm" + demono;
-		CaseManagementEntryFormBean sessionFrm = (CaseManagementEntryFormBean) request.getSession().getAttribute(sessionFrmName);
+		CaseManagementEntryFormBean sessionFrm = (CaseManagementEntryFormBean) session.getAttribute(sessionFrmName);
 
 		request.setAttribute("demoName", getDemoName(demono));
 		request.setAttribute("demoAge", getDemoAge(demono));
@@ -2199,7 +2248,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			String providerNo = this.getProviderNo(request);
 
 			// get access right
-			List accessRight = caseManagementMgr.getAccessRight(providerNo, demono, (String) request.getSession().getAttribute("case_program_id"));
+			List accessRight = caseManagementMgr.getAccessRight(providerNo, demono, (String) session.getAttribute("case_program_id"));
 
 			// add medical history to CPP
 			CaseManagementCPP cpp = this.caseManagementMgr.getCPP(getDemographicNo(request));
@@ -2276,7 +2325,9 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
 	public ActionForward history(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("history");
-		if (request.getSession().getAttribute("userrole") == null) return mapping.findForward("expired");
+
+                HttpSession session = request.getSession();
+		if (session.getAttribute("userrole") == null) return mapping.findForward("expired");
 
 		CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
 
@@ -2292,7 +2343,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
 		cform.setCaseNote_history(note.getHistory());
 
-		LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.READ, LogConst.CON_CME_NOTE, noteid, request.getRemoteAddr(), note.getAuditString());
+		LogAction.addLog((String) session.getAttribute("user"), LogConst.READ, LogConst.CON_CME_NOTE, noteid, request.getRemoteAddr(), note.getAuditString());
 
 		return mapping.findForward("historyview");
 	}
@@ -2751,6 +2802,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 	}
 	
 	public CaseManagementNote getLastSaved(HttpServletRequest request, String demono, String providerNo) {
+                HttpSession session = request.getSession();
 		CaseManagementNote note = null;
 		List notes = null;
 
@@ -2758,7 +2810,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		notes = caseManagementMgr.getNotes(demono);
 		notes = manageLockedNotes(notes, false, this.getUnlockedNotesMap(request));
 
-		String programId = (String) request.getSession().getAttribute("case_program_id");
+		String programId = (String) session.getAttribute("case_program_id");
 
 		if (programId == null || programId.length() == 0) {
 			programId = "0";
@@ -2770,7 +2822,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			CaseManagementNote n = (CaseManagementNote) notes.get(idx);
 			if (!n.isSigned() && n.getProviderNo().equals(providerNo)) {
 				note = n;
-				request.getSession().setAttribute("newNote", "false");
+				session.setAttribute("newNote", "false");
 				break;
 			}
 		}
@@ -2934,7 +2986,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 	 * Retrieve CPP issuesIf not in session, load them
 	 */
 	protected HashMap getCPPIssues(HttpServletRequest request, String providerNo) {
-		HashMap<String, Issue> issues = (HashMap<String, Issue>) request.getSession().getAttribute("CPPIssues");
+                HttpSession session = request.getSession();
+		HashMap<String, Issue> issues = (HashMap<String, Issue>) session.getAttribute("CPPIssues");
 		if (issues == null) {
 			String[] issueCodes = { "SocHistory", "MedHistory", "Concerns", "Reminders", "FamHistory" };
 			issues = new HashMap<String, Issue>();
@@ -2943,7 +2996,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 				issues.put(issue, i.get(0));
 			}
 
-			request.getSession().setAttribute("CPPIssues", issues);
+			session.setAttribute("CPPIssues", issues);
 		}
 		return issues;
 	}
