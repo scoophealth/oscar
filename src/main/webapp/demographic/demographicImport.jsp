@@ -140,11 +140,10 @@ if (!Util.checkDir(op.getProperty("TMP_DIR"))) { %>
 			<li><%=warn%></li>
 			<%}%>
 		</ul>
-		<%}%> <% if (importLog!=null) { %> Demographic Imported! <html:form
-			action="/form/importLogDownload.do" method="POST">
+		<%}%><html:form action="/form/importLogDownload.do" method="POST">
 			<input type="hidden" name="importlog" value="<%=importLog%>">
 			<input type="submit" name="Submit" value="Download Import Event Log">
-		</html:form> <% } %>
+		</html:form>
 		</div>
 		<% } %>
 		</td>
