@@ -1,3 +1,4 @@
+<%@page import="org.apache.commons.lang.StringUtils"%>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@ page language="java" contentType="text/html" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
@@ -16,6 +17,7 @@ HRMDocumentToDemographic demographicLink = (HRMDocumentToDemographic) request.ge
 List<HRMDocumentToProvider> providerLinkList = (List<HRMDocumentToProvider>) request.getAttribute("providerLinkList");
 
 ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
+
 %>
 
 
@@ -532,6 +534,26 @@ YAHOO.example.BasicRemote = function() {
           };
       }();
 </script>
+
+<%
+String duplicateLabIdsString=StringUtils.trimToNull(request.getParameter("duplicateLabIds"));
+if (duplicateLabIdsString!=null)
+{
+	%>
+		<hr />
+		Duplicate Labs found : <br />
+	<%
+	String[] duplicateLabIdsStringSplit=duplicateLabIdsString.split(",");
+	for (String tempId : duplicateLabIdsStringSplit)
+	{
+		%>
+			<input type="button" value="View labId=<%=tempId%>" onclick="window.open('?id=<%=tempId%>&segmentId=<%=tempId%>&providerNo=<%=request.getParameter("providerNo")%>&searchProviderNo=<%=request.getParameter("searchProviderNo")%>&status=<%=request.getParameter("status")%>&demoName=<%=StringEscapeUtils.escapeHtml(request.getParameter("demoName"))%>', null)" /> 
+			<br />
+		<%
+	}
+}
+%>
+
 
 </body>
 </html>

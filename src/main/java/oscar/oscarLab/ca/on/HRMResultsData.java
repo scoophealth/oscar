@@ -1,26 +1,27 @@
 package oscar.oscarLab.ca.on;
 
-import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.log4j.Logger;
-
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.hospitalReportManager.HRMReport;
 import org.oscarehr.hospitalReportManager.HRMReportParser;
-import org.oscarehr.hospitalReportManager.model.HRMDocument;
-import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
-import org.oscarehr.hospitalReportManager.model.HRMDocumentToProvider;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentDao;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentToDemographicDao;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentToProviderDao;
+import org.oscarehr.hospitalReportManager.model.HRMDocument;
+import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
+import org.oscarehr.hospitalReportManager.model.HRMDocumentToProvider;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class HRMResultsData {
 
-	Logger logger = Logger.getLogger(HRMResultsData.class);
+	private static Logger logger = MiscUtils.getLogger();
 	private HRMDocumentDao hrmDocumentDao = (HRMDocumentDao) SpringUtils.getBean("HRMDocumentDao");
 	private HRMDocumentToProviderDao hrmDocumentToProviderDao = (HRMDocumentToProviderDao) SpringUtils.getBean("HRMDocumentToProviderDao");
 	private HRMDocumentToDemographicDao hrmDocumentToDemographicDao = (HRMDocumentToDemographicDao) SpringUtils.getBean("HRMDocumentToDemographicDao");
@@ -29,7 +30,7 @@ public class HRMResultsData {
 	public HRMResultsData() {
 	}
 
-	public List<LabResultData> populateHRMdocumentsResultsData(String providerNo, Integer page, Integer pageSize, String status) {
+	public Collection<LabResultData> populateHRMdocumentsResultsData(String providerNo, Integer page, Integer pageSize, String status) {
 		if (providerNo == null || "".equals(providerNo)) {
 			providerNo = "%";
 		} else if (providerNo.equalsIgnoreCase("0")) {
@@ -50,13 +51,15 @@ public class HRMResultsData {
 
 		List<HRMDocumentToProvider> hrmDocResultsProvider = hrmDocumentToProviderDao.findByProviderNoLimit(providerNo, page, pageSize, viewed, signedOff);
 
-		ArrayList<LabResultData> labResults = new ArrayList<LabResultData>();
+		// the key = SendingFacility+':'+ReportNumber+':'+DeliverToUserID as per HRM spec can be used to signify duplicate report
+		HashMap<String,LabResultData> labResults=new HashMap<String,LabResultData>();
+		HashMap<String,HRMReport> labReports=new HashMap<String,HRMReport>();
 
 		for (HRMDocumentToProvider hrmDocResult : hrmDocResultsProvider) {
-			String id = hrmDocResult.getHrmDocumentId();
+			Integer id = Integer.parseInt(hrmDocResult.getHrmDocumentId());
 			LabResultData lbData = new LabResultData(LabResultData.HRM);
 
-			List<HRMDocument> hrmDocument = hrmDocumentDao.findById(Integer.parseInt(id));
+			List<HRMDocument> hrmDocument = hrmDocumentDao.findById(id);
 
 			lbData.dateTime = hrmDocument.get(0).getTimeReceived().toString();
 			lbData.acknowledgedStatus = "U";
@@ -70,6 +73,8 @@ public class HRMResultsData {
 			HRMReport hrmReport = HRMReportParser.parseReport(hrmDocument.get(0).getReportFile());
 			if (hrmReport == null) continue;
 
+			hrmReport.setHrmDocumentId(id);
+			
 			if (hrmDocResultsDemographic.size() > 0) {
 				Demographic demographic = demographicDao.getDemographic(hrmDocResultsDemographic.get(0).getDemographicNo());
 				if (demographic != null) {
@@ -91,19 +96,89 @@ public class HRMResultsData {
 			lbData.discipline = "HRM";
 			lbData.resultStatus = hrmReport.getResultStatus();
 
-			labResults.add(lbData);
+			String duplicateKey=hrmReport.getSendingFacilityId()+':'+hrmReport.getSendingFacilityReportNo()+':'+hrmReport.getDeliverToUserId();
+
+			// if no duplicate
+			if (!labResults.containsKey(duplicateKey))
+			{
+				labResults.put(duplicateKey,lbData);
+				labReports.put(duplicateKey, hrmReport);
+			}
+			else // there exists an entry like this one
+			{
+				HRMReport previousHrmReport=labReports.get(duplicateKey);
+				
+				logger.debug("Duplicate report found : previous="+previousHrmReport.getHrmDocumentId()+", current="+hrmReport.getHrmDocumentId());
+				
+				// if the current entry is newer than the previous one then replace it, other wise just keep the previous entry
+				if (isNewer(hrmReport, previousHrmReport))
+				{
+					LabResultData olderLabData=labResults.get(duplicateKey);
+					
+					lbData.getDuplicateLabIds().addAll(olderLabData.getDuplicateLabIds());
+					lbData.getDuplicateLabIds().add(previousHrmReport.getHrmDocumentId());
+					
+					labResults.put(duplicateKey,lbData);
+					labReports.put(duplicateKey, hrmReport);
+				}
+				else
+				{
+					LabResultData newerLabData=labResults.get(duplicateKey);
+					newerLabData.getDuplicateLabIds().add(hrmReport.getHrmDocumentId());
+				}
+			}
 
 		}
 
 		if (logger.isDebugEnabled()) {
-			for (LabResultData temp : labResults) {
+			for (LabResultData temp : labResults.values()) {
 				logger.debug("------------------");
 				logger.debug(ReflectionToStringBuilder.toString(temp));
 			}
 		}
 
-		return labResults;
+		return labResults.values();
 	}
+
+	/**
+	 * @return true if the currentEntry is deemed to be newer than the previousEntry
+	 */
+	private boolean isNewer(HRMReport currentEntry, HRMReport previousEntry) {
+		// try to parse messageUniqueId for date portion to compare, no gurantees it exists or is well formed.
+		try
+		{
+			String currentUid=currentEntry.getMessageUniqueId();
+			String previousUid=previousEntry.getMessageUniqueId();
+			String currentDatePart=currentUid.substring(0, currentUid.indexOf('^'));
+			String previousDatePart=previousUid.substring(0, previousUid.indexOf('^'));
+			long currentDateNum=Long.parseLong(currentDatePart);
+			long previousDateNum=Long.parseLong(previousDatePart);
+			
+			if (currentDateNum>previousDateNum) return(true);
+			if (currentDateNum<previousDateNum) return(false);
+			// if they are equal, then we can not determine it based on this field
+		}
+		catch (Exception e)
+		{
+			// can ignore, messageUniqueId's are note guranteed to exist, nor their format.
+			logger.debug("Error attempting to use messageUniqueId, currentUid="+currentEntry.getMessageUniqueId()+", prevUId="+previousEntry.getMessageUniqueId(), e);
+		}
+
+		logger.debug("could not determine newer based on messageUniqueId");
+		
+		// try to pick the one that's not canceled.
+		if (!"C".equals(currentEntry.getResultStatus()) && "C".equals(previousEntry.getResultStatus())) return(true);
+		if ("C".equals(currentEntry.getResultStatus()) && !"C".equals(previousEntry.getResultStatus())) return(false);
+		// if both canceled or neither canceled then we can't figure it out from this field.
+	
+		// at this point I have to make a random guess, we know it's a duplicate but we can't tell which is newer.
+		return(currentEntry.getHrmDocumentId()>previousEntry.getHrmDocumentId());
+	}
+
+	private LabResultData getNewer(LabResultData labResultData, LabResultData lbData) {
+	    // TODO Auto-generated method stub
+	    return null;
+    }
 
 	/*
 	 * public List<LabResultData> populateHRMdocumentsResultsData(String providerNo){
