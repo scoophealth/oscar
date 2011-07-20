@@ -143,7 +143,7 @@ public class HRMResultsData {
 	/**
 	 * @return true if the currentEntry is deemed to be newer than the previousEntry
 	 */
-	private boolean isNewer(HRMReport currentEntry, HRMReport previousEntry) {
+	public static boolean isNewer(HRMReport currentEntry, HRMReport previousEntry) {
 		// try to parse messageUniqueId for date portion to compare, no gurantees it exists or is well formed.
 		try
 		{
@@ -174,11 +174,6 @@ public class HRMResultsData {
 		// at this point I have to make a random guess, we know it's a duplicate but we can't tell which is newer.
 		return(currentEntry.getHrmDocumentId()>previousEntry.getHrmDocumentId());
 	}
-
-	private LabResultData getNewer(LabResultData labResultData, LabResultData lbData) {
-	    // TODO Auto-generated method stub
-	    return null;
-    }
 
 	/*
 	 * public List<LabResultData> populateHRMdocumentsResultsData(String providerNo){

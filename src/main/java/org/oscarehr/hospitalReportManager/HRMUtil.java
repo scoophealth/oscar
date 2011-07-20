@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+
 import org.apache.log4j.Logger;
 
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentDao;
@@ -18,6 +20,8 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 import org.oscarehr.hospitalReportManager.model.HRMSubClass;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
+
+import oscar.oscarLab.ca.on.HRMResultsData;
 
 public class HRMUtil {
 
@@ -42,17 +46,19 @@ public class HRMUtil {
 		List<HRMDocumentToDemographic> hrmDocResultsDemographic = hrmDocumentToDemographicDao.findByDemographicNo(demographicNo);
 		List<HRMDocument> hrmDocumentsAll = new LinkedList<HRMDocument>();
 		
+		HashMap<String,ArrayList<Integer>> duplicateLabIds=new HashMap<String, ArrayList<Integer>>();
+		HashMap<String,HRMDocument> docsToDisplay=filterDuplicates(hrmDocResultsDemographic, duplicateLabIds);
 		
-		for (HRMDocumentToDemographic hrmDocResult : hrmDocResultsDemographic) {
-			String id = hrmDocResult.getHrmDocumentId();
-			List<HRMDocument> hrmDocuments = hrmDocumentDao.findById(Integer.parseInt(id));
+		for (Map.Entry<String, HRMDocument> entry : docsToDisplay.entrySet()) {
+			String duplicateKey=entry.getKey();
+			HRMDocument hrmDocument = entry.getValue();
 			
 			HRMCategory category = null;
 			HRMSubClass thisReportSubClassMapping = null;
-			List<HRMDocumentSubClass> subClassList = hrmDocumentSubClassDao.getSubClassesByDocumentId(hrmDocuments.get(0).getId());
+			List<HRMDocumentSubClass> subClassList = hrmDocumentSubClassDao.getSubClassesByDocumentId(hrmDocument.getId());
 			
 			
-			HRMReport report = HRMReportParser.parseReport(hrmDocuments.get(0).getReportFile());
+			HRMReport report = HRMReportParser.parseReport(hrmDocument.getReportFile());
 			if (report.getFirstReportClass().equalsIgnoreCase("Diagnostic Imaging Report") || report.getFirstReportClass().equalsIgnoreCase("Cardio Respiratory Report")) {
 				// We'll only care about the first one, as long as there is at least one
 				if (subClassList != null && subClassList.size() > 0) {
@@ -71,14 +77,26 @@ public class HRMUtil {
 			
 			
 			HashMap<String, Object> curht = new HashMap<String, Object>();
-			curht.put("id", hrmDocuments.get(0).getId());
-			curht.put("time_received", hrmDocuments.get(0).getTimeReceived().toString());
-			curht.put("report_type", hrmDocuments.get(0).getReportType());
-			curht.put("report_status", hrmDocuments.get(0).getReportStatus());
+			curht.put("id", hrmDocument.getId());
+			curht.put("time_received", hrmDocument.getTimeReceived().toString());
+			curht.put("report_type", hrmDocument.getReportType());
+			curht.put("report_status", hrmDocument.getReportStatus());
 			curht.put("category", category);
 			
+			StringBuilder duplicateLabIdQueryString=new StringBuilder();
+			ArrayList<Integer> duplicateIdList=duplicateLabIds.get(duplicateKey);
+        	if (duplicateIdList!=null)
+        	{
+				for (Integer duplicateLabIdTemp : duplicateIdList)
+            	{
+            		if (duplicateLabIdQueryString.length()>0) duplicateLabIdQueryString.append(',');
+            		duplicateLabIdQueryString.append(duplicateLabIdTemp);
+            	}
+			}
+        	curht.put("duplicateLabIds", duplicateLabIdQueryString.toString());
+			
 			hrmdocslist.add(curht);
-			hrmDocumentsAll.addAll(hrmDocuments);
+			hrmDocumentsAll.add(hrmDocument);
 			
 		}
 		
@@ -94,7 +112,67 @@ public class HRMUtil {
 		
 	}
 	
-	 public static ArrayList<HashMap<String, ? extends Object>> listMappings(){
+	 private static HashMap<String,HRMDocument> filterDuplicates(List<HRMDocumentToDemographic> hrmDocumentToDemographics, HashMap<String,ArrayList<Integer>> duplicateLabIds) {
+		 
+		HashMap<String,HRMDocument> docsToDisplay = new HashMap<String,HRMDocument>();
+		HashMap<String,HRMReport> labReports=new HashMap<String,HRMReport>();
+
+		 for (HRMDocumentToDemographic hrmDocumentToDemographic : hrmDocumentToDemographics)
+		 {
+			String id = hrmDocumentToDemographic.getHrmDocumentId();
+			List<HRMDocument> hrmDocuments = hrmDocumentDao.findById(Integer.parseInt(id));
+
+			for (HRMDocument hrmDocument : hrmDocuments)
+			{
+				HRMReport hrmReport = HRMReportParser.parseReport(hrmDocument.getReportFile());
+				if (hrmReport == null) continue;
+				hrmReport.setHrmDocumentId(hrmDocument.getId());
+				String duplicateKey=hrmReport.getSendingFacilityId()+':'+hrmReport.getSendingFacilityReportNo()+':'+hrmReport.getDeliverToUserId();
+	
+				// if no duplicate
+				if (!docsToDisplay.containsKey(duplicateKey))
+				{
+					docsToDisplay.put(duplicateKey,hrmDocument);
+					labReports.put(duplicateKey, hrmReport);
+				}
+				else // there exists an entry like this one
+				{
+					HRMReport previousHrmReport=labReports.get(duplicateKey);
+					
+					logger.debug("Duplicate report found : previous="+previousHrmReport.getHrmDocumentId()+", current="+hrmReport.getHrmDocumentId());
+					
+					Integer duplicateIdToAdd;
+					
+					// if the current entry is newer than the previous one then replace it, other wise just keep the previous entry
+					if (HRMResultsData.isNewer(hrmReport, previousHrmReport))
+					{
+						HRMDocument previousHRMDocument = docsToDisplay.get(duplicateKey);
+						duplicateIdToAdd=previousHRMDocument.getId();
+						
+						docsToDisplay.put(duplicateKey,hrmDocument);
+						labReports.put(duplicateKey, hrmReport);
+					}
+					else
+					{
+						duplicateIdToAdd=hrmDocument.getId();
+					}
+	
+					ArrayList<Integer> duplicateIds=duplicateLabIds.get(duplicateKey);
+					if (duplicateIds==null)
+					{
+						duplicateIds=new ArrayList<Integer>();
+						duplicateLabIds.put(duplicateKey, duplicateIds);
+					}
+					
+					duplicateIds.add(duplicateIdToAdd);						
+				}
+			}
+		}
+		 
+		 return(docsToDisplay);
+	 }
+
+	public static ArrayList<HashMap<String, ? extends Object>> listMappings(){
 			ArrayList<HashMap<String, ? extends Object>> hrmdocslist = new ArrayList<HashMap<String, ?>>();
 			
 			List<HRMSubClass> hrmSubClasses = hrmSubClassDao.listAll();
