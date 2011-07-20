@@ -11,6 +11,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import cds.DemographicsDocument;
 import cds.ReportsReceivedDocument;
+import cdsDtHrm.Address;
+import cdsDtHrm.AddressStructured;
+import cdsDtHrm.ContactPersonPurpose;
 import cdsDtHrm.DateFullOrPartial;
 import cdsDtHrm.EnrollmentStatus;
 import cdsDtHrm.Gender;
@@ -21,12 +24,17 @@ import cdsDtHrm.PersonNamePartQualifierCode;
 import cdsDtHrm.PersonNamePartTypeCode;
 import cdsDtHrm.PersonNamePurposeCode;
 import cdsDtHrm.PersonNameSimple;
+import cdsDtHrm.PersonNameSimpleWithMiddleName;
 import cdsDtHrm.PersonNameStandard;
 import cdsDtHrm.PersonStatus;
+import cdsDtHrm.PhoneNumber;
+import cdsDtHrm.PhoneNumberType;
+import cdsDtHrm.PostalZipCode;
 import cdsDtHrm.ReportClass;
 import cdsDtHrm.ReportContent;
 import cdsDtHrm.ReportFormat;
 import cdshrm.DemographicsDocument.Demographics;
+import cdshrm.DemographicsDocument.Demographics.Contact;
 import cdshrm.OmdCdsDocument;
 import cdshrm.OmdCdsDocument.OmdCds;
 import cdshrm.PatientRecordDocument.PatientRecord;
@@ -60,7 +68,7 @@ public class CreateHRMFile {
 	options.put( XmlOptions.SAVE_AGGRESSIVE_NAMESPACES );
 
         HashMap<String,String> suggestedPrefix = new HashMap<String,String>();
-        suggestedPrefix.put("cds_dt_hrm","cdsd");
+        suggestedPrefix.put("cds_dt","cdsd");
         options.setSaveSuggestedPrefixes(suggestedPrefix);
 	options.setSaveOuter();
 
@@ -173,8 +181,100 @@ public class CreateHRMFile {
         }
 
         //Addresses
-        //Contacts
+        cdsDt.Address[] addresses = demo.getAddressArray();
+        if (addresses!=null) {
+            for (cdsDt.Address address : addresses) {
+                if (address.getFormatted()!=null) {
+                    
+                    //address.formated
+                    Address HRMaddress =  HRMdemo.addNewAddress();
+                    HRMaddress.setFormatted(address.getFormatted());
+
+                } else if (address.getStructured()!=null) {
+                    
+                    //address.structured
+                    Address HRMaddress =  HRMdemo.addNewAddress();
+                    cdsDt.AddressStructured addrStruct = address.getStructured();
+                    AddressStructured HRMaddrStruct = HRMaddress.addNewStructured();
+
+                    HRMaddrStruct.setCity(addrStruct.getCity());
+                    HRMaddrStruct.setCountrySubdivisionCode(addrStruct.getCountrySubdivisionCode());
+                    HRMaddrStruct.setLine1(addrStruct.getLine1());
+
+                    if (addrStruct.getLine2()!=null) HRMaddrStruct.setLine2(addrStruct.getLine2());
+                    if (addrStruct.getLine3()!=null) HRMaddrStruct.setLine3(addrStruct.getLine3());
+
+                    cdsDt.PostalZipCode postalZipCode = addrStruct.getPostalZipCode();
+                    PostalZipCode HRMpostalZipCode = HRMaddrStruct.addNewPostalZipCode();
+                    if (postalZipCode!=null) {
+                        if (postalZipCode.getPostalCode()!=null) HRMpostalZipCode.setPostalCode(postalZipCode.getPostalCode());
+                        else if (postalZipCode.getZipCode()!=null) HRMpostalZipCode.setZipCode(postalZipCode.getZipCode());
+                    }
+                }
+            }
+        }
+
         //PhoneNumbers
+        cdsDt.PhoneNumber[] phoneNumbers = demo.getPhoneNumberArray();
+        if (phoneNumbers!=null) {
+            for (cdsDt.PhoneNumber phoneNumber : phoneNumbers) {
+                PhoneNumber HRMphoneNumber = HRMdemo.addNewPhoneNumber();
+
+                if (phoneNumber.getPhoneNumber()!=null) {
+                    HRMphoneNumber.setPhoneNumber(phoneNumber.getPhoneNumber());
+                } else if (phoneNumber.getNumber()!=null) {
+                    HRMphoneNumber.setNumber(phoneNumber.getNumber());
+                    HRMphoneNumber.setAreaCode(phoneNumber.getAreaCode());
+                    if (phoneNumber.getExchange()!=null) HRMphoneNumber.setExchange(phoneNumber.getExchange());
+                }
+                if (phoneNumber.getExtension()!=null) HRMphoneNumber.setExtension(phoneNumber.getExtension());
+                HRMphoneNumber.setPhoneNumberType(PhoneNumberType.Enum.forString(phoneNumber.getPhoneNumberType().toString()));
+            }
+        }
+
+        //Contacts
+        DemographicsDocument.Demographics.Contact[] contacts = demo.getContactArray();
+        if (contacts!=null) {
+            for (DemographicsDocument.Demographics.Contact contact : contacts) {
+                if (contact.getName()!=null) {
+                    Contact HRMcontact = HRMdemo.addNewContact();
+
+                    //contact name
+                    cdsDt.PersonNameSimpleWithMiddleName contactName = contact.getName();
+                    PersonNameSimpleWithMiddleName HRMcontactName = HRMcontact.addNewName();
+
+                    if (contactName.getFirstName()!=null) HRMcontactName.setFirstName(contactName.getFirstName());
+                    if (contactName.getLastName()!=null) HRMcontactName.setLastName(contactName.getLastName());
+                    if (contactName.getMiddleName()!=null) HRMcontactName.setMiddleName(contactName.getMiddleName());
+
+                    //contact purpose
+                    cdsDt.PurposeEnumOrPlainText[] purposes = contact.getContactPurposeArray();
+                    if (purposes!=null && purposes.length>0) {
+                        cdsDt.PurposeEnumOrPlainText.PurposeAsEnum.Enum purpose = purposes[0].getPurposeAsEnum();
+                        if (purpose!=null) HRMcontact.setContactPurpose(ContactPersonPurpose.Enum.forString(purpose.toString()));
+                        if (HRMcontact.getContactPurpose()==null) HRMcontact.setContactPurpose(ContactPersonPurpose.O);
+                    }
+
+                    //contact phone
+                    cdsDt.PhoneNumber[] contactPhones = contact.getPhoneNumberArray();
+                    if (contactPhones!=null) {
+                        for (cdsDt.PhoneNumber contactPhone : contactPhones) {
+                            PhoneNumber HRMcontactPhone = HRMcontact.addNewPhoneNumber();
+
+                            if (contactPhone.getPhoneNumber()!=null) {
+                                HRMcontactPhone.setPhoneNumber(contactPhone.getPhoneNumber());
+                            } else if (contactPhone.getNumber()!=null) {
+                                HRMcontactPhone.setNumber(contactPhone.getNumber());
+                                HRMcontactPhone.setAreaCode(contactPhone.getAreaCode());
+                                if (contactPhone.getExchange()!=null) HRMcontactPhone.setExchange(contactPhone.getExchange());
+                            }
+                            if (contactPhone.getExtension()!=null) HRMcontactPhone.setExtension(contactPhone.getExtension());
+                            HRMcontactPhone.setPhoneNumberType(PhoneNumberType.Enum.forString(contactPhone.getPhoneNumberType().toString()));
+                        }
+                    }
+                }
+            }
+        }
     }
 
     static private void writeReportsReceived(List<ReportsReceivedDocument.ReportsReceived> reports, PatientRecord patientRecord) {

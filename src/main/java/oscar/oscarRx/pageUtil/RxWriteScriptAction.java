@@ -500,7 +500,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 
 			//there's a change there's multiple forms. Select the first one by default
 			//save the list in a separate variable to make a drop down in the interface.
-			if(dmono != null && dmono.drugForm.indexOf(",")!=-1) {
+			if(dmono != null && dmono.drugForm!=null && dmono.drugForm.indexOf(",")!=-1) {
 				String[] forms = dmono.drugForm.split(",");
 				rx.setDrugForm(forms[0]);				
 			} else if(dmono.drugForm != null){
