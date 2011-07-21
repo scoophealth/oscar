@@ -345,7 +345,7 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 		Session session=getSession();
 		try
 		{
-		SQLQuery query = session.createSQLQuery("select * from casemgmt_issue_notes,casemgmt_issue,issue   where issue.issue_id=casemgmt_issue.issue_id and casemgmt_issue.id=casemgmt_issue_notes.id and demographic_no="+demographicId+" and issue.code='"+issueCode+"'");
+		SQLQuery query = session.createSQLQuery("select casemgmt_issue.id from casemgmt_issue_notes,casemgmt_issue,issue   where issue.issue_id=casemgmt_issue.issue_id and casemgmt_issue.id=casemgmt_issue_notes.id and demographic_no="+demographicId+" and issue.code='"+issueCode+"'");
 		List results = query.list();
 		// log.info("haveIssue - DAO - # of results = " + results.size());
 		if (results.size() > 0) return true;

@@ -307,8 +307,8 @@ CREATE TABLE ctl_billingservice (
   servicetype_name varchar(150) default NULL,
   servicetype varchar(10) default NULL,
   service_code varchar(10) default NULL,
-  service_group_name varchar(20) default NULL,
-  service_group varchar(20) default NULL,
+  service_group_name varchar(30),
+  service_group varchar(30),
   status char(1) default NULL,
   service_order int(4) default NULL
 ) ;
@@ -8316,6 +8316,7 @@ CREATE TABLE `issue` (
   `update_date` datetime NOT NULL,
   `priority` CHAR(10) DEFAULT NULL,
   `type` VARCHAR(32) DEFAULT NULL,
+  `sortOrderId` int NOT NULL,
   PRIMARY KEY  (`issue_id`),
   index(code)
 );
