@@ -228,6 +228,7 @@ import cds.RiskFactorsDocument.RiskFactors;
                         out.close();
                         logs.add(importXML(ofile, warnings, request,frm.getTimeshiftInDays(),students,courseId));
                         importNo++;
+                        demographicNo=null;
                     }
                     entry = in.getNextEntry();
                 }
@@ -242,6 +243,7 @@ import cds.RiskFactorsDocument.RiskFactors;
 
             } else if (matchFileExt(ifile, "xml")) {
                 logs.add(importXML(ifile, warnings, request,frm.getTimeshiftInDays(),students,courseId));
+                demographicNo=null;
                 importLog = makeImportLog(logs, tmpDir);
             } else {
                 Util.cleanFile(ifile);
@@ -356,7 +358,8 @@ import cds.RiskFactorsDocument.RiskFactors;
         ArrayList demodup = dd.getDemographicWithHIN(hin);
         if (demodup.isEmpty()) demodup = dd.getDemographicWithLastFirstDOB(lastName, firstName, birthDate);
         if (demodup.size()>0) {
-            err_demo.add("Error! Patient already exist! Not imported.");
+            err_data.clear();
+            err_demo.add("Error! Patient "+patientName+" already exist! Not imported.");
             return packMsgs(err_demo, err_data, err_summ, err_othe, err_note, warnings);
         }
 
@@ -1422,7 +1425,6 @@ import cds.RiskFactorsDocument.RiskFactors;
                 */
 
                 // Save to measurements, measurementsExt
-                int other_id=0;
                 for (LaboratoryResults labResults : labResultArr) {
                     Measurements meas = new Measurements(Long.valueOf(demographicNo), admProviderNo);
                     LaboratoryResults.Result result = labResults.getResult();
@@ -1509,11 +1511,10 @@ import cds.RiskFactorsDocument.RiskFactors;
                         //save lab physician notes (annotation)
                         String annotation = labResults.getPhysiciansNotes();
                         if (StringUtils.filled(annotation)) {
-                            saveMeasurementsExt(measId, "other_id", String.valueOf(other_id)+"-0");
+                            saveMeasurementsExt(measId, "other_id", "0-0");
                             CaseManagementNote cmNote = prepareCMNote();
                             cmNote.setNote(annotation);
-                            saveLinkNote(cmNote, CaseManagementNoteLink.LABTEST, Long.valueOf(lab_no), String.valueOf(other_id)+"-0");
-                            other_id++;
+                            saveLinkNote(cmNote, CaseManagementNoteLink.LABTEST, Long.valueOf(lab_no), "0-0");
                         }
 
                         //to dumpsite
@@ -1979,6 +1980,7 @@ import cds.RiskFactorsDocument.RiskFactors;
                 }
 		out.close();
                 importNo = 0;
+                entries.clear();
 		return importLog;
 	}
 

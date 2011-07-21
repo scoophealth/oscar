@@ -1,6 +1,6 @@
 <%@page errorPage="../provider/errorpage.jsp"%>
 <%@ page
-	import="java.util.*, oscar.oscarMDS.data.*,oscar.oscarLab.ca.on.CML.*,oscar.oscarLab.LabRequestReportLink,oscar.oscarDB.*,java.sql.*,oscar.log.*"%>
+	import="java.util.*, oscar.oscarMDS.data.*,oscar.oscarLab.ca.on.CML.*,oscar.oscarLab.LabRequestReportLink,oscar.oscarDB.*,java.sql.*,oscar.log.*,org.oscarehr.util.SpringUtils,org.oscarehr.casemgmt.service.CaseManagementManager,org.oscarehr.casemgmt.model.*"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
@@ -15,6 +15,10 @@ lab.populateLab(segmentID);
 
 Long reqIDL = LabRequestReportLink.getIdByReport("labPatientPhysicianInfo",Long.valueOf(segmentID));
 String reqID = reqIDL==null ? "" : String.valueOf(reqIDL);
+
+String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.DISP_LABTEST;
+CaseManagementManager caseManagementManager = (CaseManagementManager) SpringUtils.getBean("caseManagementManager");
+
 %>
 <oscar:oscarPropertiesCheck property="SPEC3" value="yes">
     <%
@@ -225,10 +229,11 @@ function linkreq(rptId, reqId) {
 										<td colspan="2" nowrap>
 										<div class="FieldData" nowrap="nowrap">
 										<% if ( request.getParameter("searchProviderNo") == null ) { // we were called from e-chart %>
-										<a href="javascript:window.close()"> <% } else { // we were called from lab module %>
+										<a href="javascript:window.close()"> <%=lab.pLastName%>, <%=lab.pFirstName%> </a>
+                                                                                <% } else { // we were called from lab module %>
 										<a
 											href="javascript:popupStart(360, 680, '../../../oscarMDS/SearchPatient.do?labType=CML&segmentID=<%= segmentID %>&name=<%=java.net.URLEncoder.encode(lab.pLastName+", "+lab.pFirstName )%>', 'searchPatientWindow')">
-										<% } %> <%=lab.pLastName%>, <%=lab.pFirstName%> </a></div>
+										<%=lab.pLastName%>, <%=lab.pFirstName%> </a> <% } %> </div>
 										</td>
 									</tr>
 									<tr>
@@ -451,15 +456,12 @@ function linkreq(rptId, reqId) {
 
 
 
-		<% int i=0;
-	       int j=0;
-	       int k=0;
-               int linenum=0;
+            <% int linenum=0;
                String highlight = "#E0E0FF";
                
                ArrayList groupLabs = lab.getGroupResults(lab.labResults);
                
-     	       for(i=0;i<groupLabs.size();i++){
+     	       for(int i=0; i<groupLabs.size(); i++){
                    linenum=0;
                    CMLLabTest.GroupResults gResults = (CMLLabTest.GroupResults) groupLabs.get(i);
                    %>
@@ -481,7 +483,7 @@ function linkreq(rptId, reqId) {
 		<table width="100%" border="0" cellspacing="0" cellpadding="2"
 			bgcolor="#CCCCFF" bordercolor="#9966FF" bordercolordark="#bfcbe3"
 			name="tblDiscs" id="tblDiscs">
-			<tr class="Field2">
+			<tr class="Field2" style="font-weight:bold;">
 				<td width="25%" align="middle" valign="bottom" class="Cell"><bean:message
 					key="oscarMDS.segmentDisplay.formTestName" /></td>
 				<td width="15%" align="middle" valign="bottom" class="Cell"><bean:message
@@ -494,16 +496,25 @@ function linkreq(rptId, reqId) {
 					key="oscarMDS.segmentDisplay.formUnits" /></td>
 				<td width="15%" align="middle" valign="bottom" class="Cell"><bean:message
 					key="oscarMDS.segmentDisplay.formDateTimeCompleted" /></td>
-				<td width="6%" align="middle" valign="bottom" class="Cell"><bean:message
+				<td width="5%" align="middle" valign="bottom" class="Cell"><bean:message
 					key="oscarMDS.segmentDisplay.formTestLocation" /></td>
-				<td width="6%" align="middle" valign="bottom" class="Cell"><bean:message
+				<td width="5%" align="middle" valign="bottom" class="Cell"><bean:message
 					key="oscarMDS.segmentDisplay.formNew" /></td>
+				<td width="5%" align="middle" valign="bottom" class="Cell"><bean:message
+					key="oscarMDS.segmentDisplay.formAnnotate" /></td>
 			</tr>
 
 			<%
                         //int linenum = 1;
                         ArrayList labs = gResults.getLabResults();
                         for ( int l =0 ; l < labs.size() ; l++){
+
+                            boolean isPrevAnnotation = false;
+                            CaseManagementNoteLink cml = caseManagementManager.getLatestLinkByTableId(CaseManagementNoteLink.LABTEST,Long.valueOf(segmentID),i+"-"+l);
+                            CaseManagementNote p_cmn = null;
+                            if (cml!=null) {p_cmn = caseManagementManager.getNote(cml.getNoteId().toString());}
+                            if (p_cmn!=null){isPrevAnnotation=true;}
+
                             CMLLabTest.LabResult thisResult = (CMLLabTest.LabResult) labs.get(l);
                             String lineClass = "NormalRes";
                             if ( thisResult.abn != null && thisResult.abn.equals("A")){
@@ -516,13 +527,18 @@ function linkreq(rptId, reqId) {
 				class="<%=lineClass%>">
 				<td valign="top" align="left"><a
 					href="labValues.jsp?testName=<%=thisResult.testName%>&demo=<%=lab.getDemographicNo()%>&labType=CML"><%=thisResult.testName %></a></td>
-				<td align="right"><%=thisResult.result %></td>
+				<td align="center"><%=thisResult.result %></td>
 				<td align="center"><%=thisResult.abn %></td>
-				<td align="left"><%=thisResult.getReferenceRange()%></td>
-				<td align="left"><%=thisResult.units %></td>
+				<td align="center"><%=thisResult.getReferenceRange()%></td>
+				<td align="center"><%=thisResult.units %></td>
 				<td align="center"><%=lab.collectionDate%></td>
 				<td align="center"><%=thisResult.locationId %></td>
 				<td align="center"><%=""/*thisResult.resultStatus*/ %></td>
+                                <td align="center" valign="top">
+                                    <a href="javascript:void(0);" title="Annotation" onclick="window.open('<%=request.getContextPath()%>/annotation/annotation.jsp?display=<%=annotation_display%>&amp;table_id=<%=segmentID%>&amp;demo=<%=lab.getDemographicNo()%>&amp;other_id=<%=String.valueOf(i) + "-" + String.valueOf(l) %>','anwin','width=400,height=500');">
+                                        <%if(!isPrevAnnotation){ %><img src="../../../images/notes.gif" alt="rxAnnotation" height="16" width="13" border="0"/><%}else{ %><img src="../../../images/filledNotes.gif" alt="rxAnnotation" height="16" width="13" border="0"/> <%} %>
+                                    </a>
+                                </td>
 			</tr>
 			<% }else{%>
 			<tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>"

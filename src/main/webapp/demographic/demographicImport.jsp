@@ -132,8 +132,9 @@ if (!Util.checkDir(op.getProperty("TMP_DIR"))) { %>
                if ( list != null ) {
 	          if (list.size()>0) {
             %>
-		<div>
-		<h2>Warnings</h2>
+		<div style="font-weight:bold;">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Warnings
+                </div>
 		<ul>
 			<% for (int i = 0; i < list.size(); i++){
 			  String warn = (String) list.get(i); %>
@@ -143,8 +144,7 @@ if (!Util.checkDir(op.getProperty("TMP_DIR"))) { %>
 		<%}%><html:form action="/form/importLogDownload.do" method="POST">
 			<input type="hidden" name="importlog" value="<%=importLog%>">
 			<input type="submit" name="Submit" value="Download Import Event Log">
-		</html:form>
-		</div>
+                     </html:form>
 		<% } %>
 		</td>
 	</tr>
