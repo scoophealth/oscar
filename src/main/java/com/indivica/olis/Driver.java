@@ -100,24 +100,29 @@ public class Driver {
 				MiscUtils.getLogger().error("Couldn't write log message for OLIS query", e);
 			}
 
+			if(OscarProperties.getInstance().getProperty("olis_simulate","no").equals("yes")) {
+				String response = (String) request.getSession().getAttribute("olisResponseContent");
+				request.setAttribute("olisResponseContent", response);
+				request.getSession().setAttribute("olisResponseContent",null);
+				return response;
+			} else {
+				OLISRequestResponse olisResponse = olis.oLISRequest(olisRequest);
+	
+				String signedData = olisResponse.getHIALResponse().getSignedResponse().getSignedData();
+				String unsignedData = Driver.unsignData(signedData);
+	
+				if (request != null) { 
+					request.setAttribute("msgInXML", msgInXML);
+					request.setAttribute("signedRequest", signedRequest);
+					request.setAttribute("signedData", signedData);
+					request.setAttribute("unsignedResponse", unsignedData);
+				}
+	
+				readResponseFromXML(request, unsignedData);
+	
+				return unsignedData;
 
-
-			OLISRequestResponse olisResponse = olis.oLISRequest(olisRequest);
-
-			String signedData = olisResponse.getHIALResponse().getSignedResponse().getSignedData();
-			String unsignedData = Driver.unsignData(signedData);
-
-			if (request != null) { 
-				request.setAttribute("msgInXML", msgInXML);
-				request.setAttribute("signedRequest", signedRequest);
-				request.setAttribute("signedData", signedData);
-				request.setAttribute("unsignedResponse", unsignedData);
 			}
-
-			readResponseFromXML(request, unsignedData);
-
-			return unsignedData;
-
 		} catch (Exception e) {
 			MiscUtils.getLogger().error("Can't perform OLIS query due to exception.", e);
 			request.setAttribute("searchException", e);

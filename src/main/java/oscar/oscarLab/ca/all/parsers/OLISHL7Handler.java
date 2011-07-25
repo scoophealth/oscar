@@ -585,7 +585,9 @@ public class OLISHL7Handler implements MessageHandler {
 	public String getLastUpdateInOLIS() {
 		try {
 			String date = getString(terser.get("/.OBR-22-1"));			
-			return formatDateTime(date);
+			if(date.length()>0)
+				return formatDateTime(date);
+			return "";
 		} catch (HL7Exception e) {
 			MiscUtils.getLogger().error("OLIS HL7 Error", e);
 			return "";
@@ -2236,7 +2238,7 @@ public class OLISHL7Handler implements MessageHandler {
     }
     
     protected String formatDateTime(String plain){
-        String offset = "";
+    	String offset = "";
         if (plain.length() > 14) { 
         	offset = plain.substring(14,19);
         	plain= plain.substring(0,14);

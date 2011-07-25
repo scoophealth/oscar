@@ -843,6 +843,9 @@
         <action input="/olis/Results.jsp" path="/olis/AddToInbox" scope="request" type="org.oscarehr.olis.OLISAddToInboxAction">
         	<forward name="ajax" path="/olis/ajaxResponse.jsp" />
         </action>
+        <action input="/olis/Simulate.jsp" path="/olis/UploadSimulationData" scope="request" type="org.oscarehr.olis.OLISUploadSimulationDataAction">
+        	<forward name="success" path="/olis/Simulate.jsp" />
+        </action>
 		<action input="/CMLDisplay.jsp" path="/lab/CA/ON/Forward" scope="request" type="oscar.oscarMDS.pageUtil.ReportReassignAction">
 			<forward name="failure" path="/errorpage.jsp" />
 			<forward name="success" path="/lab/CA/ON/CMLDisplay.jsp" />

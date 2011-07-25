@@ -433,7 +433,7 @@ for (Object d : allDemographics) {
 						<option value="E"> Expired  </option>
 						</select></td>
 						<th width="20%">Test Result Code (max. 200)</th>
-						<td><input type="text"><br><select multiple="multiple" style="width:300px;" name="testResultCode" id="testResultCode">
+						<td><select multiple="multiple" style="width:300px;" name="testResultCode" id="testResultCode">
 						<%
 						
 						for (OLISResultNomenclature nomenclature : resultNomenclatureList) {
@@ -444,7 +444,7 @@ for (Object d : allDemographics) {
 						%>
 						</select></td>
 						<th width="20%">Test Request Code (max. 100)</th>
-						<td><input type="text"><br><select multiple="multiple" style="width:300px;" name="testRequestCode" id="testRequestCode">
+						<td><select multiple="multiple" style="width:300px;" name="testRequestCode" id="testRequestCode">
 						<%
 						
 						for (OLISRequestNomenclature nomenclature : requestNomenclatureList) {
@@ -458,9 +458,10 @@ for (Object d : allDemographics) {
 				</tbody></table>
 			</td>
 		</tr>
+		
 		<tr>
 			<td colspan=2><input type="submit" name="submit" value="Search" /></td>
-		</tr>	
+		</tr>			
 	</tbody></table>
 	</form>
 
@@ -756,6 +757,13 @@ for (Object d : allDemographics) {
 	</form>
 	
 	
+	
+	<oscar:oscarPropertiesCheck value="yes" property="olis_simulate">
+
+		<iframe src="Simulate.jsp" width="500" heigh="300" frameborder="0" scrolling="no"></iframe>	
+
+	</oscar:oscarPropertiesCheck>
+		
 			</td>
 		</tr>
 	</tbody></table>
