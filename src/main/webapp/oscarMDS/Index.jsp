@@ -208,6 +208,7 @@ Event.observe(window,'scroll',function(){//check for scrolling
                                 <%= (request.getParameter("hnum") == null ? "" : "<input type=\"hidden\" name=\"hnum\" value=\""+request.getParameter("hnum")+"\">") %>
                                 <input type="hidden" name="status" value="<%= ackStatus %>">
                                 <input type="hidden" name="selectedProviders">
+                                <input type="hidden" name="favorites" value="" />
                                 <% if (demographicNo == null) { %>
                                     <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnSearch"/>" onClick="window.location='<%=ctx%>/oscarMDS/Search.jsp?providerNo=<%= providerNo %>'">
                                 <% } %>

@@ -38,6 +38,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarProvider.data.ProviderData;
 /**
@@ -53,6 +54,8 @@ public class SearchProviderAutoCompleteAction extends Action{
         if(searchStr==null){
             searchStr=request.getParameter("name");
         }
+        
+        MiscUtils.getLogger().info("Search Provider " + searchStr);
         List provList=ProviderData.searchProvider(searchStr,true);
         Hashtable d=new Hashtable();
         d.put("results", provList);
