@@ -1356,7 +1356,7 @@ function checkSelected() {
         }
     }
     if (aBoxIsChecked) {
-        popupStart(300, 400, '../oscarMDS/SelectProvider.jsp', 'providerselect');
+        popupStart(397, 700, '../oscarMDS/SelectProvider.jsp', 'providerselect');
     } else {
         alert(msgSelectOneLab);
     }

@@ -120,8 +120,9 @@ function linkreq(rptId, reqId) {
 <form name="reassignForm" method="post" action="Forward.do"><input
 	type="hidden" name="flaggedLabs"
 	value="<%= segmentID %>" /> <input
-	type="hidden" name="selectedProviders" value="" /> <input
-	type="hidden" name="labType" value="CML" /> <input type="hidden"
+	type="hidden" name="selectedProviders" value="" />
+	<input type="hidden" name="favorites" value="" />
+	 <input type="hidden" name="labType" value="CML" /> <input type="hidden"
 	name="labType<%= segmentID %>CML"
 	value="imNotNull" /> <input type="hidden" name="providerNo"
 	value="<%= request.getParameter("providerNo") %>" /></form>
@@ -147,7 +148,7 @@ function linkreq(rptId, reqId) {
 					onclick="return getComment();"> <% } %> <input type="button"
 					class="smallButton"
 					value="<bean:message key="oscarMDS.index.btnForward"/>"
-					onClick="popupStart(300, 400, '../../../oscarMDS/SelectProvider.jsp', 'providerselect')">
+					onClick="popupStart(397, 700, '../../../oscarMDS/SelectProvider.jsp', 'providerselect')">
 				<input type="button" value=" <bean:message key="global.btnClose"/> "
 					onClick="window.close()"> <input type="button"
 					value=" <bean:message key="global.btnPrint"/> "
@@ -575,7 +576,7 @@ function linkreq(rptId, reqId) {
 					onclick="getComment()"> <% } %> <input type="button"
 					class="smallButton"
 					value="<bean:message key="oscarMDS.index.btnForward"/>"
-					onClick="popupStart(300, 400, '../../../oscarMDS/SelectProvider.jsp', 'providerselect')">
+					onClick="popupStart(397, 700, '../../../oscarMDS/SelectProvider.jsp', 'providerselect')">
 				<input type="button" value=" <bean:message key="global.btnClose"/> "
 					onClick="window.close()"> <input type="button"
 					value=" <bean:message key="global.btnPrint"/> "

@@ -25,6 +25,7 @@ package oscar.oscarMDS.pageUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -35,8 +36,12 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarLab.ca.on.CommonLabResultData;
+
+import org.oscarehr.common.dao.ProviderLabRoutingFavoritesDao;
+import org.oscarehr.common.model.ProviderLabRoutingFavorite;
 
 public class ReportReassignAction extends Action {
     
@@ -57,6 +62,7 @@ public class ReportReassignAction extends Action {
         
         String[] flaggedLabs = request.getParameterValues("flaggedLabs");
         String selectedProviders = request.getParameter("selectedProviders");
+        String newFavorites = request.getParameter("favorites");
        // String labType = request.getParameter("labType");
         String ajax=request.getParameter("ajax");
         //Hashtable htable = new Hashtable();
@@ -89,7 +95,58 @@ public class ReportReassignAction extends Action {
         String newURL = "";
        // MiscUtils.getLogger().info(listFlaggedLabs.size());
         try {
-            CommonLabResultData.updateLabRouting(listFlaggedLabs, selectedProviders);
+        	//Only route if there are selected providers
+        	if( !("".equals(selectedProviders) || selectedProviders == null)) {
+        		CommonLabResultData.updateLabRouting(listFlaggedLabs, selectedProviders);
+        	}
+        	//update favorites
+        	ProviderLabRoutingFavoritesDao favDao = (ProviderLabRoutingFavoritesDao)SpringUtils.getBean("ProviderLabRoutingFavoritesDao");
+        	String user = (String)request.getSession().getAttribute("user");
+        	List<ProviderLabRoutingFavorite>currentFavorites = favDao.findFavorites(user);
+        	
+        	if( "".equals(newFavorites) ) {
+        		for( ProviderLabRoutingFavorite fav : currentFavorites ) {
+        			favDao.remove(fav.getId());
+        		}
+        	}
+        	else {
+        		String[] arrNewFavs = newFavorites.split(",");
+        		
+        		//Check for new favorites to add
+        		boolean isNew;
+        		for( int idx = 0; idx < arrNewFavs.length; ++idx ) {
+        			isNew = true;
+        			for( ProviderLabRoutingFavorite fav : currentFavorites ) {
+        				if( fav.getRoute_to_provider_no().equals(arrNewFavs[idx])) {
+        					isNew = false;
+        					break;
+        				}
+        			}
+        			if( isNew ) {
+        				ProviderLabRoutingFavorite newFav = new ProviderLabRoutingFavorite();
+        				newFav.setProvider_no(user);
+        				newFav.setRoute_to_provider_no(arrNewFavs[idx]);
+        				favDao.persist(newFav);
+        			}
+        		}
+        		
+        		//check for favorites to remove
+        		boolean remove;
+        		for( ProviderLabRoutingFavorite fav : currentFavorites ) {
+        			remove = true;
+        			for( int idx2 = 0; idx2 < arrNewFavs.length; ++idx2 ) {
+        				if( fav.getRoute_to_provider_no().equals(arrNewFavs[idx2])) {
+        					remove = false;
+        					break;
+        				}
+        			}
+        			if( remove ) {
+        				favDao.remove(fav.getId());
+        			}
+        		}
+        		
+        	}
+        	
             newURL = mapping.findForward("success").getPath();
             if(newURL.contains("labDisplay.jsp"))
                 newURL = newURL + "?providerNo=" + providerNo + "&searchProviderNo=" + searchProviderNo + "&status=" + status + "&segmentID=" + flaggedLabs[0];
