@@ -32,4 +32,12 @@ public class HRMCategoryDao extends AbstractDao<HRMCategory> {
 		return documents;
 	}
 	
+	public HRMCategory findBySubClassNameMnemonic(String subClassNameMnemonic)
+	{
+		String sql = "select x from " + modelClass.getSimpleName() + " x where x.subClassNameMnemonic=?1";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter(1, subClassNameMnemonic);
+		return (HRMCategory) (query.getSingleResult());
+	}
+	
 }

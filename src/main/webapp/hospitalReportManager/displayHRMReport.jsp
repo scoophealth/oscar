@@ -1,3 +1,4 @@
+<%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@ page language="java" contentType="text/html" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -170,6 +171,8 @@ function makeActiveSubClass(reportId, subClassId) {
 				$("subclassstatus" + reportId).innerHTML = data;
 		}
 	});
+	
+	window.location.reload();
 }
 
 function addComment(reportId) {
@@ -370,20 +373,12 @@ function revokeSignOffHrm(reportId) {
 		</tr>
 		<% } %>
 		<tr>
-			<th>Categorization</th>
+			<th>Categorisation</th>
 			<td>
 				<%
-				HRMCategory category = (HRMCategory) request.getAttribute("category");
-				HRMSubClass subClassMapping = (HRMSubClass) request.getAttribute("subClassMapping");
-				if (category != null) {
-					%><abbr title="Categorized via Subclass: <%=subClassMapping.getSubClassName() %><%=(subClassMapping.getSubClassMnemonic() != null ? ", " + subClassMapping.getSubClassMnemonic() : "") %>">
-					<%=category.getCategoryName() %>
-					</abbr>
-				<%
-				} else {
+					HRMCategory category = (HRMCategory) request.getAttribute("category");
 				%>
-				<i>No Category</i>
-				<% } %>
+				<%=StringEscapeUtils.escapeHtml(category.getCategoryName())%>
 			</td>
 		</tr>
 		<tr>
