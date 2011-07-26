@@ -3,30 +3,36 @@ package oscar.oscarEncounter.pageUtil;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.log4j.Logger;
 import org.apache.struts.util.MessageResources;
+import org.oscarehr.hospitalReportManager.HRMReport;
+import org.oscarehr.hospitalReportManager.HRMReportParser;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentDao;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentToDemographicDao;
+import org.oscarehr.hospitalReportManager.model.HRMDocument;
+import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
-import java.util.List;
-
+import oscar.oscarLab.ca.on.HRMResultsData;
 import oscar.util.DateUtils;
 import oscar.util.OscarRoleObjectPrivilege;
 import oscar.util.StringUtils;
 
-import org.oscarehr.hospitalReportManager.model.HRMDocument;
-import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
-
 public class EctDisplayHRMAction extends EctDisplayAction {
 
+	private static Logger logger = MiscUtils.getLogger();
 	private static final String cmd = "HRM";
 	private HRMDocumentToDemographicDao hrmDocumentToDemographicDao = (HRMDocumentToDemographicDao) SpringUtils.getBean("HRMDocumentToDemographicDao");
 	private HRMDocumentDao hrmDocumentDao = (HRMDocumentDao) SpringUtils.getBean("HRMDocumentDao");
@@ -68,8 +74,18 @@ public class EctDisplayHRMAction extends EctDisplayAction {
 
 
 			List<Integer> doNotShowList = new LinkedList<Integer>();
-			List<HRMDocument> docsToDisplay = new LinkedList<HRMDocument>();
+			// the key = SendingFacility+':'+ReportNumber+':'+DeliverToUserID as per HRM spec can be used to signify duplicate report
+			HashMap<String,HRMDocument> docsToDisplay = new HashMap<String,HRMDocument>();
+			HashMap<String,HRMReport> labReports=new HashMap<String,HRMReport>();
+			HashMap<String,ArrayList<Integer>> duplicateLabIds=new HashMap<String,ArrayList<Integer>>();
 			for (HRMDocument doc : allHrmDocsForDemo) {
+				// filter duplicate reports
+				HRMReport hrmReport = HRMReportParser.parseReport(doc.getReportFile());
+				if (hrmReport == null) continue;
+				hrmReport.setHrmDocumentId(doc.getId());
+				String duplicateKey=hrmReport.getSendingFacilityId()+':'+hrmReport.getSendingFacilityReportNo()+':'+hrmReport.getDeliverToUserId();
+
+				
 				List<HRMDocument> relationshipDocs = hrmDocumentDao.findAllDocumentsWithRelationship(doc.getId());
 
 				HRMDocument oldestDocForTree = doc;
@@ -83,7 +99,7 @@ public class EctDisplayHRMAction extends EctDisplayAction {
 				}
 
 				boolean addToList = true;
-				for (HRMDocument displayDoc : docsToDisplay) {
+				for (HRMDocument displayDoc : docsToDisplay.values()) {
 					if (displayDoc.getId().intValue() == oldestDocForTree.getId().intValue()) {
 						addToList = false;
 					}
@@ -96,12 +112,52 @@ public class EctDisplayHRMAction extends EctDisplayAction {
 				}
 
 				if (addToList)
-					docsToDisplay.add(oldestDocForTree);
+				{
+					// if no duplicate
+					if (!docsToDisplay.containsKey(duplicateKey))
+					{
+						docsToDisplay.put(duplicateKey,oldestDocForTree);
+						labReports.put(duplicateKey, hrmReport);
+					}
+					else // there exists an entry like this one
+					{
+						HRMReport previousHrmReport=labReports.get(duplicateKey);
+						
+						logger.debug("Duplicate report found : previous="+previousHrmReport.getHrmDocumentId()+", current="+hrmReport.getHrmDocumentId());
+						
+						Integer duplicateIdToAdd;
+						
+						// if the current entry is newer than the previous one then replace it, other wise just keep the previous entry
+						if (HRMResultsData.isNewer(hrmReport, previousHrmReport))
+						{
+							HRMDocument previousHRMDocument = docsToDisplay.get(duplicateKey);
+							duplicateIdToAdd=previousHRMDocument.getId();
+							
+							docsToDisplay.put(duplicateKey,oldestDocForTree);
+							labReports.put(duplicateKey, hrmReport);
+						}
+						else
+						{
+							duplicateIdToAdd=doc.getId();
+						}
+
+						ArrayList<Integer> duplicateIds=duplicateLabIds.get(duplicateKey);
+						if (duplicateIds==null)
+						{
+							duplicateIds=new ArrayList<Integer>();
+							duplicateLabIds.put(duplicateKey, duplicateIds);
+						}
+						
+						duplicateIds.add(duplicateIdToAdd);						
+					}
+				}
 			}
 
-
-
-			for (HRMDocument hrmDocument : docsToDisplay) {
+			for (Map.Entry<String, HRMDocument> entry : docsToDisplay.entrySet()) {
+				
+				String duplicateKey=entry.getKey();
+				HRMDocument hrmDocument=entry.getValue();
+				
 				String reportStatus = hrmDocument.getReportStatus();
 				String dispFilename = hrmDocument.getReportType();
 				String dispDocNo    = hrmDocument.getId().toString();
@@ -133,7 +189,19 @@ public class EctDisplayHRMAction extends EctDisplayAction {
 				String user = (String) request.getSession().getAttribute("user");
 				item.setDate(date);
 				hash = Math.abs(winName.hashCode());
-				url = "popupPage(700,800,'" + hash + "', '" + request.getContextPath() + "/hospitalReportManager/Display.do?id="+dispDocNo+"');";
+
+				StringBuilder duplicateLabIdQueryString=new StringBuilder();
+				ArrayList<Integer> duplicateIdList=duplicateLabIds.get(duplicateKey);
+            	if (duplicateIdList!=null)
+            	{
+					for (Integer duplicateLabIdTemp : duplicateIdList)
+	            	{
+	            		if (duplicateLabIdQueryString.length()>0) duplicateLabIdQueryString.append(',');
+	            		duplicateLabIdQueryString.append(duplicateLabIdTemp);
+	            	}
+				}
+
+				url = "popupPage(700,800,'" + hash + "', '" + request.getContextPath() + "/hospitalReportManager/Display.do?id="+dispDocNo+"&duplicateLabIds="+duplicateLabIdQueryString+"');";
 
 				item.setLinkTitle(title + serviceDateStr);
 				item.setTitle(title);
@@ -159,6 +227,5 @@ public class EctDisplayHRMAction extends EctDisplayAction {
 	public String getCmd() {
 		return cmd;
 	}
-
 
 }
