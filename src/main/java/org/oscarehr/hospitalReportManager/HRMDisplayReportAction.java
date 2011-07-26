@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -23,12 +24,14 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentComment;
 import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 import org.oscarehr.hospitalReportManager.model.HRMDocumentToProvider;
-import org.oscarehr.hospitalReportManager.model.HRMSubClass;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class HRMDisplayReportAction extends DispatchAction {
 
+	private static Logger logger=MiscUtils.getLogger();
+	
 	HRMDocumentDao hrmDocumentDao = (HRMDocumentDao) SpringUtils.getBean("HRMDocumentDao");
 	HRMDocumentToDemographicDao hrmDocumentToDemographicDao = (HRMDocumentToDemographicDao) SpringUtils.getBean("HRMDocumentToDemographicDao");
 	HRMDocumentToProviderDao hrmDocumentToProviderDao = (HRMDocumentToProviderDao) SpringUtils.getBean("HRMDocumentToProviderDao");
@@ -45,8 +48,9 @@ public class HRMDisplayReportAction extends DispatchAction {
                     HRMDocument document = hrmDocumentDao.findById(Integer.parseInt(hrmDocumentId)).get(0);
 
                     if (document != null) {
+                        logger.debug("reading repotFile : "+document.getReportFile());
                         HRMReport report = HRMReportParser.parseReport(document.getReportFile());
-
+                        
                         request.setAttribute("hrmDocument", document);
 
                         if (report != null) {
@@ -74,31 +78,29 @@ public class HRMDisplayReportAction extends DispatchAction {
                                 hrmDocumentToProviderDao.merge(thisProviderLink);
                             }
 
+                            HRMDocumentSubClass hrmDocumentSubClass=null;
+                            if (subClassList!= null)
+                            {
+                            	for (HRMDocumentSubClass temp : subClassList)
+                            	{
+                            		if (temp.isActive())
+                            		{
+                            			hrmDocumentSubClass=temp;
+                            			break;
+                            		}
+                            	}
+                            }
+                            
                             HRMCategory category = null;
-                            HRMSubClass thisReportSubClassMapping = null;
-
-                            if (report.getFirstReportClass().equalsIgnoreCase("Diagnostic Imaging Report") || report.getFirstReportClass().equalsIgnoreCase("Cardio Respiratory Report")) {
-                                if (subClassList != null && subClassList.size() > 0) {
-                                    HRMDocumentSubClass subClass = null;
-                                    for (HRMDocumentSubClass sc : subClassList) {
-                                        if (sc.isActive())
-                                            subClass = sc;
-                                    }
-                                    if (subClass != null)
-                                        thisReportSubClassMapping = hrmSubClassDao.findApplicableSubClassMapping(report.getFirstReportClass(), subClass.getSubClass(), subClass.getSubClassMnemonic(), report.getSendingFacilityId());
-                                }
-                            } else {
-                                // Medical records report
-                                String[] reportSubClass = report.getFirstReportSubClass().split("\\^");
-                                thisReportSubClassMapping = hrmSubClassDao.findApplicableSubClassMapping(report.getFirstReportClass(), reportSubClass[0], null, report.getSendingFacilityId());
+                            if (hrmDocumentSubClass != null) {
+                                category = hrmCategoryDao.findBySubClassNameMnemonic(hrmDocumentSubClass.getSubClass()+':'+hrmDocumentSubClass.getSubClassMnemonic());
                             }
-
-                            if (thisReportSubClassMapping != null) {
-                                category = thisReportSubClassMapping.getHrmCategory();
+                            else
+                            {
+                            	category=hrmCategoryDao.findBySubClassNameMnemonic("DEFAULT");
                             }
-
-                            request.setAttribute("category", category);
-                            request.setAttribute("subClassMapping", thisReportSubClassMapping);
+                            
+                            request.setAttribute("category", category);                            
 
                             // Get all the other HRM documents that are either a child, sibling, or parent
                             List<HRMDocument> allDocumentsWithRelationship = hrmDocumentDao.findAllDocumentsWithRelationship(document.getId());

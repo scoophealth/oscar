@@ -12,11 +12,11 @@ import org.oscarehr.common.model.AbstractModel;
 
 @Entity
 public class HRMDocument extends AbstractModel<Integer> {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	
+
 	private Date timeReceived;
 	private String reportType;
 	private String reportHash;
@@ -24,129 +24,134 @@ public class HRMDocument extends AbstractModel<Integer> {
 	private String reportLessDemographicInfoHash;
 	private String reportStatus;
 	private String reportFile;
-	
+
 	private String unmatchedProviders;
 	private Integer numDuplicatesReceived;
 	private Date reportDate;
-	
+
 	private Integer parentReport;
-	
+
+	private Integer hrmCategoryId;
+
 	@Override
-    public Integer getId() {
-	    return id;
-    }
+	public Integer getId() {
+		return id;
+	}
 
 	public Date getTimeReceived() {
-    	return timeReceived;
-    }
+		return timeReceived;
+	}
 
 	public void setTimeReceived(Date timeReceived) {
-    	this.timeReceived = timeReceived;
-    }
+		this.timeReceived = timeReceived;
+	}
 
 	public String getReportType() {
-    	return reportType;
-    }
+		return reportType;
+	}
 
 	public void setReportType(String reportType) {
-    	this.reportType = reportType;
-    }
+		this.reportType = reportType;
+	}
 
 	public String getReportHash() {
-    	return reportHash;
-    }
+		return reportHash;
+	}
 
 	public void setReportHash(String reportHash) {
-    	this.reportHash = reportHash;
-    }
+		this.reportHash = reportHash;
+	}
 
 	public String getReportLessTransactionInfoHash() {
-    	return reportLessTransactionInfoHash;
-    }
+		return reportLessTransactionInfoHash;
+	}
 
 	public void setReportLessTransactionInfoHash(String reportLessTransactionInfoHash) {
-    	this.reportLessTransactionInfoHash = reportLessTransactionInfoHash;
-    }
+		this.reportLessTransactionInfoHash = reportLessTransactionInfoHash;
+	}
 
 	public String getReportLessDemographicInfoHash() {
-    	return reportLessDemographicInfoHash;
-    }
+		return reportLessDemographicInfoHash;
+	}
 
 	public void setReportLessDemographicInfoHash(String reportLessDemographicInfoHash) {
-    	this.reportLessDemographicInfoHash = reportLessDemographicInfoHash;
-    }
+		this.reportLessDemographicInfoHash = reportLessDemographicInfoHash;
+	}
 
 	public String getReportStatus() {
-    	return reportStatus;
-    }
+		return reportStatus;
+	}
 
 	public void setReportStatus(String reportStatus) {
-    	this.reportStatus = reportStatus;
-    }
+		this.reportStatus = reportStatus;
+	}
 
 	public String getReportFile() {
-    	return reportFile;
-    }
+		return reportFile;
+	}
 
 	public void setReportFile(String reportFile) {
-    	this.reportFile = reportFile;
-    }
+		this.reportFile = reportFile;
+	}
 
 	public String getUnmatchedProviders() {
-    	return unmatchedProviders;
-    }
+		return unmatchedProviders;
+	}
 
 	public void setUnmatchedProviders(String unmatchedProviders) {
-    	this.unmatchedProviders = unmatchedProviders;
-    }
+		this.unmatchedProviders = unmatchedProviders;
+	}
 
 	public Integer getNumDuplicatesReceived() {
-    	return numDuplicatesReceived;
-    }
+		return numDuplicatesReceived;
+	}
 
 	public void setNumDuplicatesReceived(Integer numDuplicatesReceived) {
-    	this.numDuplicatesReceived = numDuplicatesReceived;
-    }
+		this.numDuplicatesReceived = numDuplicatesReceived;
+	}
 
 	public Date getReportDate() {
-    	return reportDate;
-    }
+		return reportDate;
+	}
 
 	public void setReportDate(Date reportDate) {
-    	this.reportDate = reportDate;
-    }
-	
-	
+		this.reportDate = reportDate;
+	}
+
 	public Integer getParentReport() {
-    	return parentReport;
-    }
+		return parentReport;
+	}
 
 	public void setParentReport(Integer parentReport) {
-    	this.parentReport = parentReport;
-    }
+		this.parentReport = parentReport;
+	}
 
+	public Integer getHrmCategoryId() {
+		return (hrmCategoryId);
+	}
+
+	public void setHrmCategoryId(Integer hrmCategoryId) {
+		this.hrmCategoryId = hrmCategoryId;
+	}
 
 	/**
 	 * This comparator sorts HRM Docs ascending based on the time received
 	 */
-	public static final Comparator<HRMDocument> HRM_DATE_COMPARATOR=new Comparator<HRMDocument>()
-	{
+	public static final Comparator<HRMDocument> HRM_DATE_COMPARATOR = new Comparator<HRMDocument>() {
 		@Override
-        public int compare(HRMDocument o1, HRMDocument o2) {
-			return(o1.timeReceived.compareTo(o2.timeReceived));
-		}	
+		public int compare(HRMDocument o1, HRMDocument o2) {
+			return (o1.timeReceived.compareTo(o2.timeReceived));
+		}
 	};
 
 	/**
 	 * This comparator sorts EFormData ascending based on the formName
 	 */
-	public static final Comparator<HRMDocument> HRM_TYPE_COMPARATOR=new Comparator<HRMDocument>()
-	{
+	public static final Comparator<HRMDocument> HRM_TYPE_COMPARATOR = new Comparator<HRMDocument>() {
 		@Override
-        public int compare(HRMDocument o1, HRMDocument o2) {
-			return(o1.reportType.compareTo(o2.reportType));
-		}	
+		public int compare(HRMDocument o1, HRMDocument o2) {
+			return (o1.reportType.compareTo(o2.reportType));
+		}
 	};
 
-	
 }

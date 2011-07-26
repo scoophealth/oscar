@@ -59,7 +59,6 @@ public class OscarLogDao extends AbstractDao<OscarLog> {
 		query.setParameter(2, content);
 		query.setParameter(3, contentId);
 		
-
 	    @SuppressWarnings("unchecked")
 		List<OscarLog> results=query.getResultList();
 	    if(results.size() == 0){

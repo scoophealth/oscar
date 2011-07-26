@@ -1553,13 +1553,13 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 
                 //HRM reports
                 HRMDocumentToDemographicDao hrmDocToDemographicDao = (HRMDocumentToDemographicDao) SpringUtils.getBean("HRMDocumentToDemographicDao");
-                HRMDocumentDao hrmDocDao = (HRMDocumentDao) SpringUtils.getBean("HRMDocumentDao");
+                HRMDocumentDao hrmDocumentDao = (HRMDocumentDao) SpringUtils.getBean("HRMDocumentDao");
                 HRMDocumentSubClassDao hrmDocSubClassDao = (HRMDocumentSubClassDao) SpringUtils.getBean("HRMDocumentSubClassDao");
 
                 List<HRMDocumentToDemographic> hrmDocToDemographics = hrmDocToDemographicDao.findByDemographicNo(demoNo);
                 for (HRMDocumentToDemographic hrmDocToDemographic : hrmDocToDemographics) {
                     String hrmDocumentId = hrmDocToDemographic.getHrmDocumentId();
-                    List<HRMDocument> hrmDocs = hrmDocDao.findById(Integer.valueOf(hrmDocumentId));
+                    List<HRMDocument> hrmDocs = hrmDocumentDao.findById(Integer.valueOf(hrmDocumentId));
                     for (HRMDocument hrmDoc : hrmDocs) {
                         String reportFile = hrmDoc.getReportFile();
                         if (StringUtils.empty(reportFile)) continue;
