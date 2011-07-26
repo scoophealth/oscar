@@ -28,6 +28,7 @@
 package oscar.oscarLab.ca.on;
 
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 
@@ -84,6 +85,8 @@ public class LabResultData implements Comparable{
 	private Integer ackCount = null;
 	private Integer multiplAckCount = null;
 	private Integer remoteFacilityId=null;
+	
+	private ArrayList<Integer> duplicateLabIds=new ArrayList<Integer>();
 	
     public LabResultData() {
     }
@@ -406,7 +409,9 @@ public class LabResultData implements Comparable{
 	public void setRemoteFacilityId(Integer remoteFacilityId) {
     	this.remoteFacilityId = remoteFacilityId;
     }
-	
-	
+
+	public ArrayList<Integer> getDuplicateLabIds() {
+    	return (duplicateLabIds);
+    }
 }
 
