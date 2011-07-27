@@ -103,6 +103,7 @@ import cds.PatientRecordDocument.PatientRecord;
 import cds.ProblemListDocument.ProblemList;
 import cds.ReportsReceivedDocument.ReportsReceived;
 import cds.RiskFactorsDocument.RiskFactors;
+import java.util.Calendar;
 import java.util.HashMap;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
@@ -110,13 +111,11 @@ import org.oscarehr.common.dao.DemographicArchiveDao;
 import org.oscarehr.common.dao.DemographicContactDao;
 import org.oscarehr.common.model.DemographicArchive;
 import org.oscarehr.common.model.DemographicContact;
-import org.oscarehr.hospitalReportManager.HRMReport;
-import org.oscarehr.hospitalReportManager.HRMReportParser;
+import org.oscarehr.hospitalReportManager.dao.HRMDocumentCommentDao;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentDao;
-import org.oscarehr.hospitalReportManager.dao.HRMDocumentSubClassDao;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentToDemographicDao;
 import org.oscarehr.hospitalReportManager.model.HRMDocument;
-import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
+import org.oscarehr.hospitalReportManager.model.HRMDocumentComment;
 import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 import oscar.oscarRx.data.RxAllergyData.Allergy;
 
@@ -1473,7 +1472,6 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     EDoc edoc = (EDoc)edoc_list.get(j);
                     ReportsReceived rpr = patientRec.addNewReportsReceived();
                     rpr.setFormat(cdsDt.ReportFormat.TEXT);
-                    //rpr.setClass1(cdsDt.ReportClass.OTHER_LETTER);
 
                     File f = new File(edoc.getFilePath());
                     if (!f.exists()) {
@@ -1553,72 +1551,174 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 
                 //HRM reports
                 HRMDocumentToDemographicDao hrmDocToDemographicDao = (HRMDocumentToDemographicDao) SpringUtils.getBean("HRMDocumentToDemographicDao");
-                HRMDocumentDao hrmDocumentDao = (HRMDocumentDao) SpringUtils.getBean("HRMDocumentDao");
-                HRMDocumentSubClassDao hrmDocSubClassDao = (HRMDocumentSubClassDao) SpringUtils.getBean("HRMDocumentSubClassDao");
+                HRMDocumentDao hrmDocDao = (HRMDocumentDao) SpringUtils.getBean("HRMDocumentDao");
+                HRMDocumentCommentDao hrmDocCommentDao = (HRMDocumentCommentDao) SpringUtils.getBean("HRMDocumentCommentDao");
 
                 List<HRMDocumentToDemographic> hrmDocToDemographics = hrmDocToDemographicDao.findByDemographicNo(demoNo);
                 for (HRMDocumentToDemographic hrmDocToDemographic : hrmDocToDemographics) {
                     String hrmDocumentId = hrmDocToDemographic.getHrmDocumentId();
-                    List<HRMDocument> hrmDocs = hrmDocumentDao.findById(Integer.valueOf(hrmDocumentId));
+                    List<HRMDocument> hrmDocs = hrmDocDao.findById(Integer.valueOf(hrmDocumentId));
                     for (HRMDocument hrmDoc : hrmDocs) {
                         String reportFile = hrmDoc.getReportFile();
                         if (StringUtils.empty(reportFile)) continue;
 
-                        ReportsReceived rpr = patientRec.addNewReportsReceived();
-
-                        HRMReport report = HRMReportParser.parseReport(reportFile);
-                        if (report!=null) {
-                            rpr.setClass1(cdsDt.ReportClass.Enum.forString(report.getFirstReportClass()));
-                            if (report.getFirstReportSubClass()!=null) rpr.setSubClass(report.getFirstReportSubClass());
-                            if (report.getFirstReportTextContent()!=null) {
-                                rpr.addNewContent().setTextContent(report.getFirstReportTextContent());
-                            }
-                            if (report.getResultStatus()!=null) rpr.setHRMResultStatus(report.getResultStatus());
-                            if (report.getMessageUniqueId()!=null) rpr.setMessageUniqueID(report.getMessageUniqueId());
-                            if (report.getSendingFacilityId()!=null) rpr.setSendingFacilityId(report.getSendingFacilityId());
-                            if (report.getSendingFacilityReportNo()!=null) {
-                                rpr.setSendingFacilityReport(report.getSendingFacilityReportNo());
-                            }
-                            if (report.getFirstReportEventTime()!=null) {
-                                rpr.addNewEventDateTime().setFullDateTime(report.getFirstReportEventTime());
-                            }
-                        } else {
-                            rpr.setClass1(cdsDt.ReportClass.MEDICAL_RECORD_REPORT);
-
-                            File f = new File(reportFile);
-                            if (f.exists()) {
-                                InputStream in = null;
-                            try{
-                                in = new FileInputStream(f);
-                                byte[] b = new byte[(int)f.length()];
-
-                                int offset=0, numRead=0;
-                                while ((numRead=in.read(b,offset,b.length-offset)) >= 0
-                                       && offset < b.length) offset += numRead;
-
-                                if (offset < b.length) throw new IOException("Could not completely read file " + f.getName());
-                                in.close();
-                                rpr.addNewContent().setTextContent(new String(b));
-                            }
-                            catch (Exception ex) {
-                                logger.error("File InputStream Error", ex);
-                            } finally {
-                                in.close();
-                            }
-                            }
+                        File hrmFile = new File(reportFile);
+                        if (!hrmFile.exists()) {
+                            err.add("Error! HRM report file '"+reportFile+"' not exists! HRM report not exported.");
+                            continue;
                         }
-                        
-                        rpr.setFileExtensionAndVersion(".xml");
-                        rpr.setFormat(cdsDt.ReportFormat.TEXT);
-                        rpr.addNewReceivedDateTime().setFullDateTime(Util.calDate(hrmDoc.getTimeReceived()));
 
-                        List<HRMDocumentSubClass> hrmDocScs = hrmDocSubClassDao.getSubClassesByDocumentId(Integer.valueOf(hrmDocumentId));
-                        for (HRMDocumentSubClass hrmDocSc : hrmDocScs) {
-                            ReportsReceived.OBRContent obr = rpr.addNewOBRContent();
-                            obr.setAccompanyingSubClass(hrmDocSc.getSubClass());
-                            obr.setAccompanyingDescription(hrmDocSc.getSubClassDescription());
-                            obr.setAccompanyingMnemonic(hrmDocSc.getSubClassMnemonic());
-                            obr.addNewObservationDateTime().setFullDateTime(Util.calDate(hrmDocSc.getSubClassDateTime()));
+                        ReadHRMFile hrm = new ReadHRMFile(reportFile);
+                        for (int i=0; i<hrm.getReportsReceivedTotal(); i++) {
+                            ReportsReceived rpr = patientRec.addNewReportsReceived();
+
+                            //Message Unique ID
+                            if (hrm.getTransactionMessageUniqueID(i)!=null) rpr.setMessageUniqueID(hrm.getTransactionMessageUniqueID(i));
+                            
+                            HashMap<String,String> reportAuthor = hrm.getReportAuthorPhysician(i);
+                            HashMap<String,Object> reportContent = hrm.getReportContent(i);
+                            HashMap<String,String> reportStrings = hrm.getReportStrings(i);
+                            HashMap<String,Calendar> reportDates = hrm.getReportDates(i);
+
+                            if (reportAuthor!=null) {
+                                cdsDt.PersonNameSimple author = rpr.addNewSourceAuthorPhysician().addNewAuthorName();
+                                author.setFirstName(reportAuthor.get("firstname"));
+                                author.setLastName(reportAuthor.get("lastname"));
+                            }
+
+                            if (reportContent!=null) {
+                                if (reportContent!=null) {
+                                    if (reportContent.get("textcontent")!=null) {
+                                        cdsDt.ReportContent content = rpr.addNewContent();
+                                        content.setTextContent((String)reportContent.get("textcontent"));
+                                    } else if (reportContent.get("media")!=null) {
+                                        cdsDt.ReportContent content = rpr.addNewContent();
+                                        content.setMedia((byte[])reportContent.get("media"));
+                                    }
+                                }
+                            }
+
+                            String reviewerId = null;
+                            Calendar reviewDate = null;
+
+                            if (reportStrings!=null) {
+                                //Format
+                                if (reportStrings.get("format")!=null) {
+                                    if (reportStrings.get("format").equalsIgnoreCase("Text")) {
+                                        rpr.setFormat(cdsDt.ReportFormat.TEXT);
+                                    } else {
+                                        rpr.setFormat(cdsDt.ReportFormat.BINARY);
+                                    }
+                                } else {
+                                    if (rpr.getContent().getMedia()!=null) rpr.setFormat(cdsDt.ReportFormat.BINARY);
+                                    else rpr.setFormat(cdsDt.ReportFormat.TEXT);
+                                    err.add("Error! No Format for HRM report! Patient "+demoNo+" ("+(i+1)+")");
+                                }
+
+                                //Class
+                                if (reportStrings.get("class")!=null) {
+                                    rpr.setClass1(cdsDt.ReportClass.Enum.forString(reportStrings.get("class")));
+                                } else {
+                                    rpr.setClass1(cdsDt.ReportClass.OTHER_LETTER);
+                                    err.add("Error! No Class for HRM report! Export as 'Other Letter'. Patient "+demoNo+" ("+(i+1)+")");
+                                }
+
+                                //Subclass
+                                if (reportStrings.get("subclass")!=null) {
+                                    rpr.setSubClass(reportStrings.get("subclass"));
+                                }
+
+                                //File extension & version
+                                if (reportStrings.get("fileextension&version")!=null) {
+                                    rpr.setFileExtensionAndVersion(reportStrings.get("fileextension&version"));
+                                }
+
+                                //Media
+                                if (reportStrings.get("media")!=null) {
+                                    rpr.setMedia(cdsDt.ReportMedia.Enum.forString(reportStrings.get("media")));
+                                }
+
+                                //HRM Result Status
+                                if (reportStrings.get("resultstatus")!=null) {
+                                    rpr.setHRMResultStatus(reportStrings.get("resultstatus"));
+                                }
+
+                                //Sending Facility ID
+                                if (reportStrings.get("sendingfacility")!=null) {
+                                    rpr.setSendingFacilityId(reportStrings.get("sendingfacility"));
+                                }
+
+                                //Sending Facility Report Number
+                                if (reportStrings.get("sendingfacilityreportnumber")!=null) {
+                                    rpr.setSendingFacilityReport(reportStrings.get("sendingfacilityreportnumber"));
+                                }
+
+                                //Reviewing OHIP Physician ID
+                                reviewerId = reportStrings.get("reviewingohipphysicianid");
+                            }
+
+                            //report dates
+                            if (reportDates!=null) {
+                                if (reportDates.get("eventdatetime")!=null) {
+                                    rpr.addNewEventDateTime().setFullDateTime(reportDates.get("eventdatetime"));
+                                }
+                                if (reportDates.get("receiveddatetime")!=null) {
+                                    rpr.addNewReceivedDateTime().setFullDateTime(reportDates.get("receiveddatetime"));
+                                }
+                                reviewDate = reportDates.get("revieweddatetime");
+                            }
+
+                            //Source Facility
+                            if (hrmDoc.getSourceFacility()!=null) {
+                                rpr.setSourceFacility(hrmDoc.getSourceFacility());
+                            }
+
+                            //reviewing info
+                            if (reviewerId!=null && reviewDate!=null) {
+                                ReportsReceived.ReportReviewed reviewed = rpr.addNewReportReviewed();
+                                reviewed.addNewName();
+                                reviewed.setReviewingOHIPPhysicianId(reviewerId);
+                                reviewed.addNewDateTimeReportReviewed().setFullDate(reviewDate);
+                            }
+
+                            //Notes
+                            List<HRMDocumentComment> comments = hrmDocCommentDao.getCommentsForDocument(hrmDocumentId);
+                            String notes = null;
+                            for (HRMDocumentComment comment : comments) {
+                                notes = Util.addLine(notes, comment.getComment());
+                            }
+                            if (StringUtils.filled(notes)) rpr.setNotes(notes);
+
+                            //OBR Content
+                            for (int j=0; j<hrm.getReportOBRContentTotal(i); j++) {
+                                HashMap<String,String> obrStrings = hrm.getReportOBRStrings(i, j);
+                                Calendar obrObservationDateTime = hrm.getReportOBRObservationDateTime(i, j);
+
+                                ReportsReceived.OBRContent obrContent = rpr.addNewOBRContent();
+
+                                if (obrStrings!=null) {
+
+                                    //Accompanying Description
+                                    if (obrStrings.get("accompanyingdescription")!=null) {
+                                        obrContent.setAccompanyingDescription(obrStrings.get("accompanyingdescription"));
+                                    }
+
+                                    //Accompanying Mnemonic
+                                    if (obrStrings.get("accompanyingmnemonic")!=null) {
+                                        obrContent.setAccompanyingMnemonic(obrStrings.get("accompanyingmnemonic"));
+                                    }
+
+                                    //Accompanying Subclass
+                                    if (obrStrings.get("accompanyingsubclass")!=null) {
+                                        obrContent.setAccompanyingSubClass(obrStrings.get("accompanyingsubclass"));
+                                    }
+                                }
+
+                                //OBR Observation Datetime
+                                if (obrObservationDateTime!=null) {
+                                    obrContent.addNewObservationDateTime().setFullDateTime(obrObservationDateTime);
+                                }
+                            }
                         }
                     }
                 }
@@ -2217,9 +2317,6 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
         } else {
             dfp.setFullDate(Util.calDate(cme.getDateValue()));
         }
-    }
-
-    public DemographicExportAction4() {
     }
     
     /**
