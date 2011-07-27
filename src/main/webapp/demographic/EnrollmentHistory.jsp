@@ -99,8 +99,9 @@
 						<td width="100%"><!--<div class="Step1Text" style="width:100%">-->
 						<table width="100%" cellpadding="3">
 							<tr>
-								<th align="left" width="50%" nowrap="nowrap"><b>Date</b></th>
+								<th align="left" width="50%" nowrap="nowrap"><b>Date Changed</b></th>
 								<th align="left" width="50%" nowrap="nowrap"><b>Roster Status</b></th>
+								<th align="left" width="50%" nowrap="nowrap"><b>Date</b></th>
 								<th align="left" width="50%" nowrap="nowrap"><b>Rostered To</b></th>
 								<th align="left" width="50%" nowrap="nowrap"><b>Updated By</b></th>
 								<th align="left" width="50%" nowrap="nowrap"></th>											
@@ -109,6 +110,12 @@
 							<tr>
 								<td nowrap="nowrap"><%=DateUtils.formatDate(demographic.getLastUpdateDate(),request.getLocale())%></td>
 								<td nowrap="nowrap"><%=viewRS(demographic.getRosterStatus())%></td>
+								
+								<%if("RO".equals(demographic.getRosterStatus() )){ %>
+									<td nowrap="nowrap"><%=DateUtils.formatDate(demographic.getRosterDate(),request.getLocale())%></td>
+								<%}else if( demographic.getRosterStatus() != null && !demographic.getRosterStatus().trim().equals("")){ %>
+									<td nowrap="nowrap"><%=DateUtils.formatDate(demographic.getRosterTerminationDate(),request.getLocale())%></td>
+								<%}%>
 								<td nowrap="nowrap"><%=(demographic.getProviderNo().length()>0 && demographic.getRosterStatus().equals("RO"))?providerDao.getProvider(demographic.getProviderNo()).getFormattedName():"" %></td>
 								<td nowrap="nowrap"><%=providerDao.getProvider(demographic.getLastUpdateUser()).getFormattedName() %></td>
 								<td nowrap="nowrap">(Current)</td>
@@ -125,12 +132,18 @@
 					                	<tr>
 					                		<td nowrap="nowrap"><%=DateUtils.formatDate(da.getLastUpdateDate(),request.getLocale())%></td>
 					                		<td nowrap="nowrap"><%=viewRS(historyRS)%></td>
+					                		<%if("RO".equals(historyRS)){ %>
+												<td nowrap="nowrap"><%=DateUtils.formatDate(da.getRosterDate(),request.getLocale())%></td>
+											<%}else if( historyRS != null && !historyRS.trim().equals("")){ %>
+												<td nowrap="nowrap"><%=DateUtils.formatDate(da.getRosterTerminationDate(),request.getLocale())%></td>
+											<%}%>
 					                		<td nowrap="nowrap"><%=(da.getProviderNo().length()>0 && historyRS.equals("RO"))?providerDao.getProvider(da.getProviderNo()).getFormattedName():"" %></td>
 					                		<td nowrap="nowrap"><%=providerDao.getProvider(da.getLastUpdateUser()).getFormattedName() %></td>
 					                		<td></td>
 					                	</tr>					                	
 					                <%
 								}
+								
 								
 								
 							%>
