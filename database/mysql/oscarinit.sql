@@ -8463,7 +8463,8 @@ CREATE TABLE `HRMDocument` (
   `reportDate` datetime ,
   `parentReport` int(11) ,
   `reportLessDemographicInfoHash` varchar(64) ,
-  hrmCategoryId int,
+  `sourceFacility` varchar(120) ,
+  `hrmCategoryId` int ,
   PRIMARY KEY (`id`)
 ) ;
 

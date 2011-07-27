@@ -85,7 +85,6 @@ import org.oscarehr.hospitalReportManager.dao.HRMDocumentDao;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentSubClassDao;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentToDemographicDao;
 import org.oscarehr.hospitalReportManager.model.HRMDocument;
-import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -124,6 +123,9 @@ import cds.PersonalHistoryDocument.PersonalHistory;
 import cds.ProblemListDocument.ProblemList;
 import cds.ReportsReceivedDocument.ReportsReceived;
 import cds.RiskFactorsDocument.RiskFactors;
+import org.oscarehr.hospitalReportManager.dao.HRMDocumentCommentDao;
+import org.oscarehr.hospitalReportManager.model.HRMDocumentComment;
+import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 
 /**
  *
@@ -355,8 +357,9 @@ import cds.RiskFactorsDocument.RiskFactors;
 
         //Check duplicate
         DemographicData dd = new DemographicData();
-        ArrayList demodup = dd.getDemographicWithHIN(hin);
-        if (demodup.isEmpty()) demodup = dd.getDemographicWithLastFirstDOB(lastName, firstName, birthDate);
+        ArrayList demodup = null;
+        if (StringUtils.filled(hin)) demodup = dd.getDemographicWithHIN(hin);
+        else demodup = dd.getDemographicWithLastFirstDOB(lastName, firstName, birthDate);
         if (demodup.size()>0) {
             err_data.clear();
             err_demo.add("Error! Patient "+patientName+" already exist! Not imported.");
@@ -471,13 +474,13 @@ import cds.RiskFactorsDocument.RiskFactors;
         if(student == null){
             Demographics.PrimaryPhysician demoPrimaryPhysician = demo.getPrimaryPhysician();
             if (demoPrimaryPhysician!=null) {
-                String[] personName = getPersonName(demoPrimaryPhysician.getName());
+                HashMap<String,String> personName = getPersonName(demoPrimaryPhysician.getName());
                 String personOHIP = demoPrimaryPhysician.getOHIPPhysicianId();
-                if (StringUtils.empty(personName[0])) err_data.add("Error! No Primary Physician first name");
-                if (StringUtils.empty(personName[1])) err_data.add("Error! No Primary Physician last name");
+                if (StringUtils.empty(personName.get("firstname"))) err_data.add("Error! No Primary Physician first name");
+                if (StringUtils.empty(personName.get("lastname"))) err_data.add("Error! No Primary Physician last name");
                 if (StringUtils.empty(personOHIP)) err_data.add("Error! No Primary Physician OHIP billing number");
                 String personCPSO = demoPrimaryPhysician.getPrimaryPhysicianCPSO();
-                primaryPhysician = writeProviderData(personName[0], personName[1], personOHIP, personCPSO);
+                primaryPhysician = writeProviderData(personName.get("firstname"), personName.get("lastname"), personOHIP, personCPSO);
             }
             if (StringUtils.empty(primaryPhysician)) {
                 primaryPhysician = defaultProvider;
@@ -564,9 +567,9 @@ import cds.RiskFactorsDocument.RiskFactors;
 
             Demographics.Contact[] contt = demo.getContactArray();
             for (int i=0; i<contt.length; i++) {
-                String[] contactName = getPersonName(contt[i].getName());
-                String cFirstName = contactName[0];
-                String cLastName  = contactName[1];
+                HashMap<String,String> contactName = getPersonName(contt[i].getName());
+                String cFirstName = StringUtils.noNull(contactName.get("firstname"));
+                String cLastName  = StringUtils.noNull(contactName.get("lastname"));
                 String cEmail = StringUtils.noNull(contt[i].getEmailAddress());
 
                 pn = contt[i].getPhoneNumberArray();
@@ -721,7 +724,7 @@ import cds.RiskFactorsDocument.RiskFactors;
                 cme.setNoteId(hostNoteId);
                 if (fHist[i].getStartDate()!=null) {
                     cme.setKeyVal(CaseManagementNoteExt.STARTDATE);
-                    cme.setDateValue(dDateFullPartial(fHist[i].getStartDate(), timeShiftInDays));
+                    cme.setDateValue(dateFPtoDate(fHist[i].getStartDate(), timeShiftInDays));
                     caseManagementManager.saveNoteExt(cme);
                 }
                 if (fHist[i].getAgeAtOnset()!=null) {
@@ -793,17 +796,17 @@ import cds.RiskFactorsDocument.RiskFactors;
                 cme.setNoteId(hostNoteId);
                 if (pHealth[i].getOnsetOrEventDate()!=null) {
                     cme.setKeyVal(CaseManagementNoteExt.STARTDATE);
-                    cme.setDateValue(dDateFullPartial(pHealth[i].getOnsetOrEventDate(), timeShiftInDays));
+                    cme.setDateValue(dateFPtoDate(pHealth[i].getOnsetOrEventDate(), timeShiftInDays));
                     caseManagementManager.saveNoteExt(cme);
                 }
                     if (pHealth[i].getProcedureDate()!=null) {
                         cme.setKeyVal(CaseManagementNoteExt.PROCEDUREDATE);
-                        cme.setDateValue(dDateFullPartial(pHealth[i].getProcedureDate(), timeShiftInDays));
+                        cme.setDateValue(dateFPtoDate(pHealth[i].getProcedureDate(), timeShiftInDays));
                         caseManagementManager.saveNoteExt(cme);
                     }
                     if (pHealth[i].getResolvedDate()!=null) {
                         cme.setKeyVal(CaseManagementNoteExt.RESOLUTIONDATE);
-                        cme.setDateValue(dDateFullPartial(pHealth[i].getResolvedDate(), timeShiftInDays));
+                        cme.setDateValue(dateFPtoDate(pHealth[i].getResolvedDate(), timeShiftInDays));
                         caseManagementManager.saveNoteExt(cme);
                     }
                     if (pHealth[i].getLifeStage()!=null) {
@@ -865,14 +868,14 @@ import cds.RiskFactorsDocument.RiskFactors;
                     }
                     if (probList[i].getOnsetDate()!=null) {
                         cme.setKeyVal(CaseManagementNoteExt.STARTDATE);
-                        cme.setDateValue(dDateFullPartial(probList[i].getOnsetDate(), timeShiftInDays));
+                        cme.setDateValue(dateFPtoDate(probList[i].getOnsetDate(), timeShiftInDays));
                         caseManagementManager.saveNoteExt(cme);
                     } else {
                         err_data.add("Error! No Onset Date for Problem List ("+(i+1)+")");
                     }
                     if (probList[i].getResolutionDate()!=null) {
                         cme.setKeyVal(CaseManagementNoteExt.RESOLUTIONDATE);
-                        cme.setDateValue(dDateFullPartial(probList[i].getResolutionDate(), timeShiftInDays));
+                        cme.setDateValue(dateFPtoDate(probList[i].getResolutionDate(), timeShiftInDays));
                         caseManagementManager.saveNoteExt(cme);
                     }
                     if (StringUtils.filled(probList[i].getProblemStatus())) {
@@ -925,12 +928,12 @@ import cds.RiskFactorsDocument.RiskFactors;
                     cme.setNoteId(hostNoteId);
                     if (rFactors[i].getStartDate()!=null) {
                         cme.setKeyVal(CaseManagementNoteExt.STARTDATE);
-                        cme.setDateValue(dDateFullPartial(rFactors[i].getStartDate(), timeShiftInDays));
+                        cme.setDateValue(dateFPtoDate(rFactors[i].getStartDate(), timeShiftInDays));
                         caseManagementManager.saveNoteExt(cme);
                     }
                     if (rFactors[i].getEndDate()!=null) {
                         cme.setKeyVal(CaseManagementNoteExt.RESOLUTIONDATE);
-                        cme.setDateValue(dDateFullPartial(rFactors[i].getEndDate(), timeShiftInDays));
+                        cme.setDateValue(dateFPtoDate(rFactors[i].getEndDate(), timeShiftInDays));
                         caseManagementManager.saveNoteExt(cme);
                     }
                     if (rFactors[i].getAgeOfOnset()!=null) {
@@ -990,12 +993,12 @@ import cds.RiskFactorsDocument.RiskFactors;
                     cme.setNoteId(hostNoteId);
                     if (alerts[i].getDateActive()!=null) {
                         cme.setKeyVal(CaseManagementNoteExt.STARTDATE);
-                        cme.setDateValue(dDateFullPartial(alerts[i].getDateActive(), timeShiftInDays));
+                        cme.setDateValue(dateFPtoDate(alerts[i].getDateActive(), timeShiftInDays));
                         caseManagementManager.saveNoteExt(cme);
                     }
                     if (alerts[i].getEndDate()!=null) {
                         cme.setKeyVal(CaseManagementNoteExt.RESOLUTIONDATE);
-                        cme.setDateValue(dDateFullPartial(alerts[i].getEndDate(), timeShiftInDays));
+                        cme.setDateValue(dateFPtoDate(alerts[i].getEndDate(), timeShiftInDays));
                         caseManagementManager.saveNoteExt(cme);
                     }
                 }
@@ -1006,7 +1009,7 @@ import cds.RiskFactorsDocument.RiskFactors;
                     CaseManagementNote cmNote = prepareCMNote();
 
                     if (cNotes[i].getEventDateTime()==null) cmNote.setObservation_date(new Date());
-                    else cmNote.setObservation_date(dDateTimeFullPartial(cNotes[i].getEventDateTime(), timeShiftInDays));
+                    else cmNote.setObservation_date(dateTimeFPtoDate(cNotes[i].getEventDateTime(), timeShiftInDays));
 
                     String encounter = cNotes[i].getMyClinicalNotesContent();
                     encounter = Util.addLine(encounter,"Note Type: ",cNotes[i].getNoteType());
@@ -1014,12 +1017,12 @@ import cds.RiskFactorsDocument.RiskFactors;
                     ClinicalNotes.ParticipatingProviders[] participatingProviders = cNotes[i].getParticipatingProvidersArray();
                     if (participatingProviders.length>0) {
                         if (participatingProviders[0].getDateTimeNoteCreated()==null) cmNote.setUpdate_date(new Date());
-                        else cmNote.setUpdate_date(dDateTimeFullPartial(participatingProviders[0].getDateTimeNoteCreated(), timeShiftInDays));
+                        else cmNote.setUpdate_date(dateTimeFPtoDate(participatingProviders[0].getDateTimeNoteCreated(), timeShiftInDays));
 
                         if (participatingProviders[0].getName()!=null) {
-                            String[] authorName = getPersonName(participatingProviders[0].getName());
+                            HashMap<String,String> authorName = getPersonName(participatingProviders[0].getName());
                             String signerOHIP = participatingProviders[0].getOHIPPhysicianId();
-                            String signingProvider = writeProviderData(authorName[0], authorName[1], signerOHIP);
+                            String signingProvider = writeProviderData(authorName.get("firstname"), authorName.get("lastname"), signerOHIP);
                             if (StringUtils.empty(signingProvider)) {
                                 signingProvider = defaultProvider;
                                 err_note.add("Clinical notes have no signer; assigned to \"doctor oscardoc\" ("+(i+1)+")");
@@ -1027,19 +1030,19 @@ import cds.RiskFactorsDocument.RiskFactors;
                             cmNote.setProviderNo(signingProvider);
                         }
                         if (participatingProviders[0].getDateTimeNoteCreated()!=null) {
-                            cmNote.setCreate_date(dDateTimeFullPartial(participatingProviders[0].getDateTimeNoteCreated(), timeShiftInDays));
+                            cmNote.setCreate_date(dateTimeFPtoDate(participatingProviders[0].getDateTimeNoteCreated(), timeShiftInDays));
                         }
                     }
                     ClinicalNotes.NoteReviewer[] noteReviewers = cNotes[i].getNoteReviewerArray();
                     if (noteReviewers.length>0) {
                         if (noteReviewers[0].getName()!=null) {
-                            String[] authorName = getPersonName(noteReviewers[0].getName());
+                            HashMap<String,String> authorName = getPersonName(noteReviewers[0].getName());
                             String reviewerOHIP = noteReviewers[0].getOHIPPhysicianId();
-                            String reviewer = writeProviderData(authorName[0], authorName[1], reviewerOHIP);
+                            String reviewer = writeProviderData(authorName.get("firstname"), authorName.get("lastname"), reviewerOHIP);
                             cmNote.setSigning_provider_no(reviewer);
                         }
                         if (noteReviewers[0].getDateTimeNoteReviewed()!=null) {
-                            Util.addLine(encounter, "Review Date: ", dateTimeFullPartial(noteReviewers[0].getDateTimeNoteReviewed(), timeShiftInDays));
+                            Util.addLine(encounter, "Review Date: ", dateTimeFPtoString(noteReviewers[0].getDateTimeNoteReviewed(), timeShiftInDays));
                         }
                     }
                     if (StringUtils.filled(encounter)) {
@@ -1056,8 +1059,8 @@ import cds.RiskFactorsDocument.RiskFactors;
 
                     reaction = StringUtils.noNull(aaReactArray[i].getReaction());
                     description = StringUtils.noNull(aaReactArray[i].getOffendingAgentDescription());
-                    entryDate = dateTimeFullPartial(aaReactArray[i].getRecordedDate(), timeShiftInDays);
-                    startDate = dateFullPartial(aaReactArray[i].getStartDate(), timeShiftInDays);
+                    entryDate = dateTimeFPtoString(aaReactArray[i].getRecordedDate(), timeShiftInDays);
+                    startDate = dateFPtoString(aaReactArray[i].getStartDate(), timeShiftInDays);
                     if (aaReactArray[i].getLifeStage()!=null) lifeStage = aaReactArray[i].getLifeStage().toString();
 
                     if (StringUtils.empty(entryDate)) entryDate = null;
@@ -1108,8 +1111,8 @@ import cds.RiskFactorsDocument.RiskFactors;
                     Drug drug = new Drug();
                     //no need: DrugReason drugReason = new DrugReason();
                     drug.setCreateDate(new Date());
-                    drug.setRxDate(dDateFullPartial(medArray[i].getStartDate(), timeShiftInDays));
-                    drug.setWrittenDate(dDateTimeFullPartial(medArray[i].getPrescriptionWrittenDate(), timeShiftInDays));
+                    drug.setRxDate(dateFPtoDate(medArray[i].getStartDate(), timeShiftInDays));
+                    drug.setWrittenDate(dateTimeFPtoDate(medArray[i].getPrescriptionWrittenDate(), timeShiftInDays));
 
                     if (medArray[i].getStartDate()==null) drug.setRxDate(new Date());
                     String duration = medArray[i].getDuration();
@@ -1191,14 +1194,14 @@ import cds.RiskFactorsDocument.RiskFactors;
                     drug.setSpecial(special);
 
                     if (medArray[i].getPrescribedBy()!=null) {
-                        String[] personName = getPersonName(medArray[i].getPrescribedBy().getName());
+                        HashMap<String,String> personName = getPersonName(medArray[i].getPrescribedBy().getName());
                         String personOHIP = medArray[i].getPrescribedBy().getOHIPPhysicianId();
                         ProviderData pd = getProviderByOhip(personOHIP);
                         if (pd!=null && Integer.valueOf(pd.getProviderNo())>-1000) drug.setProviderNo(pd.getProviderNo());
                         else { //outside provider
-                            drug.setOutsideProviderName(personName[1] + ", " + personName[0]);
+                            drug.setOutsideProviderName(StringUtils.noNull(personName.get("lastname"))+", "+StringUtils.noNull(personName.get("firstname")));
                             drug.setOutsideProviderOhip(personOHIP);
-                            drug.setProviderNo(writeProviderData(personName[0], personName[1], personOHIP));
+                            drug.setProviderNo(writeProviderData(personName.get("firstname"), personName.get("lastname"), personOHIP));
                         }
                     } else {
                         drug.setProviderNo(admProviderNo);
@@ -1264,7 +1267,7 @@ import cds.RiskFactorsDocument.RiskFactors;
                         comments = Util.addLine(comments, "Immunization Type", immuArray[i].getImmunizationType().toString());
                     }
 
-                    preventionDate = dateTimeFullPartial(immuArray[i].getDate(), timeShiftInDays);
+                    preventionDate = dateTimeFPtoString(immuArray[i].getDate(), timeShiftInDays);
                     refused = getYN(immuArray[i].getRefusedFlag()).equals("Yes") ? "1" : "0";
                     if (immuArray[i].getRefusedFlag()==null) err_data.add("Error! No Refused Flag for Immunizations ("+(i+1)+")");
 
@@ -1341,8 +1344,9 @@ import cds.RiskFactorsDocument.RiskFactors;
                     _testName[i] = StringUtils.noNull(labResultArr[i].getLabTestCode());
                     _location[i] = StringUtils.noNull(labResultArr[i].getLaboratoryName());
                     _accession[i] = StringUtils.noNull(labResultArr[i].getAccessionNumber());
-                    _coll_date[i] = dateOnly(dateTimeFullPartial(labResultArr[i].getCollectionDateTime(), timeShiftInDays));
-                    _req_date[i] = dateTimeFullPartial(labResultArr[i].getLabRequisitionDateTime(), timeShiftInDays);
+                    _coll_date[i] = dateOnly(dateTimeFPtoString(labResultArr[i].getCollectionDateTime(), timeShiftInDays));
+                    _req_date[i] = dateTimeFPtoString(labResultArr[i].getLabRequisitionDateTime(), timeShiftInDays);
+                    if (StringUtils.empty(_req_date[i])) _req_date[i] = _coll_date[i];
 
                     _title[i] = StringUtils.noNull(labResultArr[i].getTestName());
                     if (StringUtils.filled(labResultArr[i].getTestNameReportedByLab())) {
@@ -1375,10 +1379,10 @@ import cds.RiskFactorsDocument.RiskFactors;
 
                     LaboratoryResults.ResultReviewer[] resultReviewers = labResultArr[i].getResultReviewerArray();
                     if (resultReviewers.length>0) {
-                        String[] revName = getPersonName(resultReviewers[0].getName());
+                        HashMap<String,String> revName = getPersonName(resultReviewers[0].getName());
                         String revOhip = StringUtils.noNull(resultReviewers[0].getOHIPPhysicianId());
-                        _reviewer[i] = writeProviderData(revName[0], revName[1], revOhip);
-                        _rev_date[i] = dateTimeFullPartial(resultReviewers[0].getDateTimeResultReviewed(), timeShiftInDays);
+                        _reviewer[i] = writeProviderData(revName.get("firstname"), revName.get("lastname"), revOhip);
+                        _rev_date[i] = dateTimeFPtoString(resultReviewers[0].getDateTimeResultReviewed(), timeShiftInDays);
                     }
                 }
 
@@ -1457,7 +1461,7 @@ import cds.RiskFactorsDocument.RiskFactors;
                     //save lab collection datetime
                     cdsDt.DateTimeFullOrPartial collDate = labResults.getCollectionDateTime();
                     if (collDate!=null) {
-                        saveMeasurementsExt(measId, "datetime", dateTimeFullPartial(collDate, timeShiftInDays));
+                        saveMeasurementsExt(measId, "datetime", dateTimeFPtoString(collDate, timeShiftInDays));
                     } else {
                         err_data.add("Error! No Collection DateTime for Lab Test "+testCode+" for Patient "+demographicNo);
                     }
@@ -1538,7 +1542,7 @@ import cds.RiskFactorsDocument.RiskFactors;
                 Properties p = (Properties) request.getSession().getAttribute("oscarVariables");
 
                 for (int i=0; i<appArray.length; i++) {
-                    String apptDateStr = dateFullPartial(appArray[i].getAppointmentDate(), timeShiftInDays);
+                    String apptDateStr = dateFPtoString(appArray[i].getAppointmentDate(), timeShiftInDays);
                     if (StringUtils.filled(apptDateStr)) {
                         appointmentDate = UtilDateUtilities.StringToDate(apptDateStr);
                     } else {
@@ -1579,9 +1583,9 @@ import cds.RiskFactorsDocument.RiskFactors;
 
                     reason = StringUtils.noNull(appArray[i].getAppointmentPurpose());
                     if (appArray[i].getProvider()!=null) {
-                        String[] providerName = getPersonName(appArray[i].getProvider().getName());
+                        HashMap<String,String> providerName = getPersonName(appArray[i].getProvider().getName());
                         String personOHIP = appArray[i].getProvider().getOHIPPhysicianId();
-                        apptProvider = writeProviderData(providerName[0], providerName[1], personOHIP);
+                        apptProvider = writeProviderData(providerName.get("firstname"), providerName.get("lastname"), personOHIP);
                         if (StringUtils.empty(apptProvider)) {
                             apptProvider = defaultProvider;
                             err_note.add("Appointment has no provider; assigned to \"doctor oscardoc\" ("+(i+1)+")");
@@ -1595,6 +1599,7 @@ import cds.RiskFactorsDocument.RiskFactors;
                 //REPORTS RECEIVED
 
                 HRMDocumentDao hrmDocDao = (HRMDocumentDao) SpringUtils.getBean("HRMDocumentDao");
+                HRMDocumentCommentDao hrmDocCommentDao = (HRMDocumentCommentDao) SpringUtils.getBean("HRMDocumentCommentDao");
                 HRMDocumentSubClassDao hrmDocSubClassDao = (HRMDocumentSubClassDao) SpringUtils.getBean("HRMDocumentSubClassDao");
                 HRMDocumentToDemographicDao hrmDocToDemoDao = (HRMDocumentToDemographicDao) SpringUtils.getBean("HRMDocumentToDemographicDao");
 
@@ -1605,14 +1610,26 @@ import cds.RiskFactorsDocument.RiskFactors;
 
                     if (repR[i].getHRMResultStatus()!=null || repR[i].getOBRContentArray().length>0) { //HRM reports
                         HRMDocument hrmDoc = new HRMDocument();
+                        HRMDocumentComment hrmDocComment = new HRMDocumentComment();
                         HRMDocumentToDemographic hrmDocToDemo = new HRMDocumentToDemographic();
 
                         hrmDoc.setReportFile(HRMfile);
+                        if (repR[i].getSourceFacility()!=null) hrmDoc.setSourceFacility(repR[i].getSourceFacility());
+                        if (repR[i].getReceivedDateTime()!=null) {
+                            hrmDoc.setTimeReceived(dateTimeFPtoDate(repR[i].getReceivedDateTime(), timeShiftInDays));
+                        } else {
+                            hrmDoc.setTimeReceived(new Date());
+                        }
                         if (repR[i].getHRMResultStatus()!=null) hrmDoc.setReportStatus(repR[i].getHRMResultStatus());
                         if (repR[i].getClass1()!=null) hrmDoc.setReportType(repR[i].getClass1().toString());
-                        if (repR[i].getEventDateTime()!=null) hrmDoc.setReportDate(dDateTimeFullPartial(repR[i].getEventDateTime(), timeShiftInDays));
-                        if (repR[i].getReceivedDateTime()!=null) hrmDoc.setTimeReceived(dDateTimeFullPartial(repR[i].getReceivedDateTime(), timeShiftInDays));
+                        if (repR[i].getEventDateTime()!=null) hrmDoc.setReportDate(dateTimeFPtoDate(repR[i].getEventDateTime(), timeShiftInDays));
                         hrmDocDao.persist(hrmDoc);
+
+                        if (repR[i].getNotes()!=null) {
+                            hrmDocComment.setHrmDocumentId(hrmDoc.getId());
+                            hrmDocComment.setComment(repR[i].getNotes());
+                            hrmDocCommentDao.persist(hrmDocComment);
+                        }
 
                         hrmDocToDemo.setDemographicNo(demographicNo);
                         hrmDocToDemo.setHrmDocumentId(hrmDoc.getId().toString());
@@ -1624,7 +1641,7 @@ import cds.RiskFactorsDocument.RiskFactors;
                             if (obr[j].getAccompanyingSubClass()!=null) hrmDocSc.setSubClass(obr[j].getAccompanyingSubClass());
                             if (obr[j].getAccompanyingDescription()!=null) hrmDocSc.setSubClassDescription(obr[j].getAccompanyingDescription());
                             if (obr[j].getAccompanyingMnemonic()!=null) hrmDocSc.setSubClassMnemonic(obr[j].getAccompanyingMnemonic());
-                            if (obr[j].getObservationDateTime()!=null) hrmDocSc.setSubClassDateTime(dDateTimeFullPartial(obr[j].getObservationDateTime(), timeShiftInDays));
+                            if (obr[j].getObservationDateTime()!=null) hrmDocSc.setSubClassDateTime(dateTimeFPtoDate(obr[j].getObservationDateTime(), timeShiftInDays));
                             hrmDocSc.setHrmDocumentId(hrmDoc.getId());
                             hrmDocSc.setActive(true);
                             hrmDocSubClassDao.persist(hrmDocSc);
@@ -1674,8 +1691,8 @@ import cds.RiskFactorsDocument.RiskFactors;
                                 ReportsReceived.SourceAuthorPhysician authorPhysician = repR[i].getSourceAuthorPhysician();
                                 if (authorPhysician!=null) {
                                     if (authorPhysician.getAuthorName()!=null) {
-                                        String[] author = getPersonName(authorPhysician.getAuthorName());
-                                        source = StringUtils.noNull(author[0]) + (StringUtils.filled(author[1]) ? " "+author[1] : "");
+                                        HashMap<String,String> author = getPersonName(authorPhysician.getAuthorName());
+                                        source = StringUtils.noNull(author.get("firstname")) + " " + StringUtils.noNull(author.get("lastname"));
                                     } else if (authorPhysician.getAuthorFreeText()!=null) {
                                         source = authorPhysician.getAuthorFreeText();
                                     }
@@ -1683,13 +1700,13 @@ import cds.RiskFactorsDocument.RiskFactors;
 
                                 ReportsReceived.ReportReviewed[] reportReviewed = repR[i].getReportReviewedArray();
                                 if (reportReviewed.length>0) {
-                                    String[] reviewerName = getPersonName(reportReviewed[0].getName());
-                                    reviewer = writeProviderData(reviewerName[0], reviewerName[1], reportReviewed[0].getReviewingOHIPPhysicianId());
-                                    reviewDateTime = dateFullPartial(reportReviewed[0].getDateTimeReportReviewed(), timeShiftInDays);
+                                    HashMap<String,String> reviewerName = getPersonName(reportReviewed[0].getName());
+                                    reviewer = writeProviderData(reviewerName.get("firstname"), reviewerName.get("lastname"), reportReviewed[0].getReviewingOHIPPhysicianId());
+                                    reviewDateTime = dateFPtoString(reportReviewed[0].getDateTimeReportReviewed(), timeShiftInDays);
                                 }
 
-                                observationDate = dateTimeFullPartial(repR[i].getEventDateTime(), timeShiftInDays);
-                                updateDateTime = dateTimeFullPartial(repR[i].getReceivedDateTime(), timeShiftInDays);
+                                observationDate = dateTimeFPtoString(repR[i].getEventDateTime(), timeShiftInDays);
+                                updateDateTime = dateTimeFPtoString(repR[i].getReceivedDateTime(), timeShiftInDays);
 
                                 EDocUtil.addDocument(demographicNo,docFileName,docDesc,"",docClass,docSubClass,contentType,observationDate,updateDateTime,docCreator,admProviderNo,reviewer,reviewDateTime, source);
                                 if (binaryFormat) addOneEntry(REPORTBINARY);
@@ -2034,7 +2051,7 @@ import cds.RiskFactorsDocument.RiskFactors;
 		return "OT"; //Other
 	}
 
-    String dateTimeFullPartial(cdsDt.DateTimeFullOrPartial dtfp, int timeshiftInDays) {
+    String dateTimeFPtoString(cdsDt.DateTimeFullOrPartial dtfp, int timeshiftInDays) {
 		if (dtfp==null) return "";
 
 		if (dtfp.getFullDateTime()!=null)  {
@@ -2058,7 +2075,7 @@ import cds.RiskFactorsDocument.RiskFactors;
 			return "";
     }
 
-    String dateFullPartial(cdsDt.DateFullOrPartial dfp, int timeshiftInDays) {
+    String dateFPtoString(cdsDt.DateFullOrPartial dfp, int timeshiftInDays) {
 		if (dfp==null) return "";
 				
 		if (dfp.getFullDate()!=null)  {
@@ -2078,8 +2095,8 @@ import cds.RiskFactorsDocument.RiskFactors;
 			return "";
     }
 
-    Date dDateTimeFullPartial(cdsDt.DateTimeFullOrPartial dtfp, int timeShiftInDays) {
-		String sdate = dateTimeFullPartial(dtfp,timeShiftInDays);
+    Date dateTimeFPtoDate(cdsDt.DateTimeFullOrPartial dtfp, int timeShiftInDays) {
+		String sdate = dateTimeFPtoString(dtfp,timeShiftInDays);
 		Date dDate = UtilDateUtilities.StringToDate(sdate, "yyyy-MM-dd HH:mm:ss");
 		if (dDate==null)
 			dDate = UtilDateUtilities.StringToDate(sdate, "yyyy-MM-dd");
@@ -2089,36 +2106,36 @@ import cds.RiskFactorsDocument.RiskFactors;
 		return dDate;
     }
 	    
-    Date dDateFullPartial(cdsDt.DateFullOrPartial dfp, int timeShiftInDays) {
-		String sdate = dateFullPartial(dfp,timeShiftInDays);
-                Date dDate = UtilDateUtilities.StringToDate(sdate, "yyyy-MM-dd");
-		if (dDate==null) 
-			dDate = UtilDateUtilities.StringToDate(sdate, "HH:mm:ss");
-		
-		return dDate;
+    Date dateFPtoDate(cdsDt.DateFullOrPartial dfp, int timeShiftInDays) {
+            String sdate = dateFPtoString(dfp,timeShiftInDays);
+            Date dDate = UtilDateUtilities.StringToDate(sdate, "yyyy-MM-dd");
+            if (dDate==null)
+                    dDate = UtilDateUtilities.StringToDate(sdate, "HH:mm:ss");
+
+            return dDate;
     }
 
-	String dateOnly(String d) {
-		return UtilDateUtilities.DateToString(UtilDateUtilities.StringToDate(d),"yyyy-MM-dd");
-	}
+    String dateOnly(String d) {
+            return UtilDateUtilities.DateToString(UtilDateUtilities.StringToDate(d),"yyyy-MM-dd");
+    }
 
-	String[] getPersonName(cdsDt.PersonNameSimple person) {
-		String[] name = new String[2];
-		if (person!=null) {
-			name[0] = StringUtils.noNull(person.getFirstName());
-			name[1] = StringUtils.noNull(person.getLastName());
-		}
-		return name;
-	}
+    HashMap getPersonName(cdsDt.PersonNameSimple person) {
+            HashMap<String,String> name = new HashMap<String,String>();
+            if (person!=null) {
+                name.put("firstname", StringUtils.noNull(person.getFirstName()));
+                name.put("lastname", StringUtils.noNull(person.getLastName()));
+            }
+            return name;
+    }
 
-	String[] getPersonName(cdsDt.PersonNameSimpleWithMiddleName person) {
-		String[] name = new String[2];
-		if (person!=null) {
-			name[0] = StringUtils.noNull(person.getFirstName())+" "+StringUtils.noNull(person.getMiddleName());
-			name[1] = StringUtils.noNull(person.getLastName());
-		}
-		return name;
-	}
+    HashMap getPersonName(cdsDt.PersonNameSimpleWithMiddleName person) {
+            HashMap<String,String> name = new HashMap<String,String>();
+            if (person!=null) {
+                name.put("firstname", StringUtils.noNull(person.getFirstName())+" "+StringUtils.noNull(person.getMiddleName()));
+                name.put("lastname", StringUtils.noNull(person.getLastName()));
+            }
+            return name;
+    }
 
 	String getDefaultProvider() {
 		ProviderData pd = getProviderByNames("doctor", "oscardoc", true);
@@ -2427,6 +2444,9 @@ import cds.RiskFactorsDocument.RiskFactors;
         }
 
 	String writeProviderData(String firstName, String lastName, String ohipNo, String cpsoNo) {
+                firstName = StringUtils.noNull(firstName);
+                lastName = StringUtils.noNull(lastName);
+
 		ProviderData pd = getProviderByOhip(ohipNo);
 		if (pd!=null) return updateExternalProviderNames(firstName, lastName, pd);
 
@@ -2487,12 +2507,12 @@ import cds.RiskFactorsDocument.RiskFactors;
 			appendIfNotNull(s,"ReferenceRangeText", ref.getReferenceRangeText());
 		}
 
-		appendIfNotNull(s,"LabRequisitionDateTime",dateTimeFullPartial(labRes.getLabRequisitionDateTime(), timeShiftInDays));
-		appendIfNotNull(s,"CollectionDateTime",dateTimeFullPartial( labRes.getCollectionDateTime(), timeShiftInDays));
+		appendIfNotNull(s,"LabRequisitionDateTime",dateTimeFPtoString(labRes.getLabRequisitionDateTime(), timeShiftInDays));
+		appendIfNotNull(s,"CollectionDateTime",dateTimeFPtoString( labRes.getCollectionDateTime(), timeShiftInDays));
 
                 LaboratoryResults.ResultReviewer[] resultReviewers = labRes.getResultReviewerArray();
                 if (resultReviewers.length>0) {
-                    appendIfNotNull(s,"DateTimeResultReviewed",dateTimeFullPartial(resultReviewers[0].getDateTimeResultReviewed(), timeShiftInDays));
+                    appendIfNotNull(s,"DateTimeResultReviewed",dateTimeFPtoString(resultReviewers[0].getDateTimeResultReviewed(), timeShiftInDays));
                     appendIfNotNull(s,"OHIP ID :", resultReviewers[0].getOHIPPhysicianId());
                     cdsDt.PersonNameSimple reviewerName = resultReviewers[0].getName();
                     if (reviewerName!=null) {
