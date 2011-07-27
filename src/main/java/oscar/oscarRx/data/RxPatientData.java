@@ -34,6 +34,7 @@ import java.util.LinkedList;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.oscarehr.util.MiscUtils;
+import org.apache.commons.lang.StringUtils;
 
 import oscar.oscarDB.DBHandler;
 
@@ -144,7 +145,7 @@ public class RxPatientData {
    }
    
    private static java.util.Date calcDate(String year, String month, String day) {   
-	   if (year==null || month==null || day==null) return null;
+	   if (StringUtils.isBlank(year) || StringUtils.isBlank(month) || StringUtils.isBlank(day)) return null;
            if (!NumberUtils.isDigits(year) || !NumberUtils.isDigits(month) || !NumberUtils.isDigits(day)) return null;
 	   
       int iYear = Integer.parseInt(year);

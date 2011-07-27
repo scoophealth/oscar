@@ -1413,7 +1413,7 @@ CREATE TABLE billing_on_cheader1 (
   demographic_no int(10) NOT NULL default '0',
   provider_no varchar(6) NOT NULL default '',
   appointment_no int(12) default NULL,
-  demographic_name varchar(20) default NULL,
+  demographic_name varchar(60),
   sex char(1) default '1',
   province char(2) default 'ON',
   billing_date date default NULL,
