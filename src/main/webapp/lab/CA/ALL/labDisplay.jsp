@@ -7,7 +7,7 @@
 <%@page errorPage="../../../provider/errorpage.jsp" %>
 <%@ page import="java.util.*,
 		 java.sql.*,
-		 oscar.oscarDB.*,
+		 oscar.oscarDB.*, oscar.oscarLab.FileUploadCheck, oscar.util.UtilDateUtilities,
 		 oscar.oscarLab.ca.all.*,
 		 oscar.oscarLab.ca.all.util.*,
 		 oscar.oscarLab.ca.all.parsers.*,
@@ -18,7 +18,7 @@
 <%@ page import="org.oscarehr.casemgmt.model.CaseManagementNoteLink"%>
 <%@ page import="org.oscarehr.casemgmt.model.CaseManagementNote"%>
 <%@ page import="org.oscarehr.util.SpringUtils"%>
-<%@ page import="org.oscarehr.casemgmt.service.CaseManagementManager"%>
+<%@ page import="org.oscarehr.casemgmt.service.CaseManagementManager, org.oscarehr.common.dao.Hl7TextMessageDao, org.oscarehr.common.model.Hl7TextMessage"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
@@ -34,6 +34,13 @@ String patientMatched = request.getParameter("patientMatched");
 String remoteFacilityIdString = request.getParameter("remoteFacilityId");
 String remoteLabKey = request.getParameter("remoteLabKey");
 String demographicID = request.getParameter("demographicId");
+
+//Need date lab was received by OSCAR
+Hl7TextMessageDao hl7TxtMsgDao = (Hl7TextMessageDao)SpringUtils.getBean("hl7TextMessageDao");
+Hl7TextMessage hl7TextMessage = hl7TxtMsgDao.find(Integer.parseInt(segmentID));
+java.util.Date date = hl7TextMessage.getCreated();
+String stringFormat = "yyyy-MM-dd HH:mm";
+String dateLabReceived = UtilDateUtilities.DateToString(date, stringFormat);
 
 boolean isLinkedToDemographic=false;
 ArrayList<ReportStatus> ackList=null;
@@ -628,6 +635,18 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                             <td>
                                                 <div class="FieldData" nowrap="nowrap">
                                                     <%= handler.getServiceDate() %>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                        	<td>
+                                        		<div class="FieldData">
+                                                    <strong><bean:message key="oscarMDS.segmentDisplay.formDateReceived"/>:</strong>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="FieldData" nowrap="nowrap">
+                                                    <%= dateLabReceived %>
                                                 </div>
                                             </td>
                                         </tr>
