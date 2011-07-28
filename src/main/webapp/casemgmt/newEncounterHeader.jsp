@@ -25,6 +25,7 @@
  <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
  <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
  <%@ page import="oscar.oscarEncounter.data.*, oscar.oscarProvider.data.*, oscar.util.UtilDateUtilities" %>
+ <%@ page import="org.oscarehr.util.MiscUtils"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%
     oscar.oscarEncounter.pageUtil.EctSessionBean bean = null;
@@ -94,7 +95,23 @@
         <% if(oscar.OscarProperties.getInstance().hasProperty("ONTARIO_MD_INCOMINGREQUESTOR")){%>
            <a href="javascript:void(0)" onClick="popupPage(600,175,'Calculators','<c:out value="${ctx}"/>/common/omdDiseaseList.jsp?sex=<%=bean.patientSex%>&age=<%=pAge%>'); return false;" ><bean:message key="oscarEncounter.Header.OntMD"/></a>
         <%}%>
+        <%=getEChartLinks() %>
    </span>
 </div>
+<%!
 
+String getEChartLinks(){
+	String str = oscar.OscarProperties.getInstance().getProperty("ECHART_LINK");
+		if (str == null){
+			return "";
+		}
+		try{
+			String[] httpLink = str.split("\\|"); 
+ 			return "<a target=\"_blank\" href=\""+httpLink[1]+"\">"+httpLink[0]+"</a>";
+		}catch(Exception e){
+			MiscUtils.getLogger().error("ECHART_LINK is not in the correct format. title|url :"+str, e);
+		}
+		return "";
+}
+%>
 
