@@ -45,7 +45,7 @@ public class PrintDemoAddressLabelAction extends OscarAction {
 	logger.debug("user home: " + System.getProperty("user.home"));
 
         try {
-                ins = new FileInputStream(System.getProperty("user.home") + "Addresslabel.xml");
+                ins = new FileInputStream(System.getProperty("user.home") + "/Addresslabel.xml");
         }
 
         catch (FileNotFoundException ex1) {
