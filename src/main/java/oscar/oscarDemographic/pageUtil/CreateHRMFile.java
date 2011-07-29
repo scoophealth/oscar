@@ -13,6 +13,7 @@ import cds.DemographicsDocument;
 import cds.ReportsReceivedDocument;
 import cdsDtHrm.Address;
 import cdsDtHrm.AddressStructured;
+import cdsDtHrm.AddressType;
 import cdsDtHrm.ContactPersonPurpose;
 import cdsDtHrm.DateFullOrPartial;
 import cdsDtHrm.EnrollmentStatus;
@@ -184,11 +185,19 @@ public class CreateHRMFile {
         cdsDt.Address[] addresses = demo.getAddressArray();
         if (addresses!=null) {
             for (cdsDt.Address address : addresses) {
+
+                //copy address type
+                cdsDt.AddressType.Enum addressType = address.getAddressType();
+
                 if (address.getFormatted()!=null) {
                     
                     //address.formated
                     Address HRMaddress =  HRMdemo.addNewAddress();
                     HRMaddress.setFormatted(address.getFormatted());
+
+                    //address type
+                    if (addressType!=null) HRMaddress.setAddressType(AddressType.Enum.forString(addressType.toString()));
+                    else HRMaddress.setAddressType(AddressType.R);
 
                 } else if (address.getStructured()!=null) {
                     
@@ -210,6 +219,10 @@ public class CreateHRMFile {
                         if (postalZipCode.getPostalCode()!=null) HRMpostalZipCode.setPostalCode(postalZipCode.getPostalCode());
                         else if (postalZipCode.getZipCode()!=null) HRMpostalZipCode.setZipCode(postalZipCode.getZipCode());
                     }
+
+                    //address type
+                    if (addressType!=null) HRMaddress.setAddressType(AddressType.Enum.forString(addressType.toString()));
+                    else HRMaddress.setAddressType(AddressType.R);
                 }
             }
         }

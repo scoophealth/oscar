@@ -13,6 +13,7 @@ import org.oscarehr.hospitalReportManager.xsd.OmdCds;
 import org.oscarehr.hospitalReportManager.xsd.PersonNameStandard;
 import org.oscarehr.hospitalReportManager.xsd.PersonNameStandard.LegalName.OtherName;
 import org.oscarehr.hospitalReportManager.xsd.ReportsReceived.OBRContent;
+import org.oscarehr.hospitalReportManager.xsd.DateFullOrPartial;
 import org.oscarehr.util.MiscUtils;
 
 public class HRMReport {
@@ -80,7 +81,7 @@ public class HRMReport {
 
 	public List<Integer> getDateOfBirth() {
 		List<Integer> dateOfBirthList = new ArrayList<Integer>();
-		XMLGregorianCalendar fullDate = demographics.getDateOfBirth().getDateTime();
+		XMLGregorianCalendar fullDate = dateFP(demographics.getDateOfBirth());
 		dateOfBirthList.add(fullDate.getYear());
 		dateOfBirthList.add(fullDate.getMonth());
 		dateOfBirthList.add(fullDate.getDay());
@@ -173,7 +174,7 @@ public class HRMReport {
 
 	public Calendar getFirstReportEventTime() {
 		if (hrmReport.getPatientRecord().getReportsReceived().get(0).getEventDateTime() != null)
-			return hrmReport.getPatientRecord().getReportsReceived().get(0).getEventDateTime().getDateTime().toGregorianCalendar();
+                        return dateFP(hrmReport.getPatientRecord().getReportsReceived().get(0).getEventDateTime()).toGregorianCalendar();
 		
 		return null;
 	}
@@ -212,9 +213,11 @@ public class HRMReport {
 			obrContentList.add(o.getAccompanyingSubClass());
 			obrContentList.add(o.getAccompanyingMnemonic());
 			obrContentList.add(o.getAccompanyingDescription());
-			
-			Date date = o.getObservationDateTime().getDateTime().toGregorianCalendar().getTime();
-			obrContentList.add(date);
+
+                        if (o.getObservationDateTime()!=null) {
+                            Date date = dateFP(o.getObservationDateTime()).toGregorianCalendar().getTime();
+                            obrContentList.add(date);
+                        }
 			
 			subclassList.add(obrContentList);
 		}
@@ -226,7 +229,7 @@ public class HRMReport {
 		if (hrmReport.getPatientRecord().getReportsReceived().get(0).getOBRContent() != null && 
 				hrmReport.getPatientRecord().getReportsReceived().get(0).getOBRContent().get(0) != null &&
 				hrmReport.getPatientRecord().getReportsReceived().get(0).getOBRContent().get(0).getObservationDateTime() != null) {
-			return hrmReport.getPatientRecord().getReportsReceived().get(0).getOBRContent().get(0).getObservationDateTime().getDateTime().toGregorianCalendar();
+			return dateFP(hrmReport.getPatientRecord().getReportsReceived().get(0).getOBRContent().get(0).getObservationDateTime()).toGregorianCalendar();
 		}
 		
 		return null;
@@ -263,4 +266,17 @@ public class HRMReport {
 	public void setHrmParentDocumentId(Integer hrmParentDocumentId) {
     	this.hrmParentDocumentId = hrmParentDocumentId;
     }
+
+
+        XMLGregorianCalendar dateFP(DateFullOrPartial dfp) {
+            if (dfp==null) return null;
+
+            if (dfp.getDateTime()!=null) return dfp.getDateTime();
+            else if (dfp.getFullDate()!=null) return dfp.getFullDate();
+            else if (dfp.getYearMonth()!=null) return dfp.getYearMonth();
+            else if (dfp.getYearOnly()!=null) return dfp.getYearOnly();
+            return null;
+    }
+
+
 }

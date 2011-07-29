@@ -24,7 +24,8 @@ public class HRMDocument extends AbstractModel<Integer> {
 	private String reportLessDemographicInfoHash;
 	private String reportStatus;
 	private String reportFile;
-
+        private String sourceFacility;
+	
 	private String unmatchedProviders;
 	private Integer numDuplicatesReceived;
 	private Date reportDate;
@@ -93,6 +94,14 @@ public class HRMDocument extends AbstractModel<Integer> {
 	public void setReportFile(String reportFile) {
 		this.reportFile = reportFile;
 	}
+
+        public String getSourceFacility() {
+        return sourceFacility;
+    }
+
+        public void setSourceFacility(String sourceFacility) {
+        this.sourceFacility = sourceFacility;
+    }
 
 	public String getUnmatchedProviders() {
 		return unmatchedProviders;
