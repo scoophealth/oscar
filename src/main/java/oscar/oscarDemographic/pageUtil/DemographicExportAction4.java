@@ -1953,13 +1953,13 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	
 	//zip all export files
         String zipName = files.get(0).getName().replace(".xml", ".pgp");
-	if (setName!=null) zipName = "export_"+setName.replace(" ","")+"_"+UtilDateUtilities.getToday("yyyyMMddHHmmss")+".pgp";
+//	if (setName!=null) zipName = "export_"+setName.replace(" ","")+"_"+UtilDateUtilities.getToday("yyyyMMddHHmmss")+".pgp";
+	if (setName!=null) zipName = "export_"+setName.replace(" ","")+"_"+UtilDateUtilities.getToday("yyyyMMddHHmmss");
 	if (!Util.zipFiles(files, zipName, tmpDir)) {
             logger.debug("Error! Failed to zip export files");
 	}
 
 //To be un-commented after CMS4
-/*
         if (pgpReady.equals("Yes")) {
             //PGP encrypt zip file
             PGPEncrypt pgp = new PGPEncrypt();
@@ -1968,19 +1968,16 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                 Util.cleanFile(zipName+".pgp", tmpDir);
                 ffwd = "success";
             } else {
-                HttpSession session = request.getSession();
-                session.setAttribute("pgp_ready", "No");
+                request.getSession().setAttribute("pgp_ready", "No");
             }
         } else {
             logger.debug("Warning: PGP Encryption NOT available - unencrypted file exported!");
             Util.downloadFile(zipName, tmpDir, response);
             ffwd = "success";
         }
- *
- */
 //To be removed after CMS4
-        Util.downloadFile(zipName, tmpDir, response);
-        ffwd = "success";
+//        Util.downloadFile(zipName, tmpDir, response);
+//        ffwd = "success";
 //To be removed after CMS4
         
 

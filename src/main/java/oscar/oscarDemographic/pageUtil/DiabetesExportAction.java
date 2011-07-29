@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -15,6 +16,8 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,6 +29,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.xmlbeans.XmlOptions;
 import org.jdom.Document;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.jdom.filter.ElementFilter;
 import org.jdom.input.SAXBuilder;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
@@ -191,40 +195,50 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	return errorLog;
     }
 
-    private void getListOfDINS() throws Exception{
+    private void getListOfDINS() {
         if (listOfDINS.size()>0) return;
 
         String omdDmlink = OscarProperties.getInstance().getProperty("ontariomd_cds_diabetes_link");
-        if (omdDmlink==null || omdDmlink.trim().isEmpty()) return;
+        if (omdDmlink==null || omdDmlink.trim().isEmpty()) {
+            errors.add("Error loading schema file! Property ontariomd_cds_diabetes_link not set!");
+            return;
+        }
         
-        URL omdDmURL = new URL(omdDmlink);
-        if (omdDmURL.openConnection().getContentLength()<0) return;
+        try {
+            URL omdDmURL = new URL(omdDmlink);
+            BufferedReader in;
+            in = new BufferedReader(new InputStreamReader(omdDmURL.openStream()));
+            SAXBuilder parser = new SAXBuilder();
+            Document doc;
+            doc = parser.build(in);
+            Element root = doc.getRootElement();
+            Iterator<Element> items = root.getDescendants(new ElementFilter("restriction",root.getNamespace("xs")));
 
-	BufferedReader in = new BufferedReader(
-				new InputStreamReader(
-				omdDmURL.openStream()));
+            while (items.hasNext()) {
+                Element pcgGroup = items.next();
+                String s = pcgGroup.getAttributeValue("base");
 
-            try {
-                SAXBuilder parser = new SAXBuilder();
-                Document doc = parser.build(in);
-                Element root = doc.getRootElement();
-                Iterator<Element> items = root.getDescendants(new ElementFilter("restriction",root.getNamespace("xs")));
+                if ("cdsd:drugIdentificationNumber".equals(s)){
+                    List<Element> l = pcgGroup.getChildren();
+                    for (Element e:l){
 
-                while (items.hasNext()) {
-                    Element pcgGroup = items.next();
-                    String s = pcgGroup.getAttributeValue("base");
-
-                    if ("cdsd:drugIdentificationNumber".equals(s)){
-                        List<Element> l = pcgGroup.getChildren();
-                        for (Element e:l){
-
-                            listOfDINS.add(e.getAttributeValue("value"));
-                        }
+                        listOfDINS.add(e.getAttributeValue("value"));
                     }
                 }
-            } catch (Exception e) {
-                MiscUtils.getLogger().error("Error", e);
             }
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(DiabetesExportAction.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (JDOMException ex) {
+            Logger.getLogger(DiabetesExportAction.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(DiabetesExportAction.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        if (listOfDINS.isEmpty())
+            errors.add("Error loading schema file! Cannot obtain DIN list!");
+
+
+        MiscUtils.getLogger().info("Ronnie: DIN list [" + listOfDINS.size() + "]");
     }
     
     void setCareElements(PatientRecord patientRecord, String demoNo) throws SQLException {
@@ -443,6 +457,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
         }
         
         data = demographic.getProviderNo();
+        demo.setOHIPPhysicianId("");
         if (StringUtils.filled(data)) {
             ProviderData provider = new ProviderData(data);
 
@@ -660,7 +675,6 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
     
     void setMedicationsAndTreatments(PatientRecord patientRecord, String demoNo) throws Exception {
         if (listOfDINS.isEmpty()) {
-            errors.add("Error loading schema file! Cannot obtain DIN list! No Medication & Treatments exported!");
             return;
         }
 
@@ -783,7 +797,6 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		errors.add("Error! No Onset Date for Diabetes Diagnosis for Patient "+demoNo);
 	    }
 	} else {
-	    errors.add("Error! No Diabetes Diagnosis for Patient "+demoNo);
 	    return false;
 	}
 	return true;
