@@ -277,7 +277,7 @@ function refresh() {
 			face="Arial, Helvetica, sans-serif"><%=proLast1%>, <%=proFirst1%></font></b></TD>
 		<TD align="center" width="10%"><b> <font size="2"
 			face="Arial, Helvetica, sans-serif"><a href=#
-			onClick='popupPage(700,720, "../billing/billingOB.jsp?billForm=MFP&hotclick=&appointment_no=<%=apptNo%>&demographic_name=<%=URLEncoder.encode(demoName)%>&demographic_no=<%=demoNo%>&user_no=<%=userno%>&apptProvider_no=<%=provider%>&appointment_date=<%=apptDate%>&start_time=<%=apptTime%>&bNewForm=1")'
+			onClick='popupPage(700,1000, "../billing/billingOB.jsp?billForm=MFP&hotclick=&appointment_no=<%=apptNo%>&demographic_name=<%=URLEncoder.encode(demoName)%>&demographic_no=<%=demoNo%>&user_no=<%=userno%>&apptProvider_no=<%=provider%>&appointment_date=<%=apptDate%>&start_time=<%=apptTime%>&bNewForm=1")'
 			title="<%=reason%>">Bill |$|</a></font></b></TD>
 	</tr>
 	<%  rowCount = rowCount + 1;

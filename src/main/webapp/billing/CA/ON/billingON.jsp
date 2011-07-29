@@ -439,7 +439,7 @@
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.common.model.ProviderPreference"%><html>
 <head>
-<title>HospitalBilling</title>
+<title>Ontario Billing</title>
 <style type="text/css">
 <!--
 .demo1  {color:#000033; background-color:silver; layer-background-color:#cccccc;

@@ -476,7 +476,7 @@ function tsr(s) {
 
 										<% if(status.indexOf('B')==-1) { %>
 										<a href=#
-											onClick='popupPage(700,720, "../billing/billingOB.jsp?hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=appt.get("appointment_no")%>&demographic_name=<%=URLEncoder.encode(name)%>&demographic_no=<%=demographic_no%>&providerview=<%=curProvider_no[nProvider]%>&user_no=<%=curUser_no%>&apptProvider_no=<%=curProvider_no[nProvider]%>&appointment_date=<%=year+"-"+month+"-"+day%>&start_time=<%=iS+":"+iSm%>&bNewForm=1");return false;'
+											onClick='popupPage(700,1000, "../billing/billingOB.jsp?hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=appt.get("appointment_no")%>&demographic_name=<%=URLEncoder.encode(name)%>&demographic_no=<%=demographic_no%>&providerview=<%=curProvider_no[nProvider]%>&user_no=<%=curUser_no%>&apptProvider_no=<%=curProvider_no[nProvider]%>&appointment_date=<%=year+"-"+month+"-"+day%>&start_time=<%=iS+":"+iSm%>&bNewForm=1");return false;'
 											title="Billing">| B | </a>
 										<% } else {%>
 										<a href=#
