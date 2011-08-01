@@ -141,7 +141,7 @@ public final class XmlUtils
 		if (childContents == null) throw(new NullPointerException("ChildNode is null."));
 
 		Element child = doc.createElement(childName);
-		child.appendChild(doc.createTextNode(childContents));
+		child.setTextContent(childContents);
 		parentNode.appendChild(child);
 	}
 
