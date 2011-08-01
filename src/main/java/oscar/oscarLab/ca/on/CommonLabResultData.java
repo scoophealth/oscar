@@ -41,6 +41,8 @@ import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicLabResult;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.common.dao.DocumentResultsDao;
+import org.oscarehr.hospitalReportManager.dao.HRMDocumentToDemographicDao;
+import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -560,6 +562,22 @@ public class CommonLabResultData {
 		return ret;
 	}
 
+	public boolean isHRMLinkedWithPatient(String labId, String labType) {
+		boolean ret = false;
+		try {
+			HRMDocumentToDemographicDao hrmDocumentToDemographicDao = (HRMDocumentToDemographicDao)  SpringUtils.getBean("HRMDocumentToDemographicDao");
+			List<HRMDocumentToDemographic> docToDemo = hrmDocumentToDemographicDao.findByHrmDocumentId(labId);
+			if(docToDemo != null && docToDemo.size() > 0){
+				ret = true;
+			}
+		} catch (Exception e) {
+			logger.error("exception in isLabLinkedWithPatient", e);
+
+		}
+		return ret;
+	}
+
+	
 	public int getAckCount(String labId, String labType) {
 		int ret = 0;
 		try {
