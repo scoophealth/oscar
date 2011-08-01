@@ -239,10 +239,13 @@ public class LabResultData implements Comparable{
 //       }
         CommonLabResultData commonLabResultData = new CommonLabResultData();
         logger.debug("in ismatchedtopatient, "+this.segmentID+"--"+this.labType);
-        if(this.labType.equals("DOC"))
+        if(this.labType.equals("DOC")){
             this.isMatchedToPatient=commonLabResultData.isDocLinkedWithPatient(this.segmentID,this.labType);
-        else
+        }else if(this.labType.equals("HRM")){
+        	this.isMatchedToPatient = commonLabResultData.isHRMLinkedWithPatient(this.segmentID, this.labType); 
+        }else{
             this.isMatchedToPatient = commonLabResultData.isLabLinkedWithPatient(this.segmentID,this.labType);
+        }
         return this.isMatchedToPatient;
     }
     
