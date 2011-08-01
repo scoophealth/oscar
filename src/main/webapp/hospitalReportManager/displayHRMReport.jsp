@@ -210,14 +210,12 @@ function doSignOff(reportId, isSign) {
 	else
 		data = "method=signOff&signedOff=0&reportId=" + reportId;
 	
-	$("signoff" + reportId).disabled = "disabled";
-	
 	jQuery.ajax({
 		type: "POST",
 		url: "<%=request.getContextPath() %>/hospitalReportManager/Modify.do",
 		data: data,
 		success: function(data) {
-			$("signoffstatus" + reportId).innerHTML = data;
+			window.location.reload();
 		}
 	});
 }
@@ -387,17 +385,18 @@ function revokeSignOffHrm(reportId) {
 			<td colspan=2>
 				<input type="button" value="Print" onClick="window.print()" />
 				<input type="button" style="display: none;" value="Save" id="save<%=hrmReportId %>hrm" />
+				<% 
+				HRMDocumentToProvider hrmDocumentToProvider = HRMDisplayReportAction.getHRMDocumentFromCurrentProvider(hrmReportId);
+				if (hrmDocumentToProvider != null && hrmDocumentToProvider.getSignedOff() != null && hrmDocumentToProvider.getSignedOff() == 1) {
+				%>
+				<input type="button" id="signoff<%=hrmReportId %>" value="Revoke Sign-Off" onClick="revokeSignOffHrm('<%=hrmReportId %>')" />
 				<%
-				if (request.getAttribute("thisProviderLink") != null) { 
-					HRMDocumentToProvider hrmDocumentToProvider = (HRMDocumentToProvider) request.getAttribute("thisProviderLink");
-					if (hrmDocumentToProvider != null && hrmDocumentToProvider.getSignedOff() != null && hrmDocumentToProvider.getSignedOff() != 1) {
+				} else { 
 				%>
 				<input type="button" id="signoff<%=hrmReportId %>" value="Sign-Off" onClick="signOffHrm('<%=hrmReportId %>')" />
-				<%  } else { %>
-				<input type="button" id="signoff<%=hrmReportId %>" value="Revoke Sign-Off" onClick="revokeSignOffHrm('<%=hrmReportId %>')" />
-				<%	} %>
-				<div id="signoffstatus<%=hrmReportId %>"></div>
-				<% } %>
+				<%
+				} 
+				%>
 			</td>
 		</tr>
 			
