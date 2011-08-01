@@ -97,18 +97,25 @@ public class HRMModifyDocumentAction extends DispatchAction {
 		String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
 
 		try {
+			String signedOff = request.getParameter("signedOff");
 			HRMDocumentToProvider providerMapping = hrmDocumentToProviderDao.findByHrmDocumentIdAndProviderNo(reportId, providerNo);
 
 			if (providerMapping != null) {
-				String signedOff = request.getParameter("signedOff");
-
 				providerMapping.setSignedOff(Integer.parseInt(signedOff));
 				providerMapping.setSignedOffTimestamp(new Date());
-
 				hrmDocumentToProviderDao.merge(providerMapping);
-
-				request.setAttribute("success", true);
 			}
+			else
+			{
+				HRMDocumentToProvider hrmDocumentToProvider=new HRMDocumentToProvider();
+				hrmDocumentToProvider.setHrmDocumentId(reportId);
+				hrmDocumentToProvider.setProviderNo(providerNo);
+				hrmDocumentToProvider.setSignedOff(Integer.parseInt(signedOff));
+				hrmDocumentToProvider.setSignedOffTimestamp(new Date());
+				hrmDocumentToProviderDao.persist(hrmDocumentToProvider);
+			}
+			
+			request.setAttribute("success", true);
 		} catch (Exception e) {
 			MiscUtils.getLogger().error("Tried to set signed off status on document but failed.", e); 
 			request.setAttribute("success", false);
