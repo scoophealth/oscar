@@ -2,6 +2,7 @@ package org.oscarehr.hospitalReportManager.dao;
 
 import java.util.List;
 
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 import org.oscarehr.common.dao.AbstractDao;
@@ -34,10 +35,14 @@ public class HRMCategoryDao extends AbstractDao<HRMCategory> {
 	
 	public HRMCategory findBySubClassNameMnemonic(String subClassNameMnemonic)
 	{
-		String sql = "select x from " + modelClass.getSimpleName() + " x where x.subClassNameMnemonic=?1";
-		Query query = entityManager.createQuery(sql);
-		query.setParameter(1, subClassNameMnemonic);
-		return (HRMCategory) (query.getSingleResult());
+		try{
+			String sql = "select x from " + modelClass.getSimpleName() + " x where x.subClassNameMnemonic=?1";
+			Query query = entityManager.createQuery(sql);
+			query.setParameter(1, subClassNameMnemonic);
+			return (HRMCategory) (query.getSingleResult());
+		} catch(NoResultException e) {
+	        return null;
+	    }
 	}
 	
 }
