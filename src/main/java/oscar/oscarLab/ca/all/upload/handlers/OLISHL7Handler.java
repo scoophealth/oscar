@@ -13,6 +13,7 @@ import org.oscarehr.common.dao.Hl7TextInfoDao;
 import org.oscarehr.common.model.Hl7TextInfo;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.OscarAuditLogger;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarLab.ca.all.parsers.Factory;
@@ -93,7 +94,10 @@ public class OLISHL7Handler implements MessageHandler {
 					} else {
 						//direct
 						if(dupResult.getAccessionNumber().substring(3).equals(acc.split("-")[0])) {
-							return true;
+							//if(h.getHealthNum().equals(dupResult.getHealthNumber())) {
+								OscarAuditLogger.getInstance().log("Lab", "Skip", "Duplicate lab skipped - accession " + acc + "\n" + msg);
+								return true;
+							//}
 						}
 					}
 				}		
@@ -108,7 +112,10 @@ public class OLISHL7Handler implements MessageHandler {
 					//	return true;
 					//}
 					if(dupResult.getAccessionNumber().equals(acc)) {
-						return true;
+						//if(h.getHealthNum().equals(dupResult.getHealthNumber())) {
+							OscarAuditLogger.getInstance().log("Lab", "Skip", "Duplicate lab skipped - accession " + acc + "\n" + msg);
+							return true;
+						//}
 					}
 				}		
 			}
@@ -120,7 +127,10 @@ public class OLISHL7Handler implements MessageHandler {
 					//	return true;
 					//}
 					if(dupResult.getAccessionNumber().equals(acc.substring(5))) {
-						return true;
+						//if(h.getHealthNum().equals(dupResult.getHealthNumber())) {
+							OscarAuditLogger.getInstance().log("Lab", "Skip", "Duplicate lab skipped - accession " + acc + "\n" + msg);
+							return true;
+						//}
 					}
 				}		
 			}
