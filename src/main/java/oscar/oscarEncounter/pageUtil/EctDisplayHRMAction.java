@@ -24,6 +24,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocument;
 import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
+import org.oscarehr.common.dao.OscarLogDao;
 
 import oscar.oscarLab.ca.on.HRMResultsData;
 import oscar.util.DateUtils;
@@ -36,7 +37,8 @@ public class EctDisplayHRMAction extends EctDisplayAction {
 	private static final String cmd = "HRM";
 	private HRMDocumentToDemographicDao hrmDocumentToDemographicDao = (HRMDocumentToDemographicDao) SpringUtils.getBean("HRMDocumentToDemographicDao");
 	private HRMDocumentDao hrmDocumentDao = (HRMDocumentDao) SpringUtils.getBean("HRMDocumentDao");
-
+	private OscarLogDao oscarLogDao = (OscarLogDao) SpringUtils.getBean("oscarLogDao");
+	
 	public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
 
 
@@ -162,11 +164,7 @@ public class EctDisplayHRMAction extends EctDisplayAction {
 				String dispFilename = hrmDocument.getReportType();
 				String dispDocNo    = hrmDocument.getId().toString();
 
-				boolean skip=false;
-
-				if(skip)
-					continue;
-
+				
 				title = StringUtils.maxLenString(dispFilename, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
 
 				if (reportStatus != null && reportStatus.equalsIgnoreCase("C")) {
@@ -203,8 +201,14 @@ public class EctDisplayHRMAction extends EctDisplayAction {
 
 				url = "popupPage(700,800,'" + hash + "', '" + request.getContextPath() + "/hospitalReportManager/Display.do?id="+dispDocNo+"&duplicateLabIds="+duplicateLabIdQueryString+"');";
 
+				String labRead = "";
+				if(!oscarLogDao.hasRead(( (String) request.getSession().getAttribute("user")   ),"hrm",dispDocNo)){
+                	labRead = "*";	
+                }
+
+				
 				item.setLinkTitle(title + serviceDateStr);
-				item.setTitle(title);
+				item.setTitle(labRead+title+labRead);
 				key = StringUtils.maxLenString(dispFilename, MAX_LEN_KEY, CROP_LEN_KEY, ELLIPSES) + "(" + serviceDateStr + ")";
 				key = StringEscapeUtils.escapeJavaScript(key);
 
