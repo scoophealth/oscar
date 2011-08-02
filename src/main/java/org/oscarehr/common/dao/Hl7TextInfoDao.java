@@ -59,5 +59,18 @@ public class Hl7TextInfoDao extends AbstractDao<Hl7TextInfo> {
     	List<Hl7TextInfo> list = query.getResultList();
     	return list;
     }
+    
+    public List<Hl7TextInfo> searchByAccessionNumber(String acc) {
+
+    	String sqlCommand="select x from Hl7TextInfo x where x.accessionNumber like ?1";
+    	
+    	Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, "%"+acc+"%");
+
+		@SuppressWarnings("unchecked")
+		List<Hl7TextInfo> results = query.getResultList();
+		
+		return results;
+    }
 
 }
