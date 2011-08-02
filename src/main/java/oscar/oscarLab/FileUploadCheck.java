@@ -32,6 +32,8 @@ import java.io.InputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
@@ -62,6 +64,25 @@ public final class FileUploadCheck {
 			MiscUtils.getLogger().error("Error", e);
 		}
 		return hasFileBeenUploaded;
+	}
+	
+	public static Map<String,String> getFileInfo(Integer id) {
+		Map<String, String> fileInfo = new HashMap<String, String>();
+		try {
+			String sql = "select * from fileUploadCheck where id = " + id.toString();
+			ResultSet rs = DBHandler.GetSQL(sql);
+			if (rs.next()) {
+				fileInfo.put("providerNo", oscar.Misc.getString(rs, "provider_no"));
+				fileInfo.put("filename", oscar.Misc.getString(rs, "filename"));
+				fileInfo.put("md5sum", oscar.Misc.getString(rs, "md5sum"));
+				fileInfo.put("dateTime", oscar.Misc.getString(rs, "date_time"));
+			}
+		} catch (Exception e) {
+			MiscUtils.getLogger().error("Error", e);
+		}
+		
+		return fileInfo;
+		
 	}
 
 	public static Hashtable<String, String> getFileInfo(String md5sum) {
