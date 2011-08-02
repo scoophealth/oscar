@@ -301,7 +301,10 @@ Event.observe(window,'scroll',function(){//check for scrolling
                                 String segmentID        =  result.segmentID;
                                 
                                 String labRead = "";
-                                if(!oscarLogDao.hasRead(( (String) session.getAttribute("user")   ),"lab",segmentID)){
+                                
+                                if(result.isHRM() && !oscarLogDao.hasRead(curUser_no,"hrm",segmentID)){
+                                	labRead = "*";	
+                                }else if(!result.isHRM() &&!oscarLogDao.hasRead(curUser_no,"lab",segmentID)){
                                 	labRead = "*";	
                                 }
                                 String status           =  result.acknowledgedStatus;
@@ -396,7 +399,7 @@ Event.observe(window,'scroll',function(){//check for scrolling
                                     		duplicateLabIds.append(duplicateLabId);
                                     	}
                                     %>
-                                    <a href="javascript:reportWindow('../hospitalReportManager/Display.do?id=<%=segmentID%>&segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>&demoName=<%=(String)result.getPatientName()%>&duplicateLabIds=<%=duplicateLabIds.toString()%> ',850,1020)"><%=(String) result.getPatientName()%></a>
+                                    <a href="javascript:reportWindow('../hospitalReportManager/Display.do?id=<%=segmentID%>&segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>&demoName=<%=(String)result.getPatientName()%>&duplicateLabIds=<%=duplicateLabIds.toString()%> ',850,1020)"><%=labRead%><%=(String) result.getPatientName()%><%=labRead%></a>
                                     <% }else {%>
                                     <a href="javascript:reportWindow('../lab/CA/BC/labDisplay.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')"><%=(String) result.getPatientName()%></a>                                   
                                     <% }%>
