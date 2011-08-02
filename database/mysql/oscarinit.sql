@@ -8539,3 +8539,11 @@ create table FlowSheetUserCreated(
   createdDate date,
   KEY FlowSheetUserCreated_archived (archived)
 );
+
+create table providerLabRoutingFavorites (
+  id int auto_increment primary key,
+  provider_no varchar(6),
+  index(provider_no),
+  route_to_provider_no varchar(6)
+);
+
