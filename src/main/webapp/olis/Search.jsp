@@ -3,7 +3,9 @@
 		org.oscarehr.common.model.Demographic, org.oscarehr.PMmodule.dao.ProviderDao, org.oscarehr.common.model.Provider,
 		org.oscarehr.olis.dao.OLISRequestNomenclatureDao, org.oscarehr.olis.dao.OLISResultNomenclatureDao,
 		org.oscarehr.olis.model.OLISRequestNomenclature, org.oscarehr.olis.model.OLISResultNomenclature, org.oscarehr.util.SpringUtils" %>
-	
+	<%@page import="org.oscarehr.common.dao.UserPropertyDAO" %>
+	<%@page import="org.oscarehr.common.model.UserProperty" %>
+	<%@page import="org.oscarehr.util.LoggedInInfo" %>
 	<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 	<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 
@@ -268,43 +270,53 @@ List<OLISRequestNomenclature> requestNomenclatureList = requestDao.findAll();
 </select>
 </td>
 </tr>
+<%
+	UserPropertyDAO upDao = (UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
+	String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
+	UserProperty repLabProp = upDao.getProp(providerNo,"olis_reportingLab");
+	UserProperty exRepLabProp = upDao.getProp(providerNo,"olis_exreportingLab");
+	
+	String reportingLabVal = (repLabProp!=null)?repLabProp.getValue():"";
+	String exReportingLabVal = (exRepLabProp!=null)?exRepLabProp.getValue():"";
+
+%>
 <tr>
 			<th width="20%">Reporting Laboratory</th>
 			<td colspan="3"><select id="reportingLaboratory" name="reportingLaboratory">
-<option value=""></option>
-<option value="5552">Gamma-Dynacare</option>
-<option value="5407">CML</option>
-<option value="5687">LifeLabs</option>
-<option value="4001">BSD Lab1</option>
-<option value="4002">BSD Lab2</option>
-<option value="4003">BSD Lab3</option>
-<option value="4004">BSD Lab4</option>
-<option value="4005">BSD Lab5</option>
-<option value="4006">BSD Lab6</option>
-<option value="4007">BSD Lab7</option>
-<option value="4008">BSD Lab8</option>
-<option value="4009">BSD Lab9</option>
-<option value="4010">BSD Lab10</option>
+						<option value="" <%=(reportingLabVal.equals("")?"selected=\"selected\"":"") %>></option>
+						<option value="5552" <%=(reportingLabVal.equals("5552")?"selected=\"selected\"":"") %>>Gamma-Dynacare</option>
+						<option value="5407" <%=(reportingLabVal.equals("5407")?"selected=\"selected\"":"") %>>CML</option>
+						<option value="5687" <%=(reportingLabVal.equals("5687")?"selected=\"selected\"":"") %>>LifeLabs</option>
+						<option value="4001" <%=(reportingLabVal.equals("4001")?"selected=\"selected\"":"") %>>BSD Lab1</option>
+						<option value="4002" <%=(reportingLabVal.equals("4002")?"selected=\"selected\"":"") %>>BSD Lab2</option>
+						<option value="4003" <%=(reportingLabVal.equals("4003")?"selected=\"selected\"":"") %>>BSD Lab3</option>
+						<option value="4004" <%=(reportingLabVal.equals("4004")?"selected=\"selected\"":"") %>>BSD Lab4</option>
+						<option value="4005" <%=(reportingLabVal.equals("4005")?"selected=\"selected\"":"") %>>BSD Lab5</option>
+						<option value="4006" <%=(reportingLabVal.equals("4006")?"selected=\"selected\"":"") %>>BSD Lab6</option>
+						<option value="4007" <%=(reportingLabVal.equals("4007")?"selected=\"selected\"":"") %>>BSD Lab7</option>
+						<option value="4008" <%=(reportingLabVal.equals("4008")?"selected=\"selected\"":"") %>>BSD Lab8</option>
+						<option value="4009" <%=(reportingLabVal.equals("4009")?"selected=\"selected\"":"") %>>BSD Lab9</option>
+						<option value="4010" <%=(reportingLabVal.equals("4010")?"selected=\"selected\"":"") %>>BSD Lab10</option>
 </select>
 </td>
 		</tr>
 <tr>
 			<th width="20%">Exclude Reporting Laboratory</th>
 			<td width="30%"><select id="excludeReportingLaboratory" name="excludeReportingLaboratory">
-<option value=""></option>
-<option value="5552">Gamma-Dynacare</option>
-<option value="5407">CML</option>
-<option value="5687">LifeLabs</option>
-<option value="4001">BSD Lab1</option>
-<option value="4002">BSD Lab2</option>
-<option value="4003">BSD Lab3</option>
-<option value="4004">BSD Lab4</option>
-<option value="4005">BSD Lab5</option>
-<option value="4006">BSD Lab6</option>
-<option value="4007">BSD Lab7</option>
-<option value="4008">BSD Lab8</option>
-<option value="4009">BSD Lab9</option>
-<option value="4010">BSD Lab10</option>
+						<option value="" <%=(exReportingLabVal.equals("")?"selected=\"selected\"":"") %>></option>
+						<option value="5552" <%=(exReportingLabVal.equals("5552")?"selected=\"selected\"":"") %>>Gamma-Dynacare</option>
+						<option value="5407" <%=(exReportingLabVal.equals("5407")?"selected=\"selected\"":"") %>>CML</option>
+						<option value="5687" <%=(exReportingLabVal.equals("5687")?"selected=\"selected\"":"") %>>LifeLabs</option>
+						<option value="4001" <%=(exReportingLabVal.equals("4001")?"selected=\"selected\"":"") %>>BSD Lab1</option>
+						<option value="4002" <%=(exReportingLabVal.equals("4002")?"selected=\"selected\"":"") %>>BSD Lab2</option>
+						<option value="4003" <%=(exReportingLabVal.equals("4003")?"selected=\"selected\"":"") %>>BSD Lab3</option>
+						<option value="4004" <%=(exReportingLabVal.equals("4004")?"selected=\"selected\"":"") %>>BSD Lab4</option>
+						<option value="4005" <%=(exReportingLabVal.equals("4005")?"selected=\"selected\"":"") %>>BSD Lab5</option>
+						<option value="4006" <%=(exReportingLabVal.equals("4006")?"selected=\"selected\"":"") %>>BSD Lab6</option>
+						<option value="4007" <%=(exReportingLabVal.equals("4007")?"selected=\"selected\"":"") %>>BSD Lab7</option>
+						<option value="4008" <%=(exReportingLabVal.equals("4008")?"selected=\"selected\"":"") %>>BSD Lab8</option>
+						<option value="4009" <%=(exReportingLabVal.equals("4009")?"selected=\"selected\"":"") %>>BSD Lab9</option>
+						<option value="4010" <%=(exReportingLabVal.equals("4010")?"selected=\"selected\"":"") %>>BSD Lab10</option>
 </select>
 </td>
 		</tr>
