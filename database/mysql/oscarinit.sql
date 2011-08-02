@@ -8547,3 +8547,14 @@ create table providerLabRoutingFavorites (
   route_to_provider_no varchar(6)
 );
 
+CREATE TABLE `dataExport` (
+  `id` int(11) primary key auto_increment,
+  `file` varchar(255),
+  `daterun` timestamp,
+  `user` varchar(255),
+  `type` varchar(255),
+  `contactLName` varchar(255),
+  `contactFName` varchar(255),
+  `contactPhone` varchar(255),
+  `contactEmail` varchar(255)
+);
