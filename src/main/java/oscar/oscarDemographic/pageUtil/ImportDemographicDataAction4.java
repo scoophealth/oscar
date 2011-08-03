@@ -123,6 +123,7 @@ import cds.PersonalHistoryDocument.PersonalHistory;
 import cds.ProblemListDocument.ProblemList;
 import cds.ReportsReceivedDocument.ReportsReceived;
 import cds.RiskFactorsDocument.RiskFactors;
+import cdsDt.PersonNameStandard.LegalName.OtherName;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentCommentDao;
 import org.oscarehr.hospitalReportManager.model.HRMDocumentComment;
 import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
@@ -145,6 +146,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
     private static final String LABS = "Labs";
     private static final String MEDICATION = "Medication";
     private static final String PASTHEALTH = "Past";
+    private static final String PERSONALHISTORY = "Personal";
     private static final String PROBLEMLIST = "Problem";
     private static final String REPORTBINARY = "Binary";
     private static final String REPORTTEXT = "Text";
@@ -328,6 +330,13 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
         } else {
             err_data.add("Error! No Legal Name");
         }
+        OtherName[] otherNames = legalName.getOtherNameArray();
+        String otherNameTxt = null;
+        for (OtherName otherName : otherNames) {
+            if (otherNameTxt==null) otherNameTxt = otherName.getPart();
+            else otherNameTxt += " "+otherName.getPart();
+        }
+
         String title = demo.getNames().getNamePrefix()!=null ? demo.getNames().getNamePrefix().toString() : "";
         String suffix = demo.getNames().getLastNameSuffix()!=null ? demo.getNames().getLastNameSuffix().toString() : "";
         String sex = demo.getGender()!=null ? demo.getGender().toString() : "";
@@ -401,15 +410,21 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
             official_lang = official_lang.equals("ENG") ? "English" : official_lang;
             official_lang = official_lang.equals("FRE") ? "French" : official_lang;
         }
-        String spoken_lang = StringUtils.noNull(demo.getPreferredSpokenLanguage());
+        String spoken_lang = StringUtils.noNull(Util.convertCodeToLanguage(demo.getPreferredSpokenLanguage()));
         String dNote = StringUtils.noNull(demo.getNoteAboutPatient());
         String uvID = demo.getUniqueVendorIdSequence();
         String psDate = getCalDate(demo.getPersonStatusDate(), timeShiftInDays);
+
+        if (StringUtils.filled(otherNameTxt)) {
+            dNote = Util.addLine(dNote, "Other name: ", otherNameTxt);
+            err_note.add("Other name(s) imported to Patient Note");
+        }
 
         if (StringUtils.filled(suffix)) {
             dNote = Util.addLine(dNote, "Lastname suffix: ", suffix);
             err_note.add("Lastname suffix imported to Patient Note");
         }
+
         if (StringUtils.filled(uvID)) {
             if (StringUtils.empty(chart_no)) {
                 chart_no = uvID;
@@ -658,7 +673,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
             PersonalHistory[] pHist = patientRec.getPersonalHistoryArray();
             for (int i=0; i<pHist.length; i++) {
                 if (i==0) scmi = getCMIssue("SocHistory");
-                CaseManagementNote cmNote = prepareCMNote();
+                CaseManagementNote cmNote = prepareCMNote("1");
                 cmNote.setIssues(scmi);
 
                 //main field
@@ -669,11 +684,12 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 
                 cmNote.setNote(socialHist);
                 caseManagementManager.saveNoteSimple(cmNote);
+                addOneEntry(PERSONALHISTORY);
 
                 //to dumpsite
                 summary = Util.addLine("imported.cms4.2011.06", summary);
                 Long hostNoteId = cmNote.getId();
-                cmNote = prepareCMNote();
+                cmNote = prepareCMNote("2");
                 cmNote.setNote(summary);
                 saveLinkNote(hostNoteId, cmNote);
             }
@@ -682,7 +698,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
             FamilyHistory[] fHist = patientRec.getFamilyHistoryArray();
             for (int i=0; i<fHist.length; i++) {
                 if (i==0) scmi = getCMIssue("FamHistory");
-                CaseManagementNote cmNote = prepareCMNote();
+                CaseManagementNote cmNote = prepareCMNote("1");
 
                 //diagnosis code
                 if (fHist[i].getDiagnosisProcedureCode()==null) {
@@ -700,7 +716,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 
                 //annotation
                 Long hostNoteId = cmNote.getId();
-                cmNote = prepareCMNote();
+                cmNote = prepareCMNote("2");
                 String note = StringUtils.noNull(fHist[i].getNotes());
                 cmNote.setNote(note);
                 saveLinkNote(hostNoteId, cmNote);
@@ -715,7 +731,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                 dump = Util.addLine(dump, summary);
                 dump = Util.addLine(dump, diagCode);
                 dump = Util.addLine(dump, getResidual(fHist[i].getResidualInfo()));
-                cmNote = prepareCMNote();
+                cmNote = prepareCMNote("2");
                 cmNote.setNote(dump);
                 saveLinkNote(hostNoteId, cmNote);
 
@@ -725,6 +741,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                 if (fHist[i].getStartDate()!=null) {
                     cme.setKeyVal(CaseManagementNoteExt.STARTDATE);
                     cme.setDateValue(dateFPtoDate(fHist[i].getStartDate(), timeShiftInDays));
+                    cme.setValue(dateFPGetPartial(fHist[i].getStartDate()));
                     caseManagementManager.saveNoteExt(cme);
                 }
                 if (fHist[i].getAgeAtOnset()!=null) {
@@ -753,7 +770,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
             PastHealth[] pHealth = patientRec.getPastHealthArray();
             for (int i=0; i< pHealth.length; i++) {
                 if (i==0) scmi = getCMIssue("MedHistory");
-                CaseManagementNote cmNote = prepareCMNote();
+                CaseManagementNote cmNote = prepareCMNote("1");
 
                 //diagnosis code
                 if (pHealth[i].getDiagnosisProcedureCode()==null) {
@@ -771,7 +788,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 
                 //annotation
                 Long hostNoteId = cmNote.getId();
-                cmNote = prepareCMNote();
+                cmNote = prepareCMNote("2");
                 String note = pHealth[i].getNotes();
                 cmNote.setNote(note);
                 saveLinkNote(hostNoteId, cmNote);
@@ -787,7 +804,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                 dump = Util.addLine(dump, summary);
                 dump = Util.addLine(dump, diagCode);
                 dump = Util.addLine(dump, getResidual(pHealth[i].getResidualInfo()));
-                cmNote = prepareCMNote();
+                cmNote = prepareCMNote("2");
                 cmNote.setNote(dump);
                 saveLinkNote(hostNoteId, cmNote);
 
@@ -797,16 +814,19 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                 if (pHealth[i].getOnsetOrEventDate()!=null) {
                     cme.setKeyVal(CaseManagementNoteExt.STARTDATE);
                     cme.setDateValue(dateFPtoDate(pHealth[i].getOnsetOrEventDate(), timeShiftInDays));
+                    cme.setValue(dateFPGetPartial(pHealth[i].getOnsetOrEventDate()));
                     caseManagementManager.saveNoteExt(cme);
                 }
                     if (pHealth[i].getProcedureDate()!=null) {
                         cme.setKeyVal(CaseManagementNoteExt.PROCEDUREDATE);
                         cme.setDateValue(dateFPtoDate(pHealth[i].getProcedureDate(), timeShiftInDays));
+                        cme.setValue(dateFPGetPartial(pHealth[i].getProcedureDate()));
                         caseManagementManager.saveNoteExt(cme);
                     }
                     if (pHealth[i].getResolvedDate()!=null) {
                         cme.setKeyVal(CaseManagementNoteExt.RESOLUTIONDATE);
                         cme.setDateValue(dateFPtoDate(pHealth[i].getResolvedDate(), timeShiftInDays));
+                        cme.setValue(dateFPGetPartial(pHealth[i].getResolvedDate()));
                         caseManagementManager.saveNoteExt(cme);
                     }
                     if (pHealth[i].getLifeStage()!=null) {
@@ -820,7 +840,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                 ProblemList[] probList = patientRec.getProblemListArray();
                 for (int i=0; i<probList.length; i++) {
                     if (i==0) scmi = getCMIssue("Concerns");
-                    CaseManagementNote cmNote = prepareCMNote();
+                    CaseManagementNote cmNote = prepareCMNote("1");
 
                     //diagnosis code
                     if (probList[i].getDiagnosisCode()==null) {
@@ -838,7 +858,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 
                     //annotation
                     Long hostNoteId = cmNote.getId();
-                    cmNote = prepareCMNote();
+                    cmNote = prepareCMNote("2");
                     String note = probList[i].getNotes();
                     cmNote.setNote(note);
                     saveLinkNote(hostNoteId, cmNote);
@@ -854,7 +874,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     dump = Util.addLine(dump, summary);
                     dump = Util.addLine(dump, diagCode);
                     dump = Util.addLine(dump, getResidual(probList[i].getResidualInfo()));
-                    cmNote = prepareCMNote();
+                    cmNote = prepareCMNote("2");
                     cmNote.setNote(dump);
                     saveLinkNote(hostNoteId, cmNote);
 
@@ -869,6 +889,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     if (probList[i].getOnsetDate()!=null) {
                         cme.setKeyVal(CaseManagementNoteExt.STARTDATE);
                         cme.setDateValue(dateFPtoDate(probList[i].getOnsetDate(), timeShiftInDays));
+                        cme.setValue(dateFPGetPartial(probList[i].getOnsetDate()));
                         caseManagementManager.saveNoteExt(cme);
                     } else {
                         err_data.add("Error! No Onset Date for Problem List ("+(i+1)+")");
@@ -876,6 +897,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     if (probList[i].getResolutionDate()!=null) {
                         cme.setKeyVal(CaseManagementNoteExt.RESOLUTIONDATE);
                         cme.setDateValue(dateFPtoDate(probList[i].getResolutionDate(), timeShiftInDays));
+                        cme.setValue(dateFPGetPartial(probList[i].getResolutionDate()));
                         caseManagementManager.saveNoteExt(cme);
                     }
                     if (StringUtils.filled(probList[i].getProblemStatus())) {
@@ -894,7 +916,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                 RiskFactors[] rFactors = patientRec.getRiskFactorsArray();
                 for (int i=0; i<rFactors.length; i++) {
                     if (i==0) scmi = getCMIssue("RiskFactors");
-                    CaseManagementNote cmNote = prepareCMNote();
+                    CaseManagementNote cmNote = prepareCMNote("1");
                     cmNote.setIssues(scmi);
 
                     //main field
@@ -906,7 +928,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 
                     //annotation
                     Long hostNoteId = cmNote.getId();
-                    cmNote = prepareCMNote();
+                    cmNote = prepareCMNote("2");
                     String note = rFactors[i].getNotes();
                     cmNote.setNote(note);
                     saveLinkNote(hostNoteId, cmNote);
@@ -919,7 +941,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     }
                     dump = Util.addLine(dump, summary);
                     dump = Util.addLine(dump, getResidual(rFactors[i].getResidualInfo()));
-                    cmNote = prepareCMNote();
+                    cmNote = prepareCMNote("2");
                     cmNote.setNote(dump);
                     saveLinkNote(hostNoteId, cmNote);
 
@@ -929,11 +951,13 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     if (rFactors[i].getStartDate()!=null) {
                         cme.setKeyVal(CaseManagementNoteExt.STARTDATE);
                         cme.setDateValue(dateFPtoDate(rFactors[i].getStartDate(), timeShiftInDays));
+                        cme.setValue(dateFPGetPartial(rFactors[i].getStartDate()));
                         caseManagementManager.saveNoteExt(cme);
                     }
                     if (rFactors[i].getEndDate()!=null) {
                         cme.setKeyVal(CaseManagementNoteExt.RESOLUTIONDATE);
                         cme.setDateValue(dateFPtoDate(rFactors[i].getEndDate(), timeShiftInDays));
+                        cme.setValue(dateFPGetPartial(rFactors[i].getEndDate()));
                         caseManagementManager.saveNoteExt(cme);
                     }
                     if (rFactors[i].getAgeOfOnset()!=null) {
@@ -957,7 +981,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                 AlertsAndSpecialNeeds[] alerts = patientRec.getAlertsAndSpecialNeedsArray();
                 for (int i=0; i<alerts.length; i++) {
                     if (i==0) scmi = getCMIssue("Reminders");
-                    CaseManagementNote cmNote = prepareCMNote();
+                    CaseManagementNote cmNote = prepareCMNote("1");
                     cmNote.setIssues(scmi);
 
                     //main field
@@ -972,7 +996,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 
                     //annotation
                     Long hostNoteId = cmNote.getId();
-                    cmNote = prepareCMNote();
+                    cmNote = prepareCMNote("2");
                     String note = alerts[i].getNotes();
                     cmNote.setNote(note);
                     saveLinkNote(hostNoteId, cmNote);
@@ -985,6 +1009,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     }
                     dump = Util.addLine(dump, summary);
                     dump = Util.addLine(dump, getResidual(alerts[i].getResidualInfo()));
+                    cmNote = prepareCMNote("2");
                     cmNote.setNote(dump);
                     saveLinkNote(hostNoteId, cmNote);
 
@@ -994,11 +1019,13 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     if (alerts[i].getDateActive()!=null) {
                         cme.setKeyVal(CaseManagementNoteExt.STARTDATE);
                         cme.setDateValue(dateFPtoDate(alerts[i].getDateActive(), timeShiftInDays));
+                        cme.setValue(dateFPGetPartial(alerts[i].getDateActive()));
                         caseManagementManager.saveNoteExt(cme);
                     }
                     if (alerts[i].getEndDate()!=null) {
                         cme.setKeyVal(CaseManagementNoteExt.RESOLUTIONDATE);
                         cme.setDateValue(dateFPtoDate(alerts[i].getEndDate(), timeShiftInDays));
+                        cme.setValue(dateFPGetPartial(alerts[i].getEndDate()));
                         caseManagementManager.saveNoteExt(cme);
                     }
                 }
@@ -1006,7 +1033,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                 //CLINICAL NOTES
                 ClinicalNotes[] cNotes = patientRec.getClinicalNotesArray();
                 for (int i=0; i<cNotes.length; i++) {
-                    CaseManagementNote cmNote = prepareCMNote();
+                    CaseManagementNote cmNote = prepareCMNote("1");
 
                     if (cNotes[i].getEventDateTime()==null) cmNote.setObservation_date(new Date());
                     else cmNote.setObservation_date(dateTimeFPtoDate(cNotes[i].getEventDateTime(), timeShiftInDays));
@@ -1086,7 +1113,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 
                     //annotation
                     String note = StringUtils.noNull(aaReactArray[i].getNotes());
-                    CaseManagementNote cmNote = prepareCMNote();
+                    CaseManagementNote cmNote = prepareCMNote("2");
                     cmNote.setNote(note);
                     saveLinkNote(cmNote, CaseManagementNoteLink.ALLERGIES, allergyId);
 
@@ -1099,7 +1126,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     dump = Util.addLine(dump, summary);
                     dump = Util.addLine(dump, getResidual(aaReactArray[i].getResidualInfo()));
 
-                    cmNote = prepareCMNote();
+                    cmNote = prepareCMNote("2");
                     cmNote.setNote(note);
                     saveLinkNote(cmNote, CaseManagementNoteLink.ALLERGIES, allergyId);
                 }
@@ -1134,7 +1161,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     drug.setDrugForm(medArray[i].getForm());
                     drug.setLongTerm(getYN(medArray[i].getLongTermMedication()).equals("Yes"));
                     drug.setPastMed(getYN(medArray[i].getPastMedications()).equals("Yes"));
-                    //no need: drug.setPatientCompliance(getYN(medArray[i].getPatientCompliance()));
+                    drug.setPatientCompliance(getYN(medArray[i].getPatientCompliance()));
 
                     if (NumberUtils.isDigits(medArray[i].getNumberOfRefills())) drug.setRepeat(Integer.valueOf(medArray[i].getNumberOfRefills()));
                     drug.setETreatmentType(medArray[i].getTreatmentType());
@@ -1224,7 +1251,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                      */
 
                     //annotation
-                    CaseManagementNote cmNote = prepareCMNote();
+                    CaseManagementNote cmNote = prepareCMNote("2");
                     String note = StringUtils.noNull(medArray[i].getNotes());
                     cmNote.setNote(note);
                     saveLinkNote(cmNote, CaseManagementNoteLink.DRUGS, (long)drug.getId());
@@ -1238,7 +1265,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     dump = Util.addLine(dump, summary);
                     dump = Util.addLine(dump, getResidual(medArray[i].getResidualInfo()));
 
-                    cmNote = prepareCMNote();
+                    cmNote = prepareCMNote("2");
                     cmNote.setNote(dump);
                     saveLinkNote(cmNote, CaseManagementNoteLink.DRUGS, (long)drug.getId());
                 }
@@ -1520,7 +1547,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                         String annotation = labResults.getPhysiciansNotes();
                         if (StringUtils.filled(annotation)) {
                             saveMeasurementsExt(measId, "other_id", "0-0");
-                            CaseManagementNote cmNote = prepareCMNote();
+                            CaseManagementNote cmNote = prepareCMNote("2");
                             cmNote.setNote(annotation);
                             saveLinkNote(cmNote, CaseManagementNoteLink.LABTEST, Long.valueOf(lab_no), "0-0");
                         }
@@ -1529,7 +1556,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                         String testResultsInfo = labResults.getTestResultsInformationReportedByTheLab();
                         if (StringUtils.filled(testResultsInfo)) {
                             String dump = Util.addLine("imported.cms4.2011.06", "Test Results Info: ", testResultsInfo);
-                            CaseManagementNote cmNote = prepareCMNote();
+                            CaseManagementNote cmNote = prepareCMNote("2");
                             cmNote.setNote(dump);
                             saveLinkNote(cmNote, CaseManagementNoteLink.LABTEST, Long.valueOf(lab_no));
                         }
@@ -1906,30 +1933,32 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 
 
 	File makeImportLog(ArrayList demo, String dir) throws IOException {
-		String[][] keyword = new String[2][15];
+		String[][] keyword = new String[2][16];
 		keyword[0][0] = PATIENTID;
 		keyword[1][0] = "ID";
-                keyword[0][1] = " "+FAMILYHISTORY;
+                keyword[0][1] = " "+PERSONALHISTORY;
                 keyword[1][1] = " History";
-                keyword[0][2] = " "+PASTHEALTH;
-                keyword[1][2] = " Health";
-                keyword[0][3] = " "+PROBLEMLIST;
-                keyword[1][3] = " List";
-                keyword[0][4] = " "+RISKFACTOR;
-                keyword[1][4] = " Factor";
-                keyword[0][5] = " "+ALLERGY;
-                keyword[0][6] = " "+MEDICATION;
-                keyword[0][7] = " "+IMMUNIZATION;
-                keyword[0][8] = " "+LABS;
-                keyword[0][9] = " "+APPOINTMENT;
-                keyword[0][10] = " "+CLINICALNOTE;
-                keyword[1][10] = " Note";
-                keyword[0][11] = "    Report    ";
-                keyword[1][11] = " "+REPORTTEXT;
-                keyword[1][12] = " "+REPORTBINARY;
-                keyword[0][13] = " "+CAREELEMENTS;
-                keyword[1][13] = " Elements";
-                keyword[0][14] = " "+ALERT;
+                keyword[0][2] = " "+FAMILYHISTORY;
+                keyword[1][2] = " History";
+                keyword[0][3] = " "+PASTHEALTH;
+                keyword[1][3] = " Health";
+                keyword[0][4] = " "+PROBLEMLIST;
+                keyword[1][4] = " List";
+                keyword[0][5] = " "+RISKFACTOR;
+                keyword[1][5] = " Factor";
+                keyword[0][6] = " "+ALLERGY;
+                keyword[0][7] = " "+MEDICATION;
+                keyword[0][8] = " "+IMMUNIZATION;
+                keyword[0][9] = " "+LABS;
+                keyword[0][10] = " "+APPOINTMENT;
+                keyword[0][11] = " "+CLINICALNOTE;
+                keyword[1][11] = " Note";
+                keyword[0][12] = "    Report    ";
+                keyword[1][12] = " "+REPORTTEXT;
+                keyword[1][13] = " "+REPORTBINARY;
+                keyword[0][14] = " "+CAREELEMENTS;
+                keyword[1][14] = " Elements";
+                keyword[0][15] = " "+ALERT;
 
                 for (int i=0; i<keyword[0].length; i++) {
                     if (keyword[0][i].contains("Report")) {
@@ -2099,6 +2128,19 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 			return "";
     }
 
+    String dateFPGetPartial(cdsDt.DateFullOrPartial dfp) {
+		if (dfp==null) return "";
+
+		if (dfp.getYearMonth()!=null) {
+                        return CaseManagementNoteExt.YEARMONTH;
+		}
+		else if (dfp.getYearOnly()!=null) {
+                        return CaseManagementNoteExt.YEARONLY;
+		}
+		else
+			return "";
+    }
+
     Date dateTimeFPtoDate(cdsDt.DateTimeFullOrPartial dtfp, int timeShiftInDays) {
 		String sdate = dateTimeFPtoString(dtfp,timeShiftInDays);
 		Date dDate = UtilDateUtilities.StringToDate(sdate, "yyyy-MM-dd HH:mm:ss");
@@ -2126,8 +2168,8 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
     HashMap getPersonName(cdsDt.PersonNameSimple person) {
             HashMap<String,String> name = new HashMap<String,String>();
             if (person!=null) {
-                name.put("firstname", StringUtils.noNull(person.getFirstName()));
-                name.put("lastname", StringUtils.noNull(person.getLastName()));
+                name.put("firstname", StringUtils.noNull(person.getFirstName()).trim());
+                name.put("lastname", StringUtils.noNull(person.getLastName()).trim());
             }
             return name;
     }
@@ -2135,8 +2177,8 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
     HashMap getPersonName(cdsDt.PersonNameSimpleWithMiddleName person) {
             HashMap<String,String> name = new HashMap<String,String>();
             if (person!=null) {
-                name.put("firstname", StringUtils.noNull(person.getFirstName())+" "+StringUtils.noNull(person.getMiddleName()));
-                name.put("lastname", StringUtils.noNull(person.getLastName()));
+                name.put("firstname", StringUtils.noNull(person.getFirstName()).trim()+" "+StringUtils.noNull(person.getMiddleName()).trim());
+                name.put("lastname", StringUtils.noNull(person.getLastName()).trim());
             }
             return name;
     }
@@ -2376,7 +2418,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 		return msgs;
 	}
 
-	CaseManagementNote prepareCMNote() {
+	CaseManagementNote prepareCMNote(String caisi_role) {
 		CaseManagementNote cmNote = new CaseManagementNote();
 		cmNote.setUpdate_date(new Date());
 		cmNote.setObservation_date(new Date());
@@ -2385,10 +2427,13 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 		cmNote.setSigning_provider_no(admProviderNo);
 		cmNote.setSigned(true);
 		cmNote.setHistory("");
-		cmNote.setReporter_caisi_role("1");  //caisi_role for "doctor"
 		cmNote.setReporter_program_team("0");
 		cmNote.setProgram_no(programId);
 		cmNote.setUuid(UUID.randomUUID().toString());
+
+                if (caisi_role==null || (!caisi_role.equals("1") && !caisi_role.equals("2"))) caisi_role="1";
+                cmNote.setReporter_caisi_role(caisi_role);  //"1" for doctor, "2" for nurse - note hidden in echart
+
 		return cmNote;
 	}
 

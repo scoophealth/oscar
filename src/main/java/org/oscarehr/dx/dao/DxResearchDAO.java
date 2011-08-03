@@ -13,7 +13,7 @@ public class DxResearchDAO extends HibernateDaoSupport {
 	}
 	
 	public List<DxResearch> getByDemographicNo(int demographicNo) {
-		return getHibernateTemplate().find("from DxResearch dx where dx.demographicNo = ?",demographicNo);
+		return getHibernateTemplate().find("from DxResearch dx where dx.demographicNo = ? and dx.status='A'",demographicNo);
 	}
 	
 	public boolean entryExists(int demographicNo, String codeType, String code) {
