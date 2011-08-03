@@ -130,7 +130,7 @@ public class MDSHandler implements MessageHandler {
             // ignore exceptions
         }
         
-        if (priority.startsWith("AL"))
+        if (priority != null && priority.startsWith("AL"))
             priority = "L";
         
         return priority;
