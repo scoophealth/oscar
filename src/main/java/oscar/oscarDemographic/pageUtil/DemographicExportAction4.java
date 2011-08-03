@@ -907,7 +907,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                             ClinicalNotes.NoteReviewer noteReviewer = cNote.addNewNoteReviewer();
                             Util.writeNameSimple(noteReviewer.addNewName(), prvd.getFirst_name(), prvd.getLast_name());
                             if (cmn.getUpdate_date()!=null) noteReviewer.addNewDateTimeNoteReviewed().setFullDate(Util.calDate(cmn.getUpdate_date()));
-                            else noteReviewer.addNewDateTimeNoteReviewed().setFullDate(Util.calDate(new Date()));
+                            else noteReviewer.addNewDateTimeNoteReviewed().setFullDateTime(Util.calDate(new Date()));
                             if (StringUtils.noNull(prvd.getOhip_no()).length()<=6) noteReviewer.setOHIPPhysicianId(prvd.getOhip_no());
                         }
                     }
@@ -1170,7 +1170,8 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         mSummary = Util.addSummary(mSummary, "Form", arr[p].getDrugForm());
                     }
                     if (StringUtils.filled(arr[p].getCustomName())) {
-                        medi.setForm(arr[p].getCustomName());
+                        if (StringUtils.empty(drugName)) medi.setDrugName(arr[p].getCustomName());
+                        medi.setDrugDescription(arr[p].getCustomName());
                         mSummary = Util.addSummary(mSummary, "Drug Description", arr[p].getCustomName());
                     }
                     if (StringUtils.filled(arr[p].getFreqDisplay())) {
@@ -1368,6 +1369,10 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         if (StringUtils.filled(min)) refRange.setLowLimit(min);
                         if (StringUtils.filled(max)) refRange.setHighLimit(max);
                     }
+
+                    //OLIS test result status
+                    String olis_status = labMea.getExtVal("olis_status");
+                    if (StringUtils.filled(olis_status)) labResults.setOLISTestResultStatus(olis_status);
 
                     String lab_no = StringUtils.noNull(labMea.getExtVal("lab_no"));
                     if (StringUtils.filled(lab_no)) {
@@ -1811,7 +1816,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         if (meas.getDateObserved()==null) {
                             err.add("Error! No Date for Diabetes Self-management Challenges (id="+meas.getId()+") for Patient "+demoNo);
                         }
-                        dsc.setChallengesIdentified(cdsDt.YnIndicatorsimple.Y);
+                        dsc.setChallengesIdentified(Util.yn(meas.getDataField()));
                         addOneEntry(CAREELEMENTS);
                     } else if (meas.getType().equals("MCCN")) { //Motivation Counseling Completed Nutrition
                         CareElements careElm = patientRec.addNewCareElements();
@@ -1949,7 +1954,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
         files.add(makeExportLog(files.get(0).getParentFile(), err));
 	
 	//zip all export files
-        String zipName = files.get(0).getName().replace(".xml", ".pgp");
+        String zipName = files.get(0).getName().replace(".xml", ".zip");
 //	if (setName!=null) zipName = "export_"+setName.replace(" ","")+"_"+UtilDateUtilities.getToday("yyyyMMddHHmmss")+".pgp";
 	if (setName!=null) zipName = "export_"+setName.replace(" ","")+"_"+UtilDateUtilities.getToday("yyyyMMddHHmmss");
 	if (!Util.zipFiles(files, zipName, tmpDir)) {

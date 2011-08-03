@@ -1497,6 +1497,10 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                         }
                     }
 
+                    //save OLIS test result status
+                    String olis_status = labResults.getOLISTestResultStatus();
+                    if (StringUtils.filled(olis_status)) saveMeasurementsExt(measId, "olis_status", olis_status);
+
                     //save notes from lab
                     String labNotes = labResults.getNotesFromLab();
                     if (StringUtils.filled(labNotes)) saveMeasurementsExt(measId, "comments", labNotes);
