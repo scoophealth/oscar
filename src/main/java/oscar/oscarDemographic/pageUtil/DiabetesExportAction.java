@@ -238,7 +238,6 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             errors.add("Error loading schema file! Cannot obtain DIN list!");
 
 
-        MiscUtils.getLogger().info("Ronnie: DIN list [" + listOfDINS.size() + "]");
     }
     
     void setCareElements(PatientRecord patientRecord, String demoNo) throws SQLException {
@@ -323,7 +322,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                 CareElements careElements = patientRecord.addNewCareElements();
 		cdsDt.DiabetesSelfManagementChallenges dsc = careElements.addNewDiabetesSelfManagementChallenges();
 		dsc.setCodeValue(cdsDt.DiabetesSelfManagementChallenges.CodeValue.X_44941_3);
-		dsc.setChallengesIdentified(cdsDt.YnIndicatorsimple.Y);
+		dsc.setChallengesIdentified(Util.yn(meas.getDataField()));
 		dsc.setDate(Util.calDate(dateObserved));
                 if (dateObserved==null) {
                     errors.add("Error! No Date for Diabetes Self-management Challenges (id="+meas.getId()+") for Patient "+demoNo);

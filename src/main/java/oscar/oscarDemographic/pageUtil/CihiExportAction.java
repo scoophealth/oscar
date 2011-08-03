@@ -647,7 +647,6 @@ public class CihiExportAction extends DispatchAction {
                     else if(typeCode == 0) xmlAllergies.setPropertyOfOffendingAgent(cdsDtCihi.PropertyOfOffendingAgent.ND);
                     else xmlAllergies.setPropertyOfOffendingAgent(cdsDtCihi.PropertyOfOffendingAgent.UK);
                 }
-        	xmlAllergies.setPropertyOfOffendingAgent(cdsDtCihi.PropertyOfOffendingAgent.DR);
         	xmlAllergies.setOffendingAgentDescription(allergy.getDescription());
         	try {
                 index = Integer.parseInt(allergy.getSeverityOfReaction());
