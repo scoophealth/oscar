@@ -363,7 +363,7 @@ public class CihiExportAction extends DispatchAction {
 		xmlDemographics.setGender(enumDemo);
 		
 		String spokenLanguage = demo.getSpokenLanguage();
-		if (spokenLanguage != null && !"".equals(spokenLanguage.trim())){
+		if (StringUtils.filled(spokenLanguage) && Util.convertLanguageToCode(spokenLanguage)!=null){
 			xmlDemographics.setPreferredSpokenLanguage(spokenLanguage);
 		}
 					
@@ -482,8 +482,9 @@ public class CihiExportAction extends DispatchAction {
                         if (cIssue.getIssue().getType().equals("system")) continue;
 
                 	StandardCoding standardCoding = familyHistory.addNewDiagnosisProcedureCode();
-                	standardCoding.setStandardCode(cIssue.getIssue().getCode());
                 	standardCoding.setStandardCodingSystem(cIssue.getIssue().getType());
+                        String code = cIssue.getIssue().getType().equalsIgnoreCase("icd9") ? Util.formatIcd9(cIssue.getIssue().getCode()) : cIssue.getIssue().getCode();
+                	standardCoding.setStandardCode(code);
                 	standardCoding.setStandardCodeDescription(cIssue.getIssue().getDescription());
                         break;
                 }
@@ -557,8 +558,9 @@ public class CihiExportAction extends DispatchAction {
                     if (cIssue.getIssue().getType().equals("system")) continue;
 
                 	StandardCoding standardCoding = problemList.addNewDiagnosisCode();
-                	standardCoding.setStandardCode(cIssue.getIssue().getCode());
                 	standardCoding.setStandardCodingSystem(cIssue.getIssue().getType());
+                        String code = cIssue.getIssue().getType().equalsIgnoreCase("icd9") ? Util.formatIcd9(cIssue.getIssue().getCode()) : cIssue.getIssue().getCode();
+                	standardCoding.setStandardCode(code);
                 	standardCoding.setStandardCodeDescription(cIssue.getIssue().getDescription());
                     break;
                 }
@@ -824,17 +826,18 @@ public class CihiExportAction extends DispatchAction {
                             cIssue = i.next();
                             if (cIssue.getIssue().getType().equals("system")) continue;
 
+                            String code = cIssue.getIssue().getType().equalsIgnoreCase("icd9") ? Util.formatIcd9(cIssue.getIssue().getCode()) : cIssue.getIssue().getCode();
                             if (procedure!=null) {
                                 StandardCoding procedureCode = procedure.addNewProcedureCode();
                                 procedureCode.setStandardCodingSystem(cIssue.getIssue().getType());
-                                procedureCode.setStandardCode(cIssue.getIssue().getCode());
+                                procedureCode.setStandardCode(code);
                                 procedureCode.setStandardCodeDescription(cIssue.getIssue().getDescription());
                                 break;
                             } else
                             if (problemlist!=null) {
                                 StandardCoding diagnosisCode = problemlist.addNewDiagnosisCode();
                                 diagnosisCode.setStandardCodingSystem(cIssue.getIssue().getType());
-                                diagnosisCode.setStandardCode(cIssue.getIssue().getCode());
+                                diagnosisCode.setStandardCode(code);
                                 diagnosisCode.setStandardCodeDescription(cIssue.getIssue().getDescription());
                                 break;
                             }

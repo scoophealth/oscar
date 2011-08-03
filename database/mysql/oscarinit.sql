@@ -8069,6 +8069,14 @@ CREATE TABLE `other_id` (
 	deleted boolean NOT NULL
 );
 
+CREATE TABLE `partial_date` (
+	id int PRIMARY KEY AUTO_INCREMENT,
+	table_name int,
+	table_id int,
+	field_name varchar(50),
+	format varchar(10)
+);
+
 CREATE TABLE demographicArchive (
   id bigint(20) auto_increment primary key,
   demographic_no int(10),

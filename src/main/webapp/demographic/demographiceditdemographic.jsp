@@ -1407,6 +1407,7 @@ if(oscarVariables.getProperty("demographicExt") != null) {
 									    <option value="English" <%=spokenLang.equals("English")?"selected":""%> ><bean:message key="demographic.demographiceditdemographic.msgEnglish"/></option>
 									    <option value="French" <%=spokenLang.equals("French")?"selected":""%> ><bean:message key="demographic.demographiceditdemographic.msgFrench"/></option>
                                                                             <option value="Chinese" <%=spokenLang.equals("Chinese")?"selected":""%> >Chinese</option>
+                                                                            <option value="German" <%=spokenLang.equals("German")?"selected":""%> >German</option>
                                                                             <option value="Italian" <%=spokenLang.equals("Italian")?"selected":""%> >Italian</option>
                                                                             <option value="Japanese" <%=spokenLang.equals("Japanese")?"selected":""%> >Japanese</option>
                                                                             <option value="Korean" <%=spokenLang.equals("Korean")?"selected":""%> >Korean</option>

@@ -23,6 +23,7 @@ import java.util.zip.ZipOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.xmlbeans.XmlCalendar;
+import org.oscarehr.casemgmt.model.CaseManagementNoteExt;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.util.StringUtils;
@@ -48,8 +49,8 @@ public class Util {
 	return newStr;
     }
 
-    static public String newSummary(String label, String item) {
-	return addSummary("<CategorySummaryLine>", label, item);
+    static public String addSummary(String label, String item) {
+	return addSummary(label, "", item);
     }
 
     static public String addSummary(String summary, String label, String item) {
@@ -58,13 +59,6 @@ public class Util {
         if (StringUtils.filled(summary)) summary += ",";
         summary += "["+label+"]:"+item;
 	
-	return summary;
-    }
-
-    static public String endSummary(String summary) {
-	if (StringUtils.filled(summary) && summary.startsWith("<CategorySummaryLine>")) {
-            summary += "</CategorySummaryLine>";
-	}
 	return summary;
     }
 
@@ -352,4 +346,76 @@ public class Util {
         return false;
     }
 
+    static public void putPartialDate(cdsDt.DateFullOrPartial dfp, CaseManagementNoteExt cme) {
+        String type = cme.getValue();
+
+        if (type!=null) {
+            if (type.equals(CaseManagementNoteExt.YEARONLY)) dfp.setYearOnly(Util.calDate(cme.getDateValue()));
+            else if(type.equals(CaseManagementNoteExt.YEARMONTH)) dfp.setYearMonth(Util.calDate(cme.getDateValue()));
+            else dfp.setFullDate(Util.calDate(cme.getDateValue()));
+        } else {
+            dfp.setFullDate(Util.calDate(cme.getDateValue()));
+        }
+    }
+
+    static public String readPartialDate(CaseManagementNoteExt cme) {
+        String type = cme.getValue();
+        String val = null;
+
+        if (StringUtils.filled(type)) {
+            if (type.equals(CaseManagementNoteExt.YEARONLY))
+                val = oscar.util.UtilDateUtilities.DateToString(cme.getDateValue(),"yyyy");
+            else if (type.equals(CaseManagementNoteExt.YEARMONTH))
+                val = oscar.util.UtilDateUtilities.DateToString(cme.getDateValue(),"yyyy-MM");
+            else val = oscar.util.UtilDateUtilities.DateToString(cme.getDateValue(),"yyyy-MM-dd");
+        } else {
+            val = oscar.util.UtilDateUtilities.DateToString(cme.getDateValue(),"yyyy-MM-dd");
+        }
+        return val;
+    }
+    
+    static public String formatIcd9(String code) {
+        if (StringUtils.empty(code)) return code;
+        if (code.length()<=3) return code;
+
+        String codeFormatted = code.substring(0,3);
+        code = code.substring(3);
+        while (code.length()>3) {
+            codeFormatted += "."+code.substring(0,3);
+            code = code.substring(3);
+        }
+        if (code.length()>0) codeFormatted += "."+code;
+
+        return codeFormatted;
+    }
+
+    /**
+     * TODO: Need to extend this in the future to read off an ISO-639-2 table.
+     *
+     * @param lang
+     * @return
+     */
+    static public String convertLanguageToCode(String lang) {
+    	if(lang.equalsIgnoreCase("english")) return "ENG";
+    	if(lang.equalsIgnoreCase("french")) return "FRE";
+    	if(lang.equalsIgnoreCase("chinese")) return "CHI";
+        if(lang.equalsIgnoreCase("italian")) return "ITA";
+        if(lang.equalsIgnoreCase("japanese")) return "JPA";
+        if(lang.equalsIgnoreCase("korean")) return "KOR";
+        if(lang.equalsIgnoreCase("spanish")) return "SPA";
+        if(lang.equalsIgnoreCase("german")) return "GER";
+    	return null;
+    }
+
+    static public String convertCodeToLanguage(String lang) {
+    	if(lang.equalsIgnoreCase("ENG")) return "English";
+    	if(lang.equalsIgnoreCase("FRE")) return "French";
+    	if(lang.equalsIgnoreCase("CHI")) return "Chinese";
+        if(lang.equalsIgnoreCase("ITA")) return "Italian";
+        if(lang.equalsIgnoreCase("JPA")) return "Japanese";
+        if(lang.equalsIgnoreCase("KOR")) return "Korean";
+        if(lang.equalsIgnoreCase("SPA")) return "Spanish";
+        if(lang.equalsIgnoreCase("GER")) return "German";
+    	return null;
+    }
 }
