@@ -68,19 +68,32 @@
     Integer tableName = cmm.getTableNameByDisplay(display);
     String note = "";
     String dump = "";
+    List<CaseManagementNoteLink> cmll = null;
     CaseManagementNoteLink cml = null;
     if(oid!=null && oid.length()>0) {
-    	cml = cmm.getLatestLinkByTableId(tableName, tableId, oid);//the lastest note which should be the annotation instead of document note.
+    	cmll = cmm.getLinkByTableIdDesc(tableName, tableId, oid);
     } else {
-    	cml = cmm.getLatestLinkByTableId(tableName, tableId);//the lastest note which should be the annotation instead of document note.
+    	cmll = cmm.getLinkByTableIdDesc(tableName, tableId);
     }
     CaseManagementNote p_cmn = null;
-    if (cml!=null) {
-        p_cmn = cmm.getNote(cml.getNoteId().toString());
+    CaseManagementNote p_cmn_dump = null;
+    
+    for (CaseManagementNoteLink link : cmll) {
 
-        //get the most recent previous note from uuid.
-        p_cmn=cmm.getMostRecentNote(p_cmn.getUuid());
+        CaseManagementNote cmnote = cmm.getNote(link.getNoteId().toString());
+        if (cmnote.getNote().startsWith("imported.cms4.2011.06")) {
+            if (p_cmn_dump==null) p_cmn_dump = cmm.getNote(link.getNoteId().toString());
+        } else {
+            if (p_cmn==null) {
+                p_cmn = cmm.getNote(link.getNoteId().toString());
+                cml = link;
+            }
+        }
+        if (p_cmn_dump!=null && p_cmn!=null) break;
     }
+
+    //get the most recent previous note from uuid.
+    if (p_cmn!=null) p_cmn=cmm.getMostRecentNote(p_cmn.getUuid());
 
     String uuid = "";
     //if get provider no is -1 , it's a document note.
@@ -96,12 +109,10 @@
 	//get note from database
 	 //previous annotation exists
             historyNote=p_cmn;
+            note = p_cmn.getNote();
 
-            String tmp = p_cmn.getNote();
-            if (tmp.startsWith("imported.cms4.2011.06")) {
-                dump = tmp.substring("imported.cms4.2011.06".length());
-            } else {
-                note = p_cmn.getNote();
+            if (p_cmn_dump!=null) {
+                dump = p_cmn_dump.getNote().substring("imported.cms4.2011.06".length());
             }
 	}
     if (saved) {
@@ -110,8 +121,8 @@
 	CaseManagementNote cmn = createCMNote(historyNote,request.getParameter("note"), demo, user_no, prog_no);
 	if (cmn!=null) {
 	    if (p_cmn!=null) {  //previous annotation exists
-/*            if (p_cmn!=null && note !="") { //previous annotation exists
-*/		cmn.setUuid(uuid); //assign same UUID to new annotation
+//            if (p_cmn!=null && note !="") { //previous annotation exists
+		cmn.setUuid(uuid); //assign same UUID to new annotation
 	    }
 	    if (tableName.equals(cml.CASEMGMTNOTE) || tableId.equals(0L)) {
                 //new casemgmt_note may be saved AFTER annotation

@@ -806,13 +806,31 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
                     LogAction.addLog(providerNo, LogConst.ANNOTATE, LogConst.CON_CME_NOTE, String.valueOf(cmn.getId()), request.getRemoteAddr(), demo, cmn.getNote());
                     session.removeAttribute(attrib_name);
                     
-		} else if (!noteId.equals("0")) {
+		}
+                if (!noteId.equals("0")) {
                     //Not a new note, look for old annotation
 
-                    CaseManagementNoteLink cml = caseManagementMgr.getLatestLinkByTableId(CaseManagementNoteLink.CASEMGMTNOTE, Long.valueOf(noteId));
-                    if (cml!=null) {//old annotation exists - create new link
+                    CaseManagementNoteLink cml_anno = null;
+                    CaseManagementNoteLink cml_dump = null;
+                    List<CaseManagementNoteLink> cmll = caseManagementMgr.getLinkByTableIdDesc(CaseManagementNoteLink.CASEMGMTNOTE, Long.valueOf(noteId));
+                    for (CaseManagementNoteLink link : cmll) {
+                        CaseManagementNote cmmn = caseManagementMgr.getNote(link.getNoteId().toString());
+                        if (cmmn==null) continue;
 
-                        CaseManagementNoteLink cml_n = new CaseManagementNoteLink(CaseManagementNoteLink.CASEMGMTNOTE,note.getId(),cml.getNoteId());
+                        if (cmmn.getNote().startsWith("imported.cms4.2011.06")) {
+                            if (cml_dump==null) cml_dump = link;
+                        } else {
+                            if (cml_anno==null) cml_anno = link;
+                        }
+                        if (cml_anno!=null && cml_dump!=null) break;
+                    }
+
+                    if (cml_anno!=null) {//old annotation exists - create new link
+                        CaseManagementNoteLink cml_n = new CaseManagementNoteLink(CaseManagementNoteLink.CASEMGMTNOTE,note.getId(),cml_anno.getNoteId());
+                        caseManagementMgr.saveNoteLink(cml_n);
+                    }
+                    if (cml_dump!=null) {//old dump exists - create new link
+                        CaseManagementNoteLink cml_n = new CaseManagementNoteLink(CaseManagementNoteLink.CASEMGMTNOTE,note.getId(),cml_dump.getNoteId());
                         caseManagementMgr.saveNoteLink(cml_n);
                     }
                 }
@@ -1149,28 +1167,34 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
                         LogAction.addLog(providerNo, LogConst.ANNOTATE, LogConst.CON_CME_NOTE, String.valueOf(cmn.getId()), request.getRemoteAddr(), demo, cmn.getNote());
                         session.removeAttribute(attrib_name);
 
-		} else if (old_note_id!=null) {
+		}
+                if (old_note_id!=null) {
                     //Not a new note, look for old annotation
 
-                    CaseManagementNoteLink cml = caseManagementMgr.getLatestLinkByTableId(CaseManagementNoteLink.CASEMGMTNOTE, old_note_id);
-                    if (cml!=null) {//old annotation exists - create new link
+                    CaseManagementNoteLink cml_anno = null;
+                    CaseManagementNoteLink cml_dump = null;
+                    List<CaseManagementNoteLink> cmll = caseManagementMgr.getLinkByTableIdDesc(CaseManagementNoteLink.CASEMGMTNOTE, old_note_id);
+                    for (CaseManagementNoteLink link : cmll) {
+                        CaseManagementNote cmmn = caseManagementMgr.getNote(link.getNoteId().toString());
+                        if (cmmn==null) continue;
 
-                        CaseManagementNoteLink cml_n = new CaseManagementNoteLink(CaseManagementNoteLink.CASEMGMTNOTE,note.getId(),cml.getNoteId());
+                        if (cmmn.getNote().startsWith("imported.cms4.2011.06")) {
+                            if (cml_dump==null) cml_dump = link;
+                        } else {
+                            if (cml_anno==null) cml_anno = link;
+                        }
+                        if (cml_anno!=null && cml_dump!=null) break;
+                    }
+
+                    if (cml_anno!=null) {//old annotation exists - create new link
+                        CaseManagementNoteLink cml_n = new CaseManagementNoteLink(CaseManagementNoteLink.CASEMGMTNOTE,note.getId(),cml_anno.getNoteId());
+                        caseManagementMgr.saveNoteLink(cml_n);
+                    }
+                    if (cml_dump!=null) {//old dump exists - create new link
+                        CaseManagementNoteLink cml_n = new CaseManagementNoteLink(CaseManagementNoteLink.CASEMGMTNOTE,note.getId(),cml_dump.getNoteId());
                         caseManagementMgr.saveNoteLink(cml_n);
                     }
                 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 		String logAction;
 		if (newNote) {
