@@ -379,12 +379,14 @@ function revokeSignOffHrm(reportId) {
 		</tr>
 		<% } %>
 		<tr>
-			<th>Categorisation</th>
+			<th>Categorization</th>
 			<td>
 				<%
 					HRMCategory category = (HRMCategory) request.getAttribute("category");
+					if (category != null){
 				%>
 				<%=StringEscapeUtils.escapeHtml(category.getCategoryName())%>
+				<%  }%> 
 			</td>
 		</tr>
 		<tr>
