@@ -405,6 +405,18 @@ public class CaseManagementManager {
 		return this.caseManagementNoteLinkDAO.getLinkByTableId(tableName, tableId);
 	}
 
+	public List getLinkByTableId(Integer tableName, Long tableId, String otherId) {
+		return this.caseManagementNoteLinkDAO.getLinkByTableId(tableName, tableId, otherId);
+	}
+
+	public List getLinkByTableIdDesc(Integer tableName, Long tableId) {
+		return this.caseManagementNoteLinkDAO.getLinkByTableIdDesc(tableName, tableId);
+	}
+
+	public List getLinkByTableIdDesc(Integer tableName, Long tableId, String otherId) {
+		return this.caseManagementNoteLinkDAO.getLinkByTableIdDesc(tableName, tableId, otherId);
+	}
+
 	public CaseManagementNoteLink getLatestLinkByTableId(Integer tableName, Long tableId, String otherId) {
 		return this.caseManagementNoteLinkDAO.getLastLinkByTableId(tableName, tableId, otherId);
 	}
