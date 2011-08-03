@@ -11,8 +11,12 @@ package oscar.oscarLab.ca.all.upload.handlers;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.common.dao.Hl7TextInfoDao;
+import org.oscarehr.common.model.Hl7TextInfo;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBHandler;
 import oscar.oscarLab.ca.all.parsers.Factory;
@@ -21,7 +25,9 @@ import oscar.oscarLab.ca.all.util.Utilities;
 
 public class GDMLHandler implements MessageHandler {
 
-	Logger logger = Logger.getLogger(GDMLHandler.class);
+	Logger logger = Logger.getLogger(GDMLHandler.class);	
+	Hl7TextInfoDao hl7TextInfoDao = (Hl7TextInfoDao)SpringUtils.getBean("hl7TextInfoDao");
+	
 
 	public String parse(String serviceName, String fileName, int fileId) {
 
@@ -31,6 +37,9 @@ public class GDMLHandler implements MessageHandler {
 			for (i = 0; i < messages.size(); i++) {
 
 				String msg = messages.get(i);
+				if(isDuplicate(msg)) {
+					return ("success");
+				}
 				MessageUploader.routeReport(serviceName, "GDML", msg, fileId);
 
 			}
@@ -82,4 +91,27 @@ public class GDMLHandler implements MessageHandler {
 		}
 	}
 
+	private boolean isDuplicate(String msg) {
+		//OLIS requirements - need to see if this is a duplicate
+		oscar.oscarLab.ca.all.parsers.MessageHandler h = Factory.getHandler("GDML", msg);
+		//if final		
+		if(h.getOrderStatus().equals("F")) {
+			String fullAcc = h.getAccessionNum();
+			String acc = h.getAccessionNum();
+			if(acc.indexOf("-")!=-1) {
+				acc = acc.substring(acc.indexOf("-")+1);
+			}
+			//do we have this?
+			List<Hl7TextInfo> dupResults = hl7TextInfoDao.searchByAccessionNumber(acc);
+			for(Hl7TextInfo dupResult:dupResults) {
+				if(dupResult.equals(fullAcc)) {
+					return true;
+				}
+				if(dupResult.getAccessionNumber().length()>4 && dupResult.getAccessionNumber().substring(4).equals(acc)) {
+					return true;
+				}
+			}		
+		}
+		return false;	
+	}
 }
