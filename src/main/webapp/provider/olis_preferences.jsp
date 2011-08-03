@@ -1,0 +1,129 @@
+<!--  
+/*
+ * 
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License. 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either version 2 
+ * of the License, or (at your option) any later version. * 
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+ * 
+ * <OSCAR TEAM>
+ * 
+ * This software was written for the 
+ * Department of Family Medicine 
+ * McMaster University 
+ * Hamilton 
+ * Ontario, Canada 
+ */
+--><%@ include file="/casemgmt/taglibs.jsp"%>
+
+<%
+  String curUser_no;
+  curUser_no = (String) session.getAttribute("user");
+
+%>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request" />
+<html:html>
+<head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+<html:base />
+<title><bean:message key="provider.olisPrefs" /></title>
+
+<link rel="stylesheet" type="text/css" href="../oscarEncounter/encounterStyles.css">
+<link rel="stylesheet" type="text/css" media="all" href="<c:out value="${ctx}"/>/share/calendar/calendar.css" title="win2k-cold-1">
+<script src="<c:out value="${ctx}"/>/share/javascript/prototype.js"	type="text/javascript"></script>
+<script src="<c:out value="${ctx}"/>/share/javascript/scriptaculous.js"	type="text/javascript"></script>
+<script src="<c:out value="${ctx}"/>/js/jquery.js"></script>
+<script>
+	jQuery.noConflict();
+</script>
+
+
+</head>
+
+<body class="BodyStyle" vlink="#0000FF">
+
+<table class="MainTable" id="scrollNumber1" name="encounterTable">
+	<tr class="MainTableTopRow">
+		<td class="MainTableTopRowLeftColumn"><bean:message key="provider.setNoteStaleDate.msgPrefs" /></td>
+		<td style="color: white" class="MainTableTopRowRightColumn"><bean:message key="provider.olisPrefs" /></td>
+	</tr>
+	<tr>
+		<td class="MainTableLeftColumn">&nbsp;</td>
+		<td class="MainTableRightColumn">
+			<!-- form starts here -->
+			<form action="<c:out value="${ctx}"/>/provider/OlisPreferences.do?method=save" method="post">
+			<table width="100%" border="1">
+			<tr>
+				<th width="20%">Reporting Laboratory</th>
+				<td colspan="3">
+					<%
+						String val1 = (String)request.getAttribute("reportingLaboratory");
+						if(val1 == null) val1 = "";
+					%>
+					<select id="reportingLaboratory" name="reportingLaboratory">
+						<option value="" <%=(val1.equals("")?"selected=\"selected\"":"") %>></option>
+						<option value="5552" <%=(val1.equals("5552")?"selected=\"selected\"":"") %>>Gamma-Dynacare</option>
+						<option value="5407" <%=(val1.equals("5407")?"selected=\"selected\"":"") %>>CML</option>
+						<option value="5687" <%=(val1.equals("5687")?"selected=\"selected\"":"") %>>LifeLabs</option>
+						<option value="4001" <%=(val1.equals("4001")?"selected=\"selected\"":"") %>>BSD Lab1</option>
+						<option value="4002" <%=(val1.equals("4002")?"selected=\"selected\"":"") %>>BSD Lab2</option>
+						<option value="4003" <%=(val1.equals("4003")?"selected=\"selected\"":"") %>>BSD Lab3</option>
+						<option value="4004" <%=(val1.equals("4004")?"selected=\"selected\"":"") %>>BSD Lab4</option>
+						<option value="4005" <%=(val1.equals("4005")?"selected=\"selected\"":"") %>>BSD Lab5</option>
+						<option value="4006" <%=(val1.equals("4006")?"selected=\"selected\"":"") %>>BSD Lab6</option>
+						<option value="4007" <%=(val1.equals("4007")?"selected=\"selected\"":"") %>>BSD Lab7</option>
+						<option value="4008" <%=(val1.equals("4008")?"selected=\"selected\"":"") %>>BSD Lab8</option>
+						<option value="4009" <%=(val1.equals("4009")?"selected=\"selected\"":"") %>>BSD Lab9</option>
+						<option value="4010" <%=(val1.equals("4010")?"selected=\"selected\"":"") %>>BSD Lab10</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<th width="20%">Exclude Reporting Laboratory</th>
+				<td width="30%">
+					<%
+						val1 = (String)request.getAttribute("excludeReportingLaboratory");
+						if(val1 == null) val1 = "";
+					%>
+					<select id="excludeReportingLaboratory" name="excludeReportingLaboratory">
+						<option value="" <%=(val1.equals("")?"selected=\"selected\"":"") %>></option>
+						<option value="5552" <%=(val1.equals("5552")?"selected=\"selected\"":"") %>>Gamma-Dynacare</option>
+						<option value="5407" <%=(val1.equals("5407")?"selected=\"selected\"":"") %>>CML</option>
+						<option value="5687" <%=(val1.equals("5687")?"selected=\"selected\"":"") %>>LifeLabs</option>
+						<option value="4001" <%=(val1.equals("4001")?"selected=\"selected\"":"") %>>BSD Lab1</option>
+						<option value="4002" <%=(val1.equals("4002")?"selected=\"selected\"":"") %>>BSD Lab2</option>
+						<option value="4003" <%=(val1.equals("4003")?"selected=\"selected\"":"") %>>BSD Lab3</option>
+						<option value="4004" <%=(val1.equals("4004")?"selected=\"selected\"":"") %>>BSD Lab4</option>
+						<option value="4005" <%=(val1.equals("4005")?"selected=\"selected\"":"") %>>BSD Lab5</option>
+						<option value="4006" <%=(val1.equals("4006")?"selected=\"selected\"":"") %>>BSD Lab6</option>
+						<option value="4007" <%=(val1.equals("4007")?"selected=\"selected\"":"") %>>BSD Lab7</option>
+						<option value="4008" <%=(val1.equals("4008")?"selected=\"selected\"":"") %>>BSD Lab8</option>
+						<option value="4009" <%=(val1.equals("4009")?"selected=\"selected\"":"") %>>BSD Lab9</option>
+						<option value="4010" <%=(val1.equals("4010")?"selected=\"selected\"":"") %>>BSD Lab10</option>
+					</select>
+			</td>
+			</tr>
+												
+		</table>
+			<input type="submit" value="Save Changes"/>
+			</form>
+			<!-- end of form -->
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableBottomRowLeftColumn"></td>
+		<td class="MainTableBottomRowRightColumn"></td>
+	</tr>
+</table>
+</body>
+</html:html>
