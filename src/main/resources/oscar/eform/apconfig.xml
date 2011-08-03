@@ -489,5 +489,12 @@
         </ap-sql>
         <ap-output>${first_name} ${last_name}\n${address}\n${city} ${province}\n${postal}</ap-output>    	
     </databaseap>
+    <databaseap>
+    	<ap-name>guardian_label2</ap-name>
+        <ap-sql>select d.first_name, d.last_name, d.address, d.city, d.province, d.postal from DemographicContact r, demographic d where r.contactId = d.demographic_no and r.sdm = 'true' and r.demographicNo =  ${demographic}
+        </ap-sql>
+        <ap-output>${first_name} ${last_name}\n${address}\n${city} ${province}\n${postal}</ap-output>    	
+    </databaseap>
+    
 
 </eformap-config>
