@@ -46,6 +46,18 @@ public class CaseManagementNoteLinkDAO extends HibernateDaoSupport {
 		return this.getHibernateTemplate().find(hql, param);
 	}
 
+	public List getLinkByTableIdDesc(Integer tableName, Long tableId) {
+		Object[] param = {tableName, tableId};
+		String hql = "from CaseManagementNoteLink cLink where cLink.tableName = ? and cLink.tableId = ? order by cLink.id desc";
+		return this.getHibernateTemplate().find(hql, param);
+	}
+
+	public List getLinkByTableIdDesc(Integer tableName, Long tableId,String otherId) {
+		Object[] param = {tableName, tableId, otherId};
+		String hql = "from CaseManagementNoteLink cLink where cLink.tableName = ? and cLink.tableId = ? and cLink.otherId=? order by cLink.id desc";
+		return this.getHibernateTemplate().find(hql, param);
+	}
+
 	public List getLinkByNote(Long noteId) {
 		String hql = "from CaseManagementNoteLink cLink where cLink.noteId = ? order by cLink.id";
 		return this.getHibernateTemplate().find(hql, noteId);

@@ -1284,7 +1284,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                         preventionType = mapPreventionType(immuArray[i].getImmunizationCode());
                         if (preventionType.equals("")) {
                             preventionType = "OtherA";
-                            err_note.add("Immunization "+immuArray[i].getImmunizationName()+" contains no DIN number. Item mapped to Other Layout A");
+                            err_note.add("Immunization "+immuArray[i].getImmunizationName()+" mapped to Other Layout A");
                         }
                         comments = Util.addLine(comments, "Immunization Name: ", immuArray[i].getImmunizationName());
                     } else {
