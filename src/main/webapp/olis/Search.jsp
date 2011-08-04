@@ -560,7 +560,7 @@ for (Object d : allDemographics) {
 			<td colspan=4><hr /></td>
 		</tr>
 		<tr>
-			<td width="20%"><span>Requesting HIC</span></td><td><select name="requestingHic" id="requestingHic">
+			<td width="20%"><span>Requesting HIC</span></td><td><select multiple="multiple" name="requestingHic" id="requestingHic">
 			
 			<option value=""></option>
 			<%
