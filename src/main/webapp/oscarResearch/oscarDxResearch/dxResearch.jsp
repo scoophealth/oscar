@@ -130,7 +130,6 @@ function showdatebox(x) {
 
 function update_date(did, demoNo, provNo) {
     var startdate = document.getElementById("startdatenew"+did).value;
-    alert(startdate);
     window.location.href = "dxResearchUpdate.do?status=A&startdate="+startdate+"&did="+did+"&demographicNo="+demoNo+"&providerNo="+provNo;
 }
 
