@@ -108,11 +108,13 @@ public class GDMLHandler implements MessageHandler {
 				if(dupResult.equals(fullAcc)) {
 					//if(h.getHealthNum().equals(dupResult.getHealthNumber())) {
 					OscarAuditLogger.getInstance().log("Lab", "Skip", "Duplicate lab skipped - accession " + fullAcc + "\n" + msg);
+					return true;
 					//}
 				}
 				if(dupResult.getAccessionNumber().length()>4 && dupResult.getAccessionNumber().substring(4).equals(acc)) {
 					//if(h.getHealthNum().equals(dupResult.getHealthNumber())) {
 					OscarAuditLogger.getInstance().log("Lab", "Skip", "Duplicate lab skipped - accession " + fullAcc + "\n" + msg);
+					return true;
 					//}
 				}
 			}		
