@@ -372,10 +372,10 @@ function linkreq(rptId, reqId) {
 					</tr>
 					<tr>
 						<td>
-						<div class="FieldData"><strong>Lab Vendor:</strong></div>
+						<div class="FieldData"><strong>&nbsp;</strong></div>
 						</td>
 						<td>
-						<div class="FieldData" nowrap="nowrap">CML</div>
+						<div class="FieldData" nowrap="nowrap">&nbsp;</div>
 						</td>
 					</tr>
 				</table>
