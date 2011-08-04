@@ -174,7 +174,7 @@ public class Driver {
 			}
 		} catch (Exception e) {
 			MiscUtils.getLogger().error("Couldn't read XML from OLIS response.", e);
-			notifyOlisError(e.getMessage());
+			notifyOlisError("Couldn't read XML from OLIS response." + "\n" + e);
 		}
 	}
 
