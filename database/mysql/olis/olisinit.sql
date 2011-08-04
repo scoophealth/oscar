@@ -38,6 +38,8 @@ CREATE TABLE OLISSystemPreferences (
      endTime VARCHAR(20),
      pollFrequency INT,
      lastRun timestamp,
+     filterPatients tinyint(1),
          PRIMARY KEY(id)
 );
 
+update OLISSystemPreferences set filterPatients=0;

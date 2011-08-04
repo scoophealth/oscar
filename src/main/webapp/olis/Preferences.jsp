@@ -226,6 +226,12 @@ function checkForm() {
 				<td style="color:red"> The frequency must be an integer</td>
 			</tr>
 			<tr>
+				<td>Filter out patients not in system</td>
+				<td >					
+					<input type="checkbox" name="filter_patients" <%=(olisPreferences.isFilterPatients()?"checked=\"checked\"":"") %>/>
+				</td>
+			</tr>				
+			<tr>
 				<td> 
 					<input type="submit" value="Submit" />
 				</td>
