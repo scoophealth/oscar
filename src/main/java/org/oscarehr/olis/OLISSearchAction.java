@@ -768,7 +768,16 @@ public class OLISSearchAction extends DispatchAction {
 			String searchUuid = UUID.randomUUID().toString();
 			searchQueryMap.put(searchUuid, query);
 			request.setAttribute("searchUuid", searchUuid);
-			Driver.submitOLISQuery(request, query);
+			if(queryType.equals("Z04") && request.getParameterValues("requestingHic") != null && request.getParameterValues("requestingHic").length>1) {
+				for(String providerNo:request.getParameterValues("requestingHic")) {
+					Provider provider = providerDao.getProvider(providerNo);
+					ZRP1 zrp1 = new ZRP1(provider.getBillingNo(), "MDL", "ON", "HL70347", provider.getLastName(), provider.getFirstName(), null);
+					((Z04Query) query).setRequestingHic(zrp1);
+					Driver.submitOLISQuery(request, query);
+				}
+			} else {
+				Driver.submitOLISQuery(request, query);
+			}
 
 		}
 		
