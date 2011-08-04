@@ -23,6 +23,8 @@ public class OLISSystemPreferences extends AbstractModel<Integer> {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastRun;
 
+	private boolean filterPatients;
+	
 	
 	@Override
 	public Integer getId() {
@@ -60,6 +62,16 @@ public class OLISSystemPreferences extends AbstractModel<Integer> {
 	public void setLastRun(Date lastRun) {
 		this.lastRun = lastRun;
 	}	
+	
+	
+
+	public boolean isFilterPatients() {
+    	return filterPatients;
+    }
+
+	public void setFilterPatients(boolean filterPatients) {
+    	this.filterPatients = filterPatients;
+    }
 
 	public OLISSystemPreferences(){
 		super();
