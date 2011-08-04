@@ -62,6 +62,7 @@ public class CMLHandler implements MessageHandler {
 				if(("CML"+dupResult.getAccessionNumber()).equals(acc)) {
 					//if(h.getHealthNum().equals(dupResult.getHealthNumber())) {
 						OscarAuditLogger.getInstance().log("Lab", "Skip", "Duplicate lab skipped - accession " + acc + "\n" + msg);
+						return true;
 					//}					
 					
 				}
@@ -70,6 +71,7 @@ public class CMLHandler implements MessageHandler {
 						//olis match								
 						//if(h.getHealthNum().equals(dupResult.getHealthNumber())) {
 						OscarAuditLogger.getInstance().log("Lab", "Skip", "Duplicate lab skipped - accession " + acc + "\n" + msg);
+						return true;
 						//}
 					}
 				}
