@@ -64,7 +64,7 @@
 			<form action="<c:out value="${ctx}"/>/provider/OlisPreferences.do?method=save" method="post">
 			<table width="100%" border="1">
 			<tr>
-				<th width="20%">Reporting Laboratory</th>
+				<th width="20%">Default Reporting Laboratory</th>
 				<td colspan="3">
 					<%
 						String val1 = (String)request.getAttribute("reportingLaboratory");
@@ -89,7 +89,7 @@
 				</td>
 			</tr>
 			<tr>
-				<th width="20%">Exclude Reporting Laboratory</th>
+				<th width="20%">Default Exclude Reporting Laboratory</th>
 				<td width="30%">
 					<%
 						val1 = (String)request.getAttribute("excludeReportingLaboratory");
@@ -113,7 +113,8 @@
 					</select>
 			</td>
 			</tr>
-												
+								
+			
 		</table>
 			<input type="submit" value="Save Changes"/>
 			</form>
