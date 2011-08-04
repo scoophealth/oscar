@@ -945,7 +945,13 @@ public class CihiExportAction extends DispatchAction {
              preventionMap = getPreventionDao().getPreventionExt(prevention.getId());
              if( preventionMap.containsKey("lot") ) {
             	 Immunizations immunizations = patientRecord.addNewImmunizations();
-            	 immunizations.setImmunizationName(prevention.getPreventionType());
+            	 
+            	 String name = preventionMap.get("name");
+            	 if (name != null && !name.equals("")){
+            		immunizations.setImmunizationName(name);
+            	 }else{
+            	    immunizations.setImmunizationName(prevention.getPreventionType());
+            	 }
             	 DateFullOrPartial dateFullorPartial = immunizations.addNewDate();
             	 dateFullorPartial.setFullDate(Util.calDate(prevention.getPreventionDate()));
             	 immunizations.setLotNumber(preventionMap.get("lot"));
