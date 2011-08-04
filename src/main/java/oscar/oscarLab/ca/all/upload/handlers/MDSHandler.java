@@ -14,6 +14,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.Hl7TextInfoDao;
 import org.oscarehr.common.model.Hl7TextInfo;
+import org.oscarehr.util.OscarAuditLogger;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarLab.ca.all.parsers.Factory;
@@ -34,8 +35,10 @@ public class MDSHandler implements MessageHandler {
 			StringBuilder audit = new StringBuilder();
 			ArrayList<String> messages = Utilities.separateMessages(fileName);
 			for (i = 0; i < messages.size(); i++) {
-
 				String msg = messages.get(i);
+				if(isDuplicate(msg)) {
+					continue;
+				}
 				String auditLine = MessageUploader.routeReport(serviceName, "MDS", msg, fileId) + "\n";
 				audit.append(auditLine);
 
@@ -61,9 +64,12 @@ public class MDSHandler implements MessageHandler {
 			
 			//do we have this?
 			List<Hl7TextInfo> dupResults = hl7TextInfoDao.searchByAccessionNumber(fullAcc);
-			for(Hl7TextInfo dupResult:dupResults) {
-				if(dupResult.equals(fullAcc)) {
-					return true;
+			for(Hl7TextInfo dupResult:dupResults) {				
+				if(dupResult.getAccessionNumber().substring(5).equals(fullAcc)) {
+					//if(h.getHealthNum().equals(dupResult.getHealthNumber())) {
+					OscarAuditLogger.getInstance().log("Lab", "Skip", "Duplicate lab skipped - accession " + fullAcc + "\n" + msg);
+						return true;
+					//}
 				}
 				
 			}		

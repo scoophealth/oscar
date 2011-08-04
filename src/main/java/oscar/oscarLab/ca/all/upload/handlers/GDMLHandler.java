@@ -16,6 +16,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.Hl7TextInfoDao;
 import org.oscarehr.common.model.Hl7TextInfo;
+import org.oscarehr.util.OscarAuditLogger;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBHandler;
@@ -105,10 +106,14 @@ public class GDMLHandler implements MessageHandler {
 			List<Hl7TextInfo> dupResults = hl7TextInfoDao.searchByAccessionNumber(acc);
 			for(Hl7TextInfo dupResult:dupResults) {
 				if(dupResult.equals(fullAcc)) {
-					return true;
+					//if(h.getHealthNum().equals(dupResult.getHealthNumber())) {
+					OscarAuditLogger.getInstance().log("Lab", "Skip", "Duplicate lab skipped - accession " + fullAcc + "\n" + msg);
+					//}
 				}
 				if(dupResult.getAccessionNumber().length()>4 && dupResult.getAccessionNumber().substring(4).equals(acc)) {
-					return true;
+					//if(h.getHealthNum().equals(dupResult.getHealthNumber())) {
+					OscarAuditLogger.getInstance().log("Lab", "Skip", "Duplicate lab skipped - accession " + fullAcc + "\n" + msg);
+					//}
 				}
 			}		
 		}

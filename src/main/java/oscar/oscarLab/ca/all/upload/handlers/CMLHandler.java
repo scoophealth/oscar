@@ -15,6 +15,7 @@ import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.Hl7TextInfoDao;
 import org.oscarehr.common.model.Hl7TextInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.OscarAuditLogger;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarLab.ca.all.parsers.Factory;
@@ -59,13 +60,17 @@ public class CMLHandler implements MessageHandler {
 			List<Hl7TextInfo> dupResults = hl7TextInfoDao.searchByAccessionNumber(acc);
 			for(Hl7TextInfo dupResult:dupResults) {
 				if(("CML"+dupResult.getAccessionNumber()).equals(acc)) {
-					//exact match
-					return true;
+					//if(h.getHealthNum().equals(dupResult.getHealthNumber())) {
+						OscarAuditLogger.getInstance().log("Lab", "Skip", "Duplicate lab skipped - accession " + acc + "\n" + msg);
+					//}					
+					
 				}
 				if(dupResult.getAccessionNumber().indexOf("-")!= -1) {
-					if(dupResult.getAccessionNumber().subSequence(0,dupResult.getAccessionNumber().indexOf("-")).equals(acc) ) {
+					if(dupResult.getAccessionNumber().substring(0,dupResult.getAccessionNumber().indexOf("-")).equals(acc) ) {
 						//olis match								
-						return true;
+						//if(h.getHealthNum().equals(dupResult.getHealthNumber())) {
+						OscarAuditLogger.getInstance().log("Lab", "Skip", "Duplicate lab skipped - accession " + acc + "\n" + msg);
+						//}
 					}
 				}
 			}		
