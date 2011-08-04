@@ -21,6 +21,8 @@ import org.oscarehr.common.dao.Hl7TextInfoDao;
 import org.oscarehr.common.dao.Hl7TextMessageDao;
 import org.oscarehr.common.model.Hl7TextInfo;
 import org.oscarehr.common.model.Hl7TextMessage;
+import org.oscarehr.olis.dao.OLISSystemPreferencesDao;
+import org.oscarehr.olis.model.OLISSystemPreferences;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -136,7 +138,18 @@ public final class MessageUploader {
 			hl7TextInfoDao.persist(hl7TextInfo);
 
 			String demProviderNo = patientRouteReport(insertID, lastName, firstName, sex, dob, hin, DbConnectionFilter.getThreadLocalDbConnection());
-			providerRouteReport(String.valueOf(insertID), docNums, DbConnectionFilter.getThreadLocalDbConnection(), demProviderNo, type);
+			if(type.equals("OLIS_HL7") && demProviderNo.equals("0")) {
+				OLISSystemPreferencesDao olisPrefDao = (OLISSystemPreferencesDao)SpringUtils.getBean("OLISSystemPreferencesDao");
+			    OLISSystemPreferences olisPreferences =  olisPrefDao.getPreferences();
+			    if(olisPreferences.isFilterPatients()) {			    	
+			    	//set as unclaimed
+			    	providerRouteReport(String.valueOf(insertID), null, DbConnectionFilter.getThreadLocalDbConnection(), String.valueOf(0), type);
+			    } else {
+			    	providerRouteReport(String.valueOf(insertID), docNums, DbConnectionFilter.getThreadLocalDbConnection(), demProviderNo, type);			    	
+			    }
+			} else {
+				providerRouteReport(String.valueOf(insertID), docNums, DbConnectionFilter.getThreadLocalDbConnection(), demProviderNo, type);
+			}
 			retVal = h.audit();
 			if(results != null) {
 				results.segmentId = insertID;
