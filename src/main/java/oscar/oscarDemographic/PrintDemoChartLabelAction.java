@@ -46,7 +46,7 @@ public class PrintDemoChartLabelAction extends OscarAction {
 	logger.debug("user home: " + System.getProperty("user.home"));
 
         try {
-		ins = new FileInputStream(System.getProperty("user.home") + "Chartlabel.xml");
+		ins = new FileInputStream(System.getProperty("user.home") + "/Chartlabel.xml");
         }
 
         catch (FileNotFoundException ex1) {
