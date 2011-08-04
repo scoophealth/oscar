@@ -43,20 +43,21 @@
 		            <select name="contact_<%=id%>.role" id="contact_<%=id%>.role">
 						<option value="Mother">Mother</option>
 						<option value="Father">Father</option>
-						<option value="Father">Parent</option>
+						<option value="Parent">Parent</option>
 						<option value="Wife">Wife</option>
 						<option value="Husband">Husband</option>
 						<option value="Partner">Partner</option>
-						<option value="Brother">Brother</option>
-						<option value="Sister">Sister</option>
 						<option value="Son">Son</option>
 						<option value="Daughter">Daughter</option>
+						<option value="Brother">Brother</option>
+						<option value="Sister">Sister</option>
 						<option value="Aunt">Aunt</option>
 						<option value="Uncle">Uncle</option>
 						<option value="GrandFather">GrandFather</option>
 						<option value="GrandMother">GrandMother</option>
 						<option value="Guardian">Guardian</option>
-		                <option value="Foster Parent">Foster Parent</option>
+                                                <option value="Foster Parent">Foster Parent</option>
+                                                <option value="Next of Kin">Next of Kin</option>
 						<option value="Administrative Staff">Administrative Staff</option>
 						<option value="Care Giver">Care Giver</option>
 						<option value="Power of Attorney">Power of Attorney</option>

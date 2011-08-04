@@ -908,23 +908,31 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         if (cmn.getObservation_date()!=null) {
                             cNote.addNewEventDateTime().setFullDateTime(Util.calDate(cmn.getObservation_date()));
                         }
-                        if (StringUtils.filled(cmn.getProviderNo())) {
-                            ClinicalNotes.ParticipatingProviders pProvider = cNote.addNewParticipatingProviders();
-                            ProviderData prvd = new ProviderData(cmn.getProviderNo());
-                            Util.writeNameSimple(pProvider.addNewName(), StringUtils.noNull(prvd.getFirst_name()), StringUtils.noNull(prvd.getLast_name()));
 
-                            if (StringUtils.noNull(prvd.getOhip_no()).length()<=6) pProvider.setOHIPPhysicianId(prvd.getOhip_no());
-                            cdsDt.DateTimeFullOrPartial noteCreatedDateTime = pProvider.addNewDateTimeNoteCreated();
-                            if (cmn.getCreate_date()!=null) noteCreatedDateTime.setFullDate(Util.calDate(cmn.getCreate_date()));
-                            else noteCreatedDateTime.setFullDate(Util.calDate(new Date()));
-                        }
-                        if (StringUtils.filled(cmn.getSigning_provider_no())) {
-                            ProviderData prvd = new ProviderData(cmn.getSigning_provider_no());
-                            ClinicalNotes.NoteReviewer noteReviewer = cNote.addNewNoteReviewer();
-                            Util.writeNameSimple(noteReviewer.addNewName(), prvd.getFirst_name(), prvd.getLast_name());
-                            if (cmn.getUpdate_date()!=null) noteReviewer.addNewDateTimeNoteReviewed().setFullDate(Util.calDate(cmn.getUpdate_date()));
-                            else noteReviewer.addNewDateTimeNoteReviewed().setFullDateTime(Util.calDate(new Date()));
-                            if (StringUtils.noNull(prvd.getOhip_no()).length()<=6) noteReviewer.setOHIPPhysicianId(prvd.getOhip_no());
+                        List<CaseManagementNote> cmn_same = cmm.getNotesByUUID(cmn.getUuid());
+                        for (CaseManagementNote cm_note : cmn_same) {
+
+                            //participating providers
+                            if (StringUtils.filled(cm_note.getProviderNo())) {
+                                ClinicalNotes.ParticipatingProviders pProvider = cNote.addNewParticipatingProviders();
+                                ProviderData prvd = new ProviderData(cm_note.getProviderNo());
+                                Util.writeNameSimple(pProvider.addNewName(), StringUtils.noNull(prvd.getFirst_name()), StringUtils.noNull(prvd.getLast_name()));
+
+                                if (StringUtils.noNull(prvd.getOhip_no()).length()<=6) pProvider.setOHIPPhysicianId(prvd.getOhip_no());
+                                cdsDt.DateTimeFullOrPartial noteCreatedDateTime = pProvider.addNewDateTimeNoteCreated();
+                                if (cmn.getCreate_date()!=null) noteCreatedDateTime.setFullDate(Util.calDate(cm_note.getCreate_date()));
+                                else noteCreatedDateTime.setFullDate(Util.calDate(new Date()));
+                            }
+
+                            //reviewing providers
+                            if (StringUtils.filled(cm_note.getSigning_provider_no())) {
+                                ProviderData prvd = new ProviderData(cm_note.getSigning_provider_no());
+                                ClinicalNotes.NoteReviewer noteReviewer = cNote.addNewNoteReviewer();
+                                Util.writeNameSimple(noteReviewer.addNewName(), prvd.getFirst_name(), prvd.getLast_name());
+                                if (cm_note.getUpdate_date()!=null) noteReviewer.addNewDateTimeNoteReviewed().setFullDate(Util.calDate(cm_note.getUpdate_date()));
+                                else noteReviewer.addNewDateTimeNoteReviewed().setFullDateTime(Util.calDate(new Date()));
+                                if (StringUtils.noNull(prvd.getOhip_no()).length()<=6) noteReviewer.setOHIPPhysicianId(prvd.getOhip_no());
+                            }
                         }
                     }
                 }
@@ -1398,6 +1406,8 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                             if (StringUtils.filled(n.getNote()) && !n.getNote().startsWith("imported.cms4.2011.06")) //not from dumpsite
                                 labResults.setPhysiciansNotes(n.getNote());
                         }
+//                      String info = labRoutingInfo.get("comment"); <--for whole report, may refer to >1 lab results
+
 
                         //lab reviewer
                         HashMap<String,String> labRoutingInfo = new HashMap<String,String>();
@@ -1414,7 +1424,6 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                                 if (StringUtils.noNull(pvd.getOhip_no()).length()<=6) reviewer.setOHIPPhysicianId(pvd.getOhip_no());
                             }
                         }
-//                      String info = labRoutingInfo.get("comment"); <--for whole report, may refer to >1 lab results
 
                         HashMap<String,Date> link = new HashMap<String,Date>();
                         link.putAll(LabRequestReportLink.getLinkByReport("hl7TextMessage", Long.valueOf(lab_no)));
@@ -1432,11 +1441,6 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                 for (int j=0; j<appts.size(); j++) {
                     ap = (ApptData)appts.get(j);
                     Appointments aptm = patientRec.addNewAppointments();
-
-
-
-logger.info("Ronnie: appt provide="+ap.getProviderFirstName()+" "+ap.getProviderLastName()+" "+ap.getProviderNo());
-
                     cdsDt.DateFullOrPartial apDate = aptm.addNewAppointmentDate();
                     apDate.setFullDate(Util.calDate(ap.getAppointment_date()));
                     if (ap.getAppointment_date()==null) {
