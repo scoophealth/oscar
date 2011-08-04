@@ -621,8 +621,8 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     if (contactPurpose.getPurposeAsEnum()!=null) cPurpose = contactPurpose.getPurposeAsEnum().toString();
                     else cPurpose = contactPurpose.getPurposeAsPlainText();
 
-                    emc = cPurpose.equals("EC") ? "true" : "";
-                    sdm = cPurpose.equals("SDM") ? "true" : "";
+                    emc = cPurpose.equals("EC") || cPurpose.equalsIgnoreCase("emergency contact") ? "true" : "";
+                    sdm = cPurpose.equals("SDM")    ? "true" : "";
                     if (cPurpose.equals("NK")) rel = "Next of Kin";
                     else if (cPurpose.equals("AS")) rel = "Administrative Staff";
                     else if (cPurpose.equals("CG")) rel = "Care Giver";

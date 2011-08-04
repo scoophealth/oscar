@@ -1433,6 +1433,10 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     ap = (ApptData)appts.get(j);
                     Appointments aptm = patientRec.addNewAppointments();
 
+
+
+logger.info("Ronnie: appt provide="+ap.getProviderFirstName()+" "+ap.getProviderLastName()+" "+ap.getProviderNo());
+
                     cdsDt.DateFullOrPartial apDate = aptm.addNewAppointmentDate();
                     apDate.setFullDate(Util.calDate(ap.getAppointment_date()));
                     if (ap.getAppointment_date()==null) {
@@ -1467,12 +1471,11 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     if (StringUtils.filled(ap.getReason())) {
                         aptm.setAppointmentPurpose(ap.getReason());
                     }
-                    if (StringUtils.filled(ap.getProviderNo())) {
+                    if (StringUtils.filled(ap.getProviderFirstName()) || StringUtils.filled(ap.getProviderLastName())) {
                         Appointments.Provider prov = aptm.addNewProvider();
 
-                        ProviderData appd = new ProviderData(ap.getProviderNo());
-                        if (StringUtils.noNull(appd.getOhip_no()).length()<=6) prov.setOHIPPhysicianId(appd.getOhip_no());
-                        Util.writeNameSimple(prov.addNewName(), appd.getFirst_name(), appd.getLast_name());
+                        if (StringUtils.noNull(ap.getOhipNo()).length()<=6) prov.setOHIPPhysicianId(ap.getOhipNo());
+                        Util.writeNameSimple(prov.addNewName(), ap.getProviderFirstName(), ap.getProviderLastName());
                     }
                     if (StringUtils.filled(ap.getNotes())) {
                         aptm.setAppointmentNotes(ap.getNotes());
