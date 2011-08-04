@@ -198,8 +198,8 @@ public class JdbcBillingClaimImpl {
 	// get monthCode, batchcount
 	public String[] getLatestSoloMonthCodeBatchNum(String providerNo) {
 		String[] retval = null;
-		String sql = "select monthCode, batchcount from billing_on_diskname d, billing_on_filename f where f.providerno='"
-				+ providerNo + "' and d.id=f.disk_id order by d.createdatetime desc limit 1";
+		String sql = "select monthCode, batchcount from billing_on_diskname d, billing_on_filename f where f.providerohipno='"
+				+ providerNo + "' and d.id=f.disk_id order by d.id desc limit 1";
 		// _logger.info("getLatestSoloMonthCodeBatchNum(sql = " + sql + ")");
 		ResultSet rs = dbObj.searchDBRecord(sql);
 

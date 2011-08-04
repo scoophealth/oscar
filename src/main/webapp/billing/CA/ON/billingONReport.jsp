@@ -82,7 +82,7 @@ if("unbilled".equals(action)) {
         prop.setProperty("TIME", rs.getString("start_time").substring(0,5));
         prop.setProperty("PATIENT", rs.getString("name"));
         prop.setProperty("DESCRIPTION", rs.getString("reason"));
-        String tempStr = "<a href=# onClick='popupPage(700,720, \"billingOB.jsp?billForm=" 
+        String tempStr = "<a href=# onClick='popupPage(700,1000, \"billingOB.jsp?billForm=" 
                 + URLEncoder.encode(oscarVariables.getProperty("default_view")) + "&hotclick=&appointment_no="
                 + rs.getString("appointment_no") + "&demographic_name=" + URLEncoder.encode(rs.getString("name"))
 				+ "&demographic_no=" + rs.getString("demographic_no") + "&user_no=" + rs.getString("provider_no") 
