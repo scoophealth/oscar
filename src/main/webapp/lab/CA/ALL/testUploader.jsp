@@ -103,6 +103,7 @@ if(outcome != null){
                     <option value="ALPHA">ALPHA</option>
 					<option value="HL7">HL7</option>
 					<option value="HRMXML">HRM XML</option>
+					<option value="OLIS_HL7">OLIS HL7</option>
 				</select></td>
 			</tr>
 			<tr id="OTHER" style="visibility: hidden;">
