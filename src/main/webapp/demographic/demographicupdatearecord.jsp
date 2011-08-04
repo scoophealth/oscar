@@ -89,7 +89,7 @@
 	  param[28]=request.getParameter("spoken_lang");
           param[29]=(String)session.getAttribute("user");
 	
-		java.sql.Date [] dtparam = new java.sql.Date[6];
+		java.sql.Date [] dtparam = new java.sql.Date[7];
 
 		String yearTmp=StringUtils.trimToNull(request.getParameter("date_joined_year"));
 		String monthTmp=StringUtils.trimToNull(request.getParameter("date_joined_month"));
@@ -163,7 +163,20 @@
 		{
 			dtparam[5]=null;
 		}
-         
+
+                yearTmp=StringUtils.trimToNull(request.getParameter("patientstatus_date_year"));
+		monthTmp=StringUtils.trimToNull(request.getParameter("patientstatus_date_month"));
+		dayTmp=StringUtils.trimToNull(request.getParameter("patientstatus_date_day"));
+
+		if( yearTmp != null && monthTmp!=null && dayTmp!=null )
+		{
+			dtparam[6]=MyDateFormat.getSysDate(yearTmp+'-'+monthTmp+'-'+dayTmp);
+		}
+		else
+		{
+			dtparam[6]=null;
+		}
+
           
 	  int []intparam=new int[] {Integer.parseInt(request.getParameter("demographic_no"))};
      
@@ -229,12 +242,6 @@
 
     int[] paramOne =new int[] {Integer.parseInt(request.getParameter("demographic_no"))};
     apptMainBean.queryExecuteUpdate(paramOne, "archive_record");
-
-    String prev_patient_status = request.getParameter("prev_patient_status");
-    String pres_patient_status = request.getParameter("patient_status");
-    if (prev_patient_status!=null && pres_patient_status!=null && !prev_patient_status.equals(pres_patient_status)) {
-        apptMainBean.queryExecuteUpdate(paramOne, "update_status_date");
-    }
 
   int rowsAffected = apptMainBean.queryExecuteUpdate(param, dtparam, intparam, request.getParameter("dboperation"));
   if (rowsAffected ==1) {      

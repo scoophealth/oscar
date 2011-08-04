@@ -305,6 +305,12 @@ function checkRosterDates() {
             return checkDate(yyyy,mm,dd,"<bean:message key="demographic.search.msgWrongRosterDate"/>");
         }
 }
+function checkPatientStatusDate() {
+        var yyyy = document.updatedelete.patientstatus_date_year.value;
+        var mm = document.updatedelete.patientstatus_date_month.value;
+        var dd = document.updatedelete.patientstatus_date_day.value;
+        return checkDate(yyyy,mm,dd,"<bean:message key="demographic.search.msgWrongPatientStatusDate"/>");
+}
 function checkDob() {
 	var yyyy = document.updatedelete.year_of_birth.value;
 	var mm = document.updatedelete.month_of_birth.value;
@@ -338,6 +344,7 @@ function checkTypeInEdit() {
   if ( !checkName() ) return false;
   if ( !checkDob() ) return false;
   if ( !checkRosterDates() ) return false;
+  if ( !checkPatientStatusDate() ) return false;
   if ( !checkHin() ) return false;
   //if ( !checkAllDate() ) return false;
   return(true);
@@ -2064,28 +2071,39 @@ document.updatedelete.r_doctor_ohip.value = refNo;
                                                              // Year
                                                              decF.applyPattern("0000");
 
-                                                             GregorianCalendar rosterDateCal=new GregorianCalendar();
+                                                             GregorianCalendar dateCal=new GregorianCalendar();
                                                              String rosterDateYear="";
                                                              String rosterDateMonth="";
                                                              String rosterDateDay="";
                                                              if (demographic.getRosterDate()!=null){
-                                                                rosterDateCal.setTime(demographic.getRosterDate());
-                                                                rosterDateYear = decF.format(rosterDateCal.get(GregorianCalendar.YEAR));
+                                                                dateCal.setTime(demographic.getRosterDate());
+                                                                rosterDateYear = decF.format(dateCal.get(GregorianCalendar.YEAR));
                                                                 // Month and Day
                                                                 decF.applyPattern("00");
-                                                                rosterDateMonth = decF.format(rosterDateCal.get(GregorianCalendar.MONTH)+1);
-                                                                rosterDateDay   = decF.format(rosterDateCal.get(GregorianCalendar.DAY_OF_MONTH));
+                                                                rosterDateMonth = decF.format(dateCal.get(GregorianCalendar.MONTH)+1);
+                                                                rosterDateDay   = decF.format(dateCal.get(GregorianCalendar.DAY_OF_MONTH));
                                                              }
                                                              String rosterTerminationDateYear="";
                                                              String rosterTerminationDateMonth="";
                                                              String rosterTerminationDateDay="";
                                                              if (demographic.getRosterTerminationDate()!=null){
-                                                                rosterDateCal.setTime(demographic.getRosterTerminationDate());
-                                                                rosterTerminationDateYear = decF.format(rosterDateCal.get(GregorianCalendar.YEAR));
+                                                                dateCal.setTime(demographic.getRosterTerminationDate());
+                                                                rosterTerminationDateYear = decF.format(dateCal.get(GregorianCalendar.YEAR));
                                                                 // Month and Day
                                                                 decF.applyPattern("00");
-                                                                rosterTerminationDateMonth = decF.format(rosterDateCal.get(GregorianCalendar.MONTH)+1);
-                                                                rosterTerminationDateDay   = decF.format(rosterDateCal.get(GregorianCalendar.DAY_OF_MONTH));
+                                                                rosterTerminationDateMonth = decF.format(dateCal.get(GregorianCalendar.MONTH)+1);
+                                                                rosterTerminationDateDay   = decF.format(dateCal.get(GregorianCalendar.DAY_OF_MONTH));
+                                                             }
+                                                             String patientStatusDateYear="";
+                                                             String patientStatusDateMonth="";
+                                                             String patientStatusDateDay="";
+                                                             if (demographic.getPatientStatusDate()!=null){
+                                                                dateCal.setTime(demographic.getPatientStatusDate());
+                                                                patientStatusDateYear = decF.format(dateCal.get(GregorianCalendar.YEAR));
+                                                                // Month and Day
+                                                                decF.applyPattern("00");
+                                                                patientStatusDateMonth = decF.format(dateCal.get(GregorianCalendar.MONTH)+1);
+                                                                patientStatusDateDay   = decF.format(dateCal.get(GregorianCalendar.DAY_OF_MONTH));
                                                              }
                                                                     %>
 
@@ -2113,7 +2131,6 @@ document.updatedelete.r_doctor_ohip.value = refNo;
                                   %> <input type="text"
 									name="patient_status" value="<%=pacStatus%>"> <% } else {
                                 String patientStatus = apptMainBean.getString(rs,"patient_status"); %>
-                                <input type="hidden" name="prev_patient_status" value="<%=patientStatus%>">
 								<select name="patient_status" style="width: 120">
 									<option value="AC"
 										<%=patientStatus.equals("AC")?" selected":""%>>
@@ -2141,6 +2158,16 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 								<% } // end if...then...else
                                                                 %>
 								</td>
+								<td align="right" nowrap><b><bean:message
+									key="demographic.demographiceditdemographic.PatientStatusDate" />: </b></td>
+								<td align="left">
+                                                                    <input  type="text" name="patientstatus_date_year" size="4" maxlength="4" value="<%=patientStatusDateYear%>">
+                                                                    <input  type="text" name="patientstatus_date_month" size="2" maxlength="2" value="<%=patientStatusDateMonth%>">
+                                                                    <input  type="text" name="patientstatus_date_day" size="2" maxlength="2" value="<%=patientStatusDateDay%>">
+								</td>
+                                                        </tr>
+                                                        <tr>
+                                                                <td>&nbsp;</td>
 								<td align="right"><b><bean:message
 									key="demographic.demographiceditdemographic.formChartNo" />:</b></td>
 								<td align="left"><input type="text" name="chart_no"
