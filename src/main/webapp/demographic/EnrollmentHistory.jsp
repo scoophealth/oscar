@@ -117,7 +117,11 @@
 									<td nowrap="nowrap"><%=DateUtils.formatDate(demographic.getRosterTerminationDate(),request.getLocale())%></td>
 								<%}%>
 								<td nowrap="nowrap"><%=(demographic.getProviderNo().length()>0 && demographic.getRosterStatus().equals("RO"))?providerDao.getProvider(demographic.getProviderNo()).getFormattedName():"" %></td>
+								<% if(demographic.getLastUpdateUser()!= null){ %>
 								<td nowrap="nowrap"><%=providerDao.getProvider(demographic.getLastUpdateUser()).getFormattedName() %></td>
+								<%}else{ %>
+								<td nowrap="nowrap">System</td>
+								<%} %>
 								<td nowrap="nowrap">(Current)</td>
 							</tr>
 								
