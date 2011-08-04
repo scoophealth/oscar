@@ -202,7 +202,7 @@ public class CihiExportAction extends DispatchAction {
 			frm.set("vendorSoftware", properties.getProperty("softwareName", ""));
 			frm.set("vendorSoftwareCommonName", properties.getProperty("softwareCommonName", ""));
 			frm.set("vendorSoftwareVer", properties.getProperty("version", ""));
-			frm.set("installDate", properties.getProperty("versionDate", ""));
+			frm.set("installDate", properties.getProperty("buildDateTime", ""));
 			
 			if( dataExportList.size() > 0 ) {
 				DataExport dataExport = dataExportList.get(dataExportList.size()-1);
@@ -324,7 +324,7 @@ public class CihiExportAction extends DispatchAction {
 		info.setEMRSoftwareCommonName(frm.getString("vendorSoftwareCommonName"));
 		info.setEMRSoftwareVersionNumber(frm.getString("vendorSoftwareVer"));
 
-                Date installDate = UtilDateUtilities.StringToDate(frm.getString("installDate"));
+                Date installDate = UtilDateUtilities.StringToDate(frm.getString("installDate"),"yyyy-MM-dd hh:mm aa");
                 if (installDate==null) installDate = new Date();
                 
                 Calendar installCalendar = Calendar.getInstance();
