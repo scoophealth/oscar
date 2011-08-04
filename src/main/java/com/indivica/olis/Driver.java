@@ -12,7 +12,9 @@ import java.security.cert.CollectionCertStoreParameters;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -41,6 +43,7 @@ import org.oscarehr.util.SpringUtils;
 import org.xml.sax.InputSource;
 
 import oscar.OscarProperties;
+import oscar.oscarMessenger.data.MsgProviderData;
 import ca.ssha._2005.hial.ArrayOfError;
 import ca.ssha._2005.hial.ArrayOfString;
 import ca.ssha._2005.hial.Response;
@@ -126,6 +129,7 @@ public class Driver {
 		} catch (Exception e) {
 			MiscUtils.getLogger().error("Can't perform OLIS query due to exception.", e);
 			request.setAttribute("searchException", e);
+			notifyOlisError(e.getMessage());
 			return "";
 		}
 	}
@@ -170,6 +174,7 @@ public class Driver {
 			}
 		} catch (Exception e) {
 			MiscUtils.getLogger().error("Couldn't read XML from OLIS response.", e);
+			notifyOlisError(e.getMessage());
 		}
 	}
 
@@ -269,4 +274,41 @@ public class Driver {
 		}
 		return result;
 	}
+	
+	
+	private static void notifyOlisError(String errorMsg) {
+	    HashSet<String> sendToProviderList = new HashSet<String>();
+
+    	String providerNoTemp="999998";
+	    sendToProviderList.add(providerNoTemp);
+	    
+    	LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+	    if (loggedInInfo != null && loggedInInfo.loggedInProvider != null)
+	    {
+	    	// manual prompts always send to admin
+	    	sendToProviderList.add(providerNoTemp);
+	    	
+	    	providerNoTemp=loggedInInfo.loggedInProvider.getProviderNo();
+		    sendToProviderList.add(providerNoTemp);
+	    }
+
+	    // no one wants to hear about the problem
+	    if (sendToProviderList.size()==0) return;
+	    
+	    String message = "OSCAR attempted to perform a fetch of OLIS data at " + new Date() + " but there was an error during the task.\n\nSee below for the error message:\n" + errorMsg;
+
+	    oscar.oscarMessenger.data.MsgMessageData messageData = new oscar.oscarMessenger.data.MsgMessageData();
+
+	    ArrayList<MsgProviderData> sendToProviderListData = new ArrayList<MsgProviderData>();
+	    for (String providerNo : sendToProviderList) {
+	    	MsgProviderData mpd = new MsgProviderData();
+	    	mpd.providerNo = providerNo;
+	    	mpd.locationId = "145";
+	    	sendToProviderListData.add(mpd);
+	    }
+
+    	String sentToString = messageData.createSentToString(sendToProviderListData);
+    	messageData.sendMessage2(message, "OLIS Retrieval Error", "System", sentToString, "-1", sendToProviderListData, null, null);
+    }
+	
 }
