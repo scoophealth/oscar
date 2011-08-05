@@ -1,3 +1,4 @@
+<%@page import="org.apache.commons.lang.StringUtils"%>
 <%@page
 	import="oscar.oscarEncounter.pageUtil.NavBarDisplayDAO, oscar.util.*, java.util.ArrayList, java.util.Date, java.util.Calendar, java.io.IOException"%>
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
@@ -198,15 +199,29 @@
                 }                   
                 ++curNum;
                         
-                out.println("<span style=\" z-index: 1; position:absolute; margin-right:10px; width:90%; overflow:hidden;  height:1.2em; white-space:nowrap; float:left; text-align:left; \">");                
-                out.println("<a class='links' style='" + colour + "' onmouseover=\"this.className='linkhover'\" onmouseout=\"this.className='links'\" href='#' onclick=\"" + org.apache.commons.lang.StringEscapeUtils.escapeJava(item.getURL()) + "\" title='" + item.getLinkTitle() + "'>");
+                out.println("<span style=\" z-index: 1; position:absolute; margin-right:10px; width:90%; overflow:hidden;  height:1.2em; white-space:nowrap; float:left; text-align:left; \">");
+				String url = item.getURL();
+				//This should be done in the display classes but I'll keep it here for future reference
+				//url = StringUtils.replaceEach(url, new String[] {"'","\\\""}, new String[] {"\'","\\\""});
+                if( item.isURLJavaScript() ) {
+                	out.println("<a class='links' style='" + colour + "' onmouseover=\"this.className='linkhover'\" onmouseout=\"this.className='links'\" href='#' onclick=\"" + url + "\" title='" + item.getLinkTitle() + "'>");
+                }
+                else {
+                	out.println("<a class='links' style='" + colour + "' onmouseover=\"this.className='linkhover'\" onmouseout=\"this.className='links'\" href=\"" + url + "\" title='" + item.getLinkTitle() + "' target=\"_blank\">");
+                }
                 out.println(item.getTitle());
                 out.println("</a>");
                 out.println("</span>");
               
                 if( item.getDate() != null ) {                                                 
                     out.println("<span style=\"z-index: 100; "+dateColour+" overflow:hidden;   position:relative; height:1.2em; white-space:nowrap; float:right; text-align:right;\">");
-                    out.println("...<a class='links' style='margin-right: 2px;" + colour + "' onmouseover=\"this.className='linkhover'\" onmouseout=\"this.className='links'\" href='#' onclick=\"" + org.apache.commons.lang.StringEscapeUtils.escapeJava(item.getURL()) + "\" title='" + item.getLinkTitle() + "'>");
+                    
+                    if( item.isURLJavaScript() ) {
+                    	out.println("...<a class='links' style='margin-right: 2px;" + colour + "' onmouseover=\"this.className='linkhover'\" onmouseout=\"this.className='links'\" href='#' onclick=\"" + url + "\" title='" + item.getLinkTitle() + "'>");
+                    }
+                    else {
+                    	out.println("...<a class='links' style='margin-right: 2px;" + colour + "' onmouseover=\"this.className='linkhover'\" onmouseout=\"this.className='links'\" href=\"" + url + "\" title='" + item.getLinkTitle() + "' target=\"_blank\">");
+                    }
                     
                     if(item.getValue() != null && !item.getValue().trim().equals("")){
                         out.println(item.getValue());
