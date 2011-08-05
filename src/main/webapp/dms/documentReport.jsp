@@ -423,12 +423,9 @@ function popup1(height, width, url, windowName){
                                         
                               String url = "ManageDocument.do?method=display&doc_no="+curdoc.getDocId()+"&providerNo="+user_no+(curdoc.getRemoteFacilityId()!=null?"&remoteFacilityId="+curdoc.getRemoteFacilityId():"");
                               //String url = "documentGetFile.jsp?document=" + StringEscapeUtils.escapeJavaScript(curdoc.getFileName()) + "&type=" + dStatus + "&doc_no=" + curdoc.getDocId();
-                              if (curdoc.getStatus() == 'H') { %> <a
-						<%=curdoc.getStatus() == 'D' ? "style='text-decoration:line-through'" : ""%>
-						href="<%=url%>" target="_blank"> <% } else { %> <a
-						<%=curdoc.getStatus() == 'D' ? "style='text-decoration:line-through'" : ""%>
-						href="javascript:popup1(480, 480, '<%=url%>', 'edoc<%=i2%>')">
-					<% } %> <%=curdoc.getDescription()%></a></td>
+                      
+					%>	<a <%=curdoc.getStatus() == 'D' ? "style='text-decoration:line-through'" : ""%>
+						href="<%=url%>" target="_blank"> <%=curdoc.getDescription()%></a></td>
 					<td><%=contentType%></td>
 					<td><%=curdoc.getType()%></td>
 					<td><%=curdoc.getCreatorName()%></td>

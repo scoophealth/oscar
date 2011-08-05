@@ -237,6 +237,7 @@ public class NavBarDisplayDAO {
         private String colour;
         private String bgColour;
         private Date date;
+        private boolean URLJavaScript;
         
         public Item() {
             title = "";
@@ -245,6 +246,7 @@ public class NavBarDisplayDAO {
             colour = "";
             bgColour = "";
             date = null;
+            setURLJavaScript(true);
         }
         
         public void setTitle( String t ) {
@@ -295,7 +297,15 @@ public class NavBarDisplayDAO {
             return date;
         }
         
-        //default compare is alphabetical
+        public boolean isURLJavaScript() {
+	        return URLJavaScript;
+        }
+
+		public void setURLJavaScript(boolean uRLJavaScript) {
+	        URLJavaScript = uRLJavaScript;
+        }
+
+		//default compare is alphabetical
         public int compareTo( Object o ) throws NullPointerException {
             if( o == null )
                 throw new NullPointerException();
