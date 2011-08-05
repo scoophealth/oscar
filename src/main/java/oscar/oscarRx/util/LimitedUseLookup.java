@@ -82,7 +82,7 @@ public class LimitedUseLookup {
     static private void loadLULookupInformation() {
         log.debug("current LU lookup size " + luLookup.size());
         if (!loaded) {
-            String dosing = "oscar/oscarRx/data_extract_20100422.xml";
+            String dosing = "oscar/oscarRx/data_extract_20110804.xml";
             LimitedUseLookup rdf = new LimitedUseLookup();
             InputStream is = rdf.getClass().getClassLoader().getResourceAsStream(dosing);
 
