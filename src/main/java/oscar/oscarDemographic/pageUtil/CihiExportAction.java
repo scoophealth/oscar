@@ -792,27 +792,29 @@ public class CihiExportAction extends DispatchAction {
                         if (problemlist!=null && problemlist.getOnsetDate()!=null && problemlist.getResolutionDate()!=null) break;
 
                         keyval = caseManagementNoteExt.getKeyVal();
-                
-                        if( keyval.equals(CaseManagementNoteExt.PROCEDUREDATE)) {
-                            procedure = patientRecord.addNewProcedure();
-                            pDate = caseManagementNoteExt.getDateValue();
-                            cal.setTime(pDate);
-                            DateFullOrPartial dateFullOrPartial = procedure.addNewProcedureDate();
-                            dateFullOrPartial.setFullDate(cal);
-                        } else
-                        if( keyval.equals(CaseManagementNoteExt.STARTDATE)) {
-                            if (problemlist==null) problemlist = patientRecord.addNewProblemList();
-                            pDate = caseManagementNoteExt.getDateValue();
-                            cal.setTime(pDate);
-                            DateFullOrPartial dateFullOrPartial = problemlist.addNewOnsetDate();
-                            dateFullOrPartial.setFullDate(cal);
-                        } else
-                        if( keyval.equals(CaseManagementNoteExt.RESOLUTIONDATE)) {
-                            if (problemlist==null) problemlist = patientRecord.addNewProblemList();
-                            pDate = caseManagementNoteExt.getDateValue();
-                            cal.setTime(pDate);
-                            DateFullOrPartial dateFullOrPartial = problemlist.addNewResolutionDate();
-                            dateFullOrPartial.setFullDate(cal);
+                       
+                        if( caseManagementNoteExt.getDateValue() != null ) {
+	                        if( keyval.equals(CaseManagementNoteExt.PROCEDUREDATE)) {
+	                            procedure = patientRecord.addNewProcedure();
+	                            pDate = caseManagementNoteExt.getDateValue();
+	                            cal.setTime(pDate);
+	                            DateFullOrPartial dateFullOrPartial = procedure.addNewProcedureDate();
+	                            dateFullOrPartial.setFullDate(cal);
+	                        } else
+	                        if( keyval.equals(CaseManagementNoteExt.STARTDATE)) {
+	                            if (problemlist==null) problemlist = patientRecord.addNewProblemList();
+	                            pDate = caseManagementNoteExt.getDateValue();
+	                            cal.setTime(pDate);
+	                            DateFullOrPartial dateFullOrPartial = problemlist.addNewOnsetDate();
+	                            dateFullOrPartial.setFullDate(cal);
+	                        } else
+	                        if( keyval.equals(CaseManagementNoteExt.RESOLUTIONDATE)) {
+	                            if (problemlist==null) problemlist = patientRecord.addNewProblemList();
+	                            pDate = caseManagementNoteExt.getDateValue();
+	                            cal.setTime(pDate);
+	                            DateFullOrPartial dateFullOrPartial = problemlist.addNewResolutionDate();
+	                            dateFullOrPartial.setFullDate(cal);
+	                        }
                         }
                     }
                     if (procedure==null && problemlist==null) continue;
