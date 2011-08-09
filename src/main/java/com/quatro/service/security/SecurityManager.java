@@ -9,12 +9,17 @@
  *     <Quatro Group Software Systems inc.>  <OSCAR Team>
  *******************************************************************************/
 package com.quatro.service.security;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 
+import org.oscarehr.util.SpringUtils;
+
 import com.quatro.common.KeyConstants;
+import com.quatro.dao.security.SecobjprivilegeDao;
 import com.quatro.model.LookupCodeValue;
+import com.quatro.model.security.Secobjprivilege;
 import com.quatro.model.security.UserAccessValue;
 import com.quatro.service.LookupManager;
 import com.quatro.util.Utility;
@@ -94,4 +99,49 @@ public class SecurityManager {
         return GetAccess(function, "");
     }
 
+    public boolean hasReadAccess(String objectName, String roleNames) {
+    	boolean result=false;
+    	
+    	SecobjprivilegeDao secobjprivilegeDao = (SecobjprivilegeDao)SpringUtils.getBean("secobjprivilegeDao");
+        
+    	List<String> rl = new ArrayList<String>();
+        for(String tmp:roleNames.split(",")) {
+        	rl.add(tmp);
+        }
+        List<Secobjprivilege> priv = secobjprivilegeDao.getByObjectNameAndRoles(objectName,rl);
+       
+        if(priv.size()==0) {
+        	return true;
+        }
+        for(Secobjprivilege p:priv) {
+			if(p.getPrivilege_code().indexOf("r")!= -1)
+				result=true;
+			if(p.getPrivilege_code().indexOf("x")!= -1)
+				result=true;
+		}
+    	return result;
+    }
+
+    public boolean hasWriteAccess(String objectName, String roleNames) {
+    	boolean result=false;
+    	
+    	SecobjprivilegeDao secobjprivilegeDao = (SecobjprivilegeDao)SpringUtils.getBean("secobjprivilegeDao");
+        
+    	List<String> rl = new ArrayList<String>();
+        for(String tmp:roleNames.split(",")) {
+        	rl.add(tmp);
+        }
+        List<Secobjprivilege> priv = secobjprivilegeDao.getByObjectNameAndRoles(objectName,rl);
+       
+        if(priv.size()==0) {
+        	return true;
+        }
+        for(Secobjprivilege p:priv) {
+			if(p.getPrivilege_code().indexOf("w")!= -1)
+				result=true;
+			if(p.getPrivilege_code().indexOf("x")!= -1)
+				result=true;
+		}
+    	return result;
+    }
 }

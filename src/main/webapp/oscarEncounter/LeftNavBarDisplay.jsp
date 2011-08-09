@@ -1,6 +1,10 @@
 <%@page import="org.apache.commons.lang.StringUtils"%>
 <%@page
 	import="oscar.oscarEncounter.pageUtil.NavBarDisplayDAO, oscar.util.*, java.util.ArrayList, java.util.Date, java.util.Calendar, java.io.IOException"%>
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="com.quatro.dao.security.SecobjprivilegeDao" %>
+<%@ page import="com.quatro.model.security.Secobjprivilege" %>
+<%@ page import="java.util.List" %>
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
 <c:set var="ctx" value="${pageContext.request.contextPath}"
 	scope="request" />
@@ -22,7 +26,11 @@
 <%
         //Do we have a '+' command to display on the right of the module header?
         String rh = dao.getRightHeadingID();
-        if( !rh.equals("") ) {          
+		String rhid = dao.getRightHeadingID();
+		String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+		com.quatro.service.security.SecurityManager securityMgr = new com.quatro.service.security.SecurityManager();
+		        
+		if( !rh.equals("") && securityMgr.hasWriteAccess("_" + ((String)request.getAttribute("cmd")).toLowerCase(),roleName$)) {              
         %>
 <div id='menuTitle<%=rh%>'
 	style="width: 10%; float: right; text-align: center;">
@@ -68,8 +76,16 @@
 </div>
 <%            
         } //end if menu items
+        	
         } //end if there is a right hand header               
-        
+        else {
+        	if(!rh.equals("")) {
+        	 %>
+             <div id='menuTitle<%=rh%>' style="width: 10%; float: right; text-align: center;">
+      			<h3 style="padding:0px; <%=getBackgroundColor(dao)%>">&nbsp;</h3>
+      	   </div>
+             <%	        	
+        } }
         
         //left hand module header comes last as it's displayed as a block
         %>
