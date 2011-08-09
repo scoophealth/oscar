@@ -63,8 +63,8 @@ public class EctDisplayTicklerAction extends EctDisplayAction {
     String winName = "ViewTickler" + bean.demographicNo;
     String pathview, pathedit;
     if( org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable() ) {
-        pathview = request.getContextPath() + "/Tickler.do?method=filter&filter.demographic_webName="+bean.patientLastName+","+bean.patientFirstName+"&filter.demographic_no="+bean.demographicNo;
-        pathedit = request.getContextPath() + "/Tickler.do?method=edit&tickler.demographic_webName="+bean.patientLastName + "," + bean.patientFirstName+"&tickler.demographic_no=" + bean.demographicNo;
+    	pathview = request.getContextPath() + "/Tickler.do?filter.demographic_webName="+bean.patientLastName + "," + bean.patientFirstName+"&filter.demographic_no=" + bean.demographicNo +"&filter.assignee=";
+    	pathedit = request.getContextPath() + "/Tickler.do?method=edit&tickler.demographic_webName="+bean.patientLastName + "," + bean.patientFirstName+"&tickler.demographic_no=" + bean.demographicNo;
     }
     else {
         pathview = request.getContextPath() + "/tickler/ticklerDemoMain.jsp?demoview=" + bean.demographicNo + "&parentAjaxId=" + cmd;
