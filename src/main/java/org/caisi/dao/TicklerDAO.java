@@ -140,10 +140,10 @@ public class TicklerDAO extends HibernateDaoSupport {
             if( filter.getProgramId() == null || "".equals(filter.getProgramId()) || filter.getProgramId().equals("All Programs")) {
             		includeProgramClause = false;
             }
-            if (filter.getProvider() == null || filter.getProvider().equals("All Providers")) {
+            if (filter.getProvider() == null || filter.getProvider().equals("All Providers") || filter.getProvider().equals("")) {
                     includeProviderClause=false;
             }
-            if (filter.getAssignee() == null || filter.getAssignee().equals("All Providers")) {
+            if (filter.getAssignee() == null || filter.getAssignee().equals("All Providers") || filter.getAssignee().equals("")) {
                     includeAssigneeClause=false;
             }
             if (filter.getClient() == null || filter.getClient().equals("All Clients")) {
@@ -200,11 +200,11 @@ public class TicklerDAO extends HibernateDaoSupport {
                     paramList.add(String.valueOf(filter.getStatus()));
             }
             if(includeClientClause) {
-                    query = query + "and t.demographic_no = ?";
+                    query = query + " and t.demographic_no = ?";
                     paramList.add(filter.getClient());
             }
             if(includeDemographicClause) {
-                    query = query + "and t.demographic_no = ?";
+                    query = query + " and t.demographic_no = ?";
                     paramList.add(filter.getDemographic_no());
             }
             return query;
