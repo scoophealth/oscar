@@ -38,6 +38,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.util.MiscUtils;
 
+import oscar.OscarProperties;
 import oscar.oscarRx.data.RxAllergyData;
 import oscar.oscarRx.util.RxDrugRef;
 
@@ -108,7 +109,9 @@ public final class RxSearchAllergyAction extends Action {
         }
         
         boolean itemsFound = true;
-        vec  = drugRef.list_search_element_select_categories(frm.getSearchString(),catVec);
+        
+        String wildcardRightOnly = OscarProperties.getInstance().getProperty("allergies.search_right_wildcard_only", "false");               
+        vec  = drugRef.list_search_element_select_categories(frm.getSearchString(),catVec,Boolean.valueOf(wildcardRightOnly));
         
         //  'id':'0','category':'','name'
         RxAllergyData.Allergy[] arr = new RxAllergyData.Allergy[vec==null?0:vec.size()];

@@ -292,12 +292,22 @@ public class RxDrugRef {
      
      
      public Vector list_search_element_select_categories(String searchStr,Vector catVec){
-         Vector params = new Vector();
-         params.addElement(searchStr);
-         params.addElement(catVec);
-         Vector vec = (Vector) callWebservice("list_search_element_select_categories",params);             
-         return vec;		         
-     }	
+         return list_search_element_select_categories(searchStr,catVec,false);
+      }
+      
+      public Vector list_search_element_select_categories(String searchStr,Vector catVec, boolean wildcardRightOnly){
+          Vector params = new Vector();
+          params.addElement(searchStr);
+          params.addElement(catVec);
+          Vector vec = null;
+          if(wildcardRightOnly) {
+         	 vec = (Vector) callWebservice("list_search_element_select_categories_right",params);             
+          } else {
+         	 vec = (Vector) callWebservice("list_search_element_select_categories",params);    
+          }
+          return vec;		         
+      }	
+      
      
      public Vector list_drug_class(Vector classVec){
          Vector params = new Vector();         
