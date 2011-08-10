@@ -4003,7 +4003,6 @@
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = (Vector) callWebservice("interaction_by_drugnames",params);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = (Vector) callWebservice("list_drug_class",params);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = (Vector) callWebservice("list_search_element",params);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = (Vector) callWebservice("list_search_element_select_categories",params);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = (Vector) callWebserviceLite("get_allergy_warnings",params);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = (Vector) callWebserviceLite("get_drug",params);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = (Vector) callWebserviceLite("get_drug_2",params);</ViolationValue>
@@ -4016,6 +4015,7 @@
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = (Vector) callWebserviceLite("list_search_element_route",params);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = (Vector) callWebserviceLite("suggestAlias",params);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = new Vector();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = null;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector&lt;Hashtable&gt; vec = (Vector)  callWebserviceLite("list_search_element3",params);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:if (holbrook instanceof Vector){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:if (obj instanceof Vector){</ViolationValue>
@@ -4065,12 +4065,15 @@
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:public Vector list_products(int pkey, Hashtable tags ){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:public Vector list_references(Hashtable tags){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:public Vector list_search_element_select_categories(String searchStr,Vector catVec){</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:public Vector list_search_element_select_categories(String searchStr,Vector catVec, boolean wildcardRightOnly){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:public Vector list_sources(String searchexpr,Hashtable tags){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:public Vector suggestAlias(String alias,String aliasComment,String id,String name,String provider)throws Exception{</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:public static void removeNullFromVector(Vector v){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:removeNullFromVector(drugs);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:return new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:return new Vector();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:vec = (Vector) callWebservice("list_search_element_select_categories",params);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:vec = (Vector) callWebservice("list_search_element_select_categories_right",params);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:vec = (Vector) holbrook;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:vec = (Vector) obj;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:}else if(obj instanceof Hashtable){</ViolationValue>
