@@ -371,6 +371,18 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 
 			String anonymous=StringUtils.trimToNull(request.getParameter("anonymous"));
 			client.setAnonymous(anonymous);
+
+			//check to see if HIN already exists in the system
+			if(client.getDemographicNo() == null) {
+				String hin = client.getHin();
+				String hcType = client.getHcType();
+				if(hin.length()>0 && clientManager.checkHealthCardExists(hin, hcType)) {
+					ActionMessages messages = new ActionMessages();
+					messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("hin.duplicate"));
+					saveErrors(request, messages);
+					return mapping.findForward(EDIT);
+				}
+			}			
 			
 			// save client information.
 			saveClient(client, providerNo);

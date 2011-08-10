@@ -295,7 +295,7 @@ public class ClientDao extends HibernateDaoSupport {
 		}	
 		
 		if (bean.getChartNo() != null && bean.getChartNo().length() > 0) {
-			criteria.add(Expression.eq("ChartNo", bean.getChartNo()));
+			criteria.add(Expression.like("ChartNo", "%"+bean.getChartNo()+"%"));
 		}	
 	
 		if (!bean.isSearchUsingSoundex()) {
@@ -838,4 +838,15 @@ public class ClientDao extends HibernateDaoSupport {
 
 		return rs;
     }
+    
+    public List<String> getRosterStatuses() {
+    	@SuppressWarnings("unchecked")
+    	List<String> results = getHibernateTemplate().find("SELECT DISTINCT d.RosterStatus FROM Demographic d where d.RosterStatus != '' and d.RosterStatus != 'RO' and d.RosterStatus != 'NR' and d.RosterStatus != 'TE' and d.RosterStatus != 'FS'");
+    	return results;
+    }
+    
+    public List<Demographic> searchByHealthCard(String hin, String hcType) {
+    	return getClientsByHealthCard(hin,hcType);
+    }
+
 }
