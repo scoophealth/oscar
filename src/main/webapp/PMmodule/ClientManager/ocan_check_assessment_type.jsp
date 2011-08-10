@@ -13,7 +13,6 @@
 		
 	//When can we make Initial OCAN
 	/* We can make reassessment without having initial ocan, so comment out the following coding lines.
-
 	if("IA".equals(reasonForAssessment)) {
 		if(OcanForm.canCreateInitialAssessment(clientId)) { 
 			out.print("ia_true");
@@ -33,28 +32,32 @@
 		if(OcanForm.haveInitialAssessment(clientId)) { 
 			out.print("ia_exists_true");
 		} else {
-			out.print("ia_exists_false");
+			
+				if(OcanForm.haveReassessment(clientId)) {
+					out.print("ia_exists_true");
+				} else {
+					out.print("ia_exists_false");
+				}
 		}
 	}
 	*/
 	
 	out.print("ia_true");
-    out.print("ra_true");
-    if("DIS".equals(reasonForAssessment) || "OTHR".equals(reasonForAssessment) ||
-            "SC".equals(reasonForAssessment) || "REV".equals(reasonForAssessment) ||
-            "REK".equals(reasonForAssessment)) {
-            //Firstly must have an intial ocan
-            if(OcanForm.haveInitialAssessment(clientId)) {
-                    out.print("ia_exists_true");
-            } else {
-
-                    if(OcanForm.haveReassessment(clientId)) {
-                            out.print("ia_exists_true");
-                    } else {
-                            out.print("ia_exists_false");
-                    }
-            }
-    }
-
+	out.print("ra_true");
+	if("DIS".equals(reasonForAssessment) || "OTHR".equals(reasonForAssessment) || 
+		"SC".equals(reasonForAssessment) || "REV".equals(reasonForAssessment) || 
+		"REK".equals(reasonForAssessment)) {
+		//Firstly must have an intial ocan
+		if(OcanForm.haveInitialAssessment(clientId)) { 
+			out.print("ia_exists_true");
+		} else {
+	
+			if(OcanForm.haveReassessment(clientId)) {
+				out.print("ia_exists_true");
+			} else {
+				out.print("ia_exists_false");
+			}
+		}
+	}
 	
 %>

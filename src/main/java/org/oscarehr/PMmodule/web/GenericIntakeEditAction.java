@@ -442,9 +442,9 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 			}
 
 			// if (!formBean.getSelectedServiceProgramIds().isEmpty() && "RFQ_admit".endsWith(saveWhich)) {
-			if (!formBean.getSelectedServiceProgramIds().isEmpty()) {
+			//if (!formBean.getSelectedServiceProgramIds().isEmpty()) { //should be able to discharge from all service programs.
 				admitServicePrograms(client.getDemographicNo(), providerNo, formBean.getSelectedServiceProgramIds(), null);
-			}
+			//}
 
 			if ("normal".equals(saveWhich)) {
 				// normal intake saving . eg. seaton house
@@ -902,7 +902,14 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 		SortedSet<Integer> currentServicePrograms = getCurrentServiceProgramIds(clientId);
 
 		if (admissionText == null) admissionText = "intake admit";
-
+		
+		if( serviceProgramIds.isEmpty()) {
+			for(Object programId : currentServicePrograms) {
+				admissionManager.processDischarge((Integer) programId, clientId, "intake discharge", "0");
+			}
+			return;
+		}
+		
 		Collection<?> discharge = CollectionUtils.subtract(currentServicePrograms, serviceProgramIds);
 
 		for (Object programId : discharge) {
