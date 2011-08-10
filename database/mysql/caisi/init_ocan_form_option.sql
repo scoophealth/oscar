@@ -100,7 +100,7 @@ insert into OcanFormOption values (1272,"1.2","Client Camberwell Need","1","1 - 
 insert into OcanFormOption values (1273,"1.2","Client Camberwell Need","2","2 - Unmet Need");
 insert into OcanFormOption values (1274,"1.2","Client Camberwell Need","9","9 - I Do Not Want to Answer");
 
-
+insert into OcanFormOption values (1275,'1.2','Ethniticity','CAN','Canadian');
 
 
 
