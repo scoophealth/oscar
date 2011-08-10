@@ -27,12 +27,16 @@ package oscar.oscarEncounter.pageUtil;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.util.MessageResources;
+import org.oscarehr.PMmodule.dao.AdmissionDao;
+import org.oscarehr.PMmodule.model.Admission;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarEncounter.oscarMeasurements.MeasurementTemplateFlowSheetConfig;
 import oscar.oscarResearch.oscarDxResearch.bean.dxResearchBeanHandler;
@@ -69,12 +73,50 @@ public class EctDisplayMeasurementsAction extends EctDisplayAction {
         Dao.setRightHeadingID(menuId);
         Dao.setMenuHeader(messages.getMessage("oscarEncounter.LeftNavBar.InputGrps"));
         Dao.setRightURL("return !showMenu('" + menuId + "', event);");
-        
-        //first we add flowsheets to the module items
+                
+        ArrayList<String> flowsheets = MeasurementTemplateFlowSheetConfig.getInstance().getUniveralFlowsheets();                            
+        int hash;
+        for (int f = 0; f < flowsheets.size();f++){
+            NavBarDisplayDAO.Item item = Dao.Item();
+            String flowsheetName = (String) flowsheets.get(f);
+            String dispname = MeasurementTemplateFlowSheetConfig.getInstance().getDisplayName(flowsheetName);
+
+            winName = flowsheetName + bean.demographicNo;
+            hash = Math.abs(winName.hashCode());
+            url = "popupPage(700,1000,'" + hash + "','" + request.getContextPath() + "/oscarEncounter/oscarMeasurements/TemplateFlowSheet.jsp?demographic_no=" + bean.demographicNo + "&template=" + flowsheetName + "');return false;";
+            item.setLinkTitle(dispname);
+            dispname = StringUtils.maxLenString(dispname, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
+            item.setTitle(dispname);
+            item.setURL(url);
+            Dao.addItem(item);            
+        }
+        //next we add dx triggered flowsheets to the module items
         dxResearchBeanHandler dxRes = new dxResearchBeanHandler(bean.demographicNo);
         Vector dxCodes = dxRes.getActiveCodeListWithCodingSystem();        
-        ArrayList flowsheets = MeasurementTemplateFlowSheetConfig.getInstance().getFlowsheetsFromDxCodes(dxCodes);                            
-        int hash;
+        flowsheets = MeasurementTemplateFlowSheetConfig.getInstance().getFlowsheetsFromDxCodes(dxCodes);                            
+        for (int f = 0; f < flowsheets.size();f++){
+            NavBarDisplayDAO.Item item = Dao.Item();
+            String flowsheetName = (String) flowsheets.get(f);
+            String dispname = MeasurementTemplateFlowSheetConfig.getInstance().getDisplayName(flowsheetName);
+
+            winName = flowsheetName + bean.demographicNo;
+            hash = Math.abs(winName.hashCode());
+            url = "popupPage(700,1000,'" + hash + "','" + request.getContextPath() + "/oscarEncounter/oscarMeasurements/TemplateFlowSheet.jsp?demographic_no=" + bean.demographicNo + "&template=" + flowsheetName + "');return false;";
+            item.setLinkTitle(dispname);
+            dispname = StringUtils.maxLenString(dispname, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
+            item.setTitle(dispname);
+            item.setURL(url);
+            Dao.addItem(item);            
+        }
+        
+        //next we add program based flowsheets
+        List<String> programs = new ArrayList<String>();        
+        AdmissionDao admissionDao = (AdmissionDao)SpringUtils.getBean("admissionDao");
+        List<Admission> admissions = admissionDao.getCurrentAdmissions(Integer.parseInt(bean.demographicNo));
+        for(Admission admission:admissions) {
+        	programs.add(String.valueOf(admission.getProgramId()));
+        }
+        flowsheets = MeasurementTemplateFlowSheetConfig.getInstance().getFlowsheetsFromPrograms(programs);                                   
         for (int f = 0; f < flowsheets.size();f++){
             NavBarDisplayDAO.Item item = Dao.Item();
             String flowsheetName = (String) flowsheets.get(f);
