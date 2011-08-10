@@ -26,6 +26,10 @@
 <%@ page import="org.oscarehr.PMmodule.model.IntakeNodeJavascript" %>
 <%@ page import="org.oscarehr.PMmodule.web.formbean.GenericIntakeEditFormBean" %>
 <%@ page import="org.oscarehr.PMmodule.web.ProgramUtils" %>
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.PMmodule.dao.ClientDao" %>
+<%@ page import="oscar.OscarProperties" %>
+
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 <%@ page import="org.oscarehr.util.SessionConstants" %>
 <%
@@ -38,11 +42,14 @@
     String intakeFrmName = intake.getNode().getLabelStr();
     Integer intakeFrmVer = intake.getNode().getForm_version();
     intakeFrmName += intakeFrmVer==null ? " (1)" : " ("+intakeFrmVer+")";
+    
+    boolean readOnlyDates = Boolean.valueOf(OscarProperties.getInstance().getProperty("intake.readonly_dates","true"));
 %>
 
 <%@page import="org.apache.commons.lang.StringUtils"%>
 <%@page import="java.util.GregorianCalendar"%>
 <%@page import="java.util.Calendar"%>
+<%@page import="java.util.List"%>
 <%@page import="java.text.DateFormatSymbols"%>
 <%@page import="org.apache.commons.lang.time.DateFormatUtils"%>
 <%@page import="org.oscarehr.common.model.Demographic"%><html:html xhtml="true" locale="true">
@@ -345,7 +352,7 @@
             <tr>
                 <td colspan="3">
                 	<label>Date of Birth</label><br/>
-                	<input id="client.formattedDob" name="client.formattedDob" value="<%=intakeEditForm.getClient().getFormattedDob() %>" onfocus="this.blur()" readonly="readonly" type="text"><img title="Calendar" id="cal_dob" src="../../images/cal.gif" alt="Calendar" border="0"><script type="text/javascript">Calendar.setup({inputField:'client.formattedDob',ifFormat :'%Y-%m-%d',button :'cal_dob',align :'cr',singleClick :true,firstDay :1});</script>                                     
+                	<input id="client.formattedDob" name="client.formattedDob" value="<%=intakeEditForm.getClient().getFormattedDob() %>" <%=(readOnlyDates?"readonly=\"readonly\" onfocus=\"this.blur()\"":"") %> type="text"><img title="Calendar" id="cal_dob" src="../../images/cal.gif" alt="Calendar" border="0"><script type="text/javascript">Calendar.setup({inputField:'client.formattedDob',ifFormat :'%Y-%m-%d',button :'cal_dob',align :'cr',singleClick :true,firstDay :1});</script>                                     
                 </td>                
             </tr>
         </table>
@@ -389,7 +396,7 @@
 				   	 			effDateVal = intakeEditForm.getClient().getFormattedEffDate();
 				   	 		}	   		
 						%>
-						<input style="width:8em" id="client.formattedEffDate" name="client.formattedEffDate" value="<%=effDateVal %>" onfocus="this.blur()" readonly="readonly" type="text"><img title="Calendar" id="cal_effdate" src="../../images/cal.gif" alt="Calendar" border="0"><script type="text/javascript">Calendar.setup({inputField:'client.formattedEffDate',ifFormat :'%Y-%m-%d',button :'cal_effdate',align :'cr',singleClick :true,firstDay :1});</script>                                     
+						<input style="width:8em" id="client.formattedEffDate" name="client.formattedEffDate" value="<%=effDateVal %>" <%=(readOnlyDates?"readonly=\"readonly\" onfocus=\"this.blur()\"":"") %> type="text"><img title="Calendar" id="cal_effdate" src="../../images/cal.gif" alt="Calendar" border="0"><script type="text/javascript">Calendar.setup({inputField:'client.formattedEffDate',ifFormat :'%Y-%m-%d',button :'cal_effdate',align :'cr',singleClick :true,firstDay :1});</script>                                     
 					</td>
 					<td>
 						<%
@@ -399,7 +406,7 @@
 				   	 			renewDateVal = intakeEditForm.getClient().getFormattedRenewDate();
 				   	 		}	   		
 						%>
-						<input style="width:8em" id="client.formattedRenewDate" name="client.formattedRenewDate" value="<%=renewDateVal%>" onfocus="this.blur()" readonly="readonly" type="text"><img title="Calendar" id="cal_renewdate" src="../../images/cal.gif" alt="Calendar" border="0"><script type="text/javascript">Calendar.setup({inputField:'client.formattedRenewDate',ifFormat :'%Y-%m-%d',button :'cal_renewdate',align :'cr',singleClick :true,firstDay :1});</script>                                     
+						<input style="width:8em" id="client.formattedRenewDate" name="client.formattedRenewDate" value="<%=renewDateVal%>" <%=(readOnlyDates?"readonly=\"readonly\" onfocus=\"this.blur()\"":"") %> type="text"><img title="Calendar" id="cal_renewdate" src="../../images/cal.gif" alt="Calendar" border="0"><script type="text/javascript">Calendar.setup({inputField:'client.formattedRenewDate',ifFormat :'%Y-%m-%d',button :'cal_renewdate',align :'cr',singleClick :true,firstDay :1});</script>                                     
 					</td>
 				</tr>
 			</table>
@@ -449,6 +456,32 @@
         </td>
         <td><label>Postal Code<br><html:text property="client.postal" size="9" maxlength="9"/></label></td>
     </tr>
+    <tr>
+    	<td><label>Chart No<br/><html:text size="20" maxlength="40" property="client.chartNo"/></label></td>
+    	<td>
+    		<label>Roster Status<br/>
+			<html:select property="client.rosterStatus" styleId="width: 120">
+			<%String rosterStatus=""; %>
+				<html:option value=""></html:option>
+				<html:option value="RO"><bean:message key="demographic.demographiceditdemographic.optRostered"/></html:option>
+				<html:option value="NR"><bean:message key="demographic.demographiceditdemographic.optNotRostered"/></html:option>
+				<html:option value="TE"><bean:message key="demographic.demographiceditdemographic.optTerminated"/></html:option>
+				<html:option value="FS"><bean:message key="demographic.demographiceditdemographic.optFeeService"/></html:option>
+				<%
+				ClientDao clientDao = (ClientDao)SpringUtils.getBean("clientDao");
+				List<String> statuses = clientDao.getRosterStatuses();
+				for(String status:statuses) {
+					%>
+						<html:option value="<%=status%>"><%=status%></html:option>
+					<%
+				}
+				%>			
+			</html:select>    			
+    		</label>
+    	</td>
+    	<td></td>
+    	<td></td>
+    </tr>        
 <oscar:oscarPropertiesCheck property="ENABLE_CME_ON_REG_INTAKE" value="true">
 <c:if test="${not empty sessionScope.genericIntakeEditForm.client.demographicNo}">
     <tr>
