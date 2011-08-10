@@ -60,7 +60,7 @@ public final class RxShowAllergyAction extends DispatchAction {
         
         String user_no = (String) request.getSession().getAttribute("user");
         String demo_no = (String) request.getParameter("demographicNo");
-               
+        String view = (String) request.getParameter("view");
         
         if(demo_no == null){
            return mapping.findForward("failure");
@@ -81,6 +81,9 @@ public final class RxShowAllergyAction extends DispatchAction {
         
         bean.setProviderNo(user_no);
         bean.setDemographicNo(Integer.parseInt(demo_no));
+        if(view != null) {
+        	bean.setView(view);
+    	}
         
         request.getSession().setAttribute("RxSessionBean", bean);
         

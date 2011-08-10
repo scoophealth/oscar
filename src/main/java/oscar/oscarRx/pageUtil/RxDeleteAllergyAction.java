@@ -53,15 +53,26 @@ public final class RxDeleteAllergyAction extends Action {
             // Add allergy
 
             int id = Integer.parseInt(request.getParameter("ID"));
+            String demographicNo = request.getParameter("demographicNo");
+    		String action = request.getParameter("action");
 
             RxPatientData.Patient patient = (RxPatientData.Patient)request.getSession().getAttribute("Patient");
 
             RxPatientData.Patient.Allergy allergy = patient.getAllergy(id);
-            patient.deleteAllergy(id);          
-            
-            String ip = request.getRemoteAddr();
-            LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.DELETE, LogConst.CON_ALLERGY, ""+id, ip,""+patient.getDemographicNo(), allergy.getAllergy().getAuditString());
-
+            if(action!= null && action.equals("activate")) {
+            	patient.activateAllergy(id);
+        		String ip = request.getRemoteAddr();
+        		LogAction.addLog((String) request.getSession().getAttribute("user"), "Activate", LogConst.CON_ALLERGY, ""+id, ip,""+patient.getDemographicNo(), allergy.getAllergy().getAuditString());                   
+        	} else {
+        		patient.deleteAllergy(id);
+        		String ip = request.getRemoteAddr();
+        		LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.DELETE, LogConst.CON_ALLERGY, ""+id, ip,""+patient.getDemographicNo(), allergy.getAllergy().getAuditString());
+        	}
+        		
+            if(demographicNo != null) {
+            	request.setAttribute("demographicNo",demographicNo);
+        	}
+        		
             return (mapping.findForward("success"));
     }
 }
