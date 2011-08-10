@@ -2,6 +2,12 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+
+<%@page import="java.util.List" %>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.casemgmt.service.CaseManagementManager" %>
+<%@page import="org.oscarehr.casemgmt.model.CaseManagementNoteLink" %>
+
 <%
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
@@ -169,7 +175,20 @@ String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.D
 									<td><bean:write name="allergy" property="allergy.reaction" /></td>
 									<td><%=allergy.getAllergy().getStartDate()!=null?allergy.getAllergy().getStartDate():""%></td>
 									<td><bean:write name="allergy" property="allergy.lifeStageDesc"/> </td>
-									<td><a href="#" title="Annotation" onclick="window.open('../annotation/annotation.jsp?display=<%=annotation_display%>&table_id=<%=String.valueOf(allergy.getAllergyId())%>&demo=<jsp:getProperty name="patient" property="demographicNo"/>','anwin','width=400,height=500');"><img src="../images/notes.gif" border="0"></a></td>
+									<%
+										CaseManagementManager cmm = (CaseManagementManager) SpringUtils.getBean("caseManagementManager");
+										@SuppressWarnings("unchecked")
+										List<CaseManagementNoteLink> existingAnnots = cmm.getLinkByTableId(org.oscarehr.casemgmt.model.CaseManagementNoteLink.ALLERGIES,Long.valueOf(allergy.getAllergyId()));
+									%>									
+									<td>
+										<a href="#" title="Annotation" onclick="window.open('../annotation/annotation.jsp?display=<%=annotation_display%>&table_id=<%=String.valueOf(allergy.getAllergyId())%>&demo=<jsp:getProperty name="patient" property="demographicNo"/>','anwin','width=400,height=500');">
+											<%if(existingAnnots.size()>0) {%>
+											<img src="../images/filledNotes.gif" border="0"/>
+											<% } else { %>
+											<img src="../images/notes.gif" border="0">
+											<% } %>											
+										</a>
+									</td>
 								</tr>
 
 							</logic:iterate>
