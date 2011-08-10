@@ -2364,7 +2364,7 @@
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPatientData.java:boolean b = DBHandler.RunSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPatientData.java:rs = DBHandler.GetSQL(</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPatientData.java:rs = DBHandler.GetSQL("SELECT * FROM allergies WHERE allergyid  = " + String.valueOf(id));</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPatientData.java:rs = DBHandler.GetSQL("SELECT * FROM allergies WHERE demographic_no = '" + getDemographicNo() + "' and archived = '0' ORDER BY position");</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPatientData.java:rs = DBHandler.GetSQL("SELECT * FROM allergies WHERE demographic_no = '" + getDemographicNo() + "' ORDER BY position");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPatientData.java:rs = DBHandler.GetSQL("SELECT * FROM diseases WHERE demographic_no = '" + getDemographicNo()+"'");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPharmacyData.java:DBHandler.RunSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPharmacyData.java:rs = DBHandler.GetSQL(sql);</ViolationValue>

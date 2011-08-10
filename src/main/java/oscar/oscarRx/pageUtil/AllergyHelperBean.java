@@ -49,7 +49,7 @@ public final class AllergyHelperBean {
 			allergyDisplay.setSeverityCode(allergy.getAllergy().getSeverityOfReaction());
 			allergyDisplay.setStartDate(DateUtils.formatDate(allergy.getAllergy().getStartDate(), locale));
 			allergyDisplay.setTypeCode(allergy.getAllergy().getTYPECODE());
-
+			allergyDisplay.setArchived(allergy.getAllergy().getArchived());
 			results.add(allergyDisplay);
 		}
 	}
@@ -72,7 +72,7 @@ public final class AllergyHelperBean {
 				allergyDisplay.setSeverityCode(remoteAllergy.getSeverityCode());
 				allergyDisplay.setStartDate(DateUtils.formatDate(remoteAllergy.getStartDate(), locale));
 				allergyDisplay.setTypeCode(remoteAllergy.getTypeCode());
-
+				
 				results.add(allergyDisplay);
 			}
 		} catch (Exception e) {
