@@ -37,10 +37,11 @@ import java.io.InputStream;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Vector;
 import java.util.Map;
+import java.util.Vector;
 
 import org.apache.log4j.Logger;
 import org.drools.RuleBase;
@@ -75,7 +76,9 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
     private List<File> flowSheets;
     
     ArrayList<String> dxTriggers = new ArrayList<String>();
+    ArrayList<String> programTriggers = new ArrayList<String>();
     Hashtable<String, ArrayList<String>> dxTrigHash = new Hashtable<String, ArrayList<String>>();
+    HashMap<String, ArrayList<String>> programTrigHash = new HashMap<String, ArrayList<String>>();
     Hashtable<String, String> flowsheetDisplayNames = new Hashtable<String, String>();
     ArrayList<String> universalFlowSheets = new ArrayList<String>();
 
@@ -138,6 +141,29 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
         log.debug("alist size " + alist.size());
         return alist;
     }
+    
+    public ArrayList<String> getFlowsheetsFromPrograms(List<String> coll) {
+        ArrayList<String> alist = new ArrayList<String>();
+        
+        log.debug("Triggers size " + programTriggers.size());
+        for (int i = 0; i < programTriggers.size(); i++) {
+            String programId = programTriggers.get(i);
+            log.debug("Checking programId " + programId);
+            if (coll.contains(programId) && !alist.contains(programId)) {                
+                ArrayList<String> flowsheets = getFlowsheetForProgramId(programId);
+                log.debug("Size of flowsheets for " + programId + " is " + flowsheets.size());
+                for (int j = 0; j < flowsheets.size(); j++) {
+                    String flowsheet = flowsheets.get(j);
+                    if (!alist.contains(flowsheet)) {
+                        log.debug("adding flowsheet " + flowsheet);
+                        alist.add(flowsheet);
+                    }
+                }
+            }
+        }
+        log.debug("alist size " + alist.size());
+        return alist;
+    }
 
     public ArrayList<String> getUniveralFlowsheets() {
         return universalFlowSheets;
@@ -145,6 +171,10 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
 
     public Hashtable<String, ArrayList<String>> getDxTrigHash() {
         return dxTrigHash;
+    }
+    
+    public HashMap<String, ArrayList<String>> getProgramTrigHash() {
+        return programTrigHash;
     }
 
     public String getDisplayName(String name) {
@@ -180,10 +210,14 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
             flowsheets.put(d.getName(), d);
             if (d.isUniversal())
                 universalFlowSheets.add(d.getName());
-            else {
+            else if(d.getDxTriggers()!=null && d.getDxTriggers().length>0){
                 String[] dxTrig = d.getDxTriggers();
                 addTriggers(dxTrig, d.getName());
+            } else if(d.getProgramTriggers()!=null && d.getProgramTriggers().length>0) {
+            	String[] programTrig = d.getProgramTriggers();
+            	addProgramTriggers(programTrig,d.getName());
             }
+
             flowsheetDisplayNames.put(d.getName(), d.getDisplayName());
         }
         List<FlowSheetUserCreated> flowSheetUserCreateds = flowSheetUserCreatedDao.getAllUserCreatedFlowSheets();
@@ -207,6 +241,10 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
     public ArrayList<String> getFlowsheetForDxCode(String code) {
         return dxTrigHash.get(code);
     }
+    
+    public ArrayList<String> getFlowsheetForProgramId(String code) {
+        return programTrigHash.get(code);
+    }
 
     private void addTriggers(String[] dxTrig, String name) {
         if (dxTrig != null) {
@@ -223,6 +261,26 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
                     ArrayList<String> l = new ArrayList<String>();
                     l.add(name);
                     dxTrigHash.put(aDxTrig, l);
+                }
+            }
+        }
+    }
+    
+    private void addProgramTriggers(String[] programTrig, String name) {
+        if (programTrig != null) {
+            for (String aProgramTrig : programTrig) {
+                if (!programTriggers.contains(aProgramTrig)) {
+                    programTriggers.add(aProgramTrig);
+                }
+                if (programTrigHash.containsKey(aProgramTrig)) {
+                    ArrayList<String> l = programTrigHash.get(aProgramTrig);
+                    if (!l.contains(name)) {
+                        l.add(name);
+                    }
+                } else {
+                    ArrayList<String> l = new ArrayList<String>();
+                    l.add(name);
+                    programTrigHash.put(aProgramTrig, l);
                 }
             }
         }
@@ -409,6 +467,10 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
             }
             if (root.getAttribute("dxcode_triggers") != null) {
                 d.parseDxTriggers(root.getAttribute("dxcode_triggers").getValue());
+            }
+            
+            if (root.getAttribute("program_triggers") != null) {
+                d.parseProgramTriggers(root.getAttribute("program_triggers").getValue());
             }
 
             if (root.getAttribute("warning_colour") != null) {
@@ -752,6 +814,7 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
             addAttributeifValueNotNull(va, "recommendation_colour", mFlowsheet.getRecommendationColour());
             addAttributeifValueNotNull(va, "top_HTML", mFlowsheet.getTopHTMLStream());        
             addAttributeifValueNotNull(va,"dxcode_triggers",mFlowsheet.getDxTriggersString());
+            addAttributeifValueNotNull(va,"program_triggers",mFlowsheet.getProgramTriggersString());
 
             Hashtable indicatorHash = mFlowsheet.getIndicatorHashtable();
             Enumeration enu = indicatorHash.keys();
