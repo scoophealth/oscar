@@ -12,6 +12,7 @@ public final class AllergyDisplay {
 	private String onSetCode;
 	private String reaction;
 	private String startDate;
+	private String archived;
 
 	public Integer getId() {
 		return (id);
@@ -96,4 +97,13 @@ public final class AllergyDisplay {
 	public String getTypeDesc() {
 		return (RxAllergyData.getTypeDesc(typeCode));
 	}
+
+	public String getArchived() {
+    	return archived;
+    }
+
+	public void setArchived(String archived) {
+    	this.archived = archived;
+    }
+	
 }
