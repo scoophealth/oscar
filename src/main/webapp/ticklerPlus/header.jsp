@@ -35,6 +35,52 @@
 
 	<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 	<html:base />
+
+	<style type="text/css">
+	table.legend{
+	border:0;
+	padding-top:0px;
+	font-family:"Arial", Verdana;
+	
+	}
+	
+	table.legend td{
+	font-size:10;
+	text-align:left;
+	padding-right:5px;
+	
+	}
+	
+	
+	table.colour_codes{
+	width:8px;
+	height:10px;
+	border:1px solid #999999;
+	padding-right:0px;
+	}
+	
+	
+	</style>
+	
+	<!--[if IE]>
+	<style type="text/css">
+	
+	table.legend{
+	border:0;
+	font-family:"Arial", Verdana;
+	
+	}
+	
+	table.legend td{
+	font-size:12;
+	text-align:left;
+	padding-right:5px;
+	}
+	
+	</style>
+	<![endif]-->
+
+
 	</head>
 	<body>
 </c:if>

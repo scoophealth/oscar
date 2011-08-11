@@ -246,7 +246,35 @@
 	</tr>
 </table>
 
-<br/>
+<% 
+	 //colour codes - html
+	 String[] ColourCodesArray=new String[3];
+	 ColourCodesArray[1]="red"; //red - High
+	 ColourCodesArray[2]="black"; //normal or low
+	
+	 //labels for colour codes
+	 String[] lblCodesArray=new String[3];
+	 lblCodesArray[1]="High"; //red - High
+	 lblCodesArray[2]="Normal or Low"; //normal or low
+	 
+	 //Title ie: Legend or Profile Legend
+	 String legend_title="Priority Legend: ";
+			
+	 //creat empty builder string
+	 String legend_builder=" ";
+		
+		
+	 	for (int iLegend = 1; iLegend < 3; iLegend++){
+			
+			legend_builder +="<td> <table class='colour_codes' bgcolor='"+ColourCodesArray[iLegend]+"'><td> </td></table> </td> <td align='center'>"+lblCodesArray[iLegend]+"</td>";
+			
+		}
+		
+	 	String legend = "<table class='legend' cellspacing='0' align='right'><tr><td><b>"+legend_title+"</b></td>"+legend_builder+" </tr></table>";
+		
+		out.print(legend);
+%>
+<br />
 <%@ include file="/ticklerPlus/messages.jsp"%>
 
 <table width="100%" border="0" cellpadding="0" cellspacing="1"
