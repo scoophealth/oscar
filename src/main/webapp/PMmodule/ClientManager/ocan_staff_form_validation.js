@@ -779,8 +779,8 @@ function validateStartAndCompletionDates()
 	var cdd = new Date(cd[0],cd[1]-1,cd[2]);
 
 	
-	if(cdd <= sdd) {
-		alert('Completion Date must be after Start Date');
+	if(cdd < sdd) {
+		alert('Completion date must be equal or after start date');
 		return false;
 	}
 	

@@ -34,8 +34,12 @@
 					lastCompletedForm.setAssessmentStatus("In Progress");
 						
 					ocanStaffForm = lastCompletedForm;
+					
 				}
 			}
+		}
+		if(ocanStaffForm!=null) {
+			ocanStaffFormId = ocanStaffForm.getId()==null?0:ocanStaffForm.getId().intValue();
 		}
 	}
 	int medicationNumber = Integer.parseInt(request.getParameter("medication_num"));
