@@ -9,6 +9,7 @@
 <%@page import="java.util.Map"%>
 <%@page import="java.util.Date"%>
 <%@page import="java.util.List"%>
+<%@page import="org.apache.commons.lang.StringUtils"%>
 <%
 	@SuppressWarnings("unchecked")
 	HashMap<String,String[]> parameters=new HashMap(request.getParameterMap());
@@ -26,34 +27,36 @@
 	String ocanStaffFormId = parameters.get("ocanStaffFormId")[0];
 
 	OcanStaffForm ocanClientForm=OcanFormAction.createOcanStaffForm(ocanStaffFormId,clientId,signed);
-	ocanClientForm.setLastName(request.getParameter("lastName"));
-	ocanClientForm.setFirstName(request.getParameter("firstName"));	
+	ocanClientForm.setLastName(request.getParameter("lastName")==null?"":request.getParameter("lastName"));
+	ocanClientForm.setFirstName(request.getParameter("firstName")==null?"":request.getParameter("firstName"));	
 	
-	ocanClientForm.setAddressLine1(request.getParameter("addressLine1"));
-	ocanClientForm.setAddressLine2(request.getParameter("addressLine2"));
-	ocanClientForm.setCity(request.getParameter("city"));
-	ocanClientForm.setProvince(request.getParameter("province"));
-	ocanClientForm.setPostalCode(request.getParameter("postalCode"));
-	ocanClientForm.setPhoneNumber(request.getParameter("phoneNumber"));
-	ocanClientForm.setEmail(request.getParameter("email"));
-	ocanClientForm.setHcNumber(request.getParameter("hcNumber"));
-	ocanClientForm.setHcVersion(request.getParameter("hcVersion"));
-	ocanClientForm.setDateOfBirth(request.getParameter("date_of_birth"));	
-	ocanClientForm.setGender(request.getParameter("gender"));
+	ocanClientForm.setAddressLine1(request.getParameter("addressLine1")==null?"":request.getParameter("addressLine1"));
+	ocanClientForm.setAddressLine2(request.getParameter("addressLine2")==null?"":request.getParameter("addressLine2"));
+	ocanClientForm.setCity(request.getParameter("city")==null?"":request.getParameter("city"));
+	ocanClientForm.setProvince(request.getParameter("province")==null?"":request.getParameter("province"));
+	ocanClientForm.setPostalCode(request.getParameter("postalCode")==null?"":request.getParameter("postalCode"));
+	ocanClientForm.setPhoneNumber(request.getParameter("phoneNumber")==null?"":request.getParameter("phoneNumber"));
+	ocanClientForm.setEmail(request.getParameter("email")==null?"":request.getParameter("email"));
+	ocanClientForm.setHcNumber(request.getParameter("hcNumber")==null?"":request.getParameter("hcNumber"));
+	ocanClientForm.setHcVersion(request.getParameter("hcVersion")==null?"":request.getParameter("hcVersion"));
+	ocanClientForm.setDateOfBirth(request.getParameter("date_of_birth")==null?"":request.getParameter("date_of_birth"));	
+	ocanClientForm.setGender(request.getParameter("gender")==null?"":request.getParameter("gender"));
 	
 	
-	ocanClientForm.setClientDateOfBirth(request.getParameter("client_date_of_birth"));
+	ocanClientForm.setClientDateOfBirth(request.getParameter("client_date_of_birth")==null?"":request.getParameter("client_date_of_birth"));
 	ocanClientForm.setOcanType(request.getParameter("ocanType"));
 
 	java.text.SimpleDateFormat formatter = new java.text.SimpleDateFormat("yyyy-MM-dd");
 	
 	try {
-		ocanClientForm.setClientStartDate(formatter.parse(startDate));
-		//ocanClientForm.setStartDate(formatter.parse(request.getParameter("startDate")));
+		if(!StringUtils.isBlank(startDate))
+			ocanClientForm.setClientStartDate(formatter.parse(startDate));
+			//ocanClientForm.setStartDate(formatter.parse(request.getParameter("startDate")));
 	}catch(java.text.ParseException e){}
 	try {
-		ocanClientForm.setClientCompletionDate(formatter.parse(completionDate));
-		//ocanClientForm.setCompletionDate(formatter.parse(request.getParameter("completionDate")));
+		if(!StringUtils.isBlank(completionDate))
+			ocanClientForm.setClientCompletionDate(formatter.parse(completionDate));
+			//ocanClientForm.setCompletionDate(formatter.parse(request.getParameter("completionDate")));
 	}catch(java.text.ParseException e){}
 	
 	ocanClientForm.setClientFormCreated(new Date());

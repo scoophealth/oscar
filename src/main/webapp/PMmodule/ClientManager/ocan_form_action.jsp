@@ -10,6 +10,7 @@
 <%@page import="java.util.Map"%>
 <%@page import="java.util.Date"%>
 <%@page import="java.util.List"%>
+<%@page import="org.apache.commons.lang.StringUtils"%>
 <%
 	@SuppressWarnings("unchecked")
 	HashMap<String,String[]> parameters=new HashMap(request.getParameterMap());
@@ -43,22 +44,22 @@
 	prepopulate = Integer.parseInt(request.getParameter("prepopulate")==null?"0":request.getParameter("prepopulate"));
 	
 	
-	ocanStaffForm.setLastName(request.getParameter("lastName"));
-	ocanStaffForm.setFirstName(request.getParameter("firstName"));
-	ocanStaffForm.setAddressLine1(request.getParameter("addressLine1"));
-	ocanStaffForm.setAddressLine2(request.getParameter("addressLine2"));
-	ocanStaffForm.setCity(request.getParameter("city"));
-	ocanStaffForm.setProvince(request.getParameter("province"));
-	ocanStaffForm.setPostalCode(request.getParameter("postalCode"));
-	ocanStaffForm.setPhoneNumber(request.getParameter("phoneNumber"));
-	ocanStaffForm.setEmail(request.getParameter("email"));
-	ocanStaffForm.setHcNumber(request.getParameter("hcNumber"));
-	ocanStaffForm.setHcVersion(request.getParameter("hcVersion"));
-	ocanStaffForm.setDateOfBirth(request.getParameter("date_of_birth"));
-	ocanStaffForm.setClientDateOfBirth(request.getParameter("client_date_of_birth"));
-	ocanStaffForm.setGender(gender);
+	ocanStaffForm.setLastName(request.getParameter("lastName")==null?"":request.getParameter("lastName"));
+	ocanStaffForm.setFirstName(request.getParameter("firstName")==null?"":request.getParameter("firstName"));
+	ocanStaffForm.setAddressLine1(request.getParameter("addressLine1")==null?"":request.getParameter("addressLine1"));
+	ocanStaffForm.setAddressLine2(request.getParameter("addressLine2")==null?"":request.getParameter("addressLine2"));
+	ocanStaffForm.setCity(request.getParameter("city")==null?"":request.getParameter("city"));
+	ocanStaffForm.setProvince(request.getParameter("province")==null?"":request.getParameter("province"));
+	ocanStaffForm.setPostalCode(request.getParameter("postalCode")==null?"":request.getParameter("postalCode"));
+	ocanStaffForm.setPhoneNumber(request.getParameter("phoneNumber")==null?"":request.getParameter("phoneNumber"));
+	ocanStaffForm.setEmail(request.getParameter("email")==null?"":request.getParameter("email"));
+	ocanStaffForm.setHcNumber(request.getParameter("hcNumber")==null?"":request.getParameter("hcNumber"));
+	ocanStaffForm.setHcVersion(request.getParameter("hcVersion")==null?"":request.getParameter("hcVersion"));
+	ocanStaffForm.setDateOfBirth(request.getParameter("date_of_birth")==null?"":request.getParameter("date_of_birth"));
+	ocanStaffForm.setClientDateOfBirth(request.getParameter("client_date_of_birth")==null?"":request.getParameter("client_date_of_birth"));
+	ocanStaffForm.setGender(gender==null?"":gender);
 	//ocanStaffForm.setAdmissionId(admissionId);
-	ocanStaffForm.setOcanType(request.getParameter("ocanType"));
+	ocanStaffForm.setOcanType(request.getParameter("ocanType")==null?"":request.getParameter("ocanType"));
 	
 	//Once ocan assessment was completed, it can not be changed to other status.
 	if(!"Completed".equals(ocanStaffForm.getAssessmentStatus())) {	
@@ -69,12 +70,17 @@
 	java.text.SimpleDateFormat formatter = new java.text.SimpleDateFormat("yyyy-MM-dd");
 	
 	try {
-		ocanStaffForm.setStartDate(formatter.parse(startDate));
-		ocanStaffForm.setClientStartDate(formatter.parse(request.getParameter("clientStartDate")));
+		if(!StringUtils.isBlank(startDate))
+			ocanStaffForm.setStartDate(formatter.parse(startDate));
+		if(!StringUtils.isBlank(request.getParameter("clientStartDate")))
+			ocanStaffForm.setClientStartDate(formatter.parse(request.getParameter("clientStartDate")));
 	}catch(java.text.ParseException e){}
 	try {
-		ocanStaffForm.setCompletionDate(formatter.parse(completionDate));
-		ocanStaffForm.setClientCompletionDate(formatter.parse(request.getParameter("clientCompletionDate")));
+		if(!StringUtils.isBlank(completionDate))
+			ocanStaffForm.setCompletionDate(formatter.parse(completionDate));
+		
+		if(!StringUtils.isBlank(request.getParameter("clientCompletionDate")))
+			ocanStaffForm.setClientCompletionDate(formatter.parse(request.getParameter("clientCompletionDate")));
 	}catch(java.text.ParseException e){}
 	
 	ocanStaffForm.setCreated(new Date());
@@ -116,8 +122,7 @@
 	} 
 	
 		for (Map.Entry<String, String[]> entry : parameters.entrySet())
-		{
-			
+		{			
 			if (entry.getValue()!=null)
 			{
 				for (String value : entry.getValue())
