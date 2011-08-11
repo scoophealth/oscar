@@ -362,7 +362,44 @@ div.recommendations ul {
 div.recommendations li {
 	
 }
+table.legend{
+border:0;
+padding-top:10px;
+width:370px;
+}
+
+table.legend td{
+font-size:8;
+text-align:left;
+
+}
+
+
+table.colour_codes{
+width:8px;
+height:10px;
+border:1px solid #999999;
+}
+
+
 </style>
+
+<!--[if IE]>
+<style type="text/css">
+
+table.legend{
+border:0;
+margin-top:10px;
+width:370px;
+}
+
+table.legend td{
+font-size:10;
+text-align:left;
+}
+
+</style>
+<![endif]-->
 
 </head>
 
@@ -442,7 +479,38 @@ div.recommendations li {
 			<% } %>
 		</ul>
 		</div>
-		<% } %>
+		<% } 
+		
+	 String[] ColourCodesArray=new String[5];
+	 ColourCodesArray[1]="#F0F0E7"; //very light grey - completed or normal
+	 ColourCodesArray[2]="#FFDDDD"; //light pink - Refused
+	 ColourCodesArray[3]="#FFCC24"; //orange - Ineligible
+	 ColourCodesArray[4]="#FF00FF"; //dark pink - pending	
+		
+	 //labels for colour codes
+	 String[] lblCodesArray=new String[5];
+	 lblCodesArray[1]="Completed or Normal"; 
+	 lblCodesArray[2]="Refused"; 
+	 lblCodesArray[3]="Ineligible"; 
+	 lblCodesArray[4]="Pending"; 
+	 
+	 //Title ie: Legend or Profile Legend
+	 String legend_title="Legend: ";
+			
+	 //creat empty builder string
+	 String legend_builder=" ";
+		
+		
+	 	for (int iLegend = 1; iLegend < 5; iLegend++){
+			
+			legend_builder +="<td> <table class='colour_codes' bgcolor='"+ColourCodesArray[iLegend]+"'><td> </td></table> </td> <td align='center'>"+lblCodesArray[iLegend]+"</td>";
+			
+		}
+		
+	 	String legend = "<table class='legend' cellspacing='0'><tr><td><b>"+legend_title+"</b></td>"+legend_builder+" </tr></table>";
+		
+		out.print(legend);
+%>
 
 		<div>
 		<form name="printFrm" method="post" onsubmit="return onPrint();"
@@ -604,6 +672,7 @@ div.recommendations li {
 		<!--immSet--> <%}
                     }%>
 		</div>
+		<%=legend %>
 		</td>
 	</tr>
 	<tr>
