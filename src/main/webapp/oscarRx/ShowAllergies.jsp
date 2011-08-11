@@ -30,6 +30,8 @@
 <%
 oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean)pageContext.findAttribute("bean");
 String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.DISP_ALLERGY;
+
+com.quatro.service.security.SecurityManager securityManager = new com.quatro.service.security.SecurityManager();
 %>
 
 <!--  
@@ -352,8 +354,8 @@ boolean filterOut=false;
 												%>
 											</td>
 										<td>
-									<%
-									if (displayAllergy.getRemoteFacilityId()==null) {
+									<%									
+									if (displayAllergy.getRemoteFacilityId()==null && securityManager.hasDeleteAccess("_allergies",roleName$)) {
 									%>
 									<a href="deleteAllergy.do?ID=<%= String.valueOf(displayAllergy.getId()) %>&demographicNo=<%=demoNo %>&action=<%=actionPath %>" onClick="return confirm('Are you sure want to set the allergy <%=displayAllergy.getDescription() %> to <%=labelConfirmAction%>?');"><%=labelAction%></a>
 									<% } %>
@@ -370,6 +372,7 @@ boolean filterOut=false;
 				</table>
 				</td>
 			</tr>
+			<%if(securityManager.hasWriteAccess("_allergies",roleName$)) {%>
 			<tr> 
 				<td>
 				<div class="DivContentSectionHead"><bean:message
@@ -485,7 +488,7 @@ boolean filterOut=false;
 		<td width="100%" height="0%" style="padding: 5" bgcolor="#DCDCDC"
 			colspan="2"></td>
 	</tr>
-
+	<% } %>
 </table>
 </body>
 </html:html>
