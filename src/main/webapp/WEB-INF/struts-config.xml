@@ -272,7 +272,6 @@
 		</form-bean>
 		<form-bean name="setMyOscarIdForm" type="org.apache.struts.action.DynaActionForm">
 			<form-property name="myOscarLoginId" type="java.lang.String" />
-			<form-property name="myOscarDomain" type="java.lang.String" />
 		</form-bean>
 		<form-bean name="attachConsultation" type="org.apache.struts.action.DynaActionForm">
 			<form-property name="documents" type="java.lang.String[]" />

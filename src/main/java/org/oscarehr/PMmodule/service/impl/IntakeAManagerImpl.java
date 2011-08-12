@@ -84,19 +84,8 @@ public class IntakeAManagerImpl extends BaseIntakeManager implements IntakeAMana
 			Demographic client = new Demographic();
 			client.setFirstName(form.getClientFirstName());
 			client.setLastName(form.getClientSurname());
-			client.setAddress("");
-			client.setChartNo("");
-			client.setCity("");
 			client.setDateJoined(new Date());
-			client.setEmail("");
-			client.setPhone("");
-			client.setPhone2("");
-			client.setPostal("");
-			client.setProvince("");
-			client.setRosterStatus("");
 			client.setPatientStatus("AC");
-			client.setPcnIndicator("");
-			client.setPin("");
 			if(form.getYear().equals("")) {
 				form.setYear(null);
 			}
@@ -110,17 +99,12 @@ public class IntakeAManagerImpl extends BaseIntakeManager implements IntakeAMana
 			client.setMonthOfBirth(form.getMonth());
 			client.setDateOfBirth(form.getDay());
 			client.setProviderNo(String.valueOf(form.getProviderNo()));
-			client.setFamilyDoctor("");
 			if(form.getRadioSex() != null && form.getRadioSex().length() >0) {
 				client.setSex(form.getRadioSex().substring(0,1).toUpperCase());
 			} else {
 				client.setSex("");
 			}
 			client.setDateJoined(new Date());
-			client.setAddress("");
-			client.setCity("");
-			client.setEmail("");
-			client.setHcType("");
 			client.setHin(form.getHealthCardNum());
 			client.setVer(form.getHealthCardVer());
 			

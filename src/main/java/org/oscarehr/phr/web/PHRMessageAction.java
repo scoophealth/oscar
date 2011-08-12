@@ -41,6 +41,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.myoscar_server.ws.MedicalDataType;
+import org.oscarehr.myoscar_server.ws.MessageTransfer;
 import org.oscarehr.phr.PHRAuthentication;
 import org.oscarehr.phr.dao.PHRActionDAO;
 import org.oscarehr.phr.dao.PHRDocumentDAO;
@@ -48,6 +49,8 @@ import org.oscarehr.phr.model.PHRAction;
 import org.oscarehr.phr.model.PHRDocument;
 import org.oscarehr.phr.model.PHRMessage;
 import org.oscarehr.phr.service.PHRService;
+import org.oscarehr.phr.util.MyOscarMessageManager;
+import org.oscarehr.phr.util.MyOscarUtils;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
@@ -109,17 +112,16 @@ public class PHRMessageAction extends DispatchAction {
 			}
 		}
 
-// doesn't look like the previous jsp was built to handle messages yet.
-//		if (auth != null) {
-//			ArrayList<MessageTransfer> remoteMessages = MyOscarMessageManager.getReceivedMessages(auth.getMyOscarUserId(), auth.getMyOscarPassword());
-//			for (MessageTransfer remoteMessage : remoteMessages) {
-//				PHRMessage phrMessage=PHRMessage.converFromTransfer(remoteMessage);
-//				messages.add(phrMessage);
-//				
-//				PHRDocument phrDocument=PHRDocument.converFromTransfer(remoteMessage);
-//				docs.add(phrDocument);
-//			}
-//		}
+		if (auth != null) {
+			ArrayList<MessageTransfer> remoteMessages = MyOscarMessageManager.getReceivedMessages(auth.getMyOscarUserId(), auth.getMyOscarPassword());
+			for (MessageTransfer remoteMessage : remoteMessages) {
+				PHRMessage phrMessage=PHRMessage.converFromTransfer(remoteMessage);
+				messages.add(phrMessage);
+				
+				PHRDocument phrDocument=PHRDocument.converFromTransfer(remoteMessage);
+				docs.add(phrDocument);
+			}
+		}
 
 		request.getSession().setAttribute("indivoMessages", docs);
 		request.getSession().setAttribute("indivoMessageBodies", messages);
@@ -326,19 +328,21 @@ public class PHRMessageAction extends DispatchAction {
 		String recipientOscarId = request.getParameter("recipientOscarId");
 		if (request.getParameter("recipientType") == null) return mapping.findForward("view");
 		int recipientType = Integer.parseInt(request.getParameter("recipientType"));
-		String recipientPhrId = null;
-
+		Long myOscarUserId=null;
+		
 		log.debug("recipientType " + recipientType + " : " + PHRDocument.TYPE_DEMOGRAPHIC + " : " + PHRDocument.TYPE_PROVIDER);
 		if (recipientType == PHRDocument.TYPE_DEMOGRAPHIC) {
 			log.debug("finding data from demographic");
+			
+			PHRAuthentication auth = (PHRAuthentication) request.getSession().getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
 			DemographicData demo = new DemographicData();
-			recipientPhrId = demo.getDemographic(recipientOscarId).getIndivoId();
+			myOscarUserId = MyOscarUtils.getMyOscarUserId(auth, demo.getDemographic(recipientOscarId).getMyOscarUserName());
 		} else if (recipientType == PHRDocument.TYPE_PROVIDER) {
-			recipientPhrId = ProviderMyOscarIdData.getMyOscarId(recipientOscarId);
+			myOscarUserId = Long.parseLong(ProviderMyOscarIdData.getMyOscarId(recipientOscarId));
 		}
 
-		log.debug("SENDER ID >" + recipientPhrId + "<");
-		phrService.sendAddMessage(subject, priorThreadMessage, messageBody, pp, recipientOscarId, recipientType, recipientPhrId);
+		log.debug("SENDER ID >" + myOscarUserId + "<");
+		phrService.sendAddMessage(subject, priorThreadMessage, messageBody, pp, recipientOscarId, recipientType, myOscarUserId);
 
 		// PHRMessage(subject, priorThreadMessage, messageBody, senderOscarId, senderType,
 		// senderPhrId, recipientOscarId, recipientType, recipientPhrId)

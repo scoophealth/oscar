@@ -76,7 +76,7 @@ public class IndivoAPService extends PHRService {
     
     /*adds the access policy to the PHRActions table.  The action waits for approval from the provider
     //before it is queued and sent*/
-    public void proposeAccessPolicy(String providerOscarId, String permissionRecipientPhrId, String newPolicy, String providerIdPerformingAction) {
+    public void proposeAccessPolicy(String providerOscarId, Long permissionRecipientPhrId, String newPolicy, String providerIdPerformingAction) {
         PHRAction action = new PHRAction();
         action.setActionType(PHRAction.ACTION_UPDATE);
         action.setStatus(PHRAction.STATUS_APPROVAL_PENDING);
@@ -90,7 +90,7 @@ public class IndivoAPService extends PHRService {
         //make a csv store permissionRecipientPhrId and newPolicy
         action.setDocContent(permissionRecipientPhrId + DOC_CONTENT_DELIMITER + newPolicy);
         //User receiving permissions is stored as senderPhr
-        action.setSenderPhr(permissionRecipientPhrId);
+        action.setSenderMyOscarUserId(permissionRecipientPhrId);
         phrActionDAO.save(action);
     }
     
@@ -125,7 +125,7 @@ public class IndivoAPService extends PHRService {
         byte[] newPolicyDocBytes = JAXBUtils.marshalToByteArray((JAXBElement) new IndivoDocument(newPolicyDoc), docContext);
         String newPolicyDocStr = new String(newPolicyDocBytes);
         //log.debug("PolicyFile: " + newPolicyDocStr);
-        action.setReceiverPhr(receiverPhr);
+        action.setReceiverMyOscarUserId(Long.parseLong(receiverPhr));
         action.setStatus(PHRAction.STATUS_SEND_PENDING);
         action.setDocContent(newPolicyDocStr);
         action.setDateQueued(new Date());  //reset date

@@ -48,7 +48,7 @@ public class PHRBinaryData extends PHRDocument {
     public PHRBinaryData() {
     }
     
-    public PHRBinaryData(ProviderData sender, String recipientOscarId, int recipientType, String recipientPhrId, EDoc document) throws JAXBException, IndivoException {
+    public PHRBinaryData(ProviderData sender, String recipientOscarId, int recipientType, Long recipientMyOscarUserId, EDoc document) throws JAXBException, IndivoException {
         //Temp data: We're not setting the document just yet
         
         GregorianCalendar calendar = new GregorianCalendar();
@@ -56,13 +56,13 @@ public class PHRBinaryData extends PHRDocument {
         
         BinaryDataType binaryDataType = getPhrBinaryData(document.getContentType(), document.getDescription(), fname, new byte[0]);
         IndivoDocumentType indivoDoc = getPhrBinaryDataDocument(sender, binaryDataType);
-        this.setSenderPhr(sender.getMyOscarId());
+        this.setSenderMyOscarUserId(Long.parseLong(sender.getMyOscarId()));
         this.setSenderOscar(sender.getProviderNo());
         
-        setConstructorData(recipientOscarId, recipientType, recipientPhrId, indivoDoc);
+        setConstructorData(recipientOscarId, recipientType, recipientMyOscarUserId, indivoDoc);
     }
 
-    public PHRBinaryData(Provider provider, String recipientOscarId, int recipientType, String recipientPhrId, String documentType, String documentContentType, String documentDesription) throws JAXBException, IndivoException {        
+    public PHRBinaryData(Provider provider, String recipientOscarId, int recipientType, Long recipientMyOscarUserId, String documentType, String documentContentType, String documentDesription) throws JAXBException, IndivoException {        
         //Temp data: We're not setting the document just yet
         
         GregorianCalendar calendar = new GregorianCalendar();
@@ -71,19 +71,19 @@ public class PHRBinaryData extends PHRDocument {
         BinaryDataType binaryDataType = getPhrBinaryData(documentContentType, documentDesription, fname, new byte[0]);
         IndivoDocumentType indivoDoc = getPhrBinaryDataDocument(provider, binaryDataType);
         this.setSenderOscar(provider.getProviderNo());
-        this.setSenderPhr(ProviderMyOscarIdData.getMyOscarId(provider.getProviderNo()));
+        this.setSenderMyOscarUserId(Long.parseLong(ProviderMyOscarIdData.getMyOscarId(provider.getProviderNo())));
         
-        setConstructorData(recipientOscarId, recipientType, recipientPhrId, indivoDoc);
+        setConstructorData(recipientOscarId, recipientType, recipientMyOscarUserId, indivoDoc);
     }
 
-	private void setConstructorData(String recipientOscarId, int recipientType, String recipientPhrId, IndivoDocumentType indivoDoc) throws IndivoException, JAXBException {
+	private void setConstructorData(String recipientOscarId, int recipientType, long recipientMyOscarUserId, IndivoDocumentType indivoDoc) throws IndivoException, JAXBException {
 	    byte[] docContentBytes = JAXBUtils.marshalToByteArray((JAXBElement) new IndivoDocument(indivoDoc), JAXBContext.newInstance(IndivoDocumentType.class.getPackage().getName()));
         String docContentStr = new String(docContentBytes);
         this.setPhrClassification(MedicalDataType.BINARY_DOCUMENT.name());
         this.setSenderType(PHRDocument.TYPE_PROVIDER);
         this.setReceiverOscar(recipientOscarId);
         this.setReceiverType(recipientType);
-        this.setReceiverPhr(recipientPhrId);
+        this.setReceiverMyOscarUserId(recipientMyOscarUserId);
         this.setDocContent(docContentStr);
     }
     

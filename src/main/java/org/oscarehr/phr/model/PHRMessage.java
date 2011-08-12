@@ -116,14 +116,14 @@ public class PHRMessage  extends PHRDocument implements Serializable{
     }
 
 
-    public PHRMessage(String senderOscarId, int senderType, String senderPhrId, String recipientOscarId, int recipientType, String recipientPhrId, String docContentStr) throws JAXBException {
+    public PHRMessage(String senderOscarId, int senderType, Long senderPhrId, String recipientOscarId, int recipientType, Long recipientPhrId, String docContentStr) throws JAXBException {
         this();
         this.setSenderOscar(senderOscarId);
         this.setSenderType(senderType);
-        this.setSenderPhr(senderPhrId);
+        this.setSenderMyOscarUserId(senderPhrId);
         this.setReceiverOscar(recipientOscarId);
         this.setReceiverType(recipientType);
-        this.setReceiverPhr(recipientPhrId);
+        this.setReceiverMyOscarUserId(recipientPhrId);
         this.setDocContent(docContentStr);
     }
     
@@ -164,14 +164,14 @@ public class PHRMessage  extends PHRDocument implements Serializable{
 //        this.setDocContent(docContentStr);
     }
 
-    public PHRMessage(String subject, String priorThreadMessage, String messageBody, ProviderData sender, String recipientOscarId, int recipientType, String recipientPhrId) throws JAXBException, IndivoException {
-        this(subject, priorThreadMessage, messageBody, sender, recipientOscarId, recipientType, recipientPhrId, new ArrayList());
+    public PHRMessage(String subject, String priorThreadMessage, String messageBody, ProviderData sender, String recipientOscarId, int recipientType, Long myOscarUserId) throws JAXBException, IndivoException {
+        this(subject, priorThreadMessage, messageBody, sender, recipientOscarId, recipientType, myOscarUserId, new ArrayList());
     }
 
-    public PHRMessage(String subject, String priorThreadMessage, String messageBody, ProviderData sender, String recipientOscarId, int recipientType, String recipientPhrId, List<String> attachedDocumentActionIds) throws JAXBException, IndivoException {
+    public PHRMessage(String subject, String priorThreadMessage, String messageBody, ProviderData sender, String recipientOscarId, int recipientType, Long myOscarUserId, List<String> attachedDocumentActionIds) throws JAXBException, IndivoException {
         this();
         JAXBContext docContext = JAXBContext.newInstance(IndivoDocumentType.class.getPackage().getName());
-        MessageType message = getPhrMessage(recipientPhrId, priorThreadMessage, subject, messageBody, attachedDocumentActionIds);
+        MessageType message = getPhrMessage(myOscarUserId, priorThreadMessage, subject, messageBody, attachedDocumentActionIds);
         IndivoDocumentType document = getPhrMessageDocument(sender, message);
         byte[] docContentBytes = JAXBUtils.marshalToByteArray((JAXBElement) new IndivoDocument(document), docContext);
         String docContentStr = new String(docContentBytes);
@@ -180,10 +180,10 @@ public class PHRMessage  extends PHRDocument implements Serializable{
         
         this.setSenderOscar(sender.getProviderNo());
         this.setSenderType(PHRDocument.TYPE_PROVIDER);
-        this.setSenderPhr(sender.getMyOscarId());
+        this.setSenderMyOscarUserId(Long.parseLong(sender.getMyOscarId()));
         this.setReceiverOscar(recipientOscarId);
         this.setReceiverType(recipientType);
-        this.setReceiverPhr(recipientPhrId);
+        this.setReceiverMyOscarUserId(myOscarUserId);
         this.setDocContent(docContentStr);
     }
     
@@ -296,22 +296,26 @@ public class PHRMessage  extends PHRDocument implements Serializable{
         this.setDateExchanged(new Date());
         this.setPhrClassification(classification);
         this.setPhrIndex(documentIndex);
-        this.setSenderPhr(msg.getSender());
+// This code can't possibly be run... it's using the wrong library
+//        this.setSenderMyOscarUserId(msg.getSender());
         this.setDocSubject(msg.getSubject());
         
         this.setSenderType(indivoRoleToOscarType(docHeaderType.getAuthor().getRole().getValue()));
-        this.setReceiverPhr(msg.getRecipient());
+// This code can't possibly be run... it's using the wrong library
+//        this.setReceiverMyOscarUserId(msg.getRecipient());
         Hashtable result = new Hashtable();
         String newOscarId;
         int newIdType;
        //find sender oscar id
-        result = findOscarId(this.getSenderType(), this.getSenderPhr());
+// This code can't possibly be run... it's using the wrong library
+//        result = findOscarId(this.getSenderType(), this.getSenderPhr());
         newOscarId = (String) result.get("oscarId");
         this.setSenderOscar(newOscarId);
         newIdType = ((Integer) result.get("idType")).intValue();
         this.setSenderType(newIdType);
        //find receiver oscar id
-        result = findOscarId(this.getReceiverType(), this.getReceiverPhr());
+// This code can't possibly be run... it's using the wrong library
+//        result = findOscarId(this.getReceiverType(), this.getReceiverMyOscarUserId());
         newOscarId = (String) result.get("oscarId");
         this.setReceiverOscar(newOscarId);
         newIdType = ((Integer) result.get("idType")).intValue();
@@ -336,30 +340,31 @@ public class PHRMessage  extends PHRDocument implements Serializable{
     public boolean isFromDemographic(){
         return PHRDocument.TYPE_DEMOGRAPHIC == this.getSenderType();
     }
+
+// this code could never have worked, it's mixing up ID / NAME
+//    public String getSenderDemographicNo(){   
+//        Hashtable h = findOscarId(PHRDocument.TYPE_DEMOGRAPHIC,this.getSenderMyOscarUserId());
+//        return (String) h.get("oscarId");
+//    }
     
-    public String getSenderDemographicNo(){   
-        Hashtable h = findOscarId(PHRDocument.TYPE_DEMOGRAPHIC,this.getSenderPhr());
-        return (String) h.get("oscarId");
-    }
-    
-    public Hashtable findOscarId(int idType, String phrId) {
+    public Hashtable findOscarId(int idType, String myOscarUserName) {
        DemographicData demographicData = new DemographicData();
        Hashtable results = new Hashtable();
        String oscarId = "";
        if (idType == PHRDocument.TYPE_PROVIDER) {
-           oscarId = ProviderMyOscarIdData.getProviderNo(phrId);
+           oscarId = ProviderMyOscarIdData.getProviderNo(myOscarUserName);
            log.debug("OSCAR ID "+oscarId);
        } else if(idType == PHRDocument.TYPE_DEMOGRAPHIC) {
-           oscarId = demographicData.getDemographicNoByIndivoId(phrId);
+           oscarId = demographicData.getDemographicNoByIndivoId(myOscarUserName);
        } else if (idType == PHRDocument.TYPE_NOT_SET) {
            //try provider:
-           String searchNo = ProviderMyOscarIdData.getProviderNo(phrId);
+           String searchNo = ProviderMyOscarIdData.getProviderNo(myOscarUserName);
            if (!searchNo.equals("")) {
                oscarId = searchNo;
                idType = PHRDocument.TYPE_PROVIDER;
            }
            //try demographic
-           searchNo = demographicData.getDemographicNoByIndivoId(phrId);
+           searchNo = demographicData.getDemographicNoByIndivoId(myOscarUserName);
            if (!searchNo.equals("")) {
                oscarId = searchNo;
                idType = PHRDocument.TYPE_DEMOGRAPHIC;
@@ -429,9 +434,10 @@ public class PHRMessage  extends PHRDocument implements Serializable{
         return document;
     }
     
-    private MessageType getPhrMessage(String recipientPhrId, String priorThreadMessage, String subject, String messageBody, List<String> attachedDocumentIds) {
+    private MessageType getPhrMessage(Long myOscarUserId, String priorThreadMessage, String subject, String messageBody, List<String> attachedDocumentIds) {
         MessageType message = new MessageType();
-        message.setRecipient(recipientPhrId);
+// this code can't possibly be run, its using the wrong client
+        message.setRecipient(""+myOscarUserId);
         message.setPriorThreadMessageId(priorThreadMessage);
         message.setSubject(subject);
         message.setMessageContent(toTextMessageContent(messageBody));
@@ -453,8 +459,8 @@ public class PHRMessage  extends PHRDocument implements Serializable{
 		result.setDocSubject(messageTransfer.getSubject());
 		result.setPhrClassification("MESSAGE");
 		result.setPhrIndex(messageTransfer.getId().toString());
-		result.setReceiverPhr(messageTransfer.getRecipientPersonFirstName()+" "+messageTransfer.getRecipientPersonLastName()+" ("+messageTransfer.getRecipientPersonUserName()+")");
-		result.setSenderPhr(messageTransfer.getSenderPersonFirstName()+" "+messageTransfer.getSenderPersonLastName()+" ("+messageTransfer.getSenderPersonUserName()+")");
+		result.setReceiverMyOscarUserId(messageTransfer.getRecipientPersonId());
+		result.setSenderMyOscarUserId(messageTransfer.getSenderPersonId());
 		
 		result.setStatus(STATUS_NEW);
 		if (messageTransfer.getFirstViewDate()!=null) result.setStatus(STATUS_READ);

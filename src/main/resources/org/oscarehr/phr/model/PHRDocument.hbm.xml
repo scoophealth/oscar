@@ -40,13 +40,13 @@
 			type="string" />
 		<property column="sender_type" name="senderType" length="1"
 			type="integer" />
-		<property column="sender_phr" name="senderPhr" length="255"
+		<property column="sender_phr" name="senderMyOscarUserId" length="255"
 			type="string" />
 		<property column="receiver_oscar" name="receiverOscar"
 			length="11" type="string" />
 		<property column="receiver_type" name="receiverType" length="1"
 			type="integer" />
-		<property column="receiver_phr" name="receiverPhr" length="255"
+		<property column="receiver_phr" name="receiverMyOscarUserId" length="255"
 			type="string" />
 		<property column="doc_subject" name="docSubject" length="255"
 			type="string" />

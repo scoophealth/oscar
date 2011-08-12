@@ -35,7 +35,7 @@ public class PHRIndivoAnnotation extends PHRIndivoDocument {
 
     //sending new meds to PHR
     //when sending it updates the document reference index to phr one - see mountDocumentReference
-    public PHRIndivoAnnotation(ProviderData provider, String demographicNo, String demographicPhrId, String documentReferenceIndex, String message) 
+    public PHRIndivoAnnotation(ProviderData provider, String demographicNo, Long demographicPhrId, String documentReferenceIndex, String message) 
             throws JAXBException, ActionNotPerformedException, IndivoException, DatatypeConfigurationException  {
         super(provider, demographicNo, demographicPhrId);
         IndivoDocumentType document = getPhrAnnotationDocument(provider, documentReferenceIndex, message);
