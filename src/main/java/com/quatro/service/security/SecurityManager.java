@@ -144,4 +144,27 @@ public class SecurityManager {
 		}
     	return result;
     }
+    
+    public boolean hasDeleteAccess(String objectName, String roleNames) {
+    	boolean result=false;
+    	
+    	SecobjprivilegeDao secobjprivilegeDao = (SecobjprivilegeDao)SpringUtils.getBean("secobjprivilegeDao");
+        
+    	List<String> rl = new ArrayList<String>();
+        for(String tmp:roleNames.split(",")) {
+        	rl.add(tmp);
+        }
+        List<Secobjprivilege> priv = secobjprivilegeDao.getByObjectNameAndRoles(objectName,rl);
+       
+        if(priv.size()==0) {
+        	return true;
+        }
+        for(Secobjprivilege p:priv) {
+			if(p.getPrivilege_code().indexOf("d")!= -1)
+				result=true;
+			if(p.getPrivilege_code().indexOf("x")!= -1)
+				result=true;
+		}
+    	return result;
+    }
 }
