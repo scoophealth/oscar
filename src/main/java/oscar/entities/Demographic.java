@@ -37,7 +37,6 @@ public class Demographic {
   private String phone;
   private String phone2;
   private String email;
-  private String pin;
   private String year_of_birth;
   private String month_of_birth;
   private String date_of_birth;
@@ -97,10 +96,6 @@ public class Demographic {
 
   public void setEmail(String email) {
     this.email = email;
-  }
-
-  public void setPin(String pin) {
-    this.pin = pin;
   }
 
   public void setYear_of_birth(String year_of_birth) {
@@ -213,10 +208,6 @@ public class Demographic {
 
   public String getEmail() {
     return email;
-  }
-
-  public String getPin() {
-    return pin;
   }
 
   public String getYear_of_birth() {

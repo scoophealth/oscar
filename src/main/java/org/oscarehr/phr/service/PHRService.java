@@ -79,6 +79,7 @@ import org.oscarehr.phr.model.PHRDocument;
 import org.oscarehr.phr.model.PHRMedication;
 import org.oscarehr.phr.model.PHRMessage;
 import org.oscarehr.phr.util.MyOscarServerWebServicesManager;
+import org.oscarehr.phr.util.MyOscarUtils;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.XmlUtils;
 import org.w3c.dom.Node;
@@ -154,6 +155,7 @@ public class PHRService {
 		// phrAuth = new PHRAuthentication(authResult);
 
 		LoginWs loginWs = MyOscarServerWebServicesManager.getLoginWs();
+		logger.debug("MyOscar Login attempt :" + indivoId+":"+password);
 		PersonTransfer personTransfer = loginWs.login(indivoId, password);
 
 		logger.debug("MyOscar Login result : " + (personTransfer == null ? "failed" : "success, userId=" + personTransfer.getId()));
@@ -175,17 +177,17 @@ public class PHRService {
 		 */
 	}
 
-	public Integer sendAddBinaryData(ProviderData sender, String recipientOscarId, int recipientType, String recipientPhrId, EDoc document) throws Exception {
-		logger.debug("sendAddBinaryData:" + sender + ", " + recipientOscarId + ", " + recipientType + ", " + recipientPhrId + ", " + document);
+	public Integer sendAddBinaryData(ProviderData sender, String recipientOscarId, int recipientType, Long recipientMyOscarUserId, EDoc document) throws Exception {
+		logger.debug("sendAddBinaryData:" + sender + ", " + recipientOscarId + ", " + recipientType + ", " + recipientMyOscarUserId + ", " + document);
 
-		PHRBinaryData phrBinaryData = new PHRBinaryData(sender, recipientOscarId, recipientType, recipientPhrId, document);
+		PHRBinaryData phrBinaryData = new PHRBinaryData(sender, recipientOscarId, recipientType, recipientMyOscarUserId, document);
 		PHRAction action = phrBinaryData.getAction(PHRAction.ACTION_ADD, PHRAction.STATUS_SEND_PENDING);
 		action.setOscarId(document.getDocId());
 		// write action to phr_actions table
 		return phrActionDAO.saveAndGetId(action);
 	}
 
-	public void sendAddAnnotation(ProviderData sender, String recipientOscarId, String recipientPhrId, String documentReferenceOscarActionId, String message) throws Exception {
+	public void sendAddAnnotation(ProviderData sender, String recipientOscarId, Long recipientPhrId, String documentReferenceOscarActionId, String message) throws Exception {
 		logger.debug("sendAddAnnotation:" + sender + ", " + recipientOscarId + ", " + recipientPhrId + ", " + documentReferenceOscarActionId + ", " + message);
 
 		PHRIndivoAnnotation phrAnnotation = new PHRIndivoAnnotation(sender, recipientOscarId, recipientPhrId, documentReferenceOscarActionId, message);
@@ -197,10 +199,10 @@ public class PHRService {
 		phrActionDAO.update(action);
 	}
 
-	public void sendUpdateBinaryData(ProviderData sender, String recipientOscarId, int recipientType, String recipientPhrId, EDoc document, String phrDocIndex) throws Exception {
-		logger.debug("sendUpdateBinaryData:" + sender + ", " + recipientOscarId + ", " + recipientType + ", " + recipientPhrId + ", " + document + ", " + phrDocIndex);
+	public void sendUpdateBinaryData(ProviderData sender, String recipientOscarId, int recipientType, Long recipientMyOscarUserId, EDoc document, String phrDocIndex) throws Exception {
+		logger.debug("sendUpdateBinaryData:" + sender + ", " + recipientOscarId + ", " + recipientType + ", " + recipientMyOscarUserId + ", " + document + ", " + phrDocIndex);
 
-		PHRBinaryData phrBinaryData = new PHRBinaryData(sender, recipientOscarId, recipientType, recipientPhrId, document);
+		PHRBinaryData phrBinaryData = new PHRBinaryData(sender, recipientOscarId, recipientType, recipientMyOscarUserId, document);
 		PHRAction action = phrBinaryData.getAction(PHRAction.ACTION_UPDATE, PHRAction.STATUS_SEND_PENDING);
 		action.setOscarId(document.getDocId());
 
@@ -211,20 +213,20 @@ public class PHRService {
 		phrActionDAO.save(action);
 	}
 
-	public void sendAddMedication(EctProviderData.Provider prov, String demographicNo, String demographicPhrId, RxPrescriptionData.Prescription drug) throws Exception {
-		logger.debug("sendAddMedication:" + prov + ", " + demographicNo + ", " + demographicPhrId + ", " + drug);
+	public void sendAddMedication(EctProviderData.Provider prov, String demographicNo, Long demographicMyOscarUserId, RxPrescriptionData.Prescription drug) throws Exception {
+		logger.debug("sendAddMedication:" + prov + ", " + demographicNo + ", " + demographicMyOscarUserId + ", " + drug);
 
-		PHRMedication medication = new PHRMedication(prov, demographicNo, demographicPhrId, drug);
+		PHRMedication medication = new PHRMedication(prov, demographicNo, demographicMyOscarUserId, drug);
 		PHRAction action = medication.getAction(PHRAction.ACTION_ADD, PHRAction.STATUS_SEND_PENDING);
 		action.setOscarId(drug.getDrugId() + "");
 		// write action to phr_actions table
 		phrActionDAO.save(action);
 	}
 
-	public void sendUpdateMedication(EctProviderData.Provider prov, String demographicNo, String demographicPhrId, RxPrescriptionData.Prescription drug, String phrDrugIndex) throws Exception {
-		logger.debug("sendAddMedication:" + prov + ", " + demographicNo + ", " + demographicPhrId + ", " + drug + ", " + phrDrugIndex);
+	public void sendUpdateMedication(EctProviderData.Provider prov, String demographicNo, Long demographicMyOscarUserId, RxPrescriptionData.Prescription drug, String phrDrugIndex) throws Exception {
+		logger.debug("sendAddMedication:" + prov + ", " + demographicNo + ", " + demographicMyOscarUserId + ", " + drug + ", " + phrDrugIndex);
 
-		PHRMedication medication = new PHRMedication(prov, demographicNo, demographicPhrId, drug);
+		PHRMedication medication = new PHRMedication(prov, demographicNo, demographicMyOscarUserId, drug);
 		PHRAction action = medication.getAction(PHRAction.ACTION_UPDATE, PHRAction.STATUS_SEND_PENDING);
 		// set which phrIndex to update
 		action.setPhrIndex(phrDrugIndex);
@@ -253,14 +255,14 @@ public class PHRService {
 		phrActionDAO.save(action);
 	}
 
-	public void sendAddMessage(String subject, String priorThreadMessage, String messageBody, ProviderData sender, String recipientOscarId, int recipientType, String recipientPhrId) throws Exception {
-		sendAddMessage(subject, priorThreadMessage, messageBody, sender, recipientOscarId, recipientType, recipientPhrId, new ArrayList<String>());
+	public void sendAddMessage(String subject, String priorThreadMessage, String messageBody, ProviderData sender, String recipientOscarId, int recipientType, Long myOscarUserId) throws Exception {
+		sendAddMessage(subject, priorThreadMessage, messageBody, sender, recipientOscarId, recipientType, myOscarUserId, new ArrayList<String>());
 	}
 
-	public void sendAddMessage(String subject, String priorThreadMessage, String messageBody, ProviderData sender, String recipientOscarId, int recipientType, String recipientPhrId, List<String> attachmentActionIds) throws Exception {
-		logger.debug("sendAddMessage:" + subject + ", " + priorThreadMessage + ", " + messageBody + ", " + sender + ", " + recipientOscarId + ", " + recipientType + ", " + recipientPhrId + ", " + attachmentActionIds);
+	public void sendAddMessage(String subject, String priorThreadMessage, String messageBody, ProviderData sender, String recipientOscarId, int recipientType, Long myOscarUserId, List<String> attachmentActionIds) throws Exception {
+		logger.debug("sendAddMessage:" + subject + ", " + priorThreadMessage + ", " + messageBody + ", " + sender + ", " + recipientOscarId + ", " + recipientType + ", " + myOscarUserId + ", " + attachmentActionIds);
 
-		PHRMessage message = new PHRMessage(subject, priorThreadMessage, messageBody, sender, recipientOscarId, recipientType, recipientPhrId, attachmentActionIds);
+		PHRMessage message = new PHRMessage(subject, priorThreadMessage, messageBody, sender, recipientOscarId, recipientType, myOscarUserId, attachmentActionIds);
 		PHRAction action = message.getAction(PHRAction.ACTION_ADD, PHRAction.STATUS_SEND_PENDING);
 		phrActionDAO.save(action);
 	}
@@ -325,25 +327,7 @@ public class PHRService {
 	}
 
 	// retrieve meds from phr and save in phr_document table
-	public List<PHRMedication> retrieveSaveMedToDisplay(PHRAuthentication auth, String providerNo, String demoId, String demoPhrId) throws Exception {
-		// TalkClient client = getTalkClient();
-		// List<PHRMedication> listMed = new ArrayList<PHRMedication>();
-		// ReadDocumentHeaderListResultType readResult = client.readDocumentHeaders(auth.getToken(), demoPhrId, org.indivo.xml.phr.urns.DocumentClassificationUrns.MEDICATION, true);
-		// List<DocumentHeaderType> docHeaders = readResult.getDocumentHeader();
-		// for (DocumentHeaderType header : docHeaders) {
-		//
-		// String index = header.getDocumentIndex();
-		// boolean importStatus = checkImportStatus(index);// check if document has been imported before
-		// Boolean sendByOscarBefore = isMedSentBefore(index);// check if this document was sent by this oscar before.
-		// if (importStatus && !sendByOscarBefore) {
-		// ReadDocumentResultType resultDoc = client.readDocument(auth.getToken(), demoPhrId, index);
-		// IndivoDocumentType document = resultDoc.getIndivoDocument();
-		// PHRMedication med = new PHRMedication(document, demoId, demoPhrId, providerNo);
-		// listMed.add(med);
-		// saveMed(med);
-		// }
-		// }
-		// return listMed;
+	public List<PHRMedication> retrieveSaveMedToDisplay(PHRAuthentication auth, String providerNo, String demoId, Long myOscarUserId) throws Exception {
 
 		MedicalDataWs medicalDataWs = MyOscarServerWebServicesManager.getMedicalDataWs(auth.getMyOscarUserId(), auth.getMyOscarPassword());
 		ArrayList<PHRMedication> phrMedications = new ArrayList<PHRMedication>();
@@ -352,7 +336,7 @@ public class PHRService {
 		int itemsToReturn = 100;
 		List<MedicalDataTransfer> medicationTransfers = null;
 		do {
-			medicationTransfers = medicalDataWs.getMedicalDataList(Long.parseLong(demoPhrId), MedicalDataType.MEDICATION.name(), true, startIndex, itemsToReturn);
+			medicationTransfers = medicalDataWs.getMedicalDataList(myOscarUserId, MedicalDataType.MEDICATION.name(), true, startIndex, itemsToReturn);
 			startIndex = startIndex + itemsToReturn;
 
 			for (MedicalDataTransfer medicalDataTransfer : medicationTransfers) {
@@ -360,7 +344,7 @@ public class PHRService {
 				Boolean sendByOscarBefore = isMedSentBefore(medicalDataTransfer.getId().toString());// check if this document was sent by this oscar before.
 				logger.debug("medicalDataTransfer: importStatus=" + importStatus + ", sentBefore=" + sendByOscarBefore);
 				if (importStatus && !sendByOscarBefore) {
-					PHRMedication med = new PHRMedication(medicalDataTransfer, demoId, demoPhrId, providerNo);
+					PHRMedication med = new PHRMedication(medicalDataTransfer, demoId, myOscarUserId, providerNo);
 					phrMedications.add(med);
 					saveMed(med);
 				}
@@ -392,10 +376,10 @@ public class PHRService {
 			logger.debug("file created by: " + docHeader.getAuthor().getIndivoId());
 			logger.debug("currentUser: " + auth.getUserId());
 			logger.debug("sendingDocument: " + sendingDocument);
-			logger.debug("userInOscar: " + !dd.getDemographicNoByPIN(docHeader.getAuthor().getIndivoId()).equals(""));
 
 			if (!sendingDocument) {
-				boolean userInOscar = !dd.getDemographicNoByPIN(docHeader.getAuthor().getIndivoId()).equals("");
+				String myOscarUserName=MyOscarUtils.getMyOscarUserName(auth, Long.parseLong(docHeader.getAuthor().getIndivoId()));
+				boolean userInOscar = !dd.getDemographicNoByMyOscarUserName(myOscarUserName).equals("");
 				if (!userInOscar) continue;
 			}
 			if (importStatus) {
@@ -408,7 +392,8 @@ public class PHRService {
 
 				// second check for known demographics
 				// this if statement can replace both checks if ((dd.getDemographic(mess.getSenderOscar()) == null) && (dd.getDemographic(mess.getReceiverOscar()) == null))
-				if (sendingDocument && dd.getDemographicNoByPIN(mess.getReceiverPhr()).equals("")) continue;
+				String myOscarUserName=MyOscarUtils.getMyOscarUserName(auth, mess.getReceiverMyOscarUserId());
+				if (sendingDocument && dd.getDemographicNoByMyOscarUserName(myOscarUserName).equals("")) continue;
 				mess.checkImportStatus();
 				PHRDocument phrdoc = new PHRDocument();
 				BeanUtils.copyProperties(phrdoc, mess);
@@ -464,7 +449,7 @@ public class PHRService {
 
 						if (doc.getDocumentHeader().getCreationDateTime() != null) dataTime = doc.getDocumentHeader().getCreationDateTime().toGregorianCalendar();
 
-						resultId = medicalDataWs.addMedicalData(Long.parseLong(action.getReceiverPhr()), dataTime, action.getPhrClassification(), auth.getMyOscarUserId(), xmlString, true);
+						resultId = medicalDataWs.addMedicalData(action.getReceiverMyOscarUserId(), dataTime, action.getPhrClassification(), auth.getMyOscarUserId(), xmlString, true);
 					} else if (action.getPhrClassification().equals("ANNOTATION")) {
 						try {
 							String referenceIndex = PHRIndivoAnnotation.getAnnotationReferenceIndex(doc);// temporarily stored
@@ -506,7 +491,7 @@ public class PHRService {
 
 						if (doc.getDocumentHeader().getCreationDateTime() != null) dataTime = doc.getDocumentHeader().getCreationDateTime().toGregorianCalendar();
 
-						resultId = medicalDataWs.addMedicalData(Long.parseLong(action.getReceiverPhr()), dataTime, action.getPhrClassification(), auth.getMyOscarUserId(), xmlString, true);
+						resultId = medicalDataWs.addMedicalData(action.getReceiverMyOscarUserId(), dataTime, action.getPhrClassification(), auth.getMyOscarUserId(), xmlString, true);
 					}
 
 					// AddDocumentResultType result = client.addDocument(auth.getToken(), action.getReceiverPhr(), doc);
@@ -706,15 +691,17 @@ public class PHRService {
 	}
 
 	public void sendDemographicMessage(PHRAuthentication auth, String demographic, String priorThreadMessage, String subject, String messageText) {
-		DemographicData dd = new DemographicData();
-		DemographicData.Demographic demo = dd.getDemographic(demographic);
-		String recipientId = demo.getIndivoId();
-		try {
-			TalkClient client = getTalkClient();
-			SendMessageResultType sendMessageResultType = client.sendMessage(auth.getToken(), recipientId, priorThreadMessage, subject, messageText);
-		} catch (Exception e) {
-			MiscUtils.getLogger().error("Error", e);
-		}
+// this code can't possibly be run, its using the wrong client
+		
+//		DemographicData dd = new DemographicData();
+//		DemographicData.Demographic demo = dd.getDemographic(demographic);
+//		String recipientId = demo.getIndivoId();
+//		try {
+//			TalkClient client = getTalkClient();
+//			SendMessageResultType sendMessageResultType = client.sendMessage(auth.getToken(), recipientId, priorThreadMessage, subject, messageText);
+//		} catch (Exception e) {
+//			MiscUtils.getLogger().error("Error", e);
+//		}
 	}
 
 	public void sendMessage(PHRAuthentication auth, String recipientId, String priorThreadMessage, String subject, String messageText) {
@@ -811,7 +798,7 @@ public class PHRService {
 				String permissionRecipientProviderId = providerData.getMyOscarId();
 
 				accountWs.createRelationshipByUserName(newAccount.getUserName(), permissionRecipientProviderId, Relation.PRIMARY_CARE_PROVIDER);
-				apUtil.proposeAccessPolicy(grantToProvider, newAccount.getUserName(), Relation.PATIENT.name(), iRegisteringProviderNo);
+//				apUtil.proposeAccessPolicy(grantToProvider, newAccount.getUserName(), Relation.PATIENT.name(), iRegisteringProviderNo);
 			}
 		}
 

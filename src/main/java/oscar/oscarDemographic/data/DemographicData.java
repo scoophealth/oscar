@@ -346,13 +346,13 @@ public class DemographicData {
 		return demographic;
 	}
 
-	public String getDemographicNoByPIN(String pin) {
+	public String getDemographicNoByMyOscarUserName(String myOscarUserName) {
 		String demographicNo = "";
 
 		try {
 			
 			ResultSet rs;
-			String sql = "SELECT demographic_no FROM demographic WHERE pin = '" + pin + "'";
+			String sql = "SELECT demographic_no FROM demographic WHERE myOscarUserName = '" + myOscarUserName + "'";
 			rs = DBHandler.GetSQL(sql);
 			if (rs.next()) {
 				demographicNo = oscar.Misc.getString(rs, "demographic_no");
@@ -407,7 +407,7 @@ public class DemographicData {
 						"phone = '" + dm.getPhone() + "', " +
 						"phone2 = '" + dm.getPhone2() + "', " +
 						"email = '" + dm.getEmail() + "', " +
-						"pin = '" + dm.getPin() + "', " +
+						"myOscarUserName = '" + dm.getMyOscarUserName() + "', " +
 						"year_of_birth = '" + dm.getYearOfBirth() + "', " +
 						"month_of_birth = '" + dm.getMonthOfBirth() + "', " +
 						"date_of_birth = '" + dm.getDateOfBirth() + "', " +
@@ -453,7 +453,7 @@ public class DemographicData {
 		protected String phone;
 		protected String phone2;
 		protected String email;
-		protected String pin;
+		protected String myOscarUserName;
 		protected String year_of_birth;
 		protected String month_of_birth;
 		protected String date_of_birth;
@@ -490,7 +490,7 @@ public class DemographicData {
 			init(DemographicNo);
 		}
 
-		protected Demographic(String DemographicNo, String title, String last_name, String first_name, String address, String city, String province, String postal, String phone, String phone2, String email, String pin, String year_of_birth, String month_of_birth, String date_of_birth, String hin, String ver, String roster_status, String roster_date, String roster_termination_date, String patient_status, String patient_status_date, String date_joined, String chart_no, String official_lang, String spoken_lang, String provider_no, String sex, String end_date, String eff_date,
+		protected Demographic(String DemographicNo, String title, String last_name, String first_name, String address, String city, String province, String postal, String phone, String phone2, String email, String myOscarUserName, String year_of_birth, String month_of_birth, String date_of_birth, String hin, String ver, String roster_status, String roster_date, String roster_termination_date, String patient_status, String patient_status_date, String date_joined, String chart_no, String official_lang, String spoken_lang, String provider_no, String sex, String end_date, String eff_date,
 		        String pcn_indicator, String hc_type, String hc_renew_date, String family_doctor, String alias, String previousAddress, String children, String sourceOfIncome, String citizenship, String sin) {
 			this.demographic_no = DemographicNo;
 			this.title = title;
@@ -503,7 +503,7 @@ public class DemographicData {
 			this.phone = phone;
 			this.phone2 = phone2;
 			this.email = email;
-			this.pin = pin;
+			this.myOscarUserName = myOscarUserName;
 			this.year_of_birth = year_of_birth;
 			this.month_of_birth = month_of_birth;
 			this.date_of_birth = date_of_birth;
@@ -558,7 +558,7 @@ public class DemographicData {
 					this.phone = oscar.Misc.getString(rs, "phone");
 					this.phone2 = oscar.Misc.getString(rs, "phone2");
 					this.email = oscar.Misc.getString(rs, "email");
-					this.pin = oscar.Misc.getString(rs, "pin");
+					this.myOscarUserName = oscar.Misc.getString(rs, "myOscarUserName");
 					this.year_of_birth = oscar.Misc.getString(rs, "year_of_birth");
 					this.month_of_birth = oscar.Misc.getString(rs, "month_of_birth");
 					this.date_of_birth = oscar.Misc.getString(rs, "date_of_birth");
@@ -686,17 +686,15 @@ public class DemographicData {
 			email = data;
 		}
 
-		public String getPin() {
-			return pin;
-		}
 
-		public void setPin(String data) {
-			pin = data;
-		}
 
-		public String getIndivoId() {
-			return pin;
-		}
+		public String getMyOscarUserName() {
+        	return (myOscarUserName);
+        }
+
+		public void setMyOscarUserName(String myOscarUserName) {
+        	this.myOscarUserName = myOscarUserName;
+        }
 
 		public String getAge() {
 			if (oscar.util.StringUtils.empty(year_of_birth) ||
@@ -1108,7 +1106,7 @@ public class DemographicData {
 
 	// //////////////
 	String add_record_string = "insert into demographic (title,last_name,first_name,address,city,province,postal,phone,phone2,email,"
-                                 + "pin,year_of_birth,month_of_birth,date_of_birth,hin,ver,roster_status,roster_date,roster_termination_date,"
+                                 + "myOscarUserName,year_of_birth,month_of_birth,date_of_birth,hin,ver,roster_status,roster_date,roster_termination_date,"
                                  + "patient_status,patient_status_date,date_joined,chart_no," + "official_lang,spoken_lang,provider_no,sex,"
                                  + "end_date,eff_date,pcn_indicator,hc_type,hc_renew_date," + "family_doctor,alias,previousAddress,children,"
                                  + "sourceOfIncome,citizenship,sin) "
@@ -1119,7 +1117,7 @@ public class DemographicData {
 			String date_of_birth, String hin, String ver, String roster_status, String roster_date, String roster_termination_date, String patient_status, String patient_status_date, String date_joined,
 			String chart_no, String official_lang, String spoken_lang, String provider_no, String sex, String end_date,
 			String eff_date, String pcn_indicator, String hc_type, String hc_renew_date, String family_doctor, String email,
-			String pin, String alias, String previousAddress, String children, String sourceOfIncome, String citizenship, 
+			String myOscarUserName, String alias, String previousAddress, String children, String sourceOfIncome, String citizenship, 
 			String sin) {
 		
 		boolean duplicateRecord = false;

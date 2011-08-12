@@ -28,7 +28,7 @@ public final class EfmPatientFormList {
         Demographic demographic=demographicDao.getDemographicById(demographicId);
         if (demographic!=null)
         {
-        	String temp=StringUtils.trimToNull(demographic.getPin());
+        	String temp=StringUtils.trimToNull(demographic.getMyOscarUserName());
         	return(temp!=null);
         }
         

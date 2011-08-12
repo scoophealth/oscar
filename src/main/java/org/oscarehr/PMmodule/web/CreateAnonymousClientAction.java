@@ -60,19 +60,6 @@ public class CreateAnonymousClientAction {
 		d.setPatientStatus("AC");
 		d.setProviderNo(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
 		d.setSex("M");
-		d.setAddress("");
-		d.setCity("");
-		d.setPostal("");
-		d.setPhone("");
-		d.setPhone2("");
-		d.setEmail("");
-		d.setPin("");
-		d.setHin("");
-		d.setVer("");
-		d.setRosterStatus("");
-		d.setChartNo("");
-		d.setPcnIndicator("");
-		d.setFamilyDoctor("");
 		
 		return d;
 	}

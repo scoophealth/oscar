@@ -96,6 +96,13 @@ public class DemographicDao extends HibernateDaoSupport {
     	return rs;
     }
 
+    public Demographic getDemographicByMyOscarUserName(String myOscarUserName){
+    	String q = "From Demographic d where d.myOscarUserName = ? ";
+    	List<Demographic> rs = (List) getHibernateTemplate().find(q, new Object[] { myOscarUserName });
+    	if (rs.size()>0) return(rs.get(0));
+    	else return(null);
+    }
+
     /*
      * get demographics according to their program, admit time, discharge time, ordered by lastname and first name
      */
