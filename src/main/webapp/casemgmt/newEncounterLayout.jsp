@@ -571,6 +571,10 @@ function doscroll(){
           <div id="header">
               <tiles:insert attribute="header" />
           </div>
+          
+          <div id="rightNavBar" style="display:inline; float:right; width:20%; margin-left:-3px;">
+              <tiles:insert attribute="rightNavigation" />
+          </div> 
                     
           <div id="leftNavBar" style="display:inline; float:left; width:20%;">
               <tiles:insert attribute="leftNavigation" />
@@ -578,11 +582,7 @@ function doscroll(){
           
           <div id="content" style="display:inline; float:left; width:60%; background-color:#CCCCFF;">
               <tiles:insert attribute="body" />
-          </div>                   
-
-          <div id="rightNavBar" style="display:inline; float:right; width:20%; margin-left:-3px;">
-              <tiles:insert attribute="rightNavigation" />
-          </div>            
+          </div>                                        
                 
           <!-- hovering divs -->
           <div id="showEditNote" class="showEdContent">
