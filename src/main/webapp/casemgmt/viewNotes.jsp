@@ -80,7 +80,10 @@
                 }             
                 
                 String htmlNoteTxt = note.getNote() + addlData;
-                htmlNoteTxt = htmlNoteTxt.replaceAll("\n", "<br>");
+                //htmlNoteTxt = htmlNoteTxt.replaceAll("\n", "<br>");
+		if(htmlNoteTxt.indexOf("\n")!=-1) {
+                	htmlNoteTxt = htmlNoteTxt.substring(0,htmlNoteTxt.indexOf("\n")) + "...";
+                }
                 
                 String noteTxt = note.getNote();
                 noteTxt = noteTxt.replaceAll("\"","");

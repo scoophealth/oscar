@@ -25,7 +25,11 @@ package oscar.oscarRx.pageUtil;
 
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import javax.servlet.ServletException;
@@ -40,6 +44,7 @@ import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
 import oscar.oscarRx.data.RxAllergyData;
+import oscar.oscarRx.data.RxAllergyData.Allergy;
 import oscar.oscarRx.util.RxDrugRef;
 
 public final class RxSearchAllergyAction extends Action {
@@ -117,6 +122,16 @@ public final class RxSearchAllergyAction extends Action {
         RxAllergyData.Allergy[] arr = new RxAllergyData.Allergy[vec==null?0:vec.size()];
         
         Vector classVec = new Vector() ;
+       
+        Map<Integer,List<Allergy>> allergyResults = new HashMap<Integer,List<Allergy>>();
+        allergyResults.put(8, new ArrayList<Allergy>());
+        allergyResults.put(10, new ArrayList<Allergy>());
+        allergyResults.put(11, new ArrayList<Allergy>());
+        allergyResults.put(12, new ArrayList<Allergy>());
+        allergyResults.put(13, new ArrayList<Allergy>());
+        allergyResults.put(14, new ArrayList<Allergy>());
+        
+        Map<Integer,Allergy> classResults = new HashMap<Integer,Allergy>();
         
         for (int i = 0; i < vec.size(); i++){
            
@@ -131,6 +146,9 @@ public final class RxSearchAllergyAction extends Action {
                 if( arr[i].getTYPECODE() == 13){
                     classVec.add(""+arr[i].getPickID());
                 }
+                
+                allergyResults.get((Integer) hash.get("category")).add(arr[i]);
+                
             }else{
                 MiscUtils.getLogger().debug("IM FLAGGING IT AS NOT FOUND");
                 itemsFound = false;
@@ -178,6 +196,7 @@ public final class RxSearchAllergyAction extends Action {
             MiscUtils.getLogger().debug("Sending this many vector of this size back "+returnHash.values().size());
 
             if(arr.length>0) {
+            	request.setAttribute("allergyResults", allergyResults);
                 request.setAttribute("allergies", arr);
                 request.setAttribute("drugClasses", returnHash);
             }
