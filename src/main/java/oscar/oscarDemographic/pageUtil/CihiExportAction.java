@@ -272,6 +272,10 @@ public class CihiExportAction extends DispatchAction {
 			 }
 			 
 			 demo = getDemographicDao().getDemographic(demoNo);
+			 if( demo == null ) {
+				 continue;
+			 }
+			 
 			 if( !xmlMap.containsKey(demo.getProviderNo())) {
 				 cihiCdsDocument = CiHiCdsDocument.Factory.newInstance();
 				 cihicds =  cihiCdsDocument.addNewCiHiCds();
@@ -408,25 +412,34 @@ public class CihiExportAction extends DispatchAction {
 	}
 	
 	private void buildAppointment(Demographic demo, PatientRecord patientRecord) {
-		List<Appointment> appointmentList = oscarAppointmentDao.getAppointmentHistory(demo.getDemographicNo());
+		//some weird values for appointment time preventing query from executing so just skip bad records
+		try {
+			List<Appointment> appointmentList = oscarAppointmentDao.getAppointmentHistory(demo.getDemographicNo());
 		
-		Calendar cal = Calendar.getInstance();
-		Calendar startTime = Calendar.getInstance();
-		Date startDate;
-		
-		for( Appointment appt: appointmentList) {
-			Appointments appointments = patientRecord.addNewAppointments();
-            if (StringUtils.filled(appt.getReason())) appointments.setAppointmentPurpose(appt.getReason());
-            
-			DateFullOrPartial dateFullorPartial = appointments.addNewAppointmentDate();			
-			cal.setTime(appt.getAppointmentDate());
+			Calendar cal = Calendar.getInstance();
+			Calendar startTime = Calendar.getInstance();
+			Date startDate;
 			
-			startDate = appt.getStartTime();
-			startTime.setTime(startDate);
-			cal.set(Calendar.HOUR_OF_DAY, startTime.get(Calendar.HOUR_OF_DAY));
-			cal.set(Calendar.MINUTE, startTime.get(Calendar.MINUTE));
-			dateFullorPartial.setFullDate(cal);
+			for( Appointment appt: appointmentList) {
+				if( appt.getAppointmentDate() == null ) {
+					continue;
+				}
+				Appointments appointments = patientRecord.addNewAppointments();
+	            if (StringUtils.filled(appt.getReason())) appointments.setAppointmentPurpose(appt.getReason());
+	            
+				DateFullOrPartial dateFullorPartial = appointments.addNewAppointmentDate();			
+				cal.setTime(appt.getAppointmentDate());
+				
+				startDate = appt.getStartTime();
+				startTime.setTime(startDate);
+				cal.set(Calendar.HOUR_OF_DAY, startTime.get(Calendar.HOUR_OF_DAY));
+				cal.set(Calendar.MINUTE, startTime.get(Calendar.MINUTE));
+				dateFullorPartial.setFullDate(cal);
+			}
+		} catch( Exception e ) {
+			
 		}
+		
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -495,7 +508,11 @@ public class CihiExportAction extends DispatchAction {
                 }
 
                 if( !"".equalsIgnoreCase(age) ) {
-                    familyHistory.setAgeAtOnset(BigInteger.valueOf(Long.parseLong(age)));
+                	try {
+                		familyHistory.setAgeAtOnset(BigInteger.valueOf(Long.parseLong(age)));
+                	}catch(NumberFormatException e) {
+                		
+                	}
                 }
 
                 //if( !hasIssue ) {  //Commenting this out.  I don't see why it's not there if it has an issue
@@ -655,7 +672,10 @@ public class CihiExportAction extends DispatchAction {
             }catch(Exception e ) {
                 index = 4;
             }
-        	xmlAllergies.setSeverity(cdsDtCihi.AdverseReactionSeverity.Enum.forString(severity[index-1]));
+        	if( index > 0 ) {
+        		index -= 1;
+        	}
+        	xmlAllergies.setSeverity(cdsDtCihi.AdverseReactionSeverity.Enum.forString(severity[index]));
         	date = allergy.getStartDate();
         	if( date != null ) {
         		DateFullOrPartial dateFullOrPartial = xmlAllergies.addNewStartDate();        	
