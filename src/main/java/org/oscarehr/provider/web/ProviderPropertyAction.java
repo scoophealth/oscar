@@ -1415,6 +1415,82 @@ public class ProviderPropertyAction extends DispatchAction {
 
          return actionmapping.findForward("gen");
     }
+    
+    public ActionForward viewCppSingleLine(ActionMapping actionmapping,
+            ActionForm actionform,
+            HttpServletRequest request,
+            HttpServletResponse response) {
+	
+		DynaActionForm frm = (DynaActionForm)actionform;
+		String provider = (String) request.getSession().getAttribute("user");
+		UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.CPP_SINGLE_LINE);
+		
+		String propValue="";
+		if (prop == null){
+			prop = new UserProperty();
+		}else{
+			propValue=prop.getValue();
+		}
+		
+		boolean checked;
+		if(propValue.equalsIgnoreCase("yes"))
+			checked=true;
+		else
+			checked=false;
+		
+		prop.setChecked(checked);
+		request.setAttribute("cppSingleLineProperty", prop);
+		request.setAttribute("providertitle","provider.setCppSingleLine.title"); //=Select if you want to use Rx3
+		request.setAttribute("providermsgPrefs","provider.setCppSingleLine.msgPrefs"); //=Preferences
+		request.setAttribute("providermsgProvider","provider.setCppSingleLine.msgProfileView"); //=Use Rx3
+		request.setAttribute("providermsgEdit","provider.setCppSingleLine.msgEdit"); //=Do you want to use Rx3?
+		request.setAttribute("providerbtnSubmit","provider.setCppSingleLine.btnSubmit"); //=Save
+		request.setAttribute("providermsgSuccess","provider.setCppSingleLine.msgSuccess"); //=Rx3 Selection saved
+		request.setAttribute("method","saveUseCppSingleLine");
+		
+		frm.set("cppSingleLineProperty", prop);
+		
+		return actionmapping.findForward("genCppSingleLine");
+	}
+
+
+    public ActionForward saveUseCppSingleLine(ActionMapping actionmapping,ActionForm actionform,HttpServletRequest request,HttpServletResponse response){	
+    	String provider=(String) request.getSession().getAttribute("user");
+
+    	DynaActionForm frm=(DynaActionForm)actionform;
+    	UserProperty UUseRx3=(UserProperty)frm.get("cppSingleLineProperty");
+ 
+		boolean checked=false;
+		if(UUseRx3!=null)
+			checked = UUseRx3.isChecked();
+		UserProperty prop=this.userPropertyDAO.getProp(provider, UserProperty.CPP_SINGLE_LINE);
+		if(prop==null){
+			prop=new UserProperty();
+			prop.setName(UserProperty.CPP_SINGLE_LINE);
+			prop.setProviderNo(provider);
+		}
+		String useRx3="no";
+		if(checked)
+			useRx3="yes";
+
+		prop.setValue(useRx3);
+		this.userPropertyDAO.saveProp(prop);
+		
+		request.setAttribute("status", "success");
+		request.setAttribute("cppSingleLineProperty",prop);
+		request.setAttribute("providertitle","provider.setCppSingleLine.title"); //=Select if you want to use Rx3
+		request.setAttribute("providermsgPrefs","provider.setCppSingleLine.msgPrefs"); //=Preferences
+		request.setAttribute("providermsgProvider","provider.setCppSingleLine.msgProfileView"); //=Use Rx3
+		request.setAttribute("providermsgEdit","provider.setCppSingleLine.msgEdit"); //=Check if you want to use Rx3
+		request.setAttribute("providerbtnSubmit","provider.setCppSingleLine.btnSubmit"); //=Save
+		if(checked)
+			request.setAttribute("providermsgSuccess","provider.setCppSingleLine.msgSuccess_selected"); //=Rx3 is selected
+		else
+			request.setAttribute("providermsgSuccess","provider.setCppSingleLine.msgSuccess_unselected"); //=Rx3 is unselected
+		request.setAttribute("method","saveUseCppSingleLine");
+
+		return actionmapping.findForward("genCppSingleLine");
+	}
 
     /**
      * Creates a new instance of ProviderPropertyAction
