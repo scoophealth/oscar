@@ -8368,13 +8368,14 @@ create table EyeformConsultationReport (
  primary key(id)
 );
 
-create table RemoteDataRetrievalLog
+create table RemoteDataLog
 (
 	id bigint primary key auto_increment,
 	providerNo varchar(255) not null,
-	retrievalDate datetime not null,
-	remoteDocumentId varchar(255) not null,
-	remoteDocumentContents blob not null
+	actionDate datetime not null,
+	action varchar(32) not null,
+	documentId varchar(255) not null,
+	documentContents blob not null
 );
 
 create table DemographicContact (
