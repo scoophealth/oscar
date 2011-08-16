@@ -23,6 +23,10 @@
  * Ontario, Canada 
  */
 --%>
+<%@page import="oscar.util.DateUtils"%>
+<%@page import="org.apache.commons.lang.StringEscapeUtils"%>
+<%@page import="org.oscarehr.myoscar_server.ws.MessageTransfer"%>
+<%@page import="org.oscarehr.phr.web.MyOscarMessagesHelper"%>
 <%@page import="oscar.oscarDemographic.data.*, java.util.Enumeration" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -30,6 +34,10 @@
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <%@ taglib uri="http://jakarta.apache.org/struts/tags-html-el" prefix="html-el" %>
 
+<%
+	Long messageId=new Long(request.getParameter("messageId"));
+	MessageTransfer messageTransfer=MyOscarMessagesHelper.readMessage(session, messageId);
+%>
 
 <html:html locale="true">
 <head>
@@ -94,7 +102,7 @@ function BackToOscar()
                                   
                                     <td>
                                         <table class=messButtonsA cellspacing=0 cellpadding=3 ><tr><td class="messengerButtonsA">
-                                           <a href="PhrMessage.do?method=<c:out value="${comingfrom}"/>" class="messengerButtons">
+                                           <a href="#" class="messengerButtons" onclick="history.go(-1)">
                                              Back
                                            </a>
                                         </td></tr></table>
@@ -116,7 +124,7 @@ function BackToOscar()
                                     <bean:message key="oscarMessenger.ViewMessage.msgFrom"/>:
                                     </td>
                                     <td class="Printable" bgcolor="#CCCCFF">
-                                       <c:out value="${message.senderPhr}"/>
+                                    	<%=StringEscapeUtils.escapeHtml(messageTransfer.getSenderPersonLastName()+", "+messageTransfer.getSenderPersonFirstName())%>
                                     </td>
                                 </tr>
                                 <tr>
@@ -124,7 +132,7 @@ function BackToOscar()
                                     <bean:message key="oscarMessenger.ViewMessage.msgTo"/>:
                                     </td>
                                     <td class="Printable" bgcolor="#BFBFFF">
-                                       <c:out value="${message.receiverPhr}"/>
+                                    	<%=StringEscapeUtils.escapeHtml(messageTransfer.getRecipientPersonLastName()+", "+messageTransfer.getRecipientPersonLastName())%>
                                     </td>
                                 </tr>
                                 <tr>
@@ -132,7 +140,7 @@ function BackToOscar()
                                         <bean:message key="oscarMessenger.ViewMessage.msgSubject"/>:
                                     </td>
                                     <td class="Printable" bgcolor="#BBBBFF">
-                                        <c:out value="${message.docSubject}"/>
+                                    	<%=StringEscapeUtils.escapeHtml(messageTransfer.getSubject())%>
                                     </td>
                                 </tr>
                                 <tr>
@@ -140,26 +148,20 @@ function BackToOscar()
                                       <bean:message key="oscarMessenger.ViewMessage.msgDate"/>:
                                   </td>
                                   <td  class="Printable" bgcolor="#B8B8FF">
-                                      <c:out value="${message.dateSent}"/>
+                                   	<%=StringEscapeUtils.escapeHtml(DateUtils.formatDateTime(messageTransfer.getSendDate(), request.getLocale()))%>
                                   </td>
                                 </tr>
                                 <tr>
                                     
                                     <td bgcolor="#EEEEFF" ></td>
                                     <td bgcolor="#EEEEFF" >
-                                        <textarea name="msgBody" wrap="hard" readonly="true" rows="18" cols="60" ><c:out value="${message.body}"/></textarea><br>
+                                        <textarea name="msgBody" wrap="hard" readonly="true" rows="18" cols="60" ><%=StringEscapeUtils.escapeHtml(messageTransfer.getContents())%></textarea><br>
                                         <logic:notPresent name="noreply">
                                             <html:submit styleClass="ControlPushButton" property="reply">
                                                 <bean:message key="oscarMessenger.ViewMessage.btnReply"/>
                                             </html:submit>
                                         </logic:notPresent>
-                                        <html-el:hidden property="msgTo"         value="${message.senderPhr}" />
-                                        <html-el:hidden property="msgFrom"       value="${message.senderPhr}" />
-                                        <html-el:hidden property="msgRe"         value="${message.docSubject}" />
-                                        <html-el:hidden property="id"            value="${message.id}" />
-                                        <html-el:hidden property="docIdx"        value="${message.phrIndex}" />
-                                        <html-el:hidden property="demographicNo" value="${message.senderOscar}"/>
-                                        <html-el:hidden property="comingfrom"    value="${comingfrom}"/>
+                                        <input type="hidden" name="messageId" value="<%=messageId%>"/>
                                         <input type="hidden" name="method" value="reply"/>
                                      </td>
                                 </tr>

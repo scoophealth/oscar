@@ -123,6 +123,11 @@ public final class DateUtils {
 		return(formatTime(calendar.getTime(), locale));
 	}
 	
+	public static String formatDateTime(Calendar calendar, Locale locale)
+	{
+		return(formatDate(calendar, locale)+' '+formatTime(calendar, locale));
+	}
+	
 	/**
 	 * @param locale can be null
 	 * @return if String is null will return null.
