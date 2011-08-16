@@ -245,4 +245,12 @@ public class DxresearchDAO extends HibernateDaoSupport{
         listItems.addAll(new dxQuickListItemsHandler(quickListName).getDxQuickListItemsVector());
         return listItems;
     }
+    
+    public List<Dxresearch> getDxResearchItemsByPatient(Integer demographicNo) {
+    	
+    	@SuppressWarnings("unchecked")
+    	List<Dxresearch> items = this.getHibernateTemplate().find("from Dxresearch d where d.demographicNo=?",new Object[]{demographicNo});
+    	
+    	return items;
+    }
 }
