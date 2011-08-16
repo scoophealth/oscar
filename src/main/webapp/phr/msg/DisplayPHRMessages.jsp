@@ -238,7 +238,6 @@ request.setAttribute("pageMethod",pageMethod);
     </head>
 
     <body class="BodyStyle" vlink="#0000FF" onload="window.focus(); setFocus();">
-        <!--  -->
 
     <table  class="MainTable" id="scrollNumber1" name="encounterTable">
         <tr class="MainTableTopRow">
@@ -346,6 +345,26 @@ request.setAttribute("pageMethod",pageMethod);
             <td class="MainTableLeftColumn">
                 &nbsp;
             </td>
+        	<td>
+        		<%
+					int startIndex=0;
+					try
+					{
+						startIndex=Integer.parseInt(request.getParameter("startIndex"));
+					}
+					catch (Exception e)
+					{
+						// okay to ignore, either no parameter or some one messing with url string.
+					}
+        		%>
+				<a href="?method=<%=pageMethod%>&startIndex=<%=MyOscarMessagesHelper.getPreviousPageStartIndex(startIndex)%>" />Previous</a>
+				<a href="?method=<%=pageMethod%>&startIndex=<%=MyOscarMessagesHelper.getNextPageStartIndex(startIndex)%>" />Next</a>
+        	</td>
+        </tr>
+        <tr>
+            <td class="MainTableLeftColumn">
+                &nbsp;
+            </td>
             <td class="MainTableRightColumn">
                 
                 <%-- Sharing approval alerts -------------- --%>
@@ -376,12 +395,12 @@ request.setAttribute("pageMethod",pageMethod);
                             &nbsp;
                         </th>
                         <th align="left" bgcolor="#DDDDFF">
-                            <html-el:link action="/phr/PhrMessage?orderby=0&method=${pageMethod}" >
+                            <html-el:link action="/phr/PhrMessage.do?orderby=0&method=${pageMethod}" >
                                 <bean:message key="oscarMessenger.DisplayMessages.msgStatus"/>
                             </html-el:link>
                         </th>
                         <th align="left" bgcolor="#DDDDFF">
-                             <html-el:link action="/phr/PhrMessage?orderby=1&method=${pageMethod}" >
+                             <html-el:link action="/phr/PhrMessage.do?orderby=1&method=${pageMethod}" >
                                  <%if (pageMethod.equals("viewSentMessages")) {%>
                                          Recipient
                                  <%} else {%>
@@ -390,12 +409,12 @@ request.setAttribute("pageMethod",pageMethod);
                             </html-el:link>
                         </th>
                         <th align="left" bgcolor="#DDDDFF">
-                            <html-el:link action="/phr/PhrMessage?orderby=2&method=${pageMethod}" >
+                            <html-el:link action="/phr/PhrMessage.do?orderby=2&method=${pageMethod}" >
                                 <bean:message key="oscarMessenger.DisplayMessages.msgSubject"/>
                             </html-el:link>
                         </th>
                         <th align="left" bgcolor="#DDDDFF">
-                            <html-el:link action="/phr/PhrMessage?orderby=3&method=${pageMethod}" >
+                            <html-el:link action="/phr/PhrMessage.do?orderby=3&method=${pageMethod}" >
                                 <bean:message key="oscarMessenger.DisplayMessages.msgDate"/>
                             </html-el:link>
                         </th>
@@ -471,12 +490,12 @@ request.setAttribute("pageMethod",pageMethod);
                             </td>
                             <td>
                                 <c:choose>
-                                    <c:when test="${otherAction.status == STATUS_NOT_AUTHORIZED || otherAction.status == STATUS_OTHER_ERROR}"><html-el:link action="/phr/PhrMessage?&method=resend&id=${otherAction.id}">Resend</html-el:link></c:when>
+                                    <c:when test="${otherAction.status == STATUS_NOT_AUTHORIZED || otherAction.status == STATUS_OTHER_ERROR}"><html-el:link action="/phr/PhrMessage.do?&method=resend&id=${otherAction.id}">Resend</html-el:link></c:when>
                                     <c:otherwise>&nbsp;</c:otherwise>
                                 </c:choose>
                             </td>
                             <td>
-                                <html-el:link action="/phr/PhrMessage?&method=delete&id=${otherAction.id}">Remove</html-el:link>
+                                <html-el:link action="/phr/PhrMessage.do?&method=delete&id=${otherAction.id}">Remove</html-el:link>
                             </td>
                         </tr>
                     </c:forEach>
@@ -505,7 +524,7 @@ request.setAttribute("pageMethod",pageMethod);
                             <td>
                             <c:out value="${actionMessage.phrMessage.receiverPhr}"/></td>
                             <td>
-                                <html-el:link action="/phr/PhrMessage?method=read&source=actions&comingfrom=viewSentMessages&noreply=yes&id=${actionMessage.id}"  >
+                                <html-el:link action="/phr/PhrMessage.do?method=read&source=actions&comingfrom=viewSentMessages&noreply=yes&messageId=${actionMessage.id}"  >
                                     <c:out value="${actionMessage.phrMessage.docSubject}"/>
                                 </html-el:link>
                             </td>
@@ -514,12 +533,12 @@ request.setAttribute("pageMethod",pageMethod);
                             </td>
                             <td>
                                 <c:choose>
-                                    <c:when test="${actionMessage.status == STATUS_NOT_AUTHORIZED || actionMessage.status == STATUS_OTHER_ERROR}"><html-el:link action="/phr/PhrMessage?&method=resend&id=${actionMessage.id}">Resend</html-el:link></c:when>
+                                    <c:when test="${actionMessage.status == STATUS_NOT_AUTHORIZED || actionMessage.status == STATUS_OTHER_ERROR}"><html-el:link action="/phr/PhrMessage.do?&method=resend&id=${actionMessage.id}">Resend</html-el:link></c:when>
                                     <c:otherwise>&nbsp;</c:otherwise>
                                 </c:choose>
                             </td>
                             <td>
-                                <html-el:link action="/phr/PhrMessage?&method=delete&id=${actionMessage.id}">Remove</html-el:link>
+                                <html-el:link action="/phr/PhrMessage.do?&method=delete&id=${actionMessage.id}">Remove</html-el:link>
                             </td>
                         </tr>
                     </c:forEach>
@@ -540,7 +559,7 @@ request.setAttribute("pageMethod",pageMethod);
                             </td>
                             <td>
                                 
-                                <html-el:link action="/phr/PhrMessage?method=read&noreply=yes&comingfrom=viewSentMessages&id=${sMessage.id}"  >
+                                <html-el:link action="/phr/PhrMessage.do?method=read&noreply=yes&comingfrom=viewSentMessages&messageId=${sMessage.id}"  >
                                    <c:if test='${not empty sMessage.docSubject}'>
                                     <c:out value="${sMessage.docSubject}"/>
                                     </c:if>
@@ -579,7 +598,7 @@ request.setAttribute("pageMethod",pageMethod);
                                 <c:out value="${archivedMessage.senderPhr}"/></td>
                             <td>
                                 
-                                <html-el:link action="/phr/PhrMessage?&method=read&comingfrom=viewArchivedMessages&id=${archivedMessage.id}"  >
+                                <html-el:link action="/phr/PhrMessage.do?&method=read&comingfrom=viewArchivedMessages&messageId=${archivedMessage.id}"  >
                                    <c:if test='${not empty archivedMessage.docSubject}'>
                                     <c:out value="${archivedMessage.docSubject}"/>
                                    </c:if>
@@ -593,19 +612,20 @@ request.setAttribute("pageMethod",pageMethod);
                                 <fmt:formatDate value="${archivedMessage.dateSent}" type="DATE" pattern="yyyy-MM-dd HH:mm:ss"/>
                             </td>
                             <td>
-                                <html-el:link action="/phr/PhrMessage?&method=unarchive&id=${archivedMessage.id}"  >
+                                <html-el:link action="/phr/PhrMessage.do?&method=unarchive&id=${archivedMessage.id}"  >
                                    Unarchive
                                 </html-el:link>
                             </td>
                         </tr>
                     </c:forEach>               
- <%-- Inbox-------------------------------------------------------------- --%>
+ <%-- Inbox new -------------------------------------------------------------- --%>
 	
 				<%
 					PHRAuthentication auth = (PHRAuthentication) session.getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
+					
 					if (auth!=null)
 					{
-						ArrayList<MessageTransfer> messages=MyOscarMessagesHelper.getMessages(session);
+						List<MessageTransfer> messages=MyOscarMessagesHelper.getMessages(session, startIndex );
 						for (MessageTransfer message : messages)
 						{
 							%>
@@ -645,7 +665,7 @@ request.setAttribute("pageMethod",pageMethod);
 	                                	%>
 		                            </td>
 		                            <td bgcolor="#EEEEFF">
-		                                <a href="<%=request.getContextPath()%>/phr/PhrMessage?&method=read&comingfrom=viewMessages&id=<%=message.getId()%>">
+		                                <a href="<%=request.getContextPath()%>/phr/PhrMessage.do?&method=read&comingfrom=viewMessages&messageId=<%=message.getId()%>">
 		                                   <%=StringEscapeUtils.escapeHtml(message.getSubject())%>
 		                                </a>
 		                            </td>
@@ -655,7 +675,7 @@ request.setAttribute("pageMethod",pageMethod);
 	                                   <%=DateUtils.formatTime(message.getSendDate(), request.getLocale())%>
 		                            </td>
 		                            <td>
-		                                <a href"<%=request.getContextPath()%>/phr/PhrMessage?&method=archive&id=<%=message.getId()%>"  >
+		                                <a href"<%=request.getContextPath()%>/phr/PhrMessage.do?&method=archive&id=<%=message.getId()%>"  >
 		                                   Archive
 		                                </a>
 		                            </td>
@@ -693,7 +713,7 @@ request.setAttribute("pageMethod",pageMethod);
                             </td>
                             <td bgcolor="#EEEEFF">
                                 
-                                <html-el:link action="/phr/PhrMessage?&method=read&comingfrom=viewMessages&id=${iMessage.id}"  >
+                                <html-el:link action="/phr/PhrMessage.do?&method=read&comingfrom=viewMessages&messageId=${iMessage.id}"  >
                                    <c:if test='${not empty iMessage.docSubject}'>
                                     <c:out value="${iMessage.docSubject}"/>
                                    </c:if>
@@ -707,7 +727,7 @@ request.setAttribute("pageMethod",pageMethod);
                                 <fmt:formatDate value="${iMessage.dateSent}" type="DATE" pattern="yyyy-MM-dd HH:mm:ss"/>
                             </td>
                             <td>
-                                <html-el:link action="/phr/PhrMessage?&method=archive&id=${iMessage.id}"  >
+                                <html-el:link action="/phr/PhrMessage.do?&method=archive&id=${iMessage.id}"  >
                                    Archive
                                 </html-el:link>
                             </td>

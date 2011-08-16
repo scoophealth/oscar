@@ -80,4 +80,10 @@ public class MyOscarUtils
 		Demographic demographic=demographicDao.getDemographicByMyOscarUserName(myOscarUserName);
 		return(demographic);
 	}
+	
+	public static PHRAuthentication getPHRAuthentication(HttpSession session)
+	{
+		return (PHRAuthentication) (session.getAttribute(PHRAuthentication.SESSION_PHR_AUTH));
+	}
+	
 }
