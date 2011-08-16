@@ -41,7 +41,6 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.myoscar_server.ws.MedicalDataType;
-import org.oscarehr.myoscar_server.ws.MessageTransfer;
 import org.oscarehr.phr.PHRAuthentication;
 import org.oscarehr.phr.dao.PHRActionDAO;
 import org.oscarehr.phr.dao.PHRDocumentDAO;
@@ -49,7 +48,6 @@ import org.oscarehr.phr.model.PHRAction;
 import org.oscarehr.phr.model.PHRDocument;
 import org.oscarehr.phr.model.PHRMessage;
 import org.oscarehr.phr.service.PHRService;
-import org.oscarehr.phr.util.MyOscarMessageManager;
 import org.oscarehr.phr.util.MyOscarUtils;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -112,16 +110,16 @@ public class PHRMessageAction extends DispatchAction {
 			}
 		}
 
-		if (auth != null) {
-			ArrayList<MessageTransfer> remoteMessages = MyOscarMessageManager.getReceivedMessages(auth.getMyOscarUserId(), auth.getMyOscarPassword());
-			for (MessageTransfer remoteMessage : remoteMessages) {
-				PHRMessage phrMessage=PHRMessage.converFromTransfer(remoteMessage);
-				messages.add(phrMessage);
-				
-				PHRDocument phrDocument=PHRDocument.converFromTransfer(remoteMessage);
-				docs.add(phrDocument);
-			}
-		}
+//		if (auth != null) {
+//			ArrayList<MessageTransfer> remoteMessages = MyOscarMessageManager.getReceivedMessages(auth.getMyOscarUserId(), auth.getMyOscarPassword());
+//			for (MessageTransfer remoteMessage : remoteMessages) {
+//				PHRMessage phrMessage=PHRMessage.converFromTransfer(remoteMessage);
+//				messages.add(phrMessage);
+//				
+//				PHRDocument phrDocument=PHRDocument.converFromTransfer(remoteMessage);
+//				docs.add(phrDocument);
+//			}
+//		}
 
 		request.getSession().setAttribute("indivoMessages", docs);
 		request.getSession().setAttribute("indivoMessageBodies", messages);
@@ -174,37 +172,37 @@ public class PHRMessageAction extends DispatchAction {
 		 * PHRAuthentication auth = (PHRAuthentication) request.getSession().getAttribute(PHRAuthentication.SESSION_PHR_AUTH); log.debug("AUTH "+auth); String indivoId = auth.getUserId(); String ticket = auth.getToken();
 		 */
 
-		String id = request.getParameter("id");
-		String source = request.getParameter("source");
-		if (source == null) source = "";
-		PHRMessage msg = new PHRMessage();
-		if ((source != null) && source.equals("actions")) {
-			PHRAction phrAction = phrActionDAO.getActionById(id);
-			if (phrAction == null) {
-				return mapping.findForward("document_not_found");
-			}
-			msg = phrAction.getPhrMessage();
-		} else {
-			PHRDocument doc = phrDocumentDAO.getDocumentById(id);
-			if (doc == null) {
-				return mapping.findForward("document_not_found");
-			}
-			msg = new PHRMessage(doc);
-		}
-		if (!msg.isRead() && !source.equals("actions")) {
-			msg.setRead();
-			msg.reDocContent();
-			phrDocumentDAO.update((PHRDocument) msg);
-
-			phrService.sendUpdateMessage(msg);
-		}
-
-		log.debug("ID FOR DOC BEING READ IS " + msg.getId());
-		request.setAttribute("noreply", request.getParameter("noreply"));
-		request.setAttribute("comingfrom", request.getParameter("comingfrom"));
-		request.setAttribute("message", msg);
-		// List refList = phrDocumentDAO.getReferencedMessages(doc);
-		// request.setAttribute("refList",refList);
+		
+//		String source = request.getParameter("source");
+//		if (source == null) source = "";
+//		PHRMessage msg = new PHRMessage();
+//		if ((source != null) && source.equals("actions")) {
+//			PHRAction phrAction = phrActionDAO.getActionById(id);
+//			if (phrAction == null) {
+//				return mapping.findForward("document_not_found");
+//			}
+//			msg = phrAction.getPhrMessage();
+//		} else {
+//			PHRDocument doc = phrDocumentDAO.getDocumentById(id);
+//			if (doc == null) {
+//				return mapping.findForward("document_not_found");
+//			}
+//			msg = new PHRMessage(doc);
+//		}
+//		if (!msg.isRead() && !source.equals("actions")) {
+//			msg.setRead();
+//			msg.reDocContent();
+//			phrDocumentDAO.update((PHRDocument) msg);
+//
+//			phrService.sendUpdateMessage(msg);
+//		}
+//
+//		log.debug("ID FOR DOC BEING READ IS " + msg.getId());
+//		request.setAttribute("noreply", request.getParameter("noreply"));
+//		request.setAttribute("comingfrom", request.getParameter("comingfrom"));
+//		request.setAttribute("message", msg);
+//		// List refList = phrDocumentDAO.getReferencedMessages(doc);
+//		// request.setAttribute("refList",refList);
 
 		return mapping.findForward("read");
 	}
