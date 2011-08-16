@@ -55,7 +55,6 @@ import org.indivo.xml.phr.medication.Medication;
 import org.indivo.xml.phr.medication.MedicationType;
 import org.indivo.xml.phr.urns.ContentTypeQNames;
 import org.indivo.xml.phr.urns.DocumentClassificationUrns;
-import org.indivo.xml.talk.AddDocumentResultType;
 import org.indivo.xml.talk.AuthenticateResultType;
 import org.indivo.xml.talk.ReadDocumentResultType;
 import org.oscarehr.util.MiscUtils;
@@ -160,65 +159,69 @@ public class Send2Indivo {
         return fdata;
     }
     
-    private void sendDocument(String recipientId, IndivoDocumentType doc) throws IndivoException,ActionNotPerformedException {        
-        AddDocumentResultType addDocumentResultType = client.addDocument(sessionTicket,recipientId, doc);
-        indivoDocId = addDocumentResultType.getDocumentIndex();
+    private void sendDocument(Long recipientId, IndivoDocumentType doc) throws IndivoException,ActionNotPerformedException {        
+// this code can't possibly be run, its using the wrong client
+
+//        AddDocumentResultType addDocumentResultType = client.addDocument(sessionTicket,recipientId, doc);
+//        indivoDocId = addDocumentResultType.getDocumentIndex();
     }
     
     /**Create a Medication Type with prescription and send it to indivo server */
      public boolean sendMedication(Prescription drug, String providerFname, String providerLname, String recipientId) {
-        NameType name = new NameType();
-        name.setFirstName(providerFname);
-        name.setLastName(providerLname);
+// this code can't possibly be run, its using the wrong client
 
-        ConciseContactInformationType contactInfo = new ConciseContactInformationType();
-        contactInfo.getPersonName().add(name);
-
-        MedicationType medType = new MedicationType();
-        medType.setPrescription(true);
-        
-        if( drug.getCustomInstr() == false ) {           
-            medType.setDose(drug.getDosageDisplay() + " " + drug.getUnit());            
-            medType.setDuration(drug.getDuration());
-            medType.setRefills(String.valueOf(drug.getRepeat()));
-            medType.setSubstitutionPermitted(drug.getNosubs());
-        }
-        else
-            medType.setDose(ResourceBundle.getBundle("oscarResources").getString("Send2Indivo.prescription.Instruction"));
-                
-        medType.setName(drug.getDrugName());
-        medType.setInstructions("<pre>" + drug.getSpecial() + "</pre>");        
-        medType.setProvider(contactInfo);
-
-        org.indivo.xml.phr.DocumentGenerator generator  = new   org.indivo.xml.phr.DocumentGenerator();
-        org.indivo.xml.JAXBUtils jaxbUtils              = new   org.indivo.xml.JAXBUtils();
-        org.indivo.xml.phr.medication.ObjectFactory medFactory = new org.indivo.xml.phr.medication.ObjectFactory();
-        Medication med = medFactory.createMedication(medType);
-
-        try {
-            Element element = jaxbUtils.marshalToElement(med, JAXBContext.newInstance("org.indivo.xml.phr.medication"));            
-            IndivoDocumentType doc = generator.generateDefaultDocument(indivoId, indivoFullName, indivoRole, DocumentClassificationUrns.MEDICATION, ContentTypeQNames.MEDICATION, element);
-            sendDocument(recipientId, doc);
-        }
-        catch(javax.xml.bind.JAXBException e ) {
-            errorMsg = e.getMessage();
-            MiscUtils.getLogger().debug("JAXB Error " + errorMsg);
-            MiscUtils.getLogger().error("Error", e);
-            return false;
-        }
-        catch(ActionNotPerformedException e) {
-            errorMsg = e.getMessage();
-            MiscUtils.getLogger().debug("Indivo Unaccepted Medication " + drug.getDrugName() + " " + errorMsg);
-            MiscUtils.getLogger().error("Error", e);
-            return false;
-        }
-        catch(IndivoException e ) {
-            errorMsg = e.getMessage();
-            MiscUtils.getLogger().debug("Indivo Network Error " + errorMsg);
-            MiscUtils.getLogger().error("Error", e);
-            return false;
-        } 
-
+//        NameType name = new NameType();
+//        name.setFirstName(providerFname);
+//        name.setLastName(providerLname);
+//
+//        ConciseContactInformationType contactInfo = new ConciseContactInformationType();
+//        contactInfo.getPersonName().add(name);
+//
+//        MedicationType medType = new MedicationType();
+//        medType.setPrescription(true);
+//        
+//        if( drug.getCustomInstr() == false ) {           
+//            medType.setDose(drug.getDosageDisplay() + " " + drug.getUnit());            
+//            medType.setDuration(drug.getDuration());
+//            medType.setRefills(String.valueOf(drug.getRepeat()));
+//            medType.setSubstitutionPermitted(drug.getNosubs());
+//        }
+//        else
+//            medType.setDose(ResourceBundle.getBundle("oscarResources").getString("Send2Indivo.prescription.Instruction"));
+//                
+//        medType.setName(drug.getDrugName());
+//        medType.setInstructions("<pre>" + drug.getSpecial() + "</pre>");        
+//        medType.setProvider(contactInfo);
+//
+//        org.indivo.xml.phr.DocumentGenerator generator  = new   org.indivo.xml.phr.DocumentGenerator();
+//        org.indivo.xml.JAXBUtils jaxbUtils              = new   org.indivo.xml.JAXBUtils();
+//        org.indivo.xml.phr.medication.ObjectFactory medFactory = new org.indivo.xml.phr.medication.ObjectFactory();
+//        Medication med = medFactory.createMedication(medType);
+//
+//        try {
+//            Element element = jaxbUtils.marshalToElement(med, JAXBContext.newInstance("org.indivo.xml.phr.medication"));            
+//            IndivoDocumentType doc = generator.generateDefaultDocument(indivoId, indivoFullName, indivoRole, DocumentClassificationUrns.MEDICATION, ContentTypeQNames.MEDICATION, element);
+//            sendDocument(recipientId, doc);
+//        }
+//        catch(javax.xml.bind.JAXBException e ) {
+//            errorMsg = e.getMessage();
+//            MiscUtils.getLogger().debug("JAXB Error " + errorMsg);
+//            MiscUtils.getLogger().error("Error", e);
+//            return false;
+//        }
+//        catch(ActionNotPerformedException e) {
+//            errorMsg = e.getMessage();
+//            MiscUtils.getLogger().debug("Indivo Unaccepted Medication " + drug.getDrugName() + " " + errorMsg);
+//            MiscUtils.getLogger().error("Error", e);
+//            return false;
+//        }
+//        catch(IndivoException e ) {
+//            errorMsg = e.getMessage();
+//            MiscUtils.getLogger().debug("Indivo Network Error " + errorMsg);
+//            MiscUtils.getLogger().error("Error", e);
+//            return false;
+//        } 
+//
          return true;
      }
      
@@ -293,7 +296,7 @@ public class Send2Indivo {
      }
     
     /**Send file to indivo as a raw sequence of bytes */
-    public boolean sendBinaryFile(String file, String type, String description, String recipientId ) {        
+    public boolean sendBinaryFile(String file, String type, String description, Long recipientId ) {        
         byte[] bfile = getFile(file);
         if( bfile == null )
             return false;
@@ -348,58 +351,60 @@ public class Send2Indivo {
     }
     
     /**Update indivo record with new file */
-    public boolean updateBinaryFile(String file, String docIndex, String type, String description, String recipientId) {
-        byte[] bfile = getFile(file);
-        if( bfile == null )
-            return false;
-        
-        GregorianCalendar calendar = new GregorianCalendar();
-        String fname = type + calendar.get(Calendar.DAY_OF_MONTH) + "-" + String.valueOf(calendar.get(Calendar.MONTH)+1) + "-" + calendar.get(Calendar.YEAR);
-        
-        //Create new file
-        BinaryDataType binaryDataType = new BinaryDataType();
-        binaryDataType.setData(bfile);
-        binaryDataType.setMimeType("application/pdf");
-        binaryDataType.setFileDescription(description);
-        binaryDataType.setFilename(fname);
-        
-        try {
-            //Retrieve current file record from indivo
-            ReadDocumentResultType readResult = client.readDocument(sessionTicket, recipientId, docIndex);
-            IndivoDocumentType doc = readResult.getIndivoDocument();
-            DocumentVersionType version = doc.getDocumentVersion().get(doc.getDocumentVersion().size() - 1);
-            
-            //Update current record with new file info
-             org.indivo.xml.JAXBUtils jaxbUtils = new org.indivo.xml.JAXBUtils();
-             org.indivo.xml.phr.binarydata.ObjectFactory binFactory = new org.indivo.xml.phr.binarydata.ObjectFactory();
-
-             BinaryData bd = binFactory.createBinaryData(binaryDataType);
-             Element element = jaxbUtils.marshalToElement(bd, JAXBContext.newInstance("org.indivo.xml.phr.binarydata"));
-
-             VersionBodyType body = version.getVersionBody();
-             body.setAny(element);
-             version.setVersionBody(body);
-             client.updateDocument(sessionTicket, recipientId, docIndex, version);
-
-        }        
-        catch(javax.xml.bind.JAXBException e ) {
-            errorMsg = e.getMessage();
-            MiscUtils.getLogger().debug("JAXB Error " + errorMsg);
-            MiscUtils.getLogger().error("Error", e);
-            return false;
-        }
-        catch(ActionNotPerformedException e) {
-            errorMsg = e.getMessage();
-            MiscUtils.getLogger().debug("Indivo Unaccepted File " + file + " " + errorMsg);
-            MiscUtils.getLogger().error("Error", e);
-            return false;
-        }
-        catch(IndivoException e ) {
-            errorMsg = e.getMessage();
-            MiscUtils.getLogger().debug("Indivo Network Error " + errorMsg);
-            MiscUtils.getLogger().error("Error", e);
-            return false;
-        }        
+    public boolean updateBinaryFile(String file, String docIndex, String type, String description, Long myOscarUserId) {
+// this code can't possibly be run it's using the wrong library
+    	
+//        byte[] bfile = getFile(file);
+//        if( bfile == null )
+//            return false;
+//        
+//        GregorianCalendar calendar = new GregorianCalendar();
+//        String fname = type + calendar.get(Calendar.DAY_OF_MONTH) + "-" + String.valueOf(calendar.get(Calendar.MONTH)+1) + "-" + calendar.get(Calendar.YEAR);
+//        
+//        //Create new file
+//        BinaryDataType binaryDataType = new BinaryDataType();
+//        binaryDataType.setData(bfile);
+//        binaryDataType.setMimeType("application/pdf");
+//        binaryDataType.setFileDescription(description);
+//        binaryDataType.setFilename(fname);
+//        
+//        try {
+//            //Retrieve current file record from indivo
+//        	ReadDocumentResultType readResult = client.readDocument(sessionTicket, recipientId, docIndex);
+//            IndivoDocumentType doc = readResult.getIndivoDocument();
+//            DocumentVersionType version = doc.getDocumentVersion().get(doc.getDocumentVersion().size() - 1);
+//            
+//            //Update current record with new file info
+//             org.indivo.xml.JAXBUtils jaxbUtils = new org.indivo.xml.JAXBUtils();
+//             org.indivo.xml.phr.binarydata.ObjectFactory binFactory = new org.indivo.xml.phr.binarydata.ObjectFactory();
+//
+//             BinaryData bd = binFactory.createBinaryData(binaryDataType);
+//             Element element = jaxbUtils.marshalToElement(bd, JAXBContext.newInstance("org.indivo.xml.phr.binarydata"));
+//
+//             VersionBodyType body = version.getVersionBody();
+//             body.setAny(element);
+//             version.setVersionBody(body);
+//             client.updateDocument(sessionTicket, recipientId, docIndex, version);
+//
+//        }        
+//        catch(javax.xml.bind.JAXBException e ) {
+//            errorMsg = e.getMessage();
+//            MiscUtils.getLogger().debug("JAXB Error " + errorMsg);
+//            MiscUtils.getLogger().error("Error", e);
+//            return false;
+//        }
+//        catch(ActionNotPerformedException e) {
+//            errorMsg = e.getMessage();
+//            MiscUtils.getLogger().debug("Indivo Unaccepted File " + file + " " + errorMsg);
+//            MiscUtils.getLogger().error("Error", e);
+//            return false;
+//        }
+//        catch(IndivoException e ) {
+//            errorMsg = e.getMessage();
+//            MiscUtils.getLogger().debug("Indivo Network Error " + errorMsg);
+//            MiscUtils.getLogger().error("Error", e);
+//            return false;
+//        }        
         return true;
     }
     

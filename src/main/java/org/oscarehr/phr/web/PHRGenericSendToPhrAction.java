@@ -20,8 +20,10 @@ import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.casemgmt.web.CaseManagementEntryAction;
+import org.oscarehr.phr.PHRAuthentication;
 import org.oscarehr.phr.model.PHRDocument;
 import org.oscarehr.phr.service.PHRService;
+import org.oscarehr.phr.util.MyOscarUtils;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -94,7 +96,10 @@ public class PHRGenericSendToPhrAction extends DispatchAction {
         String message = request.getParameter("message");
         
         DemographicData demographicData = new DemographicData();
-        String recipientPhrId = demographicData.getDemographic(demographicNo).getIndivoId();
+        String recipientMyOscarUserName = demographicData.getDemographic(demographicNo).getMyOscarUserName();
+        PHRAuthentication auth  = (PHRAuthentication) request.getSession().getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
+        Long recipientMyOscarUserId=MyOscarUtils.getMyOscarUserId(auth, recipientMyOscarUserName);
+        
         int recipientType = PHRDocument.TYPE_DEMOGRAPHIC;
 
         EDocFactory eDocFactory = new EDocFactory();
@@ -163,14 +168,14 @@ public class PHRGenericSendToPhrAction extends DispatchAction {
 
             EDoc eDoc = EDocUtil.getDoc(documentNo);
             
-            String actionIndex = phrService.sendAddBinaryData(senderProviderData, demographicNo, recipientType, recipientPhrId, eDoc) + "";
+            String actionIndex = phrService.sendAddBinaryData(senderProviderData, demographicNo, recipientType, recipientMyOscarUserId, eDoc) + "";
 
             ArrayList<String> eDocAttachmentActionId = new ArrayList();
             eDocAttachmentActionId.add(actionIndex);
-            phrService.sendAddMessage(subject, null, message, senderProviderData, demographicNo, recipientType, recipientPhrId, eDocAttachmentActionId);
+            phrService.sendAddMessage(subject, null, message, senderProviderData, demographicNo, recipientType, recipientMyOscarUserId, eDocAttachmentActionId);
 
 
-            phrService.sendAddAnnotation(senderProviderData, demographicNo, recipientPhrId, actionIndex, message);
+            phrService.sendAddAnnotation(senderProviderData, demographicNo, recipientMyOscarUserId, actionIndex, message);
             return mapping.findForward("loginPage");
             
         } catch (Exception e) {

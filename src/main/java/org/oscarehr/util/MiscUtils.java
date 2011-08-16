@@ -262,4 +262,13 @@ public class MiscUtils {
 	public static byte[] decodeBase64(String s) throws UnsupportedEncodingException {
 		return (base64.decode(s.getBytes(ENCODING)));
 	}
+	
+	public static String getUserNameNoDomain(String s)
+	{
+		if (s==null) return(null);
+		
+		int indexOfAt=s.indexOf('@');
+		if (indexOfAt!=-1) s = s.substring(0,indexOfAt);
+		return(s);
+	}
 }

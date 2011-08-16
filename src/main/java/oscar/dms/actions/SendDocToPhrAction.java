@@ -36,8 +36,10 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.myoscar_server.ws.MedicalDataType;
+import org.oscarehr.phr.PHRAuthentication;
 import org.oscarehr.phr.model.PHRDocument;
 import org.oscarehr.phr.service.PHRService;
+import org.oscarehr.phr.util.MyOscarUtils;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -85,15 +87,18 @@ public class SendDocToPhrAction extends Action {
 		PHRService phrService = (PHRService) SpringUtils.getBean("phrService");
 		
 		try {
-	    	if (phrService.isIndivoRegistered(MedicalDataType.BINARY_DOCUMENT.name(), doc.getDocId())) {
+    		PHRAuthentication auth  = (PHRAuthentication) request.getSession().getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
+    		Long myOscarUserId=MyOscarUtils.getMyOscarUserId(auth, demo.getMyOscarUserName());
+
+    		if (phrService.isIndivoRegistered(MedicalDataType.BINARY_DOCUMENT.name(), doc.getDocId())) {
 	    		// update
 	    		logger.debug("called update");
 	    		String phrIndex = phrService.getPhrIndex(MedicalDataType.BINARY_DOCUMENT.name(), doc.getDocId());
-	    		phrService.sendUpdateBinaryData(prov, demo.getChartNo(), PHRDocument.TYPE_DEMOGRAPHIC, demo.getPin(), doc, phrIndex);
+	    		phrService.sendUpdateBinaryData(prov, demo.getChartNo(), PHRDocument.TYPE_DEMOGRAPHIC, myOscarUserId, doc, phrIndex);
 	    	} else {
 	    		// add
 	    		logger.debug("called add");
-	    		phrService.sendAddBinaryData(prov, demo.getChartNo(), PHRDocument.TYPE_DEMOGRAPHIC, demo.getPin(), doc);
+	    		phrService.sendAddBinaryData(prov, demo.getChartNo(), PHRDocument.TYPE_DEMOGRAPHIC, myOscarUserId, doc);
 	    	}
 	    } catch (Exception e) {
 	    	logger.error("Error", e);

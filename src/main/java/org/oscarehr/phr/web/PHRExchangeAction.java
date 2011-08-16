@@ -59,6 +59,7 @@ import org.oscarehr.phr.dao.PHRDocumentDAO;
 import org.oscarehr.phr.model.PHRDocument;
 import org.oscarehr.phr.model.PHRMedication;
 import org.oscarehr.phr.service.PHRService;
+import org.oscarehr.phr.util.MyOscarUtils;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -144,7 +145,6 @@ public class PHRExchangeAction extends DispatchAction {
 
         log.debug("-----------------displayNewMedsFromPhr has been called -------------");
         String demoId=request.getParameter("demoId");
-        String demoPhrId="";
         oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
         if (bean == null) {
                 response.sendRedirect("error.html");
@@ -152,9 +152,10 @@ public class PHRExchangeAction extends DispatchAction {
         }
         if(demoId!=null){
             DemographicDao demographicDao=(DemographicDao)SpringUtils.getBean("demographicDao");
-            demoPhrId=demographicDao.getDemographic(demoId).getPin();
-            if(demoPhrId!=null && demoPhrId.length()>0){
+            String myOscarUserName=demographicDao.getDemographic(demoId).getMyOscarUserName();
+            if(myOscarUserName!=null){
                 PHRAuthentication auth  = (PHRAuthentication) request.getSession().getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
+                Long myOserUserId=MyOscarUtils.getMyOscarUserId(auth, myOscarUserName);
                 //PrintWriter out = response.getWriter();
                 log.error("auth object="+auth+"--"+request.getSession().getAttribute(phrService.SESSION_PHR_EXCHANGE_TIME));
                 if (auth != null && request.getSession().getAttribute(phrService.SESSION_PHR_EXCHANGE_TIME) != null){
@@ -164,7 +165,7 @@ public class PHRExchangeAction extends DispatchAction {
                         request.getSession().setAttribute(phrService.SESSION_PHR_EXCHANGE_TIME, null);
                         long startTime = System.currentTimeMillis();                        
                         
-                        List<PHRMedication> listDrugsToDisplay=phrService.retrieveSaveMedToDisplay(auth,providerNo,demoId,demoPhrId);
+                        List<PHRMedication> listDrugsToDisplay=phrService.retrieveSaveMedToDisplay(auth,providerNo,demoId,myOserUserId);
                         HashMap<Long,PHRMedication> drugsToDisplay =RxUtil.createKeyValPair(listDrugsToDisplay);
                         bean.setPairPHRMed(drugsToDisplay);
                         

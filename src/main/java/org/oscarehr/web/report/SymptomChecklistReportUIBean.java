@@ -19,6 +19,7 @@ import org.oscarehr.myoscar_server.ws.SurveyWs;
 import org.oscarehr.phr.PHRAuthentication;
 import org.oscarehr.phr.util.MumpsResultWrapper.Entry;
 import org.oscarehr.phr.util.MyOscarServerWebServicesManager;
+import org.oscarehr.phr.util.MyOscarUtils;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.xml.sax.SAXException;
@@ -52,7 +53,7 @@ public class SymptomChecklistReportUIBean {
 		return (symptomChecklistTemplateId);
 	}
 
-	public static ArrayList<MumpsSurveyResultsDisplayObject> getSymptomChecklistReportsResultList(HttpSession session, PHRAuthentication auth, int demographicId, int startIndex, int itemsToReturn) {
+	public static ArrayList<MumpsSurveyResultsDisplayObject> getSymptomChecklistReportsResultList(HttpSession session, PHRAuthentication auth, int demographicId, int startIndex, int itemsToReturn) throws NotAuthorisedException_Exception {
 		String sessionKey = "SymptomChecklistReportsResultList:" + demographicId + ":" + startIndex + ":" + itemsToReturn;
 
 		@SuppressWarnings("unchecked")
@@ -66,12 +67,13 @@ public class SymptomChecklistReportUIBean {
 		return (results);
 	}
 
-	private static ArrayList<MumpsSurveyResultsDisplayObject> getSymptomChecklistReportsResultListNoCache(PHRAuthentication auth, int demographicId, int startIndex, int itemsToReturn) {
+	private static ArrayList<MumpsSurveyResultsDisplayObject> getSymptomChecklistReportsResultListNoCache(PHRAuthentication auth, int demographicId, int startIndex, int itemsToReturn) throws NotAuthorisedException_Exception {
 
 		Demographic demographic = demographicDao.getDemographicById(demographicId);
 
 		SurveyWs surveyWs = MyOscarServerWebServicesManager.getSurveyWs(auth.getMyOscarUserId(), auth.getMyOscarPassword());
-		List<SurveyResultTransfer> surveyResultTransfers = surveyWs.getSurveyResults(new Long(demographic.getPin()), getSymptomChecklistTemplateId(auth), true, true, startIndex, itemsToReturn);
+		Long myOscarUserId=MyOscarUtils.getMyOscarUserId(auth, demographic.getMyOscarUserName());
+		List<SurveyResultTransfer> surveyResultTransfers = surveyWs.getSurveyResults(myOscarUserId, getSymptomChecklistTemplateId(auth), true, true, startIndex, itemsToReturn);
 
 		ArrayList<MumpsSurveyResultsDisplayObject> results = new ArrayList<MumpsSurveyResultsDisplayObject>();
 

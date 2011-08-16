@@ -158,7 +158,7 @@
         <ViolationValue>/src/main/java/org/oscarehr/phr/model/PHRMessage.java:HashMap m = new HashMap();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/phr/model/PHRMessage.java:Hashtable result = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/phr/model/PHRMessage.java:Hashtable results = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/phr/model/PHRMessage.java:this(subject, priorThreadMessage, messageBody, sender, recipientOscarId, recipientType, recipientPhrId, new ArrayList());</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/phr/model/PHRMessage.java:this(subject, priorThreadMessage, messageBody, sender, recipientOscarId, recipientType, myOscarUserId, new ArrayList());</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/phr/web/PHRGenericSendToPhrAction.java:ArrayList&lt;String&gt; eDocAttachmentActionId = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/phr/web/PHRMessageAction.java:ArrayList&lt;Integer&gt; statusList = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/provider/web/ProviderPropertyAction.java:ArrayList groupList = new ArrayList();</ViolationValue>
@@ -2694,11 +2694,11 @@
         <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/service/DSServiceMyDrugref.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/service/DSServiceMyDrugref.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/service/DSServiceMyDrugref.java:params.addElement(new Vector(uuids));</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/phr/model/PHRMessage.java:Hashtable h = findOscarId(PHRDocument.TYPE_DEMOGRAPHIC,this.getSenderPhr());</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/phr/model/PHRMessage.java://        Hashtable h = findOscarId(PHRDocument.TYPE_DEMOGRAPHIC,this.getSenderMyOscarUserId());</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/phr/model/PHRMessage.java:Hashtable result = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/phr/model/PHRMessage.java:Hashtable results = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/phr/model/PHRMessage.java:import java.util.Hashtable;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/phr/model/PHRMessage.java:public Hashtable findOscarId(int idType, String phrId) {</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/phr/model/PHRMessage.java:public Hashtable findOscarId(int idType, String myOscarUserName) {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/provider/web/ProviderPropertyAction.java:ArrayList&lt;Hashtable&gt; groups = EFormUtil.getEFormGroups();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/provider/web/ProviderPropertyAction.java:List&lt;Hashtable&gt; queues= queueDao.getQueues();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/provider/web/ProviderPropertyAction.java:Vector&lt;String&gt; vect = conUtil.teamVec;</ViolationValue>

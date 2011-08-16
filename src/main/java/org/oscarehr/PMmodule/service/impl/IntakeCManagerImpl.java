@@ -63,19 +63,7 @@ public class IntakeCManagerImpl extends BaseIntakeManager implements IntakeCMana
 			
 			client.setFirstName(form.getClientFirstName());
 			client.setLastName(form.getClientSurname());
-			client.setAddress("");
-			client.setChartNo("");
-			client.setCity("");
 			client.setDateJoined(new Date());
-			client.setEmail("");
-			client.setPhone("");
-			client.setPhone2("");
-			client.setPostal("");
-			client.setProvince("");
-			client.setRosterStatus("");
-			client.setPatientStatus("AC");
-			client.setPcnIndicator("");
-			client.setPin("");
 			
 			if (form.getYearOfBirth().equals("")) {
 				form.setYearOfBirth(null);
@@ -91,7 +79,6 @@ public class IntakeCManagerImpl extends BaseIntakeManager implements IntakeCMana
 			client.setMonthOfBirth(form.getMonthOfBirth());
 			client.setDateOfBirth(form.getDayOfBirth());
 			client.setProviderNo(String.valueOf(form.getProviderNo()));
-			client.setFamilyDoctor("");
 			
 			if (form.getRadioGender() != null && form.getRadioGender().length() > 0) {
 				int gender = Integer.parseInt(form.getRadioGender());
@@ -108,12 +95,6 @@ public class IntakeCManagerImpl extends BaseIntakeManager implements IntakeCMana
 			}
 			
 			client.setDateJoined(new Date());
-			client.setAddress("");
-			client.setCity("");
-			client.setEmail("");
-			client.setHcType("");
-			client.setHin("");
-			client.setVer("");
 
 			Calendar cal = Calendar.getInstance();
 			cal.set(Calendar.YEAR, 2100);

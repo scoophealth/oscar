@@ -106,14 +106,14 @@ public final class ProviderMyOscarIdData {
 	}
 
 	// get provider number knowing the indivo id
-	public static String getProviderNo(String myOscarId) {
+	public static String getProviderNo(String myOscarUserName) {
 		String sql = "";
 		String providerNo = "";
 		ResultSet rs = null;
 
 		try {
 
-			sql = "SELECT provider_no FROM property WHERE name = '" + strColName + "' AND value = '" + myOscarId + "'";
+			sql = "SELECT provider_no FROM property WHERE name = '" + strColName + "' AND value = '" + myOscarUserName + "'";
 			MiscUtils.getLogger().debug(sql);
 			rs = DBHandler.GetSQL(sql);
 

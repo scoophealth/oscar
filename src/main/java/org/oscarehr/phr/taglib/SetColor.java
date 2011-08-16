@@ -21,8 +21,6 @@
  *  Hamilton
  *  Ontario, Canada
  *
- * PHRMessageAction.java
- *
  * Created on June 4, 2007, 4:51 PM
  *
  */
