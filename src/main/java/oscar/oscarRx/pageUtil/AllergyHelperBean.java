@@ -33,7 +33,7 @@ public final class AllergyHelperBean {
 	}
 
 	private static void addLocalAllergies(Integer demographicId, ArrayList<AllergyDisplay> results, Locale locale) throws SQLException {
-		Allergy[] allergies = RxPatientData.getPatient(demographicId).getAllergies();
+		Allergy[] allergies = RxPatientData.getPatient(demographicId).getActiveAllergies();
 
 		if (allergies == null) return;
 
