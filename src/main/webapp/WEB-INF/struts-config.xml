@@ -2000,6 +2000,8 @@
 			<forward name="expired" path="/casemgmt/expired.jsp" />
 			<forward name="surveillance" path="/oscarSurveillance/CheckSurveillance.do" />
 		</action>
+		<action path="/OscarChartPrint" type="org.oscarehr.casemgmt.web.EChartPrintAction" parameter="method" scope="request">
+        </action>		
 		<action path="/ClientImage" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request" name="clientImageForm" input="/casemgmt/uploadimage.jsp">
 			<forward name="success" path="/casemgmt/uploadimage.jsp" />
 		</action>

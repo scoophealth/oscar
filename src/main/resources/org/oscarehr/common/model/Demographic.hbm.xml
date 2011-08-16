@@ -13,6 +13,7 @@
 		<id column="demographic_no" name="DemographicNo" type="integer">
 			<generator class="native" />
 		</id>
+		<property column="title" name="title" type="string" />
 		<property column="first_name" length="30" name="FirstName" not-null="true" type="string" />
 		<property column="last_name" length="30" name="LastName" not-null="true" type="string" />
 		<property column="sex" length="1" name="Sex" not-null="true" type="string" />
@@ -55,6 +56,7 @@
 		<property column="sin" length="15" name="Sin" type="string" />
 		<property name="anonymous" type="string" />
 		<property column="spoken_lang" name="spokenLanguage" />
+		<property column="official_lang" name="officialLanguage" type="string" />
 
 		<property name="HeadRecord" type="integer" formula="(select d.merged_to from demographic_merged d where d.deleted = 0 and d.demographic_no = demographic_no)" />
 

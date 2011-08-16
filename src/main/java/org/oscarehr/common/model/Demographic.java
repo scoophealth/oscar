@@ -102,8 +102,29 @@ public class Demographic implements Serializable {
         private String lastUpdateUser = null;
         private Date lastUpdateDate = null;
 
+        private String title;
+        private String officialLanguage;
         
-        public String getLastUpdateUser() {
+        
+        
+        
+        public String getTitle() {
+        	return title;
+        }
+
+		public void setTitle(String title) {
+        	this.title = title;
+        }
+
+		public String getOfficialLanguage() {
+        	return officialLanguage;
+        }
+
+		public void setOfficialLanguage(String officialLanguage) {
+        	this.officialLanguage = officialLanguage;
+        }
+
+		public String getLastUpdateUser() {
         	return lastUpdateUser;
         }
 
