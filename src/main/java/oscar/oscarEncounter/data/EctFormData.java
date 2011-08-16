@@ -274,6 +274,16 @@ public class EctFormData {
 		 */
 		public static final Comparator<PatientForm> CREATED_DATE_COMPARATOR = new Comparator<PatientForm>() {
 			public int compare(PatientForm o1, PatientForm o2) {
+				if( o2.created == null && o1.created == null ) {
+					return o2.edited.compareTo(o1.edited);
+				}
+				if( o2.created == null && o1.created != null ) {
+					return o2.edited.compareTo(o1.created);
+				}
+				if( o1.created == null && o2.created != null ) {					
+					return o2.created.compareTo(o1.edited);
+				}
+				
 				return (o2.created.compareTo(o1.created));
 			}
 		};
