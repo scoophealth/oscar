@@ -907,6 +907,7 @@
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java://Vector idWarningVec=new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:Hashtable dsPrefs=new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:Hashtable emptyHiddenRes=new Hashtable();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:Hashtable h = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:Hashtable hiddenR=new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:Vector all = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:Vector params = new Vector();</ViolationValue>
@@ -2365,6 +2366,7 @@
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPatientData.java:rs = DBHandler.GetSQL(</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPatientData.java:rs = DBHandler.GetSQL("SELECT * FROM allergies WHERE allergyid  = " + String.valueOf(id));</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPatientData.java:rs = DBHandler.GetSQL("SELECT * FROM allergies WHERE demographic_no = '" + getDemographicNo() + "' ORDER BY position");</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPatientData.java:rs = DBHandler.GetSQL("SELECT * FROM allergies WHERE demographic_no = '" + getDemographicNo() + "' and archived=0 ORDER BY position,severity_of_reaction");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPatientData.java:rs = DBHandler.GetSQL("SELECT * FROM diseases WHERE demographic_no = '" + getDemographicNo()+"'");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPharmacyData.java:DBHandler.RunSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPharmacyData.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
@@ -3910,6 +3912,7 @@
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:Hashtable dsPrefs=new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:Hashtable emptyHiddenRes=new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:Hashtable h = (Hashtable) request.getSession().getAttribute("hideResources");</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:Hashtable h = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:Hashtable hiddenR=new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:Hashtable hiddenResAttribute=(Hashtable)request.getSession().getAttribute("hideResources");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:Hashtable ht=(Hashtable)all.get(i);</ViolationValue>
@@ -4006,6 +4009,7 @@
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = (Vector) callWebservice("interaction_by_drugnames",params);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = (Vector) callWebservice("list_drug_class",params);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = (Vector) callWebservice("list_search_element",params);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = (Vector) callWebserviceLite("get_allergy_classes",params);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = (Vector) callWebserviceLite("get_allergy_warnings",params);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = (Vector) callWebserviceLite("get_drug",params);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = (Vector) callWebserviceLite("get_drug_2",params);</ViolationValue>
@@ -4043,6 +4047,7 @@
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:public Vector druglist2atclist(Vector druglist){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:public Vector getAISameByDrugCode(String drugRefId){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:public Vector getAlergyWarnings(String drugs,Vector allergies)throws Exception{</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:public Vector getAllergyClasses(Vector allergies)throws Exception{</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:public Vector getDistinctForms(){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:public Vector getDrugInfoPage(String drugRefId){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:public Vector getFormFromDrugCode(String drugCode){</ViolationValue>

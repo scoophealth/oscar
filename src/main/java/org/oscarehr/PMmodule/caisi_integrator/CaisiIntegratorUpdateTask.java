@@ -1077,7 +1077,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		logger.debug("pushing demographicAllergies facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
 		RxPatientData.Patient patient = RxPatientData.getPatient(demographicId);
-		RxPatientData.Patient.Allergy[] allergies = patient.getAllergies();
+		RxPatientData.Patient.Allergy[] allergies = patient.getActiveAllergies();
 		if (allergies==null || allergies.length==0) return;
 		
 		ArrayList<CachedDemographicAllergy> cachedAllergies = new ArrayList<CachedDemographicAllergy>();

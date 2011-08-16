@@ -797,6 +797,13 @@ public class RxDrugRef {
          Vector vec = (Vector) callWebserviceLite("get_allergy_warnings",params);             
          return vec;		         
      }
+    
+    public Vector getAllergyClasses(Vector allergies)throws Exception{
+        Vector params = new Vector();
+        params.addElement(allergies);
+        Vector vec = (Vector) callWebserviceLite("get_allergy_classes",params);             
+        return vec;		         
+    }
 
 
     public Vector getInactiveDate(String din) throws Exception{

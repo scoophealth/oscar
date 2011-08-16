@@ -113,7 +113,7 @@ public final class RxShowAllergyAction extends DispatchAction {
     	String demographicNo = request.getParameter("demographicNo");
     	int allergyId = Integer.parseInt(request.getParameter("allergyId"));
     	try {
-    		Allergy[] allergies = RxPatientData.getPatient(demographicNo).getAllergies();
+    		Allergy[] allergies = RxPatientData.getPatient(demographicNo).getActiveAllergies();
     		for(int x=0;x<allergies.length;x++) {
     			if(allergies[x].getAllergyId() == allergyId) {
     				if(direction.equals("up")) {    					
