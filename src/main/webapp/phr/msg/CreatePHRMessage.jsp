@@ -23,6 +23,11 @@
  * Ontario, Canada 
  */
 --%>
+<%@page import="org.apache.commons.lang.StringEscapeUtils"%>
+<%@page import="org.oscarehr.phr.util.MyOscarUtils"%>
+<%@page import="org.oscarehr.phr.PHRAuthentication"%>
+<%@page import="org.oscarehr.phr.util.MyOscarMessageManager"%>
+<%@page import="org.oscarehr.myoscar_server.ws.MessageTransfer"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
@@ -158,49 +163,81 @@
                     <tr>
                         <td>
                             <table> 
-                                 <%--
-         request.setAttribute("toName",toName);
-        request.setAttribute("toId",toId);
-        request.setAttribute("toType",toType);
-     
-        request.setAttribute("fromName",fromName);
-        request.setAttribute("fromId",fromId);
-        request.setAttribute("fromType",fromType);
-         
-                                        --%>
+                            	<%
+                            		Long replyToMessageId=null;
+                            		MessageTransfer replyToMessage=null;
+                            		try
+                            		{
+                            			replyToMessageId=new Long(request.getParameter("replyToMessageId"));
+                            			PHRAuthentication auth=MyOscarUtils.getPHRAuthentication(session);
+                            			replyToMessage=MyOscarMessageManager.getMessage(auth.getMyOscarUserId(), auth.getMyOscarPassword(), replyToMessageId);
+                            		}
+                            		catch (Exception e)
+                            		{
+                            			// this is okay, if the request is not a reply this will happen.
+                            		}
+                            	
+                            	%>
                                 <html:form action="/phr/PhrMessage">
                                     <tr>
                                         <th align="left" bgcolor="#DDDDFF">
-                                            
                                             <bean:message key="oscarMessenger.CreateMessage.msgMessage"/>
                                         </th>
                                     </tr>
                                     <tr>
-                                        <td bgcolor="#EEEEFF" valign=top>   <!--Message and Subject Cell--><c:out value=""/>
+                                        <td bgcolor="#EEEEFF" valign=top>
                                             <table>
                                                 <tr>
                                                     <td align="right">To :</td>
-                                                    <td><html-el:text name="to" property="to" size="30" value="${toName}"/>
-                                                        <html-el:hidden property="recipientOscarId" value="${toId}"/>
-                                                        <html-el:hidden property="recipientType" value="${toType}"/>
+                                                    <td>
+			                                        	<%
+			                                        		if (replyToMessage!=null)
+			                                        		{
+			                                        			%>
+			                                        				<input size="30" readonly="readonly" type="text" value="<%=StringEscapeUtils.escapeHtml(replyToMessage.getSenderPersonLastName()+", "+replyToMessage.getSenderPersonFirstName())%>" />
+			                                        			<%
+			                                        		}
+			                                        		else
+			                                        		{
+			                                        			%>
+			                                                    	<html-el:text name="to" property="to" size="30" value="${toName}"/>
+			                                        			<%
+			                                        		}
+			                                        	%>                                            
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td align="right"><bean:message key="oscarMessenger.CreateMessage.formSubject"/> : </td>
-                                                    <td><html-el:text name="subject" property="subject" size="67" value="${subject}"/></td>
+                                                    <td>
+			                                        	<%
+			                                        		if (replyToMessage!=null)
+			                                        		{
+			                                        			%>
+			                                        				<input size="67" readonly="readonly" type="text" value="Re: <%=StringEscapeUtils.escapeHtml(replyToMessage.getSubject())%>" />
+			                                        			<%
+			                                        		}
+			                                        		else
+			                                        		{
+			                                        			%>
+			                                                    	<html-el:text name="subject" property="subject" size="67" value="${subject}"/>
+			                                        			<%
+			                                        		}
+			                                        	%>
+                                                    </td>
                                                 </tr>
-                                                <c:if test="${!empty message}">
-                                                    <tr>
-                                                        <td >&nbsp;</td>
-                                                        
-                                                        <td >
-                                                            <pre style="border: 1px solid black;  background-color: white;" ><c:out value="${message.body}" />
-                                                            </pre>
-                                                            <html-el:hidden property="priorMessageId" value="${message.id}"/>
-                                                        </td>
-                                                    </tr>
-                                                    
-                                                </c:if> 
+	                                        	<%
+	                                        		if (replyToMessage!=null)
+	                                        		{
+	                                        			%>
+		                                                    <tr>
+		                                                        <td style="text-align:right;vertical-align:top">Re:</td>
+		                                                        <td >
+		                                                            <textarea disabled="disabled" readonly="readonly" cols="60" rows="4" style="border: 1px solid black;color:black" ><%=StringEscapeUtils.escapeHtml(replyToMessage.getContents())%></textarea>
+		                                                        </td>
+		                                                    </tr>
+	                                        			<%
+	                                        		}
+	                                        	%>
                                                 <tr>
                                                     <td>&nbsp;</td>
                                                     <td><html:textarea value="" name="body" styleId="message" property="body" cols="60" rows="18"/></td>
@@ -208,8 +245,22 @@
                                                 </tr>
                                             </table>
                                            
-                                            <html-el:hidden property="demographic" value="${demographicNo}"/>
-                                            <html-el:hidden property="method" value="send"/>
+	                                     	<%
+                                        		if (replyToMessage!=null)
+                                        		{
+                                        			%>
+                                        				<input type="hidden" name="replyToMessageId" value="<%=replyToMessageId%>" />
+                                        				<input type="hidden" name="method" value="sendReply" />
+                                        			<%
+                                        		}
+                                        		else
+                                        		{
+                                        			%>
+			                                            <html-el:hidden property="method" value="send" />
+                                        			<%
+                                        		}
+                                        	%>
+                                        
                                             <input type="submit" class="ControlPushButton" value="<bean:message key="oscarMessenger.CreateMessage.btnSendMessage"/>" >
                                         </td>
                                     </tr>
