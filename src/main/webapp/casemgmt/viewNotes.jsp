@@ -31,6 +31,11 @@
 <%@page import="org.oscarehr.provider.web.CppPreferencesUIBean"%>
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="org.oscarehr.casemgmt.web.CaseManagementViewAction"%>
+<%@page import="org.oscarehr.common.dao.UserPropertyDAO"%>
+<%@page import="org.oscarehr.common.model.UserProperty"%>
+<%@page import="org.oscarehr.util.SpringUtils"%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
+
 
 <c:set var="ctx" value="${pageContext.request.contextPath}"
 	scope="request" />
@@ -80,10 +85,21 @@
                 }             
                 
                 String htmlNoteTxt = note.getNote() + addlData;
-                //htmlNoteTxt = htmlNoteTxt.replaceAll("\n", "<br>");
-		if(htmlNoteTxt.indexOf("\n")!=-1) {
-                	htmlNoteTxt = htmlNoteTxt.substring(0,htmlNoteTxt.indexOf("\n")) + "...";
+               
+                //single line or 'normal' view.
+                boolean singleLine = Boolean.valueOf(oscar.OscarProperties.getInstance().getProperty("echart.cpp.single_line","false"));
+                UserPropertyDAO userPropertyDao = (UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
+                UserProperty prop = userPropertyDao.getProp(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(),UserProperty.CPP_SINGLE_LINE);
+                if(prop != null) {
+                	singleLine = Boolean.valueOf((prop.getValue().equals("yes")?true:false));
                 }
+                if(singleLine) {
+                	if(htmlNoteTxt.indexOf("\n")!=-1) {
+                    	htmlNoteTxt = htmlNoteTxt.substring(0,htmlNoteTxt.indexOf("\n")) + "...";
+                    }	
+                } else {
+                	htmlNoteTxt = htmlNoteTxt.replaceAll("\n", "<br>");
+                }                          
                 
                 String noteTxt = note.getNote();
                 noteTxt = noteTxt.replaceAll("\"","");

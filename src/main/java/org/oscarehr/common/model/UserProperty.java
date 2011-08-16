@@ -77,7 +77,7 @@ public class UserProperty implements Serializable {
     public final static String DEFAULT_REFERRAL_TYPE = "default_referral_type";
     public final static String DEFAULT_PAYEE = "default_payee";
     public final static String DEFAULT_DX_CODE = "default_dx_code";
-     
+    public final static String CPP_SINGLE_LINE="cpp_single_line";
     
     private long id;
     private String name;
