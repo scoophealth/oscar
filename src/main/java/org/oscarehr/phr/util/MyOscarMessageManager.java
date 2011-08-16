@@ -36,7 +36,8 @@ public class MyOscarMessageManager {
 	public static MessageTransfer getMessage(Long myOscarUserId, String myOscarPassword, Long messageId)
 	{
 		MessageWs messageWs=MyOscarServerWebServicesManager.getMessageWs(myOscarUserId, myOscarPassword);
-		return(messageWs.getMessage(messageId));
+		MessageTransfer messageTransfer=messageWs.getMessage(messageId);
+		return(messageTransfer);
 	}
 	
 	private static void logMessageRetrieved(MessageTransfer messageTransfer) {
@@ -55,5 +56,11 @@ public class MyOscarMessageManager {
 	{
 		MessageWs messageWs=MyOscarServerWebServicesManager.getMessageWs(myOscarUserId, myOscarPassword);
 		messageWs.markAsRead(messageId);
+	}
+
+	public static void sendReply(Long myOscarUserId, String myOscarPassword, Long messageId, String contents)
+	{
+		MessageWs messageWs=MyOscarServerWebServicesManager.getMessageWs(myOscarUserId, myOscarPassword);
+		messageWs.replyToMessage(messageId, contents);
 	}
 }

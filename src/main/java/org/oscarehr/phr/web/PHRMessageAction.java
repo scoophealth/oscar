@@ -35,6 +35,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -48,6 +49,7 @@ import org.oscarehr.phr.model.PHRAction;
 import org.oscarehr.phr.model.PHRDocument;
 import org.oscarehr.phr.model.PHRMessage;
 import org.oscarehr.phr.service.PHRService;
+import org.oscarehr.phr.util.MyOscarMessageManager;
 import org.oscarehr.phr.util.MyOscarUtils;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -211,58 +213,55 @@ public class PHRMessageAction extends DispatchAction {
 	// Reply is a create but displays the message being re
 	//
 	public ActionForward reply(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		/*
-		 * PHRAuthentication auth = (PHRAuthentication) request.getSession().getAttribute(PHRAuthentication.SESSION_PHR_AUTH); log.debug("AUTH "+auth); String indivoId = auth.getUserId(); String ticket = auth.getToken();
-		 */
 
-		String id = request.getParameter("id");
-
-		log.debug(id);
-		PHRDocument doc = phrDocumentDAO.getDocumentById(id);
-
-		if (doc == null) {
-
-			log.debug("DOC WAS NULL");
-			// FORWARD TO PAGE SAYING DOCUMENT NOT FOUND ON SYSTEM
-		}
-		request.setAttribute("message", new PHRMessage(doc));
-		String msgRe = doc.getDocSubject();
-		if (msgRe != null && !msgRe.startsWith("Re:")) {
-			msgRe = "Re: " + msgRe;
-		}
-		request.setAttribute("subject", msgRe); // TODO: check to see if the string already starts with re:
-		// List refList = phrDocumentDAO.getReferencedMessages(doc);
-		// request.setAttribute("refList",refList);
-
-        String toName ="";
-        String toId   = "";
-        String toType ="";
-
-		if (doc.getSenderType() == PHRDocument.TYPE_DEMOGRAPHIC) {
-
-			toId = doc.getSenderOscar();
-			DemographicData dd = new DemographicData();
-			DemographicData.Demographic d = dd.getDemographic(toId);
-			toName = d.getFirstName() + " " + d.getLastName();
-			toType = "" + doc.getSenderType();
-
-		}
-
-		String provNo = (String) request.getSession().getAttribute("user");
-		ProviderData pp = new ProviderData();
-		String providerName = pp.getProviderName(provNo);
-
-		String fromName = providerName;
-		String fromId = provNo;
-		String fromType = "" + PHRDocument.TYPE_PROVIDER; // ONLY PROVIDERS WILL BE SENDING FROM OSCAR
-
-		request.setAttribute("toName", toName);
-		request.setAttribute("toId", toId);
-		request.setAttribute("toType", toType);
-
-		request.setAttribute("fromName", fromName);
-		request.setAttribute("fromId", fromId);
-		request.setAttribute("fromType", fromType);
+//		String id = request.getParameter("id");
+//
+//		log.debug(id);
+//		PHRDocument doc = phrDocumentDAO.getDocumentById(id);
+//
+//		if (doc == null) {
+//
+//			log.debug("DOC WAS NULL");
+//			// FORWARD TO PAGE SAYING DOCUMENT NOT FOUND ON SYSTEM
+//		}
+//		request.setAttribute("message", new PHRMessage(doc));
+//		String msgRe = doc.getDocSubject();
+//		if (msgRe != null && !msgRe.startsWith("Re:")) {
+//			msgRe = "Re: " + msgRe;
+//		}
+//		request.setAttribute("subject", msgRe); // TODO: check to see if the string already starts with re:
+//		// List refList = phrDocumentDAO.getReferencedMessages(doc);
+//		// request.setAttribute("refList",refList);
+//
+//        String toName ="";
+//        String toId   = "";
+//        String toType ="";
+//
+//		if (doc.getSenderType() == PHRDocument.TYPE_DEMOGRAPHIC) {
+//
+//			toId = doc.getSenderOscar();
+//			DemographicData dd = new DemographicData();
+//			DemographicData.Demographic d = dd.getDemographic(toId);
+//			toName = d.getFirstName() + " " + d.getLastName();
+//			toType = "" + doc.getSenderType();
+//
+//		}
+//
+//		String provNo = (String) request.getSession().getAttribute("user");
+//		ProviderData pp = new ProviderData();
+//		String providerName = pp.getProviderName(provNo);
+//
+//		String fromName = providerName;
+//		String fromId = provNo;
+//		String fromType = "" + PHRDocument.TYPE_PROVIDER; // ONLY PROVIDERS WILL BE SENDING FROM OSCAR
+//
+//		request.setAttribute("toName", toName);
+//		request.setAttribute("toId", toId);
+//		request.setAttribute("toType", toType);
+//
+//		request.setAttribute("fromName", fromName);
+//		request.setAttribute("fromId", fromId);
+//		request.setAttribute("fromType", fromType);
 
 		return mapping.findForward("create");
 	}
@@ -295,6 +294,16 @@ public class PHRMessageAction extends DispatchAction {
 		return mapping.findForward("create");
 	}
 
+	public ActionForward sendReply(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		Long replyToMessageId=new Long(request.getParameter("replyToMessageId"));
+		String message=StringUtils.trimToNull(request.getParameter("body"));
+		
+		PHRAuthentication auth=MyOscarUtils.getPHRAuthentication(request.getSession());
+		MyOscarMessageManager.sendReply(auth.getMyOscarUserId(), auth.getMyOscarPassword(), replyToMessageId, message);
+		
+		return mapping.findForward("view");		
+	}
+		
 	public ActionForward send(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String provNo = (String) request.getSession().getAttribute("user");
 		//
