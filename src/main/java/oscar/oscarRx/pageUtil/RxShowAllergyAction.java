@@ -33,8 +33,12 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.common.dao.UserPropertyDAO;
+import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
+import oscar.OscarProperties;
 import oscar.oscarRx.data.RxPatientData;
 import oscar.oscarRx.data.RxPatientData.Patient.Allergy;
 
@@ -57,6 +61,18 @@ public final class RxShowAllergyAction extends DispatchAction {
         if(request.getSession().getAttribute("user") == null  || !( ((String) request.getSession().getAttribute("userprofession")).equalsIgnoreCase("doctor") )  ){
             return (mapping.findForward("Logout"));
         }
+        
+        boolean useRx3=false;
+        String rx3 = OscarProperties.getInstance().getProperty("RX3");
+        if(rx3!=null&&rx3.equalsIgnoreCase("yes")) {
+        	useRx3=true;
+        }        
+        UserPropertyDAO userPropertyDAO = (UserPropertyDAO) SpringUtils.getBean("UserPropertyDAO");
+        String provider = (String) request.getSession().getAttribute("user");        
+        UserProperty propUseRx3 = userPropertyDAO.getProp(provider, UserProperty.RX_USE_RX3);
+        if(propUseRx3!=null && propUseRx3.getValue().equalsIgnoreCase("yes"))
+                useRx3=true;
+        
         
         String user_no = (String) request.getSession().getAttribute("user");
         String demo_no = (String) request.getParameter("demographicNo");
@@ -99,9 +115,13 @@ public final class RxShowAllergyAction extends DispatchAction {
             throw new ServletException(ex);
         }
         
+        String forward="success";
+        if(useRx3) {
+        	forward="successRX3";
+        }
         if(patient!=null) {
             request.getSession().setAttribute("Patient", patient);
-            return (mapping.findForward("success"));            
+            return (mapping.findForward(forward));            
         } else {//no records found        
             response.sendRedirect("error.html");
             return null;
