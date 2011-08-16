@@ -69,8 +69,8 @@ public class indivoCheck extends TagSupport {
             if( ProviderMyOscarIdData.idIsSet(providerNo) ) {
                 if( demoNo != null ) {
                    DemographicData.Demographic demo = new DemographicData().getDemographic(demoNo); 
-                   String pin = demo.getIndivoId();
-                   if( pin != null ) 
+                   String myOscarUserName = demo.getMyOscarUserName();
+                   if( myOscarUserName != null ) 
                         conditionMet = true;
                 }
                 else

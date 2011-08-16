@@ -27,7 +27,7 @@
 		<property column="email" length="100" name="Email" type="string" />
 		<property column="phone" length="20" name="Phone" type="string" />
 		<property column="phone2" length="20" name="Phone2" type="string" />
-		<property column="pin" length="10" name="Pin" type="string" />
+		<property column="myOscarUserName" length="255" name="myOscarUserName" type="string" />
 
 		<property column="hin" length="20" name="Hin" type="string" />
 		<property column="ver" length="3" name="Ver" type="string" />

@@ -429,7 +429,7 @@ function dxScriptAttach(name2) {
 						<table border="0">							
 							<tr>
 								<td nowrap="nowrap"><bean:message key="provider.pref.myoscar.id"/>:</td>
-								<td><input type="text" size="20" <%=UserPreferenceAction.getTextData(prefs,"pref."+UserProperty.MYOSCAR_ID)%>/>@myoscar.org</td>
+								<td><input type="text" size="20" <%=UserPreferenceAction.getTextData(prefs,"pref."+UserProperty.MYOSCAR_ID)%>/></td>
 							</tr>
 							<tr>
 								<td nowrap="nowrap"><bean:message key="provider.pref.myoscar.mymeds"/>: </td>

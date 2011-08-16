@@ -40,7 +40,7 @@ String fullName = prov.getFirstName() + " " + prov.getSurname();
 String role = "provider";
 
 DemographicData demoData = new DemographicData();
-String patientPingId = demoData.getDemographic(""+bean.getDemographicNo()).getPin();
+String patientPingId = demoData.getDemographic(""+bean.getDemographicNo()).getMyOscarUserName();
 
 Send2Indivo indivoServer = new Send2Indivo(actor, actorPassword, fullName, role);
 String server = OscarProperties.getInstance().getProperty("INDIVO_SERVER");

@@ -14,6 +14,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.phr.PHRAuthentication;
+import org.oscarehr.phr.util.MyOscarUtils;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
@@ -58,13 +59,14 @@ public class PHRViewPatientRecord extends DispatchAction {
                 return null;
             }
             DemographicData demographicData = new DemographicData();
-            String patientMyOscarId = demographicData.getDemographic(demographicNo).getIndivoId();
+            Long myOscarUserId = MyOscarUtils.getMyOscarUserId(auth, demographicData.getDemographic(demographicNo).getMyOscarUserName());
+
            
 //            request.setAttribute("userid", auth.getUserId());
 //            request.setAttribute("ticket", auth.getToken());
             request.setAttribute("userName", auth.getMyOscarUserName());
             request.setAttribute("password", auth.getMyOscarPassword());
-            request.setAttribute("viewpatient", patientMyOscarId);
+            request.setAttribute("viewpatient", myOscarUserId);
             request.setAttribute("url", phrPath + (phrPath.endsWith("/")?"":"/") + "patient_view_action.jsp");
             return mapping.findForward("phr");
         }

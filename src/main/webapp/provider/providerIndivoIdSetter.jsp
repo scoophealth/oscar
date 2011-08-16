@@ -33,7 +33,6 @@ if(session.getValue("user") == null)
   
 String curUser_no;
 curUser_no = (String) session.getAttribute("user");
-String domain = "@myoscar.org";
 %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
@@ -85,17 +84,16 @@ String domain = "@myoscar.org";
                {
       
             %> <html:form action="/setMyOscarId.do">
-			<html:hidden property="myOscarDomain" value="<%=domain%>" />
 			<bean:message key="provider.setMyOscarLogin.msgEdit" />&nbsp;&nbsp;
                <html:text property="myOscarLoginId" value="<%=login%>"
-				size="20" /><%=domain%>
+				size="20" />
 			<br>
 			<input type="submit" onclick="return validate();"
 				value="<bean:message key="provider.setMyOscarLogin.btnSubmit"/>" />
 		</html:form> <%
                }               
                else if( ((String)request.getAttribute("status")).equals("complete") ) {
-            %> <bean:message key="provider.setMyOscarLogin.msgSuccess" />&nbsp;'<%=login + domain%>'
+            %> <bean:message key="provider.setMyOscarLogin.msgSuccess" />&nbsp;'<%=login%>'
 
 		<%
                }

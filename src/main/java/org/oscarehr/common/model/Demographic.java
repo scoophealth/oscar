@@ -54,7 +54,7 @@ public class Demographic implements Serializable {
         private Date patientStatusDate;
 	private String rosterStatus;
 	private String providerNo;
-	private String pin;
+	private String myOscarUserName;
 	private String hin;
 	private String address;
 	private String province;
@@ -167,28 +167,15 @@ public class Demographic implements Serializable {
 		demographic.setHin(hin);
 		demographic.setVer(ver);
 
-		demographic.setChartNo(StringUtils.EMPTY);
-		demographic.setFamilyDoctor(StringUtils.EMPTY);
 		demographic.setHcType(DEFAULT_HEATH_CARD_TYPE);
-		demographic.setPcnIndicator(StringUtils.EMPTY);
 		demographic.setPatientStatus(DEFAULT_PATIENT_STATUS);
                 demographic.setPatientStatusDate(new Date());
-		demographic.setPin(StringUtils.EMPTY);
-		demographic.setRosterStatus(StringUtils.EMPTY);
 		demographic.setSex(gender == null || gender.length() == 0 ? DEFAULT_SEX : gender.substring(0, 1).toUpperCase());
 
 		demographic.setDateJoined(new Date());
 		//demographic.setEffDate(new Date());		
 		demographic.setEndDate(DateTimeFormatUtils.getDateFromString(DEFAULT_FUTURE_DATE));
 		//demographic.setHcRenewDate(DateTimeFormatUtils.getDateFromString(DEFAULT_FUTURE_DATE));
-
-		demographic.setAddress(StringUtils.EMPTY);
-		demographic.setCity(StringUtils.EMPTY);
-		demographic.setProvince(StringUtils.EMPTY);
-		demographic.setPostal(StringUtils.EMPTY);
-		demographic.setEmail(StringUtils.EMPTY);
-		demographic.setPhone(StringUtils.EMPTY);
-		demographic.setPhone2(StringUtils.EMPTY);
 
 		return demographic;
 	}
@@ -314,21 +301,15 @@ public class Demographic implements Serializable {
 		this.providerNo = providerNo;
 	}
 
-	/**
-	 * Return the value associated with the column: pin
-	 */
-	public String getPin() {
-		return pin;
-	}
 
-	/**
-	 * Set the value related to the column: pin
-	 * 
-	 * @param pin the pin value
-	 */
-	public void setPin(String pin) {
-		this.pin = pin;
-	}
+
+	public String getMyOscarUserName() {
+    	return (myOscarUserName);
+    }
+
+	public void setMyOscarUserName(String myOscarUserName) {
+    	this.myOscarUserName = StringUtils.trimToNull(myOscarUserName);
+    }
 
 	/**
 	 * Return the value associated with the column: hin

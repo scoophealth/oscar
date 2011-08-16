@@ -21,10 +21,6 @@
  *  Hamilton
  *  Ontario, Canada
  *
- * PHRMessageAction.java
- *
- * Created on June 4, 2007, 4:51 PM
- *
  */
 
 package org.oscarehr.phr.web;
@@ -72,7 +68,6 @@ public class PHRUserManagementAction extends DispatchAction {
        return super.execute(mapping, form, request, response);
     }
     
-    /** Creates a new instance of PHRMessageAction */
     public PHRUserManagementAction() {
     }
     

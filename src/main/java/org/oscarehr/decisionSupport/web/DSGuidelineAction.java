@@ -37,7 +37,6 @@ public class DSGuidelineAction extends DispatchAction {
        return super.execute(mapping, form, request, response);
     }
 
-    /** Creates a new instance of PHRMessageAction */
     public DSGuidelineAction() {
 
     }

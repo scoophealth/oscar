@@ -1,3 +1,9 @@
+<%@page import="oscar.util.DateUtils"%>
+<%@page import="org.apache.commons.lang.StringEscapeUtils"%>
+<%@page import="org.oscarehr.common.model.Demographic"%>
+<%@page import="org.oscarehr.phr.util.MyOscarUtils"%>
+<%@page import="org.oscarehr.phr.web.MyOscarMessagesHelper"%>
+<%@page import="org.oscarehr.myoscar_server.ws.MessageTransfer"%>
 <%@page import="org.oscarehr.myoscar_server.ws.MedicalDataType"%>
 <%@ page import="java.util.ArrayList"%>
 <%@ page import="java.net.URLEncoder"%>
@@ -222,6 +228,12 @@ request.setAttribute("pageMethod",pageMethod);
             url += msgBody + '&appointmentDate=&startTime=&status=';
             popup(755,1048,url,'apptProvider');
         }
+        
+        function gotoEchart2(demoNo) {
+            var url = '<%=request.getContextPath()%>/oscarEncounter/IncomingEncounter.do?demographicNo='+ demoNo';
+            popup(755,1048,url,'apptProvider');
+        }
+        
         </script>
     </head>
 
@@ -588,6 +600,72 @@ request.setAttribute("pageMethod",pageMethod);
                         </tr>
                     </c:forEach>               
  <%-- Inbox-------------------------------------------------------------- --%>
+	
+				<%
+					PHRAuthentication auth = (PHRAuthentication) session.getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
+					if (auth!=null)
+					{
+						ArrayList<MessageTransfer> messages=MyOscarMessagesHelper.getMessages(session);
+						for (MessageTransfer message : messages)
+						{
+							%>
+		                        <tr class="<%=message.getFirstViewDate()!=null?"normal":"new"%>">
+		                            <td bgcolor="#EEEEFF" width="30">
+		                            	<%
+		                            		if (message.getFirstRepliedDate()!=null)
+		                            		{
+		                            			%>
+		                            				-->
+		                            			<%
+		                            		}
+		                            	%>
+		                            </td>
+		                            <td bgcolor="#EEEEFF" width="75">
+		                            	<%=message.getFirstViewDate()!=null?"read":"new"%>
+		                            </td>
+		                            <td bgcolor="#EEEEFF">                                
+		                                <%
+		                                	String myOscarUserName=message.getSenderPersonUserName();
+		                                	Demographic demographic=MyOscarUtils.getDemographicByMyOscarUserName(myOscarUserName);
+		                                	if (demographic!=null)
+		                                	{
+				                                %>
+				                               		<a href="#" onClick="gotoEchart2(<%=demographic.getDemographicNo()%>);" >
+			                               		<%
+		                                	}
+			                            %>
+		                                <%=StringEscapeUtils.escapeHtml(message.getSenderPersonLastName()+", "+message.getSenderPersonFirstName())%>
+										<%
+		                                	if (demographic!=null)
+		                                	{
+				                                %>
+		                                			</a>
+	                                			<%
+		                                	}
+	                                	%>
+		                            </td>
+		                            <td bgcolor="#EEEEFF">
+		                                <a href="<%=request.getContextPath()%>/phr/PhrMessage?&method=read&comingfrom=viewMessages&id=<%=message.getId()%>">
+		                                   <%=StringEscapeUtils.escapeHtml(message.getSubject())%>
+		                                </a>
+		                            </td>
+		                            <td bgcolor="#EEEEFF"> 
+	                                   <%=DateUtils.formatDate(message.getSendDate(), request.getLocale())%>
+										&nbsp;
+	                                   <%=DateUtils.formatTime(message.getSendDate(), request.getLocale())%>
+		                            </td>
+		                            <td>
+		                                <a href"<%=request.getContextPath()%>/phr/PhrMessage?&method=archive&id=<%=message.getId()%>"  >
+		                                   Archive
+		                                </a>
+		                            </td>
+		                        </tr>						
+							<%
+						}
+					}
+				%>
+
+ <%-- Inbox-------------------------------------------------------------- --%>
                     
                 <nested:notEmpty name="indivoMessages">
                     <% ArrayList<PHRMessage>phrMsgs = (ArrayList<PHRMessage>)session.getAttribute("indivoMessageBodies");%>
@@ -609,8 +687,8 @@ request.setAttribute("pageMethod",pageMethod);
                             </td>
                             <td bgcolor="#EEEEFF">                                
                                 
-                                <a href="javascript: function myFunction() {return false; }" onClick="gotoEchart(<c:out value="${iMessage.senderDemographicNo}"/>, '<%=URLEncoder.encode(phrMsgs.get(msgIdx).getBody().replaceAll("\n","<br>"))%>');" >
-                                    <c:out value="${iMessage.senderPhr}"/>
+                                <a href="javascript: function myFunction() {return false; }" onClick="gotoEchart(<c:out value="${iMessage.senderOscar}"/>, '<%=URLEncoder.encode(phrMsgs.get(msgIdx).getDocContent().replaceAll("\n","<br>"))%>');" >
+                                    <c:out value="${iMessage.senderMyOscarUserId}"/>
                                 </a>
                             </td>
                             <td bgcolor="#EEEEFF">
