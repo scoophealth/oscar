@@ -61,9 +61,6 @@ function BackToOscar()
 
 <body class="BodyStyle" vlink="#0000FF" >
 
-<html:form action="/phr/PhrMessage">
-   
-<!--  -->
     <table  class="MainTable" id="scrollNumber1" name="encounterTable">
         <tr class="MainTableTopRow">
             <td class="MainTableTopRowLeftColumn">
@@ -132,7 +129,7 @@ function BackToOscar()
                                     <bean:message key="oscarMessenger.ViewMessage.msgTo"/>:
                                     </td>
                                     <td class="Printable" bgcolor="#BFBFFF">
-                                    	<%=StringEscapeUtils.escapeHtml(messageTransfer.getRecipientPersonLastName()+", "+messageTransfer.getRecipientPersonLastName())%>
+                                    	<%=StringEscapeUtils.escapeHtml(messageTransfer.getRecipientPersonLastName()+", "+messageTransfer.getRecipientPersonFirstName())%>
                                     </td>
                                 </tr>
                                 <tr>
@@ -156,13 +153,7 @@ function BackToOscar()
                                     <td bgcolor="#EEEEFF" ></td>
                                     <td bgcolor="#EEEEFF" >
                                         <textarea name="msgBody" wrap="hard" readonly="true" rows="18" cols="60" ><%=StringEscapeUtils.escapeHtml(messageTransfer.getContents())%></textarea><br>
-                                        <logic:notPresent name="noreply">
-                                            <html:submit styleClass="ControlPushButton" property="reply">
-                                                <bean:message key="oscarMessenger.ViewMessage.btnReply"/>
-                                            </html:submit>
-                                        </logic:notPresent>
-                                        <input type="hidden" name="messageId" value="<%=messageId%>"/>
-                                        <input type="hidden" name="method" value="reply"/>
+                                        <input class="ControlPushButton" type="button" value="<bean:message key="oscarMessenger.ViewMessage.btnReply"/>" onclick="window.location.href='<%=request.getContextPath()%>/phr/msg/CreatePHRMessage.jsp?replyToMessageId=<%=messageId%>'"/>
                                      </td>
                                 </tr>
                                 <tr>
@@ -184,7 +175,6 @@ function BackToOscar()
             </td>
         </tr>
     </table>
- </html:form>
 </body>
 
 </html:html>
