@@ -343,8 +343,8 @@ function checkHin() {
 function checkTypeInEdit() {
   if ( !checkName() ) return false;
   if ( !checkDob() ) return false;
-  if ( !checkRosterDates() ) return false;
-  if ( !checkPatientStatusDate() ) return false;
+  //if ( !checkRosterDates() ) return false;
+  //if ( !checkPatientStatusDate() ) return false;
   if ( !checkHin() ) return false;
   //if ( !checkAllDate() ) return false;
   return(true);
