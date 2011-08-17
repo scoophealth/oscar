@@ -27,15 +27,27 @@
 	import="oscar.oscarResearch.oscarDxResearch.util.dxResearchCodingSystem"%>
 <%@ page
 	import="oscar.OscarProperties"%>
+<%@ page import="com.quatro.service.security.SecurityManager" %>
+
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 <%   
     if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
-
+	String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+	
 	String disableVal = OscarProperties.getInstance().getProperty("dxResearch_disable_entry", "false");
 	boolean disable = Boolean.valueOf(disableVal).booleanValue();
+	SecurityManager sm = new SecurityManager();
+	if(sm.hasWriteAccess("_dx.code",roleName$,true)) {
+		disable=false;
+	}
+	boolean showQuicklist=false;
+	
+	if(sm.hasWriteAccess("_dx.quicklist",roleName$)) {
+		showQuicklist=true;
+	}
 	
     String user_no = (String) session.getAttribute("user");
     String color ="";
@@ -213,7 +225,13 @@ function update_date(did, demoNo, provNo) {
 							<td class="heading"><bean:message key="oscarResearch.oscarDxResearch.quickList" /></td>
 						</tr>
 						<tr>
-							<td><%-- RJ --%> <html:select property="quickList" style="width:200px" onchange="javascript:changeList();">
+							<%
+								String disableQl="false";
+								if(!showQuicklist) {
+									disableQl = "true";
+								}
+							%>
+							<td><%-- RJ --%> <html:select property="quickList" style="width:200px" onchange="javascript:changeList();" disabled="<%=Boolean.valueOf(disableQl) %>">
 								<logic:iterate id="quickLists" name="allQuickLists"
 									property="dxQuickListBeanVector">
 									<option value="<bean:write name="quickLists" property="quickListName" />"
