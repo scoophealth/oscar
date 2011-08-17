@@ -1684,8 +1684,8 @@ if(oscarVariables.getProperty("demographicExt") != null) {
 								<td align="right"><b><bean:message
 									key="demographic.demographiceditdemographic.formPIN" />: </b></td>
 								<td align="left"><input type="text" name="pin" size="30"
-									value="<%=apptMainBean.getString(rs,"pin")!=null? apptMainBean.getString(rs,"pin") : ""%>"><br />
-								<%if (apptMainBean.getString(rs,"pin")==null || apptMainBean.getString(rs,"pin").equals("")) {%>
+									value="<%=apptMainBean.getString(rs,"myOscarUserName")!=null? apptMainBean.getString(rs,"myOscarUserName") : ""%>"><br />
+								<%if (apptMainBean.getString(rs,"myOscarUserName")==null || apptMainBean.getString(rs,"myOscarUserName").equals("")) {%>
 								<a href="javascript:"
 									onclick="popup(600, 650, '../phr/indivo/RegisterIndivo.jsp?demographicNo=<%=demographic_no%>', 'indivoRegistration');"><sub
 									style="white-space: nowrap;"><bean:message key="demographic.demographiceditdemographic.msgRegisterMyOSCAR"/></sub></a> <%}%>
