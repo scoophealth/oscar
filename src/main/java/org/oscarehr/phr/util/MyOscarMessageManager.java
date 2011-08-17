@@ -62,5 +62,16 @@ public class MyOscarMessageManager {
 	{
 		MessageWs messageWs=MyOscarServerWebServicesManager.getMessageWs(myOscarUserId, myOscarPassword);
 		messageWs.replyToMessage(messageId, contents);
+		
+		//--- log reply ---
+		RemoteDataLog remoteDataLog=new RemoteDataLog();
+		
+		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+		remoteDataLog.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
+		remoteDataLog.setDocumentId(MyOscarServerWebServicesManager.getMyOscarServerBaseUrl(), "MESSAGE_REPLY", null);
+		remoteDataLog.setAction(RemoteDataLog.Action.SEND);
+		remoteDataLog.setDocumentContents("repliedToMessageId="+messageId+", contents="+contents);
+		
+		remoteDataLogDao.persist(remoteDataLog);
 	}
 }
