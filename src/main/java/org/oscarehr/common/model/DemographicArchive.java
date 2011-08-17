@@ -40,8 +40,7 @@ public class DemographicArchive extends AbstractModel<Long> implements Serializa
 	private String phone2 = null;
 	@Column(name = "email")
 	private String email = null;
-	@Column(name = "pin")
-	private String pin = null;
+	private String myOscarUserName = null;
 	@Column(name = "year_of_birth")
 	private String yearOfBirth = null;
 	@Column(name = "month_of_birth")
@@ -197,14 +196,15 @@ public class DemographicArchive extends AbstractModel<Long> implements Serializa
             this.email = s;
         }
 
-        public String getPin() {
-            return this.pin;
-        }
-        public void setPin(String s) {
-            this.pin = s;
+        public String getMyOscarUserName() {
+        	return (myOscarUserName);
         }
 
-        public String getYearOfBirth() {
+		public void setMyOscarUserName(String myOscarUserName) {
+        	this.myOscarUserName = myOscarUserName;
+        }
+
+		public String getYearOfBirth() {
             return this.yearOfBirth;
         }
         public void setYearOfBirth(String s) {
