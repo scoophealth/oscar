@@ -8090,7 +8090,7 @@ CREATE TABLE demographicArchive (
   phone varchar(20),
   phone2 varchar(20),
   email varchar(100),
-  pin varchar(255),
+  myOscarUserName varchar(255),
   year_of_birth varchar(4),
   month_of_birth char(2),
   date_of_birth char(2),

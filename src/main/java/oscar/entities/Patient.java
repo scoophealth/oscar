@@ -35,7 +35,7 @@ public class Patient {
   private String postal;
   private String phone2;
   private String email;
-  private int pin;
+  private int myOscarUserName;
   private String yearOfBirth;
   private String monthOfBirth;
   private String dateOfBirth;
@@ -128,12 +128,12 @@ public class Patient {
     this.email = email;
   }
 
-  public int getPin() {
-    return pin;
+  public int getMyOscarUserName() {
+	return (myOscarUserName);
   }
 
-  public void setPin(int pin) {
-    this.pin = pin;
+  public void setMyOscarUserName(int myOscarUserName) {
+	this.myOscarUserName = myOscarUserName;
   }
 
   public String getYearOfBirth() {
