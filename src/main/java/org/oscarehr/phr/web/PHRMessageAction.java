@@ -56,7 +56,6 @@ import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDemographic.data.DemographicData;
 import oscar.oscarProvider.data.ProviderData;
-import oscar.oscarProvider.data.ProviderMyOscarIdData;
 
 /**
  * @author jay
@@ -304,56 +303,18 @@ public class PHRMessageAction extends DispatchAction {
 		return mapping.findForward("view");		
 	}
 		
-	public ActionForward send(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		String provNo = (String) request.getSession().getAttribute("user");
-		//
+	public ActionForward sendPatient(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String subject = request.getParameter("subject");
 		String messageBody = request.getParameter("body");
+		String demographicId = request.getParameter("demographicId");
 
-		String priorThreadMessage = null;
-		String priorMessageId = request.getParameter("priorMessageId");
-		if (priorMessageId != null) {
-			PHRDocument doc = phrDocumentDAO.getDocumentById(priorMessageId);
-			log.debug("Setting replied on priormessageId " + priorMessageId);
-			priorThreadMessage = doc.getPhrIndex();
+		PHRAuthentication auth = (PHRAuthentication) request.getSession().getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
 
-			PHRMessage msg = new PHRMessage(doc);
-			msg.setReplied();
-			msg.reDocContent();
-			phrDocumentDAO.update((PHRDocument) msg);
-			phrService.sendUpdateMessage(msg);
-		}
+		DemographicData demo = new DemographicData();
+		Long recipientMyOscarUserId = MyOscarUtils.getMyOscarUserId(auth, demo.getDemographic(demographicId).getMyOscarUserName());
 
-		ProviderData pp = new ProviderData();
-		pp.getProvider(provNo);
-		// ProviderMyOscarIdData myId = new ProviderMyOscarIdData(provNo);
-
-		// String senderOscarId = provNo;
-		// /String senderType = ""+PHRDocument.TYPE_PROVIDER;
-		// String senderPhrId = myId.getMyOscarId();
-
-		String recipientOscarId = request.getParameter("recipientOscarId");
-		if (request.getParameter("recipientType") == null) return mapping.findForward("view");
-		int recipientType = Integer.parseInt(request.getParameter("recipientType"));
-		Long myOscarUserId=null;
+		MyOscarMessageManager.sendMessage(auth.getMyOscarUserId(), auth.getMyOscarPassword(), recipientMyOscarUserId, subject, messageBody);
 		
-		log.debug("recipientType " + recipientType + " : " + PHRDocument.TYPE_DEMOGRAPHIC + " : " + PHRDocument.TYPE_PROVIDER);
-		if (recipientType == PHRDocument.TYPE_DEMOGRAPHIC) {
-			log.debug("finding data from demographic");
-			
-			PHRAuthentication auth = (PHRAuthentication) request.getSession().getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
-			DemographicData demo = new DemographicData();
-			myOscarUserId = MyOscarUtils.getMyOscarUserId(auth, demo.getDemographic(recipientOscarId).getMyOscarUserName());
-		} else if (recipientType == PHRDocument.TYPE_PROVIDER) {
-			myOscarUserId = Long.parseLong(ProviderMyOscarIdData.getMyOscarId(recipientOscarId));
-		}
-
-		log.debug("SENDER ID >" + myOscarUserId + "<");
-		phrService.sendAddMessage(subject, priorThreadMessage, messageBody, pp, recipientOscarId, recipientType, myOscarUserId);
-
-		// PHRMessage(subject, priorThreadMessage, messageBody, senderOscarId, senderType,
-		// senderPhrId, recipientOscarId, recipientType, recipientPhrId)
-
 		return mapping.findForward("view");
 	}
 

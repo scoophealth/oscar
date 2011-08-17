@@ -102,10 +102,8 @@
 </script>
 </head>
 
-
 <body class="BodyStyle" vlink="#0000FF" >
 
-<!--  -->
     <table  class="MainTable" id="scrollNumber1" name="encounterTable">
         <tr class="MainTableTopRow">
             <td class="MainTableTopRowLeftColumn">
@@ -200,7 +198,7 @@
 			                                        		else
 			                                        		{
 			                                        			%>
-			                                                    	<html-el:text name="to" property="to" size="30" value="${toName}"/>
+			                                                    	<html-el:text readonly="readonly" name="to" property="to" size="30" value="${toName}"/>
 			                                        			<%
 			                                        		}
 			                                        	%>                                            
@@ -256,7 +254,8 @@
                                         		else
                                         		{
                                         			%>
-			                                            <html-el:hidden property="method" value="send" />
+			                                            <html-el:hidden property="demographicId" value="${toId}" />
+			                                            <html-el:hidden property="method" value="sendPatient" />
                                         			<%
                                         		}
                                         	%>
