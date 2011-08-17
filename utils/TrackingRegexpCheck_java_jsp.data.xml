@@ -3227,6 +3227,8 @@
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementTemplateFlowSheetConfig.java:Hashtable&lt;String, MeasurementFlowSheet&gt; flowsheets = null;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementTemplateFlowSheetConfig.java:Hashtable&lt;String, String&gt; flowsheetDisplayNames = new Hashtable&lt;String, String&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementTemplateFlowSheetConfig.java:Hashtable&lt;String, String&gt; h = new Hashtable&lt;String, String&gt;();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementTemplateFlowSheetConfig.java:dxTrigHash = new Hashtable&lt;String, ArrayList&lt;String&gt;&gt;();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementTemplateFlowSheetConfig.java:flowsheetDisplayNames = new Hashtable&lt;String, String&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementTemplateFlowSheetConfig.java:flowsheets = new Hashtable&lt;String, MeasurementFlowSheet&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementTemplateFlowSheetConfig.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementTemplateFlowSheetConfig.java:import java.util.Vector;</ViolationValue>
@@ -4178,6 +4180,7 @@
         <ViolationValue>/src/main/webapp/admin/gstreport.jsp:pList= (Vector)(new JdbcBillingPageUtil()).getCurTeamProviderStr(curProvider_no);</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/logReport.jsp:Vector   vecProvider  = new Vector();</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/logReport.jsp:Vector&lt;Properties&gt; vec = new Vector&lt;Properties&gt;();</ViolationValue>
+        <ViolationValue>/src/main/webapp/admin/manageFlowsheets.jsp:Hashtable&lt;String, String&gt; systemFlowsheets = MeasurementTemplateFlowSheetConfig.getInstance().getFlowsheetDisplayNames();</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/providerPrivilege.jsp:Vector vecObjRowNo = new Vector();</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/providerPrivilege.jsp:Vector vecObjectId = new Vector();</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/providerPrivilege.jsp:Vector vecProviderName = new Vector();</ViolationValue>

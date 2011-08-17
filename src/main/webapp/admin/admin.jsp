@@ -762,7 +762,8 @@ div.logoutBox {
 			<li><a href="#" onclick='popupPage(400, 400,&quot;<html:rewrite page="/hospitalReportManager/hrmCategories.jsp"/>&quot;);return false;'>Hospital Report Manager (HRM) Categories</a></li>
 			<li><a href="#" onclick='popupPage(400, 400,&quot;<html:rewrite page="/olis/Preferences.jsp"/>&quot;);return false;'>OLIS Preferences</a></li>
 			<li><a href="#" onclick='popupPage(800, 1000,&quot;<html:rewrite page="/oscarEncounter/oscarMeasurements/adminFlowsheet/NewFlowsheet.jsp"/>&quot;);return false;'>Create New Flowsheet</a></li>
-			
+			<li><a href="#" onclick='popupPage(800, 1000,&quot;<html:rewrite page="/admin/manageFlowsheets.jsp"/>&quot;);return false;'><bean:message key="admin.admin.flowsheetManager"/></a></li>
+            
 			<%
 				if (oscarVariables.getProperty("hsfo.loginSiteCode", "") != null && !"".equalsIgnoreCase(oscarVariables.getProperty("hsfo.loginSiteCode", "")))
 							{

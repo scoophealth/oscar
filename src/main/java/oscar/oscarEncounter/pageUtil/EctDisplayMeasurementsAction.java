@@ -36,6 +36,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.struts.util.MessageResources;
 import org.oscarehr.PMmodule.dao.AdmissionDao;
 import org.oscarehr.PMmodule.model.Admission;
+import org.oscarehr.common.dao.FlowsheetDao;
+import org.oscarehr.common.model.Flowsheet;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarEncounter.oscarMeasurements.MeasurementTemplateFlowSheetConfig;
@@ -48,6 +50,7 @@ import oscar.util.StringUtils;
 
 public class EctDisplayMeasurementsAction extends EctDisplayAction {
     private static final String cmd = "measurements";
+    FlowsheetDao flowsheetDao = (FlowsheetDao)SpringUtils.getBean("flowsheetDao");
     
    public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {              
         
@@ -83,6 +86,12 @@ public class EctDisplayMeasurementsAction extends EctDisplayAction {
             NavBarDisplayDAO.Item item = Dao.Item();
             String flowsheetName = (String) flowsheets.get(f);
             if(securityMgr.hasReadAccess("_flowsheet."+flowsheetName, roleName$)) {
+            	Flowsheet fs = null;
+            	if((fs=flowsheetDao.findByName(flowsheetName)) != null) {
+            		if(!fs.isEnabled()){
+            			continue;
+            		}
+            	}            	
 	            String dispname = MeasurementTemplateFlowSheetConfig.getInstance().getDisplayName(flowsheetName);
 	
 	            winName = flowsheetName + bean.demographicNo;
@@ -103,6 +112,12 @@ public class EctDisplayMeasurementsAction extends EctDisplayAction {
             NavBarDisplayDAO.Item item = Dao.Item();
             String flowsheetName = (String) flowsheets.get(f);
             if(securityMgr.hasReadAccess("_flowsheet."+flowsheetName, roleName$)) {
+            	Flowsheet fs = null;
+            	if((fs=flowsheetDao.findByName(flowsheetName)) != null) {
+            		if(!fs.isEnabled()){
+            			continue;
+            		}
+            	}            	
 	            String dispname = MeasurementTemplateFlowSheetConfig.getInstance().getDisplayName(flowsheetName);
 	
 	            winName = flowsheetName + bean.demographicNo;
@@ -128,6 +143,12 @@ public class EctDisplayMeasurementsAction extends EctDisplayAction {
             NavBarDisplayDAO.Item item = Dao.Item();
             String flowsheetName = (String) flowsheets.get(f);
             if(securityMgr.hasReadAccess("_flowsheet."+flowsheetName, roleName$))  {
+            	Flowsheet fs = null;
+            	if((fs=flowsheetDao.findByName(flowsheetName)) != null) {
+            		if(!fs.isEnabled()){
+            			continue;
+            		}
+            	}            	
 	            String dispname = MeasurementTemplateFlowSheetConfig.getInstance().getDisplayName(flowsheetName);
 	
 	            winName = flowsheetName + bean.demographicNo;
