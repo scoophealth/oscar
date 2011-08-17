@@ -332,6 +332,45 @@ public class RxPatientData {
          return arr;         
       }
       
+      public Allergy[] getActiveAllergies() {         
+          Allergy[] arr = {};         
+          LinkedList lst = new LinkedList();         
+          try {            
+                         
+             ResultSet rs;            
+             Allergy allergy;
+             
+             rs = DBHandler.GetSQL("SELECT * FROM allergies WHERE demographic_no = '" + getDemographicNo() + "' and archived=0 ORDER BY position,severity_of_reaction");
+             
+             while (rs.next()) {               
+                allergy = new Allergy(getDemographicNo(), rs.getInt("allergyid"), rs.getDate("entry_date"),               
+                oscar.Misc.getString(rs, "DESCRIPTION"),
+                rs.getInt("HICL_SEQNO"), rs.getInt("HIC_SEQNO"),               
+                rs.getInt("AGCSP"), rs.getInt("AGCCS"),
+                rs.getInt("TYPECODE"));
+                             
+                allergy.getAllergy().setArchived(rs.getString("archived"));
+                allergy.getAllergy().setReaction(oscar.Misc.getString(rs, "reaction"));
+                allergy.getAllergy().setStartDate(rs.getDate("start_date"));
+                allergy.getAllergy().setAgeOfOnset(oscar.Misc.getString(rs, "age_of_onset"));
+                allergy.getAllergy().setSeverityOfReaction(oscar.Misc.getString(rs, "severity_of_reaction"));
+                allergy.getAllergy().setOnSetOfReaction(oscar.Misc.getString(rs, "onset_of_reaction"));
+                allergy.getAllergy().setRegionalIdentifier(oscar.Misc.getString(rs, "regional_identifier"));
+                allergy.getAllergy().setLifeStage(oscar.Misc.getString(rs,"life_stage"));
+                allergy.getAllergy().setPickID(rs.getInt("drugref_id"));
+                allergy.getAllergy().setPosition(rs.getInt("position"));
+                lst.add(allergy);               
+             }            
+             rs.close();            
+             arr = (Allergy[]) lst.toArray(arr);            
+          }
+          catch (SQLException e) {            
+             MiscUtils.getLogger().error("Error", e);            
+          }
+          
+          return arr;
+       }
+      
       public Allergy addAllergy(java.util.Date entryDate,RxAllergyData.Allergy allergyCode) {         
          Allergy allergy = null;
          try {            
