@@ -27,7 +27,7 @@ public class MyOscarMessageManager {
 			
 		for (MessageTransfer messageTransfer : messageTransfers)
 		{
-			logMessageRetrieved(messageTransfer);
+			makeLogEntry("MESSAGE", messageTransfer.getId(), RemoteDataLog.Action.RETRIEVE, ReflectionToStringBuilder.toString(messageTransfer));
 		}
 			
 		return(messageTransfers);
@@ -37,20 +37,11 @@ public class MyOscarMessageManager {
 	{
 		MessageWs messageWs=MyOscarServerWebServicesManager.getMessageWs(myOscarUserId, myOscarPassword);
 		MessageTransfer messageTransfer=messageWs.getMessage(messageId);
+
+		makeLogEntry("MESSAGE", messageTransfer.getId(), RemoteDataLog.Action.RETRIEVE, ReflectionToStringBuilder.toString(messageTransfer));
+		
 		return(messageTransfer);
 	}
-	
-	private static void logMessageRetrieved(MessageTransfer messageTransfer) {
-		RemoteDataLog remoteDataLog=new RemoteDataLog();
-		
-		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-		remoteDataLog.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
-		remoteDataLog.setDocumentId(MyOscarServerWebServicesManager.getMyOscarServerBaseUrl(), "MESSAGE", messageTransfer.getId());
-		remoteDataLog.setAction(RemoteDataLog.Action.RETRIEVE);
-		remoteDataLog.setDocumentContents(ReflectionToStringBuilder.toString(messageTransfer));
-		
-		remoteDataLogDao.persist(remoteDataLog);
-    }
 	
 	public static void markRead(Long myOscarUserId, String myOscarPassword, Long messageId) throws NotAuthorisedException_Exception
 	{
@@ -62,15 +53,27 @@ public class MyOscarMessageManager {
 	{
 		MessageWs messageWs=MyOscarServerWebServicesManager.getMessageWs(myOscarUserId, myOscarPassword);
 		messageWs.replyToMessage(messageId, contents);
-		
-		//--- log reply ---
+
+		makeLogEntry("MESSAGE_REPLY", null, RemoteDataLog.Action.SEND, "repliedToMessageId="+messageId+", contents="+contents);
+	}
+
+	public static void sendMessage(Long myOscarUserId, String myOscarPassword, Long recipientPersonId, String subject, String contents)
+	{
+		MessageWs messageWs=MyOscarServerWebServicesManager.getMessageWs(myOscarUserId, myOscarPassword);
+		messageWs.sendMessage(recipientPersonId, subject, contents);
+
+		makeLogEntry("MESSAGE", null, RemoteDataLog.Action.SEND, "recipientPersonId="+recipientPersonId+", subject="+subject+", contents="+contents);
+	}
+	
+	private static void makeLogEntry(String documentType, Object objectId, RemoteDataLog.Action action, String documentContents)
+	{
 		RemoteDataLog remoteDataLog=new RemoteDataLog();
 		
 		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 		remoteDataLog.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
-		remoteDataLog.setDocumentId(MyOscarServerWebServicesManager.getMyOscarServerBaseUrl(), "MESSAGE_REPLY", null);
-		remoteDataLog.setAction(RemoteDataLog.Action.SEND);
-		remoteDataLog.setDocumentContents("repliedToMessageId="+messageId+", contents="+contents);
+		remoteDataLog.setDocumentId(MyOscarServerWebServicesManager.getMyOscarServerBaseUrl(), documentType, objectId);
+		remoteDataLog.setAction(action);
+		remoteDataLog.setDocumentContents(documentContents);
 		
 		remoteDataLogDao.persist(remoteDataLog);
 	}

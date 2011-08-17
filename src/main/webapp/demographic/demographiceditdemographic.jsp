@@ -25,6 +25,7 @@
  * Ontario, Canada
  */
 --%>
+<%@page import="org.oscarehr.phr.util.MyOscarUtils"%>
 <%@page import="org.oscarehr.PMmodule.caisi_integrator.ConformanceTestHelper"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
@@ -901,10 +902,17 @@ if(wLReadonly.equals("")){
 				     <td style="font-weight: bold">f<bean:message key="global.personalHealthRecord"/></td>
                                 </tr>
 					<tr>
-						<td><a
-							href="javascript: function myFunction() {return false; }"
-							ONCLICK="popupOscarRx(600,900,'../phr/PhrMessage.do?method=createMessage&providerNo=<%=curProvider_no%>&demographicNo=<%=demographic_no%>')"
-							title="myOscar"><bean:message key="demographic.demographiceditdemographic.msgSendMsgPHR"/></a></td>
+						<td>
+							<%
+								String onclickString="alert('Please login to MyOscar first.')";
+							
+								PHRAuthentication auth=MyOscarUtils.getPHRAuthentication(session);
+								if (auth!=null) onclickString="popupOscarRx(600,900,'../phr/PhrMessage.do?method=createMessage&providerNo="+curProvider_no+"&demographicNo="+demographic_no+"')";
+							%>
+							<a href="javascript: function myFunction() {return false; }" ONCLICK="<%=onclickString%>"	title="myOscar">
+								<bean:message key="demographic.demographiceditdemographic.msgSendMsgPHR"/>
+							</a>
+						</td>
 					</tr>
                                         <tr>
 
