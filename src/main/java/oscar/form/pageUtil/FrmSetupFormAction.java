@@ -271,7 +271,7 @@ public final class FrmSetupFormAction extends Action {
         List allergyLst = new LinkedList();
         try{
             RxPatientData.Patient p = RxPatientData.getPatient(Integer.parseInt(demographicNo));
-            RxPatientData.Patient.Allergy[] allergies = p.getAllergies();
+            RxPatientData.Patient.Allergy[] allergies = p.getActiveAllergies();
             if(allergies.length==0)
                 allergyLst=null;
             for(int i=0; i<allergies.length; i++){

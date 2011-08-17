@@ -59,7 +59,9 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import oscar.OscarProperties;
+import oscar.oscarRx.data.RxPatientData;
 import oscar.oscarRx.util.MyDrugrefComparator;
+import oscar.oscarRx.util.RxDrugRef;
 import oscar.oscarRx.util.RxUtil;
 import oscar.oscarRx.util.TimingOutCallback;
 import oscar.oscarRx.util.TimingOutCallback.TimeoutException;
@@ -127,6 +129,20 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
             return mapping.findForward("success");
         }
         Vector codes = bean.getAtcCodes();
+        
+        if(Boolean.valueOf(OscarProperties.getInstance().getProperty("drug_allergy_interaction_warnings", "false"))) {
+        	RxDrugRef d = new RxDrugRef();
+        	oscar.oscarRx.data.RxPatientData.Patient.Allergy[]  allerg = RxPatientData.getPatient(bean.getDemographicNo()).getActiveAllergies();
+        	Vector vec = new Vector();
+            for (int i =0; i < allerg.length; i++){
+               Hashtable h = new Hashtable();           
+               h.put("id",""+i); 
+               h.put("description",allerg[i].getAllergy().getDESCRIPTION());  
+               h.put("type",""+allerg[i].getAllergy().getTYPECODE());
+               vec.add(h);
+            }
+        	codes.addAll(d.getAllergyClasses(vec));                
+        }
         //String[] str = new String[]{"warnings_byATC","bulletins_byATC","interactions_byATC"};
         String[] str = new String[]{"warnings_byATC,bulletins_byATC,interactions_byATC,get_guidelines"};   //NEW more efficent way of sending multiple requests at the same time.
         MessageResources mr=getResources(request);
