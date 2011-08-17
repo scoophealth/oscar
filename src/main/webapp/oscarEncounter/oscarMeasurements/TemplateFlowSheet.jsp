@@ -532,7 +532,7 @@ div.recommendations li{
 
                 <% 
 			oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergies;
-                    allergies = RxPatientData.getPatient(Integer.parseInt(demographic_no)).getAllergies();
+                    allergies = RxPatientData.getPatient(Integer.parseInt(demographic_no)).getActiveAllergies();
 
 // oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergies;
 //                    allergies = oscar.oscarRx.data.RxPatientData().getPatient(Integer.parseInt(demographic_no)).getAllergies();
