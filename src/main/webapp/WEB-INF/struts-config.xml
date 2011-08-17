@@ -773,6 +773,7 @@
 		<action input="/oscarRx/ChooseAllergy.jsp" path="/oscarRx/showAllergy" parameter="method" scope="request" type="oscar.oscarRx.pageUtil.RxShowAllergyAction">
 			<forward name="success" path="/oscarRx/ShowAllergies.jsp" />
 			<forward name="success-redirect" path="/oscarRx/ShowAllergies.jsp" redirect="true"/>
+			<forward name="successRX3" path="/oscarRx/ShowAllergies2.jsp"/>
 		</action>
 		<action input="/oscarRx/ChooseDrug.jsp" path="/oscarRx/drugInfo" scope="request" type="oscar.oscarRx.pageUtil.RxDrugInfoAction">
 			<forward name="success" path="/oscarRx/SearchDrug.jsp" />
