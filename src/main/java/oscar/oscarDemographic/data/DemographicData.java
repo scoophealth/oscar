@@ -95,13 +95,13 @@ public class DemographicData {
 		return date;
 	}
 
-	public String getDemographicNoByIndivoId(String pin) {
+	public String getDemographicNoByIndivoId(String myOscarUserName) {
 		String demographicNo = "";
 
 		try {
 			
 			ResultSet rs;
-			String sql = "SELECT demographic_no FROM demographic WHERE myOscarUserName = '" + pin + "'";
+			String sql = "SELECT demographic_no FROM demographic WHERE myOscarUserName = '" + myOscarUserName + "'";
 			rs = DBHandler.GetSQL(sql);
 			if (rs.next()) {
 				demographicNo = oscar.Misc.getString(rs, "demographic_no");
@@ -334,7 +334,7 @@ public class DemographicData {
 			rs = DBHandler.GetSQL(sql);
 
 			if (rs.next()) {
-				demographic = new Demographic(DemographicNo, oscar.Misc.getString(rs, "title"), oscar.Misc.getString(rs, "last_name"), oscar.Misc.getString(rs, "first_name"), oscar.Misc.getString(rs, "address"), oscar.Misc.getString(rs, "city"), oscar.Misc.getString(rs, "province"), oscar.Misc.getString(rs, "postal"), oscar.Misc.getString(rs, "phone"), oscar.Misc.getString(rs, "phone2"), oscar.Misc.getString(rs, "email"), oscar.Misc.getString(rs, "myOserUserName"), oscar.Misc.getString(rs, "year_of_birth"), oscar.Misc.getString(rs, "month_of_birth"), oscar.Misc.getString(rs, "date_of_birth"), oscar.Misc.getString(rs, "hin"), oscar.Misc.getString(rs, "ver"), oscar.Misc.getString(rs, "roster_status"), oscar.Misc.getString(rs, "roster_date"), oscar.Misc.getString(rs, "roster_termination_date"), oscar.Misc.getString(rs, "patient_status"), oscar.Misc.getString(rs, "patient_status_date"), oscar.Misc.getString(rs, "date_joined"), oscar.Misc.getString(rs, "chart_no"), oscar.Misc.getString(rs, "official_lang"), oscar.Misc.getString(rs, "spoken_lang"), oscar.Misc.getString(rs, "provider_no"), oscar.Misc.getString(rs, "sex"), oscar.Misc.getString(rs, "end_date"), oscar.Misc.getString(rs, "eff_date"), oscar.Misc.getString(rs, "pcn_indicator"), oscar.Misc.getString(rs, "hc_type"), oscar.Misc.getString(rs, "hc_renew_date"), oscar.Misc.getString(rs, "family_doctor"), oscar.Misc.getString(rs, "alias"), oscar.Misc.getString(rs, "previousAddress"), oscar.Misc.getString(rs, "children"), oscar.Misc.getString(rs, "sourceOfIncome"), oscar.Misc.getString(rs, "citizenship"), oscar.Misc.getString(rs, "sin"));
+				demographic = new Demographic(DemographicNo, oscar.Misc.getString(rs, "title"), oscar.Misc.getString(rs, "last_name"), oscar.Misc.getString(rs, "first_name"), oscar.Misc.getString(rs, "address"), oscar.Misc.getString(rs, "city"), oscar.Misc.getString(rs, "province"), oscar.Misc.getString(rs, "postal"), oscar.Misc.getString(rs, "phone"), oscar.Misc.getString(rs, "phone2"), oscar.Misc.getString(rs, "email"), oscar.Misc.getString(rs, "myOscarUserName"), oscar.Misc.getString(rs, "year_of_birth"), oscar.Misc.getString(rs, "month_of_birth"), oscar.Misc.getString(rs, "date_of_birth"), oscar.Misc.getString(rs, "hin"), oscar.Misc.getString(rs, "ver"), oscar.Misc.getString(rs, "roster_status"), oscar.Misc.getString(rs, "roster_date"), oscar.Misc.getString(rs, "roster_termination_date"), oscar.Misc.getString(rs, "patient_status"), oscar.Misc.getString(rs, "patient_status_date"), oscar.Misc.getString(rs, "date_joined"), oscar.Misc.getString(rs, "chart_no"), oscar.Misc.getString(rs, "official_lang"), oscar.Misc.getString(rs, "spoken_lang"), oscar.Misc.getString(rs, "provider_no"), oscar.Misc.getString(rs, "sex"), oscar.Misc.getString(rs, "end_date"), oscar.Misc.getString(rs, "eff_date"), oscar.Misc.getString(rs, "pcn_indicator"), oscar.Misc.getString(rs, "hc_type"), oscar.Misc.getString(rs, "hc_renew_date"), oscar.Misc.getString(rs, "family_doctor"), oscar.Misc.getString(rs, "alias"), oscar.Misc.getString(rs, "previousAddress"), oscar.Misc.getString(rs, "children"), oscar.Misc.getString(rs, "sourceOfIncome"), oscar.Misc.getString(rs, "citizenship"), oscar.Misc.getString(rs, "sin"));
 			}
 
 			rs.close();
@@ -386,9 +386,9 @@ public class DemographicData {
 		return date;
 	}
 
-	public void setDemographicPin(String demographicNo, String pin) throws Exception {
+	public void setDemographicPin(String demographicNo, String myOscarUserName) throws Exception {
 		
-		String sql = "UPDATE demographic SET myOscarUserName = '" + pin + "' WHERE demographic_no = " + demographicNo;
+		String sql = "UPDATE demographic SET myOscarUserName = '" + myOscarUserName + "' WHERE demographic_no = " + demographicNo;
 		DBHandler.RunSQL(sql);
 	}
 
