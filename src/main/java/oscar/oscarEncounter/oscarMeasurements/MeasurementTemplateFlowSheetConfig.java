@@ -33,9 +33,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -51,8 +54,10 @@ import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.XMLOutputter;
 import org.oscarehr.common.dao.FlowSheetUserCreatedDao;
+import org.oscarehr.common.dao.FlowsheetDao;
 import org.oscarehr.common.model.FlowSheetCustomization;
 import org.oscarehr.common.model.FlowSheetUserCreated;
+import org.oscarehr.common.model.Flowsheet;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.springframework.beans.factory.InitializingBean;
@@ -85,6 +90,8 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
     static MeasurementTemplateFlowSheetConfig measurementTemplateFlowSheetConfig;
 
     Hashtable<String, MeasurementFlowSheet> flowsheets = null;
+    
+    HashMap<String,Flowsheet> flowsheetSettings = null;
 
     public void afterPropertiesSet() throws Exception {
         measurementTemplateFlowSheetConfig = this;
@@ -196,29 +203,99 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
         addTriggers(m.getDxTriggers(),m.getName());
         return m.getName();
     }
+    
+    public void enableFlowsheet(String name)  {
+    	FlowsheetDao flowsheetDao = (FlowsheetDao)SpringUtils.getBean("flowsheetDao");
+    	Flowsheet fs = flowsheetDao.findByName(name);
+    	if(fs != null) {
+    		fs.setEnabled(true);
+    		flowsheetDao.merge(fs);
+    	} else {
+    		fs = new Flowsheet();
+    		fs.setCreatedDate(new Date());
+    		fs.setEnabled(false);
+    		fs.setExternal(true);
+    		fs.setName(name);
+    		flowsheetDao.persist(fs);
+    	}
+    	reloadFlowsheets();
+    }
+    
+    public void disableFlowsheet(String name)  {
+    	FlowsheetDao flowsheetDao = (FlowsheetDao)SpringUtils.getBean("flowsheetDao");
+    	Flowsheet fs = flowsheetDao.findByName(name);
+    	if(fs != null) {
+    		fs.setEnabled(false);
+    		flowsheetDao.merge(fs);
+    	} else {
+    		fs = new Flowsheet();
+    		fs.setCreatedDate(new Date());
+    		fs.setEnabled(false);
+    		fs.setExternal(true);
+    		fs.setName(name);
+    		flowsheetDao.persist(fs);
+    	}
+    	reloadFlowsheets();
+    }
+
+    public void reloadFlowsheets() {       
+        dxTriggers = new ArrayList<String>();
+        programTriggers = new ArrayList<String>();
+        dxTrigHash = new Hashtable<String, ArrayList<String>>();
+        programTrigHash = new HashMap<String, ArrayList<String>>();
+        flowsheetDisplayNames = new Hashtable<String, String>();
+        universalFlowSheets = new ArrayList<String>();
+        flowsheets = null;
+        flowsheetSettings = null;
+        try {
+        	loadFlowsheets();
+        }catch(FileNotFoundException e) {
+        	MiscUtils.getLogger().error("error",e);
+        }
+    }
 
     void loadFlowsheets() throws FileNotFoundException {
+    	FlowsheetDao flowsheetDao = (FlowsheetDao)SpringUtils.getBean("flowsheetDao");
     	FlowSheetUserCreatedDao flowSheetUserCreatedDao = (FlowSheetUserCreatedDao) SpringUtils.getBean("flowSheetUserCreatedDao");
 
         flowsheets = new Hashtable<String, MeasurementFlowSheet>();
+        flowsheetSettings = new HashMap<String,Flowsheet>();
+        
         EctMeasurementTypeBeanHandler mType = new EctMeasurementTypeBeanHandler();
         //TODO: Will change this when there are more flowsheets
         log.debug("LOADING FLOWSSHEETS");
         for (File flowSheet : flowSheets) {
-            InputStream is = new FileInputStream(flowSheet);
-            MeasurementFlowSheet d = createflowsheet(mType, is);
-            flowsheets.put(d.getName(), d);
-            if (d.isUniversal())
-                universalFlowSheets.add(d.getName());
-            else if(d.getDxTriggers()!=null && d.getDxTriggers().length>0){
-                String[] dxTrig = d.getDxTriggers();
-                addTriggers(dxTrig, d.getName());
-            } else if(d.getProgramTriggers()!=null && d.getProgramTriggers().length>0) {
-            	String[] programTrig = d.getProgramTriggers();
-            	addProgramTriggers(programTrig,d.getName());
-            }
-
-            flowsheetDisplayNames.put(d.getName(), d.getDisplayName());
+        	InputStream is = null;
+        	try {
+	            is = new FileInputStream(flowSheet);
+	            MeasurementFlowSheet d = createflowsheet(mType, is);
+	            flowsheets.put(d.getName(), d);
+	            if (d.isUniversal())
+	                universalFlowSheets.add(d.getName());
+	            else if(d.getDxTriggers()!=null && d.getDxTriggers().length>0){
+	                String[] dxTrig = d.getDxTriggers();
+	                addTriggers(dxTrig, d.getName());
+	            } else if(d.getProgramTriggers()!=null && d.getProgramTriggers().length>0) {
+	            	String[] programTrig = d.getProgramTriggers();
+	            	addProgramTriggers(programTrig,d.getName());
+	            }
+	
+	            flowsheetDisplayNames.put(d.getName(), d.getDisplayName());
+	            Flowsheet tmp = flowsheetDao.findByName(d.getName());
+	            if(tmp!=null) {
+	            	flowsheetSettings.put(d.getName(), tmp);
+	            }
+        	}catch(Exception e) {
+        		MiscUtils.getLogger().error("error",e);
+        	} finally {
+        		if(is != null) {
+        			try {
+        				is.close();
+        			}catch(IOException e) {
+        				MiscUtils.getLogger().error("error",e);
+        			}
+        		}
+        	}
         }
         List<FlowSheetUserCreated> flowSheetUserCreateds = flowSheetUserCreatedDao.getAllUserCreatedFlowSheets();
         for(FlowSheetUserCreated flowSheetUserCreated: flowSheetUserCreateds){
@@ -233,9 +310,43 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
             String[] dxTrig = m.getDxTriggers();
             addTriggers(dxTrig, m.getName());
             flowsheetDisplayNames.put(m.getName(), m.getDisplayName());
-            
+            Flowsheet tmp = flowsheetDao.findByName(m.getName());
+            if(tmp!=null) {
+            	flowsheetSettings.put(m.getName(), tmp);
+            }            
         }
         
+        for(Flowsheet fs:flowsheetDao.findAll()) {
+        	if(fs.isExternal()){
+        		continue;
+        	}
+        	String data = fs.getContent();
+        	InputStream is = null;
+        	try {
+                 is = new ByteArrayInputStream(data.getBytes("UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                MiscUtils.getLogger().error("error",e);
+                continue;
+            }
+        	MeasurementFlowSheet d = createflowsheet(mType, is);
+        	flowsheets.put(d.getName(), d);
+            if (d.isUniversal())
+                universalFlowSheets.add(d.getName());
+            else if(d.getDxTriggers()!=null && d.getDxTriggers().length>0){
+                String[] dxTrig = d.getDxTriggers();
+                addTriggers(dxTrig, d.getName());
+            } else if(d.getProgramTriggers()!=null && d.getProgramTriggers().length>0) {
+            	String[] programTrig = d.getProgramTriggers();
+            	addProgramTriggers(programTrig,d.getName());
+            }
+            flowsheetDisplayNames.put(d.getName(), d.getDisplayName());
+            flowsheetSettings.put(d.getName(),fs);
+        }        
+        
+    }
+    
+    public HashMap<String,Flowsheet> getFlowsheetSettings() {
+    	return flowsheetSettings;
     }
 
     public ArrayList<String> getFlowsheetForDxCode(String code) {
@@ -488,6 +599,84 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
 
         } catch (Exception e) {
             MiscUtils.getLogger().error("Error", e);
+        }
+
+        d.loadRuleBase();
+        return d;
+    }
+    
+    public MeasurementFlowSheet validateFlowsheet(String data) {
+    	InputStream is = null;
+    	try {
+             is = new ByteArrayInputStream(data.getBytes("UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            MiscUtils.getLogger().error("error",e);
+            return null;
+        }
+        
+        MeasurementFlowSheet d = new MeasurementFlowSheet();
+
+        try {
+            SAXBuilder parser = new SAXBuilder();
+            Document doc = parser.build(is);
+            Element root = doc.getRootElement();
+            
+            XMLOutputter outp = new XMLOutputter();
+           
+            //MAKE SURE ALL MEASUREMENTS HAVE BEEN INITIALIZED
+            ImportMeasurementTypes importMeasurementTypes = new ImportMeasurementTypes();
+            importMeasurementTypes.importMeasurements(root);
+
+            List indi = root.getChildren("indicator"); // key="LOW" colour="blue">
+            for (int i = 0; i < indi.size(); i++) {
+                Element e = (Element) indi.get(i);
+                d.AddIndicator(e.getAttributeValue("key"), e.getAttributeValue("colour"));
+            }
+            List<Element> elements = root.getChildren();
+            List<Element> items = root.getChildren("item");
+            List<Node> aItems = new ArrayList<Node>();
+
+                processItems(elements, aItems, null, d);
+                d.setItemHeirarchy(aItems);
+
+            if (root.getAttribute("name") != null) {
+                d.setName(root.getAttribute("name").getValue());
+            }
+            if (root.getAttribute("display_name") != null) {
+                d.setDisplayName(root.getAttribute("display_name").getValue());
+            }
+            
+            if (root.getAttribute("top_HTML") != null) {
+                d.setTopHTMLFileName(root.getAttribute("top_HTML").getValue());
+            }           
+            
+            if (root.getAttribute("ds_rules") != null) {
+                d.loadRuleBase(root.getAttribute("ds_rules").getValue());
+            }
+            if (root.getAttribute("dxcode_triggers") != null) {
+                d.parseDxTriggers(root.getAttribute("dxcode_triggers").getValue());
+            }
+            
+            if (root.getAttribute("program_triggers") != null) {
+                d.parseProgramTriggers(root.getAttribute("program_triggers").getValue());
+            }
+
+            if (root.getAttribute("warning_colour") != null) {
+                d.setWarningColour(root.getAttribute("warning_colour").getValue());
+            }
+            if (root.getAttribute("recommendation_colour") != null) {
+                d.setRecommendationColour(root.getAttribute("recommendation_colour").getValue());
+            }
+            if (root.getAttribute("is_universal") != null) {
+                d.setUniversal("true".equals(root.getAttribute("is_universal").getValue()));
+            }
+            if (root.getAttribute("is_medical") != null) {
+                d.setMedical("true".equals(root.getAttribute("is_medical").getValue()));
+            }
+
+        } catch (Exception e) {
+            MiscUtils.getLogger().error("error",e);
+            return null;
         }
 
         d.loadRuleBase();
