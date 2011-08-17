@@ -230,7 +230,7 @@ request.setAttribute("pageMethod",pageMethod);
         }
         
         function gotoEchart2(demoNo) {
-            var url = '<%=request.getContextPath()%>/oscarEncounter/IncomingEncounter.do?demographicNo='+ demoNo';
+            var url = '<%=request.getContextPath()%>/oscarEncounter/IncomingEncounter.do?demographicNo='+ demoNo;
             popup(755,1048,url,'apptProvider');
         }
         
@@ -650,7 +650,7 @@ request.setAttribute("pageMethod",pageMethod);
 		                                	if (demographic!=null)
 		                                	{
 				                                %>
-				                               		<a href="#" onClick="gotoEchart2(<%=demographic.getDemographicNo()%>);" >
+				                               		<a href="?<%=request.getQueryString()%>" onClick="gotoEchart2(<%=demographic.getDemographicNo()%>);" >
 			                               		<%
 		                                	}
 			                            %>
