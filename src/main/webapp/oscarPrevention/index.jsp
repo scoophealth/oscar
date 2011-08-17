@@ -139,6 +139,12 @@ div.ImmSet li a:visited {
 div.onPrint {
 	display: none;
 }
+
+span.footnote {
+    background-color: #ccccee;
+    border: 1px solid #000;
+    width: 4px;
+}
 </style>
 
 <link rel="stylesheet" type="text/css"
@@ -566,6 +572,9 @@ text-align:left;
 		<div class="preventionProcedure" onclick="<%=onClickCode%>">
 		<p <%=r(hdata.get("refused"),result)%>>Age: <%=hdata.get("age")%> <br />
 		<!--<%=refused(hdata.get("refused"))%>-->Date: <%=hdata.get("prevention_date")%>
+		<%if (hExt.get("comments") != null && ((String)hExt.get("comments")).length()>0) {%>
+            <span class="footnote">1</span>
+            <%}%>
 		<%=getFromFacilityMsg(hdata)%></p>
 		</div>
 		<%}%>
@@ -611,6 +620,9 @@ text-align:left;
 			onclick="javascript:popup(465,635,'AddPreventionData.jsp?id=<%=hdata.get("id")%>&amp;demographic_no=<%=demographic_no%>','addPreventionData')">
 		<p <%=r(hdata.get("refused"), result)%>>Age: <%=hdata.get("age")%> <br />
 		<!--<%=refused(hdata.get("refused"))%>-->Date: <%=hdata.get("prevention_date")%>
+		<%if (hExt.get("comments") != null && ((String)hExt.get("comments")).length()>0) {%>
+            <span class="footnote">1</span>
+            <%}%>
 		</p>
 		</div>
 		<%}%>
