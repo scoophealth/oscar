@@ -123,6 +123,10 @@ public class SecurityManager {
     }
 
     public boolean hasWriteAccess(String objectName, String roleNames) {
+    	return hasWriteAccess(objectName,roleNames,false);
+    }
+    
+    public boolean hasWriteAccess(String objectName, String roleNames, boolean required) {
     	boolean result=false;
     	
     	SecobjprivilegeDao secobjprivilegeDao = (SecobjprivilegeDao)SpringUtils.getBean("secobjprivilegeDao");
@@ -133,8 +137,11 @@ public class SecurityManager {
         }
         List<Secobjprivilege> priv = secobjprivilegeDao.getByObjectNameAndRoles(objectName,rl);
        
-        if(priv.size()==0) {
+        if(!required && priv.size()==0) {
         	return true;
+        }
+        if(required && priv.size()==0) {
+        	return false;
         }
         for(Secobjprivilege p:priv) {
 			if(p.getPrivilege_code().indexOf("w")!= -1)
