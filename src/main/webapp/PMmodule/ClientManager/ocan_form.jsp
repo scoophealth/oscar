@@ -220,7 +220,7 @@ function changeNumberOfMedications() {
 	}
 
 	//do we need to remove. If there's any blocks > newCount..we need to delete them.
-	for(var x=(Number(newCount)+1);x<=25;x++) {			
+	for(var x=(Number(newCount)+1);x<=50;x++) {			
 		if(document.getElementById("medication_" + x) != null) {
 			$("#medication_"+x).remove();
 		}
@@ -246,7 +246,7 @@ function changeNumberOfcentres() {
 	}
 
 	//do we need to remove. If there's any blocks > newCount..we need to delete them.
-	for(var x=(Number(newCount)+1);x<=25;x++) {			
+	for(var x=(Number(newCount)+1);x<=50;x++) {			
 		if(document.getElementById("center_" + x) != null) {
 			$("#center_"+x).remove();
 		}
@@ -359,7 +359,7 @@ function changeNumberOfReferrals() {
 	}
 
 	//do we need to remove. If there's any blocks > newCount..we need to delete them.
-	for(var x=(Number(newCount)+1);x<=25;x++) {			
+	for(var x=(Number(newCount)+1);x<=50;x++) {			
 		if(document.getElementById("referral_" + x) != null) {
 			$("#referral_"+x).remove();
 		}
