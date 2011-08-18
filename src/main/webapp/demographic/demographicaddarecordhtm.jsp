@@ -677,7 +677,7 @@ function autoFillHin(){
 				</td>
 				<td align="right"><b><bean:message
 					key="demographic.demographicaddrecordhtm.formPIN" />:</b></td>
-				<td align="left"><input type="text" name="pin" value="">
+				<td align="left"><input type="text" name="myOscarUserName" value="">
 				</td>
 			</tr>
 			<tr valign="top">
