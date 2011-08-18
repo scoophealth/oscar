@@ -258,7 +258,7 @@ while (rs.next()) {
 			key="demographic.demographiceditdemographic.formEmail" />: </b><%=apptMainBean.getString(rs,"email")!=null? apptMainBean.getString(rs,"email") : ""%></td>
 		<td align="left"><b><bean:message
 			key="demographic.demographiceditdemographic.formPIN" />: </b></td>
-		<td align="left"><%=apptMainBean.getString(rs,"pin")!=null? apptMainBean.getString(rs,"pin") : ""%></td>
+		<td align="left"><%=apptMainBean.getString(rs,"myOscarUserName")!=null? apptMainBean.getString(rs,"myOscarUserName") : ""%></td>
 	</tr>
 	<tr valign="top">
 		<td align="left"><b><bean:message

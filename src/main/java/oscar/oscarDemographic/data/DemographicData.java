@@ -95,13 +95,13 @@ public class DemographicData {
 		return date;
 	}
 
-	public String getDemographicNoByIndivoId(String pin) {
+	public String getDemographicNoByIndivoId(String myOscarUserName) {
 		String demographicNo = "";
 
 		try {
 			
 			ResultSet rs;
-			String sql = "SELECT demographic_no FROM demographic WHERE myOscarUserName = '" + pin + "'";
+			String sql = "SELECT demographic_no FROM demographic WHERE myOscarUserName = '" + myOscarUserName + "'";
 			rs = DBHandler.GetSQL(sql);
 			if (rs.next()) {
 				demographicNo = oscar.Misc.getString(rs, "demographic_no");
@@ -386,9 +386,9 @@ public class DemographicData {
 		return date;
 	}
 
-	public void setDemographicPin(String demographicNo, String pin) throws Exception {
+	public void setDemographicPin(String demographicNo, String myOscarUserName) throws Exception {
 		
-		String sql = "UPDATE demographic SET myOscarUserName = '" + pin + "' WHERE demographic_no = " + demographicNo;
+		String sql = "UPDATE demographic SET myOscarUserName = '" + myOscarUserName + "' WHERE demographic_no = " + demographicNo;
 		DBHandler.RunSQL(sql);
 	}
 
