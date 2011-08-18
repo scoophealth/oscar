@@ -24,9 +24,15 @@ public final class MyOscarMessagesHelper {
 		return(Math.max(0,  temp));
 	}
 	
-	public static List<MessageTransfer> getMessages(HttpSession session, int startIndex) {
+	public static List<MessageTransfer> getReceivedMessages(HttpSession session, Boolean active, int startIndex) {
 		PHRAuthentication auth = (PHRAuthentication) session.getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
-		List<MessageTransfer> remoteMessages = MyOscarMessageManager.getReceivedMessages(auth.getMyOscarUserId(), auth.getMyOscarPassword(), startIndex, MESSAGE_DISPLAY_SIZE);
+		List<MessageTransfer> remoteMessages = MyOscarMessageManager.getReceivedMessages(auth.getMyOscarUserId(), auth.getMyOscarPassword(), active, startIndex, MESSAGE_DISPLAY_SIZE);
+		return (remoteMessages);
+	}
+
+	public static List<MessageTransfer> getSentMessages(HttpSession session, int startIndex) {
+		PHRAuthentication auth = (PHRAuthentication) session.getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
+		List<MessageTransfer> remoteMessages = MyOscarMessageManager.getSentMessages(auth.getMyOscarUserId(), auth.getMyOscarPassword(), startIndex, MESSAGE_DISPLAY_SIZE);
 		return (remoteMessages);
 	}
 
@@ -34,7 +40,9 @@ public final class MyOscarMessagesHelper {
 	{
 		PHRAuthentication auth=MyOscarUtils.getPHRAuthentication(session);
 		MessageTransfer messageTransfer=MyOscarMessageManager.getMessage(auth.getMyOscarUserId(), auth.getMyOscarPassword(), messageId);
-		if (messageTransfer!=null)
+		
+		// can only mark as read if I'm the recipient.
+		if (messageTransfer!=null && messageTransfer.getRecipientPersonId().equals(auth.getMyOscarUserId()))
 		{
 			MyOscarMessageManager.markRead(auth.getMyOscarUserId(), auth.getMyOscarPassword(), messageId);
 		}

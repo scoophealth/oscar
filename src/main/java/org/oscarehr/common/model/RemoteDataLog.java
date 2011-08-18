@@ -48,7 +48,7 @@ public class RemoteDataLog extends AbstractModel<Long> {
 	/**
 	 * What ever uniquely identifies the document. An example maybe <remoteServerUrl>:<documentType>:<documentId> like "myoscar.myserver.org:8080:message:1234". The general idea is that oscar can view documents from multiple sources, not just 1 myoscar
 	 * server, also documentId's are not always unique as there can be imageId=444 and messageId=444. This fields is a string so it allows massive flexibility in shaping this key to be unique for the server the data is retrieved from. For data being sent,
-	 * this could be something like "local:message:1234" i.e. just change the url to the string local so it's obvious the id signifies a local document.
+	 * this could be something like "myoscar.myserver.org:8080:message:", the url can still signify where it went and in the case of messages there is no local persistence of it so there's no id, if the example were a note, then the note id could be put there like "myoscar.myserver.org:8080:note:442"
 	 */
 	@Column(nullable = false)
 	private String documentId;
@@ -122,7 +122,7 @@ public class RemoteDataLog extends AbstractModel<Long> {
 	 * This is a convenience method for building a documentId string
 	 */
 	public void setDocumentId(String myOscarServerUrl, String documentType, Object objectId) {
-		if (myOscarServerUrl == null || documentType == null || objectId == null) throw (new NullPointerException("All 3 parameters are required, myOscarServerUrl=" + myOscarServerUrl + ", documentType=" + documentType + ", objectId=" + objectId));
+		if (myOscarServerUrl == null || documentType == null) throw (new NullPointerException("All url and type parameters are required, myOscarServerUrl=" + myOscarServerUrl + ", documentType=" + documentType + ", objectId=" + objectId));
 
 		setDocumentId(myOscarServerUrl + ':' + documentType + ':' + objectId);
 	}
