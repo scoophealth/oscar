@@ -5,21 +5,32 @@
 
 package org.oscarehr.decisionSupport.service;
 
+import org.apache.log4j.Logger;
+import org.oscarehr.util.DbConnectionFilter;
+import org.oscarehr.util.MiscUtils;
+
 /**
- *
  * @author apavel
  */
 public class DSServiceThread extends Thread {
-    private DSService service;
-    private String providerNo;
+	private static final Logger logger = MiscUtils.getLogger();
 
-    public DSServiceThread(DSService service, String providerNo) {
-        this.service = service;
-        this.providerNo = providerNo;
-    }
+	private DSService service;
+	private String providerNo;
 
-    @Override
-    public void run() {
-        service.fetchGuidelinesFromService(providerNo);
-    }
+	public DSServiceThread(DSService service, String providerNo) {
+		this.service = service;
+		this.providerNo = providerNo;
+	}
+
+	@Override
+	public void run() {
+		try {
+			service.fetchGuidelinesFromService(providerNo);
+		} catch (Exception e) {
+			logger.error("Error", e);
+		} finally {
+			DbConnectionFilter.releaseAllThreadDbResources();
+		}
+	}
 }
