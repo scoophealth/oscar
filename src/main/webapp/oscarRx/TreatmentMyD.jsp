@@ -64,6 +64,7 @@ if ( bean == null ){
     </tr>
     <tr>
         <td align="right" style="font-size:10px">
+            <i>Reference: <a href="http://www.mydrugref.org" target="_blank"></i>MyDrugRef.org</a><br />
             <em>From:<%=author%></em>
         </td>
     </tr>
