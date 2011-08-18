@@ -1683,7 +1683,7 @@ if(oscarVariables.getProperty("demographicExt") != null) {
 								</td>
 								<td align="right"><b><bean:message
 									key="demographic.demographiceditdemographic.formPIN" />: </b></td>
-								<td align="left"><input type="text" name="pin" size="30"
+								<td align="left"><input type="text" name="myOscarUserName" size="30"
 									value="<%=apptMainBean.getString(rs,"myOscarUserName")!=null? apptMainBean.getString(rs,"myOscarUserName") : ""%>"><br />
 								<%if (apptMainBean.getString(rs,"myOscarUserName")==null || apptMainBean.getString(rs,"myOscarUserName").equals("")) {%>
 								<a href="javascript:"
