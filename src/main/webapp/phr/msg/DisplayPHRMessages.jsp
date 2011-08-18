@@ -56,6 +56,8 @@ pageContext.setAttribute("TYPE_MEDICATION", MedicalDataType.MEDICATION.name());
 pageContext.setAttribute("TYPE_ACCESSPOLICIES", "RELATIONSHIP");
 
 String pageMethod = request.getParameter("method");
+if (pageMethod==null) pageMethod = "viewMessages";
+
 if (pageMethod.equals("delete") || pageMethod.equals("resend")) 
     pageMethod = "viewSentMessages";
 if (pageMethod.equals("archive"))
@@ -271,35 +273,28 @@ request.setAttribute("pageMethod",pageMethod);
                                 <tr>
                                     <td >
                                         <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA<%if (pageMethod.equals("viewMessages")) {%>Current<%}%>">
-                                                    <html:link page="/phr/PhrMessage.do?method=viewMessages" styleClass="messengerButtons">
-                                                        Inbox
-                                                    </html:link>
+                                            <html:link page="/phr/PhrMessage.do?method=viewMessages" styleClass="messengerButtons">
+                                                <bean:message key="oscarMessenger.DisplayMessages.msgInbox"/>
+                                            </html:link>
                                         </td></tr></table>
                                     </td>
                                     <td >
                                         <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA<%if (phrActionDAO.ifActionsWithErrors(providerNo)) {%>Warning<%} else if (pageMethod.equals("viewSentMessages")) {%>Current<%}%>">
-                                                    <html:link page="/phr/PhrMessage.do?method=viewSentMessages" styleClass="messengerButtons">
-                                                        Sent
-                                                    </html:link>
+                                            <html:link page="/phr/PhrMessage.do?method=viewSentMessages" styleClass="messengerButtons">
+                                                <bean:message key="oscarMessenger.DisplayMessages.msgSentTitle"/>
+                                            </html:link>
                                         </td></tr></table>
                                     </td>
                                     <td>
                                         <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA<%if (pageMethod.equals("viewArchivedMessages")) {%>Current<%}%>">
-                                                    <html:link page="/phr/PhrMessage.do?method=viewArchivedMessages" styleClass="messengerButtons">
-                                                        Archived
-                                                    </html:link>
-                                        </td></tr></table>
-                                    </td>
-                                    <td>
-                                        <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA<%if (pageMethod.equals("viewArchivedMessages")) {%>Current<%}%>">
-                                                    <a href="../../phrExchange.do?method=setExchangeTimeNow&forwardto=phr/msg/DisplayPHRMessages.jsp?method=<%=pageMethod%>" class="messengerButtons">
-                                                        Send & Receive
-                                                    </a>
+                                            <html:link page="/phr/PhrMessage.do?method=viewArchivedMessages" styleClass="messengerButtons">
+                                                <bean:message key="oscarMessenger.DisplayMessages.msgDeleted"/>
+                                            </html:link>
                                         </td></tr></table>
                                     </td>
                                     <td >
                                         <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA">
-                                                    <a href="javascript:window.close()" class="messengerButtons">Exit</a>
+                                          	<a href="javascript:window.close()" class="messengerButtons">Exit</a>
                                         </td></tr></table>
                                     </td>
                                     <%
@@ -357,8 +352,8 @@ request.setAttribute("pageMethod",pageMethod);
 						// okay to ignore, either no parameter or some one messing with url string.
 					}
         		%>
-				<a href="?method=<%=pageMethod%>&startIndex=<%=MyOscarMessagesHelper.getPreviousPageStartIndex(startIndex)%>" />Previous</a>
-				<a href="?method=<%=pageMethod%>&startIndex=<%=MyOscarMessagesHelper.getNextPageStartIndex(startIndex)%>" />Next</a>
+				<a href="?method=<%=pageMethod%>&startIndex=<%=MyOscarMessagesHelper.getPreviousPageStartIndex(startIndex)%>" /><bean:message key="oscarMessenger.DisplayMessages.msgNewerMessage"/></a>
+				<a href="?method=<%=pageMethod%>&startIndex=<%=MyOscarMessagesHelper.getNextPageStartIndex(startIndex)%>" /><bean:message key="oscarMessenger.DisplayMessages.msgOlderMessage"/></a>
         	</td>
         </tr>
         <tr>
@@ -400,23 +395,16 @@ request.setAttribute("pageMethod",pageMethod);
                             </html-el:link>
                         </th>
                         <th align="left" bgcolor="#DDDDFF">
-                             <html-el:link action="/phr/PhrMessage.do?orderby=1&method=${pageMethod}" >
-                                 <%if (pageMethod.equals("viewSentMessages")) {%>
-                                         Recipient
-                                 <%} else {%>
-                                         <bean:message key="oscarMessenger.DisplayMessages.msgFrom"/>
-                                 <%}%>
-                            </html-el:link>
+                        	<bean:message key="oscarMessenger.DisplayMessages.msgFrom"/>
                         </th>
                         <th align="left" bgcolor="#DDDDFF">
-                            <html-el:link action="/phr/PhrMessage.do?orderby=2&method=${pageMethod}" >
-                                <bean:message key="oscarMessenger.DisplayMessages.msgSubject"/>
-                            </html-el:link>
+                        	<bean:message key="oscarMessenger.DisplayMessages.msgTo"/>
                         </th>
                         <th align="left" bgcolor="#DDDDFF">
-                            <html-el:link action="/phr/PhrMessage.do?orderby=3&method=${pageMethod}" >
-                                <bean:message key="oscarMessenger.DisplayMessages.msgDate"/>
-                            </html-el:link>
+                            <bean:message key="oscarMessenger.DisplayMessages.msgSubject"/>
+                        </th>
+                        <th align="left" bgcolor="#DDDDFF">
+                            <bean:message key="oscarMessenger.DisplayMessages.msgDate"/>
                         </th>
                         <th align="center" style="width: 30px;" bgcolor="#DDDDFF">
                                 &nbsp;
@@ -427,205 +415,20 @@ request.setAttribute("pageMethod",pageMethod);
                             </th>
                         <%}%>
                     </tr>
-                    
-     <%-- Sent items-----------------------------------------------------------------%>
- 
-                    <c:forEach var="otherAction" items="${indivoOtherActions}">
-                        <tr 
-                            <c:choose>
-                                <c:when test="${otherAction.status == STATUS_ON_HOLD}">class="onHold"</c:when>
-                                <c:when test="${otherAction.status == STATUS_SEND_PENDING}">class="sendPending"</c:when>
-                                <c:when test="${otherAction.status == STATUS_NOT_AUTHORIZED}">class="notAuthorized"</c:when>
-                                <c:when test="${otherAction.status == STATUS_OTHER_ERROR}">class="notAuthorized"</c:when>
-                                <c:otherwise>class="normal"</c:otherwise>
-                            </c:choose>
-                        >
-                            <td width="30">
-                                &nbsp;
-                            </td>
-                            <td width="120"> 
-                                <c:choose>
-                                    <c:when test="${otherAction.status == STATUS_SENT}">Sent</c:when>
-                                    <c:when test="${otherAction.status == STATUS_ON_HOLD}">Waiting to send...</c:when>
-                                    <c:when test="${otherAction.status == STATUS_SEND_PENDING}">Waiting to send...</c:when>
-                                    <c:when test="${otherAction.status == STATUS_NOT_AUTHORIZED}">Error: Not Authorized</c:when>
-                                    <c:when test="${otherAction.status == STATUS_OTHER_ERROR}">Unknown Error</c:when>
-                                    <c:otherwise>Unknown</c:otherwise>
-                                </c:choose>
-                            </td>
-                            <td>
-                            <c:choose>
-                                 <c:when test="${otherAction.phrClassification == TYPE_ACCESSPOLICIES}">
-                                    <%List idAndPermission = IndivoAPService.getProposalIdAndPermission((PHRAction)pageContext.getAttribute("otherAction"));
-                                     String demographicIndivoId = (String) idAndPermission.get(0);
-                                     String permission = (String) idAndPermission.get(1);
-                                     String permissionReadable = permission.substring(permission.lastIndexOf(':')+1, permission.length());%>
-                                    <%=demographicIndivoId%> (<%=permissionReadable%>)
-                                 </c:when>
-                                 <c:otherwise><c:out value="${otherAction.receiverPhr}"/></c:otherwise>
-                            </c:choose>
-                            </td>
-                            <td>
-                                  <c:choose>
-                                    <c:when test="${otherAction.phrClassification == TYPE_BINARYDATA}">
-                                            <c:choose>
-                                                <c:when test="${otherAction.actionType == ACTION_ADD}"><-- Add Document></c:when>
-                                                <c:when test="${otherAction.actionType == ACTION_UPDATE}"><-- Update Document></c:when>
-                                                <c:otherwise><-- Document></c:otherwise>
-                                            </c:choose>
-                                    </c:when>
-                                    <c:when test="${otherAction.phrClassification == TYPE_MEDICATION}">
-                                            <c:choose>
-                                                <c:when test="${otherAction.actionType == ACTION_ADD}"><-- Add Medication></c:when>
-                                                <c:when test="${otherAction.actionType == ACTION_UPDATE}"><-- Update Medication></c:when>
-                                                <c:otherwise><-- Medication></c:otherwise>
-                                            </c:choose>
-                                    </c:when>
-                                    <c:when test="${otherAction.phrClassification == TYPE_ACCESSPOLICIES}"><-- Sharing Permission</c:when>
-                                    <c:otherwise><-- Unknown></c:otherwise>
-                                </c:choose>
-                            </td>
-                            <td> 
-                                <fmt:formatDate value="${otherAction.dateQueued}" type="DATE" pattern="yyyy-MM-dd HH:mm:ss"/>
-                            </td>
-                            <td>
-                                <c:choose>
-                                    <c:when test="${otherAction.status == STATUS_NOT_AUTHORIZED || otherAction.status == STATUS_OTHER_ERROR}"><html-el:link action="/phr/PhrMessage.do?&method=resend&id=${otherAction.id}">Resend</html-el:link></c:when>
-                                    <c:otherwise>&nbsp;</c:otherwise>
-                                </c:choose>
-                            </td>
-                            <td>
-                                <html-el:link action="/phr/PhrMessage.do?&method=delete&id=${otherAction.id}">Remove</html-el:link>
-                            </td>
-                        </tr>
-                    </c:forEach>
-     
-     
-                    <c:forEach var="actionMessage" items="${indivoMessageActions}">
-                        <tr 
-                            <c:choose>
-                                <c:when test="${actionMessage.status == STATUS_SEND_PENDING}">class="sendPending"</c:when>
-                                <c:when test="${actionMessage.status == STATUS_NOT_AUTHORIZED}">class="notAuthorized"</c:when>
-                                <c:when test="${actionMessage.status == STATUS_OTHER_ERROR}">class="notAuthorized"</c:when>
-                                <c:otherwise>class="normal"</c:otherwise>
-                            </c:choose>
-                        >
-                            <td width="30">
-                                &nbsp;
-                            </td>
-                            <td width="120"> 
-                                <c:choose>
-                                    <c:when test="${actionMessage.status == STATUS_SEND_PENDING}">Waiting to send...</c:when>
-                                    <c:when test="${actionMessage.status == STATUS_NOT_AUTHORIZED}">Error: Not Authorized</c:when>
-                                    <c:when test="${actionMessage.status == STATUS_OTHER_ERROR}">Unknown Error</c:when>
-                                    <c:otherwise>Unknown</c:otherwise>
-                                </c:choose>
-                            </td>
-                            <td>
-                            <c:out value="${actionMessage.phrMessage.receiverPhr}"/></td>
-                            <td>
-                                <html-el:link action="/phr/PhrMessage.do?method=read&source=actions&comingfrom=viewSentMessages&noreply=yes&messageId=${actionMessage.id}"  >
-                                    <c:out value="${actionMessage.phrMessage.docSubject}"/>
-                                </html-el:link>
-                            </td>
-                            <td> 
-                                <fmt:formatDate value="${actionMessage.dateQueued}" type="DATE" pattern="yyyy-MM-dd HH:mm:ss"/>
-                            </td>
-                            <td>
-                                <c:choose>
-                                    <c:when test="${actionMessage.status == STATUS_NOT_AUTHORIZED || actionMessage.status == STATUS_OTHER_ERROR}"><html-el:link action="/phr/PhrMessage.do?&method=resend&id=${actionMessage.id}">Resend</html-el:link></c:when>
-                                    <c:otherwise>&nbsp;</c:otherwise>
-                                </c:choose>
-                            </td>
-                            <td>
-                                <html-el:link action="/phr/PhrMessage.do?&method=delete&id=${actionMessage.id}">Remove</html-el:link>
-                            </td>
-                        </tr>
-                    </c:forEach>
-                    
-                    <c:forEach var="sMessage" items="${indivoSentMessages}">
-                        <tr class="normal">
-                            <td width="30">
-                               
-                            &nbsp;
-                            
-                            </td>
-                            <td width="75">
-                                Sent
-                            </td>
-                            <td>
-                                <c:out value="${sMessage.receiverPhr}"/>
                                 
-                            </td>
-                            <td>
-                                
-                                <html-el:link action="/phr/PhrMessage.do?method=read&noreply=yes&comingfrom=viewSentMessages&messageId=${sMessage.id}"  >
-                                   <c:if test='${not empty sMessage.docSubject}'>
-                                    <c:out value="${sMessage.docSubject}"/>
-                                    </c:if>
-                                    <c:if test='${empty sMessage.docSubject}'>
-                                    No Subject
-                                    </c:if>
-                                </html-el:link>
-                                
-                            </td>
-                            <td> 
-                                <fmt:formatDate value="${sMessage.dateSent}" type="DATE" pattern="yyyy-MM-dd HH:mm:ss"/>
-                            </td>
-                            <td>
-                                &nbsp;
-                            </td>
-                            <td>
-                                &nbsp;
-                            </td>
-                        </tr>
-                    </c:forEach> 
- <%-- Archived ---------------------------------------------------------- --%>
-                    <c:forEach var="archivedMessage" items="${indivoArchivedMessages}">
-                        <tr class="normal">
-                            <td width="30">
-                               
-                            <c:if test="${archivedMessage.replied}" > --> </c:if>
-                            
-                            </td>
-                            <td width="75">
-                                <c:choose>
-                                   <c:when test="${archivedMessage.read}">read</c:when>
-                                   <c:otherwise>new</c:otherwise>
-                                </c:choose>
-                            </td>
-                            <td>
-                                <c:out value="${archivedMessage.senderPhr}"/></td>
-                            <td>
-                                
-                                <html-el:link action="/phr/PhrMessage.do?&method=read&comingfrom=viewArchivedMessages&messageId=${archivedMessage.id}"  >
-                                   <c:if test='${not empty archivedMessage.docSubject}'>
-                                    <c:out value="${archivedMessage.docSubject}"/>
-                                   </c:if>
-                                   <c:if test='${empty archivedMessage.docSubject}'>
-                                    No Subject
-                                   </c:if>
-                                </html-el:link>
-                                
-                            </td>
-                            <td> 
-                                <fmt:formatDate value="${archivedMessage.dateSent}" type="DATE" pattern="yyyy-MM-dd HH:mm:ss"/>
-                            </td>
-                            <td>
-                                <html-el:link action="/phr/PhrMessage.do?&method=unarchive&id=${archivedMessage.id}"  >
-                                   Unarchive
-                                </html-el:link>
-                            </td>
-                        </tr>
-                    </c:forEach>               
- <%-- Inbox new -------------------------------------------------------------- --%>
+ <%-- Inbox -------------------------------------------------------------- --%>
 	
 				<%
 					PHRAuthentication auth = (PHRAuthentication) session.getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
 					
 					if (auth!=null)
 					{
-						List<MessageTransfer> messages=MyOscarMessagesHelper.getMessages(session, startIndex );
+						List<MessageTransfer> messages=null;
+						
+						if ("viewSentMessages".equals(pageMethod)) messages=MyOscarMessagesHelper.getSentMessages(session, startIndex);
+						else if ("viewArchivedMessages".equals(pageMethod)) messages=MyOscarMessagesHelper.getReceivedMessages(session, false, startIndex);
+						else messages=MyOscarMessagesHelper.getReceivedMessages(session, true, startIndex);
+ 
 						for (MessageTransfer message : messages)
 						{
 							%>
@@ -664,6 +467,27 @@ request.setAttribute("pageMethod",pageMethod);
 		                                	}
 	                                	%>
 		                            </td>
+		                            <td bgcolor="#EEEEFF">                                
+		                                <%
+		                                	myOscarUserName=message.getRecipientPersonUserName();
+		                                	demographic=MyOscarUtils.getDemographicByMyOscarUserName(myOscarUserName);
+		                                	if (demographic!=null)
+		                                	{
+				                                %>
+				                               		<a href="?<%=request.getQueryString()%>" onClick="gotoEchart2(<%=demographic.getDemographicNo()%>);" >
+			                               		<%
+		                                	}
+			                            %>
+		                                <%=StringEscapeUtils.escapeHtml(message.getRecipientPersonLastName()+", "+message.getRecipientPersonFirstName())%>
+										<%
+		                                	if (demographic!=null)
+		                                	{
+				                                %>
+		                                			</a>
+	                                			<%
+		                                	}
+	                                	%>
+		                            </td>
 		                            <td bgcolor="#EEEEFF">
 		                                <a href="<%=request.getContextPath()%>/phr/PhrMessage.do?&method=read&comingfrom=viewMessages&messageId=<%=message.getId()%>">
 		                                   <%=StringEscapeUtils.escapeHtml(message.getSubject())%>
@@ -675,9 +499,29 @@ request.setAttribute("pageMethod",pageMethod);
 	                                   <%=DateUtils.formatTime(message.getSendDate(), request.getLocale())%>
 		                            </td>
 		                            <td>
-		                                <a href"<%=request.getContextPath()%>/phr/PhrMessage.do?&method=archive&id=<%=message.getId()%>"  >
-		                                   Archive
-		                                </a>
+		                            	<% 
+		                            		if (!"viewSentMessages".equals(pageMethod))
+		                            		{
+				                            	%>
+				                                <a href="<%=request.getContextPath()%>/phr/PhrMessage.do?prevDisplay=<%=pageMethod%>&method=flipActive&messageId=<%=message.getId()%>"  >
+						                            <%
+						                            	if (message.isActive())
+						                            	{
+						                            		%>
+								                                   <bean:message key="oscarMessenger.DisplayMessages.formDelete"/>
+						                            		<%
+						                            	}
+						                            	else
+						                            	{
+						                            		%>
+								                                   <bean:message key="oscarMessenger.DisplayMessages.formUndelete"/>
+						                            		<%			                            		
+						                            	}
+					                            	%>
+				                                </a>
+				                              <%
+		                            		}
+				                        %>
 		                            </td>
 		                        </tr>						
 							<%
@@ -685,55 +529,6 @@ request.setAttribute("pageMethod",pageMethod);
 					}
 				%>
 
- <%-- Inbox-------------------------------------------------------------- --%>
-                    
-                <nested:notEmpty name="indivoMessages">
-                    <% ArrayList<PHRMessage>phrMsgs = (ArrayList<PHRMessage>)session.getAttribute("indivoMessageBodies");%>
-                    <nested:iterate indexId="msgIdx" id="iMessage" name="indivoMessages" type="org.oscarehr.phr.model.PHRDocument">                           
-                        <tr <c:choose>
-                                <c:when test="${iMessage.read}">class="normal"</c:when>
-                                <c:otherwise>class="new"</c:otherwise>
-                            </c:choose>>
-                            <td bgcolor="#EEEEFF" width="30">
-                               
-                            <c:if test="${iMessage.replied}" > --> </c:if>
-                            
-                            </td>
-                            <td bgcolor="#EEEEFF" width="75">
-                                <c:choose>
-                                   <c:when test="${iMessage.read}">read</c:when>
-                                   <c:otherwise>new</c:otherwise>
-                                </c:choose>
-                            </td>
-                            <td bgcolor="#EEEEFF">                                
-                                
-                                <a href="javascript: function myFunction() {return false; }" onClick="gotoEchart(<c:out value="${iMessage.senderOscar}"/>, '<%=URLEncoder.encode(phrMsgs.get(msgIdx).getDocContent().replaceAll("\n","<br>"))%>');" >
-                                    <c:out value="${iMessage.senderMyOscarUserId}"/>
-                                </a>
-                            </td>
-                            <td bgcolor="#EEEEFF">
-                                
-                                <html-el:link action="/phr/PhrMessage.do?&method=read&comingfrom=viewMessages&messageId=${iMessage.id}"  >
-                                   <c:if test='${not empty iMessage.docSubject}'>
-                                    <c:out value="${iMessage.docSubject}"/>
-                                   </c:if>
-                                   <c:if test='${empty iMessage.docSubject}'>
-                                    No Subject
-                                   </c:if>
-                                </html-el:link>
-                                
-                            </td>
-                            <td bgcolor="#EEEEFF"> 
-                                <fmt:formatDate value="${iMessage.dateSent}" type="DATE" pattern="yyyy-MM-dd HH:mm:ss"/>
-                            </td>
-                            <td>
-                                <html-el:link action="/phr/PhrMessage.do?&method=archive&id=${iMessage.id}"  >
-                                   Archive
-                                </html-el:link>
-                            </td>
-                        </tr>
-                    </nested:iterate> 
-                 </nested:notEmpty>
                 </table>
             </td>
         </tr>

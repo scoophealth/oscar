@@ -18,12 +18,28 @@ public class MyOscarMessageManager {
 	
 	private static RemoteDataLogDao remoteDataLogDao=(RemoteDataLogDao) SpringUtils.getBean("remoteDataLogDao");
 	
-	public static List<MessageTransfer> getReceivedMessages(Long myOscarUserId, String myOscarPassword, int startIndex, int itemsToReturn)
+	public static List<MessageTransfer> getReceivedMessages(Long myOscarUserId, String myOscarPassword, Boolean active, int startIndex, int itemsToReturn)
 	{		
 		MessageWs messageWs=MyOscarServerWebServicesManager.getMessageWs(myOscarUserId, myOscarPassword);
 		
-		List<MessageTransfer> messageTransfers=messageWs.getReceivedMessages(myOscarUserId, true, startIndex, itemsToReturn);
-		logger.debug("Mesages Retrieved from MyOsar Server : "+messageTransfers.size());
+		List<MessageTransfer> messageTransfers=messageWs.getReceivedMessages(myOscarUserId, active, startIndex, itemsToReturn);
+		logger.debug("getReceivedMessages from MyOsar Server : "+messageTransfers.size());
+			
+		for (MessageTransfer messageTransfer : messageTransfers)
+		{
+			makeLogEntry("MESSAGE", messageTransfer.getId(), RemoteDataLog.Action.RETRIEVE, ReflectionToStringBuilder.toString(messageTransfer));
+		}
+			
+		return(messageTransfers);
+	}
+
+	public static List<MessageTransfer> getSentMessages(Long myOscarUserId, String myOscarPassword, int startIndex, int itemsToReturn)
+	{		
+		MessageWs messageWs=MyOscarServerWebServicesManager.getMessageWs(myOscarUserId, myOscarPassword);
+		
+		// when viewing sent messages we always view all even if the receipient has deleted/archived/inactived the message
+		List<MessageTransfer> messageTransfers=messageWs.getSentMessages(myOscarUserId, null, startIndex, itemsToReturn);
+		logger.debug("getSentMessages from MyOsar Server : "+messageTransfers.size());
 			
 		for (MessageTransfer messageTransfer : messageTransfers)
 		{
@@ -77,4 +93,10 @@ public class MyOscarMessageManager {
 		
 		remoteDataLogDao.persist(remoteDataLog);
 	}
+
+	public static void flipActive(Long myOscarUserId, String myOscarPassword, Long messageId) throws NotAuthorisedException_Exception {
+		MessageWs messageWs=MyOscarServerWebServicesManager.getMessageWs(myOscarUserId, myOscarPassword);
+		MessageTransfer messageTransfer=messageWs.getMessage(messageId);
+		messageWs.setMessageActive(messageId, !messageTransfer.isActive());
+    }
 }
