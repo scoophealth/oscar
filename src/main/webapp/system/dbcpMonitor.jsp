@@ -175,6 +175,29 @@ detect those and search the source.
 	Thread Format: <%=VMStat.getThreadFormat() %><br />
 	Thread Info: <%=VMStat.getThreadInfo()%>
 
+	<br /><br />
+	<%
+		Map<Thread,StackTraceElement[]> threadMap=Thread.getAllStackTraces();
+		int i=0;
+		for (Map.Entry<Thread, StackTraceElement[]> entry : threadMap.entrySet())
+		{
+			%>
+				<a href="javascript: hideDiv('threadStacktrace<%=i%>');">Hide Stacktrace</a> |
+				<a href="javascript: showDiv('threadStacktrace<%=i%>');">Show FULL Stacktrace</a><br/>
+				<div id="threadStacktrace<%=i%>" style="border: 1px solid grey; height: 70px; overflow: hidden;">
+				<%
+					String key=StringEscapeUtils.escapeHtml(entry.getKey().hashCode()+":"+entry.getKey().toString());
+					String value=StringEscapeUtils.escapeHtml(Arrays.toString(entry.getValue())).replace(",", "<br />");
+				%>
+				<%=key%> : <%=value%>
+				</div><br /><br />
+			<%
+			i++;
+		}
+	%>
+	
+	
+
     <h3>----- DataSource Connection Monitor -----</h3>
 
 	<br />
@@ -183,7 +206,7 @@ detect those and search the source.
 	<%
         //make local copy of the map to prevent thread interruption
         HashMap<Connection, StackTraceElement[]> connectionMap = new HashMap<Connection, StackTraceElement[]>(TrackingBasicDataSource.debugMap);
-        int i=0;
+        i=0;
         for (Map.Entry<Connection, StackTraceElement[]> entry : connectionMap.entrySet())
 		{
 			%>
