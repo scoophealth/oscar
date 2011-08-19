@@ -637,8 +637,7 @@ public class ManageDocumentAction extends DispatchAction {
 			File file = new File(documentDir, d.getDocfilename());
 			filename=d.getDocfilename();
 			
-			BufferedInputStream bfis = new BufferedInputStream(new FileInputStream(file));
-			contentBytes=FileUtils.readFileToByteArray(file);
+			if (file.exists()) contentBytes=FileUtils.readFileToByteArray(file);
 
 		} else // remote document
 		{
