@@ -53,6 +53,7 @@ import java.util.Vector;
 import javax.servlet.jsp.PageContext;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.SecObjPrivilegeDao;
 import org.oscarehr.common.model.SecObjPrivilege;
 import org.oscarehr.util.MiscUtils;
@@ -64,6 +65,8 @@ import oscar.oscarDB.DBHandler;
 
 public class OscarRoleObjectPrivilege {
 
+	private static Logger logger=MiscUtils.getLogger();
+	
 	private static PageContext pageContext;
 	private static String rights = "r";
 
@@ -83,7 +86,11 @@ public class OscarRoleObjectPrivilege {
 				}
 			}
 
-			String sql = new String("select roleUserGroup,privilege from secObjPrivilege where " + objectWhere.toString() + " order by priority desc");
+			
+			String sql = "select roleUserGroup,privilege from secObjPrivilege where " + objectWhere.toString() + " order by priority desc";
+			
+			// this sql looks nasty, OR statements are inherently poor performance items...
+			logger.debug("getPrivilegeProp() sql="+sql);
 
 			rs = DBHandler.GetSQL(sql);
 			Vector roleInObj = new Vector();
