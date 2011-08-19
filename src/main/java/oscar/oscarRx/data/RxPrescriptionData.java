@@ -480,7 +480,8 @@ public class RxPrescriptionData {
         Prescription[] arr = {};
         ArrayList lst = new ArrayList();
 
-        String sql = "SELECT d.*, p.date_printed, p.dates_reprinted FROM drugs d, prescription p WHERE  " + "d.demographic_no = " + demographicNo + " and d.script_no = p.script_no " + "ORDER BY position, rx_date DESC, drugId DESC";
+        String sql = "SELECT d.*, p.date_printed, p.dates_reprinted FROM drugs d, prescription p WHERE  " + "d.demographic_no = " + demographicNo + " and d.script_no = p.script_no " + "ORDER BY position DESC" +
+        		", rx_date DESC, drugId ASC";
 
         try {
             // Get Prescription from database
@@ -745,16 +746,16 @@ public class RxPrescriptionData {
             // Get Prescription from database
             
             ResultSet rs, rs2;
-            String sql = "SELECT * FROM drugs d WHERE d.archived = 0 AND d.demographic_no = " + demographicNo + " ORDER BY position,rx_date DESC, drugId DESC";
+            String sql = "SELECT * FROM drugs d WHERE d.archived = 0 AND d.demographic_no = " + demographicNo + " ORDER BY position DESC,rx_date DESC, drugId DESC";
             String indivoSql = "SELECT indivoDocIdx FROM indivoDocs i WHERE i.oscarDocNo = ? and docType = 'Rx' limit 1";
             boolean myOscarEnabled = OscarProperties.getInstance().getProperty("MY_OSCAR", "").trim().equalsIgnoreCase("YES");
             Prescription p;
-
+            logger.info(sql + "   RETURNS");
             rs = DBHandler.GetSQL(sql);
 
             while (rs.next()) {
                 boolean b = true;
-
+                
                 for (int i = 0; i < lst.size(); i++) {
                     Prescription p2 = (Prescription) lst.get(i);
 
@@ -775,6 +776,7 @@ public class RxPrescriptionData {
                 }
 
                 if (b) {
+                	logger.info("ADDING PRESCRIPTION");
                     p = new Prescription(rs.getInt("drugid"), oscar.Misc.getString(rs, "provider_no"), demographicNo);
                     p.setRxCreatedDate(rs.getDate("create_date"));
                     p.setRxDate(rs.getDate("rx_date"));
