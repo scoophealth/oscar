@@ -56,6 +56,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.SecObjPrivilegeDao;
 import org.oscarehr.common.model.SecObjPrivilege;
+import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.springframework.context.ApplicationContext;
@@ -104,6 +105,11 @@ public class OscarRoleObjectPrivilege {
 			rs.close();
 		} catch (java.sql.SQLException e) {
 			MiscUtils.getLogger().error("Error", e);
+		}
+		finally
+		{
+			// although this is not a thread, if we release resources earlier, it'l let us know who else is hoging resources as we only log the first caller to get connection
+			DbConnectionFilter.releaseAllThreadDbResources();
 		}
 		return ret;
 	}
