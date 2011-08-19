@@ -1,6 +1,7 @@
 package oscar.log;
 
 import org.oscarehr.common.model.OscarLog;
+import org.oscarehr.util.DbConnectionFilter;
 
 /**
  * No one should be calling / using this class except the LogAction.java class.
@@ -15,6 +16,13 @@ class AddLogExecutorTask implements Runnable {
 	}
 	
 	public void run() {
-		LogAction.addLogSynchronous(oscarLog);
+		try
+		{
+			LogAction.addLogSynchronous(oscarLog);
+		}
+		finally
+		{
+			DbConnectionFilter.releaseAllThreadDbResources();
+		}
 	}
 }
