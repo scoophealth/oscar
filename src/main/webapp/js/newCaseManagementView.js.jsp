@@ -1905,14 +1905,15 @@ function ajaxSaveNote(div,noteId,noteTxt) {
         	alert(assignEncTypeError);
         	return false;
         }
-        
-        if(isNaN(document.getElementById("hourOfEncTransportationTime").value) ||
-         isNaN(document.getElementById("minuteOfEncTransportationTime").value) ||
-         isNaN(document.getElementById("hourOfEncounterTime").value) ||
-         isNaN(document.getElementById("minuteOfEncounterTime").value) ) {
-        	alert(encTimeError);
-        	return false;
-        }
+        if(document.getElementById("hourOfEncTransportationTime") != null) {    
+	        if(isNaN(document.getElementById("hourOfEncTransportationTime").value) ||
+	         isNaN(document.getElementById("minuteOfEncTransportationTime").value) ||
+	         isNaN(document.getElementById("hourOfEncounterTime").value) ||
+	         isNaN(document.getElementById("minuteOfEncounterTime").value) ) {
+	        	alert(encTimeError);
+	        	return false;
+	        }
+		}
     }
 
 
@@ -1983,14 +1984,16 @@ function savePage(method, chain) {
         	alert(assignEncTypeError);
         	return false;
         }
+ 		if(document.getElementById("hourOfEncTransportationTime") != null) {          
+	        if(isNaN(document.getElementById("hourOfEncTransportationTime").value) ||
+	         isNaN(document.getElementById("minuteOfEncTransportationTime").value) ||
+	         isNaN(document.getElementById("hourOfEncounterTime").value) ||
+	         isNaN(document.getElementById("minuteOfEncounterTime").value) ) {
+	        	alert(encTimeError);
+	        	return false;
+	        }
+	    }
         
-        if(isNaN(document.getElementById("hourOfEncTransportationTime").value) ||
-         isNaN(document.getElementById("minuteOfEncTransportationTime").value) ||
-         isNaN(document.getElementById("hourOfEncounterTime").value) ||
-         isNaN(document.getElementById("minuteOfEncounterTime").value) ) {
-        	alert(encTimeError);
-        	return false;
-        }
         
     }
     document.forms["caseManagementEntryForm"].method.value = method;
