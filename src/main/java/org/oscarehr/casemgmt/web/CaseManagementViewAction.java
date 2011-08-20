@@ -1166,7 +1166,14 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		String appointmentNo = request.getParameter("appointment_no");
 
 		String[] codes = request.getParameterValues("issue_code");
-
+		com.quatro.service.security.SecurityManager securityManager = new com.quatro.service.security.SecurityManager();
+		//these are the ones on the right nav bar. - generic implementation of view access
+		if(codes != null && codes.length > 0) {
+			if(!securityManager.hasReadAccess("_"  + codes[0], request.getSession().getAttribute("userrole") + "," + request.getSession().getAttribute("user"))) {
+				return null;
+			}
+		}
+							
 		String roleName = (String) request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
 
 		boolean a = true;
