@@ -167,6 +167,7 @@
         <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/dragiframe.js"/>"></script>
         <script type="text/javascript" src="<c:out value="${ctx}/share/lightwindow/javascript/lightwindow.js"/>"></script>
         <!--script type="text/javascript" src="<%--c:out value="modaldbox.js"/--%>"></script-->
+        <script type="text/javascript" src="<c:out value="${ctx}/js/checkDate.js"/>"></script
 
         <script src="<c:out value="${ctx}/js/jquery.js"/>"></script>
         <script>
@@ -1877,8 +1878,35 @@ function updateQty(element){
              new Ajax.Updater(divId,url,{method:'get',parameters:params,insertion:Insertion.Bottom,asynchronous:true});
          }
 
+    function validateWrittenDate() {
+    	var x=true;
+    	jQuery('input[name^="writtenDate_"]').each(function(){    		
+    		var str1  = jQuery(this).val(); 
+    		
+    		if(!checkAndValidateDate(str1,null)) {
+    			x=false;
+    			return false;
+    		}
+    		
+			var dt1  = parseInt(str1.substring(8,10),10);
+    		var mon1 = parseInt(str1.substring(5,7),10);
+    		var yr1  = parseInt(str1.substring(0,4),10);
+    		var date1 = new Date(yr1, mon1-1, dt1);    		
+    		var now  = new Date();
+    		    		
+    		if(date1 > now) {
+    			x=false;
+    			alert('Written Date cannot be in the future. (' + str1 +')');
+    		} 
+    	});
+    	return x;
+    }
+
 
     function updateSaveAllDrugsPrint(){
+    	if(!validateWrittenDate()) {
+    		return false;
+    	}
         var data=Form.serialize($('drugForm'));
         var url= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=updateSaveAllDrugs";
         new Ajax.Request(url,
@@ -1891,6 +1919,9 @@ function updateQty(element){
         return false;
     }
     function updateSaveAllDrugs(){
+    	if(!validateWrittenDate()) {
+    		return false;
+    	}
         var data=Form.serialize($('drugForm'));
         var url= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=updateSaveAllDrugs";
         new Ajax.Request(url,

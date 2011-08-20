@@ -282,6 +282,15 @@ function validateDate(year, month, day)
 	// This happens because today's day is 31st and September only has 30 days
 	// so date is normalized to 2009 October 01 when setMonth() is called.
 */
+       //Marc: this fix seems needed on firefox anyway, or else the parseInt is returning 0    
+       if(month.charAt(0) == '0') {
+               month = month.substring(1,month.length);
+       }
+       if(day.charAt(0) == '0') {
+               day = day.substring(1,day.length);
+       }
+       
+      
 	var iYear = parseInt(year);
 	var iMonth = parseInt(month);
 	var iDay = parseInt(day);
