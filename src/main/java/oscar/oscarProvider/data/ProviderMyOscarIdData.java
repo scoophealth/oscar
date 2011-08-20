@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
@@ -66,6 +67,9 @@ public final class ProviderMyOscarIdData {
 
 		} catch (SQLException ex) {
 			logger.error("Error", ex);
+		}
+		finally {
+			DbConnectionFilter.releaseAllThreadDbResources();
 		}
 
 		return myOscarId;
