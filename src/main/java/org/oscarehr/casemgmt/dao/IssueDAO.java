@@ -95,7 +95,7 @@ public class IssueDAO extends HibernateDaoSupport {
         search = search.toLowerCase();
         String sql = "from Issue i where (lower(i.code) like ? or lower(i.description) like ?  or lower(i.role) like ?) and i.role in (" + roleList + ") order by sortOrderId";
         logger.debug(sql);
-        return this.getHibernateTemplate().find(sql, new Object[] {search, search});
+        return this.getHibernateTemplate().find(sql, new Object[] {search, search,roleList});
 
     }
 
