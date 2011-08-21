@@ -806,6 +806,8 @@ public final class RxWriteScriptAction extends DispatchAction {
 					boolean isOutsideProvider = false;
 					boolean isLongTerm = false;
 					boolean isPastMed = false;
+					boolean isHomeMed = false;
+					boolean isStartDateUnknown = false;
                                         boolean isNonAuthoritative = false;
                                         Date pickupDate;
                                         Date pickupTime;
@@ -915,6 +917,20 @@ public final class RxWriteScriptAction extends DispatchAction {
 							} else {
 								isPastMed = false;
 							}
+						} else if (elem.equals("homeMed_" + num)) {
+							if (val.equals("on")) {
+								isHomeMed = true;
+							} else {
+								isHomeMed = false;
+							}
+						} else if (elem.equals("startDateUnknown_" + num)) {
+							if (val.equals("on")) {
+								isStartDateUnknown = true;
+							} else {
+								isStartDateUnknown = false;
+							}
+						} else if (elem.equals("comment_" + num)) {
+							rx.setComment(val);
 						} else if (elem.equals("patientComplianceY_" + num)) {
 							if (val.equals("on")) {
 								patientComplianceY = true;
@@ -950,6 +966,8 @@ public final class RxWriteScriptAction extends DispatchAction {
 						rx.setOutsideProviderOhip("");
 					}
 					rx.setPastMed(isPastMed);
+					rx.setHomeMed(isHomeMed);
+					rx.setStartDateUnknown(isStartDateUnknown);
 					rx.setLongTerm(isLongTerm);
                                         rx.setNonAuthoritative(isNonAuthoritative);
 					String newline = System.getProperty("line.separator");
