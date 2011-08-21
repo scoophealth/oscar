@@ -82,7 +82,15 @@ if (heading != null){
             <th align="center" width="35px"><b><bean:message key="SearchDrug.msgReprescribe"/></b></th>
             <th align="center" width="35px"><b><bean:message key="SearchDrug.msgDelete"/></b></th>
             <th align="center" width="35px"><b><bean:message key="SearchDrug.msgDiscontinue"/></b></th>
-			<th align="center" width="35px"><b><bean:message key="SearchDrug.msgReason"/></b></th>           
+			<th align="center" width="35px"><b><bean:message key="SearchDrug.msgReason"/></b></th>    
+            <%
+               String listHomeMed = OscarProperties.getInstance().getProperty("rx.list_home_med");
+               if(listHomeMed != null && listHomeMed.equals("true")) {
+            %>
+            <th align="center" width="35px"><b><bean:message key="SearchDrug.msgHomeMed"/></b></th>
+            <% } %>
+            <th align="center" width="35px"><b><bean:message key="SearchDrug.msgPastMed"/></b></th>
+			       
             <th align="center" width="15px">&nbsp;</th>
             <th align="center"><bean:message key="SearchDrug.msgLocationPrescribed"/></th>
             <th align="center"><bean:message key="SearchDrug.msgHideCPP"/></th>
@@ -236,6 +244,13 @@ if (heading != null){
 				%>
             </td>
 
+            <%
+            if(listHomeMed != null && listHomeMed.equals("true")) {
+            %>             
+            <td align="center" valign="top"><%=(prescriptDrug.getHomeMed())?"yes":"no" %></td>
+            <% } %>
+            <td align="center" valign="top"><%=(prescriptDrug.getPastMed())?"yes":"no" %></td>
+
             <td width="10px" align="center" valign="top">
             	<% 	
             		if (prescriptDrug.getRemoteFacilityId()==null)
@@ -261,7 +276,7 @@ if (heading != null){
 
             </td>
 
-			<td>
+			<td align="center" valign="top">
 				<%
 					boolean hideCpp = prescriptDrug.getHideFromCpp();
 					String checked="";
@@ -271,7 +286,7 @@ if (heading != null){
 				%>
 				<input type="checkbox" id="hidecpp_<%=prescriptIdInt%>" <%=checked%>/>
 			</td>
-			<td nowrap="nowrap">
+			<td nowrap="nowrap" align="center" valign="top">
 				<%if(!(prescriptDrugs.get(prescriptDrugs.size()-1) == prescriptDrug)) {%>
 				<img border="0" src="<%=request.getContextPath()%>/images/icon_down_sort_arrow.png" onclick="moveDrugDown(<%=prescriptDrug.getId() %>,<%=prescriptDrugs.get(x+1).getId() %>,<%=prescriptDrug.getDemographicId()%>);return false;"/>
 				<% } %>
