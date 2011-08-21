@@ -1832,6 +1832,17 @@ function updateQty(element){
        var prnVal="prnVal_"+rand;
         new Ajax.Request(url, {method: 'get',parameters:instruction,asynchronous:false, onSuccess:function(transport){
                 var json=transport.responseText.evalJSON();
+                if(json.policyViolations != null && json.policyViolations.length>0) {
+                       for(var x=0;x<json.policyViolations.length;x++) {
+                               alert(json.policyViolations[x]);
+                       }
+                       $("saveButton").disabled=true;
+                       $("saveOnlyButton").disabled=true;
+                } else {
+                       $("saveButton").disabled=false;
+                       $("saveOnlyButton").disabled=false;     
+                }
+                
                 $(methodStr).innerHTML=json.method;
                 $(routeStr).innerHTML=json.route;
                 $(frequencyStr).innerHTML=json.frequency;
