@@ -248,12 +248,17 @@ public class RxDrugRef {
          return vec;
      }
 
-     public Vector list_drug_element3(String searchStr) throws Exception{
-          Vector params = new Vector();
-          params.addElement(searchStr);
-          Vector<Hashtable> vec = (Vector)  callWebserviceLite("list_search_element3",params);
-          return vec;
-     }
+     public Vector list_drug_element3(String searchStr, boolean rightWildcardOnly) throws Exception{
+         Vector params = new Vector();
+         params.addElement(searchStr);
+         Vector<Hashtable> vec = null;
+         if(rightWildcardOnly) {
+       	  vec  = (Vector)  callWebserviceLite("list_search_element3_right",params);
+         } else {
+       	  vec  = (Vector)  callWebserviceLite("list_search_element3",params);
+         }
+         return vec;
+    }
      
      /**
      returns all matching search element names, ids and categoeis for the given searchString
