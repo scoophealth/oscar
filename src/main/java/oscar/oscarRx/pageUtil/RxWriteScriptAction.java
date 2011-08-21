@@ -611,6 +611,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 				hm.put("prn", rx.getPrn());
 				hm.put("calQuantity", rx.getQuantity());
 				hm.put("unitName", rx.getUnitName());
+				hm.put("policyViolations", rx.getPolicyViolations());
 				JSONObject jsonObject = JSONObject.fromObject(hm);
 				logger.debug("jsonObject:"+jsonObject.toString());
 				response.getOutputStream().write(jsonObject.toString().getBytes());
