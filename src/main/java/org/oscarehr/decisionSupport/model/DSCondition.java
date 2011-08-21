@@ -58,7 +58,7 @@ public class DSCondition {
     protected List<DSValue> values;
     private Hashtable param = null;
     private String label = null;
-
+    private String desc  = null;
     
     /**
      * @return the conditionType
@@ -109,4 +109,14 @@ public class DSCondition {
     public void setValues(List<DSValue> values) {
         this.values = values;
     }
+
+	public String getDesc() {
+		return desc;
+	}
+
+	public void setDesc(String desc) {
+		this.desc = desc;
+	}
+    
+    
 }
