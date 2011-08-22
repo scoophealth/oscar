@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Vector;
 
@@ -1135,9 +1136,17 @@ public class RxPrescriptionData {
         private String drugFormList = "";
         private String datesReprinted = "";
         
+        private List<String> policyViolations = new ArrayList<String>();                
         
-        
-        public boolean getHomeMed() {
+        public List<String> getPolicyViolations() {
+        	return policyViolations;
+        }
+
+		public void setPolicyViolations(List<String> policyViolations) {
+        	this.policyViolations = policyViolations;
+        }
+
+		public boolean getHomeMed() {
         	return homeMed;
         }
 
