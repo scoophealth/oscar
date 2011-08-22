@@ -167,7 +167,7 @@
         <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/dragiframe.js"/>"></script>
         <script type="text/javascript" src="<c:out value="${ctx}/share/lightwindow/javascript/lightwindow.js"/>"></script>
         <!--script type="text/javascript" src="<%--c:out value="modaldbox.js"/--%>"></script-->
-        <script type="text/javascript" src="<c:out value="${ctx}/js/checkDate.js"/>"></script
+        <script type="text/javascript" src="<c:out value="${ctx}/js/checkDate.js"/>"></script>
 
         <script src="<c:out value="${ctx}/js/jquery.js"/>"></script>
         <script>
