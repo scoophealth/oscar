@@ -1514,8 +1514,8 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
                      if(debt >= 0.01d) {
                                    List<Integer> unpaidNumbers = billDao.listUnpaidInvoices(Integer.valueOf(demographic_no),cal.getTime());
                                    if(unpaidNumbers == null || unpaidNumbers.size()>0) {
-                                           if(unpaidNumbers.size() == 1) debtMessage = "Patient "+demographic_no+" "+userfirstname+" "+userlastname+" needs to pay invoice #";
-                                           else debtMessage = "Patient "+demographic_no+" "+userfirstname+" "+userlastname+" needs to pay invoices ##";
+                                           if(unpaidNumbers.size() == 1) debtMessage = "Patient "+name+" needs to pay invoice #";
+                                           else debtMessage = "Patient "+name+" needs to pay invoices ##";
                                            for (Integer num : unpaidNumbers) {
                                                    debtMessage += num.toString()+" ";
                                            }

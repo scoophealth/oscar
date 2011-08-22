@@ -53,6 +53,7 @@
 <%@ page import="java.util.*, java.sql.*, java.net.*,java.text.DecimalFormat, oscar.*, oscar.oscarDemographic.data.ProvinceNames, oscar.oscarWaitingList.WaitingList, oscar.oscarReport.data.DemographicSets,oscar.log.*"%>
 <%@ page import="org.oscarehr.phr.PHRAuthentication"%>
 <%@ page import="oscar.oscarDemographic.data.*"%>
+<%@ page import="oscar.oscarDemographic.pageUtil.Util" %>
 <%@ page import="org.springframework.web.context.*,org.springframework.web.context.support.*,org.oscarehr.common.dao.*,org.oscarehr.common.model.*,org.oscarehr.common.OtherIdManager"%>
 <%@ page import="oscar.OscarProperties"%>
 <%@ page import="org.oscarehr.phr.PHRAuthentication"%>
@@ -1414,19 +1415,19 @@ if(oscarVariables.getProperty("demographicExt") != null) {
 								    <option value="English" <%=lang.equals("English")?"selected":""%> ><bean:message key="demographic.demographiceditdemographic.msgEnglish"/></option>
 								    <option value="French" <%=lang.equals("French")?"selected":""%> ><bean:message key="demographic.demographiceditdemographic.msgFrench"/></option>
 								</select>
-								&nbsp;&nbsp;
-								<b><bean:message key="demographic.demographiceditdemographic.msgSpoken"/>: </b>
+								</td>
+							</tr>
+							<tr>
+							    <td colspan="2">&nbsp;</td>
+                                <td align="right">
+							    <b><bean:message key="demographic.demographiceditdemographic.msgSpoken"/>: </b>
+							    </td>
+							    <td>
 								<%String spokenLang = apptMainBean.getString(rs,"spoken_lang"); %>
 									<select name="spoken_lang">
-										<option value="">--</option>
-									    <option value="English" <%=spokenLang.equals("English")?"selected":""%> ><bean:message key="demographic.demographiceditdemographic.msgEnglish"/></option>
-									    <option value="French" <%=spokenLang.equals("French")?"selected":""%> ><bean:message key="demographic.demographiceditdemographic.msgFrench"/></option>
-                                                                            <option value="Chinese" <%=spokenLang.equals("Chinese")?"selected":""%> >Chinese</option>
-                                                                            <option value="German" <%=spokenLang.equals("German")?"selected":""%> >German</option>
-                                                                            <option value="Italian" <%=spokenLang.equals("Italian")?"selected":""%> >Italian</option>
-                                                                            <option value="Japanese" <%=spokenLang.equals("Japanese")?"selected":""%> >Japanese</option>
-                                                                            <option value="Korean" <%=spokenLang.equals("Korean")?"selected":""%> >Korean</option>
-                                                                            <option value="Spanish" <%=spokenLang.equals("Spanish")?"selected":""%> >Spanish</option>
+<%for (String splang : Util.spokenLangProperties.getLangSorted()) { %>
+                                        <option value="<%=splang %>" <%=spokenLang.equals(splang)?"selected":"" %>><%=splang %></option> 
+<%} %>
 									</select>								
 							    </td>
 							</tr>
