@@ -87,6 +87,9 @@ public class DSGuidelineFactory {
                 String knownTypes = StringUtils.join(DSDemographicAccess.Module.values(), ",");
                 throw new DecisionSupportParseException(guidelineTitle, "Cannot recognize condition type: '" + conditionTypeStr + "'.  Known types: " + knownTypes, iae);
             }
+            
+            String conditionDescStr = conditionTag.getAttributeValue("desc");
+            
 
             Hashtable paramHashtable = new Hashtable();
             List<Element> paramList = conditionTag.getChildren("param");
@@ -101,6 +104,7 @@ public class DSGuidelineFactory {
             List<Attribute> attributes = conditionTag.getAttributes();
             for (Attribute attribute: attributes) {
                 if (attribute.getName().equalsIgnoreCase("type")) continue;
+                if (attribute.getName().equalsIgnoreCase("desc")) continue;
                 DSCondition.ListOperator operator;
                 try {
                     operator = DSCondition.ListOperator.valueOf(attribute.getName().toLowerCase());
@@ -109,6 +113,7 @@ public class DSGuidelineFactory {
                 }
                 DSCondition dsCondition = new DSCondition();
                 dsCondition.setConditionType(conditionType);
+                dsCondition.setDesc(conditionDescStr);
                 dsCondition.setListOperator(operator); //i.e. any, all, not
                 if (paramHashtable != null && !paramHashtable.isEmpty()){
                     _log.debug("THIS IS THE HASH STRING "+paramHashtable.toString());
