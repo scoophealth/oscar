@@ -280,7 +280,12 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
         }
         function getComment(action) {    
             var ret = true;
-            var commentVal = prompt('<bean:message key="oscarMDS.segmentDisplay.msgComment"/>', '');
+            var text = $F("providerNo") + "commentText";
+            var comment = $(text).value;
+            if( comment == null ) {
+            	comment = "";
+            }
+            var commentVal = prompt('<bean:message key="oscarMDS.segmentDisplay.msgComment"/>', comment);
     
             if( action == "addComment" && (commentVal == null || commentVal.length==0))
                 ret = false;
@@ -393,10 +398,12 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
         function addComment(formid,labid) {
         	var url='<%=request.getContextPath()%>'+"/oscarMDS/UpdateStatus.do?method=addComment";
         	var data=$(formid).serialize(true);
+        	var label = $F("providerNo") + "commentLabel";
+        	var text = $F("providerNo") + "commentText";
 
             new Ajax.Request(url,{method:'post',parameters:data,onSuccess:function(transport){
-            	$("commentLabel").update("comment : ");
-            	$("commentText").update(document.acknowledgeForm.comment.value); 
+            	$(label).update("comment : ");
+            	$(text).update(document.acknowledgeForm.comment.value); 
         }});
         }
         </script>
@@ -423,7 +430,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                 <td align="left" class="MainTableTopRowRightColumn" width="100%">                        
                                     <input type="hidden" name="segmentID" value="<%= segmentID %>"/>
                                     <input type="hidden" name="multiID" value="<%= multiLabId %>" />
-                                    <input type="hidden" name="providerNo" value="<%= providerNo %>"/>
+                                    <input type="hidden" name="providerNo" id="providerNo" value="<%= providerNo %>"/>
                                     <input type="hidden" name="status" value="<%=labStatus%>" id="labStatus"/>
                                     <input type="hidden" name="comment" value=""/>
                                     <input type="hidden" name="labType" value="HL7"/>
@@ -761,7 +768,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                                         <% if ( ackStatus.equals("Acknowledged") ) { %>
                                                                             <%= report.getTimestamp() %>,                                                                             
                                                                         <% } %>
-                                                                        <span id="commentLabel"><%=report.getComment().equals("") ? "no comment" : "comment : "%></span><span id="commentText"><%=report.getComment()%></span>
+                                                                        <span id="<%=report.getProviderNo()%>commentLabel"><%=report.getComment().equals("") ? "no comment" : "comment : "%></span><span id="<%=report.getProviderNo()%>commentText"><%=report.getComment()%></span>
                                                                         <br>
                                                                     <% } 
                                                                     if (ackList.size() == 0){
