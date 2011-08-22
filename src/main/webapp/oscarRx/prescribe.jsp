@@ -60,7 +60,13 @@ if(listRxDrugs!=null){
          if(drugName==null || drugName.equalsIgnoreCase("null"))
              drugName="" ;
 
+         String comment  = rx.getComment();
+         if(rx.getComment() == null) {
+        	 comment = "";
+         }
          boolean pastMed            = rx.getPastMed();
+         boolean homeMed			= rx.getHomeMed();
+         boolean startDateUnknown	= rx.getStartDateUnknown();
          boolean nonAuthoritative   = rx.isNonAuthoritative();
          String quantity            = rx.getQuantity();
          String quantityText="";
@@ -170,7 +176,12 @@ if(listRxDrugs!=null){
 
         <bean:message key="WriteScript.msgPastMedication"/>
             <input  type="checkbox" name="pastMed_<%=rand%>" id="pastMed_<%=rand%>" <%if(pastMed) {%> checked="true" <%}%> />
-
+            
+        <bean:message key="WriteScript.msgHomeMedication"/>
+            <input  type="checkbox" name="homeMed_<%=rand%>" id="homeMed_<%=rand%>" <%if(homeMed) {%> checked="true" <%}%> />
+        
+	<Br/>
+	
 	<bean:message key="WriteScript.msgPatientCompliance"/>:
           <bean:message key="WriteScript.msgYes"/>
             <input type="checkbox"  name="patientComplianceY_<%=rand%>" id="patientComplianceY_<%=rand%>" <%if(patientCompliance!=null && patientCompliance) {%> checked="true" <%}%> />
@@ -184,6 +195,10 @@ if(listRxDrugs!=null){
 
         <label style="float:left;width:80px;">Start Date:</label>
            <input type="text" id="rxDate_<%=rand%>" name="rxDate_<%=rand%>" value="<%=startDate%>"/>
+        <bean:message key="WriteScript.msgUnknown"/>
+           <input  type="checkbox" name="startDateUnknown_<%=rand%>" id="startDateUnknown_<%=rand%>" <%if(startDateUnknown) {%> checked="true" <%}%> />
+           
+           <br/>
 	<label style="">Last Refill Date:</label>
            <input type="text" id="lastRefillDate_<%=rand%>"  name="lastRefillDate_<%=rand%>" value="<%=lastRefillDate%>" />
 	<br/>
@@ -197,7 +212,10 @@ if(listRxDrugs!=null){
            <input type="text" id="pickupDate_<%=rand%>"  name="pickupDate_<%=rand%>" value="<%=pickupDate%>" onchange="if (!isValidDate(this.value)) {this.value=null}" />
            <bean:message key="WriteScript.msgPickUpTime"/>: 
            <input type="text" id="pickupTime_<%=rand%>"  name="pickupTime_<%=rand%>" value="<%=pickupTime%>" onchange="if (!isValidTime(this.value)) {this.value=null}" />
-           <br/> 
+           <br/>
+           <bean:message key="WriteScript.msgComment"/>:
+           <input type="text" id="comment_<%=rand%>" name="comment_<%=rand%>" value="<%=comment%>" size="60"/>
+           <br/>  
            <bean:message key="WriteScript.msgETreatmentType"/>:     
            <select name="eTreatmentType_<%=rand%>">
            		<option>--</option>
