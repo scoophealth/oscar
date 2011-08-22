@@ -23,6 +23,7 @@
  * Ontario, Canada
  */
 --%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="org.oscarehr.util.MiscUtils"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.MatchingDemographicTransferScore"%>
 <%@page import="java.util.List"%>
@@ -190,8 +191,9 @@
 
    	apptMainBean.doCommand(request); //store request to a help class object Dict - function&params
 
+	LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
    	//--- add integrator results ---
-	if (matchingDemographicParameters!=null)
+	if (matchingDemographicParameters!=null && loggedInInfo.currentFacility.isIntegratorEnabled())
 	{
 		matchingDemographicParameters.setMaxEntriesToReturn(5);
 		matchingDemographicParameters.setMinScore(7);
