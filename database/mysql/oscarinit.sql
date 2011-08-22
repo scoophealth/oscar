@@ -652,6 +652,9 @@ CREATE TABLE drugs (
   refill_quantity int(10),
   hide_cpp tinyint(1),
   position int(10) not null,
+  home_med boolean,
+  comment varchar(255),
+  start_date_unknown boolean,
   PRIMARY KEY  (drugid)
 ) ;
 
