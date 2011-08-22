@@ -132,6 +132,7 @@
 								for(int i=0;i<DAs.size();i++) {
 									DemographicArchive da = DAs.get(i);
 									String historyRS = da.getRosterStatus();
+									if (i==0 && historyRS.equals(demographic.getRosterStatus())) continue;
 					                %>
 					                	<tr>
 					                		<td nowrap="nowrap"><%=DateUtils.formatDate(da.getLastUpdateDate(),request.getLocale())%></td>

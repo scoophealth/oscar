@@ -388,34 +388,14 @@ public class Util {
 
         return codeFormatted;
     }
-
-    /**
-     * TODO: Need to extend this in the future to read off an ISO-639-2 table.
-     *
-     * @param lang
-     * @return
-     */
+    
+    static public SpokenLangProperties spokenLangProperties = SpokenLangProperties.getInstance();
+    
     static public String convertLanguageToCode(String lang) {
-    	if(lang.equalsIgnoreCase("english")) return "ENG";
-    	if(lang.equalsIgnoreCase("french")) return "FRE";
-    	if(lang.equalsIgnoreCase("chinese")) return "CHI";
-        if(lang.equalsIgnoreCase("italian")) return "ITA";
-        if(lang.equalsIgnoreCase("japanese")) return "JPA";
-        if(lang.equalsIgnoreCase("korean")) return "KOR";
-        if(lang.equalsIgnoreCase("spanish")) return "SPA";
-        if(lang.equalsIgnoreCase("german")) return "GER";
-    	return null;
+    	return spokenLangProperties.getCodeByLang(lang);
     }
 
-    static public String convertCodeToLanguage(String lang) {
-    	if(lang.equalsIgnoreCase("ENG")) return "English";
-    	if(lang.equalsIgnoreCase("FRE")) return "French";
-    	if(lang.equalsIgnoreCase("CHI")) return "Chinese";
-        if(lang.equalsIgnoreCase("ITA")) return "Italian";
-        if(lang.equalsIgnoreCase("JPA")) return "Japanese";
-        if(lang.equalsIgnoreCase("KOR")) return "Korean";
-        if(lang.equalsIgnoreCase("SPA")) return "Spanish";
-        if(lang.equalsIgnoreCase("GER")) return "German";
-    	return null;
+    static public String convertCodeToLanguage(String code) {
+    	return spokenLangProperties.getProperty(code);
     }
 }
