@@ -40,6 +40,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.util.MiscUtils;
 
+import oscar.OscarProperties;
 import oscar.oscarRx.data.RxDrugData;
 import oscar.oscarRx.util.RxDrugRef;
 
@@ -89,8 +90,10 @@ public final class RxSearchDrugAction extends DispatchAction {
             searchStr = request.getParameter("name");
         }
 
+        String wildcardRightOnly = OscarProperties.getInstance().getProperty("rx.search_right_wildcard_only", "false");       
+               
         RxDrugRef drugref = new RxDrugRef();
-        Vector<Hashtable> vec = drugref.list_drug_element3(searchStr);
+        Vector<Hashtable> vec = drugref.list_drug_element3(searchStr,Boolean.valueOf(wildcardRightOnly));
         
         Hashtable d = new Hashtable();
         d.put("results",vec);

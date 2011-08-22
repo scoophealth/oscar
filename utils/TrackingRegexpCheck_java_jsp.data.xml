@@ -160,7 +160,6 @@
         <ViolationValue>/src/main/java/org/oscarehr/phr/model/PHRMessage.java:Hashtable results = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/phr/model/PHRMessage.java:this(subject, priorThreadMessage, messageBody, sender, recipientOscarId, recipientType, myOscarUserId, new ArrayList());</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/phr/web/PHRGenericSendToPhrAction.java:ArrayList&lt;String&gt; eDocAttachmentActionId = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/phr/web/PHRMessageAction.java:ArrayList&lt;Integer&gt; statusList = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/provider/web/ProviderPropertyAction.java:ArrayList groupList = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/provider/web/ProviderPropertyAction.java:ArrayList provinces = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/provider/web/ProviderPropertyAction.java:ArrayList serviceList = new ArrayList();</ViolationValue>
@@ -3955,7 +3954,7 @@
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxSearchAllergyAction.java:strVec = (Vector) returnHash.get(idDrug);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxSearchAllergyAction.java:strVec = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxSearchDrugAction.java:Hashtable d = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxSearchDrugAction.java:Vector&lt;Hashtable&gt; vec = drugref.list_drug_element3(searchStr);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxSearchDrugAction.java:Vector&lt;Hashtable&gt; vec = drugref.list_drug_element3(searchStr,Boolean.valueOf(wildcardRightOnly));</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxSearchDrugAction.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxSearchDrugAction.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxSessionBean.java:Vector atcCodes = rxData.getCurrentATCCodesByPatient(this.getDemographicNo());</ViolationValue>
@@ -4025,7 +4024,7 @@
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = (Vector) callWebserviceLite("suggestAlias",params);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = null;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector&lt;Hashtable&gt; vec = (Vector)  callWebserviceLite("list_search_element3",params);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector&lt;Hashtable&gt; vec = null;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:if (holbrook instanceof Vector){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:if (obj instanceof Vector){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:import java.util.Hashtable;</ViolationValue>
@@ -4067,7 +4066,7 @@
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:public Vector list_drug_class(Vector classVec){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:public Vector list_drug_element(String searchStr) throws Exception{</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:public Vector list_drug_element2(String searchStr) throws Exception{</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:public Vector list_drug_element3(String searchStr) throws Exception{</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:public Vector list_drug_element3(String searchStr, boolean rightWildcardOnly) throws Exception{</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:public Vector list_drug_element_route(String searchStr, String searchRoute) throws Exception{</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:public Vector list_drugs(String searchexpr,Hashtable  tags){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:public Vector list_drugs_for_indication(int indication ,Hashtable tags){</ViolationValue>
@@ -4082,6 +4081,8 @@
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:removeNullFromVector(drugs);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:return new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:return new Vector();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:vec  = (Vector)  callWebserviceLite("list_search_element3",params);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:vec  = (Vector)  callWebserviceLite("list_search_element3_right",params);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:vec = (Vector) callWebservice("list_search_element_select_categories",params);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:vec = (Vector) callWebservice("list_search_element_select_categories_right",params);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:vec = (Vector) holbrook;</ViolationValue>
