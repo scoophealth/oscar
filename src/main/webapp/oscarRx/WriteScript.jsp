@@ -5,6 +5,8 @@
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 <%@ page import="java.util.*,oscar.oscarRx.data.*,oscar.oscarRx.pageUtil.*,oscar.oscarRx.util.*"%>
 <%@page import="org.oscarehr.util.MiscUtils"%>
+<%@page import="org.apache.commons.lang.StringEscapeUtils"%>
+
 <%long start = System.currentTimeMillis();%>
 
 <!--
@@ -1446,7 +1448,7 @@ int i;
 										<td><a href="javascript:submitPending(<%= i%>, 'delete');"><bean:message key="WriteScript.msgDelete"/></a></td>
 										<td><a href="javascript:submitPending(<%= i%>, 'edit');"><bean:write name="rx" property="rxDisplay" /> </a></td>
 										<td><a href="javascript:ShowDrugInfo('<%= rx2.getGenericName() %>');"><bean:message key="WriteScript.msgInfo"/></a></td>
-										<td><a href="javascript:addFavorite(<%= String.valueOf(i) %>, '<%= rx2.isCustom() ? rx2.getCustomName() : rx2.getBrandName() %>');"><bean:message key="WriteScript.msgAddtoFavorites"/></a></td>
+										<td><a href="javascript:addFavorite(<%= String.valueOf(i) %>, '<%= rx2.isCustom() ? StringEscapeUtils.escapeJavaScript(rx2.getCustomName()) :  StringEscapeUtils.escapeJavaScript(rx2.getBrandName()) %>');"><bean:message key="WriteScript.msgAddtoFavorites"/></a></td>
 									</tr>
 									<% i++; %>
 								</logic:iterate>

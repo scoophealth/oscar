@@ -98,6 +98,10 @@ function validateEdit() {
 			return error(gender, "This gender not allowed in selected program.");
 		}
 	}
+	if(getElement('client.formattedDob').value.length==0) {
+		return error(getElement('client.formattedDob'), "The birth date you've entered is not a valid date.");
+	}
+	
 /*
 	var month = parseInt(getElement('client.monthOfBirth').value, 10);
 	var day = parseInt(getElement('client.dateOfBirth').value, 10);

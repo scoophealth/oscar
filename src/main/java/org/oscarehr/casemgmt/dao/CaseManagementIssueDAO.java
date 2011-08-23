@@ -76,7 +76,12 @@ public class CaseManagementIssueDAO extends HibernateDaoSupport {
     public void saveAndUpdateCaseIssues(List<CaseManagementIssue> issuelist) {
         Iterator<CaseManagementIssue> itr = issuelist.iterator();
         while (itr.hasNext()) {
-            getHibernateTemplate().saveOrUpdate(itr.next());
+        	CaseManagementIssue cmi = itr.next();
+        	if(cmi.getId()!=null && cmi.getId().longValue()>0) {
+        		getHibernateTemplate().update(cmi);
+        	} else {
+        		getHibernateTemplate().save(cmi);
+        	}            
         }
 
     }
