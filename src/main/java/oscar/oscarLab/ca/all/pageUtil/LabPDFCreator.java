@@ -44,6 +44,11 @@ import oscar.oscarLab.ca.all.parsers.Factory;
 import oscar.oscarLab.ca.all.parsers.MessageHandler;
 import oscar.oscarMDS.data.ReportStatus;
 
+import org.oscarehr.common.dao.Hl7TextMessageDao;
+import org.oscarehr.common.model.Hl7TextMessage;
+import oscar.util.UtilDateUtilities;
+import org.oscarehr.util.SpringUtils;
+
 import com.lowagie.text.Chunk;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
@@ -78,6 +83,7 @@ public class LabPDFCreator extends PdfPageEventHelper{
     private Font font;
     private Font boldFont;
     private Font redFont;
+    private String dateLabReceived;
     
     public static byte[] getPdfBytes(String segmentId, String providerNo) throws IOException, DocumentException
     {
@@ -97,6 +103,14 @@ public class LabPDFCreator extends PdfPageEventHelper{
     public LabPDFCreator(OutputStream os, String segmentId, String providerNo) {
         this.os = os;
         this.id = segmentId;
+        
+      //Need date lab was received by OSCAR
+        Hl7TextMessageDao hl7TxtMsgDao = (Hl7TextMessageDao)SpringUtils.getBean("hl7TextMessageDao");
+        Hl7TextMessage hl7TextMessage = hl7TxtMsgDao.find(Integer.parseInt(segmentId));
+        java.util.Date date = hl7TextMessage.getCreated();
+        String stringFormat = "yyyy-MM-dd HH:mm";
+        dateLabReceived = UtilDateUtilities.DateToString(date, stringFormat);
+
 
         // check for acknowledgements and set ackFlag
         ArrayList ackList = AcknowledgementData.getAcknowledgements(id);
@@ -410,6 +424,10 @@ public class LabPDFCreator extends PdfPageEventHelper{
         cell.setPhrase(new Phrase("Date of Service: ", boldFont));
         rInfoTable.addCell(cell);
         cell.setPhrase(new Phrase(handler.getServiceDate(), font));
+        rInfoTable.addCell(cell);      
+        cell.setPhrase(new Phrase("Date Received: ", boldFont));
+        rInfoTable.addCell(cell);
+        cell.setPhrase(new Phrase(dateLabReceived, font));
         rInfoTable.addCell(cell);
         cell.setPhrase(new Phrase("Report Status: ", boldFont));
         rInfoTable.addCell(cell);
