@@ -75,7 +75,7 @@ if (heading != null){
 <div class="drugProfileText" style="">
     <table width="100%" cellpadding="3" border="0" class="sortable" id="Drug_table<%=heading%>">
         <tr>
-            <th align="left"><b>Rx Date</b></th>
+            <th align="left"><b><bean:message key="SearchDrug.msgRxDate"/></b></th>
             <th align="left"><b>Days to Exp</b></th>
             <th align="left"><b>LT Med</b></th>
             <th align="left"><b><bean:message key="SearchDrug.msgPrescription"/></b></th>
