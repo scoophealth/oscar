@@ -682,7 +682,7 @@ function autoFillHin(){
 				<td align="left"><input type="text" name="email" value="">
 				</td>
 				<td align="right"><b><bean:message
-					key="demographic.demographicaddrecordhtm.formPIN" />:</b></td>
+					key="demographic.demographicaddrecordhtm.formMyOscarUserName" />:</b></td>
 				<td align="left"><input type="text" name="myOscarUserName" value="">
 				</td>
 			</tr>
