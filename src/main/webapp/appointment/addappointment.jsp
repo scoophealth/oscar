@@ -685,7 +685,7 @@ function pasteAppt() {
             <%=disabled%>>
         <INPUT TYPE="submit"
             onclick="document.forms['ADDAPPT'].displaymode.value='Add Appt & PrintCard'"
-            VALUE="&<bean:message key='global.btnPrint'/>"
+            VALUE="<bean:message key='global.btnPrint'/>"
             <%=disabled%>>
                 </TD>
 		<TD></TD>

@@ -25,7 +25,7 @@
 </table>
 <%
 
-	String[] param = new String[18];
+	String[] param = new String[19];
 	param[0]=request.getParameter("provider_no");
 	param[1]=request.getParameter("appointment_date");
 	param[2]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("start_time"));
@@ -49,6 +49,7 @@
     } else {
         param[16] = "0";
     }
+    param[18]=request.getParameter("urgency");
 
     int rowsAffected = oscarSuperManager.update("appointmentDao", request.getParameter("dboperation"), param);
 	if (rowsAffected == 1) {
