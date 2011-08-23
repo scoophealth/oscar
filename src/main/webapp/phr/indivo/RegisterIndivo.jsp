@@ -52,10 +52,6 @@ if (wPhoneExt != null)
                     alert ("Username is required");
                     document.getElementById("username").focus();
                     return;
-                } else if (document.getElementById("username").value.search('@') == -1) {
-                    alert ("Username must be in format 'username@domain.org");
-                    document.getElementById("username").focus();
-                    return;
                 } else if (document.getElementById("password").length < 8) {
                     alert ("Password must be at least 8 characters long");
                     document.getElementById("password").focus();
@@ -165,18 +161,6 @@ if (wPhoneExt != null)
                         <td><html-el:text property="dob" value="<%=demographic.getDob(\"/\")%>" size="10"/> (YYYY-MM-DD)</td>
                     </tr>
                 </table>
-            </div>
-            <div class="objectBlue">
-                <div class="objectBlueHeader">
-                    Grant Access Rights:
-                </div>
-                    <%ArrayList<String> providerNums = (ArrayList<String>) ProviderMyOscarIdData.listMyOscarProviderNums();
-                    for (int i=0; i<providerNums.size(); i++) {
-                        String curProviderNo = providerNums.get(i);
-                        ProviderData pd = new ProviderData(curProviderNo);
-                        if (pd.getFirst_name() == null) continue; %>
-                    <span style="white-space: nowrap; width: 40px;"><input type="checkbox" name="list:grantProviders" value="<%=curProviderNo%>"/><%=pd.getFirst_name()%> <%=pd.getLast_name()%></span>&nbsp; &nbsp;
-                    <%}%>
             </div>
             <div class="objectBlue">
                 <div class="objectBlueHeader">
