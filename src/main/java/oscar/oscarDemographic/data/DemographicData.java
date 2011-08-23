@@ -1177,7 +1177,7 @@ public class DemographicData {
 				add_record.setString(8, phone);
 				add_record.setString(9, phone2);
 				add_record.setString(10, email);
-				add_record.setString(11, "");
+				add_record.setString(11, null);
 				add_record.setString(12, year_of_birth);
 				add_record.setString(13, month_of_birth);
 				add_record.setString(14, date_of_birth);
