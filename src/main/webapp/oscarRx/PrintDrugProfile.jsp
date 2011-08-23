@@ -120,8 +120,8 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
 						<td width="100%"><!--<div class="Step1Text" style="width:100%">-->
 						<table width="100%" cellpadding="3">
 							<tr>
-								<th align=left width=20%><b>Rx Date</b></th>
-								<th align=left width=100%><b>Prescription</b></th>
+								<th align=left width=20%><b><bean:message key="SearchDrug.msgRxDate"/></b></th>
+								<th align=left width=100%><b><bean:message key="SearchDrug.msgPrescription"/></b></th>
 							</tr>
 
 							<%
