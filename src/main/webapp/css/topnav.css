@@ -51,4 +51,7 @@ table.topnav td {
 #navlist li:hover { color: #fff; background-color: #486ebd; }
 #navlist li a:hover { color: #fff; background-color: #486ebd; }
 
+.tabalert {
+	color: red;
+}
 /*end of top navigation bar */
