@@ -285,7 +285,7 @@
 	});
 
 	$("document").ready(function() {	
-		//$("form").validate({meta: "validate"});
+		$("form").validate({meta: "validate"});
 		
 	});
 	
