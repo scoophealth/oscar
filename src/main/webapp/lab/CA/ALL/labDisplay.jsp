@@ -281,18 +281,19 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
         function getComment(action) {    
             var ret = true;
             var text = $F("providerNo") + "commentText";
-            var comment = $(text).value;
+            var comment = $(text).innerHTML;            
             if( comment == null ) {
             	comment = "";
             }
             var commentVal = prompt('<bean:message key="oscarMDS.segmentDisplay.msgComment"/>', comment);
-    
-            if( action == "addComment" && (commentVal == null || commentVal.length==0))
-                ret = false;
+            
+            if( commentVal == null ) {
+            	ret = false;
+            }    
             else if( commentVal != null && commentVal.length > 0 )
                 document.acknowledgeForm.comment.value = commentVal;
             else
-            	document.acknowledgeForm.comment.value = $("commentText").innerHTML;
+            	document.acknowledgeForm.comment.value = comment;
             
            if(ret) handleLab('acknowledgeForm','<%=segmentID%>', action);
            
@@ -436,7 +437,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                     <input type="hidden" name="labType" value="HL7"/>
                                     <% if ( !ackFlag ) { %>
                                                                         
-                                    <input type="button" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>" onclick="getComment('ackLab')" >
+                                    <input type="button" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>" onclick="return getComment('ackLab');" >
                                     <input type="button" <%=notBeenAcked ? "disabled='disabled'" : ""%> value="<bean:message key="oscarMDS.segmentDisplay.btnComment"/>" onclick="return getComment('addComment');">
                                     <% } %>
                                     <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="popupStart(397, 700, '../../../oscarMDS/SelectProvider.jsp', 'providerselect')">
