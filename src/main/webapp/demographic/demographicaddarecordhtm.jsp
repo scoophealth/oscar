@@ -9,7 +9,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 
 <%@ page
-	import="java.util.*, java.sql.*, oscar.*, oscar.oscarDemographic.data.ProvinceNames, oscar.oscarWaitingList.WaitingList"
+	import="java.util.*, java.sql.*, oscar.*, oscar.oscarDemographic.data.ProvinceNames, oscar.oscarDemographic.pageUtil.Util, oscar.oscarWaitingList.WaitingList"
 	errorPage="errorpage.jsp"%>
 <%@ page
 	import="org.springframework.web.context.*,org.springframework.web.context.support.*,org.oscarehr.common.dao.*,org.oscarehr.common.model.*"%>
@@ -425,20 +425,17 @@ function autoFillHin(){
       </td>
     </tr>
     <tr>
-	<td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.msgDemoLanguage"/>: <font color="red">:</font></b></td>
+	<td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.msgDemoLanguage"/><font color="red">:</font></b></td>
 	<td align="left">
 	    <select name="official_lang">
 		<option value="English" <%= vLocale.getLanguage().equals("en") ? " selected":"" %>><bean:message key="demographic.demographiceaddrecordhtm.msgEnglish"/></option>
 		<option value="French"  <%= vLocale.getLanguage().equals("fr") ? " selected":"" %>><bean:message key="demographic.demographiceaddrecordhtm.msgFrench"/></option>
 	    </select>
-	    &nbsp;&nbsp;
-	    <b><bean:message key="demographic.demographicaddrecordhtm.msgSpoken"/>:</b>
-	    <input name="spoken_lang" size="15" />
 	</td>
 	<td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.msgDemoTitle"/><font color="red">:</font></b></td>
 	<td align="left">
 	    <select name="title" onchange="checkTitleSex(value);">
-                <option value="" selected><bean:message key="demographic.demographicaddrecordhtm.msgNotSet"/></option>
+                <option value=""><bean:message key="demographic.demographicaddrecordhtm.msgNotSet"/></option>
                 <option value="MS"><bean:message key="demographic.demographicaddrecordhtm.msgMs"/></option>
                 <option value="MISS"><bean:message key="demographic.demographicaddrecordhtm.msgMiss"/></option>
                 <option value="MRS"><bean:message key="demographic.demographicaddrecordhtm.msgMrs"/></option>
@@ -453,6 +450,15 @@ function autoFillHin(){
                 <option value="SR"><bean:message key="demographic.demographicaddrecordhtm.msgSr"/></option>
 	    </select>
 	</td>
+    </tr>
+    <tr>
+        <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.msgSpoken"/>:</b></td>
+        <td><select name="spoken_lang">
+<%for (String sp_lang : Util.spokenLangProperties.getLangSorted()) { %>
+                <option value="<%=sp_lang %>"><%=sp_lang %></option> 
+<%} %>
+            </select>
+        </td>
     </tr>
     <%
     if (vLocale.getCountry().equals("BR")) { %>
