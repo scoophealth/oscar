@@ -72,7 +72,6 @@ import org.oscarehr.phr.dao.PHRActionDAO;
 import org.oscarehr.phr.dao.PHRDocumentDAO;
 import org.oscarehr.phr.indivo.model.PHRIndivoAnnotation;
 import org.oscarehr.phr.indivo.model.PHRIndivoDocument;
-import org.oscarehr.phr.indivo.service.accesspolicies.IndivoAPService;
 import org.oscarehr.phr.model.PHRAction;
 import org.oscarehr.phr.model.PHRBinaryData;
 import org.oscarehr.phr.model.PHRDocument;
@@ -744,19 +743,9 @@ public class PHRService {
 	 * @return the myOscarUserId of the created user.
 	 * @throws Exception
 	 */
-	public PersonTransfer sendUserRegistration(HashMap<String, Object> phrRegistrationForm, String whoIsAdding) throws Exception {
-		String iRegisteringProviderNo = (String) phrRegistrationForm.get("registeringProviderNo");
+	public PersonTransfer sendUserRegistration(PHRAuthentication auth, HashMap<String, Object> phrRegistrationForm) throws Exception {
 
-		// Login to Indivo as Admin
-		HashMap<String, String> adminLoginInfo = this.getAdminLogin();
-
-		LoginWs loginWs = MyOscarServerWebServicesManager.getLoginWs();
-		String adminUser = adminLoginInfo.get("username");
-		String adminPassword = adminLoginInfo.get("password");
-		PersonTransfer admin = loginWs.login(adminUser, adminPassword);
-		if (admin == null) throw (new Exception("Could not authenticate as admin"));
-
-		AccountWs accountWs = MyOscarServerWebServicesManager.getAccountWs(admin.getId(), adminPassword);
+		AccountWs accountWs = MyOscarServerWebServicesManager.getAccountWs(auth.getMyOscarUserId(), auth.getMyOscarPassword());
 		PersonTransfer newAccount = new PersonTransfer();
 		newAccount.setUserName((String) phrRegistrationForm.get("username"));
 		newAccount.setRole(Role.PATIENT);
@@ -784,23 +773,9 @@ public class PHRService {
 		// if no password is set, we'll make one up, the nano time is to ensure it's not guessable.
 		if (newAccountPassword == null || newAccountPassword.length() == 0) newAccountPassword = newAccount.getUserName() + System.nanoTime();
 
-		newAccount = accountWs.addPerson(newAccount, newAccountPassword);
+		newAccount = accountWs.addPatient(newAccount, newAccountPassword);
 
 		if (newAccount == null) throw (new Exception("Error creating new Myoscar Account."));
-
-		String[] iGrantProviders = (String[]) phrRegistrationForm.get("list:grantProviders");
-		if (iGrantProviders != null) {
-			IndivoAPService apUtil = new IndivoAPService(this);
-
-			for (String grantToProvider : iGrantProviders) {
-				ProviderData providerData = new ProviderData();
-				providerData.setProviderNo(grantToProvider);
-				String permissionRecipientProviderId = providerData.getMyOscarId();
-
-				accountWs.createRelationshipByUserName(newAccount.getUserName(), permissionRecipientProviderId, Relation.PRIMARY_CARE_PROVIDER);
-//				apUtil.proposeAccessPolicy(grantToProvider, newAccount.getUserName(), Relation.PATIENT.name(), iRegisteringProviderNo);
-			}
-		}
 
 		return (newAccount);
 	}
@@ -814,18 +789,6 @@ public class PHRService {
 
 	public void setPhrActionDAO(PHRActionDAO phrActionDAO) {
 		this.phrActionDAO = phrActionDAO;
-	}
-
-	private HashMap<String, String> getAdminLogin() {
-		HashMap<String, String> loginInfo = new HashMap<String, String>();
-		OscarProperties props = OscarProperties.getInstance();
-		loginInfo.put("username", props.getProperty("myOSCAR.admin.username"));
-		loginInfo.put("password", props.getProperty("myOSCAR.admin.password"));
-		loginInfo.put("firstName", props.getProperty("myOSCAR.admin.firstName"));
-		loginInfo.put("lastName", props.getProperty("myOSCAR.admin.lastName"));
-		loginInfo.put("role", props.getProperty("myOSCAR.admin.role"));
-
-		return loginInfo;
 	}
 
 	public void approveAction(PHRAction action) {
