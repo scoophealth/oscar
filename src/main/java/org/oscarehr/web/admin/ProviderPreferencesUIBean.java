@@ -17,6 +17,7 @@ import org.oscarehr.common.model.EncounterForm;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.ProviderPreference;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.WebUtils;
 
@@ -55,7 +56,11 @@ public final class ProviderPreferencesUIBean {
 		// default billing preference (edit or delete)
 		temp = StringUtils.trimToNull(request.getParameter("caisiBillingPreferenceNotDelete"));
 		if (temp != null) {
-			providerPreference.setDefaultDoNotDeleteBilling(Integer.parseInt(temp));
+			try {
+				providerPreference.setDefaultDoNotDeleteBilling(Integer.parseInt(temp));
+			}catch(NumberFormatException e) {
+				MiscUtils.getLogger().error("Error",e);
+			}
 		} else {
 			temp = StringUtils.trimToNull(String.valueOf(session.getAttribute("caisiBillingPreferenceNotDelete")));
 			if (temp == null) 

@@ -205,6 +205,7 @@
 				<html:textarea cols="40" rows="10" property="tickler.message"></html:textarea>
 			</td>
 		</tr>
+		<!-- 
 		<tr>
 			<td class="fieldTitle">
 				Post to eChart:
@@ -213,6 +214,7 @@
 				<input name="echart" value="true" type="checkbox" />
 			</td>
 		</tr>
+		-->
 		<tr>
 			<td class="fieldValue" colspan="3" align="left">
 				<html:submit styleClass="button">Save</html:submit>

@@ -1563,32 +1563,32 @@ insert into lst_program_type values('01','BED',1,1);
 insert into lst_program_type values('02','SERVICE',1,2);
 insert into lst_program_type values('03','EXTERNAL',1,3);
 
-insert into app_lookuptable (tableid, moduleid, table_name, description, istree, treecode_length, activeyn)
-values ('ORG', '1', 'lst_orgcd', 'Org Chart', 1, 8, 1);
-insert into app_lookuptable (tableid, moduleid, table_name, description, istree, treecode_length, activeyn)
-values ('BTY', '4', 'bed_type', 'Bed Type', 0, 0, 0);
-insert into app_lookuptable (tableid, moduleid, table_name, description, istree, treecode_length, activeyn)
-values ('GEN', '4', 'lst_gender', 'Gender', 0, 0, 1);
-insert into app_lookuptable (tableid, moduleid, table_name, description, istree, treecode_length, activeyn)
-values ('SEC', '2', 'lst_sector', 'Sector', 0, 0, 1);
-insert into app_lookuptable (tableid, moduleid, table_name, description, istree, treecode_length, activeyn)
-values ('OGN', '2', 'lst_organization', 'Organization', 0, 0, 1);
-insert into app_lookuptable (tableid, moduleid, table_name, description, istree, treecode_length, activeyn)
-values ('DRN', '5', 'lst_discharge_reason', 'Discharge Reason', 0, 0, 1);
-insert into app_lookuptable (tableid, moduleid, table_name, description, istree, treecode_length, activeyn)
-values ('SRT', '3', 'lst_service_restriction', 'Service Restriction', 0, 0, 1);
-insert into app_lookuptable (tableid, moduleid, table_name, description, istree, treecode_length, activeyn)
-values ('LKT', '1', 'app_lookuptable', 'Available Fields', 0, 0, 1);
-insert into app_lookuptable (tableid, moduleid, table_name, description, istree, treecode_length, activeyn)
-values ('FCT', '1', 'lst_field_category', 'Field Category', 0, 0, 1);
-insert into app_lookuptable (tableid, moduleid, table_name, description, istree, treecode_length, activeyn)
-values ('PRO', '5', 'program', 'Program', 0, 0, 0);
-insert into app_lookuptable (tableid, moduleid, table_name, description, istree, treecode_length, activeyn)
-values ('FAC', '5', 'facility', 'Facility', 0, 0, 0);
-insert into app_lookuptable (tableid, moduleid, table_name, description, istree, treecode_length, activeyn)
-values ('AST', '5', 'lst_admission_status', 'Admission Status', 0, 0, 0);
-insert into app_lookuptable (tableid, moduleid, table_name, description, istree, treecode_length, activeyn)
-values ('PTY', '5', 'lst_program_type', 'Program Type', 0, 0, 0);
+insert into app_lookuptable (tableid, moduleid, table_name, description, istree, treecode_length, activeyn,readonly)
+values ('ORG', '1', 'lst_orgcd', 'Org Chart', 1, 8, 1,0);
+insert into app_lookuptable (tableid, moduleid, table_name, description, istree, treecode_length, activeyn,readonly)
+values ('BTY', '4', 'bed_type', 'Bed Type', 0, 0, 0,0);
+insert into app_lookuptable (tableid, moduleid, table_name, description, istree, treecode_length, activeyn,readonly)
+values ('GEN', '4', 'lst_gender', 'Gender', 0, 0, 1,0);
+insert into app_lookuptable (tableid, moduleid, table_name, description, istree, treecode_length, activeyn,readonly)
+values ('SEC', '2', 'lst_sector', 'Sector', 0, 0, 1,0);
+insert into app_lookuptable (tableid, moduleid, table_name, description, istree, treecode_length, activeyn,readonly)
+values ('OGN', '2', 'lst_organization', 'Organization', 0, 0, 1,0);
+insert into app_lookuptable (tableid, moduleid, table_name, description, istree, treecode_length, activeyn,readonly)
+values ('DRN', '5', 'lst_discharge_reason', 'Discharge Reason', 0, 0, 1,0);
+insert into app_lookuptable (tableid, moduleid, table_name, description, istree, treecode_length, activeyn,readonly)
+values ('SRT', '3', 'lst_service_restriction', 'Service Restriction', 0, 0, 1,0);
+insert into app_lookuptable (tableid, moduleid, table_name, description, istree, treecode_length, activeyn,readonly)
+values ('LKT', '1', 'app_lookuptable', 'Available Fields', 0, 0, 1,0);
+insert into app_lookuptable (tableid, moduleid, table_name, description, istree, treecode_length, activeyn,readonly)
+values ('FCT', '1', 'lst_field_category', 'Field Category', 0, 0, 1,0);
+insert into app_lookuptable (tableid, moduleid, table_name, description, istree, treecode_length, activeyn,readonly)
+values ('PRO', '5', 'program', 'Program', 0, 0, 0,0);
+insert into app_lookuptable (tableid, moduleid, table_name, description, istree, treecode_length, activeyn,readonly)
+values ('FAC', '5', 'facility', 'Facility', 0, 0, 0,0);
+insert into app_lookuptable (tableid, moduleid, table_name, description, istree, treecode_length, activeyn,readonly)
+values ('AST', '5', 'lst_admission_status', 'Admission Status', 0, 0, 0,0);
+insert into app_lookuptable (tableid, moduleid, table_name, description, istree, treecode_length, activeyn,readonly)
+values ('PTY', '5', 'lst_program_type', 'Program Type', 0, 0, 0,0);
 commit;
 
 insert into app_lookuptable_fields (tableid, fieldname, fielddesc, edityn, fieldtype, lookuptable, fieldsql, fieldindex, uniqueyn, genericiDX, AUTOYN)
