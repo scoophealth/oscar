@@ -848,10 +848,18 @@ function changeCodeDesc() {
 }
 
 //this function will show the content within the <div> tag of billing codes
-function toggleDiv(selectedBillForm, selectedBillFormName)
+function toggleDiv(selectedBillForm, selectedBillFormName,billType)
 {
         document.getElementById("billForm").value=selectedBillForm;
         document.getElementById("billFormName").value=selectedBillFormName;
+        
+        if(billType != ''){
+        	for (var i=0;i<document.forms[0].xml_billtype.options.length;i++) {
+        	    if (document.forms[0].xml_billtype.options[i].value.substring(0,3) == billType){
+        	    	document.forms[0].xml_billtype.options[i].selected = true;
+        		}
+        	}
+        }
 
         //dx search
         showBillFormDiv("dxCodeSearchDiv_",selectedBillForm);
@@ -916,11 +924,17 @@ function toggleDiv(selectedBillForm, selectedBillFormName)
 			if (ctlcode.equals(ctlBillForm)) {
 			    currentFormName = ctlcodename;
 			}
+			String billType = "";
+			ResultSet rsbtype = dbObj.searchDBRecord("select billtype from ctl_billingtype where servicetype='" + ctlcode +"'");
+			if (rsbtype.next()) {
+				billType = rsbtype.getString("billtype");
+	        }   
+			rsbtype.close();
 %>
 	<tr bgcolor=<%=ctlCount%2==0 ? "#FFFFFF" : "#EEEEFF"%>>
 	    <td colspan="2">
 		<b><font size="-1" color="#7A388D">
-		    <a href="#" onclick="toggleDiv('<%=ctlcode%>', '<%=ctlcodename %>');showHideLayers('Layer1','','hide');"><%=ctlcodename%></a>
+		    <a href="#" onclick="toggleDiv('<%=ctlcode%>', '<%=ctlcodename %>','<%=billType%>');showHideLayers('Layer1','','hide');"><%=ctlcodename%></a>
 	    </font></b></td>
 	</tr>
 <%}%>
