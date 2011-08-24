@@ -50,9 +50,7 @@
                 <div class="objectGreenHeader">
                     User was successfully added.
                 </div>
-                The user and corresponding permissions have been added.  All checked providers
-                    must authorize this demographic as "patient" from the OSCAR Personal Health Record
-                    message screen before the patient can communicate with them.
+                	The user and corresponding permissions have been added. 
                     <br/>
                     <input type="button" onclick="closeWindow()" name="closeButton" value="Close Window">
             </div>

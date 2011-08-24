@@ -90,11 +90,8 @@ public class PHRUserManagementAction extends DispatchAction {
     }
     
     public ActionForward registerUser(ActionMapping mapping, ActionForm  form,HttpServletRequest request, HttpServletResponse response) throws Exception {
-        /*PHRAuthentication auth  = (PHRAuthentication) request.getSession().getAttribute(PHRAuthentication.SESSION_PHR_AUTH); 
-        log.debug("AUTH "+auth);
-        String indivoId   = auth.getUserId();
-        String ticket     = auth.getToken();*/
-        ActionRedirect ar = new ActionRedirect(mapping.findForward("registrationResult").getPath());
+
+    	ActionRedirect ar = new ActionRedirect(mapping.findForward("registrationResult").getPath());
         PHRAuthentication phrAuth = (PHRAuthentication) request.getSession().getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
         if (phrAuth == null || phrAuth.getMyOscarUserId() == null) {
             ar.addParameter("failmessage", "Permission Denied: You must be logged into myOSCAR to register users");
@@ -112,12 +109,12 @@ public class PHRUserManagementAction extends DispatchAction {
         }
         ht.put("registeringProviderNo", request.getSession().getAttribute("user"));
         try {
-            PersonTransfer newAccount=phrService.sendUserRegistration(ht, (String) request.getSession().getAttribute("user"));
+            PersonTransfer newAccount=phrService.sendUserRegistration(phrAuth, ht);
             //if all is well, add the "pin" in the demographic screen
             String demographicNo = request.getParameter("demographicNo");
             
             DemographicData dd = new DemographicData();
-            dd.setDemographicPin(demographicNo, newAccount.getId().toString());
+            dd.setDemographicPin(demographicNo, newAccount.getUserName());
         } catch (Exception e) {
             log.error("Failed to register myOSCAR user", e);
             if (e.getClass().getName().indexOf("ActionNotPerformedException") != -1) {
