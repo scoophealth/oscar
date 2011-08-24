@@ -57,7 +57,7 @@
             boolean show_all=true;
             boolean active=true;
             boolean inactive=true;
-            boolean all=true;
+            //boolean all=true;
             boolean longterm_acute=true;
             boolean longterm_acute_inactive_external=true;
             if(hm==null) {
@@ -80,10 +80,10 @@
                 inactive=(Boolean)hm.get("inactive");
              else
                  inactive=false;
-             if(hm.get("all")!=null)
-                all=(Boolean)hm.get("all");
-             else
-                 all=false;
+             //if(hm.get("all")!=null)
+             //   all=(Boolean)hm.get("all");
+             //else
+             //    all=false;
              if(hm.get("longterm_acute")!=null)
                 longterm_acute=(Boolean)hm.get("longterm_acute");
              else
@@ -569,10 +569,20 @@ function checkFav(){
 		popupWindow(720,700,'ShowPreviousPrints.jsp?scriptNo='+scriptNo,'ShowPreviousPrints')
 	}
 
+	
+    /*<![CDATA[*/
+    var Lst;
+
+    function CngClass(obj){
+    	document.getElementById("selected_default").removeAttribute("style");
+     if (Lst) Lst.className='';
+     obj.className='selected';
+     Lst=obj;
+    }
+	
+    /*]]>*/
+    
 </script>
-
-
-
 
                <style type="text/css" media="print">
                    noprint{
@@ -584,23 +594,25 @@ function checkFav(){
                </style>
 
 <style type="text/css">
+<!-- .selected { font: Arial, Verdana; color:#000000; text-decoration: none; } --> 
+
     .ControlPushButton{
         font-size:10.5px;
     }
     
-   	table.legend{
+    
+	table.legend{
         font-size:12px;
+        padding-left:20px;
 		
     }
-
-	td.legend_title{
-		padding-left:20px;
-	}
 	
-	td.legend_items{
+	
+	table.legend_items td{
 		font-size:12px;
 		text-align:left;
-		height:30px;	
+		height:30px;
+		padding-right:10px;	
 	}
             .highlight {
                 background-color : #99FFCC;
@@ -694,6 +706,16 @@ body {
      }
 </style>
 
+<!--[if IE]>
+<style type="text/css">
+    
+	table.legend{
+	margin-left:20px;
+	}
+
+</style>
+<![endif]-->
+
     </head>
 
     <%
@@ -756,7 +778,7 @@ body {
                             </td>
                         </tr>
                         <tr><!--put this left-->
-                            <td align="right" valign="top">
+                            <td align="left" valign="top">
                                 <div>
                                     <table width="100%"><!--drug profile, view and listdrugs.jsp-->
                                         <tr>
@@ -820,40 +842,44 @@ body {
                                                         <td>
                                                             <table width="100%" cellspacing="0" cellpadding="0" class="legend">
                                                                     <tr>
-                                                                        <td class="legend_title">
+                                                                        <td>
                                                                             <a href="javascript:void(0);" title="View drug profile legend" onclick="ThemeViewer();" style="font-style:normal;color:#000000" ><bean:message key="SearchDrug.msgProfileLegend"/>:</a>
                                                                             <a href="#"  title="<bean:message key="provider.rxChangeProfileViewMessage"/>" onclick="popupPage(230,860,'../setProviderStaleDate.do?method=viewRxProfileView');" style="color:red;text-decoration:none" ><bean:message key="provider.rxChangeProfileView"/></a>
                                                                         </td>
 																	       
-																			<%if(show_current){%><span>&nbsp;&nbsp;</span>
-																			<td class="legend_items"> 
-                                                                            <a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp','drugProfile');"><bean:message key="SearchDrug.msgShowCurrent"/></a>
-                                                                            </td>
-																			<%}if(show_all){%><span>&nbsp;&nbsp;</span>
-                                                                            <td class="legend_items"> 
-																			<a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?show=all','drugProfile');"><bean:message key="SearchDrug.msgShowAll"/></a>
-                                                                            </td>
-																			<%}if(active){%><span>&nbsp;&nbsp;</span>
-																			<td class="legend_items"> 
-																			<a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?status=active','drugProfile');"><bean:message key="SearchDrug.msgActive"/></a>
-                                                                            </td>
-																			<%}if(inactive){%><span>&nbsp;&nbsp;</span>
-																			<td class="legend_items"> 
-																			<a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?status=inactive','drugProfile');"><bean:message key="SearchDrug.msgInactive"/></a>
-                                                                            </td>
-																			<%}if(all){%><span>&nbsp;&nbsp;</span>
-																			<td class="legend_items"> 
-																			<a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?status=all','drugProfile');"><bean:message key="SearchDrug.msgAll"/></a>
-                                                                            </td>
-																			<%}if(longterm_acute){%><span>&nbsp;&nbsp;</span>
-																			<td class="legend_items"> 
-																			<a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?longTermOnly=true&heading=Long Term Meds','drugProfile'); callAdditionWebService('ListDrugs.jsp?longTermOnly=acute&heading=Acute','drugProfile')"><bean:message key="SearchDrug.msgLongTermAcute"/></a>
-                                                                            </td>
-																			<%}if(longterm_acute_inactive_external){%><span>&nbsp;&nbsp;</span>
-																			<td class="legend_items"> 
-																			<a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?longTermOnly=true&heading=Long Term Meds','drugProfile'); callAdditionWebService('ListDrugs.jsp?longTermOnly=acute&heading=Acute&status=active','drugProfile');callAdditionWebService('ListDrugs.jsp?longTermOnly=acute&heading=Inactive&status=inactive','drugProfile');callAdditionWebService('ListDrugs.jsp?heading=External&drugLocation=external','drugProfile')"><bean:message key="SearchDrug.msgLongTermAcuteInactiveExternal"/></a>
-                                                                            </td> 
-																			<%}%>
+																	    <td align="left">
+																	       
+																	       <table class="legend_items" align="left">
+																			<tr>
+																				<%if(show_current){%>
+																				<td > 
+	                                                                            <a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp','drugProfile');CngClass(this);" id="selected_default" style="font: Arial; color:#000000; text-decoration: none;" TITLE="<bean:message key='SearchDrug.msgShowCurrentDesc'/>"><bean:message key="SearchDrug.msgShowCurrent"/></a>
+	                                                                            </td>
+																				<%}if(show_all){%>
+	                                                                            <td > 
+																				<a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?show=all','drugProfile');CngClass(this);" Title="<bean:message key='SearchDrug.msgShowAllDesc'/>"><bean:message key="SearchDrug.msgShowAll"/></a>
+	                                                                            </td>
+																				<%}if(active){%>
+																				<td > 
+																				<a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?status=active','drugProfile');CngClass(this);" TITLE="<bean:message key='SearchDrug.msgActiveDesc'/>"><bean:message key="SearchDrug.msgActive"/></a>
+	                                                                            </td>
+																				<%}if(inactive){%>
+																				<td > 
+																				<a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?status=inactive','drugProfile');CngClass(this);" TITLE="<bean:message key='SearchDrug.msgInactiveDesc'/>"><bean:message key="SearchDrug.msgInactive"/></a>
+	                                                                            </td>
+																				<%}if(longterm_acute){%>
+																				<td > 
+																				<a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?longTermOnly=true&heading=Long Term Meds','drugProfile'); callAdditionWebService('ListDrugs.jsp?longTermOnly=acute&heading=Acute','drugProfile');CngClass(this);" TITLE="<bean:message key='SearchDrug.msgLongTermAcuteDesc'/>"><bean:message key="SearchDrug.msgLongTermAcute"/></a>
+	                                                                            </td>
+																				<%}if(longterm_acute_inactive_external){%>
+																				<td > 
+																				<a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?longTermOnly=true&heading=Long Term Meds','drugProfile'); callAdditionWebService('ListDrugs.jsp?longTermOnly=acute&heading=Acute&status=active','drugProfile');callAdditionWebService('ListDrugs.jsp?longTermOnly=acute&heading=Inactive&status=inactive','drugProfile');callAdditionWebService('ListDrugs.jsp?heading=External&drugLocation=external','drugProfile');CngClass(this);" TITLE="<bean:message key='SearchDrug.msgLongTermAcuteInactiveExternalDesc'/>"><bean:message key="SearchDrug.msgLongTermAcuteInactiveExternal"/></a>
+	                                                                            </td> 
+																				<%}%>
+																			</tr>
+																			</table>
+																			
+																			</td>
 					
                                                                     </tr>
                                                                 </table>
@@ -917,22 +943,23 @@ body {
         <input type="hidden" name="disDrugId" id="disDrugId"/>
         <bean:message key="oscarRx.discontinuedReason.msgReason"/>
         <select name="disReason" id="disReason">
-            <option value="notSelected"><bean:message key="oscarRx.discontinuedReason.NotSelected"/></option>
-            <option value="doseChange"><bean:message key="oscarRx.discontinuedReason.DoseChange"/></option>
             <option value="adverseReaction"><bean:message key="oscarRx.discontinuedReason.AdverseReaction"/></option>
             <option value="allergy"><bean:message key="oscarRx.discontinuedReason.Allergy"/></option>
-            <option value="ineffectiveTreatment"><bean:message key="oscarRx.discontinuedReason.IneffectiveTreatment"/></option>
-            <option value="prescribingError"><bean:message key="oscarRx.discontinuedReason.PrescribingError"/></option>
-            <option value="noLongerNecessary"><bean:message key="oscarRx.discontinuedReason.NoLongerNecessary"/></option>
-            <option value="simplifyingTreatment"><bean:message key="oscarRx.discontinuedReason.SimplifyingTreatment"/></option>
-            <option value="patientRequest"><bean:message key="oscarRx.discontinuedReason.PatientRequest"/></option>
-            <option value="newScientificEvidence"><bean:message key="oscarRx.discontinuedReason.NewScientificEvidence"/></option>
-            <option value="increasedRiskBenefitRatio"><bean:message key="oscarRx.discontinuedReason.IncreasedRiskBenefitRatio"/></option>
-            <option value="discontinuedByAnotherPhysician"><bean:message key="oscarRx.discontinuedReason.DiscontinuedByAnotherPhysician"/></option>
             <option value="cost"><bean:message key="oscarRx.discontinuedReason.Cost"/></option>
+            <option value="discontinuedByAnotherPhysician"><bean:message key="oscarRx.discontinuedReason.DiscontinuedByAnotherPhysician"/></option>
+            <option value="doseChange"><bean:message key="oscarRx.discontinuedReason.DoseChange"/></option>
             <option value="drugInteraction"><bean:message key="oscarRx.discontinuedReason.DrugInteraction"/></option>
-            <option value="other"><bean:message key="oscarRx.discontinuedReason.Other"/></option>
+            <option value="increasedRiskBenefitRatio"><bean:message key="oscarRx.discontinuedReason.IncreasedRiskBenefitRatio"/></option>
+            <option value="ineffectiveTreatment"><bean:message key="oscarRx.discontinuedReason.IneffectiveTreatment"/></option>
+            <option value="newScientificEvidence"><bean:message key="oscarRx.discontinuedReason.NewScientificEvidence"/></option>
+            <option value="noLongerNecessary"><bean:message key="oscarRx.discontinuedReason.NoLongerNecessary"/></option>
+			<option value="notSelected"><bean:message key="oscarRx.discontinuedReason.NotSelected"/></option>
+            <option value="patientRequest"><bean:message key="oscarRx.discontinuedReason.PatientRequest"/></option>
+            <option value="prescribingError"><bean:message key="oscarRx.discontinuedReason.PrescribingError"/></option>
+            <option value="simplifyingTreatment"><bean:message key="oscarRx.discontinuedReason.SimplifyingTreatment"/></option>
             <option value="unknown"><bean:message key="oscarRx.discontinuedReason.Unknown"/></option>
+			
+			<option value="other"><bean:message key="oscarRx.discontinuedReason.Other"/></option>
         </select>
 
 
