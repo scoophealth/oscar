@@ -53,6 +53,22 @@ function togglediv(el) {
 	}
 }
 
+function expanddiv(el) {
+	var tmp = document.getElementById('s_' + el.id.substring(el.id.indexOf('_')+1));	
+	if(effectMap[tmp.id] != 'down') {		
+		new Effect.BlindDown(tmp,{ duration: 0.1 });
+		effectMap[tmp.id] = 'down';
+	}
+}
+
+function collapsediv(el) {
+	var tmp = document.getElementById('s_' + el.id.substring(el.id.indexOf('_')+1));	
+	if(effectMap[tmp.id] == 'down') {		
+		new Effect.BlindUp(tmp,{ duration: 0.1 });
+		effectMap[tmp.id] = 'up';
+	}
+}
+
 function whiteField(el){	
   		el.className="examfieldwhite";
 }
@@ -175,6 +191,23 @@ function clearExternal(){
 	setfieldvalue("os_lacrimal_lake","");	
 	
 }
+
+function expandAll() {
+	jQuery(".title a").each(function() {
+		if(this.id.indexOf('a_')!=-1) {
+			expanddiv(this);
+		}
+	});	
+}
+
+function collapseAll() {
+	jQuery(".title a").each(function() {
+		if(this.id.indexOf('a_')!=-1) {
+			collapsediv(this);
+		}
+	});	
+}
+
 </script>
 
 <style type="text/css">
@@ -269,7 +302,13 @@ span.ge{
 
 </style>
 
-<span style="font-size:10px"><a id="save_measurements" href="#">[Save Measurements]</a></span>
+<span style="font-size:10px">
+	<a id="save_measurements" href="#">[Save Measurements]</a>
+</span>
+<span style="float:right;font-size:10px">
+	<a href="javascript:void(0);" onclick="expandAll();">[expand all sections]</a>&nbsp;
+	<a href="javascript:void(0);" onclick="collapseAll();">[collapse all sections]</a>
+</span>
 
 <table border="0" width="100%">
 <tr>
@@ -472,7 +511,7 @@ span.ge{
         	<td ></td>
         	<td ><input type="text" tabindex="91" measurement="od_iop_nct" onchange="syncFields(this)" class="examfieldgrey" onfocus="whiteField(this);"/></td>
         	<td ></td>
-        	<td width="34%" nowrap="nowrap">NCT()</td>
+        	<td width="34%" nowrap="nowrap">NCT(<span id="nct_ts"></span>)</td>
         	<td ></td>
         	<td ><input type="text" tabindex="93" measurement="os_iop_nct" onchange="syncFields(this)" class="examfieldgrey" onfocus="whiteField(this);"/></td>
         	<td ></td>
@@ -481,7 +520,7 @@ span.ge{
         	<td ></td>
         	<td ><input type="text" tabindex="94" measurement="od_iop_applanation" onchange="syncFields(this)" class="examfieldgrey" onfocus="whiteField(this);"/></td>
         	<td ></td>
-        	<td width="34%">Applanation()</td>
+        	<td width="34%">Applanation(<span id="applanation_ts"></span>)</td>
         	<td ></td>
         	<td ><input type="text" tabindex="95" measurement="os_iop_applanation" onchange="syncFields(this)" class="examfieldgrey" onfocus="whiteField(this);"/></td>
         	<td></td>
@@ -897,3 +936,7 @@ span.ge{
 </tr>
 </table>
 <span style="font-size:10px"><a id="save_measurements" href="#">[Save Measurements]</a></span>
+<span style="float:right;font-size:10px">
+	<a href="javascript:void(0);" onclick="expandAll();">[expand all sections]</a>&nbsp;
+	<a href="javascript:void(0);" onclick="collapseAll();">[collapse all sections]</a>
+</span>

@@ -505,20 +505,7 @@
 
             </tr>
             </c:if>
-             <c:if test="${not empty cp.plan}">
-            <tr>
-                <td class="subTitles">
-                    <b>Treatment/Follow-up:</b>
-                </td>
-            </tr>
-            <tr>
-                <td class="fillLine">
-        
-                    <%=cp.getPlan()%>
-                </td>
-
-            </tr>
-            </c:if>
+             
             <tr>
             
                 <td class="letterContent">

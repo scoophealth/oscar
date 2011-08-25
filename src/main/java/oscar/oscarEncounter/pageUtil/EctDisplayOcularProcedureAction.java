@@ -96,7 +96,8 @@ public class EctDisplayOcularProcedureAction extends EctDisplayAction {
     	
     	Provider provider = providerDao.getProvider(op.getDoctor());
     	
-    	String title = provider.getTeam() + " " + op.getEye() + " " + op.getProcedureName();    	
+    	//String title = provider.getTeam() + " " + op.getEye() + " " + op.getProcedureName();
+    	String title = op.getEye() + " " + op.getProcedureName() + " " + provider.getTeam();
     	String itemHeader = StringUtils.maxLenString(title, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);                              
         item.setTitle(itemHeader);
         

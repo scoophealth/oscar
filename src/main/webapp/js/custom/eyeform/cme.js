@@ -17,6 +17,7 @@
 			   divR2I2:    ctx + "/CaseManagementView.do?hc=996633&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=MedHistory&title=" + medHistoryLabel + "&cmd=divR2I2"+ "&appointment_no="+appointmentNo                              
        };	   
 	   jQuery("#divR1").css('height','150px');
+	   jQuery("#divR2").css('height','150px');
       	   
      	//link save button       
 		jQuery("#save_measurements").live('click',function(e){	
