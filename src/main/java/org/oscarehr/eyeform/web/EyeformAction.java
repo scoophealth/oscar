@@ -212,7 +212,7 @@ public class EyeformAction extends DispatchAction {
 		   }
            String strOcularProcs = ocularProc.toString();
            if (strOcularProcs != null && !"".equalsIgnoreCase(strOcularProcs.trim()))
-        	   strOcularProcs = "Past Ocular Proc:\n" + strOcularProcs;
+        	   strOcularProcs = "Past Ocular Procedures:\n" + strOcularProcs;
            else
         	   strOcularProcs = "";           
            request.setAttribute("ocularProc", StringEscapeUtils.escapeJavaScript(strOcularProcs));
@@ -260,7 +260,7 @@ public class EyeformAction extends DispatchAction {
            }
            String specsStr1 = "";
            if (specsStr != null && specs.size()>0)
-               specsStr1  = "specs:\n" + specsStr.toString();
+               specsStr1  = "Spectacles:\n" + specsStr.toString();
            else
     	   		specsStr1 = "";
       
@@ -790,7 +790,7 @@ public class EyeformAction extends DispatchAction {
 			   }
 	           String strOcularProcs = ocularProc.toString();
 	           if (strOcularProcs != null && !"".equalsIgnoreCase(strOcularProcs.trim()))
-	        	   strOcularProcs = "Past Ocular Proc:\n" + strOcularProcs + "\n";
+	        	   strOcularProcs = "Past Ocular Procedures:\n" + strOcularProcs + "\n";
 	           else
 	        	   strOcularProcs = "";           
 	           request.setAttribute("ocularProc", StringEscapeUtils.escapeJavaScript(strOcularProcs));
@@ -836,7 +836,7 @@ public class EyeformAction extends DispatchAction {
 	           }
 	           String specsStr1 = "";
 	           if (specsStr != null && specs.size()>0)
-	               specsStr1  = "specs:\n" + specsStr.toString();
+	               specsStr1  = "Spectacles:\n" + specsStr.toString();
 	           else
 	    	   		specsStr1 = "";
 	      
