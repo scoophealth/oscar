@@ -27,6 +27,8 @@
 
 package oscar.dms.actions;
 
+import java.util.GregorianCalendar;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -35,14 +37,18 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.common.dao.RemoteDataLogDao;
+import org.oscarehr.common.model.RemoteDataLog;
 import org.oscarehr.myoscar_server.ws.MedicalDataType;
+import org.oscarehr.myoscar_server.ws.MedicalDataWs;
 import org.oscarehr.phr.PHRAuthentication;
-import org.oscarehr.phr.model.PHRDocument;
-import org.oscarehr.phr.service.PHRService;
+import org.oscarehr.phr.util.MyOscarServerWebServicesManager;
 import org.oscarehr.phr.util.MyOscarUtils;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
+import org.oscarehr.util.XmlUtils;
+import org.w3c.dom.Document;
 
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
@@ -55,6 +61,7 @@ import oscar.oscarProvider.data.ProviderData;
 public class SendDocToPhrAction extends Action {
 
 	private static final Logger logger = MiscUtils.getLogger();
+	private static RemoteDataLogDao remoteDataLogDao=(RemoteDataLogDao) SpringUtils.getBean("remoteDataLogDao");
 
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 
@@ -81,25 +88,46 @@ public class SendDocToPhrAction extends Action {
 		return mapping.findForward("finished");
 	}
 
-	private static void addOrUpdate(HttpServletRequest request, DemographicData.Demographic demo, ProviderData prov, EDoc doc) {
+	private static void addOrUpdate(HttpServletRequest request, DemographicData.Demographic demo, ProviderData prov, EDoc eDoc) {
 		logger.debug("called addOrUpdate()");
 
-		PHRService phrService = (PHRService) SpringUtils.getBean("phrService");
+//		PHRService phrService = (PHRService) SpringUtils.getBean("phrService");
 		
 		try {
+    		Document doc=XmlUtils.newDocument("BinaryDocument");
+    		XmlUtils.appendChildToRoot(doc, "Filename", eDoc.getFileName());
+    		XmlUtils.appendChildToRoot(doc, "FileDescription", eDoc.getDescription());
+    		XmlUtils.appendChildToRoot(doc, "MimeType", eDoc.getContentType());
+    		XmlUtils.appendChildToRoot(doc, "Data", eDoc.getFileBytes());
+    		String docAsString=XmlUtils.toString(doc, false);
+    		
     		PHRAuthentication auth  = (PHRAuthentication) request.getSession().getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
-    		Long myOscarUserId=MyOscarUtils.getMyOscarUserId(auth, demo.getMyOscarUserName());
+    		MedicalDataWs medicalDataWs = MyOscarServerWebServicesManager.getMedicalDataWs(auth.getMyOscarUserId(), auth.getMyOscarPassword());
+    		
+    		Long patientMyOscarUserId=MyOscarUtils.getMyOscarUserId(auth, demo.getMyOscarUserName());
+    		GregorianCalendar dateOfData=new GregorianCalendar();
+    		if (eDoc.getDateTimeStampAsDate()!=null) dateOfData.setTime(eDoc.getDateTimeStampAsDate());
+    		medicalDataWs.addMedicalData(patientMyOscarUserId, dateOfData, MedicalDataType.BINARY_DOCUMENT.name(), auth.getMyOscarUserId(), docAsString, true);
+    		
+    		// log the send
+    		RemoteDataLog remoteDataLog=new RemoteDataLog();
+    		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+    		remoteDataLog.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
+    		remoteDataLog.setDocumentId(MyOscarServerWebServicesManager.getMyOscarServerBaseUrl(), "eDoc", eDoc.getDocId());
+    		remoteDataLog.setAction(RemoteDataLog.Action.SEND);
+    		remoteDataLog.setDocumentContents("id="+eDoc.getDocId()+", fileName="+eDoc.getFileName());
+    		remoteDataLogDao.persist(remoteDataLog);
 
-    		if (phrService.isIndivoRegistered(MedicalDataType.BINARY_DOCUMENT.name(), doc.getDocId())) {
-	    		// update
-	    		logger.debug("called update");
-	    		String phrIndex = phrService.getPhrIndex(MedicalDataType.BINARY_DOCUMENT.name(), doc.getDocId());
-	    		phrService.sendUpdateBinaryData(prov, demo.getChartNo(), PHRDocument.TYPE_DEMOGRAPHIC, myOscarUserId, doc, phrIndex);
-	    	} else {
-	    		// add
-	    		logger.debug("called add");
-	    		phrService.sendAddBinaryData(prov, demo.getChartNo(), PHRDocument.TYPE_DEMOGRAPHIC, myOscarUserId, doc);
-	    	}
+//    		if (phrService.isIndivoRegistered(MedicalDataType.BINARY_DOCUMENT.name(), doc.getDocId())) {
+//	    		// update
+//	    		logger.debug("called update");
+//	    		String phrIndex = phrService.getPhrIndex(MedicalDataType.BINARY_DOCUMENT.name(), doc.getDocId());
+//	    		phrService.sendUpdateBinaryData(auth, prov, demo.getChartNo(), PHRDocument.TYPE_DEMOGRAPHIC, myOscarUserId, doc, phrIndex);
+//	    	} else {
+//	    		// add
+//	    		logger.debug("called add");
+//	    		phrService.sendAddBinaryData(auth, prov, demo.getChartNo(), PHRDocument.TYPE_DEMOGRAPHIC, myOscarUserId, doc);
+//	    	}
 	    } catch (Exception e) {
 	    	logger.error("Error", e);
 	    	request.setAttribute("error_msg", e.getMessage());
