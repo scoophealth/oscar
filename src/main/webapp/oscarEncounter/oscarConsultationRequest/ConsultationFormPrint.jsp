@@ -634,7 +634,7 @@ for(ConsultationRequestExt ext:exts) {
             </tr>
             <tr>
                 <td class="fillLine">
-                    <%=divy(reqFrm.clinicalInformation) %>
+                    <%=divy(reqFrm.clinicalInformation).replaceAll("\\s","&nbsp;") %>
                     &nbsp;<br>
                 </td>
             </tr>

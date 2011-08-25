@@ -1,6 +1,7 @@
 package org.oscarehr.measurements.web;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -50,6 +51,9 @@ public class MeasurementDataAction extends DispatchAction {
 		
 		Map<String,Measurements> measurementMap = measurementsDao.getMeasurements(demographicNo,types);
 		
+		Date nctTs = null;
+		Date applanationTs=null;
+		
 		StringBuilder script = new StringBuilder();
 		for(String key:measurementMap.keySet()) {
 			Measurements value = measurementMap.get(key);
@@ -58,8 +62,29 @@ public class MeasurementDataAction extends DispatchAction {
 				if(apptNo>0 && apptNo == value.getAppointmentNo()) {
 					script.append("jQuery(\"[measurement='"+key+"']\").addClass('examfieldwhite');\n");
 				}
+				if(key.equals("os_iop_applanation") || key.equals("od_iop_applanation")) {
+					if(applanationTs == null) {
+						applanationTs = value.getDateObserved();
+					} else if(value.getDateObserved().after(applanationTs)) {
+						applanationTs = value.getDateObserved();
+					}
+				}
+				if(key.equals("os_iop_nct") || key.equals("od_iop_nct")) { 
+					if(nctTs == null) {
+						nctTs = value.getDateObserved();
+					} else if(value.getDateObserved().after(nctTs)) {
+						nctTs = value.getDateObserved();
+					}					
+				}
 			}			
 		}
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		if(applanationTs!=null)
+			script.append("jQuery(\"#applanation_ts\").html('"+sdf.format(applanationTs)+"');\n");
+		if(nctTs != null)
+			script.append("jQuery(\"#nct_ts\").html('"+sdf.format(nctTs)+"');\n");
+		
 		response.getWriter().print(script);
 		return null;
 	}

@@ -53,8 +53,41 @@
 				}
 			});	
 			jQuery.ajax({type:'POST',url:ctx+'/oscarEncounter/MeasurementData.do?action=saveValues&demographicNo='+demographicNo+'&appointmentNo='+appointmentNo,data:postData,success: function(){
-				//alert('Saved.');
+				
+				//make a call to update the existing values
+				var types='';
+				jQuery("input[measurement]").each(function() {
+					if(types.length > 0) {
+						types += ',';
+					}
+					types += jQuery(this).attr("measurement");
+				});
+				jQuery("textarea[measurement]").each(function() {
+					if(types.length > 0) {
+						types += ',';
+					}
+					types += jQuery(this).attr("measurement");
+				});
+
+				jQuery.ajax({dataType: "script", url:ctx+"/oscarEncounter/MeasurementData.do?demographicNo="+demographicNo+"&types="+types+"&action=getLatestValues&appointmentNo="+appointmentNo,async:false});
+				
+				jQuery(".slideblock").each(function() { 
+					var id = jQuery(this).attr('id');
+					var expand=false;
+					jQuery("#" + id + " [measurement]").each(function() {
+						if(jQuery(this).val().trim().length>0) {
+							expand=true;
+						}
+					});					
+					if(expand == true) {						
+						var num = id.substring(2,id.length);						
+						document.getElementById('a_'+num).style.color='blue';
+					}				
+				});
+								
 			}});
+			
+			
 		});
 		
 		
@@ -90,15 +123,14 @@
 						expand=true;
 					}
 				});
-				/*
-				jQuery("#"+id+" .examfieldwhite").each(function(){
-					expand=true;
-				});
-				*/
 				if(expand == true) {
 					togglediv(document.getElementById(id));
+					var num = id.substring(2,id.length);						
+					document.getElementById('a_'+num).style.color='blue';
 				}				
 			});
+			
+			
 						
        }});
 

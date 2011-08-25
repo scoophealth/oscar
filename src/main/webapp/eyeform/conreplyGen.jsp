@@ -559,7 +559,7 @@ jQuery(document).ready(function() {
 							<td class="tite1" colspan="2">
 								<input type="text" style="width:120px;" name="clDoctor" />
 								<input type="button" class="btn" onclick="addDoc();" value="add to cc">
-								<a ref="javascript:referralScriptAttach2('otherDocId','clDoctor')">								
+								<a href="javascript:referralScriptAttach2('otherDocId','clDoctor')">								
 								<span style="font-size: 10;">Search #</span></a> </td>
 						</tr>
 					</table>
