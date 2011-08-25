@@ -176,10 +176,10 @@ public class PHRService {
 		 */
 	}
 
-	public Integer sendAddBinaryData(ProviderData sender, String recipientOscarId, int recipientType, Long recipientMyOscarUserId, EDoc document) throws Exception {
+	public Integer sendAddBinaryData(PHRAuthentication auth, ProviderData sender, String recipientOscarId, int recipientType, Long recipientMyOscarUserId, EDoc document) throws Exception {
 		logger.debug("sendAddBinaryData:" + sender + ", " + recipientOscarId + ", " + recipientType + ", " + recipientMyOscarUserId + ", " + document);
 
-		PHRBinaryData phrBinaryData = new PHRBinaryData(sender, recipientOscarId, recipientType, recipientMyOscarUserId, document);
+		PHRBinaryData phrBinaryData = new PHRBinaryData(auth, sender, recipientOscarId, recipientType, recipientMyOscarUserId, document);
 		PHRAction action = phrBinaryData.getAction(PHRAction.ACTION_ADD, PHRAction.STATUS_SEND_PENDING);
 		action.setOscarId(document.getDocId());
 		// write action to phr_actions table
@@ -198,10 +198,10 @@ public class PHRService {
 		phrActionDAO.update(action);
 	}
 
-	public void sendUpdateBinaryData(ProviderData sender, String recipientOscarId, int recipientType, Long recipientMyOscarUserId, EDoc document, String phrDocIndex) throws Exception {
+	public void sendUpdateBinaryData(PHRAuthentication auth, ProviderData sender, String recipientOscarId, int recipientType, Long recipientMyOscarUserId, EDoc document, String phrDocIndex) throws Exception {
 		logger.debug("sendUpdateBinaryData:" + sender + ", " + recipientOscarId + ", " + recipientType + ", " + recipientMyOscarUserId + ", " + document + ", " + phrDocIndex);
 
-		PHRBinaryData phrBinaryData = new PHRBinaryData(sender, recipientOscarId, recipientType, recipientMyOscarUserId, document);
+		PHRBinaryData phrBinaryData = new PHRBinaryData(auth, sender, recipientOscarId, recipientType, recipientMyOscarUserId, document);
 		PHRAction action = phrBinaryData.getAction(PHRAction.ACTION_UPDATE, PHRAction.STATUS_SEND_PENDING);
 		action.setOscarId(document.getDocId());
 

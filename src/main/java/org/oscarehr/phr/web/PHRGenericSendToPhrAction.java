@@ -168,7 +168,7 @@ public class PHRGenericSendToPhrAction extends DispatchAction {
 
             EDoc eDoc = EDocUtil.getDoc(documentNo);
             
-            String actionIndex = phrService.sendAddBinaryData(senderProviderData, demographicNo, recipientType, recipientMyOscarUserId, eDoc) + "";
+            String actionIndex = phrService.sendAddBinaryData(auth, senderProviderData, demographicNo, recipientType, recipientMyOscarUserId, eDoc) + "";
 
             ArrayList<String> eDocAttachmentActionId = new ArrayList();
             eDocAttachmentActionId.add(actionIndex);
