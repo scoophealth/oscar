@@ -9,5 +9,5 @@ jQuery(document).ready(function(){
 	});
 	
 	//add button	
-	jQuery("#apptHistoryTbl").append("<tr><td colspan=\"7\"><input type=\"button\" value=\"Print Visit Data\" onclick=\"printVisit()\"/></td></tr>");
+	jQuery("#apptHistoryTbl").append("<tr><td colspan=\"7\"><input type=\"button\" onclick=\"selectAllCheckboxes()\" value=\"Select All\"/>&nbsp;<input type=\"button\" onclick=\"deselectAllCheckboxes()\" value=\"Deselect All\"/><input type=\"button\" value=\"Print Visit Data\" onclick=\"printVisit()\"/></td></tr>");
 });

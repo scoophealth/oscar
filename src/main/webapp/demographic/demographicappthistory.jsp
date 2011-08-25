@@ -114,6 +114,18 @@ function popupPageNew(vheight,vwidth,varpage) {
 		}		
 		location.href=ctx+"/eyeform/Eyeform.do?method=print&apptNos="+ids+"&cpp="+cpp;                
 	}
+	
+	function selectAllCheckboxes() {
+		jQuery("input[name='sel']").each(function(){
+			jQuery(this).attr('checked',true);
+		});
+	}
+	
+	function deselectAllCheckboxes() {
+		jQuery("input[name='sel']").each(function(){
+			jQuery(this).attr('checked',false);
+		});
+	}
 
 </script>
 
