@@ -70,7 +70,7 @@ public class InsideLabUploadAction extends Action {
             }
             
         }catch(Exception e){
-            logger.error("Error: "+e);
+            logger.error("Error: ",e);
             outcome = "exception";
         }
         
