@@ -2557,10 +2557,12 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			LinkedHashMap<String,LabResultData> accessionMap = new LinkedHashMap<String,LabResultData>();
 			for(int i=0;i<labs.size();i++) {
 				LabResultData result = labs.get(i);
-				if (result.accessionNumber == null || result.accessionNumber.equals("")) {
-					accessionMap.put("noAccessionNum" + i + result.labType, result);
-				} else {
-					if (!accessionMap.containsKey(result.accessionNumber + result.labType)) accessionMap.put(result.accessionNumber + result.labType, result);
+				if(result.isHL7TEXT()){
+					if (result.accessionNumber == null || result.accessionNumber.equals("")) {
+						accessionMap.put("noAccessionNum" + i + result.labType, result);
+					} else {
+						if (!accessionMap.containsKey(result.accessionNumber + result.labType)) accessionMap.put(result.accessionNumber + result.labType, result);
+					}
 				}
 			}			
 			for(LabResultData result:accessionMap.values()) {
