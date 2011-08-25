@@ -75,6 +75,7 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
+import oscar.SxmlMisc;
 import oscar.oscarEncounter.oscarMeasurements.dao.MeasurementsDao;
 import oscar.oscarEncounter.oscarMeasurements.model.Measurements;
 import oscar.util.UtilDateUtilities;
@@ -699,6 +700,16 @@ public class EyeformAction extends DispatchAction {
 			String refNo = null;
 			String referraldoc = new String();
 			
+			//referralNo and referral_doc_name
+			String famXml = demographic.getFamilyDoctor();
+			if(famXml != null && famXml.length()>0) {
+				refNo = SxmlMisc.getXmlContent(famXml,"rdohip");
+				referraldoc = SxmlMisc.getXmlContent(famXml,"rd");
+				request.setAttribute("referral_doc_name", referraldoc);
+				cp.setReferralNo(refNo);
+			}
+			
+			
 			if (!"saved".equalsIgnoreCase((String) request.getAttribute("savedflag"))
 					&& "new".equalsIgnoreCase(request.getParameter("flag"))) {
 				
@@ -999,8 +1010,9 @@ public class EyeformAction extends DispatchAction {
 			
 			cp.setCc(divycc(cp.getCc()));
 			cp.setClinicalInfo(divy(cp.getClinicalInfo()));
-			cp.setConcurrentProblems(divy(cp.getConcurrentProblems()));
-			cp.setCurrentMeds(divy(cp.getCurrentMeds()));
+			cp.setClinicalInfo(cp.getClinicalInfo().replaceAll("\\s", "&nbsp;"));
+			cp.setConcurrentProblems(divy(cp.getConcurrentProblems()));			
+			cp.setCurrentMeds(cp.getCurrentMeds());
 			cp.setExamination(dive(cp.getExamination()));
 			cp.setImpression(divy(cp.getImpression()));
 			cp.setAllergies(divy(cp.getAllergies()));

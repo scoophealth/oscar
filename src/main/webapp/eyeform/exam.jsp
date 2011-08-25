@@ -272,6 +272,10 @@ function collapseAll() {
         
   }
 
+.section_title {
+	color:black;
+}
+
 .slidey .title2 {
         margin-top: 1px;
         font-size:10pt;
@@ -315,7 +319,7 @@ span.ge{
 <td>
 <div class="slidey">
         <div class="title">
-            <a style="font-weight: bold;" href="javascript:void(0)" tabindex="31" id="a_21" onclick="togglediv(this);">Vision Pretest:</a>            
+            <a style="font-weight: bold;color:black;text-decoration:none;font-size:12px" href="javascript:void(0)" tabindex="31" id="a_21" onclick="togglediv(this);">Vision Pretest:</a>            
         </div>
         <div id="s_21" class="slideblock">
             <table class="exam" width="100%">
@@ -411,7 +415,7 @@ span.ge{
 <td>
 <div class="slidey">
         <div class="title">
-            <a style="font-weight: bold;" tabindex="60" href="javascript:void(0)" id="a_22" onclick="togglediv(this);">Vision Manifest:</a>
+            <a style="font-weight: bold;color:black;text-decoration:none;font-size:12px" tabindex="60" href="javascript:void(0)" id="a_22" onclick="togglediv(this);">Vision Manifest:</a>
             <span>&nbsp;&nbsp;</span>
             
             <a href="javascript:void(0)" tabindex="61" onclick="copyAR();"> [copy AR] </a>
@@ -493,7 +497,7 @@ span.ge{
 <td>
 	<div class="slidey">
         <div class="title">
-            <a style="font-weight: bold;" href="javascript:void(0)" tabindex="90" id="a_23" onclick="togglediv(this);">IOP:</a>
+            <a style="font-weight: bold;color:black;text-decoration:none;font-size:12px" href="javascript:void(0)" tabindex="90" id="a_23" onclick="togglediv(this);">IOP:</a>
             
         </div>
         <div id="s_23" class="slideblock">
@@ -546,7 +550,7 @@ span.ge{
 <td>
 	<div class="slidey">
         <div class="title">
-            <a style="font-weight: bold;" tabindex="100" href="javascript:void(0)" id="a_24" onclick="togglediv(this);">Special Exam:</a>
+            <a style="font-weight: bold;color:black;text-decoration:none;font-size:12px" tabindex="100" href="javascript:void(0)" id="a_24" onclick="togglediv(this);">Special Exam:</a>
             
         </div>
         <div id="s_24" class="slideblock">
@@ -595,7 +599,7 @@ span.ge{
 <td>
 	<div class="slidey">
         <div class="title">
-            <a style="font-weight: bold;" href="javascript:void(0)" tabindex="120" id="a_25" onclick="togglediv(this);">
+            <a style="font-weight: bold;color:black;text-decoration:none;font-size:12px" href="javascript:void(0)" tabindex="120" id="a_25" onclick="togglediv(this);">
             EOM/Stereo:
             </a>
             
@@ -614,7 +618,7 @@ span.ge{
 <td>
 	<div class="slidey">
         <div class="title">
-            <a style="font-weight: bold;" tabindex="125" href="javascript:void(0)" id="a_26" onclick="togglediv(this);">Anterior Segment:</a>
+            <a style="font-weight: bold;color:black;text-decoration:none;font-size:12px" tabindex="125" href="javascript:void(0)" id="a_26" onclick="togglediv(this);">Anterior Segment:</a>
             <span>&nbsp;&nbsp;</span>
 
             <a href="javascript:void(0)" tabindex="126" onclick="setAnterior();return false;">[normal]</a>
@@ -719,7 +723,7 @@ span.ge{
 <td>
 	<div class="slidey">
         <div class="title">
-            <a style="font-weight: bold;" tabindex="160" href="javascript:void(0)" id="a_27" onclick="togglediv(this);">Posterior Segment:</a>
+            <a style="font-weight: bold;color:black;text-decoration:none;font-size:12px" tabindex="160" href="javascript:void(0)" id="a_27" onclick="togglediv(this);">Posterior Segment:</a>
             <span>&nbsp;&nbsp;</span>
             
             <a href="javascript:void(0)" tabindex="161" onclick="setPosterior();return false;">[normal]</a>
@@ -768,7 +772,7 @@ span.ge{
 <td>
 	<div class="slidey">
         <div class="title">
-            <a style="font-weight: bold;" tabindex="175" href="javascript:void(0)" id="a_28" onclick="togglediv(this);">External:</a>
+            <a style="font-weight: bold;color:black;text-decoration:none;font-size:12px" tabindex="175" href="javascript:void(0)" id="a_28" onclick="togglediv(this);">External:</a>
             <span>&nbsp;&nbsp;</span>
             <a href="javascript:void(0)" tabindex="176" onclick="setExternal();return false;">[normal]</a>
             <a href="javascript:void(0)" tabindex="177" onclick="clearExternal();return false;">[clear]</a>
@@ -816,7 +820,7 @@ span.ge{
 <td>
 	<div class="slidey">
         <div class="title">
-            <a style="font-weight: bold;" tabindex="190" href="javascript:void(0)" id="a_29" onclick="togglediv(this);">NLD:</a>
+            <a style="font-weight: bold;color:black;text-decoration:none;font-size:12px" tabindex="190" href="javascript:void(0)" id="a_29" onclick="togglediv(this);">NLD:</a>
             
         </div>
         <div id="s_29" class="slideblock">
@@ -855,7 +859,7 @@ span.ge{
 <td>
 	<div class="slidey">
         <div class="title">
-            <a style="font-weight: bold;" tabindex="200" href="javascript:void(0)" id="a_30" onclick="togglediv(this);">Eyelid Measurements:</a>
+            <a style="font-weight: bold;color:black;text-decoration:none;font-size:12px" tabindex="200" href="javascript:void(0)" id="a_30" onclick="togglediv(this);">Eyelid Measurements:</a>
             
         </div>
         <div id="s_30" class="slideblock">
@@ -909,7 +913,7 @@ span.ge{
 <td>
 	<div class="slidey">
         <div class="title">
-            <a style="font-weight: bold;" tabindex="220" href="javascript:void(0)" id="a_31" onclick="togglediv(this);">Orbit:</a>
+            <a style="font-weight: bold;color:black;text-decoration:none;font-size:12px" tabindex="220" href="javascript:void(0)" id="a_31" onclick="togglediv(this);">Orbit:</a>
             
         </div>
         <div id="s_31" class="slideblock">
