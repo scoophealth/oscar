@@ -460,10 +460,10 @@ public class DemographicData {
 		protected String hin;
 		protected String ver;
 		protected String roster_status;
-                protected String roster_date;
-                protected String roster_termination_date;
+        protected String roster_date;
+        protected String roster_termination_date;
 		protected String patient_status;
-                protected String patient_status_date;
+        protected String patient_status_date;
 		protected String date_joined;
 		protected String chart_no;
 		protected String official_lang;
@@ -482,6 +482,11 @@ public class DemographicData {
 		protected String sourceOfIncome;
 		protected String citizenship;
 		protected String sin;
+		protected String anonymous;
+		protected String countryOfOrigin;
+		protected String newsletter;
+		protected String lastUpdateDate;
+		protected String lastUpdateUser;
 
 		public RxInformation RxInfo;
 		public EctInformation EctInfo;
@@ -510,10 +515,10 @@ public class DemographicData {
 			this.hin = hin;
 			this.ver = ver;
 			this.roster_status = roster_status;
-                        this.roster_date = roster_date;
-                        this.roster_termination_date = roster_termination_date;
+			this.roster_date = roster_date;
+            this.roster_termination_date = roster_termination_date;
 			this.patient_status = patient_status;
-                        this.patient_status_date = patient_status_date;
+            this.patient_status_date = patient_status_date;
 			this.date_joined = date_joined;
 			this.chart_no = chart_no;
 			this.official_lang = official_lang;
@@ -565,10 +570,10 @@ public class DemographicData {
 					this.hin = oscar.Misc.getString(rs, "hin");
 					this.ver = oscar.Misc.getString(rs, "ver");
 					this.roster_status = oscar.Misc.getString(rs, "roster_status");
-                                        this.roster_date = oscar.Misc.getString(rs, "roster_date");
-                                        this.roster_termination_date = oscar.Misc.getString(rs, "roster_termination_date");
+                    this.roster_date = oscar.Misc.getString(rs, "roster_date");
+                    this.roster_termination_date = oscar.Misc.getString(rs, "roster_termination_date");
 					this.patient_status = oscar.Misc.getString(rs, "patient_status");
-                                        this.patient_status_date = oscar.Misc.getString(rs, "patient_status_date");
+                    this.patient_status_date = oscar.Misc.getString(rs, "patient_status_date");
 					this.date_joined = oscar.Misc.getString(rs, "date_joined");
 					this.chart_no = oscar.Misc.getString(rs, "chart_no");
 					this.official_lang = oscar.Misc.getString(rs, "official_lang");
@@ -587,6 +592,11 @@ public class DemographicData {
 					this.sourceOfIncome = oscar.Misc.getString(rs, "sourceOfIncome");
 					this.citizenship = oscar.Misc.getString(rs, "citizenship");
 					this.sin = oscar.Misc.getString(rs, "sin");
+					this.anonymous = oscar.Misc.getString(rs, "anonymous");
+					this.countryOfOrigin = oscar.Misc.getString(rs, "country_of_origin");
+					this.newsletter = oscar.Misc.getString("newsletter");
+					this.lastUpdateDate = oscar.Misc.getString(rs, "lastUpdateDate");
+					this.lastUpdateUser = oscar.Misc.getString("lastUpdateUser");
 				}
 
 				rs.close();
@@ -992,6 +1002,46 @@ public class DemographicData {
 
 		public void setSourceOfIncome(String data) {
 			sourceOfIncome = data;
+		}
+		
+		public String getAnonymous() {
+			return anonymous;
+		}
+		
+		public void setAnonymous(String data) {
+			anonymous = data;
+		}
+		
+		public String getCountryOfOrigin() {
+			return countryOfOrigin;
+		}
+		
+		public void setCountryOfOrigin(String data) {
+			countryOfOrigin = data;
+		}
+		
+		public String getNewsletter() {
+			return newsletter;
+		}
+		
+		public void setNewsletter(String data) {
+			newsletter = data;
+		}
+		
+		public String getLastUpdateDate() {
+			return lastUpdateDate;
+		}
+		
+		public void setLastUpdateDate(String data) {
+			lastUpdateDate = data;
+		}
+		
+		public String getLastUpdateUser() {
+			return lastUpdateUser;
+		}
+
+		public void setLastUpdateUser(String data) {
+			lastUpdateUser = data;
 		}
 
 		public String addZero(String text, int num) {
