@@ -102,11 +102,23 @@ border-top: 1px solid black;
 border-bottom: 1px solid black;
 }
 
-
-table.allergy_legend td.colour_codes{
+table.colour_codes{
 width:8px;
-padding-right:0;
+height:10px;
+border:1px solid #999999;
 }
+
+
+table.allergy_table td{
+	border-collapse: collapse;
+	border-bottom: 1px #8F8F8F solid thin;
+	border-top: none;
+	border-left: none;
+	border-right: none;
+	
+	empty-cells: show;	
+}
+
 
 </style>
 
@@ -235,15 +247,15 @@ padding-right:6;
 							out.print("</a></span>");	
 						}
 					 }
-					 //1 mild 2 moderate 3 severe
+					 //1 mild 2 moderate 3 severe 4 unknown
 					 
 					 String[] ColourCodesArray=new String[5];
-					 ColourCodesArray[1]="#FFFF33";
-					 ColourCodesArray[2]="#FF6600";
-					 ColourCodesArray[3]="#CC0000";
-					 ColourCodesArray[4]="#F5F5F5";
+					 ColourCodesArray[1]="#F5F5F5"; // Mild Was set to yellow (#FFFF33) SJHH requested not to flag mild
+					 ColourCodesArray[2]="#FF6600"; // Moderate
+					 ColourCodesArray[3]="#CC0000"; // Severe
+					 ColourCodesArray[4]="#E0E0E0"; // unknown 
 					
-					 String allergy_colour_codes = "<table class='allergy_legend' cellspacing='0'><tr><td><b>Legend:</b></td><td class='colour_codes' bgcolor='"+ColourCodesArray[1]+"' > </td> <td align='center'>Mild</td><td class='colour_codes' bgcolor='"+ColourCodesArray[2]+"'> </td> <td >Moderate</td><td bgcolor='"+ColourCodesArray[3]+"'class='colour_codes'> </td><td >Severe</td></tr></table>";
+					 String allergy_colour_codes = "<table class='allergy_legend' cellspacing='0'><tr><td><b>Legend:</b></td> <td > <table class='colour_codes' bgcolor='"+ColourCodesArray[1]+"'><td> </td></table></td> <td >Mild</td> <td > <table class='colour_codes' bgcolor='"+ColourCodesArray[2]+"'><td> </td></table></td> <td >Moderate</td><td > <table class='colour_codes' bgcolor='"+ColourCodesArray[3]+"'><td> </td></table></td> <td >Severe</td> </tr></table>";
 				%>
 				</span>
 
@@ -260,7 +272,11 @@ padding-right:6;
 						<%=allergy_colour_codes%>
 						<div class="Step1Text" style="width: 830px;">
 						
-						<table width="100%" cellpadding="3" cellspacing="0">
+						                                                                          <!-- frame="below" and rules="all" 
+						                                                                          are here so the browser displays 
+						                                                                          cells that are empty so the bottom 
+						                                                                          border appears -->                   
+						<table width="100%" cellpadding="3" cellspacing="0" class="allergy_table" frame="below" rules="all">
 							<tr>
 								<td><b>Status</b></td>
 								<td><b>Entry Date</b></td>
