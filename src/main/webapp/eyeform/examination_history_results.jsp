@@ -43,7 +43,9 @@
 				color: black;
 				width: 300px;
 			}
-		
+			th {white-space:nowrap}
+			
+			.centered {text-align:center}
 		</style>    	
 	</head>
 	
@@ -90,8 +92,10 @@
 	 	</table>
 	 		 		 	
 		<h5>Simple field history:</h5>
-	    <span class="pagebanner">Total <c:out value="${numPages}"/> pages.</span>
-		<span class="pagelinks">
+		<table class="display" style="width:20%">
+		<tr style="background-color: rgb(204, 204, 255);">
+	    <td>Total <c:out value="${numPages}"/> pages.</td>
+		<td align="right">
 		<% 
 			int numPages = (Integer)request.getAttribute("numPages");
 			int pageNumber = (Integer)request.getAttribute("refPage");
@@ -109,15 +113,15 @@
 				%>next<%
 			}
 		%>
-		</span>
-	  
-		<table class="display">
+		</td>
+	  </tr>
+		<table class="display" style="width:20%">
 			<tr style="background-color: rgb(204, 204, 255);">
-		  		<td></td>
+		  		<td nowrap="nowrap"></td>
 		  		<%
 		  			SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
 		  			for(Appointment appointment:(List<Appointment>)request.getAttribute("appointments")) { 
-		  				out.println("<td>"+formatter.format(appointment.getAppointmentDate())+"</td>");
+		  				out.println("<td nowrap=\"nowrap\">"+formatter.format(appointment.getAppointmentDate())+"</td>");
 		  			}
 		  		%>
 			</tr>
@@ -127,39 +131,40 @@
 				Measurements simpleFields[][] = (Measurements[][])request.getAttribute("simpleFields");
 				for(int x=0;x<simpleFields.length;x++) {
 					out.println("<tr class=\""+(((x%2)==0)?"even":"odd")+"\">");
-					out.println("<td>"+simpleFieldNames.get(x)+"</td>");
+					out.println("<td nowrap=\"nowrap\">"+simpleFieldNames.get(x)+"</td>");
 					for(int y=0;y<simpleFields[x].length;y++) {						
-						out.println("<td>"+((simpleFields[x][y]!=null)?simpleFields[x][y].getDataField():"")+"</td>");
+						out.println("<td nowrap=\"nowrap\">"+((simpleFields[x][y]!=null)?simpleFields[x][y].getDataField():"")+"</td>");
 					}
 					out.println("</tr>");
 				}
 			%>
-			
+</table>
+<table class="display">
   <tr>
   <td><h5>AR history</h5>
   <display:table name="ars" requestURI="/eyeform/ExaminationHistory.do" class="display" id="map" pagesize="5">
 	
-			<display:column title="OD Sph" style="width:30px;">
+			<display:column title="OD Sph" style="width:30px;white-space: nowrap;">
 			<c:out value="${map.od_ar_sph}"/>
 			</display:column>
 		       
-			<display:column title="OD Cyl" style="width:30px;">
+			<display:column title="OD Cyl" style="width:30px;white-space: nowrap;">
 			<c:out value="${map.od_ar_cyl}"/>
 
 			</display:column>
-			 <display:column title="OD Axis" style="width:30px;">
+			 <display:column title="OD Axis" style="width:30px;white-space: nowrap;">
 		    <c:out value="${map.od_ar_axis}"/>
 			</display:column>
 			
-			<display:column title="Date" >
+			<display:column title="Date" style="width:80%;white-space: nowrap;text-align:center" headerClass="centered">
 			<c:out value="${map.date}"/>
 			</display:column>
 		   
-			<display:column title="OS Sph" style="width:30px;">
+			<display:column title="OS Sph" style="width:30px;white-space: nowrap;">
 			<c:out value="${map.os_ar_sph}"/>
 			</display:column>
 		       
-			<display:column title="OS Cyl" style="width:30px;">
+			<display:column title="OS Cyl" style="width:30px;white-space: nowrap;">
 			<c:out value="${map.os_ar_cyl}"/>
 			</display:column>
 			
@@ -187,7 +192,7 @@
 		    <c:out value="${map.od_k2_axis}"/>
 			</display:column>
 			
-			<display:column title="Date" >
+			<display:column title="Date" style="text-align:center" headerClass="centered">
 			<c:out value="${map.date}"/>
 			</display:column>
 		   
@@ -230,7 +235,7 @@
 		    <c:out value="${map.od_manifest_refraction_add}"/>
 			</display:column>
 		   
-		   <display:column title="Date" >
+		   <display:column title="Date" style="text-align:center" headerClass="centered">
 			<c:out value="${map.date}"/>
 			</display:column>
 			
@@ -277,7 +282,7 @@
 		    <c:out value="${map.od_cycloplegic_refraction_add}"/>
 			</display:column>
 		   
-		   <display:column title="Date" >
+		   <display:column title="Date" style="text-align:center" headerClass="centered">
 			<c:out value="${map.date}"/>
 			</display:column>
 			
@@ -324,12 +329,12 @@
 			</tr>
 			</table>
 			</display:column>
-			<display:column title="Date" >
+			<display:column title="Date" style="text-align:center" headerClass="centered">
 			<c:out value="${map.date}"/>
 			</display:column>
 			
 			<display:column title="OS" >
-			<table style="border:0px">
+			<table border="1">
 			<tr>
 			<td width="33%"></td>
 			<td class="inner" width="34%"><c:out value="${map.os_angle_up}"/></td>
@@ -341,9 +346,9 @@
 			<td class="inner"><c:out value="${map.os_angle_middle2}"/></td>
 			</tr>
 			<tr>
-			<td></td>
-			<td class="inner"><c:out value="${map.os_angle_down}"/></td>
-			<td></td>
+			<td width="33%"></td>
+			<td class="inner" width="34%"><c:out value="${map.os_angle_down}"/></td>
+			<td width="33%"></td>
 			</tr>
 			</table>
 			</display:column>
