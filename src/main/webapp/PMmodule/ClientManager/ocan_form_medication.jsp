@@ -47,6 +47,9 @@
 <div id="medication_<%=medicationNumber%>">
 	<table>
 		<tr>
+			<td colspan="2">&nbsp;</td>
+		</tr>
+		<tr>
 			<td class="genericTableHeader">Medication</td>
 			<td class="genericTableData">
 				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "medication_"+medicationNumber+"_medication", 128,prepopulationLevel)%>	
