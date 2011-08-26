@@ -325,12 +325,15 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             //Enrolment Status history
             List<DemographicArchive> DAs = demoArchiveDao.findRosterStatusHistoryByDemographicNo(Integer.valueOf(demoNo));
             for (int i=0; i<DAs.size(); i++) {
-                String historyRS = DAs.get(i).getRosterStatus();
-                if (StringUtils.empty(historyRS)) continue;
+                String historyRS = StringUtils.noNull(DAs.get(i).getRosterStatus());
+                String historyRS1 = i<DAs.size()-1 ? StringUtils.noNull(DAs.get(i+1).getRosterStatus()) : "-1";
 
                 historyRS = historyRS.equalsIgnoreCase("RO") ? "1" : "0";
-                if (i==0 && historyRS.equals(rosterStatus)) continue;
+                historyRS1 = historyRS1.equalsIgnoreCase("RO") ? "1" : "0";
+                if (i==0 && historyRS.equals(rosterStatus)) continue; //ignore if same as current status
+                if (historyRS.equals(historyRS1)) continue; //skip if same as next status
 
+                rosterStatus = historyRS;
                 enrolment = demo.addNewEnrolment();
                 enrolment.setEnrollmentStatus(cdsDt.EnrollmentStatus.Enum.forString(historyRS));
                 if (historyRS.equals("1")) {
