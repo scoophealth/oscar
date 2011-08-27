@@ -369,83 +369,6 @@ function changeNumberOfReferrals() {
 
 </script>
 
-<script>
-$("document").ready(function(){
-	/* should not blank out 2,3a,3b, those are optional.
-	$("select[domain1='true']").change(function(){
-		var curId = $(this).attr("id");
-		var domainNumber = curId.substring(0,curId.indexOf("_"));
-		var value = $(this).val();
-		if(value == '0' || value == '9') {
-			//blank out 2,3a,3b
-			$("#"+domainNumber+"_2").attr("disabled","disabled");
-			$("#"+domainNumber+"_3a").attr("disabled","disabled");
-			$("#"+domainNumber+"_3b").attr("disabled","disabled");
-		} else {
-			$("#"+domainNumber+"_2").attr("disabled","");
-			$("#"+domainNumber+"_3a").attr("disabled","");
-			$("#"+domainNumber+"_3b").attr("disabled","");
-		}
-	});
-
-	$("select[domain1='true']").each(function(){
-		var curId = $(this).attr("id");
-		var domainNumber = curId.substring(0,curId.indexOf("_"));
-		var value = $(this).val();
-		if(value == '0' || value == '9') {
-			//blank out 2,3a,3b
-			$("#"+domainNumber+"_2").attr("disabled","disabled");
-			$("#"+domainNumber+"_3a").attr("disabled","disabled");
-			$("#"+domainNumber+"_3b").attr("disabled","disabled");
-		} else {
-			$("#"+domainNumber+"_2").attr("disabled","");
-			$("#"+domainNumber+"_3a").attr("disabled","");
-			$("#"+domainNumber+"_3b").attr("disabled","");
-		}
-	});
-	*/
-
-	
-	//autism
-	$("input[name='6_medical_conditions'][value='408856003']").change(function(){
-		if($(this).attr("checked")) {
-			$("#6_medical_conditions_autism").attr("disabled","");
-		} else {
-			$("#6_medical_conditions_autism").attr("disabled","disabled");
-			$("#6_medical_conditions_autism").val("");
-		}
-		
-	});
-
-	if($("input[name='6_medical_conditions'][value='408856003']").attr("checked")) {	
-		$("#6_medical_conditions_autism").attr("disabled","");
-	} else {
-		$("#6_medical_conditions_autism").attr("disabled","disabled");
-		$("#6_medical_conditions_autism").val("");
-	}
-
-	//phys health - other
-	//410515003
-	$("input[name='6_medical_conditions'][value='OTH']").change(function(){
-		if($(this).attr("checked")) {
-			$("#6_medical_conditions_other").attr("disabled","");
-		} else {
-			$("#6_medical_conditions_other").attr("disabled","disabled");
-			$("#6_medical_conditions_other").val("");
-		}
-		
-	});
-	
-	if($("input[name='6_medical_conditions'][value='OTH']").attr("checked")) {	
-		$("#6_medical_conditions_other").attr("disabled","");
-	} else {
-		$("#6_medical_conditions_other").attr("disabled","disabled");
-		$("#6_medical_conditions_other").val("");
-	}
-});
-
-</script>
-
 <style>
 .error {color:red;}
 </style>
@@ -1630,7 +1553,8 @@ Client date of birth : <%=ocanStaffForm.getClientDateOfBirth()%>
 						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"power_attorney_property_phoneExt",16,prepopulationLevel)%>
 			</td>
 		</tr>		
-		
+		<tr><td colspan="2">&nbsp;</td>
+		</tr> 
 		<tr>
 			<td class="genericTableHeader">Power of Attorney for Personal Care</td>
 			<td class="genericTableData">
@@ -1663,7 +1587,8 @@ Client date of birth : <%=ocanStaffForm.getClientDateOfBirth()%>
 						<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"power_attorney_personal_care_phoneExt",16,prepopulationLevel)%>
 			</td>
 		</tr>
-		
+		<tr><td colspan="2">&nbsp;</td>
+		</tr> 
 		<tr>
 			<td class="genericTableHeader">Guardian</td>
 			<td class="genericTableData">
@@ -1851,6 +1776,7 @@ Client date of birth : <%=ocanStaffForm.getClientDateOfBirth()%>
 			<td class="genericTableHeader">Do you have any issues with your immigration experience? (Select all that apply)</td>
 			<td class="genericTableData">
 				<%=OcanForm.renderAsCheckBoxOptions(ocanStaffForm.getId(), "immigration_issues", OcanForm.getOcanFormOptions("Immigration Experience"),prepopulationLevel)%>						
+				<input type="hidden" name="immigration_issues_hidden" id="immigration_issues_hidden" value="" />
 			</td>
 		</tr>
 		<tr>
@@ -1993,7 +1919,7 @@ Client date of birth : <%=ocanStaffForm.getClientDateOfBirth()%>
 		<tr>
 			<td class="genericTableHeader">Where do you live?</td>
 			<td class="genericTableData">
-				<select name="1_where_live" class="{validate: {required:true}}">
+				<select name="1_where_live" id="1_where_live" class="{validate: {required:true}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "1_where_live", OcanForm.getOcanFormOptions("Residence Type"),prepopulationLevel)%>
 				</select>					
 			</td>
@@ -2009,9 +1935,10 @@ Client date of birth : <%=ocanStaffForm.getClientDateOfBirth()%>
 		<tr>
 			<td class="genericTableHeader">Do you receive any support?</td>
 			<td class="genericTableData">
-				<select name="1_any_support" class="{validate: {required:true}}">
+				<select name="1_any_support" id="1_any_support" class="{validate: {required:true}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "1_any_support", OcanForm.getOcanFormOptions("Residential Support"),prepopulationLevel)%>
-				</select>					
+				</select>	
+				<input type="hidden" name="1_any_support_hidden" id="1_any_support_hidden" value="" />			
 			</td>
 		</tr>
 		
@@ -2308,7 +2235,7 @@ Client date of birth : <%=ocanStaffForm.getClientDateOfBirth()%>
 		<tr>
 			<td class="genericTableHeader">Are you currently in school?</td>
 			<td class="genericTableData">
-				<select name="5_education_program_status" class="{validate: {required:true}}">
+				<select name="5_education_program_status" id="5_education_program_status" class="{validate: {required:true}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "5_education_program_status", OcanForm.getOcanFormOptions("Education Program Status"),prepopulationLevel)%>
 				</select>					
 			</td>
@@ -2619,7 +2546,7 @@ This information is collected from a variety of sources, including self-report, 
 			</td>
 		</tr>
 		<tr>
-			<td class="genericTableHeader">Symptom Checklist - Other</td>
+			<td class="genericTableHeader">Symptoms Comments</td>
 			<td class="genericTableData">
 						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"symptom_checklist_other",5,50,prepopulationLevel)%>
 			</td>

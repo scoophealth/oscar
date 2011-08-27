@@ -14,8 +14,30 @@
 <%
 	@SuppressWarnings("unchecked")
 	HashMap<String,String[]> parameters=new HashMap(request.getParameterMap());
-
-	
+	if(request.getParameter("ocanType")!=null && request.getParameter("ocanType").equalsIgnoreCase("full")) {	
+	if(parameters.get("1_where_live")[0].equals("024-01") || parameters.get("1_where_live")[0].equals("024-02") ||
+			parameters.get("1_where_live")[0].equals("024-05") || parameters.get("1_where_live")[0].equals("024-06") ||
+			parameters.get("1_where_live")[0].equals("024-08") || parameters.get("1_where_live")[0].equals("024-09") ) {
+		parameters.remove("1_any_support");
+		parameters.put("1_any_support", parameters.get("1_any_support_hidden"));
+	}
+	boolean var4 = false;
+	boolean var3 = false;
+	int length = parameters.get("immigration_issues").length;
+	String[] immi = new String[length+1];	
+	int i=0;
+	for(String ii : parameters.get("immigration_issues")) {
+		immi[i] = ii;
+		if(ii.equalsIgnoreCase("4")) var4 = true;
+		if(ii.equalsIgnoreCase("3")) var3 = true;
+		i++;
+	}
+	if(var4 && !var3) {
+		immi[length] = "3"; 
+		parameters.put("immigration_issues", immi);
+	}
+		
+}	
 	// for these values get them and pop them from map so subsequent iterating through map doesn't process these parameters again.
 	//Integer admissionId=Integer.valueOf(parameters.get("admissionId")[0]);	
 	//parameters.remove("admissionId");
@@ -122,7 +144,7 @@
 	} 
 	
 		for (Map.Entry<String, String[]> entry : parameters.entrySet())
-		{			
+		{
 			if (entry.getValue()!=null)
 			{
 				for (String value : entry.getValue())
