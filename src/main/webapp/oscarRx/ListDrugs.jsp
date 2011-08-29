@@ -57,6 +57,8 @@
 </logic:present>
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
 <%
+		String roleName$ = (String)session.getAttribute("userrole") + "," + (String)session.getAttribute("user");
+		com.quatro.service.security.SecurityManager securityManager = new com.quatro.service.security.SecurityManager();
         oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) pageContext.findAttribute("bean");
         boolean showall = false;
         if (request.getParameter("show") != null) {
@@ -79,9 +81,11 @@ if (heading != null){
             <th align="left"><b>Days to Exp</b></th>
             <th align="left"><b>LT Med</b></th>
             <th align="left"><b><bean:message key="SearchDrug.msgPrescription"/></b></th>
+			<%if(securityManager.hasWriteAccess("_rx",roleName$,true)) {%>
             <th align="center" width="35px"><b><bean:message key="SearchDrug.msgReprescribe"/></b></th>
-            <th align="center" width="35px"><b><bean:message key="SearchDrug.msgDelete"/></b></th>
-            <th align="center" width="35px"><b><bean:message key="SearchDrug.msgDiscontinue"/></b></th>
+            <!--<th align="center" width="35px"><b><bean:message key="SearchDrug.msgDelete"/></b></th>-->
+            <% } %>
+            <th align="center" width="35px"><b><bean:message key="SearchDrug.msgDiscontinue"/></b></th>		
 			<th align="center" width="35px"><b><bean:message key="SearchDrug.msgReason"/></b></th>    
             <%
                String listHomeMed = OscarProperties.getInstance().getProperty("rx.list_home_med");
@@ -90,8 +94,9 @@ if (heading != null){
             <th align="center" width="35px"><b><bean:message key="SearchDrug.msgHomeMed"/></b></th>
             <% } %>
             <th align="center" width="35px"><b><bean:message key="SearchDrug.msgPastMed"/></b></th>
-			       
-            <th align="center" width="15px">&nbsp;</th>
+            <%if(securityManager.hasWriteAccess("_rx",roleName$,true)) {%>
+            	<th align="center" width="15px">&nbsp;</th>
+            <% } %>
             <th align="center"><bean:message key="SearchDrug.msgLocationPrescribed"/></th>
             <th align="center"><bean:message key="SearchDrug.msgHideCPP"/></th>
              <th align="center"></th>
@@ -175,9 +180,16 @@ if (heading != null){
             			if (prescriptDrug.getRemoteFacilityId()==null)
             			{
             				%>
+							<%
+								if(securityManager.hasWriteAccess("_rx",roleName$,true)) {            		
+							%>
 		            			<a id="notLongTermDrug_<%=prescriptIdInt%>" title="<bean:message key='oscarRx.Prescription.changeDrugLongTerm'/>" onclick="changeLt('<%=prescriptIdInt%>');" href="javascript:void(0);">
 		            			L
 		            			</a>
+							<% } else { %>
+            					<span style="color:blue">L</span>
+            				<% } %>
+
             				<%
             			}
             			else
@@ -191,6 +203,9 @@ if (heading != null){
             </td>
 
             <td valign="top"><a id="prescrip_<%=prescriptIdInt%>" <%=styleColor%> href="StaticScript2.jsp?regionalIdentifier=<%=prescriptDrug.getRegionalIdentifier()%>&amp;cn=<%=response.encodeURL(prescriptDrug.getCustomName())%>&amp;bn=<%=response.encodeURL(bn)%>&amp;atc=<%=prescriptDrug.getAtc()%>"><%=RxPrescriptionData.getFullOutLine(prescriptDrug.getSpecial()).replaceAll(";", " ")%></a></td>
+			<%            			
+	           	if(securityManager.hasWriteAccess("_rx",roleName$,true)) {            		
+           	%>
             <td width="20px" align="center" valign="top">
                 <%if (prescriptDrug.getRemoteFacilityName() == null) {%>
                 <input id="reRxCheckBox_<%=prescriptIdInt%>" type=CHECKBOX onclick="updateReRxDrugId(this.id)" <%if(reRxDrugList.contains(prescriptIdInt.toString())){%>checked<%}%> name="checkBox_<%=prescriptIdInt%>">
@@ -203,19 +218,25 @@ if (heading != null){
                 </form>
                 <%}%>
             </td>
+<!--
             <td width="20px" align="center" valign="top">
                 <%if (prescriptDrug.getRemoteFacilityName() == null) {%>
                    <a id="del_<%=prescriptIdInt%>" name="delete" <%=styleColor%> href="javascript:void(0);" onclick="Delete2(this);">Del</a>
                 <%}%>
             </td>
+-->
+			<% } %>
             <td width="20px" align="center" valign="top">
                 <%if(!prescriptDrug.isDiscontinued())
                 {
                	 if (prescriptDrug.getRemoteFacilityId()==null)
                	 {
+               		
+					if(securityManager.hasWriteAccess("_rx",roleName$,true)) {            		
+				
                 %>
-                	<a id="discont_<%=prescriptIdInt%>" href="javascript:void(0);" onclick="Discontinue(event,this);" <%=styleColor%> >Discon</a>
-                <%
+                	<a id="discont_<%=prescriptIdInt%>" href="javascript:void(0);" onclick="Discontinue(event,this);" <%=styleColor%> >Discon</a>                
+                <% }
                	 }
                 }else{%>
                   <%=prescriptDrug.getArchivedReason()%>
@@ -224,9 +245,9 @@ if (heading != null){
             
             <td>
             	<% 	
-            		List<DrugReason> drugReasons  = drugReasonDao.getReasonsForDrugID(prescriptDrug.getId(),true);
-            		
-            		if (prescriptDrug.getRemoteFacilityId()==null)
+            		List<DrugReason> drugReasons  = drugReasonDao.getReasonsForDrugID(prescriptDrug.getId(),true);            		            					        	
+			
+            		if (prescriptDrug.getRemoteFacilityId()==null && securityManager.hasWriteAccess("_rx",roleName$,true) )
             		{
             			%>
 			           	 	<a href="javascript:void(0);"  onclick="popupRxReasonWindow(<%=patient.getDemographicNo()%>,<%=prescriptIdInt%>);"  title="<%=displayDrugReason(drugReasons) %>">
@@ -235,7 +256,7 @@ if (heading != null){
             	%>
             	<%=StringUtils.maxLenString(displayDrugReason(drugReasons), 4, 3, StringUtils.ELLIPSIS)%>
 				<%
-		      		if (prescriptDrug.getRemoteFacilityId()==null)
+		      		if (prescriptDrug.getRemoteFacilityId()==null  && securityManager.hasWriteAccess("_rx",roleName$,true))
 		      		{
 		      			%>
 			            	</a>
@@ -243,7 +264,7 @@ if (heading != null){
             		}
 				%>
             </td>
-
+		
             <%
             if(listHomeMed != null && listHomeMed.equals("true")) {
             %>             
@@ -251,6 +272,7 @@ if (heading != null){
             <% } %>
             <td align="center" valign="top"><%=(prescriptDrug.getPastMed())?"yes":"no" %></td>
 
+			<%if(securityManager.hasWriteAccess("_rx",roleName$,true)) {%>
             <td width="10px" align="center" valign="top">
             	<% 	
             		if (prescriptDrug.getRemoteFacilityId()==null)
@@ -262,7 +284,8 @@ if (heading != null){
             		}
             	%>
             </td>
-
+            <% } %>
+            
             <td width="10px" align="center" valign="top">
                 <%
                 if (prescriptDrug.getRemoteFacilityName() != null){ %>
