@@ -108,10 +108,16 @@ public class ExaminationHistoryAction extends DispatchAction {
 		}
 		
 		if(strStartDate.equals("")) {
-			Calendar enddate = Calendar.getInstance();									
-			enddate.roll(Calendar.YEAR, -1);
-			strStartDate = dformate.format(enddate.getTime());
-			startDate = enddate.getTime();
+			List<Appointment> appts = appointmentDao.getAllByDemographicNo(Integer.parseInt(demographicNo));
+			if(appts.size()>0) {
+				startDate = appts.get(0).getAppointmentDate();
+				strStartDate = dformate.format(startDate.getTime());
+			} else {
+				Calendar enddate = Calendar.getInstance();									
+				enddate.roll(Calendar.YEAR, -1);
+				strStartDate = dformate.format(enddate.getTime());
+				startDate = enddate.getTime();
+			}
 		}
 		if(startDate == null) {
 			try {

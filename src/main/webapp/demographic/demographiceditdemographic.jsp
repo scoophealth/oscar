@@ -156,6 +156,13 @@
 <script src="<c:out value="${ctx}"/>/share/javascript/menutility.js"
 	type="text/javascript"></script>
 <script type="text/javascript" src="../share/javascript/prototype.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.js"></script> 
+   <script>
+     jQuery.noConflict();
+   </script>
+<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
+<oscar:customInterface section="master"/>
+   
 <script language="JavaScript" type="text/javascript">
 
 function rs(n,u,w,h,x) {
@@ -534,6 +541,8 @@ function addToPatientSet(demoNo, patientSet) {
     window.open("addDemoToPatientSet.jsp?demoNo="+demoNo+"&patientSet="+patientSet, "addpsetwin", "width=50,height=50");
 }
 </security:oscarSec>
+
+var demographicNo='<%=demographic_no%>';
 </script>
 
 <style type="text/css">
@@ -684,15 +693,17 @@ div.demographicWrapper {
 	</tr>
 	<tr>
 		<td class="MainTableLeftColumn" valign="top">
-		<table border=0 cellspacing=0 width="100%">
+		<table border=0 cellspacing=0 width="100%" id="appt_table">
 			<tr class="Header">
 				<td style="font-weight: bold"><bean:message key="demographic.demographiceditdemographic.msgAppt"/></td>
 			</tr>
-			<tr>
+			<tr id="appt_hx">
 				<td><a
 					href='demographiccontrol.jsp?demographic_no=<%=apptMainBean.getString(rs,"demographic_no")%>&last_name=<%=URLEncoder.encode(apptMainBean.getString(rs,"last_name"))%>&first_name=<%=URLEncoder.encode(apptMainBean.getString(rs,"first_name"))%>&orderby=appttime&displaymode=appt_history&dboperation=appt_history&limit1=0&limit2=25'><bean:message
-					key="demographic.demographiceditdemographic.btnApptHist" /></a></td>
-			</tr>
+					key="demographic.demographiceditdemographic.btnApptHist" /></a>
+				</td>
+			</tr>	
+			
 <%
 String wLReadonly = "";
 WaitingList wL = WaitingList.getInstance();
@@ -704,8 +715,11 @@ if(wLReadonly.equals("")){
 			<tr>
 				<td><a
 					href="../oscarWaitingList/SetupDisplayPatientWaitingList.do?demographic_no=<%=apptMainBean.getString(rs,"demographic_no")%>">
-				<bean:message key="demographic.demographiceditdemographic.msgWaitList"/></a></td>
+				<bean:message key="demographic.demographiceditdemographic.msgWaitList"/></a>
+				</td>
 			</tr>
+			</table>
+			 <table border=0 cellspacing=0 width="100%">
 <%}%>
 <security:oscarSec roleName="<%=roleName$%>" objectName="_billing" rights="r">
 			<tr class="Header">
