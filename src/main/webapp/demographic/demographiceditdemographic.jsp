@@ -484,7 +484,7 @@ function showMenu(menuNumber, eventObj) {
     return showPopup(menuId, eventObj);
 }
 
-function add2url(txt) {
+function add2url(txt) {	
     var reasonLabel = "reason=";
     var encTypeLabel = "encType=";
     var beg = encURL.indexOf(reasonLabel);
@@ -492,13 +492,13 @@ function add2url(txt) {
     var end = encURL.indexOf("&", beg);
     var part1 = encURL.substring(0,beg);
     var part2 = encURL.substr(end);
-    encURL = part1 + encodeURI(txt) + part2;
+    encURL = part1 + encodeURI(txt) + part2;   
     beg = encURL.indexOf(encTypeLabel);
     beg += encTypeLabel.length;
     end = encURL.indexOf("&", beg);
     part1 = encURL.substring(0,beg);
     part2 = encURL.substr(end);
-    encURL = part1 + encodeURI(txt) + part2;
+    encURL = part1 + encodeURI(txt) + part2;    
     popupEChart(710, 1024,encURL);
     return false;
 }
@@ -822,7 +822,7 @@ if(wLReadonly.equals("")){
 						<li><a href="#" onmouseover='this.style.color="black"' onmouseout='this.style.color="white"' onclick="return add2url('<bean:message key="oscarEncounter.telephoneEnc.title"/>');"><bean:message key="oscarEncounter.telephoneEnc.title"/>
 						</a><br>
 						</li>
-						<li><a href="#" onmouseover='this.style.color="black"' onmouseout='this.style.color="white"' onclick="return add2url('<bean:message key="oscarEncounter.noClientEnc.title"/>');">oscarEncounter.noClientEnc.title
+						<li><a href="#" onmouseover='this.style.color="black"' onmouseout='this.style.color="white"' onclick="return add2url('<bean:message key="oscarEncounter.noClientEnc.title"/>');"><bean:message key="oscarEncounter.noClientEnc.title"/>
 						</a><br>
 						</li>
 						<li><a href="#" onmouseover='this.style.color="black"' onmouseout='this.style.color="white"' onclick="return customReason();"><bean:message key="demographic.demographiceditdemographic.msgCustom"/></a></li>
