@@ -282,7 +282,19 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 				note.setNote("");
 				note.setEncounter_type("");
 			}
-			
+
+			String strBeanName = "casemgmt_oscar_bean" + demono;
+			EctSessionBean bean = (EctSessionBean) session.getAttribute(strBeanName);
+			String encType = request.getParameter("encType");
+
+			if (encType == null || encType.equals("")) {
+				note.setEncounter_type("");
+			} else {
+				note.setEncounter_type(encType);
+			}
+			if(bean.encType!=null && bean.encType.length()>0){ 
+				note.setEncounter_type(bean.encType);
+			}
 
 			resetTemp(providerNo, demono, programIdString);
 
@@ -343,6 +355,18 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 				} else {
 					note.setNote("");
 					note.setEncounter_type("");
+				}
+				String strBeanName = "casemgmt_oscar_bean" + demono;
+				EctSessionBean bean = (EctSessionBean) session.getAttribute(strBeanName);
+				String encType = request.getParameter("encType");
+
+				if (encType == null || encType.equals("")) {
+					note.setEncounter_type("");
+				} else {
+					note.setEncounter_type(encType);
+				}
+				if(bean.encType!=null && bean.encType.length()>0){ 
+					note.setEncounter_type(bean.encType);
 				}
 			}
 		}
