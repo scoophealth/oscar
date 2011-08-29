@@ -48,7 +48,7 @@ public class DemographicArchiveDao extends AbstractDao {
 
     public List<DemographicArchive> findRosterStatusHistoryByDemographicNo(Integer demographicNo) {
         
-    	String sqlCommand = "select x from DemographicArchive x where x.demographicNo=?1 order by x.lastUpdateDate,id desc";
+    	String sqlCommand = "select x from DemographicArchive x where x.demographicNo=?1 order by x.lastUpdateDate desc,x.id desc";
 
         Query query = entityManager.createQuery(sqlCommand);
         query.setParameter(1, demographicNo);
@@ -69,7 +69,6 @@ public class DemographicArchiveDao extends AbstractDao {
                 i--;
             }
         }
-
         return (results);
     }
 }

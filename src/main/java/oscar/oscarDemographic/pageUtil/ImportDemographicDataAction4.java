@@ -75,9 +75,11 @@ import org.oscarehr.casemgmt.model.CaseManagementNoteExt;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
+import org.oscarehr.common.dao.DemographicArchiveDao;
 import org.oscarehr.common.dao.DemographicContactDao;
 import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.dao.DrugReasonDao;
+import org.oscarehr.common.model.DemographicArchive;
 import org.oscarehr.common.model.DemographicContact;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.Provider;
@@ -112,6 +114,7 @@ import cds.AppointmentsDocument.Appointments;
 import cds.CareElementsDocument.CareElements;
 import cds.ClinicalNotesDocument.ClinicalNotes;
 import cds.DemographicsDocument.Demographics;
+import cds.DemographicsDocument.Demographics.Enrolment;
 import cds.FamilyHistoryDocument.FamilyHistory;
 import cds.ImmunizationsDocument.Immunizations;
 import cds.LaboratoryResultsDocument.LaboratoryResults;
@@ -168,6 +171,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
     DrugDao drugDao = (DrugDao) SpringUtils.getBean("drugDao");
     DrugReasonDao drugReasonDao = (DrugReasonDao) SpringUtils.getBean("drugReasonDao");
     OscarSuperManager oscarSuperManager = (OscarSuperManager) SpringUtils.getBean("oscarSuperManager");
+    DemographicArchiveDao demoArchiveDao = (DemographicArchiveDao)SpringUtils.getBean("demographicArchiveDao");
 
     @Override
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception  {
@@ -392,15 +396,20 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
             err_data.add("Error! No Person Status Code");
         }
 
-        String roster_status=null, roster_date=null, term_date=null;
-        Demographics.Enrolment[] enrolments = demo.getEnrolmentArray();
-        if (enrolments.length>0) {
-            roster_status = enrolments[0].getEnrollmentStatus()!=null ? enrolments[0].getEnrollmentStatus().toString() : "";
-            if	(roster_status.equals("1")) roster_status = "RO";
-            else if (roster_status.equals("0")) roster_status = "NR";
-            roster_date = getCalDate(enrolments[0].getEnrollmentDate(), timeShiftInDays);
-            term_date = getCalDate(enrolments[0].getEnrollmentTerminationDate(), timeShiftInDays);
+        Enrolment[] enrolments = demo.getEnrolmentArray();
+        int enrolTotal = enrolments.length;
+        if (enrolTotal==0) enrolTotal = 1;
+        String[] roster_status=new String[enrolTotal],
+        		 roster_date=new String[enrolTotal],
+        		 term_date=new String[enrolTotal];
+        for (int i=0; i<enrolments.length; i++) {
+            roster_status[i] = enrolments[i].getEnrollmentStatus()!=null ? enrolments[i].getEnrollmentStatus().toString() : "";
+            if	(roster_status[i].equals("1")) roster_status[i] = "RO";
+            else if (roster_status[i].equals("0")) roster_status[i] = "NR";
+            roster_date[i] = getCalDate(enrolments[i].getEnrollmentDate(), timeShiftInDays);
+            term_date[i] = getCalDate(enrolments[i].getEnrollmentTerminationDate(), timeShiftInDays);
         }
+        
         String sin = StringUtils.noNull(demo.getSIN());
 
         String chart_no = StringUtils.noNull(demo.getChartNumber());
@@ -526,11 +535,9 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
             demographicNo = dd.getDemoNoByNamePhoneEmail(firstName, lastName, homePhone, workPhone, email);
             demographic = dd.getDemographic(demographicNo);
         }
-        if (demographic==null) { //demo not found, add patient
-            demoRes = dd.addDemographic(title, lastName, firstName, address, city, province, postalCode, homePhone, workPhone, year_of_birth, month_of_birth, date_of_birth, hin, versionCode, roster_status, roster_date, term_date, patient_status, psDate, ""/*date_joined*/, chart_no, official_lang, spoken_lang, primaryPhysician, sex, ""/*end_date*/, ""/*eff_date*/, ""/*pcn_indicator*/, hc_type, hc_renew_date, ""/*family_doctor*/, email, ""/*pin*/, ""/*alias*/, ""/*previousAddress*/, ""/*children*/, ""/*sourceOfIncome*/, ""/*citizenship*/, sin);
-            demographicNo = demoRes.getId();
-            entries.put(PATIENTID+importNo, Integer.valueOf(demographicNo));
-        } else if (StringUtils.nullSafeEqualsIgnoreCase(demographic.getPatientStatus(), "Contact-only")) { //replace contact
+        
+        if (demographic!=null && StringUtils.nullSafeEqualsIgnoreCase(demographic.getPatientStatus(), "Contact-only")) {
+        	//found contact-only demo, replace!
             demographic.setTitle(title);
             demographic.setAddress(address);
             demographic.setCity(city);
@@ -541,9 +548,9 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
             demographic.setDateOfBirth(date_of_birth);
             demographic.setJustHIN(hin);
             demographic.setVersionCode(versionCode);
-            demographic.setRosterStatus(roster_status);
-            demographic.setRosterDate(roster_date);
-            demographic.setRosterTerminationDate(term_date);
+            demographic.setRosterStatus(roster_status[0]);
+            demographic.setRosterDate(roster_date[0]);
+            demographic.setRosterTerminationDate(term_date[0]);
             demographic.setPatientStatus(patient_status);
             demographic.setPatientStatusDate(psDate);
             demographic.setChartNo(chart_no);
@@ -556,16 +563,34 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
             demographic.setSin(sin);
             dd.setDemographic(demographic);
             err_note.add("Replaced Contact-only patient "+patientName+" (Demo no="+demographicNo+")");
-            demoRes = dd.addDemographic(title, lastName, firstName, address, city, province, postalCode, homePhone, workPhone, year_of_birth, month_of_birth, date_of_birth, hin, versionCode, roster_status, roster_date, term_date, patient_status, psDate, ""/*date_joined*/, chart_no, official_lang, spoken_lang, primaryPhysician, sex, ""/*end_date*/, ""/*eff_date*/, ""/*pcn_indicator*/, hc_type, hc_renew_date, ""/*family_doctor*/, email, ""/*pin*/, ""/*alias*/, ""/*previousAddress*/, ""/*children*/, ""/*sourceOfIncome*/, ""/*citizenship*/, sin);
+            
+        } else { //add patient!
+            demoRes = dd.addDemographic(title, lastName, firstName, address, city, province, postalCode, homePhone, workPhone, year_of_birth, month_of_birth, date_of_birth, hin, versionCode, roster_status[0], roster_date[0], term_date[0], patient_status, psDate, ""/*date_joined*/, chart_no, official_lang, spoken_lang, primaryPhysician, sex, ""/*end_date*/, ""/*eff_date*/, ""/*pcn_indicator*/, hc_type, hc_renew_date, ""/*family_doctor*/, email, ""/*pin*/, ""/*alias*/, ""/*previousAddress*/, ""/*children*/, ""/*sourceOfIncome*/, ""/*citizenship*/, sin);
+            demographicNo = demoRes.getId();
         }
 
         if (StringUtils.filled(demographicNo))
         {
             //TODO: Course - Admit to student program
+        	
+            entries.put(PATIENTID+importNo, Integer.valueOf(demographicNo));
+            
             if(admitTo == null) {
                 insertIntoAdmission();
             } else {
                 admissionManager.processAdmission(Integer.valueOf(demographicNo), student.getProviderNo(), admitTo, "", "batch import");
+            }
+            
+            //Put enrolment history into demographicArchive
+            demographic = dd.getDemographic(demographicNo);
+            for (int i=1; i<roster_status.length; i++) {
+            	
+            	DemographicArchive demographicArchive = archiveDemographic(demographic);
+            	
+            	demographicArchive.setRosterStatus(roster_status[i]);
+            	demographicArchive.setRosterDate(UtilDateUtilities.StringToDate(roster_date[i]));
+            	demographicArchive.setRosterTerminationDate(UtilDateUtilities.StringToDate(term_date[i]));
+            	demoArchiveDao.persist(demographicArchive);
             }
 
             if (StringUtils.filled(dNote)) dd.addDemographiccust(demographicNo, dNote);
@@ -2627,11 +2652,63 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 		}
 	}
 
-        void addOneEntry(String category) {
-            if (StringUtils.empty(category)) return;
-            
-            Integer n = entries.get(category+importNo);
-            n = n==null ? 1 : n+1;
-            entries.put(category+importNo, n);
-        }
+    void addOneEntry(String category) {
+        if (StringUtils.empty(category)) return;
+        
+        Integer n = entries.get(category+importNo);
+        n = n==null ? 1 : n+1;
+        entries.put(category+importNo, n);
+    }
+    
+    DemographicArchive archiveDemographic(DemographicData.Demographic d) {
+    	DemographicArchive da = new DemographicArchive();
+    	
+    	da.setDemographicNo(Integer.valueOf(d.getDemographicNo()));
+    	da.setFirstName(d.getFirstName());
+    	da.setLastName(d.getLastName());
+    	da.setTitle(d.getTitle());
+    	da.setSex(d.getSex());
+    	da.setYearOfBirth(d.getYearOfBirth());
+    	da.setMonthOfBirth(d.getMonthOfBirth());
+    	da.setDateOfBirth(d.getDateOfBirth());
+    	da.setAddress(d.getAddress());
+    	da.setCity(d.getCity());
+    	da.setProvince(d.getProvince());
+    	da.setPostal(d.getPostal());
+    	da.setAlias(d.getAlias());
+    	da.setEmail(d.getEmail());
+    	da.setAnonymous(d.getAnonymous());
+    	da.setChartNo(d.getChartNo());
+    	da.setChildren(d.getChildren());
+    	da.setCitizenship(d.getCitizenship());
+    	da.setCountryOfOrigin(d.getCountryOfOrigin());
+    	da.setDateJoined(UtilDateUtilities.StringToDate(d.getDateJoined()));
+    	da.setEndDate(UtilDateUtilities.StringToDate(d.getEndDate()));
+    	da.setFamilyDoctor(d.getFamilyDoctor());
+    	da.setHin(d.getHIN());
+    	da.setVer(d.getVersionCode());
+    	da.setHcType(d.getHCType());
+    	da.setEffDate(UtilDateUtilities.StringToDate(d.getEffDate()));
+    	da.setHcRenewDate(UtilDateUtilities.StringToDate(d.getHCRenewDate()));
+    	da.setMyOscarUserName(d.getMyOscarUserName());
+    	da.setNewsletter(d.getNewsletter());
+    	da.setOfficialLang(d.getOfficialLang());
+    	da.setSpokenLang(d.getSpokenLang());
+    	da.setPatientStatus(d.getPatientStatus());
+    	da.setPatientStatusDate(UtilDateUtilities.StringToDate(d.getPatientStatusDate()));
+    	da.setPcnIndicator(d.getPCNindicator());
+    	da.setPhone(d.getPhone());
+    	da.setPhone2(d.getPhone2());
+    	da.setPreviousAddress(d.getPreviousAddress());
+    	da.setProviderNo(d.getProviderNo());
+    	da.setRosterStatus(d.getRosterStatus());
+    	da.setRosterDate(UtilDateUtilities.StringToDate(d.getRosterDate()));
+    	da.setRosterTerminationDate(UtilDateUtilities.StringToDate(d.getRosterTerminationDate()));
+    	da.setSin(d.getSin());
+    	da.setSourceOfIncome(d.getSourceOfIncome());
+    	da.setLastUpdateDate(UtilDateUtilities.StringToDate(d.getLastUpdateDate()));
+    	da.setLastUpdateUser(d.getLastUpdateUser());
+    	
+    	return da;
+    }
 }
