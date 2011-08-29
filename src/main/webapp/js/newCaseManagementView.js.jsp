@@ -1358,7 +1358,7 @@ function minView(e) {
     var line = $(txtId).innerHTML.substr(0,100);    
     line = line.replace(/<br>/g," ");    
     var dateValue = $(dateId) != null ? $(dateId).innerHTML : "";
-    line = "<div id='" + date + "' style='float:left; font-size:1.0em; width:25%;'><b>" + dateValue + "<\/b><\/div><div id='" + content + "' style='float:left; font-size:1.0em; width:60%;'>" + line + "<\/div>";
+    line = "<div id='" + date + "' style='float:left; font-size:1.0em; width:20%;'><b>" + dateValue + "<\/b><\/div><div id='" + content + "' style='float:left; font-size:1.0em; width:60%;'>" + line + "<\/div>";
     $("txt"+nId).hide();
     new Insertion.Top(txt,line);
 
