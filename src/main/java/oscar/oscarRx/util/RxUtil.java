@@ -1143,7 +1143,12 @@ public class RxUtil {
 
     public static void setDefaultSpecialQuantityRepeat(RxPrescriptionData.Prescription rx) {
 
-        rx.setSpecial("1 OD");
+    	String defaultRx = OscarProperties.getInstance().getProperty("rx.default_instruction");
+    	if(defaultRx != null) {
+    		rx.setSpecial(defaultRx);
+    	} else {
+    		rx.setSpecial("1 OD");
+    	}
         rx.setQuantity(getDefaultQuantity());
         rx.setRepeat(0);
 

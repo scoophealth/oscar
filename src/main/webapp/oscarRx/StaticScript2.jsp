@@ -59,6 +59,8 @@
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
 <%
 	oscar.oscarRx.pageUtil.RxSessionBean bean=(oscar.oscarRx.pageUtil.RxSessionBean)pageContext.findAttribute("bean");
+	String roleName$ = (String)session.getAttribute("userrole") + "," + (String)session.getAttribute("user");
+	com.quatro.service.security.SecurityManager securityManager = new com.quatro.service.security.SecurityManager();
 %>
 
 
@@ -212,6 +214,7 @@
 							}
 						%>
 						</td>
+						<%if(securityManager.hasWriteAccess("_rx",roleName$,true)) {%>
 						<td>
 							<%
 								if (drug.isLocal)
@@ -256,6 +259,7 @@
 								}
 							%>
 						</td>
+						<% } %>
 					</tr>
 					<%
 						}
