@@ -306,13 +306,6 @@ function toggleView(form) {
 		<td width="100%"
 			style="padding-left: 3; padding-right: 3; padding-top: 2; padding-bottom: 2"
 			height="0%" colspan="2">
-		<p class="HelpAboutLogout">
-                    <span class="FakeLink"><a href="Help.htm"><bean:message key="ViewScript.msgHelp"/></a></span>
-                    <span> | </span>
-                    <span class="FakeLink"><a href="About.htm"><bean:message key="ViewScript.msgAbout"/></a></span>
-                    <span> | </span>
-                    <span class="FakeLink"><a href="Disclaimer.htm"><bean:message key="ViewScript.msgDisclaimer"/></a></span>
-                </p>
 		</td>
 	</tr>
 
@@ -390,18 +383,7 @@ function toggleView(form) {
 						<td colspan=2 style="font-weight: bold;"><span><bean:message key="ViewScript.msgActions"/></span>
 						</td>
 					</tr>
-					<tr>
-						<td width=10px></td>
-						<td><span><input type=button
-							value="<bean:message key="ViewScript.msgCreateNewRx"/>" class="ControlPushButton"
-							style="width: 200px" onClick="<%=createAnewRx%>" /></span></td>
-					</tr>
-					<tr>
-						<td width=10px></td>
-						<td><span><input type=button value="<bean:message key="ViewScript.msgBackToOscar"/>"
-							class="ControlPushButton" style="width: 200px"
-							onClick="javascript:clearPending('close');" /></span></td>
-					</tr>
+
 					<tr>
 						<td width=10px></td>
 						<td><span><input type=button value="<bean:message key="ViewScript.msgPrint"/>"
@@ -414,6 +396,18 @@ function toggleView(form) {
 							<%=reprint.equals("true")?"disabled='true'":""%>" value="<bean:message key="ViewScript.msgPrintPasteEmr"/>"
 							class="ControlPushButton" style="width: 200px"
 							onClick="javascript:printPaste2Parent();" /></span></td>
+					</tr>
+					<tr>
+						<td width=10px></td>
+						<td><span><input type=button
+							value="<bean:message key="ViewScript.msgCreateNewRx"/>" class="ControlPushButton"
+							style="width: 200px" onClick="<%=createAnewRx%>" /></span></td>
+					</tr>
+					<tr>
+						<td width=10px></td>
+						<td><span><input type=button value="<bean:message key="ViewScript.msgBackToOscar"/>"
+							class="ControlPushButton" style="width: 200px"
+							onClick="javascript:clearPending('close');" /></span></td>
 					</tr>
 
                                         <%if (request.getAttribute("rePrint") == null ){%>
