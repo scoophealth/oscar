@@ -446,6 +446,9 @@ function showHideDetail(){
     showHideItem('viewDemographics2');
     showHideItem('updateButton');
     showHideItem('swipeButton');
+    
+    showHideBtn('editBtn');
+    showHideBtn('closeBtn');
 }
 
 // Used to display demographic sections, where sections is an array of id's for
@@ -474,6 +477,14 @@ function showHideItem(id){
     else
         document.getElementById(id).style.display = 'block';
 }
+
+function showHideBtn(id){
+    if(document.getElementById(id).style.display == 'none')
+        document.getElementById(id).style.display = 'inline';
+    else
+        document.getElementById(id).style.display = 'none';
+}
+
 
 function showItem(id){
         document.getElementById(id).style.display = 'inline';
@@ -1069,6 +1080,7 @@ if (iviewTag!=null && !"".equalsIgnoreCase(iviewTag.trim())){
                                                     if( head.equals(demographic_no)) {
                                                     %>
                                                         <a id="editBtn" href="javascript: showHideDetail();"><bean:message key="demographic.demographiceditdemographic.msgEdit"/></a>
+                                                        <a id="closeBtn" href="javascript: showHideDetail();" style="display:none;">Close</a>
                                                    <% } %>
 						</td>
 					</tr>
