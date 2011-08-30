@@ -977,7 +977,7 @@ body {
     <div id="themeLegend" style="position: absolute;display:none; width:500px;height:200px;background-color:white;padding:20px;border:1px solid grey">
         <a href="javascript:void(0);" class="currentDrug">Drug that is current</a><br/>
         <a href="javascript:void(0);" class="archivedDrug">Drug that is archived</a><br/>
-        <a href="javascript:void(0);" class="expireInReference">Drug the is current but will expire within the reference range</a><br/>
+        <a href="javascript:void(0);" class="expireInReference">Drug that is current but will expire within the reference range</a><br/>
         <a href="javascript:void(0);" class="expiredDrug">Drug that is expired</a><br/>
         <a href="javascript:void(0);" class="longTermMed">Long Term Med Drug</a><br/>
         <a href="javascript:void(0);" class="discontinued">Discontinued Drug</a><br/><br/><br/><br/>
