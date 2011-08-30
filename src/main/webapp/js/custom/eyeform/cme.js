@@ -74,15 +74,23 @@
 				jQuery(".slideblock").each(function() { 
 					var id = jQuery(this).attr('id');
 					var expand=false;
+					var setHeader=false;
+					
 					jQuery("#" + id + " [measurement]").each(function() {
 						if(jQuery(this).val().trim().length>0) {
+							setHeader=true;
+						}
+						if(jQuery(this).attr('prev_appt') == 'true' ) {
 							expand=true;
 						}
-					});					
-					if(expand == true) {						
+					});
+					if(expand==true) {
+						togglediv(document.getElementById(id));					
+					}	
+					if(setHeader==true) {
 						var num = id.substring(2,id.length);						
 						document.getElementById('a_'+num).style.color='blue';
-					}				
+					}
 				});
 								
 			}});
@@ -118,16 +126,23 @@
 			jQuery(".slideblock").each(function() { 
 				var id = jQuery(this).attr('id');
 				var expand=false;
+				var setHeader=false;
+				
 				jQuery("#" + id + " [measurement]").each(function() {
 					if(jQuery(this).val().trim().length>0) {
-						expand=true;
+						setHeader=true;
 					}
+					if(jQuery(this).attr('prev_appt') == 'true' || jQuery(this).attr('current_appt') == 'true') {
+						expand=true;
+					}					
 				});
-				if(expand == true) {
-					togglediv(document.getElementById(id));
+				if(expand==true) {
+					togglediv(document.getElementById(id));					
+				}	
+				if(setHeader==true) {
 					var num = id.substring(2,id.length);						
 					document.getElementById('a_'+num).style.color='blue';
-				}				
+				}
 			});
 			
 			
