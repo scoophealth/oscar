@@ -542,23 +542,4 @@ request.setAttribute("pageMethod",pageMethod);
         
     </table>
     </body>
-    <script type="text/javascript" language="JavaScript">
-        <phr:IfTimeToExchange>
-        //phrExchangeGo('../../phrExchange.do');
-        setStatus("Loading messages...");
-        new Ajax.Request('../../phrExchange.do',
-          {
-            method:'get',
-            onSuccess: function(transport){
-              var response = transport.responseText || "0";
-              setStatus("");
-              reloadWindow();
-            },
-            onFailure: function(){ 
-              setStatus("");
-              reloadWindow();
-            }
-          });
-        </phr:IfTimeToExchange>
-      </script>
 </html>
