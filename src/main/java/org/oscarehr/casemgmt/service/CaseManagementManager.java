@@ -242,7 +242,12 @@ public class CaseManagementManager {
 			hashAuditDAO.saveHash(hashAudit);
 		}
 
-		return echartDAO.saveEchart(note, cpp, userName, lastStr);
+		OscarProperties properties = OscarProperties.getInstance();
+		if( !Boolean.parseBoolean(properties.getProperty("AbandonOldChart", "false"))) {
+			return echartDAO.saveEchart(note, cpp, userName, lastStr);
+		}
+		
+		return "";
 
 	}
 
@@ -574,7 +579,11 @@ public class CaseManagementManager {
 	public void saveCPP(CaseManagementCPP cpp, String providerNo) {
 		cpp.setProviderNo(providerNo); // added because nothing else was setting providerNo; not sure this is the right place to do this -- rwd
 		caseManagementCPPDAO.saveCPP(cpp);
-		echartDAO.saveCPPIntoEchart(cpp, providerNo);
+		
+		OscarProperties properties = OscarProperties.getInstance();
+		if( !Boolean.parseBoolean(properties.getProperty("AbandonOldChart", "false"))) {
+			echartDAO.saveCPPIntoEchart(cpp, providerNo);
+		}
 	}
 
 	public List<Issue> getIssueInfoByCode(String providerNo, String[] codes) {
@@ -628,7 +637,11 @@ public class CaseManagementManager {
 		ongoing = ongoing + issueName + "\n";
 		cpp.setOngoingConcerns(ongoing);
 		caseManagementCPPDAO.saveCPP(cpp);
-		echartDAO.updateEchartOngoing(cpp);
+		
+		OscarProperties properties = OscarProperties.getInstance();
+		if( !Boolean.parseBoolean(properties.getProperty("AbandonOldChart", "false"))) {
+			echartDAO.updateEchartOngoing(cpp);
+		}
 
 	}
 
@@ -655,7 +668,11 @@ public class CaseManagementManager {
 
 			cpp.setOngoingConcerns(newOngoing);
 			caseManagementCPPDAO.saveCPP(cpp);
-			echartDAO.updateEchartOngoing(cpp);
+			
+			OscarProperties properties = OscarProperties.getInstance();
+			if( !Boolean.parseBoolean(properties.getProperty("AbandonOldChart", "false"))) {
+				echartDAO.updateEchartOngoing(cpp);
+			}
 		}
 	}
 
@@ -678,7 +695,11 @@ public class CaseManagementManager {
 			newOngoing = matcher.replaceFirst(newIssueDesc);
 			cpp.setOngoingConcerns(newOngoing);
 			caseManagementCPPDAO.saveCPP(cpp);
-			echartDAO.updateEchartOngoing(cpp);
+			
+			OscarProperties properties = OscarProperties.getInstance();
+			if( !Boolean.parseBoolean(properties.getProperty("AbandonOldChart", "false"))) {
+				echartDAO.updateEchartOngoing(cpp);
+			}
 		}
 
 	}
@@ -698,7 +719,11 @@ public class CaseManagementManager {
 
 		cpp.setOngoingConcerns(ongoing);
 		caseManagementCPPDAO.saveCPP(cpp);
-		echartDAO.updateEchartOngoing(cpp);
+		
+		OscarProperties properties = OscarProperties.getInstance();
+		if( !Boolean.parseBoolean(properties.getProperty("AbandonOldChart", "false"))) {
+			echartDAO.updateEchartOngoing(cpp);
+		}
 	}
 
 	/* get the filtered Notes by caisi role */
