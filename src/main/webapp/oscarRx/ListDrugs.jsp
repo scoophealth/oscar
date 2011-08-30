@@ -24,7 +24,8 @@
  * Ontario, Canada
  */
 
---%><%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+--%><%@page import="org.oscarehr.casemgmt.web.PrescriptDrug"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
@@ -245,11 +246,15 @@ if (heading != null){
             </td>
 
             <%
+            Boolean past_med = prescriptDrug.getPastMed();
+            if( past_med == null ) {
+            	past_med = false;
+            }
             if(listHomeMed != null && listHomeMed.equals("true")) {
             %>             
             <td align="center" valign="top"><%=(prescriptDrug.getHomeMed())?"yes":"no" %></td>
             <% } %>
-            <td align="center" valign="top"><%=(prescriptDrug.getPastMed())?"yes":"no" %></td>
+            <td align="center" valign="top"><%=(past_med)?"yes":"no" %></td>
 
             <td width="10px" align="center" valign="top">
             	<% 	
