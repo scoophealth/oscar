@@ -175,7 +175,10 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 			return getHibernateTemplate().findByNamedQuery("mostRecentOra", new Object[] { demographic_no });
 		}
 		else {
-			return getHibernateTemplate().findByNamedQuery("mostRecent", new Object[] { demographic_no });
+			String hql = "select cmn from CaseManagementNote cmn where cmn.demographic_no = ? and cmn.id = (select max(cmn2.id) from CaseManagementNote cmn2 where cmn2.uuid = cmn.uuid) order by cmn.observation_date";
+			return getHibernateTemplate().find(hql, demographic_no);
+			//return getHibernateTemplate().findByNamedQuery("mostRecent", new Object[] { demographic_no });
+			
 		}
 	}
 
