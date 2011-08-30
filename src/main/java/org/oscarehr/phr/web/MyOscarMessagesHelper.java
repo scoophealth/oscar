@@ -5,7 +5,6 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import org.oscarehr.myoscar_server.ws.MessageTransfer;
-import org.oscarehr.myoscar_server.ws.NotAuthorisedException_Exception;
 import org.oscarehr.phr.PHRAuthentication;
 import org.oscarehr.phr.util.MyOscarMessageManager;
 import org.oscarehr.phr.util.MyOscarUtils;
@@ -36,7 +35,7 @@ public final class MyOscarMessagesHelper {
 		return (remoteMessages);
 	}
 
-	public static MessageTransfer readMessage(HttpSession session, Long messageId) throws NotAuthorisedException_Exception
+	public static MessageTransfer readMessage(HttpSession session, Long messageId)
 	{
 		PHRAuthentication auth=MyOscarUtils.getPHRAuthentication(session);
 		MessageTransfer messageTransfer=MyOscarMessageManager.getMessage(auth.getMyOscarUserId(), auth.getMyOscarPassword(), messageId);
