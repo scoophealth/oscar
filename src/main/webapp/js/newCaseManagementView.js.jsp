@@ -1338,7 +1338,7 @@ function minView(e) {
     var content = "c" + nId;
     var date = "d" + nId;
     var editAnchor = "edit" + nId;
-
+    
     Event.stop(e);
     var imgs = $(txt).getElementsBySelector("img");
     for( i = 0; i < imgs.length; ++i ) {
@@ -1355,10 +1355,11 @@ function minView(e) {
     //$(txt).style.height = divHeight;
 
     var txtId = "txt" + nId;
-    var line = $(txtId).innerHTML.substr(0,100);
-    line = line.replace(/<br>/g," ");
+    var line = $(txtId).innerHTML.substr(0,100);    
+    line = line.replace(/<br>/g," ");    
     var dateValue = $(dateId) != null ? $(dateId).innerHTML : "";
     line = "<div id='" + date + "' style='float:left; font-size:1.0em; width:25%;'><b>" + dateValue + "<\/b><\/div><div id='" + content + "' style='float:left; font-size:1.0em; width:60%;'>" + line + "<\/div>";
+    $("txt"+nId).hide();
     new Insertion.Top(txt,line);
 
 
@@ -1422,6 +1423,7 @@ function xpandView(e) {
 
     $(txt).style.height = 'auto';
     new Insertion.Top(txt, imgTag);
+    $("txt"+nId).show();
     Event.stop(e);
     Element.stopObserving(txt, 'click', xpandView);
 

@@ -825,7 +825,7 @@ if(wLReadonly.equals("")){
                     <special:SpecialEncounterTag moduleName="eyeform" reverse="true">
                     <tr><td>
 					<a href="javascript: function myFunction() {return false; }" onClick="popupEChart(710, 1024,encURL);return false;" title="<bean:message key="demographic.demographiceditdemographic.btnEChart"/>">
-					<bean:message key="demographic.demographiceditdemographic.btnEChart" /></a>&nbsp;<a style="text-decoration: none;" href="#" onmouseover="return !showMenu('1', event);">+</a>
+					<bean:message key="demographic.demographiceditdemographic.btnEChart" /></a>&nbsp;<a style="text-decoration: none;" href="javascript: function myFunction() {return false; }" onmouseover="return !showMenu('1', event);">+</a>
 					<div id='menu1' class='menu' onclick='event.cancelBubble = true;'>
 					<h3 style='text-align: center'><bean:message key="demographic.demographiceditdemographic.msgEncType"/></h3>
 					<br>
