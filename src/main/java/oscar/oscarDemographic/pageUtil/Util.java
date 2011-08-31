@@ -50,11 +50,11 @@ public class Util {
     }
 
     static public String addSummary(String label, String item) {
-	return addSummary(label, "", item);
+	return addSummary("", label, item);
     }
 
     static public String addSummary(String summary, String label, String item) {
-        if (StringUtils.empty(summary) || StringUtils.empty(item)) return summary;
+        if (summary==null || StringUtils.empty(item)) return summary;
 
         if (StringUtils.filled(summary)) summary += ",";
         summary += "["+label+"]:"+item;
@@ -347,14 +347,26 @@ public class Util {
     }
 
     static public void putPartialDate(cdsDt.DateFullOrPartial dfp, CaseManagementNoteExt cme) {
-        String type = cme.getValue();
+    	putPartialDate(dfp, cme.getDateValue(), cme.getValue());
+    }
 
-        if (type!=null) {
-            if (type.equals(CaseManagementNoteExt.YEARONLY)) dfp.setYearOnly(Util.calDate(cme.getDateValue()));
-            else if(type.equals(CaseManagementNoteExt.YEARMONTH)) dfp.setYearMonth(Util.calDate(cme.getDateValue()));
-            else dfp.setFullDate(Util.calDate(cme.getDateValue()));
-        } else {
-            dfp.setFullDate(Util.calDate(cme.getDateValue()));
+    static public void putPartialDate(cdsDt.DateFullOrPartial dfp, Date dateValue, String format) {
+        if (dateValue!=null) {
+            if (CaseManagementNoteExt.YEARONLY.equals(format)) dfp.setYearOnly(Util.calDate(dateValue));
+            else if (CaseManagementNoteExt.YEARMONTH.equals(format)) dfp.setYearMonth(Util.calDate(dateValue));
+            else dfp.setFullDate(Util.calDate(dateValue));
+        }
+    }
+
+    static public void putPartialDate(cdsDtCihi.DateFullOrPartial dfp, CaseManagementNoteExt cme) {
+    	putPartialDate(dfp, cme.getDateValue(), cme.getValue());
+    }
+
+    static public void putPartialDate(cdsDtCihi.DateFullOrPartial dfp, Date dateValue, String format) {
+        if (dateValue!=null) {
+            if (CaseManagementNoteExt.YEARONLY.equals(format)) dfp.setYearOnly(Util.calDate(dateValue));
+            else if (CaseManagementNoteExt.YEARMONTH.equals(format)) dfp.setYearMonth(Util.calDate(dateValue));
+            else dfp.setFullDate(Util.calDate(dateValue));
         }
     }
 
@@ -396,6 +408,7 @@ public class Util {
     }
 
     static public String convertCodeToLanguage(String code) {
+    	if (StringUtils.empty(code)) return null;
     	return spokenLangProperties.getProperty(code);
     }
 }
