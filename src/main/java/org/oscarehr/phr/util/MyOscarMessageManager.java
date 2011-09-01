@@ -8,7 +8,6 @@ import org.oscarehr.common.dao.RemoteDataLogDao;
 import org.oscarehr.common.model.RemoteDataLog;
 import org.oscarehr.myoscar_server.ws.MessageTransfer;
 import org.oscarehr.myoscar_server.ws.MessageWs;
-import org.oscarehr.myoscar_server.ws.NotAuthorisedException_Exception;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -59,7 +58,7 @@ public class MyOscarMessageManager {
 		return(messageTransfer);
 	}
 	
-	public static void markRead(Long myOscarUserId, String myOscarPassword, Long messageId) throws NotAuthorisedException_Exception
+	public static void markRead(Long myOscarUserId, String myOscarPassword, Long messageId)
 	{
 		MessageWs messageWs=MyOscarServerWebServicesManager.getMessageWs(myOscarUserId, myOscarPassword);
 		messageWs.markAsRead(messageId);
@@ -94,7 +93,7 @@ public class MyOscarMessageManager {
 		remoteDataLogDao.persist(remoteDataLog);
 	}
 
-	public static void flipActive(Long myOscarUserId, String myOscarPassword, Long messageId) throws NotAuthorisedException_Exception {
+	public static void flipActive(Long myOscarUserId, String myOscarPassword, Long messageId) {
 		MessageWs messageWs=MyOscarServerWebServicesManager.getMessageWs(myOscarUserId, myOscarPassword);
 		MessageTransfer messageTransfer=messageWs.getMessage(messageId);
 		messageWs.setMessageActive(messageId, !messageTransfer.isActive());

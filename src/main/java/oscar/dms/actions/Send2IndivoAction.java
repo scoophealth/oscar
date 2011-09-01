@@ -37,7 +37,6 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
-import org.oscarehr.myoscar_server.ws.NotAuthorisedException_Exception;
 import org.oscarehr.phr.PHRAuthentication;
 import org.oscarehr.phr.util.MyOscarUtils;
 import org.oscarehr.util.MiscUtils;
@@ -63,63 +62,59 @@ public class Send2IndivoAction extends Action{
         String curUser = request.getParameter("curUser");
         ActionMessages errors = new ActionMessages();
         
-        try {
-	        if( files != null && curUser != null ) {
-	            
-	            MiscUtils.getLogger().debug("Preparing to send " + files.length + " files");
-	            String path = OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
-	            EDocUtil docData = new EDocUtil();                        
-	            
-	            DemographicData.Demographic demo = new DemographicData().getDemographic(request.getParameter("demoId"));
+        if( files != null && curUser != null ) {
+            
+            MiscUtils.getLogger().debug("Preparing to send " + files.length + " files");
+            String path = OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
+            EDocUtil docData = new EDocUtil();                        
+            
+            DemographicData.Demographic demo = new DemographicData().getDemographic(request.getParameter("demoId"));
 
-	        	PHRAuthentication auth = (PHRAuthentication) request.getSession().getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
-	        	Long myOscarUserId = MyOscarUtils.getMyOscarUserId(auth, demo.getMyOscarUserName());
-	            MiscUtils.getLogger().debug("INDIVO RECIPIENT " + myOscarUserId);
-	            
-	            EctProviderData.Provider prov = new EctProviderData().getProvider(curUser);
-	            String fullname = prov.getFirstName() + " " + prov.getSurname();
-	            String role = "provider";
-	            
-	            Send2Indivo indivo = new Send2Indivo(prov.getIndivoId(),prov.getIndivoPasswd(), fullname, role);
-	            String indivoServer = OscarProperties.getInstance().getProperty("INDIVO_SERVER");           
-	            MiscUtils.getLogger().debug("SETTING INDIVO SERVER " + indivoServer);
-	            indivo.setServer(indivoServer);
-	            if( !indivo.authenticate() ) {
-	                errors.add("", new ActionMessage("indivo.authenticateError", indivo.getErrorMsg()));
-	                this.saveErrors(request, errors);
-	                return mapping.findForward("error");
-	            }
-	                        
-	            for( int idx = 0; idx < files.length; ++idx ) {
-	                String filename =  docData.getDocumentName(files[idx]);
-	                EDoc doc = docData.getDoc(files[idx]);
-	                String description = doc.getDescription();
-	                String type = doc.getType();
-	                
-	                if( doc.isInIndivo() ) {                   
-	                    if( !indivo.updateBinaryFile(path+filename, doc.getIndivoIdx(), type, description, myOscarUserId) ) {
-	                        errors.add("",new ActionMessage("indivo.sendbinFileError", description, indivo.getErrorMsg()));
-	                        this.saveErrors(request, errors);
-	                        return mapping.findForward("error");
-	                    }
-	                }
-	                else {                                        
-	                    if( !indivo.sendBinaryFile(path+filename, type, description, myOscarUserId) ) {
-	                        errors.add("",new ActionMessage("indivo.sendbinFileError", description, indivo.getErrorMsg()));
-	                        this.saveErrors(request, errors);
-	                        return mapping.findForward("error");
-	                    }
-	                    MiscUtils.getLogger().debug("Saving indivo Doc Idx " + indivo.getIndivoDocIdx());
-	                    doc.setIndivoIdx(indivo.getIndivoDocIdx());
-	                }
-	                
-	                EDocUtil.indivoRegister(doc);
-	            }                                               
-	            return mapping.findForward("success");
-	        
-	        }
-        } catch (NotAuthorisedException_Exception e) {
-	        logger.error("Error", e);
+        	PHRAuthentication auth = (PHRAuthentication) request.getSession().getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
+        	Long myOscarUserId = MyOscarUtils.getMyOscarUserId(auth, demo.getMyOscarUserName());
+            MiscUtils.getLogger().debug("INDIVO RECIPIENT " + myOscarUserId);
+            
+            EctProviderData.Provider prov = new EctProviderData().getProvider(curUser);
+            String fullname = prov.getFirstName() + " " + prov.getSurname();
+            String role = "provider";
+            
+            Send2Indivo indivo = new Send2Indivo(prov.getIndivoId(),prov.getIndivoPasswd(), fullname, role);
+            String indivoServer = OscarProperties.getInstance().getProperty("INDIVO_SERVER");           
+            MiscUtils.getLogger().debug("SETTING INDIVO SERVER " + indivoServer);
+            indivo.setServer(indivoServer);
+            if( !indivo.authenticate() ) {
+                errors.add("", new ActionMessage("indivo.authenticateError", indivo.getErrorMsg()));
+                this.saveErrors(request, errors);
+                return mapping.findForward("error");
+            }
+                        
+            for( int idx = 0; idx < files.length; ++idx ) {
+                String filename =  docData.getDocumentName(files[idx]);
+                EDoc doc = docData.getDoc(files[idx]);
+                String description = doc.getDescription();
+                String type = doc.getType();
+                
+                if( doc.isInIndivo() ) {                   
+                    if( !indivo.updateBinaryFile(path+filename, doc.getIndivoIdx(), type, description, myOscarUserId) ) {
+                        errors.add("",new ActionMessage("indivo.sendbinFileError", description, indivo.getErrorMsg()));
+                        this.saveErrors(request, errors);
+                        return mapping.findForward("error");
+                    }
+                }
+                else {                                        
+                    if( !indivo.sendBinaryFile(path+filename, type, description, myOscarUserId) ) {
+                        errors.add("",new ActionMessage("indivo.sendbinFileError", description, indivo.getErrorMsg()));
+                        this.saveErrors(request, errors);
+                        return mapping.findForward("error");
+                    }
+                    MiscUtils.getLogger().debug("Saving indivo Doc Idx " + indivo.getIndivoDocIdx());
+                    doc.setIndivoIdx(indivo.getIndivoDocIdx());
+                }
+                
+                EDocUtil.indivoRegister(doc);
+            }                                               
+            return mapping.findForward("success");
+        
         }
         
         errors.add("",new ActionMessage("indivo.configError"));
