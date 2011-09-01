@@ -19,6 +19,7 @@ import java.util.Date;
 
 import org.oscarehr.util.MiscUtils;
 
+import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;
 import oscar.oscarEncounter.oscarConsultation.data.EctConProviderData;
 import oscar.util.UtilDateUtilities;
@@ -77,7 +78,7 @@ public class EctSessionBean {
     public ArrayList appointmentsNamesArray;
     public ArrayList templateNames;
     public ArrayList measurementGroupNames;
-    public String source;
+    public String source;       
 
     public void resetAll() {
         eChartTimeStamp = null;
@@ -103,7 +104,7 @@ public class EctSessionBean {
         phone = "";
         roster = "";
         template = "";
-        oscarMsg = "";
+        oscarMsg = "";        
     }
 
     /**
@@ -181,29 +182,33 @@ public class EctSessionBean {
             }
             rs.close();
 
-            sql = "select * from eChart where demographicNo=" + demographicNo + " ORDER BY eChartId DESC";
-            rs = DBHandler.GetSQL(sql);
-            if (rs.next()) {
-                eChartId = oscar.Misc.getString(rs, "eChartId");
-                eChartTimeStamp = rs.getTimestamp("timeStamp");
-                socialHistory = oscar.Misc.getString(rs, "socialHistory");
-                familyHistory = oscar.Misc.getString(rs, "familyHistory");
-                medicalHistory = oscar.Misc.getString(rs, "medicalHistory");
-                ongoingConcerns = oscar.Misc.getString(rs, "ongoingConcerns");
-                reminders = oscar.Misc.getString(rs, "reminders");
-                encounter = oscar.Misc.getString(rs, "encounter");
-                subject = oscar.Misc.getString(rs, "subject");
-            } else {
-                eChartTimeStamp = null;
-                socialHistory = "";
-                familyHistory = "";
-                medicalHistory = "";
-                ongoingConcerns = "";
-                reminders = "";
-                encounter = "";
-                subject = "";
-            }
-            rs.close();
+            OscarProperties properties = OscarProperties.getInstance();
+    		if( !Boolean.parseBoolean(properties.getProperty("AbandonOldChart", "false"))) {
+	            sql = "select * from eChart where demographicNo=" + demographicNo + " ORDER BY eChartId DESC";
+	            rs = DBHandler.GetSQL(sql);
+	            if (rs.next()) {
+	                eChartId = oscar.Misc.getString(rs, "eChartId");
+	                eChartTimeStamp = rs.getTimestamp("timeStamp");
+	                socialHistory = oscar.Misc.getString(rs, "socialHistory");
+	                familyHistory = oscar.Misc.getString(rs, "familyHistory");
+	                medicalHistory = oscar.Misc.getString(rs, "medicalHistory");
+	                ongoingConcerns = oscar.Misc.getString(rs, "ongoingConcerns");
+	                reminders = oscar.Misc.getString(rs, "reminders");
+	                encounter = oscar.Misc.getString(rs, "encounter");
+	                subject = oscar.Misc.getString(rs, "subject");
+	            } else {
+	                eChartTimeStamp = null;
+	                socialHistory = "";
+	                familyHistory = "";
+	                medicalHistory = "";
+	                ongoingConcerns = "";
+	                reminders = "";
+	                encounter = "";
+	                subject = "";
+	            }
+	            rs.close();
+    		}
+    		
             if (oscarMsgID != null) {
                 sql = "Select * from messagetbl where messageid = \'" + oscarMsgID + "\' ";
                 rs = DBHandler.GetSQL(sql);
@@ -279,31 +284,34 @@ public class EctSessionBean {
             MiscUtils.getLogger().error("Error", e);
         }
         try {
-            //            
-            sql = "select * from eChart where demographicNo='" + demographicNo + "' ORDER BY eChartId DESC limit 1";
-            rs = DBHandler.GetSQL(sql);
-            ;
-            if (rs.next()) {
-                eChartId = oscar.Misc.getString(rs, "eChartId");
-                eChartTimeStamp = rs.getTimestamp("timeStamp");
-                socialHistory = oscar.Misc.getString(rs, "socialHistory");
-                familyHistory = oscar.Misc.getString(rs, "familyHistory");
-                medicalHistory = oscar.Misc.getString(rs, "medicalHistory");
-                ongoingConcerns = oscar.Misc.getString(rs, "ongoingConcerns");
-                reminders = oscar.Misc.getString(rs, "reminders");
-                encounter = oscar.Misc.getString(rs, "encounter");
-                subject = oscar.Misc.getString(rs, "subject");
-            } else {
-                eChartTimeStamp = null;
-                socialHistory = "";
-                familyHistory = "";
-                medicalHistory = "";
-                ongoingConcerns = "";
-                reminders = "";
-                encounter = "";
-                subject = "";
-            }
-            rs.close();
+            //     
+        	OscarProperties properties = OscarProperties.getInstance();
+    		if( !Boolean.parseBoolean(properties.getProperty("AbandonOldChart", "false"))) {
+	            sql = "select * from eChart where demographicNo='" + demographicNo + "' ORDER BY eChartId DESC limit 1";
+	            rs = DBHandler.GetSQL(sql);
+	            ;
+	            if (rs.next()) {
+	                eChartId = oscar.Misc.getString(rs, "eChartId");
+	                eChartTimeStamp = rs.getTimestamp("timeStamp");
+	                socialHistory = oscar.Misc.getString(rs, "socialHistory");
+	                familyHistory = oscar.Misc.getString(rs, "familyHistory");
+	                medicalHistory = oscar.Misc.getString(rs, "medicalHistory");
+	                ongoingConcerns = oscar.Misc.getString(rs, "ongoingConcerns");
+	                reminders = oscar.Misc.getString(rs, "reminders");
+	                encounter = oscar.Misc.getString(rs, "encounter");
+	                subject = oscar.Misc.getString(rs, "subject");
+	            } else {
+	                eChartTimeStamp = null;
+	                socialHistory = "";
+	                familyHistory = "";
+	                medicalHistory = "";
+	                ongoingConcerns = "";
+	                reminders = "";
+	                encounter = "";
+	                subject = "";
+	            }
+	            rs.close();
+    		}
         } catch (java.sql.SQLException e) {
             MiscUtils.getLogger().error("Error", e);
         }
@@ -360,21 +368,24 @@ public class EctSessionBean {
 
         try {
             
-            sql = "select * from eChart where eChartId = " + echartid + " and demographicNo=" + demographicNo;
-            rs = DBHandler.GetSQL(sql);
-            ;
-            if (rs.next()) {
-                eChartId = echartid;
-                eChartTimeStamp = rs.getTimestamp("timeStamp");
-                socialHistory = oscar.Misc.getString(rs, "socialHistory");
-                familyHistory = oscar.Misc.getString(rs, "familyHistory");
-                medicalHistory = oscar.Misc.getString(rs, "medicalHistory");
-                ongoingConcerns = oscar.Misc.getString(rs, "ongoingConcerns");
-                reminders = oscar.Misc.getString(rs, "reminders");
-                encounter = oscar.Misc.getString(rs, "encounter");
-                subject = oscar.Misc.getString(rs, "subject");
-            }
-            rs.close();
+        	OscarProperties properties = OscarProperties.getInstance();
+    		if( !Boolean.parseBoolean(properties.getProperty("AbandonOldChart", "false"))) {
+	            sql = "select * from eChart where eChartId = " + echartid + " and demographicNo=" + demographicNo;
+	            rs = DBHandler.GetSQL(sql);
+	            
+	            if (rs.next()) {
+	                eChartId = echartid;
+	                eChartTimeStamp = rs.getTimestamp("timeStamp");
+	                socialHistory = oscar.Misc.getString(rs, "socialHistory");
+	                familyHistory = oscar.Misc.getString(rs, "familyHistory");
+	                medicalHistory = oscar.Misc.getString(rs, "medicalHistory");
+	                ongoingConcerns = oscar.Misc.getString(rs, "ongoingConcerns");
+	                reminders = oscar.Misc.getString(rs, "reminders");
+	                encounter = oscar.Misc.getString(rs, "encounter");
+	                subject = oscar.Misc.getString(rs, "subject");
+	            }
+	            rs.close();
+    		}
         } catch (java.sql.SQLException e) {
             MiscUtils.getLogger().error("Error", e);
         }
