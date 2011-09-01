@@ -335,7 +335,14 @@ public class PHRService {
 		int itemsToReturn = 100;
 		List<MedicalDataTransfer> medicationTransfers = null;
 		do {
-			medicationTransfers = medicalDataWs.getMedicalDataList(myOscarUserId, MedicalDataType.MEDICATION.name(), true, startIndex, itemsToReturn);
+			List<Long> documentIds = medicalDataWs.getMedicalDataIds(myOscarUserId, MedicalDataType.MEDICATION.name(), true, startIndex, itemsToReturn);
+			medicationTransfers = new ArrayList<MedicalDataTransfer>();
+			for (Long id : documentIds)
+			{
+				MedicalDataTransfer medicalDataTransfer=medicalDataWs.getMedicalData(id);
+				medicationTransfers.add(medicalDataTransfer);
+			}
+
 			startIndex = startIndex + itemsToReturn;
 
 			for (MedicalDataTransfer medicalDataTransfer : medicationTransfers) {
