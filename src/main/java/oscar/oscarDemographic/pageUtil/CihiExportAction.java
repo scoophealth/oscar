@@ -368,7 +368,7 @@ public class CihiExportAction extends DispatchAction {
 		
 		String spokenLanguage = demo.getSpokenLanguage();
 		if (StringUtils.filled(spokenLanguage) && Util.convertLanguageToCode(spokenLanguage)!=null){
-			xmlDemographics.setPreferredSpokenLanguage(spokenLanguage);
+			xmlDemographics.setPreferredSpokenLanguage(Util.convertLanguageToCode(spokenLanguage));
 		}
 					
 		Date statusDate = demo.getPatientStatusDate();
@@ -453,6 +453,7 @@ public class CihiExportAction extends DispatchAction {
 	    String relationship;
 	    String age;
 	    Date startDate;	    
+	    String startDateFormat;
 	    boolean hasIssue;
 	    OscarProperties properties = OscarProperties.getInstance();
 	    
@@ -462,7 +463,8 @@ public class CihiExportAction extends DispatchAction {
 			intervention = "";
 			relationship = "";
 			age = "";
-			startDate = null;				
+			startDateFormat = null;
+			startDate = null;
 			hasIssue = false;
 			
 			List<CaseManagementNoteExt> caseManagementNoteExtList = getCaseManagementNoteExtDAO().getExtByNote(caseManagementNote.getId());
@@ -480,6 +482,7 @@ public class CihiExportAction extends DispatchAction {
                 }
                 else if( keyval.equals(CaseManagementNoteExt.STARTDATE)) {
                     startDate = caseManagementNoteExt.getDateValue();
+                    startDateFormat = caseManagementNoteExt.getValue();
                 }                
             }
             
@@ -492,19 +495,17 @@ public class CihiExportAction extends DispatchAction {
                 FamilyHistory familyHistory = patientRecord.addNewFamilyHistory();
                 while ( i.hasNext() ) {
                 	cIssue = i.next();
-                        if (cIssue.getIssue().getType().equals("system")) continue;
+                    if (cIssue.getIssue().getType().equals("system")) continue;
 
                 	StandardCoding standardCoding = familyHistory.addNewDiagnosisProcedureCode();
                 	standardCoding.setStandardCodingSystem(cIssue.getIssue().getType());
-                        String code = cIssue.getIssue().getType().equalsIgnoreCase("icd9") ? Util.formatIcd9(cIssue.getIssue().getCode()) : cIssue.getIssue().getCode();
+                    String code = cIssue.getIssue().getType().equalsIgnoreCase("icd9") ? Util.formatIcd9(cIssue.getIssue().getCode()) : cIssue.getIssue().getCode();
                 	standardCoding.setStandardCode(code);
                 	standardCoding.setStandardCodeDescription(cIssue.getIssue().getDescription());
-                        break;
+                    break;
                 }
                 if( startDate != null ) {
-                    DateFullOrPartial dateFullOrPartial = familyHistory.addNewStartDate();
-                    cal.setTime(startDate);
-                    dateFullOrPartial.setFullDate(cal);
+                	Util.putPartialDate(familyHistory.addNewStartDate(), startDate, startDateFormat);
                 }
 
                 if( !"".equalsIgnoreCase(age) ) {
@@ -540,6 +541,8 @@ public class CihiExportAction extends DispatchAction {
 			   
 	    Date startDate;
 	    Date endDate;
+	    String startDateFormat;
+	    String endDateFormat;
 	    boolean hasIssue;
 	    OscarProperties properties = OscarProperties.getInstance();
 
@@ -548,6 +551,8 @@ public class CihiExportAction extends DispatchAction {
 			
 			startDate = null;
 			endDate = null;
+		    startDateFormat = null;
+		    endDateFormat = null;
 			hasIssue = false;
 			
 			List<CaseManagementNoteExt> caseManagementNoteExtList = getCaseManagementNoteExtDAO().getExtByNote(caseManagementNote.getId());
@@ -557,9 +562,11 @@ public class CihiExportAction extends DispatchAction {
                 
                 if( keyval.equals(CaseManagementNoteExt.STARTDATE)) {
                     startDate = caseManagementNoteExt.getDateValue();
+                    startDateFormat = caseManagementNoteExt.getValue();
                 }
                 else if( keyval.equals(CaseManagementNoteExt.RESOLUTIONDATE)) {
                     endDate = caseManagementNoteExt.getDateValue();
+                    endDateFormat = caseManagementNoteExt.getValue();
                 }
             }
             
@@ -576,22 +583,18 @@ public class CihiExportAction extends DispatchAction {
 
                 	StandardCoding standardCoding = problemList.addNewDiagnosisCode();
                 	standardCoding.setStandardCodingSystem(cIssue.getIssue().getType());
-                        String code = cIssue.getIssue().getType().equalsIgnoreCase("icd9") ? Util.formatIcd9(cIssue.getIssue().getCode()) : cIssue.getIssue().getCode();
+                    String code = cIssue.getIssue().getType().equalsIgnoreCase("icd9") ? Util.formatIcd9(cIssue.getIssue().getCode()) : cIssue.getIssue().getCode();
                 	standardCoding.setStandardCode(code);
                 	standardCoding.setStandardCodeDescription(cIssue.getIssue().getDescription());
                     break;
                 }
 
                 if( startDate != null ) {
-                    DateFullOrPartial dateFullOrPartial = problemList.addNewOnsetDate();
-                    cal.setTime(startDate);
-                    dateFullOrPartial.setFullDate(cal);
+                	Util.putPartialDate(problemList.addNewOnsetDate(), startDate, startDateFormat);
                 }
 
                 if( endDate != null ) {
-                    DateFullOrPartial dateFullOrPartial = problemList.addNewResolutionDate();
-                    cal.setTime(endDate);
-                    dateFullOrPartial.setFullDate(cal);
+                	Util.putPartialDate(problemList.addNewResolutionDate(), endDate, endDateFormat);
                 }
 
                 //if( !hasIssue ) {  //Commenting out another one
@@ -611,12 +614,16 @@ public class CihiExportAction extends DispatchAction {
 		Calendar cal = Calendar.getInstance();			    
 	    Date startDate;
 	    Date endDate;
+	    String startDateFormat;
+	    String endDateFormat;
 	    
 		List<CaseManagementNote> notesList = getCaseManagementNoteDAO().getActiveNotesByDemographic(demo.getDemographicNo().toString(), riskFactor);
 		for( CaseManagementNote caseManagementNote: notesList) {
 			
 			startDate = null;
 			endDate = null;
+		    startDateFormat = null;
+		    endDateFormat = null;
 			
 			List<CaseManagementNoteExt> caseManagementNoteExtList = getCaseManagementNoteExtDAO().getExtByNote(caseManagementNote.getId());
             String keyval;
@@ -625,9 +632,11 @@ public class CihiExportAction extends DispatchAction {
                 
                 if( keyval.equals(CaseManagementNoteExt.STARTDATE)) {
                     startDate = caseManagementNoteExt.getDateValue();
+                    startDateFormat = caseManagementNoteExt.getValue();
                 }
                 else if( keyval.equals(CaseManagementNoteExt.RESOLUTIONDATE)) {
                     endDate = caseManagementNoteExt.getDateValue();
+                    endDateFormat = caseManagementNoteExt.getValue();
                 }
             }
             
@@ -635,15 +644,11 @@ public class CihiExportAction extends DispatchAction {
                         
                                     
             if( startDate != null ) {
-            	DateFullOrPartial dateFullOrPartial = riskFactors.addNewStartDate();
-            	cal.setTime(startDate);
-            	dateFullOrPartial.setFullDate(cal);
+            	Util.putPartialDate(riskFactors.addNewStartDate(), startDate, startDateFormat);
             }
             
             if( endDate != null ) {
-            	DateFullOrPartial dateFullOrPartial = riskFactors.addNewEndDate();
-            	cal.setTime(endDate);
-            	dateFullOrPartial.setFullDate(cal);
+            	Util.putPartialDate(riskFactors.addNewEndDate(), endDate, endDateFormat);
             }
                                     
             riskFactors.setRiskFactor(caseManagementNote.getNote());                                    
@@ -816,24 +821,15 @@ public class CihiExportAction extends DispatchAction {
                         if( caseManagementNoteExt.getDateValue() != null ) {
 	                        if( keyval.equals(CaseManagementNoteExt.PROCEDUREDATE)) {
 	                            procedure = patientRecord.addNewProcedure();
-	                            pDate = caseManagementNoteExt.getDateValue();
-	                            cal.setTime(pDate);
-	                            DateFullOrPartial dateFullOrPartial = procedure.addNewProcedureDate();
-	                            dateFullOrPartial.setFullDate(cal);
+	                            Util.putPartialDate(procedure.addNewProcedureDate(), caseManagementNoteExt);
 	                        } else
 	                        if( keyval.equals(CaseManagementNoteExt.STARTDATE)) {
 	                            if (problemlist==null) problemlist = patientRecord.addNewProblemList();
-	                            pDate = caseManagementNoteExt.getDateValue();
-	                            cal.setTime(pDate);
-	                            DateFullOrPartial dateFullOrPartial = problemlist.addNewOnsetDate();
-	                            dateFullOrPartial.setFullDate(cal);
+	                            Util.putPartialDate(problemlist.addNewOnsetDate(), caseManagementNoteExt);
 	                        } else
 	                        if( keyval.equals(CaseManagementNoteExt.RESOLUTIONDATE)) {
 	                            if (problemlist==null) problemlist = patientRecord.addNewProblemList();
-	                            pDate = caseManagementNoteExt.getDateValue();
-	                            cal.setTime(pDate);
-	                            DateFullOrPartial dateFullOrPartial = problemlist.addNewResolutionDate();
-	                            dateFullOrPartial.setFullDate(cal);
+	                            Util.putPartialDate(problemlist.addNewResolutionDate(), caseManagementNoteExt);
 	                        }
                         }
                     }
@@ -951,8 +947,7 @@ public class CihiExportAction extends DispatchAction {
 	        YnIndicatorAndBlank patientCompliance = medications.addNewPatientCompliance();
 	        if (pa[p].getPatientCompliance()==null) {
 	        	patientCompliance.setBlank(cdsDtCihi.Blank.X);	        	
-	        }
-	        else {
+	        } else {
 	        	patientCompliance.setBoolean(pa[p].getPatientCompliance());
 	        }
 		}

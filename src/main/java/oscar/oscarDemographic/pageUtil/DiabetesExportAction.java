@@ -16,12 +16,12 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -69,6 +69,7 @@ import java.util.HashMap;
 import org.apache.commons.lang.math.NumberUtils;
 
 
+
 /**
  *
  * @author jaygallagher
@@ -79,6 +80,8 @@ public class DiabetesExportAction extends Action {
     CaseManagementManager cmm;
     ArrayList<String> errors;
     ArrayList<String> listOfDINS = new ArrayList<String>();
+    
+    private static Logger logger = MiscUtils.getLogger();
 
 public DiabetesExportAction(){}
 
@@ -99,7 +102,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
     //Create export files
     String tmpDir = OscarProperties.getInstance().getProperty("TMP_DIR");
     if (!Util.checkDir(tmpDir)) {
-        MiscUtils.getLogger().debug("Error! Cannot write to TMP_DIR - Check oscar.properties or dir permissions.");
+        logger.info("Error! Cannot write to TMP_DIR - Check oscar.properties or dir permissions.");
     } else {
         tmpDir = Util.fixDirName(tmpDir);
     }
@@ -111,7 +114,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
     
     //Zip export files
     String zipName = "omd_diabetes-"+UtilDateUtilities.getToday("yyyy-MM-dd.HH.mm.ss")+".zip";
-    if (!Util.zipFiles(exportFiles, zipName, tmpDir)) MiscUtils.getLogger().debug("Error! Failed zipping export files");
+    if (!Util.zipFiles(exportFiles, zipName, tmpDir)) logger.error("Error! Failed zipping export files");
     
     //Download zip file
     Util.downloadFile(zipName, tmpDir, response);
@@ -169,11 +172,11 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                 count++;
                 files.add(new File(dir,inFile));
             }catch(Exception e){
-                MiscUtils.getLogger().error("Error", e);
+                logger.error("Error", e);
             }
             try {
                     omdCdsDiabetesDoc.save(files.get(files.size()-1), options);
-            } catch (IOException ex) {MiscUtils.getLogger().error("Error", ex);
+            } catch (IOException ex) {logger.error("Error", ex);
                     throw new Exception("Cannot write .xml file(s) to export directory.\nPlease check directory permissions.");
             }
 	}
@@ -206,8 +209,9 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
         
         try {
             URL omdDmURL = new URL(omdDmlink);
-            BufferedReader in;
-            in = new BufferedReader(new InputStreamReader(omdDmURL.openStream()));
+            logger.info("Diabetes export schema: "+omdDmlink);
+            
+            BufferedReader in = new BufferedReader(new InputStreamReader(omdDmURL.openStream()));
             SAXBuilder parser = new SAXBuilder();
             Document doc;
             doc = parser.build(in);
@@ -217,7 +221,6 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             while (items.hasNext()) {
                 Element pcgGroup = items.next();
                 String s = pcgGroup.getAttributeValue("base");
-
                 if ("cdsd:drugIdentificationNumber".equals(s)){
                     List<Element> l = pcgGroup.getChildren();
                     for (Element e:l){
@@ -227,17 +230,15 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                 }
             }
         } catch (MalformedURLException ex) {
-            Logger.getLogger(DiabetesExportAction.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DiabetesExportAction.class.getName()).log(Level.ERROR, null, ex);
         } catch (JDOMException ex) {
-            Logger.getLogger(DiabetesExportAction.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DiabetesExportAction.class.getName()).log(Level.ERROR, null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(DiabetesExportAction.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DiabetesExportAction.class.getName()).log(Level.ERROR, null, ex);
         }
         
         if (listOfDINS.isEmpty())
             errors.add("Error loading schema file! Cannot obtain DIN list!");
-
-
     }
     
     void setCareElements(PatientRecord patientRecord, String demoNo) throws SQLException {

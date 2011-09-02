@@ -242,7 +242,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                 }
                 if (noXML) {
                     Util.cleanFile(ifile);
-                        throw new Exception ("Error! No XML file in zip");
+                        throw new Exception ("Error! No .xml file in zip");
                 } else {
                     importLog = makeImportLog(logs, tmpDir);
                 }
@@ -255,7 +255,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                 importLog = makeImportLog(logs, tmpDir);
             } else {
                 Util.cleanFile(ifile);
-                throw new Exception ("Error! Import file must be XML or ZIP");
+                throw new Exception ("Error! Import file must be .xml or .zip");
             }
 	} catch (Exception e) {
             warnings.add("Error processing file: " + imp.getFileName());
@@ -2104,7 +2104,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 		if (filename.length()<ext.length()+2) return false;
 		if (filename.charAt(filename.length()-ext.length()-1)!='.') return false;
 
-		if (filename.substring(filename.length()-ext.length()).equals(ext)) return true;
+		if (filename.toLowerCase().substring(filename.length()-ext.length()).equals(ext.toLowerCase())) return true;
 		else return false;
 	}
 
