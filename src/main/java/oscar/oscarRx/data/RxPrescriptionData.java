@@ -1077,6 +1077,7 @@ public class RxPrescriptionData {
         java.util.Date pickupDate = null;
         java.util.Date pickupTime = null;
         java.util.Date writtenDate = null;
+        String writtenDateFormat = null;
         java.util.Date printDate = null;
         int numPrints = 0;
         String BN = null; // regular
@@ -1416,6 +1417,14 @@ public class RxPrescriptionData {
 
         public void setWrittenDate(java.util.Date RHS) {
             this.writtenDate = RHS;
+        }
+        
+        public String getWrittenDateFormat() {
+        	return this.writtenDateFormat;
+        }
+        
+        public void setWrittenDateFormat(String RHS) {
+        	this.writtenDateFormat = RHS;
         }
 
         public boolean isCurrent() {

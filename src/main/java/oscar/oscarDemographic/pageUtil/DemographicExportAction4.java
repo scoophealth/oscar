@@ -109,8 +109,10 @@ import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.DemographicArchiveDao;
 import org.oscarehr.common.dao.DemographicContactDao;
+import org.oscarehr.common.dao.PartialDateDao;
 import org.oscarehr.common.model.DemographicArchive;
 import org.oscarehr.common.model.DemographicContact;
+import org.oscarehr.common.model.PartialDate;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentCommentDao;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentDao;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentToDemographicDao;
@@ -126,6 +128,14 @@ import oscar.oscarRx.data.RxAllergyData.Allergy;
 public class DemographicExportAction4 extends Action {
 
         private static final Logger logger = MiscUtils.getLogger();
+        private static final DemographicArchiveDao demoArchiveDao = (DemographicArchiveDao) SpringUtils.getBean("demographicArchiveDao");
+        private static final DemographicContactDao contactDao = (DemographicContactDao) SpringUtils.getBean("demographicContactDao");
+        private static final PartialDateDao partialDateDao = (PartialDateDao) SpringUtils.getBean("partialDateDao");
+        private static final HRMDocumentToDemographicDao hrmDocToDemographicDao = (HRMDocumentToDemographicDao) SpringUtils.getBean("HRMDocumentToDemographicDao");
+        private static final HRMDocumentDao hrmDocDao = (HRMDocumentDao) SpringUtils.getBean("HRMDocumentDao");
+        private static final HRMDocumentCommentDao hrmDocCommentDao = (HRMDocumentCommentDao) SpringUtils.getBean("HRMDocumentCommentDao");
+        private static final CaseManagementManager cmm = (CaseManagementManager) SpringUtils.getBean("caseManagementManager");
+        
         private static final String PATIENTID = "Patient";
         private static final String ALERT = "Alert";
         private static final String ALLERGY = "Allergy";
@@ -217,7 +227,6 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             }
 
             // DEMOGRAPHICS
-            DemographicArchiveDao demoArchiveDao = (DemographicArchiveDao)SpringUtils.getBean("demographicArchiveDao");
             DemographicData d = new DemographicData();
             DemographicExt ext = new DemographicExt();
 
@@ -462,10 +471,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             }
             demoExt = null;
 
-            DemographicContactDao contactDao = (DemographicContactDao) SpringUtils.getBean("demographicContactDao");
             List<DemographicContact> demoContacts = contactDao.findByDemographicNo(Integer.valueOf(demoNo));
-
-
 //            DemographicRelationship demoRel = new DemographicRelationship();
 //            ArrayList<HashMap> demoR = demoRel.getDemographicRelationships(demoNo);
             for (int j=0; j<demoContacts.size(); j++) {
@@ -548,7 +554,6 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                 }
             }
 
-            CaseManagementManager cmm = (CaseManagementManager) SpringUtils.getBean("caseManagementManager");
             List<CaseManagementNote> lcmn = cmm.getNotes(demoNo);
             for (CaseManagementNote cmn : lcmn) {
                 String famHist="", socHist="", medHist="", concerns="", reminders="", riskFactors="", encounter="", annotation="", summary="";
@@ -653,7 +658,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                                 if (bSTARTDATE) continue;
                                 if (cme.getDateValue()!=null) {
                                     Util.putPartialDate(fHist.addNewStartDate(), cme);
-                                    summary = Util.addSummary(summary, CaseManagementNoteExt.STARTDATE, UtilDateUtilities.DateToString(cme.getDateValue(), "yyyy-MM-dd"));
+                                    summary = Util.addSummary(summary, CaseManagementNoteExt.STARTDATE, Util.readPartialDate(cme));
                                 }
                                 bSTARTDATE = true;
                             } else if (cme.getKeyVal().equals(CaseManagementNoteExt.TREATMENT)) {
@@ -724,21 +729,21 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                                 if (bSTARTDATE) continue;
                                 if (cme.getDateValue()!=null) {
                                     Util.putPartialDate(pHealth.addNewOnsetOrEventDate(), cme);
-                                    summary = Util.addSummary(summary, "Onset/Event Date", UtilDateUtilities.DateToString(cme.getDateValue(), "yyyy-MM-dd"));
+                                    summary = Util.addSummary(summary, "Onset/Event Date", Util.readPartialDate(cme));
                                 }
                                 bSTARTDATE = true;
                             } else if (cme.getKeyVal().equals(CaseManagementNoteExt.RESOLUTIONDATE)) {
                                 if (bRESOLUTIONDATE) continue;
                                 if (cme.getDateValue()!=null) {
                                     Util.putPartialDate(pHealth.addNewResolvedDate(), cme);
-                                    summary = Util.addSummary(summary, "Resolved Date", UtilDateUtilities.DateToString(cme.getDateValue(), "yyyy-MM-dd"));
+                                    summary = Util.addSummary(summary, "Resolved Date", Util.readPartialDate(cme));
                                 }
                                 bRESOLUTIONDATE = true;
                             } else if (cme.getKeyVal().equals(CaseManagementNoteExt.PROCEDUREDATE)) {
                                 if (bPROCEDUREDATE) continue;
                                 if (cme.getDateValue()!=null) {
                                     Util.putPartialDate(pHealth.addNewProcedureDate(), cme);
-                                    summary = Util.addSummary(summary, CaseManagementNoteExt.PROCEDUREDATE, UtilDateUtilities.DateToString(cme.getDateValue(), "yyyy-MM-dd"));
+                                    summary = Util.addSummary(summary, CaseManagementNoteExt.PROCEDUREDATE, Util.readPartialDate(cme));
                                 }
                                 bPROCEDUREDATE = true;
                             } else if (cme.getKeyVal().equals(CaseManagementNoteExt.LIFESTAGE)) {
@@ -795,7 +800,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                             } else if (cme.getKeyVal().equals(CaseManagementNoteExt.STARTDATE)) {
                                 if (bSTARTDATE) continue;
                                 Util.putPartialDate(pList.addNewOnsetDate(), cme);
-                                summary = Util.addSummary(summary, "Onset Date", UtilDateUtilities.DateToString(cme.getDateValue(), "yyyy-MM-dd"));
+                                summary = Util.addSummary(summary, "Onset Date", Util.readPartialDate(cme));
                                 if (cme.getDateValue()==null) {
                                     err.add("Error! No Onset Date for Problem List for Patient "+demoNo);
                                 }
@@ -804,7 +809,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                                 if (bRESOLUTIONDATE) continue;
                                 if (cme.getDateValue()!=null) {
                                     Util.putPartialDate(pList.addNewResolutionDate(), cme);
-                                    summary = Util.addSummary(summary, CaseManagementNoteExt.RESOLUTIONDATE, UtilDateUtilities.DateToString(cme.getDateValue(), "yyyy-MM-dd"));
+                                    summary = Util.addSummary(summary, CaseManagementNoteExt.RESOLUTIONDATE, Util.readPartialDate(cme));
                                 }
                                 bRESOLUTIONDATE = true;
                             } else if (cme.getKeyVal().equals(CaseManagementNoteExt.LIFESTAGE)) {
@@ -845,14 +850,14 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                                 if (bSTARTDATE) continue;
                                 if (cme.getDateValue()!=null) {
                                     Util.putPartialDate(rFact.addNewStartDate(), cme);
-                                    summary = Util.addSummary(summary, CaseManagementNoteExt.STARTDATE, UtilDateUtilities.DateToString(cme.getDateValue(), "yyyy-MM-dd"));
+                                    summary = Util.addSummary(summary, CaseManagementNoteExt.STARTDATE, Util.readPartialDate(cme));
                                 }
                                 bSTARTDATE = true;
                             } else if (cme.getKeyVal().equals(CaseManagementNoteExt.RESOLUTIONDATE)) {
                                 if (bRESOLUTIONDATE) continue;
                                 if (cme.getDateValue()!=null) {
                                     Util.putPartialDate(rFact.addNewEndDate(), cme);
-                                    summary = Util.addSummary(summary, "End Date", UtilDateUtilities.DateToString(cme.getDateValue(), "yyyy-MM-dd"));
+                                    summary = Util.addSummary(summary, "End Date", Util.readPartialDate(cme));
                                 }
                                 bRESOLUTIONDATE = true;
                             } else if (cme.getKeyVal().equals(CaseManagementNoteExt.AGEATONSET)) {
@@ -954,14 +959,14 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                                 if (bSTARTDATE) continue;
                                 if (cme.getDateValue()!=null) {
                                     Util.putPartialDate(alerts.addNewDateActive(), cme);
-                                    reminders = Util.addLine(reminders, "Date Active: ", UtilDateUtilities.DateToString(cme.getDateValue()));
+                                    reminders = Util.addLine(reminders, "Date Active: ", Util.readPartialDate(cme));
                                 }
                                 bSTARTDATE = true;
                             } else if (cme.getKeyVal().equals(CaseManagementNoteExt.RESOLUTIONDATE)) {
                                 if (bRESOLUTIONDATE) continue;
                                 if (cme.getDateValue()!=null) {
                                     Util.putPartialDate(alerts.addNewEndDate(), cme);
-                                    reminders = Util.addLine(reminders, "End Date: ", UtilDateUtilities.DateToString(cme.getDateValue()));
+                                    reminders = Util.addLine(reminders, "End Date: ", Util.readPartialDate(cme));
                                 }
                                 bRESOLUTIONDATE = true;
                             }
@@ -1136,13 +1141,14 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                 // MEDICATIONS & TREATMENTS
                 RxPrescriptionData prescriptData = new RxPrescriptionData();
                 RxPrescriptionData.Prescription[] arr = null;
-                arr = prescriptData.getUniquePrescriptionsByPatient(Integer.parseInt(demoNo));
+                arr = prescriptData.getPrescriptionsByPatient(Integer.parseInt(demoNo));
                 for (int p = 0; p < arr.length; p++){
                     MedicationsAndTreatments medi = patientRec.addNewMedicationsAndTreatments();
                     String mSummary = "";
                     if (arr[p].getWrittenDate()!=null) {
-                        medi.addNewPrescriptionWrittenDate().setFullDate(Util.calDate(arr[p].getWrittenDate()));
-                        mSummary = Util.addSummary("Prescription Written Date", UtilDateUtilities.DateToString(arr[p].getWrittenDate(),"yyyy-MM-dd"));
+                    	String dateFormat = partialDateDao.getFormat(PartialDate.DRUGS, arr[p].getDrugId(), PartialDate.DRUGS_WRITTENDATE);
+                    	Util.putPartialDate(medi.addNewPrescriptionWrittenDate(), arr[p].getWrittenDate(), dateFormat);
+                        mSummary = Util.addSummary("Prescription Written Date", partialDateDao.getDatePartial(arr[p].getWrittenDate(), dateFormat));
                     }
                     if (arr[p].getRxDate()!=null) {
                         medi.addNewStartDate().setFullDate(Util.calDate(arr[p].getRxDate()));
@@ -1576,10 +1582,6 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                 }
 
                 //HRM reports
-                HRMDocumentToDemographicDao hrmDocToDemographicDao = (HRMDocumentToDemographicDao) SpringUtils.getBean("HRMDocumentToDemographicDao");
-                HRMDocumentDao hrmDocDao = (HRMDocumentDao) SpringUtils.getBean("HRMDocumentDao");
-                HRMDocumentCommentDao hrmDocCommentDao = (HRMDocumentCommentDao) SpringUtils.getBean("HRMDocumentCommentDao");
-
                 List<HRMDocumentToDemographic> hrmDocToDemographics = hrmDocToDemographicDao.findByDemographicNo(demoNo);
                 for (HRMDocumentToDemographic hrmDocToDemographic : hrmDocToDemographics) {
                     String hrmDocumentId = hrmDocToDemographic.getHrmDocumentId();
