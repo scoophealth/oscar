@@ -371,6 +371,7 @@ TABLE {
 	margin-bottom: 10px;
 	font-weight: bold;
 	height: 17px;
+	padding-right:10px;
 }
 
 .DivContentGeneric {
@@ -739,3 +740,9 @@ table.mhTable td{
     font-family:sans-serif;
     font-size:10pt;
 }
+
+@media print { 
+.noPrint {
+	display:none; 
+	} 
+} 
