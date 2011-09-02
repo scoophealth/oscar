@@ -14,11 +14,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
+import org.oscarehr.PMmodule.dao.ClientDao;
 import org.oscarehr.common.dao.Hl7TextInfoDao;
 import org.oscarehr.common.dao.Hl7TextMessageDao;
+import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Hl7TextInfo;
 import org.oscarehr.common.model.Hl7TextMessage;
 import org.oscarehr.olis.dao.OLISSystemPreferencesDao;
@@ -30,6 +33,7 @@ import org.oscarehr.util.SpringUtils;
 import oscar.OscarProperties;
 import oscar.oscarLab.ca.all.Hl7textResultsData;
 import oscar.oscarLab.ca.all.parsers.Factory;
+import oscar.oscarLab.ca.all.parsers.HHSEmrDownloadHandler;
 import oscar.oscarLab.ca.all.parsers.MessageHandler;
 import oscar.util.UtilDateUtilities;
 
@@ -71,6 +75,18 @@ public final class MessageUploader {
 			ArrayList docNums = h.getDocNums();
 			int finalResultCount = h.getOBXFinalResultCount();
 			String obrDate = h.getMsgDate();
+			
+			if(h instanceof HHSEmrDownloadHandler) {
+            	String chartNo = ((HHSEmrDownloadHandler)h).getPatientIdByType("MR");
+            	if(chartNo != null) {
+            		//let's get the hin
+            		ClientDao clientDao = (ClientDao)SpringUtils.getBean("clientDao");
+            		List<Demographic> clients = clientDao.getClientsByChartNo(chartNo);
+            		if(clients!=null && clients.size()>0) {
+            			hin = clients.get(0).getHin();
+            		}
+            	}
+            }
 
 			try {
 				// reformat date
