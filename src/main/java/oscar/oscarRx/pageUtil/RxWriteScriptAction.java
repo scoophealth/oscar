@@ -51,8 +51,10 @@ import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.dao.PartialDateDao;
 import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.PartialDate;
 import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -64,12 +66,15 @@ import oscar.log.LogConst;
 import oscar.oscarRx.data.RxDrugData;
 import oscar.oscarRx.data.RxPrescriptionData;
 import oscar.oscarRx.util.RxUtil;
+import oscar.util.StringUtils;
 
 public final class RxWriteScriptAction extends DispatchAction {
 
 	private static final Logger logger = MiscUtils.getLogger();
 	private static UserPropertyDAO userPropertyDAO;
 	private static final String DEFAULT_QUANTITY = "30";
+	private static final PartialDateDao partialDateDao = (PartialDateDao)SpringUtils.getBean("partialDateDao");
+ 
 
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, Exception {
 
@@ -792,6 +797,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 		for (int i = 0; i < bean.getStashSize(); i++) {
 			allIndex.add(i);
 		}
+		
 		List<Integer> existingIndex = new ArrayList();
 		for (String num : randNum) {
 			int stashIndex = bean.getIndexFromRx(Integer.parseInt(num));
@@ -892,10 +898,10 @@ public final class RxWriteScriptAction extends DispatchAction {
 							}
 						} else if (elem.equals("writtenDate_" + num)) {
 							if (val == null || (val.equals(""))) {
-								// p("writtenDate is null");
 								rx.setWrittenDate(RxUtil.StringToDate("0000-00-00", "yyyy-MM-dd"));
 							} else {
-								rx.setWrittenDate(RxUtil.StringToDate(val, "yyyy-MM-dd"));
+								rx.setWrittenDateFormat(partialDateDao.getFormat(val));
+								rx.setWrittenDate(partialDateDao.StringToDate(val));
 							}
 
 						} else if (elem.equals("outsideProviderName_" + num)) {
@@ -1090,10 +1096,14 @@ public final class RxWriteScriptAction extends DispatchAction {
 		for (int i = 0; i < bean.getStashSize(); i++) {
 			try {
 				rx = bean.getStashItem(i);
-				rx.Save(scriptId);// new drug id availble after this line
+				rx.Save(scriptId);// new drug id available after this line
 				bean.addRandomIdDrugIdPair(rx.getRandomId(), rx.getDrugId());
 				auditStr.append(rx.getAuditString());
 				auditStr.append("\n");
+				
+				//write partial date
+				if (StringUtils.filled(rx.getWrittenDateFormat()))
+					partialDateDao.setPartialDate(PartialDate.DRUGS, rx.getDrugId(), PartialDate.DRUGS_WRITTENDATE, rx.getWrittenDateFormat());
 			} catch (Exception e) {
 				logger.error("Error", e);
 			}

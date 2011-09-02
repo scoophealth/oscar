@@ -86,6 +86,7 @@ import org.oscarehr.common.dao.GroupNoteDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.GroupNoteLink;
+import org.oscarehr.common.model.PartialDate;
 import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.dx.model.DxResearch;
 import org.oscarehr.eyeform.EyeformInit;
@@ -1727,9 +1728,9 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
             String val = null;
 
             if (StringUtils.isNotEmpty(type)) {
-                if (type.equals(CaseManagementNoteExt.YEARONLY))
+                if (type.equals(PartialDate.YEARONLY))
                     val = oscar.util.UtilDateUtilities.DateToString(cme.getDateValue(),"yyyy");
-                else if (type.equals(CaseManagementNoteExt.YEARMONTH))
+                else if (type.equals(PartialDate.YEARMONTH))
                     val = oscar.util.UtilDateUtilities.DateToString(cme.getDateValue(),"yyyy-MM");
                 else val = oscar.util.UtilDateUtilities.DateToString(cme.getDateValue(),"yyyy-MM-dd");
             } else {

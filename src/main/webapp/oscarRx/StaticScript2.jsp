@@ -32,6 +32,8 @@
 
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.common.dao.DrugDao"%>
+<%@page import="org.oscarehr.common.dao.PartialDateDao" %>
+<%@page import="org.oscarehr.common.model.PartialDate" %>
 <%@page import="java.util.List"%>
 <%@page import="org.oscarehr.common.model.Drug"%>
 <%@page import="oscar.oscarRx.data.RxPrescriptionData"%>
@@ -158,6 +160,7 @@
 						<th colspan="2"></th>
 					</tr>
 					<%
+						PartialDateDao partialDateDao = (PartialDateDao)SpringUtils.getBean("partialDateDao");
 						for (StaticScriptBean.DrugDisplayData drug : drugs)
 							{
 								String arch="";
@@ -170,7 +173,7 @@
 						<td><%=drug.providerName%></td>
 						<td><%=drug.startDate%></td>
 						<td><%=drug.endDate%></td>
-						<td><%=drug.writtenDate%></td>
+						<td><%=partialDateDao.getDatePartial(drug.writtenDate, PartialDate.DRUGS, drug.localDrugId, PartialDate.DRUGS_WRITTENDATE)%></td>
                                                 <td><%=drug.prescriptionDetails%>
 
                                                     <% if (drug.nonAuthoritative) { %>
