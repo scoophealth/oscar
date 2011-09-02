@@ -809,7 +809,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                                 bRESOLUTIONDATE = true;
                             } else if (cme.getKeyVal().equals(CaseManagementNoteExt.LIFESTAGE)) {
                                 if (bLIFESTAGE) continue;
-                                if (StringUtils.filled(cme.getValue()) && "NICTA".contains(cme.getValue())) {
+                                if (cme.getValue()!=null && cme.getValue().length()==1 && "NICTA".contains(cme.getValue())) {
                                     pList.setLifeStage(cdsDt.LifeStage.Enum.forString(cme.getValue()));
                                     summary = Util.addSummary(summary, CaseManagementNoteExt.LIFESTAGE, cme.getValue());
                                 }
@@ -932,6 +932,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                                 ProviderData prvd = new ProviderData(cm_note.getSigning_provider_no());
                                 ClinicalNotes.NoteReviewer noteReviewer = cNote.addNewNoteReviewer();
                                 Util.writeNameSimple(noteReviewer.addNewName(), prvd.getFirst_name(), prvd.getLast_name());
+                                
                                 if (cm_note.getUpdate_date()!=null) noteReviewer.addNewDateTimeNoteReviewed().setFullDate(Util.calDate(cm_note.getUpdate_date()));
                                 else noteReviewer.addNewDateTimeNoteReviewed().setFullDateTime(Util.calDate(new Date()));
                                 if (StringUtils.noNull(prvd.getOhip_no()).length()<=6) noteReviewer.setOHIPPhysicianId(prvd.getOhip_no());
@@ -1984,7 +1985,6 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             logger.debug("Error! Failed to zip export files");
 	}
 
-//To be un-commented after CMS4
         if (pgpReady.equals("Yes")) {
             //PGP encrypt zip file
             PGPEncrypt pgp = new PGPEncrypt();
@@ -1996,14 +1996,10 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                 request.getSession().setAttribute("pgp_ready", "No");
             }
         } else {
-            logger.debug("Warning: PGP Encryption NOT available - unencrypted file exported!");
+            logger.info("Warning: PGP Encryption NOT available - unencrypted file exported!");
             Util.downloadFile(zipName, tmpDir, response);
             ffwd = "success";
         }
-//To be removed after CMS4
-//        Util.downloadFile(zipName, tmpDir, response);
-//        ffwd = "success";
-//To be removed after CMS4
         
 
         //Remove zip & export files from temp dir
