@@ -123,9 +123,14 @@ Varicella Immunoglobulin	VarIg
 		showIfMinRecordNum="1" />
 
 	<item desc="MMR=measles, mumps and rubella" name="MMR" healthCanadaType="MMR"
-		link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#MMR"
+		link="http://www.phac-aspc.gc.ca/publicat/cig-gci/p04-meas-roug-eng.php"
 		layout="injection" atc="J07BD52" minAge="0" maxAge="6"
 		showIfMinRecordNum="1" />
+		
+	<item desc="MMRV=measles, mumps, rubella, varicella" name="MMRV" healthCanadaType="MMRV"
+		link="http://www.phac-aspc.gc.ca/publicat/ccdr-rmtc/10vol36/acs-9/index-eng.php"
+		layout="injection" atc="J07BD54" minAge="0" maxAge="6"
+		showIfMinRecordNum="1" />		
 
 	<item
 		desc="Meningococcal - Polysaccharide"
