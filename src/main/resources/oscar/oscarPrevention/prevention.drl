@@ -332,7 +332,7 @@
         <java:condition>prev.getNumberOfPreventionType("Pneu-C") == 1</java:condition>
         <java:condition>prev.getHowManyMonthsSinceLast("Pneu-C") &gt;= 2</java:condition>                                        
         <java:consequence>              
-              prev.log("Pneu-C 4");
+              prev.log("Pneu-C 6");
               prev.addWarning("Pneu-C", "Needs Second Pneu-C");
         </java:consequence>
     </rule>
@@ -347,7 +347,7 @@
         <java:condition>prev.getAgeInYears() &lt; 40</java:condition>        
         <java:condition>prev.getNumberOfPreventionType("MMR") == 0</java:condition>                        
         <java:consequence>              
-              prev.log("Pneu-C 4");
+              prev.log("MMR 1");
               prev.addWarning("MMR", "Needs First MMR");
         </java:consequence>
     </rule>
@@ -360,7 +360,7 @@
         <java:condition>prev.getAgeInYears() &lt; 30</java:condition>
         <java:condition>prev.getNumberOfPreventionType("MMR") == 0</java:condition>                
         <java:consequence>              
-              prev.log("Pneu-C 4");
+              prev.log("MMR 1.1");
               prev.addWarning("MMR", "Needs First MMR");
         </java:consequence>
     </rule>
@@ -372,26 +372,27 @@
         <java:condition>prev.getAgeInMonths() &gt;= 14</java:condition>
         <java:condition>prev.getAgeInYears() &lt; 24</java:condition>
         <java:condition>prev.getNumberOfPreventionType("MMR") == 1</java:condition>  
+        <java:condition>prev.getNumberOfPreventionType("MMRV") == 0</java:condition> 
         <java:condition>prev.getHowManyMonthsSinceLast("MMR") &gt;= 2</java:condition>                                        
         <java:condition>prev.getHowManyDaysSinceLast("VZ") &gt;= 28</java:condition>
         <java:consequence>              
-              prev.log("Pneu-C 4");
-              prev.addWarning("MMR", "Needs Second MMR");
+              prev.log("MMR 2");
+              prev.addWarning("MMR", "Needs Second MMR or MMRV");
         </java:consequence>
     </rule>
 
-    <rule name="MMR 3">
+    <rule name="MMRV 1">
         <parameter identifier="prev">
             <class>oscar.oscarPrevention.Prevention</class>
         </parameter>
-        <java:condition>prev.getAgeInMonths() &gt;= 14</java:condition>
-        <java:condition>prev.getAgeInYears() &lt; 18</java:condition>
+        <java:condition>prev.getAgeInMonths() &gt;= 48</java:condition>
+        <java:condition>prev.getAgeInYears() &lt;= 6</java:condition>
         <java:condition>prev.getNumberOfPreventionType("MMR") == 1</java:condition>  
         <java:condition>prev.getHowManyMonthsSinceLast("MMR") &gt;= 2</java:condition>                                        
-        <java:condition>prev.getHowManyDaysSinceLast("VZ") &gt;= 0</java:condition>
+        <java:condition>prev.getHowManyDaysSinceLast("VZ") &gt;= 28</java:condition>
         <java:consequence>              
-              prev.log("Pneu-C 4");
-              prev.addWarning("MMR", "Needs Second MMR");
+              prev.log("MMRV 1");
+              prev.addWarning("MMRV", "Needs MMRV");
         </java:consequence>
     </rule>
 

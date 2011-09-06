@@ -8,7 +8,7 @@
 
 <preventionConfig>
 	<set title="Childhood Immunization" effective="(August 2011)"
-       minAge="0" maxAge="19" prevList="DTaP-IPV,Hib,Pneu-C,MMR,MenC-C,VZ,HepB,dTap,Td,Flu,Rot" />
+       minAge="0" maxAge="19" prevList="DTaP-IPV,Hib,Pneu-C,MMR,MMRV,MenC-C,VZ,HepB,dTap,Td,Flu,Rot" />
 
 	<set title="Women's Preventive Care" effective="" minAge="20"
 		maxAge="65" sex="F" prevList="PAP,MAM,Flu,Td" />
