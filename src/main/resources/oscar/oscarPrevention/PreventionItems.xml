@@ -89,6 +89,13 @@ Varicella Immunoglobulin	VarIg
 		link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#DTaPIPV"
 		layout="injection" atc="J07CA02" minAge="0" maxAge="6"
 		showIfMinRecordNum="1" />
+		
+ 	<item 
+ 		desc="Rot-1=Rotavirus Vaccine" 
+ 		name="Rot"
+        link="www.novaccine.com/pdffiles/Rotarix_new_package_insert.pdf"
+		layout="injection" atc="J07BH01" minAge="0" maxAge="2"
+		showIfMinRecordNum="1" />
 
 	<item
 		desc="Hib=haemophilus influenzae type B for children under 5 years of age"
