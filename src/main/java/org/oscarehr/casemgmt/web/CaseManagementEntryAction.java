@@ -1706,6 +1706,9 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			return forward;
 		}
 
+		String frmName = "caseManagementEntryForm" + demoNo;
+		session.removeAttribute(frmName);
+		
 		String toBill = request.getParameter("toBill");
 		if (toBill != null && toBill.equalsIgnoreCase("true")) {
 			String region = cform.getBillRegion();
@@ -1784,6 +1787,9 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			logger.warn("Warning", e);
 		}
 
+		String sessionFrmName = "caseManagementEntryForm" + demo;
+		session.removeAttribute(sessionFrmName);
+		
 		return mapping.findForward("windowClose");
 	}
 
