@@ -205,6 +205,39 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
 					<logic:notPresent name="allergies">Search returned no results. Revise your search and try again.</logic:notPresent> 
 					<logic:present name="allergies">
 	
+	
+						<%
+						boolean flatResults = Boolean.valueOf(oscar.OscarProperties.getInstance().getProperty("allergies.flat_results", "false"));    
+				       	if(flatResults) {
+				       		TreeMap<String,Allergy> flatMap = (TreeMap<String,Allergy>)request.getAttribute("flatMap");
+				       		if(flatMap.size()>0) {
+				       			
+					       		for(String key:flatMap.keySet()) {
+					       			Allergy allergy = flatMap.get(key);
+					       			%>
+					       				<a href="addReaction.do?ID=<%= allergy.getPickID() %>&name=<%=java.net.URLEncoder.encode(allergy.getDESCRIPTION())%>&type=<%=allergy.getTYPECODE()%>"><%=allergy.getDESCRIPTION()%></a>
+<%
+	                                    java.util.Vector vect = (Vector) drugClassHash.get(""+allergy.getPickID());
+	                                    if (vect != null){
+	                                        for (int k = 0; k < vect.size() ; k++){
+	                                        	String[] drugClassPair = (String[]) vect.get(k);
+	                                    %>
+	                                    &nbsp;&nbsp;&nbsp;
+                                        <a style="color: orange" href="addReaction.do?ID=<%=drugClassPair[0] %>&name=<%=java.net.URLEncoder.encode(drugClassPair[1])%>&type=10"><%=drugClassPair[1] %></a>
+                                        <%
+                                        	}
+                                        }
+                                        %>					       				
+										<br/>
+					       			<%
+					       		}
+					       		
+				       		}
+						%>
+	
+	
+						<% } else { //not flat results %>
+	
 						<%
 							Map<Integer,List<Allergy>> allergyResults = (Map<Integer,List<Allergy>>)request.getAttribute("allergyResults");
 							if(allergyResults.get(8).size()>0) {
@@ -293,7 +326,8 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
 								%></div><%
 							}
 						%>
-
+	
+						<% } %>
 					</logic:present>
 				</div>
 
