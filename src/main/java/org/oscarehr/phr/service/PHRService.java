@@ -64,6 +64,7 @@ import org.oscarehr.myoscar_server.ws.MedicalDataTransfer;
 import org.oscarehr.myoscar_server.ws.MedicalDataType;
 import org.oscarehr.myoscar_server.ws.MedicalDataWs;
 import org.oscarehr.myoscar_server.ws.MessageWs;
+import org.oscarehr.myoscar_server.ws.NotAuthorisedException_Exception;
 import org.oscarehr.myoscar_server.ws.PersonTransfer;
 import org.oscarehr.myoscar_server.ws.Relation;
 import org.oscarehr.myoscar_server.ws.Role;
@@ -81,6 +82,7 @@ import org.oscarehr.phr.util.MyOscarServerWebServicesManager;
 import org.oscarehr.phr.util.MyOscarUtils;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.XmlUtils;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -142,7 +144,7 @@ public class PHRService {
 	}
 
 	// used to authenticate demographics and perhaps admin account
-	private PHRAuthentication authenticateIndivoId(String indivoId, String password) throws Exception {
+	private PHRAuthentication authenticateIndivoId(String indivoId, String password) {
 		// Caution: does not set provider number in PHRAuthentication object
 		// PHRAuthentication phrAuth = null;
 		// TalkClient client = getTalkClient(); // also throws Exception
@@ -154,26 +156,23 @@ public class PHRService {
 		// phrAuth = new PHRAuthentication(authResult);
 
 		LoginWs loginWs = MyOscarServerWebServicesManager.getLoginWs();
-		logger.debug("MyOscar Login attempt :" + indivoId+":"+password);
-		PersonTransfer personTransfer = loginWs.login(indivoId, password);
+		logger.debug("MyOscar Login attempt :" + indivoId);
 
-		logger.debug("MyOscar Login result : " + (personTransfer == null ? "failed" : "success, userId=" + personTransfer.getId()));
+		PersonTransfer personTransfer;
+        try {
+	        personTransfer = loginWs.login(indivoId, password);
+			logger.debug("MyOscar Login success:" + indivoId);
 
-		if (personTransfer == null) return (null);
+			PHRAuthentication phrAuth = new PHRAuthentication();
+			phrAuth.setMyOscarUserName(indivoId);
+			phrAuth.setMyOscarUserId(personTransfer.getId());
+			phrAuth.setMyOscarPassword(password);
 
-		PHRAuthentication phrAuth = new PHRAuthentication();
-		phrAuth.setMyOscarUserName(indivoId);
-		phrAuth.setMyOscarUserId(personTransfer.getId());
-		phrAuth.setMyOscarPassword(password);
-
-		return phrAuth;
-
-		/*
-		 * @throws ActionNotPerformedException If there is a null result. Can be caused for a number of reasons such as: the actor performing the action isn't authorized, the record the action is being performed on doesn't exist, the password is incorrect,
-		 * etc.
-		 * 
-		 * @throws IndivoException If there is an error in the communication to the server.
-		 */
+			return phrAuth;
+        } catch (NotAuthorisedException_Exception e) {
+			logger.debug("MyOscar Login failed:" + indivoId+":"+password);
+			return(null);
+        }
 	}
 
 	public Integer sendAddBinaryData(PHRAuthentication auth, ProviderData sender, String recipientOscarId, int recipientType, Long recipientMyOscarUserId, EDoc document) throws Exception {
@@ -617,7 +616,7 @@ public class PHRService {
         }	    
     }
 
-	private void sendMessage(PHRAuthentication auth, PHRAction action) throws JAXBException, IndivoException {
+	private void sendMessage(PHRAuthentication auth, PHRAction action) throws JAXBException, IndivoException, NumberFormatException, DOMException, NotAuthorisedException_Exception {
 		MessageWs messageWs = MyOscarServerWebServicesManager.getMessageWs(auth.getMyOscarUserId(), auth.getMyOscarPassword());
 
 		logger.debug("Sending Add Message");
