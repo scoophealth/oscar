@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.Vector;
 
 import javax.servlet.ServletException;
@@ -121,8 +122,13 @@ public final class RxSearchAllergyAction extends Action {
         //  'id':'0','category':'','name'
         RxAllergyData.Allergy[] arr = new RxAllergyData.Allergy[vec==null?0:vec.size()];
         
-        Vector classVec = new Vector() ;
-       
+        String includeClassesStr = OscarProperties.getInstance().getProperty("allergies.include_ahfs_class_in_results", "true");
+        boolean includeClasses = Boolean.valueOf(includeClassesStr);
+        
+        boolean flatResults = Boolean.valueOf(OscarProperties.getInstance().getProperty("allergies.flat_results", "false"));    
+        TreeMap<String,Allergy> flatList = new TreeMap<String,Allergy>();
+        
+        //we want to categorize the search results.
         Map<Integer,List<Allergy>> allergyResults = new HashMap<Integer,List<Allergy>>();
         allergyResults.put(8, new ArrayList<Allergy>());
         allergyResults.put(10, new ArrayList<Allergy>());
@@ -133,9 +139,9 @@ public final class RxSearchAllergyAction extends Action {
         
         Map<Integer,Allergy> classResults = new HashMap<Integer,Allergy>();
         
-        for (int i = 0; i < vec.size(); i++){
-           
-                java.util.Hashtable hash = (java.util.Hashtable) vec.get(i);
+        Vector classVec = new Vector() ;        
+        for (int i = 0; i < vec.size(); i++){           
+        	java.util.Hashtable hash = (java.util.Hashtable) vec.get(i);
             if (!hash.get("name").equals("None found")){
                 arr[i] = aData.getAllergy();
 
@@ -148,7 +154,9 @@ public final class RxSearchAllergyAction extends Action {
                 }
                 
                 allergyResults.get((Integer) hash.get("category")).add(arr[i]);
-                
+                if(flatList.get(arr[i].getDESCRIPTION()) == null) {
+                	flatList.put(arr[i].getDESCRIPTION(),arr[i]);
+                }
             }else{
                 MiscUtils.getLogger().debug("IM FLAGGING IT AS NOT FOUND");
                 itemsFound = false;
@@ -157,15 +165,16 @@ public final class RxSearchAllergyAction extends Action {
                 
         }
         
-        if (itemsFound){
-            Hashtable returnHash = new Hashtable();
+        Hashtable returnHash = new Hashtable();
+        
+        if (itemsFound && includeClasses){
             
             if (classVec.size() > 0){
                 Vector classVec2 = drugRef.list_drug_class(classVec);
 
 
                 Hashtable hash ;
-            
+                String compString = null;
                 Vector strVec = null;
 
                 if(classVec2!=null) {
@@ -193,14 +202,17 @@ public final class RxSearchAllergyAction extends Action {
                 }
                 }
             }
-            MiscUtils.getLogger().debug("Sending this many vector of this size back "+returnHash.values().size());
-
-            if(arr.length>0) {
-            	request.setAttribute("allergyResults", allergyResults);
-                request.setAttribute("allergies", arr);
-                request.setAttribute("drugClasses", returnHash);
-            }
+          	MiscUtils.getLogger().debug("Sending this many vector of this size back "+returnHash.values().size());
+            
         }
+        
+        if(arr.length>0) {
+        	request.setAttribute("allergyResults", allergyResults);
+            request.setAttribute("allergies", arr);
+            request.setAttribute("drugClasses", returnHash);
+            request.setAttribute("flatMap", flatList);
+        }
+        
         return (mapping.findForward("success"));
     }
 }
