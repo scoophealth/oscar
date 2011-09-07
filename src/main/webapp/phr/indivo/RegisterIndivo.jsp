@@ -7,6 +7,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
    
+<%@page import="org.oscarehr.phr.RegistrationHelper"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
@@ -22,6 +23,7 @@
 
 <%
 String demographicNo = request.getParameter("demographicNo");
+int demographicId=Integer.parseInt(demographicNo);
 
 DemographicData.Demographic demographic = new DemographicData().getDemographic(demographicNo);
 request.setAttribute("demographic", demographic);
@@ -54,12 +56,6 @@ if (wPhoneExt != null)
                     return;
                 } else if (document.getElementById("password").length < 8) {
                     alert ("Password must be at least 8 characters long");
-                    document.getElementById("password").focus();
-                    return;
-                } else if (document.getElementById("password").value != document.getElementById("passwordRepeat").value) {
-                    alert ("Passwords must match");
-                    document.getElementById("password").value = "";
-                    document.getElementById("passwordRepeat").value = "";
                     document.getElementById("password").focus();
                     return;
                 }
@@ -104,15 +100,11 @@ if (wPhoneExt != null)
                 <table>
                     <tr>
                         <td>Username: </td>
-                        <td><html-el:text styleId="username" property="username" value="" size="30"/></td>
+                        <td><html-el:text styleId="username" property="username" value="<%=RegistrationHelper.getDefaultUserName(demographicId)%>" size="30"/></td>
                     </tr>
                     <tr>
-                        <td>Password: </td>
-                        <td><html-el:password styleId="password" property="password" value=""/></td>
-                    </tr>
-                    <tr>
-                        <td>Repeat Password: <br/>(min 8 char) </td>
-                        <td><html-el:password styleId="passwordRepeat" property="passwordRepeat" value=""/></td>
+                        <td>Password (default generated): </td>
+                        <td><html-el:text styleId="password" property="password" value="<%=RegistrationHelper.getNewRandomPassword()%>"/></td>
                     </tr>
                 </table>
             </div>
