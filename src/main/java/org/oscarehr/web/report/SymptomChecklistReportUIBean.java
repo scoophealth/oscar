@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.myoscar_server.ws.AccountWs;
+import org.oscarehr.myoscar_server.ws.NotAuthorisedException_Exception;
 import org.oscarehr.myoscar_server.ws.PersonTransfer;
 import org.oscarehr.myoscar_server.ws.SurveyResultTransfer;
 import org.oscarehr.myoscar_server.ws.SurveyTemplateTransfer;
@@ -52,7 +53,7 @@ public class SymptomChecklistReportUIBean {
 		return (symptomChecklistTemplateId);
 	}
 
-	public static ArrayList<MumpsSurveyResultsDisplayObject> getSymptomChecklistReportsResultList(HttpSession session, PHRAuthentication auth, int demographicId, int startIndex, int itemsToReturn) {
+	public static ArrayList<MumpsSurveyResultsDisplayObject> getSymptomChecklistReportsResultList(HttpSession session, PHRAuthentication auth, int demographicId, int startIndex, int itemsToReturn) throws NotAuthorisedException_Exception {
 		String sessionKey = "SymptomChecklistReportsResultList:" + demographicId + ":" + startIndex + ":" + itemsToReturn;
 
 		@SuppressWarnings("unchecked")
@@ -66,7 +67,7 @@ public class SymptomChecklistReportUIBean {
 		return (results);
 	}
 
-	private static ArrayList<MumpsSurveyResultsDisplayObject> getSymptomChecklistReportsResultListNoCache(PHRAuthentication auth, int demographicId, int startIndex, int itemsToReturn) {
+	private static ArrayList<MumpsSurveyResultsDisplayObject> getSymptomChecklistReportsResultListNoCache(PHRAuthentication auth, int demographicId, int startIndex, int itemsToReturn) throws NotAuthorisedException_Exception {
 
 		Demographic demographic = demographicDao.getDemographicById(demographicId);
 
@@ -87,7 +88,7 @@ public class SymptomChecklistReportUIBean {
 		return (results);
 	}
 
-	public static SymptomChecklistCompareDisplayObject getCompareDisplayObject(PHRAuthentication auth, String[] resultIds) throws IOException, SAXException, ParserConfigurationException {
+	public static SymptomChecklistCompareDisplayObject getCompareDisplayObject(PHRAuthentication auth, String[] resultIds) throws IOException, SAXException, ParserConfigurationException, NumberFormatException, NotAuthorisedException_Exception {
 		SymptomChecklistCompareDisplayObject symptomChecklistCompareDisplayObject = new SymptomChecklistCompareDisplayObject();
 
 		if (resultIds != null && resultIds.length > 0) {
