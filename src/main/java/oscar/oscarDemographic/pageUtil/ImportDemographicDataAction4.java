@@ -1120,7 +1120,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                                 cmNote.setSigning_provider_no(reviewer);
                             }
                             if (noteReviewers[p].getDateTimeNoteReviewed()!=null) {
-                                Util.addLine(encounter, "Review Date: ", dateTimeFPtoString(noteReviewers[p].getDateTimeNoteReviewed(), timeShiftInDays));
+                                Util.addLine(encounter, "Review Date: ", dateFPtoString(noteReviewers[p].getDateTimeNoteReviewed(), timeShiftInDays));
                             }
                         }
 
@@ -1139,15 +1139,18 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                 AllergiesAndAdverseReactions[] aaReactArray = patientRec.getAllergiesAndAdverseReactionsArray();
                 for (int i=0; i<aaReactArray.length; i++) {
                     String description="", regionalId="", reaction="", severity="", entryDate="", startDate="", typeCode="", lifeStage="";
+                    String entryDateFormat=null, startDateFormat=null;
 
                     reaction = StringUtils.noNull(aaReactArray[i].getReaction());
                     description = StringUtils.noNull(aaReactArray[i].getOffendingAgentDescription());
-                    entryDate = dateTimeFPtoString(aaReactArray[i].getRecordedDate(), timeShiftInDays);
+                    entryDate = dateFPtoString(aaReactArray[i].getRecordedDate(), timeShiftInDays);
                     startDate = dateFPtoString(aaReactArray[i].getStartDate(), timeShiftInDays);
                     if (aaReactArray[i].getLifeStage()!=null) lifeStage = aaReactArray[i].getLifeStage().toString();
 
                     if (StringUtils.empty(entryDate)) entryDate = null;
+                    else entryDateFormat = dateFPGetPartial(aaReactArray[i].getRecordedDate());
                     if (StringUtils.empty(startDate)) startDate = null;
+                    else startDateFormat = dateFPGetPartial(aaReactArray[i].getStartDate());
 
                     if (aaReactArray[i].getCode()!=null) regionalId = StringUtils.noNull(aaReactArray[i].getCode().getCodeValue());
                     reaction = Util.addLine(reaction,"Offending Agent Description: ",aaReactArray[i].getOffendingAgentDescription());
@@ -1166,6 +1169,10 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     }
                     Long allergyId = RxAllergyImport.save(demographicNo, entryDate, description, typeCode, reaction, startDate, severity, regionalId, lifeStage);
                     addOneEntry(ALLERGY);
+                    
+                    //write partial dates
+                    if (entryDateFormat!=null) partialDateDao.setPartialDate(PartialDate.ALLERGIES, allergyId.intValue(), PartialDate.ALLERGIES_ENTRYDATE, entryDateFormat);
+                    if (startDateFormat!=null) partialDateDao.setPartialDate(PartialDate.ALLERGIES, allergyId.intValue(), PartialDate.ALLERGIES_STARTDATE, startDateFormat);
 
                     //annotation
                     String note = StringUtils.noNull(aaReactArray[i].getNotes());
@@ -1388,7 +1395,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                         comments = Util.addLine(comments, "Immunization Type: ", immuArray[i].getImmunizationType().toString());;;
                     }
 
-                    preventionDate = dateTimeFPtoString(immuArray[i].getDate(), timeShiftInDays);
+                    preventionDate = dateFPtoString(immuArray[i].getDate(), timeShiftInDays);
                     refused = getYN(immuArray[i].getRefusedFlag()).equals("Yes") ? "1" : "0";
                     if (immuArray[i].getRefusedFlag()==null) err_data.add("Error! No Refused Flag for Immunizations ("+(i+1)+")");
 
@@ -1442,8 +1449,8 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     _testName[i] = StringUtils.noNull(labResultArr[i].getLabTestCode());
                     _location[i] = StringUtils.noNull(labResultArr[i].getLaboratoryName());
                     _accession[i] = StringUtils.noNull(labResultArr[i].getAccessionNumber());
-                    _coll_date[i] = dateOnly(dateTimeFPtoString(labResultArr[i].getCollectionDateTime(), timeShiftInDays));
-                    _req_date[i] = dateTimeFPtoString(labResultArr[i].getLabRequisitionDateTime(), timeShiftInDays);
+                    _coll_date[i] = dateOnly(dateFPtoString(labResultArr[i].getCollectionDateTime(), timeShiftInDays));
+                    _req_date[i] = dateFPtoString(labResultArr[i].getLabRequisitionDateTime(), timeShiftInDays);
                     if (StringUtils.empty(_req_date[i])) _req_date[i] = _coll_date[i];
 
                     _title[i] = StringUtils.noNull(labResultArr[i].getTestName());
@@ -1480,7 +1487,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                         HashMap<String,String> revName = getPersonName(resultReviewers[0].getName());
                         String revOhip = StringUtils.noNull(resultReviewers[0].getOHIPPhysicianId());
                         _reviewer[i] = writeProviderData(revName.get("firstname"), revName.get("lastname"), revOhip);
-                        _rev_date[i] = dateTimeFPtoString(resultReviewers[0].getDateTimeResultReviewed(), timeShiftInDays);
+                        _rev_date[i] = dateFPtoString(resultReviewers[0].getDateTimeResultReviewed(), timeShiftInDays);
                     }
                 }
 
@@ -1559,7 +1566,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     //save lab collection datetime
                     cdsDt.DateTimeFullOrPartial collDate = labResults.getCollectionDateTime();
                     if (collDate!=null) {
-                        saveMeasurementsExt(measId, "datetime", dateTimeFPtoString(collDate, timeShiftInDays));
+                        saveMeasurementsExt(measId, "datetime", dateFPtoString(collDate, timeShiftInDays));
                     } else {
                         err_data.add("Error! No Collection DateTime for Lab Test "+testCode+" for Patient "+demographicNo);
                     }
@@ -1807,8 +1814,8 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                                     reviewDateTime = dateFPtoString(reportReviewed[0].getDateTimeReportReviewed(), timeShiftInDays);
                                 }
 
-                                observationDate = dateTimeFPtoString(repR[i].getEventDateTime(), timeShiftInDays);
-                                updateDateTime = dateTimeFPtoString(repR[i].getReceivedDateTime(), timeShiftInDays);
+                                observationDate = dateFPtoString(repR[i].getEventDateTime(), timeShiftInDays);
+                                updateDateTime = dateFPtoString(repR[i].getReceivedDateTime(), timeShiftInDays);
 
                                 EDocUtil.addDocument(demographicNo,docFileName,docDesc,"",docClass,docSubClass,contentType,observationDate,updateDateTime,docCreator,admProviderNo,reviewer,reviewDateTime, source);
                                 if (binaryFormat) addOneEntry(REPORTBINARY);
@@ -2155,7 +2162,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 		return "OT"; //Other
 	}
 
-    String dateTimeFPtoString(cdsDt.DateTimeFullOrPartial dtfp, int timeshiftInDays) {
+    String dateFPtoString(cdsDt.DateTimeFullOrPartial dtfp, int timeshiftInDays) {
 		if (dtfp==null) return "";
 
 		if (dtfp.getFullDateTime()!=null)  {
@@ -2216,7 +2223,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
     }
 
     Date dateTimeFPtoDate(cdsDt.DateTimeFullOrPartial dtfp, int timeShiftInDays) {
-		String sdate = dateTimeFPtoString(dtfp,timeShiftInDays);
+		String sdate = dateFPtoString(dtfp,timeShiftInDays);
 		Date dDate = UtilDateUtilities.StringToDate(sdate, "yyyy-MM-dd HH:mm:ss");
 		if (dDate==null)
 			dDate = UtilDateUtilities.StringToDate(sdate, "yyyy-MM-dd");
@@ -2627,12 +2634,12 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 			appendIfNotNull(s,"ReferenceRangeText", ref.getReferenceRangeText());
 		}
 
-		appendIfNotNull(s,"LabRequisitionDateTime",dateTimeFPtoString(labRes.getLabRequisitionDateTime(), timeShiftInDays));
-		appendIfNotNull(s,"CollectionDateTime",dateTimeFPtoString( labRes.getCollectionDateTime(), timeShiftInDays));
+		appendIfNotNull(s,"LabRequisitionDateTime",dateFPtoString(labRes.getLabRequisitionDateTime(), timeShiftInDays));
+		appendIfNotNull(s,"CollectionDateTime",dateFPtoString( labRes.getCollectionDateTime(), timeShiftInDays));
 
                 LaboratoryResults.ResultReviewer[] resultReviewers = labRes.getResultReviewerArray();
                 if (resultReviewers.length>0) {
-                    appendIfNotNull(s,"DateTimeResultReviewed",dateTimeFPtoString(resultReviewers[0].getDateTimeResultReviewed(), timeShiftInDays));
+                    appendIfNotNull(s,"DateTimeResultReviewed",dateFPtoString(resultReviewers[0].getDateTimeResultReviewed(), timeShiftInDays));
                     appendIfNotNull(s,"OHIP ID :", resultReviewers[0].getOHIPPhysicianId());
                     cdsDt.PersonNameSimple reviewerName = resultReviewers[0].getName();
                     if (reviewerName!=null) {

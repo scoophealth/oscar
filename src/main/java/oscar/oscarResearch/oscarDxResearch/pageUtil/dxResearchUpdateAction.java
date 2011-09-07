@@ -34,7 +34,10 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.common.dao.PartialDateDao;
+import org.oscarehr.common.model.PartialDate;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBHandler;
 import oscar.util.ParameterActionForward;
@@ -42,6 +45,7 @@ import oscar.util.UtilDateUtilities;
 
 
 public class dxResearchUpdateAction extends Action {
+	private static final PartialDateDao partialDateDao = (PartialDateDao) SpringUtils.getBean("partialDateDao");
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException
@@ -52,7 +56,9 @@ public class dxResearchUpdateAction extends Action {
         String providerNo = request.getParameter("providerNo");
         String startDate = request.getParameter("startdate");
         String nowDate = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy/MM/dd"); 
-        if (UtilDateUtilities.StringToDate(startDate, "yyyy-mm-dd")==null) startDate=null;
+
+        partialDateDao.setPartialDate(startDate, PartialDate.DXRESEARCH, Integer.valueOf(did), PartialDate.DXRESEARCH_STARTDATE);
+        startDate = partialDateDao.getFullDate(startDate);
         
         try{
                         
@@ -66,7 +72,7 @@ public class dxResearchUpdateAction extends Action {
                 DBHandler.RunSQL(sql);
             }
             else if (status.equals("A") && startDate!=null){
-                sql = "update dxresearch set update_date='"+nowDate+"', start_date='"+startDate+"' where dxresearch_no='"+did+"'";
+                sql = "update dxresearch set update_datpartialDatee='"+nowDate+"', start_date='"+startDate+"' where dxresearch_no='"+did+"'";
                 DBHandler.RunSQL(sql);
             }
         }

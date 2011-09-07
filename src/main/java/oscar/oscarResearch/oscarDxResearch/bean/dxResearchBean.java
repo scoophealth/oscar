@@ -24,8 +24,13 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarResearch.oscarDxResearch.bean;
 
+import org.oscarehr.common.dao.PartialDateDao;
+import org.oscarehr.common.model.PartialDate;
+import org.oscarehr.util.SpringUtils;
+
 
 public class dxResearchBean{
+		private static final PartialDateDao partialDateDao = (PartialDateDao) SpringUtils.getBean("partialDateDao");
 
        String description;
        String dxResearchNo;
@@ -84,7 +89,7 @@ public class dxResearchBean{
        }
        
        public String getStart_date(){
-           return start_date;
+           return partialDateDao.getDatePartial(start_date, PartialDate.DXRESEARCH, Integer.valueOf(dxResearchNo), PartialDate.DXRESEARCH_STARTDATE);
        }       
        public void setStart_date(String start_date){
            this.start_date = start_date;

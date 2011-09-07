@@ -9,8 +9,11 @@ import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicAllergy;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
+import org.oscarehr.common.dao.PartialDateDao;
+import org.oscarehr.common.model.PartialDate;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarRx.data.RxPatientData;
 import oscar.oscarRx.data.RxPatientData.Patient.Allergy;
@@ -18,6 +21,7 @@ import oscar.util.DateUtils;
 
 public final class AllergyHelperBean {
 	private static Logger logger = MiscUtils.getLogger();
+	private static final PartialDateDao partialDateDao = (PartialDateDao) SpringUtils.getBean("partialDateDao");
 
 	public static List<AllergyDisplay> getAllergiesToDisplay(Integer demographicId, Locale locale) throws SQLException {
 		ArrayList<AllergyDisplay> results = new ArrayList<AllergyDisplay>();
@@ -43,13 +47,17 @@ public final class AllergyHelperBean {
 			allergyDisplay.setId(allergy.getAllergyId());
 
 			allergyDisplay.setDescription(allergy.getAllergy().getDESCRIPTION());
-			allergyDisplay.setEntryDate(DateUtils.formatDate(allergy.getEntryDate(), locale));
 			allergyDisplay.setOnSetCode(allergy.getAllergy().getOnSetOfReaction());
 			allergyDisplay.setReaction(allergy.getAllergy().getReaction());
 			allergyDisplay.setSeverityCode(allergy.getAllergy().getSeverityOfReaction());
-			allergyDisplay.setStartDate(DateUtils.formatDate(allergy.getAllergy().getStartDate(), locale));
 			allergyDisplay.setTypeCode(allergy.getAllergy().getTYPECODE());
 			allergyDisplay.setArchived(allergy.getAllergy().getArchived());
+			
+			String entryDate = partialDateDao.getDatePartial(allergy.getEntryDate(), PartialDate.ALLERGIES, allergy.getAllergyId(), PartialDate.ALLERGIES_ENTRYDATE);
+			String startDate = partialDateDao.getDatePartial(allergy.getAllergy().getStartDate(), PartialDate.ALLERGIES, allergy.getAllergyId(), PartialDate.ALLERGIES_STARTDATE);
+			allergyDisplay.setEntryDate(entryDate);
+			allergyDisplay.setStartDate(startDate);
+			
 			results.add(allergyDisplay);
 		}
 	}

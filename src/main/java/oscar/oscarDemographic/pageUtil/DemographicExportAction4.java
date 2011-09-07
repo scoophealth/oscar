@@ -983,6 +983,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             if (exAllergiesAndAdverseReactions) {
                 // ALLERGIES & ADVERSE REACTIONS
                 RxPatientData.Patient.Allergy[] allergies = RxPatientData.getPatient(demoNo).getActiveAllergies();
+                String dateFormat = null;
                 for (int j=0; j<allergies.length; j++) {
                     AllergiesAndAdverseReactions alr = patientRec.addNewAllergiesAndAdverseReactions();
                     Allergy allergy = allergies[j].getAllergy();
@@ -1036,8 +1037,9 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         aSummary = Util.addSummary(aSummary,"Adverse Reaction Severity",alr.getSeverity().toString());
                     }
                     if (allergy.getStartDate()!=null) {
-                        alr.addNewStartDate().setFullDate(Util.calDate(allergy.getStartDate()));
-                        aSummary = Util.addSummary(aSummary,"Start Date",UtilDateUtilities.DateToString(allergy.getStartDate()));
+                    	dateFormat = partialDateDao.getFormat(PartialDate.ALLERGIES, allergies[j].getAllergyId(), PartialDate.ALLERGIES_STARTDATE);
+                    	Util.putPartialDate(alr.addNewStartDate(), allergy.getStartDate(), dateFormat);
+                        aSummary = Util.addSummary(aSummary,"Start Date",partialDateDao.getDatePartial(allergy.getStartDate(), dateFormat));
                     }
                     if (StringUtils.filled(allergy.getLifeStage()) && "NICTA".contains(allergy.getLifeStage())) {
                         alr.setLifeStage(cdsDt.LifeStage.Enum.forString(allergy.getLifeStage()));
@@ -1045,8 +1047,9 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     }
 
                     if (allergies[j].getEntryDate()!=null) {
-                        alr.addNewRecordedDate().setFullDate(Util.calDate(allergies[j].getEntryDate()));
-                        aSummary = Util.addSummary(aSummary,"Recorded Date",UtilDateUtilities.DateToString(allergies[j].getEntryDate(),"yyyy-MM-dd"));
+                    	dateFormat = partialDateDao.getFormat(PartialDate.ALLERGIES, allergies[j].getAllergyId(), PartialDate.ALLERGIES_ENTRYDATE);
+                    	Util.putPartialDate(alr.addNewRecordedDate(), allergies[j].getEntryDate(), dateFormat);
+                        aSummary = Util.addSummary(aSummary,"Recorded Date",partialDateDao.getDatePartial(allergies[j].getEntryDate(), dateFormat));
                     }
                     CaseManagementNoteLink cml = cmm.getLatestLinkByTableId(CaseManagementNoteLink.ALLERGIES, (long)allergies[j].getAllergyId());
                     if (cml!=null) {

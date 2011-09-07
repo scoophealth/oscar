@@ -49,6 +49,7 @@ public class RxAllergyData {
         String archived;
         String reaction;
         java.util.Date startDate = null;
+        String startDateFormat = null;
         String ageOfOnset = null;
         String severityOfReaction = null;
         String onSetOfReaction = null;
@@ -191,6 +192,14 @@ public class RxAllergyData {
 	
 	public void setStartDate(java.util.Date startDate) {
 	    this.startDate = startDate;
+	}
+	
+	public String getStartDateFormat() {
+	    return startDateFormat;
+	}
+	
+	public void setStartDateFormat(String format) {
+	    this.startDateFormat = format;
 	}
 	
         /**
