@@ -1,3 +1,4 @@
+<%@page import="org.oscarehr.util.MiscUtils"%>
 <%@ page language="java" import="oscar.OscarProperties"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -8,12 +9,16 @@
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="org.oscarehr.casemgmt.service.CaseManagementManager" %>
 <%@page import="org.oscarehr.casemgmt.model.CaseManagementNoteLink" %>
+<%@page import="org.oscarehr.common.dao.PartialDateDao" %>
+<%@page import="org.oscarehr.common.model.PartialDate" %>
 
 <%
 OscarProperties props = OscarProperties.getInstance();
 
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    
+    PartialDateDao partialDateDao = (PartialDateDao) SpringUtils.getBean("partialDateDao"); 
 %>
 <security:oscarSec roleName="<%=roleName$%>" objectName="_rx" rights="r"
 	reverse="<%=true%>">
@@ -346,17 +351,19 @@ padding-right:6;
 													
 									
 									if(!filterOut) {
+										String entryDate = partialDateDao.getDatePartial(allergy.getEntryDate(), PartialDate.ALLERGIES, allergy.getAllergyId(), PartialDate.ALLERGIES_ENTRYDATE);
+										String startDate = partialDateDao.getDatePartial(allergy.getAllergy().getStartDate(), PartialDate.ALLERGIES, allergy.getAllergyId(), PartialDate.ALLERGIES_STARTDATE);
 								%>
 								
 								<tr bgcolor="<%=trColour%>">
 									<td><%=labelStatus%></td>
-									<td><bean:write name="allergy" property="entryDate" /></td>
+									<td><%=entryDate==null ? "" : entryDate %></td>
 									<td><bean:write name="allergy" property="allergy.DESCRIPTION" /></td>
 									<td><bean:write name="allergy" property="allergy.typeDesc" /></td>
 									<td bgcolor="<%=sevColour%>"><bean:write name="allergy" property="allergy.severityOfReactionDesc" /></td>
 									<td><bean:write name="allergy" property="allergy.onSetOfReactionDesc" /></td>
 									<td><bean:write name="allergy" property="allergy.reaction" /></td>
-									<td><%=allergy.getAllergy().getStartDate()!=null?allergy.getAllergy().getStartDate():""%></td>
+									<td><%=startDate==null ? "" : startDate %></td>
 									<td><bean:write name="allergy" property="allergy.lifeStageDesc"/> </td>
 									<%
 										CaseManagementManager cmm = (CaseManagementManager) SpringUtils.getBean("caseManagementManager");

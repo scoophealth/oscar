@@ -381,6 +381,11 @@ public class Util {
     	putPartialDate(dfp, cme.getDateValue(), cme.getValue());
     }
 
+    static public void putPartialDate(cdsDtCihi.DateFullOrPartial dfp, Date dateValue, Integer tableName, Integer tableId, Integer fieldName) {
+    	PartialDate pd = partialDateDao.getPartialDate(tableName, tableId, fieldName);
+    	putPartialDate(dfp, dateValue, pd.getFormat());
+    }
+
     static public void putPartialDate(cdsDtCihi.DateFullOrPartial dfp, Date dateValue, String format) {
         if (dateValue!=null) {
             if (PartialDate.YEARONLY.equals(format)) dfp.setYearOnly(Util.calDate(dateValue));

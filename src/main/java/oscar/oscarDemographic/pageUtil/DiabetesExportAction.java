@@ -779,6 +779,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	/*                                     */
 	String diagValue = "";
 	Date dateValue = null;
+	String dateFormat = null;
 	List<DxResearch> dxList = cmm.getDxByDemographicNo(demoNo);
 	for (DxResearch dx : dxList) {
 	    if (diagValue.equals("E10.9")) break;
@@ -787,17 +788,19 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	    else continue;
 	    
 	    dateValue = dx.getStartDate();
-        }
+	    dateFormat = partialDateDao.getFormat(PartialDate.DXRESEARCH, dx.getId().intValue(), PartialDate.DXRESEARCH_STARTDATE);
+	}
 	if (StringUtils.filled(diagValue)) {
 	    ProblemList problemList = patientRecord.addNewProblemList();
 	    cdsDt.Code diagnosis = problemList.addNewDiagnosisCode();
 	    
 	    diagnosis.setValue(diagValue);
 	    diagnosis.setCodingSystem("ICD10-CA");
-	    problemList.addNewOnsetDate().setFullDate(Util.calDate(dateValue));
-	    if (dateValue==null) {
-		errors.add("Error! No Onset Date for Diabetes Diagnosis for Patient "+demoNo);
-	    }
+	    
+	    Util.putPartialDate(problemList.addNewOnsetDate(), dateValue, dateFormat);
+		if (dateValue==null) {
+			errors.add("Error! No Onset Date for Diabetes Diagnosis for Patient "+demoNo);
+		}
 	} else {
 	    return false;
 	}
