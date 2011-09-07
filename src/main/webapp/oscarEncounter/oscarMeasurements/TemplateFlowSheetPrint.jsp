@@ -474,10 +474,15 @@ div.recommendations li{
                   <img class="DoNotPrint" src="img/chart.gif" alt="Plot"/>
                <%}%>
             <%}%>
+            <security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
             <a href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(465,635,'AddMeasurementData.jsp?measurement=<%= response.encodeURL( measure) %>&amp;demographic_no=<%=demographic_no%>&amp;template=<%= URLEncoder.encode(temp,"UTF-8") %>','addMeasurementData<%=Math.abs( item.getItemName().hashCode() ) %>')">
+            </security:oscarSec>
+            
                 <span  style="font-weight:bold;"><%=item.getDisplayName()%></span>
+                
+            <security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
             </a>
-
+			</security:oscarSec>
         </p>
         
     </div>
