@@ -35,71 +35,95 @@ public class PartialDateDao extends AbstractDao<PartialDate> {
 	public PartialDateDao() {
 		super(PartialDate.class);
 	}
+	
+	public PartialDate getPartialDate(Integer tableName, Integer tableId, Integer fieldName) {
 
-        public PartialDate getPartialDate(Integer tableName, Integer tableId, String fieldName) {
-	   	String sqlCommand = "select x from PartialDate x order by x.id desc limit 1";
+		String sqlCommand = "select x from PartialDate x where x.tableName=?1 and x.tableId=?2 and x.fieldName=?3 order by x.id desc limit 1";
 		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, tableName);
+		query.setParameter(2, tableId);
+		query.setParameter(3, fieldName);
 
 		@SuppressWarnings("unchecked")
 		PartialDate result = null;
-                try {
-                    result = (PartialDate) query.getSingleResult();
-                } catch (NoResultException ex) {
-                    MiscUtils.getLogger().error("Note",ex);
-                }
+		try {
+			result = (PartialDate) query.getSingleResult();
+		} catch (NoResultException ex) {
+			MiscUtils.getLogger().error("Note",ex);
+		}
 
 		return result;
-        }
+	}
+	
+	public String getDatePartial(Date fieldDate, Integer tableName, Integer tableId, Integer fieldName) {
+		String dateString = UtilDateUtilities.DateToString(fieldDate, "yyyy-MM-dd");
+		return getDatePartial(dateString, tableName, tableId, fieldName);
+	}
 
-        public String getDatePartial(Date fieldDate, Integer tableName, Integer tableId, String fieldName) {
-                PartialDate partialDate = getPartialDate(tableName, tableId, fieldName);
-                if (partialDate!=null) return makeDatePartial(fieldDate, partialDate.getFormat());
-                return null;
-        }
+	public String getDatePartial(String fieldDate, Integer tableName, Integer tableId, Integer fieldName) {
+		return getDatePartial(fieldDate, getFormat(tableName, tableId, fieldName));
+	}
+	
+	public String getDatePartial(Date partialDate, String format) {
+		String dateString = UtilDateUtilities.DateToString(partialDate, "yyyy-MM-dd");
+		return getDatePartial(dateString, format);
+	}
+	
+	public String getDatePartial(String dateString, String format) {
+		if (dateString==null || dateString.length()<10) return dateString;
+		
+		if (PartialDate.YEARONLY.equals(format)) {
+			dateString = dateString.substring(0,4);
+		}
+		else if (PartialDate.YEARMONTH.equals(format)) {
+			dateString = dateString.substring(0,7);
+		}
+		return dateString;
+	}
 
-        public void setPartialDate(Date fieldDate, Integer tableName, Integer tableId, String fieldName) {
-                String format = checkDatePartial(UtilDateUtilities.DateToString(fieldDate, "yyyy-MM-dd"));
-                setFormat(tableName, tableId, fieldName, format);
-        }
+	public void setPartialDate(String fieldDate, Integer tableName, Integer tableId, Integer fieldName) {
+		String format = getFormat(fieldDate);
+		setPartialDate(tableName, tableId, fieldName, format);
+	}
 
-        public String checkDatePartial(String dateValue) {
-            if (StringUtils.empty(dateValue)) return null;
+	public void setPartialDate(Integer tableName, Integer tableId, Integer fieldName, String format) {
+		PartialDate partialDate = getPartialDate(tableName, tableId, fieldName);
+		if (partialDate==null) {
+			if (StringUtils.filled(format)) partialDate = new PartialDate(tableName, tableId, fieldName, format);
+		}
+		else partialDate.setFormat(format);
+		
+		if (partialDate!=null) persist(partialDate);
+	}
 
-            dateValue = dateValue.trim();
-            dateValue = dateValue.replace("/", "-");
-            if (dateValue.length()==4 && NumberUtils.isDigits(dateValue)) return new PartialDate().getYEARONLY();
+	public String getFormat(Integer tableName, Integer tableId, Integer fieldName) {
+		PartialDate partialDate = getPartialDate(tableName, tableId, fieldName);
+		if (partialDate!=null) return partialDate.getFormat();
+		
+		return null;
+	}
 
-            String[] dateParts = dateValue.split("-");
-            if (dateParts.length==2 && NumberUtils.isDigits(dateParts[0]) && NumberUtils.isDigits(dateParts[1])) {
-                if (dateParts[0].length()==4 &&
-                    dateParts[1].length()>=1 && dateParts[1].length()<=2) return new PartialDate().getYEARMONTH();
-            }
-            return null;
-        }
+	public String getFormat(String dateValue) {
+		if (StringUtils.empty(dateValue)) return null;
 
+		dateValue = dateValue.trim();
+		dateValue = dateValue.replace("/", "-");
+		if (dateValue.length()==4 && NumberUtils.isDigits(dateValue)) return PartialDate.YEARONLY;
 
-
-
-
-        private void setFormat(Integer tableName, Integer tableId, String fieldName, String format) {
-                PartialDate partialDate = getPartialDate(tableName, tableId, fieldName);
-                if (partialDate==null) partialDate = new PartialDate(tableName, tableId, fieldName, format);
-                persist(partialDate);
-        }
-
-        private String makeDatePartial(Date dateValue, String format) {
-            if (dateValue==null) return null;
-
-            String dateString = UtilDateUtilities.DateToString(dateValue, "yyyy-MM-dd");
-            String type = checkDatePartial(dateString);
-            if (type==null) return dateString;
-
-            if (type.equals(new PartialDate().getYEARONLY())) {
-                dateString = dateString.substring(0,4);
-            }
-            else if (type.equals(new PartialDate().getYEARMONTH())) {
-                dateString = dateString.substring(0,7);
-            }
-            return dateString;
-        }
+		String[] dateParts = dateValue.split("-");
+		if (dateParts.length==2 && NumberUtils.isDigits(dateParts[0]) && NumberUtils.isDigits(dateParts[1])) {
+			if (dateParts[0].length()==4 && dateParts[1].length()>=1 && dateParts[1].length()<=2)
+					return PartialDate.YEARMONTH;
+		}
+		return null;
+    }
+	
+	public Date StringToDate(String partialDate) {
+		String format = getFormat(partialDate);
+		
+		if (PartialDate.YEARONLY.equals(format)) partialDate += "-01-01";
+		else if (PartialDate.YEARMONTH.equals(format)) partialDate += "-01";
+		
+		return UtilDateUtilities.StringToDate(partialDate, "yyyy-MM-dd");
+	}
 }

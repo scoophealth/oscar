@@ -47,6 +47,7 @@ import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.common.model.*;
 import org.oscarehr.common.dao.*;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import cdsDtCihi.DateFullOrPartial;
 import cdsDtCihi.HealthCard;
@@ -85,7 +86,8 @@ public class CihiExportAction extends DispatchAction {
 	private PrescriptionDAO prescriptionDao;
 	private PreventionDao preventionDao;
 	
-	private Logger logger = MiscUtils.getLogger();
+	private static final Logger logger = MiscUtils.getLogger();
+	private static final PartialDateDao partialDateDao = (PartialDateDao) SpringUtils.getBean("partialDateDao");
 	
 	public void setDemographicDao(DemographicDao demographicDao) {
 	    this.demographicDao = demographicDao;
@@ -907,7 +909,7 @@ public class CihiExportAction extends DispatchAction {
 	
     private void buildMedications(Demographic demo, PatientRecord patientRecord) {
 		MedicationsAndTreatments medications;
-		RxPrescriptionData.Prescription[] pa = new RxPrescriptionData().getUniquePrescriptionsByPatient(Integer.parseInt(demo.getDemographicNo().toString()));
+		RxPrescriptionData.Prescription[] pa = new RxPrescriptionData().getPrescriptionsByPatient(Integer.parseInt(demo.getDemographicNo().toString()));
 		String drugname;
 		String dosage;
 		String strength;
@@ -920,8 +922,14 @@ public class CihiExportAction extends DispatchAction {
 			medications = patientRecord.addNewMedicationsAndTreatments();
 
 			medications.setDrugName(drugname);
+			Date writtenDate = pa[p].getWrittenDate();
+			if (writtenDate!=null) {
+	        	String dateFormat = partialDateDao.getFormat(PartialDate.DRUGS, pa[p].getDrugId(), PartialDate.DRUGS_WRITTENDATE);
+	        	Util.putPartialDate(medications.addNewPrescriptionWrittenDate(), writtenDate, dateFormat);
+			}
+        	
 			DateFullOrPartial dateFullorPartial = medications.addNewPrescriptionWrittenDate();
-			dateFullorPartial.setFullDate(Util.calDate(pa[p].getRxDate()));
+			dateFullorPartial.setFullDate(Util.calDate(pa[p].getWrittenDate()));
 						
                     if (StringUtils.filled(pa[p].getDosage())) {
                         String strength0 = pa[p].getDosage();

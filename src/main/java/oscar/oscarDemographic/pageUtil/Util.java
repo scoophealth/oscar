@@ -22,9 +22,13 @@ import java.util.zip.ZipOutputStream;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.apache.xmlbeans.XmlCalendar;
 import org.oscarehr.casemgmt.model.CaseManagementNoteExt;
+import org.oscarehr.common.dao.PartialDateDao;
+import org.oscarehr.common.model.PartialDate;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.util.StringUtils;
 import oscar.util.UtilDateUtilities;
@@ -34,6 +38,8 @@ import oscar.util.UtilDateUtilities;
  * @author Ronnie
  */
 public class Util {
+	static private final Logger logger = MiscUtils.getLogger();
+	static private final PartialDateDao partialDateDao = (PartialDateDao)SpringUtils.getBean("partialDateDao");
     
     static public String addLine(String baseStr, String addStr) {
 	return addLine(baseStr, "", addStr);
@@ -103,9 +109,9 @@ public class Util {
             } else {
                 return false;
             }
-        } catch (IOException ex) {MiscUtils.getLogger().error("Error", ex);
+        } catch (IOException ex) {logger.error("Error", ex);
         }
-        MiscUtils.getLogger().debug("Error! Cannot write to directory [" + dirName + "]");
+        logger.error("Error! Cannot write to directory [" + dirName + "]");
         return false;
     }
 
@@ -122,7 +128,7 @@ public class Util {
 
     static public boolean cleanFile(File file) {
 	if (!file.delete()) {
-            MiscUtils.getLogger().debug("Error! Cannot delete file ["+file.getPath()+"]");
+		logger.error("Error! Cannot delete file ["+file.getPath()+"]");
             return false;
         }
         return true;
@@ -158,7 +164,7 @@ public class Util {
             }
             in.close();
             out.close();
-        } catch (IOException ex) {MiscUtils.getLogger().error("Error", ex);
+        } catch (IOException ex) {logger.error("Error", ex);
         }
     }
 
@@ -306,11 +312,11 @@ public class Util {
     static public boolean zipFiles(ArrayList<File> files, String zipFileName, String dirName) throws Exception {
         try {
             if (files == null) {
-                MiscUtils.getLogger().debug("Error! No source file for zipping");
+            	logger.error("Error! No source file for zipping");
                 return false;
             }
             if (!StringUtils.filled(zipFileName)) {
-                MiscUtils.getLogger().debug("Error! Zip filename not given");
+            	logger.error("Error! Zip filename not given");
                 return false;
             }
             if (!checkDir(dirName)) {
@@ -341,7 +347,7 @@ public class Util {
             zout.close();
             return true;
 
-        } catch (IOException ex) {MiscUtils.getLogger().error("Error", ex);
+        } catch (IOException ex) {logger.error("Error", ex);
         }
         return false;
     }
@@ -350,10 +356,23 @@ public class Util {
     	putPartialDate(dfp, cme.getDateValue(), cme.getValue());
     }
 
+    static public void putPartialDate(cdsDt.DateFullOrPartial dfp, Date dateValue, Integer tableName, Integer tableId, Integer fieldName) {
+    	PartialDate pd = partialDateDao.getPartialDate(tableName, tableId, fieldName);
+    	putPartialDate(dfp, dateValue, pd.getFormat());
+    }
+
     static public void putPartialDate(cdsDt.DateFullOrPartial dfp, Date dateValue, String format) {
         if (dateValue!=null) {
-            if (CaseManagementNoteExt.YEARONLY.equals(format)) dfp.setYearOnly(Util.calDate(dateValue));
-            else if (CaseManagementNoteExt.YEARMONTH.equals(format)) dfp.setYearMonth(Util.calDate(dateValue));
+            if (PartialDate.YEARONLY.equals(format)) dfp.setYearOnly(Util.calDate(dateValue));
+            else if (PartialDate.YEARMONTH.equals(format)) dfp.setYearMonth(Util.calDate(dateValue));
+            else dfp.setFullDate(Util.calDate(dateValue));
+        }
+    }
+
+    static public void putPartialDate(cdsDt.DateTimeFullOrPartial dfp, Date dateValue, String format) {
+        if (dateValue!=null) {
+            if (PartialDate.YEARONLY.equals(format)) dfp.setYearOnly(Util.calDate(dateValue));
+            else if (PartialDate.YEARMONTH.equals(format)) dfp.setYearMonth(Util.calDate(dateValue));
             else dfp.setFullDate(Util.calDate(dateValue));
         }
     }
@@ -364,20 +383,20 @@ public class Util {
 
     static public void putPartialDate(cdsDtCihi.DateFullOrPartial dfp, Date dateValue, String format) {
         if (dateValue!=null) {
-            if (CaseManagementNoteExt.YEARONLY.equals(format)) dfp.setYearOnly(Util.calDate(dateValue));
-            else if (CaseManagementNoteExt.YEARMONTH.equals(format)) dfp.setYearMonth(Util.calDate(dateValue));
+            if (PartialDate.YEARONLY.equals(format)) dfp.setYearOnly(Util.calDate(dateValue));
+            else if (PartialDate.YEARMONTH.equals(format)) dfp.setYearMonth(Util.calDate(dateValue));
             else dfp.setFullDate(Util.calDate(dateValue));
         }
     }
-
+    
     static public String readPartialDate(CaseManagementNoteExt cme) {
         String type = cme.getValue();
         String val = null;
 
         if (StringUtils.filled(type)) {
-            if (type.equals(CaseManagementNoteExt.YEARONLY))
+            if (type.equals(PartialDate.YEARONLY))
                 val = oscar.util.UtilDateUtilities.DateToString(cme.getDateValue(),"yyyy");
-            else if (type.equals(CaseManagementNoteExt.YEARMONTH))
+            else if (type.equals(PartialDate.YEARMONTH))
                 val = oscar.util.UtilDateUtilities.DateToString(cme.getDateValue(),"yyyy-MM");
             else val = oscar.util.UtilDateUtilities.DateToString(cme.getDateValue(),"yyyy-MM-dd");
         } else {

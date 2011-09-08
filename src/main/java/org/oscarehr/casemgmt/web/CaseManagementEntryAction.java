@@ -85,6 +85,7 @@ import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DxAssociation;
+import org.oscarehr.common.model.PartialDate;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.eyeform.dao.EyeFormDao;
 import org.oscarehr.eyeform.dao.FollowUpDao;
@@ -3075,12 +3076,12 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
             dateValue = dateValue.trim();
             dateValue = dateValue.replace("/", "-");
-            if (dateValue.length()==4 && NumberUtils.isDigits(dateValue)) return CaseManagementNoteExt.YEARONLY;
+            if (dateValue.length()==4 && NumberUtils.isDigits(dateValue)) return PartialDate.YEARONLY;
 
             String[] dateParts = dateValue.split("-");
             if (dateParts.length==2 && NumberUtils.isDigits(dateParts[0]) && NumberUtils.isDigits(dateParts[1])) {
                 if (dateParts[0].length()==4 &&
-                    dateParts[1].length()>=1 && dateParts[1].length()<=2) return CaseManagementNoteExt.YEARMONTH;
+                    dateParts[1].length()>=1 && dateParts[1].length()<=2) return PartialDate.YEARMONTH;
             }
             if (dateParts.length==3 &&
                 NumberUtils.isDigits(dateParts[0]) && NumberUtils.isDigits(dateParts[1]) && NumberUtils.isDigits(dateParts[2])) {
@@ -3097,12 +3098,12 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             String type = checkPartial(dateValue);
             if (type==null) return false;
 
-            if (type.equals(CaseManagementNoteExt.YEARONLY)) {
+            if (type.equals(PartialDate.YEARONLY)) {
                 cme.setValue(type);
                 cme.setDateValue(dateValue+"-01-01");
                 return true;
             }
-            else if(type.equals(CaseManagementNoteExt.YEARMONTH)) {
+            else if(type.equals(PartialDate.YEARMONTH)) {
                 cme.setValue(type);
                 cme.setDateValue(dateValue+"-01");
                 return true;
