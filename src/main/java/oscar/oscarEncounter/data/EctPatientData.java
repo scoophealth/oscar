@@ -32,6 +32,7 @@ import java.util.Date;
 
 import org.oscarehr.util.MiscUtils;
 
+import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
 
@@ -163,28 +164,31 @@ public class EctPatientData {
             }
 
             private void init() {
-                try {
-                    
-                    ResultSet rs;
-
-                    String sql = "select * from eChart where demographicNo=" + demographicNo
-                            + " ORDER BY eChartId DESC";
-//                            + " ORDER BY eChartId DESC limit 1";
-                    rs = DBHandler.GetSQL(sql);
-                    if (rs.next()) {
-                        this.eChartTimeStamp = rs.getTimestamp("timeStamp");
-                        this.socialHistory = oscar.Misc.getString(rs, "socialHistory");
-                        this.familyHistory = oscar.Misc.getString(rs, "familyHistory");
-                        this.medicalHistory = oscar.Misc.getString(rs, "medicalHistory");
-                        this.ongoingConcerns = oscar.Misc.getString(rs, "ongoingConcerns");
-                        this.reminders = oscar.Misc.getString(rs, "reminders");
-                        this.encounter = oscar.Misc.getString(rs, "encounter");
-                        this.subject = oscar.Misc.getString(rs, "subject");
-                    }
-                    rs.close();
-                } catch (SQLException e) {
-                    MiscUtils.getLogger().error("Error", e);
-                }
+            	OscarProperties properties = OscarProperties.getInstance();
+        		if( !Boolean.parseBoolean(properties.getProperty("AbandonOldChart", "false"))) {
+	                try {
+	                	
+	                    ResultSet rs;
+	
+	                    String sql = "select * from eChart where demographicNo=" + demographicNo
+	                            + " ORDER BY eChartId DESC";
+	//                            + " ORDER BY eChartId DESC limit 1";
+	                    rs = DBHandler.GetSQL(sql);
+	                    if (rs.next()) {
+	                        this.eChartTimeStamp = rs.getTimestamp("timeStamp");
+	                        this.socialHistory = oscar.Misc.getString(rs, "socialHistory");
+	                        this.familyHistory = oscar.Misc.getString(rs, "familyHistory");
+	                        this.medicalHistory = oscar.Misc.getString(rs, "medicalHistory");
+	                        this.ongoingConcerns = oscar.Misc.getString(rs, "ongoingConcerns");
+	                        this.reminders = oscar.Misc.getString(rs, "reminders");
+	                        this.encounter = oscar.Misc.getString(rs, "encounter");
+	                        this.subject = oscar.Misc.getString(rs, "subject");
+	                    }
+	                    rs.close();
+	                } catch (SQLException e) {
+	                    MiscUtils.getLogger().error("Error", e);
+	                }
+        		}
             }
 
             public Date getEChartTimeStamp() {
