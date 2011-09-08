@@ -582,7 +582,21 @@ function checkFav(){
     }
 	
     /*]]>*/
-    
+     
+    function toggleStartDateUnknown(rand) {
+    	var cb = document.getElementById('startDateUnknown_'+rand);
+    	var txt = document.getElementById('rxDate_'+rand);
+    	if(cb.checked) {
+    		<%
+    			java.text.SimpleDateFormat formatter = new java.text.SimpleDateFormat("yyyy-MM-dd");
+    			String today = formatter.format(new java.util.Date());
+    		%>
+    		txt.disabled=true;    		
+    		txt.value='<%=today%>';
+    	} else {
+    		txt.disabled=false;
+    	}
+    }
 </script>
 
                <style type="text/css" media="print">
