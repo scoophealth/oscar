@@ -79,9 +79,11 @@ import org.oscarehr.common.dao.DemographicArchiveDao;
 import org.oscarehr.common.dao.DemographicContactDao;
 import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.dao.DrugReasonDao;
+import org.oscarehr.common.dao.PartialDateDao;
 import org.oscarehr.common.model.DemographicArchive;
 import org.oscarehr.common.model.DemographicContact;
 import org.oscarehr.common.model.Drug;
+import org.oscarehr.common.model.PartialDate;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentDao;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentSubClassDao;
@@ -171,7 +173,8 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
     DrugDao drugDao = (DrugDao) SpringUtils.getBean("drugDao");
     DrugReasonDao drugReasonDao = (DrugReasonDao) SpringUtils.getBean("drugReasonDao");
     OscarSuperManager oscarSuperManager = (OscarSuperManager) SpringUtils.getBean("oscarSuperManager");
-    DemographicArchiveDao demoArchiveDao = (DemographicArchiveDao)SpringUtils.getBean("demographicArchiveDao");
+    DemographicArchiveDao demoArchiveDao = (DemographicArchiveDao) SpringUtils.getBean("demographicArchiveDao");
+    PartialDateDao partialDateDao = (PartialDateDao) SpringUtils.getBean("partialDateDao");
 
     @Override
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception  {
@@ -1193,6 +1196,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     drug.setCreateDate(new Date());
                     drug.setRxDate(dateFPtoDate(medArray[i].getStartDate(), timeShiftInDays));
                     drug.setWrittenDate(dateTimeFPtoDate(medArray[i].getPrescriptionWrittenDate(), timeShiftInDays));
+                    String writtenDateFormat = dateFPGetPartial(medArray[i].getPrescriptionWrittenDate());
 
                     if (medArray[i].getStartDate()==null) drug.setRxDate(new Date());
                     String duration = medArray[i].getDuration();
@@ -1303,6 +1307,9 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                      *
                      */
 
+                    //partial date
+                    partialDateDao.setPartialDate(PartialDate.DRUGS, drug.getId(), PartialDate.DRUGS_WRITTENDATE, writtenDateFormat);
+                    
                     //annotation
                     CaseManagementNote cmNote = prepareCMNote("2",null);
                     String note = StringUtils.noNull(medArray[i].getNotes());
@@ -2195,14 +2202,17 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
     String dateFPGetPartial(cdsDt.DateFullOrPartial dfp) {
 		if (dfp==null) return "";
 
-		if (dfp.getYearMonth()!=null) {
-                        return CaseManagementNoteExt.YEARMONTH;
-		}
-		else if (dfp.getYearOnly()!=null) {
-                        return CaseManagementNoteExt.YEARONLY;
-		}
-		else
-			return "";
+		if (dfp.getYearMonth()!=null) return PartialDate.YEARMONTH;
+		else if (dfp.getYearOnly()!=null) return PartialDate.YEARONLY;
+		else return "";
+    }
+
+    String dateFPGetPartial(cdsDt.DateTimeFullOrPartial dfp) {
+		if (dfp==null) return "";
+
+		if (dfp.getYearMonth()!=null) return PartialDate.YEARMONTH;
+		else if (dfp.getYearOnly()!=null) return PartialDate.YEARONLY;
+		else return "";
     }
 
     Date dateTimeFPtoDate(cdsDt.DateTimeFullOrPartial dtfp, int timeShiftInDays) {
@@ -2218,11 +2228,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 	    
     Date dateFPtoDate(cdsDt.DateFullOrPartial dfp, int timeShiftInDays) {
             String sdate = dateFPtoString(dfp,timeShiftInDays);
-            Date dDate = UtilDateUtilities.StringToDate(sdate, "yyyy-MM-dd");
-            if (dDate==null)
-                    dDate = UtilDateUtilities.StringToDate(sdate, "HH:mm:ss");
-
-            return dDate;
+            return UtilDateUtilities.StringToDate(sdate, "yyyy-MM-dd");
     }
 
     String dateOnly(String d) {

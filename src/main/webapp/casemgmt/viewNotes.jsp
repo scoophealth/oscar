@@ -33,6 +33,7 @@
 <%@page import="org.oscarehr.casemgmt.web.CaseManagementViewAction"%>
 <%@page import="org.oscarehr.common.dao.UserPropertyDAO"%>
 <%@page import="org.oscarehr.common.model.UserProperty"%>
+<%@page import="org.oscarehr.common.model.PartialDate"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
 
@@ -169,9 +170,9 @@
             String val = null;
 
             if (type!=null && !type.trim().equals("")) {
-                if (type.equals(CaseManagementNoteExt.YEARONLY))
+                if (type.equals(PartialDate.YEARONLY))
                     val = oscar.util.UtilDateUtilities.DateToString(cme.getDateValue(),"yyyy");
-                else if (type.equals(CaseManagementNoteExt.YEARMONTH))
+                else if (type.equals(PartialDate.YEARMONTH))
                     val = oscar.util.UtilDateUtilities.DateToString(cme.getDateValue(),"yyyy-MM");
                 else val = oscar.util.UtilDateUtilities.DateToString(cme.getDateValue(),"yyyy-MM-dd");
             } else {

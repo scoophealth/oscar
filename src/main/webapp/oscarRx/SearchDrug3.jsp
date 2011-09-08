@@ -1920,28 +1920,50 @@ function updateQty(element){
          }
 
     function validateWrittenDate() {
-    	var x=true;
-    	jQuery('input[name^="writtenDate_"]').each(function(){    		
-    		var str1  = jQuery(this).val(); 
-    		
-    		if(!checkAndValidateDate(str1,null)) {
-    			x=false;
-    			return false;
-    		}
-    		
-			var dt1  = parseInt(str1.substring(8,10),10);
-    		var mon1 = parseInt(str1.substring(5,7),10);
-    		var yr1  = parseInt(str1.substring(0,4),10);
-    		var date1 = new Date(yr1, mon1-1, dt1);    		
-    		var now  = new Date();
-    		    		
-    		if(date1 > now) {
-    			x=false;
-    			alert('Written Date cannot be in the future. (' + str1 +')');
-    		} 
-    	});
-    	return x;
-    }
+    	var x = true;
+        jQuery('input[name^="writtenDate_"]').each(function(){    		
+            var str1  = jQuery(this).val(); 
+
+            var dt = str1.split("-");
+            if (dt.length>3) {
+                alert('Written Date wrong format! Must be yyyy or yyyy-mm or yyyy-mm-dd');
+                x = false;
+                return;
+            }
+
+            var dt1=1, mon1=0, yr1=parseInt(dt[0],10);
+            if (isNaN(yr1) || yr1<0 || yr1>9999) {
+                alert('Invalid Written Date! Please check the year');
+                x = false;
+                return;
+            }
+            if (dt.length>1) {
+            	mon1 = parseInt(dt[1],10)-1;
+            	if (isNaN(mon1) || mon1<0 || mon1>11) {
+            		alert('Invalid Written Date! Please check the month');
+                    x = false;
+                    return;
+            	}
+            }
+            if (dt.length>2) {
+            	dt1 = parseInt(dt[2],10);
+                if (isNaN(dt1) || dt1<1 || dt1>31) {
+                    alert('Invalid Written Date! Please check the day');
+                    x = false;
+                    return;
+                }
+            }
+            var date1 = new Date(yr1, mon1, dt1);
+            var now  = new Date();
+
+            if(date1 > now) {
+                alert('Written Date cannot be in the future. (' + str1 +')');
+                x = false;
+                return;
+	        } 
+        });
+        return x;
+    }   
 
 
     function updateSaveAllDrugsPrint(){

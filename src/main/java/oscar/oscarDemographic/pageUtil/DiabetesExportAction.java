@@ -35,6 +35,8 @@ import org.jdom.input.SAXBuilder;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
+import org.oscarehr.common.dao.PartialDateDao;
+import org.oscarehr.common.model.PartialDate;
 import org.oscarehr.dx.model.DxResearch;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -77,11 +79,13 @@ import org.apache.commons.lang.math.NumberUtils;
 public class DiabetesExportAction extends Action {
     Date startDate;
     Date endDate;
-    CaseManagementManager cmm;
     ArrayList<String> errors;
     ArrayList<String> listOfDINS = new ArrayList<String>();
     
-    private static Logger logger = MiscUtils.getLogger();
+    private static final Logger logger = MiscUtils.getLogger();
+    private static final CaseManagementManager cmm = (CaseManagementManager) SpringUtils.getBean("caseManagementManager");
+    private static final PartialDateDao partialDateDao = (PartialDateDao) SpringUtils.getBean("partialDateDao");
+  
 
 public DiabetesExportAction(){}
 
@@ -91,8 +95,6 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
     String setName = defrm.getPatientSet();
     this.startDate = UtilDateUtilities.StringToDate(defrm.getstartDate());
     this.endDate = UtilDateUtilities.StringToDate(defrm.getendDate());
-    
-    this.cmm = (CaseManagementManager) SpringUtils.getBean("caseManagementManager");
     this.errors = new ArrayList<String>();
     getListOfDINS();
     
@@ -678,7 +680,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             return;
         }
 
-        RxPrescriptionData.Prescription[] pa = new RxPrescriptionData().getUniquePrescriptionsByPatient(Integer.parseInt(demoNo));
+        RxPrescriptionData.Prescription[] pa = new RxPrescriptionData().getPrescriptionsByPatient(Integer.parseInt(demoNo));
         for (int p=0; p<pa.length; p++){
             Date prescribeDate = pa[p].getWrittenDate();
             if (prescribeDate!=null) {
@@ -690,9 +692,9 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             MedicationsAndTreatments medications = patientRecord.addNewMedicationsAndTreatments();
             medications.setDrugIdentificationNumber(DiabetesDinList.Enum.forString(data));
 
-            if (Util.calDate(pa[p].getWrittenDate())!=null) {
-                medications.addNewPrescriptionWrittenDate().setFullDate(Util.calDate(pa[p].getWrittenDate()));
-            }
+        	String dateFormat = partialDateDao.getFormat(PartialDate.DRUGS, pa[p].getDrugId(), PartialDate.DRUGS_WRITTENDATE);
+        	Util.putPartialDate(medications.addNewPrescriptionWrittenDate(), prescribeDate, dateFormat);
+
             if (Util.calDate(pa[p].getRxDate())!=null) {
                 medications.addNewStartDate().setFullDate(Util.calDate(pa[p].getRxDate()));
             }
