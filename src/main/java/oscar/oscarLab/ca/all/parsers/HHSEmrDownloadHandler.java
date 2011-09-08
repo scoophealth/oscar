@@ -567,25 +567,24 @@ public class HHSEmrDownloadHandler extends DefaultGenericHandler implements Mess
 //        return("");
 //    }
 //    
-      public String getOrderStatus(){
-    	  //usually a message type specific
-       	  String orderStatus = "F";
-       /*try{
-          for (Object ob:obrGroups){
-              ArrayList<Segment> obxSegs = (ArrayList<Segment>) ob;
-              for(Segment obxSeg:obxSegs){
-                 String observationStatus = getString(terser.get(obxSeg, 14, 1, 1, 1 ));
-                 if ("P".equals(observationStatus)){
-                     status = "P";
-                 }
-              }
-          }
-      	}catch(Exception e){
-        	logger.error("getting orderstatus ",e);
-      	}
-       */
-        return orderStatus;
-    }
+        public String getOrderStatus(){
+    	       String status = "F";
+    	       try {
+    	               int count = this.getOBRCount();
+    	               for(int x=0;x<count;x++) {
+    	                       String val = terser.get("/.OBX-11("+count+")");
+    	                       if(val!=null) {
+    	                               if(!val.equals("F")) {
+    	                                       status="";
+    	                               }
+    	                       }
+    	               }
+    	       }catch(HL7Exception e) {
+    	               
+    	       }
+    	        return status;
+    	    }
+
 //    
 //    public String getClientRef(){
 //        try{

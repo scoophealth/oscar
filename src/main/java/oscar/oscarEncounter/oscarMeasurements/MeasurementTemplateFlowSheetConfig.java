@@ -573,7 +573,7 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
                 d.setTopHTMLFileName(root.getAttribute("top_HTML").getValue());
             }           
             
-            if (root.getAttribute("ds_rules") != null) {
+            if (root.getAttribute("ds_rules") != null && root.getAttribute("ds_rules").getValue().length()>0 ) {
                 d.loadRuleBase(root.getAttribute("ds_rules").getValue());
             }
             if (root.getAttribute("dxcode_triggers") != null) {
