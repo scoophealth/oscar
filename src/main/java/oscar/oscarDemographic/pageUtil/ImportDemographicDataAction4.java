@@ -427,24 +427,21 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
         String dNote = StringUtils.noNull(demo.getNoteAboutPatient());
         String uvID = demo.getUniqueVendorIdSequence();
         String psDate = getCalDate(demo.getPersonStatusDate(), timeShiftInDays);
+        String extra = null;
 
         if (StringUtils.filled(otherNameTxt)) {
-            dNote = Util.addLine(dNote, "Other name: ", otherNameTxt);
-            err_note.add("Other name(s) imported to Patient Note");
+            extra = Util.addLine(extra, "Other name: ", otherNameTxt);
         }
 
         if (StringUtils.filled(suffix)) {
-            dNote = Util.addLine(dNote, "Lastname suffix: ", suffix);
-            err_note.add("Lastname suffix imported to Patient Note");
+        	extra = Util.addLine(extra, "Lastname suffix: ", suffix);
         }
 
         if (StringUtils.filled(uvID)) {
             if (StringUtils.empty(chart_no)) {
                 chart_no = uvID;
-                err_note.add("Unique Vendor Id imported as Chart No");
             } else {
-                dNote = Util.addLine(dNote, "Unique Vendor ID: ", uvID);
-                err_note.add("Unique Vendor Id imported to Patient Note");
+            	extra = Util.addLine(extra, "Unique Vendor ID: ", uvID);
             }
         } else {
             err_data.add("Error! No Unique Vendor ID Sequence");
@@ -597,7 +594,16 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
             	demoArchiveDao.persist(demographicArchive);
             }
 
+            //Patient notes
             if (StringUtils.filled(dNote)) dd.addDemographiccust(demographicNo, dNote);
+            
+            //to dumpsite: Extra demographic data
+            if (StringUtils.filled(extra)) {
+	            extra = Util.addLine("imported.cms4.2011.06", extra);
+	            CaseManagementNote dmNote = prepareCMNote("2",null);
+	            dmNote.setNote(extra);
+	            saveLinkNote(dmNote, CaseManagementNoteLink.DEMOGRAPHIC, Long.valueOf(demographicNo));
+            }
 
             if (!workExt.equals("")) dExt.addKey(primaryPhysician, demographicNo, "wPhoneExt", workExt);
             if (!homeExt.equals("")) dExt.addKey(primaryPhysician, demographicNo, "hPhoneExt", homeExt);
@@ -1354,21 +1360,24 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     err_note.add("All Immunization info assigned to doctor oscardoc");
                 }
                 for (int i=0; i<immuArray.length; i++) {
-                    String preventionDate="", preventionType="", refused="0", comments="";
+                    String preventionDate="", refused="0";
+                    String preventionType=null, immExtra=null;
                     ArrayList<Map<String,String>> preventionExt = new ArrayList<Map<String,String>>();
 
                     if (StringUtils.filled(immuArray[i].getImmunizationName())) {
                         Map<String,String> ht = new HashMap<String,String>();
                         ht.put("name", immuArray[i].getImmunizationName());
                         preventionExt.add(ht);
-
-                        preventionType = mapPreventionType(immuArray[i].getImmunizationCode());
-                        if (preventionType.equals("")) {
-                            preventionType = "OtherA";
-                            err_note.add("Immunization "+immuArray[i].getImmunizationName()+" mapped to Other Layout A");
-                        }
                     } else {
                         err_data.add("Error! No Immunization Name ("+(i+1)+")");
+                    }
+
+                    if (immuArray[i].getImmunizationType()!=null) {
+                        preventionType = Util.getPreventionType(immuArray[i].getImmunizationType().toString());
+                    }
+                    if (preventionType==null) {
+                        preventionType = "OtherA";
+                        err_note.add("Cannot match Immunization Type, "+immuArray[i].getImmunizationName()+" mapped to Other Layout A");
                     }
 
                     if (StringUtils.filled(immuArray[i].getManufacturer())) {
@@ -1398,17 +1407,14 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     }
                     
                     if (StringUtils.filled(immuArray[i].getNotes())) {
-                        comments = Util.addLine(comments, immuArray[i].getNotes());
-                    }
-
-                    if (immuArray[i].getImmunizationType()!=null) {
-                        comments = Util.addLine(comments, "Immunization Type: ", immuArray[i].getImmunizationType().toString());
+                        Map<String,String> ht = new HashMap<String,String>();
+                        ht.put("comments", immuArray[i].getNotes());
+                        preventionExt.add(ht);
                     }
 
                     preventionDate = dateFPtoString(immuArray[i].getDate(), timeShiftInDays);
                     refused = getYN(immuArray[i].getRefusedFlag()).equals("Yes") ? "1" : "0";
                     if (immuArray[i].getRefusedFlag()==null) err_data.add("Error! No Refused Flag for Immunizations ("+(i+1)+")");
-
 /*
                     String iSummary="";
                     if (immuArray[i].getCategorySummaryLine()!=null) {
@@ -1418,22 +1424,27 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     }
 
 
-//                    if (StringUtils.filled(iSummary)) {
-//                        comments = Util.addLine(comments, "Summary: ", iSummary);
-//                        err_note.add("Immunization Summary imported in [comments] ("+(i+1)+")");
- *
- */
-//                    }
-                    comments = Util.addLine(comments, getCode(immuArray[i].getImmunizationCode(),"Immunization Code"));
-                    comments = Util.addLine(comments, "Instructions: ", immuArray[i].getInstructions());
-                    comments = Util.addLine(comments, getResidual(immuArray[i].getResidualInfo()));
-                    if (StringUtils.filled(comments)) {
-                        Map<String,String> ht = new HashMap<String,String>();
-                        ht.put("comments", comments);
-                        preventionExt.add(ht);
+                    if (StringUtils.filled(iSummary)) {
+                        comments = Util.addLine(comments, "Summary: ", iSummary);
+                        err_note.add("Immunization Summary imported in [comments] ("+(i+1)+")");
                     }
-                    PreventionData.insertPreventionData(admProviderNo, demographicNo, preventionDate, defaultProvider, "", preventionType, refused, "", "", preventionExt);
+ * 
+ */
+
+                    immExtra = Util.addLine(immExtra, getCode(immuArray[i].getImmunizationCode(),"Immunization Code"));
+                    immExtra = Util.addLine(immExtra, "Instructions: ", immuArray[i].getInstructions());
+                    immExtra = Util.addLine(immExtra, getResidual(immuArray[i].getResidualInfo()));
+                    
+                    Integer preventionId = PreventionData.insertPreventionData(admProviderNo, demographicNo, preventionDate, defaultProvider, "", preventionType, refused, "", "", preventionExt);
                     addOneEntry(IMMUNIZATION);
+
+                    //to dumpsite: Extra immunization data
+                    if (StringUtils.filled(immExtra) && preventionId>=0) {
+        	            immExtra = Util.addLine("imported.cms4.2011.06", immExtra);
+        	            CaseManagementNote imNote = prepareCMNote("2",null);
+        	            imNote.setNote(immExtra);
+        	            saveLinkNote(imNote, CaseManagementNoteLink.PREVENTIONS, Long.valueOf(preventionId));
+                    }
                 }
 
                 //LABORATORY RESULTS
@@ -2538,7 +2549,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 			cml.setTableName(tableName);
 			cml.setTableId(tableId);
 			cml.setNoteId(cmn.getId()); //new note id
-                        cml.setOtherId(otherId);
+            cml.setOtherId(otherId);
 			caseManagementManager.saveNoteLink(cml);
 		}
 	}

@@ -73,7 +73,6 @@ import oscar.oscarEncounter.oscarMeasurements.data.Measurements;
 import oscar.oscarLab.LabRequestReportLink;
 import oscar.oscarLab.ca.all.upload.ProviderLabRouting;
 import oscar.oscarPrevention.PreventionData;
-import oscar.oscarPrevention.PreventionDisplayConfig;
 import oscar.oscarProvider.data.ProviderData;
 import oscar.oscarReport.data.DemographicSets;
 import oscar.oscarReport.data.RptDemographicQueryBuilder;
@@ -1074,23 +1073,11 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 
             if (exImmunizations) {
                 // IMMUNIZATIONS
-                ArrayList<String> inject = new ArrayList<String>();
-                HashMap<String,String> prevTypes = new HashMap<String,String>();
-                PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance();
-                ArrayList<HashMap<String,String>> prevList = pdc.getPreventions();
+                ArrayList<Map<String,Object>> prevList = PreventionData.getPreventionData(demoNo);
                 for (int k =0 ; k < prevList.size(); k++){
-                    HashMap<String,String> a = new HashMap<String,String>();
-                    a.putAll(prevList.get(k));
-                    if (a != null && a.get("layout") != null &&  a.get("layout").equals("injection")){
-                        inject.add(a.get("name"));
-                        prevTypes.put(a.get("name"), a.get("healthCanadaType"));
-                    }
-                }
-                ArrayList<Map<String,Object>> prevList2 = PreventionData.getPreventionData(demoNo);
-                for (int k =0 ; k < prevList2.size(); k++){
                     HashMap<String,Object> a = new HashMap<String,Object>();
-                    a.putAll(prevList2.get(k));
-                    if (a != null && inject.contains(a.get("type")) ){
+                    a.putAll(prevList.get(k));
+                    if (a != null && Util.getImmunizationType((String)a.get("type"))!=null ){
                         Immunizations immu = patientRec.addNewImmunizations();
                         HashMap<String,Object> extraData = new HashMap<String,Object>();
                         extraData.putAll(PreventionData.getPreventionById((String) a.get("id")));
@@ -1101,7 +1088,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         if (StringUtils.filled((String)extraData.get("dose"))) immu.setDose((String)extraData.get("dose"));
                         if (StringUtils.filled((String)extraData.get("comments"))) immu.setNotes((String)extraData.get("comments"));
 
-                        String prevType = prevTypes.get(a.get("type"));
+                        String prevType = Util.getImmunizationType((String)a.get("type"));
                         if (prevType!=null) {
                             immu.setImmunizationType(cdsDt.ImmunizationType.Enum.forString(prevType));
                         }

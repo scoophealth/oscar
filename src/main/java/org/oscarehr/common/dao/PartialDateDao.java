@@ -49,7 +49,7 @@ public class PartialDateDao extends AbstractDao<PartialDate> {
 		try {
 			result = (PartialDate) query.getSingleResult();
 		} catch (NoResultException ex) {
-			MiscUtils.getLogger().error("Note",ex);
+			MiscUtils.getLogger().debug("Note",ex);
 		}
 
 		return result;

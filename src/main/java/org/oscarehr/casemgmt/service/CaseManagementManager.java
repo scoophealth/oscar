@@ -438,6 +438,8 @@ public class CaseManagementManager {
 		else if (disp.equals(CaseManagementNoteLink.DISP_DOCUMENT)) tName = CaseManagementNoteLink.DOCUMENT;
 		else if (disp.equals(CaseManagementNoteLink.DISP_LABTEST)) tName = CaseManagementNoteLink.LABTEST;
 		else if (disp.equals(CaseManagementNoteLink.DISP_PRESCRIP)) tName = CaseManagementNoteLink.DRUGS;
+		else if (disp.equals(CaseManagementNoteLink.DISP_DEMO)) tName = CaseManagementNoteLink.DEMOGRAPHIC;
+		else if (disp.equals(CaseManagementNoteLink.DISP_PREV)) tName = CaseManagementNoteLink.PREVENTIONS;
 
 		return tName;
 	}
