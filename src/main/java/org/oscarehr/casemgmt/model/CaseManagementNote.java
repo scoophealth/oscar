@@ -331,6 +331,13 @@ public class CaseManagementNote extends BaseObject {
 		return getProvider().getFormattedName();
 	}
 
+	public String getProviderNameFirstLast() {
+		if (getProvider() == null) {
+			return "DELETED";
+		}
+		return getProvider().getFullName();
+	}
+
 	public static Comparator<CaseManagementNote> getProviderComparator() {
 		return new Comparator<CaseManagementNote>() {
 			public int compare(CaseManagementNote note1, CaseManagementNote note2) {
