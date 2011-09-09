@@ -249,9 +249,11 @@
 	</bean>
 	<bean name="/phr/Logout" class="org.oscarehr.phr.web.PHRLogoutAction" singleton="false">
 	</bean>
+	<!-- 
 	<bean name="/phrExchange" class="org.oscarehr.phr.web.PHRExchangeAction" singleton="false">
 		<property name="phrService" ref="phrService" />
 	</bean>
+	 -->
 	<bean name="/phr/UserManagement" class="org.oscarehr.phr.web.PHRUserManagementAction" singleton="false">
 		<property name="phrService" ref="phrService" />
 		<property name="phrActionDAO" ref="phrActionDAO" />
