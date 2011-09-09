@@ -515,7 +515,7 @@
         month[11] = "<bean:message key="share.CalendarPopUp.msgDec"/>";
 
 function init() {       
-
+	scrollDownInnerBar();
     showIssueNotes();
     
     var navBars = new navBarLoader();
@@ -546,11 +546,6 @@ function init() {
     <nested:notEmpty name="DateError">
         alert("<nested:write name="DateError"/>");
     </nested:notEmpty>
-
-    doscroll();
-
-    //if we're on a new note
-    setTimeout(scrollDownInnerBar,1500);
     
 }
 
