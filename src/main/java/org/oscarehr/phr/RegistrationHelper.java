@@ -1,24 +1,40 @@
 package org.oscarehr.phr;
 
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
+import java.util.TreeMap;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.dao.PropertyDao;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.Property;
+import org.oscarehr.common.model.Provider;
+import org.oscarehr.myoscar_server.ws.Relation;
 import org.oscarehr.util.SpringUtils;
+import org.oscarehr.util.WebUtils;
 
 public final class RegistrationHelper {
+	private static final String MYOSCAR_REGISTRATION_DEFAULTS_SESSION_KEY = "MYOSCAR_REGISTRATION_DEFAULTS";
+
 	private static DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
+	private static ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
+	private static PropertyDao propertyDao = (PropertyDao) SpringUtils.getBean("propertyDao");
 	private static Random random = new Random();
 
 	public static String getDefaultUserName(int demographicId) {
 		Demographic demographic = demographicDao.getDemographicById(demographicId);
-		return((demographic.getFirstName() + '.' + demographic.getLastName()).toLowerCase());
+		return ((demographic.getFirstName() + '.' + demographic.getLastName()).toLowerCase());
 	}
 
 	/**
-	 * Generate a password of length 12 using numbers and letters.
-	 * This will ommit i/l/o/1/o to prevent abiguity.
-	 * Due to the length the permutations are still large, i.e. (24^8 ~= 110 billion) * (8^4 = 4096) ~= 450,868,486,864,896 permutations ~= 450 trillion
+	 * Generate a password of length 12 using numbers and letters. This will ommit i/l/o/1/o to prevent abiguity. Due to the length the permutations are still large, i.e. (24^8 ~= 110 billion) * (8^4 = 4096) ~= 450,868,486,864,896 permutations ~= 450
+	 * trillion
 	 */
 	public static String getNewRandomPassword() {
 		StringBuilder sb = new StringBuilder();
@@ -53,5 +69,100 @@ public final class RegistrationHelper {
 		if (i == 'i' || i == 'l' || i == 'o') return (getRandomPasswordLetter());
 
 		return (char) (i);
+	}
+
+	/**
+	 * @return map of <MyOscarUserName,Provider>
+	 */
+	public static TreeMap<String, Provider> getMyOscarProviders() {
+		TreeMap<String, Provider> results = new TreeMap<String, Provider>();
+
+		List<Property> tempProperties = propertyDao.findByName("MyOscarId");
+		for (Property property : tempProperties) {
+			Provider provider = providerDao.getProvider(property.getProviderNo());
+			if (provider != null) results.put(property.getValue(), provider);
+		}
+
+		return (results);
+	}
+
+	public static String renderRelationshipSelect(HttpSession session, String widgetName) {
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("<select name=\"" + widgetName + "\">");
+
+		for (Relation relation : Relation.values()) {
+			sb.append("<option value=\"" + relation.name() + "\" "+getSelectedString(session, widgetName, relation.name())+" >");
+			sb.append(relation.name());
+			sb.append("</option>");
+		}
+
+		sb.append("</select>");
+
+		return (sb.toString());
+	}
+
+	public static String getCheckedString(HttpSession session, String elementName) {
+		HashMap<String, Object> defaults=(HashMap<String, Object>) session.getAttribute(MYOSCAR_REGISTRATION_DEFAULTS_SESSION_KEY);
+		if (defaults==null) return("");
+		Boolean b=(Boolean) defaults.get(elementName);
+		return(WebUtils.getCheckedString(b!=null && b));
+	}
+
+	public static String getSelectedString(HttpSession session, String elementName, String elementValue) {
+		HashMap<String, Object> defaults=(HashMap<String, Object>) session.getAttribute(MYOSCAR_REGISTRATION_DEFAULTS_SESSION_KEY);
+		if (defaults==null) return("");
+		String relationString=(String) defaults.get(elementName);
+		return(WebUtils.getSelectedString(relationString!=null && relationString.equals(elementValue)));
+	}
+	
+	public static void storeSelectionDefaults(HttpServletRequest request) {
+		// 2011-09-08 15:53:39,632 ERROR [WebUtils:43] --- Dump Request Parameters Start ---
+		// 2011-09-08 15:53:39,632 ERROR [WebUtils:49] dob=1988/06/15
+		// 2011-09-08 15:53:39,632 ERROR [WebUtils:49] firstName=MMM0
+		// 2011-09-08 15:53:39,632 ERROR [WebUtils:49] province=ON
+		// 2011-09-08 15:53:39,633 ERROR [WebUtils:49] password=mu2xd3sr6kd2
+		// 2011-09-08 15:53:39,633 ERROR [WebUtils:49] reverse_relation_3456=PATIENT
+		// 2011-09-08 15:53:39,633 ERROR [WebUtils:49] reverse_relation_999998=PATIENT
+		// 2011-09-08 15:53:39,633 ERROR [WebUtils:49] method=registerUser
+		// 2011-09-08 15:53:39,633 ERROR [WebUtils:49] demographicNo=8
+		// 2011-09-08 15:53:39,634 ERROR [WebUtils:49] address=
+		// 2011-09-08 15:53:39,634 ERROR [WebUtils:49] username=mmm0.mmm0
+		// 2011-09-08 15:53:39,634 ERROR [WebUtils:49] postal=
+		// 2011-09-08 15:53:39,634 ERROR [WebUtils:49] enable_reverse_relation_999998=on
+		// 2011-09-08 15:53:39,634 ERROR [WebUtils:49] phone=905-
+		// 2011-09-08 15:53:39,635 ERROR [WebUtils:49] enable_reverse_relation_3456=on
+		// 2011-09-08 15:53:39,635 ERROR [WebUtils:49] enable_primary_relation_22=on
+		// 2011-09-08 15:53:39,635 ERROR [WebUtils:49] primary_relation_22=RESEARCH_ADMINISTRATOR
+		// 2011-09-08 15:53:39,635 ERROR [WebUtils:49] enable_primary_relation_999998=on
+		// 2011-09-08 15:53:39,635 ERROR [WebUtils:49] reverse_relation_22=RESEARCH_SUBJECT
+		// 2011-09-08 15:53:39,636 ERROR [WebUtils:49] lastName=MMM0
+		// 2011-09-08 15:53:39,636 ERROR [WebUtils:49] phone2=
+		// 2011-09-08 15:53:39,636 ERROR [WebUtils:49] email=
+		// 2011-09-08 15:53:39,636 ERROR [WebUtils:49] city=
+		// 2011-09-08 15:53:39,636 ERROR [WebUtils:49] primary_relation_3456=PRIMARY_CARE_PROVIDER
+		// 2011-09-08 15:53:39,637 ERROR [WebUtils:49] primary_relation_999998=PRIMARY_CARE_PROVIDER
+		// 2011-09-08 15:53:39,637 ERROR [WebUtils:49] enable_primary_relation_3456=on
+		// 2011-09-08 15:53:39,637 ERROR [WebUtils:52] --- Dump Request Parameters End ---
+
+		HashMap<String, Object> defaults = new HashMap<String, Object>();
+
+		@SuppressWarnings("unchecked")
+		Enumeration<String> e = request.getParameterNames();
+		while (e.hasMoreElements()) {
+			String key = e.nextElement();
+
+			if (key.startsWith("enable_primary_relation_") || key.startsWith("enable_reverse_relation_")) {
+				boolean b = WebUtils.isChecked(request, key);
+				if (b) defaults.put(key, b);
+			}
+
+			if (key.startsWith("primary_relation_") || key.startsWith("reverse_relation_")) {
+				String relation=request.getParameter(key);
+				defaults.put(key, relation);
+			}
+		}
+
+		request.getSession().setAttribute(MYOSCAR_REGISTRATION_DEFAULTS_SESSION_KEY, defaults);
 	}
 }
