@@ -408,8 +408,10 @@ div.recommendations li{
                     <oscar:nameage demographicNo="<%=demographic_no%>"/>
                     <oscar:oscarPropertiesCheck property="SPEC3" value="yes"> 
                     <span class="DoNotPrint">
+                    <security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
                     <a href="adminFlowsheet/EditFlowsheet.jsp?flowsheet=<%=temp%>&demographic=<%=demographic_no%>" target="_new">Edit</a>
                     &nbsp;
+                    </security:oscarSec>
                     <a href="TemplateFlowSheet.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>&show=lastOnly">Last Only</a>
                     &nbsp;
                     <a href="TemplateFlowSheet.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>&show=outOfRange">Only out of Range</a>
@@ -438,11 +440,13 @@ div.recommendations li{
 </tr>
 <tr>
 <td class="MainTableLeftColumn" valign="top">
+	<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
     <% if (recList.size() > 0){ %>
     <a class="DoNotPrint" href="javascript: function myFunction() {return false; }"  onclick="javascript:fsPopup(465,635,'AddMeasurementData.jsp?demographic_no=<%=demographic_no%><%=recListBuffer.toString()%>&amp;template=<%=temp%>','addMeasurementData<%=Math.abs( "ADDTHEMALL".hashCode() ) %>')">
         ADD ALL
     </a>
     <%}%>
+    </security:oscarSec>
     <!-- only show disease registry and prescriptions for flowsheets which aren't medical in nature -->
     <% if (mFlowsheet.isMedical()) {%>
     <div class="leftBox">
@@ -634,9 +638,15 @@ div.recommendations li{
                <img class="DoNotPrint" src="img/chart.gif" alt="Plot"/>
             <%}%>
            <%}%>
+           
+		   <security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
             <a class="noborder" href="javascript: function myFunction() {return false; }"  onclick="javascript:fsPopup(465,635,'AddMeasurementData.jsp?measurement=<%= response.encodeURL( measure) %>&amp;demographic_no=<%=demographic_no%>&amp;template=<%= URLEncoder.encode(temp,"UTF-8") %>','addMeasurementData<%=Math.abs( ((String) h.get("name")).hashCode() ) %>')">
+           </security:oscarSec>
                 <span  class="noborder" style="font-weight:bold;"><%=h2.get("display_name")%></span>
+                
+           <security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
             </a>
+			</security:oscarSec>
 
         </p>
     </div>
