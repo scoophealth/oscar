@@ -176,7 +176,7 @@ public class PHRExchangeAction extends DispatchAction {
                     }catch(Exception e){
                         MiscUtils.getLogger().error("Error", e);
                         //out.print("exception thrown");
-                        request.getSession().removeAttribute(PHRAuthentication.SESSION_PHR_AUTH);
+//                        request.getSession().removeAttribute(PHRAuthentication.SESSION_PHR_AUTH);
                     }
                 }else{
                     log.error("String Auth object was null or the previous action still executing");
@@ -225,8 +225,8 @@ public class PHRExchangeAction extends DispatchAction {
                 out.print("1");
             }catch(Exception e){
                 MiscUtils.getLogger().error("Error", e);
-                out.print("0");
-                request.getSession().removeAttribute(PHRAuthentication.SESSION_PHR_AUTH);
+//                out.print("0");
+//                request.getSession().removeAttribute(PHRAuthentication.SESSION_PHR_AUTH);
             }
         }else{
             log.error("String Auth object was null or the previous action still executing");
