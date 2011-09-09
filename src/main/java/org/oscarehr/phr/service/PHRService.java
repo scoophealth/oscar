@@ -779,7 +779,7 @@ public class PHRService {
 		// if no password is set, we'll make one up, the nano time is to ensure it's not guessable.
 		if (newAccountPassword == null || newAccountPassword.length() == 0) newAccountPassword = newAccount.getUserName() + System.nanoTime();
 
-		newAccount = accountWs.addPatient(newAccount, newAccountPassword);
+		newAccount = accountWs.addPerson(newAccount, newAccountPassword);
 
 		if (newAccount == null) throw (new Exception("Error creating new Myoscar Account."));
 
