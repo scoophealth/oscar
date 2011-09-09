@@ -663,11 +663,7 @@ public class CihiExportAction extends DispatchAction {
         	date = allergy.getStartDate();
         	if( date != null ) {
         		Util.putPartialDate(xmlAllergies.addNewStartDate(), date, PartialDate.ALLERGIES, allergy.getAllergyid(), PartialDate.ALLERGIES_STARTDATE);
-        		DateFullOrPartial dateFullOrPartial = xmlAllergies.addNewStartDate();        	
-        		cal.setTime(date);
-        		dateFullOrPartial.setFullDate(cal);
         	}
-        	
         }
 	}
 	
@@ -891,7 +887,7 @@ public class CihiExportAction extends DispatchAction {
 		
 		for(int p = 0; p<pa.length; ++p) {
 			drugname = pa[p].getBrandName();
-                        if (StringUtils.empty(drugname)) continue;
+			if (StringUtils.empty(drugname)) continue;
 
 			medications = patientRecord.addNewMedicationsAndTreatments();
 
@@ -901,23 +897,20 @@ public class CihiExportAction extends DispatchAction {
 	        	String dateFormat = partialDateDao.getFormat(PartialDate.DRUGS, pa[p].getDrugId(), PartialDate.DRUGS_WRITTENDATE);
 	        	Util.putPartialDate(medications.addNewPrescriptionWrittenDate(), writtenDate, dateFormat);
 			}
-        	
-			DateFullOrPartial dateFullorPartial = medications.addNewPrescriptionWrittenDate();
-			dateFullorPartial.setFullDate(Util.calDate(pa[p].getWrittenDate()));
-						
-                    if (StringUtils.filled(pa[p].getDosage())) {
-                        String strength0 = pa[p].getDosage();
-                        sep = strength0.indexOf("/");
-                        strength = sep<0 ? Util.sleadingNum(strength0) : strength0.substring(0,sep);
-                        if (sep>=0) {
-                            if (sep<strength0.length()) strength0 = strength0.substring(sep+1);
-                        }
-                        cdsDtCihi.DrugMeasure drugM = medications.addNewStrength();
-                        drugM.setAmount(strength);
-                        drugM.setUnitOfMeasure(Util.trailingTxt(strength0));
-                        if (StringUtils.empty(drugM.getUnitOfMeasure())) drugM.setUnitOfMeasure("unit");
-                    }
-	        
+			
+			if (StringUtils.filled(pa[p].getDosage())) {
+				String strength0 = pa[p].getDosage();
+				sep = strength0.indexOf("/");
+				strength = sep<0 ? Util.sleadingNum(strength0) : strength0.substring(0,sep);
+				if (sep>=0) {
+					if (sep<strength0.length()) strength0 = strength0.substring(sep+1);
+				}
+				cdsDtCihi.DrugMeasure drugM = medications.addNewStrength();
+				drugM.setAmount(strength);
+				drugM.setUnitOfMeasure(Util.trailingTxt(strength0));
+				if (StringUtils.empty(drugM.getUnitOfMeasure())) drugM.setUnitOfMeasure("unit");
+			}
+
 	        dosage = StringUtils.noNull(pa[p].getDosageDisplay());
 	        medications.setDosage(dosage);
 	        medications.setDosageUnitOfMeasure(StringUtils.noNull(pa[p].getUnit()));
