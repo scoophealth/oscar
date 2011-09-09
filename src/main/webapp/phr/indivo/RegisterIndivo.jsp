@@ -7,6 +7,9 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
    
+<%@page import="org.oscarehr.phr.util.MyOscarUtils"%>
+<%@page import="org.apache.commons.lang.StringEscapeUtils"%>
+<%@page import="org.oscarehr.common.model.Provider"%>
 <%@page import="org.oscarehr.phr.RegistrationHelper"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -27,6 +30,8 @@ int demographicId=Integer.parseInt(demographicNo);
 
 DemographicData.Demographic demographic = new DemographicData().getDemographic(demographicNo);
 request.setAttribute("demographic", demographic);
+
+String defaultNewUserName=RegistrationHelper.getDefaultUserName(demographicId);
 
 DemographicExt demographicExt = new DemographicExt();
 String hPhoneExt = demographicExt.getValueForDemoKey(demographicNo, "hPhoneExt");
@@ -100,7 +105,7 @@ if (wPhoneExt != null)
                 <table>
                     <tr>
                         <td>Username: </td>
-                        <td><html-el:text styleId="username" property="username" value="<%=RegistrationHelper.getDefaultUserName(demographicId)%>" size="30"/></td>
+                        <td><html-el:text styleId="username" property="username" value="<%=defaultNewUserName%>" size="30"/></td>
                     </tr>
                     <tr>
                         <td>Password (default generated): </td>
@@ -152,6 +157,37 @@ if (wPhoneExt != null)
                         <td>Date of Birth</td>
                         <td><html-el:text property="dob" value="<%=demographic.getDob(\"/\")%>" size="10"/> (YYYY-MM-DD)</td>
                     </tr>
+                </table>
+            </div>
+            <div class="objectBlue">
+                <div class="objectBlueHeader">
+                    Relationships
+                </div>
+                <table>
+                	<%
+                		TreeMap<String, Provider> myOscarProviders=RegistrationHelper.getMyOscarProviders();
+                		for (Map.Entry<String, Provider> entry : myOscarProviders.entrySet())
+                		{
+                			Long providerMyOscarId=MyOscarUtils.getMyOscarUserId(session, entry.getKey());
+		                	%>
+		                    <tr>
+		                        <td><input type="checkbox" name="enable_primary_relation_<%=providerMyOscarId%>" <%=RegistrationHelper.getCheckedString(session, "enable_primary_relation_"+providerMyOscarId)%> /></td>
+		                        <td><%=StringEscapeUtils.escapeHtml(entry.getKey()+" ("+entry.getValue().getFormattedName()+')')%></td>
+		                        <td> is the <%=RegistrationHelper.renderRelationshipSelect(session, "primary_relation_"+providerMyOscarId)%> for </td>
+		                        <td><%=StringEscapeUtils.escapeHtml(defaultNewUserName)%></td>
+		                    </tr>
+		                    <tr>
+		                        <td><input type="checkbox" name="enable_reverse_relation_<%=providerMyOscarId%>" <%=RegistrationHelper.getCheckedString(session, "enable_reverse_relation_"+providerMyOscarId)%> /></td>
+		                        <td><%=StringEscapeUtils.escapeHtml(defaultNewUserName)%></td>
+		                        <td> is the <%=RegistrationHelper.renderRelationshipSelect(session, "reverse_relation_"+providerMyOscarId)%> for </td>
+		                        <td><%=StringEscapeUtils.escapeHtml(entry.getKey()+" ("+entry.getValue().getFormattedName()+')')%></td>
+		                    </tr>
+		                    <tr>
+		                    	<td colspan="4"><hr /></td>
+		                    </tr>
+		                    <%
+                		}
+                    %>
                 </table>
             </div>
             <div class="objectBlue">

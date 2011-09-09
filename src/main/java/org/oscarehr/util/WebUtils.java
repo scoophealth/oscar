@@ -229,9 +229,15 @@ public final class WebUtils {
 		return(sb.toString());
 	}
 	
-	public static String renderChecked(boolean b)
+	public static String getCheckedString(boolean b)
 	{
 		if (b) return("checked=\"checked\"");
+		else return("");
+	}
+
+	public static String getSelectedString(boolean b)
+	{
+		if (b) return("selected=\"selected\"");
 		else return("");
 	}
 }
