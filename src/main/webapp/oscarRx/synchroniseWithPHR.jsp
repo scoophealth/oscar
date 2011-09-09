@@ -137,7 +137,11 @@
                      el.setAttribute('id', 'fromPhr_display');
                      el.setAttribute('height','300');
                      el.innerHTML = "<a id='fromPhr_close' href='javascript:void(0);'>Hide</a>\n\
-<a id='fromPhr_expand' href='javascript:void(0);'>Expand</a> <iframe src='../phrExchange.do?method=displayNewMedsFromPhr&demoId=<%=demoNo%>' width='100%' height='100%'>\n\
+<a id='fromPhr_expand' href='javascript:void(0);'>Expand</a> 
+<!--
+<iframe src='../phrExchange.do?method=displayNewMedsFromPhr&demoId=<%=demoNo%>' width='100%' height='100%'>
+-->
+\n\
      <p>Your browser doesn't support iframe.</p></iframe>"
                      Dom.add(el, 'contentdisplay');
                      var close=document.getElementById('fromPhr_close');
@@ -159,7 +163,11 @@
                              el.setAttribute('id', 'viewPrev_display');
                              el.setAttribute('height','300');
                              el.innerHTML = "<a id='viewPrev_close' href='javascript:void(0);'>Hide</a>\n\
-        <a id='viewPrev_expand' href='javascript:void(0);'>Expand</a> <iframe src='../phrExchange.do?method=displayPrevViewedMeds&demoId=<%=demoNo%>' width='100%' height='100%'>\n\
+        <a id='viewPrev_expand' href='javascript:void(0);'>Expand</a> 
+        <!--
+        <iframe src='../phrExchange.do?method=displayPrevViewedMeds&demoId=<%=demoNo%>' width='100%' height='100%'>
+        -->
+        \n\
              <p>Your browser doesn't support iframe.</p></iframe>"
                              Dom.add(el, 'contentdisplay');
                              var close=document.getElementById('viewPrev_close');
