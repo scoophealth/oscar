@@ -1,3 +1,5 @@
+<%@page import="org.oscarehr.phr.util.MyOscarUtils"%>
+<%@page import="org.oscarehr.phr.PHRAuthentication"%>
 <%@page import="java.net.URLEncoder"%>
 <%@page import="org.apache.commons.lang.builder.ReflectionToStringBuilder"%>
 <%@page import="org.oscarehr.util.MiscUtils"%>
@@ -311,7 +313,22 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 	}
 
         function sendToPHR(labId, demographicNo) {
-            popup(300, 600, "<%=request.getContextPath()%>/phr/SendToPhrPreview.jsp?labId=" + labId + "&demographic_no=" + demographicNo, "sendtophr");
+        	<%
+        		PHRAuthentication auth=MyOscarUtils.getPHRAuthentication(session);
+        	
+        		if (auth==null)
+        		{
+        			%>
+    					alert('Please Login to MyOscar before performing this action.');
+        			<%
+        		}
+        		else
+        		{
+        			%>
+	                    popup(300, 600, "<%=request.getContextPath()%>/phr/SendToPhrPreview.jsp?labId=" + labId + "&demographic_no=" + demographicNo, "sendtophr");            
+        			<%
+        		}        			
+        	%>
         }
 
         function matchMe() {
