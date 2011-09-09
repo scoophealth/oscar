@@ -141,10 +141,12 @@ PHRAuthentication phrAuth = (PHRAuthentication) session.getAttribute(PHRAuthenti
             <%}%>
         </div>
         <script type="text/javascript" src="<%=request.getContextPath()%>/share/javascript/boxover.js"></script>
+        <!-- 
         <phr:IfTimeToExchange>
             <script type="text/javascript">
             phrExchangeGo('<%=request.getContextPath()%>/phrExchange.do');
             </script>
         </phr:IfTimeToExchange>
+         -->
     </body>
 </html>

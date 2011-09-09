@@ -77,6 +77,7 @@
     function resetSelectedDrugs(){
         selectedDrugs='';
     }
+    /*
     function importPHRDrugs(){
         if(selectedDrugs.length>0){
             var url='./phrExchange.do';
@@ -93,10 +94,11 @@
             }})
         }
     }
+    */
 </script>
         <body ><%if(ks.isEmpty()){%> <a>No drugs to view</a> <%}else{%>
         <table id="phr_drug_div">
-            <tr><td><input type="button" value="import" onclick="importPHRDrugs();"></td><td id="successImport" style="color: blue" ></td></tr>
+            <tr><td><input type="button" value="import" ></td><td id="successImport" style="color: blue" ></td></tr>
             <tr>
                 <td align="center" ><a>Select</a></td>
                 <td align="center" ><a>Drug Name</a></td>
