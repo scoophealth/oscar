@@ -101,7 +101,7 @@ public class SendDocToPhrAction extends Action {
     		XmlUtils.appendChildToRoot(doc, "Data", eDoc.getFileBytes());
     		String docAsString=XmlUtils.toString(doc, false);
     		
-    		PHRAuthentication auth  = (PHRAuthentication) request.getSession().getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
+    		PHRAuthentication auth  = MyOscarUtils.getPHRAuthentication(request.getSession());
     		MedicalDataWs medicalDataWs = MyOscarServerWebServicesManager.getMedicalDataWs(auth.getMyOscarUserId(), auth.getMyOscarPassword());
     		
     		Long patientMyOscarUserId=MyOscarUtils.getMyOscarUserId(auth, demo.getMyOscarUserName());
@@ -118,16 +118,6 @@ public class SendDocToPhrAction extends Action {
     		remoteDataLog.setDocumentContents("id="+eDoc.getDocId()+", fileName="+eDoc.getFileName());
     		remoteDataLogDao.persist(remoteDataLog);
 
-//    		if (phrService.isIndivoRegistered(MedicalDataType.BINARY_DOCUMENT.name(), doc.getDocId())) {
-//	    		// update
-//	    		logger.debug("called update");
-//	    		String phrIndex = phrService.getPhrIndex(MedicalDataType.BINARY_DOCUMENT.name(), doc.getDocId());
-//	    		phrService.sendUpdateBinaryData(auth, prov, demo.getChartNo(), PHRDocument.TYPE_DEMOGRAPHIC, myOscarUserId, doc, phrIndex);
-//	    	} else {
-//	    		// add
-//	    		logger.debug("called add");
-//	    		phrService.sendAddBinaryData(auth, prov, demo.getChartNo(), PHRDocument.TYPE_DEMOGRAPHIC, myOscarUserId, doc);
-//	    	}
 	    } catch (Exception e) {
 	    	logger.error("Error", e);
 	    	request.setAttribute("error_msg", e.getMessage());

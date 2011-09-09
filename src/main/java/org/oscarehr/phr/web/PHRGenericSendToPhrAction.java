@@ -6,8 +6,8 @@
 package org.oscarehr.phr.web;
 
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,12 +20,23 @@ import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.casemgmt.web.CaseManagementEntryAction;
+import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.dao.RemoteDataLogDao;
+import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.RemoteDataLog;
+import org.oscarehr.myoscar_server.ws.MedicalDataType;
+import org.oscarehr.myoscar_server.ws.MedicalDataWs;
 import org.oscarehr.phr.PHRAuthentication;
 import org.oscarehr.phr.model.PHRDocument;
 import org.oscarehr.phr.service.PHRService;
+import org.oscarehr.phr.util.MyOscarMessageManager;
+import org.oscarehr.phr.util.MyOscarServerWebServicesManager;
 import org.oscarehr.phr.util.MyOscarUtils;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
+import org.oscarehr.util.XmlUtils;
+import org.w3c.dom.Document;
 
 import oscar.dms.EDoc;
 import oscar.dms.EDocFactory;
@@ -87,7 +98,8 @@ public class PHRGenericSendToPhrAction extends DispatchAction {
 
 
     public ActionForward send(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String demographicNo = request.getParameter("demographic_no");
+
+    	String demographicNo = request.getParameter("demographic_no");
         String providerNo = (String) request.getSession().getAttribute("user");
         String module = request.getParameter("module");
 
@@ -97,7 +109,7 @@ public class PHRGenericSendToPhrAction extends DispatchAction {
         
         DemographicData demographicData = new DemographicData();
         String recipientMyOscarUserName = demographicData.getDemographic(demographicNo).getMyOscarUserName();
-        PHRAuthentication auth  = (PHRAuthentication) request.getSession().getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
+        PHRAuthentication auth  = MyOscarUtils.getPHRAuthentication(request.getSession());
         Long recipientMyOscarUserId=MyOscarUtils.getMyOscarUserId(auth, recipientMyOscarUserName);
         
         int recipientType = PHRDocument.TYPE_DEMOGRAPHIC;
@@ -167,16 +179,42 @@ public class PHRGenericSendToPhrAction extends DispatchAction {
             ProviderData senderProviderData = new ProviderData(providerNo);
 
             EDoc eDoc = EDocUtil.getDoc(documentNo);
-            
-            String actionIndex = phrService.sendAddBinaryData(auth, senderProviderData, demographicNo, recipientType, recipientMyOscarUserId, eDoc) + "";
 
-            ArrayList<String> eDocAttachmentActionId = new ArrayList();
-            eDocAttachmentActionId.add(actionIndex);
-            phrService.sendAddMessage(subject, null, message, senderProviderData, demographicNo, recipientType, recipientMyOscarUserId, eDocAttachmentActionId);
+            //--- send to myoscar ---
+			Document doc=XmlUtils.newDocument("BinaryDocument");
+			XmlUtils.appendChildToRoot(doc, "Filename", eDoc.getFileName());
+			XmlUtils.appendChildToRoot(doc, "FileDescription", eDoc.getDescription());
+			XmlUtils.appendChildToRoot(doc, "MimeType", eDoc.getContentType());
+			XmlUtils.appendChildToRoot(doc, "Data", eDoc.getFileBytes());
+			String docAsString=XmlUtils.toString(doc, false);
+			
+			MedicalDataWs medicalDataWs = MyOscarServerWebServicesManager.getMedicalDataWs(auth.getMyOscarUserId(), auth.getMyOscarPassword());
+			
+			DemographicDao demographicDao=(DemographicDao) SpringUtils.getBean("demographicDao");
+			Demographic demographic=demographicDao.getDemographic(demographicNo);
+			Long patientMyOscarUserId=MyOscarUtils.getMyOscarUserId(auth, demographic.getMyOscarUserName());
+			GregorianCalendar dateOfData=new GregorianCalendar();
+			if (eDoc.getDateTimeStampAsDate()!=null) dateOfData.setTime(eDoc.getDateTimeStampAsDate());
+			Long medicalDataId=medicalDataWs.addMedicalData(patientMyOscarUserId, dateOfData, MedicalDataType.BINARY_DOCUMENT.name(), auth.getMyOscarUserId(), docAsString, true);
+			
+			// log the send
+			RemoteDataLogDao remoteDataLogDao=(RemoteDataLogDao) SpringUtils.getBean("remoteDataLogDao");
+			RemoteDataLog remoteDataLog=new RemoteDataLog();
+			LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+			remoteDataLog.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
+			remoteDataLog.setDocumentId(MyOscarServerWebServicesManager.getMyOscarServerBaseUrl(), "eDoc", eDoc.getDocId());
+			remoteDataLog.setAction(RemoteDataLog.Action.SEND);
+			remoteDataLog.setDocumentContents("id="+eDoc.getDocId()+", fileName="+eDoc.getFileName());
+			remoteDataLogDao.persist(remoteDataLog);
 
 
-            phrService.sendAddAnnotation(senderProviderData, demographicNo, recipientMyOscarUserId, actionIndex, message);
-            return mapping.findForward("loginPage");
+			//--- send message ---
+			MyOscarMessageManager.sendMessage(auth.getMyOscarUserId(), auth.getMyOscarPassword(), patientMyOscarUserId, subject, message);
+
+			//--- send annotations ---
+			medicalDataWs.addMedicalDataAnnotation(medicalDataId, message);
+			
+			return mapping.findForward("loginPage");
             
         } catch (Exception e) {
             logger.error("Could not send document to PHR", e);
