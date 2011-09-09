@@ -1721,8 +1721,14 @@ if(oscarVariables.getProperty("demographicExt") != null) {
 								<td align="left"><input type="text" name="myOscarUserName" size="30"
 									value="<%=apptMainBean.getString(rs,"myOscarUserName")!=null? apptMainBean.getString(rs,"myOscarUserName") : ""%>"><br />
 								<%if (apptMainBean.getString(rs,"myOscarUserName")==null || apptMainBean.getString(rs,"myOscarUserName").equals("")) {%>
+								
+								<%
+									String onclickString="popup(600, 650, '../phr/indivo/RegisterIndivo.jsp?demographicNo="+demographic_no+"', 'indivoRegistration');";
+									PHRAuthentication auth=MyOscarUtils.getPHRAuthentication(session);
+									if (auth==null) onclickString="alert('Please login to MyOsar first.')";
+								%>
 								<a href="javascript:"
-									onclick="popup(600, 650, '../phr/indivo/RegisterIndivo.jsp?demographicNo=<%=demographic_no%>', 'indivoRegistration');"><sub
+									onclick="<%=onclickString%>"><sub
 									style="white-space: nowrap;"><bean:message key="demographic.demographiceditdemographic.msgRegisterMyOSCAR"/></sub></a> <%}%>
 								</td>
 							</tr>

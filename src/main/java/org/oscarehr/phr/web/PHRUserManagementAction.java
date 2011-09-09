@@ -38,24 +38,25 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionRedirect;
 import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.myoscar_server.ws.AccountWs;
+import org.oscarehr.myoscar_server.ws.NotAuthorisedException_Exception;
 import org.oscarehr.myoscar_server.ws.PersonTransfer;
+import org.oscarehr.myoscar_server.ws.Relation;
 import org.oscarehr.phr.PHRAuthentication;
+import org.oscarehr.phr.RegistrationHelper;
 import org.oscarehr.phr.dao.PHRActionDAO;
 import org.oscarehr.phr.dao.PHRDocumentDAO;
 import org.oscarehr.phr.indivo.service.accesspolicies.IndivoAPService;
 import org.oscarehr.phr.model.PHRAction;
 import org.oscarehr.phr.service.PHRService;
+import org.oscarehr.phr.util.MyOscarServerWebServicesManager;
+import org.oscarehr.phr.util.MyOscarUtils;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.WebUtils;
 
 import oscar.oscarDemographic.data.DemographicData;
 
 
-
-
-/**
- *
- * @author jay
- */
 public class PHRUserManagementAction extends DispatchAction {  
     
     private static Logger log = MiscUtils.getLogger();
@@ -92,6 +93,7 @@ public class PHRUserManagementAction extends DispatchAction {
     public ActionForward registerUser(ActionMapping mapping, ActionForm  form,HttpServletRequest request, HttpServletResponse response) throws Exception {
 
     	ActionRedirect ar = new ActionRedirect(mapping.findForward("registrationResult").getPath());
+    	
         PHRAuthentication phrAuth = (PHRAuthentication) request.getSession().getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
         if (phrAuth == null || phrAuth.getMyOscarUserId() == null) {
             ar.addParameter("failmessage", "Permission Denied: You must be logged into myOSCAR to register users");
@@ -115,6 +117,8 @@ public class PHRUserManagementAction extends DispatchAction {
             
             DemographicData dd = new DemographicData();
             dd.setDemographicPin(demographicNo, newAccount.getUserName());
+            
+            addRelationships(request, newAccount);
         } catch (Exception e) {
             log.error("Failed to register myOSCAR user", e);
             if (e.getClass().getName().indexOf("ActionNotPerformedException") != -1) {
@@ -127,10 +131,49 @@ public class PHRUserManagementAction extends DispatchAction {
                 ar.addParameter("failmessage", "Unknown Error: Check the log file for details.");
             }
         }
+    	
         return ar;
     }
     
-    public ActionForward approveAction(ActionMapping mapping, ActionForm  form,HttpServletRequest request, HttpServletResponse response) throws Exception {
+    private void addRelationships(HttpServletRequest request, PersonTransfer newAccount) throws NotAuthorisedException_Exception {
+    	
+    	if (log.isDebugEnabled())
+    	{
+    		WebUtils.dumpParameters(request);
+    	}
+    	
+    	PHRAuthentication auth=MyOscarUtils.getPHRAuthentication(request.getSession());
+		AccountWs accountWs=MyOscarServerWebServicesManager.getAccountWs(auth.getMyOscarUserId(), auth.getMyOscarPassword());
+		
+		@SuppressWarnings("unchecked")
+        Enumeration<String> e = request.getParameterNames();
+		while (e.hasMoreElements()) {
+			String key = e.nextElement();
+			
+			if (key.startsWith("enable_primary_relation_")) handlePrimaryRelation(accountWs, request, newAccount, key);
+			if (key.startsWith("enable_reverse_relation_")) handleReverseRelation(accountWs, request, newAccount, key);
+		}
+
+		RegistrationHelper.storeSelectionDefaults(request);
+    }
+
+	private void handleReverseRelation(AccountWs accountWs, HttpServletRequest request, PersonTransfer newAccount, String key) throws NotAuthorisedException_Exception {
+		if (!WebUtils.isChecked(request, key)) return;
+	    
+		Long otherMyOscarUserId=new Long(key.substring("enable_reverse_relation_".length()));
+		Relation relation=Relation.valueOf(request.getParameter("reverse_relation_"+otherMyOscarUserId));
+		accountWs.createRelationship(otherMyOscarUserId, newAccount.getId(), relation);
+    }
+
+	private void handlePrimaryRelation(AccountWs accountWs, HttpServletRequest request, PersonTransfer newAccount, String key) throws NotAuthorisedException_Exception {
+		if (!WebUtils.isChecked(request, key)) return;
+	    
+		Long otherMyOscarUserId=new Long(key.substring("enable_primary_relation_".length()));
+		Relation relation=Relation.valueOf(request.getParameter("primary_relation_"+otherMyOscarUserId));
+		accountWs.createRelationship(newAccount.getId(), otherMyOscarUserId, relation);
+    }
+
+	public ActionForward approveAction(ActionMapping mapping, ActionForm  form,HttpServletRequest request, HttpServletResponse response) throws Exception {
         IndivoAPService apService = new IndivoAPService(phrService);
         String actionId = request.getParameter("actionId");
         PHRAction action = phrActionDAO.getActionById(actionId);
