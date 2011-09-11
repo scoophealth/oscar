@@ -462,13 +462,12 @@ public class ProviderPropertyAction extends DispatchAction {
          }
          prop.setValueArray(propertyArray);
          Collection viewChoices=new ArrayList();
-         viewChoices.add(new LabelValueBean("Show Current","show_current"));
-         viewChoices.add(new LabelValueBean("Show All","show_all"));
-         viewChoices.add(new LabelValueBean("Show Active","active"));
-         viewChoices.add(new LabelValueBean("Show Inactive","inactive"));
-         viewChoices.add(new LabelValueBean("All","all"));
-         viewChoices.add(new LabelValueBean("Show Longterm/Acute","longterm_acute"));
-         viewChoices.add(new LabelValueBean("Show Longterm/Acute/Inactive/External","longterm_acute_inactive_external"));
+         viewChoices.add(new LabelValueBean("Current","show_current"));
+         viewChoices.add(new LabelValueBean("All","show_all"));
+         viewChoices.add(new LabelValueBean("Active","active"));
+         viewChoices.add(new LabelValueBean("Expired","inactive"));
+         viewChoices.add(new LabelValueBean("Longterm/Acute","longterm_acute"));
+         viewChoices.add(new LabelValueBean("Longterm/Acute/Inactive/External","longterm_acute_inactive_external"));
          request.setAttribute("viewChoices", viewChoices);
          request.setAttribute("providertitle","provider.setRxProfileView.title"); //=Set Rx Profile View
          request.setAttribute("providermsgPrefs","provider.setRxProfileView.msgPrefs"); //=Preferences
