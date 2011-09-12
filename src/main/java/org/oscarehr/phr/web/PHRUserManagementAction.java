@@ -39,6 +39,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionRedirect;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.myoscar_server.ws.AccountWs;
+import org.oscarehr.myoscar_server.ws.InvalidRequestException_Exception;
 import org.oscarehr.myoscar_server.ws.NotAuthorisedException_Exception;
 import org.oscarehr.myoscar_server.ws.PersonTransfer;
 import org.oscarehr.myoscar_server.ws.Relation;
@@ -119,7 +120,13 @@ public class PHRUserManagementAction extends DispatchAction {
             dd.setDemographicPin(demographicNo, newAccount.getUserName());
             
             addRelationships(request, newAccount);
-        } catch (Exception e) {
+        }
+        catch (InvalidRequestException_Exception e)
+        {
+        	log.debug("error", e);
+            ar.addParameter("failmessage", "Error, most likely cause is the username already exists. Check to make sure this person doesn't already have a myoscar user or try a different username.");
+        }
+        catch (Exception e) {
             log.error("Failed to register myOSCAR user", e);
             if (e.getClass().getName().indexOf("ActionNotPerformedException") != -1) {
                 ar.addParameter("failmessage", "Error on the myOSCAR server.  Perhaps the user already exists.");
