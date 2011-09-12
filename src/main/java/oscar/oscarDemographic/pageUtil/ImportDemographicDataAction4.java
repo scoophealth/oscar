@@ -46,7 +46,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 import java.util.UUID;
 import java.util.zip.ZipEntry;
@@ -128,6 +127,8 @@ import cds.PersonalHistoryDocument.PersonalHistory;
 import cds.ProblemListDocument.ProblemList;
 import cds.ReportsReceivedDocument.ReportsReceived;
 import cds.RiskFactorsDocument.RiskFactors;
+import cdsDt.DiabetesComplicationScreening.ExamCode;
+import cdsDt.DiabetesMotivationalCounselling.CounsellingPerformed;
 import cdsDt.PersonNameStandard.LegalName.OtherName;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentCommentDao;
 import org.oscarehr.hospitalReportManager.model.HRMDocumentComment;
@@ -272,7 +273,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
         return mapping.findForward("success");
     }
 
-    String[] importXML(String xmlFile, ArrayList warnings, HttpServletRequest request, int timeShiftInDays,List<Provider> students, int courseId) throws SQLException, Exception {
+    String[] importXML(String xmlFile, ArrayList<String> warnings, HttpServletRequest request, int timeShiftInDays,List<Provider> students, int courseId) throws SQLException, Exception {
         if(students == null || students.isEmpty()) {
             return importXML(xmlFile,warnings,request,timeShiftInDays,null,null,0);
         }
@@ -303,7 +304,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 
 
 
-    String[] importXML(String xmlFile, ArrayList warnings, HttpServletRequest request, int timeShiftInDays, Provider student, Program admitTo, int courseId) throws SQLException, Exception {
+    String[] importXML(String xmlFile, ArrayList<String> warnings, HttpServletRequest request, int timeShiftInDays, Provider student, Program admitTo, int courseId) throws SQLException, Exception {
         ArrayList<String> err_demo = new ArrayList<String>(); //errors: duplicate demographics
         ArrayList<String> err_data = new ArrayList<String>(); //errors: discrete data
         ArrayList<String> err_summ = new ArrayList<String>(); //errors: summary
@@ -642,7 +643,6 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                 }
 
                 String sdm = null, emc = null, rel = null;
-                Integer type = 2;
                 cdsDt.PurposeEnumOrPlainText[] contactPurposes = contt[i].getContactPurposeArray();
                 for (cdsDt.PurposeEnumOrPlainText contactPurpose : contactPurposes) {
                     String cPurpose = null;
@@ -664,7 +664,6 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     else if (cPurpose.equals("GT")) rel = "Guarantor";
                     else {
                         rel = cPurpose;
-                        type = 1;
                     }
                 }
 
@@ -1065,30 +1064,38 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 
                 //CLINICAL NOTES
                 ClinicalNotes[] cNotes = patientRec.getClinicalNotesArray();
+                Date observeDate = new Date(), createDate = new Date();
                 for (int i=0; i<cNotes.length; i++) {
-                    CaseManagementNote cmNote = prepareCMNote("1",null);
-
-                    //observation date
-                    cdsDt.DateTimeFullOrPartial eventDateTime = cNotes[i].getEventDateTime();
-                    if (eventDateTime==null) cmNote.setObservation_date(new Date());
-                    else cmNote.setObservation_date(dateTimeFPtoDate(eventDateTime, timeShiftInDays));
-
                     //encounter note
                     String encounter = cNotes[i].getMyClinicalNotesContent();
-                    encounter = Util.addLine(encounter,"Note Type: ",cNotes[i].getNoteType());
-                    if (StringUtils.filled(encounter)) cmNote.setNote(encounter);
+                    if (StringUtils.empty(encounter)) {
+                    	err_data.add("Note: Empty clinical note - not added ("+(i+1)+")");
+                    	continue;
+                    }
 
+                    CaseManagementNote cmNote = prepareCMNote("1",null);
+                    encounter = Util.addLine(encounter,"Note Type: ",cNotes[i].getNoteType());
+                    cmNote.setNote(encounter);
+
+                    //observation date
+                    if (cNotes[i].getEventDateTime()!=null) observeDate = dateTimeFPtoDate(cNotes[i].getEventDateTime(),timeShiftInDays); 
+                    cmNote.setObservation_date(observeDate);
+
+                    //create date
+                    if (cNotes[i].getEnteredDateTime()!=null) createDate = dateTimeFPtoDate(cNotes[i].getEnteredDateTime(),timeShiftInDays); 
+                    cmNote.setCreate_date(createDate);
+                    
                     String uuid = null;
                     ClinicalNotes.ParticipatingProviders[] participatingProviders = cNotes[i].getParticipatingProvidersArray();
                     ClinicalNotes.NoteReviewer[] noteReviewers = cNotes[i].getNoteReviewerArray();
 
-                    int p_total = participatingProviders.length>noteReviewers.length ? participatingProviders.length : noteReviewers.length;
+                    int p_total = participatingProviders.length + noteReviewers.length;
                     for (int p=0; p<p_total; p++) {
                         if (p>0) {
                             cmNote = prepareCMNote("1",uuid);
-                            if (eventDateTime==null) cmNote.setObservation_date(new Date());
-                            else cmNote.setObservation_date(dateTimeFPtoDate(eventDateTime, timeShiftInDays));
-                            if (StringUtils.filled(encounter)) cmNote.setNote(encounter);
+                            cmNote.setObservation_date(observeDate);
+                            cmNote.setCreate_date(createDate);
+                            cmNote.setNote(encounter);
                         }
 
                         //participating providers
@@ -1109,18 +1116,21 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                             if (participatingProviders[p].getDateTimeNoteCreated()!=null) {
                                 cmNote.setCreate_date(dateTimeFPtoDate(participatingProviders[p].getDateTimeNoteCreated(), timeShiftInDays));
                             }
-                        }
+                        } else {
 
-                        //note reviewers
-                        if (p<noteReviewers.length) {
-                            if (noteReviewers[p].getName()!=null) {
-                                HashMap<String,String> authorName = getPersonName(noteReviewers[p].getName());
-                                String reviewerOHIP = noteReviewers[p].getOHIPPhysicianId();
+                        	//note reviewers
+                        	int r = p-participatingProviders.length;
+                            if (noteReviewers[r].getName()!=null) {
+                                if (noteReviewers[r].getDateTimeNoteReviewed()==null) cmNote.setUpdate_date(new Date());
+                                else cmNote.setUpdate_date(dateTimeFPtoDate(noteReviewers[r].getDateTimeNoteReviewed(), timeShiftInDays));
+
+                                HashMap<String,String> authorName = getPersonName(noteReviewers[r].getName());
+                                String reviewerOHIP = noteReviewers[r].getOHIPPhysicianId();
                                 String reviewer = writeProviderData(authorName.get("firstname"), authorName.get("lastname"), reviewerOHIP);
+                                
+                                cmNote.setProviderNo(reviewer);
                                 cmNote.setSigning_provider_no(reviewer);
-                            }
-                            if (noteReviewers[p].getDateTimeNoteReviewed()!=null) {
-                                Util.addLine(encounter, "Review Date: ", dateFPtoString(noteReviewers[p].getDateTimeNoteReviewed(), timeShiftInDays));
+                                Util.writeVerified(cmNote);
                             }
                         }
 
@@ -1392,7 +1402,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     }
 
                     if (immuArray[i].getImmunizationType()!=null) {
-                        comments = Util.addLine(comments, "Immunization Type: ", immuArray[i].getImmunizationType().toString());;;
+                        comments = Util.addLine(comments, "Immunization Type: ", immuArray[i].getImmunizationType().toString());
                     }
 
                     preventionDate = dateFPtoString(immuArray[i].getDate(), timeShiftInDays);
@@ -1646,9 +1656,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                 //APPOINTMENTS
                 Appointments[] appArray = patientRec.getAppointmentsArray();
                 Date appointmentDate = null;
-                String name="", notes="", reason="", status="", startTime="", endTime="", apptProvider="";
-
-                Properties p = (Properties) request.getSession().getAttribute("oscarVariables");
+                String notes="", reason="", status="", startTime="", endTime="", apptProvider="";
 
                 for (int i=0; i<appArray.length; i++) {
                     String apptDateStr = dateFPtoString(appArray[i].getAppointmentDate(), timeShiftInDays);
@@ -1936,20 +1944,19 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                         Date dateObserved = dc.getDate()!=null ? dc.getDate().getTime() : null;
                         String dataField = "Yes";
                         if (dc.getCounsellingPerformed()!=null) {
-                            cdsDt.DiabetesMotivationalCounselling.CounsellingPerformed cp = null;
-                            if (dc.getCounsellingPerformed().equals(cp.NUTRITION)) {
+                            if (dc.getCounsellingPerformed().equals(CounsellingPerformed.NUTRITION)) {
                                 ImportExportMeasurements.saveMeasurements("MCCN", demographicNo, admProviderNo, dataField, dateObserved);
                                 addOneEntry(CAREELEMENTS);
                             }
-                            else if (dc.getCounsellingPerformed().equals(cp.EXERCISE)) {
+                            else if (dc.getCounsellingPerformed().equals(CounsellingPerformed.EXERCISE)) {
                                 ImportExportMeasurements.saveMeasurements("MCCE", demographicNo, admProviderNo, dataField, dateObserved);
                                 addOneEntry(CAREELEMENTS);
                             }
-                            else if (dc.getCounsellingPerformed().equals(cp.SMOKING_CESSATION)) {
+                            else if (dc.getCounsellingPerformed().equals(CounsellingPerformed.SMOKING_CESSATION)) {
                                 ImportExportMeasurements.saveMeasurements("MCCS", demographicNo, admProviderNo, dataField, dateObserved);
                                 addOneEntry(CAREELEMENTS);
                             }
-                            else if (dc.getCounsellingPerformed().equals(cp.OTHER)) {
+                            else if (dc.getCounsellingPerformed().equals(CounsellingPerformed.OTHER)) {
                                 ImportExportMeasurements.saveMeasurements("MCCO", demographicNo, admProviderNo, dataField, dateObserved);
                                 addOneEntry(CAREELEMENTS);
                             }
@@ -1962,14 +1969,13 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                         Date dateObserved = ds.getDate()!=null ? ds.getDate().getTime() : null;
                         String dataField = "Yes";
                         if (ds.getExamCode()!=null) {
-                            cdsDt.DiabetesComplicationScreening.ExamCode ec = null;
-                            if (ds.getExamCode().equals(ec.X_32468_1)) {
+                            if (ds.getExamCode().equals(ExamCode.X_32468_1)) {
                                 ImportExportMeasurements.saveMeasurements("EYEE", demographicNo, admProviderNo, dataField, dateObserved);
                                 addOneEntry(CAREELEMENTS);
-                            } else if (ds.getExamCode().equals(ec.X_11397_7)) {
+                            } else if (ds.getExamCode().equals(ExamCode.X_11397_7)) {
                                 ImportExportMeasurements.saveMeasurements("FTE", demographicNo, admProviderNo, dataField, dateObserved);
                                 addOneEntry(CAREELEMENTS);
-                            } else if (ds.getExamCode().equals(ec.NEUROLOGICAL_EXAM)) {
+                            } else if (ds.getExamCode().equals(ExamCode.NEUROLOGICAL_EXAM)) {
                                 ImportExportMeasurements.saveMeasurements("FTLS", demographicNo, admProviderNo, dataField, dateObserved);
                                 addOneEntry(CAREELEMENTS);
                             }
@@ -1981,8 +1987,6 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     for (cdsDt.DiabetesSelfManagementCollaborative dc : dsco) {
                         Date dateObserved = dc.getDate()!=null ? dc.getDate().getTime() : null;
                         String dataField = StringUtils.noNull(dc.getDocumentedGoals());
-                        String dataCode = dc.getCodeValue()!=null ? "LOINC="+dc.getCodeValue().toString() : "";
-
                         if (dc.getDate()==null) err_data.add("Error! No Date for Diabetes Self-management/Collaborative Goal Setting in Care Element ("+(i+1)+")");
                         if (StringUtils.empty(dc.getDocumentedGoals())) err_data.add("Error! No Documented Goal for Diabetes Self-management/Collaborative Goal Setting in Care Element ("+(i+1)+")");
                         if (dc.getCodeValue()==null) err_data.add("Error! No Code Value for Diabetes Self-management/Collaborative Goal Setting in Care Element ("+(i+1)+")");
@@ -2010,7 +2014,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 	}
 
 
-	File makeImportLog(ArrayList demo, String dir) throws IOException {
+	File makeImportLog(ArrayList<String[]> demo, String dir) throws IOException {
 		String[][] keyword = new String[2][16];
 		keyword[0][0] = PATIENTID;
 		keyword[1][0] = "ID";
@@ -2092,7 +2096,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     if (id==null) id = 0;
                     out.write(fillUp(id.toString(), ' ', column1.length()));
                     out.write(" |");
-                    String[] info = (String[]) demo.get(i);
+                    String[] info = demo.get(i);
                     if (info!=null && info.length>0) {
                         String[] text = info[info.length-1].split("\n");
                         out.write(text[0]);
@@ -2135,17 +2139,20 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 		SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
 		return f.format(c.getTime());
 	}
-        String getCalDate(Calendar c, int timeShiftInDays) {
-                if (c==null) return "";
+	
+	String getCalDate(Calendar c, int timeShiftInDays) {
+		if (c==null) return "";
 
-                c.add(Calendar.DAY_OF_YEAR, timeShiftInDays);
-                return getCalDate(c);
-        }
+		c.add(Calendar.DAY_OF_YEAR, timeShiftInDays);
+		return getCalDate(c);
+	}
+	
 	String getCalDateTime(Calendar c) {
 		if (c==null) return "";
 		SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		return f.format(c.getTime());
 	}
+
 	String getCalTime(Calendar c) {
 		if (c==null) return "";
 		SimpleDateFormat f = new SimpleDateFormat("HH:mm:ss");
@@ -2167,7 +2174,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 
 		if (dtfp.getFullDateTime()!=null)  {
 			dtfp.getFullDateTime().add(Calendar.DAY_OF_YEAR, timeshiftInDays);
-			return getCalDate(dtfp.getFullDateTime());
+			return getCalDateTime(dtfp.getFullDateTime());
 		}
 		if (dtfp.getFullDate()!=null)  {
 			dtfp.getFullDate().add(Calendar.DAY_OF_YEAR, timeshiftInDays);
@@ -2242,7 +2249,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
             return UtilDateUtilities.DateToString(UtilDateUtilities.StringToDate(d),"yyyy-MM-dd");
     }
 
-    HashMap getPersonName(cdsDt.PersonNameSimple person) {
+    HashMap<String, String> getPersonName(cdsDt.PersonNameSimple person) {
             HashMap<String,String> name = new HashMap<String,String>();
             if (person!=null) {
                 name.put("firstname", StringUtils.noNull(person.getFirstName()).trim());
@@ -2251,7 +2258,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
             return name;
     }
 
-    HashMap getPersonName(cdsDt.PersonNameSimpleWithMiddleName person) {
+    HashMap<String, String> getPersonName(cdsDt.PersonNameSimpleWithMiddleName person) {
             HashMap<String,String> name = new HashMap<String,String>();
             if (person!=null) {
                 name.put("firstname", StringUtils.noNull(person.getFirstName()).trim()+" "+StringUtils.noNull(person.getMiddleName()).trim());
@@ -2469,7 +2476,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 		return "OtherA";
 	}
 
-	String[] packMsgs(ArrayList err_demo, ArrayList err_data, ArrayList err_summ, ArrayList err_othe, ArrayList err_note, ArrayList warnings) {
+	String[] packMsgs(ArrayList<String> err_demo, ArrayList<String> err_data, ArrayList<String> err_summ, ArrayList<String> err_othe, ArrayList<String> err_note, ArrayList<String> warnings) {
 		if (!(err_demo.isEmpty() && err_data.isEmpty() && err_summ.isEmpty() && err_othe.isEmpty() && err_note.isEmpty())) {
 			String title = "Fail to import patient "+patientName;
 			if (StringUtils.filled(demographicNo)) {
