@@ -149,7 +149,7 @@
 	rev = l.size();
     }
 
-    if(display.equals("Prescriptions") && note.trim().length()==0){
+    if(display.equals(CaseManagementNoteLink.DISP_PRESCRIP) && note.trim().length()==0){
         if(special!=null)
             note=special+"\nRx annotation: ";
     }
@@ -209,7 +209,7 @@
             <input type="button" class="leftButton top" value="Cancel" onclick="window.close();"/>
             <p>&nbsp;</p>
             <p>
-                Extra note from import:<br>
+                Extra data from Import:<br>
                 <textarea rows="10" name="dump" readonly="readonly"><%=dump%></textarea>
             </p>
 	<% if (rev>0) { %>
@@ -236,7 +236,7 @@
 	    cmNote.setSigning_provider_no(provider);
 	    cmNote.setSigned(true);
 	    cmNote.setProgram_no(program_no);
-	    cmNote.setReporter_caisi_role("2");  //secRole for "doctor"
+	    cmNote.setReporter_caisi_role("2");  //secRole for "nurse"
 	    cmNote.setReporter_program_team("0");
 	    cmNote.setNote(note);
             String historyStr;

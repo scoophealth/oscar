@@ -54,12 +54,14 @@
 <%@ page import="org.oscarehr.phr.PHRAuthentication"%>
 <%@ page import="oscar.oscarDemographic.data.*"%>
 <%@ page import="oscar.oscarDemographic.pageUtil.Util" %>
-<%@ page import="org.springframework.web.context.*,org.springframework.web.context.support.*,org.oscarehr.common.dao.*,org.oscarehr.common.model.*,org.oscarehr.common.OtherIdManager"%>
+<%@ page import="org.springframework.web.context.*,org.springframework.web.context.support.*" %>
 <%@ page import="oscar.OscarProperties"%>
 <%@ page import="org.oscarehr.phr.PHRAuthentication"%>
+<%@ page import="org.oscarehr.common.dao.*,org.oscarehr.common.model.*" %>
+<%@ page import="org.oscarehr.common.OtherIdManager" %>
 <%@ page import="org.oscarehr.common.web.ContactAction" %>
-<%@ page import="org.oscarehr.common.dao.UserPropertyDAO"%>
-<%@ page import="org.oscarehr.common.model.UserProperty"%>
+<%@ page import="org.oscarehr.casemgmt.model.CaseManagementNoteLink" %>
+<%@ page import="org.oscarehr.casemgmt.service.CaseManagementManager" %>
 <%@ page import="org.oscarehr.util.SpringUtils"%>
 
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
@@ -92,6 +94,11 @@
 	String str = null;
 	int nStrShowLen = 20;
 	String prov= ((String ) oscarVariables.getProperty("billregion","")).trim().toUpperCase();
+	
+	CaseManagementManager cmm = (CaseManagementManager) SpringUtils.getBean("caseManagementManager");
+	List<CaseManagementNoteLink> cml = cmm.getLinkByTableId(CaseManagementNoteLink.DEMOGRAPHIC, Long.valueOf(demographic_no));
+	boolean hasImportExtra = (cml.size()>0); 
+	String annotation_display = CaseManagementNoteLink.DISP_DEMO;
 
 	LogAction.addLog((String) session.getAttribute("user"), LogConst.READ, LogConst.CON_DEMOGRAPHIC,  demographic_no , request.getRemoteAddr(),demographic_no);
 
@@ -1374,6 +1381,11 @@ if ( PatStat.equals(Dead) ) {%>
 							key="demographic.demographiceditdemographic.formNotes" /></h3>
 						
                                                     <%=notes%>&nbsp;
+<%if (hasImportExtra) { %>
+		                <a href="javascript:void(0);" title="Extra data from Import" onclick="window.open('../annotation/importExtra.jsp?display=<%=annotation_display %>&amp;table_id=<%=demographic_no %>&amp;demo=<%=demographic_no %>','anwin','width=400,height=250');">
+		                    <img src="../images/notes.gif" align="right" alt="Extra data from Import" height="16" width="13" border="0"> </a>
+<%} %>
+                                                    
                                                 
 						</div>
 						</div>
