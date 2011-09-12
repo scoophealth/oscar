@@ -75,9 +75,10 @@ public class PreventionData {
 		// prevent instantiation
 	}
 
-	public static void insertPreventionData(String creator, String demoNo, String date, String providerNo, String providerName, String preventionType, String refused, String nextDate,
+	public static Integer insertPreventionData(String creator, String demoNo, String date, String providerNo, String providerName, String preventionType, String refused, String nextDate,
 			String neverWarn, ArrayList<Map<String,String>> list) {
 		String sql = null;
+		Integer insertId = -1;
 		try {
 			
 			ResultSet rs;
@@ -87,7 +88,6 @@ public class PreventionData {
 			log.debug(sql);
 			DBHandler.RunSQL(sql);
 			rs = DBHandler.GetSQL("select Last_insert_id()");
-			int insertId = -1;
 			if (rs.next()) {
 				insertId = rs.getInt(1);
 			}
@@ -106,6 +106,7 @@ public class PreventionData {
 			log.error(e.getMessage(), e);
 			log.error(sql);
 		}
+		return insertId;
 	}
 
 	public static void addPreventionKeyValue(String preventionId, String keyval, String val) {

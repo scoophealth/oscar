@@ -24,6 +24,10 @@
  */
 -->
 <%@page import="java.text.SimpleDateFormat, oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarProvider.data.*,oscar.util.*"%>
+<%@ page import="org.oscarehr.casemgmt.model.CaseManagementNoteLink" %>
+<%@ page import="org.oscarehr.casemgmt.service.CaseManagementManager" %>
+<%@ page import="org.oscarehr.util.SpringUtils"%>
+
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
@@ -44,6 +48,8 @@
   String summary = "";
   boolean never = false;
   Map<String,String> extraData = new HashMap<String,String>();
+	boolean hasImportExtra = false; 
+	String annotation_display = CaseManagementNoteLink.DISP_PREV;
   
   if (id != null){
      
@@ -67,6 +73,10 @@
      }
      summary = (String) existingPrevention.get("summary");
      extraData = PreventionData.getPreventionKeyValues(id);
+     
+	CaseManagementManager cmm = (CaseManagementManager) SpringUtils.getBean("caseManagementManager");
+	List<CaseManagementNoteLink> cml = cmm.getLinkByTableId(CaseManagementNoteLink.PREVENTIONS, Long.valueOf(id));
+	hasImportExtra = (cml.size()>0); 
   }
 
   String prevention = request.getParameter("prevention");
@@ -310,7 +320,11 @@ clear: left;
 	       <div class="prevention">
 		   <fieldset>
 		       <legend>Summary</legend>
-		       <textarea name="summary" readonly><%=summary%></textarea>		   
+		       <textarea name="summary" readonly><%=summary%></textarea>
+<%if (hasImportExtra) { %>
+				<a href="javascript:void(0);" title="Extra data from Import" onclick="window.open('../annotation/importExtra.jsp?display=<%=annotation_display %>&amp;table_id=<%=id %>&amp;demo=<%=demographic_no %>','anwin','width=400,height=250');">
+				 <img src="../images/notes.gif" align="right" alt="Extra data from Import" height="16" width="13" border="0"> </a>
+<%} %>
 		   </fieldset>
 	       </div>
                <% } %>

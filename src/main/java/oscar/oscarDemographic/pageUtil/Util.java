@@ -17,6 +17,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -31,6 +32,7 @@ import org.oscarehr.common.model.PartialDate;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
+import oscar.oscarPrevention.PreventionDisplayConfig;
 import oscar.util.StringUtils;
 import oscar.util.UtilDateUtilities;
 
@@ -468,5 +470,34 @@ public class Util {
     	if (cmn.getProviderNameFirstLast()!=null) vtext += " by "+cmn.getProviderNameFirstLast();
     	
     	cmn.setNote("\n"+vtext+"]\n");
+    }
+    
+    static private HashMap<String,String> preventionToImmunizationType = new HashMap<String,String>(); 
+    static private HashMap<String,String> immunizationToPreventionType = new HashMap<String,String>();
+    
+    static private void set_p_i_types() {
+    	if (!preventionToImmunizationType.isEmpty() && !immunizationToPreventionType.isEmpty()) return;
+    	
+        PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance();
+        ArrayList<HashMap<String,String>> prevList = pdc.getPreventions();
+        
+        for (int k =0 ; k < prevList.size(); k++){
+            HashMap<String,String> a = new HashMap<String,String>();
+            a.putAll(prevList.get(k));
+            if (a != null && a.get("layout") != null &&  a.get("layout").equals("injection")){
+            	preventionToImmunizationType.put(a.get("name"), a.get("healthCanadaType"));
+            	immunizationToPreventionType.put(a.get("healthCanadaType"), a.get("name"));
+            }
+        }
+    }
+    
+    static public String getImmunizationType(String preventionType) {
+    	if (preventionToImmunizationType.isEmpty()) set_p_i_types();
+    	return preventionToImmunizationType.get(preventionType);
+    }
+    
+    static public String getPreventionType(String immunizationType) {
+    	if (immunizationToPreventionType.isEmpty()) set_p_i_types();
+    	return immunizationToPreventionType.get(immunizationType);
     }
 }
