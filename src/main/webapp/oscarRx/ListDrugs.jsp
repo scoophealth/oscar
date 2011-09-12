@@ -89,12 +89,6 @@ if (heading != null){
             <% } %>
             <th align="center" width="35px"><b><bean:message key="SearchDrug.msgDiscontinue"/></b></th>		
 			<th align="center" width="35px"><b><bean:message key="SearchDrug.msgReason"/></b></th>    
-            <%
-               String listHomeMed = OscarProperties.getInstance().getProperty("rx.list_home_med");
-               if(listHomeMed != null && listHomeMed.equals("true")) {
-            %>
-            <th align="center" width="35px"><b><bean:message key="SearchDrug.msgHomeMed"/></b></th>
-            <% } %>
             <th align="center" width="35px"><b><bean:message key="SearchDrug.msgPastMed"/></b></th>
             <%if(securityManager.hasWriteAccess("_rx",roleName$,true)) {%>
             	<th align="center" width="15px">&nbsp;</th>
@@ -286,11 +280,7 @@ if (heading != null){
             Boolean past_med = prescriptDrug.getPastMed();
             if( past_med == null ) {
             	past_med = false;
-            }
-            if(listHomeMed != null && listHomeMed.equals("true")) {
-            %>             
-            <td align="center" valign="top"><%=(prescriptDrug.getHomeMed())?"yes":"no" %></td>
-            <% } %>
+            } %>
             <td align="center" valign="top"><%=(past_med)?"yes":"no" %></td>
 
 			<%if(securityManager.hasWriteAccess("_rx",roleName$,true)) {%>
