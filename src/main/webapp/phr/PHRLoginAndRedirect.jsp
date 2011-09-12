@@ -160,11 +160,5 @@ pageContext.setAttribute("forwardToOnSuccess",request.getAttribute("forwardToOnS
             <%}%>
         </div>
         <script type="text/javascript" src="<%=request.getContextPath()%>/share/javascript/boxover.js"></script>
-        <%-- Kill this to speed it up
-        <phr:IfTimeToExchange>
-            <script type="text/javascript">
-            phrExchangeGo('<%=request.getContextPath()%>/phrExchange.do');
-            </script>
-        </phr:IfTimeToExchange>--%>
     </body>
 </html>
