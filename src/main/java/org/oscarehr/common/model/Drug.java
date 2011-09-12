@@ -121,9 +121,7 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
         @Column(name="dispense_interval")
         private Integer dispenseInterval;
         @Column(name="position")
-        private Integer position;
-        @Column(name="home_med")
-        private boolean homeMed;
+        private Integer position;        
         @Column(name="start_date_unknown")
         private boolean startDateUnknown;    
         private String comment;    
@@ -772,12 +770,6 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
     }
 	public void setPosition(Integer position) {
     	this.position = position;
-    }
-	public boolean getHomeMed() {
-    	return homeMed;
-    }
-	public void setHomeMed(boolean homeMed) {
-    	this.homeMed = homeMed;
     }
 	public boolean getStartDateUnknown() {
     	return startDateUnknown;

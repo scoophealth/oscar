@@ -65,7 +65,6 @@ if(listRxDrugs!=null){
         	 comment = "";
          }
          boolean pastMed            = rx.getPastMed();
-         boolean homeMed			= rx.getHomeMed();
          boolean startDateUnknown	= rx.getStartDateUnknown();
          boolean nonAuthoritative   = rx.isNonAuthoritative();
          String quantity            = rx.getQuantity();
@@ -176,10 +175,7 @@ if(listRxDrugs!=null){
 
         <bean:message key="WriteScript.msgPastMedication"/>
             <input  type="checkbox" name="pastMed_<%=rand%>" id="pastMed_<%=rand%>" <%if(pastMed) {%> checked="true" <%}%> />
-            
-        <bean:message key="WriteScript.msgHomeMedication"/>
-            <input  type="checkbox" name="homeMed_<%=rand%>" id="homeMed_<%=rand%>" <%if(homeMed) {%> checked="true" <%}%> />
-        
+                  
 	<Br/>
 	
 	<bean:message key="WriteScript.msgPatientCompliance"/>:
