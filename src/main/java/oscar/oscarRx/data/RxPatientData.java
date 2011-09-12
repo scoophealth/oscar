@@ -33,12 +33,16 @@ import java.util.LinkedList;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.math.NumberUtils;
+import org.oscarehr.common.dao.PartialDateDao;
+import org.oscarehr.common.model.PartialDate;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 import org.apache.commons.lang.StringUtils;
 
 import oscar.oscarDB.DBHandler;
 
 public class RxPatientData {
+	private static final PartialDateDao partialDateDao = (PartialDateDao) SpringUtils.getBean("partialDateDao");
    
 	private RxPatientData()
 	{
@@ -508,7 +512,7 @@ public class RxPatientData {
         	 return (position+1);
          }
          
-         public boolean Save() throws SQLException {            
+         public boolean Save() throws SQLException {
             boolean b;            
             String sql;            
             if (this.getAllergyId() == 0) {       
@@ -566,6 +570,9 @@ public class RxPatientData {
                
                b = DBHandler.RunSQL(sql);               
             }
+            
+            //write partial date
+            partialDateDao.setPartialDate(PartialDate.ALLERGIES, this.getAllergyId(), PartialDate.ALLERGIES_STARTDATE, allergy.getStartDateFormat());
             
             return b;            
          }

@@ -23,9 +23,6 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.validator.DynaValidatorForm;
 import org.apache.xmlbeans.XmlOptions;
-import org.apache.log4j.Logger;
-
-
 import oscar.oscarEncounter.oscarMeasurements.data.ImportExportMeasurements;
 import oscar.oscarEncounter.oscarMeasurements.data.MeasurementMapConfig;
 import oscar.oscarEncounter.oscarMeasurements.data.Measurements;
@@ -86,7 +83,6 @@ public class CihiExportAction extends DispatchAction {
 	private PrescriptionDAO prescriptionDao;
 	private PreventionDao preventionDao;
 	
-	private static final Logger logger = MiscUtils.getLogger();
 	private static final PartialDateDao partialDateDao = (PartialDateDao) SpringUtils.getBean("partialDateDao");
 	
 	public void setDemographicDao(DemographicDao demographicDao) {
@@ -449,17 +445,12 @@ public class CihiExportAction extends DispatchAction {
 		List<Issue> issueList = issueDAO.findIssueByCode(new String[] {"FamHistory"});
 		String[] famHistory = new String[] {issueList.get(0).getId().toString()};
 		
-		Calendar cal = Calendar.getInstance();
-		
-	    String intervention;
+		String intervention;
 	    String relationship;
 	    String age;
 	    Date startDate;	    
 	    String startDateFormat;
-	    boolean hasIssue;
-	    OscarProperties properties = OscarProperties.getInstance();
-	    
-		List<CaseManagementNote> notesList = getCaseManagementNoteDAO().getActiveNotesByDemographic(demo.getDemographicNo().toString(), famHistory);
+	    List<CaseManagementNote> notesList = getCaseManagementNoteDAO().getActiveNotesByDemographic(demo.getDemographicNo().toString(), famHistory);
 		for( CaseManagementNote caseManagementNote: notesList) {
 			
 			intervention = "";
@@ -467,8 +458,6 @@ public class CihiExportAction extends DispatchAction {
 			age = "";
 			startDateFormat = null;
 			startDate = null;
-			hasIssue = false;
-			
 			List<CaseManagementNoteExt> caseManagementNoteExtList = getCaseManagementNoteExtDAO().getExtByNote(caseManagementNote.getId());
             String keyval;
             for( CaseManagementNoteExt caseManagementNoteExt: caseManagementNoteExtList ) {
@@ -492,8 +481,6 @@ public class CihiExportAction extends DispatchAction {
             if( noteIssueList != null && noteIssueList.size() > 0 ) {
                 Iterator<CaseManagementIssue> i = noteIssueList.iterator();
                 CaseManagementIssue cIssue;                
-                hasIssue = true;
-
                 FamilyHistory familyHistory = patientRecord.addNewFamilyHistory();
                 while ( i.hasNext() ) {
                 	cIssue = i.next();
@@ -539,24 +526,17 @@ public class CihiExportAction extends DispatchAction {
 		List<Issue> issueList = issueDAO.findIssueByCode(new String[] {"Concerns"});
 		String[] onGoingConcerns = new String[] {issueList.get(0).getId().toString()};
 		
-		Calendar cal = Calendar.getInstance();
-			   
-	    Date startDate;
+		Date startDate;
 	    Date endDate;
 	    String startDateFormat;
 	    String endDateFormat;
-	    boolean hasIssue;
-	    OscarProperties properties = OscarProperties.getInstance();
-
-		List<CaseManagementNote> notesList = getCaseManagementNoteDAO().getActiveNotesByDemographic(demo.getDemographicNo().toString(), onGoingConcerns);
+	    List<CaseManagementNote> notesList = getCaseManagementNoteDAO().getActiveNotesByDemographic(demo.getDemographicNo().toString(), onGoingConcerns);
 		for( CaseManagementNote caseManagementNote: notesList) {
 			
 			startDate = null;
 			endDate = null;
 		    startDateFormat = null;
 		    endDateFormat = null;
-			hasIssue = false;
-			
 			List<CaseManagementNoteExt> caseManagementNoteExtList = getCaseManagementNoteExtDAO().getExtByNote(caseManagementNote.getId());
             String keyval;
             for( CaseManagementNoteExt caseManagementNoteExt: caseManagementNoteExtList ) {
@@ -576,8 +556,6 @@ public class CihiExportAction extends DispatchAction {
             if( noteIssueList != null && noteIssueList.size() > 0 ) {
                 Iterator<CaseManagementIssue> i = noteIssueList.iterator();
                 CaseManagementIssue cIssue;                
-                hasIssue = true;
-
                 ProblemList problemList = patientRecord.addNewProblemList();
                 while ( i.hasNext() ) {
                 	cIssue = i.next();
@@ -613,8 +591,7 @@ public class CihiExportAction extends DispatchAction {
 		List<Issue> issueList = issueDAO.findIssueByCode(new String[] {"RiskFactors"});
 		String[] riskFactor = new String[] {issueList.get(0).getId().toString()};
 		
-		Calendar cal = Calendar.getInstance();			    
-	    Date startDate;
+		Date startDate;
 	    Date endDate;
 	    String startDateFormat;
 	    String endDateFormat;
@@ -685,6 +662,7 @@ public class CihiExportAction extends DispatchAction {
         	xmlAllergies.setSeverity(cdsDtCihi.AdverseReactionSeverity.Enum.forString(severity[index]));
         	date = allergy.getStartDate();
         	if( date != null ) {
+        		Util.putPartialDate(xmlAllergies.addNewStartDate(), date, PartialDate.ALLERGIES, allergy.getAllergyid(), PartialDate.ALLERGIES_STARTDATE);
         		DateFullOrPartial dateFullOrPartial = xmlAllergies.addNewStartDate();        	
         		cal.setTime(date);
         		dateFullOrPartial.setFullDate(cal);
@@ -796,19 +774,15 @@ public class CihiExportAction extends DispatchAction {
 	
 	@SuppressWarnings("unchecked")
     private void buildProcedure(Demographic demo, PatientRecord patientRecord) {
-		OscarProperties properties = OscarProperties.getInstance();
 		List<Issue> issueList = issueDAO.findIssueByCode(new String[] {"MedHistory"});
 		String[] medhistory = new String[] {issueList.get(0).getId().toString()};
 		
-		Calendar cal = Calendar.getInstance();			    
-                Date pDate;
-                Procedure procedure;
-                ProblemList problemlist;
+		Procedure procedure;
+		ProblemList problemlist;
 	    
 		List<CaseManagementNote> notesList = getCaseManagementNoteDAO().getActiveNotesByDemographic(demo.getDemographicNo().toString(), medhistory);
 		for( CaseManagementNote caseManagementNote: notesList) {
 			
-                    pDate = null;
                     procedure = null;
                     problemlist = null;
 			

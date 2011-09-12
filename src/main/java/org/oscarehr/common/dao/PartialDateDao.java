@@ -87,6 +87,8 @@ public class PartialDateDao extends AbstractDao<PartialDate> {
 	}
 
 	public void setPartialDate(Integer tableName, Integer tableId, Integer fieldName, String format) {
+		if (tableName==null || fieldName==null || tableId==null || tableId.equals(0)) return;
+		
 		PartialDate partialDate = getPartialDate(tableName, tableId, fieldName);
 		if (partialDate==null) {
 			if (StringUtils.filled(format)) partialDate = new PartialDate(tableName, tableId, fieldName, format);
@@ -118,12 +120,16 @@ public class PartialDateDao extends AbstractDao<PartialDate> {
 		return null;
     }
 	
-	public Date StringToDate(String partialDate) {
+	public String getFullDate(String partialDate) {
 		String format = getFormat(partialDate);
 		
 		if (PartialDate.YEARONLY.equals(format)) partialDate += "-01-01";
 		else if (PartialDate.YEARMONTH.equals(format)) partialDate += "-01";
 		
-		return UtilDateUtilities.StringToDate(partialDate, "yyyy-MM-dd");
+		return partialDate;
+	}
+	
+	public Date StringToDate(String partialDate) {
+		return UtilDateUtilities.StringToDate(getFullDate(partialDate), "yyyy-MM-dd");
 	}
 }
