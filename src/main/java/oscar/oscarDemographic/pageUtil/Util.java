@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.apache.xmlbeans.XmlCalendar;
+import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteExt;
 import org.oscarehr.common.dao.PartialDateDao;
 import org.oscarehr.common.model.PartialDate;
@@ -378,12 +379,14 @@ public class Util {
     }
 
     static public void putPartialDate(cdsDtCihi.DateFullOrPartial dfp, CaseManagementNoteExt cme) {
-    	putPartialDate(dfp, cme.getDateValue(), cme.getValue());
+    	if (cme!=null) putPartialDate(dfp, cme.getDateValue(), cme.getValue());
     }
 
     static public void putPartialDate(cdsDtCihi.DateFullOrPartial dfp, Date dateValue, Integer tableName, Integer tableId, Integer fieldName) {
+    	String format = null;
     	PartialDate pd = partialDateDao.getPartialDate(tableName, tableId, fieldName);
-    	putPartialDate(dfp, dateValue, pd.getFormat());
+    	if (pd!=null) format = pd.getFormat();
+    	putPartialDate(dfp, dateValue, format);
     }
 
     static public void putPartialDate(cdsDtCihi.DateFullOrPartial dfp, Date dateValue, String format) {
@@ -434,5 +437,36 @@ public class Util {
     static public String convertCodeToLanguage(String code) {
     	if (StringUtils.empty(code)) return null;
     	return spokenLangProperties.getProperty(code);
+    }
+
+	static private final String verified = "[Verified and Signed";
+	
+    static public boolean isVerified(CaseManagementNote cmn) {
+    	if (cmn==null) return false;
+    	
+    	String note = cmn.getNote();
+    	if (StringUtils.empty(note)) return false;
+    	if (!note.contains("\n")) return false;
+    	
+    	int marker = note.substring(0, note.lastIndexOf("\n")).lastIndexOf("\n");
+    	if (marker<0) return false;
+    	
+    	String vtext = verified;
+    	if (cmn.getUpdate_date()!=null) vtext += " on "+UtilDateUtilities.DateToString(cmn.getUpdate_date(), "dd-MMM-yyyy HH:mm");
+    	if (cmn.getProviderNameFirstLast()!=null) vtext += " by "+cmn.getProviderNameFirstLast();
+    	return note.substring(marker+1).startsWith(vtext);
+    }
+    
+    static public void writeVerified(CaseManagementNote cmn) {
+    	if (isVerified(cmn)) return;
+    	
+    	String note = cmn.getNote();
+    	if (StringUtils.empty(note)) return;
+    	
+    	String vtext = verified;
+    	if (cmn.getUpdate_date()!=null) vtext += " on "+UtilDateUtilities.DateToString(cmn.getUpdate_date(), "dd-MMM-yyyy HH:mm");
+    	if (cmn.getProviderNameFirstLast()!=null) vtext += " by "+cmn.getProviderNameFirstLast();
+    	
+    	cmn.setNote("\n"+vtext+"]\n");
     }
 }

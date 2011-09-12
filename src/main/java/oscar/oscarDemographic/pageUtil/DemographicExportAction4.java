@@ -28,12 +28,9 @@
 
 package oscar.oscarDemographic.pageUtil;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
-import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -723,7 +720,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                             }
                         }
                         addOneEntry(PASTHEALTH);
-                        boolean bSTARTDATE=false, bRESOLUTIONDATE=false, bPROCEDUREDATE=false, bLIFESTAGE=false;;
+                        boolean bSTARTDATE=false, bRESOLUTIONDATE=false, bPROCEDUREDATE=false, bLIFESTAGE=false;
                         for (CaseManagementNoteExt cme : cmeList) {
                             if (cme.getKeyVal().equals(CaseManagementNoteExt.STARTDATE)) {
                                 if (bSTARTDATE) continue;
@@ -910,37 +907,45 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         cNote.setMyClinicalNotesContent(encounter);
                         addOneEntry(CLINICALNOTE);
 
-                        if (cmn.getUpdate_date()!=null) {
-                            cNote.addNewEnteredDateTime().setFullDateTime(Util.calDate(cmn.getUpdate_date()));
+                        //entered datetime
+                        if (cmn.getCreate_date()!=null) {
+                            cNote.addNewEnteredDateTime().setFullDateTime(Util.calDate(cmn.getCreate_date()));
                         }
+                        
+                        //event datetime
                         if (cmn.getObservation_date()!=null) {
                             cNote.addNewEventDateTime().setFullDateTime(Util.calDate(cmn.getObservation_date()));
                         }
 
                         List<CaseManagementNote> cmn_same = cmm.getNotesByUUID(cmn.getUuid());
                         for (CaseManagementNote cm_note : cmn_same) {
-
+ 
                             //participating providers
-                            if (StringUtils.filled(cm_note.getProviderNo())) {
+                            if (StringUtils.filled(cm_note.getProviderNo()) && !Util.isVerified(cm_note)) {
+                            	//participant info
                                 ClinicalNotes.ParticipatingProviders pProvider = cNote.addNewParticipatingProviders();
                                 ProviderData prvd = new ProviderData(cm_note.getProviderNo());
                                 Util.writeNameSimple(pProvider.addNewName(), StringUtils.noNull(prvd.getFirst_name()), StringUtils.noNull(prvd.getLast_name()));
-
                                 if (StringUtils.noNull(prvd.getOhip_no()).length()<=6) pProvider.setOHIPPhysicianId(prvd.getOhip_no());
+                                
+                                //note created datetime
                                 cdsDt.DateTimeFullOrPartial noteCreatedDateTime = pProvider.addNewDateTimeNoteCreated();
-                                if (cmn.getCreate_date()!=null) noteCreatedDateTime.setFullDate(Util.calDate(cm_note.getCreate_date()));
-                                else noteCreatedDateTime.setFullDate(Util.calDate(new Date()));
+                                if (cmn.getUpdate_date()!=null) noteCreatedDateTime.setFullDateTime(Util.calDate(cm_note.getUpdate_date()));
+                                else noteCreatedDateTime.setFullDateTime(Util.calDate(new Date()));
                             }
 
                             //reviewing providers
-                            if (StringUtils.filled(cm_note.getSigning_provider_no())) {
-                                ProviderData prvd = new ProviderData(cm_note.getSigning_provider_no());
+                            if (StringUtils.filled(cm_note.getSigning_provider_no()) && Util.isVerified(cm_note)) {
+                            	//reviewer info
                                 ClinicalNotes.NoteReviewer noteReviewer = cNote.addNewNoteReviewer();
+                                ProviderData prvd = new ProviderData(cm_note.getSigning_provider_no());
                                 Util.writeNameSimple(noteReviewer.addNewName(), prvd.getFirst_name(), prvd.getLast_name());
-                                
-                                if (cm_note.getUpdate_date()!=null) noteReviewer.addNewDateTimeNoteReviewed().setFullDate(Util.calDate(cm_note.getUpdate_date()));
-                                else noteReviewer.addNewDateTimeNoteReviewed().setFullDateTime(Util.calDate(new Date()));
                                 if (StringUtils.noNull(prvd.getOhip_no()).length()<=6) noteReviewer.setOHIPPhysicianId(prvd.getOhip_no());
+                                
+                                //note reviewed datetime
+                                cdsDt.DateTimeFullOrPartial noteReviewedDateTime = noteReviewer.addNewDateTimeNoteReviewed();
+                                if (cm_note.getUpdate_date()!=null) noteReviewedDateTime.setFullDateTime(Util.calDate(cm_note.getUpdate_date()));
+                                else noteReviewer.addNewDateTimeNoteReviewed().setFullDateTime(Util.calDate(new Date()));
                             }
                         }
                     }
@@ -1105,7 +1110,8 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         else
                         {
                             err.add("Error! No Immunization Name for Patient "+demoNo+" ("+(k+1)+")");
-                            immu.setImmunizationName(prevType);
+                            if (StringUtils.filled(prevType)) immu.setImmunizationName(prevType);
+                            else immu.setImmunizationName("");
                         }
                         addOneEntry(IMMUNIZATION);
                         String imSummary = Util.addSummary("Immunization Name",data);
@@ -1359,9 +1365,10 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     Date dateTime = labMea.getMeasure().getDateObserved();
                     String sDateTime = labMea.getExtVal("datetime");
                     if (dateTime!=null) collDate.setFullDateTime(Util.calDate(dateTime));
-                    else collDate.setFullDateTime(Util.calDate(sDateTime));
+                    else if (StringUtils.filled(sDateTime)) collDate.setFullDateTime(Util.calDate(sDateTime));
+                    else collDate.setFullDateTime(Util.calDate("0001-01-01"));
 
-                    if (dateTime==null && sDateTime==null) {
+                    if (dateTime==null && StringUtils.empty(sDateTime)) {
                         err.add("Error! No Collection Datetime for Lab Test "+labResults.getLabTestCode()+" for Patient "+demoNo);
                         collDate.setFullDateTime(Util.calDate(new Date()));
                     }
@@ -1376,6 +1383,10 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     data = StringUtils.noNull(labMea.getMeasure().getDataField());
                     if (StringUtils.filled(data)) {
                         LaboratoryResults.Result result = labResults.addNewResult();
+                        if (data.length()>120) {
+                        	data = data.substring(0, 120);
+                        	err.add("Error! Result text length > 120 - truncated; Lab Test "+labResults.getLabTestCode()+" for Patient "+demoNo);
+                        }
                         result.setValue(data);
                         data = labMea.getExtVal("unit");
                         if (StringUtils.filled(data)) result.setUnitOfMeasure(data);
@@ -1430,10 +1441,13 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         if (UtilDateUtilities.StringToDate(timestamp,"yyyy-MM-dd HH:mm:ss")!=null) {
                             LaboratoryResults.ResultReviewer reviewer = labResults.addNewResultReviewer();
                             reviewer.addNewDateTimeResultReviewed().setFullDateTime(Util.calDate(timestamp));
+                            
+                            //reviewer name
+                            cdsDt.PersonNameSimple reviewerName = reviewer.addNewName();
                             String lab_provider_no = labRoutingInfo.get("provider_no");
                             if (!"0".equals(lab_provider_no)) {
                                 ProviderData pvd = new ProviderData(lab_provider_no);
-                                Util.writeNameSimple(reviewer.addNewName(), pvd.getFirst_name(), pvd.getLast_name());
+                                Util.writeNameSimple(reviewerName, pvd.getFirst_name(), pvd.getLast_name());
                                 if (StringUtils.noNull(pvd.getOhip_no()).length()<=6) reviewer.setOHIPPhysicianId(pvd.getOhip_no());
                             }
                         }
@@ -1502,11 +1516,9 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 
             if (exReportsReceived) {
                 // REPORTS RECEIVED
-                ArrayList edoc_list = new EDocUtil().listDemoDocs(demoNo);
+                ArrayList<EDoc> edoc_list = new EDocUtil().listDemoDocs(demoNo);
                 for (int j=0; j<edoc_list.size(); j++) {
-                    EDoc edoc = (EDoc)edoc_list.get(j);
-                    ReportsReceived rpr = patientRec.addNewReportsReceived();
-                    rpr.setFormat(cdsDt.ReportFormat.TEXT);
+                    EDoc edoc = edoc_list.get(j);
 
                     File f = new File(edoc.getFilePath());
                     if (!f.exists()) {
@@ -1514,6 +1526,9 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     } else if (f.length()>Runtime.getRuntime().freeMemory()) {
                         err.add("Error! Document \""+f.getName()+"\" too big to be exported. Not enough memory!");
                     } else {
+                        ReportsReceived rpr = patientRec.addNewReportsReceived();
+                        rpr.setFormat(cdsDt.ReportFormat.TEXT);
+                        
                         cdsDt.ReportContent rpc = rpr.addNewContent();
                         InputStream in = new FileInputStream(f);
                         byte[] b = new byte[(int)f.length()];
@@ -2015,7 +2030,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
     return mapping.findForward(ffwd);
 }
 
-    File makeReadMe(ArrayList<File> fs, ArrayList error) throws IOException {
+    File makeReadMe(ArrayList<File> fs, ArrayList<String> error) throws IOException {
         OscarProperties oscarp = oscar.OscarProperties.getInstance();
 	File readMe = new File(fs.get(0).getParentFile(), "ReadMe.txt");
 	BufferedWriter out = new BufferedWriter(new FileWriter(readMe));
@@ -2236,79 +2251,6 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
         return null;
     }
 
-    private int[] countByte(File fin, String[] kwd) throws FileNotFoundException, IOException {
-	int[] cat_cnt = new int[kwd.length];
-	String[] tag = new String[kwd.length];
-	
-	FileInputStream fis = new FileInputStream(fin);
-	BufferedInputStream bis = new BufferedInputStream(fis);
-	DataInputStream dis = new DataInputStream(bis);
-	
-	int cnt=0, tag_in_list=0;
-	boolean tag_fnd=false;
-	
-	while (dis.available()!=0) {
-	    if (!tag_fnd) {   //looking for a start tag
-		if ((char)dis.read()=='<') {   //a possible tag
-		    boolean whole_tag=false;
-		    
-		    //retrieve the whole tag word
-		    String tag_word = "";
-		    while (dis.available()!=0 && !whole_tag) {
-			String tmp = "" + (char)dis.read();
-			if (tmp.equals(">")) {
-			    whole_tag = true;
-			} else {
-			    tag_word += tmp;
-			}
-		    }
-		    
-		    //compare the tag word with the list
-		    for (int i=0; i<kwd.length; i++) {
-			if (tag_word.equals("cds:"+kwd[i])) {
-			    tag_in_list = i;
-			    tag_fnd = true;
-			    cnt = kwd[i].length() +1 +4 +1;   //byte count +"<" +"cds:" +">"
-			}
-		    }
-		}
-	    } else {   //a start tag was found, counting...
-		//look for an end tag
-		if ((char)dis.read()=='<') {   //a possible tag
-		    if ((char)dis.read()=='/') {   //a possible end tag
-			boolean whole_tag=false;
-
-			//retrieve the whole tag word
-			String tag_word = "";
-			while (dis.available()!=0 & !whole_tag) {
-			    String tmp = "" + (char)dis.read();
-			    if (tmp.equals(">")) {
-				whole_tag = true;
-			    } else {
-				tag_word += tmp;
-			    }
-			    cnt++;
-			}
-			
-			//compare tag word with the start tag - if matched, stop counting
-			if (tag_word.equals("cds:"+kwd[tag_in_list])) {
-			    tag_fnd = false;
-			    cat_cnt[tag_in_list] += cnt;
-			    cnt = 0;
-			}
-		    }
-		    cnt++;
-		}
-		cnt++;
-	    }
-	}
-	fis.close();
-	bis.close();
-	dis.close();
-	
-	return cat_cnt;
-    }
-    
     private String cutExt(String filename) {
 	if (StringUtils.empty(filename)) return "";
 	String[] parts = filename.split(".");
@@ -2331,5 +2273,4 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
         n = n==null ? 1 : n+1;
         entries.put(category+exportNo, n);
     }
-
 }
