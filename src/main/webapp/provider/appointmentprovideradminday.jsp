@@ -703,34 +703,6 @@ var pars = "id=" + id;
 
 var myAjax = new Ajax.Updater(id, url, {method: 'get', parameters: pars});
 }
-
-<!--
-<oscar:oscarPropertiesCheck property="MY_OSCAR" value="yes">
-<phr:IfTimeToExchange>
-phrExchangeGo('../phrExchange.do');
-</phr:IfTimeToExchange>
-</oscar:oscarPropertiesCheck>
--->
-/*
-// myoscar JavaScript server call --we are using the JSP check instead (see above)
-function phrAsyncActivate() {
-var interval = 10;
-var date = new Date();
-var curr_min = d.getMinutes();
-var timeleft = curr_min%interval + 4;
-setTimeout(phrAsyncGo2, timeleft);
-}
-function phrAsyncGo2() {
-alert("executing");
-new Ajax.Request('../phrAsync.do', { method:'get' });
-phrAsyncActivate();
-}
-
-
-
-
-*/
-
 </script>
 
 <style type="text/css">
