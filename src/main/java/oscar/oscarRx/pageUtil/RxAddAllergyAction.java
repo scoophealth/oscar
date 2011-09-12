@@ -34,6 +34,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.common.model.PartialDate;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.log.LogAction;
@@ -80,11 +81,13 @@ public final class RxAddAllergyAction extends Action {
             allergy.setReaction(description);
 	    
 	    if (startDate.length()>=8 && getCharOccur(startDate,'-')==2) {
-		allergy.setStartDate(oscar.oscarRx.util.RxUtil.StringToDate(startDate, "yyyy-MM-dd"));
+	    	allergy.setStartDate(oscar.oscarRx.util.RxUtil.StringToDate(startDate, "yyyy-MM-dd"));
 	    } else if (startDate.length()>=6 && getCharOccur(startDate,'-')>=1) {
-		allergy.setStartDate(oscar.oscarRx.util.RxUtil.StringToDate(startDate, "yyyy-MM"));
+	    	allergy.setStartDate(oscar.oscarRx.util.RxUtil.StringToDate(startDate, "yyyy-MM"));
+	    	allergy.setStartDateFormat(PartialDate.YEARMONTH);
 	    } else if (startDate.length()>=4) {
-		allergy.setStartDate(oscar.oscarRx.util.RxUtil.StringToDate(startDate, "yyyy"));
+	    	allergy.setStartDate(oscar.oscarRx.util.RxUtil.StringToDate(startDate, "yyyy"));
+	    	allergy.setStartDateFormat(PartialDate.YEARONLY);
 	    }
             allergy.setAgeOfOnset(ageOfOnset);
             allergy.setSeverityOfReaction(severityOfReaction);
