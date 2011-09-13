@@ -13,6 +13,14 @@
          org.oscarehr.common.dao.UserPropertyDAO,org.oscarehr.common.model.UserProperty"%>
 <%@ page import="org.oscarehr.util.SpringUtils"%>
 
+<!-- Classes needed for signature injection -->
+<%@page import="org.oscarehr.util.SessionConstants"%>
+<%@page import="org.oscarehr.common.dao.*"%>
+<%@page import="org.oscarehr.common.model.*"%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
+<%@page import="org.oscarehr.util.DigitalSignatureUtils"%>
+<%@page import="org.oscarehr.ui.servlet.ImageRenderingServlet"%>
+<!-- end -->
 
 <!--
 /*
@@ -364,22 +372,61 @@ if(prop!=null && prop.getValue().equalsIgnoreCase("yes")){
 
 
                                                     <% if ( oscar.OscarProperties.getInstance().getProperty("RX_FOOTER") != null ){ out.write(oscar.OscarProperties.getInstance().getProperty("RX_FOOTER")); }%>
-
+ 
 
                                                     <tr valign=bottom>
                                                             <td height=25px width=25%><bean:message key="RxPreview.msgSignature"/>:</td>
                                                             <td height=25px width=75%
                                                                     style="border-width: 0; border-bottom-width: 1; border-style: solid;">
+                                                                    <%
+																	String signatureRequestId = null;	
+																	String imageUrl=null;
+																	String startimageUrl=null;
+																	String statusUrl=null;
+
+																	signatureRequestId=LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
+																	imageUrl=request.getContextPath()+"/imageRenderingServlet?source="+ImageRenderingServlet.Source.signature_preview.name()+"&"+DigitalSignatureUtils.SIGNATURE_REQUEST_ID_KEY+"="+signatureRequestId;
+																	startimageUrl=request.getContextPath()+"/images/1x1.gif";		
+																	statusUrl = request.getContextPath()+"/PMmodule/ClientManager/check_signature_status.jsp?" + DigitalSignatureUtils.SIGNATURE_REQUEST_ID_KEY+"="+signatureRequestId;
+																	%>
+																	<input type="hidden" name="<%=DigitalSignatureUtils.SIGNATURE_REQUEST_ID_KEY%>" value="<%=signatureRequestId%>" />	
+
+																	<img id="signature" style="width:200px; height:100px" src="<%=startimageUrl%>" alt="digital_signature" />
+				
+																	<script type="text/javascript">
+																		var POLL_TIME=2500;
+																		var counter=0;
+
+																		function refreshImage()
+																			{
+																			counter=counter+1;
+																			var img=document.getElementById("signature");
+																			img.src='<%=imageUrl%>&rand='+counter;
+
+																			var request = dojo.io.bind({
+																	                            url: '<%=statusUrl%>',
+																	                            method: "post",
+																	                            mimetype: "text/html",
+																	                            load: function(type, data, evt){   
+ 																	                               	var x = data.trim();                                	
+																	                                    //document.getElementById('signature_status').value=x;                                   
+																	                            }
+																	                    	});
+						
+																			}
+																	</script>
+                                                                    
                                                             &nbsp;</td>
                                                     </tr>
                                                     <tr valign=bottom>
-                                                            <td height=25px></td>
-                                                            <td height=25px>&nbsp; <%= doctorName%> <% if ( pracNo != null && ! pracNo.equals("") && !pracNo.equalsIgnoreCase("null")) { %>
-                                                                Pract. No. <%= pracNo%> <% } %>
+                                                            <td height=25px>
+                                                            <% if (props.getProperty("signature_tablet", "").equals("yes")) { %>
+                                                            <input type="button" value=<bean:message key="RxPreview.digitallySign"/> class="noprint" onclick="setInterval('refreshImage()', POLL_TIME); document.location='<%=request.getContextPath()%>/signature_pad/topaz_signature_pad.jnlp.jsp?<%=DigitalSignatureUtils.SIGNATURE_REQUEST_ID_KEY%>=<%=signatureRequestId%>'"  />
+                                                            	<% } %>
                                                             </td>
-
-
-
+                                                            <td height=25px>&nbsp; <%= doctorName%> <% if ( pracNo != null && ! pracNo.equals("") && !pracNo.equalsIgnoreCase("null")) { %>
+                                                                Pract. No. <%= pracNo%> <% } %>                                                         
+                                                            </td>
                                                     </tr>
                                                     <% 
                                                     	 if( rePrint.equalsIgnoreCase("true") && rx != null ) 
