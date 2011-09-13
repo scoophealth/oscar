@@ -382,7 +382,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             if (UtilDateUtilities.StringToDate(data)==null) {
                 err.add("Error! No Date Of Birth for Patient "+demoNo);
             } else if (UtilDateUtilities.StringToDate(data)==null) {
-                err.add("Note: Not exporting invalid Date of Birth for Patient "+demoNo);
+                err.add("Not exporting invalid Date of Birth for Patient "+demoNo);
             }
             data = demographic.getChartNo();
             if (StringUtils.filled(data)) demo.setChartNumber(data);
@@ -440,7 +440,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                 if (data!=null) {
                     if (data.length()>5) {
                         data = data.substring(0,5);
-                        err.add("Note: Home phone extension too long - trimmed for Patient "+demoNo);
+                        err.add("Home phone extension too long - trimmed for Patient "+demoNo);
                     }
                     phoneResident.setExtension(data);
                 }
@@ -454,7 +454,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                 if (data!=null) {
                     if (data.length()>5) {
                         data = data.substring(0,5);
-                        err.add("Note: Work phone extension too long, export trimmed for Patient "+demoNo);
+                        err.add("Work phone extension too long, export trimmed for Patient "+demoNo);
                     }
                     phoneWork.setExtension(data);
                 }
@@ -521,7 +521,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         if (StringUtils.filled(data)) {
                             if (data.length()>5) {
                                 data = data.substring(0,5);
-                                err.add("Note: Home phone extension too long, export trimmed for contact ("+(j+1)+") of Patient "+demoNo);
+                                err.add("Home phone extension too long, export trimmed for contact ("+(j+1)+") of Patient "+demoNo);
                             }
                             phoneRes.setExtension(data);
                         }
@@ -535,7 +535,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         if (StringUtils.filled(data)) {
                             if (data.length()>5) {
                                 data = data.substring(0,5);
-                                err.add("Note: Work phone extension too long, export trimmed for contact ("+(j+1)+") of Patient "+demoNo);
+                                err.add("Work phone extension too long, export trimmed for contact ("+(j+1)+") of Patient "+demoNo);
                             }
                             phoneW.setExtension(data);
                         }
@@ -1036,7 +1036,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                             alr.setSeverity(cdsDt.AdverseReactionSeverity.LT);
                         } else { //SeverityOfReaction==0
                             alr.setSeverity(cdsDt.AdverseReactionSeverity.MI);
-                            err.add("Note: Severity Of Allergy Reaction [Unknown] exported as [Mild] for Patient "+demoNo+" ("+(j+1)+")");
+                            err.add("Severity Of Allergy Reaction [Unknown] exported as [Mild] for Patient "+demoNo+" ("+(j+1)+")");
                         }
                         aSummary = Util.addSummary(aSummary,"Adverse Reaction Severity",alr.getSeverity().toString());
                     }
@@ -1155,10 +1155,20 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         medi.setDrugIdentificationNumber(data);
                         mSummary = Util.addSummary(mSummary, "DIN", data);
                     }
-                    String drugName = StringUtils.noNull(arr[p].getBrandName());
-                    medi.setDrugName(drugName);
+                    String drugName = arr[p].getBrandName();
+                    if (StringUtils.filled(drugName)) {
+                    	medi.setDrugName(drugName);
+                    	mSummary = Util.addSummary(mSummary, "Drug Name", drugName);
+                    } else {
+                    	drugName = arr[p].getCustomName();
+                        if (StringUtils.filled(drugName)) {
+                        	medi.setDrugDescription(drugName);
+                        	mSummary = Util.addSummary(mSummary, "Drug Description", drugName);
+                        } else {
+                        	err.add("Error! No medication name for Patient "+demoNo+" ("+(p+1)+")");
+                        }
+                    }
                     addOneEntry(MEDICATION);
-                    mSummary = Util.addSummary(mSummary, "Drug Name", drugName);
 
                     /* no need:
                     DrugReasonDao drugReasonDao = (DrugReasonDao) SpringUtils.getBean("drugReasonDao");
@@ -1174,7 +1184,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 
                         String strength = sep<0 ? Util.sleadingNum(strength0) : strength0.substring(0,sep);
                         if (sep>=0) {
-                            err.add("Note: Multiple components exist for Drug "+drugName+" for Patient "+demoNo+". Exporting 1st one as Strength.");
+                            err.add("Multiple components exist for Drug "+drugName+" for Patient "+demoNo+". Exporting 1st one as Strength.");
                             if (sep<strength0.length()) strength0 = strength0.substring(sep+1);
                         }
                         cdsDt.DrugMeasure drugM = medi.addNewStrength();
@@ -1189,6 +1199,12 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         medi.setDosageUnitOfMeasure(StringUtils.noNull(arr[p].getUnit()));
                         mSummary = Util.addSummary(mSummary, "Dosage", arr[p].getDosageDisplay()+" "+StringUtils.noNull(arr[p].getUnit()));
                     }
+                    
+                    if (StringUtils.filled(arr[p].getSpecialInstruction())) {
+                        medi.setPrescriptionInstructions(arr[p].getSpecialInstruction());
+                        mSummary = Util.addSummary(mSummary, "Prescription Instructions", data);
+                    }
+                    
                     if (StringUtils.filled(arr[p].getRoute())) {
                         medi.setRoute(arr[p].getRoute());
                         mSummary = Util.addSummary(mSummary, "Route", arr[p].getRoute());
@@ -1196,11 +1212,6 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     if (StringUtils.filled(arr[p].getDrugForm())) {
                         medi.setForm(arr[p].getDrugForm());
                         mSummary = Util.addSummary(mSummary, "Form", arr[p].getDrugForm());
-                    }
-                    if (StringUtils.filled(arr[p].getCustomName())) {
-                        if (StringUtils.empty(drugName)) medi.setDrugName(arr[p].getCustomName());
-                        medi.setDrugDescription(arr[p].getCustomName());
-                        mSummary = Util.addSummary(mSummary, "Drug Description", arr[p].getCustomName());
                     }
                     if (StringUtils.filled(arr[p].getFreqDisplay())) {
                         medi.setFrequency(arr[p].getFreqDisplay());
@@ -1293,14 +1304,6 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                             Util.writeNameSimple(pcb.addNewName(), prvd.getFirst_name(), prvd.getLast_name());
                             mSummary = Util.addSummary(mSummary, "Prescribed by", StringUtils.noNull(prvd.getFirst_name())+" "+StringUtils.noNull(prvd.getLast_name()));
                         }
-                    }
-
-                    /* no need:
-                    data = arr[p].getSpecial();
-                    if (StringUtils.filled(data)) {
-                        data = Util.extractDrugInstr(data);
-                        medi.setPrescriptionInstructions(data);
-                        mSummary = Util.addSummary(mSummary, "Prescription Instructions", data);
                     }
 
                     /* no need:
@@ -1557,13 +1560,13 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         if (UtilDateUtilities.StringToDate(data)!=null) {
                             rpr.addNewEventDateTime().setFullDate(Util.calDate(data));
                         } else {
-                            err.add("Note: Not exporting invalid Event Date (Reports) for Patient "+demoNo+" ("+(j+1)+")");
+                            err.add("Not exporting invalid Event Date (Reports) for Patient "+demoNo+" ("+(j+1)+")");
                         }
                         data = edoc.getDateTimeStamp();
                         if (UtilDateUtilities.StringToDate(data,"yyyy-MM-dd HH:mm:ss")!=null) {
                             rpr.addNewReceivedDateTime().setFullDateTime(Util.calDate(data));
                         } else {
-                            err.add("Note: Not exporting invalid Received DateTime (Reports) for Patient "+demoNo+" ("+(j+1)+")");
+                            err.add("Not exporting invalid Received DateTime (Reports) for Patient "+demoNo+" ("+(j+1)+")");
                         }
                         data = edoc.getReviewDateTime();
                         if (UtilDateUtilities.StringToDate(data,"yyyy-MM-dd HH:mm:ss")!=null) {
@@ -1858,7 +1861,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         }
                         dmc.setCounsellingPerformed(cdsDt.DiabetesMotivationalCounselling.CounsellingPerformed.NUTRITION);
                         if (Util.yn(meas.getDataField())==cdsDt.YnIndicatorsimple.N) {
-                            err.add("Note: Patient "+demoNo+" didn't do Diabetes Counselling (Nutrition) on "+UtilDateUtilities.DateToString(meas.getDateObserved(),"yyyy-MM-dd"));
+                            err.add("Patient "+demoNo+" didn't do Diabetes Counselling (Nutrition) on "+UtilDateUtilities.DateToString(meas.getDateObserved(),"yyyy-MM-dd"));
                         }
                         addOneEntry(CAREELEMENTS);
                     } else if (meas.getType().equals("MCCE")) { //Motivation Counseling Completed Exercise
@@ -1870,7 +1873,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         }
                         dmc.setCounsellingPerformed(cdsDt.DiabetesMotivationalCounselling.CounsellingPerformed.EXERCISE);
                         if (Util.yn(meas.getDataField())==cdsDt.YnIndicatorsimple.N) {
-                            err.add("Note: Patient "+demoNo+" didn't do Diabetes Counselling (Exercise) on "+UtilDateUtilities.DateToString(meas.getDateObserved(),"yyyy-MM-dd"));
+                            err.add("Patient "+demoNo+" didn't do Diabetes Counselling (Exercise) on "+UtilDateUtilities.DateToString(meas.getDateObserved(),"yyyy-MM-dd"));
                         }
                         addOneEntry(CAREELEMENTS);
                     } else if (meas.getType().equals("MCCS")) { //Motivation Counseling Completed Smoking Cessation
@@ -1882,7 +1885,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         }
                         dmc.setCounsellingPerformed(cdsDt.DiabetesMotivationalCounselling.CounsellingPerformed.SMOKING_CESSATION);
                         if (Util.yn(meas.getDataField())==cdsDt.YnIndicatorsimple.N) {
-                            err.add("Note: Patient "+demoNo+" didn't do Diabetes Counselling (Smoking Cessation) on "+UtilDateUtilities.DateToString(meas.getDateObserved(),"yyyy-MM-dd"));
+                            err.add("Patient "+demoNo+" didn't do Diabetes Counselling (Smoking Cessation) on "+UtilDateUtilities.DateToString(meas.getDateObserved(),"yyyy-MM-dd"));
                         }
                         addOneEntry(CAREELEMENTS);
                     } else if (meas.getType().equals("MCCO")) { //Motivation Counseling Completed Other
@@ -1894,7 +1897,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         }
                         dmc.setCounsellingPerformed(cdsDt.DiabetesMotivationalCounselling.CounsellingPerformed.OTHER);
                         if (Util.yn(meas.getDataField())==cdsDt.YnIndicatorsimple.N) {
-                            err.add("Note: Patient "+demoNo+" didn't do Diabetes Counselling (Other) on "+UtilDateUtilities.DateToString(meas.getDateObserved(),"yyyy-MM-dd"));
+                            err.add("Patient "+demoNo+" didn't do Diabetes Counselling (Other) on "+UtilDateUtilities.DateToString(meas.getDateObserved(),"yyyy-MM-dd"));
                         }
                         addOneEntry(CAREELEMENTS);
                     } else if (meas.getType().equals("EYEE")) { //Dilated Eye Exam
@@ -1906,7 +1909,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         }
                         dcs.setExamCode(cdsDt.DiabetesComplicationScreening.ExamCode.X_32468_1);
                         if (Util.yn(meas.getDataField())==cdsDt.YnIndicatorsimple.N) {
-                            err.add("Note: Patient "+demoNo+" didn't do Diabetes Complications Screening (Retinal Exam) on "+UtilDateUtilities.DateToString(meas.getDateObserved(),"yyyy-MM-dd"));
+                            err.add("Patient "+demoNo+" didn't do Diabetes Complications Screening (Retinal Exam) on "+UtilDateUtilities.DateToString(meas.getDateObserved(),"yyyy-MM-dd"));
                         }
                         addOneEntry(CAREELEMENTS);
                     } else if (meas.getType().equals("FTE")) { //Foot Exam
@@ -1918,7 +1921,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         }
                         dcs.setExamCode(cdsDt.DiabetesComplicationScreening.ExamCode.X_11397_7);
                         if (Util.yn(meas.getDataField())==cdsDt.YnIndicatorsimple.N) {
-                            err.add("Note: Patient "+demoNo+" didn't do Diabetes Complications Screening (Foot Exam) on "+UtilDateUtilities.DateToString(meas.getDateObserved(),"yyyy-MM-dd"));
+                            err.add("Patient "+demoNo+" didn't do Diabetes Complications Screening (Foot Exam) on "+UtilDateUtilities.DateToString(meas.getDateObserved(),"yyyy-MM-dd"));
                         }
                         addOneEntry(CAREELEMENTS);
                     } else if (meas.getType().equals("FTLS")) { // Foot Exam Test Loss of Sensation (Neurological Exam)
@@ -1930,7 +1933,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         }
                         dcs.setExamCode(cdsDt.DiabetesComplicationScreening.ExamCode.NEUROLOGICAL_EXAM);
                         if (Util.yn(meas.getDataField())==cdsDt.YnIndicatorsimple.N) {
-                            err.add("Note: Patient "+demoNo+" didn't do Diabetes Complications Screening (Neurological Exam) on "+UtilDateUtilities.DateToString(meas.getDateObserved(),"yyyy-MM-dd"));
+                            err.add("Patient "+demoNo+" didn't do Diabetes Complications Screening (Neurological Exam) on "+UtilDateUtilities.DateToString(meas.getDateObserved(),"yyyy-MM-dd"));
                         }
                         addOneEntry(CAREELEMENTS);
                     } else if (meas.getType().equals("CGSD")) { //Collaborative Goal Setting
