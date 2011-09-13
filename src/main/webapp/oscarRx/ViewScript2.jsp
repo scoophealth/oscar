@@ -436,7 +436,7 @@ function toggleView(form) {
                                             if(json!=null){
                                                 var text=json.name+"<br>"+json.address+"<br>"+json.city+","+json.province+","
                                                     +json.postalCode+"<br>Tel:"+json.phone1+","+json.phone2+"<br>Fax:"+json.fax+"<br>Email:"+json.email+"<br>Note:"+json.notes;
-                                                    text+='<br><br><a style="text-align:center;" onclick="parent.reducePreview();" href="javascript:void(0);">Remove Pharmacy Info</a>';
+                                                    text+='<br><br><a class="noprint" style="text-align:center;" onclick="parent.reducePreview();" href="javascript:void(0);">Remove Pharmacy Info</a>';
                                                 expandPreview(text);
                                             }
                                         }});
