@@ -70,6 +70,7 @@ Boolean isMobileOptimized = session.getAttribute("mobileOptimized") != null;
 
 <html:html locale="true">
     <head>
+    <link rel="shortcut icon" href="images/Oscar.ico" />
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
         <html:base/>
         <% if (isMobileOptimized) { %><meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width"/><% } %>
