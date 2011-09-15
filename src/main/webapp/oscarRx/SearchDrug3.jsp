@@ -1138,32 +1138,34 @@ function changeLt(drugId){
    function hideMedHistory(){
        mb.hide();
    }
-    var modalBox=function(){
-        this.show=function(randomId){
-            if(!document.getElementById("xmaskframe")){
-                var divFram=document.createElement('iframe');
-                divFram.setAttribute("id","xmaskframe");
-                divFram.setAttribute("name","xmaskframe");
-                //divFram.setAttribute("src","displayMedHistory.jsp?randomId="+randomId);
-                divFram.setAttribute("allowtransparency","false");
-                document.body.appendChild(divFram);
-                var divSty=document.getElementById("xmaskframe").style;
-                divSty.position="fixed";
-                divSty.top="0px";
-                divSty.left="0px";
-                divSty.width="400px"
-                //divSty.border="solid";
-                divSty.backgroundColor="#F5F5F5";
-                divSty.zIndex="45";
-                //divSty.cursor="move";
-            }
-            this.waitifrm=document.getElementById("xmaskframe");
+   var modalBox=function(){ 
+       this.show=function(randomId, displaySRC, H){
+           if(!document.getElementById("xmaskframe")){
+               var divFram=document.createElement('iframe');
+               divFram.setAttribute("id","xmaskframe");
+               divFram.setAttribute("name","xmaskframe");
+               //divFram.setAttribute("src","displayMedHistory.jsp?randomId="+randomId);
+               divFram.setAttribute("allowtransparency","false");
+               document.body.appendChild(divFram);
+               var divSty=document.getElementById("xmaskframe").style;
+               divSty.position="fixed";
+               divSty.top="0px";
+               divSty.right="0px";
+               divSty.width="390px"
+               //divSty.border="solid";
+               divSty.backgroundColor="#F5F5F5";
+               divSty.zIndex="45";
+               //divSty.cursor="move";
+           }
+           this.waitifrm=document.getElementById("xmaskframe");
 
-            this.waitifrm.setAttribute("src","displayMedHistory.jsp?randomId="+randomId);
-            this.waitifrm.style.display="block";
-            $("dragifm").appendChild(this.waitifrm);
-            Effect.Appear('xmaskframe');
-        };
+           this.waitifrm.setAttribute("src",displaySRC+".jsp?randomId="+randomId);
+           this.waitifrm.style.display="block";
+           this.waitifrm.style.height=H;
+           
+           $("dragifm").appendChild(this.waitifrm);
+           Effect.Appear('xmaskframe');
+       };
         this.hide=function()
             {
                 Effect.Fade('xmaskframe');
@@ -1175,9 +1177,15 @@ function changeLt(drugId){
            var data="randomId="+randomId;
            new Ajax.Request("<c:out value='${ctx}'/>"+ "/oscarRx/WriteScript.do?parameterValue=listPreviousInstructions",
            {method: 'post',parameters:data,asynchronous:false,onSuccess:function(transport){
-                 mb.show(randomId);
+                 mb.show(randomId,'displayMedHistory', '200px');
                 }});
     }
+    
+    function displayInstructions(randomId){
+    	var data="randomId="+randomId;
+    	mb.show(randomId,'displayInstructions', '600px');
+
+	}
 
     function updateProperty(elementId){
          var randomId=elementId.split("_")[1];
