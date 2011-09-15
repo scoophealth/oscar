@@ -171,23 +171,6 @@ public class Util {
         }
     }
 
-    static public String extractDrugInstr(String special) {
-	if (!StringUtils.filled(special)) return "";
-	if (!special.contains("Repeats:")) return special;
-	
-	Integer rear = special.indexOf("Repeats:");
-	Integer cut = special.indexOf("\n", rear);
-	if (cut<0) cut = special.indexOf("\r", rear);
-	if (cut>=0) {
-	    if (cut<special.length()) {
-		special = special.substring(cut+1);
-	    }
-	} else {
-	    special = "";
-	}
-	return special;
-    }
-
     static public String fixDirName(String dirName) {
         if (StringUtils.filled(dirName)) {
             if (dirName.charAt(dirName.length()-1)!='/') dirName = dirName + '/';

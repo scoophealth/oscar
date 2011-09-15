@@ -881,17 +881,21 @@ public class CihiExportAction extends DispatchAction {
 		MedicationsAndTreatments medications;
 		RxPrescriptionData.Prescription[] pa = new RxPrescriptionData().getPrescriptionsByPatient(Integer.parseInt(demo.getDemographicNo().toString()));
 		String drugname;
+		String customname;
 		String dosage;
 		String strength;
 		int sep;
 		
 		for(int p = 0; p<pa.length; ++p) {
 			drugname = pa[p].getBrandName();
-			if (StringUtils.empty(drugname)) continue;
+			customname = pa[p].getCustomName();
+			if (StringUtils.empty(drugname) && StringUtils.empty(customname)) continue;
 
 			medications = patientRecord.addNewMedicationsAndTreatments();
 
-			medications.setDrugName(drugname);
+			if (StringUtils.filled(drugname)) medications.setDrugName(drugname);
+			else medications.setDrugDescription(customname);
+			
 			Date writtenDate = pa[p].getWrittenDate();
 			if (writtenDate!=null) {
 	        	String dateFormat = partialDateDao.getFormat(PartialDate.DRUGS, pa[p].getDrugId(), PartialDate.DRUGS_WRITTENDATE);
