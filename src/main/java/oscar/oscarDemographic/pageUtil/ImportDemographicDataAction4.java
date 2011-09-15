@@ -342,7 +342,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
         String otherNameTxt = null;
         for (OtherName otherName : otherNames) {
             if (otherNameTxt==null) otherNameTxt = otherName.getPart();
-            else otherNameTxt += " "+otherName.getPart();
+            else otherNameTxt += ", "+otherName.getPart();
         }
 
         String title = demo.getNames().getNamePrefix()!=null ? demo.getNames().getNamePrefix().toString() : "";
@@ -417,13 +417,19 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
         String sin = StringUtils.noNull(demo.getSIN());
 
         String chart_no = StringUtils.noNull(demo.getChartNumber());
-        String official_lang = "";
+        String official_lang = null;
         if (demo.getPreferredOfficialLanguage()!=null) {
             official_lang = demo.getPreferredOfficialLanguage().toString();
             official_lang = official_lang.equals("ENG") ? "English" : official_lang;
             official_lang = official_lang.equals("FRE") ? "French" : official_lang;
         }
-        String spoken_lang = StringUtils.noNull(Util.convertCodeToLanguage(demo.getPreferredSpokenLanguage()));
+        
+        String spoken_lang = null; 
+        if (demo.getPreferredSpokenLanguage()!=null) {
+        	spoken_lang = Util.convertCodeToLanguage(demo.getPreferredSpokenLanguage());
+        	if (StringUtils.empty(spoken_lang)) err_data.add("Error! Cannot map spoken language code "+demo.getPreferredSpokenLanguage());
+        }
+        
         String dNote = StringUtils.noNull(demo.getNoteAboutPatient());
         String uvID = demo.getUniqueVendorIdSequence();
         String psDate = getCalDate(demo.getPersonStatusDate(), timeShiftInDays);
@@ -577,7 +583,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
             entries.put(PATIENTID+importNo, Integer.valueOf(demographicNo));
             
             if(admitTo == null) {
-                insertIntoAdmission();
+                insertIntoAdmission(demographicNo);
             } else {
                 admissionManager.processAdmission(Integer.valueOf(demographicNo), student.getProviderNo(), admitTo, "", "batch import");
             }
@@ -681,6 +687,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     demoRes = dd.addDemographic("", cLastName, cFirstName, "", "", "", "", homePhone, workPhone, null, null,
                     null, "", "", "", "Contact-only", psDate, "", "", "", "", "", "", "", "F", "", "", "", "", "", "", cEmail, "", "", "", "", "", "", "");
                     cDemoNo = demoRes.getId();
+                    insertIntoAdmission(cDemoNo);
                     err_note.add("Contact-only patient "+cPatient+" (Demo no="+cDemoNo+") created");
 
                     if (StringUtils.filled(contactNote)) dd.addDemographiccust(cDemoNo, contactNote);
@@ -1075,7 +1082,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     //encounter note
                     String encounter = cNotes[i].getMyClinicalNotesContent();
                     if (StringUtils.empty(encounter)) {
-                    	err_data.add("Note: Empty clinical note - not added ("+(i+1)+")");
+                    	err_data.add("Empty clinical note - not added ("+(i+1)+")");
                     	continue;
                     }
 
@@ -1118,9 +1125,6 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                                     err_note.add("Clinical notes have no author; assigned to \"doctor oscardoc\" ("+(i+1)+")");
                                 }
                                 cmNote.setProviderNo(authorProvider);
-                            }
-                            if (participatingProviders[p].getDateTimeNoteCreated()!=null) {
-                                cmNote.setCreate_date(dateTimeFPtoDate(participatingProviders[p].getDateTimeNoteCreated(), timeShiftInDays));
                             }
                         } else {
 
@@ -1292,14 +1296,18 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     special += StringUtils.noNull(drug.getFreqCode());
                     special += StringUtils.noNull(drug.getDuration())+" days";
 
-                    //no need: special = Util.addLine(special, medArray[i].getPrescriptionInstructions());
                     //no need: special = Util.addLine(special, "Prescription Status: ", medArray[i].getPrescriptionStatus());
                     //no need: special = Util.addLine(special, "Dispense Interval: ", medArray[i].getDispenseInterval());
                     //no need: special = Util.addLine(special, "Protocol Id: ", medArray[i].getProtocolIdentifier());
                     //no need: special = Util.addLine(special, "Prescription Id: ", medArray[i].getPrescriptionIdentifier());
                     //no need: special = Util.addLine(special, "Prior Prescription Id: ", medArray[i].getPriorPrescriptionReferenceIdentifier());
+                    
                     drug.setSpecial(special);
 
+                    if (StringUtils.filled(medArray[i].getPrescriptionInstructions())) {
+                    	drug.setSpecialInstruction(medArray[i].getPrescriptionInstructions());
+                    }
+                    
                     if (medArray[i].getPrescribedBy()!=null) {
                         HashMap<String,String> personName = getPersonName(medArray[i].getPrescribedBy().getName());
                         String personOHIP = medArray[i].getPrescribedBy().getOHIPPhysicianId();
@@ -1374,10 +1382,12 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 
                     if (immuArray[i].getImmunizationType()!=null) {
                         preventionType = Util.getPreventionType(immuArray[i].getImmunizationType().toString());
-                    }
-                    if (preventionType==null) {
-                        preventionType = "OtherA";
-                        err_note.add("Cannot match Immunization Type, "+immuArray[i].getImmunizationName()+" mapped to Other Layout A");
+                        if (preventionType==null) {
+                            preventionType = "OtherA";
+                            err_note.add("Cannot match Immunization Type, "+immuArray[i].getImmunizationName()+" mapped to Other Layout A");
+                        }
+                    } else {
+                        err_data.add("No Immunization Type, "+immuArray[i].getImmunizationName()+" mapped to Other Layout A");                    	
                     }
 
                     if (StringUtils.filled(immuArray[i].getManufacturer())) {
@@ -2615,9 +2625,9 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 		return msgs;
 	}
 
-	void insertIntoAdmission() {
+	void insertIntoAdmission(String demoNo) {
 		Admission admission = new Admission();
-		admission.setClientId(Integer.valueOf(demographicNo));
+		admission.setClientId(Integer.valueOf(demoNo));
 		admission.setProviderNo(admProviderNo);
 		admission.setProgramId(Integer.valueOf(programId));
 		admission.setAdmissionDate(new Date());
