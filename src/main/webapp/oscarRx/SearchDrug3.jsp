@@ -597,6 +597,18 @@ function checkFav(){
     		txt.disabled=false;
     	}
     }
+    
+    //this is a SJHH specific feature
+    function completeMedRec() {
+   	 var ok = confirm("Are you sure you would like to mark the Med Rec as complete?");
+   	 if(ok) {
+   		 var url = "<c:out value="${ctx}"/>" + "/oscarRx/completeMedRec.jsp?demographicNo=<%=bean.getDemographicNo()%>";
+   		 var data;
+   		 new Ajax.Request(url,{method: 'get',parameters:data,onSuccess:function(transport){
+                alert('Completed.')
+            }});    		 
+   	 }
+    }
 </script>
 
                <style type="text/css" media="print">
@@ -780,6 +792,11 @@ body {
                                                 <br>
                                                 <input id="saveButton" type="button"  class="ControlPushButton" onclick="updateSaveAllDrugsPrint();" value="<bean:message key="SearchDrug.msgSaveAndPrint"/>" />
                                                 <input id="saveOnlyButton" type="button"  class="ControlPushButton" onclick="updateSaveAllDrugs();" value="<bean:message key="SearchDrug.msgSaveOnly"/>" />
+												<%
+                                                    	if(OscarProperties.getInstance().getProperty("oscarrx.medrec","false").equals("true")) {
+                                                %>
+                                                    <input id="completeMedRecButton" type="button"  onclick="completeMedRec();" value="Complete Med Rec" />
+                                                <% } %>                                                      
                                             </td>
                                         </tr>
                                         <tr>
