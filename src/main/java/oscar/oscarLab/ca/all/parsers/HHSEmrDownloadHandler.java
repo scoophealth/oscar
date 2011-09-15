@@ -567,24 +567,20 @@ public class HHSEmrDownloadHandler extends DefaultGenericHandler implements Mess
 //        return("");
 //    }
 //    
-        public String getOrderStatus(){
-    	       String status = "F";
-    	       try {
-    	               int count = this.getOBRCount();
-    	               for(int x=0;x<count;x++) {
-    	                       String val = terser.get("/.OBX-11("+count+")");
-    	                       if(val!=null) {
-    	                               if(!val.equals("F")) {
-    	                                       status="";
-    	                               }
-    	                       }
-    	               }
-    	       }catch(HL7Exception e) {
-    	               
-    	       }
-    	        return status;
-    	    }
-
+    public String getOrderStatus(){
+        String status = "F";
+        
+        for(int x=0;x<this.getOBRCount();x++) {
+        	for(int y=0;y<this.getOBXCount(x);y++) {
+        		String val = this.getOBXResultStatus(x, y);
+        		if(!val.equals("F")) {
+        			return val;
+        		}
+        	}
+        }
+        
+        return(status);
+    }
 //    
 //    public String getClientRef(){
 //        try{
