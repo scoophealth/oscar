@@ -16,7 +16,7 @@
 		 oscar.oscarLab.LabRequestReportLink,
 		 oscar.oscarMDS.data.ReportStatus,oscar.log.*,
 		 org.apache.commons.codec.binary.Base64,
-                 oscar.OscarProperties" %>
+         oscar.OscarProperties" %>
 <%@ page import="org.oscarehr.casemgmt.model.CaseManagementNoteLink"%>
 <%@ page import="org.oscarehr.casemgmt.model.CaseManagementNote"%>
 <%@ page import="org.oscarehr.util.SpringUtils"%>
@@ -187,9 +187,7 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
 .AbnormalRes a:visited { color: red }
 .AbnormalRes a:active { color: red }
 .NormalRes   { font-weight: bold; font-size: 8pt; color: black; font-family: 
-                      confirmAck=function() {
-            return confirm('<bean:message key="oscarMDS.index.msgConfirmAcknowledge"/>');
-        } Verdana, Arial, Helvetica }
+                      Verdana, Arial, Helvetica }
 .NormalRes a:link { color: black }
 .NormalRes a:hover { color: black }
 .NormalRes a:visited { color: black }
@@ -202,9 +200,7 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
 .HiLoRes a:active { color: blue }
 .CorrectedRes { font-weight: bold; font-size: 8pt; color: #E000D0; font-family: 
                Verdana, Arial, Helvetica }
-.CorrectedRes         confirmAck=function() {
-            return confirm('<bean:message key="oscarMDS.index.msgConfirmAcknowledge"/>');
-        }a:link { color: #6da997 }
+.CorrectedRes         a:link { color: #6da997 }
 .CorrectedRes a:hover { color: #6da997 }
 .CorrectedRes a:visited { color: #6da997 }
 .CorrectedRes a:active { color: #6da997 }
@@ -218,9 +214,7 @@ div.Field a:active { color: black }
                Verdana, Arial, Helvetica }
 div.Field2   { font-weight: bold; font-size: 8pt; color: #ffffff; font-family: 
                Verdana, Arial, Helvetica }
-div.FieldData {         confirmAck=function() {
-            return confirm('<bean:message key="oscarMDS.index.msgConfirmAcknowledge"/>');
-        }font-weight: normal; font-size: 8pt; color: black; font-family:
+div.FieldData { font-weight: normal; font-size: 8pt; color: black; font-family:
                Verdana, Arial, Helvetica }
 div.Field3   { font-weight: normal; font-size: 8pt; color: black; font-style: italic; 
                font-family: Verdana, Arial, Helvetica }
@@ -247,9 +241,7 @@ div.Title2 a:active { color: black }
                border-bottom-width: medium }
 .Cell3       { background-color: #add9c7; border-left: thin solid #dbfdeb; 
                border-right: thin solid #5d9987; 
-                      confirmAck=function() {
-            return confirm('<bean:message key="oscarMDS.index.msgConfirmAcknowledge"/>');
-        } border-top: thin solid #dbfdeb;
+               border-top: thin solid #dbfdeb;
                border-bottom: thin solid #5d9987 }
 .CellHdr     { background-color: #cbe5d7; border-right-style: none; border-right-width: 
                medium; border-bottom-style: none; border-bottom-width: medium }
@@ -454,7 +446,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                     <input type="hidden" name="labType" value="HL7"/>
                                     <% if ( !ackFlag ) { %>
                                                                         
-                                    <input type="button" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>" onclick="return getComment('ackLab');" >
+                                    <input type="button" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>" onclick="handleLab('acknowledgeForm','<%=segmentID%>','ackLab');" >
                                     <input type="button" <%=notBeenAcked ? "disabled='disabled'" : ""%> value="<bean:message key="oscarMDS.segmentDisplay.btnComment"/>" onclick="return getComment('addComment');">
                                     <% } %>
                                     <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="popupStart(397, 700, '../../../oscarMDS/SelectProvider.jsp', 'providerselect')">
@@ -963,7 +955,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                             <tr>
                                 <td align="left" width="50%">
                                     <% if ( !ackFlag ) { %>
-                                    <input type="button" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge" />" onclick="getComment('ackLab');" >
+                                    <input type="button" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge" />" onclick="handleLab('acknowledgeForm','<%=segmentID%>','ackLab');" >
                                     <input type="button" <%=notBeenAcked ? "disabled='disabled'" : ""%> value="<bean:message key="oscarMDS.segmentDisplay.btnComment"/>" onclick="return getComment('addComment');">
                                     <% } %>
                                     <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="popupStart(397, 700, '../../../oscarMDS/SelectProvider.jsp', 'providerselect')">
