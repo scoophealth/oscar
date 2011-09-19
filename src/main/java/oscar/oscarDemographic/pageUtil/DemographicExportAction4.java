@@ -1366,7 +1366,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     //lab normal/abnormal flag
                     labResults.setResultNormalAbnormalFlag(cdsDt.ResultNormalAbnormalFlag.U);
                     data = StringUtils.noNull(labMea.getExtVal("abnormal"));
-                    if (data.equals("A")) labResults.setResultNormalAbnormalFlag(cdsDt.ResultNormalAbnormalFlag.Y);
+                    if (data.equals("A") || data.equals("L")) labResults.setResultNormalAbnormalFlag(cdsDt.ResultNormalAbnormalFlag.Y);
                     if (data.equals("N")) labResults.setResultNormalAbnormalFlag(cdsDt.ResultNormalAbnormalFlag.N);
 
                     //lab unit of measure
