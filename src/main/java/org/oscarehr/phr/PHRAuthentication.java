@@ -31,7 +31,6 @@ package org.oscarehr.phr;
 import java.util.Date;
 
 import javax.persistence.Transient;
-import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.log4j.Logger;
 import org.indivo.xml.attributes.RoleType;
@@ -85,15 +84,15 @@ public class PHRAuthentication
 	public Date getExpirationDate()
 	{
 		Date date = null;
-		XMLGregorianCalendar cal = authResult.getExpirationDate();
-		if (cal != null)
-		{
-			date = cal.toGregorianCalendar().getTime();
-		}
-		else
-		{
-			logger.debug("cal was null");
-		}
+//		XMLGregorianCalendar cal = authResult.getExpirationDate();
+//		if (cal != null)
+//		{
+//			date = cal.toGregorianCalendar().getTime();
+//		}
+//		else
+//		{
+//			logger.debug("cal was null");
+//		}
 		return date;
 	}
 
