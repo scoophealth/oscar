@@ -206,7 +206,7 @@ public final class RxSearchAllergyAction extends Action {
             
         }
         
-        if(arr.length>0) {
+        if(arr != null && arr.length>0) {
         	request.setAttribute("allergyResults", allergyResults);
             request.setAttribute("allergies", arr);
             request.setAttribute("drugClasses", returnHash);
