@@ -67,7 +67,7 @@
 	  param[6]=request.getParameter("phone");
 	  param[7]=request.getParameter("phone2");
 	  param[8]=request.getParameter("email");
-	  param[9]=request.getParameter("myOscarUserName");
+	  param[9]=StringUtils.trimToNull(request.getParameter("myOscarUserName"));
 	  param[10]=request.getParameter("year_of_birth");
 	  param[11]=request.getParameter("month_of_birth")!=null && request.getParameter("month_of_birth").length()==1 ? "0"+request.getParameter("month_of_birth") : request.getParameter("month_of_birth");
 	  param[12]=request.getParameter("date_of_birth")!=null && request.getParameter("date_of_birth").length()==1 ? "0"+request.getParameter("date_of_birth") : request.getParameter("date_of_birth");

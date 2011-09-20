@@ -89,7 +89,7 @@
 	  param[6]=new DBPreparedHandlerParam(request.getParameter("phone"));
 	  param[7]=new DBPreparedHandlerParam(request.getParameter("phone2"));
 	  param[8]=new DBPreparedHandlerParam(request.getParameter("email"));
-	  param[9]=new DBPreparedHandlerParam(request.getParameter("myOscarUserName"));
+	  param[9]=new DBPreparedHandlerParam(StringUtils.trimToNull(request.getParameter("myOscarUserName")));
 	  param[10]=new DBPreparedHandlerParam(request.getParameter("year_of_birth"));
 	  param[11]=new DBPreparedHandlerParam(request.getParameter("month_of_birth")!=null && request.getParameter("month_of_birth").length()==1 ? "0"+request.getParameter("month_of_birth") : request.getParameter("month_of_birth"));
 	  param[12]=new DBPreparedHandlerParam(request.getParameter("date_of_birth")!=null && request.getParameter("date_of_birth").length()==1 ? "0"+request.getParameter("date_of_birth") : request.getParameter("date_of_birth"));

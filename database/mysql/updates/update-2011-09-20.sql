@@ -1,0 +1,1 @@
+update demographic set myOscarUserName=null where myOscarUserName='';
