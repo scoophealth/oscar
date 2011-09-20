@@ -83,7 +83,7 @@ if(session.getValue("user") == null)
 
 </head>
 
-<body class="BodyStyle" vlink="#0000FF">
+<body class="BodyStyle" vlink="#0000FF" onBlur="this.focus();">
 
 <table class="MainTable" id="scrollNumber1" name="encounterTable">
 	<tr class="MainTableTopRow">
