@@ -281,7 +281,8 @@ function update_date(did, demoNo, provNo) {
 					<table width="100%" border="0" cellpadding="0" cellspacing="0"
 						bgcolor="#FFFFFF">
 						<tr>
-							<td class="heading" width="45%"><b><bean:message key="oscarResearch.oscarDxResearch.dxResearch.msgDiagnosis" /></b></td>
+							<td class="heading" width="10%"><b><bean:message key="oscarResearch.oscarDxResearch.dxResearch.msgCode" /></b></td>
+							<td class="heading" width="35%"><b><bean:message key="oscarResearch.oscarDxResearch.dxResearch.msgDiagnosis" /></b></td>
 							<td class="heading" width="15%"><b><bean:message key="oscarResearch.oscarDxResearch.dxResearch.msgFirstVisit" /></b></td>
 							<td class="heading" width="15%"><b><bean:message key="oscarResearch.oscarDxResearch.dxResearch.msgLastVisit" /></b></td>
 							<% if(!disable){ %>
@@ -302,6 +303,7 @@ function update_date(did, demoNo, provNo) {
                     %>
 							<logic:equal name="diagnotics" property="status" value="A">
 								<tr bgcolor="<%=color%>">
+								<td class="notResolved"> <bean:write name="diagnotics" property="dxSearchCode" /></td>
 									<td class="notResolved"><bean:write name="diagnotics" property="description" /></td>
 									<td class="notResolved">
                                                                             <a href="#" onclick="showdatebox(<bean:write name="diagnotics" property="dxResearchNo" />);">
@@ -326,6 +328,7 @@ function update_date(did, demoNo, provNo) {
 							</logic:equal>
 							<logic:equal name="diagnotics" property="status" value="C">
 								<tr bgcolor="<%=color%>">
+									<td> <bean:write name="diagnotics" property="dxSearchCode" /></td>
                                     <td><bean:write name="diagnotics" property="description" /></td>
 									<td><bean:write name="diagnotics" property="start_date" /></td>
 									<td><bean:write name="diagnotics" property="end_date" /></td>
