@@ -178,6 +178,7 @@ if(currentFacility.isEnableEncounterTime()) {
 		<html:option value=""></html:option>
 		<html:option value="face to face encounter with client"><bean:message key="oscarEncounter.faceToFaceEnc.title"/></html:option>
 		<html:option value="telephone encounter with client"><bean:message key="oscarEncounter.telephoneEnc.title"/></html:option>
+		<html:option value="email encounter with client"><bean:message key="oscarEncounter.emailEnc.title"/></html:option>
 		<html:option value="encounter without client"><bean:message key="oscarEncounter.noClientEnc.title"/></html:option>
 		
 		<%
@@ -186,6 +187,7 @@ if(currentFacility.isEnableEncounterTime()) {
 		
 		<html:option value="group face to face encounter"><bean:message key="oscarEncounter.groupFaceEnc.title"/></html:option>
 		<html:option value="group telephone encounter"><bean:message key="oscarEncounter.groupTelephoneEnc.title"/></html:option>
+		<html:option value="group encounter with client"><bean:message key="oscarEncounter.emailEnc.title"/></html:option>
 		<html:option value="group encounter without group"><bean:message key="oscarEncounter.groupNoClientEnc.title"/></html:option>
 		
 		<%
