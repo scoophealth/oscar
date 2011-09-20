@@ -210,11 +210,9 @@ padding-right:6;
 				<td>
 				<table>
 					<tr>
-						<td><b>Name:</b> <jsp:getProperty name="patient"
-							property="surname" /></td>
+						<td><b>Name:</b> <jsp:getProperty name="patient" property="surname" />, <jsp:getProperty name="patient" property="firstName" /> </td>
 						<td>&nbsp;</td>
-						<td><b>Age:</b> <jsp:getProperty name="patient"
-							property="age" /></td>
+						<td><b>Age:</b> <jsp:getProperty name="patient" property="age" /></td>
 					</tr>
 				</table>
 				</td>
@@ -258,7 +256,7 @@ padding-right:6;
 					 ColourCodesArray[1]="#F5F5F5"; // Mild Was set to yellow (#FFFF33) SJHH requested not to flag mild
 					 ColourCodesArray[2]="#FF6600"; // Moderate
 					 ColourCodesArray[3]="#CC0000"; // Severe
-					 ColourCodesArray[4]="#E0E0E0"; // unknown 
+					 ColourCodesArray[4]="#E0E0E0"; // unknown
 					
 					 String allergy_colour_codes = "<table class='allergy_legend' cellspacing='0'><tr><td><b>Legend:</b></td> <td > <table class='colour_codes' bgcolor='"+ColourCodesArray[1]+"'><td> </td></table></td> <td >Mild</td> <td > <table class='colour_codes' bgcolor='"+ColourCodesArray[2]+"'><td> </td></table></td> <td >Moderate</td><td > <table class='colour_codes' bgcolor='"+ColourCodesArray[3]+"'><td> </td></table></td> <td >Severe</td> </tr></table>";
 				%>

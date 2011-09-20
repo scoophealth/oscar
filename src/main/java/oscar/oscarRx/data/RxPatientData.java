@@ -305,7 +305,7 @@ public class RxPatientData {
             ResultSet rs;            
             Allergy allergy;
             
-            rs = DBHandler.GetSQL("SELECT * FROM allergies WHERE demographic_no = '" + getDemographicNo() + "' ORDER BY position");
+            rs = DBHandler.GetSQL("SELECT * FROM allergies WHERE demographic_no = '" + getDemographicNo() + "' ORDER BY archived, CASE severity_of_reaction when 4 then severity_of_reaction end asc, CASE severity_of_reaction when  3 then severity_of_reaction end desc, CASE severity_of_reaction when 2 then severity_of_reaction end desc");
             
             while (rs.next()) {               
                allergy = new Allergy(getDemographicNo(), rs.getInt("allergyid"), rs.getDate("entry_date"),               
