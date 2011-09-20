@@ -51,8 +51,8 @@ try{
                 List<HashMap<String,String>> listMedHistory=(List<HashMap<String,String>>)bean.getListMedHistory();
                 %>
 
-<a style="position:fixed;top:0px;right:4px;color:red;font-size:12pt" onmouseover="this.style.cursor='pointer';" onclick="parent.mb.hide();">X</a>
-</br>
+<a onmouseover="this.style.cursor='pointer';" onMouseDown="parent.mb.hide();" ><img src="<c:out value="${ctx}/images/close.png"/>"  border="0" TITLE="Close" style="position: absolute; top: 0.5em; right: 0.5em; "></a> 
+<br /><br />
 <table class="mhTable" >
         <tr>
             <th colspan="3" align="center" style="font-style:normal;font-weight:bold;margin:0;font-family:sans-serif;font-size:80%"><%=drugName%> Rx Examples</th>
