@@ -767,7 +767,7 @@ body {
 
                         <tr><!--put this left-->
                             <td valign="top" align="left">
-
+							<%if(securityManager.hasWriteAccess("_rx",roleName$,true)) {%>
                                 <html:form action="/oscarRx/searchDrug"  onsubmit="return checkEnterSendRx();" style="display: inline; margin-bottom:0;" styleId="drugForm">
                                     <div id="interactingDrugErrorMsg" style="display:none"></div>
                                     <div id="rxText" style="float:left;"></div><br style="clear:left;">
@@ -808,6 +808,7 @@ body {
                                     </table>
                                 </html:form>
                                 <div id="previewForm" style="display:none;"></div>
+                                <%} %>
                             </td>
                         </tr>
                         <tr><!--put this left-->
@@ -877,7 +878,7 @@ body {
                                                         <td>
                                                             <table width="100%" cellspacing="0" cellpadding="0" class="legend">
                                                                     <tr>
-                                                                        <td>
+                                                                        <td width="100">
                                                                             <a href="javascript:void(0);" title="View drug profile legend" onclick="ThemeViewer();" style="font-style:normal;color:#000000" ><bean:message key="SearchDrug.msgProfileLegend"/>:</a>
                                                                             <a href="#"  title="<bean:message key="provider.rxChangeProfileViewMessage"/>" onclick="popupPage(230,860,'../setProviderStaleDate.do?method=viewRxProfileView');" style="color:red;text-decoration:none" ><bean:message key="provider.rxChangeProfileView"/></a>
                                                                         </td>
@@ -902,7 +903,9 @@ body {
 																				<td > 
 																				<a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?status=inactive','drugProfile');CngClass(this);" TITLE="<bean:message key='SearchDrug.msgInactiveDesc'/>"><bean:message key="SearchDrug.msgInactive"/></a>
 	                                                                            </td>
-																				<%}if(longterm_acute){%>
+																				<%} if(!OscarProperties.getInstance().getProperty("rx.profile_legend.hide","false").equals("true")) {
+																				
+																				if(longterm_acute){%>
 																				<td > 
 																				<a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?longTermOnly=true&heading=Long Term Meds','drugProfile'); callAdditionWebService('ListDrugs.jsp?longTermOnly=acute&heading=Acute','drugProfile');CngClass(this);" TITLE="<bean:message key='SearchDrug.msgLongTermAcuteDesc'/>"><bean:message key="SearchDrug.msgLongTermAcute"/></a>
 	                                                                            </td>
@@ -910,7 +913,9 @@ body {
 																				<td > 
 																				<a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?longTermOnly=true&heading=Long Term Meds','drugProfile'); callAdditionWebService('ListDrugs.jsp?longTermOnly=acute&heading=Acute&status=active','drugProfile');callAdditionWebService('ListDrugs.jsp?longTermOnly=acute&heading=Inactive&status=inactive','drugProfile');callAdditionWebService('ListDrugs.jsp?heading=External&drugLocation=external','drugProfile');CngClass(this);" TITLE="<bean:message key='SearchDrug.msgLongTermAcuteInactiveExternalDesc'/>"><bean:message key="SearchDrug.msgLongTermAcuteInactiveExternal"/></a>
 	                                                                            </td> 
-																				<%}%>
+																				<%}
+																				}
+																				%>
 																			</tr>
 																			</table>
 																			
@@ -988,7 +993,7 @@ body {
             <option value="ineffectiveTreatment"><bean:message key="oscarRx.discontinuedReason.IneffectiveTreatment"/></option>
             <option value="newScientificEvidence"><bean:message key="oscarRx.discontinuedReason.NewScientificEvidence"/></option>
             <option value="noLongerNecessary"><bean:message key="oscarRx.discontinuedReason.NoLongerNecessary"/></option>
-			<option value="notSelected"><bean:message key="oscarRx.discontinuedReason.NotSelected"/></option>
+			<option value="enteredInError"><bean:message key="oscarRx.discontinuedReason.EnteredInError"/></option>
             <option value="patientRequest"><bean:message key="oscarRx.discontinuedReason.PatientRequest"/></option>
             <option value="prescribingError"><bean:message key="oscarRx.discontinuedReason.PrescribingError"/></option>
             <option value="simplifyingTreatment"><bean:message key="oscarRx.discontinuedReason.SimplifyingTreatment"/></option>
@@ -1008,7 +1013,9 @@ body {
 
     <div id="themeLegend" style="position: absolute;display:none; width:500px;height:200px;background-color:white;padding:20px;border:1px solid grey">
         <a href="javascript:void(0);" class="currentDrug">Drug that is current</a><br/>
+        <%if(!OscarProperties.getInstance().getProperty("rx.delete_drug.hide","false").equals("true")) {%>
         <a href="javascript:void(0);" class="archivedDrug">Drug that is archived</a><br/>
+        <%} %>
         <a href="javascript:void(0);" class="expireInReference">Drug that is current but will expire within the reference range</a><br/>
         <a href="javascript:void(0);" class="expiredDrug">Drug that is expired</a><br/>
         <a href="javascript:void(0);" class="longTermMed">Long Term Med Drug</a><br/>
