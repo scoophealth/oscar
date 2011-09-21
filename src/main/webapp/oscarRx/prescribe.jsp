@@ -173,8 +173,8 @@ if(listRxDrugs!=null){
                 <b><label style="width:80px;">OHIP No:</label></b> <input type="text" id="outsideProviderOhip_<%=rand%>" name="outsideProviderOhip_<%=rand%>"  <%if(outsideProvOhip!=null){%>value="<%=outsideProvOhip%>"<%}else {%> value=""<%}%>/>
           </div><br/>
 
-        <bean:message key="WriteScript.msgPastMedication"/>
-            <input  type="checkbox" name="pastMed_<%=rand%>" id="pastMed_<%=rand%>" <%if(pastMed) {%> checked="true" <%}%> />
+        <label title="Medications taken at home that were previously ordered."><bean:message key="WriteScript.msgPastMedication" />
+            <input  type="checkbox" name="pastMed_<%=rand%>" id="pastMed_<%=rand%>" <%if(pastMed) {%> checked="true" <%}%> onclick="emptyWrittenDate('<%=rand%>');" /></label>
                   
 	<Br/>
 	
@@ -192,7 +192,7 @@ if(listRxDrugs!=null){
         <label style="float:left;width:80px;">Start Date:</label>
            <input type="text" id="rxDate_<%=rand%>" name="rxDate_<%=rand%>" value="<%=startDate%>" <%if(startDateUnknown) {%> disabled="disabled" <%}%>/>
         <bean:message key="WriteScript.msgUnknown"/>
-           <input  type="checkbox" name="startDateUnknown_<%=rand%>" id="startDateUnknown_<%=rand%>" <%if(startDateUnknown) {%> checked="true" <%}%> onchange="toggleStartDateUnknown('<%=rand%>');"/>
+           <input  type="checkbox" name="startDateUnknown_<%=rand%>" id="startDateUnknown_<%=rand%>" <%if(startDateUnknown) {%> checked="true" <%}%> onclick="toggleStartDateUnknown('<%=rand%>');"/>
            
            <br/>
 	<label style="">Last Refill Date:</label>
