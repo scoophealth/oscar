@@ -2537,7 +2537,7 @@
         <ViolationValue>/src/main/webapp/demographic/demographicaddarecord.jsp:param[6]=new DBPreparedHandlerParam(request.getParameter("phone"));</ViolationValue>
         <ViolationValue>/src/main/webapp/demographic/demographicaddarecord.jsp:param[7]=new DBPreparedHandlerParam(request.getParameter("phone2"));</ViolationValue>
         <ViolationValue>/src/main/webapp/demographic/demographicaddarecord.jsp:param[8]=new DBPreparedHandlerParam(request.getParameter("email"));</ViolationValue>
-        <ViolationValue>/src/main/webapp/demographic/demographicaddarecord.jsp:param[9]=new DBPreparedHandlerParam(request.getParameter("myOscarUserName"));</ViolationValue>
+        <ViolationValue>/src/main/webapp/demographic/demographicaddarecord.jsp:param[9]=new DBPreparedHandlerParam(StringUtils.trimToNull(request.getParameter("myOscarUserName")));</ViolationValue>
         <ViolationValue>/src/main/webapp/demographic/demographicappthistory.jsp:DBPreparedHandlerParam[] params= new DBPreparedHandlerParam[1];</ViolationValue>
         <ViolationValue>/src/main/webapp/demographic/demographicappthistory.jsp:params[0]= new DBPreparedHandlerParam(Integer.parseInt(request.getParameter("demographic_no")));</ViolationValue>
         <ViolationValue>/src/main/webapp/form/study/redirectstudysite.jsp:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
