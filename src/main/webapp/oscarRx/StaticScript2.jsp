@@ -171,9 +171,21 @@
 					%>
 					<tr style="height:20px;<%=arch%>">
 						<td><%=drug.providerName%></td>
-						<td><%=drug.startDate%></td>
-						<td><%=drug.endDate%></td>
-						<td><%=partialDateDao.getDatePartial(drug.writtenDate, PartialDate.DRUGS, drug.localDrugId, PartialDate.DRUGS_WRITTENDATE)%></td>
+						<td><%
+						if(!drug.startDate.equals("0001/01/01") ){
+							out.print(drug.startDate);	
+						}
+						%></td>
+						<td><%
+						if(!drug.startDate.equals("0001/01/01") ){
+							out.print(drug.endDate);	
+						}
+						%></td>
+						<td><%
+						if(!drug.writtenDate.equals("0001/01/01") ){
+						out.print(partialDateDao.getDatePartial(drug.writtenDate, PartialDate.DRUGS, drug.localDrugId, PartialDate.DRUGS_WRITTENDATE));
+						}
+						%></td>
                                                 <td><%=drug.prescriptionDetails%>
 
                                                     <% if (drug.nonAuthoritative) { %>
