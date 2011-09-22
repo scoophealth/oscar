@@ -2220,6 +2220,7 @@
 		<action path="/phr/UserManagement" name="FrmForm" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
 			<forward name="registrationResult" path="/phr/indivo/RegisterIndivoResult.jsp" />
 			<forward name="msgIndex" path="/phr/PhrMessage.do?method=viewMessages" />
+			<forward name="registrationLetter" path="/admin/MyoscarConfiguration.jsp" />
 		</action>
 		<action input="/oscarEncounter/oscarMeasurements/HistoryIndex.jsp" name="FrmForm" path="/oscarEncounter/oscarMeasurements/SendToPhr" parameter="method" scope="request" type="org.springframework.web.struts.DelegatingActionProxy">
 			<forward name="finished" path="/phr/response.jsp"></forward>

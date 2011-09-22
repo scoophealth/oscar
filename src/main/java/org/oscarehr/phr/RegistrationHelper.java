@@ -109,6 +109,13 @@ public final class RegistrationHelper {
 		return(WebUtils.getCheckedString(b!=null && b));
 	}
 
+	public static String getCheckedStringWithValueString(HttpSession session, String elementName,String elementValue) {
+		HashMap<String, Object> defaults=(HashMap<String, Object>) session.getAttribute(MYOSCAR_REGISTRATION_DEFAULTS_SESSION_KEY);
+		if (defaults==null) return("");
+		String relationString=(String) defaults.get(elementName);
+		return(WebUtils.getCheckedString(relationString!=null && relationString.equals(elementValue)));
+	}
+	
 	public static String getSelectedString(HttpSession session, String elementName, String elementValue) {
 		HashMap<String, Object> defaults=(HashMap<String, Object>) session.getAttribute(MYOSCAR_REGISTRATION_DEFAULTS_SESSION_KEY);
 		if (defaults==null) return("");

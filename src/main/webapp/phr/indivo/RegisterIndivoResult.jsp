@@ -9,7 +9,10 @@
    <%@ taglib uri="http://jakarta.apache.org/struts/tags-logic" prefix="logic" %>
    <%@ taglib uri="http://jakarta.apache.org/struts/tags-bean" prefix="bean" %>
    <%@ taglib uri="http://jakarta.apache.org/struts/tags-html" prefix="html" %>
-
+<%
+String dispDocNo = request.getParameter("DocId");
+String user = (String) session.getAttribute("user");
+%>
 <html>
     <head>
         <title>Indivo Registration Result</title>
@@ -53,6 +56,7 @@
                 	The user and corresponding permissions have been added. 
                     <br/>
                     <input type="button" onclick="closeWindow()" name="closeButton" value="Close Window">
+                    <a href="../../dms/ManageDocument.do?method=display&doc_no=<%=dispDocNo%>&providerNo=<%=user%>" >Registration Letter</a>
             </div>
         <%}%>
     </body>
