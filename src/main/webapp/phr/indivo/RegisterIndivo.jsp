@@ -52,6 +52,13 @@ if (wPhoneExt != null)
                 text-align: center;
                 font-weight: bold;
             }
+            td.error {
+            	color: red;
+            }
+            tr.userrow td {
+            	border-bottom:1px solid black;
+            
+            }
         </style>
         <script type="text/javascript" language="JavaScript">
             function validateNSubmit() {
@@ -164,27 +171,30 @@ if (wPhoneExt != null)
                     Relationships
                 </div>
                 <table>
+                    		<tr>
+                    			<th>&nbsp;</th>
+                    			<th>Provider</th>
+                    			<th>Relationship</th>
+                    			<th>Allow patients to send messages</th> 
+                    		</tr>
                 	<%
                 		TreeMap<String, Provider> myOscarProviders=RegistrationHelper.getMyOscarProviders();
                 		for (Map.Entry<String, Provider> entry : myOscarProviders.entrySet())
                 		{
                 			Long providerMyOscarId=MyOscarUtils.getMyOscarUserId(session, entry.getKey());
 		                	%>
-		                    <tr>
-		                        <td><input type="checkbox" name="enable_primary_relation_<%=providerMyOscarId%>" <%=RegistrationHelper.getCheckedString(session, "enable_primary_relation_"+providerMyOscarId)%> /></td>
+		                	<tr class="userrow">
+		                		<%if (providerMyOscarId != null){ %>
+		                		<td><input type="checkbox" name="enable_primary_relation_<%=providerMyOscarId%>" <%=RegistrationHelper.getCheckedString(session, "enable_primary_relation_"+providerMyOscarId)%> /></td>
 		                        <td><%=StringEscapeUtils.escapeHtml(entry.getKey()+" ("+entry.getValue().getFormattedName()+')')%></td>
-		                        <td> is the <%=RegistrationHelper.renderRelationshipSelect(session, "primary_relation_"+providerMyOscarId)%> for </td>
-		                        <td><%=StringEscapeUtils.escapeHtml(defaultNewUserName)%></td>
-		                    </tr>
-		                    <tr>
-		                        <td><input type="checkbox" name="enable_reverse_relation_<%=providerMyOscarId%>" <%=RegistrationHelper.getCheckedString(session, "enable_reverse_relation_"+providerMyOscarId)%> /></td>
-		                        <td><%=StringEscapeUtils.escapeHtml(defaultNewUserName)%></td>
-		                        <td> is the <%=RegistrationHelper.renderRelationshipSelect(session, "reverse_relation_"+providerMyOscarId)%> for </td>
-		                        <td><%=StringEscapeUtils.escapeHtml(entry.getKey()+" ("+entry.getValue().getFormattedName()+')')%></td>
-		                    </tr>
-		                    <tr>
-		                    	<td colspan="4"><hr /></td>
-		                    </tr>
+		                		<td><%=RegistrationHelper.renderRelationshipSelect(session, "primary_relation_"+providerMyOscarId)%></td>
+		                        <td align="center"><input type="checkbox" name="reverse_relation_<%=providerMyOscarId%>" value="PATIENT" <%=RegistrationHelper.getCheckedStringWithValueString(session, "reverse_relation_"+providerMyOscarId,"PATIENT")%> ></td>
+		                        <%}else{ %>
+		                		<td>&nbsp</td>
+		                        <td class="error" ><%=StringEscapeUtils.escapeHtml(entry.getKey()+" ("+entry.getValue().getFormattedName()+')')%></td>
+		                		<td colspan="2" class="error">Not Found on Server</td>
+		                		<%} %>
+		                	</tr>
 		                    <%
                 		}
                     %>

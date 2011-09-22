@@ -9,6 +9,7 @@ import org.oscarehr.myoscar_server.ws.AccountWs;
 import org.oscarehr.myoscar_server.ws.NotAuthorisedException_Exception;
 import org.oscarehr.myoscar_server.ws.PersonTransfer;
 import org.oscarehr.phr.PHRAuthentication;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.TimeClearedHashMap;
 
@@ -31,7 +32,15 @@ public class MyOscarUtils
 		if (myOscarUserId==null)
 		{
 			AccountWs accountWs=MyOscarServerWebServicesManager.getAccountWs(auth.getMyOscarUserId(), auth.getMyOscarPassword());
-			PersonTransfer person=accountWs.getPersonByUserName(myOscarUserName, null);
+			PersonTransfer person = null;
+			try
+			{
+				person=accountWs.getPersonByUserName(myOscarUserName, null);
+			}
+			catch(Exception e)
+			{
+				MiscUtils.getLogger().error("Myoscar user "+myOscarUserName+" not found ",e);
+			}
 			if (person!=null)
 			{
 				myOscarUserId=person.getId();
