@@ -617,4 +617,17 @@ public class ProgramDao extends HibernateDaoSupport {
 
         return result;
     }
+    
+    public Program getProgramByName(String value) {
+        Program result = null;
+
+        @SuppressWarnings("unchecked")
+        List<Program> results = getHibernateTemplate().find("from Program p where p.name = ?", new Object[]{value});
+
+        if (!results.isEmpty()) {
+            result = results.get(0);
+        }
+
+        return result;
+    }
 }

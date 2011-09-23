@@ -184,6 +184,11 @@ public class PhsStarHandler extends BasePhsStarHandler {
 			OtherIdManager.saveIdDemographic(demographicNo, "TMR", tempMrn.getId());		
 		}
 		
+		Program p = programDao.getProgramByName(OscarProperties.getInstance().getProperty("phs.default_program", "OSCAR"));
+		if(p != null && admissionDao.getCurrentAdmission(p.getId(), demographicNo) == null) {
+			logger.info("need to do admission");
+			doAdmit(demo,p,"000001");
+		}
 		return demographicNo;
 	}
 	
