@@ -278,9 +278,9 @@ function printIframe(){
 function printPaste2Parent(){
     //console.log("in printPaste2Parent");
    try{
-      text = "****<%=oscar.oscarProvider.data.ProviderData.getProviderName(bean.getProviderNo())%>********************************************************************************";
+      text =""; // "****<%=oscar.oscarProvider.data.ProviderData.getProviderName(bean.getProviderNo())%>********************************************************************************";
       //console.log("1");
-      text = text.substring(0, 82) + "\n";
+      //text = text.substring(0, 82) + "\n";
       if (document.all){
          text += preview.document.forms[0].rx_no_newlines.value
       } else {
@@ -288,7 +288,7 @@ function printPaste2Parent(){
       }
       //console.log("2");
       text+=document.getElementById('additionalNotes').value+"\n";
-      text += "**********************************************************************************\n";
+      //text += "**********************************************************************************\n";
       //oscarLog(text);
 
       //we support pasting into orig encounter and new casemanagement

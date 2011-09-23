@@ -35,7 +35,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.lang.StringUtils;
+//import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -114,7 +114,7 @@ public class EctMeasurementsAction extends Action {
            by = p.getProperty(providerNo,"");
         }
 
-        String textOnEncounter = "**"+StringUtils.rightPad(by,80,"*")+"\\n";
+        String textOnEncounter = ""; //"**"+StringUtils.rightPad(by,80,"*")+"\\n";
         
         //if parent window content has changed then we need to propagate change so
         //we do not write to parent
@@ -256,7 +256,7 @@ public class EctMeasurementsAction extends Action {
                         }
 
                     }
-                    textOnEncounter = textOnEncounter + "**********************************************************************************\\n";
+                    // textOnEncounter = textOnEncounter + "**********************************************************************************\\n";
 
                 }
                 else{
