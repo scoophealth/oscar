@@ -1742,7 +1742,7 @@ if(oscarVariables.getProperty("demographicExt") != null) {
 								<%
 									String onclickString="popup(600, 650, '../phr/indivo/RegisterIndivo.jsp?demographicNo="+demographic_no+"', 'indivoRegistration');";
 									PHRAuthentication auth=MyOscarUtils.getPHRAuthentication(session);
-									if (auth==null) onclickString="alert('Please login to MyOsar first.')";
+									if (auth==null) onclickString="alert('Please login to MyOscar first.')";
 								%>
 								<a href="javascript:"
 									onclick="<%=onclickString%>"><sub

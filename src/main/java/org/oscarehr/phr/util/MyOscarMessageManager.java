@@ -24,7 +24,7 @@ public class MyOscarMessageManager {
 		MessageWs messageWs=MyOscarServerWebServicesManager.getMessageWs(myOscarUserId, myOscarPassword);
 		
 		List<MessageTransfer> messageTransfers=messageWs.getReceivedMessages(myOscarUserId, active, startIndex, itemsToReturn);
-		logger.debug("getReceivedMessages from MyOsar Server : "+messageTransfers.size());
+		logger.debug("getReceivedMessages from MyOscar Server : "+messageTransfers.size());
 			
 		for (MessageTransfer messageTransfer : messageTransfers)
 		{
@@ -40,7 +40,7 @@ public class MyOscarMessageManager {
 		
 		// when viewing sent messages we always view all even if the receipient has deleted/archived/inactived the message
 		List<MessageTransfer> messageTransfers=messageWs.getSentMessages(myOscarUserId, null, startIndex, itemsToReturn);
-		logger.debug("getSentMessages from MyOsar Server : "+messageTransfers.size());
+		logger.debug("getSentMessages from MyOscar Server : "+messageTransfers.size());
 			
 		for (MessageTransfer messageTransfer : messageTransfers)
 		{
