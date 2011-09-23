@@ -336,7 +336,7 @@ padding-right:6;
 										actionPath="activate";
 										trColour="#C0C0C0";
 										
-										sevColour=" "; //clearing severity bgcolor
+										sevColour="#C0C0C0"; //clearing severity bgcolor
 									}else{
 										labelStatus="Active";
 										labelAction="Inactivate";
