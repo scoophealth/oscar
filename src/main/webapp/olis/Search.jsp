@@ -218,16 +218,6 @@ List<OLISRequestNomenclature> requestNomenclatureList = requestDao.findAll();
 <option value="5552">Gamma-Dynacare</option>
 <option value="5407">CML</option>
 <option value="5687">LifeLabs</option>
-<option value="4001">BSD Lab1</option>
-<option value="4002">BSD Lab2</option>
-<option value="4003">BSD Lab3</option>
-<option value="4004">BSD Lab4</option>
-<option value="4005">BSD Lab5</option>
-<option value="4006">BSD Lab6</option>
-<option value="4007">BSD Lab7</option>
-<option value="4008">BSD Lab8</option>
-<option value="4009">BSD Lab9</option>
-<option value="4010">BSD Lab10</option>
 </select>
 </td>
 </tr><tr>
@@ -237,16 +227,6 @@ List<OLISRequestNomenclature> requestNomenclatureList = requestDao.findAll();
 <option value="5552">Gamma-Dynacare</option>
 <option value="5407">CML</option>
 <option value="5687">LifeLabs</option>
-<option value="4001">BSD Lab1</option>
-<option value="4002">BSD Lab2</option>
-<option value="4003">BSD Lab3</option>
-<option value="4004">BSD Lab4</option>
-<option value="4005">BSD Lab5</option>
-<option value="4006">BSD Lab6</option>
-<option value="4007">BSD Lab7</option>
-<option value="4008">BSD Lab8</option>
-<option value="4009">BSD Lab9</option>
-<option value="4010">BSD Lab10</option>
 </select>
 </td>
 		</tr>
@@ -257,16 +237,6 @@ List<OLISRequestNomenclature> requestNomenclatureList = requestDao.findAll();
 <option value="5552">Gamma-Dynacare</option>
 <option value="5407">CML</option>
 <option value="5687">LifeLabs</option>
-<option value="4001">BSD Lab1</option>
-<option value="4002">BSD Lab2</option>
-<option value="4003">BSD Lab3</option>
-<option value="4004">BSD Lab4</option>
-<option value="4005">BSD Lab5</option>
-<option value="4006">BSD Lab6</option>
-<option value="4007">BSD Lab7</option>
-<option value="4008">BSD Lab8</option>
-<option value="4009">BSD Lab9</option>
-<option value="4010">BSD Lab10</option>
 </select>
 </td>
 </tr>
@@ -287,16 +257,6 @@ List<OLISRequestNomenclature> requestNomenclatureList = requestDao.findAll();
 						<option value="5552" <%=(reportingLabVal.equals("5552")?"selected=\"selected\"":"") %>>Gamma-Dynacare</option>
 						<option value="5407" <%=(reportingLabVal.equals("5407")?"selected=\"selected\"":"") %>>CML</option>
 						<option value="5687" <%=(reportingLabVal.equals("5687")?"selected=\"selected\"":"") %>>LifeLabs</option>
-						<option value="4001" <%=(reportingLabVal.equals("4001")?"selected=\"selected\"":"") %>>BSD Lab1</option>
-						<option value="4002" <%=(reportingLabVal.equals("4002")?"selected=\"selected\"":"") %>>BSD Lab2</option>
-						<option value="4003" <%=(reportingLabVal.equals("4003")?"selected=\"selected\"":"") %>>BSD Lab3</option>
-						<option value="4004" <%=(reportingLabVal.equals("4004")?"selected=\"selected\"":"") %>>BSD Lab4</option>
-						<option value="4005" <%=(reportingLabVal.equals("4005")?"selected=\"selected\"":"") %>>BSD Lab5</option>
-						<option value="4006" <%=(reportingLabVal.equals("4006")?"selected=\"selected\"":"") %>>BSD Lab6</option>
-						<option value="4007" <%=(reportingLabVal.equals("4007")?"selected=\"selected\"":"") %>>BSD Lab7</option>
-						<option value="4008" <%=(reportingLabVal.equals("4008")?"selected=\"selected\"":"") %>>BSD Lab8</option>
-						<option value="4009" <%=(reportingLabVal.equals("4009")?"selected=\"selected\"":"") %>>BSD Lab9</option>
-						<option value="4010" <%=(reportingLabVal.equals("4010")?"selected=\"selected\"":"") %>>BSD Lab10</option>
 </select>
 </td>
 		</tr>
@@ -307,16 +267,6 @@ List<OLISRequestNomenclature> requestNomenclatureList = requestDao.findAll();
 						<option value="5552" <%=(exReportingLabVal.equals("5552")?"selected=\"selected\"":"") %>>Gamma-Dynacare</option>
 						<option value="5407" <%=(exReportingLabVal.equals("5407")?"selected=\"selected\"":"") %>>CML</option>
 						<option value="5687" <%=(exReportingLabVal.equals("5687")?"selected=\"selected\"":"") %>>LifeLabs</option>
-						<option value="4001" <%=(exReportingLabVal.equals("4001")?"selected=\"selected\"":"") %>>BSD Lab1</option>
-						<option value="4002" <%=(exReportingLabVal.equals("4002")?"selected=\"selected\"":"") %>>BSD Lab2</option>
-						<option value="4003" <%=(exReportingLabVal.equals("4003")?"selected=\"selected\"":"") %>>BSD Lab3</option>
-						<option value="4004" <%=(exReportingLabVal.equals("4004")?"selected=\"selected\"":"") %>>BSD Lab4</option>
-						<option value="4005" <%=(exReportingLabVal.equals("4005")?"selected=\"selected\"":"") %>>BSD Lab5</option>
-						<option value="4006" <%=(exReportingLabVal.equals("4006")?"selected=\"selected\"":"") %>>BSD Lab6</option>
-						<option value="4007" <%=(exReportingLabVal.equals("4007")?"selected=\"selected\"":"") %>>BSD Lab7</option>
-						<option value="4008" <%=(exReportingLabVal.equals("4008")?"selected=\"selected\"":"") %>>BSD Lab8</option>
-						<option value="4009" <%=(exReportingLabVal.equals("4009")?"selected=\"selected\"":"") %>>BSD Lab9</option>
-						<option value="4010" <%=(exReportingLabVal.equals("4010")?"selected=\"selected\"":"") %>>BSD Lab10</option>
 </select>
 </td>
 		</tr>
@@ -416,16 +366,6 @@ for (Object d : allDemographics) {
 <option value="5552">Gamma-Dynacare</option>
 <option value="5407">CML</option>
 <option value="5687">LifeLabs</option>
-<option>BSD Lab1</option>
-<option>BSD Lab2</option>
-<option>BSD Lab3</option>
-<option>BSD Lab4</option>
-<option>BSD Lab5</option>
-<option>BSD Lab6</option>
-<option>BSD Lab7</option>
-<option>BSD Lab8</option>
-<option>BSD Lab9</option>
-<option>BSD Lab10</option>
 </select></td>
 		</tr>
 		<tr>
@@ -634,17 +574,6 @@ for (Object d : allDemographics) {
 <option value="5552">Gamma-Dynacare</option>
 <option value="5407">CML</option>
 <option value="5687">LifeLabs</option>
-<option value="4001">BSD Lab1</option>
-<option value="4002">BSD Lab2</option>
-<option value="4003">BSD Lab3</option>
-<option value="4004">BSD Lab4</option>
-<option value="4005">BSD Lab5</option>
-<option value="4006">BSD Lab6</option>
-<option value="4007">BSD Lab7</option>
-<option value="4008">BSD Lab8</option>
-<option value="4009">BSD Lab9</option>
-<option value="4010">BSD Lab10</option>
-
 </select>
 </td>
 		</tr>
@@ -677,16 +606,6 @@ for (Object d : allDemographics) {
 <option value="5552">Gamma-Dynacare</option>
 <option value="5407">CML</option>
 <option value="5687">LifeLabs</option>
-<option value="4001">BSD Lab1</option>
-<option value="4002">BSD Lab2</option>
-<option value="4003">BSD Lab3</option>
-<option value="4004">BSD Lab4</option>
-<option value="4005">BSD Lab5</option>
-<option value="4006">BSD Lab6</option>
-<option value="4007">BSD Lab7</option>
-<option value="4008">BSD Lab8</option>
-<option value="4009">BSD Lab9</option>
-<option value="4010">BSD Lab10</option>
 </select>
 </td>
 		</tr>

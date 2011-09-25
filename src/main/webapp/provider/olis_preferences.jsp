@@ -75,16 +75,6 @@
 						<option value="5552" <%=(val1.equals("5552")?"selected=\"selected\"":"") %>>Gamma-Dynacare</option>
 						<option value="5407" <%=(val1.equals("5407")?"selected=\"selected\"":"") %>>CML</option>
 						<option value="5687" <%=(val1.equals("5687")?"selected=\"selected\"":"") %>>LifeLabs</option>
-						<option value="4001" <%=(val1.equals("4001")?"selected=\"selected\"":"") %>>BSD Lab1</option>
-						<option value="4002" <%=(val1.equals("4002")?"selected=\"selected\"":"") %>>BSD Lab2</option>
-						<option value="4003" <%=(val1.equals("4003")?"selected=\"selected\"":"") %>>BSD Lab3</option>
-						<option value="4004" <%=(val1.equals("4004")?"selected=\"selected\"":"") %>>BSD Lab4</option>
-						<option value="4005" <%=(val1.equals("4005")?"selected=\"selected\"":"") %>>BSD Lab5</option>
-						<option value="4006" <%=(val1.equals("4006")?"selected=\"selected\"":"") %>>BSD Lab6</option>
-						<option value="4007" <%=(val1.equals("4007")?"selected=\"selected\"":"") %>>BSD Lab7</option>
-						<option value="4008" <%=(val1.equals("4008")?"selected=\"selected\"":"") %>>BSD Lab8</option>
-						<option value="4009" <%=(val1.equals("4009")?"selected=\"selected\"":"") %>>BSD Lab9</option>
-						<option value="4010" <%=(val1.equals("4010")?"selected=\"selected\"":"") %>>BSD Lab10</option>
 					</select>
 				</td>
 			</tr>
@@ -100,16 +90,6 @@
 						<option value="5552" <%=(val1.equals("5552")?"selected=\"selected\"":"") %>>Gamma-Dynacare</option>
 						<option value="5407" <%=(val1.equals("5407")?"selected=\"selected\"":"") %>>CML</option>
 						<option value="5687" <%=(val1.equals("5687")?"selected=\"selected\"":"") %>>LifeLabs</option>
-						<option value="4001" <%=(val1.equals("4001")?"selected=\"selected\"":"") %>>BSD Lab1</option>
-						<option value="4002" <%=(val1.equals("4002")?"selected=\"selected\"":"") %>>BSD Lab2</option>
-						<option value="4003" <%=(val1.equals("4003")?"selected=\"selected\"":"") %>>BSD Lab3</option>
-						<option value="4004" <%=(val1.equals("4004")?"selected=\"selected\"":"") %>>BSD Lab4</option>
-						<option value="4005" <%=(val1.equals("4005")?"selected=\"selected\"":"") %>>BSD Lab5</option>
-						<option value="4006" <%=(val1.equals("4006")?"selected=\"selected\"":"") %>>BSD Lab6</option>
-						<option value="4007" <%=(val1.equals("4007")?"selected=\"selected\"":"") %>>BSD Lab7</option>
-						<option value="4008" <%=(val1.equals("4008")?"selected=\"selected\"":"") %>>BSD Lab8</option>
-						<option value="4009" <%=(val1.equals("4009")?"selected=\"selected\"":"") %>>BSD Lab9</option>
-						<option value="4010" <%=(val1.equals("4010")?"selected=\"selected\"":"") %>>BSD Lab10</option>
 					</select>
 			</td>
 			</tr>
