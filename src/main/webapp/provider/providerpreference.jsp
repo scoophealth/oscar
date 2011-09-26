@@ -4,9 +4,12 @@
   String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF" ;
   LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
   String providerNo=loggedInInfo.loggedInProvider.getProviderNo();
+  
+  String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 %>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
@@ -506,6 +509,7 @@ Event.observe('rxInteractionWarningLevel', 'change', function(event) {
     </td>
   </tr>
   <oscar:oscarPropertiesCheck property="TORONTO_RFQ" value="no" defaultVal="true">
+  <security:oscarSec roleName="<%=roleName$%>" objectName="_billing" rights="r">
   <tr>
     <td align="center">
 <% String br = OscarProperties.getInstance().getProperty("billregion");
@@ -546,7 +550,7 @@ Event.observe('rxInteractionWarningLevel', 'change', function(event) {
 	  </div>
       </td>
   </tr>
-
+</security:oscarSec>
       <tr>
           <td align="center"><a href=# onClick ="popupPage(230,860,'providerPhone.jsp');return false;"><bean:message key="provider.btnEditPhoneNumber"/></a></td>
       </tr>  
@@ -574,9 +578,11 @@ Event.observe('rxInteractionWarningLevel', 'change', function(event) {
       <tr>
           <td align="center"><a href=# onClick ="popupPage(230,860,'../setProviderStaleDate.do?method=view&provider_no=<%=providerNo%>');return false;"><bean:message key="provider.btnEditStaleDate"/></a></td>
       </tr>
+     
       <tr>
           <td align="center"><a href=# onClick ="popupPage(230,860,'../setProviderStaleDate.do?method=viewMyDrugrefId');return false;"><bean:message key="provider.btnSetmyDrugrefID"/></a></td>
       </tr>
+
       <tr>
           <td align="center"><a href=# onClick ="popupPage(230,860,'../setProviderStaleDate.do?method=viewConsultationRequestCuffOffDate');return false;"><bean:message key="provider.btnSetConsultationCutoffTimePeriod"/></a></td>
       </tr>
