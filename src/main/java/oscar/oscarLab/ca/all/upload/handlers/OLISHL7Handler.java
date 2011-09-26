@@ -111,7 +111,11 @@ public class OLISHL7Handler implements MessageHandler {
 					//if(dupResult.getAccessionNumber().equals(directAcc)) {
 					//	return true;
 					//}
-					if(dupResult.getAccessionNumber().equals(directAcc)) {
+
+
+					// Note: The following line may need to replace the line below it for real life usage, for right now though, just using acc is what makes it work
+					//if(dupResult.getAccessionNumber().equals(directAcc)) {
+					if(dupResult.getAccessionNumber().equals(acc)) {
 						//if(h.getHealthNum().equals(dupResult.getHealthNumber())) {
 							OscarAuditLogger.getInstance().log("Lab", "Skip", "Duplicate lab skipped - accession " + acc + "\n" + msg);
 							return true;
