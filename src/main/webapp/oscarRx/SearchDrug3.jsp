@@ -599,6 +599,20 @@ function checkFav(){
     	}
     }
     
+    function emptyWrittenDate(rand){
+    	var cb = document.getElementById('pastMed_'+rand);
+    	var txt = document.getElementById('writtenDate_'+rand); 
+    	
+    	if(cb.checked){
+    		txt.value='0001-01-01';
+    		txt.disabled=true;		
+    	}else{
+    		txt.disabled=false;
+    		
+    	}
+    	
+    }  
+    
     //this is a SJHH specific feature
     function completeMedRec() {
    	 var ok = confirm("Are you sure you would like to mark the Med Rec as complete?");
