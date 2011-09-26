@@ -80,20 +80,20 @@ public class Hl7textResultsData {
             
             for (int i=0; i < h.getOBRCount(); i++){
                 for (int j=0; j < h.getOBXCount(i); j++){
-                    
+
                     String result = h.getOBXResult(i, j);
                     
                     // only insert if there is a result and it is supposed to be viewed
                     if (result.equals("") || result.equals("DNR") || h.getOBXName(i, j).equals("") || h.getOBXResultStatus(i, j).equals("DNS"))
                         continue;
-                    
                     logger.debug("obx("+j+") should be inserted");
                     String identifier = h.getOBXIdentifier(i,j);
                     String name = h.getOBXName(i,j);
-		    String unit = h.getOBXUnits(i,j);
-		    String labname = h.getPatientLocation();
-		    String accession = h.getAccessionNum();
-		    String datetime = h.getTimeStamp(i,j);
+                    String unit = h.getOBXUnits(i,j);
+                    String labname = h.getPatientLocation();
+                    String accession = h.getAccessionNum();
+                    String datetime = h.getTimeStamp(i,j);
+                    String olis_status = h.getOBXResultStatus(i, j);
                     String abnormal = h.getOBXAbnormalFlag(i,j);
                     if ( abnormal != null && ( abnormal.equals("A") || abnormal.startsWith("H")) ){
                         abnormal = "A";
@@ -102,11 +102,11 @@ public class Hl7textResultsData {
                     }else{
                         abnormal = "N";
                     }
-		    String[] refRange = splitRefRange(h.getOBXReferenceRange(i,j));
-		    String comments = "";
-		    for (int l=0; l<h.getOBXCommentCount(i,j); l++) {
-			comments += comments.length()>0 ? "\n"+h.getOBXComment(i,j,l) : h.getOBXComment(i,j,l);
-		    }
+                    String[] refRange = splitRefRange(h.getOBXReferenceRange(i,j));
+                    String comments = "";
+                    for (int l=0; l<h.getOBXCommentCount(i,j); l++) {
+                    	comments += comments.length()>0 ? "\n"+h.getOBXComment(i,j,l) : h.getOBXComment(i,j,l);
+                	}
                     
                     String sql = "SELECT b.ident_code, type.measuringInstruction FROM measurementMap a, measurementMap b, measurementType type WHERE b.lab_type='FLOWSHEET' AND a.ident_code='"+identifier+"' AND a.loinc_code = b.loinc_code and type.type = b.ident_code";
                     PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -188,6 +188,15 @@ public class Hl7textResultsData {
                     pstmt.setString(3, datetime);
                     pstmt.executeUpdate();
                     pstmt.clearParameters();
+                    
+                    if (olis_status!=null && olis_status.length()>0) {
+                        logger.debug("Inserting into measurementsExt id "+insertID+ " olis_status "+ olis_status);
+                        pstmt.setString(1, insertID);
+                        pstmt.setString(2, "olis_status");
+                        pstmt.setString(3, olis_status);
+                        pstmt.executeUpdate();
+                        pstmt.clearParameters();
+                    }
 		    
 		    if (unit!=null && unit.length()>0) {
 			logger.debug("Inserting into measurementsExt id "+insertID+ " unit "+ unit);

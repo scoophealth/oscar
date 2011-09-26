@@ -1955,6 +1955,7 @@ public class OLISHL7Handler implements MessageHandler {
     
     @Override
     public String getPatientLocation(){
+    	/*
         try{
             String address = getString(terser.get("/.PID-11-1"));
             String mailing = String.format("%s %s %s",
@@ -1965,6 +1966,8 @@ public class OLISHL7Handler implements MessageHandler {
         }catch(Exception e){
             return("");
         }
+        */
+    	return getPerformingFacilityName();
     }
     public String getWorkLocation(){
         try{
