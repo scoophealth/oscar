@@ -1074,7 +1074,9 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             if (exImmunizations) {
                 // IMMUNIZATIONS
                 ArrayList<Map<String,Object>> prevList = PreventionData.getPreventionData(demoNo);
+                String imSummary;
                 for (int k =0 ; k < prevList.size(); k++){
+                	imSummary = null;
                     HashMap<String,Object> a = new HashMap<String,Object>();
                     a.putAll(prevList.get(k));
                     if (a != null && Util.getImmunizationType((String)a.get("type"))!=null ){
@@ -1097,11 +1099,13 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         else
                         {
                             err.add("Error! No Immunization Name for Patient "+demoNo+" ("+(k+1)+")");
-                            if (StringUtils.filled(prevType)) immu.setImmunizationName(prevType);
+                            if (StringUtils.filled(prevType)) {
+                            	immu.setImmunizationName(prevType);
+                                imSummary = Util.addSummary("Immunization Name",data);
+                            }
                             else immu.setImmunizationName("");
                         }
                         addOneEntry(IMMUNIZATION);
-                        String imSummary = Util.addSummary("Immunization Name",data);
 
                         data = (String) a.get("refused");
                         if (StringUtils.empty(data)) {
