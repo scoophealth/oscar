@@ -63,7 +63,8 @@ public class Util {
     }
 
     static public String addSummary(String summary, String label, String item) {
-        if (summary==null || StringUtils.empty(item)) return summary;
+        if (summary==null) summary = addSummary(label, item);
+        if (StringUtils.empty(item)) return summary;
 
         if (StringUtils.filled(summary)) summary += ",";
         summary += "["+label+"]:"+item;
