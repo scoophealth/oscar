@@ -278,9 +278,6 @@ objectName="_admin,_admin.reporting" rights="r" reverse="<%=true%>">
 
                         &nbsp;&nbsp;
                         <nested:submit style="border:1px solid #666666;">Search Patients</nested:submit>
-                    </nested:form>
-
-
 
                         <display:table name="listview" id="listview" class="mars" style="border:1px solid #666666; width:99%;margin-top:2px;">
                             <display:column property="strFirstName" title="First Name" />
@@ -295,6 +292,16 @@ objectName="_admin,_admin.reporting" rights="r" reverse="<%=true%>">
                             <display:column property="strUpdateDate" title="Update Date" />
                             <display:column property="strStatus" title="Status" />
                         </display:table>
+
+			<%
+	if(request.getAttribute("listview") != null && (request.getAttribute("listview").getClass().getCanonicalName().contains("ArrayList"))) {
+%>
+	<br/>
+	<input type="button" value=" Excel " style="border:1px solid #666666;" onclick="javascript:this.form.action='<%= request.getContextPath()%>/report/DxresearchReport.do?method=patientExcelReport';this.form.submit()">
+<%		
+	}
+%>
+                    </nested:form>
 
                 </td>
             </tr>

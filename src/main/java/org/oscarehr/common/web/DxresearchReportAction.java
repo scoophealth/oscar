@@ -5,12 +5,14 @@
 
 package org.oscarehr.common.web;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.List;
-
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.beanutils.DynaBean;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -22,23 +24,25 @@ import org.oscarehr.common.model.DxRegistedPTInfo;
 import org.oscarehr.util.SpringUtils;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
+import oscar.OscarDocumentCreator;
 import oscar.oscarResearch.oscarDxResearch.bean.dxCodeSearchBean;
 import oscar.oscarResearch.oscarDxResearch.bean.dxQuickListBeanHandler;
 import oscar.oscarResearch.oscarDxResearch.bean.dxQuickListItemsHandler;
 import oscar.oscarResearch.oscarDxResearch.util.dxResearchCodingSystem;
-
+import org.oscarehr.util.MiscUtils;
+import org.apache.log4j.Logger;
 /**
  *
  * @author toby
  */
 @Transactional(propagation=Propagation.REQUIRES_NEW)
 public class DxresearchReportAction extends DispatchAction {
-
+    private static final Logger logger = MiscUtils.getLogger();
     private final static String SUCCESS = "success";
     private final static String EDIT_DESC = "editdesc";
     private DxresearchDAO dxresearchdao ;
     private MyGroupDao mygroupdao = (MyGroupDao)SpringUtils.getBean("myGroupDao");
+    private static final String REPORTS_PATH = "org/oscarehr/common/web/DxResearchReport.jrxml";
 
     public void setDxresearchdao(DxresearchDAO dxresearchdao) {
         this.dxresearchdao = dxresearchdao;
@@ -81,6 +85,44 @@ public class DxresearchReportAction extends DispatchAction {
         return mapping.findForward(SUCCESS);
     }
 
+    public ActionForward patientExcelReport(ActionMapping mapping, ActionForm  form,
+            HttpServletRequest request, HttpServletResponse response)
+            throws Exception {
+        ServletOutputStream outputStream = getServletOstream(response);
+
+        List<DxRegistedPTInfo> patients = null;
+
+        if(request.getSession().getAttribute("listview").getClass().getCanonicalName().contains("ArrayList")) {
+            patients = (List<DxRegistedPTInfo>) request.getSession().getAttribute("listview");
+        } else if(request.getSession().getAttribute("listview").getClass().getCanonicalName().contains("DxRegistedPTInfo")) {
+        	patients = new ArrayList<DxRegistedPTInfo>();
+        	DxRegistedPTInfo info = (DxRegistedPTInfo) request.getSession().getAttribute("listview");
+        	patients.add(info);
+        }
+
+        String providerNo = request.getParameter("provider_no");
+
+        if (providerNo.startsWith("_grp_")){
+            providerNo=providerNo.replaceFirst("_grp_", "");
+        }
+
+        String mode = (String) request.getSession().getAttribute("radiovaluestatus");
+
+    	OscarDocumentCreator osc = new OscarDocumentCreator();
+        HashMap<String,String> reportParams = new HashMap<String,String>();
+        reportParams.put("provider", providerNo);
+        reportParams.put("mode", mode);
+
+        InputStream reportInstream = this.getClass().getClassLoader().getResourceAsStream(REPORTS_PATH);
+
+    	response.setContentType("application/excel");
+    	response.setHeader( "Content-disposition", "inline; filename=dxResearchReport.xls");
+
+    	osc.fillDocumentStream(reportParams, outputStream, OscarDocumentCreator.EXCEL, reportInstream, patients);
+
+        return null;
+    }
+
     public ActionForward patientRegistedDistincted(ActionMapping mapping, ActionForm  form,
             HttpServletRequest request, HttpServletResponse response)
              {
@@ -103,6 +145,16 @@ public class DxresearchReportAction extends DispatchAction {
             request.getSession().setAttribute("Counter", patientInfo.size());
         request.getSession().setAttribute("radiovaluestatus", "patientRegistedDistincted");
         return mapping.findForward(SUCCESS);
+    }
+
+    protected ServletOutputStream getServletOstream(HttpServletResponse response) {
+        ServletOutputStream outputStream = null;
+        try {
+          outputStream = response.getOutputStream();
+        } catch (IOException ex) {
+		MiscUtils.getLogger().warn("Warning",ex);
+        }
+        return outputStream;
     }
 
     public ActionForward patientRegistedDeleted(ActionMapping mapping, ActionForm  form,

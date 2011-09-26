@@ -145,7 +145,7 @@ public class DxresearchDAO extends HibernateDaoSupport{
             while (ite.hasNext()) {
                 dxCodeSearchBean bean = (dxCodeSearchBean)ite.next();
                 String codeSys = bean.getType();
-                String code = bean.getDxSearchCode();
+                String code = bean.getDxSearchCode().trim();
                 HQL += "dxres.codingSystem= '" + codeSys + "' AND dxres.dxresearchCode='" + code + "'";
                 if (ite.hasNext()) {
                     HQL += " OR ";
