@@ -18,11 +18,14 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.export.JRCsvExporter;
+import net.sf.jasperreports.engine.export.JRXlsExporter;
+import net.sf.jasperreports.engine.export.JRXlsExporterParameter;
 
 import org.oscarehr.util.MiscUtils;
 public class OscarDocumentCreator {
   public static final String PDF = "pdf";
   public static final String CSV = "csv";
+  public static final String EXCEL = "excel";
 
   public OscarDocumentCreator() {
 
@@ -66,6 +69,8 @@ public class OscarDocumentCreator {
       else if (docType.equals(OscarDocumentCreator.CSV)) {
         this.exportReportToCSVStream(print, sos);
 
+      } else if (docType.equals(this.EXCEL)) {
+    	this.exportReportToExcelStream(print,sos);
       }
 
     }
@@ -102,6 +107,21 @@ public class OscarDocumentCreator {
     exp.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
     exp.setParameter(JRExporterParameter.OUTPUT_STREAM, sos);
     exp.exportReport();
+  }
+
+  private void exportReportToExcelStream(JasperPrint jasperPrint, OutputStream os) 
+  			throws JRException{
+  	JRXlsExporter exp = new JRXlsExporter();
+  	exp.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
+	exp.setParameter(JRExporterParameter.OUTPUT_STREAM, os);	
+	exp.setParameter(JRXlsExporterParameter.IGNORE_PAGE_MARGINS, Boolean.TRUE);
+	exp.setParameter(JRXlsExporterParameter.OFFSET_X, 0);
+	exp.setParameter(JRXlsExporterParameter.IS_IGNORE_CELL_BORDER, Boolean.FALSE);
+	exp.setParameter(JRXlsExporterParameter.IS_DETECT_CELL_TYPE, true);
+	exp.setParameter(JRXlsExporterParameter.IS_WHITE_PAGE_BACKGROUND, false);
+      	exp.setParameter(JRXlsExporterParameter.IS_ONE_PAGE_PER_SHEET, false);
+      	exp.setParameter(JRXlsExporterParameter.MAXIMUM_ROWS_PER_SHEET,Integer.decode("65000"));
+  	exp.exportReport();
   }
 
 }
