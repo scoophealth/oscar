@@ -1064,7 +1064,10 @@ public class PhsStarHandler extends BasePhsStarHandler {
 	//PV1-7
 	public String getAttendingId() {
 		try {
-			String var = this.extractOrEmpty("/PV1-7-1");			
+			String var = this.extractOrEmpty("/PV1-7-1");
+			if(var != null && var.length()>0) {
+				return var;
+			}
 		}catch(Exception e) {/*swallow exception*/}
 		
 		try {
