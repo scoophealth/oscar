@@ -33,6 +33,7 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarPrevention.PreventionDisplayConfig;
+import oscar.oscarProvider.data.ProviderData;
 import oscar.util.StringUtils;
 import oscar.util.UtilDateUtilities;
 
@@ -439,7 +440,9 @@ public class Util {
     	
     	String vtext = verified;
     	if (cmn.getUpdate_date()!=null) vtext += " on "+UtilDateUtilities.DateToString(cmn.getUpdate_date(), "dd-MMM-yyyy HH:mm");
-    	if (cmn.getProviderNameFirstLast()!=null) vtext += " by "+cmn.getProviderNameFirstLast();
+    	String providerName = ProviderData.getProviderName(cmn.getProviderNo());
+    	if (StringUtils.filled(providerName)) vtext += " by "+providerName;
+
     	return note.substring(marker+1).startsWith(vtext);
     }
     
@@ -451,7 +454,8 @@ public class Util {
     	
     	String vtext = verified;
     	if (cmn.getUpdate_date()!=null) vtext += " on "+UtilDateUtilities.DateToString(cmn.getUpdate_date(), "dd-MMM-yyyy HH:mm");
-    	if (cmn.getProviderNameFirstLast()!=null) vtext += " by "+cmn.getProviderNameFirstLast();
+    	String providerName = ProviderData.getProviderName(cmn.getProviderNo());
+    	if (StringUtils.filled(providerName)) vtext += " by "+providerName;
     	
     	cmn.setNote("\n"+vtext+"]\n");
     }

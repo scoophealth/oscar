@@ -110,11 +110,10 @@
 	 //previous annotation exists
             historyNote=p_cmn;
             note = p_cmn.getNote();
-
-            if (p_cmn_dump!=null) {
-                dump = p_cmn_dump.getNote().substring("imported.cms4.2011.06".length());
-            }
-	}
+    }
+    if (p_cmn_dump!=null) {
+        dump = p_cmn_dump.getNote().substring("imported.cms4.2011.06".length());
+    }
     if (saved) {
 	String prog_no = new EctProgram(se).getProgram(user_no);
         //create a note with demo, user_no, prog_no
