@@ -89,6 +89,7 @@ public class ContactAction extends DispatchAction {
 				c.setDemographicNo(Integer.parseInt(request.getParameter("demographic_no")));
     			c.setRole(request.getParameter("contact_"+x+".role"));
     			c.setType(Integer.parseInt(request.getParameter("contact_"+x+".type")));
+    			c.setNote(request.getParameter("contact_"+x+".note"));
     			c.setContactId(otherId);
     			c.setCategory(DemographicContact.CATEGORY_PERSONAL);
     			if(request.getParameter("contact_"+x+".sdm") != null) {

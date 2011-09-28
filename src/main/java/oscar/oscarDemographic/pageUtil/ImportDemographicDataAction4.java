@@ -312,7 +312,6 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
         ArrayList<String> err_othe = new ArrayList<String>(); //errors: other categories
         ArrayList<String> err_note = new ArrayList<String>(); //non-errors: notes
 
-        String defaultProvider = getDefaultProvider();
         String docDir = oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
         docDir = Util.fixDirName(docDir);
         if (!Util.checkDir(docDir)) {
@@ -531,7 +530,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                 primaryPhysician = writeProviderData(personName.get("firstname"), personName.get("lastname"), personOHIP, personCPSO);
             }
             if (StringUtils.empty(primaryPhysician)) {
-                primaryPhysician = defaultProvider;
+                primaryPhysician = defaultProviderNo();
                 err_data.add("Error! No Primary Physician; patient assigned to \"doctor oscardoc\"");
             }
         } else {
@@ -707,7 +706,6 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     insertIntoAdmission(cDemoNo);
                     err_note.add("Contact-only patient "+cPatient+" (Demo no="+cDemoNo+") created");
 
-                    if (StringUtils.filled(contactNote)) dd.addDemographiccust(cDemoNo, contactNote);
                     if (!workExt.equals("")) dExt.addKey("", cDemoNo, "wPhoneExt", workExt);
                     if (!homeExt.equals("")) dExt.addKey("", cDemoNo, "hPhoneExt", homeExt);
                     if (!cellPhone.equals("")) dExt.addKey("", cDemoNo, "demo_cell", cellPhone);
@@ -720,6 +718,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     demoContact.setEc(emc);
                     demoContact.setSdm(sdm);
                     demoContact.setRole(rel);
+                    demoContact.setNote(contactNote);
                     demoContact.setType(1); //should be "type" - display problem
                     demoContact.setCategory("personal");
                     contactDao.merge(demoContact);
@@ -1148,7 +1147,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                                 String authorOHIP = participatingProviders[p].getOHIPPhysicianId();
                                 String authorProvider = writeProviderData(authorName.get("firstname"), authorName.get("lastname"), authorOHIP);
                                 if (StringUtils.empty(authorProvider)) {
-                                    authorProvider = defaultProvider;
+                                    authorProvider = defaultProviderNo();
                                     err_note.add("Clinical notes have no author; assigned to \"doctor oscardoc\" ("+(i+1)+")");
                                 }
                                 cmNote.setProviderNo(authorProvider);
@@ -1290,11 +1289,15 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     //no need: if (NumberUtils.isDigits(medArray[i].getDispenseInterval())) drug.setDispenseInterval(Integer.parseInt(medArray[i].getDispenseInterval()));
                     //no need: else err_data.add("Error! Invalid Dispense Interval for Medications & Treatments ("+(i+1)+")");
 
-                    if (NumberUtils.isDigits(medArray[i].getRefillDuration())) drug.setRefillDuration(Integer.parseInt(medArray[i].getRefillDuration()));
-                    else err_data.add("Error! Invalid Refill Duration for Medications & Treatments ("+(i+1)+")");
+                    if (StringUtils.filled(medArray[i].getRefillDuration())) {
+                    	if (NumberUtils.isDigits(medArray[i].getRefillDuration())) drug.setRefillDuration(Integer.parseInt(medArray[i].getRefillDuration()));
+                    	else err_data.add("Error! Invalid Refill Duration ["+medArray[i].getRefillDuration()+"] for Medications & Treatments");
+                    }
 
-                    if (NumberUtils.isDigits(medArray[i].getRefillQuantity())) drug.setRefillQuantity(Integer.parseInt(medArray[i].getRefillQuantity()));
-                    else err_data.add("Error! Invalid Refill Quantity for Medications & Treatments ("+(i+1)+")");
+                    if (StringUtils.filled(medArray[i].getRefillQuantity())) {
+                    	if (NumberUtils.isDigits(medArray[i].getRefillQuantity())) drug.setRefillQuantity(Integer.parseInt(medArray[i].getRefillQuantity()));
+                    	else err_data.add("Error! Invalid Refill Quantity ["+medArray[i].getRefillQuantity()+"] for Medications & Treatments");
+                    }
 
                     String take = StringUtils.noNull(medArray[i].getDosage()).trim();
                     drug.setTakeMin(Util.leadingNum(take));
@@ -1395,9 +1398,6 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 
                 //IMMUNIZATIONS
                 Immunizations[] immuArray = patientRec.getImmunizationsArray();
-                if (immuArray.length>0) {
-                    err_note.add("All Immunization info assigned to doctor oscardoc");
-                }
                 for (int i=0; i<immuArray.length; i++) {
                     String preventionDate="", refused="0";
                     String preventionType=null, immExtra=null;
@@ -1476,7 +1476,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     immExtra = Util.addLine(immExtra, "Instructions: ", immuArray[i].getInstructions());
                     immExtra = Util.addLine(immExtra, getResidual(immuArray[i].getResidualInfo()));
                     
-                    Integer preventionId = PreventionData.insertPreventionData(admProviderNo, demographicNo, preventionDate, defaultProvider, "", preventionType, refused, "", "", preventionExt);
+                    Integer preventionId = PreventionData.insertPreventionData(admProviderNo, demographicNo, preventionDate, defaultProviderNo(), "", preventionType, refused, "", "", preventionExt);
                     addOneEntry(IMMUNIZATION);
 
                     //to dumpsite: Extra immunization data
@@ -1756,7 +1756,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                         String personOHIP = appArray[i].getProvider().getOHIPPhysicianId();
                         apptProvider = writeProviderData(providerName.get("firstname"), providerName.get("lastname"), personOHIP);
                         if (StringUtils.empty(apptProvider)) {
-                            apptProvider = defaultProvider;
+                            apptProvider = defaultProviderNo();
                             err_note.add("Appointment has no provider; assigned to \"doctor oscardoc\" ("+(i+1)+")");
                         }
                     }
@@ -2319,7 +2319,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
             return name;
     }
 
-	String getDefaultProvider() {
+	String defaultProviderNo() {
 		ProviderData pd = getProviderByNames("doctor", "oscardoc", true);
 		if (pd!=null) return pd.getProviderNo();
 
