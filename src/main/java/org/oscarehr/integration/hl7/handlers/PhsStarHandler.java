@@ -764,7 +764,7 @@ public class PhsStarHandler extends BasePhsStarHandler {
         	updateDemographic(demographicNo);
         	updateAppointmentAccountNumber();
         	updateAppointmentStatus("H");
-        	updatePrimaryPhysician(demographicNo);
+        	//updatePrimaryPhysician(demographicNo);
         	this.logPatientMessage(controlId,msgType+"^"+triggerEvent,hl7Body,demographicNo);
         }
         
