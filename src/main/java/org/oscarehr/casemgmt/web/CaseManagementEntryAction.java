@@ -807,12 +807,13 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			String val = request.getParameter(names[i]);
 			if (filled(val)) {
 				cme.setKeyVal(keys[i]);
+				cme.setDateValue((Date)null);
+				cme.setValue(null);
 				if (i <= 2) {
-                                        if (createPartialDate(val, cme)) caseManagementMgr.saveNoteExt(cme);
+					if (createPartialDate(val, cme)) caseManagementMgr.saveNoteExt(cme);
 				} else {
-					if (cme.getDateValue() != null) cme.setDateValue("");
 					cme.setValue(val);
-                                        caseManagementMgr.saveNoteExt(cme);
+                    caseManagementMgr.saveNoteExt(cme);
 				}
 			}
 		}
@@ -3099,7 +3100,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
             String type = checkPartial(dateValue);
             if (type==null) return false;
-
+        	
             if (type.equals(PartialDate.YEARONLY)) {
                 cme.setValue(type);
                 cme.setDateValue(dateValue+"-01-01");

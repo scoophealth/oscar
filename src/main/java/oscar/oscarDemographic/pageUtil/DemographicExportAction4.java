@@ -297,7 +297,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             }
 
             data = demographic.getSex();
-            if (StringUtils.filled(data)) {
+            if (cdsDt.Gender.Enum.forString(data)!=null) {
                 demo.setGender(cdsDt.Gender.Enum.forString(data));
             } else {
                 err.add("Error! No Gender for Patient "+demoNo);
@@ -686,7 +686,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                                 bRELATIONSHIP = true;
                             } else if (cme.getKeyVal().equals(CaseManagementNoteExt.LIFESTAGE)) {
                                 if (bLIFESTAGE) continue;
-                                if (StringUtils.filled(cme.getValue()) && "NICTA".contains(cme.getValue())) {
+                                if ("NICTA".contains(cme.getValue()) && cme.getValue().length()==1) {
                                     fHist.setLifeStage(cdsDt.LifeStage.Enum.forString(cme.getValue()));
                                     summary = Util.addSummary(summary, CaseManagementNoteExt.LIFESTAGE, cme.getValue());
                                 }
@@ -750,7 +750,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                                 bPROCEDUREDATE = true;
                             } else if (cme.getKeyVal().equals(CaseManagementNoteExt.LIFESTAGE)) {
                                 if (bLIFESTAGE) continue;
-                                    if (StringUtils.filled(cme.getValue()) && "NICTA".contains(cme.getValue())) {
+                                    if ("NICTA".contains(cme.getValue()) && cme.getValue().length()==1) {
                                     pHealth.setLifeStage(cdsDt.LifeStage.Enum.forString(cme.getValue()));
                                     summary = Util.addSummary(summary, CaseManagementNoteExt.LIFESTAGE, cme.getValue());
                                 }
@@ -816,7 +816,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                                 bRESOLUTIONDATE = true;
                             } else if (cme.getKeyVal().equals(CaseManagementNoteExt.LIFESTAGE)) {
                                 if (bLIFESTAGE) continue;
-                                if (cme.getValue()!=null && cme.getValue().length()==1 && "NICTA".contains(cme.getValue())) {
+                                if ("NICTA".contains(cme.getValue()) && cme.getValue().length()==1) {
                                     pList.setLifeStage(cdsDt.LifeStage.Enum.forString(cme.getValue()));
                                     summary = Util.addSummary(summary, CaseManagementNoteExt.LIFESTAGE, cme.getValue());
                                 }
@@ -871,7 +871,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                                 bAGEATONSET = true;
                             } else if (cme.getKeyVal().equals(CaseManagementNoteExt.LIFESTAGE)) {
                                 if (bLIFESTAGE) continue;
-                                if (StringUtils.filled(cme.getValue()) && "NICTA".contains(cme.getValue())) {
+                                if ("NICTA".contains(cme.getValue()) && cme.getValue().length()==1) {
                                     rFact.setLifeStage(cdsDt.LifeStage.Enum.forString(cme.getValue()));
                                     summary = Util.addSummary(summary, CaseManagementNoteExt.LIFESTAGE, cme.getValue());
                                 }
@@ -1051,7 +1051,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     	Util.putPartialDate(alr.addNewStartDate(), allergy.getStartDate(), dateFormat);
                         aSummary = Util.addSummary(aSummary,"Start Date",partialDateDao.getDatePartial(allergy.getStartDate(), dateFormat));
                     }
-                    if (StringUtils.filled(allergy.getLifeStage()) && "NICTA".contains(allergy.getLifeStage())) {
+                    if ("NICTA".contains(allergy.getLifeStage()) && allergy.getLifeStage().length()==1) {
                         alr.setLifeStage(cdsDt.LifeStage.Enum.forString(allergy.getLifeStage()));
                         aSummary = Util.addSummary(aSummary,"Life Stage at Onset", allergy.getLifeStageDesc());
                     }
@@ -1097,7 +1097,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         if (StringUtils.filled((String)extraData.get("comments"))) immu.setNotes((String)extraData.get("comments"));
 
                         String prevType = Util.getImmunizationType((String)a.get("type"));
-                        if (prevType!=null) {
+                        if (cdsDt.ImmunizationType.Enum.forString(prevType)!=null) {
                             immu.setImmunizationType(cdsDt.ImmunizationType.Enum.forString(prevType));
                         }
 
@@ -1556,7 +1556,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         rpr.setFileExtensionAndVersion(data);
 
                         data = edoc.getDocClass();
-                        if (StringUtils.filled(data)) {
+                        if (cdsDt.ReportClass.Enum.forString(data)!=null) {
                             rpr.setClass1(cdsDt.ReportClass.Enum.forString(data));
                         } else {
                             err.add("Error! No Class Type for Document \""+edoc.getFileName()+"\"");
@@ -1662,7 +1662,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                                 }
 
                                 //Class
-                                if (reportStrings.get("class")!=null && cdsDt.ReportClass.Enum.forString(reportStrings.get("class"))!=null) {
+                                if (cdsDt.ReportClass.Enum.forString(reportStrings.get("class"))!=null) {
                                     rpr.setClass1(cdsDt.ReportClass.Enum.forString(reportStrings.get("class")));
                                 } else {
                                     rpr.setClass1(cdsDt.ReportClass.OTHER_LETTER);
@@ -1680,7 +1680,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                                 }
 
                                 //Media
-                                if (reportStrings.get("media")!=null && cdsDt.ReportMedia.Enum.forString(reportStrings.get("media"))!=null) {
+                                if (cdsDt.ReportMedia.Enum.forString(reportStrings.get("media"))!=null) {
                                     rpr.setMedia(cdsDt.ReportMedia.Enum.forString(reportStrings.get("media")));
                                 }
 
