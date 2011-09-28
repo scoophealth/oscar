@@ -130,7 +130,7 @@
 						<th align="left"><b>Start Date</b></th>
 						<th align="left"><b>End Date</b></th>
 						<th align="left"><b>Written Date</b></th>
-						<th align="left"><b>Prescription Details</b></th>
+						<th align="left"><b>Medication Details</b></th>
 						<th colspan="2"></th>
 					</tr>
 					<%
