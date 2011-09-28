@@ -49,21 +49,6 @@
 <%@ page import="org.oscarehr.common.dao.FlowsheetDao" %>
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 
-<%
-	String method = request.getParameter("method");
-	if(method != null ) {
-		if(method.equals("disable")) {
-			String name = request.getParameter("name");
-			MeasurementTemplateFlowSheetConfig.getInstance().disableFlowsheet(name);
-		}
-		if(method.equals("enable")) {
-			String name = request.getParameter("name");
-			MeasurementTemplateFlowSheetConfig.getInstance().enableFlowsheet(name);
-		}
-		response.sendRedirect("manageFlowsheets.jsp");
-	}
-
-%>
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
