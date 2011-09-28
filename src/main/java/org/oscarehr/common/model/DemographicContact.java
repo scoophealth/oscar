@@ -43,6 +43,7 @@ public class DemographicContact extends AbstractModel<Integer> {
 	private String category;
 	private String sdm;
 	private String ec;
+	private String note;
 	
 	@Transient
 	private String contactName;
@@ -145,6 +146,14 @@ public class DemographicContact extends AbstractModel<Integer> {
 
 	public void setEc(String ec) {
     	this.ec = ec;
+    }
+
+	public String getNote() {
+    	return note;
+    }
+
+	public void setNote(String note) {
+    	this.note = note;
     }
 
 	@PreRemove
