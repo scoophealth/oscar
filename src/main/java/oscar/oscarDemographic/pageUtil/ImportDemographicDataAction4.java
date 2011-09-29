@@ -129,7 +129,8 @@ import cds.ReportsReceivedDocument.ReportsReceived;
 import cds.RiskFactorsDocument.RiskFactors;
 import cdsDt.DiabetesComplicationScreening.ExamCode;
 import cdsDt.DiabetesMotivationalCounselling.CounsellingPerformed;
-import cdsDt.PersonNameStandard.LegalName.OtherName;
+import cdsDt.PersonNameStandard.LegalName;
+import cdsDt.PersonNameStandard.OtherNames;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentCommentDao;
 import org.oscarehr.hospitalReportManager.model.HRMDocumentComment;
 import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
@@ -338,12 +339,28 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
         } else {
             err_data.add("Error! No Legal Name");
         }
-        OtherName[] otherNames = legalName.getOtherNameArray();
-        String otherNameTxt = null;
-        for (OtherName otherName : otherNames) {
-            if (otherNameTxt==null) otherNameTxt = otherName.getPart();
-            else otherNameTxt += ", "+otherName.getPart();
+        
+        //other names
+        String legalOtherNameTxt=null, otherNameTxt=null;
+        
+        LegalName.OtherName[] legalOtherNames = legalName.getOtherNameArray();
+        for (LegalName.OtherName otherName : legalOtherNames) {
+            if (legalOtherNameTxt==null) legalOtherNameTxt = otherName.getPart();
+            else legalOtherNameTxt += ", "+otherName.getPart();
         }
+        
+        OtherNames[] otherNames = demo.getNames().getOtherNamesArray();
+        for (OtherNames otherName : otherNames) {
+        	OtherNames.OtherName[] otherNames2 = otherName.getOtherNameArray();
+        	for (OtherNames.OtherName otherName2 : otherNames2) {
+        		if (otherNameTxt==null) otherNameTxt = otherName2.getPart();
+        		else otherNameTxt += ", "+otherName2.getPart();
+        	}
+        	if (otherName.getNamePurpose()!=null) {
+        		otherNameTxt = Util.addLine(mapNamePurpose(otherName.getNamePurpose())+": ", otherNameTxt);
+        	}
+        }
+        otherNameTxt = Util.addLine(legalOtherNameTxt, otherNameTxt);
 
         String title = demo.getNames().getNamePrefix()!=null ? demo.getNames().getNamePrefix().toString() : "";
         String suffix = demo.getNames().getLastNameSuffix()!=null ? demo.getNames().getLastNameSuffix().toString() : "";
@@ -723,19 +740,19 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 
                 //main field
                 String socialHist = "Imported Personal History";
-                String summary = pHist[i].getCategorySummaryLine();
-                summary = Util.addLine(summary, getResidual(pHist[i].getResidualInfo()));
-                if (StringUtils.empty(summary)) continue;
+//                String summary = pHist[i].getCategorySummaryLine();
+                String residual = getResidual(pHist[i].getResidualInfo());
+                if (StringUtils.empty(residual)) continue;
 
                 cmNote.setNote(socialHist);
                 caseManagementManager.saveNoteSimple(cmNote);
                 addOneEntry(PERSONALHISTORY);
 
                 //to dumpsite
-                summary = Util.addLine("imported.cms4.2011.06", summary);
+                residual = Util.addLine("imported.cms4.2011.06", residual);
                 Long hostNoteId = cmNote.getId();
                 cmNote = prepareCMNote("2",null);
-                cmNote.setNote(summary);
+                cmNote.setNote(residual);
                 saveLinkNote(hostNoteId, cmNote);
             }
 
@@ -768,12 +785,14 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 
                 //to dumpsite
                 String dump = "imported.cms4.2011.06";
+                /*
                 String summary = fHist[i].getCategorySummaryLine();
                 if (StringUtils.empty(summary)) {
                         err_summ.add("No Summary for Family History ("+(i+1)+")");
                 }
-                String diagCode = isICD9(fHist[i].getDiagnosisProcedureCode()) ? null : getCode(fHist[i].getDiagnosisProcedureCode(),"Diagnosis/Procedure");
                 dump = Util.addLine(dump, summary);
+                */
+                String diagCode = isICD9(fHist[i].getDiagnosisProcedureCode()) ? null : getCode(fHist[i].getDiagnosisProcedureCode(),"Diagnosis/Procedure");
                 dump = Util.addLine(dump, diagCode);
                 dump = Util.addLine(dump, getResidual(fHist[i].getResidualInfo()));
                 cmNote = prepareCMNote("2",null);
@@ -841,12 +860,14 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 
                 //to dumpsite
                 String dump = "imported.cms4.2011.06";
+                /*
                 String summary = pHealth[i].getCategorySummaryLine();
                 if (StringUtils.empty(summary)) {
                     err_summ.add("No Summary for Past Health ("+(i+1)+")");
                 }
-                String diagCode = isICD9(pHealth[i].getDiagnosisProcedureCode()) ? null : getCode(pHealth[i].getDiagnosisProcedureCode(),"Diagnosis/Procedure");
                 dump = Util.addLine(dump, summary);
+                */
+                String diagCode = isICD9(pHealth[i].getDiagnosisProcedureCode()) ? null : getCode(pHealth[i].getDiagnosisProcedureCode(),"Diagnosis/Procedure");
                 dump = Util.addLine(dump, diagCode);
                 dump = Util.addLine(dump, getResidual(pHealth[i].getResidualInfo()));
                 cmNote = prepareCMNote("2",null);
@@ -911,12 +932,14 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 
                     //to dumpsite
                     String dump = "imported.cms4.2011.06";
+                    /*
                     String summary = probList[i].getCategorySummaryLine();
                     if (StringUtils.empty(summary)) {
                             err_summ.add("No Summary for Problem List ("+(i+1)+")");
                     }
-                    String diagCode = isICD9(probList[i].getDiagnosisCode()) ? null : getCode(probList[i].getDiagnosisCode(),"Diagnosis");
                     dump = Util.addLine(dump, summary);
+                    */
+                    String diagCode = isICD9(probList[i].getDiagnosisCode()) ? null : getCode(probList[i].getDiagnosisCode(),"Diagnosis");
                     dump = Util.addLine(dump, diagCode);
                     dump = Util.addLine(dump, getResidual(probList[i].getResidualInfo()));
                     cmNote = prepareCMNote("2",null);
@@ -980,11 +1003,13 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 
                     //to dumpsite
                     String dump = "imported.cms4.2011.06";
+                    /*
                     String summary = rFactors[i].getCategorySummaryLine();
                     if (StringUtils.empty(summary)) {
                         err_summ.add("No Summary for Risk Factors ("+(i+1)+")");
                     }
                     dump = Util.addLine(dump, summary);
+                    */
                     dump = Util.addLine(dump, getResidual(rFactors[i].getResidualInfo()));
                     cmNote = prepareCMNote("2",null);
                     cmNote.setNote(dump);
@@ -1048,11 +1073,13 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 
                     //to dumpsite
                     String dump = "imported.cms4.2011.06";
+                    /*
                     String summary = alerts[i].getCategorySummaryLine();
                     if (StringUtils.empty(summary)) {
                             err_summ.add("No Summary for Alerts & Special Needs ("+(i+1)+")");
                     }
                     dump = Util.addLine(dump, summary);
+                    */
                     dump = Util.addLine(dump, getResidual(alerts[i].getResidualInfo()));
                     cmNote = prepareCMNote("2",null);
                     cmNote.setNote(dump);
@@ -1202,11 +1229,13 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 
                     //to dumpsite
                     String dump = "imported.cms4.2011.06";
+                    /*
                     String summary = aaReactArray[i].getCategorySummaryLine();
                     if (StringUtils.empty(summary)) {
                         err_summ.add("No Summary for Allergies & Adverse Reactions ("+(i+1)+")");
                     }
                     dump = Util.addLine(dump, summary);
+                    */
                     dump = Util.addLine(dump, getResidual(aaReactArray[i].getResidualInfo()));
 
                     cmNote = prepareCMNote("2",null);
@@ -1349,11 +1378,13 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 
                     //to dumpsite
                     String dump = "imported.cms4.2011.06";
+                    /*
                     String summary = medArray[i].getCategorySummaryLine();
                     if (StringUtils.empty(summary)) {
                         err_summ.add("No Summary for Medications & Treatments ("+(i+1)+")");
                     }
                     dump = Util.addLine(dump, summary);
+                    */
                     dump = Util.addLine(dump, getResidual(medArray[i].getResidualInfo()));
 
                     cmNote = prepareCMNote("2",null);
@@ -2752,4 +2783,16 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
     	
     	return da;
     }
+	
+	String mapNamePurpose(cdsDt.PersonNamePurposeCode.Enum namePurpose) {
+		if (namePurpose.equals(cdsDt.PersonNamePurposeCode.HC))
+			return "Health Card Name";
+		if (namePurpose.equals(cdsDt.PersonNamePurposeCode.L))
+			return "Legal Name";
+		if (namePurpose.equals(cdsDt.PersonNamePurposeCode.AL))
+			return "Alias Name";
+		if (namePurpose.equals(cdsDt.PersonNamePurposeCode.C))
+			return "License Name";
+		return "";
+	}
 }
