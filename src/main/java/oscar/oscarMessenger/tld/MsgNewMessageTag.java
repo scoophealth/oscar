@@ -24,6 +24,8 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarMessenger.tld;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -31,14 +33,17 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
+import org.hibernate.HibernateException;
+import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 
-import oscar.oscarDB.DBHandler;
+import oscar.util.SqlUtils;
 
 public class MsgNewMessageTag extends TagSupport {
 
     public MsgNewMessageTag()    {
         numNewMessages = 0;
+        numNewDemographicMessages = 0;
     }
 
     public void setProviderNo(String providerNo1)    {
@@ -50,20 +55,36 @@ public class MsgNewMessageTag extends TagSupport {
     }
 
     public int doStartTag() throws JspException    {
-        try {
-            
-//            String sql = new String("select count(*) from messagelisttbl where provider_no ='"+ providerNo +"' and status = 'new' ");
-            String sql = new String("select count(*) from messagelisttbl m LEFT JOIN oscarcommlocations o ON m.remoteLocation = o.locationId where m.provider_no = '"+ providerNo +"' and m.status = 'new' and o.current1=1" );
-            ResultSet rs = DBHandler.GetSQL(sql);
-            while (rs.next()) {
-               numNewMessages = (rs.getInt(1));
-
+       
+            Connection c = null;
+            PreparedStatement ps = null;
+            ResultSet rs = null;
+            try {
+                c = DbConnectionFilter.getThreadLocalDbConnection();
+                						//String sql = new String("select count(*) from messagelisttbl where provider_no ='"+ providerNo +"' and status = 'new' ");
+                String sql = "select count(*) from messagelisttbl m LEFT JOIN oscarcommlocations o ON m.remoteLocation = o.locationId where m.provider_no = ? and m.status = 'new' and o.current1=1" ;
+                ps = c.prepareStatement(sql);
+                ps.setString(1,providerNo);
+                rs = ps.executeQuery();                
+                while (rs.next()) {
+                   numNewMessages = (rs.getInt(1));
+                }
+                
+                String sqlCommand="select count(*) from messagelisttbl,msgDemoMap where provider_no =? and status = 'new' and messageID = message" ;
+                ps = c.prepareStatement(sqlCommand);
+                ps.setString(1,providerNo);
+                rs = ps.executeQuery();
+                while (rs.next()) {
+                	numNewDemographicMessages = (rs.getInt(1));
+                }
             }
-
-            rs.close();
-        }      catch(SQLException e)        {
-           MiscUtils.getLogger().error("Error", e);
-        }
+            catch (SQLException e) {
+                throw (new HibernateException(e));
+            }
+            finally {
+                SqlUtils.closeResources(c, ps, rs);
+            }
+        
         try        {
             JspWriter out = super.pageContext.getOut();
             if(numNewMessages > 0)
@@ -80,7 +101,7 @@ public class MsgNewMessageTag extends TagSupport {
        try{
           JspWriter out = super.pageContext.getOut();
           if (numNewMessages > 0)
-              out.print("<sup>"+numNewMessages+"</sup></span>  ");
+              out.print("<sup>"+numNewDemographicMessages+"/"+numNewMessages+"</sup></span>  ");
           else
               out.print("</span>  ");
        }catch(Exception p) {MiscUtils.getLogger().error("Error",p);
@@ -90,4 +111,5 @@ public class MsgNewMessageTag extends TagSupport {
 
     private String providerNo;
     private int numNewMessages;
+    private int numNewDemographicMessages;
 }
