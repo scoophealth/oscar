@@ -40,6 +40,7 @@ public class DemographicExportForm extends ActionForm {
     String patientSet;
     String pgpReady;
     
+    boolean exPersonalHistory;
     boolean exFamilyHistory;
     boolean exPastHealth;
     boolean exProblemList;
@@ -70,6 +71,9 @@ public class DemographicExportForm extends ActionForm {
     }
     public String getPgpReady() {
         return pgpReady;
+    }
+    public boolean getExPersonalHistory() {
+        return exPersonalHistory;
     }
     public boolean getExFamilyHistory() {
         return exFamilyHistory;
@@ -124,6 +128,9 @@ public class DemographicExportForm extends ActionForm {
     public void setPgpReady(String pgpReady) {
         this.pgpReady = pgpReady;
     }
+    public void setExPersonalHistory(boolean rhs) {
+        this.exPersonalHistory = rhs;
+    }
     public void setExFamilyHistory(boolean rhs) {
         this.exFamilyHistory = rhs;
     }
@@ -162,13 +169,5 @@ public class DemographicExportForm extends ActionForm {
     }
     public void setExCareElements(boolean rhs) {
         this.exCareElements = rhs;
-    }
-    
-    boolean isInteger(String num) {
-        String numeric = "0123456789";
-        for (int i=0; i<num.length(); i++) {
-            if (!numeric.contains(num.subSequence(i,i+1))) return false;
-        }
-        return true;
     }
 }

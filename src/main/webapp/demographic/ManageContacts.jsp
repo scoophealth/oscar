@@ -201,6 +201,12 @@ function setChecked(id,type,name) {
 	});
 }
 
+function setTextarea(id,type,name,val) {
+	jQuery("textarea[name='"+type+"_"+id+"."+name+"']").each(function() {
+		jQuery(this).val(val);					
+	});
+}
+
 jQuery(document).ready(function() {
 	<%
 		@SuppressWarnings("unchecked")
@@ -215,6 +221,7 @@ jQuery(document).ready(function() {
 					setSelect(num,'contact','type','<%=dc.getType()%>');
 					setInput(num,'contact','contactId','<%=dc.getContactId()%>');
 					setInput(num,'contact','contactName','<%=dc.getContactName()%>');
+					setTextarea(num,'contact','note','<%=dc.getNote()!=null?dc.getNote():""%>');
 					<%if(dc.getSdm().equals("true")) {%>setChecked(num,'contact','sdm');<%}%>
 					<%if(dc.getEc().equals("true")) {%>setChecked(num,'contact','ec');<%}%>
 			    <%

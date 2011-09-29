@@ -122,6 +122,7 @@ function checkSelect(slct) {
 function checkAll(all) {
     var frm = document.DemographicExportForm;
     if (all) {
+   	frm.exPersonalHistory.checked = true;
 	frm.exFamilyHistory.checked = true;
 	frm.exPastHealth.checked = true;
 	frm.exProblemList.checked = true;
@@ -136,6 +137,7 @@ function checkAll(all) {
 	frm.exAlertsAndSpecialNeeds.checked = true;
 	frm.exCareElements.checked = true;
     } else {
+   	frm.exPersonalHistory.checked = false; 
 	frm.exFamilyHistory.checked = false;
 	frm.exPastHealth.checked = false;
 	frm.exProblemList.checked = false;
@@ -225,14 +227,15 @@ if (!userRole.toLowerCase().contains("admin")) { %>
                     <p><table border="1"><tr><td>
 		       Export Categories:
 		       <table cellpadding="10"><tr><td>
+		       <html:checkbox property="exPersonalHistory">Personal History</html:checkbox><br>
 		       <html:checkbox property="exFamilyHistory">Family History</html:checkbox><br>
 		       <html:checkbox property="exPastHealth">Past Health</html:checkbox><br>
 		       <html:checkbox property="exProblemList">Problem List</html:checkbox><br>
 		       <html:checkbox property="exRiskFactors">Risk Factors</html:checkbox><br>
 		       <html:checkbox property="exAllergiesAndAdverseReactions">Allergies & Adverse Reactions</html:checkbox><br>
 		       <html:checkbox property="exMedicationsAndTreatments">Medications & Treatments</html:checkbox><br>
-		       <html:checkbox property="exImmunizations">Immunizations</html:checkbox>
 		       </td><td>
+		       <html:checkbox property="exImmunizations">Immunizations</html:checkbox><br>
 		       <html:checkbox property="exLaboratoryResults">Laboratory Results</html:checkbox><br>
 		       <html:checkbox property="exAppointments">Appointments</html:checkbox><br>
 		       <html:checkbox property="exClinicalNotes">Clinical Notes</html:checkbox><br>
