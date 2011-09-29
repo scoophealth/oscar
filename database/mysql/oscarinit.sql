@@ -8381,17 +8381,18 @@ create table RemoteDataLog
 );
 
 create table DemographicContact (
-id integer not null auto_increment primary key,
-created timestamp not null,
-updateDate timestamp not null,
-deleted tinyint,
-demographicNo integer,
-contactId varchar(100),
-role varchar(100),
-type integer,
-category varchar(100),
-sdm varchar(25),
-ec varchar(25),
+	id integer not null auto_increment primary key,
+	created timestamp not null,
+	updateDate timestamp not null,
+	deleted tinyint,
+	demographicNo integer,
+	contactId varchar(100),
+	role varchar(100),
+	type integer,
+	category varchar(100),
+	sdm varchar(25),
+	ec varchar(25),
+	note varchar(200),
 KEY (`demographicNo`)
 );
 

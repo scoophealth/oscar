@@ -38,8 +38,6 @@
 					
 					<a href="#" onclick="deleteContact(<%=id%>);">[Delete]</a>
 					
-					&nbsp;
-					
 		            <select name="contact_<%=id%>.role" id="contact_<%=id%>.role">
 						<option value="Mother">Mother</option>
 						<option value="Father">Father</option>
@@ -66,16 +64,12 @@
 						<option value="Other">Other</option>		            	
 		            </select>
 	            	
-	            	&nbsp;
-	            	
 	            	<!--  they can be an internal (Demographic) or external (Contact) contact -->
 	            		             
 		            <select name="contact_<%=id%>.type" id="contact_<%=id%>.type">
 		            	<option value="<%=DemographicContact.TYPE_DEMOGRAPHIC%>">Internal</option>
 		            	<option value="<%=DemographicContact.TYPE_CONTACT%>">External</option>
 					</select>
-				
-	            	&nbsp;
 	            			           
 	            	<input type="hidden" name="contact_<%=id%>.contactId" value="0"/>
 		             <input type="text" name="contact_<%=id%>.contactName" id="contact_<%=id%>.contactName" size="20" readonly="readonly"/>		             
@@ -83,6 +77,6 @@
 		             
 		             &nbsp;
 		             SDM:<input type="checkbox" name="contact_<%=id%>.sdm"/>
-		             &nbsp;
 		             EC:<input type="checkbox" name="contact_<%=id%>.ec"/>
+		             <textarea name="contact_<%=id%>.note" rows="1" cols="15" title="Contact Note"></textarea>
 </div>

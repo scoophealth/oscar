@@ -162,6 +162,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
     String demographicNo = defrm.getDemographicNo();
     String setName = defrm.getPatientSet();
     String pgpReady = defrm.getPgpReady();
+    boolean exPersonalHistory = WebUtils.isChecked(request, "exPersonalHistory");
     boolean exFamilyHistory = WebUtils.isChecked(request, "exFamilyHistory");
     boolean exPastHealth = WebUtils.isChecked(request, "exPastHealth");
     boolean exProblemList = WebUtils.isChecked(request, "exProblemList");
@@ -493,6 +494,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     String ec = demoContact.getEc();
                     String sdm = demoContact.getSdm();
                     String rel = demoContact.getRole();
+                    String contactNote = demoContact.getNote();
 
                     if (ec.equals("true")) {
                         contact.addNewContactPurpose().setPurposeAsEnum(cdsDt.PurposeEnumOrPlainText.PurposeAsEnum.EC);
@@ -510,6 +512,8 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         else if (rel.equals("Guarantor")) contactPurpose.setPurposeAsEnum(cdsDt.PurposeEnumOrPlainText.PurposeAsEnum.GT);
                         else contactPurpose.setPurposeAsPlainText(rel);
                     }
+                    if (StringUtils.filled(contactNote)) contact.setNote(contactNote);
+                    
                     if (StringUtils.filled(relDemo.getEmail())) contact.setEmailAddress(relDemo.getEmail());
 
                     phoneNo = Util.onlyNum(relDemo.getPhone());
@@ -594,6 +598,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                 }
                 List<CaseManagementNoteExt> cmeList = cmm.getExtByNote(cmn.getId());
 
+                if (exPersonalHistory) {
                     // PERSONAL HISTORY (SocHistory)
                     if (StringUtils.filled(socHist)) {
                         summary = Util.addSummary("Personal History", socHist);
@@ -623,6 +628,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         summary = Util.addSummary(summary, "Notes", annotation);
                         patientRec.addNewPersonalHistory().setCategorySummaryLine(summary);
                     }
+            	}
                 if (exFamilyHistory) {
                     // FAMILY HISTORY (FamHistory)
                     if (StringUtils.filled(famHist)) {
@@ -1622,8 +1628,8 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 
                             if (reportAuthor!=null) {
                                 cdsDt.PersonNameSimple author = rpr.addNewSourceAuthorPhysician().addNewAuthorName();
-                                author.setFirstName(reportAuthor.get("firstname"));
-                                author.setLastName(reportAuthor.get("lastname"));
+                                if (StringUtils.filled(reportAuthor.get("firstname"))) author.setFirstName(reportAuthor.get("firstname"));
+                                if (StringUtils.filled(reportAuthor.get("lastname"))) author.setLastName(reportAuthor.get("lastname"));
                             }
 
                             if (reportContent!=null) {
@@ -1656,7 +1662,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                                 }
 
                                 //Class
-                                if (reportStrings.get("class")!=null) {
+                                if (reportStrings.get("class")!=null && cdsDt.ReportClass.Enum.forString(reportStrings.get("class"))!=null) {
                                     rpr.setClass1(cdsDt.ReportClass.Enum.forString(reportStrings.get("class")));
                                 } else {
                                     rpr.setClass1(cdsDt.ReportClass.OTHER_LETTER);
@@ -1674,7 +1680,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                                 }
 
                                 //Media
-                                if (reportStrings.get("media")!=null) {
+                                if (reportStrings.get("media")!=null && cdsDt.ReportMedia.Enum.forString(reportStrings.get("media"))!=null) {
                                     rpr.setMedia(cdsDt.ReportMedia.Enum.forString(reportStrings.get("media")));
                                 }
 
