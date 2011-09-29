@@ -103,7 +103,7 @@ public class PHRMessageAction extends DispatchAction {
 		String providerNo = loggedInInfo.loggedInProvider.getProviderNo();
 		List docs = phrDocumentDAO.getDocumentsReceived("MESSAGE", providerNo);
 		ArrayList<PHRMessage> messages = null;
-		List<PHRAction> actionsPendingApproval = phrActionDAO.getActionsByStatus(PHRAction.STATUS_APPROVAL_PENDING, providerNo);
+//		List<PHRAction> actionsPendingApproval = phrActionDAO.getActionsByStatus(PHRAction.STATUS_APPROVAL_PENDING, providerNo);
 		if (docs != null) {
 			messages = new ArrayList(docs.size());
 			for (int idx = 0; idx < docs.size(); ++idx) {
@@ -117,9 +117,9 @@ public class PHRMessageAction extends DispatchAction {
 		request.getSession().setAttribute("indivoMessages", docs);
 		request.getSession().setAttribute("indivoMessageBodies", messages);
 
-		if (actionsPendingApproval != null) {
-			request.getSession().setAttribute("actionsPendingApproval", actionsPendingApproval);
-		}
+//		if (actionsPendingApproval != null) {
+//			request.getSession().setAttribute("actionsPendingApproval", actionsPendingApproval);
+//		}
 
 		return mapping.findForward("view");
 	}
