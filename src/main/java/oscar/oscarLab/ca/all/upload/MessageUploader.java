@@ -19,11 +19,13 @@ import java.util.List;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.dao.ClientDao;
+import org.oscarehr.common.OtherIdManager;
 import org.oscarehr.common.dao.Hl7TextInfoDao;
 import org.oscarehr.common.dao.Hl7TextMessageDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Hl7TextInfo;
 import org.oscarehr.common.model.Hl7TextMessage;
+import org.oscarehr.common.model.OtherId;
 import org.oscarehr.olis.dao.OLISSystemPreferencesDao;
 import org.oscarehr.olis.model.OLISSystemPreferences;
 import org.oscarehr.util.DbConnectionFilter;
@@ -199,6 +201,15 @@ public final class MessageUploader {
 					}
 					rs.close();
 					pstmt.close();
+					
+					String otherIdMatchKey = OscarProperties.getInstance().getProperty("lab.other_id_matching", "");
+					if(otherIdMatchKey.length()>0) {
+						OtherId otherId = OtherIdManager.searchTable(OtherIdManager.PROVIDER, otherIdMatchKey, (String)docNums.get(i));
+						if(otherId != null) {
+							providerNums.add(otherId.getTableId());
+						}
+					}
+					
 				}
 			}
 		}
