@@ -66,12 +66,15 @@ public class MyOscarMessageManager {
 		messageWs.markAsRead(messageId);
 	}
 
-	public static void sendReply(Long myOscarUserId, String myOscarPassword, Long messageId, String contents) throws InvalidRequestException_Exception, NotAuthorisedException_Exception
+	/**
+	 * @return Returns the ID of the new message that is created ie the reply message.
+	 */
+	public static Long sendReply(Long myOscarUserId, String myOscarPassword, Long messageId, String contents) throws InvalidRequestException_Exception, NotAuthorisedException_Exception
 	{
 		MessageWs messageWs=MyOscarServerWebServicesManager.getMessageWs(myOscarUserId, myOscarPassword);
-		messageWs.replyToMessage(messageId, contents);
-
+		Long repliedMessageId = messageWs.replyToMessage(messageId, contents);
 		makeLogEntry("MESSAGE_REPLY", null, RemoteDataLog.Action.SEND, "repliedToMessageId="+messageId+", contents="+contents);
+		return repliedMessageId;
 	}
 
 	public static void sendMessage(Long myOscarUserId, String myOscarPassword, Long recipientPersonId, String subject, String contents) throws NotAuthorisedException_Exception

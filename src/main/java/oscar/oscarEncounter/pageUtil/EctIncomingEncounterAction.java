@@ -26,18 +26,23 @@ package oscar.oscarEncounter.pageUtil;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.myoscar_server.ws.MessageTransfer;
+import org.oscarehr.phr.web.MyOscarMessagesHelper;
 import org.oscarehr.util.MiscUtils;
 
+import oscar.util.DateUtils;
 import oscar.util.UtilDateUtilities;
 
 //import oscar.oscarSecurity.CookieSecurity;
@@ -102,7 +107,31 @@ public class EctIncomingEncounterAction extends Action {
                 if (bean.userName == null){
                      bean.userName =  ( (String) request.getSession().getAttribute("userfirstname") ) + " " + ( (String) request.getSession().getAttribute("userlastname") );
                 }
+               
+                bean.myoscarMsgId = request.getParameter("myoscarmsg");
+                if(request.getParameter("myoscarmsg") != null){
+                	ResourceBundle props = ResourceBundle.getBundle("oscarResources", request.getLocale());
+                	try{
+	                	MessageTransfer messageTransfer=MyOscarMessagesHelper.readMessage(request.getSession(), Long.parseLong(bean.myoscarMsgId));
+	                	String messageBeingRepliedTo = "";
+	                	String dateStr  = "";
+	                	if(request.getParameter("remyoscarmsg") != null){
+	                		MessageTransfer messageTransferOrig=MyOscarMessagesHelper.readMessage(request.getSession(), Long.parseLong(request.getParameter("remyoscarmsg")));
+	                		dateStr = StringEscapeUtils.escapeHtml(DateUtils.formatDateTime(messageTransferOrig.getSendDate(), request.getLocale()));
+	                		messageBeingRepliedTo = props.getString("myoscar.msg.From")+": "+StringEscapeUtils.escapeHtml(messageTransferOrig.getSenderPersonLastName()+", "+messageTransferOrig.getSenderPersonFirstName())+" ("+dateStr+")\n"+ messageTransferOrig.getContents()+"\n-------------\n"+props.getString("myoscar.msg.Reply")+":\n";
+	                	}else{
+	                		dateStr = StringEscapeUtils.escapeHtml(DateUtils.formatDateTime(messageTransfer.getSendDate(), request.getLocale()));
+	                		messageBeingRepliedTo = props.getString("myoscar.msg.From")+": "+StringEscapeUtils.escapeHtml(messageTransfer.getSenderPersonLastName()+", "+messageTransfer.getSenderPersonFirstName())+" ("+dateStr+")\n";
+	                	}
+	                	bean.reason = props.getString("myoscar.msg.SubjectPrefix")+" - "+messageTransfer.getSubject();
+	                	bean.myoscarMsgId =  messageBeingRepliedTo+StringEscapeUtils.escapeHtml(messageTransfer.getContents())+"\n";
+                	}catch(Exception myoscarEx){
+                		bean.oscarMsg = "myoscar message was not retrieved";
+                		log.error("ERROR retrieving message",myoscarEx);
+                	}
                 
+                }
+
                 bean.appointmentDate=request.getParameter("appointmentDate");
                 bean.startTime=request.getParameter("startTime");
                 bean.status=request.getParameter("status");
@@ -115,6 +144,9 @@ public class EctIncomingEncounterAction extends Action {
                 if(request.getParameter("source")!=null) {
                 	bean.source = request.getParameter("source");
                 }
+                
+                
+                
             }
         }
         else{

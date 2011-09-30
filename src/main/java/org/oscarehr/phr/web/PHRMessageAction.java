@@ -30,6 +30,7 @@
 package org.oscarehr.phr.web;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -40,6 +41,7 @@ import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionRedirect;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.phr.PHRAuthentication;
 import org.oscarehr.phr.dao.PHRActionDAO;
@@ -55,6 +57,7 @@ import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDemographic.data.DemographicData;
 import oscar.oscarProvider.data.ProviderData;
+import oscar.util.UtilDateUtilities;
 
 /**
  * @author jay
@@ -180,7 +183,17 @@ public class PHRMessageAction extends DispatchAction {
 		String message=StringUtils.trimToNull(request.getParameter("body"));
 		
 		PHRAuthentication auth=MyOscarUtils.getPHRAuthentication(request.getSession());
-		MyOscarMessageManager.sendReply(auth.getMyOscarUserId(), auth.getMyOscarPassword(), replyToMessageId, message);
+		Long messageId = MyOscarMessageManager.sendReply(auth.getMyOscarUserId(), auth.getMyOscarPassword(), replyToMessageId, message);
+		
+		if(request.getParameter("andPasteToEchart")!= null && request.getParameter("andPasteToEchart").equals("yes")){
+			ActionRedirect redirect = new ActionRedirect(mapping.findForward("echart"));
+			redirect.addParameter("myoscarmsg", messageId.toString());
+			redirect.addParameter("remyoscarmsg",replyToMessageId.toString());
+			redirect.addParameter("appointmentDate",UtilDateUtilities.DateToString(new Date())); //Makes echart note have todays date, which makes sense because we are reply now
+			redirect.addParameter("demographicNo",request.getParameter("demographicNo")); 
+			return redirect;
+		}
+		
 		
 		return mapping.findForward("view");		
 	}

@@ -68,6 +68,7 @@ public class EctSessionBean {
     public String template = "";
     public String oscarMsgID;
     public String oscarMsg = "";
+    public String myoscarMsgId = null;
     public ArrayList eChartIdArray;
     public ArrayList socialHistoryArray;
     public ArrayList familyHistoryArray;
@@ -224,6 +225,11 @@ public class EctSessionBean {
                 }
                 rs.close();
             }
+            
+            if(myoscarMsgId != null){
+            	oscarMsg = myoscarMsgId;
+            }
+            
 
         } catch (java.sql.SQLException e) {
             MiscUtils.getLogger().error("Error", e);
