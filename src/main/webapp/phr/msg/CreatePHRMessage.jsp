@@ -99,6 +99,10 @@
             }
         }
     }
+    
+    function setCpyToChart(){
+    	document.getElementById("andPasteToEchart").value = "yes";
+    }
 </script>
 </head>
 
@@ -249,6 +253,7 @@
                                         			%>
                                         				<input type="hidden" name="replyToMessageId" value="<%=replyToMessageId%>" />
                                         				<input type="hidden" name="method" value="sendReply" />
+                                        				<input type="hidden" name="demographicNo" value="<%=request.getParameter("demographicNo")%>" />
                                         			<%
                                         		}
                                         		else
@@ -259,8 +264,9 @@
                                         			<%
                                         		}
                                         	%>
-                                        
+                                        	<input type="hidden" name="andPasteToEchart" id="andPasteToEchart"/>
                                             <input type="submit" class="ControlPushButton" value="<bean:message key="oscarMessenger.CreateMessage.btnSendMessage"/>" >
+                                            <input type="submit" class="ControlPushButton" value="<bean:message key="oscarMessenger.CreateMessage.btnSendMessageCpyToeChart"/>" onclick="setCpyToChart();" >
                                         </td>
                                     </tr>
                                     </html:form>                                                                                                                                                                            

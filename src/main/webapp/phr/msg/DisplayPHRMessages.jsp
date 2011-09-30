@@ -26,6 +26,7 @@
 <%@ page import="java.util.*"%>
 <%@ page import="oscar.util.StringUtils"%>
 <%@ page import="org.oscarehr.phr.indivo.service.accesspolicies.IndivoAPService" %>
+<%@ page import="oscar.util.UtilDateUtilities" %>
 
 <%
 int statusNotAuthorized = PHRAction.STATUS_NOT_AUTHORIZED;
@@ -231,8 +232,8 @@ request.setAttribute("pageMethod",pageMethod);
             popup(755,1048,url,'apptProvider');
         }
         
-        function gotoEchart2(demoNo) {
-            var url = '<%=request.getContextPath()%>/oscarEncounter/IncomingEncounter.do?demographicNo='+ demoNo;
+        function gotoEchart2(demoNo,myoscarmsg) {
+            var url = '<%=request.getContextPath()%>/oscarEncounter/IncomingEncounter.do?demographicNo='+ demoNo+'&myoscarmsg='+myoscarmsg+'&appointmentDate=<%=UtilDateUtilities.DateToString(new Date())%>';
             popup(755,1048,url,'apptProvider');
         }
         
@@ -448,12 +449,14 @@ request.setAttribute("pageMethod",pageMethod);
 		                            </td>
 		                            <td bgcolor="#EEEEFF">                                
 		                                <%
+		                                String demographicLink = "";
 		                                	String myOscarUserName=message.getSenderPersonUserName();
 		                                	Demographic demographic=MyOscarUtils.getDemographicByMyOscarUserName(myOscarUserName);
 		                                	if (demographic!=null)
 		                                	{
+		                                		demographicLink = "&demographicNo="+demographic.getDemographicNo();
 				                                %>
-				                               		<a href="?<%=request.getQueryString()%>" onClick="gotoEchart2(<%=demographic.getDemographicNo()%>);" >
+				                               		<a href="?<%=request.getQueryString()%>" onClick="gotoEchart2(<%=demographic.getDemographicNo()%>,<%=message.getId()%>);" >
 			                               		<%
 		                                	}
 			                            %>
@@ -474,7 +477,7 @@ request.setAttribute("pageMethod",pageMethod);
 		                                	if (demographic!=null)
 		                                	{
 				                                %>
-				                               		<a href="?<%=request.getQueryString()%>" onClick="gotoEchart2(<%=demographic.getDemographicNo()%>);" >
+				                               		<a href="?<%=request.getQueryString()%>" onClick="gotoEchart2(<%=demographic.getDemographicNo()%>,<%=message.getId()%>);" >
 			                               		<%
 		                                	}
 			                            %>
@@ -489,7 +492,7 @@ request.setAttribute("pageMethod",pageMethod);
 	                                	%>
 		                            </td>
 		                            <td bgcolor="#EEEEFF">
-		                                <a href="<%=request.getContextPath()%>/phr/PhrMessage.do?&method=read&comingfrom=viewMessages&messageId=<%=message.getId()%>">
+		                                <a href="<%=request.getContextPath()%>/phr/PhrMessage.do?&method=read&comingfrom=viewMessages&messageId=<%=message.getId()%><%=demographicLink%>">
 		                                   <%=StringEscapeUtils.escapeHtml(message.getSubject())%>
 		                                </a>
 		                            </td>

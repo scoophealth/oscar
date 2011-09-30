@@ -36,6 +36,7 @@
 
 <%
 	Long messageId=new Long(request.getParameter("messageId"));
+	String demographicNo = request.getParameter("demographicNo");
 	MessageTransfer messageTransfer=MyOscarMessagesHelper.readMessage(session, messageId);
 %>
 
@@ -153,7 +154,7 @@ function BackToOscar()
                                     <td bgcolor="#EEEEFF" ></td>
                                     <td bgcolor="#EEEEFF" >
                                         <textarea name="msgBody" wrap="hard" readonly="true" rows="18" cols="60" ><%=StringEscapeUtils.escapeHtml(messageTransfer.getContents())%></textarea><br>
-                                        <input class="ControlPushButton" type="button" value="<bean:message key="oscarMessenger.ViewMessage.btnReply"/>" onclick="window.location.href='<%=request.getContextPath()%>/phr/msg/CreatePHRMessage.jsp?replyToMessageId=<%=messageId%>'"/>
+                                        <input class="ControlPushButton" type="button" value="<bean:message key="oscarMessenger.ViewMessage.btnReply"/>" onclick="window.location.href='<%=request.getContextPath()%>/phr/msg/CreatePHRMessage.jsp?replyToMessageId=<%=messageId%>&demographicNo=<%=demographicNo%>'"/>
                                      </td>
                                 </tr>
                                 <tr>
