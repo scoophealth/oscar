@@ -25,6 +25,7 @@
 -->
 <%@page import="java.util.*,oscar.eform.*"%>
 <%@page import="org.oscarehr.web.eform.EfmPatientFormList"%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%
 	String demographic_no = request.getParameter("demographic_no");
 	String deepColor = "#CCCCFF", weakColor = "#EEEEFF";
@@ -142,7 +143,7 @@ function updateAjax() {
 		<a
 			href="efmpatientformlistdeleted.jsp?demographic_no=<%=demographic_no%>&appointment=<%=appointment%>&parentAjaxId=<%=parentAjaxId%>"><bean:message
 			key="eform.showmyform.btnDeleted" /> </a> <security:oscarSec
-			roleName="<%=roleName$%>" objectName="_admin,_admin.eform" rights="r"
+			roleName="<%=roleName$%>" objectName="_admin,_admin.eform" rights="w"
 			reverse="<%=false%>">
 			<br />
 			<a href="#"
@@ -214,7 +215,7 @@ function updateAjax() {
 						<td><%=curform.get("formSubject")%></td>
 						<td align='center'><%=curform.get("formDate")%></td>
 						<td align='center'><a
-							href="../eform/removeEForm.do?fdid=<%=curform.get("fdid")%>&group_view=<%=groupView%>&demographic_no=<%=demographic_no%>&parentAjaxId=<%=parentAjaxId%>"><bean:message
+							href="../eform/removeEForm.do?fdid=<%=curform.get("fdid")%>&group_view=<%=groupView%>&demographic_no=<%=demographic_no%>&parentAjaxId=<%=parentAjaxId%>" onClick="javascript: return confirm('Are you sure you want to delete this eform?');"><bean:message
 							key="eform.uploadimages.btnDelete" /></a></td>
 					</tr>
 					<%

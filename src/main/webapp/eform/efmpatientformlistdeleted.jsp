@@ -33,6 +33,7 @@ if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.
 %>
 
 <%@ page import="java.util.*, oscar.eform.*"%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 
 <%
 String country = request.getLocale().getCountry();
@@ -122,7 +123,7 @@ function updateAjax() {
 			href="efmpatientformlistdeleted.jsp?demographic_no=<%=demographic_no%>&appointment=<%=appointment%>&parentAjaxId=<%=parentAjaxId%>"
 			class="current"><bean:message key="eform.showmyform.btnDeleted" /></a>
 		<security:oscarSec roleName="<%=roleName$%>"
-			objectName="_admin,_admin.eform" rights="r" reverse="<%=false%>">
+			objectName="_admin,_admin.eform" rights="w" reverse="<%=false%>">
 			<br />
 			<a href="#"
 				onclick="javascript: return popup(600, 750, '../eform/efmformmanager.jsp', 'manageeforms');"
@@ -155,7 +156,7 @@ function updateAjax() {
 				<td><%=curform.get("formSubject")%></td>
 				<td align='center'><%=curform.get("formDate")%></td>
 				<td align='center'><a
-					href="../eform/unRemoveEForm.do?fdid=<%=curform.get("fdid")%>&demographic_no=<%=demographic_no%>&parentAjaxId=<%=parentAjaxId%>"><bean:message
+					href="../eform/unRemoveEForm.do?fdid=<%=curform.get("fdid")%>&demographic_no=<%=demographic_no%>&parentAjaxId=<%=parentAjaxId%>" onClick="javascript: return confirm('Are you sure you want to delete this eform?');"><bean:message
 					key="global.btnRestore" /></a></td>
 			</tr>
 			<%
