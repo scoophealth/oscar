@@ -37,9 +37,9 @@
 <%@ page import="java.util.Iterator.*" %>
 <%@ page import="java.util.Enumeration.*" %>
 <%@ page import="org.apache.commons.collections.iterators.*" %>
+<%@ page import="oscar.util.UtilDateUtilities,java.util.*" %>
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <%@ taglib uri="http://jakarta.apache.org/struts/tags-html-el" prefix="html-el" %>
-
 
 <html:html locale="true">
 
@@ -80,6 +80,7 @@
     border-right: 2px solid #cfcfcf;
     }
 </style>
+<script type="text/javascript" src="../../share/javascript/Oscar.js"></script>
 <script language="javascript">
 
     var browserName=navigator.appName; 
@@ -103,6 +104,25 @@
     function setCpyToChart(){
     	document.getElementById("andPasteToEchart").value = "yes";
     }
+    
+    var openedWindow = null;
+    function gotoEchart2(demoNo,myoscarmsg) {
+        var url = '<%=request.getContextPath()%>/oscarEncounter/IncomingEncounter.do?demographicNo='+ demoNo+'&myoscarmsg='+myoscarmsg+'&appointmentDate=<%=UtilDateUtilities.DateToString(new Date())%>';
+        openedWindow = popup(755,1048,url,'apptProvider');
+    }
+    
+    function paste2Echart(){
+       try{
+          var text =document.getElementById('message').value+"\n";
+          if( openedWindow.document.forms["caseManagementEntryForm"] != undefined ) {
+             openedWindow.pasteToEncounterNote(text);
+          }
+       }catch (e){
+          alert ("ERROR: could not paste to EMR");
+       }
+    }
+
+    
 </script>
 </head>
 
@@ -267,6 +287,8 @@
                                         	<input type="hidden" name="andPasteToEchart" id="andPasteToEchart"/>
                                             <input type="submit" class="ControlPushButton" value="<bean:message key="oscarMessenger.CreateMessage.btnSendMessage"/>" >
                                             <input type="submit" class="ControlPushButton" value="<bean:message key="oscarMessenger.CreateMessage.btnSendMessageCpyToeChart"/>" onclick="setCpyToChart();" >
+                                            <input type="button" class="ControlPushButton" value="<bean:message key="oscarMessenger.CreateMessage.btnOpenEchart"/>" onclick="gotoEchart2('<%=request.getParameter("demographicNo")%>','<%=replyToMessageId%>');" />
+                                            <input type="button" class="ControlPushButton" value="<bean:message key="oscarMessenger.CreateMessage.btnPasteToEchart"/>" onclick="paste2Echart();"/>
                                         </td>
                                     </tr>
                                     </html:form>                                                                                                                                                                            
