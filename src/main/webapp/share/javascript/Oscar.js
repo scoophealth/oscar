@@ -37,7 +37,7 @@ function popup2(height, width, top, left, url, windowName){
     }  
   }  
   popup.focus();  
-  return false;  
+  return popup;  
 }
 
 function confirmNGo(url, message) {
