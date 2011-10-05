@@ -32,6 +32,7 @@ import org.oscarehr.integration.hl7.model.PatientId;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.Misc;
+import oscar.OscarProperties;
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.Group;
 import ca.uhn.hl7v2.model.Segment;
@@ -592,6 +593,16 @@ public class HHSEmrDownloadHandler extends DefaultGenericHandler implements Mess
 
 
 public String getAccessionNum(){
+	String useOrderNumber = OscarProperties.getInstance().getProperty("hhs.emr.handler.accession.use_order_number","false");
+	if(useOrderNumber.equals("true")) {
+		try{
+            String accessionNum = getString(terser.get("/.OBR-3-1"));
+            return accessionNum;
+        }catch(Exception e){
+            return("");
+        }
+	}
+	
         try{
             String accessionNum = getString(terser.get("/.MSH-10-1"));
             return accessionNum;
