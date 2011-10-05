@@ -16,7 +16,7 @@
             if (luList != null){
      %>
             <div style="float:left; margin-left:2px; margin-right: 2px;">
-            <table style="border-width: 1px; border-spacing: 2px; border-style: outset; border-color: black;">
+            <table width="570" style="border-width: 1px; border-spacing: 2px; border-style: outset; border-color: black;">
                         <tr>
                                 <th colspan="2" align="left">Limited Use Codes</th>
                         </tr>
