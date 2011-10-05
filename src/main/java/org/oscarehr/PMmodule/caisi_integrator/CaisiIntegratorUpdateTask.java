@@ -158,7 +158,9 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	private static final Logger logger = MiscUtils.getLogger();
 
 	private static final String INTEGRATOR_UPDATE_PERIOD_PROPERTIES_KEY = "INTEGRATOR_UPDATE_PERIOD";
-
+	private static final String INTEGRATOR_THROTTLE_DELAY_PROPERTIES_KEY = "INTEGRATOR_THROTTLE_DELAY";
+	private static final long INTEGRATOR_THROTTLE_DELAY=Long.parseLong((String)OscarProperties.getInstance().get(INTEGRATOR_THROTTLE_DELAY_PROPERTIES_KEY));
+	
 	private static Timer timer = new Timer("CaisiIntegratorUpdateTask Timer", true);
 
 	private FacilityDao facilityDao = (FacilityDao) SpringUtils.getBean("facilityDao");
@@ -247,8 +249,6 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		List<Facility> facilities = facilityDao.findAll(true);
 
 		for (Facility facility : facilities) {
-			MiscUtils.checkShutdownSignaled();
-
 			try {
 				if (facility.isIntegratorEnabled()) {
 					pushAllDataForOneFacility(facility);
@@ -323,7 +323,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		}
 	}
 
-	private void pushPrograms(Date lastDataUpdated, Facility facility) throws MalformedURLException, IllegalAccessException, InvocationTargetException, ShutdownException {
+	private void pushPrograms(Date lastDataUpdated, Facility facility) throws MalformedURLException, ShutdownException {
 		// all are always sent so program deletions have be proliferated.
 		List<Program> programs = programDao.getProgramsByFacilityId(facility.getId());
 
@@ -364,11 +364,9 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 	private void pushProviders(Date lastDataUpdated, Facility facility) throws MalformedURLException, IllegalAccessException, InvocationTargetException, ShutdownException {
 		List<String> providerIds = ProviderDao.getProviderIds(facility.getId());
-
-		ArrayList<ProviderTransfer> providerTransfers = new ArrayList<ProviderTransfer>();
+		ProviderWs service = CaisiIntegratorManager.getProviderWs(facility);
 
 		for (String providerId : providerIds) {
-			MiscUtils.checkShutdownSignaled();
 			logger.debug("Adding provider " + providerId + " for " + facility.getName());
 
 			// copy provider basic data over
@@ -393,13 +391,11 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				if (integratorRole != null) providerTransfer.getRoles().add(integratorRole);
 			}
 
-			// add to list
+			ArrayList<ProviderTransfer> providerTransfers = new ArrayList<ProviderTransfer>();
 			providerTransfers.add(providerTransfer);
+			service.setCachedProviders(providerTransfers);
+			throttleAndChecks();
 		}
-
-		ProviderWs service = CaisiIntegratorManager.getProviderWs(facility);
-		// service.setCachedProviders(providerTransfers);
-		writeToIntegrator(providerTransfers, service, ProviderTransfer.class.getName());
 	}
 
 	private void pushAllDemographics(Date lastDataUpdated) throws MalformedURLException, ShutdownException {
@@ -412,7 +408,6 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 		for (Integer demographicId : demographicIds) {
 			logger.debug("pushing demographic facilityId:" + facility.getId() + ", demographicId:" + demographicId);
-			MiscUtils.checkShutdownSignaled();
 
 			try {
 				pushDemographic(facility, demographicService, demographicId, facility.getId());
@@ -445,7 +440,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		}
 	}
 
-	private void pushDemographic(Facility facility, DemographicWs service, Integer demographicId, Integer facilityId) throws IllegalAccessException, InvocationTargetException {
+	private void pushDemographic(Facility facility, DemographicWs service, Integer demographicId, Integer facilityId) throws ShutdownException {
 		DemographicTransfer demographicTransfer = new DemographicTransfer();
 
 		// set demographic info
@@ -487,6 +482,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 		// send the request
 		service.setDemographic(demographicTransfer);
+		throttleAndChecks();
 		
 		conformanceTestLog(facility, "Demographic", String.valueOf(demographicId));
 	}
@@ -513,10 +509,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		StringBuilder sentIds=new StringBuilder();
 		if (caseManagementIssues.size() == 0) return;
 
-		ArrayList<CachedDemographicIssue> issues = new ArrayList<CachedDemographicIssue>();
 		for (CaseManagementIssue caseManagementIssue : caseManagementIssues) {
-			MiscUtils.checkShutdownSignaled();
-
 			// don't send issue if it is not in our facility.
 			logger.debug("Facility:" + facility.getName() + " - caseManagementIssue = " + caseManagementIssue.toString());
 			if (caseManagementIssue.getProgram_id() == null || !isProgramIdInProgramList(programsInFacility, caseManagementIssue.getProgram_id())) continue;
@@ -535,13 +528,13 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			cachedDemographicIssue.setIssueDescription(issue.getDescription());
 			cachedDemographicIssue.setIssueRole(IntegratorRoleUtils.getIntegratorRole(issue.getRole()));
 
+			ArrayList<CachedDemographicIssue> issues = new ArrayList<CachedDemographicIssue>();
 			issues.add(cachedDemographicIssue);
+			service.setCachedDemographicIssues(issues);
+			throttleAndChecks();
 			
 			sentIds.append(","+caseManagementIssue.getId());
 		}
-
-		// if (issues.size()>0) service.setCachedDemographicIssues(issues);
-		writeToIntegrator(issues, service, CachedDemographicIssue.class.getName());
 		
 		conformanceTestLog(facility, "CaseManagementIssue", sentIds.toString());
 	}
@@ -553,10 +546,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		StringBuilder sentIds=new StringBuilder();
 		if (admissions.size() == 0) return;
 		
-
-		ArrayList<CachedAdmission> cachedAdmissions = new ArrayList<CachedAdmission>();
 		for (Admission admission : admissions) {
-			MiscUtils.checkShutdownSignaled();
 
 			// don't send admission if it is not in our facility. yeah I know I'm double checking since it's selected
 			// but the reality is I don't trust it and our facility segmentation is flakey at best so.. better to check again.
@@ -576,13 +566,13 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			cachedAdmission.setDischargeDate(MiscUtils.toCalendar(admission.getDischargeDate()));
 			cachedAdmission.setDischargeNotes(admission.getDischargeNotes());
 
+			ArrayList<CachedAdmission> cachedAdmissions = new ArrayList<CachedAdmission>();
 			cachedAdmissions.add(cachedAdmission);
+			demographicService.setCachedAdmissions(cachedAdmissions);
+			throttleAndChecks();
 
 			sentIds.append(","+admission.getId());
 		}
-
-		// if (cachedAdmissions.size()>0) demographicService.setCachedAdmissions(cachedAdmissions);
-		writeToIntegrator(cachedAdmissions, demographicService, CachedAdmission.class.getName());
 
 		conformanceTestLog(facility, "Admission", sentIds.toString());
 	}
@@ -609,7 +599,6 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		if (localPreventions.size()==0) return;
 		
 		for (Prevention localPrevention : localPreventions) {
-			MiscUtils.checkShutdownSignaled();
 
 			if (!providerIdsInFacility.contains(localPrevention.getCreatorProviderNo())) continue;
 
@@ -646,6 +635,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 		if (preventionsToSend.size() > 0) service.setCachedDemographicPreventions(preventionsToSend);
 
+		throttleAndChecks();
+
 		conformanceTestLog(facility, "Admission", sentIds.toString());
 	}
 
@@ -664,8 +655,6 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		allDocs.addAll(publicDocs);
 
 		for (EDoc eDoc : allDocs) {
-			MiscUtils.checkShutdownSignaled();
-
 			// the last update date is unreliable right now
 			// if (lastDataUpdated.after(eDoc.getDateTimeStampAsDate())) continue;
 			
@@ -698,6 +687,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 			demographicWs.addCachedDemographicDocumentAndContents(cachedDemographicDocument, contents);
 			
+			throttleAndChecks();
 			sentIds.append(","+eDoc.getDocId());
 		}
 		
@@ -714,11 +704,11 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		
 	    for (LabResultData lab : labs)
 	    {
-			MiscUtils.checkShutdownSignaled();
 
 	    	CachedDemographicLabResult cachedDemographicLabResult=makeCachedDemographicLabResult(demographicId, lab);
 	    	demographicWs.addCachedDemographicLabResult(cachedDemographicLabResult);
-	    	
+			
+	    	throttleAndChecks();
 			sentIds.append(","+lab.getLabPatientId()+":"+lab.labType+":"+lab.segmentID);
 	    }
 	    
@@ -760,133 +750,9 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 		for (Properties p : records)
 		{
-			MiscUtils.checkShutdownSignaled();
-			
 			SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
 			Date date=sdf.parse(p.getProperty("formEdited"));
 			if (lastDataUpdated.after(lastDataUpdated)) continue;
-
-			//	b_creatinine=0
-			//	ohip=1
-			//	formCreated=2011/06/17
-			//	patientFirstName=W1W1
-			//	b_timeNextDose2=
-			//	clinicCity=Hamilton
-			//	b_timeNextDose1=
-			//	b_timeLastDose2=
-			//	b_timeLastDose1=
-			//	provider_no=1234
-			//	m_vaginal=0
-			//	m_vaginalRectal=0
-			//	b_acRatioUrine=0
-			//	healthNumber=
-			//	patientCity=
-			//	b_patientsTelNo=
-			//	b_potassium=0
-			//	b_childsAgeDays=
-			//	b_glucose_random=0
-			//	b_tsh=0
-			//	b_timeCollected2=
-			//	b_timeCollected1=
-			//	b_therapeuticDrugMonitoring=0
-			//	i_rubella=1
-			//	patientAddress=
-			//	m_cervical=0
-			//	b_vitaminB12=0
-			//	m_blank=0
-			//	reqProvName=p1, p1
-			//	m_blankText=
-			//	version=
-			//	v_chronicHepatitis=0
-			//	oprn=
-			//	b_glucose_fasting=0
-			//	b_albumin=0
-			//	b_alkPhosphatase=0
-			//	aci=this is a test
-			//	patientPC=
-			//	b_urinalysis=0
-			//	h_cbc=0
-			//	form_class=0
-			//	sex=M
-			//	b_uricAcid=0
-			//	i_pregnancyTest=0
-			//	submit=0
-			//	v_acuteHepatitis=0
-			//	clinicianContactUrgent=44444
-			//	birthDate=1995/06/15
-			//	patientBirthMth=06
-			//	phoneNumber=905-
-			//	m_otherSwabsSource=
-			//	m_otherSwabsPus=0
-			//	clinicAddress=Hamilton
-			//	m_gcSource=
-			//	b_childsAgeHours=
-			//	patientLastName=W1W1
-			//	m_throat=0
-			//	b_sodium=0
-			//	m_sputum=0
-			//	b_neonatalBilirubin=0
-			//	m_fecalOccultBlood=0
-			//	m_urine=0
-			//	b_glucose=1
-			//	b_nameDrug2=
-			//	b_nameDrug1=
-			//	m_stoolOvaParasites=0
-			//	i_prenatal=0
-			//	m_gc=0
-			//	patientBirthYear=1995
-			//	h_prothrombinTime=0
-			//	m_chlamydiaSource=
-			//	b_ferritin=0
-			//	i_repeatPrenatalAntibodies=0
-			//	wcb=0
-			//	v_immuneStatus=0
-			//	province=
-			//	m_stoolCulture=0
-			//	m_woundSource=
-			//	patientBirthDay=15
-			//	demographic_no=21
-			//	i_mononucleosisScreen=0
-			//	b_lipidAssessment=0
-			//	thirdParty=0
-			//	provName=doe, doctor
-			//	m_wound=0
-			//	m_specimenCollectionTime=
-			//	ID=3
-			//	clinicName=McMaster Hospital
-			//	b_bilirubin=0
-			//	b_hba1c=1
-			//	o_otherTests16=
-			//	o_otherTests15=
-			//	o_otherTests14=
-			//	b_alt=0
-			//	o_otherTests13=
-			//	o_otherTests12=
-			//	o_otherTests11=
-			//	o_otherTests9=
-			//	o_otherTests10=
-			//	o_otherTests8=
-			//	o_otherTests7=
-			//	o_otherTests6=
-			//	clinicPC=L0R 4K3
-			//	o_otherTests5=
-			//	o_specimenCollectionDate=
-			//	formEdited=2011-06-17 12\:24\:56
-			//	o_otherTests4=
-			//	o_otherTests3=
-			//	b_cliniciansTelNo=
-			//	o_otherTests2=
-			//	o_otherTests1=
-			//	b_chloride=0
-			//	patientName=W1W1, W1W1
-			//	b_dateSigned=2011/06/17
-			//	practitionerNo=0000--00
-			//	b_ck=0
-			//	m_chlamydia=0
-			//	v_immune_HepatitisC=0
-			//	v_immune_HepatitisB=0
-			//	v_immune_HepatitisA=0
-			
 			
 			CachedDemographicForm cachedDemographicForm=new CachedDemographicForm();
 			FacilityIdIntegerCompositePk facilityIdIntegerCompositePk=new FacilityIdIntegerCompositePk();
@@ -904,13 +770,14 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			
 			demographicWs.addCachedDemographicForm(cachedDemographicForm);
 			
+			throttleAndChecks();			
 			sentIds.append(","+p.getProperty("ID"));
 		}
 		
 		conformanceTestLog(facility, "formLabReq07", sentIds.toString());
     }
 
-	private void pushDemographicNotes(Facility facility, DemographicWs service, Integer demographicId) {
+	private void pushDemographicNotes(Facility facility, DemographicWs service, Integer demographicId) throws ShutdownException {
 		logger.debug("pushing demographicNotes facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
 		List<Program> programs = programDao.getProgramsByFacilityId(facility.getId());
@@ -971,6 +838,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 		// if (notesToSend.size()>0) service.setCachedDemographicNotes(notesToSend);
 		writeToIntegrator(notesToSend, service, CachedDemographicNote.class.getName());
+		throttleAndChecks();
 	}
 
 	private CachedDemographicNote makeRemoteNote(CaseManagementNote localNote, String issueType) {
@@ -1016,8 +884,6 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		ArrayList<CachedDemographicDrug> drugsToSend = new ArrayList<CachedDemographicDrug>();
 		if (drugs != null) {
 			for (Drug drug : drugs) {
-				MiscUtils.checkShutdownSignaled();
-
 				if (!providerIdsInFacility.contains(drug.getProviderNo())) continue;
 
 				CachedDemographicDrug cachedDemographicDrug = new CachedDemographicDrug();
@@ -1069,18 +935,18 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 		// if (drugsToSend.size()>0) demographicService.setCachedDemographicDrugs(drugsToSend);
 		writeToIntegrator(drugsToSend, demographicService, CachedDemographicDrug.class.getName());
-		
+
+		throttleAndChecks();
 		conformanceTestLog(facility, "Drug", sentIds.toString());
 	}
 
-	private void pushAllergies(Facility facility, DemographicWs demographicService, Integer demographicId) throws SQLException {
+	private void pushAllergies(Facility facility, DemographicWs demographicService, Integer demographicId) throws SQLException, ShutdownException {
 		logger.debug("pushing demographicAllergies facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
 		RxPatientData.Patient patient = RxPatientData.getPatient(demographicId);
 		RxPatientData.Patient.Allergy[] allergies = patient.getActiveAllergies();
 		if (allergies==null || allergies.length==0) return;
 		
-		ArrayList<CachedDemographicAllergy> cachedAllergies = new ArrayList<CachedDemographicAllergy>();
 		StringBuilder sentIds=new StringBuilder();
 
 		for (RxPatientData.Patient.Allergy allergy : allergies) {
@@ -1107,15 +973,12 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			cachedAllergy.setStartDate(DateUtils.toGregorianCalendar(allergy.getAllergy().getStartDate()));
 			cachedAllergy.setTypeCode(allergy.getAllergy().getTYPECODE());
 
+			ArrayList<CachedDemographicAllergy> cachedAllergies = new ArrayList<CachedDemographicAllergy>();
 			cachedAllergies.add(cachedAllergy);
+			demographicService.setCachedDemographicAllergies(cachedAllergies);
+			throttleAndChecks();
 			
 			sentIds.append(","+allergy.getAllergyId());
-		}
-
-		for (ArrayList<CachedDemographicAllergy> chunk : breakListIntoSmallChunks(cachedAllergies, 50)) {
-			if (chunk.size() > 0) {
-				demographicService.setCachedDemographicAllergies(chunk);
-			}
 		}
 		
 		conformanceTestLog(facility, "Allergy", sentIds.toString());
@@ -1131,8 +994,6 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 		ArrayList<CachedAppointment> cachedAppointments = new ArrayList<CachedAppointment>();
 		for (Appointment appointment : appointments) {
-			MiscUtils.checkShutdownSignaled();
-
 			if (appointment.getUpdateDateTime()!=null && lastDataUpdated.after(appointment.getUpdateDateTime())) continue;
 			
 			CachedAppointment cachedAppointment = new CachedAppointment();
@@ -1162,7 +1023,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		}
 		// if (cachedAppointments.size()>0) demographicService.setCachedAppointments(cachedAppointments);
 		writeToIntegrator(cachedAppointments, demographicService, CachedAppointment.class.getName());
-		
+
+		throttleAndChecks();
 		conformanceTestLog(facility, "Appointment", sentIds.toString());
 	}
 
@@ -1176,8 +1038,6 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 		ArrayList<CachedDxresearch> cachedDxresearchs = new ArrayList<CachedDxresearch>();
 		for (DxResearch dxresearch : dxresearchs) {
-			MiscUtils.checkShutdownSignaled();
-
 			CachedDxresearch cachedDxresearch = new CachedDxresearch();
 			FacilityIdIntegerCompositePk facilityIdIntegerCompositePk = new FacilityIdIntegerCompositePk();
 			facilityIdIntegerCompositePk.setCaisiItemId(dxresearch.getId().intValue());
@@ -1197,6 +1057,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		// if (cachedDxresearchs.size()>0) demographicService.setCachedDxresearch(cachedDxresearchs);
 		writeToIntegrator(cachedDxresearchs, demographicService, CachedDxresearch.class.getName());
 		
+		throttleAndChecks();
 		conformanceTestLog(facility, "DxResearch", sentIds.toString());
 	}
 
@@ -1234,6 +1095,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		}
 		// if (cachedBillingOnItems.size()>0) demographicService.setCachedBillingOnItem(cachedBillingOnItems);
 		writeToIntegrator(cachedBillingOnItems, demographicService, CachedBillingOnItem.class.getName());
+		throttleAndChecks();
 	}
 
 	private void pushEforms(Facility facility, DemographicWs demographicService, Integer demographicId) throws ShutdownException {
@@ -1246,8 +1108,6 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 		ArrayList<CachedEformData> cachedEformDatas = new ArrayList<CachedEformData>();
 		for (EFormData eformData : eformDatas) {
-			MiscUtils.checkShutdownSignaled();
-
 			CachedEformData cachedEformData = new CachedEformData();
 			FacilityIdIntegerCompositePk facilityIdIntegerCompositePk = new FacilityIdIntegerCompositePk();
 			facilityIdIntegerCompositePk.setCaisiItemId(eformData.getId());
@@ -1275,8 +1135,6 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 		ArrayList<CachedEformValue> cachedEformValues = new ArrayList<CachedEformValue>();
 		for (EFormValue eFormValue : eFormValues) {
-			MiscUtils.checkShutdownSignaled();
-
 			CachedEformValue cachedEformValue = new CachedEformValue();
 			FacilityIdIntegerCompositePk facilityIdIntegerCompositePk = new FacilityIdIntegerCompositePk();
 			facilityIdIntegerCompositePk.setCaisiItemId(eFormValue.getId());
@@ -1294,7 +1152,10 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		// if (cachedEformDatas.size()>0) demographicService.setCachedEformData(cachedEformDatas);
 		// if (cachedEformValues.size()>0) demographicService.setCachedEformValues(cachedEformValues);
 		writeToIntegrator(cachedEformDatas, demographicService, CachedEformData.class.getName());
+		throttleAndChecks();
+
 		writeToIntegrator(cachedEformValues, demographicService, CachedEformValue.class.getName());		
+		throttleAndChecks();
 	}
 
 	private void pushMeasurements(Facility facility, DemographicWs demographicService, Integer demographicId) throws ShutdownException {
@@ -1311,8 +1172,6 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		ArrayList<CachedMeasurementMap> cachedMeasurementMaps = new ArrayList<CachedMeasurementMap>();
 
 		for (Measurements measurement : measurements) {
-			MiscUtils.checkShutdownSignaled();
-
 			CachedMeasurement cachedMeasurement = new CachedMeasurement();
 			FacilityIdIntegerCompositePk facilityIdIntegerCompositePk = new FacilityIdIntegerCompositePk();
 			facilityIdIntegerCompositePk.setCaisiItemId(measurement.getId());
@@ -1387,9 +1246,16 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		 * demographicService.setCachedMeasurementTypes(cachedMeasurementTypes); if (cachedMeasurementMaps.size()>0) demographicService.setCachedMeasurementMaps(cachedMeasurementMaps);
 		 */
 		writeToIntegrator(cachedMeasurements, demographicService, CachedMeasurement.class.getName());
+		throttleAndChecks();
+
 		writeToIntegrator(cachedMeasurementExts, demographicService, CachedMeasurementExt.class.getName());
+		throttleAndChecks();
+
 		writeToIntegrator(cachedMeasurementTypes, demographicService, CachedMeasurementType.class.getName());
+		throttleAndChecks();
+
 		writeToIntegrator(cachedMeasurementMaps, demographicService, CachedMeasurementMap.class.getName());
+		throttleAndChecks();
 		
 		conformanceTestLog(facility, "Measurements", sentIds.toString());
 	}
@@ -1422,17 +1288,17 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		return retrn;
 	}
 
+	/**
+	 * @deprecated this method doesn't make architectural sense, we should send items one at a time to save memory anyways. Don't send items in lists anymore. 
+	 */
 	private void writeToIntegrator(ArrayList dataList, Object ws, String dataType) {
 		ArrayList partList = new ArrayList();
 		for (int i = 0; i < dataList.size(); i++) {
 			partList.add(dataList.get(i));
 			if (i % 50 == 0 || i + 1 == dataList.size()) {
 
-				if (dataType.equals(ProviderTransfer.class.getName())) ((ProviderWs) ws).setCachedProviders(partList);
-				else if (dataType.equals(CachedDemographicIssue.class.getName())) ((DemographicWs) ws).setCachedDemographicIssues(partList);
-				else if (dataType.equals(CachedDemographicNote.class.getName())) ((DemographicWs) ws).setCachedDemographicNotes(partList);
+				if (dataType.equals(CachedDemographicNote.class.getName())) ((DemographicWs) ws).setCachedDemographicNotes(partList);
 				else if (dataType.equals(CachedDemographicDrug.class.getName())) ((DemographicWs) ws).setCachedDemographicDrugs(partList);
-				else if (dataType.equals(CachedAdmission.class.getName())) ((DemographicWs) ws).setCachedAdmissions(partList);
 				else if (dataType.equals(CachedAppointment.class.getName())) ((DemographicWs) ws).setCachedAppointments(partList);
 				else if (dataType.equals(CachedMeasurement.class.getName())) ((DemographicWs) ws).setCachedMeasurements(partList);
 				else if (dataType.equals(CachedMeasurementExt.class.getName())) ((DemographicWs) ws).setCachedMeasurementExts(partList);
@@ -1447,26 +1313,6 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			}			
 		}
 	}
-
-	private static <T> ArrayList<ArrayList<T>> breakListIntoSmallChunks(List<T> items, int size) {
-		ArrayList<ArrayList<T>> results = new ArrayList<ArrayList<T>>();
-
-		int itemCounter = 0;
-		ArrayList<T> tempList = new ArrayList<T>();
-		for (T o : items) {
-			if (itemCounter > size) {
-				results.add(tempList);
-				tempList = new ArrayList<T>();
-				size = 0;
-			}
-
-			tempList.add(o);
-		}
-
-		results.add(tempList);
-
-		return (results);
-	}
 	
 	/**
 	 * This method should not be used except during conformance testing. It will log all sends to the integrator.
@@ -1478,5 +1324,16 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			ids=StringUtils.trimToNull(ids);
 			if (ids!=null) LogAction.addLogSynchronous(null, "Integrator Send", dataType, ids, facility.getIntegratorUrl());
 		}
+	}
+	
+	private static void throttleAndChecks() throws ShutdownException
+	{
+		MiscUtils.checkShutdownSignaled();
+		
+		try {
+	        Thread.sleep(INTEGRATOR_THROTTLE_DELAY);
+        } catch (InterruptedException e) {
+	        logger.error("Error", e);
+        }
 	}
 }
