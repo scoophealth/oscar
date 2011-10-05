@@ -626,7 +626,8 @@ public class JdbcBillingRAImpl {
 				String localServiceDate = "";
 				String demo_hin = rsdemo.getString("hin") != null ? rsdemo.getString("hin") : "";
 				demo_hin = demo_hin.trim();
-				sql = "select b.provider_no, b.demographic_name, b.hin, b.billing_date, b.billing_time, b.visittype,d.provider_no as fdoc "
+				String site = "";
+				sql = "select b.provider_no, b.demographic_name, b.hin, b.billing_date, b.billing_time, b.visittype,d.provider_no as fdoc, b.clinic as site "
 						+ "from billing_on_cheader1 b, demographic d where b.id= " + account+ " and b.demographic_no = d.demographic_no";
 
 				ResultSet rsdemo3 = dbObj.searchDBRecord(sql);
@@ -634,6 +635,7 @@ public class JdbcBillingRAImpl {
 				while (rsdemo3.next()) {
 					demo_name = rsdemo3.getString("demographic_name");
                                         famProviderNo = rsdemo3.getString("fdoc");
+                                        site = rsdemo3.getString("site");
 					if (rsdemo3.getString("hin") != null) {
 						if (!(rsdemo3.getString("hin")).startsWith(demo_hin)) {
 							demo_hin = "";
@@ -672,6 +674,7 @@ public class JdbcBillingRAImpl {
 				prop.setProperty("demo_name", demo_name);
 				prop.setProperty("demo_hin", demo_hin);
                                 prop.setProperty("demo_doc",famProviderNo);
+                                prop.setProperty("site", site);
 				ret.add(prop);
 			}
 			rsdemo.close();

@@ -16,6 +16,7 @@
  * Yi Li
  */
 -->
+<%! boolean bMultisites = org.oscarehr.common.IsPropertiesOn.isMultisitesEnable(); %>
 <% 
 if(session.getAttribute("user") == null) response.sendRedirect("../../../logout.jsp");
 %>
@@ -34,8 +35,18 @@ if(session.getAttribute("user") == null) response.sendRedirect("../../../logout.
 <html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/tablefilter_all_min.js"></script>
 <link rel="stylesheet" type="text/css" href="billingON.css" />
 <title>Billing Reconcilliation</title>
+
+<style>
+<% if (bMultisites) { %>
+	.positionFilter {position:absolute;top:2px;right:350px;display:block;}
+<% } else { %>
+	.positionFilter {display:none;}
+<% } %>
+</style>
+
 </head>
 
 <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
@@ -105,7 +116,9 @@ if (raNo.compareTo("") == 0 || raNo == null){
 	<tr class="myDarkGreen">
 		<th align='LEFT'><font color="#FFFFFF"> Billing
 		Reconcilliation - Summary Report</font></th>
-		<th align='RIGHT'><select name="proNo">
+		<th align='RIGHT'>
+		<select id="loadingMsg" class="positionFilter"><option>Loading filters...</option></select>
+		<select name="proNo">
 			<option value="all" <%=proNo.equals("all")?"selected":""%>>All
 			Providers</option>
 
@@ -324,7 +337,7 @@ for(int i=0; i<aL.size(); i++) {
 } else { // raNo for all providers
 %>
 
-	<table width="100%" border="0" cellspacing="1" cellpadding="0"
+	<table id="ra_table" width="100%" border="0" cellspacing="1" cellpadding="0"
 		class="myIvory">
 		<tr class="myYellow">
 			<th width="6%">Billing No</th>
@@ -341,11 +354,12 @@ for(int i=0; i<aL.size(); i++) {
 			<th width="7%" align=right>Hospital Pay</th>
 			<th width="7%" align=right>OB</th>
 			<th align=right>Error</th>
+			<th width="0" align=right style="display:none">Site</th>			
 		</tr>
 
 		<%
 	aL = obj.getRASummary(raNo, proNo, OBbilling_no, CObilling_no,map);
-	for(int i=0; i<aL.size(); i++) {
+	for(int i=0; i<aL.size()-1; i++) { //to use table-filter js to generate the sum - so the total-1
 		Properties prop = (Properties) aL.get(i);
 		String color = i%2==0? "class='myGreen'":"";
 		color = i == (aL.size()-1) ? "class='myYellow'" : color;
@@ -365,11 +379,29 @@ for(int i=0; i<aL.size(); i++) {
 			<td align=right><%=prop.getProperty("hospitalPay", "&nbsp;")%></td>
 			<td align=right><%=prop.getProperty("obPay", "&nbsp;")%></td>
 			<td align=right><%=prop.getProperty("explain", "&nbsp;")%></td>
+			<td width="0" style="display:none"><%=prop.getProperty("site", "")%></td>			
 		</tr>
 
 		<% } }
 }
 %>
+<!-- added another TR for table-filter js to automatically calculate totals based on filters -->
+<tr class="myYellow">
+			<td align="center"></td>
+			<td></td>
+			<td align="center"></td>
+			<td align="center"></td>
+			<td align="center"></td>
+			<td align="center">Total:</td>
+			<td id="amountSubmit" align=right></td>
+			<td id="amountPay" align=right></td>
+			<td id="clinicPay" align=right></td>
+			<td id="hospitalPay" align=right></td>
+			<td align=right>&nbsp;</td>
+			<td align=right>&nbsp;</td>
+
+</tr>
+
 		<%-- 	
 	String[] param = new String[2];
 	param[0] = raNo;
@@ -587,6 +619,40 @@ param2[1] = raNo;
 recordAffected = apptMainBean.queryExecuteUpdate(param2,"update_rahd_content");
 
 %>
+<script language="javascript" type="text/javascript">
+	document.getElementById('loadingMsg').style.display='none';
+	var totRowIndex = tf_Tag(tf_Id('ra_table'),"tr").length;
+	var table_Props = 	{	
+					col_0: "none",
+					col_1: "none",
+					col_2: "none",
+					col_3: "none",
+					col_4: "none",
+					col_5: "none",
+					col_6: "none",
+					col_7: "none",
+					col_8: "none",
+					col_9: "none",
+					col_10: "none",
+					col_11: "none",
+					col_12: "select",
+					display_all_text: " [ Show all clinics ] ",
+					flts_row_css_class: "dummy",
+					flt_css_class: "positionFilter",
+					sort_select: true,
+					rows_always_visible: [totRowIndex],
+					col_operation: { 
+								id: ["amountSubmit","amountPay","clinicPay","hospitalPay"],
+								col: [6,7,8,9],
+								operation: ["sum","sum","sum","sum"],
+								write_method: ["innerHTML","innerHTML","innerHTML","innerHTML"],
+								exclude_row: [totRowIndex],
+								decimal_precision: [2,2,2,2],
+								tot_row_index: [totRowIndex]
+							}
+				};
+	var tf = setFilterGrid( "ra_table",table_Props );
+</script>
 	
 </body>
 </html>
