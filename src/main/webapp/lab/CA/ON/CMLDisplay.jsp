@@ -14,7 +14,9 @@ CMLLabTest lab = new CMLLabTest();
 lab.populateLab(segmentID);
 
 Long reqIDL = LabRequestReportLink.getIdByReport("labPatientPhysicianInfo",Long.valueOf(segmentID));
-String reqID = reqIDL==null ? "" : String.valueOf(reqIDL);
+String reqID = reqIDL==null ? "" : reqIDL.toString();
+reqIDL = LabRequestReportLink.getRequestTableIdByReport("labPatientPhysicianInfo",Long.valueOf(segmentID));
+String reqTableID = reqIDL==null ? "" : reqIDL.toString();
 
 String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.DISP_LABTEST;
 CaseManagementManager caseManagementManager = (CaseManagementManager) SpringUtils.getBean("caseManagementManager");
@@ -162,7 +164,7 @@ function linkreq(rptId, reqId) {
 					value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> "
 					onClick="popupStart(360, 680, '../../../oscarMDS/SearchPatient.do?labType=CML&segmentID=<%= segmentID %>&name=<%=java.net.URLEncoder.encode(lab.pLastName+", "+lab.pFirstName )%>', 'searchPatientWindow')">
 				<% } %>
-				<input type="button" value="Req# <%=reqID%>" title="Link to Requisition" onclick="linkreq('<%=segmentID%>','<%=reqID%>');" />
+				<input type="button" value="Req# <%=reqTableID%>" title="Link to Requisition" onclick="linkreq('<%=segmentID%>','<%=reqID%>');" />
 				<span class="Field2"><i>Next Appointment: <oscar:nextAppt
 					demographicNo="<%=lab.getDemographicNo()%>" /></i></span></td>
 			</tr>

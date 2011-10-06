@@ -667,9 +667,8 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		    labResults.addNewDateTimeResultReviewed().setFullDate(Util.calDate(timestamp));
 		}
 		
-		HashMap<String,Date> link = new HashMap<String,Date>();
-                link.putAll(LabRequestReportLink.getLinkByReport("hl7TextMessage", Long.valueOf(lab_no)));
-		Date reqDate = link.get("request_date");
+		HashMap<String,Object> link = LabRequestReportLink.getLinkByReport("hl7TextMessage", Long.valueOf(lab_no));
+		Date reqDate = (Date) link.get("request_date");
 		if (reqDate!=null) labResults.addNewLabRequisitionDateTime().setFullDate(Util.calDate(reqDate));
 	    }
 	}
