@@ -22,9 +22,12 @@ String segmentID = request.getParameter("segmentID");
 String providerNo = request.getParameter("providerNo");
 String searchProviderNo = request.getParameter("searchProviderNo");
 String patientMatched = request.getParameter("patientMatched");
-Long reqIDL = LabRequestReportLink.getIdByReport("hl7TextMessage",Long.valueOf(segmentID.trim()));
-String reqID = reqIDL==null ? "" : String.valueOf(reqIDL);
 String sql = "SELECT demographic_no FROM patientLabRouting WHERE lab_type='HL7' and lab_no='"+segmentID+"';";
+
+Long reqIDL = LabRequestReportLink.getIdByReport("hl7TextMessage",Long.valueOf(segmentID.trim()));
+String reqID = reqIDL==null ? "" : reqIDL.toString();
+reqIDL = LabRequestReportLink.getRequestTableIdByReport("hl7TextMessage",Long.valueOf(segmentID.trim()));
+String reqTableID = reqIDL==null ? "" : reqIDL.toString();
 
 ResultSet rs = DBHandler.GetSQL(sql);
 String demographicID = "";
@@ -212,7 +215,7 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
                                     <% if ( searchProviderNo != null ) { // null if we were called from e-chart%>
                                     <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupStart(360, 680, '../oscarMDS/SearchPatient.do?labType=HL7&segmentID=<%= segmentID %>&name=<%=java.net.URLEncoder.encode(handler.getLastName()+", "+handler.getFirstName())%>', 'searchPatientWindow')">
                                     <% } %>
-				    <input type="button" value="Req# <%=reqID%>" title="Link to Requisition" onclick="linkreq('<%=segmentID%>','<%=reqID%>');" />
+				    <input type="button" value="Req# <%=reqTableID%>" title="Link to Requisition" onclick="linkreq('<%=segmentID%>','<%=reqID%>');" />
                                     <span class="Field2"><i>Next Appointment: <oscar:nextAppt demographicNo="<%=demographicID%>"/></i></span>
                                 </td>
                             </tr>

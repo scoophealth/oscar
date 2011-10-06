@@ -1502,7 +1502,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                 String[] _labnotes  = new String[labResultArr.length];
                 String[] _location  = new String[labResultArr.length];
                 String[] _reviewer  = new String[labResultArr.length];
-                String[] _lab_no    = new String[labResultArr.length];
+                String[] _lab_ppid  = new String[labResultArr.length];
                 String[] _rev_date  = new String[labResultArr.length];
                 String[] _req_date  = new String[labResultArr.length];
 
@@ -1584,7 +1584,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                             LabResultImport.saveLabTestResults(_title[i], _testName[i], "", "", "", "", "", _labnotes[i], _location[i], paPhysId, "D", "Y");
                             addOneEntry(LABS);
 
-                            _lab_no[i] = paPhysId;
+                            _lab_ppid[i] = paPhysId;
                         }
                     }
                 }
@@ -1615,7 +1615,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     Long measId = meas.getId();
                     saveMeasurementsExt(measId, "unit", unit);
 
-                    //save lab tes code, test name
+                    //save lab test code, test name
                     String testCode = StringUtils.filled(labResults.getLabTestCode()) ? labResults.getLabTestCode() : "";
                     String testName = StringUtils.noNull(labResults.getTestName());
                     if (StringUtils.filled(labResults.getTestNameReportedByLab())) {
@@ -1632,6 +1632,13 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     } else {
                         err_data.add("Error! No Collection DateTime for Lab Test "+testCode+" for Patient "+demographicNo);
                     }
+                    
+                    //save lab requisition datetime
+                    cdsDt.DateTimeFullOrPartial reqDate = labResults.getLabRequisitionDateTime();
+                    if (reqDate!=null) {
+                    	saveMeasurementsExt(measId, "request_datetime", dateFPtoString(reqDate, timeShiftInDays));
+                    }
+                    
                     //save laboratory name
                     String labname = StringUtils.noNull(labResults.getLaboratoryName());
                     if (StringUtils.filled(labname)) {
@@ -1672,16 +1679,16 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     String labNotes = labResults.getNotesFromLab();
                     if (StringUtils.filled(labNotes)) saveMeasurementsExt(measId, "comments", labNotes);
 
-                    //retrieve lab_no
-                    String lab_no = null;
+                    //retrieve lab_ppid
+                    String lab_ppid = null;
                     for (int i=0; i<labResultArr.length; i++) {
                         if (!(_location[i].equals(labname) && _accession[i].equals(accnum))) continue;
-                        saveMeasurementsExt(measId, "lab_no", _lab_no[i]);
-                        lab_no = _lab_no[i];
+                        saveMeasurementsExt(measId, "lab_ppid", _lab_ppid[i]);
+                        lab_ppid = _lab_ppid[i];
                         break;
                     }
 
-                    if (lab_no!=null) {
+                    if (lab_ppid!=null) {
 
                         //save lab physician notes (annotation)
                         String annotation = labResults.getPhysiciansNotes();
@@ -1689,7 +1696,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                             saveMeasurementsExt(measId, "other_id", "0-0");
                             CaseManagementNote cmNote = prepareCMNote("2",null);
                             cmNote.setNote(annotation);
-                            saveLinkNote(cmNote, CaseManagementNoteLink.LABTEST, Long.valueOf(lab_no), "0-0");
+                            saveLinkNote(cmNote, CaseManagementNoteLink.LABTEST, Long.valueOf(lab_ppid), "0-0");
                         }
 
                         //to dumpsite
@@ -1698,7 +1705,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                             String dump = Util.addLine("imported.cms4.2011.06", "Test Results Info: ", testResultsInfo);
                             CaseManagementNote cmNote = prepareCMNote("2",null);
                             cmNote.setNote(dump);
-                            saveLinkNote(cmNote, CaseManagementNoteLink.LABTEST, Long.valueOf(lab_no));
+                            saveLinkNote(cmNote, CaseManagementNoteLink.LABTEST, Long.valueOf(lab_ppid));
                         }
                     } else {
                         logger.error("No lab no! (demo="+demographicNo+")");

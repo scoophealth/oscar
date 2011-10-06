@@ -70,7 +70,6 @@ import oscar.oscarDemographic.data.DemographicExt;
 import oscar.oscarEncounter.oscarMeasurements.data.ImportExportMeasurements;
 import oscar.oscarEncounter.oscarMeasurements.data.LabMeasurements;
 import oscar.oscarEncounter.oscarMeasurements.data.Measurements;
-import oscar.oscarLab.LabRequestReportLink;
 import oscar.oscarLab.ca.all.upload.ProviderLabRouting;
 import oscar.oscarPrevention.PreventionData;
 import oscar.oscarProvider.data.ProviderData;
@@ -1415,6 +1414,14 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         if (StringUtils.filled(max)) refRange.setHighLimit(max);
                     }
 
+                    //lab requisition datetime
+                    /*
+                    HashMap<String,Object> link = LabRequestReportLink.getLinkByReport("hl7TextMessage", Long.valueOf(lab_no));
+                    Date reqDate = (Date) link.get("request_date");
+                    */
+                    String reqDate = labMea.getExtVal("request_date");
+                    if (StringUtils.filled(reqDate)) labResults.addNewLabRequisitionDateTime().setFullDateTime(Util.calDate(reqDate));
+                    
                     //OLIS test result status
                     String olis_status = labMea.getExtVal("olis_status");
                     if (StringUtils.filled(olis_status)) labResults.setOLISTestResultStatus(olis_status);
@@ -1451,11 +1458,6 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                                 if (StringUtils.noNull(pvd.getOhip_no()).length()<=6) reviewer.setOHIPPhysicianId(pvd.getOhip_no());
                             }
                         }
-
-                        HashMap<String,Date> link = new HashMap<String,Date>();
-                        link.putAll(LabRequestReportLink.getLinkByReport("hl7TextMessage", Long.valueOf(lab_no)));
-                        Date reqDate = link.get("request_date");
-                        if (reqDate!=null) labResults.addNewLabRequisitionDateTime().setFullDateTime(Util.calDate(reqDate));
                     }
                 }
             }

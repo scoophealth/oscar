@@ -5952,7 +5952,7 @@ CREATE TABLE labRequestReportLink (
   id int(10) NOT NULL auto_increment,
   request_table varchar(60),
   request_id int(10),
-  request_date date,
+  request_date datetime,
   report_table varchar(60) NOT NULL,
   report_id int(10) NOT NULL,
   PRIMARY KEY (id)

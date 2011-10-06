@@ -82,23 +82,22 @@ public class Util {
 	XmlCalendar x = new XmlCalendar(date+"T"+time);
 	return x;
     }
-    
-    static public XmlCalendar calDate(String inDate) {
-	Date dateTime = null;
-	dateTime = UtilDateUtilities.StringToDate(inDate,"yyyy-MM-dd HH:mm:ss");
-	if (dateTime==null) dateTime = UtilDateUtilities.StringToDate(inDate,"yyyy-MM-dd");
-	if (dateTime==null) { //inDate may contain time only
-	    try {
-		XmlCalendar x = new XmlCalendar(inDate);
-		return x;
-	    } catch (Exception ex) { //inDate format is wrong
-		XmlCalendar x = new XmlCalendar("0001-01-01 00:00:00");
-		return x;
-	    }
-	    
+
+	static public XmlCalendar calDate(String inDate) {
+		Date dateTime = null;
+		dateTime = UtilDateUtilities.StringToDate(inDate,"yyyy-MM-dd HH:mm:ss");
+		if (dateTime==null) dateTime = UtilDateUtilities.StringToDate(inDate,"yyyy-MM-dd");
+		if (dateTime==null) { //inDate may contain time only
+			try {
+				XmlCalendar x = new XmlCalendar(inDate);
+				return x;
+			} catch (Exception ex) { //inDate format is wrong
+				XmlCalendar x = new XmlCalendar("0001-01-01 00:00:00");
+				return x;
+			}
+		}
+		return calDate(dateTime);
 	}
-	return calDate(dateTime);
-    }
 
     static public boolean checkDir(String dirName) throws Exception {
         dirName = fixDirName(dirName);
@@ -351,17 +350,17 @@ public class Util {
 
     static public void putPartialDate(cdsDt.DateFullOrPartial dfp, Date dateValue, String format) {
         if (dateValue!=null) {
-            if (PartialDate.YEARONLY.equals(format)) dfp.setYearOnly(Util.calDate(dateValue));
-            else if (PartialDate.YEARMONTH.equals(format)) dfp.setYearMonth(Util.calDate(dateValue));
-            else dfp.setFullDate(Util.calDate(dateValue));
+            if (PartialDate.YEARONLY.equals(format)) dfp.setYearOnly(calDate(dateValue));
+            else if (PartialDate.YEARMONTH.equals(format)) dfp.setYearMonth(calDate(dateValue));
+            else dfp.setFullDate(calDate(dateValue));
         }
     }
 
     static public void putPartialDate(cdsDt.DateTimeFullOrPartial dfp, Date dateValue, String format) {
         if (dateValue!=null) {
-            if (PartialDate.YEARONLY.equals(format)) dfp.setYearOnly(Util.calDate(dateValue));
-            else if (PartialDate.YEARMONTH.equals(format)) dfp.setYearMonth(Util.calDate(dateValue));
-            else dfp.setFullDate(Util.calDate(dateValue));
+            if (PartialDate.YEARONLY.equals(format)) dfp.setYearOnly(calDate(dateValue));
+            else if (PartialDate.YEARMONTH.equals(format)) dfp.setYearMonth(calDate(dateValue));
+            else dfp.setFullDate(calDate(dateValue));
         }
     }
 
@@ -378,9 +377,9 @@ public class Util {
 
     static public void putPartialDate(cdsDtCihi.DateFullOrPartial dfp, Date dateValue, String format) {
         if (dateValue!=null) {
-            if (PartialDate.YEARONLY.equals(format)) dfp.setYearOnly(Util.calDate(dateValue));
-            else if (PartialDate.YEARMONTH.equals(format)) dfp.setYearMonth(Util.calDate(dateValue));
-            else dfp.setFullDate(Util.calDate(dateValue));
+            if (PartialDate.YEARONLY.equals(format)) dfp.setYearOnly(calDate(dateValue));
+            else if (PartialDate.YEARMONTH.equals(format)) dfp.setYearMonth(calDate(dateValue));
+            else dfp.setFullDate(calDate(dateValue));
         }
     }
     
@@ -422,8 +421,7 @@ public class Util {
     }
 
     static public String convertCodeToLanguage(String code) {
-    	if (StringUtils.empty(code)) return null;
-    	return spokenLangProperties.getProperty(code);
+    	return spokenLangProperties.getLangByCode(code);
     }
 
 	static private final String verified = "[Verified and Signed";

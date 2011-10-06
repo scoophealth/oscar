@@ -16,7 +16,9 @@ String searchProviderNo = request.getParameter("searchProviderNo");
 
 boolean preview = oscar.Misc.getStr(request.getParameter("preview"), "").equals("true");
 Long reqIDL = preview ? null : LabRequestReportLink.getIdByReport("hl7TextMessage",Long.valueOf(segmentID));
-String reqID = reqIDL==null ? "" : String.valueOf(reqIDL);
+String reqID = reqIDL==null ? "" : reqIDL.toString();
+reqIDL = preview ? null : LabRequestReportLink.getRequestTableIdByReport("hl7TextMessage",Long.valueOf(segmentID));
+String reqTableID = reqIDL==null ? "" : reqIDL.toString();
 
 PatientLabRoutingDao plrDao = preview ? null : (PatientLabRoutingDao) SpringUtils.getBean("patientLabRoutingDao");
 PatientLabRouting plr = preview ? null : plrDao.findDemographicByLabId(Integer.valueOf(segmentID));
@@ -306,7 +308,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                                 
                                     <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupStart(360, 680, '../../../oscarMDS/SearchPatient.do?labType=HL7&segmentID=<%= segmentID %>&name=<%=java.net.URLEncoder.encode(handler.getLastName()+", "+handler.getFirstName())%>', 'searchPatientWindow')">
                                     
-				    <input type="button" value="Req# <%=reqID%>" title="Link to Requisition" onclick="linkreq('<%=segmentID%>','<%=reqID%>');" />
+				    <input type="button" value="Req# <%=reqTableID%>" title="Link to Requisition" onclick="linkreq('<%=segmentID%>','<%=reqID%>');" />
                                     <span class="Field2"><i>Next Appointment: <%=AppointmentUtil.getNextAppointment(demographicID) %></i></span>
                                 </td>
                             </tr>

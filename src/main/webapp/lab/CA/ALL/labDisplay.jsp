@@ -49,13 +49,15 @@ ArrayList<ReportStatus> ackList=null;
 String multiLabId = null;
 MessageHandler handler=null;
 String hl7 = null;
-String reqID = "";
+String reqID = null, reqTableID = null;
 String remoteFacilityIdQueryString="";
 
 if (remoteFacilityIdString==null) // local lab
 {
 	Long reqIDL = LabRequestReportLink.getIdByReport("hl7TextMessage",Long.valueOf(segmentID));
-	if (reqIDL!=null) reqID = String.valueOf(reqIDL);
+	reqID = reqIDL==null ? "" : reqIDL.toString();
+	reqIDL = LabRequestReportLink.getRequestTableIdByReport("hl7TextMessage",Long.valueOf(segmentID));
+	reqTableID = reqIDL==null ? "" : reqIDL.toString();
 	
 	String sql = "SELECT demographic_no FROM patientLabRouting WHERE lab_type='HL7' and lab_no='"+segmentID+"';";
 
@@ -459,7 +461,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                     <% if ( searchProviderNo != null ) { // null if we were called from e-chart%>                            
                                     <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupStart(360, 680, '../../../oscarMDS/SearchPatient.do?labType=HL7&segmentID=<%= segmentID %>&name=<%=java.net.URLEncoder.encode(handler.getLastName()+", "+handler.getFirstName())%>', 'searchPatientWindow')">
                                     <% } %>
-				    <input type="button" value="Req# <%=reqID%>" title="Link to Requisition" onclick="linkreq('<%=segmentID%>','<%=reqID%>');" />
+				    <input type="button" value="Req# <%=reqTableID%>" title="Link to Requisition" onclick="linkreq('<%=segmentID%>','<%=reqID%>');" />
                                     <span class="Field2"><i>Next Appointment: <oscar:nextAppt demographicNo="<%=demographicID%>"/></i></span>
                                 </td>
                             </tr>
