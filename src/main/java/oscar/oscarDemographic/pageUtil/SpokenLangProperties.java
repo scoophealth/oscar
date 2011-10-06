@@ -14,6 +14,8 @@ import java.util.Map.Entry;
 import org.apache.log4j.Logger;
 import org.oscarehr.util.MiscUtils;
 
+import oscar.util.StringUtils;
+
 public class SpokenLangProperties extends Properties {
 	private static SpokenLangProperties spokenLangProperties = new SpokenLangProperties();
 	private static SortedSet<String> langSorted = new TreeSet<String>();
@@ -39,8 +41,19 @@ public class SpokenLangProperties extends Properties {
 		if (langSorted.isEmpty()) {
 			Set<Entry<Object, Object>> eset = spokenLangProperties.entrySet();
 			
+			String lang;
+			boolean preferred;
 			for (Entry e : eset) {
-				langToCode.put((String) e.getValue(), (String) e.getKey());
+				lang = StringUtils.noNull((String) e.getValue());
+				preferred = lang.startsWith("^");
+				
+				if (preferred) {
+					lang = lang.substring(1);
+				} else if (langToCode.get(lang)!=null) {
+					continue;
+				}
+				
+				langToCode.put(lang, (String) e.getKey());
 			}
 			langSorted.addAll(langToCode.keySet());
 		}
@@ -52,6 +65,15 @@ public class SpokenLangProperties extends Properties {
 	
 	public String getCodeByLang(String lang) {
 		return langToCode.get(lang);
+	}
+	
+	public String getLangByCode(String code) {
+    	if (StringUtils.empty(code)) return null;
+    	
+		String lang = StringUtils.noNull(spokenLangProperties.getProperty(code));
+		if (lang.startsWith("^")) lang = lang.substring(1);
+		
+		return lang;
 	}
 	
 	public SortedSet<String> getLangSorted() {
