@@ -305,7 +305,9 @@ public class PhsStarHandler extends BasePhsStarHandler {
 		logger.info("resource unit = " + getApptResourceUnit());
 		logger.info("procedure = " + getProcedureName());
 		
-		String programId = findProgram(getApptResourceUnit(),getProcedureName());
+		//String programId = findProgram(getApptResourceUnit(),getProcedureName());
+		/*
+		String programId = findProgram2();
 		Program p = null;
 		if(programId != null) {
 			p = programDao.getProgram(Integer.parseInt(programId));
@@ -315,6 +317,7 @@ public class PhsStarHandler extends BasePhsStarHandler {
 				throw new HL7Exception("System not configured to accept messages for runit " + getApptResourceUnit());
 			}
 		}
+		*/
 		
 		//TODO: fix the bug in schedule
 		appt.setProgramId(0);
@@ -349,7 +352,7 @@ public class PhsStarHandler extends BasePhsStarHandler {
 			OtherIdManager.saveIdAppointment(appt.getId(), "AN", an.getId());
 		}		
 
-		
+		/*
 		//admit if necessary
 		if(p != null && p.getId()>0) {
 			//check to see if they are admitted to program already
@@ -358,9 +361,15 @@ public class PhsStarHandler extends BasePhsStarHandler {
 				doAdmit(demographic,p,"000001");
 			}
 		}
+		*/
 		
 	}
 
+	private void doAdmit(Integer demographicNo, Program p, String providerNo) {
+		Demographic demographic = clientDao.getClientByDemographicNo(demographicNo);
+		doAdmit(demographic,p,providerNo);
+	}
+	
 	private void doAdmit(Demographic demographic, Program p, String providerNo) {
 		Admission admission = new Admission();
 		admission.setAdmissionDate(new Date());
@@ -374,7 +383,8 @@ public class PhsStarHandler extends BasePhsStarHandler {
 		admission.setClientStatusId(0);
 		admission.setTeamId(0);
 		admission.setRadioDischargeReason("0");
-		admissionDao.saveAdmission(admission);		
+		admissionDao.saveAdmission(admission);
+		logger.info("admission made to program " + p.getName() + " for " + demographic.getFormattedName());
 	}
 	/**
 	 * Reschedule an existing appointment. We match on Temporary Account Number or Account Number.
@@ -765,7 +775,19 @@ public class PhsStarHandler extends BasePhsStarHandler {
         	updateAppointmentAccountNumber();
         	updateAppointmentStatus("H");
         	//updatePrimaryPhysician(demographicNo);
-        	this.logPatientMessage(controlId,msgType+"^"+triggerEvent,hl7Body,demographicNo);
+        	String programId = findProgram2();
+    		Program pp = null;
+    		if(programId != null) {
+    			pp = programDao.getProgram(Integer.parseInt(programId));
+    			if(pp != null) {
+    				if(admissionDao.getCurrentAdmission(pp.getId(), demographicNo) == null) {
+    					logger.info("need to do admission");
+    					doAdmit(demographicNo,pp,"000001");
+    				}
+    			}
+    		}
+    		
+    		this.logPatientMessage(controlId,msgType+"^"+triggerEvent,hl7Body,demographicNo);
         }
         
       
@@ -1153,6 +1175,88 @@ public class PhsStarHandler extends BasePhsStarHandler {
 		
 		return new String();
 		
+	}
+	
+	private String findProgram2() {
+		//service = pv1-10
+		//patient_type = pv1-18
+		//location= pv2-23-3
+		String service =null;
+		String patientType = null;
+		String location=null;
+		try {
+			service = this.extractOrEmpty("/PV1-10");
+			patientType = this.extractOrEmpty("/PV1-18");
+			location = this.extractOrEmpty("/PV2-23-3");
+		}catch(HL7Exception e) {
+			logger.warn("Did not have all information to determine program - " + service + "," + patientType + "," + location);
+			return null;
+		}
+		logger.info("service="+service);
+		logger.info("patientType="+patientType);
+		logger.info("location="+location);
+		
+		if(service.length()==0 || patientType.length()==0 || location.length()==0) {
+			logger.warn("Did not have all information to determine program - " + service + "," + patientType + "," + location);
+			return null;
+		}
+		
+		String programId = readProgramMappingFile(service,patientType,location);
+		
+		logger.info("mapped to program " + programId);
+		
+		return programId;
+	}
+	
+	private String readProgramMappingFile(String service, String patientType, String location) {
+		String filename = OscarProperties.getInstance().getProperty("phs_star.program_file");
+		if(filename == null) {
+        	logger.warn("Cannot lookup program. Config file not found - " + filename);
+        	return null;
+        }
+        InputStream is = null;
+        
+        try {
+        	is = new FileInputStream(new File(filename));
+                     
+	        if(is != null) {
+		        SAXBuilder parser = new SAXBuilder();
+		        Document doc = null;
+		        try {
+		        	doc = parser.build(is);
+		        }catch(Exception e) {
+		        	logger.error("Error",e);
+		        	return null;
+		        }
+		        
+		        Element root = doc.getRootElement();
+		        @SuppressWarnings("unchecked")
+		        List<Element> items = root.getChildren();
+		        for (int i = 0; i < items.size(); i++){
+		            Element e = items.get(i);
+		            if(e.getName().equals("mapping")) {
+		            	String service1 = e.getAttributeValue("service");
+		            	String patientType1 = e.getAttributeValue("patientType");
+		            	String location1 = e.getAttributeValue("location");
+		            	
+		            	if(service1.equals(service) && patientType1.equals(patientType) && location1.equals(location) ) {
+		            		return e.getAttributeValue("programId");
+		            	}
+		            }		           
+		        }
+	        }
+        }catch(Exception e) {
+        	logger.error("error",e);        	    
+        } finally {
+        	if(is != null) {
+        		try {
+        			is.close();
+        		}catch(IOException e) {
+        			logger.error("error",e);
+        		}
+        	}
+        }
+        return null;
 	}
 	
 	private String findProgram(String resourceUnit, String procedure) {
