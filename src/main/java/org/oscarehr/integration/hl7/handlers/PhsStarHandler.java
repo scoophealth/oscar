@@ -1184,14 +1184,11 @@ public class PhsStarHandler extends BasePhsStarHandler {
 		String service =null;
 		String patientType = null;
 		String location=null;
-		try {
-			service = this.extractOrEmpty("/PV1-10");
-			patientType = this.extractOrEmpty("/PV1-18");
-			location = this.extractOrEmpty("/PV2-23-3");
-		}catch(HL7Exception e) {
-			logger.warn("Did not have all information to determine program - " + service + "," + patientType + "," + location);
-			return null;
-		}
+		
+		service = getValueAndTryGroup("/PV1-10","INSURANCE");
+		patientType = getValueAndTryGroup("/PV1-18","INSURANCE");
+		location = getValueAndTryGroup("/PV2-23-3","INSURANCE");
+		
 		logger.info("service="+service);
 		logger.info("patientType="+patientType);
 		logger.info("location="+location);
@@ -1304,5 +1301,22 @@ public class PhsStarHandler extends BasePhsStarHandler {
         	}
         }
         return null;
+	}
+	
+	
+	public String getValueAndTryGroup(String path, String group) {
+		try {
+			String var = this.extractOrEmpty(path);
+			if(var != null && var.length()>0) {
+				return var;
+			}
+		}catch(Exception e) {/*swallow exception*/}
+		
+		try {
+			String var = this.extractOrEmpty("/"+group+path);
+			return var;
+		}catch(Exception ee) {/*swallow exception*/}			
+		return new String();
+		
 	}
 }
