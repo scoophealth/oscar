@@ -76,7 +76,7 @@ public class EFormUtil {
 	// for sorting....
 	public static final String NAME = "form_name";
 	public static final String SUBJECT = "subject";
-	public static final String DATE = "form_date DESC";
+	public static final String DATE = "form_date DESC, form_time DESC";
 	public static final String FILE_NAME = "file_name";
 	// -----------
 	public static final String DELETED = "deleted";
