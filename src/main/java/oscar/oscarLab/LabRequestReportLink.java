@@ -98,7 +98,7 @@ public class LabRequestReportLink {
 	public static Long getRequestTableIdByReport(String reportTable, Long reportId) throws SQLException {
 		HashMap<String,Object> link = getLinkByReport(reportTable, reportId);
 		Long requestId = (Long)link.get("request_id");
-		if (requestId==0) requestId = null;
+		if (requestId==null || requestId==0) requestId = null;
 		return requestId;
 	}
 	
