@@ -467,6 +467,11 @@ public class DefaultGenericHandler implements MessageHandler {
         return("");
     }
     
+    public String getRequestDate(int i){
+        //usually a message type specific location
+        return("");
+    }
+    
     public String getOrderStatus(){
         //usually a message type specific location
         return("");
@@ -608,6 +613,7 @@ public class DefaultGenericHandler implements MessageHandler {
     
     
     protected String formatDateTime(String plain){
+    	if (plain==null || plain.trim().equals("")) return "";
         
         String dateFormat = "yyyyMMddHHmmss";
         dateFormat = dateFormat.substring(0, plain.length());

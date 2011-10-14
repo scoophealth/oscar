@@ -275,6 +275,11 @@ public interface MessageHandler {
     public String getServiceDate();
     
     /**
+     *  Return the request date of the message
+     */
+    public String getRequestDate(int i);
+    
+    /**
      *  Return the status of the report, 'F' is returned for a final report, 
      *  otherwise the report is partial
      */

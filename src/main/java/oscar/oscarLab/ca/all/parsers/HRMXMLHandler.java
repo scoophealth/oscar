@@ -372,7 +372,10 @@ public class HRMXMLHandler implements MessageHandler {
 	}
 
 	public String getServiceDate() {
+		return "";
+	}
 
+	public String getRequestDate(int i) {
 		return "";
 	}
 
@@ -447,6 +450,8 @@ public class HRMXMLHandler implements MessageHandler {
 	}
 
 	private String formatDateTime(String plain) {
+		if (plain==null || plain.trim().equals("")) return "";
+		
 		String dateFormat = "yyyyMMddHHmmss";
 		dateFormat = dateFormat.substring(0, plain.length());
 		String stringFormat = "yyyy-MM-dd HH:mm:ss";
