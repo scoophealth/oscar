@@ -566,6 +566,16 @@ public class GDMLHandler implements MessageHandler {
         }
     }
     
+    public String getRequestDate(int i){
+        try{
+            String ret = ((OBR) obrSegKeySet.get(i)).getRequestedDateTime().getTimeOfAnEvent().getValue();
+            return(formatDateTime(getString(ret)));
+        }catch(Exception e){
+            logger.error("Exception retrieving request date", e);
+            return("");
+        }
+    }
+    
     public String getOrderStatus(){
         // gdml won't send pending labs... they'll send only the final parts of the
         // labs
@@ -748,6 +758,8 @@ public class GDMLHandler implements MessageHandler {
     
     
     private String formatDateTime(String plain){
+    	if (plain==null || plain.trim().equals("")) return "";
+    	
         String dateFormat = "yyyyMMddHHmmss";
         dateFormat = dateFormat.substring(0, plain.length());
         String stringFormat = "yyyy-MM-dd HH:mm:ss";
