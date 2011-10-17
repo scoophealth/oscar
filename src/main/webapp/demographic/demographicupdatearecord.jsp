@@ -57,7 +57,7 @@
   java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
 
   //if action is good, then give me the result
-    String[] param =new String[30];
+    String[] param =new String[31];
 	  param[0]=request.getParameter("last_name");
 	  param[1]=request.getParameter("first_name");
 	  param[2]=request.getParameter("address");
@@ -81,13 +81,14 @@
 	  param[20]=request.getParameter("pcn_indicator");
 	  param[21]=request.getParameter("hc_type");
 	  param[22]="<rdohip>" + request.getParameter("r_doctor_ohip") + "</rdohip><rd>" + request.getParameter("r_doctor") + "</rd>" + (request.getParameter("family_doc")!=null? ("<family_doc>" + request.getParameter("family_doc") + "</family_doc>") : "") ;  
-          param[23] =request.getParameter("countryOfOrigin");
-          param[24]=request.getParameter("newsletter");
-          param[25]=request.getParameter("sin");
+	  param[23] =request.getParameter("countryOfOrigin");
+	  param[24]=request.getParameter("newsletter");
+	  param[25]=request.getParameter("sin");
 	  param[26]=request.getParameter("title");
 	  param[27]=request.getParameter("official_lang");
 	  param[28]=request.getParameter("spoken_lang");
-          param[29]=(String)session.getAttribute("user");
+	  param[29]=(String)request.getParameter("roster_termination_reason");
+	  param[30]=(String)session.getAttribute("user");
 	
 		java.sql.Date [] dtparam = new java.sql.Date[7];
 
@@ -151,7 +152,7 @@
 		{
 			dtparam[4]=null;
 		}
-                yearTmp=StringUtils.trimToNull(request.getParameter("roster_termination_date_year"));
+		yearTmp=StringUtils.trimToNull(request.getParameter("roster_termination_date_year"));
 		monthTmp=StringUtils.trimToNull(request.getParameter("roster_termination_date_month"));
 		dayTmp=StringUtils.trimToNull(request.getParameter("roster_termination_date_day"));
 
