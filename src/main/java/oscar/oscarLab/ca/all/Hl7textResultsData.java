@@ -92,6 +92,7 @@ public class Hl7textResultsData {
                     String unit = h.getOBXUnits(i,j);
                     String labname = h.getPatientLocation();
                     String accession = h.getAccessionNum();
+                    String req_datetime = h.getRequestDate(i);
                     String datetime = h.getTimeStamp(i,j);
                     String olis_status = h.getOBXResultStatus(i, j);
                     String abnormal = h.getOBXAbnormalFlag(i,j);
@@ -182,6 +183,13 @@ public class Hl7textResultsData {
                     pstmt.executeUpdate();
                     pstmt.clearParameters();
 		    
+                    logger.debug("Inserting into measurementsExt id "+insertID+ " request_datetime "+ req_datetime);
+                    pstmt.setString(1, insertID);
+                    pstmt.setString(2, "request_datetime");
+                    pstmt.setString(3, req_datetime);
+                    pstmt.executeUpdate();
+                    pstmt.clearParameters();
+                    
                     logger.debug("Inserting into measurementsExt id "+insertID+ " datetime "+ datetime);
                     pstmt.setString(1, insertID);
                     pstmt.setString(2, "datetime");

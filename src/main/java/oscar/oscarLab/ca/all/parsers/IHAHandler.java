@@ -248,6 +248,15 @@ public class IHAHandler implements MessageHandler {
     }
     
     @Override
+    public String getRequestDate(int i){
+        try{
+            return(formatDateTime(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBR().getRequestedDateTime().getTimeOfAnEvent().getValue())));
+        }catch(Exception e){
+            return("");
+        }
+    }
+    
+    @Override
     public String getOrderStatus(){
         try{
             return(getString(msg.getRESPONSE().getORDER_OBSERVATION(0).getOBR().getResultStatus().getValue()));
@@ -583,6 +592,8 @@ public class IHAHandler implements MessageHandler {
     
     
     private String formatDateTime(String plain){
+    	if (plain==null || plain.trim().equals("")) return "";
+    	
         String dateFormat = "yyyyMMddHHmmss";
         dateFormat = dateFormat.substring(0, plain.length());
         String stringFormat = "yyyy-MM-dd HH:mm:ss";

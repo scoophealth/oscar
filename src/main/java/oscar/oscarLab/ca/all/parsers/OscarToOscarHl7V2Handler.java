@@ -210,6 +210,10 @@ public final class OscarToOscarHl7V2Handler implements MessageHandler {
 	    return chainnedMessageAdapter.getServiceDate();
     }
 
+	public String getRequestDate(int i) {
+	    return chainnedMessageAdapter.getRequestDate(i);
+    }
+
 	public String getSex() {
 	    return chainnedMessageAdapter.getSex();
     }

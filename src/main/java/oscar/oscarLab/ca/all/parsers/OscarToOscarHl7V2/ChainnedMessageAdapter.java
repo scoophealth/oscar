@@ -246,6 +246,10 @@ public abstract class ChainnedMessageAdapter<T extends AbstractMessage> implemen
 		return (null);
 	}
 
+	public String getRequestDate(int i) {
+		return (null);
+	}
+
 	public String getOrderStatus() {
 		return ("F");
 	}
