@@ -568,6 +568,21 @@ public class MDSHandler implements MessageHandler {
         }
     }
     
+    public String getRequestDate(int i){
+        String requestDate;
+        i++;
+        try{
+            if (i == 1){
+            	requestDate = formatDateTime(getString(DynamicHapiLoaderUtils.terserGet(terser, "/.OBR-14-1")));
+            }else{
+            	requestDate = formatDateTime(getString(DynamicHapiLoaderUtils.terserGet(terser, "/.OBR"+i+"-14-1")));
+            }
+            return(requestDate);
+        }catch(Exception e){
+            return getMsgDate();
+        }
+    }
+    
     public String getOrderStatus(){
         
         String ret = "F";
@@ -789,6 +804,8 @@ public class MDSHandler implements MessageHandler {
     }
     
     private String formatDateTime(String plain){
+    	if (plain==null || plain.trim().equals("")) return "";
+    	
         String dateFormat = "yyyyMMddHHmmss";
         dateFormat = dateFormat.substring(0, plain.length());
         String stringFormat = "yyyy-MM-dd HH:mm:ss";

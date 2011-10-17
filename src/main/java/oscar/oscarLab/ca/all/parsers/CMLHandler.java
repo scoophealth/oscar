@@ -390,6 +390,14 @@ public class CMLHandler implements MessageHandler {
         }
     }
     
+    public String getRequestDate(int i){
+        try{
+            return(formatDateTime(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBR().getRequestedDateTime().getTimeOfAnEvent().getValue())));
+        }catch(Exception e){
+            return("");
+        }
+    }
+    
     public String getOrderStatus(){
         try{
             return(getString(msg.getRESPONSE().getORDER_OBSERVATION(0).getORC().getOrderStatus().getValue()));
@@ -539,6 +547,8 @@ public class CMLHandler implements MessageHandler {
     
     
     protected String formatDateTime(String plain){
+    	if (plain==null || plain.trim().equals("")) return "";
+    	
         String dateFormat = "yyyyMMddHHmmss";
         dateFormat = dateFormat.substring(0, plain.length());
         String stringFormat = "yyyy-MM-dd HH:mm:ss";
