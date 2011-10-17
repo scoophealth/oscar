@@ -25,6 +25,7 @@
 -->
 <%
   if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
+  String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -34,6 +35,7 @@
 <%@ page import="oscar.oscarEncounter.oscarMeasurements.bean.*"%>
 <%@ page import="java.util.Vector"%>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 
 <%
     String demo = (String) request.getAttribute("demographicNo");	
@@ -106,9 +108,12 @@
 					<th align="left" class="Header" width="150"><bean:message
 						key="oscarEncounter.oscarMeasurements.displayHistory.headingDateEntered" />
 					</th>
+					<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
 					<th align="left" class="Header" width="10"><bean:message
 						key="oscarEncounter.oscarMeasurements.displayHistory.headingDelete" />
 					</th>
+					</security:oscarSec> 
+					
 				</tr>
 				<logic:iterate id="data" name="measurementsData"
 					property="measurementsDataVector" indexId="ctr">
@@ -131,8 +136,11 @@
 								property="dateObserved" /></td>
 							<td width="150"><bean:write name="data"
 								property="dateEntered" /></td>
+							<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">	
 							<td width="10"><input type="checkbox" name="deleteCheckbox"
 								value="<bean:write name="data" property="id" />"></td>
+							</security:oscarSec> 	
+							
 						</tr>
 					</logic:present>
 					<logic:notPresent name="data" property="canPlot">
@@ -151,9 +159,11 @@
 								property="dateObserved" /></td>
 							<td width="150"><bean:write name="data"
 								property="dateEntered" /></td>
+							<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
 							<td width="10">
-                                                            <input type="checkbox" name="deleteCheckbox" value="<bean:write name="data" property="id" />">
-                                                        </td>
+                              <input type="checkbox" name="deleteCheckbox" value="<bean:write name="data" property="id" />">
+                             </td>
+                             </security:oscarSec>
 						</tr>
 					</logic:notPresent>
 				</logic:iterate>
@@ -171,10 +181,11 @@
 					<td><input type="button" name="Button"
 						value="<bean:message key="global.btnClose"/>"
 						onClick="window.close()"></td>
+					<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
 					<td><input type="button" name="Button"
 						value="<bean:message key="oscarEncounter.oscarMeasurements.displayHistory.headingDelete"/>"
 						onclick="submit();" /></td>
-
+					</security:oscarSec>
 					<logic:present name="data" property="canPlot">
 						<td><input type="button" name="Button" value="Graph"
 							onClick="javascript: popupPage(300,800,'../../oscarEncounter/GraphMeasurements.do?demographic_no=<%=demo%>&type=<bean:write name="type" />')" />
