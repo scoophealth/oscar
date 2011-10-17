@@ -415,6 +415,7 @@ public class Util {
     }
     
     static public SpokenLangProperties spokenLangProperties = SpokenLangProperties.getInstance();
+    static public RosterTermReasonProperties rosterTermReasonProperties = RosterTermReasonProperties.getInstance();
     
     static public String convertLanguageToCode(String lang) {
     	return spokenLangProperties.getCodeByLang(lang);

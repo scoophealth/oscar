@@ -305,21 +305,32 @@ function checkDate(yyyy,mm,dd,err_msg) {
 
 	return typeInOK;
 }
-function checkRosterDates() {
+function checkRosterDatesTermReason() {
         if (document.updatedelete.roster_status.value=="") return true;
-        if (document.updatedelete.roster_status.value!="RO") {
-            var yyyy = document.updatedelete.roster_termination_date_year.value;
-            var mm = document.updatedelete.roster_termination_date_month.value;
-            var dd = document.updatedelete.roster_termination_date_day.value;
+        
+        var yyyy = document.updatedelete.roster_date_year.value;
+        var mm = document.updatedelete.roster_date_month.value;
+        var dd = document.updatedelete.roster_date_day.value;
 
-            return checkDate(yyyy,mm,dd,"<bean:message key="demographic.search.msgWrongRosterTerminationDate"/>");
-        } else {
-            var yyyy = document.updatedelete.roster_date_year.value;
-            var mm = document.updatedelete.roster_date_month.value;
-            var dd = document.updatedelete.roster_date_day.value;
-
+        if (document.updatedelete.roster_status.value=="RO") {
             return checkDate(yyyy,mm,dd,"<bean:message key="demographic.search.msgWrongRosterDate"/>");
+        } else if (yyyy!="" && mm!="" && dd!="") {
+            yyyy = document.updatedelete.roster_termination_date_year.value;
+            mm = document.updatedelete.roster_termination_date_month.value;
+            dd = document.updatedelete.roster_termination_date_day.value;
+
+            return checkDate(yyyy,mm,dd,"<bean:message key="demographic.search.msgWrongRosterTerminationDate"/>")
+            		&& checkTerminationReason();
         }
+        return true;
+}
+function checkTerminationReason() {
+		if (document.updatedelete.roster_termination_reason.value=="") {
+			alert ("<bean:message key="demographic.demographiceditdemographic.msgNoTerminationReason"/>");
+			return false;
+		} else {
+			return true;
+		}
 }
 function checkPatientStatusDate() {
         var yyyy = document.updatedelete.patientstatus_date_year.value;
@@ -359,10 +370,9 @@ function checkHin() {
 function checkTypeInEdit() {
   if ( !checkName() ) return false;
   if ( !checkDob() ) return false;
-  //if ( !checkRosterDates() ) return false;
-  //if ( !checkPatientStatusDate() ) return false;
+  if ( !checkRosterDatesTermReason() ) return false;
+  if ( !checkPatientStatusDate() ) return false;
   if ( !checkHin() ) return false;
-  //if ( !checkAllDate() ) return false;
   return(true);
 }
 
@@ -1206,7 +1216,7 @@ if (iviewTag!=null && !"".equalsIgnoreCase(iviewTag.trim())){
 						
 						<% } %>	
 						<div class="demographicSection" id="clinicStatus">
-						<h3>&nbsp;<bean:message key="demographic.demographiceditdemographic.msgClinicStatus"/> (<a href="#" onclick="popup(600, 650, 'EnrollmentHistory.jsp?demographicNo=<%=demographic_no%>', 'enrollmentHistory'); return false;"><bean:message key="demographic.demographiceditdemographic.msgEnrollmentHistory"/></a>)</h3>
+						<h3>&nbsp;<bean:message key="demographic.demographiceditdemographic.msgClinicStatus"/> (<a href="#" onclick="popup(1000, 650, 'EnrollmentHistory.jsp?demographicNo=<%=demographic_no%>', 'enrollmentHistory'); return false;"><bean:message key="demographic.demographiceditdemographic.msgEnrollmentHistory"/></a>)</h3>
 						<ul>
                                                     <li><span class="label"><bean:message
                                                             key="demographic.demographiceditdemographic.formRosterStatus" />:</span>
@@ -1220,6 +1230,12 @@ if (iviewTag!=null && !"".equalsIgnoreCase(iviewTag.trim())){
                                                             key="demographic.demographiceditdemographic.RosterTerminationDate" />:</span>
                                                         <span class="info"><%=MyDateFormat.getMyStandardDate(apptMainBean.getString(rs,"roster_termination_date"))%></span>
                                                     </li>
+<%if (!"".equals(apptMainBean.getString(rs,"roster_termination_date"))) { %>
+													<li><span class="label"><bean:message
+                                                            key="demographic.demographiceditdemographic.RosterTerminationReason" />:</span>
+                                                        <span class="info"><%=Util.rosterTermReasonProperties.getReasonByCode(apptMainBean.getString(rs,"roster_termination_reason")) %></span>
+                                                    </li>
+<%} %>
                                                     <li><span class="label"><bean:message
 								key="demographic.demographiceditdemographic.formPatientStatus" />:</span>
                                                         <span class="info">
@@ -2144,6 +2160,7 @@ document.updatedelete.r_doctor_ohip.value = refNo;
                                                              String rosterTerminationDateYear="";
                                                              String rosterTerminationDateMonth="";
                                                              String rosterTerminationDateDay="";
+                                                             String rosterTerminationReason="";
                                                              if (demographic.getRosterTerminationDate()!=null){
                                                                 dateCal.setTime(demographic.getRosterTerminationDate());
                                                                 rosterTerminationDateYear = decF.format(dateCal.get(GregorianCalendar.YEAR));
@@ -2152,6 +2169,8 @@ document.updatedelete.r_doctor_ohip.value = refNo;
                                                                 rosterTerminationDateMonth = decF.format(dateCal.get(GregorianCalendar.MONTH)+1);
                                                                 rosterTerminationDateDay   = decF.format(dateCal.get(GregorianCalendar.DAY_OF_MONTH));
                                                              }
+                                                             rosterTerminationReason = demographic.getRosterTerminationReason();
+                                                             
                                                              String patientStatusDateYear="";
                                                              String patientStatusDateMonth="";
                                                              String patientStatusDateDay="";
@@ -2168,13 +2187,26 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 								<td align="right" nowrap><b><bean:message
 									key="demographic.demographiceditdemographic.DateJoined" />: </b></td>
 								<td align="left">
-                                                                    <input  type="text" name="roster_date_year" size="4" maxlength="4" value="<%=rosterDateYear%>">
-                                                                    <input  type="text" name="roster_date_month" size="2" maxlength="2" value="<%=rosterDateMonth%>">
-                                                                    <input  type="text" name="roster_date_day" size="2" maxlength="2" value="<%=rosterDateDay%>">
-                                                                    <b><bean:message key="demographic.demographiceditdemographic.RosterTerminationDate" />: </b>
-                                                                    <input  type="text" name="roster_termination_date_year" size="4" maxlength="4" value="<%=rosterTerminationDateYear%>">
-                                                                    <input  type="text" name="roster_termination_date_month" size="2" maxlength="2" value="<%=rosterTerminationDateMonth%>">
-                                                                    <input  type="text" name="roster_termination_date_day" size="2" maxlength="2" value="<%=rosterTerminationDateDay%>">
+									<input  type="text" name="roster_date_year" size="4" maxlength="4" value="<%=rosterDateYear%>">
+									<input  type="text" name="roster_date_month" size="2" maxlength="2" value="<%=rosterDateMonth%>">
+									<input  type="text" name="roster_date_day" size="2" maxlength="2" value="<%=rosterDateDay%>">
+									<b><bean:message
+									key="demographic.demographiceditdemographic.RosterTerminationDate" />: </b>
+									<input  type="text" name="roster_termination_date_year" size="4" maxlength="4" value="<%=rosterTerminationDateYear%>">
+									<input  type="text" name="roster_termination_date_month" size="2" maxlength="2" value="<%=rosterTerminationDateMonth%>">
+									<input  type="text" name="roster_termination_date_day" size="2" maxlength="2" value="<%=rosterTerminationDateDay%>">
+								</td>
+							</tr>
+							<tr valign="top">
+								<td align="right" nowrap><b><bean:message
+									key="demographic.demographiceditdemographic.RosterTerminationReason" />: </b></td>
+								<td align="left" colspan="3">
+									<select  name="roster_termination_reason">
+										<option value="">N/A</option>
+<%for (String code : Util.rosterTermReasonProperties.getTermReasonCodes()) { %>
+										<option value="<%=code %>" <%=code.equals(rosterTerminationReason)?"selected":"" %> ><%=Util.rosterTermReasonProperties.getReasonByCode(code) %></option>
+<%} %>
+									</select>
 								</td>
 							</tr>
 							<tr valign="top">

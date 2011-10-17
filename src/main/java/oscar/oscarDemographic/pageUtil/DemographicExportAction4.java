@@ -321,14 +321,17 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     }
                 } else {
                     data = demographic.getRosterTerminationDate();
-                    if (UtilDateUtilities.StringToDate(data)!=null) {
-                        enrolment.setEnrollmentTerminationDate(Util.calDate(data));
-                    }
+                    if (UtilDateUtilities.StringToDate(data)!=null)
+                    	enrolment.setEnrollmentTerminationDate(Util.calDate(data));
+                    data = demographic.getRosterTerminationReason();
+                    if (StringUtils.filled(data))
+                    	enrolment.setTerminationReason(cdsDt.TerminationReasonCode.Enum.forString(data));
                 }
             }
             
             //Enrolment Status history
             List<DemographicArchive> DAs = demoArchiveDao.findRosterStatusHistoryByDemographicNo(Integer.valueOf(demoNo));
+            Date rosterDate=null, terminationDate=null;
             for (int i=0; i<DAs.size(); i++) {
                 String historyRS = StringUtils.noNull(DAs.get(i).getRosterStatus());
                 String historyRS1 = i<DAs.size()-1 ? StringUtils.noNull(DAs.get(i+1).getRosterStatus()) : "-1";
@@ -342,15 +345,15 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                 enrolment = demo.addNewEnrolment();
                 enrolment.setEnrollmentStatus(cdsDt.EnrollmentStatus.Enum.forString(historyRS));
                 if (historyRS.equals("1")) {
-                    data = demographic.getRosterDate();
-                    if (UtilDateUtilities.StringToDate(data)!=null) {
-                        enrolment.setEnrollmentDate(Util.calDate(data));
-                    }
+                    rosterDate = DAs.get(i).getRosterDate();
+                    if (rosterDate!=null) enrolment.setEnrollmentDate(Util.calDate(rosterDate));
                 } else {
-                    Date terminationDate = DAs.get(i).getRosterTerminationDate();
-                    if (terminationDate!=null) {
-                        enrolment.setEnrollmentTerminationDate(Util.calDate(terminationDate));
-                    }
+                    terminationDate = DAs.get(i).getRosterTerminationDate();
+                    if (terminationDate!=null)
+                    	enrolment.setEnrollmentTerminationDate(Util.calDate(terminationDate));
+                    data = DAs.get(i).getRosterTerminationReason();
+                    if (StringUtils.filled(data))
+                    	enrolment.setTerminationReason(cdsDt.TerminationReasonCode.Enum.forString(data));
                 }
             }
 

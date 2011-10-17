@@ -334,7 +334,7 @@ public class DemographicData {
 			rs = DBHandler.GetSQL(sql);
 
 			if (rs.next()) {
-				demographic = new Demographic(DemographicNo, oscar.Misc.getString(rs, "title"), oscar.Misc.getString(rs, "last_name"), oscar.Misc.getString(rs, "first_name"), oscar.Misc.getString(rs, "address"), oscar.Misc.getString(rs, "city"), oscar.Misc.getString(rs, "province"), oscar.Misc.getString(rs, "postal"), oscar.Misc.getString(rs, "phone"), oscar.Misc.getString(rs, "phone2"), oscar.Misc.getString(rs, "email"), oscar.Misc.getString(rs, "myOscarUserName"), oscar.Misc.getString(rs, "year_of_birth"), oscar.Misc.getString(rs, "month_of_birth"), oscar.Misc.getString(rs, "date_of_birth"), oscar.Misc.getString(rs, "hin"), oscar.Misc.getString(rs, "ver"), oscar.Misc.getString(rs, "roster_status"), oscar.Misc.getString(rs, "roster_date"), oscar.Misc.getString(rs, "roster_termination_date"), oscar.Misc.getString(rs, "patient_status"), oscar.Misc.getString(rs, "patient_status_date"), oscar.Misc.getString(rs, "date_joined"), oscar.Misc.getString(rs, "chart_no"), oscar.Misc.getString(rs, "official_lang"), oscar.Misc.getString(rs, "spoken_lang"), oscar.Misc.getString(rs, "provider_no"), oscar.Misc.getString(rs, "sex"), oscar.Misc.getString(rs, "end_date"), oscar.Misc.getString(rs, "eff_date"), oscar.Misc.getString(rs, "pcn_indicator"), oscar.Misc.getString(rs, "hc_type"), oscar.Misc.getString(rs, "hc_renew_date"), oscar.Misc.getString(rs, "family_doctor"), oscar.Misc.getString(rs, "alias"), oscar.Misc.getString(rs, "previousAddress"), oscar.Misc.getString(rs, "children"), oscar.Misc.getString(rs, "sourceOfIncome"), oscar.Misc.getString(rs, "citizenship"), oscar.Misc.getString(rs, "sin"));
+				demographic = new Demographic(DemographicNo, oscar.Misc.getString(rs, "title"), oscar.Misc.getString(rs, "last_name"), oscar.Misc.getString(rs, "first_name"), oscar.Misc.getString(rs, "address"), oscar.Misc.getString(rs, "city"), oscar.Misc.getString(rs, "province"), oscar.Misc.getString(rs, "postal"), oscar.Misc.getString(rs, "phone"), oscar.Misc.getString(rs, "phone2"), oscar.Misc.getString(rs, "email"), oscar.Misc.getString(rs, "myOscarUserName"), oscar.Misc.getString(rs, "year_of_birth"), oscar.Misc.getString(rs, "month_of_birth"), oscar.Misc.getString(rs, "date_of_birth"), oscar.Misc.getString(rs, "hin"), oscar.Misc.getString(rs, "ver"), oscar.Misc.getString(rs, "roster_status"), oscar.Misc.getString(rs, "roster_date"), oscar.Misc.getString(rs, "roster_termination_date"), oscar.Misc.getString(rs, "roster_termination_reason"), oscar.Misc.getString(rs, "patient_status"), oscar.Misc.getString(rs, "patient_status_date"), oscar.Misc.getString(rs, "date_joined"), oscar.Misc.getString(rs, "chart_no"), oscar.Misc.getString(rs, "official_lang"), oscar.Misc.getString(rs, "spoken_lang"), oscar.Misc.getString(rs, "provider_no"), oscar.Misc.getString(rs, "sex"), oscar.Misc.getString(rs, "end_date"), oscar.Misc.getString(rs, "eff_date"), oscar.Misc.getString(rs, "pcn_indicator"), oscar.Misc.getString(rs, "hc_type"), oscar.Misc.getString(rs, "hc_renew_date"), oscar.Misc.getString(rs, "family_doctor"), oscar.Misc.getString(rs, "alias"), oscar.Misc.getString(rs, "previousAddress"), oscar.Misc.getString(rs, "children"), oscar.Misc.getString(rs, "sourceOfIncome"), oscar.Misc.getString(rs, "citizenship"), oscar.Misc.getString(rs, "sin"));
 			}
 
 			rs.close();
@@ -414,8 +414,9 @@ public class DemographicData {
 						"hin = '" + dm.getHIN() + "', " +
 						"ver = '" + dm.getVersionCode() + "', " +
 						"roster_status = '" + dm.getRosterStatus() + "', " +
-                                                "roster_date = '" + dm.getRosterDate() + "', " +
-                                                "roster_termination_date = '" + dm.getRosterTerminationDate() + "', " +
+						"roster_date = '" + dm.getRosterDate() + "', " +
+						"roster_termination_date = '" + dm.getRosterTerminationDate() + "', " +
+						"roster_termination_reason= '" + dm.getRosterTerminationReason() + ", " +
 						"patient_status = '" + dm.getPatientStatus() + "', " +
 						"patient_status_date = '" + dm.getPatientStatusDate() + "', " +
 						"date_joined = '" + dm.getDateJoined() + "', " +
@@ -462,6 +463,7 @@ public class DemographicData {
 		protected String roster_status;
         protected String roster_date;
         protected String roster_termination_date;
+        protected String roster_termination_reason;
 		protected String patient_status;
         protected String patient_status_date;
 		protected String date_joined;
@@ -495,7 +497,7 @@ public class DemographicData {
 			init(DemographicNo);
 		}
 
-		protected Demographic(String DemographicNo, String title, String last_name, String first_name, String address, String city, String province, String postal, String phone, String phone2, String email, String myOscarUserName, String year_of_birth, String month_of_birth, String date_of_birth, String hin, String ver, String roster_status, String roster_date, String roster_termination_date, String patient_status, String patient_status_date, String date_joined, String chart_no, String official_lang, String spoken_lang, String provider_no, String sex, String end_date, String eff_date,
+		protected Demographic(String DemographicNo, String title, String last_name, String first_name, String address, String city, String province, String postal, String phone, String phone2, String email, String myOscarUserName, String year_of_birth, String month_of_birth, String date_of_birth, String hin, String ver, String roster_status, String roster_date, String roster_termination_date, String roster_termination_reason, String patient_status, String patient_status_date, String date_joined, String chart_no, String official_lang, String spoken_lang, String provider_no, String sex, String end_date, String eff_date,
 		        String pcn_indicator, String hc_type, String hc_renew_date, String family_doctor, String alias, String previousAddress, String children, String sourceOfIncome, String citizenship, String sin) {
 			this.demographic_no = DemographicNo;
 			this.title = title;
@@ -517,6 +519,7 @@ public class DemographicData {
 			this.roster_status = roster_status;
 			this.roster_date = roster_date;
             this.roster_termination_date = roster_termination_date;
+            this.roster_termination_reason = roster_termination_reason;
 			this.patient_status = patient_status;
             this.patient_status_date = patient_status_date;
 			this.date_joined = date_joined;
@@ -572,6 +575,7 @@ public class DemographicData {
 					this.roster_status = oscar.Misc.getString(rs, "roster_status");
                     this.roster_date = oscar.Misc.getString(rs, "roster_date");
                     this.roster_termination_date = oscar.Misc.getString(rs, "roster_termination_date");
+                    this.roster_termination_reason = oscar.Misc.getString(rs, "roster_termination_reason");
 					this.patient_status = oscar.Misc.getString(rs, "patient_status");
                     this.patient_status_date = oscar.Misc.getString(rs, "patient_status_date");
 					this.date_joined = oscar.Misc.getString(rs, "date_joined");
@@ -826,6 +830,14 @@ public class DemographicData {
 
 		public void setRosterTerminationDate(String data) {
 			roster_termination_date = data;
+		}
+
+		public String getRosterTerminationReason() {
+			return roster_termination_reason;
+		}
+
+		public void setRosterTerminationReason(String data) {
+			roster_termination_reason = data;
 		}
 
 		public String getPatientStatus() {
@@ -1156,15 +1168,15 @@ public class DemographicData {
 
 	// //////////////
 	String add_record_string = "insert into demographic (title,last_name,first_name,address,city,province,postal,phone,phone2,email,"
-                                 + "myOscarUserName,year_of_birth,month_of_birth,date_of_birth,hin,ver,roster_status,roster_date,roster_termination_date,"
+                                 + "myOscarUserName,year_of_birth,month_of_birth,date_of_birth,hin,ver,roster_status,roster_date,roster_termination_date,roster_termination_reason,"
                                  + "patient_status,patient_status_date,date_joined,chart_no," + "official_lang,spoken_lang,provider_no,sex,"
                                  + "end_date,eff_date,pcn_indicator,hc_type,hc_renew_date," + "family_doctor,alias,previousAddress,children,"
                                  + "sourceOfIncome,citizenship,sin) "
-                                 + "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                                 + "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
 	public DemographicAddResult addDemographic(String title, String last_name, String first_name, String address, String city,
 			String province, String postal, String phone, String phone2, String year_of_birth, String month_of_birth,
-			String date_of_birth, String hin, String ver, String roster_status, String roster_date, String roster_termination_date, String patient_status, String patient_status_date, String date_joined,
+			String date_of_birth, String hin, String ver, String roster_status, String roster_date, String roster_termination_date, String roster_termination_reason, String patient_status, String patient_status_date, String date_joined,
 			String chart_no, String official_lang, String spoken_lang, String provider_no, String sex, String end_date,
 			String eff_date, String pcn_indicator, String hc_type, String hc_renew_date, String family_doctor, String email,
 			String myOscarUserName, String alias, String previousAddress, String children, String sourceOfIncome, String citizenship, 
@@ -1235,27 +1247,28 @@ public class DemographicData {
 				add_record.setString(16, ver);
 				add_record.setString(17, roster_status);
 				add_record.setString(18, roster_date);
-                                add_record.setString(19, roster_termination_date);
-				add_record.setString(20, patient_status);
-                                add_record.setString(21, patient_status_date);
-				add_record.setString(22, date_joined);
-				add_record.setString(23, chart_no);
-				add_record.setString(24, official_lang);
-				add_record.setString(25, spoken_lang);
-				add_record.setString(26, provider_no);
-				add_record.setString(27, sex);
-				add_record.setString(28, end_date);
-				add_record.setString(29, eff_date);
-				add_record.setString(30, pcn_indicator);
-				add_record.setString(31, hc_type);
-				add_record.setString(32, hc_renew_date);
-				add_record.setString(33, family_doctor);
-				add_record.setString(34, alias);
-				add_record.setString(35, previousAddress);
-				add_record.setString(36, children);
-				add_record.setString(37, sourceOfIncome);
-				add_record.setString(38, citizenship);
-				add_record.setString(39, sin);
+				add_record.setString(19, roster_termination_date);
+				add_record.setString(20, roster_termination_reason);
+				add_record.setString(21, patient_status);
+				add_record.setString(22, patient_status_date);
+				add_record.setString(23, date_joined);
+				add_record.setString(24, chart_no);
+				add_record.setString(25, official_lang);
+				add_record.setString(26, spoken_lang);
+				add_record.setString(27, provider_no);
+				add_record.setString(28, sex);
+				add_record.setString(29, end_date);
+				add_record.setString(30, eff_date);
+				add_record.setString(31, pcn_indicator);
+				add_record.setString(32, hc_type);
+				add_record.setString(33, hc_renew_date);
+				add_record.setString(34, family_doctor);
+				add_record.setString(35, alias);
+				add_record.setString(36, previousAddress);
+				add_record.setString(37, children);
+				add_record.setString(38, sourceOfIncome);
+				add_record.setString(39, citizenship);
+				add_record.setString(40, sin);
 
 				String outString = add_record.toString();
 				int firstmark = outString.indexOf(':');
