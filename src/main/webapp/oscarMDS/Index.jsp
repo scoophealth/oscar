@@ -59,6 +59,8 @@ final String noAckStatus="N";
 String ctx = request.getContextPath();
 
 OscarLogDao oscarLogDao = (OscarLogDao) SpringUtils.getBean("oscarLogDao");
+
+String roleName$ = (String)session.getAttribute("userrole") + "," + (String)session.getAttribute("user");
 %>
 
 
@@ -238,7 +240,11 @@ Event.observe(window,'scroll',function(){//check for scrolling
                                 | <a href="javascript:popupStart(800,1000, '<%=request.getContextPath() %>/olis/Search.jsp')" style="color: #FFFFFF;"><bean:message key="olis.olisSearch" /></a>
                                 | <a href="javascript:popupPage(400, 400,'<html:rewrite page="/hospitalReportManager/hospitalReportManager.jsp"/>')" style="color: #FFFFFF;">HRM Status/Upload</a>
                                 | <a href="javascript:popupStart(800,1000, '<%=request.getContextPath() %>/oscarMDS/CreateLab.jsp')" style="color: #FFFFFF;"><bean:message key="global.createLab" /></a>            
+                                
+                                <security:oscarSec	roleName="<%=roleName$%>" objectName="_labs" rights="w" >
                                 | <a href="javascript:popupStart(800,1000,'../lab/CA/ALL/testUploader.jsp')" style="color: #FFFFFF; "><bean:message key="admin.admin.hl7LabUpload"/></a>
+                                </security:oscarSec>
+                                
                                 | <a href="javascript:popupStart(600,500,'../dms/html5AddDocuments.jsp')" style="color: #FFFFFF; "><bean:message key="inboxmanager.document.uploadDoc"/></a>
                                 | <a href="javascript:void(0);" onclick="changeView();" style="color: #FFFFFF;"><bean:message key="inboxmanager.document.changeView"/></a>
                                 | <a href="javascript:popupStart(700,1100,'../dms/inboxManage.do?method=getDocumentsInQueues')" style="color: #FFFFFF;"><bean:message key="inboxmanager.document.pendingDocs"/></a>
