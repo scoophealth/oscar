@@ -11,6 +11,7 @@
 <%@page import="java.util.List" %>
 <%@page import="oscar.util.DateUtils" %>
 <%@page import="oscar.util.StringUtils" %>
+<%@page import="oscar.oscarDemographic.pageUtil.Util" %>
 <!--  
 /*
  * 
@@ -56,7 +57,8 @@
 	ClientDao clientDao=(ClientDao)SpringUtils.getBean("clientDao");
 	Demographic demographic = clientDao.getClientByDemographicNo(Integer.valueOf(demographicNo));
 
-
+	//load current roster status
+	String rosterStatus = demographic.getRosterStatus();
 %>
 
 <body topmargin="0" leftmargin="0" vlink="#0000FF">
@@ -110,11 +112,11 @@
 							
 							<tr>
 								<td nowrap="nowrap"><%=DateUtils.formatDate(demographic.getLastUpdateDate(),request.getLocale())%></td>
-								<td nowrap="nowrap"><%=viewRS(demographic.getRosterStatus())%></td>
+								<td nowrap="nowrap"><%=viewRS(rosterStatus)%></td>
 								
-							<%if("RO".equals(demographic.getRosterStatus() )){ %>
+							<%if("RO".equals(rosterStatus)){ %>
 								<td nowrap="nowrap"><%=DateUtils.formatDate(demographic.getRosterDate(),request.getLocale())%></td>
-							<%}else if( demographic.getRosterStatus() != null && !demographic.getRosterStatus().trim().equals("")){ %>
+							<%}else if( rosterStatus != null && !rosterStatus.trim().equals("")){ %>
 								<td nowrap="nowrap"><%=DateUtils.formatDate(demographic.getRosterTerminationDate(),request.getLocale())%></td>
 							<%}%>
 								<td nowrap="nowrap"><%=(demographic.getProviderNo().length()>0 && demographic.getRosterStatus().equals("RO"))?providerDao.getProvider(demographic.getProviderNo()).getFormattedName():"" %></td>
@@ -125,9 +127,15 @@
 							<%} %>
 								<td nowrap="nowrap">(Current)</td>
 							</tr>
-								
-							<%
-								String rosterStatus = demographic.getRosterStatus();
+						<%if(!"RO".equals(rosterStatus)
+								&& demographic.getRosterTerminationReason()!=null
+								&& !demographic.getRosterTerminationReason().equals("")){ %>
+							<tr>
+								<td nowrap="nowrap">Termination Reason: </td>
+								<td colspan="5"><%=Util.rosterTermReasonProperties.getReasonByCode(demographic.getRosterTerminationReason()) %></td>
+							</tr>
+						<%} %>
+						<%
 								DemographicArchiveDao demoArchiveDao = (DemographicArchiveDao)SpringUtils.getBean("demographicArchiveDao");
 								List<DemographicArchive> DAs = demoArchiveDao.findRosterStatusHistoryByDemographicNo(Integer.valueOf(demographicNo));
 								for(int i=0;i<DAs.size();i++) {
@@ -149,8 +157,15 @@
 				                		<%}else{ %>
 				                		    <td nowrap="nowrap">System</td>
 				                		<%}%>
-					                	</tr>					                	
-					                <%
+					                	</tr>
+									<%if(!"RO".equals(da.getRosterStatus())
+											&& da.getRosterTerminationReason()!=null
+											&& !da.getRosterTerminationReason().equals("")){ %>
+										<tr>
+											<td nowrap="nowrap">Termination Reason: </td>
+											<td colspan="5"><%=Util.rosterTermReasonProperties.getReasonByCode(da.getRosterTerminationReason()) %></td>
+										</tr>
+									<%}
 								}
 								
 								

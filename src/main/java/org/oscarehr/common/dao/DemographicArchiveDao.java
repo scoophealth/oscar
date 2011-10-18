@@ -48,7 +48,7 @@ public class DemographicArchiveDao extends AbstractDao {
 
     public List<DemographicArchive> findRosterStatusHistoryByDemographicNo(Integer demographicNo) {
         
-    	String sqlCommand = "select x from DemographicArchive x where x.demographicNo=?1 order by x.lastUpdateDate desc,x.id desc";
+    	String sqlCommand = "select x from DemographicArchive x where x.demographicNo=?1 order by x.id desc";
 
         Query query = entityManager.createQuery(sqlCommand);
         query.setParameter(1, demographicNo);
@@ -57,14 +57,16 @@ public class DemographicArchiveDao extends AbstractDao {
         List<DemographicArchive> results = query.getResultList();
 
         //Remove entries with identical rosterStatus
-        for (int i=1; i<results.size(); i++) {
-            String lastRS = results.get(i-1).getRosterStatus();
-            if (StringUtils.isNullOrEmpty(lastRS)) {
-                if (StringUtils.isNullOrEmpty(results.get(i).getRosterStatus())) {
+        String this_rs, next_rs;
+        for (int i=0; i<results.size()-1; i++) {
+            this_rs = results.get(i).getRosterStatus();
+            next_rs = results.get(i+1).getRosterStatus();
+            if (StringUtils.empty(this_rs)) {
+                if (StringUtils.empty(next_rs)) {
                     results.remove(i);
                     i--;
                 }
-            } else if (results.get(i).getRosterStatus().equalsIgnoreCase(lastRS)) {
+            } else if (this_rs.equalsIgnoreCase(next_rs)) {
                 results.remove(i);
                 i--;
             }

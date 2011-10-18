@@ -62,6 +62,8 @@ public class DemographicArchive extends AbstractModel<Long> implements Serializa
 	@Column(name = "roster_termination_date")
 	@Temporal(TemporalType.DATE)
 	private Date rosterTerminationDate = null;
+	@Column(name = "roster_termination_reason")
+	private String rosterTerminationReason = null;
 	@Column(name = "patient_status")
 	private String patientStatus = null;
 	@Column(name = "patient_status_date")
@@ -261,6 +263,13 @@ public class DemographicArchive extends AbstractModel<Long> implements Serializa
 		}
 		public void setRosterTerminationDate(Date d) {
 		    this.rosterTerminationDate = d;
+		}
+		
+		public String getRosterTerminationReason() {
+		    return this.rosterTerminationReason;
+		}
+		public void setRosterTerminationReason(String s) {
+		    this.rosterTerminationReason = s;
 		}
 		
 		public String getPatientStatus() {
