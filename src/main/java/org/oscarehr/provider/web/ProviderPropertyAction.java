@@ -1490,6 +1490,84 @@ public class ProviderPropertyAction extends DispatchAction {
 
 		return actionmapping.findForward("genCppSingleLine");
 	}
+    
+    public ActionForward viewCommentLab(ActionMapping actionmapping,
+            ActionForm actionform,
+            HttpServletRequest request,
+            HttpServletResponse response) {
+	
+		DynaActionForm frm = (DynaActionForm)actionform;
+		String provider = (String) request.getSession().getAttribute("user");
+		UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.LAB_ACK_COMMENT);
+		
+		String propValue="";
+		if (prop == null){
+			prop = new UserProperty();
+		}else{
+			propValue=prop.getValue();
+		}
+		
+		boolean checked;
+		if(propValue.equalsIgnoreCase("yes"))
+			checked=true;
+		else
+			checked=false;
+		
+		prop.setChecked(checked);
+		request.setAttribute("labAckComment", prop);
+		request.setAttribute("providertitle","provider.setAckComment.title"); 
+		request.setAttribute("providermsgPrefs","provider.setAckComment.msgPrefs");
+		request.setAttribute("providermsgProvider","provider.setAckComment.msgProfileView");
+		request.setAttribute("providermsgEdit","provider.setAckComment.msgEdit"); 
+		request.setAttribute("providerbtnSubmit","provider.setAckComment.btnSubmit");
+		request.setAttribute("providermsgSuccess","provider.setAckComment.msgSuccess");
+		request.setAttribute("method","saveCommentLab");
+		
+		frm.set("labAckCommentProperty", prop);
+		
+		return actionmapping.findForward("genAckCommentLab");
+	}
+    
+    public ActionForward saveCommentLab(ActionMapping actionmapping,ActionForm actionform,HttpServletRequest request,HttpServletResponse response){	
+    	String provider=(String) request.getSession().getAttribute("user");
+
+    	DynaActionForm frm=(DynaActionForm)actionform;
+    	UserProperty Uprop=(UserProperty)frm.get("labAckCommentProperty");
+ 
+		boolean checked=false;
+		if(Uprop!=null)
+			checked = Uprop.isChecked();
+		UserProperty prop=this.userPropertyDAO.getProp(provider, UserProperty.LAB_ACK_COMMENT);
+		if(prop==null){
+			prop=new UserProperty();
+			prop.setName(UserProperty.LAB_ACK_COMMENT);
+			prop.setProviderNo(provider);
+		}
+		String disableComment="no";
+		if(checked)
+			disableComment="yes";
+
+		prop.setValue(disableComment);
+		this.userPropertyDAO.saveProp(prop);
+		
+		request.setAttribute("status", "success");
+		request.setAttribute("labAckComment", prop);
+		request.setAttribute("providertitle","provider.setAckComment.title"); 
+		request.setAttribute("providermsgPrefs","provider.setAckComment.msgPrefs");
+		request.setAttribute("providermsgProvider","provider.setAckComment.msgProfileView");
+		request.setAttribute("providermsgEdit","provider.setAckComment.msgEdit"); 
+		request.setAttribute("providerbtnSubmit","provider.setAckComment.btnSubmit");
+		request.setAttribute("providermsgSuccess","provider.setAckComment.msgSuccess");
+		request.setAttribute("method","saveCommentLab");
+		
+		if(checked)
+			request.setAttribute("providermsgSuccess","provider.setAckComment.msgSuccess_selected");
+		else
+			request.setAttribute("providermsgSuccess","provider.setAckComment.msgSuccess_unselected");
+		
+
+		return actionmapping.findForward("genAckCommentLab");
+	}
 
     /**
      * Creates a new instance of ProviderPropertyAction

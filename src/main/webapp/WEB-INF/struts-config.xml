@@ -270,6 +270,7 @@
 			<form-property name="newDefaultDocQueueProperty" type="org.oscarehr.common.model.UserProperty" />
                         <form-property name="rxShowPatientDOBProperty" type="org.oscarehr.common.model.UserProperty"/>
             <form-property name="cppSingleLineProperty" type="org.oscarehr.common.model.UserProperty"/>
+            <form-property name="labAckCommentProperty" type="org.oscarehr.common.model.UserProperty"/>
 		</form-bean>
 		<form-bean name="setMyOscarIdForm" type="org.apache.struts.action.DynaActionForm">
 			<form-property name="myOscarLoginId" type="java.lang.String" />
@@ -1329,6 +1330,7 @@
 		        <forward name="genShowPatientDOB" path="/provider/setShowPatientDOB.jsp"/>
                         <forward name="genUseMyMeds" path="/provider/setToUseMyMeds.jsp"/>
             <forward name="genCppSingleLine"     path="/provider/setCppSingleLine.jsp"/>
+            <forward name="genAckCommentLab"     path="/provider/setLabAckComment.jsp"/>
                  </action>
 		<action input="/provider/providerIndivoIdSetter.jsp" name="setMyOscarIdForm" path="/setMyOscarId" scope="request" type="oscar.oscarProvider.pageUtil.ProEditMyOscarIdAction">
 			<forward name="success" path="/provider/providerIndivoIdSetter.jsp" />

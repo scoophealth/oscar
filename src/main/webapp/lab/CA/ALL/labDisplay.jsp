@@ -20,6 +20,7 @@
 <%@ page import="org.oscarehr.casemgmt.model.CaseManagementNoteLink"%>
 <%@ page import="org.oscarehr.casemgmt.model.CaseManagementNote"%>
 <%@ page import="org.oscarehr.util.SpringUtils"%>
+<%@ page import="org.oscarehr.common.dao.UserPropertyDAO, org.oscarehr.common.model.UserProperty" %>
 <%@ page import="org.oscarehr.casemgmt.service.CaseManagementManager, org.oscarehr.common.dao.Hl7TextMessageDao, org.oscarehr.common.model.Hl7TextMessage"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -36,6 +37,20 @@ String patientMatched = request.getParameter("patientMatched");
 String remoteFacilityIdString = request.getParameter("remoteFacilityId");
 String remoteLabKey = request.getParameter("remoteLabKey");
 String demographicID = request.getParameter("demographicId");
+UserPropertyDAO userPropertyDAO = (UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
+UserProperty uProp = userPropertyDAO.getProp(providerNo, UserProperty.LAB_ACK_COMMENT);
+boolean skipComment = false;
+if( uProp != null && uProp.getValue().equalsIgnoreCase("yes")) {
+	skipComment = true;
+}
+
+String ackLabFunc;
+if( skipComment ) {
+	ackLabFunc = "handleLab('acknowledgeForm','" + segmentID + "','ackLab');";
+}
+else {
+	ackLabFunc = "getComment('ackLab');";
+}
 
 //Need date lab was received by OSCAR
 Hl7TextMessageDao hl7TxtMsgDao = (Hl7TextMessageDao)SpringUtils.getBean("hl7TextMessageDao");
@@ -123,6 +138,8 @@ if (ackList != null){
         }
     }
 }
+
+
 
 /********************** Converted to this sport *****************************/ 
 
@@ -276,10 +293,13 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
         }
         function getComment(action) {    
             var ret = true;
+            var comment = "";
             var text = $F("providerNo") + "commentText";
-            var comment = $(text).innerHTML;            
-            if( comment == null ) {
-            	comment = "";
+            if( $(text) != null ) {
+	            comment = $(text).innerHTML;            
+	            if( comment == null ) {
+	            	comment = "";
+	            }
             }
             var commentVal = prompt('<bean:message key="oscarMDS.segmentDisplay.msgComment"/>', comment);
             
@@ -409,13 +429,22 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
         
         function addComment(formid,labid) {
         	var url='<%=request.getContextPath()%>'+"/oscarMDS/UpdateStatus.do?method=addComment";
+			if( $F("labStatus") == "" ) {
+				$("labStatus").value = "N";
+			}        	
         	var data=$(formid).serialize(true);
         	var label = $F("providerNo") + "commentLabel";
         	var text = $F("providerNo") + "commentText";
 
             new Ajax.Request(url,{method:'post',parameters:data,onSuccess:function(transport){
-            	$(label).update("comment : ");
-            	$(text).update(document.acknowledgeForm.comment.value); 
+            	
+            	if( $(label) == null || $(text) == null ) {
+            		window.location.reload();
+            	}
+            	else {
+            		$(label).update("comment : ");
+            		$(text).update(document.acknowledgeForm.comment.value);
+            	}
         }});
         }
         </script>
@@ -446,10 +475,12 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                     <input type="hidden" name="status" value="<%=labStatus%>" id="labStatus"/>
                                     <input type="hidden" name="comment" value=""/>
                                     <input type="hidden" name="labType" value="HL7"/>
-                                    <% if ( !ackFlag ) { %>
+                                    <% 
+                                    if ( !ackFlag ) {                                                                         	
+                                    %>
                                                                         
-                                    <input type="button" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>" onclick="handleLab('acknowledgeForm','<%=segmentID%>','ackLab');" >
-                                    <input type="button" <%=notBeenAcked ? "disabled='disabled'" : ""%> value="<bean:message key="oscarMDS.segmentDisplay.btnComment"/>" onclick="return getComment('addComment');">
+                                    <input type="button" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>" onclick="<%=ackLabFunc%>" >
+                                    <input type="button" value="<bean:message key="oscarMDS.segmentDisplay.btnComment"/>" onclick="return getComment('addComment');">
                                     <% } %>
                                     <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="popupStart(397, 700, '../../../oscarMDS/SelectProvider.jsp', 'providerselect')">
                                     <input type="button" value=" <bean:message key="global.btnClose"/> " onClick="window.close()">
@@ -747,8 +778,8 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                         ackList = AcknowledgementData.getAcknowledgements(multiID[j]);                                        
                                         if (multiID[j].equals(segmentID))
                                             startFlag = true;                                                              
-                                        if (startFlag)
-                                            if (ackList.size() > 0){{%>
+                                        if (startFlag) {
+                                            //if (ackList.size() > 0){{%>
                                                 <table width="100%" height="20" cellpadding="2" cellspacing="2">
                                                     <tr>
                                                         <% if (multiID.length > 1){ %>
@@ -793,7 +824,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                     </tr>
                                                 </table>
 
-                                            <%}
+                                            <%//}
                                         }
                                     }%>
                                 </td>
@@ -957,8 +988,8 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                             <tr>
                                 <td align="left" width="50%">
                                     <% if ( !ackFlag ) { %>
-                                    <input type="button" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge" />" onclick="handleLab('acknowledgeForm','<%=segmentID%>','ackLab');" >
-                                    <input type="button" <%=notBeenAcked ? "disabled='disabled'" : ""%> value="<bean:message key="oscarMDS.segmentDisplay.btnComment"/>" onclick="return getComment('addComment');">
+                                    <input type="button" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge" />" onclick="<%=ackLabFunc%>" >
+                                    <input type="button" value="<bean:message key="oscarMDS.segmentDisplay.btnComment"/>" onclick="return getComment('addComment');">
                                     <% } %>
                                     <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="popupStart(397, 700, '../../../oscarMDS/SelectProvider.jsp', 'providerselect')">
                                     <input type="button" value=" <bean:message key="global.btnClose"/> " onClick="window.close()">
