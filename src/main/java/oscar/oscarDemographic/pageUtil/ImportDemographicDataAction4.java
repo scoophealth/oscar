@@ -421,13 +421,17 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
         if (enrolTotal==0) enrolTotal = 1;
         String[] roster_status=new String[enrolTotal],
         		 roster_date=new String[enrolTotal],
-        		 term_date=new String[enrolTotal];
+        		 term_date=new String[enrolTotal],
+        		 term_reason=new String[enrolTotal];
+        		 
         for (int i=0; i<enrolments.length; i++) {
             roster_status[i] = enrolments[i].getEnrollmentStatus()!=null ? enrolments[i].getEnrollmentStatus().toString() : "";
             if	(roster_status[i].equals("1")) roster_status[i] = "RO";
             else if (roster_status[i].equals("0")) roster_status[i] = "NR";
             roster_date[i] = getCalDate(enrolments[i].getEnrollmentDate(), timeShiftInDays);
             term_date[i] = getCalDate(enrolments[i].getEnrollmentTerminationDate(), timeShiftInDays);
+            if (enrolments[i].getTerminationReason()!=null)
+            	term_reason[i] = enrolments[i].getTerminationReason().toString();
         }
         
         String sin = StringUtils.noNull(demo.getSIN());
@@ -588,7 +592,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
             err_note.add("Replaced Contact-only patient "+patientName+" (Demo no="+demographicNo+")");
             
         } else { //add patient!
-            demoRes = dd.addDemographic(title, lastName, firstName, address, city, province, postalCode, homePhone, workPhone, year_of_birth, month_of_birth, date_of_birth, hin, versionCode, roster_status[0], roster_date[0], term_date[0], patient_status, psDate, ""/*date_joined*/, chart_no, official_lang, spoken_lang, primaryPhysician, sex, ""/*end_date*/, ""/*eff_date*/, ""/*pcn_indicator*/, hc_type, hc_renew_date, ""/*family_doctor*/, email, ""/*pin*/, ""/*alias*/, ""/*previousAddress*/, ""/*children*/, ""/*sourceOfIncome*/, ""/*citizenship*/, sin);
+            demoRes = dd.addDemographic(title, lastName, firstName, address, city, province, postalCode, homePhone, workPhone, year_of_birth, month_of_birth, date_of_birth, hin, versionCode, roster_status[0], roster_date[0], term_date[0], term_reason[0], patient_status, psDate, ""/*date_joined*/, chart_no, official_lang, spoken_lang, primaryPhysician, sex, ""/*end_date*/, ""/*eff_date*/, ""/*pcn_indicator*/, hc_type, hc_renew_date, ""/*family_doctor*/, email, ""/*pin*/, ""/*alias*/, ""/*previousAddress*/, ""/*children*/, ""/*sourceOfIncome*/, ""/*citizenship*/, sin);
             demographicNo = demoRes.getId();
         }
 
@@ -613,6 +617,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
             	demographicArchive.setRosterStatus(roster_status[i]);
             	demographicArchive.setRosterDate(UtilDateUtilities.StringToDate(roster_date[i]));
             	demographicArchive.setRosterTerminationDate(UtilDateUtilities.StringToDate(term_date[i]));
+            	demographicArchive.setRosterTerminationReason(term_reason[i]);
             	demoArchiveDao.persist(demographicArchive);
             }
 
@@ -700,9 +705,12 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                 String cPatient = cLastName+","+cFirstName;
                 if (StringUtils.empty(cDemoNo)) {   //add new demographic as contact
                     psDate = UtilDateUtilities.DateToString(new Date(),"yyyy-MM-dd");
-                    demoRes = dd.addDemographic("", cLastName, cFirstName, "", "", "", "", homePhone, workPhone, null, null,
-                    null, "", "", "", "Contact-only", psDate, "", "", "", "", "", "", "", "F", "", "", "", "", "", "", cEmail, "", "", "", "", "", "", "");
-                    cDemoNo = demoRes.getId();
+                    demoRes = dd.addDemographic(""/*title*/, cLastName, cFirstName, ""/*address*/, ""/*city*/, ""/*province*/, ""/*postal*/, 
+                    			homePhone, workPhone, ""/*year_of_birth*/, ""/*month_*/, ""/*date_*/, ""/*hin*/, ""/*ver*/, ""/*roster_status*/, "", "", "", 
+                    			"Contact-only", psDate, ""/*date_joined*/, ""/*chart_no*/, ""/*official_lang*/, ""/*spoken_lang*/, ""/*provider_no*/, 
+                    			"F", ""/*end_date*/, ""/*eff_date*/, ""/*pcn_indicator*/, ""/*hc_type*/, ""/*hc_renew_date*/, ""/*family_doctor*/,
+                    			cEmail, "", "", "", "", "", "", "");
+                	cDemoNo = demoRes.getId();
                     insertIntoAdmission(cDemoNo);
                     err_note.add("Contact-only patient "+cPatient+" (Demo no="+cDemoNo+") created");
 
