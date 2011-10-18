@@ -579,10 +579,10 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	for (LabMeasurements labMea : labMeaList) {
 	    String data = StringUtils.noNull(labMea.getExtVal("identifier"));
 	    String loinc = new MeasurementMapConfig().getLoincCodeByIdentCode(data);
-            if (StringUtils.filled(loinc)) {
-                loinc = loinc.trim();
-                if (loinc.equals("9318-7")) loinc = "14959-1"; //Urine Albumin-Creatinine Ratio
-            }
+	    if (StringUtils.filled(loinc)) {
+	    	loinc = loinc.trim();
+	    	if (loinc.equals("9318-7")) loinc = "14959-1"; //Urine Albumin-Creatinine Ratio
+    	}
             
 	    LaboratoryResults.TestName.Enum testName = LaboratoryResults.TestName.Enum.forString(loinc);
 	    if (testName==null) continue;
@@ -590,6 +590,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	    LaboratoryResults labResults = patientRecord.addNewLaboratoryResults();
 	    labResults.setTestName(testName); //LOINC code
 	    labResults.setLabTestCode(data);
+	    
 	    
 	    cdsDt.DateFullOrPartial collDate = labResults.addNewCollectionDateTime();
             Date dateTime = UtilDateUtilities.StringToDate(labMea.getExtVal("datetime"),"yyyy-MM-dd HH:mm:ss");
@@ -628,24 +629,24 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	    
 	    data = labMea.getExtVal("name");
 	    if (StringUtils.filled(data)) {
-		labResults.setTestNameReportedByLab(data);
+	    	labResults.setTestNameReportedByLab(data);
 	    }
-            
-            data = labMea.getExtVal("comments");
-            if (StringUtils.filled(data)) {
-                labResults.setNotesFromLab(data);
-            }
-            
-            String range = labMea.getExtVal("range");
-            String min = labMea.getExtVal("minimum");
-            String max = labMea.getExtVal("maximum");
-            LaboratoryResults.ReferenceRange refRange = labResults.addNewReferenceRange();
-            if (StringUtils.filled(range)) refRange.setReferenceRangeText(range);
-            else {
-                if (StringUtils.filled(min)) refRange.setLowLimit(min);
-                if (StringUtils.filled(max)) refRange.setHighLimit(max);
-            }
-	    
+        
+        data = labMea.getExtVal("comments");
+        if (StringUtils.filled(data)) {
+            labResults.setNotesFromLab(data);
+        }
+        
+        String range = labMea.getExtVal("range");
+        String min = labMea.getExtVal("minimum");
+        String max = labMea.getExtVal("maximum");
+        LaboratoryResults.ReferenceRange refRange = labResults.addNewReferenceRange();
+        if (StringUtils.filled(range)) refRange.setReferenceRangeText(range);
+        else {
+            if (StringUtils.filled(min)) refRange.setLowLimit(min);
+            if (StringUtils.filled(max)) refRange.setHighLimit(max);
+        }
+
 	    String lab_no = labMea.getExtVal("lab_no");
 	    if (StringUtils.filled(lab_no)) {
 		HashMap<String,String> labRoutingInfo = new HashMap<String,String>();
@@ -727,7 +728,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             if (StringUtils.filled(pa[p].getDosage())) {
                 String strength0 = pa[p].getDosage();
                 int sep = strength0.indexOf("/");
-                String strength = sep<0 ? Util.sleadingNum(strength0) : strength0.substring(0,sep);
+                String strength = sep<0 ? Util.leadingNum(strength0) : strength0.substring(0,sep);
                 if (sep>=0) {
                 	errors.add("Multiple components exist for Drug "+drugName+" for Patient "+demoNo+". Exporting 1st one as Strength.");
                     if (sep<strength0.length()) strength0 = strength0.substring(sep+1);

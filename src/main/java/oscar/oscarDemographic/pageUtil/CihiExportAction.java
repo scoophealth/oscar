@@ -922,7 +922,7 @@ public class CihiExportAction extends DispatchAction {
 			if (StringUtils.filled(pa[p].getDosage())) {
 				String strength0 = pa[p].getDosage();
 				sep = strength0.indexOf("/");
-				strength = sep<0 ? Util.sleadingNum(strength0) : strength0.substring(0,sep);
+				strength = sep<0 ? Util.leadingNum(strength0) : strength0.substring(0,sep);
 				if (sep>=0) {
 					if (sep<strength0.length()) strength0 = strength0.substring(sep+1);
 				}
