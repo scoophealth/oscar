@@ -70,6 +70,8 @@ import cdscihi.ProcedureDocument.Procedure;
 import cdscihi.RiskFactorsDocument.RiskFactors;
 import oscar.oscarEncounter.oscarMeasurements.data.LabMeasurements;
 
+import org.apache.log4j.Logger;
+
 public class CihiExportAction extends DispatchAction {
 	private ClinicDAO clinicDAO;
 	private DataExportDao dataExportDAO;
@@ -82,6 +84,8 @@ public class CihiExportAction extends DispatchAction {
 	private Hl7TextInfoDao hl7TextInfoDAO;
 	private PrescriptionDAO prescriptionDao;
 	private PreventionDao preventionDao;
+	
+	private Logger log = MiscUtils.getLogger();
 	
 	private static final PartialDateDao partialDateDao = (PartialDateDao) SpringUtils.getBean("partialDateDao");
 	
@@ -839,16 +843,25 @@ public class CihiExportAction extends DispatchAction {
 	}  
 	
 	private void buildLaboratoryResults(Demographic demo, PatientRecord patientRecord) throws SQLException {
+				log.debug("Building lab results for " + demo.getDemographicNo() + " " + demo.getFormattedName());
                 List<LabMeasurements> labMeaList = ImportExportMeasurements.getLabMeasurements(demo.getDemographicNo().toString());
                 for (LabMeasurements labMea : labMeaList) {
                 	String data = StringUtils.noNull(labMea.getExtVal("identifier"));
+                	log.debug("Measurement search for identifier '" + data + "'");
             	    String loinc = new MeasurementMapConfig().getLoincCodeByIdentCode(data);
             	    if( StringUtils.empty(loinc) ) {
+            	    	log.debug("loin code empty...continuing");
             	    	continue;
             	    }                	                   
             	    
                     Date dateTime = UtilDateUtilities.StringToDate(labMea.getExtVal("datetime"),"yyyy-MM-dd HH:mm:ss");
-                    if (dateTime==null) continue;
+                    if (dateTime==null) {
+                    	dateTime = UtilDateUtilities.StringToDate(labMea.getExtVal("datetime"),"yyyy-MM-dd");
+                    	if (dateTime==null) {
+                    		log.debug("dateTime is null...continuing");
+                    		continue;
+                    	}
+                    }
 
                     LaboratoryResults labResults = patientRecord.addNewLaboratoryResults();
                     
@@ -858,7 +871,11 @@ public class CihiExportAction extends DispatchAction {
                     collDate.setFullDate(Util.calDate(dateTime));                    
 
                     data = labMea.getExtVal("name");
-                    if (StringUtils.filled(data)) labResults.setTestNameReportedByLab(data);
+                    
+                    if (StringUtils.filled(data)) {
+                    	log.debug("Adding " + data);
+                    	labResults.setTestNameReportedByLab(data);
+                    }
 
                     data = labMea.getMeasure().getDataField();
                     if (StringUtils.filled(data)) {
