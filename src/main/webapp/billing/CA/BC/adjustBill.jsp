@@ -664,6 +664,10 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
 </table>
 <%
 BillingService billService = bcd.getBillingCodeByCode(allFields.getProperty("billing_code"),billingmaster.getServiceDateAsDate());
+String billValue= "0.00";
+if(billService != null){
+    billValue = billService.getValue();
+}
 %>
 <table width="100%" border=1>
   <tr bgcolor="#CCCCFF">
@@ -683,8 +687,8 @@ BillingService billService = bcd.getBillingCodeByCode(allFields.getProperty("bil
         <input type="button" onClick="javascript:popFeeItemList('ReProcessBilling','service_code');return false;" value="Search/Update"/>
       </td>
       <td width="50%"  class="bCellData">
-        <%=billform.getServiceDesc(allFields.getProperty("billing_code"),billRegion)%>   ($<span id="valueDisplay"><%=billService.getValue()%></span>)
-        <input type="hidden" value="<%=billService.getValue()%>" id="billValue"/>
+        <%=billform.getServiceDesc(allFields.getProperty("billing_code"),billRegion)%>   ($<span id="valueDisplay"><%=billValue%></span>)
+        <input type="hidden" value="<%=billValue%>" id="billValue"/>
         <input type="button" value="Recalculate" onclick="calculateFee()"/>
       </td>
       <td  class="bCellData">
