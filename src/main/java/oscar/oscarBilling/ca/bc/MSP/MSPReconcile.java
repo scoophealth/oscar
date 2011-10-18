@@ -1148,17 +1148,22 @@ public class MSPReconcile {
     }
     else if (this.WCB.equals(stat)) {
       this.updateBillTypeHlp(billingNo, BILLTYPE_WCB);
-    }
-    else {
-      String res[] = SqlUtils.getRow(
-          "select billingtype from billing where billing_no = " + billingNo);
-      if (res != null && res.length > 0) {
-        if (!this.BILLTYPE_ICBC.equals(res[0]) ||
-            !this.BILLTYPE_MSP.equals(res[0])) {
-          this.updateBillTypeHlp(billingNo, BILLTYPE_MSP);
-        }
-      }
-    }
+    }else if (this.NOTSUBMITTED.equals(stat)){
+        this.updateBillTypeHlp(billingNo, BILLTYPE_MSP);
+    }  //Changed because of issue 2972852
+//  else {
+//    String res[] = SqlUtils.getRow("select billingtype from billing where billing_no = " + billingNo);
+//    if (res != null && res.length > 0) {
+//      if (!this.BILLTYPE_ICBC.equals(res[0]) || !this.BILLTYPE_MSP.equals(res[0])) {
+//        /*
+//         If bill type is not equal to ICBC OR bill type is not equal to msp. Why?  so really only WCB and Private bills change to MSP???
+//         */
+//
+//        this.updateBillTypeHlp(billingNo, BILLTYPE_MSP);
+//      }
+//    }
+//  }
+
     updatePaymentMethodHlp(billingNo, paymentMethod);
   }
 
