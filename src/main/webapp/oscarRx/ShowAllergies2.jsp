@@ -311,8 +311,12 @@ padding-right:6;
 								
 								<%
 								
-								boolean filterOut=false;
+								String title = "";
+								if(allergy.getAllergy().getRegionalIdentifier() != null && !allergy.getAllergy().getRegionalIdentifier().trim().equalsIgnoreCase("null") && !allergy.getAllergy().getRegionalIdentifier().trim().equals("")){
+									 title=  " title=\"Din: "+allergy.getAllergy().getRegionalIdentifier()+"\" ";												 
+								}
 								
+								boolean filterOut=false;
 								strArchived=allergy.getAllergy().getArchived();
 								intArchived = Integer.parseInt(strArchived);
 								
@@ -356,7 +360,7 @@ padding-right:6;
 								<tr bgcolor="<%=trColour%>">
 									<td><%=labelStatus%></td>
 									<td><%=entryDate==null ? "" : entryDate %></td>
-									<td><bean:write name="allergy" property="allergy.DESCRIPTION" /></td>
+									<td <%=title%> ><bean:write name="allergy" property="allergy.DESCRIPTION" /></td>
 									<td><bean:write name="allergy" property="allergy.typeDesc" /></td>
 									<td bgcolor="<%=sevColour%>"><bean:write name="allergy" property="allergy.severityOfReactionDesc" /></td>
 									<td><bean:write name="allergy" property="allergy.onSetOfReactionDesc" /></td>
