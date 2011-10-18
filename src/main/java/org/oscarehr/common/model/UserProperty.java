@@ -78,6 +78,7 @@ public class UserProperty implements Serializable {
     public final static String DEFAULT_PAYEE = "default_payee";
     public final static String DEFAULT_DX_CODE = "default_dx_code";
     public final static String CPP_SINGLE_LINE="cpp_single_line";
+    public final static String LAB_ACK_COMMENT="lab_ack_comment";
     
     private long id;
     private String name;
