@@ -79,6 +79,7 @@ import org.oscarehr.common.dao.DemographicContactDao;
 import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.dao.DrugReasonDao;
 import org.oscarehr.common.dao.PartialDateDao;
+import org.oscarehr.common.dao.ProviderDataDao;
 import org.oscarehr.common.model.DemographicArchive;
 import org.oscarehr.common.model.DemographicContact;
 import org.oscarehr.common.model.Drug;
@@ -176,6 +177,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
     DrugReasonDao drugReasonDao = (DrugReasonDao) SpringUtils.getBean("drugReasonDao");
     OscarSuperManager oscarSuperManager = (OscarSuperManager) SpringUtils.getBean("oscarSuperManager");
     DemographicArchiveDao demoArchiveDao = (DemographicArchiveDao) SpringUtils.getBean("demographicArchiveDao");
+    ProviderDataDao providerDataDao = (ProviderDataDao) SpringUtils.getBean("providerDataDao");
     PartialDateDao partialDateDao = (PartialDateDao) SpringUtils.getBean("partialDateDao");
 
     @Override
@@ -1355,9 +1357,9 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     }
 
                     special = Util.addLine(special, "Take ", StringUtils.noNull(medArray[i].getDosage()));
-                    special += StringUtils.noNull(drug.getRoute());
-                    special += StringUtils.noNull(drug.getFreqCode());
-                    special += StringUtils.noNull(drug.getDuration())+" days";
+                    special += " "+StringUtils.noNull(drug.getRoute());
+                    special += " "+StringUtils.noNull(drug.getFreqCode());
+                    special += " "+StringUtils.noNull(drug.getDuration())+" days";
 
                     //no need: special = Util.addLine(special, "Prescription Status: ", medArray[i].getPrescriptionStatus());
                     //no need: special = Util.addLine(special, "Dispense Interval: ", medArray[i].getDispenseInterval());
@@ -1613,7 +1615,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                                 accNew = false;
                             }
                             LabResultImport.saveLabTestResults(_title[i], _testName[i], _abn[i], _minimum[i], _maximum[i], _result[i], _unit[i], "", _location[i], paPhysId, "C", "Y");
-//                            LabResultImport.saveLabTestResults(_title[i], _testName[i], "", "", "", "", "", _labnotes[i], _location[i], paPhysId, "D", "Y");
+                            LabResultImport.saveLabTestResults(_title[i], _testName[i], "", "", "", "", "", _labnotes[i], _location[i], paPhysId, "D", "Y");
                             addOneEntry(LABS);
 
                             _lab_ppid[i] = paPhysId;
@@ -2470,14 +2472,20 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 		} else {
 			pd.getExternalProviderWithNames(firstName, lastName);
 		}
-		if (StringUtils.filled(pd.getProviderNo())) return pd;
+		if (StringUtils.filled(pd.getProviderNo())) {
+			pd.getProvider(pd.getProviderNo());
+			return pd;
+		}
 		else return null;
 	}
 
 	ProviderData getProviderByOhip(String OhipNo) {
 		ProviderData pd = new ProviderData();
 		pd.getProviderWithOHIP(OhipNo);
-		if (StringUtils.filled(pd.getProviderNo())) return pd;
+		if (StringUtils.filled(pd.getProviderNo())) {
+			pd.getProvider(pd.getProviderNo());
+			return pd;
+		}
 		else return null;
 	}
 
@@ -2642,40 +2650,32 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 		}
 	}
 
-	String updateExternalProviderNames(String firstName, String lastName, ProviderData pd) {
+	String updateExternalProvider(String firstName, String lastName, String ohipNo, String cpsoNo, ProviderData pd) {
 		// For external provider only
-		if (pd.getProviderNo().charAt(0)=='-') {
-			if (StringUtils.empty(pd.getFirst_name()) && StringUtils.empty(pd.getLast_name())) {
-				pd.setFirst_name(StringUtils.noNull(firstName));
-				pd.setLast_name(StringUtils.noNull(lastName));
-			}
-		}
-		return pd.getProviderNo();
+		if (pd==null || pd.getProviderNo().charAt(0)!='-') return null;
+		
+		org.oscarehr.common.model.ProviderData newpd = providerDataDao.findByProviderNo(pd.getProviderNo());
+		if (StringUtils.empty(pd.getFirst_name()))
+			newpd.setFirstName(StringUtils.noNull(firstName));
+		if (StringUtils.empty(pd.getLast_name()))
+			newpd.setLastName(StringUtils.noNull(lastName));
+		if (StringUtils.empty(pd.getOhip_no()))
+			newpd.setOhipNo(ohipNo);
+		if (StringUtils.empty(pd.getPractitionerNo()))
+			newpd.setPractitionerNo(cpsoNo);
+		
+		providerDataDao.merge(newpd);
+		return newpd.getId();
 	}
 
-	String updateExternalProviderOhip(String ohipNo, ProviderData pd) {
-		// For external provider only
-		if (pd.getProviderNo().charAt(0)=='-') {
-			if (StringUtils.empty(pd.getOhip_no())) {
-				pd.setOhip_no(StringUtils.noNull(ohipNo));
-			}
-		}
-		return pd.getProviderNo();
+	String writeProviderData(String firstName, String lastName, String ohipNo) {
+		return writeProviderData(firstName, lastName, ohipNo, null);
 	}
-
-        String writeProviderData(String firstName, String lastName, String ohipNo) {
-            return writeProviderData(firstName, lastName, ohipNo, null);
-        }
 
 	String writeProviderData(String firstName, String lastName, String ohipNo, String cpsoNo) {
-                firstName = StringUtils.noNull(firstName);
-                lastName = StringUtils.noNull(lastName);
-
 		ProviderData pd = getProviderByOhip(ohipNo);
-		if (pd!=null) return updateExternalProviderNames(firstName, lastName, pd);
-
-		pd = getProviderByNames(firstName, lastName, matchProviderNames);
-		if (pd!=null) return updateExternalProviderOhip(ohipNo, pd);
+		if (pd==null) pd = getProviderByNames(firstName, lastName, matchProviderNames);
+		if (pd!=null) return updateExternalProvider(firstName, lastName, ohipNo, cpsoNo, pd);
 
 		//Write as a new provider
 		if (StringUtils.empty(firstName) && StringUtils.empty(lastName) && StringUtils.empty(ohipNo)) return ""; //no information at all!
@@ -2814,6 +2814,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
     	da.setRosterStatus(d.getRosterStatus());
     	da.setRosterDate(UtilDateUtilities.StringToDate(d.getRosterDate()));
     	da.setRosterTerminationDate(UtilDateUtilities.StringToDate(d.getRosterTerminationDate()));
+    	da.setRosterTerminationReason(d.getRosterTerminationReason());
     	da.setSin(d.getSin());
     	da.setSourceOfIncome(d.getSourceOfIncome());
     	da.setLastUpdateDate(UtilDateUtilities.StringToDate(d.getLastUpdateDate()));
