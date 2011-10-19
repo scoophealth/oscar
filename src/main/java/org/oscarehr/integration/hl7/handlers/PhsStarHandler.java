@@ -953,7 +953,7 @@ public class PhsStarHandler extends BasePhsStarHandler {
 		
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(startDate);
-		cal.add(Calendar.MINUTE, Integer.parseInt(aptDuration));
+		cal.add(Calendar.MINUTE, Integer.parseInt(aptDuration)-1);
 		
 		return cal.getTime();
 	}
