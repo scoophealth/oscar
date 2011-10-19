@@ -196,7 +196,9 @@ for (int j=0; j<selRoute.length; j++) {
 			    <!--<html:hidden property="otcExcluded" value="true"/>OTC Excluded-->
 			    </td>
 			    <td width=100>
+			    <% if(!OscarProperties.getInstance().getProperty("rx.drugofchoice.hide","false").equals("true")) { %>
 				<a href="#" onclick="callTreatments('searchString','treatmentsMyD');return false;"><bean:message key="ChooseDrug.msgDrugOfChoice"/></a>                            
+			    <%} %>
 			    </td>
 			    <td>
 				<oscar:oscarPropertiesCheck property="drugref_route_search" value="on">				
