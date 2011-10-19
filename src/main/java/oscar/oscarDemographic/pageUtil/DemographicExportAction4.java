@@ -278,8 +278,6 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                 if (data.equalsIgnoreCase("SEN")) personName.setNamePrefix(cdsDt.PersonNamePrefixCode.SEN);
                 if (data.equalsIgnoreCase("SGT")) personName.setNamePrefix(cdsDt.PersonNamePrefixCode.SGT);
                 if (data.equalsIgnoreCase("SR")) personName.setNamePrefix(cdsDt.PersonNamePrefixCode.SR);
-            } else {
-                err.add("Error! No Name Prefix for Patient "+demoNo);
             }
 
             data = demographic.getOfficialLang();
@@ -1194,7 +1192,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         String strength0 = arr[p].getDosage();
                         int sep = strength0.indexOf("/");
 
-                        String strength = sep<0 ? Util.sleadingNum(strength0) : strength0.substring(0,sep);
+                        String strength = sep<0 ? Util.leadingNum(strength0) : strength0.substring(0,sep);
                         if (sep>=0) {
                             err.add("Multiple components exist for Drug "+drugName+" for Patient "+demoNo+". Exporting 1st one as Strength.");
                             if (sep<strength0.length()) strength0 = strength0.substring(sep+1);
@@ -1351,9 +1349,12 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     LaboratoryResults labResults = patientRec.addNewLaboratoryResults();
 
                     //lab test code, test name, test name reported by lab
-                    labResults.setLabTestCode(StringUtils.noNull(labMea.getExtVal("identifier")));
-                    labResults.setTestName(StringUtils.noNull(labMea.getExtVal("name")));
-                    labResults.setTestNameReportedByLab(StringUtils.noNull(labMea.getExtVal("name")));
+                    data = labMea.getExtVal("identifier");
+                    if (StringUtils.filled(data)) labResults.setLabTestCode(data);
+                    data = labMea.getExtVal("name_internal");
+                    if (StringUtils.filled(data)) labResults.setTestName(data);
+                    data = labMea.getExtVal("name");
+                    if (StringUtils.filled(data)) labResults.setTestNameReportedByLab(data);
 
                     //laboratory name
                     labResults.setLaboratoryName(StringUtils.noNull(labMea.getExtVal("labname")));
