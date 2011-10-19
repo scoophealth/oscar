@@ -79,6 +79,7 @@ import org.oscarehr.common.dao.DemographicContactDao;
 import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.dao.DrugReasonDao;
 import org.oscarehr.common.dao.PartialDateDao;
+import org.oscarehr.common.dao.ProviderDataDao;
 import org.oscarehr.common.model.DemographicArchive;
 import org.oscarehr.common.model.DemographicContact;
 import org.oscarehr.common.model.Drug;
@@ -176,6 +177,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
     DrugReasonDao drugReasonDao = (DrugReasonDao) SpringUtils.getBean("drugReasonDao");
     OscarSuperManager oscarSuperManager = (OscarSuperManager) SpringUtils.getBean("oscarSuperManager");
     DemographicArchiveDao demoArchiveDao = (DemographicArchiveDao) SpringUtils.getBean("demographicArchiveDao");
+    ProviderDataDao providerDataDao = (ProviderDataDao) SpringUtils.getBean("providerDataDao");
     PartialDateDao partialDateDao = (PartialDateDao) SpringUtils.getBean("partialDateDao");
 
     @Override
@@ -1253,26 +1255,44 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 
                 //MEDICATIONS & TREATMENTS
                 MedicationsAndTreatments[] medArray = patientRec.getMedicationsAndTreatmentsArray();
+                String duration, quantity;
                 for (int i=0; i<medArray.length; i++) {
                     Drug drug = new Drug();
                     //no need: DrugReason drugReason = new DrugReason();
                     drug.setCreateDate(new Date());
                     drug.setRxDate(dateFPtoDate(medArray[i].getStartDate(), timeShiftInDays));
+                    if (medArray[i].getStartDate()==null) drug.setRxDate(new Date());
+                    
                     drug.setWrittenDate(dateTimeFPtoDate(medArray[i].getPrescriptionWrittenDate(), timeShiftInDays));
                     String writtenDateFormat = dateFPGetPartial(medArray[i].getPrescriptionWrittenDate());
-
-                    if (medArray[i].getStartDate()==null) drug.setRxDate(new Date());
-                    String duration = medArray[i].getDuration();
-                    drug.setDuration(duration);
-                    drug.setDurUnit("D");
-                    if (duration==null || !NumberUtils.isDigits(duration)) duration = "0";
-
+                    
+                    duration = medArray[i].getDuration();
+                    if (StringUtils.filled(duration)) {
+                    	duration = duration.trim();
+                    	if (duration.endsWith("days")) duration = Util.leadingNum(duration);
+                    	if (NumberUtils.isDigits(duration)) {
+                    		drug.setDuration(duration);
+    	                    drug.setDurUnit("D");
+                    	}
+                    	else err_data.add("Error! Invalid Duration ["+medArray[i].getDuration()+"] for Medications");
+                    }
+                    
+                    quantity = medArray[i].getQuantity();
+                    if (StringUtils.filled(quantity)) {
+                    	quantity = Util.leadingNum(quantity.trim());
+                    	if (NumberUtils.isDigits(quantity)) {
+                    		drug.setQuantity(quantity);
+                    	}
+                    	else err_data.add("Error! Invalid Quantity ["+medArray[i].getQuantity()+"] for Medications");
+                    }
+                    
                     Calendar endDate = Calendar.getInstance();
                     endDate.setTime(drug.getRxDate());
-                    endDate.add(Calendar.DAY_OF_YEAR, Integer.valueOf(duration)+timeShiftInDays);
+                    if (StringUtils.filled(duration))
+                    	endDate.add(Calendar.DAY_OF_YEAR, Integer.valueOf(duration)+timeShiftInDays);
                     drug.setEndDate(endDate.getTime());
+                    
                     drug.setRegionalIdentifier(medArray[i].getDrugIdentificationNumber());
-                    drug.setQuantity(medArray[i].getQuantity());
                     drug.setFreqCode(medArray[i].getFrequency());
                     if (medArray[i].getFrequency()!=null && medArray[i].getFrequency().contains("PRN")) drug.setPrn(true);
                     else drug.setPrn(false);
@@ -1284,6 +1304,21 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     drug.setPatientCompliance(getYN(medArray[i].getPatientCompliance()));
 
                     if (NumberUtils.isDigits(medArray[i].getNumberOfRefills())) drug.setRepeat(Integer.valueOf(medArray[i].getNumberOfRefills()));
+                    duration = medArray[i].getRefillDuration();
+                    if (StringUtils.filled(duration)) {
+                    	duration = duration.trim();
+                    	if (duration.endsWith("days")) duration = Util.leadingNum(duration);
+                    	if (NumberUtils.isDigits(duration)) drug.setRefillDuration(Integer.valueOf(duration));
+                    	else err_data.add("Error! Invalid Refill Duration ["+medArray[i].getRefillDuration()+"] for Medications");
+                    }
+
+                    quantity = medArray[i].getRefillQuantity();
+                    if (StringUtils.filled(quantity)) {
+                    	quantity = Util.leadingNum(quantity.trim());
+                    	if (NumberUtils.isDigits(quantity)) drug.setRefillQuantity(Integer.valueOf(quantity));
+                    	else err_data.add("Error! Invalid Refill Quantity ["+medArray[i].getRefillQuantity()+"] for Medications");
+                    }
+                    
                     drug.setETreatmentType(medArray[i].getTreatmentType());
                     //no need: drug.setRxStatus(medArray[i].getPrescriptionStatus());
 
@@ -1297,20 +1332,10 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     //no need: if (NumberUtils.isDigits(medArray[i].getDispenseInterval())) drug.setDispenseInterval(Integer.parseInt(medArray[i].getDispenseInterval()));
                     //no need: else err_data.add("Error! Invalid Dispense Interval for Medications & Treatments ("+(i+1)+")");
 
-                    if (StringUtils.filled(medArray[i].getRefillDuration())) {
-                    	if (NumberUtils.isDigits(medArray[i].getRefillDuration())) drug.setRefillDuration(Integer.parseInt(medArray[i].getRefillDuration()));
-                    	else err_data.add("Error! Invalid Refill Duration ["+medArray[i].getRefillDuration()+"] for Medications & Treatments");
-                    }
-
-                    if (StringUtils.filled(medArray[i].getRefillQuantity())) {
-                    	if (NumberUtils.isDigits(medArray[i].getRefillQuantity())) drug.setRefillQuantity(Integer.parseInt(medArray[i].getRefillQuantity()));
-                    	else err_data.add("Error! Invalid Refill Quantity ["+medArray[i].getRefillQuantity()+"] for Medications & Treatments");
-                    }
-
                     String take = StringUtils.noNull(medArray[i].getDosage()).trim();
-                    drug.setTakeMin(Util.leadingNum(take));
+                    drug.setTakeMin(Util.leadingNumF(take));
                     int sep = take.indexOf("-");
-                    if (sep>0) drug.setTakeMax(Util.leadingNum(take.substring(sep+1)));
+                    if (sep>0) drug.setTakeMax(Util.leadingNumF(take.substring(sep+1)));
                     else drug.setTakeMax(drug.getTakeMin());
                     drug.setUnit(medArray[i].getDosageUnitOfMeasure());
                     drug.setDemographicId(Integer.valueOf(demographicNo));
@@ -1332,9 +1357,9 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     }
 
                     special = Util.addLine(special, "Take ", StringUtils.noNull(medArray[i].getDosage()));
-                    special += StringUtils.noNull(drug.getRoute());
-                    special += StringUtils.noNull(drug.getFreqCode());
-                    special += StringUtils.noNull(drug.getDuration())+" days";
+                    special += " "+StringUtils.noNull(drug.getRoute());
+                    special += " "+StringUtils.noNull(drug.getFreqCode());
+                    special += " "+StringUtils.noNull(drug.getDuration())+" days";
 
                     //no need: special = Util.addLine(special, "Prescription Status: ", medArray[i].getPrescriptionStatus());
                     //no need: special = Util.addLine(special, "Dispense Interval: ", medArray[i].getDispenseInterval());
@@ -1516,18 +1541,19 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 
                 // Save to labPatientPhysicianInfo, labTestResults, patientLabRouting
                 for (int i=0; i<labResultArr.length; i++) {
-                    _testName[i] = StringUtils.noNull(labResultArr[i].getLabTestCode());
                     _location[i] = StringUtils.noNull(labResultArr[i].getLaboratoryName());
                     _accession[i] = StringUtils.noNull(labResultArr[i].getAccessionNumber());
                     _coll_date[i] = dateOnly(dateFPtoString(labResultArr[i].getCollectionDateTime(), timeShiftInDays));
                     _req_date[i] = dateFPtoString(labResultArr[i].getLabRequisitionDateTime(), timeShiftInDays);
                     if (StringUtils.empty(_req_date[i])) _req_date[i] = _coll_date[i];
 
-                    _title[i] = StringUtils.noNull(labResultArr[i].getTestName());
+                    _testName[i] = StringUtils.noNull(labResultArr[i].getTestName());
                     if (StringUtils.filled(labResultArr[i].getTestNameReportedByLab())) {
-                        _title[i] += StringUtils.filled(_title[i]) ? "/" : "";
-                        _title[i] += labResultArr[i].getTestNameReportedByLab();
+                    	_testName[i] += StringUtils.filled(_testName[i]) ? " / " : "";
+                    	_testName[i] += labResultArr[i].getTestNameReportedByLab();
                     }
+                    _title[i] = _testName[i];
+                    
                     if (StringUtils.filled(labResultArr[i].getNotesFromLab()))
                         _labnotes[i] = "Notes: "+labResultArr[i].getNotesFromLab();
 
@@ -1588,7 +1614,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 
                                 accNew = false;
                             }
-                            LabResultImport.saveLabTestResults(_title[i], _testName[i], _abn[i], _minimum[i], _maximum[i], _result[i], _unit[i], "", _location[i], paPhysId, "C", "N");
+                            LabResultImport.saveLabTestResults(_title[i], _testName[i], _abn[i], _minimum[i], _maximum[i], _result[i], _unit[i], "", _location[i], paPhysId, "C", "Y");
                             LabResultImport.saveLabTestResults(_title[i], _testName[i], "", "", "", "", "", _labnotes[i], _location[i], paPhysId, "D", "Y");
                             addOneEntry(LABS);
 
@@ -1624,14 +1650,13 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     saveMeasurementsExt(measId, "unit", unit);
 
                     //save lab test code, test name
-                    String testCode = StringUtils.filled(labResults.getLabTestCode()) ? labResults.getLabTestCode() : "";
-                    String testName = StringUtils.noNull(labResults.getTestName());
-                    if (StringUtils.filled(labResults.getTestNameReportedByLab())) {
-                        testName += StringUtils.filled(testName) ? "/" : "";
-                        testName += labResults.getTestNameReportedByLab();
-                    }
+                    String testCode = labResults.getLabTestCode();
+                    String testName = labResults.getTestName();
+                    String testNameLab = labResults.getTestNameReportedByLab();
+
                     saveMeasurementsExt(measId, "identifier", testCode);
-                    saveMeasurementsExt(measId, "name", testName);
+                    saveMeasurementsExt(measId, "name_internal", testName);
+                    saveMeasurementsExt(measId, "name", testNameLab);
 
                     //save lab collection datetime
                     cdsDt.DateTimeFullOrPartial collDate = labResults.getCollectionDateTime();
@@ -2447,14 +2472,20 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 		} else {
 			pd.getExternalProviderWithNames(firstName, lastName);
 		}
-		if (StringUtils.filled(pd.getProviderNo())) return pd;
+		if (StringUtils.filled(pd.getProviderNo())) {
+			pd.getProvider(pd.getProviderNo());
+			return pd;
+		}
 		else return null;
 	}
 
 	ProviderData getProviderByOhip(String OhipNo) {
 		ProviderData pd = new ProviderData();
 		pd.getProviderWithOHIP(OhipNo);
-		if (StringUtils.filled(pd.getProviderNo())) return pd;
+		if (StringUtils.filled(pd.getProviderNo())) {
+			pd.getProvider(pd.getProviderNo());
+			return pd;
+		}
 		else return null;
 	}
 
@@ -2611,7 +2642,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 	}
 
 	void saveMeasurementsExt(Long measurementId, String key, String val) throws SQLException {
-		if (measurementId!=null && StringUtils.filled(key)) {
+		if (measurementId!=null && StringUtils.filled(key) && StringUtils.filled(val)) {
 			MeasurementsExt mx = new MeasurementsExt(measurementId.intValue());
 			mx.setKeyVal(key);
 			mx.setVal(StringUtils.noNull(val));
@@ -2619,40 +2650,32 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 		}
 	}
 
-	String updateExternalProviderNames(String firstName, String lastName, ProviderData pd) {
+	String updateExternalProvider(String firstName, String lastName, String ohipNo, String cpsoNo, ProviderData pd) {
 		// For external provider only
-		if (pd.getProviderNo().charAt(0)=='-') {
-			if (StringUtils.empty(pd.getFirst_name()) && StringUtils.empty(pd.getLast_name())) {
-				pd.setFirst_name(StringUtils.noNull(firstName));
-				pd.setLast_name(StringUtils.noNull(lastName));
-			}
-		}
-		return pd.getProviderNo();
+		if (pd==null || pd.getProviderNo().charAt(0)!='-') return null;
+		
+		org.oscarehr.common.model.ProviderData newpd = providerDataDao.findByProviderNo(pd.getProviderNo());
+		if (StringUtils.empty(pd.getFirst_name()))
+			newpd.setFirstName(StringUtils.noNull(firstName));
+		if (StringUtils.empty(pd.getLast_name()))
+			newpd.setLastName(StringUtils.noNull(lastName));
+		if (StringUtils.empty(pd.getOhip_no()))
+			newpd.setOhipNo(ohipNo);
+		if (StringUtils.empty(pd.getPractitionerNo()))
+			newpd.setPractitionerNo(cpsoNo);
+		
+		providerDataDao.merge(newpd);
+		return newpd.getId();
 	}
 
-	String updateExternalProviderOhip(String ohipNo, ProviderData pd) {
-		// For external provider only
-		if (pd.getProviderNo().charAt(0)=='-') {
-			if (StringUtils.empty(pd.getOhip_no())) {
-				pd.setOhip_no(StringUtils.noNull(ohipNo));
-			}
-		}
-		return pd.getProviderNo();
+	String writeProviderData(String firstName, String lastName, String ohipNo) {
+		return writeProviderData(firstName, lastName, ohipNo, null);
 	}
-
-        String writeProviderData(String firstName, String lastName, String ohipNo) {
-            return writeProviderData(firstName, lastName, ohipNo, null);
-        }
 
 	String writeProviderData(String firstName, String lastName, String ohipNo, String cpsoNo) {
-                firstName = StringUtils.noNull(firstName);
-                lastName = StringUtils.noNull(lastName);
-
 		ProviderData pd = getProviderByOhip(ohipNo);
-		if (pd!=null) return updateExternalProviderNames(firstName, lastName, pd);
-
-		pd = getProviderByNames(firstName, lastName, matchProviderNames);
-		if (pd!=null) return updateExternalProviderOhip(ohipNo, pd);
+		if (pd==null) pd = getProviderByNames(firstName, lastName, matchProviderNames);
+		if (pd!=null) return updateExternalProvider(firstName, lastName, ohipNo, cpsoNo, pd);
 
 		//Write as a new provider
 		if (StringUtils.empty(firstName) && StringUtils.empty(lastName) && StringUtils.empty(ohipNo)) return ""; //no information at all!
@@ -2791,6 +2814,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
     	da.setRosterStatus(d.getRosterStatus());
     	da.setRosterDate(UtilDateUtilities.StringToDate(d.getRosterDate()));
     	da.setRosterTerminationDate(UtilDateUtilities.StringToDate(d.getRosterTerminationDate()));
+    	da.setRosterTerminationReason(d.getRosterTerminationReason());
     	da.setSin(d.getSin());
     	da.setSourceOfIncome(d.getSourceOfIncome());
     	da.setLastUpdateDate(UtilDateUtilities.StringToDate(d.getLastUpdateDate()));

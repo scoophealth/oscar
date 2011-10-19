@@ -224,11 +224,8 @@ public class Util {
         return s;
     }
 
-    static public String sleadingNum(String s) {
-        return String.valueOf(leadingNum(s));
-    }
-
-    static public float leadingNum(String s) {
+    static public String leadingNum(String s) {
+    	if (s==null) return "";
         s = s.trim();
         for (int i=0; i<s.length(); i++) {
             if (!".0123456789".contains(s.substring(i,i+1))) {
@@ -236,6 +233,11 @@ public class Util {
                 break;
             }
         }
+        return s;
+    }
+
+    static public float leadingNumF(String s) {
+    	s = leadingNum(s);
         try {
         	float f = Float.parseFloat(s);
         	return f;

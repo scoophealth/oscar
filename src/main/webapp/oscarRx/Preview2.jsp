@@ -4,7 +4,8 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%@ taglib uri="/WEB-INF/oscarProperties-tag.tld" prefix="oscar"%>
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
-<%@ page import="oscar.oscarProvider.data.*, oscar.log.*"%>
+<%@ page import="oscar.oscarProvider.data.ProSignatureData, oscar.oscarProvider.data.ProviderData"%>
+<%@ page import="oscar.log.*"%>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@ page import="org.apache.log4j.Logger" %>
 
@@ -238,7 +239,7 @@ if(prop!=null && prop.getValue().equalsIgnoreCase("yes")){
                                             </c:choose> <input type="hidden" name="patientName"
                                                     value="<%= StringEscapeUtils.escapeHtml(patient.getFirstName())+ " " +StringEscapeUtils.escapeHtml(patient.getSurname()) %>" />
                                             <input type="hidden" name="patientDOB" value="<%= StringEscapeUtils.escapeHtml(patientDOBStr) %>" />
-                                            <input type="hidden" name="showPatientDOB" value="<%=showPatientDOB%>"
+                                            <input type="hidden" name="showPatientDOB" value="<%=showPatientDOB%>"/>
                                             <input type="hidden" name="patientAddress"
                                                     value="<%= StringEscapeUtils.escapeHtml(patient.getAddress()) %>" />
                                             <input type="hidden" name="patientCityPostal"
