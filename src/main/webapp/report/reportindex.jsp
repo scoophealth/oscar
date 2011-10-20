@@ -274,7 +274,7 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
 			onClick="popupPage(310,430,'../share/CalendarPopup.jsp?urlfrom=../report/reportindex.jsp&year=<%=now.get(Calendar.YEAR)%>&month=<%=now.get(Calendar.MONTH)+1%>&param=<%=URLEncoder.encode("&formdatebox=document.report.startDate.value")%>')">
 		<bean:message key="report.reportindex.formFrom" /></a> 
 		<%-- any early default start date should suffice for reporting all --%>
-		<INPUT TYPE="text" NAME="startDate" VALUE="1950/01/01" size='10'>
+		<INPUT TYPE="text" NAME="startDate" VALUE="<%=today%>" size='10'>
 		</td>
 		<td><a HREF="#"
 			onClick="popupPage(310,430,'../share/CalendarPopup.jsp?urlfrom=../report/reportindex.jsp&year=<%=now.get(Calendar.YEAR)%>&month=<%=now.get(Calendar.MONTH)+1%>&param=<%=URLEncoder.encode("&formdatebox=document.report.endDate.value")%>')">
