@@ -56,7 +56,7 @@ while(rslocal.next()){
 
 DBHelp dbObj = new DBHelp();
 Vector billingProvider = new Vector();
-String sql = "select p.provider_no, p.ohip_no, p.last_name, p.first_name from reportprovider r, provider p where r.provider_no=p.provider_no order by p.last_name, p.first_name";
+String sql = "select distinct p.provider_no, p.ohip_no, p.last_name, p.first_name from reportprovider r, provider p where r.provider_no=p.provider_no order by p.last_name, p.first_name";
 ResultSet rs = dbObj.searchDBRecord(sql);
 while(rs.next()){
 	billingProvider.add(dbObj.getString(rs,"p.provider_no"));
@@ -559,9 +559,9 @@ SPAN.bold {
 			<tr bgcolor="#FFFFFF">
 				<td width="19%"><font
 					face="Verdana, Arial, Helvetica, sans-serif" size="1"
-					color="#000000">Service Code </font><font
+					color="#000000">Service Codes </font><font
 					face="Verdana, Arial, Helvetica, sans-serif" size="1"> <input
-					type="text" name="svcCode" size="20" value="G591A"> </font></td>
+					type="text" name="svcCode" size="20" value="G590A,G700A"> </font></td>
 				<td width="26%"><font size="1">Diagnostic Code <input
 					type="text" name="dxCode" size="20" value="896"> </font></td>
 				<td width="31%"><font

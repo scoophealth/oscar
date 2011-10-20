@@ -109,10 +109,23 @@ public class BillingSpecPrep {
 		claim1Header.setUpdate_datetime(UtilDateUtilities.getToday("yyyy-MM-dd HH:mm:ss"));
 
 		JdbcBillingCodeImpl tObj = new JdbcBillingCodeImpl();
-		String total = "";
-		List tL = tObj.getBillingCodeAttr(val.getParameter("svcCode"));
-		total = tL != null ? (String) tL.get(2) : "";
-
+		String total;
+		double runningTotal = 0.0;
+		String[] codes = val.getParameter("svcCode").split(",");
+		List tL;
+		for(int idx = 0; idx < codes.length; ++idx  ) {
+			tL = tObj.getBillingCodeAttr(codes[idx].trim());
+			total = tL != null ? (String) tL.get(2) : "0.0";
+			runningTotal += Double.parseDouble(total);
+		}
+		
+		if( runningTotal == 0.0 ) {
+			total = "";
+		}
+		else {
+			total = String.valueOf(runningTotal);
+		}
+		
 		claim1Header.setTotal(total);
 		claim1Header.setPaid("");
 		claim1Header.setStatus(getStatus(val.getParameter("xml_billtype")));
@@ -130,20 +143,24 @@ public class BillingSpecPrep {
 	}
 
 	private BillingItemData[] getItemObj(HttpServletRequest val) {
-		BillingItemData[] claimItem = new BillingItemData[1];
-		// _logger.info("No billing item for billing # " + itemNum);
-		claimItem[0] = new BillingItemData();
-		claimItem[0].setTransc_id(BillingDataHlp.ITEM_TRANSACTIONIDENTIFIER);
-		claimItem[0].setRec_id(BillingDataHlp.ITEM_REORDIDENTIFICATION);
-		claimItem[0].setService_code(val.getParameter("svcCode"));
-		claimItem[0]
-				.setFee((String) (new JdbcBillingCodeImpl()).getBillingCodeAttr(val.getParameter("svcCode")).get(2));
-		claimItem[0].setSer_num("1");
-		claimItem[0].setService_date(val.getParameter("apptDate"));
-		claimItem[0].setDx(val.getParameter("dxCode"));
-		claimItem[0].setDx1("");
-		claimItem[0].setDx2("");
-		claimItem[0].setStatus("O");
+		String tmp = val.getParameter("svcCode");
+		String[] codes = tmp.split(",");
+		BillingItemData[] claimItem = new BillingItemData[codes.length];
+		
+		for( int idx = 0; idx < claimItem.length; ++idx ) {
+			claimItem[idx] = new BillingItemData();
+			claimItem[idx].setTransc_id(BillingDataHlp.ITEM_TRANSACTIONIDENTIFIER);
+			claimItem[idx].setRec_id(BillingDataHlp.ITEM_REORDIDENTIFICATION);
+			claimItem[idx].setService_code(codes[idx].trim());
+			claimItem[idx]
+					.setFee((String) (new JdbcBillingCodeImpl()).getBillingCodeAttr(codes[idx].trim()).get(2));
+			claimItem[idx].setSer_num("1");
+			claimItem[idx].setService_date(val.getParameter("apptDate"));
+			claimItem[idx].setDx(val.getParameter("dxCode"));
+			claimItem[idx].setDx1("");
+			claimItem[idx].setDx2("");
+			claimItem[idx].setStatus("O");
+		}
 
 		return claimItem;
 	}
