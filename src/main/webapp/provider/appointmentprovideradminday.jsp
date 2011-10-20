@@ -1507,23 +1507,7 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
           	  String urgency = (String)appointment.get("urgency");
           	  
           	  bFirstTimeRs=true;
-			    as.setApptStatus(status);
-
-		Double debt = 0d;
-             	String debtMessage = "";
-             	if(billDao!=null && demographic_no>0 && cal!=null && cal.getTime()!=null) {
-                     debt = billDao.getDebt(Integer.valueOf(demographic_no),cal.getTime());
-                     if(debt >= 0.01d) {
-                                   List<Integer> unpaidNumbers = billDao.listUnpaidInvoices(Integer.valueOf(demographic_no),cal.getTime());
-                                   if(unpaidNumbers == null || unpaidNumbers.size()>0) {
-                                           if(unpaidNumbers.size() == 1) debtMessage = "Patient "+name+" needs to pay invoice #";
-                                           else debtMessage = "Patient "+name+" needs to pay invoices ##";
-                                           for (Integer num : unpaidNumbers) {
-                                                   debtMessage += num.toString()+" ";
-                                           }
-                               }
-                     }
-             	}
+			    as.setApptStatus(status);		
 
 			 //multi-site. if a site have been selected, only display appointment in that site   
 			 if (!bMultisites || (selectedSite == null && CurrentSiteMap.get(sitename) != null) || sitename.equals(selectedSite)) {   
@@ -1547,16 +1531,9 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
             <%
                 } else {
 	                out.print("&nbsp;");
-                }
+                } 		
 
- 		if (debt != null && debt > 0) {
-             %>
-                            <span style="color:red" title="<%= debtMessage %>"><b>$</b></span>
-             <%
-                }
-             %>
-
-            <%if(urgency != null && urgency.equals("critical")) {             	
+            if(urgency != null && urgency.equals("critical")) {             	
             %>
             	<img src="../images/warning-icon.png" border="0" width="14" height="14" title="Critical Appointment"/>
             <% } %>
