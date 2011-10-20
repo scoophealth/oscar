@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.zip.ZipEntry;
@@ -72,31 +73,36 @@ public class Util {
 	
 	return summary;
     }
-
+    
     static public XmlCalendar calDate(Date inDate) {
-	String date = UtilDateUtilities.DateToString(inDate, "yyyy-MM-dd");
-	String time = UtilDateUtilities.DateToString(inDate, "HH:mm:ss");
-	if (date.equals("")) date = "0001-01-01";
-	if (time.equals("")) time = "00:00:00";
-	
-	XmlCalendar x = new XmlCalendar(date+"T"+time);
-	return x;
+    	return calDate(inDate, false);
+    }
+    
+    static public XmlCalendar calDate(Date inDate, boolean timezone) {
+		String date = UtilDateUtilities.DateToString(inDate, "yyyy-MM-dd");
+		String time = UtilDateUtilities.DateToString(inDate, "HH:mm:ss");
+		if (timezone) time += getTimezone();
+		XmlCalendar x = new XmlCalendar(date+"T"+time);
+		return x;
     }
 
 	static public XmlCalendar calDate(String inDate) {
-		Date dateTime = null;
-		dateTime = UtilDateUtilities.StringToDate(inDate,"yyyy-MM-dd HH:mm:ss");
+		Date dateTime = UtilDateUtilities.StringToDate(inDate,"yyyy-MM-dd HH:mm:ss");
 		if (dateTime==null) dateTime = UtilDateUtilities.StringToDate(inDate,"yyyy-MM-dd");
+		
+		if (dateTime!=null) //inDate contains no time part
+			return calDate(dateTime, false);
+		
 		if (dateTime==null) { //inDate may contain time only
 			try {
 				XmlCalendar x = new XmlCalendar(inDate);
 				return x;
 			} catch (Exception ex) { //inDate format is wrong
-				XmlCalendar x = new XmlCalendar("0001-01-01 00:00:00");
+				XmlCalendar x = new XmlCalendar("0001-01-01T00:00:00");
 				return x;
 			}
 		}
-		return calDate(dateTime);
+		return calDate(dateTime, true);
 	}
 
     static public boolean checkDir(String dirName) throws Exception {
@@ -458,7 +464,8 @@ public class Util {
     	String providerName = ProviderData.getProviderName(cmn.getProviderNo());
     	if (StringUtils.filled(providerName)) vtext += " by "+providerName;
     	
-    	cmn.setNote("\n"+vtext+"]\n");
+    	note = Util.addLine(note, "\n"+vtext+"]\n");
+    	cmn.setNote(note);
     }
     
     static private HashMap<String,String> preventionToImmunizationType = new HashMap<String,String>(); 
@@ -488,5 +495,15 @@ public class Util {
     static public String getPreventionType(String immunizationType) {
     	if (immunizationToPreventionType.isEmpty()) set_p_i_types();
     	return immunizationToPreventionType.get(immunizationType);
+    }
+    
+    static public String getTimezone() {
+    	Calendar c = Calendar.getInstance();
+    	int tz = (c.get(Calendar.ZONE_OFFSET) + c.get(Calendar.DST_OFFSET)) / (60 * 60 * 1000);
+    	String zero = Math.abs(tz)>9 ? "" : "0";    	
+    	
+    	if (tz>0) return "+"+zero+tz+":00";
+    	if (tz<0) return "-"+zero+(-tz)+":00";
+    	return "";
     }
 }
