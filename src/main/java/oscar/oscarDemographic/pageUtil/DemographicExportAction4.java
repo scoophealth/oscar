@@ -251,7 +251,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             if (StringUtils.filled(data)) {
                 firstName.setPart(data);
                 firstName.setPartType(cdsDt.PersonNamePartTypeCode.GIV);
-                firstName.setPartQualifier(cdsDt.PersonNamePartQualifierCode.BR);
+//				firstName.setPartQualifier(cdsDt.PersonNamePartQualifierCode.BR);
             } else {
                 err.add("Error! No First Name for Patient "+demoNo);
             }
@@ -259,7 +259,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             if (StringUtils.filled(data)) {
                 lastName.setPart(data);
                 lastName.setPartType(cdsDt.PersonNamePartTypeCode.FAMC);
-                lastName.setPartQualifier(cdsDt.PersonNamePartQualifierCode.BR);
+//				lastName.setPartQualifier(cdsDt.PersonNamePartQualifierCode.BR);
             } else {
                 err.add("Error! No Last Name for Patient "+demoNo);
             }
@@ -914,12 +914,12 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 
                         //entered datetime
                         if (cmn.getCreate_date()!=null) {
-                            cNote.addNewEnteredDateTime().setFullDateTime(Util.calDate(cmn.getCreate_date()));
+                            cNote.addNewEnteredDateTime().setFullDateTime(Util.calDate(cmn.getCreate_date(), true));
                         }
                         
                         //event datetime
                         if (cmn.getObservation_date()!=null) {
-                            cNote.addNewEventDateTime().setFullDateTime(Util.calDate(cmn.getObservation_date()));
+                            cNote.addNewEventDateTime().setFullDateTime(Util.calDate(cmn.getObservation_date(), true));
                         }
 
                         List<CaseManagementNote> cmn_same = cmm.getNotesByUUID(cmn.getUuid());
@@ -935,8 +935,8 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                                 
                                 //note created datetime
                                 cdsDt.DateTimeFullOrPartial noteCreatedDateTime = pProvider.addNewDateTimeNoteCreated();
-                                if (cmn.getUpdate_date()!=null) noteCreatedDateTime.setFullDateTime(Util.calDate(cm_note.getUpdate_date()));
-                                else noteCreatedDateTime.setFullDateTime(Util.calDate(new Date()));
+                                if (cmn.getUpdate_date()!=null) noteCreatedDateTime.setFullDateTime(Util.calDate(cm_note.getUpdate_date(),true));
+                                else noteCreatedDateTime.setFullDateTime(Util.calDate(new Date(),true));
                             }
 
                             //reviewing providers
@@ -949,8 +949,8 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                                 
                                 //note reviewed datetime
                                 cdsDt.DateTimeFullOrPartial noteReviewedDateTime = noteReviewer.addNewDateTimeNoteReviewed();
-                                if (cm_note.getUpdate_date()!=null) noteReviewedDateTime.setFullDateTime(Util.calDate(cm_note.getUpdate_date()));
-                                else noteReviewer.addNewDateTimeNoteReviewed().setFullDateTime(Util.calDate(new Date()));
+                                if (cm_note.getUpdate_date()!=null) noteReviewedDateTime.setFullDateTime(Util.calDate(cm_note.getUpdate_date(),true));
+                                else noteReviewer.addNewDateTimeNoteReviewed().setFullDateTime(Util.calDate(new Date(),true));
                             }
                         }
                     }
@@ -1367,13 +1367,13 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     cdsDt.DateTimeFullOrPartial collDate = labResults.addNewCollectionDateTime();
                     Date dateTime = labMea.getMeasure().getDateObserved();
                     String sDateTime = labMea.getExtVal("datetime");
-                    if (dateTime!=null) collDate.setFullDateTime(Util.calDate(dateTime));
+                    if (dateTime!=null) collDate.setFullDateTime(Util.calDate(dateTime,true));
                     else if (StringUtils.filled(sDateTime)) collDate.setFullDateTime(Util.calDate(sDateTime));
                     else collDate.setFullDateTime(Util.calDate("0001-01-01"));
 
                     if (dateTime==null && StringUtils.empty(sDateTime)) {
                         err.add("Error! No Collection Datetime for Lab Test "+labResults.getLabTestCode()+" for Patient "+demoNo);
-                        collDate.setFullDateTime(Util.calDate(new Date()));
+                        collDate.setFullDateTime(Util.calDate(new Date(),true));
                     }
 
                     //lab normal/abnormal flag
