@@ -38,11 +38,9 @@ import java.util.ArrayList;
 import javax.servlet.http.HttpServletRequest;
 
 import oscar.OscarProperties;
-import oscar.oscarLab.ca.all.AcknowledgementData;
 import oscar.oscarLab.ca.all.Hl7textResultsData;
 import oscar.oscarLab.ca.all.parsers.Factory;
 import oscar.oscarLab.ca.all.parsers.MessageHandler;
-import oscar.oscarMDS.data.ReportStatus;
 
 import org.oscarehr.common.dao.Hl7TextMessageDao;
 import org.oscarehr.common.model.Hl7TextMessage;
@@ -110,19 +108,6 @@ public class LabPDFCreator extends PdfPageEventHelper{
         java.util.Date date = hl7TextMessage.getCreated();
         String stringFormat = "yyyy-MM-dd HH:mm";
         dateLabReceived = UtilDateUtilities.DateToString(date, stringFormat);
-
-
-        // check for acknowledgements and set ackFlag
-        ArrayList ackList = AcknowledgementData.getAcknowledgements(id);
-        if (ackList != null){
-            for (int i=0; i < ackList.size(); i++){
-                ReportStatus reportStatus = (ReportStatus) ackList.get(i);
-                if ( reportStatus.getProviderNo().equals(providerNo) && reportStatus.getStatus().equals("A") ){
-                    this.ackFlag = true;
-                    break;
-                }
-            }
-        }
         
         // create handler
         this.handler = Factory.getHandler(id);
@@ -456,61 +441,7 @@ public class LabPDFCreator extends PdfPageEventHelper{
         clientPhrase.add(new Chunk(handler.getCCDocs(), font));
         cell.setPhrase(clientPhrase);
         clientTable.addCell(cell);
-        
-        //Create acknowledgement table        
-        float[] ackWidths = {1f, 1f, 8f};
-        PdfPTable ackTable = new PdfPTable(ackWidths);
-        ReportStatus report;
-        boolean startFlag = false;
-        
-        // only create acknowledgement table if there are acknowlegements
-        if (ackFlag){
-            for (int j=multiID.length-1; j >=0; j--){
-                ArrayList ackList = AcknowledgementData.getAcknowledgements(multiID[j]);
-                if (multiID[j].equals(id))
-                    startFlag = true;
-                if (startFlag){
-                    if (ackList.size() > 0){
-                        if (multiID.length > 1){
-                            cell.setPhrase(new Phrase("Version: ", boldFont));
-                            ackTable.addCell(cell);
-                            cell.setPhrase(new Phrase("v"+(j+1), font));
-                            ackTable.addCell(cell);
-                        }else{
-                            cell.setColspan(3);
-                            cell.setHorizontalAlignment(cell.ALIGN_CENTER);
-                        }
-                        
-                        for (int i=0; i < ackList.size(); i++) {
-                            if (multiID.length > 1 && i > 0){
-                                cell.setPhrase(new Phrase(""));
-                                ackTable.addCell(cell);
-                            }
-                            
-                            report = (ReportStatus) ackList.get(i);
-                            Phrase phrase = new Phrase(new Chunk(report.getProviderName()+" : ", font));
-                            String ackStatus = report.getStatus();
-                            if(ackStatus.equals("A")){
-                                ackStatus = "Acknowledged";
-                            }else if(ackStatus.equals("F")){
-                                ackStatus = "Filed but not Acknowledged";
-                            }else{
-                                ackStatus = "Not Acknowledged";
-                            }
-                            phrase.add(new Chunk(ackStatus+"  ", redFont));
-                            
-                            if (ackStatus.equals("Acknowledged")){
-                                String comment = report.getComment().equals("") ? "no comment" : "comment : "+report.getComment();
-                                phrase.add(new Chunk(report.getTimestamp()+",  "+comment, font));
-                            }
-                            
-                            cell.setPhrase(phrase);
-                            ackTable.addCell(cell);
-                        }
-                    }
-                }
-            }
-        }
+                
         //Create header info table
         float[] tableWidths = {2f, 1f};
         PdfPTable table = new PdfPTable(tableWidths);
@@ -532,10 +463,7 @@ public class LabPDFCreator extends PdfPageEventHelper{
         table = addTableToTable(table, pInfoTable, 1);
         table = addTableToTable(table, rInfoTable, 1);
         table = addTableToTable(table, clientTable, 2);
-        // only add the acknowledgement table if there are actually acknowledgements
-        if (ackFlag){
-            table = addTableToTable(table, ackTable, 2);
-        }       
+            
         table.setWidthPercentage(100);
                
         document.add(table);
