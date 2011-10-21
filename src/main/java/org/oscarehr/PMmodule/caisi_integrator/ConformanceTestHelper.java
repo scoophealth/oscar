@@ -5,8 +5,10 @@ import java.util.List;
 
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.log4j.Logger;
+import org.oscarehr.caisi_integrator.ws.CachedProvider;
 import org.oscarehr.caisi_integrator.ws.DemographicTransfer;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
+import org.oscarehr.caisi_integrator.ws.FacilityIdStringCompositePk;
 import org.oscarehr.caisi_integrator.ws.ProviderCommunicationTransfer;
 import org.oscarehr.caisi_integrator.ws.ProviderWs;
 import org.oscarehr.common.dao.DemographicDao;
@@ -48,6 +50,16 @@ public final class ConformanceTestHelper {
 				TicklerCreator t = new TicklerCreator();
 
 				logger.debug("Create tickler : " + demographicId + ", " + providerCommunication.getDestinationProviderId() + ", " + note);
+				
+				FacilityIdStringCompositePk senderProviderId=new FacilityIdStringCompositePk();
+				senderProviderId.setIntegratorFacilityId(providerCommunication.getSourceIntegratorFacilityId());
+				senderProviderId.setCaisiItemId(providerCommunication.getSourceProviderId());
+				CachedProvider senderProvider=CaisiIntegratorManager.getProvider(senderProviderId);
+				if (senderProvider!=null)
+				{
+					note="Sent by remote provider : "+senderProvider.getLastName()+", "+senderProvider.getFirstName()+"<br />--------------------<br />"+note;
+				}
+				
 				t.createTickler(demographicId, providerCommunication.getDestinationProviderId(), note);
 
 				providerWs.deactivateProviderCommunication(providerCommunication.getId());
