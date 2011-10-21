@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://plus.mcmaster.ca/oscarws" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" targetNamespace="http://plus.mcmaster.ca/oscarws" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://plus.mcmaster.ca/oscarws">
+      <s:element name="SearchPlus">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="sKey" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="SearchTerm" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Disciplines" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Category" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Population" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="ArticleType" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="OrderBy" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SearchPlusResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SearchPlusResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="2" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getFullArticleRecord">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="sKey" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sEncIdSource" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getFullArticleRecordResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getFullArticleRecordResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="SearchPlusSoapIn">
+    <wsdl:part name="parameters" element="tns:SearchPlus" />
+  </wsdl:message>
+  <wsdl:message name="SearchPlusSoapOut">
+    <wsdl:part name="parameters" element="tns:SearchPlusResponse" />
+  </wsdl:message>
+  <wsdl:message name="getFullArticleRecordSoapIn">
+    <wsdl:part name="parameters" element="tns:getFullArticleRecord" />
+  </wsdl:message>
+  <wsdl:message name="getFullArticleRecordSoapOut">
+    <wsdl:part name="parameters" element="tns:getFullArticleRecordResponse" />
+  </wsdl:message>
+  <wsdl:portType name="ServiceSoap">
+    <wsdl:operation name="SearchPlus">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Search PLUS db. SearchPlus(sKey As String, SearchTerm As String, Disciplines As String, Category As String, Population As String, ArticleType As Integer, OrderBy As String)</wsdl:documentation>
+      <wsdl:input message="tns:SearchPlusSoapIn" />
+      <wsdl:output message="tns:SearchPlusSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getFullArticleRecord">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Full ArticleRecord from McMaster University PLUS Db. Evidence Based Resource.</wsdl:documentation>
+      <wsdl:input message="tns:getFullArticleRecordSoapIn" />
+      <wsdl:output message="tns:getFullArticleRecordSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ServiceSoap" type="tns:ServiceSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="SearchPlus">
+      <soap:operation soapAction="http://plus.mcmaster.ca/oscarws/SearchPlus" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getFullArticleRecord">
+      <soap:operation soapAction="http://plus.mcmaster.ca/oscarws/getFullArticleRecord" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="ServiceSoap12" type="tns:ServiceSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="SearchPlus">
+      <soap12:operation soapAction="http://plus.mcmaster.ca/oscarws/SearchPlus" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getFullArticleRecord">
+      <soap12:operation soapAction="http://plus.mcmaster.ca/oscarws/getFullArticleRecord" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="Service">
+    <wsdl:port name="ServiceSoap" binding="tns:ServiceSoap">
+      <soap:address location="http://plus.mcmaster.ca/oscarws/service.asmx" />
+    </wsdl:port>
+    <wsdl:port name="ServiceSoap12" binding="tns:ServiceSoap12">
+      <soap12:address location="http://plus.mcmaster.ca/oscarws/service.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
+
+<!-- 
+wsdl2java -d target/client_stubs/ macplus.wsdl
+Can be used to create the client stubs and this following ant build script to build it.
+
+<project name="build_client_stubs" default="build_client_stubs">
+	<property environment="env" />
+	<property name="PROJECT_NAME" value="mac_plus" />
+	<property name="GENERATED_CLIENT_STUB_SOURCES" value="target/client_stubs" />
+	<property name="GENERATED_CLIENT_STUB_CLASSES" value="target/client_stubs_classes" />
+	<property name="GENERATED_JAR" value="target/${PROJECT_NAME}_client_stubs.jar" />
+	
+	<fileset id="lib_jars" dir="../myoscar_server2/target/myoscar_server-SNAPSHOT/WEB-INF/lib">
+		<include name="*.jar" />
+	</fileset>
+
+	<target name="build_client_stubs">
+		<mkdir dir="${GENERATED_CLIENT_STUB_SOURCES}" />
+		<mkdir dir="${GENERATED_CLIENT_STUB_CLASSES}" />
+
+		<javac target="1.5" srcdir="${GENERATED_CLIENT_STUB_SOURCES}" destdir="${GENERATED_CLIENT_STUB_CLASSES}">
+			<classpath>
+				<fileset refid="lib_jars" />
+			</classpath>
+		</javac>
+
+		<jar destfile="${GENERATED_JAR}" basedir="${GENERATED_CLIENT_STUB_CLASSES}" />
+	</target>
+	
+	<target name="compile_client_stubs">
+		<javac srcdir="${GENERATED_CLIENT_STUB_SOURCES}" destdir="${GENERATED_CLIENT_STUB_CLASSES}">
+			<classpath>
+				<fileset refid="lib_jars" />
+			</classpath>
+		</javac>
+		
+		<jar destfile="${GENERATED_JAR}" basedir="${GENERATED_CLIENT_STUB_CLASSES}" />
+	</target>
+</project>
+
+
+ -->

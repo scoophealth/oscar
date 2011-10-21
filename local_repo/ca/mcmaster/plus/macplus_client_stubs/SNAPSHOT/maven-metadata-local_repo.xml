@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>ca.mcmaster.plus</groupId>
+  <artifactId>macplus_client_stubs</artifactId>
+  <version>SNAPSHOT</version>
+  <versioning>
+    <snapshot>
+      <localCopy>true</localCopy>
+    </snapshot>
+    <lastUpdated>20111013014240</lastUpdated>
+  </versioning>
+</metadata>
