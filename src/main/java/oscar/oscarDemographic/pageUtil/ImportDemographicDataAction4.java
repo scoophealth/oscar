@@ -333,9 +333,20 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
         Demographics demo = patientRec.getDemographics();
         cdsDt.PersonNameStandard.LegalName legalName = demo.getNames().getLegalName();
         String lastName="", firstName="";
+        String lastNameQualifier=null, firstNameQualifier=null;
         if (legalName!=null) {
-            if (legalName.getLastName()!=null) lastName = StringUtils.noNull(legalName.getLastName().getPart());
-            if (legalName.getFirstName()!=null) firstName = StringUtils.noNull(legalName.getFirstName().getPart());
+            if (legalName.getLastName()!=null) {
+            	lastName = StringUtils.noNull(legalName.getLastName().getPart());
+            	if (legalName.getLastName().getPartQualifier()!=null) {
+            		lastNameQualifier = legalName.getLastName().getPartQualifier().toString();
+            	}
+            }
+            if (legalName.getFirstName()!=null) {
+            	firstName = StringUtils.noNull(legalName.getFirstName().getPart());
+            	if (legalName.getFirstName().getPartQualifier()!=null) {
+            		firstNameQualifier = legalName.getFirstName().getPartQualifier().toString();
+            	}
+            }
             patientName = lastName+","+firstName;
         } else {
             err_data.add("Error! No Legal Name");
@@ -457,6 +468,14 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
         String psDate = getCalDate(demo.getPersonStatusDate(), timeShiftInDays);
         String extra = null;
 
+        if (StringUtils.filled(lastNameQualifier)) {
+        	extra = Util.addLine(extra, "Lastname Qualifier: ", lastNameQualifier);
+        }
+        
+        if (StringUtils.filled(firstNameQualifier)) {
+        	extra = Util.addLine(extra, "Firstname Qualifier: ", firstNameQualifier);
+        }
+        
         if (StringUtils.filled(otherNameTxt)) {
             extra = Util.addLine(extra, "Other name: ", otherNameTxt);
         }
@@ -1161,6 +1180,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                                     err_note.add("Clinical notes have no author; assigned to \"doctor oscardoc\" ("+(i+1)+")");
                                 }
                                 cmNote.setProviderNo(authorProvider);
+                                cmNote.setSigning_provider_no(authorProvider);
                             }
                         } else {
 
@@ -1179,7 +1199,6 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                                 Util.writeVerified(cmNote);
                             }
                         }
-
                         caseManagementManager.saveNoteSimple(cmNote);
 
                         //prepare for extra notes
@@ -1248,23 +1267,22 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     dump = Util.addLine(dump, getResidual(aaReactArray[i].getResidualInfo()));
 
                     cmNote = prepareCMNote("2",null);
-                    cmNote.setNote(note);
+                    cmNote.setNote(dump);
                     saveLinkNote(cmNote, CaseManagementNoteLink.ALLERGIES, allergyId);
                 }
 
 
                 //MEDICATIONS & TREATMENTS
                 MedicationsAndTreatments[] medArray = patientRec.getMedicationsAndTreatmentsArray();
-                String duration, quantity;
+                String duration, quantity, special, special2;
                 for (int i=0; i<medArray.length; i++) {
                     Drug drug = new Drug();
-                    //no need: DrugReason drugReason = new DrugReason();
                     drug.setCreateDate(new Date());
-                    drug.setRxDate(dateFPtoDate(medArray[i].getStartDate(), timeShiftInDays));
-                    if (medArray[i].getStartDate()==null) drug.setRxDate(new Date());
-                    
                     drug.setWrittenDate(dateTimeFPtoDate(medArray[i].getPrescriptionWrittenDate(), timeShiftInDays));
                     String writtenDateFormat = dateFPGetPartial(medArray[i].getPrescriptionWrittenDate());
+                    
+                    drug.setRxDate(dateFPtoDate(medArray[i].getStartDate(), timeShiftInDays));
+                    if (medArray[i].getStartDate()==null) drug.setRxDate(drug.getWrittenDate());
                     
                     duration = medArray[i].getDuration();
                     if (StringUtils.filled(duration)) {
@@ -1320,6 +1338,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     }
                     
                     drug.setETreatmentType(medArray[i].getTreatmentType());
+                    //no need: DrugReason drugReason = new DrugReason();
                     //no need: drug.setRxStatus(medArray[i].getPrescriptionStatus());
 
                     //no need: String nosub = medArray[i].getSubstitutionNotAllowed();
@@ -1344,7 +1363,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     drug.setBrandName(medArray[i].getDrugName());
                     drug.setCustomName(medArray[i].getDrugDescription());
 
-                    String special = StringUtils.noNull(drug.getBrandName());
+                    special = StringUtils.noNull(drug.getBrandName());
                     if (special.equals("")) {
                         special = StringUtils.noNull(drug.getCustomName());
                         drug.setCustomInstructions(true);
@@ -1356,10 +1375,14 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                         drug.setDosage(dosage);
                     }
 
-                    special = Util.addLine(special, "Take ", StringUtils.noNull(medArray[i].getDosage()));
-                    special += " "+StringUtils.noNull(drug.getRoute());
-                    special += " "+StringUtils.noNull(drug.getFreqCode());
-                    special += " "+StringUtils.noNull(drug.getDuration())+" days";
+                    special2 = StringUtils.noNull(medArray[i].getDosage())
+                    			+" "+ StringUtils.noNull(drug.getRoute())
+                				+" "+ StringUtils.noNull(drug.getFreqCode())
+            					+" "+ StringUtils.noNull(drug.getDuration()); 
+                    if (StringUtils.filled(special2))
+                    	special = Util.addLine(special, "Take ", special2+" days");
+                    
+                    drug.setSpecial(special);
 
                     //no need: special = Util.addLine(special, "Prescription Status: ", medArray[i].getPrescriptionStatus());
                     //no need: special = Util.addLine(special, "Dispense Interval: ", medArray[i].getDispenseInterval());
@@ -1367,7 +1390,6 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     //no need: special = Util.addLine(special, "Prescription Id: ", medArray[i].getPrescriptionIdentifier());
                     //no need: special = Util.addLine(special, "Prior Prescription Id: ", medArray[i].getPriorPrescriptionReferenceIdentifier());
                     
-                    drug.setSpecial(special);
 
                     if (StringUtils.filled(medArray[i].getPrescriptionInstructions())) {
                     	drug.setSpecialInstruction(medArray[i].getPrescriptionInstructions());
