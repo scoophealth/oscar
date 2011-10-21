@@ -256,6 +256,13 @@
 			<artifactId>caisi_integrator_client_stubs</artifactId>
 			<version>SNAPSHOT</version>
 		</dependency>
+		
+		<!-- macplus -->
+		<dependency>
+			<groupId>ca.mcmaster.plus</groupId>
+			<artifactId>macplus_client_stubs</artifactId>
+			<version>SNAPSHOT</version>
+		</dependency>
 
 		<!-- apache xmlgraphics batik -->
 		<dependency>
