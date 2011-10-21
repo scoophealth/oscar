@@ -716,9 +716,13 @@ div.demographicWrapper {
                                                 if(dob_year!=0) age=MyDateFormat.getAge(dob_year,dob_month,dob_date);
                         %> <%=apptMainBean.getString(rs,"last_name")%>,
 				<%=apptMainBean.getString(rs,"first_name")%> <%=apptMainBean.getString(rs,"sex")%>
-				<%=age%> years <span style="margin-left: 20px;"><i>
-				 <bean:message key="demographic.demographiceditdemographic.msgNextAppt"/>: <oscar:nextAppt
-					demographicNo='<%=apptMainBean.getString(rs,"demographic_no")%>' /></i></span>
+				<%=age%> years &nbsp;
+				<oscar:phrverification demographicNo='<%=apptMainBean.getString(rs,"demographic_no")%>' ><bean:message key="phr.verification.link"/></oscar:phrverification> 
+				
+				<span style="margin-left: 20px;font-style:italic">
+				<bean:message key="demographic.demographiceditdemographic.msgNextAppt"/>: <oscar:nextAppt demographicNo='<%=apptMainBean.getString(rs,"demographic_no")%>' />
+				</span>
+					
 				</td>
 			</tr>
 		</table>

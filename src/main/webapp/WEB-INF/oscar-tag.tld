@@ -111,6 +111,21 @@
   </attribute>
 </tag>
 
+<tag>
+  <name>phrverification</name>
+  <tagclass>org.oscarehr.phr.util.PHRVerificationTag</tagclass>
+  <bodycontent>jsp</bodycontent>
+  <attribute>
+    <name>demographicNo</name>
+    <required>true</required>
+    <rtexprvalue>true</rtexprvalue>
+  </attribute>
+  <attribute>
+    <name>styleId</name>
+    <required>false</required>
+    <rtexprvalue>true</rtexprvalue>
+  </attribute>
+</tag>
 
 <tag>
   <name>nextAppt</name>
