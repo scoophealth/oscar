@@ -2153,6 +2153,7 @@
 		<action path="/demographic/viewPhrRecord" name="FrmForm" type="org.oscarehr.phr.web.PHRViewPatientRecord" parameter="method" scope="request">
 			<forward name="login" path="/phr/PHRLoginAndRedirect.jsp" />
 			<forward name="phr" path="/phr/PHRRedirectToPhrForm.jsp" />
+			<forward name="viewVerification" path="/phr/PHRVerification.jsp" />
 		</action>
 
 
