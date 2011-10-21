@@ -1085,61 +1085,59 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                 	imSummary = null;
                     HashMap<String,Object> a = new HashMap<String,Object>();
                     a.putAll(prevList.get(k));
-                    if (a != null && Util.getImmunizationType((String)a.get("type"))!=null ){
-                        Immunizations immu = patientRec.addNewImmunizations();
-                        HashMap<String,Object> extraData = new HashMap<String,Object>();
-                        extraData.putAll(PreventionData.getPreventionById((String) a.get("id")));
-                        if (StringUtils.filled((String)extraData.get("manufacture"))) immu.setManufacturer((String)extraData.get("manufacture"));
-                        if (StringUtils.filled((String)extraData.get("lot"))) immu.setLotNumber((String)extraData.get("lot"));
-                        if (StringUtils.filled((String)extraData.get("route"))) immu.setRoute((String)extraData.get("route"));
-                        if (StringUtils.filled((String)extraData.get("location"))) immu.setSite((String)extraData.get("location"));
-                        if (StringUtils.filled((String)extraData.get("dose"))) immu.setDose((String)extraData.get("dose"));
-                        if (StringUtils.filled((String)extraData.get("comments"))) immu.setNotes((String)extraData.get("comments"));
+                    Immunizations immu = patientRec.addNewImmunizations();
+                    HashMap<String,Object> extraData = new HashMap<String,Object>();
+                    extraData.putAll(PreventionData.getPreventionById((String) a.get("id")));
+                    if (StringUtils.filled((String)extraData.get("manufacture"))) immu.setManufacturer((String)extraData.get("manufacture"));
+                    if (StringUtils.filled((String)extraData.get("lot"))) immu.setLotNumber((String)extraData.get("lot"));
+                    if (StringUtils.filled((String)extraData.get("route"))) immu.setRoute((String)extraData.get("route"));
+                    if (StringUtils.filled((String)extraData.get("location"))) immu.setSite((String)extraData.get("location"));
+                    if (StringUtils.filled((String)extraData.get("dose"))) immu.setDose((String)extraData.get("dose"));
+                    if (StringUtils.filled((String)extraData.get("comments"))) immu.setNotes((String)extraData.get("comments"));
 
-                        String prevType = Util.getImmunizationType((String)a.get("type"));
-                        if (cdsDt.ImmunizationType.Enum.forString(prevType)!=null) {
-                            immu.setImmunizationType(cdsDt.ImmunizationType.Enum.forString(prevType));
-                        }
-
-                        if (StringUtils.filled((String)extraData.get("name"))) immu.setImmunizationName((String)extraData.get("name"));
-                        else
-                        {
-                            err.add("Error! No Immunization Name for Patient "+demoNo+" ("+(k+1)+")");
-                            if (StringUtils.filled(prevType)) {
-                            	immu.setImmunizationName(prevType);
-                                imSummary = Util.addSummary("Immunization Name",data);
-                            }
-                            else immu.setImmunizationName("");
-                        }
-                        addOneEntry(IMMUNIZATION);
-
-                        data = (String) a.get("refused");
-                        if (StringUtils.empty(data)) {
-                            immu.addNewRefusedFlag();
-                            err.add("Error! No Refused Flag for Patient "+demoNo+" ("+(k+1)+")");
-                        } else {
-                            immu.addNewRefusedFlag().setBoolean(Util.convert10toboolean(data));
-                            imSummary = Util.addSummary(imSummary, "Refused Flag", Util.convert10toboolean(data)?"Y":"N");
-                        }
-
-                        data = (String) a.get("prevention_date");
-                        if (UtilDateUtilities.StringToDate(data)!=null) {
-                            immu.addNewDate().setFullDate(Util.calDate(data));
-                            imSummary = Util.addSummary(imSummary, "Date", data);
-                        }
-
-                        imSummary = Util.addSummary(imSummary, "Manufacturer", immu.getManufacturer());
-                        imSummary = Util.addSummary(imSummary, "Lot No", immu.getLotNumber());
-                        imSummary = Util.addSummary(imSummary, "Route", immu.getRoute());
-                        imSummary = Util.addSummary(imSummary, "Site", immu.getSite());
-                        imSummary = Util.addSummary(imSummary, "Dose", immu.getDose());
-                        imSummary = Util.addSummary(imSummary, "Notes", immu.getNotes());
-
-                        if (StringUtils.empty(imSummary)) {
-                            err.add("Error! No Category Summary Line (Immunization) for Patient "+demoNo+" ("+(k+1)+")");
-                        }
-                        immu.setCategorySummaryLine(StringUtils.noNull(imSummary));
+                    String prevType = Util.getImmunizationType((String)a.get("type"));
+                    if (cdsDt.ImmunizationType.Enum.forString(prevType)!=null) {
+                        immu.setImmunizationType(cdsDt.ImmunizationType.Enum.forString(prevType));
                     }
+
+                    if (StringUtils.filled((String)extraData.get("name"))) immu.setImmunizationName((String)extraData.get("name"));
+                    else
+                    {
+                        err.add("Error! No Immunization Name for Patient "+demoNo+" ("+(k+1)+")");
+                        if (StringUtils.filled(prevType)) {
+                        	immu.setImmunizationName(prevType);
+                            imSummary = Util.addSummary("Immunization Name",data);
+                        }
+                        else immu.setImmunizationName("");
+                    }
+                    addOneEntry(IMMUNIZATION);
+
+                    data = (String) a.get("refused");
+                    if (StringUtils.empty(data)) {
+                        immu.addNewRefusedFlag();
+                        err.add("Error! No Refused Flag for Patient "+demoNo+" ("+(k+1)+")");
+                    } else {
+                        immu.addNewRefusedFlag().setBoolean(Util.convert10toboolean(data));
+                        imSummary = Util.addSummary(imSummary, "Refused Flag", Util.convert10toboolean(data)?"Y":"N");
+                    }
+
+                    data = (String) a.get("prevention_date");
+                    if (UtilDateUtilities.StringToDate(data)!=null) {
+                        immu.addNewDate().setFullDate(Util.calDate(data));
+                        imSummary = Util.addSummary(imSummary, "Date", data);
+                    }
+
+                    imSummary = Util.addSummary(imSummary, "Manufacturer", immu.getManufacturer());
+                    imSummary = Util.addSummary(imSummary, "Lot No", immu.getLotNumber());
+                    imSummary = Util.addSummary(imSummary, "Route", immu.getRoute());
+                    imSummary = Util.addSummary(imSummary, "Site", immu.getSite());
+                    imSummary = Util.addSummary(imSummary, "Dose", immu.getDose());
+                    imSummary = Util.addSummary(imSummary, "Notes", immu.getNotes());
+
+                    if (StringUtils.empty(imSummary)) {
+                        err.add("Error! No Category Summary Line (Immunization) for Patient "+demoNo+" ("+(k+1)+")");
+                    }
+                    immu.setCategorySummaryLine(StringUtils.noNull(imSummary));
                 }
             }
 

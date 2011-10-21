@@ -956,28 +956,30 @@ public class CihiExportAction extends DispatchAction {
     	 
          for( Prevention prevention: preventionsList ) {
              preventionMap = getPreventionDao().getPreventionExt(prevention.getId());
-             if( preventionMap.containsKey("lot") ) {
-            	 Immunizations immunizations = patientRecord.addNewImmunizations();
-            	 
-            	 String name = preventionMap.get("name");
-            	 if (name != null && !name.equals("")){
-            		immunizations.setImmunizationName(name);
-            	 }else{
-            	    immunizations.setImmunizationName(prevention.getPreventionType());
-            	 }
-            	 DateFullOrPartial dateFullorPartial = immunizations.addNewDate();
-            	 dateFullorPartial.setFullDate(Util.calDate(prevention.getPreventionDate()));
-            	 immunizations.setLotNumber(preventionMap.get("lot"));
-            	 
-            	 YnIndicator refusedIndicator = immunizations.addNewRefusedFlag();
-                 if( prevention.isRefused() ) {
-                	 refusedIndicator.setBoolean(true);
-                 }
-                 else {
-                     refusedIndicator.setBoolean(false);
-                 }                 
-
+             
+        	 Immunizations immunizations = patientRecord.addNewImmunizations();
+        	 
+        	 if (StringUtils.filled(preventionMap.get("name"))) {
+        		immunizations.setImmunizationName(preventionMap.get("name"));
+        	 }else{
+        	    immunizations.setImmunizationName(prevention.getPreventionType());
+        	 }
+        	 
+        	 if (StringUtils.filled(preventionMap.get("lot")))
+        		 immunizations.setLotNumber(preventionMap.get("lot"));
+        	 
+        	 if (prevention.getPreventionDate()!=null) {
+        		 DateFullOrPartial dateFullorPartial = immunizations.addNewDate();
+        		 dateFullorPartial.setFullDate(Util.calDate(prevention.getPreventionDate()));
+        	 }
+        	 
+        	 YnIndicator refusedIndicator = immunizations.addNewRefusedFlag();
+             if( prevention.isRefused() ) {
+            	 refusedIndicator.setBoolean(true);
              }
+             else {
+                 refusedIndicator.setBoolean(false);
+             }                 
          }
     }	
     
