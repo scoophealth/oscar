@@ -634,7 +634,11 @@ for(ConsultationRequestExt ext:exts) {
             </tr>
             <tr>
                 <td class="fillLine">
+                	<%if(request.getParameter("preserveFormatting")!= null ) {%>
                     <%=divy(reqFrm.clinicalInformation).replaceAll("\\s","&nbsp;") %>
+                    <%}else {%>
+                    	<%=divy(reqFrm.clinicalInformation)%>
+                    <%}%>
                     &nbsp;<br>
                 </td>
             </tr>
