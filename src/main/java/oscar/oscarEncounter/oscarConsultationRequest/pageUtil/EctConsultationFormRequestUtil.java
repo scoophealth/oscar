@@ -196,31 +196,44 @@ public class EctConsultationFormRequestUtil {
                     appointmentNotes = new String();
                 }
                 estPatient(oscar.Misc.getString(rs, "demographicNo"));
-                String date = oscar.Misc.getString(rs, "appointmentDate");
+                
                 if (bMultisites) {
                 	siteName = oscar.Misc.getString(rs, "site_name");
                 }
-                int fir = date.indexOf('-');
-                int las = date.lastIndexOf('-');
-                appointmentYear = date.substring(0, fir);
-                appointmentMonth = date.substring(fir + 1, las);
-                appointmentDay = date.substring(las + 1);
-                fir = appointmentTime.indexOf(':');
-                las = appointmentTime.lastIndexOf(':');
-                if (fir > -1 && las > -1) {
-
-                    appointmentHour = appointmentTime.substring(0, fir);
-                    if (fir < las) {
-                        appointmentMinute = appointmentTime.substring(fir + 1, las);
-                    }
-                    int h = Integer.parseInt(appointmentHour);
-                    if (h > 12) {
-                        appointmentPm = "PM";
-                        appointmentHour = Integer.toString(h - 12);
-                    } else {
-                        appointmentPm = "AM";
-                        appointmentHour = Integer.toString(h);
-                    }
+                
+                String date = oscar.Misc.getString(rs, "appointmentDate");
+                if( date == null || date.equals("") ) {
+                	appointmentYear = "1970";
+                	appointmentMonth = "1";
+                	appointmentDay = "1";
+                	appointmentHour = "1";
+                	appointmentMinute = "1";
+                	appointmentPm = "AM";
+                	
+                }
+                else {
+	                int fir = date.indexOf('-');
+	                int las = date.lastIndexOf('-');
+	                appointmentYear = date.substring(0, fir);
+	                appointmentMonth = date.substring(fir + 1, las);
+	                appointmentDay = date.substring(las + 1);
+	                fir = appointmentTime.indexOf(':');
+	                las = appointmentTime.lastIndexOf(':');
+	                if (fir > -1 && las > -1) {
+	
+	                    appointmentHour = appointmentTime.substring(0, fir);
+	                    if (fir < las) {
+	                        appointmentMinute = appointmentTime.substring(fir + 1, las);
+	                    }
+	                    int h = Integer.parseInt(appointmentHour);
+	                    if (h > 12) {
+	                        appointmentPm = "PM";
+	                        appointmentHour = Integer.toString(h - 12);
+	                    } else {
+	                        appointmentPm = "AM";
+	                        appointmentHour = Integer.toString(h);
+	                    }
+	                }
                 }
             }
             rs.close();

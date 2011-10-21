@@ -133,12 +133,17 @@ public class EctViewConsultationRequestsUtil {
               urgency.add(consult.getUrgency());
               siteName.add(consult.getSiteName());
               teams.add(consult.getSendTo());
-              cal.setTime(consult.getAppointmentDate());
-              date1 = cal.getTime();
-              cal.setTime(consult.getAppointmentTime());
-              date2 = cal.getTime();
+              
+              date1 = consult.getAppointmentDate();
+              date2 = consult.getAppointmentTime();
+              if( date1 == null || date2 == null ) {
+            	  cal.set(1970, 0, 1, 1, 0, 0);
+            	  date1 = date2 = cal.getTime();
+              }              
+              
               apptDate.add(DateFormatUtils.ISO_DATE_FORMAT.format(date1) + " " +  DateFormatUtils.ISO_TIME_FORMAT.format(date2));
               patientWillBook.add(""+consult.isPatientWillBook());
+              
               date1 = consult.getFollowUpDate();
               if( date1 == null ) {
                   followUpDate.add("N/A");
