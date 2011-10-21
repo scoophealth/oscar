@@ -101,6 +101,54 @@ public class EctViewRequestAction extends Action {
 		
 		return mapping.findForward("success");
 	}
+	
+		private static Calendar setAppointmentDateTime(EctConsultationFormRequestForm thisForm, ConsultationRequest consult) {
+			Calendar cal = Calendar.getInstance();
+			
+			Date date1 = consult.getAppointmentDate();
+			Date date2 = consult.getAppointmentTime();
+			
+			if( date1 == null || date2 == null ) {
+				cal.set(1970, 0, 1, 1, 0, 0);
+				thisForm.setAppointmentDay(String.valueOf(cal.get(Calendar.DAY_OF_MONTH)));
+				thisForm.setAppointmentMonth(String.valueOf(cal.get(Calendar.MONTH)+1));
+				thisForm.setAppointmentYear(String.valueOf(cal.get(Calendar.YEAR)));
+				Integer hr = cal.get(Calendar.HOUR_OF_DAY);
+	            hr = hr == 0 ? 12 : hr;
+	            hr = hr > 12 ? hr - 12: hr;
+	            thisForm.setAppointmentHour(String.valueOf(hr));
+	            thisForm.setAppointmentMinute(String.valueOf(cal.get(Calendar.MINUTE)));
+	            String appointmentPm;            
+	            if (cal.get(Calendar.HOUR_OF_DAY) > 11) {
+	                appointmentPm = "PM";
+	            } else {
+	                appointmentPm = "AM";
+	            }
+	            thisForm.setAppointmentPm(appointmentPm);
+			}
+			else {
+				cal.setTime(date1);
+				thisForm.setAppointmentDay(String.valueOf(cal.get(Calendar.DAY_OF_MONTH)));
+				thisForm.setAppointmentMonth(String.valueOf(cal.get(Calendar.MONTH)+1));
+				thisForm.setAppointmentYear(String.valueOf(cal.get(Calendar.YEAR)));
+				
+				cal.setTime(date2);
+				Integer hr = cal.get(Calendar.HOUR_OF_DAY);
+				hr = hr == 0 ? 12 : hr;
+	            hr = hr > 12 ? hr - 12: hr;
+	            thisForm.setAppointmentHour(String.valueOf(hr));
+	            thisForm.setAppointmentMinute(String.valueOf(cal.get(Calendar.MINUTE)));
+	            
+	            String appointmentPm;            
+	            if (cal.get(Calendar.HOUR_OF_DAY) > 11) {
+	                appointmentPm = "PM";
+	            } else {
+	                appointmentPm = "AM";
+	            }
+	            thisForm.setAppointmentPm(appointmentPm);
+			}
+			return cal;
+		}
 
         public static void fillFormValues(EctConsultationFormRequestForm thisForm, Integer requestId) {
             ConsultationRequestDao consultDao = (ConsultationRequestDao)SpringUtils.getBean("consultationRequestDao");
@@ -115,25 +163,8 @@ public class EctViewRequestAction extends Action {
             thisForm.setSendTo(consult.getSendTo());
             thisForm.setService(consult.getServiceId().toString());
             thisForm.setStatus(consult.getStatus());
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(consult.getAppointmentDate());            
-            thisForm.setAppointmentDay(String.valueOf(cal.get(Calendar.DAY_OF_MONTH)));
-            thisForm.setAppointmentMonth(String.valueOf(cal.get(Calendar.MONTH)+1));
-            thisForm.setAppointmentYear(String.valueOf(cal.get(Calendar.YEAR)));
-            cal.setTime(consult.getAppointmentTime());
-            Integer hr = cal.get(Calendar.HOUR_OF_DAY);
-            hr = hr == 0 ? 12 : hr;
-            hr = hr > 12 ? hr - 12: hr;
-            thisForm.setAppointmentHour(String.valueOf(hr));
-            thisForm.setAppointmentMinute(String.valueOf(cal.get(Calendar.MINUTE)));
             
-            String appointmentPm;            
-            if (cal.get(Calendar.HOUR_OF_DAY) > 11) {
-                appointmentPm = "PM";
-            } else {
-                appointmentPm = "AM";
-            }
-            thisForm.setAppointmentPm(appointmentPm);
+            setAppointmentDateTime(thisForm, consult);
             
             thisForm.setConcurrentProblems(consult.getConcurrentProblems());
             thisForm.setAppointmentNotes(consult.getStatusText());
