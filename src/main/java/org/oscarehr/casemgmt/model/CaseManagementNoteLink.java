@@ -29,15 +29,17 @@ public class CaseManagementNoteLink {
 	public static final Integer CASEMGMTNOTE = 1;
 	public static final Integer DRUGS = 2;
 	public static final Integer ALLERGIES = 3;
-	public static final Integer LABTEST = 4;
+	public static final Integer LABTEST = 4; //represents the hl7TextMessage table
 	public static final Integer DOCUMENT = 5;
 	public static final Integer EFORMDATA = 6;
 	public static final Integer DEMOGRAPHIC = 7;
-	public static final Integer PREVENTIONS = 8; 
+	public static final Integer PREVENTIONS = 8;
+	public static final Integer LABTEST2 = 9; //repesents the labPatientPhysicianInfo table
 	
 	public static final String DISP_PRESCRIP = "Prescriptions";
 	public static final String DISP_ALLERGY = "Allergies";
 	public static final String DISP_LABTEST = "Lab Reports";
+	public static final String DISP_LABTEST2 = "Lab Reports_";
 	public static final String DISP_DOCUMENT = "Documents";
 	public static final String DISP_DEMO = "Patient Record";
 	public static final String DISP_PREV = "Preventions";

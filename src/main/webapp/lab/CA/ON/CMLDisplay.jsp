@@ -18,7 +18,7 @@ String reqID = reqIDL==null ? "" : reqIDL.toString();
 reqIDL = LabRequestReportLink.getRequestTableIdByReport("labPatientPhysicianInfo",Long.valueOf(segmentID));
 String reqTableID = reqIDL==null ? "" : reqIDL.toString();
 
-String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.DISP_LABTEST;
+String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.DISP_LABTEST2;
 CaseManagementManager caseManagementManager = (CaseManagementManager) SpringUtils.getBean("caseManagementManager");
 
 %>
@@ -513,7 +513,7 @@ function linkreq(rptId, reqId) {
                         for ( int l =0 ; l < labs.size() ; l++){
 
                             boolean isPrevAnnotation = false;
-                            CaseManagementNoteLink cml = caseManagementManager.getLatestLinkByTableId(CaseManagementNoteLink.LABTEST,Long.valueOf(segmentID),i+"-"+l);
+                            CaseManagementNoteLink cml = caseManagementManager.getLatestLinkByTableId(CaseManagementNoteLink.LABTEST2,Long.valueOf(segmentID),i+"-"+l);
                             CaseManagementNote p_cmn = null;
                             if (cml!=null) {p_cmn = caseManagementManager.getNote(cml.getNoteId().toString());}
                             if (p_cmn!=null){isPrevAnnotation=true;}

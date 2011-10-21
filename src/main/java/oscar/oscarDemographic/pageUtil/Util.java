@@ -82,8 +82,13 @@ public class Util {
 		String date = UtilDateUtilities.DateToString(inDate, "yyyy-MM-dd");
 		String time = UtilDateUtilities.DateToString(inDate, "HH:mm:ss");
 		if (timezone) time += getTimezone();
-		XmlCalendar x = new XmlCalendar(date+"T"+time);
-		return x;
+		try {
+			XmlCalendar x = new XmlCalendar(date+"T"+time);
+			return x;
+		} catch (Exception ex) {
+			XmlCalendar x = new XmlCalendar("0001-01-01T00:00:00");
+			return x;
+		}
     }
 
 	static public XmlCalendar calDate(String inDate) {
@@ -101,8 +106,9 @@ public class Util {
 				XmlCalendar x = new XmlCalendar("0001-01-01T00:00:00");
 				return x;
 			}
+		} else {
+			return calDate(dateTime, true);
 		}
-		return calDate(dateTime, true);
 	}
 
     static public boolean checkDir(String dirName) throws Exception {

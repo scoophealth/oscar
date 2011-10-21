@@ -485,11 +485,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
         }
 
         if (StringUtils.filled(uvID)) {
-            if (StringUtils.empty(chart_no)) {
-                chart_no = uvID;
-            } else {
-            	extra = Util.addLine(extra, "Unique Vendor ID: ", uvID);
-            }
+        	extra = Util.addLine(extra, "Unique Vendor ID: ", uvID);
         } else {
             err_data.add("Error! No Unique Vendor ID Sequence");
         }
@@ -1145,13 +1141,20 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     encounter = Util.addLine(encounter,"Note Type: ",cNotes[i].getNoteType());
                     cmNote.setNote(encounter);
 
-                    //observation date
-                    if (cNotes[i].getEventDateTime()!=null) observeDate = dateTimeFPtoDate(cNotes[i].getEventDateTime(),timeShiftInDays); 
-                    cmNote.setObservation_date(observeDate);
-
                     //create date
-                    if (cNotes[i].getEnteredDateTime()!=null) createDate = dateTimeFPtoDate(cNotes[i].getEnteredDateTime(),timeShiftInDays); 
+                    if (cNotes[i].getEnteredDateTime()!=null) {
+                    	createDate = dateTimeFPtoDate(cNotes[i].getEnteredDateTime(),timeShiftInDays);
+                    	observeDate = createDate;
+                    }
+
+                    //observation date
+                    if (cNotes[i].getEventDateTime()!=null) {
+                    	observeDate = dateTimeFPtoDate(cNotes[i].getEventDateTime(),timeShiftInDays);
+                    	if (cNotes[i].getEnteredDateTime()==null) createDate = observeDate;
+                    }
+                    
                     cmNote.setCreate_date(createDate);
+                    cmNote.setObservation_date(observeDate);
                     
                     String uuid = null;
                     ClinicalNotes.ParticipatingProviders[] participatingProviders = cNotes[i].getParticipatingProvidersArray();
@@ -1213,7 +1216,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                 //ALLERGIES & ADVERSE REACTIONS
                 AllergiesAndAdverseReactions[] aaReactArray = patientRec.getAllergiesAndAdverseReactionsArray();
                 for (int i=0; i<aaReactArray.length; i++) {
-                    String description="", regionalId="", reaction="", severity="", entryDate="", startDate="", typeCode="", lifeStage="";
+                    String description="", regionalId="", reaction="", severity="", entryDate="", startDate="", typeCode="", lifeStage="", alg_extra="";
                     String entryDateFormat=null, startDateFormat=null;
 
                     reaction = StringUtils.noNull(aaReactArray[i].getReaction());
@@ -1228,8 +1231,8 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     else startDateFormat = dateFPGetPartial(aaReactArray[i].getStartDate());
 
                     if (aaReactArray[i].getCode()!=null) regionalId = StringUtils.noNull(aaReactArray[i].getCode().getCodeValue());
-                    reaction = Util.addLine(reaction,"Offending Agent Description: ",aaReactArray[i].getOffendingAgentDescription());
-                    if (aaReactArray[i].getReactionType()!=null) reaction = Util.addLine(reaction,"Reaction Type: ",aaReactArray[i].getReactionType().toString());
+                    alg_extra = Util.addLine(alg_extra,"Offending Agent Description: ",aaReactArray[i].getOffendingAgentDescription());
+                    alg_extra = Util.addLine(alg_extra,"Reaction Type: ",aaReactArray[i].getReactionType().toString());
 
                     if (typeCode.equals("") && aaReactArray[i].getPropertyOfOffendingAgent()!=null) {
                         if (aaReactArray[i].getPropertyOfOffendingAgent()==cdsDt.PropertyOfOffendingAgent.DR) typeCode="13"; //drug
@@ -1264,6 +1267,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     }
                     dump = Util.addLine(dump, summary);
                     */
+                    dump = Util.addLine(dump, alg_extra);
                     dump = Util.addLine(dump, getResidual(aaReactArray[i].getResidualInfo()));
 
                     cmNote = prepareCMNote("2",null);
@@ -1298,9 +1302,9 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     quantity = medArray[i].getQuantity();
                     if (StringUtils.filled(quantity)) {
                     	quantity = Util.leadingNum(quantity.trim());
-                    	if (NumberUtils.isDigits(quantity)) {
+                    	if (NumberUtils.isNumber(quantity)) {
                     		drug.setQuantity(quantity);
-                    	}
+                    	} 
                     	else err_data.add("Error! Invalid Quantity ["+medArray[i].getQuantity()+"] for Medications");
                     }
                     
@@ -1333,7 +1337,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     quantity = medArray[i].getRefillQuantity();
                     if (StringUtils.filled(quantity)) {
                     	quantity = Util.leadingNum(quantity.trim());
-                    	if (NumberUtils.isDigits(quantity)) drug.setRefillQuantity(Integer.valueOf(quantity));
+                    	if (NumberUtils.isNumber(quantity)) drug.setRefillQuantity(Integer.valueOf(quantity));
                     	else err_data.add("Error! Invalid Refill Quantity ["+medArray[i].getRefillQuantity()+"] for Medications");
                     }
                     
@@ -1466,14 +1470,13 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                         err_data.add("Error! No Immunization Name ("+(i+1)+")");
                     }
 
-                    if (immuArray[i].getImmunizationType()!=null) {
+                    if (immuArray[i].getImmunizationType()!=null)
                         preventionType = Util.getPreventionType(immuArray[i].getImmunizationType().toString());
-                        if (preventionType==null) {
-                            preventionType = "OtherA";
-                            err_note.add("Cannot match Immunization Type, "+immuArray[i].getImmunizationName()+" mapped to Other Layout A");
-                        }
-                    } else {
-                        err_data.add("No Immunization Type, "+immuArray[i].getImmunizationName()+" mapped to Other Layout A");                    	
+//					if (preventionType==null)
+//                    	preventionType = mapPreventionTypeByCode(immuArray[i].getImmunizationCode());
+                    if (preventionType==null) {
+                    	preventionType = "OtherA";
+                    	err_note.add("Cannot map Immunization Type, "+immuArray[i].getImmunizationName()+" mapped to Other Layout A");
                     }
 
                     if (StringUtils.filled(immuArray[i].getManufacturer())) {
@@ -1751,7 +1754,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                             saveMeasurementsExt(measId, "other_id", "0-0");
                             CaseManagementNote cmNote = prepareCMNote("2",null);
                             cmNote.setNote(annotation);
-                            saveLinkNote(cmNote, CaseManagementNoteLink.LABTEST, Long.valueOf(lab_ppid), "0-0");
+                            saveLinkNote(cmNote, CaseManagementNoteLink.LABTEST2, Long.valueOf(lab_ppid), "0-0");
                         }
 
                         //to dumpsite
@@ -1760,7 +1763,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                             String dump = Util.addLine("imported.cms4.2011.06", "Test Results Info: ", testResultsInfo);
                             CaseManagementNote cmNote = prepareCMNote("2",null);
                             cmNote.setNote(dump);
-                            saveLinkNote(cmNote, CaseManagementNoteLink.LABTEST, Long.valueOf(lab_ppid));
+                            saveLinkNote(cmNote, CaseManagementNoteLink.LABTEST2, Long.valueOf(lab_ppid), "0-0");
                         }
                     } else {
                         logger.error("No lab no! (demo="+demographicNo+")");
@@ -2571,9 +2574,9 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 		return ret;
         }
 
-	String mapPreventionType(cdsDt.Code imCode) {
-		if (imCode==null) return "";
-		if (!imCode.getCodingSystem().equalsIgnoreCase("DIN")) return "";
+	String mapPreventionTypeByCode(cdsDt.Code imCode) {
+		if (imCode==null) return null;
+		if (!imCode.getCodingSystem().equalsIgnoreCase("DIN")) return null;
 
 		ArrayList<String> dinFlu = new ArrayList<String>();
 		ArrayList<String> dinHebAB = new ArrayList<String>();
@@ -2593,7 +2596,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 		if (dinFlu.contains(StringUtils.noNull(imCode.getValue()))) return "Flu";
 		if (dinHebAB.contains(StringUtils.noNull(imCode.getValue()))) return "HebAB";
 		if (dinCHOLERA.contains(StringUtils.noNull(imCode.getValue()))) return "CHOLERA";
-		return "OtherA";
+		return null;
 	}
 
 	String[] packMsgs(ArrayList<String> err_demo, ArrayList<String> err_data, ArrayList<String> err_summ, ArrayList<String> err_othe, ArrayList<String> err_note, ArrayList<String> warnings) {
