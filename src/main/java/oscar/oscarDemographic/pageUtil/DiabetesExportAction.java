@@ -681,6 +681,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
         }
 
         RxPrescriptionData.Prescription[] pa = new RxPrescriptionData().getPrescriptionsByPatient(Integer.parseInt(demoNo));
+        String annotation = null;
         for (int p=0; p<pa.length; p++){
             Date prescribeDate = pa[p].getWrittenDate();
             if (prescribeDate!=null) {
@@ -746,11 +747,8 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             if (pa[p].getPatientCompliance()==null) pc.setBlank(cdsDt.Blank.X);
             else pc.setBoolean(pa[p].getPatientCompliance());
             
-            CaseManagementNoteLink cml = cmm.getLatestLinkByTableId(CaseManagementNoteLink.DRUGS, (long)pa[p].getDrugId());
-            if (cml!=null) {
-                CaseManagementNote n = cmm.getNote(cml.getNoteId().toString());
-                medications.setNotes(StringUtils.noNull(n.getNote()));
-            }
+            annotation = getNonDumpNote(CaseManagementNoteLink.DRUGS, (long)pa[p].getDrugId(), null);
+            if (StringUtils.filled(annotation)) medications.setNotes(annotation);
             
             data = pa[p].getOutsideProviderName();
             if (StringUtils.filled(data)) {
@@ -819,4 +817,23 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	}
         
     }
+
+    private String getNonDumpNote(Integer tableName, Long tableId, String otherId) {
+    	String note = null;
+    	
+    	List<CaseManagementNoteLink> cmll;
+    	if (StringUtils.empty(otherId))
+    		cmll = cmm.getLinkByTableIdDesc(tableName, tableId);
+		else
+			cmll = cmm.getLinkByTableIdDesc(tableName, tableId, otherId);
+		
+        for (CaseManagementNoteLink cml : cmll) {
+        	CaseManagementNote n = cmm.getNote(cml.getNoteId().toString());
+        	if (n.getNote()!=null && !n.getNote().startsWith("imported.cms4.2011.06")) {//not from dumpsite
+        		note = n.getNote();
+        		break;
+        	}
+        }
+        return note;
+    }    
 }
