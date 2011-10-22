@@ -627,6 +627,9 @@ function checkFav(){
 </script>
 
                <style type="text/css" media="print">
+               
+               
+               
                    noprint{
                        display:none;
                    }
@@ -642,6 +645,9 @@ function checkFav(){
         font-size:10.5px;
     }
     
+    #verificationLink{
+    	color:white;
+    }
     
 	table.legend{
         font-size:12px;

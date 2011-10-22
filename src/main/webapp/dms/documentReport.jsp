@@ -51,6 +51,7 @@ if(appointment != null && appointment.length()>0) {
 <%@ taglib uri="/WEB-INF/oscarProperties-tag.tld" prefix="oscarProp"%>
 <%@ taglib uri="/WEB-INF/indivo-tag.tld" prefix="indivo"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
 
 <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="page" />
@@ -290,7 +291,9 @@ function popup1(height, width, url, windowName){
 		<td class="MainTableTopRowRightColumn">
 		<table class="TopStatusBar">
 			<tr>
-				<td><bean:message key="dms.documentReport.msgDocuments"/></td>
+				<td><bean:message key="dms.documentReport.msgDocuments"/> &nbsp;
+				<oscar:nameage demographicNo="<%=moduleid%>"/> &nbsp; <oscar:phrverification demographicNo="<%=moduleid%>"><bean:message key="phr.verification.link"/></oscar:phrverification>
+				</td>
 				<td>&nbsp;</td>
 				<td style="text-align: right;"><oscar:help keywords="2.6.1" key="app.top1" /> | <a
 					href="javascript: popupStart(300, 400, 'About.jsp')"><bean:message key="global.about"/></a> | <a
