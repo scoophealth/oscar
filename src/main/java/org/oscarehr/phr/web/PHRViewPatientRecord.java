@@ -5,6 +5,8 @@
 
 package org.oscarehr.phr.web;
 
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -12,13 +14,17 @@ import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionRedirect;
 import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.common.dao.PHRVerificationDao;
 import org.oscarehr.phr.PHRAuthentication;
 import org.oscarehr.phr.util.MyOscarUtils;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
 import oscar.oscarDemographic.data.DemographicData;
+import oscar.util.UtilDateUtilities;
 
 /**
  *
@@ -72,4 +78,50 @@ public class PHRViewPatientRecord extends DispatchAction {
         }
 
     }
+    
+    
+    public ActionForward saveNewVerification(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String demographicNo = request.getParameter("demographic_no");
+        PHRVerificationDao phrVerificationDao = (PHRVerificationDao)SpringUtils.getBean("PHRVerificationDao");
+        
+        org.oscarehr.common.model.PHRVerification phrA = new org.oscarehr.common.model.PHRVerification();
+        
+        boolean photoId = false;
+        try{
+        	photoId = Boolean.parseBoolean(request.getParameter("photoId"));
+        }catch(Exception e){/*anything but true should be considered false*/}
+        
+        boolean parentGuardian = false;
+        try{
+        	parentGuardian = Boolean.parseBoolean(request.getParameter("parentGuardian"));
+        }catch(Exception e2){/*Anything but true should be considered false*/}
+        
+        
+        
+        Date verificationDate = null;
+        try{
+        	verificationDate = UtilDateUtilities.getDateFromString(request.getParameter("verificationDate"),"yyyy-MM-dd");
+        }catch(Exception e){
+        	verificationDate = new Date();
+        }
+        
+        DemographicData demographicData = new DemographicData();
+        phrA.setPhrUserName(demographicData.getDemographic(demographicNo).getMyOscarUserName());
+        phrA.setVerificationLevel(request.getParameter("verificationLevel"));
+        phrA.setVerificationDate(verificationDate);// fix me
+        phrA.setPhotoId(photoId);
+        phrA.setParentGuardian(parentGuardian);
+        phrA.setComments(request.getParameter("comments"));
+        
+        phrA.setDemographicNo(Integer.parseInt(demographicNo));
+        phrA.setVerificationBy((String) request.getSession().getAttribute("user"));
+        phrA.setArchived(false);
+        phrA.setCreatedDate(new java.util.Date());
+        phrVerificationDao.persist(phrA);
+        
+        ActionRedirect ar = new ActionRedirect(mapping.findForward("viewVerification"));
+        ar.addParameter("demographic_no", demographicNo);
+        return ar;
+    }
+    
 }
