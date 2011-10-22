@@ -398,7 +398,6 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
             }
             versionCode = StringUtils.noNull(healthCard.getVersion());
             hc_renew_date = getCalDate(healthCard.getExpirydate());
-            if (StringUtils.empty(hc_renew_date)) err_data.add("Error! No health card expiry date");
         }
 
         //Check duplicate
@@ -816,7 +815,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                 }
                 dump = Util.addLine(dump, summary);
                 */
-                String diagCode = isICD9(fHist[i].getDiagnosisProcedureCode()) ? null : getCode(fHist[i].getDiagnosisProcedureCode(),"Diagnosis/Procedure");
+                String diagCode = getCode(fHist[i].getDiagnosisProcedureCode(),"Diagnosis/Procedure");
                 dump = Util.addLine(dump, diagCode);
                 dump = Util.addLine(dump, getResidual(fHist[i].getResidualInfo()));
                 cmNote = prepareCMNote("2",null);
@@ -2391,19 +2390,6 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 		return writeProviderData("doctor", "oscardoc", "");
 	}
 
-	Set<CaseManagementIssue> getCMIssue(String code) {
-		CaseManagementIssue cmIssu = new CaseManagementIssue();
-		cmIssu.setDemographic_no(demographicNo);
-		Issue isu = caseManagementManager.getIssueInfoByCode(StringUtils.noNull(code));
-		cmIssu.setIssue_id(isu.getId());
-		cmIssu.setType(isu.getType());
-		caseManagementManager.saveCaseIssue(cmIssu);
-
-		Set<CaseManagementIssue> sCmIssu = new HashSet<CaseManagementIssue>();
-		sCmIssu.add(cmIssu);
-		return sCmIssu;
-	}
-
         boolean isICD9(cdsDt.StandardCoding diagCode) {
                 if (diagCode==null) return false;
 
@@ -2418,9 +2404,22 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 		return (codingSystem.contains("icd") && codingSystem.contains("9"));
         }
 
-	Set<CaseManagementIssue> getCMIssue(String cppName, cdsDt.StandardCoding diagCode) {
+	Set<CaseManagementIssue> getCMIssue(String code) {
+		CaseManagementIssue cmIssu = new CaseManagementIssue();
+		cmIssu.setDemographic_no(demographicNo);
+		Issue isu = caseManagementManager.getIssueInfoByCode(StringUtils.noNull(code));
+		cmIssu.setIssue_id(isu.getId());
+		cmIssu.setType(isu.getType());
+		caseManagementManager.saveCaseIssue(cmIssu);
+	
 		Set<CaseManagementIssue> sCmIssu = new HashSet<CaseManagementIssue>();
-		Issue isu = caseManagementManager.getIssueInfoByCode(StringUtils.noNull(cppName));
+		sCmIssu.add(cmIssu);
+		return sCmIssu;
+	}
+
+	Set<CaseManagementIssue> getCMIssue(String issueCode, cdsDt.StandardCoding diagCode) {
+		Set<CaseManagementIssue> sCmIssu = new HashSet<CaseManagementIssue>();
+		Issue isu = caseManagementManager.getIssueInfoByCode(StringUtils.noNull(issueCode));
 		if (isu!=null) {
 			CaseManagementIssue cmIssu = new CaseManagementIssue();
 			cmIssu.setDemographic_no(demographicNo);
@@ -2429,8 +2428,8 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 			caseManagementManager.saveCaseIssue(cmIssu);
 			sCmIssu.add(cmIssu);
 		}
-                if (isICD9(diagCode)) {
-			isu = caseManagementManager.getIssueInfoByCode(StringUtils.noNull(diagCode.getStandardCode()));
+		if (isICD9(diagCode)) {
+			isu = caseManagementManager.getIssueInfoByCode(noDot(diagCode.getStandardCode()));
 			if (isu!=null) {
 				CaseManagementIssue cmIssu = new CaseManagementIssue();
 				cmIssu.setDemographic_no(demographicNo);
@@ -2859,4 +2858,17 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 			return "License Name";
 		return "";
 	}
+	
+    String noDot(String s) {
+        if (s==null) return null;
+
+        for (int i=0; i<s.length(); i++) {
+            if (".".contains(s.substring(i, i+1))) {
+                s = s.substring(0,i)+s.substring(i+1,s.length());
+                i--;
+            }
+        }
+        return s;
+    }
+
 }
