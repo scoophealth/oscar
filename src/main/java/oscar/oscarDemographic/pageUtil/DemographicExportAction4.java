@@ -590,12 +590,8 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                 if (!systemIssue && cmm.getLinkByNote(cmn.getId()).isEmpty()) { //this is not an annotation
                         encounter = cmn.getNote();
                 }
-                CaseManagementNoteLink cml = cmm.getLatestLinkByTableId(CaseManagementNoteLink.CASEMGMTNOTE, cmn.getId());
-                if (cml!=null) {
-                    CaseManagementNote n = cmm.getNote(cml.getNoteId().toString());
-                    if (n.getNote()!=null && !n.getNote().startsWith("imported.cms4.2011.06")) //not from dumpsite
-                        annotation = n.getNote();
-                }
+                
+                annotation = getNonDumpNote(CaseManagementNoteLink.CASEMGMTNOTE, cmn.getId(), null);
                 List<CaseManagementNoteExt> cmeList = cmm.getExtByNote(cmn.getId());
 
                 if (exPersonalHistory) {
@@ -993,7 +989,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             if (exAllergiesAndAdverseReactions) {
                 // ALLERGIES & ADVERSE REACTIONS
                 RxPatientData.Patient.Allergy[] allergies = RxPatientData.getPatient(demoNo).getActiveAllergies();
-                String dateFormat = null;
+                String dateFormat = null, annotation = null;
                 for (int j=0; j<allergies.length; j++) {
                     AllergiesAndAdverseReactions alr = patientRec.addNewAllergiesAndAdverseReactions();
                     Allergy allergy = allergies[j].getAllergy();
@@ -1061,13 +1057,11 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     	Util.putPartialDate(alr.addNewRecordedDate(), allergies[j].getEntryDate(), dateFormat);
                         aSummary = Util.addSummary(aSummary,"Recorded Date",partialDateDao.getDatePartial(allergies[j].getEntryDate(), dateFormat));
                     }
-                    CaseManagementNoteLink cml = cmm.getLatestLinkByTableId(CaseManagementNoteLink.ALLERGIES, (long)allergies[j].getAllergyId());
-                    if (cml!=null) {
-                        CaseManagementNote n = cmm.getNote(cml.getNoteId().toString());
-                        if (n.getNote()!=null && !n.getNote().startsWith("imported.cms4.2011.06")) {//not from dumpsite
-                            alr.setNotes(StringUtils.noNull(n.getNote()));
-                            aSummary = Util.addSummary(aSummary, "Notes", n.getNote());
-                        }
+                    
+                    annotation = getNonDumpNote(CaseManagementNoteLink.ALLERGIES, (long)allergies[j].getAllergyId(), null);
+                    if (StringUtils.filled(annotation)) {
+                        alr.setNotes(annotation);
+                        aSummary = Util.addSummary(aSummary, "Notes", annotation);
                     }
 
                     if (StringUtils.empty(aSummary)) {
@@ -1145,6 +1139,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                 // MEDICATIONS & TREATMENTS
                 RxPrescriptionData prescriptData = new RxPrescriptionData();
                 RxPrescriptionData.Prescription[] arr = null;
+                String annotation = null;
                 arr = prescriptData.getPrescriptionsByPatient(Integer.parseInt(demoNo));
                 for (int p = 0; p < arr.length; p++){
                     MedicationsAndTreatments medi = patientRec.addNewMedicationsAndTreatments();
@@ -1325,13 +1320,10 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                      *
                      */
 
-                    CaseManagementNoteLink cml = cmm.getLatestLinkByTableId(CaseManagementNoteLink.DRUGS, (long)arr[p].getDrugId());
-                    if (cml!=null) {
-                        CaseManagementNote n = cmm.getNote(cml.getNoteId().toString());
-                        if (n.getNote()!=null && !n.getNote().startsWith("imported.cms4.2011.06")) {//not from dumpsite
-                            medi.setNotes(StringUtils.noNull(n.getNote()));
-                            mSummary = Util.addSummary(mSummary, "Notes", n.getNote());
-                        }
+                    annotation = getNonDumpNote(CaseManagementNoteLink.DRUGS, (long)arr[p].getDrugId(), null);
+                    if (StringUtils.filled(annotation)) {
+                        medi.setNotes(annotation);
+                        mSummary = Util.addSummary(mSummary, "Notes", annotation);
                     }
 
                     if (StringUtils.empty(mSummary)) err.add("Error! No Category Summary Line (Medications & Treatments) for Patient "+demoNo+" ("+(p+1)+")");
@@ -1343,6 +1335,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             if (exLaboratoryResults) {
                 // LABORATORY RESULTS
                 List<LabMeasurements> labMeaList = ImportExportMeasurements.getLabMeasurements(demoNo);
+                String annotation = null;
                 for (LabMeasurements labMea : labMeaList) {
                     LaboratoryResults labResults = patientRec.addNewLaboratoryResults();
 
@@ -1433,12 +1426,9 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 
                         //lab annotation
                         String other_id = StringUtils.noNull(labMea.getExtVal("other_id"));
-                        CaseManagementNoteLink cml = cmm.getLatestLinkByTableId(CaseManagementNoteLink.LABTEST, Long.valueOf(lab_no), other_id);
-                        if (cml!=null) {
-                            CaseManagementNote n = cmm.getNote(cml.getNoteId().toString());
-                            if (StringUtils.filled(n.getNote()) && !n.getNote().startsWith("imported.cms4.2011.06")) //not from dumpsite
-                                labResults.setPhysiciansNotes(n.getNote());
-                        }
+                        annotation = getNonDumpNote(CaseManagementNoteLink.LABTEST, Long.valueOf(lab_no), other_id);
+                        if (StringUtils.filled(annotation)) labResults.setPhysiciansNotes(annotation);
+                        
 //                      String info = labRoutingInfo.get("comment"); <--for whole report, may refer to >1 lab results
 
 
@@ -1521,6 +1511,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             if (exReportsReceived) {
                 // REPORTS RECEIVED
                 ArrayList<EDoc> edoc_list = new EDocUtil().listDemoDocs(demoNo);
+                String annotation = null;
                 for (int j=0; j<edoc_list.size(); j++) {
                     EDoc edoc = edoc_list.get(j);
 
@@ -1594,12 +1585,8 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 
                         if (edoc.getDocId()==null) continue;
                         
-                        CaseManagementNoteLink cml = cmm.getLatestLinkByTableId(CaseManagementNoteLink.DOCUMENT, Long.valueOf(edoc.getDocId()));
-                        if (cml!=null) {
-                            CaseManagementNote n = cmm.getNote(cml.getNoteId().toString());
-                            if (n.getNote()!=null && !n.getNote().startsWith("imported.cms4.2011.06")) //not from dumpsite
-                                if (n.getNote()!=null) rpr.setNotes(n.getNote());
-                        }
+                        annotation = getNonDumpNote(CaseManagementNoteLink.DOCUMENT, Long.valueOf(edoc.getDocId()), null);
+                        if (StringUtils.filled(annotation)) rpr.setNotes(annotation);
                     }
                 }
 
@@ -2277,4 +2264,23 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
         n = n==null ? 1 : n+1;
         entries.put(category+exportNo, n);
     }
+    
+    private String getNonDumpNote(Integer tableName, Long tableId, String otherId) {
+    	String note = null;
+    	
+    	List<CaseManagementNoteLink> cmll;
+    	if (StringUtils.empty(otherId))
+    		cmll = cmm.getLinkByTableIdDesc(tableName, tableId);
+		else
+			cmll = cmm.getLinkByTableIdDesc(tableName, tableId, otherId);
+		
+        for (CaseManagementNoteLink cml : cmll) {
+        	CaseManagementNote n = cmm.getNote(cml.getNoteId().toString());
+        	if (n.getNote()!=null && !n.getNote().startsWith("imported.cms4.2011.06")) {//not from dumpsite
+        		note = n.getNote();
+        		break;
+        	}
+        }
+        return note;
+    }    
 }
