@@ -371,6 +371,12 @@ function isformNeeded(){
       return true;
   }
 
+  function grabEnter(event,callb){
+     if( (window.event && window.event.keyCode == 13) || (event && event.which == 13) )  {
+        eval(callb);
+        return false;
+     }
+  }
   
 var WCBFeeItemCall = "popFeeItemList('WCBForm','w_feeitem')";
 var extraFeeItemCall = "popFeeItemList('WCBForm','w_extrafeeitem')";
