@@ -656,7 +656,6 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 
             //Demographic Contacts
             DemographicContactDao contactDao = (DemographicContactDao) SpringUtils.getBean("demographicContactDao");
-            DemographicContact demoContact = new DemographicContact();
 
             Demographics.Contact[] contt = demo.getContactArray();
             for (int i=0; i<contt.length; i++) {
@@ -691,31 +690,6 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     }
                 }
 
-                String sdm = null, emc = null, rel = null;
-                cdsDt.PurposeEnumOrPlainText[] contactPurposes = contt[i].getContactPurposeArray();
-                for (cdsDt.PurposeEnumOrPlainText contactPurpose : contactPurposes) {
-                    String cPurpose = null;
-                    if (contactPurpose.getPurposeAsEnum()!=null) cPurpose = contactPurpose.getPurposeAsEnum().toString();
-                    else cPurpose = contactPurpose.getPurposeAsPlainText();
-                    cPurpose = cPurpose.trim();
-
-                    if (emc==null)
-                        emc = cPurpose.equals("EC") || cPurpose.equalsIgnoreCase("emergency contact") ? "true" : "";
-
-                    if (sdm==null)
-                        sdm = cPurpose.equals("SDM") || cPurpose.equalsIgnoreCase("substitute decision maker") ? "true" : "";
-                    
-                    if (cPurpose.equals("NK")) rel = "Next of Kin";
-                    else if (cPurpose.equals("AS")) rel = "Administrative Staff";
-                    else if (cPurpose.equals("CG")) rel = "Care Giver";
-                    else if (cPurpose.equals("PA")) rel = "Power of Attorney";
-                    else if (cPurpose.equals("IN")) rel = "Insurance";
-                    else if (cPurpose.equals("GT")) rel = "Guarantor";
-                    else {
-                        rel = cPurpose;
-                    }
-                }
-
                 String contactNote = contt[i].getNote();
                 String cDemoNo = dd.getDemoNoByNamePhoneEmail(cFirstName, cLastName, homePhone, workPhone, cEmail);
                 String cPatient = cLastName+","+cFirstName;
@@ -727,25 +701,61 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     			"F", ""/*end_date*/, ""/*eff_date*/, ""/*pcn_indicator*/, ""/*hc_type*/, ""/*hc_renew_date*/, ""/*family_doctor*/,
                     			cEmail, "", "", "", "", "", "", "");
                 	cDemoNo = demoRes.getId();
-                    insertIntoAdmission(cDemoNo);
                     err_note.add("Contact-only patient "+cPatient+" (Demo no="+cDemoNo+") created");
 
                     if (!workExt.equals("")) dExt.addKey("", cDemoNo, "wPhoneExt", workExt);
                     if (!homeExt.equals("")) dExt.addKey("", cDemoNo, "hPhoneExt", homeExt);
                     if (!cellPhone.equals("")) dExt.addKey("", cDemoNo, "demo_cell", cellPhone);
                 }
+                insertIntoAdmission(cDemoNo);
+                
+                cdsDt.PurposeEnumOrPlainText[] contactPurposes = contt[i].getContactPurposeArray();
+                String sdm="", emc="", cPurpose=null;
+                String[] rel = new String[contactPurposes.length];
+                
+                for (int j=0; j<contactPurposes.length; j++) {
+                    cPurpose = contactPurposes[j].getPurposeAsPlainText();
+                    if (cPurpose==null) cPurpose = contactPurposes[j].getPurposeAsEnum().toString(); 
+                    if (cPurpose!=null) cPurpose = cPurpose.trim();
+                    else continue;
+
+                    if (cPurpose.equals("EC") || cPurpose.equalsIgnoreCase("emergency contact"))
+                    	emc = "true";
+                    else if (cPurpose.equals("SDM") || cPurpose.equalsIgnoreCase("substitute decision maker"))
+                    	sdm = "true";
+                    else if (cPurpose.equals("NK")) rel[j] = "Next of Kin";
+                    else if (cPurpose.equals("AS")) rel[j] = "Administrative Staff";
+                    else if (cPurpose.equals("CG")) rel[j] = "Care Giver";
+                    else if (cPurpose.equals("PA")) rel[j] = "Power of Attorney";
+                    else if (cPurpose.equals("IN")) rel[j] = "Insurance";
+                    else if (cPurpose.equals("GT")) rel[j] = "Guarantor";
+                    else {
+                        rel[j] = cPurpose;
+                    }
+                }
+                
                 if (StringUtils.filled(cDemoNo)) {
-                    demoContact.setCreated(new Date());
-                    demoContact.setUpdateDate(new Date());
-                    demoContact.setDemographicNo(Integer.valueOf(demographicNo));
-                    demoContact.setContactId(cDemoNo);
-                    demoContact.setEc(emc);
-                    demoContact.setSdm(sdm);
-                    demoContact.setRole(rel);
-                    demoContact.setNote(contactNote);
-                    demoContact.setType(1); //should be "type" - display problem
-                    demoContact.setCategory("personal");
-                    contactDao.merge(demoContact);
+                    for (int j=0; j<rel.length; j++) {
+                    	if (rel[j]==null) continue;
+                    	
+                        DemographicContact demoContact = new DemographicContact();
+                        demoContact.setCreated(new Date());
+                        demoContact.setUpdateDate(new Date());
+                        demoContact.setDemographicNo(Integer.valueOf(demographicNo));
+                        demoContact.setContactId(cDemoNo);
+                        demoContact.setType(1); //should be "type" - display problem
+                        demoContact.setCategory("personal");
+                    	demoContact.setRole(rel[j]);
+                        demoContact.setEc(emc);
+                        demoContact.setSdm(sdm);
+                        demoContact.setNote(contactNote);
+                    	contactDao.persist(demoContact);
+                    	
+                    	//clear emc, sdm, contactNote after 1st save
+                    	emc = "";
+                    	sdm = "";
+                    	contactNote = "";
+                    }
 
 //                  DemographicRelationship demoRel = new DemographicRelationship();
 //                  demoRel.addDemographicRelationship(demographicNo, cDemoNo, rel, sdm, emc, ""/*notes*/, primaryPhysician, null);
@@ -2861,6 +2871,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 	
     String noDot(String s) {
         if (s==null) return null;
+        s = s.trim();
 
         for (int i=0; i<s.length(); i++) {
             if (".".contains(s.substring(i, i+1))) {
