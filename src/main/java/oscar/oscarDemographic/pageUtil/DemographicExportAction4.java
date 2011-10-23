@@ -469,18 +469,30 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             demoExt = null;
 
             List<DemographicContact> demoContacts = contactDao.findByDemographicNo(Integer.valueOf(demoNo));
-//            DemographicRelationship demoRel = new DemographicRelationship();
-//            ArrayList<HashMap> demoR = demoRel.getDemographicRelationships(demoNo);
+            DemographicContact demoContact;
+            
+            //create a list of contactIds
+            String[] contactId = new String[demoContacts.size()];
             for (int j=0; j<demoContacts.size(); j++) {
-//                HashMap<String,String> r = new HashMap<String,String>();
-//                r.putAll(demoR.get(j));
-//                data = r.get("demographic_no");
-                DemographicContact demoContact = demoContacts.get(j);
-                data = demoContact.getContactId();
-                if (StringUtils.filled(data)) {
-                    DemographicData.Demographic relDemo = d.getDemographic(data);
+                demoContact = demoContacts.get(j);
+                if (demoContact!=null) contactId[j] = demoContact.getContactId();
+            }
+
+        LoopContacts:
+            for (int j=0; j<demoContacts.size(); j++) {
+                if (StringUtils.filled(contactId[j])) {
+                	//check if this contact is a duplicate
+                	for (int k=0; k<j; k++) {
+                		if (contactId[j].equals(contactId[k])) {
+                			continue LoopContacts;
+                		}
+                	}
+                	demoContact = demoContacts.get(j);
+                	if (demoContact==null) continue;
+                	
+                    DemographicData.Demographic relDemo = d.getDemographic(contactId[j]);
                     HashMap<String,String> relDemoExt = new HashMap<String,String>();
-                    relDemoExt.putAll(ext.getAllValuesForDemo(data));
+                    relDemoExt.putAll(ext.getAllValuesForDemo(contactId[j]));
 
                     Demographics.Contact contact = demo.addNewContact();
                     Util.writeNameSimple(contact.addNewName(), relDemo.getFirstName(), relDemo.getLastName());
@@ -490,29 +502,6 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     if (StringUtils.empty(relDemo.getLastName())) {
                         err.add("Error! No Last Name for contact ("+j+") for Patient "+demoNo);
                     }
-
-                    String ec = demoContact.getEc();
-                    String sdm = demoContact.getSdm();
-                    String rel = demoContact.getRole();
-                    String contactNote = demoContact.getNote();
-
-                    if (ec.equals("true")) {
-                        contact.addNewContactPurpose().setPurposeAsEnum(cdsDt.PurposeEnumOrPlainText.PurposeAsEnum.EC);
-                    }
-                    if (sdm.equals("true")) {
-                        contact.addNewContactPurpose().setPurposeAsEnum(cdsDt.PurposeEnumOrPlainText.PurposeAsEnum.SDM);
-                    }
-                    if (StringUtils.filled(rel)) {
-                        cdsDt.PurposeEnumOrPlainText contactPurpose = contact.addNewContactPurpose();
-                        if (rel.equals("Next of Kin")) contactPurpose.setPurposeAsEnum(cdsDt.PurposeEnumOrPlainText.PurposeAsEnum.NK);
-                        else if (rel.equals("Administrative Staff")) contactPurpose.setPurposeAsEnum(cdsDt.PurposeEnumOrPlainText.PurposeAsEnum.AS);
-                        else if (rel.equals("Care Giver")) contactPurpose.setPurposeAsEnum(cdsDt.PurposeEnumOrPlainText.PurposeAsEnum.CG);
-                        else if (rel.equals("Power of Attorney")) contactPurpose.setPurposeAsEnum(cdsDt.PurposeEnumOrPlainText.PurposeAsEnum.PA);
-                        else if (rel.equals("Insurance")) contactPurpose.setPurposeAsEnum(cdsDt.PurposeEnumOrPlainText.PurposeAsEnum.IN);
-                        else if (rel.equals("Guarantor")) contactPurpose.setPurposeAsEnum(cdsDt.PurposeEnumOrPlainText.PurposeAsEnum.GT);
-                        else contactPurpose.setPurposeAsPlainText(rel);
-                    }
-                    if (StringUtils.filled(contactNote)) contact.setNote(contactNote);
                     
                     if (StringUtils.filled(relDemo.getEmail())) contact.setEmailAddress(relDemo.getEmail());
 
@@ -551,6 +540,35 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         phoneCell.setPhoneNumber(phoneNo);
                     }
                     relDemoExt = null;
+
+                    String ec=null, sdm=null, rel=null, contactNote=null;
+                    for (int k=j; k<demoContacts.size(); k++) {
+                    	demoContact = demoContacts.get(k);
+                    	if (demoContact==null) continue;
+                    	
+	                    rel = demoContact.getRole();
+	                    if (StringUtils.empty(ec)) ec = demoContact.getEc();
+	                    if (StringUtils.empty(sdm)) sdm = demoContact.getSdm();
+	                    contactNote = Util.addLine(contactNote, demoContact.getNote());
+	
+	                    if (StringUtils.filled(rel)) {
+	                        cdsDt.PurposeEnumOrPlainText contactPurpose = contact.addNewContactPurpose();
+	                        if (rel.equals("Next of Kin")) contactPurpose.setPurposeAsEnum(cdsDt.PurposeEnumOrPlainText.PurposeAsEnum.NK);
+	                        else if (rel.equals("Administrative Staff")) contactPurpose.setPurposeAsEnum(cdsDt.PurposeEnumOrPlainText.PurposeAsEnum.AS);
+	                        else if (rel.equals("Care Giver")) contactPurpose.setPurposeAsEnum(cdsDt.PurposeEnumOrPlainText.PurposeAsEnum.CG);
+	                        else if (rel.equals("Power of Attorney")) contactPurpose.setPurposeAsEnum(cdsDt.PurposeEnumOrPlainText.PurposeAsEnum.PA);
+	                        else if (rel.equals("Insurance")) contactPurpose.setPurposeAsEnum(cdsDt.PurposeEnumOrPlainText.PurposeAsEnum.IN);
+	                        else if (rel.equals("Guarantor")) contactPurpose.setPurposeAsEnum(cdsDt.PurposeEnumOrPlainText.PurposeAsEnum.GT);
+	                        else contactPurpose.setPurposeAsPlainText(rel);
+	                    }
+                    }
+                    if (ec.equals("true")) {
+                        contact.addNewContactPurpose().setPurposeAsEnum(cdsDt.PurposeEnumOrPlainText.PurposeAsEnum.EC);
+                    }
+                    if (sdm.equals("true")) {
+                        contact.addNewContactPurpose().setPurposeAsEnum(cdsDt.PurposeEnumOrPlainText.PurposeAsEnum.SDM);
+                    }
+                    if (StringUtils.filled(contactNote)) contact.setNote(contactNote);
                 }
             }
 
