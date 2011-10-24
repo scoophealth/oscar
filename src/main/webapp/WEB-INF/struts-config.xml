@@ -752,11 +752,11 @@
 		</action>
 
 		<action input="/oscarRx/ChooseAllergy.jsp" name="RxAddAllergyForm" path="/oscarRx/addAllergy" scope="request" type="oscar.oscarRx.pageUtil.RxAddAllergyAction">
-			<forward name="success" path="/oscarRx/ShowAllergies.jsp" />
+			<forward name="success" path="/oscarRx/ShowAllergies.jsp" redirect="true" />
 		</action>
 
 		<action input="/oscarRx/ChooseAllergy2.jsp" name="RxAddAllergyForm" path="/oscarRx/addAllergy2" scope="request" type="oscar.oscarRx.pageUtil.RxAddAllergyAction">
-			<forward name="success" path="/oscarRx/ShowAllergies2.jsp" />
+			<forward name="success" path="/oscarRx/ShowAllergies2.jsp" redirect="true"/>
 		</action>
 
 		<action input="/oscarRx/ChooseAllergy.jsp" path="/oscarRx/addReaction" scope="request" type="oscar.oscarRx.pageUtil.RxAddReactionAction">
