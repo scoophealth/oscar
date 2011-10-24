@@ -1599,6 +1599,8 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                             if (data.length()<=6) reportReviewed.setReviewingOHIPPhysicianId(data);
                         }
                         Util.writeNameSimple(rpr.addNewSourceAuthorPhysician().addNewAuthorName(), edoc.getSource());
+                        
+                        if (StringUtils.filled(edoc.getSourceFacility())) rpr.setSourceFacility(edoc.getSourceFacility());
 
                         if (edoc.getDocId()==null) continue;
                         

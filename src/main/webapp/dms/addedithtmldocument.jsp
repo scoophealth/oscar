@@ -121,8 +121,8 @@ ArrayList<String> consultA = new ArrayList<String>();
 ArrayList<String> consultB = new ArrayList<String>();
 for (String reportClass : reportClasses) {
     List<String> subClassList = docClassDao.findSubClassesByReportClass(reportClass);
-    if (reportClass.equals("ConsultA")) consultA.addAll(subClassList);
-    else if (reportClass.equals("ConsultB")) consultB.addAll(subClassList);
+    if (reportClass.equals("Consultant ReportA")) consultA.addAll(subClassList);
+    else if (reportClass.equals("Consultant ReportB")) consultB.addAll(subClassList);
     else subClasses.addAll(subClassList);
 
     if (!consultA.isEmpty() && !consultB.isEmpty()) {
@@ -277,9 +277,9 @@ for (String reportClass : reportClasses) {
                                 <option value=""><bean:message key="dms.addDocument.formSelectClass"/></option>
 <% boolean consultShown = false;
 for (String reportClass : reportClasses) {
-    if (reportClass.startsWith("Consult")) {
+    if (reportClass.startsWith("Consultant Report")) {
         if (consultShown) continue;
-        reportClass = "Consult";
+        reportClass = "Consultant Report";
         consultShown = true;
     }
 %>

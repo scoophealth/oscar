@@ -573,6 +573,7 @@ public final class EDocUtil extends SqlUtilBaseS {
 				currentdoc.setSource(rsGetString(rs, "source"));
 				currentdoc.setResponsibleId(rsGetString(rs, "responsible"));
 				currentdoc.setSource(rsGetString(rs, "source"));
+				currentdoc.setSourceFacility(rsGetString(rs, "sourceFacility"));
 				currentdoc.setDateTimeStampAsDate(rs.getTimestamp("updatedatetime"));
 				currentdoc.setDateTimeStamp(rsGetString(rs, "updatedatetime"));
 				currentdoc.setFileName(rsGetString(rs, "docfilename"));
@@ -672,15 +673,19 @@ public final class EDocUtil extends SqlUtilBaseS {
 	}
 
 	public static int addDocument(String demoNo, String docFileName, String docDesc, String docType, String docClass, String docSubClass, String contentType, String observationDate, String updateDateTime, String docCreator, String responsible) throws SQLException {
-		return addDocument(demoNo, docFileName, docDesc, docType, docClass, docSubClass, contentType, observationDate, updateDateTime, docCreator, responsible, null, null);
+		return addDocument(demoNo, docFileName, docDesc, docType, docClass, docSubClass, contentType, observationDate, updateDateTime, docCreator, responsible, null, null, null);
 	}
 
 	public static int addDocument(String demoNo, String docFileName, String docDesc, String docType, String docClass, String docSubClass, String contentType, String observationDate, String updateDateTime, String docCreator, String responsible, String reviewer, String reviewDateTime) throws SQLException {
-		return addDocument(demoNo, docFileName, docDesc, docType, docClass, docSubClass, contentType, observationDate, updateDateTime, docCreator, responsible, reviewer, reviewDateTime, null);
+		return addDocument(demoNo, docFileName, docDesc, docType, docClass, docSubClass, contentType, observationDate, updateDateTime, docCreator, responsible, reviewer, reviewDateTime, null, null);
 	}
 
 	public static int addDocument(String demoNo, String docFileName, String docDesc, String docType, String docClass, String docSubClass, String contentType, String observationDate, String updateDateTime, String docCreator, String responsible, String reviewer, String reviewDateTime, String source) throws SQLException {
-		String add_record_string1 = "insert into document (doctype,docClass,docSubClass,docdesc,docfilename,doccreator,responsible,updatedatetime,status,contenttype,public1,observationdate,reviewer,reviewdatetime, source) values (?,?,?,?,?,?,?,?,'A',?,0,?,?,?,?)";
+		return addDocument(demoNo, docFileName, docDesc, docType, docClass, docSubClass, contentType, observationDate, updateDateTime, docCreator, responsible, reviewer, reviewDateTime, source, null);
+	}
+	
+	public static int addDocument(String demoNo, String docFileName, String docDesc, String docType, String docClass, String docSubClass, String contentType, String observationDate, String updateDateTime, String docCreator, String responsible, String reviewer, String reviewDateTime, String source, String sourceFacility) throws SQLException {
+		String add_record_string1 = "insert into document (doctype,docClass,docSubClass,docdesc,docfilename,doccreator,responsible,updatedatetime,status,contenttype,public1,observationdate,reviewer,reviewdatetime,source,sourceFacility) values (?,?,?,?,?,?,?,?,'A',?,0,?,?,?,?,?)";
 		String add_record_string2 = "insert into ctl_document values ('demographic',?,?,'A')";
 		int key = 0;
 
@@ -688,8 +693,8 @@ public final class EDocUtil extends SqlUtilBaseS {
 		PreparedStatement add_record = conn.prepareStatement(add_record_string1);
 
 		add_record.setString(1, docType);
-                add_record.setString(2, docClass);
-                add_record.setString(3, docSubClass);
+		add_record.setString(2, docClass);
+		add_record.setString(3, docSubClass);
 		add_record.setString(4, docDesc);
 		add_record.setString(5, docFileName);
 		add_record.setString(6, docCreator);
@@ -700,6 +705,7 @@ public final class EDocUtil extends SqlUtilBaseS {
 		add_record.setString(11, reviewer);
 		add_record.setString(12, reviewDateTime);
 		add_record.setString(13, source);
+		add_record.setString(14, sourceFacility);
 
 		add_record.executeUpdate();
 		ResultSet rs = add_record.getGeneratedKeys();
