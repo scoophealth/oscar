@@ -1831,7 +1831,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                         }
                         if (StringUtils.empty(status)) {
                         	status = allStatus[0];
-                        	err_note.add("Cannot map appointment status ["+apptStatus+"]. Appointment Status set to [To Do]");
+//                        	err_note.add("Cannot map appointment status ["+apptStatus+"]. Appointment Status set to [To Do]");
                         }
                         
                     }

@@ -286,7 +286,7 @@ for (String reportClass : reportClasses) {
 		</tr>
 		<tr>
 			<td>Source Facility:</td>
-			<td><input type="text" name="source" size="15" value="<%=formdata.getSource()%>"/></td>
+			<td><input type="text" name="sourceFacility" size="15" value="<%=formdata.getSourceFacility()%>"/></td>
 		</tr>
 		<% if (module.equals("provider")) {%>
 		<tr>

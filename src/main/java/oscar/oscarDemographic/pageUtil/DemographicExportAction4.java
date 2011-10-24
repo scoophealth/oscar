@@ -1566,7 +1566,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         if (StringUtils.empty(data)) data = cutExt(edoc.getFileName());
                         if (StringUtils.empty(data)) err.add("Error! No File Extension&Version info for Document \""+edoc.getFileName()+"\"");
                         rpr.setFileExtensionAndVersion(data);
-
+                        
                         data = edoc.getDocClass();
                         if (cdsDt.ReportClass.Enum.forString(data)!=null) {
                             rpr.setClass1(cdsDt.ReportClass.Enum.forString(data));
@@ -1670,10 +1670,10 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                                     else rpr.setFormat(cdsDt.ReportFormat.TEXT);
                                     err.add("Error! No Format for HRM report! Patient "+demoNo+" ("+(i+1)+")");
                                 }
-
+                                
                                 //Class
-                                if (cdsDt.ReportClass.Enum.forString(reportStrings.get("class"))!=null) {
-                                    rpr.setClass1(cdsDt.ReportClass.Enum.forString(reportStrings.get("class")));
+                                if (reportStrings.get("class")!=null) {
+                                    rpr.setClass1(cdsDt.ReportClass.Enum.forString(formatReportClass(reportStrings.get("class"))));
                                 } else {
                                     rpr.setClass1(cdsDt.ReportClass.OTHER_LETTER);
                                     err.add("Error! No Class for HRM report! Export as 'Other Letter'. Patient "+demoNo+" ("+(i+1)+")");
@@ -2301,5 +2301,22 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
         	}
         }
         return note;
-    }    
+    }
+    
+    private String formatReportClass(String reportClass) {
+    	if (StringUtils.empty(reportClass)) return null;
+    	
+    	reportClass = reportClass.toLowerCase();
+    	reportClass = reportClass.replace("_", " ");
+    	
+    	String reportClassF = reportClass.substring(0,1).toUpperCase();
+    	for (int i=1; i<reportClass.length(); i++) {
+    		reportClassF += reportClass.substring(i,i+1);
+    		if (reportClass.substring(i,i+1).equals(" ") && (i+1)<reportClass.length()) {
+    			reportClassF += reportClass.substring(i+1, i+2).toUpperCase();
+    			i++;
+    		}
+    	}
+    	return reportClassF;
+    }
 }
