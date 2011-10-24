@@ -61,7 +61,7 @@ create table labPatientPhysicianInfo(
   comment2 text,
   patient_phone varchar(20),
   doc_phone varchar(20),
-  collection_date varchar(12)
+  collection_date varchar(20)
 );
 
 create table labTestResults(

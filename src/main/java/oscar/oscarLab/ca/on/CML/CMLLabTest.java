@@ -362,14 +362,16 @@ public class CMLLabTest {
         ///
         public String getReferenceRange(){
             String retval ="";
-            if (minimum != null && maximum != null){
-                if (!minimum.equals("") && !maximum.equals("")){
-                    if (minimum.equals(maximum)){
-                        retval = minimum;
-                    }else{
-                        retval = minimum + " - " + maximum;
-                    }
+            if (filled(minimum) && filled(maximum)) {
+                if (minimum.equals(maximum)){
+                    retval = minimum;
+                }else{
+                    retval = minimum + " - " + maximum;
                 }
+            } else if (filled(minimum)) {
+            	retval = minimum;
+            } else if (filled(maximum)) {
+            	retval = maximum;
             }
             return retval;
         }
@@ -412,6 +414,10 @@ public class CMLLabTest {
             }
         }
         return groups;
+    }
+    
+    private boolean filled(String s) {
+    	return !(s==null || s.trim().equals(""));
     }
 }//end
 

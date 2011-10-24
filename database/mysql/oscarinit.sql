@@ -569,6 +569,7 @@ CREATE TABLE document (
   doccreator varchar(30) NOT NULL default '',
   responsible varchar(30) NOT NULL default '',
   source varchar(60) default NULL,
+  sourceFacility varchar(120),
   program_id int,
   updatedatetime datetime default NULL,
   status char(1) NOT NULL default '',

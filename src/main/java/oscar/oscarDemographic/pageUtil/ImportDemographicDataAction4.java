@@ -1241,7 +1241,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 
                     if (aaReactArray[i].getCode()!=null) regionalId = StringUtils.noNull(aaReactArray[i].getCode().getCodeValue());
                     alg_extra = Util.addLine(alg_extra,"Offending Agent Description: ",aaReactArray[i].getOffendingAgentDescription());
-                    alg_extra = Util.addLine(alg_extra,"Reaction Type: ",aaReactArray[i].getReactionType().toString());
+                    if (aaReactArray[i].getReactionType()!=null) alg_extra = Util.addLine(alg_extra,"Reaction Type: ",aaReactArray[i].getReactionType().toString());
 
                     if (typeCode.equals("") && aaReactArray[i].getPropertyOfOffendingAgent()!=null) {
                         if (aaReactArray[i].getPropertyOfOffendingAgent()==cdsDt.PropertyOfOffendingAgent.DR) typeCode="13"; //drug
@@ -1252,7 +1252,12 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                         if (aaReactArray[i].getSeverity()==cdsDt.AdverseReactionSeverity.MI) severity="1"; //mild
                         else if (aaReactArray[i].getSeverity()==cdsDt.AdverseReactionSeverity.MO) severity="2"; //moderate
                         else if (aaReactArray[i].getSeverity()==cdsDt.AdverseReactionSeverity.LT) severity="3"; //severe
-                        else if (aaReactArray[i].getSeverity()==cdsDt.AdverseReactionSeverity.NO) severity="4"; //unknown
+                        else if (aaReactArray[i].getSeverity()==cdsDt.AdverseReactionSeverity.NO) {
+                        	severity="4"; //No reaction, map to unknown
+                        	alg_extra = Util.addLine(alg_extra,  "Severity: No reaction");
+                        }
+                    } else {
+                    	severity = "4"; //severity unknown
                     }
                     Long allergyId = RxAllergyImport.save(demographicNo, entryDate, description, typeCode, reaction, startDate, severity, regionalId, lifeStage);
                     addOneEntry(ALLERGY);
@@ -1577,7 +1582,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                 for (int i=0; i<labResultArr.length; i++) {
                     _location[i] = StringUtils.noNull(labResultArr[i].getLaboratoryName());
                     _accession[i] = StringUtils.noNull(labResultArr[i].getAccessionNumber());
-                    _coll_date[i] = dateOnly(dateFPtoString(labResultArr[i].getCollectionDateTime(), timeShiftInDays));
+                    _coll_date[i] = dateFPtoString(labResultArr[i].getCollectionDateTime(), timeShiftInDays);
                     _req_date[i] = dateFPtoString(labResultArr[i].getLabRequisitionDateTime(), timeShiftInDays);
                     if (StringUtils.empty(_req_date[i])) _req_date[i] = _coll_date[i];
 
@@ -1694,8 +1699,10 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 
                     //save lab collection datetime
                     cdsDt.DateTimeFullOrPartial collDate = labResults.getCollectionDateTime();
+                    String coll_date = null; 
                     if (collDate!=null) {
-                        saveMeasurementsExt(measId, "datetime", dateFPtoString(collDate, timeShiftInDays));
+                    	coll_date = dateFPtoString(collDate, timeShiftInDays);
+                        saveMeasurementsExt(measId, "datetime", coll_date);
                     } else {
                         err_data.add("Error! No Collection DateTime for Lab Test "+testCode+" for Patient "+demographicNo);
                     }
@@ -1749,7 +1756,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     //retrieve lab_ppid
                     String lab_ppid = null;
                     for (int i=0; i<labResultArr.length; i++) {
-                        if (!(_location[i].equals(labname) && _accession[i].equals(accnum))) continue;
+                        if (!(_location[i].equals(labname) && _coll_date[i].equals(coll_date))) continue;
                         saveMeasurementsExt(measId, "lab_ppid", _lab_ppid[i]);
                         lab_ppid = _lab_ppid[i];
                         break;
@@ -1783,6 +1790,9 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                 Appointments[] appArray = patientRec.getAppointmentsArray();
                 Date appointmentDate = null;
                 String notes="", reason="", status="", startTime="", endTime="", apptProvider="";
+                ApptStatusData asd = new ApptStatusData();
+                String[] allStatus = asd.getAllStatus();
+                String[] allTitle = asd.getAllTitle();
 
                 for (int i=0; i<appArray.length; i++) {
                     String apptDateStr = dateFPtoString(appArray[i].getAppointmentDate(), timeShiftInDays);
@@ -1810,18 +1820,20 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     if (StringUtils.filled(appArray[i].getAppointmentNotes())) {
                         notes = appArray[i].getAppointmentNotes();
                     }
-                    if (appArray[i].getAppointmentStatus()!=null) {
-                        ApptStatusData asd = new ApptStatusData();
-                        String[] allStatus = asd.getAllStatus();
-                        String[] allTitle = asd.getAllTitle();
-                        status = allStatus[0];
+                    String apptStatus = appArray[i].getAppointmentStatus();
+                    if (apptStatus!=null) {
                         for (int j=1; j<allStatus.length; j++) {
                             String msg = getResources(request).getMessage(allTitle[j]);
-                            if (appArray[i].getAppointmentStatus().trim().equalsIgnoreCase(msg)) {
+                            if (apptStatus.trim().equalsIgnoreCase(msg)) {
                                 status = allStatus[j];
                                 break;
                             }
                         }
+                        if (StringUtils.empty(status)) {
+                        	status = allStatus[0];
+                        	err_note.add("Cannot map appointment status ["+apptStatus+"]. Appointment Status set to [To Do]");
+                        }
+                        
                     }
 
                     reason = StringUtils.noNull(appArray[i].getAppointmentPurpose());
@@ -2614,7 +2626,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 			if (StringUtils.filled(demographicNo)) {
 				title = "Patient "+patientName+" (Demographic no="+demographicNo+")";
 			}
-			warnings.add(fillUp("---- "+title, '-', 150));
+			warnings.add(fillUp("---- "+title, '-', 100));
 		}
 		warnings.addAll(err_demo);
 		warnings.addAll(err_data);
