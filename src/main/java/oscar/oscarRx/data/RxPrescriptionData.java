@@ -281,6 +281,7 @@ public class RxPrescriptionData {
                 p.setNosubs(rs.getInt("nosubs"));
                 p.setPrn(rs.getInt("prn"));
                 p.setSpecial(oscar.Misc.getString(rs, "special"));
+                p.setSpecialInstruction(oscar.Misc.getString(rs, "special_instruction"));
                 p.setArchived(oscar.Misc.getString(rs, "archived"));
                 p.setGenericName(oscar.Misc.getString(rs, "GN"));
                 p.setAtcCode(oscar.Misc.getString(rs, "ATC"));

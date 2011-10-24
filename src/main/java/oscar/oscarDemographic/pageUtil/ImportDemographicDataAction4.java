@@ -1292,7 +1292,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 
                 //MEDICATIONS & TREATMENTS
                 MedicationsAndTreatments[] medArray = patientRec.getMedicationsAndTreatmentsArray();
-                String duration, quantity, special, special2;
+                String duration, quantity, dosage, special;
                 for (int i=0; i<medArray.length; i++) {
                     Drug drug = new Drug();
                     drug.setCreateDate(new Date());
@@ -1328,11 +1328,19 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     	endDate.add(Calendar.DAY_OF_YEAR, Integer.valueOf(duration)+timeShiftInDays);
                     drug.setEndDate(endDate.getTime());
                     
-                    drug.setRegionalIdentifier(medArray[i].getDrugIdentificationNumber());
+                    String freq = StringUtils.noNull(medArray[i].getFrequency());
+                    int prnPos = freq.toUpperCase().indexOf("PRN");
+                    if (prnPos>=0) {
+                    	 drug.setPrn(true);
+                    	 freq = freq.substring(0, prnPos).trim() +" "+ freq.substring(prnPos+3).trim(); //remove "prn" from freq
+                    }
+                    drug.setFreqCode(freq);
+                    
                     drug.setFreqCode(medArray[i].getFrequency());
                     if (medArray[i].getFrequency()!=null && medArray[i].getFrequency().contains("PRN")) drug.setPrn(true);
                     else drug.setPrn(false);
 
+                    drug.setRegionalIdentifier(medArray[i].getDrugIdentificationNumber());
                     drug.setRoute(medArray[i].getRoute());
                     drug.setDrugForm(medArray[i].getForm());
                     drug.setLongTerm(getYN(medArray[i].getLongTermMedication()).equals("Yes"));
@@ -1389,17 +1397,26 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 
                     cdsDt.DrugMeasure strength = medArray[i].getStrength();
                     if (strength!=null) {
-                        String dosage = StringUtils.noNull(strength.getAmount())+" "+StringUtils.noNull(strength.getUnitOfMeasure());
-                        drug.setDosage(dosage);
+                    	String dosageValue = StringUtils.noNull(strength.getAmount());
+                    	String dosageUnit = StringUtils.noNull(strength.getUnitOfMeasure());
+                    	
+                    	if (dosageValue.contains("/")) {
+                    		String[] dValue = dosageValue.split("/");
+                    		String[] dUnit = dosageUnit.split("/");
+                    		dosage = dValue[0] + dUnit[0] + " / " + dValue[1] + (dUnit.length>1 ? dUnit[1] : "unit");
+                    	} else {
+                    		dosage = dosageValue + " " + dosageUnit;
+                    	}
+                		drug.setDosage(dosage);
                     }
 
-                    special2 = StringUtils.noNull(medArray[i].getDosage())
-                    			+" "+ StringUtils.noNull(drug.getRoute())
-                				+" "+ StringUtils.noNull(drug.getFreqCode())
-            					+" "+ StringUtils.noNull(drug.getDuration()); 
-                    if (StringUtils.filled(special2))
-                    	special = Util.addLine(special, "Take ", special2+" days");
+                    special = addSpaced(special, medArray[i].getDosage());
+                    special = addSpaced(special, drug.getRoute());
+                    special = addSpaced(special, drug.getFreqCode());
                     
+                    if (drug.getDuration()!=null) {
+                    	special = addSpaced(special, "for "+drug.getDuration()+" days");
+                    }
                     drug.setSpecial(special);
 
                     //no need: special = Util.addLine(special, "Prescription Status: ", medArray[i].getPrescriptionStatus());
@@ -2898,4 +2915,12 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
         return s;
     }
 
+    String addSpaced(String s, String ss) {
+    	s = StringUtils.noNull(s).trim();
+    	
+    	if (!s.equals("") && StringUtils.filled(ss)) s += " " + ss.trim();
+    	else s += ss.trim();
+    	
+    	return s;
+    }
 }
