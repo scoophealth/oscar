@@ -1626,6 +1626,7 @@
         <ViolationValue>/src/main/java/oscar/dbBillingData.java:accessDB = new DBPreparedHandler();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dbBillingData.java:import oscar.oscarDB.DBPreparedHandler;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dms/EDocUtil.java:DBPreparedHandlerParam[] param = new DBPreparedHandlerParam[17];</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/dms/EDocUtil.java:DBPreparedHandlerParam[] param = new DBPreparedHandlerParam[18];</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dms/EDocUtil.java:DBPreparedHandlerParam[] param = new DBPreparedHandlerParam[1];</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dms/EDocUtil.java:DBPreparedHandlerParam[] param = new DBPreparedHandlerParam[2];</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dms/EDocUtil.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
@@ -1648,6 +1649,7 @@
         <ViolationValue>/src/main/java/oscar/dms/EDocUtil.java:param[counter++] = new DBPreparedHandlerParam(newDocument.getProgramId());</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dms/EDocUtil.java:param[counter++] = new DBPreparedHandlerParam(newDocument.getResponsibleId());</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dms/EDocUtil.java:param[counter++] = new DBPreparedHandlerParam(newDocument.getSource());</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/dms/EDocUtil.java:param[counter++] = new DBPreparedHandlerParam(newDocument.getSourceFacility());</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dms/EDocUtil.java:param[counter++] = new DBPreparedHandlerParam(newDocument.getType());</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dms/EDocUtil.java:param[counter++] = new DBPreparedHandlerParam(od1);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dms/EDocUtil.java:param[counter++] = new DBPreparedHandlerParam(od2);</ViolationValue>

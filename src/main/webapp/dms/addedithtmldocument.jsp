@@ -90,6 +90,7 @@ if (request.getAttribute("completedForm") != null) {
     formdata.setDocCreator(currentDoc.getCreatorId());
     formdata.setResponsibleId(currentDoc.getResponsibleId());
     formdata.setSource(currentDoc.getSource());
+    formdata.setSourceFacility(currentDoc.getSourceFacility());
     formdata.setObservationDate(currentDoc.getObservationDate());
     formdata.setReviewerId(currentDoc.getReviewerId());
     formdata.setReviewDateTime(currentDoc.getReviewDateTime());
@@ -323,9 +324,12 @@ for (String reportClass : reportClasses) {
 			<td><%=lastUpdate%></td>
 		</tr>
 		<tr>
-			<td>Source:</td>
-			<td><input type="text" name="source" size="15" value="<%=formdata.getSource()%>"/>
-			    (Specialist, Hospital, Patient, ...)</td>
+			<td>Source Author:</td>
+			<td><input type="text" name="source" size="15" value="<%=formdata.getSource()%>"/></td>
+		</tr>
+		<tr>
+			<td>Source Facility:</td>
+			<td><input type="text" name="sourceFacility" size="15" value="<%=formdata.getSourceFacility()%>"/></td>
 		</tr>
 		<tr>
 			<td>Observation Date <font class="comment">(yyyy/mm/dd):</font></td>
