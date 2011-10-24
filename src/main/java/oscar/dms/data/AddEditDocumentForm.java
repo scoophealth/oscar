@@ -35,6 +35,7 @@ public class AddEditDocumentForm extends ActionForm {
     private String docCreator = "";
     private String responsibleId = "";
     private String source = "";
+    private String sourceFacility = "";
     private FormFile docFile;
 
     private FormFile filedata;
@@ -123,6 +124,14 @@ public class AddEditDocumentForm extends ActionForm {
     public void setSource(String source) {
 	this.source = source;
     }
+    
+	public String getSourceFacility() {
+		return sourceFacility;
+	}
+	
+	public void setSourceFacility(String sourceFacility) {
+		this.sourceFacility = sourceFacility;
+	}
     
     public FormFile getDocFile() {
         return docFile;

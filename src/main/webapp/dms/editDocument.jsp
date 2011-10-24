@@ -78,6 +78,7 @@ if (request.getAttribute("completedForm") != null) {
     formdata.setResponsibleId(currentDoc.getResponsibleId());
     formdata.setObservationDate(currentDoc.getObservationDate());
     formdata.setSource(currentDoc.getSource());
+    formdata.setSourceFacility(currentDoc.getSourceFacility());
     formdata.setReviewerId(currentDoc.getReviewerId());
     formdata.setReviewDateTime(currentDoc.getReviewDateTime());
     lastUpdate = currentDoc.getDateTimeStamp();
@@ -96,8 +97,8 @@ ArrayList<String> consultA = new ArrayList<String>();
 ArrayList<String> consultB = new ArrayList<String>();
 for (String reportClass : reportClasses) {
     List<String> subClassList = docClassDao.findSubClassesByReportClass(reportClass);
-    if (reportClass.equals("ConsultA")) consultA.addAll(subClassList);
-    else if (reportClass.equals("ConsultB")) consultB.addAll(subClassList);
+    if (reportClass.equals("Consultant ReportA")) consultA.addAll(subClassList);
+    else if (reportClass.equals("Consultant ReportB")) consultB.addAll(subClassList);
     else subClasses.addAll(subClassList);
 
     if (!consultA.isEmpty() && !consultB.isEmpty()) {
@@ -226,9 +227,9 @@ for (String reportClass : reportClasses) {
                                 <option value=""><bean:message key="dms.addDocument.formSelectClass"/></option>
 <% boolean consultShown = false;
 for (String reportClass : reportClasses) {
-    if (reportClass.startsWith("Consult")) {
+    if (reportClass.startsWith("Consultant Report")) {
         if (consultShown) continue;
-        reportClass = "Consult";
+        reportClass = "Consultant Report";
         consultShown = true;
     }
 %>
@@ -280,9 +281,12 @@ for (String reportClass : reportClasses) {
 			<td><%=lastUpdate%></td>
 		</tr>
 		<tr>
-			<td>Source:</td>
-			<td><input type="text" name="source" size="15" value="<%=formdata.getSource()%>"/>
-			    (Specialist, Hospital, Patient, ...)</td>
+			<td>Source Author:</td>
+			<td><input type="text" name="source" size="15" value="<%=formdata.getSource()%>"/></td>
+		</tr>
+		<tr>
+			<td>Source Facility:</td>
+			<td><input type="text" name="source" size="15" value="<%=formdata.getSource()%>"/></td>
 		</tr>
 		<% if (module.equals("provider")) {%>
 		<tr>

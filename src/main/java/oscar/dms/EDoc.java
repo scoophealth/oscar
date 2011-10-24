@@ -57,6 +57,7 @@ public class EDoc extends TagObject implements Comparable {
 	private String creatorId = "";
 	private String responsibleId = "";
 	private String source = "";
+	private String sourceFacility = "";
 	private Integer programId = -1;
 	private char status;
 	private String module = "";
@@ -321,6 +322,14 @@ public class EDoc extends TagObject implements Comparable {
 
 	public void setSource(String source) {
 		this.source = source;
+	}
+
+	public String getSourceFacility() {
+		return sourceFacility;
+	}
+
+	public void setSourceFacility(String sourceFacility) {
+		this.sourceFacility = sourceFacility;
 	}
 
 	public char getStatus() {

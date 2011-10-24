@@ -1920,7 +1920,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                             } else {
                                 String docFileName = "ImportReport"+(i+1)+"-"+UtilDateUtilities.getToday("yyyy-MM-dd.HH.mm.ss");
                                 String docClass=null, docSubClass=null, contentType="", observationDate=null, updateDateTime=null, docCreator=admProviderNo;
-                                String reviewer=null, reviewDateTime=null, source=null;
+                                String reviewer=null, reviewDateTime=null, source=null, sourceFacility=null;
 
                                 if (StringUtils.filled(repR[i].getFileExtensionAndVersion())) {
                                     contentType = repR[i].getFileExtensionAndVersion();
@@ -1943,6 +1943,10 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                                     docSubClass = repR[i].getSubClass();
                                 }
 
+                                if (repR[i].getSourceFacility()!=null) {
+                                	sourceFacility = repR[i].getSourceFacility();
+                                }
+                                
                                 ReportsReceived.SourceAuthorPhysician authorPhysician = repR[i].getSourceAuthorPhysician();
                                 if (authorPhysician!=null) {
                                     if (authorPhysician.getAuthorName()!=null) {
@@ -1963,7 +1967,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                                 observationDate = dateFPtoString(repR[i].getEventDateTime(), timeShiftInDays);
                                 updateDateTime = dateFPtoString(repR[i].getReceivedDateTime(), timeShiftInDays);
 
-                                EDocUtil.addDocument(demographicNo,docFileName,docDesc,"",docClass,docSubClass,contentType,observationDate,updateDateTime,docCreator,admProviderNo,reviewer,reviewDateTime, source);
+                                EDocUtil.addDocument(demographicNo,docFileName,docDesc,"",docClass,docSubClass,contentType,observationDate,updateDateTime,docCreator,admProviderNo,reviewer,reviewDateTime,source,sourceFacility);
                                 if (binaryFormat) addOneEntry(REPORTBINARY);
                                 else addOneEntry(REPORTTEXT);
                             }
