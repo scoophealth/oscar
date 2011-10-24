@@ -900,7 +900,7 @@ public class CihiExportAction extends DispatchAction {
 		String drugname;
 		String customname;
 		String dosage;
-		String strength;
+		String[] strength;
 		int sep;
 		
 		for(int p = 0; p<pa.length; ++p) {
@@ -920,16 +920,28 @@ public class CihiExportAction extends DispatchAction {
 			}
 			
 			if (StringUtils.filled(pa[p].getDosage())) {
-				String strength0 = pa[p].getDosage();
-				sep = strength0.indexOf("/");
-				strength = sep<0 ? Util.leadingNum(strength0) : strength0.substring(0,sep);
-				if (sep>=0) {
-					if (sep<strength0.length()) strength0 = strength0.substring(sep+1);
-				}
-				cdsDtCihi.DrugMeasure drugM = medications.addNewStrength();
-				drugM.setAmount(strength);
-				drugM.setUnitOfMeasure(Util.trailingTxt(strength0));
-				if (StringUtils.empty(drugM.getUnitOfMeasure())) drugM.setUnitOfMeasure("unit");
+            	strength = pa[p].getDosage().split(" ");
+            	
+            	cdsDtCihi.DrugMeasure drugM = medications.addNewStrength();
+            	if (Util.leadingNum(strength[0]).equals(strength[0])) {//amount & unit separated by space
+            		drugM.setAmount(strength[0]);
+            		if (strength.length>1) drugM.setUnitOfMeasure(strength[1]);
+            		else drugM.setUnitOfMeasure("unit"); //UnitOfMeasure cannot be null
+            		
+            	} else {//amount & unit not separated, probably e.g. 50mg / 2tablet
+            		if (strength.length>1 && strength[1].equals("/")) {
+            			if (strength.length>2) {
+            				String unit1 = Util.leadingNum(strength[2]).equals("") ? "1" : Util.leadingNum(strength[2]);
+            				String unit2 = Util.trailingTxt(strength[2]).equals("") ? "unit" : Util.trailingTxt(strength[2]);
+            				
+                    		drugM.setAmount(Util.leadingNum(strength[0])+"/"+Util.leadingNum(strength[2])); 
+                    		drugM.setUnitOfMeasure(Util.trailingTxt(strength[0])+"/"+unit2);                    				
+            			}
+            		} else {
+                		drugM.setAmount(Util.leadingNum(strength[0]));
+                		drugM.setUnitOfMeasure(Util.trailingTxt(strength[0]));
+            		}
+            	}
 			}
 
 	        dosage = StringUtils.noNull(pa[p].getDosageDisplay());

@@ -545,6 +545,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     for (int k=j; k<demoContacts.size(); k++) {
                     	demoContact = demoContacts.get(k);
                     	if (demoContact==null) continue;
+                    	if (!contactId[j].equals(demoContact.getId())) continue;
                     	
 	                    rel = demoContact.getRole();
 	                    if (StringUtils.empty(ec)) ec = demoContact.getEc();
@@ -1198,20 +1199,29 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                      */
 
                     if (StringUtils.filled(arr[p].getDosage())) {
-                        String strength0 = arr[p].getDosage();
-                        int sep = strength0.indexOf("/");
-
-                        String strength = sep<0 ? Util.leadingNum(strength0) : strength0.substring(0,sep);
-                        if (sep>=0) {
-                            err.add("Multiple components exist for Drug "+drugName+" for Patient "+demoNo+". Exporting 1st one as Strength.");
-                            if (sep<strength0.length()) strength0 = strength0.substring(sep+1);
-                        }
-                        cdsDt.DrugMeasure drugM = medi.addNewStrength();
-                        drugM.setAmount(strength);
-                        drugM.setUnitOfMeasure(Util.trailingTxt(strength0));
-                        if (StringUtils.empty(drugM.getUnitOfMeasure())) drugM.setUnitOfMeasure("unit");
-                        
-                        mSummary = Util.addSummary(mSummary, "Strength", arr[p].getGenericName()+" "+strength);
+                    	String[] strength = arr[p].getDosage().split(" ");
+                    	
+                    	cdsDt.DrugMeasure drugM = medi.addNewStrength();
+                    	if (Util.leadingNum(strength[0]).equals(strength[0])) {//amount & unit separated by space
+                    		drugM.setAmount(strength[0]);
+                    		if (strength.length>1) drugM.setUnitOfMeasure(strength[1]);
+                    		else drugM.setUnitOfMeasure("unit"); //UnitOfMeasure cannot be null
+                    		
+                    	} else {//amount & unit not separated, probably e.g. 50mg / 2tablet
+                    		if (strength.length>1 && strength[1].equals("/")) {
+                    			if (strength.length>2) {
+                    				String unit1 = Util.leadingNum(strength[2]).equals("") ? "1" : Util.leadingNum(strength[2]);
+                    				String unit2 = Util.trailingTxt(strength[2]).equals("") ? "unit" : Util.trailingTxt(strength[2]);
+                    				
+    	                    		drugM.setAmount(Util.leadingNum(strength[0])+"/"+Util.leadingNum(strength[2])); 
+    	                    		drugM.setUnitOfMeasure(Util.trailingTxt(strength[0])+"/"+unit2);                    				
+                    			}
+                    		} else {
+	                    		drugM.setAmount(Util.leadingNum(strength[0]));
+	                    		drugM.setUnitOfMeasure(Util.trailingTxt(strength[0]));
+                    		}
+                    	}
+                        mSummary = Util.addSummary(mSummary, "Strength", drugM.getAmount()+" "+drugM.getUnitOfMeasure());
                     }
                     if (StringUtils.filled(arr[p].getDosageDisplay())) {
                         medi.setDosage(arr[p].getDosageDisplay());
@@ -1783,9 +1793,10 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             if (exCareElements) {
                 //CARE ELEMENTS
                 List<Measurements> measList = ImportExportMeasurements.getMeasurements(demoNo);
+                CareElements careElm = null;
+                if (measList.size()>0) careElm = patientRec.addNewCareElements();
                 for (Measurements meas : measList) {
                     if (meas.getType().equals("HT")) { //Height in cm
-                        CareElements careElm = patientRec.addNewCareElements();
                         cdsDt.Height height = careElm.addNewHeight();
                         height.setDate(Util.calDate(meas.getDateObserved()));
                         if (meas.getDateObserved()==null) {
@@ -1795,7 +1806,6 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         height.setHeightUnit(cdsDt.Height.HeightUnit.CM);
                         addOneEntry(CAREELEMENTS);
                     } else if (meas.getType().equals("WT") && meas.getMeasuringInstruction().equalsIgnoreCase("in kg")) { //Weight in kg
-                        CareElements careElm = patientRec.addNewCareElements();
                         cdsDt.Weight weight = careElm.addNewWeight();
                         weight.setDate(Util.calDate(meas.getDateObserved()));
                         if (meas.getDateObserved()==null) {
@@ -1805,7 +1815,6 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         weight.setWeightUnit(cdsDt.Weight.WeightUnit.KG);
                         addOneEntry(CAREELEMENTS);
                     } else if (meas.getType().equals("WAIS") || meas.getType().equals("WC")) { //Waist Circumference in cm
-                        CareElements careElm = patientRec.addNewCareElements();
                         cdsDt.WaistCircumference waist = careElm.addNewWaistCircumference();
                         waist.setDate(Util.calDate(meas.getDateObserved()));
                         if (meas.getDateObserved()==null) {
@@ -1815,7 +1824,6 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         waist.setWaistCircumferenceUnit(cdsDt.WaistCircumference.WaistCircumferenceUnit.CM);
                         addOneEntry(CAREELEMENTS);
                     } else if (meas.getType().equals("BP")) { //Blood Pressure
-                        CareElements careElm = patientRec.addNewCareElements();
                         cdsDt.BloodPressure bloodp = careElm.addNewBloodPressure();
                         bloodp.setDate(Util.calDate(meas.getDateObserved()));
                         if (meas.getDateObserved()==null) {
@@ -1827,7 +1835,6 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         bloodp.setBPUnit(cdsDt.BloodPressure.BPUnit.MM_HG);
                         addOneEntry(CAREELEMENTS);
                     } else if (meas.getType().equals("POSK")) { //Packs of Cigarettes per day
-                        CareElements careElm = patientRec.addNewCareElements();
                         cdsDt.SmokingPacks smokp = careElm.addNewSmokingPacks();
                         smokp.setDate(Util.calDate(meas.getDateObserved()));
                         if (meas.getDateObserved()==null) {
@@ -1836,7 +1843,6 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         smokp.setPerDay(new BigDecimal(meas.getDataField()));
                         addOneEntry(CAREELEMENTS);
                     } else if (meas.getType().equals("SKST")) { //Smoking Status
-                        CareElements careElm = patientRec.addNewCareElements();
                         cdsDt.SmokingStatus smoks = careElm.addNewSmokingStatus();
                         smoks.setDate(Util.calDate(meas.getDateObserved()));
                         if (meas.getDateObserved()==null) {
@@ -1845,7 +1851,6 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         smoks.setStatus(Util.yn(meas.getDataField()));
                         addOneEntry(CAREELEMENTS);
                     } else if (meas.getType().equals("SMBG")) { //Self Monitoring Blood Glucose
-                        CareElements careElm = patientRec.addNewCareElements();
                         cdsDt.SelfMonitoringBloodGlucose bloodg = careElm.addNewSelfMonitoringBloodGlucose();
                         bloodg.setDate(Util.calDate(meas.getDateObserved()));
                         if (meas.getDateObserved()==null) {
@@ -1854,7 +1859,6 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         bloodg.setSelfMonitoring(Util.yn(meas.getDataField()));
                         addOneEntry(CAREELEMENTS);
                     } else if (meas.getType().equals("DMME")) { //Diabetes Education
-                        CareElements careElm = patientRec.addNewCareElements();
                         cdsDt.DiabetesEducationalSelfManagement des = careElm.addNewDiabetesEducationalSelfManagement();
                         des.setDate(Util.calDate(meas.getDateObserved()));
                         if (meas.getDateObserved()==null) {
@@ -1863,7 +1867,6 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         des.setEducationalTrainingPerformed(Util.yn(meas.getDataField()));
                         addOneEntry(CAREELEMENTS);
                     } else if (meas.getType().equals("SMCD")) { //Self Management Challenges
-                        CareElements careElm = patientRec.addNewCareElements();
                         cdsDt.DiabetesSelfManagementChallenges dsc = careElm.addNewDiabetesSelfManagementChallenges();
                         dsc.setCodeValue(cdsDt.DiabetesSelfManagementChallenges.CodeValue.X_44941_3);
                         dsc.setDate(Util.calDate(meas.getDateObserved()));
@@ -1873,7 +1876,6 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         dsc.setChallengesIdentified(Util.yn(meas.getDataField()));
                         addOneEntry(CAREELEMENTS);
                     } else if (meas.getType().equals("MCCN")) { //Motivation Counseling Completed Nutrition
-                        CareElements careElm = patientRec.addNewCareElements();
                         cdsDt.DiabetesMotivationalCounselling dmc = careElm.addNewDiabetesMotivationalCounselling();
                         dmc.setDate(Util.calDate(meas.getDateObserved()));
                         if (meas.getDateObserved()==null) {
@@ -1885,7 +1887,6 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         }
                         addOneEntry(CAREELEMENTS);
                     } else if (meas.getType().equals("MCCE")) { //Motivation Counseling Completed Exercise
-                        CareElements careElm = patientRec.addNewCareElements();
                         cdsDt.DiabetesMotivationalCounselling dmc = careElm.addNewDiabetesMotivationalCounselling();
                         dmc.setDate(Util.calDate(meas.getDateObserved()));
                         if (meas.getDateObserved()==null) {
@@ -1897,7 +1898,6 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         }
                         addOneEntry(CAREELEMENTS);
                     } else if (meas.getType().equals("MCCS")) { //Motivation Counseling Completed Smoking Cessation
-                        CareElements careElm = patientRec.addNewCareElements();
                         cdsDt.DiabetesMotivationalCounselling dmc = careElm.addNewDiabetesMotivationalCounselling();
                         dmc.setDate(Util.calDate(meas.getDateObserved()));
                         if (meas.getDateObserved()==null) {
@@ -1909,7 +1909,6 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         }
                         addOneEntry(CAREELEMENTS);
                     } else if (meas.getType().equals("MCCO")) { //Motivation Counseling Completed Other
-                        CareElements careElm = patientRec.addNewCareElements();
                         cdsDt.DiabetesMotivationalCounselling dmc = careElm.addNewDiabetesMotivationalCounselling();
                         dmc.setDate(Util.calDate(meas.getDateObserved()));
                         if (meas.getDateObserved()==null) {
@@ -1921,7 +1920,6 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         }
                         addOneEntry(CAREELEMENTS);
                     } else if (meas.getType().equals("EYEE")) { //Dilated Eye Exam
-                        CareElements careElm = patientRec.addNewCareElements();
                         cdsDt.DiabetesComplicationScreening dcs = careElm.addNewDiabetesComplicationsScreening();
                         dcs.setDate(Util.calDate(meas.getDateObserved()));
                         if (meas.getDateObserved()==null) {
@@ -1933,7 +1931,6 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         }
                         addOneEntry(CAREELEMENTS);
                     } else if (meas.getType().equals("FTE")) { //Foot Exam
-                        CareElements careElm = patientRec.addNewCareElements();
                         cdsDt.DiabetesComplicationScreening dcs = careElm.addNewDiabetesComplicationsScreening();
                         dcs.setDate(Util.calDate(meas.getDateObserved()));
                         if (meas.getDateObserved()==null) {
@@ -1945,7 +1942,6 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         }
                         addOneEntry(CAREELEMENTS);
                     } else if (meas.getType().equals("FTLS")) { // Foot Exam Test Loss of Sensation (Neurological Exam)
-                        CareElements careElm = patientRec.addNewCareElements();
                         cdsDt.DiabetesComplicationScreening dcs = careElm.addNewDiabetesComplicationsScreening();
                         dcs.setDate(Util.calDate(meas.getDateObserved()));
                         if (meas.getDateObserved()==null) {
@@ -1957,7 +1953,6 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         }
                         addOneEntry(CAREELEMENTS);
                     } else if (meas.getType().equals("CGSD")) { //Collaborative Goal Setting
-                        CareElements careElm = patientRec.addNewCareElements();
                         cdsDt.DiabetesSelfManagementCollaborative dsco = careElm.addNewDiabetesSelfManagementCollaborative();
                         dsco.setDate(Util.calDate(meas.getDateObserved()));
                         if (meas.getDateObserved()==null) {
@@ -1967,7 +1962,6 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         dsco.setDocumentedGoals(meas.getDataField());
                         addOneEntry(CAREELEMENTS);
                     } else if (meas.getType().equals("HYPE")) { //Hypoglycemic Episodes
-                        CareElements careElm = patientRec.addNewCareElements();
                         cdsDt.HypoglycemicEpisodes he = careElm.addNewHypoglycemicEpisodes();
                         he.setDate(Util.calDate(meas.getDateObserved()));
                         if (meas.getDateObserved()==null) {
