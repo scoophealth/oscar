@@ -1054,11 +1054,9 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                             alr.setSeverity(cdsDt.AdverseReactionSeverity.MO);
                         } else if (data.equals("3")) {
                             alr.setSeverity(cdsDt.AdverseReactionSeverity.LT);
-                        } else { //SeverityOfReaction==0
-                            alr.setSeverity(cdsDt.AdverseReactionSeverity.MI);
-                            err.add("Severity Of Allergy Reaction [Unknown] exported as [Mild] for Patient "+demoNo+" ("+(j+1)+")");
                         }
-                        aSummary = Util.addSummary(aSummary,"Adverse Reaction Severity",alr.getSeverity().toString());
+                        if (alr.getSeverity()!=null)
+                        	aSummary = Util.addSummary(aSummary,"Adverse Reaction Severity",alr.getSeverity().toString());
                     }
                     if (allergy.getStartDate()!=null) {
                     	dateFormat = partialDateDao.getFormat(PartialDate.ALLERGIES, allergies[j].getAllergyId(), PartialDate.ALLERGIES_STARTDATE);
@@ -1501,8 +1499,9 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         ApptStatusData asd = new ApptStatusData();
                         asd.setApptStatus(ap.getStatus());
                         String msg = null;
-                        if (strEditable!=null&&strEditable.equalsIgnoreCase("yes"))
+                        if (strEditable!=null&&strEditable.equalsIgnoreCase("yes")) {
                             msg = asd.getTitle();
+                        }
                         else
                             msg = getResources(request).getMessage(asd.getTitle());
                         if (StringUtils.filled(msg)) {
