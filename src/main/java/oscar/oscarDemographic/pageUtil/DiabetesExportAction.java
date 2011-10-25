@@ -47,7 +47,6 @@ import oscar.oscarEncounter.oscarMeasurements.data.ImportExportMeasurements;
 import oscar.oscarEncounter.oscarMeasurements.data.LabMeasurements;
 import oscar.oscarEncounter.oscarMeasurements.data.MeasurementMapConfig;
 import oscar.oscarEncounter.oscarMeasurements.data.Measurements;
-import oscar.oscarLab.LabRequestReportLink;
 import oscar.oscarLab.ca.all.upload.ProviderLabRouting;
 import oscar.oscarPrevention.PreventionData;
 import oscar.oscarPrevention.PreventionDisplayConfig;
@@ -593,11 +592,13 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	    
 	    
 	    cdsDt.DateFullOrPartial collDate = labResults.addNewCollectionDateTime();
-            Date dateTime = UtilDateUtilities.StringToDate(labMea.getExtVal("datetime"),"yyyy-MM-dd HH:mm:ss");
-            collDate.setFullDate(Util.calDate(dateTime));
-            if (dateTime==null) {
-                errors.add("Error! No Collection Datetime for Lab Test "+testName+" for Patient "+demoNo);
-            }
+        String sDateTime = labMea.getExtVal("datetime");
+        if (StringUtils.filled(sDateTime)) {
+        	collDate.setFullDate(Util.calDate(sDateTime));
+        } else {
+            errors.add("Error! No Collection Datetime for Lab Test "+testName+" for Patient "+demoNo);
+            collDate.setFullDate(Util.calDate("0001-01-01"));
+        }
             
 	    data = labMea.getMeasure().getDataField();
 	    LaboratoryResults.Result result = labResults.addNewResult();
@@ -647,30 +648,34 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             if (StringUtils.filled(max)) refRange.setHighLimit(max);
         }
 
+        String reqDate = labMea.getExtVal("request_datetime");
+        if (StringUtils.filled(reqDate)) labResults.addNewLabRequisitionDateTime().setFullDate(Util.calDate(reqDate));
+        
 	    String lab_no = labMea.getExtVal("lab_no");
+	    if (StringUtils.empty(lab_no)) lab_no = labMea.getExtVal("lab_ppid");
 	    if (StringUtils.filled(lab_no)) {
-		HashMap<String,String> labRoutingInfo = new HashMap<String,String>();
-                labRoutingInfo.putAll(ProviderLabRouting.getInfo(lab_no));
-		
-		String info = labRoutingInfo.get("comment");
-		if (StringUtils.filled(info)) labResults.setPhysiciansNotes(info);
-		info = labRoutingInfo.get("provider_no");
-		if (!"0".equals(info)) {
-		    ProviderData pd = new ProviderData(info);
-		    if (StringUtils.noNull(pd.getOhip_no()).length()<=6) {
-			LaboratoryResults.ResultReviewer reviewer = labResults.addNewResultReviewer();
-			reviewer.setOHIPPhysicianId(pd.getOhip_no());
-			Util.writeNameSimple(reviewer.addNewName(), pd.getFirst_name(), pd.getLast_name());
-		    }
-		}
-		String timestamp = labRoutingInfo.get("timestamp");
-		if (StringUtils.filled(timestamp)) {
-		    labResults.addNewDateTimeResultReviewed().setFullDate(Util.calDate(timestamp));
-		}
-		
-		HashMap<String,Object> link = LabRequestReportLink.getLinkByReport("hl7TextMessage", Long.valueOf(lab_no));
-		Date reqDate = (Date) link.get("request_date");
-		if (reqDate!=null) labResults.addNewLabRequisitionDateTime().setFullDate(Util.calDate(reqDate));
+	    	
+            //lab annotation
+            String other_id = StringUtils.noNull(labMea.getExtVal("other_id"));
+            String annotation = getNonDumpNote(CaseManagementNoteLink.LABTEST, Long.valueOf(lab_no), other_id);
+            if (StringUtils.filled(annotation)) labResults.setPhysiciansNotes(annotation);
+	    	
+	    	HashMap<String,String> labRoutingInfo = new HashMap<String,String>();
+	    	labRoutingInfo.putAll(ProviderLabRouting.getInfo(lab_no));
+	    	
+	    	String info = labRoutingInfo.get("provider_no");
+	    	if (info!=null && !"0".equals(info)) {
+	    		ProviderData pd = new ProviderData(info);
+	    		if (StringUtils.noNull(pd.getOhip_no()).length()<=6) {
+	    			LaboratoryResults.ResultReviewer reviewer = labResults.addNewResultReviewer();
+	    			reviewer.setOHIPPhysicianId(pd.getOhip_no());
+	    			Util.writeNameSimple(reviewer.addNewName(), pd.getFirst_name(), pd.getLast_name());
+    			}
+	    	}
+	    	String timestamp = labRoutingInfo.get("timestamp");
+    		if (StringUtils.filled(timestamp)) {
+    			labResults.addNewDateTimeResultReviewed().setFullDate(Util.calDate(timestamp));
+    		}
 	    }
 	}
     }

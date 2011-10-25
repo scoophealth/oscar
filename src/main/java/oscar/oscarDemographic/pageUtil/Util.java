@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.zip.ZipEntry;
@@ -75,13 +74,8 @@ public class Util {
     }
     
     static public XmlCalendar calDate(Date inDate) {
-    	return calDate(inDate, false);
-    }
-    
-    static public XmlCalendar calDate(Date inDate, boolean timezone) {
 		String date = UtilDateUtilities.DateToString(inDate, "yyyy-MM-dd");
 		String time = UtilDateUtilities.DateToString(inDate, "HH:mm:ss");
-		if (timezone) time += getTimezone();
 		try {
 			XmlCalendar x = new XmlCalendar(date+"T"+time);
 			return x;
@@ -93,11 +87,9 @@ public class Util {
 
 	static public XmlCalendar calDate(String inDate) {
 		Date dateTime = UtilDateUtilities.StringToDate(inDate,"yyyy-MM-dd HH:mm:ss");
-		if (dateTime==null) dateTime = UtilDateUtilities.StringToDate(inDate,"yyyy-MM-dd");
-		
-		if (dateTime!=null) //inDate contains no time part
-			return calDate(dateTime, false);
-		
+		if (dateTime==null) {
+			dateTime = UtilDateUtilities.StringToDate(inDate,"yyyy-MM-dd");
+		}
 		if (dateTime==null) { //inDate may contain time only
 			try {
 				XmlCalendar x = new XmlCalendar(inDate);
@@ -107,7 +99,7 @@ public class Util {
 				return x;
 			}
 		} else {
-			return calDate(dateTime, true);
+			return calDate(dateTime);
 		}
 	}
 
@@ -501,15 +493,5 @@ public class Util {
     static public String getPreventionType(String immunizationType) {
     	if (immunizationToPreventionType.isEmpty()) set_p_i_types();
     	return immunizationToPreventionType.get(immunizationType);
-    }
-    
-    static public String getTimezone() {
-    	Calendar c = Calendar.getInstance();
-    	int tz = (c.get(Calendar.ZONE_OFFSET) + c.get(Calendar.DST_OFFSET)) / (60 * 60 * 1000);
-    	String zero = Math.abs(tz)>9 ? "" : "0";    	
-    	
-    	if (tz>0) return "+"+zero+tz+":00";
-    	if (tz<0) return "-"+zero+(-tz)+":00";
-    	return "";
     }
 }
