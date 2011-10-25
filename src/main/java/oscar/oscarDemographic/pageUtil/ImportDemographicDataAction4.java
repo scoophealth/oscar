@@ -843,21 +843,25 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                 }
                 if (fHist[i].getAgeAtOnset()!=null) {
                     cme.setKeyVal(CaseManagementNoteExt.AGEATONSET);
+                    cme.setDateValue((Date)null);
                     cme.setValue(fHist[i].getAgeAtOnset().toString());
                     caseManagementManager.saveNoteExt(cme);
                 }
                 if (StringUtils.filled(fHist[i].getRelationship())) {
                     cme.setKeyVal(CaseManagementNoteExt.RELATIONSHIP);
+                    cme.setDateValue((Date)null);
                     cme.setValue(fHist[i].getRelationship());
                     caseManagementManager.saveNoteExt(cme);
                 }
                 if (StringUtils.filled(fHist[i].getTreatment())) {
                     cme.setKeyVal(CaseManagementNoteExt.TREATMENT);
+                    cme.setDateValue((Date)null);
                     cme.setValue(fHist[i].getTreatment());
                     caseManagementManager.saveNoteExt(cme);
                 }
                 if (fHist[i].getLifeStage()!=null) {
                     cme.setKeyVal(CaseManagementNoteExt.LIFESTAGE);
+                    cme.setDateValue((Date)null);
                     cme.setValue(fHist[i].getLifeStage().toString());
                     caseManagementManager.saveNoteExt(cme);
                 }
@@ -930,6 +934,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     }
                     if (pHealth[i].getLifeStage()!=null) {
                         cme.setKeyVal(CaseManagementNoteExt.LIFESTAGE);
+                        cme.setDateValue((Date)null);
                         cme.setValue(pHealth[i].getLifeStage().toString());
                         caseManagementManager.saveNoteExt(cme);
                     }
@@ -984,6 +989,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     cme.setNoteId(hostNoteId);
                     if (StringUtils.filled(probList[i].getProblemDescription())) {
                         cme.setKeyVal(CaseManagementNoteExt.PROBLEMDESC);
+                        cme.setDateValue((Date)null);
                         cme.setValue(probList[i].getProblemDescription());
                         caseManagementManager.saveNoteExt(cme);
                     }
@@ -1003,11 +1009,13 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     }
                     if (StringUtils.filled(probList[i].getProblemStatus())) {
                         cme.setKeyVal(CaseManagementNoteExt.PROBLEMSTATUS);
+                        cme.setDateValue((Date)null);
                         cme.setValue(probList[i].getProblemStatus());
                         caseManagementManager.saveNoteExt(cme);
                     }
                     if (probList[i].getLifeStage()!=null) {
                         cme.setKeyVal(CaseManagementNoteExt.LIFESTAGE);
+                        cme.setDateValue((Date)null);
                         cme.setValue(probList[i].getLifeStage().toString());
                         caseManagementManager.saveNoteExt(cme);
                     }
@@ -1065,16 +1073,19 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     }
                     if (rFactors[i].getAgeOfOnset()!=null) {
                         cme.setKeyVal(CaseManagementNoteExt.AGEATONSET);
+                        cme.setDateValue((Date)null);
                         cme.setValue(rFactors[i].getAgeOfOnset().toString());
                         caseManagementManager.saveNoteExt(cme);
                     }
                     if (StringUtils.filled(rFactors[i].getExposureDetails())) {
                         cme.setKeyVal(CaseManagementNoteExt.EXPOSUREDETAIL);
+                        cme.setDateValue((Date)null);
                         cme.setValue(rFactors[i].getExposureDetails());
                         caseManagementManager.saveNoteExt(cme);
                     }
                     if (rFactors[i].getLifeStage()!=null) {
                         cme.setKeyVal(CaseManagementNoteExt.LIFESTAGE);
+                        cme.setDateValue((Date)null);
                         cme.setValue(rFactors[i].getLifeStage().toString());
                         caseManagementManager.saveNoteExt(cme);
                     }
@@ -1383,6 +1394,8 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     if (sep>0) drug.setTakeMax(Util.leadingNumF(take.substring(sep+1)));
                     else drug.setTakeMax(drug.getTakeMin());
                     drug.setUnit(medArray[i].getDosageUnitOfMeasure());
+                    if ("table".equalsIgnoreCase(drug.getUnit())) drug.setUnit("tab");
+                    
                     drug.setDemographicId(Integer.valueOf(demographicNo));
                     drug.setArchived(false);
 
