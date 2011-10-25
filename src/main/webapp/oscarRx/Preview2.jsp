@@ -141,8 +141,8 @@ if (hasSig){
    doctorName = (provider.getFirstName() + ' ' + provider.getSurname());
 }
 
-doctorName = doctorName.replaceAll("\\d{6}","");
-doctorName = doctorName.replaceAll("\\-","");
+//doctorName = doctorName.replaceAll("\\d{6}","");
+//doctorName = doctorName.replaceAll("\\-","");
 
 OscarProperties props = OscarProperties.getInstance();
 
