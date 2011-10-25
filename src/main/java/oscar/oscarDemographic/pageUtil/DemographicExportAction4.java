@@ -574,6 +574,14 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             }
 
             List<CaseManagementNote> lcmn = cmm.getNotes(demoNo);
+            
+            //find all "header"; cms4 only
+            List<CaseManagementNote> headers = new ArrayList<CaseManagementNote>();
+            for (CaseManagementNote cmn : lcmn) {
+            	if (cmn.getNote()!=null && cmn.getNote().startsWith("imported.cms4.2011.06") && cmm.getLinkByNote(cmn.getId()).isEmpty())
+            		headers.add(cmn);
+            }
+            
             for (CaseManagementNote cmn : lcmn) {
                 String famHist="", socHist="", medHist="", concerns="", reminders="", riskFactors="", encounter="", annotation="", summary="";
                 Set<CaseManagementIssue> sisu = cmn.getIssues();
@@ -608,6 +616,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                 }
                 if (!systemIssue && cmm.getLinkByNote(cmn.getId()).isEmpty()) { //this is not an annotation
                         encounter = cmn.getNote();
+                        if (encounter.startsWith("imported.cms4.2011.06")) continue; //this is a "header", cms4 only
                 }
                 
                 annotation = getNonDumpNote(CaseManagementNoteLink.CASEMGMTNOTE, cmn.getId(), null);
@@ -926,10 +935,19 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         }
                         cNote.setMyClinicalNotesContent(encounter);
                         addOneEntry(CLINICALNOTE);
+                        
+                        Date createDate = cmn.getCreate_date();
+                        String uuid;
+                        for (CaseManagementNote header : headers) {
+                        	uuid = header.getNote().substring("imported.cms4.2011.06".length());
+                        	if (uuid.equals(cmn.getUuid())) {
+                        		createDate = header.getCreate_date();
+                        	}
+                        }
 
                         //entered datetime
-                        if (cmn.getCreate_date()!=null) {
-                            cNote.addNewEnteredDateTime().setFullDateTime(Util.calDate(cmn.getCreate_date()));
+                        if (createDate!=null) {
+                            cNote.addNewEnteredDateTime().setFullDateTime(Util.calDate(createDate));
                         }
                         
                         //event datetime
@@ -1419,7 +1437,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     //notes from lab
                     data = StringUtils.noNull(labMea.getExtVal("comments"));
                     if (StringUtils.filled(data)) {
-                        labResults.setNotesFromLab(data);
+                        labResults.setNotesFromLab(Util.replaceBr(data));
                     }
 
                     //lab reference range
