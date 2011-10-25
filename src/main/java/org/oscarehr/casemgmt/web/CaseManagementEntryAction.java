@@ -155,7 +155,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		cform.setChain("");
 		request.setAttribute("change_flag", "false");
 		request.setAttribute("from", "casemgmt");
-
+		
 		logger.debug("Get demo and provider no");
 		String demono = getDemographicNo(request);
 		Integer demographicNo = Integer.parseInt(demono);
@@ -2930,37 +2930,32 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 	 * Insert encounter reason for new note
 	 */
 	protected void insertReason(HttpServletRequest request, CaseManagementNote note) {
-		String strBeanName = "casemgmt_oscar_bean" + note.getDemographic_no();
-		oscar.oscarEncounter.pageUtil.EctSessionBean bean = (oscar.oscarEncounter.pageUtil.EctSessionBean) request.getSession().getAttribute(strBeanName);
-
-		if (bean != null) {
-			String encounterText = new String();
-			String apptDate = convertDateFmt(bean.appointmentDate, request);
-			if (bean.eChartTimeStamp == null) {
-				encounterText = "\n[" + UtilDateUtilities.DateToString(bean.currentDate, "dd-MMM-yyyy", request.getLocale()) + " .: " + bean.reason + "] \n";
-				// encounterText +="\n["+bean.appointmentDate+" .: "+bean.reason+"] \n";
-			} else { // if(bean.currentDate.compareTo(bean.eChartTimeStamp)>0){
-				// log.debug("2curr Date "+ oscar.util.UtilDateUtilities.DateToString(oscar.util.UtilDateUtilities.now(),"yyyy",java.util.Locale.CANADA) );
-				// encounterText +="\n__________________________________________________\n["+dateConvert.DateToString(bean.currentDate)+" .: "+bean.reason+"]\n";
-				encounterText = "\n[" + ("".equals(bean.appointmentDate) ? UtilDateUtilities.getToday("dd-MMM-yyyy") : apptDate) + " .: " + bean.reason + "]\n";
-			} /*
-			 * else if((bean.currentDate.compareTo(bean.eChartTimeStamp) == 0) && (bean.reason != null || bean.subject != null ) && !bean.reason.equals(bean.subject) ){ //encounterText
-			 * +="\n__________________________________________________\n["+dateConvert.DateToString(bean.currentDate)+" .: "+bean.reason+"]\n"; encounterText ="\n["+apptDate+" .: "+bean.reason+"]\n"; }
-			 */
-			// log.debug("eChartTimeStamp" + bean.eChartTimeStamp+" bean.currentDate " + dateConvert.DateToString(bean.currentDate));//" diff "+bean.currentDate.compareTo(bean.eChartTimeStamp));
-			// if (!bean.oscarMsg.equals("")) {
-			// encounterText += "\n\n" + bean.oscarMsg;
-			// }
-
-			note.setNote(encounterText);
-			String encType = request.getParameter("encType");
-
-			if (encType == null || encType.equals("")) {
-				note.setEncounter_type("");
-			} else {
-				note.setEncounter_type(encType);
-			}
+		
+		String encounterText = "";
+		String apptDate = request.getParameter("appointmentDate");
+		String reason = request.getParameter("reason");
+		
+		if( reason == null ) {
+			reason = "";
 		}
+		
+		if( apptDate == null || apptDate.equals("") || apptDate.equalsIgnoreCase("null")) {			
+			encounterText = "\n[" + oscar.util.UtilDateUtilities.DateToString(oscar.util.UtilDateUtilities.Today(), "dd-MMM-yyyy", request.getLocale()) + " .: " + reason + "] \n";
+		}
+		else {
+			apptDate = convertDateFmt(apptDate, request);
+			encounterText = "\n[" + apptDate + " .: " + reason + "]\n";			
+		}
+		
+
+		note.setNote(encounterText);
+		String encType = request.getParameter("encType");
+
+		if (encType == null || encType.equals("")) {
+			note.setEncounter_type("");
+		} else {
+			note.setEncounter_type(encType);
+		}		
 
 	}
 
