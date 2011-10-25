@@ -1222,8 +1222,6 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                                 Util.writeVerified(cmNote);
                             }
                         }
-                        
-                        if (StringUtils.filled(uuid)) cmNote.setUuid(uuid);
                         caseManagementManager.saveNoteSimple(cmNote);
 
                         //prepare for extra notes

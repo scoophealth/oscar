@@ -602,15 +602,17 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             
 	    data = labMea.getMeasure().getDataField();
 	    LaboratoryResults.Result result = labResults.addNewResult();
-	    result.setValue(data);
-	    if (StringUtils.empty(data)) {
-		errors.add("Error! No Result Value for Lab Test "+testName+" for Patient "+demoNo);
+	    if (StringUtils.filled(data)) {
+	    	result.setValue(data);
+	    } else {
+	    	errors.add("Error! No Result Value for Lab Test "+testName+" for Patient "+demoNo);
 	    }
 	    
 	    data = labMea.getExtVal("unit");
-	    result.setUnitOfMeasure(data);
-	    if (StringUtils.empty(data)) {
-		errors.add("Error! No Unit for Lab Test "+testName+" for Patient "+demoNo);
+	    if (StringUtils.filled(data)) {
+	    	result.setUnitOfMeasure(data);
+	    } else {
+	    	errors.add("Error! No Unit for Lab Test "+testName+" for Patient "+demoNo);
 	    }
 	    
 	    labResults.setLaboratoryName(StringUtils.noNull(labMea.getExtVal("labname")));
