@@ -369,6 +369,8 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
               if (bFirstDisp){
                   statusCode = (String) appt.get("status");
               }
+              String importedStatus = (String) appt.get("imported_status");
+              
               String signOrVerify = "";
               if (statusCode.length() >= 2){
                   signOrVerify = statusCode.substring(1,2);
@@ -382,8 +384,13 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
 						<%=((AppointmentStatus)allStatus.get(i)).getStatus().equals(statusCode)?"SELECTED":""%>><%=((AppointmentStatus)allStatus.get(i)).getDescription()%></option>
 					<% } %>
 				</select> <%
-              } else { %>
-                <INPUT TYPE="TEXT" NAME="status" VALUE="<%=statusCode%>" WIDTH="25"> <%
+              } else { 
+              	if (importedStatus==null || importedStatus.trim().equals("")) { %>
+              	<INPUT TYPE="TEXT" NAME="status" VALUE="<%=statusCode%>" WIDTH="25"> <%
+              	} else { %>
+                <INPUT TYPE="TEXT" NAME="status" VALUE="<%=statusCode%>" WIDTH="25">
+                <INPUT TYPE="TEXT" TITLE="Imported Status" VALUE="<%=importedStatus%>" WIDTH="25" readonly> <%
+              	}
               }
 %>
             </div>
@@ -519,7 +526,7 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
             <div class="input">
                 <input type="text" name="appt_mc_number" tabindex="4"
                     value="<%=bFirstDisp?mcNumber:request.getParameter("appt_mc_number")%>" />
-            </div
+            </div>
             <div class="space">&nbsp;</div>
             <div class="label"></div>
             <div class="input"></div>
@@ -583,18 +590,11 @@ if (bMultisites) { %>
             </div>
         </li>
         <li class="row weak">
-            <div class="label"></div>
-            <div class="input"></div>
-            <div class="space">&nbsp;</div>
             <div class="label">Create Date:</div>
             <div class="input">
                 <INPUT TYPE="TEXT" NAME="createDate" readonly
 					VALUE="<%=origDate%>" WIDTH="25">
             </div>
-        </li>
-        <li class="row weak">
-			<div class="label"></div>
-            <div class="input"></div>
             <div class="space">&nbsp;</div>
             <div class="label"><bean:message key="Appointment.formCritical" />:</div>
             <div class="input">
@@ -614,6 +614,13 @@ if (bMultisites) { %>
             	%>
             	<input type="checkbox" name="urgency" value="critical" <%=urgencyChecked%>/>
             </div>        
+        </li>
+        <li class="row weak">
+			<div class="label"></div>
+            <div class="input"></div>
+            <div class="space">&nbsp;</div>
+			<div class="label"></div>
+            <div class="input"></div>
         </li>
     </ul>
 <table class="buttonBar deep">

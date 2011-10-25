@@ -1843,6 +1843,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                             String msg = getResources(request).getMessage(allTitle[j]);
                             if (apptStatus.trim().equalsIgnoreCase(msg)) {
                                 status = allStatus[j];
+                                apptStatus = null;
                                 break;
                             }
                         }
@@ -1863,8 +1864,10 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                             err_note.add("Appointment has no provider; assigned to \"doctor oscardoc\" ("+(i+1)+")");
                         }
                     }
-                    oscarSuperManager.update("appointmentDao", "import_appt", new Object [] {apptProvider,
-                    appointmentDate, startTime, endTime, patientName, demographicNo, notes, reason, status});
+                    oscarSuperManager.update("appointmentDao", "import_appt", new Object [] {
+                    		apptProvider, appointmentDate, startTime, endTime,
+                    		patientName, demographicNo, notes, reason, status, apptStatus
+            		});
                     addOneEntry(APPOINTMENT);
                 }
 
@@ -2919,7 +2922,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
     	s = StringUtils.noNull(s).trim();
     	
     	if (!s.equals("") && StringUtils.filled(ss)) s += " " + ss.trim();
-    	else s += ss.trim();
+    	else s += StringUtils.noNull(ss).trim();
     	
     	return s;
     }
