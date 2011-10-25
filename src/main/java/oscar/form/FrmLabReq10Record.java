@@ -152,8 +152,9 @@ public class FrmLabReq10Record extends FrmRecord {
                 provider = providerDao.getProvider(demoProvider);
                 
                     if( num.equals("") ) {
-                        num = provider.getOhipNo();
+                    	num = provider.getOhipNo() == null ? "" : provider.getOhipNo();                        
                         props.setProperty("practitionerNo", "0000-"+num+"-00");
+                        props.setProperty("reqProvName", provider.getFormattedName());
                     }
                     props.setProperty("provName", provider.getFormattedName());
                                     
