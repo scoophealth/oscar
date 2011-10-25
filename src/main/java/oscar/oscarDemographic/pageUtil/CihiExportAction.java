@@ -827,7 +827,7 @@ public class CihiExportAction extends DispatchAction {
                                 procedureCode.setStandardCode(code);
                                 procedureCode.setStandardCodeDescription(cIssue.getIssue().getDescription());
                                 break;
-                            } else
+                            }
                             if (problemlist!=null) {
                                 StandardCoding diagnosisCode = problemlist.addNewDiagnosisCode();
                                 diagnosisCode.setStandardCodingSystem(cIssue.getIssue().getType());
@@ -838,7 +838,7 @@ public class CihiExportAction extends DispatchAction {
                         }
                     }
                     if (procedure!=null) procedure.setProcedureInterventionDescription(caseManagementNote.getNote());
-                    else if (problemlist!=null) problemlist.setProblemDiagnosisDescription(caseManagementNote.getNote());
+                    if (problemlist!=null) problemlist.setProblemDiagnosisDescription(caseManagementNote.getNote());
 		}
 	}  
 	

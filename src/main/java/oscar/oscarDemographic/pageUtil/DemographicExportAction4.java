@@ -978,29 +978,30 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         alerts.setAlertDescription(reminders);
                         addOneEntry(ALERT);
 
+                        summary = Util.addSummary("Alert Description", reminders);
                         boolean bSTARTDATE=false, bRESOLUTIONDATE=false;
                         for (CaseManagementNoteExt cme : cmeList) {
                             if (cme.getKeyVal().equals(CaseManagementNoteExt.STARTDATE)) {
                                 if (bSTARTDATE) continue;
                                 if (cme.getDateValue()!=null) {
                                     Util.putPartialDate(alerts.addNewDateActive(), cme);
-                                    reminders = Util.addLine(reminders, "Date Active: ", Util.readPartialDate(cme));
+                                    summary = Util.addSummary(summary, "Date Active", Util.readPartialDate(cme));
                                 }
                                 bSTARTDATE = true;
                             } else if (cme.getKeyVal().equals(CaseManagementNoteExt.RESOLUTIONDATE)) {
                                 if (bRESOLUTIONDATE) continue;
                                 if (cme.getDateValue()!=null) {
                                     Util.putPartialDate(alerts.addNewEndDate(), cme);
-                                    reminders = Util.addLine(reminders, "End Date: ", Util.readPartialDate(cme));
+                                    summary = Util.addSummary(summary, "End Date", Util.readPartialDate(cme));
                                 }
                                 bRESOLUTIONDATE = true;
                             }
                         }
                         if (StringUtils.filled(annotation)) {
                             alerts.setNotes(annotation);
-                            reminders = Util.addLine(reminders, "Notes: ", annotation);
+                            summary = Util.addSummary(summary, "Notes", annotation);
                         }
-                        alerts.setCategorySummaryLine(reminders);
+                        alerts.setCategorySummaryLine(summary);
                     }
                 }
             }
