@@ -1158,7 +1158,11 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     }
 
                     CaseManagementNote cmNote = prepareCMNote("1",null);
-                    encounter = Util.addLine(encounter,"Note Type: ",cNotes[i].getNoteType());
+                    String noteType = cNotes[i].getNoteType();
+                    if (StringUtils.filled(noteType)) noteType = "Note Type: "+noteType;
+                    
+                    if (!encounter.trim().startsWith(noteType))
+                    	encounter = Util.addLine(noteType, encounter);
                     cmNote.setNote(encounter);
 
                     //create date
