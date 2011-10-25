@@ -545,7 +545,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     for (int k=j; k<demoContacts.size(); k++) {
                     	demoContact = demoContacts.get(k);
                     	if (demoContact==null) continue;
-                    	if (!contactId[j].equals(demoContact.getId())) continue;
+                    	if (!contactId[j].equals(demoContact.getContactId())) continue;
                     	
 	                    rel = demoContact.getRole();
 	                    if (StringUtils.empty(ec)) ec = demoContact.getEc();
@@ -563,10 +563,10 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	                        else contactPurpose.setPurposeAsPlainText(rel);
 	                    }
                     }
-                    if (ec.equals("true")) {
+                    if (ec!=null && ec.equals("true")) {
                         contact.addNewContactPurpose().setPurposeAsEnum(cdsDt.PurposeEnumOrPlainText.PurposeAsEnum.EC);
                     }
-                    if (sdm.equals("true")) {
+                    if (sdm!=null && sdm.equals("true")) {
                         contact.addNewContactPurpose().setPurposeAsEnum(cdsDt.PurposeEnumOrPlainText.PurposeAsEnum.SDM);
                     }
                     if (StringUtils.filled(contactNote)) contact.setNote(contactNote);
