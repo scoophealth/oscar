@@ -92,6 +92,7 @@
 %>
 <script type="text/javascript" src="../share/javascript/prototype.js"/>"></script>
 <script type="text/javascript" src="../share/javascript/scriptaculous.js"/>"></script>
+<script type="text/javascript" src="<c:out value="${ctx}/share/javascript/Oscar.js"/>"></script>
 
 <script language="javascript">
 
@@ -186,7 +187,7 @@
 						out.print(partialDateDao.getDatePartial(drug.writtenDate, PartialDate.DRUGS, drug.localDrugId, PartialDate.DRUGS_WRITTENDATE));
 						}
 						%></td>
-                                                <td><%=drug.prescriptionDetails%>
+                                                <td><a href="javascript:void(0);"   onclick="popup(600, 425,'DisplayRxRecord.jsp?id=<%=drug.localDrugId%>','displayRxWindow')"><%=drug.prescriptionDetails%></a> 
 
                                                     <% if (drug.nonAuthoritative) { %>
                                                         &nbsp;<bean:message key="WriteScript.msgNonAuthoritative"></bean:message>
