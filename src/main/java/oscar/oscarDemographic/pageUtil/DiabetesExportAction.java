@@ -732,6 +732,9 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             if (StringUtils.filled(pa[p].getDosageDisplay())) medications.setDosage(pa[p].getDosageDisplay());
             if (StringUtils.filled(pa[p].getUnit())) medications.setDosageUnitOfMeasure(pa[p].getUnit());
             if (pa[p].getRepeat()>0) medications.setNumberOfRefills(String.valueOf(pa[p].getRepeat()));
+            
+            if (pa[p].getRefillDuration()!=null && pa[p].getRefillDuration()>0) medications.setRefillDuration(pa[p].getRefillDuration().toString());
+            if (pa[p].getRefillQuantity()!=null && pa[p].getRefillQuantity()>0) medications.setRefillQuantity(pa[p].getRefillQuantity().toString());
 
             if (StringUtils.filled(pa[p].getDosage())) {
             	String[] strength = pa[p].getDosage().split(" ");
