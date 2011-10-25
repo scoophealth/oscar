@@ -494,4 +494,13 @@ public class Util {
     	if (immunizationToPreventionType.isEmpty()) set_p_i_types();
     	return immunizationToPreventionType.get(immunizationType);
     }
+    
+    static public String replaceBr(String s) {
+    	if (StringUtils.empty(s)) return s;
+    	
+    	String br = "<b />";
+    	s = s.replace(br, "\n");
+    	
+    	return s;
+    }
 }

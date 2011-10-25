@@ -1171,8 +1171,8 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     if (cNotes[i].getEventDateTime()!=null) {
                     	observeDate = dateTimeFPtoDate(cNotes[i].getEventDateTime(),timeShiftInDays);
                     	if (cNotes[i].getEnteredDateTime()==null) createDate = observeDate;
+                    	
                     }
-                    
                     cmNote.setCreate_date(createDate);
                     cmNote.setObservation_date(observeDate);
                     
@@ -1222,12 +1222,25 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                                 Util.writeVerified(cmNote);
                             }
                         }
+                        
+                        if (StringUtils.filled(uuid)) cmNote.setUuid(uuid);
                         caseManagementManager.saveNoteSimple(cmNote);
 
                         //prepare for extra notes
                         if (p==0) {
                             addOneEntry(CLINICALNOTE);
                             uuid = cmNote.getUuid();
+                            
+                            //create "header", cms4 only
+                        	if (cNotes[i].getEnteredDateTime()!=null && !createDate.equals(cmNote.getUpdate_date())) {
+                        		CaseManagementNote headNote = prepareCMNote("2",null);
+                        		headNote.setCreate_date(createDate);
+                        		headNote.setUpdate_date(createDate);
+                        		headNote.setObservation_date(observeDate);
+                        		headNote.setNote("imported.cms4.2011.06"+uuid);
+                        		caseManagementManager.saveNoteSimple(headNote);
+                        	}
+                            
                         }
                     }
                     if (p_total==0) caseManagementManager.saveNoteSimple(cmNote);
