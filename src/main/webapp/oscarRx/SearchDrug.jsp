@@ -455,7 +455,7 @@ function load() {
 									href="SearchDrug.jsp?status=inactive<%=show%>"><bean:message key="SearchDrug.msgInactive"/></a> - <a href="SearchDrug.jsp?status=all<%=show%>"><bean:message key="SearchDrug.msgAll"/></a></td>
 								<td align="right">
                                                                     <span style="width: 350px; align: right"> 
-                                                                       <input type="button" name="cmdAllergies" value="<bean:message key="SearchDrug.msgViewEditAllergies"/>" class="ControlPushButton" onclick="javascript:window.location.href='ShowAllergies.jsp';" style="width: 100px" />
+                                                                       <input type="button" name="cmdAllergies" value="<bean:message key="SearchDrug.msgViewEditAllergies"/>" class="ControlPushButton" onclick="javascript:window.location.href='ShowAllergies.jsp?demographicNo=<%=request.getParameter("demographicNo")%>';" style="width: 100px" />
 								       <input type="button" name="cmdRePrescribe" value="<bean:message key="SearchDrug.msgReprescribe"/>" class="ControlPushButton" onclick="javascript:RePrescribe();" style="width: 100px" /> 
                                                                        <input type="button" name="cmdDelete" value="<bean:message key="SearchDrug.msgDelete"/>" class="ControlPushButton" onclick="javascript:Delete();" style="width: 100px" /> 
                                                                     </span>
