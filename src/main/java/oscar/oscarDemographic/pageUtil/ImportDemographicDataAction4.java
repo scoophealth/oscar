@@ -430,13 +430,15 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 
         Enrolment[] enrolments = demo.getEnrolmentArray();
         int enrolTotal = enrolments.length;
-        if (enrolTotal==0) enrolTotal = 1;
         String[] roster_status=new String[enrolTotal],
         		 roster_date=new String[enrolTotal],
         		 term_date=new String[enrolTotal],
         		 term_reason=new String[enrolTotal];
         		 
-        for (int i=0; i<enrolments.length; i++) {
+        String rosterInfo = null;
+        Calendar enrollDate=null, currentEnrollDate=null;
+        
+        for (int i=0; i<enrolTotal; i++) {
             roster_status[i] = enrolments[i].getEnrollmentStatus()!=null ? enrolments[i].getEnrollmentStatus().toString() : "";
             if	(roster_status[i].equals("1")) roster_status[i] = "RO";
             else if (roster_status[i].equals("0")) roster_status[i] = "NR";
@@ -444,6 +446,32 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
             term_date[i] = getCalDate(enrolments[i].getEnrollmentTerminationDate(), timeShiftInDays);
             if (enrolments[i].getTerminationReason()!=null)
             	term_reason[i] = enrolments[i].getTerminationReason().toString();
+            
+            //Sort enrolments by date
+            if (enrolments[i].getEnrollmentDate()!=null) currentEnrollDate = enrolments[i].getEnrollmentDate();
+            else if (enrolments[i].getEnrollmentTerminationDate()!=null) currentEnrollDate = enrolments[i].getEnrollmentTerminationDate();
+            else currentEnrollDate = null;
+            
+            for (int j=i-1; j>=0; j--) {
+                if (enrolments[j].getEnrollmentDate()!=null) enrollDate = enrolments[j].getEnrollmentDate();
+                else if (enrolments[j].getEnrollmentTerminationDate()!=null) enrollDate = enrolments[j].getEnrollmentTerminationDate();
+                else break;
+                
+                if (currentEnrollDate==null || currentEnrollDate.before(enrollDate)) {
+                    rosterInfo=roster_status[j]; roster_status[j]=roster_status[i]; roster_status[i]=rosterInfo;
+                    rosterInfo=roster_date[j];   roster_date[j]=roster_date[i];     roster_date[i]=rosterInfo;
+            		rosterInfo=term_date[j];     term_date[j]=term_date[i];         term_date[i]=rosterInfo;
+    				rosterInfo=term_reason[j];   term_reason[j]=term_reason[i];     term_reason[i]=rosterInfo; 
+                }
+            }
+        }
+        
+        String rosterStatus=null, rosterDate=null, termDate=null, termReason=null;
+        if (enrolTotal>0) {
+        	rosterStatus=roster_status[enrolTotal-1];
+        	rosterDate=roster_date[enrolTotal-1];
+        	termDate=term_date[enrolTotal-1];
+        	termReason=term_reason[enrolTotal-1];
         }
         
         String sin = StringUtils.noNull(demo.getSIN());
@@ -591,9 +619,10 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
             demographic.setDateOfBirth(date_of_birth);
             demographic.setJustHIN(hin);
             demographic.setVersionCode(versionCode);
-            demographic.setRosterStatus(roster_status[0]);
-            demographic.setRosterDate(roster_date[0]);
-            demographic.setRosterTerminationDate(term_date[0]);
+            demographic.setRosterStatus(rosterStatus);
+            demographic.setRosterDate(rosterDate);
+            demographic.setRosterTerminationDate(termDate);
+            demographic.setRosterTerminationReason(termReason);
             demographic.setPatientStatus(patient_status);
             demographic.setPatientStatusDate(psDate);
             demographic.setChartNo(chart_no);
@@ -608,7 +637,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
             err_note.add("Replaced Contact-only patient "+patientName+" (Demo no="+demographicNo+")");
             
         } else { //add patient!
-            demoRes = dd.addDemographic(title, lastName, firstName, address, city, province, postalCode, homePhone, workPhone, year_of_birth, month_of_birth, date_of_birth, hin, versionCode, roster_status[0], roster_date[0], term_date[0], term_reason[0], patient_status, psDate, ""/*date_joined*/, chart_no, official_lang, spoken_lang, primaryPhysician, sex, ""/*end_date*/, ""/*eff_date*/, ""/*pcn_indicator*/, hc_type, hc_renew_date, ""/*family_doctor*/, email, ""/*pin*/, ""/*alias*/, ""/*previousAddress*/, ""/*children*/, ""/*sourceOfIncome*/, ""/*citizenship*/, sin);
+            demoRes = dd.addDemographic(title, lastName, firstName, address, city, province, postalCode, homePhone, workPhone, year_of_birth, month_of_birth, date_of_birth, hin, versionCode, rosterStatus, rosterDate, termDate, termReason, patient_status, psDate, ""/*date_joined*/, chart_no, official_lang, spoken_lang, primaryPhysician, sex, ""/*end_date*/, ""/*eff_date*/, ""/*pcn_indicator*/, hc_type, hc_renew_date, ""/*family_doctor*/, email, ""/*pin*/, ""/*alias*/, ""/*previousAddress*/, ""/*children*/, ""/*sourceOfIncome*/, ""/*citizenship*/, sin);
             demographicNo = demoRes.getId();
         }
 
@@ -626,10 +655,8 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
             
             //Put enrolment history into demographicArchive
             demographic = dd.getDemographic(demographicNo);
-            for (int i=1; i<roster_status.length; i++) {
-            	
+            for (int i=0; i<roster_status.length-1; i++) {
             	DemographicArchive demographicArchive = archiveDemographic(demographic);
-            	
             	demographicArchive.setRosterStatus(roster_status[i]);
             	demographicArchive.setRosterDate(UtilDateUtilities.StringToDate(roster_date[i]));
             	demographicArchive.setRosterTerminationDate(UtilDateUtilities.StringToDate(term_date[i]));

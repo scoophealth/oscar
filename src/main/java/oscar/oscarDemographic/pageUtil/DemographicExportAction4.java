@@ -202,25 +202,24 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
     if (!Util.checkDir(tmpDir)) {
         logger.debug("Error! Cannot write to TMP_DIR - Check oscar.properties or dir permissions.");
     } else {
-	XmlOptions options = new XmlOptions();
-	options.put( XmlOptions.SAVE_PRETTY_PRINT );
-	options.put( XmlOptions.SAVE_PRETTY_PRINT_INDENT, 3 );
-	options.put( XmlOptions.SAVE_AGGRESSIVE_NAMESPACES );
-
-        HashMap<String,String> suggestedPrefix = new HashMap<String,String>();
-        suggestedPrefix.put("cds_dt","cdsd");
-        options.setSaveSuggestedPrefixes(suggestedPrefix);
-
-	options.setSaveOuter();
-        
-        ArrayList<String> err = new ArrayList<String>();
-        ArrayList<File> files = new ArrayList<File>();
-	String data="";
-        for (String demoNo : list) {
-	    if (StringUtils.empty(demoNo)) {
+		XmlOptions options = new XmlOptions();
+		options.put( XmlOptions.SAVE_PRETTY_PRINT );
+		options.put( XmlOptions.SAVE_PRETTY_PRINT_INDENT, 3 );
+		options.put( XmlOptions.SAVE_AGGRESSIVE_NAMESPACES );
+		
+		HashMap<String,String> suggestedPrefix = new HashMap<String,String>();
+		suggestedPrefix.put("cds_dt","cdsd");
+		options.setSaveSuggestedPrefixes(suggestedPrefix);
+		options.setSaveOuter();
+		
+		ArrayList<String> err = new ArrayList<String>();
+		ArrayList<File> files = new ArrayList<File>();
+		String data="";
+		for (String demoNo : list) {
+		if (StringUtils.empty(demoNo)) {
 		err.add("Error! No Demographic Number");
-                continue;
-            }
+		continue;
+	}
 
             // DEMOGRAPHICS
             DemographicData d = new DemographicData();
@@ -306,52 +305,64 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             }
 
             //Enrolment Status (Roster Status)
-            Demographics.Enrolment enrolment;
-            String rosterStatus = demographic.getRosterStatus();
-            if (StringUtils.filled(rosterStatus)) {
-                rosterStatus = rosterStatus.equalsIgnoreCase("RO") ? "1" : "0";
-                enrolment = demo.addNewEnrolment();
-                enrolment.setEnrollmentStatus(cdsDt.EnrollmentStatus.Enum.forString(rosterStatus));
-                if (rosterStatus.equals("1")) {
-                    data = demographic.getRosterDate();
-                    if (UtilDateUtilities.StringToDate(data)!=null) {
-                        enrolment.setEnrollmentDate(Util.calDate(data));
-                    }
-                } else {
-                    data = demographic.getRosterTerminationDate();
-                    if (UtilDateUtilities.StringToDate(data)!=null)
-                    	enrolment.setEnrollmentTerminationDate(Util.calDate(data));
-                    data = demographic.getRosterTerminationReason();
-                    if (StringUtils.filled(data))
-                    	enrolment.setTerminationReason(cdsDt.TerminationReasonCode.Enum.forString(data));
-                }
-            }
-            
+			Demographics.Enrolment enrolment;
+			String rosterStatus = StringUtils.noNull(demographic.getRosterStatus());
+			String rosterDate = StringUtils.noNull(demographic.getRosterDate());
+			String rosterTermDate = StringUtils.noNull(demographic.getRosterTerminationDate());
+			if (StringUtils.filled(rosterStatus)) {
+				rosterStatus = rosterStatus.equalsIgnoreCase("RO") ? "1" : "0";
+				enrolment = demo.addNewEnrolment();
+				enrolment.setEnrollmentStatus(cdsDt.EnrollmentStatus.Enum.forString(rosterStatus));
+				if (rosterStatus.equals("1")) {
+					if (UtilDateUtilities.StringToDate(rosterDate)!=null) {
+						enrolment.setEnrollmentDate(Util.calDate(rosterDate));
+					}
+				} else {
+					if (UtilDateUtilities.StringToDate(rosterTermDate)!=null)
+						enrolment.setEnrollmentTerminationDate(Util.calDate(rosterTermDate));
+					data = demographic.getRosterTerminationReason();
+					if (StringUtils.filled(data))
+						enrolment.setTerminationReason(cdsDt.TerminationReasonCode.Enum.forString(data));
+				}
+			}
+
             //Enrolment Status history
             List<DemographicArchive> DAs = demoArchiveDao.findRosterStatusHistoryByDemographicNo(Integer.valueOf(demoNo));
-            Date rosterDate=null, terminationDate=null;
+            String historyRS, historyRS1;
+            Date historyRD, historyRD1, historyTD, historyTD1;
             for (int i=0; i<DAs.size(); i++) {
-                String historyRS = StringUtils.noNull(DAs.get(i).getRosterStatus());
-                String historyRS1 = i<DAs.size()-1 ? StringUtils.noNull(DAs.get(i+1).getRosterStatus()) : "-1";
-
+                historyRS = StringUtils.noNull(DAs.get(i).getRosterStatus());
+                historyRS1 = i<DAs.size()-1 ? StringUtils.noNull(DAs.get(i+1).getRosterStatus()) : "-1";
                 historyRS = historyRS.equalsIgnoreCase("RO") ? "1" : "0";
                 historyRS1 = historyRS1.equalsIgnoreCase("RO") ? "1" : "0";
-                if (i==0 && historyRS.equals(rosterStatus)) continue; //ignore if same as current status
-                if (historyRS.equals(historyRS1)) continue; //skip if same as next status
+                
+                historyRD = DAs.get(i).getRosterDate();
+                historyRD1 = i<DAs.size()-1 ? DAs.get(i+1).getRosterDate() : null;
+                historyTD = DAs.get(i).getRosterTerminationDate();
+                historyTD1 = i<DAs.size()-1 ? DAs.get(i+1).getRosterTerminationDate() : null;
+                
+                if (i==0) { //check history info with current
+                	String rd = UtilDateUtilities.DateToString(historyRD);
+                	String td = UtilDateUtilities.DateToString(historyTD);
+                	if (historyRS.equals(rosterStatus) && rd.equals(rosterDate) && td.equals(rosterTermDate))
+                		continue;
+                } else { //check history info with next
+                	if (historyRS.equals(historyRS1) &&
+            			UtilDateUtilities.nullSafeCompare(historyRD, historyRD1).equals(0) &&
+            			UtilDateUtilities.nullSafeCompare(historyTD, historyTD1).equals(0))
+                		continue;
+                }
 
-                rosterStatus = historyRS;
                 enrolment = demo.addNewEnrolment();
                 enrolment.setEnrollmentStatus(cdsDt.EnrollmentStatus.Enum.forString(historyRS));
                 if (historyRS.equals("1")) {
-                    rosterDate = DAs.get(i).getRosterDate();
-                    if (rosterDate!=null) enrolment.setEnrollmentDate(Util.calDate(rosterDate));
+                    if (historyRD!=null) enrolment.setEnrollmentDate(Util.calDate(historyRD));
                 } else {
-                    terminationDate = DAs.get(i).getRosterTerminationDate();
-                    if (terminationDate!=null)
-                    	enrolment.setEnrollmentTerminationDate(Util.calDate(terminationDate));
-                    data = DAs.get(i).getRosterTerminationReason();
-                    if (StringUtils.filled(data))
-                    	enrolment.setTerminationReason(cdsDt.TerminationReasonCode.Enum.forString(data));
+                    if (historyTD!=null)
+                    	enrolment.setEnrollmentTerminationDate(Util.calDate(historyTD));
+                	data = DAs.get(i).getRosterTerminationReason();
+                	if (StringUtils.filled(data))
+                		enrolment.setTerminationReason(cdsDt.TerminationReasonCode.Enum.forString(data));
                 }
             }
 
@@ -1463,30 +1474,37 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     String olis_status = labMea.getExtVal("olis_status");
                     if (StringUtils.filled(olis_status)) labResults.setOLISTestResultStatus(olis_status);
 
+                    Integer labTable = CaseManagementNoteLink.LABTEST;
                     String lab_no = labMea.getExtVal("lab_no");
-                    if (StringUtils.empty(lab_no)) lab_no = labMea.getExtVal("lab_ppid");
+                    if (StringUtils.empty(lab_no)) {
+                    	lab_no = labMea.getExtVal("lab_ppid");
+                    	labTable = CaseManagementNoteLink.LABTEST2;
+                    }
                     if (StringUtils.filled(lab_no)) {
 
                         //lab annotation
                         String other_id = StringUtils.noNull(labMea.getExtVal("other_id"));
-                        annotation = getNonDumpNote(CaseManagementNoteLink.LABTEST, Long.valueOf(lab_no), other_id);
+                        annotation = getNonDumpNote(labTable, Long.valueOf(lab_no), other_id);
                         if (StringUtils.filled(annotation)) labResults.setPhysiciansNotes(annotation);
                         
 //                      String info = labRoutingInfo.get("comment"); <--for whole report, may refer to >1 lab results
 
 
                         //lab reviewer
-                        HashMap<String,String> labRoutingInfo = new HashMap<String,String>();
-                        labRoutingInfo.putAll(ProviderLabRouting.getInfo(lab_no));
+                        HashMap<String,Object> labRoutingInfo = new HashMap<String,Object>();
+                        if (labTable.equals(CaseManagementNoteLink.LABTEST))
+                        	labRoutingInfo.putAll(ProviderLabRouting.getInfo(lab_no, "HL7"));
+                        else
+                        	labRoutingInfo.putAll(ProviderLabRouting.getInfo(lab_no, "CML"));
 
-                        String timestamp = labRoutingInfo.get("timestamp");
+                        String timestamp = (String)labRoutingInfo.get("timestamp");
                         if (UtilDateUtilities.StringToDate(timestamp,"yyyy-MM-dd HH:mm:ss")!=null) {
                             LaboratoryResults.ResultReviewer reviewer = labResults.addNewResultReviewer();
                             reviewer.addNewDateTimeResultReviewed().setFullDateTime(Util.calDate(timestamp));
                             
                             //reviewer name
                             cdsDt.PersonNameSimple reviewerName = reviewer.addNewName();
-                            String lab_provider_no = labRoutingInfo.get("provider_no");
+                            String lab_provider_no = (String)labRoutingInfo.get("provider_no");
                             if (!"0".equals(lab_provider_no)) {
                                 ProviderData pvd = new ProviderData(lab_provider_no);
                                 Util.writeNameSimple(reviewerName, pvd.getFirst_name(), pvd.getLast_name());

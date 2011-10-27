@@ -18,6 +18,7 @@
  */
 package org.oscarehr.common.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Query;
@@ -25,6 +26,7 @@ import javax.persistence.Query;
 import org.oscarehr.common.model.DemographicArchive;
 import org.springframework.stereotype.Repository;
 import oscar.util.StringUtils;
+import oscar.util.UtilDateUtilities;
 
 @Repository
 public class DemographicArchiveDao extends AbstractDao {
@@ -58,15 +60,18 @@ public class DemographicArchiveDao extends AbstractDao {
 
         //Remove entries with identical rosterStatus
         String this_rs, next_rs;
+        Date this_rd, next_rd, this_td, next_td;
         for (int i=0; i<results.size()-1; i++) {
-            this_rs = results.get(i).getRosterStatus();
-            next_rs = results.get(i+1).getRosterStatus();
-            if (StringUtils.empty(this_rs)) {
-                if (StringUtils.empty(next_rs)) {
-                    results.remove(i);
-                    i--;
-                }
-            } else if (this_rs.equalsIgnoreCase(next_rs)) {
+            this_rs = StringUtils.noNull(results.get(i).getRosterStatus());
+            next_rs = StringUtils.noNull(results.get(i+1).getRosterStatus());
+            this_rd = results.get(i).getRosterDate();
+            next_rd = results.get(i+1).getRosterDate();
+            this_td = results.get(i).getRosterTerminationDate();
+            next_td = results.get(i+1).getRosterTerminationDate();
+            
+            if (this_rs.equalsIgnoreCase(next_rs) && 
+        		UtilDateUtilities.nullSafeCompare(this_rd, next_rd).equals(0) && 
+        		UtilDateUtilities.nullSafeCompare(this_td, next_td).equals(0)) {
                 results.remove(i);
                 i--;
             }
