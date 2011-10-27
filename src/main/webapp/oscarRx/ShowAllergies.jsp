@@ -222,11 +222,15 @@ padding-right:6;
 				| <span class="view_menu">View: 
 				
 				<%
-					 
+					 					 
 					 String demoNo=request.getParameter("demographicNo");
+					 
 					 if(demoNo==null) {
-						 demoNo = (String)request.getAttribute("demographicNo");
+						 demoNo = (String)session.getAttribute("demographicNo");
+					 }else{
+						 session.setAttribute("demographicNo", demoNo);
 					 }
+					 
 				     String strView=request.getParameter("view");
 					
 					 String[] navArray={"Active","All","Inactive"};	
