@@ -52,6 +52,7 @@ import org.oscarehr.document.dao.DocumentDAO;
 import org.oscarehr.document.model.CtlDocument;
 import org.oscarehr.document.model.CtlDocumentPK;
 import org.oscarehr.myoscar_server.ws.AccountWs;
+import org.oscarehr.myoscar_server.ws.InvalidRelationshipException_Exception;
 import org.oscarehr.myoscar_server.ws.InvalidRequestException_Exception;
 import org.oscarehr.myoscar_server.ws.NotAuthorisedException_Exception;
 import org.oscarehr.myoscar_server.ws.PersonTransfer;
@@ -484,7 +485,7 @@ public class PHRUserManagementAction extends DispatchAction {
         return ar;
     }
     
-    private void addRelationships(HttpServletRequest request, PersonTransfer newAccount) throws NotAuthorisedException_Exception {
+    private void addRelationships(HttpServletRequest request, PersonTransfer newAccount) throws NotAuthorisedException_Exception, InvalidRequestException_Exception, InvalidRelationshipException_Exception {
     	
     	if (log.isDebugEnabled())
     	{
@@ -506,7 +507,7 @@ public class PHRUserManagementAction extends DispatchAction {
 		RegistrationHelper.storeSelectionDefaults(request);
     }
 
-	private void handleReverseRelation(AccountWs accountWs, HttpServletRequest request, PersonTransfer newAccount, String key) throws NotAuthorisedException_Exception {
+	private void handleReverseRelation(AccountWs accountWs, HttpServletRequest request, PersonTransfer newAccount, String key) throws NotAuthorisedException_Exception, InvalidRequestException_Exception, InvalidRelationshipException_Exception {
 		if (!WebUtils.isChecked(request, key)) return;
 	    
 		Long otherMyOscarUserId=new Long(key.substring("enable_reverse_relation_".length()));
@@ -514,7 +515,7 @@ public class PHRUserManagementAction extends DispatchAction {
 		accountWs.createRelationship(otherMyOscarUserId, newAccount.getId(), relation);
     }
 
-	private void handlePrimaryRelation(AccountWs accountWs, HttpServletRequest request, PersonTransfer newAccount, String key) throws NotAuthorisedException_Exception {
+	private void handlePrimaryRelation(AccountWs accountWs, HttpServletRequest request, PersonTransfer newAccount, String key) throws NotAuthorisedException_Exception, InvalidRequestException_Exception, InvalidRelationshipException_Exception {
 		if (!WebUtils.isChecked(request, key)) return;
 	    
 		Long otherMyOscarUserId=new Long(key.substring("enable_primary_relation_".length()));
