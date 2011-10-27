@@ -123,12 +123,12 @@ else if (orderByRequest.equals("file_name")) orderBy = EFormUtil.FILE_NAME;
                         <table class="eformInputHeadingTable">
                             <tr>
                                 <td class="eformInputHeading" style="width: 20px; background-color: white;"> </td>
-                                <td class="eformInputHeading eformInputHeadingActive" onclick="openUpload(this)" id="uploadHeading">Upload New EForm</td>
-                                <td class="eformInputHeading" onclick="openImport()" id="importHeading">&nbsp; Import EForm</td>
+                                <td class="eformInputHeading eformInputHeadingActive" onclick="openUpload(this)" id="uploadHeading">Upload New eForm</td>
+                                <td class="eformInputHeading" onclick="openImport()" id="importHeading">&nbsp; Import eForm</td>
                                 <td class="eformInputHeading" onclick="openCreate()" id="createHeading">&nbsp; Create In Editor</td>
-                                <td class="eformInputHeading" onclick="openDownload()" id="createHeading">&nbsp; Download Eforms</td>
+                                <td class="eformInputHeading" onclick="openDownload()" id="createHeading">&nbsp; Download eForms</td>
                                <!-- call eform generator-->
-                                <td class="eformInputHeading" onClick ="popupPage(400,960,'eformGenerator.jsp');return false;"id="createHeading"> &nbsp; Eform Generator</td>
+                                <td class="eformInputHeading" onClick ="popupPage(400,960,'eformGenerator.jsp');return false;"id="createHeading"> &nbsp; eForm Generator</td>
                                 <!--generator-->
                             </tr>
                         </table>
