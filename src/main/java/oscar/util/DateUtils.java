@@ -749,4 +749,17 @@ public final class DateUtils {
 	{
 		return(calculateDayDifference(MiscUtils.toCalendar(date1), MiscUtils.toCalendar(date2)));
 	}
+	
+	
+	public static Integer nullSafeCompare(Date d1, Date d2) {
+		if (d1==null && d2==null) return 0;
+		if (d1==null) return 1;
+		if (d2==null) return -1;
+   
+		if (d1.equals(d2)) return 0;
+		if (d1.before(d2)) return 1;
+		if (d2.after(d2)) return -1;
+   
+		return null; //should never happen
+	}
 }

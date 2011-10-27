@@ -14,6 +14,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
 
 import org.apache.log4j.Logger;
@@ -82,6 +83,24 @@ public class ProviderLabRouting {
     public static Hashtable getInfo(String lab_no) throws SQLException {
 	Hashtable info = new Hashtable();
 	String sql = "SELECT * FROM providerLabRouting WHERE lab_no='"+lab_no+"'";
+	
+	ResultSet rs = DBHandler.GetSQL(sql);
+	
+	if (rs.next()) {
+	    info.put("lab_no", lab_no);
+	    info.put("provider_no", rs.getString("provider_no"));
+	    info.put("status", rs.getString("status"));
+	    info.put("comment", rs.getString("comment"));
+	    info.put("timestamp", rs.getString("timestamp"));
+	    info.put("lab_type", rs.getString("lab_type"));
+	    info.put("id", rs.getInt("id"));
+	}
+	return info;
+    }
+    
+    public static HashMap getInfo(String lab_no, String lab_type) throws SQLException {
+	HashMap<String, Object> info = new HashMap<String, Object>();
+	String sql = "SELECT * FROM providerLabRouting WHERE lab_no='"+lab_no+"' AND lab_type='"+lab_type+"'";
 	
 	ResultSet rs = DBHandler.GetSQL(sql);
 	
