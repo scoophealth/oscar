@@ -24,7 +24,6 @@ import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.validator.DynaValidatorForm;
 import org.apache.xmlbeans.XmlOptions;
 import oscar.oscarEncounter.oscarMeasurements.data.ImportExportMeasurements;
-import oscar.oscarEncounter.oscarMeasurements.data.MeasurementMapConfig;
 import oscar.oscarEncounter.oscarMeasurements.data.Measurements;
 import oscar.oscarReport.data.DemographicSets;
 import oscar.oscarRx.data.RxPrescriptionData;
@@ -848,18 +847,12 @@ public class CihiExportAction extends DispatchAction {
                 for (LabMeasurements labMea : labMeaList) {
                 	String data = StringUtils.noNull(labMea.getExtVal("identifier"));
                 	log.debug("Measurement search for identifier '" + data + "'");
-            	    String loinc = new MeasurementMapConfig().getLoincCodeByIdentCode(data);
-            	    if( StringUtils.empty(loinc) ) {
-            	    	log.debug("loin code empty...continuing");
-            	    	continue;
-            	    }                	                   
             	    
                     Date dateTime = UtilDateUtilities.StringToDate(labMea.getExtVal("datetime"),"yyyy-MM-dd HH:mm:ss");
                     if (dateTime==null) {
                     	dateTime = UtilDateUtilities.StringToDate(labMea.getExtVal("datetime"),"yyyy-MM-dd");
                     	if (dateTime==null) {
                     		log.debug("dateTime is null...continuing");
-                    		continue;
                     	}
                     }
 
@@ -868,7 +861,8 @@ public class CihiExportAction extends DispatchAction {
                     if (StringUtils.filled(data)) labResults.setLabTestCode(data);
                     
                     cdsDtCihi.DateFullOrDateTime collDate = labResults.addNewCollectionDateTime();
-                    collDate.setFullDate(Util.calDate(dateTime));                    
+                    if (dateTime!=null) collDate.setFullDate(Util.calDate(dateTime));
+                    else collDate.setFullDate(Util.calDate("0001-01-01"));
 
                     data = labMea.getExtVal("name");
                     

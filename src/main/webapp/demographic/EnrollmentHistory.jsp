@@ -9,6 +9,7 @@
 <%@page import="org.oscarehr.common.dao.DemographicArchiveDao" %>
 <%@page import="org.oscarehr.common.model.DemographicArchive" %>
 <%@page import="java.util.List" %>
+<%@page import="java.util.Date" %>
 <%@page import="oscar.util.DateUtils" %>
 <%@page import="oscar.util.StringUtils" %>
 <%@page import="oscar.oscarDemographic.pageUtil.Util" %>
@@ -59,6 +60,8 @@
 
 	//load current roster status
 	String rosterStatus = demographic.getRosterStatus();
+	Date rosterDate = demographic.getRosterDate();
+	Date rosterTermDate = demographic.getRosterTerminationDate();
 %>
 
 <body topmargin="0" leftmargin="0" vlink="#0000FF">
@@ -115,9 +118,9 @@
 								<td nowrap="nowrap"><%=viewRS(rosterStatus)%></td>
 								
 							<%if("RO".equals(rosterStatus)){ %>
-								<td nowrap="nowrap"><%=DateUtils.formatDate(demographic.getRosterDate(),request.getLocale())%></td>
+								<td nowrap="nowrap"><%=DateUtils.formatDate(rosterDate,request.getLocale())%></td>
 							<%}else if( rosterStatus != null && !rosterStatus.trim().equals("")){ %>
-								<td nowrap="nowrap"><%=DateUtils.formatDate(demographic.getRosterTerminationDate(),request.getLocale())%></td>
+								<td nowrap="nowrap"><%=DateUtils.formatDate(rosterTermDate,request.getLocale())%></td>
 							<%}%>
 								<td nowrap="nowrap"><%=(demographic.getProviderNo().length()>0 && demographic.getRosterStatus().equals("RO"))?providerDao.getProvider(demographic.getProviderNo()).getFormattedName():"" %></td>
 							<% if(StringUtils.filled(demographic.getLastUpdateUser())){ %>
@@ -140,8 +143,16 @@
 								List<DemographicArchive> DAs = demoArchiveDao.findRosterStatusHistoryByDemographicNo(Integer.valueOf(demographicNo));
 								for(int i=0;i<DAs.size();i++) {
 									DemographicArchive da = DAs.get(i);
-									String historyRS = da.getRosterStatus();
-									if (i==0 && historyRS.equals(rosterStatus)) continue;
+					                String historyRS = StringUtils.noNull(da.getRosterStatus());
+					                
+					                if (i==0) { //check history info with current
+						                Date rd = da.getRosterDate();
+						                Date td = da.getRosterTerminationDate();
+					                	if (historyRS.equals(rosterStatus) &&
+				                			DateUtils.nullSafeCompare(td, rosterDate).equals(0) &&
+				                			DateUtils.nullSafeCompare(td, rosterTermDate).equals(0))
+					                		continue;
+					                }
 					                %>
 					                	<tr>
 					                		<td nowrap="nowrap"><%=DateUtils.formatDate(da.getLastUpdateDate(),request.getLocale())%></td>
