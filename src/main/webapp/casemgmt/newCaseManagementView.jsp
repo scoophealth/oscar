@@ -22,6 +22,8 @@
 */
 --%>
 
+<%@page import="oscar.Misc"%>
+<%@page import="oscar.util.UtilMisc"%>
 <%@include file="/casemgmt/taglibs.jsp"%>
 <%@taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
 <%@page import="java.util.Enumeration"%>
@@ -1049,6 +1051,7 @@ try
 
 	</div>
 	<script type="text/javascript">
+	
 		if (parseInt(navigator.appVersion)>3) {
 			var windowHeight=750;
 			if (navigator.appName=="Netscape") {
@@ -1073,7 +1076,7 @@ try
  function selectGroup() {
 	 	var noteId='<%=((CaseManagementEntryFormBean)session.getAttribute(frmName)).getNoteId()%>';
 	 	var noteId = document.forms["caseManagementEntryForm"].noteId.value;
-    	alert(noteId);
+    	
     	popupPage(600,700,'group','groupNoteSelect.jsp?programId='+case_program_id + '&demographicNo='+demographicNo);
     
     }
@@ -1195,7 +1198,7 @@ try
    setTimer();
 
     //$("encMainDiv").scrollTop = $("n<%=savedId%>").offsetTop - $("encMainDiv").offsetTop;
-    reason = "<%=insertReason(request, bean)%>";    //function defined bottom of file
+    reason = "<%=insertReason(request)%>";    //function defined bottom of file
    
  	function spellCheck()
     {            
@@ -1222,24 +1225,27 @@ catch (Exception e)
 <%!/*
 																						 *Insert encounter reason for new note
 																						 */
-	protected String insertReason(HttpServletRequest request, oscar.oscarEncounter.pageUtil.EctSessionBean bean)
+	protected String insertReason(HttpServletRequest request)
 	{
 		if(OscarProperties.getInstance().isPropertyActive("encounter.empty_new_note")) {
 			return new String();
 		}
 		String encounterText = "";
-		if (bean != null)
-		{
-			String apptDate = convertDateFmt(bean.appointmentDate);
-			if (bean.eChartTimeStamp == null)
-			{
-				encounterText = "\n[" + oscar.util.UtilDateUtilities.DateToString(bean.currentDate, "dd-MMM-yyyy", request.getLocale()) + " .: " + bean.reason + "] \n";
-			}
-			else
-			{
-				encounterText = "\n[" + ("".equals(bean.appointmentDate)?oscar.util.UtilDateUtilities.getToday("dd-MMM-yyyy"):apptDate) + " .: " + bean.reason + "]\n";
-			}
+		String apptDate = request.getParameter("appointmentDate");
+		String reason = request.getParameter("reason");
+		
+		if( reason == null ) {
+			reason = "";
 		}
+		
+		if( apptDate == null || apptDate.equals("") || apptDate.equalsIgnoreCase("null") ) {
+			encounterText = "\n[" + oscar.util.UtilDateUtilities.DateToString(oscar.util.UtilDateUtilities.Today(), "dd-MMM-yyyy", request.getLocale()) + " .: " + reason + "] \n";
+		}
+		else {
+			apptDate = convertDateFmt(apptDate);
+			encounterText = "\n[" + apptDate + " .: " + reason + "]\n";		
+		}
+		
 		encounterText = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(encounterText);
 		return encounterText;
 	}
