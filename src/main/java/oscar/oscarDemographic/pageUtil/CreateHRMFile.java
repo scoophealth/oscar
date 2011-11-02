@@ -34,6 +34,7 @@ import cdsDtHrm.PostalZipCode;
 import cdsDtHrm.ReportClass;
 import cdsDtHrm.ReportContent;
 import cdsDtHrm.ReportFormat;
+import cdsDtHrm.ReportMedia;
 import cdshrm.DemographicsDocument.Demographics;
 import cdshrm.DemographicsDocument.Demographics.Contact;
 import cdshrm.OmdCdsDocument;
@@ -319,9 +320,10 @@ public class CreateHRMFile {
             else HRMreport.setFileExtensionAndVersion("");
 
             //Format
-            if (report.getFormat()!=null && report.getFormat().equals(cdsDt.ReportFormat.TEXT)) {
-                HRMreport.setFormat(ReportFormat.TEXT);
-            }
+            if (report.getFormat()!=null) HRMreport.setFormat(ReportFormat.Enum.forString(report.getFormat().toString()));
+
+            //Media
+            if (report.getMedia()!=null) HRMreport.setMedia(ReportMedia.Enum.forString(report.getMedia().toString()));
 
             //EventDateTime
             if (report.getEventDateTime()!=null) copyDateFP(HRMreport.addNewEventDateTime(), report.getEventDateTime());

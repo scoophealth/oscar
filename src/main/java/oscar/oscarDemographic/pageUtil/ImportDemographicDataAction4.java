@@ -1995,7 +1995,8 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                             } else {
                                 String docFileName = "ImportReport"+(i+1)+"-"+UtilDateUtilities.getToday("yyyy-MM-dd.HH.mm.ss");
                                 String docClass=null, docSubClass=null, contentType="", observationDate=null, updateDateTime=null, docCreator=admProviderNo;
-                                String reviewer=null, reviewDateTime=null, source=null, sourceFacility=null;
+                                String reviewer=null, reviewDateTime=null, source=null, sourceFacility=null, reportExtra=null;
+                                Integer docNum=null;
 
                                 if (StringUtils.filled(repR[i].getFileExtensionAndVersion())) {
                                     contentType = repR[i].getFileExtensionAndVersion();
@@ -2022,6 +2023,10 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                                 	sourceFacility = repR[i].getSourceFacility();
                                 }
                                 
+                                if (repR[i].getMedia()!=null) {
+                                	reportExtra = Util.addLine(reportExtra, "Media: ", repR[i].getMedia().toString());
+                                }
+                                
                                 ReportsReceived.SourceAuthorPhysician authorPhysician = repR[i].getSourceAuthorPhysician();
                                 if (authorPhysician!=null) {
                                     if (authorPhysician.getAuthorName()!=null) {
@@ -2042,9 +2047,18 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                                 observationDate = dateFPtoString(repR[i].getEventDateTime(), timeShiftInDays);
                                 updateDateTime = dateFPtoString(repR[i].getReceivedDateTime(), timeShiftInDays);
 
-                                EDocUtil.addDocument(demographicNo,docFileName,docDesc,"",docClass,docSubClass,contentType,observationDate,updateDateTime,docCreator,admProviderNo,reviewer,reviewDateTime,source,sourceFacility);
+                                docNum = EDocUtil.addDocument(demographicNo,docFileName,docDesc,"",docClass,docSubClass,contentType,observationDate,updateDateTime,docCreator,admProviderNo,reviewer,reviewDateTime,source,sourceFacility);
+                                if (docNum==null) docNum = 0;
                                 if (binaryFormat) addOneEntry(REPORTBINARY);
                                 else addOneEntry(REPORTTEXT);
+                                
+                                //to dumpsite: Extra report data
+                                if (StringUtils.filled(reportExtra)) {
+                    	            reportExtra = Util.addLine("imported.cms4.2011.06", reportExtra);
+                    	            CaseManagementNote rpNote = prepareCMNote("2",null);
+                    	            rpNote.setNote(reportExtra);
+                    	            saveLinkNote(rpNote, CaseManagementNoteLink.DOCUMENT, Long.valueOf(docNum));
+                                }
                             }
                         }
                     }
