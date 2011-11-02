@@ -2555,7 +2555,11 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
 						<%
 							if (ConformanceTestHelper.enableConformanceOnlyTestFeatures)
 							{
-								%>
+								String styleBut = "";
+								if(ConformanceTestHelper.hasDifferentRemoteDemographics(Integer.parseInt(demographic$))){                                                                        
+                                                                       styleBut = " style=\"background-color:yellow\" ";
+                                                                }%>
+									<input type="button" value="Compare with Integrator" <%=styleBut%>  onclick="popup(425, 600, 'DiffRemoteDemographics.jsp?demographicId=<%=demographic$%>', 'RemoteDemoWindow')" />
 									<input type="button" value="Update latest integrated demographics information" onclick="document.location='<%=request.getContextPath()%>/demographic/copyLinkedDemographicInfoAction.jsp?demographicId=<%=demographic$%>&<%=request.getQueryString()%>'" /> 
 									<input type="button" value="Send note to integrated provider" onclick="document.location='<%=request.getContextPath()%>/demographic/followUpSelection.jsp?demographicId=<%=demographic$%>'" /> 
 								<%								
