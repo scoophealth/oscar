@@ -498,7 +498,7 @@ public class Util {
     static public String replaceBr(String s) {
     	if (StringUtils.empty(s)) return s;
     	
-    	String br = "<b />";
+    	String br = "<br />";
     	s = s.replace(br, "\n");
     	
     	return s;

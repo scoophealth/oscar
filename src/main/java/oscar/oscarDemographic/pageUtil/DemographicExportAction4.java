@@ -1718,10 +1718,16 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                                 
                                 //Class
                                 if (reportStrings.get("class")!=null) {
-                                    rpr.setClass1(cdsDt.ReportClass.Enum.forString(formatReportClass(reportStrings.get("class"))));
+                                    rpr.setClass1(cdsDt.ReportClass.Enum.forString(formatHrmEnum(reportStrings.get("class"))));
+                                    
                                 } else {
                                     rpr.setClass1(cdsDt.ReportClass.OTHER_LETTER);
                                     err.add("Error! No Class for HRM report! Export as 'Other Letter'. Patient "+demoNo+" ("+(i+1)+")");
+                                }
+
+                                //Media
+                                if (reportStrings.get("media")!=null) {
+                                    rpr.setMedia(cdsDt.ReportMedia.Enum.forString(formatHrmEnum(reportStrings.get("media"))));
                                 }
 
                                 //Subclass
@@ -1732,11 +1738,6 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                                 //File extension & version
                                 if (reportStrings.get("fileextension&version")!=null) {
                                     rpr.setFileExtensionAndVersion(reportStrings.get("fileextension&version"));
-                                }
-
-                                //Media
-                                if (cdsDt.ReportMedia.Enum.forString(reportStrings.get("media"))!=null) {
-                                    rpr.setMedia(cdsDt.ReportMedia.Enum.forString(reportStrings.get("media")));
                                 }
 
                                 //HRM Result Status
@@ -2332,20 +2333,22 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
         return note;
     }
     
-    private String formatReportClass(String reportClass) {
-    	if (StringUtils.empty(reportClass)) return null;
+    private String formatHrmEnum(String hrmEnum) {
+    	if (StringUtils.empty(hrmEnum)) return null;
     	
-    	reportClass = reportClass.toLowerCase();
-    	reportClass = reportClass.replace("_", " ");
-    	
-    	String reportClassF = reportClass.substring(0,1).toUpperCase();
-    	for (int i=1; i<reportClass.length(); i++) {
-    		reportClassF += reportClass.substring(i,i+1);
-    		if (reportClass.substring(i,i+1).equals(" ") && (i+1)<reportClass.length()) {
-    			reportClassF += reportClass.substring(i+1, i+2).toUpperCase();
+    	hrmEnum = hrmEnum.replace("_", " ");
+		hrmEnum = hrmEnum.toLowerCase();
+		
+    	String hrmEnumF = hrmEnum.substring(0,1).toUpperCase();
+    	for (int i=1; i<hrmEnum.length(); i++) {
+    		hrmEnumF += hrmEnum.substring(i,i+1);
+    		if (hrmEnum.substring(i,i+1).equals(" ") && (i+1)<hrmEnum.length()) {
+    			hrmEnumF += hrmEnum.substring(i+1, i+2).toUpperCase();
     			i++;
     		}
     	}
-    	return reportClassF;
+    	
+    	if (hrmEnumF.equals("Medical Records Report")) hrmEnumF = "Medical Record Report"; //HRM & CDS class names not match
+    	return hrmEnumF;
     }
 }
