@@ -446,7 +446,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		// set demographic info
 		Demographic demographic = demographicDao.getDemographicById(demographicId);
 
-		BeanUtils.copyProperties(demographic, demographicTransfer);
+		String ignoreProperties[] = {"lastUpdateDate"};
+		BeanUtils.copyProperties(demographic, demographicTransfer,ignoreProperties);
 
 		demographicTransfer.setCaisiDemographicId(demographic.getDemographicNo());
 		demographicTransfer.setBirthDate(demographic.getBirthDay());
@@ -461,7 +462,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		demographicTransfer.setPhone1(demographic.getPhone());
 		demographicTransfer.setPhone2(demographic.getPhone2());
 
-		
+		demographicTransfer.setLastUpdateDate(DateUtils.toGregorianCalendar(demographic.getLastUpdateDate()));
+
 		try {
 			demographicTransfer.setGender(Gender.valueOf(demographic.getSex().toUpperCase()));
 		} catch (Exception e) {
