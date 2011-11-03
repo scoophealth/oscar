@@ -159,8 +159,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 	private static final String INTEGRATOR_UPDATE_PERIOD_PROPERTIES_KEY = "INTEGRATOR_UPDATE_PERIOD";
 	private static final String INTEGRATOR_THROTTLE_DELAY_PROPERTIES_KEY = "INTEGRATOR_THROTTLE_DELAY";
-	private static final long INTEGRATOR_THROTTLE_DELAY=Long.parseLong((String)OscarProperties.getInstance().get(INTEGRATOR_THROTTLE_DELAY_PROPERTIES_KEY));
-	
+	private static final long INTEGRATOR_THROTTLE_DELAY = Long.parseLong((String) OscarProperties.getInstance().get(INTEGRATOR_THROTTLE_DELAY_PROPERTIES_KEY));
+
 	private static Timer timer = new Timer("CaisiIntegratorUpdateTask Timer", true);
 
 	private FacilityDao facilityDao = (FacilityDao) SpringUtils.getBean("facilityDao");
@@ -193,7 +193,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 	static {
 		// ensure cxf uses log4j
-		System.setProperty("org.apache.cxf.Logger", "org.apache.cxf.common.logging.Log4jLogger");		
+		System.setProperty("org.apache.cxf.Logger", "org.apache.cxf.common.logging.Log4jLogger");
 	}
 
 	public static synchronized void startTask() {
@@ -260,13 +260,15 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				} else {
 					logger.error("Unexpected error.", e);
 				}
+			} catch (ShutdownException e) {
+				throw (e);
 			} catch (Exception e) {
 				logger.error("Unexpected error.", e);
 			}
 		}
 	}
 
-	private void pushAllDataForOneFacility(Facility facility) throws IOException, IllegalAccessException, InvocationTargetException, ShutdownException {
+	private void pushAllDataForOneFacility(Facility facility) throws IOException, ShutdownException {
 		logger.info("Start pushing data for facility : " + facility.getId() + " : " + facility.getName());
 
 		// set working facility
@@ -307,7 +309,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		logger.info("Finished pushing data for facility : " + facility.getId() + " : " + facility.getName());
 	}
 
-	private void pushFacility(Date lastDataUpdated) throws MalformedURLException, IllegalAccessException, InvocationTargetException {
+	private void pushFacility(Date lastDataUpdated) throws MalformedURLException {
 		Facility facility = LoggedInInfo.loggedInInfo.get().currentFacility;
 
 		if (facility.getLastUpdated().after(lastDataUpdated)) {
@@ -362,7 +364,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		service.setCachedPrograms(cachedPrograms);
 	}
 
-	private void pushProviders(Date lastDataUpdated, Facility facility) throws MalformedURLException, IllegalAccessException, InvocationTargetException, ShutdownException {
+	private void pushProviders(Date lastDataUpdated, Facility facility) throws MalformedURLException, ShutdownException {
 		List<String> providerIds = ProviderDao.getProviderIds(facility.getId());
 		ProviderWs service = CaisiIntegratorManager.getProviderWs(facility);
 
@@ -435,6 +437,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				// connection at large -- continuing to process not possible
 				// need some way of notification here.
 				logger.error("Error updating demographic, continuing with Demographic batch", iae);
+			} catch (ShutdownException e) {
+				throw (e);
 			} catch (Exception e) {
 				logger.error("Unexpected error.", e);
 			}
@@ -486,7 +490,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		// send the request
 		service.setDemographic(demographicTransfer);
 		throttleAndChecks();
-		
+
 		conformanceTestLog(facility, "Demographic", String.valueOf(demographicId));
 	}
 
@@ -509,7 +513,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		logger.debug("pushing demographicIssues facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
 		List<CaseManagementIssue> caseManagementIssues = caseManagementIssueDAO.getIssuesByDemographic(demographicId.toString());
-		StringBuilder sentIds=new StringBuilder();
+		StringBuilder sentIds = new StringBuilder();
 		if (caseManagementIssues.size() == 0) return;
 
 		for (CaseManagementIssue caseManagementIssue : caseManagementIssues) {
@@ -535,10 +539,10 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			issues.add(cachedDemographicIssue);
 			service.setCachedDemographicIssues(issues);
 			throttleAndChecks();
-			
-			sentIds.append(","+caseManagementIssue.getId());
+
+			sentIds.append("," + caseManagementIssue.getId());
 		}
-		
+
 		conformanceTestLog(facility, "CaseManagementIssue", sentIds.toString());
 	}
 
@@ -546,9 +550,9 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		logger.debug("pushing admissions facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
 		List<Admission> admissions = admissionDao.getAdmissionsByFacility(demographicId, facility.getId());
-		StringBuilder sentIds=new StringBuilder();
+		StringBuilder sentIds = new StringBuilder();
 		if (admissions.size() == 0) return;
-		
+
 		for (Admission admission : admissions) {
 
 			// don't send admission if it is not in our facility. yeah I know I'm double checking since it's selected
@@ -574,7 +578,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			demographicService.setCachedAdmissions(cachedAdmissions);
 			throttleAndChecks();
 
-			sentIds.append(","+admission.getId());
+			sentIds.append("," + admission.getId());
 		}
 
 		conformanceTestLog(facility, "Admission", sentIds.toString());
@@ -592,15 +596,15 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		logger.debug("pushing demographicPreventions facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
 		ArrayList<CachedDemographicPrevention> preventionsToSend = new ArrayList<CachedDemographicPrevention>();
-		StringBuilder sentIds=new StringBuilder();
+		StringBuilder sentIds = new StringBuilder();
 
 		// get all preventions
 		// for each prevention, copy fields to an integrator prevention
 		// need to copy ext info
 		// add prevention to array list to send
 		List<Prevention> localPreventions = preventionDao.findNotDeletedByDemographicId(demographicId);
-		if (localPreventions.size()==0) return;
-		
+		if (localPreventions.size() == 0) return;
+
 		for (Prevention localPrevention : localPreventions) {
 
 			if (!providerIdsInFacility.contains(localPrevention.getCreatorProviderNo())) continue;
@@ -622,18 +626,17 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			cachedDemographicPrevention.setNever(localPrevention.isNever());
 
 			// add ext info
-			// ext info should be added to the attributes field as xml data 
-			Document doc=XmlUtils.newDocument("PreventionExt");
-			HashMap<String, String> exts=preventionDao.getPreventionExt(localPrevention.getId());
-			for (Map.Entry<String, String> entry : exts.entrySet())
-			{
+			// ext info should be added to the attributes field as xml data
+			Document doc = XmlUtils.newDocument("PreventionExt");
+			HashMap<String, String> exts = preventionDao.getPreventionExt(localPrevention.getId());
+			for (Map.Entry<String, String> entry : exts.entrySet()) {
 				XmlUtils.appendChildToRoot(doc, entry.getKey(), entry.getValue());
 			}
-			cachedDemographicPrevention.setAttributes(XmlUtils.toString(doc,false));
-				
+			cachedDemographicPrevention.setAttributes(XmlUtils.toString(doc, false));
+
 			preventionsToSend.add(cachedDemographicPrevention);
-			
-			sentIds.append(","+localPrevention.getId());
+
+			sentIds.append("," + localPrevention.getId());
 		}
 
 		if (preventionsToSend.size() > 0) service.setCachedDemographicPreventions(preventionsToSend);
@@ -646,31 +649,30 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	private void pushDocuments(Date lastDataUpdated, Facility facility, DemographicWs demographicWs, Integer demographicId) throws ShutdownException {
 		logger.debug("pushing demographicDocuments facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
-		StringBuilder sentIds=new StringBuilder();
+		StringBuilder sentIds = new StringBuilder();
 
-		logger.debug("module=demographic, moduleid="+demographicId.toString()+", view=all, EDocUtil.PRIVATE="+EDocUtil.PRIVATE+", sort="+EDocUtil.SORT_OBSERVATIONDATE+", viewstatus=active");
+		logger.debug("module=demographic, moduleid=" + demographicId.toString() + ", view=all, EDocUtil.PRIVATE=" + EDocUtil.PRIVATE + ", sort=" + EDocUtil.SORT_OBSERVATIONDATE + ", viewstatus=active");
 		List<EDoc> privateDocs = EDocUtil.listDocs("demographic", demographicId.toString(), "all", EDocUtil.PRIVATE, EDocUtil.SORT_OBSERVATIONDATE, "active");
 		for (EDoc eDoc : privateDocs) {
 			sendSingleDocument(lastDataUpdated, demographicWs, eDoc, demographicId);
 			throttleAndChecks();
-			sentIds.append(","+eDoc.getDocId());
+			sentIds.append("," + eDoc.getDocId());
 		}
 
 		List<EDoc> publicDocs = EDocUtil.listDocs("demographic", demographicId.toString(), "all", EDocUtil.PUBLIC, EDocUtil.SORT_OBSERVATIONDATE, "active");
 		for (EDoc eDoc : publicDocs) {
 			sendSingleDocument(lastDataUpdated, demographicWs, eDoc, demographicId);
 			throttleAndChecks();
-			sentIds.append(","+eDoc.getDocId());
+			sentIds.append("," + eDoc.getDocId());
 		}
-		
+
 		conformanceTestLog(facility, "EDoc", sentIds.toString());
 	}
-	
-	private void sendSingleDocument(Date lastDataUpdated, DemographicWs demographicWs, EDoc eDoc, Integer demographicId)
-	{
+
+	private void sendSingleDocument(Date lastDataUpdated, DemographicWs demographicWs, EDoc eDoc, Integer demographicId) {
 		// no change since last sync
-		if (eDoc.getDateTimeStampAsDate()!=null && eDoc.getDateTimeStampAsDate().before(lastDataUpdated)) return;
-		
+		if (eDoc.getDateTimeStampAsDate() != null && eDoc.getDateTimeStampAsDate().before(lastDataUpdated)) return;
+
 		// send this document
 		CachedDemographicDocument cachedDemographicDocument = new CachedDemographicDocument();
 		FacilityIdIntegerCompositePk facilityIdIntegerCompositePk = new FacilityIdIntegerCompositePk();
@@ -698,91 +700,88 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 		byte[] contents = EDocUtil.getFile(OscarProperties.getInstance().getProperty("DOCUMENT_DIR") + '/' + eDoc.getFileName());
 
-		demographicWs.addCachedDemographicDocumentAndContents(cachedDemographicDocument, contents);		
+		demographicWs.addCachedDemographicDocumentAndContents(cachedDemographicDocument, contents);
 	}
 
 	private void pushLabResults(Date lastDataUpdated, Facility facility, DemographicWs demographicWs, Integer demographicId) throws ShutdownException, ParserConfigurationException, UnsupportedEncodingException, ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException {
 		logger.debug("pushing pushLabResults facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
-	    CommonLabResultData comLab = new CommonLabResultData();
-	    ArrayList<LabResultData> labs = comLab.populateLabResultsData("",demographicId.toString(), "", "","","U");
-		StringBuilder sentIds=new StringBuilder();
-		if (labs.size()==0) return;
-		
-	    for (LabResultData lab : labs)
-	    {
-	    	CachedDemographicLabResult cachedDemographicLabResult=makeCachedDemographicLabResult(demographicId, lab);
-	    	demographicWs.addCachedDemographicLabResult(cachedDemographicLabResult);
-			
-	    	throttleAndChecks();
-			sentIds.append(","+lab.getLabPatientId()+":"+lab.labType+":"+lab.segmentID);
-	    }
-	    
+		CommonLabResultData comLab = new CommonLabResultData();
+		ArrayList<LabResultData> labs = comLab.populateLabResultsData("", demographicId.toString(), "", "", "", "U");
+		StringBuilder sentIds = new StringBuilder();
+		if (labs.size() == 0) return;
+
+		for (LabResultData lab : labs) {
+			CachedDemographicLabResult cachedDemographicLabResult = makeCachedDemographicLabResult(demographicId, lab);
+			demographicWs.addCachedDemographicLabResult(cachedDemographicLabResult);
+
+			throttleAndChecks();
+			sentIds.append("," + lab.getLabPatientId() + ":" + lab.labType + ":" + lab.segmentID);
+		}
+
 		conformanceTestLog(facility, "LabResultData", sentIds.toString());
 	}
-	
-	private CachedDemographicLabResult makeCachedDemographicLabResult(Integer demographicId, LabResultData lab) throws ParserConfigurationException, UnsupportedEncodingException, ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException
-	{
-		CachedDemographicLabResult cachedDemographicLabResult=new CachedDemographicLabResult();
-		
-		FacilityIdLabResultCompositePk pk=new FacilityIdLabResultCompositePk();
+
+	private CachedDemographicLabResult makeCachedDemographicLabResult(Integer demographicId, LabResultData lab) throws ParserConfigurationException, UnsupportedEncodingException, ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+		CachedDemographicLabResult cachedDemographicLabResult = new CachedDemographicLabResult();
+
+		FacilityIdLabResultCompositePk pk = new FacilityIdLabResultCompositePk();
 		// our attempt at making a fake pk....
-		String key=LabDisplayHelper.makeLabKey(demographicId, lab.getSegmentID(), lab.labType, lab.getDateTime());
+		String key = LabDisplayHelper.makeLabKey(demographicId, lab.getSegmentID(), lab.labType, lab.getDateTime());
 		pk.setLabResultId(key);
 		cachedDemographicLabResult.setFacilityIdLabResultCompositePk(pk);
 
 		cachedDemographicLabResult.setCaisiDemographicId(demographicId);
 		cachedDemographicLabResult.setType(lab.labType);
-		
-		Document doc=LabDisplayHelper.labToXml(demographicId, lab);
-		
-		String data=XmlUtils.toString(doc,false);
+
+		Document doc = LabDisplayHelper.labToXml(demographicId, lab);
+
+		String data = XmlUtils.toString(doc, false);
 		cachedDemographicLabResult.setData(data);
-		
-		return(cachedDemographicLabResult);
+
+		return (cachedDemographicLabResult);
 	}
-	
+
 	private void pushForms(Date lastDataUpdated, Facility facility, DemographicWs demographicWs, Integer demographicId) throws ShutdownException, SQLException, IOException, ParseException {
 		logger.debug("pushing demographic forms facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
 		pushLabReq2007(lastDataUpdated, facility, demographicWs, demographicId);
 	}
-	
-	private void pushLabReq2007(Date lastDataUpdated, Facility facility, DemographicWs demographicWs, Integer demographicId) throws SQLException, ShutdownException, IOException, ParseException {
-		List<Properties> records=FrmLabReq07Record.getPrintRecords(demographicId);
-		if (records.size()==0) return;
-		
-		StringBuilder sentIds=new StringBuilder();
 
-		for (Properties p : records)
-		{
-			SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
-			Date date=sdf.parse(p.getProperty("formEdited"));
+	private void pushLabReq2007(Date lastDataUpdated, Facility facility, DemographicWs demographicWs, Integer demographicId) throws SQLException, ShutdownException, IOException, ParseException {
+		List<Properties> records = FrmLabReq07Record.getPrintRecords(demographicId);
+		if (records.size() == 0) return;
+
+		StringBuilder sentIds = new StringBuilder();
+
+		for (Properties p : records) {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			Date date = sdf.parse(p.getProperty("formEdited"));
 			// no change since last sync
-			if (date!=null && date.before(lastDataUpdated)) continue;
-			
-			CachedDemographicForm cachedDemographicForm=new CachedDemographicForm();
-			FacilityIdIntegerCompositePk facilityIdIntegerCompositePk=new FacilityIdIntegerCompositePk();
+			if (date != null && date.before(lastDataUpdated)) continue;
+
+			CachedDemographicForm cachedDemographicForm = new CachedDemographicForm();
+			FacilityIdIntegerCompositePk facilityIdIntegerCompositePk = new FacilityIdIntegerCompositePk();
 			facilityIdIntegerCompositePk.setCaisiItemId(Integer.parseInt(p.getProperty("ID")));
 			cachedDemographicForm.setFacilityIdIntegerCompositePk(facilityIdIntegerCompositePk);
-			
+
 			cachedDemographicForm.setCaisiDemographicId(demographicId);
-			cachedDemographicForm.setCaisiProviderId(p.getProperty("provider_no"));			
-			cachedDemographicForm.setEditDate(DateUtils.toGregorianCalendar(date));				
+			cachedDemographicForm.setCaisiProviderId(p.getProperty("provider_no"));
+			cachedDemographicForm.setEditDate(DateUtils.toGregorianCalendar(date));
 			cachedDemographicForm.setFormName("formLabReq07");
-			
-			ByteArrayOutputStream baos=new ByteArrayOutputStream();
+
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			p.store(baos, null);
 			cachedDemographicForm.setFormData(baos.toString());
-			
+
 			demographicWs.addCachedDemographicForm(cachedDemographicForm);
-			
-			throttleAndChecks();			
-			sentIds.append(","+p.getProperty("ID"));
+
+			throttleAndChecks();
+			sentIds.append("," + p.getProperty("ID"));
 		}
-		
+
 		conformanceTestLog(facility, "formLabReq07", sentIds.toString());
-    }
+	}
 
 	private void pushDemographicNotes(Date lastDataUpdated, Facility facility, DemographicWs service, Integer demographicId) throws ShutdownException {
 		logger.debug("pushing demographicNotes facilityId:" + facility.getId() + ", demographicId:" + demographicId);
@@ -797,7 +796,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		String issueType = OscarProperties.getInstance().getProperty("COMMUNITY_ISSUE_CODETYPE");
 		if (issueType != null) issueType = issueType.toUpperCase();
 
-		StringBuilder sentIds=new StringBuilder();
+		StringBuilder sentIds = new StringBuilder();
 
 		for (CaseManagementNote localNote : localNotes) {
 			try {
@@ -805,22 +804,22 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				if (localNote.isLocked() || !programIds.contains(Integer.parseInt(localNote.getProgram_no()))) continue;
 
 				// note hasn't changed since last sync
-				if (localNote.getUpdate_date()!=null && localNote.getUpdate_date().before(lastDataUpdated)) continue;
-				
+				if (localNote.getUpdate_date() != null && localNote.getUpdate_date().before(lastDataUpdated)) continue;
+
 				CachedDemographicNote noteToSend = makeRemoteNote(localNote, issueType);
 				ArrayList<CachedDemographicNote> notesToSend = new ArrayList<CachedDemographicNote>();
 				notesToSend.add(noteToSend);
 				service.setCachedDemographicNotes(notesToSend);
-				
-				sentIds.append(","+localNote.getId());
+
+				sentIds.append("," + localNote.getId());
 			} catch (NumberFormatException e) {
 				logger.error("Unexpected error. ProgramNo=" + localNote.getProgram_no(), e);
 			}
 		}
 
 		conformanceTestLog(facility, "CaseManagementNote", sentIds.toString());
-		sentIds=new StringBuilder();
-		
+		sentIds = new StringBuilder();
+
 		// add group notes as well.
 		logger.info("checking for group notes for " + demographicId);
 		List<GroupNoteLink> noteLinks = groupNoteDao.findLinksByDemographic(demographicId);
@@ -839,8 +838,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				notesToSend.add(noteToSend);
 				service.setCachedDemographicNotes(notesToSend);
 				logger.info("adding group note to send");
-				
-				sentIds.append(","+noteLink.getId());
+
+				sentIds.append("," + noteLink.getId());
 			} catch (NumberFormatException e) {
 				logger.error("Unexpected error. ProgramNo=" + localNote.getProgram_no(), e);
 			}
@@ -848,7 +847,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		}
 
 		conformanceTestLog(facility, "GroupNoteLink", sentIds.toString());
-		
+
 		throttleAndChecks();
 	}
 
@@ -887,17 +886,17 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 	private void pushDemographicDrugs(Date lastDataUpdated, Facility facility, List<String> providerIdsInFacility, DemographicWs demographicService, Integer demographicId) throws ShutdownException {
 		logger.debug("pushing demographicDrugss facilityId:" + facility.getId() + ", demographicId:" + demographicId);
-		StringBuilder sentIds=new StringBuilder();
+		StringBuilder sentIds = new StringBuilder();
 
 		List<Drug> drugs = drugDao.findByDemographicIdOrderByDate(demographicId, null);
-		if (drugs==null || drugs.size()==0) return;
-		
+		if (drugs == null || drugs.size() == 0) return;
+
 		if (drugs != null) {
 			for (Drug drug : drugs) {
 				if (!providerIdsInFacility.contains(drug.getProviderNo())) continue;
 
-				if (drug.getCreateDate()!=null && drug.getCreateDate().before(lastDataUpdated)) continue;
-				
+				if (drug.getCreateDate() != null && drug.getCreateDate().before(lastDataUpdated)) continue;
+
 				CachedDemographicDrug cachedDemographicDrug = new CachedDemographicDrug();
 
 				cachedDemographicDrug.setArchived(drug.isArchived());
@@ -942,8 +941,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				ArrayList<CachedDemographicDrug> drugsToSend = new ArrayList<CachedDemographicDrug>();
 				drugsToSend.add(cachedDemographicDrug);
 				demographicService.setCachedDemographicDrugs(drugsToSend);
-				
-				sentIds.append(","+drug.getId());
+
+				sentIds.append("," + drug.getId());
 			}
 		}
 
@@ -958,14 +957,14 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 		RxPatientData.Patient patient = RxPatientData.getPatient(demographicId);
 		RxPatientData.Patient.Allergy[] allergies = patient.getActiveAllergies();
-		if (allergies==null || allergies.length==0) return;
-		
-		StringBuilder sentIds=new StringBuilder();
+		if (allergies == null || allergies.length == 0) return;
+
+		StringBuilder sentIds = new StringBuilder();
 
 		for (RxPatientData.Patient.Allergy allergy : allergies) {
 			// no change since last sync
-			if (allergy.getEntryDate()!=null && allergy.getEntryDate().before(lastDataUpdated)) continue;
-			
+			if (allergy.getEntryDate() != null && allergy.getEntryDate().before(lastDataUpdated)) continue;
+
 			CachedDemographicAllergy cachedAllergy = new CachedDemographicAllergy();
 
 			FacilityIdIntegerCompositePk facilityIdIntegerCompositePk = new FacilityIdIntegerCompositePk();
@@ -993,10 +992,10 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			cachedAllergies.add(cachedAllergy);
 			demographicService.setCachedDemographicAllergies(cachedAllergies);
 			throttleAndChecks();
-			
-			sentIds.append(","+allergy.getAllergyId());
+
+			sentIds.append("," + allergy.getAllergyId());
 		}
-		
+
 		conformanceTestLog(facility, "Allergy", sentIds.toString());
 	}
 
@@ -1006,13 +1005,13 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		List<Appointment> appointments = appointmentDao.getAllByDemographicNo(demographicId);
 		if (appointments.size() == 0) return;
 
-		StringBuilder sentIds=new StringBuilder();
+		StringBuilder sentIds = new StringBuilder();
 
 		for (Appointment appointment : appointments) {
-			if (appointment.getUpdateDateTime()!=null && lastDataUpdated.after(appointment.getUpdateDateTime())) continue;
-			
-			if (appointment.getUpdateDateTime()!=null && appointment.getUpdateDateTime().before(lastDataUpdated)) continue;
-			
+			if (appointment.getUpdateDateTime() != null && lastDataUpdated.after(appointment.getUpdateDateTime())) continue;
+
+			if (appointment.getUpdateDateTime() != null && appointment.getUpdateDateTime().before(lastDataUpdated)) continue;
+
 			CachedAppointment cachedAppointment = new CachedAppointment();
 			FacilityIdIntegerCompositePk facilityIdIntegerCompositePk = new FacilityIdIntegerCompositePk();
 			facilityIdIntegerCompositePk.setCaisiItemId(appointment.getId());
@@ -1037,8 +1036,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			ArrayList<CachedAppointment> cachedAppointments = new ArrayList<CachedAppointment>();
 			cachedAppointments.add(cachedAppointment);
 			demographicService.setCachedAppointments(cachedAppointments);
-			
-			sentIds.append(","+appointment.getId());
+
+			sentIds.append("," + appointment.getId());
 		}
 
 		throttleAndChecks();
@@ -1051,11 +1050,11 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		List<DxResearch> dxresearchs = dxresearchDao.getByDemographicNo(demographicId);
 		if (dxresearchs.size() == 0) return;
 
-		StringBuilder sentIds=new StringBuilder();
+		StringBuilder sentIds = new StringBuilder();
 
 		for (DxResearch dxresearch : dxresearchs) {
-			if (dxresearch.getUpdateDate()!=null && dxresearch.getUpdateDate().before(lastDataUpdated)) continue;
-			
+			if (dxresearch.getUpdateDate() != null && dxresearch.getUpdateDate().before(lastDataUpdated)) continue;
+
 			CachedDxresearch cachedDxresearch = new CachedDxresearch();
 			FacilityIdIntegerCompositePk facilityIdIntegerCompositePk = new FacilityIdIntegerCompositePk();
 			facilityIdIntegerCompositePk.setCaisiItemId(dxresearch.getId().intValue());
@@ -1071,10 +1070,10 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			ArrayList<CachedDxresearch> cachedDxresearchs = new ArrayList<CachedDxresearch>();
 			cachedDxresearchs.add(cachedDxresearch);
 			demographicService.setCachedDxresearch(cachedDxresearchs);
-			
-			sentIds.append(","+dxresearch.getId());
+
+			sentIds.append("," + dxresearch.getId());
 		}
-		
+
 		throttleAndChecks();
 		conformanceTestLog(facility, "DxResearch", sentIds.toString());
 	}
@@ -1085,7 +1084,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		List<BillingOnCHeader1> billingCh1s = billingOnItemDao.getCh1ByDemographicNo(demographicId);
 		if (billingCh1s.size() == 0) return;
 
-		for (BillingOnCHeader1 billingCh1 : billingCh1s) {			
+		for (BillingOnCHeader1 billingCh1 : billingCh1s) {
 			List<BillingOnItem> billingItems = billingOnItemDao.getBillingItemByCh1Id(billingCh1.getId());
 			for (BillingOnItem billingItem : billingItems) {
 				MiscUtils.checkShutdownSignaled();
@@ -1121,11 +1120,11 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 		List<EFormData> eformDatas = eFormDataDao.findByDemographicId(demographicId);
 		if (eformDatas.size() == 0) return;
-		
-		StringBuilder sentIds=new StringBuilder();
+
+		StringBuilder sentIds = new StringBuilder();
 
 		for (EFormData eformData : eformDatas) {
-			
+
 			CachedEformData cachedEformData = new CachedEformData();
 			FacilityIdIntegerCompositePk facilityIdIntegerCompositePk = new FacilityIdIntegerCompositePk();
 			facilityIdIntegerCompositePk.setCaisiItemId(eformData.getId());
@@ -1144,8 +1143,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			ArrayList<CachedEformData> cachedEformDatas = new ArrayList<CachedEformData>();
 			cachedEformDatas.add(cachedEformData);
 			demographicService.setCachedEformData(cachedEformDatas);
-			
-			sentIds.append(","+eformData.getId());
+
+			sentIds.append("," + eformData.getId());
 		}
 
 		conformanceTestLog(facility, "EFormData", sentIds.toString());
@@ -1178,13 +1177,13 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 		List<Measurements> measurements = measurementsDao.getMeasurementsByDemo(demographicId);
 		if (measurements.size() == 0) return;
-		
-		StringBuilder sentIds=new StringBuilder();
+
+		StringBuilder sentIds = new StringBuilder();
 
 		for (Measurements measurement : measurements) {
 			// no change since last sync
-			if (measurement.getDateEntered()!=null && measurement.getDateEntered().before(lastDataUpdated)) continue;
-			
+			if (measurement.getDateEntered() != null && measurement.getDateEntered().before(lastDataUpdated)) continue;
+
 			CachedMeasurement cachedMeasurement = new CachedMeasurement();
 			FacilityIdIntegerCompositePk facilityIdIntegerCompositePk = new FacilityIdIntegerCompositePk();
 			facilityIdIntegerCompositePk.setCaisiItemId(measurement.getId());
@@ -1202,8 +1201,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			ArrayList<CachedMeasurement> cachedMeasurements = new ArrayList<CachedMeasurement>();
 			cachedMeasurements.add(cachedMeasurement);
 			demographicService.setCachedMeasurements(cachedMeasurements);
-			
-			sentIds.append(","+measurement.getId());
+
+			sentIds.append("," + measurement.getId());
 
 			List<MeasurementsExt> measurementExts = measurementsExtDao.getMeasurementsExtByMeasurementId(measurement.getId());
 			for (MeasurementsExt measurementExt : measurementExts) {
@@ -1262,27 +1261,24 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		throttleAndChecks();
 		conformanceTestLog(facility, "Measurements", sentIds.toString());
 	}
-	
+
 	/**
-	 * This method should not be used except during conformance testing. It will log all sends to the integrator.
-	 * This is superfluous because all data is sent, we already know it's "all sent" even with out the logs.
+	 * This method should not be used except during conformance testing. It will log all sends to the integrator. This is superfluous because all data is sent, we already know it's "all sent" even with out the logs.
 	 */
-	private static void conformanceTestLog(Facility facility, String dataType, String ids)
-	{
-		if (ConformanceTestHelper.enableConformanceOnlyTestFeatures){
-			ids=StringUtils.trimToNull(ids);
-			if (ids!=null) LogAction.addLogSynchronous(null, "Integrator Send", dataType, ids, facility.getIntegratorUrl());
+	private static void conformanceTestLog(Facility facility, String dataType, String ids) {
+		if (ConformanceTestHelper.enableConformanceOnlyTestFeatures) {
+			ids = StringUtils.trimToNull(ids);
+			if (ids != null) LogAction.addLogSynchronous(null, "Integrator Send", dataType, ids, facility.getIntegratorUrl());
 		}
 	}
-	
-	private static void throttleAndChecks() throws ShutdownException
-	{
+
+	private static void throttleAndChecks() throws ShutdownException {
 		MiscUtils.checkShutdownSignaled();
-		
+
 		try {
-	        Thread.sleep(INTEGRATOR_THROTTLE_DELAY);
-        } catch (InterruptedException e) {
-	        logger.error("Error", e);
-        }
+			Thread.sleep(INTEGRATOR_THROTTLE_DELAY);
+		} catch (InterruptedException e) {
+			logger.error("Error", e);
+		}
 	}
 }
