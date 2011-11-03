@@ -428,6 +428,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				pushForms(lastDataUpdated, facility, demographicService, demographicId);
 				pushLabResults(lastDataUpdated, facility, demographicService, demographicId);
 
+				DbConnectionFilter.releaseAllThreadDbResources();
 			} catch (IllegalArgumentException iae) {
 				// continue processing demographics if date values in current demographic are bad
 				// all other errors thrown by the above methods should indicate a failure in the service
