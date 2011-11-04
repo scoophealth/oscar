@@ -1448,7 +1448,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     //notes from lab
                     data = StringUtils.noNull(labMea.getExtVal("comments"));
                     if (StringUtils.filled(data)) {
-                        labResults.setNotesFromLab(Util.replaceBr(data));
+                        labResults.setNotesFromLab(Util.replaceTags(data));
                     }
 
                     //lab reference range

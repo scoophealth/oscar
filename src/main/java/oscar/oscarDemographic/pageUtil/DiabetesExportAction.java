@@ -637,7 +637,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
         
         data = labMea.getExtVal("comments");
         if (StringUtils.filled(data)) {
-            labResults.setNotesFromLab(Util.replaceBr(data));
+            labResults.setNotesFromLab(Util.replaceTags(data));
         }
         
         String range = labMea.getExtVal("range");
