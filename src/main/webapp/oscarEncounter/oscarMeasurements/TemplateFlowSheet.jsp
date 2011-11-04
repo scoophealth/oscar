@@ -408,7 +408,7 @@ div.recommendations li{
                     <oscar:nameage demographicNo="<%=demographic_no%>"/>
                     <oscar:oscarPropertiesCheck property="SPEC3" value="yes"> 
                     <span class="DoNotPrint">
-                    <security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
+                    <security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="x">
                     <a href="adminFlowsheet/EditFlowsheet.jsp?flowsheet=<%=temp%>&demographic=<%=demographic_no%>" target="_new">Edit</a>
                     &nbsp;
                     </security:oscarSec>
@@ -442,9 +442,9 @@ div.recommendations li{
 <td class="MainTableLeftColumn" valign="top">
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
     <% if (recList.size() > 0){ %>
-    <a class="DoNotPrint" href="javascript: function myFunction() {return false; }"  onclick="javascript:fsPopup(465,635,'AddMeasurementData.jsp?demographic_no=<%=demographic_no%><%=recListBuffer.toString()%>&amp;template=<%=temp%>','addMeasurementData<%=Math.abs( "ADDTHEMALL".hashCode() ) %>')">
-        ADD ALL
-    </a>
+    <p></p><a class="DoNotPrint" href="javascript: function myFunction() {return false; }"  onclick="javascript:fsPopup(465,635,'AddMeasurementData.jsp?demographic_no=<%=demographic_no%><%=recListBuffer.toString()%>&amp;template=<%=temp%>','addMeasurementData<%=Math.abs( "ADDTHEMALL".hashCode() ) %>')">
+        Add Overdue
+    </a></p>
     <%}%>
     </security:oscarSec>
     <!-- only show disease registry and prescriptions for flowsheets which aren't medical in nature -->
