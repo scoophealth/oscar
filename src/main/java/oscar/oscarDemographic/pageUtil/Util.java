@@ -495,11 +495,17 @@ public class Util {
     	return immunizationToPreventionType.get(immunizationType);
     }
     
-    static public String replaceBr(String s) {
+    static public String replaceTags(String s) {
     	if (StringUtils.empty(s)) return s;
     	
-    	String br = "<br />";
-    	s = s.replace(br, "\n");
+    	String tag = "<br />";
+    	s = s.replace(tag, "\n");
+    	tag = "<br/>";
+    	s = s.replace(tag, "\n");
+    	tag = "<br>";
+    	s = s.replace(tag, "\n");
+    	tag = "&nbsp;";
+    	s = s.replace(tag, " ");
     	
     	return s;
     }
