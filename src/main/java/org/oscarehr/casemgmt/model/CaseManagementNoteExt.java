@@ -82,6 +82,9 @@ public class CaseManagementNoteExt {
 	public Date getDateValue() {
 	    return this.dateValue;
 	}
+	public String getDateValueStr() {
+	    return UtilDateUtilities.DateToString(this.dateValue,"yyyy-MM-dd");
+	}
 	public void setDateValue(Date dateValue) {
 	    this.dateValue = dateValue;
 	}

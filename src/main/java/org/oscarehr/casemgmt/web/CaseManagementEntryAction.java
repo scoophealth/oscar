@@ -68,6 +68,7 @@ import org.oscarehr.caisi_integrator.ws.CachedDemographicNote;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.casemgmt.dao.CaseManagementIssueDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
+import org.oscarehr.casemgmt.dao.CaseManagementNoteExtDAO;
 import org.oscarehr.casemgmt.dao.IssueDAO;
 import org.oscarehr.casemgmt.model.CaseManagementCPP;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
@@ -134,6 +135,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
 	private CaseManagementNoteDAO caseManagementNoteDao = (CaseManagementNoteDAO) SpringUtils.getBean("caseManagementNoteDAO");
 	private CaseManagementIssueDAO caseManagementIssueDao = (CaseManagementIssueDAO) SpringUtils.getBean("caseManagementIssueDAO");
+	private CaseManagementNoteExtDAO caseManagementNoteExtDao = (CaseManagementNoteExtDAO) SpringUtils.getBean("CaseManagementNoteExtDAO");
 	private IssueDAO issueDao = (IssueDAO) SpringUtils.getBean("IssueDAO");
 
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -502,7 +504,13 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 	public ActionForward issueNoteSave(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String strNote = request.getParameter("value");
 		String appointmentNo = request.getParameter("appointmentNo");
-                HttpSession session = request.getSession();
+		HttpSession session = request.getSession();
+		
+		String[] extNames = { "startdate", "resolutiondate", "proceduredate", "ageatonset", "problemstatus", "treatment", "exposuredetail", "relationship","lifestage","hidecpp","problemdescription" };
+		String[] extKeys = { CaseManagementNoteExt.STARTDATE, CaseManagementNoteExt.RESOLUTIONDATE, CaseManagementNoteExt.PROCEDUREDATE,
+							 CaseManagementNoteExt.AGEATONSET, CaseManagementNoteExt.PROBLEMSTATUS, CaseManagementNoteExt.TREATMENT,
+							 CaseManagementNoteExt.EXPOSUREDETAIL, CaseManagementNoteExt.RELATIONSHIP,CaseManagementNoteExt.LIFESTAGE,
+							 CaseManagementNoteExt.HIDECPP,CaseManagementNoteExt.PROBLEMDESC };
 		
 		// strNote = strNote.trim();
 		logger.debug("Saving: " + strNote);
@@ -535,11 +543,42 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			note.setDemographic_no(demo);
 			newNote = true;
 		} else {
-			note = this.caseManagementMgr.getNote(noteId);
-			// if note has not changed don't save
-			if (strNote.equals(note.getNote()) && !issueChange.equals("true") && (archived == null || archived.equalsIgnoreCase("false"))) return null;
-		}
+			boolean extChanged = false;
+			List<CaseManagementNoteExt> cmeList = caseManagementNoteExtDao.getExtByNote(Long.valueOf(noteId));
+			
+			extNames:
+			for (int i=0; i<extNames.length; i++) {
+				boolean extKeyMatched = false;
 
+				String val = request.getParameter(extNames[i]);
+				for (CaseManagementNoteExt cme : cmeList) {
+					if (!cme.getKeyVal().equals(extKeys[i])) continue;
+
+					if (i <= 2) {
+						if (!nullEmptyEqual(cme.getDateValueStr(), partialFullDate(val, partialDateFormat(val)))) {
+							extChanged = true;
+							break extNames;
+						}
+						val = partialDateFormat(val);
+					}
+					if (!nullEmptyEqual(cme.getValue(), val)) {
+						extChanged = true;
+						break extNames;
+					}
+					extKeyMatched = true;
+					break;
+				}
+				if (filled(val) && !extKeyMatched) { //new ext value(s) added
+					extChanged = true;
+					break extNames;
+				}
+			}
+			
+			// if note has not changed don't save
+			note = this.caseManagementMgr.getNote(noteId);
+			if (strNote.equals(note.getNote()) && !issueChange.equals("true") && !extChanged && 
+				(archived == null || archived.equalsIgnoreCase("false"))) return null;
+		}
 		note.setNote(strNote);
 		note.setProviderNo(providerNo);
 		note.setSigning_provider_no(providerNo);
@@ -801,16 +840,14 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		/* save extra fields */
 		CaseManagementNoteExt cme = new CaseManagementNoteExt();
 		cme.setNoteId(note.getId());
-		String[] names = { "startdate", "resolutiondate", "proceduredate", "ageatonset", "problemstatus", "treatment", "exposuredetail", "relationship","lifestage","hidecpp","problemdescription" };
-		String[] keys = { cme.STARTDATE, cme.RESOLUTIONDATE, cme.PROCEDUREDATE, cme.AGEATONSET, cme.PROBLEMSTATUS, cme.TREATMENT, cme.EXPOSUREDETAIL, cme.RELATIONSHIP,cme.LIFESTAGE,cme.HIDECPP,cme.PROBLEMDESC };
-		for (int i = 0; i < names.length; i++) {
-			String val = request.getParameter(names[i]);
+		for (int i = 0; i < extNames.length; i++) {
+			String val = request.getParameter(extNames[i]);
 			if (filled(val)) {
-				cme.setKeyVal(keys[i]);
+				cme.setKeyVal(extKeys[i]);
 				cme.setDateValue((Date)null);
 				cme.setValue(null);
 				if (i <= 2) {
-					if (createPartialDate(val, cme)) caseManagementMgr.saveNoteExt(cme);
+					if (writePartialDate(val, cme)) caseManagementMgr.saveNoteExt(cme);
 				} else {
 					cme.setValue(val);
                     caseManagementMgr.saveNoteExt(cme);
@@ -3069,7 +3106,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		return false;
 	}
 
-        private String checkPartial(String dateValue) {
+        private String partialDateFormat(String dateValue) {
             if (!filled(dateValue)) return null;
 
             dateValue = dateValue.trim();
@@ -3089,26 +3126,30 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             }
             return null;
         }
+        
+        private String partialFullDate(String dateValue, String type) {
+            if (type==null) return null;
+        	
+            dateValue = dateValue.replace("/", "-");
+            if (type.equals(PartialDate.YEARONLY)) return dateValue+"-01-01";
+            if (type.equals(PartialDate.YEARMONTH)) return dateValue+"-01";
+            return dateValue;
+        }
 
-        private boolean createPartialDate(String dateValue, CaseManagementNoteExt cme) {
+        private boolean writePartialDate(String dateValue, CaseManagementNoteExt cme) {
             if (cme==null) return false;
 
-            String type = checkPartial(dateValue);
+            String type = partialDateFormat(dateValue);
             if (type==null) return false;
         	
-            if (type.equals(PartialDate.YEARONLY)) {
-                cme.setValue(type);
-                cme.setDateValue(dateValue+"-01-01");
-                return true;
-            }
-            else if(type.equals(PartialDate.YEARMONTH)) {
-                cme.setValue(type);
-                cme.setDateValue(dateValue+"-01");
-                return true;
-            }
-            else {
-                cme.setDateValue(dateValue);
-                return true;
-            }
+            cme.setValue(type);
+            cme.setDateValue(partialFullDate(dateValue, type));
+            return true;
+        }
+        
+        private boolean nullEmptyEqual(String s1, String s2) {
+        	if (s1==null) s1 = "";
+        	if (s2==null) s2 = "";
+        	return s1.trim().equals(s2.trim());
         }
 }
