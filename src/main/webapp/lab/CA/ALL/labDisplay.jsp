@@ -21,6 +21,7 @@
 <%@ page import="org.oscarehr.casemgmt.model.CaseManagementNote"%>
 <%@ page import="org.oscarehr.util.SpringUtils"%>
 <%@ page import="org.oscarehr.common.dao.UserPropertyDAO, org.oscarehr.common.model.UserProperty" %>
+<%@ page import="oscar.oscarEncounter.oscarMeasurements.dao.*,oscar.oscarEncounter.oscarMeasurements.model.Measurementmap" %>
 <%@ page import="org.oscarehr.casemgmt.service.CaseManagementManager, org.oscarehr.common.dao.Hl7TextMessageDao, org.oscarehr.common.model.Hl7TextMessage"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -54,6 +55,7 @@ else {
 
 //Need date lab was received by OSCAR
 Hl7TextMessageDao hl7TxtMsgDao = (Hl7TextMessageDao)SpringUtils.getBean("hl7TextMessageDao");
+MeasurementMapDao measurementMapDao = (MeasurementMapDao) SpringUtils.getBean("measurementMapDao");
 Hl7TextMessage hl7TextMessage = hl7TxtMsgDao.find(Integer.parseInt(segmentID));
 java.util.Date date = hl7TextMessage.getCreated();
 String stringFormat = "yyyy-MM-dd HH:mm";
@@ -905,11 +907,26 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                         if (cml!=null) {p_cmn = caseManagementManager.getNote(cml.getNoteId().toString());}
                                         if (p_cmn!=null){isPrevAnnotation=true;}
                                         
+                                        String loincCode = null;
+                                        try{
+                                        	Measurementmap mmap = measurementMapDao.getMapsByIdent(handler.getOBXIdentifier(j, k)).get(0);
+                                        	loincCode = mmap.getLoincCode();
+                                        }catch(Exception e){
+                                         	MiscUtils.getLogger().error("loincProb",e);
+                                        }
+                                        
+                                        
                                         if(handler.getOBXValueType(j,k) != null &&  handler.getOBXValueType(j,k).equalsIgnoreCase("FT")){
                                             String[] dividedString  =divideStringAtFirstNewline(handler.getOBXResult( j, k));
                                             %>                                         
                                             <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>" >
-                                                <td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= handler.getOBXIdentifier(j, k) %><%=remoteFacilityIdQueryString%>')"><%=obxName %></a></td>
+                                                <td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %>
+                                                	<a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= handler.getOBXIdentifier(j, k) %><%=remoteFacilityIdQueryString%>')"><%=obxName %></a>
+                                                	&nbsp;
+                                                	<%if(loincCode != null){ %>
+                                                	<a href="javascript:popupStart('660','1000','http://apps.nlm.nih.gov/medlineplus/services/mpconnect.cfm?mainSearchCriteria.v.cs=2.16.840.1.113883.6.1&mainSearchCriteria.v.c=<%=loincCode%>&informationRecipient.languageCode.c=en')"> info</a>
+                                                	<%} %>
+                                                </td>
                                                 <td align="right"><%= dividedString[0] %></td>
                                                 <td align="center" valign="top"><%= handler.getOBXAbnormalFlag(j, k)%></td>
                                                 <td align="left" valign="top"><%=handler.getOBXReferenceRange( j, k)%></td>
@@ -929,7 +946,12 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                             <%}%>
                                         <%}else{%>
                                             <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>">
-                                                <td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= handler.getOBXIdentifier(j, k) %><%=remoteFacilityIdQueryString%>')"><%=obxName %></a></td>
+                                                <td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= handler.getOBXIdentifier(j, k) %><%=remoteFacilityIdQueryString%>')"><%=obxName %></a>
+                                                &nbsp;
+                                                	<%if(loincCode != null){ %>
+                                                	<a href="javascript:popupStart('660','1000','http://apps.nlm.nih.gov/medlineplus/services/mpconnect.cfm?mainSearchCriteria.v.cs=2.16.840.1.113883.6.1&mainSearchCriteria.v.c=<%=loincCode%>&informationRecipient.languageCode.c=en')"> info</a>
+                                                	<%} %>
+                                                </td>
                                                 <td align="right"><%= handler.getOBXResult( j, k) %></td>
                                                 <td align="center" valign="top"><%= handler.getOBXAbnormalFlag(j, k)%></td>
                                                 <td align="left" valign="top"><%=handler.getOBXReferenceRange( j, k)%></td>
