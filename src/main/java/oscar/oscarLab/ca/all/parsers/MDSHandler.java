@@ -648,7 +648,19 @@ public class MDSHandler implements MessageHandler {
     public String getCCDocs(){
         String docs = "";
         try {
-            docs = getFullDocName("/.PV1-9-");
+        	String tmp = "";
+        	int x=0;
+        	do {
+        		tmp = getFullDocName("/.PV1-9("+x+")-");
+        		if(tmp.length()>0) {
+        			if(docs.length()>0) {
+        				docs = docs+", " + tmp;
+        			} else {
+        				docs = tmp;
+        			}
+        		}
+        		x++;
+        	}while(!tmp.equals(""));
             if (docs.equals(""))
                 docs = getFullDocName("/.PV1-17-");
             else
