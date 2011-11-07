@@ -1184,14 +1184,6 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     	continue;
                     }
 
-                    CaseManagementNote cmNote = prepareCMNote("1",null);
-                    String noteType = cNotes[i].getNoteType();
-                    if (StringUtils.filled(noteType)) noteType = "Note Type: "+noteType;
-                    
-                    if (!encounter.trim().startsWith(noteType))
-                    	encounter = Util.addLine(noteType, encounter);
-                    cmNote.setNote(encounter);
-
                     //create date
                     if (cNotes[i].getEnteredDateTime()!=null) {
                     	createDate = dateTimeFPtoDate(cNotes[i].getEnteredDateTime(),timeShiftInDays);
@@ -1204,8 +1196,11 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     	if (cNotes[i].getEnteredDateTime()==null) createDate = observeDate;
                     	
                     }
+                    
+                    CaseManagementNote cmNote = prepareCMNote("1",null);
                     cmNote.setCreate_date(createDate);
                     cmNote.setObservation_date(observeDate);
+                    cmNote.setNote(encounter);
                     
                     String uuid = null;
                     ClinicalNotes.ParticipatingProviders[] participatingProviders = cNotes[i].getParticipatingProvidersArray();
@@ -1273,6 +1268,16 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                         }
                     }
                     if (p_total==0) caseManagementManager.saveNoteSimple(cmNote);
+                    
+                    //to dumpsite
+                    String noteType = cNotes[i].getNoteType();
+                    if (StringUtils.filled(noteType)) {
+                    	noteType = Util.addLine("imported.cms4.2011.06", "Note Type: ", noteType);
+                    }
+
+                    CaseManagementNote dumpNote = prepareCMNote("2",null);
+                    dumpNote.setNote(noteType);
+                    saveLinkNote(cmNote.getId(), dumpNote);
                 }
 
                 //ALLERGIES & ADVERSE REACTIONS
