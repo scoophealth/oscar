@@ -2385,6 +2385,19 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 	
 	String getCalDateTime(Calendar c) {
 		if (c==null) return "";
+		
+		Calendar c1 = Calendar.getInstance();
+		c1.setTime(new Date());
+		
+		//Cancel out timezone difference
+		int diff = c.getTimeZone().getRawOffset() - c1.getTimeZone().getRawOffset();
+		c.add(Calendar.MILLISECOND, diff);
+		
+		//Cancel out daylight saving
+		diff = c.getTimeZone().useDaylightTime() && c.getTimeZone().inDaylightTime(c.getTime()) ? 1 : 0;
+		diff -= c1.getTimeZone().useDaylightTime() && c1.getTimeZone().inDaylightTime(c.getTime()) ? 1 : 0;
+		c.add(Calendar.HOUR, diff);
+		
 		SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		return f.format(c.getTime());
 	}
