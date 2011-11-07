@@ -21,6 +21,7 @@ import org.apache.log4j.Logger;
 
 import oscar.util.UtilDateUtilities;
 import ca.uhn.hl7v2.HL7Exception;
+import ca.uhn.hl7v2.model.Segment;
 import ca.uhn.hl7v2.model.v23.datatype.XCN;
 import ca.uhn.hl7v2.model.v23.message.ORU_R01;
 import ca.uhn.hl7v2.parser.Parser;
@@ -131,6 +132,11 @@ public class CMLHandler implements MessageHandler {
     
     public String getOBXIdentifier(int i, int j){
         try{
+    		Segment obxSeg = msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX();	
+    		String subIdent = Terser.get(obxSeg, 3, 0, 1, 2) ;
+    		if(subIdent != null){ //HACK: for gdml labs generated with SubmitLabByFormAction
+    			return getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationIdentifier().getIdentifier().getValue())+"&"+subIdent;
+    		}
             return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationIdentifier().getIdentifier().getValue()));
         }catch(Exception e){
             return("");
