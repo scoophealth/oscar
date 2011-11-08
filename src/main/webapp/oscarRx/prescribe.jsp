@@ -115,7 +115,9 @@ if(listRxDrugs!=null){
                         prnStr="prn";
                 drugName=drugName.replace("'", "\\'");
                 drugName=drugName.replace("\"","\\\"");
-
+                drugName=drugName.replace("Â","");
+                drugName=drugName.replace("¬","");
+                
 %>
 
 <fieldset style="margin-top:2px;width:620px;" id="set_<%=rand%>">
