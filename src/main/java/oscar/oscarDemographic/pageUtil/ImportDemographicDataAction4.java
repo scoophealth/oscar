@@ -1267,7 +1267,10 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                             
                         }
                     }
-                    if (p_total==0) caseManagementManager.saveNoteSimple(cmNote);
+                    if (p_total==0) {
+                        err_note.add("Clinical notes have no author; assigned to \"doctor oscardoc\" ("+(i+1)+")");
+                    	caseManagementManager.saveNoteSimple(cmNote);
+                    }
                     
                     //to dumpsite
                     String noteType = cNotes[i].getNoteType();
