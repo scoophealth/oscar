@@ -102,56 +102,37 @@ The reason for the above is because of the review model of gerrit. You don't wan
 
 
 --------------
-ChangeId Hooks (more advanced optional topic)
+ChangeId Hooks 
 --------------
 Change ID Hook will add a change ID to every commit you make. The benefit of this is if you change / fix a commit and resubmit it, gerrit will use the changeId to replace the previous commit. 
 
-To install the changeId hook for git command line usage, copy the commit-msg file into your test/.git/hooks directory (you maye need to make the hooks directory) this will effecitvely enable the changeId hook for the test project. When you commit it should add a changeId to the comments. You may need to make sure the file is chmod +x as it's a script.
+Note that this conceptually the same as commit --amend but it's actually different because of the gerrit workflow. In general once you have a changeId in the commit message you will be able to use commit --amend on remote commits properly. If you don't have a changeId, a commit --amend will generate 2 commits (if the previous was already pushed) instead of relacing the previous one. 
+
+To install the changeId hook for git command line usage, copy the commit-msg file (located in this directory) into your test/.git/hooks directory (you may need to make the hooks directory) this will effecitvely enable the changeId hook for the test project. When you commit it should add a changeId to the comments. You may need to make sure the file is chmod +x as it's a script.
 
 For Eclipse, the newer versions of the git plugin has a check box option on the commit screen to auto generate changeId's - cool eh?  
 
 
+-----------------------
+Fixing previous commits 
+-----------------------
+Previously we allowed people to commit a subsequent fix like in CVS, but now that we've been live with git/gerrit for a while, we're going to expect developers to have progressed. We will require people to amend the previous commit via the changeId hooks.
 
------------------------
-Fixing previous commits (more advanced optional topic)
------------------------
-The easiest way to fix a previous commit is to continue working the way we did in CVS... i.e. make another commit with the changes/fixes. For those who are more adventurous the following is a native git/gerrit routine to do this but the commands are also not supported in eclipse.
+You need to fetch the commit that needs to be fixed and switch to that branch. Login to gerrit and look at the screen for that commit. Around the middle of the screen in the "Patch Set X" area you'll find a download option, the url or command line will be provided there. An example of the line is "     git fetch ssh://r6squeegee@source.oscartools.org:29418/test refs/changes/62/662/2 && git checkout FETCH_HEAD"
 
 From the command line :
-- make sure your work space has the gerrit changes you want to fix. If you don't you can explicitly fetch the branches by looking at the URL's of the commit on the gerrit pages.
-- set one branch to the end of the set of changes, i.e. master.
-- create and switch to another branch to the commit that needs to be fixed, i.e. "git checkout -b fix 4dj45" where 4dj45 is the first part of the SHA of the commit.
+- switch to the commit as per above.
 - make the changes you need to make
-- "git commit -a --amend" the change.
-- switch back to the end point, i.e. git checkout master
-- rebase from the amended commit to here, i.e. "git rebase -i fix", 
-	- it will bring up a list of subsequent commits, change the "pick" on each commit to "edit"
-	- it will then iterate through all the commits,
-		- it will checkout the next commit, warn you about conflicts, you need to
-		- resolve any conflict, make any changes you need
-		- then "git commit -a --amend"
-		- then "git rebase --continue"  
-- git push origin HEAD:refs/for/master
-- git branch -D fix
+- "git commit --amend" the change (you better have a changeId or it won't work properly, and you're on your own).
+- "git push"
+- to verify it worked, you should see another patch set in gerrit now, i.e. "Patch Set 2" you should notice the list of files and the changes in them match your update.
 
-Now if you have changeId's enabled, the above will replace the previous commits, if you don't the commits will show up in git as a string of new commits and the old commits should just be abandoned.
+From Eclipse : (If you're using the latest eclipse (not all of the docs here was written using the latest eclipse))
+- Team -> Remote -> fetch from gerrit. You'll notice the list of changes come up as "2238-1" On the gerrit screen near the download url you'll see "refs/change/38/2238/1" the 2238-1 matches the 2238/1 part, that's how you'll know which commit to get. Follow the routine as per the command line workflow but in eclipse and it should work as expected.
 
-----------------------------------------------------
-Changing a single previous commit with out ChangeIds (more advanced optional topic)
-----------------------------------------------------
-- Go to the gerrit change screen, you'll be given a download command it should look similar to :
-
-     git fetch ssh://r6squeegee@source.oscartools.org:29418/test refs/changes/62/662/2 && git checkout FETCH_HEAD
-
-- Run the command, it should fetch the commit and checkout the retrieved commit.
-- make your desired changes
-- git add and commit your files / changes as normal
-- now "git push origin HEAD:refs/changes/62/662" Note the push destination, the refs/changes/62/662 needs to match the numbers on the retrieve command.
-
-If you check with gerrit again, the commit should be amended.
 
 --------------------------------
-Rebasing to fix dependency chain (more advanced optional topic)
+Rebasing to fix dependency chain
 --------------------------------
 Here's a real example of what happend, 2 people 2 commit chains but one early conflict in the chain. Here's a picto-diagram of the commits :
 
@@ -164,14 +145,15 @@ As it turns out ted1 & marc1 were virtually identical fixes for the same problem
 The solution is to rebase marc1 through 3 off of the new master (ted1) then recommit. This is very similar to the previous section about "fixin previous commits".
 
 At the point marc, needs to :
-- do a fetch from gerrit
-- git rebase ted1 (instead of ted1 use the sha1 for that commit)
-- it notifys you of the conflict in marc1 and says you can fix it or skip it, I chose to skip it since it was an identical fix. 
+- do a fetch from gerrit so he as the changes ted1 through ted3.
+- "git rebase -i origin/master"
+- it will notify you of the conflict, you can either fix the conflict then commit, or you can remove that commit (git provides you with instructions on how to do the 2) 
+- git rebase --continue (for each conflict it shows)
 - git push
 
-that's it, at this point if you have changeId's the commit entries in gerrit should be replaces and the dependency chain from marc2 should come off ted1.
+you'll end up with one of the following depending on if you fixed the commit or removed that one commit (both are acceptible results) 
 
-Note this method is easily extrapolateable to other similar dependency chain fixing purposes. 
+master +-> ted1 -> ted2 -> ted3 -> marc1 -> marc2 -> marc3
 
-
+master +-> ted1 -> ted2 -> ted3 -> marc2 -> marc3
        
