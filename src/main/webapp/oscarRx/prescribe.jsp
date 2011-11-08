@@ -175,7 +175,9 @@ if(listRxDrugs!=null){
        	  <bean:message key="WriteScript.msgPrescribedRefill"/>:
        	  &nbsp;
        	  <bean:message key="WriteScript.msgPrescribedRefillDuration"/>
-       	  <input type="text" size="6" id="refillDuration_<%=rand%>" name="refillDuration_<%=rand%>" value="<%=refillDuration%>" />       	  
+       	  <input type="text" size="6" id="refillDuration_<%=rand%>" name="refillDuration_<%=rand%>" value="<%=refillDuration%>"
+       	   onchange="if(isNaN(this.value)||this.value<0){alert('Refill duration must be number (of days)');this.focus();return false;}return true;" /><bean:message key="WriteScript.msgPrescribedRefillDurationDays"/>
+       	  &nbsp;       	  
        	  <bean:message key="WriteScript.msgPrescribedRefillQuantity"/>
        	  <input type="text" size="6" id="refillQuantity_<%=rand%>" name="refillQuantity_<%=rand%>" value="<%=refillQuantity%>" />
        	  <br/>       	  
@@ -366,7 +368,6 @@ if(listRxDrugs!=null){
                //oscarLog("counterRx="+counterRx+"--listRxDrugSize="+listRxDrugSize);
                $('instructions_<%=rand%>').focus();
            }
-
         </script>
                 <%}%>
   <script type="text/javascript">
