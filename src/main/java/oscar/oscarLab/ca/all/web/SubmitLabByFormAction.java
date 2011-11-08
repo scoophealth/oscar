@@ -175,7 +175,7 @@ public class SubmitLabByFormAction extends DispatchAction {
 	
 	private String generateORC(Lab lab) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-		return "ORC|RE|"+lab.getAccession()+"|||CM|||||||"+lab.getBillingNo()+"^"+lab.getProviderLastName()+"^"+lab.getProviderFirstName()+"|||"+sdf.format(lab.getTests().get(0).getDate());
+		return "ORC|RE|"+lab.getAccession()+"|||F|||||||"+lab.getBillingNo()+"^"+lab.getProviderLastName()+"^"+lab.getProviderFirstName()+"|||"+sdf.format(lab.getTests().get(0).getDate());
 	}
 	
 	private String generateOBR(Lab lab) {
