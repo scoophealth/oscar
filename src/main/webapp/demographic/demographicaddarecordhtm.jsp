@@ -1018,19 +1018,9 @@ document.forms[1].r_doctor_ohip.value = refNo;
 					key="demographic.demographicaddrecordhtm.formReferalDoctorN" />:</b></td>
 				<td align="left" height="10"><input type="text"
 					name="r_doctor_ohip" maxlength="6"> <% if("ON".equals(prov)) { %>
-				<!--<a -->
-                                    <!--add more if-else statements to include other languages for now if en and fr-->
-                                    <% if (vLocale.getLanguage().equals("en")) {%>
-
-					<a href=# onClick ="popupPage(600,750,'http://www.cmq.org/en/RepertoireMembres/Recherche.aspx');return false;"> <bean:message key="demographic.demographicaddrecordhtm.Search"/></a>
-
-                                    <% }else if (vLocale.getLanguage().equals("fr")){%>
-
-                                        <a href=# onClick ="popupPage(600,750,'http://www.cmq.org/fr/RepertoireMembres/Recherche.aspx');return false;"> <bean:message key="demographic.demographicaddrecordhtm.Search"/></a>
-
-                                    <%}%>
-                               <!-- </a> -->
-                                <% } %>
+								<a
+									href="javascript:referralScriptAttach2('r_doctor_ohip','r_doctor')"><bean:message key="demographic.demographiceditdemographic.btnSearch"/>
+								#</a> <% } %>
 				</td>
 			</tr>
 			<tr valign="top">
