@@ -74,8 +74,11 @@ public final class RxWriteScriptAction extends DispatchAction {
 	private static UserPropertyDAO userPropertyDAO;
 	private static final String DEFAULT_QUANTITY = "30";
 	private static final PartialDateDao partialDateDao = (PartialDateDao)SpringUtils.getBean("partialDateDao");
- 
-
+	
+	String removeExtraChars(String s){
+		return s.replace(""+((char) 130 ),"").replace(""+((char) 194 ),"").replace(""+((char) 195 ),"").replace(""+((char) 172 ),"");
+	}
+	
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, Exception {
 
 		RxWriteScriptForm frm = (RxWriteScriptForm) form;
@@ -116,16 +119,16 @@ public final class RxWriteScriptAction extends DispatchAction {
 			rx.setRepeat(frm.getRepeat());
 			rx.setLastRefillDate(RxUtil.StringToDate(frm.getLastRefillDate(), "yyyy-MM-dd"));
 			rx.setNosubs(frm.getNosubs());
-			rx.setPrn(frm.getPrn());
-			rx.setSpecial(frm.getSpecial());
+			rx.setPrn(frm.getPrn());			
+			rx.setSpecial(removeExtraChars(frm.getSpecial()));
 			rx.setAtcCode(frm.getAtcCode());
 			rx.setRegionalIdentifier(frm.getRegionalIdentifier());
-			rx.setUnit(frm.getUnit());
+			rx.setUnit(removeExtraChars(frm.getUnit()));
 			rx.setUnitName(frm.getUnitName());
 			rx.setMethod(frm.getMethod());
 			rx.setRoute(frm.getRoute());
 			rx.setCustomInstr(frm.getCustomInstr());
-			rx.setDosage(frm.getDosage());
+			rx.setDosage(removeExtraChars(frm.getDosage()));
 			rx.setOutsideProviderName(frm.getOutsideProviderName());
 			rx.setOutsideProviderOhip(frm.getOutsideProviderOhip());
 			rx.setLongTerm(frm.getLongTerm());
@@ -540,8 +543,8 @@ public final class RxWriteScriptAction extends DispatchAction {
 				unit = drugComp.unit;
 				dosage = dosage + " " + strength + " " + unit;// get drug dosage from strength and unit.
 			}
-			rx.setDosage(dosage);
-			rx.setUnit(unit);
+			rx.setDosage(removeExtraChars(dosage));
+			rx.setUnit(removeExtraChars(unit));
 			rx.setGCN_SEQNO(Integer.parseInt(drugId));
 			rx.setRegionalIdentifier(dmono.regionalIdentifier);
 			String atcCode = dmono.atc;
