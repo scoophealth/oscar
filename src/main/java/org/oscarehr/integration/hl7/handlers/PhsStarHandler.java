@@ -327,10 +327,10 @@ public class PhsStarHandler extends BasePhsStarHandler {
 		appt.setResources("");
 		appt.setStatus("t");
 	
-		if(appointmentDao.checkForConflict(appt)) {
-			logger.error("Conflict");
-			throw new HL7Exception("Unable to schedule this appointment due to conflict");
-		}
+		//if(appointmentDao.checkForConflict(appt)) {
+		//	logger.error("Conflict");
+		//	throw new HL7Exception("Unable to schedule this appointment due to conflict");
+		//}
 		
 		//save it
 		appointmentDao.persist(appt);
@@ -456,10 +456,10 @@ public class PhsStarHandler extends BasePhsStarHandler {
 		appt.setProgramId(0);
 		
 		
-		if(appointmentDao.checkForConflict(appt)) {
-			logger.error("Conflict");
-			throw new HL7Exception("Unable to schedule this appointment due to conflict");
-		}
+		//if(appointmentDao.checkForConflict(appt)) {
+		//	logger.error("Conflict");
+		//	throw new HL7Exception("Unable to schedule this appointment due to conflict");
+		//}
 				
 		appointmentDao.merge(appt);
 		
