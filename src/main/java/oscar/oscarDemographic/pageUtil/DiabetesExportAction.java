@@ -550,7 +550,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		    if (data.equalsIgnoreCase("Flu")) {
                         immunizations = patientRecord.addNewImmunizations();
                         immunizations.setImmunizationName(Immunizations.ImmunizationName.INFLUENZA);
-                    } else if (data.equalsIgnoreCase("Pneumovax")) {
+                    } else if (data.equalsIgnoreCase("Pneumovax") || data.equalsIgnoreCase("Pneu-C")) {
                         immunizations = patientRecord.addNewImmunizations();
                         immunizations.setImmunizationName(Immunizations.ImmunizationName.PNEUMOCOCCAL);
                     } else {
