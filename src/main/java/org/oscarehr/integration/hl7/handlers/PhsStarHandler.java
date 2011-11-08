@@ -441,7 +441,8 @@ public class PhsStarHandler extends BasePhsStarHandler {
 		
 		logger.info("resource unit = " + getApptResourceUnit());
 		logger.info("procedure = " + getProcedureName());
-		String programId = findProgram(getApptResourceUnit(),getProcedureName());
+//		String programId = findProgram(getApptResourceUnit(),getProcedureName());
+		String programId = findProgram2();
 		Program p = null;
 		if(programId != null) {
 			p = programDao.getProgram(Integer.parseInt(programId));
