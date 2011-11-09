@@ -205,6 +205,7 @@ function save() {
             paragraph.innerHTML = "<bean:message key="oscarEncounter.oscarConsultationRequest.AttachDoc.Empty"/>";
             
        ret = false;
+       window.close();
     }    
     else {        
         //but we will use dummy in updating an empty list
@@ -214,13 +215,13 @@ function save() {
         window.opener.updateAttached();
         ret = true;
     }
-    window.close();
+    
     return ret;
 }
 //-->
 </script>
 </head>
-<body onload="init()"
+<body onload="init()" onunload="window.close()"
 	style="font-family: Verdana, Tahoma, Arial, sans-serif; background-color: #ddddff">
 
 <h3 style="text-align: center"><bean:message
