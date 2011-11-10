@@ -755,8 +755,11 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		StringBuilder sentIds = new StringBuilder();
 
 		for (Properties p : records) {
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			logger.debug("pushing form labReq2007 : "+p.get("ID") +" : "+p.get("formEdited"));
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Date date = sdf.parse(p.getProperty("formEdited"));
+
 			// no change since last sync
 			if (date != null && date.before(lastDataUpdated)) continue;
 
