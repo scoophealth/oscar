@@ -35,6 +35,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
@@ -110,6 +111,8 @@ import oscar.util.OscarRoleObjectPrivilege;
  */
 public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
+	private static final Integer QUICK_CHART = 20;
+	private static final Integer FULL_CHART = -1;
 	private static Logger logger = MiscUtils.getLogger();
 	private CaseManagementManager caseManagementManager = (CaseManagementManager) SpringUtils.getBean("caseManagementManager");
 	private IssueDAO issueDao = (IssueDAO) SpringUtils.getBean("IssueDAO");
@@ -446,7 +449,15 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			return mapping.findForward("clientHistoryPrintPreview");
 		} else {
 
-			if (useNewCaseMgmt) return mapping.findForward("page.newcasemgmt.view");
+			if (useNewCaseMgmt) {
+				String fwdName = request.getParameter("ajaxview");
+				if( fwdName == null || fwdName.equals("") || fwdName.equalsIgnoreCase("null")) {
+					return mapping.findForward("page.newcasemgmt.view");
+				}
+				else {
+					return mapping.findForward(fwdName);
+				}
+			}
 			else return mapping.findForward("page.casemgmt.view");
 		}
 	}
@@ -700,20 +711,24 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		List<CaseManagementNote> notes = null;
 		// here we might have a checked/unchecked issue that is remote and has no issue_id (they're all zero).
 		String[] checkedIssues = request.getParameterValues("check_issue");
+		String strFullChart = request.getParameter("fullChart"); 
+		boolean quickChart =  strFullChart == null || strFullChart.equals("") || strFullChart.equalsIgnoreCase("false");		
+		Integer maxNotes =  quickChart ? QUICK_CHART : FULL_CHART; 
 		if (checkedIssues != null && checkedIssues[0].trim().length() > 0) {
 			// need to apply a filter
 			logger.debug("Get Notes with checked issues");
 			startTime = System.currentTimeMillis();
 			request.setAttribute("checked_issues", checkedIssues);
-			notes = caseManagementMgr.getNotes(demoNo, checkedIssues);
+			notes = caseManagementMgr.getNotes(demoNo, checkedIssues, maxNotes);
 			//show locked notes anyway: notes = manageLockedNotes(notes, true, this.getUnlockedNotesMap(request));
-			notes = manageLockedNotes(notes, false, this.getUnlockedNotesMap(request));
+			//notes = manageLockedNotes(notes, false, this.getUnlockedNotesMap(request));
 			logger.debug("Get Notes with checked issues " + (System.currentTimeMillis() - startTime));
 		} else { // get all notes
 			logger.debug("Get Notes");
 			startTime = System.currentTimeMillis();
-			notes = caseManagementMgr.getNotes(demoNo);
-			notes = manageLockedNotes(notes, false, this.getUnlockedNotesMap(request));
+			notes = caseManagementMgr.getNotes(demoNo, maxNotes);
+			logger.info("number of returned notes " + notes.size());
+			//notes = manageLockedNotes(notes, false, this.getUnlockedNotesMap(request));
 			logger.debug("Get Notes " + (System.currentTimeMillis() - startTime));
 		}
 
@@ -789,16 +804,43 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		// add eforms to notes list as single line items
 		String roleName = (String) request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
 		ArrayList<HashMap<String, ? extends Object>> eForms = EFormUtil.listPatientEForms(EFormUtil.DATE, EFormUtil.CURRENT, demoNo, roleName);
-		for (HashMap<String, ? extends Object> eform : eForms) {
-			notesToDisplay.add(new NoteDisplayNonNote(eform));
-		}
-
+		
 		// add forms to notes list as single line items
 		ArrayList<PatientForm> allPatientForms=EctFormData.getGroupedPatientFormsFromAllTables(demographicId);
-		for (PatientForm patientForm : allPatientForms) {
-			notesToDisplay.add(new NoteDisplayNonNote(patientForm));
-		}
 		
+		int remainingRoom;
+		if( maxNotes == -1 ) {
+			for (HashMap<String, ? extends Object> eform : eForms) {
+				notesToDisplay.add(new NoteDisplayNonNote(eform));
+			}
+	
+			// add forms to notes list as single line items
+			//ArrayList<PatientForm> allPatientForms=EctFormData.getGroupedPatientFormsFromAllTables(demographicId);
+			for (PatientForm patientForm : allPatientForms) {
+				notesToDisplay.add(new NoteDisplayNonNote(patientForm));
+			}
+		}
+		else {
+			remainingRoom = maxNotes - notesToDisplay.size();
+			ListIterator<HashMap<String, ? extends Object>> eformIterator = eForms.listIterator(eForms.size());
+			ListIterator<PatientForm> ectFormIterator = allPatientForms.listIterator(allPatientForms.size());
+			HashMap<String, ? extends Object> eform;
+			PatientForm patientForm;
+			while( remainingRoom > 0 ) {
+				if( eformIterator.hasPrevious()) {
+					eform = eformIterator.previous();
+					notesToDisplay.add(new NoteDisplayNonNote(eform));
+				}
+				
+				if( ectFormIterator.hasPrevious() ) {
+					patientForm = ectFormIterator.previous();
+					notesToDisplay.add(new NoteDisplayNonNote(patientForm));
+				}
+				
+				remainingRoom -= 2;
+			}
+			
+		}
 		// sort the notes
 		oscar.OscarProperties p = oscar.OscarProperties.getInstance();
 		String noteSort = p.getProperty("CMESort", "");

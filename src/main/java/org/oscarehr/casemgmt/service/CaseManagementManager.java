@@ -286,10 +286,21 @@ public class CaseManagementManager {
 	public List<CaseManagementNote> getNotes(String demographic_no) {
 		return caseManagementNoteDAO.getNotesByDemographic(demographic_no);
 	}
+	
+	@SuppressWarnings("unchecked")
+    public List<CaseManagementNote> getNotes(String demographic_no, Integer maxNotes) {
+		return caseManagementNoteDAO.getNotesByDemographic(demographic_no, maxNotes);
+	}
 
 	public List<CaseManagementNote> getNotes(String demographic_no, String[] issues) {
 		@SuppressWarnings("unchecked")
 		List<CaseManagementNote> notes = caseManagementNoteDAO.getNotesByDemographic(demographic_no, issues);
+		return notes;
+	}
+    
+    public List<CaseManagementNote> getNotes(String demographic_no, String[] issues, Integer maxNotes) {
+    	@SuppressWarnings("unchecked")
+		List<CaseManagementNote> notes = caseManagementNoteDAO.getNotesByDemographic(demographic_no, issues, maxNotes);
 		return notes;
 	}
 
@@ -1054,8 +1065,10 @@ public class CaseManagementManager {
 					add = true;
 				}
 			} else {
+				logger.debug(noteRoleName + " is null");
 				if (Long.parseLong(noteRole) == role.getId().longValue()) {
 					// default
+					logger.debug("noteRole " + noteRole + " = Provider Role from secRole " + role.getId());
 					add = true;
 				}
 			}
@@ -1063,6 +1076,7 @@ public class CaseManagementManager {
 			// apply defaults
 			if (!add) {
 				if (Long.parseLong(noteRole) == role.getId().longValue()) {
+					logger.debug("noteRole " + noteRole + " = Provider Role from secRole " + role.getId());
 					add = true;
 				}
 			}
@@ -1149,7 +1163,7 @@ public class CaseManagementManager {
 
 		for (Iterator iter = pa.getRoles().iterator(); iter.hasNext();) {
 			Secrole accessRole = (Secrole) iter.next();
-			if (role.getId().longValue() == accessRole.getId().longValue()) {
+			if (role.getId().longValue() == accessRole.getId().longValue()) {				
 				return true;
 			}
 		}
