@@ -299,7 +299,7 @@ padding-right:6;
 							</tr>					
 							<% 
 							String strArchived;
-							int intArchived;
+							int intArchived=0;
 							String labelStatus;
 							String labelAction;
 							String actionPath;
@@ -322,14 +322,22 @@ padding-right:6;
 								
 								boolean filterOut=false;
 								strArchived=allergy.getAllergy().getArchived();
-								intArchived = Integer.parseInt(strArchived);
 								
-								if(bean.getView().equals("Active") && intArchived == 1) {
-									filterOut=true;
+								try
+								{
+									intArchived = Integer.parseInt(strArchived);
+									
+									if(bean.getView().equals("Active") && intArchived == 1) {
+										filterOut=true;
+									}
+									
+									if(bean.getView().equals("Inactive") && intArchived == 0) {
+										filterOut=true;
+									}									
 								}
-								
-								if(bean.getView().equals("Inactive") && intArchived == 0) {
-									filterOut=true;
+								catch (Exception e)
+								{
+									// that's okay , most likely the value is not set so we don't know, leave blank
 								}
 								
 								strSOR=allergy.getAllergy().getSeverityOfReaction();
@@ -377,17 +385,24 @@ padding-right:6;
 										List<CaseManagementNoteLink> existingAnnots = cmm.getLinkByTableId(org.oscarehr.casemgmt.model.CaseManagementNoteLink.ALLERGIES,Long.valueOf(allergy.getAllergyId()));
 									%>									
 									<td>
-										<a href="#" title="Annotation" onclick="window.open('../annotation/annotation.jsp?display=<%=annotation_display%>&table_id=<%=String.valueOf(allergy.getAllergyId())%>&demo=<jsp:getProperty name="patient" property="demographicNo"/>','anwin','width=400,height=500');">
-											<%if(existingAnnots.size()>0) {%>
-											<img src="../images/filledNotes.gif" border="0"/>
-											<% } else { %>
-											<img src="../images/notes.gif" border="0">
-											<% } %>											
-										</a>
+										<%
+											if (!allergy.isIntegratorResult())
+											{
+												%>
+													<a href="#" title="Annotation" onclick="window.open('../annotation/annotation.jsp?display=<%=annotation_display%>&table_id=<%=String.valueOf(allergy.getAllergyId())%>&demo=<jsp:getProperty name="patient" property="demographicNo"/>','anwin','width=400,height=500');">
+														<%if(existingAnnots.size()>0) {%>
+														<img src="../images/filledNotes.gif" border="0"/>
+														<% } else { %>
+														<img src="../images/notes.gif" border="0">
+														<% } %>											
+													</a>
+												<%
+											}
+										%>
 									</td>
 									<td>
 									<%
-										if(securityManager.hasDeleteAccess("_allergies",roleName$)) {
+										if(!allergy.isIntegratorResult() && securityManager.hasDeleteAccess("_allergies",roleName$)) {
 									%>
 									<a href="deleteAllergy.do?ID=<%= String.valueOf(allergy.getAllergyId()) %>&demographicNo=<%=demoNo %>&action=<%=actionPath %>" onClick="return confirm('Are you sure want to set the allergy <bean:write name="allergy" property="allergy.DESCRIPTION" /> to <%=labelConfirmAction%>?');"><%=labelAction%></a>
 									<% } %>
