@@ -28,20 +28,29 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
+import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
+import org.apache.log4j.Logger;
+import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
+import org.oscarehr.caisi_integrator.ws.CachedDemographicAllergy;
+import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.common.dao.PartialDateDao;
 import org.oscarehr.common.model.PartialDate;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
-import org.apache.commons.lang.StringUtils;
 
 import oscar.oscarDB.DBHandler;
 
 public class RxPatientData {
+	private static Logger logger=MiscUtils.getLogger();
+	
 	private static final PartialDateDao partialDateDao = (PartialDateDao) SpringUtils.getBean("partialDateDao");
    
 	private RxPatientData()
@@ -293,13 +302,12 @@ public class RxPatientData {
          catch (SQLException e) {            
             MiscUtils.getLogger().error("Error", e);            
          }  
-           
+                      
          return allergy;
       }
       
-      public Allergy[] getAllergies() {         
-         Allergy[] arr = {};         
-         LinkedList lst = new LinkedList();         
+      public Allergy[] getAllergies() {                  
+         ArrayList<Allergy> results=new ArrayList<Allergy>();         
          try {            
                         
             ResultSet rs;            
@@ -324,16 +332,47 @@ public class RxPatientData {
                allergy.getAllergy().setLifeStage(oscar.Misc.getString(rs,"life_stage"));
                allergy.getAllergy().setPickID(rs.getInt("drugref_id"));
                allergy.getAllergy().setPosition(rs.getInt("position"));
-               lst.add(allergy);               
+               results.add(allergy);               
             }            
             rs.close();            
-            arr = (Allergy[]) lst.toArray(arr);            
          }
          catch (SQLException e) {            
             MiscUtils.getLogger().error("Error", e);            
          }
          
-         return arr;         
+ 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+ 		if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
+ 			try {
+ 				DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
+ 				List<CachedDemographicAllergy> remoteAllergies = demographicWs.getLinkedCachedDemographicAllergies(demographicNo);
+ 				
+ 				for (CachedDemographicAllergy remoteAllergy : remoteAllergies)
+ 				{
+ 					Date date=null;
+ 					if (remoteAllergy.getEntryDate()!=null) date=remoteAllergy.getEntryDate().getTime();
+
+ 					Allergy allergy = new Allergy(getDemographicNo(), remoteAllergy.getFacilityIdIntegerCompositePk().getCaisiItemId().intValue(), date, remoteAllergy.getDescription(), remoteAllergy.getHiclSeqNo(), remoteAllergy.getHicSeqNo(), remoteAllergy.getAgcsp(), remoteAllergy.getAgccs(), remoteAllergy.getTypeCode());
+ 					allergy.setIntegratorResult(true);
+ 					
+					allergy.getAllergy().setReaction(remoteAllergy.getReaction());
+					
+					if (remoteAllergy.getStartDate()!=null) date=remoteAllergy.getStartDate().getTime();
+					allergy.getAllergy().setStartDate(date);
+					
+					allergy.getAllergy().setAgeOfOnset(remoteAllergy.getAgeOfOnset());
+					allergy.getAllergy().setSeverityOfReaction(remoteAllergy.getSeverityCode());
+					allergy.getAllergy().setOnSetOfReaction(remoteAllergy.getOnSetCode());
+					allergy.getAllergy().setRegionalIdentifier(remoteAllergy.getRegionalIdentifier());
+					allergy.getAllergy().setLifeStage(remoteAllergy.getLifeStage());
+					allergy.getAllergy().setPickID(remoteAllergy.getPickId());
+					results.add(allergy);               
+ 				}
+ 			} catch (Exception e) {
+ 				logger.error("error getting remote allergies", e);
+ 			}
+ 		}
+
+         return(results.toArray(new Allergy[0]));         
       }
       
       public Allergy[] getActiveAllergies() {         
@@ -458,7 +497,8 @@ public class RxPatientData {
         return new RxPrescriptionData().getPrescriptionScriptsByPatient(this.getDemographicNo());
       }         
       
-      public static class Allergy {         
+      public static class Allergy {  
+    	  boolean integratorResult=false;
          int allergyId;         
          java.util.Date entryDate;         
          RxAllergyData.Allergy allergy;
@@ -485,7 +525,15 @@ public class RxPatientData {
             this.allergy = new RxAllergyData().getAllergy(DESCRIPTION, HICL_SEQNO,HIC_SEQNO, AGCSP, AGCCS, TYPECODE);            
          }
          
-         public int getAllergyId() {            
+         public boolean isIntegratorResult() {
+        	return (integratorResult);
+        }
+
+		public void setIntegratorResult(boolean integratorResult) {
+        	this.integratorResult = integratorResult;
+        }
+
+		public int getAllergyId() {            
             return this.allergyId;            
          }
          
