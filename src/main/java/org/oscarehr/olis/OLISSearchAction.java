@@ -1,5 +1,6 @@
 package org.oscarehr.olis;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -9,7 +10,7 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.http.impl.cookie.DateUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -23,7 +24,6 @@ import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
-
 
 import com.indivica.olis.Driver;
 import com.indivica.olis.parameters.OBR16;
@@ -121,7 +121,7 @@ public class OLISSearchAction extends DispatchAction {
 					if (startTimePeriod != null && startTimePeriod.trim().length() > 0) {
 						Date startTime = DateUtils.parseDate(startTimePeriod, dateFormat);
 						if (endTimePeriod != null && endTimePeriod.trim().length() > 0) {
-							Date endTime = DateUtils.parseDate(endTimePeriod, dateFormat);
+							Date endTime = changeToEndOfDay(DateUtils.parseDate(endTimePeriod, dateFormat));
 
 							List<Date> dateList = new LinkedList<Date>();
 							dateList.add(startTime);
@@ -150,7 +150,7 @@ public class OLISSearchAction extends DispatchAction {
 					if (observationStartTimePeriod != null && observationStartTimePeriod.trim().length() > 0) {
 						Date observationStartTime = DateUtils.parseDate(observationStartTimePeriod, dateFormat);
 						if (observationEndTimePeriod != null && observationEndTimePeriod.trim().length() > 0) {
-							Date observationEndTime = DateUtils.parseDate(observationEndTimePeriod, dateFormat);
+							Date observationEndTime = changeToEndOfDay(DateUtils.parseDate(observationEndTimePeriod, dateFormat));
 
 							List<Date> dateList = new LinkedList<Date>();
 							dateList.add(observationStartTime);
@@ -465,7 +465,7 @@ public class OLISSearchAction extends DispatchAction {
 					if (startTimePeriod != null && startTimePeriod.trim().length() > 0) {
 						Date startTime = DateUtils.parseDate(startTimePeriod, dateFormat);
 						if (endTimePeriod != null && endTimePeriod.trim().length() > 0) {
-							Date endTime = DateUtils.parseDate(endTimePeriod, dateFormat);
+							Date endTime = changeToEndOfDay(DateUtils.parseDate(endTimePeriod, dateFormat));
 
 							List<Date> dateList = new LinkedList<Date>();
 							dateList.add(startTime);
@@ -545,7 +545,7 @@ public class OLISSearchAction extends DispatchAction {
 					if (startTimePeriod != null && startTimePeriod.trim().length() > 0) {
 						Date startTime = DateUtils.parseDate(startTimePeriod, dateFormat);
 						if (endTimePeriod != null && endTimePeriod.trim().length() > 0) {
-							Date endTime = DateUtils.parseDate(endTimePeriod, dateFormat);
+							Date endTime = changeToEndOfDay(DateUtils.parseDate(endTimePeriod, dateFormat));
 
 							List<Date> dateList = new LinkedList<Date>();
 							dateList.add(startTime);
@@ -597,7 +597,7 @@ public class OLISSearchAction extends DispatchAction {
 					if (startTimePeriod != null && startTimePeriod.trim().length() > 0) {
 						Date startTime = DateUtils.parseDate(startTimePeriod, dateFormat);
 						if (endTimePeriod != null && endTimePeriod.trim().length() > 0) {
-							Date endTime = DateUtils.parseDate(endTimePeriod, dateFormat);
+							Date endTime = changeToEndOfDay(DateUtils.parseDate(endTimePeriod, dateFormat));
 
 							List<Date> dateList = new LinkedList<Date>();
 							dateList.add(startTime);
@@ -649,7 +649,7 @@ public class OLISSearchAction extends DispatchAction {
 					if (startTimePeriod != null && startTimePeriod.trim().length() > 0) {
 						Date startTime = DateUtils.parseDate(startTimePeriod, dateFormat);
 						if (endTimePeriod != null && endTimePeriod.trim().length() > 0) {
-							Date endTime = DateUtils.parseDate(endTimePeriod, dateFormat);
+							Date endTime = changeToEndOfDay(DateUtils.parseDate(endTimePeriod, dateFormat));
 
 							List<Date> dateList = new LinkedList<Date>();
 							dateList.add(startTime);
@@ -693,7 +693,7 @@ public class OLISSearchAction extends DispatchAction {
 					if (startTimePeriod != null && startTimePeriod.trim().length() > 0) {
 						Date startTime = DateUtils.parseDate(startTimePeriod, dateFormat);
 						if (endTimePeriod != null && endTimePeriod.trim().length() > 0) {
-							Date endTime = DateUtils.parseDate(endTimePeriod, dateFormat);
+							Date endTime = changeToEndOfDay(DateUtils.parseDate(endTimePeriod, dateFormat));
 
 							List<Date> dateList = new LinkedList<Date>();
 							dateList.add(startTime);
@@ -757,7 +757,7 @@ public class OLISSearchAction extends DispatchAction {
 				try {
 					if (dateOfBirth != null && dateOfBirth.trim().length() > 0) {
 						PID7 pid7 = new PID7();
-						pid7.setValue(DateUtils.parseDate(dateOfBirth));
+						pid7.setValue(DateUtils.parseDate(dateOfBirth,dateFormat));
 						((Z50Query) query).setDateOfBirth(pid7);
 					}
 				} catch (Exception e) {
@@ -783,5 +783,14 @@ public class OLISSearchAction extends DispatchAction {
 		
 		return mapping.findForward("results");
 	
+	}
+	
+	private Date changeToEndOfDay(Date d) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(d);
+		c.set(Calendar.HOUR_OF_DAY, 23);
+		c.set(Calendar.MINUTE, 59);
+		c.set(Calendar.SECOND,59);
+		return c.getTime();
 	}
 }
