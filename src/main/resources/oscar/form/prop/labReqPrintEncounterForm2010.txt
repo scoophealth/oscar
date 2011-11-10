@@ -1,4 +1,5 @@
-reqProvName : left, 55, 70, 0, BaseFont.HELVETICA, 10, _, 238, 80, 10
+reqProvName : left, 55, 73, 0, BaseFont.HELVETICA, 8
+provName : left, 55, 87, 0, BaseFont.HELVETICA, 8
 clinicName : left, 55, 95, 0, BaseFont.HELVETICA, 8, _, 238, 105, 10
 clinicAddress : left, 55, 105, 0, BaseFont.HELVETICA, 8, _, 238, 116, 10
 clinicCity	: left, 55, 117, 0, BaseFont.HELVETICA, 8, _, 238, 128, 10
