@@ -10,7 +10,11 @@
     var passwordEnabled = false;
     var requireIssue = true;
     var requireObsDate = true;
-
+    var makeIssue;
+   	var defaultDiv;
+   	var changeIssueFunc; 
+   	var addIssueFunc;
+   	
        var X       = 10;
     var small   = 60;
     var normal  = 166;
@@ -66,7 +70,7 @@
             }
             return str;
         }
-
+		
         function measurementLoaded(name) {
             measurementWindows.push(openWindows[name]);
         }
@@ -217,7 +221,7 @@ function setupNotes(){
 
     Rounded("div.noteRounded","all","transparent","#CCCCCC","big border #000000");
 
-    //need to set focus after rounded is called
+    //need to set focus after rounded is called    
     adjustCaseNote();
     setCaretPosition($(caseNote), $(caseNote).value.length);
 
@@ -244,7 +248,61 @@ function monitorNavBars(e) {
 
 }
 
+function scrollDownInnerBar() {
+	$("encMainDiv").scrollTop= $("encMainDiv").scrollHeight;
+}
 
+function popperup(vheight,vwidth,varpage,pageName) { //open a new popup window
+     		var page = varpage;
+     		windowprops = "height="+vheight+",width="+vwidth+",status=yes,location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=100,left=100";
+     		var popup=window.open(varpage, pageName, windowprops);
+     		popup.pastewin = opener;     
+     		popup.focus();
+}
+
+var fullChart = "false";
+function viewFullChart(displayFullChart) {
+
+	var url = ctx + "/CaseManagementEntry.do";
+	var params = assembleMainChartParams(displayFullChart);
+	
+	if( displayFullChart ) {
+		fullChart = "true";	
+	}
+	else {
+		fullChart = "false";
+	} 
+
+	$("notCPP").update("Loading...");	
+	var objAjax = new Ajax.Request (
+                            url,
+                            {
+                                method: 'post',
+                                postBody: params,
+                                evalScripts: true,
+                                onSuccess: function(request) {                                  				                                              
+                                                $("notCPP").update(request.responseText);
+												$("notCPP").style.height = "50%";
+												if( displayFullChart ) {
+													$("quickChart").innerHTML = quickChartMsg;
+													$("quickChart").onclick = function() {return viewFullChart(false);}
+													scrollDownInnerBar();
+												
+												}
+												else {													
+													$("quickChart").innerHTML = fullChartMsg;
+													$("quickChart").onclick = function() {return viewFullChart(true);}
+													scrollDownInnerBar();
+												}
+                                           },
+                                onFailure: function(request) {
+                                                $("notCPP").update("Error: " + request.status + request.responseText);
+                                            }
+                            }
+
+                      );        		
+	return false;
+}
 /*
  *Draw the cpp views
  */
@@ -1802,7 +1860,45 @@ function issueIsAssigned() {
 }
 
 var filterError;
-function filter(reset) {
+
+function filter(reset) {	
+    var url = ctx + "/CaseManagementEntry.do";
+    var params = "ajaxview=ajaxView&fullChart=" + fullChart;
+    document.forms["caseManagementEntryForm"].method.value = "edit";
+    document.forms["caseManagementEntryForm"].note_edit.value = "new";
+    document.forms["caseManagementEntryForm"].noteId.value = "0";
+    document.forms["caseManagementEntryForm"].ajax.value = false;
+    document.forms["caseManagementEntryForm"].chain.value = "list";
+
+    document.forms["caseManagementViewForm"].method.value = "view";
+    document.forms["caseManagementViewForm"].resetFilter.value = reset;
+
+    var caseMgtEntryfrm = document.forms["caseManagementEntryForm"];
+    var caseMgtViewfrm = document.forms["caseManagementViewForm"];
+    params +=  "&" + Form.serialize(caseMgtEntryfrm);    
+    params += "&" + Form.serialize(caseMgtViewfrm);
+    
+    var objAjax = new Ajax.Request (
+                    url,
+                    {
+                        method: 'post',
+                        postBody: params,
+                        evalScripts: true,
+                        onSuccess: function(request) {                                                
+                                                $("notCPP").update(request.responseText);
+												$("notCPP").style.height = "50%";
+                                           },
+                                onFailure: function(request) {
+                                                $(div).innerHTML = "<h3>" + div + "</h3>Error: " + request.status;
+                                            }
+                            }
+
+                      );        		
+	return false;
+
+}
+
+/*function filter(reset) {
     document.forms["caseManagementEntryForm"].method.value = "edit";
     document.forms["caseManagementEntryForm"].note_edit.value = "new";
     document.forms["caseManagementEntryForm"].noteId.value = "0";
@@ -1830,7 +1926,7 @@ function filter(reset) {
                    );
 
     return false;
-}
+}*/
 
 //find index of month
 function getMonthIdx(mnth) {
@@ -1867,10 +1963,10 @@ function validDate() {
     date.setYear(year);
     date.setHours(timeArr[0]);
     date.setMinutes(timeArr[1]);
-
+	
     var today = new Date(strToday);
     today.setHours(23);
-    today.setMinutes(59);
+    today.setMinutes(59);    
 
     if( date <= today )
         return true;
@@ -1954,6 +2050,105 @@ function ajaxSaveNote(div,noteId,noteTxt) {
 
     return true;
 }
+
+function saveNoteAjax(method, chain) {
+
+	var noteStr;
+	noteStr = $F(caseNote);
+    /*
+    if( noteStr.replace(/^\s+|\s+$/g,"").length == 0 ) {
+        alert("Please enter a note before saving");
+        return false;
+    }
+    */
+
+    if( $("observationDate") != undefined && $("observationDate").value.length > 0 && !validDate() ) {
+        alert(pastObservationDateError);
+        return false;
+    }
+	
+    if( caisiEnabled ) {    
+        if( requireIssue && !issueIsAssigned() ) {
+            alert(assignIssueError);
+            return false;
+        }
+
+        if( requireObsDate && $("observationDate").value.length == 0 ) {
+            alert(assignObservationDateError);
+            return false;
+        }
+
+        if($("encTypeSelect0") != null && $("encTypeSelect0").options[$("encTypeSelect0").selectedIndex].value.length == 0 ) {
+        	alert(assignEncTypeError);
+        	return false;
+        }
+ 		if(document.getElementById("hourOfEncTransportationTime") != null) {          
+	        if(isNaN(document.getElementById("hourOfEncTransportationTime").value) ||
+	         isNaN(document.getElementById("minuteOfEncTransportationTime").value) ||
+	         isNaN(document.getElementById("hourOfEncounterTime").value) ||
+	         isNaN(document.getElementById("minuteOfEncounterTime").value) ) {
+	        	alert(encTimeError);
+	        	return false;
+	        }
+	    }
+        
+        
+    }
+    document.forms["caseManagementEntryForm"].method.value = method;
+    document.forms["caseManagementEntryForm"].ajax.value = false;
+    document.forms["caseManagementEntryForm"].chain.value = chain;
+    document.forms["caseManagementEntryForm"].includeIssue.value = "off";    
+
+    var caseMgtEntryfrm = document.forms["caseManagementEntryForm"];
+    tmpSaveNeeded = false;
+
+	var params = Form.serialize(caseMgtEntryfrm);
+    params += "&ajaxview=ajaxView&fullChart=" + fullChart;
+    
+    var url = ctx + "/CaseManagementEntry.do";
+    
+    $("notCPP").update("Loading...");	
+	var objAjax = new Ajax.Request (
+                            url,
+                            {
+                                method: 'post',
+                                postBody: params,
+                                evalScripts: true,
+                                onSuccess: function(request) {                                  				                                              
+                                                $("notCPP").update(request.responseText);
+												$("notCPP").style.height = "50%";
+												if( fullChart == "true" ) {
+													$("quickChart").innerHTML = quickChartMsg;
+													$("quickChart").onclick = function() {return viewFullChart(false);}
+												
+												}
+												else {													
+													$("quickChart").innerHTML = fullChartMsg;
+													$("quickChart").onclick = function() {return viewFullChart(true);}
+												}
+                                           },
+                                onFailure: function(request) {
+                                                $("notCPP").update("Error: " + request.status + request.responseText);
+                                            }
+                            }
+
+                      );
+
+	jQuery("span[note_addon]").each(function(i){
+		var func = jQuery(this).attr('note_addon');
+		eval(func + "()");
+	});
+	
+	
+	jQuery("[submit_addon]").each(function()
+    		   {    		   	
+    		     jQuery("#"+jQuery(this).attr('submit_addon')).click();
+    		   }
+    		 );
+    		 
+    return false;
+}
+
 
 function savePage(method, chain) {
 	var noteStr;

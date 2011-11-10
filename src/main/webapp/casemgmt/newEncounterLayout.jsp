@@ -25,17 +25,23 @@
 <%@ include file="/casemgmt/taglibs.jsp" %>
 <%@ page errorPage="/casemgmt/error.jsp" %>
 <% if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp"); %>
-
+<%@ page import="java.util.Enumeration, org.apache.commons.lang.StringEscapeUtils" %>
+<%@page import="org.oscarehr.casemgmt.web.formbeans.*, org.oscarehr.casemgmt.model.CaseManagementNote"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
 
 <%
     oscar.oscarEncounter.pageUtil.EctSessionBean bean = null;
     String beanName = "casemgmt_oscar_bean" + (String) request.getAttribute("demographicNo");
-    bean=(oscar.oscarEncounter.pageUtil.EctSessionBean)request.getSession().getAttribute(beanName);
+    //bean=(oscar.oscarEncounter.pageUtil.EctSessionBean)request.getSession().getAttribute(beanName);
     
-    pageContext.setAttribute("providerNo",bean.providerNo, pageContext.PAGE_SCOPE);
+    pageContext.setAttribute("providerNo",request.getParameter("providerNo"), pageContext.PAGE_SCOPE);
+    pageContext.setAttribute("demographicNo",request.getParameter("demographicNo"), pageContext.PAGE_SCOPE);
     org.oscarehr.casemgmt.model.CaseManagementNoteExt cme = new org.oscarehr.casemgmt.model.CaseManagementNoteExt();
+    
+    String frmName = "caseManagementEntryForm" + request.getParameter("demographicNo");
+	CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean)session.getAttribute(frmName);
+	
 %>
 
 <%--<nested:define id="rowOneSize" name="caseManagementViewForm" property="ectWin.rowOneSize"/>
@@ -90,7 +96,31 @@
      jQuery.noConflict();
    </script>
    
-   <script>
+   <script type="text/javascript">
+   
+   function assembleMainChartParams(displayFullChart) {
+	   
+	   var params = "method=edit&ajaxview=ajaxView&fullChart=" + displayFullChart;
+	   <%	   
+		 Enumeration<String>enumerator = request.getParameterNames();
+		 String paramName, paramValue;
+		 while( enumerator.hasMoreElements() ) {
+			paramName = enumerator.nextElement();  
+			if( paramName.equals("method") || paramName.equals("fullChart") ) {
+				continue;
+			}
+			 
+			paramValue = request.getParameter(paramName);
+			
+		%>
+			params += "&<%=paramName%>=<%=StringEscapeUtils.escapeJavaScript(paramValue)%>";
+		<%
+			
+		 }		 		 
+	   %>
+	   
+	   return params;
+   }
    
    function reorderNavBarElements(idToMove, afterThisId) {
 	   var clone = jQuery("#"+idToMove).clone();
@@ -459,9 +489,12 @@
      </style>
  <![endif]-->
     <html:base />
-    <title><bean:message key="oscarEncounter.Index.title"/> - <oscar:nameage demographicNo="<%=(String) request.getAttribute(\"demographicNo\")%>"/></title>
+    <title><bean:message key="oscarEncounter.Index.title"/> - <oscar:nameage demographicNo="<%=(String) request.getParameter(\"demographicNo\")%>"/></title>
     <script type="text/javascript">
-            
+    	ctx = "<c:out value="${ctx}"/>";    
+    	demographicNo = "<c:out value="${demographicNo}"/>";
+    	providerNo = "<c:out value="${providerNo}"/>";
+    	
         socHistoryLabel = "oscarEncounter.socHistory.title";
         medHistoryLabel = "oscarEncounter.medHistory.title";
         onGoingLabel = "oscarEncounter.onGoing.title";;
@@ -476,6 +509,8 @@
         ocularMedicationsLabel = "oscarEncounter.eyeform.ocularMedications.title";          
 		currentHistoryLabel = "oscarEncounter.eyeform.currentHistory.title";
          
+		quickChartMsg = "<bean:message key="oscarEncounter.quickChart.msg"/>";
+		fullChartMsg = "<bean:message key="oscarEncounter.fullChart.msg"/>";
         insertTemplateError = "<bean:message key="oscarEncounter.templateError.msg"/>";
         unsavedNoteWarning = "<bean:message key="oscarEncounter.unsavedNoteWarning.msg"/>";
         sessionExpiredError = "<bean:message key="oscarEncounter.sessionExpiredError.msg"/>";
@@ -515,7 +550,8 @@
         month[11] = "<bean:message key="share.CalendarPopUp.msgDec"/>";
 
 function init() {       
-	scrollDownInnerBar();
+	//scrollDownInnerBar();
+	viewFullChart(false);
     showIssueNotes();
     
     var navBars = new navBarLoader();
@@ -541,16 +577,10 @@ function init() {
     </c:url>
     var issueAutoCompleterCPP = new Ajax.Autocompleter("issueAutocompleteCPP", "issueAutocompleteListCPP", "<c:out value="${issueURLCPP}" />", {minChars: 3, indicator: 'busy2', afterUpdateElement: addIssue2CPP, onShow: autoCompleteShowMenuCPP, onHide: autoCompleteHideMenuCPP});
     
-    strToday = $F("serverDate");        
-    
     <nested:notEmpty name="DateError">
         alert("<nested:write name="DateError"/>");
     </nested:notEmpty>
     
-}
-
-function scrollDownInnerBar() {
-	$("encMainDiv").scrollTop= $("encMainDiv").scrollHeight;
 }
 
 function doscroll(){

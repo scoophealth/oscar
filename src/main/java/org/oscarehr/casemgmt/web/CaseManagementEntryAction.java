@@ -141,6 +141,10 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		return edit(mapping, form, request, response);
 	}
+	
+	public ActionForward setUpMainEncounter(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		return mapping.findForward("setUpMainEncounterPage");
+	}
 
 	public ActionForward edit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("Edit Starts");
