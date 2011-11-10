@@ -966,7 +966,12 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 		for (RxPatientData.Patient.Allergy allergy : allergies) {
 			// no change since last sync
-			if (allergy.getEntryDate() != null && allergy.getEntryDate().before(lastDataUpdated)) continue;
+			if (allergy.getEntryDate()!=null)
+			{
+				// date is missing HH/MM/SS so we'll have to do 1 day over lap, so it might sync twice, better than missing a sync
+				Date tempDate=new Date(allergy.getEntryDate().getTime()+org.apache.commons.lang.time.DateUtils.MILLIS_PER_DAY);
+				if (tempDate.before(lastDataUpdated)) continue;
+			}
 
 			CachedDemographicAllergy cachedAllergy = new CachedDemographicAllergy();
 
