@@ -305,6 +305,19 @@ function checkDate(yyyy,mm,dd,err_msg) {
 
 	return typeInOK;
 }
+function checkRosterDate() {
+	if (document.updatedelete.roster_status.value=="") {
+        var y = document.updatedelete.roster_date_year.value;
+        var m = document.updatedelete.roster_date_month.value;
+        var d = document.updatedelete.roster_date_day.value;
+        if (y.trim()!="" || m.trim()!="" || d.trim()!="") {
+        	alert("<bean:message key="demographic.search.msgForbiddenRosterDate"/>");
+        	document.updatedelete.roster_date_year.focus();
+        	return false;
+        }
+	}
+	return true;
+}
 function checkRosterDatesTermReason() {
         if (document.updatedelete.roster_status.value=="") return true;
         
@@ -314,7 +327,7 @@ function checkRosterDatesTermReason() {
 
         if (document.updatedelete.roster_status.value=="RO") {
             return checkDate(yyyy,mm,dd,"<bean:message key="demographic.search.msgWrongRosterDate"/>");
-        } else if (yyyy!="" && mm!="" && dd!="") {
+        } else {
             yyyy = document.updatedelete.roster_termination_date_year.value;
             mm = document.updatedelete.roster_termination_date_month.value;
             dd = document.updatedelete.roster_termination_date_day.value;
@@ -367,10 +380,22 @@ function checkHin() {
 	return(true);
 }
 
+function checkRoster() {
+	if (document.updatedelete.initial_roster.value!="") {
+		if (document.updatedelete.roster_status.value=="") {
+			alert ("<bean:message key="demographic.demographiceditdemographic.msgBlankRoster"/>");
+			document.updatedelete.roster_status.focus();
+			return false;
+		}
+	}
+	return true;
+}
+
 function checkTypeInEdit() {
   if ( !checkName() ) return false;
   if ( !checkDob() ) return false;
-  if ( !checkRosterDatesTermReason() ) return false;
+  if ( !checkRoster() ) return false;
+  if ( !checkRosterDate() ) return false;
   if ( !checkPatientStatusDate() ) return false;
   if ( !checkHin() ) return false;
   return(true);
@@ -2120,7 +2145,8 @@ document.updatedelete.r_doctor_ohip.value = refNo;
                                   if (rosterStatus == null) {
                                      rosterStatus = "";
                                   }
-                                  %> <!--  input type="text" name="roster_status" size="30" value="<%--=rosterStatus--%>" onBlur="upCaseCtrl(this)" -->
+                                  %>
+                                <input type="hidden" name="initial_roster" value="<%=rosterStatus%>"/>
 								<select name="roster_status" style="width: 120" <%=getDisabled("roster_status")%>>
 									<option value=""></option>
 									<option value="RO"
