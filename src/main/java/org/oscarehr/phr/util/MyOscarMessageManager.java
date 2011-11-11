@@ -6,9 +6,9 @@ import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.RemoteDataLogDao;
 import org.oscarehr.common.model.RemoteDataLog;
-import org.oscarehr.myoscar_server.ws.InvalidRequestException_Exception;
 import org.oscarehr.myoscar_server.ws.MessageTransfer;
 import org.oscarehr.myoscar_server.ws.MessageWs;
+import org.oscarehr.myoscar_server.ws.NoSuchItemException_Exception;
 import org.oscarehr.myoscar_server.ws.NotAuthorisedException_Exception;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -50,7 +50,7 @@ public class MyOscarMessageManager {
 		return(messageTransfers);
 	}
 
-	public static MessageTransfer getMessage(Long myOscarUserId, String myOscarPassword, Long messageId) throws NotAuthorisedException_Exception
+	public static MessageTransfer getMessage(Long myOscarUserId, String myOscarPassword, Long messageId) throws NotAuthorisedException_Exception, NoSuchItemException_Exception
 	{
 		MessageWs messageWs=MyOscarServerWebServicesManager.getMessageWs(myOscarUserId, myOscarPassword);
 		MessageTransfer messageTransfer=messageWs.getMessage(messageId);
@@ -60,7 +60,7 @@ public class MyOscarMessageManager {
 		return(messageTransfer);
 	}
 	
-	public static void markRead(Long myOscarUserId, String myOscarPassword, Long messageId) throws NotAuthorisedException_Exception
+	public static void markRead(Long myOscarUserId, String myOscarPassword, Long messageId) throws NotAuthorisedException_Exception, NoSuchItemException_Exception
 	{
 		MessageWs messageWs=MyOscarServerWebServicesManager.getMessageWs(myOscarUserId, myOscarPassword);
 		messageWs.markAsRead(messageId);
@@ -68,8 +68,9 @@ public class MyOscarMessageManager {
 
 	/**
 	 * @return Returns the ID of the new message that is created ie the reply message.
+	 * @throws NoSuchItemException_Exception 
 	 */
-	public static Long sendReply(Long myOscarUserId, String myOscarPassword, Long messageId, String contents) throws InvalidRequestException_Exception, NotAuthorisedException_Exception
+	public static Long sendReply(Long myOscarUserId, String myOscarPassword, Long messageId, String contents) throws NotAuthorisedException_Exception, NoSuchItemException_Exception
 	{
 		MessageWs messageWs=MyOscarServerWebServicesManager.getMessageWs(myOscarUserId, myOscarPassword);
 		Long repliedMessageId = messageWs.replyToMessage(messageId, contents);
@@ -98,7 +99,7 @@ public class MyOscarMessageManager {
 		remoteDataLogDao.persist(remoteDataLog);
 	}
 
-	public static void flipActive(Long myOscarUserId, String myOscarPassword, Long messageId) throws NotAuthorisedException_Exception {
+	public static void flipActive(Long myOscarUserId, String myOscarPassword, Long messageId) throws NotAuthorisedException_Exception, NoSuchItemException_Exception {
 		MessageWs messageWs=MyOscarServerWebServicesManager.getMessageWs(myOscarUserId, myOscarPassword);
 		MessageTransfer messageTransfer=messageWs.getMessage(messageId);
 		messageWs.setMessageActive(messageId, !messageTransfer.isActive());
