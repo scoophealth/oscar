@@ -194,7 +194,7 @@
                                                      <%   } %>
                                                      
                                                      <% 
-                                                        if (!((drug.pickupDate).equals("")) && !((drug.pickupDate).equals("0000-00-00")))
+                                                        if (drug.pickupDate!=null &&  !drug.pickupDate.equals("") && !drug.pickupDate.equals("0000-00-00"))
                                                         {
                                                     %>&nbsp;<bean:message key="WriteScript.msgPickUpDate"></bean:message>&nbsp;<%=drug.pickupDate%>&nbsp;
                                                             <% 
