@@ -30,6 +30,7 @@
  */
 package oscar.login.tld;
 
+import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
 
@@ -84,7 +85,7 @@ public class SecurityTag implements Tag {
         }
         else
         {
-	        if (OscarRoleObjectPrivilege.checkPrivilege(roleName, (Properties) v.get(0), (Vector) v.get(1),rights)){
+	        if (OscarRoleObjectPrivilege.checkPrivilege(roleName, (Properties)v.get(0), (List<String>)v.get(1), (List<String>)v.get(2), rights)){
 	            ret = EVAL_BODY_INCLUDE;
 	        }else{
 	            ret = SKIP_BODY;
