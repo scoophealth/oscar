@@ -15,7 +15,7 @@ public class JdbcBillingCodeImpl {
 
 	public List getBillingCodeAttr(String serviceCode) {
 		List ret = new Vector();
-		String sql = "select * from billingservice b where b.service_code='" + serviceCode + "'";
+		String sql = "select * from billingservice b where b.service_code='" + serviceCode + "' and b.billingservice_no = (select max(b2.billingservice_no) from billingservice b2 where b.service_code = b2.service_code and b2.billingservice_date <= now())";
 		ResultSet rs = dbObj.searchDBRecord(sql);
 		try {
 			while (rs.next()) {
