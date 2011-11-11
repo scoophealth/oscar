@@ -25,6 +25,8 @@ import org.oscarehr.util.SpringUtils;
 import oscar.OscarProperties;
 import oscar.oscarDemographic.data.DemographicData;
 import oscar.util.UtilDateUtilities;
+import oscar.log.LogAction;
+import oscar.log.LogConst;
 
 /**
  *
@@ -67,7 +69,7 @@ public class PHRViewPatientRecord extends DispatchAction {
             DemographicData demographicData = new DemographicData();
             Long myOscarUserId = MyOscarUtils.getMyOscarUserId(auth, demographicData.getDemographic(demographicNo).getMyOscarUserName());
 
-           
+            LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.READ, LogConst.CON_PHR, String.valueOf(myOscarUserId), request.getRemoteAddr(), demographicNo, "");
 //            request.setAttribute("userid", auth.getUserId());
 //            request.setAttribute("ticket", auth.getToken());
             request.setAttribute("userName", auth.getMyOscarUserName());
@@ -118,6 +120,8 @@ public class PHRViewPatientRecord extends DispatchAction {
         phrA.setArchived(false);
         phrA.setCreatedDate(new java.util.Date());
         phrVerificationDao.persist(phrA);
+        
+        LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.VERIFY, LogConst.CON_PHR, phrA.getPhrUserName(), request.getRemoteAddr(), demographicNo, "");
         
         ActionRedirect ar = new ActionRedirect(mapping.findForward("viewVerification"));
         ar.addParameter("demographic_no", demographicNo);
