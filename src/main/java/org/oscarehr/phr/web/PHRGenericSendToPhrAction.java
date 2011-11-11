@@ -24,6 +24,7 @@ import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.RemoteDataLogDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.RemoteDataLog;
+import org.oscarehr.myoscar_server.ws.MedicalDataTransfer2;
 import org.oscarehr.myoscar_server.ws.MedicalDataType;
 import org.oscarehr.myoscar_server.ws.MedicalDataWs;
 import org.oscarehr.phr.PHRAuthentication;
@@ -195,12 +196,25 @@ public class PHRGenericSendToPhrAction extends DispatchAction {
 			Long patientMyOscarUserId=MyOscarUtils.getMyOscarUserId(auth, demographic.getMyOscarUserName());
 			GregorianCalendar dateOfData=new GregorianCalendar();
 			if (eDoc.getDateTimeStampAsDate()!=null) dateOfData.setTime(eDoc.getDateTimeStampAsDate());
-			Long medicalDataId=medicalDataWs.addMedicalData(patientMyOscarUserId, dateOfData, MedicalDataType.BINARY_DOCUMENT.name(), auth.getMyOscarUserId(), docAsString, true);
+			
+			MedicalDataTransfer2 medicalDataTransfer=new MedicalDataTransfer2();
+			medicalDataTransfer.setActive(true);
+			medicalDataTransfer.setCompleted(true);
+			medicalDataTransfer.setData(docAsString);
+			medicalDataTransfer.setDateOfData(dateOfData);
+			medicalDataTransfer.setMedicalDataType(MedicalDataType.BINARY_DOCUMENT.name());
+			medicalDataTransfer.setObserverOfDataPersonId(auth.getMyOscarUserId());
+
+			LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+			medicalDataTransfer.setObserverOfDataPersonName(loggedInInfo.loggedInProvider.getFormattedName());
+			medicalDataTransfer.setOriginalSourceId(loggedInInfo.currentFacility.getName()+":eDoc:"+eDoc.getDocId());
+			medicalDataTransfer.setOwningPersonId(patientMyOscarUserId);
+						
+			Long medicalDataId=medicalDataWs.addMedicalData2(medicalDataTransfer);
 			
 			// log the send
 			RemoteDataLogDao remoteDataLogDao=(RemoteDataLogDao) SpringUtils.getBean("remoteDataLogDao");
 			RemoteDataLog remoteDataLog=new RemoteDataLog();
-			LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 			remoteDataLog.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
 			remoteDataLog.setDocumentId(MyOscarServerWebServicesManager.getMyOscarServerBaseUrl(), "eDoc", eDoc.getDocId());
 			remoteDataLog.setAction(RemoteDataLog.Action.SEND);
