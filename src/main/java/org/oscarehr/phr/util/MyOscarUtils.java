@@ -6,6 +6,7 @@ import org.apache.commons.lang.time.DateUtils;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.myoscar_server.ws.AccountWs;
+import org.oscarehr.myoscar_server.ws.NoSuchItemException_Exception;
 import org.oscarehr.myoscar_server.ws.NotAuthorisedException_Exception;
 import org.oscarehr.myoscar_server.ws.PersonTransfer;
 import org.oscarehr.phr.PHRAuthentication;
@@ -60,8 +61,9 @@ public class MyOscarUtils
 	/**
 	 * Note this method must only return the userName, it must never return the PersonTransfer itself since it reads from a cache.
 	 * @throws NotAuthorisedException_Exception 
+	 * @throws NoSuchItemException_Exception 
 	 */
-	public static String getMyOscarUserName(PHRAuthentication auth, Long myOscarUserId) throws NotAuthorisedException_Exception
+	public static String getMyOscarUserName(PHRAuthentication auth, Long myOscarUserId) throws NotAuthorisedException_Exception, NoSuchItemException_Exception
 	{
 		String myOscarUserName=userIdToNameCache.get(myOscarUserId);
 		
@@ -79,7 +81,7 @@ public class MyOscarUtils
 		return(myOscarUserName);
 	}
 	
-	public static String getMyOscarUserName(HttpSession session, Long myOscarUserId) throws NotAuthorisedException_Exception
+	public static String getMyOscarUserName(HttpSession session, Long myOscarUserId) throws NotAuthorisedException_Exception, NoSuchItemException_Exception
 	{
 		PHRAuthentication auth = (PHRAuthentication) session.getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
 		return(getMyOscarUserName(auth, myOscarUserId));

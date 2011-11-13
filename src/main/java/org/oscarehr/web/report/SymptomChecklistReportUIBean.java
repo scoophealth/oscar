@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.myoscar_server.ws.AccountWs;
+import org.oscarehr.myoscar_server.ws.NoSuchItemException_Exception;
 import org.oscarehr.myoscar_server.ws.NotAuthorisedException_Exception;
 import org.oscarehr.myoscar_server.ws.PersonTransfer;
 import org.oscarehr.myoscar_server.ws.SurveyResultTransfer;
@@ -88,7 +89,7 @@ public class SymptomChecklistReportUIBean {
 		return (results);
 	}
 
-	public static SymptomChecklistCompareDisplayObject getCompareDisplayObject(PHRAuthentication auth, String[] resultIds) throws IOException, SAXException, ParserConfigurationException, NumberFormatException, NotAuthorisedException_Exception {
+	public static SymptomChecklistCompareDisplayObject getCompareDisplayObject(PHRAuthentication auth, String[] resultIds) throws IOException, SAXException, ParserConfigurationException, NumberFormatException, NotAuthorisedException_Exception, NoSuchItemException_Exception {
 		SymptomChecklistCompareDisplayObject symptomChecklistCompareDisplayObject = new SymptomChecklistCompareDisplayObject();
 
 		if (resultIds != null && resultIds.length > 0) {
