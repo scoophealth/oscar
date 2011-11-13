@@ -42,6 +42,9 @@ public class Z04Query extends Query {
 		for (OBX3 testResultCode : testResultCodeList)
 			query += testResultCode.toOlisString() + "~";
 		
+		if(query.endsWith("~")) {
+			query = query.substring(0,query.length()-1);
+		}
 		return query;
 	}
 

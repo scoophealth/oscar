@@ -2,6 +2,8 @@ package com.indivica.olis;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.io.StringReader;
 import java.security.KeyStore;
 import java.security.PrivateKey;
@@ -31,6 +33,7 @@ import javax.xml.validation.SchemaFactory;
 import org.bouncycastle.cms.CMSProcessableByteArray;
 import org.bouncycastle.cms.CMSSignedData;
 import org.bouncycastle.cms.CMSSignedDataGenerator;
+import org.bouncycastle.cms.DefaultSignedAttributeTableGenerator;
 import org.bouncycastle.cms.SignerInformation;
 import org.bouncycastle.cms.SignerInformationStore;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -113,7 +116,10 @@ public class Driver {
 	
 				String signedData = olisResponse.getHIALResponse().getSignedResponse().getSignedData();
 				String unsignedData = Driver.unsignData(signedData);
-	
+				//MiscUtils.getLogger().info(msgInXML);
+				//MiscUtils.getLogger().info("---------------------------------");			
+				//MiscUtils.getLogger().info(unsignedData);
+				
 				if (request != null) { 
 					request.setAttribute("msgInXML", msgInXML);
 					request.setAttribute("signedRequest", signedRequest);
@@ -121,6 +127,7 @@ public class Driver {
 					request.setAttribute("unsignedResponse", unsignedData);
 				}
 	
+				//writeToFile(unsignedData);
 				readResponseFromXML(request, unsignedData);
 	
 				return unsignedData;
@@ -136,6 +143,9 @@ public class Driver {
 
 	public static void readResponseFromXML(HttpServletRequest request,
 			String olisResponse) {
+		
+		olisResponse = olisResponse.replaceAll("<Content", "<Content xmlns=\"\" ");
+		olisResponse = olisResponse.replaceAll("<Errors", "<Errors xmlns=\"\" ");
 
 		try {
 			DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -146,6 +156,7 @@ public class Driver {
 
 			JAXBContext jc = JAXBContext.newInstance("ca.ssha._2005.hial");
 			Unmarshaller u = jc.createUnmarshaller();
+			@SuppressWarnings("unchecked")
 			Response root = ((JAXBElement<Response>) u.unmarshal(new InputSource(new StringReader(olisResponse)))).getValue();
 			
 			if (root.getErrors() != null) {
@@ -242,26 +253,29 @@ public class Driver {
 			cert = (X509Certificate) keystore.getCertificate(name);
 
 			// I'm not sure if this is necessary
+			
 			Certificate[] certChain = keystore.getCertificateChain(name);
 			ArrayList<Certificate> certList = new ArrayList<Certificate>();
+			certList.add(cert);
 			CertStore certs = null;
-			for (int i = 0; i < certChain.length; i++) {
-				certList.add(certChain[i]);
-			}
 
+			
 			certs = CertStore.getInstance("Collection", new CollectionCertStoreParameters(certList), "BC");
 
 			// Encrypt data
 			CMSSignedDataGenerator sgen = new CMSSignedDataGenerator();
+			
 
 			// What digest algorithm i must use? SHA1? MD5? RSA?...
-			sgen.addSigner(priv, (X509Certificate) cert, CMSSignedDataGenerator.DIGEST_MD5);
+			DefaultSignedAttributeTableGenerator attributeGenerator = new DefaultSignedAttributeTableGenerator();			
+			sgen.addSigner(priv, cert, CMSSignedDataGenerator.DIGEST_SHA1,attributeGenerator,null);
 
 			// I'm not sure this is necessary
 			sgen.addCertificatesAndCRLs(certs);
 
 			// I think that the 2nd parameter need to be false (detached form)
-			CMSSignedData csd = sgen.generate(new CMSProcessableByteArray(data.getBytes()), false, "BC");
+			CMSSignedData csd = sgen.generate(new CMSProcessableByteArray(data.getBytes()), true, "BC");
+			
 			byte[] signedData = csd.getEncoded();
 			byte[] signedDataB64 = Base64.encode(signedData);
 
@@ -311,4 +325,15 @@ public class Driver {
     	messageData.sendMessage2(message, "OLIS Retrieval Error", "System", sentToString, "-1", sendToProviderListData, null, null);
     }
 	
+	static void writeToFile(String data) {
+		try {
+			File tempFile = new File(System.getProperty("java.io.tmpdir")+(Math.random()*100)+".xml");
+			PrintWriter pw = new PrintWriter(new FileWriter(tempFile));
+			pw.println(data);
+			pw.flush();
+			pw.close();
+		}catch(Exception e) {
+			MiscUtils.getLogger().error("Error",e);
+		}
+	}
 }

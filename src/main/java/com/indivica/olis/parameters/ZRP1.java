@@ -30,12 +30,12 @@ public class ZRP1 implements Parameter {
 
 	@Override
 	public String toOlisString() {
-		return getQueryCode() + ".1^" + idNumber + "~" + getQueryCode() + ".1.13^" + idTypeCode + "~" +
+		return getQueryCode() + ".1^" + idNumber + "~" + getQueryCode() + ".13^" + idTypeCode + "~" +
 			getQueryCode() + ".22.1^" + (assigningJurisdiction != null ? assigningJurisdiction : "") + "~" +
 			getQueryCode() + ".22.3^" + (assigningJurisdictionCodingSystem != null ? assigningJurisdictionCodingSystem : "") + "~" +
-			getQueryCode() + ".1.2^" + (name != null ? name : "") + "~" +
-			getQueryCode() + ".1.3^" + (firstName != null ? firstName : "") + "~" +
-			getQueryCode() + ".1.4^" + (secondName != null ? secondName : "");
+			getQueryCode() + ".2^" + (name != null ? name : "") + "~" +
+			getQueryCode() + ".3^" + (firstName != null ? firstName : "") + "~" +
+			getQueryCode() + ".4^" + (secondName != null ? secondName : "");
 	}
 
 	@Override
