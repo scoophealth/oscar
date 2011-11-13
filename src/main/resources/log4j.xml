@@ -55,7 +55,12 @@
 	<category name="org.oscarehr">
 		<priority value="INFO" />
 	</category>
-
+	
+	<!-- //debugging soap messages 
+	<category name="httpclient.wire">
+		<priority value="DEBUG" />
+	</category>
+	-->
 	<category name="org.oscarehr.util.VmStat" additivity="false">
 		<level value="INFO" />
 		<!-- uncomment for deployments -->

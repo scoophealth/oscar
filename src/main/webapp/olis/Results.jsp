@@ -114,7 +114,7 @@ function filterResults(select) {
 			
 			<%
 			if (request.getAttribute("errors") != null) {
-				// Show the errors to the user
+				// Show the errors to the user				
 				for (String error : (List<String>) request.getAttribute("errors")) { %>
 					<div class="error"><%=error.replaceAll("\\n", "<br />") %></div>
 				<% }
@@ -128,16 +128,20 @@ function filterResults(select) {
 			<%
 			boolean hasBlockedContent = false;
 			try {
-				OLISHL7Handler reportHandler = (OLISHL7Handler) Factory.getHandler("OLIS_HL7", resp);
-				List<OLISError> errors = reportHandler.getReportErrors();
-				if (errors.size() > 0) {
-					for (OLISError error : errors) {
-					%>
-						<div class="error"><%=error.getText().replaceAll("\\n", "<br />")%></div>
-					<%
+				if(resp != null && resp.length()>0) {
+					OLISHL7Handler reportHandler = (OLISHL7Handler) Factory.getHandler("OLIS_HL7", resp);
+					if(reportHandler != null) {
+						List<OLISError> errors = reportHandler.getReportErrors();
+						if (errors.size() > 0) {
+							for (OLISError error : errors) {
+							%>
+								<div class="error"><%=error.getText().replaceAll("\\n", "<br />")%></div>
+							<%
+							}
+						}
+						hasBlockedContent = reportHandler.isReportBlocked();
 					}
 				}
-				hasBlockedContent = reportHandler.isReportBlocked();
 			} catch (Exception e) {
 				MiscUtils.getLogger().error("error",e);
 			}
