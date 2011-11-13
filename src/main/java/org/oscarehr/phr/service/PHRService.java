@@ -60,7 +60,7 @@ import org.indivo.xml.talk.ReadResultType;
 import org.indivo.xml.talk.SendMessageResultType;
 import org.oscarehr.myoscar_server.ws.AccountWs;
 import org.oscarehr.myoscar_server.ws.LoginWs;
-import org.oscarehr.myoscar_server.ws.MedicalDataTransfer;
+import org.oscarehr.myoscar_server.ws.MedicalDataTransfer2;
 import org.oscarehr.myoscar_server.ws.MedicalDataType;
 import org.oscarehr.myoscar_server.ws.MedicalDataWs;
 import org.oscarehr.myoscar_server.ws.MessageWs;
@@ -80,6 +80,7 @@ import org.oscarehr.phr.model.PHRMedication;
 import org.oscarehr.phr.model.PHRMessage;
 import org.oscarehr.phr.util.MyOscarServerWebServicesManager;
 import org.oscarehr.phr.util.MyOscarUtils;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.XmlUtils;
 import org.w3c.dom.DOMException;
@@ -332,19 +333,19 @@ public class PHRService {
 
 		int startIndex = 0;
 		int itemsToReturn = 100;
-		List<MedicalDataTransfer> medicationTransfers = null;
+		List<MedicalDataTransfer2> medicationTransfers = null;
 		do {
 			List<Long> documentIds = medicalDataWs.getMedicalDataIds(myOscarUserId, MedicalDataType.MEDICATION.name(), true, startIndex, itemsToReturn);
-			medicationTransfers = new ArrayList<MedicalDataTransfer>();
+			medicationTransfers = new ArrayList<MedicalDataTransfer2>();
 			for (Long id : documentIds)
 			{
-				MedicalDataTransfer medicalDataTransfer=medicalDataWs.getMedicalData(id);
+				MedicalDataTransfer2 medicalDataTransfer=medicalDataWs.getMedicalData2(id);
 				medicationTransfers.add(medicalDataTransfer);
 			}
 
 			startIndex = startIndex + itemsToReturn;
 
-			for (MedicalDataTransfer medicalDataTransfer : medicationTransfers) {
+			for (MedicalDataTransfer2 medicalDataTransfer : medicationTransfers) {
 				boolean importStatus = checkImportStatus(medicalDataTransfer.getId().toString());// check if document has been imported before
 				Boolean sendByOscarBefore = isMedSentBefore(medicalDataTransfer.getId().toString());// check if this document was sent by this oscar before.
 				logger.debug("medicalDataTransfer: importStatus=" + importStatus + ", sentBefore=" + sendByOscarBefore);
@@ -454,7 +455,20 @@ public class PHRService {
 
 						if (doc.getDocumentHeader().getCreationDateTime() != null) dataTime = doc.getDocumentHeader().getCreationDateTime().toGregorianCalendar();
 
-						resultId = medicalDataWs.addMedicalData(action.getReceiverMyOscarUserId(), dataTime, action.getPhrClassification(), auth.getMyOscarUserId(), xmlString, true);
+						MedicalDataTransfer2 medicalDataTransfer=new MedicalDataTransfer2();
+						medicalDataTransfer.setActive(true);
+						medicalDataTransfer.setCompleted(true);
+						medicalDataTransfer.setData(xmlString);
+						medicalDataTransfer.setDateOfData(dataTime);
+						medicalDataTransfer.setMedicalDataType(action.getPhrClassification());
+						medicalDataTransfer.setObserverOfDataPersonId(auth.getMyOscarUserId());
+						
+						LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+						medicalDataTransfer.setObserverOfDataPersonName(loggedInInfo.loggedInProvider.getFormattedName());
+						medicalDataTransfer.setOriginalSourceId(loggedInInfo.currentFacility.getName()+":EDoc:"+edoc.getDocId());
+						medicalDataTransfer.setOwningPersonId(action.getReceiverMyOscarUserId());
+						
+						resultId = medicalDataWs.addMedicalData2(medicalDataTransfer);
 					} else if (action.getPhrClassification().equals("ANNOTATION")) {
 						try {
 							String referenceIndex = PHRIndivoAnnotation.getAnnotationReferenceIndex(doc);// temporarily stored
@@ -496,7 +510,20 @@ public class PHRService {
 
 						if (doc.getDocumentHeader().getCreationDateTime() != null) dataTime = doc.getDocumentHeader().getCreationDateTime().toGregorianCalendar();
 
-						resultId = medicalDataWs.addMedicalData(action.getReceiverMyOscarUserId(), dataTime, action.getPhrClassification(), auth.getMyOscarUserId(), xmlString, true);
+						MedicalDataTransfer2 medicalDataTransfer=new MedicalDataTransfer2();
+						medicalDataTransfer.setActive(true);
+						medicalDataTransfer.setCompleted(true);
+						medicalDataTransfer.setData(xmlString);
+						medicalDataTransfer.setDateOfData(dataTime);
+						medicalDataTransfer.setMedicalDataType(action.getPhrClassification());
+						medicalDataTransfer.setObserverOfDataPersonId(auth.getMyOscarUserId());
+
+						LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+						medicalDataTransfer.setObserverOfDataPersonName(loggedInInfo.loggedInProvider.getFormattedName());
+						medicalDataTransfer.setOriginalSourceId(loggedInInfo.currentFacility.getName()+":medication:"+action.getOscarId());
+						medicalDataTransfer.setOwningPersonId(action.getReceiverMyOscarUserId());
+
+						resultId = medicalDataWs.addMedicalData2(medicalDataTransfer);
 					}
 
 					// AddDocumentResultType result = client.addDocument(auth.getToken(), action.getReceiverPhr(), doc);
