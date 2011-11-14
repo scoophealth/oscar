@@ -97,7 +97,7 @@ public class Driver {
 				logItem.setContent("query");
 				logItem.setData(olisHL7String);
 
-				if (LoggedInInfo.loggedInInfo.get().loggedInProvider != null)
+				if (LoggedInInfo.loggedInInfo.get() != null && LoggedInInfo.loggedInInfo.get().loggedInProvider != null)
 					logItem.setProviderNo(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
 				
 				logDao.persist(logItem);
@@ -135,7 +135,9 @@ public class Driver {
 			}
 		} catch (Exception e) {
 			MiscUtils.getLogger().error("Can't perform OLIS query due to exception.", e);
-			request.setAttribute("searchException", e);
+			if(request != null) {
+				request.setAttribute("searchException", e);
+			}
 			notifyOlisError(e.getMessage());
 			return "";
 		}
