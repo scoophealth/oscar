@@ -72,7 +72,6 @@ public class OscarRoleObjectPrivilege {
 
 	public static Vector getPrivilegeProp(String objName) {
 		Vector ret = new Vector();
-		Properties prop = new Properties();
 		try {
 
 			java.sql.ResultSet rs;
@@ -87,19 +86,23 @@ public class OscarRoleObjectPrivilege {
 			}
 
 			
-			String sql = "select roleUserGroup,privilege from secObjPrivilege where " + objectWhere.toString() + " order by priority desc";
+			String sql = "select roleUserGroup,privilege,priority from secObjPrivilege where " + objectWhere.toString() + " order by priority desc";
 			
 			// this sql looks nasty, OR statements are inherently poor performance items...
 			logger.debug("getPrivilegeProp() sql="+sql);
 
 			rs = DBHandler.GetSQL(sql);
+			Properties prop = new Properties();
 			Vector roleInObj = new Vector();
+			ArrayList<String> priority = new ArrayList<String>();
 			while (rs.next()) {
 				prop.setProperty(oscar.Misc.getString(rs, "roleUserGroup"), oscar.Misc.getString(rs, "privilege"));
 				roleInObj.add(oscar.Misc.getString(rs, "roleUserGroup"));
+				priority.add(oscar.Misc.getString(rs, "priority"));
 			}
 			ret.add(prop);
 			ret.add(roleInObj);
+			ret.add(priority);
 
 			rs.close();
 		} catch (java.sql.SQLException e) {
@@ -183,6 +186,10 @@ public class OscarRoleObjectPrivilege {
 	}
 
 	public static boolean checkPrivilege(String roleName, Properties propPrivilege, List<String> roleInObj, String rightCustom) {
+		return checkPrivilege(roleName, propPrivilege, roleInObj, null, rightCustom);
+	}
+
+	public static boolean checkPrivilege(String roleName, Properties propPrivilege, List<String> roleInObj, List<String> priority, String rightCustom) {
 		boolean ret = false;
 		Properties propRoleName = getVecRole(roleName);
 		for (int i = 0; i < roleInObj.size(); i++) {
@@ -202,6 +209,10 @@ public class OscarRoleObjectPrivilege {
 				if (check[1]) { // get the only rights, stop and return the result
 					return check[0];
 				}
+			}
+			if (priority!=null && priority.get(i)!=null) {
+				// Since higher priority goes first in the list, if priority>0 we can skip the rest
+				if (!priority.get(i).trim().equals("") && !priority.get(i).trim().equals("0")) break;
 			}
 		}
 		return ret;
