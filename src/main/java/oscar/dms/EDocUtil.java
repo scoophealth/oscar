@@ -814,6 +814,7 @@ public final class EDocUtil extends SqlUtilBaseS {
 
 	public static boolean getDocReviewFlag(String docId) {
 		boolean flag = false;
+/* table "doc_manager" does not exist, unnecessary error log generated -> code disabled
 		try {
 
 			String sql = "select reviewed_flag from doc_manager where id=" + docId;
@@ -826,11 +827,13 @@ public final class EDocUtil extends SqlUtilBaseS {
 		} catch (SQLException e) {
 			logger.error("Error", e);
 		}
+*/		
 		return flag;
 	}
 
 	public static boolean getDocUrgentFlag(String docId) {
 		boolean flag = false;
+/* table "doc_manager" does not exist, unnecessary error log generated -> code disabled
 		try {
 
 			String sql = "select urgent from doc_manager where id=" + docId;
@@ -843,6 +846,7 @@ public final class EDocUtil extends SqlUtilBaseS {
 		} catch (SQLException e) {
 			logger.error("Error", e);
 		}
+*/
 		return flag;
 	}
 
