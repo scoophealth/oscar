@@ -127,7 +127,7 @@ public class Driver {
 					request.setAttribute("unsignedResponse", unsignedData);
 				}
 	
-				//writeToFile(unsignedData);
+				writeToFile(unsignedData);
 				readResponseFromXML(request, unsignedData);
 	
 				return unsignedData;
@@ -180,10 +180,11 @@ public class Driver {
 					
 					errorStringList.add(errorString);
 				}
-				
-				request.setAttribute("errors", errorStringList);
+				if(request!=null)
+					request.setAttribute("errors", errorStringList);
 			} else if (root.getContent() != null) {
-				request.setAttribute("olisResponseContent", root.getContent());
+				if(request != null)
+					request.setAttribute("olisResponseContent", root.getContent());
 			}
 		} catch (Exception e) {
 			MiscUtils.getLogger().error("Couldn't read XML from OLIS response.", e);
