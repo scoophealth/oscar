@@ -302,6 +302,7 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
 	String demono="", chartno="", phone="", rosterstatus="", alert="", doctorNo="";
 	String strApptDate = bFirstDisp?"":request.getParameter("appointment_date") ;
 
+	
 	if (bFirstDisp) {
 		List<Map> resultList = oscarSuperManager.find("appointmentDao",
 				request.getParameter("dboperation"), new Object [] {appointment_no});
@@ -314,6 +315,7 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
 			appt = resultList.get(0); 
 		}
 	}
+
 
 	if (bFirstDisp && appt.get("demographic_no")!=null) {
 		demono = String.valueOf(appt.get("demographic_no"));
@@ -366,10 +368,12 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
             <div class="input">
 <%     
               String statusCode = request.getParameter("status");
+			  String importedStatus = null;
               if (bFirstDisp){
                   statusCode = (String) appt.get("status");
+                  importedStatus = (String) appt.get("imported_status");
               }
-              String importedStatus = (String) appt.get("imported_status");
+              
               
               String signOrVerify = "";
               if (statusCode.length() >= 2){
