@@ -24,6 +24,10 @@ public class Z07Query extends Query {
 		if (quantityLimitedRequest != null)
 			query += quantityLimitedRequest.toOlisString() + "~";
 
+		if(query.endsWith("~")) {
+			query = query.substring(0,query.length()-1);
+		}
+		
 		return query;
 	}
 

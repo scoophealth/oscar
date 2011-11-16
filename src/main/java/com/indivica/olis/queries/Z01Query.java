@@ -124,6 +124,9 @@ public class Z01Query extends Query {
 			query += testResultCode.toOlisString() + "~";
 		}
 		
+		if(query.endsWith("~")) {
+			query = query.substring(0,query.length()-1);
+		}
 		
 		return query;
 		
