@@ -44,6 +44,10 @@ public class Z02Query extends Query {
 		if (placerGroupNumber != null)
 			query += placerGroupNumber.toOlisString() + "~";
 		
+		if(query.endsWith("~")) {
+			query = query.substring(0,query.length()-1);
+		}
+		
 		return query;
 	}
 

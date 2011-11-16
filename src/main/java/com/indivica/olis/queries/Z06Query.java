@@ -29,6 +29,10 @@ public class Z06Query extends Query {
 		if (orderingFacilityId != null)
 			query += orderingFacilityId.toOlisString() + "~";
 		
+		if(query.endsWith("~")) {
+			query = query.substring(0,query.length()-1);
+		}
+		
 		return query;
 	}
 	
