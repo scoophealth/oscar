@@ -57,10 +57,10 @@ public class RxInstructionPolicy {
 		addPolicy(new String[]{"@"},instr,errors,"@","at");
 		
 		//A.S.
-		addPolicy(new String[]{"\\s+(?i)A.?S.?\\s+","\\s+(?i)A.?S.?$","^(?i)A.?S.?\\s+","^(?i)A.?S.?$"},instr,errors,"A.S.","left ear");		
+		addPolicy(new String[]{"\\s+(?i)A\\.\\.?S.?\\s+","\\s+(?i)A\\.\\.?S.?$","^(?i)A\\.\\.?S.?\\s+","^(?i)A\\.\\.?S.?$"},instr,errors,"A.S.","left ear");				
 		
 		//A.D.
-		addPolicy(new String[]{"\\s+(?i)A.?D.?\\s+","\\s+(?i)A.?D.?$","^(?i)A.?D.?\\s+","^(?i)A.?D.?$"},instr,errors,"A.D.","right ear");		
+		addPolicy(new String[]{"\\s+(?i)AD.?\\s+","\\s+(?i)AD.?$","^s+(?i)AD.?\\s+","^(?i)AD.?$","\\s+(?i)A\\.\\.?D.?\\s+","\\s+(?i)A\\.\\.?D.?$","^s+(?i)A\\.\\.?D.?\\s+","^(?i)A\\.\\.?D.?$"},instr,errors,"A.D.","right ear");		
 		
 		//A.U.
 		addPolicy(new String[]{"\\s+(?i)A.?U.?\\s+","\\s+(?i)A.?U.?$","^(?i)A.?U.?\\s+","^(?i)A.?U.?$"},instr,errors,"A.U.","both ears");		
@@ -84,7 +84,7 @@ public class RxInstructionPolicy {
 		addPolicy(new String[]{"\\s+(?i)q.?o.?d.?\\s+","\\s+(?i)q.?o.?d.?$","^(?i)q.?o.?d.?\\s+","^(?i)q.?o.?d.?$"},instr,errors,"q.o.d","every other day");		
 		
 		//q.d
-		addPolicy(new String[]{"\\s+(?i)q.?d.?\\s+","\\s+(?i)q.?d.?$","^(?i)q.?d.?\\s+","^(?i)q.?d.?$"},instr,errors,"q.d","daily");
+		addPolicy(new String[]{"\\s+(?i)qd.?\\s+","\\s+(?i)qd.?$","^s+(?i)qd.?\\s+","^(?i)qd.?$","\\s+(?i)q\\.\\.?d.?\\s+","\\s+(?i)q\\.\\.?d.?$","^s+(?i)q\\.\\.?d.?\\s+","^(?i)q\\.\\.?d.?$"},instr,errors,"q.d","daily");
 		
 		//o.d.
 		addPolicy(new String[]{"\\s+(?i)o.?d.?\\s+","\\s+(?i)o.?d.?$","^(?i)o.?d.?\\s+","^(?i)o.?d.?$"},instr,errors,"o.d.","daily");		
