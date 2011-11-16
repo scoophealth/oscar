@@ -34,6 +34,10 @@ public class Z50Query extends Query {
 		if (dateOfBirth != null)
 			query += dateOfBirth.toOlisString() + "~";
 		
+		if(query.endsWith("~")) {
+			query = query.substring(0,query.length()-1);
+		}
+		
 		return query;
 	}
 

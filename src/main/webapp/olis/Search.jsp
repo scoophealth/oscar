@@ -43,12 +43,11 @@
 
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title><bean:message key="olis.olisSearch" /></title>
-	<link rel="stylesheet" type="text/css"
-		href="../../../share/css/OscarStandardLayout.css">
-	<link rel="stylesheet" type="text/css"
-		href="../share/css/OscarStandardLayout.css">
+	<link rel="stylesheet" type="text/css" href="../../../share/css/OscarStandardLayout.css">
+	<link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css">
 	<script type="text/javascript" src="../../../share/javascript/Oscar.js"></script>
 	<script type="text/javascript" src="../share/javascript/Oscar.js"></script>
+	
 	<script type="text/javascript">
 		    function selectOther(){                
 		        if (document.UPLOAD.type.value == "OTHER")
@@ -56,6 +55,7 @@
 		        else
 		            document.getElementById('OTHER').style.visibility = "hidden";                
 		    }
+		    
 		    function checkInput(){
 		        if (document.UPLOAD.lab.value ==""){
 		            alert("Please select a lab for upload");
@@ -169,7 +169,6 @@ List<OLISRequestNomenclature> requestNomenclatureList = requestDao.findAll();
 
 %>
 			
-
 
 	<select id="queryType" onchange="displaySearch(this)" style="margin-left:30px;">
 		<option value="Z01">Z01 - Retrieve Laboratory Information for Patient</option>

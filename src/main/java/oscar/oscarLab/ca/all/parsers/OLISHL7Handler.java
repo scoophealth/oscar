@@ -4,6 +4,7 @@
 
 package oscar.oscarLab.ca.all.parsers;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -1285,7 +1286,9 @@ public class OLISHL7Handler implements MessageHandler {
 				response.setHeader("Content-Disposition", "attachment; filename=\"" + getAccessionNum().replaceAll("\\s", "_") + "_" + obr + "-" + obx + "_Document.xml\"");
 			}
 
+			
 			byte[] buf = Base64.decode(data);
+			/*
 			int pos = 0;
 			int read;
 			while (pos < buf.length) {
@@ -1293,6 +1296,11 @@ public class OLISHL7Handler implements MessageHandler {
 				response.getOutputStream().write(buf, pos, read);
 				pos += read;
 			}
+			*/
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			baos.write(buf, 0, buf.length);
+			baos.writeTo(response.getOutputStream());
+			
 
 		} catch (IOException e) {
 			MiscUtils.getLogger().error("OLIS HL7 Error", e);
@@ -2183,7 +2191,10 @@ public class OLISHL7Handler implements MessageHandler {
 			if (key == null || "".equals(key.trim())) {
 				return "";
 			}
-			return String.format("%s (%s %s)", sourceOrganizations.get(key), ident, key);
+			String sourceOrg = sourceOrganizations.get(key);
+			if(sourceOrg == null)
+				sourceOrg = defaultSourceOrganizations.get(key);
+			return String.format("%s (%s %s)", sourceOrg, ident, key);
 		} catch (Exception e) {
 			MiscUtils.getLogger().error("OLIS HL7 Error", e);
 		}
