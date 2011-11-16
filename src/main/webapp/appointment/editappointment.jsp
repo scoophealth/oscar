@@ -21,6 +21,8 @@
 	errorPage="errorpage.jsp"%>
 <%@ page import="oscar.appt.status.model.AppointmentStatus"
 	errorPage="errorpage.jsp"%>
+<%@ page import="org.oscarehr.common.dao.DemographicDao, org.oscarehr.common.model.Demographic, org.oscarehr.util.SpringUtils"
+         errorPage="errorpage.jsp"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
@@ -35,6 +37,8 @@
   List allStatus = apptStatusMgr.getAllActiveStatus();
 
   Boolean isMobileOptimized = session.getAttribute("mobileOptimized") != null;
+  
+  DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
 %>
 <!--  
 /*
@@ -445,10 +449,21 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
             <div class="input">
 				<%
   int everyMin = 1;
+  StringBuilder nameSb = new StringBuilder();
   if(bFirstDisp) {
     int endtime = (Integer.parseInt(String.valueOf(appt.get("end_time")).substring(0,2) ) )*60 + (Integer.parseInt(String.valueOf(appt.get("end_time")).substring(3,5) ) ) ;
     int starttime = (Integer.parseInt(String.valueOf(appt.get("start_time")).substring(0,2) ) )*60 + (Integer.parseInt(String.valueOf(appt.get("start_time")).substring(3,5) ) ) ;
     everyMin = endtime - starttime +1;
+    
+    if (!demono.equals("0") && !demono.equals("") && (demographicDao != null)) {
+        Demographic demo = demographicDao.getDemographic(demono);
+        nameSb.append(demo.getLastName())
+              .append(",")
+              .append(demo.getFirstName());
+    }
+    else {
+        nameSb.append(appt.get("name"));
+    }
   }
 %> <INPUT TYPE="hidden" NAME="end_time"
 					VALUE="<%=bFirstDisp?String.valueOf(appt.get("end_time")).substring(0,5):request.getParameter("end_time")%>"
@@ -486,7 +501,7 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
             <div class="input">
                 <INPUT TYPE="TEXT" NAME="keyword"
 					tabindex="1"
-					VALUE="<%=bFirstDisp?appt.get("name"):request.getParameter("name")%>"
+					VALUE="<%=bFirstDisp?nameSb.toString():request.getParameter("name")%>"
                     width="25">
             </div>
             <div class="space">&nbsp;</div>

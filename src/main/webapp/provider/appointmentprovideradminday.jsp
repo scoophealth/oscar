@@ -2,7 +2,7 @@
 <%@page import="org.oscarehr.common.model.Provider,org.oscarehr.common.dao.BillingDao,org.oscarehr.common.model.BillingONCHeader1"%>
 <%@page import="org.oscarehr.common.model.ProviderPreference"%>
 <%@page import="org.oscarehr.web.admin.ProviderPreferencesUIBean"%>
-<%@page import="org.oscarehr.common.dao.UserPropertyDAO, org.oscarehr.common.dao.DemographicDao, org.oscarehr.common.model.UserProperty" %>
+<%@page import="org.oscarehr.common.dao.UserPropertyDAO, org.oscarehr.common.dao.DemographicDao, org.oscarehr.common.model.Demographic, org.oscarehr.common.model.UserProperty" %>
 <%
 	if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
 	String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
@@ -294,9 +294,8 @@ String strMonth=month>9?(""+month):("0"+month);
 String strDay=day>9?(""+day):("0"+day);
 
 UserPropertyDAO userPropertyDao = null;
-DemographicDao demographicDao = null;
+DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
 if(view == 1) {
-    demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
     userPropertyDao = (UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
 }
 
@@ -1441,8 +1440,23 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
          	    //get time format: 00:00am/pm
                     //String startTime = (iS>12?("0"+(iS-12)):String.valueOf(appointment.get("start_time")).substring(0,2))+":"+String.valueOf(appointment.get("start_time")).substring(3,5)+am_pm ;
                     //String endTime   = (iE>12?("0"+(iE-12)):String.valueOf(appointment.get("end_time")).substring(0,2))  +":"+String.valueOf(appointment.get("end_time")).substring(3,5)+(iE<12?"am":"pm");
-                    String name = UtilMisc.toUpperLowerCase(String.valueOf(appointment.get("name")));
-                  int demographic_no = (Integer)appointment.get("demographic_no");
+                                    
+                    int demographic_no = (Integer)appointment.get("demographic_no");
+                    
+                  //Pull the appointment name from the demographic information if the appointment is attached to a specific demographic. 
+                  //Otherwise get the name associated with the appointment from the appointment information
+                  StringBuilder nameSb = new StringBuilder();
+                  if ((demographic_no != 0)&& (demographicDao != null)) {
+                        Demographic demo = demographicDao.getDemographic(String.valueOf(demographic_no));
+                        nameSb.append(demo.getLastName())
+                              .append(",")
+                              .append(demo.getFirstName());  
+                  }
+                  else {
+                        nameSb.append(String.valueOf(appointment.get("name")));
+                  }
+                  String name = UtilMisc.toUpperLowerCase(nameSb.toString());
+                  
                   paramTickler[0]=String.valueOf(demographic_no);
                   paramTickler[1]=MyDateFormat.getSysDate(strDate); //year+"-"+month+"-"+day;//e.g."2001-02-02";
                   tickler_no = "";
