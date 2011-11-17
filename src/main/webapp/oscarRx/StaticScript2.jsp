@@ -42,6 +42,8 @@
 <%@page import="org.oscarehr.util.SessionConstants"%>
 <%@page import="org.oscarehr.oscarRx.StaticScriptBean"%>
 <%@page import="oscar.oscarRx.util.RxUtil" %>
+<%@page import="org.apache.commons.lang.StringEscapeUtils" %>
+
 <%@page import="java.util.ArrayList"%><html:html locale="true">
 <head>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/global.js"></script>
@@ -252,7 +254,7 @@
                                                                                         <html:submit style="width:100px" styleClass="ControlPushButton"  onclick="javascript:reRxDrugSearch3('<%=drug.localDrugId%>');" value="Re-prescribe" />
 										</html:form> --%>
                                                                                         <input type="button" align="top" value="Represcribe" style="width: 100px" class="ControlPushButton" onclick="javascript:reRxDrugSearch3('<%=drug.localDrugId%>');" />
-                                                                                        <input type="button" align="top" value="Add to Favorites" style="width: 100px" class="ControlPushButton" onclick="javascript:addFavorite2(<%=drug.localDrugId%>, '<%=(drug.customName!=null&&(!drug.customName.equalsIgnoreCase("null")))?drug.customName:drug.brandName%>');" />
+                                                                                        <input type="button" align="top" value="Add to Favorites" style="width: 100px" class="ControlPushButton" onclick="javascript:addFavorite2(<%=drug.localDrugId%>, '<%=StringEscapeUtils.escapeJavaScript((drug.customName!=null&&(!drug.customName.equalsIgnoreCase("null")))?drug.customName:drug.brandName)%>');" />
 									
                                                        
                                                     <%
