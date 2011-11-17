@@ -77,6 +77,21 @@ public class NextAppointmentSearchHelper {
 	 */
 	private static List<NextAppointmentSearchResult> searchDay(Date day, boolean today, NextAppointmentSearchBean searchBean) {
 		List<NextAppointmentSearchResult> results = new ArrayList<NextAppointmentSearchResult>();
+		
+		Calendar c = Calendar.getInstance();
+		c.setTime(day);
+		if(searchBean.getDayOfWeek().length()>0) {
+			if(searchBean.getDayOfWeek().equals("daily")) {
+				if(c.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY || c.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+					return results;				
+				}
+			} else {
+				if(c.get(Calendar.DAY_OF_WEEK) != Integer.parseInt(searchBean.getDayOfWeek())) {
+					return results;				
+				}
+			}
+		}
+		
 		if(searchBean.getProviderNo().equals("")) {			
 			List<Provider> providers = providerDao.getActiveProviders();
 			for(Provider p:providers) {
