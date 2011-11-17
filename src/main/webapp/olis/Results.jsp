@@ -135,7 +135,7 @@ function filterResults(select) {
 						if (errors.size() > 0) {
 							for (OLISError error : errors) {
 							%>
-								<div class="error"><%=error.getText().replaceAll("\\n", "<br />")%></div>
+								<div class="error"><%=error.getIndentifer()%>:<%=error.getText().replaceAll("\\n", "<br />")%></div>
 							<%
 							}
 						}
