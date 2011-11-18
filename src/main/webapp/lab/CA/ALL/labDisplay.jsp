@@ -227,6 +227,8 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
 .CorrectedRes a:active { color: #6da997 }
 .Field       { font-weight: bold; font-size: 8.5pt; color: black; font-family: 
                Verdana, Arial, Helvetica }
+.NarrativeRes { font-weight: 700; font-size: 10pt; color: black; font-family: 
+               Courier New, Courier, mono }
 div.Field a:link { color: black }
 div.Field a:hover { color: black }
 div.Field a:visited { color: black }
@@ -916,7 +918,12 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                         }
                                         
                                         
-                                        if(handler.getOBXValueType(j,k) != null &&  handler.getOBXValueType(j,k).equalsIgnoreCase("FT")){
+                                        if(handler.getOBXValueType(j,k) != null &&  handler.getOBXValueType(j,k).equalsIgnoreCase("NAR")) {
+                                            %>                                         
+                                            <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%="NarrativeRes"%>" >
+                                                <td align="left" colspan="7"style="padding-left:10px;"><%= handler.getOBXResult( j, k) %></td>
+                                            </tr>
+                                        <%}else if(handler.getOBXValueType(j,k) != null &&  handler.getOBXValueType(j,k).equalsIgnoreCase("FT")){
                                             String[] dividedString  =divideStringAtFirstNewline(handler.getOBXResult( j, k));
                                             %>                                         
                                             <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>" >
@@ -1066,6 +1073,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
     ED Encapsulated Data
     FT Formatted Text (Display)
     MO Money
+    NAR Narrative (not official HL7. Added for IHA POI interface)
     NM Numeric
     PN Person Name
     RP Reference Pointer
