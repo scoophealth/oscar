@@ -59,6 +59,9 @@ public class BasePhsStarHandler {
 			
 			if(identifier != null) {
 				PatientId tmp = new PatientId(identifier, authority, typeId);
+				if(typeId.equals("MR") && authority.equals("ST01L")) {
+					continue;
+				}
 				ids.put(typeId,tmp);
 			}
 			
@@ -69,6 +72,7 @@ public class BasePhsStarHandler {
 		}		
 		return ids;
 	}
+	
 	
 	
 	protected String getHealthCardVer() throws HL7Exception {
