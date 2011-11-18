@@ -4,6 +4,7 @@
 <%@ page import="java.util.Enumeration"%>
 <%@ page import="oscar.util.DateUtils"%>
 <%@ page import="org.oscarehr.PMmodule.dao.ProviderDao,oscar.util.UtilDateUtilities" %>
+<%@ page import="org.oscarehr.phr.util.MyOscarServerRelationManager,org.oscarehr.phr.util.MyOscarUtils,org.oscarehr.phr.PHRAuthentication" %>
 
 <%@ taglib uri="/WEB-INF/phr-tag.tld" prefix="phr"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
@@ -20,6 +21,8 @@
 	objectName="_admin,_admin.misc" rights="r" reverse="<%=true%>">
 	<%response.sendRedirect("../logout.jsp");%>
 </security:oscarSec --%>
+
+
 
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
@@ -61,6 +64,11 @@ PHRVerificationDao phrVerificationDao = (PHRVerificationDao)SpringUtils.getBean(
 ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
 
 List<PHRVerification> phrVerifications = phrVerificationDao.getForDemographic(demoNo);
+
+DemographicData.Demographic demo = new DemographicData().getDemographic(demographicNo); 
+String myOscarUserName = demo.getMyOscarUserName();
+
+PHRAuthentication phrAuthentication= MyOscarUtils.getPHRAuthentication(session);
 
 %>
 
@@ -163,7 +171,15 @@ br {
 		<td class="MainTableTopRowRightColumn">
 		<table class="TopStatusBar" style="width: 100%;">
 			<tr>
-				<td><bean:message key="phr.verification.title"/> &nbsp; <oscar:nameage demographicNo="<%=demographicNo%>"/> &nbsp; <oscar:phrverification demographicNo="<%=demographicNo%>"><bean:message key="phr.verification.link"/></oscar:phrverification> </td>
+				<td>
+					<bean:message key="phr.verification.title"/> &nbsp; <oscar:nameage demographicNo="<%=demographicNo%>"/> &nbsp; <oscar:phrverification demographicNo="<%=demographicNo%>"><bean:message key="phr.verification.link"/></oscar:phrverification> 
+					&nbsp;
+					<%if(phrAuthentication !=null && !MyOscarServerRelationManager.hasPatientRelationship(phrAuthentication,myOscarUserName)){%>
+					<a href="UserManagement.do?method=addPatientRelationship&demoNo=<%=demographicNo%>"><bean:message key="phr.verification.addPatientRelationship"/></a>
+					<%}else{%>
+					<bean:message key="phr.verification.patientRelationshipExists"/>
+					<%}%>
+				</td>
 			</tr>
 		</table>
 		</td>
