@@ -64,6 +64,7 @@ import org.oscarehr.phr.dao.PHRDocumentDAO;
 import org.oscarehr.phr.indivo.service.accesspolicies.IndivoAPService;
 import org.oscarehr.phr.model.PHRAction;
 import org.oscarehr.phr.service.PHRService;
+import org.oscarehr.phr.util.MyOscarServerRelationManager;
 import org.oscarehr.phr.util.MyOscarServerWebServicesManager;
 import org.oscarehr.phr.util.MyOscarUtils;
 import org.oscarehr.util.MiscUtils;
@@ -537,6 +538,20 @@ public class PHRUserManagementAction extends DispatchAction {
         PHRAction action = phrActionDAO.getActionById(actionId);
         apService.denyAccessPolicy(action);
         return mapping.findForward("msgIndex");
+    }
+    
+    public ActionForward addPatientRelationship(ActionMapping mapping, ActionForm  form,HttpServletRequest request, HttpServletResponse response) throws Exception {
+    	if (log.isDebugEnabled()){
+    		WebUtils.dumpParameters(request);
+    	}
+    	String demoNo = request.getParameter("demoNo");
+    	
+    	PHRAuthentication auth=MyOscarUtils.getPHRAuthentication(request.getSession());
+    	boolean patientRelationshipCreated = MyOscarServerRelationManager.addPatientRelationship(auth,  demoNo );
+    	log.debug("Patient Added: "+patientRelationshipCreated);
+        ActionRedirect ar = new ActionRedirect(mapping.findForward("viewVerification"));
+        ar.addParameter("demographic_no", demoNo);
+        return ar;
     }
     
 }
