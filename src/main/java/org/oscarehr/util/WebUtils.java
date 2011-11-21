@@ -40,7 +40,7 @@ public final class WebUtils {
 	private static final String INFO_MESSAGE_SESSION_KEY = WebUtils.class.getName() + ".INFO_MESSAGE_SESSION_KEY";
 
 	public static void dumpParameters(HttpServletRequest request) {
-		logger.error("--- Dump Request Parameters Start ---");
+		logger.error("--- Dump Request Parameters for "+request.getRequestURI()+" Start ---");
 
 		@SuppressWarnings("unchecked")
 		Enumeration<String> e = request.getParameterNames();
