@@ -82,7 +82,7 @@ public class Driver {
 			olisRequest.getHIALRequest().setClientTransactionID(message.getTransactionId());
 			olisRequest.getHIALRequest().setSignedRequest(new HIALRequestSignedRequest());
 
-			String olisHL7String = message.getOlisHL7String();
+			String olisHL7String = message.getOlisHL7String().replaceAll("\n", "\r");
 			String msgInXML = String
 			.format("<Request xmlns=\"http://www.ssha.ca/2005/HIAL\"><Content><![CDATA[%s]]></Content></Request>",
 					olisHL7String);
