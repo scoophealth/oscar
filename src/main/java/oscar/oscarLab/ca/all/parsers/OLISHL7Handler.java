@@ -34,9 +34,12 @@ import org.oscarehr.util.SpringUtils;
 
 import oscar.util.UtilDateUtilities;
 import ca.uhn.hl7v2.HL7Exception;
+import ca.uhn.hl7v2.model.GenericComposite;
 import ca.uhn.hl7v2.model.Message;
 import ca.uhn.hl7v2.model.Segment;
 import ca.uhn.hl7v2.model.Structure;
+import ca.uhn.hl7v2.model.Type;
+import ca.uhn.hl7v2.model.Varies;
 import ca.uhn.hl7v2.parser.Parser;
 import ca.uhn.hl7v2.parser.PipeParser;
 import ca.uhn.hl7v2.util.Terser;
@@ -844,7 +847,27 @@ public class OLISHL7Handler implements MessageHandler {
 						} else {
 							obr = (Segment) terser.getFinder().getRoot().get("OBR" + obrNum);
 						}
+
+						String weirdFixToGetObr1512 = null;
+						Type obr15Types[] = obr.getField(15);
+						if(obr15Types != null && obr15Types.length>0) {
+							Type obr15Type = obr.getField(15)[0];
+							if(obr15Type instanceof Varies) {
+								Type tt =((Varies) obr15Type).getData();
+								if(tt instanceof GenericComposite ){
+									Type comp = ((GenericComposite)tt).getComponent(1);
+									if(comp instanceof Varies) {
+										Type ttt = ((Varies)comp).getData();
+										weirdFixToGetObr1512 = ttt.toString();
+									}
+								}
+							}
+						}
+
 						String s1 = getString(Terser.get(obr, 15, 0, 1, 2)); // getString(terser.get("/.OBR-15-1-2"));
+						if(Terser.get(obr, 15, 0, 1, 2) == null && weirdFixToGetObr1512 != null) {
+							s1 = weirdFixToGetObr1512;
+						}
 						String s2 = getString(Terser.get(obr, 15, 0, 5, 2)); // getString(terser.get("/.OBR-15-5-2"));
 						String specimen = String.format("%s%s%s", s1, s1.equals("") || s2.equals("") ? "" : " ", s2);
 						obrSpecimenSource.add(specimen);
@@ -1042,7 +1065,10 @@ public class OLISHL7Handler implements MessageHandler {
 
 	private void parseZPDSegment() throws HL7Exception {
 		Segment zpd = terser.getSegment("/.ZPD");
-		reportBlocked = "Y".equals(oscar.Misc.getStr(Terser.get(zpd, 3, 0, 1, 1), ""));
+		boolean rb = "Y".equals(oscar.Misc.getStr(Terser.get(zpd, 3, 0, 1, 1), ""));
+		if(!reportBlocked && rb) {
+			reportBlocked=true;
+		}
 	}
 
 	private void parseERRSegment() throws HL7Exception {
@@ -1254,7 +1280,7 @@ public class OLISHL7Handler implements MessageHandler {
 		}
 
 	}
-	
+
 	@Override
 	public String getRequestDate(int i) {
 		return getOrderDate();
@@ -1286,7 +1312,7 @@ public class OLISHL7Handler implements MessageHandler {
 				response.setHeader("Content-Disposition", "attachment; filename=\"" + getAccessionNum().replaceAll("\\s", "_") + "_" + obr + "-" + obx + "_Document.xml\"");
 			}
 
-			
+
 			byte[] buf = Base64.decode(data);
 			/*
 			int pos = 0;
@@ -1300,7 +1326,7 @@ public class OLISHL7Handler implements MessageHandler {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			baos.write(buf, 0, buf.length);
 			baos.writeTo(response.getOutputStream());
-			
+
 
 		} catch (IOException e) {
 			MiscUtils.getLogger().error("OLIS HL7 Error", e);
@@ -2418,7 +2444,7 @@ public class OLISHL7Handler implements MessageHandler {
 
 	protected String formatDateTime(String plain) {
 		if (plain==null || plain.trim().equals("")) return "";
-		
+
 		String offset = "";
 		if (plain.length() > 14) {
 			offset = plain.substring(14, 19);
