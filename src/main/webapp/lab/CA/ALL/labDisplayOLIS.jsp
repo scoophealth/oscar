@@ -27,10 +27,10 @@ String demographicID = preview || plr.getDemographicNumber() == null ? "" : plr.
 
 if(demographicID != null && !demographicID.equals("")){
     LogAction.addLog((String) session.getAttribute("user"), LogConst.READ, LogConst.CON_HL7_LAB, segmentID, request.getRemoteAddr(),demographicID);
-}else{           
+}else{
     LogAction.addLog((String) session.getAttribute("user"), LogConst.READ, LogConst.CON_HL7_LAB, segmentID, request.getRemoteAddr());
 }
-        
+
 
 boolean ackFlag = false;
 ArrayList ackList = preview ? null : AcknowledgementData.getAcknowledgements(segmentID);
@@ -50,14 +50,14 @@ if (!preview) {
 	    }
 	}
 	handlerMain = Factory.getHandler(segmentID);
-	hl7 = Factory.getHL7Body(segmentID);	
+	hl7 = Factory.getHL7Body(segmentID);
 
 } else {
-	String resultUuid = oscar.Misc.getStr(request.getParameter("uuid"), "");	
+	String resultUuid = oscar.Misc.getStr(request.getParameter("uuid"), "");
 	handlerMain = OLISResultsAction.searchResultsMap.get(resultUuid);
-} 
-	
-	
+}
+
+
 
 
 OLISHL7Handler handler = null;
@@ -79,7 +79,7 @@ for (String tempId : multiLabId.split(",")) {
 	if (tempId.equals(segmentID) || tempId.equals("")) { continue; }
 	else {
 		try {
-			handler.importSourceOrganizations((OLISHL7Handler)Factory.getHandler(tempId));		
+			handler.importSourceOrganizations((OLISHL7Handler)Factory.getHandler(tempId));
 		} catch (Exception e) {
 			org.oscarehr.util.MiscUtils.getLogger().error("error",e);
 		}
@@ -96,7 +96,7 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
 %>
 <%!
 public String strikeOutInvalidContent(String content, String status) {
-     return status != null && status.startsWith("W") ? "<s>" + content + "</s>" : content; 
+     return status != null && status.startsWith("W") ? "<s>" + content + "</s>" : content;
 }
 %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
@@ -113,90 +113,90 @@ public String strikeOutInvalidContent(String content, String status) {
         <style type="text/css">
             <!--
 * { word-wrap: break-word; }
-.RollRes     { font-weight: 700; font-size: 8pt; color: white; font-family: 
+.RollRes     { font-weight: 700; font-size: 8pt; color: white; font-family:
                Verdana, Arial, Helvetica }
 .RollRes a:link { color: white }
 .RollRes a:hover { color: white }
 .RollRes a:visited { color: white }
 .RollRes a:active { color: white }
-.AbnormalRollRes { font-weight: 700; font-size: 8pt; color: red; font-family: 
+.AbnormalRollRes { font-weight: 700; font-size: 8pt; color: red; font-family:
                Verdana, Arial, Helvetica }
 .AbnormalRollRes a:link { color: red }
 .AbnormalRollRes a:hover { color: red }
 .AbnormalRollRes a:visited { color: red }
 .AbnormalRollRes a:active { color: red }
-.CorrectedRollRes { font-weight: 700; font-size: 8pt; color: yellow; font-family: 
+.CorrectedRollRes { font-weight: 700; font-size: 8pt; color: yellow; font-family:
                Verdana, Arial, Helvetica }
 .CorrectedRollRes a:link { color: yellow }
 .CorrectedRollRes a:hover { color: yellow }
 .CorrectedRollRes a:visited { color: yellow }
 .CorrectedRollRes a:active { color: yellow }
-.AbnormalRes { font-weight: bold; font-size: 8pt; color: red; font-family: 
+.AbnormalRes { font-weight: bold; font-size: 8pt; color: red; font-family:
                Verdana, Arial, Helvetica }
 .AbnormalRes a:link { color: red }
 .AbnormalRes a:hover { color: red }
 .AbnormalRes a:visited { color: red }
 .AbnormalRes a:active { color: red }
-.NormalRes   { font-weight: bold; font-size: 8pt; color: black; font-family: 
+.NormalRes   { font-weight: bold; font-size: 8pt; color: black; font-family:
                Verdana, Arial, Helvetica }
 .NormalRes a:link { color: black }
 .NormalRes a:hover { color: black }
 .NormalRes a:visited { color: black }
 .NormalRes a:active { color: black }
-.HiLoRes     { font-weight: bold; font-size: 8pt; color: blue; font-family: 
+.HiLoRes     { font-weight: bold; font-size: 8pt; color: blue; font-family:
                Verdana, Arial, Helvetica }
 .HiLoRes a:link { color: blue }
 .HiLoRes a:hover { color: blue }
 .HiLoRes a:visited { color: blue }
 .HiLoRes a:active { color: blue }
-.CorrectedRes { font-weight: bold; font-size: 8pt; color: #E000D0; font-family: 
+.CorrectedRes { font-weight: bold; font-size: 8pt; color: #E000D0; font-family:
                Verdana, Arial, Helvetica }
 .CorrectedRes a:link { color: #6da997 }
 .CorrectedRes a:hover { color: #6da997 }
 .CorrectedRes a:visited { color: #6da997 }
 .CorrectedRes a:active { color: #6da997 }
-.Field       { font-weight: bold; font-size: 8.5pt; color: black; font-family: 
+.Field       { font-weight: bold; font-size: 8.5pt; color: black; font-family:
                Verdana, Arial, Helvetica }
 div.Field a:link { color: black }
 div.Field a:hover { color: black }
 div.Field a:visited { color: black }
 div.Field a:active { color: black }
-.Field2      { font-weight: bold; font-size: 8pt; color: #ffffff; font-family: 
+.Field2      { font-weight: bold; font-size: 8pt; color: #ffffff; font-family:
                Verdana, Arial, Helvetica }
-div.Field2   { font-weight: bold; font-size: 8pt; color: #ffffff; font-family: 
+div.Field2   { font-weight: bold; font-size: 8pt; color: #ffffff; font-family:
                Verdana, Arial, Helvetica }
-div.FieldData { font-weight: normal; font-size: 8pt; color: black; font-family: 
+div.FieldData { font-weight: normal; font-size: 8pt; color: black; font-family:
                Verdana, Arial, Helvetica }
-div.Field3   { font-weight: normal; font-size: 8pt; color: black; font-style: italic; 
+div.Field3   { font-weight: normal; font-size: 8pt; color: black; font-style: italic;
                font-family: Verdana, Arial, Helvetica }
-div.Title    { font-weight: 800; font-size: 10pt; color: white; font-family: 
-               Verdana, Arial, Helvetica; padding-top: 4pt; padding-bottom: 
+div.Title    { font-weight: 800; font-size: 10pt; color: white; font-family:
+               Verdana, Arial, Helvetica; padding-top: 4pt; padding-bottom:
                2pt }
 div.Title a:link { color: white }
 div.Title a:hover { color: white }
 div.Title a:visited { color: white }
 div.Title a:active { color: white }
-div.Title2   { font-weight: bolder; font-size: 9pt; color: black; text-indent: 5pt; 
+div.Title2   { font-weight: bolder; font-size: 9pt; color: black; text-indent: 5pt;
                font-family: Verdana, Arial, Helvetica; padding: 10pt 15pt 2pt 2pt}
 div.Title2 a:link { color: black }
 div.Title2 a:hover { color: black }
 div.Title2 a:visited { color: black }
 div.Title2 a:active { color: black }
-.Cell        { background-color: #9999CC; border-left: thin solid #CCCCFF; 
-               border-right: thin solid #6666CC; 
-               border-top: thin solid #CCCCFF; 
+.Cell        { background-color: #9999CC; border-left: thin solid #CCCCFF;
+               border-right: thin solid #6666CC;
+               border-top: thin solid #CCCCFF;
                border-bottom: thin solid #6666CC }
-.Cell2       { background-color: #376c95; border-left-style: none; border-left-width: medium; 
-               border-right-style: none; border-right-width: medium; 
-               border-top: thin none #bfcbe3; border-bottom-style: none; 
+.Cell2       { background-color: #376c95; border-left-style: none; border-left-width: medium;
+               border-right-style: none; border-right-width: medium;
+               border-top: thin none #bfcbe3; border-bottom-style: none;
                border-bottom-width: medium }
-.Cell3       { background-color: #add9c7; border-left: thin solid #dbfdeb; 
-               border-right: thin solid #5d9987; 
-               border-top: thin solid #dbfdeb; 
+.Cell3       { background-color: #add9c7; border-left: thin solid #dbfdeb;
+               border-right: thin solid #5d9987;
+               border-top: thin solid #dbfdeb;
                border-bottom: thin solid #5d9987 }
-.CellHdr     { background-color: #cbe5d7; border-right-style: none; border-right-width: 
+.CellHdr     { background-color: #cbe5d7; border-right-style: none; border-right-width:
                medium; border-bottom-style: none; border-bottom-width: medium }
-.Nav         { font-weight: bold; font-size: 8pt; color: black; font-family: 
+.Nav         { font-weight: bold; font-size: 8pt; color: black; font-family:
                Verdana, Arial, Helvetica }
 .PageLink a:link { font-size: 8pt; color: white }
 .PageLink a:hover { color: red }
@@ -206,13 +206,13 @@ div.Title2 a:active { color: black }
 .text1       { font-size: 8pt; color: black; font-family: Verdana, Arial, Helvetica }
 div.txt1     { font-size: 8pt; color: black; font-family: Verdana, Arial }
 div.txt2     { font-weight: bolder; font-size: 6pt; color: black; font-family: Verdana, Arial }
-div.Title3   { font-weight: bolder; font-size: 12pt; color: black; font-family: 
+div.Title3   { font-weight: bolder; font-size: 12pt; color: black; font-family:
                Verdana, Arial }
 .red         { color: red }
 .text2       { font-size: 7pt; color: black; font-family: Verdana, Arial }
 .white       { color: white }
 .title1      { font-size: 9pt; color: black; font-family: Verdana, Arial }
-div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family: 
+div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                Verdana, Arial, Helvetica }
             -->
         </style>
@@ -222,30 +222,30 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 		</script>
 
 <script type="text/javascript" src="<%= request.getContextPath() %>/share/jquery/jquery.form.js"></script>
-        
+
         <script type="text/javaScript">
         function popupStart(vheight,vwidth,varpage,windowname) {
             var page = varpage;
             windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes";
             var popup=window.open(varpage, windowname, windowprops);
         }
-        function getComment() {    
+        function getComment() {
             var ret = true;
             var commentVal = prompt('<bean:message key="oscarMDS.segmentDisplay.msgComment"/>', '');
-    
+
             if( commentVal == null )
                 ret = false;
-            else 
-                document.acknowledgeForm.comment.value = commentVal;    
-       
+            else
+                document.acknowledgeForm.comment.value = commentVal;
+
             return ret;
         }
-        
+
         function printPDF(){
             document.acknowledgeForm.action="PrintOLISLab.do";
             document.acknowledgeForm.submit();
         }
-	
+
 	function linkreq(rptId, reqId) {
 	    var link = "../../LinkReq.jsp?table=hl7TextMessage&rptid="+rptId+"&reqid="+reqId;
 	    window.open(link, "linkwin", "width=500, height=200");
@@ -254,23 +254,23 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
     function sendToPHR(labId, demographicNo) {
         popup(300, 600, "<%=request.getContextPath()%>/phr/SendToPhrPreview.jsp?labId=" + labId + "&demographic_no=" + demographicNo, "sendtophr");
     }
-    
+
     window.ForwardSelectedRows = function() {
-		var query = jQuery(document.reassignForm).formSerialize();		
+		var query = jQuery(document.reassignForm).formSerialize();
 		jQuery.ajax({
 			type: "POST",
 			url:  "<%=request.getContextPath()%>/oscarMDS/ReportReassign.do",
 			data: query,
 			success: function (data) {
 				self.close();
-			}			
+			}
 		});
 	}
-    
+
         </script>
-        
-    </head>    
-    
+
+    </head>
+
     <body style="width:800px">
         <!-- form forwarding of the lab -->
         <form name="reassignForm" method="post" action="Forward.do">
@@ -279,7 +279,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
             <input type="hidden" name="labType" value="HL7" />
             <input type="hidden" name="labType<%= segmentID %>HL7" value="imNotNull" />
             <input type="hidden" name="providerNo" value="<%= providerNo %>" />
-        </form>    
+        </form>
         <form name="acknowledgeForm" method="post" action="../../../oscarMDS/UpdateStatus.do">
             <input type="hidden" name="originalSegmentID" value="<%=originalSegmentID%>" />
             <table width="100%" height="100%" border="0" cellspacing="0" cellpadding="0">
@@ -288,7 +288,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                         <table width="100%" border="0" cellspacing="0" cellpadding="3">
                             <tr>
                                 <td align="left" class="MainTableTopRowRightColumn" width="100%">
-                                	<input type="hidden" name="labName" value="<%=handler.getAccessionNum() %>"/>                        
+                                	<input type="hidden" name="labName" value="<%=handler.getAccessionNum() %>"/>
                                     <input type="hidden" name="segmentID" value="<%= segmentID %>"/>
                                     <input type="hidden" name="multiID" value="<%= multiLabId %>" />
                                     <input type="hidden" name="providerNo" value="<%= providerNo %>"/>
@@ -305,9 +305,9 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                     <input type="button" value="Msg" onclick="popup(700,960,'../../../oscarMessenger/SendDemoMessage.do?demographic_no=<%=demographicID%>','msg')"/>
                                     <input type="button" value="Tickler" onclick="popup(450,600,'../../../tickler/ForwardDemographicTickler.do?docType=HL7&docId=<%= segmentID %>&demographic_no=<%=demographicID%>','tickler')"/>
                                     <% } %>
-                                                                
+
                                     <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupStart(360, 680, '../../../oscarMDS/SearchPatient.do?labType=HL7&segmentID=<%= segmentID %>&name=<%=java.net.URLEncoder.encode(handler.getLastName()+", "+handler.getFirstName())%>', 'searchPatientWindow')">
-                                    
+
 				    <input type="button" value="Req# <%=reqTableID%>" title="Link to Requisition" onclick="linkreq('<%=segmentID%>','<%=reqID%>');" />
                                     <span class="Field2"><i>Next Appointment: <%=AppointmentUtil.getNextAppointment(demographicID) %></i></span>
                                 </td>
@@ -346,7 +346,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                             <tr>
                                 <td align="middle" class="Cell">
                                     <div class="Field2">
-                                        <bean:message key="oscarMDS.segmentDisplay.formDetailResults"/> 
+                                        <bean:message key="oscarMDS.segmentDisplay.formDetailResults"/>
                                     </div>
                                 </td>
                                 <td align="middle" class="Cell">
@@ -377,23 +377,23 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                                             <%=handler.getHealthNum()%>
                                                                         </div>
                                                                     </td>
-                                                                    
-                                                                </tr>   
-                                                                
-                                                                
-                                                                <%                                                                
+
+                                                                </tr>
+
+
+                                                                <%
                                                                 Set<String> patientIdentifiers = handler.getPatientIdentifiers();
                                                                 for (String ident : patientIdentifiers) {
                                                                 	// The health number is displayed in a seperate location.
-                                                                	if (ident.equals("JHN")) { continue; } 
+                                                                	if (ident.equals("JHN")) { continue; }
                                                                 	String[] values = handler.getPatientIdentifier(ident);
                                                                 	String value = values[0];
                                                                 	String attrib = values[1];
                                                                 	String attribName=  null;
-                                                                	if (attrib != null) { 
+                                                                	if (attrib != null) {
                                                                 		attribName = handler.getSourceOrganization(attrib);
                                                                 	}
-                                                                
+
                                                                 %>
                                                                 <tr>
                                                                     <td valign="top">
@@ -407,10 +407,10 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                                              <% if (attribName != null) { %>
 	                                                                             <span style="margin-left:15px; font-size:8px; color:#333333;">
 	                                                                             <%= attribName %> (Lab <%=attrib %>)
-	                                                                             </span>                 
-                                                                             <% } %>                             
+	                                                                             </span>
+                                                                             <% } %>
                                                                         </div>
-                                                                    </td>                                                                    
+                                                                    </td>
                                                                 </tr>
                                                                 <% } %>
                                                                 <tr>
@@ -439,10 +439,10 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                                     </td>
                                                                     <td >
                                                                         <div class="FieldData">
-                                                                            <%=handler.getDOB()%>                                                  
+                                                                            <%=handler.getDOB()%>
                                                                         </div>
                                                                     </td>
-                                                                    
+
                                                                 </tr>
                                                                 <tr>
                                                                     <td valign="top">
@@ -468,10 +468,10 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                                         </div>
                                                                     </td>
                                                                 </tr>
-                                                                                                                           
+
                                                                 <%!
-                                                              
-                                                                public boolean stringIsNullOrEmpty(String s) { 
+
+                                                                public boolean stringIsNullOrEmpty(String s) {
                                                                 	return s == null || s.trim().length() == 0;
                                                                 }
                                                                 public String displayAddressFieldIfNotNullOrEmpty(HashMap<String,String> address, String key) {
@@ -486,7 +486,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                                 %>
                                                                 <%
                                                                 ArrayList<HashMap<String,String>> addresses = handler.getPatientAddresses();
-                                                                for(HashMap<String, String> address : addresses) { 
+                                                                for(HashMap<String, String> address : addresses) {
                                                                 	String city = displayAddressFieldIfNotNullOrEmpty(address, "City", false);
                                                                 	String province = displayAddressFieldIfNotNullOrEmpty(address, "Province", false);
                                                                 %>
@@ -499,22 +499,22 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                                     <td>
                                                                         <div align="left" class="FieldData">
                                                                             <%= displayAddressFieldIfNotNullOrEmpty(address, "Street Address") %>
-                                                                            <%= displayAddressFieldIfNotNullOrEmpty(address, "Other Designation") %> 
+                                                                            <%= displayAddressFieldIfNotNullOrEmpty(address, "Other Designation") %>
                                                                             <%= displayAddressFieldIfNotNullOrEmpty(address, "Postal Code") %>
                                                                             <%= city + ("".equals(city) || "".equals(province) ? "" : ", ") + province + ("".equals(city) && "".equals(province) ? "" : "<br/>") %>
                                                                             <%= displayAddressFieldIfNotNullOrEmpty(address, "Country") %>
                                                                         </div>
                                                                     </td>
                                                                 </tr>
-                                                                <% } %>      
+                                                                <% } %>
                                                                 <%
                                                                 ArrayList<HashMap<String,String>> homePhones = handler.getPatientHomeTelecom();
-                                                                if (homePhones.size() > 0) { 
-                                                                %>	
+                                                                if (homePhones.size() > 0) {
+                                                                %>
                                                                 <tr><td colspan="2"><fieldset><legend>Home</legend><table>
                                                                 <%
                                                                 }
-                                                                for(HashMap<String, String> homePhone : homePhones) { 
+                                                                for(HashMap<String, String> homePhone : homePhones) {
                                                                 %>
                                                                  <tr>
                                                                     <td valign="top">
@@ -525,17 +525,17 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                                     <td>
                                                                         <div align="left" class="FieldData">
                                                                         	<%
-                                                                        	if (homePhone.get("email") != null) { 
+                                                                        	if (homePhone.get("email") != null) {
                                                                         	%>
                                                                         		<%=homePhone.get("email")%>
-                                                                       		<% 
+                                                                       		<%
                                                                        		} else {
-                                                                       			
+
                                                                        			String countryCode = homePhone.get("countryCode");
                                                                        			if (stringIsNullOrEmpty(countryCode)) {
                                                                        				countryCode = "";
                                                                        			}
-                                                                       			
+
                                                                        			String localNumber = homePhone.get("localNumber");
                                                                        			if (!stringIsNullOrEmpty(localNumber) && localNumber.length() > 4) {
                                                                        				localNumber = localNumber.substring(0,3) + "-" + localNumber.substring(3);
@@ -562,21 +562,21 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                                         </div>
                                                                     </td>
                                                                 </tr>
-                                                                <% }   
-                                                                if (homePhones.size() > 0) { 
-                                                                %>	
-                                                                </table></fieldset></td></tr>                                                                
+                                                                <% }
+                                                                if (homePhones.size() > 0) {
+                                                                %>
+                                                                </table></fieldset></td></tr>
                                                                 <%
-                                                                }                            
+                                                                }
                                                                 %>
                                                                 <%
                                                                 ArrayList<HashMap<String,String>> workPhones = handler.getPatientWorkTelecom();
-                                                                if (workPhones.size() > 0) { 
-                                                                %>	
+                                                                if (workPhones.size() > 0) {
+                                                                %>
                                                                 <tr><td colspan="2"><fieldset><legend>Work</legend><table>
                                                                 <%
                                                                 }
-                                                                for(HashMap<String, String> workPhone : workPhones) { 
+                                                                for(HashMap<String, String> workPhone : workPhones) {
                                                                 %>
                                                                  <tr>
                                                                     <td valign="top">
@@ -587,17 +587,17 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                                     <td>
                                                                         <div align="left" class="FieldData">
                                                                         	<%
-                                                                        	if (workPhone.get("email") != null) { 
+                                                                        	if (workPhone.get("email") != null) {
                                                                         	%>
                                                                         		<%=workPhone.get("email")%>
-                                                                       		<% 
+                                                                       		<%
                                                                        		} else {
-                                                                       			
+
                                                                        			String countryCode = workPhone.get("countryCode");
                                                                        			if (stringIsNullOrEmpty(countryCode)) {
                                                                        				countryCode = "";
                                                                        			}
-                                                                       			
+
                                                                        			String localNumber = workPhone.get("localNumber");
                                                                        			if (!stringIsNullOrEmpty(localNumber) && localNumber.length() > 4) {
                                                                        				localNumber = localNumber.substring(0,3) + "-" + localNumber.substring(3);
@@ -624,12 +624,12 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                                         </div>
                                                                     </td>
                                                                 </tr>
-                                                                <% }   
-                                                                if (workPhones.size() > 0) { 
-                                                                %>	
-                                                                </table></fieldset></td></tr>                                                                
+                                                                <% }
+                                                                if (workPhones.size() > 0) {
+                                                                %>
+                                                                </table></fieldset></td></tr>
                                                                 <%
-                                                                }                            
+                                                                }
                                                                 %>
                                                             </table>
                                                         </td>
@@ -663,7 +663,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                             </td>
                                             <td>
                                                 <div class="FieldData">
-                                                    <%= ( (String) ( handler.getOrderStatus().equals("F") ? "Final" : handler.getOrderStatus().equals("C") ? "Corrected" : "Partial") )%>                                        
+                                                    <%= ( (String) ( handler.getOrderStatus().equals("F") ? "Final" : handler.getOrderStatus().equals("C") ? "Corrected" : "Partial") )%>
                                                 </div>
                                             </td>
                                         </tr>
@@ -693,7 +693,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                             </td>
                                             <td>
                                                 <div class="FieldData">
-                                                    <%= handler.getOrderDate()%>                                        
+                                                    <%= handler.getOrderDate()%>
                                                 </div>
                                             </td>
                                         </tr>
@@ -708,7 +708,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                             </td>
                                             <td>
                                                 <div class="FieldData">
-                                                    <%= lastUpdate %>                                        
+                                                    <%= lastUpdate %>
                                                 </div>
                                             </td>
                                         </tr>
@@ -724,7 +724,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                             </td>
                                             <td valign="top">
                                                 <div class="FieldData">
-                                                    <%= specimenReceived %>                                        
+                                                    <%= specimenReceived %>
                                                 </div>
                                             </td>
                                         </tr>
@@ -733,7 +733,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                            if (!"".equals(handler.getOrderingFacilityName())) {
                                         %>
                                         <tr>
-                                         	
+
                                             <td colspan="2">
                                                 <div class="FieldData">
                                                     <strong>Ordering Facility:</strong>
@@ -749,11 +749,11 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                     if (address != null && address.size() > 0) {
                                                     	String city = displayAddressFieldIfNotNullOrEmpty(address, "City", false);
                                                     	String province = displayAddressFieldIfNotNullOrEmpty(address, "Province", false);
-                                                    %>                               
+                                                    %>
                                                     <br/>
                                                     <strong>Address:</strong><br/>
                                                     <%= displayAddressFieldIfNotNullOrEmpty(address, "Street Address") %>
-                                                    <%= displayAddressFieldIfNotNullOrEmpty(address, "Other Designation") %> 
+                                                    <%= displayAddressFieldIfNotNullOrEmpty(address, "Other Designation") %>
                                                     <%= displayAddressFieldIfNotNullOrEmpty(address, "Postal Code") %>
                                                     <%= city + ("".equals(city) || "".equals(province) ? "" : ", ") + province + ("".equals(city) && "".equals(province) ? "" : "<br/>") %>
                                                     <%= displayAddressFieldIfNotNullOrEmpty(address, "Country") %>
@@ -768,47 +768,47 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                     <strong>Ordering Provider: </strong>
                                                 </div>
                                              </td>
-                                             
+
                                         </tr>
                                         <tr>
                                             <td colspan="2">
                                                 <div class="FieldData">
-                                                    <%= handler.getDocName()%>                                                
+                                                    <%= handler.getDocName()%>
                                                     <%
                                                     HashMap<String,String> address = handler.getOrderingProviderAddress();
                                                     if (address != null && address.size() > 0) {
                                                     	String city = displayAddressFieldIfNotNullOrEmpty(address, "City", false);
                                                     	String province = displayAddressFieldIfNotNullOrEmpty(address, "Province", false);
-                                                    %>                               
+                                                    %>
                                                     <br/>
                                                     <strong>Address:</strong><br/>
                                                     <%= displayAddressFieldIfNotNullOrEmpty(address, "Street Address") %>
-                                                    <%= displayAddressFieldIfNotNullOrEmpty(address, "Other Designation") %> 
+                                                    <%= displayAddressFieldIfNotNullOrEmpty(address, "Other Designation") %>
                                                     <%= displayAddressFieldIfNotNullOrEmpty(address, "Postal Code") %>
                                                     <%= city + ("".equals(city) || "".equals(province) ? "" : ", ") + province + ("".equals(city) && "".equals(province) ? "" : "<br/>") %>
                                                     <%= displayAddressFieldIfNotNullOrEmpty(address, "Country", false) %>
                                                     <% } %>
                                                     <%
                                                                 ArrayList<HashMap<String,String>> phones = handler.getOrderingProviderPhones();
-                                                                for(HashMap<String, String> phone : phones) { 
+                                                                for(HashMap<String, String> phone : phones) {
                                                                 %>
 
-                                                                    	<br />        
+                                                                    	<br />
                                                                         <strong> <%=phone.get("useCode")%></strong>
-                                                                        <br/>                                                                        
-                                                                    
+                                                                        <br/>
+
                                                                         	<%
-                                                                        	if (phone.get("email") != null) { 
+                                                                        	if (phone.get("email") != null) {
                                                                         	%>
                                                                         		<%=phone.get("email")%>
-                                                                       		<% 
+                                                                       		<%
                                                                        		} else {
-                                                                       			
+
                                                                        			String countryCode = phone.get("countryCode");
                                                                        			if (stringIsNullOrEmpty(countryCode)) {
                                                                        				countryCode = "";
                                                                        			}
-                                                                       			
+
                                                                        			String localNumber = phone.get("localNumber");
                                                                        			if (!stringIsNullOrEmpty(localNumber) && localNumber.length() > 4) {
                                                                        				localNumber = localNumber.substring(0,3) + "-" + localNumber.substring(3);
@@ -829,16 +829,16 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                                     		<%
                                                                        		}
                                                                        		%>
-                                                                      
-                                                                <% }   
-                                                                                            
+
+                                                                <% }
+
                                                                 %>
                                                 </div>
                                             </td>
                                         </tr>
-                                        <% if (!"".equals(handler.getAttendingProviderName())) { %>                                        
+                                        <% if (!"".equals(handler.getAttendingProviderName())) { %>
                                         <tr>
-                                         	
+
                                             <td colspan="2">
                                                 <div class="FieldData">
                                                     <strong>Attending Provider:</strong>
@@ -853,9 +853,9 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                             </td>
                                         </tr>
                                         <% }%>
-                                        <% if (!"".equals(handler.getAdmittingProviderName())) { %>                                        
+                                        <% if (!"".equals(handler.getAdmittingProviderName())) { %>
                                         <tr>
-                                         	
+
                                             <td colspan="2">
                                                 <div class="FieldData">
                                                     <strong>Admitting Provider:</strong>
@@ -872,11 +872,11 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                         <% }%>
                                          <%
                                String primaryFacility = handler.getPerformingFacilityName();
-                               String reportingFacility = handler.getReportingFacilityName();                                         
+                               String reportingFacility = handler.getReportingFacilityName();
                                if (!stringIsNullOrEmpty(primaryFacility)) {
                             %>
                                         <tr>
-                                         	
+
                                             <td colspan="2">
                                                 <div class="FieldData">
                                                     <strong>Performing <%=(primaryFacility.equals(reportingFacility) ? "and Reporting" : "")%> Facility:</strong>
@@ -892,11 +892,11 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                     if (address != null && address.size() > 0) {
                                                     	String city = displayAddressFieldIfNotNullOrEmpty(address, "City", false);
                                                     	String province = displayAddressFieldIfNotNullOrEmpty(address, "Province", false);
-                                                    %>                               
+                                                    %>
                                                     <br/>
                                                     <strong>Address:</strong><br/>
                                                     <%= displayAddressFieldIfNotNullOrEmpty(address, "Street Address") %>
-                                                    <%= displayAddressFieldIfNotNullOrEmpty(address, "Other Designation") %> 
+                                                    <%= displayAddressFieldIfNotNullOrEmpty(address, "Other Designation") %>
                                                     <%= displayAddressFieldIfNotNullOrEmpty(address, "Postal Code") %>
                                                     <%= city + ("".equals(city) || "".equals(province) ? "" : ", ") + province + ("".equals(city) && "".equals(province) ? "" : "<br/>") %>
                                                     <%= displayAddressFieldIfNotNullOrEmpty(address, "Country") %>
@@ -905,13 +905,13 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                             </td>
                                         </tr>
                                         <% } %>
-                                        
+
                                           <%
-                               
+
                                if (!stringIsNullOrEmpty(reportingFacility) && !reportingFacility.equals(primaryFacility)) {
                             %>
                                         <tr>
-                                         	
+
                                             <td colspan="2">
                                                 <div class="FieldData">
                                                     <strong>Reporting Facility:</strong>
@@ -927,11 +927,11 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                     if (address != null && address.size() > 0) {
                                                     	String city = displayAddressFieldIfNotNullOrEmpty(address, "City", false);
                                                     	String province = displayAddressFieldIfNotNullOrEmpty(address, "Province", false);
-                                                    %>                               
+                                                    %>
                                                     <br/>
                                                     <strong>Address:</strong><br/>
                                                     <%= displayAddressFieldIfNotNullOrEmpty(address, "Street Address") %>
-                                                    <%= displayAddressFieldIfNotNullOrEmpty(address, "Other Designation") %> 
+                                                    <%= displayAddressFieldIfNotNullOrEmpty(address, "Other Designation") %>
                                                     <%= displayAddressFieldIfNotNullOrEmpty(address, "Postal Code") %>
                                                     <%= city + ("".equals(city) || "".equals(province) ? "" : ", ") + province + ("".equals(city) && "".equals(province) ? "" : "<br/>") %>
                                                     <%= displayAddressFieldIfNotNullOrEmpty(address, "Country") %>
@@ -943,7 +943,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                     </table>
                                 </td>
                             </tr>
-                           
+
                             <tr>
                                 <td bgcolor="white" colspan="2">
                                     <table width="100%" border="0" cellpadding="0" cellspacing="0" bordercolor="#CCCCCC">
@@ -958,22 +958,22 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                 <div class="FieldData">
                                                     <strong><bean:message key="oscarMDS.segmentDisplay.formCCClient"/>: </strong>
                                                     <%= handler.getCCDocs()%>
-                                                    
+
                                                 </div>
                                             </td>
                                         </tr>
                                     </table>
                                 </td>
                             </tr>
-                            <tr>                                                                
+                            <tr>
                                 <td align="center" bgcolor="white" colspan="2">
                                     <%String[] multiID = multiLabId.split(",");
-                                    ReportStatus report;          
+                                    ReportStatus report;
                                     boolean startFlag = false;
                                     for (int j=multiID.length-1; j >=0; j--){
-                                        ackList = AcknowledgementData.getAcknowledgements(multiID[j]);                                        
+                                        ackList = AcknowledgementData.getAcknowledgements(multiID[j]);
                                         if (multiID[j].equals(segmentID))
-                                            startFlag = true;                                                              
+                                            startFlag = true;
                                         if (startFlag)
                                             if (ackList.size() > 0){{%>
                                                 <table width="100%" height="20" cellpadding="2" cellspacing="2">
@@ -989,27 +989,27 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                             <td align="center" bgcolor="white">
                                                         <% } %>
                                                             <div class="FieldData">
-                                                                <!--center-->          
-                                                                    <% for (int i=0; i < ackList.size(); i++) { 
+                                                                <!--center-->
+                                                                    <% for (int i=0; i < ackList.size(); i++) {
                                                                         report = (ReportStatus) ackList.get(i); %>
                                                                         <%= report.getProviderName() %> :
 
-                                                                        <% String ackStatus = report.getStatus(); 
+                                                                        <% String ackStatus = report.getStatus();
                                                                             if(ackStatus.equals("A")){
-                                                                                ackStatus = "Acknowledged"; 
+                                                                                ackStatus = "Acknowledged";
                                                                             }else if(ackStatus.equals("F")){
                                                                                 ackStatus = "Filed but not Acknowledged";
                                                                             }else{
                                                                                 ackStatus = "Not Acknowledged";
-                                                                            }                                                                             
+                                                                            }
                                                                         %>
                                                                         <font color="red"><%= ackStatus %></font>
                                                                         <% if ( ackStatus.equals("Acknowledged") ) { %>
-                                                                            <%= report.getTimestamp() %>, 
+                                                                            <%= report.getTimestamp() %>,
                                                                             <%= ( report.getComment().equals("") ? "no comment" : "comment : "+report.getComment() ) %>
                                                                         <% } %>
                                                                         <br>
-                                                                    <% } 
+                                                                    <% }
                                                                     if (ackList.size() == 0){
                                                                         %><font color="red">N/A</font><%
                                                                     }
@@ -1024,7 +1024,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                         }
                                     }%>
                                 </td>
-                            </tr>    
+                            </tr>
                             <tr>
                                 <td bgcolor="white" colspan="2">
                                     <table width="100%" border="0" cellpadding="0" cellspacing="0" bordercolor="#CCCCCC">
@@ -1032,25 +1032,36 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                             <td bgcolor="white">
                                                 <div class="FieldData">
                                                 <% if (handler.isReportBlocked()) { %>
-                                                	<span style="color:red; font-weight:bold">Do Not Disclose Without Explicit Patient Consent</span>    
+                                                <%
+                                                boolean hasBlockedTest=false;
+                                                for(int i=0;i<handler.getHeaders().size();i++) {
+                                                	int obr = handler.getMappedOBR(i);
+                                                	if(handler.isOBRBlocked(obr)) {
+                                                		hasBlockedTest=true;
+                                                		break;
+                                                	}
+                                                }
+                                                if(hasBlockedTest) {
+                                                %>
+                                                	<span style="color:red; font-weight:bold">Do Not Disclose Without Explicit Patient Consent</span>
                                                 	<br/>
-                                                <% } %>
-                                                
+                                                <% } } %>
+
                                                     <strong>Report Comments: </strong>
                                                 </div>
                                             </td>
                                         </tr>
-                                        <tr>                                 
+                                        <tr>
                                             <td bgcolor="white" align="left">
                                                 <div class="FieldData" style="width:700px;">
-                                                                                                        
+
                                                     <% for (int i = 0, j = handler.getReportCommentCount(); i < j; i++) { %>
                                                     <span style="margin-left:15px; width: 700px; word-wrap: break-word;">
                                                     <%= (i > 0 ? "<br/>" : "") + handler.getReportComment(i) %>
                                                     </span>
                                                     <span style="margin-left:15px; font-size:8px; color:#333333;">
                                                     <%= handler.getReportSourceOrganization(i) %>
-                                                    </span>                                                    
+                                                    </span>
                                                     <% } %>
                                                 </div>
                                             </td>
@@ -1058,22 +1069,22 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                     </table>
                                 </td>
                             </tr>
-                        </table>   
-                       
-                        
+                        </table>
+
+
                         <% int i=0;
-                        
+
                         int obx = 0;
                         int l=0;
                         int linenum=0;
-                        String highlight = "#E0E0FF";                        
+                        String highlight = "#E0E0FF";
                         ArrayList headers = handler.getHeaders();
                         int OBRCount = handler.getOBRCount();
                         String category = "";
                         String newCategory = "";
-                        
+
                         int obr;
-                        
+
                         for(i=0;i<headers.size();i++) {
                         	obr = handler.getMappedOBR(i);
                             linenum = obr + 1;
@@ -1090,10 +1101,10 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                             <tr>
                                 <td colspan="4" height="7">&nbsp;</td>
                             </tr>
-                            <% 
-                            		} 
+                            <%
+                            		}
                          	%>
-                            		
+
                         	<tr>
                         		 <td colspan="7" align="center" bgcolor="#FFCC00"><span style="font-size: large;"><%=newCategory%></span><td>
                         	</tr>
@@ -1110,12 +1121,12 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                         <%=headers.get(obr)%>
                                         <%
                                         String poc = handler.getPointOfCare(obr);
-                                        if (!stringIsNullOrEmpty(poc)) { 
+                                        if (!stringIsNullOrEmpty(poc)) {
                                         %>
                                         <br/>
-                                        <span style="font-size:8px; color:#333333;">Test performed at patient location</span>                                        
+                                        <span style="font-size:8px; color:#333333;">Test performed at patient location</span>
                                         <% } %>
-                                        <% 
+                                        <%
                                         boolean blocked = handler.isOBRBlocked(obr);
                                         if (blocked) {
                                         %>
@@ -1123,16 +1134,16 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                         <% } %>
                                     </div>
                                 </td>
-                                <%--<td align="right" bgcolor="#FFCC00" width="100">&nbsp;</td>--%>                                
+                                <%--<td align="right" bgcolor="#FFCC00" width="100">&nbsp;</td>--%>
                                 <td  bgcolor="#FFCC00" width="500">
-                                	<div class="Title2"> 
+                                	<div class="Title2">
                                 	<table>
                                 		<% if (!handler.getObrSpecimenSource(obr).equals("")) { %>
                                 			<tr> <td> Specimen Source: </td><td><%=handler.getObrSpecimenSource(obr) %></td> </tr>
                                 		<% } %>
                                 		<tr> <td> Request Status: </td><td> <%=handler.getObrStatus(obr) %></td></tr>
                                 	</table>
-                                	
+
                                 	</div>
                                 </td>
                                 <td width="9">&nbsp;</td>
@@ -1140,40 +1151,40 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                             </tr>
                             <tr>
                             <%--
-                              
-                              Collection Date/Time 
+
+                              Collection Date/Time
                               Specimen Collected By
-                              Collection Volume 
+                              Collection Volume
                               No. of Sample Containers
-                              
-                             
+
+
                              --%>
                              <%
                              HashMap<String,String> parameters = new HashMap<String,String>();
-                             
+
                              String collectionDateTime = handler.getCollectionDateTime(obr);
-                             String specimenCollectedBy = handler.getSpecimenCollectedBy(obr); 
-                             String collectionVolume = handler.getCollectionVolume(obr); 
+                             String specimenCollectedBy = handler.getSpecimenCollectedBy(obr);
+                             String collectionVolume = handler.getCollectionVolume(obr);
 							 String noOfSampleContainers = handler.getNoOfSampleContainers(obr);
-							 
+
 							 if (!stringIsNullOrEmpty(collectionDateTime)) {
 								 parameters.put("Collection Date/Time", collectionDateTime);
 							 }
-							 
+
 							 if (!stringIsNullOrEmpty(specimenCollectedBy)) {
 								 parameters.put("Specimen Collected By", specimenCollectedBy);
 							 }
-							 
+
 							 if (!stringIsNullOrEmpty(collectionVolume)) {
 								 parameters.put("Collection Volume", collectionVolume);
 							 }
-							 
+
 							 if (!stringIsNullOrEmpty(noOfSampleContainers)) {
 								 parameters.put("No. of Sample Containers", noOfSampleContainers);
 							 }
-							 
+
 							 for (String key : parameters.keySet()) {
-								 
+
 							 }
                              %>
 								<td bgcolor="#FFCC00" colspan="2">
@@ -1183,7 +1194,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 									<tr><% if (!stringIsNullOrEmpty(collectionVolume)) { %><th> Collection Volume </th><% } %><% if (!stringIsNullOrEmpty(noOfSampleContainers)) { %><th>No. of Sample Containers</th><% } %></tr>
 									<tr><% if (!stringIsNullOrEmpty(collectionVolume)) { %><td align="center"><%=collectionVolume%></td><% } %><% if (!stringIsNullOrEmpty(noOfSampleContainers)) { %><td align="center"><%=noOfSampleContainers%></td><% } %></tr>
 								</table>
-									
+
 								</td>
 								<td width="9">&nbsp;</td>
                                 <td width="*">&nbsp;</td>
@@ -1191,7 +1202,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 							<%
 							String performingFacility = handler.getOBRPerformingFacilityName(obr);
 							if (!primaryFacility.equals(performingFacility) && !performingFacility.equals("")) {
-								
+
                             %>
                                         <tr>
                                             <td bgcolor="#FFCC00">
@@ -1218,9 +1229,9 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                     if (address != null && address.size() > 0) {
                                                     	String city = displayAddressFieldIfNotNullOrEmpty(address, "City", false);
                                                     	String province = displayAddressFieldIfNotNullOrEmpty(address, "Province", false);
-                                                    %>                                                     
+                                                    %>
                                                     <%= displayAddressFieldIfNotNullOrEmpty(address, "Street Address") %>
-                                                    <%= displayAddressFieldIfNotNullOrEmpty(address, "Other Designation") %> 
+                                                    <%= displayAddressFieldIfNotNullOrEmpty(address, "Other Designation") %>
                                                     <%= displayAddressFieldIfNotNullOrEmpty(address, "Postal Code") %>
                                                     <%= city + ("".equals(city) || "".equals(province) ? "" : ", ") + province + ("".equals(city) && "".equals(province) ? "" : "<br/>") %>
                                                     <%= displayAddressFieldIfNotNullOrEmpty(address, "Country") %>
@@ -1243,7 +1254,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                         </tr>
                                         <% } %>
                         </table>
-                        
+
                         <table width="100%" border="0" cellspacing="0" cellpadding="2" bgcolor="#CCCCFF" bordercolor="#9966FF" bordercolordark="#bfcbe3" name="tblDiscs" id="tblDiscs">
                             <tr class="Field2">
                                 <td width="25%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formTestName"/></td>
@@ -1258,11 +1269,11 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                 </td>
                                 <td width="6%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formNew"/></td>
                             </tr>
-                            
+
                             <%
 
-                            
-                              
+
+
                                 boolean obrFlag = false;
                                 int obxCount = handler.getOBXCount(obr);
                                 String collectorsComment = handler.getCollectorsComment(obr); // TODO: get collector attribution
@@ -1274,9 +1285,9 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                          <span style="margin-left:15px;font-size:8px; color:#333333;"><%=handler.getCollectorsCommentSourceOrganization(obr)%></span>
                                          </div></td>
                                      </tr>
-                                     <% 
+                                     <%
                                 }
-                                
+
                                 if (handler.getObservationHeader(obr, 0).equals(headers.get(obr))) {
                                 	int cc = handler.getOBRCommentCount(obr);
                                 	for (int comment = 0; comment < cc; comment++){
@@ -1292,7 +1303,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                         </tr>
                                         <%obrFlag = true;
                                     }
-                                    
+
                                     String obrComment = handler.getOBRComment(obr, comment);
                                     String sourceOrg = handler.getOBRSourceOrganization(obr, comment);
                                     %>
@@ -1304,16 +1315,16 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                    	</div>
                                     </td>
                                 </tr>
-                                <%                                 
-                                
+                                <%
+
                                 }//end for k=0
                             	}//end if handler.getObservation..
-                                
-                                for (int k=0; k < obxCount; k++){ 
+
+                                for (int k=0; k < obxCount; k++){
                                 	obx = handler.getMappedOBX(obr, k);
                                     String obxName = handler.getOBXName(obr, obx);
                                     boolean b1=false, b2=false, b3=false;
-                                    
+
                                     boolean fail = true;
                                     try {
                                     b1 = !handler.getOBXResultStatus(obr, obx).equals("DNS");
@@ -1322,16 +1333,16 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                     String obsHeader = handler.getObservationHeader(obr, obx);
                                     b3 = handler.getObservationHeader(obr, obx).equals(headers.get(obr));
                                     fail = false;
-                                    
-                                    
-                                    
-                                    
-                                    
+
+
+
+
+
                                     } catch (Exception e){
                                     	//logger.info("ERROR :"+e);
                                     }
-                                   
-                                    
+
+
                                     if (!fail && b1 && b2 && b3){ // <<--  DNS only needed for MDS messages
                                         String obrName = handler.getOBRName(obr);
                                     	b1 = !obrFlag && !obrName.equals("");
@@ -1347,9 +1358,9 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                              --%>
                                             <%
                                             obrFlag = true;
-                                            
+
                                         }
-                                        
+
                                         String status = handler.getOBXResultStatus(obr, obx).trim();
                                         String statusMsg = "";
                                         try {
@@ -1362,7 +1373,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                         String pre = "<u>";
                                         String post = "</u>";
                                         String obxDisplayName = "";
-                                        if (strikeout) { 
+                                        if (strikeout) {
 											pre = "<s>" + pre;
 											post = post + "</s>";
                                         }
@@ -1371,7 +1382,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                         	abnormalNature = " <span style=\"font-size:8px; color:#333333;\">"+abnormalNature+"</span>";
                                         }
                                         obxDisplayName = pre + obxName + post + abnormalNature;
-                                        
+
                                         String lineClass = "NormalRes";
                                         String abnormal = handler.getOBXAbnormalFlag(obr, obx);
                                         if ( abnormal != null && abnormal.startsWith("L")){
@@ -1380,7 +1391,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                             lineClass = "AbnormalRes";
                                         }
                                         String obxValueType = handler.getOBXValueType(obr,obx).trim();
-                                        
+
                                         if (obxValueType.equals("ST") &&  handler.renderAsFT(obr,obx)) {
                                         	obxValueType = "FT";
                                         } else if (obxValueType.equals("TX") && handler.renderAsNM(obr,obx)) {
@@ -1388,7 +1399,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                         } else if (obxValueType.equals("FT") && handler.renderAsNM(obr,obx)) {
                                         	obxValueType = "NM";
                                         }
-                                        
+
                                         if (obxValueType.equals("NM") 		// Numeric
                                         	|| obxValueType.equals("ST")) { // String Data
                                         	if (handler.isAncillary(obr,obx)) {
@@ -1398,7 +1409,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                            	</tr>
                                             <% } %>
                                             <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>">
-                                                <td valign="top" align="leftZOR"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= handler.getOBXIdentifier(obr, obx) %>')"><%=obxDisplayName %></a></td>                                         
+                                                <td valign="top" align="leftZOR"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= handler.getOBXIdentifier(obr, obx) %>')"><%=obxDisplayName %></a></td>
                                                 <td align="right"><%= strikeOutInvalidContent(handler.getOBXResult(obr, obx), status) %></td>
                                                 <td align="center">
                                                         <%= strikeOutInvalidContent(handler.getOBXAbnormalFlag(obr, obx), status)%>
@@ -1414,7 +1425,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                         } else if (obxValueType.equals("SN")) { // or Structured Numeric
 	                                              %>
 	                                              <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>">
-	                                                  <td valign="top" align="leftZOR"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= handler.getOBXIdentifier(obr, obx) %>')"><%=obxDisplayName %></a></td>                                         
+	                                                  <td valign="top" align="leftZOR"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= handler.getOBXIdentifier(obr, obx) %>')"><%=obxDisplayName %></a></td>
 	                                                  <td align="right"><%= strikeOutInvalidContent(handler.getOBXSNResult(obr, obx), status) %></td>
 	                                                  <td align="center">
 	                                                          <%= strikeOutInvalidContent(handler.getOBXAbnormalFlag(obr, obx), status)%>
@@ -1426,7 +1437,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 	                                              </tr>
 	                                              <%
                                         } else if (obxValueType.equals("TX") // Text Data (Display)
-		                                        || obxValueType.equals("FT")) {  // Formatted Text (Display)												
+		                                        || obxValueType.equals("FT")) {  // Formatted Text (Display)
                                         	%>
                                         	<tr  bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>">
                                         		<td align="left" colspan="7"><b><%= obxDisplayName %></b></td>
@@ -1436,38 +1447,38 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                         	<td align="center"> <%=statusMsg %></td>
                                         	</tr>
                                         	<%
-                                       
+
 										} else if (obxValueType.equals("TM")) { // Time
 											%>
                                             <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>">
-                                                <td valign="top" align="leftZOR"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= handler.getOBXIdentifier(obr, obx) %>')"><%=obxDisplayName %></a></td>                                         
+                                                <td valign="top" align="leftZOR"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= handler.getOBXIdentifier(obr, obx) %>')"><%=obxDisplayName %></a></td>
                                                 <td align="right"><%= strikeOutInvalidContent(handler.getOBXTMResult(obr, obx), status) %></td>
                                                 <td align="center" colspan="4"></td>
-                                                <td align="center"><%=statusMsg %></td>                                                
+                                                <td align="center"><%=statusMsg %></td>
                                             </tr>
                                             <%
 										} else if (obxValueType.equals("DT")) { // Date
 											%>
                                             <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>">
-                                                <td valign="top" align="leftZOR"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= handler.getOBXIdentifier(obr, obx) %>')"><%=obxDisplayName %></a></td>                                         
+                                                <td valign="top" align="leftZOR"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= handler.getOBXIdentifier(obr, obx) %>')"><%=obxDisplayName %></a></td>
                                                 <td align="right"><%= strikeOutInvalidContent(handler.getOBXDTResult(obr, obx), status) %></td>
                                                 <td align="center" colspan="4"></td>
-                                                <td align="center"><%=statusMsg%></td>                                                
+                                                <td align="center"><%=statusMsg%></td>
                                             </tr>
-                                            <%											
+                                            <%
 										} else if (obxValueType.equals("TS")) { // Time Stamp (Date & Time)
 											%>
                                             <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>">
-                                                <td valign="top" align="leftZOR"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= handler.getOBXIdentifier(obr, obx) %>')"><%=obxDisplayName %></a></td>                                         
+                                                <td valign="top" align="leftZOR"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= handler.getOBXIdentifier(obr, obx) %>')"><%=obxDisplayName %></a></td>
                                                 <td align="right"><%= strikeOutInvalidContent(handler.getOBXTSResult(obr, obx), status) %></td>
                                                 <td align="center" colspan="4"></td>
-                                                <td align="center"><%=statusMsg %></td>                                                
+                                                <td align="center"><%=statusMsg %></td>
                                             </tr>
-                                            <%								
+                                            <%
    										} else if (obxValueType.equals("ED")) { // Encapsulated Data
    											%>
    											<tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>">
-												<td colspan="7" valign="top" align="leftZOR"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= handler.getOBXIdentifier(obr, obx) %>')"><%=obxDisplayName %></a></td>   											
+												<td colspan="7" valign="top" align="leftZOR"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= handler.getOBXIdentifier(obr, obx) %>')"><%=obxDisplayName %></a></td>
    											</tr>
    											<tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>">
    												<td colspan="4" valign="left"><a href="PrintOLIS.do?segmentID=<%=segmentID%>&obr=<%=obr%>&obx=<%=obx%>" style="margin-left: 30px;">Click to view attachment.</a></td>
@@ -1476,10 +1487,10 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
    											</tr>
    											<%
    										} else if (obxValueType.equals("CE")) { // Coded Entry
-   											
+
    											%>
    											<tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>">
-												<td colspan="7" valign="top" align="leftZOR"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= handler.getOBXIdentifier(obr, obx) %>')"><%=obxDisplayName %></a></td>   											
+												<td colspan="7" valign="top" align="leftZOR"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= handler.getOBXIdentifier(obr, obx) %>')"><%=obxDisplayName %></a></td>
    											</tr>
    											<tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>">
    												<td colspan="6" valign="left"><span  style="margin-left:15px;"><%=handler.getOBXCEName(obr,obx) %></span></td>
@@ -1494,9 +1505,9 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
    												<td colspan="7" align="center">
    													<table style="border: 1px solid black; margin-left 30px;">
    														<tr><th>Agent</th><th>Sensitivity</th> </tr>
-   												    <% 
-   												    
-   												    int childOBR = handler.getChildOBR(parentId) - 1;   												    
+   												    <%
+
+   												    int childOBR = handler.getChildOBR(parentId) - 1;
    												    if (childOBR != -1) {
 	   												    int childLength = handler.getOBXCount(childOBR);
 	   												    for (int ceIndex = 0; ceIndex < childLength; ceIndex++) {
@@ -1516,18 +1527,18 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
    											<% 		if (category.toUpperCase().trim().equals("MICROBIOLOGY")) {%>
    											<tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>">
    												<td align="center" colspan="7">
-   														S=Sensitive R=Resistant I=Intermediate MS=Moderately Sensitive VS=Very Sensitive   												
+   														S=Sensitive R=Resistant I=Intermediate MS=Moderately Sensitive VS=Very Sensitive
 
    												</td>
    											</tr>
-											<% 
-													}    												
+											<%
+													}
   												}
    											}
-                                        } else {                                        	
+                                        } else {
                                         	%>
                                             <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>">
-                                                <td valign="top" align="leftZOR"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= handler.getOBXIdentifier(obr, obx) %>')"><%=obxDisplayName %></a></td>                                         
+                                                <td valign="top" align="leftZOR"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= handler.getOBXIdentifier(obr, obx) %>')"><%=obxDisplayName %></a></td>
                                                 <td align="right"><%= strikeOutInvalidContent(handler.getOBXResult(obr, obx), status) %></td>
                                                 <td align="center">
                                                         <%= strikeOutInvalidContent(handler.getOBXAbnormalFlag(obr, obx), status)%>
@@ -1536,7 +1547,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                 <td align="left"><%=strikeOutInvalidContent(handler.getOBXUnits(obr, obx), status) %></td>
                                                 <td align="center"><%-- strikeOutInvalidContent(handler.getTimeStamp(obr, obx), status) --%></td>
                                                 <td align="center"><%=statusMsg %></td>
-                                                <%-- 
+                                                <%--
                                                 <td align="center"><%= handler.getOBXValueType(j, k) %></td>
                                                  --%>
                                             </tr>
@@ -1569,19 +1580,19 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                         <%}
                                     }
                                 }
-                            //}                             
-                                                    
+                            //}
+
                             String obsHeader = handler.getObservationHeader(obr, 0);
                             String headr = (String) headers.get(i);
-                            
-                            //for ( j=0; j< OBRCount; j++){    
-                                
+
+                            //for ( j=0; j< OBRCount; j++){
+
                             //} //end for j=0; j<obrCount;
                             %>
                         </table>
                         <% // end for headers
                         }  // for i=0... (headers) line 625 %>
-                        
+
                         <table width="100%" border="0" cellspacing="0" cellpadding="3" class="MainTableBottomRowRightColumn" bgcolor="#003399">
                             <tr>
                                 <td align="left" width="50%">
@@ -1604,11 +1615,11 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                     <span class="Field2"><i><bean:message key="oscarMDS.segmentDisplay.msgReportEnd"/></i></span>
                                 </td>
                             </tr>
-                        </table> 
+                        </table>
                     </td>
                 </tr>
             </table>
-            
+
         </form>
     </body>
 </html>
