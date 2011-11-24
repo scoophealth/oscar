@@ -60,6 +60,7 @@ public class BasePhsStarHandler {
 			if(identifier != null) {
 				PatientId tmp = new PatientId(identifier, authority, typeId);
 				if(typeId.equals("MR") && authority.equals("ST01L")) {
+					x++;
 					continue;
 				}
 				ids.put(typeId,tmp);
