@@ -84,6 +84,8 @@
       prevention = (String) existingPrevention.get("preventionType");
   }
   
+  String prevResultDesc = request.getParameter("prevResultDesc");
+
   PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance();
   HashMap<String,String> prevHash = pdc.getPrevention(prevention);
   
@@ -483,6 +485,7 @@ clear: left;
                    <fieldset >
                       <legend >Result</legend>
                       <% if (extraData.get("result") == null ){ extraData.put("result","pending");} %>
+			<%=prevResultDesc%><br />
                       <input type="radio" name="result" value="pending" <%=checked( (extraData.get("result")) ,"pending")%> >Pending</input><br/>
                       <input type="radio" name="result" value="normal"  <%=checked((extraData.get("result")),"normal")%> >Normal</input><br/>
                       <input type="radio" name="result" value="abnormal" <%=checked((extraData.get("result")),"abnormal")%> >Abnormal</input> &nbsp;&nbsp;&nbsp;  Reason: <input type="text" name="reason" value="<%=str((extraData.get("reason")),"")%>"/>                      

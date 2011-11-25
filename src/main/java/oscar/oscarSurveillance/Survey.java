@@ -377,7 +377,7 @@ public class Survey {
      if (providersParticipating == null){
         providersParticipating = new ArrayList();
      }
-     if (!providersParticipating.contains("p")){
+     if (!providersParticipating.contains(p)){
         providersParticipating.add(p);          
      }
    }
