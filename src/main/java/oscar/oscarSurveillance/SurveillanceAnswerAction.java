@@ -44,6 +44,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.util.MiscUtils;
+import org.apache.commons.lang.StringUtils;
 
 /**
  *
@@ -98,7 +99,9 @@ public class SurveillanceAnswerAction extends Action {
          }catch (Exception e){ }
       }
       
-      
+	if(StringUtils.isBlank(forward.getPath())) {
+		forward.setPath("close.jsp");
+	}      
                     
       return forward;
    }

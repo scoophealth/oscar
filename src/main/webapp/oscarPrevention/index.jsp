@@ -442,7 +442,7 @@ text-align:left;
                 String prevName = h.get("name");%>
 			<li style="margin-top: 2px;"><a
 				href="javascript: function myFunction() {return false; }"
-				onclick="javascript:popup(465,635,'AddPreventionData.jsp?prevention=<%= java.net.URLEncoder.encode(prevName) %>&amp;demographic_no=<%=demographic_no%>','addPreventionData<%=Math.abs(prevName.hashCode()) %>')">
+				onclick="javascript:popup(465,635,'AddPreventionData.jsp?prevention=<%= java.net.URLEncoder.encode(prevName) %>&amp;demographic_no=<%=demographic_no%>&amp;prevResultDesc=<%= java.net.URLEncoder.encode(h.get("resultDesc")) %>','addPreventionData<%=Math.abs(prevName.hashCode()) %>')">
 			<%=prevName%> </a></li>
 			<%}%>
 		</ul>
@@ -554,7 +554,7 @@ text-align:left;
 		</div>
 		<div class="headPrevention">
 		<p><a href="javascript: function myFunction() {return false; }"
-			onclick="javascript:popup(465,635,'AddPreventionData.jsp?prevention=<%= response.encodeURL( (String) h.get("name")) %>&amp;demographic_no=<%=demographic_no%>','addPreventionData<%=Math.abs( ((String) h.get("name")).hashCode() ) %>')">
+			onclick="javascript:popup(465,635,'AddPreventionData.jsp?prevention=<%= response.encodeURL( (String) h.get("name")) %>&amp;demographic_no=<%=demographic_no%>&amp;prevResultDesc=<%= java.net.URLEncoder.encode(h.get("resultDesc")) %>';,'addPreventionData<%=Math.abs( ((String) h.get("name")).hashCode() ) %>')">
 		<span title="<%=h.get("desc")%>" style="font-weight: bold;"><%=h.get("name")%></span>
 		</a>
 		<br />
@@ -603,7 +603,7 @@ text-align:left;
 		</div>
 		<div class="headPrevention">
 		<p><a href="javascript: function myFunction() {return false; }"
-			onclick="javascript:popup(465,635,'AddPreventionData.jsp?prevention=<%= response.encodeURL( (String) h.get("name")) %>&amp;demographic_no=<%=demographic_no%>','addPreventionData<%=Math.abs( ((String) h.get("name")).hashCode() ) %>')">
+			onclick="javascript:popup(465,635,'AddPreventionData.jsp?prevention=<%= response.encodeURL( (String) h.get("name")) %>&amp;demographic_no=<%=demographic_no%>&amp;prevResultDesc=<%= java.net.URLEncoder.encode(h.get("resultDesc")) %>','addPreventionData<%=Math.abs( ((String) h.get("name")).hashCode() ) %>')">
 		<span title="<%=h.get("desc")%>" style="font-weight: bold;"><%=h.get("name")%></span>
 		</a> 
 		<br />
@@ -653,7 +653,7 @@ text-align:left;
 		<div class="preventionSection">
 		<div class="headPrevention">
 		<p><a href="javascript: function myFunction() {return false; }"
-			onclick="javascript:popup(465,635,'AddPreventionData.jsp?prevention=<%= response.encodeURL( h.get("name")) %>&amp;demographic_no=<%=demographic_no%>','addPreventionData<%=Math.abs(h.get("name").hashCode())%>')">
+			onclick="javascript:popup(465,635,'AddPreventionData.jsp?prevention=<%= response.encodeURL( h.get("name")) %>&amp;demographic_no=<%=demographic_no%>&amp;prevResultDesc=<%= java.net.URLEncoder.encode(h.get("resultDesc")) %>','addPreventionData<%=Math.abs(h.get("name").hashCode())%>')">
 		<span title="<%=h.get("desc")%>" style="font-weight: bold;"><%=h.get("name")%></span>
 		</a>  <br />
 		</p>
