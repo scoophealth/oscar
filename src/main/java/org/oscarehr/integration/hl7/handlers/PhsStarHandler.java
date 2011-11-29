@@ -748,8 +748,16 @@ public class PhsStarHandler extends BasePhsStarHandler {
         	rescheduleAppointment();
         	this.logPatientMessage(controlId,msgType+"^"+triggerEvent,hl7Body,demographicNo);
         }
-        
-      
+
+        //SIU S14 is CHANGED APPOINTMENT
+        if(msgType.equals("SIU") && triggerEvent.equals("S14")) {
+        	logger.info("Change Appointment");
+        	Integer demographicNo = this.doKeyMatching(extractInternalPatientIds());
+        	rescheduleAppointment();
+        	this.logPatientMessage(controlId,msgType+"^"+triggerEvent,hl7Body,demographicNo);
+        }
+
+
         //ADT A27 is CANCEL PENDING ADMIT - don't do anything? (happens with an S15)
         if(msgType.equals("ADT") && triggerEvent.equals("A27")) {
         	logger.info("cancel pending admit");        	
