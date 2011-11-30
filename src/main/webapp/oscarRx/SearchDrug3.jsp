@@ -1994,6 +1994,21 @@ function updateQty(element){
              new Ajax.Updater(divId,url,{method:'get',parameters:params,insertion:Insertion.Bottom,asynchronous:true});
          }
 
+      function validateRxDate() {
+          	var rx=true;
+          	jQuery('input[name^="rxDate_"]').each(function(){    		
+          		var strRx  = jQuery(this).val(); 
+          		
+          		if(!checkAndValidateDate(strRx,null)) {
+          			jQuery(this).focus();
+          			rx=false;
+          			return false;
+          		}
+          		 
+          	});
+          	return rx;
+     } 
+         
     function validateWrittenDate() {
     	var x = true;
         jQuery('input[name^="writtenDate_"]').each(function(){    		
@@ -2001,6 +2016,7 @@ function updateQty(element){
 
             var dt = str1.split("-");
             if (dt.length>3) {
+            	jQuery(this).focus();
                 alert('Written Date wrong format! Must be yyyy or yyyy-mm or yyyy-mm-dd');
                 x = false;
                 return;
@@ -2008,6 +2024,7 @@ function updateQty(element){
 
             var dt1=1, mon1=0, yr1=parseInt(dt[0],10);
             if (isNaN(yr1) || yr1<0 || yr1>9999) {
+            	jQuery(this).focus();
                 alert('Invalid Written Date! Please check the year');
                 x = false;
                 return;
@@ -2015,6 +2032,7 @@ function updateQty(element){
             if (dt.length>1) {
             	mon1 = parseInt(dt[1],10)-1;
             	if (isNaN(mon1) || mon1<0 || mon1>11) {
+            		jQuery(this).focus();
             		alert('Invalid Written Date! Please check the month');
                     x = false;
                     return;
@@ -2023,6 +2041,7 @@ function updateQty(element){
             if (dt.length>2) {
             	dt1 = parseInt(dt[2],10);
                 if (isNaN(dt1) || dt1<1 || dt1>31) {
+                	jQuery(this).focus();
                     alert('Invalid Written Date! Please check the day');
                     x = false;
                     return;
@@ -2032,6 +2051,7 @@ function updateQty(element){
             var now  = new Date();
 
             if(date1 > now) {
+            	jQuery(this).focus();
                 alert('Written Date cannot be in the future. (' + str1 +')');
                 x = false;
                 return;
@@ -2043,6 +2063,9 @@ function updateQty(element){
 
     function updateSaveAllDrugsPrint(){
     	if(!validateWrittenDate()) {
+    		return false;
+    	}
+		if(!validateRxDate()) {
     		return false;
     	}
         var data=Form.serialize($('drugForm'));
@@ -2058,6 +2081,9 @@ function updateQty(element){
     }
     function updateSaveAllDrugs(){
     	if(!validateWrittenDate()) {
+    		return false;
+    	}
+		if(!validateRxDate()) {
     		return false;
     	}
         var data=Form.serialize($('drugForm'));
