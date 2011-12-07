@@ -1,6 +1,7 @@
 <%@ page
 	import="java.sql.*, java.util.*, oscar.MyDateFormat, oscar.oscarWaitingList.bean.*, oscar.oscarWaitingList.WaitingList, oscar.oscarDemographic.data.*, org.oscarehr.common.OtherIdManager, org.oscarehr.common.dao.BillingDao, java.text.SimpleDateFormat, org.caisi.model.Tickler, org.caisi.service.TicklerManager,org.oscarehr.util.SpringUtils"
 	errorPage="errorpage.jsp"%>
+<%@ page import="org.oscarehr.common.dao.DemographicDao, org.oscarehr.common.model.Demographic,oscar.appt.AppointmentMailer, org.oscarehr.util.SpringUtils" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
@@ -78,6 +79,38 @@
 	int rowsAffected = oscarSuperManager.update("appointmentDao", request.getParameter("dboperation"), param);
 
 	if (rowsAffected == 1) {
+            
+             //email patient appointment record
+            if (request.getParameter("emailPt")!= null) {
+                try{
+                    String[] param3 = new String[7];
+                    param3[0]=param[0]; //provider_no
+                    param3[1]=param[1]; //appointment_date
+                    param3[2]=param[2]; //start_time
+                    param3[3]=param[3]; //end_time
+                    param3[4]=param[13]; //createdatetime
+                    param3[5]=param[14]; //creator
+                    param3[6]=param[16]; //demographic_no
+
+		    List<Map> resultList = oscarSuperManager.find("appointmentDao", "search_appt_no", param3);
+                    if (resultList.size()>0) {
+			Integer apptNo = (Integer)resultList.get(0).get("appointment_no");
+                        DemographicDao demoDao = (DemographicDao) SpringUtils.getBean("demographicDao");
+                        Demographic demographic = demoDao.getDemographic(param[16]);
+                        
+                        if ((demographic != null) && (apptNo > 0)) {
+                            AppointmentMailer emailer = new AppointmentMailer(apptNo,demographic);
+                            emailer.prepareMessage();
+                            emailer.send();
+                        }
+                    }
+                                       
+                }catch(Exception e) { 
+                    out.print(e.getMessage());
+                }
+            }
+
+            
 		// turn off reminder of "remove patient from the waiting list"
 		oscar.OscarProperties pros = oscar.OscarProperties.getInstance();
 		String strMWL = pros.getProperty("MANUALLY_CLEANUP_WL");
