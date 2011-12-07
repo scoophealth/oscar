@@ -596,6 +596,12 @@ if (bMultisites) { %>
 				GregorianCalendar now=new GregorianCalendar();
 				String strDateTime=now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DAY_OF_MONTH)+" "
 					+	now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE)+":"+now.get(Calendar.SECOND);
+                                
+                 String remarks = "";
+                 if (bFirstDisp && appt.get("remarks")!=null) {
+                     remarks = (String) appt.get("remarks");
+                 }
+               
 %>
                 <INPUT TYPE="TEXT" NAME="lastcreatedatetime" readonly
                     VALUE="<%=bFirstDisp?lastDateTime:request.getParameter("lastcreatedatetime")%>"
@@ -604,7 +610,7 @@ if (bMultisites) { %>
 				<INPUT TYPE="hidden" NAME="provider_no" VALUE="<%=curProvider_no%>">
 				<INPUT TYPE="hidden" NAME="dboperation" VALUE="update_apptrecord">
                 <INPUT TYPE="hidden" NAME="creator" VALUE="<%=userlastname+", "+userfirstname%>">
-                <INPUT TYPE="hidden" NAME="remarks" VALUE="">
+                <INPUT TYPE="hidden" NAME="remarks" VALUE="<%=remarks%>"> 
                 <INPUT TYPE="hidden" NAME="appointment_no" VALUE="<%=appointment_no%>">
             </div>
         </li>
