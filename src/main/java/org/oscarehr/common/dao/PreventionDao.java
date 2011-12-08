@@ -40,6 +40,27 @@ public class PreventionDao extends AbstractDao<Prevention> {
 		super(Prevention.class);
 	}
 	
+	public List<Prevention> findByDemographicId(Integer demographicId) {
+		Query query = entityManager.createQuery("select x from Prevention x where demographicId=?1");
+		query.setParameter(1, demographicId);
+
+		@SuppressWarnings("unchecked")
+		List<Prevention> results = query.getResultList();
+
+		return (results);
+	}
+	
+	public List<Prevention> findByDemographicIdAfterId(Integer demographicId, Integer preventionId) {
+		Query query = entityManager.createQuery("select x from Prevention x where demographicId=?1 and id>?2");
+		query.setParameter(1, demographicId);
+		query.setParameter(2, preventionId);
+
+		@SuppressWarnings("unchecked")
+		List<Prevention> results = query.getResultList();
+
+		return (results);
+	}
+	
 	public List<Prevention> findNotDeletedByDemographicId(Integer demographicId) {
 		Query query = entityManager.createQuery("select x from Prevention x where demographicId=?1 and deleted=?2");
 		query.setParameter(1, demographicId);
