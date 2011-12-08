@@ -23,8 +23,10 @@
  * Ontario, Canada 
  */
 -->
-<%@page
-	import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*"%>
+<%@page import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*"%>
+<%@page import="org.oscarehr.phr.PHRAuthentication, org.oscarehr.phr.util.MyOscarUtils" %>
+<%@page import="org.oscarehr.common.dao.DemographicDao, org.oscarehr.common.model.Demographic" %>
+<%@page import="org.oscarehr.util.SpringUtils" %>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -70,6 +72,22 @@
   ArrayList recomendations = p.getReminder();
           
   boolean printError = request.getAttribute("printError") != null;
+  
+  
+  boolean phrReady = false;
+  //check if logged into MyOscar
+  PHRAuthentication phrAuth = MyOscarUtils.getPHRAuthentication(session);
+  if (phrAuth!=null) {
+	  DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
+	  //check if patient has MyOscar ID
+	  Demographic demographic = demographicDao.getDemographic(demographic_no);
+	  if (demographic!=null && demographic.getMyOscarUserName()!=null) {
+		  //check if patient's MyOscar ID is valid
+		  if (MyOscarUtils.getMyOscarUserId(phrAuth, demographic.getMyOscarUserName())!=null) {
+			  phrReady = true;
+		  }
+	  }
+  }
 %>
 
 <%!
@@ -455,6 +473,9 @@ text-align:left;
 			<bean:message key="global.immunizations" /></a>
 			<br>
 		</oscar:oscarPropertiesCheck></td>
+		
+		<form name="printFrm" method="post" onsubmit="return onPrint();"
+			action="<rewrite:reWrite jspPage="printPrevention.do"/>">
 		<td valign="top" class="MainTableRightColumn">
 		<a href="#" onclick="popup(600,800,'http://www.phac-aspc.gc.ca/im/is-cv/index-eng.php')">Immunization Schedules - Public Health Agency of Canada</a>
 		<%             
@@ -519,8 +540,6 @@ text-align:left;
 %>
 
 		<div>
-		<form name="printFrm" method="post" onsubmit="return onPrint();"
-			action="<rewrite:reWrite jspPage="printPrevention.do"/>">
 		<input type="hidden" name="demographic_no" value="<%=demographic_no%>">
 		<input type="hidden" name="hin" value="<%=hin%>"/>
 		<input type="hidden" name="mrp" value="<%=mrp%>" />
@@ -689,43 +708,51 @@ text-align:left;
 	</tr>
 	<tr>
 		<td class="MainTableBottomRowLeftColumn">
-                    <input type="button"
-			class="noPrint" name="printButton" onclick="EnablePrint(this)"
-			value="Enable Print"> &nbsp;<br>
-                        <input type="button" name="sendToPhrButton" value="Send To PHR" style="display: none;" onclick="sendToPhr(this)">
-                </td>
-		<td class="MainTableBottomRowRightColumn" valign="top">&nbsp;</td>
+			<input type="button" class="noPrint" name="printButton" onclick="EnablePrint(this)" value="Enable Print">
+			<br>
+			<input type="button" name="sendToPhrButton" value="Send To PHR (PDF)" style="display: none;" onclick="sendToPhr(this)">
+		</td>
+				
+		<input type="hidden" id="nameAge" name="nameAge"
+			value="<oscar:nameage demographicNo="<%=demographic_no%>"/> DOB:<%=demographicDob%>">
+		
+		<%
+		    for (int i = 0 ; i < prevList.size(); i++){ 
+		   	 	HashMap<String,String> h = prevList.get(i);
+		        String prevName = h.get("name");
+		        ArrayList<Map<String,Object>> alist = PreventionData.getPreventionData(prevName, demographic_no); 
+		        PreventionData.addRemotePreventions(alist, demographicId, prevName,demographicDateOfBirth);
+		        if( alist.size() > 0 ) { %>
+		<input type="hidden" id="preventionHeader<%=i%>"
+			name="preventionHeader<%=i%>" value="<%=h.get("name")%>">
+		
+		<%     
+		            for (int k = 0; k < alist.size(); k++){
+		            	Map<String,Object> hdata = alist.get(k);
+		    %>
+		<input type="hidden" id="preventProcedureAge<%=i%>-<%=k%>"
+			name="preventProcedureAge<%=i%>-<%=k%>"
+			value="Age: <%=hdata.get("age")%>">
+		<input type="hidden" id="preventProcedureDate<%=i%>-<%=k%>"
+			name="preventProcedureDate<%=i%>-<%=k%>"
+			value="Date: <%=hdata.get("prevention_date")%>">
+		<%}                    
+		        }               
+		    } //for there are preventions
+		    
+		    %>
+		</form>
+				
+		<td class="MainTableBottomRowRightColumn" valign="top">
+<% if (phrReady) { %>
+			<form action="<%=request.getContextPath()%>/SendImmunizationToPhr.do" method="POST">
+				<input type="hidden" name="demographic_no" value="<%=demographic_no%>">
+				<input type="submit" value="Send To PHR (New)">
+			</form>
+<% } %>
+		</td>
 	</tr>
 </table>
-<input type="hidden" id="nameAge" name="nameAge"
-	value="<oscar:nameage demographicNo="<%=demographic_no%>"/> DOB:<%=demographicDob%>">
-
-<%
-    for (int i = 0 ; i < prevList.size(); i++){ 
-   	 	HashMap<String,String> h = prevList.get(i);
-        String prevName = h.get("name");
-        ArrayList<Map<String,Object>> alist = PreventionData.getPreventionData(prevName, demographic_no); 
-        PreventionData.addRemotePreventions(alist, demographicId, prevName,demographicDateOfBirth);
-        if( alist.size() > 0 ) { %>
-<input type="hidden" id="preventionHeader<%=i%>"
-	name="preventionHeader<%=i%>" value="<%=h.get("name")%>">
-
-<%     
-            for (int k = 0; k < alist.size(); k++){
-            	Map<String,Object> hdata = alist.get(k);
-    %>
-<input type="hidden" id="preventProcedureAge<%=i%>-<%=k%>"
-	name="preventProcedureAge<%=i%>-<%=k%>"
-	value="Age: <%=hdata.get("age")%>">
-<input type="hidden" id="preventProcedureDate<%=i%>-<%=k%>"
-	name="preventProcedureDate<%=i%>-<%=k%>"
-	value="Date: <%=hdata.get("prevention_date")%>">
-<%}                    
-        }               
-    } //for there are preventions
-    
-    %>
-</form>
 </body>
 </html:html>
 <%! 
