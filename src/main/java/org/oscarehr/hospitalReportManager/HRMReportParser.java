@@ -19,7 +19,6 @@ import javax.xml.validation.SchemaFactory;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.cxf.helpers.FileUtils;
-import org.apache.http.impl.cookie.DateParseException;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.DemographicDao;
@@ -114,11 +113,7 @@ public class HRMReportParser {
 		document.setReportLessTransactionInfoHash(noTransactionInfoHash);
 		document.setReportLessDemographicInfoHash(noDemographicInfoHash);
 
-		try {
-			document.setReportDate(HRMReportParser.getAppropriateDateFromReport(report));
-		} catch (DateParseException e) {
-			MiscUtils.getLogger().error("Can't find report date on report", e);
-		}
+		document.setReportDate(HRMReportParser.getAppropriateDateFromReport(report));
 
 		// We're going to check to see if there's a match in the database already for either of these
 		// report hash matches = duplicate report for same recipient
@@ -207,11 +202,8 @@ public class HRMReportParser {
 			boolean hasSameStatus = report.getResultStatus().equalsIgnoreCase(loadedReport.getResultStatus());
 			boolean hasSameClass = report.getFirstReportClass().equalsIgnoreCase(loadedReport.getFirstReportClass());
 			boolean hasSameDate = false;
-			try {
-				hasSameDate = HRMReportParser.getAppropriateDateFromReport(report).equals(HRMReportParser.getAppropriateDateFromReport(loadedReport));
-			} catch (DateParseException e) {
-				MiscUtils.getLogger().warn("Can't parse date on HRM report", e);
-			}
+
+			hasSameDate = HRMReportParser.getAppropriateDateFromReport(report).equals(HRMReportParser.getAppropriateDateFromReport(loadedReport));
 
 			Integer threshold = 0;
 
@@ -306,7 +298,7 @@ public class HRMReportParser {
 		}
 	}
 
-	public static Date getAppropriateDateFromReport(HRMReport report) throws DateParseException {
+	public static Date getAppropriateDateFromReport(HRMReport report) {
 		if (report.getFirstReportClass().equalsIgnoreCase("Diagnostic Imaging Report") || report.getFirstReportClass().equalsIgnoreCase("Cardio Respiratory Report")) {
 			return ((Date) (report.getAccompanyingSubclassList().get(0).get(3)));
 		}

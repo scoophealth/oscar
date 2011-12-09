@@ -62,7 +62,7 @@ public class SchemaUtils
 	 * @throws IOException 
 	 * @throws NoSuchAlgorithmException 
 	 */
-	public static void createDatabaseAndTables() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException, IOException, NoSuchAlgorithmException
+	public static void createDatabaseAndTables() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException, IOException
 	{
 		String schema=ConfigUtils.getProperty("db_schema");
 		
@@ -108,7 +108,7 @@ public class SchemaUtils
 		return exitValue;
 	}
 
-	private static void runCreateTablesScript(Connection c) throws IOException, SQLException
+	private static void runCreateTablesScript(Connection c) throws IOException
 	{				
 		assertEquals(loadFileIntoMySQL(System.getProperty("basedir") + "/database/mysql/oscarinit.sql"),0);
 
@@ -144,7 +144,7 @@ public class SchemaUtils
 	 * @throws SQLException 
 	 * @throws NoSuchAlgorithmException 
 	 */
-	public static void dropAndRecreateDatabase() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException, IOException, NoSuchAlgorithmException
+	public static void dropAndRecreateDatabase() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException, IOException
 	{
 		dropDatabaseIfExists();
 		createDatabaseAndTables();

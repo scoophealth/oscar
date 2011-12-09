@@ -633,9 +633,8 @@ public final class DateUtils {
 				sdate = new SimpleDateFormat("yyyyMMdd").format(tempDate);
 			}
 		} catch (ParseException ex) {MiscUtils.getLogger().error("Error", ex);
-		} finally {
-			return sdate;
-		}
+		} 
+		return sdate;
 	}
 
 	/**

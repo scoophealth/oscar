@@ -21,7 +21,6 @@ import org.oscarehr.util.WKHtmlToPdfUtils;
 import oscar.OscarProperties;
 import oscar.util.UtilDateUtilities;
 
-import com.lowagie.text.DocumentException;
 import com.sun.xml.messaging.saaj.util.ByteOutputStream;
 
 public class PrintOLISLabAction extends Action {
@@ -45,12 +44,8 @@ public class PrintOLISLabAction extends Action {
 		String labName = request.getParameter("labName");
 		localUri = getLabRequestUrl(request, segmentID, searchProviderNo, providerNo, status, showLatest);
 		
-		try {
-			printLab(labName, segmentID, searchProviderNo, providerNo, status, showLatest);
-		} catch (DocumentException e) {
-			MiscUtils.getLogger().error("error",e);
-			return mapping.findForward("error");
-		}
+		printLab(labName, segmentID, searchProviderNo, providerNo, status, showLatest);
+		
 		return mapping.findForward("success");
 	}
 	
@@ -90,9 +85,8 @@ public class PrintOLISLabAction extends Action {
 
 	/**
 	 * This method will take eforms and send them to a PHR.
-	 * @throws DocumentException 
 	 */
-	public void printLab(String labName, String segmentID, String searchProviderNo, String providerNo, String status, String showLatest) throws DocumentException {
+	public void printLab(String labName, String segmentID, String searchProviderNo, String providerNo, String status, String showLatest) {
 		
 		File tempFile = null;
 

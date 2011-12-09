@@ -1732,7 +1732,7 @@ public class RxUtil {
     }
 
     private static final Logger log2 = MiscUtils.getLogger();
-    public static Object callWebserviceLite(String procedureName, Vector params) throws Exception{
+    public static Object callWebserviceLite(String procedureName, Vector params){
         log2.debug("#CALLmyDRUGREF-"+procedureName);
         Object object = null;
 

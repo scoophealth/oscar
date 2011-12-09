@@ -159,7 +159,7 @@ public class Send2Indivo {
         return fdata;
     }
     
-    private void sendDocument(Long recipientId, IndivoDocumentType doc) throws IndivoException,ActionNotPerformedException {        
+    private void sendDocument(Long recipientId, IndivoDocumentType doc) {        
 // this code can't possibly be run, its using the wrong client
 
 //        AddDocumentResultType addDocumentResultType = client.addDocument(sessionTicket,recipientId, doc);

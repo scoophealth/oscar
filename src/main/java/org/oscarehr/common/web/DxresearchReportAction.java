@@ -194,8 +194,7 @@ public class DxresearchReportAction extends DispatchAction {
     }
 
     public ActionForward addSearchCode(ActionMapping mapping, ActionForm  form,
-            HttpServletRequest request, HttpServletResponse response)
-            throws Exception {
+            HttpServletRequest request, HttpServletResponse response) {
 
         DynaBean lazyForm = (DynaBean) form;
         String quickListName = (String)lazyForm.get("quicklistname");

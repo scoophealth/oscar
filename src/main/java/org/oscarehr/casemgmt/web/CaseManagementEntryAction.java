@@ -1805,7 +1805,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		return mapping.findForward("windowClose");
 	}
 
-	public ActionForward cancel(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ActionForward cancel(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
                 HttpSession session = request.getSession();
 		if (session.getAttribute("userrole") == null) return mapping.findForward("expired");
 
@@ -1832,7 +1832,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		return mapping.findForward("list");
 	}
 
-	public ActionForward addNewIssue(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ActionForward addNewIssue(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		logger.debug("addNewIssue");
 
                 HttpSession session = request.getSession();

@@ -34,7 +34,7 @@ public class MigrateStaffAssignments {
     protected int nurseRoleId = 0;
     protected int doctorRoleId = 0;
     
-    public MigrateStaffAssignments() throws Exception {
+    public MigrateStaffAssignments() {
     }
     
     public void run() throws Exception {
