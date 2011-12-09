@@ -210,9 +210,10 @@ public class StringUtils {
                 ret = true;
             } catch (NumberFormatException e) {
                 ret = false;
-            } finally {
+            } 
+            
                 return ret;
-            }
+           
         }
         return ret;
     }
@@ -241,9 +242,9 @@ public class StringUtils {
             fmt.parse(dateString);
             ret = true;
         } catch (ParseException ex) {
-        } finally {
+        } 
             return ret;
-        }
+       
     }
 
     public static String readFileStream(FormFile file) {

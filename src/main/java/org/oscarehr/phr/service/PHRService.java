@@ -132,7 +132,7 @@ public class PHRService {
 		return true;
 	}
 
-	public PHRAuthentication authenticate(String providerNo, String password) throws Exception {
+	public PHRAuthentication authenticate(String providerNo, String password) {
 		// see authenticateIndivoId for exception explanation
 		ProviderData providerData = new ProviderData();
 		providerData.setProviderNo(providerNo);

@@ -48,7 +48,7 @@ public class MyOscarServerRelationManager {
 	
 	private static QueueCache<String, List<RelationshipTransfer2>> relationDataCache = new QueueCache<String, List <RelationshipTransfer2>>(4, MAX_OBJECTS_TO_CACHE, DateUtils.MILLIS_PER_HOUR*2);
 	
-	private static List<RelationshipTransfer2> getRelationShipTransferFromServer(PHRAuthentication auth,String myoscarUsername) throws InvalidRequestException_Exception, NoSuchItemException_Exception{
+	private static List<RelationshipTransfer2> getRelationShipTransferFromServer(PHRAuthentication auth,String myoscarUsername) throws NoSuchItemException_Exception{
 		AccountWs accountWs=MyOscarServerWebServicesManager.getAccountWs(auth.getMyOscarUserId(), auth.getMyOscarPassword());
 		List<RelationshipTransfer2> relationList = accountWs.getRelationshipsByPrimaryPersonIdRelatedPersonId(auth.getMyOscarUserName(),myoscarUsername);
 		return relationList;
@@ -58,7 +58,7 @@ public class MyOscarServerRelationManager {
 		return(primaryUsername + ":" + relatedUsername);
 	}
 	
-	public static List<RelationshipTransfer2> getRelationData(PHRAuthentication auth,String myoscarUsername) throws InvalidRequestException_Exception, NoSuchItemException_Exception{
+	public static List<RelationshipTransfer2> getRelationData(PHRAuthentication auth,String myoscarUsername) throws NoSuchItemException_Exception{
 		
 		String cacheKey = getCacheKey(auth.getMyOscarUserName(), myoscarUsername);
 		List<RelationshipTransfer2> relationList = relationDataCache.get(cacheKey);

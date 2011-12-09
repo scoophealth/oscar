@@ -452,7 +452,7 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
     }
 
 
-    public Object callWebserviceLite(String procedureName, Vector params) throws Exception{
+    public Object callWebserviceLite(String procedureName, Vector params){
         log2.debug("#CALLmyDRUGREF-"+procedureName);
         Object object = null;
 

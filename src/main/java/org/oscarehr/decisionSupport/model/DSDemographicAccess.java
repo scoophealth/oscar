@@ -117,7 +117,7 @@ public class DSDemographicAccess {
     public boolean hasDxCodesNotany(String dxCodesStr) { return !hasDxCodesAny(dxCodesStr); }
 
 
-    public List<Prescription> getRxCodes() throws DecisionSupportException {
+    public List<Prescription> getRxCodes() {
     	logger.debug("GET RX CODES CALLED");
         try {
             Prescription[] prescriptions = new RxPrescriptionData().getPrescriptionsByPatientHideDeleted(Integer.parseInt(this.demographicNo));
@@ -294,7 +294,7 @@ public class DSDemographicAccess {
         return true;
     }
 
-    public boolean noteContainsNot(String searchStrings) throws DecisionSupportException { return noteContainsNotany(searchStrings); }
+    public boolean noteContainsNot(String searchStrings) { return noteContainsNotany(searchStrings); }
 
     public boolean noteContainsNotall(String searchStrings) { return !noteContainsAll(searchStrings); }
 
@@ -313,7 +313,7 @@ public class DSDemographicAccess {
     //          notInCalendarYear=true
     //          unitsBilledToday=<4
     //          requiresStartTime=true     not implemented yet.
-    public boolean billedForAny(String searchStrings,Hashtable options) throws DecisionSupportException {
+    public boolean billedForAny(String searchStrings,Hashtable options) {
         boolean retval = false;
         if(options.containsKey("payer") && options.get("payer").equals("MSP")){
         	logger.debug("PAYER:MSP ");
@@ -366,7 +366,7 @@ public class DSDemographicAccess {
         return retval;
     }
 
-     public boolean billedForAny2(String searchStrings,Hashtable options) throws DecisionSupportException {
+     public boolean billedForAny2(String searchStrings,Hashtable options) {
         boolean retval = false;
         String[] codes = searchStrings.replaceAll("\'","" ).split(",");
         for (String code: codes){

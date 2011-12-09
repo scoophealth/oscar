@@ -311,10 +311,9 @@ public class ServiceCodeValidationLogic {
     }
     catch (Exception ex) {MiscUtils.getLogger().error("Error", ex);
     }
-    finally {
+
       return ret;
-    }
-  }
+   }
 
   /**
    *
@@ -362,12 +361,11 @@ public class ServiceCodeValidationLogic {
      }
      catch (Exception ex) {MiscUtils.getLogger().error("Error", ex);
      }
-     finally {
-       HashMap availableUnits = new HashMap();
-       availableUnits.put(DAILY_AVAILABLE_UNITS,new Double(currentDayAvailable));
-       availableUnits.put(ANNUAL_AVAILABLE_UNITS,new Double(currentYearAvailable));
-       return availableUnits;
-     }
+
+    HashMap availableUnits = new HashMap();
+    availableUnits.put(DAILY_AVAILABLE_UNITS,new Double(currentDayAvailable));
+    availableUnits.put(ANNUAL_AVAILABLE_UNITS,new Double(currentYearAvailable));
+    return availableUnits;
    }
 
 

@@ -151,9 +151,7 @@ public class MSPReconcile {
     catch (IOException e) {
       MiscUtils.getLogger().error("Error", e);
     }
-    finally {
       return ret;
-    }
   }
 
   /**

@@ -212,7 +212,7 @@ public class DSGuidelineDrools extends DSGuideline {
     }
     
     //multiple conditions because to handle OR statements, need to have multiple 
-    public Element getDroolsCondition(DSCondition condition) throws DecisionSupportException {
+    public Element getDroolsCondition(DSCondition condition) {
         String accessMethod = condition.getConditionType().getAccessMethod();
         Element javaCondition = new Element("condition", javaNamespace);
         String parameters = "\"" + StringUtils.join(condition.getValues(), ",") + "\"";
@@ -228,7 +228,7 @@ public class DSGuidelineDrools extends DSGuideline {
         return javaCondition;
     }
 
-    public Element getDroolsParameter(DSParameter dsParameter) throws DecisionSupportException {
+    public Element getDroolsParameter(DSParameter dsParameter) {
         Element accessClassParameter = new Element("parameter", namespace);
         accessClassParameter.setAttribute("identifier", dsParameter.getStrAlias());
         Element accessClass = new Element("class", namespace);
@@ -238,7 +238,7 @@ public class DSGuidelineDrools extends DSGuideline {
         return accessClassParameter;
     }
 
-    public Element getDroolsConsequences(List<DSConsequence> consequences) throws DecisionSupportException {
+    public Element getDroolsConsequences(List<DSConsequence> consequences) {
         Element javaElement = new Element("consequence", javaNamespace);
         String consequencesStr = "a.setPassedGuideline(true);";
         for (DSConsequence consequence: consequences) {

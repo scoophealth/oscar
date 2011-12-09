@@ -524,7 +524,7 @@ public class PHRUserManagementAction extends DispatchAction {
 		accountWs.createRelationship(newAccount.getId(), otherMyOscarUserId, relation);
     }
 
-	public ActionForward approveAction(ActionMapping mapping, ActionForm  form,HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ActionForward approveAction(ActionMapping mapping, ActionForm  form,HttpServletRequest request, HttpServletResponse response) {
         IndivoAPService apService = new IndivoAPService(phrService);
         String actionId = request.getParameter("actionId");
         PHRAction action = phrActionDAO.getActionById(actionId);

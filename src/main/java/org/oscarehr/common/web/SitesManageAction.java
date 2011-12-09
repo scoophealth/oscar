@@ -32,7 +32,7 @@ public class SitesManageAction extends DispatchAction {
         return mapping.findForward("list");
     }
 
-    public ActionForward add(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public ActionForward add(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
     	DynaBean lazyForm = (DynaBean) form;
 
     	Site s = new Site();

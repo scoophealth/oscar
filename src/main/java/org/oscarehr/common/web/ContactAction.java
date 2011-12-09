@@ -163,11 +163,11 @@ public class ContactAction extends DispatchAction {
 	}
 		
 	
-	public ActionForward addContact(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ActionForward addContact(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		return mapping.findForward("cForm");   
 	}
 	
-	public ActionForward addProContact(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ActionForward addProContact(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		return mapping.findForward("pForm");   
 	}
 	

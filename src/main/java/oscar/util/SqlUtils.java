@@ -370,7 +370,7 @@ public class SqlUtils {
 			records = null;
 			MiscUtils.getLogger().error("Error", e);
 		}
-		finally {
+
 			if (rs != null) {
 				try {
 					rs.close();
@@ -382,7 +382,6 @@ public class SqlUtils {
 				records = records.isEmpty() ? null : records;
 			}
 			return records;
-		}
 	}
 
 	/**
@@ -439,7 +438,7 @@ public class SqlUtils {
 			records = null;
 			MiscUtils.getLogger().error("Error", e);
 		}
-		finally {
+
 			if (rs != null) {
 				try {
 					rs.close();
@@ -449,7 +448,6 @@ public class SqlUtils {
 			}
 
 			return records;
-		}
 	}
 
 	/**

@@ -46,7 +46,6 @@
         <ViolationValue>/src/main/java/org/caisi/tickler/prepared/PreparedTicklerManager.java:ticklers = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/org/caisi/tickler/web/CustomFilterAction.java:Set sAssignees = new HashSet();</ViolationValue>
         <ViolationValue>/src/main/java/org/caisi/tickler/web/CustomFilterAction.java:Set sProviders = new HashSet();</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/caisi_integrator/CaisiIntegratorUpdateTask.java:ArrayList partList = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/ClientDao.java:results = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/ClientReferralDAO.java:ArrayList paramList = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/FormsDAO.java:List formInfos = new ArrayList();</ViolationValue>
@@ -592,7 +591,6 @@
         <ViolationValue>/src/main/java/oscar/oscarEncounter/search/data/EctSearchDemographicData.java:vector = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ForwardingRules.java:ArrayList info = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ForwardingRules.java:ArrayList ret = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarLab/LabRequestReportLink.java:Hashtable link = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/SortHashtable.java:public SortHashtable() {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/all/Hl7textResultsData.java:ArrayList&lt;LabResultData&gt; ret=new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/all/parsers/CMLHandler.java:ArrayList docNums = new ArrayList();</ViolationValue>
@@ -1625,7 +1623,6 @@
         <ViolationValue>/src/main/java/oscar/dbBillingData.java:DBPreparedHandler accessDB = null;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dbBillingData.java:accessDB = new DBPreparedHandler();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dbBillingData.java:import oscar.oscarDB.DBPreparedHandler;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/EDocUtil.java:DBPreparedHandlerParam[] param = new DBPreparedHandlerParam[17];</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dms/EDocUtil.java:DBPreparedHandlerParam[] param = new DBPreparedHandlerParam[18];</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dms/EDocUtil.java:DBPreparedHandlerParam[] param = new DBPreparedHandlerParam[1];</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dms/EDocUtil.java:DBPreparedHandlerParam[] param = new DBPreparedHandlerParam[2];</ViolationValue>
@@ -2226,7 +2223,6 @@
         <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgViewMessageAction.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgViewMessageByPositionAction.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgViewPDFAttachmentAction.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/tld/MsgNewMessageTag.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/tld/MsgNewMessagesTag.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/util/MsgDemoMap.java:DBHandler.RunSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/util/MsgDemoMap.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
@@ -2676,8 +2672,8 @@
         <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/model/DSDemographicAccess.java:List&lt;dxResearchBean&gt; dxCodes = handler.getDxResearchBeanVector();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/model/DSDemographicAccess.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/model/DSDemographicAccess.java:public boolean billedForAll(String searchStrings,Hashtable options) throws DecisionSupportException { throw new DecisionSupportException("NOT IMPLEMENTED");  }</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/model/DSDemographicAccess.java:public boolean billedForAny(String searchStrings,Hashtable options) throws DecisionSupportException {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/model/DSDemographicAccess.java:public boolean billedForAny2(String searchStrings,Hashtable options) throws DecisionSupportException {</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/model/DSDemographicAccess.java:public boolean billedForAny(String searchStrings,Hashtable options) {</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/model/DSDemographicAccess.java:public boolean billedForAny2(String searchStrings,Hashtable options) {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/model/DSDemographicAccess.java:public boolean billedForNot(String searchStrings,Hashtable options) throws DecisionSupportException { throw new DecisionSupportException("NOT IMPLEMENTED");  }</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/model/DSDemographicAccess.java:public boolean billedForNotall(String searchStrings,Hashtable options) throws DecisionSupportException { throw new DecisionSupportException("NOT IMPLEMENTED"); }</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/model/DSDemographicAccess.java:public boolean billedForNotany(String searchStrings,Hashtable options) throws DecisionSupportException { throw new DecisionSupportException("NOT IMPLEMENTED"); }</ViolationValue>
@@ -2863,7 +2859,6 @@
         <ViolationValue>/src/main/java/oscar/login/tld/SecurityTag.java:// if (checkPrivilege(roleName, (Properties) getPrivilegeProp(objectName).get(0), (Vector) getPrivilegeProp(</ViolationValue>
         <ViolationValue>/src/main/java/oscar/login/tld/SecurityTag.java://private Vector roleInObj = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/login/tld/SecurityTag.java:Vector v = OscarRoleObjectPrivilege.getPrivilegeProp(objectName);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/login/tld/SecurityTag.java:if (OscarRoleObjectPrivilege.checkPrivilege(roleName, (Properties) v.get(0), (Vector) v.get(1),rights)){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/login/tld/SecurityTag.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/CDMReminderHlp.java:Vector cdmPatientNos = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/CDMReminderHlp.java:import java.util.Vector;</ViolationValue>
@@ -3434,10 +3429,6 @@
         <ViolationValue>/src/main/java/oscar/oscarLab/FileUploadCheck.java:Hashtable&lt;String, String&gt; fileInfo = new Hashtable&lt;String, String&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/FileUploadCheck.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/FileUploadCheck.java:public static Hashtable&lt;String, String&gt; getFileInfo(String md5sum) {</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarLab/LabRequestReportLink.java:Hashtable link = getLinkByReport(reportTable, reportId);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarLab/LabRequestReportLink.java:Hashtable link = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarLab/LabRequestReportLink.java:import java.util.Hashtable;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarLab/LabRequestReportLink.java:public static Hashtable getLinkByReport(String reportTable, Long reportId) throws SQLException {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/SortHashtable.java:* SortHashtable.java</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/SortHashtable.java:/** Creates a new instance of SortHashtable */</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/SortHashtable.java:Date date1 = (Date) ((Hashtable) object).get("collDateDate");</ViolationValue>
@@ -3934,7 +3925,7 @@
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:log2.debug(s+" "+((Hashtable) obj).get(s)+" "+((Hashtable) obj).get(s).getClass().getName());</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:public Object callWebserviceLite(String procedureName, Vector params) throws Exception{</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:public Object callWebserviceLite(String procedureName, Vector params){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:public Vector getMyDrugrefInfo(String command, Vector drugs,String myDrugrefId) throws Exception {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:public static void removeNullFromVector(Vector v){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:removeNullFromVector(drugs);</ViolationValue>
@@ -4105,7 +4096,7 @@
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:log2.debug(s+" "+((Hashtable) obj).get(s)+" "+((Hashtable) obj).get(s).getClass().getName());</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:private static Vector getMyDrugrefInfo(String command, Vector drugs,String myDrugrefId) throws Exception {</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:public static Object callWebserviceLite(String procedureName, Vector params) throws Exception{</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:public static Object callWebserviceLite(String procedureName, Vector params){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:vec = (Vector) holbrook;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:vec = (Vector) obj;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:}else if(obj instanceof Hashtable){</ViolationValue>

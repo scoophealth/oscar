@@ -304,9 +304,9 @@ public class UtilMisc {
     }
     catch (Exception ex) {MiscUtils.getLogger().error("Error", ex);
     }
-    finally {
+    
       return ret;
-    }
+    
   }
 
   public static Object IIf(boolean Expression, Object TruePart,
@@ -409,9 +409,9 @@ public class UtilMisc {
     }
     catch (Exception ex) {MiscUtils.getLogger().error("Error", ex);
     }
-    finally {
+    
       return ret;
-    }
+    
   }
 
   /**

@@ -15,7 +15,7 @@ import org.oscarehr.util.SpringUtils;
 public class OscarAppointmentDaoTest extends DaoTestFixtures {
 
 	@Before
-	public void before() throws Exception {
+	public void before() {
 		//nothing here yet. should clean up the appointment table to a known state
 	}
 	

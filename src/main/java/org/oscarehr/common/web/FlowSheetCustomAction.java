@@ -309,7 +309,7 @@ public class FlowSheetCustomAction extends DispatchAction {
         return mapping.findForward("success");
     }
     
-    public ActionForward archiveMod(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public ActionForward archiveMod(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         logger.debug("IN MOD");
         String id = request.getParameter("id");
         

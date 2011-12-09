@@ -781,7 +781,7 @@ public class MDSHandler implements MessageHandler {
         
     }
     
-    private String getFullDocName(String docSeg) throws HL7Exception{
+    private String getFullDocName(String docSeg){
         //docSeg = "/.PV1-8-"
         String docName = "";
         String temp;
