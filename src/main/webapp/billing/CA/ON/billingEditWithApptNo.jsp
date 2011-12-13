@@ -167,6 +167,9 @@
 		   else{
 			   
 		 %>
+
+
+ 
 <form method="post" name="editBillingForm" action="billingON.jsp" >
 	<input type="hidden" name="billNo_old" id="billNo_old" value="<%=billNo%>" />	
 	<input type="hidden" name="billStatus_old" id="billStatus_old" value="<%=status%>" />		
@@ -190,35 +193,33 @@
      <input type="hidden" name="service_code" id="service_code" value="<%=service_code%>"/>
     <input type="hidden" name="xml_visittype" id="xml_visittype" value="<%=xml_visittype%>" />
     <input type="hidden" name="xml_location" id="xml_location" value="<%=xml_location%>" />
-   <input type="hidden" name="xml_vdate" id="xml_vdate" value="<%=xml_vdate%>" />
+   <input type="hidden" name="xml_vdate" id="xml_vdate" value="<%=xml_vdate%>" />   
    
+
   	<input type="hidden" name="checkFlag" id="checkFlag" />
    	<input type="hidden" name="rfcheck" id="rfcheck" />
 	<input type="hidden" name="referralDocName" id="referralDocName" />
 	<input type="hidden" name="referralCode" id="referralCode " value="<%=referralCode%>" />
 	<input type="hidden" name="referralSpet" id="referralSpet" />
    	<input type="hidden" name="site" id="site" value="<%=site %>" />
-	<input type="hidden" name="xml_billtype" id="xml_billtype" value="<%=xml_billtype %>" />
-   
+	<input type="hidden" name="xml_billtype" id="xml_billtype" value="<%=xml_billtype %>" />   
     <input type="hidden" name="ohip_version" id="ohip_version" value="V03G" />
     <input type="hidden" name="hin" id="hin" value="<%=demoHIN%>" />
     <input type="hidden" name="ver" id="ver" value="<%=demoVer%>" />
     <input type="hidden" name="hc_type" id="hc_type" value="<%=demoHCTYPE%>" />    
-
     <input type="hidden" name="start_time" id="start_time" value="<%=start_time%>" />
-
-    <input type="hidden" name="demographic_dob" id="demographic_dob" value="<%=demoDOB%>" />   
-    
+    <input type="hidden" name="demographic_dob" id="demographic_dob" value="<%=demoDOB%>" />       
     <input type="hidden" name="url_back" id="url_back">
 
 <%	
 	int serviceN = 0;
 	int services_checked_num = 0;
+	String service_code_="", service_code_num_="",serviceCode_="", serviceUnit_="";
 	while (rs2.next()) {
 			
-		String service_code_ = rs2.getString("service_code");
-		String service_code_num_ = rs2.getString("ser_num");
-	
+		service_code_ = rs2.getString("service_code");
+		service_code_num_ = rs2.getString("ser_num");
+		
 		if("1".equals(service_code_num_)) {	
 	
 			//curBillForm
@@ -234,51 +235,52 @@
 			xml_serviceCode = "xml_".concat(service_code_);
 			services_checked_num ++;
 %>
-
+			
  			<input type="hidden" name="<%=xml_serviceCode %>" id="<%=xml_serviceCode %>" value="checked" />  
+ 			
 <%
 		} else {
-			String serviceCode_ = "serviceCode".concat(String.valueOf(serviceN));
-			String serviceUnit_ = "serviceUnit".concat(String.valueOf(serviceN));
+			serviceCode_ = "serviceCode".concat(String.valueOf(serviceN));
+			serviceUnit_ = "serviceUnit".concat(String.valueOf(serviceN));
 			serviceN ++;
 %>
-
+		 
 			<input type="hidden" name="<%=serviceCode_ %>" id="<%=serviceCode_ %>" value="<%=service_code_%>" />  
 			<input type="hidden" name="<%=serviceUnit_ %>" id="<%=serviceUnit_ %>" value="<%=service_code_num_%>" />  
+			
 
 <%
 		}
 	}
 %>
+
+  
 	<input type="hidden" name="services_checked" id="services_checked" value=<%=services_checked_num %>>
+	
+	
+	
 <%
+	
   }	
 %>
 
+ 
  <input type="hidden" name="curBillForm" id="curBillForm" value="<%=curBillForm%>" /> 
  <input type="hidden" name="billForm" id="billForm" value="<%=billForm%>" />	
- 
+
 <center>
 <p>
 Do you want to edit the billing?
 <p>
-<input type="submit" name="submit" value="Yes" />
+<input type="submit" name="submit2" value="Yes" />
 <input type="button" name="close" value="No" onclick="window.close()" />
 </center>
+
 </form>
-
-<%	 /*   for (int i = 0; i < BillingDataHlp.FIELD_SERVICE_NUM / 2; i++) { 
-
-serviceCode
-serviceUnit
-serviceAt
-}
-"xml_" + serviceCode
-*/
-%>
+ 
+<SCRIPT LANGUAGE="JavaScript"><!--
+setTimeout('document.editBillingForm.submit()',50);
+//--></SCRIPT>
 
 
 
-<% 
-//	response.sendRedirect("../../../billing.do?billRegion="+URLEncoder.encode(prov)+"&billForm="+URLEncoder.encode(billForm)+"&hotclick="+URLEncoder.encode(hotclick)+"&appointment_no="+appointment_no+"&demographic_name="+URLEncoder.encode(name)+"&status="+status+"&demographic_no="+demographic_no+"&providerview="+providerview+"&user_no="+curUser_no+"&apptProvider_no="+apptProvider_no+"&appointment_date="+appointment_date+"&start_time="+start_time+"&bNewForm=1");
-%>

@@ -172,6 +172,8 @@ public final class LoginAction extends DispatchAction {
                 if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable()) {
                     session.setAttribute("newticklerwarningwindow", providerPreference.getNewTicklerWarningWindow());
                     session.setAttribute("default_pmm", providerPreference.getDefaultCaisiPmm());
+                    session.setAttribute("caisiBillingPreferenceNotDelete", String.valueOf(providerPreference.getDefaultDoNotDeleteBilling()));
+                    
                     default_pmm = providerPreference.getDefaultCaisiPmm();
                     ArrayList<String> newDocArr = (ArrayList<String>)request.getSession().getServletContext().getAttribute("CaseMgmtUsers");    
                     if("enabled".equals(providerPreference.getDefaultNewOscarCme())) {
