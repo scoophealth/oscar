@@ -57,7 +57,7 @@ public class OscarPropertiesCheck extends TagSupport {
     }
 
     public void setValue(String value) {
-        this.value = value;
+        this.value = value.trim();
     }
 
     public String getProperty() {
@@ -65,7 +65,7 @@ public class OscarPropertiesCheck extends TagSupport {
     }
 
     public void setProperty(String property) {
-        this.property = property;
+        this.property = property.trim();
     }
 
 
