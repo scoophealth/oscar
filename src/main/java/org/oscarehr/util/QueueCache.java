@@ -36,7 +36,14 @@ public final class QueueCache<K, V>
 		@Override
 		public void run()
 		{
-			shiftPools();
+			try
+			{
+				shiftPools();
+			}
+			catch (Exception e)
+			{
+				logger.error("Error", e);
+			}
 		}
 	}
 
