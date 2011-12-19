@@ -303,11 +303,11 @@ function showHideBillPref() {
 		                 String myCheck6 = "";
 		                 String value1 = request.getParameter("caisiBillingPreferenceNotDelete");
 		                  if(value1!=null && value1.equals("1"))
-		                  { myCheck5 = "checked";
-		                          myCheck6 = "unchecked";}
+		                  { 	myCheck5 = "checked";
+		                        myCheck6 = "unchecked";}
 		                  else
-		                  { myCheck5 = "unchecked";
-		                          myCheck6 = "checked";}
+		                  { 	myCheck5 = "unchecked";
+		                  		myCheck6 = "checked";}
 		
 		               %>
 		
