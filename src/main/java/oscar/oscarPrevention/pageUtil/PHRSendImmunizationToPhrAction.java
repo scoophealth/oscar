@@ -33,7 +33,7 @@ import oscar.util.StringUtils;
  * @author Ronnie Cheng
  */
 public class PHRSendImmunizationToPhrAction extends DispatchAction {
-	private static final String TYPE_IMMUNIZATIONS = MedicalDataType.IMMUNIZATIONS.name();
+	private static final String TYPE_IMMUNIZATIONS = MedicalDataType.IMMUNISATION.name();
 	
 	private HashMap<String,String> preventionKeys = null;
 	private PreventionDao preventionDao;
