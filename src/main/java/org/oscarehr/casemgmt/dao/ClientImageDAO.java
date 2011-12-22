@@ -22,16 +22,14 @@
 
 package org.oscarehr.casemgmt.dao;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.casemgmt.model.ClientImage;
 import org.oscarehr.util.MiscUtils;
-import org.oscarehr.util.TimeClearedHashMap;
+import org.oscarehr.util.QueueCache;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
@@ -44,8 +42,8 @@ public class ClientImageDAO extends HibernateDaoSupport {
 	/**
 	 * This is a simple cache for image data because the images are excessively large (relatively speaking). The Integer key is the demographic_no.
 	 */
-	private static final Map<Integer, ClientImage> dataCache = Collections.synchronizedMap(new TimeClearedHashMap<Integer, ClientImage>(DateUtils.MILLIS_PER_HOUR, DateUtils.MILLIS_PER_MINUTE * 5));
-
+	private static final QueueCache<Integer, ClientImage> dataCache=new QueueCache<Integer, ClientImage>(4, 40, DateUtils.MILLIS_PER_HOUR);
+	
 	public void saveClientImage(ClientImage clientImage) {
 		ClientImage existing = getClientImage(clientImage.getDemographic_no());
 		if (existing != null) {
@@ -72,9 +70,12 @@ public class ClientImageDAO extends HibernateDaoSupport {
 			if (results.size() > 0) {
 				clientImage = results.get(0);
 
-				// add to cache
-				dataCache.put(clientId, clientImage);
-				logger.debug("entry found in db, adding to dataCache : clientId=" + clientId);
+				// add to cache if it's less than ... say 1 megs
+				if (clientImage.getImage_data().length<1024000)
+				{
+					dataCache.put(clientId, clientImage);
+					logger.debug("entry found in db, adding to dataCache : clientId=" + clientId);
+				}
 			}
 		} else {
 			logger.debug("dataCache hit : clientId=" + clientId);

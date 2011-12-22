@@ -37,7 +37,6 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
-import org.oscarehr.myoscar_server.ws.NotAuthorisedException_Exception;
 import org.oscarehr.phr.PHRAuthentication;
 import org.oscarehr.phr.util.MyOscarUtils;
 import org.oscarehr.util.MiscUtils;
@@ -119,7 +118,7 @@ public class Send2IndivoAction extends Action{
 	            return mapping.findForward("success");
 	        
 	        }
-        } catch (NotAuthorisedException_Exception e) {
+        } catch (Exception e) {
 	        logger.error("Error", e);
         }
         

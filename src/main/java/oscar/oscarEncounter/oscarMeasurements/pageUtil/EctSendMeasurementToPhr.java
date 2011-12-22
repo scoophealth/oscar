@@ -19,7 +19,6 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.indivo.IndivoException;
-import org.oscarehr.myoscar_server.ws.NotAuthorisedException_Exception;
 import org.oscarehr.phr.PHRAuthentication;
 import org.oscarehr.phr.model.PHRMeasurement;
 import org.oscarehr.phr.service.PHRService;
@@ -67,7 +66,7 @@ public class EctSendMeasurementToPhr extends Action {
 	                
 	            }
 	        }
-        } catch (NotAuthorisedException_Exception e) {
+        } catch (Exception e) {
         	errorMsg=e.getMessage();
         	logger.error("Error", e);
         }

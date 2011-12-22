@@ -22,7 +22,6 @@
 
 package org.oscarehr.casemgmt.model;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -31,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang.time.DateUtils;
 import org.caisi.model.BaseObject;
 import org.oscarehr.PMmodule.dao.ProgramAccessDAO;
 import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
@@ -40,7 +38,6 @@ import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.casemgmt.dao.RoleProgramAccessDAO;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
-import org.oscarehr.util.TimeClearedHashMap;
 
 import com.quatro.model.security.Secrole;
 
@@ -48,7 +45,6 @@ public class CaseManagementIssue extends BaseObject {
 
 	private ProgramProviderDAO programProviderDao=(ProgramProviderDAO)SpringUtils.getBean("programProviderDAO");
 	private ProgramAccessDAO programAccessDao=(ProgramAccessDAO)SpringUtils.getBean("programAccessDAO");
-	private static Map<String, Boolean> writeAccessCache=Collections.synchronizedMap(new TimeClearedHashMap<String, Boolean>(DateUtils.MILLIS_PER_MINUTE, DateUtils.MILLIS_PER_MINUTE));
 	private RoleProgramAccessDAO roleProgramAccessDAO=(RoleProgramAccessDAO)SpringUtils.getBean("RoleProgramAccessDAO");
 	
 	protected Long id;
@@ -228,21 +224,6 @@ public class CaseManagementIssue extends BaseObject {
 
 	public boolean isWriteAccess(int programId)
 	{
-		String cacheKey=LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo()+':'+programId;
-		
-		/* one cacheKey like 91:10018 could have the value of "false" or "true"
-		 * You cannot say the first write access is false then all others will be false too
-		 * Not sure why we have cacheKey here. But it surely caused one bug:
-		 * If one client had counselor issues and doctor issues, all issues would be grayed out for the counselor if the counselor didn't have "write doctor issues" access right.
-		 * In this case, only doctor issues should be grayed out. 
-		
-		Boolean result=writeAccessCache.get(cacheKey);
-		if (result==null)
-		{
-			result=calculateWriteAccess(programId);
-			writeAccessCache.put(cacheKey, result);
-		}
-		*/
 		Boolean result = calculateWriteAccess(programId);
 		return(result);
 	}
