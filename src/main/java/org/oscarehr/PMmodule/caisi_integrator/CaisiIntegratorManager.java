@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang.time.DateUtils;
@@ -66,7 +65,7 @@ import org.oscarehr.hnr.ws.MatchingClientScore;
 import org.oscarehr.util.CxfClientUtils;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
-import org.oscarehr.util.TimeClearedHashMap;
+import org.oscarehr.util.QueueCache;
 
 /**
  * This class is a manager for integration related functionality. <br />
@@ -79,17 +78,14 @@ import org.oscarehr.util.TimeClearedHashMap;
  * <br />
  * Note that not all data is privacy related, examples include a Facility and it's information is not covered under the regulations for privacy of an individual. Note also that for some reason we're only concerned about client privacy, providers seem to
  * not be covered and or have no expectation of privacy (although we could be wrong in this interpretation).
- * <br />
- * We will attempt to cache data on a per provider level as well, we will put this cached data in the sessions space. To keep things organised,
- * we will put a TimeClearedHashMap in the session space and with in that hash map we will cache data. 
  */
 public class CaisiIntegratorManager {
 
-	private static final String INTEGRATOR_DATA_SESSION_CACHE_KEY="INTEGRATOR_DATA_SESSION_CACHE_KEY";
-	private static final long MAX_SESSION_CACHE_DATA_TIME=DateUtils.MILLIS_PER_HOUR;
-	
 	/** only non-audited data should be cached in here */
-	private static Map<String, Object> basicDataCache=Collections.synchronizedMap(new TimeClearedHashMap<String, Object>(DateUtils.MILLIS_PER_HOUR, DateUtils.MILLIS_PER_HOUR));
+	private static QueueCache<String, Object> basicDataCache=new QueueCache<String, Object>(4, 100, DateUtils.MILLIS_PER_HOUR);
+	
+	/** data put here should be segmented by the requesting provider as part of the cache key */
+	private static QueueCache<String, Object> segmentedDataCache=new QueueCache<String, Object>(4, 100, DateUtils.MILLIS_PER_HOUR);
 	
 	public static boolean isEnableIntegratedReferrals() {
 		Facility facility = LoggedInInfo.loggedInInfo.get().currentFacility;
@@ -366,69 +362,24 @@ public class CaisiIntegratorManager {
 		return (consentTransfer);
 	}
 
-    public static List<CachedDemographicNote> getLinkedNotes(Integer demographicNo) throws MalformedURLException {
-		
-		String sessionCacheKey="LINKED_NOTES:"+demographicNo;
+    public static List<CachedDemographicNote> getLinkedNotes(Integer demographicNo) throws MalformedURLException 
+    {
+ 		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+		String sessionCacheKey="LINKED_NOTES:"+loggedInInfo.currentFacility.getId()+":"+loggedInInfo.loggedInProvider.getPractitionerNo()+":"+demographicNo;
 
 		@SuppressWarnings("unchecked")
-		List<CachedDemographicNote> linkedNotes=(List<CachedDemographicNote>) getFromSessionCache(sessionCacheKey);
+		List<CachedDemographicNote> linkedNotes=(List<CachedDemographicNote>) segmentedDataCache.get(sessionCacheKey);
 		
 		if (linkedNotes==null)
 		{
 			DemographicWs demographicWs = getDemographicWs();
 			linkedNotes = Collections.unmodifiableList(demographicWs.getLinkedCachedDemographicNotes(demographicNo));
-			putInSessionCache(sessionCacheKey, linkedNotes);
+			segmentedDataCache.put(sessionCacheKey, linkedNotes);
 		}
 		
 		return (linkedNotes);
 	}
-	
-	public static void clearSessionCache()
-	{
-		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-		if (loggedInInfo!=null && loggedInInfo.session!=null) loggedInInfo.session.removeAttribute(INTEGRATOR_DATA_SESSION_CACHE_KEY);
-	}
-	
-	/**
-	 * This method should get the existin session cache or create one of none exists. It will return null if this is 
-	 * run from a non-session thread.
-	 */
-	private static TimeClearedHashMap<String, Object> getSessionCache()
-	{
-		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-		if (loggedInInfo!=null && loggedInInfo.session!=null)
-		{
-			@SuppressWarnings("unchecked")
-			TimeClearedHashMap<String, Object> sessionCache=(TimeClearedHashMap<String, Object>) loggedInInfo.session.getAttribute(INTEGRATOR_DATA_SESSION_CACHE_KEY);
-			
-			if (sessionCache==null)
-			{
-				sessionCache=new TimeClearedHashMap<String, Object>(MAX_SESSION_CACHE_DATA_TIME, MAX_SESSION_CACHE_DATA_TIME);
-				loggedInInfo.session.setAttribute(INTEGRATOR_DATA_SESSION_CACHE_KEY, sessionCache);
-			}
-			
-			return(sessionCache);
-		}
-		
-		return(null);
-	}
-	
-    private static void putInSessionCache(String key, Object value)
-	{
-		TimeClearedHashMap<String, Object> sessionCache=getSessionCache();
-		
-		if (sessionCache!=null) sessionCache.put(key, value);
-	}
-
-    private static Object getFromSessionCache(String key)
-	{
-		TimeClearedHashMap<String, Object> sessionCache=getSessionCache();
-		
-		if (sessionCache!=null) return(sessionCache.get(key));
-		
-		return(null);
-	}
-    
+	    
     /**
      * The purpose of this method is to retrieve a remote demographic record and populate it in a local demographic object. It is ready to be persisted.
      * We do not automatically persist it as there appears to be some code logic where a subsequent approval process may choose not to persist it.

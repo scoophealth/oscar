@@ -22,23 +22,21 @@
 
 package org.oscarehr.PMmodule.dao;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.model.AccessType;
 import org.oscarehr.PMmodule.model.ProgramAccess;
 import org.oscarehr.util.MiscUtils;
-import org.oscarehr.util.TimeClearedHashMap;
+import org.oscarehr.util.QueueCache;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 public class ProgramAccessDAO extends HibernateDaoSupport {
 
     private static Logger log = MiscUtils.getLogger();
 
-	private static Map<Long, List<ProgramAccess>> programAccessListByProgramIdCache=Collections.synchronizedMap(new TimeClearedHashMap<Long, List<ProgramAccess>>(DateUtils.MILLIS_PER_HOUR, DateUtils.MILLIS_PER_HOUR));
+	private static QueueCache<Long, List<ProgramAccess>> programAccessListByProgramIdCache=new QueueCache<Long, List<ProgramAccess>>(4, 100, DateUtils.MILLIS_PER_HOUR);
 
     @SuppressWarnings("unchecked")
     public List<ProgramAccess> getAccessListByProgramId(Long programId) {

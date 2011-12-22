@@ -11,19 +11,19 @@ import org.oscarehr.myoscar_server.ws.NotAuthorisedException_Exception;
 import org.oscarehr.myoscar_server.ws.PersonTransfer;
 import org.oscarehr.phr.PHRAuthentication;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.QueueCache;
 import org.oscarehr.util.SpringUtils;
-import org.oscarehr.util.TimeClearedHashMap;
 
 public class MyOscarUtils
 {
-	private static TimeClearedHashMap<String, Long> userNameToIdCache=new TimeClearedHashMap<String, Long>(DateUtils.MILLIS_PER_DAY, DateUtils.MILLIS_PER_HOUR);
-	private static TimeClearedHashMap<Long, String> userIdToNameCache=new TimeClearedHashMap<Long, String>(DateUtils.MILLIS_PER_DAY, DateUtils.MILLIS_PER_HOUR);
+	private static QueueCache<String, Long> userNameToIdCache=new QueueCache<String, Long>(4, 100, DateUtils.MILLIS_PER_HOUR);
+	private static QueueCache<Long, String> userIdToNameCache=new QueueCache<Long, String>(4, 100, DateUtils.MILLIS_PER_HOUR);
 	
 	/**
 	 * Note this method must only return the ID, it must never return the PersonTransfer itself since it reads from a cache.
 	 * @throws NotAuthorisedException_Exception 
 	 */
-	public static Long getMyOscarUserId(PHRAuthentication auth, String myOscarUserName) throws NotAuthorisedException_Exception
+	public static Long getMyOscarUserId(PHRAuthentication auth, String myOscarUserName)
 	{
 		int indexOfAt=myOscarUserName.indexOf('@');
 		if (indexOfAt!=-1) myOscarUserName = myOscarUserName.substring(0,indexOfAt);
@@ -52,7 +52,7 @@ public class MyOscarUtils
 		return(myOscarUserId);
 	}
 
-	public static Long getMyOscarUserId(HttpSession session, String myOscarUserName) throws NotAuthorisedException_Exception
+	public static Long getMyOscarUserId(HttpSession session, String myOscarUserName)
 	{
 		PHRAuthentication auth = (PHRAuthentication) session.getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
 		return(getMyOscarUserId(auth, myOscarUserName));
