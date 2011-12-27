@@ -88,7 +88,7 @@ public final class EDocUtil extends SqlUtilBaseS {
 		String moduleName = "";
 		try {
 			if (rs.next()) {
-				moduleName = oscar.Misc.getString(rs, "last_name") + ", " + oscar.Misc.getString(rs, "first_name");
+				moduleName = oscar.Misc.getString(rs, "last_name").toUpperCase() + ", " + oscar.Misc.getString(rs, "first_name").toUpperCase();
 			}
 		} catch (SQLException sqe) {
 			logger.error("Error", sqe);
