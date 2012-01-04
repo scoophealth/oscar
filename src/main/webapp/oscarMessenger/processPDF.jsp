@@ -10,9 +10,9 @@
 
 
 <%
-String demographic_no = (String) request.getParameter("demographic_no");
-String uri = (String) request.getParameter("uri");
-String pdfTitle = (String) request.getParameter("pdfTitle");
+String demographic_no = request.getParameter("demographic_no");
+String uri = request.getParameter("uri");
+String pdfTitle = request.getParameter("pdfTitle");
 
 %>
 

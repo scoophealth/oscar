@@ -35,7 +35,7 @@
 <%
   ArrayList groups = EFormUtil.getEFormGroups();
   ArrayList<HashMap<String, ? extends Object>> forms = EFormUtil.listEForms(EFormUtil.NAME, EFormUtil.CURRENT);
-  String groupView = (String) request.getParameter("group_view");
+  String groupView = request.getParameter("group_view");
   if (groupView == null) {
       groupView = (String) request.getAttribute("group_view");
   }

@@ -40,11 +40,11 @@ if(session.getValue("user") == null)
 String mons = "1";
 String pros = curUser_no;
 if (request.getParameter("numMonth") != null ){
-mons = (String) request.getParameter("numMonth");
+mons = request.getParameter("numMonth");
 }
 
 if (request.getParameter("proNo") != null ){
-pros = (String) request.getParameter("proNo");
+pros = request.getParameter("proNo");
 }
 
 oscar.oscarReport.data.RptConsultReportData conData  = new oscar.oscarReport.data.RptConsultReportData();

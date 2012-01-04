@@ -97,7 +97,7 @@ String dx = request.getParameter("dx");
 String visitType = request.getParameter("visitType");
 String filename = request.getParameter("demographicNo");
 
-String selectedSite = (String) request.getParameter("site");
+String selectedSite = request.getParameter("site");
 String billingForm = request.getParameter("billing_form");
 
 if ( statusType == null ) { statusType = "O"; } 

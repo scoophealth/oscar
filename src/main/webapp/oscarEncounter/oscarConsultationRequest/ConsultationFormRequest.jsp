@@ -56,7 +56,7 @@
 <%! boolean bMultisites=org.oscarehr.common.IsPropertiesOn.isMultisitesEnable(); %>
 <%
 	//multi-site support
-	String appNo = (String) request.getParameter("appNo");
+	String appNo = request.getParameter("appNo");
 	appNo = (appNo==null ? "" : appNo);
 	
 	String defaultSiteName = "";

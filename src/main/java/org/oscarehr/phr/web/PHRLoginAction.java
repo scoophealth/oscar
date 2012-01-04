@@ -72,14 +72,14 @@ public class PHRLoginAction extends DispatchAction
 
 		String providerNo = (String)session.getAttribute("user");
 		PHRAuthentication phrAuth = null;
-		String forwardTo = (String)request.getParameter("forwardto");
+		String forwardTo = request.getParameter("forwardto");
 		//ActionForward af = new ActionForward();
 		//af.setPath(forwardTo);
 		//af.setRedirect(true);
 		ActionForward ar = new ActionForward(forwardTo);
 		request.setAttribute("forwardToOnSuccess", request.getParameter("forwardToOnSuccess"));
 		//log.debug("Request URI: " + forwardTo);
-		//log.debug("from request uri: " + (String) request.getParameter("forwardto"));
+		//log.debug("from request uri: " + request.getParameter("forwardto"));
 		//log.debug("referrer header: " + request.getHeader("referer"));
 		if (!phrService.canAuthenticate(providerNo))
 		{

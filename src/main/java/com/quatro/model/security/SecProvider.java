@@ -47,9 +47,7 @@ public class SecProvider implements java.io.Serializable {
 	private String jobTitle;
 	private String email;
 
-	private String formattedName;
-	private String fullName;
-	
+
 	// Constructors
 
 	/** default constructor */

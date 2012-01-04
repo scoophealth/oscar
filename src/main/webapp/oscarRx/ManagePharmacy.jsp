@@ -102,7 +102,7 @@ if (request.getParameter("ID") != null && request.getParameter("type")!=null && 
 					<% 
                             if (request.getParameter("ID") != null){ 
                                RxManagePharmacyForm frm = (RxManagePharmacyForm) request.getAttribute("RxManagePharmacyForm");
-                               String ID = (String) request.getParameter("ID");
+                               String ID = request.getParameter("ID");
                                RxPharmacyData pharmacy = new RxPharmacyData();                               
                                RxPharmacyData.Pharmacy ph = pharmacy.getPharmacy(ID);
                                frm.setID(ID);

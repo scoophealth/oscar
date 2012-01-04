@@ -147,7 +147,7 @@ public class LookupTag extends BaseInputTag {
         return results.toString();
     }
     
-    protected String prepareBodyStyles() throws JspException {
+    protected String prepareBodyStyles() {
     	StringBuffer styles = new StringBuffer();
        prepareAttribute(styles, "style", bodyStyle);
        prepareAttribute(styles, "class", bodyStyleClass);
@@ -176,7 +176,7 @@ public class LookupTag extends BaseInputTag {
         results.append('"');
      }
 
-    protected String formatValue(Object value) throws JspException {
+    protected String formatValue(Object value) {
         if (value == null) return "";
         return TagUtils.getInstance().filter(value.toString());
      }

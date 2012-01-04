@@ -80,7 +80,7 @@
   if (bMultisites) {
 	//multisite starts =====================	  
 	  SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
-      List<Site> sites = siteDao.getActiveSitesByProviderNo((String)request.getParameter("provider_no")); 
+      List<Site> sites = siteDao.getActiveSitesByProviderNo(request.getParameter("provider_no")); 
       List<Site> managerSites; 
 
 	  if (isSiteAccessPrivacy) {

@@ -35,7 +35,7 @@
     String type = request.getParameter("type");
     int year = Integer.parseInt(request.getParameter("year"));
     int month = Integer.parseInt(request.getParameter("month"));
-    String form = (String) request.getParameter("form");
+    String form = request.getParameter("form");
     
 
     //int day = now.get(Calendar.DATE);
