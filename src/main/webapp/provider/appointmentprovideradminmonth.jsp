@@ -64,7 +64,7 @@ private String getSiteHTML(String reason, List<Site> sites) {
   curUser_no = (String) session.getAttribute("user");
   userfirstname = (String) session.getAttribute("userfirstname");
   userlastname = (String) session.getAttribute("userlastname");
-  mygroupno = ((String) request.getParameter("mygroup_no") == null ? (String) session.getAttribute("groupno") : (String) request.getParameter("mygroup_no"));  
+  mygroupno = (request.getParameter("mygroup_no") == null ? (String) session.getAttribute("groupno") : request.getParameter("mygroup_no"));  
 if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
   n_t_w_w = (String) session.getAttribute("newticklerwarningwindow");
 }
@@ -121,7 +121,7 @@ if (bMultisites) {
 	SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
 	sites = siteDao.getAllActiveSites(); 
 	
-	String requestSite = (String) request.getParameter("site") ;
+	String requestSite = request.getParameter("site") ;
 	if (requestSite!=null) 
 	{
 		requestSite = (requestSite.equals("none") ? null : requestSite);

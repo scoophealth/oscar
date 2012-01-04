@@ -4,7 +4,7 @@
 <%@ page import="oscar.util.*"%>
 <% 
 
-    String srcText = (String) request.getParameter("srcText");
+    String srcText = request.getParameter("srcText");
     
     Doc2PDF.parseString2PDF( request, response, "<HTML>" + srcText + "</HTML>" );
 

@@ -149,7 +149,7 @@ public class DatePickerTag extends BaseInputTag{
         return property;
      }
     
-     protected String formatValue(Object value) throws JspException {
+     protected String formatValue(Object value) {
         if (value == null) return "";
 
         String value2 = TagUtils.getInstance().filter(value.toString());

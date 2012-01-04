@@ -46,7 +46,7 @@ public final class EctInsertTemplateAction extends Action {
                                  HttpServletRequest request,
                                  HttpServletResponse response)
         throws Exception {
-        String templateName = (String) request.getParameter("templateName");
+        String templateName = request.getParameter("templateName");
             
         try{
             
@@ -69,7 +69,7 @@ public final class EctInsertTemplateAction extends Action {
             MiscUtils.getLogger().error("Error", e);
         }            
         
-        String version = (String)request.getParameter("version");
+        String version = request.getParameter("version");
         if( version != null && version.equals("2") )
             return (mapping.findForward("success2"));
         else

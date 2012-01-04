@@ -55,7 +55,7 @@ public class HRMWebHandler extends DispatchAction {
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) {
 		/*
-				String method = (String) request.getParameter("method");
+				String method = request.getParameter("method");
 				if (method != null && method.equals("update")) {
 					return update(mapping, form, request, response);
 				}

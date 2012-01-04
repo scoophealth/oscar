@@ -79,7 +79,7 @@ String mode = "";
 if (request.getAttribute("mode") != null) {
     mode = (String) request.getAttribute("mode");
 } else if (request.getParameter("mode") != null) {
-    mode = (String) request.getParameter("mode");
+    mode = request.getParameter("mode");
 }
 
 //Retrieve encounter id for updating encounter navbar if info this page changes anything

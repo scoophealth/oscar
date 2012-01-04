@@ -98,7 +98,7 @@ public final class FrmSetupFormAction extends Action {
         }                
                 
         String ongoingConcern = chartBean.ongoingConcerns;
-        String formName = (String) request.getParameter("formName");        
+        String formName = request.getParameter("formName");        
         String today = UtilDateUtilities.DateToString(UtilDateUtilities.Today(),_dateFormat);
         String visitCod = UtilDateUtilities.DateToString(UtilDateUtilities.Today(),"yyyy-MM-dd");
         

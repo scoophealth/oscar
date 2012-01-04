@@ -54,7 +54,7 @@
     for(int i=0; i<btNewPasswd.length; i++) sbTemp = sbTemp.append(btNewPasswd[i]);
 
     String sPin = request.getParameter("pin");
-    if (OscarProperties.getInstance().isPINEncripted()) sPin = Misc.encryptPIN((String)request.getParameter("pin"));
+    if (OscarProperties.getInstance().isPINEncripted()) sPin = Misc.encryptPIN(request.getParameter("pin"));
 
     int rowsAffected =0;
     

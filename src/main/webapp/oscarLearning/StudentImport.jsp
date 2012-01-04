@@ -81,7 +81,7 @@
 		<td class="MainTableRightColumn">
 	
 	<%
-		String totalImported = (String)request.getParameter("r");
+		String totalImported = request.getParameter("r");
 		if(totalImported != null && totalImported.length()>0) {
 	%>				
 	

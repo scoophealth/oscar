@@ -5,7 +5,7 @@ OutputStream o = response.getOutputStream();
 
 org.jfree.data.time.TimeSeriesCollection dataset = new org.jfree.data.time.TimeSeriesCollection();
 
-String id = (String) request.getParameter("id");
+String id = request.getParameter("id");
 Hashtable[] harray = (Hashtable[]) session.getAttribute(id);
 
 

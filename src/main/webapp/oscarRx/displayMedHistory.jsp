@@ -42,7 +42,7 @@
     <%
 try{
     oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
-    String randomId=(String)request.getParameter("randomId");
+    String randomId=request.getParameter("randomId");
         if(randomId!=null){
                 RxPrescriptionData.Prescription rx=bean.getStashItem2(Integer.parseInt(randomId));
                 String drugName=rx.getBrandName();

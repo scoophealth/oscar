@@ -130,7 +130,7 @@ function CodeAttach(File0, File1, File2) {
  int rowsAffected=0;
     
     String[] param1 =new String[2];
-	  param1[0]= (String)request.getParameter(code);
+	  param1[0]= request.getParameter(code);
 	  param1[1]=code;
           try{
   	 rowsAffected = apptMainBean.queryExecuteUpdate(param1,"updatedigcode");

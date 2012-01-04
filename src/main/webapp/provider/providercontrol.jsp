@@ -57,7 +57,7 @@
         int nowMonth = now.get(Calendar.MONTH)+1 ; //be care for the month +-1
         int nowDay = now.get(Calendar.DAY_OF_MONTH);
         String caisiView = null;
-        caisiView = (String)request.getParameter("GoToCaisiViewFromOscarView");
+        caisiView = request.getParameter("GoToCaisiViewFromOscarView");
         if(caisiView!=null && "true".equals(caisiView)) {
         	response.sendRedirect("./providercontrol.jsp?GoToCaisiViewFromOscarView=true&year="+nowYear+"&month="+(nowMonth)+"&day="+(nowDay)+"&view=0&displaymode=day&dboperation=searchappointmentday&viewall=1");
         	return;

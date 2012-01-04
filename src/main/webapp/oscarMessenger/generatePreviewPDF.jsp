@@ -36,7 +36,7 @@
 
 
 <%
-String demographic_no = (String) request.getParameter("demographic_no");
+String demographic_no = request.getParameter("demographic_no");
 
 
 DemographicData demoData = new  DemographicData();

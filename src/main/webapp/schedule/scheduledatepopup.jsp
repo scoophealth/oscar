@@ -162,7 +162,7 @@ function upCaseCtrl(ctrl) {
           if (bMultisites) {
         		//multisite starts =====================	  
         		  SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
-        	      List<Site> sites = siteDao.getActiveSitesByProviderNo((String)request.getParameter("provider_no")); 
+        	      List<Site> sites = siteDao.getActiveSitesByProviderNo(request.getParameter("provider_no")); 
         	      siteList = new String[sites.size()+1];
         		  bgColors = new String[sites.size()+1];
         	      for (int i=0; i<sites.size(); i++) {

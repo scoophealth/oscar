@@ -43,10 +43,8 @@ public class RoleManagerAction extends BaseAdminAction {
 
 	private RolesManager rolesManager;
 
-	private LookupManager lookupManager;
-
 	public void setLookupManager(LookupManager lookupManager) {
-		this.lookupManager = lookupManager;
+		// not used
 	}
 
 	public void setLogManager(LogManager mgr) {
@@ -74,7 +72,7 @@ public class RoleManagerAction extends BaseAdminAction {
 			request.setAttribute("roles", list);
 			logManager.log("read", "full roles list", "", request);
 	
-			String scrollPosition = (String) request.getParameter("scrollPosition");
+			String scrollPosition = request.getParameter("scrollPosition");
 			if(null != scrollPosition) {
 				request.setAttribute("scrPos", scrollPosition);
 			}else{
@@ -166,7 +164,7 @@ public class RoleManagerAction extends BaseAdminAction {
 				super.getAccess(request, KeyConstants.FUN_ADMIN_ROLE,KeyConstants.ACCESS_WRITE);
 			}
 	
-			String scrollPosition = (String) request.getParameter("scrollPosition");
+			String scrollPosition = request.getParameter("scrollPosition");
 			if(null != scrollPosition) {
 				request.setAttribute("scrPos", scrollPosition);
 			}else{
@@ -306,7 +304,7 @@ public class RoleManagerAction extends BaseAdminAction {
 			ChangeFunLstTable(2, secroleForm, request);
 			request.setAttribute("secroleForEdit", "flag");
 	
-			String scrollPosition = (String) request.getParameter("scrollPosition");
+			String scrollPosition = request.getParameter("scrollPosition");
 			if(!Utility.IsEmpty(scrollPosition)) {
 				request.setAttribute("scrPos", String.valueOf(Integer.valueOf(scrollPosition).intValue()+ 50));
 			}else{
@@ -345,7 +343,7 @@ public class RoleManagerAction extends BaseAdminAction {
 			ChangeFunLstTable(1, secroleForm, request);
 			request.setAttribute("secroleForEdit", "flag");
 			
-			String scrollPosition = (String) request.getParameter("scrollPosition");
+			String scrollPosition = request.getParameter("scrollPosition");
 			if(null != scrollPosition) {
 				request.setAttribute("scrPos", scrollPosition);
 			}else{
