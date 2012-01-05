@@ -24,6 +24,7 @@
  */
 -->
 
+<%@page import="org.oscarehr.util.LocaleUtils"%>
 <%@page import="org.oscarehr.phr.util.MyOscarUtils"%>
 <%@page import="org.oscarehr.phr.PHRAuthentication"%>
 <%@page import="org.oscarehr.util.MiscUtils"%>
@@ -547,12 +548,12 @@ function popup1(height, width, url, windowName){
               <oscarProp:oscarPropertiesCheck property="MY_OSCAR" value="yes">
 				<indivo:indivoRegistered demographic="<%=moduleid%>" provider="<%=curUser%>">
 					<%
-						String onclickString="alert('Please login to MyOscar before perfoming this action.')";
+						String onclickString="alert('"+LocaleUtils.getMessage(request, "LoginToMyOscarFirst")+"')";
 
 						PHRAuthentication auth=MyOscarUtils.getPHRAuthentication(session);
 						if (auth!=null) onclickString="return submitPhrForm('SendDocToPhr.do', 'sendDocToPhr');";
 					%>
-					<input type="button" onclick="<%=onclickString%>"	value="Send To MyOscar" />
+					<input type="button" onclick="<%=onclickString%>"	value="<%=LocaleUtils.getMessage(request, "SendToMyOscar")%>" />
 
 				</indivo:indivoRegistered>
 			</oscarProp:oscarPropertiesCheck> <%
