@@ -739,7 +739,7 @@ CREATE TABLE eform_data (
   form_date date default NULL,
   form_time time default NULL,
   form_provider varchar(255) default NULL,
-  form_data mediumtext,
+  form_data mediumtext,`description_index`(`description`(20));
   patient_independent tinyint(1) not null,
   roleType varchar(50) default NULL,
   PRIMARY KEY  (fdid),
@@ -6501,7 +6501,8 @@ CREATE TABLE providerLabRouting (
   timestamp timestamp(14) NOT NULL,
   lab_type char(3) default 'MDS',
   id int(10) NOT NULL auto_increment,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY  (`id`),
+  KEY `labno_index`(`lab_no`)
 ) ; 
 
  
@@ -7239,7 +7240,8 @@ create table hl7TextInfo(
 	last_name varchar(30),
 	first_name varchar(30),
 	report_status varchar(1) NOT NULL,
-	accessionNum varchar(20)
+	accessionNum varchar(20),
+	KEY `labno_index`(`lab_no`)
 );
 
 create table hl7TextMessage(
@@ -8333,7 +8335,8 @@ CREATE TABLE `issue` (
   `type` VARCHAR(32) DEFAULT NULL,
   `sortOrderId` int NOT NULL,
   PRIMARY KEY  (`issue_id`),
-  index(code)
+  KEY `description_index`(`description`(20)),
+  KEY (`code`)
 );
 
 create table consultationRequestExt(
