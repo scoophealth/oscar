@@ -1,3 +1,6 @@
+<%@page import="org.oscarehr.phr.util.MyOscarUtils"%>
+<%@page import="org.oscarehr.phr.PHRAuthentication"%>
+<%@page import="org.oscarehr.util.LocaleUtils"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
@@ -157,7 +160,6 @@
         <link rel="stylesheet" href="<c:out value="${ctx}/share/lightwindow/css/lightwindow.css"/>" type="text/css" media="screen" />
         <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
         <!--link rel="stylesheet" type="text/css" href="modaldbox.css"  /-->
-        <script type="text/javascript" src="<c:out value="${ctx}/phr/phr.js"/>"></script>
         <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/prototype.js"/>"></script>
         <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/screen.js"/>"></script>
         <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/rx.js"/>"></script>
@@ -859,7 +861,21 @@ body {
                                                     <oscar:oscarPropertiesCheck property="MY_OSCAR" value="yes">
                                                             <indivo:indivoRegistered demographic="<%=String.valueOf(demoNo)%>" provider="<%=providerNo%>">
                                                                     &nbsp;
-                                                                    <a href="javascript: popupFocusPage(720,920,'./synchroniseWithPHR.jsp?providerNo=<%=providerNo%>&demoNo=<%=demoNo%>','PHR');">PHR</a>
+                                                  					<%
+																		PHRAuthentication auth=MyOscarUtils.getPHRAuthentication(session);
+																		if (auth!=null) 
+																		{
+																			%>
+																				<a href="send_prescriptions_to_myoscar_action.jsp"><%=LocaleUtils.getMessage(request, "SendToMyOscar")%></a>
+																			<%
+																		}
+																		else
+																		{
+																			%>
+																				<a href="#" onclick="alert('<%=LocaleUtils.getMessage(request, "LoginToMyOscarFirst")%>')"><%=LocaleUtils.getMessage(request, "SendToMyOscar")%></a>
+																			<%
+																		}
+																	%>
                                                             </indivo:indivoRegistered>
                                                     </oscar:oscarPropertiesCheck>
                                                 </div>

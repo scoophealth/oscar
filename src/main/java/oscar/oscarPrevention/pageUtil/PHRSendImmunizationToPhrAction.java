@@ -8,11 +8,13 @@ package oscar.oscarPrevention.pageUtil;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.lang.time.DateFormatUtils;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -23,6 +25,9 @@ import org.oscarehr.common.dao.PreventionDao;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.service.MyOscarMedicalDataManager;
 import org.oscarehr.myoscar_server.ws.MedicalDataType;
+import org.oscarehr.phr.PHRAuthentication;
+import org.oscarehr.phr.util.MyOscarUtils;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.XmlUtils;
 import org.w3c.dom.Document;
 
@@ -33,6 +38,7 @@ import oscar.util.StringUtils;
  * @author Ronnie Cheng
  */
 public class PHRSendImmunizationToPhrAction extends DispatchAction {
+	private static Logger logger=MiscUtils.getLogger();
 	private static final String TYPE_IMMUNIZATIONS = MedicalDataType.IMMUNISATION.name();
 	
 	private HashMap<String,String> preventionKeys = null;
@@ -54,11 +60,11 @@ public class PHRSendImmunizationToPhrAction extends DispatchAction {
 			return mapping.findForward("loginPage");
 		}
 
-		MyOscarMedicalDataManager myOscarMedicalDataManager = new MyOscarMedicalDataManager(request.getSession());
-		Integer lastId = myOscarMedicalDataManager.getLastTrackingId(demographicNo, TYPE_IMMUNIZATIONS);
+		PHRAuthentication auth=MyOscarUtils.getPHRAuthentication(request.getSession());
+		Integer lastId = MyOscarMedicalDataManager.getLastTrackingId(demographicNo, TYPE_IMMUNIZATIONS);
 
 		List<Prevention> preventionList = getPreventionDao().findByDemographicIdAfterId(demographicNo, lastId);
-		String docAsString=null, msgReturn=null;
+		String docAsString=null;
 		Integer lastSentId = null;
 		for (Prevention prevention : preventionList) {
 			
@@ -70,23 +76,25 @@ public class PHRSendImmunizationToPhrAction extends DispatchAction {
 			writeXmlExtra(doc, preventionExt);
 			docAsString = XmlUtils.toString(doc, false);
 			
-			msgReturn = myOscarMedicalDataManager.sendMedicalData(demographicNo, TYPE_IMMUNIZATIONS, docAsString, prevention.getId(), prevention.getProviderNo(), prevention.getPreventionDate());
-			if (MyOscarMedicalDataManager.SUCCESS.equals(msgReturn)) {
+			try
+			{
+				MyOscarMedicalDataManager.sendMedicalData(auth, demographicNo, TYPE_IMMUNIZATIONS, docAsString, prevention.getId(), prevention.getProviderNo(), prevention.getPreventionDate());
 				lastSentId = prevention.getId();
-			} else {
-				request.setAttribute("error_msg", "Error: " + msgReturn);
+				MyOscarMedicalDataManager.addTracking(demographicNo, TYPE_IMMUNIZATIONS, lastSentId);
+			}
+			catch (Exception e)
+			{
+				logger.error("Error", e);
+				request.setAttribute("error_msg", "Error: " + e.getMessage());
 				
-				//track the last object id sent
-				if (lastSentId!=null) myOscarMedicalDataManager.addTracking(demographicNo, TYPE_IMMUNIZATIONS, lastSentId);
 				return mapping.findForward("loginPage");
 			}
 		}
 		
 		if (preventionList.size()==0) {
 			request.setAttribute("error_msg", "No new immunization to be sent");
-		} else {
-			myOscarMedicalDataManager.addTracking(demographicNo, TYPE_IMMUNIZATIONS, lastSentId);
 		}
+		
 		return mapping.findForward("loginPage");
 	}
 	
