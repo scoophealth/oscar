@@ -22,8 +22,8 @@
 
 package org.oscarehr.common.dao;
 
-import java.util.List;
 import javax.persistence.Query;
+
 import org.oscarehr.common.model.SentToPHRTracking;
 import org.springframework.stereotype.Repository;
 
@@ -34,21 +34,13 @@ public class SentToPHRTrackingDao extends AbstractDao<SentToPHRTracking> {
 		super(SentToPHRTracking.class);
 	}
 
-	public List<SentToPHRTracking> getTrackings(Integer demographicNo, String objectName, String sentToServer) {
-		String sql = "select x from SentToPHRTracking x where x.demographicNo=?1 and x.objectName=?2 and x.sentToServer=?3 order by id desc";
+	public SentToPHRTracking findByDemographicObjectServer(Integer demographicNo, String objectName, String sentToServer) {
+		String sql = "select x from SentToPHRTracking x where x.demographicNo=?1 and x.objectName=?2 and x.sentToServer=?3";
 		Query query = entityManager.createQuery(sql);
 		query.setParameter(1, demographicNo);
 		query.setParameter(2, objectName);
 		query.setParameter(3, sentToServer);
 
-		@SuppressWarnings("unchecked")
-		List<SentToPHRTracking> trackings = query.getResultList();
-		return trackings;
-	}
-
-	public SentToPHRTracking getLastTracking(Integer demographicNo, String objectName, String sentToServer) {
-		List<SentToPHRTracking> trackings = getTrackings(demographicNo, objectName, sentToServer);
-		if (trackings.size() > 0) return trackings.get(0);
-		return null;
+		return(getSingleResultOrNull(query));
 	}
 }
