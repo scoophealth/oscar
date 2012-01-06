@@ -182,7 +182,7 @@ public class QuatroReportDao extends HibernateDaoSupport {
          
   		      sess.saveOrUpdate(rtv);
 
-              ArrayList orgs = (ArrayList)rtv.getOrgCodes();
+              ArrayList orgs = rtv.getOrgCodes();
               if (orgs != null){
                 for(int i=0;i<orgs.size();i++){
       	          LookupCodeValue orgCd = (LookupCodeValue)orgs.get(i);

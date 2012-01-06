@@ -74,7 +74,7 @@ if (request.getParameter("undelDocumentNo") != null) {
 //view  - tabs
 String view = "all";
 if (request.getParameter("view") != null) {
-    view = (String) request.getParameter("view");
+    view = request.getParameter("view");
 } else if (request.getAttribute("view") != null) {
     view = (String) request.getAttribute("view");
 }

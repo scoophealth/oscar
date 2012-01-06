@@ -343,8 +343,8 @@ public class ScatterPlotChartServlet extends HttpServlet
 	 **********************************************************************************************/
 	public void service( HttpServletRequest request, HttpServletResponse httpServletResponse ) throws ServletException, IOException
 	{		
-                String type = (String) request.getParameter("type");
-                String mInstrc = (String) request.getParameter("mInstrc");                
+                String type = request.getParameter("type");
+                String mInstrc = request.getParameter("mInstrc");                
                 EctSessionBean bean = (EctSessionBean)request.getSession().getAttribute("EctSessionBean");
                 String demographicNo = null;
                 if ( bean != null){

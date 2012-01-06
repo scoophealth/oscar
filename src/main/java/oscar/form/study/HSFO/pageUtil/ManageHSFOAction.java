@@ -76,7 +76,7 @@ public class ManageHSFOAction extends Action{
         List patientHistory = new LinkedList();
         String id = (String) request.getAttribute("demographic_no");
         if (id == null){
-            id = (String) request.getParameter("demographic_no");
+            id = request.getParameter("demographic_no");
         }
         String isfirstrecord = "";
         boolean firstrecord=false;

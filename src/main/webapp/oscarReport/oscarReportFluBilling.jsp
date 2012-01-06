@@ -42,7 +42,7 @@ int curYear = 0;
 
 String pros = "";
 if (request.getParameter("numMonth") != null ){
-	years = (String) request.getParameter("numMonth");
+	years = request.getParameter("numMonth");
 	curYear = Integer.parseInt(years);
 } else {
 	GregorianCalendar cal = new GregorianCalendar();
@@ -51,7 +51,7 @@ if (request.getParameter("numMonth") != null ){
 }
 
 if (request.getParameter("proNo") != null ){
-pros = (String) request.getParameter("proNo");
+pros = request.getParameter("proNo");
 }
 
 oscar.oscarReport.data.RptFluReportData fluData  = new oscar.oscarReport.data.RptFluReportData();

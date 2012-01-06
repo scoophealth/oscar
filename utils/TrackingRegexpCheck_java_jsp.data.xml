@@ -2542,12 +2542,12 @@
         <ViolationValue>/src/main/webapp/lab/CA/ALL/labDisplay.jsp:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/CA/ALL/labDisplayAjax.jsp:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/CA/BC/demo_select.jsp:java.sql.ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/webapp/lab/CA/BC/index.jsp:DBHandler.RunSQL(delete_linking.replaceAll("@pid", (String)request.getParameter("pid")));</ViolationValue>
+        <ViolationValue>/src/main/webapp/lab/CA/BC/index.jsp:DBHandler.RunSQL(delete_linking.replaceAll("@pid", request.getParameter("pid")));</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/CA/BC/index.jsp:DBHandler.RunSQL(insert_auto_matching);</ViolationValue>
-        <ViolationValue>/src/main/webapp/lab/CA/BC/index.jsp:DBHandler.RunSQL(insert_linking.replaceAll("@pid", (String)request.getParameter("pid")).replaceAll("@demo", (String)request.getParameter("demo_id")));</ViolationValue>
+        <ViolationValue>/src/main/webapp/lab/CA/BC/index.jsp:DBHandler.RunSQL(insert_linking.replaceAll("@pid", request.getParameter("pid")).replaceAll("@demo", request.getParameter("demo_id")));</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/CA/BC/index.jsp:DBHandler.RunSQL(update_linking.replaceAll("@pid", values[i]));</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/CA/BC/index.jsp:java.sql.ResultSet result = DBHandler.GetSQL(select_lab_matching);</ViolationValue>
-        <ViolationValue>/src/main/webapp/lab/CA/BC/report.jsp:DBHandler.RunSQL(update_doc_notes.replaceAll("@pid", pid).replaceAll("@notes", oscar.Misc.mysqlEscape((String)request.getParameter("notes"))));</ViolationValue>
+        <ViolationValue>/src/main/webapp/lab/CA/BC/report.jsp:DBHandler.RunSQL(update_doc_notes.replaceAll("@pid", pid).replaceAll("@notes", oscar.Misc.mysqlEscape(request.getParameter("notes"))));</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/CA/BC/report.jsp:DBHandler.RunSQL(update_lab_report_signed.replaceAll("@pid", sign).replaceAll("@provider_no", (String)session.getAttribute("user")));</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/CA/BC/report.jsp:DBHandler.RunSQL(update_lab_report_viewed.replaceAll("@pid", pid));</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/CA/BC/report.jsp:java.sql.ResultSet rs = DBHandler.GetSQL(select_signed.replaceAll("@pid", pid));</ViolationValue>

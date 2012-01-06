@@ -75,8 +75,8 @@ public final class RxShowAllergyAction extends DispatchAction {
         
         
         String user_no = (String) request.getSession().getAttribute("user");
-        String demo_no = (String) request.getParameter("demographicNo");
-        String view = (String) request.getParameter("view");
+        String demo_no = request.getParameter("demographicNo");
+        String view = request.getParameter("view");
         
         if(demo_no == null){
            return mapping.findForward("failure");

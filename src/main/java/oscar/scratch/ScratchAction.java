@@ -55,10 +55,10 @@ public class ScratchAction extends Action {
         //String request.getParameter("");
 
         String providerNo =  (String) request.getSession().getAttribute("user");
-        String id = (String) request.getParameter("id");
-        String dirty = (String) request.getParameter("dirty");
-        String scratchPad = (String) request.getParameter("scratchpad");
-        String windowId = (String) request.getParameter("windowId");
+        String id = request.getParameter("id");
+        String dirty = request.getParameter("dirty");
+        String scratchPad = request.getParameter("scratchpad");
+        String windowId = request.getParameter("windowId");
         String returnId = "";
         String returnText = scratchPad;
         MiscUtils.getLogger().debug("pro "+providerNo+" id "+id+" dirty "+dirty+" scatchPad "+scratchPad);

@@ -102,7 +102,7 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
         try{
 
         long start = System.currentTimeMillis();
-        String target=(String)request.getParameter("target");
+        String target=request.getParameter("target");
         if(target==null) MiscUtils.getLogger().debug("target is null");
         else if(target.equals("interactionsRx")) MiscUtils.getLogger().debug("target is interactionsRx");
         String provider = (String) request.getSession().getAttribute("user");

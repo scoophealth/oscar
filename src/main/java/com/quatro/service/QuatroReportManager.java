@@ -38,7 +38,7 @@ public class QuatroReportManager {
 
 	public ReportValue GetReport(int rptNo, String loginId) {
 		ReportValue reportValue = new ReportValue(); 
-		reportValue =(ReportValue)quatroReportDao.GetReport(rptNo, loginId);
+		reportValue =quatroReportDao.GetReport(rptNo, loginId);
 		
 //		ArrayList options= (ArrayList)quatroReportDao.GetReportOptionList(rptNo);
 //		reportValue.setOptions(options);
@@ -52,7 +52,7 @@ public class QuatroReportManager {
 
 	public ReportValue GetReport(int rptNo, int templateNo, String loginId) {
 		ReportValue reportValue = new ReportValue(); 
-		reportValue =(ReportValue)quatroReportDao.GetReport(rptNo, loginId);
+		reportValue =quatroReportDao.GetReport(rptNo, loginId);
 		
 		reportValue.setRunTime(new java.util.Date());
 

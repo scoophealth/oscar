@@ -202,7 +202,7 @@ public abstract class BaseAction extends DispatchAction {
 				throw new NoAccessException();
 			}
 		}
-		String scrollPosition = (String) request.getParameter("scrollPosition");
+		String scrollPosition = request.getParameter("scrollPosition");
 		if(null != scrollPosition) {
 			request.setAttribute("scrPos", scrollPosition);
 		}
@@ -260,7 +260,7 @@ public abstract class BaseAction extends DispatchAction {
 	protected ActionForward dispatchMethod(ActionMapping mapping, ActionForm form,HttpServletRequest request, HttpServletResponse response, String name) throws Exception
 	{
 		/*
-		String tokenP = (String) request.getParameter("token");
+		String tokenP = request.getParameter("token");
 		if ( name!= null && (name.indexOf("save")>=0 || name.indexOf("login")>=0)) {
 			String tokenS = (String) request.getSession().getAttribute("token"); 
 			if(Utility.isNotNullOrEmptyStr(tokenS)) {
@@ -305,8 +305,8 @@ public abstract class BaseAction extends DispatchAction {
         String providerNo = (String) session.getAttribute(KeyConstants.SESSION_KEY_PROVIDERNO);
         String className = this.toString();
         if(method == null) method = "unspecified";
-        if (request.getParameter("tab") != null) method = method + "(" + (String)request.getParameter("tab") + ")";
-		if(method.equals("unspecified") && request.getParameter("method") != null) method = method + "(" + (String)request.getParameter("method") + ")";
+        if (request.getParameter("tab") != null) method = method + "(" + request.getParameter("tab") + ")";
+		if(method.equals("unspecified") && request.getParameter("method") != null) method = method + "(" + request.getParameter("method") + ")";
         Integer programId = null;
         try {
         	programId = (Integer) request.getAttribute("programId");

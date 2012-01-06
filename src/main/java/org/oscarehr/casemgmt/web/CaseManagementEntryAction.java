@@ -983,7 +983,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			note.setMinuteOfEncTransportationTime(Integer.valueOf(minuteOfEncTransportationTime));
 		}
 		
-		String sign = (String) request.getParameter("sign");
+		String sign = request.getParameter("sign");
 		if (sign == null) {
 			note.setSigning_provider_no("");
 			note.setSigned(false);
@@ -1070,7 +1070,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		note.setNote(noteString);
 
 		/* add issues into notes */
-		String includeIssue = (String) request.getParameter("includeIssue");
+		String includeIssue = request.getParameter("includeIssue");
 		if (includeIssue == null || !includeIssue.equals("on")) {
 			/* set includeissue in note */
 			note.setIncludeissue(false);
@@ -2359,7 +2359,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		String demono = getDemographicNo(request);
 		request.setAttribute("demoName", getDemoName(demono));
 
-		String noteid = (String) request.getParameter("noteId");
+		String noteid = request.getParameter("noteId");
 
 		List<CaseManagementNote> history = caseManagementMgr.getHistory(noteid);
 		request.setAttribute("history", history);
@@ -2425,7 +2425,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		request.setAttribute("demoAge", getDemoAge(demono));
 		request.setAttribute("demoDOB", getDemoDOB(demono));
 
-		String noteid = (String) request.getParameter("noteId");
+		String noteid = request.getParameter("noteId");
 		CaseManagementNote note = caseManagementMgr.getNote(noteid);
 
 		request.setAttribute("history", note.getHistory());

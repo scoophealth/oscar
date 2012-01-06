@@ -17,8 +17,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.SimpleTimeZone;
-import java.util.TimeZone;
 
 import org.oscarehr.PMmodule.model.FieldDefinition;
 import org.oscarehr.util.MiscUtils;
@@ -132,7 +130,7 @@ public class Utility {
         }
     }
     
-    public static Date SetDate(int year, int month, int day) throws Exception
+    public static Date SetDate(int year, int month, int day)
     {
 	   Calendar c1 = Calendar.getInstance();
 	   c1.set(year, month , day);
@@ -376,19 +374,7 @@ public class Utility {
     	return sb.toString();
     }
     
-    private static boolean checkIfNowAtDST(String iTimezoneName){ 
-       	boolean isDST = false;
-       	TimeZone iTimezone = TimeZone.getTimeZone(iTimezoneName);
-        SimpleTimeZone stz = new SimpleTimeZone(iTimezone.getRawOffset(),
-       		iTimezoneName, Calendar.MARCH, 8, -Calendar.SUNDAY,
-            7200000, Calendar.NOVEMBER, 1, -Calendar.SUNDAY,
-            7200000, 3600000); 
-        if(stz.inDaylightTime(new Date())){
-          	isDST = true;
-        } 
-
-        return isDST;
-      } 
+ 
     public static ArrayList getTemplate(String pathLoc,String dir,String filename) {
 		FieldDefinition fDev = null; // clientImageMgr.getClientImage(demoNo);
 		ArrayList list = new ArrayList();

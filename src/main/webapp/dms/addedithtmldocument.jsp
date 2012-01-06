@@ -41,7 +41,7 @@ String mode = "";
 if (request.getAttribute("mode") != null) {
     mode = (String) request.getAttribute("mode");
 } else if (request.getParameter("mode") != null) {
-    mode = (String) request.getParameter("mode");
+    mode = request.getParameter("mode");
 }
 
 String editDocumentNo = "";
@@ -49,7 +49,7 @@ if (request.getAttribute("editDocumentNo") != null) {
     editDocumentNo = (String) request.getAttribute("editDocumentNo");
     mode = editDocumentNo;
 } else if (request.getParameter("editDocumentNo") != null) {
-    editDocumentNo = (String) request.getParameter("editDocumentNo");
+    editDocumentNo = request.getParameter("editDocumentNo");
     mode = editDocumentNo;
 }
 

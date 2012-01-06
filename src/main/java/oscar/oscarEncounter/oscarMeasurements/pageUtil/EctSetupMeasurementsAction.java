@@ -49,7 +49,7 @@ public final class EctSetupMeasurementsAction extends Action {
         HttpSession session = request.getSession();
         EctMeasurementsForm frm = (EctMeasurementsForm) form;
         
-        String groupName = (String) request.getParameter("groupName");
+        String groupName = request.getParameter("groupName");
         EctValidation ectValidation = new EctValidation();             
         String css = ectValidation.getCssPath(groupName);
         java.util.Calendar calender = java.util.Calendar.getInstance();

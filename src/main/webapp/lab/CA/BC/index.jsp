@@ -17,8 +17,8 @@
     }
 	DBHandler.RunSQL(insert_auto_matching);
     if(request.getParameter("demo_id") != null && request.getParameter("pid") != null){
-    	DBHandler.RunSQL(delete_linking.replaceAll("@pid", (String)request.getParameter("pid")));
-    	DBHandler.RunSQL(insert_linking.replaceAll("@pid", (String)request.getParameter("pid")).replaceAll("@demo", (String)request.getParameter("demo_id")));
+    	DBHandler.RunSQL(delete_linking.replaceAll("@pid", request.getParameter("pid")));
+    	DBHandler.RunSQL(insert_linking.replaceAll("@pid", request.getParameter("pid")).replaceAll("@demo", request.getParameter("demo_id")));
     }
 %>
 <!--  

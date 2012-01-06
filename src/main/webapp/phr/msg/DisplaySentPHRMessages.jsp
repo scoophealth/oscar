@@ -158,7 +158,7 @@ request.setAttribute("forwardto", request.getRequestURI());
                                             <div>
                                                 Status: <b>Logged in as <%=providerName%></b> (<%=phrAuth.getUserId()%>)
                                                 <form action="../../phr/Logout.do" name="phrLogout" method="POST"  style="margin: 0px; padding: 0px;">
-                                                    <input type="hidden" name="forwardto" value="<%=request.getServletPath()%>?method=<%=(String) request.getParameter("method")%>">
+                                                    <input type="hidden" name="forwardto" value="<%=request.getServletPath()%>?method=<%=request.getParameter("method")%>">
                                                     <center><a href="javascript: document.forms['phrLogout'].submit()">Logout</a></center>
                                                 </form>
                                             </div>
@@ -181,7 +181,7 @@ request.setAttribute("forwardto", request.getRequestURI());
                                                     </logic:present>
                                                     Status: <b>Not logged in</b><br/>
                                                     <%=providerName%> password: <input type="password" id="phrPassword" name="phrPassword" style="font-size: 8px; width: 40px;"> <a href="javascript: document.forms['phrLogin'].submit()">Login</a>
-                                                    <input type="hidden" name="forwardto" value="<%=request.getServletPath()%>?method=<%=(String) request.getParameter("method")%>">
+                                                    <input type="hidden" name="forwardto" value="<%=request.getServletPath()%>?method=<%=request.getParameter("method")%>">
                                                 </form>
                                             </div>
                                         </td>
