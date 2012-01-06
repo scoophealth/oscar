@@ -75,7 +75,7 @@ public final class MyOscarMedicalDataManager {
 	}
 
 	public static Integer getLastTrackingId(Integer demographicNo, String dataType) {
-		SentToPHRTracking lastTracking = sentToPHRTrackingDao.getLastTracking(demographicNo, dataType, MyOscarServerWebServicesManager.getMyOscarServerBaseUrl());
+		SentToPHRTracking lastTracking = sentToPHRTrackingDao.findByDemographicObjectServer(demographicNo, dataType, MyOscarServerWebServicesManager.getMyOscarServerBaseUrl());
 		if (lastTracking != null) return lastTracking.getLastObjectId();
 		return 0;
 	}
