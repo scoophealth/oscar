@@ -63,7 +63,7 @@ function BackToOscar()
       if (request.getAttribute("groupNo") != null){
          grpNo = (String) request.getAttribute("groupNo");
       }else{
-         grpNo = (String) request.getParameter("groupNo");
+         grpNo = request.getParameter("groupNo");
       }
 
    }else{

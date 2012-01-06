@@ -15,7 +15,7 @@
 	sign = request.getParameter("cmd_sign"),
 	save = request.getParameter("cmd_save");
 	if(null != save){
-		DBHandler.RunSQL(update_doc_notes.replaceAll("@pid", pid).replaceAll("@notes", oscar.Misc.mysqlEscape((String)request.getParameter("notes"))));
+		DBHandler.RunSQL(update_doc_notes.replaceAll("@pid", pid).replaceAll("@notes", oscar.Misc.mysqlEscape(request.getParameter("notes"))));
 	}
 	if(null != sign){
 		DBHandler.RunSQL(update_lab_report_signed.replaceAll("@pid", sign).replaceAll("@provider_no", (String)session.getAttribute("user")));

@@ -165,7 +165,7 @@ public class InfirmAction extends BaseAction
 		List filteredDemographicBeans = new ArrayList();
 		if( request.getParameter("infirmaryView_clientStatusId") != null) {		
 			//int statusId = new Integer(request.getParameter("infirmaryView_clientStatusId")).intValue();
-			String statusId = (String) request.getParameter("infirmaryView_clientStatusId");
+			String statusId = request.getParameter("infirmaryView_clientStatusId");
 			if(statusId.equals("0")){
 				filteredDemographicBeans = demographicBeans;
 			}

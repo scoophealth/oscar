@@ -1040,7 +1040,7 @@ public class ClientManagerAction extends BaseAction {
 		jadmission.setProviderNo((String) request.getSession().getAttribute("user"));
 		jadmission.setTypeId(new Long(type));
 		clientManager.saveJointAdmission(jadmission);
-		setEditAttributes(form, request, (String) request.getParameter("clientId"));
+		setEditAttributes(form, request, request.getParameter("clientId"));
 
 		return mapping.findForward("edit");
 	}
@@ -1048,7 +1048,7 @@ public class ClientManagerAction extends BaseAction {
 	public ActionForward remove_joint_admission(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		String clientId = request.getParameter("dependentClientId");
 		clientManager.removeJointAdmission(new Long(clientId), (String) request.getSession().getAttribute("user"));
-		setEditAttributes(form, request, (String) request.getParameter("clientId"));
+		setEditAttributes(form, request, request.getParameter("clientId"));
 		return mapping.findForward("edit");
 	}
 

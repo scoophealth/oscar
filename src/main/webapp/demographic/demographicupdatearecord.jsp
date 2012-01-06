@@ -87,7 +87,7 @@
 	  param[26]=request.getParameter("title");
 	  param[27]=request.getParameter("official_lang");
 	  param[28]=request.getParameter("spoken_lang");
-	  param[29]=(String)request.getParameter("roster_termination_reason");
+	  param[29]=request.getParameter("roster_termination_reason");
 	  param[30]=(String)session.getAttribute("user");
 	
 		java.sql.Date [] dtparam = new java.sql.Date[7];

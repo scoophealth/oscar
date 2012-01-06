@@ -64,7 +64,7 @@
   if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
   	n_t_w_w = (String) session.getAttribute("newticklerwarningwindow");
   }
-  boolean caisi = Boolean.valueOf((String)request.getParameter("caisi")).booleanValue();
+  boolean caisi = Boolean.valueOf(request.getParameter("caisi")).booleanValue();
   
   String form = null;
   String elementName = null;

@@ -34,22 +34,22 @@ if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.
    
 String url = "";
 if (request.getParameter("url") != null) 
-    url = (String) request.getParameter("url");
+    url = request.getParameter("url");
 String groupView = "";
 if (request.getParameter("group_view") != null) 
-    groupView = (String) request.getParameter("groupView");
+    groupView = request.getParameter("groupView");
 String demographic_no = "";
 if (request.getParameter("demographic_no") != null) 
-    demographic_no = (String) request.getParameter("demographic_no");
+    demographic_no = request.getParameter("demographic_no");
 String patientGroups = "";
 if (request.getParameter("patientGroups") != null) 
-    patientGroups = (String) request.getParameter("patientGroups");
+    patientGroups = request.getParameter("patientGroups");
 String apptProvider = "";
 if (request.getParameter("apptProvider") != null)
-	apptProvider = (String) request.getParameter("apptProvider");
+	apptProvider = request.getParameter("apptProvider");
 String appointment = "";
 if (request.getParameter("appointment") != null)
-	appointment = (String) request.getParameter("appointment");
+	appointment = request.getParameter("appointment");
     
 String parentAjaxId = request.getParameter("parentAjaxId");
 

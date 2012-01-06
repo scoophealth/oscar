@@ -123,7 +123,7 @@ public class PassIntakeFormVars
 			session.setAttribute("providerNo", "0");
 		}
 
-		clientDateOfBirth = (String)request.getParameter("clientDateOfBirth");
+		clientDateOfBirth = request.getParameter("clientDateOfBirth");
 		if (clientDateOfBirth == null || clientDateOfBirth.equals(""))
 		{
 			if (request.getAttribute("clientDateOfBirth") != null)
@@ -137,7 +137,7 @@ public class PassIntakeFormVars
 			}
 		}
 
-		healthCardNum = (String)request.getParameter("healthCardNum");
+		healthCardNum = request.getParameter("healthCardNum");
 		if (healthCardNum == null || healthCardNum.equals(""))
 		{
 			if (request.getAttribute("healthCardNum") != null)
@@ -152,7 +152,7 @@ public class PassIntakeFormVars
 			}
 		}
 
-		healthCardVer = (String)request.getParameter("healthCardVer");
+		healthCardVer = request.getParameter("healthCardVer");
 		if (healthCardVer == null || healthCardVer.equals(""))
 		{
 			if (request.getAttribute("healthCardVer") != null)

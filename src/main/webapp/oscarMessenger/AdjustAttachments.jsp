@@ -59,7 +59,7 @@ oscar.oscarMessenger.pageUtil.MsgSessionBean bean = (oscar.oscarMessenger.pageUt
     }
 
     String xmlDoc = oscar.oscarMessenger.docxfer.util.MsgCommxml.decode64(request.getParameter("xmlDoc"));
-    String idEnc = (String) request.getParameter("id");
+    String idEnc = request.getParameter("id");
 
     String sXML = MsgCommxml.toXML(new MsgSendDocument().parseChecks(xmlDoc, checks));
 

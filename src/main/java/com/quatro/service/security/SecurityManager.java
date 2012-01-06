@@ -50,7 +50,7 @@ public class SecurityManager {
 	
     public String GetAccess(String functioncd, String orgcd)
     {
-        String privilege = this.ACCESS_NONE;
+        String privilege = ACCESS_NONE;
         LookupCodeValue lcv=lookupManager.GetLookupCode("ORG", orgcd);
         String codecsv="";
         if(lcv !=null)   codecsv= lcv.getCodecsv();
@@ -83,13 +83,13 @@ public class SecurityManager {
         	;
         }
 
-        if(privilege==null || privilege.equals(this.ACCESS_NONE)) {
+        if(privilege==null || privilege.equals(ACCESS_NONE)) {
         	if (functioncd.equals(KeyConstants.FUN_CLIENTHEALTHSAFETY)) {
-        		privilege = this.ACCESS_READ;
+        		privilege = ACCESS_READ;
         	}
         	else
         	{
-        		privilege = this.ACCESS_NONE;
+        		privilege = ACCESS_NONE;
         	}
         }
         return privilege;

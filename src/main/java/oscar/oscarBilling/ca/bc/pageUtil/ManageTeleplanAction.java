@@ -89,8 +89,8 @@ public class ManageTeleplanAction extends DispatchAction {
            HttpServletRequest request, HttpServletResponse response)
            throws Exception {
            log.debug("SET USER NA<E ACTION JACKSON");
-           String username = (String) request.getParameter("user");
-           String password = (String) request.getParameter("pass");
+           String username = request.getParameter("user");
+           String password = request.getParameter("pass");
            
            log.debug("username "+username+" password "+password);
            
@@ -331,7 +331,7 @@ public class ManageTeleplanAction extends DispatchAction {
            HttpServletRequest request, HttpServletResponse response)
            throws Exception {
            log.debug("setSequenceNumber");
-           String sequence = (String) request.getParameter("num");
+           String sequence = request.getParameter("num");
            int sequenceNumber = -1;
            try{
             sequenceNumber = Integer.parseInt(sequence);
@@ -355,7 +355,7 @@ public class ManageTeleplanAction extends DispatchAction {
            HttpServletRequest request, HttpServletResponse response)
            throws Exception {
            log.debug("sendFile Start");
-           String id  = (String) request.getParameter("id");
+           String id  = request.getParameter("id");
            
            TeleplanUserPassDAO dao = new TeleplanUserPassDAO();
            String[] userpass = dao.getUsernamePassword();
@@ -430,7 +430,7 @@ public class ManageTeleplanAction extends DispatchAction {
     public ActionForward setPass(ActionMapping mapping, ActionForm  form,
            HttpServletRequest request, HttpServletResponse response)
            throws Exception {
-           String newpass  = (String) request.getParameter("newpass");
+           String newpass  = request.getParameter("newpass");
            TeleplanUserPassDAO dao = new TeleplanUserPassDAO();
            dao.saveUpdatePasssword(newpass);
            return mapping.findForward("success");
@@ -441,8 +441,8 @@ public class ManageTeleplanAction extends DispatchAction {
            HttpServletRequest request, HttpServletResponse response)
            throws Exception {
            
-           String newpass  = (String) request.getParameter("newpass");
-           String confpass = (String) request.getParameter("confpass");
+           String newpass  = request.getParameter("newpass");
+           String confpass = request.getParameter("confpass");
            
            //TODO: validate username - make sure url is not null
            

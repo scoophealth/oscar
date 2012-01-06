@@ -47,7 +47,7 @@ public class UserAccessManager
     	secManager.setUserFunctionAccessList(functionList);
     	List orgs = _dao.GetUserOrgAccessList(providerNo,shelterId);
     	String orgRoot = OscarProperties.getInstance().getProperty("ORGROOT");
-    	if(orgs.size() > 0 && orgRoot!=null && orgRoot.equals((String) orgs.get(0))) 
+    	if(orgs.size() > 0 && orgRoot!=null && orgRoot.equals(orgs.get(0))) 
     	{
     		orgs.clear();
     	}

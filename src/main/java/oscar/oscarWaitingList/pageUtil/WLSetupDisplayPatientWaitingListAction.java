@@ -47,7 +47,7 @@ public final class WLSetupDisplayPatientWaitingListAction extends Action {
                                  HttpServletResponse response)
         throws Exception {
         
-        String demographicNo = (String) request.getParameter("demographic_no");
+        String demographicNo = request.getParameter("demographic_no");
         DemographicData demoData = new DemographicData();
         DemographicData.Demographic demo = demoData.getDemographic(demographicNo);
         String demoInfo = demo.getLastName() + ", " + demo.getFirstName() + " " + demo.getSex() + " " + demo.getAge();

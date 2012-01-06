@@ -122,7 +122,7 @@ public class UserManagerAction extends BaseAdminAction {
 			secForm.set("secUserRoleLst", profilelist);
 	//		logManager.log("read", "full secuserroles list", "", request);
 	
-			String scrollPosition = (String) request.getParameter("scrollPosition");
+			String scrollPosition = request.getParameter("scrollPosition");
 			if(null != scrollPosition) {
 				request.setAttribute("scrPos", scrollPosition);
 			}else{
@@ -336,7 +336,7 @@ public class UserManagerAction extends BaseAdminAction {
 	}
 	// all users can change their own password
 	public ActionForward changePassword(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response) throws NoAccessException {
+			HttpServletRequest request, HttpServletResponse response) {
 
 		DynaActionForm secuserForm = (DynaActionForm) form;
 
@@ -348,7 +348,7 @@ public class UserManagerAction extends BaseAdminAction {
 	}
 	
 	public ActionForward savePassword(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response) throws NoAccessException {
+			HttpServletRequest request, HttpServletResponse response) {
 		
 		ActionMessages messages = new ActionMessages();
 
@@ -479,7 +479,7 @@ public class UserManagerAction extends BaseAdminAction {
 		
 		changeRoleLstTable(2, secuserForm, request);
 
-		String scrollPosition = (String) request.getParameter("scrollPosition");
+		String scrollPosition = request.getParameter("scrollPosition");
 		if(!"".equals(scrollPosition)) {
 			request.setAttribute("scrPos", String.valueOf(Integer.valueOf(scrollPosition).intValue()+ 50));
 		}else{
@@ -498,7 +498,7 @@ public class UserManagerAction extends BaseAdminAction {
 		DynaActionForm secroleForm = (DynaActionForm) form;
 		changeRoleLstTable(1, secroleForm, request);
 
-		String scrollPosition = (String) request.getParameter("scrollPosition");
+		String scrollPosition = request.getParameter("scrollPosition");
 		if(null != scrollPosition) {
 			request.setAttribute("scrPos", scrollPosition);
 		}else{

@@ -58,7 +58,7 @@
 	n_t_w_w = (String) session.getAttribute("newticklerwarningwindow");
   }
 
-  boolean caisi = Boolean.valueOf((String)request.getParameter("caisi")).booleanValue();
+  boolean caisi = Boolean.valueOf(request.getParameter("caisi")).booleanValue();
 %>
 <html>
 <head>

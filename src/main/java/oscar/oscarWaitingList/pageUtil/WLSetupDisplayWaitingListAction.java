@@ -86,7 +86,7 @@ public final class WLSetupDisplayWaitingListAction extends Action {
         
         
         if(request.getParameter("waitingListId") != null){
-        	waitingListId = (String) request.getParameter("waitingListId");
+        	waitingListId = request.getParameter("waitingListId");
         }
         
         log.debug("WLSetupDisplayWaitingListAction/execute(): waitingListId = "+ waitingListId);

@@ -41,7 +41,7 @@ String editDocumentNo = "";
 if (request.getAttribute("editDocumentNo") != null) {
     editDocumentNo = (String) request.getAttribute("editDocumentNo");
 } else {
-    editDocumentNo = (String) request.getParameter("editDocumentNo");
+    editDocumentNo = request.getParameter("editDocumentNo");
 }
 
 String module = "";

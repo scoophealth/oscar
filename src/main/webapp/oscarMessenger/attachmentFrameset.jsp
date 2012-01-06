@@ -7,7 +7,7 @@
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <%
-String demographic_no = (String) request.getParameter("demographic_no");
+String demographic_no = request.getParameter("demographic_no");
 %>
 
 <title>OSCAR attachment</title>

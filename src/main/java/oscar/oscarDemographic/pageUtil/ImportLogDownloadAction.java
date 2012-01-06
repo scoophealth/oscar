@@ -52,7 +52,7 @@ public class ImportLogDownloadAction extends Action {
    
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws FileNotFoundException, IOException {
 
-	String importLog = (String) request.getParameter("importlog");
+	String importLog = request.getParameter("importlog");
 	File importLogFile = new File(importLog);
 	InputStream in = new FileInputStream(importLog);
 	OutputStream out = response.getOutputStream();

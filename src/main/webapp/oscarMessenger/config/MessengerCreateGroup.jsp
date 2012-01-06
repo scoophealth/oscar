@@ -94,11 +94,11 @@ function BackToOscar()
                                     String levelOrGroup = new String();
                                 if (request.getParameter("Level") != null){
                                       style=1;
-                                      levelOrGroup = (String) request.getParameter("Level");
+                                      levelOrGroup = request.getParameter("Level");
                                 %> <bean:message
 					key="oscarMessenger.config.MessengerCreateGroup.msgAddGroup" /> <%}else if(request.getParameter("Group") != null){
                                       style =2;
-                                      levelOrGroup = (String) request.getParameter("Group");
+                                      levelOrGroup = request.getParameter("Group");
                                 %> <bean:message
 					key="oscarMessenger.config.MessengerCreateGroup.msgRenameGroup" />
 				<%}else{
