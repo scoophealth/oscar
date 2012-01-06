@@ -60,36 +60,23 @@ public final class MyOscarMedicalDataManager {
 		}
 		medicalDataTransfer.setObserverOfDataPersonName(getProviderName(observerOscarId));
 
-		// set date of medical data
+		// set date of medical data, can not be null, how can we have data which we don't know when it's from?
 		GregorianCalendar cal = new GregorianCalendar();
-		if (dateOfData != null) {
-			cal.setTime(dateOfData);
-		}
+		cal.setTime(dateOfData);
 		medicalDataTransfer.setDateOfData(cal);
 
 		medicalDataTransfer.setData(medicalData);
-		medicalDataTransfer.setOriginalSourceId(loggedInInfo.currentFacility.getName() + ":" + dataType + ":" + objectId);
+		medicalDataTransfer.setOriginalSourceId(generateSourceId(loggedInInfo.currentFacility.getName(), dataType, objectId));
 		medicalDataWs.addMedicalData2(medicalDataTransfer);
 
 		logging(dataType, objectId, "content=" + medicalData);
 	}
 
-	public static Integer getLastTrackingId(Integer demographicNo, String dataType) {
-		SentToPHRTracking lastTracking = sentToPHRTrackingDao.findByDemographicObjectServer(demographicNo, dataType, MyOscarServerWebServicesManager.getMyOscarServerBaseUrl());
-		if (lastTracking != null) return lastTracking.getLastObjectId();
-		return 0;
+	public static String generateSourceId(String facilityName, String dataType, Object objectId)
+	{
+		return(facilityName + ':' + dataType + ':' + objectId);
 	}
-
-	public static void addTracking(Integer demographicNo, String dataType, Integer objectId) {
-		SentToPHRTracking tracking = new SentToPHRTracking();
-		tracking.setDemographicNo(demographicNo);
-		tracking.setObjectName(dataType);
-		tracking.setLastObjectId(objectId);
-		tracking.setSentDatetime(new Date());
-		tracking.setSentToServer(MyOscarServerWebServicesManager.getMyOscarServerBaseUrl());
-		sentToPHRTrackingDao.persist(tracking);
-	}
-
+	
 	private static MedicalDataTransfer2 createMedicalDataTransfer(String dataType) {
 		MedicalDataTransfer2 medicalDataTransfer = new MedicalDataTransfer2();
 		medicalDataTransfer.setMedicalDataType(dataType);
@@ -111,5 +98,28 @@ public final class MyOscarMedicalDataManager {
 		remoteDataLog.setAction(RemoteDataLog.Action.SEND);
 		remoteDataLog.setDocumentContents("id=" + objectId + ", " + dataContentsDescription);
 		remoteDataLogDao.persist(remoteDataLog);
+	}
+	
+	/**
+	 * This method will get the existing SentToPHRTracking entry or it will create a new one if no prior exists.
+	 * If a new one is created the lastObjectId will be initialised to 0 and the sentDatetime will be set to time 0 as well.
+	 */
+	public static SentToPHRTracking getExistingOrCreateInitialSentToPHRTracking(Integer demographicNo, String dataType, String server)
+	{
+		SentToPHRTracking lastTracking = sentToPHRTrackingDao.findByDemographicObjectServer(demographicNo, dataType, server);
+		
+		if (lastTracking == null)
+		{
+			lastTracking=new SentToPHRTracking();
+			lastTracking.setDemographicNo(demographicNo);
+			lastTracking.setLastObjectId(0);
+			lastTracking.setObjectName(dataType);
+			lastTracking.setSentDatetime(new Date(0)); // set to beginning of time to not confuse any algorithms trying to figure out if it's an update or create.
+			lastTracking.setSentToServer(server);
+			
+			sentToPHRTrackingDao.persist(lastTracking);
+		}
+		
+		return(lastTracking);
 	}
 }
