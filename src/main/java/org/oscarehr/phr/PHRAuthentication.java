@@ -32,20 +32,16 @@ import java.util.Date;
 
 import javax.persistence.Transient;
 
-import org.apache.log4j.Logger;
 import org.indivo.xml.attributes.RoleType;
 import org.indivo.xml.phr.types.AuthorType;
 import org.indivo.xml.talk.AuthenticateResultType;
-import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarEncounter.data.EctProviderData;
 
-public class PHRAuthentication
+public final class PHRAuthentication
 {
-
 	public static final String SESSION_PHR_AUTH = "PHR_AUTH";
 
-	private static Logger logger = MiscUtils.getLogger();
 	AuthenticateResultType authResult = null;
 	String providerNo = null;
 
@@ -62,7 +58,6 @@ public class PHRAuthentication
 
 	public PHRAuthentication(AuthenticateResultType authResult)
 	{
-		this();
 		this.authResult = authResult;
 	}
 	
@@ -159,5 +154,10 @@ public class PHRAuthentication
 	public void setMyOscarPassword(String myOscarPassword)
 	{
 		this.myOscarPassword = myOscarPassword;
+	}
+	
+	public boolean isloggedIn()
+	{
+		return(myOscarUserId!=null && myOscarPassword!=null);
 	}
 }

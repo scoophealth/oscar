@@ -497,7 +497,7 @@ function popup1(height, width, url, windowName){
 	                         <%
 	                         } 
 			    			
-			    			 if(!moduleid.equals((String)session.getAttribute("user"))) {
+			    			 if(!moduleid.equals(session.getAttribute("user"))) {
 	                              
 	                              String tickler_url;
 		                          if( org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable() ) {
@@ -542,23 +542,22 @@ function popup1(height, width, url, windowName){
 				onClick="window.print()"> <input type="button"
 				value="<bean:message key="dms.documentReport.btnCombinePDF"/>"
 				onclick="return submitForm('<rewrite:reWrite jspPage="combinePDFs.do"/>');" />
-			<%
+				<%
                     if( module.equals("demographic") ) {
-              %> 
-              <oscarProp:oscarPropertiesCheck property="MY_OSCAR" value="yes">
-				<indivo:indivoRegistered demographic="<%=moduleid%>" provider="<%=curUser%>">
-					<%
-						String onclickString="alert('"+LocaleUtils.getMessage(request, "LoginToMyOscarFirst")+"')";
 
-						PHRAuthentication auth=MyOscarUtils.getPHRAuthentication(session);
-						if (auth!=null) onclickString="return submitPhrForm('SendDocToPhr.do', 'sendDocToPhr');";
-					%>
-					<input type="button" onclick="<%=onclickString%>"	value="<%=LocaleUtils.getMessage(request, "SendToMyOscar")%>" />
+                  	  if (MyOscarUtils.isVisibleMyOscarSendButton())
+                  	  {
+       						String onclickString="alert('"+LocaleUtils.getMessage(request, "LoginToMyOscarFirst")+"')";
 
-				</indivo:indivoRegistered>
-			</oscarProp:oscarPropertiesCheck> <%
+      						PHRAuthentication auth=MyOscarUtils.getPHRAuthentication(session);
+      						if (auth!=null) onclickString="return submitPhrForm('SendDocToPhr.do', 'sendDocToPhr');";
+      						
+	      					%>
+	      					<input type="button" <%=MyOscarUtils.getDisabledStringForMyOscarSendButton(auth, Integer.parseInt(demographicNo))%> value="<%=LocaleUtils.getMessage(request, "SendToMyOscar")%>" />
+							<%                  		  
+                  	  }
                     }
-              %>
+             	%> 
 			</div>
 		</html:form></td>
 	</tr>

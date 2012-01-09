@@ -240,4 +240,13 @@ public final class WebUtils {
 		if (b) return("selected=\"selected\"");
 		else return("");
 	}
+
+	/**
+	 * @return the html string to disable a button or component if !enabled
+	 */
+	public static String getDisabledString(boolean enabled)
+	{
+		if (!enabled) return("disabled=\"disabled\"");
+		else return("");
+	}
 }

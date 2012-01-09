@@ -28,9 +28,6 @@ import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarProvider.data.ProviderMyOscarIdData;
 
-/**
- * @author Ronnie Cheng
- */
 public final class MyOscarMedicalDataManager {
 	private static final DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
 	private static final ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");

@@ -48,10 +48,8 @@
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
 <%
             oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) pageContext.findAttribute("bean");
-%>
 
-<%
-            String usefav=request.getParameter("usefav");
+			String usefav=request.getParameter("usefav");
             String favid=request.getParameter("favid");
             int demoNo=bean.getDemographicNo();
             String providerNo=bean.getProviderNo();
@@ -858,26 +856,26 @@ body {
                                                     <a href="javascript:popupWindow(720,920,'chartDrugProfile.jsp?demographic_no=<%=demoNo%>','PrintDrugProfile2')">Timeline Drug Profile</a>
                                                     &nbsp;&nbsp;
                                                     <a href="javascript: void(0);" onclick="callReplacementWebService('GetmyDrugrefInfo.do?method=view','interactionsRxMyD');" >DS run</a>
-                                                    <oscar:oscarPropertiesCheck property="MY_OSCAR" value="yes">
-                                                            <indivo:indivoRegistered demographic="<%=String.valueOf(demoNo)%>" provider="<%=providerNo%>">
-                                                                    &nbsp;
-                                                  					<%
-																		PHRAuthentication auth=MyOscarUtils.getPHRAuthentication(session);
-																		if (auth!=null) 
-																		{
-																			%>
-																				<a href="send_prescriptions_to_myoscar_action.jsp"><%=LocaleUtils.getMessage(request, "SendToMyOscar")%></a>
-																			<%
-																		}
-																		else
-																		{
-																			%>
-																				<a href="#" onclick="alert('<%=LocaleUtils.getMessage(request, "LoginToMyOscarFirst")%>')"><%=LocaleUtils.getMessage(request, "SendToMyOscar")%></a>
-																			<%
-																		}
+                                                    &nbsp;&nbsp;
+													<%
+									                  	  if (MyOscarUtils.isVisibleMyOscarSendButton())
+									                  	  {
+																PHRAuthentication auth=MyOscarUtils.getPHRAuthentication(session);
+									                  		  	boolean enabledMyOscarButton=MyOscarUtils.isMyOscarSendButtonEnabled(auth, Integer.valueOf(demoNo));
+																if (enabledMyOscarButton) 
+																{
 																	%>
-                                                            </indivo:indivoRegistered>
-                                                    </oscar:oscarPropertiesCheck>
+																		<a href="send_prescriptions_to_myoscar_action.jsp"><%=LocaleUtils.getMessage(request, "SendToMyOscar")%></a>
+																	<%
+																}
+																else
+																{
+																	%>
+																		<span style="color:grey;text-decoration:underline"><%=LocaleUtils.getMessage(request, "SendToMyOscar")%></span>
+																	<%
+																}
+									                  	  }
+									             	%> 
                                                 </div>
 
                                             </td>
