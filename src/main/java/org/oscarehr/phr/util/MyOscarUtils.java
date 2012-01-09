@@ -2,6 +2,7 @@ package org.oscarehr.phr.util;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.Demographic;
@@ -13,6 +14,9 @@ import org.oscarehr.phr.PHRAuthentication;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.QueueCache;
 import org.oscarehr.util.SpringUtils;
+import org.oscarehr.util.WebUtils;
+
+import oscar.OscarProperties;
 
 public class MyOscarUtils
 {
@@ -99,4 +103,45 @@ public class MyOscarUtils
 		return (PHRAuthentication) (session.getAttribute(PHRAuthentication.SESSION_PHR_AUTH));
 	}
 	
+	
+	/**
+	 * @return true if the myoscar send button should be displayed, false otherwise.
+	 */
+	public static boolean isVisibleMyOscarSendButton()
+	{
+		OscarProperties properties=OscarProperties.getInstance();
+		String myOscarModule=properties.getProperty("MY_OSCAR");
+		if (myOscarModule!=null) myOscarModule=myOscarModule.toLowerCase();
+		myOscarModule=StringUtils.trimToNull(myOscarModule);
+		boolean module=("yes".equals(myOscarModule) || "true".equals(myOscarModule));
+		
+		return(module);
+	}
+	
+	public static String getDisabledStringForMyOscarSendButton(PHRAuthentication auth, Integer demographicId)
+	{
+		boolean enabled=isMyOscarSendButtonEnabled(auth, demographicId);
+		
+		return(WebUtils.getDisabledString(enabled));
+	}
+
+	public static String getDisabledStringForMyOscarSendButton(PHRAuthentication auth, Demographic demographic)
+	{
+		boolean enabled=isMyOscarSendButtonEnabled(auth, demographic);
+		
+		return(WebUtils.getDisabledString(enabled));
+	}
+	
+	public static boolean isMyOscarSendButtonEnabled(PHRAuthentication auth, Integer demographicId)
+	{
+		DemographicDao demographicDao=(DemographicDao) SpringUtils.getBean("demographicDao");
+		Demographic demographic=demographicDao.getDemographicById(demographicId);
+		
+		return(auth!=null && auth.isloggedIn() && demographic!=null && demographic.getMyOscarUserName()!=null);
+	}
+
+	public static boolean isMyOscarSendButtonEnabled(PHRAuthentication auth, Demographic demographic)
+	{
+		return(auth!=null && auth.isloggedIn() && demographic!=null && demographic.getMyOscarUserName()!=null);
+	}
 }
