@@ -5,6 +5,7 @@
 
 package oscar.oscarPrevention.pageUtil;
 
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
@@ -22,12 +23,16 @@ import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.PreventionDao;
+import org.oscarehr.common.dao.SentToPHRTrackingDao;
 import org.oscarehr.common.model.Prevention;
+import org.oscarehr.common.model.SentToPHRTracking;
 import org.oscarehr.common.service.MyOscarMedicalDataManager;
 import org.oscarehr.myoscar_server.ws.MedicalDataType;
 import org.oscarehr.phr.PHRAuthentication;
+import org.oscarehr.phr.util.MyOscarServerWebServicesManager;
 import org.oscarehr.phr.util.MyOscarUtils;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.XmlUtils;
 import org.w3c.dom.Document;
 
@@ -40,7 +45,8 @@ import oscar.util.StringUtils;
 public class PHRSendImmunizationToPhrAction extends DispatchAction {
 	private static Logger logger=MiscUtils.getLogger();
 	private static final String TYPE_IMMUNIZATIONS = MedicalDataType.IMMUNISATION.name();
-	
+	private static final SentToPHRTrackingDao sentToPHRTrackingDao = (SentToPHRTrackingDao) SpringUtils.getBean("sentToPHRTrackingDao");
+
 	private HashMap<String,String> preventionKeys = null;
 	private PreventionDao preventionDao;
 	private ProviderDao providerDao;
@@ -61,11 +67,13 @@ public class PHRSendImmunizationToPhrAction extends DispatchAction {
 		}
 
 		PHRAuthentication auth=MyOscarUtils.getPHRAuthentication(request.getSession());
-		Integer lastId = MyOscarMedicalDataManager.getLastTrackingId(demographicNo, TYPE_IMMUNIZATIONS);
-
-		List<Prevention> preventionList = getPreventionDao().findByDemographicIdAfterId(demographicNo, lastId);
+		SentToPHRTracking sentToPHRTracking = MyOscarMedicalDataManager.getExistingOrCreateInitialSentToPHRTracking(demographicNo, TYPE_IMMUNIZATIONS, MyOscarServerWebServicesManager.getMyOscarServerBaseUrl());
+		
+		// new sync time needs to be set at the beginning of sync jst in case there's updates at the same time as the sync.
+		sentToPHRTracking.setSentDatetime(new Date());
+		
+		List<Prevention> preventionList = getPreventionDao().findByDemographicIdAfterId(demographicNo, sentToPHRTracking.getLastObjectId());
 		String docAsString=null;
-		Integer lastSentId = null;
 		for (Prevention prevention : preventionList) {
 			
 			//create immunization xml
@@ -79,8 +87,8 @@ public class PHRSendImmunizationToPhrAction extends DispatchAction {
 			try
 			{
 				MyOscarMedicalDataManager.sendMedicalData(auth, demographicNo, TYPE_IMMUNIZATIONS, docAsString, prevention.getId(), prevention.getProviderNo(), prevention.getPreventionDate());
-				lastSentId = prevention.getId();
-				MyOscarMedicalDataManager.addTracking(demographicNo, TYPE_IMMUNIZATIONS, lastSentId);
+				sentToPHRTracking.setLastObjectId(prevention.getId());
+				sentToPHRTrackingDao.merge(sentToPHRTracking);
 			}
 			catch (Exception e)
 			{
