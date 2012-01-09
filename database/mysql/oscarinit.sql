@@ -739,7 +739,7 @@ CREATE TABLE eform_data (
   form_date date default NULL,
   form_time time default NULL,
   form_provider varchar(255) default NULL,
-  form_data mediumtext,`description_index`(`description`(20));
+  form_data mediumtext,
   patient_independent tinyint(1) not null,
   roleType varchar(50) default NULL,
   PRIMARY KEY  (fdid),
