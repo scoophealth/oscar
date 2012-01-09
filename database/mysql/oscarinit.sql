@@ -8610,6 +8610,6 @@ CREATE TABLE `SentToPHRTracking` (
   `lastObjectId` int(10) NOT NULL,
   `sentDatetime` datetime NOT NULL,
   `sentToServer` varchar(60) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `demographicNo` (`demographicNo`,`objectName`,`sentToServer`)
 );
-
