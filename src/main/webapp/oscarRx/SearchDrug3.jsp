@@ -865,7 +865,7 @@ body {
 																if (enabledMyOscarButton) 
 																{
 																	%>
-																		<a href="send_prescriptions_to_myoscar_action.jsp"><%=LocaleUtils.getMessage(request, "SendToMyOscar")%></a>
+																		<a href="send_prescriptions_to_myoscar_action.jsp?demographicId=<%=demoNo%>"><%=LocaleUtils.getMessage(request, "SendToMyOscar")%></a>
 																	<%
 																}
 																else

@@ -18,7 +18,7 @@ import org.oscarehr.util.WebUtils;
 
 import oscar.OscarProperties;
 
-public class MyOscarUtils
+public final class MyOscarUtils
 {
 	private static QueueCache<String, Long> userNameToIdCache=new QueueCache<String, Long>(4, 100, DateUtils.MILLIS_PER_HOUR);
 	private static QueueCache<Long, String> userIdToNameCache=new QueueCache<Long, String>(4, 100, DateUtils.MILLIS_PER_HOUR);
