@@ -145,6 +145,12 @@ public final class XmlUtils
 		parentNode.appendChild(child);
 	}
 
+	public static void appendChildToRootIgnoreNull(Document doc, String childName, String childContents)
+	{
+		if (childContents==null) return;
+		appendChildToRoot(doc, childName, childContents);
+	}
+
 	public static void replaceChild(Document doc, Node parentNode, String childName, String childContents)
 	{
 		Node node=getChildNode(parentNode, childName);

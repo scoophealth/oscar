@@ -32,8 +32,6 @@ import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.OcanSubmissionLog;
 import org.oscarehr.PMmodule.web.OcanForm;
 import org.oscarehr.common.dao.FacilityDao;
-import org.oscarehr.common.dao.OcanClientFormDao;
-import org.oscarehr.common.dao.OcanClientFormDataDao;
 import org.oscarehr.common.dao.OcanConnexOptionDao;
 import org.oscarehr.common.dao.OcanStaffFormDao;
 import org.oscarehr.common.dao.OcanStaffFormDataDao;
@@ -42,10 +40,9 @@ import org.oscarehr.common.model.OcanClientForm;
 import org.oscarehr.common.model.OcanClientFormData;
 import org.oscarehr.common.model.OcanStaffForm;
 import org.oscarehr.common.model.OcanStaffFormData;
-import org.oscarehr.ocan.ActionDocument;
-import org.oscarehr.ocan.OCANv2SubmissionFileDocument;
 import org.oscarehr.ocan.AboriginalOriginDocument.AboriginalOrigin;
 import org.oscarehr.ocan.AcceptedDocument.Accepted;
+import org.oscarehr.ocan.*;
 import org.oscarehr.ocan.ActionDocument.Action;
 import org.oscarehr.ocan.ActionListDocument.ActionList;
 import org.oscarehr.ocan.AddictionTypeDocument.AddictionType;
@@ -168,11 +165,11 @@ import ca.on.iar.definition.SubmissionPortType;
 import ca.on.iar.definition.SubmissionService;
 import ca.on.iar.types.IARSubmission;
 import ca.on.iar.types.SubmissionContent;
-import ca.on.iar.types.SubmissionResultType;
-import ca.on.iar.types.TransmissionHeaderType;
 import ca.on.iar.types.SubmissionContent.Record;
+import ca.on.iar.types.SubmissionResultType;
 import ca.on.iar.types.SubmissionResultType.Result;
 import ca.on.iar.types.SubmissionType.Text;
+import ca.on.iar.types.TransmissionHeaderType;
 import ca.on.iar.types.TransmissionHeaderType.Application;
 import ca.on.iar.types.TransmissionHeaderType.Organization;
 
@@ -185,8 +182,6 @@ public class OcanReportUIBean implements CallbackHandler {
 	
 	private static OcanStaffFormDao ocanStaffFormDao = (OcanStaffFormDao) SpringUtils.getBean("ocanStaffFormDao");
 	private static OcanStaffFormDataDao ocanStaffFormDataDao = (OcanStaffFormDataDao) SpringUtils.getBean("ocanStaffFormDataDao");	
-	private static OcanClientFormDao ocanClientFormDao = (OcanClientFormDao) SpringUtils.getBean("ocanClientFormDao");
-	private static OcanClientFormDataDao ocanClientFormDataDao = (OcanClientFormDataDao) SpringUtils.getBean("ocanClientFormDataDao");
 	private static FacilityDao facilityDao = (FacilityDao)SpringUtils.getBean("facilityDao");
 	private static AdmissionDao admissionDao = (AdmissionDao)SpringUtils.getBean("admissionDao");
 
@@ -744,7 +739,7 @@ public class OcanReportUIBean implements CallbackHandler {
 			
 			for(int x=0;x<24;x++) {
 				domainList.add(convertOCANDomain(x+1,ocanStaffForm,ocanStaffFormData,ocanClientForm, ocanClientFormData, ocanType));
-				ocanDomains.setDomainArray((Domain[])domainList.toArray(new Domain[domainList.size()]));		
+				ocanDomains.setDomainArray(domainList.toArray(new Domain[domainList.size()]));		
 			}
 		} else {
 			ocanDomains.setResidenceType(convertResidenceType(ocanStaffForm,ocanStaffFormData));			
@@ -1977,7 +1972,7 @@ public class OcanReportUIBean implements CallbackHandler {
 		int hour = cal.get(GregorianCalendar.HOUR_OF_DAY);
 		int min = cal.get(GregorianCalendar.MINUTE);
 		 
-		return "OCAN" +  year + ( (month<10)?("0"+month):(month) )+ ((date<10)?("0"+date):(date)) + ((hour<10)?("0"+hour):(hour))+ ((min<10)?("0"+min):(min))+loggedInInfo.loggedInInfo.get().currentFacility.getOcanServiceOrgNumber() +  ( (increment<10)?(".00"+increment):(increment) ) + ".xml";
+		return "OCAN" +  year + ( (month<10)?("0"+month):(month) )+ ((date<10)?("0"+date):(date)) + ((hour<10)?("0"+hour):(hour))+ ((min<10)?("0"+min):(min))+loggedInInfo.currentFacility.getOcanServiceOrgNumber() +  ( (increment<10)?(".00"+increment):(increment) ) + ".xml";
 	}
 	
 	private static Date getStartDate(int year, int month) {
