@@ -108,8 +108,6 @@ if (heading != null){
             	Collections.sort(prescriptDrugs,new oscar.oscarRx.util.ShowAllSorter());
             }
 
-            //DrugDao drugDao = (DrugDao) SpringUtils.getBean("drugDao");
-            //List<Drug> prescriptDrugs = drugDao.getPrescriptions(""+patient.getDemographicNo(), showall);
             DrugReasonDao drugReasonDao  = (DrugReasonDao) SpringUtils.getBean("drugReasonDao");
 			
             

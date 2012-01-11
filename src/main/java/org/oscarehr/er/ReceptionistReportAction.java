@@ -160,10 +160,7 @@ public class ReceptionistReportAction extends DispatchAction {
 		this.addRemoteIssues(issuesToDisplay, Integer.parseInt(clientId), false);
 		request.setAttribute("remote_issues",issuesToDisplay);
 		
-		
-		//List<PrescriptDrug> prescriptions = this.caseManagementManager.getPrescriptions(clientId,false);
-		//request.setAttribute("prescriptions",prescriptions);
-		
+				
 		List<Drug> prescriptions = null;
 		boolean viewAll=true;
 

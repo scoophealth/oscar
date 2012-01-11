@@ -24,7 +24,6 @@ package org.oscarehr.casemgmt.web;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -66,7 +65,6 @@ import org.oscarehr.caisi_integrator.ws.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.caisi_integrator.ws.NoteIssue;
 import org.oscarehr.casemgmt.common.Colour;
-import org.oscarehr.casemgmt.dao.CaseManagementIssueDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
 import org.oscarehr.casemgmt.dao.IssueDAO;
 import org.oscarehr.casemgmt.model.CaseManagementCPP;
@@ -86,7 +84,6 @@ import org.oscarehr.common.dao.GroupNoteDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.GroupNoteLink;
-import org.oscarehr.common.model.PartialDate;
 import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.dx.model.DxResearch;
 import org.oscarehr.eyeform.EyeformInit;
@@ -121,7 +118,6 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	private GroupNoteDao groupNoteDao = (GroupNoteDao) SpringUtils.getBean("groupNoteDao");
 	private DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
 	private CaseManagementIssueNotesDao cmeIssueNotesDao = (CaseManagementIssueNotesDao)SpringUtils.getBean("caseManagementIssueNotesDao");
-	private CaseManagementIssueDAO cmeIssueDao = (CaseManagementIssueDAO)SpringUtils.getBean("caseManagementIssueDAO");
 	
 	static {
 		//temporary..need something generic;
@@ -168,7 +164,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			caseManagementMgr.saveCPP(cpp, loggedInInfo.loggedInProvider.getProviderNo());
 
 			// caseManagementMgr.saveEctWin(ectWin);
-		} else response.sendError(response.SC_FORBIDDEN);
+		} else response.sendError(HttpServletResponse.SC_FORBIDDEN);
 
 		return null;
 	}
@@ -382,7 +378,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			boolean viewAll = caseForm.getPrescipt_view().equals("all");
 			String demographicId = getDemographicNo(request);
 			request.setAttribute("isIntegratorEnabled", LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled());
-			prescriptions = this.caseManagementMgr.getPrescriptions(Integer.parseInt(demographicId), viewAll);
+			prescriptions = caseManagementMgr.getPrescriptions(Integer.parseInt(demographicId), viewAll);
 
 			request.setAttribute("Prescriptions", prescriptions);
 
@@ -561,7 +557,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		}
 	}
 
-	private void viewCurrentIssuesTab_oldCme(HttpServletRequest request, CaseManagementViewFormBean caseForm, String demoNo, String programId) throws InvocationTargetException, IllegalAccessException, Exception {
+	private void viewCurrentIssuesTab_oldCme(HttpServletRequest request, CaseManagementViewFormBean caseForm, String demoNo, String programId) throws Exception {
 		long startTime = System.currentTimeMillis();
 
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
@@ -686,7 +682,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	/**
 	 * New CME
 	 */
-	private void viewCurrentIssuesTab_newCme(HttpServletRequest request, CaseManagementViewFormBean caseForm, String demoNo, String programId) throws InvocationTargetException, IllegalAccessException, Exception {
+	private void viewCurrentIssuesTab_newCme(HttpServletRequest request, CaseManagementViewFormBean caseForm, String demoNo, String programId) throws Exception {
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 		String providerNo = loggedInInfo.loggedInProvider.getProviderNo();
 		int demographicId=Integer.parseInt(demoNo);
@@ -981,19 +977,6 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		return (false);
 	}
 
-	private boolean hasIssueToBeDisplayed(CaseManagementNote note, ArrayList<String> issueCodesToDisplay) {
-		// no issue selected means display all
-		if (issueCodesToDisplay == null || issueCodesToDisplay.size() == 0) return (true);
-
-		for (CaseManagementIssue noteIssue : note.getIssues()) {
-			// yes I know this is flawed in that it's ignoreing the code type.
-			// right now we don't support code type properly on the caisi side.
-			if (issueCodesToDisplay.contains(noteIssue.getIssue_id())) return (true);
-		}
-
-		return (false);
-	}
-
 	protected void addGroupIssues(ArrayList<CheckBoxBean> checkBoxBeanList, int demographicNo, boolean hideInactiveIssues) {
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 
@@ -1148,7 +1131,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		return issueDisplay;
 	}
 
-	public ActionForward viewNote(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ActionForward viewNote(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		String nId = request.getParameter("noteId");
 		CaseManagementNote note = this.caseManagementMgr.getNote(nId);
 		request.setAttribute("noteStr", note.getNote());
@@ -1157,7 +1140,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		return mapping.findForward("displayNote");
 	}
 
-	public ActionForward listNotes(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ActionForward listNotes(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		logger.debug("List Notes start");
 
 		String providerNo = getProviderNo(request);
@@ -1282,7 +1265,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		return view(mapping, form, request, response);
 	}
 
-	private List sortNotes_old(Collection<CaseManagementNote> notes, String field) throws Exception {
+	private List sortNotes_old(Collection<CaseManagementNote> notes, String field) {
 		logger.debug("Sorting notes by field: " + field);
 
 		ArrayList<CaseManagementNote> resultsSorted = new ArrayList<CaseManagementNote>(notes);
@@ -1311,7 +1294,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		return resultsSorted;
 	}
 
-	private ArrayList<NoteDisplay> sortNotes(ArrayList<NoteDisplay> notes, String field) throws Exception {
+	private ArrayList<NoteDisplay> sortNotes(ArrayList<NoteDisplay> notes, String field) {
 		logger.debug("Sorting notes by field: " + field);
 
 		if (field == null || field.equals("") || field.equals("update_date")) {
@@ -1722,20 +1705,5 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		}
 		return "";
 	}
-
-        static private String readPartialDate(CaseManagementNoteExt cme) {
-            String type = cme.getValue();
-            String val = null;
-
-            if (StringUtils.isNotEmpty(type)) {
-                if (type.equals(PartialDate.YEARONLY))
-                    val = oscar.util.UtilDateUtilities.DateToString(cme.getDateValue(),"yyyy");
-                else if (type.equals(PartialDate.YEARMONTH))
-                    val = oscar.util.UtilDateUtilities.DateToString(cme.getDateValue(),"yyyy-MM");
-                else val = oscar.util.UtilDateUtilities.DateToString(cme.getDateValue(),"yyyy-MM-dd");
-            } else {
-                val = oscar.util.UtilDateUtilities.DateToString(cme.getDateValue(),"yyyy-MM-dd");
-            }
-            return val;
-        }
+	
 }
