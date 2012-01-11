@@ -305,7 +305,7 @@ public class ManageDocumentAction extends DispatchAction {
 		cmm.saveNoteSimple(cmn);
 		// Add a noteLink to casemgmt_note_link
 		CaseManagementNoteLink cmnl = new CaseManagementNoteLink();
-		cmnl.setTableName(cmnl.DOCUMENT);
+		cmnl.setTableName(CaseManagementNoteLink.DOCUMENT);
 		cmnl.setTableId(Long.parseLong(documentId));
 		cmnl.setNoteId(Long.parseLong(EDocUtil.getLastNoteId()));
 		EDocUtil.addCaseMgmtNoteLink(cmnl);
@@ -379,12 +379,17 @@ public class ManageDocumentAction extends DispatchAction {
 
 		log.debug("about to Print to stream");
 		File outfile = new File(documentCacheDir, d.getDocfilename() + "_" + pageNum + ".png");
-		OutputStream outs = new FileOutputStream(outfile);
 
-		RenderedImage rendImage = (RenderedImage) img;
-		ImageIO.write(rendImage, "png", outs);
-		outs.flush();
-		outs.close();
+		OutputStream outs = null;
+		try {
+			outs = new FileOutputStream(outfile);
+
+			RenderedImage rendImage = (RenderedImage) img;
+			ImageIO.write(rendImage, "png", outs);
+			outs.flush();
+		} finally {
+			if (outs != null) outs.close();
+		}
 		return outfile;
 
 	}
@@ -421,18 +426,24 @@ public class ManageDocumentAction extends DispatchAction {
 
 		log.debug("about to Print to stream");
 		File outfile = new File(documentCacheDir, d.getDocfilename() + ".png");
-		OutputStream outs = new FileOutputStream(outfile);
 
-		RenderedImage rendImage = (RenderedImage) img;
-		ImageIO.write(rendImage, "png", outs);
-		outs.flush();
-		outs.close();
+		OutputStream outs = null;
+		try {
+			outs = new FileOutputStream(outfile);
+
+			RenderedImage rendImage = (RenderedImage) img;
+			ImageIO.write(rendImage, "png", outs);
+			outs.flush();
+		} finally {
+			if (outs != null) outs.close();
+		}
+
 		return outfile;
 
 	}
 
 	// PNG version
-	public ActionForward view(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ActionForward view(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 
 		try {
 			String doc_no = request.getParameter("doc_no");
@@ -456,14 +467,17 @@ public class ManageDocumentAction extends DispatchAction {
 			ServletOutputStream outs = response.getOutputStream();
 
 			response.setHeader("Content-Disposition", "attachment;filename=" + d.getDocfilename());
-			BufferedInputStream bfis = new BufferedInputStream(new FileInputStream(outfile));
-			int data;
-			while ((data = bfis.read()) != -1) {
-				outs.write(data);
-				// outs.flush();
+			BufferedInputStream bfis = null;
+			try {
+				bfis = new BufferedInputStream(new FileInputStream(outfile));
+				int data;
+				while ((data = bfis.read()) != -1) {
+					outs.write(data);
+					// outs.flush();
+				}
+			} finally {
+				if (bfis!=null) bfis.close();
 			}
-
-			bfis.close();
 			outs.flush();
 			outs.close();
 		} catch (java.net.SocketException se) {
@@ -474,7 +488,7 @@ public class ManageDocumentAction extends DispatchAction {
 		return null;
 	}
 
-	public ActionForward viewDocPage(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ActionForward viewDocPage(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		log.debug("in viewDocPage");
 		try {
 			String doc_no = request.getParameter("doc_no");
@@ -505,14 +519,19 @@ public class ManageDocumentAction extends DispatchAction {
 			response.setContentType("image/png");
 			ServletOutputStream outs = response.getOutputStream();
 			response.setHeader("Content-Disposition", "attachment;filename=" + d.getDocfilename());
-			BufferedInputStream bfis = new BufferedInputStream(new FileInputStream(outfile));
-			int data;
-			while ((data = bfis.read()) != -1) {
-				outs.write(data);
-				// outs.flush();
+
+			BufferedInputStream bfis = null;
+			try {
+				bfis = new BufferedInputStream(new FileInputStream(outfile));
+				int data;
+				while ((data = bfis.read()) != -1) {
+					outs.write(data);
+					// outs.flush();
+				}
+			} finally {
+				if (bfis!=null) bfis.close();
 			}
 
-			bfis.close();
 			outs.flush();
 			outs.close();
 		} catch (java.net.SocketException se) {
@@ -612,7 +631,7 @@ public class ManageDocumentAction extends DispatchAction {
 		String docxml = null;
 		String contentType = null;
 		byte[] contentBytes = null;
-		String filename=null;
+		String filename = null;
 
 		// local document
 		if (remoteFacilityId == null) {
@@ -635,9 +654,9 @@ public class ManageDocumentAction extends DispatchAction {
 			contentType = d.getContenttype();
 
 			File file = new File(documentDir, d.getDocfilename());
-			filename=d.getDocfilename();
-			
-			if (file.exists()) contentBytes=FileUtils.readFileToByteArray(file);
+			filename = d.getDocfilename();
+
+			if (file.exists()) contentBytes = FileUtils.readFileToByteArray(file);
 
 		} else // remote document
 		{
@@ -651,7 +670,7 @@ public class ManageDocumentAction extends DispatchAction {
 
 			docxml = remoteDocument.getDocXml();
 			contentType = remoteDocument.getContentType();
-			filename=remoteDocument.getDocFilename();
+			filename = remoteDocument.getDocFilename();
 			contentBytes = remoteDocumentContents.getFileContents();
 		}
 
