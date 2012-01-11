@@ -788,6 +788,7 @@ public final class EDocUtil extends SqlUtilBaseS {
 
 	public static byte[] getFile(String fpath) {
 		byte[] fdata = null;
+		FileInputStream fis=null;
 		try {
 			// first we get length of file and allocate mem for file
 			File file = new File(fpath);
@@ -795,9 +796,8 @@ public final class EDocUtil extends SqlUtilBaseS {
 			fdata = new byte[(int) length];
 
 			// now we read file into array buffer
-			FileInputStream fis = new FileInputStream(file);
+			fis = new FileInputStream(file);
 			fis.read(fdata);
-			fis.close();
 
 		} catch (NullPointerException ex) {
 			logger.error("Error", ex);
@@ -805,6 +805,14 @@ public final class EDocUtil extends SqlUtilBaseS {
 			logger.error("Error", ex);
 		} catch (IOException ex) {
 			logger.error("Error", ex);
+		}
+		finally
+		{
+			try {
+	            if (fis!=null) fis.close();
+            } catch (IOException e) {
+	            logger.error("error", e);
+            }
 		}
 
 		return fdata;
