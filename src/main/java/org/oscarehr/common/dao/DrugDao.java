@@ -37,182 +37,191 @@ public class DrugDao extends AbstractDao<Drug> {
 		super(Drug.class);
 	}
 
-    public boolean addNewDrug(Drug d){
-       try{
-            entityManager.persist(d);
-        }catch(Exception e){
-            MiscUtils.getLogger().error("Error", e);
-            return false;
-        }
-       return true;
-    }
-    public List<Drug> findByPrescriptionId(Integer prescriptionId) {
+	public boolean addNewDrug(Drug d) {
+		try {
+			entityManager.persist(d);
+		} catch (Exception e) {
+			MiscUtils.getLogger().error("Error", e);
+			return false;
+		}
+		return true;
+	}
 
-    	String sqlCommand = "select x from Drug x where x.scriptNo=?1";
+	public List<Drug> findByPrescriptionId(Integer prescriptionId) {
 
-        Query query = entityManager.createQuery(sqlCommand);
-        query.setParameter(1, prescriptionId);
+		String sqlCommand = "select x from Drug x where x.scriptNo=?1";
 
-        @SuppressWarnings("unchecked")
-        List<Drug> results = query.getResultList();
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, prescriptionId);
 
-        return (results);
-    }
+		@SuppressWarnings("unchecked")
+		List<Drug> results = query.getResultList();
+
+		return (results);
+	}
+
+	public List<Drug> findByDemographicId(Integer demographicId, Boolean archived) {
+
+		String sqlCommand = "select x from Drug x where x.demographicId=?1 " + (archived == null ? "" : "and x.archived=?2");
+
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, demographicId);
+		if (archived != null) {
+			query.setParameter(2, archived);
+		}
+
+		@SuppressWarnings("unchecked")
+		List<Drug> results = query.getResultList();
+		return (results);
+	}
 
 	/**
-     * @param archived can be null for both archived and non archived entries
-     */
-    public List<Drug> findByDemographicIdOrderByDate(Integer demographicId, Boolean archived) {
-        // build sql string
-        String sqlCommand = "select x from Drug x where x.demographicId=?1 " + (archived == null ? "" : "and x.archived=?2") + " order by x.rxDate desc, x.id desc";
+	 * @deprecated ordering should be done after in java not on the db when all items are returns, use the findByDemographicId() instead.
+	 * @param archived can be null for both archived and non archived entries
+	 */
+	public List<Drug> findByDemographicIdOrderByDate(Integer demographicId, Boolean archived) {
+		// build sql string
+		String sqlCommand = "select x from Drug x where x.demographicId=?1 " + (archived == null ? "" : "and x.archived=?2") + " order by x.rxDate desc, x.id desc";
 
-        // set parameters
-        Query query = entityManager.createQuery(sqlCommand);
-        query.setParameter(1, demographicId);
-        if (archived != null) {
-            query.setParameter(2, archived);
-        }
-        // run query
-        @SuppressWarnings("unchecked")
-        List<Drug> results = query.getResultList();
+		// set parameters
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, demographicId);
+		if (archived != null) {
+			query.setParameter(2, archived);
+		}
+		// run query
+		@SuppressWarnings("unchecked")
+		List<Drug> results = query.getResultList();
 
-        return (results);
-    }    
-    
-    public List<Drug> findByDemographicIdOrderByPosition(Integer demographicId, Boolean archived) {
-        // build sql string
-        String sqlCommand = "select x from Drug x where x.demographicId=?1 " + (archived == null ? "" : "and x.archived=?2") + " order by x.position desc, x.rxDate desc, x.id desc";
+		return (results);
+	}
 
-        // set parameters
-        Query query = entityManager.createQuery(sqlCommand);
-        query.setParameter(1, demographicId);
-        if (archived != null) {
-            query.setParameter(2, archived);
-        }
-        // run query
-        @SuppressWarnings("unchecked")
-        List<Drug> results = query.getResultList();
+	/**
+	 * @deprecated ordering should be done after in java not on the db when all items are returns, use the findByDemographicId() instead.
+	 */
+	public List<Drug> findByDemographicIdOrderByPosition(Integer demographicId, Boolean archived) {
+		// build sql string
+		String sqlCommand = "select x from Drug x where x.demographicId=?1 " + (archived == null ? "" : "and x.archived=?2") + " order by x.position desc, x.rxDate desc, x.id desc";
 
-        return (results);
-    }
+		// set parameters
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, demographicId);
+		if (archived != null) {
+			query.setParameter(2, archived);
+		}
+		// run query
+		@SuppressWarnings("unchecked")
+		List<Drug> results = query.getResultList();
 
-    public List<Drug> findByDemographicIdSimilarDrugOrderByDate(Integer demographicId, String regionalIdentifier, String customName) {
-        // build sql string
-        String sqlCommand = "select x from Drug x where x.demographicId=?1 and x." + (regionalIdentifier != null ? "regionalIdentifier" : "customName") + "=?2 order by x.rxDate desc, x.id desc";
+		return (results);
+	}
 
-        // set parameters
-        Query query = entityManager.createQuery(sqlCommand);
-        query.setParameter(1, demographicId);
-        if (regionalIdentifier != null) {
-            query.setParameter(2, regionalIdentifier);
-        } else {
-            query.setParameter(2, customName);
-        }
-        // run query
-        @SuppressWarnings("unchecked")
-        List<Drug> results = query.getResultList();
+	public List<Drug> findByDemographicIdSimilarDrugOrderByDate(Integer demographicId, String regionalIdentifier, String customName) {
+		// build sql string
+		String sqlCommand = "select x from Drug x where x.demographicId=?1 and x." + (regionalIdentifier != null ? "regionalIdentifier" : "customName") + "=?2 order by x.rxDate desc, x.id desc";
 
-        return (results);
-    }
+		// set parameters
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, demographicId);
+		if (regionalIdentifier != null) {
+			query.setParameter(2, regionalIdentifier);
+		} else {
+			query.setParameter(2, customName);
+		}
+		// run query
+		@SuppressWarnings("unchecked")
+		List<Drug> results = query.getResultList();
 
-    public List<Drug> findByDemographicIdSimilarDrugOrderByDate(Integer demographicId, String regionalIdentifier, String customName, String brandName) {
-    	return findByDemographicIdSimilarDrugOrderByDate(demographicId,regionalIdentifier, customName,brandName, null);
-    }
-    
-    public List<Drug> findByDemographicIdSimilarDrugOrderByDate(Integer demographicId, String regionalIdentifier, String customName, String brandName, String atc) {
-        // build sql string
-        String sqlCommand ="";
-        if(atc != null && !atc.equalsIgnoreCase("null") && atc.trim().length()!=0)
-        	sqlCommand = "select x from Drug x where x.demographicId=?1 and x.atc=?2 order by x.rxDate desc, x.id desc";
-        else if(regionalIdentifier!=null && !regionalIdentifier.equalsIgnoreCase("null") && regionalIdentifier.trim().length()!=0)
-            sqlCommand="select x from Drug x where x.demographicId=?1 and x.regionalIdentifier=?2 order by x.rxDate desc, x.id desc";
-        else if(customName!=null && !customName.equalsIgnoreCase("null") && customName.trim().length()!=0)
-            sqlCommand="select x from Drug x where x.demographicId=?1 and x.customName=?2 order by x.rxDate desc, x.id desc";
-        else
-            sqlCommand="select x from Drug x where x.demographicId=?1 and x.brandName=?2 order by x.rxDate desc, x.id desc";
-        // set parameters
-        Query query = entityManager.createQuery(sqlCommand);
-        query.setParameter(1, demographicId);
-        if(atc != null && !atc.equalsIgnoreCase("null") && atc.trim().length()!=0)
-        	query.setParameter(2, atc);
-        else if(regionalIdentifier!=null && !regionalIdentifier.equalsIgnoreCase("null") && regionalIdentifier.trim().length()!=0)
-             query.setParameter(2, regionalIdentifier);
-        else if(customName!=null && !customName.equalsIgnoreCase("null") && customName.trim().length()!=0)
-              query.setParameter(2,customName);
-        else
-             query.setParameter(2,brandName);
-        // run query
-        @SuppressWarnings("unchecked")
-        List<Drug> results = query.getResultList();
+		return (results);
+	}
 
-        return (results);
-    }
+	public List<Drug> findByDemographicIdSimilarDrugOrderByDate(Integer demographicId, String regionalIdentifier, String customName, String brandName) {
+		return findByDemographicIdSimilarDrugOrderByDate(demographicId, regionalIdentifier, customName, brandName, null);
+	}
 
-    ///////
-    public List<Drug> getUniquePrescriptions(String demographic_no) {
+	public List<Drug> findByDemographicIdSimilarDrugOrderByDate(Integer demographicId, String regionalIdentifier, String customName, String brandName, String atc) {
+		// build sql string
+		String sqlCommand = "";
+		if (atc != null && !atc.equalsIgnoreCase("null") && atc.trim().length() != 0) sqlCommand = "select x from Drug x where x.demographicId=?1 and x.atc=?2 order by x.rxDate desc, x.id desc";
+		else if (regionalIdentifier != null && !regionalIdentifier.equalsIgnoreCase("null") && regionalIdentifier.trim().length() != 0) sqlCommand = "select x from Drug x where x.demographicId=?1 and x.regionalIdentifier=?2 order by x.rxDate desc, x.id desc";
+		else if (customName != null && !customName.equalsIgnoreCase("null") && customName.trim().length() != 0) sqlCommand = "select x from Drug x where x.demographicId=?1 and x.customName=?2 order by x.rxDate desc, x.id desc";
+		else sqlCommand = "select x from Drug x where x.demographicId=?1 and x.brandName=?2 order by x.rxDate desc, x.id desc";
+		// set parameters
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, demographicId);
+		if (atc != null && !atc.equalsIgnoreCase("null") && atc.trim().length() != 0) query.setParameter(2, atc);
+		else if (regionalIdentifier != null && !regionalIdentifier.equalsIgnoreCase("null") && regionalIdentifier.trim().length() != 0) query.setParameter(2, regionalIdentifier);
+		else if (customName != null && !customName.equalsIgnoreCase("null") && customName.trim().length() != 0) query.setParameter(2, customName);
+		else query.setParameter(2, brandName);
+		// run query
+		@SuppressWarnings("unchecked")
+		List<Drug> results = query.getResultList();
 
+		return (results);
+	}
 
-        List<Drug> rs = findByDemographicIdOrderByPosition(new Integer(demographic_no), false);
+	// /////
+	public List<Drug> getUniquePrescriptions(String demographic_no) {
 
-        List<Drug> rt = new ArrayList<Drug>();
-        for (Drug drug : rs) {
-            //Drug prescriptDrug = new PrescriptDrug();
-            
-            boolean b = true;
-            for (int i = 0; i < rt.size(); i++) {
-                Drug p2 = rt.get(i);
-                if (p2.getGcnSeqNo() == drug.getGcnSeqNo()) {
+		List<Drug> rs = findByDemographicIdOrderByPosition(new Integer(demographic_no), false);
 
-                    if (p2.getGcnSeqNo() != 0){ // not custom - safe GCN
+		List<Drug> rt = new ArrayList<Drug>();
+		for (Drug drug : rs) {
+			// Drug prescriptDrug = new PrescriptDrug();
 
-                        b = false;
-                    } else {// custom
+			boolean b = true;
+			for (int i = 0; i < rt.size(); i++) {
+				Drug p2 = rt.get(i);
+				if (p2.getGcnSeqNo() == drug.getGcnSeqNo()) {
 
-                        if (p2.getCustomName() != null && drug.getCustomName() != null) {
+					if (p2.getGcnSeqNo() != 0) { // not custom - safe GCN
 
-                            if (p2.getCustomName().equals(drug.getCustomName())){ // same custom
+						b = false;
+					} else {// custom
 
-                                b = false;
-                            }
-                        }
-                    }
-                }
-            }
-            if (b) {
-                rt.add(drug);
-            }
-        }
+						if (p2.getCustomName() != null && drug.getCustomName() != null) {
 
-        return rt;
-    }
+							if (p2.getCustomName().equals(drug.getCustomName())) { // same custom
 
-    public List<Drug> getPrescriptions(String demographic_no) {
-        List<Drug> rs = findByDemographicIdOrderByDate(new Integer(demographic_no), null);       
-        return rs;
+								b = false;
+							}
+						}
+					}
+				}
+			}
+			if (b) {
+				rt.add(drug);
+			}
+		}
 
-    }
+		return rt;
+	}
 
-    public List<Drug> getPrescriptions(String demographic_no, boolean all) {
-        if (all) {
-                return getPrescriptions(demographic_no);
-        }
-        return getUniquePrescriptions(demographic_no);
-    }
-    
-    
-    public int getNumberOfDemographicsWithRxForProvider(String providerNo,Date startDate,Date endDate,boolean distinct ){
-    	String distinctStr = "distinct";
-    	if (distinct == false){
-    		distinctStr = StringUtils.EMPTY;
-    	}
-    	
-    	Query query = entityManager.createNativeQuery("select count("+distinctStr+" demographic_no)from drugs x where x.provider_no = ? and x.written_date >= ? and x.written_date <= ?");
+	public List<Drug> getPrescriptions(String demographic_no) {
+		List<Drug> rs = findByDemographicIdOrderByDate(new Integer(demographic_no), null);
+		return rs;
+
+	}
+
+	public List<Drug> getPrescriptions(String demographic_no, boolean all) {
+		if (all) {
+			return getPrescriptions(demographic_no);
+		}
+		return getUniquePrescriptions(demographic_no);
+	}
+
+	public int getNumberOfDemographicsWithRxForProvider(String providerNo, Date startDate, Date endDate, boolean distinct) {
+		String distinctStr = "distinct";
+		if (distinct == false) {
+			distinctStr = StringUtils.EMPTY;
+		}
+
+		Query query = entityManager.createNativeQuery("select count(" + distinctStr + " demographic_no)from drugs x where x.provider_no = ? and x.written_date >= ? and x.written_date <= ?");
 		query.setParameter(1, providerNo);
-		query.setParameter(2,startDate);
-		query.setParameter(3,endDate);
-		BigInteger bint =  (BigInteger) query.getSingleResult(); 
+		query.setParameter(2, startDate);
+		query.setParameter(3, endDate);
+		BigInteger bint = (BigInteger) query.getSingleResult();
 		return bint.intValue();
 	}
-    
 
 }

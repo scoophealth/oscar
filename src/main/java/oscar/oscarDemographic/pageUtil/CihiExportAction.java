@@ -1,60 +1,73 @@
 package oscar.oscarDemographic.pageUtil;
 
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.validator.DynaValidatorForm;
 import org.apache.xmlbeans.XmlOptions;
-import oscar.oscarEncounter.oscarMeasurements.data.ImportExportMeasurements;
-import oscar.oscarEncounter.oscarMeasurements.data.Measurements;
-import oscar.oscarReport.data.DemographicSets;
-import oscar.oscarRx.data.RxPrescriptionData;
-import oscar.OscarProperties;
-import oscar.util.StringUtils;
-import oscar.util.UtilDateUtilities;
-
 import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteExtDAO;
 import org.oscarehr.casemgmt.dao.IssueDAO;
-import org.oscarehr.casemgmt.dao.PrescriptionDAO;
-
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteExt;
 import org.oscarehr.casemgmt.model.Issue;
-import org.oscarehr.common.model.*;
-import org.oscarehr.common.dao.*;
+import org.oscarehr.common.dao.AllergyDAO;
+import org.oscarehr.common.dao.ClinicDAO;
+import org.oscarehr.common.dao.DataExportDao;
+import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.dao.Hl7TextInfoDao;
+import org.oscarehr.common.dao.OscarAppointmentDao;
+import org.oscarehr.common.dao.PartialDateDao;
+import org.oscarehr.common.dao.PreventionDao;
+import org.oscarehr.common.model.Allergy;
+import org.oscarehr.common.model.Appointment;
+import org.oscarehr.common.model.Clinic;
+import org.oscarehr.common.model.DataExport;
+import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.PartialDate;
+import org.oscarehr.common.model.Prevention;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
+import oscar.OscarProperties;
+import oscar.oscarEncounter.oscarMeasurements.data.ImportExportMeasurements;
+import oscar.oscarEncounter.oscarMeasurements.data.LabMeasurements;
+import oscar.oscarEncounter.oscarMeasurements.data.Measurements;
+import oscar.oscarReport.data.DemographicSets;
+import oscar.oscarRx.data.RxPrescriptionData;
+import oscar.util.StringUtils;
+import oscar.util.UtilDateUtilities;
 import cdsDtCihi.DateFullOrPartial;
 import cdsDtCihi.HealthCard;
 import cdsDtCihi.PostalZipCode;
 import cdsDtCihi.StandardCoding;
 import cdsDtCihi.YnIndicator;
 import cdsDtCihi.YnIndicatorAndBlank;
-import cdscihi.*;
 import cdscihi.AllergiesAndAdverseReactionsDocument.AllergiesAndAdverseReactions;
 import cdscihi.AppointmentsDocument.Appointments;
 import cdscihi.CareElementsDocument.CareElements;
+import cdscihi.CiHiCdsDocument;
 import cdscihi.CiHiCdsDocument.CiHiCds;
 import cdscihi.DemographicsDocument.Demographics;
 import cdscihi.DemographicsDocument.Demographics.PersonStatusCode;
@@ -67,9 +80,6 @@ import cdscihi.PatientRecordDocument.PatientRecord;
 import cdscihi.ProblemListDocument.ProblemList;
 import cdscihi.ProcedureDocument.Procedure;
 import cdscihi.RiskFactorsDocument.RiskFactors;
-import oscar.oscarEncounter.oscarMeasurements.data.LabMeasurements;
-
-import org.apache.log4j.Logger;
 
 public class CihiExportAction extends DispatchAction {
 	private ClinicDAO clinicDAO;
@@ -81,7 +91,6 @@ public class CihiExportAction extends DispatchAction {
 	private CaseManagementNoteExtDAO caseManagementNoteExtDAO;
 	private AllergyDAO allergyDAO;
 	private Hl7TextInfoDao hl7TextInfoDAO;
-	private PrescriptionDAO prescriptionDao;
 	private PreventionDao preventionDao;
 	
 	private Logger log = MiscUtils.getLogger();
@@ -102,14 +111,6 @@ public class CihiExportAction extends DispatchAction {
 
 	public PreventionDao getPreventionDao() {
 	    return preventionDao;
-    }
-	
-	public void setPrescriptionDao(PrescriptionDAO prescriptionDao) {
-	    this.prescriptionDao = prescriptionDao;
-    }
-
-	public PrescriptionDAO getPrescriptionDao() {
-	    return prescriptionDao;
     }
 
 	public void setHl7TextInfoDAO(Hl7TextInfoDao hl7TextInfoDAO) {
@@ -176,7 +177,7 @@ public class CihiExportAction extends DispatchAction {
     	this.clinicDAO = clinicDAO;
     }
 	
-	public ActionForward getFile(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ActionForward getFile(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		OscarProperties properties = OscarProperties.getInstance();
 		String zipName = request.getParameter("zipFile");
 		String dir = properties.getProperty("DOCUMENT_DIR");

@@ -4,8 +4,8 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
-import org.oscarehr.casemgmt.model.Prescription;
 import org.oscarehr.common.model.Drug;
+import org.oscarehr.common.model.Prescription;
 import org.oscarehr.common.service.MyOscarMedicalDataManager;
 import org.oscarehr.myoscar_server.ws.MedicalDataTransfer2;
 import org.oscarehr.myoscar_server.ws.MedicalDataType;
@@ -24,14 +24,14 @@ public final class PrescriptionMedicationTransformer {
 		String temp = StringUtils.trimToNull(prescription.getTextView());
 		if (temp != null) XmlUtils.appendChildToRoot(doc, "TextVersion", temp);
 
-		temp = StringUtils.trimToNull(prescription.getRxComments());
+		temp = StringUtils.trimToNull(prescription.getComments());
 		if (temp != null) XmlUtils.appendChildToRoot(doc, "Notes", temp);
 
 		return (doc);
 	}
 
 	public static MedicalDataTransfer2 toMedicalDataTransfer(PHRAuthentication auth, Prescription prescription) throws ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException, ParserConfigurationException {
-		MedicalDataTransfer2 medicalDataTransfer = MyOscarMedicalDataManager.getEmptyMedicalDataTransfer2(auth, prescription.getDate_prescribed(), prescription.getProviderNo(), Integer.parseInt(prescription.getDemographic_no()));
+		MedicalDataTransfer2 medicalDataTransfer = MyOscarMedicalDataManager.getEmptyMedicalDataTransfer2(auth, prescription.getDatePrescribed(), prescription.getProviderNo(), prescription.getDemographicId());
 
 		Document doc = toXml(prescription);
 		medicalDataTransfer.setData(XmlUtils.toString(doc, false));

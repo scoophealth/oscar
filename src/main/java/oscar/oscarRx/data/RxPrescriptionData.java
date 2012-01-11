@@ -1004,7 +1004,7 @@ public class RxPrescriptionData {
         }
         // textView.append();
         
-        String sql = " insert into prescription " + " (provider_no,demographic_no,date_prescribed,date_printed,textView) " + " values " + " ( '" + provider_no + "', " + "   '" + demographic_no + "', " + "   '" + date_prescribed + "', " + "   '" + date_printed + "', " + "   '" + StringEscapeUtils.escapeSql(textView.toString()) + "') ";
+        String sql = " insert into prescription " + " (provider_no,demographic_no,date_prescribed,date_printed,textView,lastUpdateDate) " + " values " + " ( '" + provider_no + "', " + "   '" + demographic_no + "', " + "   '" + date_prescribed + "', " + "   '" + date_printed + "', " + "   '" + StringEscapeUtils.escapeSql(textView.toString()) + "', now()) ";
         try {
 
             

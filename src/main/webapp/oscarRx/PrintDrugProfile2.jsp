@@ -161,33 +161,9 @@ String userlastname = (String) session.getAttribute("userlastname");
                                                 DrugDao drugDao = (DrugDao) SpringUtils.getBean("drugDao");
             List<Drug> prescriptDrugs = drugDao.getPrescriptions(""+patient.getDemographicNo(), showall);
 
-   // oscar.oscarRx.data.RxPrescriptionData.Prescription[] prescribedDrugs;
-
-    //if (showall) {
-    //    prescribedDrugs = patient.getPrescribedDrugs();
-    //} else {
-    //    prescribedDrugs = patient.getPrescribedDrugsUnique();
-    //}
 
     for (Drug drug: prescriptDrugs) {
-        //oscar.oscarRx.data.RxPrescriptionData.Prescription drug = prescribedDrugs[i];
         String styleColor = "";
-        //if((!drug.isExpired() || drug.getLongTerm()) && !drug.isArchived()){
-        //    if(!drug.isExpired()){
-        //        styleColor = "style=\"color:black;font-weight:bold;\"";
-        //    }
-        //}else{
-        // continue;
-        //}
-
-        /*if (drug.isCurrent() == true && drug.isArchived()) {
-            styleColor = "style=\"color:red;text-decoration: line-through;\"";
-        } else if (drug.isCurrent() && !drug.isArchived()) {
-            styleColor = "style=\"color:red;font-weight:bold;\"";
-        } else if (!drug.isCurrent() && drug.isArchived()) {
-            styleColor = "style=\"text-decoration: line-through;\"";
-        *}
- */
                                                 %>
                                                 <tr>
                                                     <td width=20% valign="top">
