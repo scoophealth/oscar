@@ -252,7 +252,7 @@ if(listRxDrugs!=null){
            </select>
                 <br/>                
                 <bean:message key="WriteScript.msgDrugForm"/>: 
-                <%if(rx.getDrugFormList().indexOf(",")!=-1){ %>
+                <%if(rx.getDrugFormList()!=null && rx.getDrugFormList().indexOf(",")!=-1){ %>
                 <select name="drugForm_<%=rand%>">
                 	<%
                 		String[] forms = rx.getDrugFormList().split(",");

@@ -133,7 +133,6 @@ public class CaseManagementManager {
 	private DxResearchDAO dxResearchDAO;
 	private ProgramProviderDAO programProviderDao;
 	private ProgramAccessDAO programAccessDAO;
-	private DrugDao drugDao = (DrugDao) SpringUtils.getBean("drugDao");
 
 	private boolean enabled;
 
@@ -454,6 +453,8 @@ public class CaseManagementManager {
 	}
 
 	public List<Drug> getPrescriptions(String demographic_no, boolean all) {
+		DrugDao drugDao = (DrugDao) SpringUtils.getBean("drugDao");
+
 		if (all) {
 			return (drugDao.findByDemographicIdOrderByPosition(new Integer(demographic_no), null));
 		}
