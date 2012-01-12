@@ -19,6 +19,7 @@
 
 package org.oscarehr.common.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Query;
@@ -39,6 +40,19 @@ public class PrescriptionDao extends AbstractDao<Prescription> {
 
         Query query = entityManager.createQuery(sqlCommand);
         query.setParameter(1, demographicId);
+
+        @SuppressWarnings("unchecked")
+        List<Prescription> results = query.getResultList();
+        return (results);
+    }
+
+	public List<Prescription> findByDemographicIdUpdatedAfterDate(Integer demographicId, Date afterThisDate) {
+
+		String sqlCommand = "select x from "+modelClass.getSimpleName()+" x where x.demographicId=?1 and x.lastUpdateDate>=?2";
+
+        Query query = entityManager.createQuery(sqlCommand);
+        query.setParameter(1, demographicId);
+        query.setParameter(2, afterThisDate);
 
         @SuppressWarnings("unchecked")
         List<Prescription> results = query.getResultList();

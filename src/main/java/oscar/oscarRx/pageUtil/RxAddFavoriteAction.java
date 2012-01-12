@@ -34,7 +34,10 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.common.dao.DrugDao;
+import org.oscarehr.common.model.Drug;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarRx.data.RxPrescriptionData;
 import oscar.oscarRx.util.RxUtil;
@@ -66,8 +69,9 @@ public final class RxAddFavoriteAction extends DispatchAction {
         if(frm.getDrugId()!=null) {
             int drugId = Integer.parseInt(frm.getDrugId());
             
-            RxPrescriptionData p = new RxPrescriptionData();
-            p.getPrescription(drugId).AddToFavorites(providerNo, favoriteName);
+        	DrugDao drugDao=(DrugDao) SpringUtils.getBean("drugDao");        	
+            Drug drug=drugDao.find(drugId);
+            RxPrescriptionData.addToFavorites(providerNo, favoriteName, drug);
         }
         else {
             int stashId = Integer.parseInt(frm.getStashId());
@@ -90,7 +94,7 @@ public final class RxAddFavoriteAction extends DispatchAction {
     ActionForm form,
     HttpServletRequest request,
     HttpServletResponse response)
-    throws IOException, ServletException {
+    throws IOException {
 
         RxSessionBean bean = (RxSessionBean)request.getSession().getAttribute("RxSessionBean");
         if(bean==null) {
@@ -104,8 +108,9 @@ public final class RxAddFavoriteAction extends DispatchAction {
 
         if(drugIdStr!=null){
             int drugId=Integer.parseInt(drugIdStr);
-            RxPrescriptionData p = new RxPrescriptionData();
-            p.getPrescription(drugId).AddToFavorites(providerNo, favoriteName);
+        	DrugDao drugDao=(DrugDao) SpringUtils.getBean("drugDao");        	
+            Drug drug=drugDao.find(drugId);
+            RxPrescriptionData.addToFavorites(providerNo, favoriteName, drug);
         }
         else{
             int stashId=bean.getIndexFromRx(Integer.parseInt(randomId));

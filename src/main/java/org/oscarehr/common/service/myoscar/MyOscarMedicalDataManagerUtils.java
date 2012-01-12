@@ -3,14 +3,14 @@
  * and open the template in the editor.
  */
 
-package org.oscarehr.common.service;
+package org.oscarehr.common.service.myoscar;
 
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.DemographicDao;
-import org.oscarehr.common.dao.PrescriptionDao;
 import org.oscarehr.common.dao.RemoteDataLogDao;
 import org.oscarehr.common.dao.SentToPHRTrackingDao;
 import org.oscarehr.common.model.Demographic;
@@ -18,31 +18,36 @@ import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.RemoteDataLog;
 import org.oscarehr.common.model.SentToPHRTracking;
 import org.oscarehr.myoscar_server.ws.ItemAlreadyExistsException_Exception;
+import org.oscarehr.myoscar_server.ws.ItemCompletedException_Exception;
 import org.oscarehr.myoscar_server.ws.MedicalDataTransfer2;
 import org.oscarehr.myoscar_server.ws.MedicalDataWs;
+import org.oscarehr.myoscar_server.ws.NoSuchItemException_Exception;
 import org.oscarehr.myoscar_server.ws.NotAuthorisedException_Exception;
 import org.oscarehr.phr.PHRAuthentication;
 import org.oscarehr.phr.util.MyOscarServerWebServicesManager;
 import org.oscarehr.phr.util.MyOscarUtils;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarProvider.data.ProviderMyOscarIdData;
 
-public final class MyOscarMedicalDataManager {
+public final class MyOscarMedicalDataManagerUtils {
+	private static final Logger logger=MiscUtils.getLogger();
+	
 	private static final DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
 	private static final RemoteDataLogDao remoteDataLogDao = (RemoteDataLogDao) SpringUtils.getBean("remoteDataLogDao");
 	private static final SentToPHRTrackingDao sentToPHRTrackingDao = (SentToPHRTrackingDao) SpringUtils.getBean("sentToPHRTrackingDao");
 	private static final LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 	private static final ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
-
-
-	private MyOscarMedicalDataManager() {
+	
+	
+	private MyOscarMedicalDataManagerUtils() {
 		// utility class, no instantiation allowed.
 	}
 
 	/**
-	 * @deprecated use sendMedicalData(PhrAuthentication auth, MedicalDataTransfer2 medicalDataTransfer) instead
+	 * @deprecated use addMedicalData(PhrAuthentication auth, MedicalDataTransfer2 medicalDataTransfer) instead
 	 */
 	public static void sendMedicalData(PHRAuthentication auth, Integer demographicNo, String dataType, String medicalData, Object objectId, String providerNo, Date dateOfData) throws ItemAlreadyExistsException_Exception, NotAuthorisedException_Exception {
 		MedicalDataWs medicalDataWs = MyOscarServerWebServicesManager.getMedicalDataWs(auth.getMyOscarUserId(), auth.getMyOscarPassword());
@@ -54,7 +59,7 @@ public final class MyOscarMedicalDataManager {
 
 		medicalDataWs.addMedicalData2(medicalDataTransfer);
 
-		addRemoteDataLog(dataType, objectId, "content=" + medicalData);
+		addSendRemoteDataLog(dataType, objectId, "content=" + medicalData);
 	}
 
 	/**
@@ -85,12 +90,26 @@ public final class MyOscarMedicalDataManager {
 		return(medicalDataTransfer);
 	}
 	
-	public static void sendMedicalData(PHRAuthentication auth, MedicalDataTransfer2 medicalDataTransfer, String oscarDataType, String objectId) throws ItemAlreadyExistsException_Exception, NotAuthorisedException_Exception {
+	public static Long addMedicalData(PHRAuthentication auth, MedicalDataTransfer2 medicalDataTransfer, String oscarDataType, Object localOscarObjectId) throws ItemAlreadyExistsException_Exception, NotAuthorisedException_Exception {
 		MedicalDataWs medicalDataWs = MyOscarServerWebServicesManager.getMedicalDataWs(auth.getMyOscarUserId(), auth.getMyOscarPassword());
 
-		medicalDataWs.addMedicalData2(medicalDataTransfer);
+		Long resultId=medicalDataWs.addMedicalData2(medicalDataTransfer);
+		logger.debug("addMedicalData success : resultId="+resultId);
 
-		addRemoteDataLog(oscarDataType, objectId, medicalDataTransfer.getData());
+		addSendRemoteDataLog(oscarDataType, localOscarObjectId, medicalDataTransfer.getData());
+		
+		return(resultId);
+	}
+	
+	public static Long updateMedicalData(PHRAuthentication auth, MedicalDataTransfer2 medicalDataTransfer, String oscarDataType, Object localOscarObjectId) throws NotAuthorisedException_Exception, NoSuchItemException_Exception, ItemCompletedException_Exception {
+		MedicalDataWs medicalDataWs = MyOscarServerWebServicesManager.getMedicalDataWs(auth.getMyOscarUserId(), auth.getMyOscarPassword());
+
+		Long resultId=medicalDataWs.updateMedicalData3(medicalDataTransfer);
+		logger.debug("updateMedicalData success : resultId="+resultId);
+
+		addSendRemoteDataLog(oscarDataType, localOscarObjectId, medicalDataTransfer.getData());
+		
+		return(resultId);
 	}
 	
 	private static String getObserverOfDataPersonName(Provider p)
@@ -116,12 +135,12 @@ public final class MyOscarMedicalDataManager {
 		return(facilityName + ':' + dataType + ':' + objectId);
 	}
 
-	private static void addRemoteDataLog(String dataType, Object objectId, String dataContentsDescription) {
+	private static void addSendRemoteDataLog(String oscarDataType, Object oscarObjectId, String dataContentsDescription) {
 		RemoteDataLog remoteDataLog = new RemoteDataLog();
 		remoteDataLog.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
-		remoteDataLog.setDocumentId(MyOscarServerWebServicesManager.getMyOscarServerBaseUrl(), dataType, objectId);
+		remoteDataLog.setDocumentId(MyOscarServerWebServicesManager.getMyOscarServerBaseUrl(), oscarDataType, oscarObjectId);
 		remoteDataLog.setAction(RemoteDataLog.Action.SEND);
-		remoteDataLog.setDocumentContents("id=" + objectId + ", contents=" + dataContentsDescription);
+		remoteDataLog.setDocumentContents(dataContentsDescription);
 		remoteDataLogDao.persist(remoteDataLog);
 	}
 	
@@ -148,22 +167,5 @@ public final class MyOscarMedicalDataManager {
 		return(lastTracking);
 	}
 	
-	public static void sendPrescriptionsMedicationsToMyOscar(PHRAuthentication auth, Integer demographicId)
-	{
-		// get last synced prescription info
-		
-		// get the persons prescriptions that are changed after last sync
-		// for each prescription
-		//		send the prescription
-		//		get the medications for the prescription
-		//		for each medication
-		//			send the medication
-		//			link the medication with the prescription
 
-		SentToPHRTracking sentToPHRTracking=getExistingOrCreateInitialSentToPHRTracking(demographicId, "prescription", MyOscarServerWebServicesManager.getMyOscarServerBaseUrl());
-		
-		PrescriptionDao prescriptionDao=(PrescriptionDao) SpringUtils.getBean("prescriptionDao");
-//		prescriptionDao.getUniquePrescriptions(demographic_no)
-// still stubbed
-	}
 }

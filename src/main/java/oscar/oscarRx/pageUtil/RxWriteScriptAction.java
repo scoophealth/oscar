@@ -1061,6 +1061,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 				response.sendRedirect("error.html");
 				return null;
 			}
+			
 			RxPrescriptionData rxData = new RxPrescriptionData();
 			RxPrescriptionData.Prescription oldRx = rxData.getPrescription(drugId);
 			oldRx.setLongTerm(true);

@@ -1,15 +1,15 @@
+<%@page import="org.oscarehr.common.service.myoscar.PrescriptionMedicationManager"%>
 <%@page import="org.oscarehr.util.WebUtils"%>
 <%@page import="org.oscarehr.util.LocaleUtils"%>
 <%@page import="org.oscarehr.util.MiscUtils"%>
 <%@page import="org.oscarehr.phr.util.MyOscarUtils"%>
 <%@page import="org.oscarehr.phr.PHRAuthentication"%>
-<%@page import="org.oscarehr.common.service.MyOscarMedicalDataManager"%>
 <%
 	try
 	{
 		String demographicNoString=request.getParameter("demographicId");
 		PHRAuthentication auth=MyOscarUtils.getPHRAuthentication(session);
-		MyOscarMedicalDataManager.sendPrescriptionsMedicationsToMyOscar(auth, Integer.parseInt(demographicNoString));
+		PrescriptionMedicationManager.sendPrescriptionsMedicationsToMyOscar(auth, Integer.parseInt(demographicNoString));
 		WebUtils.addErrorMessage(session, "ItemsHaveBeenSentToMyOscar");
 	}
 	catch (Exception e)
