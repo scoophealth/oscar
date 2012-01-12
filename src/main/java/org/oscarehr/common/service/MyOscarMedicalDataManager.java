@@ -10,6 +10,7 @@ import java.util.GregorianCalendar;
 
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.dao.PrescriptionDao;
 import org.oscarehr.common.dao.RemoteDataLogDao;
 import org.oscarehr.common.dao.SentToPHRTrackingDao;
 import org.oscarehr.common.model.Demographic;
@@ -149,7 +150,9 @@ public final class MyOscarMedicalDataManager {
 	
 	public static void sendPrescriptionsMedicationsToMyOscar(PHRAuthentication auth, Integer demographicId)
 	{
-		// get the persons prescriptions
+		// get last synced prescription info
+		
+		// get the persons prescriptions that are changed after last sync
 		// for each prescription
 		//		send the prescription
 		//		get the medications for the prescription
@@ -157,6 +160,10 @@ public final class MyOscarMedicalDataManager {
 		//			send the medication
 		//			link the medication with the prescription
 
-// stubbed for now
+		SentToPHRTracking sentToPHRTracking=getExistingOrCreateInitialSentToPHRTracking(demographicId, "prescription", MyOscarServerWebServicesManager.getMyOscarServerBaseUrl());
+		
+		PrescriptionDao prescriptionDao=(PrescriptionDao) SpringUtils.getBean("prescriptionDao");
+//		prescriptionDao.getUniquePrescriptions(demographic_no)
+// still stubbed
 	}
 }

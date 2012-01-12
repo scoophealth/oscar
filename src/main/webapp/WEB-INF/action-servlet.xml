@@ -123,7 +123,6 @@
 		<property name="caseManagementNoteExtDAO" ref="CaseManagementNoteExtDAO" />
 		<property name="allergyDAO" ref="AllergyDAO" />
 		<property name="hl7TextInfoDAO" ref="hl7TextInfoDao" />
-		<property name="prescriptionDao" ref="prescriptionDAO" />
 		<property name="preventionDao" ref="preventionDao"/>
 	</bean>
 	<!--  ER -->
