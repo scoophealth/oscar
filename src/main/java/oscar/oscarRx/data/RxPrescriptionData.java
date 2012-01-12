@@ -36,9 +36,12 @@ import java.util.Vector;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.log4j.Logger;
+import org.oscarehr.common.dao.DrugDao;
+import org.oscarehr.common.model.Drug;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;
@@ -69,88 +72,68 @@ public class RxPrescriptionData {
         return ret;
     }
 
-    public Prescription getPrescription(int drugId) {
-        Prescription prescription = null;
+	public Prescription getPrescription(int drugId) {
 
-        String sql = "SELECT * FROM drugs WHERE drugid = " + drugId;
+		DrugDao drugDao = (DrugDao) SpringUtils.getBean("drugDao");
+		Drug drug = drugDao.find(drugId);
 
-        try {
-            // Get Prescription from database
-            
-            ResultSet rs;
+		Prescription prescription = new Prescription(drugId, drug.getProviderNo(), drug.getDemographicId());
+		prescription.setRxCreatedDate(drug.getCreateDate());
+		prescription.setRxDate(drug.getRxDate());
+		prescription.setEndDate(drug.getEndDate());
+		prescription.setWrittenDate(drug.getWrittenDate());
+		prescription.setBrandName(drug.getBrandName());
+		prescription.setGCN_SEQNO(drug.getGcnSeqNo());
+		prescription.setCustomName(drug.getCustomName());
+		prescription.setTakeMin(drug.getTakeMin());
+		prescription.setTakeMax(drug.getTakeMax());
+		prescription.setFrequencyCode(drug.getFreqCode());
+		String dur = drug.getDuration();
+		if (dur.equalsIgnoreCase("null")) dur = "";
+		prescription.setDuration(dur);
+		prescription.setDurationUnit(drug.getDurUnit());
+		prescription.setQuantity(drug.getQuantity());
+		prescription.setRepeat(drug.getRepeat());
+		prescription.setLastRefillDate(drug.getLastRefillDate());
+		prescription.setNosubs(drug.isNoSubs());
+		prescription.setPrn(drug.isPrn());
+		prescription.setSpecial(drug.getSpecial());
+		prescription.setGenericName(drug.getGenericName());
+		prescription.setAtcCode(drug.getAtc());
+		prescription.setScript_no(String.valueOf(drug.getScriptNo()));
+		prescription.setRegionalIdentifier(drug.getRegionalIdentifier());
+		prescription.setUnit(drug.getUnit());
+		prescription.setUnitName(drug.getUnitName());
+		prescription.setMethod(drug.getMethod());
+		prescription.setRoute(drug.getRoute());
+		prescription.setDrugForm(drug.getDrugForm());
+		prescription.setCustomInstr(drug.isCustomInstructions());
+		prescription.setDosage(drug.getDosage());
+		prescription.setLongTerm(drug.isLongTerm());
+		prescription.setCustomNote(drug.isCustomNote());
+		prescription.setPastMed(drug.getPastMed());
+		prescription.setStartDateUnknown(drug.getStartDateUnknown());
+		prescription.setComment(drug.getComment());
+		if (drug.getPatientCompliance() == null) prescription.setPatientCompliance(null);
+		else prescription.setPatientCompliance(drug.getPatientCompliance());
+		prescription.setOutsideProviderName(drug.getOutsideProviderName());
+		prescription.setOutsideProviderOhip(drug.getOutsideProviderOhip());
+		prescription.setSpecialInstruction(drug.getSpecialInstruction());
+		prescription.setPickupDate(drug.getPickUpDateTime());
+		prescription.setPickupTime(drug.getPickUpDateTime());
+		prescription.setETreatmentType(drug.getETreatmentType());
+		prescription.setRxStatus(drug.getRxStatus());
+		if (drug.getDispenseInterval() != null) prescription.setDispenseInterval(drug.getDispenseInterval());
+		if (drug.getRefillDuration() != null) prescription.setRefillDuration(drug.getRefillDuration());
+		if (drug.getRefillQuantity() != null) prescription.setRefillQuantity(drug.getRefillQuantity());
 
-            rs = DBHandler.GetSQL(sql);
+		if (prescription.getSpecial() == null || prescription.getSpecial().length() <= 6) {
+			logger.error("I strongly suspect something is wrong, either special is null or it appears to not contain anything useful. drugId=" + drugId + ", drug.special=" + prescription.getSpecial(), new IllegalStateException("Drug special is blank or invalid"));
+			logger.error("data from db is : " + drug.getSpecial());
+		}
 
-            if (rs.next()) {
-                prescription = new Prescription(drugId, oscar.Misc.getString(rs, "provider_no"), rs.getInt("demographic_no"));
-                prescription.setRxCreatedDate(rs.getDate("create_date"));
-                prescription.setRxDate(rs.getDate("rx_date"));
-                prescription.setEndDate(rs.getDate("end_date"));
-                prescription.setWrittenDate(rs.getDate("written_date"));
-                prescription.setBrandName(oscar.Misc.getString(rs, "BN"));
-                prescription.setGCN_SEQNO(rs.getInt("GCN_SEQNO"));
-                prescription.setCustomName(oscar.Misc.getString(rs, "customName"));
-                prescription.setTakeMin(rs.getFloat("takemin"));
-                prescription.setTakeMax(rs.getFloat("takemax"));
-                prescription.setFrequencyCode(oscar.Misc.getString(rs, "freqcode"));
-                String dur=oscar.Misc.getString(rs, "duration");
-                if(dur.equalsIgnoreCase("null"))
-                    dur="";
-                prescription.setDuration(dur);
-                prescription.setDurationUnit(oscar.Misc.getString(rs, "durunit"));
-                prescription.setQuantity(oscar.Misc.getString(rs, "quantity"));
-                prescription.setRepeat(rs.getInt("repeat"));
-                prescription.setLastRefillDate(rs.getDate("last_refill_date"));
-                prescription.setNosubs(rs.getInt("nosubs"));
-                prescription.setPrn(rs.getInt("prn"));
-                prescription.setSpecial(oscar.Misc.getString(rs, "special"));
-                prescription.setGenericName(oscar.Misc.getString(rs, "GN"));
-                prescription.setAtcCode(oscar.Misc.getString(rs, "ATC"));
-                prescription.setScript_no(oscar.Misc.getString(rs, "script_no"));
-                prescription.setRegionalIdentifier(oscar.Misc.getString(rs, "regional_Identifier"));
-                prescription.setUnit(oscar.Misc.getString(rs, "unit"));
-                prescription.setUnitName(oscar.Misc.getString(rs, "unitName"));
-                prescription.setMethod(oscar.Misc.getString(rs, "method"));
-                prescription.setRoute(oscar.Misc.getString(rs, "route"));
-                prescription.setDrugForm(oscar.Misc.getString(rs, "drug_form"));
-                prescription.setCustomInstr(rs.getBoolean("custom_instructions"));
-                prescription.setDosage(oscar.Misc.getString(rs, "dosage"));
-                prescription.setLongTerm(rs.getBoolean("long_term"));
-                prescription.setCustomNote(rs.getBoolean("custom_note"));
-                prescription.setPastMed(rs.getBoolean("past_med"));
-                prescription.setStartDateUnknown(rs.getBoolean("start_date_unknown"));
-                prescription.setComment(rs.getString("comment"));
-                if (rs.getObject("patient_compliance")==null) prescription.setPatientCompliance(null);
-                else prescription.setPatientCompliance(rs.getBoolean("patient_compliance"));
-                prescription.setOutsideProviderName(oscar.Misc.getString(rs, "outside_provider_name"));
-                prescription.setOutsideProviderOhip(oscar.Misc.getString(rs, "outside_provider_ohip"));
-                prescription.setSpecialInstruction(oscar.Misc.getString(rs, "special_instruction"));
-                prescription.setPickupDate(rs.getDate("pickup_datetime"));
-                prescription.setPickupTime(rs.getDate("pickup_datetime"));
-                prescription.setETreatmentType(rs.getString("eTreatmentType"));
-                prescription.setRxStatus(rs.getString("rxStatus"));
-                if (rs.getObject("dispense_interval")!=null) prescription.setDispenseInterval(rs.getInt("dispense_interval"));
-                if (rs.getObject("refill_duration")!=null) prescription.setRefillDuration(rs.getInt("refill_duration"));
-                if (rs.getObject("refill_quantity")!=null) prescription.setRefillQuantity(rs.getInt("refill_quantity"));
-
-                if (prescription.getSpecial() == null || prescription.getSpecial().length() <= 6) {
-                    logger.error("I strongly suspect something is wrong, either special is null or it appears to not contain anything useful. drugId=" + drugId + ", drug.special=" + prescription.getSpecial(), new IllegalStateException("Drug special is blank or invalid"));
-                    logger.error("data from db is : " + rs.getString("special"));
-                }
-            } else {
-                logger.error("Drug is not found it should always be found. drugId=" + drugId, new IllegalStateException("Drug not found."));
-            }
-
-            rs.close();
-
-        } catch (SQLException e) {
-            logger.error(sql, e);
-        } finally {
-            DbConnectionFilter.releaseThreadLocalDbConnection();
-        }
-
-        return prescription;
-    }
+		return prescription;
+	}
 
     public Prescription newPrescription(String providerNo, int demographicNo) {
         // Create new prescription (only in memory)
@@ -2108,8 +2091,6 @@ public class RxPrescriptionData {
         }
 
         public boolean AddToFavorites(String providerNo, String favoriteName) {
-            boolean b = false;
-
             Favorite fav = new Favorite(0, providerNo, favoriteName, this.getBrandName(), this.getGCN_SEQNO(), this.getCustomName(), this.getTakeMin(), this.getTakeMax(), this.getFrequencyCode(), this.getDuration(), this.getDurationUnit(), this.getQuantity(), this.getRepeat(), this.getNosubsInt(), this.getPrnInt(), this.getSpecial(), this.getGenericName(), this.getAtcCode(), this.getRegionalIdentifier(), this.getUnit(), this.getUnitName(), this.getMethod(), this.getRoute(),
                     this.getDrugForm(), this.getCustomInstr(), this.getDosage());
 
@@ -2375,7 +2356,36 @@ public class RxPrescriptionData {
             this.customInstr = customInstr;
             this.dosage = dosage;
         }
-
+        
+        public Favorite(int favoriteId, String providerNo, String favoriteName, String BN, int GCN_SEQNO, String customName, float takeMin, float takeMax, String frequencyCode, String duration, String durationUnit, String quantity, int repeat, boolean nosubs,
+                boolean prn, String special, String GN, String atc, String regionalIdentifier, String unit, String unitName, String method, String route, String drugForm, boolean customInstr, String dosage) {
+            this.favoriteId = favoriteId;
+            this.providerNo = providerNo;
+            this.favoriteName = favoriteName;
+            this.BN = BN;
+            this.GCN_SEQNO = GCN_SEQNO;
+            this.customName = customName;
+            this.takeMin = takeMin;
+            this.takeMax = takeMax;
+            this.frequencyCode = frequencyCode;
+            this.duration = duration;
+            this.durationUnit = durationUnit;
+            this.quantity = quantity;
+            this.repeat = repeat;
+            this.nosubs = nosubs;
+            this.prn = prn;
+            this.special = special;
+            this.GN = GN;
+            this.atcCode = atc;
+            this.regionalIdentifier = regionalIdentifier;
+            this.unit = unit;
+            this.unitName = unitName;
+            this.method = method;
+            this.route = route;
+            this.drugForm = drugForm;
+            this.customInstr = customInstr;
+            this.dosage = dosage;
+        }
         public String getGN() {
             return this.GN;
         }
@@ -2742,7 +2752,14 @@ if (getSpecial() == null || getSpecial().length() < 4) {
 
     }
     
-	@Override
+    public static boolean addToFavorites(String providerNo, String favoriteName, Drug drug) {
+        Favorite fav = new Favorite(0, providerNo, favoriteName, drug.getBrandName(), drug.getGcnSeqNo(), drug.getCustomName(), drug.getTakeMin(), drug.getTakeMax(), drug.getFreqCode(), drug.getDuration(), drug.getDurUnit(), drug.getQuantity(), drug.getRepeat(), drug.isNoSubs(), drug.isPrn(), drug.getSpecial(), drug.getGenericName(), drug.getAtc(), drug.getRegionalIdentifier(), drug.getUnit(), drug.getUnitName(), drug.getMethod(), drug.getRoute(),
+        		drug.getDrugForm(), drug.isCustomInstructions(), drug.getDosage());
+
+        return fav.Save();
+    }
+
+    @Override
     public String toString()
 	{
 		return(ReflectionToStringBuilder.toString(this));

@@ -103,30 +103,29 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 	private String outsideProviderOhip = null;
 	@Column(name = "hide_from_drug_profile")
 	private Boolean hideFromDrugProfile;
-        @Column(name = "custom_note")
-	private Boolean customNote=false;
-        @Column(name = "non_authoritative")
+	@Column(name = "custom_note")
+	private Boolean customNote = false;
+	@Column(name = "non_authoritative")
 	private Boolean nonAuthoritative = false;
-        @Column(name = "pickup_datetime")
-        @Temporal(javax.persistence.TemporalType.DATE)
-        private Date pickupDateTime;
-        private String eTreatmentType = null;
-        private String rxStatus = null;
-	@Column(name="hide_cpp")
+	@Column(name = "pickup_datetime")
+	@Temporal(javax.persistence.TemporalType.DATE)
+	private Date pickupDateTime;
+	private String eTreatmentType = null;
+	private String rxStatus = null;
+	@Column(name = "hide_cpp")
 	private boolean hideFromCpp;
-        @Column(name="refill_duration")
-        private Integer refillDuration;
-        @Column(name="refill_quantity")
-        private Integer refillQuantity;
-        @Column(name="dispense_interval")
-        private Integer dispenseInterval;
-        @Column(name="position")
-        private Integer position;        
-        @Column(name="start_date_unknown")
-        private boolean startDateUnknown;    
-        private String comment;    
-        
-        
+	@Column(name = "refill_duration")
+	private Integer refillDuration;
+	@Column(name = "refill_quantity")
+	private Integer refillQuantity;
+	@Column(name = "dispense_interval")
+	private Integer dispenseInterval;
+	@Column(name = "position")
+	private Integer position;
+	@Column(name = "start_date_unknown")
+	private boolean startDateUnknown;
+	private String comment;
+
 	// ///
 	@Transient
 	private String remoteFacilityName = null;
@@ -135,8 +134,8 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 
 	public static final String DELETED = "deleted";
 	public static final String DOSE_CHANGE = "doseChange";
-        public static final String NOT_SELECTED = "notSelected";
-        public static final String UNKNOWN = "unknown";
+	public static final String NOT_SELECTED = "notSelected";
+	public static final String UNKNOWN = "unknown";
 	public static final String ADVERSE_REACTION = "adverseReaction";
 	public static final String ALLERGY = "allergy";
 	public static final String INEFFECTIVE_TREATMENT = "ineffectiveTreatment";
@@ -150,105 +149,110 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 	public static final String COST = "cost";
 	public static final String DRUG_INTERACTION = "drugInteraction";
 	public static final String OTHER = "other";
-        
-        public Drug(){}
-        public Drug (RxPrescriptionData.Prescription drug){
-            id=drug.getDrugId();
-            this.providerNo=drug.getProviderNo();
-            this.demographicId=drug.getDemographicNo();
-            this.rxDate=drug.getRxDate();
-            this.endDate=drug.getEndDate();
-            this.writtenDate=drug.getWrittenDate();
-            this.brandName=drug.getBrandName();
-            this.gcnSeqNo=drug.getGCN_SEQNO();
-            this.customName=drug.getCustomName();
-            this.takeMin=drug.getTakeMin();
-            this.takeMax=drug.getTakeMax();
-            this.freqCode=drug.getFrequencyCode();
-            this.duration=drug.getDuration();
-            this.durUnit=drug.getDurationUnit();
-            this.quantity=drug.getQuantity();
-            this.repeat=drug.getRepeat();
-            this.lastRefillDate=drug.getLastRefillDate();
-            this.noSubs=drug.getNosubs();
-            this.prn=drug.getPrn();
-            this.special=drug.getSpecial();
-            this.special_instruction=drug.getSpecialInstruction();
-            this.archived=drug.isArchived();
-            this.archivedReason=drug.getLastArchReason();
-            this.archivedDate=drug.getArchivedDate();
-            this.genericName=drug.getGenericName();
-            this.atc=drug.getAtcCode();
-            if(drug.getScript_no()==null || drug.getScript_no().trim().length()==0)
-                this.scriptNo=null;
-            else
-                this.scriptNo=Integer.parseInt(drug.getScript_no());
-            this.regionalIdentifier=drug.getRegionalIdentifier();
-            this.unit=drug.getUnit();
-            this.method=drug.getMethod();
-            this.route=drug.getRoute();
-            this.drugForm=drug.getDrugForm();
-            this.createDate=drug.getRxCreatedDate();
-            this.dosage=drug.getDosage();
-            this.customInstructions=drug.getCustomInstr();
-            this.unitName=drug.getUnitName();
-            this.longTerm=drug.isLongTerm();
-            this.pastMed=drug.isPastMed();
-            this.patientCompliance=drug.getPatientCompliance();
-            this.outsideProviderName=drug.getOutsideProviderName();
-            this.outsideProviderOhip=drug.getOutsideProviderOhip();
-            this.hideFromDrugProfile=false;
-            this.customNote=drug.isCustomNote();
-            this.eTreatmentType = drug.getETreatmentType();
-            this.rxStatus = drug.getRxStatus();
-            this.refillDuration = drug.getRefillDuration();
-            this.refillQuantity = drug.getRefillQuantity();
-            this.dispenseInterval = drug.getDispenseInterval();
-        }
-        public void setId(Integer i){
-            this.id=i;
-        }
-        public boolean isCustom() {
-            boolean b = false;
 
-            if (this.customName != null && !this.customName.equalsIgnoreCase("null")) {
-                b = true;
-            } else if (this.gcnSeqNo == 0) {
-                b = true;
-            }
-            return b;
-        }
-        public String getDrugName() {
-            String ret;
-            if (this.isCustom()) {
+	public Drug() {
+	}
 
-                if (this.customName != null) {
-                    ret = this.customName + " ";
-                } else {
-                    ret = "Unknown ";
-                }
-            } else {
-                ret = this.getBrandName() + " ";
-            }
-            return ret;
-        }
+	public Drug(RxPrescriptionData.Prescription drug) {
+		id = drug.getDrugId();
+		this.providerNo = drug.getProviderNo();
+		this.demographicId = drug.getDemographicNo();
+		this.rxDate = drug.getRxDate();
+		this.endDate = drug.getEndDate();
+		this.writtenDate = drug.getWrittenDate();
+		this.brandName = drug.getBrandName();
+		this.gcnSeqNo = drug.getGCN_SEQNO();
+		this.customName = drug.getCustomName();
+		this.takeMin = drug.getTakeMin();
+		this.takeMax = drug.getTakeMax();
+		this.freqCode = drug.getFrequencyCode();
+		this.duration = drug.getDuration();
+		this.durUnit = drug.getDurationUnit();
+		this.quantity = drug.getQuantity();
+		this.repeat = drug.getRepeat();
+		this.lastRefillDate = drug.getLastRefillDate();
+		this.noSubs = drug.getNosubs();
+		this.prn = drug.getPrn();
+		this.special = drug.getSpecial();
+		this.special_instruction = drug.getSpecialInstruction();
+		this.archived = drug.isArchived();
+		this.archivedReason = drug.getLastArchReason();
+		this.archivedDate = drug.getArchivedDate();
+		this.genericName = drug.getGenericName();
+		this.atc = drug.getAtcCode();
+		if (drug.getScript_no() == null || drug.getScript_no().trim().length() == 0) this.scriptNo = null;
+		else this.scriptNo = Integer.parseInt(drug.getScript_no());
+		this.regionalIdentifier = drug.getRegionalIdentifier();
+		this.unit = drug.getUnit();
+		this.method = drug.getMethod();
+		this.route = drug.getRoute();
+		this.drugForm = drug.getDrugForm();
+		this.createDate = drug.getRxCreatedDate();
+		this.dosage = drug.getDosage();
+		this.customInstructions = drug.getCustomInstr();
+		this.unitName = drug.getUnitName();
+		this.longTerm = drug.isLongTerm();
+		this.pastMed = drug.isPastMed();
+		this.patientCompliance = drug.getPatientCompliance();
+		this.outsideProviderName = drug.getOutsideProviderName();
+		this.outsideProviderOhip = drug.getOutsideProviderOhip();
+		this.hideFromDrugProfile = false;
+		this.customNote = drug.isCustomNote();
+		this.eTreatmentType = drug.getETreatmentType();
+		this.rxStatus = drug.getRxStatus();
+		this.refillDuration = drug.getRefillDuration();
+		this.refillQuantity = drug.getRefillQuantity();
+		this.dispenseInterval = drug.getDispenseInterval();
+	}
 
-        public Boolean isHideFromDrugProfile() {
+	public void setId(Integer i) {
+		this.id = i;
+	}
+
+	public boolean isCustom() {
+		boolean b = false;
+
+		if (this.customName != null && !this.customName.equalsIgnoreCase("null")) {
+			b = true;
+		} else if (this.gcnSeqNo == 0) {
+			b = true;
+		}
+		return b;
+	}
+
+	public String getDrugName() {
+		String ret;
+		if (this.isCustom()) {
+
+			if (this.customName != null) {
+				ret = this.customName + " ";
+			} else {
+				ret = "Unknown ";
+			}
+		} else {
+			ret = this.getBrandName() + " ";
+		}
+		return ret;
+	}
+
+	public Boolean isHideFromDrugProfile() {
 		if (hideFromDrugProfile == null) hideFromDrugProfile = false;
 		return hideFromDrugProfile;
 	}
+
 	public void setHideFromDrugProfile(Boolean c) {
 		this.hideFromDrugProfile = c;
 	}
-        public String getDosageDisplay() {
-            String ret = "";
-            if (this.getTakeMin() != this.getTakeMax()) {
-                ret += RxUtil.FloatToString(this.getTakeMin()) + "-" + RxUtil.FloatToString(this.getTakeMax());
-            } else {
-                ret += RxUtil.FloatToString(this.getTakeMin());
-            }
-            return ret;
-        }
+
+	public String getDosageDisplay() {
+		String ret = "";
+		if (this.getTakeMin() != this.getTakeMax()) {
+			ret += RxUtil.FloatToString(this.getTakeMin()) + "-" + RxUtil.FloatToString(this.getTakeMax());
+		} else {
+			ret += RxUtil.FloatToString(this.getTakeMin());
+		}
+		return ret;
+	}
 
 	public boolean isDeleted() {
 		if (isArchived() && DELETED.equals(getArchivedReason())) {
@@ -258,64 +262,68 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 	}
 
 	public boolean isDiscontinued() {
-            String ar=getArchivedReason();
+		String ar = getArchivedReason();
 		if (isArchived()
-		        && (UNKNOWN.equals(ar)|| NOT_SELECTED.equals(ar) || DOSE_CHANGE.equals(ar) || ADVERSE_REACTION.equals(ar) || ALLERGY.equals(ar) || INEFFECTIVE_TREATMENT.equals(ar) || PRESCRIBING_ERROR.equals(ar) || NO_LONGER_NECESSARY.equals(ar) || SIMPLIFYING_TREATMENT.equals(ar) || PATIENT_REQUEST.equals(ar) || NEW_SCIENTIFIC_EVIDENCE.equals(ar)
-		                || INCREASED_RISK_BENEFIT_RATIO.equals(ar) || DISCONTINUED_BY_ANOTHER_PHYSICIAN.equals(ar) || COST.equals(ar) || DRUG_INTERACTION.equals(ar) || OTHER.equals(ar))) {
+		        && (UNKNOWN.equals(ar) || NOT_SELECTED.equals(ar) || DOSE_CHANGE.equals(ar) || ADVERSE_REACTION.equals(ar) || ALLERGY.equals(ar) || INEFFECTIVE_TREATMENT.equals(ar) || PRESCRIBING_ERROR.equals(ar) || NO_LONGER_NECESSARY.equals(ar) || SIMPLIFYING_TREATMENT.equals(ar) || PATIENT_REQUEST.equals(ar) || NEW_SCIENTIFIC_EVIDENCE.equals(ar) || INCREASED_RISK_BENEFIT_RATIO.equals(ar) || DISCONTINUED_BY_ANOTHER_PHYSICIAN.equals(ar) || COST.equals(ar) || DRUG_INTERACTION.equals(ar) || OTHER.equals(ar))) {
 			return true;
 		}
 		return false;
 	}
 
-        public Boolean isNonAuthoritative() {
-                if (nonAuthoritative==null) return false;
+	public Boolean isNonAuthoritative() {
+		if (nonAuthoritative == null) return false;
 		return nonAuthoritative;
 	}
 
 	public void setNonAuthoritative(Boolean nonAuthoritative) {
 		this.nonAuthoritative = nonAuthoritative;
 	}
- 
-    public Integer getRefillDuration() {
-    	return refillDuration;
-    }
+
+	public Integer getRefillDuration() {
+		return refillDuration;
+	}
+
 	public void setRefillDuration(int refillDuration) {
-    	this.refillDuration = refillDuration;
-    }
+		this.refillDuration = refillDuration;
+	}
+
 	public Integer getRefillQuantity() {
-    	return refillQuantity;
-    }
+		return refillQuantity;
+	}
+
 	public void setRefillQuantity(int refillQuantity) {
-    	this.refillQuantity = refillQuantity;
-    }
+		this.refillQuantity = refillQuantity;
+	}
+
 	public Integer getDispenseInterval() {
-    	return dispenseInterval;
-    }
+		return dispenseInterval;
+	}
+
 	public void setDispenseInterval(int dispenseInterval) {
-    	this.dispenseInterval = dispenseInterval;
-    }
-	
-    public Date getPickUpDateTime() {
+		this.dispenseInterval = dispenseInterval;
+	}
+
+	public Date getPickUpDateTime() {
 		return pickupDateTime;
 	}
 
 	public void setPickUpDateTime(Date pickupDateTime) {
 		this.pickupDateTime = pickupDateTime;
 	}
-	
-	public void setETreatmentType(String eTreatmentType){
+
+	public void setETreatmentType(String eTreatmentType) {
 		this.eTreatmentType = eTreatmentType;
 	}
-	
-	public String getETreatmentType(){
+
+	public String getETreatmentType() {
 		return eTreatmentType;
 	}
-        
-	public void setRxStatus(String status){
+
+	public void setRxStatus(String status) {
 		this.rxStatus = status;
 	}
 
-	public String getRxStatus(){
+	public String getRxStatus() {
 		return rxStatus;
 	}
 
@@ -336,12 +344,13 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 	}
 
 	public boolean getHideFromCpp() {
-    	return hideFromCpp;
-    }
+		return hideFromCpp;
+	}
+
 	public void setHideFromCpp(boolean hideFromCpp) {
-    	this.hideFromCpp = hideFromCpp;
-    }
-	
+		this.hideFromCpp = hideFromCpp;
+	}
+
 	public Date getRxDate() {
 		return rxDate;
 	}
@@ -596,7 +605,8 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 	public void setLongTerm(Boolean longTerm) {
 		this.longTerm = longTerm;
 	}
-        public Boolean isCustomNote() {
+
+	public Boolean isCustomNote() {
 		if (customNote == null) customNote = false;
 		return customNote;
 	}
@@ -604,6 +614,7 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 	public void setCustomNote(Boolean c) {
 		this.customNote = c;
 	}
+
 	public Boolean getPastMed() {
 		return pastMed;
 	}
@@ -753,11 +764,13 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 	}
 
 	public Integer getRemoteFacilityId() {
-    	return (remoteFacilityId);
-    }
+		return (remoteFacilityId);
+	}
+
 	public void setRemoteFacilityId(Integer remoteFacilityId) {
-    	this.remoteFacilityId = remoteFacilityId;
-    }
+		this.remoteFacilityId = remoteFacilityId;
+	}
+
 	public long daysToExpire() {
 		long days = UtilDateUtilities.getNumDays(new Date(), getEndDate());
 		if (days < 0) {
@@ -765,25 +778,29 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 		}
 		return days;
 	}
-	public Integer getPosition() {
-    	return position;
-    }
-	public void setPosition(Integer position) {
-    	this.position = position;
-    }
-	public boolean getStartDateUnknown() {
-    	return startDateUnknown;
-    }
-	public void setStartDateUnknown(boolean startDateUnknown) {
-    	this.startDateUnknown = startDateUnknown;
-    }
-	public String getComment() {
-    	return comment;
-    }
-	public void setComment(String comment) {
-    	this.comment = comment;
-    }
 
-	
-	
+	public Integer getPosition() {
+		return position;
+	}
+
+	public void setPosition(Integer position) {
+		this.position = position;
+	}
+
+	public boolean getStartDateUnknown() {
+		return startDateUnknown;
+	}
+
+	public void setStartDateUnknown(boolean startDateUnknown) {
+		this.startDateUnknown = startDateUnknown;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
 }

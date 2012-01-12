@@ -99,7 +99,6 @@
         <ViolationValue>/src/main/java/org/oscarehr/casemgmt/service/CaseManagementManager.java:List filteredNotes = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/casemgmt/service/CaseManagementManager.java:List rt = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/casemgmt/service/CaseManagementManager.java:Map map = new HashMap();</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/casemgmt/service/CaseManagementManager.java:if (issueIds==null) return(new ArrayList());</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/casemgmt/service/CaseManagementManager.java:return new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/casemgmt/web/BaseCaseManagementEntryAction.java:List caseiss = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/casemgmt/web/BaseCaseManagementEntryAction.java:List uList = new ArrayList();</ViolationValue>
@@ -1513,8 +1512,6 @@
         <ViolationValue>/src/main/java/org/oscarehr/casemgmt/dao/MessagetblDAO.java:public class MessagetblDAO extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/casemgmt/dao/OnCallDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/casemgmt/dao/OnCallDAO.java:public class OnCallDAO extends HibernateDaoSupport {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/casemgmt/dao/PrescriptionDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/casemgmt/dao/PrescriptionDAO.java:public class PrescriptionDAO extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/casemgmt/dao/ProviderSignitureDao.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/casemgmt/dao/ProviderSignitureDao.java:public class ProviderSignitureDao extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/casemgmt/dao/RoleProgramAccessDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>

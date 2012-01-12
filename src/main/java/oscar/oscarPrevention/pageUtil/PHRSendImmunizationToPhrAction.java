@@ -26,7 +26,7 @@ import org.oscarehr.common.dao.PreventionDao;
 import org.oscarehr.common.dao.SentToPHRTrackingDao;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.SentToPHRTracking;
-import org.oscarehr.common.service.MyOscarMedicalDataManager;
+import org.oscarehr.common.service.myoscar.MyOscarMedicalDataManagerUtils;
 import org.oscarehr.myoscar_server.ws.MedicalDataType;
 import org.oscarehr.phr.PHRAuthentication;
 import org.oscarehr.phr.util.MyOscarServerWebServicesManager;
@@ -67,7 +67,7 @@ public class PHRSendImmunizationToPhrAction extends DispatchAction {
 		}
 
 		PHRAuthentication auth=MyOscarUtils.getPHRAuthentication(request.getSession());
-		SentToPHRTracking sentToPHRTracking = MyOscarMedicalDataManager.getExistingOrCreateInitialSentToPHRTracking(demographicNo, TYPE_IMMUNIZATIONS, MyOscarServerWebServicesManager.getMyOscarServerBaseUrl());
+		SentToPHRTracking sentToPHRTracking = MyOscarMedicalDataManagerUtils.getExistingOrCreateInitialSentToPHRTracking(demographicNo, TYPE_IMMUNIZATIONS, MyOscarServerWebServicesManager.getMyOscarServerBaseUrl());
 		
 		// new sync time needs to be set at the beginning of sync jst in case there's updates at the same time as the sync.
 		sentToPHRTracking.setSentDatetime(new Date());
@@ -86,7 +86,7 @@ public class PHRSendImmunizationToPhrAction extends DispatchAction {
 			
 			try
 			{
-				MyOscarMedicalDataManager.sendMedicalData(auth, demographicNo, TYPE_IMMUNIZATIONS, docAsString, prevention.getId(), prevention.getProviderNo(), prevention.getPreventionDate());
+				MyOscarMedicalDataManagerUtils.sendMedicalData(auth, demographicNo, TYPE_IMMUNIZATIONS, docAsString, prevention.getId(), prevention.getProviderNo(), prevention.getPreventionDate());
 				sentToPHRTracking.setLastObjectId(prevention.getId());
 				sentToPHRTrackingDao.merge(sentToPHRTracking);
 			}
