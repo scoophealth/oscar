@@ -67,7 +67,6 @@ import org.oscarehr.casemgmt.dao.EncounterWindowDAO;
 import org.oscarehr.casemgmt.dao.HashAuditDAO;
 import org.oscarehr.casemgmt.dao.IssueDAO;
 import org.oscarehr.casemgmt.dao.MessagetblDAO;
-import org.oscarehr.casemgmt.dao.PrescriptionDAO;
 import org.oscarehr.casemgmt.dao.ProviderSignitureDao;
 import org.oscarehr.casemgmt.dao.RoleProgramAccessDAO;
 import org.oscarehr.casemgmt.model.CaseManagementCPP;
@@ -83,6 +82,7 @@ import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.model.Messagetbl;
 import org.oscarehr.casemgmt.model.base.BaseHashAudit;
 import org.oscarehr.common.dao.AllergyDAO;
+import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Drug;
@@ -92,6 +92,7 @@ import org.oscarehr.dx.dao.DxResearchDAO;
 import org.oscarehr.dx.model.DxResearch;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import oscar.OscarProperties;
@@ -117,7 +118,6 @@ public class CaseManagementManager {
 	private IssueDAO issueDAO;
 	private CaseManagementCPPDAO caseManagementCPPDAO;
 	private AllergyDAO allergyDAO;
-	private PrescriptionDAO prescriptionDAO;
 	private MessagetblDAO messagetblDAO;
 	private EchartDAO echartDAO;
 	private ProviderDao providerDAO;
@@ -133,14 +133,15 @@ public class CaseManagementManager {
 	private DxResearchDAO dxResearchDAO;
 	private ProgramProviderDAO programProviderDao;
 	private ProgramAccessDAO programAccessDAO;
+	private DrugDao drugDao = (DrugDao) SpringUtils.getBean("drugDao");
 
 	private boolean enabled;
 
 	private static final Logger logger = MiscUtils.getLogger();
 
 	/*
-	* check to see if issue has been saved for this demo beforeif it has return issue; else return null
-	*/
+	 * check to see if issue has been saved for this demo beforeif it has return issue; else return null
+	 */
 	public CaseManagementIssue getIssueById(String demo, String issue_id) {
 		return this.caseManagementIssueDAO.getIssuebyId(demo, issue_id);
 	}
@@ -243,10 +244,10 @@ public class CaseManagementManager {
 		}
 
 		OscarProperties properties = OscarProperties.getInstance();
-		if( !Boolean.parseBoolean(properties.getProperty("AbandonOldChart", "false"))) {
+		if (!Boolean.parseBoolean(properties.getProperty("AbandonOldChart", "false"))) {
 			return echartDAO.saveEchart(note, cpp, userName, lastStr);
 		}
-		
+
 		return "";
 
 	}
@@ -283,12 +284,12 @@ public class CaseManagementManager {
 	}
 
 	@SuppressWarnings("unchecked")
-    public List<CaseManagementNote> getNotes(String demographic_no) {
+	public List<CaseManagementNote> getNotes(String demographic_no) {
 		return caseManagementNoteDAO.getNotesByDemographic(demographic_no);
 	}
 
-    public List<CaseManagementNote> getNotes(String demographic_no, String[] issues) {
-    	@SuppressWarnings("unchecked")
+	public List<CaseManagementNote> getNotes(String demographic_no, String[] issues) {
+		@SuppressWarnings("unchecked")
 		List<CaseManagementNote> notes = caseManagementNoteDAO.getNotesByDemographic(demographic_no, issues);
 		return notes;
 	}
@@ -303,9 +304,9 @@ public class CaseManagementManager {
 	public List<CaseManagementIssue> getIssues(int demographic_no) {
 		return caseManagementIssueDAO.getIssuesByDemographicOrderActive(demographic_no, null);
 	}
-	
+
 	public List<CaseManagementIssue> getIssuesByNote(int noteId) {
-		return caseManagementIssueDAO.getIssuesByNote(noteId,null);
+		return caseManagementIssueDAO.getIssuesByNote(noteId, null);
 	}
 
 	public List<CaseManagementIssue> getIssues(int demographic_no, Boolean resolved) {
@@ -365,14 +366,14 @@ public class CaseManagementManager {
 	public List<CaseManagementNote> getNotesByUUID(String uuid) {
 		return this.caseManagementNoteDAO.getNotesByUUID(uuid);
 	}
-	
+
 	public CaseManagementNote getMostRecentNote(String uuid) {
 		return this.caseManagementNoteDAO.getMostRecentNote(uuid);
 	}
 
 	public CaseManagementNoteExt getNoteExt(Long id) {
 		return this.caseManagementNoteExtDAO.getNoteExt(id);
-	}		
+	}
 
 	public List getExtByNote(Long noteId) {
 		return this.caseManagementNoteExtDAO.getExtByNote(noteId);
@@ -402,7 +403,7 @@ public class CaseManagementManager {
 		return this.caseManagementNoteLinkDAO.getLinkByNote(noteId);
 	}
 
-	public CaseManagementNoteLink getLatestLinkByNote(Long noteId){
+	public CaseManagementNoteLink getLatestLinkByNote(Long noteId) {
 		return this.caseManagementNoteLinkDAO.getLastLinkByNote(noteId);
 	}
 
@@ -425,7 +426,7 @@ public class CaseManagementManager {
 	public CaseManagementNoteLink getLatestLinkByTableId(Integer tableName, Long tableId, String otherId) {
 		return this.caseManagementNoteLinkDAO.getLastLinkByTableId(tableName, tableId, otherId);
 	}
-	
+
 	public CaseManagementNoteLink getLatestLinkByTableId(Integer tableName, Long tableId) {
 		return this.caseManagementNoteLinkDAO.getLastLinkByTableId(tableName, tableId);
 	}
@@ -454,15 +455,13 @@ public class CaseManagementManager {
 
 	public List<Drug> getPrescriptions(String demographic_no, boolean all) {
 		if (all) {
-			return this.prescriptionDAO.getPrescriptions(demographic_no);
+			return (drugDao.findByDemographicIdOrderByPosition(new Integer(demographic_no), null));
 		}
-		return this.prescriptionDAO.getUniquePrescriptions(demographic_no);
+		return (drugDao.getUniquePrescriptions(demographic_no));
 	}
 
 	/**
-	 * This method gets all prescriptions including from integrated facilities.
-	 * This method will also check to ensure the integrator is enabled for this facility before attemping to add remote drugs.
-	 * If it's not enabled it will return only local drugs.
+	 * This method gets all prescriptions including from integrated facilities. This method will also check to ensure the integrator is enabled for this facility before attemping to add remote drugs. If it's not enabled it will return only local drugs.
 	 */
 	public List<Drug> getPrescriptions(int demographicId, boolean all) {
 		List<Drug> results = null;
@@ -496,9 +495,7 @@ public class CaseManagementManager {
 					if (pd == null) {
 						prescriptions.add(getPrescriptDrug(cachedDrug));
 					} else {
-						if (pd.getRxDate().before(MiscUtils.toDate(cachedDrug.getRxDate())) ||
-							(pd.getRxDate().equals(cachedDrug.getRxDate()) && pd.getCreateDate().before(MiscUtils.toDate(cachedDrug.getCreateDate())))
-							) {
+						if (pd.getRxDate().before(MiscUtils.toDate(cachedDrug.getRxDate())) || (pd.getRxDate().equals(cachedDrug.getRxDate()) && pd.getCreateDate().before(MiscUtils.toDate(cachedDrug.getCreateDate())))) {
 							prescriptions.remove(pd);
 							prescriptions.add(getPrescriptDrug(cachedDrug));
 						}
@@ -511,7 +508,7 @@ public class CaseManagementManager {
 	}
 
 	private Drug getPrescriptDrug(CachedDemographicDrug cachedDrug) throws MalformedURLException {
-                Drug pd = new Drug();
+		Drug pd = new Drug();
 
 		pd.setBrandName(cachedDrug.getBrandName());
 		pd.setCustomName(cachedDrug.getCustomName());
@@ -523,10 +520,10 @@ public class CaseManagementManager {
 		pd.setCreateDate(MiscUtils.toDate(cachedDrug.getCreateDate()));
 
 		pd.setId(cachedDrug.getFacilityIdIntegerCompositePk().getCaisiItemId());
-		
+
 		int remoteFacilityId = cachedDrug.getFacilityIdIntegerCompositePk().getIntegratorFacilityId();
 		pd.setRemoteFacilityId(remoteFacilityId);
-		
+
 		CachedFacility cachedFacility = CaisiIntegratorManager.getRemoteFacility(remoteFacilityId);
 		pd.setRemoteFacilityName(cachedFacility.getName());
 
@@ -560,8 +557,7 @@ public class CaseManagementManager {
 
 	public void saveAndUpdateCaseIssues(List issuelist) {
 		/*
-		 * We're having a problem where duplicate CaseManagementIssue objects being 
-		 * created (as in points to same issue). 
+		 * We're having a problem where duplicate CaseManagementIssue objects being created (as in points to same issue).
 		 */
 		caseManagementIssueDAO.saveAndUpdateCaseIssues(issuelist);
 	}
@@ -581,9 +577,9 @@ public class CaseManagementManager {
 	public void saveCPP(CaseManagementCPP cpp, String providerNo) {
 		cpp.setProviderNo(providerNo); // added because nothing else was setting providerNo; not sure this is the right place to do this -- rwd
 		caseManagementCPPDAO.saveCPP(cpp);
-		
+
 		OscarProperties properties = OscarProperties.getInstance();
-		if( !Boolean.parseBoolean(properties.getProperty("AbandonOldChart", "false"))) {
+		if (!Boolean.parseBoolean(properties.getProperty("AbandonOldChart", "false"))) {
 			echartDAO.saveCPPIntoEchart(cpp, providerNo);
 		}
 	}
@@ -639,16 +635,16 @@ public class CaseManagementManager {
 		ongoing = ongoing + issueName + "\n";
 		cpp.setOngoingConcerns(ongoing);
 		caseManagementCPPDAO.saveCPP(cpp);
-		
+
 		OscarProperties properties = OscarProperties.getInstance();
-		if( !Boolean.parseBoolean(properties.getProperty("AbandonOldChart", "false"))) {
+		if (!Boolean.parseBoolean(properties.getProperty("AbandonOldChart", "false"))) {
 			echartDAO.updateEchartOngoing(cpp);
 		}
 
 	}
 
 	/**
-	 *substitute function for updateCurrentIssueToCPP We don't want to clobber existing text in ongoing concerns all we want to do is remove the issue description
+	 * substitute function for updateCurrentIssueToCPP We don't want to clobber existing text in ongoing concerns all we want to do is remove the issue description
 	 **/
 	public void removeIssueFromCPP(String demoNo, CaseManagementIssue issue) {
 		CaseManagementCPP cpp = caseManagementCPPDAO.getCPP(demoNo);
@@ -670,16 +666,16 @@ public class CaseManagementManager {
 
 			cpp.setOngoingConcerns(newOngoing);
 			caseManagementCPPDAO.saveCPP(cpp);
-			
+
 			OscarProperties properties = OscarProperties.getInstance();
-			if( !Boolean.parseBoolean(properties.getProperty("AbandonOldChart", "false"))) {
+			if (!Boolean.parseBoolean(properties.getProperty("AbandonOldChart", "false"))) {
 				echartDAO.updateEchartOngoing(cpp);
 			}
 		}
 	}
 
 	/**
-	 *Substitute for updateCurrentIssueToCPP we replace old issue with new without clobbering existing text
+	 * Substitute for updateCurrentIssueToCPP we replace old issue with new without clobbering existing text
 	 **/
 	public void changeIssueInCPP(String demoNo, String origIssueDesc, String newIssueDesc) {
 		CaseManagementCPP cpp = caseManagementCPPDAO.getCPP(demoNo);
@@ -697,9 +693,9 @@ public class CaseManagementManager {
 			newOngoing = matcher.replaceFirst(newIssueDesc);
 			cpp.setOngoingConcerns(newOngoing);
 			caseManagementCPPDAO.saveCPP(cpp);
-			
+
 			OscarProperties properties = OscarProperties.getInstance();
-			if( !Boolean.parseBoolean(properties.getProperty("AbandonOldChart", "false"))) {
+			if (!Boolean.parseBoolean(properties.getProperty("AbandonOldChart", "false"))) {
 				echartDAO.updateEchartOngoing(cpp);
 			}
 		}
@@ -721,9 +717,9 @@ public class CaseManagementManager {
 
 		cpp.setOngoingConcerns(ongoing);
 		caseManagementCPPDAO.saveCPP(cpp);
-		
+
 		OscarProperties properties = OscarProperties.getInstance();
-		if( !Boolean.parseBoolean(properties.getProperty("AbandonOldChart", "false"))) {
+		if (!Boolean.parseBoolean(properties.getProperty("AbandonOldChart", "false"))) {
 			echartDAO.updateEchartOngoing(cpp);
 		}
 	}
@@ -945,7 +941,7 @@ public class CaseManagementManager {
 	public String getCaisiRoleById(String id) {
 		// return providerCaisiRoleDAO.getCaisiRoleById(id);
 		return roleManager.getRole(id).getName();
-                }
+	}
 
 	public List search(CaseManagementSearchBean searchBean) {
 		return this.caseManagementNoteDAO.search(searchBean);
@@ -1003,9 +999,9 @@ public class CaseManagementManager {
 	 * 
 	 * @param demoNo demographic to search for
 	 */
-	public List getIssueHistory(String issueIds, String demoNo) {
-		issueIds=StringUtils.trimToNull(issueIds);
-		if (issueIds==null) return(new ArrayList());
+	public List<CaseManagementNote> getIssueHistory(String issueIds, String demoNo) {
+		issueIds = StringUtils.trimToNull(issueIds);
+		if (issueIds == null) return (new ArrayList<CaseManagementNote>());
 		return this.caseManagementNoteDAO.getIssueHistory(issueIds, demoNo);
 	}
 
@@ -1014,9 +1010,9 @@ public class CaseManagementManager {
 	 * @param providerNo provider reading issues
 	 * @param programId program provider is logged into
 	 */
-    public List<CaseManagementNote> filterNotes(Collection<CaseManagementNote> notes, String programId) {
-    	LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-    	
+	public List<CaseManagementNote> filterNotes(Collection<CaseManagementNote> notes, String programId) {
+		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+
 		List<CaseManagementNote> filteredNotes = new ArrayList<CaseManagementNote>();
 
 		if (notes.isEmpty()) {
@@ -1068,13 +1064,13 @@ public class CaseManagementManager {
 					add = true;
 				}
 			}
-			
-			//global default role access
-			String accessName="read " + noteRoleName + " notes";
-			if(roleProgramAccessDAO.hasAccess(accessName,role.getId())) {
-					add=true;
+
+			// global default role access
+			String accessName = "read " + noteRoleName + " notes";
+			if (roleProgramAccessDAO.hasAccess(accessName, role.getId())) {
+				add = true;
 			}
-			
+
 			// did it pass the test?
 			if (add) {
 				filteredNotes.add(cmNote);
@@ -1088,15 +1084,15 @@ public class CaseManagementManager {
 
 		return filteredNotes;
 	}
-	
-    public boolean hasRole(CachedDemographicNote cachedDemographicNote, String programId) {
-    	LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-    	
+
+	public boolean hasRole(CachedDemographicNote cachedDemographicNote, String programId) {
+		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+
 		// Get Role - if no ProgramProvider record found, show no issues.
 		@SuppressWarnings("unchecked")
 		List ppList = programProviderDao.getProgramProviderByProviderProgramId(loggedInInfo.loggedInProvider.getProviderNo(), new Long(programId));
 		if (ppList == null || ppList.isEmpty()) {
-			return(false);
+			return (false);
 		}
 
 		ProgramProvider pp = (ProgramProvider) ppList.get(0);
@@ -1110,7 +1106,7 @@ public class CaseManagementManager {
 
 		// iterate through the issue list
 		String noteRoleName = cachedDemographicNote.getRole();
-		if (noteRoleName!=null) noteRoleName=noteRoleName.toLowerCase();
+		if (noteRoleName != null) noteRoleName = noteRoleName.toLowerCase();
 		ProgramAccess pa = null;
 		boolean add = false;
 
@@ -1121,32 +1117,32 @@ public class CaseManagementManager {
 		if (pa != null) {
 			if (pa.isAllRoles() || isRoleIncludedInAccess(pa, role)) {
 				// filteredIssues.add(cmIssue);
-					return(true);
+				return (true);
 			}
 		} else {
 			if (noteRoleName.equals(role.getRoleName().toLowerCase())) {
 				// default
-				return(true);
+				return (true);
 			}
 		}
 
 		// apply defaults
 		if (!add) {
 			if (noteRoleName.equals(role.getRoleName().toLowerCase())) {
-				return(true);
+				return (true);
 			}
 		}
-			
-		//global default role access
-		String accessName="read " + noteRoleName + " notes";
-		if(roleProgramAccessDAO.hasAccess(accessName,role.getId())) {
-				return(true);
+
+		// global default role access
+		String accessName = "read " + noteRoleName + " notes";
+		if (roleProgramAccessDAO.hasAccess(accessName, role.getId())) {
+			return (true);
 		}
-			
-		return(false);
+
+		return (false);
 	}
-    
-    public boolean isRoleIncludedInAccess(ProgramAccess pa, Secrole role) {
+
+	public boolean isRoleIncludedInAccess(ProgramAccess pa, Secrole role) {
 		boolean result = false;
 
 		for (Iterator iter = pa.getRoles().iterator(); iter.hasNext();) {
@@ -1160,7 +1156,9 @@ public class CaseManagementManager {
 
 	public Map convertProgramAccessListToMap(List paList) {
 		Map map = new HashMap();
-		if(paList==null) {return map;}
+		if (paList == null) {
+			return map;
+		}
 		for (Iterator iter = paList.iterator(); iter.hasNext();) {
 			ProgramAccess pa = (ProgramAccess) iter.next();
 			map.put(pa.getAccessType().getName().toLowerCase(), pa);
@@ -1203,9 +1201,9 @@ public class CaseManagementManager {
 			if (pa == null && r.getId().intValue() == role.getId().intValue()) {
 				allowableSearchRoles.add(r);
 			}
-			
-			//global default role access			
-			if(roleProgramAccessDAO.hasAccess(key,role.getId())) {
+
+			// global default role access
+			if (roleProgramAccessDAO.hasAccess(key, role.getId())) {
 				allowableSearchRoles.add(r);
 			}
 		}
@@ -1226,8 +1224,8 @@ public class CaseManagementManager {
 	 * Filters a list of CaseManagementIssue objects based on role.
 	 */
 	public List<CaseManagementIssue> filterIssues(List<CaseManagementIssue> issues, String programId) {
-		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-		
+		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+
 		List<CaseManagementIssue> filteredIssues = new ArrayList<CaseManagementIssue>();
 
 		if (issues.isEmpty()) {
@@ -1266,13 +1264,13 @@ public class CaseManagementManager {
 					add = true;
 				}
 			}
-			
-			//global default role access
-			String accessName="write " + issueRole + " issues";
-			if(roleProgramAccessDAO.hasAccess(accessName,role.getId())) {
-					add=true;
+
+			// global default role access
+			String accessName = "write " + issueRole + " issues";
+			if (roleProgramAccessDAO.hasAccess(accessName, role.getId())) {
+				add = true;
 			}
-			
+
 			pa = null;
 			// read
 			pa = (ProgramAccess) programAccessMap.get("read " + issueRole + " issues");
@@ -1287,12 +1285,12 @@ public class CaseManagementManager {
 					add = true;
 				}
 			}
-			//global default role access
-			accessName= "read " + issueRole + " issues";
-			if(roleProgramAccessDAO.hasAccess(accessName,role.getId())) {
-					add=true;
+			// global default role access
+			accessName = "read " + issueRole + " issues";
+			if (roleProgramAccessDAO.hasAccess(accessName, role.getId())) {
+				add = true;
 			}
-			
+
 			// apply defaults
 			if (!add) {
 				if (issueRole.equalsIgnoreCase(role.getRoleName())) {
@@ -1437,8 +1435,8 @@ public class CaseManagementManager {
 	}
 
 	public void setProgramAccessDAO(ProgramAccessDAO programAccessDAO) {
-    	this.programAccessDAO = programAccessDAO;
-    }
+		this.programAccessDAO = programAccessDAO;
+	}
 
 	public void setIssueDAO(IssueDAO dao) {
 		this.issueDAO = dao;
@@ -1452,13 +1450,9 @@ public class CaseManagementManager {
 		this.allergyDAO = dao;
 	}
 
-	public void setPrescriptionDAO(PrescriptionDAO dao) {
-		this.prescriptionDAO = dao;
-	}
-
 	public void setProgramProviderDao(ProgramProviderDAO programProviderDao) {
-    	this.programProviderDao = programProviderDao;
-    }
+		this.programProviderDao = programProviderDao;
+	}
 
 	public void setRolesManager(RolesManager mgr) {
 		this.roleManager = mgr;
@@ -1526,60 +1520,54 @@ public class CaseManagementManager {
 		dx.setStatus("A");
 		dx.setAssociation(association);
 
-		if(!dxResearchDAO.entryExists(dx.getDemographicNo(), codingSystem, code) ) {
+		if (!dxResearchDAO.entryExists(dx.getDemographicNo(), codingSystem, code)) {
 			this.dxResearchDAO.save(dx);
 		}
 	}
 
 	public void saveToDx(String demographicNo, String code) {
-		saveToDx(demographicNo, code, null,false);
+		saveToDx(demographicNo, code, null, false);
 	}
 
 	public List<DxResearch> getDxByDemographicNo(String demographicNo) {
 		return this.dxResearchDAO.getByDemographicNo(Integer.parseInt(demographicNo));
 	}
 
-        /**
-         * This method takes in a string (template) eg
-         * "Signed on ${DATE} by {$USERSIGNATURE}"
-         * it then searches the string for values surrounded by ${ }.  Once a value is found it looks in the map to see if there is a value for that key.
-         * If it doesn't find a value in the map, it looks in the in recource bundle (this allows templates to be i18n compliant).  If nothing is found in the resource
-         * bundle the value is added as a blank in the returned formatted string.
-         * This is the default signing line.
-         *
-         * ECHART_SIGN_LINE=[${oscarEncounter.class.EctSaveEncounterAction.msgSigned} ${DATE} ${oscarEncounter.class.EctSaveEncounterAction.msgSigBy} ${USERSIGNATURE}]\n
-         *
-         * @param template string with template values used to create the String that is returned
-         * @param rc  The current locale's resource bundle
-         * @param map Values that can be subtituted in.
-         * @return Formatted String
-         */
-        public String getTemplateSignature(String template,ResourceBundle rc,Map<String,String> map){
-            StringBuilder ret = new StringBuilder();
-            int tagstart = -2;
-            int tagend;
-            int currentPosition = 0;
-            while ((tagstart = template.indexOf("${", tagstart+2)) >= 0) {
-                tagend = template.indexOf("}", tagstart);
-                String substituteName = template.substring(tagstart+2, tagend);
-                String substituteValue = map.get(substituteName);
-                if (substituteValue == null){
-                    try{
-                    substituteValue = rc.getString(substituteName);
-                    }catch(Exception e){
-                        substituteValue = "";
-                    }
-                }
+	/**
+	 * This method takes in a string (template) eg "Signed on ${DATE} by {$USERSIGNATURE}" it then searches the string for values surrounded by ${ }. Once a value is found it looks in the map to see if there is a value for that key. If it doesn't find a
+	 * value in the map, it looks in the in recource bundle (this allows templates to be i18n compliant). If nothing is found in the resource bundle the value is added as a blank in the returned formatted string. This is the default signing line.
+	 * ECHART_SIGN_LINE=[${oscarEncounter.class.EctSaveEncounterAction.msgSigned} ${DATE} ${oscarEncounter.class.EctSaveEncounterAction.msgSigBy} ${USERSIGNATURE}]\n
+	 * 
+	 * @param template string with template values used to create the String that is returned
+	 * @param rc The current locale's resource bundle
+	 * @param map Values that can be subtituted in.
+	 * @return Formatted String
+	 */
+	public String getTemplateSignature(String template, ResourceBundle rc, Map<String, String> map) {
+		StringBuilder ret = new StringBuilder();
+		int tagstart = -2;
+		int tagend;
+		int currentPosition = 0;
+		while ((tagstart = template.indexOf("${", tagstart + 2)) >= 0) {
+			tagend = template.indexOf("}", tagstart);
+			String substituteName = template.substring(tagstart + 2, tagend);
+			String substituteValue = map.get(substituteName);
+			if (substituteValue == null) {
+				try {
+					substituteValue = rc.getString(substituteName);
+				} catch (Exception e) {
+					substituteValue = "";
+				}
+			}
 
-                ret.append(template.substring(currentPosition,tagstart));
-                ret.append(substituteValue);
-                currentPosition = tagend+1;
-            }
+			ret.append(template.substring(currentPosition, tagstart));
+			ret.append(substituteValue);
+			currentPosition = tagend + 1;
+		}
 
-            ret.append(template.substring(currentPosition));
-            return ret.toString();
-        }
-
+		ret.append(template.substring(currentPosition));
+		return ret.toString();
+	}
 
 	public String getSignature(String cproviderNo, String userName, String roleName, Locale locale, int type) {
 
@@ -1594,30 +1582,30 @@ public class CaseManagementManager {
 		// if (providerSignitureDao.isOnSig(cproviderNo))
 		tempS = providerSignitureDao.getProviderSig(cproviderNo);
 		if (tempS != null && !"".equals(tempS.trim())) userName = tempS;
-                
+
 		ResourceBundle resourceBundle = ResourceBundle.getBundle("oscarResources", locale);
 		String signature;
-                if (userName != null && !"".equals(userName.trim())) {
-                    try{
-                        HashMap map = new HashMap();
-                        map.put("DATE",dt.format(now));
-                        map.put("USERSIGNATURE",userName);
-                        map.put("ROLENAME",rolename);
+		if (userName != null && !"".equals(userName.trim())) {
+			try {
+				HashMap map = new HashMap();
+				map.put("DATE", dt.format(now));
+				map.put("USERSIGNATURE", userName);
+				map.put("ROLENAME", rolename);
 
-			if (type == this.SIGNATURE_SIGNED) {
-                            //TODO: In the future pull this from a USER/PROGRAM preference.
-                            String signLine = OscarProperties.getInstance().getProperty("ECHART_SIGN_LINE");
-                            signature = getTemplateSignature(signLine,resourceBundle,map);
-			} else if (type == this.SIGNATURE_VERIFY) {
-                            String signLine = OscarProperties.getInstance().getProperty("ECHART_VERSIGN_LINE");
-                            signature = getTemplateSignature(signLine,resourceBundle,map);
-			} else {
-                            throw new Exception("No Signature type defined");
+				if (type == this.SIGNATURE_SIGNED) {
+					// TODO: In the future pull this from a USER/PROGRAM preference.
+					String signLine = OscarProperties.getInstance().getProperty("ECHART_SIGN_LINE");
+					signature = getTemplateSignature(signLine, resourceBundle, map);
+				} else if (type == this.SIGNATURE_VERIFY) {
+					String signLine = OscarProperties.getInstance().getProperty("ECHART_VERSIGN_LINE");
+					signature = getTemplateSignature(signLine, resourceBundle, map);
+				} else {
+					throw new Exception("No Signature type defined");
+				}
+			} catch (Exception eSignature) {
+				signature = "[Unknown Signature Type Requested]";
+				logger.error("Signature error while signing note ", eSignature);
 			}
-                    }catch(Exception eSignature){
-                        signature = "[Unknown Signature Type Requested]";
-                        logger.error("Signature error while signing note ",eSignature);
-                    }
 		} else {
 			signature = "\n[" + dt.format(now) + "]\n";
 		}

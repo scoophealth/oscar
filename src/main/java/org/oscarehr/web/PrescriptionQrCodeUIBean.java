@@ -4,22 +4,22 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.dao.ProviderDao;
-import org.oscarehr.casemgmt.dao.PrescriptionDAO;
-import org.oscarehr.casemgmt.model.Prescription;
 import org.oscarehr.common.dao.ClinicDAO;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DrugDao;
+import org.oscarehr.common.dao.PrescriptionDao;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.OmpO09;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.OscarToOscarUtils;
 import org.oscarehr.common.model.Clinic;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Drug;
+import org.oscarehr.common.model.Prescription;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.ProviderPreference;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.QrCodeUtils;
-import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.QrCodeUtils.QrCodesOrientation;
+import org.oscarehr.util.SpringUtils;
 import org.oscarehr.web.admin.ProviderPreferencesUIBean;
 
 import oscar.OscarProperties;
@@ -34,7 +34,7 @@ public final class PrescriptionQrCodeUIBean {
 	private static ClinicDAO clinicDAO = (ClinicDAO) SpringUtils.getBean("clinicDAO");
 	private static ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
 	private static DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
-	private static PrescriptionDAO prescriptionDAO = (PrescriptionDAO) SpringUtils.getBean("prescriptionDAO");
+	private static PrescriptionDao prescriptionDao = (PrescriptionDao) SpringUtils.getBean("prescriptionDao");
 	private static DrugDao drugDao = (DrugDao) SpringUtils.getBean("drugDao");
 
 	private PrescriptionQrCodeUIBean() {
@@ -47,9 +47,9 @@ public final class PrescriptionQrCodeUIBean {
 		
 		try {
 			Clinic clinic = clinicDAO.getClinic();
-			Prescription prescription = prescriptionDAO.getPrescription((long) prescriptionId);
+			Prescription prescription = prescriptionDao.find(prescriptionId);
 			Provider provider = providerDao.getProvider(prescription.getProviderNo());
-			Demographic demographic = demographicDao.getDemographic(prescription.getDemographic_no());
+			Demographic demographic = demographicDao.getDemographicById(prescription.getDemographicId());
 			List<Drug> drugs=drugDao.findByPrescriptionId(prescription.getId().intValue());
 						
 			OMP_O09 hl7PrescriptionMessage=OmpO09.makeOmpO09(clinic, provider, demographic, prescription, drugs);
