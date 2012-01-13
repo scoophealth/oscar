@@ -1907,15 +1907,13 @@ public class RxPrescriptionData {
 
         public void Delete() {
             try {
-                
-                String sql;
-
-                if (this.getDrugId() > 0) {
-                    sql = "UPDATE drugs SET archived = 1 WHERE drugid = " + this.getDrugId();
-                    DBHandler.RunSQL(sql);
-                }
-
-                DbConnectionFilter.getThreadLocalDbConnection().close();
+            	DrugDao drugDao=(DrugDao) SpringUtils.getBean("drugDao");
+            	Drug drug=drugDao.find(getDrugId());
+            	if (drug!=null)
+            	{
+            		drug.setArchived(true);
+            		drugDao.merge(drug);
+            	}            	
             } catch (Exception e) {
                 logger.error("unexpected error", e);
             }
@@ -2052,30 +2050,120 @@ public class RxPrescriptionData {
                     // if it doesn't already exist add it.
                     if (this.getDrugId() == 0) {
                     	int position = this.getNextPosition();
-                        sql = "INSERT INTO drugs (provider_no, demographic_no, " + "rx_date, end_date, written_date, BN, GCN_SEQNO, customName, " + "takemin, takemax, freqcode, duration, durunit, quantity, " + "`repeat`, last_refill_date, nosubs, prn, special, GN, script_no, ATC, " + "regional_identifier, unit, method, route, drug_form, create_date, " + "outside_provider_name, outside_provider_ohip, custom_instructions, " + "dosage, unitName, long_term, custom_note, past_med, special_instruction,patient_compliance, non_authoritative, pickup_datetime,eTreatmentType,rxStatus,dispense_interval,refill_quantity,refill_duration,hide_cpp,position,comment,start_date_unknown) " + "VALUES ('" + this.getProviderNo() + "', " + this.getDemographicNo() + ", '" + RxUtil.DateToString(this.getRxDate()) + "', '" + RxUtil.DateToString(this.getEndDate()) + "', '" + RxUtil.DateToString(this.getWrittenDate()) + "', '" + StringEscapeUtils.escapeSql(this.getBrandName()) + "', " + this.getGCN_SEQNO() + ", '" + StringEscapeUtils.escapeSql(this.getCustomName()) + "', " + this.getTakeMin() + ", " + this.getTakeMax() + ", '" + this.getFrequencyCode() + "', '" + this.getDuration() + "', '" + this.getDurationUnit() + "', '" + this.getQuantity() + "', " + this.getRepeat() + ", '" + RxUtil.DateToString(this.getLastRefillDate()) + "', " + this.getNosubsInt() + ", " + this.getPrnInt() + ", '" + escapedSpecial + "','" + StringEscapeUtils.escapeSql(this.getGenericName()) + "','" + scriptId + "', '" + this.getAtcCode() + "', '" + this.getRegionalIdentifier() + "','" + this.getUnit() + "','" + this.getMethod() + "','" + this.getRoute() + "','" + this.getDrugForm() + "',now(),'" + this.getOutsideProviderName() + "','" + this.getOutsideProviderOhip() + "', " + this.getCustomInstr() + ",'" + this.getDosage() + "', '" + this.getUnitName() + "', " + this.getLongTerm() + ", "  + this.isCustomNote() + ", " + this.getPastMed() + ", '" +this.special_instruction+"', "+ this.getPatientCompliance() + ", "  + this.isNonAuthoritative() + ", '"  + RxUtil.DateToString(this.getPickupDate(),"yyyy-MM-dd") + " " + RxUtil.DateToString(this.getPickupTime(),"hh:mm") + "','"+this.getETreatmentType()+"','"+this.getRxStatus()+"',"+this.getDispenseInterval()+","+this.getRefillQuantity()+","+this.getRefillDuration()+",0,"+position+",'"+this.getComment()+"',"+this.getStartDateUnknown()+")";
-                        MiscUtils.getLogger().debug("sql="+sql);
+                    	
+                    	DrugDao drugDao=(DrugDao) SpringUtils.getBean("drugDao");
+                    	Drug drug=drugDao.find(getDrugId());
 
-                        DBHandler.RunSQL(sql);
+                    	// the fields set are based on previous code, I don't know the details of why which are and are not set and can not audit it at this point in time.
+                    	drug.setProviderNo(getProviderNo());
+                    	drug.setDemographicId(getDemographicNo());
+                    	drug.setRxDate(getRxDate());
+                    	drug.setEndDate(getEndDate());
+                    	drug.setWrittenDate(getWrittenDate());
+                    	drug.setBrandName(getBrandName());
+                    	drug.setGcnSeqNo(getGCN_SEQNO());
+                    	drug.setCustomName(getCustomName());
+                    	drug.setTakeMin(getTakeMin());
+                    	drug.setTakeMax(getTakeMax());
+                    	drug.setFreqCode(getFrequencyCode());
+                    	drug.setDuration(getDuration());
+                    	drug.setDurUnit(getDurationUnit());
+                    	drug.setQuantity(getQuantity());
+                    	drug.setRepeat(getRepeat());
+                    	drug.setLastRefillDate(getLastRefillDate());
+                    	drug.setNoSubs(getNosubs());
+                    	drug.setPrn(getPrn());
+                    	drug.setSpecial(getSpecial());
+                    	drug.setGenericName(getGenericName());
+                    	drug.setScriptNo(Integer.parseInt(scriptId));
+                    	drug.setAtc(atcCode);
+                    	drug.setRegionalIdentifier(regionalIdentifier);
+                    	drug.setUnit(getUnit());
+                    	drug.setMethod(getMethod());
+                    	drug.setRoute(getRoute());
+                    	drug.setDrugForm(getDrugForm());
+                    	drug.setOutsideProviderName(getOutsideProviderName());
+                    	drug.setOutsideProviderOhip(getOutsideProviderOhip());
+                    	drug.setCustomInstructions(getCustomInstr());
+                    	drug.setDosage(getDosage());
+                    	drug.setUnitName(getUnitName());
+                    	drug.setLongTerm(getLongTerm());
+                    	drug.setCustomNote(isCustomNote());
+                    	drug.setPastMed(getPastMed());
+                    	drug.setSpecialInstruction(getSpecialInstruction());
+                    	drug.setPatientCompliance(getPatientCompliance());
+                    	drug.setNonAuthoritative(isNonAuthoritative());
+                    	drug.setPickUpDateTime(getPickupDate());
+                    	drug.setETreatmentType(getETreatmentType());
+                    	drug.setRxStatus(getRxStatus());
+                    	drug.setDispenseInterval(getDispenseInterval());
+                    	drug.setRefillQuantity(getRefillQuantity());
+                    	drug.setRefillDuration(getRefillDuration());                    	
+                    	drug.setHideFromCpp(false);
+                    	drug.setPosition(position);
+                    	drug.setComment(getComment());
+                    	drug.setStartDateUnknown(getStartDateUnknown());
 
-                        // it's added, so get the top (most recent) drugid
-                        sql = "SELECT Max(drugid) FROM drugs";
+                    	drugDao.persist(drug);
+                    	
+                        drugId = drug.getId();
 
-                        rs = DBHandler.GetSQL(sql);
-
-                        if (rs.next()) {
-                            this.drugId = rs.getInt(1);
-                        }
-
-                        rs.close();                      
                         b = true;
                     }
 
                 } else { // update the database
 
-                    //create_date is not updated
-                    sql = "UPDATE drugs SET " + "provider_no = '" + this.getProviderNo() + "', " + "demographic_no = " + this.getDemographicNo() + ", " + "rx_date = '" + RxUtil.DateToString(this.getRxDate()) + "', " + "end_date = '" + RxUtil.DateToString(this.getEndDate()) + "', " + "written_date = '" + RxUtil.DateToString(this.getWrittenDate()) + "', " + "BN = '" + StringEscapeUtils.escapeSql(this.getBrandName()) + "', " + "GCN_SEQNO = " + this.getGCN_SEQNO() + ", " + "customName = '" + StringEscapeUtils.escapeSql(this.getCustomName()) + "', " + "takemin = " + this.getTakeMin() + ", " + "takemax = " + this.getTakeMax() + ", " + "freqcode = '" + this.getFrequencyCode() + "', " + "duration = '" + this.getDuration() + "', " + "durunit = '" + this.getDurationUnit() + "', " + "quantity = '" + this.getQuantity() + "', " + "`repeat` = " + this.getRepeat() + ", " + "last_refill_date = '" + RxUtil.DateToString(this.getLastRefillDate()) + "', " + "nosubs = " + this.getNosubsInt() + ", " + "prn = " + this.getPrnInt() + ", " + "special = '" + escapedSpecial + "', " + "ATC = '" + this.atcCode + "', " + "regional_identifier = '" + this.regionalIdentifier + "', " + "unit = '" + this.getUnit() + "', " + "method = '" + this.getMethod() + "', " + "route = '" + this.getRoute() + "', " + "drug_form = '" + this.getDrugForm() + "', " + "dosage = '" + this.getDosage() + "', " + "outside_provider_name = '" + this.getOutsideProviderName() + "', " + "outside_provider_ohip = '" + this.getOutsideProviderOhip() + "', " + "custom_instructions = " + this.getCustomInstr() + ", " + "unitName = '" + this.getUnitName() + "', " + "long_term = " + this.getLongTerm() + ", " +"custom_note = " + this.isCustomNote() +", " + "past_med = " + this.getPastMed() + ", " +"special_instruction = '"+this.getSpecialInstruction()+"', " + "patient_compliance = " + this.getPatientCompliance() + ", eTreatmentType = '"+this.getETreatmentType()+"', rxStatus='"+this.getRxStatus()+"',dispense_interval="+this.getDispenseInterval()+", refill_quantity="+this.getRefillQuantity()+",refill_duration="+this.getRefillDuration()+",hide_cpp=" + ((this.isHideCpp())?1:0)+",position='"+this.getPosition()+"'" + ", " + "comment='" + comment + "'," + "start_date_unknown=" + this.getStartDateUnknown() + " WHERE drugid = " + this.getDrugId();
-                    MiscUtils.getLogger().debug("sql="+sql);
-                    DBHandler.RunSQL(sql);
+                	DrugDao drugDao=(DrugDao) SpringUtils.getBean("drugDao");
+                	Drug drug=drugDao.find(getDrugId());
+                	
+                    // create_date is not updated
+                	// the fields set are based on previous code, I don't know the details of why which are and are not set and can not audit it at this point in time.
+                	drug.setProviderNo(getProviderNo());
+                	drug.setDemographicId(getDemographicNo());
+                	drug.setRxDate(getRxDate());
+                	drug.setEndDate(getEndDate());
+                	drug.setWrittenDate(getWrittenDate());
+                	drug.setBrandName(getBrandName());
+                	drug.setGcnSeqNo(getGCN_SEQNO());
+                	drug.setCustomName(getCustomName());
+                	drug.setTakeMin(getTakeMin());
+                	drug.setTakeMax(getTakeMax());
+                	drug.setFreqCode(getFrequencyCode());
+                	drug.setDuration(getDuration());
+                	drug.setDurUnit(getDurationUnit());
+                	drug.setQuantity(getQuantity());
+                	drug.setRepeat(getRepeat());
+                	drug.setLastRefillDate(getLastRefillDate());
+                	drug.setNoSubs(getNosubs());
+                	drug.setPrn(getPrn());
+                	drug.setSpecial(getSpecial());
+                	drug.setAtc(atcCode);
+                	drug.setRegionalIdentifier(regionalIdentifier);
+                	drug.setUnit(getUnit());
+                	drug.setMethod(getMethod());
+                	drug.setRoute(getRoute());
+                	drug.setDrugForm(getDrugForm());
+                	drug.setDosage(getDosage());
+                	drug.setOutsideProviderName(getOutsideProviderName());
+                	drug.setOutsideProviderOhip(getOutsideProviderOhip());
+                	drug.setCustomInstructions(getCustomInstr());
+                	drug.setUnitName(getUnitName());
+                	drug.setLongTerm(getLongTerm());
+                	drug.setCustomNote(isCustomNote());
+                	drug.setPastMed(getPastMed());
+                	drug.setSpecialInstruction(getSpecialInstruction());
+                	drug.setPatientCompliance(getPatientCompliance());
+                	drug.setETreatmentType(getETreatmentType());
+                	drug.setRxStatus(getRxStatus());
+                	drug.setDispenseInterval(getDispenseInterval());
+                	drug.setRefillQuantity(getRefillQuantity());
+                	drug.setRefillDuration(getRefillDuration());
+                	drug.setHideFromCpp(isHideCpp());
+                	drug.setPosition(getPosition());
+                	drug.setComment(comment);
+                	drug.setStartDateUnknown(getStartDateUnknown());
+
+                	drugDao.merge(drug);
 
                     b = true;
                 }

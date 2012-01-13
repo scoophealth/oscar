@@ -891,14 +891,12 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		logger.debug("pushing demographicDrugss facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 		StringBuilder sentIds = new StringBuilder();
 
-		List<Drug> drugs = drugDao.findByDemographicIdOrderByDate(demographicId, null);
+		List<Drug> drugs = drugDao.findByDemographicIdUpdatedAfterDate(demographicId, lastDataUpdated);
 		if (drugs == null || drugs.size() == 0) return;
 
 		if (drugs != null) {
 			for (Drug drug : drugs) {
 				if (!providerIdsInFacility.contains(drug.getProviderNo())) continue;
-
-				if (drug.getCreateDate() != null && drug.getCreateDate().before(lastDataUpdated)) continue;
 
 				CachedDemographicDrug cachedDemographicDrug = new CachedDemographicDrug();
 

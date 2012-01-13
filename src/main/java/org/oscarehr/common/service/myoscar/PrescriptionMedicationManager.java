@@ -8,6 +8,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.log4j.Logger;
+import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.dao.PrescriptionDao;
 import org.oscarehr.common.dao.SentToPHRTrackingDao;
 import org.oscarehr.common.model.Drug;
@@ -51,6 +52,10 @@ public final class PrescriptionMedicationManager {
 		SentToPHRTracking sentToPHRTracking = MyOscarMedicalDataManagerUtils.getExistingOrCreateInitialSentToPHRTracking(demographicId, PRESCRIPTION_DATA_TYPE, MyOscarServerWebServicesManager.getMyOscarServerBaseUrl());
 		logger.debug("sendPrescriptionsMedicationsToMyOscar : demographicId=" + demographicId + ", lastSyncTime=" + sentToPHRTracking.getSentDatetime());
 
+		DrugDao drugDao=(DrugDao) SpringUtils.getBean("drugDao");
+		List<Drug> changedMedications = drugDao.findByDemographicIdUpdatedAfterDate(demographicId, sentToPHRTracking.getSentDatetime());
+		
+		
 		PrescriptionDao prescriptionDao = (PrescriptionDao) SpringUtils.getBean("prescriptionDao");
 		List<Prescription> changedPrescriptions = prescriptionDao.findByDemographicIdUpdatedAfterDate(demographicId, sentToPHRTracking.getSentDatetime());
 

@@ -224,4 +224,17 @@ public class DrugDao extends AbstractDao<Drug> {
 		return bint.intValue();
 	}
 
+	public List<Drug> findByDemographicIdUpdatedAfterDate(Integer demographicId, Date updatedAfterThisDate) {
+		String sqlCommand = "select x from Drug x where x.demographicId=?1 and x.lastUpdateDate>?2";
+
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, demographicId);
+		query.setParameter(2, updatedAfterThisDate);
+
+		@SuppressWarnings("unchecked")
+		List<Drug> results = query.getResultList();
+
+		return (results);
+	}
+
 }

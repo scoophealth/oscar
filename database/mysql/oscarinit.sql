@@ -657,6 +657,7 @@ CREATE TABLE drugs (
   position int(10) not null,
   comment varchar(255),
   start_date_unknown boolean,
+  lastUpdateDate datetime not null,
   PRIMARY KEY  (drugid)
 ) ;
 
