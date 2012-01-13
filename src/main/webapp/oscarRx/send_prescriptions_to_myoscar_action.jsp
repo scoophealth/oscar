@@ -10,7 +10,7 @@
 		String demographicNoString=request.getParameter("demographicId");
 		PHRAuthentication auth=MyOscarUtils.getPHRAuthentication(session);
 		PrescriptionMedicationManager.sendPrescriptionsMedicationsToMyOscar(auth, Integer.parseInt(demographicNoString));
-		WebUtils.addErrorMessage(session, "ItemsHaveBeenSentToMyOscar");
+		WebUtils.addInfoMessage(session, "ItemsHaveBeenSentToMyOscar");
 	}
 	catch (Exception e)
 	{
