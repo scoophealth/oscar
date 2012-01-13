@@ -58,7 +58,7 @@ public class Prescription extends AbstractModel<Integer> implements Serializable
 
 	@PreUpdate
 	@PrePersist
-	protected void jpaPreventUpdate()
+	protected void autoSetUpdateTime()
 	{
 		lastUpdateDate=new Date();
 	}

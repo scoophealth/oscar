@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -125,6 +127,9 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 	@Column(name = "start_date_unknown")
 	private boolean startDateUnknown;
 	private String comment;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date lastUpdateDate;
 
 	// ///
 	@Transient
@@ -203,6 +208,13 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 		this.refillDuration = drug.getRefillDuration();
 		this.refillQuantity = drug.getRefillQuantity();
 		this.dispenseInterval = drug.getDispenseInterval();
+	}
+
+	@PreUpdate
+	@PrePersist
+	protected void autoSetUpdateTime()
+	{
+		lastUpdateDate=new Date();
 	}
 
 	public void setId(Integer i) {
@@ -802,5 +814,13 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
+
+	public Date getLastUpdateDate() {
+    	return (lastUpdateDate);
+    }
+
+	public void setLastUpdateDate(Date lastUpdateDate) {
+    	this.lastUpdateDate = lastUpdateDate;
+    }
 
 }
