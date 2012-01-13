@@ -2052,7 +2052,7 @@ public class RxPrescriptionData {
                     	int position = this.getNextPosition();
                     	
                     	DrugDao drugDao=(DrugDao) SpringUtils.getBean("drugDao");
-                    	Drug drug=drugDao.find(getDrugId());
+                    	Drug drug=new Drug();
 
                     	// the fields set are based on previous code, I don't know the details of why which are and are not set and can not audit it at this point in time.
                     	drug.setProviderNo(getProviderNo());
