@@ -119,9 +119,9 @@ function updateAjax() {
 	<tr>
 		<td class="MainTableLeftColumn" valign="top">
 		        <%  if (country.equals("BR")) { %>
-                    <a href="../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&appointment=<%=appointment%>&displaymode=edit&dboperation=search_detail_ptbr"><bean:message key="demographic.demographiceditdemographic.btnEChart" /> &nbsp;</a>
+                    <a href="../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&appointment=<%=appointment%>&displaymode=edit&dboperation=search_detail_ptbr"><bean:message key="demographic.demographiceditdemographic.btnMasterFile" /></a>
                 <%}else{%>
-                    <a href="../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&appointment=<%=appointment%>&displaymode=edit&dboperation=search_detail"><bean:message key="demographic.demographiceditdemographic.btnEChart" /> &nbsp;</a>
+                    <a href="../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&appointment=<%=appointment%>&displaymode=edit&dboperation=search_detail"><bean:message key="demographic.demographiceditdemographic.btnMasterFile" /></a>
                 <%}%>
                 <br>
                 <a href="efmformslistadd.jsp?demographic_no=<%=demographic_no%>&appointment=<%=appointment%>&parentAjaxId=<%=parentAjaxId%>" class="current"> <bean:message key="eform.showmyform.btnAddEForm"/></a><br/>
