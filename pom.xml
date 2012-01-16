@@ -359,6 +359,13 @@
 			<version>0.0-SNAPSHOT</version>
 		</dependency>
 
+		<!-- cds cihi phc vrs -->	
+		<dependency>
+			<groupId>cds</groupId>
+			<artifactId>cds_cihi_phcvrs</artifactId>
+			<version>1.0</version>
+		</dependency>
+
 		<!-- cds cihi -->
 		<dependency>
 			<groupId>cds</groupId>
