@@ -178,7 +178,7 @@ if (!userRole.toLowerCase().contains("admin")) { %>
 
 <table class="MainTable" id="scrollNumber1" name="encounterTable">
 	<tr class="MainTableTopRow">
-		<td class="MainTableTopRowLeftColumn" width="100">
+		<td style="max-width:200px;" class="MainTableTopRowLeftColumn">
 		Demographic Export</td>
 		<td class="MainTableTopRowRightColumn">
 		<table class="TopStatusBar">
@@ -195,12 +195,13 @@ if (!userRole.toLowerCase().contains("admin")) { %>
 		</td>
 	</tr>
 	<tr>
-		<td class="MainTableLeftColumn" valign="top">
+		<td class="MainTableLeftColumn" valign="top" nowrap="nowrap">
 		    <% if (demographicNo== null) { %>
-		    <a href="diabetesExport.jsp">Diabetes Export</a>
-                    <a href='<c:out value="${ctx}/demographic/cihiExport.do"></c:out>'>CIHI Export</a>
-</td>
+		    <a href="diabetesExport.jsp">Diabetes Export</a><br>
+            <a href='<c:out value="${ctx}/demographic/cihiExportOMD4.do"></c:out>'>CIHI Export</a><br>
+            <a href='<c:out value="${ctx}/demographic/eRourkeExport.do"></c:out>'>Rourke 2009 Export</a>
 		    <%} %>
+		</td>
 		<td valign="top" class="MainTableRightColumn">
 		    <html:form action="/demographic/DemographicExport" method="get" onsubmit="return checkSelect(patientSet.value);">
 		    <div>

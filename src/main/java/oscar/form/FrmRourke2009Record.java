@@ -24,11 +24,15 @@
 package oscar.form;
 
 import java.sql.SQLException;
+import java.util.Enumeration;
 import java.util.Properties;
 import java.util.Date;
 import java.util.Calendar;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
+
+import oscar.oscarEncounter.data.EctFormData;
 import oscar.util.UtilDateUtilities;
 import org.oscarehr.util.SpringUtils;
 import org.oscarehr.common.dao.DemographicDao;
@@ -58,7 +62,7 @@ public class FrmRourke2009Record extends FrmRecord {
                 String postal = demo.getPostal();
                 if( postal != null && postal.length() >= 6 ) {
                     postal = postal.replaceAll("\\s+", "");
-                    postal = postal.substring(postal.length()-3);
+                    postal = postal.substring(0,3);
                 }
                 else {
                     postal = "";
@@ -99,7 +103,7 @@ public class FrmRourke2009Record extends FrmRecord {
                 demoVal = demo.getPostal();
                 if( demoVal != null && demoVal.length() >= 6 ) {
                     demoVal = demoVal.replaceAll("\\s+", "");
-                    demoVal = demoVal.substring(demoVal.length()-3);
+                    demoVal = demoVal.substring(0,3);
                     rourkeVal = props.getProperty("c_fsa","");
                     if( !rourkeVal.equals(demoVal) ) {
                         props.setProperty("c_fsa", demoVal);
@@ -134,6 +138,7 @@ public class FrmRourke2009Record extends FrmRecord {
 ///////////////////////////////////
     @Override
     public Properties getGraph(int demographicNo, int existingID)  throws SQLException {
+    	String formClass = "Growth0_36";
         Properties props = new Properties();        
 
         if(existingID==0) {
@@ -186,6 +191,37 @@ public class FrmRourke2009Record extends FrmRecord {
                     props.setProperty("c_Age", age);
                     
                 }//end if
+                
+                
+				//now we add measurements from formGrowth0_36 form
+                
+                EctFormData.PatientForm[] pforms = EctFormData.getPatientFormsFromLocalAndRemote(String.valueOf(demographicNo), "formGrowth0_36");
+                if (pforms.length > 0) {	
+                	EctFormData.PatientForm pfrm = pforms[0];
+                	FrmRecord rec = (new FrmRecordFactory()).factory(formClass);
+                    java.util.Properties growthProps = rec.getFormRecord(demographicNo, pfrm.formId);
+                    Enumeration<Object> keys = growthProps.keys();
+                    String key;
+                    String value;
+                    String[] dates;
+                    String date;
+                    while( keys.hasMoreElements() ) {
+                    	key = (String) keys.nextElement();
+                    	if( key.startsWith("date_")) {
+                    		value = growthProps.getProperty(key, "");
+                    		if( !value.equals("")) {
+                    			dates = value.split("\\/");
+                    			if( dates.length == 3 ) {
+                    				date = dates[2] + "/" + dates[1] + "/" + dates[0];
+                    				props.setProperty(key,date);                    				
+                    			}
+                    		}                    		                    		
+                    	}
+                    	else if( key.startsWith("weight_") || key.startsWith("length_") || key.startsWith("headCirc_") ) {                    		
+                    		props.setProperty(key, growthProps.getProperty(key, ""));
+                    	}
+                    }
+                }
             }
             catch( NoSuchMethodException e ) {
                 MiscUtils.getLogger().error("No Such Method Called", e);
@@ -198,6 +234,9 @@ public class FrmRourke2009Record extends FrmRecord {
             }
             catch( ClassNotFoundException e ) {
                 MiscUtils.getLogger().error("Cannot Find FormRourke2009 Class", e);
+            }
+            catch( IOException e ) {
+            	MiscUtils.getLogger().error("Problem retrieving " + formClass, e);
             }
         }
         return props;

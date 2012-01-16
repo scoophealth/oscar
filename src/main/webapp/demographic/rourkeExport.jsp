@@ -26,20 +26,6 @@ ArrayList setsList = ds.getDemographicSets();
 <html>
 <head>
 <title>CIHI Export</title>
-<script type="text/javascript">
-	function setReportType(select) {
-		
-		if(select.options[select.selectedIndex].value == "<%=DataExportDao.CIHI_OMD4%>") {
-			document.forms[0].action = "<c:out value="${ctx}"/>/demographic/cihiExportOMD4.do";
-			
-		}
-		else if(select.options[select.selectedIndex].value == "<%=DataExportDao.CIHI_PHC_VRS%>") {
-			document.forms[0].action = "<c:out value="${ctx}"/>/demographic/cihiExportPHC_VRS.do";
-		}
-		
-	}
-
-</script>
 <style type="text/css">
 
 .container {
@@ -61,7 +47,7 @@ input.setright {
 </style>
 </head>
 <body>
-<html:form action="/demographic/cihiExportOMD4.do" method="get">
+<html:form action="/demographic/eRourkeExport.do" method="post">
 <h3>Vender Information</h3>
 <div class="container" style="width:100%;">
 <div class="vendor" style="float:right">	
@@ -85,9 +71,8 @@ input.setright {
 </div>
 </div>	
 <div>
-			Extract Type<html:select property="extractType" onchange="setReportType(this);">
-				<html:option value="<%=DataExportDao.CIHI_OMD4%>"><%=DataExportDao.CIHI_OMD4%></html:option>
-				<html:option value="<%=DataExportDao.CIHI_PHC_VRS%>"><%=DataExportDao.CIHI_PHC_VRS%></html:option>
+			Extract Type<html:select property="extractType">
+				<html:option value="<%=DataExportDao.ROURKE%>"><%=DataExportDao.ROURKE%></html:option>
 			</html:select><br>
 		
 	
@@ -123,7 +108,7 @@ for( int idx = 0; idx < setsList.size(); ++idx ) {
 		%>
 		<tr>
 			<td><%=DateFormatUtils.format(dataExport.getDaterun().getTime(), DateFormatUtils.ISO_DATETIME_FORMAT.getPattern()) %></td>
-			<td><a href='<c:out value="${ctx}/demographic/cihiExportOMD4.do"></c:out>?method=getFile&zipFile=<%=file%>'><%=file %></a></td>
+			<td><a href='<c:out value="${ctx}/demographic/eRourkeExport.do"></c:out>?method=getFile&zipFile=<%=file%>'><%=file %></a></td>
 			<td><%=dataExport.getUser()%>
 			<td><%=dataExport.getType()%></td>
 		</tr>

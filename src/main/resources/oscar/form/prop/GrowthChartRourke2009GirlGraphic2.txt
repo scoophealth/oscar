@@ -14,6 +14,27 @@ p3_date15m      :       p3_ht15m
 p4_date18m      :       p4_ht18m
 p4_date24m      :       p4_ht24m
 
+date_1			 :		length_1
+date_2			 :		length_2
+date_3			 :		length_3
+date_4			 :		length_4
+date_5			 :		length_5
+date_6			 :		length_6
+date_7			 :		length_7
+date_8			 :		length_8
+date_9			 :		length_9
+date_10			 :		length_10
+date_11			 :		length_11
+date_12			 :		length_12
+date_13			 :		length_13
+date_14			 :		length_14
+date_15			 :		length_15
+date_16			 :		length_16
+date_17			 :		length_17
+date_18			 :		length_18
+date_19			 :		length_19
+date_20			 :		length_20
+
 __origX		:	125
 __origY		:	541
 __nMaxPixX	:	391
