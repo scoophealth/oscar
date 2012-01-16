@@ -31,7 +31,7 @@
 	if(true) {
         out.clear();
 		if (formId == 0) {                        
-			pageContext.forward("formrourke2009p1.jsp?demographic_no=" + demoNo + "&formId=" + formId) ;
+			pageContext.forward("formrourke2009complete.jsp?demographic_no=" + demoNo + "&formId=" + formId) ;
  		} else {
 			FrmRecord rec = (new FrmRecordFactory()).factory("Rourke2009");
 			java.util.Properties props = rec.getFormRecord(demoNo, formId);

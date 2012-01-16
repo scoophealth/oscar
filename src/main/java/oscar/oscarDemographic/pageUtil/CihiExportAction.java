@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -201,7 +202,9 @@ public class CihiExportAction extends DispatchAction {
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		OscarProperties properties = OscarProperties.getInstance();
 		Clinic clinic = clinicDAO.getClinic();
-		List<DataExport> dataExportList = dataExportDAO.findAll();
+		List<DataExport> dataExportList = dataExportDAO.findAllByType(DataExportDao.CIHI_OMD4);
+		dataExportList.addAll(dataExportDAO.findAllByType(DataExportDao.CIHI_PHC_VRS));
+		Collections.sort(dataExportList);
 		
 		DynaValidatorForm frm = (DynaValidatorForm)form;
 		String patientSet = frm.getString("patientSet");

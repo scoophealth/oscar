@@ -24,6 +24,10 @@
 
 package oscar.form.dao;
 
+import java.util.List;
+
+import javax.persistence.Query;
+
 import org.springframework.stereotype.Repository;
 import org.oscarehr.common.dao.AbstractDao;
 
@@ -38,6 +42,14 @@ public class Rourke2009DAO extends AbstractDao<FormRourke2009> {
 
     public Rourke2009DAO() {
         super(FormRourke2009.class);
+    }
+    
+    @SuppressWarnings("unchecked")
+    public List<FormRourke2009> findAllDistinctForms(Integer demographicNo) {
+    	String sql = "select frm from FormRourke2009 frm where frm.demographicNo = :demo and frm.id = (select max(frm2.id) from FormRourke2009 frm2 where frm2.formCreated = frm.formCreated and frm2.demographicNo = frm.demographicNo)";
+    	Query query = entityManager.createQuery(sql);
+    	query = query.setParameter("demo", demographicNo);
+    	return query.getResultList();
     }
 
 }
