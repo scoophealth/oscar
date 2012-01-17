@@ -47,10 +47,10 @@ public class PreventionDao extends AbstractDao<Prevention> {
 	/**
 	 * Results are ordered by the ID.
 	 */
-	public List<Prevention> findByDemographicIdAfterId(Integer demographicId, Integer preventionId) {
-		Query query = entityManager.createQuery("select x from Prevention x where demographicId=?1 and id>?2 order by id");
+	public List<Prevention> findByDemographicIdAfterDatetime(Integer demographicId, Date dateTime) {
+		Query query = entityManager.createQuery("select x from Prevention x where demographicId=?1 and lastUpdateDate>=?2 order by id");
 		query.setParameter(1, demographicId);
-		query.setParameter(2, preventionId);
+		query.setParameter(2, dateTime);
 
 		@SuppressWarnings("unchecked")
 		List<Prevention> results = query.getResultList();
