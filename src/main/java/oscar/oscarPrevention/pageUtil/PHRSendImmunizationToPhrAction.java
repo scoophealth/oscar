@@ -28,6 +28,7 @@ import org.oscarehr.common.dao.SentToPHRTrackingDao;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.SentToPHRTracking;
 import org.oscarehr.common.service.myoscar.MyOscarMedicalDataManagerUtils;
+import org.oscarehr.myoscar_server.ws.MedicalDataTransfer2;
 import org.oscarehr.myoscar_server.ws.MedicalDataType;
 import org.oscarehr.phr.PHRAuthentication;
 import org.oscarehr.phr.util.MyOscarServerWebServicesManager;
@@ -71,11 +72,12 @@ public class PHRSendImmunizationToPhrAction extends DispatchAction {
 		PHRAuthentication auth=MyOscarUtils.getPHRAuthentication(request.getSession());
 		SentToPHRTracking sentToPHRTracking = MyOscarMedicalDataManagerUtils.getExistingOrCreateInitialSentToPHRTracking(demographicNo, TYPE_IMMUNIZATIONS, MyOscarServerWebServicesManager.getMyOscarServerBaseUrl());
 		
-		// new sync time needs to be set at the beginning of sync jst in case there's updates at the same time as the sync.
+		// new sync time needs to be set at the beginning of sync just in case there's updates at the same time as the sync.
 		sentToPHRTracking.setSentDatetime(new Date());
 		
-		List<Prevention> preventionList = getPreventionDao().findByDemographicIdAfterId(demographicNo, sentToPHRTracking.getLastObjectId());
+		List<Prevention> preventionList = getPreventionDao().findByDemographicIdAfterDatetime(demographicNo, sentToPHRTracking.getSentDatetime());
 		String docAsString=null;
+		MedicalDataTransfer2 medicalDataTransfer = null;
 		for (Prevention prevention : preventionList) {
 			
 			//create immunization xml
@@ -85,12 +87,17 @@ public class PHRSendImmunizationToPhrAction extends DispatchAction {
 			
 			writeXmlExtra(doc, preventionExt);
 			docAsString = XmlUtils.toString(doc, false);
-			
+			 
 			try
 			{
-				MyOscarMedicalDataManagerUtils.sendMedicalData(auth, demographicNo, TYPE_IMMUNIZATIONS, docAsString, prevention.getId(), prevention.getProviderNo(), prevention.getPreventionDate());
-				sentToPHRTracking.setLastObjectId(prevention.getId());
+				medicalDataTransfer = MyOscarMedicalDataManagerUtils.getEmptyMedicalDataTransfer2(auth, prevention.getPreventionDate(), prevention.getProviderNo(), prevention.getDemographicId());
+				medicalDataTransfer.setMedicalDataType(TYPE_IMMUNIZATIONS);
+				medicalDataTransfer.setOriginalSourceId(prevention.getId().toString());
+				medicalDataTransfer.setData(docAsString);
+				
+				MyOscarMedicalDataManagerUtils.addMedicalData(auth, medicalDataTransfer, TYPE_IMMUNIZATIONS, prevention.getId());
 				sentToPHRTrackingDao.merge(sentToPHRTracking);
+				sentToPHRTracking.setSentDatetime(new Date()); //update time for next tracking
 			}
 			catch (Exception e)
 			{
