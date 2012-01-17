@@ -19,18 +19,12 @@
 
 package org.oscarehr.common.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
 import org.oscarehr.common.model.Prevention;
-import org.oscarehr.util.DbConnectionFilter;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -74,23 +68,27 @@ public class PreventionDao extends AbstractDao<Prevention> {
 
 		return (results);
 	}
+	
+	public List<Prevention> findByTypeAndDate(String preventionType, Date startDate, Date endDate) {
+		Query query = entityManager.createQuery("select x from Prevention x where preventionType=?1 and preventionDate>=?2 and preventionDate<=?3 and deleted='0' and refused='0' order by preventionDate");
+		query.setParameter(1, preventionType);
+		query.setParameter(2, startDate);
+		query.setParameter(3, endDate);
+		
+		@SuppressWarnings("unchecked")
+		List<Prevention> results = query.getResultList();
 
-	public HashMap<String, String> getPreventionExt(Integer preventionId) {
-		try {
-			Connection c = DbConnectionFilter.getThreadLocalDbConnection();
-			PreparedStatement ps = c.prepareStatement("select * from preventionsExt where prevention_id=?");
-			ps.setInt(1, preventionId);
-			ResultSet rs = ps.executeQuery();
+		return (results);
+	}
+	
+	public List<Prevention> findByTypeAndDemoNo(String preventionType, Integer demoNo) {
+		Query query = entityManager.createQuery("select x from Prevention x where preventionType=?1 and demographicId=?2 and deleted='0' order by preventionDate");
+		query.setParameter(1, preventionType);
+		query.setParameter(2, demoNo);
+		
+		@SuppressWarnings("unchecked")
+		List<Prevention> results = query.getResultList();
 
-			HashMap<String, String> results=new HashMap<String, String>();
-			while (rs.next()) {
-				results.put(rs.getString("keyval"), rs.getString("val"));
-			}
-			
-			return(results);
-		}
-		catch (SQLException e) {
-			throw(new PersistenceException(e));
-		}
+		return (results);
 	}
 }

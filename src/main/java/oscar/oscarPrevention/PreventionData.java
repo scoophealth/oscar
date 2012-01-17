@@ -29,7 +29,6 @@
 package oscar.oscarPrevention;
 
 import java.net.MalformedURLException;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -41,7 +40,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
@@ -49,9 +47,13 @@ import org.oscarehr.PMmodule.caisi_integrator.RemotePreventionHelper;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicPrevention;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
-import org.oscarehr.util.DbConnectionFilter;
+import org.oscarehr.common.dao.PreventionDao;
+import org.oscarehr.common.dao.PreventionExtDao;
+import org.oscarehr.common.model.Prevention;
+import org.oscarehr.common.model.PreventionExt;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBHandler;
 import oscar.oscarDemographic.data.DemographicData;
@@ -60,119 +62,95 @@ import oscar.util.UtilDateUtilities;
 
 public class PreventionData {
 	private static Logger log = MiscUtils.getLogger();
-
-	/*
-	 * create table preventions( id int(10) NOT NULL auto_increment primary key, demographic_no int(10) NOT NULL default '0', creation_date datetime, prevention_date date,
-	 * provider_no varchar(6) NOT NULL default '', provider_name varchar(255), prevention_type varchar(20), next_date date, never char(1) default '0', deleted char(1) default '0',
-	 * refused char(1) default '0', creator varchar(6) default NULL )
-	 * 
-	 * need to add next_date
-	 * 
-	 * create table preventionsExt( id int(10) NOT NULL auto_increment primary key, prevention_id int(10), keyval varchar(20), val text )
-	 */
+	private static PreventionDao preventionDao = (PreventionDao) SpringUtils.getBean("preventionDao");
+	private static PreventionExtDao preventionExtDao = (PreventionExtDao) SpringUtils.getBean("preventionExtDao");
 
 	private PreventionData() {
 		// prevent instantiation
 	}
 
-	public static Integer insertPreventionData(String creator, String demoNo, String date, String providerNo, String providerName, String preventionType, String refused, String nextDate,
-			String neverWarn, ArrayList<Map<String,String>> list) {
-		String sql = null;
+	public static Integer insertPreventionData(String creator, String demoNo, String date, String providerNo, String providerName, String preventionType, 
+			String refused, String nextDate, String neverWarn, ArrayList<Map<String,String>> list) {
 		Integer insertId = -1;
 		try {
+			Prevention prevention = new Prevention();
+			prevention.setCreatorProviderNo(creator);
+			prevention.setDemographicId(Integer.valueOf(demoNo));
+			prevention.setPreventionDate(UtilDateUtilities.StringToDate(date, "yyyy-MM-dd"));
+			prevention.setProviderNo(providerNo);
+			prevention.setPreventionType(preventionType);
+			prevention.setRefused(refused.trim().equals("1"));
+			prevention.setNextDate(UtilDateUtilities.StringToDate(nextDate, "yyyy-MM-dd"));
+			prevention.setNever(neverWarn.trim().equals("1"));
+			prevention.setLastUpdateDate(new Date());
+		
+			preventionDao.persist(prevention);
+			if (prevention.getId()==null) return insertId;
 			
-			ResultSet rs;
-			sql = "Insert into preventions (creator,demographic_no,prevention_date,provider_no,provider_name,prevention_type,refused,creation_date,next_date,never) values " + "('"
-					+ creator + "','" + demoNo + "','" + date + "','" + providerNo + "','" + providerName + "','" + preventionType + "','" + refused + "',now(),'" + nextDate
-					+ "','" + neverWarn + "')";
-			log.debug(sql);
-			DBHandler.RunSQL(sql);
-			rs = DBHandler.GetSQL("select Last_insert_id()");
-			if (rs.next()) {
-				insertId = rs.getInt(1);
-			}
-			if (insertId != -1) {
-				for (int i = 0; i < list.size(); i++) {
-					Map<String,String> h = list.get(i);
-					for (Map.Entry<String, String> entry : h.entrySet()) {
-						if (entry.getKey() != null && entry.getValue() != null) {
-							addPreventionKeyValue("" + insertId, entry.getKey(), entry.getValue());
-						}
+			insertId = prevention.getId();
+			for (int i = 0; i < list.size(); i++) {
+				Map<String,String> h = list.get(i);
+				for (Map.Entry<String, String> entry : h.entrySet()) {
+					if (entry.getKey() != null && entry.getValue() != null) {
+						addPreventionKeyValue("" + insertId, entry.getKey(), entry.getValue());
 					}
 				}
 			}
-		}
-		catch (SQLException e) {
+		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			log.error(sql);
 		}
 		return insertId;
 	}
 
 	public static void addPreventionKeyValue(String preventionId, String keyval, String val) {
-		String sql = null;
 		try {
-			sql = "Insert into preventionsExt (prevention_id,keyval,val) values " + "('" + preventionId + "','" + keyval + "','" + StringEscapeUtils.escapeSql(val) + "')";
-			log.debug(sql);
-			DBHandler.RunSQL(sql);
+			PreventionExt preventionExt = new PreventionExt();
+			preventionExt.setPreventionId(Integer.valueOf(preventionId));
+			preventionExt.setKeyval(keyval);
+			preventionExt.setVal(val);
+			
+			preventionExtDao.persist(preventionExt);
 		}
-		catch (SQLException e) {
+		catch (Exception e) {
 			log.error(e.getMessage(), e);
-			log.error(sql);
 		}
 	}
 
 	public static Map<String,String> getPreventionKeyValues(String preventionId) {
 		Map<String,String> h = new HashMap<String,String>();
-		String sql = null;
+		
 		try {
-			
-			ResultSet rs;
-			sql = "select * from  preventionsExt where prevention_id = '" + preventionId + "'";
-			log.debug(sql);
-			rs = DBHandler.GetSQL(sql);
-			while (rs.next()) {
-				String key = oscar.Misc.getString(rs, "keyval");
-				String val = oscar.Misc.getString(rs, "val");
-				if (key != null && val != null) {
-					h.put(key, val);
-				}
+			List<PreventionExt> preventionExts = preventionExtDao.findByPreventionId(Integer.valueOf(preventionId));
+			for (PreventionExt preventionExt : preventionExts) {
+				h.put(preventionExt.getkeyval(), preventionExt.getVal());
 			}
-		}
-		catch (SQLException e) {
+		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			log.error(sql);
 		}
 		return h;
 	}
 
 	public static void deletePreventionData(String id) {
-		String sql = null;
 		try {
+			Prevention prevention = preventionDao.find(Integer.valueOf(id));
+			prevention.setDeleted(true);
+			prevention.setLastUpdateDate(new Date());
 			
-			
-			sql = "update preventions set deleted = '1' where id = '" + id + "' "; // TODO: logg this in the Deletion record table or generic logging table
-			log.debug(sql);
-			DBHandler.RunSQL(sql);
-		}
-		catch (SQLException e) {
+			preventionDao.merge(prevention);
+		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			log.error(sql);
 		}
 	}
 
 	public static void setNextPreventionDate(String date, String id) {
-		String sql = null;
 		try {
+			Prevention prevention = preventionDao.find(Integer.valueOf(id));
+			prevention.setNextDate(UtilDateUtilities.StringToDate(date, "yyyy-MM-dd"));
+			prevention.setLastUpdateDate(new Date());
 			
-			
-			sql = "update preventions set next_date = '" + date + "' where id = '" + id + "' ";
-			log.debug(sql);
-			DBHandler.RunSQL(sql);
-		}
-		catch (SQLException e) {
+			preventionDao.merge(prevention);
+		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			log.error(sql);
 		}
 	}
 
@@ -196,62 +174,39 @@ public class PreventionData {
 		insertPreventionData(creator, demoNo, date, providerNo, providerName, preventionType, refused, nextDate, neverWarn, list);
 	}
 
-	public static ArrayList<Map<String,Object>> getPreventionData(String demoNo) {
-		return getPreventionData("%", demoNo);
-	}
-
 	public static ArrayList<Map<String,Object>> getPreventionDataFromExt(String extKey, String extVal) {
 		ArrayList<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
-		String sql = null;
+		
 		try {
-			
-			ResultSet rs;
-			sql = "Select prevention_id from preventionsExt where  keyval = '" + extKey + "' and val = '" + extVal + "'";
-			log.debug(sql);
-			rs = DBHandler.GetSQL(sql);
-			while (rs.next()) {
-				Map<String,Object> hash = getPreventionById(oscar.Misc.getString(rs, "prevention_id"));
+			List<PreventionExt> preventionExts = preventionExtDao.findByKeyAndValue(extKey, extVal);
+			for (PreventionExt preventionExt : preventionExts) {
+				Map<String,Object> hash = getPreventionById(preventionDao.find(preventionExt.getPreventionId()).toString());
 				if (hash.get("deleted") != null && ((String) hash.get("deleted")).equals("0")) {
 					list.add(hash);
 				}
 			}
-		}
-		catch (SQLException e) {
+		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			log.error(sql);
 		}
 		return list;
 	}
 
-        /*
-         * Fetch one extended prevention key
-         * Requires prevention id and keyval to return
-         */
-        public static String getExtValue(String id, String keyval) {
-            String sql = "select val from preventionsExt where prevention_id = ? and keyval = ?";
-           
-            String key = "";
-		try {           
-
-                    PreparedStatement pstmt = DbConnectionFilter.getThreadLocalDbConnection().prepareStatement(sql);
-                    pstmt.setString(1, id);
-                    pstmt.setString(2, keyval);
-                    ResultSet rs = pstmt.executeQuery();
-
-                    if( rs.next() ) {
-                        key = rs.getString(1);
-                    }
-
-                    rs.close();
-                    pstmt.close();
-                }
-                catch (Exception e) {
-                    log.error(e.getMessage(), e);
-                    log.error(sql);
-		}
-
-            return key;
+    /*
+     * Fetch one extended prevention key
+     * Requires prevention id and keyval to return
+     */
+    public static String getExtValue(String id, String keyval) {
+    	try {
+    		List<PreventionExt> preventionExts = preventionExtDao.findByPreventionIdAndKey(Integer.valueOf(id), keyval);
+    		for (PreventionExt preventionExt : preventionExts) {
+    			return preventionExt.getVal();
+    		}
         }
+        catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+        return "";
+    }
 
 	// //////
 	/**
@@ -259,37 +214,26 @@ public class PreventionData {
 	 * Rh injection's product #, from 2006-12-12 to 2006-12-18
 	 * 
 	 */
-	public static ArrayList<Map<String,Object>> getExtValues(String injectionType, java.util.Date startDate, java.util.Date endDate, String keyVal) {
-		String sql = "select preventions.id as preventions_id, demographic_no, prevention_date ,val from preventions, preventionsExt where preventions.id = preventionsExt.prevention_id  and prevention_type = ? and prevention_date >= ? and prevention_date <= ? and preventionsExt.keyval = ? and preventions.deleted = '0' and preventions.refused = '0' order by prevention_date";
-
+	public static ArrayList<Map<String,Object>> getExtValues(String injectionType, Date startDate, Date endDate, String keyVal) {
 		ArrayList<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
 		
-		try {
-			// log.debug("e-DATE: "+date);		
-
-			PreparedStatement pstmt = DbConnectionFilter.getThreadLocalDbConnection().prepareStatement(sql);
-			pstmt.setString(1, injectionType);
-			pstmt.setDate(2, new java.sql.Date(startDate.getTime()));
-			pstmt.setDate(3, new java.sql.Date(endDate.getTime()));
-			pstmt.setString(4, keyVal);
-
-			ResultSet rs = pstmt.executeQuery();
-
-			while (rs.next()) {
-				Map<String,Object> h = new HashMap<String,Object>();
-                h.put("preventions_id", rs.getString("preventions_id"));
-				h.put("demographic_no", oscar.Misc.getString(rs, "demographic_no"));
-				h.put("val", oscar.Misc.getString(rs, "val"));
-				h.put("prevention_date", rs.getDate("prevention_date"));
-				list.add(h);
+		List<Prevention> preventions = preventionDao.findByTypeAndDate(injectionType, startDate, endDate);
+		for (Prevention prevention : preventions) {
+			
+			List<PreventionExt> preventionExts = preventionExtDao.findByPreventionIdAndKey(prevention.getId(), keyVal);
+			try {
+				for (PreventionExt preventionExt : preventionExts) {
+					Map<String,Object> h = new HashMap<String,Object>();
+	                h.put("preventions_id", prevention.getId().toString());
+					h.put("demographic_no", prevention.getDemographicId().toString());
+					h.put("val", preventionExt.getVal());
+					h.put("prevention_date", prevention.getPreventionDate());
+					list.add(h);
+					break;
+				}
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
 			}
-
-			rs.close();
-			pstmt.close();
-		}
-		catch (Exception e) {
-			log.error(e.getMessage(), e);
-			log.error(sql);
 		}
 		return list;
 	}
@@ -299,48 +243,39 @@ public class PreventionData {
 		DemographicData dd = new DemographicData();		
 		return(dd.getDemographicDOB(demoNo));
 	}	
+
+	public static ArrayList<Map<String,Object>> getPreventionData(String demoNo) {
+		return getPreventionData(null, demoNo);
+	}
 	
 	public static ArrayList<Map<String,Object>> getPreventionData(String preventionType, String demoNo) {
 		ArrayList<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
-		String sql = null;
-		java.util.Date dob = getDemographicDateOfBirth(demoNo);
-
+		
 		try {
-			
-			ResultSet rs;
-			sql = "Select * from preventions where  demographic_no = '" + demoNo + "' and prevention_type like '" + preventionType + "' and deleted != 1 order by prevention_date";
-			log.debug(sql);
-			rs = DBHandler.GetSQL(sql);
-			while (rs.next()) {
+			Date dob = getDemographicDateOfBirth(demoNo);
+			Integer demographicId = Integer.valueOf(demoNo);
+			List<Prevention> preventions = preventionType==null ? preventionDao.findByDemographicId(demographicId) : preventionDao.findByTypeAndDemoNo(preventionType, demographicId); 
+			for (Prevention prevention : preventions) {
 				Map<String,Object> h = new HashMap<String,Object>();
-				h.put("id", oscar.Misc.getString(rs, "id"));
-				h.put("refused", oscar.Misc.getString(rs, "refused"));
-				h.put("type", oscar.Misc.getString(rs, "prevention_type"));
-				log.debug("id set to " + oscar.Misc.getString(rs, "id"));
-				h.put("provider_no", oscar.Misc.getString(rs, "provider_no"));
-				h.put("provider_name", oscar.Misc.getString(rs, "provider_name"));
-				h.put("prevention_date", blankIfNull(oscar.Misc.getString(rs, "prevention_date")));
-				java.util.Date date = null;
-
-				try {
-					date = rs.getDate("prevention_date");
-					h.put("prevention_date_asDate", date);
-				}
-				catch (Exception pe) {
-					log.error("error", pe);
-				}
+				h.put("id", prevention.getId().toString());
+				h.put("refused", prevention.isRefused()?"1":"0");
+				h.put("type", prevention.getPreventionType());
+				h.put("provider_no", prevention.getProviderNo());
+				h.put("provider_name", ProviderData.getProviderName(prevention.getProviderNo()));
+				
+				Date pDate = prevention.getPreventionDate();
+				h.put("prevention_date", blankIfNull(UtilDateUtilities.DateToString(pDate, "yyyy-MM-dd")));
+				h.put("prevention_date_asDate", pDate);
 				
 				String age = "N/A";
-				if (date != null) {
-					age = UtilDateUtilities.calcAgeAtDate(dob, date);
+				if (pDate != null) {
+					age = UtilDateUtilities.calcAgeAtDate(dob, pDate);
 				}
 				h.put("age", age);
 				list.add(h);
 			}
-		}
-		catch (SQLException e) {
+		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			log.error(sql);
 		}
 		return list;
 	}
@@ -357,42 +292,30 @@ public class PreventionData {
 			
 		return(filteredResults);
 	}
-	
-	private static String blankIfNull(String s) {
-		if (s == null) return "";
-		return s;
-	}
 
 	public static String getPreventionComment(String id) {
 		log.debug("Calling getPreventionComment " + id);
 		String comment = null;
-		String sql = null;
+		
 		try {
-			
-			ResultSet rs;
-			sql = "Select val from preventionsExt where  prevention_id = '" + id + "' and keyval = 'comments' ";
-			log.debug(sql);
-			rs = DBHandler.GetSQL(sql);
-			if (rs.next()) {
-				comment = oscar.Misc.getString(rs, "val");
-				if (comment != null && comment.trim().length() == 0) {
-					comment = null;
-				}
+			List<PreventionExt> preventionExts = preventionExtDao.findByPreventionIdAndKey(Integer.valueOf(id),	"comments");
+			for (PreventionExt preventionExt : preventionExts) {
+				comment = preventionExt.getVal();
+				if (comment!=null && comment.trim().equals("")) comment = null;
+				break;
 			}
-		}
-		catch (SQLException e) {
+		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			log.error(sql);
 		}
 		return comment;
 	}
 
-	public static Prevention getPrevention(String demoNo) {
+	public static oscar.oscarPrevention.Prevention getPrevention(String demoNo) {
 		DemographicData dd = new DemographicData();
 		java.util.Date dob = getDemographicDateOfBirth(demoNo);
 		String sex = dd.getDemographicSex(demoNo);
 		String sql = null;
-		Prevention p = new Prevention(sex, dob);
+		oscar.oscarPrevention.Prevention p = new oscar.oscarPrevention.Prevention(sex, dob);
 
 		try {
 			
@@ -430,7 +353,7 @@ public class PreventionData {
 		return (remotePreventions);
 	}
 
-	public static Prevention addRemotePreventions(Prevention prevention, Integer demographicId) {
+	public static oscar.oscarPrevention.Prevention addRemotePreventions(oscar.oscarPrevention.Prevention prevention, Integer demographicId) {
 		List<CachedDemographicPrevention> remotePreventions = getRemotePreventions(demographicId);
 
 		if (remotePreventions != null) {
@@ -520,44 +443,31 @@ public class PreventionData {
 	}
 	
 	public static Map<String,Object> getPreventionById(String id) {
-		String sql = null;
 		Map<String,Object> h = null;
+		
 		try {
-			
-			ResultSet rs;
-			sql = "Select * from preventions where  id = '" + id + "' ";
-			log.debug(sql);
-			rs = DBHandler.GetSQL(sql);
-			if (rs.next()) {
+			Prevention prevention = preventionDao.find(Integer.valueOf(id));
+			if (prevention!=null) {
 				h = new HashMap<String,Object>();
-				log.debug("preventionType" + oscar.Misc.getString(rs, "prevention_type"));
-				addToHashIfNotNull(h, "id", oscar.Misc.getString(rs, "id"));
-				addToHashIfNotNull(h, "provider_no", oscar.Misc.getString(rs, "provider_no"));
-				addToHashIfNotNull(h, "demographicNo", oscar.Misc.getString(rs, "demographic_no"));
-				addToHashIfNotNull(h, "creationDate", oscar.Misc.getString(rs, "creation_date"));
-				addToHashIfNotNull(h, "preventionDate", oscar.Misc.getString(rs, "prevention_date"));
-				addToHashIfNotNull(h, "prevention_date_asDate", rs.getDate("prevention_date"));
-				// log.debug(rs.getDate("prevention_date"));
-				addToHashIfNotNull(h, "providerName", oscar.Misc.getString(rs, "provider_name"));
-				addToHashIfNotNull(h, "preventionType", oscar.Misc.getString(rs, "prevention_type"));
-				addToHashIfNotNull(h, "deleted", oscar.Misc.getString(rs, "deleted"));
-				addToHashIfNotNull(h, "refused", oscar.Misc.getString(rs, "refused"));
-				addToHashIfNotNull(h, "next_date", oscar.Misc.getString(rs, "next_date"));
-				addToHashIfNotNull(h, "never", oscar.Misc.getString(rs, "never"));
+				String providerName = ProviderData.getProviderName(prevention.getProviderNo());
+				String preventionDate = UtilDateUtilities.DateToString(prevention.getPreventionDate(), "yyyy-MM-dd");
 
-				String refused = " completed";
-				switch (Integer.parseInt(oscar.Misc.getString(rs, "refused"))) {
-				case 1:
-					refused = " refused";
-					break;
-				case 2:
-					refused = " ineligible";
-					break;
-				}
-				String provider = ProviderData.getProviderName(oscar.Misc.getString(rs, "provider_no"));
-				String summary = "Prevention " + oscar.Misc.getString(rs, "prevention_type") + " provided by " + provider + " on " + oscar.Misc.getString(rs, "prevention_date")
-						+ "\n";
-				Map<String,String> ext = getPreventionKeyValues(oscar.Misc.getString(rs, "id"));
+				
+				addToHashIfNotNull(h, "id", prevention.getId().toString());
+				addToHashIfNotNull(h, "demographicNo", prevention.getDemographicId().toString());
+				addToHashIfNotNull(h, "provider_no", prevention.getProviderNo());
+				addToHashIfNotNull(h, "providerName", providerName);
+				addToHashIfNotNull(h, "creationDate", UtilDateUtilities.DateToString(prevention.getCreationDate(), "yyyy-MM-dd"));
+				addToHashIfNotNull(h, "preventionDate", preventionDate);
+				addToHashIfNotNull(h, "prevention_date_asDate", prevention.getPreventionDate());
+				addToHashIfNotNull(h, "preventionType", prevention.getPreventionType());
+				addToHashIfNotNull(h, "deleted", prevention.isDeleted()?"1":"0");
+				addToHashIfNotNull(h, "refused", prevention.isRefused()?"1":prevention.isIneligible()?"2":"0");
+				addToHashIfNotNull(h, "next_date", UtilDateUtilities.DateToString(prevention.getNextDate(), "yyyy-MM-dd"));
+				addToHashIfNotNull(h, "never", prevention.isNever()?"1":"0");
+
+				String summary = "Prevention " + prevention.getPreventionType() + " provided by " + providerName + " on " + preventionDate + "\n";
+				Map<String,String> ext = getPreventionKeyValues(prevention.getId().toString());
 				if (ext.containsKey("result")) {
 					summary += "Result: " + ext.get("result");
 					if (ext.containsKey("reason") && !ext.get("reason").equals("")) {
@@ -596,11 +506,11 @@ public class PreventionData {
 				addToHashIfNotNull(h, "summary", summary);
 				log.debug("1" + h.get("preventionType") + " " + h.size());
 				log.debug("id" + h.get("id"));
+				
 			}
 		}
-		catch (SQLException e) {
+		catch (Exception e) {
 			log.error(e.getMessage(), e);
-			log.error(sql);
 		}
 		return h;
 	}
@@ -611,9 +521,14 @@ public class PreventionData {
 		}
 	}
 
-	private static void addToHashIfNotNull(Map<String,Object> h, String key, java.util.Date val) {
+	private static void addToHashIfNotNull(Map<String,Object> h, String key, Date val) {
 		if (val != null) {
 			h.put(key, val);
 		}
+	}
+	
+	private static String blankIfNull(String s) {
+		if (s == null) return "";
+		return s;
 	}
 }
