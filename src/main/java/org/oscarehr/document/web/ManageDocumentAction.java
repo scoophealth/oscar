@@ -360,6 +360,8 @@ public class ManageDocumentAction extends DispatchAction {
 		FileChannel channel = raf.getChannel();
 		ByteBuffer buf = channel.map(FileChannel.MapMode.READ_ONLY, 0, channel.size());
 		PDFFile pdffile = new PDFFile(buf);
+		if(raf != null) raf.close();
+		if(channel != null) channel.close();
 		// long readfile = System.currentTimeMillis() - start;
 		// draw the first page to an image
 		PDFPage ppage = pdffile.getPage(pageNum);
@@ -376,7 +378,7 @@ public class ManageDocumentAction extends DispatchAction {
 		        true, // fill background with white
 		        true // block until drawing is done
 		        );
-
+		
 		log.debug("about to Print to stream");
 		File outfile = new File(documentCacheDir, d.getDocfilename() + "_" + pageNum + ".png");
 
@@ -407,6 +409,8 @@ public class ManageDocumentAction extends DispatchAction {
 		FileChannel channel = raf.getChannel();
 		ByteBuffer buf = channel.map(FileChannel.MapMode.READ_ONLY, 0, channel.size());
 		PDFFile pdffile = new PDFFile(buf);
+		if(raf != null) raf.close();
+		if(channel != null) channel.close();
 		// long readfile = System.currentTimeMillis() - start;
 		// draw the first page to an image
 		PDFPage ppage = pdffile.getPage(0);
