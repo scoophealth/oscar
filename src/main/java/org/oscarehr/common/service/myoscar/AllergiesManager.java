@@ -96,17 +96,33 @@ public final class AllergiesManager {
 		if (temp != null) XmlUtils.appendChildToRootIgnoreNull(doc, "AgeOfOnset", temp);
 
 		temp = StringUtils.trimToNull(allergy.getSeverityOfReaction());
-		if (temp != null) XmlUtils.appendChildToRootIgnoreNull(doc, "SeverityOfReaction", temp);
+		if (temp != null) {
+			// not too worries about i18n, just sending something better than a number
+			if ("1".equals(temp)) temp = "Mild";
+			else if ("2".equals(temp)) temp = "Moderate";
+			else if ("3".equals(temp)) temp = "Severe";
+			else if ("4".equals(temp)) temp = "Unknown";
+
+			XmlUtils.appendChildToRootIgnoreNull(doc, "SeverityOfReaction", temp);
+		}
 
 		temp = StringUtils.trimToNull(allergy.getOnsetOfReaction());
-		if (temp != null) XmlUtils.appendChildToRootIgnoreNull(doc, "OnsetOfReaction", temp);
+		if (temp != null) {
+			// not too worries about i18n, just sending something better than a number
+			if ("1".equals(temp)) temp = "Immediate";
+			else if ("2".equals(temp)) temp = "Gradual";
+			else if ("3".equals(temp)) temp = "Slow";
+			else if ("4".equals(temp)) temp = "Unknown";
+
+			XmlUtils.appendChildToRootIgnoreNull(doc, "OnsetOfReaction", temp);
+		}
 
 		temp = StringUtils.trimToNull(allergy.getRegionalIdentifier());
 		if (temp != null) XmlUtils.appendChildToRootIgnoreNull(doc, "RegionalIdentifier", temp);
-		
+
 		temp = StringUtils.trimToNull(allergy.getLifeStage());
 		if (temp != null) XmlUtils.appendChildToRootIgnoreNull(doc, "LifeStage", temp);
-		
+
 		return (doc);
 	}
 
