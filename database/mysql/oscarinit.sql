@@ -7001,6 +7001,7 @@ CREATE TABLE preventions (
   next_date date default NULL,
   never char(1) default '0',
   creator int(10) default NULL,
+  lastUpdateDate datetime NOT NULL,
   PRIMARY KEY  (`id`)
 ) ;
 

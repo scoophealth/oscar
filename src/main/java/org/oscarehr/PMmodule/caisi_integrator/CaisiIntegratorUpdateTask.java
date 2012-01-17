@@ -25,7 +25,6 @@ package org.oscarehr.PMmodule.caisi_integrator;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -107,6 +106,7 @@ import org.oscarehr.common.dao.GroupNoteDao;
 import org.oscarehr.common.dao.IntegratorConsentDao;
 import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.dao.PreventionDao;
+import org.oscarehr.common.dao.PreventionExtDao;
 import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Drug;
@@ -174,6 +174,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	private ProgramDao programDao = (ProgramDao) SpringUtils.getBean("programDao");
 	private ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
 	private PreventionDao preventionDao = (PreventionDao) SpringUtils.getBean("preventionDao");
+	private PreventionExtDao preventionExtDao = (PreventionExtDao) SpringUtils.getBean("preventionExtDao");
 	private DrugDao drugDao = (DrugDao) SpringUtils.getBean("drugDao");
 	private SecUserRoleDao secUserRoleDao = (SecUserRoleDao) SpringUtils.getBean("secUserRoleDao");
 	private AdmissionDao admissionDao = (AdmissionDao) SpringUtils.getBean("admissionDao");
@@ -451,8 +452,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		// set demographic info
 		Demographic demographic = demographicDao.getDemographicById(demographicId);
 
-		String ignoreProperties[] = {"lastUpdateDate"};
-		BeanUtils.copyProperties(demographic, demographicTransfer,ignoreProperties);
+		String ignoreProperties[] = { "lastUpdateDate" };
+		BeanUtils.copyProperties(demographic, demographicTransfer, ignoreProperties);
 
 		demographicTransfer.setCaisiDemographicId(demographic.getDemographicNo());
 		demographicTransfer.setBirthDate(demographic.getBirthDay());
@@ -509,7 +510,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		}
 	}
 
-	private void pushDemographicIssues(Date lastDataUpdated, Facility facility, List<Program> programsInFacility, DemographicWs service, Integer demographicId) throws InvocationTargetException, ShutdownException {
+	private void pushDemographicIssues(Date lastDataUpdated, Facility facility, List<Program> programsInFacility, DemographicWs service, Integer demographicId) throws ShutdownException {
 		logger.debug("pushing demographicIssues facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
 		List<CaseManagementIssue> caseManagementIssues = caseManagementIssueDAO.getIssuesByDemographic(demographicId.toString());
@@ -628,7 +629,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			// add ext info
 			// ext info should be added to the attributes field as xml data
 			Document doc = XmlUtils.newDocument("PreventionExt");
-			HashMap<String, String> exts = preventionDao.getPreventionExt(localPrevention.getId());
+			HashMap<String, String> exts = preventionExtDao.getPreventionExt(localPrevention.getId());
 			for (Map.Entry<String, String> entry : exts.entrySet()) {
 				XmlUtils.appendChildToRoot(doc, entry.getKey(), entry.getValue());
 			}
@@ -755,8 +756,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		StringBuilder sentIds = new StringBuilder();
 
 		for (Properties p : records) {
-			logger.debug("pushing form labReq2007 : "+p.get("ID") +" : "+p.get("formEdited"));
-			
+			logger.debug("pushing form labReq2007 : " + p.get("ID") + " : " + p.get("formEdited"));
+
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Date date = sdf.parse(p.getProperty("formEdited"));
 
@@ -964,10 +965,9 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 		for (RxPatientData.Patient.Allergy allergy : allergies) {
 			// no change since last sync
-			if (allergy.getEntryDate()!=null)
-			{
+			if (allergy.getEntryDate() != null) {
 				// date is missing HH/MM/SS so we'll have to do 1 day over lap, so it might sync twice, better than missing a sync
-				Date tempDate=new Date(allergy.getEntryDate().getTime()+org.apache.commons.lang.time.DateUtils.MILLIS_PER_DAY);
+				Date tempDate = new Date(allergy.getEntryDate().getTime() + org.apache.commons.lang.time.DateUtils.MILLIS_PER_DAY);
 				if (tempDate.before(lastDataUpdated)) continue;
 			}
 
