@@ -37,17 +37,18 @@ public class Prevention extends AbstractModel<Integer> implements Serializable {
 	@Column(name = "prevention_type")
 	private String preventionType = null;
 
-	private boolean deleted = false;
+	private char deleted = '0';
 	private char refused = '0';
+	private char never = '0';
 
 	@Column(name = "next_date")
 	@Temporal(TemporalType.DATE)
 	private Date nextDate = null;
 
-	private boolean never = false;
-
 	@Column(name = "creator")
 	private String creatorProviderNo = null;
+	
+	private Date lastUpdateDate = null;
 
 	public Integer getDemographicId() {
 		return demographicId;
@@ -82,33 +83,27 @@ public class Prevention extends AbstractModel<Integer> implements Serializable {
 	}
 
 	public boolean isDeleted() {
-		return deleted;
+		return deleted=='1';
 	}
 
 	public void setDeleted(boolean deleted) {
-		this.deleted = deleted;
+		this.deleted = deleted ? '1' : '0';
 	}
 
 	public boolean isRefused() {
-		if(refused == '1'){
-			return true;
-		}
-		return false;
+		return refused=='1';
 	}
 	
 	public boolean isIneligible(){
-		if(refused == '2'){
-			return true;
-		}
-		return false;
+		return refused == '2';
 	}
 
 	public void setRefused(boolean refused) {
-		this.refused = '1';
+		this.refused = refused ? '1' : '0';
 	}
 	
 	public void setIneligible(boolean ineligible){
-		this.refused = '2';
+		this.refused = ineligible ? '2' : '0';
 	}
 
 	public Date getNextDate() {
@@ -120,11 +115,11 @@ public class Prevention extends AbstractModel<Integer> implements Serializable {
 	}
 
 	public boolean isNever() {
-		return never;
+		return never=='1';
 	}
 
 	public void setNever(boolean never) {
-		this.never = never;
+		this.never = never ? '1' : '0';
 	}
 
 	public String getCreatorProviderNo() {
@@ -133,6 +128,14 @@ public class Prevention extends AbstractModel<Integer> implements Serializable {
 
 	public void setCreatorProviderNo(String creatorProviderNo) {
 		this.creatorProviderNo = creatorProviderNo;
+	}
+	
+	public Date getLastUpdateDate() {
+		return lastUpdateDate;
+	}
+	
+	public void setLastUpdateDate(Date lastUpdateDate) {
+		this.lastUpdateDate = lastUpdateDate;
 	}
 
 	@Override
