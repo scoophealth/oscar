@@ -15,6 +15,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import oscar.oscarRx.data.RxPrescriptionData;
 import oscar.oscarRx.util.RxUtil;
@@ -324,7 +325,7 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 	}
 
 	public void setETreatmentType(String eTreatmentType) {
-		this.eTreatmentType = eTreatmentType;
+		this.eTreatmentType = StringUtils.trimToNull(eTreatmentType);
 	}
 
 	public String getETreatmentType() {
@@ -332,7 +333,7 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 	}
 
 	public void setRxStatus(String status) {
-		this.rxStatus = status;
+		this.rxStatus = StringUtils.trimToNull(status);
 	}
 
 	public String getRxStatus() {
@@ -344,7 +345,7 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 	}
 
 	public void setProviderNo(String providerNo) {
-		this.providerNo = providerNo;
+		this.providerNo = StringUtils.trimToNull(providerNo);
 	}
 
 	public Integer getDemographicId() {
@@ -385,7 +386,7 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 	}
 
 	public void setBrandName(String brandName) {
-		this.brandName = brandName;
+		this.brandName = StringUtils.trimToNull(brandName);
 	}
 
 	public int getGcnSeqNo() {
@@ -401,7 +402,7 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 	}
 
 	public void setCustomName(String customName) {
-		this.customName = customName;
+		this.customName = StringUtils.trimToNull(customName);
 	}
 
 	public float getTakeMin() {
@@ -425,7 +426,7 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 	}
 
 	public void setFreqCode(String freqCode) {
-		this.freqCode = freqCode;
+		this.freqCode = StringUtils.trimToNull(freqCode);
 	}
 
 	public String getDuration() {
@@ -433,7 +434,7 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 	}
 
 	public void setDuration(String duration) {
-		this.duration = duration;
+		this.duration = StringUtils.trimToNull(duration);
 	}
 
 	public String getDurUnit() {
@@ -441,7 +442,7 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 	}
 
 	public void setDurUnit(String durUnit) {
-		this.durUnit = durUnit;
+		this.durUnit = StringUtils.trimToNull(durUnit);
 	}
 
 	public String getQuantity() {
@@ -449,7 +450,7 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 	}
 
 	public void setQuantity(String quantity) {
-		this.quantity = quantity;
+		this.quantity = StringUtils.trimToNull(quantity);
 	}
 
 	public Integer getRepeat() {
@@ -489,7 +490,7 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 	}
 
 	public void setSpecial(String special) {
-		this.special = special;
+		this.special = StringUtils.trimToNull(special);
 	}
 
 	public String getSpecialInstruction() {
@@ -497,7 +498,7 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 	}
 
 	public void setSpecialInstruction(String si) {
-		special_instruction = si;
+		special_instruction = StringUtils.trimToNull(si);
 	}
 
 	public boolean isArchived() {
@@ -513,7 +514,7 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 	}
 
 	public void setGenericName(String genericName) {
-		this.genericName = genericName;
+		this.genericName = StringUtils.trimToNull(genericName);
 	}
 
 	public String getAtc() {
@@ -521,7 +522,7 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 	}
 
 	public void setAtc(String atc) {
-		this.atc = atc;
+		this.atc = StringUtils.trimToNull(atc);
 	}
 
 	public Integer getScriptNo() {
@@ -537,7 +538,7 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 	}
 
 	public void setRegionalIdentifier(String regionalIdentifier) {
-		this.regionalIdentifier = regionalIdentifier;
+		this.regionalIdentifier = StringUtils.trimToNull(regionalIdentifier);
 	}
 
 	public String getUnit() {
@@ -545,7 +546,7 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 	}
 
 	public void setUnit(String unit) {
-		this.unit = unit;
+		this.unit = StringUtils.trimToNull(unit);
 	}
 
 	public String getMethod() {
@@ -553,7 +554,7 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 	}
 
 	public void setMethod(String method) {
-		this.method = method;
+		this.method = StringUtils.trimToNull(method);
 	}
 
 	public String getRoute() {
@@ -561,7 +562,7 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 	}
 
 	public void setRoute(String route) {
-		this.route = route;
+		this.route = StringUtils.trimToNull(route);
 	}
 
 	public String getDrugForm() {
@@ -569,7 +570,7 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 	}
 
 	public void setDrugForm(String drugForm) {
-		this.drugForm = drugForm;
+		this.drugForm = StringUtils.trimToNull(drugForm);
 	}
 
 	public Date getCreateDate() {
@@ -585,7 +586,7 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 	}
 
 	public void setDosage(String dosage) {
-		this.dosage = dosage;
+		this.dosage = StringUtils.trimToNull(dosage);
 	}
 
 	public boolean isCustomInstructions() {
@@ -601,7 +602,7 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 	}
 
 	public void setUnitName(String unitName) {
-		this.unitName = unitName;
+		this.unitName = StringUtils.trimToNull(unitName);
 	}
 
 	public Boolean getLongTerm() {
@@ -665,7 +666,7 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 	}
 
 	public void setOutsideProviderName(String outsideProviderName) {
-		this.outsideProviderName = outsideProviderName;
+		this.outsideProviderName = StringUtils.trimToNull(outsideProviderName);
 	}
 
 	public String getOutsideProviderOhip() {
@@ -673,7 +674,7 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 	}
 
 	public void setOutsideProviderOhip(String outsideProviderOhip) {
-		this.outsideProviderOhip = outsideProviderOhip;
+		this.outsideProviderOhip = StringUtils.trimToNull(outsideProviderOhip);
 	}
 
 	public boolean isExpired() {
@@ -713,7 +714,7 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 	 * @param archivedReason the archivedReason to set
 	 */
 	public void setArchivedReason(String archivedReason) {
-		this.archivedReason = archivedReason;
+		this.archivedReason = StringUtils.trimToNull(archivedReason);
 	}
 
 	/**
@@ -812,7 +813,7 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 	}
 
 	public void setComment(String comment) {
-		this.comment = comment;
+		this.comment = StringUtils.trimToNull(comment);
 	}
 
 	public Date getLastUpdateDate() {
