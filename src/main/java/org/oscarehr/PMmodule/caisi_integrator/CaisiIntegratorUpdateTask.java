@@ -25,7 +25,6 @@ package org.oscarehr.PMmodule.caisi_integrator;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -509,7 +508,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		}
 	}
 
-	private void pushDemographicIssues(Date lastDataUpdated, Facility facility, List<Program> programsInFacility, DemographicWs service, Integer demographicId) throws InvocationTargetException, ShutdownException {
+	private void pushDemographicIssues(Date lastDataUpdated, Facility facility, List<Program> programsInFacility, DemographicWs service, Integer demographicId) throws ShutdownException {
 		logger.debug("pushing demographicIssues facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
 		List<CaseManagementIssue> caseManagementIssues = caseManagementIssueDAO.getIssuesByDemographic(demographicId.toString());

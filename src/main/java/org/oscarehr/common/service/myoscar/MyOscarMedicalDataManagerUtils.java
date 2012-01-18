@@ -112,6 +112,13 @@ public final class MyOscarMedicalDataManagerUtils {
 		return(resultId);
 	}
 	
+	public static Long addMedicalDataRelationship(PHRAuthentication auth, Long primaryMedicalDataId, Long relatedMedicalDataId, String relationship) throws NoSuchItemException_Exception, NotAuthorisedException_Exception
+	{
+		MedicalDataWs medicalDataWs = MyOscarServerWebServicesManager.getMedicalDataWs(auth.getMyOscarUserId(), auth.getMyOscarPassword());
+		Long resultId=medicalDataWs.addMedicalDataRelationship(primaryMedicalDataId, relatedMedicalDataId, relationship);
+		return(resultId);
+	}
+	
 	private static String getObserverOfDataPersonName(Provider p)
 	{
 		if (p==null) return(null);
