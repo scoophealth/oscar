@@ -141,8 +141,8 @@ import oscar.oscarBilling.ca.on.model.BillingOnCHeader1;
 import oscar.oscarBilling.ca.on.model.BillingOnItem;
 import oscar.oscarEncounter.oscarMeasurements.dao.MeasurementMapDao;
 import oscar.oscarEncounter.oscarMeasurements.dao.MeasurementTypeDao;
+import oscar.oscarEncounter.oscarMeasurements.dao.MeasurementsDao;
 import oscar.oscarEncounter.oscarMeasurements.dao.MeasurementsExtDao;
-import oscar.oscarEncounter.oscarMeasurements.dao.MeasurementsHibernateDao;
 import oscar.oscarEncounter.oscarMeasurements.model.Measurementmap;
 import oscar.oscarEncounter.oscarMeasurements.model.Measurements;
 import oscar.oscarEncounter.oscarMeasurements.model.MeasurementsExt;
@@ -180,7 +180,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	private AdmissionDao admissionDao = (AdmissionDao) SpringUtils.getBean("admissionDao");
 	private OscarAppointmentDao appointmentDao = (OscarAppointmentDao) SpringUtils.getBean("oscarAppointmentDao");
 	private IntegratorControlDao integratorControlDao = (IntegratorControlDao) SpringUtils.getBean("integratorControlDao");
-	private MeasurementsHibernateDao measurementsDao = (MeasurementsHibernateDao) SpringUtils.getBean("measurementsDao");
+	private MeasurementsDao measurementsDao = (MeasurementsDao) SpringUtils.getBean("measurementsDao");
 	private MeasurementsExtDao measurementsExtDao = (MeasurementsExtDao) SpringUtils.getBean("measurementsExtDao");
 	private MeasurementTypeDao measurementTypeDao = (MeasurementTypeDao) SpringUtils.getBean("measurementTypeDao");
 	private MeasurementMapDao measurementMapDao = (MeasurementMapDao) SpringUtils.getBean("measurementMapDao");
@@ -191,11 +191,6 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	private GroupNoteDao groupNoteDao = (GroupNoteDao) SpringUtils.getBean("groupNoteDao");
 
 	private static TimerTask timerTask = null;
-
-	static {
-		// ensure cxf uses log4j
-		System.setProperty("org.apache.cxf.Logger", "org.apache.cxf.common.logging.Log4jLogger");
-	}
 
 	public static synchronized void startTask() {
 		if (timerTask == null) {

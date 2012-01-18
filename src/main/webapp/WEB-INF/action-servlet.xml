@@ -31,8 +31,7 @@
 		<property name="flowSheetDrugDAO" ref="flowSheetDrugDAO" />
 	</bean>
 
-	<bean name="/MeasurementHL7Uploader" class="oscar.oscarEncounter.oscarMeasurements.hl7.MeasurementHL7UploaderAction" autowire="byName">
-	</bean>
+	<bean name="/MeasurementHL7Uploader" class="oscar.oscarEncounter.oscarMeasurements.hl7.MeasurementHL7UploaderAction" autowire="byName" />
 
 	<bean name="/Admin" class="com.quatro.web.admin.AdminAction" singleton="true" />
 	<bean name="/Tickler" class="org.caisi.tickler.web.TicklerAction" singleton="false">

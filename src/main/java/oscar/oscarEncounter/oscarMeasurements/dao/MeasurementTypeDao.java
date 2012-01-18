@@ -12,21 +12,21 @@ public class MeasurementTypeDao extends HibernateDaoSupport {
 		getHibernateTemplate().merge(measurementType);
 	}
 
-        public List<Measurementtype> getAllTypes() {
-            String queryStr = "FROM Measurementtype m";
+	public List<Measurementtype> getAllTypes() {
+		String queryStr = "FROM Measurementtype m";
 
-            @SuppressWarnings("unchecked")
-            List<Measurementtype> rs = getHibernateTemplate().find(queryStr);
+		@SuppressWarnings("unchecked")
+		List<Measurementtype> rs = getHibernateTemplate().find(queryStr);
 
-            return rs;
-        }
+		return rs;
+	}
 
-        public List<Measurementtype> getByType(String type) {
-            String queryStr = "FROM Measurementtype m WHERE m.type = '"+type+"' ORDER BY m.id";
+	public List<Measurementtype> getByType(String type) {
+		String queryStr = "FROM Measurementtype m WHERE m.type = '" + type + "' ORDER BY m.id";
 
-            @SuppressWarnings("unchecked")
-            List<Measurementtype> rs = getHibernateTemplate().find(queryStr);
+		@SuppressWarnings("unchecked")
+		List<Measurementtype> rs = getHibernateTemplate().find(queryStr);
 
-            return rs;
-        }
+		return rs;
+	}
 }

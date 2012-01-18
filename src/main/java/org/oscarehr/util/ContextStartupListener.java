@@ -12,6 +12,9 @@ public class ContextStartupListener implements javax.servlet.ServletContextListe
 	@Override
 	public void contextInitialized(javax.servlet.ServletContextEvent sce) {
 		try {
+			// ensure cxf uses log4j
+			System.setProperty("org.apache.cxf.Logger", "org.apache.cxf.common.logging.Log4jLogger");
+
 			// need tc6 for this?
 			// String contextPath=sce.getServletContext().getContextPath();
 

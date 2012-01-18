@@ -40,6 +40,8 @@ import javax.persistence.PersistenceException;
 
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
+import org.hibernate.Session;
+import org.hibernate.criterion.Expression;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DemographicExt;
 import org.oscarehr.util.DbConnectionFilter;
@@ -66,7 +68,7 @@ public class DemographicDao extends HibernateDaoSupport {
 
     public Demographic getDemographicById(Integer demographic_id) {
         String q = "FROM Demographic d WHERE d.DemographicNo = ?";
-        List rs = (List) getHibernateTemplate().find(q, demographic_id);
+        List rs = getHibernateTemplate().find(q, demographic_id);
 
         if (rs.size() == 0) return null;
         else return (Demographic) rs.get(0);
@@ -78,7 +80,7 @@ public class DemographicDao extends HibernateDaoSupport {
     public List getDemographicByProgram(int programId, Date dt, Date defdt) {
         String q = "Select d From Demographic d, Admission a " + "Where d.DemographicNo=a.DlientId and a.ProgramId=? and a.AdmissionDate<=? and " + "(a.DischargeDate>=? or (a.DischargeDate is null) or a.DischargeDate=?)"
                 + " order by d.LastName,d.FirstName";
-        List rs = (List) getHibernateTemplate().find(q, new Object[] { new Integer(programId), dt, dt, defdt });
+        List rs = getHibernateTemplate().find(q, new Object[] { new Integer(programId), dt, dt, defdt });
         return rs;
     }
     
@@ -92,13 +94,13 @@ public class DemographicDao extends HibernateDaoSupport {
     	if(onlyActive){
     		q = "From Demographic d where d.ProviderNo = ? and d.PatientStatus = 'AC' ";	
     	}
-    	List<Demographic> rs = (List) getHibernateTemplate().find(q, new Object[] { providerNo });
+    	List<Demographic> rs = getHibernateTemplate().find(q, new Object[] { providerNo });
     	return rs;
     }
 
     public Demographic getDemographicByMyOscarUserName(String myOscarUserName){
     	String q = "From Demographic d where d.myOscarUserName = ? ";
-    	List<Demographic> rs = (List) getHibernateTemplate().find(q, new Object[] { myOscarUserName });
+    	List<Demographic> rs =getHibernateTemplate().find(q, new Object[] { myOscarUserName });
     	if (rs.size()>0) return(rs.get(0));
     	else return(null);
     }
@@ -112,7 +114,7 @@ public class DemographicDao extends HibernateDaoSupport {
                 + "(a.DischargeDate>=? or (a.DischargeDate is null) or a.DischargeDate=?)" + " order by d.LastName,d.FirstName";
 
         String status = "AC"; // only show active clients
-        List rs = (List) getHibernateTemplate().find(q, new Object[] { status, new Integer(programId), dt, dt, defdt });
+        List rs = getHibernateTemplate().find(q, new Object[] { status, new Integer(programId), dt, dt, defdt });
 
         List clients = new ArrayList();
         Integer clientNo = 0;
@@ -130,6 +132,18 @@ public class DemographicDao extends HibernateDaoSupport {
         // return rs;
         return clients;
     }
+
+    public List<Demographic> getActiveDemosByHealthCardNo(String hcn, String hcnType) {
+		Session s = getSession();
+		try {
+			List rs = s.createCriteria(Demographic.class).add(
+					Expression.eq("Hin", hcn)).add(Expression.eq("HcType", hcnType)).add(
+					Expression.eq("PatientStatus", "AC")).list();
+			return rs;
+		} finally {
+			releaseSession(s);
+		}
+	}
 
     public Set getArchiveDemographicByProgramOptimized(int programId, Date dt, Date defdt) {
 /*
@@ -174,7 +188,7 @@ public class DemographicDao extends HibernateDaoSupport {
 
         String status = "AC"; // only show active clients
         String admissionStatus = "discharged"; // only show discharged clients
-        List rs = (List) getHibernateTemplate().find(q, new Object[] { status, new Integer(programId), dt, admissionStatus });
+        List rs = getHibernateTemplate().find(q, new Object[] { status, new Integer(programId), dt, admissionStatus });
 
         // and clients should not currently in this program.
         List clients = new ArrayList();
@@ -190,7 +204,7 @@ public class DemographicDao extends HibernateDaoSupport {
             if (demographic.getDemographicNo() == clientNo) continue;
 
             clientNo = demographic.getDemographicNo();
-            List rs1 = (List) getHibernateTemplate().find(q1, new Object[] { clientNo, new Integer(programId), ss });
+            List rs1 = getHibernateTemplate().find(q1, new Object[] { clientNo, new Integer(programId), ss });
             if (rs1.size() == 0) {
                 clients.add(demographic);
             }
@@ -211,7 +225,7 @@ public class DemographicDao extends HibernateDaoSupport {
         cal.set(Calendar.SECOND, 59);
         Date dt = cal.getTime();
 
-        List rs = (List) getHibernateTemplate().find(q, new Object[] { demoNo, dt, dt, defdt });
+        List rs = getHibernateTemplate().find(q, new Object[] { demoNo, dt, dt, defdt });
         return rs;
     }
 
