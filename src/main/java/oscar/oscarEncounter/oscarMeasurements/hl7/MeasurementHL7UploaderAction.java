@@ -22,10 +22,10 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.upload.FormFile;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.util.SpringUtils;
 import org.springframework.web.struts.DispatchActionSupport;
 
 import oscar.OscarProperties;
-import oscar.oscarEncounter.oscarMeasurements.dao.DemographicDao;
 import oscar.oscarEncounter.oscarMeasurements.dao.MeasurementsDao;
 import oscar.oscarEncounter.oscarMeasurements.model.Measurements;
 import oscar.oscarLab.ca.all.pageUtil.LabUploadAction;
@@ -47,7 +47,6 @@ public class MeasurementHL7UploaderAction extends DispatchActionSupport {
 
 	private static SimpleDateFormat sdf = new SimpleDateFormat(OscarProperties.getInstance().getProperty("oscar.measurements.hl7.datetime.format", "yyyyMMddHHmmss"));
 
-	private DemographicDao demoDao;
 	private MeasurementsDao measurementsDao;
 
 	// settings to be set in spring config xml, if needed
@@ -60,10 +59,6 @@ public class MeasurementHL7UploaderAction extends DispatchActionSupport {
 
 	public void setMeasurementsDao(MeasurementsDao measurementsDao) {
 		this.measurementsDao = measurementsDao;
-	}
-
-	public void setDemoDao(DemographicDao demoDao) {
-		this.demoDao = demoDao;
 	}
 
 	public void setDefaultProviderNo(String defaultProviderNo) {
@@ -108,7 +103,8 @@ public class MeasurementHL7UploaderAction extends DispatchActionSupport {
 			String hcn = patient.getPatientIDInternalID(0).getID().getValue();
 			String hcnType = patient.getPatientIDInternalID(0).getAssigningAuthority().getNamespaceID().getValue();
 			// get demographic no from hcn
-			List<Demographic> demos = demoDao.getActiveDemosByHealthCardNo(hcn, hcnType);
+			org.oscarehr.common.dao.DemographicDao demographicDao=(org.oscarehr.common.dao.DemographicDao) SpringUtils.getBean("demographicDao");
+			List<Demographic> demos = demographicDao.getActiveDemosByHealthCardNo(hcn, hcnType);
 			if (demos == null || demos.size() == 0) throw new RuntimeException("There is no active patient with the supplied health card number: " + hcn + " " + hcnType);
 
 			// try to get consult doctor's providerID
