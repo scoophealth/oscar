@@ -127,6 +127,7 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.ShutdownException;
 import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.XmlUtils;
+import org.oscarehr.util.BenchmarkTimer;
 import org.springframework.beans.BeanUtils;
 import org.w3c.dom.Document;
 
@@ -404,27 +405,49 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		List<Program> programsInFacility = programDao.getProgramsByFacilityId(facility.getId());
 		List<String> providerIdsInFacility = ProviderDao.getProviderIds(facility.getId());
 
+		long startTime = System.currentTimeMillis();
+		int demographicPushCount =0;
 		for (Integer demographicId : demographicIds) {
-			logger.debug("pushing demographic facilityId:" + facility.getId() + ", demographicId:" + demographicId);
+			demographicPushCount++;
+			logger.debug("pushing demographic facilityId:" + facility.getId() + ", demographicId:" + demographicId+"  "+demographicPushCount+" of "+demographicIds.size());
+			BenchmarkTimer benchTimer = new BenchmarkTimer("pushing demo facilityId:" + facility.getId() + ", demographicId:" + demographicId+"  "+demographicPushCount+" of "+demographicIds.size());
 
 			try {
 				pushDemographic(facility, demographicService, demographicId, facility.getId());
 				// it's safe to set the consent later so long as we default it to none when we send the original demographic data in the line above.
+				benchTimer.tag("pushDemographic");
 				pushDemographicConsent(facility, demographicService, demographicId);
+				benchTimer.tag("pushDemographicConsent");
 				pushDemographicIssues(lastDataUpdated, facility, programsInFacility, demographicService, demographicId);
+				benchTimer.tag("pushDemographicIssues");
 				pushDemographicPreventions(lastDataUpdated, facility, providerIdsInFacility, demographicService, demographicId);
+				benchTimer.tag("pushDemographicPreventions");
 				pushDemographicNotes(lastDataUpdated, facility, demographicService, demographicId);
+				benchTimer.tag("pushDemographicNotes");
 				pushDemographicDrugs(lastDataUpdated, facility, providerIdsInFacility, demographicService, demographicId);
+				benchTimer.tag("pushDemographicDrugs");
 				pushAdmissions(lastDataUpdated, facility, programsInFacility, demographicService, demographicId);
+				benchTimer.tag("pushAdmissions");
 				pushAppointments(lastDataUpdated, facility, demographicService, demographicId);
+				benchTimer.tag("pushAppointments");
 				pushMeasurements(lastDataUpdated, facility, demographicService, demographicId);
+				benchTimer.tag("pushMeasurements");
 				pushDxresearchs(lastDataUpdated, facility, demographicService, demographicId);
+				benchTimer.tag("pushDxresearchs");
 				pushBillingItems(lastDataUpdated, facility, demographicService, demographicId);
+				benchTimer.tag("pushBillingItems");
 				pushEforms(lastDataUpdated, facility, demographicService, demographicId);
+				benchTimer.tag("pushEforms");
 				pushAllergies(lastDataUpdated, facility, demographicService, demographicId);
+				benchTimer.tag("pushAllergies");
 				pushDocuments(lastDataUpdated, facility, demographicService, demographicId);
+				benchTimer.tag("pushDocuments");
 				pushForms(lastDataUpdated, facility, demographicService, demographicId);
+				benchTimer.tag("pushForms");
 				pushLabResults(lastDataUpdated, facility, demographicService, demographicId);
+				benchTimer.tag("pushLabResults");
+				
+				logger.debug(benchTimer.report());
 
 				DbConnectionFilter.releaseAllThreadDbResources();
 			} catch (IllegalArgumentException iae) {
@@ -439,6 +462,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				logger.error("Unexpected error.", e);
 			}
 		}
+		logger.debug("Total pushAllDemographics :"+(System.currentTimeMillis() - startTime));
 	}
 
 	private void pushDemographic(Facility facility, DemographicWs service, Integer demographicId, Integer facilityId) throws ShutdownException {
