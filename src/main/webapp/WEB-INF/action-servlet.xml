@@ -124,6 +124,7 @@
 		<property name="allergyDAO" ref="AllergyDAO" />
 		<property name="hl7TextInfoDAO" ref="hl7TextInfoDao" />
 		<property name="preventionDao" ref="preventionDao"/>
+		<property name="preventionExtDao" ref="preventionExtDao"/>
 	</bean>
 	<!--  ER -->
 	<bean name="/ReceptionistReport" class="org.oscarehr.er.ReceptionistReportAction" singleton="false">
@@ -259,6 +260,7 @@
 	</bean>
 	<bean name="/SendImmunizationToPhr" class="oscar.oscarPrevention.pageUtil.PHRSendImmunizationToPhrAction" singleton="false">
 		<property name="preventionDao" ref="preventionDao" />
+		<property name="preventionExtDao" ref="preventionExtDao" />
 		<property name="providerDao" ref="providerDao" />
 		<property name="demographicDao" ref="demographicDao" />
 	</bean>

@@ -39,6 +39,7 @@ import org.oscarehr.common.dao.Hl7TextInfoDao;
 import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.dao.PartialDateDao;
 import org.oscarehr.common.dao.PreventionDao;
+import org.oscarehr.common.dao.PreventionExtDao;
 import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.Clinic;
@@ -92,6 +93,7 @@ public class CihiExportAction extends DispatchAction {
 	private AllergyDAO allergyDAO;
 	private Hl7TextInfoDao hl7TextInfoDAO;
 	private PreventionDao preventionDao;
+	private PreventionExtDao preventionExtDao;
 	
 	private Logger log = MiscUtils.getLogger();
 	
@@ -111,6 +113,14 @@ public class CihiExportAction extends DispatchAction {
 
 	public PreventionDao getPreventionDao() {
 	    return preventionDao;
+    }
+
+	public void setPreventionExtDao(PreventionExtDao preventionExtDao) {
+	    this.preventionExtDao = preventionExtDao;
+    }
+
+	public PreventionExtDao getPreventionExtDao() {
+	    return preventionExtDao;
     }
 
 	public void setHl7TextInfoDAO(Hl7TextInfoDao hl7TextInfoDAO) {
@@ -962,7 +972,7 @@ public class CihiExportAction extends DispatchAction {
     	List<Prevention> preventionsList = getPreventionDao().findNotDeletedByDemographicId(demo.getDemographicNo());
     	 
          for( Prevention prevention: preventionsList ) {
-             preventionMap = getPreventionDao().getPreventionExt(prevention.getId());
+             preventionMap = getPreventionExtDao().getPreventionExt(prevention.getId());
              
         	 Immunizations immunizations = patientRecord.addNewImmunizations();
         	 

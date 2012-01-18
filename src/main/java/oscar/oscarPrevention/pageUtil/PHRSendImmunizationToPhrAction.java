@@ -23,6 +23,7 @@ import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.PreventionDao;
+import org.oscarehr.common.dao.PreventionExtDao;
 import org.oscarehr.common.dao.SentToPHRTrackingDao;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.SentToPHRTracking;
@@ -49,6 +50,7 @@ public class PHRSendImmunizationToPhrAction extends DispatchAction {
 
 	private HashMap<String,String> preventionKeys = null;
 	private PreventionDao preventionDao;
+	private PreventionExtDao preventionExtDao;
 	private ProviderDao providerDao;
 	private DemographicDao demographicDao;
 	
@@ -78,7 +80,7 @@ public class PHRSendImmunizationToPhrAction extends DispatchAction {
 			
 			//create immunization xml
 			Document doc = newXmlDoc(prevention);
-			HashMap<String,String> preventionExt = getPreventionDao().getPreventionExt(prevention.getId());
+			HashMap<String,String> preventionExt = getPreventionExtDao().getPreventionExt(prevention.getId());
 			if (preventionExt.containsKey("result")) continue;
 			
 			writeXmlExtra(doc, preventionExt);
@@ -171,6 +173,13 @@ public class PHRSendImmunizationToPhrAction extends DispatchAction {
 	}
 	public void setPreventionDao(PreventionDao preventionDao) {
 		this.preventionDao = preventionDao;
+	}
+	
+	public PreventionExtDao getPreventionExtDao() {
+		return preventionExtDao;
+	}
+	public void setPreventionExtDao(PreventionExtDao preventionExtDao) {
+		this.preventionExtDao = preventionExtDao;
 	}
 
 	public ProviderDao getProviderDao() {
