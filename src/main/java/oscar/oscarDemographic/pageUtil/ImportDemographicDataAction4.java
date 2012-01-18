@@ -55,6 +55,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
@@ -74,21 +75,26 @@ import org.oscarehr.casemgmt.model.CaseManagementNoteExt;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
+import org.oscarehr.common.dao.AllergyDao;
 import org.oscarehr.common.dao.DemographicArchiveDao;
 import org.oscarehr.common.dao.DemographicContactDao;
 import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.dao.DrugReasonDao;
 import org.oscarehr.common.dao.PartialDateDao;
 import org.oscarehr.common.dao.ProviderDataDao;
+import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.DemographicArchive;
 import org.oscarehr.common.model.DemographicContact;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.PartialDate;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.hospitalReportManager.dao.HRMDocumentCommentDao;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentDao;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentSubClassDao;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentToDemographicDao;
 import org.oscarehr.hospitalReportManager.model.HRMDocument;
+import org.oscarehr.hospitalReportManager.model.HRMDocumentComment;
+import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -106,7 +112,6 @@ import oscar.oscarLab.LabRequestReportLink;
 import oscar.oscarLab.ca.on.LabResultImport;
 import oscar.oscarPrevention.PreventionData;
 import oscar.oscarProvider.data.ProviderData;
-import oscar.oscarRx.data.RxAllergyImport;
 import oscar.service.OscarSuperManager;
 import oscar.util.StringUtils;
 import oscar.util.UtilDateUtilities;
@@ -132,9 +137,6 @@ import cdsDt.DiabetesComplicationScreening.ExamCode;
 import cdsDt.DiabetesMotivationalCounselling.CounsellingPerformed;
 import cdsDt.PersonNameStandard.LegalName;
 import cdsDt.PersonNameStandard.OtherNames;
-import org.oscarehr.hospitalReportManager.dao.HRMDocumentCommentDao;
-import org.oscarehr.hospitalReportManager.model.HRMDocumentComment;
-import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 
 /**
  *
@@ -1320,7 +1322,10 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     } else {
                     	severity = "4"; //severity unknown
                     }
-                    Long allergyId = RxAllergyImport.save(demographicNo, entryDate, description, typeCode, reaction, startDate, severity, regionalId, lifeStage);
+                    
+                    Date entryDateDate=toDateFromString(entryDate);
+                    Date startDateDate=toDateFromString(startDate);
+                    Integer allergyId = saveRxAllergy(Integer.valueOf(demographicNo), entryDateDate, description, Integer.parseInt(typeCode), reaction, startDateDate, severity, regionalId, lifeStage);
                     addOneEntry(ALLERGY);
                     
                     //write partial dates
@@ -1331,7 +1336,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
                     String note = StringUtils.noNull(aaReactArray[i].getNotes());
                     CaseManagementNote cmNote = prepareCMNote("2",null);
                     cmNote.setNote(note);
-                    saveLinkNote(cmNote, CaseManagementNoteLink.ALLERGIES, allergyId);
+                    saveLinkNote(cmNote, CaseManagementNoteLink.ALLERGIES, Long.valueOf(allergyId));
 
                     //to dumpsite
                     String dump = "imported.cms4.2011.06";
@@ -1347,7 +1352,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 
                     cmNote = prepareCMNote("2",null);
                     cmNote.setNote(dump);
-                    saveLinkNote(cmNote, CaseManagementNoteLink.ALLERGIES, allergyId);
+                    saveLinkNote(cmNote, CaseManagementNoteLink.ALLERGIES, Long.valueOf(allergyId));
                 }
 
 
@@ -3016,4 +3021,66 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
     	
     	return s;
     }
+    
+	private static Integer saveRxAllergy(Integer demographicNo, Date entryDate, String description, Integer typeCode, String reaction, Date startDate, String severity, String regionalId, String lifeStage) {
+
+		AllergyDao allergyDao=(AllergyDao) SpringUtils.getBean("allergyDao");
+		
+		Allergy allergy=new Allergy();
+		allergy.setDemographicNo(demographicNo);
+		allergy.setEntryDate(entryDate);
+		allergy.setDescription(description);
+		allergy.setTypeCode(typeCode);
+		allergy.setReaction(reaction);
+		allergy.setStartDate(startDate);
+		allergy.setSeverityOfReaction(severity);
+		allergy.setRegionalIdentifier(regionalId);
+		allergy.setLifeStage(lifeStage);
+		
+		allergyDao.persist(allergy);
+		return(allergy.getId());		
+	}
+
+	/**
+	 * Terrible method.
+	 * Not my fault, you should have used a Date object to begin with not a String. Now I have to undo your mess.
+	 */
+	private static Date toDateFromString(String s)
+	{
+        try
+        {
+            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            return(sdf.parse(s));
+        }
+        catch (Exception e)
+        {
+        	// okay we couldn't parse it, we'll try another format
+        }
+        
+        try
+        {
+            SimpleDateFormat sdf=new SimpleDateFormat(DateFormatUtils.ISO_DATETIME_FORMAT.getPattern());
+            return(sdf.parse(s));
+        }
+        catch (Exception e)
+        {
+        	// okay we couldn't parse it, we'll try another format
+        }
+        
+        try
+        {
+            SimpleDateFormat sdf=new SimpleDateFormat(DateFormatUtils.ISO_DATE_FORMAT.getPattern());
+            return(sdf.parse(s));
+        }
+        catch (Exception e)
+        {
+        	// okay we couldn't parse it, we'll try another format
+        }
+        
+        // no more formats to try, we lose :(
+        logger.warn("UnParsable date string : "+s);
+        
+        return(null);
+        		
+	}
 }

@@ -31,7 +31,7 @@ import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteExt;
 import org.oscarehr.casemgmt.model.Issue;
-import org.oscarehr.common.dao.AllergyDAO;
+import org.oscarehr.common.dao.AllergyDao;
 import org.oscarehr.common.dao.ClinicDAO;
 import org.oscarehr.common.dao.DataExportDao;
 import org.oscarehr.common.dao.DemographicDao;
@@ -90,7 +90,6 @@ public class CihiExportAction extends DispatchAction {
 	private IssueDAO issueDAO;
 	private CaseManagementNoteDAO caseManagementNoteDAO;
 	private CaseManagementNoteExtDAO caseManagementNoteExtDAO;
-	private AllergyDAO allergyDAO;
 	private Hl7TextInfoDao hl7TextInfoDAO;
 	private PreventionDao preventionDao;
 	private PreventionExtDao preventionExtDao;
@@ -129,14 +128,6 @@ public class CihiExportAction extends DispatchAction {
 
 	public Hl7TextInfoDao getHl7TextInfoDAO() {
 	    return hl7TextInfoDAO;
-    }
-	
-	public void setAllergyDAO(AllergyDAO allergyDAO) {
-	    this.allergyDAO = allergyDAO;
-    }
-
-	public AllergyDAO getAllergyDAO() {
-	    return allergyDAO;
     }
 
 	public void setCaseManagementNoteExtDAO(CaseManagementNoteExtDAO caseManagementNoteExtDAO) {
@@ -650,9 +641,9 @@ public class CihiExportAction extends DispatchAction {
 	
 	private void buildAllergies(Demographic demo, PatientRecord patientRecord) {
 		String[] severity = new String[] {"MI","MO","LT","NO"};
-		List<Allergy> allergies = allergyDAO.getActiveAllergies(demo.getDemographicNo().toString());
+		AllergyDao allergyDao=(AllergyDao)SpringUtils.getBean("allergyDao");
+		List<Allergy> allergies = allergyDao.findActiveAllergies(demo.getDemographicNo(), "0");
 		int index;
-		Calendar cal = Calendar.getInstance();
 		Date date;
         for( Allergy allergy: allergies ) {
             	AllergiesAndAdverseReactions xmlAllergies = patientRecord.addNewAllergiesAndAdverseReactions();
@@ -676,7 +667,7 @@ public class CihiExportAction extends DispatchAction {
         	xmlAllergies.setSeverity(cdsDtCihi.AdverseReactionSeverity.Enum.forString(severity[index]));
         	date = allergy.getStartDate();
         	if( date != null ) {
-        		Util.putPartialDate(xmlAllergies.addNewStartDate(), date, PartialDate.ALLERGIES, allergy.getAllergyid(), PartialDate.ALLERGIES_STARTDATE);
+        		Util.putPartialDate(xmlAllergies.addNewStartDate(), date, PartialDate.ALLERGIES, allergy.getAllergyId(), PartialDate.ALLERGIES_STARTDATE);
         	}
         }
 	}

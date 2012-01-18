@@ -81,9 +81,10 @@ import org.oscarehr.casemgmt.model.HashAuditImpl;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.model.Messagetbl;
 import org.oscarehr.casemgmt.model.base.BaseHashAudit;
-import org.oscarehr.common.dao.AllergyDAO;
+import org.oscarehr.common.dao.AllergyDao;
 import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.dao.UserPropertyDAO;
+import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.Provider;
@@ -117,7 +118,6 @@ public class CaseManagementManager {
 	private CaseManagementIssueDAO caseManagementIssueDAO;
 	private IssueDAO issueDAO;
 	private CaseManagementCPPDAO caseManagementCPPDAO;
-	private AllergyDAO allergyDAO;
 	private MessagetblDAO messagetblDAO;
 	private EchartDAO echartDAO;
 	private ProviderDao providerDAO;
@@ -448,8 +448,9 @@ public class CaseManagementManager {
 		return this.caseManagementCPPDAO.getCPP(demographic_no);
 	}
 
-	public List getAllergies(String demographic_no) {
-		return this.allergyDAO.getAllergies(demographic_no);
+	public List<Allergy> getAllergies(String demographic_no) {
+		AllergyDao allergyDao=(AllergyDao) SpringUtils.getBean("allergyDao");
+		return allergyDao.findAllergies(Integer.parseInt(demographic_no));
 	}
 
 	public List<Drug> getPrescriptions(String demographic_no, boolean all) {
@@ -1445,10 +1446,6 @@ public class CaseManagementManager {
 
 	public void setCaseManagementCPPDAO(CaseManagementCPPDAO dao) {
 		this.caseManagementCPPDAO = dao;
-	}
-
-	public void setAllergyDAO(AllergyDAO dao) {
-		this.allergyDAO = dao;
 	}
 
 	public void setProgramProviderDao(ProgramProviderDAO programProviderDao) {

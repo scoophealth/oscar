@@ -17,7 +17,7 @@ import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.print.OscarChartPrinter;
-import org.oscarehr.common.dao.AllergyDAO;
+import org.oscarehr.common.dao.AllergyDao;
 import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.util.SpringUtils;
@@ -27,7 +27,7 @@ import com.lowagie.text.DocumentException;
 public class EChartPrintAction extends DispatchAction {
 
 	CaseManagementNoteDAO caseManagementNoteDao = (CaseManagementNoteDAO)SpringUtils.getBean("CaseManagementNoteDAO");
-	AllergyDAO allergyDao = (AllergyDAO)SpringUtils.getBean("AllergyDAO");
+	AllergyDao allergyDao = (AllergyDao)SpringUtils.getBean("allergyDao");
 	static String[] cppIssues = {"MedHistory","OMeds","SocHistory","FamHistory","Reminders","Concerns","RiskFactors"};
 
 	
@@ -62,8 +62,7 @@ public class EChartPrintAction extends DispatchAction {
 		printCppItem(printer,"Other Medications","OMeds",demographic.getDemographicNo());				
 		printer.setNewPage(true);
 
-		@SuppressWarnings("unchecked")
-		List<Allergy> allergies = allergyDao.getAllergies(String.valueOf(demographic.getDemographicNo()));
+		List<Allergy> allergies = allergyDao.findAllergies(demographic.getDemographicNo());
 		if(allergies.size()>0) {
 			printer.printAllergies(allergies);
 		}
