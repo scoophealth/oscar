@@ -69,7 +69,7 @@ public final class PrescriptionMedicationManager {
 		for (Prescription prescription : changedPrescriptions) {
 			logger.debug("sendPrescriptionsMedicationsToMyOscar : prescriptionId=" + prescription.getId());
 
-			MedicalDataTransfer2 medicalDataTransfer = PrescriptionMedicationManager.toMedicalDataTransfer(auth, prescription);
+			MedicalDataTransfer2 medicalDataTransfer = toMedicalDataTransfer(auth, prescription);
 
 			try {
 				Long remotePrescriptionId = MyOscarMedicalDataManagerUtils.addMedicalData(auth, medicalDataTransfer, OSCAR_PRESCRIPTION_DATA_TYPE, prescription.getId());
@@ -95,7 +95,7 @@ public final class PrescriptionMedicationManager {
 		for (Drug drug : changedMedications) {
 			logger.debug("sendPrescriptionsMedicationsToMyOscar : drugId=" + drug.getId());
 
-			MedicalDataTransfer2 medicalDataTransfer = PrescriptionMedicationManager.toMedicalDataTransfer(auth, drug);
+			MedicalDataTransfer2 medicalDataTransfer = toMedicalDataTransfer(auth, drug);
 			Long remoteMedicationId = null;
 			try {
 				remoteMedicationId = MyOscarMedicalDataManagerUtils.addMedicalData(auth, medicalDataTransfer, OSCAR_MEDICATION_DATA_TYPE, drug.getId());
@@ -109,7 +109,7 @@ public final class PrescriptionMedicationManager {
 		return (remoteIdMap);
 	}
 
-	public static Document toXml(Prescription prescription) throws ParserConfigurationException {
+	private static Document toXml(Prescription prescription) throws ParserConfigurationException {
 		Document doc = XmlUtils.newDocument("Prescription");
 
 		String temp = StringUtils.trimToNull(prescription.getTextView());
@@ -121,7 +121,7 @@ public final class PrescriptionMedicationManager {
 		return (doc);
 	}
 
-	public static MedicalDataTransfer2 toMedicalDataTransfer(PHRAuthentication auth, Prescription prescription) throws ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException, ParserConfigurationException {
+	private static MedicalDataTransfer2 toMedicalDataTransfer(PHRAuthentication auth, Prescription prescription) throws ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException, ParserConfigurationException {
 		MedicalDataTransfer2 medicalDataTransfer = MyOscarMedicalDataManagerUtils.getEmptyMedicalDataTransfer2(auth, prescription.getDatePrescribed(), prescription.getProviderNo(), prescription.getDemographicId());
 		// don't ask me why but prescription are currently changeable in oscar, therefore, they're never completed.
 		medicalDataTransfer.setCompleted(false);
@@ -132,12 +132,12 @@ public final class PrescriptionMedicationManager {
 		medicalDataTransfer.setMedicalDataType(MedicalDataType.PRESCRIPTION.name());
 
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
-		medicalDataTransfer.setOriginalSourceId(MyOscarMedicalDataManagerUtils.generateSourceId(loggedInInfo.currentFacility.getName(), "prescription", prescription.getId()));
+		medicalDataTransfer.setOriginalSourceId(MyOscarMedicalDataManagerUtils.generateSourceId(loggedInInfo.currentFacility.getName(), OSCAR_PRESCRIPTION_DATA_TYPE, prescription.getId()));
 
 		return (medicalDataTransfer);
 	}
 
-	public static Document toXml(Drug drug) throws ParserConfigurationException {
+	private static Document toXml(Drug drug) throws ParserConfigurationException {
 		Document doc = XmlUtils.newDocument("Medication");
 		Node rootNode = doc.getFirstChild();
 
@@ -228,7 +228,7 @@ public final class PrescriptionMedicationManager {
 		return (doc);
 	}
 
-	public static MedicalDataTransfer2 toMedicalDataTransfer(PHRAuthentication auth, Drug drug) throws ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException, ParserConfigurationException {
+	private static MedicalDataTransfer2 toMedicalDataTransfer(PHRAuthentication auth, Drug drug) throws ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException, ParserConfigurationException {
 		MedicalDataTransfer2 medicalDataTransfer = MyOscarMedicalDataManagerUtils.getEmptyMedicalDataTransfer2(auth, drug.getRxDate(), drug.getProviderNo(), drug.getDemographicId());
 
 		Document doc = toXml(drug);
@@ -237,8 +237,10 @@ public final class PrescriptionMedicationManager {
 		medicalDataTransfer.setMedicalDataType(MedicalDataType.MEDICATION.name());
 
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
-		medicalDataTransfer.setOriginalSourceId(MyOscarMedicalDataManagerUtils.generateSourceId(loggedInInfo.currentFacility.getName(), "drug", drug.getId()));
+		medicalDataTransfer.setOriginalSourceId(MyOscarMedicalDataManagerUtils.generateSourceId(loggedInInfo.currentFacility.getName(), OSCAR_MEDICATION_DATA_TYPE, drug.getId()));
 
+		medicalDataTransfer.setActive(!drug.isArchived());
+		
 		return (medicalDataTransfer);
 	}
 

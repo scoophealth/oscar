@@ -96,6 +96,7 @@ import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.ClientImage;
 import org.oscarehr.casemgmt.model.Issue;
+import org.oscarehr.common.dao.AllergyDao;
 import org.oscarehr.common.dao.CaseManagementIssueNotesDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DrugDao;
@@ -107,6 +108,7 @@ import org.oscarehr.common.dao.IntegratorConsentDao;
 import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.dao.PreventionDao;
 import org.oscarehr.common.dao.PreventionExtDao;
+import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Drug;
@@ -150,7 +152,6 @@ import oscar.oscarEncounter.oscarMeasurements.model.Measurementtype;
 import oscar.oscarLab.ca.all.web.LabDisplayHelper;
 import oscar.oscarLab.ca.on.CommonLabResultData;
 import oscar.oscarLab.ca.on.LabResultData;
-import oscar.oscarRx.data.RxPatientData;
 import oscar.util.DateUtils;
 
 public class CaisiIntegratorUpdateTask extends TimerTask {
@@ -949,45 +950,38 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		conformanceTestLog(facility, "Drug", sentIds.toString());
 	}
 
-	private void pushAllergies(Date lastDataUpdated, Facility facility, DemographicWs demographicService, Integer demographicId) throws SQLException, ShutdownException {
+	private void pushAllergies(Date lastDataUpdated, Facility facility, DemographicWs demographicService, Integer demographicId) throws ShutdownException {
 		logger.debug("pushing demographicAllergies facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
-		RxPatientData.Patient patient = RxPatientData.getPatient(demographicId);
-		RxPatientData.Patient.Allergy[] allergies = patient.getActiveAllergies();
-		if (allergies == null || allergies.length == 0) return;
+		AllergyDao allergyDao=(AllergyDao) SpringUtils.getBean("allergyDao");
+		List<Allergy> allergies=allergyDao.findByDemographicIdUpdatedAfterDate(demographicId, lastDataUpdated);
+		if (allergies.size() == 0) return;
 
 		StringBuilder sentIds = new StringBuilder();
 
-		for (RxPatientData.Patient.Allergy allergy : allergies) {
-			// no change since last sync
-			if (allergy.getEntryDate() != null) {
-				// date is missing HH/MM/SS so we'll have to do 1 day over lap, so it might sync twice, better than missing a sync
-				Date tempDate = new Date(allergy.getEntryDate().getTime() + org.apache.commons.lang.time.DateUtils.MILLIS_PER_DAY);
-				if (tempDate.before(lastDataUpdated)) continue;
-			}
-
+		for (Allergy allergy : allergies) {
 			CachedDemographicAllergy cachedAllergy = new CachedDemographicAllergy();
 
 			FacilityIdIntegerCompositePk facilityIdIntegerCompositePk = new FacilityIdIntegerCompositePk();
 			facilityIdIntegerCompositePk.setCaisiItemId(allergy.getAllergyId());
 			cachedAllergy.setFacilityIdIntegerCompositePk(facilityIdIntegerCompositePk);
 
-			cachedAllergy.setAgccs(allergy.getAllergy().getAGCCS());
-			cachedAllergy.setAgcsp(allergy.getAllergy().getAGCSP());
-			cachedAllergy.setAgeOfOnset(allergy.getAllergy().getAgeOfOnset());
+			cachedAllergy.setAgccs(allergy.getAgccs());
+			cachedAllergy.setAgcsp(allergy.getAgcsp());
+			cachedAllergy.setAgeOfOnset(allergy.getAgeOfOnset());
 			cachedAllergy.setCaisiDemographicId(demographicId);
-			cachedAllergy.setDescription(allergy.getAllergy().getDESCRIPTION());
+			cachedAllergy.setDescription(allergy.getDescription());
 			cachedAllergy.setEntryDate(DateUtils.toGregorianCalendar(allergy.getEntryDate()));
-			cachedAllergy.setHiclSeqNo(allergy.getAllergy().getHICL_SEQNO());
-			cachedAllergy.setHicSeqNo(allergy.getAllergy().getHIC_SEQNO());
-			cachedAllergy.setLifeStage(allergy.getAllergy().getLifeStage());
-			cachedAllergy.setOnSetCode(allergy.getAllergy().getOnSetOfReaction());
-			cachedAllergy.setPickId(allergy.getAllergy().getPickID());
-			cachedAllergy.setReaction(allergy.getAllergy().getReaction());
-			cachedAllergy.setRegionalIdentifier(allergy.getAllergy().getRegionalIdentifier());
-			cachedAllergy.setSeverityCode(allergy.getAllergy().getSeverityOfReaction());
-			cachedAllergy.setStartDate(DateUtils.toGregorianCalendar(allergy.getAllergy().getStartDate()));
-			cachedAllergy.setTypeCode(allergy.getAllergy().getTYPECODE());
+			cachedAllergy.setHiclSeqNo(allergy.getHiclSeqno());
+			cachedAllergy.setHicSeqNo(allergy.getHicSeqno());
+			cachedAllergy.setLifeStage(allergy.getLifeStage());
+			cachedAllergy.setOnSetCode(allergy.getOnsetOfReaction());
+			if (allergy.getDrugrefId()!=null) cachedAllergy.setPickId(Integer.parseInt(allergy.getDrugrefId()));
+			cachedAllergy.setReaction(allergy.getReaction());
+			cachedAllergy.setRegionalIdentifier(allergy.getRegionalIdentifier());
+			cachedAllergy.setSeverityCode(allergy.getSeverityOfReaction());
+			if (allergy.getStartDate()!=null) cachedAllergy.setStartDate(DateUtils.toGregorianCalendar(allergy.getStartDate()));
+			cachedAllergy.setTypeCode(allergy.getTypeCode());
 
 			ArrayList<CachedDemographicAllergy> cachedAllergies = new ArrayList<CachedDemographicAllergy>();
 			cachedAllergies.add(cachedAllergy);

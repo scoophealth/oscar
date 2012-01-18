@@ -46,7 +46,7 @@ import oscar.oscarRx.data.RxPatientData.Patient.Allergy;
 public final class RxShowAllergyAction extends DispatchAction {
     
 	
-	public ActionForward reorder(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {		
+	public ActionForward reorder(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {		
 		reorder(request);
 		ActionForward fwd = mapping.findForward("success-redirect");
 		return new ActionForward(fwd.getPath()+ "?demographicNo="+request.getParameter("demographicNo"),true );
@@ -107,14 +107,8 @@ public final class RxShowAllergyAction extends DispatchAction {
         	reorder(request);
         }
         
-        RxPatientData.Patient patient = null;
-        try {
-            patient = RxPatientData.getPatient(bean.getDemographicNo());
-        }
-        catch (java.sql.SQLException ex) {
-            throw new ServletException(ex);
-        }
-        
+        RxPatientData.Patient patient = RxPatientData.getPatient(bean.getDemographicNo());
+
         String forward="success";
         if(useRx3) {
         	forward="successRX3";

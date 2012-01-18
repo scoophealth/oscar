@@ -53,7 +53,7 @@ public class DemographicData {
 		logger.debug("test");
 		MiscUtils.getLogger().debug("test");
 		try {
-			
+
 			ResultSet rs;
 			String sql = "SELECT first_name, last_name FROM demographic WHERE demographic_no = '" + demographicNo + "'";
 			rs = DBHandler.GetSQL(sql);
@@ -76,13 +76,13 @@ public class DemographicData {
 		Date date = null;
 
 		try {
-			
+
 			ResultSet rs;
 			String sql = "SELECT year_of_birth,month_of_birth,date_of_birth FROM demographic WHERE demographic_no = '" + demographicNo + "'";
 			rs = DBHandler.GetSQL(sql);
 			if (rs.next()) {
 				try {
-					date = (Date) formatter.parse(oscar.Misc.getString(rs, "year_of_birth") + "-" + oscar.Misc.getString(rs, "month_of_birth") + "-" + oscar.Misc.getString(rs, "date_of_birth"));
+					date = formatter.parse(oscar.Misc.getString(rs, "year_of_birth") + "-" + oscar.Misc.getString(rs, "month_of_birth") + "-" + oscar.Misc.getString(rs, "date_of_birth"));
 				} catch (Exception eg) {
 				}
 			}
@@ -99,7 +99,7 @@ public class DemographicData {
 		String demographicNo = "";
 
 		try {
-			
+
 			ResultSet rs;
 			String sql = "SELECT demographic_no FROM demographic WHERE myOscarUserName = '" + myOscarUserName + "'";
 			rs = DBHandler.GetSQL(sql);
@@ -118,7 +118,7 @@ public class DemographicData {
 		String demographicNo = "";
 
 		try {
-			
+
 			ResultSet rs;
 
 			firstName = "first_name='" + firstName.trim() + "' ";
@@ -145,7 +145,7 @@ public class DemographicData {
 	public int numDemographicsWithHIN(String hin) {
 		int num = 0;
 		try {
-			
+
 			ResultSet rs;
 			String sql = "SELECT count(*) as c FROM demographic WHERE hin = '" + hin + "'";
 			rs = DBHandler.GetSQL(sql);
@@ -166,7 +166,7 @@ public class DemographicData {
 	public ArrayList getDemographicWithHIN(String hin) {
 		ArrayList list = new ArrayList();
 		try {
-			
+
 			ResultSet rs;
 			String sql = "SELECT demographic_no FROM demographic WHERE hin = '" + hin + "'";
 
@@ -184,31 +184,28 @@ public class DemographicData {
 	}
 
 	public ArrayList getDemographicWithLastFirstDOB(String lastname, String firstname, String dob) {
-		if (dob!=null)
-		{
+		if (dob != null) {
 			Date bDate = UtilDateUtilities.StringToDate(dob, "yyyy-MM-dd");
 			String year_of_birth = UtilDateUtilities.DateToString(bDate, "yyyy");
 			String month_of_birth = UtilDateUtilities.DateToString(bDate, "MM");
 			String date_of_birth = UtilDateUtilities.DateToString(bDate, "dd");
 
 			return getDemographicWithLastFirstDOB(lastname, firstname, year_of_birth, month_of_birth, date_of_birth);
-		}
-		else 
-		{
-			return(getDemographicWithLastFirstDOB(lastname, firstname, null,null,null));
+		} else {
+			return (getDemographicWithLastFirstDOB(lastname, firstname, null, null, null));
 		}
 	}
 
 	public ArrayList getDemographicWithLastFirstDOB(String lastname, String firstname, String year_of_birth, String month_of_birth, String date_of_birth) {
 		ArrayList list = new ArrayList();
 		try {
-			
+
 			ResultSet rs;
 			String sql = "SELECT demographic_no FROM demographic " + " WHERE last_name like '" + lastname + "%' and first_name like '" + lastname + "%'";
-			if (year_of_birth!=null) sql=sql+"  and year_of_birth = '" + year_of_birth + "'";
-			if (month_of_birth!=null) sql=sql+" and month_of_birth = '" + month_of_birth + "'";
-			if (date_of_birth!=null) sql=sql+" and date_of_birth = '" + date_of_birth + "'";
-			
+			if (year_of_birth != null) sql = sql + "  and year_of_birth = '" + year_of_birth + "'";
+			if (month_of_birth != null) sql = sql + " and month_of_birth = '" + month_of_birth + "'";
+			if (date_of_birth != null) sql = sql + " and date_of_birth = '" + date_of_birth + "'";
+
 			rs = DBHandler.GetSQL(sql);
 			while (rs.next()) {
 				String demoNo = oscar.Misc.getString(rs, "demographic_no");
@@ -225,7 +222,7 @@ public class DemographicData {
 	public String getNameAgeString(String demographicNo) {
 		String nameage = "";
 		try {
-			
+
 			ResultSet rs;
 			String sql = "SELECT last_name, first_name, year_of_birth,sex,month_of_birth,date_of_birth FROM demographic WHERE demographic_no = '" + demographicNo + "'";
 			rs = DBHandler.GetSQL(sql);
@@ -248,7 +245,7 @@ public class DemographicData {
 	public String[] getNameAgeSexArray(String demographicNo) {
 		String[] nameage = null;
 		try {
-			
+
 			ResultSet rs;
 			String sql = "SELECT last_name, first_name, year_of_birth,sex,month_of_birth,date_of_birth FROM demographic WHERE demographic_no = '" + demographicNo + "'";
 			rs = DBHandler.GetSQL(sql);
@@ -271,7 +268,7 @@ public class DemographicData {
 	public String getDemographicSex(String demographicNo) {
 		String retval = "";
 		try {
-			
+
 			ResultSet rs;
 			String sql = "SELECT sex FROM demographic WHERE demographic_no = '" + demographicNo + "'";
 			rs = DBHandler.GetSQL(sql);
@@ -317,8 +314,8 @@ public class DemographicData {
 		} catch (SQLException e) {
 			MiscUtils.getLogger().error("Error", e);
 		}
-                if (retval.startsWith("<unotes>")) retval = retval.substring(8);
-                if (retval.endsWith("</unotes>")) retval = retval.substring(0, retval.length()-9);
+		if (retval.startsWith("<unotes>")) retval = retval.substring(8);
+		if (retval.endsWith("</unotes>")) retval = retval.substring(0, retval.length() - 9);
 
 		return retval;
 	}
@@ -327,14 +324,17 @@ public class DemographicData {
 		Demographic demographic = null;
 
 		try {
-			
+
 			ResultSet rs;
 			String sql = "SELECT * FROM demographic WHERE demographic_no = '" + DemographicNo + "'";
 
 			rs = DBHandler.GetSQL(sql);
 
 			if (rs.next()) {
-				demographic = new Demographic(DemographicNo, oscar.Misc.getString(rs, "title"), oscar.Misc.getString(rs, "last_name"), oscar.Misc.getString(rs, "first_name"), oscar.Misc.getString(rs, "address"), oscar.Misc.getString(rs, "city"), oscar.Misc.getString(rs, "province"), oscar.Misc.getString(rs, "postal"), oscar.Misc.getString(rs, "phone"), oscar.Misc.getString(rs, "phone2"), oscar.Misc.getString(rs, "email"), oscar.Misc.getString(rs, "myOscarUserName"), oscar.Misc.getString(rs, "year_of_birth"), oscar.Misc.getString(rs, "month_of_birth"), oscar.Misc.getString(rs, "date_of_birth"), oscar.Misc.getString(rs, "hin"), oscar.Misc.getString(rs, "ver"), oscar.Misc.getString(rs, "roster_status"), oscar.Misc.getString(rs, "roster_date"), oscar.Misc.getString(rs, "roster_termination_date"), oscar.Misc.getString(rs, "roster_termination_reason"), oscar.Misc.getString(rs, "patient_status"), oscar.Misc.getString(rs, "patient_status_date"), oscar.Misc.getString(rs, "date_joined"), oscar.Misc.getString(rs, "chart_no"), oscar.Misc.getString(rs, "official_lang"), oscar.Misc.getString(rs, "spoken_lang"), oscar.Misc.getString(rs, "provider_no"), oscar.Misc.getString(rs, "sex"), oscar.Misc.getString(rs, "end_date"), oscar.Misc.getString(rs, "eff_date"), oscar.Misc.getString(rs, "pcn_indicator"), oscar.Misc.getString(rs, "hc_type"), oscar.Misc.getString(rs, "hc_renew_date"), oscar.Misc.getString(rs, "family_doctor"), oscar.Misc.getString(rs, "alias"), oscar.Misc.getString(rs, "previousAddress"), oscar.Misc.getString(rs, "children"), oscar.Misc.getString(rs, "sourceOfIncome"), oscar.Misc.getString(rs, "citizenship"), oscar.Misc.getString(rs, "sin"));
+				demographic = new Demographic(DemographicNo, oscar.Misc.getString(rs, "title"), oscar.Misc.getString(rs, "last_name"), oscar.Misc.getString(rs, "first_name"), oscar.Misc.getString(rs, "address"), oscar.Misc.getString(rs, "city"), oscar.Misc.getString(rs, "province"), oscar.Misc.getString(rs, "postal"), oscar.Misc.getString(rs, "phone"), oscar.Misc.getString(rs, "phone2"), oscar.Misc.getString(rs, "email"), oscar.Misc.getString(rs, "myOscarUserName"),
+				        oscar.Misc.getString(rs, "year_of_birth"), oscar.Misc.getString(rs, "month_of_birth"), oscar.Misc.getString(rs, "date_of_birth"), oscar.Misc.getString(rs, "hin"), oscar.Misc.getString(rs, "ver"), oscar.Misc.getString(rs, "roster_status"), oscar.Misc.getString(rs, "roster_date"), oscar.Misc.getString(rs, "roster_termination_date"), oscar.Misc.getString(rs, "roster_termination_reason"), oscar.Misc.getString(rs, "patient_status"), oscar.Misc.getString(rs, "patient_status_date"),
+				        oscar.Misc.getString(rs, "date_joined"), oscar.Misc.getString(rs, "chart_no"), oscar.Misc.getString(rs, "official_lang"), oscar.Misc.getString(rs, "spoken_lang"), oscar.Misc.getString(rs, "provider_no"), oscar.Misc.getString(rs, "sex"), oscar.Misc.getString(rs, "end_date"), oscar.Misc.getString(rs, "eff_date"), oscar.Misc.getString(rs, "pcn_indicator"), oscar.Misc.getString(rs, "hc_type"), oscar.Misc.getString(rs, "hc_renew_date"), oscar.Misc.getString(rs, "family_doctor"),
+				        oscar.Misc.getString(rs, "alias"), oscar.Misc.getString(rs, "previousAddress"), oscar.Misc.getString(rs, "children"), oscar.Misc.getString(rs, "sourceOfIncome"), oscar.Misc.getString(rs, "citizenship"), oscar.Misc.getString(rs, "sin"));
 			}
 
 			rs.close();
@@ -350,7 +350,7 @@ public class DemographicData {
 		String demographicNo = "";
 
 		try {
-			
+
 			ResultSet rs;
 			String sql = "SELECT demographic_no FROM demographic WHERE myOscarUserName = '" + myOscarUserName + "'";
 			rs = DBHandler.GetSQL(sql);
@@ -368,7 +368,7 @@ public class DemographicData {
 	public String getDemographicDateJoined(String DemographicNo) {
 		String date = null;
 		try {
-			
+
 			ResultSet rs;
 			String sql = "SELECT date_joined FROM demographic WHERE demographic_no = '" + DemographicNo + "'";
 
@@ -387,57 +387,19 @@ public class DemographicData {
 	}
 
 	public void setDemographicPin(String demographicNo, String myOscarUserName) throws Exception {
-		
+
 		String sql = "UPDATE demographic SET myOscarUserName = '" + myOscarUserName + "' WHERE demographic_no = " + demographicNo;
 		DBHandler.RunSQL(sql);
 	}
 
 	public void setDemographic(Demographic dm) throws Exception {
-		if (dm.getDemographicNo()==null || dm.getDemographicNo().trim().equals("")) return;
+		if (dm.getDemographicNo() == null || dm.getDemographicNo().trim().equals("")) return;
 
-		
-		String sql = "UPDATE demographic SET " +
-						"title = '" + dm.getTitle() + "', " +
-						"last_name = '" + dm.getLastName() + "', " +
-						"first_name = '" + dm.getFirstName() + "', " +
-						"address = '" + dm.getAddress() + "', " +
-						"city = '" + dm.getCity() + "', " +
-						"province = '" + dm.getProvince() + "', " +
-						"postal = '" + dm.getPostal() + "', " +
-						"phone = '" + dm.getPhone() + "', " +
-						"phone2 = '" + dm.getPhone2() + "', " +
-						"email = '" + dm.getEmail() + "', " +
-						"myOscarUserName = '" + dm.getMyOscarUserName() + "', " +
-						"year_of_birth = '" + dm.getYearOfBirth() + "', " +
-						"month_of_birth = '" + dm.getMonthOfBirth() + "', " +
-						"date_of_birth = '" + dm.getDateOfBirth() + "', " +
-						"hin = '" + dm.getHIN() + "', " +
-						"ver = '" + dm.getVersionCode() + "', " +
-						"roster_status = '" + dm.getRosterStatus() + "', " +
-						"roster_date = '" + dm.getRosterDate() + "', " +
-						"roster_termination_date = '" + dm.getRosterTerminationDate() + "', " +
-						"roster_termination_reason= '" + dm.getRosterTerminationReason() + ", " +
-						"patient_status = '" + dm.getPatientStatus() + "', " +
-						"patient_status_date = '" + dm.getPatientStatusDate() + "', " +
-						"date_joined = '" + dm.getDateJoined() + "', " +
-						"chart_no = '" + dm.getChartNo() + "', " +
-						"official_lang = '" + dm.getOfficialLang() + "', " +
-						"spoken_lang = '" + dm.getSpokenLang() + "', " +
-						"provider_no = '" + dm.getProviderNo() + "', " +
-						"sex = '" + dm.getSex() + "', " +
-						"end_date = '" + dm.getEndDate() + "', " +
-						"eff_date = '" + dm.getEffDate() + "', " +
-						"pcn_indicator = '" + dm.getPCNindicator() + "', " +
-						"hc_type = '" + dm.getHCType() + "', " +
-						"hc_renew_date = '" + dm.getHCRenewDate() + "', " +
-						"family_doctor = '" + dm.getFamilyDoctor() + "', " +
-						"alias = '" + dm.getAlias() + "', " +
-						"previousAddress = '" + dm.getPreviousAddress() + "', " +
-						"children = '" + dm.getChildren() + "', " +
-						"sourceOfIncome = '" + dm.getSourceOfIncome() + "', " +
-						"citizenship = '" + dm.getCitizenship() + "', " +
-						"sin = '" + dm.getSin() + "' " +
-					"WHERE demographic_no = " + dm.getDemographicNo();
+		String sql = "UPDATE demographic SET " + "title = '" + dm.getTitle() + "', " + "last_name = '" + dm.getLastName() + "', " + "first_name = '" + dm.getFirstName() + "', " + "address = '" + dm.getAddress() + "', " + "city = '" + dm.getCity() + "', " + "province = '" + dm.getProvince() + "', " + "postal = '" + dm.getPostal() + "', " + "phone = '" + dm.getPhone() + "', " + "phone2 = '" + dm.getPhone2() + "', " + "email = '" + dm.getEmail() + "', " + "myOscarUserName = '" + dm.getMyOscarUserName()
+		        + "', " + "year_of_birth = '" + dm.getYearOfBirth() + "', " + "month_of_birth = '" + dm.getMonthOfBirth() + "', " + "date_of_birth = '" + dm.getDateOfBirth() + "', " + "hin = '" + dm.getHIN() + "', " + "ver = '" + dm.getVersionCode() + "', " + "roster_status = '" + dm.getRosterStatus() + "', " + "roster_date = '" + dm.getRosterDate() + "', " + "roster_termination_date = '" + dm.getRosterTerminationDate() + "', " + "roster_termination_reason= '" + dm.getRosterTerminationReason() + ", "
+		        + "patient_status = '" + dm.getPatientStatus() + "', " + "patient_status_date = '" + dm.getPatientStatusDate() + "', " + "date_joined = '" + dm.getDateJoined() + "', " + "chart_no = '" + dm.getChartNo() + "', " + "official_lang = '" + dm.getOfficialLang() + "', " + "spoken_lang = '" + dm.getSpokenLang() + "', " + "provider_no = '" + dm.getProviderNo() + "', " + "sex = '" + dm.getSex() + "', " + "end_date = '" + dm.getEndDate() + "', " + "eff_date = '" + dm.getEffDate() + "', "
+		        + "pcn_indicator = '" + dm.getPCNindicator() + "', " + "hc_type = '" + dm.getHCType() + "', " + "hc_renew_date = '" + dm.getHCRenewDate() + "', " + "family_doctor = '" + dm.getFamilyDoctor() + "', " + "alias = '" + dm.getAlias() + "', " + "previousAddress = '" + dm.getPreviousAddress() + "', " + "children = '" + dm.getChildren() + "', " + "sourceOfIncome = '" + dm.getSourceOfIncome() + "', " + "citizenship = '" + dm.getCitizenship() + "', " + "sin = '" + dm.getSin() + "' "
+		        + "WHERE demographic_no = " + dm.getDemographicNo();
 		DBHandler.RunSQL(sql);
 	}
 
@@ -461,11 +423,11 @@ public class DemographicData {
 		protected String hin;
 		protected String ver;
 		protected String roster_status;
-        protected String roster_date;
-        protected String roster_termination_date;
-        protected String roster_termination_reason;
+		protected String roster_date;
+		protected String roster_termination_date;
+		protected String roster_termination_reason;
 		protected String patient_status;
-        protected String patient_status_date;
+		protected String patient_status_date;
 		protected String date_joined;
 		protected String chart_no;
 		protected String official_lang;
@@ -497,8 +459,8 @@ public class DemographicData {
 			init(DemographicNo);
 		}
 
-		protected Demographic(String DemographicNo, String title, String last_name, String first_name, String address, String city, String province, String postal, String phone, String phone2, String email, String myOscarUserName, String year_of_birth, String month_of_birth, String date_of_birth, String hin, String ver, String roster_status, String roster_date, String roster_termination_date, String roster_termination_reason, String patient_status, String patient_status_date, String date_joined, String chart_no, String official_lang, String spoken_lang, String provider_no, String sex, String end_date, String eff_date,
-		        String pcn_indicator, String hc_type, String hc_renew_date, String family_doctor, String alias, String previousAddress, String children, String sourceOfIncome, String citizenship, String sin) {
+		protected Demographic(String DemographicNo, String title, String last_name, String first_name, String address, String city, String province, String postal, String phone, String phone2, String email, String myOscarUserName, String year_of_birth, String month_of_birth, String date_of_birth, String hin, String ver, String roster_status, String roster_date, String roster_termination_date, String roster_termination_reason, String patient_status, String patient_status_date, String date_joined,
+		        String chart_no, String official_lang, String spoken_lang, String provider_no, String sex, String end_date, String eff_date, String pcn_indicator, String hc_type, String hc_renew_date, String family_doctor, String alias, String previousAddress, String children, String sourceOfIncome, String citizenship, String sin) {
 			this.demographic_no = DemographicNo;
 			this.title = title;
 			this.last_name = last_name;
@@ -518,10 +480,10 @@ public class DemographicData {
 			this.ver = ver;
 			this.roster_status = roster_status;
 			this.roster_date = roster_date;
-            this.roster_termination_date = roster_termination_date;
-            this.roster_termination_reason = roster_termination_reason;
+			this.roster_termination_date = roster_termination_date;
+			this.roster_termination_reason = roster_termination_reason;
 			this.patient_status = patient_status;
-            this.patient_status_date = patient_status_date;
+			this.patient_status_date = patient_status_date;
 			this.date_joined = date_joined;
 			this.chart_no = chart_no;
 			this.official_lang = official_lang;
@@ -548,7 +510,7 @@ public class DemographicData {
 		private void init(String DemographicNo) {
 
 			try {
-				
+
 				ResultSet rs;
 				String sql = "SELECT * FROM demographic WHERE demographic_no = '" + DemographicNo + "'";
 
@@ -573,11 +535,11 @@ public class DemographicData {
 					this.hin = oscar.Misc.getString(rs, "hin");
 					this.ver = oscar.Misc.getString(rs, "ver");
 					this.roster_status = oscar.Misc.getString(rs, "roster_status");
-                    this.roster_date = oscar.Misc.getString(rs, "roster_date");
-                    this.roster_termination_date = oscar.Misc.getString(rs, "roster_termination_date");
-                    this.roster_termination_reason = oscar.Misc.getString(rs, "roster_termination_reason");
+					this.roster_date = oscar.Misc.getString(rs, "roster_date");
+					this.roster_termination_date = oscar.Misc.getString(rs, "roster_termination_date");
+					this.roster_termination_reason = oscar.Misc.getString(rs, "roster_termination_reason");
 					this.patient_status = oscar.Misc.getString(rs, "patient_status");
-                    this.patient_status_date = oscar.Misc.getString(rs, "patient_status_date");
+					this.patient_status_date = oscar.Misc.getString(rs, "patient_status_date");
 					this.date_joined = oscar.Misc.getString(rs, "date_joined");
 					this.chart_no = oscar.Misc.getString(rs, "chart_no");
 					this.official_lang = oscar.Misc.getString(rs, "official_lang");
@@ -700,20 +662,16 @@ public class DemographicData {
 			email = data;
 		}
 
-
-
 		public String getMyOscarUserName() {
-        	return (myOscarUserName);
-        }
+			return (myOscarUserName);
+		}
 
 		public void setMyOscarUserName(String myOscarUserName) {
-        	this.myOscarUserName = myOscarUserName;
-        }
+			this.myOscarUserName = myOscarUserName;
+		}
 
 		public String getAge() {
-			if (oscar.util.StringUtils.empty(year_of_birth) ||
-				oscar.util.StringUtils.empty(month_of_birth) ||
-				oscar.util.StringUtils.empty(date_of_birth)) {
+			if (oscar.util.StringUtils.empty(year_of_birth) || oscar.util.StringUtils.empty(month_of_birth) || oscar.util.StringUtils.empty(date_of_birth)) {
 				return "";
 			}
 			return (String.valueOf(oscar.util.UtilDateUtilities.calcAge(year_of_birth, month_of_birth, date_of_birth)));
@@ -759,8 +717,8 @@ public class DemographicData {
 		}
 
 		public String getDob(String seperator) {
-			if (getYearOfBirth()==null || getMonthOfBirth()==null || getDateOfBirth()==null) return(null);
-			
+			if (getYearOfBirth() == null || getMonthOfBirth() == null || getDateOfBirth() == null) return (null);
+
 			return this.getYearOfBirth() + seperator + this.getMonthOfBirth() + seperator + this.getDateOfBirth();
 		}
 
@@ -1015,39 +973,39 @@ public class DemographicData {
 		public void setSourceOfIncome(String data) {
 			sourceOfIncome = data;
 		}
-		
+
 		public String getAnonymous() {
 			return anonymous;
 		}
-		
+
 		public void setAnonymous(String data) {
 			anonymous = data;
 		}
-		
+
 		public String getCountryOfOrigin() {
 			return countryOfOrigin;
 		}
-		
+
 		public void setCountryOfOrigin(String data) {
 			countryOfOrigin = data;
 		}
-		
+
 		public String getNewsletter() {
 			return newsletter;
 		}
-		
+
 		public void setNewsletter(String data) {
 			newsletter = data;
 		}
-		
+
 		public String getLastUpdateDate() {
 			return lastUpdateDate;
 		}
-		
+
 		public void setLastUpdateDate(String data) {
 			lastUpdateDate = data;
 		}
-		
+
 		public String getLastUpdateUser() {
 			return lastUpdateUser;
 		}
@@ -1057,8 +1015,8 @@ public class DemographicData {
 		}
 
 		public String addZero(String text, int num) {
-			if (text==null) return(null);
-			
+			if (text == null) return (null);
+
 			text = text.trim();
 			String zero = "0";
 			for (int i = text.length(); i < num; i++) {
@@ -1096,19 +1054,16 @@ public class DemographicData {
 			}
 
 			public String getAllergies() {
-				try {
-					oscar.oscarRx.data.RxPatientData.Patient patient = RxPatientData.getPatient(Integer.parseInt(demographic_no));
-					oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergies = {};
-					allergies = patient.getAllergies();
-					StringBuilder stringBuffer = new StringBuilder();
-					for (int i = 0; i < allergies.length; i++) {
-						oscar.oscarRx.data.RxAllergyData.Allergy allerg = allergies[i].getAllergy();
-						stringBuffer.append(allerg.getDESCRIPTION() + "  " + allerg.getTypeDesc() + " \n");
-					}
-					this.allergies = stringBuffer.toString();
-				} catch (SQLException e) {
-					MiscUtils.getLogger().error("Error", e);
+				oscar.oscarRx.data.RxPatientData.Patient patient = RxPatientData.getPatient(Integer.parseInt(demographic_no));
+				oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergies = {};
+				allergies = patient.getAllergies();
+				StringBuilder stringBuffer = new StringBuilder();
+				for (int i = 0; i < allergies.length; i++) {
+					oscar.oscarRx.data.RxAllergyData.Allergy allerg = allergies[i].getAllergy();
+					stringBuffer.append(allerg.getDESCRIPTION() + "  " + allerg.getTypeDesc() + " \n");
 				}
+				this.allergies = stringBuffer.toString();
+
 				return this.allergies;
 			}
 		}
@@ -1167,31 +1122,22 @@ public class DemographicData {
 	}
 
 	// //////////////
-	String add_record_string = "insert into demographic (title,last_name,first_name,address,city,province,postal,phone,phone2,email,"
-                                 + "myOscarUserName,year_of_birth,month_of_birth,date_of_birth,hin,ver,roster_status,roster_date,roster_termination_date,roster_termination_reason,"
-                                 + "patient_status,patient_status_date,date_joined,chart_no," + "official_lang,spoken_lang,provider_no,sex,"
-                                 + "end_date,eff_date,pcn_indicator,hc_type,hc_renew_date," + "family_doctor,alias,previousAddress,children,"
-                                 + "sourceOfIncome,citizenship,sin) "
-                                 + "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+	String add_record_string = "insert into demographic (title,last_name,first_name,address,city,province,postal,phone,phone2,email," + "myOscarUserName,year_of_birth,month_of_birth,date_of_birth,hin,ver,roster_status,roster_date,roster_termination_date,roster_termination_reason," + "patient_status,patient_status_date,date_joined,chart_no," + "official_lang,spoken_lang,provider_no,sex," + "end_date,eff_date,pcn_indicator,hc_type,hc_renew_date," + "family_doctor,alias,previousAddress,children,"
+	        + "sourceOfIncome,citizenship,sin) " + "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
-	public DemographicAddResult addDemographic(String title, String last_name, String first_name, String address, String city,
-			String province, String postal, String phone, String phone2, String year_of_birth, String month_of_birth,
-			String date_of_birth, String hin, String ver, String roster_status, String roster_date, String roster_termination_date, String roster_termination_reason, String patient_status, String patient_status_date, String date_joined,
-			String chart_no, String official_lang, String spoken_lang, String provider_no, String sex, String end_date,
-			String eff_date, String pcn_indicator, String hc_type, String hc_renew_date, String family_doctor, String email,
-			String myOscarUserName, String alias, String previousAddress, String children, String sourceOfIncome, String citizenship, 
-			String sin) {
-		
+	public DemographicAddResult addDemographic(String title, String last_name, String first_name, String address, String city, String province, String postal, String phone, String phone2, String year_of_birth, String month_of_birth, String date_of_birth, String hin, String ver, String roster_status, String roster_date, String roster_termination_date, String roster_termination_reason, String patient_status, String patient_status_date, String date_joined, String chart_no, String official_lang,
+	        String spoken_lang, String provider_no, String sex, String end_date, String eff_date, String pcn_indicator, String hc_type, String hc_renew_date, String family_doctor, String email, String myOscarUserName, String alias, String previousAddress, String children, String sourceOfIncome, String citizenship, String sin) {
+
 		boolean duplicateRecord = false;
 		DemographicAddResult ret = new DemographicAddResult();
 
 		// "insert into demographic (last_name, first_name, address, city, province, postal, phone, phone2, email, pin, year_of_birth, month_of_birth, date_of_birth, hin, ver, roster_status, patient_status, date_joined, chart_no, provider_no, sex, end_date, eff_date, pcn_indicator, hc_type, hc_renew_date, family_doctor) values(?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?)"
 		// },
 
-		end_date=StringUtils.trimToNull(end_date);
-		eff_date=StringUtils.trimToNull(eff_date);
-		hc_renew_date=StringUtils.trimToNull(hc_renew_date);
-                patient_status_date=StringUtils.trimToNull(patient_status_date);
+		end_date = StringUtils.trimToNull(end_date);
+		eff_date = StringUtils.trimToNull(eff_date);
+		hc_renew_date = StringUtils.trimToNull(hc_renew_date);
+		patient_status_date = StringUtils.trimToNull(patient_status_date);
 
 		ArrayList demos = new ArrayList();
 		if (hin != null && !hin.trim().equals("")) {
@@ -1208,7 +1154,7 @@ public class DemographicData {
 		} else { // Duplicate HIN
 			for (int i = 0; i < demos.size(); i++) {
 				Demographic d = (Demographic) demos.get(i);
-				if (last_name.equalsIgnoreCase(d.getLastName()) && first_name.equalsIgnoreCase(d.getFirstName()) && year_of_birth!=null && year_of_birth.equals(d.getYearOfBirth()) && month_of_birth!=null && month_of_birth.equals(d.getMonthOfBirth()) && date_of_birth!=null && date_of_birth.equals(d.getDateOfBirth())) {
+				if (last_name.equalsIgnoreCase(d.getLastName()) && first_name.equalsIgnoreCase(d.getFirstName()) && year_of_birth != null && year_of_birth.equals(d.getYearOfBirth()) && month_of_birth != null && month_of_birth.equals(d.getMonthOfBirth()) && date_of_birth != null && date_of_birth.equals(d.getDateOfBirth())) {
 					// DUP don't add
 
 					duplicateRecord = true;
@@ -1225,7 +1171,7 @@ public class DemographicData {
 
 		if (!duplicateRecord) {
 			try {
-				
+
 				Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
 
 				PreparedStatement add_record = conn.prepareStatement(add_record_string);
@@ -1298,9 +1244,10 @@ public class DemographicData {
 		String sql = "INSERT INTO demographiccust VALUES ('" + demoNo + "','','','','','<unotes>" + content + "</unotes>')";
 		DBHandler db;
 		try {
-			
+
 			DBHandler.RunSQL(sql);
-		} catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
+		} catch (SQLException ex) {
+			MiscUtils.getLogger().error("Error", ex);
 		}
 	}
 

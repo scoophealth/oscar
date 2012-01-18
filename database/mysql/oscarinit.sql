@@ -38,6 +38,8 @@ CREATE TABLE allergies (
   regional_identifier varchar(100),
   life_stage char(1),
   position int(10) not null,
+  lastUpdateDate datetime not null,
+  providerNo varchar(6),
   PRIMARY KEY  (allergyid)
 ) ;
 

@@ -16,7 +16,12 @@ package oscar.form;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
+
+import org.oscarehr.common.dao.AllergyDao;
+import org.oscarehr.common.model.Allergy;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
@@ -155,19 +160,18 @@ public class FrmDischargeSummaryRecord extends FrmRecord {
             }
             rs2.close();
              
-            StringBuilder allergies = new StringBuilder();
-            String sql3 = "SELECT DESCRIPTION from allergies where demographic_no="+demographicNo;
-            ResultSet rs3 = DBHandler.GetSQL(sql3);
-            while(rs3.next()) {
-            	if(rs3.isFirst())
-            		allergies.append(oscar.Misc.getString(rs3, "DESCRIPTION"));
-            	else {
-            		allergies.append(",");
-            		allergies.append(oscar.Misc.getString(rs3, "DESCRIPTION"));
-            	}
-            }
-            props.setProperty("allergies",allergies.toString());
-            rs3.close();
+            AllergyDao allergyDao=(AllergyDao) SpringUtils.getBean("allergyDao");
+            List<Allergy> allergies=allergyDao.findAllergies(demographicNo);
+			StringBuilder allergiesString = new StringBuilder();
+			for (Allergy allergy : allergies) {
+				if (allergiesString.length() != 0) {
+					allergiesString.append(",");
+				}
+
+				allergiesString.append(allergy.getDescription());
+			}
+			
+            props.setProperty("allergies",allergiesString.toString());
             
             StringBuilder issues = new StringBuilder();
             String sql4 = "SELECT issue_id from casemgmt_issue where demographic_no="+demographicNo+" and resolved=0";

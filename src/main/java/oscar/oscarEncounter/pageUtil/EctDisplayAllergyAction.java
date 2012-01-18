@@ -25,7 +25,6 @@
 
 package oscar.oscarEncounter.pageUtil;
 
-import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -84,45 +83,41 @@ public class EctDisplayAllergyAction extends EctDisplayAction {
 			Integer demographicId = Integer.parseInt(bean.demographicNo);
 			Locale locale=request.getLocale();
 
-			try {
-				allergies = RxPatientData.getPatient(demographicId).getActiveAllergies();
+			allergies = RxPatientData.getPatient(demographicId).getActiveAllergies();
 
-				// --- get local allergies ---
-				for (int idx = 0; idx < allergies.length; ++idx) {
-					if(allergies[idx].getAllergy().getArchived().equals("1")) {
-						continue;
-					}
-					Date date = allergies[idx].getEntryDate();
-					NavBarDisplayDAO.Item item = makeItem(date, allergies[idx].getAllergy().getDESCRIPTION(), allergies[idx].getAllergy().getSeverityOfReaction(), locale);
-					Dao.addItem(item);
+			// --- get local allergies ---
+			for (int idx = 0; idx < allergies.length; ++idx) {
+				if(allergies[idx].getAllergy().getArchived().equals("1")) {
+					continue;
 				}
-
-				// --- get integrator allergies ---
-				LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
-				if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
-					try {
-						DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
-						List<CachedDemographicAllergy> remoteAllergies = demographicWs.getLinkedCachedDemographicAllergies(demographicId);
-						
-						for (CachedDemographicAllergy remoteAllergy : remoteAllergies)
-						{
-							Date date=null;
-							if (remoteAllergy.getEntryDate()!=null) date=remoteAllergy.getEntryDate().getTime();
-
-							NavBarDisplayDAO.Item item = makeItem(date, remoteAllergy.getDescription(), remoteAllergy.getSeverityCode(), locale);
-							Dao.addItem(item);
-						}
-					} catch (Exception e) {
-						logger.error("error getting remote allergies", e);
-					}
-				}
-
-				// --- sort all results ---
-				Dao.sortItems(NavBarDisplayDAO.DATESORT_ASC);
-			} catch (SQLException e) {
-				logger.error("ERROR FETCHING ALLERGIES", e);
-				return false;
+				Date date = allergies[idx].getEntryDate();
+				NavBarDisplayDAO.Item item = makeItem(date, allergies[idx].getAllergy().getDESCRIPTION(), allergies[idx].getAllergy().getSeverityOfReaction(), locale);
+				Dao.addItem(item);
 			}
+
+			// --- get integrator allergies ---
+			LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+			if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
+				try {
+					DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
+					List<CachedDemographicAllergy> remoteAllergies = demographicWs.getLinkedCachedDemographicAllergies(demographicId);
+					
+					for (CachedDemographicAllergy remoteAllergy : remoteAllergies)
+					{
+						Date date=null;
+						if (remoteAllergy.getEntryDate()!=null) date=remoteAllergy.getEntryDate().getTime();
+
+						NavBarDisplayDAO.Item item = makeItem(date, remoteAllergy.getDescription(), remoteAllergy.getSeverityCode(), locale);
+						Dao.addItem(item);
+					}
+				} catch (Exception e) {
+					logger.error("error getting remote allergies", e);
+				}
+			}
+
+			// --- sort all results ---
+			Dao.sortItems(NavBarDisplayDAO.DATESORT_ASC);
+
 			return true;
 		}
 	}

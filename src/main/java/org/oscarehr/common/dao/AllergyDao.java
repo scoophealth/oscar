@@ -22,44 +22,53 @@
 
 package org.oscarehr.common.dao;
 
+import java.util.Date;
 import java.util.List;
+
 import javax.persistence.Query;
 
 import org.oscarehr.common.model.Allergy;
-
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class AllergyDAO extends AbstractDao {
+public class AllergyDao extends AbstractDao<Allergy> {
 
-	public AllergyDAO() {
+	public AllergyDao() {
 		super(Allergy.class);
 	}
 	
-    public Allergy getAllergy(Integer id) {
-    	return (entityManager.find(Allergy.class, id));
-    }
-    
-
-    public List<Allergy> getAllergies(String demographic_no) {
-    	@SuppressWarnings("unchecked")
+    public List<Allergy> findAllergies(Integer demographic_no) {
     	String sql = "select x from Allergy x where x.demographicNo=?1";
     	Query query = entityManager.createQuery(sql);
     	query.setParameter(1,demographic_no);
     	
+        @SuppressWarnings("unchecked")
         List<Allergy> allergies = query.getResultList();
         return allergies;
     }
     
-    public List<Allergy> getActiveAllergies(String demographic_no) {
-    	@SuppressWarnings("unchecked")
-    	String sql = "select x from Allergy x where x.archived = 0 and x.demographicNo=?1";
+    public List<Allergy> findActiveAllergies(Integer demographic_no, String archivedString) {
+    	String sql = "select x from Allergy x where x.demographicNo=?2 and x.archived = ?1";
     	Query query = entityManager.createQuery(sql);
     	query.setParameter(1,demographic_no);
+    	query.setParameter(2,archivedString);
     	
+        @SuppressWarnings("unchecked")
         List<Allergy> allergies = query.getResultList();
         return allergies;
     }
    
+	public List<Allergy> findByDemographicIdUpdatedAfterDate(Integer demographicId, Date updatedAfterThisDate) {
+		String sqlCommand = "select x from Allergy x where x.demographicNo=?1 and x.lastUpdateDate>?2";
+
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, demographicId);
+		query.setParameter(2, updatedAfterThisDate);
+
+		@SuppressWarnings("unchecked")
+		List<Allergy> results = query.getResultList();
+
+		return (results);
+	}
 
 }

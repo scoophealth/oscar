@@ -586,8 +586,8 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
 		
 		Allergy getAllergy(String demographic,Date entryDate,String description,Integer hiclseqno,Integer hicSeqno,Integer agcsp,Integer agccs,Integer typeCode,String reaction, String drugrefId,String archived,Date startDate,String severityOfReaction,String onsetOfReaction,String regionalIdentifier,String lifeStage){
 	        Allergy allergy = new Allergy();
-	        allergy.setDemographicNo(demographic);
-	        allergy.setEntry_date(entryDate);
+	        allergy.setDemographicNo(Integer.valueOf(demographic));
+	        allergy.setEntryDate(entryDate);
 	        allergy.setDescription(description);
 	        allergy.setHiclSeqno(hiclseqno);
 	        allergy.setHicSeqno(hicSeqno);
@@ -630,7 +630,6 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
 		OscarAppointmentDao appointmentDao=(OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
 		ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
 		DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
-		DxDao  dxDao = (DxDao) SpringUtils.getBean("dxDao");
 		DxResearchDAO dxResearchDAO = (DxResearchDAO) SpringUtils.getBean("dxResearchDao");
 		AdmissionDao admissionDao = (AdmissionDao) SpringUtils.getBean("admissionDao");
 		ProgramProviderDAO programProviderDAO = (ProgramProviderDAO) SpringUtils.getBean("programProviderDAO");
@@ -649,7 +648,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
 		MeasurementsDao measurementsDao = (MeasurementsDao) SpringUtils.getBean("measurementsDao");
 		SecurityDao securityDao = (SecurityDao) SpringUtils.getBean("securityDao");
 		SecUserRoleDao secuserroleDao = (SecUserRoleDao) SpringUtils.getBean("secUserRoleDao");
-		AllergyDAO allergyDao = (AllergyDAO) SpringUtils.getBean("AllergyDAO");
+		AllergyDao allergyDao = (AllergyDao) SpringUtils.getBean("allergyDao");
 		DocumentDAO documentDao = (DocumentDAO) SpringUtils.getBean("documentDAO");
 		
 		Integer oscarProgramID = programDao.getProgramIdByProgramName("OSCAR");
@@ -680,8 +679,6 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
 			oscarProgramID = program.getId();
 		}
 		
-		Issue omeds = issueDao.findIssueByCode("OMeds"); 
-		Issue socHistory = issueDao.findIssueByCode("SocHistory");
 		Issue medHistory = issueDao.findIssueByCode("MedHistory"); 
 		Issue concerns = issueDao.findIssueByCode("Concerns");
 		Issue reminders = issueDao.findIssueByCode("Reminders");
@@ -696,7 +693,6 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
 		Issue diabetes = issueDao.findIssueByCode("250");
 		Issue corneal = issueDao.findIssueByCode("37110");
 		Issue classicalMigraine = issueDao.findIssueByCode("3460");
-		Issue hypertension = issueDao.findIssueByCode("401");
 		
 		
 		
@@ -718,24 +714,19 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
 		cal2 = Calendar.getInstance();
 		cal2.setTime(referenceDate);
 		cal2.add(Calendar.DAY_OF_YEAR, -1);
-		Date yesterday = cal2.getTime();
 		cal2 = Calendar.getInstance();
 		cal2.add(Calendar.DAY_OF_YEAR, -7);
 		Date lastWeek = cal2.getTime();
 		
 		Date threeMonthsAgo = getDate(referenceDate,Calendar.MONTH, -3);
 		Date eightWeeksAgo  = getDate(referenceDate,Calendar.WEEK_OF_YEAR,-8);
-		Date oneMonthAgo = getDate(referenceDate,Calendar.MONTH,-1);
 		Date sixWeeksAgo = getDate(referenceDate,Calendar.WEEK_OF_YEAR,-6);
 		Date twoWeeksAgo = getDate(referenceDate,Calendar.WEEK_OF_YEAR,-2);
 		Date twoMonthsAgo = getDate(referenceDate,Calendar.MONTH,-2);
 		Date oneWeekAgo = getDate(referenceDate,Calendar.WEEK_OF_YEAR,-1);
-		Date tenWeeksAgo = getDate(referenceDate,Calendar.WEEK_OF_YEAR,-10);
 		Date sixtyThreeYearsAgoPlusTwoWeeks = getDate(getDate(referenceDate,Calendar.YEAR,-63),Calendar.WEEK_OF_YEAR,-2);
 		Date eightMonthsAgo = getDate(referenceDate,Calendar.MONTH,-8);
 		Date fourMonthsAgo = getDate(referenceDate,Calendar.MONTH,-4);
-		
-		
 		
 		
 		//Dr. Marcus Welby (DRW)  User and Physician, Provider Number=111112, Specialty=00
@@ -859,7 +850,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
 		secuserroleDao.save(getSecUserRole(lg.getProviderNo(),"receptionist",true));
 		
 		MiscUtils.getLogger().info("Adding Providers");
-		String lastName = null, firstName= null,  hin= null, ver= null, yearOfBirth= null, monthOfBirth= null, dateOfBirth= null, sex= null, address= null, city= null, province= null, postal= null, phone= null, patientStatus= null, rosterStatus= null, providerNo = null;
+		String hin= null, ver= null, address= null, city= null, province= null, postal= null, phone= null;
 	
 	    
 	    //PATIENT SETS
