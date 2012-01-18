@@ -47,8 +47,6 @@ public class SentToPHRTracking extends AbstractModel<Long> {
     @Column(nullable = false)
 	private String objectName;
     @Column(nullable = false)
-	private Integer lastObjectId;
-    @Column(nullable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date sentDatetime;  
     @Column(nullable = false)
@@ -67,13 +65,6 @@ public class SentToPHRTracking extends AbstractModel<Long> {
 	}
 	public void setObjectName(String objectName) {
 		this.objectName = StringUtils.trimToNull(objectName);
-	}
-	
-	public Integer getLastObjectId() {
-		return lastObjectId;
-	}
-	public void setLastObjectId(Integer lastObjectId) {
-		this.lastObjectId = lastObjectId;
 	}
 	
 	public Date getSentDatetime() {

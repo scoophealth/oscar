@@ -47,22 +47,6 @@ public final class MyOscarMedicalDataManagerUtils {
 	}
 
 	/**
-	 * @deprecated use addMedicalData(PhrAuthentication auth, MedicalDataTransfer2 medicalDataTransfer) instead
-	 */
-	public static void sendMedicalData(PHRAuthentication auth, Integer demographicNo, String dataType, String medicalData, Object objectId, String providerNo, Date dateOfData) throws ItemAlreadyExistsException_Exception, NotAuthorisedException_Exception {
-		MedicalDataWs medicalDataWs = MyOscarServerWebServicesManager.getMedicalDataWs(auth.getMyOscarUserId(), auth.getMyOscarPassword());
-		MedicalDataTransfer2 medicalDataTransfer = getEmptyMedicalDataTransfer2(auth, dateOfData, providerNo, demographicNo);
-
-		medicalDataTransfer.setData(medicalData);
-		medicalDataTransfer.setMedicalDataType(dataType);
-		medicalDataTransfer.setOriginalSourceId(generateSourceId(loggedInInfo.currentFacility.getName(), dataType, objectId));
-
-		medicalDataWs.addMedicalData2(medicalDataTransfer);
-
-		addSendRemoteDataLog(dataType, objectId, "content=" + medicalData);
-	}
-
-	/**
 	 * @return a MedicalDataTransfer2 with default data, but missing MedicalDataType, Data fields, orignalSourceId, set those after yourself.
 	 */
 	public static MedicalDataTransfer2 getEmptyMedicalDataTransfer2(PHRAuthentication auth, Date dateOfData, String providerNo, Integer demographicId)
@@ -163,7 +147,6 @@ public final class MyOscarMedicalDataManagerUtils {
 		{
 			lastTracking=new SentToPHRTracking();
 			lastTracking.setDemographicNo(demographicNo);
-			lastTracking.setLastObjectId(0);
 			lastTracking.setObjectName(dataType);
 			lastTracking.setSentDatetime(new Date(0)); // set to beginning of time to not confuse any algorithms trying to figure out if it's an update or create.
 			lastTracking.setSentToServer(server);
