@@ -1,3 +1,7 @@
+<%@page import="org.oscarehr.util.WebUtils"%>
+<%@page import="org.oscarehr.util.LocaleUtils"%>
+<%@page import="org.oscarehr.phr.PHRAuthentication"%>
+<%@page import="org.oscarehr.phr.util.MyOscarUtils"%>
 <%@page import="org.oscarehr.util.MiscUtils"%>
 <%@ page language="java" import="oscar.OscarProperties"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
@@ -175,6 +179,7 @@ padding-right:6;
 	type="oscar.oscarRx.data.RxPatientData.Patient" name="Patient" />
 
 <body topmargin="0" leftmargin="0" vlink="#0000FF">
+<%=WebUtils.popErrorAndInfoMessagesAsHtml(session)%>
 <table border="0" cellpadding="0" cellspacing="0"
 	style="border-collapse: collapse" bordercolor="#111111" width="100%"
 	id="AutoNumber1" height="100%">
@@ -265,7 +270,25 @@ padding-right:6;
 					 String allergy_colour_codes = "<table class='allergy_legend' cellspacing='0'><tr><td><b>Legend:</b></td> <td > <table class='colour_codes' bgcolor='"+ColourCodesArray[1]+"'><td> </td></table></td> <td >Mild</td> <td > <table class='colour_codes' bgcolor='"+ColourCodesArray[2]+"'><td> </td></table></td> <td >Moderate</td><td > <table class='colour_codes' bgcolor='"+ColourCodesArray[3]+"'><td> </td></table></td> <td >Severe</td> </tr></table>";
 				%>
 				</span>
-
+				<%
+                  	  if (MyOscarUtils.isVisibleMyOscarSendButton())
+                  	  {
+							PHRAuthentication auth=MyOscarUtils.getPHRAuthentication(session);
+                  		  	boolean enabledMyOscarButton=MyOscarUtils.isMyOscarSendButtonEnabled(auth, Integer.valueOf(demoNo));
+							if (enabledMyOscarButton) 
+							{
+								%>
+									| <a href="send_allergies_to_myoscar_action.jsp?demographicId=<%=demoNo%>"><%=LocaleUtils.getMessage(request, "SendToMyOscar")%></a>
+								<%
+							}
+							else
+							{
+								%>
+									| <span style="color:grey;text-decoration:underline"><%=LocaleUtils.getMessage(request, "SendToMyOscar")%></span>
+								<%
+							}
+                  	  }
+             	%> 
 				</div>
 					
 					

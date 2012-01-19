@@ -56,7 +56,6 @@
 	<bean id="CaseManagementCPPDAO" class="org.oscarehr.casemgmt.dao.CaseManagementCPPDAO" autowire="byName" />
 	<bean id="OnCallDAO" class="org.oscarehr.casemgmt.dao.OnCallDAO" autowire="byName" />
 
-	<bean id="AllergyDAO" class="org.oscarehr.common.dao.AllergyDAO" autowire="byName" />
 	<bean id="IssueDAO" class="org.oscarehr.casemgmt.dao.IssueDAO" autowire="byName" />
 	<bean id="EchartDAO" class="org.oscarehr.casemgmt.dao.EchartDAO" autowire="byName" />
 	<bean id="secroleDao" class="com.quatro.dao.security.SecroleDao" autowire="byName"/>
@@ -219,7 +218,6 @@
 		<property name="caseManagementNoteLinkDAO" ref="CaseManagementNoteLinkDAO" />
 		<property name="caseManagementIssueDAO" ref="CaseManagementIssueDAO" />
 		<property name="caseManagementCPPDAO" ref="CaseManagementCPPDAO" />
-		<property name="allergyDAO" ref="AllergyDAO" />
 		<property name="issueDAO" ref="IssueDAO" />
 		<property name="messagetblDAO" ref="MessagetblDAO" />
 		<property name="echartDAO" ref="EchartDAO" />

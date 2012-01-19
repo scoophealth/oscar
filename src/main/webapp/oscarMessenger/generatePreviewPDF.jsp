@@ -331,13 +331,7 @@ request.getSession().setAttribute("EctSessionBean",bean);
 
                                             request.getSession().setAttribute("RxSessionBean", Rxbean);
 
-                                            RxPatientData.Patient patient = null;
-                                            try {
-                                                patient = RxPatientData.getPatient(demographic_no);
-                                            }
-                                            catch (java.sql.SQLException ex) {
-                                                throw new ServletException(ex);
-                                            }
+                                            RxPatientData.Patient patient = RxPatientData.getPatient(demographic_no);
 
                                             if(patient!=null) {
                                                 request.getSession().setAttribute("Patient", patient);

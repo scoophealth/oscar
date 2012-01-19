@@ -31,7 +31,7 @@ import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.IsPropertiesOn;
-import org.oscarehr.common.dao.AllergyDAO;
+import org.oscarehr.common.dao.AllergyDao;
 import org.oscarehr.common.dao.BillingreferralDao;
 import org.oscarehr.common.dao.ClinicDAO;
 import org.oscarehr.common.dao.ConsultationRequestExtDao;
@@ -94,7 +94,7 @@ public class EyeformAction extends DispatchAction {
 	CaseManagementNoteDAO caseManagementNoteDao = (CaseManagementNoteDAO)SpringUtils.getBean("CaseManagementNoteDAO");
 	OcularProcDao ocularProcDao = (OcularProcDao)SpringUtils.getBean("OcularProcDAO");
 	SpecsHistoryDao specsHistoryDao = (SpecsHistoryDao)SpringUtils.getBean("SpecsHistoryDAO");
-	AllergyDAO allergyDao = (AllergyDAO)SpringUtils.getBean("AllergyDAO");
+	AllergyDao allergyDao = (AllergyDao)SpringUtils.getBean("allergyDao");
 	FollowUpDao followUpDao = (FollowUpDao)SpringUtils.getBean("FollowUpDAO");
 	ProcedureBookDao procedureBookDao = (ProcedureBookDao)SpringUtils.getBean("ProcedureBookDAO");
 	TestBookRecordDao testBookDao = (TestBookRecordDao)SpringUtils.getBean("TestBookDAO");
@@ -493,7 +493,7 @@ public class EyeformAction extends DispatchAction {
 				}
 				
 				//allergies
-				List<Allergy> allergies = allergyDao.getAllergies(String.valueOf(demographic.getDemographicNo()));
+				List<Allergy> allergies = allergyDao.findAllergies(demographic.getDemographicNo());
 				if(allergies.size()>0) {
 					printer.printAllergies(allergies);
 				}

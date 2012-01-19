@@ -1,0 +1,11 @@
+<project default="copy_jsps">
+	<property name="context.dir" value="catalina_base/webapps/oscar" />
+	<property name="src.dir" value="src/main/webapp" />
+
+	<target name="copy_jsps">
+		<copy todir="${context.dir}" verbose="true">
+			<fileset dir="${src.dir}" excludes="WEB-INF/**/*" />
+		</copy>
+	</target>
+
+</project>
