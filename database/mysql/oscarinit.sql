@@ -6255,6 +6255,7 @@ CREATE TABLE measurementType (
   typeDescription varchar(255) NOT NULL, 
   measuringInstruction varchar(255) NOT NULL, 
   validation varchar(100) NOT NULL,
+  createDate datetime not null,
   PRIMARY KEY(id),
   KEY id (id),
   KEY type (type),

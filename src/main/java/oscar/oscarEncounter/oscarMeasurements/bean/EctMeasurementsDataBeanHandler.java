@@ -50,43 +50,6 @@ public class EctMeasurementsDataBeanHandler {
         init(demo, type);
     }
     
-    /*public boolean init(String demo) {
-        boolean verdict = true;
-        try {
-            
-            String sql ="SELECT m.id, mt.type, mt.typeDisplayName, m.demographicNo, m.providerNo, m.dataField, m.measuringInstruction,"+
-                        "m.comments, m.dateObserved, m.dateEntered , p.first_name AS provider_first, p.last_name AS provider_last," +
-                        "v.isNumeric AS numericValidation, v.name AS validationName FROM measurements m, provider p, validations v," +
-                        "measurementType mt WHERE m.demographicNo='" + demo + "' AND m.providerNo= p.provider_no AND m.type = mt.type " +
-                        "AND mt.measuringInstruction = m.measuringInstruction AND mt.validation = v.id ORDER BY m.type ASC," +
-                        "m.dateEntered DESC";
-     
-            log.debug(" EctMeasurementDataBeanHandler sql: " + sql);
-            ResultSet rs;
-            String canPlot = null;
-            for(rs = DBHandler.GetSQL(sql); rs.next(); )
-            {
-                    if (rs.getInt("numericValidation")==1 || oscar.Misc.getString(rs,"validationName").compareTo("Blood Pressure")==0)
-                        canPlot = "true";
-                    else
-                        canPlot = null;
-                    //log.debug("canPlot value: " + canPlot);
-                    EctMeasurementsDataBean data = new EctMeasurementsDataBean(rs.getInt("id"), oscar.Misc.getString(rs,"type"), oscar.Misc.getString(rs,"typeDisplayName"), oscar.Misc.getString(rs,"demographicNo"),
-                                                                               oscar.Misc.getString(rs,"provider_first"), oscar.Misc.getString(rs,"provider_last"),
-                                                                               oscar.Misc.getString(rs,"dataField"), oscar.Misc.getString(rs,"measuringInstruction"),
-                                                                               oscar.Misc.getString(rs,"comments"), oscar.Misc.getString(rs,"dateObserved"),
-                                                                               oscar.Misc.getString(rs,"dateEntered"), canPlot);
-                    measurementsDataVector.add(data);
-            }
-     
-            rs.close();
-        }
-        catch(SQLException e) {
-            log.debug(e.getMessage());
-            verdict = false;
-        }
-        return verdict;
-    }*/
     
     public boolean init(String demo) {
         boolean verdict = true;
