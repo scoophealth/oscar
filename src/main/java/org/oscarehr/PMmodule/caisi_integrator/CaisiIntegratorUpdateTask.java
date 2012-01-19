@@ -105,6 +105,7 @@ import org.oscarehr.common.dao.EFormValueDao;
 import org.oscarehr.common.dao.FacilityDao;
 import org.oscarehr.common.dao.GroupNoteDao;
 import org.oscarehr.common.dao.IntegratorConsentDao;
+import org.oscarehr.common.dao.MeasurementTypeDao;
 import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.dao.PreventionDao;
 import org.oscarehr.common.dao.PreventionExtDao;
@@ -118,6 +119,7 @@ import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.GroupNoteLink;
 import org.oscarehr.common.model.IntegratorConsent;
 import org.oscarehr.common.model.IntegratorConsent.ConsentStatus;
+import org.oscarehr.common.model.MeasurementType;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.dx.dao.DxResearchDAO;
@@ -143,13 +145,11 @@ import oscar.oscarBilling.ca.on.dao.BillingOnItemDao;
 import oscar.oscarBilling.ca.on.model.BillingOnCHeader1;
 import oscar.oscarBilling.ca.on.model.BillingOnItem;
 import oscar.oscarEncounter.oscarMeasurements.dao.MeasurementMapDao;
-import oscar.oscarEncounter.oscarMeasurements.dao.MeasurementTypeDao;
 import oscar.oscarEncounter.oscarMeasurements.dao.MeasurementsDao;
 import oscar.oscarEncounter.oscarMeasurements.dao.MeasurementsExtDao;
 import oscar.oscarEncounter.oscarMeasurements.model.Measurementmap;
 import oscar.oscarEncounter.oscarMeasurements.model.Measurements;
 import oscar.oscarEncounter.oscarMeasurements.model.MeasurementsExt;
-import oscar.oscarEncounter.oscarMeasurements.model.Measurementtype;
 import oscar.oscarLab.ca.all.web.LabDisplayHelper;
 import oscar.oscarLab.ca.on.CommonLabResultData;
 import oscar.oscarLab.ca.on.LabResultData;
@@ -184,7 +184,6 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	private IntegratorControlDao integratorControlDao = (IntegratorControlDao) SpringUtils.getBean("integratorControlDao");
 	private MeasurementsDao measurementsDao = (MeasurementsDao) SpringUtils.getBean("measurementsDao");
 	private MeasurementsExtDao measurementsExtDao = (MeasurementsExtDao) SpringUtils.getBean("measurementsExtDao");
-	private MeasurementTypeDao measurementTypeDao = (MeasurementTypeDao) SpringUtils.getBean("measurementTypeDao");
 	private MeasurementMapDao measurementMapDao = (MeasurementMapDao) SpringUtils.getBean("measurementMapDao");
 	private DxResearchDAO dxresearchDao = (DxResearchDAO) SpringUtils.getBean("dxResearchDao");
 	private BillingOnItemDao billingOnItemDao = (BillingOnItemDao) SpringUtils.getBean("billingOnItemDao");
@@ -1240,8 +1239,9 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				demographicService.setCachedMeasurementExts(cachedMeasurementExts);
 			}
 
-			List<Measurementtype> measurementTypes = measurementTypeDao.getByType(measurement.getType());
-			for (Measurementtype measurementType : measurementTypes) {
+			MeasurementTypeDao measurementTypeDao=(MeasurementTypeDao) SpringUtils.getBean("measurementTypeDao");
+			List<MeasurementType> measurementTypes = measurementTypeDao.findByType(measurement.getType());
+			for (MeasurementType measurementType : measurementTypes) {
 				MiscUtils.checkShutdownSignaled();
 
 				CachedMeasurementType cachedMeasurementType = new CachedMeasurementType();
