@@ -1698,7 +1698,6 @@
         <ViolationValue>/src/main/java/oscar/form/FrmDischargeSummaryRecord.java:ResultSet rs0 = DBHandler.GetSQL(sql0);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmDischargeSummaryRecord.java:ResultSet rs1 = DBHandler.GetSQL(sql1);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmDischargeSummaryRecord.java:ResultSet rs2 = DBHandler.GetSQL(sql2);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/form/FrmDischargeSummaryRecord.java:ResultSet rs3 = DBHandler.GetSQL(sql3);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmDischargeSummaryRecord.java:ResultSet rs4 = DBHandler.GetSQL(sql4);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmDischargeSummaryRecord.java:ResultSet rs5 = DBHandler.GetSQL(sql5);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmDischargeSummaryRecord.java:ResultSet rs_cr1 = DBHandler.GetSQL(sql_cr1);</ViolationValue>
@@ -2352,11 +2351,11 @@
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPatientData.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPatientData.java:b = DBHandler.RunSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPatientData.java:boolean b = DBHandler.RunSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPatientData.java:rs = DBHandler.GetSQL(</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPatientData.java:rs = DBHandler.GetSQL("SELECT * FROM allergies WHERE allergyid  = " + String.valueOf(id));</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPatientData.java:rs = DBHandler.GetSQL("SELECT * FROM allergies WHERE demographic_no = '" + getDemographicNo() + "' ORDER BY archived, CASE severity_of_reaction when 4 then severity_of_reaction end asc, CASE severity_of_reaction when  3 then severity_of_reaction end desc, CASE severity_of_reaction when 2 then severity_of_reaction end desc");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPatientData.java:rs = DBHandler.GetSQL("SELECT * FROM allergies WHERE demographic_no = '" + getDemographicNo() + "' and archived=0 ORDER BY position,severity_of_reaction");</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPatientData.java:rs = DBHandler.GetSQL("SELECT * FROM diseases WHERE demographic_no = '" + getDemographicNo()+"'");</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPatientData.java:rs = DBHandler.GetSQL("SELECT * FROM diseases WHERE demographic_no = '" + getDemographicNo() + "'");</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPatientData.java:rs = DBHandler.GetSQL("SELECT demographic_no, last_name, first_name, sex, year_of_birth, " + "month_of_birth, date_of_birth, address, city, province, postal, phone " + "FROM demographic WHERE last_name LIKE '" + surname + "%' AND first_name LIKE '" + firstName + "%'");</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPatientData.java:rs = DBHandler.GetSQL("SELECT demographic_no, last_name, first_name, sex, year_of_birth, " + "month_of_birth, date_of_birth, address, city, province, postal, phone,hin " + "FROM demographic WHERE demographic_no = " + demographicNo);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPharmacyData.java:DBHandler.RunSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPharmacyData.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPrescriptionData.java:DBHandler.RunSQL(sql);</ViolationValue>

@@ -89,7 +89,7 @@ public final class FrmSetupFormAction extends Action {
         String providerNo = (String) session.getAttribute("user");
         if (demo == null || bean!=null){
             request.getSession().setAttribute("EctSessionBean", bean);
-            demo = (String) bean.getDemographicNo();
+            demo = bean.getDemographicNo();
             
         }
         
@@ -252,36 +252,29 @@ public final class FrmSetupFormAction extends Action {
         if(fluShot!=null)
             drugs.add(fluShot + "     Flu Shot");
             
-        try{
-            RxPatientData.Patient p = RxPatientData.getPatient(Integer.parseInt(demographicNo));
-            RxPrescriptionData.Prescription[] prescribedDrugs = p.getPrescribedDrugsUnique();
-            if(prescribedDrugs.length==0 && fluShot==null)
-                drugs=null;
-            for(int i=0; i<prescribedDrugs.length; i++){
-                drugs.add(prescribedDrugs[i].getRxDate().toString() + "    " + prescribedDrugs[i].getRxDisplay());            
-            }
+        RxPatientData.Patient p = RxPatientData.getPatient(Integer.parseInt(demographicNo));
+        RxPrescriptionData.Prescription[] prescribedDrugs = p.getPrescribedDrugsUnique();
+        if(prescribedDrugs.length==0 && fluShot==null)
+            drugs=null;
+        for(int i=0; i<prescribedDrugs.length; i++){
+            drugs.add(prescribedDrugs[i].getRxDate().toString() + "    " + prescribedDrugs[i].getRxDisplay());            
         }
-        catch(SQLException e){
-            MiscUtils.getLogger().error("Error", e);   
-        }
+
         return drugs;
     }
     
     private List getDrugAllegyList(String demographicNo){
         List allergyLst = new LinkedList();
-        try{
-            RxPatientData.Patient p = RxPatientData.getPatient(Integer.parseInt(demographicNo));
-            RxPatientData.Patient.Allergy[] allergies = p.getActiveAllergies();
-            if(allergies.length==0)
-                allergyLst=null;
-            for(int i=0; i<allergies.length; i++){
-                RxAllergyData.Allergy allergy = allergies[i].getAllergy();
-                allergyLst.add(allergies[i].getEntryDate() + " " + allergy.getDESCRIPTION() + " " + allergy.getTypeDesc());            
-            }
+
+        RxPatientData.Patient p = RxPatientData.getPatient(Integer.parseInt(demographicNo));
+        RxPatientData.Patient.Allergy[] allergies = p.getActiveAllergies();
+        if(allergies.length==0)
+            allergyLst=null;
+        for(int i=0; i<allergies.length; i++){
+            RxAllergyData.Allergy allergy = allergies[i].getAllergy();
+            allergyLst.add(allergies[i].getEntryDate() + " " + allergy.getDESCRIPTION() + " " + allergy.getTypeDesc());            
         }
-        catch(SQLException e){
-            MiscUtils.getLogger().error("Error", e);   
-        }
+      
         return allergyLst;
     }
     
@@ -432,26 +425,4 @@ public final class FrmSetupFormAction extends Action {
         
     }
     
-    private String translate(String input, String xmlName){
-        if(xmlName.startsWith("B_")){
-            if(input.equalsIgnoreCase("true")){
-                return "yes";
-            }
-            else
-                return "no";
-        }
-        else if (xmlName.startsWith("Sel_")){
-            if(input.equalsIgnoreCase("present")){
-                return "yes";
-            }
-            else{
-                return "no";
-            }            
-        }
-        if(input.equalsIgnoreCase("null")){
-            return "";
-        }
-        return input;
-            
-    }
 }
