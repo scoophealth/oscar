@@ -24,7 +24,7 @@ import oscar.oscarDB.DBHandler;
 import oscar.oscarEncounter.oscarConsultation.data.EctConProviderData;
 import oscar.util.UtilDateUtilities;
 
-public class EctSessionBean {
+public class EctSessionBean implements java.io.Serializable {
     //data passed from the oscar appointment screen these members are constant for the duration of
     // a session
     public Date currentDate;
