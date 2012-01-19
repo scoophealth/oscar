@@ -38,13 +38,19 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.common.dao.MeasurementsDeletedDao;
+import org.oscarehr.common.model.MeasurementsDeleted;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;
 import oscar.util.ParameterActionForward;
+import oscar.util.UtilDateUtilities;
 
 public class EctDeleteDataAction extends Action {
+	
+	private static MeasurementsDeletedDao measurementsDeletedDao = (MeasurementsDeletedDao) SpringUtils.getBean("measurementsDeletedDao");
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException
@@ -61,18 +67,25 @@ public class EctDeleteDataAction extends Action {
                                                                                                 
             
             if(deleteCheckbox != null){
+            	MeasurementsDeleted measurementsDeleted = new MeasurementsDeleted();
+            	
                 for(int i=0; i<deleteCheckbox.length; i++){
                     MiscUtils.getLogger().debug(deleteCheckbox[i]);
                     String sql = "SELECT * FROM `measurements` WHERE id='"+ deleteCheckbox[i] +"'";                                        
                     MiscUtils.getLogger().debug(" sql statement "+sql);
                     ResultSet rs = DBHandler.GetSQL(sql);
                     if(rs.next()){
-                        sql = "INSERT INTO measurementsDeleted"
-                             +"(type, demographicNo, providerNo, dataField, measuringInstruction, comments, dateObserved, dateEntered, dateDeleted)"
-                             +" VALUES ('"+oscar.Misc.getString(rs, "type")+"','"+oscar.Misc.getString(rs, "demographicNo")+"','"+oscar.Misc.getString(rs, "providerNo")+"','"
-                             + oscar.Misc.getString(rs, "dataField")+"','" + oscar.Misc.getString(rs, "measuringInstruction")+"','"+oscar.Misc.getString(rs, "comments")+"','"
-                             + oscar.Misc.getString(rs, "dateObserved")+"','"+oscar.Misc.getString(rs, "dateEntered")+"','"+dateDeleted+"')";
-                        DBHandler.RunSQL(sql);
+                    	measurementsDeleted.setType(oscar.Misc.getString(rs, "type"));
+                    	measurementsDeleted.setDemographicNo(Integer.valueOf(oscar.Misc.getString(rs, "demographicNo")));
+                    	measurementsDeleted.setProviderNo(oscar.Misc.getString(rs, "providerNo"));
+                    	measurementsDeleted.setDataField(oscar.Misc.getString(rs, "dataField"));
+                    	measurementsDeleted.setMeasuringInstruction(oscar.Misc.getString(rs, "measuringInstruction"));
+                    	measurementsDeleted.setComments(oscar.Misc.getString(rs, "comments"));
+                    	measurementsDeleted.setDateObserved(UtilDateUtilities.StringToDate(oscar.Misc.getString(rs, "dateObserved"), "yyyy-MM-dd hh:mm:ss"));
+                    	measurementsDeleted.setDateEntered(UtilDateUtilities.StringToDate(oscar.Misc.getString(rs, "dateEntered"), "yyyy-MM-dd hh:mm:ss"));
+                    	measurementsDeleted.setOriginalId(Integer.valueOf(deleteCheckbox[i]));
+                    	measurementsDeletedDao.persist(measurementsDeleted);
+                    	
                         rs.close();
                         sql = "DELETE FROM `measurements` WHERE id='"+ deleteCheckbox[i] +"'"; 
                         DBHandler.RunSQL(sql);
