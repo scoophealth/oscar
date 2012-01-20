@@ -82,7 +82,6 @@ public class PreventionData {
 			prevention.setRefused(refused.trim().equals("1"));
 			prevention.setNextDate(UtilDateUtilities.StringToDate(nextDate, "yyyy-MM-dd"));
 			prevention.setNever(neverWarn.trim().equals("1"));
-			prevention.setLastUpdateDate(new Date());
 		
 			preventionDao.persist(prevention);
 			if (prevention.getId()==null) return insertId;
@@ -134,7 +133,6 @@ public class PreventionData {
 		try {
 			Prevention prevention = preventionDao.find(Integer.valueOf(id));
 			prevention.setDeleted(true);
-			prevention.setLastUpdateDate(new Date());
 			
 			preventionDao.merge(prevention);
 		} catch (Exception e) {
@@ -146,7 +144,6 @@ public class PreventionData {
 		try {
 			Prevention prevention = preventionDao.find(Integer.valueOf(id));
 			prevention.setNextDate(UtilDateUtilities.StringToDate(date, "yyyy-MM-dd"));
-			prevention.setLastUpdateDate(new Date());
 			
 			preventionDao.merge(prevention);
 		} catch (Exception e) {
