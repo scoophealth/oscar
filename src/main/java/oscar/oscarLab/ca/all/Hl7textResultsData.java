@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -12,8 +11,11 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.oscarehr.common.dao.MeasurementsDeletedDao;
+import org.oscarehr.common.model.MeasurementsDeleted;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBHandler;
 import oscar.oscarLab.ca.all.parsers.Factory;
@@ -24,6 +26,7 @@ import oscar.util.UtilDateUtilities;
 public class Hl7textResultsData {
     
     private static Logger logger = MiscUtils.getLogger();
+    private static MeasurementsDeletedDao measurementsDeletedDao = (MeasurementsDeletedDao) SpringUtils.getBean("measurementsDeletedDao");
     
     private Hl7textResultsData() {
     	// no one should instantiate this
@@ -55,18 +58,22 @@ public class Hl7textResultsData {
             }
             
             if(k != 0){
+            	MeasurementsDeleted measurementsDeleted = new MeasurementsDeleted();
                 GregorianCalendar now=new GregorianCalendar();
                 
                 String sql = "SELECT m.* FROM measurements m LEFT JOIN measurementsExt e ON m.id = measurement_id AND e.keyval='lab_no' WHERE e.val='"+matchingLabs[k-1]+"'";
                 ResultSet rs = DBHandler.GetSQL(sql);
                 while(rs.next()){
-                    String dateDeleted = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DATE) ;
-                    sql = "INSERT INTO measurementsDeleted"
-                            +" (type, demographicNo, providerNo, dataField, measuringInstruction, comments, dateObserved, dateEntered, dateDeleted)"
-                            +" VALUES ('"+oscar.Misc.getString(rs, "type")+"','"+oscar.Misc.getString(rs, "demographicNo")+"','"+oscar.Misc.getString(rs, "providerNo")+"','"
-                            + oscar.Misc.getString(rs, "dataField")+"','" + oscar.Misc.getString(rs, "measuringInstruction")+"','"+oscar.Misc.getString(rs, "comments")+"','"
-                            + oscar.Misc.getString(rs, "dateObserved")+"','"+oscar.Misc.getString(rs, "dateEntered")+"','"+dateDeleted+"')";
-                    DBHandler.RunSQL(sql);
+                	measurementsDeleted.setType(oscar.Misc.getString(rs, "type"));
+                	measurementsDeleted.setDemographicNo(Integer.valueOf(oscar.Misc.getString(rs, "demographicNo")));
+                	measurementsDeleted.setProviderNo(oscar.Misc.getString(rs, "providerNo"));
+                	measurementsDeleted.setDataField(oscar.Misc.getString(rs, "dataField"));
+                	measurementsDeleted.setMeasuringInstruction(oscar.Misc.getString(rs, "measuringInstruction"));
+                	measurementsDeleted.setComments(oscar.Misc.getString(rs, "comments"));
+                	measurementsDeleted.setDateObserved(UtilDateUtilities.StringToDate(oscar.Misc.getString(rs, "dateObserved"), "yyyy-MM-dd hh:mm:ss"));
+                	measurementsDeleted.setDateEntered(UtilDateUtilities.StringToDate(oscar.Misc.getString(rs, "dateEntered"), "yyyy-MM-dd hh:mm:ss"));
+                	measurementsDeleted.setOriginalId(Integer.valueOf(oscar.Misc.getString(rs, "id")));
+                	measurementsDeletedDao.persist(measurementsDeleted);
                     
                     sql = "DELETE FROM measurements WHERE id='"+oscar.Misc.getString(rs, "id")+"'";
                     DBHandler.RunSQL(sql);

@@ -6219,6 +6219,7 @@ CREATE TABLE measurementsDeleted(
   dateObserved datetime NOT NULL, 
   dateEntered datetime NOT NULL,
   dateDeleted datetime NOT NULL,
+  originalId int UNSIGNED NOT NULL,
   PRIMARY KEY(id)
 ) ;
 
