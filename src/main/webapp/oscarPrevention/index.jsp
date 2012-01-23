@@ -27,6 +27,8 @@
 <%@page import="org.oscarehr.phr.PHRAuthentication, org.oscarehr.phr.util.MyOscarUtils" %>
 <%@page import="org.oscarehr.common.dao.DemographicDao, org.oscarehr.common.model.Demographic" %>
 <%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.util.LocaleUtils"%>
+<%@page import="org.oscarehr.util.WebUtils"%>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -72,22 +74,6 @@
   ArrayList recomendations = p.getReminder();
           
   boolean printError = request.getAttribute("printError") != null;
-  
-  
-  boolean phrReady = false;
-  //check if logged into MyOscar
-  PHRAuthentication phrAuth = MyOscarUtils.getPHRAuthentication(session);
-  if (phrAuth!=null) {
-	  DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
-	  //check if patient has MyOscar ID
-	  Demographic demographic = demographicDao.getDemographic(demographic_no);
-	  if (demographic!=null && demographic.getMyOscarUserName()!=null) {
-		  //check if patient's MyOscar ID is valid
-		  if (MyOscarUtils.getMyOscarUserId(phrAuth, demographic.getMyOscarUserName())!=null) {
-			  phrReady = true;
-		  }
-	  }
-  }
 %>
 
 <%!
@@ -429,7 +415,7 @@ text-align:left;
 
 <body class="BodyStyle">
 <!--  -->
-
+<%=WebUtils.popErrorAndInfoMessagesAsHtml(session)%>
 <table class="MainTable" id="scrollNumber1">
 	<tr class="MainTableTopRow">
 		<td class="MainTableTopRowLeftColumn">oscarPrevention</td>
@@ -478,6 +464,27 @@ text-align:left;
 			action="<rewrite:reWrite jspPage="printPrevention.do"/>">
 		<td valign="top" class="MainTableRightColumn">
 		<a href="#" onclick="popup(600,800,'http://www.phac-aspc.gc.ca/im/is-cv/index-eng.php')">Immunization Schedules - Public Health Agency of Canada</a>
+		
+		<%
+				if (MyOscarUtils.isVisibleMyOscarSendButton())
+				{
+					PHRAuthentication auth=MyOscarUtils.getPHRAuthentication(session);
+           		  	boolean enabledMyOscarButton=MyOscarUtils.isMyOscarSendButtonEnabled(auth, Integer.valueOf(demographic_no));
+					if (enabledMyOscarButton) 
+					{
+		%>
+		| | <a href="send_immunizations_to_myoscar_action.jsp?demographicId=<%=demographic_no%>"><%=LocaleUtils.getMessage(request, "SendToMyOscar")%></a>
+		<%
+					}
+					else
+					{
+		%>
+		<span style="color:grey;text-decoration:underline"><%=LocaleUtils.getMessage(request, "SendToMyOscar")%></span>
+		<%
+					}
+				}
+		%> 
+		
 		<%             
                 if (warnings.size() > 0 || recomendations.size() > 0  || dsProblems) { %>
 		<div class="recommendations">
@@ -709,10 +716,12 @@ text-align:left;
 	<tr>
 		<td class="MainTableBottomRowLeftColumn">
 			<input type="button" class="noPrint" name="printButton" onclick="EnablePrint(this)" value="Enable Print">
+<!--
 			<br>
-			<input type="button" name="sendToPhrButton" value="Send To PHR (PDF)" style="display: none;" onclick="sendToPhr(this)">
+			<input type="button" name="sendToPhrButton" value="Send To MyOscar (PDF)" style="display: none;" onclick="sendToPhr(this)">
+-->
 		</td>
-				
+
 		<input type="hidden" id="nameAge" name="nameAge"
 			value="<oscar:nameage demographicNo="<%=demographic_no%>"/> DOB:<%=demographicDob%>">
 		
@@ -742,15 +751,6 @@ text-align:left;
 		    
 		    %>
 		</form>
-				
-		<td class="MainTableBottomRowRightColumn" valign="top">
-<% if (phrReady) { %>
-			<form action="<%=request.getContextPath()%>/SendImmunizationToPhr.do" method="POST">
-				<input type="hidden" name="demographic_no" value="<%=demographic_no%>">
-				<input type="submit" value="Send To PHR (New)">
-			</form>
-<% } %>
-		</td>
 	</tr>
 </table>
 </body>

@@ -75,6 +75,15 @@ PHRAuthentication phrAuthentication= MyOscarUtils.getPHRAuthentication(session);
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+<script type="text/javascript">
+	function checkLevel(level) {
+		if (level=="") {
+			alert("Please select a verification method");
+			return false;
+		}
+		return true;
+	}
+</script>
 <title><bean:message key="phr.verification.title"/></title>
 <link rel="stylesheet" type="text/css"
 	href="../share/css/OscarStandardLayout.css">
@@ -188,11 +197,12 @@ br {
 		<td class="MainTableRightColumn" valign="top">
 			<fieldset>
 		    	<legend><bean:message key="phr.verification.add.fieldset.legend"/></legend>
-		    	<html:form action="/demographic/viewPhrRecord" >
+		    	<html:form action="/demographic/viewPhrRecord" onsubmit="return checkLevel(verificationLevel.value);" >
 			    	<input type="hidden" name="method" value="saveNewVerification"/>
 			    	<input type="hidden" name="demographic_no" value="<%=demographicNo%>"/>
 			    	<label><bean:message key="phr.verification.add.fieldset.method"/>:</label> 
 				    	<select name="verificationLevel">
+				    		<option value="">--</option>
 				    		<option value="FAX"><bean:message key="phr.verification.add.fieldset.method.option.fax"/></option>
 				    		<option value="MAIL"><bean:message key="phr.verification.add.fieldset.method.option.mail"/></option>
 				    		<option value="EMAIL"><bean:message key="phr.verification.add.fieldset.method.option.email"/></option>

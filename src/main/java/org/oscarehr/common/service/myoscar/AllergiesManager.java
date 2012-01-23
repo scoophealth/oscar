@@ -9,8 +9,10 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.AllergyDao;
+import org.oscarehr.common.dao.PHRVerificationDao;
 import org.oscarehr.common.dao.SentToPHRTrackingDao;
 import org.oscarehr.common.model.Allergy;
+import org.oscarehr.common.model.PHRVerification;
 import org.oscarehr.common.model.SentToPHRTracking;
 import org.oscarehr.myoscar_server.ws.ItemAlreadyExistsException_Exception;
 import org.oscarehr.myoscar_server.ws.MedicalDataTransfer2;
@@ -27,6 +29,7 @@ public final class AllergiesManager {
 	private static final Logger logger = MiscUtils.getLogger();
 	private static final String OSCAR_ALLERGIES_DATA_TYPE = "ALLERGY";
 	private static final SentToPHRTrackingDao sentToPHRTrackingDao = (SentToPHRTrackingDao) SpringUtils.getBean("sentToPHRTrackingDao");
+	private static final PHRVerificationDao phrVerificationDao = (PHRVerificationDao) SpringUtils.getBean("PHRVerificationDao");
 
 	public static void sendAllergiesToMyOscar(PHRAuthentication auth, Integer demographicId) throws ClassCastException {
 		// get last synced info
@@ -125,6 +128,16 @@ public final class AllergiesManager {
 
 		return (doc);
 	}
+	
+	public static List<PHRVerification> getVerificationsForDemographic(int demographicNo){
+		return phrVerificationDao.getForDemographic(demographicNo);
+	}
+	
+	public static String getVerificationLevel(int demographicNo){
+		return phrVerificationDao.getVerificationLevel(demographicNo);
+	}
+	
+
 
 	/**
 	 * This method may return null for invalid allergy entries... we have some of those, specifically when no provider can be identified to be responsible for this send.
