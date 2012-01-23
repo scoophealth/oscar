@@ -40,12 +40,12 @@ function popLayer(content){
 	document.object1.left=x+15;
 	document.object1.top=y-5;
     }
-    else if(navigator.family =="ie4" || navigator.family == "safari" ){
+    else if( navigator.family == "safari" ){
 	object1.innerHTML=desc;
 	object1.style.pixelLeft=x+15;
 	object1.style.pixelTop=y-5;
     }
-    else if(navigator.family =="gecko"){
+    else if(navigator.family =="ie4" || navigator.family =="gecko"){
 	document.getElementById("object1").innerHTML=desc;
 	document.getElementById("object1").style.left=x+15;
 	document.getElementById("object1").style.top=y-5;
@@ -57,10 +57,10 @@ function hideLayer(){
 	if(navigator.family =="nn4") {
             eval(document.object1.top="-500");
         }
-	else if(navigator.family =="ie4" || navigator.family == "safari" ){
+	else if( navigator.family == "safari" ){
             object1.innerHTML="";
         }
-	else if(navigator.family =="gecko") {
+	else if(navigator.family =="ie4" || navigator.family =="gecko") {
             document.getElementById("object1").style.top="-500";
         }
     }

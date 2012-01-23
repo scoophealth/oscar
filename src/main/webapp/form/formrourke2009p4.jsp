@@ -25,19 +25,19 @@
 --%>
 
 <%@ page import="oscar.util.*, oscar.form.*, oscar.form.data.*"%>
+<%@ page import="oscar.oscarEncounter.data.EctFormData" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 
 <%
-    String formClass = "Rourke2009";
-    String formLink = "formrourke2009p4.jsp";
+    String formClass = "Rourke2009";    
 
     int demoNo = Integer.parseInt(request.getParameter("demographic_no"));
     int formId = Integer.parseInt(request.getParameter("formId"));
     int provNo = Integer.parseInt((String) session.getAttribute("user"));
-    FrmRecord rec = (new FrmRecordFactory()).factory(formClass);
-    java.util.Properties props = rec.getFormRecord(demoNo, formId);    
+    java.util.Properties props = (java.util.Properties)request.getAttribute("frmProperties"); //rec.getFormRecord(demoNo, formId);
+    FrmRecord rec = (FrmRecord) request.getAttribute("frmRecord"); 
     String []growthCharts = new String[2];
     
     if( ((FrmRourke2009Record)rec).isFemale(demoNo) ) {
@@ -51,315 +51,26 @@
     
     FrmData fd = new FrmData();
     String resource = fd.getResource();    
-    props.setProperty("c_lastVisited", "p4");
-
+    
     //get project_home
-    String project_home = request.getContextPath().substring(1);
+    String project_home = request.getContextPath().substring(1); 
+    
+    String formTable = "formGrowth0_36";
+    String formName = "Growth 0-36m";
+    String growthChartURL = "";
+    EctFormData.PatientForm[] pforms = EctFormData.getPatientFormsFromLocalAndRemote(String.valueOf(demoNo), formTable);
+    if (pforms.length > 0) {
+    	EctFormData.PatientForm pfrm = pforms[0];
+    	growthChartURL = request.getContextPath() + "/form/forwardshortcutname.jsp?formname=" + formName + "&demographic_no=" + demoNo + (pfrm.getRemoteFacilityId()!=null?"&remoteFacilityId="+pfrm.getRemoteFacilityId()+"&formId="+pfrm.getFormId():"");
+    }
     
 %>
 <%
   boolean bView = false;
-  if (request.getParameter("view") != null && request.getParameter("view").equals("1")) bView = true; 
+  if (request.getParameter("view") != null && request.getParameter("view").equals("1")) bView = true;  
 %>
 
-<html:html locale="true">
-
-<head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<title>Rourke2009 Record 4</title>
-<link rel="stylesheet" type="text/css" href="rourkeStyle.css">
-<!-- calendar stylesheet -->
-<link rel="stylesheet" type="text/css" media="all"
-	href="../share/calendar/calendar.css" title="win2k-cold-1" />
-
-<!-- main calendar program -->
-<script type="text/javascript" src="../share/calendar/calendar.js"></script>
-
-<!-- language for the calendar -->
-<script type="text/javascript"
-	src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
-
-<!-- the following script defines the Calendar.setup helper function, which makes
-       adding a calendar a matter of 1 or 2 lines of code. -->
-<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
-
-<!-- popup mouseover js code -->
-<script type="text/javascript" src="../share/javascript/mouseover.js"></script>
-
-<!--Text Area text max limit code -->
-<script type="text/javascript"
-	src="../share/javascript/txtCounter/x_core.js"></script>
-<script type="text/javascript"
-	src="../share/javascript/txtCounter/x_dom.js"></script>
-<script type="text/javascript"
-	src="../share/javascript/txtCounter/x_event.js"></script>
-<script type="text/javascript"
-	src="../share/javascript/txtCounter/ylib.js"></script>
-<script type="text/javascript"
-	src="../share/javascript/txtCounter/y_TextCounter.js"></script>
-<script type="text/javascript"
-	src="../share/javascript/txtCounter/y_util.js"></script>
-
-
-<html:base />
-</head>
-
-<script type="text/javascript" language="Javascript">
-    //constrain text to number of rows and columns   
-    window.onload = function() {
-    
-        var txtBirthRem = new ylib.widget.TextCounter("c_riskFactors", 90,3);
-        var txtriskFact = new ylib.widget.TextCounter("c_famHistory", 84,3);
-        var txtConcern18m = new ylib.widget.TextCounter("p4_pConcern18m", 180,4);
-        var txtConcern24m = new ylib.widget.TextCounter("p4_pConcern24m", 180,4);
-        var txtConcern48m = new ylib.widget.TextCounter("p4_pConcern48m", 180,4);
-        var txtProblems18m = new ylib.widget.TextCounter("p4_problems18m", 180,4);
-        var txtProblems24m = new ylib.widget.TextCounter("p4_problems24m", 180,4);
-        var txtProblems48m = new ylib.widget.TextCounter("p4_problems48m", 180,4);
-        
-    }            
-    
-    function showNotes() {
-        var frm = document.getElementById("frmPopUp");
-        frm.action = "Rourke2009_Notes.pdf";
-        frm.submit();
-    }
-    
-    function del( names ) {        
-        var arrElem = names.split(",");
-        var elem;
-    	
-        for( var idx = 0; idx < arrElem.length; ++idx ) {        	
-            elem = document.getElementById(arrElem[idx]);
-            elem.checked = false;
-        }
-    
-    }
-    
-    function onCheck(a, groupName) {
-        if (a.checked) {
-		var s = groupName;
-		unCheck(s);
-		a.checked = true;
-        }
-    }
-
-    function unCheck(s) {    
-        for (var i =0; i <document.forms[0].elements.length; i++) {
-            if (document.forms[0].elements[i].id.indexOf(s) != -1 && document.forms[0].elements[i].id.indexOf(s) < 1) {
-                document.forms[0].elements[i].checked = false;
-            }
-        }
-    }
-    
-    function reset() {        
-        document.forms[0].target = "";
-        document.forms[0].action = "/<%=project_home%>/form/formname.do" ;
-    }
-    
-    function $F(elem) {
-        return document.forms[0].elements[elem].value;
-    
-    }
-    
-    /*We have to check that measurements are numeric and an observation date has 
-     *been entered for that measurment
-     */
-    function checkMeasures() {
-        var measurements = new Array(3);
-        measurements[0] = new Array("p4_ht18m", "p4_wt18m", "p4_hc18m");
-        measurements[1] = new Array("p4_ht24m", "p4_wt24m", "p4_hc24m");
-        measurements[2] = new Array("p4_ht48m", "p4_wt48m");
-        var dates = new Array("p4_date18m", "p4_date24m", "p4_date48m");
-                    
-        for( var dateIdx = 0; dateIdx < dates.length; ++dateIdx ) {
-            var date = dates[dateIdx];
-            for( var elemIdx = 0; elemIdx < measurements[dateIdx].length; ++elemIdx ) {
-                var elem = measurements[dateIdx][elemIdx];                
-                if( $F(elem).length > 0 && (isNaN($F(elem)) || $F(date).length == 0 )) {
-                    alert('<bean:message key="oscarEncounter.formRourke2006.frmError"/>');
-                    return false;
-                }
-            }
-           
-        }
-            
-        return true;   
-    }
-    
-    function onGraph(url) {        
-        if( checkMeasures() ) {
-            document.forms["graph"].action = url;
-            document.forms["graph"].submit();
-        } 
-        
-    }
-    
-    function onPrint() {
-        document.forms[0].submit.value="print"; 
-                
-        document.forms[0].action = "../form/createpdf?__title=Rourke+Baby+Report+Pg4&__cfgfile=rourke2009printCfgPg4&__template=rourke2009p4";
-        document.forms[0].target="_blank";            
-        
-        return true;
-    }
-    
-    function onPrintAll() {
-        document.forms[0].submit.value="printAll"; 
-                
-        document.forms[0].action = "../form/formname.do?__title=Rourke+Baby+Report&__cfgfile=rourke2009printCfgPg1&__cfgfile=rourke2009printCfgPg2&__cfgfile=rourke2009printCfgPg3&__cfgfile=rourke2009printCfgPg4&__template=rourke2009";
-        document.forms[0].target="_blank";            
-        
-        return true;
-    }
-    
-    function onSave() {
-        if( checkMeasures() ) {
-            document.forms[0].submit.value="save";                
-            reset();                
-            return confirm("Are you sure you want to save this form?");
-        }
-        
-        return false; 
-        
-    }
-    
-    function onSaveExit() {
-        if( checkMeasures() ) {
-            document.forms[0].submit.value="exit";
-            reset();
-            return confirm("Are you sure you wish to save and close this window?");
-        }
-        
-        return false;
-    }
-    
-    function popPage(varpage,pageName) {
-        windowprops = "height=700,width=960"+
-            ",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=no,screenX=50,screenY=50,top=20,left=20";
-        var popup = window.open(varpage,pageName, windowprops);
-        //if (popup.opener == null) {
-        //    popup.opener = self;
-        //}
-        popup.focus();
-    }
-    
-    
-    function isNumber(ss) {
-		var s = ss.value;
-        var i;
-        for (i = 0; i < s.length; i++){
-            // Check that current character is number.
-            var c = s.charAt(i)
-			if (c == '.') {
-				continue;
-			} else if (((c < "0") || (c > "9"))) {
-                            alert('Invalid '+s+' in field ' + ss.name);
-                            ss.focus();
-                            return false;
-			}
-        }
-        // All characters are numbers.
-        return true;
-    }
-    
-    function wtEnglish2Metric(obj) {
-	//if(isNumber(document.forms[0].c_ppWt) ) {
-	//	weight = document.forms[0].c_ppWt.value;
-	if(isNumber(obj) ) {
-		weight = obj.value;
-		weightM = Math.round(weight * 10 * 0.4536) / 10 ;
-		if(confirm("Are you sure you want to change " + weight + " pounds to " + weightM +"kg?") ) {
-			//document.forms[0].c_ppWt.value = weightM;
-			obj.value = weightM;
-		}
-	}
-    }
-    
-    function htEnglish2Metric(obj) {
-	height = obj.value;
-	if(height.length > 1 && height.indexOf("'") > 0 ) {
-		feet = height.substring(0, height.indexOf("'"));
-		inch = height.substring(height.indexOf("'"));
-		if(inch.length == 1) {
-			inch = 0;
-		} else {
-			inch = inch.charAt(inch.length-1)=='"' ? inch.substring(0, inch.length-1) : inch;
-			inch = inch.substring(1);
-		}
-		
-		//if(isNumber(feet) && isNumber(inch) )
-			height = Math.round((feet * 30.48 + inch * 2.54) * 10) / 10 ;
-			if(confirm("Are you sure you want to change " + feet + " feet " + inch + " inch(es) to " + height +"cm?") ) {
-				obj.value = height;
-			}
-		//}
-	}
-    }
-    
-    //Remove date from textbox
-    function resetDate(textbox) {
-        if( textbox.value.length > 0 )
-            textbox.value = "";
-        else {
-            var date = new Date();
-            var mth = date.getMonth() + 1;
-            textbox.value = date.getDate() + "/" + mth + "/" + date.getFullYear();
-        }
-    }
-    
-  	//set as default "not discussed" for all radio buttons if no value is set for a group
-    //e.g. if no value is found for p3_formulaFeeding9m then set p3_formulaFeeding9mNotDiscussed to checked
-    function setDefault() {
-    	var currentElem;
-    	var currentgroup;
-    	var notDiscussed;
-    	var isChecked = false;
-    	var pattern = /\'.+\'/;
-    	var clickHandler;
-    	
-    	for( var idx = 0; idx < document.forms[0].elements.length; ++idx ) {
-    		if( document.forms[0].elements[idx].type == "radio") {
-    			clickHandler = document.forms[0].elements[idx].getAttributeNode('onclick');
-    			if( clickHandler != null ) {
-    				//We need to capture the group name which is present in onclick call to onCheck(this,group)
-    				currentElem = new String(pattern.exec(clickHandler.value));
-    				currentElem = currentElem.substring(1,currentElem.length-1);
-    				if( idx == 0 ) {
-    					currentgroup = currentElem;
-    				}
-    				    				
-    				if( currentgroup != currentElem ) {    					
-    					if( !isChecked ) {
-    						notDiscussed = document.getElementById(currentgroup+"NotDiscussed");
-    						if( notDiscussed != null ) {
-    							notDiscussed.checked = true;
-    						}    						
-    					}
-    					currentgroup = currentElem;
-						isChecked = false;
-    				}
-    				
-    				if( document.forms[0].elements[idx].checked ) {    					
-    					isChecked = true;
-    				}
-    			}    				
-    		}
-    	}
-    	
-    	//capture last element if necessary
-    	if( !isChecked ) {
-    		notDiscussed = document.getElementById(currentgroup+"NotDiscussed");
-			if( notDiscussed != null ) {
-				notDiscussed.checked = true;
-			} 
-    	}
-    	
-    }
-
-</script>
-
-<body bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0" onload="setDefault()">
+<body bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0">
     <div style="display:block; width:100%; text-align:center; background-color: #FFFFFF;"><img alt="copyright" src="graphics/banner.png" onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2009.formCopyRight" />')"
                                                    onMouseOut="hideLayer()">
     </div>
@@ -368,57 +79,40 @@
 	onmouseover="overdiv=1;"
 	onmouseout="overdiv=0; setTimeout('hideLayer()',1000)">pop up
 description layer</div>
-<html:form action="/form/formname">
-
-	<input type="hidden" name="demographic_no"
-		value="<%= props.getProperty("demographic_no", "0") %>" />
-	<input type="hidden" name="ID"
-		value="<%= props.getProperty("ID", "0") %>" />
-	<input type="hidden" name="provider_no"
-		value=<%=request.getParameter("provNo")%> />
-	<input type="hidden" name="formCreated"
-		value="<%= props.getProperty("formCreated", "") %>" />
-	<input type="hidden" name="form_class" value="<%=formClass%>" />
-	<input type="hidden" name="form_link" value="<%=formLink%>" />
-	<input type="hidden" name="formId" value="<%=formId%>" />
-	<input type="hidden" name="c_lastVisited"
-		value=<%=props.getProperty("c_lastVisited", "p4")%> />
-	<input type="hidden" name="submit" value="exit" />
 
 	<table cellpadding="0" cellspacing="0" class="Header" class="hidePrint">
 		<tr>
-			<td nowrap="true"><input type="submit"
+			<td nowrap="true"><input type="button"
 				value="<bean:message key="oscarEncounter.formRourke1.btnSave"/>"
-				onclick="javascript:return onSave();" /> <input type="submit"
+				onclick="javascript:onSave(); return false;" /> <input type="button"
 				value="<bean:message key="oscarEncounter.formRourke1.btnSaveExit"/>"
-				onclick="javascript:return onSaveExit();" /> <input type="submit"
+				onclick="javascript:onSaveExit(); return false;" /> <input type="button"
 				value="<bean:message key="oscarEncounter.formRourke1.btnExit"/>"
-				onclick="javascript:return onExit();"> <input type="submit"
+				onclick="javascript:onExit(); return false;"> <input type="submit"
 				value="<bean:message key="oscarEncounter.formRourke1.btnPrint"/>"
-				onclick="javascript:return onPrint();" /> <input type="submit"
-				value="<bean:message key="oscarEncounter.formRourke2006.btnPrintAll"/>"
-				onclick="javascript:return onPrintAll();" /> <input type="button"
+				onclick="javascript:return onPrint();" /> <input type="button"
 				value="About"
 				onclick="javascript:return popPage('http://rourkebabyrecord.ca','About Rourke');" />
 			</td>
-			<td align="center" width="100%">
+			<td align="center" nowrap="true" width="100%">
+			<% if( growthChartURL.length() > 0 ) {%>
+				<a style="color:red; font-weight:bold; text-decoration:underline; cursor:pointer;" "href="#" onclick="popPage('<%=growthChartURL%>','growthChart')">Growth Chart Avail</a>
+			
+			<%} else { %>
+				&nbsp; 
+			<% }%>
+			</td>
+			<td align="center" nowrap="true" width="100%">
 			<% if(formId > 0)
            { %> <a name="length" href="#"
-				onclick="onGraph('<%=request.getContextPath()%>/form/formname.do?submit=graph&form_class=Rourke2009&__title=Baby+Growth+Graph1&__cfgfile=<%=growthCharts[0]%>&demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>');return false;">
+				onclick="onGraph('<%=request.getContextPath()%>/form/formname.do?submit=graph&form_class=Rourke2009&__title=Baby+Growth+Graph1&__cfgfile=<%=growthCharts[0]%>&demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>','<%= "growth1" + demoNo %>');return false;">
 			<bean:message key="oscarEncounter.formRourke1.btnGraphLenghtWeight" /></a><br>
 			<a name="headCirc" href="#"
-				onclick="onGraph('<%=request.getContextPath()%>/form/formname.do?submit=graph&form_class=Rourke2009&__title=Baby+Head+Circumference&__cfgfile=<%=growthCharts[1]%>&demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>');return false;">
+				onclick="onGraph('<%=request.getContextPath()%>/form/formname.do?submit=graph&form_class=Rourke2009&__title=Baby+Head+Circumference&__cfgfile=<%=growthCharts[1]%>&demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>','<%= "growth2" + demoNo %>');return false;">
 			<bean:message key="oscarEncounter.formRourke1.btnGraphHead" /></a> <% }else { %>
 			&nbsp; <% } %>
 			</td>
-			<td nowrap="true"><a
-				href="formrourke2009p1.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>"><bean:message
-				key="oscarEncounter.formRourke2006.Pg1" /></a>&nbsp;|&nbsp; <a
-				href="formrourke2009p2.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>"><bean:message
-				key="oscarEncounter.formRourke2006.Pg2" /></a>&nbsp;|&nbsp; <a
-				href="formrourke2009p3.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>"><bean:message
-				key="oscarEncounter.formRourke2006.Pg3" /></a>&nbsp;|&nbsp; <a><bean:message
-				key="oscarEncounter.formRourke2006.Pg4" /></a></td>
+			
 		</tr>
 	</table>
 
@@ -428,57 +122,42 @@ description layer</div>
 				key="oscarEncounter.formRourke2006_4.msgRourkeBabyRecord" /></th>
 		</tr>
 	</table>
-
-	<table cellpadding="0" cellspacing="0" width="100%" border="0">
-		<tr valign="top">
-			<td align="center"><bean:message
-				key="oscarEncounter.formRourke2009_4.formRemarks" />:<br>
-			<textarea wrap="physical" id="c_riskFactors" name="c_riskFactors"
-				rows="3" cols="17"><%= props.getProperty("c_riskFactors", "") %></textarea>
-			</td>
-			<td nowrap align="center"><bean:message
-				key="oscarEncounter.formRourke2006_2.formFamHistory" /><br>
-			<textarea id="c_famHistory" name="c_famHistory" rows="3" cols="17"><%= props.getProperty("c_famHistory", "") %></textarea>
-			</td>
-			<td width="65%" nowrap align="center">
-			<p><bean:message key="oscarEncounter.formRourke1.msgName" />: <input
-				type="text" name="c_pName" maxlength="60" size="30"
+	<div id="patientInfop4">
+		<bean:message key="oscarEncounter.formRourke1.msgName" />: <input
+				type="text" maxlength="60" size="30"
 				value="<%= props.getProperty("c_pName", "") %>" readonly="true" />
 			&nbsp;&nbsp; <bean:message
 				key="oscarEncounter.formRourke1.msgBirthDate" /> (d/m/yyyy): <input
-				type="text" name="c_birthDate" size="10" maxlength="10"
+				type="text" id="c_birthDate4" size="10" maxlength="10"
 				value="<%= props.getProperty("c_birthDate", "") %>" readonly="true">
-			&nbsp;&nbsp; <% if(! ((FrmRourke2009Record)rec).isFemale(demoNo))
+			&nbsp;&nbsp; 
+			Age: <input type="text" id="currentAge4" size="10" maxlength="10" readonly="true" ondblclick="calcAge();">
+				<% if(! ((FrmRourke2009Record)rec).isFemale(demoNo))
                 {
-                    %><bean:message
-				key="oscarEncounter.formRourke1.msgMale" /> <input type="hidden"
-				name="c_male" value="x"> <%
+                    %>(<bean:message
+				key="oscarEncounter.formRourke1.msgMale" />)
+				<%
                 }else
                 {
-                    %><bean:message
-				key="oscarEncounter.formRourke1.msgFemale" /> <input type="hidden"
-				name="c_female" value="x"> <%
+                    %>(<bean:message
+				key="oscarEncounter.formRourke1.msgFemale" />)
+				<%
                 }
-                %>
-			</p>
-			</td>
-		</tr>
-	</table>
-
+                %>                
+				
+	</div>
 	<table cellpadding="0" cellspacing="0" width="100%" border="1">
-		<tr align="center">
-			<td class="column"><a><bean:message
-				key="oscarEncounter.formRourke2006_1.visitDate" /></a></td>
+		<tr align="center">			
 			<td colspan="3" class="row"><a><bean:message
 				key="oscarEncounter.formRourke2006_4.msg18mos" /></a></td>
 			<td colspan="3" class="row"><a><bean:message
 				key="oscarEncounter.formRourke2006_4.msg2yrs" /></a></td>
-			<td colspan="3" class="row"><a><bean:message
+			<td colspan="2" class="row"><a><bean:message
 				key="oscarEncounter.formRourke2006_4.msg4yrs" /></a></td>
-		</tr>
-		<tr align="center">
 			<td class="column"><a><bean:message
-				key="oscarEncounter.formRourke1.msgDate" /></a></td>
+				key="oscarEncounter.formRourke2006_1.visitDate" /></a></td>
+		</tr>
+		<tr align="center">			
 			<td colspan="3"><input readonly type="text" id="p4_date18m"
 				name="p4_date18m" ondblclick="resetDate(this)" size="10"
 				value="<%=UtilMisc.htmlEscape(props.getProperty("p4_date18m", ""))%>" />
@@ -491,12 +170,10 @@ description layer</div>
 				name="p4_date48m" ondblclick="resetDate(this)" size="10"
 				value="<%=UtilMisc.htmlEscape(props.getProperty("p4_date48m", ""))%>" />
 			<img src="../images/cal.gif" id="p4_date48m_cal"></td>
+			<td class="column"><a><bean:message
+				key="oscarEncounter.formRourke1.msgDate" /></a></td>
 		</tr>
-		<tr align="center">
-			<td class="column" rowspan="2"><a><bean:message
-				key="oscarEncounter.formRourke1.btnGrowth" />*<br>
-                        <bean:message key="oscarEncounter.formRourke2009_1.btnGrowthmsg"/>
-                        </td>
+		<tr align="center" id="growthAp4">			
 			<td><bean:message key="oscarEncounter.formRourke1.formHt" /></td>
 			<td><bean:message key="oscarEncounter.formRourke1.formWt" /></td>
 			<td><bean:message
@@ -504,11 +181,15 @@ description layer</div>
 			<td><bean:message key="oscarEncounter.formRourke1.formHt" /></td>
 			<td><bean:message key="oscarEncounter.formRourke1.formWt" /></td>
 			<td><bean:message
-				key="oscarEncounter.formRourke2006_4.formHdCirc24m" /></td>
+				key="oscarEncounter.formRourke2006_3.formHdCirc" /></td>
 			<td><bean:message key="oscarEncounter.formRourke1.formHt" /></td>
 			<td><bean:message key="oscarEncounter.formRourke1.formWt" /></td>
+			<td class="column" rowspan="2"><a><bean:message
+				key="oscarEncounter.formRourke1.btnGrowth" />*<br>
+                        <bean:message key="oscarEncounter.formRourke2009_1.btnGrowthmsg"/>
+            </td>
 		</tr>
-		<tr align="center">
+		<tr align="center" id="growthBp4">
 			<td><input type="text" class="wide"
 				ondblclick="htEnglish2Metric(this);" name="p4_ht18m" size="4"
 				maxlength="5" value="<%= props.getProperty("p4_ht18m", "") %>"></td>
@@ -535,8 +216,6 @@ description layer</div>
 				maxlength="5" value="<%= props.getProperty("p4_wt48m", "") %>"></td>
 		</tr>
 		<tr align="center">
-			<td class="column"><a><bean:message
-				key="oscarEncounter.formRourke1.formParentalConcerns" /></a></td>
 			<td colspan="3"><textarea id="p4_pConcern18m"
 				name="p4_pConcern18m" class="wide" cols="10" rows="5"><%= props.getProperty("p4_pConcern18m", "") %></textarea>
 			</td>
@@ -546,16 +225,13 @@ description layer</div>
 			<td colspan="2"><textarea id="p4_pConcern48m"
 				name="p4_pConcern48m" class="wide" cols="10" rows="5"><%= props.getProperty("p4_pConcern48m", "") %></textarea>
 			</td>
-		</tr>
-		<tr align="center">
-
 			<td class="column"><a><bean:message
-				key="oscarEncounter.formRourke1.msgNutrition" />*</a></td>
-
-			<td colspan="3" valign="top">
-			<textarea id="p4_nutrition18m"
-				name="p4_nutrition18m" class="wide" cols="10" rows="5"><%= props.getProperty("p4_nutrition18m", "") %></textarea>
-			<table cellpadding="0" cellspacing="0" width="100%">
+				key="oscarEncounter.formRourke1.formParentalConcerns" /></a></td>
+			
+		</tr>
+		<tr align="center" id="nutritionp4">
+			<td colspan="3">			
+			<table id="ntp41" cellpadding="0" cellspacing="0" width="100%">
 				<tr>
                     <td style="padding-right: 5pt" valign="top"><img height="15"
                          width="20" src="graphics/Checkmark_L.gif"></td>
@@ -611,17 +287,17 @@ description layer</div>
 					<td><bean:message
 						key="oscarEncounter.formRourke2009_4.formNoBottle" /></td>
 				</tr>
+                
                 <tr>
-					<td class="edcol" colspan="5" valign="top"><input
-						class="delete" type="button" value="Del"
-						onclick="del('p4_breastFeeding18mOk,p4_breastFeeding18mOkConcerns,p4_breastFeeding18mNo,p4_breastFeeding18mNotDiscussed,p4_homoMilk18mOk,p4_homoMilk18mOkConcerns,p4_homoMilk18mNo,p4_homoMilk18mNotDiscussed,p4_bottle18mOk,p4_bottle18mOkConcerns,p4_bottle18mNotDiscussed');" /></td>
-                </tr>
+                	<td colspan="5" style="vertical-align:bottom;">
+                		<textarea id="p4_nutrition18m"
+							name="p4_nutrition18m" class="wide" cols="10" rows="5"><%= props.getProperty("p4_nutrition18m", "") %></textarea>
+					</td>
+				</tr>
 			</table>
-			</td>
-			<td colspan="3" valign="top">
-			<textarea id="p4_nutrition24m"
-				name="p4_nutrition24m" class="wide" cols="10" rows="5"><%= props.getProperty("p4_nutrition24m", "") %></textarea>
-			<table cellpadding="0" cellspacing="0" width="100%">
+			</td>				
+			<td colspan="3">			
+			<table id="ntp42" cellpadding="0" cellspacing="0" width="100%">
 				<tr>
                     <td style="padding-right: 5pt" valign="top"><img height="15"
                     	width="20" src="graphics/Checkmark_L.gif"></td>
@@ -677,17 +353,17 @@ description layer</div>
 						onMouseOut="hideLayer()"><bean:message
 						key="oscarEncounter.formRourke2009_4.formFoodGuide" /></a></td>
 				</tr>
+                
                 <tr>
-					<td class="edcol" colspan="5" valign="top"><input
-						class="delete" type="button" value="Del"
-						onclick="del('p4_homo2percent24mOk,p4_homo2percent24mOkConcerns,p4_homo2percent24mNo,p4_homo2percent24mNotDiscussed,p4_lowerfatdiet24mOk,p4_lowerfatdiet24mOkConcerns,p4_lowerfatdiet24mNotDiscussed,p4_foodguide24mOk,p4_foodguide24mNo,p4_foodguide24mNotDiscussed');" /></td>
-                </tr>
+                	<td colspan="5" style="vertical-align:bottom;">
+                		<textarea id="p4_nutrition24m"
+							name="p4_nutrition24m" class="wide" cols="10" rows="5"><%= props.getProperty("p4_nutrition24m", "") %></textarea>
+					</td>
+				</tr>
 			</table>
 			</td>
-			<td colspan="2" valign="top">
-			<textarea id="p4_nutrition48m"
-				name="p4_nutrition48m" class="wide" cols="10" rows="5"><%= props.getProperty("p4_nutrition48m", "") %></textarea>
-			<table cellpadding="0" cellspacing="0" width="100%" height="100%">
+			<td colspan="2">			
+			<table id="ntp43" cellpadding="0" cellspacing="0" width="100%">
 				<tr>
                 	<td style="padding-right: 5pt" valign="top"><img height="15"
                     	width="20" src="graphics/Checkmark_L.gif"></td>
@@ -727,22 +403,21 @@ description layer</div>
 						onMouseOut="hideLayer()"><bean:message
 						key="oscarEncounter.formRourke2009_4.formFoodGuide" /></a></td>
 				</tr>
-                <tr>
-					<td class="edcol" colspan="5" valign="top"><input
-						class="delete" type="button" value="Del"
-						onclick="del('p4_2pMilk48mOk,p4_2pMilk48mOkConcerns,p4_2pMilk48mNo,p4_2pMilk48mNotDiscussed,p4_foodguide48mOk,p4_foodguide48mNo,p4_foodguide48mNotDiscussed');" /></td>
-		       	</tr>
+                
+		       	<tr>
+		       		<td colspan="5" style="vertical-align:bottom;">
+		       			<textarea id="p4_nutrition48m"
+							name="p4_nutrition48m" class="wide" cols="10" rows="5"><%= props.getProperty("p4_nutrition48m", "") %></textarea>
+					</td>
+				</tr>
 			</table>
 			</td>
-		</tr>
-		<tr>
 			<td class="column"><a><bean:message
-				key="oscarEncounter.formRourke1.msgEducational" /></a><br />
-			<br />
-			<img height="15" width="20" src="graphics/Checkmark_Lwhite.gif"><bean:message
-				key="oscarEncounter.formRourke2006.msgEducationalLegend" /></td>
-			<td colspan="3" valign="bottom">
-			<table style="font-size: 8pt;" cellpadding="0" cellspacing="0"
+				key="oscarEncounter.formRourke1.msgNutrition" />*</a></td>		
+		</tr>
+		<tr id="educationp4">			
+			<td colspan="3">
+			<table id="edt41" style="font-size: 8pt;" cellpadding="0" cellspacing="0"
 				width="100%">
 				<tr>
 					<td colspan="4">&nbsp;</td>
@@ -802,11 +477,7 @@ description layer</div>
 						onMouseOut="hideLayer()"><bean:message
 						key="oscarEncounter.formRourke2006_1.formSafeToys" />*</a></td>
 				</tr>
-				<tr>
-					<td class="edcol" colspan="4" valign="top"><input
-						class="delete" type="button" value="Del"
-						onclick="del('p4_carSeat18mOk,p4_carSeat18mOkConcerns,p4_carSeat18mNotDiscussed,p4_bathSafetyOk,p4_bathSafetyOkConcerns,p4_bathSafetyNotDiscussed,p4_safeToysOk,p4_safeToysOkConcerns,p4_safeToysNotDiscussed');" /></td>
-				</tr>
+				
 				<tr>
 					<td colspan="4">&nbsp;</td>
 				</tr>
@@ -848,11 +519,7 @@ description layer</div>
 						onMouseOut="hideLayer()"><bean:message
 						key="oscarEncounter.formRourke2009_4.formDiscipline" />**</a></td>
 				</tr>
-				<tr>
-					<td class="edcol" colspan="4" valign="top"><input
-						class="delete" type="button" value="Del"
-						onclick="del('p4_parentChild18mOk,p4_parentChild18mOkConcerns,p4_parentChild18mNotDiscussed,p4_discipline18mOk,p4_discipline18mOkConcerns,p4_discipline18mNotDiscussed');" /></td>
-				</tr>
+				
 				<tr>
 					<td colspan="4">&nbsp;</td>
 				</tr>
@@ -890,11 +557,7 @@ description layer</div>
 						onMouseOut="hideLayer()"><bean:message
 						key="oscarEncounter.formRourke2006_4.formHighRisk" />**</a></td>
 				</tr>
-				<tr>
-					<td class="edcol" colspan="4" valign="top"><input
-						class="delete" type="button" value="Del"
-						onclick="del('p4_pFatigue18mOk,p4_pFatigue18mOkConcerns,p4_pFatigue18mNotDiscussed,p4_highRisk18mOk,p4_highRisk18mOkConcerns,p4_highRisk18mNotDiscussed');" /></td>
-				</tr>
+				
 				<tr>
 					<td colspan="4">&nbsp;</td>
 				</tr>
@@ -981,17 +644,17 @@ description layer</div>
 						onMouseOut="hideLayer()"><bean:message
 						key="oscarEncounter.formRourke2009_2.formReading" />**</a></i></b></td>
 				</tr>
+				
 				<tr>
-					<td class="edcol" colspan="4" valign="top"><input
-						class="delete" type="button" value="Del"
-						onclick="del('p4_socializing18mOk,p4_socializing18mOkConcerns,p4_socializing18mNotDiscussed,p4_weanPacifier18mOk,p4_weanPacifier18mOkConcerns,p4_weanPacifier18mNotDiscussed,p4_dentalCareOk,p4_dentalCareOkConcerns,p4_dentalCareNotDiscussed,p4_toiletLearning18mOk,p4_toiletLearning18mOkConcerns,p4_toiletLearning18mNotDiscussed,p4_encourageReading18mOk,p4_encourageReading18mOkConcerns,p4_encourageReading18mNotDiscussed');" /></td>
-				</tr>
-			</table>
-			<textarea id="p4_education18m"
-				name="p4_education18m" class="wide" cols="10" rows="5"><%= props.getProperty("p4_education18m", "") %></textarea>
+					<td colspan="4" style="vertical-align:bottom">
+						<textarea id="p4_education18m"
+							name="p4_education18m" class="wide" cols="10" rows="5"><%= props.getProperty("p4_education18m", "") %></textarea>
+					</td>
+				</tr>	
+			</table>			
 			</td>
-			<td colspan="5" valign="bottom">
-			<table style="font-size: 8pt;" cellpadding="0" cellspacing="0"
+			<td colspan="5">
+			<table id="edt42" style="font-size: 8pt;" cellpadding="0" cellspacing="0"
 				width="100%">
 				<tr>
 					<td colspan="12">&nbsp;</td>
@@ -1094,17 +757,7 @@ description layer</div>
 					<td valign="top"><bean:message
 						key="oscarEncounter.formRourke2006_4.formWaterSafety" /></td>
 				</tr>
-				<tr>
-					<td class="edcol" colspan="4" valign="top"><input
-						class="delete" type="button" value="Del"
-						onclick="del('p4_carSeat24mOk,p4_carSeat24mOkConcerns,p4_carSeat24mNotDiscussed,p4_smokeSafetyOk,p4_smokeSafetyOkConcerns,p4_smokeSafetyNotDiscussed');" /></td>
-					<td class="edcol" colspan="4" valign="top"><input
-						class="delete" type="button" value="Del"
-						onclick="del('p4_bikeHelmetsOk,p4_bikeHelmetsOkConcerns,p4_bikeHelmetsNotDiscussed,p4_matchesOk,p4_matchesOkConcerns,p4_matchesNotDiscussed');" /></td>
-					<td class="edcol" colspan="4" valign="top"><input
-						class="delete" type="button" value="Del"
-						onclick="del('p4_firearmSafetyOk,p4_firearmSafetyOkConcerns,p4_firearmSafetyNotDiscussed,p4_waterSafetyOk,p4_waterSafetyOkConcerns,p4_waterSafetyNotDiscussed');" /></td>
-				</tr>
+				
 				<tr>
 					<td colspan="12">&nbsp;</td>
 				</tr>
@@ -1190,17 +843,7 @@ description layer</div>
 					<td valign="top"><bean:message
 						key="oscarEncounter.formRourke2006_1.formSiblings" /></td>
 				</tr>
-				<tr>
-					<td class="edcol" colspan="4" valign="top"><input
-						class="delete" type="button" value="Del"
-						onclick="del('p4_parentChild24mOk,p4_parentChild24mOkConcerns,p4_parentChild24mNotDiscussed,p4_pFatigue24mOk,p4_pFatigue24mOkConcerns,p4_pFatigue24mNotDiscussed');" /></td>
-					<td class="edcol" colspan="4" valign="top"><input
-						class="delete" type="button" value="Del"
-						onclick="del('p4_discipline24mOk,p4_discipline24mOkConcerns,p4_discipline24mNotDiscussed,p4_famConflictOk,p4_famConflictOkConcerns,p4_famConflictNotDiscussed');" /></td>
-					<td class="edcol" colspan="4" valign="top"><input
-						class="delete" type="button" value="Del"
-						onclick="del('p4_highRisk24mOk,p4_highRisk24mOkConcerns,p4_highRisk24mNotDiscussed,p4_siblingsOk,p4_siblingsOkConcerns,p4_siblingsNotDiscussed');" /></td>
-				</tr>
+				
 				<tr>
 					<td colspan="12">&nbsp;</td>
 				</tr>
@@ -1358,17 +1001,7 @@ description layer</div>
 						onMouseOut="hideLayer()"><bean:message
 						key="oscarEncounter.formRourke2006_4.formDayCare" />**</a></b></td>
 				</tr>
-				<tr>
-					<td class="edcol" colspan="4" valign="top"><input
-						class="delete" type="button" value="Del"
-						onclick="del('p4_2ndSmokeOk,p4_2ndSmokeOkConcerns,p4_2ndSmokeNotDiscussed,p4_altMedOk,p4_altMedOkConcerns,p4_altMedNotDiscussed,p4_activeOk,p4_activeOkConcerns,p4_activeNotDiscussed,p4_dayCareOk,p4_dayCareOkConcerns,p4_dayCareNotDiscussed');" /></td>
-					<td class="edcol" colspan="4" valign="top"><input
-						class="delete" type="button" value="Del"
-						onclick="del('p4_dentalCleaningOk,p4_dentalCleaningOkConcerns,p4_dentalCleaningNotDiscussed,p4_toiletLearning24mOk,p4_toiletLearning24mOkConcerns,p4_toiletLearning24mNotDiscussed,p4_socializing24mOk,p4_socializing24mOkConcerns,p4_socializing24mNotDiscussed');" /></td>
-					<td class="edcol" colspan="4" valign="top"><input
-						class="delete" type="button" value="Del"
-						onclick="del('p4_readingOk,p4_readingOkConcerns,p4_readingNotDiscussed,p4_noCough24mOk,p4_noCough24mOkConcerns,p4_noCough24mNotDiscussed,p4_noPacifier24mOk,p4_noPacifier24mOkConcerns,p4_noPacifier24mNotDiscussed');" /></td>
-				</tr>
+				
 				<tr>
 					<td colspan="12">&nbsp;</td>
 				</tr>
@@ -1421,29 +1054,31 @@ description layer</div>
 						onMouseOut="hideLayer()"><bean:message
 						key="oscarEncounter.formRourke2009_4.formCheckSerum" />*</a></i></td>
 				</tr>
+				
 				<tr>
-					<td class="edcol" colspan="4" valign="top"><input
-						class="delete" type="button" value="Del"
-						onclick="del('p4_sunExposureOk,p4_sunExposureOkConcerns,p4_sunExposureNotDiscussed,p4_checkSerumOk,p4_checkSerumOkConcerns,p4_checkSerumNotDiscussed');" /></td>
-					<td class="edcol" colspan="4" valign="top"><input
-						class="delete" type="button" value="Del"
-						onclick="del('p4_pesticidesOk,p4_pesticidesOkConcerns,p4_pesticidesNotDiscussed');" /></td>
-					<td colspan="4">&nbsp;</td>
+					<td colspan="12" style="vertical-align:bottom">
+						<textarea id="p4_education48m"
+							name="p4_education48m" class="wide" rows="5"><%= props.getProperty("p4_education48m", "") %></textarea>
+					</td>
 				</tr>
-			</table>
-			<textarea id="p4_education48m"
-				name="p4_education48m" class="wide" rows="5"><%= props.getProperty("p4_education48m", "") %></textarea>
+			</table>			
 			</td>
-		</tr>
-		<tr>
 			<td class="column"><a><bean:message
-				key="oscarEncounter.formRourke1.msgDevelopment" />**</a><br>
-                            <bean:message key="oscarEncounter.formRourke2009_1.msgDevelopmentDesc" />
-                            <br>
+				key="oscarEncounter.formRourke1.msgEducational" /></a><br />
+			<br />
 			<img height="15" width="20" src="graphics/Checkmark_Lwhite.gif"><bean:message
-				key="oscarEncounter.formRourke2006_1.msgDevelopmentLegend" /></td>			
-			<td colspan="3" valign="bottom" align="center">
-			<table cellpadding="0" cellspacing="0" width="100%">
+				key="oscarEncounter.formRourke2006.msgEducationalLegend" /></td>
+		</tr>
+		<tr id="developmentp4">						
+			<td colspan="3" align="center">
+			<table id="dt41" cellpadding="0" cellspacing="0" width="300px" height="100%">
+				<tr>
+					<td colspan="4">
+						<bean:message key="oscarEncounter.formRourke2009_4.msgNippissing" />				
+						<textarea id="p4_nippisingattained"
+							name="p4_nippisingattained" class="wide" cols="10" rows="2"><%= props.getProperty("p4_nippisingattained", "") %></textarea>
+					</td>
+				</tr>
 				<tr>
 					<td colspan="4">&nbsp;</td>
 				</tr>				
@@ -1509,12 +1144,7 @@ description layer</div>
 					<td valign="top"><bean:message
 						key="oscarEncounter.formRourke2006_4.formComfort" /></td>
 				</tr>
-				<tr>
-					<td valign="top" class="edcol" colspan="3"><input
-						class="delete" type="button" value="Del"
-						onclick="del('p4_manageableOk,p4_manageableOkConcerns,p4_manageableNotDiscussed,p4_otherChildrenOk,p4_otherChildrenOkConcerns,p4_otherChildrenNotDiscussed,p4_soothabilityOk,p4_soothabilityOkConcerns,p4_soothabilityNotDiscussed,p4_comfortOk,p4_comfortOkConcerns,p4_comfortNotDiscussed');" /></td>
-					<td>&nbsp;</td>
-				</tr>
+				
 				<tr>
 					<td colspan="4">&nbsp;</td>
 				</tr>
@@ -1626,12 +1256,7 @@ description layer</div>
 					<td valign="top"><bean:message
 						key="oscarEncounter.formRourke2009_4.form4consonants" /></td>
 				</tr>
-				<tr>
-					<td valign="top" class="edcol" colspan="3"><input
-						class="delete" type="button" value="Del"
-						onclick="del('p4_points2bodyOk,p4_points2bodyOkConcerns,p4_points2bodyNotDiscussed,p4_getAttnOk,p4_getAttnOkConcerns,p4_getAttnNotDiscussed,p4_looks4toyOk,p4_looks4toyOkConcerns,p4_looks4toyNotDiscussed,p4_recsNameOk,p4_recsNameOkConcerns,p4_recsNameNotDiscussed,p4_says20wordsOk,p4_says20wordsOkConcerns,p4_says20wordsNotDiscussed,p4_initSpeechOk,p4_initSpeechOkConcerns,p4_initSpeechNotDiscussed,p4_4consonantsOk,p4_4consonantsOkConcerns,p4_4consonantsNotDiscussed,p4_points2wantOk,p4_points2wantOkConcerns,p4_points2wantNotDiscussed');" /></td>
-					<td>&nbsp;</td>
-				</tr>
+				
 				<tr>
 					<td colspan="4">&nbsp;</td>
 				</tr>
@@ -1665,12 +1290,7 @@ description layer</div>
 					<td valign="top"><bean:message
 						key="oscarEncounter.formRourke2006_4.formFeedsSelf" /></td>
 				</tr>
-				<tr>
-					<td valign="top" class="edcol" colspan="3"><input
-						class="delete" type="button" value="Del"
-						onclick="del('p4_walksbackAloneOk,p4_walksbackAloneOkConcerns,p4_walksbackAloneNotDiscussed,p4_feedsSelfOk,p4_feedsSelfOkConcerns,p4_feedsSelfNotDiscussed');" /></td>
-					<td>&nbsp;</td>
-				</tr>
+				
 				<tr>
 					<td colspan="4">&nbsp;</td>
 				</tr>
@@ -1707,25 +1327,20 @@ description layer</div>
 					<td valign="top"><bean:message
 						key="oscarEncounter.formRourke2009.formNoparentConcerns" /></td>
 				</tr>
+				
 				<tr>
-					<td valign="top" class="edcol" colspan="3"><input
-						class="delete" type="button" value="Del"
-						onclick="del('p4_removesHatOk,p4_removesHatOkConcerns,p4_removesHatNotDiscussed,p4_noParentsConcerns18mOk,p4_noParentsConcerns18mOkConcerns,p4_noParentsConcerns18mNotDiscussed');" /></td>
-					<td>&nbsp;</td>
+					<td colspan="4" style="vertical-align:bottom;">
+						<textarea id="p4_development18m"
+							name="p4_development18m" class="wide" cols="10" rows="5"><%= props.getProperty("p4_development18m", "") %></textarea>					
+					</td>
 				</tr>
 			</table>
-			<textarea id="p4_development18m"
-				name="p4_development18m" class="wide" cols="10" rows="5"><%= props.getProperty("p4_development18m", "") %></textarea>
 			</td>
-			<td colspan="5" valign="bottom" align="center">
-			<bean:message
-				key="oscarEncounter.formRourke2009_4.msgNippissing" />				
-					<textarea id="p4_nippisingattained"
-				name="p4_nippisingattained" class="wide" cols="10" rows="2"><%= props.getProperty("p4_nippisingattained", "") %></textarea>				
-			<table cellpadding="0" cellspacing="2" border="1" width="100%">								
+			<td colspan="5" align="center">							
+			<table cellpadding="0" cellspacing="2" border="1" width="100%" height="100%">								
 				<tr>
 					<td>
-					<table cellpadding="0" cellspacing="0" width="100%">
+					<table cellpadding="0" cellspacing="0" width="100%" height="100%">
 						<tr>
 							<td colspan="4">&nbsp;</td>
 						</tr>
@@ -1852,14 +1467,9 @@ description layer</div>
 							<td valign="top"><bean:message
 								key="oscarEncounter.formRourke2009.formNoparentConcerns" /></td>
 						</tr>
+						
 						<tr>
-							<td valign="top" class="edcol" colspan="3"><input
-								class="delete" type="button" value="Del"
-								onclick="del('p4_2wSentenceOk,p4_2wSentenceOkConcerns,p4_2wSentenceNotDiscussed,p4_walksbackwardOk,p4_walksbackwardOkConcerns,p4_walksbackwardNotDiscussed,p4_one2stepdirectionsOk,p4_one2stepdirectionsOkConcerns,p4_one2stepdirectionsNotDiscussed,p4_runsOk,p4_runsOkConcerns,p4_runsNotDiscussed,p4_smallContainerOk,p4_smallContainerOkConcerns,p4_smallContainerNotDiscussed,p4_pretendsPlayOk,p4_pretendsPlayOkConcerns,p4_pretendsPlayNotDiscussed,p4_newSkillsOk,p4_newSkillsOkConcerns,p4_newSkillsNotDiscussed,p4_noParentsConcerns24mOk,p4_noParentsConcerns24mOkConcerns,p4_noParentsConcerns24mNotDiscussed');" /></td>
-							<td>&nbsp;</td>
-						</tr>
-						<tr>
-							<td colspan="4" style="padding-top:5px;">
+							<td colspan="4" style="vertical-align:bottom;">
 								<textarea id="p4_development24m"
 											name="p4_development24m" class="wide" cols="10" rows="5"><%= props.getProperty("p4_development24m", "") %></textarea>
 							</td>
@@ -1867,7 +1477,7 @@ description layer</div>
 					</table>
 					</td>
 					<td>
-					<table cellpadding="0" cellspacing="0" width="100%">
+					<table cellpadding="0" cellspacing="0" height="100%">
 						<tr>
 							<td colspan="4">&nbsp;</td>
 						</tr>
@@ -1971,14 +1581,9 @@ description layer</div>
 							<td valign="top"><bean:message
 								key="oscarEncounter.formRourke2009.formNoparentConcerns" /></td>
 						</tr>
+						
 						<tr>
-							<td valign="top" class="edcol" colspan="3"><input
-								class="delete" type="button" value="Del"
-								onclick="del('p4_3directionsOk,p4_3directionsOkConcerns,p4_3directionsNotDiscussed,p4_asksQuestionsOk,p4_asksQuestionsOkConcerns,p4_asksQuestionsNotDiscussed,p4_upDownStairsOkConcerns,p4_upDownStairsNotDiscussed,p4_upDownStairsOkConcerns,p4_upDownStairsNotDiscussed,p4_undoesZippersOkConcerns,p4_undoesZippersNotDiscussed,p4_tries2comfortOkConcerns,p4_tries2comfortNotDiscussed,p4_noParentsConcerns48mOk,p4_noParentsConcerns48mOkConcerns,p4_noParentsConcerns48mNotDiscussed');" /></td>
-							<td>&nbsp;</td>
-						</tr>
-						<tr>
-							<td colspan="4">
+							<td colspan="4" style="vertical-align:bottom;">
 								<textarea id="p4_development48m"
 											name="p4_development48m" class="wide" cols="10" rows="5"><%= props.getProperty("p4_development48m", "") %></textarea>
 							</td>
@@ -1987,8 +1592,8 @@ description layer</div>
 					</td>
 				</tr>
 				<tr>
-					<td valign="bottom">
-					<table cellpadding="0" cellspacing="0" width="100%">
+					<td>
+					<table cellpadding="0" cellspacing="0" width="100%" height="100%">
 						<tr>
 							<td colspan="4">&nbsp;</td>
 						</tr>
@@ -2128,14 +1733,9 @@ description layer</div>
 							<td valign="top"><bean:message
 								key="oscarEncounter.formRourke2009.formNoparentConcerns" /></td>
 						</tr>
+						
 						<tr>
-							<td valign="top" class="edcol" colspan="3"><input
-								class="delete" type="button" value="Del"
-								onclick="del('p4_2directionsOk,p4_2directionsOkConcerns,p4_2directionsNotDiscussed,p4_5ormoreWordsOk,p4_5ormoreWordsOkConcerns,p4_5ormoreWordsNotDiscussed,p4_walksUpStairsOk,p4_walksUpStairsOkConcerns,p4_walksUpStairsNotDiscussed,p4_twistslidsOk,p4_twistslidsOkConcerns,p4_twistslidsNotDiscussed,p4_turnsPagesOk,p4_turnsPagesOkConcerns,p4_turnsPagesNotDiscussed,p4_sharesSometimeOk,p4_sharesSometimeOkConcerns,p4_sharesSometimeNotDiscussed,p4_playMakeBelieveOk,p4_playMakeBelieveOkConcerns,p4_playMakeBelieveNotDiscussed,p4_listenMusikOk,p4_listenMusikOkConcerns,p4_listenMusikNotDiscussed,p4_noParentsConcerns36mOk,p4_noParentsConcerns36mOkConcerns,p4_noParentsConcerns36mNotDiscussed');" /></td>
-							<td>&nbsp;</td>
-						</tr>
-						<tr>
-							<td colspan="4">
+							<td colspan="4" style="vertical-align:bottom;">
 								<textarea id="p4_development36m"
 											name="p4_development36m" class="wide" cols="10" rows="5"><%= props.getProperty("p4_development36m", "") %></textarea>
 							</td>
@@ -2143,7 +1743,7 @@ description layer</div>
 					</table>
 					</td>
 					<td>
-					<table cellpadding="0" cellspacing="0" width="100%">
+					<table cellpadding="0" cellspacing="0" width="100%" height="100%">
 						<tr>
 							<td colspan="4">&nbsp;</td>
 						</tr>
@@ -2286,14 +1886,9 @@ description layer</div>
 							<td valign="top"><bean:message
 								key="oscarEncounter.formRourke2009.formNoparentConcerns" /></td>
 						</tr>
+						
 						<tr>
-							<td valign="top" class="edcol" colspan="3"><input
-								class="delete" type="button" value="Del"
-								onclick="del('p4_countsOutloudOk,p4_countsOutloudOkConcerns,p4_countsOutloudNotDiscussed,p4_speaksClearlyOk,p4_speaksClearlyOkConcerns,p4_speaksClearlyNotDiscussed,p4_throwsCatchesOk,p4_throwsCatchesOkConcerns,p4_throwsCatchesNotDiscussed,p4_hops1footOk,p4_hops1footOkConcerns,p4_hops1footNotDiscussed,p4_dressesUndressesOk,p4_dressesUndressesOkConcerns,p4_dressesUndressesNotDiscussed,p4_obeysAdultOk,p4_obeysAdultOkConcerns,p4_obeysAdultNotDiscussed,p4_retellsStoryOk,p4_retellsStoryOkConcerns,p4_retellsStoryNotDiscussed,p4_separatesOk,p4_separatesOkConcerns,p4_separatesNotDiscussed,p4_noParentsConcerns60mOk,p4_noParentsConcerns60mOkConcerns,p4_noParentsConcerns60mNotDiscussed');" /></td>
-							<td>&nbsp;</td>
-						</tr>
-						<tr>
-							<td colspan="4">
+							<td colspan="4" style="vertical-align:bottom;">
 								<textarea id="p4_development60m"
 											name="p4_development60m" class="wide" cols="10" rows="5"><%= props.getProperty("p4_development60m", "") %></textarea>
 							</td>
@@ -2302,18 +1897,16 @@ description layer</div>
 					</td>
 			</table>
 			</td>
-		</tr>
-		<tr>
 			<td class="column"><a><bean:message
-				key="oscarEncounter.formRourke1.msgPhysicalExamination" /></a><br>
-			<bean:message
-				key="oscarEncounter.formRourke1.msgPhysicalExaminationDesc" /><br>
-                        <img height="15" width="20" src="graphics/Checkmark_Lwhite.gif">
-                        <bean:message key="oscarEncounter.formRourke2009.msgPhysicalExaminationLegend"/>
-			
-			</td>
-			<td colspan="3" valign="top">
-			<table cellpadding="0" cellspacing="0" width="100%">
+				key="oscarEncounter.formRourke1.msgDevelopment" />**</a><br>
+                            <bean:message key="oscarEncounter.formRourke2009_1.msgDevelopmentDesc" />
+                            <br>
+			<img height="15" width="20" src="graphics/Checkmark_Lwhite.gif"><bean:message
+				key="oscarEncounter.formRourke2006_1.msgDevelopmentLegend" /></td>
+		</tr>
+		<tr id="physicalExamp4">
+			<td colspan="3" id="physicalExamp4a">
+			<table id="pt41" cellpadding="0" cellspacing="0" width="100%">
 				<tr>
 					<td colspan="4">&nbsp;</td>
 				</tr>
@@ -2339,12 +1932,7 @@ description layer</div>
                                         <td valign="top"><bean:message
                                                 key="oscarEncounter.formRourke2009_4.formFontanellesClosed" /></td>
                                 </tr>
-                                <tr>
-                                        <td valign="top" class="edcol" colspan="3"><input
-                                                class="delete" type="button" value="Del"
-                                                onclick="del('p4_fontanellesClosedOk,p4_fontanellesClosedOkConcerns,p4_fontanellesClosedNotDiscussed');" /></td>
-                                        <td>&nbsp;</td>
-                                </tr>
+                                
                                 <tr>
 					<td valign="top"><input type="radio" id="p4_eyes18mOk"
 						name="p4_eyes18mOk" onclick="onCheck(this,'p4_eyes18m')"
@@ -2360,12 +1948,7 @@ description layer</div>
 						onMouseOut="hideLayer()"><bean:message
 						key="oscarEncounter.formRourke2009_4.formEyes" />*</a></b></td>
 				</tr>
-                                <tr>
-                                        <td valign="top" class="edcol" colspan="3"><input
-                                                class="delete" type="button" value="Del"
-                                                onclick="del('p4_eyes18mOk,p4_eyes18mOkConcerns,p4_eyes18mNotDiscussed');" /></td>
-                                        <td>&nbsp;</td>
-                                </tr>
+                                
                                 <tr>
 					<td valign="top"><input type="radio" id="p4_corneal18mOk"
 						name="p4_corneal18mOk" onclick="onCheck(this,'p4_corneal18m')"
@@ -2381,12 +1964,7 @@ description layer</div>
 						onMouseOut="hideLayer()"><bean:message
 						key="oscarEncounter.formRourke2009_4.formCorneal" />*</a></b></td>
 				</tr>
-                                <tr>
-                                        <td valign="top" class="edcol" colspan="3"><input
-                                                class="delete" type="button" value="Del"
-                                                onclick="del('p4_corneal18mOk,p4_corneal18mOkConcerns,p4_corneal18mNotDiscussed');" /></td>
-                                        <td>&nbsp;</td>
-                                </tr>
+                                
                                 <tr>
 					<td valign="top"><input type="radio" id="p4_hearing18mOk"
 						name="p4_hearing18mOk" onclick="onCheck(this,'p4_hearing18m')"
@@ -2400,12 +1978,7 @@ description layer</div>
 					<td valign="top"><bean:message
 						key="oscarEncounter.formRourke2006_4.formHearingInquiry" /></td>
 				</tr>
-                                <tr>
-                                        <td valign="top" class="edcol" colspan="3"><input
-                                                class="delete" type="button" value="Del"
-                                                onclick="del('p4_hearing18mOk,p4_hearing18mOkConcerns,p4_hearing18mNotDiscussed');" /></td>
-                                        <td>&nbsp;</td>
-                                </tr>
+                                
 				<tr>
 					<td valign="top"><input type="radio" id="p4_tonsil18mOk"
 						name="p4_tonsil18mOk" onclick="onCheck(this,'p4_tonsil18m')"
@@ -2421,18 +1994,18 @@ description layer</div>
 						onMouseOut="hideLayer()"><bean:message
 						key="oscarEncounter.formRourke2006_3.formTonsilSize" />*</a></td>
 				</tr>
-                                <tr>
-                                        <td valign="top" class="edcol" colspan="3"><input
-                                                class="delete" type="button" value="Del"
-                                                onclick="del('p4_tonsil18mOk,p4_tonsil18mOkConcerns,p4_tonsil18mNotDiscussed');" /></td>
-                                        <td>&nbsp;</td>
-                                </tr>
+                                
+               <tr>
+               		<td colspan="4" style="vertical-align:bottom;">
+						<textarea id="p4_physical18m"
+							name="p4_physical18m" class="wide" cols="10" rows="5"><%= props.getProperty("p4_physical18m", "") %></textarea>
+               		
+               		</td>
+               	</tr>
 			</table>
-			<textarea id="p4_physical18m"
-											name="p4_physical18m" class="wide" cols="10" rows="5"><%= props.getProperty("p4_physical18m", "") %></textarea>
 			</td>
-			<td colspan="3" valign="top">
-			<table cellpadding="0" cellspacing="0" width="100%">
+			<td colspan="3" id="physicalExamp4b">
+			<table id="pt42" cellpadding="0" cellspacing="0" width="100%">
 				<tr>
 					<td colspan="4">&nbsp;</td>
 				</tr>
@@ -2458,12 +2031,7 @@ description layer</div>
                                         <td valign="top"><bean:message
                                                 key="oscarEncounter.formRourke2006_4.formBloodPressure" /></td>
                                 </tr>
-                                <tr>
-                                        <td valign="top" class="edcol" colspan="3"><input
-                                                class="delete" type="button" value="Del"
-                                                onclick="del('p4_bloodpressure24mOk,p4_bloodpressure24mOkConcerns,p4_bloodpressure24mNotDiscussed');" /></td>
-                                        <td>&nbsp;</td>
-                                </tr>
+                               
                                 <tr>
 					<td valign="top"><input type="radio" id="p4_eyes24mOk"
 						name="p4_eyes24mOk" onclick="onCheck(this,'p4_eyes24m')"
@@ -2479,12 +2047,7 @@ description layer</div>
 						onMouseOut="hideLayer()"><bean:message
 						key="oscarEncounter.formRourke2009_4.formEyes" />*</a></b></td>
 				</tr>
-                                <tr>
-                                        <td valign="top" class="edcol" colspan="3"><input
-                                                class="delete" type="button" value="Del"
-                                                onclick="del('p4_eyes24mOk,p4_eyes24mOkConcerns,p4_eyes24mNotDiscussed');" /></td>
-                                        <td>&nbsp;</td>
-                                </tr>
+                                
                                 <tr>
 					<td valign="top"><input type="radio" id="p4_corneal24mOk"
 						name="p4_corneal24mOk" onclick="onCheck(this,'p4_corneal24m')"
@@ -2500,12 +2063,7 @@ description layer</div>
 						onMouseOut="hideLayer()"><bean:message
 						key="oscarEncounter.formRourke2009_4.formCorneal" />*</a></b></td>
 				</tr>
-                                <tr>
-                                        <td valign="top" class="edcol" colspan="3"><input
-                                                class="delete" type="button" value="Del"
-                                                onclick="del('p4_corneal24mOk,p4_corneal24mOkConcerns,p4_corneal24mNotDiscussed');" /></td>
-                                        <td>&nbsp;</td>
-                                </tr>
+                                
                                 <tr>
 					<td valign="top"><input type="radio" id="p4_hearing24mOk"
 						name="p4_hearing24mOk" onclick="onCheck(this,'p4_hearing24m')"
@@ -2519,12 +2077,7 @@ description layer</div>
 					<td valign="top"><bean:message
 						key="oscarEncounter.formRourke2006_4.formHearingInquiry" /></td>
 				</tr>
-                                <tr>
-                                        <td valign="top" class="edcol" colspan="3"><input
-                                                class="delete" type="button" value="Del"
-                                                onclick="del('p4_hearing24mOk,p4_hearing24mOkConcerns,p4_hearing24mNotDiscussed');" /></td>
-                                        <td>&nbsp;</td>
-                                </tr>
+                                
 				<tr>
 					<td valign="top"><input type="radio" id="p4_tonsil24mOk"
 						name="p4_tonsil24mOk" onclick="onCheck(this,'p4_tonsil24m')"
@@ -2540,18 +2093,17 @@ description layer</div>
 						onMouseOut="hideLayer()"><bean:message
 						key="oscarEncounter.formRourke2006_3.formTonsilSize" />*</a></td>
 				</tr>
-                                <tr>
-                                        <td valign="top" class="edcol" colspan="3"><input
-                                                class="delete" type="button" value="Del"
-                                                onclick="del('p4_tonsil24mOk,p4_tonsil24mOkConcerns,p4_tonsil24mNotDiscussed');" /></td>
-                                        <td>&nbsp;</td>
-                                </tr>
+                                
+            	<tr>
+            		<td colspan="4" style="vertical-align:bottom;">
+            			<textarea id="p4_physicalm"
+							name="p4_physical24m" class="wide" cols="10" rows="5"><%= props.getProperty("p4_physical24m", "") %></textarea>            		
+            		</td>
+            	</tr>
 			</table>
-			<textarea id="p4_physicalm"
-											name="p4_physical24m" class="wide" cols="10" rows="5"><%= props.getProperty("p4_physical24m", "") %></textarea>
 			</td>
-			<td colspan="2" valign="top">
-			<table cellpadding="0" cellspacing="0" width="100%">
+			<td colspan="2" id="physicalExamp4c">
+			<table id="pt43" cellpadding="0" cellspacing="0" width="100%">
 				<tr>
 					<td colspan="4">&nbsp;</td>
 				</tr>
@@ -2577,12 +2129,7 @@ description layer</div>
                                         <td valign="top"><bean:message
                                                 key="oscarEncounter.formRourke2006_4.formBloodPressure" /></td>
                                 </tr>
-                                <tr>
-                                        <td valign="top" class="edcol" colspan="3"><input
-                                                class="delete" type="button" value="Del"
-                                                onclick="del('p4_bloodpressure48mOk,p4_bloodpressure48mOkConcerns,p4_bloodpressure48mNotDiscussed');" /></td>
-                                        <td>&nbsp;</td>
-                                </tr>
+                                
                                 <tr>
 					<td valign="top"><input type="radio" id="p4_eyes48mOk"
 						name="p4_eyes48mOk" onclick="onCheck(this,'p4_eyes48m')"
@@ -2598,12 +2145,7 @@ description layer</div>
 						onMouseOut="hideLayer()"><bean:message
 						key="oscarEncounter.formRourke2009_4.formEyes" />*</a></b></td>
 				</tr>
-                                <tr>
-                                        <td valign="top" class="edcol" colspan="3"><input
-                                                class="delete" type="button" value="Del"
-                                                onclick="del('p4_eyes48mOk,p4_eyes48mOkConcerns,p4_eyes48mNotDiscussed');" /></td>
-                                        <td>&nbsp;</td>
-                                </tr>
+                                
                                 <tr>
 					<td valign="top"><input type="radio" id="p4_corneal48mOk"
 						name="p4_corneal48mOk" onclick="onCheck(this,'p4_corneal48m')"
@@ -2619,12 +2161,7 @@ description layer</div>
 						onMouseOut="hideLayer()"><bean:message
 						key="oscarEncounter.formRourke2009_4.formCorneal" />*</a></b></td>
 				</tr>
-                                <tr>
-                                        <td valign="top" class="edcol" colspan="3"><input
-                                                class="delete" type="button" value="Del"
-                                                onclick="del('p4_corneal48mOk,p4_corneal48mOkConcerns,p4_corneal48mNotDiscussed');" /></td>
-                                        <td>&nbsp;</td>
-                                </tr>
+                                
                                 <tr>
 					<td valign="top"><input type="radio" id="p4_hearing48mOk"
 						name="p4_hearing48mOk" onclick="onCheck(this,'p4_hearing48m')"
@@ -2638,12 +2175,7 @@ description layer</div>
 					<td valign="top"><bean:message
 						key="oscarEncounter.formRourke2006_4.formHearingInquiry" /></td>
 				</tr>
-                                <tr>
-                                        <td valign="top" class="edcol" colspan="3"><input
-                                                class="delete" type="button" value="Del"
-                                                onclick="del('p4_hearing48mOk,p4_hearing48mOkConcerns,p4_hearing48mNotDiscussed');" /></td>
-                                        <td>&nbsp;</td>
-                                </tr>
+                                
 				<tr>
 					<td valign="top"><input type="radio" id="p4_tonsil48mOk"
 						name="p4_tonsil48mOk" onclick="onCheck(this,'p4_tonsil48m')"
@@ -2659,35 +2191,38 @@ description layer</div>
 						onMouseOut="hideLayer()"><bean:message
 						key="oscarEncounter.formRourke2006_3.formTonsilSize" />*</a></td>
 				</tr>
-                                <tr>
-                                        <td valign="top" class="edcol" colspan="3"><input
-                                                class="delete" type="button" value="Del"
-                                                onclick="del('p4_tonsil48mOk,p4_tonsil48mOkConcerns,p4_tonsil48mNotDiscussed');" /></td>
-                                        <td>&nbsp;</td>
-                                </tr>
-			</table>
-			<textarea id="p4_physical48m"
-											name="p4_physical48m" class="wide" cols="10" rows="5"><%= props.getProperty("p4_physical48m", "") %></textarea>
+                                
+              	<tr>
+              		<td colspan="4" style="vertical-align:bottom;">
+              			<textarea id="p4_physical48m"
+							name="p4_physical48m" class="wide" cols="10" rows="5"><%= props.getProperty("p4_physical48m", "") %></textarea>
+              		</td>
+              	</tr>
+			</table>			
+			</td>
+			<td class="column"><a><bean:message
+				key="oscarEncounter.formRourke1.msgPhysicalExamination" /></a><br>
+			<bean:message
+				key="oscarEncounter.formRourke1.msgPhysicalExaminationDesc" /><br>
+                        <img height="15" width="20" src="graphics/Checkmark_Lwhite.gif">
+                        <bean:message key="oscarEncounter.formRourke2009.msgPhysicalExaminationLegend"/>
+			
 			</td>
 		</tr>
-		<tr>
-			<td class="column"><a><bean:message
-				key="oscarEncounter.formRourke1.msgProblemsAndPlans" /></a></td>
-			<td colspan="3" valign="top"><textarea id="p4_problems18m"
+		<tr id="problemsPlansp4">			
+			<td colspan="3" valign="bottom"><textarea id="p4_problems18m"
 				name="p4_problems18m" rows="5" cols="25" class="wide"><%= props.getProperty("p4_problems18m", "") %></textarea>
 			</td>
-			<td colspan="3" valign="top"><textarea id="p4_problems24m"
+			<td colspan="3" valign="bottom"><textarea id="p4_problems24m"
 				name="p4_problems24m" rows="5" cols="25" class="wide"><%= props.getProperty("p4_problems24m", "") %></textarea>
 			</td>
-			<td colspan="2" valign="top"><textarea id="p4_problems48m"
+			<td colspan="2" valign="bottom"><textarea id="p4_problems48m"
 				name="p4_problems48m" rows="5" cols="25" class="wide"><%= props.getProperty("p4_problems48m", "") %></textarea>
 			</td>
-		</tr>
-		<tr>
 			<td class="column"><a><bean:message
-				key="oscarEncounter.formRourke1.msgImmunization" /></a><br>
-			<bean:message key="oscarEncounter.formRourke1.msgImmunizationDesc" />
-			</td>
+				key="oscarEncounter.formRourke1.msgProblemsAndPlans" /></a></td>
+		</tr>
+		<tr id="immunizationp4">			
 			<td style="text-align: center" colspan="3" valign="top"><b><bean:message
 				key="oscarEncounter.formRourke2006_1.msgImmunizationColTitle" /></b></td>
 			<td style="text-align: center" colspan="3" valign="top"><b><bean:message
@@ -2695,10 +2230,12 @@ description layer</div>
 			
 			<td style="text-align: center" colspan="2" valign="top"><b><bean:message
 				key="oscarEncounter.formRourke2006_1.msgImmunizationColTitle" /></b></td>
-		</tr>
-		<tr>
 			<td class="column"><a><bean:message
-				key="oscarEncounter.formRourke1.formSignature" /></a></td>
+				key="oscarEncounter.formRourke1.msgImmunization" /></a><br>
+			<bean:message key="oscarEncounter.formRourke1.msgImmunizationDesc" />
+			</td>
+		</tr>
+		<tr>			
 			<td colspan="3"><input type="text" class="wide"
 				style="width: 100%" name="p4_signature18m"
 				value="<%= props.getProperty("p4_signature18m", "") %>" /></td>
@@ -2708,6 +2245,8 @@ description layer</div>
 			<td colspan="2"><input type="text" class="wide"
 				style="width: 100%" name="p4_signature48m"
 				value="<%= props.getProperty("p4_signature48m", "") %>" /></td>
+			<td class="column"><a><bean:message
+				key="oscarEncounter.formRourke1.formSignature" /></a></td>
 		</tr>
 
 	</table>
@@ -2722,43 +2261,37 @@ description layer</div>
 				value="<bean:message key="oscarEncounter.formRourke1.btnExit"/>"
 				onclick="javascript:return onExit();"> <input type="submit"
 				value="<bean:message key="oscarEncounter.formRourke1.btnPrint"/>"
-				onclick="javascript:return onPrint();" /> <input type="submit"
-				value="<bean:message key="oscarEncounter.formRourke2006.btnPrintAll"/>"
-				onclick="javascript:return onPrintAll();" /> <input type="button"
+				onclick="javascript:return onPrint();" /> <input type="button"
 				value="About"
 				onclick="javascript:return popPage('http://rourkebabyrecord.ca','About Rourke');" />
 			</td>
-			<td align="center" width="100%">
+			<td align="center" nowrap="true" width="100%">
+			<% if( growthChartURL.length() > 0 ) {%>
+				<a style="color:red; font-weight:bold; text-decoration:underline; cursor:pointer;" "href="#" onclick="popPage('<%=growthChartURL%>','growthChart')">Growth Chart Avail</a>
+			
+			<%} else { %>
+				&nbsp; 
+			<% }%>
+			</td>
+			<td align="center" nowrap="true" width="100%">
 			<% if(formId > 0)
            { %> <a name="length" href="#"
-				onclick="onGraph('<%=request.getContextPath()%>/form/formname.do?submit=graph&form_class=Rourke2009&__title=Baby+Growth+Graph1&__cfgfile=<%=growthCharts[0]%>&demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>');return false;">
+				onclick="onGraph('<%=request.getContextPath()%>/form/formname.do?submit=graph&form_class=Rourke2009&__title=Baby+Growth+Graph1&__cfgfile=<%=growthCharts[0]%>&demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>','<%= "growth1" + demoNo %>');return false;">
 			<bean:message key="oscarEncounter.formRourke1.btnGraphLenghtWeight" /></a><br>
 			<a name="headCirc" href="#"
-				onclick="onGraph('<%=request.getContextPath()%>/form/formname.do?submit=graph&form_class=Rourke2009&__title=Baby+Head+Circumference&__cfgfile=<%=growthCharts[1]%>&demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>');return false;">
+				onclick="onGraph('<%=request.getContextPath()%>/form/formname.do?submit=graph&form_class=Rourke2009&__title=Baby+Head+Circumference&__cfgfile=<%=growthCharts[1]%>&demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>','<%= "growth2" + demoNo %>');return false;">
 			<bean:message key="oscarEncounter.formRourke1.btnGraphHead" /></a> <% }else { %>
 			&nbsp; <% } %>
 			</td>
-			<td nowrap="true"><a
-				href="formrourke2009p1.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>"><bean:message
-				key="oscarEncounter.formRourke2006.Pg1" /></a>&nbsp;|&nbsp; <a
-				href="formrourke2009p2.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>"><bean:message
-				key="oscarEncounter.formRourke2006.Pg2" /></a>&nbsp;|&nbsp; <a
-				href="formrourke2009p3.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>"><bean:message
-				key="oscarEncounter.formRourke2006.Pg3" /></a>&nbsp;|&nbsp; <a><bean:message
-				key="oscarEncounter.formRourke2006.Pg4" /></a></td>
+			
 		</tr>
 	</table>
 	<p style="font-size: 8pt;"><bean:message
 		key="oscarEncounter.formRourke2006.footer" /><br />
 	</p>
 
-</html:form>
-<form id="frmPopUp" method="get" action=""></form>
-<form id="graph" method="post" action=""></form>
-</body>
 <script type="text/javascript">
     Calendar.setup({ inputField : "p4_date18m", ifFormat : "%d/%m/%Y", showsTime :false, button : "p4_date18m_cal", singleClick : true, step : 1 });
     Calendar.setup({ inputField : "p4_date24m", ifFormat : "%d/%m/%Y", showsTime :false, button : "p4_date24m_cal", singleClick : true, step : 1 });
     Calendar.setup({ inputField : "p4_date48m", ifFormat : "%d/%m/%Y", showsTime :false, button : "p4_date48m_cal", singleClick : true, step : 1 });
 </script>
-</html:html>
