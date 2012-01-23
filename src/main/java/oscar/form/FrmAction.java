@@ -47,6 +47,7 @@ public final class FrmAction extends Action {
             rec = recorder.factory(request.getParameter("form_class"));
             Properties props = new Properties();
                
+            log.info("SUBMIT " + String.valueOf(request.getParameter("submit") == null));
             //if we are graphing, we need to grab info from db and add it to request object
             if( request.getParameter("submit").equals("graph") )
             {                

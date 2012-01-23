@@ -12,7 +12,7 @@ import java.sql.Timestamp;
  */
 @Entity
 @Table(name="dataExport")
-public class DataExport extends AbstractModel<Integer> implements Serializable {
+public class DataExport extends AbstractModel<Integer> implements Serializable, Comparable<DataExport> {
 	private static final long serialVersionUID = 1L;
 	private Integer id;
 	private Timestamp daterun;
@@ -112,6 +112,12 @@ public class DataExport extends AbstractModel<Integer> implements Serializable {
 
 	public void setContactPhone(String contactPhone) {
     	this.contactPhone = contactPhone;
+    }
+
+
+	@Override
+    public int compareTo(DataExport o) {
+	    return this.getDaterun().compareTo(o.getDaterun());	    
     }
 
 }

@@ -365,6 +365,13 @@
 			<artifactId>cds_cihi</artifactId>
 			<version>1.0</version>
 		</dependency>
+		
+		<!-- cds rourke -->
+		<dependency>
+			<groupId>cds</groupId>
+			<artifactId>cds_rourke</artifactId>
+			<version>1.0</version>
+		</dependency>
 
 		<!-- cds hrm -->
 		<dependency>

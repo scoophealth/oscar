@@ -112,7 +112,7 @@
 		<property name="userManager" ref="surveyUserManager" />
 	</bean>
 	<!-- Data Export -->
-	<bean name="/demographic/cihiExport" class="oscar.oscarDemographic.pageUtil.CihiExportAction" singleton="false">
+	<bean name="/demographic/cihiExportOMD4" class="oscar.oscarDemographic.pageUtil.CihiExportAction" singleton="false">
 		<property name="clinicDAO" ref="clinicDAO"></property>
 		<property name="dataExportDAO" ref="dataExportDAO"></property>
 		<property name="demographicDao" ref="demographicDao"></property>
@@ -123,6 +123,26 @@
 		<property name="hl7TextInfoDAO" ref="hl7TextInfoDao" />
 		<property name="preventionDao" ref="preventionDao"/>
 		<property name="preventionExtDao" ref="preventionExtDao"/>
+	</bean>
+	<bean name="/demographic/cihiExportPHC_VRS" class="oscar.oscarDemographic.pageUtil.CihiExportPHC_VRSAction" singleton="false">
+		<property name="clinicDAO" ref="clinicDAO"></property>
+		<property name="dataExportDAO" ref="dataExportDAO"></property>
+		<property name="demographicDao" ref="demographicDao"></property>
+		<property name="oscarAppointmentDao" ref="oscarAppointmentDao"></property>
+		<property name="issueDAO" ref="IssueDAO"></property>		
+		<property name="caseManagementNoteDAO" ref="CaseManagementNoteDAO" />
+		<property name="caseManagementNoteExtDAO" ref="CaseManagementNoteExtDAO" />
+		<property name="allergyDAO" ref="AllergyDAO" />
+		<property name="hl7TextInfoDAO" ref="hl7TextInfoDao" />		
+		<property name="preventionDao" ref="preventionDao"/>
+		<property name="dxResearchDAO" ref="DxresearchDAO"></property>
+		<property name="icd9Dao" ref="Icd9DAO"></property>
+	</bean>
+	<bean name="/demographic/eRourkeExport" class="oscar.oscarDemographic.pageUtil.RourkeExportAction" singleton="false">
+		<property name="clinicDAO" ref="clinicDAO"></property>
+		<property name="dataExportDAO" ref="dataExportDAO"></property>
+		<property name="demographicDao" ref="demographicDao"></property>
+		<property name="frmRourke2009DAO" ref="rourke2009Dao"></property>
 	</bean>
 	<!--  ER -->
 	<bean name="/ReceptionistReport" class="org.oscarehr.er.ReceptionistReportAction" singleton="false">

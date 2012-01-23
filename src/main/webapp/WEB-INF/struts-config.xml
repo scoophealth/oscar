@@ -1550,8 +1550,14 @@
 		</action>
 		<action input="/demographic/diabetesExport.jsp" name="DiabetesExportForm" path="/demographic/DiabetesExport" scope="request" type="oscar.oscarDemographic.pageUtil.DiabetesExportAction">
 		</action>
-		<action input="/demographic/cihiExport.jsp" name="CihiExportForm" path="/demographic/cihiExport" parameter="method" scope="request" type="org.springframework.web.struts.DelegatingActionProxy">
+		<action input="/demographic/cihiExport.jsp" name="CihiExportForm" path="/demographic/cihiExportOMD4" parameter="method" scope="request" type="org.springframework.web.struts.DelegatingActionProxy">
 			<forward name="display" path="/demographic/cihiExport.jsp" />
+		</action>
+		<action input="/demographic/cihiExport.jsp" name="CihiExportForm" path="/demographic/cihiExportPHC_VRS" parameter="method" scope="request" type="org.springframework.web.struts.DelegatingActionProxy">
+			<forward name="display" path="/demographic/cihiExport.jsp" />
+		</action>
+		<action input="/demographic/rourkeExport.jsp" name="CihiExportForm" path="/demographic/eRourkeExport" parameter="method" scope="request" type="org.springframework.web.struts.DelegatingActionProxy">
+			<forward name="display" path="/demographic/rourkeExport.jsp" />
 		</action>
 		<action input="/oscarReport/demographicSetEdit.jsp" name="DemographicSetEditForm" path="/report/DemographicSetEdit" scope="request" type="oscar.oscarReport.pageUtil.DemographicSetEditAction">
 			<forward name="success" path="/oscarReport/demographicSetEdit.jsp" />
@@ -1978,6 +1984,7 @@
 		</action>
 		<action path="/CaseManagementView" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request" input="/casemgmt/CaseManagementView.jsp" name="caseManagementViewForm">
 			<forward name="view" path="/casemgmt/CaseManagementView.jsp" />
+			<forward name="ajaxView" path="/casemgmt/ChartNotes.jsp" />
 			<forward name="page.casemgmt.view" path="page.casemgmt.view" />
 			<forward name="page.newcasemgmt.view" path="page.newcasemgmt.view" />
 			<forward name="domain-error" path="/casemgmt/domain-error.jsp" />
@@ -1992,6 +1999,7 @@
 			<forward name="clientHistoryPrintPreview" path="/casemgmt/client_history_printPreview.jsp" />
 		</action>
 		<action path="/CaseManagementEntry" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request" input="/casemgmt/CaseManagementEntry.jsp" name="caseManagementEntryForm">
+			<forward name="setUpMainEncounterPage" path="page.newcasemgmt.view" />
 			<forward name="view" path="/casemgmt/CaseManagementEntry.jsp" />
 			<forward name="list" path="/CaseManagementView.do?method=view" redirect="true" />
 			<forward name="listCPPNotes" path="/CaseManagementView.do" redirect="true" />
