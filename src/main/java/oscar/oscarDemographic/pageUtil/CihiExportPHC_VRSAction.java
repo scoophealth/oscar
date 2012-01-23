@@ -38,6 +38,8 @@ import oscar.OscarProperties;
 import oscar.util.StringUtils;
 import oscar.util.UtilDateUtilities;
 
+import org.oscarehr.common.dao.AllergyDao;
+import org.oscarehr.common.model.Allergy;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteExtDAO;
 import org.oscarehr.casemgmt.dao.IssueDAO;
@@ -85,7 +87,7 @@ public class CihiExportPHC_VRSAction extends DispatchAction {
 	private IssueDAO issueDAO;
 	private CaseManagementNoteDAO caseManagementNoteDAO;
 	private CaseManagementNoteExtDAO caseManagementNoteExtDAO;
-	private AllergyDAO allergyDAO;
+	private AllergyDao allergyDAO;
 	private Hl7TextInfoDao hl7TextInfoDAO;
 	private PreventionDao preventionDao;
 	private DxresearchDAO dxResearchDAO;
@@ -120,11 +122,11 @@ public class CihiExportPHC_VRSAction extends DispatchAction {
 	    return hl7TextInfoDAO;
     }
 	
-	public void setAllergyDAO(AllergyDAO allergyDAO) {
+	public void setAllergyDao(AllergyDao allergyDAO) {
 	    this.allergyDAO = allergyDAO;
     }
 
-	public AllergyDAO getAllergyDAO() {
+	public AllergyDao getAllergyDao() {
 	    return allergyDAO;
     }
 
@@ -773,7 +775,7 @@ public class CihiExportPHC_VRSAction extends DispatchAction {
 	
 	private void buildAllergies(Demographic demo, PatientRecord patientRecord) {
 		String[] severity = new String[] {"MI","MO","LT","NO"};
-		List<Allergy> allergies = allergyDAO.getActiveAllergies(demo.getDemographicNo().toString());
+		List<Allergy> allergies = allergyDAO.findAllergies(demo.getDemographicNo());
 		int index;
 		Calendar cal = Calendar.getInstance();
 		Date date;
@@ -799,7 +801,7 @@ public class CihiExportPHC_VRSAction extends DispatchAction {
         	xmlAllergies.setSeverity(cdsDtCihiPhcvrs.AdverseReactionSeverity.Enum.forString(severity[index]));
         	date = allergy.getStartDate();
         	if( date != null ) {
-        		this.putPartialDate(xmlAllergies.addNewStartDate(), date, PartialDate.ALLERGIES, allergy.getAllergyid(), PartialDate.ALLERGIES_STARTDATE);
+        		this.putPartialDate(xmlAllergies.addNewStartDate(), date, PartialDate.ALLERGIES, (int)allergy.getId(), PartialDate.ALLERGIES_STARTDATE);
         	}
         }
 	}
