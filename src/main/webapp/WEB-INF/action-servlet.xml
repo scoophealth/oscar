@@ -132,7 +132,7 @@
 		<property name="issueDAO" ref="IssueDAO"></property>		
 		<property name="caseManagementNoteDAO" ref="CaseManagementNoteDAO" />
 		<property name="caseManagementNoteExtDAO" ref="CaseManagementNoteExtDAO" />
-		<property name="allergyDAO" ref="AllergyDAO" />
+		<property name="allergyDao" ref="AllergyDao" />
 		<property name="hl7TextInfoDAO" ref="hl7TextInfoDao" />		
 		<property name="preventionDao" ref="preventionDao"/>
 		<property name="dxResearchDAO" ref="DxresearchDAO"></property>
