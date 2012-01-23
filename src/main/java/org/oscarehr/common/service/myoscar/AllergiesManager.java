@@ -13,11 +13,8 @@ import org.oscarehr.common.dao.SentToPHRTrackingDao;
 import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.SentToPHRTracking;
 import org.oscarehr.myoscar_server.ws.ItemAlreadyExistsException_Exception;
-import org.oscarehr.myoscar_server.ws.ItemCompletedException_Exception;
 import org.oscarehr.myoscar_server.ws.MedicalDataTransfer2;
 import org.oscarehr.myoscar_server.ws.MedicalDataType;
-import org.oscarehr.myoscar_server.ws.NoSuchItemException_Exception;
-import org.oscarehr.myoscar_server.ws.NotAuthorisedException_Exception;
 import org.oscarehr.phr.PHRAuthentication;
 import org.oscarehr.phr.util.MyOscarServerWebServicesManager;
 import org.oscarehr.util.LoggedInInfo;
@@ -31,7 +28,7 @@ public final class AllergiesManager {
 	private static final String OSCAR_ALLERGIES_DATA_TYPE = "ALLERGY";
 	private static final SentToPHRTrackingDao sentToPHRTrackingDao = (SentToPHRTrackingDao) SpringUtils.getBean("sentToPHRTrackingDao");
 
-	public static void sendAllergiesToMyOscar(PHRAuthentication auth, Integer demographicId) throws ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException, ParserConfigurationException, NotAuthorisedException_Exception, NoSuchItemException_Exception, ItemCompletedException_Exception {
+	public static void sendAllergiesToMyOscar(PHRAuthentication auth, Integer demographicId) throws ClassCastException {
 		// get last synced info
 
 		// get the items for the person which are changed since last sync
@@ -47,12 +44,15 @@ public final class AllergiesManager {
 		for (Allergy allergy : changedAllergies) {
 			logger.debug("sendAllergiesToMyOscar : allergyId=" + allergy.getId());
 
-			MedicalDataTransfer2 medicalDataTransfer = toMedicalDataTransfer(auth, allergy);
-
 			try {
-				MyOscarMedicalDataManagerUtils.addMedicalData(auth, medicalDataTransfer, OSCAR_ALLERGIES_DATA_TYPE, allergy.getId());
-			} catch (ItemAlreadyExistsException_Exception e) {
-				MyOscarMedicalDataManagerUtils.updateMedicalData(auth, medicalDataTransfer, OSCAR_ALLERGIES_DATA_TYPE, allergy.getId());
+				MedicalDataTransfer2 medicalDataTransfer = toMedicalDataTransfer(auth, allergy);
+				try {
+					MyOscarMedicalDataManagerUtils.addMedicalData(auth, medicalDataTransfer, OSCAR_ALLERGIES_DATA_TYPE, allergy.getId());
+				} catch (ItemAlreadyExistsException_Exception e) {
+					MyOscarMedicalDataManagerUtils.updateMedicalData(auth, medicalDataTransfer, OSCAR_ALLERGIES_DATA_TYPE, allergy.getId());
+				}
+			} catch (Exception e) {
+				logger.error("Unexpected error", e);
 			}
 		}
 

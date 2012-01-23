@@ -7,13 +7,12 @@ package org.oscarehr.common.service.myoscar;
 
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.dao.ProviderDao;
-import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.RemoteDataLogDao;
 import org.oscarehr.common.dao.SentToPHRTrackingDao;
-import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.RemoteDataLog;
 import org.oscarehr.common.model.SentToPHRTracking;
@@ -35,7 +34,6 @@ import oscar.oscarProvider.data.ProviderMyOscarIdData;
 public final class MyOscarMedicalDataManagerUtils {
 	private static final Logger logger=MiscUtils.getLogger();
 	
-	private static final DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
 	private static final RemoteDataLogDao remoteDataLogDao = (RemoteDataLogDao) SpringUtils.getBean("remoteDataLogDao");
 	private static final SentToPHRTrackingDao sentToPHRTrackingDao = (SentToPHRTrackingDao) SpringUtils.getBean("sentToPHRTrackingDao");
 	private static final LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
@@ -67,8 +65,7 @@ public final class MyOscarMedicalDataManagerUtils {
 		}
 		medicalDataTransfer.setObserverOfDataPersonName(getObserverOfDataPersonName(providerNo));
 
-		Demographic demographic = demographicDao.getDemographicById(demographicId);
-		Long patientMyOscarUserId = MyOscarUtils.getMyOscarUserId(auth, demographic.getMyOscarUserName());
+		Long patientMyOscarUserId = MyOscarUtils.getPatientMyOscarId(auth, demographicId);
 		medicalDataTransfer.setOwningPersonId(patientMyOscarUserId);
 		
 		return(medicalDataTransfer);
@@ -157,5 +154,17 @@ public final class MyOscarMedicalDataManagerUtils {
 		return(lastTracking);
 	}
 	
+	public static List<Long> getMedicalDataIds(PHRAuthentication auth, Long ownerId, String medicalDataType, Boolean active, int startIndex, int itemsToReturn)
+	{
+		MedicalDataWs medicalDataWs = MyOscarServerWebServicesManager.getMedicalDataWs(auth.getMyOscarUserId(), auth.getMyOscarPassword());
+		List<Long> resultIds=medicalDataWs.getMedicalDataIds(ownerId, medicalDataType, active, startIndex, itemsToReturn);
+		return(resultIds);
+	}
 
+	public static MedicalDataTransfer2 getMedicalData(PHRAuthentication auth, Long medicalDataId) throws NoSuchItemException_Exception, NotAuthorisedException_Exception
+	{
+		MedicalDataWs medicalDataWs = MyOscarServerWebServicesManager.getMedicalDataWs(auth.getMyOscarUserId(), auth.getMyOscarPassword());
+		MedicalDataTransfer2 result=medicalDataWs.getMedicalData2(medicalDataId);
+		return(result);
+	}
 }

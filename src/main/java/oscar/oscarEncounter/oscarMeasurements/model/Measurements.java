@@ -3,6 +3,8 @@ package oscar.oscarEncounter.oscarMeasurements.model;
 import java.io.Serializable;
 
 /**
+ * @deprecated use MeasurementDao instead (2012-01-23)
+ * 
  * This is an object that contains data related to the measurements table. Do not modify this class because it will be overwritten if the configuration file related to this class is modified.
  * 
  * @hibernate.class table="measurements"
