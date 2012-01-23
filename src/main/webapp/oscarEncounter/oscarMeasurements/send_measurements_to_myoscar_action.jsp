@@ -1,4 +1,4 @@
-<%@page import="org.oscarehr.common.service.myoscar.PrescriptionMedicationManager"%>
+<%@page import="org.oscarehr.common.service.myoscar.MeasurementsManager"%>
 <%@page import="org.oscarehr.util.WebUtils"%>
 <%@page import="org.oscarehr.util.LocaleUtils"%>
 <%@page import="org.oscarehr.util.MiscUtils"%>
@@ -9,7 +9,7 @@
 	{
 		String demographicNoString=request.getParameter("demographicId");
 		PHRAuthentication auth=MyOscarUtils.getPHRAuthentication(session);
-		PrescriptionMedicationManager.sendPrescriptionsMedicationsToMyOscar(auth, Integer.parseInt(demographicNoString));
+		MeasurementsManager.sendMeasurementsToMyOscar(auth, Integer.parseInt(demographicNoString));
 		WebUtils.addInfoMessage(session, "ItemsHaveBeenSentToMyOscar");
 	}
 	catch (Exception e)

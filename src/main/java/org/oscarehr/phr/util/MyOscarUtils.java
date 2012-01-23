@@ -22,6 +22,7 @@ public final class MyOscarUtils
 {
 	private static QueueCache<String, Long> userNameToIdCache=new QueueCache<String, Long>(4, 100, DateUtils.MILLIS_PER_HOUR);
 	private static QueueCache<Long, String> userIdToNameCache=new QueueCache<Long, String>(4, 100, DateUtils.MILLIS_PER_HOUR);
+	private static final DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
 	
 	/**
 	 * Note this method must only return the ID, it must never return the PersonTransfer itself since it reads from a cache.
@@ -143,5 +144,12 @@ public final class MyOscarUtils
 	public static boolean isMyOscarSendButtonEnabled(PHRAuthentication auth, Demographic demographic)
 	{
 		return(auth!=null && auth.isloggedIn() && demographic!=null && demographic.getMyOscarUserName()!=null);
+	}
+	
+	public static Long getPatientMyOscarId(PHRAuthentication auth, Integer demographicId)
+	{
+		Demographic demographic = demographicDao.getDemographicById(demographicId);
+		Long patientMyOscarUserId = getMyOscarUserId(auth, demographic.getMyOscarUserName());
+		return(patientMyOscarUserId);
 	}
 }

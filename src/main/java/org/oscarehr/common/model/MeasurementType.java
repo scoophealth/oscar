@@ -13,6 +13,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.apache.commons.lang.StringUtils;
+
 @Entity
 @Table(name="measurementType")
 public class MeasurementType extends AbstractModel<Integer> implements Serializable {
@@ -46,7 +48,7 @@ public class MeasurementType extends AbstractModel<Integer> implements Serializa
     }
 
 	public void setType(String type) {
-    	this.type = type;
+    	this.type = StringUtils.trimToNull(type);
     }
 
 	public String getTypeDisplayName() {
@@ -54,7 +56,7 @@ public class MeasurementType extends AbstractModel<Integer> implements Serializa
     }
 
 	public void setTypeDisplayName(String typeDisplayName) {
-    	this.typeDisplayName = typeDisplayName;
+    	this.typeDisplayName = StringUtils.trimToNull(typeDisplayName);
     }
 
 	public String getTypeDescription() {
@@ -62,7 +64,7 @@ public class MeasurementType extends AbstractModel<Integer> implements Serializa
     }
 
 	public void setTypeDescription(String typeDescription) {
-    	this.typeDescription = typeDescription;
+    	this.typeDescription = StringUtils.trimToNull(typeDescription);
     }
 
 	public String getMeasuringInstruction() {
@@ -70,7 +72,7 @@ public class MeasurementType extends AbstractModel<Integer> implements Serializa
     }
 
 	public void setMeasuringInstruction(String measuringInstruction) {
-    	this.measuringInstruction = measuringInstruction;
+    	this.measuringInstruction = StringUtils.trimToNull(measuringInstruction);
     }
 
 	public String getValidation() {
@@ -78,7 +80,7 @@ public class MeasurementType extends AbstractModel<Integer> implements Serializa
     }
 
 	public void setValidation(String validation) {
-    	this.validation = validation;
+    	this.validation = StringUtils.trimToNull(validation);
     }
 
 	public Date getCreateDate() {

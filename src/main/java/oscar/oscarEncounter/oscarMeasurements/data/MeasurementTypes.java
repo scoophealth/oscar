@@ -39,8 +39,7 @@ import oscar.oscarDB.DBHandler;
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementTypesBean;
 
 /**
- *
- * @author Jay Gallagher
+ * @deprecated use MeasurementTypeDao instead (2012-01-23)
  */
 public class MeasurementTypes {
     private static Logger log = MiscUtils.getLogger();

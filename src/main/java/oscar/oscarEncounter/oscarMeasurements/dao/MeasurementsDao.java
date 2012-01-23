@@ -12,6 +12,9 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import oscar.oscarEncounter.oscarMeasurements.model.Measurements;
 
+/**
+ * @deprecated use MeasurementDao instead (2012-01-23)
+ */
 public class MeasurementsDao extends HibernateDaoSupport {
 
 	public int displayCount = 10;
