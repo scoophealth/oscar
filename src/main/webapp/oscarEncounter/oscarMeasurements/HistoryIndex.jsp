@@ -106,8 +106,12 @@
 			PHRAuthentication auth=MyOscarUtils.getPHRAuthentication(session);
 			boolean enabledMyOscarButton=MyOscarUtils.isMyOscarSendButtonEnabled(auth, Integer.valueOf(bean.getDemographicNo()));
 
+			String sendDataPath = request.getContextPath() + "/phr/send_medicaldata_to_myoscar_action.jsp?"
+					+ "demographicId=" + bean.getDemographicNo() + "&"
+					+ "medicalDataType=Measurements" + "&"
+					+ "parentPage=" + request.getRequestURI(); 
 			%>
-				<input type="button" name="Button" <%=WebUtils.getDisabledString(enabledMyOscarButton)%> value="<%=LocaleUtils.getMessage(request, "SendToMyOscar")%>" onclick="document.location.href='send_measurements_to_myoscar_action.jsp?demographicId=<%=bean.getDemographicNo()%>'">
+				<input type="button" name="Button" <%=WebUtils.getDisabledString(enabledMyOscarButton)%> value="<%=LocaleUtils.getMessage(request, "SendToMyOscar")%>" onclick="document.location.href='<%=sendDataPath%>'">
 			<%
 		}
 	%>
