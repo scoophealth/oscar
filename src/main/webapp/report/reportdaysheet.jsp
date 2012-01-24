@@ -194,7 +194,7 @@ td {
     }
   } else { //new appt, need to update status
     if(!provider_no.equals("*") && !provider_no.startsWith("_grp_") ) {
-	  rsdemo = daySheetBean.queryResults(param, "search_daysheetsinglenew");
+	  rsdemo = daySheetBean.queryResults(new String[] {param[1],param[2]}, "search_daysheetsinglenew");
           daySheetBean.queryExecuteUpdate(new String[]{param[1],param[2]}, "archive_apptsingle");
 	  daySheetBean.queryExecuteUpdate(param, "update_apptstatussingle");
     } else { //select all providers

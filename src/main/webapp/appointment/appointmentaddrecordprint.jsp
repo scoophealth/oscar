@@ -71,33 +71,7 @@
     param[18]=request.getParameter("urgency");
 
     int rowsAffected = oscarSuperManager.update("appointmentDao", request.getParameter("dboperation"), param);
-	if (rowsAffected == 1) {
-            if(demo != null && request.getParameter("dboperation").equals("add_apptrecord")) {
-			BillingDao billingDao = (BillingDao) SpringUtils.getBean("billingDao");
-			java.util.Date appointmentDate = (new SimpleDateFormat("yyyy-MM-dd")).parse(param[1]);
-			List<Integer> unpaidNumbers = billingDao.listUnpaidInvoices(Integer.parseInt(demo.getDemographicNo()), appointmentDate);
-			if(unpaidNumbers == null || unpaidNumbers.size()>0) {
-				Tickler tickler = new Tickler();
-				tickler.setStatus('A');
-				tickler.setCreator((String) request.getSession().getAttribute("user"));
-				tickler.setDemographic_no(demo.getDemographicNo());
-				tickler.setPriority("Normal");
-				tickler.setService_date(appointmentDate);
-				tickler.setTask_assigned_to(param[0]);
-				tickler.setUpdate_date(new java.util.Date());
-				String message = null;
-				if(unpaidNumbers.size() == 1) message = "Patient "+demo.getChartNo()+" "+demo.getFirstName()+" "+demo.getLastName()+" needs to pay invoice #";
-				else message = "Patient "+demo.getChartNo()+" "+demo.getFirstName()+" "+demo.getLastName()+" needs to pay invoices ##";
-				for (Integer num : unpaidNumbers) {
-					message += num.toString()+" ";
-				}
-				tickler.setMessage(message);
-
-		        org.caisi.service.TicklerManager tcm = (org.caisi.service.TicklerManager) WebApplicationContextUtils.getWebApplicationContext(
-			       		 pageContext.getServletContext()).getBean("ticklerManagerT");
-		        tcm.addTickler(tickler);
-		    }
-		}
+	if (rowsAffected == 1) {           
 %>
 <p>
 <h1><bean:message key="appointment.addappointment.msgAddSuccess" /></h1>
