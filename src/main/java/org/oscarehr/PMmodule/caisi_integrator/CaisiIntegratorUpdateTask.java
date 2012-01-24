@@ -105,6 +105,7 @@ import org.oscarehr.common.dao.EFormValueDao;
 import org.oscarehr.common.dao.FacilityDao;
 import org.oscarehr.common.dao.GroupNoteDao;
 import org.oscarehr.common.dao.IntegratorConsentDao;
+import org.oscarehr.common.dao.MeasurementDao;
 import org.oscarehr.common.dao.MeasurementTypeDao;
 import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.dao.PreventionDao;
@@ -119,11 +120,13 @@ import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.GroupNoteLink;
 import org.oscarehr.common.model.IntegratorConsent;
 import org.oscarehr.common.model.IntegratorConsent.ConsentStatus;
+import org.oscarehr.common.model.Measurement;
 import org.oscarehr.common.model.MeasurementType;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.dx.dao.DxResearchDAO;
 import org.oscarehr.dx.model.DxResearch;
+import org.oscarehr.util.BenchmarkTimer;
 import org.oscarehr.util.CxfClientUtils;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.LoggedInInfo;
@@ -131,7 +134,6 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.ShutdownException;
 import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.XmlUtils;
-import org.oscarehr.util.BenchmarkTimer;
 import org.springframework.beans.BeanUtils;
 import org.w3c.dom.Document;
 
@@ -145,10 +147,8 @@ import oscar.oscarBilling.ca.on.dao.BillingOnItemDao;
 import oscar.oscarBilling.ca.on.model.BillingOnCHeader1;
 import oscar.oscarBilling.ca.on.model.BillingOnItem;
 import oscar.oscarEncounter.oscarMeasurements.dao.MeasurementMapDao;
-import oscar.oscarEncounter.oscarMeasurements.dao.MeasurementsDao;
 import oscar.oscarEncounter.oscarMeasurements.dao.MeasurementsExtDao;
 import oscar.oscarEncounter.oscarMeasurements.model.Measurementmap;
-import oscar.oscarEncounter.oscarMeasurements.model.Measurements;
 import oscar.oscarEncounter.oscarMeasurements.model.MeasurementsExt;
 import oscar.oscarLab.ca.all.web.LabDisplayHelper;
 import oscar.oscarLab.ca.on.CommonLabResultData;
@@ -182,7 +182,6 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	private AdmissionDao admissionDao = (AdmissionDao) SpringUtils.getBean("admissionDao");
 	private OscarAppointmentDao appointmentDao = (OscarAppointmentDao) SpringUtils.getBean("oscarAppointmentDao");
 	private IntegratorControlDao integratorControlDao = (IntegratorControlDao) SpringUtils.getBean("integratorControlDao");
-	private MeasurementsDao measurementsDao = (MeasurementsDao) SpringUtils.getBean("measurementsDao");
 	private MeasurementsExtDao measurementsExtDao = (MeasurementsExtDao) SpringUtils.getBean("measurementsExtDao");
 	private MeasurementMapDao measurementMapDao = (MeasurementMapDao) SpringUtils.getBean("measurementMapDao");
 	private DxResearchDAO dxresearchDao = (DxResearchDAO) SpringUtils.getBean("dxResearchDao");
@@ -1193,15 +1192,14 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	private void pushMeasurements(Date lastDataUpdated, Facility facility, DemographicWs demographicService, Integer demographicId) throws ShutdownException {
 		logger.debug("pushing measurements facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
-		List<Measurements> measurements = measurementsDao.getMeasurementsByDemo(demographicId);
+		MeasurementDao measurementDao=(MeasurementDao) SpringUtils.getBean("measurementDao");
+		
+		List<Measurement> measurements = measurementDao.findByDemographicIdUpdatedAfterDate(demographicId, lastDataUpdated);
 		if (measurements.size() == 0) return;
 
 		StringBuilder sentIds = new StringBuilder();
 
-		for (Measurements measurement : measurements) {
-			// no change since last sync
-			if (measurement.getDateEntered() != null && measurement.getDateEntered().before(lastDataUpdated)) continue;
-
+		for (Measurement measurement : measurements) {
 			CachedMeasurement cachedMeasurement = new CachedMeasurement();
 			FacilityIdIntegerCompositePk facilityIdIntegerCompositePk = new FacilityIdIntegerCompositePk();
 			facilityIdIntegerCompositePk.setCaisiItemId(measurement.getId());
@@ -1211,7 +1209,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			cachedMeasurement.setCaisiProviderId(measurement.getProviderNo());
 			cachedMeasurement.setComments(measurement.getComments());
 			cachedMeasurement.setDataField(measurement.getDataField());
-			cachedMeasurement.setDateEntered(MiscUtils.toCalendar(measurement.getDateEntered()));
+			cachedMeasurement.setDateEntered(MiscUtils.toCalendar(measurement.getCreateDate()));
 			cachedMeasurement.setDateObserved(MiscUtils.toCalendar(measurement.getDateObserved()));
 			cachedMeasurement.setMeasuringInstruction(measurement.getMeasuringInstruction());
 			cachedMeasurement.setType(measurement.getType());
