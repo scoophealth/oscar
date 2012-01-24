@@ -11,11 +11,9 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.MeasurementDao;
 import org.oscarehr.common.dao.MeasurementTypeDao;
-import org.oscarehr.common.dao.PHRVerificationDao;
 import org.oscarehr.common.dao.SentToPHRTrackingDao;
 import org.oscarehr.common.model.Measurement;
 import org.oscarehr.common.model.MeasurementType;
-import org.oscarehr.common.model.PHRVerification;
 import org.oscarehr.common.model.SentToPHRTracking;
 import org.oscarehr.myoscar_server.ws.ItemAlreadyExistsException_Exception;
 import org.oscarehr.myoscar_server.ws.MedicalDataTransfer2;
@@ -38,7 +36,6 @@ public final class MeasurementsManager {
 	private static final SentToPHRTrackingDao sentToPHRTrackingDao = (SentToPHRTrackingDao) SpringUtils.getBean("sentToPHRTrackingDao");
 	private static MeasurementDao measurementDao = (MeasurementDao) SpringUtils.getBean("measurementDao");
 	private static MeasurementTypeDao measurementTypeDao = (MeasurementTypeDao) SpringUtils.getBean("measurementTypeDao");
-	private static final PHRVerificationDao phrVerificationDao = (PHRVerificationDao) SpringUtils.getBean("PHRVerificationDao");
 
 	static class HeightWeight {
 		public Measurement height;
@@ -119,14 +116,6 @@ public final class MeasurementsManager {
 
 		sentToPHRTracking.setSentDatetime(startSyncTime);
 		sentToPHRTrackingDao.merge(sentToPHRTracking);
-	}
-	
-	public static List<PHRVerification> getVerificationsForDemographic(int demographicNo){
-		return phrVerificationDao.getForDemographic(demographicNo);
-	}
-	
-	public static String getVerificationLevel(int demographicNo){
-		return phrVerificationDao.getVerificationLevel(demographicNo);
 	}
 
 	

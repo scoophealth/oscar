@@ -11,11 +11,9 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.DrugDao;
-import org.oscarehr.common.dao.PHRVerificationDao;
 import org.oscarehr.common.dao.PrescriptionDao;
 import org.oscarehr.common.dao.SentToPHRTrackingDao;
 import org.oscarehr.common.model.Drug;
-import org.oscarehr.common.model.PHRVerification;
 import org.oscarehr.common.model.Prescription;
 import org.oscarehr.common.model.SentToPHRTracking;
 import org.oscarehr.myoscar_server.ws.ItemAlreadyExistsException_Exception;
@@ -37,7 +35,6 @@ public final class PrescriptionMedicationManager {
 	private static final String OSCAR_PRESCRIPTION_DATA_TYPE = "PRESCRIPTION";
 	private static final String OSCAR_MEDICATION_DATA_TYPE = "MEDICATION";
 	private static final SentToPHRTrackingDao sentToPHRTrackingDao = (SentToPHRTrackingDao) SpringUtils.getBean("sentToPHRTrackingDao");
-	private static final PHRVerificationDao phrVerificationDao = (PHRVerificationDao) SpringUtils.getBean("PHRVerificationDao");
 
 	public static void sendPrescriptionsMedicationsToMyOscar(PHRAuthentication auth, Integer demographicId) throws ClassCastException {
 		// get last synced prescription info
@@ -61,14 +58,6 @@ public final class PrescriptionMedicationManager {
 
 		sentToPHRTracking.setSentDatetime(startSyncTime);
 		sentToPHRTrackingDao.merge(sentToPHRTracking);
-	}
-	
-	public static List<PHRVerification> getVerificationsForDemographic(int demographicNo){
-		return phrVerificationDao.getForDemographic(demographicNo);
-	}
-	
-	public static String getVerificationLevel(int demographicNo){
-		return phrVerificationDao.getVerificationLevel(demographicNo);
 	}
 	
 

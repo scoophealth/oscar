@@ -1,4 +1,5 @@
 <%@page import="org.oscarehr.common.service.myoscar.PrescriptionMedicationManager"%>
+<%@page import="org.oscarehr.common.service.myoscar.MyOscarMedicalDataManagerUtils"%>
 <%@page import="org.oscarehr.util.WebUtils"%>
 <%@page import="org.oscarehr.util.LocaleUtils"%>
 <%@page import="org.oscarehr.util.MiscUtils"%>
@@ -13,7 +14,7 @@
 		String demographicNoString=request.getParameter("demographicId");
 		demographicNo = Integer.parseInt(demographicNoString);
 
-		String verificationLevel = PrescriptionMedicationManager.getVerificationLevel(demographicNo);
+		String verificationLevel = MyOscarMedicalDataManagerUtils.getVerificationLevel(demographicNo);
 		if ("+3".equals(verificationLevel) || "Yes".equals(forceSend)) {
 			PHRAuthentication auth=MyOscarUtils.getPHRAuthentication(session);
 			PrescriptionMedicationManager.sendPrescriptionsMedicationsToMyOscar(auth, Integer.parseInt(demographicNoString));

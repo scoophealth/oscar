@@ -11,8 +11,10 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.common.dao.PHRVerificationDao;
 import org.oscarehr.common.dao.RemoteDataLogDao;
 import org.oscarehr.common.dao.SentToPHRTrackingDao;
+import org.oscarehr.common.model.PHRVerification;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.RemoteDataLog;
 import org.oscarehr.common.model.SentToPHRTracking;
@@ -38,6 +40,7 @@ public final class MyOscarMedicalDataManagerUtils {
 	private static final SentToPHRTrackingDao sentToPHRTrackingDao = (SentToPHRTrackingDao) SpringUtils.getBean("sentToPHRTrackingDao");
 	private static final LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 	private static final ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
+	private static final PHRVerificationDao phrVerificationDao = (PHRVerificationDao) SpringUtils.getBean("PHRVerificationDao");
 	
 	
 	private MyOscarMedicalDataManagerUtils() {
@@ -166,5 +169,13 @@ public final class MyOscarMedicalDataManagerUtils {
 		MedicalDataWs medicalDataWs = MyOscarServerWebServicesManager.getMedicalDataWs(auth.getMyOscarUserId(), auth.getMyOscarPassword());
 		MedicalDataTransfer2 result=medicalDataWs.getMedicalData2(medicalDataId);
 		return(result);
+	}
+	
+	public static List<PHRVerification> getVerificationsForDemographic(int demographicNo){
+		return phrVerificationDao.getForDemographic(demographicNo);
+	}
+	
+	public static String getVerificationLevel(int demographicNo){
+		return phrVerificationDao.getVerificationLevel(demographicNo);
 	}
 }

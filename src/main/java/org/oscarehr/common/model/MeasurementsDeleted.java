@@ -8,8 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
 @Entity
@@ -45,7 +43,7 @@ public class MeasurementsDeleted extends AbstractModel<Integer> implements Seria
 	private Date dateEntered = null;
 	
 	@Column(nullable = false)
-	private Date dateDeleted = null;
+	private Date dateDeleted = new Date();
 
 	@Column(nullable = false)
 	private Integer originalId = null;
@@ -123,12 +121,5 @@ public class MeasurementsDeleted extends AbstractModel<Integer> implements Seria
 	}
 	public void setOriginalId(Integer originalId) {
 		this.originalId = originalId;
-	}
-	
-	@PreUpdate
-	@PrePersist
-	protected void autoSetDateDeleted()
-	{
-		dateDeleted = new Date();
 	}
 }
