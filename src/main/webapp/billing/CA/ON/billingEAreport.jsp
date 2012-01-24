@@ -186,7 +186,7 @@
 								<table width="100%" border="0" cellspacing="2" cellpadding="2"
 									bgcolor="#CCCCFF">
 									<tr>
-										<td width="20%"><b>Record Coutns: [ </b></td>
+										<td width="20%"><b>Record Counts: [ </b></td>
 										<td width="20% "><b>Header 1: <bean:write
 											name="claimsError" property="header1Count" /> </b></td>
 										<td width="20%"><b>Header 2: <bean:write
