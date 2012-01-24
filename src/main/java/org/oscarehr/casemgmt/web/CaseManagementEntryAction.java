@@ -230,7 +230,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		}
 
 		/* remove the remembered echart string */
-		session.setAttribute("lastSavedNoteString", null);
+		session.removeAttribute("lastSavedNoteString");
 
 		logger.debug("Get Issues and filter them");
 		current = System.currentTimeMillis();
