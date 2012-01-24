@@ -37,7 +37,7 @@ public class AppointmentDao extends OscarSuperDao {
 
             {"add_apptrecord", "insert into appointment (provider_no,appointment_date,start_time,end_time,name, notes,reason,location,resources,type, style,billing,status,createdatetime,creator, remarks, demographic_no, program_id,urgency) values(?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?)" },
             {"search_waitinglist", "select wl.listID, wln.name from waitingList wl, waitingListName wln where wl.demographic_no=? and wln.ID=wl.listID and wl.is_history ='N' order by wl.listID"},
-
+            {"appendremarks", "update appointment set remarks=CONCAT(remarks,?) where appointment_no=?"},
             {"updatestatusc", "update appointment set status=?, lastupdateuser=?, updatedatetime=now() where appointment_no=?"},
             {"update_apptrecord", "update appointment set demographic_no=?,appointment_date=?,start_time=?,end_time=?,name=?, notes=?,reason =?,location=?, resources=?, type=?,style=?,billing =?,status=?,lastupdateuser=?,remarks=?,updatedatetime=now(),urgency=? where appointment_no=? "},
 

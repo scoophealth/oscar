@@ -641,8 +641,15 @@ function pasteAppt() {
             </div>
         </li>
         <li class="row weak">
-			<div class="label"></div>
-            <div class="input"></div>
+            <% String emailReminder = pros.getProperty("emailApptReminder"); 
+               if ((emailReminder != null) && emailReminder.equalsIgnoreCase("yes")) { %>
+                    <div class="label"><bean:message key="Appointment.formEmailReminder" />:</div>
+                    <div class="input"><input type="checkbox" name="emailPt" value="email reminder"></div>
+             <%  }else { %>
+                    <div class="label"></div>
+                    <div class="input"></div>
+	     <%  }%>
+           
             <div class="space">&nbsp;</div>
             <div class="label"><bean:message key="Appointment.formCritical" />:</div>
             <div class="input">

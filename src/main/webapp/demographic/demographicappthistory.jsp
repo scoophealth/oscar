@@ -255,7 +255,27 @@ function popupPageNew(vheight,vwidth,varpage) {
       <td><a href="#" onclick="popupPage(800,1000,'<%=request.getContextPath()%>/mod/specialencounterComp/EyeForm.do?method=view&appHis=true&demographicNo=<%=request.getParameter("demographic_no")%>&appNo=<%=rs.getString("appointment_no")%>')">eyeform</a></td>
       </special:SpecialEncounterTag>
       </plugin:hideWhenCompExists>
-      <td>&nbsp;<%=apptMainBean.getString(rs,"status")==null?"":(apptMainBean.getString(rs,"status").contains("N")?"No Show":(apptMainBean.getString(rs,"status").equals("C")?"Cancelled":"") ) %></td>
+      <% String remarks = apptMainBean.getString(rs,"remarks");
+         String comments = "";
+         boolean newline = false;
+         if (apptMainBean.getString(rs,"remarks") == null){
+            remarks = "";
+         }
+
+         if (apptMainBean.getString(rs,"status")!=null) {
+            if(apptMainBean.getString(rs,"status").contains("N")) {
+               comments = "No Show";
+            }
+            else if (apptMainBean.getString(rs,"status").equals("C")) {
+               comments = "Cancelled";
+            }
+        }
+
+        if (!remarks.isEmpty() && !comments.isEmpty()) {
+              newline=true;
+         }
+      %>
+      <td>&nbsp;<%=remarks%><% if(newline){%><br/>&nbsp;<%}%><%=comments%></td>
 </tr>
 <%
     }

@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
-		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd" default-autowire="no">
+       xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context" 
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+                http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+                http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd"
+       default-autowire="no">
 
 	<!--
 		load properties from additional property files; oscar.properties is
@@ -324,5 +328,32 @@
 	
 	<!-- Encounter Form DAO -->
 	<bean id="Rourke2009DAO" class="oscar.form.dao.Rourke2009DAO" autowire="byName"/>
+        
+        
+        <!--Email Support -->
+        <context:component-scan base-package="oscar.service"/>
+      
+        <bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor" p:corePoolSize="5"
+          p:maxPoolSize="10" p:queueCapacity="100" p:waitForTasksToCompleteOnShutdown="true"/>
+        
+        <bean id="asyncMailSender" class="oscar.service.AsyncMailSender" autowire="byName">
+           <property name="taskExecutor" ref="taskExecutor" />
+        </bean>
+        
+        <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+            <property name="host" value="${email.host}"/>
+            <property name="port" value="${email.port}" />
+            <property name="protocol" value="${email.protocol}" />
+            <property name="username" value="${email.username}" />
+            <property name="password" value="${email.password}" />
+
+            <property name="javaMailProperties">
+               <props>
+                  <prop key="mail.smtp.auth">true</prop>
+                  <prop key="mail.smtp.starttls.enable">true</prop>
+               </props>
+            </property>
+        </bean>
+
 
 </beans>
