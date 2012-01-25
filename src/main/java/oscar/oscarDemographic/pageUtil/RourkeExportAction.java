@@ -205,11 +205,11 @@ public class RourkeExportAction extends DispatchAction {
 			patient.setBREM(new BigInteger("2"));
 		}
 		
-		if( frmRourke2009.getC_APGAR1min() > -1 ) {
+		if( frmRourke2009.getC_APGAR1min() != null && frmRourke2009.getC_APGAR1min() > -1 ) {
 			patient.setAPGAR1(frmRourke2009.getC_APGAR1min());
 		}
 		
-		if( frmRourke2009.getC_APGAR5min() > -1 ) {
+		if( frmRourke2009.getC_APGAR5min() != null && frmRourke2009.getC_APGAR5min() > -1 ) {
 			patient.setAPGAR5(frmRourke2009.getC_APGAR5min());
 		}
 		
