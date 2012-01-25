@@ -846,17 +846,17 @@ body {
                                             <td>
                                                 <div class="DivContentSectionHead">
                                                     <bean:message key="SearchDrug.section2Title" />
-                                                    &nbsp;&nbsp;
+                                                    &nbsp;
                                                     <a href="javascript:popupWindow(720,700,'PrintDrugProfile2.jsp','PrintDrugProfile')"><bean:message key="SearchDrug.Print"/></a>
-                                                    &nbsp;&nbsp;
+                                                    &nbsp;
 													<%if(securityManager.hasWriteAccess("_rx",roleName$,true)) {%>
                                                     <a href="#" onclick="$('reprint').toggle();return false;"><bean:message key="SearchDrug.Reprint"/></a>
-                                                    &nbsp;&nbsp;
+                                                    &nbsp;
                                                     <a href="javascript:void(0);"name="cmdRePrescribe"  onclick="javascript:RePrescribeLongTerm();" style="width: 200px" ><bean:message key="SearchDrug.msgReprescribeLongTermMed"/></a>
-                                                    &nbsp;&nbsp;
+                                                    &nbsp;
 													<% } %>
                                                     <a href="javascript:popupWindow(720,920,'chartDrugProfile.jsp?demographic_no=<%=demoNo%>','PrintDrugProfile2')">Timeline Drug Profile</a>
-                                                    &nbsp;&nbsp;
+                                                    &nbsp;
                                                     <a href="javascript: void(0);" onclick="callReplacementWebService('GetmyDrugrefInfo.do?method=view','interactionsRxMyD');" >DS run</a>
                                                     &nbsp;&nbsp;
 													<%
@@ -866,7 +866,7 @@ body {
 									                  		  	boolean enabledMyOscarButton=MyOscarUtils.isMyOscarSendButtonEnabled(auth, Integer.valueOf(demoNo));
 																if (enabledMyOscarButton) 
 																{
-																	String sendDataPath = request.getContextPath() + "/phr/send_medicaldata_to_myoscar_action.jsp?"
+																	String sendDataPath = request.getContextPath() + "/phr/send_medicaldata_to_myoscar.jsp?"
 																			+ "demographicId=" + demoNo + "&"
 																			+ "medicalDataType=Prescriptions" + "&"
 																			+ "parentPage=" + request.getRequestURI(); 
