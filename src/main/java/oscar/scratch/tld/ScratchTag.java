@@ -29,7 +29,6 @@ import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import org.oscarehr.util.MiscUtils;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 
 public class ScratchTag extends TagSupport {
 
@@ -48,9 +47,10 @@ public class ScratchTag extends TagSupport {
     public int doStartTag() throws JspException    {
 
     	if(providerNo!=null){
-       	    com.quatro.service.ScratchPadManager spm = (com.quatro.service.ScratchPadManager) WebApplicationContextUtils.getWebApplicationContext(
- 	       		pageContext.getServletContext()).getBean("scratchPadManager");
- 		    scratchFilled= spm.isScratchFilled(providerNo);
+    		//isScratchFilled is inefficient, removed until a more efficient method is available. by default show the filled graphic
+       	    //com.quatro.service.ScratchPadManager spm = (com.quatro.service.ScratchPadManager) WebApplicationContextUtils.getWebApplicationContext(
+ 	       	//	pageContext.getServletContext()).getBean("scratchPadManager");
+ 		    scratchFilled= true;//spm.isScratchFilled(providerNo);
     	}
         
         try        {
