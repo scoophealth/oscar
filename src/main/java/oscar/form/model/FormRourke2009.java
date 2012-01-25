@@ -48,8 +48,8 @@ import org.oscarehr.common.model.AbstractModel;
 public class FormRourke2009 extends AbstractModel<Integer> implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
-	private int c_APGAR1min;
-	private int c_APGAR5min;
+	private Integer c_APGAR1min;
+	private Integer c_APGAR5min;
 	private Date c_birthDate;
 	private String c_birthRemarks;
 	private String c_birthWeight;
@@ -1292,20 +1292,20 @@ public class FormRourke2009 extends AbstractModel<Integer> implements Serializab
 	}
 
 
-	public int getC_APGAR1min() {
+	public Integer getC_APGAR1min() {
 		return this.c_APGAR1min;
 	}
 
-	public void setC_APGAR1min(int c_APGAR1min) {
+	public void setC_APGAR1min(Integer c_APGAR1min) {
 		this.c_APGAR1min = c_APGAR1min;
 	}
 
 
-	public int getC_APGAR5min() {
+	public Integer getC_APGAR5min() {
 		return this.c_APGAR5min;
 	}
 
-	public void setC_APGAR5min(int c_APGAR5min) {
+	public void setC_APGAR5min(Integer c_APGAR5min) {
 		this.c_APGAR5min = c_APGAR5min;
 	}
 
