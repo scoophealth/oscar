@@ -12,9 +12,9 @@
     var requireObsDate = true;
     var makeIssue;
    	var defaultDiv;
-   	var changeIssueFunc; 
+   	var changeIssueFunc;
    	var addIssueFunc;
-   	
+
        var X       = 10;
     var small   = 60;
     var normal  = 166;
@@ -70,7 +70,7 @@
             }
             return str;
         }
-		
+
         function measurementLoaded(name) {
             measurementWindows.push(openWindows[name]);
         }
@@ -221,7 +221,7 @@ function setupNotes(){
 
     Rounded("div.noteRounded","all","transparent","#CCCCCC","big border #000000");
 
-    //need to set focus after rounded is called    
+    //need to set focus after rounded is called
     adjustCaseNote();
     setCaretPosition($(caseNote), $(caseNote).value.length);
 
@@ -256,7 +256,7 @@ function popperup(vheight,vwidth,varpage,pageName) { //open a new popup window
      		var page = varpage;
      		windowprops = "height="+vheight+",width="+vwidth+",status=yes,location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=100,left=100";
      		var popup=window.open(varpage, pageName, windowprops);
-     		popup.pastewin = opener;     
+     		popup.pastewin = opener;
      		popup.focus();
 }
 
@@ -265,31 +265,31 @@ function viewFullChart(displayFullChart) {
 
 	var url = ctx + "/CaseManagementEntry.do";
 	var params = assembleMainChartParams(displayFullChart);
-	
+
 	if( displayFullChart ) {
-		fullChart = "true";	
+		fullChart = "true";
 	}
 	else {
 		fullChart = "false";
-	} 
+	}
 
-	$("notCPP").update("Loading...");	
+	$("notCPP").update("Loading...");
 	var objAjax = new Ajax.Request (
                             url,
                             {
                                 method: 'post',
                                 postBody: params,
                                 evalScripts: true,
-                                onSuccess: function(request) {                                  				                                              
+                                onSuccess: function(request) {
                                                 $("notCPP").update(request.responseText);
 												$("notCPP").style.height = "50%";
 												if( displayFullChart ) {
 													$("quickChart").innerHTML = quickChartMsg;
 													$("quickChart").onclick = function() {return viewFullChart(false);}
 													scrollDownInnerBar();
-												
+
 												}
-												else {													
+												else {
 													$("quickChart").innerHTML = fullChartMsg;
 													$("quickChart").onclick = function() {return viewFullChart(true);}
 													scrollDownInnerBar();
@@ -300,7 +300,7 @@ function viewFullChart(displayFullChart) {
                                             }
                             }
 
-                      );        		
+                      );
 	return false;
 }
 /*
@@ -546,14 +546,14 @@ function showEdit(e,title, noteId, editors, date, revision, note, url, container
     var limit = containerDiv + "threshold";
     var editElem = "showEditNote";
     var pgHeight = pageHeight();
-    
+
     var coords = null;
     if(document.getElementById("measurements_div") == null) {
     	 coords = Position.page($("topContent"));
-    } else {   		
+    } else {
    		coords = Position.positionedOffset($("cppBoxes"));
-    }  
-     
+    }
+
     var top = coords[1];
     var right = Math.round(coords[0]/0.66);
     var height = $("showEditNote").getHeight();
@@ -630,7 +630,7 @@ function showEdit(e,title, noteId, editors, date, revision, note, url, container
 
     //Set note position order
     var elementNum = containerDiv + "num";
-    var numNotes = $F(elementNum);   
+    var numNotes = $F(elementNum);
     var positionElement = containerDiv + noteId;
     var position;
     if( noteId == "" ) {
@@ -744,7 +744,7 @@ exKeys[10] = "Problem Description";
 
 function prepareExtraFields(cpp,exts) {
 	//commented out..this causes a problem in Firefox
-	//console.log("prepare Extra Fields"); 
+	//console.log("prepare Extra Fields");
     var rowIDs = new Array(10);
     for (var i=2; i<exFields.length; i++) {
 	rowIDs[i] = "Item"+exFields[i];
@@ -762,7 +762,7 @@ function prepareExtraFields(cpp,exts) {
     var extsArr = exts.split(";");
     for (var i=0; i<extsArr.length; i+=2) {
     	for (var j=0; j<exFields.length; j++) {
-			if (extsArr[i]==exKeys[j]) {	    		
+			if (extsArr[i]==exKeys[j]) {
 				$(exFields[j]).value = extsArr[i+1];
 				continue;
 	    	}
@@ -801,7 +801,7 @@ function updateCPPNote() {
         $("issueChange").value = true;
    }
 
-   var params = $("frmIssueNotes").serialize();   
+   var params = $("frmIssueNotes").serialize();
    var sigId = "sig" + caseNote.substr(13);
    var objAjax = new Ajax.Request (
                           url,
@@ -811,7 +811,7 @@ function updateCPPNote() {
                                 postBody: params,
                                 onSuccess: function(request) {
                                                 if( request.responseText.length > 0 ) {
-                                                    $(div).update(request.responseText);                                                    
+                                                    $(div).update(request.responseText);
 												}
                                                  if( $("issueChange").value == "true" ) {
                                                  	  ajaxUpdateIssues("edit",sigId);
@@ -1022,7 +1022,7 @@ function loadDiv(div,url,limit) {
     }
 
     function setCaretPosition(inpu, pos){
-	if(inpu.setSelectionRange){		
+	if(inpu.setSelectionRange){
 		inpu.focus();
 		inpu.setSelectionRange(pos,pos);
 		if(inpu.value.trim().length == 0) {
@@ -1046,7 +1046,7 @@ function loadDiv(div,url,limit) {
 
                 inpu.dispatchEvent(ev); // causes the scrolling
 
-	}else if (inpu.createTextRange) {		
+	}else if (inpu.createTextRange) {
 		var range = inpu.createTextRange();
 		range.collapse(true);
 		range.moveEnd('character', pos);
@@ -1387,7 +1387,7 @@ function completeChangeToView(note,newId) {
 
 }
 
-function minView(e) {	
+function minView(e) {
     var divHeight = "1.1em";
     var txt = Event.element(e).parentNode.id;
     var nId = txt.substr(1);
@@ -1396,7 +1396,7 @@ function minView(e) {
     var content = "c" + nId;
     var date = "d" + nId;
     var editAnchor = "edit" + nId;
-    
+
     Event.stop(e);
     var imgs = $(txt).getElementsBySelector("img");
     for( i = 0; i < imgs.length; ++i ) {
@@ -1413,10 +1413,10 @@ function minView(e) {
     //$(txt).style.height = divHeight;
 
     var txtId = "txt" + nId;
-    var line = $(txtId).innerHTML.substr(0,100);    
-    line = line.replace(/<br>/g," ");    
+    var line = $(txtId).innerHTML.substr(0,100);
+    line = line.replace(/<br>/g," ");
     var dateValue = $(dateId) != null ? $(dateId).innerHTML : "";
-    line = "<div id='" + date + "' style='float:left; font-size:1.0em; width:20%;'><b>" + dateValue + "<\/b><\/div><div id='" + content + "' style='float:left; font-size:1.0em; width:60%;'>" + line + "<\/div>";
+    line = "<div id='" + date + "' style='float:left; font-size:1.0em; width:10%;'><b>" + dateValue + "<\/b><\/div><div id='" + content + "' style='float:left; font-size:1.0em; width:70%;'>" + line + "<\/div>";
     $("txt"+nId).hide();
     new Insertion.Top(txt,line);
 
@@ -1446,14 +1446,14 @@ var idHeight;
 var curElemHeight;
 var shrinkTimer;
 function shrink(id, toScale) {
-	idHeight = $(id).getHeight();	
+	idHeight = $(id).getHeight();
     curElemHeight = idHeight;
-    var delta = Math.ceil(curElemHeight/5);    
+    var delta = Math.ceil(curElemHeight/5);
     shrinkTimer = self.setInterval("shrinkImpl('"+id+"', " + toScale+", "+delta+")",1);
 }
 function shrinkImpl(id, minHeight, delta) {
-    curElemHeight -= delta;        
-    if( curElemHeight <= minHeight ) {    	
+    curElemHeight -= delta;
+    if( curElemHeight <= minHeight ) {
         $(id).setStyle({height:minHeight + 'px'});
         window.clearInterval(shrinkTimer);
         return;
@@ -1861,7 +1861,7 @@ function issueIsAssigned() {
 
 var filterError;
 
-function filter(reset) {	
+function filter(reset) {
     var url = ctx + "/CaseManagementEntry.do";
     var params = "ajaxview=ajaxView&fullChart=" + fullChart;
     document.forms["caseManagementEntryForm"].method.value = "edit";
@@ -1875,16 +1875,16 @@ function filter(reset) {
 
     var caseMgtEntryfrm = document.forms["caseManagementEntryForm"];
     var caseMgtViewfrm = document.forms["caseManagementViewForm"];
-    params +=  "&" + Form.serialize(caseMgtEntryfrm);    
+    params +=  "&" + Form.serialize(caseMgtEntryfrm);
     params += "&" + Form.serialize(caseMgtViewfrm);
-    
+
     var objAjax = new Ajax.Request (
                     url,
                     {
                         method: 'post',
                         postBody: params,
                         evalScripts: true,
-                        onSuccess: function(request) {                                                
+                        onSuccess: function(request) {
                                                 $("notCPP").update(request.responseText);
 												$("notCPP").style.height = "50%";
                                            },
@@ -1893,7 +1893,7 @@ function filter(reset) {
                                             }
                             }
 
-                      );        		
+                      );
 	return false;
 
 }
@@ -1963,10 +1963,10 @@ function validDate() {
     date.setYear(year);
     date.setHours(timeArr[0]);
     date.setMinutes(timeArr[1]);
-	
+
     var today = new Date(strToday);
     today.setHours(23);
-    today.setMinutes(59);    
+    today.setMinutes(59);
 
     if( date <= today )
         return true;
@@ -1986,7 +1986,7 @@ function ajaxSaveNote(div,noteId,noteTxt) {
         return false;
     }
 
-	
+
     if( caisiEnabled ) {
         if(requireIssue && !issueIsAssigned() ) {
             alert(assignIssueError);
@@ -2002,7 +2002,7 @@ function ajaxSaveNote(div,noteId,noteTxt) {
         	alert(assignEncTypeError);
         	return false;
         }
-        if(document.getElementById("hourOfEncTransportationTime") != null) {    
+        if(document.getElementById("hourOfEncTransportationTime") != null) {
 	        if(isNaN(document.getElementById("hourOfEncTransportationTime").value) ||
 	         isNaN(document.getElementById("minuteOfEncTransportationTime").value) ||
 	         isNaN(document.getElementById("hourOfEncounterTime").value) ||
@@ -2066,8 +2066,8 @@ function saveNoteAjax(method, chain) {
         alert(pastObservationDateError);
         return false;
     }
-	
-    if( caisiEnabled ) {    
+
+    if( caisiEnabled ) {
         if( requireIssue && !issueIsAssigned() ) {
             alert(assignIssueError);
             return false;
@@ -2082,7 +2082,7 @@ function saveNoteAjax(method, chain) {
         	alert(assignEncTypeError);
         	return false;
         }
- 		if(document.getElementById("hourOfEncTransportationTime") != null) {          
+ 		if(document.getElementById("hourOfEncTransportationTime") != null) {
 	        if(isNaN(document.getElementById("hourOfEncTransportationTime").value) ||
 	         isNaN(document.getElementById("minuteOfEncTransportationTime").value) ||
 	         isNaN(document.getElementById("hourOfEncounterTime").value) ||
@@ -2091,38 +2091,38 @@ function saveNoteAjax(method, chain) {
 	        	return false;
 	        }
 	    }
-        
-        
+
+
     }
     document.forms["caseManagementEntryForm"].method.value = method;
     document.forms["caseManagementEntryForm"].ajax.value = false;
     document.forms["caseManagementEntryForm"].chain.value = chain;
-    document.forms["caseManagementEntryForm"].includeIssue.value = "off";    
+    document.forms["caseManagementEntryForm"].includeIssue.value = "off";
 
     var caseMgtEntryfrm = document.forms["caseManagementEntryForm"];
     tmpSaveNeeded = false;
 
 	var params = Form.serialize(caseMgtEntryfrm);
     params += "&ajaxview=ajaxView&fullChart=" + fullChart;
-    
+
     var url = ctx + "/CaseManagementEntry.do";
-    
-    $("notCPP").update("Loading...");	
+
+    $("notCPP").update("Loading...");
 	var objAjax = new Ajax.Request (
                             url,
                             {
                                 method: 'post',
                                 postBody: params,
                                 evalScripts: true,
-                                onSuccess: function(request) {                                  				                                              
+                                onSuccess: function(request) {
                                                 $("notCPP").update(request.responseText);
 												$("notCPP").style.height = "50%";
 												if( fullChart == "true" ) {
 													$("quickChart").innerHTML = quickChartMsg;
 													$("quickChart").onclick = function() {return viewFullChart(false);}
-												
+
 												}
-												else {													
+												else {
 													$("quickChart").innerHTML = fullChartMsg;
 													$("quickChart").onclick = function() {return viewFullChart(true);}
 												}
@@ -2138,14 +2138,14 @@ function saveNoteAjax(method, chain) {
 		var func = jQuery(this).attr('note_addon');
 		eval(func + "()");
 	});
-	
-	
+
+
 	jQuery("[submit_addon]").each(function()
-    		   {    		   	
+    		   {
     		     jQuery("#"+jQuery(this).attr('submit_addon')).click();
     		   }
     		 );
-    		 
+
     return false;
 }
 
@@ -2164,8 +2164,8 @@ function savePage(method, chain) {
         alert(pastObservationDateError);
         return false;
     }
-	
-    if( caisiEnabled ) {    
+
+    if( caisiEnabled ) {
         if( requireIssue && !issueIsAssigned() ) {
             alert(assignIssueError);
             return false;
@@ -2180,7 +2180,7 @@ function savePage(method, chain) {
         	alert(assignEncTypeError);
         	return false;
         }
- 		if(document.getElementById("hourOfEncTransportationTime") != null) {          
+ 		if(document.getElementById("hourOfEncTransportationTime") != null) {
 	        if(isNaN(document.getElementById("hourOfEncTransportationTime").value) ||
 	         isNaN(document.getElementById("minuteOfEncTransportationTime").value) ||
 	         isNaN(document.getElementById("hourOfEncounterTime").value) ||
@@ -2189,8 +2189,8 @@ function savePage(method, chain) {
 	        	return false;
 	        }
 	    }
-        
-        
+
+
     }
     document.forms["caseManagementEntryForm"].method.value = method;
     document.forms["caseManagementEntryForm"].ajax.value = false;
@@ -2208,15 +2208,15 @@ function savePage(method, chain) {
 		var func = jQuery(this).attr('note_addon');
 		eval(func + "()");
 	});
-	
-	
+
+
 	jQuery("[submit_addon]").each(function()
-    		   {    		   	
+    		   {
     		     jQuery("#"+jQuery(this).attr('submit_addon')).click();
     		   }
     		 );
-       
-	
+
+
     /*var frm = document.forms["caseManagementViewForm"];
     var url = ctx + "/CaseManagementView.do";
     var objAjax = new Ajax.Request (
@@ -2696,7 +2696,7 @@ function autoCompleteShowMenuCPP(element, update) {
         var selected = ctx + "/oscarEncounter/graphics/printerGreen.png";
         var unselected = ctx + "/oscarEncounter/graphics/printer.png";
 
-		
+
         if( $F(item) == "true" ) {
             $(img).src = unselected;
             $(item).value = "false";
@@ -2856,15 +2856,15 @@ function autoCompleteShowMenuCPP(element, update) {
         var pos;
         var imgId;
 
-        for( idx = 0; idx <= numNotes; ++idx ) {    
-        	if($("nc"+idx) == null) continue;    
+        for( idx = 0; idx <= numNotes; ++idx ) {
+        	if($("nc"+idx) == null) continue;
             notesDiv = $("nc" + idx).down('div');
             noteId = notesDiv.id.substr(1);  //get note id
             if(noteId==0) continue;
-            
+
             imgId = "print" + noteId;
             if( $(imgId) == null ) continue;
-            
+
             if( $("obs"+noteId) != null )
                 noteDate = $("obs"+noteId).innerHTML;
             else if( $("observationDate") != null )
@@ -2922,7 +2922,7 @@ function autoCompleteShowMenuCPP(element, update) {
         var frm = document.forms["caseManagementEntryForm"];
 
         frm.method.value = "print";
-        
+
         frm.pStartDate.value = $F("printStartDate");
         frm.pEndDate.value = $F("printEndDate");
         frm.submit();
@@ -3027,7 +3027,7 @@ function autoCompleteShowMenuCPP(element, update) {
             noteId = notesDiv.id.substr(1);  //get note id
           //if print img present, add note to print queue if not already there
             if( $("print"+noteId) != null ) {
-                pos = noteIsQeued(noteId);  
+                pos = noteIsQeued(noteId);
                 if( pos == -1 )
                     addPrintQueue(noteId);
             }
@@ -3044,12 +3044,12 @@ function autoCompleteShowMenuCPP(element, update) {
             Event.stop(e);
         }
     }
-    
+
     function copyCppToCurrentNote() {
     	var currentNoteId = jQuery("input[name='noteId']").val();
     	var currentNoteText = jQuery("#caseNote_note"+currentNoteId).val();
     	currentNoteText += "\n";
-    	currentNoteText += jQuery("#noteEditTxt").val();    	
+    	currentNoteText += jQuery("#noteEditTxt").val();
     	jQuery("#caseNote_note"+currentNoteId).val(currentNoteText);
     }
-    
+
