@@ -28,10 +28,10 @@ import oscar.oscarEncounter.oscarMeasurements.model.Measurements;
 
 public class MeasurementDataAction extends DispatchAction {
 
-	private static Logger logger = MiscUtils.getLogger();	
+	private static Logger logger = MiscUtils.getLogger();
 	private static MeasurementsDao measurementsDao = (MeasurementsDao) SpringUtils.getBean("measurementsDao");
 	OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
-	
+
 	public ActionForward getLatestValues(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String demographicNo = request.getParameter("demographicNo");
 		String typeStr = request.getParameter("types");
@@ -40,19 +40,21 @@ public class MeasurementDataAction extends DispatchAction {
 		if(appointmentNo != null && appointmentNo.length()>0) {
 			apptNo = Integer.parseInt(appointmentNo);
 		}
-		
+
 		int prevApptNo = 0;
 		if(apptNo > 0) {
 			List<Appointment> appts = appointmentDao.getAppointmentHistory(Integer.parseInt(demographicNo));
-			for(int x=0;x<appts.size();x++) {
-				Appointment appt = appts.get(x);
-				if(appt.getId().intValue() == apptNo && x <= appts.size()-1) {
-					prevApptNo = appts.get(x+1).getId();
+			if(appts.size() > 1) {
+				for(int x=0;x<appts.size();x++) {
+					Appointment appt = appts.get(x);
+					if(appt.getId().intValue() == apptNo && x <= appts.size()-1) {
+						prevApptNo = appts.get(x+1).getId();
+					}
 				}
 			}
 		}
-		
-		
+
+
 		String fresh =request.getParameter("fresh");
 		HashMap<String,Boolean> freshMap = new HashMap<String,Boolean>();
 		if(fresh!=null) {
@@ -65,12 +67,12 @@ public class MeasurementDataAction extends DispatchAction {
 			//error
 		}
 		String[] types = typeStr.split(",");
-		
+
 		Map<String,Measurements> measurementMap = measurementsDao.getMeasurements(demographicNo,types);
-		
+
 		Date nctTs = null;
 		Date applanationTs=null;
-		
+
 		StringBuilder script = new StringBuilder();
 		for(String key:measurementMap.keySet()) {
 			Measurements value = measurementMap.get(key);
@@ -92,36 +94,36 @@ public class MeasurementDataAction extends DispatchAction {
 						applanationTs = value.getDateObserved();
 					}
 				}
-				if(key.equals("os_iop_nct") || key.equals("od_iop_nct")) { 
+				if(key.equals("os_iop_nct") || key.equals("od_iop_nct")) {
 					if(nctTs == null) {
 						nctTs = value.getDateObserved();
 					} else if(value.getDateObserved().after(nctTs)) {
 						nctTs = value.getDateObserved();
-					}					
+					}
 				}
-			}			
+			}
 		}
-		
+
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		if(applanationTs!=null)
 			script.append("jQuery(\"#applanation_ts\").html('"+sdf.format(applanationTs)+"');\n");
 		if(nctTs != null)
 			script.append("jQuery(\"#nct_ts\").html('"+sdf.format(nctTs)+"');\n");
-		
+
 		response.getWriter().print(script);
 		return null;
 	}
-	
-	
+
+
 	public ActionForward saveValues(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String demographicNo = request.getParameter("demographicNo");
 		String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
 		String strAppointmentNo = request.getParameter("appointmentNo");
 		int appointmentNo = Integer.parseInt(strAppointmentNo);
-		
+
 		Enumeration e = request.getParameterNames();
 		Map<String,String> measurements = new HashMap<String,String>();
-		
+
 		while(e.hasMoreElements()) {
 			String key = (String)e.nextElement();
 			String values[] = request.getParameterValues(key);
@@ -142,8 +144,8 @@ public class MeasurementDataAction extends DispatchAction {
 				measurementsDao.addMeasurements(m);
 			}
 		}
-		
-		
+
+
 		return null;
 	}
 }

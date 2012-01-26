@@ -43,7 +43,7 @@ try
 	Facility facility = org.oscarehr.util.LoggedInInfo.loggedInInfo.get().currentFacility;
 	ProfessionalSpecialistDao professionalSpecialistDao=(ProfessionalSpecialistDao)SpringUtils.getBean("professionalSpecialistDao");
     CaseManagementManager caseManagementManager=(CaseManagementManager)SpringUtils.getBean("caseManagementManager");
-      
+
 	String demographicNo = request.getParameter("demographicNo");
 	oscar.oscarEncounter.pageUtil.EctSessionBean bean = null;
 	String strBeanName = "casemgmt_oscar_bean" + demographicNo;
@@ -108,13 +108,12 @@ try
     %>
     	requireObsDate = false;
     <% } %>
-	
+
     <c:if test="${sessionScope.passwordEnabled=='true'}">
 
         passwordEnabled = true;
     </c:if>
 
-    var savedNoteId=0;
     strToday = "<%=strToday%>";
 </script>
 
@@ -148,7 +147,7 @@ try
 				</nested:iterate>
 			</div>
 		</nested:notEmpty>
-		
+
 		<nested:notEmpty name="caseManagementViewForm" property="filter_roles">
 		<div style="float: left; margin-left: 10px; margin-top: 0px;"><u><bean:message key="oscarEncounter.roles.title" />:</u><br>
 			<nested:iterate type="String" id="filter_role" property="filter_roles">
@@ -164,9 +163,9 @@ try
 					</c:otherwise>
 				</c:choose>
 			</nested:iterate>
-		</div>		
-		</nested:notEmpty> 
-		
+		</div>
+		</nested:notEmpty>
+
 		<nested:notEmpty name="caseManagementViewForm" property="note_sort">
 			<div style="float: left; margin-left: 10px; margin-top: 0px;"><u><bean:message key="oscarEncounter.sort.title" />:</u><br>
 			<nested:write property="note_sort" /><br>
@@ -188,8 +187,8 @@ try
 					</c:otherwise>
 				</c:choose>
 			</nested:iterate>
-		</div>		
-		</nested:notEmpty> 
+		</div>
+		</nested:notEmpty>
 		<div id="filter" style="display:none;background-color:#ddddff;padding:8px">
 			<input type="button" value="<bean:message key="oscarEncounter.showView.title" />" onclick="return filter(false);" />
 			<input type="button" value="<bean:message key="oscarEncounter.resetFilter.title" />" onclick="return filter(true);" />
@@ -217,7 +216,7 @@ try
 								<%
 									@SuppressWarnings("unchecked")
 										Set<Provider> providers = (Set<Provider>)request.getAttribute("providers");
-						
+
 										String providerNo;
 										Provider prov;
 										Iterator<Provider> iter = providers.iterator();
@@ -281,7 +280,7 @@ try
 										List issues = (List)request.getAttribute("cme_issues");
 										for (int num = 0; num < issues.size(); ++num)
 										{
-											CheckBoxBean issue_checkBoxBean = (CheckBoxBean)issues.get(num);											
+											CheckBoxBean issue_checkBoxBean = (CheckBoxBean)issues.get(num);
 								%>
 								<li><html:multibox property="issues" value="<%=String.valueOf(issue_checkBoxBean.getIssue().getId())%>" onclick="filterCheckBox(this)"></html:multibox><%=issue_checkBoxBean.getIssueDisplay().getResolved().equals("resolved")?"* ":""%> <%=issue_checkBoxBean.getIssueDisplay().getDescription()%></li>
 								<%
@@ -293,16 +292,16 @@ try
 				</tr>
 			</table>
 		</div>
-	
+
 		<div style="float: left; clear: both; margin-top: 5px; margin-bottom: 5px; width: 100%; text-align: center;">
 			<div style="display:inline-block">
-				<img alt="<bean:message key="oscarEncounter.msgFind"/>" src="<c:out value="${ctx}/oscarEncounter/graphics/edit-find.png"/>"> 
+				<img alt="<bean:message key="oscarEncounter.msgFind"/>" src="<c:out value="${ctx}/oscarEncounter/graphics/edit-find.png"/>">
 				<input id="enTemplate" tabindex="6" size="16" type="text" value="" onkeypress="return grabEnterGetTemplate(event)">
-				
+
 				<div class="enTemplate_name_auto_complete" id="enTemplate_list" style="z-index: 1; display: none">&nbsp;</div>
-				
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-				
+
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 				<select id="channel">
 					<option value="http://resource.oscarmcmaster.org/oscarResource/OSCAR_search/OSCAR_search_results?title="><bean:message key="oscarEncounter.Index.oscarSearch" /></option>
 					<option value="http://www.google.com/search?q="><bean:message key="global.google" /></option>
@@ -311,8 +310,8 @@ try
                     <option value="tripsearch.jsp?searchterm=">Trip Database</option>
                     <option value="macplussearch.jsp?searchterm=">MacPlus Database</option>
     	        </select>
-				
-				<input type="text" id="keyword" name="keyword" value="" onkeypress="return grabEnter('searchButton',event)"> 
+
+				<input type="text" id="keyword" name="keyword" value="" onkeypress="return grabEnter('searchButton',event)">
 				<input type="button" id="searchButton" name="button" value="<bean:message key="oscarEncounter.Index.btnSearch"/>" onClick="popupPage(600,800,'<bean:message key="oscarEncounter.Index.popupSearchPageWindow"/>',$('channel').options[$('channel').selectedIndex].value+urlencode($F('keyword')) ); return false;">
 			</div>
 			&nbsp;&nbsp;
@@ -325,7 +324,7 @@ try
 				<security:oscarSec roleName="<%=roleName%>" objectName="_newCasemgmt.calculators" rights="r" reverse="false">
 					<%@include file="calculatorsSelectList.jspf" %>
 				</security:oscarSec>
-				<security:oscarSec roleName="<%=roleName%>" objectName="_newCasemgmt.templates" rights="r" reverse="false"> 
+				<security:oscarSec roleName="<%=roleName%>" objectName="_newCasemgmt.templates" rights="r" reverse="false">
 					<select>
 						<option><bean:message key="oscarEncounter.Header.Templates"/></option>
 						<option>------------------</option>
@@ -334,8 +333,8 @@ try
 						<%
 							EncounterTemplateDao encounterTemplateDao=(EncounterTemplateDao)SpringUtils.getBean("encounterTemplateDao");
 							List<EncounterTemplate> allTemplates=encounterTemplateDao.findAll();
-				  
-							for (EncounterTemplate encounterTemplate : allTemplates) 
+
+							for (EncounterTemplate encounterTemplate : allTemplates)
 							{
 								String templateName=StringEscapeUtils.escapeHtml(encounterTemplate.getEncounterTemplateName());
 								%>
@@ -416,7 +415,7 @@ try
 	<input type="hidden" name="pStartDate" id="pStartDate" value="">
 	<input type="hidden" name="pEndDate" id="pEndDate" value="">
 	<input type="hidden" id="annotation_attribname" name="annotation_attribname" value="">
-	
+
 
 	<div id="mainContent" style="background-color: #FFFFFF; width: 100%; margin-right: -2px; display: inline; float: left;">
 	<div id="issueList" style="background-color: #FFFFFF; height: 440px; width: 350px; position: absolute; z-index: 1; display: none; overflow: auto;">
@@ -431,11 +430,11 @@ try
 	<div id="encMainDiv" style="width: 99%; border-top: thin groove #000000; border-right: thin groove #000000; border-left: thin groove #000000; background-color: #FFFFFF; height: 410px; overflow: auto; margin-left: 2px;">
 	<div class="Header" style="background-color:#ddddff;padding:8px; text-align:center;">
 	<%
-	String strFullChart = request.getParameter("fullChart"); 
-	boolean quickChart =  strFullChart == null || strFullChart.equals("") || strFullChart.equalsIgnoreCase("false");	
+	String strFullChart = request.getParameter("fullChart");
+	boolean quickChart =  strFullChart == null || strFullChart.equals("") || strFullChart.equalsIgnoreCase("false");
 	if( quickChart ) {
-	%>	
-		<a href="#" onclick="return viewFullChart(true);"><bean:message key="oscarEncounter.fullChart.msg"/></a>	
+	%>
+		<a href="#" onclick="return viewFullChart(true);"><bean:message key="oscarEncounter.fullChart.msg"/></a>
 	<%
 	}
 	else {
@@ -565,7 +564,7 @@ try
 					dispDocNo = doc.getDocId();
 					dispFilename = doc.getFileName();
 					Character status = doc.getStatus();
-	
+
 					if (status == 'A')
 					{
 						dispStatus = "active";
@@ -591,9 +590,9 @@ try
 			boolean editWarn = !note.isSigned() && !note.getProviderNo().equals(provNo);
 			boolean hideCppNotes = OscarProperties.getInstance().isPropertyActive("encounter.hide_cpp_notes");
 			boolean hideDocumentNotes = OscarProperties.getInstance().isPropertyActive("encounter.hide_document_notes");
-			boolean hideEformNotes = OscarProperties.getInstance().isPropertyActive("encounter.hide_eform_notes");			
+			boolean hideEformNotes = OscarProperties.getInstance().isPropertyActive("encounter.hide_eform_notes");
 			//boolean hideMetaData = OscarProperties.getInstance().isPropertyActive("encounter.hide_metadata");
-			
+
 			String noteDisplay = "block";
 			if(note.isCpp() && hideCppNotes) {
 				noteDisplay="none";
@@ -604,33 +603,33 @@ try
 			if(note.isEformData() && hideEformNotes) {
 				noteDisplay="none";
 			}
-			
-			//String metaDisplay = (hideMetaData)?"none":"block";			
-			
+
+			//String metaDisplay = (hideMetaData)?"none":"block";
+
 	%>
 		<div id="nc<%=idx+1%>" style="display:<%=noteDisplay %>" class="note<%=note.isDocument()||note.isCpp()||note.isEformData()||note.isEncounterForm()?"":" noteRounded"%>">
-			<input type="hidden" id="signed<%=note.getNoteId()%>" value="<%=note.isSigned()%>"> 
-			<input type="hidden" id="full<%=note.getNoteId()%>" value="<%=fulltxt || (note.getNoteId() !=null && note.getNoteId().equals(savedId))%>"> 
+			<input type="hidden" id="signed<%=note.getNoteId()%>" value="<%=note.isSigned()%>">
+			<input type="hidden" id="full<%=note.getNoteId()%>" value="<%=fulltxt || (note.getNoteId() !=null && note.getNoteId().equals(savedId))%>">
 			<input type="hidden" id="bgColour<%=note.getNoteId()%>" value="<%=bgColour%>">
-			<input type="hidden" id="editWarn<%=note.getNoteId()%>" value="<%=editWarn%>">			
+			<input type="hidden" id="editWarn<%=note.getNoteId()%>" value="<%=editWarn%>">
 
-	  		<div id="n<%=note.getNoteId()%>">	  		
+	  		<div id="n<%=note.getNoteId()%>">
 			<%
-				//display last saved note for editing				
+				//display last saved note for editing
 				if (note.getNoteId()!=null && !"".equals(note.getNoteId()) && note.getNoteId().intValue() == savedId )
 				{
 					found = true;
 					%>
-						<script>						
-							savedNoteId=<%=note.getNoteId()%>;							
-						</script> 
+						<script>
+							savedNoteId=<%=note.getNoteId()%>;
+						</script>
 						<img title="<bean:message key="oscarEncounter.print.title"/>" id='print<%=note.getNoteId()%>' alt="<bean:message key="oscarEncounter.togglePrintNote.title"/>" onclick="togglePrint(<%=note.getNoteId()%>, event)" style='float: right; margin-right: 5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png'>
 						<textarea tabindex="7" cols="84" rows="10" class="txtArea" wrap="hard" style="line-height: 1.1em;" name="caseNote_note" id="caseNote_note<%=savedId%>"><nested:write property="caseNote.note" /></textarea>
 						<div class="sig" style="display:inline;<%=bgColour%>" id="sig<%=note.getNoteId()%>"><%@ include file="noteIssueList.jsp"%></div>
-	
+
 						<c:if test="${sessionScope.passwordEnabled=='true'}">
 							<p style='background-color: #CCCCFF; display: none; margin: 0px;' id='notePasswd'>Password:&nbsp;<html:password property="caseNote.password" /></p>
-						</c:if> 
+						</c:if>
 					<%
 		 		}
 				else //else display contents of note for viewing
@@ -654,56 +653,56 @@ try
 							}
 							else if (fulltxt)
 							{
-							%> 
+							%>
 	 							<img title="<bean:message key="oscarEncounter.MinDisplay.title"/>" id='quitImg<%=note.getNoteId()%>' alt="<bean:message key="oscarEncounter.MinDisplay.title"/>" onclick="minView(event)"
-								style='float: right; margin-right: 5px; margin-bottom: 3px; margin-top: 2px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif'> 
+								style='float: right; margin-right: 5px; margin-bottom: 3px; margin-top: 2px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif'>
 							<%
 		 					}
 							else
 							{
-							%> 
-								<img title="<bean:message key="oscarEncounter.MaxDisplay.title"/>" id='quitImg<%=note.getNoteId()%>' alt="Maximize Display" onclick="fullView(event)" style='float: right; margin-right: 5px; margin-top: 2px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_down.gif'> 
+							%>
+								<img title="<bean:message key="oscarEncounter.MaxDisplay.title"/>" id='quitImg<%=note.getNoteId()%>' alt="Maximize Display" onclick="fullView(event)" style='float: right; margin-right: 5px; margin-top: 2px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_down.gif'>
 							<%
 							}
 						}
-					
+
 						if (note.getRemoteFacilityId()!=null) // if it's a remote note, say where if came from on the top of the note
 						{
-					 	%> 
+					 	%>
 						 	<div style="background-color:#ffcccc; text-align:right"><bean:message key="oscarEncounter.noteFrom.label" />&nbsp;<%=note.getLocation()%>,<%=note.getProviderName()%></div>
 						<%
 						}
-					
+
 						if (note.isGroupNote()) // if it's a remote note, say where if came from on the top of the note
 						{
-					 	%> 
+					 	%>
 						 	<div style="background-color:#33FFCC; text-align:right">Group Note - Editable note in this <a target="_blank" href="<html:rewrite action="/PMmodule/ClientManager.do"/>?id=<%=note.getLocation() %>">client</a></div>
 						<%
 						}
-			
+
 						if (note.getRemoteFacilityId()==null && !note.isDocument() && !note.isCpp() && !note.isEformData() && !note.isEncounterForm()) // only allow printing for local notes and disallow for documents (was told they should open the document then print it that way)
 						{
-					 	%> 
-						 	<img title="<bean:message key="oscarEncounter.print.title"/>" id='print<%=note.getNoteId()%>' alt="<bean:message key="oscarEncounter.togglePrintNote.title"/>" onclick="togglePrint(<%=note.getNoteId()%>   , event)" style='float: right; margin-right: 5px; margin-top: 2px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png'> 
+					 	%>
+						 	<img title="<bean:message key="oscarEncounter.print.title"/>" id='print<%=note.getNoteId()%>' alt="<bean:message key="oscarEncounter.togglePrintNote.title"/>" onclick="togglePrint(<%=note.getNoteId()%>   , event)" style='float: right; margin-right: 5px; margin-top: 2px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png'>
 						<%
 						}
-				
+
 					 	if (!note.isDocument() && !note.isRxAnnotation())
 					 	{
 					 		// only allow editing for local notes
-					 		// also disallow editing of cpp's inline (can be edited in the cpp area) 
+					 		// also disallow editing of cpp's inline (can be edited in the cpp area)
 					 		if (note.getRemoteFacilityId()==null && !note.isCpp() && !note.isEformData() && !note.isEncounterForm())
 							{
-					 			if(!note.isReadOnly()) 
+					 			if(!note.isReadOnly())
 					 			{
 						 		%>
-							 		<a title="<bean:message key="oscarEncounter.edit.msgEdit"/>" id="edit<%=note.getNoteId()%>" 
+							 		<a title="<bean:message key="oscarEncounter.edit.msgEdit"/>" id="edit<%=note.getNoteId()%>"
 							 		href="#" onclick="<%=editWarn?"noPrivs(event)":"editNote(event)"%> ;return false;" style="float: right; margin-right: 5px; font-size: 8px;">
 							 		<bean:message key="oscarEncounter.edit.msgEdit" />
-							 		</a> 
+							 		</a>
 								<%
 								}
-			 			
+
 					 			if (professionalSpecialistDao.hasRemoteCapableProfessionalSpecialists())
 					 			{
 					 			%>
@@ -718,10 +717,10 @@ try
 	                        int hash = Math.abs(winName.hashCode());
 	                        //get drug from note id.
 	                        RxPrescriptionData.Prescription rx=note.getRxFromAnnotation(note.getNoteLink());
-	                                   
+
 	                        if (note.getRemoteFacilityId()==null) // only allow editing for local notes
 							{
-	                      		if(!note.isReadOnly()) 
+	                      		if(!note.isReadOnly())
 	                      		{
 								%>
 							 		<a title="<bean:message key="oscarEncounter.edit.msgEdit"/>" id="edit<%=note.getNoteId()%>"
@@ -731,7 +730,7 @@ try
 						 		<%
 								}
 	                   		}
-	                           
+
 		                    if(rx!=null)
 	       		            {
 	               		        String url="popupPage(700,800,'" + hash + "', '" + request.getContextPath() + "/oscarRx/StaticScript2.jsp?regionalIdentifier="+rx.getRegionalIdentifier()+"&cn="+response.encodeURL(rx.getCustomName())+"');";
@@ -741,23 +740,23 @@ try
 	                        }
 		                }
 						else if (note.isDocument() && !note.getProviderNo().equals("-1"))
-						{ 
+						{
 							//document annotation
 							String url;
-					
+
 							Enumeration em = request.getAttributeNames();
-					
+
 							String winName = "docs" + demographicNo;
 							int hash = Math.abs(winName.hashCode());
-					
+
 							url = "popupPage(700,800,'" + hash + "', '" + request.getContextPath() + "/dms/documentGetFile.jsp?document=" + StringEscapeUtils.escapeJavaScript(dispFilename) + "&type=" + dispStatus + "&doc_no=" + dispDocNo + "');";
 							url = url + "return false;";
-					
+
 							if (note.getRemoteFacilityId()==null) // only allow editing for local notes
 							{
-								if(!note.isReadOnly()) 
+								if(!note.isReadOnly())
 								{
-								%> 
+								%>
 							 		<a title="<bean:message key="oscarEncounter.edit.msgEdit"/>" id="edit<%=note.getNoteId()%>"
 							 		href="javascript:void(0);" onclick="<%=editWarn?"noPrivs(event)":"editNote(event)"%> ;return false;" style="float: right; margin-right: 5px; font-size: 8px;">
 							 		<bean:message key="oscarEncounter.edit.msgEdit" />
@@ -766,39 +765,39 @@ try
 								}
 							}
 			 				%>
-								<a class="links" title="<bean:message key="oscarEncounter.view.docView"/>" id="view<%=note.getNoteId()%>" href="#" onclick="<%=url%>" style="float: right; margin-right: 5px; font-size: 8px;"> <bean:message key="oscarEncounter.view" /> </a> 
+								<a class="links" title="<bean:message key="oscarEncounter.view.docView"/>" id="view<%=note.getNoteId()%>" href="#" onclick="<%=url%>" style="float: right; margin-right: 5px; font-size: 8px;"> <bean:message key="oscarEncounter.view" /> </a>
 							<%
 			 			}
 						else
 						{ //document note
 							String url;
-						
+
 							Enumeration em = request.getAttributeNames();
 							String winName = "docs" + demographicNo;
 							int hash = Math.abs(winName.hashCode());
-					
+
 							url = "popupPage(700,800,'" + hash + "', '" + request.getContextPath() + "/dms/documentGetFile.jsp?document=" + StringEscapeUtils.escapeJavaScript(dispFilename) + "&type=" + dispStatus + "&doc_no=" + dispDocNo + "');";
 							url = url + "return false;";
-						 	%> 
+						 	%>
 							 	<a class="links" title="<bean:message key="oscarEncounter.view.docView"/>" id="view<%=note.getNoteId()%>" href="javascript:void(0);" onclick="<%=url%>" style="float: right; margin-right: 5px; font-size: 8px;color:black">
-							 		<bean:message key="oscarEncounter.view" /> 
-								</a> 
+							 		<bean:message key="oscarEncounter.view" />
+								</a>
 							<%
 					 	}
-	
+
 					 	if (note.isEformData())
 						{
 							String winName = "eforms"+demographicNo;
 							int hash = Math.abs(winName.hashCode());
 							String url = "popupPage(700,800,'"+hash+"','"+request.getContextPath()+"/eform/efmshowform_data.jsp?appointment="+apptNo+"&fdid=";
-		
+
 							CaseManagementNoteLink noteLink = note.getNoteLink();
 							if (noteLink!=null) url += noteLink.getTableId();
 							else url+=note.getNoteId();
-							
+
 							url += "'); return false;";
 							%>
-								<a class="links" title="<bean:message key="oscarEncounter.view.eformView"/>" id="view<%=note.getNoteId()%>" href="#" onclick="<%=url%>" style="float: right; margin-right: 5px; font-size: 8px;"> <bean:message key="oscarEncounter.view" /> </a> 
+								<a class="links" title="<bean:message key="oscarEncounter.view.eformView"/>" id="view<%=note.getNoteId()%>" href="#" onclick="<%=url%>" style="float: right; margin-right: 5px; font-size: 8px;"> <bean:message key="oscarEncounter.view" /> </a>
 							<%
 						} else if (note.isEncounterForm())
 						{
@@ -806,9 +805,9 @@ try
 							int hash = Math.abs(winName.hashCode());
 							String url = "popupPage(700,800,'"+hash+"','"+request.getContextPath()+StringEscapeUtils.escapeHtml(((NoteDisplayNonNote)note).getLinkInfo())+"'); return false;";
 							%>
-								<a class="links" title="<bean:message key="oscarEncounter.view.eformView"/>" id="view<%=note.getNoteId()%>" href="#" onclick="<%=url%>" style="float: right; margin-right: 5px; font-size: 8px;"> <bean:message key="oscarEncounter.view" /> </a> 
+								<a class="links" title="<bean:message key="oscarEncounter.view.eformView"/>" id="view<%=note.getNoteId()%>" href="#" onclick="<%=url%>" style="float: right; margin-right: 5px; font-size: 8px;"> <bean:message key="oscarEncounter.view" /> </a>
 							<%
-						}	
+						}
 					 	if (!note.isDocument() && !note.isCpp() && !note.isEformData() && !note.isEncounterForm()) {
 					 		String atbname = "anno" + String.valueOf(new Date().getTime());
 					 		String addr = request.getContextPath() + "/annotation/annotation.jsp?atbname=" + atbname + "&table_id=" + String.valueOf(note.getNoteId()) + "&display=EChartNote&demo=" + demographicNo;
@@ -837,7 +836,7 @@ try
 															if (rev!=null)
 															{
 																%>
-																	<a style="color:#ddddff" href="#" onclick="return showHistory('<%=note.getNoteId()%>', event);"><%=rev%></a>		
+																	<a style="color:#ddddff" href="#" onclick="return showHistory('<%=note.getNoteId()%>', event);"><%=rev%></a>
 																<%
 															}
 															else
@@ -855,18 +854,18 @@ try
 		  						%>
 			  				</div>
 						<%
-							
+
 			 			if (largeNote(noteStr))
 						{
-			 			%> 
+			 			%>
 						 	<img title="<bean:message key="oscarEncounter.MinDisplay.title"/>" id='bottomQuitImg<%=note.getNoteId()%>' alt="<bean:message key="oscarEncounter.MinDisplay.title"/>" onclick="minView(event)" style='float: right; margin-right: 5px; margin-bottom: 3px;'
-							src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif'> 
+							src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif'>
 						<%
 				 		}
-				
+
 						if (!note.isDocument() && !note.isCpp() && !note.isEformData() && !note.isEncounterForm())
-						{							
-						%>							
+						{
+						%>
 							<div id="sig<%=note.getNoteId()%>" class="sig" style="clear:both;<%=bgColour%>">
 								<div id="sumary<%=note.getNoteId()%>">
 									<div id="observation<%=note.getNoteId()%>" style="float: right; margin-right: 3px;">
@@ -878,7 +877,7 @@ try
 												if (rev!=null)
 												{
 													%>
-														<a href="#" onclick="return showHistory('<%=note.getNoteId()%>', event);"><%=rev%></a>		
+														<a href="#" onclick="return showHistory('<%=note.getNoteId()%>', event);"><%=rev%></a>
 													<%
 												}
 												else
@@ -890,9 +889,9 @@ try
 											%>
 										</i>
 									</div>
-									
-									
-									
+
+
+
 									<div>
 										<span style="float: left;"><bean:message key="oscarEncounter.editors.title" />:</span>
 										<ul style="list-style: none inside none; margin: 0px;">
@@ -904,7 +903,7 @@ try
 												while (it.hasNext())
 												{
 													String providerName = it.next();
-								
+
 													if (count % MAXLINE == 0)
 													{
 														out.print("<li>" + providerName + "; ");
@@ -919,25 +918,25 @@ try
 											%>
 										</ul>
 									</div>
-															
-									
+
+
 									<%
-									if(facility.isEnableEncounterTransportationTime()) { 
+									if(facility.isEnableEncounterTransportationTime()) {
 									%>
 									<div style="clear: right; margin-right: 3px; float: right;">Encounter Transportation Time (hour:min):&nbsp;<span id="encTransTime<%=note.getNoteId()%>"><%=note.getEncounterTransportationTime()%></span></div>
 									<%} %>
 									<%if(facility.isEnableEncounterTime()) { %>
 									<div style="clear: left; margin-left: 3px;float: left;">Encounter Time (hour:min):&nbsp;<span id="encTime<%=note.getNoteId()%>"><%=note.getEncounterTime()%></span></div>
 									<% } %>
-									
+
 									<div style="clear: right; margin-right: 3px; float: right;">Enc Type:&nbsp;<span id="encType<%=note.getNoteId()%>"><%=note.getEncounterType().equals("")?"":"&quot;" + note.getEncounterType() + "&quot;"%></span></div>
-									
-									
+
+
 									<div style="display: block;">
 										<span style="float: left;"><bean:message key="oscarEncounter.assignedIssues.title" /></span>
 										<%
 											ArrayList<String> issueDescriptions = note.getIssueDescriptions();
-										
+
 											if (issueDescriptions.size() > 0)
 											{
 												%>
@@ -981,7 +980,7 @@ try
 								unLockedNotes.add(note.getNoteId());
 							}
 						}
-			
+
 					} //end for */
 					%>
 				</c:if> <%
@@ -990,16 +989,13 @@ try
  		if( savedId > 0 ) {
  			found = true;
  		}
- 		
+
  			//savedId = 0;
  %>
- 						<script>
-							savedNoteId=<%=savedId%>;							
-						</script> 
 	<div id="nc<%=savedId%>" class="note noteRounded">
-		<input type="hidden" id="signed<%=savedId%>" value="false"> 
-		<input type="hidden" id="full<%=savedId%>" value="true"> 
-		<input type="hidden" id="bgColour<%=savedId%>" value="color:#000000;background-color:#CCCCFF;"> 
+		<input type="hidden" id="signed<%=savedId%>" value="false">
+		<input type="hidden" id="full<%=savedId%>" value="true">
+		<input type="hidden" id="bgColour<%=savedId%>" value="color:#000000;background-color:#CCCCFF;">
 		<input type="hidden" id="editWarn<%=savedId%>" value="false">
 		<div id="n<%=savedId%>" style="line-height: 1.1em;">
 			 <textarea tabindex="7" cols="84" rows="10" class="txtArea" wrap="hard" style="line-height: 1.1em;" name="caseNote_note" id="caseNote_note<%=savedId%>"><nested:write property="caseNote_note" /></textarea>
@@ -1012,8 +1008,8 @@ try
 	</div>
 	<%
 		}
-	%> 
-	
+	%>
+
 	<%-- The BRs are here because the drop down list is not in the scrolling pane view so we need some padding at the end so when the drop down occurs it's in the view--%> <br />
 	&nbsp;<br />
 	&nbsp;<br />
@@ -1021,7 +1017,7 @@ try
 
 	</div>
 	<script type="text/javascript">
-	
+
 		if (parseInt(navigator.appVersion)>3) {
 			var windowHeight=750;
 			if (navigator.appName=="Netscape") {
@@ -1032,61 +1028,61 @@ try
 			}
 
 			var divHeight=windowHeight-280;
-			$("encMainDiv").style.height = divHeight+'px'; 
+			$("encMainDiv").style.height = divHeight+'px';
 		}
 	</script>
-	
+
 	<div id='save' style="width: 99%; background-color: #CCCCFF; padding-top: 5px; margin-left: 2px; border-left: thin solid #000000; border-right: thin solid #000000; border-bottom: thin solid #000000;">
 		<span style="float: right; margin-right: 5px;">
 		<%
-					
+
 			if(facility.isEnableGroupNotes()) {
 		%>
 		<script>
  function selectGroup() {
 	 	var noteId='<%=((CaseManagementEntryFormBean)session.getAttribute(frmName)).getNoteId()%>';
 	 	var noteId = document.forms["caseManagementEntryForm"].noteId.value;
-    	
+
     	popupPage(600,700,'group','groupNoteSelect.jsp?programId='+case_program_id + '&demographicNo='+demographicNo);
-    
+
     }
 </script>
 			<input tabindex="09" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/group-gnote.png"/>" id="groupNoteImg" onclick="Event.stop(event);return selectGroup();" title='<bean:message key="oscarEncounter.Index.btnGroupNote"/>'>&nbsp;
-		<%  } %>			 
-			<input tabindex="10" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/media-floppy.png"/>" id="saveImg" onclick="Event.stop(event);return saveNoteAjax('save', 'list');" title='<bean:message key="oscarEncounter.Index.btnSave"/>'>&nbsp; 
+		<%  } %>
+			<input tabindex="10" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/media-floppy.png"/>" id="saveImg" onclick="Event.stop(event);return saveNoteAjax('save', 'list');" title='<bean:message key="oscarEncounter.Index.btnSave"/>'>&nbsp;
 			<input tabindex="11" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/document-new.png"/>" id="newNoteImg" onclick="newNote(event); return false;" title='<bean:message key="oscarEncounter.Index.btnNew"/>'>&nbsp;
-			<input tabindex="12" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/note-save.png"/>" onclick="document.forms['caseManagementEntryForm'].sign.value='on';Event.stop(event);return savePage('saveAndExit', '');" title='<bean:message key="oscarEncounter.Index.btnSignSave"/>'>&nbsp; 
+			<input tabindex="12" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/note-save.png"/>" onclick="document.forms['caseManagementEntryForm'].sign.value='on';Event.stop(event);return savePage('saveAndExit', '');" title='<bean:message key="oscarEncounter.Index.btnSignSave"/>'>&nbsp;
 			<input tabindex="13" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/verify-sign.png"/>" onclick="document.forms['caseManagementEntryForm'].sign.value='on';document.forms['caseManagementEntryForm'].verify.value='on';Event.stop(event);return savePage('saveAndExit', '');" title='<bean:message key="oscarEncounter.Index.btnSign"/>'>&nbsp;
 			<%
-				if(bean.source == null)  { 
+				if(bean.source == null)  {
 				%>
 					<input tabindex="13" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/dollar-sign-icon.png"/>" onclick="document.forms['caseManagementEntryForm'].sign.value='on';document.forms['caseManagementEntryForm'].toBill.value='true';Event.stop(event);return savePage('saveAndExit', '');" title='<bean:message key="oscarEncounter.Index.btnBill"/>'>&nbsp;
 				<%
 				}
 			%>
-			
+
 			<c:if test="${sessionScope.passwordEnabled=='true'}">
 				<input tabindex="14" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/lock-note.png"/>" onclick="return toggleNotePasswd();" title='<bean:message key="oscarEncounter.Index.btnLock"/>'>&nbsp;
 	    	</c:if>
-	    	
-	    	<input tabindex="15" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/system-log-out.png"/>" onclick='closeEnc(event);return false;' title='<bean:message key="global.btnExit"/>'>&nbsp; 
-	    	<input tabindex="16" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/document-print.png"/>" onclick="return printSetup(event);" title='<bean:message key="oscarEncounter.Index.btnPrint"/>' id="imgPrintEncounter"> 
-    	</span> 
+
+	    	<input tabindex="15" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/system-log-out.png"/>" onclick='closeEnc(event);return false;' title='<bean:message key="global.btnExit"/>'>&nbsp;
+	    	<input tabindex="16" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/document-print.png"/>" onclick="return printSetup(event);" title='<bean:message key="oscarEncounter.Index.btnPrint"/>' id="imgPrintEncounter">
+    	</span>
     	<div id="assignIssueSection">
-	    	<input type='image' id='toggleIssue' onclick="return showIssues(event);" src="<c:out value="${ctx}/oscarEncounter/graphics/issues.png"/>" title='<bean:message key="oscarEncounter.Index.btnDisplayIssues"/>'>&nbsp; 
-	    	<input tabindex="8" type="text" id="issueAutocomplete" name="issueSearch" style="z-index: 2;" onkeypress="return submitIssue(event);" size="25">&nbsp; <input tabindex="9" type="button" id="asgnIssues" value="<bean:message key="oscarEncounter.assign.title"/>"> 
+	    	<input type='image' id='toggleIssue' onclick="return showIssues(event);" src="<c:out value="${ctx}/oscarEncounter/graphics/issues.png"/>" title='<bean:message key="oscarEncounter.Index.btnDisplayIssues"/>'>&nbsp;
+	    	<input tabindex="8" type="text" id="issueAutocomplete" name="issueSearch" style="z-index: 2;" onkeypress="return submitIssue(event);" size="25">&nbsp; <input tabindex="9" type="button" id="asgnIssues" value="<bean:message key="oscarEncounter.assign.title"/>">
 	    	<span id="busy" style="display: none">
 	    		<img style="position: absolute;" src="<c:out value="${ctx}/oscarEncounter/graphics/busy.gif"/>" alt="<bean:message key="oscarEncounter.Index.btnWorking" />">
 	    	</span>
     	</div>
     	<button type="button" onclick="javascript:spellCheck();">Spell Check</button>
     </div>
-    
+
 </div>
 </nested:form>
 
 <script language="JavaScript" src='<c:out value="${ctx}"/>/jspspellcheck/spellcheck-caller.js'></script>
-	
+
 <script type="text/javascript">
     document.forms["caseManagementEntryForm"].noteId.value = "<%=savedId%>";
 
@@ -1162,25 +1158,29 @@ try
    addIssueFunc = updateIssues.bindAsEventListener(obj, makeIssue, defaultDiv);
    Element.observe('asgnIssues', 'click', addIssueFunc);
    new Autocompleter.Local('enTemplate', 'enTemplate_list', autoCompList, { colours: itemColours, afterUpdateElement: menuAction }  );
-   
+
    //start timer for autosave
    setTimer();
 
     //$("encMainDiv").scrollTop = $("n<%=savedId%>").offsetTop - $("encMainDiv").offsetTop;
     reason = "<%=insertReason(request)%>";    //function defined bottom of file
-   
+
  	function spellCheck()
-    {            
+    {
 		// Build an array of form elements (not there values)
         var elements = new Array(0);
-                
+
         // Your form elements that you want to have spell checked
         elements[elements.length] = document.getElementById(caseNote);
-                
+
         // Start the spell checker
         startSpellCheck(ctx+'/jspspellcheck/',elements);
-                
+
     }
+
+    if(typeof messagesLoaded == 'function') {
+ 	     messagesLoaded('<%=savedId%>');
+ 	 }
 
 </script>
 <%
@@ -1202,19 +1202,19 @@ catch (Exception e)
 		String encounterText = "";
 		String apptDate = request.getParameter("appointmentDate");
 		String reason = request.getParameter("reason");
-		
+
 		if( reason == null ) {
 			reason = "";
 		}
-		
+
 		if( apptDate == null || apptDate.equals("") || apptDate.equalsIgnoreCase("null") ) {
 			encounterText = "\n[" + oscar.util.UtilDateUtilities.DateToString(oscar.util.UtilDateUtilities.Today(), "dd-MMM-yyyy", request.getLocale()) + " .: " + reason + "] \n";
 		}
 		else {
 			apptDate = convertDateFmt(apptDate);
-			encounterText = "\n[" + apptDate + " .: " + reason + "]\n";		
+			encounterText = "\n[" + apptDate + " .: " + reason + "]\n";
 		}
-		
+
 		encounterText = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(encounterText);
 		return encounterText;
 	}
