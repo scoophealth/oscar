@@ -1,24 +1,24 @@
-<!-- 
+<!--
 /*
-* 
+*
 * Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
-* This software is published under the GPL GNU General Public License. 
-* This program is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License 
-* as published by the Free Software Foundation; either version 2 
-* of the License, or (at your option) any later version. * 
-* This program is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
-* GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
-* along with this program; if not, write to the Free Software 
-* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
-* 
+* This software is published under the GPL GNU General Public License.
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version. *
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+*
 * <OSCAR TEAM>
-* 
-* This software was written for 
-* Centre for Research on Inner City Health, St. Michael's Hospital, 
-* Toronto, Ontario, Canada 
+*
+* This software was written for
+* Centre for Research on Inner City Health, St. Michael's Hospital,
+* Toronto, Ontario, Canada
 */
  -->
 
@@ -34,26 +34,26 @@
     oscar.oscarEncounter.pageUtil.EctSessionBean bean = null;
     String beanName = "casemgmt_oscar_bean" + (String) request.getAttribute("demographicNo");
     //bean=(oscar.oscarEncounter.pageUtil.EctSessionBean)request.getSession().getAttribute(beanName);
-    
+
     pageContext.setAttribute("providerNo",request.getParameter("providerNo"), pageContext.PAGE_SCOPE);
     pageContext.setAttribute("demographicNo",request.getParameter("demographicNo"), pageContext.PAGE_SCOPE);
     org.oscarehr.casemgmt.model.CaseManagementNoteExt cme = new org.oscarehr.casemgmt.model.CaseManagementNoteExt();
-    
+
     String frmName = "caseManagementEntryForm" + request.getParameter("demographicNo");
 	CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean)session.getAttribute(frmName);
-	
+
 %>
 
 <%--<nested:define id="rowOneSize" name="caseManagementViewForm" property="ectWin.rowOneSize"/>
 <nested:define id="rowTwoSize" name="caseManagementViewForm" property="ectWin.rowTwoSize"/>
 --%>
 <html:html locale="true">
-  <head>  	<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>	
+  <head>  	<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
 	<link rel="stylesheet" href="<c:out value="${ctx}"/>/css/casemgmt.css" type="text/css">
-    <link rel="stylesheet" href="<c:out value="${ctx}"/>/oscarEncounter/encounterStyles.css" type="text/css">         
+    <link rel="stylesheet" href="<c:out value="${ctx}"/>/oscarEncounter/encounterStyles.css" type="text/css">
     <link rel="stylesheet" type="text/css" href="<c:out value="${ctx}"/>/css/print.css" media="print">
     <script src="<c:out value="${ctx}"/>/share/javascript/prototype.js" type="text/javascript"></script>
-    <script src="<c:out value="${ctx}"/>/share/javascript/scriptaculous.js" type="text/javascript"></script>    
+    <script src="<c:out value="${ctx}"/>/share/javascript/scriptaculous.js" type="text/javascript"></script>
 
     <%-- for popup menu of forms --%>
     <script src="<c:out value="${ctx}"/>/share/javascript/popupmenu.js" type="text/javascript"></script>
@@ -62,7 +62,7 @@
     <!-- library for rounded elements -->
     <link rel="stylesheet" type="text/css" href="<c:out value="${ctx}/share/css/niftyCorners.css" />">
     <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/nifty.js"/>"></script>
-    
+
       <!-- calendar stylesheet -->
   <link rel="stylesheet" type="text/css" media="all" href="<c:out value="${ctx}"/>/share/calendar/calendar.css" title="win2k-cold-1">
 
@@ -75,10 +75,10 @@
   <!-- the following script defines the Calendar.setup helper function, which makes
        adding a calendar a matter of 1 or 2 lines of code. -->
   <script type="text/javascript" src="<c:out value="${ctx}"/>/share/calendar/calendar-setup.js"></script>
-  
+
   <%--<!-- js implementation of markdown -->
   <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/showdown.js"/>"></script>--%>
-  
+
   <!-- js window size utility funcs since prototype's funcs are buggy in ie6 -->
   <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/screen.js"/>"></script>
 
@@ -90,38 +90,38 @@
 
   <!--js code for newCaseManagementView.jsp -->
   <script type="text/javascript" src="<c:out value="${ctx}/js/newCaseManagementView.js.jsp"/>"></script>
-  
+
    <script src="<c:out value="${ctx}/js/jquery.js"/>"></script>
    <script>
      jQuery.noConflict();
    </script>
-   
+
    <script type="text/javascript">
-   
+
    function assembleMainChartParams(displayFullChart) {
-	   
+
 	   var params = "method=edit&ajaxview=ajaxView&fullChart=" + displayFullChart;
-	   <%	   
+	   <%
 		 Enumeration<String>enumerator = request.getParameterNames();
 		 String paramName, paramValue;
 		 while( enumerator.hasMoreElements() ) {
-			paramName = enumerator.nextElement();  
+			paramName = enumerator.nextElement();
 			if( paramName.equals("method") || paramName.equals("fullChart") ) {
 				continue;
 			}
-			 
+
 			paramValue = request.getParameter(paramName);
-			
+
 		%>
 			params += "&<%=paramName%>=<%=StringEscapeUtils.escapeJavaScript(paramValue)%>";
 		<%
-			
-		 }		 		 
+
+		 }
 	   %>
-	   
+
 	   return params;
    }
-   
+
    function reorderNavBarElements(idToMove, afterThisId) {
 	   var clone = jQuery("#"+idToMove).clone();
        jQuery("#"+idToMove).remove();
@@ -134,7 +134,7 @@
 	     for (var i in attributes) {
 	       element.setAttribute(i, attributes[i]);
 	     }
-	   }	   
+	   }
 	   return element;
 	 }
 
@@ -142,9 +142,9 @@
    {
        referenceNode.parentNode.insertBefore( newNode, referenceNode.nextSibling );
    }
-   
-   
-   function addCppRow(rowNumber) {	   	
+
+
+   function addCppRow(rowNumber) {
 		if(!document.getElementById("divR" + rowNumber)) {
 			var newDiv = makeElement('div',{'style':'width: 100%; height: 75px; margin-top: 0px; background-color: #FFFFFF;','id':'divR'+rowNumber});
 
@@ -154,9 +154,9 @@
 			newDiv.appendChild(i2);
 			var prevRow = document.getElementById("divR"+(rowNumber-1));
 			insertAfter(prevRow,newDiv);
-		}	
+		}
    }
-   
+
    function removeCppRow(rowNumber) {
 	   jQuery("#divR"+rowNumber).remove();
    }
@@ -197,16 +197,16 @@
 
                      );
        };
-   
+
 
        function addLeftNavDiv(name) {
     	   var div = document.createElement("div");
            div.className = "leftBox";
            div.style.display = "block";
            div.style.visiblity = "hidden";
-           div.id = name;                
+           div.id = name;
            $("leftNavBar").appendChild(div);
-           
+
        }
 
        function addRightNavDiv(name) {
@@ -214,141 +214,149 @@
            div.className = "leftBox";
            div.style.display = "block";
            div.style.visiblity = "hidden";
-           div.id = name;                
+           div.id = name;
            $("rightNavBar").appendChild(div);
-           
+
        }
 
        function removeNavDiv(name) {
-    	   var tmpEl = document.getElementById(name);          
+    	   var tmpEl = document.getElementById(name);
            tmpEl.parentNode.removeChild(tmpEl);
        }
 
-       function reloadNav(name) {    	   
-    	   var url = jQuery("#" + name + " input[name='reloadUrl']").val();    	   
-    	   popColumn(url,name,name,null,null);   
+       function reloadNav(name) {
+    	   var url = jQuery("#" + name + " input[name='reloadUrl']").val();
+    	   popColumn(url,name,name,null,null);
        }
 
        function addPrintOption(name,bean) {
     	   var test1Str = "<img style=\"cursor: pointer;\" title=\"Print "+name+"\" id=\"img"+name+"\" alt=\"Print "+name+"\" onclick=\"return printInfo(this, 'extPrint"+name+"');\" src=\"" + ctx + "/oscarEncounter/graphics/printer.png\">&nbsp;"+name;
-           jQuery("#printDateRow").before("<tr><td></td><td>" + test1Str + "</tr></tr>");           
+           jQuery("#printDateRow").before("<tr><td></td><td>" + test1Str + "</tr></tr>");
            jQuery("form[name='caseManagementEntryForm']").append("<input name=\"extPrint"+name+"\" id=\"extPrint"+name+"\" value=\"false\" type=\"hidden\"/>");
-           jQuery.ajax({ url: ctx+"/casemgmt/ExtPrintRegistry.do?method=register&name="+name+"&bean="+bean, async:false, success: function(data){               
-           }});      
+           jQuery.ajax({ url: ctx+"/casemgmt/ExtPrintRegistry.do?method=register&name="+name+"&bean="+bean, async:false, success: function(data){
+           }});
        }
-       
+
        <%if(request.getParameter("appointmentNo") != null && request.getParameter("appointmentNo").length()>0) { %>
        var appointmentNo = <%=request.getParameter("appointmentNo")%>;
         <% } else { %>
         var appointmentNo = 0;
         <%}%>
+
+        var savedNoteId=0;
+        <%
+        if (cform == null){%>
+            savedNoteId=0;
+        <%}else{%>
+            savedNoteId=<%=cform.getCaseNote().getId()%>
+    <%}%>
    </script>
- 
+
  	<oscar:customInterface section="cme"/>
-  
+
     <style type="text/css">
-        
+
         /*CPP Format */
         li.cpp {
-            color: #000000;         
+            color: #000000;
             font-family:arial,sans-serif;
         }
-        
+
         /*Note format */
         div.newNote {
-            color: #000000;         
+            color: #000000;
             font-family:arial,sans-serif;
             font-size:0.8em;
             margin: 5px 0px 5px 5px;
-            float:left;  
-            width:98%;            
-        }
-        
-        div.newNote pre {
-            color: #000000;      
-            font-family:arial,sans-serif;
-            margin: 0px 3px 0px 3px;          
-            width:100%; 
-            clear:left;            
-        }
-        
-        div.note {
-            color: #000000;         
-            font-family:arial,sans-serif;
-            margin: 3px 0px 3px 5px;
-            float:left;  
+            float:left;
             width:98%;
         }
-        
-        div.note pre {
-            color: #000000;      
+
+        div.newNote pre {
+            color: #000000;
             font-family:arial,sans-serif;
-            margin: 0px 3px 0px 3px;          
-            width:100%; 
+            margin: 0px 3px 0px 3px;
+            width:100%;
+            clear:left;
+        }
+
+        div.note {
+            color: #000000;
+            font-family:arial,sans-serif;
+            margin: 3px 0px 3px 5px;
+            float:left;
+            width:98%;
+        }
+
+        div.note pre {
+            color: #000000;
+            font-family:arial,sans-serif;
+            margin: 0px 3px 0px 3px;
+            width:100%;
             clear:left;
         }
        .sig {
             background-color:#CCCCFF;
-            color: #000000;  
+            color: #000000;
             width:100%;
             font-size:9px;
-        }                
-        
+        }
+
         .txtArea {
-            font-family:arial,sans-serif; 
-            font-size:1.0em;             
-            width:99%; 
-            rows:10; 
-            overflow:hidden; 
-            border:none; 
-            font-family:arial,sans-serif;             
+            font-family:arial,sans-serif;
+            font-size:1.0em;
+            width:99%;
+            rows:10;
+            overflow:hidden;
+            border:none;
+            font-family:arial,sans-serif;
             margin: 0px 3px 0px 3px;
         }
-      
+
         p.passwd {
             margin: 0px 3px 0px 3px;
         }
-        
+
         /* span formatting for measurements div found in ajax call */
-        span.measureCol1 {            
+        span.measureCol1 {
             float: left;
-            width: 50px;            
+            width: 50px;
         }
-        
+
         span.measureCol2 {
             float: left;
             width: 55px;
         }
-        
+
         span.measureCol3 {
-            float: left;                        
+            float: left;
         }
-        
+
         .topLinks  {
             color: black;
             text-decoration:none;
-            font-size:9px;                
+            font-size:9px;
         }
-        
-        .topLinkhover { 
+
+        .topLinkhover {
             color: blue;
             text-decoration: underline;
         }
-        
-        /* formatting for navbar */               
+
+        /* formatting for navbar */
         .links {
             color: blue;
             text-decoration:none;
             font-size:9px;
         }
-        
-        .linkhover { 
+
+        .linkhover {
             color: black;
             text-decoration: underline;
         }
-        
+
     /* template styles*/
-          
+
           .enTemplate_name_auto_complete {
             width: 350px;
             background: #fff;
@@ -365,14 +373,14 @@
           }
           .enTemplate_name_auto_complete ul li {
             margin:0;
-            padding:3px;            
+            padding:3px;
           }
-          .enTemplate_name_auto_complete ul li.selected { 
-            background-color: #ffb; 
+          .enTemplate_name_auto_complete ul li.selected {
+            background-color: #ffb;
             text-decoration: underline;
           }
-          .enTemplate_name_auto_complete ul strong.highlight { 
-            color: #800; 
+          .enTemplate_name_auto_complete ul strong.highlight {
+            color: #800;
             margin:0;
             padding:0;
           }
@@ -384,14 +392,14 @@
             width: 97%;
             overflow:auto;
         }
-        
+
         .rowTwo {
             height: <%--<nested:write name="rowTwoSize"/>--%>10px;
             width:97%;
-            margin-left:4px;            
+            margin-left:4px;
             overflow:auto;
         }
-        
+
         /* Encounter type select box */
         div.autocomplete {
           position:absolute;
@@ -410,7 +418,7 @@
           margin:0px;
           padding:0px;
         }
-        div.autocomplete ul li.selected { 
+        div.autocomplete ul li.selected {
           background-color: #EAF2FB;
         }
         div.autocomplete ul li {
@@ -420,27 +428,27 @@
           padding:2px;
           cursor:pointer;
         }
-        
+
         .encTypeCombo /* look&feel of scriptaculous select box*/
         {
           margin: 0px;/* 5px 10px 0px;*/
           font-family:Verdana, Geneva, Arial, Helvetica, sans-serif;
           font-size:9px;
-          width: 200px;          
-          text-align:left; 
+          width: 200px;
+          text-align:left;
           vertical-align: middle;
           background: #FFFFFF url('<c:out value="${ctx}"/>/images/downarrow_inv.gif') no-repeat right;
           height:18px;
           cursor: pointer;
           border:1px solid #ccc;
           color: #000000;
-          
+
         }
-        
-        .printOps {                        
+
+        .printOps {
             background-color:#CCCCFF;
             font-size:9px;
-                        
+
             position: absolute;
             display:none;
             z-index:1;
@@ -448,42 +456,42 @@
             right:100px;
             bottom:200px;
         }
-        
-        .showEdContainer {        
+
+        .showEdContainer {
             position: absolute;
             display:none;
             z-index:100;
             right:100px;
-            bottom:200px;            
+            bottom:200px;
             background-color:transparent;
             font-size:8px;
             /*border: thin ridge black;*/
             text-align: center;
         }
-        
-        .showEdPosition { 
-            display: table-cell;        
-            vertical-align: middle;            
+
+        .showEdPosition {
+            display: table-cell;
+            vertical-align: middle;
         }
-        
-        .showEdContent {            
+
+        .showEdContent {
             /*border: thin ridge black;*/
             background-color:#CCCCFF;
             font-size:9px;
-                        
+
             position: absolute;
             display:none;
             z-index:200;
             right:100px;
-            bottom:200px;                                    
+            bottom:200px;
             text-align: center;
         }
-        
+
     </style>
 <!--[if IE]>
     <style type=text/css>
-    
-        .showEdContent { 
+
+        .showEdContent {
             width:450px;
         }
      </style>
@@ -491,24 +499,24 @@
     <html:base />
     <title><bean:message key="oscarEncounter.Index.title"/> - <oscar:nameage demographicNo="<%=(String) request.getParameter(\"demographicNo\")%>"/></title>
     <script type="text/javascript">
-    	ctx = "<c:out value="${ctx}"/>";    
+    	ctx = "<c:out value="${ctx}"/>";
     	demographicNo = "<c:out value="${demographicNo}"/>";
     	providerNo = "<c:out value="${providerNo}"/>";
-    	
+
         socHistoryLabel = "oscarEncounter.socHistory.title";
         medHistoryLabel = "oscarEncounter.medHistory.title";
         onGoingLabel = "oscarEncounter.onGoing.title";;
         remindersLabel = "oscarEncounter.reminders.title";
         oMedsLabel = "oscarEncounter.oMeds.title";
         famHistoryLabel = "oscarEncounter.famHistory.title";
-        riskFactorsLabel = "oscarEncounter.riskFactors.title";  
+        riskFactorsLabel = "oscarEncounter.riskFactors.title";
 
         diagnosticNotesLabel = "oscarEncounter.eyeform.diagnosticNotes.title";
         pastOcularHistoryLabel = "oscarEncounter.eyeform.pastOcularHistory.title";
         patientLogLabel = "oscarEncounter.eyeform.patientLog.title";
-        ocularMedicationsLabel = "oscarEncounter.eyeform.ocularMedications.title";          
+        ocularMedicationsLabel = "oscarEncounter.eyeform.ocularMedications.title";
 		currentHistoryLabel = "oscarEncounter.eyeform.currentHistory.title";
-         
+
 		quickChartMsg = "<bean:message key="oscarEncounter.quickChart.msg"/>";
 		fullChartMsg = "<bean:message key="oscarEncounter.fullChart.msg"/>";
         insertTemplateError = "<bean:message key="oscarEncounter.templateError.msg"/>";
@@ -549,26 +557,26 @@
         month[10] = "<bean:message key="share.CalendarPopUp.msgNov"/>";
         month[11] = "<bean:message key="share.CalendarPopUp.msgDec"/>";
 
-function init() {       
+function init() {
 	//scrollDownInnerBar();
 	viewFullChart(false);
     showIssueNotes();
-    
+
     var navBars = new navBarLoader();
-    navBars.load();  
-    
+    navBars.load();
+
     monitorNavBars(null);
-    
-    Element.observe(window, "resize", monitorNavBars);    
-    
+
+    Element.observe(window, "resize", monitorNavBars);
+
     if(!NiftyCheck())
         return;
 
-    Rounded("div.showEdContent","all","transparent","#CCCCCC","big border #000000"); 
+    Rounded("div.showEdContent","all","transparent","#CCCCCC","big border #000000");
     Rounded("div.printOps","all","transparent","#CCCCCC","big border #000000");
-    Calendar.setup({ inputField : "printStartDate", ifFormat : "%d-%b-%Y", showsTime :false, button : "printStartDate_cal", singleClick : true, step : 1 });    
-    Calendar.setup({ inputField : "printEndDate", ifFormat : "%d-%b-%Y", showsTime :false, button : "printEndDate_cal", singleClick : true, step : 1 });    
-    
+    Calendar.setup({ inputField : "printStartDate", ifFormat : "%d-%b-%Y", showsTime :false, button : "printStartDate_cal", singleClick : true, step : 1 });
+    Calendar.setup({ inputField : "printEndDate", ifFormat : "%d-%b-%Y", showsTime :false, button : "printEndDate_cal", singleClick : true, step : 1 });
+
     <c:url value="/CaseManagementEntry.do" var="issueURLCPP">
         <c:param name="method" value="issueList"/>
         <c:param name="demographicNo" value="${demographicNo}" />
@@ -576,11 +584,11 @@ function init() {
         <c:param name="all" value="true" />
     </c:url>
     var issueAutoCompleterCPP = new Ajax.Autocompleter("issueAutocompleteCPP", "issueAutocompleteListCPP", "<c:out value="${issueURLCPP}" />", {minChars: 3, indicator: 'busy2', afterUpdateElement: addIssue2CPP, onShow: autoCompleteShowMenuCPP, onHide: autoCompleteHideMenuCPP});
-    
+
     <nested:notEmpty name="DateError">
         alert("<nested:write name="DateError"/>");
     </nested:notEmpty>
-    
+
 }
 
 function doscroll(){
@@ -590,25 +598,25 @@ function doscroll(){
 	}
 
 </script>
-  </head> 
+  </head>
   <body id="body" style="margin:0px;" onunload="onClosing()">
-    
+
           <div id="header">
               <tiles:insert attribute="header" />
           </div>
-          
+
           <div id="rightNavBar" style="display:inline; float:right; width:20%; margin-left:-3px;">
               <tiles:insert attribute="rightNavigation" />
-          </div> 
-                    
+          </div>
+
           <div id="leftNavBar" style="display:inline; float:left; width:20%;">
               <tiles:insert attribute="leftNavigation" />
-          </div>  
-          
+          </div>
+
           <div id="content" style="display:inline; float:left; width:60%; background-color:#CCCCFF;">
               <tiles:insert attribute="body" />
-          </div>                                        
-                
+          </div>
+
           <!-- hovering divs -->
           <div id="showEditNote" class="showEdContent">
               <form id="frmIssueNotes" action="" method="post" onsubmit="return updateCPPNote();">
@@ -645,39 +653,39 @@ function doscroll(){
 					<option value="N"><bean:message key="oscarEncounter.lifestage.opt.newborn"/></option>
  					<option value="I"><bean:message key="oscarEncounter.lifestage.opt.infant"/></option>
  					<option value="C"><bean:message key="oscarEncounter.lifestage.opt.child"/></option>
- 					<option value="T"><bean:message key="oscarEncounter.lifestage.opt.adolescent"/></option> 
+ 					<option value="T"><bean:message key="oscarEncounter.lifestage.opt.adolescent"/></option>
 					<option value="A"><bean:message key="oscarEncounter.lifestage.opt.adult"/></option>
 				</select>
 				</td>
  			</tr>
  			<tr id="Itemhidecpp">
- 				<td><bean:message key="oscarEncounter.hidecpp.title"/>: </td>				
+ 				<td><bean:message key="oscarEncounter.hidecpp.title"/>: </td>
 				<td>
 					<select id="hidecpp" name="hidecpp">
 						<option value="0">No</option>
 						<option value="1">Yes</option>
 					</select>
-					
+
 				</td>
 			</tr>
 		  </table><br>
                   <span style="float:right; margin-right:10px;">
-                  	  <input type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/copy.png"/>" title='<bean:message key="oscarEncounter.Index.btnCopy"/>' onclick="copyCppToCurrentNote(); return false;">                            
+                  	  <input type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/copy.png"/>" title='<bean:message key="oscarEncounter.Index.btnCopy"/>' onclick="copyCppToCurrentNote(); return false;">
 		     		  <input type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/annotation.png"/>" title='<bean:message key="oscarEncounter.Index.btnAnnotation"/>' id="anno" style="padding-right:10px;">
                       <input type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/edit-cut.png"/>" title='<bean:message key="oscarEncounter.Index.btnArchive"/>' onclick="$('archived').value='true';" style="padding-right:10px;">
                       <input type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/note-save.png"/>" title='<bean:message key="oscarEncounter.Index.btnSignSave"/>' onclick="$('archived').value='false';" style="padding-right:10px;">
                       <input type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/system-log-out.png"/>" title='<bean:message key="global.btnExit"/>' onclick="this.focus();$('channel').style.visibility ='visible';$('showEditNote').style.display='none';return false;">
                   </span>
                   <bean:message key="oscarEncounter.Index.btnPosition"/><select id="position" name="position"><option id="popt0" value="0">1</option>
-                  </select> 
+                  </select>
                   <div id="issueNoteInfo" style="clear:both; text-align:left;"></div>
                   <div id="issueListCPP" style="background-color:#FFFFFF; height:200px; width:350px; position:absolute; z-index:1; display:none; overflow:auto;">
                       <div class="enTemplate_name_auto_complete" id="issueAutocompleteListCPP" style="position:relative; left:0px; display:none;"></div>
                   </div>
                   <bean:message key="oscarEncounter.Index.assnIssue"/>&nbsp;<input  tabindex="100" type="text" id="issueAutocompleteCPP" name="issueSearch" style="z-index: 2;" size="25">&nbsp;
-                 
+
                   <span id="busy2" style="display: none"><img style="position:absolute;" src="<c:out value="${ctx}/oscarEncounter/graphics/busy.gif"/>" alt="<bean:message key="oscarEncounter.Index.btnWorking"/>" ></span>
-                  
+
               </form>
           </div>
           <div id="printOps" class="printOps">
@@ -691,7 +699,7 @@ function doscroll(){
 	              					String roleName = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
               					%>
 								<security:oscarSec roleName="<%=roleName%>" objectName="_newCasemgmt.cpp" rights="r" reverse="false">
-									<img style="cursor: pointer;" title="<bean:message key="oscarEncounter.print.title"/>" id='imgPrintCPP' alt="<bean:message key="oscarEncounter.togglePrintCPP.title"/>" onclick="return printInfo(this,'printCPP');" src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png'>&nbsp;<bean:message key="oscarEncounter.cpp.title" /> 
+									<img style="cursor: pointer;" title="<bean:message key="oscarEncounter.print.title"/>" id='imgPrintCPP' alt="<bean:message key="oscarEncounter.togglePrintCPP.title"/>" onclick="return printInfo(this,'printCPP');" src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png'>&nbsp;<bean:message key="oscarEncounter.cpp.title" />
 								</security:oscarSec>
               				</td>
               			</tr>
@@ -707,7 +715,7 @@ function doscroll(){
 								<img style="cursor: pointer;" title="<bean:message key="oscarEncounter.print.title"/>" id='imgPrintLabs' alt="<bean:message key="oscarEncounter.togglePrintLabs.title"/>" onclick="return printInfo(this, 'printLabs');" src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png'>&nbsp;<bean:message key="oscarEncounter.Labs.title" />
               				</td>
               			</tr>
-              			<!--  extension point -->              			
+              			<!--  extension point -->
               			<tr id="printDateRow">
               				<td><input type="radio" id="printopDates" name="printop" value="dates"><bean:message key="oscarEncounter.Index.PrintDates"/>&nbsp;<a style="font-variant:small-caps;" href="#" onclick="return printToday(event);"><bean:message key="oscarEncounter.Index.PrintToday"/></a></td>
               				<td></td>
@@ -715,7 +723,7 @@ function doscroll(){
               		</table>
 
                    <div style="float:left; margin-left:5px; width:30px;"><bean:message key="oscarEncounter.Index.PrintFrom"/>:</div> <img src="<c:out value="${ctx}/images/cal.gif" />" id="printStartDate_cal" alt="calendar">&nbsp;<input type="text" id="printStartDate" name="printStartDate" ondblclick="this.value='';" style="font-style:italic; border: 1px solid #7682b1; width:125px; background-color:#FFFFFF;" readonly value=""><br>
-                   <div style="float:left; margin-left:5px; width:30px;"><bean:message key="oscarEncounter.Index.PrintTo"/>:</div> <img src="<c:out value="${ctx}/images/cal.gif" />" id="printEndDate_cal" alt="calendar">&nbsp;<input type="text" id="printEndDate" name="printEndDate" ondblclick="this.value='';" style="font-style:italic; border: 1px solid #7682b1; width:125px; background-color:#FFFFFF;" readonly value=""><br>                   
+                   <div style="float:left; margin-left:5px; width:30px;"><bean:message key="oscarEncounter.Index.PrintTo"/>:</div> <img src="<c:out value="${ctx}/images/cal.gif" />" id="printEndDate_cal" alt="calendar">&nbsp;<input type="text" id="printEndDate" name="printEndDate" ondblclick="this.value='';" style="font-style:italic; border: 1px solid #7682b1; width:125px; background-color:#FFFFFF;" readonly value=""><br>
                    <div style="margin-top:5px; text-align:center">
                        <input type="submit" id="printOp" style="border: 1px solid #7682b1;" value="Print" onclick="return printNotes();">
                        <oscarProperties:oscarPropertiesCheck property="MY_OSCAR" value="yes">
@@ -726,8 +734,8 @@ function doscroll(){
                        <input type="submit" id="cancelprintOp" style="border: 1px solid #7682b1;" value="Cancel" onclick="$('printOps').style.display='none';">
                        <input type="submit" id="clearprintOp" style="border: 1px solid #7682b1;" value="Clear" onclick="$('printOps').style.display='none'; return clearAll(event);">
                    </div>
-              </form>              
+              </form>
           </div>
-          
+
   </body>
 </html:html>
