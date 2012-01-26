@@ -53,6 +53,7 @@ import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.EncounterUtil;
 import org.oscarehr.util.MiscUtils;
+import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import oscar.OscarProperties;
@@ -181,6 +182,27 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 			
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+    public List<CaseManagementNote> getNotesByDemographic(String demographic_no, Integer maxNotes) {
+		if (OscarProperties.getInstance().getDbType().equals("oracle")) {
+			return getHibernateTemplate().findByNamedQuery("mostRecentOra", new Object[] { demographic_no });
+		}
+		else {
+			String hql = "select cmn from CaseManagementNote cmn where cmn.demographic_no = ? and cmn.id = (select max(cmn2.id) from CaseManagementNote cmn2 where cmn2.uuid = cmn.uuid) order by cmn.observation_date desc";
+			
+			HibernateTemplate Hibernatetemplate = getHibernateTemplate();
+			if( maxNotes != -1 ) {
+				Hibernatetemplate.setMaxResults(maxNotes);				
+			}			
+			
+			List<CaseManagementNote> list = Hibernatetemplate.find(hql, demographic_no);
+			Hibernatetemplate.setMaxResults(0);
+			return list;
+			//return getHibernateTemplate().findByNamedQuery("mostRecent", new Object[] { demographic_no });
+			
+		}
+	}
 
 	// This is the original method. It was created by CAISI, to get all notes for each client.
 	/*
@@ -213,6 +235,42 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 
 		return new ArrayList();
 	}
+	
+	@SuppressWarnings("unchecked")
+    public List<CaseManagementNote> getNotesByDemographic(String demographic_no, String[] issueIds, Integer maxNotes) {
+		
+		HibernateTemplate hibernateTemplate = getHibernateTemplate();
+		if( maxNotes != -1 ) {
+			hibernateTemplate.setMaxResults(maxNotes);
+		}
+		List<CaseManagementNote> retList = new ArrayList<CaseManagementNote>();
+		String list = null;
+		String hql;
+		if (issueIds != null) {
+			if (issueIds.length > 1) {
+				list = "";
+				for (int x = 0; x < issueIds.length; x++) {
+					if (x != 0) {
+						list += ",";
+					}
+					list += issueIds[x];
+				}
+				hql = "select cmn from CaseManagementNote cmn join cmn.issues i where i.issue_id in (" + list
+				        + ") and cmn.demographic_no = ? and cmn.id = (select max(cmn2.id) from CaseManagementNote cmn2 where cmn.uuid = cmn2.uuid) order by cmn.observation_date desc ";
+				retList = this.getHibernateTemplate().find(hql, demographic_no);
+
+			} else if (issueIds.length == 1) {
+				hql = "select cmn from CaseManagementNote cmn join cmn.issues i where i.issue_id = ? and cmn.demographic_no = ? and cmn.id = (select max(cmn2.id) from CaseManagementNote cmn2 where cmn.uuid = cmn2.uuid) order by cmn.observation_date desc";
+				long id = Long.parseLong(issueIds[0]);
+				retList = this.getHibernateTemplate().find(hql, new Object[] { id, demographic_no});
+			}
+		}
+		
+		hibernateTemplate.setMaxResults(0);
+		// String hql = "select distinct cmn from CaseManagementNote cmn where cmn.demographic_no = ? and cmn.issues.issue_id in (" + list +
+		// ") and cmn.id in (select max(cmn.id) from cmn GROUP BY uuid) ORDER BY cmn.observation_date asc";
+		return retList;
+	}
 
 	public List getNotesByDemographic(String demographic_no, String[] issueIds) {
 		String list = null;
@@ -227,11 +285,11 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 					list += issueIds[x];
 				}
 				hql = "select cmn from CaseManagementNote cmn join cmn.issues i where i.issue_id in (" + list
-				        + ") and cmn.demographic_no = ? and cmn.id = (select max(cmn2.id) from CaseManagementNote cmn2 where cmn.uuid = cmn2.uuid) ORDER BY cmn.observation_date asc";
+				        + ") and cmn.demographic_no = ? and cmn.id = (select max(cmn2.id) from CaseManagementNote cmn2 where cmn.uuid = cmn2.uuid)";
 				return this.getHibernateTemplate().find(hql, demographic_no);
 
 			} else if (issueIds.length == 1) {
-				hql = "select cmn from CaseManagementNote cmn join cmn.issues i where i.issue_id = ? and cmn.demographic_no = ? and cmn.id = (select max(cmn2.id) from CaseManagementNote cmn2 where cmn.uuid = cmn2.uuid) ORDER BY cmn.observation_date asc";
+				hql = "select cmn from CaseManagementNote cmn join cmn.issues i where i.issue_id = ? and cmn.demographic_no = ? and cmn.id = (select max(cmn2.id) from CaseManagementNote cmn2 where cmn.uuid = cmn2.uuid)";
 				long id = Long.parseLong(issueIds[0]);
 				return this.getHibernateTemplate().find(hql, new Object[] { id, demographic_no});
 			}

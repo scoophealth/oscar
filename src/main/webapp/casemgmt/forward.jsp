@@ -40,10 +40,10 @@
         useNewCaseMgmt = (String)session.getAttribute("newCaseManagement");                
    }
     
-    if( useNewCaseMgmt != null && useNewCaseMgmt.equals("true") ) {        
+    if( useNewCaseMgmt != null && useNewCaseMgmt.equals("true") ) {    	
 	%>
 		<jsp:forward page="/CaseManagementEntry.do">
-			<jsp:param name="method" value="edit" />
+			<jsp:param name="method" value="setUpMainEncounter" />
 			<jsp:param name="from" value="casemgmt" />
 			<jsp:param name="chain" value="list" />
 			<jsp:param name="demographicNo"

@@ -73,7 +73,8 @@
     %>
 
     <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
-<div style="padding-left:2px; text-align:left; font-size: 12px; color:<%=inverseUserColour%>; background-color:<%=userColour%>" id="encounterHeader">
+    
+<div style="float:left; width: 80%; padding-left:2px; text-align:left; font-size: 12px; color:<%=inverseUserColour%>; background-color:<%=userColour%>" id="encounterHeader">
     <span style="border-bottom: medium solid <%=famDocColour%>"><bean:message key="oscarEncounter.Index.msgMRP"/>&nbsp;&nbsp;
     <%=famDocName%> <%=famDocSurname%>  </span>
 
@@ -97,8 +98,25 @@
            <a href="javascript:void(0)" onClick="popupPage(600,175,'Calculators','<c:out value="${ctx}"/>/common/omdDiseaseList.jsp?sex=<%=bean.patientSex%>&age=<%=pAge%>'); return false;" ><bean:message key="oscarEncounter.Header.OntMD"/></a>
         <%}%>
         <%=getEChartLinks() %>
+        &nbsp;&nbsp;
+        
+        <%
+		String strFullChart = request.getParameter("fullChart"); 
+		boolean quickChart =  strFullChart == null || strFullChart.equals("") || strFullChart.equalsIgnoreCase("false");	
+		if( quickChart ) {
+		%>		
+			<a id="quickChart" href="#" onclick="return viewFullChart(true);"><bean:message key="oscarEncounter.fullChart.msg"/></a>		
+		<%
+		}
+		else {
+		%>
+			<a id="quickChart" href="#" onclick="return viewFullChart(false);"><bean:message key="oscarEncounter.quickChart.msg"/></a>
+		<%
+		}
+		%>      
    </span>
 </div>
+
 <%!
 
 String getEChartLinks(){
