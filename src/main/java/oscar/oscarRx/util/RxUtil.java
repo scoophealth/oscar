@@ -1149,7 +1149,7 @@ public class RxUtil {
     	if(defaultRx != null) {
     		rx.setSpecial(defaultRx);
     	} else {
-    		rx.setSpecial("1 OD");
+    		rx.setSpecial("");
     	}
         rx.setQuantity(getDefaultQuantity());
         rx.setRepeat(0);
@@ -1358,26 +1358,20 @@ public class RxUtil {
                 p(rx.getRegionalIdentifier());
                 //query the database to see if there is a rx with same din as this rx.
                 // String sql = "SELECT * FROM drugs WHERE regional_identifier='" + rx.getRegionalIdentifier() + "' order by written_date desc"; //most recent is the first.
-                String sql = "SELECT * FROM drugs WHERE regional_identifier='" + rx.getRegionalIdentifier() + "' and BN='"+StringEscapeUtils.escapeSql(rx.getBrandName())+"' AND demographic_no="+rx.getDemographicNo()+" order by drugid desc"; //most recent is the first.
+                String sql = "SELECT * FROM drugs WHERE regional_identifier='" + rx.getRegionalIdentifier() + "' and BN='"+StringEscapeUtils.escapeSql(rx.getBrandName())+"' AND demographic_no="+rx.getDemographicNo()+" AND provider_no = '" + rx.getProviderNo() +"' order by drugid desc"; //most recent is the first.
                 MiscUtils.getLogger().debug("sql 1="+sql);
                 rs = DBHandler.GetSQL(sql);
                 if (rs.first()) {//use the first result if there are multiple.
                     setResultSpecialQuantityRepeat(rx, rs);
                 } else {
-                    String sql2 = "SELECT * FROM drugs WHERE regional_identifier='" + rx.getRegionalIdentifier() + "' and BN='"+StringEscapeUtils.escapeSql(rx.getBrandName())+"' order by drugid desc"; //most recent is the first.
-                    MiscUtils.getLogger().debug("sql 2="+sql2);
-                    rs = DBHandler.GetSQL(sql2);
-                    if (rs.first()) {//use the first result if there are multiple.
-                        setResultSpecialQuantityRepeat(rx, rs);
-                    }else   //else, set to special to "1 OD", quantity to "30", repeat to "0".
-                        setDefaultSpecialQuantityRepeat(rx);
+                    setDefaultSpecialQuantityRepeat(rx);
                 }
             } else {
                 p("else2");
                 if (rx.getBrandName() != null && rx.getBrandName().length() > 1) {
                     p("if2");
                     //String sql2 = "SELECT * FROM drugs WHERE BN='" + StringEscapeUtils.escapeSql(rx.getBrandName()) + "' order by written_date desc"; //most recent is the first.
-                    String sql2 = "SELECT * FROM drugs WHERE BN='" + StringEscapeUtils.escapeSql(rx.getBrandName()) + "' AND demographic_no="+rx.getDemographicNo()+" order by drugid desc"; //most recent is the first.
+                    String sql2 = "SELECT * FROM drugs WHERE BN='" + StringEscapeUtils.escapeSql(rx.getBrandName()) + "' AND demographic_no="+rx.getDemographicNo()+" AND provider_no = '" + rx.getProviderNo() +"' order by drugid desc"; //most recent is the first.
                     MiscUtils.getLogger().debug("sql 2="+sql2);
                     //if none, query database to see if there is rx with same brandname.
                     //if there are multiple, use latest.
@@ -1385,37 +1379,26 @@ public class RxUtil {
                     if (rs.first()) {
                         setResultSpecialQuantityRepeat(rx, rs);
                     } else {
-                        String sql3="SELECT * FROM drugs WHERE BN='" + StringEscapeUtils.escapeSql(rx.getBrandName()) + "' order by drugid desc"; //most recent is the first.
-                        MiscUtils.getLogger().debug("sql 3="+sql3);
-                        rs = DBHandler.GetSQL(sql3);
-                        if (rs.first()) {//use the first result if there are multiple.
-                            setResultSpecialQuantityRepeat(rx, rs);
-                        }else                        //else, set to special to "1 OD", quantity to "30", repeat to "0".
-                            setDefaultSpecialQuantityRepeat(rx);
+                    //else, set to special to "", quantity to "30", repeat to "0".
+                    	setDefaultSpecialQuantityRepeat(rx);
                     }
                 } else {
                     p("if3");
                     if (rx.getCustomName() != null && rx.getCustomName().length() > 1) {
                         p("customName is not null");
                         //String sql3 = "SELECT * FROM drugs WHERE customName='" + StringEscapeUtils.escapeSql(rx.getCustomName()) + "' order by written_date desc"; //most recent is the first.
-                        String sql3 = "SELECT * FROM drugs WHERE customName='" + StringEscapeUtils.escapeSql(rx.getCustomName()) + "'  AND demographic_no="+rx.getDemographicNo()+" order by drugid desc"; //most recent is the first.
+                        String sql3 = "SELECT * FROM drugs WHERE customName='" + StringEscapeUtils.escapeSql(rx.getCustomName()) + "'  AND demographic_no="+rx.getDemographicNo()+" AND provider_no = '" + rx.getProviderNo() +"' order by drugid desc"; //most recent is the first.
                         MiscUtils.getLogger().debug("sql 3="+sql3);
                         //if none, query database to see if there is rx with same customName.
                         //if there are multiple, use latest.
                         rs = DBHandler.GetSQL(sql3);
                         if (rs.first()) {
                             setResultSpecialQuantityRepeat(rx, rs);
-                        } else {
-                            String sql4="SELECT * FROM drugs WHERE customName='" + StringEscapeUtils.escapeSql(rx.getCustomName()) + "'  order by drugid desc"; //most recent is the first.
-                            rs = DBHandler.GetSQL(sql4);
-                            if (rs.first()) {
-                                setResultSpecialQuantityRepeat(rx, rs);
-                            }//else, set to special to "1 OD", quantity to "30", repeat to "0".
-                            else
-                                setDefaultSpecialQuantityRepeat(rx);
+                        } else {                            
+                        	setDefaultSpecialQuantityRepeat(rx);
                         }
                     } else {
-                        //else, set to special to "1 OD", quantity to "30", repeat to "0".
+                        //else, set to special to "", quantity to "30", repeat to "0".
                         setDefaultSpecialQuantityRepeat(rx);
                     }
                 }
