@@ -1,24 +1,24 @@
-<!-- 
+<!--
 /*
-* 
+*
 * Copyright (c) 2001-2009. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
-* This software is published under the GPL GNU General Public License. 
-* This program is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License 
-* as published by the Free Software Foundation; either version 2 
-* of the License, or (at your option) any later version. * 
-* This program is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
-* GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
-* along with this program; if not, write to the Free Software 
-* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
-* 
+* This software is published under the GPL GNU General Public License.
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version. *
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+*
 * <OSCAR TEAM>
-* 
-* This software was written for 
-* Centre for Research on Inner City Health, St. Michael's Hospital, 
-* Toronto, Ontario, Canada 
+*
+* This software was written for
+* Centre for Research on Inner City Health, St. Michael's Hospital,
+* Toronto, Ontario, Canada
 */
  -->
 <%@ page import="java.util.GregorianCalendar" %>
@@ -30,7 +30,7 @@
 
 <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
 
-<%	
+<%
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 %>
@@ -56,7 +56,7 @@ String default_pmm=null;
 if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
 	newticklerwarningwindow = (String) session.getAttribute("newticklerwarningwindow");
 	default_pmm = (String)session.getAttribute("default_pmm");
-}  
+}
 
 %>
 
@@ -79,24 +79,24 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 				<li>
 					<a HREF="#" ONCLICK ="popupPage2('<html:rewrite page="/report/reportindex.jsp"/>','reportPage');return false;" title="<bean:message key="global.genReport"/>"><u>R</u>eport</a>
 				</li>
-				
+
 				<security:oscarSec roleName="<%=roleName$%>" objectName="_billing" rights="r">
 				<oscar:oscarPropertiesCheck property="NOT_FOR_CAISI" value="no" defaultVal="true">
-				<li>					
+				<li>
 					<a HREF="#" ONCLICK ="popupPage2('<html:rewrite page="/billing"/>/CA/<%=prov%>/billingReportCenter.jsp?displaymode=billreport&providerview=<%=curUser_no%>');return false;" title="<bean:message key="global.genBillReport"/>"><u>B</u>illing</a>
 				</li>
 				</oscar:oscarPropertiesCheck>
 				</security:oscarSec>
-				
+
 <security:oscarSec roleName="<%=roleName$%>" objectName="_appointment.doctorLink" rights="r">
 				<oscar:oscarPropertiesCheck property="NOT_FOR_CAISI" value="no" defaultVal="true">
                                 <li>
-                                        <a HREF="#" ONCLICK ="popupInboxManager('<html:rewrite page="/dms/inboxManage.do?method=prepareForIndexPage"/>?providerNo=<%=curUser_no%>', 'Lab');return false;" title="<bean:message key="provider.appointmentProviderAdminDay.viewLabReports"/>">
+                                        <a HREF="#" ONCLICK ="popupInboxManager('<html:rewrite page="/dms/inboxManage.do?method=prepareForIndexPage"/>&providerNo=<%=curUser_no%>', 'Lab');return false;" title="<bean:message key="provider.appointmentProviderAdminDay.viewLabReports"/>">
                                             <span id="oscar_new_lab"><bean:message key="global.lab"/></span>
 					</a>
        				<oscar:newUnclaimedLab>
        					<a class="tabalert" HREF="#" ONCLICK="popupInboxManager('<html:rewrite page="/dms/inboxManage.do?method=prepareForIndexPage"/>?providerNo=0&searchProviderNo=0&status=N&lname=&fname=&hnum=&pageNum=1&startIndex=0', 'Lab');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewLabReports"/>'>*</a>
-       				</oscar:newUnclaimedLab>					       
+       				</oscar:newUnclaimedLab>
 				</li>
 				</oscar:oscarPropertiesCheck>
 </security:oscarSec>
@@ -109,9 +109,9 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 					<a HREF="#" ONCLICK ="popupOscarRx(625,900,'<html:rewrite page="/oscarEncounter/IncomingConsultation.do"/>?providerNo=<%=curUser_no %>&userName=<%=URLEncoder.encode(userfirstname+" "+userlastname)%>');return false;" title="<bean:message key="provider.appointmentProviderAdminDay.viewConReq"/>">
 					<span id="oscar_aged_consults">C<u>o</u>n</span></a>
 				</li>
-				<li>    
+				<li>
 					<a href="#" onClick ="popupPage(400,680,'<html:rewrite page="/provider/providerpreference.jsp"/>?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&mygroup_no=<%=mygroupno%>&new_tickler_warning_window=<%=newticklerwarningwindow%>&default_pmm=<%=default_pmm%>');return false;" title="<bean:message key="provider.appointmentProviderAdminDay.msgSettings"/>"><u>P</u>ref</a>
-				</li>				
+				</li>
 				<li>
 					<a HREF="#" onclick="popup('700', '1000', '<html:rewrite page="/dms/documentReport.jsp"/>?function=provider&functionid=<%=curUser_no%>&curUser=<%=curUser_no%>', 'edocView');return false;" title="<bean:message key="provider.appointmentProviderAdminDay.viewEdoc"/>">e<u>D</u>oc</a>
 				</li>
@@ -124,22 +124,22 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 					<a HREF="#" ONCLICK ="popupOscarRx(700,687,'<html:rewrite page="/admin/admin.jsp"/>');return false;"><u>A</u>dmin</a>
 				</li>
 </security:oscarSec>
-				
+
 				<li>
 					<a href='<html:rewrite page="/PMmodule/ProviderInfo.do"/>'>Program</a>
 				</li>
-			</ul>  
-			
+			</ul>
+
 		</td>
 		<td align="right" valign="bottom">
  			<a href="javascript: function myFunction() {return false; }" onClick="popup(700,1000,'<html:rewrite page="/scratch/index.jsp"/>','scratch')"><span id="oscar_scratch"></span></a>
-  			&nbsp;&nbsp;   
+  			&nbsp;&nbsp;
 			<a href=# onClick ="popupPage(600,750,'http://www.oscarcanada.org/manual/oscar-caisi-documentation/');return false;"><u>H</u>elp</a>
 			&nbsp;
 			<a href='<html:rewrite page="/PMmodule/ProviderInfo.do"/>'>Home</a> |
 			<a href="<html:rewrite page="/logout.jsp"/>">Lo<u>g</u>out</a>
 		</td>
-	</tr>	
+	</tr>
 </table>
 <table width="100%" border="1">
 <tr>
