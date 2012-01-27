@@ -277,7 +277,7 @@ padding-right:6;
                   		  	boolean enabledMyOscarButton=MyOscarUtils.isMyOscarSendButtonEnabled(auth, Integer.valueOf(demoNo));
 							if (enabledMyOscarButton) 
 							{
-								String sendDataPath = request.getContextPath() + "/phr/send_medicaldata_to_myoscar_action.jsp?"
+								String sendDataPath = request.getContextPath() + "/phr/send_medicaldata_to_myoscar.jsp?"
 														+ "demographicId=" + demoNo + "&"
 														+ "medicalDataType=Allergies" + "&"
 														+ "parentPage=" + request.getRequestURI(); 
