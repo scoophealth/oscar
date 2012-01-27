@@ -472,7 +472,7 @@ text-align:left;
            		  	boolean enabledMyOscarButton=MyOscarUtils.isMyOscarSendButtonEnabled(auth, Integer.valueOf(demographic_no));
 					if (enabledMyOscarButton) 
 					{
-						String sendDataPath = request.getContextPath() + "/phr/send_medicaldata_to_myoscar_action.jsp?"
+						String sendDataPath = request.getContextPath() + "/phr/send_medicaldata_to_myoscar.jsp?"
 								+ "demographicId=" + demographic_no + "&"
 								+ "medicalDataType=Immunizations" + "&"
 								+ "parentPage=" + request.getRequestURI() + "?demographic_no=" + demographic_no; 
@@ -483,7 +483,7 @@ text-align:left;
 					else
 					{
 		%>
-		<span style="color:grey;text-decoration:underline"><%=LocaleUtils.getMessage(request, "SendToMyOscar")%></span>
+		| | <span style="color:grey;text-decoration:underline"><%=LocaleUtils.getMessage(request, "SendToMyOscar")%></span>
 		<%
 					}
 				}
