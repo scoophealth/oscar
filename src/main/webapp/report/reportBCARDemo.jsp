@@ -21,8 +21,7 @@
 
 <%@ page import="java.util.*, oscar.oscarDemographic.data.ProvinceNames"
 	errorPage="errorpage.jsp"%>
-<jsp:useBean id="oscarVariables" class="java.util.Properties"
-	scope="session" />
+<% java.util.Properties oscarVariables = oscar.OscarProperties.getInstance(); %>
 <% 
   ProvinceNames pNames = ProvinceNames.getInstance();
   String prov= ((String ) oscarVariables.getProperty("billregion","")).trim().toUpperCase();

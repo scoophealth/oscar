@@ -24,8 +24,7 @@
 <!--add for con report-->
 <%@ taglib uri="http://www.caisi.ca/plugin-tag" prefix="plugin" %>
 
-<jsp:useBean id="oscarVariables" class="java.util.Properties"
-	scope="session" />
+
 
 <%
     String formClass = "ONAR";

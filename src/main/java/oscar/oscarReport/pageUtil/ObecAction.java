@@ -37,6 +37,7 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.oscarehr.util.MiscUtils;
 
+import oscar.OscarProperties;
 import oscar.oscarEncounter.oscarMeasurements.pageUtil.EctValidation;
 import oscar.oscarReport.data.ObecData;
 import oscar.util.DateUtils;
@@ -45,7 +46,7 @@ public class ObecAction extends Action {
    
    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
    throws ServletException, IOException {
-      Properties proppies = (Properties)  request.getSession().getAttribute("oscarVariables");
+      Properties proppies = OscarProperties.getInstance();
       
       ObecForm frm = (ObecForm)form;
       ObecData obecData1 = new ObecData();

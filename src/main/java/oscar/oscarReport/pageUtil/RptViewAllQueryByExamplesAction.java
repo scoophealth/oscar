@@ -23,7 +23,6 @@
  */
 package oscar.oscarReport.pageUtil;
 import java.io.IOException;
-import java.util.Properties;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -37,8 +36,6 @@ import org.apache.struts.action.ActionMapping;
 import oscar.oscarReport.bean.RptByExampleQueryBeanHandler;
 
 public class RptViewAllQueryByExamplesAction extends Action {
-
-    Properties oscarVariables = null;
     
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException

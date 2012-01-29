@@ -143,8 +143,8 @@ public final class LoginAction extends DispatchAction {
             LogAction.addLog(strAuth[0], LogConst.LOGIN, LogConst.CON_LOGIN, "", ip);
 
             // initial db setting
-            Properties pvar = cl.getOscarVariable();
-            session.setAttribute("oscarVariables", pvar);
+            Properties pvar = OscarProperties.getInstance();
+            
 
             // get View Type
             String viewType = LoginViewTypeHlp.getInstance().getProperty(strAuth[3].toLowerCase());

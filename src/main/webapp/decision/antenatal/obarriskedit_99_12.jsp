@@ -30,8 +30,7 @@
   String user_no = (String) session.getAttribute("user");
 %>
 <%@ page import="java.util.*, java.sql.*, java.io.*, oscar.*"%>
-<jsp:useBean id="oscarVariables" class="java.util.Properties"
-	scope="session" />
+<% java.util.Properties oscarVariables = OscarProperties.getInstance(); %>
 
 <html>
 <head>

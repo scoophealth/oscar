@@ -31,8 +31,6 @@ if(session.getValue("user") == null) response.sendRedirect("../logout.htm");
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<jsp:useBean id="oscarVariables" class="java.util.Properties"
-	scope="page" />
 <%@ page
 	import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, oscar.util.*, java.net.*, oscar.oscarLab.ca.on.*, oscar.MyDateFormat, oscar.dms.*, oscar.dms.data.*"%>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils"%>

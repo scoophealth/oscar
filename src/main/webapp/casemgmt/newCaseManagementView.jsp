@@ -58,7 +58,7 @@
 <%@page import="org.oscarehr.common.dao.EncounterTemplateDao"%>
 <%@page import="org.oscarehr.casemgmt.web.CheckBoxBean"%>
 
-<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
+<% java.util.Properties oscarVariables = OscarProperties.getInstance(); %>
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request" />
 
 <%

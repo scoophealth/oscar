@@ -41,8 +41,7 @@
 %>
 <%@ page import="java.util.*,oscar.*,java.io.*,java.net.*,oscar.util.*,org.apache.commons.io.FileUtils"
 	errorPage="errorpage.jsp"%>
-<jsp:useBean id="oscarVariables" class="java.util.Properties"
-	scope="session" />
+<% java.util.Properties oscarVariables = OscarProperties.getInstance(); %>
 
 <html>
 <head>

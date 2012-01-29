@@ -196,11 +196,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		String url = "";
 		if ("casemgmt".equals(request.getAttribute("from"))) {
 			String ss = (String) session.getAttribute("casemgmt_VlCountry");
-			Properties oscarVariables = (Properties) session.getAttribute("oscarVariables");
-			String province = "";
-			if (oscarVariables != null) {
-				province = ((String) oscarVariables.getProperty("billregion", "")).trim().toUpperCase();
-			}
+
+			String province = OscarProperties.getInstance().getProperty("billregion", "").trim().toUpperCase();
 
 			String strBeanName = "casemgmt_oscar_bean" + demono;
 			EctSessionBean bean = (EctSessionBean) session.getAttribute(strBeanName);
@@ -219,10 +216,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 				url = bsurl + "/oscar/billing/procedimentoRealizado/init.do?appId=" + bean.appointmentNo;
 			} else {
 				// StringEncoderUtils.a();
-				String default_view = "";
-				if (oscarVariables != null) {
-					default_view = oscarVariables.getProperty("default_view", "");
-				}
+				String default_view = OscarProperties.getInstance().getProperty("default_view", "");
+				
 				url = bsurl + "/billing.do?billRegion=" + java.net.URLEncoder.encode(province, "UTF-8") + "&billForm=" + java.net.URLEncoder.encode(default_view, "UTF-8") + "&hotclick=" + java.net.URLEncoder.encode("", "UTF-8") + "&appointment_no=" + bean.appointmentNo + "&appointment_date=" + bean.appointmentDate + "&start_time=" + Hour + ":" + Min + "&demographic_name=" + java.net.URLEncoder.encode(bean.patientLastName + "," + bean.patientFirstName, "UTF-8") + "&demographic_no=" + bean.demographicNo
 				        + "&providerview=" + bean.curProviderNo + "&user_no=" + bean.providerNo + "&apptProvider_no=" + bean.curProviderNo + "&bNewForm=1&status=t";
 			}
