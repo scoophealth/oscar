@@ -20,8 +20,7 @@
 <%@ page errorPage="errorpage.jsp"%>
 <%@ page import="java.util.*,java.net.*, java.sql.*, oscar.*"%>
 <%@ page import="oscar.oscarBilling.ca.on.data.*"%>
-<jsp:useBean id="oscarVariables" class="java.util.Properties"
-	scope="session" />
+<% java.util.Properties oscarVariables = OscarProperties.getInstance(); %>
 <jsp:useBean id="providerBean" class="java.util.Properties"
 	scope="session" />
 <%

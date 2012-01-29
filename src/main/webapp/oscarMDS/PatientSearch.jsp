@@ -191,7 +191,7 @@ function checkTypeIn() {
   int age=0;
   
   ResultSet rs=null;
-  Properties props = (Properties) request.getSession().getAttribute("oscarVariables");
+  Properties props =  oscar.OscarProperties.getInstance(); 
   DBPreparedHandler db = new DBPreparedHandler();
   
   String keyword="";

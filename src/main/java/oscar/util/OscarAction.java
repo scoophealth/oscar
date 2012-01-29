@@ -28,7 +28,7 @@ import java.util.Properties;
 import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+
 
 import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
@@ -37,6 +37,8 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.oscarehr.util.MiscUtils;
+
+import oscar.OscarProperties;
 
 
 public abstract class OscarAction extends Action {
@@ -160,8 +162,7 @@ public abstract class OscarAction extends Action {
 	}
 	
 	protected Properties getPropertiesDb(HttpServletRequest request) {
-		HttpSession session = request.getSession();
-	    return (Properties) session.getAttribute("oscarVariables");
+	    return OscarProperties.getInstance();
 	}
 
 }

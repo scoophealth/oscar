@@ -89,8 +89,7 @@ You have no rights to access the data!
 <%@page
 	import="oscar.eform.*, oscar.dms.*, org.apache.commons.lang.StringEscapeUtils"%>
 
-<jsp:useBean id="oscarVariables" class="java.util.Properties"
-	scope="session" />
+<% java.util.Properties oscarVariables = oscar.OscarProperties.getInstance(); %>
 
 <%
 	String ip = request.getRemoteAddr();

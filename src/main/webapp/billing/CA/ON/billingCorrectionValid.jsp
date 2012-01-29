@@ -36,8 +36,7 @@ if(session.getValue("user") == null) response.sendRedirect("../../../logout.htm"
 <%@ page
 	import="java.io.*, java.sql.*, java.util.*,java.net.*, oscar.*, java.math.*"
 	errorPage="errorpage.jsp"%>
-<jsp:useBean id="oscarVariables" class="java.util.Properties"
-	scope="session" />
+<% java.util.Properties oscarVariables = OscarProperties.getInstance(); %>
 <jsp:useBean id="dbBillingDataBean" scope="page"
 	class="oscar.dbBillingData">
 	<jsp:setProperty name="dbBillingDataBean" property="*" />

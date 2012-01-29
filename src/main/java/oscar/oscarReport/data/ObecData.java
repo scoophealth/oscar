@@ -50,8 +50,7 @@ public class ObecData {
 	public String text = null;
 	public String connect = null;
 	DBPreparedHandler accessDB = null;
-	Properties oscarVariables = null;
-
+	
 	public ObecData() {
 	}
 

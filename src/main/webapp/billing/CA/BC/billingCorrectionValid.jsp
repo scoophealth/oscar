@@ -40,8 +40,7 @@
 	class="oscar.dbBillingData">
 	<jsp:setProperty name="dbBillingDataBean" property="*" />
 </jsp:useBean>
-<jsp:useBean id="oscarVariables" class="java.util.Properties"
-	scope="session" />
+<% java.util.Properties oscarVariables = OscarProperties.getInstance(); %>
 <center>
 <h2>Billing Correction Review (session)</h2>
 </center>

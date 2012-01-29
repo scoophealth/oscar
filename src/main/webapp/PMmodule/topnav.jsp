@@ -28,7 +28,7 @@
 <%@ include file="/taglibs.jsp"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 
-<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
+<% java.util.Properties oscarVariables = oscar.OscarProperties.getInstance(); %>
 
 <%	
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
