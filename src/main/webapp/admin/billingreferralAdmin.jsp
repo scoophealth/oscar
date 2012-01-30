@@ -86,7 +86,7 @@
       Name</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       <nested:text property="search"></nested:text>
 	<nested:submit style="border:1px solid #666666;">Search</nested:submit>
-        <nested:submit style="border:1px solid #666666;" onclick="this.form.action=<%= URL %>">Add</nested:submit>
+        <nested:submit style="border:1px solid #666666;" onclick="this.form.action='ManageBillingReferral.do?method=add'">Add</nested:submit>
 </nested:form>
 
 <display:table name="referrals" id="referral" class="its" pagesize="15" style="border:1px solid #666666; width:99%;margin-top:2px;">

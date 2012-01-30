@@ -22,18 +22,18 @@ public class BillingreferralDao extends HibernateDaoSupport {
 
 	 public Billingreferral getByReferralNo(String referral_no) {
 		 String sql = "From Billingreferral br WHERE br.referralNo=?";
-		 
+
 		 @SuppressWarnings("unchecked")
 		 List<Billingreferral> brs = this.getHibernateTemplate().find(sql,referral_no);
 		 if(!brs.isEmpty())
 			 return brs.get(0);
 		 return null;
 	 }
-	 
+
 	 public Billingreferral getById(int id) {
 		 return (Billingreferral)this.getHibernateTemplate().get(Billingreferral.class, id);
 	 }
-	 
+
     public List getBillingreferral(String referral_no) {
 
         List cList = null;
@@ -79,6 +79,10 @@ public class BillingreferralDao extends HibernateDaoSupport {
     }
 
     public void updateBillingreferral(Billingreferral obj) {
-        getHibernateTemplate().saveOrUpdate(obj);
+    	if(obj.getBillingreferralNo() == null || obj.getBillingreferralNo().intValue() == 0) {
+    		getHibernateTemplate().save(obj);
+    	} else {
+    		getHibernateTemplate().update(obj);
+    	}
     }
 }
