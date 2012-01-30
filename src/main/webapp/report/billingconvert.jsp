@@ -6,8 +6,7 @@
 <%@ page
 	import="java.util.*, java.sql.*,java.io.*, oscar.*, oscar.login.*, org.apache.commons.lang.StringEscapeUtils"
 	errorPage="../appointment/errorpage.jsp"%>
-<jsp:useBean id="oscarVariables" class="java.util.Properties"
-	scope="session" />
+<% java.util.Properties oscarVariables = OscarProperties.getInstance(); %>
 
 <%@page import="org.oscarehr.util.MiscUtils"%><html>
 <head>

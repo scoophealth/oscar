@@ -36,7 +36,7 @@
 
 <jsp:useBean id="checklist" class="oscar.OBChecklist_99_12" scope="page" />
 <jsp:useBean id="risks" class="oscar.OBRisks_99_12" scope="page" />
-<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
+<% java.util.Properties oscarVariables = OscarProperties.getInstance(); %>
 
 <html>
 <head>

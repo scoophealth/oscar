@@ -35,7 +35,7 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.Vector" %>
 
-<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
+<% java.util.Properties oscarVariables = oscar.OscarProperties.getInstance(); %>
 <%
     String province = ((String ) oscarVariables.getProperty("billregion","")).trim().toUpperCase();
     oscar.oscarEncounter.pageUtil.EctSessionBean bean=null;

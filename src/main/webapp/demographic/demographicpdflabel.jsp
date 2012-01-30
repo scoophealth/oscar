@@ -48,8 +48,7 @@ You have no rights to access the data!
 	scope="session" />
 <jsp:useBean id="providerBean" class="java.util.Properties"
 	scope="session" />
-<jsp:useBean id="oscarVariables" class="java.util.Properties"
-	scope="session" />
+<% java.util.Properties oscarVariables = OscarProperties.getInstance(); %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 

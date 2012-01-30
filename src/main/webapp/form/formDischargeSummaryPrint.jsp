@@ -25,8 +25,7 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%@ page
 	import="org.springframework.context.*,org.springframework.web.context.support.*"%>
-<jsp:useBean id="oscarVariables" class="java.util.Properties"
-	scope="session" />
+
 
 <%
 	String formClass = "DischargeSummary";

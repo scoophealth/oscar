@@ -40,6 +40,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.util.MiscUtils;
 
+import oscar.OscarProperties;
 import oscar.entities.Provider;
 import oscar.oscarBilling.ca.bc.MSP.MSPReconcile;
 import oscar.oscarBilling.ca.bc.data.BillRecipient;
@@ -57,8 +58,7 @@ public final class BillingViewAction
                                HttpServletResponse response) throws IOException,
       ServletException {
 
-    Properties oscarVars = (Properties) request.getSession().getAttribute(
-        "oscarVariables");
+    Properties oscarVars = OscarProperties.getInstance();
 
     if (oscarVars.getProperty("billregion").equals("ON")) {
       String newURL = mapping.findForward("ON").getPath();

@@ -30,7 +30,6 @@
 package oscar;
 
 import java.io.IOException;
-import java.util.Properties;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -48,7 +47,6 @@ public class OscarAction
   protected String error = "error";
   protected String propName = "";
   protected DBPreparedHandler handler = null;
-  protected Properties oscarVariables = null;
   public final String MIME_PDF = "application/pdf";
   String propFile = "";
 
