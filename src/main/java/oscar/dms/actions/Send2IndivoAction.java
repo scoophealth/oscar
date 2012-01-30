@@ -92,7 +92,7 @@ public class Send2IndivoAction extends Action{
 	                        
 	            for( int idx = 0; idx < files.length; ++idx ) {
 	                String filename =  docData.getDocumentName(files[idx]);
-	                EDoc doc = docData.getDoc(files[idx]);
+	                EDoc doc = EDocUtil.getDoc(files[idx]);
 	                String description = doc.getDescription();
 	                String type = doc.getType();
 	                
