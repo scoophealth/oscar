@@ -19,7 +19,7 @@
 <script>
 	//filter for client - will work for other dropdowns as well
 	function filter(term, _id, cellNr) {
-		
+
 		var suche = term.toLowerCase();
 		//suche = trimAll(suche);
 		//alert(suche.length + suche  + _id + cellNr);
@@ -36,7 +36,7 @@
 		for (var r = 1; r < table.rows.length - 1; r++){
 			//alert(table.rows.length +  table.rows[0].cells[2].innerHTML);
 			ele = table.rows[r].cells[cellNr].innerHTML.replace(/<[^>]+>/g,"");
-			
+
 			if (ele.toLowerCase().indexOf(suche)>=0 )
 				table.rows[r].style.display = '';
 			else table.rows[r].style.display = 'none';
@@ -61,18 +61,18 @@
 		form.method.value=method;
 		form.submit();
 	}
-	
+
 	function checkTicklerDate() {
 		//2007-10-05
 		var startDate = document.ticklerForm.elements['filter.startDate'].value;
 		var endDate = document.ticklerForm.elements['filter.endDate'].value;
-		
+
 		if(check_date('filter.startDate') && check_date('filter.endDate')) {
-		  
+
 		  var sArray1=startDate.split("-");
 		  var sArray2=endDate.split("-");
 		  var bValid=true;
-		  
+
 		  if(parseInt(sArray1[0])>parseInt(sArray2[0])) {
 		    bValid=false;
 		  }else if(parseInt(sArray1[0])==parseInt(sArray2[0])) {
@@ -84,42 +84,42 @@
 		 		}
 		 	}
 		 }
-		    
+
 		  if(!bValid){
             alert("Begin Date can not be greater than End Date.");
-            return false;		
+            return false;
 		  }else{
 		    var form = document.ticklerForm;
 		    form.method.value='filter';
 		    form.submit();
-		  }  
+		  }
 		} else {
 			return false;
-		}		
-	}	
+		}
+	}
 
-        function createReport() {        
+        function createReport() {
                 document.ticklerForm.method.value='filter';
-                document.ticklerForm.submit();                
+                document.ticklerForm.submit();
         }
-        
+
         function updTklrList() {
                 clearInterval(check_demo_no);
                 createReport();
         }
-        
+
         function search_demographic() {
-                var url = '<c:out value="${ctx}"/>/ticklerPlus/demographicSearch2.jsp?query=';// + document.ticklerForm.elements['filter.demographic_webName'].value;
+                var url = '<c:out value="${ctx}"/>/ticklerPlus/demographicSearch2.jsp?query=' + document.ticklerForm.elements['filter.demographic_webName'].value;
                 var popup = window.open(url,'demographic_search');
                 demo_no_orig = document.ticklerForm.elements['filter.demographic_no'].value;
                 check_demo_no = setInterval("if (demo_no_orig != document.ticklerForm.elements['filter.demographic_no'].value) updTklrList()",100);
-       		
+
        			if (popup != null) {
     				if (popup.opener == null) {
       					popup.opener = self;
     				}
     				popup.focus();
-  				}	
+  				}
         }
 
         function sortByDate()
@@ -127,24 +127,24 @@
 			document.ticklerForm.method.value='filter';
 			document.ticklerForm.submit();
         }
-        
+
         function clearClientFilter() {
             document.ticklerForm.elements['filter.demographic_no'].value = "";
             document.ticklerForm.elements['filter.demographic_webName'].value = "";
             showClearButton();
             createReport();
         }
-        
+
         function showClearButton() {
             var cb = document.getElementById('clear_button');
-            
+
             if (document.ticklerForm.elements['filter.demographic_webName'].value=="") {
                 cb.style.display = 'none';
             } else {
                 cb.style.display = '';
             }
         }
-        
+
         function wrapUp() {
             try {
                 if (window.opener && window.opener.callRefreshTabAlerts) {
@@ -178,7 +178,7 @@
 		<td class="blueText" width="30%"><span style="text-decoration:underline"
 			onClick="openBrWindow('<c:out value="${ctx}"/>/ticklerPlus/calendar/oscarCalendarPopup.jsp?type=caisi&openerForm=ticklerForm&amp;openerElement=filter.startDate&amp;year=<%=curYear%>&amp;month=<%=curMonth%>','','width=300,height=300')">Begin&nbsp;Date:</span>
 			<html:text property="filter.startDate" maxlength="10" /></td>
-		
+
 		<td class="blueText" width="30%"><span style="text-decoration:underline"
 			onClick="openBrWindow('<c:out value="${ctx}"/>/ticklerPlus/calendar/oscarCalendarPopup.jsp?type=caisi&openerForm=ticklerForm&amp;openerElement=filter.endDate&amp;year=<%=curYear%>&amp;month=<%=curMonth %>','','width=300,height=300')">End&nbsp;Date:</span>
 			<html:text property="filter.endDate" maxlength="10"/>
@@ -208,11 +208,11 @@
 			<html:options collection="providers" property="providerNo"
 				labelProperty="formattedName" />
 		</html:select></td>
-		
+
 	</tr>
 	<tr>
-		<td class="blueText" colspan="2">Client: 
-		
+		<td class="blueText" colspan="2">Client:
+
 		<oscar:oscarPropertiesCheck property="clientdropbox" value="on">
 		    <html:select property="filter.demographic_no"
 			onchange="return checkTicklerDate();">
@@ -220,13 +220,13 @@
 			<html:options collection="demographics" property="demographicNo" labelProperty="formattedName" />
 		    </html:select>
 		</oscar:oscarPropertiesCheck>
-		
+
 		<oscar:oscarPropertiesCheck property="clientdropbox" value="off" defaultVal="true">
 		    <html:hidden property="filter.demographic_no"/>
 		    <html:text property="filter.demographic_webName" onkeyup="filter(this.value, 'ticklersTbl', 2)" size="15"/>
 		    <span id="clear_button"><input type="button" value="Clear" onclick="clearClientFilter();" /></span>
 		    <script language="JavaScript">showClearButton();</script>
-		    <input type="button" value="Search" onclick="search_demographic();" />
+		    <!-- <input type="button" value="Search" onclick="search_demographic();" /> -->
 		</oscar:oscarPropertiesCheck>
 
 		</td>
@@ -246,32 +246,32 @@
 	</tr>
 </table>
 
-<% 
+<%
 	 //colour codes - html
 	 String[] ColourCodesArray=new String[3];
 	 ColourCodesArray[1]="red"; //red - High
 	 ColourCodesArray[2]="black"; //normal or low
-	
+
 	 //labels for colour codes
 	 String[] lblCodesArray=new String[3];
 	 lblCodesArray[1]="High"; //red - High
 	 lblCodesArray[2]="Normal or Low"; //normal or low
-	 
+
 	 //Title ie: Legend or Profile Legend
 	 String legend_title="Priority Legend: ";
-			
+
 	 //creat empty builder string
 	 String legend_builder=" ";
-		
-		
+
+
 	 	for (int iLegend = 1; iLegend < 3; iLegend++){
-			
+
 			legend_builder +="<td> <table class='colour_codes' bgcolor='"+ColourCodesArray[iLegend]+"'><td> </td></table> </td> <td align='center'>"+lblCodesArray[iLegend]+"</td>";
-			
+
 		}
-		
+
 	 	String legend = "<table class='legend' cellspacing='0' align='right'><tr><td><b>"+legend_title+"</b></td>"+legend_builder+" </tr></table>";
-		
+
 		out.print(legend);
 %>
 <br />
@@ -284,18 +284,18 @@
 			<th></th>
 			<th>Demographic Name</th>
 			<th class=noprint>Provider Name</th>
-		 
+
 			<%
 			String click_order = (String)session.getAttribute( "filter_order" );
-	
+
 			if(click_order=="DESC") {%>
 				<input type="hidden" name="filter.sort_order" value="ASC" />
-				<% 
+				<%
 				session.setAttribute( "filter_order", "ASC" );
 			} else {%>
 				<input type="hidden" name="filter.sort_order" value="DESC" />
 				<% session.setAttribute( "filter_order", "DESC");
-			}		
+			}
 			%>
 
 			<th class=noprint><a href="javascript:sortByDate();" class=noprint>Date</a></th>
@@ -328,7 +328,7 @@
 			String assignee_name = "";
 			String program_name = "";
 			String status = "Active";
-			String late_status = "b";			
+			String late_status = "b";
 			Tickler temp = (Tickler) pageContext.getAttribute("tickler");
 			if (temp != null) {
 				org.oscarehr.common.model.Demographic demographic = (org.oscarehr.common.model.Demographic) temp.getDemographic();
@@ -346,12 +346,12 @@
 					assignee_name = assignee.getLastName() + ","
 							+ assignee.getFirstName();
 				}
-				
+
 				Program program = (Program) temp.getProgram();
 				if (program != null) {
 					program_name = program.getName();
 				}
-				
+
 				switch (temp.getStatus()) {
 				case 'A':
 					status = "Active";
@@ -405,7 +405,7 @@
 </table>
 
 <table>
-		<!-- 
+		<!--
 		<tr>
 			<td colspan="2"><a href="#" onclick="CheckAll(document.ticklerForm);return false;">Check All</a>&nbsp;<a href="#" onclick="ClearAll(document.ticklerForm);return false;">Clear All</a></td>
 		</tr>
@@ -415,8 +415,8 @@
 			<td class=noprint><input type="button" value="Complete"
 				onclick="batch_operation('complete');" /></td>
 			<td class=noprint><input type="button" value="Delete"
-				onclick="batch_operation('delete');" /></td>	
-				
+				onclick="batch_operation('delete');" /></td>
+
 		</tr>
 </table>
 
