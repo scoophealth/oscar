@@ -93,10 +93,10 @@
 	String str = null;
 	int nStrShowLen = 20;
 	String prov= ((String ) oscarVariables.getProperty("billregion","")).trim().toUpperCase();
-	
+
 	CaseManagementManager cmm = (CaseManagementManager) SpringUtils.getBean("caseManagementManager");
 	List<CaseManagementNoteLink> cml = cmm.getLinkByTableId(CaseManagementNoteLink.DEMOGRAPHIC, Long.valueOf(demographic_no));
-	boolean hasImportExtra = (cml.size()>0); 
+	boolean hasImportExtra = (cml.size()>0);
 	String annotation_display = CaseManagementNoteLink.DISP_DEMO;
 
 	LogAction.addLog((String) session.getAttribute("user"), LogConst.READ, LogConst.CON_DEMOGRAPHIC,  demographic_no , request.getRemoteAddr(),demographic_no);
@@ -162,13 +162,13 @@
 <script src="<c:out value="${ctx}"/>/share/javascript/menutility.js"
 	type="text/javascript"></script>
 <script type="text/javascript" src="../share/javascript/prototype.js"></script>
-<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.js"></script> 
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.js"></script>
    <script>
      jQuery.noConflict();
    </script>
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
 <oscar:customInterface section="master"/>
-   
+
 <script language="JavaScript" type="text/javascript">
 
 function rs(n,u,w,h,x) {
@@ -319,7 +319,7 @@ function checkRosterDate() {
 }
 function checkRosterDatesTermReason() {
         if (document.updatedelete.roster_status.value=="") return true;
-        
+
         var yyyy = document.updatedelete.roster_date_year.value;
         var mm = document.updatedelete.roster_date_month.value;
         var dd = document.updatedelete.roster_date_day.value;
@@ -424,7 +424,7 @@ function checkONReferralNo() {
   if (document.updatedelete.hc_type.value == 'ON' && referralNo.length > 0 && referralNo.length != 6) {
     alert("<bean:message key="demographic.demographiceditdemographic.msgWrongReferral"/>") ;
   }
-  
+
   <% } %>
 }
 
@@ -487,7 +487,7 @@ function showHideDetail(){
     showHideItem('viewDemographics2');
     showHideItem('updateButton');
     showHideItem('swipeButton');
-    
+
     showHideBtn('editBtn');
     showHideBtn('closeBtn');
 }
@@ -543,7 +543,7 @@ function showMenu(menuNumber, eventObj) {
     return showPopup(menuId, eventObj);
 }
 
-function add2url(txt) {	
+function add2url(txt) {
     var reasonLabel = "reason=";
     var encTypeLabel = "encType=";
     var beg = encURL.indexOf(reasonLabel);
@@ -551,13 +551,13 @@ function add2url(txt) {
     var end = encURL.indexOf("&", beg);
     var part1 = encURL.substring(0,beg);
     var part2 = encURL.substr(end);
-    encURL = part1 + encodeURI(txt) + part2;   
+    encURL = part1 + encodeURI(txt) + part2;
     beg = encURL.indexOf(encTypeLabel);
     beg += encTypeLabel.length;
     end = encURL.indexOf("&", beg);
     part1 = encURL.substring(0,beg);
     part2 = encURL.substr(end);
-    encURL = part1 + encodeURI(txt) + part2;    
+    encURL = part1 + encodeURI(txt) + part2;
     popupEChart(710, 1024,encURL);
     return false;
 }
@@ -689,10 +689,10 @@ div.demographicWrapper {
                                 String resident="", nurse="", alert="", notes="", midwife="";
                                 ResultSet rs = null;
                                 rs = apptMainBean.queryResults(demographic_no, "search_demographiccust");
-                                
+
                                 DemographicDao demographicDao=(DemographicDao)SpringUtils.getBean("demographicDao");
                                 Demographic demographic=demographicDao.getDemographic(demographic_no);
-                                
+
                                 while (rs.next()) {
                                         resident = (apptMainBean.getString(rs,"cust1"));
                                         nurse = (apptMainBean.getString(rs,"cust2"));
@@ -733,7 +733,7 @@ div.demographicWrapper {
                                                 if (oscar.util.StringUtils.filled(apptMainBean.getString(rs,"year_of_birth"))) birthYear = apptMainBean.getString(rs,"year_of_birth");
                                                 if (oscar.util.StringUtils.filled(apptMainBean.getString(rs,"month_of_birth"))) birthMonth = apptMainBean.getString(rs,"month_of_birth");
                                                 if (oscar.util.StringUtils.filled(apptMainBean.getString(rs,"date_of_birth"))) birthDate = apptMainBean.getString(rs,"date_of_birth");
-                                                
+
                                                	dob_year = Integer.parseInt(birthYear);
                                                	dob_month = Integer.parseInt(birthMonth);
                                                	dob_date = Integer.parseInt(birthDate);
@@ -741,12 +741,12 @@ div.demographicWrapper {
                         %> <%=apptMainBean.getString(rs,"last_name")%>,
 				<%=apptMainBean.getString(rs,"first_name")%> <%=apptMainBean.getString(rs,"sex")%>
 				<%=age%> years &nbsp;
-				<oscar:phrverification demographicNo='<%=apptMainBean.getString(rs,"demographic_no")%>' ><bean:message key="phr.verification.link"/></oscar:phrverification> 
-				
+				<oscar:phrverification demographicNo='<%=apptMainBean.getString(rs,"demographic_no")%>' ><bean:message key="phr.verification.link"/></oscar:phrverification>
+
 				<span style="margin-left: 20px;font-style:italic">
 				<bean:message key="demographic.demographiceditdemographic.msgNextAppt"/>: <oscar:nextAppt demographicNo='<%=apptMainBean.getString(rs,"demographic_no")%>' />
 				</span>
-					
+
 				</td>
 			</tr>
 		</table>
@@ -763,8 +763,8 @@ div.demographicWrapper {
 					href='demographiccontrol.jsp?demographic_no=<%=apptMainBean.getString(rs,"demographic_no")%>&last_name=<%=URLEncoder.encode(apptMainBean.getString(rs,"last_name"))%>&first_name=<%=URLEncoder.encode(apptMainBean.getString(rs,"first_name"))%>&orderby=appttime&displaymode=appt_history&dboperation=appt_history&limit1=0&limit2=25'><bean:message
 					key="demographic.demographiceditdemographic.btnApptHist" /></a>
 				</td>
-			</tr>	
-			
+			</tr>
+
 <%
 String wLReadonly = "";
 WaitingList wL = WaitingList.getInstance();
@@ -803,7 +803,7 @@ if(wLReadonly.equals("")){
 					onclick="popupPage(800,1000,'../billing/CA/BC/billStatus.jsp?lastName=<%=URLEncoder.encode(apptMainBean.getString(rs,"last_name"))%>&firstName=<%=URLEncoder.encode(apptMainBean.getString(rs,"first_name"))%>&filterPatient=true&demographicNo=<%=apptMainBean.getString(rs,"demographic_no")%>');return false;">
 				<bean:message key="demographic.demographiceditdemographic.msgInvoiceList"/></a>
 
-                             
+
                                 <br/>
                                 <a  href="javascript: void();" onclick="return !showMenu('2', event);" onmouseover="callEligibilityWebService('../billing/CA/BC/ManageTeleplan.do','returnTeleplanMsg');"><bean:message key="demographic.demographiceditdemographic.btnCheckElig"/></a>
 					<div id='menu2' class='menu' onclick='event.cancelBubble = true;' style="width:350px;">
@@ -947,7 +947,7 @@ if(wLReadonly.equals("")){
       			</special:SpecialEncounterTag>
       		</plugin:hideWhenCompExists>
 			<tr>
-				<td>				
+				<td>
 				<%if( org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable() ) {%>
 				<a
 					href="javascript: function myFunction() {return false; }"
@@ -981,7 +981,7 @@ if(wLReadonly.equals("")){
 						<td>
 							<%
 								String onclickString="alert('Please login to MyOscar first.')";
-							
+
 								PHRAuthentication auth=MyOscarUtils.getPHRAuthentication(session);
 								if (auth!=null) onclickString="popupOscarRx(600,900,'../phr/PhrMessage.do?method=createMessage&providerNo="+curProvider_no+"&demographicNo="+demographic_no+"')";
 							%>
@@ -1214,9 +1214,9 @@ if (iviewTag!=null && !"".equalsIgnoreCase(iviewTag.trim())){
 
 						</ul>
 						</div>
-						
+
 						<% } else { %>
-						
+
 						<div class="demographicSection" id="otherContacts2">
 						<h3>&nbsp;<bean:message key="demographic.demographiceditdemographic.msgOtherContacts"/>: <b><a
 							href="javascript: function myFunction() {return false; }"
@@ -1228,21 +1228,21 @@ if (iviewTag!=null && !"".equalsIgnoreCase(iviewTag.trim())){
 							DemographicContactDao dContactDao = (DemographicContactDao)SpringUtils.getBean("demographicContactDao");
 							List<DemographicContact> dContacts = dContactDao.findByDemographicNo(Integer.parseInt(apptMainBean.getString(rs,"demographic_no")));
 							dContacts = ContactAction.fillContactNames(dContacts);
-							for(DemographicContact dContact:dContacts) {	
-								String sdm = (dContact.getSdm().equals("true"))?"<span title=\"SDM\" >/SDM</span>":"";
-								String ec = (dContact.getEc().equals("true"))?"<span title=\"Emergency Contact\" >/EC</span>":"";
+							for(DemographicContact dContact:dContacts) {
+								String sdm = (dContact.getSdm()!=null && dContact.getSdm().equals("true"))?"<span title=\"SDM\" >/SDM</span>":"";
+								String ec = (dContact.getEc()!=null && dContact.getEc().equals("true"))?"<span title=\"Emergency Contact\" >/EC</span>":"";
 						%>
-																										
+
 								<li><span class="label"><%=dContact.getRole()%>:</span>
                                                             <span class="info"><%=dContact.getContactName() %><%=sdm%><%=ec%></span>
-                                                        </li>																																			
+                                                        </li>
 
 						<%  } %>
 
-						</ul>						
+						</ul>
 						</div>
-						
-						<% } %>	
+
+						<% } %>
 						<div class="demographicSection" id="clinicStatus">
 						<h3>&nbsp;<bean:message key="demographic.demographiceditdemographic.msgClinicStatus"/> (<a href="#" onclick="popup(1000, 650, 'EnrollmentHistory.jsp?demographicNo=<%=demographic_no%>', 'enrollmentHistory'); return false;"><bean:message key="demographic.demographiceditdemographic.msgEnrollmentHistory"/></a>)</h3>
 						<ul>
@@ -1314,7 +1314,7 @@ if ( PatStat.equals(Dead) ) {%>
 						<div class="demographicSection" id="rxInteractionWarningLevel">
 						<h3>&nbsp;<bean:message
 							key="demographic.demographiceditdemographic.rxInteractionWarningLevel" /></h3>
-                              <%                              
+                              <%
                               	String warningLevel = (String)demoExt.get("rxInteractionWarningLevel");
                               	if(warningLevel==null) warningLevel="0";
 	          					String warningLevelStr = "Not Specified";
@@ -1428,14 +1428,14 @@ if ( PatStat.equals(Dead) ) {%>
 						<div class="demographicSection" id="notes">
 						<h3>&nbsp;<bean:message
 							key="demographic.demographiceditdemographic.formNotes" /></h3>
-						
+
                                                     <%=notes%>&nbsp;
 <%if (hasImportExtra) { %>
 		                <a href="javascript:void(0);" title="Extra data from Import" onclick="window.open('../annotation/importExtra.jsp?display=<%=annotation_display %>&amp;table_id=<%=demographic_no %>&amp;demo=<%=demographic_no %>','anwin','width=400,height=250');">
 		                    <img src="../images/notes.gif" align="right" alt="Extra data from Import" height="16" width="13" border="0"> </a>
 <%} %>
-                                                    
-                                                
+
+
 						</div>
 						</div>
 						</div>
@@ -1513,9 +1513,9 @@ if(oscarVariables.getProperty("demographicExt") != null) {
 								<%String spokenLang = apptMainBean.getString(rs,"spoken_lang"); %>
 									<select name="spoken_lang" <%=getDisabled("spoken_lang")%>>
 <%for (String splang : Util.spokenLangProperties.getLangSorted()) { %>
-                                        <option value="<%=splang %>" <%=spokenLang.equals(splang)?"selected":"" %>><%=splang %></option> 
+                                        <option value="<%=splang %>" <%=spokenLang.equals(splang)?"selected":"" %>><%=splang %></option>
 <%} %>
-									</select>								
+									</select>
 							    </td>
 							</tr>
 							<%
@@ -1782,7 +1782,7 @@ if(oscarVariables.getProperty("demographicExt") != null) {
 								<td align="left"><input type="text" name="myOscarUserName" size="30" <%=getDisabled("myOscarUserName")%>
 									value="<%=apptMainBean.getString(rs,"myOscarUserName")!=null? apptMainBean.getString(rs,"myOscarUserName") : ""%>"><br />
 								<%if (apptMainBean.getString(rs,"myOscarUserName")==null || apptMainBean.getString(rs,"myOscarUserName").equals("")) {%>
-								
+
 								<%
 									String onclickString="popup(600, 650, '../phr/indivo/RegisterIndivo.jsp?demographicNo="+demographic_no+"', 'indivoRegistration');";
 									PHRAuthentication auth=MyOscarUtils.getPHRAuthentication(session);
@@ -1901,7 +1901,7 @@ if(oscarVariables.getProperty("demographicExt") != null) {
 	                                 renewDateDay = decF.format(hcRenewalCal.get(GregorianCalendar.DAY_OF_MONTH));
 								 }
 
-                              %> 
+                              %>
 								<input type="text" name="hc_renew_date_year" size="4" maxlength="4" value="<%=renewDateYear%>" <%=getDisabled("hc_renew_date_year")%>>
 								<input type="text" name="hc_renew_date_month" size="2" maxlength="2" value="<%=renewDateMonth%>" <%=getDisabled("hc_renew_date_month")%>>
 								<input type="text" name="hc_renew_date_date" size="2" maxlength="2" value="<%=renewDateDay%>" <%=getDisabled("hc_renew_date_date")%>>
@@ -2199,7 +2199,7 @@ document.updatedelete.r_doctor_ohip.value = refNo;
                                                                 rosterTerminationDateDay   = decF.format(dateCal.get(GregorianCalendar.DAY_OF_MONTH));
                                                              }
                                                              rosterTerminationReason = demographic.getRosterTerminationReason();
-                                                             
+
                                                              String patientStatusDateYear="";
                                                              String patientStatusDateMonth="";
                                                              String patientStatusDateDay="";
@@ -2422,7 +2422,7 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 								String endYear="";
 								String endMonth="";
 								String endDay="";
-								
+
 								if (endDate!=null)
 								{
 	                                 // Format year
@@ -2581,13 +2581,13 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
 							if (ConformanceTestHelper.enableConformanceOnlyTestFeatures)
 							{
 								String styleBut = "";
-								if(ConformanceTestHelper.hasDifferentRemoteDemographics(Integer.parseInt(demographic$))){                                                                        
+								if(ConformanceTestHelper.hasDifferentRemoteDemographics(Integer.parseInt(demographic$))){
                                                                        styleBut = " style=\"background-color:yellow\" ";
                                                                 }%>
 									<input type="button" value="Compare with Integrator" <%=styleBut%>  onclick="popup(425, 600, 'DiffRemoteDemographics.jsp?demographicId=<%=demographic$%>', 'RemoteDemoWindow')" />
-									<input type="button" value="Update latest integrated demographics information" onclick="document.location='<%=request.getContextPath()%>/demographic/copyLinkedDemographicInfoAction.jsp?demographicId=<%=demographic$%>&<%=request.getQueryString()%>'" /> 
-									<input type="button" value="Send note to integrated provider" onclick="document.location='<%=request.getContextPath()%>/demographic/followUpSelection.jsp?demographicId=<%=demographic$%>'" /> 
-								<%								
+									<input type="button" value="Update latest integrated demographics information" onclick="document.location='<%=request.getContextPath()%>/demographic/copyLinkedDemographicInfoAction.jsp?demographicId=<%=demographic$%>&<%=request.getQueryString()%>'" />
+									<input type="button" value="Send note to integrated provider" onclick="document.location='<%=request.getContextPath()%>/demographic/followUpSelection.jsp?demographicId=<%=demographic$%>'" />
+								<%
 							}
 						%>
 						</td>
@@ -2613,7 +2613,7 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
 Calendar.setup({ inputField : "waiting_list_referral_date", ifFormat : "%Y-%m-%d", showsTime :false, button : "referral_date_cal", singleClick : true, step : 1 });
 
 function callEligibilityWebService(url,id){
-        
+
        var ran_number=Math.round(Math.random()*1000000);
        var params = "demographic=<%=demographic_no%>&method=checkElig&rand="+ran_number;  //hack to get around ie caching the page
        new Ajax.Updater(id,url, {method:'get',parameters:params,asynchronous:true,onComplete:function(request){Element.hide('search_spinner')},onLoading:function(request){Element.show('search_spinner')}});
@@ -2631,7 +2631,7 @@ function callEligibilityWebService(url,id){
 		if(val != null && val.equals("disabled")) {
 			return " disabled=\"disabled\" ";
 		}
-		
+
 		return "";
 }
 
