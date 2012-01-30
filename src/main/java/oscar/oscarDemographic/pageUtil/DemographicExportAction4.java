@@ -1572,7 +1572,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 
             if (exReportsReceived) {
                 // REPORTS RECEIVED
-                ArrayList<EDoc> edoc_list = new EDocUtil().listDemoDocs(demoNo);
+                ArrayList<EDoc> edoc_list = EDocUtil.listDemoDocs(demoNo);
                 String annotation = null;
                 for (int j=0; j<edoc_list.size(); j++) {
                     EDoc edoc = edoc_list.get(j);
