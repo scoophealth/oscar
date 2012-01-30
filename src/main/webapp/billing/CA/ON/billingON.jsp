@@ -30,7 +30,6 @@
 <%@page import="org.oscarehr.web.admin.ProviderPreferencesUIBean"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 
-<%--<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />--%>
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
 <%
 			if (session.getAttribute("user") == null) {

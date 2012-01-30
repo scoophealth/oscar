@@ -130,10 +130,9 @@ if (request.getParameter("year")!=null && request.getParameter("month")!=null &&
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
-<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
 <jsp:useBean id="as" class="oscar.appt.ApptStatusData" scope="page" />
 <jsp:useBean id="dateTimeCodeBean" class="java.util.Hashtable" scope="page" />
-
+<% Properties oscarVariables = OscarProperties.getInstance(); %>
 <%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 
 <!-- Struts for i18n -->

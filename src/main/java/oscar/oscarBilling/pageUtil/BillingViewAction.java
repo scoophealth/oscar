@@ -38,6 +38,8 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.util.MessageResources;
 import org.oscarehr.util.MiscUtils;
 
+import oscar.OscarProperties;
+
 public final class BillingViewAction extends Action {
     
     public ActionForward execute(ActionMapping mapping,
@@ -55,7 +57,7 @@ public final class BillingViewAction extends Action {
         MessageResources messages = getResources(request);
         
         // Setup variables
-        Properties oscarVars = (Properties) request.getSession().getAttribute("oscarVariables");
+        Properties oscarVars = OscarProperties.getInstance();
         
         if (oscarVars.getProperty("billregion").equals("ON")){
             String newURL = mapping.findForward("ON").getPath();

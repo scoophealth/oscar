@@ -26,7 +26,7 @@
 %>
 
 <%@ page errorPage="errorpage.jsp"%>
-<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
+<% java.util.Properties oscarVariables = OscarProperties.getInstance(); %>
 <%
 	String country = request.getLocale().getCountry();
 	oscar.oscarSecurity.CookieSecurity cs = new oscar.oscarSecurity.CookieSecurity();

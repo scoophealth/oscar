@@ -24,8 +24,7 @@
  */
 -->
 
-<jsp:useBean id="oscarVariables" class="java.util.Properties"
-	scope="session" />
+<% java.util.Properties oscarVariables = oscar.OscarProperties.getInstance(); %>
 <%   
   if(session.getValue("user") == null)
     response.sendRedirect("../../../logout.jsp");

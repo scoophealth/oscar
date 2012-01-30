@@ -70,9 +70,6 @@ public class RptByExampleData {
 
 accessDB = new DBPreparedHandler();
 
-//accessDB = new DBPreparedHandler("org.gjt.mm.mysql.Driver","jdbc:mysql:///oscar_sfhc","oscarsql","sfhc96");
-
-//results = oscarVariables.getProperty("db_driver")+ " " +oscarVariables.getProperty("db_uri")+oscarVariables.getProperty("db_name")+ " " +oscarVariables.getProperty("db_selectuser") + " " + oscarVariables.getProperty("db_selectpassword");
 
 ResultSet rs = null;
 rs = accessDB.queryResults(this.sql);

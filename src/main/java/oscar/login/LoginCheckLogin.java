@@ -148,7 +148,7 @@ public class LoginCheckLogin {
     }
 
     public void setOscarVariable(String propFile) {
-    	pvar = (Properties) oscar.OscarProperties.getInstance();
+    	pvar = oscar.OscarProperties.getInstance();
     	/*
         pvar = new Properties();
         pvar.setProperty("file_separator", System.getProperty("file.separator"));

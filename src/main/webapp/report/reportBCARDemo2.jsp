@@ -2,8 +2,7 @@
 <%@ page
 	import="java.util.*, oscar.oscarReport.data.*, java.sql.*, oscar.login.*, java.net.*"
 	errorPage="../appointment/errorpage.jsp"%>
-<jsp:useBean id="oscarVariables" class="java.util.Properties"
-	scope="session" />
+<% java.util.Properties oscarVariables = oscar.OscarProperties.getInstance(); %>
 
 <%
 if(request.getParameter("submit")!=null && request.getParameter("submit").equals("Report in CSV")) {

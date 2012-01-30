@@ -166,8 +166,7 @@ if (bMultisites) {
 <%@ page
 	import="java.lang.*, java.util.*, java.text.*,java.net.*,java.sql.*,oscar.*"
 	errorPage="errorpage.jsp"%>
-<jsp:useBean id="oscarVariables" class="java.util.Properties"
-	scope="session" />
+<% java.util.Properties oscarVariables = OscarProperties.getInstance(); %>
 <jsp:useBean id="scheduleHolidayBean" class="java.util.Hashtable"
 	scope="session" />
 <jsp:useBean id="providerNameBean" class="oscar.Dict" scope="page" />

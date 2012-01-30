@@ -32,8 +32,7 @@
 
 <jsp:useBean id="providerBean" class="java.util.Properties"
 	scope="session" />
-<jsp:useBean id="oscarVariables" class="java.util.Properties"
-	scope="session" />
+<% java.util.Properties oscarVariables = oscar.OscarProperties.getInstance(); %>
 
 <link rel="stylesheet" type="text/css" media="print" href="print.css" />
 <link rel="stylesheet" type="text/css" href="encounterPrintStyles.css" />

@@ -38,13 +38,12 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.util.MiscUtils;
 
+import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;
 import oscar.oscarReport.bean.RptByExampleQueryBeanHandler;
 
 
 public class RptByExampleAction extends Action {
-
-    Properties oscarVariables = null;
     
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException
@@ -70,7 +69,7 @@ public class RptByExampleAction extends Action {
             sql = "";
         
         oscar.oscarReport.data.RptByExampleData exampleData  = new oscar.oscarReport.data.RptByExampleData();
-        Properties proppies = (Properties)  request.getSession().getAttribute("oscarVariables");
+        Properties proppies = OscarProperties.getInstance();
 
         String results = exampleData.exampleReportGenerate(sql, proppies)==null?null: exampleData.exampleReportGenerate(sql, proppies);
         String resultText = exampleData.exampleTextGenerate(sql, proppies)==null?null: exampleData.exampleTextGenerate(sql, proppies);
