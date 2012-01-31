@@ -41,7 +41,7 @@ import oscar.oscarRx.data.RxInteractionData;
 import oscar.oscarRx.data.RxPatientData;
 import oscar.oscarRx.data.RxPrescriptionData;
 
-public class RxSessionBean {
+public class RxSessionBean  implements java.io.Serializable {
 	private static final Logger logger=MiscUtils.getLogger();
 	
     private String providerNo = null;

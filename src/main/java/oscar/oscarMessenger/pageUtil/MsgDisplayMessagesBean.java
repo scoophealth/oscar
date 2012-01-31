@@ -30,7 +30,7 @@ import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
 
-public class MsgDisplayMessagesBean {
+public class MsgDisplayMessagesBean implements java.io.Serializable  {
   private String sample = "Start value";
   //Access sample property
 
