@@ -28,8 +28,7 @@ import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
 
-public class MsgSessionBean
-{
+public class MsgSessionBean  implements java.io.Serializable {
     private String providerNo = null;
     private String userName   = null;
     private String attach     = null;
