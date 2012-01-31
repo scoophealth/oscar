@@ -30,6 +30,7 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -109,6 +110,7 @@ import org.oscarehr.common.dao.MeasurementTypeDao;
 import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.dao.PreventionDao;
 import org.oscarehr.common.dao.PreventionExtDao;
+import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.Demographic;
@@ -122,6 +124,7 @@ import org.oscarehr.common.model.IntegratorConsent.ConsentStatus;
 import org.oscarehr.common.model.MeasurementType;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.dx.dao.DxResearchDAO;
 import org.oscarehr.dx.model.DxResearch;
 import org.oscarehr.util.CxfClientUtils;
@@ -164,6 +167,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	private static final long INTEGRATOR_THROTTLE_DELAY = Long.parseLong((String) OscarProperties.getInstance().get(INTEGRATOR_THROTTLE_DELAY_PROPERTIES_KEY));
 
 	private static Timer timer = new Timer("CaisiIntegratorUpdateTask Timer", true);
+	
+	private int numberOfTimesRun = 0;
 
 	private FacilityDao facilityDao = (FacilityDao) SpringUtils.getBean("facilityDao");
 	private DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
@@ -190,6 +195,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	private EFormValueDao eFormValueDao = (EFormValueDao) SpringUtils.getBean("EFormValueDao");
 	private EFormDataDao eFormDataDao = (EFormDataDao) SpringUtils.getBean("EFormDataDao");
 	private GroupNoteDao groupNoteDao = (GroupNoteDao) SpringUtils.getBean("groupNoteDao");
+	
+	private UserPropertyDAO userPropertyDao = (UserPropertyDAO) SpringUtils.getBean("UserPropertyDAO");
 
 	private static TimerTask timerTask = null;
 
@@ -224,7 +231,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 	@Override
 	public void run() {
-		logger.debug("CaisiIntegratorUpdateTask starting");
+		numberOfTimesRun++;
+		logger.debug("CaisiIntegratorUpdateTask starting #"+numberOfTimesRun);
 
 		LoggedInInfo.setLoggedInInfoToCurrentClassAndMethod();
 
@@ -238,7 +246,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			LoggedInInfo.loggedInInfo.remove();
 			DbConnectionFilter.releaseAllThreadDbResources();
 
-			logger.debug("CaisiIntegratorUpdateTask finished");
+			logger.debug("CaisiIntegratorUpdateTask finished #"+numberOfTimesRun);
 		}
 	}
 
@@ -396,11 +404,72 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			throttleAndChecks();
 		}
 	}
+	
+	/**
+	 * A check to compare the time being requested from the integrator and that last time the integrator requested.
+	 * If the date being requested is before the last date requested return true.  If a last date hasn't been stored return true.
+	 * 
+	 * 
+	 * @param lastDataUpdated  time requested from the integrator
+	 * @param lastPushUpdated  prior time requested from the integrator
+	 * @return
+	 */
+	private boolean isIntegratorRequestDateOlderThanLastKnownDate(Date lastDataUpdated,UserProperty lastPushUpdated){
+		boolean ret = false;
+		try{
+			Date lastDateRequested = new Date();
+			//If lastPushUpdated is null that means this is the first time this has run, return true
+			lastDateRequested.setTime(Long.parseLong(lastPushUpdated.getValue()));
+			if(lastDataUpdated.before(lastDateRequested)){
+				ret = true;
+			}
+			logger.debug("lastDataUpdated "+lastDataUpdated+ " lastDateRequested "+lastDateRequested+" lastDataUpdated is before lastDateRequested: "+ret );
+		}catch(Exception e){
+			logger.info("INTEGRATOR_LAST_UPDATED was not set. Assume lastDataUpdated is before lastDateRequested ",e);
+			return true;
+		}
+		return ret;
+	}
 
 	private void pushAllDemographics(Date lastDataUpdated) throws MalformedURLException, ShutdownException {
 		Facility facility = LoggedInInfo.loggedInInfo.get().currentFacility;
 
-		List<Integer> demographicIds = DemographicDao.getDemographicIdsAdmittedIntoFacility(facility.getId());
+		List<Integer> demographicIds = null;//DemographicDao.getDemographicIdsAdmittedIntoFacility(facility.getId());
+
+   		UserProperty fullPushProp = userPropertyDao.getProp(UserProperty.INTEGRATOR_FULL_PUSH);
+		UserProperty lastPushProp = userPropertyDao.getProp(UserProperty.INTEGRATOR_LAST_PUSH);
+		UserProperty lastPushUpdated = userPropertyDao.getProp(UserProperty.INTEGRATOR_LAST_UPDATED);
+		
+		Date now = Calendar.getInstance().getTime();
+		
+		
+		if (isIntegratorRequestDateOlderThanLastKnownDate(lastDataUpdated,lastPushUpdated)){  // If the date the integrator is asking for is before the last interm push, force a full push
+			fullPushProp.setValue("1");
+			logger.info("Forcing full integrator push Date from Integrator: "+lastDataUpdated+" Date on file: "+lastPushUpdated);
+		}
+		
+		if(OscarProperties.getInstance().isPropertyActive("INTEGRATOR_FORCE_FULL")){
+			fullPushProp.setValue("1");
+		}
+		
+		if ((fullPushProp != null && fullPushProp.getValue().equalsIgnoreCase("1")) || lastPushProp == null) {
+	        logger.info("Pushing all demographics");
+	        demographicIds = DemographicDao.getDemographicIdsAdmittedIntoFacility(facility.getId()); 
+	        		//DemographicDao.getDemographicIdsAdmittedIntoFacilityAndRostered(facility.getId());
+		} else {
+	        logger.info("Pushing all demographic charts opened/viewed since " + lastPushProp.getValue());
+	        demographicIds = DemographicDao.getDemographicIdsOpenedSinceTime(lastPushProp.getValue());
+		}
+		
+		
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		userPropertyDao.saveProp(UserProperty.INTEGRATOR_FULL_PUSH, "0");
+        userPropertyDao.saveProp(UserProperty.INTEGRATOR_LAST_PUSH, format.format(now)); 
+        userPropertyDao.saveProp(UserProperty.INTEGRATOR_LAST_UPDATED,""+lastDataUpdated.getTime());
+		 
+		
+		
+		
 		DemographicWs demographicService = CaisiIntegratorManager.getDemographicWs();
 		List<Program> programsInFacility = programDao.getProgramsByFacilityId(facility.getId());
 		List<String> providerIdsInFacility = ProviderDao.getProviderIds(facility.getId());
