@@ -21,8 +21,7 @@
 
             String creator = (String) session.getAttribute("user");
             ArrayList doctypes = EDocUtil.getDoctypes("demographic");
-            EDocUtil edocUtil = new EDocUtil();
-            EDoc curdoc = edocUtil.getDoc(documentNo);
+            EDoc curdoc = EDocUtil.getDoc(documentNo);
 
             String demographicID = curdoc.getModuleId();
 
