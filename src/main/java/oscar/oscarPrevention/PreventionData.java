@@ -79,9 +79,10 @@ public class PreventionData {
 			prevention.setPreventionDate(UtilDateUtilities.StringToDate(date, "yyyy-MM-dd"));
 			prevention.setProviderNo(providerNo);
 			prevention.setPreventionType(preventionType);
-			prevention.setRefused(refused.trim().equals("1"));
 			prevention.setNextDate(UtilDateUtilities.StringToDate(nextDate, "yyyy-MM-dd"));
 			prevention.setNever(neverWarn.trim().equals("1"));
+			if (refused.trim().equals("1")) prevention.setRefused(true);
+			else if (refused.trim().equals("2")) prevention.setIneligible(true);
 		
 			preventionDao.persist(prevention);
 			if (prevention.getId()==null) return insertId;
@@ -255,7 +256,7 @@ public class PreventionData {
 			for (Prevention prevention : preventions) {
 				Map<String,Object> h = new HashMap<String,Object>();
 				h.put("id", prevention.getId().toString());
-				h.put("refused", prevention.isRefused()?"1":"0");
+				h.put("refused", prevention.isRefused()?"1":prevention.isIneligible()?"2":"0");
 				h.put("type", prevention.getPreventionType());
 				h.put("provider_no", prevention.getProviderNo());
 				h.put("provider_name", ProviderData.getProviderName(prevention.getProviderNo()));
