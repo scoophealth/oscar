@@ -44,7 +44,7 @@ if(listRxDrugs!=null){
          String rxStatus        = rx.getRxStatus()!=null ? rx.getRxStatus() : "";
          String drugForm		= rx.getDrugForm();
          
-         if(ATC.trim().length()>0)
+         if(ATC != null && ATC.trim().length()>0)
              ATC="ATC: "+ATC;
          String drugName;
          boolean isSpecInstPresent=false;
