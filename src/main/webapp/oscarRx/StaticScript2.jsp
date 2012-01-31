@@ -51,18 +51,29 @@
 
 <html:base />
 
+<%
+oscar.oscarRx.pageUtil.RxSessionBean rxBean = null;
+%>
 <logic:notPresent name="RxSessionBean" scope="session">
-	<logic:redirect href="error.html" />
+	<%rxBean = new oscar.oscarRx.pageUtil.RxSessionBean();
+
+	rxBean.setProviderNo((String)session.getAttribute("user"));
+	rxBean.setDemographicNo(Integer.parseInt(request.getParameter("demographicNo")));
+
+	request.getSession().setAttribute("RxSessionBean", rxBean); %>
+	<!--  logic:redirect href="error.html" /-->	
 </logic:notPresent>
 <logic:present name="RxSessionBean" scope="session">
 	<bean:define id="bean" type="oscar.oscarRx.pageUtil.RxSessionBean" name="RxSessionBean" scope="session" />
-	<logic:equal name="bean" property="valid" value="false">
+	<logic:equal name="bean" property="valid" value="false">		
 		<logic:redirect href="error.html" />
 	</logic:equal>
 </logic:present>
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
 <%
-	oscar.oscarRx.pageUtil.RxSessionBean bean=(oscar.oscarRx.pageUtil.RxSessionBean)pageContext.findAttribute("bean");
+	if( rxBean == null ) {
+		rxBean=(oscar.oscarRx.pageUtil.RxSessionBean)pageContext.findAttribute("bean");
+	}
 	String roleName$ = (String)session.getAttribute("userrole") + "," + (String)session.getAttribute("user");
 	com.quatro.service.security.SecurityManager securityManager = new com.quatro.service.security.SecurityManager();
 %>
@@ -84,7 +95,7 @@
 	String regionalIdentifier=request.getParameter("regionalIdentifier");
 	String cn=request.getParameter("cn");
         String bn=request.getParameter("bn");
-	Integer currentDemographicNo=bean.getDemographicNo();
+	Integer currentDemographicNo=rxBean.getDemographicNo();
 	String atc = request.getParameter("atc");
 
         ArrayList<StaticScriptBean.DrugDisplayData> drugs=StaticScriptBean.getDrugList(currentDemographicNo, regionalIdentifier, cn,bn,atc);
