@@ -552,7 +552,7 @@ function popup1(height, width, url, windowName){
       						if (auth!=null) onclickString="return submitPhrForm('SendDocToPhr.do', 'sendDocToPhr');";
       						
 	      					%>
-	      					<input type="button" <%=MyOscarUtils.getDisabledStringForMyOscarSendButton(auth, Integer.parseInt(demographicNo))%> value="<%=LocaleUtils.getMessage(request, "SendToMyOscar")%>" />
+	      					<input type="button" <%=MyOscarUtils.getDisabledStringForMyOscarSendButton(auth, Integer.parseInt(demographicNo))%> value="<%=LocaleUtils.getMessage(request, "SendToMyOscar")%>" onclick="<%=onclickString%>" />
 							<%                  		  
                   	  }
                     }
