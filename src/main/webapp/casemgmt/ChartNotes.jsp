@@ -472,6 +472,10 @@ try
 			{
 				cal.set(0, 1, 1);
 			}
+			else if(strStaleDate.equalsIgnoreCase("0"))
+			{
+				cal.add(Calendar.MONTH,1);
+			}
 			else
 			{
 				int pastMths = Integer.parseInt(strStaleDate);
@@ -541,7 +545,14 @@ try
 			}
 			else
 			{
-				fullTxtFormat.add(Boolean.TRUE);
+				if (cmNote.getObservationDate().compareTo(dStaleDate) >= 0)
+				{
+					fullTxtFormat.add(Boolean.TRUE);
+				}
+				else
+				{
+					fullTxtFormat.add(Boolean.FALSE);
+				}
 			}
 		} //end of for loop
 
