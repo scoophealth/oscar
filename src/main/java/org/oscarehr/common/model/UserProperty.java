@@ -80,6 +80,31 @@ public class UserProperty implements Serializable {
     public final static String CPP_SINGLE_LINE="cpp_single_line";
     public final static String LAB_ACK_COMMENT="lab_ack_comment";
     
+    
+    public static final String INTEGRATOR_DEMOGRAPHIC_SYNC = "integrator_demographic_sync";
+    public static final String INTEGRATOR_DEMOGRAPHIC_ISSUES = "integrator_demographic_issues";
+    public static final String INTEGRATOR_DEMOGRAPHIC_CONSENT = "integrator_demographic_consent";
+    public static final String INTEGRATOR_DEMOGRAPHIC_ADMISSIONS = "integrator_demographic_admissions";
+    public static final String INTEGRATOR_DEMOGRAPHIC_PREVENTIONS = "integrator_demographic_preventions";
+    public static final String INTEGRATOR_DEMOGRAPHIC_NOTES = "integrator_demographic_notes";
+    public static final String INTEGRATOR_DEMOGRAPHIC_DRUGS = "integrator_demographic_drugs";
+    public static final String INTEGRATOR_DEMOGRAPHIC_APPOINTMENTS = "integrator_demographic_appointments";
+    public static final String INTEGRATOR_DEMOGRAPHIC_DXRESEARCH = "integrator_demographic_dxresearch";
+    public static final String INTEGRATOR_DEMOGRAPHIC_BILLING = "integrator_demographic_billing";
+    public static final String INTEGRATOR_DEMOGRAPHIC_EFORMS = "integrator_demographic_eforms";
+    public static final String INTEGRATOR_DEMOGRAPHIC_MEASUREMENTS = "integrator_demographic_measurements";
+    public static final String INTEGRATOR_DEMOGRAPHIC_DOCUMENTS = "integrator_demographic_documents";
+    public static final String INTEGRATOR_DEMOGRAPHIC_ALLERGIES = "integrator_demographic_allergies";
+    public static final String INTEGRATOR_DEMOGRAPHIC_LABREQ = "integrator_demographic_labreq";
+    
+    public static final String INTEGRATOR_PROGRAMS = "integrator_programs_sync";
+    public static final String INTEGRATOR_PROVIDERS = "integrator_providers_sync";
+    public static final String INTEGRATOR_FACILITY = "integrator_facility_sync";
+    
+    public static final String INTEGRATOR_FULL_PUSH = "integrator_full_push";
+    public static final String INTEGRATOR_LAST_PUSH = "integrator_last_push";
+    public static final String INTEGRATOR_LAST_UPDATED = "integrator_last_updated";
+    
     private long id;
     private String name;
     private String value;
