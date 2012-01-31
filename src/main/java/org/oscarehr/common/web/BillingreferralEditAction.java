@@ -17,14 +17,12 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.common.dao.BillingreferralDao;
 import org.oscarehr.common.model.Billingreferral;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * @author Toby
  */
-@Transactional(propagation=Propagation.REQUIRES_NEW)
+
 public class BillingreferralEditAction extends DispatchAction{
 
     private BillingreferralDao bDao;
@@ -78,6 +76,16 @@ public class BillingreferralEditAction extends DispatchAction{
         return mapping.findForward("detail");
     }
 
+    public ActionForward add(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        DynaBean lazyForm = (DynaBean) form;
+
+        Billingreferral referral = new Billingreferral();
+
+        lazyForm.set("referral", referral);
+
+        return mapping.findForward("detail");
+    }
+
     public ActionForward update(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
         DynaBean lazyForm = (DynaBean) form;
 
@@ -86,6 +94,6 @@ public class BillingreferralEditAction extends DispatchAction{
 
         return mapping.findForward("list");
     }
-    
+
 
 }
