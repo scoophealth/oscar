@@ -98,7 +98,7 @@ public class PHRGenericSendToPhrAction extends DispatchAction {
     }
 
 
-    public ActionForward send(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public ActionForward send(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 
     	String demographicNo = request.getParameter("demographic_no");
         String providerNo = (String) request.getSession().getAttribute("user");
@@ -173,9 +173,7 @@ public class PHRGenericSendToPhrAction extends DispatchAction {
             }
             request.setAttribute("providerNo", providerNo);
 
-            EDocUtil eDocUtil = new EDocUtil();
-
-            String documentNo = eDocUtil.addDocumentSQL(newEDoc);
+            String documentNo = EDocUtil.addDocumentSQL(newEDoc);
 
             ProviderData senderProviderData = new ProviderData(providerNo);
 
