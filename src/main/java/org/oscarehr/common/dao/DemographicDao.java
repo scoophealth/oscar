@@ -310,5 +310,24 @@ public class DemographicDao extends HibernateDaoSupport {
      public void save(Demographic demographic){
     	 this.getHibernateTemplate().saveOrUpdate(demographic);
      }
- 
+     
+     public static List<Integer> getDemographicIdsOpenedSinceTime(String value) {
+    	 Connection c = null;
+    	 try {
+    		 c = DbConnectionFilter.getThreadLocalDbConnection();
+    		 PreparedStatement ps = c.prepareStatement("SELECT DISTINCT contentId FROM log WHERE dateTime >= ? AND content='eChart' GROUP BY contentId");
+    		 ps.setString(1, value);
+    		 ResultSet rs = ps.executeQuery();
+    		 ArrayList<Integer> results = new ArrayList<Integer>();
+    		 while (rs.next()){
+    			 results.add(rs.getInt(1));
+    		 }
+    		 return(results);
+    	 }catch (SQLException e) {
+    		 throw(new PersistenceException(e));
+    	 }finally {
+    		 SqlUtils.closeResources(c, null, null);
+    	 }
+     }
+	 
 }
