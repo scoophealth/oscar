@@ -1331,6 +1331,7 @@
                         <forward name="genUseMyMeds" path="/provider/setToUseMyMeds.jsp"/>
             <forward name="genCppSingleLine"     path="/provider/setCppSingleLine.jsp"/>
             <forward name="genAckCommentLab"     path="/provider/setLabAckComment.jsp"/>
+            <forward name="genIntegrator" path="/admin/setIntegratorProperties.jsp" />
                  </action>
 		<action input="/provider/providerIndivoIdSetter.jsp" name="setMyOscarIdForm" path="/setMyOscarId" scope="request" type="oscar.oscarProvider.pageUtil.ProEditMyOscarIdAction">
 			<forward name="success" path="/provider/providerIndivoIdSetter.jsp" />

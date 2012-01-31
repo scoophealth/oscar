@@ -759,6 +759,7 @@ div.logoutBox {
 			<li><a href="#" onclick='popupPage(800,1000,&quot;<html:rewrite page="/admin/keygen/keyManager.jsp"/>&quot;);return false;'><bean:message key="admin.admin.keyPairGen" /></a></li>
 			<li><a href="#" onclick='popupPage(800,1000,&quot;<html:rewrite page="/admin/labforwardingrules.jsp"/>&quot;);return false;'><bean:message key="admin.admin.labFwdRules" /></a></li>
 			<li><a href="#" onclick='popupPage(600,600,&quot;<html:rewrite page="/FacilityManager.do"/>&quot;);return false;'><bean:message key="admin.admin.manageFacilities" /></a></li>
+			<li><a href="#" onClick="popupPage(900, 500, '../setProviderStaleDate.do?method=viewIntegratorProperties');return false;"><bean:message key="provider.btnSetIntegratorPreferences" /></a></li>
 			<li><a href="<%=request.getContextPath()%>/lab/CA/ALL/sendOruR01.jsp"><bean:message key="admin.admin.sendOruR01" /></a></li>
 			<li><a href="#" onclick='popupPage(400, 400,&quot;<html:rewrite page="/hospitalReportManager/hospitalReportManager.jsp"/>&quot;);return false;'>Hospital Report Manager (HRM) Status</a></li>
 			<li><a href="#" onclick='popupPage(400, 400,&quot;<html:rewrite page="/hospitalReportManager/hrmPreferences.jsp"/>&quot;);return false;'>Hospital Report Manager (HRM) Preferences</a></li>

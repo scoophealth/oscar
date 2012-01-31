@@ -52,6 +52,19 @@ public class UserPropertyDAO extends HibernateDaoSupport {
         this.getHibernateTemplate().saveOrUpdate(prop);
     }
     
+    //Should properties be updatable?
+    public void saveProp(String name, String val) {
+        if (val != null) {
+                UserProperty prop = getProp(name);
+                if (prop == null) {
+                        prop = new UserProperty();
+                        prop.setName(name);
+                }
+                prop.setValue(val);
+                saveProp(prop);
+        }
+    }
+
     public UserProperty getProp(String prov, String name) {
         List list = this.getHibernateTemplate().find("from UserProperty p where p.providerNo = ? and p.name = ?", new Object[] {prov,name});
         if( list != null && list.size() > 0 ) {
