@@ -8,7 +8,7 @@
 <script type="text/javascript">
 	function validateForm()
 	{
-		if (bCancel == true) 
+		if (bCancel == true)
 			return confirm("Do you really want to Cancel?");
 		var isOk = false;
 		isOk = validateRequiredField('facilityName', 'Facility Name', 32);
@@ -51,7 +51,7 @@
 			<td><html:checkbox property="facility.hic" /></td>
 		</tr>
 		<tr class="b">
-			<td width="20%">OCAN Service Org Number: *</td>
+			<td width="20%">OCAN Service Org Number:</td>
 			<td><html:text property="facility.ocanServiceOrgNumber" size="5" maxlength="5"
 				styleId="ocanServiceOrgNumber" /></td>
 		</tr>
@@ -70,7 +70,7 @@
 		<%
         	Integer orgId = (Integer)request.getAttribute("orgId");
         	Integer sectorId = (Integer)request.getAttribute("sectorID");
-        
+
         %>
 		<tr class="b">
 			<td width="20%">Organization:</td>
@@ -139,7 +139,7 @@
 		<tr class="b">
 			<td width="20%">Enable Health Number Registry:</td>
 			<td><html:checkbox property="facility.enableHealthNumberRegistry" /></td>
-		</tr>		
+		</tr>
 		<tr class="b">
 			<td width="20%">Enable OCAN Forms:</td>
 			<td><html:checkbox property="facility.enableOcanForms" /></td>
@@ -160,7 +160,7 @@
 			<td width="20%">Enable Mandatory Transportation Time in Encounter:</td>
 			<td><html:checkbox property="facility.enableEncounterTransportationTime" /></td>
 		</tr>
-		
+
 		<tr class="b">
 			<td width="20%">Rx Interaction Warning Level:</td>
 			<td>
@@ -169,12 +169,12 @@
 					<html:option value="1">Low</html:option>
 					<html:option value="2">Medium</html:option>
 					<html:option value="3">High</html:option>
-					<html:option value="4">None</html:option>					
+					<html:option value="4">None</html:option>
 				</html:select>
-				
+
 			</td>
 		</tr>
-		
+
 		<tr>
 			<td colspan="2"><html:submit property="submit.save" onclick="bCancel=false;">Save</html:submit>
 			<html:cancel>Cancel</html:cancel></td>
