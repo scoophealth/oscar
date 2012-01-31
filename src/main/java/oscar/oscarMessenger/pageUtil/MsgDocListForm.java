@@ -27,7 +27,7 @@ import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
 
-public class MsgDocListForm {
+public class MsgDocListForm implements java.io.Serializable {
   private java.util.Vector providerNoVector;
   private java.util.Vector providerFirstName;
   private java.util.Vector providerLastName;
