@@ -34,7 +34,6 @@
 <%@page import="org.oscarehr.common.dao.EncounterTemplateDao"%>
 <%@page import="org.oscarehr.casemgmt.web.CheckBoxBean"%>
 
-<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request" />
 
 <%
@@ -386,7 +385,7 @@ try
 	<html:hidden property="appointmentNo" value="<%=apptNo%>" />
 	<html:hidden property="appointmentDate" value="<%=apptDate%>" />
 	<html:hidden property="start_time" value="<%=startTime%>" />
-	<html:hidden property="billRegion" value="<%=((String )oscarVariables.getProperty(\"billregion\",\"\")).trim().toUpperCase()%>" />
+	<html:hidden property="billRegion" value="<%=((String )OscarProperties.getInstance().getProperty(\"billregion\",\"\")).trim().toUpperCase()%>" />
 	<html:hidden property="apptProvider" value="<%=apptProv%>" />
 	<html:hidden property="providerview" value="<%=provView%>" />
 	<input type="hidden" name="toBill" id="toBill" value="false">
