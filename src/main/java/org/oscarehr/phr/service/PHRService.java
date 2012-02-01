@@ -59,6 +59,7 @@ import org.indivo.xml.talk.ReadDocumentResultType;
 import org.indivo.xml.talk.ReadResultType;
 import org.indivo.xml.talk.SendMessageResultType;
 import org.oscarehr.myoscar_server.ws.AccountWs;
+import org.oscarehr.myoscar_server.ws.LoginResultTransfer;
 import org.oscarehr.myoscar_server.ws.LoginWs;
 import org.oscarehr.myoscar_server.ws.MedicalDataTransfer2;
 import org.oscarehr.myoscar_server.ws.MedicalDataType;
@@ -146,28 +147,17 @@ public class PHRService {
 
 	// used to authenticate demographics and perhaps admin account
 	private PHRAuthentication authenticateIndivoId(String indivoId, String password) {
-		// Caution: does not set provider number in PHRAuthentication object
-		// PHRAuthentication phrAuth = null;
-		// TalkClient client = getTalkClient(); // also throws Exception
-		// AuthenticateResultType authResult = client.authenticate(indivoId, password);
-		// // Throws IndivoException & ActionNotPerformedException
-		// // could be incorrect password or server down
-		// // distinguish like this: if (e.getCause() != null && e.getCause().getClass() == java.net.ConnectException.class)
-		// logger.debug("actor ticket " + authResult.getActorTicket());
-		// phrAuth = new PHRAuthentication(authResult);
-
-		LoginWs loginWs = MyOscarServerWebServicesManager.getLoginWs();
-		logger.debug("MyOscar Login attempt :" + indivoId);
-
-		PersonTransfer personTransfer;
         try {
-	        personTransfer = loginWs.login(indivoId, password);
+    		LoginWs loginWs = MyOscarServerWebServicesManager.getLoginWs();
+    		logger.debug("MyOscar Login attempt :" + indivoId);
+
+    		LoginResultTransfer loginResult = loginWs.login2(indivoId, password);
 			logger.debug("MyOscar Login success:" + indivoId);
 
 			PHRAuthentication phrAuth = new PHRAuthentication();
 			phrAuth.setMyOscarUserName(indivoId);
-			phrAuth.setMyOscarUserId(personTransfer.getId());
-			phrAuth.setMyOscarPassword(password);
+			phrAuth.setMyOscarUserId(loginResult.getPerson().getId());
+			phrAuth.setMyOscarPassword(loginResult.getSecurityTokenKey());
 
 			return phrAuth;
         } catch (NotAuthorisedException_Exception e) {
@@ -266,7 +256,7 @@ public class PHRService {
 		phrActionDAO.save(action);
 	}
 
-	public void sendUpdateMessage(PHRMessage msg) throws Exception {
+	public void sendUpdateMessage(PHRMessage msg) {
 		logger.debug("sendUpdateMessage:" + msg);
 
 		PHRAction action = msg.getAction2(PHRAction.ACTION_UPDATE, PHRAction.STATUS_SEND_PENDING);
