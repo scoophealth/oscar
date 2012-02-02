@@ -304,52 +304,6 @@ function checkDate(yyyy,mm,dd,err_msg) {
 
 	return typeInOK;
 }
-function checkRosterDate() {
-	if (document.updatedelete.roster_status.value=="") {
-        var y = document.updatedelete.roster_date_year.value;
-        var m = document.updatedelete.roster_date_month.value;
-        var d = document.updatedelete.roster_date_day.value;
-        if (y.trim()!="" || m.trim()!="" || d.trim()!="") {
-        	alert("<bean:message key="demographic.search.msgForbiddenRosterDate"/>");
-        	document.updatedelete.roster_date_year.focus();
-        	return false;
-        }
-	}
-	return true;
-}
-function checkRosterDatesTermReason() {
-        if (document.updatedelete.roster_status.value=="") return true;
-
-        var yyyy = document.updatedelete.roster_date_year.value;
-        var mm = document.updatedelete.roster_date_month.value;
-        var dd = document.updatedelete.roster_date_day.value;
-
-        if (document.updatedelete.roster_status.value=="RO") {
-            return checkDate(yyyy,mm,dd,"<bean:message key="demographic.search.msgWrongRosterDate"/>");
-        } else {
-            yyyy = document.updatedelete.roster_termination_date_year.value;
-            mm = document.updatedelete.roster_termination_date_month.value;
-            dd = document.updatedelete.roster_termination_date_day.value;
-
-            return checkDate(yyyy,mm,dd,"<bean:message key="demographic.search.msgWrongRosterTerminationDate"/>")
-            		&& checkTerminationReason();
-        }
-        return true;
-}
-function checkTerminationReason() {
-		if (document.updatedelete.roster_termination_reason.value=="") {
-			alert ("<bean:message key="demographic.demographiceditdemographic.msgNoTerminationReason"/>");
-			return false;
-		} else {
-			return true;
-		}
-}
-function checkPatientStatusDate() {
-        var yyyy = document.updatedelete.patientstatus_date_year.value;
-        var mm = document.updatedelete.patientstatus_date_month.value;
-        var dd = document.updatedelete.patientstatus_date_day.value;
-        return checkDate(yyyy,mm,dd,"<bean:message key="demographic.search.msgWrongPatientStatusDate"/>");
-}
 function checkDob() {
 	var yyyy = document.updatedelete.year_of_birth.value;
 	var mm = document.updatedelete.month_of_birth.value;
@@ -365,7 +319,6 @@ function isValidDate(day,month,year){
    return ((day==dteDate.getDate()) && (month==dteDate.getMonth()) && (year==dteDate.getFullYear()));
 }
 
-
 function checkHin() {
 	var hin = document.updatedelete.hin.value;
 	var province = document.updatedelete.hc_type.value;
@@ -379,24 +332,125 @@ function checkHin() {
 	return(true);
 }
 
-function checkRoster() {
-	if (document.updatedelete.initial_roster.value!="") {
+function checkRosterStatus() {
+	if (rosterStatusChangedNotBlank()) {
+		if (document.updatedelete.roster_status.value=="RO") { //Patient rostered
+			if (!rosterStatusDateValid(false)) return false;
+		}
+		else {
+			if (!rosterStatusTerminationDateValid(false)) return false;
+			if (!rosterStatusTerminationReasonNotBlank()) return false;
+		}
+	}
+	
+	if (rosterStatusDateAllowed()) {
+		if (document.updatedelete.roster_status.value=="RO") { //Patient rostered
+			if (!rosterStatusDateValid(false)) return false;
+		}
+		else {
+			if (!rosterStatusTerminationDateValid(true)) return false;
+		}
+	} else {
+		return false;
+	}
+	if (!rosterStatusDateValid(true)) return false;
+	if (!rosterStatusTerminationDateValid(true)) return false;
+	return true;
+}
+
+function rosterStatusChanged() {
+	return (document.updatedelete.initial_rosterstatus.value!=document.updatedelete.roster_status.value);
+}
+
+function rosterStatusChangedNotBlank() {
+	if (rosterStatusChanged()) {
 		if (document.updatedelete.roster_status.value=="") {
 			alert ("<bean:message key="demographic.demographiceditdemographic.msgBlankRoster"/>");
 			document.updatedelete.roster_status.focus();
 			return false;
 		}
+		return true;
+	}
+	return false;
+}
+
+function rosterStatusDateAllowed() {
+	if (document.updatedelete.roster_status.value=="") {
+	    yyyy = document.updatedelete.roster_date_year.value.trim();
+	    mm = document.updatedelete.roster_date_month.value.trim();
+	    dd = document.updatedelete.roster_date_day.value.trim();
+	    
+	    if (yyyy!="" || mm!="" || dd!="") {
+	    	alert ("<bean:message key="demographic.search.msgForbiddenRosterDate"/>");
+	    	return false;
+	    }
+	    return true;
 	}
 	return true;
+}
+
+function rosterStatusDateValid(trueIfBlank) {
+    yyyy = document.updatedelete.roster_date_year.value.trim();
+    mm = document.updatedelete.roster_date_month.value.trim();
+    dd = document.updatedelete.roster_date_day.value.trim();
+    var errMsg = "<bean:message key="demographic.search.msgWrongRosterDate"/>";
+    
+    if (trueIfBlank) {
+    	errMsg += "\n<bean:message key="demographic.search.msgLeaveBlank"/>";
+    	if (yyyy=="" && mm=="" && dd=="") return true;
+    }
+    return checkDate(yyyy,mm,dd,errMsg);
+}
+
+function rosterStatusTerminationDateValid(trueIfBlank) {
+    yyyy = document.updatedelete.roster_termination_date_year.value.trim();
+    mm = document.updatedelete.roster_termination_date_month.value.trim();
+    dd = document.updatedelete.roster_termination_date_day.value.trim();
+    var errMsg = "<bean:message key="demographic.search.msgWrongRosterTerminationDate"/>";
+    
+    if (trueIfBlank) {
+    	errMsg += "\n<bean:message key="demographic.search.msgLeaveBlank"/>";
+    	if (yyyy=="" && mm=="" && dd=="") return true;
+    }
+    return checkDate(yyyy,mm,dd,errMsg);
+}
+
+function rosterStatusTerminationReasonNotBlank() {
+	if (document.updatedelete.roster_termination_reason.value=="") {
+		alert ("<bean:message key="demographic.demographiceditdemographic.msgNoTerminationReason"/>");
+		return false;
+	}
+	return true;
+}
+
+function checkPatientStatus() {
+	if (patientStatusChanged()) {
+		return patientStatusDateValid(false);
+	}
+	return patientStatusDateValid(true);
+}
+
+function patientStatusChanged() {
+	return (document.updatedelete.initial_patientstatus.value!=document.updatedelete.patient_status.value);
+}
+
+function patientStatusDateValid(trueIfBlank) {
+    var yyyy = document.updatedelete.patientstatus_date_year.value.trim();
+    var mm = document.updatedelete.patientstatus_date_month.value.trim();
+    var dd = document.updatedelete.patientstatus_date_day.value.trim();
+    
+    if (trueIfBlank) {
+    	if (yyyy=="" && mm=="" && dd=="") return true;
+    }
+    return checkDate(yyyy,mm,dd,"<bean:message key="demographic.search.msgWrongPatientStatusDate"/>");
 }
 
 function checkTypeInEdit() {
   if ( !checkName() ) return false;
   if ( !checkDob() ) return false;
-  if ( !checkRoster() ) return false;
-  if ( !checkRosterDate() ) return false;
-  if ( !checkPatientStatusDate() ) return false;
   if ( !checkHin() ) return false;
+  if ( !checkRosterStatus() ) return false;
+  if ( !checkPatientStatus() ) return false;
   return(true);
 }
 
@@ -2145,7 +2199,7 @@ document.updatedelete.r_doctor_ohip.value = refNo;
                                      rosterStatus = "";
                                   }
                                   %>
-                                <input type="hidden" name="initial_roster" value="<%=rosterStatus%>"/>
+                                <input type="hidden" name="initial_rosterstatus" value="<%=rosterStatus%>"/>
 								<select name="roster_status" style="width: 120" <%=getDisabled("roster_status")%>>
 									<option value=""></option>
 									<option value="RO"
@@ -2247,9 +2301,10 @@ document.updatedelete.r_doctor_ohip.value = refNo;
                                   if (pacStatus == null) {
                                      pacStatus = "";
                                   }
-                                  %> <input type="text"
-									name="patient_status" value="<%=pacStatus%>"> <% } else {
+                                  %> <input type="hidden" name="initial_patientstatus" value="<%=pacStatus%>">
+                                  	 <input type="text" name="patient_status" value="<%=pacStatus%>"> <% } else {
                                 String patientStatus = apptMainBean.getString(rs,"patient_status"); %>
+                                <input type="hidden" name="initial_patientstatus" value="<%=patientStatus%>">
 								<select name="patient_status" style="width: 120" <%=getDisabled("patient_status")%>>
 									<option value="AC"
 										<%=patientStatus.equals("AC")?" selected":""%>>
