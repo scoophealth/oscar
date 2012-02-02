@@ -1023,8 +1023,19 @@ public class PhsStarHandler extends BasePhsStarHandler {
 	
 	public String getFirstName() {
 		try {
-			String lastName = this.extractOrEmpty("PID-5-2");
-			return lastName;
+			String firstName = this.extractOrEmpty("PID-5-2");	
+			return firstName;
+		}catch(Exception e) {
+			return "";
+		}
+	}
+	
+	public String getMiddleName() {
+		try {
+			String middleName = this.extractOrEmpty("PID-5-3");
+			//"" populating middleName on update
+			if(middleName.equals("\"\"")){middleName="";}
+			return middleName;
 		}catch(Exception e) {
 			return "";
 		}
