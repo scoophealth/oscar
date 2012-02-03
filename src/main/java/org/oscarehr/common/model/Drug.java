@@ -97,7 +97,7 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 	@Column(name = "long_term")
 	private Boolean longTerm = false;
 	@Column(name = "past_med")
-	private Boolean pastMed;
+	private boolean pastMed;
 	@Column(name = "patient_compliance")
 	private Boolean patientCompliance = null;
 	@Column(name = "outside_provider_name")
@@ -628,7 +628,7 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 		this.customNote = c;
 	}
 
-	public Boolean getPastMed() {
+	public boolean getPastMed() {		
 		return pastMed;
 	}
 
