@@ -322,7 +322,7 @@ function addNameCaisi(demographic_no,lastname,firstname,chartno,messageID) {
 			   onClick="document.forms[0].demographic_no.value=<%=demographicTransfer.getCaisiDemographicId()%>;addName('<%=demographicTransfer.getCaisiDemographicId()%>','<%=URLEncoder.encode(demographicTransfer.getLastName())%>','<%=URLEncoder.encode(demographicTransfer.getFirstName())%>','','<%=request.getParameter("messageId")%>','<%=demographicTransfer.getCaisiProviderId()%>','<%=demographicTransfer.getIntegratorFacilityId()%>')"
 		   >
 				<div class="demoId">
-					<input type="submit" class="mbttn" name="demographic_no" value="Integrator <%=demographicTransfer.getIntegratorFacilityId()%>:<%=demographicTransfer.getCaisiDemographicId()%>" />
+					<input type="submit" class="mbttn" name="demographic_no" value="Integrator <%=CaisiIntegratorManager.getRemoteFacility(demographicTransfer.getIntegratorFacilityId()).getName()%>:<%=demographicTransfer.getCaisiDemographicId()%>" />
                 </div>
 				<div class="lastName"><%=Misc.toUpperLowerCase(demographicTransfer.getLastName())%></div>
 				<div class="firstName"><%=Misc.toUpperLowerCase(demographicTransfer.getFirstName())%></div>
