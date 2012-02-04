@@ -70,8 +70,8 @@ public class DemographicArchiveDao extends AbstractDao {
             next_td = results.get(i+1).getRosterTerminationDate();
             
             if (this_rs.equalsIgnoreCase(next_rs) && 
-        		UtilDateUtilities.nullSafeCompare(this_rd, next_rd).equals(0) && 
-        		UtilDateUtilities.nullSafeCompare(this_td, next_td).equals(0)) {
+        		UtilDateUtilities.nullSafeCompare(this_rd, next_rd) == 0 && 
+        		UtilDateUtilities.nullSafeCompare(this_td, next_td) == 0) {
                 results.remove(i);
                 i--;
             }

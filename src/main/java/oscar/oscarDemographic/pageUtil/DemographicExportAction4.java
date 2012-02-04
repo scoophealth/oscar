@@ -348,8 +348,8 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                 		continue;
                 } else { //check history info with next
                 	if (historyRS.equals(historyRS1) &&
-            			UtilDateUtilities.nullSafeCompare(historyRD, historyRD1).equals(0) &&
-            			UtilDateUtilities.nullSafeCompare(historyTD, historyTD1).equals(0))
+            			UtilDateUtilities.nullSafeCompare(historyRD, historyRD1) == 0 &&
+            			UtilDateUtilities.nullSafeCompare(historyTD, historyTD1) == 0 )
                 		continue;
                 }
 
