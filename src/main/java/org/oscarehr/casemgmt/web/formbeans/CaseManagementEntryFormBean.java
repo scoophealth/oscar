@@ -31,7 +31,7 @@ import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.web.CheckBoxBean;
 import org.oscarehr.casemgmt.web.CheckIssueBoxBean;
 
-public class CaseManagementEntryFormBean extends ActionForm {
+public class CaseManagementEntryFormBean extends ActionForm  implements java.io.Serializable {
 	private CaseManagementNote caseNote;
 	private CaseManagementCPP cpp;        
 	private String demoNo;
