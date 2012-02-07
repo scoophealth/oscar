@@ -1,0 +1,1655 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema targetNamespace="http://oscarehr.org/ocan" xmlns:ocan="http://oscarehr.org/ocan"
+ xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="unqualified" attributeFormDefault="unqualified"> 
+
+	<!-- 
+	============================================================================================
+	Program Name	: ocan_v1.0.0.xsd 
+	Description	: XML schema for the file submission of OCAN assessment tool for NE LHIN pilot
+	Developed by	: Khaled Awad
+	History		: 23-Feb-2009 initial version
+			  13-Mar-2009 reviewed optional vs. mandatory
+	============================================================================================
+	-->
+
+	<xsd:element name="OCANSubmissionFile">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+				
+					<xsd:sequence maxOccurs="unbounded">
+						<xsd:element ref="ocan:OCANSubmissionRecord"/>
+					</xsd:sequence>
+	
+
+					<!-- OCAN Tool Version Number: it has to be a constant 1.0.0 -->
+					<xsd:attribute name="version" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="1.0.0"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- File ID -->
+					<xsd:attribute name="ID" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="64">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Timestamp: on which the File is generated YYYY-MM-DDThh:mi:ssZ -->
+					<xsd:attribute name="timestamp" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:pattern value="((000[1-9])|(00[1-9][0-9])|(0[1-9][0-9]{2})|([1-9][0-9]{3}))-((0[1-9])|(1[012]))-((0[1-9])|([12][0-9])|(3[01]))T(([01][0-9])|(2[0-3]))(:[0-5][0-9]){2}(\.[0-9]+)?(([\+|\-]((0[0-9])|(1[0-2]))(:[0-5][0-9]))|(\+13(:[0-5][0-9])(:[0-5][0-9]))|\+14:00|Z)"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+			</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+
+	<xsd:element name="OCANSubmissionRecord">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+
+					<xsd:sequence>
+						<xsd:element ref="ocan:organizationRecord"/>
+						<xsd:element ref="ocan:clientRecord"/>
+						<xsd:element ref="ocan:OCANDomains"/>
+						<xsd:element ref="ocan:additionalElements"/>
+					</xsd:sequence>
+
+
+					<!-- Assessment Start Date: YYYY-MM-DDZ note the existence of the letter Z at the end of date value -->
+					<xsd:attribute name="startDate" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:pattern value="((000[1-9])|(00[1-9][0-9])|(0[1-9][0-9]{2})|([1-9][0-9]{3}))-((0[1-9])|(1[012]))-((0[1-9])|([12][0-9])|(3[01]))(Z)"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Assessment Completion Date: YYYY-MM-DDZ note the existence of the letter Z at the end of date value -->
+					<xsd:attribute name="completionDate" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:pattern value="((000[1-9])|(00[1-9][0-9])|(0[1-9][0-9]{2})|([1-9][0-9]{3}))-((0[1-9])|(1[012]))-((0[1-9])|([12][0-9])|(3[01]))(Z)"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Assessment ID: it has to be unique accross the file -->
+					<xsd:attribute name="assessmentID" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="64">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Assessment Status: only Completed assessments will be included in data submission -->
+					<xsd:attribute name="assessmentStatus" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="Complete"/>	<!-- Completed -->
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+
+	<xsd:element name="organizationRecord">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+					<xsd:sequence>
+						<xsd:element ref="ocan:serviceOrg"/>
+						<xsd:element ref="ocan:program"/>
+						<xsd:element ref="ocan:MISFunction"/>
+					</xsd:sequence>
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="serviceOrg">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence/>
+
+					<!-- Service Organization Name -->
+					<xsd:attribute name="name" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="128">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Service Organization Number -->
+					<xsd:attribute name="number" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="4">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="program">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence/>
+
+					<!-- Program Name -->
+					<xsd:attribute name="name" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="128">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Program Number -->
+					<xsd:attribute name="number" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="64">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- MIS Functional Centre (CDS Question) -->
+	<xsd:element name="MISFunction">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence/>
+
+					<xsd:attribute name="value">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="clientRecord">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+					<xsd:sequence>
+
+						<xsd:element ref="ocan:clientID"/>
+
+						<!-- Begin PHI Information For Future Collection, only -->
+						<xsd:element ref="ocan:clientName"/>
+						<xsd:element ref="ocan:clientAddress"/>
+						<xsd:element ref="ocan:clientPhone"/>
+						<xsd:element ref="ocan:clientOHIP"/>
+						<xsd:element ref="ocan:clientCulture"/>
+						<!-- End PHI Information For Future Collection, only -->
+
+						<xsd:element ref="ocan:reasonForAssessment"/>
+						<xsd:element ref="ocan:clientContact"/>
+						<xsd:element ref="ocan:serviceRecipientLocation"/>
+						<xsd:element ref="ocan:serviceRecipientLHIN"/>
+						<xsd:element ref="ocan:serviceDeliveryLHIN"/>
+						<xsd:element ref="ocan:clientDOB"/>
+						<xsd:element ref="ocan:gender"/>
+						<xsd:element ref="ocan:maritalStatus"/>
+						<xsd:element ref="ocan:clientCapacity"/>
+						<xsd:element ref="ocan:referralSource"/>
+						<xsd:element ref="ocan:aboriginalOrigin"/>
+						<xsd:element ref="ocan:citizenshipStatus"/>
+						<xsd:element ref="ocan:timeLivedInCanada"/>
+						<xsd:element ref="ocan:immigExpList" minOccurs="0"/>
+						<xsd:element ref="ocan:discrimExpList" minOccurs="0"/>
+						<xsd:element ref="ocan:prefLang"/>
+						<xsd:element ref="ocan:serviceLang"/>
+						<xsd:element ref="ocan:legalIssues"/>
+						<xsd:element ref="ocan:legalStatusList" minOccurs="0"/>
+						<xsd:element ref="ocan:exitDisposition"/>
+
+					</xsd:sequence>
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- Client ID: this should be unique within the organization -->
+	<xsd:element name="clientID">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+					<xsd:sequence/>
+					<xsd:attribute name="orgClientID" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="64">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- Begin PHI Information For Future Collection, only -->
+	<!-- 
+		 Note: 
+			All PHI elements are not supposed to be collected during this phase.
+			There is a plan to collect them in the future, so, the placeholder 
+			i.e. the TAGs will be there but they are restricted with maxLength=0
+			in order to ensure no PHI data is sent at this time.
+			PHI TAGs will be included in the data submission file but with empty values.
+	-->
+
+	<!-- Client Name -->
+	<xsd:element name="clientName">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence/>
+
+					<!-- Last Name -->
+					<xsd:attribute name="last" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="0"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- First Name -->
+					<xsd:attribute name="first" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="0"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- Client Address -->
+	<xsd:element name="clientAddress">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence/>
+
+					<!-- Address Line 1 -->
+					<xsd:attribute name="line1" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="0"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Address Line 2 -->
+					<xsd:attribute name="line2" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="0"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- City -->
+					<xsd:attribute name="city" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="0"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Province -->
+					<xsd:attribute name="province" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="0"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Postal Code -->
+					<xsd:attribute name="postalCode" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="0"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- Client Phone Number -->
+	<xsd:element name="clientPhone">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:maxLength value="0"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- Client OHIP -->
+	<xsd:element name="clientOHIP">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence/>
+
+					<!-- OHIP Number -->
+					<xsd:attribute name="number" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="0"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- OHIP Version -->
+					<xsd:attribute name="version" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="0"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- What culture do you identify with? -->
+	<xsd:element name="clientCulture">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:maxLength value="0"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- End PHI Information For Future Collection, only -->
+
+	<!-- Reason for Assessment (select one) -->
+	<xsd:element name="reasonForAssessment">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence/>
+
+					<xsd:attribute name="value" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<xsd:attribute name="other" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string"/>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- Client Contact Information -->
+	<xsd:element name="clientContact">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+					<xsd:sequence>
+						<xsd:element ref="ocan:doctorContact"/>
+						<xsd:element ref="ocan:psychiatristContact"/>
+						<xsd:element ref="ocan:otherPractitionerContact" maxOccurs="unbounded" minOccurs="0"/>
+						<xsd:element ref="ocan:otherAgencyContact"/>
+					</xsd:sequence>
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- Client Doctor -->
+	<xsd:element name="doctorContact">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence/>
+
+					<xsd:attribute name="doctor" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<xsd:attribute name="lastSeen" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- Client Psychiatrist -->
+	<xsd:element name="psychiatristContact">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence/>
+
+					<xsd:attribute name="psychiatrist" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<xsd:attribute name="lastSeen" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- Client Other Practitioner Contacts -->
+	<xsd:element name="otherPractitionerContact">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence/>
+
+					<xsd:attribute name="practitionerType" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<xsd:attribute name="lastSeen" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- Client Other Agency Contact -->
+	<xsd:element name="otherAgencyContact">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+					<xsd:sequence/>
+					<xsd:attribute name="lastSeen" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- Service Recipient Location (county, district, municipality) -->
+	<xsd:element name="serviceRecipientLocation">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- Service Recipient LHIN -->
+	<xsd:element name="serviceRecipientLHIN">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:integer">
+				<xsd:minInclusive value="1"/>
+				<xsd:maxInclusive value="14"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- Service Delivery LHIN -->
+	<xsd:element name="serviceDeliveryLHIN">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:integer">
+				<xsd:minInclusive value="1"/>
+				<xsd:maxInclusive value="14"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- Client Date of Birth: YYYY-MM-DDZ note the existence of the letter Z at the end of date value -->
+	<xsd:element name="clientDOB">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:pattern value="((000[1-9])|(00[1-9][0-9])|(0[1-9][0-9]{2})|([1-9][0-9]{3}))-((0[1-9])|(1[012]))-((0[1-9])|([12][0-9])|(3[01]))(Z)"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- Gender (select one) -->
+	<xsd:element name="gender">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- Marital Status (select one) -->
+	<xsd:element name="maritalStatus">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- Client Capacity (check all that apply) -->
+	<xsd:element name="clientCapacity">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence/>
+
+					<!-- Does the client have a Power of Attorney for property? -->
+					<xsd:attribute name="property" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Does the client have a Power of Attorney or a substitute decision maker for personal care? -->
+					<xsd:attribute name="personalCare" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Does the client have a court appointed guardian? -->
+					<xsd:attribute name="legalGuardian" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- Who referred you to this service? (select one) -->
+	<xsd:element name="referralSource">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- Aboriginal Origin (select one) -->
+	<xsd:element name="aboriginalOrigin">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- Citizenship Status (select one) -->
+	<xsd:element name="citizenshipStatus">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- Length of time lived in Canada (Number of years, months) -->
+	<xsd:element name="timeLivedInCanada">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+					<xsd:sequence/>
+					<xsd:attribute name="years" type="xsd:integer" use="optional"/>
+					<xsd:attribute name="months" type="xsd:integer" use="optional"/>
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- Do you have any issues with your immigration experience?  (check all that apply) -->
+	<xsd:element name="immigExpList">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence>
+						<xsd:element name="value" minOccurs="0" maxOccurs="unbounded">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:string">
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:element>
+					</xsd:sequence>
+
+					<xsd:attribute name="otherImmigExp" type="xsd:string" use="optional"/>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- Experience of Discrimination (check all that apply) -->
+	<xsd:element name="discrimExpList">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence>
+						<xsd:element name="value" minOccurs="0" maxOccurs="unbounded">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:string">
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:element>
+					</xsd:sequence>
+
+					<xsd:attribute name="otherDiscrimExp" type="xsd:string" use="optional"/>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- Service Recipient Preferred Language -->
+	<xsd:element name="prefLang">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- Language of Service Provision -->
+	<xsd:element name="serviceLang">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- Do you have any legal issues? (select one) -->
+	<xsd:element name="legalIssues">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- Legal Status (check all that apply) -->
+	<xsd:element name="legalStatusList">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+					<xsd:sequence>
+						<xsd:element ref="ocan:legalStatus" minOccurs="0" maxOccurs="unbounded"/>
+					</xsd:sequence>
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="legalStatus">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- Exit Disposition? (select one if applicable) -->
+	<xsd:element name="exitDisposition">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<xsd:element name="OCANDomains">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+					<xsd:sequence>
+						<xsd:element ref="ocan:domain" maxOccurs="unbounded"/>
+					</xsd:sequence>
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="domain">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence>
+
+						<!-- common for all domains -->
+						<xsd:element ref="ocan:needRating" minOccurs="0"/>
+						<xsd:element ref="ocan:informalHelpRecvd" minOccurs="0"/>
+						<xsd:element ref="ocan:formalHelpRecvd" minOccurs="0"/>
+						<xsd:element ref="ocan:formalHelpNeed" minOccurs="0"/>
+
+						<!-- 01: accommodation -->
+						<xsd:element ref="ocan:residenceType" minOccurs="0"/>
+						<xsd:element ref="ocan:residenceSupport" minOccurs="0"/>
+						<xsd:element ref="ocan:livingArrangementType" minOccurs="0"/>
+
+						<!-- 05: daytime activities -->
+						<xsd:element ref="ocan:employStatus" minOccurs="0"/>
+						<xsd:element ref="ocan:educationProgramStatus" minOccurs="0"/>
+						<xsd:element ref="ocan:riskUnemploymentList" minOccurs="0"/>
+
+						<!-- 06: physical health -->
+						<xsd:element ref="ocan:medicalConditionList" minOccurs="0"/>
+						<xsd:element ref="ocan:physicalHealthConcern" minOccurs="0"/>
+						<xsd:element ref="ocan:concernAreaList" minOccurs="0"/>
+						<xsd:element ref="ocan:medicationList" minOccurs="0"/>
+						<xsd:element ref="ocan:sideEffects" minOccurs="0"/>
+						<xsd:element ref="ocan:dailyLivingAffected" minOccurs="0"/>
+						<xsd:element ref="ocan:sideEffectsDetailList" minOccurs="0"/>
+
+						<!-- 07: psychotic symptoms -->
+						<xsd:element ref="ocan:hospitalizedPastTwoYears" minOccurs="0"/>
+						<xsd:element ref="ocan:totalAdmissions" minOccurs="0"/>
+						<xsd:element ref="ocan:totalHospitalDays" minOccurs="0"/>
+						<xsd:element ref="ocan:communityTreatOrder" minOccurs="0"/>
+						<xsd:element ref="ocan:symptomList" minOccurs="0"/>
+
+						<!-- 08: condition and treatment -->
+						<xsd:element ref="ocan:diagnosticList" minOccurs="0"/>
+						<xsd:element ref="ocan:otherIllnessList" minOccurs="0"/>
+
+						<!-- 10: safety to self -->
+						<xsd:element ref="ocan:suicideAttempt" minOccurs="0"/>
+						<xsd:element ref="ocan:suicideThoughts" minOccurs="0"/>
+						<xsd:element ref="ocan:safetyConcernSelf" minOccurs="0"/>
+						<xsd:element ref="ocan:safetyToSelfRiskList" minOccurs="0"/>
+
+						<!-- 12: alcohol -->
+						<xsd:element ref="ocan:drinkAlcohol" minOccurs="0"/>
+						<xsd:element ref="ocan:stageOfChangeAlcohol" minOccurs="0"/>
+
+						<!-- 13: drugs -->
+						<xsd:element ref="ocan:drugUseList" minOccurs="0"/>
+						<xsd:element ref="ocan:stageOfChangeDrugs" minOccurs="0"/>
+
+						<!-- 14: other addictions -->
+						<xsd:element ref="ocan:addictionTypeList" minOccurs="0"/>
+						<xsd:element ref="ocan:stageOfChangeAddictions" minOccurs="0"/>
+
+						<!-- 15: company -->
+						<xsd:element ref="ocan:changedSocialPatterns" minOccurs="0"/>
+
+						<!-- 20: basic education -->
+						<xsd:element ref="ocan:highestEducationLevel" minOccurs="0"/>
+
+						<!-- 23: money -->
+						<xsd:element ref="ocan:sourceOfIncome" minOccurs="0"/>
+
+					</xsd:sequence>
+
+					<xsd:attribute name="name" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- common for all domains -->
+	<xsd:element name="needRating">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence/>
+
+					<xsd:attribute name="staff" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:byte">
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<xsd:attribute name="client" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:byte">
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- common for all domains -->
+	<xsd:element name="informalHelpRecvd">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+					<xsd:sequence/>
+					<xsd:attribute name="staff" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:byte">
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- common for all domains -->
+	<xsd:element name="formalHelpRecvd">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+					<xsd:sequence/>
+					<xsd:attribute name="staff" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:byte">
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- common for all domains -->
+	<xsd:element name="formalHelpNeed">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+					<xsd:sequence/>
+					<xsd:attribute name="staff" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:byte">
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- 01: accommodation: Where do you live? (select one) -->
+	<xsd:element name="residenceType">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- 01: accommodation: Do you receive any support? (select one) -->
+	<xsd:element name="residenceSupport">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- 01: accommodation: Do you live with anyone? (select one) -->
+	<xsd:element name="livingArrangementType">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- 05: daytime activities: What is your current employment status? (select one) -->
+	<xsd:element name="employStatus">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- 05: daytime activities: Are you currently in school? (select one) -->
+	<xsd:element name="educationProgramStatus">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- 05: daytime activities: Are you at risk of unemployment or disrupted education? (check all that apply) -->
+	<xsd:element name="riskUnemploymentList">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+					<xsd:sequence>
+						<xsd:element ref="ocan:riskUnemployment" maxOccurs="unbounded" minOccurs="0"/>
+					</xsd:sequence>
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="riskUnemployment">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- 06: physical health: Medical conditions (check all that apply) -->
+	<xsd:element name="medicalConditionList">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+					<xsd:sequence>
+						<xsd:element ref="ocan:medicalCondition" maxOccurs="unbounded" minOccurs="0"/>
+					</xsd:sequence>
+					<xsd:attribute name="autismDetail" type="xsd:string" use="optional"/>
+					<xsd:attribute name="otherDetail" type="xsd:string" use="optional"/>
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="medicalCondition">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- 06: physical health: Do you have any concerns about your physical health? -->
+	<xsd:element name="physicalHealthConcern">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- 06: physical health: If Yes, please indicate the areas where you have concerns (check all that apply) -->
+	<xsd:element name="concernAreaList">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+					<xsd:sequence>
+						<xsd:element ref="ocan:concernArea" maxOccurs="unbounded" minOccurs="0"/>
+					</xsd:sequence>
+					<xsd:attribute name="otherConcernArea" type="xsd:string" use="optional"/>
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="concernArea">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- 06: physical health: List of all current medications (including prescribed and alternative/over the counter medication) -->
+	<xsd:element name="medicationList">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+					<xsd:sequence>
+						<xsd:element ref="ocan:medicationDetail" maxOccurs="unbounded" minOccurs="0"/>
+					</xsd:sequence>
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="medicationDetail">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence/>
+
+					<!-- Taken as prescribed? -->
+					<xsd:attribute name="takenAsPrescribed" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Help is provided? -->
+					<xsd:attribute name="isHelpProvided" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Help is needed? -->
+					<xsd:attribute name="isHelpNeeded" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- 06: physical health: Reports side effects? (select one) -->
+	<xsd:element name="sideEffects">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- 06: physical health: Do these side effects affect your daily living? (select one) -->
+	<xsd:element name="dailyLivingAffected">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- 06: physical health: Description of side effects (check all that apply) -->
+	<xsd:element name="sideEffectsDetailList">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+					<xsd:sequence>
+						<xsd:element ref="ocan:sideEffectsDetail" maxOccurs="unbounded" minOccurs="0"/>
+					</xsd:sequence>
+					<xsd:attribute name="otherSideEffectsDetail" type="xsd:string" use="optional"/>
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="sideEffectsDetail">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- 07: psychotic symptoms: Have you been hospitalized due to your mental health during the past two years? (Select one) -->
+	<xsd:element name="hospitalizedPastTwoYears">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- 07: psychotic symptoms: Total Number of Admissions (last two years) -->
+	<xsd:element name="totalAdmissions" type="xsd:integer"/>
+
+	<!-- 07: psychotic symptoms: Total Number of Hospitalization Days (last two years) -->
+	<xsd:element name="totalHospitalDays" type="xsd:integer"/>
+
+	<!-- 07: psychotic symptoms: Community Treatment Order (CDS) -->
+	<xsd:element name="communityTreatOrder">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- 07: psychotic symptoms: Symptom checklist -->
+	<xsd:element name="symptomList">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+					<xsd:sequence>
+						<xsd:element ref="ocan:symptom" maxOccurs="unbounded" minOccurs="0"/>
+					</xsd:sequence>
+					<xsd:attribute name="otherSymptom" type="xsd:string" use="optional"/>
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="symptom">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- 08: condition and treatment: Diagnostic categories (check all that apply) -->
+	<xsd:element name="diagnosticList">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+					<xsd:sequence>
+						<xsd:element ref="ocan:diagnostic" maxOccurs="unbounded" minOccurs="0"/>
+					</xsd:sequence>
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="diagnostic">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- 08: condition and treatment: Other Illness Information (check all that apply) -->
+	<xsd:element name="otherIllnessList">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+					<xsd:sequence>
+						<xsd:element ref="ocan:otherIllness" maxOccurs="unbounded" minOccurs="0"/>
+					</xsd:sequence>
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="otherIllness">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- 10: safety to self: Have you attempted suicide in the past? (select one) -->
+	<xsd:element name="suicideAttempt">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- 10: safety to self: Do you currently have suicidal thoughts? (select one) -->
+	<xsd:element name="suicideThoughts">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- 10: safety to self: Do you have any concerns for your own safety? (select one) -->
+	<xsd:element name="safetyConcernSelf">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- 10: safety to self: Risks (select all that apply) -->
+	<xsd:element name="safetyToSelfRiskList">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+					<xsd:sequence>
+						<xsd:element ref="ocan:safetyToSelfRisk" maxOccurs="unbounded" minOccurs="0"/>
+					</xsd:sequence>
+					<xsd:attribute name="otherSafetyToSelfRisk" type="xsd:string" use="optional"/>
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="safetyToSelfRisk">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- 12: alcohol: How often do you drink alcohol (i.e. number of drinks)? -->
+	<xsd:element name="drinkAlcohol">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence/>
+
+					<xsd:attribute name="quantity" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:integer">
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<xsd:attribute name="frequency" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- 12: alcohol: Indicate the stage of change client is at – Optional (select one) -->
+	<xsd:element name="stageOfChangeAlcohol">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- 13: drugs: Which of the following drugs have you used? (check all that apply) -->
+	<xsd:element name="drugUseList">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence>
+						<xsd:element ref="ocan:drugUse" maxOccurs="unbounded" minOccurs="0"/>
+					</xsd:sequence>
+
+					<!-- Has the substance been injected? -->
+					<xsd:attribute name="injected" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="drugUse">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence/>
+
+					<xsd:attribute name="name" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<xsd:attribute name="frequency" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- 13: drugs: Indicate the stage of change client is at – Optional (select one) -->
+	<xsd:element name="stageOfChangeDrugs">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- 14: other addictions: Type of addiction (check all that apply) -->
+	<xsd:element name="addictionTypeList">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+					<xsd:sequence>
+						<xsd:element ref="ocan:addictionType" maxOccurs="unbounded" minOccurs="0"/>
+					</xsd:sequence>
+					<xsd:attribute name="otherAddictionType" type="xsd:string" use="optional"/>
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="addictionType">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- 14: other addictions: Indicate the stage of change client is at – Optional (select one) -->
+	<xsd:element name="stageOfChangeAddictions">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- 15: company: Have there been any changes to your social patterns recently? -->
+	<xsd:element name="changedSocialPatterns">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- 20: basic education: What is your highest level of education? (select one) -->
+	<xsd:element name="highestEducationLevel">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- 23: money: What is your primary source of income? (select one) -->
+	<xsd:element name="sourceOfIncome">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<xsd:element name="additionalElements">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence>
+
+						<!-- Begin Free Text Information For Future Collection, only -->
+						<xsd:element ref="ocan:clientHopesForFuture"/>
+						<xsd:element ref="ocan:clientNeedToGetThere"/>
+						<xsd:element ref="ocan:clientViewMentalHealth"/>
+						<xsd:element ref="ocan:clientSpiritualityImportance"/>
+						<xsd:element ref="ocan:clientCultureHeritageImportance"/>
+						<!-- End Free Text Information For Future Collection, only -->
+
+						<xsd:element ref="ocan:presentingIssueList" minOccurs="1" maxOccurs="1"/>
+						<xsd:element ref="ocan:actionList" minOccurs="0" maxOccurs="1"/>
+						<xsd:element ref="ocan:referralList" minOccurs="0" maxOccurs="1"/>
+
+					</xsd:sequence>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- Begin Free Text Information For Future Collection, only -->
+	<!-- 
+		 Note: 
+			All Free Text elements are not supposed to be collected during this phase.
+			There is a plan to collect them in the future, so, the placeholder 
+			i.e. the TAGs will be there but they are restricted with maxLength=0
+			in order to ensure no Free Text data is sent at this time.
+			Free Text TAGs will be included in the data submission file but with empty values.
+	-->
+
+	<!-- What are your hopes for the future? -->
+	<xsd:element name="clientHopesForFuture">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:maxLength value="0"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- What do you think you need in order to get there? -->
+	<xsd:element name="clientNeedToGetThere">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:maxLength value="0"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- How do you view your mental health? -->
+	<xsd:element name="clientViewMentalHealth">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:maxLength value="0"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- Is spirituality an important part of your life? -->
+	<xsd:element name="clientSpiritualityImportance">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:maxLength value="0"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- Is culture (heritage) an important part of your life? -->
+	<xsd:element name="clientCultureHeritageImportance">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:maxLength value="0"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- End Free Text Information For Future Collection, only -->
+
+	<!-- Presenting Issues: this is mandatory, at least one issue should be listed -->
+	<xsd:element name="presentingIssueList">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+					<xsd:sequence>
+						<xsd:element ref="ocan:presentingIssue" minOccurs="1" maxOccurs="unbounded"/>
+					</xsd:sequence>
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="presentingIssue">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+					<xsd:sequence/>
+					<xsd:attribute name="type" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- Summary of actions -->
+	<xsd:element name="actionList">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+					<xsd:sequence>
+						<xsd:element ref="ocan:action" maxOccurs="unbounded" minOccurs="0"/>
+					</xsd:sequence>
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="action">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence/>
+
+					<xsd:attribute name="priority" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<xsd:attribute name="domain" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- Summary of referrals -->
+	<xsd:element name="referralList">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+					<xsd:sequence>
+						<xsd:element ref="ocan:referral" maxOccurs="unbounded" minOccurs="0"/>
+					</xsd:sequence>
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="referral">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence/>
+
+					<!-- Optimal Referral -->
+					<xsd:attribute name="optimal" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Specify more details about Optimal Referral -->
+					<xsd:attribute name="specifyOptimal" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Actual Referral -->
+					<xsd:attribute name="actual" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Specify more details about Actual Referral -->
+					<xsd:attribute name="specifyActual" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Reason for Difference -->
+					<xsd:attribute name="differenceReason" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Referral Status -->
+					<xsd:attribute name="status" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+</xsd:schema>

@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2010 rel. 3 sp1 (http://www.altova.com) by SORINA CONSTANTIN (COMMUNITY CARE INFORAMTION MANAGEMENT) -->
+<xs:schema xmlns="http://www.ehealthontario.ca/CCIM" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.ehealthontario.ca/CCIM" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+	<!-- 
+    ============================================================================================
+	File Name  		: ConsentDirectives-1.0.xsd 
+	Description        : XML schema for the Consent Directive Submission Record
+	Developed by     : IAR
+	Version History  : 
+		1.0				May-2-2011		: Initial Version
+	============================================================================================
+	-->
+	<xs:element name="ConsentSubmission">
+		<xs:annotation>
+			<xs:documentation>Consent Submission, typically imbedded within an IAR SubmissionContent Record</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence maxOccurs="unbounded">
+				<xs:element ref="ConsentDirective">
+					<xs:annotation>
+						<xs:documentation>Consent directive record for for each individual assessment</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ConsentDirective">
+		<xs:annotation>
+			<xs:documentation>Consent directive element</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="PersonIdentification"/>
+				<xs:element ref="ApplyTo"/>
+				<xs:element ref="Directive"/>
+				<xs:element ref="RecordedByInfo" minOccurs="0"/>
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:string" use="required">
+				<xs:annotation>
+					<xs:documentation>Source System Supplied Identifier</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="type" type="cdConsentDirectiveType" use="required">
+				<xs:annotation>
+					<xs:documentation>Type of Consent Directive - Assessment or PersonalInformation (future)</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="PersonIdentification">
+		<xs:annotation>
+			<xs:documentation>A reference to person, e.g. person ID</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="organization">
+					<xs:annotation>
+						<xs:documentation>Submitting Organization Id used/assigned in IAR</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:attribute name="id" use="required">
+							<xs:annotation>
+								<xs:documentation>The MOHLTC assigned number for the submitting HSP </xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:minLength value="1"/>
+									<xs:maxLength value="10"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="name" use="optional">
+							<xs:annotation>
+								<xs:documentation>Full name of the submitting HSP</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string"/>
+							</xs:simpleType>
+						</xs:attribute>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="SourceSystem" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Source Assessment software  software application information</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:attribute name="id" use="required">
+							<xs:annotation>
+								<xs:documentation>Facility or application Id, used in some assessment types to identify unique source of client data.</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:minLength value="1"/>
+									<xs:maxLength value="5"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="type" use="required">
+							<xs:annotation>
+								<xs:documentation>Type of identifier - Facility or ApplicationId</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:enumeration value="Facility"/>
+									<xs:enumeration value="ApplicationId"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="PersonId">
+					<xs:annotation>
+						<xs:documentation>Person/Client/Patient Identifier.  </xs:documentation>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="40"/>
+							<xs:minLength value="1"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ApplyTo">
+		<xs:annotation>
+			<xs:documentation>Reference to the consented record</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:choice>
+				<xs:element name="Assessment">
+					<xs:annotation>
+						<xs:documentation>Required when ConsentDirective = A (Assessment)</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="AssessmentId" type="xs:string">
+								<xs:annotation>
+									<xs:documentation>Assessment Id as recorded in HSP source system</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="assessmentType">
+								<xs:annotation>
+									<xs:documentation>Assessment type of assesmentMust be one of IAR supported assessment types. </xs:documentation>
+								</xs:annotation>
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:enumeration value="OCAN">
+											<xs:annotation>
+												<xs:documentation>Ontario Common Assessment of Need</xs:documentation>
+											</xs:annotation>
+										</xs:enumeration>
+										<xs:enumeration value="RAI-MH">
+											<xs:annotation>
+												<xs:documentation>Resident Assessment Intake Mental Health</xs:documentation>
+											</xs:annotation>
+										</xs:enumeration>
+										<xs:enumeration value="ADAT">
+											<xs:annotation>
+												<xs:documentation>Addiction Assessment, Discharge and Treatment Standardized Tools</xs:documentation>
+											</xs:annotation>
+										</xs:enumeration>
+										<xs:enumeration value="RAI_MDS_2.0">
+											<xs:annotation>
+												<xs:documentation>Resident Assessment Instrument Minimum Data Set 2.0</xs:documentation>
+											</xs:annotation>
+										</xs:enumeration>
+										<xs:enumeration value="RAI-CA">
+											<xs:annotation>
+												<xs:documentation>Common Intake Assessment Tool</xs:documentation>
+											</xs:annotation>
+										</xs:enumeration>
+										<xs:enumeration value="RAI-HC">
+											<xs:annotation>
+												<xs:documentation>Long Stay Assessment Software (LSAS), Resident Assessment Intake Home Care</xs:documentation>
+											</xs:annotation>
+										</xs:enumeration>
+										<xs:enumeration value="RAI-CHA">
+											<xs:annotation>
+												<xs:documentation>interRAI Community Health Assessment (CHA) is assessment type is used by CSS sector</xs:documentation>
+											</xs:annotation>
+										</xs:enumeration>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="PersonalInformation" type="xs:anyType">
+					<xs:annotation>
+						<xs:documentation>Required when ConsentDirective = P reserved for future use</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Directive" type="cdConsentActionType">
+		<xs:annotation>
+			<xs:documentation>Actual Consent Directive</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="RecordedByInfo">
+		<xs:annotation>
+			<xs:documentation>Information about who entered the consent information and when </xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="NameOrUserID">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="30"/>
+							<xs:minLength value="1"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="TimeRecorded" type="xs:dateTime"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:simpleType name="cdConsentDirectiveType">
+		<xs:annotation>
+			<xs:documentation>Consent type</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:enumeration value="Assessment">
+				<xs:annotation>
+					<xs:documentation>Assessment Level Consent</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="PersonalInformation">
+				<xs:annotation>
+					<xs:documentation>Person Level Consent, future use</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="cdProtectedRecordIdType">
+		<xs:annotation>
+			<xs:documentation>Subject Id Type</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="type" use="required">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:minLength value="1"/>
+							<xs:enumeration value="AssessmentId"/>
+							<xs:enumeration value="AssessmentType"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:attribute>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="cdConsentActionType">
+		<xs:annotation>
+			<xs:documentation>Consent Action Type</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="AccessLevel">
+				<xs:annotation>
+					<xs:documentation>Grant, Deny, Not supported by this data feed</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="Grant">
+							<xs:annotation>
+								<xs:documentation>Grant (allow)</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="Deny">
+							<xs:annotation>
+								<xs:documentation>Deny Access</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="Unsupported">
+							<xs:annotation>
+								<xs:documentation>Consent flag Unsupported</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="EffectiveDate" type="xs:date" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Date consent takes affect</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="RequestedTime" type="xs:dateTime" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>When person provided directive</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>
