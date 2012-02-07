@@ -691,9 +691,9 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
         String annotation = null;
         for (int p=0; p<pa.length; p++){
             Date prescribeDate = pa[p].getWrittenDate();
-            if (prescribeDate!=null) {
-                if (startDate.after(prescribeDate) || endDate.before(prescribeDate)) continue;
-            }
+            if (prescribeDate==null) continue;
+            else if (startDate.after(prescribeDate) || endDate.before(prescribeDate)) continue;
+
             String data = StringUtils.noNull(pa[p].getRegionalIdentifier());
             if (!listOfDINS.contains(data)) continue;
 
