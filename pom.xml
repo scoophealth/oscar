@@ -615,8 +615,21 @@
 		<dependency>
 			<groupId>ocan</groupId>
 			<artifactId>ocan-iar</artifactId>
+			<version>3.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>ocan</groupId>
+			<artifactId>ocan-iar-consent</artifactId>
 			<version>UNKNOWN</version>
 		</dependency>
+
+		<dependency>
+			<groupId>ocan</groupId>
+			<artifactId>ocan-iar-phr</artifactId>
+			<version>UNKNOWN</version>
+		</dependency>
+
 
 		<dependency>
 			<groupId>com.jcraft</groupId>

@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://www.ehealthontario.ca/CCIM" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://www.ehealthontario.ca/CCIM">
+	<xs:element name="OHIPVersion">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:pattern value="\p{Lu}{0,2}" />
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="SubmissionType">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="C">
+					<xs:annotation>
+						<xs:documentation>Correction</xs:documentation>
+					</xs:annotation>
+				</xs:enumeration>
+				<xs:enumeration value="D">
+					<xs:annotation>
+						<xs:documentation>Deletion</xs:documentation>
+					</xs:annotation>
+				</xs:enumeration>
+				<xs:enumeration value="N">
+					<xs:annotation>
+						<xs:documentation>New</xs:documentation>
+					</xs:annotation>
+				</xs:enumeration>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="SubmissionHeader">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="OrganizationId" />
+				<xs:element ref="FiscalYearOfSubmission" />
+				<xs:element ref="FiscalQuarterForThisSubmission" />
+				<xs:element ref="NumberOfRecordsInTransmissionFile" />
+				<xs:element ref="DateOfSubmission" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="SubmissionContents">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="RecordEntry" maxOccurs="unbounded" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Sex">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="M">
+					<xs:annotation>
+						<xs:documentation>Male</xs:documentation>
+					</xs:annotation>
+				</xs:enumeration>
+				<xs:enumeration value="F">
+					<xs:annotation>
+						<xs:documentation>Female</xs:documentation>
+					</xs:annotation>
+				</xs:enumeration>
+				<xs:enumeration value="O">
+					<xs:annotation>
+						<xs:documentation>Other</xs:documentation>
+					</xs:annotation>
+				</xs:enumeration>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="RecordID" type="xs:string" />
+	<xs:element name="RecordEntry">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Assessment" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ProvinceTerritoryIssuingHealthCardNumber">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="BC">
+					<xs:annotation>
+						<xs:documentation>British Columbia</xs:documentation>
+					</xs:annotation>
+				</xs:enumeration>
+				<xs:enumeration value="AB">
+					<xs:annotation>
+						<xs:documentation>Alberta</xs:documentation>
+					</xs:annotation>
+				</xs:enumeration>
+				<xs:enumeration value="SK">
+					<xs:annotation>
+						<xs:documentation>Saskatchewan</xs:documentation>
+					</xs:annotation>
+				</xs:enumeration>
+				<xs:enumeration value="MB">
+					<xs:annotation>
+						<xs:documentation>Manitoba</xs:documentation>
+					</xs:annotation>
+				</xs:enumeration>
+				<xs:enumeration value="ON">
+					<xs:annotation>
+						<xs:documentation>Ontario</xs:documentation>
+					</xs:annotation>
+				</xs:enumeration>
+				<xs:enumeration value="QC">
+					<xs:annotation>
+						<xs:documentation>Quebec</xs:documentation>
+					</xs:annotation>
+				</xs:enumeration>
+				<xs:enumeration value="NL">
+					<xs:annotation>
+						<xs:documentation>Newfoundland</xs:documentation>
+					</xs:annotation>
+				</xs:enumeration>
+				<xs:enumeration value="PE">
+					<xs:annotation>
+						<xs:documentation>Prince Edward Island</xs:documentation>
+					</xs:annotation>
+				</xs:enumeration>
+				<xs:enumeration value="NS">
+					<xs:annotation>
+						<xs:documentation>Nova Scotia</xs:documentation>
+					</xs:annotation>
+				</xs:enumeration>
+				<xs:enumeration value="NB">
+					<xs:annotation>
+						<xs:documentation>New Brunswick</xs:documentation>
+					</xs:annotation>
+				</xs:enumeration>
+				<xs:enumeration value="NT">
+					<xs:annotation>
+						<xs:documentation>Northwest Territories
+						</xs:documentation>
+					</xs:annotation>
+				</xs:enumeration>
+				<xs:enumeration value="YT">
+					<xs:annotation>
+						<xs:documentation>Yukon Territory</xs:documentation>
+					</xs:annotation>
+				</xs:enumeration>
+				<xs:enumeration value="NU">
+					<xs:annotation>
+						<xs:documentation>Nunavut</xs:documentation>
+					</xs:annotation>
+				</xs:enumeration>
+				<xs:enumeration value="-70">
+					<xs:annotation>
+						<xs:documentation>Unknown</xs:documentation>
+					</xs:annotation>
+				</xs:enumeration>
+				<xs:enumeration value="-90">
+					<xs:annotation>
+						<xs:documentation>Not Applicable</xs:documentation>
+					</xs:annotation>
+				</xs:enumeration>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="PhoneNumber" type="xs:string" />
+	<xs:element name="OrganizationId" type="xs:string" />
+	<xs:element name="NumberOfRecordsInTransmissionFile" type="xs:nonNegativeInteger" />
+	<xs:element name="OHIPNumber">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="12" />
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="Name">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="First" />
+				<xs:element ref="Last" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Last" type="xs:string" />
+	<xs:element name="ClientAddress">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="AddressLines" />
+				<xs:element ref="City" />
+				<xs:element ref="Province" />
+				<xs:element ref="PostalCode" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="AddressLines">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="AddressLine" maxOccurs="2" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="AddressLine" type="xs:string" />
+	<xs:element name="City" type="xs:string" />
+	<xs:element name="Province" type="xs:string" />
+	<xs:element name="PostalCode" type="xs:string" />
+	<xs:element name="HealthCard">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="OHIPNumber" />
+				<xs:element ref="OHIPVersion" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="FiscalYearOfSubmission">
+		<xs:simpleType>
+			<xs:restriction base="xs:positiveInteger">
+				<xs:minInclusive value="1900" />
+				<xs:maxInclusive value="9999" />
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="FiscalQuarterForThisSubmission">
+		<xs:simpleType>
+			<xs:restriction base="xs:byte">
+				<xs:enumeration value="1" />
+				<xs:enumeration value="2" />
+				<xs:enumeration value="3" />
+				<xs:enumeration value="4" />
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="First" type="xs:string" />
+	<xs:element name="EstimatedBirthDate" type="xs:string" />
+	<xs:element name="DateOfSubmission" type="xs:date" />
+	<xs:element name="CountryOfResidence">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="CA">
+					<xs:annotation>
+						<xs:documentation>Canada</xs:documentation>
+					</xs:annotation>
+				</xs:enumeration>
+				<xs:enumeration value="US">
+					<xs:annotation>
+						<xs:documentation>USA</xs:documentation>
+					</xs:annotation>
+				</xs:enumeration>
+				<xs:enumeration value="OTH">
+					<xs:annotation>
+						<xs:documentation>Other</xs:documentation>
+					</xs:annotation>
+				</xs:enumeration>
+				<xs:enumeration value="UNK">
+					<xs:annotation>
+						<xs:documentation>Unknown</xs:documentation>
+					</xs:annotation>
+				</xs:enumeration>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="ChartNumber" type="xs:string" />
+	<xs:element name="CaseRecordNumber" type="xs:string" />
+	<xs:element name="CCIMSubmissionPHI">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="SubmissionHeader" />
+				<xs:element ref="SubmissionContents" />
+			</xs:sequence>
+			<!-- CCIM PHI Version Number: it has to be a constant 1.0.3 -->
+			<xs:attribute name="version" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="1.0.3" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="BirthDate" type="xs:date" />
+	<xs:element name="AssessmentReferenceDate" type="xs:date" />
+	<xs:element name="AssessmentPHIElements">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Name" />
+				<xs:element ref="ClientAddress" />
+				<xs:element ref="PhoneNumber" />
+				<xs:element ref="HealthCard" minOccurs="0" />
+				<xs:element ref="CountryOfResidence" />
+				<xs:element ref="ProvinceTerritoryIssuingHealthCardNumber"
+					minOccurs="0" />
+				<xs:element ref="Sex" />
+				<xs:element ref="BirthDate" minOccurs="0" />
+				<xs:element ref="EstimatedBirthDate" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="AssessmentKeyElements">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="RecordID" />
+				<xs:element ref="SubmissionType" />
+				<xs:element ref="ChartNumber" />
+				<xs:element ref="CaseRecordNumber" />
+				<xs:element ref="AssessmentReferenceDate" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Assessment">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="AssessmentKeyElements" />
+				<xs:element ref="AssessmentPHIElements" minOccurs="0" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

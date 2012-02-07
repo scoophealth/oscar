@@ -1,0 +1,3762 @@
+<OCANSubmissionFile version="1.0.0" ID="File-01" timestamp="2009-03-16T00:00:00Z" xmlns="http://oscarehr.org/ocan">​​​ ​ ​
+
+	<!-- assessment record# 1: this assessment shows all TAGs have their values populated -->
+	<OCANSubmissionRecord assessmentID="1001" startDate="2009-01-16Z" completionDate="2009-01-31Z" assessmentStatus="Complete">
+		<organizationRecord>
+			<serviceOrg name="NE LHIN Test Org" number="123"/>
+			<program name="Intensive Case Management" number="3025"/>
+			<MISFunction value="725 10 76 12"/>
+		</organizationRecord>
+		<clientRecord>
+			<clientID orgClientID="123000"/>
+			<!-- Begin PHI Information For Future Collection, only -->
+			<clientName last="" first=""/>
+			<clientAddress line1="" line2="" city="" province="" postalCode=""/>
+			<clientPhone/>
+			<clientOHIP number="" version=""/>
+			<clientCulture/>
+			<!-- End PHI Information For Future Collection, only -->
+			<reasonForAssessment value="OTHR" other="detail text for other reason of assessment"/>
+			<clientContact>
+				<doctorContact doctor="TRUE" lastSeen="LS-6"/>
+				<psychiatristContact psychiatrist="TRUE" lastSeen="LS-12"/>
+				<otherPractitionerContact practitionerType="3111" lastSeen="LS-1"/>
+				<otherPractitionerContact practitionerType="3112" lastSeen="LS-13"/>
+				<otherPractitionerContact practitionerType="4217" lastSeen="LS-6"/>
+				<otherAgencyContact lastSeen="LS-12"/>
+			</clientContact>
+			<serviceRecipientLocation>010-52</serviceRecipientLocation>
+			<serviceRecipientLHIN>12</serviceRecipientLHIN>
+			<serviceDeliveryLHIN>5</serviceDeliveryLHIN>
+			<clientDOB>2001-03-15Z</clientDOB>
+			<gender>F</gender>
+			<maritalStatus>125681006</maritalStatus>
+			<clientCapacity property="TRUE" personalCare="FALSE" legalGuardian="CDA"/>
+			<referralSource>018-05</referralSource>
+			<aboriginalOrigin>011-02</aboriginalOrigin>
+			<citizenshipStatus>CDN</citizenshipStatus>
+			<timeLivedInCanada years="3" months="8"/>
+			<immigExpList otherImmigExp="other immigration experience text">
+				<value>2</value>
+				<value>3</value>
+				<value>7</value>
+				<value>8</value>
+			</immigExpList>
+			<discrimExpList otherDiscrimExp="other discrimination experience text">
+				<value>21134002</value>
+				<value>365873007</value>
+				<value>410515003</value>
+			</discrimExpList>
+			<prefLang>fra</prefLang>
+			<serviceLang>eng</serviceLang>
+			<legalIssues>Civil</legalIssues>
+			<legalStatusList>
+				<legalStatus>013-01</legalStatus>
+				<legalStatus>013-02</legalStatus>
+				<legalStatus>013-03</legalStatus>
+				<legalStatus>013-08</legalStatus>
+				<legalStatus>013-09</legalStatus>
+			</legalStatusList>
+			<exitDisposition>019-06</exitDisposition>
+		</clientRecord>
+		<OCANDomains>
+			<domain name="01-accommodation">
+				<needRating staff="1" client="2"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="3"/>
+				<residenceType>024-19</residenceType>
+				<residenceSupport>24A-05</residenceSupport>
+				<livingArrangementType>023-08</livingArrangementType>
+			</domain>
+			<domain name="02-food">
+				<needRating staff="0" client="9"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="0"/>
+			</domain>
+			<domain name="03-looking after the home">
+				<needRating staff="1" client="2"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="-1"/>
+			</domain>
+			<domain name="04-self-care">
+				<needRating staff="9" client="0"/>
+				<informalHelpRecvd staff="-1"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="0"/>
+			</domain>
+			<domain name="05-daytime activities">
+				<needRating staff="9" client="1"/>
+				<informalHelpRecvd staff="2"/>
+				<formalHelpRecvd staff="3"/>
+				<formalHelpNeed staff="0"/>
+				<employStatus>224366004</employStatus>
+				<educationProgramStatus>224870001</educationProgramStatus>
+				<riskUnemploymentList>
+					<riskUnemployment>UDER-02</riskUnemployment>
+					<riskUnemployment>UDER-03</riskUnemployment>
+					<riskUnemployment>UDER-06</riskUnemployment>
+				</riskUnemploymentList>
+			</domain>
+			<domain name="06-physical health">
+				<needRating staff="1" client="1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="0"/>
+				<formalHelpNeed staff="-1"/>
+				<medicalConditionList autismDetail="autism specific text" otherDetail="other medical text">
+					<medicalCondition>408856003</medicalCondition>
+					<medicalCondition>410515003</medicalCondition>
+					<medicalCondition>414916001</medicalCondition>
+				</medicalConditionList>
+				<physicalHealthConcern>TRUE</physicalHealthConcern>
+				<concernAreaList otherConcernArea="other concern text">
+					<concernArea>119415007</concernArea>
+					<concernArea>118952005</concernArea>
+					<concernArea>410515003</concernArea>
+				</concernAreaList>
+				<medicationList>
+					<medicationDetail takenAsPrescribed="TRUE" isHelpProvided="FALSE" isHelpNeeded="TRUE"/>
+					<medicationDetail takenAsPrescribed="FALSE" isHelpProvided="UNK" isHelpNeeded="TRUE"/>
+					<medicationDetail takenAsPrescribed="UNK" isHelpProvided="TRUE" isHelpNeeded="FALSE"/>
+				</medicationList>
+				<sideEffects>TRUE</sideEffects>
+				<dailyLivingAffected>TRUE</dailyLivingAffected>
+				<sideEffectsDetailList otherSideEffectsDetail="other side effect text">
+					<sideEffectsDetail>246636008</sideEffectsDetail>
+					<sideEffectsDetail>53619000</sideEffectsDetail>
+					<sideEffectsDetail>410515003</sideEffectsDetail>
+				</sideEffectsDetailList>
+			</domain>
+			<domain name="07-psychotic symptoms">
+				<needRating staff="0" client="0"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="9"/>
+				<hospitalizedPastTwoYears>TRUE</hospitalizedPastTwoYears>
+				<totalAdmissions>5</totalAdmissions>
+				<totalHospitalDays>78</totalHospitalDays>
+				<communityTreatOrder>015-03</communityTreatOrder>
+				<symptomList otherSymptom="other symptom text">
+					<symptom>410516002</symptom>
+					<symptom>75408008</symptom>
+					<symptom>2073000</symptom>
+					<symptom>1402001</symptom>
+					<symptom>55929007</symptom>
+					<symptom>410515003</symptom>
+				</symptomList>
+			</domain>
+			<domain name="08-condition and treatment">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="-1"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="0"/>
+				<diagnosticList>
+					<diagnostic>2776000</diagnostic>
+					<diagnostic>MDGMC</diagnostic>
+					<diagnostic>87858002</diagnostic>
+					<diagnostic>SRDDH</diagnostic>
+					<diagnostic>DH</diagnostic>
+				</diagnosticList>
+				<otherIllnessList>
+					<otherIllness>016A-01</otherIllness>
+					<otherIllness>016A-03</otherIllness>
+				</otherIllnessList>
+			</domain>
+			<domain name="09-psychological distress">
+				<needRating staff="0" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="-1"/>
+			</domain>
+			<domain name="10-safety to self">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="-1"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="-1"/>
+				<suicideAttempt>TRUE</suicideAttempt>
+				<suicideThoughts>TRUE</suicideThoughts>
+				<safetyConcernSelf>TRUE</safetyConcernSelf>
+				<safetyToSelfRiskList otherSafetyToSelfRisk="other risk to self text">
+					<safetyToSelfRisk>225915006</safetyToSelfRisk>
+					<safetyToSelfRisk>401206008</safetyToSelfRisk>
+					<safetyToSelfRisk>410515003</safetyToSelfRisk>
+				</safetyToSelfRiskList>
+			</domain>
+			<domain name="11-safety to others">
+				<needRating staff="9" client="9"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="0"/>
+				<formalHelpNeed staff="-1"/>
+			</domain>
+			<domain name="12-alcohol">
+				<needRating staff="0" client="0"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="3"/>
+				<drinkAlcohol quantity="6" frequency="1"/>
+				<stageOfChangeAlcohol>5</stageOfChangeAlcohol>
+			</domain>
+			<domain name="13-drugs">
+				<needRating staff="2" client="2"/>
+				<informalHelpRecvd staff="2"/>
+				<formalHelpRecvd staff="0"/>
+				<formalHelpNeed staff="1"/>
+				<drugUseList injected="6">
+					<drugUse name="398705004" frequency="5"/>
+					<drugUse name="226044004" frequency="6"/>
+					<drugUse name="410515003" frequency="5"/>
+				</drugUseList>
+				<stageOfChangeDrugs>2</stageOfChangeDrugs>
+			</domain>
+			<domain name="14-other addictions">
+				<needRating staff="9" client="9"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="1"/>
+				<formalHelpNeed staff="1"/>
+				<addictionTypeList otherAddictionType="other addiction text">
+					<addictionType>105523009</addictionType>
+					<addictionType>56294008</addictionType>
+					<addictionType>410515003</addictionType>
+				</addictionTypeList>
+				<stageOfChangeAddictions>3</stageOfChangeAddictions>
+			</domain>
+			<domain name="15-company">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="0"/>
+				<formalHelpNeed staff="2"/>
+				<changedSocialPatterns>CDA</changedSocialPatterns>
+			</domain>
+			<domain name="16-intimate relationships">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="3"/>
+			</domain>
+			<domain name="17-sexual expression">
+				<needRating staff="0" client="0"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="1"/>
+			</domain>
+			<domain name="18-childcare">
+				<needRating staff="9" client="1"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="3"/>
+			</domain>
+			<domain name="19-other dependents">
+				<needRating staff="1" client="1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="1"/>
+				<formalHelpNeed staff="1"/>
+			</domain>
+			<domain name="20-basic education">
+				<needRating staff="9" client="1"/>
+				<informalHelpRecvd staff="-1"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="-1"/>
+				<highestEducationLevel>HLES-6</highestEducationLevel>
+			</domain>
+			<domain name="21-telephone">
+				<needRating staff="9" client="9"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="9"/>
+			</domain>
+			<domain name="22-transport">
+				<needRating staff="9" client="9"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="9"/>
+			</domain>
+			<domain name="23-money">
+				<needRating staff="9" client="9"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="9"/>
+				<sourceOfIncome>031-10</sourceOfIncome>
+			</domain>
+			<domain name="24-benefits">
+				<needRating staff="9" client="9"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="9"/>
+			</domain>
+		</OCANDomains>
+		<additionalElements>
+			<!-- Begin Free Text Information For Future Collection, only -->
+			<clientHopesForFuture/>
+			<clientNeedToGetThere/>
+			<clientViewMentalHealth/>
+			<clientSpiritualityImportance/>
+			<clientCultureHeritageImportance/>
+			<!-- End Free Text Information For Future Collection, only -->
+			<presentingIssueList>
+				<presentingIssue type="017-05"/>
+				<presentingIssue type="017-09"/>
+				<presentingIssue type="017-11"/>
+			</presentingIssueList>
+			<actionList>
+				<action priority="1" domain="01-accommodation"/>
+				<action priority="2" domain="02-food"/>
+				<action priority="3" domain="21-telephone"/>
+				<action priority="4" domain="22-transport"/>
+			</actionList>
+			<referralList>
+				<referral optimal="ADD" specifyOptimal="specify text for optimal referral" actual="CHI" specifyActual="specify text for actual referral" differenceReason="RD-1" status="RS-2"/>
+				<referral optimal="CHI" specifyOptimal="specify text for optimal referral" actual="ADD" specifyActual="specify text for actual referral" differenceReason="RD-3" status="RS-1"/>
+			</referralList>
+		</additionalElements>
+	</OCANSubmissionRecord>
+
+	<!-- assessment record# 2: this assessment shows some optional TAGs allow for Null values -->
+	<OCANSubmissionRecord assessmentID="1002" startDate="2009-01-05Z" completionDate="2009-01-27Z" assessmentStatus="Complete">
+		<organizationRecord>
+			<serviceOrg name="NE LHIN Test Org" number="123"/>
+			<program name="Intensive Case Management" number="3025"/>
+			<MISFunction value="725 10 76 96"/>
+		</organizationRecord>
+		<clientRecord>
+			<clientID orgClientID="123100"/>
+			<!-- Begin PHI Information For Future Collection, only -->
+			<clientName last="" first=""/>
+			<clientAddress line1="" line2="" city="" province="" postalCode=""/>
+			<clientPhone/>
+			<clientOHIP number="" version=""/>
+			<clientCulture/>
+			<!-- End PHI Information For Future Collection, only -->
+			<reasonForAssessment value="IA" other=""/>
+			<clientContact>
+				<doctorContact doctor="FALSE" lastSeen=""/>
+				<psychiatristContact psychiatrist="NA" lastSeen=""/>
+				<otherPractitionerContact/>
+				<otherAgencyContact/>
+			</clientContact>
+			<serviceRecipientLocation>010-15</serviceRecipientLocation>
+			<serviceRecipientLHIN>12</serviceRecipientLHIN>
+			<serviceDeliveryLHIN>5</serviceDeliveryLHIN>
+			<clientDOB>1989-02-11Z</clientDOB>
+			<gender>F</gender>
+			<maritalStatus>20295000</maritalStatus>
+			<clientCapacity property="FALSE" personalCare="FALSE" legalGuardian="TRUE"/>
+			<referralSource>018-02</referralSource>
+			<aboriginalOrigin>011-01</aboriginalOrigin>
+			<citizenshipStatus>REF</citizenshipStatus>
+			<timeLivedInCanada years="8" months="1"/>
+			<immigExpList otherImmigExp="">
+				<value>3</value>
+				<value>7</value>
+			</immigExpList>
+			<discrimExpList otherDiscrimExp="">
+				<value>21134002</value>
+				<value>365873007</value>
+			</discrimExpList>
+			<prefLang>fra</prefLang>
+			<serviceLang>eng</serviceLang>
+			<legalIssues>CDA</legalIssues>
+			<legalStatusList>
+				<legalStatus>013-04</legalStatus>
+				<legalStatus>013-05</legalStatus>
+				<legalStatus>013-06</legalStatus>
+			</legalStatusList>
+			<exitDisposition>019-01</exitDisposition>
+		</clientRecord>
+		<OCANDomains>
+			<domain name="01-accommodation">
+				<needRating staff="1" client="2"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="3"/>
+				<residenceType>024-19</residenceType>
+				<residenceSupport>24A-05</residenceSupport>
+				<livingArrangementType>023-08</livingArrangementType>
+			</domain>
+			<domain name="02-food">
+				<needRating staff="0" client="9"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="0"/>
+			</domain>
+			<domain name="03-looking after the home">
+				<needRating staff="1" client="2"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="-1"/>
+			</domain>
+			<domain name="04-self-care">
+				<needRating staff="9" client="0"/>
+				<informalHelpRecvd staff="-1"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="0"/>
+			</domain>
+			<domain name="05-daytime activities">
+				<needRating staff="9" client="1"/>
+				<informalHelpRecvd staff="2"/>
+				<formalHelpRecvd staff="3"/>
+				<formalHelpNeed staff="0"/>
+				<employStatus>224366004</employStatus>
+				<educationProgramStatus>224870001</educationProgramStatus>
+				<riskUnemploymentList>
+					<riskUnemployment>UDER-03</riskUnemployment>
+				</riskUnemploymentList>
+			</domain>
+			<domain name="06-physical health">
+				<needRating staff="1" client="1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="0"/>
+				<formalHelpNeed staff="-1"/>
+				<medicalConditionList autismDetail="" otherDetail="">
+					<medicalCondition>64859006</medicalCondition>
+				</medicalConditionList>
+				<physicalHealthConcern>FALSE</physicalHealthConcern>
+				<concernAreaList>
+				</concernAreaList>
+				<medicationList>
+				</medicationList>
+				<sideEffects>CDA</sideEffects>
+				<dailyLivingAffected>TRUE</dailyLivingAffected>
+				<sideEffectsDetailList>
+				</sideEffectsDetailList>
+			</domain>
+			<domain name="07-psychotic symptoms">
+				<needRating staff="0" client="0"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="9"/>
+				<hospitalizedPastTwoYears>TRUE</hospitalizedPastTwoYears>
+				<totalAdmissions>5</totalAdmissions>
+				<totalHospitalDays>78</totalHospitalDays>
+				<communityTreatOrder>015-03</communityTreatOrder>
+				<symptomList otherSymptom="">
+					<symptom>410516002</symptom>
+					<symptom>75408008</symptom>
+					<symptom>2073000</symptom>
+					<symptom>1402001</symptom>
+				</symptomList>
+			</domain>
+			<domain name="08-condition and treatment">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="-1"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="0"/>
+				<diagnosticList>
+					<diagnostic>2776000</diagnostic>
+					<diagnostic>MDGMC</diagnostic>
+					<diagnostic>87858002</diagnostic>
+					<diagnostic>SRDDH</diagnostic>
+					<diagnostic>DH</diagnostic>
+				</diagnosticList>
+				<otherIllnessList>
+					<otherIllness>016A-01</otherIllness>
+					<otherIllness>016A-02</otherIllness>
+				</otherIllnessList>
+			</domain>
+			<domain name="09-psychological distress">
+				<needRating staff="0" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="-1"/>
+			</domain>
+			<domain name="10-safety to self">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="-1"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="-1"/>
+				<suicideAttempt>TRUE</suicideAttempt>
+				<suicideThoughts>TRUE</suicideThoughts>
+				<safetyConcernSelf>TRUE</safetyConcernSelf>
+				<safetyToSelfRiskList otherSafetyToSelfRisk="">
+					<safetyToSelfRisk>225915006</safetyToSelfRisk>
+					<safetyToSelfRisk>401206008</safetyToSelfRisk>
+				</safetyToSelfRiskList>
+			</domain>
+			<domain name="11-safety to others">
+				<needRating staff="9" client="9"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="0"/>
+				<formalHelpNeed staff="-1"/>
+			</domain>
+			<domain name="12-alcohol">
+				<needRating staff="0" client="0"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="3"/>
+				<drinkAlcohol quantity="6" frequency="1"/>
+				<stageOfChangeAlcohol>5</stageOfChangeAlcohol>
+			</domain>
+			<domain name="13-drugs">
+				<needRating staff="2" client="2"/>
+				<informalHelpRecvd staff="2"/>
+				<formalHelpRecvd staff="0"/>
+				<formalHelpNeed staff="1"/>
+				<drugUseList injected="6">
+					<drugUse name="398705004" frequency="5"/>
+					<drugUse name="226044004" frequency="6"/>
+					<drugUse name="410515003" frequency="5"/>
+				</drugUseList>
+				<stageOfChangeDrugs>2</stageOfChangeDrugs>
+			</domain>
+			<domain name="14-other addictions">
+				<needRating staff="9" client="9"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="1"/>
+				<formalHelpNeed staff="1"/>
+				<addictionTypeList otherAddictionType="">
+					<addictionType>105523009</addictionType>
+					<addictionType>56294008</addictionType>
+				</addictionTypeList>
+				<stageOfChangeAddictions>3</stageOfChangeAddictions>
+			</domain>
+			<domain name="15-company">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="0"/>
+				<formalHelpNeed staff="2"/>
+				<changedSocialPatterns>CDA</changedSocialPatterns>
+			</domain>
+			<domain name="16-intimate relationships">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="3"/>
+			</domain>
+			<domain name="17-sexual expression">
+				<needRating staff="0" client="0"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="1"/>
+			</domain>
+			<domain name="18-childcare">
+				<needRating staff="9" client="1"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="3"/>
+			</domain>
+			<domain name="19-other dependents">
+				<needRating staff="1" client="1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="1"/>
+				<formalHelpNeed staff="1"/>
+			</domain>
+			<domain name="20-basic education">
+				<needRating staff="9" client="1"/>
+				<informalHelpRecvd staff="-1"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="-1"/>
+				<highestEducationLevel>HLES-6</highestEducationLevel>
+			</domain>
+			<domain name="21-telephone">
+				<needRating staff="9" client="9"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="9"/>
+			</domain>
+			<domain name="22-transport">
+				<needRating staff="9" client="9"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="9"/>
+			</domain>
+			<domain name="23-money">
+				<needRating staff="9" client="9"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="9"/>
+				<sourceOfIncome>031-10</sourceOfIncome>
+			</domain>
+			<domain name="24-benefits">
+				<needRating staff="9" client="9"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="9"/>
+			</domain>
+		</OCANDomains>
+		<additionalElements>
+			<!-- Begin Free Text Information For Future Collection, only -->
+			<clientHopesForFuture/>
+			<clientNeedToGetThere/>
+			<clientViewMentalHealth/>
+			<clientSpiritualityImportance/>
+			<clientCultureHeritageImportance/>
+			<!-- End Free Text Information For Future Collection, only -->
+			<presentingIssueList>
+				<presentingIssue type="017-05"/>
+				<presentingIssue type="017-09"/>
+				<presentingIssue type="017-11"/>
+			</presentingIssueList>
+			<actionList>
+				<action priority="1" domain="21-telephone"/>
+				<action priority="2" domain="22-transport"/>
+			</actionList>
+			<referralList>
+				<referral optimal="ADD" specifyOptimal="specify text for optimal referral" actual="CHI" specifyActual="specify text for actual referral" differenceReason="RD-1" status="RS-2"/>
+			</referralList>
+		</additionalElements>
+	</OCANSubmissionRecord>
+
+	<!-- assessment record# 3: this assessment shows client did not answer client version of the assessment tool -->
+	<OCANSubmissionRecord assessmentID="1003" startDate="2009-01-02Z" completionDate="2009-01-17Z" assessmentStatus="Complete">
+		<organizationRecord>
+			<serviceOrg name="NE LHIN Test Org" number="123"/>
+			<program name="Intensive Case Management" number="3025"/>
+			<MISFunction value="725 51 76 20"/>
+		</organizationRecord>
+		<clientRecord>
+			<clientID orgClientID="123300"/>
+			<!-- Begin PHI Information For Future Collection, only -->
+			<clientName last="" first=""/>
+			<clientAddress line1="" line2="" city="" province="" postalCode=""/>
+			<clientPhone/>
+			<clientOHIP number="" version=""/>
+			<clientCulture/>
+			<!-- End PHI Information For Future Collection, only -->
+			<reasonForAssessment value="OTHR" other="detail text for other reason of assessment"/>
+			<clientContact>
+				<doctorContact doctor="TRUE" lastSeen="LS-6"/>
+				<psychiatristContact psychiatrist="TRUE" lastSeen="LS-12"/>
+				<otherPractitionerContact practitionerType="3111" lastSeen="LS-1"/>
+				<otherPractitionerContact practitionerType="3112" lastSeen="LS-13"/>
+				<otherPractitionerContact practitionerType="4217" lastSeen="LS-6"/>
+				<otherAgencyContact lastSeen="LS-12"/>
+			</clientContact>
+			<serviceRecipientLocation>010-52</serviceRecipientLocation>
+			<serviceRecipientLHIN>12</serviceRecipientLHIN>
+			<serviceDeliveryLHIN>5</serviceDeliveryLHIN>
+			<clientDOB>2001-08-22Z</clientDOB>
+			<gender>M</gender>
+			<maritalStatus>125681006</maritalStatus>
+			<clientCapacity property="TRUE" personalCare="FALSE" legalGuardian="CDA"/>
+			<referralSource>018-05</referralSource>
+			<aboriginalOrigin>011-02</aboriginalOrigin>
+			<citizenshipStatus>TR</citizenshipStatus>
+			<timeLivedInCanada years="3" months="8"/>
+			<immigExpList otherImmigExp="other immigration experience text">
+				<value>2</value>
+				<value>3</value>
+				<value>7</value>
+				<value>8</value>
+			</immigExpList>
+			<discrimExpList otherDiscrimExp="other discrimination experience text">
+				<value>21134002</value>
+				<value>365873007</value>
+				<value>410515003</value>
+			</discrimExpList>
+			<prefLang>fra</prefLang>
+			<serviceLang>eng</serviceLang>
+			<legalIssues>Civil</legalIssues>
+			<legalStatusList>
+				<legalStatus>013-01</legalStatus>
+				<legalStatus>013-02</legalStatus>
+				<legalStatus>013-03</legalStatus>
+				<legalStatus>013-08</legalStatus>
+				<legalStatus>013-09</legalStatus>
+			</legalStatusList>
+			<exitDisposition>019-06</exitDisposition>
+		</clientRecord>
+		<OCANDomains>
+			<domain name="01-accommodation">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="3"/>
+				<residenceType>024-19</residenceType>
+				<residenceSupport>24A-05</residenceSupport>
+				<livingArrangementType>023-08</livingArrangementType>
+			</domain>
+			<domain name="02-food">
+				<needRating staff="0" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="0"/>
+			</domain>
+			<domain name="03-looking after the home">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="-1"/>
+			</domain>
+			<domain name="04-self-care">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="-1"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="0"/>
+			</domain>
+			<domain name="05-daytime activities">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="2"/>
+				<formalHelpRecvd staff="3"/>
+				<formalHelpNeed staff="0"/>
+				<employStatus>224366004</employStatus>
+				<educationProgramStatus>224870001</educationProgramStatus>
+				<riskUnemploymentList>
+					<riskUnemployment>UDER-02</riskUnemployment>
+					<riskUnemployment>UDER-03</riskUnemployment>
+					<riskUnemployment>UDER-06</riskUnemployment>
+				</riskUnemploymentList>
+			</domain>
+			<domain name="06-physical health">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="0"/>
+				<formalHelpNeed staff="-1"/>
+				<medicalConditionList autismDetail="autism specific text" otherDetail="other medical text">
+					<medicalCondition>408856003</medicalCondition>
+					<medicalCondition>410515003</medicalCondition>
+					<medicalCondition>414916001</medicalCondition>
+				</medicalConditionList>
+				<physicalHealthConcern>TRUE</physicalHealthConcern>
+				<concernAreaList otherConcernArea="other concern text">
+					<concernArea>119415007</concernArea>
+					<concernArea>118952005</concernArea>
+					<concernArea>410515003</concernArea>
+				</concernAreaList>
+				<medicationList>
+					<medicationDetail takenAsPrescribed="TRUE" isHelpProvided="FALSE" isHelpNeeded="TRUE"/>
+					<medicationDetail takenAsPrescribed="FALSE" isHelpProvided="UNK" isHelpNeeded="TRUE"/>
+					<medicationDetail takenAsPrescribed="UNK" isHelpProvided="TRUE" isHelpNeeded="FALSE"/>
+				</medicationList>
+				<sideEffects>TRUE</sideEffects>
+				<dailyLivingAffected>TRUE</dailyLivingAffected>
+				<sideEffectsDetailList otherSideEffectsDetail="other side effect text">
+					<sideEffectsDetail>246636008</sideEffectsDetail>
+					<sideEffectsDetail>53619000</sideEffectsDetail>
+					<sideEffectsDetail>410515003</sideEffectsDetail>
+				</sideEffectsDetailList>
+			</domain>
+			<domain name="07-psychotic symptoms">
+				<needRating staff="0" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="9"/>
+				<hospitalizedPastTwoYears>TRUE</hospitalizedPastTwoYears>
+				<totalAdmissions>5</totalAdmissions>
+				<totalHospitalDays>78</totalHospitalDays>
+				<communityTreatOrder>015-03</communityTreatOrder>
+				<symptomList otherSymptom="other symptom text">
+					<symptom>410516002</symptom>
+					<symptom>75408008</symptom>
+					<symptom>2073000</symptom>
+					<symptom>1402001</symptom>
+					<symptom>55929007</symptom>
+					<symptom>410515003</symptom>
+				</symptomList>
+			</domain>
+			<domain name="08-condition and treatment">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="-1"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="0"/>
+				<diagnosticList>
+					<diagnostic>2776000</diagnostic>
+					<diagnostic>MDGMC</diagnostic>
+					<diagnostic>87858002</diagnostic>
+					<diagnostic>SRDDH</diagnostic>
+					<diagnostic>DH</diagnostic>
+				</diagnosticList>
+				<otherIllnessList>
+					<otherIllness>016A-01</otherIllness>
+					<otherIllness>016A-03</otherIllness>
+				</otherIllnessList>
+			</domain>
+			<domain name="09-psychological distress">
+				<needRating staff="0" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="-1"/>
+			</domain>
+			<domain name="10-safety to self">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="-1"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="-1"/>
+				<suicideAttempt>TRUE</suicideAttempt>
+				<suicideThoughts>TRUE</suicideThoughts>
+				<safetyConcernSelf>TRUE</safetyConcernSelf>
+				<safetyToSelfRiskList otherSafetyToSelfRisk="other risk to self text">
+					<safetyToSelfRisk>225915006</safetyToSelfRisk>
+					<safetyToSelfRisk>401206008</safetyToSelfRisk>
+					<safetyToSelfRisk>410515003</safetyToSelfRisk>
+				</safetyToSelfRiskList>
+			</domain>
+			<domain name="11-safety to others">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="0"/>
+				<formalHelpNeed staff="-1"/>
+			</domain>
+			<domain name="12-alcohol">
+				<needRating staff="0" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="3"/>
+				<drinkAlcohol quantity="6" frequency="1"/>
+				<stageOfChangeAlcohol>5</stageOfChangeAlcohol>
+			</domain>
+			<domain name="13-drugs">
+				<needRating staff="2" client="-1"/>
+				<informalHelpRecvd staff="2"/>
+				<formalHelpRecvd staff="0"/>
+				<formalHelpNeed staff="1"/>
+				<drugUseList injected="6">
+					<drugUse name="398705004" frequency="5"/>
+					<drugUse name="226044004" frequency="6"/>
+					<drugUse name="410515003" frequency="5"/>
+				</drugUseList>
+				<stageOfChangeDrugs>2</stageOfChangeDrugs>
+			</domain>
+			<domain name="14-other addictions">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="1"/>
+				<formalHelpNeed staff="1"/>
+				<addictionTypeList otherAddictionType="other addiction text">
+					<addictionType>105523009</addictionType>
+					<addictionType>56294008</addictionType>
+					<addictionType>410515003</addictionType>
+				</addictionTypeList>
+				<stageOfChangeAddictions>3</stageOfChangeAddictions>
+			</domain>
+			<domain name="15-company">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="0"/>
+				<formalHelpNeed staff="2"/>
+				<changedSocialPatterns>CDA</changedSocialPatterns>
+			</domain>
+			<domain name="16-intimate relationships">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="3"/>
+			</domain>
+			<domain name="17-sexual expression">
+				<needRating staff="0" client="-1"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="1"/>
+			</domain>
+			<domain name="18-childcare">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="3"/>
+			</domain>
+			<domain name="19-other dependents">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="1"/>
+				<formalHelpNeed staff="1"/>
+			</domain>
+			<domain name="20-basic education">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="-1"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="-1"/>
+				<highestEducationLevel>HLES-6</highestEducationLevel>
+			</domain>
+			<domain name="21-telephone">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="9"/>
+			</domain>
+			<domain name="22-transport">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="9"/>
+			</domain>
+			<domain name="23-money">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="9"/>
+				<sourceOfIncome>031-10</sourceOfIncome>
+			</domain>
+			<domain name="24-benefits">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="9"/>
+			</domain>
+		</OCANDomains>
+		<additionalElements>
+			<!-- Begin Free Text Information For Future Collection, only -->
+			<clientHopesForFuture/>
+			<clientNeedToGetThere/>
+			<clientViewMentalHealth/>
+			<clientSpiritualityImportance/>
+			<clientCultureHeritageImportance/>
+			<!-- End Free Text Information For Future Collection, only -->
+			<presentingIssueList>
+				<presentingIssue type="017-05"/>
+				<presentingIssue type="017-09"/>
+				<presentingIssue type="017-11"/>
+			</presentingIssueList>
+			<actionList>
+				<action priority="1" domain="01-accommodation"/>
+				<action priority="2" domain="02-food"/>
+				<action priority="3" domain="21-telephone"/>
+				<action priority="4" domain="22-transport"/>
+			</actionList>
+			<referralList>
+				<referral optimal="ADD" specifyOptimal="specify text for optimal referral" actual="CHI" specifyActual="specify text for actual referral" differenceReason="RD-1" status="RS-2"/>
+				<referral optimal="CHI" specifyOptimal="specify text for optimal referral" actual="ADD" specifyActual="specify text for actual referral" differenceReason="RD-3" status="RS-1"/>
+			</referralList>
+		</additionalElements>
+	</OCANSubmissionRecord>
+
+	<!-- assessment record# 4: this assessment shows client answered some of the client version of the assessment tool -->
+	<OCANSubmissionRecord assessmentID="1004" startDate="2009-01-07Z" completionDate="2009-01-19Z" assessmentStatus="Complete">
+		<organizationRecord>
+			<serviceOrg name="NE LHIN Test Org" number="123"/>
+			<program name="Intensive Case Management" number="3025"/>
+			<MISFunction value="725 51 76 20"/>
+		</organizationRecord>
+		<clientRecord>
+			<clientID orgClientID="123400"/>
+			<!-- Begin PHI Information For Future Collection, only -->
+			<clientName last="" first=""/>
+			<clientAddress line1="" line2="" city="" province="" postalCode=""/>
+			<clientPhone/>
+			<clientOHIP number="" version=""/>
+			<clientCulture/>
+			<!-- End PHI Information For Future Collection, only -->
+			<reasonForAssessment value="OTHR" other="detail text for other reason of assessment"/>
+			<clientContact>
+				<doctorContact doctor="TRUE" lastSeen="LS-6"/>
+				<psychiatristContact psychiatrist="TRUE" lastSeen="LS-12"/>
+				<otherPractitionerContact practitionerType="3111" lastSeen="LS-1"/>
+				<otherPractitionerContact practitionerType="3112" lastSeen="LS-13"/>
+				<otherPractitionerContact practitionerType="4217" lastSeen="LS-6"/>
+				<otherAgencyContact lastSeen="LS-12"/>
+			</clientContact>
+			<serviceRecipientLocation>010-52</serviceRecipientLocation>
+			<serviceRecipientLHIN>12</serviceRecipientLHIN>
+			<serviceDeliveryLHIN>5</serviceDeliveryLHIN>
+			<clientDOB>1966-11-15Z</clientDOB>
+			<gender>M</gender>
+			<maritalStatus>125681006</maritalStatus>
+			<clientCapacity property="TRUE" personalCare="FALSE" legalGuardian="CDA"/>
+			<referralSource>018-05</referralSource>
+			<aboriginalOrigin>011-02</aboriginalOrigin>
+			<citizenshipStatus>PR</citizenshipStatus>
+			<timeLivedInCanada years="3" months="8"/>
+			<immigExpList otherImmigExp="other immigration experience text">
+				<value>2</value>
+				<value>3</value>
+				<value>7</value>
+				<value>8</value>
+			</immigExpList>
+			<discrimExpList otherDiscrimExp="other discrimination experience text">
+				<value>21134002</value>
+				<value>365873007</value>
+				<value>410515003</value>
+			</discrimExpList>
+			<prefLang>fra</prefLang>
+			<serviceLang>eng</serviceLang>
+			<legalIssues>Civil</legalIssues>
+			<legalStatusList>
+				<legalStatus>013-01</legalStatus>
+				<legalStatus>013-02</legalStatus>
+				<legalStatus>013-03</legalStatus>
+				<legalStatus>013-08</legalStatus>
+				<legalStatus>013-09</legalStatus>
+			</legalStatusList>
+			<exitDisposition>019-06</exitDisposition>
+		</clientRecord>
+		<OCANDomains>
+			<domain name="01-accommodation">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="3"/>
+				<residenceType>024-19</residenceType>
+				<residenceSupport>24A-05</residenceSupport>
+				<livingArrangementType>023-08</livingArrangementType>
+			</domain>
+			<domain name="02-food">
+				<needRating staff="0" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="0"/>
+			</domain>
+			<domain name="03-looking after the home">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="-1"/>
+			</domain>
+			<domain name="04-self-care">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="-1"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="0"/>
+			</domain>
+			<domain name="05-daytime activities">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="2"/>
+				<formalHelpRecvd staff="3"/>
+				<formalHelpNeed staff="0"/>
+				<employStatus>224366004</employStatus>
+				<educationProgramStatus>224870001</educationProgramStatus>
+				<riskUnemploymentList>
+					<riskUnemployment>UDER-02</riskUnemployment>
+					<riskUnemployment>UDER-03</riskUnemployment>
+					<riskUnemployment>UDER-06</riskUnemployment>
+				</riskUnemploymentList>
+			</domain>
+			<domain name="06-physical health">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="0"/>
+				<formalHelpNeed staff="-1"/>
+				<medicalConditionList autismDetail="autism specific text" otherDetail="other medical text">
+					<medicalCondition>408856003</medicalCondition>
+					<medicalCondition>410515003</medicalCondition>
+					<medicalCondition>414916001</medicalCondition>
+				</medicalConditionList>
+				<physicalHealthConcern>TRUE</physicalHealthConcern>
+				<concernAreaList otherConcernArea="other concern text">
+					<concernArea>119415007</concernArea>
+					<concernArea>118952005</concernArea>
+					<concernArea>410515003</concernArea>
+				</concernAreaList>
+				<medicationList>
+					<medicationDetail takenAsPrescribed="TRUE" isHelpProvided="FALSE" isHelpNeeded="TRUE"/>
+					<medicationDetail takenAsPrescribed="FALSE" isHelpProvided="UNK" isHelpNeeded="TRUE"/>
+					<medicationDetail takenAsPrescribed="UNK" isHelpProvided="TRUE" isHelpNeeded="FALSE"/>
+				</medicationList>
+				<sideEffects>TRUE</sideEffects>
+				<dailyLivingAffected>TRUE</dailyLivingAffected>
+				<sideEffectsDetailList otherSideEffectsDetail="other side effect text">
+					<sideEffectsDetail>246636008</sideEffectsDetail>
+					<sideEffectsDetail>53619000</sideEffectsDetail>
+					<sideEffectsDetail>410515003</sideEffectsDetail>
+				</sideEffectsDetailList>
+			</domain>
+			<domain name="07-psychotic symptoms">
+				<needRating staff="0" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="9"/>
+				<hospitalizedPastTwoYears>TRUE</hospitalizedPastTwoYears>
+				<totalAdmissions>5</totalAdmissions>
+				<totalHospitalDays>78</totalHospitalDays>
+				<communityTreatOrder>015-03</communityTreatOrder>
+				<symptomList otherSymptom="other symptom text">
+					<symptom>410516002</symptom>
+					<symptom>75408008</symptom>
+					<symptom>2073000</symptom>
+					<symptom>1402001</symptom>
+					<symptom>55929007</symptom>
+					<symptom>410515003</symptom>
+				</symptomList>
+			</domain>
+			<domain name="08-condition and treatment">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="-1"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="0"/>
+				<diagnosticList>
+					<diagnostic>2776000</diagnostic>
+					<diagnostic>MDGMC</diagnostic>
+					<diagnostic>87858002</diagnostic>
+					<diagnostic>SRDDH</diagnostic>
+					<diagnostic>DH</diagnostic>
+				</diagnosticList>
+				<otherIllnessList>
+					<otherIllness>016A-01</otherIllness>
+					<otherIllness>016A-03</otherIllness>
+				</otherIllnessList>
+			</domain>
+			<domain name="09-psychological distress">
+				<needRating staff="0" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="-1"/>
+			</domain>
+			<domain name="10-safety to self">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="-1"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="-1"/>
+				<suicideAttempt>TRUE</suicideAttempt>
+				<suicideThoughts>TRUE</suicideThoughts>
+				<safetyConcernSelf>TRUE</safetyConcernSelf>
+				<safetyToSelfRiskList otherSafetyToSelfRisk="other risk to self text">
+					<safetyToSelfRisk>225915006</safetyToSelfRisk>
+					<safetyToSelfRisk>401206008</safetyToSelfRisk>
+					<safetyToSelfRisk>410515003</safetyToSelfRisk>
+				</safetyToSelfRiskList>
+			</domain>
+			<domain name="11-safety to others">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="0"/>
+				<formalHelpNeed staff="-1"/>
+			</domain>
+			<domain name="12-alcohol">
+				<needRating staff="0" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="3"/>
+				<drinkAlcohol quantity="6" frequency="1"/>
+				<stageOfChangeAlcohol>5</stageOfChangeAlcohol>
+			</domain>
+			<domain name="13-drugs">
+				<needRating staff="2" client="-1"/>
+				<informalHelpRecvd staff="2"/>
+				<formalHelpRecvd staff="0"/>
+				<formalHelpNeed staff="1"/>
+				<drugUseList injected="6">
+					<drugUse name="398705004" frequency="5"/>
+					<drugUse name="226044004" frequency="6"/>
+					<drugUse name="410515003" frequency="5"/>
+				</drugUseList>
+				<stageOfChangeDrugs>2</stageOfChangeDrugs>
+			</domain>
+			<domain name="14-other addictions">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="1"/>
+				<formalHelpNeed staff="1"/>
+				<addictionTypeList otherAddictionType="other addiction text">
+					<addictionType>105523009</addictionType>
+					<addictionType>56294008</addictionType>
+					<addictionType>410515003</addictionType>
+				</addictionTypeList>
+				<stageOfChangeAddictions>3</stageOfChangeAddictions>
+			</domain>
+			<domain name="15-company">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="0"/>
+				<formalHelpNeed staff="2"/>
+				<changedSocialPatterns>CDA</changedSocialPatterns>
+			</domain>
+			<domain name="16-intimate relationships">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="3"/>
+			</domain>
+			<domain name="17-sexual expression">
+				<needRating staff="0" client="-1"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="1"/>
+			</domain>
+			<domain name="18-childcare">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="3"/>
+			</domain>
+			<domain name="19-other dependents">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="1"/>
+				<formalHelpNeed staff="1"/>
+			</domain>
+			<domain name="20-basic education">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="-1"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="-1"/>
+				<highestEducationLevel>HLES-6</highestEducationLevel>
+			</domain>
+			<domain name="21-telephone">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="9"/>
+			</domain>
+			<domain name="22-transport">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="9"/>
+			</domain>
+			<domain name="23-money">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="9"/>
+				<sourceOfIncome>031-10</sourceOfIncome>
+			</domain>
+			<domain name="24-benefits">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="9"/>
+			</domain>
+		</OCANDomains>
+		<additionalElements>
+			<!-- Begin Free Text Information For Future Collection, only -->
+			<clientHopesForFuture/>
+			<clientNeedToGetThere/>
+			<clientViewMentalHealth/>
+			<clientSpiritualityImportance/>
+			<clientCultureHeritageImportance/>
+			<!-- End Free Text Information For Future Collection, only -->
+			<presentingIssueList>
+				<presentingIssue type="017-05"/>
+				<presentingIssue type="017-09"/>
+				<presentingIssue type="017-11"/>
+			</presentingIssueList>
+			<actionList>
+				<action priority="1" domain="01-accommodation"/>
+				<action priority="2" domain="02-food"/>
+				<action priority="3" domain="21-telephone"/>
+				<action priority="4" domain="22-transport"/>
+			</actionList>
+			<referralList>
+				<referral optimal="ADD" specifyOptimal="specify text for optimal referral" actual="CHI" specifyActual="specify text for actual referral" differenceReason="RD-1" status="RS-2"/>
+				<referral optimal="CHI" specifyOptimal="specify text for optimal referral" actual="ADD" specifyActual="specify text for actual referral" differenceReason="RD-3" status="RS-1"/>
+			</referralList>
+		</additionalElements>
+	</OCANSubmissionRecord>
+
+	<!-- assessment record# 5: this assessment shows a reassessment -->
+	<OCANSubmissionRecord assessmentID="1005" startDate="2009-01-11Z" completionDate="2009-01-16Z" assessmentStatus="Complete">
+		<organizationRecord>
+			<serviceOrg name="NE LHIN Test Org" number="123"/>
+			<program name="Intensive Case Management" number="3025"/>
+			<MISFunction value="725 51 76 20"/>
+		</organizationRecord>
+		<clientRecord>
+			<clientID orgClientID="123500"/>
+			<!-- Begin PHI Information For Future Collection, only -->
+			<clientName last="" first=""/>
+			<clientAddress line1="" line2="" city="" province="" postalCode=""/>
+			<clientPhone/>
+			<clientOHIP number="" version=""/>
+			<clientCulture/>
+			<!-- End PHI Information For Future Collection, only -->
+			<reasonForAssessment value="RA" other=""/>
+			<clientContact>
+				<doctorContact doctor="TRUE" lastSeen="LS-6"/>
+				<psychiatristContact psychiatrist="TRUE" lastSeen="LS-12"/>
+				<otherPractitionerContact practitionerType="3111" lastSeen="LS-1"/>
+				<otherPractitionerContact practitionerType="3112" lastSeen="LS-13"/>
+				<otherPractitionerContact practitionerType="4217" lastSeen="LS-6"/>
+				<otherAgencyContact lastSeen="LS-12"/>
+			</clientContact>
+			<serviceRecipientLocation>010-52</serviceRecipientLocation>
+			<serviceRecipientLHIN>12</serviceRecipientLHIN>
+			<serviceDeliveryLHIN>5</serviceDeliveryLHIN>
+			<clientDOB>2001-03-15Z</clientDOB>
+			<gender>M</gender>
+			<maritalStatus>125681006</maritalStatus>
+			<clientCapacity property="TRUE" personalCare="FALSE" legalGuardian="CDA"/>
+			<referralSource>018-05</referralSource>
+			<aboriginalOrigin>011-02</aboriginalOrigin>
+			<citizenshipStatus>TR</citizenshipStatus>
+			<timeLivedInCanada years="3" months="8"/>
+			<immigExpList otherImmigExp="other immigration experience text">
+				<value>2</value>
+				<value>3</value>
+				<value>7</value>
+				<value>8</value>
+			</immigExpList>
+			<discrimExpList otherDiscrimExp="other discrimination experience text">
+				<value>21134002</value>
+				<value>365873007</value>
+				<value>410515003</value>
+			</discrimExpList>
+			<prefLang>fra</prefLang>
+			<serviceLang>eng</serviceLang>
+			<legalIssues>Civil</legalIssues>
+			<legalStatusList>
+				<legalStatus>013-01</legalStatus>
+				<legalStatus>013-02</legalStatus>
+				<legalStatus>013-03</legalStatus>
+				<legalStatus>013-08</legalStatus>
+				<legalStatus>013-09</legalStatus>
+			</legalStatusList>
+			<exitDisposition>019-06</exitDisposition>
+		</clientRecord>
+		<OCANDomains>
+			<domain name="01-accommodation">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="3"/>
+				<residenceType>024-19</residenceType>
+				<residenceSupport>24A-05</residenceSupport>
+				<livingArrangementType>023-08</livingArrangementType>
+			</domain>
+			<domain name="02-food">
+				<needRating staff="0" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="0"/>
+			</domain>
+			<domain name="03-looking after the home">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="-1"/>
+			</domain>
+			<domain name="04-self-care">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="-1"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="0"/>
+			</domain>
+			<domain name="05-daytime activities">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="2"/>
+				<formalHelpRecvd staff="3"/>
+				<formalHelpNeed staff="0"/>
+				<employStatus>224366004</employStatus>
+				<educationProgramStatus>224870001</educationProgramStatus>
+				<riskUnemploymentList>
+					<riskUnemployment>UDER-02</riskUnemployment>
+					<riskUnemployment>UDER-03</riskUnemployment>
+					<riskUnemployment>UDER-06</riskUnemployment>
+				</riskUnemploymentList>
+			</domain>
+			<domain name="06-physical health">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="0"/>
+				<formalHelpNeed staff="-1"/>
+				<medicalConditionList autismDetail="autism specific text" otherDetail="other medical text">
+					<medicalCondition>408856003</medicalCondition>
+					<medicalCondition>410515003</medicalCondition>
+					<medicalCondition>414916001</medicalCondition>
+				</medicalConditionList>
+				<physicalHealthConcern>TRUE</physicalHealthConcern>
+				<concernAreaList otherConcernArea="other concern text">
+					<concernArea>119415007</concernArea>
+					<concernArea>118952005</concernArea>
+					<concernArea>410515003</concernArea>
+				</concernAreaList>
+				<medicationList>
+					<medicationDetail takenAsPrescribed="TRUE" isHelpProvided="FALSE" isHelpNeeded="TRUE"/>
+					<medicationDetail takenAsPrescribed="FALSE" isHelpProvided="UNK" isHelpNeeded="TRUE"/>
+					<medicationDetail takenAsPrescribed="UNK" isHelpProvided="TRUE" isHelpNeeded="FALSE"/>
+				</medicationList>
+				<sideEffects>TRUE</sideEffects>
+				<dailyLivingAffected>TRUE</dailyLivingAffected>
+				<sideEffectsDetailList otherSideEffectsDetail="other side effect text">
+					<sideEffectsDetail>246636008</sideEffectsDetail>
+					<sideEffectsDetail>53619000</sideEffectsDetail>
+					<sideEffectsDetail>410515003</sideEffectsDetail>
+				</sideEffectsDetailList>
+			</domain>
+			<domain name="07-psychotic symptoms">
+				<needRating staff="0" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="9"/>
+				<hospitalizedPastTwoYears>TRUE</hospitalizedPastTwoYears>
+				<totalAdmissions>5</totalAdmissions>
+				<totalHospitalDays>78</totalHospitalDays>
+				<communityTreatOrder>015-03</communityTreatOrder>
+				<symptomList otherSymptom="other symptom text">
+					<symptom>410516002</symptom>
+					<symptom>75408008</symptom>
+					<symptom>2073000</symptom>
+					<symptom>1402001</symptom>
+					<symptom>55929007</symptom>
+					<symptom>410515003</symptom>
+				</symptomList>
+			</domain>
+			<domain name="08-condition and treatment">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="-1"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="0"/>
+				<diagnosticList>
+					<diagnostic>2776000</diagnostic>
+					<diagnostic>MDGMC</diagnostic>
+					<diagnostic>87858002</diagnostic>
+					<diagnostic>SRDDH</diagnostic>
+					<diagnostic>DH</diagnostic>
+				</diagnosticList>
+				<otherIllnessList>
+					<otherIllness>016A-01</otherIllness>
+					<otherIllness>016A-03</otherIllness>
+				</otherIllnessList>
+			</domain>
+			<domain name="09-psychological distress">
+				<needRating staff="0" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="-1"/>
+			</domain>
+			<domain name="10-safety to self">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="-1"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="-1"/>
+				<suicideAttempt>TRUE</suicideAttempt>
+				<suicideThoughts>TRUE</suicideThoughts>
+				<safetyConcernSelf>TRUE</safetyConcernSelf>
+				<safetyToSelfRiskList otherSafetyToSelfRisk="other risk to self text">
+					<safetyToSelfRisk>225915006</safetyToSelfRisk>
+					<safetyToSelfRisk>401206008</safetyToSelfRisk>
+					<safetyToSelfRisk>410515003</safetyToSelfRisk>
+				</safetyToSelfRiskList>
+			</domain>
+			<domain name="11-safety to others">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="0"/>
+				<formalHelpNeed staff="-1"/>
+			</domain>
+			<domain name="12-alcohol">
+				<needRating staff="0" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="3"/>
+				<drinkAlcohol quantity="6" frequency="1"/>
+				<stageOfChangeAlcohol>5</stageOfChangeAlcohol>
+			</domain>
+			<domain name="13-drugs">
+				<needRating staff="2" client="-1"/>
+				<informalHelpRecvd staff="2"/>
+				<formalHelpRecvd staff="0"/>
+				<formalHelpNeed staff="1"/>
+				<drugUseList injected="6">
+					<drugUse name="398705004" frequency="5"/>
+					<drugUse name="226044004" frequency="6"/>
+					<drugUse name="410515003" frequency="5"/>
+				</drugUseList>
+				<stageOfChangeDrugs>2</stageOfChangeDrugs>
+			</domain>
+			<domain name="14-other addictions">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="1"/>
+				<formalHelpNeed staff="1"/>
+				<addictionTypeList otherAddictionType="other addiction text">
+					<addictionType>105523009</addictionType>
+					<addictionType>56294008</addictionType>
+					<addictionType>410515003</addictionType>
+				</addictionTypeList>
+				<stageOfChangeAddictions>3</stageOfChangeAddictions>
+			</domain>
+			<domain name="15-company">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="0"/>
+				<formalHelpNeed staff="2"/>
+				<changedSocialPatterns>CDA</changedSocialPatterns>
+			</domain>
+			<domain name="16-intimate relationships">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="3"/>
+			</domain>
+			<domain name="17-sexual expression">
+				<needRating staff="0" client="-1"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="1"/>
+			</domain>
+			<domain name="18-childcare">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="3"/>
+			</domain>
+			<domain name="19-other dependents">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="1"/>
+				<formalHelpNeed staff="1"/>
+			</domain>
+			<domain name="20-basic education">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="-1"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="-1"/>
+				<highestEducationLevel>HLES-6</highestEducationLevel>
+			</domain>
+			<domain name="21-telephone">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="9"/>
+			</domain>
+			<domain name="22-transport">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="9"/>
+			</domain>
+			<domain name="23-money">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="9"/>
+				<sourceOfIncome>031-10</sourceOfIncome>
+			</domain>
+			<domain name="24-benefits">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="9"/>
+			</domain>
+		</OCANDomains>
+		<additionalElements>
+			<!-- Begin Free Text Information For Future Collection, only -->
+			<clientHopesForFuture/>
+			<clientNeedToGetThere/>
+			<clientViewMentalHealth/>
+			<clientSpiritualityImportance/>
+			<clientCultureHeritageImportance/>
+			<!-- End Free Text Information For Future Collection, only -->
+			<presentingIssueList>
+				<presentingIssue type="017-05"/>
+				<presentingIssue type="017-09"/>
+				<presentingIssue type="017-11"/>
+			</presentingIssueList>
+			<actionList>
+				<action priority="1" domain="01-accommodation"/>
+				<action priority="2" domain="02-food"/>
+				<action priority="3" domain="21-telephone"/>
+				<action priority="4" domain="22-transport"/>
+			</actionList>
+			<referralList>
+				<referral optimal="ADD" specifyOptimal="specify text for optimal referral" actual="CHI" specifyActual="specify text for actual referral" differenceReason="RD-1" status="RS-2"/>
+				<referral optimal="CHI" specifyOptimal="specify text for optimal referral" actual="ADD" specifyActual="specify text for actual referral" differenceReason="RD-3" status="RS-1"/>
+			</referralList>
+		</additionalElements>
+	</OCANSubmissionRecord>
+
+	<!-- assessment record# 6: this assessment shows a reassessment -->
+	<OCANSubmissionRecord assessmentID="1006" startDate="2009-01-11Z" completionDate="2009-01-16Z" assessmentStatus="Complete">
+		<organizationRecord>
+			<serviceOrg name="NE LHIN Test Org" number="123"/>
+			<program name="Intensive Case Management" number="3025"/>
+			<MISFunction value="725 51 76 20"/>
+		</organizationRecord>
+		<clientRecord>
+			<clientID orgClientID="123600"/>
+			<!-- Begin PHI Information For Future Collection, only -->
+			<clientName last="" first=""/>
+			<clientAddress line1="" line2="" city="" province="" postalCode=""/>
+			<clientPhone/>
+			<clientOHIP number="" version=""/>
+			<clientCulture/>
+			<!-- End PHI Information For Future Collection, only -->
+			<reasonForAssessment value="RA" other=""/>
+			<clientContact>
+				<doctorContact doctor="TRUE" lastSeen="LS-6"/>
+				<psychiatristContact psychiatrist="TRUE" lastSeen="LS-12"/>
+				<otherPractitionerContact practitionerType="3111" lastSeen="LS-1"/>
+				<otherPractitionerContact practitionerType="3112" lastSeen="LS-13"/>
+				<otherPractitionerContact practitionerType="4217" lastSeen="LS-6"/>
+				<otherAgencyContact lastSeen="LS-12"/>
+			</clientContact>
+			<serviceRecipientLocation>010-52</serviceRecipientLocation>
+			<serviceRecipientLHIN>12</serviceRecipientLHIN>
+			<serviceDeliveryLHIN>5</serviceDeliveryLHIN>
+			<clientDOB>1930-09-11Z</clientDOB>
+			<gender>OTH</gender>
+			<maritalStatus>125681006</maritalStatus>
+			<clientCapacity property="TRUE" personalCare="FALSE" legalGuardian="CDA"/>
+			<referralSource>018-05</referralSource>
+			<aboriginalOrigin>011-02</aboriginalOrigin>
+			<citizenshipStatus>PR</citizenshipStatus>
+			<timeLivedInCanada years="3" months="8"/>
+			<immigExpList otherImmigExp="other immigration experience text">
+				<value>2</value>
+				<value>3</value>
+				<value>7</value>
+				<value>8</value>
+			</immigExpList>
+			<discrimExpList otherDiscrimExp="other discrimination experience text">
+				<value>21134002</value>
+				<value>365873007</value>
+				<value>410515003</value>
+			</discrimExpList>
+			<prefLang>fra</prefLang>
+			<serviceLang>eng</serviceLang>
+			<legalIssues>Civil</legalIssues>
+			<legalStatusList>
+				<legalStatus>013-01</legalStatus>
+				<legalStatus>013-02</legalStatus>
+				<legalStatus>013-03</legalStatus>
+				<legalStatus>013-08</legalStatus>
+				<legalStatus>013-09</legalStatus>
+			</legalStatusList>
+			<exitDisposition>019-06</exitDisposition>
+		</clientRecord>
+		<OCANDomains>
+			<domain name="01-accommodation">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="3"/>
+				<residenceType>024-19</residenceType>
+				<residenceSupport>24A-05</residenceSupport>
+				<livingArrangementType>023-08</livingArrangementType>
+			</domain>
+			<domain name="02-food">
+				<needRating staff="0" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="0"/>
+			</domain>
+			<domain name="03-looking after the home">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="-1"/>
+			</domain>
+			<domain name="04-self-care">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="-1"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="0"/>
+			</domain>
+			<domain name="05-daytime activities">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="2"/>
+				<formalHelpRecvd staff="3"/>
+				<formalHelpNeed staff="0"/>
+				<employStatus>224366004</employStatus>
+				<educationProgramStatus>224870001</educationProgramStatus>
+				<riskUnemploymentList>
+					<riskUnemployment>UDER-02</riskUnemployment>
+					<riskUnemployment>UDER-03</riskUnemployment>
+					<riskUnemployment>UDER-06</riskUnemployment>
+				</riskUnemploymentList>
+			</domain>
+			<domain name="06-physical health">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="0"/>
+				<formalHelpNeed staff="-1"/>
+				<medicalConditionList autismDetail="autism specific text" otherDetail="other medical text">
+					<medicalCondition>408856003</medicalCondition>
+					<medicalCondition>410515003</medicalCondition>
+					<medicalCondition>414916001</medicalCondition>
+				</medicalConditionList>
+				<physicalHealthConcern>TRUE</physicalHealthConcern>
+				<concernAreaList otherConcernArea="other concern text">
+					<concernArea>119415007</concernArea>
+					<concernArea>118952005</concernArea>
+					<concernArea>410515003</concernArea>
+				</concernAreaList>
+				<medicationList>
+					<medicationDetail takenAsPrescribed="TRUE" isHelpProvided="FALSE" isHelpNeeded="TRUE"/>
+					<medicationDetail takenAsPrescribed="FALSE" isHelpProvided="UNK" isHelpNeeded="TRUE"/>
+					<medicationDetail takenAsPrescribed="UNK" isHelpProvided="TRUE" isHelpNeeded="FALSE"/>
+				</medicationList>
+				<sideEffects>TRUE</sideEffects>
+				<dailyLivingAffected>TRUE</dailyLivingAffected>
+				<sideEffectsDetailList otherSideEffectsDetail="other side effect text">
+					<sideEffectsDetail>246636008</sideEffectsDetail>
+					<sideEffectsDetail>53619000</sideEffectsDetail>
+					<sideEffectsDetail>410515003</sideEffectsDetail>
+				</sideEffectsDetailList>
+			</domain>
+			<domain name="07-psychotic symptoms">
+				<needRating staff="0" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="9"/>
+				<hospitalizedPastTwoYears>TRUE</hospitalizedPastTwoYears>
+				<totalAdmissions>5</totalAdmissions>
+				<totalHospitalDays>78</totalHospitalDays>
+				<communityTreatOrder>015-03</communityTreatOrder>
+				<symptomList otherSymptom="other symptom text">
+					<symptom>410516002</symptom>
+					<symptom>75408008</symptom>
+					<symptom>2073000</symptom>
+					<symptom>1402001</symptom>
+					<symptom>55929007</symptom>
+					<symptom>410515003</symptom>
+				</symptomList>
+			</domain>
+			<domain name="08-condition and treatment">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="-1"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="0"/>
+				<diagnosticList>
+					<diagnostic>2776000</diagnostic>
+					<diagnostic>MDGMC</diagnostic>
+					<diagnostic>87858002</diagnostic>
+					<diagnostic>SRDDH</diagnostic>
+					<diagnostic>DH</diagnostic>
+				</diagnosticList>
+				<otherIllnessList>
+					<otherIllness>016A-01</otherIllness>
+					<otherIllness>016A-03</otherIllness>
+				</otherIllnessList>
+			</domain>
+			<domain name="09-psychological distress">
+				<needRating staff="0" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="-1"/>
+			</domain>
+			<domain name="10-safety to self">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="-1"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="-1"/>
+				<suicideAttempt>TRUE</suicideAttempt>
+				<suicideThoughts>TRUE</suicideThoughts>
+				<safetyConcernSelf>TRUE</safetyConcernSelf>
+				<safetyToSelfRiskList otherSafetyToSelfRisk="other risk to self text">
+					<safetyToSelfRisk>225915006</safetyToSelfRisk>
+					<safetyToSelfRisk>401206008</safetyToSelfRisk>
+					<safetyToSelfRisk>410515003</safetyToSelfRisk>
+				</safetyToSelfRiskList>
+			</domain>
+			<domain name="11-safety to others">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="0"/>
+				<formalHelpNeed staff="-1"/>
+			</domain>
+			<domain name="12-alcohol">
+				<needRating staff="0" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="3"/>
+				<drinkAlcohol quantity="6" frequency="1"/>
+				<stageOfChangeAlcohol>5</stageOfChangeAlcohol>
+			</domain>
+			<domain name="13-drugs">
+				<needRating staff="2" client="-1"/>
+				<informalHelpRecvd staff="2"/>
+				<formalHelpRecvd staff="0"/>
+				<formalHelpNeed staff="1"/>
+				<drugUseList injected="6">
+					<drugUse name="398705004" frequency="5"/>
+					<drugUse name="226044004" frequency="6"/>
+					<drugUse name="410515003" frequency="5"/>
+				</drugUseList>
+				<stageOfChangeDrugs>2</stageOfChangeDrugs>
+			</domain>
+			<domain name="14-other addictions">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="1"/>
+				<formalHelpNeed staff="1"/>
+				<addictionTypeList otherAddictionType="other addiction text">
+					<addictionType>105523009</addictionType>
+					<addictionType>56294008</addictionType>
+					<addictionType>410515003</addictionType>
+				</addictionTypeList>
+				<stageOfChangeAddictions>3</stageOfChangeAddictions>
+			</domain>
+			<domain name="15-company">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="0"/>
+				<formalHelpNeed staff="2"/>
+				<changedSocialPatterns>CDA</changedSocialPatterns>
+			</domain>
+			<domain name="16-intimate relationships">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="3"/>
+			</domain>
+			<domain name="17-sexual expression">
+				<needRating staff="0" client="-1"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="1"/>
+			</domain>
+			<domain name="18-childcare">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="3"/>
+			</domain>
+			<domain name="19-other dependents">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="1"/>
+				<formalHelpNeed staff="1"/>
+			</domain>
+			<domain name="20-basic education">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="-1"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="-1"/>
+				<highestEducationLevel>HLES-6</highestEducationLevel>
+			</domain>
+			<domain name="21-telephone">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="9"/>
+			</domain>
+			<domain name="22-transport">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="9"/>
+			</domain>
+			<domain name="23-money">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="9"/>
+				<sourceOfIncome>031-10</sourceOfIncome>
+			</domain>
+			<domain name="24-benefits">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="9"/>
+			</domain>
+		</OCANDomains>
+		<additionalElements>
+			<!-- Begin Free Text Information For Future Collection, only -->
+			<clientHopesForFuture/>
+			<clientNeedToGetThere/>
+			<clientViewMentalHealth/>
+			<clientSpiritualityImportance/>
+			<clientCultureHeritageImportance/>
+			<!-- End Free Text Information For Future Collection, only -->
+			<presentingIssueList>
+				<presentingIssue type="017-01"/>
+				<presentingIssue type="017-03"/>
+				<presentingIssue type="017-05"/>
+				<presentingIssue type="017-08"/>
+				<presentingIssue type="017-09"/>
+			</presentingIssueList>
+			<actionList>
+				<action priority="1" domain="13-drugs"/>
+				<action priority="2" domain="15-company"/>
+				<action priority="3" domain="20-basic education"/>
+				<action priority="4" domain="23-money"/>
+				<action priority="5" domain="10-safety to self"/>
+				<action priority="6" domain="24-benefits"/>
+			</actionList>
+			<referralList>
+				<referral optimal="0AS" specifyOptimal="specify text for optimal referral" actual="FOR" specifyActual="specify text for actual referral" differenceReason="RD-4" status="RS-1"/>
+				<referral optimal="0AB" specifyOptimal="specify text for optimal referral" actual="HPA" specifyActual="specify text for actual referral" differenceReason="RD-2" status="RS-2"/>
+				<referral optimal="EAT" specifyOptimal="specify text for optimal referral" actual="HSC" specifyActual="specify text for actual referral" differenceReason="RD-3" status="RS-1"/>
+				<referral optimal="0FI" specifyOptimal="specify text for optimal referral" actual="0SR" specifyActual="specify text for actual referral" differenceReason="RD-1" status="RS-2"/>
+			</referralList>
+		</additionalElements>
+	</OCANSubmissionRecord>
+
+	<!-- assessment record# 7: just another assessment -->
+	<OCANSubmissionRecord assessmentID="1007" startDate="2009-01-11Z" completionDate="2009-01-16Z" assessmentStatus="Complete">
+		<organizationRecord>
+			<serviceOrg name="NE LHIN Test Org" number="123"/>
+			<program name="Intensive Case Management" number="3025"/>
+			<MISFunction value="725 51 76 20"/>
+		</organizationRecord>
+		<clientRecord>
+			<clientID orgClientID="123700"/>
+			<!-- Begin PHI Information For Future Collection, only -->
+			<clientName last="" first=""/>
+			<clientAddress line1="" line2="" city="" province="" postalCode=""/>
+			<clientPhone/>
+			<clientOHIP number="" version=""/>
+			<clientCulture/>
+			<!-- End PHI Information For Future Collection, only -->
+			<reasonForAssessment value="IA" other=""/>
+			<clientContact>
+				<doctorContact doctor="TRUE" lastSeen="LS-6"/>
+				<psychiatristContact psychiatrist="TRUE" lastSeen="LS-12"/>
+				<otherPractitionerContact practitionerType="3111" lastSeen="LS-1"/>
+				<otherPractitionerContact practitionerType="3112" lastSeen="LS-13"/>
+				<otherPractitionerContact practitionerType="4217" lastSeen="LS-6"/>
+				<otherAgencyContact lastSeen="LS-12"/>
+			</clientContact>
+			<serviceRecipientLocation>010-52</serviceRecipientLocation>
+			<serviceRecipientLHIN>12</serviceRecipientLHIN>
+			<serviceDeliveryLHIN>5</serviceDeliveryLHIN>
+			<clientDOB>1999-09-15Z</clientDOB>
+			<gender>M</gender>
+			<maritalStatus>125681006</maritalStatus>
+			<clientCapacity property="TRUE" personalCare="FALSE" legalGuardian="CDA"/>
+			<referralSource>018-05</referralSource>
+			<aboriginalOrigin>011-02</aboriginalOrigin>
+			<citizenshipStatus>CDN</citizenshipStatus>
+			<timeLivedInCanada years="3" months="8"/>
+			<immigExpList otherImmigExp="other immigration experience text">
+				<value>2</value>
+				<value>3</value>
+				<value>7</value>
+				<value>8</value>
+			</immigExpList>
+			<discrimExpList otherDiscrimExp="other discrimination experience text">
+				<value>21134002</value>
+				<value>365873007</value>
+				<value>410515003</value>
+			</discrimExpList>
+			<prefLang>fra</prefLang>
+			<serviceLang>eng</serviceLang>
+			<legalIssues>Civil</legalIssues>
+			<legalStatusList>
+				<legalStatus>013-01</legalStatus>
+				<legalStatus>013-02</legalStatus>
+				<legalStatus>013-03</legalStatus>
+				<legalStatus>013-08</legalStatus>
+				<legalStatus>013-09</legalStatus>
+			</legalStatusList>
+			<exitDisposition>019-06</exitDisposition>
+		</clientRecord>
+		<OCANDomains>
+			<domain name="01-accommodation">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="3"/>
+				<residenceType>024-19</residenceType>
+				<residenceSupport>24A-05</residenceSupport>
+				<livingArrangementType>023-08</livingArrangementType>
+			</domain>
+			<domain name="02-food">
+				<needRating staff="0" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="0"/>
+			</domain>
+			<domain name="03-looking after the home">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="-1"/>
+			</domain>
+			<domain name="04-self-care">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="-1"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="0"/>
+			</domain>
+			<domain name="05-daytime activities">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="2"/>
+				<formalHelpRecvd staff="3"/>
+				<formalHelpNeed staff="0"/>
+				<employStatus>224366004</employStatus>
+				<educationProgramStatus>224870001</educationProgramStatus>
+				<riskUnemploymentList>
+					<riskUnemployment>UDER-02</riskUnemployment>
+					<riskUnemployment>UDER-03</riskUnemployment>
+					<riskUnemployment>UDER-06</riskUnemployment>
+				</riskUnemploymentList>
+			</domain>
+			<domain name="06-physical health">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="0"/>
+				<formalHelpNeed staff="-1"/>
+				<medicalConditionList autismDetail="autism specific text" otherDetail="other medical text">
+					<medicalCondition>408856003</medicalCondition>
+					<medicalCondition>410515003</medicalCondition>
+					<medicalCondition>414916001</medicalCondition>
+				</medicalConditionList>
+				<physicalHealthConcern>TRUE</physicalHealthConcern>
+				<concernAreaList otherConcernArea="other concern text">
+					<concernArea>119415007</concernArea>
+					<concernArea>118952005</concernArea>
+					<concernArea>410515003</concernArea>
+				</concernAreaList>
+				<medicationList>
+					<medicationDetail takenAsPrescribed="TRUE" isHelpProvided="FALSE" isHelpNeeded="TRUE"/>
+					<medicationDetail takenAsPrescribed="FALSE" isHelpProvided="UNK" isHelpNeeded="TRUE"/>
+					<medicationDetail takenAsPrescribed="UNK" isHelpProvided="TRUE" isHelpNeeded="FALSE"/>
+				</medicationList>
+				<sideEffects>TRUE</sideEffects>
+				<dailyLivingAffected>TRUE</dailyLivingAffected>
+				<sideEffectsDetailList otherSideEffectsDetail="other side effect text">
+					<sideEffectsDetail>246636008</sideEffectsDetail>
+					<sideEffectsDetail>53619000</sideEffectsDetail>
+					<sideEffectsDetail>410515003</sideEffectsDetail>
+				</sideEffectsDetailList>
+			</domain>
+			<domain name="07-psychotic symptoms">
+				<needRating staff="0" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="9"/>
+				<hospitalizedPastTwoYears>TRUE</hospitalizedPastTwoYears>
+				<totalAdmissions>5</totalAdmissions>
+				<totalHospitalDays>78</totalHospitalDays>
+				<communityTreatOrder>015-03</communityTreatOrder>
+				<symptomList otherSymptom="other symptom text">
+					<symptom>410516002</symptom>
+					<symptom>75408008</symptom>
+					<symptom>2073000</symptom>
+					<symptom>1402001</symptom>
+					<symptom>55929007</symptom>
+					<symptom>410515003</symptom>
+				</symptomList>
+			</domain>
+			<domain name="08-condition and treatment">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="-1"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="0"/>
+				<diagnosticList>
+					<diagnostic>2776000</diagnostic>
+					<diagnostic>MDGMC</diagnostic>
+					<diagnostic>87858002</diagnostic>
+					<diagnostic>SRDDH</diagnostic>
+					<diagnostic>DH</diagnostic>
+				</diagnosticList>
+				<otherIllnessList>
+					<otherIllness>016A-01</otherIllness>
+					<otherIllness>016A-03</otherIllness>
+				</otherIllnessList>
+			</domain>
+			<domain name="09-psychological distress">
+				<needRating staff="0" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="-1"/>
+			</domain>
+			<domain name="10-safety to self">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="-1"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="-1"/>
+				<suicideAttempt>TRUE</suicideAttempt>
+				<suicideThoughts>TRUE</suicideThoughts>
+				<safetyConcernSelf>TRUE</safetyConcernSelf>
+				<safetyToSelfRiskList otherSafetyToSelfRisk="other risk to self text">
+					<safetyToSelfRisk>225915006</safetyToSelfRisk>
+					<safetyToSelfRisk>401206008</safetyToSelfRisk>
+					<safetyToSelfRisk>410515003</safetyToSelfRisk>
+				</safetyToSelfRiskList>
+			</domain>
+			<domain name="11-safety to others">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="0"/>
+				<formalHelpNeed staff="-1"/>
+			</domain>
+			<domain name="12-alcohol">
+				<needRating staff="0" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="3"/>
+				<drinkAlcohol quantity="6" frequency="1"/>
+				<stageOfChangeAlcohol>5</stageOfChangeAlcohol>
+			</domain>
+			<domain name="13-drugs">
+				<needRating staff="2" client="-1"/>
+				<informalHelpRecvd staff="2"/>
+				<formalHelpRecvd staff="0"/>
+				<formalHelpNeed staff="1"/>
+				<drugUseList injected="6">
+					<drugUse name="398705004" frequency="5"/>
+					<drugUse name="226044004" frequency="6"/>
+					<drugUse name="410515003" frequency="5"/>
+				</drugUseList>
+				<stageOfChangeDrugs>2</stageOfChangeDrugs>
+			</domain>
+			<domain name="14-other addictions">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="1"/>
+				<formalHelpNeed staff="1"/>
+				<addictionTypeList otherAddictionType="other addiction text">
+					<addictionType>105523009</addictionType>
+					<addictionType>56294008</addictionType>
+					<addictionType>410515003</addictionType>
+				</addictionTypeList>
+				<stageOfChangeAddictions>3</stageOfChangeAddictions>
+			</domain>
+			<domain name="15-company">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="0"/>
+				<formalHelpNeed staff="2"/>
+				<changedSocialPatterns>CDA</changedSocialPatterns>
+			</domain>
+			<domain name="16-intimate relationships">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="3"/>
+			</domain>
+			<domain name="17-sexual expression">
+				<needRating staff="0" client="-1"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="1"/>
+			</domain>
+			<domain name="18-childcare">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="3"/>
+			</domain>
+			<domain name="19-other dependents">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="1"/>
+				<formalHelpNeed staff="1"/>
+			</domain>
+			<domain name="20-basic education">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="-1"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="-1"/>
+				<highestEducationLevel>HLES-6</highestEducationLevel>
+			</domain>
+			<domain name="21-telephone">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="9"/>
+			</domain>
+			<domain name="22-transport">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="9"/>
+			</domain>
+			<domain name="23-money">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="9"/>
+				<sourceOfIncome>031-10</sourceOfIncome>
+			</domain>
+			<domain name="24-benefits">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="9"/>
+			</domain>
+		</OCANDomains>
+		<additionalElements>
+			<!-- Begin Free Text Information For Future Collection, only -->
+			<clientHopesForFuture/>
+			<clientNeedToGetThere/>
+			<clientViewMentalHealth/>
+			<clientSpiritualityImportance/>
+			<clientCultureHeritageImportance/>
+			<!-- End Free Text Information For Future Collection, only -->
+			<presentingIssueList>
+				<presentingIssue type="017-01"/>
+				<presentingIssue type="017-03"/>
+				<presentingIssue type="017-05"/>
+				<presentingIssue type="017-08"/>
+				<presentingIssue type="017-09"/>
+			</presentingIssueList>
+			<actionList>
+				<action priority="1" domain="13-drugs"/>
+				<action priority="2" domain="15-company"/>
+				<action priority="3" domain="20-basic education"/>
+				<action priority="4" domain="23-money"/>
+				<action priority="5" domain="10-safety to self"/>
+				<action priority="6" domain="24-benefits"/>
+			</actionList>
+			<referralList>
+				<referral optimal="0AS" specifyOptimal="specify text for optimal referral" actual="FOR" specifyActual="specify text for actual referral" differenceReason="RD-4" status="RS-1"/>
+				<referral optimal="0AB" specifyOptimal="specify text for optimal referral" actual="HPA" specifyActual="specify text for actual referral" differenceReason="RD-2" status="RS-2"/>
+				<referral optimal="EAT" specifyOptimal="specify text for optimal referral" actual="HSC" specifyActual="specify text for actual referral" differenceReason="RD-3" status="RS-1"/>
+				<referral optimal="0FI" specifyOptimal="specify text for optimal referral" actual="0SR" specifyActual="specify text for actual referral" differenceReason="RD-1" status="RS-2"/>
+			</referralList>
+		</additionalElements>
+	</OCANSubmissionRecord>
+
+	<!-- assessment record# 8: just another assessment -->
+	<OCANSubmissionRecord assessmentID="1008" startDate="2009-01-11Z" completionDate="2009-01-16Z" assessmentStatus="Complete">
+		<organizationRecord>
+			<serviceOrg name="NE LHIN Test Org" number="123"/>
+			<program name="Intensive Case Management" number="3025"/>
+			<MISFunction value="725 51 76 20"/>
+		</organizationRecord>
+		<clientRecord>
+			<clientID orgClientID="123800"/>
+			<!-- Begin PHI Information For Future Collection, only -->
+			<clientName last="" first=""/>
+			<clientAddress line1="" line2="" city="" province="" postalCode=""/>
+			<clientPhone/>
+			<clientOHIP number="" version=""/>
+			<clientCulture/>
+			<!-- End PHI Information For Future Collection, only -->
+			<reasonForAssessment value="IA" other=""/>
+			<clientContact>
+				<doctorContact doctor="TRUE" lastSeen="LS-6"/>
+				<psychiatristContact psychiatrist="TRUE" lastSeen="LS-12"/>
+				<otherPractitionerContact practitionerType="3111" lastSeen="LS-1"/>
+				<otherPractitionerContact practitionerType="3112" lastSeen="LS-13"/>
+				<otherPractitionerContact practitionerType="4217" lastSeen="LS-6"/>
+				<otherAgencyContact lastSeen="LS-12"/>
+			</clientContact>
+			<serviceRecipientLocation>010-52</serviceRecipientLocation>
+			<serviceRecipientLHIN>12</serviceRecipientLHIN>
+			<serviceDeliveryLHIN>5</serviceDeliveryLHIN>
+			<clientDOB>2002-02-10Z</clientDOB>
+			<gender>CDA</gender>
+			<maritalStatus>125681006</maritalStatus>
+			<clientCapacity property="TRUE" personalCare="FALSE" legalGuardian="CDA"/>
+			<referralSource>018-05</referralSource>
+			<aboriginalOrigin>011-02</aboriginalOrigin>
+			<citizenshipStatus>PR</citizenshipStatus>
+			<timeLivedInCanada years="3" months="8"/>
+			<immigExpList otherImmigExp="other immigration experience text">
+				<value>2</value>
+				<value>3</value>
+				<value>7</value>
+				<value>8</value>
+			</immigExpList>
+			<discrimExpList otherDiscrimExp="other discrimination experience text">
+				<value>21134002</value>
+				<value>365873007</value>
+				<value>410515003</value>
+			</discrimExpList>
+			<prefLang>fra</prefLang>
+			<serviceLang>eng</serviceLang>
+			<legalIssues>Civil</legalIssues>
+			<legalStatusList>
+				<legalStatus>013-01</legalStatus>
+				<legalStatus>013-02</legalStatus>
+				<legalStatus>013-03</legalStatus>
+				<legalStatus>013-08</legalStatus>
+				<legalStatus>013-09</legalStatus>
+			</legalStatusList>
+			<exitDisposition>019-06</exitDisposition>
+		</clientRecord>
+		<OCANDomains>
+			<domain name="01-accommodation">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="3"/>
+				<residenceType>024-19</residenceType>
+				<residenceSupport>24A-05</residenceSupport>
+				<livingArrangementType>023-08</livingArrangementType>
+			</domain>
+			<domain name="02-food">
+				<needRating staff="0" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="0"/>
+			</domain>
+			<domain name="03-looking after the home">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="-1"/>
+			</domain>
+			<domain name="04-self-care">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="-1"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="0"/>
+			</domain>
+			<domain name="05-daytime activities">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="2"/>
+				<formalHelpRecvd staff="3"/>
+				<formalHelpNeed staff="0"/>
+				<employStatus>224366004</employStatus>
+				<educationProgramStatus>224870001</educationProgramStatus>
+				<riskUnemploymentList>
+					<riskUnemployment>UDER-02</riskUnemployment>
+					<riskUnemployment>UDER-03</riskUnemployment>
+					<riskUnemployment>UDER-06</riskUnemployment>
+				</riskUnemploymentList>
+			</domain>
+			<domain name="06-physical health">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="0"/>
+				<formalHelpNeed staff="-1"/>
+				<medicalConditionList autismDetail="autism specific text" otherDetail="other medical text">
+					<medicalCondition>408856003</medicalCondition>
+					<medicalCondition>410515003</medicalCondition>
+					<medicalCondition>414916001</medicalCondition>
+				</medicalConditionList>
+				<physicalHealthConcern>TRUE</physicalHealthConcern>
+				<concernAreaList otherConcernArea="other concern text">
+					<concernArea>119415007</concernArea>
+					<concernArea>118952005</concernArea>
+					<concernArea>410515003</concernArea>
+				</concernAreaList>
+				<medicationList>
+					<medicationDetail takenAsPrescribed="TRUE" isHelpProvided="FALSE" isHelpNeeded="TRUE"/>
+					<medicationDetail takenAsPrescribed="FALSE" isHelpProvided="UNK" isHelpNeeded="TRUE"/>
+					<medicationDetail takenAsPrescribed="UNK" isHelpProvided="TRUE" isHelpNeeded="FALSE"/>
+				</medicationList>
+				<sideEffects>TRUE</sideEffects>
+				<dailyLivingAffected>TRUE</dailyLivingAffected>
+				<sideEffectsDetailList otherSideEffectsDetail="other side effect text">
+					<sideEffectsDetail>246636008</sideEffectsDetail>
+					<sideEffectsDetail>53619000</sideEffectsDetail>
+					<sideEffectsDetail>410515003</sideEffectsDetail>
+				</sideEffectsDetailList>
+			</domain>
+			<domain name="07-psychotic symptoms">
+				<needRating staff="0" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="9"/>
+				<hospitalizedPastTwoYears>TRUE</hospitalizedPastTwoYears>
+				<totalAdmissions>5</totalAdmissions>
+				<totalHospitalDays>78</totalHospitalDays>
+				<communityTreatOrder>015-03</communityTreatOrder>
+				<symptomList otherSymptom="other symptom text">
+					<symptom>410516002</symptom>
+					<symptom>75408008</symptom>
+					<symptom>2073000</symptom>
+					<symptom>1402001</symptom>
+					<symptom>55929007</symptom>
+					<symptom>410515003</symptom>
+				</symptomList>
+			</domain>
+			<domain name="08-condition and treatment">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="-1"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="0"/>
+				<diagnosticList>
+					<diagnostic>2776000</diagnostic>
+					<diagnostic>MDGMC</diagnostic>
+					<diagnostic>87858002</diagnostic>
+					<diagnostic>SRDDH</diagnostic>
+					<diagnostic>DH</diagnostic>
+				</diagnosticList>
+				<otherIllnessList>
+					<otherIllness>016A-01</otherIllness>
+					<otherIllness>016A-03</otherIllness>
+				</otherIllnessList>
+			</domain>
+			<domain name="09-psychological distress">
+				<needRating staff="0" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="-1"/>
+			</domain>
+			<domain name="10-safety to self">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="-1"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="-1"/>
+				<suicideAttempt>TRUE</suicideAttempt>
+				<suicideThoughts>TRUE</suicideThoughts>
+				<safetyConcernSelf>TRUE</safetyConcernSelf>
+				<safetyToSelfRiskList otherSafetyToSelfRisk="other risk to self text">
+					<safetyToSelfRisk>225915006</safetyToSelfRisk>
+					<safetyToSelfRisk>401206008</safetyToSelfRisk>
+					<safetyToSelfRisk>410515003</safetyToSelfRisk>
+				</safetyToSelfRiskList>
+			</domain>
+			<domain name="11-safety to others">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="0"/>
+				<formalHelpNeed staff="-1"/>
+			</domain>
+			<domain name="12-alcohol">
+				<needRating staff="0" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="3"/>
+				<drinkAlcohol quantity="6" frequency="1"/>
+				<stageOfChangeAlcohol>5</stageOfChangeAlcohol>
+			</domain>
+			<domain name="13-drugs">
+				<needRating staff="2" client="-1"/>
+				<informalHelpRecvd staff="2"/>
+				<formalHelpRecvd staff="0"/>
+				<formalHelpNeed staff="1"/>
+				<drugUseList injected="6">
+					<drugUse name="398705004" frequency="5"/>
+					<drugUse name="226044004" frequency="6"/>
+					<drugUse name="410515003" frequency="5"/>
+				</drugUseList>
+				<stageOfChangeDrugs>2</stageOfChangeDrugs>
+			</domain>
+			<domain name="14-other addictions">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="1"/>
+				<formalHelpNeed staff="1"/>
+				<addictionTypeList otherAddictionType="other addiction text">
+					<addictionType>105523009</addictionType>
+					<addictionType>56294008</addictionType>
+					<addictionType>410515003</addictionType>
+				</addictionTypeList>
+				<stageOfChangeAddictions>3</stageOfChangeAddictions>
+			</domain>
+			<domain name="15-company">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="0"/>
+				<formalHelpNeed staff="2"/>
+				<changedSocialPatterns>CDA</changedSocialPatterns>
+			</domain>
+			<domain name="16-intimate relationships">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="3"/>
+			</domain>
+			<domain name="17-sexual expression">
+				<needRating staff="0" client="-1"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="1"/>
+			</domain>
+			<domain name="18-childcare">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="3"/>
+			</domain>
+			<domain name="19-other dependents">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="1"/>
+				<formalHelpNeed staff="1"/>
+			</domain>
+			<domain name="20-basic education">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="-1"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="-1"/>
+				<highestEducationLevel>HLES-6</highestEducationLevel>
+			</domain>
+			<domain name="21-telephone">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="9"/>
+			</domain>
+			<domain name="22-transport">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="9"/>
+			</domain>
+			<domain name="23-money">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="9"/>
+				<sourceOfIncome>031-10</sourceOfIncome>
+			</domain>
+			<domain name="24-benefits">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="9"/>
+			</domain>
+		</OCANDomains>
+		<additionalElements>
+			<!-- Begin Free Text Information For Future Collection, only -->
+			<clientHopesForFuture/>
+			<clientNeedToGetThere/>
+			<clientViewMentalHealth/>
+			<clientSpiritualityImportance/>
+			<clientCultureHeritageImportance/>
+			<!-- End Free Text Information For Future Collection, only -->
+			<presentingIssueList>
+				<presentingIssue type="017-01"/>
+				<presentingIssue type="017-03"/>
+				<presentingIssue type="017-05"/>
+				<presentingIssue type="017-08"/>
+				<presentingIssue type="017-09"/>
+			</presentingIssueList>
+			<actionList>
+				<action priority="1" domain="13-drugs"/>
+				<action priority="2" domain="15-company"/>
+				<action priority="3" domain="20-basic education"/>
+				<action priority="4" domain="23-money"/>
+				<action priority="5" domain="10-safety to self"/>
+				<action priority="6" domain="24-benefits"/>
+			</actionList>
+			<referralList>
+				<referral optimal="0AS" specifyOptimal="specify text for optimal referral" actual="FOR" specifyActual="specify text for actual referral" differenceReason="RD-4" status="RS-1"/>
+				<referral optimal="0AB" specifyOptimal="specify text for optimal referral" actual="HPA" specifyActual="specify text for actual referral" differenceReason="RD-2" status="RS-2"/>
+				<referral optimal="EAT" specifyOptimal="specify text for optimal referral" actual="HSC" specifyActual="specify text for actual referral" differenceReason="RD-3" status="RS-1"/>
+				<referral optimal="0FI" specifyOptimal="specify text for optimal referral" actual="0SR" specifyActual="specify text for actual referral" differenceReason="RD-1" status="RS-2"/>
+			</referralList>
+		</additionalElements>
+	</OCANSubmissionRecord>
+
+	<!-- assessment record# 9: just another assessment -->
+	<OCANSubmissionRecord assessmentID="1009" startDate="2009-01-11Z" completionDate="2009-01-16Z" assessmentStatus="Complete">
+		<organizationRecord>
+			<serviceOrg name="NE LHIN Test Org" number="123"/>
+			<program name="Intensive Case Management" number="3025"/>
+			<MISFunction value="725 51 76 20"/>
+		</organizationRecord>
+		<clientRecord>
+			<clientID orgClientID="123900"/>
+			<!-- Begin PHI Information For Future Collection, only -->
+			<clientName last="" first=""/>
+			<clientAddress line1="" line2="" city="" province="" postalCode=""/>
+			<clientPhone/>
+			<clientOHIP number="" version=""/>
+			<clientCulture/>
+			<!-- End PHI Information For Future Collection, only -->
+			<reasonForAssessment value="IA" other=""/>
+			<clientContact>
+				<doctorContact doctor="TRUE" lastSeen="LS-6"/>
+				<psychiatristContact psychiatrist="TRUE" lastSeen="LS-12"/>
+				<otherPractitionerContact practitionerType="3111" lastSeen="LS-1"/>
+				<otherPractitionerContact practitionerType="3112" lastSeen="LS-13"/>
+				<otherPractitionerContact practitionerType="4217" lastSeen="LS-6"/>
+				<otherAgencyContact lastSeen="LS-12"/>
+			</clientContact>
+			<serviceRecipientLocation>010-52</serviceRecipientLocation>
+			<serviceRecipientLHIN>12</serviceRecipientLHIN>
+			<serviceDeliveryLHIN>5</serviceDeliveryLHIN>
+			<clientDOB>1977-10-22Z</clientDOB>
+			<gender>UNK</gender>
+			<maritalStatus>125681006</maritalStatus>
+			<clientCapacity property="TRUE" personalCare="FALSE" legalGuardian="CDA"/>
+			<referralSource>018-05</referralSource>
+			<aboriginalOrigin>011-02</aboriginalOrigin>
+			<citizenshipStatus>CDN</citizenshipStatus>
+			<timeLivedInCanada years="3" months="8"/>
+			<immigExpList otherImmigExp="other immigration experience text">
+				<value>2</value>
+				<value>3</value>
+				<value>7</value>
+				<value>8</value>
+			</immigExpList>
+			<discrimExpList otherDiscrimExp="other discrimination experience text">
+				<value>21134002</value>
+				<value>365873007</value>
+				<value>410515003</value>
+			</discrimExpList>
+			<prefLang>fra</prefLang>
+			<serviceLang>eng</serviceLang>
+			<legalIssues>Civil</legalIssues>
+			<legalStatusList>
+				<legalStatus>013-01</legalStatus>
+				<legalStatus>013-02</legalStatus>
+				<legalStatus>013-03</legalStatus>
+				<legalStatus>013-08</legalStatus>
+				<legalStatus>013-09</legalStatus>
+			</legalStatusList>
+			<exitDisposition>019-06</exitDisposition>
+		</clientRecord>
+		<OCANDomains>
+			<domain name="01-accommodation">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="3"/>
+				<residenceType>024-19</residenceType>
+				<residenceSupport>24A-05</residenceSupport>
+				<livingArrangementType>023-08</livingArrangementType>
+			</domain>
+			<domain name="02-food">
+				<needRating staff="0" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="0"/>
+			</domain>
+			<domain name="03-looking after the home">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="-1"/>
+			</domain>
+			<domain name="04-self-care">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="-1"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="0"/>
+			</domain>
+			<domain name="05-daytime activities">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="2"/>
+				<formalHelpRecvd staff="3"/>
+				<formalHelpNeed staff="0"/>
+				<employStatus>224366004</employStatus>
+				<educationProgramStatus>224870001</educationProgramStatus>
+				<riskUnemploymentList>
+					<riskUnemployment>UDER-02</riskUnemployment>
+					<riskUnemployment>UDER-03</riskUnemployment>
+					<riskUnemployment>UDER-06</riskUnemployment>
+				</riskUnemploymentList>
+			</domain>
+			<domain name="06-physical health">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="0"/>
+				<formalHelpNeed staff="-1"/>
+				<medicalConditionList autismDetail="autism specific text" otherDetail="other medical text">
+					<medicalCondition>408856003</medicalCondition>
+					<medicalCondition>410515003</medicalCondition>
+					<medicalCondition>414916001</medicalCondition>
+				</medicalConditionList>
+				<physicalHealthConcern>TRUE</physicalHealthConcern>
+				<concernAreaList otherConcernArea="other concern text">
+					<concernArea>119415007</concernArea>
+					<concernArea>118952005</concernArea>
+					<concernArea>410515003</concernArea>
+				</concernAreaList>
+				<medicationList>
+					<medicationDetail takenAsPrescribed="TRUE" isHelpProvided="FALSE" isHelpNeeded="TRUE"/>
+					<medicationDetail takenAsPrescribed="FALSE" isHelpProvided="UNK" isHelpNeeded="TRUE"/>
+					<medicationDetail takenAsPrescribed="UNK" isHelpProvided="TRUE" isHelpNeeded="FALSE"/>
+				</medicationList>
+				<sideEffects>TRUE</sideEffects>
+				<dailyLivingAffected>TRUE</dailyLivingAffected>
+				<sideEffectsDetailList otherSideEffectsDetail="other side effect text">
+					<sideEffectsDetail>246636008</sideEffectsDetail>
+					<sideEffectsDetail>53619000</sideEffectsDetail>
+					<sideEffectsDetail>410515003</sideEffectsDetail>
+				</sideEffectsDetailList>
+			</domain>
+			<domain name="07-psychotic symptoms">
+				<needRating staff="0" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="9"/>
+				<hospitalizedPastTwoYears>TRUE</hospitalizedPastTwoYears>
+				<totalAdmissions>5</totalAdmissions>
+				<totalHospitalDays>78</totalHospitalDays>
+				<communityTreatOrder>015-03</communityTreatOrder>
+				<symptomList otherSymptom="other symptom text">
+					<symptom>410516002</symptom>
+					<symptom>75408008</symptom>
+					<symptom>2073000</symptom>
+					<symptom>1402001</symptom>
+					<symptom>55929007</symptom>
+					<symptom>410515003</symptom>
+				</symptomList>
+			</domain>
+			<domain name="08-condition and treatment">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="-1"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="0"/>
+				<diagnosticList>
+					<diagnostic>2776000</diagnostic>
+					<diagnostic>MDGMC</diagnostic>
+					<diagnostic>87858002</diagnostic>
+					<diagnostic>SRDDH</diagnostic>
+					<diagnostic>DH</diagnostic>
+				</diagnosticList>
+				<otherIllnessList>
+					<otherIllness>016A-01</otherIllness>
+					<otherIllness>016A-03</otherIllness>
+				</otherIllnessList>
+			</domain>
+			<domain name="09-psychological distress">
+				<needRating staff="0" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="-1"/>
+			</domain>
+			<domain name="10-safety to self">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="-1"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="-1"/>
+				<suicideAttempt>TRUE</suicideAttempt>
+				<suicideThoughts>TRUE</suicideThoughts>
+				<safetyConcernSelf>TRUE</safetyConcernSelf>
+				<safetyToSelfRiskList otherSafetyToSelfRisk="other risk to self text">
+					<safetyToSelfRisk>225915006</safetyToSelfRisk>
+					<safetyToSelfRisk>401206008</safetyToSelfRisk>
+					<safetyToSelfRisk>410515003</safetyToSelfRisk>
+				</safetyToSelfRiskList>
+			</domain>
+			<domain name="11-safety to others">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="0"/>
+				<formalHelpNeed staff="-1"/>
+			</domain>
+			<domain name="12-alcohol">
+				<needRating staff="0" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="3"/>
+				<drinkAlcohol quantity="6" frequency="1"/>
+				<stageOfChangeAlcohol>5</stageOfChangeAlcohol>
+			</domain>
+			<domain name="13-drugs">
+				<needRating staff="2" client="-1"/>
+				<informalHelpRecvd staff="2"/>
+				<formalHelpRecvd staff="0"/>
+				<formalHelpNeed staff="1"/>
+				<drugUseList injected="6">
+					<drugUse name="398705004" frequency="5"/>
+					<drugUse name="226044004" frequency="6"/>
+					<drugUse name="410515003" frequency="5"/>
+				</drugUseList>
+				<stageOfChangeDrugs>2</stageOfChangeDrugs>
+			</domain>
+			<domain name="14-other addictions">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="1"/>
+				<formalHelpNeed staff="1"/>
+				<addictionTypeList otherAddictionType="other addiction text">
+					<addictionType>105523009</addictionType>
+					<addictionType>56294008</addictionType>
+					<addictionType>410515003</addictionType>
+				</addictionTypeList>
+				<stageOfChangeAddictions>3</stageOfChangeAddictions>
+			</domain>
+			<domain name="15-company">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="0"/>
+				<formalHelpNeed staff="2"/>
+				<changedSocialPatterns>CDA</changedSocialPatterns>
+			</domain>
+			<domain name="16-intimate relationships">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="3"/>
+			</domain>
+			<domain name="17-sexual expression">
+				<needRating staff="0" client="-1"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="1"/>
+			</domain>
+			<domain name="18-childcare">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="3"/>
+			</domain>
+			<domain name="19-other dependents">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="1"/>
+				<formalHelpNeed staff="1"/>
+			</domain>
+			<domain name="20-basic education">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="-1"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="-1"/>
+				<highestEducationLevel>HLES-6</highestEducationLevel>
+			</domain>
+			<domain name="21-telephone">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="9"/>
+			</domain>
+			<domain name="22-transport">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="9"/>
+			</domain>
+			<domain name="23-money">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="9"/>
+				<sourceOfIncome>031-10</sourceOfIncome>
+			</domain>
+			<domain name="24-benefits">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="9"/>
+			</domain>
+		</OCANDomains>
+		<additionalElements>
+			<!-- Begin Free Text Information For Future Collection, only -->
+			<clientHopesForFuture/>
+			<clientNeedToGetThere/>
+			<clientViewMentalHealth/>
+			<clientSpiritualityImportance/>
+			<clientCultureHeritageImportance/>
+			<!-- End Free Text Information For Future Collection, only -->
+			<presentingIssueList>
+				<presentingIssue type="017-01"/>
+				<presentingIssue type="017-03"/>
+				<presentingIssue type="017-05"/>
+				<presentingIssue type="017-08"/>
+				<presentingIssue type="017-09"/>
+			</presentingIssueList>
+			<actionList>
+				<action priority="1" domain="13-drugs"/>
+				<action priority="2" domain="15-company"/>
+				<action priority="3" domain="20-basic education"/>
+				<action priority="4" domain="23-money"/>
+				<action priority="5" domain="10-safety to self"/>
+				<action priority="6" domain="24-benefits"/>
+			</actionList>
+			<referralList>
+				<referral optimal="0AS" specifyOptimal="specify text for optimal referral" actual="FOR" specifyActual="specify text for actual referral" differenceReason="RD-4" status="RS-1"/>
+				<referral optimal="0AB" specifyOptimal="specify text for optimal referral" actual="HPA" specifyActual="specify text for actual referral" differenceReason="RD-2" status="RS-2"/>
+				<referral optimal="EAT" specifyOptimal="specify text for optimal referral" actual="HSC" specifyActual="specify text for actual referral" differenceReason="RD-3" status="RS-1"/>
+				<referral optimal="0FI" specifyOptimal="specify text for optimal referral" actual="0SR" specifyActual="specify text for actual referral" differenceReason="RD-1" status="RS-2"/>
+			</referralList>
+		</additionalElements>
+	</OCANSubmissionRecord>
+
+	<!-- assessment record# 10: just another assessment -->
+	<OCANSubmissionRecord assessmentID="1010" startDate="2009-01-11Z" completionDate="2009-01-16Z" assessmentStatus="Complete">
+		<organizationRecord>
+			<serviceOrg name="NE LHIN Test Org" number="123"/>
+			<program name="Intensive Case Management" number="3025"/>
+			<MISFunction value="725 51 76 20"/>
+		</organizationRecord>
+		<clientRecord>
+			<clientID orgClientID="123150"/>
+			<!-- Begin PHI Information For Future Collection, only -->
+			<clientName last="" first=""/>
+			<clientAddress line1="" line2="" city="" province="" postalCode=""/>
+			<clientPhone/>
+			<clientOHIP number="" version=""/>
+			<clientCulture/>
+			<!-- End PHI Information For Future Collection, only -->
+			<reasonForAssessment value="IA" other=""/>
+			<clientContact>
+				<doctorContact doctor="TRUE" lastSeen="LS-6"/>
+				<psychiatristContact psychiatrist="TRUE" lastSeen="LS-12"/>
+				<otherPractitionerContact practitionerType="3111" lastSeen="LS-1"/>
+				<otherPractitionerContact practitionerType="3112" lastSeen="LS-13"/>
+				<otherPractitionerContact practitionerType="4217" lastSeen="LS-6"/>
+				<otherAgencyContact lastSeen="LS-12"/>
+			</clientContact>
+			<serviceRecipientLocation>010-52</serviceRecipientLocation>
+			<serviceRecipientLHIN>12</serviceRecipientLHIN>
+			<serviceDeliveryLHIN>5</serviceDeliveryLHIN>
+			<clientDOB>1955-08-09Z</clientDOB>
+			<gender>F</gender>
+			<maritalStatus>125681006</maritalStatus>
+			<clientCapacity property="TRUE" personalCare="FALSE" legalGuardian="CDA"/>
+			<referralSource>018-05</referralSource>
+			<aboriginalOrigin>011-02</aboriginalOrigin>
+			<citizenshipStatus>CDA</citizenshipStatus>
+			<timeLivedInCanada years="3" months="8"/>
+			<immigExpList otherImmigExp="other immigration experience text">
+				<value>2</value>
+				<value>3</value>
+				<value>7</value>
+				<value>8</value>
+			</immigExpList>
+			<discrimExpList otherDiscrimExp="other discrimination experience text">
+				<value>21134002</value>
+				<value>365873007</value>
+				<value>410515003</value>
+			</discrimExpList>
+			<prefLang>fra</prefLang>
+			<serviceLang>eng</serviceLang>
+			<legalIssues>Civil</legalIssues>
+			<legalStatusList>
+				<legalStatus>013-01</legalStatus>
+				<legalStatus>013-02</legalStatus>
+				<legalStatus>013-03</legalStatus>
+				<legalStatus>013-08</legalStatus>
+				<legalStatus>013-09</legalStatus>
+			</legalStatusList>
+			<exitDisposition>019-06</exitDisposition>
+		</clientRecord>
+		<OCANDomains>
+			<domain name="01-accommodation">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="3"/>
+				<residenceType>024-19</residenceType>
+				<residenceSupport>24A-05</residenceSupport>
+				<livingArrangementType>023-08</livingArrangementType>
+			</domain>
+			<domain name="02-food">
+				<needRating staff="0" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="0"/>
+			</domain>
+			<domain name="03-looking after the home">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="-1"/>
+			</domain>
+			<domain name="04-self-care">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="-1"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="0"/>
+			</domain>
+			<domain name="05-daytime activities">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="2"/>
+				<formalHelpRecvd staff="3"/>
+				<formalHelpNeed staff="0"/>
+				<employStatus>224366004</employStatus>
+				<educationProgramStatus>224870001</educationProgramStatus>
+				<riskUnemploymentList>
+					<riskUnemployment>UDER-02</riskUnemployment>
+					<riskUnemployment>UDER-03</riskUnemployment>
+					<riskUnemployment>UDER-06</riskUnemployment>
+				</riskUnemploymentList>
+			</domain>
+			<domain name="06-physical health">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="0"/>
+				<formalHelpNeed staff="-1"/>
+				<medicalConditionList autismDetail="autism specific text" otherDetail="other medical text">
+					<medicalCondition>408856003</medicalCondition>
+					<medicalCondition>410515003</medicalCondition>
+					<medicalCondition>414916001</medicalCondition>
+				</medicalConditionList>
+				<physicalHealthConcern>TRUE</physicalHealthConcern>
+				<concernAreaList otherConcernArea="other concern text">
+					<concernArea>119415007</concernArea>
+					<concernArea>118952005</concernArea>
+					<concernArea>410515003</concernArea>
+				</concernAreaList>
+				<medicationList>
+					<medicationDetail takenAsPrescribed="TRUE" isHelpProvided="FALSE" isHelpNeeded="TRUE"/>
+					<medicationDetail takenAsPrescribed="FALSE" isHelpProvided="UNK" isHelpNeeded="TRUE"/>
+					<medicationDetail takenAsPrescribed="UNK" isHelpProvided="TRUE" isHelpNeeded="FALSE"/>
+				</medicationList>
+				<sideEffects>TRUE</sideEffects>
+				<dailyLivingAffected>TRUE</dailyLivingAffected>
+				<sideEffectsDetailList otherSideEffectsDetail="other side effect text">
+					<sideEffectsDetail>246636008</sideEffectsDetail>
+					<sideEffectsDetail>53619000</sideEffectsDetail>
+					<sideEffectsDetail>410515003</sideEffectsDetail>
+				</sideEffectsDetailList>
+			</domain>
+			<domain name="07-psychotic symptoms">
+				<needRating staff="0" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="9"/>
+				<hospitalizedPastTwoYears>TRUE</hospitalizedPastTwoYears>
+				<totalAdmissions>5</totalAdmissions>
+				<totalHospitalDays>78</totalHospitalDays>
+				<communityTreatOrder>015-03</communityTreatOrder>
+				<symptomList otherSymptom="other symptom text">
+					<symptom>410516002</symptom>
+					<symptom>75408008</symptom>
+					<symptom>2073000</symptom>
+					<symptom>1402001</symptom>
+					<symptom>55929007</symptom>
+					<symptom>410515003</symptom>
+				</symptomList>
+			</domain>
+			<domain name="08-condition and treatment">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="-1"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="0"/>
+				<diagnosticList>
+					<diagnostic>2776000</diagnostic>
+					<diagnostic>MDGMC</diagnostic>
+					<diagnostic>87858002</diagnostic>
+					<diagnostic>SRDDH</diagnostic>
+					<diagnostic>DH</diagnostic>
+				</diagnosticList>
+				<otherIllnessList>
+					<otherIllness>016A-01</otherIllness>
+					<otherIllness>016A-03</otherIllness>
+				</otherIllnessList>
+			</domain>
+			<domain name="09-psychological distress">
+				<needRating staff="0" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="-1"/>
+			</domain>
+			<domain name="10-safety to self">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="-1"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="-1"/>
+				<suicideAttempt>TRUE</suicideAttempt>
+				<suicideThoughts>TRUE</suicideThoughts>
+				<safetyConcernSelf>TRUE</safetyConcernSelf>
+				<safetyToSelfRiskList otherSafetyToSelfRisk="other risk to self text">
+					<safetyToSelfRisk>225915006</safetyToSelfRisk>
+					<safetyToSelfRisk>401206008</safetyToSelfRisk>
+					<safetyToSelfRisk>410515003</safetyToSelfRisk>
+				</safetyToSelfRiskList>
+			</domain>
+			<domain name="11-safety to others">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="0"/>
+				<formalHelpNeed staff="-1"/>
+			</domain>
+			<domain name="12-alcohol">
+				<needRating staff="0" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="3"/>
+				<drinkAlcohol quantity="6" frequency="1"/>
+				<stageOfChangeAlcohol>5</stageOfChangeAlcohol>
+			</domain>
+			<domain name="13-drugs">
+				<needRating staff="2" client="-1"/>
+				<informalHelpRecvd staff="2"/>
+				<formalHelpRecvd staff="0"/>
+				<formalHelpNeed staff="1"/>
+				<drugUseList injected="6">
+					<drugUse name="398705004" frequency="5"/>
+					<drugUse name="226044004" frequency="6"/>
+					<drugUse name="410515003" frequency="5"/>
+				</drugUseList>
+				<stageOfChangeDrugs>2</stageOfChangeDrugs>
+			</domain>
+			<domain name="14-other addictions">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="1"/>
+				<formalHelpNeed staff="1"/>
+				<addictionTypeList otherAddictionType="other addiction text">
+					<addictionType>105523009</addictionType>
+					<addictionType>56294008</addictionType>
+					<addictionType>410515003</addictionType>
+				</addictionTypeList>
+				<stageOfChangeAddictions>3</stageOfChangeAddictions>
+			</domain>
+			<domain name="15-company">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="0"/>
+				<formalHelpNeed staff="2"/>
+				<changedSocialPatterns>CDA</changedSocialPatterns>
+			</domain>
+			<domain name="16-intimate relationships">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="3"/>
+			</domain>
+			<domain name="17-sexual expression">
+				<needRating staff="0" client="-1"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="1"/>
+			</domain>
+			<domain name="18-childcare">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="3"/>
+			</domain>
+			<domain name="19-other dependents">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="1"/>
+				<formalHelpNeed staff="1"/>
+			</domain>
+			<domain name="20-basic education">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="-1"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="-1"/>
+				<highestEducationLevel>HLES-6</highestEducationLevel>
+			</domain>
+			<domain name="21-telephone">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="9"/>
+			</domain>
+			<domain name="22-transport">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="9"/>
+			</domain>
+			<domain name="23-money">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="9"/>
+				<sourceOfIncome>031-10</sourceOfIncome>
+			</domain>
+			<domain name="24-benefits">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="9"/>
+			</domain>
+		</OCANDomains>
+		<additionalElements>
+			<!-- Begin Free Text Information For Future Collection, only -->
+			<clientHopesForFuture/>
+			<clientNeedToGetThere/>
+			<clientViewMentalHealth/>
+			<clientSpiritualityImportance/>
+			<clientCultureHeritageImportance/>
+			<!-- End Free Text Information For Future Collection, only -->
+			<presentingIssueList>
+				<presentingIssue type="017-01"/>
+				<presentingIssue type="017-03"/>
+				<presentingIssue type="017-05"/>
+				<presentingIssue type="017-08"/>
+				<presentingIssue type="017-09"/>
+			</presentingIssueList>
+			<actionList>
+				<action priority="1" domain="13-drugs"/>
+				<action priority="2" domain="15-company"/>
+				<action priority="3" domain="20-basic education"/>
+				<action priority="4" domain="23-money"/>
+				<action priority="5" domain="10-safety to self"/>
+				<action priority="6" domain="24-benefits"/>
+			</actionList>
+			<referralList>
+				<referral optimal="0AS" specifyOptimal="specify text for optimal referral" actual="FOR" specifyActual="specify text for actual referral" differenceReason="RD-4" status="RS-1"/>
+				<referral optimal="0AB" specifyOptimal="specify text for optimal referral" actual="HPA" specifyActual="specify text for actual referral" differenceReason="RD-2" status="RS-2"/>
+				<referral optimal="EAT" specifyOptimal="specify text for optimal referral" actual="HSC" specifyActual="specify text for actual referral" differenceReason="RD-3" status="RS-1"/>
+				<referral optimal="0FI" specifyOptimal="specify text for optimal referral" actual="0SR" specifyActual="specify text for actual referral" differenceReason="RD-1" status="RS-2"/>
+			</referralList>
+		</additionalElements>
+	</OCANSubmissionRecord>
+
+	<!-- assessment record# 11: just another assessment -->
+	<OCANSubmissionRecord assessmentID="1011" startDate="2009-01-11Z" completionDate="2009-01-16Z" assessmentStatus="Complete">
+		<organizationRecord>
+			<serviceOrg name="NE LHIN Test Org" number="123"/>
+			<program name="Intensive Case Management" number="3025"/>
+			<MISFunction value="725 51 76 20"/>
+		</organizationRecord>
+		<clientRecord>
+			<clientID orgClientID="123250"/>
+			<!-- Begin PHI Information For Future Collection, only -->
+			<clientName last="" first=""/>
+			<clientAddress line1="" line2="" city="" province="" postalCode=""/>
+			<clientPhone/>
+			<clientOHIP number="" version=""/>
+			<clientCulture/>
+			<!-- End PHI Information For Future Collection, only -->
+			<reasonForAssessment value="IA" other=""/>
+			<clientContact>
+				<doctorContact doctor="TRUE" lastSeen="LS-6"/>
+				<psychiatristContact psychiatrist="TRUE" lastSeen="LS-12"/>
+				<otherPractitionerContact practitionerType="3111" lastSeen="LS-1"/>
+				<otherPractitionerContact practitionerType="3112" lastSeen="LS-13"/>
+				<otherPractitionerContact practitionerType="4217" lastSeen="LS-6"/>
+				<otherAgencyContact lastSeen="LS-12"/>
+			</clientContact>
+			<serviceRecipientLocation>010-52</serviceRecipientLocation>
+			<serviceRecipientLHIN>12</serviceRecipientLHIN>
+			<serviceDeliveryLHIN>5</serviceDeliveryLHIN>
+			<clientDOB>1989-04-04Z</clientDOB>
+			<gender>F</gender>
+			<maritalStatus>125681006</maritalStatus>
+			<clientCapacity property="TRUE" personalCare="FALSE" legalGuardian="CDA"/>
+			<referralSource>018-05</referralSource>
+			<aboriginalOrigin>011-02</aboriginalOrigin>
+			<citizenshipStatus>CDN</citizenshipStatus>
+			<timeLivedInCanada years="3" months="8"/>
+			<immigExpList otherImmigExp="other immigration experience text">
+				<value>2</value>
+				<value>3</value>
+				<value>7</value>
+				<value>8</value>
+			</immigExpList>
+			<discrimExpList otherDiscrimExp="other discrimination experience text">
+				<value>21134002</value>
+				<value>365873007</value>
+				<value>410515003</value>
+			</discrimExpList>
+			<prefLang>fra</prefLang>
+			<serviceLang>eng</serviceLang>
+			<legalIssues>Civil</legalIssues>
+			<legalStatusList>
+				<legalStatus>013-01</legalStatus>
+				<legalStatus>013-02</legalStatus>
+				<legalStatus>013-03</legalStatus>
+				<legalStatus>013-08</legalStatus>
+				<legalStatus>013-09</legalStatus>
+			</legalStatusList>
+			<exitDisposition>019-06</exitDisposition>
+		</clientRecord>
+		<OCANDomains>
+			<domain name="01-accommodation">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="3"/>
+				<residenceType>024-19</residenceType>
+				<residenceSupport>24A-05</residenceSupport>
+				<livingArrangementType>023-08</livingArrangementType>
+			</domain>
+			<domain name="02-food">
+				<needRating staff="0" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="0"/>
+			</domain>
+			<domain name="03-looking after the home">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="-1"/>
+			</domain>
+			<domain name="04-self-care">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="-1"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="0"/>
+			</domain>
+			<domain name="05-daytime activities">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="2"/>
+				<formalHelpRecvd staff="3"/>
+				<formalHelpNeed staff="0"/>
+				<employStatus>224366004</employStatus>
+				<educationProgramStatus>224870001</educationProgramStatus>
+				<riskUnemploymentList>
+					<riskUnemployment>UDER-02</riskUnemployment>
+					<riskUnemployment>UDER-03</riskUnemployment>
+					<riskUnemployment>UDER-06</riskUnemployment>
+				</riskUnemploymentList>
+			</domain>
+			<domain name="06-physical health">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="0"/>
+				<formalHelpNeed staff="-1"/>
+				<medicalConditionList autismDetail="autism specific text" otherDetail="other medical text">
+					<medicalCondition>408856003</medicalCondition>
+					<medicalCondition>410515003</medicalCondition>
+					<medicalCondition>414916001</medicalCondition>
+				</medicalConditionList>
+				<physicalHealthConcern>TRUE</physicalHealthConcern>
+				<concernAreaList otherConcernArea="other concern text">
+					<concernArea>119415007</concernArea>
+					<concernArea>118952005</concernArea>
+					<concernArea>410515003</concernArea>
+				</concernAreaList>
+				<medicationList>
+					<medicationDetail takenAsPrescribed="TRUE" isHelpProvided="FALSE" isHelpNeeded="TRUE"/>
+					<medicationDetail takenAsPrescribed="FALSE" isHelpProvided="UNK" isHelpNeeded="TRUE"/>
+					<medicationDetail takenAsPrescribed="UNK" isHelpProvided="TRUE" isHelpNeeded="FALSE"/>
+				</medicationList>
+				<sideEffects>TRUE</sideEffects>
+				<dailyLivingAffected>TRUE</dailyLivingAffected>
+				<sideEffectsDetailList otherSideEffectsDetail="other side effect text">
+					<sideEffectsDetail>246636008</sideEffectsDetail>
+					<sideEffectsDetail>53619000</sideEffectsDetail>
+					<sideEffectsDetail>410515003</sideEffectsDetail>
+				</sideEffectsDetailList>
+			</domain>
+			<domain name="07-psychotic symptoms">
+				<needRating staff="0" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="9"/>
+				<hospitalizedPastTwoYears>TRUE</hospitalizedPastTwoYears>
+				<totalAdmissions>5</totalAdmissions>
+				<totalHospitalDays>78</totalHospitalDays>
+				<communityTreatOrder>015-03</communityTreatOrder>
+				<symptomList otherSymptom="other symptom text">
+					<symptom>410516002</symptom>
+					<symptom>75408008</symptom>
+					<symptom>2073000</symptom>
+					<symptom>1402001</symptom>
+					<symptom>55929007</symptom>
+					<symptom>410515003</symptom>
+				</symptomList>
+			</domain>
+			<domain name="08-condition and treatment">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="-1"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="0"/>
+				<diagnosticList>
+					<diagnostic>2776000</diagnostic>
+					<diagnostic>MDGMC</diagnostic>
+					<diagnostic>87858002</diagnostic>
+					<diagnostic>SRDDH</diagnostic>
+					<diagnostic>DH</diagnostic>
+				</diagnosticList>
+				<otherIllnessList>
+					<otherIllness>016A-01</otherIllness>
+					<otherIllness>016A-03</otherIllness>
+				</otherIllnessList>
+			</domain>
+			<domain name="09-psychological distress">
+				<needRating staff="0" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="-1"/>
+			</domain>
+			<domain name="10-safety to self">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="-1"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="-1"/>
+				<suicideAttempt>TRUE</suicideAttempt>
+				<suicideThoughts>TRUE</suicideThoughts>
+				<safetyConcernSelf>TRUE</safetyConcernSelf>
+				<safetyToSelfRiskList otherSafetyToSelfRisk="other risk to self text">
+					<safetyToSelfRisk>225915006</safetyToSelfRisk>
+					<safetyToSelfRisk>401206008</safetyToSelfRisk>
+					<safetyToSelfRisk>410515003</safetyToSelfRisk>
+				</safetyToSelfRiskList>
+			</domain>
+			<domain name="11-safety to others">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="0"/>
+				<formalHelpNeed staff="-1"/>
+			</domain>
+			<domain name="12-alcohol">
+				<needRating staff="0" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="3"/>
+				<drinkAlcohol quantity="6" frequency="1"/>
+				<stageOfChangeAlcohol>5</stageOfChangeAlcohol>
+			</domain>
+			<domain name="13-drugs">
+				<needRating staff="2" client="-1"/>
+				<informalHelpRecvd staff="2"/>
+				<formalHelpRecvd staff="0"/>
+				<formalHelpNeed staff="1"/>
+				<drugUseList injected="6">
+					<drugUse name="398705004" frequency="5"/>
+					<drugUse name="226044004" frequency="6"/>
+					<drugUse name="410515003" frequency="5"/>
+				</drugUseList>
+				<stageOfChangeDrugs>2</stageOfChangeDrugs>
+			</domain>
+			<domain name="14-other addictions">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="1"/>
+				<formalHelpNeed staff="1"/>
+				<addictionTypeList otherAddictionType="other addiction text">
+					<addictionType>105523009</addictionType>
+					<addictionType>56294008</addictionType>
+					<addictionType>410515003</addictionType>
+				</addictionTypeList>
+				<stageOfChangeAddictions>3</stageOfChangeAddictions>
+			</domain>
+			<domain name="15-company">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="0"/>
+				<formalHelpNeed staff="2"/>
+				<changedSocialPatterns>CDA</changedSocialPatterns>
+			</domain>
+			<domain name="16-intimate relationships">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="3"/>
+			</domain>
+			<domain name="17-sexual expression">
+				<needRating staff="0" client="-1"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="1"/>
+			</domain>
+			<domain name="18-childcare">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="3"/>
+			</domain>
+			<domain name="19-other dependents">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="1"/>
+				<formalHelpNeed staff="1"/>
+			</domain>
+			<domain name="20-basic education">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="-1"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="-1"/>
+				<highestEducationLevel>HLES-6</highestEducationLevel>
+			</domain>
+			<domain name="21-telephone">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="9"/>
+			</domain>
+			<domain name="22-transport">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="9"/>
+			</domain>
+			<domain name="23-money">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="9"/>
+				<sourceOfIncome>031-10</sourceOfIncome>
+			</domain>
+			<domain name="24-benefits">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="9"/>
+			</domain>
+		</OCANDomains>
+		<additionalElements>
+			<!-- Begin Free Text Information For Future Collection, only -->
+			<clientHopesForFuture/>
+			<clientNeedToGetThere/>
+			<clientViewMentalHealth/>
+			<clientSpiritualityImportance/>
+			<clientCultureHeritageImportance/>
+			<!-- End Free Text Information For Future Collection, only -->
+			<presentingIssueList>
+				<presentingIssue type="017-01"/>
+				<presentingIssue type="017-03"/>
+				<presentingIssue type="017-05"/>
+				<presentingIssue type="017-08"/>
+				<presentingIssue type="017-09"/>
+			</presentingIssueList>
+			<actionList>
+				<action priority="1" domain="13-drugs"/>
+				<action priority="2" domain="15-company"/>
+				<action priority="3" domain="20-basic education"/>
+				<action priority="4" domain="23-money"/>
+				<action priority="5" domain="10-safety to self"/>
+				<action priority="6" domain="24-benefits"/>
+			</actionList>
+			<referralList>
+				<referral optimal="0AS" specifyOptimal="specify text for optimal referral" actual="FOR" specifyActual="specify text for actual referral" differenceReason="RD-4" status="RS-1"/>
+				<referral optimal="0AB" specifyOptimal="specify text for optimal referral" actual="HPA" specifyActual="specify text for actual referral" differenceReason="RD-2" status="RS-2"/>
+				<referral optimal="EAT" specifyOptimal="specify text for optimal referral" actual="HSC" specifyActual="specify text for actual referral" differenceReason="RD-3" status="RS-1"/>
+				<referral optimal="0FI" specifyOptimal="specify text for optimal referral" actual="0SR" specifyActual="specify text for actual referral" differenceReason="RD-1" status="RS-2"/>
+			</referralList>
+		</additionalElements>
+	</OCANSubmissionRecord>
+
+	<!-- assessment record# 12: just another assessment -->
+	<OCANSubmissionRecord assessmentID="1012" startDate="2009-01-11Z" completionDate="2009-01-16Z" assessmentStatus="Complete">
+		<organizationRecord>
+			<serviceOrg name="NE LHIN Test Org" number="123"/>
+			<program name="Intensive Case Management" number="3025"/>
+			<MISFunction value="725 51 76 20"/>
+		</organizationRecord>
+		<clientRecord>
+			<clientID orgClientID="123850"/>
+			<!-- Begin PHI Information For Future Collection, only -->
+			<clientName last="" first=""/>
+			<clientAddress line1="" line2="" city="" province="" postalCode=""/>
+			<clientPhone/>
+			<clientOHIP number="" version=""/>
+			<clientCulture/>
+			<!-- End PHI Information For Future Collection, only -->
+			<reasonForAssessment value="IA" other=""/>
+			<clientContact>
+				<doctorContact doctor="TRUE" lastSeen="LS-6"/>
+				<psychiatristContact psychiatrist="TRUE" lastSeen="LS-12"/>
+				<otherPractitionerContact practitionerType="3111" lastSeen="LS-1"/>
+				<otherPractitionerContact practitionerType="3112" lastSeen="LS-13"/>
+				<otherPractitionerContact practitionerType="4217" lastSeen="LS-6"/>
+				<otherAgencyContact lastSeen="LS-12"/>
+			</clientContact>
+			<serviceRecipientLocation>010-52</serviceRecipientLocation>
+			<serviceRecipientLHIN>12</serviceRecipientLHIN>
+			<serviceDeliveryLHIN>5</serviceDeliveryLHIN>
+			<clientDOB>1938-01-03Z</clientDOB>
+			<gender>CDA</gender>
+			<maritalStatus>125681006</maritalStatus>
+			<clientCapacity property="TRUE" personalCare="FALSE" legalGuardian="CDA"/>
+			<referralSource>018-05</referralSource>
+			<aboriginalOrigin>011-02</aboriginalOrigin>
+			<citizenshipStatus>CDA</citizenshipStatus>
+			<timeLivedInCanada years="3" months="8"/>
+			<immigExpList otherImmigExp="other immigration experience text">
+				<value>2</value>
+				<value>3</value>
+				<value>7</value>
+				<value>8</value>
+			</immigExpList>
+			<discrimExpList otherDiscrimExp="other discrimination experience text">
+				<value>21134002</value>
+				<value>365873007</value>
+				<value>410515003</value>
+			</discrimExpList>
+			<prefLang>fra</prefLang>
+			<serviceLang>eng</serviceLang>
+			<legalIssues>Civil</legalIssues>
+			<legalStatusList>
+				<legalStatus>013-01</legalStatus>
+				<legalStatus>013-02</legalStatus>
+				<legalStatus>013-03</legalStatus>
+				<legalStatus>013-08</legalStatus>
+				<legalStatus>013-09</legalStatus>
+			</legalStatusList>
+			<exitDisposition>019-06</exitDisposition>
+		</clientRecord>
+		<OCANDomains>
+			<domain name="01-accommodation">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="3"/>
+				<residenceType>024-19</residenceType>
+				<residenceSupport>24A-05</residenceSupport>
+				<livingArrangementType>023-08</livingArrangementType>
+			</domain>
+			<domain name="02-food">
+				<needRating staff="0" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="0"/>
+			</domain>
+			<domain name="03-looking after the home">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="-1"/>
+			</domain>
+			<domain name="04-self-care">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="-1"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="0"/>
+			</domain>
+			<domain name="05-daytime activities">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="2"/>
+				<formalHelpRecvd staff="3"/>
+				<formalHelpNeed staff="0"/>
+				<employStatus>224366004</employStatus>
+				<educationProgramStatus>224870001</educationProgramStatus>
+				<riskUnemploymentList>
+					<riskUnemployment>UDER-02</riskUnemployment>
+					<riskUnemployment>UDER-03</riskUnemployment>
+					<riskUnemployment>UDER-06</riskUnemployment>
+				</riskUnemploymentList>
+			</domain>
+			<domain name="06-physical health">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="0"/>
+				<formalHelpNeed staff="-1"/>
+				<medicalConditionList autismDetail="autism specific text" otherDetail="other medical text">
+					<medicalCondition>408856003</medicalCondition>
+					<medicalCondition>410515003</medicalCondition>
+					<medicalCondition>414916001</medicalCondition>
+				</medicalConditionList>
+				<physicalHealthConcern>TRUE</physicalHealthConcern>
+				<concernAreaList otherConcernArea="other concern text">
+					<concernArea>119415007</concernArea>
+					<concernArea>118952005</concernArea>
+					<concernArea>410515003</concernArea>
+				</concernAreaList>
+				<medicationList>
+					<medicationDetail takenAsPrescribed="TRUE" isHelpProvided="FALSE" isHelpNeeded="TRUE"/>
+					<medicationDetail takenAsPrescribed="FALSE" isHelpProvided="UNK" isHelpNeeded="TRUE"/>
+					<medicationDetail takenAsPrescribed="UNK" isHelpProvided="TRUE" isHelpNeeded="FALSE"/>
+				</medicationList>
+				<sideEffects>TRUE</sideEffects>
+				<dailyLivingAffected>TRUE</dailyLivingAffected>
+				<sideEffectsDetailList otherSideEffectsDetail="other side effect text">
+					<sideEffectsDetail>246636008</sideEffectsDetail>
+					<sideEffectsDetail>53619000</sideEffectsDetail>
+					<sideEffectsDetail>410515003</sideEffectsDetail>
+				</sideEffectsDetailList>
+			</domain>
+			<domain name="07-psychotic symptoms">
+				<needRating staff="0" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="9"/>
+				<hospitalizedPastTwoYears>TRUE</hospitalizedPastTwoYears>
+				<totalAdmissions>5</totalAdmissions>
+				<totalHospitalDays>78</totalHospitalDays>
+				<communityTreatOrder>015-03</communityTreatOrder>
+				<symptomList otherSymptom="other symptom text">
+					<symptom>410516002</symptom>
+					<symptom>75408008</symptom>
+					<symptom>2073000</symptom>
+					<symptom>1402001</symptom>
+					<symptom>55929007</symptom>
+					<symptom>410515003</symptom>
+				</symptomList>
+			</domain>
+			<domain name="08-condition and treatment">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="-1"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="0"/>
+				<diagnosticList>
+					<diagnostic>2776000</diagnostic>
+					<diagnostic>MDGMC</diagnostic>
+					<diagnostic>87858002</diagnostic>
+					<diagnostic>SRDDH</diagnostic>
+					<diagnostic>DH</diagnostic>
+				</diagnosticList>
+				<otherIllnessList>
+					<otherIllness>016A-01</otherIllness>
+					<otherIllness>016A-03</otherIllness>
+				</otherIllnessList>
+			</domain>
+			<domain name="09-psychological distress">
+				<needRating staff="0" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="-1"/>
+			</domain>
+			<domain name="10-safety to self">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="-1"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="-1"/>
+				<suicideAttempt>TRUE</suicideAttempt>
+				<suicideThoughts>TRUE</suicideThoughts>
+				<safetyConcernSelf>TRUE</safetyConcernSelf>
+				<safetyToSelfRiskList otherSafetyToSelfRisk="other risk to self text">
+					<safetyToSelfRisk>225915006</safetyToSelfRisk>
+					<safetyToSelfRisk>401206008</safetyToSelfRisk>
+					<safetyToSelfRisk>410515003</safetyToSelfRisk>
+				</safetyToSelfRiskList>
+			</domain>
+			<domain name="11-safety to others">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="0"/>
+				<formalHelpNeed staff="-1"/>
+			</domain>
+			<domain name="12-alcohol">
+				<needRating staff="0" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="3"/>
+				<drinkAlcohol quantity="6" frequency="1"/>
+				<stageOfChangeAlcohol>5</stageOfChangeAlcohol>
+			</domain>
+			<domain name="13-drugs">
+				<needRating staff="2" client="-1"/>
+				<informalHelpRecvd staff="2"/>
+				<formalHelpRecvd staff="0"/>
+				<formalHelpNeed staff="1"/>
+				<drugUseList injected="6">
+					<drugUse name="398705004" frequency="5"/>
+					<drugUse name="226044004" frequency="6"/>
+					<drugUse name="410515003" frequency="5"/>
+				</drugUseList>
+				<stageOfChangeDrugs>2</stageOfChangeDrugs>
+			</domain>
+			<domain name="14-other addictions">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="1"/>
+				<formalHelpNeed staff="1"/>
+				<addictionTypeList otherAddictionType="other addiction text">
+					<addictionType>105523009</addictionType>
+					<addictionType>56294008</addictionType>
+					<addictionType>410515003</addictionType>
+				</addictionTypeList>
+				<stageOfChangeAddictions>3</stageOfChangeAddictions>
+			</domain>
+			<domain name="15-company">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="0"/>
+				<formalHelpNeed staff="2"/>
+				<changedSocialPatterns>CDA</changedSocialPatterns>
+			</domain>
+			<domain name="16-intimate relationships">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="3"/>
+			</domain>
+			<domain name="17-sexual expression">
+				<needRating staff="0" client="-1"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="1"/>
+			</domain>
+			<domain name="18-childcare">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="3"/>
+			</domain>
+			<domain name="19-other dependents">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="1"/>
+				<formalHelpNeed staff="1"/>
+			</domain>
+			<domain name="20-basic education">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="-1"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="-1"/>
+				<highestEducationLevel>HLES-6</highestEducationLevel>
+			</domain>
+			<domain name="21-telephone">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="9"/>
+			</domain>
+			<domain name="22-transport">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="9"/>
+			</domain>
+			<domain name="23-money">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="9"/>
+				<sourceOfIncome>031-10</sourceOfIncome>
+			</domain>
+			<domain name="24-benefits">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="9"/>
+			</domain>
+		</OCANDomains>
+		<additionalElements>
+			<!-- Begin Free Text Information For Future Collection, only -->
+			<clientHopesForFuture/>
+			<clientNeedToGetThere/>
+			<clientViewMentalHealth/>
+			<clientSpiritualityImportance/>
+			<clientCultureHeritageImportance/>
+			<!-- End Free Text Information For Future Collection, only -->
+			<presentingIssueList>
+				<presentingIssue type="017-01"/>
+				<presentingIssue type="017-03"/>
+				<presentingIssue type="017-05"/>
+				<presentingIssue type="017-08"/>
+				<presentingIssue type="017-09"/>
+			</presentingIssueList>
+			<actionList>
+				<action priority="1" domain="13-drugs"/>
+				<action priority="2" domain="15-company"/>
+				<action priority="3" domain="20-basic education"/>
+				<action priority="4" domain="23-money"/>
+				<action priority="5" domain="10-safety to self"/>
+				<action priority="6" domain="24-benefits"/>
+			</actionList>
+			<referralList>
+				<referral optimal="0AS" specifyOptimal="specify text for optimal referral" actual="FOR" specifyActual="specify text for actual referral" differenceReason="RD-4" status="RS-1"/>
+				<referral optimal="0AB" specifyOptimal="specify text for optimal referral" actual="HPA" specifyActual="specify text for actual referral" differenceReason="RD-2" status="RS-2"/>
+				<referral optimal="EAT" specifyOptimal="specify text for optimal referral" actual="HSC" specifyActual="specify text for actual referral" differenceReason="RD-3" status="RS-1"/>
+				<referral optimal="0FI" specifyOptimal="specify text for optimal referral" actual="0SR" specifyActual="specify text for actual referral" differenceReason="RD-1" status="RS-2"/>
+			</referralList>
+		</additionalElements>
+	</OCANSubmissionRecord>
+
+​​​​​</OCANSubmissionFile>
