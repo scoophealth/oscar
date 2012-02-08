@@ -255,8 +255,12 @@ public class EctFormData {
 
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 		if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
-			ArrayList<PatientForm> remoteResults = getRemotePatientForms(Integer.parseInt(demoNo), null, table);
-			results.addAll(remoteResults);
+			try {
+				ArrayList<PatientForm> remoteResults = getRemotePatientForms(Integer.parseInt(demoNo), null, table);
+				results.addAll(remoteResults);
+			} catch( Exception e ) {
+				logger.error("Retrieving remote forms failed", e);
+			}
 		}
 
 		Collections.sort(results, PatientForm.CREATED_DATE_COMPARATOR);
