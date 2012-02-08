@@ -13,7 +13,7 @@
 	for (CachedProvider cachedProvider : providers)
 	{
 		%>
-			<a href="followUp.jsp?demographicId=<%=demographicId%>&remoteFacilityId=<%=cachedProvider.getFacilityIdStringCompositePk().getIntegratorFacilityId()%>&remoteProviderId=<%=cachedProvider.getFacilityIdStringCompositePk().getCaisiItemId()%>" ><%=cachedProvider.getFacilityIdStringCompositePk().getIntegratorFacilityId()%> : <%=cachedProvider.getLastName()+", "+cachedProvider.getFirstName()%></a>
+			<a href="followUp.jsp?demographicId=<%=demographicId%>&remoteFacilityId=<%=cachedProvider.getFacilityIdStringCompositePk().getIntegratorFacilityId()%>&remoteProviderId=<%=cachedProvider.getFacilityIdStringCompositePk().getCaisiItemId()%>" ><%=CaisiIntegratorManager.getRemoteFacility(cachedProvider.getFacilityIdStringCompositePk().getIntegratorFacilityId()).getName()%> : <%=cachedProvider.getLastName()+", "+cachedProvider.getFirstName()%></a>
 			<br />
 		<%
 	}
