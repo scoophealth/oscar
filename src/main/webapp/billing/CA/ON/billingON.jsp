@@ -309,7 +309,7 @@
                     listServiceType.add(ctlcode);
                     
                     sql = "select distinct c.servicetype_name, c.servicetype, c.service_group_name, c.service_order,b.service_code, b.description, b.value, b.percentage from billingservice b, ctl_billingservice c where c.service_code=b.service_code and c.status='A' and c.servicetype ='"
-                        + ctlcode + "' and c.service_group ='" + "Group1" + "' and b.billingservice_date in (select max(b2.billingservice_date) from billingservice b2 where b2.billingservice_date <= '" + billReferenceDate + "' and b2.service_code = b.service_code  ) order by c.service_order";
+                        + ctlcode + "' and c.service_group ='" + "Group1" + "' and b.billingservice_date in (select max(b2.billingservice_date) from billingservice b2 where b2.billingservice_date <= '" + billReferenceDate + "' and b2.service_code = b.service_code  ) and b.billingservice_no = (select max(b3.billingservice_no) from billingservice b3 where b3.billingservice_date = b.billingservice_date and b3.service_code = b.service_code) order by c.service_order";
     
                     
 			rs = dbObj.searchDBRecord(sql);
@@ -342,7 +342,7 @@
 			
 			
 			sql = "select distinct c.servicetype_name, c.servicetype, c.service_group_name, c.service_order,b.service_code, b.description, b.value, b.percentage from billingservice b, ctl_billingservice c where c.service_code=b.service_code and c.status='A' and c.servicetype ='"
-                 + ctlcode + "' and c.service_group ='" + "Group2" + "' and b.billingservice_date in (select max(b2.billingservice_date) from billingservice b2 where b2.billingservice_date <= '" + billReferenceDate + "' and b2.service_code = b.service_code) order by c.service_order";
+                 + ctlcode + "' and c.service_group ='" + "Group2" + "' and b.billingservice_date in (select max(b2.billingservice_date) from billingservice b2 where b2.billingservice_date <= '" + billReferenceDate + "' and b2.service_code = b.service_code) and b.billingservice_no = (select max(b3.billingservice_no) from billingservice b3 where b3.billingservice_date = b.billingservice_date and b3.service_code = b.service_code) order by c.service_order";
 
 			rs = dbObj.searchDBRecord(sql);
                         
@@ -379,7 +379,7 @@
             
             
             sql = "select distinct c.servicetype_name, c.servicetype, c.service_group_name, c.service_order,b.service_code, b.description, b.value, b.percentage from billingservice b, ctl_billingservice c where c.service_code=b.service_code and c.status='A' and c.servicetype ='"
-                + ctlcode + "' and c.service_group ='" + "Group3" + "' and b.billingservice_date in (select max(b2.billingservice_date) from billingservice b2 where b2.billingservice_date <= '" + billReferenceDate + "' and b2.service_code = b.service_code) order by c.service_order";
+                + ctlcode + "' and c.service_group ='" + "Group3" + "' and b.billingservice_date in (select max(b2.billingservice_date) from billingservice b2 where b2.billingservice_date <= '" + billReferenceDate + "' and b2.service_code = b.service_code) and b.billingservice_no = (select max(b3.billingservice_no) from billingservice b3 where b3.billingservice_date = b.billingservice_date and b3.service_code = b.service_code) order by c.service_order";
 
 			rs = dbObj.searchDBRecord(sql);
 			while (rs.next()) {
