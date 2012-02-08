@@ -11,33 +11,41 @@
 <%@page import="java.util.Date"%>
 <%@page import="java.util.List"%>
 <%@page import="org.apache.commons.lang.StringUtils"%>
+<%@page import="org.apache.commons.lang.ArrayUtils"%>
 <%
 	@SuppressWarnings("unchecked")
 	HashMap<String,String[]> parameters=new HashMap(request.getParameterMap());
-	if(request.getParameter("ocanType")!=null && request.getParameter("ocanType").equalsIgnoreCase("full")) {	
-	if(parameters.get("1_where_live")[0].equals("024-01") || parameters.get("1_where_live")[0].equals("024-02") ||
-			parameters.get("1_where_live")[0].equals("024-05") || parameters.get("1_where_live")[0].equals("024-06") ||
-			parameters.get("1_where_live")[0].equals("024-08") || parameters.get("1_where_live")[0].equals("024-09") ) {
-		parameters.remove("1_any_support");
-		parameters.put("1_any_support", parameters.get("1_any_support_hidden"));
-	}
-	boolean var4 = false;
-	boolean var3 = false;
-	int length = parameters.get("immigration_issues").length;
-	String[] immi = new String[length+1];	
-	int i=0;
-	for(String ii : parameters.get("immigration_issues")) {
-		immi[i] = ii;
-		if(ii.equalsIgnoreCase("4")) var4 = true;
-		if(ii.equalsIgnoreCase("3")) var3 = true;
-		i++;
-	}
-	if(var4 && !var3) {
-		immi[length] = "3"; 
-		parameters.put("immigration_issues", immi);
-	}
+	
+	if(request.getParameter("ocanType")!=null && request.getParameter("ocanType").equalsIgnoreCase("full")) {
+		if(parameters.get("1_where_live")[0].equals("024-01") || parameters.get("1_where_live")[0].equals("024-02") ||
+				parameters.get("1_where_live")[0].equals("024-05") || parameters.get("1_where_live")[0].equals("024-06") ||
+				parameters.get("1_where_live")[0].equals("024-08") || parameters.get("1_where_live")[0].equals("024-09") ) {
+			parameters.remove("1_any_support");
+			parameters.put("1_any_support", parameters.get("1_any_support_hidden"));
+		}
+		boolean var4 = false;
+		boolean var3 = false;
+		int length = 0;
 		
-}	
+		if(!ArrayUtils.isEmpty(parameters.get("immigration_issues"))) {
+			length = parameters.get("immigration_issues").length;
+		
+			String[] immi = new String[length+1];	
+			int i=0;
+			for(String ii : parameters.get("immigration_issues")) {
+				immi[i] = ii;
+				if(ii.equalsIgnoreCase("4")) var4 = true;
+				if(ii.equalsIgnoreCase("3")) var3 = true;
+				i++;
+			}
+			if(var4 && !var3) {
+				immi[length] = "3"; 
+				parameters.put("immigration_issues", immi);
+			}
+		}
+		
+	}	
+	
 	// for these values get them and pop them from map so subsequent iterating through map doesn't process these parameters again.
 	//Integer admissionId=Integer.valueOf(parameters.get("admissionId")[0]);	
 	//parameters.remove("admissionId");
@@ -59,6 +67,7 @@
 	String reasonForAssessment = parameters.get("reasonForAssessment")[0];
 	String gender = parameters.get("gender")[0];	
 	String ocanStaffFormId = parameters.get("ocanStaffFormId")[0];
+	String consent = parameters.get("consent")[0];
 	
 	OcanStaffForm ocanStaffForm=OcanFormAction.createOcanStaffForm(ocanStaffFormId, clientId, signed);
 	
@@ -82,6 +91,7 @@
 	ocanStaffForm.setGender(gender==null?"":gender);
 	//ocanStaffForm.setAdmissionId(admissionId);
 	ocanStaffForm.setOcanType(request.getParameter("ocanType")==null?"":request.getParameter("ocanType"));
+	ocanStaffForm.setConsent(request.getParameter("consent")==null?"NOT_SPECIFIED":request.getParameter("consent"));
 	
 	//Once ocan assessment was completed, it can not be changed to other status.
 	if(!"Completed".equals(ocanStaffForm.getAssessmentStatus())) {	
@@ -128,6 +138,7 @@
 	parameters.remove("completionDate");
 	parameters.remove("reasonForAssessment");
 	parameters.remove("gender");
+	parameters.remove("consent");
 	
 	Integer ocanStaffFormId_Int=0;
 	if(ocanStaffFormId!=null && !"".equals(ocanStaffFormId) && !"null".equals(ocanStaffFormId)) {

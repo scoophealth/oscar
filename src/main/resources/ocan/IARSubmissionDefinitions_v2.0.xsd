@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	File Name	:	SubmissionDefinitions_v2.0.xsd
+	Version		:	2.0
+	Description	: 	IAR assessment data upload data types specification (is used in IAR Submission Web Service definition)
+	Developed by:	Ontario Ministry of Health, Community Care Information Management (CCIM) Program
+	History		:		09-Mar-2010, initial version
+		version 1.1 (25-May-2010)
+					added Application element
+					mimetype text/csv changed to text/x-non-xml
+ 		version 2.0 (18-Apr-2011)
+ -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:iar="http://iar.on.ca/types" targetNamespace="http://iar.on.ca/types" version="1.0">
+	<xs:element name="IARSubmission">
+		<xs:annotation>
+			<xs:documentation>IAR submission envelope,  contains various types of submissions from an individual HSP</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="iar:TransmissionHeader">
+					<xs:annotation>
+						<xs:documentation>Acts as a Control Record, defining the submission content</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element ref="iar:SubmissionContent">
+					<xs:annotation>
+						<xs:documentation>Contains Assessment, Consent and PHI record data</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="version" use="required" fixed="2.0">
+				<xs:annotation>
+					<xs:documentation>Reflects IAR Submission schema version in use (2.0)</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string"/>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="TransmissionHeader" type="iar:TransmissionHeaderType">
+		<xs:annotation>
+			<xs:documentation> Transmission Header</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="SubmissionContent">
+		<xs:annotation>
+			<xs:documentation> Submission Content</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence maxOccurs="3">
+				<xs:element name="Record">
+					<xs:annotation>
+						<xs:documentation>XML Content container record</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:complexContent>
+							<xs:extension base="iar:SubmissionType"/>
+						</xs:complexContent>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="TransmissionHeaderType">
+		<xs:annotation>
+			<xs:documentation> Transmission Header Type</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="submissionId">
+				<xs:annotation>
+					<xs:documentation>Submission Id is source system defined and is used to uniquely identify the submission</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="40"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="organization">
+				<xs:annotation>
+					<xs:documentation>Submitting organization identification for acceptance and logging purposes</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:attribute name="name" type="xs:string" use="required">
+						<xs:annotation>
+							<xs:documentation>Full name of the submitting HSP</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+					<xs:attribute name="id" type="xs:string" use="required">
+						<xs:annotation>
+							<xs:documentation>The MOHLTC assigned number for the submitting HSP </xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="exportTimestamp" type="xs:dateTime">
+				<xs:annotation>
+					<xs:documentation>Date and time when export was generated in submitting application</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="assessmentType">
+				<xs:annotation>
+					<xs:documentation>Assessment type of submission. Must be one of supported assessment types. Assessment version is indicated in the version attribute of the Record element of submission content  element.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="OCAN">
+							<xs:annotation>
+								<xs:documentation>Ontario Common Assessment of Need</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="RAI-MH">
+							<xs:annotation>
+								<xs:documentation>Resident Assessment Intake Mental Health</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="ADAT">
+							<xs:annotation>
+								<xs:documentation>Addiction Assessment, Discharge and Treatment Standardized Tools</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="RAI_MDS_2.0">
+							<xs:annotation>
+								<xs:documentation>Resident Assessment Instrument Minimum Data Set 2.0</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="RAI-CA">
+							<xs:annotation>
+								<xs:documentation>Common Intake Assessment Tool</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="RAI-HC">
+							<xs:annotation>
+								<xs:documentation>Long Stay Assessment Software (LSAS), Resident Assessment Intake Home Care</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="RAI-CHA">
+							<xs:annotation>
+								<xs:documentation>interRAI Community Health Assessment (CHA) is assessment type is used by CSS sector</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="application">
+				<xs:annotation>
+					<xs:documentation>Source Application (submission point) identification.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:attribute name="id" use="required">
+						<xs:annotation>
+							<xs:documentation>Instance ID</xs:documentation>
+						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:minLength value="1"/>
+								<xs:maxLength value="5"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+					<xs:attribute name="name" type="xs:string" use="optional">
+						<xs:annotation>
+							<xs:documentation>Product Name</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+					<xs:attribute name="version" type="xs:string" use="optional">
+						<xs:annotation>
+							<xs:documentation>Product Version</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+					<xs:attribute name="vendor" type="xs:string" use="optional">
+						<xs:annotation>
+							<xs:documentation>Product Vendor</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="SubmissionType">
+		<xs:annotation>
+			<xs:documentation> Submission Content Type</xs:documentation>
+		</xs:annotation>
+		<xs:choice>
+			<xs:element name="text">
+				<xs:annotation>
+					<xs:documentation>XML Content - Assessments, Consent or PHI.  Either contained within a CDATA segment or entity encoded</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:string"/>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="binary">
+				<xs:annotation>
+					<xs:documentation>XML Content - Assessments, Consent or PHI.  Base64 encoded or compressed data</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:base64Binary">
+							<xs:attribute name="compressionType" use="optional" default="application/zip">
+								<xs:annotation>
+									<xs:documentation>none for Base64,  application/zip for compressed data</xs:documentation>
+								</xs:annotation>
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:enumeration value="application/zip">
+											<xs:annotation>
+												<xs:documentation>The content is zipped. Standard Java zip compression package could be used to compress/uncompress of the content of this element.</xs:documentation>
+											</xs:annotation>
+										</xs:enumeration>
+										<xs:enumeration value="none"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:attribute>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+		</xs:choice>
+		<xs:attribute name="recordType" use="required">
+			<xs:annotation>
+				<xs:documentation>Indicates what kind of content is stored in the record. PersonalInformation type is indicates a separate PHI file that comes with some assessment types, e.g. RAI-MH </xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="Assessment">
+						<xs:annotation>
+							<xs:documentation>Indicates that element contains assessment data, assesment type is defined in transmission header</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="PersonalInformation">
+						<xs:annotation>
+							<xs:documentation>Indicates that content of the element is personal data (PI/PHI) , used in RAI-MH submission</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="Consent">
+						<xs:annotation>
+							<xs:documentation>Indicates that content of the element is consent data</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="version" use="required">
+			<xs:annotation>
+				<xs:documentation>Version of xml content schema, i.e. 1.0.2 for OCAN Assessments. In case of OCAN is value of version attribute in OCAN schema. In case of RAI-MH the year of CIHI schema edition, i.e. 2010 for the 2010-2011 fiscal year. If version attribute is omitted than IAR application will determine the version based on the content of data.</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="mimeType" use="required">
+			<xs:annotation>
+				<xs:documentation>Indicates the data format, either XML or CSV (delimited text) of data record.</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="text/xml"/>
+					<xs:enumeration value="text/x-non-xml">
+						<xs:annotation>
+							<xs:documentation>Non xml daat format, delimeted or fixed length layout</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="delimiter" type="xs:string" use="optional">
+			<xs:annotation>
+				<xs:documentation>Used if CSV data format (mimetype) is specified.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+</xs:schema>

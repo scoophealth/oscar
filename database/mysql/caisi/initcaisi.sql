@@ -2663,6 +2663,7 @@ create table OcanStaffForm
 	gender varchar(10),
 	providerName varchar(100),
 	clientFormProviderName varchar(100),	
+	consent varchar(50),
 	index(startDate),
 	index(completionDate)
 );

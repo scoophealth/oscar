@@ -102,7 +102,9 @@ insert into OcanFormOption values (1274,"1.2","Client Camberwell Need","9","9 - 
 
 insert into OcanFormOption values (1275,'1.2','Ethniticity','CAN','Canadian');
 
-
+insert into OcanFormOption values (1276,'1.2','IAR Consent','NOT_SPECIFIED','Not Specified');
+insert into OcanFormOption values (1277,'1.2','IAR Consent','GRANT','Grant');
+insert into OcanFormOption values (1278,'1.2','IAR Consent','DENY','Deny');
 
 
 

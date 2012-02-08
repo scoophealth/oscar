@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+	File Name	:	IAR_Submission_v2.0.wsdl 
+	Version		:	2.0
+	Description	: 	IAR assessment data upload Web Service definition
+	Developed by:	Ontario Ministry of Health, Community Care Information Management (CCIM) Program
+	History		:	09-Mar-2010, initial version
+			:	12-April-2010, SOAP FAULT definitions moved into WSDL file from SubmissionDefinitions schema
+			:	21-April-2010, converted operation into request-respose model
+			:	4-May-2010, added Transaction Id to return value, v1.1
+			:	18-Apr-2011, created new definition for v2.0
+  -->
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:y="http://new.webservice.namespace" xmlns:tns="http://iar.on.ca/definition" xmlns:types="http://iar.on.ca/types" name="IAR_Submission" targetNamespace="http://iar.on.ca/definition">
+	<wsdl:types>
+		<xs:schema targetNamespace="http://iar.on.ca/types" xmlns:iar="http://iar.on.ca/types">
+			<xs:include schemaLocation="IARSubmissionDefinitions_v2.0.xsd"/>
+			<xs:element name="SubmissionResult" type="iar:SubmissionResultType">
+				<xs:annotation>
+					<xs:documentation>result returned from web service</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:complexType name="SubmissionResultType">
+				<xs:annotation>
+					<xs:documentation>Submission Result Type</xs:documentation>
+				</xs:annotation>
+				<xs:sequence>
+					<xs:element name="Result">
+						<xs:annotation>
+							<xs:documentation>true, if operation successfully executed</xs:documentation>
+						</xs:annotation>
+						<xs:complexType>
+							<xs:simpleContent>
+								<xs:extension base="xs:boolean">
+									<xs:attribute name="transactionId" type="xs:string" use="required">
+										<xs:annotation>
+											<xs:documentation>internal IAR tracking id</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+								</xs:extension>
+							</xs:simpleContent>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="ErrorCode" type="xs:string" minOccurs="0"/>
+					<xs:element name="DetailMessage" type="xs:string" minOccurs="0"/>
+				</xs:sequence>
+			</xs:complexType>
+		</xs:schema>
+	</wsdl:types>
+	<wsdl:message name="SubmissionInput">
+		<wsdl:part name="body" element="types:IARSubmission"/>
+	</wsdl:message>
+	<wsdl:message name="SubmissionResponse">
+		<wsdl:part name="body" element="types:SubmissionResult"/>
+	</wsdl:message>
+	<wsdl:portType name="SubmissionPortType">
+		<wsdl:operation name="SubmitAssessment">
+			<wsdl:input message="tns:SubmissionInput"/>
+			<wsdl:output message="tns:SubmissionResponse"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="SubmissionBinding" type="tns:SubmissionPortType">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="SubmitAssessment">
+			<soap:operation soapAction="http://iar.on.ca/SubmitAssessment" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="SubmissionService">
+		<wsdl:port name="SubmissionPort" binding="tns:SubmissionBinding">
+			<soap:address location="" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>
