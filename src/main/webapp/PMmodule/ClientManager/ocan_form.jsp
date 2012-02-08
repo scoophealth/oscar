@@ -537,7 +537,15 @@ Client date of birth : <%=ocanStaffForm.getClientDateOfBirth()%>
 				<input id="completionDate" name="completionDate" onfocus="this.blur()" readonly="readonly" class="{validate: {required:true}}" type="text" value="<%=ocanStaffForm.getFormattedCompletionDate()%>"> <img title="Calendar" id="cal_completionDate" src="../../images/cal.gif" alt="Calendar" border="0"><script type="text/javascript">Calendar.setup({inputField:'completionDate',ifFormat :'%Y-%m-%d',button :'cal_completionDate',align :'cr',singleClick :true,firstDay :1});</script>					
 			</td>
 		</tr>
-	
+
+		<tr>
+			<td class="genericTableHeader">IAR Consent</td>
+			<td class="genericTableData">
+				<select name="consent" id="consent" class="{validate: {required:true}}">
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "consent", OcanForm.getOcanFormOptions("IAR Consent"),ocanStaffForm.getConsent(),prepopulationLevel)%>
+				</select>
+			</td>
+		</tr>	
 		
 		<tr><td colspan="2">
 		<h3>Consumer Information Summary</h3>
