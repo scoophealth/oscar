@@ -50,8 +50,8 @@ public class AllergyDao extends AbstractDao<Allergy> {
     public List<Allergy> findActiveAllergies(Integer demographic_no, String archivedString) {
     	String sql = "select x from Allergy x where x.demographicNo=?2 and x.archived = ?1";
     	Query query = entityManager.createQuery(sql);
-    	query.setParameter(1,demographic_no);
-    	query.setParameter(2,archivedString);
+    	query.setParameter(2,demographic_no);
+    	query.setParameter(1,archivedString);
     	
         @SuppressWarnings("unchecked")
         List<Allergy> allergies = query.getResultList();
