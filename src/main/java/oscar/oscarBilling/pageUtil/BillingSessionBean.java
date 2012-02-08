@@ -25,7 +25,7 @@ package oscar.oscarBilling.pageUtil;
 
 import java.util.ArrayList;
 
-public class BillingSessionBean {
+public class BillingSessionBean implements java.io.Serializable {
     private String apptProviderNo = null;
     private String patientName 	  = null;
     private String providerView	  = null;

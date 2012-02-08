@@ -97,8 +97,14 @@
     if(searchMode.equals("search_chart_no")) fieldname="chart_no";
     if(searchMode.equals("search_name")) {
 	  	matchingDemographicParameters=new MatchingDemographicParameters();
-    	matchingDemographicParameters.setFirstName(keyword);
-    	matchingDemographicParameters.setLastName(keyword);
+	  	String[] lastfirst = keyword.split(",");
+
+        if (lastfirst.length > 1) {
+            matchingDemographicParameters.setLastName(lastfirst[0].trim());
+            matchingDemographicParameters.setFirstName(lastfirst[1].trim());
+        }else{
+            matchingDemographicParameters.setLastName(lastfirst[0].trim());
+        }
 
     	if(keyword.indexOf(",")==-1)  fieldname="lower(last_name)";
       else if(keyword.trim().indexOf(",")==(keyword.trim().length()-1)) fieldname="lower(last_name)";
@@ -195,12 +201,16 @@
    	//--- add integrator results ---
 	if (matchingDemographicParameters!=null && loggedInInfo.currentFacility.isIntegratorEnabled())
 	{
-		matchingDemographicParameters.setMaxEntriesToReturn(5);
-		matchingDemographicParameters.setMinScore(7);
-		List<MatchingDemographicTransferScore> integratorSearchResults=DemographicSearchHelper.getIntegratedSearchResults(matchingDemographicParameters);
-
-		MiscUtils.getLogger().debug("Integrator search results : "+MiscUtils.getSize(integratorSearchResults) );
-		request.setAttribute("integratorSearchResults", integratorSearchResults);
+		try{
+			matchingDemographicParameters.setMaxEntriesToReturn(5);
+			matchingDemographicParameters.setMinScore(7);
+			List<MatchingDemographicTransferScore> integratorSearchResults=DemographicSearchHelper.getIntegratedSearchResults(matchingDemographicParameters);
+	
+			MiscUtils.getLogger().debug("Integrator search results : "+MiscUtils.getSize(integratorSearchResults) );
+			request.setAttribute("integratorSearchResults", integratorSearchResults);
+		}catch(Exception e){
+			log("error searching integrator", e);
+		}
 	}
    	
 	String pg=apptMainBean.whereTo();
