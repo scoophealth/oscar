@@ -747,13 +747,6 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			sentIds.append("," + eDoc.getDocId());
 		}
 
-		List<EDoc> publicDocs = EDocUtil.listDocs("demographic", demographicId.toString(), "all", EDocUtil.PUBLIC, EDocUtil.SORT_OBSERVATIONDATE, "active");
-		for (EDoc eDoc : publicDocs) {
-			sendSingleDocument(lastDataUpdated, demographicWs, eDoc, demographicId);
-			throttleAndChecks();
-			sentIds.append("," + eDoc.getDocId());
-		}
-
 		conformanceTestLog(facility, "EDoc", sentIds.toString());
 	}
 
