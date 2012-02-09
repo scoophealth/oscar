@@ -877,7 +877,10 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     // RISK FACTORS
                     if (StringUtils.filled(riskFactors)) {
                         RiskFactors rFact = patientRec.addNewRiskFactors();
+                        
+                        if (riskFactors.length()>120) riskFactors = riskFactors.substring(0, 120);
                         rFact.setRiskFactor(riskFactors);
+                        
                         summary = Util.addSummary("Risk Factor", riskFactors);
                         addOneEntry(RISKFACTOR);
 
