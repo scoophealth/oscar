@@ -199,7 +199,15 @@
 
 	LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
    	//--- add integrator results ---
-	if (matchingDemographicParameters!=null && loggedInInfo.currentFacility.isIntegratorEnabled())
+   	
+   	boolean searchIntegrator = false;
+   	if (request.getParameter("includeIntegratedResults") != null && "true".equals(request.getParameter("includeIntegratedResults"))){
+   		searchIntegrator = true;
+   	}
+   	MiscUtils.getLogger().debug("search Integrator: "+searchIntegrator);
+   	
+   	
+	if (searchIntegrator && matchingDemographicParameters!=null && loggedInInfo.currentFacility.isIntegratorEnabled())
 	{
 		try{
 			matchingDemographicParameters.setMaxEntriesToReturn(5);
