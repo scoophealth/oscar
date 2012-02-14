@@ -1,9 +1,25 @@
+<%@page import="org.oscarehr.common.dao.SiteDao"%>
+<%@page import="org.oscarehr.common.model.Site"%>
+<%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
+<%@page import="org.springframework.web.context.WebApplicationContext"%>
+<%!
+	private List<Site> sites = new ArrayList<Site>();
+	private HashMap<String,String[]> siteBgColor = new HashMap<String,String[]>();
+%>
 
 <%@page import="org.apache.commons.lang.StringUtils"%>
 <%@page import="oscar.util.DateUtils"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.DemographicWs"%>
 <%
-  
+if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
+	SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
+	sites = siteDao.getAllActiveSites(); 
+	//get all sites bgColors
+	for (Site st : sites) {
+		siteBgColor.put(st.getName(), new String[]{st.getBgColor(), st.getShortName()});
+	}
+}
+
   String curProvider_no = (String) session.getAttribute("user");
   String demographic_no = request.getParameter("demographic_no");
   String strLimit1="0";
@@ -181,10 +197,16 @@ function popupPageNew(vheight,vwidth,varpage) {
 				<TH width="15%"><b><bean:message
 					key="demographic.demographicappthistory.msgProvider" /></b></TH>
 				<plugin:hideWhenCompExists componentName="specialencounterComp" reverse="true">
-					<TH><b>EYE FORM</b></TH>
+				<special:SpecialEncounterTag moduleName="eyeform">   
+					<TH width="5%"><b>EYE FORM</b></TH>
+				</special:SpecialEncounterTag>
 				</plugin:hideWhenCompExists>
-				<TH width="10%"><b><bean:message
-					key="demographic.demographicappthistory.msgComments" /></b></TH>
+				<TH><b><bean:message key="demographic.demographicappthistory.msgComments" /></b></TH>
+				
+				<% if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) { %>
+					<TH width="5%">Location</TH>
+				<% } %>
+				
 			</tr>
 			<%
   int iRSOffSet=0;
@@ -255,6 +277,7 @@ function popupPageNew(vheight,vwidth,varpage) {
       <td><a href="#" onclick="popupPage(800,1000,'<%=request.getContextPath()%>/mod/specialencounterComp/EyeForm.do?method=view&appHis=true&demographicNo=<%=request.getParameter("demographic_no")%>&appNo=<%=rs.getString("appointment_no")%>')">eyeform</a></td>
       </special:SpecialEncounterTag>
       </plugin:hideWhenCompExists>
+
       <% String remarks = apptMainBean.getString(rs,"remarks");
          String comments = "";
          boolean newline = false;
@@ -276,6 +299,12 @@ function popupPageNew(vheight,vwidth,varpage) {
          }
       %>
       <td>&nbsp;<%=remarks%><% if(newline){%><br/>&nbsp;<%}%><%=comments%></td>
+      <% if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) { 
+	String[] sbc = siteBgColor.get(apptMainBean.getString(rs,"location")); 
+      %>      
+	<td style='background-color:<%= sbc[0] %>'><%= sbc[1] %></td>
+      <% } %>      
+
 </tr>
 <%
     }

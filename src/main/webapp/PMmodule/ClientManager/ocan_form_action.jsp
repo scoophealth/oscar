@@ -15,7 +15,7 @@
 <%
 	@SuppressWarnings("unchecked")
 	HashMap<String,String[]> parameters=new HashMap(request.getParameterMap());
-	
+
 	if(request.getParameter("ocanType")!=null && request.getParameter("ocanType").equalsIgnoreCase("full")) {
 		if(parameters.get("1_where_live")[0].equals("024-01") || parameters.get("1_where_live")[0].equals("024-02") ||
 				parameters.get("1_where_live")[0].equals("024-05") || parameters.get("1_where_live")[0].equals("024-06") ||

@@ -556,13 +556,25 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
             <div class="input">
 
 <% // multisites start ==================
+boolean isSiteSelected = false;
 if (bMultisites) { %>
 				<select tabindex="4" name="location" style="background-color: <%=colo%>" onchange='this.style.backgroundColor=this.options[this.selectedIndex].style.backgroundColor'>
-				<% for (Site s:sites) { %>
-					<option value="<%=s.getName()%>" style="background-color: <%=s.getBgColor()%>" <%=s.getName().equals(loc)?"selected":"" %>><%=s.getName()%></option>
-				<% } %>
+				<% 
+					StringBuilder sb = new StringBuilder();
+					for (Site s:sites) { 
+						if (s.getName().equals(loc)) isSiteSelected = true; // added by vic 
+						sb.append("<option value=\"").append(s.getName()).append("\" style=\"background-color: ").append(s.getBgColor()).append("\" ").append(s.getName().equals(loc)?"selected":"").append(">").append(s.getName()).append("</option>");
+					}
+					if (isSiteSelected) {
+						out.println(sb.toString());
+					} else {
+						out.println("<option value='"+loc+"'>"+loc+"</option>");
+					}
+				%>
+				
 				</select>
 <% } else { 
+	isSiteSelected = true;
 	// multisites end ==================
 %>				           
             <INPUT TYPE="TEXT" NAME="location" tabindex="4"
@@ -648,6 +660,8 @@ if (bMultisites) { %>
             <div class="input"></div>
         </li>
     </ul>
+    
+<% if (isSiteSelected) { %>    
 <table class="buttonBar deep">
 	<tr>
         <td align="left"><input type="submit" class="rightButton blueButton top" id="updateButton"
@@ -675,6 +689,8 @@ if (bMultisites) { %>
 			onclick="onButRepeat()"></td>
 	</tr>
 </table>
+<% } %>
+
 </div>
 <div id="bottomInfo">
 <table width="95%" align="center">
@@ -688,6 +704,8 @@ if (bMultisites) { %>
 	</tr>
 </table>
 <hr />
+
+<% if (isSiteSelected) { %>
 <table width="95%" align="center">
 	<tr>
 		<td><input type="submit"
@@ -700,6 +718,7 @@ if (bMultisites) { %>
 		</td>
 	</tr>
 </table>
+<% } %>
 
 
 </div>
