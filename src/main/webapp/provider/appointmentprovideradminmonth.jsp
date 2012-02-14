@@ -146,6 +146,9 @@ if (bMultisites) {
 	for (Site s : curUserSites) {
 		CurrentSiteMap.put(s.getName(),"Y");
 	}
+	
+	CurrentSiteMap.put("NONE", "Y"); // added by vic for the reason that some provider could work in multiple clinics in same day, when the schedule template will set the default location to NONE.
+
 	// a site has been seleceted
 	if (selectedSite != null) {
 		//get site provider list
@@ -337,8 +340,11 @@ function refresh1() {
   var u = self.location.href;
   if(u.lastIndexOf("&providerview=") > 0) {
     self.location.href = u.substring(0,u.lastIndexOf("&providerview=")) ;
+  } 
+  if(u.lastIndexOf("&mygroup_no=") > 0) { // group switch should be treated same as provider switch
+		    self.location.href = u.substring(0,u.lastIndexOf("&mygroup_no=")) ;
   } else {
-    history.go(0);
+  history.go(0);
   }
 }
 
@@ -744,7 +750,7 @@ function refreshTabAlerts(id) {
       if(String.valueOf(date.get("available")).equals("0")) continue;
     }
     if(isTeamOnly || !providerview.startsWith("_grp_",0) || myGrpBean.containsKey(String.valueOf(date.get("provider_no"))) ) {
-    	if (bMultisites && CurrentSiteMap.get((String)date.get("reason")) != null && ( selectedSite == null || (selectedSite != null && selectedSite.equals((String)date.get("reason"))))) {
+    	if (bMultisites && CurrentSiteMap.get((String)date.get("reason")) != null && ( selectedSite == null || "NONE".equals(date.get("reason")) || selectedSite.equals((String)date.get("reason")))) {
 %> <br>
 <% if (bMultisites) { out.print(getSiteHTML((String)date.get("reason"), sites)); } %>
 					<span class='datepname'>&nbsp;<%=providerNameBean.getShortDef(String.valueOf(date.get("provider_no")),"",NameMaxLen )%></span><span
