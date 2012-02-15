@@ -324,7 +324,6 @@ public class CihiExportAction extends DispatchAction {
 		info.setOrganizationName(frm.getString("orgName"));
 		info.setContactLastName(frm.getString("contactLName"));
 		info.setContactFirstName(frm.getString("contactFName"));
-		info.setContactPhoneNumber(Util.onlyNum(frm.getString("contactPhone")));
 		info.setContactEmail(frm.getString("contactEmail"));
 		info.setContactUserName(frm.getString("contactUserName"));
 		info.setEMRVendorID(frm.getString("vendorId"));
@@ -333,13 +332,17 @@ public class CihiExportAction extends DispatchAction {
 		info.setEMRSoftwareName(frm.getString("vendorSoftware"));
 		info.setEMRSoftwareCommonName(frm.getString("vendorSoftwareCommonName"));
 		info.setEMRSoftwareVersionNumber(frm.getString("vendorSoftwareVer"));
+		
+		String contactPhoneNumber = Util.onlyNum(frm.getString("contactPhone"));
+		if (contactPhoneNumber.length()>12) contactPhoneNumber = contactPhoneNumber.substring(0,12);
+		info.setContactPhoneNumber(contactPhoneNumber);
 
-                Date installDate = UtilDateUtilities.StringToDate(frm.getString("installDate"),"yyyy-MM-dd hh:mm aa");
-                if (installDate==null) installDate = new Date();
+		Date installDate = UtilDateUtilities.StringToDate(frm.getString("installDate"),"yyyy-MM-dd hh:mm aa");
+		if (installDate==null) installDate = new Date();
                 
-                Calendar installCalendar = Calendar.getInstance();
-                installCalendar.setTime(installDate);
-                info.setEMRSoftwareVersionDate(installCalendar);
+		Calendar installCalendar = Calendar.getInstance();
+		installCalendar.setTime(installDate);
+		info.setEMRSoftwareVersionDate(installCalendar);
 	}
 	
 	private void buildProvider(Provider provider, cdscihi.ProviderDocument.Provider xmlProvider, Map<String,String> fileNamesMap) {
@@ -637,8 +640,10 @@ public class CihiExportAction extends DispatchAction {
             if( endDate != null ) {
             	Util.putPartialDate(riskFactors.addNewEndDate(), endDate, endDateFormat);
             }
-                                    
-            riskFactors.setRiskFactor(caseManagementNote.getNote());                                    
+
+            String riskFactorContent = caseManagementNote.getNote();
+            if (riskFactorContent.length()>120) riskFactorContent = riskFactorContent.substring(0, 120);
+            riskFactors.setRiskFactor(riskFactorContent);                                    
 		}
 	}
 	
