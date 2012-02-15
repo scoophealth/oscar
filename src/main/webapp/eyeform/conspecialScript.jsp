@@ -51,25 +51,29 @@ function currentProAdd(val,ob) {
 //lets modify some existing HTML
 jQuery(document).ready(function(){
 	jQuery("#clinicalInfoButtonBar").html("");
-	
+
 	jQuery("#clinicalInfoButtonBar").append("<input type=\"button\" class=\"btn\" value=\"Current History\" onclick=\"currentProAdd('cHis','clinicalInformation');\"/>&nbsp;");
-	jQuery("#clinicalInfoButtonBar").append("<input type=\"button\" class=\"btn\" value=\"Past Ocular History\" onclick=\"currentProAdd('pHis','clinicalInformation');\"/>&nbsp;");	
-	jQuery("#clinicalInfoButtonBar").append("<input class=\"btn\" value=\"Medical History\" onclick=\"currentProAdd('mHis','clinicalInformation');\" type=\"button\">&nbsp");	
-	jQuery("#clinicalInfoButtonBar").append("<input class=\"btn\" value=\"Family History\" onclick=\"currentProAdd('fHis','clinicalInformation');\" type=\"button\">&nbsp");	
-	jQuery("#clinicalInfoButtonBar").append("<input type=\"button\" class=\"btn\" value=\"Specs History\" onclick=\"currentProAdd('specs','clinicalInformation');\"/>&nbsp;");	
-	jQuery("#clinicalInfoButtonBar").append("<br/>");															
-	jQuery("#clinicalInfoButtonBar").append("<input type=\"button\" class=\"btn\" value=\"Diagnostic Notes\" onclick=\"currentProAdd('dTest','clinicalInformation');\"/>&nbsp;");	
+	jQuery("#clinicalInfoButtonBar").append("<input type=\"button\" class=\"btn\" value=\"Past Ocular History\" onclick=\"currentProAdd('pHis','clinicalInformation');\"/>&nbsp;");
+	jQuery("#clinicalInfoButtonBar").append("<input class=\"btn\" value=\"Medical History\" onclick=\"currentProAdd('mHis','clinicalInformation');\" type=\"button\">&nbsp");
+	jQuery("#clinicalInfoButtonBar").append("<input class=\"btn\" value=\"Family History\" onclick=\"currentProAdd('fHis','clinicalInformation');\" type=\"button\">&nbsp");
+	jQuery("#clinicalInfoButtonBar").append("<input type=\"button\" class=\"btn\" value=\"Specs History\" onclick=\"currentProAdd('specs','clinicalInformation');\"/>&nbsp;");
+	jQuery("#clinicalInfoButtonBar").append("<br/>");
+	jQuery("#clinicalInfoButtonBar").append("<input type=\"button\" class=\"btn\" value=\"Diagnostic Notes\" onclick=\"currentProAdd('dTest','clinicalInformation');\"/>&nbsp;");
 	jQuery("#clinicalInfoButtonBar").append("<input type=\"button\" class=\"btn\" value=\"Ocular Procedures\" onclick=\"currentProAdd('oProc','clinicalInformation');\"/>&nbsp;");
 	jQuery("#clinicalInfoButtonBar").append("<input type=\"button\" class=\"btn\" value=\"Impression/Plan\" onclick=\"currentProAdd('impress','clinicalInformation');\"/>&nbsp;");
-	
-	
+
+
 	jQuery("#concurrentProblemsButtonBar").html("");
 	jQuery("#concurrentProblemsButtonBar").append("<input type=\"button\" class=\"btn\" value=\"Family History\" onclick=\"currentProAdd('fHis','concurrentProblems');\" />&nbsp;");
 	jQuery("#concurrentProblemsButtonBar").append("<input type=\"button\" class=\"btn\" value=\"Medical History\" onclick=\"currentProAdd('mHis','concurrentProblems');\" />&nbsp;");
 	jQuery("#concurrentProblemsButtonBar").append("<input type=\"button\" class=\"btn\" value=\"Other Meds\" onclick=\"currentProAdd('otherMeds','concurrentProblems');\" />&nbsp;");
-	
+
 	jQuery("#medsButtonBar").html("");
 	jQuery("#medsButtonBar").append("<input type=\"button\" class=\"btn\" value=\"Ocular Meds\" onclick=\"currentProAdd('oMeds','currentMedications');\"/>&nbsp;");
 	jQuery("#medsButtonBar").append("<input type=\"button\" class=\"btn\" value=\"Other Meds\" onclick=\"currentProAdd('otherMeds','currentMedications');\"/>&nbsp;");
-			
+
+	jQuery("#ext_specialProblem").val('<%=request.getAttribute("specialProblem") %>');
+	if(jQuery("[name='ext_appNo']").val() == 'null') {
+		jQuery("[name='ext_appNo']").val('<%=request.getAttribute("appNo") %>');
+	}
 });
