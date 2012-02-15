@@ -2108,6 +2108,7 @@ function saveNoteAjax(method, chain) {
     var url = ctx + "/CaseManagementEntry.do";
 
     $("notCPP").update("Loading...");
+
 	var objAjax = new Ajax.Request (
                             url,
                             {
@@ -2120,7 +2121,6 @@ function saveNoteAjax(method, chain) {
 												if( fullChart == "true" ) {
 													$("quickChart").innerHTML = quickChartMsg;
 													$("quickChart").onclick = function() {return viewFullChart(false);}
-
 												}
 												else {
 													$("quickChart").innerHTML = fullChartMsg;
@@ -2133,18 +2133,6 @@ function saveNoteAjax(method, chain) {
                             }
 
                       );
-
-	jQuery("span[note_addon]").each(function(i){
-		var func = jQuery(this).attr('note_addon');
-		eval(func + "()");
-	});
-
-
-	jQuery("[submit_addon]").each(function()
-    		   {
-    		     jQuery("#"+jQuery(this).attr('submit_addon')).click();
-    		   }
-    		 );
 
     return false;
 }
