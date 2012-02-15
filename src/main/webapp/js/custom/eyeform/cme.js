@@ -150,7 +150,6 @@
        }});
 
 
-
        init();
 
        //left nav bar
@@ -207,8 +206,6 @@
        popColumn(ctx + "/oscarEncounter/displayExaminationHistory.do?hC=009999&appointment_no="+appointmentNo,"examhistory","examhistory", "leftNavBar", this);
        reorderNavBarElements('examhistory','photos');
        notifyIssueUpdate();
-
-       jQuery("form[name='caseManagementEntryForm']").append('<span submit_addon="save_measurements"></span>');
 
      });
 
@@ -270,4 +267,10 @@
        });
        jQuery("#assignIssueSection").html("<span>&nbsp;</span>");
        jQuery("#caseNote_note"+savedId).css('height','10em');
+       jQuery("#saveImg, #signSaveImg, #signVerifyImg").bind('click',function() {
+    	   jQuery("#save_measurements").click();
+    	   saveEyeformNote();
+       });
+
+
    }
