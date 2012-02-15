@@ -176,6 +176,10 @@ public class EyeformAction extends DispatchAction {
 			   requestId = Integer.parseInt(reqId);
 		   }
 
+		   if(requestId>0) {
+			   String tmp = consultationRequestExtDao.getConsultationRequestExtsByKey(requestId, "appNo");
+        	   appNo = Integer.parseInt(tmp);
+		   }
 		   request.setAttribute("providerList", providerDao.getActiveProviders());
 		   request.setAttribute("re_demoNo", demo);
 /*
