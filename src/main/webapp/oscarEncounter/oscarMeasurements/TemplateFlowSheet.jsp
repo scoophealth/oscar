@@ -189,10 +189,10 @@ div.headPrevention a:visited { color:black; }
 }
 
 
-div.headPrevention a:active { color:blue; }
-div.headPrevention a:hover { color:blue; }
-div.headPrevention a:link { color:blue; }
-div.headPrevention a:visited { color:blue; }
+div.headPrevention a:active { color:black; }
+div.headPrevention a:hover { color:black; }
+div.headPrevention a:link { color:black; }
+div.headPrevention a:visited { color:black; }
 
 div.headPrevention p {
     background: #ddddff;
@@ -402,9 +402,9 @@ div.recommendations li{
         <%=flowSheet%>
     </td>
     <td class="MainTableTopRowRightColumn">
-        <table class="TopStatusBar">
+        <table class="TopStatusBar" cellpadding="2">
             <tr>
-                <td >
+                <td colspan="3>
                     <oscar:nameage demographicNo="<%=demographic_no%>"/>
                     <oscar:oscarPropertiesCheck property="SPEC3" value="yes"> 
                     <span class="DoNotPrint">
@@ -419,7 +419,12 @@ div.recommendations li{
                     <a href="TemplateFlowSheet.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>">All</a>
                     &nbsp;
                     <a href="TemplateFlowSheetPrint.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>">Custom Print</a>
-                    <br>
+                  </span>
+                </td>
+             </tr>
+             <tr>
+             	<td>
+               		<span class="DoNotPrint">
                     #Of Elements <input type="text" size="3" id="numEle"/>
                     
                     Start Date <input type="text" size="10" id="flowsheetStartDate" />
@@ -428,10 +433,10 @@ div.recommendations li{
                     </span>
                     </oscar:oscarPropertiesCheck>
                 </td>
-                <td  >&nbsp;
-
+                <td>
+                &nbsp;
                 </td>
-                <td style="text-align:right">
+                <td style="text-align:right" valign="bottom">
                     <oscar:help keywords="measurement" key="app.top1"/> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about" /></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license" /></a>
                 </td>
             </tr>
@@ -440,9 +445,9 @@ div.recommendations li{
 </tr>
 <tr>
 <td class="MainTableLeftColumn" valign="top">
-	<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
+	<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">  
     <% if (recList.size() > 0){ %>
-    <p></p><a class="DoNotPrint" href="javascript: function myFunction() {return false; }"  onclick="javascript:fsPopup(465,635,'AddMeasurementData.jsp?demographic_no=<%=demographic_no%><%=recListBuffer.toString()%>&amp;template=<%=temp%>','addMeasurementData<%=Math.abs( "ADDTHEMALL".hashCode() ) %>')">
+    <p><a class="DoNotPrint" href="javascript: function myFunction() {return false; }"  onclick="javascript:fsPopup(760,670,'AddMeasurementData.jsp?demographic_no=<%=demographic_no%><%=recListBuffer.toString()%>&amp;template=<%=temp%>','addMeasurementData<%=Math.abs( "ADDTHEMALL".hashCode() ) %>')">
         Add Overdue
     </a></p>
     <%}%>
@@ -640,7 +645,7 @@ div.recommendations li{
            <%}%>
            
 		   <security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
-            <a class="noborder" href="javascript: function myFunction() {return false; }"  onclick="javascript:fsPopup(465,635,'AddMeasurementData.jsp?measurement=<%= response.encodeURL( measure) %>&amp;demographic_no=<%=demographic_no%>&amp;template=<%= URLEncoder.encode(temp,"UTF-8") %>','addMeasurementData<%=Math.abs( ((String) h.get("name")).hashCode() ) %>')">
+            <a class="noborder" href="javascript: function myFunction() {return false; }"  onclick="javascript:fsPopup(760,670,'AddMeasurementData.jsp?measurement=<%= response.encodeURL( measure) %>&amp;demographic_no=<%=demographic_no%>&amp;template=<%= URLEncoder.encode(temp,"UTF-8") %>','addMeasurementData<%=Math.abs( ((String) h.get("name")).hashCode() ) %>')">
            </security:oscarSec>
                 <span  class="noborder" style="font-weight:bold;"><%=h2.get("display_name")%></span>
                 
@@ -691,7 +696,7 @@ div.recommendations li{
             }
             
     %>
-    <div class="preventionProcedure" <%=hider%>  onclick="javascript:fsPopup(465,635,'AddMeasurementData.jsp?measurement=<%= response.encodeURL( measure) %>&amp;id=<%=hdata.get("id")%>&amp;demographic_no=<%=demographic_no%>&amp;template=<%= URLEncoder.encode(temp,"UTF-8") %>','addMeasurementData')" >
+    <div class="preventionProcedure" <%=hider%>  onclick="javascript:fsPopup(760,670,'AddMeasurementData.jsp?measurement=<%= response.encodeURL( measure) %>&amp;id=<%=hdata.get("id")%>&amp;demographic_no=<%=demographic_no%>&amp;template=<%= URLEncoder.encode(temp,"UTF-8") %>','addMeasurementData')" >
         <p <%=indColour%> title="fade=[on] header=[<%=hdata.get("age")%> -- Date:<%=hdata.get("prevention_date")%>] body=[<%=com%>&lt;br/&gt;Entered By:<%=mdb.getProviderFirstName()%> <%=mdb.getProviderLastName()%>]"><%=h2.get("value_name")%>: <%=hdata.get("age")%> <br/>
             <%=hdata.get("prevention_date")%>&nbsp;<%=mdb.getNumMonthSinceObserved()%>M
             <%if (comb) {%>
