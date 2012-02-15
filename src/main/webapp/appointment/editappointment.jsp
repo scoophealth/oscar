@@ -228,7 +228,37 @@ function checkTimeTypeIn(obj) {
 	}
 }
 <% if (apptObj!=null) { %>
-function pasteAppt() {
+function pasteAppt(multipleSameDayGroupAppt) {
+    
+        var warnMsgId = document.getElementById("tooManySameDayGroupApptWarning");
+        
+        if (multipleSameDayGroupAppt) {
+           warnMsgId.style.display = "block";
+           if (document.EDITAPPT.updateButton) {
+              document.EDITAPPT.updateButton.style.display = "none";
+           }
+           if (document.EDITAPPT.groupButton) {
+              document.EDITAPPT.groupButton.style.display = "none";
+           }
+           if (document.EDITAPPT.deleteButton){
+              document.EDITAPPT.deleteButton.style.display = "none";
+           }
+           if (document.EDITAPPT.cancelButton){
+              document.EDITAPPT.cancelButton.style.display = "none";
+           }           
+           if (document.EDITAPPT.noShowButton){
+              document.EDITAPPT.noShowButton.style.display = "none";
+           }           
+           if (document.EDITAPPT.labelButton) {
+                document.EDITAPPT.labelButton.style.display = "none";
+           }           
+           if (document.EDITAPPT.repeatButton) {
+                document.EDITAPPT.repeatButton.style.display = "none";
+           }
+        }
+        else {
+           warnMsgId.style.display = "none";    
+        }
 	document.EDITAPPT.status.value = "<%=apptObj.getStatus()%>";
 	document.EDITAPPT.duration.value = "<%=apptObj.getDuration()%>";
 	document.EDITAPPT.chart_no.value = "<%=apptObj.getChart_no()%>";
@@ -288,7 +318,7 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
 <div id="editAppointment" style="display:<%= (isMobileOptimized && bFirstDisp) ? "none":"block"%>;">
 <FORM NAME="EDITAPPT" METHOD="post" ACTION="appointmentcontrol.jsp"
 	onSubmit="return(onSub())"><INPUT TYPE="hidden"
-	NAME="displaymode" value="">
+	NAME="displaymode" value=""> 
     <div class="header deep">
         <div class="title">
             <!-- We display a shortened title for the mobile version -->
@@ -342,7 +372,43 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
 			alert = (String) detail.get("cust3");
 		}
 	}
+        
+        OscarProperties props = OscarProperties.getInstance();
+        String displayStyle="display:none";
+        String myGroupNo = (String) session.getAttribute("groupno");  
+        boolean bMultipleSameDayGroupAppt = false;
+        if (props.getProperty("allowMultipleSameDayGroupAppt", "").equalsIgnoreCase("no")) {  
 
+            if (!bFirstDisp && !demono.equals("0") && !demono.equals("")) {
+                String [] sqlParam = new String[3] ;
+                sqlParam[0] = myGroupNo; //schedule group
+                sqlParam[1] = demono;
+                sqlParam[2] = strApptDate;
+
+                List<Map<String,Object>> resultList = oscarSuperManager.find("appointmentDao", "search_group_day_appt", sqlParam);
+                long numSameDayGroupAppts = resultList.size() > 0 ? (Long)resultList.get(0).get("numAppts") : 0;
+                bMultipleSameDayGroupAppt = (numSameDayGroupAppts > 0);
+            }
+            
+            if (bMultipleSameDayGroupAppt){
+                displayStyle="display:block";
+            }
+%>
+<div id="tooManySameDayGroupApptWarning" style="<%=displayStyle%>">
+    <table width="98%" BGCOLOR="red" border=1 align='center'> 
+        <tr>
+            <th>
+                <font color='white'> 
+                    <bean:message key='appointment.addappointment.titleMultipleGroupDayBooking'/><br/>
+                    <bean:message key='appointment.addappointment.MultipleGroupDayBooking'/>
+                </font>
+            </th>
+        </tr>
+    </table>
+</div>
+ <%            
+        }
+   
     //RJ 07/12/2006
     //If page is loaded first time hit db for patient's family doctor
     //Else if we are coming back from search this has been done for us
@@ -422,7 +488,6 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
             List<Site> sites = siteDao.getActiveSitesByProviderNo((String) session.getAttribute("user"));
             // multisites end ==================
 
-            OscarProperties props = OscarProperties.getInstance();
             boolean bMoreAddr = bMultisites? true : props.getProperty("scheduleSiteID", "").equals("") ? false : true;
 
             String loc = bFirstDisp?((String)appt.get("location")):request.getParameter("location");
@@ -664,29 +729,35 @@ if (bMultisites) { %>
 <% if (isSiteSelected) { %>    
 <table class="buttonBar deep">
 	<tr>
+            <% if (!bMultipleSameDayGroupAppt) { %>
         <td align="left"><input type="submit" class="rightButton blueButton top" id="updateButton"
 			onclick="document.forms['EDITAPPT'].displaymode.value='Update Appt'; onButUpdate();"
 			value="<bean:message key="appointment.editappointment.btnUpdateAppointment"/>">
-		<input type="submit"
+             <% if (!props.getProperty("allowMultipleSameDayGroupAppt", "").equalsIgnoreCase("no")) {%>
+		<input type="submit" id="groupButton"
 			onclick="document.forms['EDITAPPT'].displaymode.value='Group Action'; onButUpdate();"
 			value="<bean:message key="appointment.editappointment.btnGroupAction"/>">
+             <% }%>
 		<input type="submit" class="redButton button" id="deleteButton"
 			onclick="document.forms['EDITAPPT'].displaymode.value='Delete Appt'; onButDelete();"
 			value="<bean:message key="appointment.editappointment.btnDeleteAppointment"/>">
-		<input type="button" name="buttoncancel"
+		<input type="button" name="buttoncancel" id="cancelButton"
 			value="<bean:message key="appointment.editappointment.btnCancelAppointment"/>"
 			onClick="onButCancel();"> <input type="button"
-			name="buttoncancel"
+			name="buttoncancel" id="noShowButton"
 			value="<bean:message key="appointment.editappointment.btnNoShow"/>"
 			onClick="window.location='appointmentcontrol.jsp?buttoncancel=No Show&displaymode=Update Appt&appointment_no=<%=appointment_no%>'">
 		</td>
-		<td align="right" nowrap><input type="button" name="labelprint"
+		<td align="right" nowrap><input type="button" name="labelprint" id="labelButton"
 			value="<bean:message key="appointment.editappointment.btnLabelPrint"/>"
 			onClick="window.open('../demographic/demographiclabelprintsetting.jsp?demographic_no='+document.EDITAPPT.demographic_no.value, 'labelprint','height=550,width=700,location=no,scrollbars=yes,menubars=no,toolbars=no' )">
 		<!--input type="button" name="Button" value="<bean:message key="global.btnExit"/>" onClick="self.close()"-->
-		<input type="button"
+		 <% if (!props.getProperty("allowMultipleSameDayGroupAppt", "").equalsIgnoreCase("no")) {%>
+                    <input type="button" id="repeatButton"
 			value="<bean:message key="appointment.addappointment.btnRepeat"/>"
 			onclick="onButRepeat()"></td>
+                 <% }
+                }%>
 	</tr>
 </table>
 <% } %>
@@ -712,8 +783,23 @@ if (bMultisites) { %>
 			onclick="document.forms['EDITAPPT'].displaymode.value='Cut';"
 			value="Cut" /> | <input type="submit"
 			onclick="document.forms['EDITAPPT'].displaymode.value='Copy';"
-			value="Copy" /> <% if(apptObj!=null) { %><a href=#
-			onclick="pasteAppt();">Paste</a>
+			value="Copy" /> 
+                     <% 
+                     if(bFirstDisp && apptObj!=null) {
+           
+                            long numSameDayGroupApptsPaste = 0;
+           
+                            if (props.getProperty("allowMultipleSameDayGroupAppt", "").equalsIgnoreCase("no")) {
+                                String [] sqlParam = new String[3] ;
+                                sqlParam[0] = myGroupNo; //schedule group
+                                sqlParam[1] = apptObj.getDemographic_no();
+                                sqlParam[2] = (String) appt.get("appointment_date").toString();
+
+                                List<Map<String,Object>> resultList = oscarSuperManager.find("appointmentDao", "search_group_day_appt", sqlParam);
+                                numSameDayGroupApptsPaste = resultList.size() > 0 ? (Long)resultList.get(0).get("numAppts") : 0;
+                            }
+                  %><a href=#
+			onclick="pasteAppt(<%=(numSameDayGroupApptsPaste > 0)%>);">Paste</a>
 		<% } %>
 		</td>
 	</tr>
