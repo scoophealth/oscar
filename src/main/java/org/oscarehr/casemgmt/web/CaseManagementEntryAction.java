@@ -2511,25 +2511,35 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		request.setAttribute("demoDOB", dob);
 		String providerNo = getProviderNo(request);
 
-		String[] noteIds;
+		String[] noteIds;		
 		if (ids.length() > 0) noteIds = ids.split(",");
 		else noteIds = (String[]) Array.newInstance(String.class, 0);
 
 		List<CaseManagementNote> notes = new ArrayList<CaseManagementNote>();
-		for (int idx = 0; idx < noteIds.length; ++idx)
-			notes.add(this.caseManagementMgr.getNote(noteIds[idx]));
+		List<String>remoteNoteUUIDs = new ArrayList<String>();
+		String uuid;
+		for (int idx = 0; idx < noteIds.length; ++idx) {
+			if( noteIds[idx].startsWith("UUID")) {
+				uuid = noteIds[idx].substring(4);
+				remoteNoteUUIDs.add(uuid);
+			}
+			else {
+				notes.add(this.caseManagementMgr.getNote(noteIds[idx]));
+			}
+		}
 
 		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-		if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
-			// at this point i realise that we're missing the filtering, i.e.
-			// all remote notes will print instead of the selected ranges
-			// but this is more or less for the purpose of passing OMD conformance 
-			// testing so we'll live with this bug for now.
+		if (loggedInInfo.currentFacility.isIntegratorEnabled() && remoteNoteUUIDs.size() > 0 ) {
 			DemographicWs demographicWs=CaisiIntegratorManager.getDemographicWs();
 			List<CachedDemographicNote> remoteNotes=demographicWs.getLinkedCachedDemographicNotes(Integer.parseInt(demono));
 			for (CachedDemographicNote remoteNote : remoteNotes) {
-				CaseManagementNote fakeNote=getFakedNote(remoteNote);
-				notes.add(fakeNote);
+				for( String remoteUUID : remoteNoteUUIDs ) {
+					if( remoteUUID.equals(remoteNote.getCachedDemographicNoteCompositePk().getUuid())) {
+						CaseManagementNote fakeNote=getFakedNote(remoteNote);
+						notes.add(fakeNote);
+						break;
+					}
+				}
 			}
 		}
 		
