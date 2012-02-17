@@ -159,8 +159,7 @@ public class JdbcBillingCreateBillingFile {
 				+ rightJustify(" ", 4, ch1Obj.getFacilty_num().equals("0000") ? "" : ch1Obj.getFacilty_num())
 				+ rightJustify(" ", 8, getCompactDateStr(ch1Obj.getAdmission_date()))
 				+ rightJustify(" ", 4, ch1Obj.getRef_lab_num()) + rightJustify(" ", 1, ch1Obj.getMan_review())
-				+ rightJustify(" ", 4, ch1Obj.getLocation())
-				+ space(11)
+				+ leftJustify(" ", 4, ch1Obj.getLocation().equals("0000") ? "" : ch1Obj.getLocation()) + space(11)
 				+ space(6);
 		checkHeader1();
 		if (bRMB) {

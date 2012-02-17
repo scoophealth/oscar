@@ -600,7 +600,7 @@ public class JdbcBillingRAImpl {
 
 	public List getRASummary(String id, String providerOhipNo) {
 		List ret = new Vector();
-		String sql = "select billing_no, service_count, error_code, amountclaim, service_code,service_date, "
+		String sql = "select billing_no, claim_no, service_count, error_code, amountclaim, service_code,service_date, "
 				+ "providerohip_no, amountpay, hin from radetail where raheader_no= " + id + " and providerohip_no ="
 				+ providerOhipNo;
 		ResultSet rsdemo = dbObj.searchDBRecord(sql);
@@ -660,10 +660,10 @@ public class JdbcBillingRAImpl {
 				prop.setProperty("demo_name", demo_name);
 				prop.setProperty("demo_hin", demo_hin);
                 prop.setProperty("demo_doc",famProviderNo);
-                if( site != null ) {
-                	prop.setProperty("site", site);
-                }
-                
+                prop.setProperty("claimNo",rsdemo.getString("claim_no"));
+                if(site==null) 
+                	site="";
+                prop.setProperty("site", site);
 				ret.add(prop);
 			}
 			rsdemo.close();

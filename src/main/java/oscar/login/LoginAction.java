@@ -148,9 +148,12 @@ public final class LoginAction extends DispatchAction {
             if (isMobileOptimized) session.setAttribute("mobileOptimized","true");
             // initiate security manager
             String default_pmm = null;
+            
+            // get preferences from preference table
+        	ProviderPreference providerPreference=providerPreferenceDao.find(providerNo);
+        	
             if (viewType.equalsIgnoreCase("receptionist") || viewType.equalsIgnoreCase("doctor")) {
-                // get preferences from preference table
-            	ProviderPreference providerPreference=providerPreferenceDao.find(providerNo);
+                
             	if (providerPreference==null) providerPreference=new ProviderPreference();
              	
             	session.setAttribute(SessionConstants.LOGGED_IN_PROVIDER_PREFERENCE, providerPreference);
@@ -167,6 +170,11 @@ public final class LoginAction extends DispatchAction {
                     	session.setAttribute("CaseMgmtUsers", newDocArr);
                     }
                 }
+                session.setAttribute("starthour", providerPreference.getStartHour().toString());
+                session.setAttribute("endhour", providerPreference.getEndHour().toString());
+                session.setAttribute("everymin", providerPreference.getEveryMin().toString());
+                session.setAttribute("groupno", providerPreference.getMyGroupNo());
+                
             }
 
             if (viewType.equalsIgnoreCase("receptionist")) { // go to receptionist view

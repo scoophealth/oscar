@@ -1641,17 +1641,17 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	public static String getNoteColour(NoteDisplay noteDisplay) {
 		// set all colours
 		String blackColour = "000000";
-		String documentColour = "color:#" + blackColour + ";background-color:#" + Colour.documents + ";";
-		String diseaseColour = "color:#" + blackColour + ";background-color:#" + Colour.disease + ";";
-		String eFormsColour = "color:#" + blackColour + ";background-color:#" + Colour.eForms + ";";
-		String formsColour = "color:#" + blackColour + ";background-color:#" + Colour.forms + ";";
-		String labsColour = "color:#" + blackColour + ";background-color:#" + Colour.labs + ";";
-		String measurementsColour = "color:#" + blackColour + ";background-color:#" + Colour.measurements + ";";
-		String messagesColour = "color:#" + blackColour + ";background-color:#" + Colour.messages + ";";
-		String preventionColour = "color:#" + blackColour + ";background-color:#" + Colour.prevention + ";";
-		String ticklerColour = "color:#" + blackColour + ";background-color:#" + Colour.tickler + ";";
-		String rxColour = "color:#" + blackColour + ";background-color:#" + Colour.rx + ";";
-		String invoiceColour = "color:#" + blackColour + ";background-color:#" + Colour.invoices + ";";
+		String documentColour = "color:#" + blackColour + ";background-color:#" + Colour.getInstance().documents + ";";
+		String diseaseColour = "color:#" + blackColour + ";background-color:#" + Colour.getInstance().disease + ";";
+		String eFormsColour = "color:#" + blackColour + ";background-color:#" + Colour.getInstance().eForms + ";";
+		String formsColour = "color:#" + blackColour + ";background-color:#" + Colour.getInstance().forms + ";";
+		String labsColour = "color:#" + blackColour + ";background-color:#" + Colour.getInstance().labs + ";";
+		String measurementsColour = "color:#" + blackColour + ";background-color:#" + Colour.getInstance().measurements + ";";
+		String messagesColour = "color:#" + blackColour + ";background-color:#" + Colour.getInstance().messages + ";";
+		String preventionColour = "color:#" + blackColour + ";background-color:#" + Colour.getInstance().prevention + ";";
+		String ticklerColour = "color:#" + blackColour + ";background-color:#" + Colour.getInstance().tickler + ";";
+		String rxColour = "color:#" + blackColour + ";background-color:#" + Colour.getInstance().rx + ";";
+		String invoiceColour = "color:#" + blackColour + ";background-color:#" + Colour.getInstance().invoices + ";";
 
 		String bgColour = "color:#000000;background-color:#CCCCFF;";
 
@@ -1677,14 +1677,14 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		CaseManagementIssueNotesDao caseManagementIssueNotesDao = (CaseManagementIssueNotesDao) SpringUtils.getBean("caseManagementIssueNotesDao");
 		List<CaseManagementIssue> caseManagementIssues = caseManagementIssueNotesDao.getNoteIssues(noteDisplay.getNoteId());
 		for (CaseManagementIssue caseManagementIssue : caseManagementIssues) {
-			if ("OMeds".equals(caseManagementIssue.getIssue().getCode())) return (Colour.omed);
-			else if ("FamHistory".equals(caseManagementIssue.getIssue().getCode())) return (Colour.familyHistory);
-			else if ("RiskFactors".equals(caseManagementIssue.getIssue().getCode())) return (Colour.riskFactors);
-			else if ("SocHistory".equals(caseManagementIssue.getIssue().getCode())) return (Colour.socialHistory);
-			else if ("MedHistory".equals(caseManagementIssue.getIssue().getCode())) return (Colour.medicalHistory);
-			else if ("Concerns".equals(caseManagementIssue.getIssue().getCode())) return (Colour.ongoingConcerns);
-			else if ("Reminders".equals(caseManagementIssue.getIssue().getCode())) return (Colour.reminders);
-			else return Colour.prevention;
+			if ("OMeds".equals(caseManagementIssue.getIssue().getCode())) return (Colour.getInstance().omed);
+			else if ("FamHistory".equals(caseManagementIssue.getIssue().getCode())) return (Colour.getInstance().familyHistory);
+			else if ("RiskFactors".equals(caseManagementIssue.getIssue().getCode())) return (Colour.getInstance().riskFactors);
+			else if ("SocHistory".equals(caseManagementIssue.getIssue().getCode())) return (Colour.getInstance().socialHistory);
+			else if ("MedHistory".equals(caseManagementIssue.getIssue().getCode())) return (Colour.getInstance().medicalHistory);
+			else if ("Concerns".equals(caseManagementIssue.getIssue().getCode())) return (Colour.getInstance().ongoingConcerns);
+			else if ("Reminders".equals(caseManagementIssue.getIssue().getCode())) return (Colour.getInstance().reminders);
+			else return Colour.getInstance().prevention;
 		}
 
 		logger.error("Missing cpp colour : noteId=" + noteDisplay.getNoteId());

@@ -152,7 +152,7 @@ for(int i=0; i<aL.size(); i++) {
 	class="myIvory">
 	<tr class="myYellow">
 		<td width="7%" height="16">Billing No</td>
-		<td width="14%" height="16">Provider</td>
+		<td width="7%" height="16">Provider</td>
 		<td width="15%" height="16">Patient</td>
 		<td width="7%" height="16">HIN</td>
 		<td width="10%" height="16">Service Date</td>
@@ -341,8 +341,9 @@ for(int i=0; i<aL.size(); i++) {
 		class="myIvory">
 		<tr class="myYellow">
 			<th width="6%">Billing No</th>
+			<td width="7%">Claim No</td>
 			<!--  th width="14%">Provider </th -->
-			<th width="20%">Patient</th>
+			<th width="14%">Patient</th>
 			<th>Fam Doc</th>
 			<th width="10%">HIN</th>
 			<th width="9%">Service Date</th>
@@ -366,6 +367,7 @@ for(int i=0; i<aL.size(); i++) {
 %>
 		<tr <%=color %>>
 			<td align="center"><%=prop.getProperty("account", "&nbsp;")%></td>
+			<td align="center"><%=prop.getProperty("claimNo", "&nbsp;")%></td>
 			<!--  >td><%=prop.getProperty("demo_docname", "&nbsp;")%></td -->
 			<td><%=prop.getProperty("demo_name", "&nbsp;")%></td>
 			<td align="center"><%=prop.getProperty("demo_doc", "&nbsp;")%></td>
