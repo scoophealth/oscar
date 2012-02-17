@@ -642,15 +642,15 @@ try
 			}
 
 			//String metaDisplay = (hideMetaData)?"none":"block";
-
+			String globalNoteId = note.getRemoteFacilityId()==null ? note.getNoteId().toString() : "UUID" + note.getUuid();
 	%>
 		<div id="nc<%=idx+1%>" style="display:<%=noteDisplay %>" class="note<%=note.isDocument()||note.isCpp()||note.isEformData()||note.isEncounterForm()?"":" noteRounded"%>">
-			<input type="hidden" id="signed<%=note.getNoteId()%>" value="<%=note.isSigned()%>">
-			<input type="hidden" id="full<%=note.getNoteId()%>" value="<%=fulltxt || (note.getNoteId() !=null && note.getNoteId().equals(savedId))%>">
-			<input type="hidden" id="bgColour<%=note.getNoteId()%>" value="<%=bgColour%>">
-			<input type="hidden" id="editWarn<%=note.getNoteId()%>" value="<%=editWarn%>">
+			<input type="hidden" id="signed<%=globalNoteId%>" value="<%=note.isSigned()%>">
+			<input type="hidden" id="full<%=globalNoteId%>" value="<%=fulltxt || (note.getNoteId() !=null && note.getNoteId().equals(savedId))%>">
+			<input type="hidden" id="bgColour<%=globalNoteId%>" value="<%=bgColour%>">
+			<input type="hidden" id="editWarn<%=globalNoteId%>" value="<%=editWarn%>">
 
-	  		<div id="n<%=note.getNoteId()%>">
+	  		<div id="n<%=globalNoteId%>">
 			<%
 				//display last saved note for editing
 				if (note.getNoteId()!=null && !"".equals(note.getNoteId()) && note.getNoteId().intValue() == savedId )
@@ -717,10 +717,11 @@ try
 						<%
 						}
 
-						if (note.getRemoteFacilityId()==null && !note.isDocument() && !note.isCpp() && !note.isEformData() && !note.isEncounterForm()) // only allow printing for local notes and disallow for documents (was told they should open the document then print it that way)
+						if (!note.isDocument() && !note.isCpp() && !note.isEformData() && !note.isEncounterForm()) 
 						{
+						 	
 					 	%>
-						 	<img title="<bean:message key="oscarEncounter.print.title"/>" id='print<%=note.getNoteId()%>' alt="<bean:message key="oscarEncounter.togglePrintNote.title"/>" onclick="togglePrint(<%=note.getNoteId()%>   , event)" style='float: right; margin-right: 5px; margin-top: 2px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png'>
+						 	<img title="<bean:message key="oscarEncounter.print.title"/>" id='print<%=globalNoteId%>' alt="<bean:message key="oscarEncounter.togglePrintNote.title"/>" onclick="togglePrint('<%=globalNoteId%>'   , event)" style='float: right; margin-right: 5px; margin-top: 2px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png'>
 						<%
 						}
 
@@ -903,12 +904,12 @@ try
 						if (!note.isDocument() && !note.isCpp() && !note.isEformData() && !note.isEncounterForm())
 						{
 						%>
-							<div id="sig<%=note.getNoteId()%>" class="sig" style="clear:both;<%=bgColour%>">
-								<div id="sumary<%=note.getNoteId()%>">
-									<div id="observation<%=note.getNoteId()%>" style="float: right; margin-right: 3px;">
+							<div id="sig<%=globalNoteId%>" class="sig" style="clear:both;<%=bgColour%>">
+								<div id="sumary<%=globalNoteId%>">
+									<div id="observation<%=globalNoteId%>" style="float: right; margin-right: 3px;">
 										<i>
 											Encounter Date:&nbsp;
-											<span id="obs<%=note.getNoteId()%>"><%=DateUtils.getDate(note.getObservationDate(), dateFormat, request.getLocale())%></span>&nbsp;
+											<span id="obs<%=globalNoteId%>"><%=DateUtils.getDate(note.getObservationDate(), dateFormat, request.getLocale())%></span>&nbsp;
 											<bean:message key="oscarEncounter.noteRev.title" />
 											<%
 												if (rev!=null)
