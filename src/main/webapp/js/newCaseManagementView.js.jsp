@@ -352,29 +352,29 @@ function navBarLoader() {
     this.load = function() {
 
             var leftNavBar = [
-                  ctx + "/oscarEncounter/displayPrevention.do?hC=<%=Colour.prevention%>",
-                  ctx + "/oscarEncounter/displayTickler.do?hC=<%=Colour.tickler%>",
-                  ctx + "/oscarEncounter/displayDisease.do?hC=<%=Colour.disease%>",
-                  ctx + "/oscarEncounter/displayForms.do?hC=<%=Colour.forms%>",
-                  ctx + "/oscarEncounter/displayEForms.do?hC=<%=Colour.eForms%>",
-                  ctx + "/oscarEncounter/displayDocuments.do?hC=<%=Colour.documents%>",
-                  ctx + "/oscarEncounter/displayLabs.do?hC=<%=Colour.labs%>",
-                  ctx + "/oscarEncounter/displayMessages.do?hC=<%=Colour.messages%>",
-                  ctx + "/oscarEncounter/displayMeasurements.do?hC=<%=Colour.measurements%>",
-                  ctx + "/oscarEncounter/displayConsultation.do?hC=",
+                  ctx + "/oscarEncounter/displayPrevention.do?hC=<%=Colour.getInstance().prevention%>",
+                  ctx + "/oscarEncounter/displayTickler.do?hC=<%=Colour.getInstance().tickler%>",
+                  ctx + "/oscarEncounter/displayDisease.do?hC=<%=Colour.getInstance().disease%>",
+                  ctx + "/oscarEncounter/displayForms.do?hC=<%=Colour.getInstance().forms%>",
+                  ctx + "/oscarEncounter/displayEForms.do?hC=<%=Colour.getInstance().eForms%>",
+                  ctx + "/oscarEncounter/displayDocuments.do?hC=<%=Colour.getInstance().documents%>",
+                  ctx + "/oscarEncounter/displayLabs.do?hC=<%=Colour.getInstance().labs%>",
+                  ctx + "/oscarEncounter/displayMessages.do?hC=<%=Colour.getInstance().messages%>",
+                  ctx + "/oscarEncounter/displayMeasurements.do?hC=<%=Colour.getInstance().measurements%>",
+                  ctx + "/oscarEncounter/displayConsultation.do?hC=<%=Colour.getInstance().consultation%>",
                   ctx + "/oscarEncounter/displayHRM.do?hC="
               ];
 
             var leftNavBarTitles = [ "preventions", "tickler", "Dx", "forms", "eforms", "docs","labs", "msgs", "measurements", "consultation","HRM"];
 
             var rightNavBar = [
-                  ctx + "/oscarEncounter/displayAllergy.do?hC=<%=Colour.allergy%>",
-                  ctx + "/oscarEncounter/displayRx.do?hC=<%=Colour.rx%>&numToDisplay=12",
-                  ctx + "/CaseManagementView.do?hc=<%=Colour.omed%>&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=OMeds&title=" + oMedsLabel + "&cmd=OMeds" + "&appointment_no="+appointmentNo,
-                  ctx + "/CaseManagementView.do?hc=<%=Colour.riskFactors%>&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=RiskFactors&title=" + riskFactorsLabel + "&cmd=RiskFactors"+ "&appointment_no="+appointmentNo,
-                  ctx + "/CaseManagementView.do?hc=<%=Colour.familyHistory%>&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=FamHistory&title=" + famHistoryLabel + "&cmd=FamHistory"+ "&appointment_no="+appointmentNo,
-                  ctx + "/oscarEncounter/displayIssues.do?hC=<%=Colour.unresolvedIssues%>",
-                  ctx + "/oscarEncounter/displayResolvedIssues.do?hC=<%=Colour.resolvedIssues%>",
+                  ctx + "/oscarEncounter/displayAllergy.do?hC=<%=Colour.getInstance().allergy%>",
+                  ctx + "/oscarEncounter/displayRx.do?hC=<%=Colour.getInstance().rx%>&numToDisplay=12",
+                  ctx + "/CaseManagementView.do?hc=<%=Colour.getInstance().omed%>&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=OMeds&title=" + oMedsLabel + "&cmd=OMeds" + "&appointment_no="+appointmentNo,
+                  ctx + "/CaseManagementView.do?hc=<%=Colour.getInstance().riskFactors%>&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=RiskFactors&title=" + riskFactorsLabel + "&cmd=RiskFactors"+ "&appointment_no="+appointmentNo,
+                  ctx + "/CaseManagementView.do?hc=<%=Colour.getInstance().familyHistory%>&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=FamHistory&title=" + famHistoryLabel + "&cmd=FamHistory"+ "&appointment_no="+appointmentNo,
+                  ctx + "/oscarEncounter/displayIssues.do?hC=<%=Colour.getInstance().unresolvedIssues%>",
+                  ctx + "/oscarEncounter/displayResolvedIssues.do?hC=<%=Colour.getInstance().resolvedIssues%>",
                   ctx + "/oscarEncounter/displayDecisionSupportAlerts.do?providerNo=" + providerNo + "&demographicNo=" + demographicNo
               ];
 

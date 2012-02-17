@@ -473,7 +473,7 @@ var beginD = "1900-01-01"
 <% boolean isTeamOnly=false; %>
 <security:oscarSec roleName="<%=roleName$%>"
 	objectName="_team_schedule_only" rights="r" reverse="false">
-<% isTeamOnly=true; %>
+<% isTeamOnly=false; //turn off team privacy as per Eric's request %>
 </security:oscarSec>
 
         <select id="providerview" name="providerview">

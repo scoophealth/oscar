@@ -57,6 +57,11 @@
 	String programId_forCME = request.getParameter("case_program_id");
 	request.getSession().setAttribute("case_program_id",programId_forCME);
 	
+	String selected_site = (String) request.getParameter("site") ;
+	if (selected_site != null) {
+		session.setAttribute("site_selected", (selected_site.equals("none") ? null : selected_site) );	    
+	}
+
 	ProviderPreference providerPreference=ProviderPreferencesUIBean.updateOrCreateProviderPreferences(request);
 
 	//--- 
