@@ -57,7 +57,7 @@ function start(){
    String content="";
    String encounterattachment="";
    String temp="";
-   List<Map> resultList = oscarSuperManager.find("providerDao", request.getParameter("dboperation"), new Object[] {request.getParameter("encounter_no")});
+   List<Map<String,Object>> resultList = oscarSuperManager.find("providerDao", request.getParameter("dboperation"), new Object[] {request.getParameter("encounter_no")});
    for (Map enc : resultList) {
      content = (String)enc.get("content");
      encounterattachment = (String)enc.get("encounterattachment");

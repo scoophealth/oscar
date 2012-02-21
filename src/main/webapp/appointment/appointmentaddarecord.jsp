@@ -92,7 +92,7 @@
                     param3[5]=param[14]; //creator
                     param3[6]=param[16]; //demographic_no
 
-		    List<Map> resultList = oscarSuperManager.find("appointmentDao", "search_appt_no", param3);
+		    List<Map<String,Object>> resultList = oscarSuperManager.find("appointmentDao", "search_appt_no", param3);
                     if (resultList.size()>0) {
 			Integer apptNo = (Integer)resultList.get(0).get("appointment_no");
                         DemographicDao demoDao = (DemographicDao) SpringUtils.getBean("demographicDao");
@@ -119,7 +119,7 @@
 		} else {
 			WaitingList wL = WaitingList.getInstance();
 			if (wL.getFound()) {
-				List<Map> resultList = oscarSuperManager.find("appointmentDao", "search_waitinglist", new Object [] {request.getParameter("demographic_no")});
+				List<Map<String,Object>> resultList = oscarSuperManager.find("appointmentDao", "search_waitinglist", new Object [] {request.getParameter("demographic_no")});
 				if (resultList.size() > 0) {
 					Map wlEntry = resultList.get(0);
 %>
@@ -159,7 +159,7 @@
 		param2[5]=param[14]; //creator
 		param2[6]=param[16]; //demographic_no
 
-		List<Map> resultList = oscarSuperManager.find("appointmentDao", "search_appt_no", param2);
+		List<Map<String,Object>> resultList = oscarSuperManager.find("appointmentDao", "search_appt_no", param2);
 		if (resultList.size()>0) {
 			Integer apptNo = (Integer)resultList.get(0).get("appointment_no");
 			String mcNumber = request.getParameter("appt_mc_number");

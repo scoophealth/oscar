@@ -58,7 +58,7 @@ function setfocus() {
 </table>
 <%
    boolean bNewDemoAcc=true;
-   List<Map> resultList = oscarSuperManager.find("providerDao", "search_demographicaccessory", new Object[] {request.getParameter("demographic_no")});
+   List<Map<String,Object>> resultList = oscarSuperManager.find("providerDao", "search_demographicaccessory", new Object[] {request.getParameter("demographic_no")});
    for (Map acc : resultList) {
      String content=(String)acc.get("content");
      bNewDemoAcc=false;

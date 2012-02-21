@@ -19,6 +19,9 @@
 		</property>
 	</bean>
 
+	<!-- setup CXF -->
+	<import resource="classpath:spring_ws.xml" />
+ 
 	<!-- setup JPA -->
 	<import resource="classpath:spring_jpa.xml" />
 

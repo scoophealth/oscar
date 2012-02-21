@@ -84,7 +84,7 @@
         int rowsAffected=0, datano=0;
 
         Object[] paramE = new Object[10];
-        List<Map> resultList = oscarSuperManager.find("appointmentDao", "search", new Object [] {request.getParameter("appointment_no")});
+        List<Map<String,Object>> resultList = oscarSuperManager.find("appointmentDao", "search", new Object [] {request.getParameter("appointment_no")});
         if (resultList.size() > 0) {
                 Map appt = resultList.get(0);
                 paramE[0]=String.valueOf(appt.get("appointment_date")); //request.getParameter("appointment_date"); // param[3] - appointment_date

@@ -29,12 +29,8 @@ private String selectedSite = null;
 private HashMap<String,String> siteBgColor = new HashMap<String,String>();
 private HashMap<String,String> CurrentSiteMap = new HashMap<String,String>();
 
-private String getSiteHTML(String scDate, String provider_no, List<Site> sites) {
-	 if (!bMultisites) return "";
-	 String _loc = jdbc.getLocationFromSchedule(scDate, provider_no);
-	 return "<span style='background-color:"+ApptUtil.getColorFromLocation(sites, _loc)+"'>"+ApptUtil.getShortNameFromLocation(sites, _loc)+"</span>";	
-}
 %>
+
 <% 
 if (bMultisites) {
 	SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
@@ -240,7 +236,7 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 
     //String resourcebaseurl = "http://resource.oscarmcmaster.org/oscarResource/";
     String resourcebaseurl = "http://www.oscarmanual.org/oscar-emr/";
-    List<Map> resultList = oscarSuperManager.find("providerDao", "search_resource_baseurl", new Object[] {"resource_baseurl"});
+    List<Map<String,Object>> resultList = oscarSuperManager.find("providerDao", "search_resource_baseurl", new Object[] {"resource_baseurl"});
     for (Map url : resultList) {
             resourcebaseurl = (String)url.get("value");
     }
@@ -1390,8 +1386,8 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
                 param0[0]=curProvider_no[nProvider];
                 param0[1]=year+"-"+month+"-"+day;//e.g."2001-02-02";
 				param0[2]=programId_oscarView;
-                List<Map> appointmentList = oscarSuperManager.find("providerDao", strsearchappointmentday, param0);
-                Iterator<Map> it = appointmentList.iterator();
+                List<Map<String,Object>> appointmentList = oscarSuperManager.find("providerDao", strsearchappointmentday, param0);
+                Iterator<Map<String,Object>> it = appointmentList.iterator();
                 
                 Map appointment = null;
 
@@ -1460,7 +1456,7 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
                   paramTickler[1]=MyDateFormat.getSysDate(strDate); //year+"-"+month+"-"+day;//e.g."2001-02-02";
                   tickler_no = "";
                   tickler_note="";
-                      List<Map> ticklerList = oscarSuperManager.find("providerDao", "search_tickler", paramTickler);
+                      List<Map<String,Object>> ticklerList = oscarSuperManager.find("providerDao", "search_tickler", paramTickler);
                           for (Map tickler : ticklerList) {
                                 tickler_no = String.valueOf(tickler.get("tickler_no"));
                                 tickler_note = tickler.get("message")==null?tickler_note:tickler_note + "\n" + tickler.get("message");
@@ -1468,7 +1464,7 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
 
                           ver = "";
                   roster = "";
-                      List<Map> demoList = oscarSuperManager.find("providerDao", "search_demograph", new Object[] {demographic_no});
+                      List<Map<String,Object>> demoList = oscarSuperManager.find("providerDao", "search_demograph", new Object[] {demographic_no});
                   for (Map demo : demoList) {
                     ver = (String)demo.get("ver");
                     roster = (String)demo.get("roster_status");
@@ -1496,7 +1492,7 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
 				  studyDescription = new StringBuffer("");
 
 				  int numStudy = 0;
-                      List<Map> studyList = oscarSuperManager.find("providerDao", "search_studycount", new Object[] {demographic_no});
+                      List<Map<String,Object>> studyList = oscarSuperManager.find("providerDao", "search_studycount", new Object[] {demographic_no});
                           for (Map study : studyList) {
                                   numStudy = ((Long)(study.get(study.keySet().toArray()[0]))).intValue();
                           }
@@ -1669,7 +1665,7 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
                 String providerColor = null;
                 if(view == 1 && demographicDao != null && userPropertyDao != null) {
                         String providerNo = (demographicDao.getDemographic(String.valueOf(demographic_no))==null?null:demographicDao.getDemographic(String.valueOf(demographic_no)).getProviderNo());
-                        UserProperty property = userPropertyDao.getProp(providerNo, userPropertyDao.COLOR_PROPERTY);
+                        UserProperty property = userPropertyDao.getProp(providerNo, UserPropertyDAO.COLOR_PROPERTY);
                         if(property != null) {
                                 providerColor = property.getValue();
                         }

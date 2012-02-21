@@ -81,7 +81,7 @@
 	param1[2]=request.getParameter("appointment_no");
         oscarSuperManager.update("providerDao", "archive_appt", new String[]{request.getParameter("appointment_no")});
 	rowsAffected = oscarSuperManager.update("providerDao", "updateapptstatus", param1);
-	List<Map> resultList = oscarSuperManager.find("providerDao", "search_billing_no", new Object[] {request.getParameter("demographic_no")});
+	List<Map<String,Object>> resultList = oscarSuperManager.find("providerDao", "search_billing_no", new Object[] {request.getParameter("demographic_no")});
 	for (Map bill: resultList) {
 %>
 <p>

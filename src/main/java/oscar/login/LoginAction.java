@@ -32,7 +32,6 @@ import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.PMmodule.web.OcanForm;
 import org.oscarehr.common.dao.FacilityDao;
-import org.oscarehr.common.dao.OcanStaffFormDao;
 import org.oscarehr.common.dao.ProviderPreferenceDao;
 import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.Facility;
@@ -40,6 +39,7 @@ import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.ProviderPreference;
 import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.decisionSupport.service.DSService;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SessionConstants;
 import org.oscarehr.util.SpringUtils;
 import org.springframework.context.ApplicationContext;
@@ -60,20 +60,19 @@ public final class LoginAction extends DispatchAction {
 	 */
     public static final String SELECTED_FACILITY_ID="selectedFacilityId";
 
-    private static final Logger _logger = Logger.getLogger(LoginAction.class);
+    private static final Logger logger = MiscUtils.getLogger();
     private static final String LOG_PRE = "Login!@#$: ";
 
     private ProviderManager providerManager = (ProviderManager) SpringUtils.getBean("providerManager");
     private FacilityDao facilityDao = (FacilityDao) SpringUtils.getBean("facilityDao");
     private ProviderPreferenceDao providerPreferenceDao = (ProviderPreferenceDao) SpringUtils.getBean("providerPreferenceDao");
-    private static OcanStaffFormDao ocanStaffFormDao = (OcanStaffFormDao) SpringUtils.getBean("ocanStaffFormDao");
     
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         String ip = request.getRemoteAddr();
         Boolean isMobileOptimized = request.getSession().getAttribute("mobileOptimized") != null;
         String nextPage=request.getParameter("nextPage");
-        _logger.debug("nextPage: "+nextPage);
+        logger.debug("nextPage: "+nextPage);
         if (nextPage!=null) {
             // set current facility
             String facilityIdString=request.getParameter(SELECTED_FACILITY_ID);
@@ -92,34 +91,23 @@ public final class LoginAction extends DispatchAction {
         String userName = ((LoginForm) form).getUsername();
         String password = ((LoginForm) form).getPassword();
         String pin = ((LoginForm) form).getPin();
-        String propName = request.getContextPath().substring(1) + ".properties";
-        if (userName.equals("")) {
-            _logger.debug("username was blank");
-            return mapping.findForward(where);
-        }
 
-        LoginCheckLogin cl = new LoginCheckLogin(propName);
-        if (!cl.propFileFound) {
-            String newURL = mapping.findForward("error").getPath();
-            newURL = newURL + "?errormsg=Unable to open the properties file " + cl.propFileName + ".";
-            return(new ActionForward(newURL));
-        }
-        _logger.debug("Property file was found");
-
+        LoginCheckLogin cl = new LoginCheckLogin();
         if (cl.isBlock(ip, userName)) {
-            _logger.info(LOG_PRE + " Blocked: " + userName);
+            logger.info(LOG_PRE + " Blocked: " + userName);
             // return mapping.findForward(where); //go to block page
             // change to block page
             String newURL = mapping.findForward("error").getPath();
             newURL = newURL + "?errormsg=Your account is locked. Please contact your administrator to unlock.";
             return(new ActionForward(newURL));
         }
-        _logger.debug("ip was not blocked: "+ip);
+        logger.debug("ip was not blocked: "+ip);
         String[] strAuth;
         try {
             strAuth = cl.auth(userName, password, pin, ip);
         }
         catch (Exception e) {
+        	logger.error("Error", e);
             String newURL = mapping.findForward("error").getPath();
             if (e.getMessage() != null && e.getMessage().startsWith("java.lang.ClassNotFoundException")) {
                 newURL = newURL + "?errormsg=Database driver " + e.getMessage().substring(e.getMessage().indexOf(':') + 2) + " not found.";
@@ -130,7 +118,7 @@ public final class LoginAction extends DispatchAction {
             return(new ActionForward(newURL));
         }
         
-        _logger.debug("strAuth : "+strAuth);
+        logger.debug("strAuth : "+strAuth);
         if (strAuth != null && strAuth.length != 1) { // login successfully
             // invalidate the existing sesson
             HttpSession session = request.getSession(false);
@@ -139,7 +127,7 @@ public final class LoginAction extends DispatchAction {
                 session = request.getSession(); // Create a new session for this user
             }
 
-            _logger.debug("Assigned new session for: " + strAuth[0] + " : " + strAuth[3] + " : " + strAuth[4]);
+            logger.debug("Assigned new session for: " + strAuth[0] + " : " + strAuth[3] + " : " + strAuth[4]);
             LogAction.addLog(strAuth[0], LogConst.LOGIN, LogConst.CON_LOGIN, "", ip);
 
             // initial db setting
@@ -233,7 +221,8 @@ public final class LoginAction extends DispatchAction {
             // setup caisi stuff
             String username = (String) session.getAttribute("user");
             Provider provider = providerManager.getProvider(username);
-            session.setAttribute("provider", provider);
+            session.setAttribute(SessionConstants.LOGGED_IN_PROVIDER, provider);
+            session.setAttribute(SessionConstants.LOGGED_IN_SECURITY, cl.getSecurity());
 
             List<Integer> facilityIds = ProviderDao.getFacilityIds(provider.getProviderNo());
             if (facilityIds.size() > 1) {
@@ -268,6 +257,7 @@ public final class LoginAction extends DispatchAction {
         }
         // expired password
         else if (strAuth != null && strAuth.length == 1 && strAuth[0].equals("expired")) {
+        	logger.warn("Expired password");
             cl.updateLoginList(ip, userName);
             String newURL = mapping.findForward("error").getPath();
             newURL = newURL + "?errormsg=Your account is expired. Please contact your administrator.";

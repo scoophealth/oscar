@@ -240,7 +240,7 @@ public class SecurityDao extends HibernateDaoSupport {
 		}
 	}
 
-	public List findByProperty(String propertyName, Object value) {
+    public List<Security> findByProperty(String propertyName, Object value) {
 		logger.debug("finding Security instance with property: " + propertyName
 				+ ", value: " + value);
 		try {
@@ -248,40 +248,43 @@ public class SecurityDao extends HibernateDaoSupport {
 					+ propertyName + "= ?";
 			Query queryObject = getSession().createQuery(queryString);
 			queryObject.setParameter(0, value);
-			return queryObject.list();
+
+			@SuppressWarnings("unchecked")
+			List<Security> result=queryObject.list();
+			return result;
 		} catch (RuntimeException re) {
 			logger.error("find by property name failed", re);
 			throw re;
 		}
 	}
 
-	public List findByUserName(Object userName) {
+	public List<Security> findByUserName(Object userName) {
 		return findByProperty(USER_NAME, userName);
 	}
-	public List findByProviderNo(Object providerNo) {
+	public List<Security> findByProviderNo(Object providerNo) {
 		return findByProperty(PROVIDER_NO, providerNo);
 	}
-	public List findByPassword(Object password) {
+	public List<Security> findByPassword(Object password) {
 		return findByProperty(PASSWORD, password);
 	}
 
-	public List findByPin(Object pin) {
+	public List<Security> findByPin(Object pin) {
 		return findByProperty(PIN, pin);
 	}
 
-	public List findByBRemotelockset(Object BRemotelockset) {
+	public List<Security> findByBRemotelockset(Object BRemotelockset) {
 		return findByProperty(_BREMOTELOCKSET, BRemotelockset);
 	}
 
-	public List findByBLocallockset(Object BLocallockset) {
+	public List<Security> findByBLocallockset(Object BLocallockset) {
 		return findByProperty(_BLOCALLOCKSET, BLocallockset);
 	}
 
-	public List findByBExpireset(Object BExpireset) {
+	public List<Security> findByBExpireset(Object BExpireset) {
 		return findByProperty(_BEXPIRESET, BExpireset);
 	}
 
-	public List findAll() {
+	public List<Security> findAll() {
 		logger.debug("finding all Security instances");
 		try {
 			String queryString = "from Security";

@@ -84,7 +84,7 @@
 	String reason = new String();
 	if(apptNo != null && apptNo.length()>0) {
 		oscar.dao.AppointmentDao appointmentDao = (oscar.dao.AppointmentDao)org.oscarehr.util.SpringUtils.getBean("appointmentSuperDao");
-		java.util.List<java.util.Map> result = appointmentDao.executeSelectQuery("search", new Object[] {apptNo});
+		java.util.List<java.util.Map<String,Object>> result = appointmentDao.executeSelectQuery("search", new Object[] {apptNo});
 		if(result.size()>0) {
 			java.util.Map mresult = result.get(0);
 			reason = (String)mresult.get("reason");

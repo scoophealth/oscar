@@ -64,7 +64,7 @@
 			param2[5]=param[14]; //creator
 			param2[6]=param[16]; //demographic_no
 
-			List<Map> apptList = oscarSuperManager.find("appointmentDao", "search_appt_no", param2);
+			List<Map<String,Object>> apptList = oscarSuperManager.find("appointmentDao", "search_appt_no", param2);
 			if (apptList.size()>0) {
 				Integer apptNo = (Integer)apptList.get(0).get("appointment_no");
 				String mcNumber = request.getParameter("appt_mc_number");
@@ -145,7 +145,7 @@
 					paramu2[5]=paramu[14]; //creator
 					paramu2[6]=paramu[16]; //demographic_no
 
-					List<Map> apptList = oscarSuperManager.find("appointmentDao", "search_appt_no", paramu2);
+					List<Map<String,Object>> apptList = oscarSuperManager.find("appointmentDao", "search_appt_no", paramu2);
 					if (apptList.size()>0) {
 						Integer apptNo = (Integer)apptList.get(0).get("appointment_no");
 						String mcNumber = request.getParameter("appt_mc_number");
@@ -319,7 +319,7 @@ function onSub() {
 	String eName = request.getParameter("keyword");
 
 	if (bEdit) {
-		List<Map> resultList = oscarSuperManager.find("appointmentDao",
+		List<Map<String,Object>> resultList = oscarSuperManager.find("appointmentDao",
 				"search", new Object [] {request.getParameter("appointment_no")});
 		if (resultList.size() > 0) {
 			Map appt = resultList.get(0);
@@ -342,7 +342,7 @@ function onSub() {
 	boolean bOne = false;
 	boolean bTwo = false;
 
-	List<Map> resultList = oscarSuperManager.find("appointmentDao", "search_otherappt", param0);
+	List<Map<String,Object>> resultList = oscarSuperManager.find("appointmentDao", "search_otherappt", param0);
 
 	for (Map other : resultList) {
         bOne = false;
@@ -424,7 +424,7 @@ function onSub() {
         i++;
 
 		param1[1] = String.valueOf(provider.get("provider_no"));
-		List<Map> providerTest = oscarSuperManager.find("appointmentDao", "search_scheduledate_single", param1);
+		List<Map<String,Object>> providerTest = oscarSuperManager.find("appointmentDao", "search_scheduledate_single", param1);
 
 		bAvailProvider = providerTest.size() > 0 ? true : false;  
 		if(bAvailProvider == bLooperCon) continue;

@@ -29,6 +29,7 @@ import org.apache.struts.action.ActionMapping;
 import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.PMmodule.web.BaseAction;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.util.SessionConstants;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.log.LogAction;
@@ -166,7 +167,8 @@ public final class SiteCheckAction extends BaseAction {
     	            SecurityManager secManager = userAccessManager.getUserSecurityManager(providerNo,null,lookupManager);
     	            session.setAttribute(KeyConstants.SESSION_KEY_SECURITY_MANAGER, secManager);
     	
-    	            session.setAttribute("provider", provider);
+    	            session.setAttribute(SessionConstants.LOGGED_IN_PROVIDER, provider);
+    	            session.setAttribute(SessionConstants.LOGGED_IN_SECURITY, user);
     	            String appPath = oscar.OscarProperties.getInstance().getProperty("contextPath");
     	            return("confirmed:" +  "/" + appPath  + mapping.findForward(where).getPath());
     	        }

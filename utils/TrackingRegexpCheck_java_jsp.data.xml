@@ -523,8 +523,6 @@
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctTypeDisplayNameBeanHandler.java:public Collection getTypeDisplayNameVector(){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctValidationsBeanHandler.java:Vector validationsVector = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctValidationsBeanHandler.java:public Collection getValidationsVector(){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/dao/MeasurementsDao.java:List&lt;Date&gt; dateList = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/dao/MeasurementsDao.java:List&lt;Object[]&gt; rs = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/data/ImportExportMeasurements.java:List extsList = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/data/ImportExportMeasurements.java:List labmList = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/data/ImportExportMeasurements.java:List measList = new ArrayList();</ViolationValue>
@@ -551,7 +549,6 @@
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctSetupEditMeasurementGroupAction.java:Collection existingTypeDisplayName = hd.getTypeDisplayNameVector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctSetupEditMeasurementGroupForm.java:private final Map values = new HashMap();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctSetupGroupListAction.java:Collection groups = hd.getGroupNameVector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctSetupHistoryIndexAction.java:HashMap&lt;Date, HashMap&gt; hd = new HashMap();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctSetupMeasurementsAction.java:Vector mInstrcVector = hd.getMeasuringInstrcHdVector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctSetupMeasurementsAction.java:for(int i=0; i&lt;hd.getMeasurementTypeVector().size(); i++){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctSetupStyleSheetListAction.java:Collection allStyleSheets = sshd.getStyleSheetNameVector();</ViolationValue>
@@ -1777,9 +1774,6 @@
         <ViolationValue>/src/main/java/oscar/log/LogAction.java:import oscar.oscarDB.DBPreparedHandler;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/login/DBHelp.java:public final class DBHelp {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/login/DBHelp.java:ret = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/login/LoginCheckLoginBean.java:DBHelp accessDB = null;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/login/LoginCheckLoginBean.java:ResultSet rs =  DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/login/LoginCheckLoginBean.java:accessDB = new DBHelp();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/MSP/ExtractBean.java:DBHandler.RunSQL(nsql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/MSP/ExtractBean.java:DBHandler.RunSQL(query30);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/MSP/ExtractBean.java:ResultSet  rs = DBHandler.GetSQL("SELECT LAST_INSERT_ID()");</ViolationValue>
@@ -1878,7 +1872,6 @@
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingSaveBillingAction.java://        ResultSet rs = DBHandler.GetSQL("SELECT LAST_INSERT_ID()");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingSaveBillingAction.java:OscarSuperManager oscarSuperManager = (OscarSuperManager)SpringUtils.getBean("oscarSuperManager");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingSaveBillingAction.java:import oscar.service.OscarSuperManager;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingSaveBillingAction.java:rs = DBHandler.GetSQL("SELECT value FROM billingservice WHERE service_code='" +</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingSessionBean.java://             rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingViewBean.java:DBHandler.RunSQL("update billingmaster set payee_no = '" + payeeNo + "' " +</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingViewBean.java:rs = DBHandler.GetSQL(</ViolationValue>
@@ -2039,7 +2032,6 @@
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasurementsDataBeanHandler.java://            ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasurementsDataBeanHandler.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasurementsDataBeanHandler.java:for (rs = DBHandler.GetSQL(sql); rs.next(); ) {</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasurementsDataBeanHandler.java:for(rs = DBHandler.GetSQL(sql); rs.next(); )</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasurementsDataBeanHandler.java:for(rs = DBHandler.GetSQL(sql); rs.next(); ) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasurementsDataBeanHandler.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctStyleSheetBeanHandler.java:for(rs = DBHandler.GetSQL(sql); rs.next(); )</ViolationValue>
@@ -2050,8 +2042,6 @@
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctValidationsBeanHandler.java:for(rs = DBHandler.GetSQL(sql); rs.next(); )</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/dao/MeasurementMapDao.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/dao/MeasurementMapDao.java:public class MeasurementMapDao extends HibernateDaoSupport {</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/dao/MeasurementTypeDao.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/dao/MeasurementTypeDao.java:public class MeasurementTypeDao extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/dao/MeasurementsDao.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/dao/MeasurementsDao.java:public class MeasurementsDao extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/dao/MeasurementsExtDao.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
@@ -2254,7 +2244,6 @@
         <ViolationValue>/src/main/java/oscar/oscarReport/data/ObecData.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/ObecData.java:import oscar.oscarDB.DBPreparedHandler;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/PatientListByAppt.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/data/RptByExampleData.java://accessDB = new DBPreparedHandler("org.gjt.mm.mysql.Driver","jdbc:mysql:///oscar_sfhc","oscarsql","sfhc96");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptByExampleData.java:DBPreparedHandler accessDB=null;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptByExampleData.java:accessDB = new DBPreparedHandler();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptByExampleData.java:import oscar.oscarDB.DBPreparedHandler;</ViolationValue>
@@ -2369,7 +2358,6 @@
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:rs = DBHandler.GetSQL(sql2);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:rs = DBHandler.GetSQL(sql3);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:rs = DBHandler.GetSQL(sql4);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarSurveillance/ProcessSurveyFile.java:DBHandler.RunSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarSurveillance/ProcessSurveyFile.java:ResultSet rs = DBHandler.GetSQL(processCount);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarSurveillance/ProcessSurveyFile.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>

@@ -54,7 +54,7 @@ function start(){
 </table>
 </center>
 <%
-   List<Map> resultList = oscarSuperManager.find("providerDao", request.getParameter("dboperation"), new Object[] {request.getParameter("prescribe_no")});
+   List<Map<String,Object>> resultList = oscarSuperManager.find("providerDao", request.getParameter("dboperation"), new Object[] {request.getParameter("prescribe_no")});
    Map prescribe = resultList.get(0);
 %>
 <font size="-1"><%=prescribe.get("prescribe_date")%> <%=prescribe.get("prescribe_time")%></font>
