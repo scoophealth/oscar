@@ -88,7 +88,7 @@ function setfocus() {
 		<td align="center"><font color="white">Form Name: </font> <select
 			name="encounterform_name">
 <%
-  List<Map> resultList = oscarSuperManager.find("providerDao", "search_encounterformname", new Object[] {});
+  List<Map<String,Object>> resultList = oscarSuperManager.find("providerDao", "search_encounterformname", new Object[] {});
   for (Map form : resultList) {
 %>
 			<option value="<%=form.get("form_name")%>"><%=form.get("form_name")%></option>

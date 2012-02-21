@@ -308,7 +308,7 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
 
 	
 	if (bFirstDisp) {
-		List<Map> resultList = oscarSuperManager.find("appointmentDao",
+		List<Map<String,Object>> resultList = oscarSuperManager.find("appointmentDao",
 				request.getParameter("dboperation"), new Object [] {appointment_no});
 		if (resultList.size() == 0) {
 %>
@@ -329,7 +329,7 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
 
 	//get chart_no from demographic table if it exists
 	if (!demono.equals("0") && !demono.equals("")) {
-   		List<Map> resultList = oscarSuperManager.find("appointmentDao", "search_detail", new Object [] {demono});
+   		List<Map<String,Object>> resultList = oscarSuperManager.find("appointmentDao", "search_detail", new Object [] {demono});
 		if (resultList.size() > 0) {
 			Map detail = resultList.get(0);
 			chartno = (String) detail.get("chart_no");

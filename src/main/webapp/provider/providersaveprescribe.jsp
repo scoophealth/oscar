@@ -83,7 +83,7 @@
 	  param2[0]=param1[1];
 	  param2[1]=param1[0];
     long numRecord=1, rowsAffected=0;
-    List<Map> resultList = oscarSuperManager.find("providerDao", "search_demographicaccessorycount", new Object[] {request.getParameter("demographic_no")});
+    List<Map<String,Object>> resultList = oscarSuperManager.find("providerDao", "search_demographicaccessorycount", new Object[] {request.getParameter("demographic_no")});
     for (Map demo : resultList) {
       numRecord=(Long)demo.get("count(demographic_no)");
     }

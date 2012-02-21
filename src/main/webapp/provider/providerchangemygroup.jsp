@@ -65,7 +65,7 @@ function setfocus() {
 			key="provider.providerchangemygroup.msgChangeGroup" />:</TD>
 		<TD align="right"><select name="mygroup_no">
 <%
-	List<Map> resultList = oscarSuperManager.find("providerDao", "searchmygroupno", new Object[] {});
+	List<Map<String, Object>> resultList = oscarSuperManager.find("providerDao", "searchmygroupno", new Object[] {});
 	for (Map group : resultList) {
 %>
 			<option value="<%=group.get("mygroup_no")%>"

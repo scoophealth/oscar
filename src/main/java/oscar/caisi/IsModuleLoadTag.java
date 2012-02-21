@@ -28,7 +28,6 @@ public class IsModuleLoadTag extends TagSupport {
              
 			OscarProperties proper = OscarProperties.getInstance();
 
-//			proper.loader(propFileName);
 			if (proper.getProperty(moduleName, "").equalsIgnoreCase("yes") || proper.getProperty(moduleName, "").equalsIgnoreCase("true") || proper.getProperty(moduleName, "").equalsIgnoreCase("on"))
 				if (reverse)
 					return SKIP_BODY;

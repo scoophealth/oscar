@@ -90,8 +90,7 @@ public class OscarSuperManager {
 	 *            sql query parameters
 	 * @return List of Map objects created for each result set row
 	 */
-	@SuppressWarnings("unchecked")
-	public List<Map> find(String daoName, String queryName, Object[] params) {
+	public List<Map<String, Object>> find(String daoName, String queryName, Object[] params) {
 		return getDao(daoName).executeSelectQuery(queryName, params);
 	}
 

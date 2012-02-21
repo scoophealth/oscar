@@ -161,7 +161,7 @@ function selectProviderCustom(p,pn) {
   
   int nItems = 0;
   String sp =null, spnl =null, spnf =null;
-  List<Map> resultList = oscarSuperManager.find("providerDao", dboperation, param);
+  List<Map<String,Object>> resultList = oscarSuperManager.find("providerDao", dboperation, param);
   for (Map provider : resultList) {
     bColor = bColor?false:true ;
     sp = String.valueOf(provider.get(field1));

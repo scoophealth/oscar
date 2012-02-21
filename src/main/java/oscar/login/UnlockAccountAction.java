@@ -19,34 +19,25 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.validator.DynaValidatorForm;
-import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.PMmodule.web.admin.BaseAdminAction;
-import org.oscarehr.util.SpringUtils;
 
 import com.quatro.common.KeyConstants;
 import com.quatro.model.security.NoAccessException;
-import com.quatro.service.LookupManager;
 
 public final class UnlockAccountAction extends BaseAdminAction {
-    private static final Logger _logger = Logger.getLogger(LoginAction.class);
-    private static final String LOG_PRE = "Login!@#$: ";
-
-    private ProviderManager providerManager = (ProviderManager) SpringUtils.getBean("providerManager");
-    private LookupManager lookupManager = (LookupManager) SpringUtils.getBean("lookupManager");
 
     public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
     {
     	return list(mapping, form, request, response);
     }
     
-    public ActionForward unlock(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    public ActionForward unlock(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) 
     {
     	try {
     		super.getAccess(request, KeyConstants.FUN_ADMIN_UNLOCKUSER);
@@ -56,7 +47,6 @@ public final class UnlockAccountAction extends BaseAdminAction {
 	    	 
 	    	  LoginList vec = null;
 	    	  LoginCheckLogin cl = new LoginCheckLogin();
-	    	  //LoginList vec = cl.findLockList();
 	    	  
 	    	    // unlock
 	    	  for(int i=0; i<userIds.length; i++)
@@ -76,13 +66,11 @@ public final class UnlockAccountAction extends BaseAdminAction {
     		return mapping.findForward("failure");
     	}
     }
-    private ActionForward list(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+
+    private ActionForward list(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
     {
     	try {
     		super.getAccess(request, KeyConstants.FUN_ADMIN_UNLOCKUSER);
-    		//LoginCheckLogin cl = new LoginCheckLogin();
-    		//List users = cl.getLockUserList();
-    		//request.setAttribute("users", users);
     		return mapping.findForward("list");
     	}
     	catch(NoAccessException e)

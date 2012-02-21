@@ -57,7 +57,7 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 
 <%
   String resourcebaseurl = "http://resource.oscarmcmaster.org/oscarResource/";
-  List<Map> resultList = oscarSuperManager.find("receptionistDao", "search_resource_baseurl", new String[] {"resource_baseurl"});
+  List<Map<String,Object>> resultList = oscarSuperManager.find("receptionistDao", "search_resource_baseurl", new String[] {"resource_baseurl"});
   for (Map url : resultList) {
  	  resourcebaseurl = (String) url.get("value");
   }
@@ -386,7 +386,7 @@ function refresh1() {
     String[] param = new String[2];
     boolean bFistEntry = true;
    	GregorianCalendar cal = new GregorianCalendar(year,(month-1),1);
-   	cal.add(cal.MONTH,1);
+   	cal.add(GregorianCalendar.MONTH,1);
     if(providerBean.get(mygroupno) == null) { //it is a real group defined by users
       param[0] = year+"-"+month+"-"+"1";
       param[1] = cal.get(Calendar.YEAR)+"-"+(cal.get(Calendar.MONTH)+1)+"-"+"1";
@@ -398,7 +398,7 @@ function refresh1() {
       param1[2] = mygroupno;
       resultList = oscarSuperManager.find("receptionistDao", "search_scheduledate_singlep", param1);
     }
-              Iterator<Map> it = resultList.iterator();
+              Iterator<Map<String,Object>> it = resultList.iterator();
               Map date = null;
               for (int i=0; i<dateGrid.length; i++) {
                 out.println("</tr>");

@@ -139,7 +139,7 @@ function tsr(s) {
    String [] curProvider_no;
    String [] curProviderName;
    if(view==0) { //multiple views
-	 List<Map> resultList = oscarSuperManager.find("providerDao", "searchmygroupcount", new Object[] {mygroupno});
+	 List<Map<String,Object>> resultList = oscarSuperManager.find("providerDao", "searchmygroupcount", new Object[] {mygroupno});
 	 for (Map group : resultList) {
        numProvider=((Long)group.get("count(provider_no)")).intValue();
      }
@@ -259,7 +259,7 @@ function tsr(s) {
 			onChange="changeGroup(this)">
 			<option value=".">.</option>
 <%
-   List<Map> resultList = oscarSuperManager.find("providerDao", "searchmygroupno", new Object[] {});
+   List<Map<String,Object>> resultList = oscarSuperManager.find("providerDao", "searchmygroupno", new Object[] {});
    for (Map group : resultList) {
 %>
 			<option value="<%=group.get("mygroup_no")%>"
@@ -380,7 +380,7 @@ function tsr(s) {
           param[1]=year+"-"+month+"-"+day;//e.g."2001-02-02";
           resultList = oscarSuperManager.find("providerDao", strsearchappointmentday, param);
 
-          Iterator<Map> it = resultList.iterator();
+          Iterator<Map<String,Object>> it = resultList.iterator();
           Map appt = null;
 
           for(ih=startHour*60; ih<=endHour*60; ih+=depth) { // use minutes as base

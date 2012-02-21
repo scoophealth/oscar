@@ -13,6 +13,8 @@ package com.quatro.model.security;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.oscarehr.util.EncryptionUtils;
+
 
 public class Security implements java.io.Serializable {
 	public static final int LOGIN_SUCCESS = 0;
@@ -167,4 +169,20 @@ public class Security implements java.io.Serializable {
 		this.loginStatus = loginStatus;
 	}
 
+	/**
+	 * @return true if inputed password equals password in the DB, false otherwise.
+	 */
+	public boolean checkPassword(String inputedPassword)
+	{
+		if (password==null) return(false);
+		
+        byte[] sha1Bytes = EncryptionUtils.getSha1(inputedPassword);
+        StringBuilder sb=new StringBuilder();
+        for (byte b : sha1Bytes)
+        {
+        	sb.append(b);
+        }
+        
+		return(password.equals(sb.toString()));
+	}
 }

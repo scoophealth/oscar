@@ -529,7 +529,7 @@ Event.observe('rxInteractionWarningLevel', 'change', function(event) {
 <%
 	if (providerPreference!=null) {
 		String def = providerPreference.getDefaultServiceType();
-		List<Map> resultList = oscarSuperManager.find("providerDao", "list_bills_servicetype", new Object[] {});
+		List<Map<String,Object>> resultList = oscarSuperManager.find("providerDao", "list_bills_servicetype", new Object[] {});
 		for (Map bill : resultList) {
 %>
 				<option value="<%=bill.get("servicetype")%>"
@@ -538,7 +538,7 @@ Event.observe('rxInteractionWarningLevel', 'change', function(event) {
 <%
 		}
 	} else {
-		List<Map> resultList = oscarSuperManager.find("providerDao", "list_bills_servicetype", new Object[] {});
+		List<Map<String,Object>> resultList = oscarSuperManager.find("providerDao", "list_bills_servicetype", new Object[] {});
 		for (Map bill : resultList) {	
 %>
 		<option value="<%=bill.get("servicetype")%>"><%=bill.get("servicetype_name")%></option>

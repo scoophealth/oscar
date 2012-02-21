@@ -36,6 +36,8 @@ import org.apache.log4j.Logger;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.Provider;
 
+import com.quatro.model.security.Security;
+
 public class LoggedInUserFilter implements javax.servlet.Filter {
 	private static final Logger logger = MiscUtils.getLogger();
 
@@ -56,6 +58,7 @@ public class LoggedInUserFilter implements javax.servlet.Filter {
 			x.session = session;
 			x.currentFacility = (Facility) session.getAttribute(SessionConstants.CURRENT_FACILITY);
 			x.loggedInProvider = (Provider) session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER);
+			x.loggedInSecurity = (Security) session.getAttribute(SessionConstants.LOGGED_IN_SECURITY);
 			x.initiatingCode = request.getRequestURI();
 			LoggedInInfo.loggedInInfo.set(x);
 

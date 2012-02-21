@@ -137,7 +137,7 @@ function selectProviderCaisi(p,pn) {
 
   int nItems = 0;
   String sp = null, spnl = null, spnf = null;
-  List<Map> resultList = oscarSuperManager.find("receptionistDao", dboperation, param);
+  List<Map<String,Object>> resultList = oscarSuperManager.find("receptionistDao", dboperation, param);
 
   for (Map provider : resultList) {
     bColor = bColor?false:true ;
