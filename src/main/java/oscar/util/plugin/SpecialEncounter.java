@@ -33,7 +33,7 @@ public class SpecialEncounter extends TagSupport
 			String propFileName = System.getProperty("user.home") + sep
 					+ propFile;
 			OscarProperties proper = OscarProperties.getInstance();
-			proper.loader(propFileName);
+			proper.readFromFile(propFileName);
 			if (!isExactEqual()&&(proper.getProperty("specialencounter", "").indexOf(moduleName)>=0)){
 							
 				if (reverse) return SKIP_BODY;
