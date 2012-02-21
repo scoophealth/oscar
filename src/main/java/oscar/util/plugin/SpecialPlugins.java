@@ -42,7 +42,7 @@ public class SpecialPlugins extends TagSupport {
 			String propFileName = System.getProperty("user.home") + sep
 					+ propFile;
 			OscarProperties proper = OscarProperties.getInstance();
-			proper.loader(propFileName);
+			proper.readFromFile(propFileName);
 			
 			for (int i = 0; i < mNameArray.length; i++) {
 				String mname=mNameArray[i];

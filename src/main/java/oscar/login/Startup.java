@@ -28,7 +28,6 @@
 package oscar.login;
 
 import java.io.File;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -81,7 +80,7 @@ public class Startup implements ServletContextListener {
 			// oscar.OscarProperties p = oscar.OscarProperties.getInstance();
 			try {
 				// This has been used to look in the users home directory that started tomcat
-				p.loader(propFileName);
+				p.readFromFile(propFileName);
 				logger.info("loading properties from " + propFileName);
 			} catch (java.io.FileNotFoundException ex) {
 				logger.info(propFileName + " not found");
@@ -90,8 +89,7 @@ public class Startup implements ServletContextListener {
 				/* if the file not found in the user root, look in the WEB-INF directory */
 				try {
 					logger.info("looking up  /WEB-INF/" + propName);
-					InputStream pf = sc.getServletContext().getResource("/WEB-INF/" + propName).openStream();
-					p.loader(pf);
+					p.readFromFile("/WEB-INF/" + propName);
 					logger.info("loading properties from /WEB-INF/" + propName);
 				} catch (java.io.FileNotFoundException e) {
 					logger.error("Configuration file: " + propName + " cannot be found, it should be put either in the User's home or in WEB-INF ");

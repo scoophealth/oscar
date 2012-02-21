@@ -33,51 +33,21 @@ import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
 import org.oscarehr.util.MiscUtils;
 
-/*
- * Updated by Eugene Petruhin on 21 jan 2009 while fixing missing "New Note" link
- * New isPropertyActive() function is introduced and everybody is encouraged to use it
- */
 /**
- * This class will hold OSCAR & CAISI properties.
- * It is a singleton class. Do not instantiate it, use the method getInstance().
- * Every time the properties file changes, tomcat must be restarted.
+ * This class will hold OSCAR & CAISI properties. It is a singleton class. Do not instantiate it, use the method getInstance(). Every time the properties file changes, tomcat must be restarted.
  */
 public class OscarProperties extends Properties {
-    private static Logger logger=MiscUtils.getLogger(); 
-
 	private static final long serialVersionUID = -5965807410049845132L;
 	private static OscarProperties oscarProperties = new OscarProperties();
-	private static boolean loaded = false;
-	private static final Set<String> activeMarkers = new HashSet<String>(Arrays.asList(new String[] {"true", "yes", "on"}));
+	private static final Set<String> activeMarkers = new HashSet<String>(Arrays.asList(new String[] { "true", "yes", "on" }));
 
-	static {
-		try {
-			readFromFile("/oscar_mcmaster.properties", oscarProperties);
-		} catch (IOException e) {
-			// don't use a logger here or your asking for trouble, it's a static initialiser
-			MiscUtils.getLogger().error("Error", e);
-		}
-	}
-        
 	/**
 	 * @return OscarProperties the instance of OscarProperties
 	 */
 	public static OscarProperties getInstance() {
 		return oscarProperties;
-	}
-
-	private static void readFromFile(String url, Properties p) throws IOException {
-		InputStream is = OscarProperties.class.getResourceAsStream(url);
-		if (is == null) is = new FileInputStream(url);
-
-		try {
-			p.load(is);
-		} finally {
-			is.close();
-		}
 	}
 
 	/* If cant find the file, inform and continue */
@@ -93,30 +63,48 @@ public class OscarProperties extends Properties {
 	/* Do not use this constructor. Use getInstance instead */
 	private OscarProperties() {
 		MiscUtils.getLogger().debug("OSCAR PROPS CONSTRUCTOR");
+
+		try {
+			readFromFile("/oscar_mcmaster.properties");
+
+			String overrideProperties = System.getProperty("oscar_override_properties");
+			if (overrideProperties != null) {
+				MiscUtils.getLogger().info("Applying override properties : "+overrideProperties);
+				readFromFile(overrideProperties);
+			}
+		} catch (IOException e) {
+			MiscUtils.getLogger().error("Error", e);
+		}
 	}
 
-        
-        /*
-         * Check to see if the properties to see if that property exists.
-         */
-        public boolean hasProperty(String key){
-            boolean prop = false;
-            String propertyValue = getProperty(key);
-            if (propertyValue != null) {
-                    prop = true;
-            }
-            return prop;
-        }
+	public void readFromFile(String url) throws IOException {
+		InputStream is = getClass().getResourceAsStream(url);
+		if (is == null) is = new FileInputStream(url);
+
+		try {
+			load(is);
+		} finally {
+			is.close();
+		}
+	}
+
+	/*
+	 * Check to see if the properties to see if that property exists.
+	 */
+	public boolean hasProperty(String key) {
+		boolean prop = false;
+		String propertyValue = getProperty(key);
+		if (propertyValue != null) {
+			prop = true;
+		}
+		return prop;
+	}
+
 	/**
-	 * Will check the properties to see if that property is set and if it's set to the given value.
-	 * If it is method returns true if not method returns false.
+	 * Will check the properties to see if that property is set and if it's set to the given value. If it is method returns true if not method returns false. This method was improved to ensure positive response on any "true", "yes" or "on" property value.
 	 * 
-	 * This method was improved to ensure positive response on any "true", "yes" or "on" property value.
-	 * 
-	 * @param key
-	 *            key of property
-	 * @param val
-	 *            value that will cause a true value to be returned
+	 * @param key key of property
+	 * @param val value that will cause a true value to be returned
 	 * @return boolean
 	 */
 	public boolean getBooleanProperty(String key, String val) {
@@ -129,69 +117,38 @@ public class OscarProperties extends Properties {
 	}
 
 	/**
-	 * Will check the properties to see if that property is set and if it's set to "true", "yes" or "on" value.
-	 * If it is method returns true if not method returns false.
+	 * Will check the properties to see if that property is set and if it's set to "true", "yes" or "on" value. If it is method returns true if not method returns false.
 	 * 
-	 * @param key
-	 *            key of property
-	 * @return boolean
-	 *            whether the property is active
+	 * @param key key of property
+	 * @return boolean whether the property is active
 	 */
 	public boolean isPropertyActive(String key) {
 		return activeMarkers.contains(getProperty(key, "").toLowerCase());
 	}
 
-	public void loader(InputStream propertyStream) {
-		if (!loaded) {
-			try {
-				load(propertyStream);
-				propertyStream.close();
-				loaded = true;
-			} catch (IOException ex) {
-				logger.error("IO Error: ", ex);
-			}
-		}
-	}
-
-	public void loader(String propFileName) throws java.io.FileNotFoundException {
-		if (!loaded) {
-			FileInputStream fis2 = new FileInputStream(propFileName);
-			try {
-				load(fis2);
-				fis2.close();
-				loaded = true;
-			} catch (IOException ex) {
-				logger.error("IO Error: ", ex);
-			}
-		}
-	}
-
 	/*
-	 * Comma delimited spring configuration modules
-	 * Options:  Caisi,Indivo
-	 * Caisi  - Required to run the Caisi Shelter Management System
-	 * Indivo - Indivo PHR record. Required for integration with Indivo.
+	 * Comma delimited spring configuration modules Options: Caisi,Indivo Caisi - Required to run the Caisi Shelter Management System Indivo - Indivo PHR record. Required for integration with Indivo.
 	 */
 
 	/*
-	 * not being used - commenting out
-	public final String ModuleNames = "ModuleNames";
-	*/  
+	 * not being used - commenting out public final String ModuleNames = "ModuleNames";
+	 */
 
-	public Date getStartTime(){
-		String str  = getProperty("OSCAR_START_TIME");
+	public Date getStartTime() {
+		String str = getProperty("OSCAR_START_TIME");
 		Date ret = null;
 		try {
 			ret = new Date(Long.parseLong(str));
-		} catch (Exception e){/*No Date Found*/}
+		} catch (Exception e) {/* No Date Found */
+		}
 		return ret;
 	}
 
 	public boolean isTorontoRFQ() {
 		return isPropertyActive("TORONTO_RFQ");
 	}
-     
-    public boolean isProviderNoAuto() {
+
+	public boolean isProviderNoAuto() {
 		return isPropertyActive("AUTO_GENERATE_PROVIDER_NO");
 	}
 
@@ -246,7 +203,7 @@ public class OscarProperties extends Properties {
 	public static String getBuildDate() {
 		return oscarProperties.getProperty("buildDateTime");
 	}
-	
+
 	public static String getBuildTag() {
 		return oscarProperties.getProperty("buildtag");
 	}
