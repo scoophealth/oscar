@@ -8433,6 +8433,8 @@ note text,
 specialty varchar(255),
 cpso varchar(10),
 systemId varchar(30),
+deleted tinyint,
+updateDate timestamp not null,
 KEY (`type`),
 KEY (`cpso`),
 KEY (`systemId`)
