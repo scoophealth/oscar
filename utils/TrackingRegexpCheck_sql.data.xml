@@ -16,6 +16,7 @@
         <ViolationValue>/database/mysql/oscarinit_bc.sql:) ENGINE=MyISAM ;</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:) ENGINE=MyISAM;</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:) TYPE=MyISAM;</ViolationValue>
+        <ViolationValue>/database/mysql/oscarinit_on.sql:) ENGINE=MyISAM ;</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-2007-07-17.sql:) ENGINE=MyISAM AUTO_INCREMENT=30 DEFAULT CHARSET=latin1;</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-2007-07-25.sql:) ENGINE=MyISAM DEFAULT CHARSET=latin1;</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-2007-08-16.sql:) ENGINE=MyISAM;</ViolationValue>
