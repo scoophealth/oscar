@@ -7,7 +7,7 @@
 <%@page import="java.text.SimpleDateFormat" %>
 <%
 	String sdate = StringUtils.transformNullInEmptyString((String)request.getAttribute("sdate"));
-	String edate = StringUtils.transformNullInEmptyString((String)request.getAttribute("edate"));	
+	String edate = StringUtils.transformNullInEmptyString((String)request.getAttribute("edate"));
 %>
 <html>
 	<head>
@@ -21,11 +21,11 @@
     	<style type="text/css">
 			* { font-family: Trebuchet MS, Lucida Sans Unicode, Arial, Helvetica, sans-serif; color: #000; margin: 0px; padding: 0px; }
 			body { padding: 10px; }
-			
+
 			td.inner{
 			border:1px solid #666;
 			}
-			
+
 			table.common{
 			border:0;
 			font-size: 10pt;
@@ -44,11 +44,11 @@
 				width: 300px;
 			}
 			th {white-space:nowrap}
-			
+
 			.centered {text-align:center}
-		</style>    	
+		</style>
 	</head>
-	
+
 	<body>
 		<form action="<%=request.getContextPath()%>/eyeform/ExaminationHistory.do" method="POST" id="inputForm" name="inputForm">
 		<input type="hidden" name="method" value="query"/>
@@ -74,29 +74,29 @@
 								Calendar.setup({ inputField : "sdate", ifFormat : "%Y-%m-%d", showsTime :false, button : "sdate_cal", singleClick : true, step : 1 });
 							</script>
 		    			</td>
-						<td>End Date:</td> 
+						<td>End Date:</td>
 						<td>
 							<input type="text" class="plain" name="edate" id="edate" size="12" onfocus="this.blur()" readonly="readonly" value="<%=edate%>"/>
 							<img src="<%=request.getContextPath()%>/images/cal.gif" id="edate_cal">
 			 				<script type="text/javascript">
 								Calendar.setup({ inputField : "edate", ifFormat : "%Y-%m-%d", showsTime :false, button : "edate_cal", singleClick : true, step : 1 });
-							</script>							
+							</script>
 						</td>
 						<td></td>
 						<td>
 							<input type="submit" onclick="this.form.refPage.value=null" value="Search"/>
 						</td>
 					</tr>
-				</table>			
-			</tr>			
+				</table>
+			</tr>
 	 	</table>
-	 		 		 	
+
 		<h5>Simple field history:</h5>
 		<table class="display" style="width:20%">
 		<tr style="background-color: rgb(204, 204, 255);">
 	    <td>Total <c:out value="${numPages}"/> pages.</td>
 		<td align="right">
-		<% 
+		<%
 			int numPages = (Integer)request.getAttribute("numPages");
 			int pageNumber = (Integer)request.getAttribute("refPage");
 			if(pageNumber>1) {
@@ -120,7 +120,7 @@
 		  		<td nowrap="nowrap"></td>
 		  		<%
 		  			SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
-		  			for(Appointment appointment:(List<Appointment>)request.getAttribute("appointments")) { 
+		  			for(Appointment appointment:(List<Appointment>)request.getAttribute("appointments")) {
 		  				out.println("<td nowrap=\"nowrap\">"+formatter.format(appointment.getAppointmentDate())+"</td>");
 		  			}
 		  		%>
@@ -132,7 +132,7 @@
 				for(int x=0;x<simpleFields.length;x++) {
 					out.println("<tr class=\""+(((x%2)==0)?"even":"odd")+"\">");
 					out.println("<td nowrap=\"nowrap\">"+simpleFieldNames.get(x)+"</td>");
-					for(int y=0;y<simpleFields[x].length;y++) {						
+					for(int y=0;y<simpleFields[x].length;y++) {
 						out.println("<td nowrap=\"nowrap\">"+((simpleFields[x][y]!=null)?simpleFields[x][y].getDataField():"")+"</td>");
 					}
 					out.println("</tr>");
@@ -142,12 +142,12 @@
 <table class="display">
   <tr>
   <td><h5>AR history</h5>
-  <display:table name="ars" requestURI="/eyeform/ExaminationHistory.do" class="display" id="map" pagesize="5">
-	
+  <display:table name="ars" requestURI="/eyeform/ExaminationHistory.do" class="display" style="width:100%" id="map" pagesize="5">
+
 			<display:column title="OD Sph" style="width:30px;white-space: nowrap;">
 			<c:out value="${map.od_ar_sph}"/>
 			</display:column>
-		       
+
 			<display:column title="OD Cyl" style="width:30px;white-space: nowrap;">
 			<c:out value="${map.od_ar_cyl}"/>
 
@@ -155,35 +155,35 @@
 			 <display:column title="OD Axis" style="width:30px;white-space: nowrap;">
 		    <c:out value="${map.od_ar_axis}"/>
 			</display:column>
-			
-			<display:column title="Date" style="width:80%;white-space: nowrap;text-align:center" headerClass="centered">
+
+			<display:column title="Date" style="width:60px;white-space: nowrap;text-align:center" headerClass="centered">
 			<c:out value="${map.date}"/>
 			</display:column>
-		   
+
 			<display:column title="OS Sph" style="width:30px;white-space: nowrap;">
 			<c:out value="${map.os_ar_sph}"/>
 			</display:column>
-		       
+
 			<display:column title="OS Cyl" style="width:30px;white-space: nowrap;">
 			<c:out value="${map.os_ar_cyl}"/>
 			</display:column>
-			
+
 			 <display:column title="OS Axis" style="width:30px;">
 		    <c:out value="${map.os_ar_axis}"/>
-			</display:column>  
+			</display:column>
 
 	</display:table>
    </td>
-   </tr>	
-   
+   </tr>
+
   <tr>
   <td><h5>K history</h5>
-  <display:table name="ks" requestURI="/ExaminationHistory.do" class="display" id="map" pagesize="5">
-						
+  <display:table name="ks" requestURI="/ExaminationHistory.do" class="display" style="width:100%" id="map" pagesize="5">
+
 			<display:column title="OD K1" style="width:30px;">
 			<c:out value="${map.od_k1}"/>
 			</display:column>
-		       
+
 			<display:column title="OD K2" style="width:30px;">
 			<c:out value="${map.od_k2}"/>
 
@@ -191,124 +191,124 @@
 			 <display:column title="OD K2-Axis" style="width:30px;">
 		    <c:out value="${map.od_k2_axis}"/>
 			</display:column>
-			
+
 			<display:column title="Date" style="text-align:center" headerClass="centered">
 			<c:out value="${map.date}"/>
 			</display:column>
-		   
+
 			<display:column title="OS K1" style="width:30px;">
 			<c:out value="${map.os_k1}"/>
 			</display:column>
-		       
+
 			<display:column title="OS K2" style="width:30px;">
 			<c:out value="${map.os_k2}"/>
 			</display:column>
-			
+
 			 <display:column title="OS K2-Axis" style="width:30px;">
 		    <c:out value="${map.os_k2_axis}"/>
-			</display:column>  
+			</display:column>
 
 	</display:table>
    </td>
-   </tr>   
-   		
-   		
+   </tr>
+
+
   <tr>
   <td><h5>Manifest Refraction history</h5>
-  <display:table name="manifestRefraction" requestURI="/eyeform/ExaminationHistory.do" class="display" id="map" pagesize="5">
-						
+  <display:table name="manifestRefraction" requestURI="/eyeform/ExaminationHistory.do" class="display" style="width:100%" id="map" pagesize="5">
+
 			<display:column title="OD Sph" style="width:30px;">
 			<c:out value="${map.od_manifest_refraction_sph}"/>
 			</display:column>
-		       
+
 			<display:column title="OD Cyl" style="width:30px;">
 			<c:out value="${map.od_manifest_refraction_cyl}"/>
 
 			</display:column>
-			
+
 			 <display:column title="OD Axis" style="width:30px;">
 		    <c:out value="${map.od_manifest_refraction_axis}"/>
 			</display:column>
-			
-		
+
+
 			 <display:column title="OD Add" style="width:30px;">
 		    <c:out value="${map.od_manifest_refraction_add}"/>
 			</display:column>
-		   
+
 		   <display:column title="Date" style="text-align:center" headerClass="centered">
 			<c:out value="${map.date}"/>
 			</display:column>
-			
+
 			<display:column title="OS Sph" style="width:30px;">
 			<c:out value="${map.os_manifest_refraction_sph}"/>
 			</display:column>
-		       
+
 			<display:column title="OS Cyl" style="width:30px;">
 			<c:out value="${map.os_manifest_refraction_cyl}"/>
 			</display:column>
-			
+
 			 <display:column title="OS Axis" style="width:30px;">
 		    <c:out value="${map.os_manifest_refraction_axis}"/>
-			</display:column>  
-			
+			</display:column>
+
 		 <display:column title="OS Add" style="width:30px;">
 		    <c:out value="${map.os_manifest_refraction_add}"/>
 			</display:column>
-	
+
   </display:table>
    </td>
-   </tr>   		
-			
-			
+   </tr>
+
+
   <tr>
   <td><h5>Cycloplegic refraction history</h5>
-  <display:table name="cycloplegicRefraction" requestURI="/eyeform/ExaminationHistory.do" class="display" id="map" pagesize="5">
+  <display:table name="cycloplegicRefraction" requestURI="/eyeform/ExaminationHistory.do" class="display" style="width:100%" id="map" pagesize="5">
 
 			<display:column title="OD Sph" style="width:30px;">
 			<c:out value="${map.od_cycloplegic_refraction_sph}"/>
 			</display:column>
-		       
+
 			<display:column title="OD Cyl" style="width:30px;">
 			<c:out value="${map.od_cycloplegic_refraction_cyl}"/>
 
 			</display:column>
-			
+
 			 <display:column title="OD Axis" style="width:30px;">
 		    <c:out value="${map.od_cycloplegic_refraction_axis}"/>
 			</display:column>
-			
-		
+
+
 			 <display:column title="OD Add" style="width:30px;">
 		    <c:out value="${map.od_cycloplegic_refraction_add}"/>
 			</display:column>
-		   
+
 		   <display:column title="Date" style="text-align:center" headerClass="centered">
 			<c:out value="${map.date}"/>
 			</display:column>
-			
+
 			<display:column title="OS Sph" style="width:30px;">
 			<c:out value="${map.os_cycloplegic_refraction_sph}"/>
 			</display:column>
-		       
+
 			<display:column title="OS Cyl" style="width:30px;">
 			<c:out value="${map.os_cycloplegic_refraction_cyl}"/>
 			</display:column>
-			
+
 			 <display:column title="OS Axis" style="width:30px;">
 		    <c:out value="${map.os_cycloplegic_refraction_axis}"/>
-			</display:column>  
-			
+			</display:column>
+
 		 <display:column title="OS Add" style="width:30px;">
 		    <c:out value="${map.os_cycloplegic_refraction_add}"/>
 			</display:column>
-	
+
   </display:table>
    </td>
    </tr>
-   			
+
   <tr>
   <td><h5>Angle history</h5>
-  <display:table name="angle" requestURI="/eyeform/ExaminationHistory.do" class="display" id="map" pagesize="5">
+  <display:table name="angle" requestURI="/eyeform/ExaminationHistory.do" class="display" style="width:100%" id="map" pagesize="5">
 
 			<display:column title="OD" >
 			<table style="border:0px">
@@ -332,7 +332,7 @@
 			<display:column title="Date" style="text-align:center" headerClass="centered">
 			<c:out value="${map.date}"/>
 			</display:column>
-			
+
 			<display:column title="OS" >
 			<table border="1">
 			<tr>
@@ -352,12 +352,12 @@
 			</tr>
 			</table>
 			</display:column>
-	
+
   </display:table>
    </td>
-   </tr>   			
-   			
-		</table>	 	
+   </tr>
+
+		</table>
 
 	</body>
 </html>
