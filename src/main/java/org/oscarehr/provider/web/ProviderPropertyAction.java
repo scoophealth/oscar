@@ -79,9 +79,11 @@ public class ProviderPropertyAction extends DispatchAction {
 
          DynaActionForm frm = (DynaActionForm)actionform;
          UserProperty prop = (UserProperty)frm.get("dateProperty");
+         UserProperty prop2 = (UserProperty)frm.get("singleViewProperty");
 
          frm.reset(actionmapping,request);
          this.userPropertyDAO.delete(prop);
+         this.userPropertyDAO.delete(prop2);
 
          request.setAttribute("status", "success");
 
@@ -105,6 +107,16 @@ public class ProviderPropertyAction extends DispatchAction {
 
          frm.set("dateProperty", prop);
 
+         UserProperty prop2 = this.userPropertyDAO.getProp(provider, UserProperty.STALE_FORMAT);
+
+         if( prop2 == null ) {
+             prop2 = new UserProperty();
+             prop2.setProviderNo(provider);
+             prop2.setName(UserProperty.STALE_FORMAT);
+         }
+
+         frm.set("singleViewProperty", prop2);
+
          return actionmapping.findForward("success");
      }
 
@@ -118,6 +130,10 @@ public class ProviderPropertyAction extends DispatchAction {
          UserProperty prop = (UserProperty)frm.get("dateProperty");
 
          this.userPropertyDAO.saveProp(prop);
+
+         UserProperty prop2 = (UserProperty)frm.get("singleViewProperty");
+
+         this.userPropertyDAO.saveProp(prop2);
 
          request.setAttribute("status", "success");
          return actionmapping.findForward("success");
@@ -606,7 +622,7 @@ public class ProviderPropertyAction extends DispatchAction {
          String provider = (String) request.getSession().getAttribute("user");
          UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.USE_MYMEDS);
          if (prop == null) prop = new UserProperty();
-         
+
          String propValue=prop.getValue();
          boolean checked=Boolean.parseBoolean(propValue);
 
@@ -1414,29 +1430,29 @@ public class ProviderPropertyAction extends DispatchAction {
 
          return actionmapping.findForward("gen");
     }
-    
+
     public ActionForward viewCppSingleLine(ActionMapping actionmapping,
             ActionForm actionform,
             HttpServletRequest request,
             HttpServletResponse response) {
-	
+
 		DynaActionForm frm = (DynaActionForm)actionform;
 		String provider = (String) request.getSession().getAttribute("user");
 		UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.CPP_SINGLE_LINE);
-		
+
 		String propValue="";
 		if (prop == null){
 			prop = new UserProperty();
 		}else{
 			propValue=prop.getValue();
 		}
-		
+
 		boolean checked;
 		if(propValue.equalsIgnoreCase("yes"))
 			checked=true;
 		else
 			checked=false;
-		
+
 		prop.setChecked(checked);
 		request.setAttribute("cppSingleLineProperty", prop);
 		request.setAttribute("providertitle","provider.setCppSingleLine.title"); //=Select if you want to use Rx3
@@ -1446,19 +1462,19 @@ public class ProviderPropertyAction extends DispatchAction {
 		request.setAttribute("providerbtnSubmit","provider.setCppSingleLine.btnSubmit"); //=Save
 		request.setAttribute("providermsgSuccess","provider.setCppSingleLine.msgSuccess"); //=Rx3 Selection saved
 		request.setAttribute("method","saveUseCppSingleLine");
-		
+
 		frm.set("cppSingleLineProperty", prop);
-		
+
 		return actionmapping.findForward("genCppSingleLine");
 	}
 
 
-    public ActionForward saveUseCppSingleLine(ActionMapping actionmapping,ActionForm actionform,HttpServletRequest request,HttpServletResponse response){	
+    public ActionForward saveUseCppSingleLine(ActionMapping actionmapping,ActionForm actionform,HttpServletRequest request,HttpServletResponse response){
     	String provider=(String) request.getSession().getAttribute("user");
 
     	DynaActionForm frm=(DynaActionForm)actionform;
     	UserProperty UUseRx3=(UserProperty)frm.get("cppSingleLineProperty");
- 
+
 		boolean checked=false;
 		if(UUseRx3!=null)
 			checked = UUseRx3.isChecked();
@@ -1474,7 +1490,7 @@ public class ProviderPropertyAction extends DispatchAction {
 
 		prop.setValue(useRx3);
 		this.userPropertyDAO.saveProp(prop);
-		
+
 		request.setAttribute("status", "success");
 		request.setAttribute("cppSingleLineProperty",prop);
 		request.setAttribute("providertitle","provider.setCppSingleLine.title"); //=Select if you want to use Rx3
@@ -1490,50 +1506,50 @@ public class ProviderPropertyAction extends DispatchAction {
 
 		return actionmapping.findForward("genCppSingleLine");
 	}
-    
+
     public ActionForward viewCommentLab(ActionMapping actionmapping,
             ActionForm actionform,
             HttpServletRequest request,
             HttpServletResponse response) {
-	
+
 		DynaActionForm frm = (DynaActionForm)actionform;
 		String provider = (String) request.getSession().getAttribute("user");
 		UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.LAB_ACK_COMMENT);
-		
+
 		String propValue="";
 		if (prop == null){
 			prop = new UserProperty();
 		}else{
 			propValue=prop.getValue();
 		}
-		
+
 		boolean checked;
 		if(propValue.equalsIgnoreCase("yes"))
 			checked=true;
 		else
 			checked=false;
-		
+
 		prop.setChecked(checked);
 		request.setAttribute("labAckComment", prop);
-		request.setAttribute("providertitle","provider.setAckComment.title"); 
+		request.setAttribute("providertitle","provider.setAckComment.title");
 		request.setAttribute("providermsgPrefs","provider.setAckComment.msgPrefs");
 		request.setAttribute("providermsgProvider","provider.setAckComment.msgProfileView");
-		request.setAttribute("providermsgEdit","provider.setAckComment.msgEdit"); 
+		request.setAttribute("providermsgEdit","provider.setAckComment.msgEdit");
 		request.setAttribute("providerbtnSubmit","provider.setAckComment.btnSubmit");
 		request.setAttribute("providermsgSuccess","provider.setAckComment.msgSuccess");
 		request.setAttribute("method","saveCommentLab");
-		
+
 		frm.set("labAckCommentProperty", prop);
-		
+
 		return actionmapping.findForward("genAckCommentLab");
 	}
-    
-    public ActionForward saveCommentLab(ActionMapping actionmapping,ActionForm actionform,HttpServletRequest request,HttpServletResponse response){	
+
+    public ActionForward saveCommentLab(ActionMapping actionmapping,ActionForm actionform,HttpServletRequest request,HttpServletResponse response){
     	String provider=(String) request.getSession().getAttribute("user");
 
     	DynaActionForm frm=(DynaActionForm)actionform;
     	UserProperty Uprop=(UserProperty)frm.get("labAckCommentProperty");
- 
+
 		boolean checked=false;
 		if(Uprop!=null)
 			checked = Uprop.isChecked();
@@ -1549,28 +1565,28 @@ public class ProviderPropertyAction extends DispatchAction {
 
 		prop.setValue(disableComment);
 		this.userPropertyDAO.saveProp(prop);
-		
+
 		request.setAttribute("status", "success");
 		request.setAttribute("labAckComment", prop);
-		request.setAttribute("providertitle","provider.setAckComment.title"); 
+		request.setAttribute("providertitle","provider.setAckComment.title");
 		request.setAttribute("providermsgPrefs","provider.setAckComment.msgPrefs");
 		request.setAttribute("providermsgProvider","provider.setAckComment.msgProfileView");
-		request.setAttribute("providermsgEdit","provider.setAckComment.msgEdit"); 
+		request.setAttribute("providermsgEdit","provider.setAckComment.msgEdit");
 		request.setAttribute("providerbtnSubmit","provider.setAckComment.btnSubmit");
 		request.setAttribute("providermsgSuccess","provider.setAckComment.msgSuccess");
 		request.setAttribute("method","saveCommentLab");
-		
+
 		if(checked)
 			request.setAttribute("providermsgSuccess","provider.setAckComment.msgSuccess_selected");
 		else
 			request.setAttribute("providermsgSuccess","provider.setAckComment.msgSuccess_unselected");
-		
+
 
 		return actionmapping.findForward("genAckCommentLab");
 	}
-    
-    
-    
+
+
+
     public ActionForward viewIntegratorProperties(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         UserProperty[] integratorProperties = new UserProperty[20];
         integratorProperties[0] = this.userPropertyDAO.getProp(UserProperty.INTEGRATOR_DEMOGRAPHIC_SYNC);
@@ -1593,13 +1609,13 @@ public class ProviderPropertyAction extends DispatchAction {
         integratorProperties[17] = this.userPropertyDAO.getProp(UserProperty.INTEGRATOR_PROVIDERS);
         integratorProperties[18] = this.userPropertyDAO.getProp(UserProperty.INTEGRATOR_FULL_PUSH);
         integratorProperties[19] = this.userPropertyDAO.getProp(UserProperty.INTEGRATOR_LAST_PUSH);
-        
-        request.setAttribute("integratorProperties", integratorProperties);       
+
+        request.setAttribute("integratorProperties", integratorProperties);
         return mapping.findForward("genIntegrator");
     }
-    
+
     public ActionForward saveIntegratorProperties(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-        
+
         this.userPropertyDAO.saveProp(UserProperty.INTEGRATOR_DEMOGRAPHIC_ADMISSIONS, request.getParameter("integrator_demographic_admissions"));
         this.userPropertyDAO.saveProp(UserProperty.INTEGRATOR_DEMOGRAPHIC_ALLERGIES, request.getParameter("integrator_demographic_allergies"));
         this.userPropertyDAO.saveProp(UserProperty.INTEGRATOR_DEMOGRAPHIC_APPOINTMENTS, request.getParameter("integrator_demographic_appointments"));
@@ -1615,15 +1631,15 @@ public class ProviderPropertyAction extends DispatchAction {
         this.userPropertyDAO.saveProp(UserProperty.INTEGRATOR_DEMOGRAPHIC_NOTES, request.getParameter("integrator_demographic_notes"));
         this.userPropertyDAO.saveProp(UserProperty.INTEGRATOR_DEMOGRAPHIC_PREVENTIONS, request.getParameter("integrator_demographic_preventions"));
         this.userPropertyDAO.saveProp(UserProperty.INTEGRATOR_DEMOGRAPHIC_SYNC, request.getParameter("integrator_demographic_sync"));
-        
+
         this.userPropertyDAO.saveProp(UserProperty.INTEGRATOR_FACILITY, request.getParameter("integrator_facility"));
         this.userPropertyDAO.saveProp(UserProperty.INTEGRATOR_PROGRAMS, request.getParameter("integrator_programs"));
         this.userPropertyDAO.saveProp(UserProperty.INTEGRATOR_PROVIDERS, request.getParameter("integrator_providers"));
-        
+
         this.userPropertyDAO.saveProp(UserProperty.INTEGRATOR_FULL_PUSH, request.getParameter("integrator_full_push"));
-        
+
         request.setAttribute("saved", true);
-        
+
         return viewIntegratorProperties(mapping, form, request, response);
     }
 

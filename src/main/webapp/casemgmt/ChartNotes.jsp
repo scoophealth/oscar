@@ -114,6 +114,33 @@ try
     </c:if>
 
     strToday = "<%=strToday%>";
+
+
+    jQuery(document).ready(function(){
+    	<%
+    		String singleLineFormat="false";
+	    	UserProperty slProp = (UserProperty)request.getAttribute(UserProperty.STALE_FORMAT);
+    		if(slProp != null && slProp.getValue().equals("yes")) {
+    			singleLineFormat="true";
+    		}
+    	%>
+    	if('<%=singleLineFormat%>'=='true') {
+	    	var staleIds = new Array();
+
+	        jQuery("img[id^='quitImg']").each(function(){
+	     	   if(jQuery(this).attr('src').indexOf('/oscarEncounter/graphics/triangle_down.gif')!=-1) {
+	     		   var iid = jQuery(this).attr('id');
+	     		   jQuery(this).trigger('click');
+	     		   staleIds.push(iid);
+	     	   }
+	        });
+
+	        for(var i=0;i<staleIds.length;i++) {
+	        	//alert("#"+staleIds[i]);
+	        	jQuery("#"+staleIds[i]).trigger('click');
+	        }
+    	}
+    });
 </script>
 
  <html:form action="/CaseManagementView" method="post">

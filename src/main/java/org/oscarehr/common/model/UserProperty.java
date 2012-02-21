@@ -35,6 +35,7 @@ public class UserProperty implements Serializable {
 
     public final static String MYOSCAR_ID="MyOscarId";
     public final static String STALE_NOTEDATE = "cme_note_date";
+    public final static String STALE_FORMAT = "cme_note_format";
     public final static String MYDRUGREF_ID = "mydrugref_id";
     public final static String ONTARIO_MD_USERNAME = "ontario_md_username";
     public final static String ONTARIO_MD_PASSWORD = "ontario_md_password";
@@ -54,7 +55,7 @@ public class UserProperty implements Serializable {
 
     public final static String EFORM_FAVOURITE_GROUP = "favourite_eform_group";
     public final static String RX_SHOW_PATIENT_DOB="rx_show_patient_dob";
-    
+
     //added to user properties with new interface
     public final static String FAX = "fax";
     public final static String SIGNATURE = "signature";
@@ -79,8 +80,8 @@ public class UserProperty implements Serializable {
     public final static String DEFAULT_DX_CODE = "default_dx_code";
     public final static String CPP_SINGLE_LINE="cpp_single_line";
     public final static String LAB_ACK_COMMENT="lab_ack_comment";
-    
-    
+
+
     public static final String INTEGRATOR_DEMOGRAPHIC_SYNC = "integrator_demographic_sync";
     public static final String INTEGRATOR_DEMOGRAPHIC_ISSUES = "integrator_demographic_issues";
     public static final String INTEGRATOR_DEMOGRAPHIC_CONSENT = "integrator_demographic_consent";
@@ -96,15 +97,15 @@ public class UserProperty implements Serializable {
     public static final String INTEGRATOR_DEMOGRAPHIC_DOCUMENTS = "integrator_demographic_documents";
     public static final String INTEGRATOR_DEMOGRAPHIC_ALLERGIES = "integrator_demographic_allergies";
     public static final String INTEGRATOR_DEMOGRAPHIC_LABREQ = "integrator_demographic_labreq";
-    
+
     public static final String INTEGRATOR_PROGRAMS = "integrator_programs_sync";
     public static final String INTEGRATOR_PROVIDERS = "integrator_providers_sync";
     public static final String INTEGRATOR_FACILITY = "integrator_facility_sync";
-    
+
     public static final String INTEGRATOR_FULL_PUSH = "integrator_full_push";
     public static final String INTEGRATOR_LAST_PUSH = "integrator_last_push";
     public static final String INTEGRATOR_LAST_UPDATED = "integrator_last_updated";
-    
+
     private long id;
     private String name;
     private String value;

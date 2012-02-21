@@ -250,15 +250,8 @@
        jQuery.ajax({url:noteAddonUrl,dataType: "html",success: function(data) {
 			jQuery("#current_note_addon").html(data);
        }});
-       jQuery("img[id^='quitImg']").each(function(){
-    	   if(jQuery(this).attr('src').indexOf('/oscarEncounter/graphics/triangle_up.gif')!=-1) {
-    		   var iid = jQuery(this).attr('id');
-    		   //var noteId = iid.substring(7,iid.length);
-    		   //shrink('n'+noteId,14);
-    		   jQuery(this).trigger('click');
 
-    	   }
-       });
+
        jQuery("#newNoteImg").hide();
        jQuery("#imgPrintEncounter").removeAttr('onclick');
        jQuery("#imgPrintEncounter").live('click',function(e){
