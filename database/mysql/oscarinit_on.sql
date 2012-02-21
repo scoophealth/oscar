@@ -2926,7 +2926,7 @@ CREATE TABLE `formRourke2009` (
   `p4_nippisingattained` text,
   PRIMARY KEY (`ID`),
   KEY `formRourke2009_demographic_no` (`demographic_no`)
-);
+) ENGINE=MyISAM ;
 
 CREATE TABLE `formLabReq10` (
   `ID` int(10) NOT NULL AUTO_INCREMENT,
