@@ -167,7 +167,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	private static final long INTEGRATOR_THROTTLE_DELAY = Long.parseLong((String) OscarProperties.getInstance().get(INTEGRATOR_THROTTLE_DELAY_PROPERTIES_KEY));
 
 	private static Timer timer = new Timer("CaisiIntegratorUpdateTask Timer", true);
-	
+
 	private int numberOfTimesRun = 0;
 
 	private FacilityDao facilityDao = (FacilityDao) SpringUtils.getBean("facilityDao");
@@ -194,7 +194,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	private EFormValueDao eFormValueDao = (EFormValueDao) SpringUtils.getBean("EFormValueDao");
 	private EFormDataDao eFormDataDao = (EFormDataDao) SpringUtils.getBean("EFormDataDao");
 	private GroupNoteDao groupNoteDao = (GroupNoteDao) SpringUtils.getBean("groupNoteDao");
-	
+
 	private UserPropertyDAO userPropertyDao = (UserPropertyDAO) SpringUtils.getBean("UserPropertyDAO");
 
 	private static TimerTask timerTask = null;
@@ -231,7 +231,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	@Override
 	public void run() {
 		numberOfTimesRun++;
-		logger.debug("CaisiIntegratorUpdateTask starting #"+numberOfTimesRun);
+		logger.debug("CaisiIntegratorUpdateTask starting #" + numberOfTimesRun);
 
 		LoggedInInfo.setLoggedInInfoToCurrentClassAndMethod();
 
@@ -245,7 +245,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			LoggedInInfo.loggedInInfo.remove();
 			DbConnectionFilter.releaseAllThreadDbResources();
 
-			logger.debug("CaisiIntegratorUpdateTask finished #"+numberOfTimesRun);
+			logger.debug("CaisiIntegratorUpdateTask finished #" + numberOfTimesRun);
 		}
 	}
 
@@ -403,28 +403,28 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			throttleAndChecks();
 		}
 	}
-	
+
 	/**
-	 * A check to compare the time being requested from the integrator and that last time the integrator requested.
-	 * If the date being requested is before the last date requested return true.  If a last date hasn't been stored return true.
+	 * A check to compare the time being requested from the integrator and that last time the integrator requested. If the date being requested is before the last date requested return true. If a last date hasn't been stored return true.
 	 * 
-	 * 
-	 * @param lastDataUpdated  time requested from the integrator
-	 * @param lastPushUpdated  prior time requested from the integrator
+	 * @param lastDataUpdated time requested from the integrator
+	 * @param lastPushUpdated prior time requested from the integrator
 	 * @return
 	 */
-	private boolean isIntegratorRequestDateOlderThanLastKnownDate(Date lastDataUpdated,UserProperty lastPushUpdated){
+	private boolean isIntegratorRequestDateOlderThanLastKnownDate(Date lastDataUpdated, UserProperty lastPushUpdated) {
+		if (lastPushUpdated == null) return (true);
+
 		boolean ret = false;
-		try{
+		try {
 			Date lastDateRequested = new Date();
-			//If lastPushUpdated is null that means this is the first time this has run, return true
+			// If lastPushUpdated is null that means this is the first time this has run, return true
 			lastDateRequested.setTime(Long.parseLong(lastPushUpdated.getValue()));
-			if(lastDataUpdated.before(lastDateRequested)){
+			if (lastDataUpdated.before(lastDateRequested)) {
 				ret = true;
 			}
-			logger.debug("lastDataUpdated "+lastDataUpdated+ " lastDateRequested "+lastDateRequested+" lastDataUpdated is before lastDateRequested: "+ret );
-		}catch(Exception e){
-			logger.info("INTEGRATOR_LAST_UPDATED was not set. Assume lastDataUpdated is before lastDateRequested ",e);
+			logger.debug("lastDataUpdated " + lastDataUpdated + " lastDateRequested " + lastDateRequested + " lastDataUpdated is before lastDateRequested: " + ret);
+		} catch (Exception e) {
+			logger.error("Unexpected error", e);
 			return true;
 		}
 		return ret;
@@ -433,52 +433,49 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	private void pushAllDemographics(Date lastDataUpdated) throws MalformedURLException, ShutdownException {
 		Facility facility = LoggedInInfo.loggedInInfo.get().currentFacility;
 
-		List<Integer> demographicIds = null;//DemographicDao.getDemographicIdsAdmittedIntoFacility(facility.getId());
+		List<Integer> demographicIds = null;// DemographicDao.getDemographicIdsAdmittedIntoFacility(facility.getId());
 
-   		UserProperty fullPushProp = userPropertyDao.getProp(UserProperty.INTEGRATOR_FULL_PUSH);
+		UserProperty fullPushProp = userPropertyDao.getProp(UserProperty.INTEGRATOR_FULL_PUSH);
 		UserProperty lastPushProp = userPropertyDao.getProp(UserProperty.INTEGRATOR_LAST_PUSH);
 		UserProperty lastPushUpdated = userPropertyDao.getProp(UserProperty.INTEGRATOR_LAST_UPDATED);
-		
+
 		Date now = Calendar.getInstance().getTime();
-		
-		
-		if (isIntegratorRequestDateOlderThanLastKnownDate(lastDataUpdated,lastPushUpdated)){  // If the date the integrator is asking for is before the last interm push, force a full push
-			fullPushProp.setValue("1");
-			logger.info("Forcing full integrator push Date from Integrator: "+lastDataUpdated+" Date on file: "+lastPushUpdated);
+
+		if (fullPushProp != null) {
+			if (isIntegratorRequestDateOlderThanLastKnownDate(lastDataUpdated, lastPushUpdated)) { // If the date the integrator is asking for is before the last interm push, force a full push
+				fullPushProp.setValue("1");
+				logger.info("Forcing full integrator push Date from Integrator: " + lastDataUpdated + " Date on file: " + lastPushUpdated);
+			}
+
+			if (OscarProperties.getInstance().isPropertyActive("INTEGRATOR_FORCE_FULL")) {
+				fullPushProp.setValue("1");
+			}
 		}
-		
-		if(OscarProperties.getInstance().isPropertyActive("INTEGRATOR_FORCE_FULL")){
-			fullPushProp.setValue("1");
-		}
-		
+
 		if ((fullPushProp != null && fullPushProp.getValue().equalsIgnoreCase("1")) || lastPushProp == null) {
-	        logger.info("Pushing all demographics");
-	        demographicIds = DemographicDao.getDemographicIdsAdmittedIntoFacility(facility.getId()); 
-	        		//DemographicDao.getDemographicIdsAdmittedIntoFacilityAndRostered(facility.getId());
+			logger.info("Pushing all demographics");
+			demographicIds = DemographicDao.getDemographicIdsAdmittedIntoFacility(facility.getId());
+			// DemographicDao.getDemographicIdsAdmittedIntoFacilityAndRostered(facility.getId());
 		} else {
-	        logger.info("Pushing all demographic charts opened/viewed since " + lastPushProp.getValue());
-	        demographicIds = DemographicDao.getDemographicIdsOpenedSinceTime(lastPushProp.getValue());
+			logger.info("Pushing all demographic charts opened/viewed since " + lastPushProp.getValue());
+			demographicIds = DemographicDao.getDemographicIdsOpenedSinceTime(lastPushProp.getValue());
 		}
-		
-		
+
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		userPropertyDao.saveProp(UserProperty.INTEGRATOR_FULL_PUSH, "0");
-        userPropertyDao.saveProp(UserProperty.INTEGRATOR_LAST_PUSH, format.format(now)); 
-        userPropertyDao.saveProp(UserProperty.INTEGRATOR_LAST_UPDATED,""+lastDataUpdated.getTime());
-		 
-		
-		
-		
+		userPropertyDao.saveProp(UserProperty.INTEGRATOR_LAST_PUSH, format.format(now));
+		userPropertyDao.saveProp(UserProperty.INTEGRATOR_LAST_UPDATED, "" + lastDataUpdated.getTime());
+
 		DemographicWs demographicService = CaisiIntegratorManager.getDemographicWs();
 		List<Program> programsInFacility = programDao.getProgramsByFacilityId(facility.getId());
 		List<String> providerIdsInFacility = ProviderDao.getProviderIds(facility.getId());
 
 		long startTime = System.currentTimeMillis();
-		int demographicPushCount =0;
+		int demographicPushCount = 0;
 		for (Integer demographicId : demographicIds) {
 			demographicPushCount++;
-			logger.debug("pushing demographic facilityId:" + facility.getId() + ", demographicId:" + demographicId+"  "+demographicPushCount+" of "+demographicIds.size());
-			BenchmarkTimer benchTimer = new BenchmarkTimer("pushing demo facilityId:" + facility.getId() + ", demographicId:" + demographicId+"  "+demographicPushCount+" of "+demographicIds.size());
+			logger.debug("pushing demographic facilityId:" + facility.getId() + ", demographicId:" + demographicId + "  " + demographicPushCount + " of " + demographicIds.size());
+			BenchmarkTimer benchTimer = new BenchmarkTimer("pushing demo facilityId:" + facility.getId() + ", demographicId:" + demographicId + "  " + demographicPushCount + " of " + demographicIds.size());
 
 			try {
 				pushDemographic(facility, demographicService, demographicId, facility.getId());
@@ -514,7 +511,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				benchTimer.tag("pushForms");
 				pushLabResults(lastDataUpdated, facility, demographicService, demographicId);
 				benchTimer.tag("pushLabResults");
-				
+
 				logger.debug(benchTimer.report());
 
 				DbConnectionFilter.releaseAllThreadDbResources();
@@ -530,7 +527,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				logger.error("Unexpected error.", e);
 			}
 		}
-		logger.debug("Total pushAllDemographics :"+(System.currentTimeMillis() - startTime));
+		logger.debug("Total pushAllDemographics :" + (System.currentTimeMillis() - startTime));
 	}
 
 	private void pushDemographic(Facility facility, DemographicWs service, Integer demographicId, Integer facilityId) throws ShutdownException {
@@ -1037,8 +1034,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	private void pushAllergies(Date lastDataUpdated, Facility facility, DemographicWs demographicService, Integer demographicId) throws ShutdownException {
 		logger.debug("pushing demographicAllergies facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
-		AllergyDao allergyDao=(AllergyDao) SpringUtils.getBean("allergyDao");
-		List<Allergy> allergies=allergyDao.findByDemographicIdUpdatedAfterDate(demographicId, lastDataUpdated);
+		AllergyDao allergyDao = (AllergyDao) SpringUtils.getBean("allergyDao");
+		List<Allergy> allergies = allergyDao.findByDemographicIdUpdatedAfterDate(demographicId, lastDataUpdated);
 		if (allergies.size() == 0) return;
 
 		StringBuilder sentIds = new StringBuilder();
@@ -1060,11 +1057,11 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			cachedAllergy.setHicSeqNo(allergy.getHicSeqno());
 			cachedAllergy.setLifeStage(allergy.getLifeStage());
 			cachedAllergy.setOnSetCode(allergy.getOnsetOfReaction());
-			if (allergy.getDrugrefId()!=null) cachedAllergy.setPickId(Integer.parseInt(allergy.getDrugrefId()));
+			if (allergy.getDrugrefId() != null) cachedAllergy.setPickId(Integer.parseInt(allergy.getDrugrefId()));
 			cachedAllergy.setReaction(allergy.getReaction());
 			cachedAllergy.setRegionalIdentifier(allergy.getRegionalIdentifier());
 			cachedAllergy.setSeverityCode(allergy.getSeverityOfReaction());
-			if (allergy.getStartDate()!=null) cachedAllergy.setStartDate(DateUtils.toGregorianCalendar(allergy.getStartDate()));
+			if (allergy.getStartDate() != null) cachedAllergy.setStartDate(DateUtils.toGregorianCalendar(allergy.getStartDate()));
 			cachedAllergy.setTypeCode(allergy.getTypeCode());
 
 			ArrayList<CachedDemographicAllergy> cachedAllergies = new ArrayList<CachedDemographicAllergy>();
@@ -1254,8 +1251,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	private void pushMeasurements(Date lastDataUpdated, Facility facility, DemographicWs demographicService, Integer demographicId) throws ShutdownException {
 		logger.debug("pushing measurements facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
-		MeasurementDao measurementDao=(MeasurementDao) SpringUtils.getBean("measurementDao");
-		
+		MeasurementDao measurementDao = (MeasurementDao) SpringUtils.getBean("measurementDao");
+
 		List<Measurement> measurements = measurementDao.findByDemographicIdUpdatedAfterDate(demographicId, lastDataUpdated);
 		if (measurements.size() == 0) return;
 
@@ -1299,7 +1296,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				demographicService.setCachedMeasurementExts(cachedMeasurementExts);
 			}
 
-			MeasurementTypeDao measurementTypeDao=(MeasurementTypeDao) SpringUtils.getBean("measurementTypeDao");
+			MeasurementTypeDao measurementTypeDao = (MeasurementTypeDao) SpringUtils.getBean("measurementTypeDao");
 			List<MeasurementType> measurementTypes = measurementTypeDao.findByType(measurement.getType());
 			for (MeasurementType measurementType : measurementTypes) {
 				MiscUtils.checkShutdownSignaled();
