@@ -133,6 +133,17 @@ if(session.getValue("user") == null)
 				<html:option value="-35">35</html:option>
 				<html:option value="-36">36</html:option>
 			</html:select>
+			<br/>
+			<html:hidden property="singleViewProperty.name" />
+			<html:hidden property="singleViewProperty.providerNo" />
+			<html:hidden property="singleViewProperty.id" />
+			Use Single Line View:
+			<html:select property="singleViewProperty.value" styleId="staleDate">
+				<html:option value="no">No</html:option>
+				<html:option value="yes">Yes</html:option>
+			</html:select>
+
+			<br/>
 			<input type="submit"
 				value="<bean:message key="provider.setNoteStaleDate.btnSubmit"/>" />
 			<input type="submit" onclick="$('method').value='remove';"

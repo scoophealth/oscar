@@ -1390,6 +1390,7 @@ function completeChangeToView(note,newId) {
 function minView(e) {
     var divHeight = "1.1em";
     var txt = Event.element(e).parentNode.id;
+   //alert(txt);
     var nId = txt.substr(1);
     var img = Event.element(e).id;
     var dateId = "obs" + nId;
@@ -1409,15 +1410,18 @@ function minView(e) {
     Element.remove(editAnchor);
 
     $(txt).style.overflow = "hidden";
-    shrink(txt, 14);
+    //shrink(txt, 14);
+    $(txt).setStyle('height','14px');
     //$(txt).style.height = divHeight;
 
     var txtId = "txt" + nId;
-    var line = $(txtId).innerHTML.substr(0,100);
+    var line = $(txtId).innerHTML.substr(0,90);
     line = line.replace(/<br>/g," ");
     var dateValue = $(dateId) != null ? $(dateId).innerHTML : "";
+    dateValue = dateValue.substring(0,dateValue.indexOf(" "));
     line = "<div id='" + date + "' style='float:left; font-size:1.0em; width:10%;'><b>" + dateValue + "<\/b><\/div><div id='" + content + "' style='float:left; font-size:1.0em; width:70%;'>" + line + "<\/div>";
     $("txt"+nId).hide();
+    $("sig"+nId).hide();
     new Insertion.Top(txt,line);
 
 
@@ -1479,9 +1483,11 @@ function xpandView(e) {
     Element.remove(date);
     Element.remove(content);
 
+
     $(txt).style.height = 'auto';
     new Insertion.Top(txt, imgTag);
     $("txt"+nId).show();
+    $("sig"+nId).show();
     Event.stop(e);
     Element.stopObserving(txt, 'click', xpandView);
 
