@@ -99,7 +99,7 @@ function checkForm() {
 			</tr>
 <%
    int i=0;
-   List<Map> resultList = oscarSuperManager.find("providerDao", "searchprovider", new Object[] {});
+   List<Map<String,Object>> resultList = oscarSuperManager.find("providerDao", "searchprovider", new Object[] {});
    for (Map provider : resultList) {
      i++;
 %>

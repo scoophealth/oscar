@@ -71,7 +71,7 @@
 <%
 	boolean bNewNo = false;
 	String oldNo = "";
-	List<Map> resultList = oscarSuperManager.find("receptionistDao", "searchmygroupall", new Object[] {});
+	List<Map<String,Object>> resultList = oscarSuperManager.find("receptionistDao", "searchmygroupall", new Object[] {});
 	for (Map group : resultList) {
 		String groupNo = String.valueOf(group.get("mygroup_no"));
 		bNewNo = bNewNo?false:true;

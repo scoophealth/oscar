@@ -84,7 +84,7 @@ function checkTypeIn(obj) {
 
   if(!bNew ) { //not new form
     bNewList = false;
-    List<Map> resultList = oscarSuperManager.find("providerDao", "search_form", new Object[] {request.getParameter("form_no")});
+    List<Map<String,Object>> resultList = oscarSuperManager.find("providerDao", "search_form", new Object[] {request.getParameter("form_no")});
     for (Map form : resultList) {
       content = (String)form.get("content");
 %> <xml id="xml_list"><encounter><%=content%></encounter></xml> <%
@@ -93,7 +93,7 @@ function checkTypeIn(obj) {
     String[] param2 =new String[2];
     param2[0]=request.getParameter("demographic_no");
     param2[1]=form_name;
-    List<Map> resultList = oscarSuperManager.find("providerDao", "search_form_no", param2);
+    List<Map<String,Object>> resultList = oscarSuperManager.find("providerDao", "search_form_no", param2);
     for (Map form : resultList) {
       bNew = false;
       content = (String)form.get("content");

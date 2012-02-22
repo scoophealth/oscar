@@ -1,5 +1,4 @@
 package oscar.util.plugin;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
@@ -25,15 +24,8 @@ public class SpecialEncounter extends TagSupport
 	{
 		try
 		{
-			HttpServletRequest request = (HttpServletRequest) pageContext
-					.getRequest();
-			String propFile = request.getContextPath().substring(1)
-					+ ".properties";
-			String sep = System.getProperty("file.separator");
-			String propFileName = System.getProperty("user.home") + sep
-					+ propFile;
 			OscarProperties proper = OscarProperties.getInstance();
-			proper.readFromFile(propFileName);
+
 			if (!isExactEqual()&&(proper.getProperty("specialencounter", "").indexOf(moduleName)>=0)){
 							
 				if (reverse) return SKIP_BODY;

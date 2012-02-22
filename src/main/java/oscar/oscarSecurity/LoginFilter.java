@@ -58,7 +58,8 @@ public class LoginFilter implements Filter {
 		"/index.html",
 		"/eformViewForPdfGenerationServlet",
 		"/LabViewForPdfGenerationServlet",
-		"/oscarFacesheet/token_error.jsp"
+		"/oscarFacesheet/token_error.jsp",
+		"/ws/"
 	};
 
 	/*

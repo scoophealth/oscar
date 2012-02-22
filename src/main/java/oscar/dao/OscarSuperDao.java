@@ -29,8 +29,7 @@ public abstract class OscarSuperDao extends JdbcDaoSupport {
 	 * @param params sql query parameters
 	 * @return List of Map objects created for each result set row
 	 */
-	@SuppressWarnings("unchecked")
-	public List<Map> executeSelectQuery(String queryName, Object[] params) {
+	public List<Map<String, Object>> executeSelectQuery(String queryName, Object[] params) {
 		return getJdbcTemplate().queryForList(getSqlQueryByKey(queryName), params);
 	}
 

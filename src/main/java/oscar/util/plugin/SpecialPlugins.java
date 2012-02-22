@@ -1,6 +1,5 @@
 package oscar.util.plugin;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
@@ -34,15 +33,7 @@ public class SpecialPlugins extends TagSupport {
 		String[] mNameArray = moduleName.split(",");
 		boolean flag=false;
 		try {
-			HttpServletRequest request = (HttpServletRequest) pageContext
-					.getRequest();
-			String propFile = request.getContextPath().substring(1)
-					+ ".properties";
-			String sep = System.getProperty("file.separator");
-			String propFileName = System.getProperty("user.home") + sep
-					+ propFile;
 			OscarProperties proper = OscarProperties.getInstance();
-			proper.readFromFile(propFileName);
 			
 			for (int i = 0; i < mNameArray.length; i++) {
 				String mname=mNameArray[i];

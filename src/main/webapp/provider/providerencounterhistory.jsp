@@ -61,7 +61,7 @@
 	<tr>
 		<td width="95%">
 <%
-   List<Map> resultList = oscarSuperManager.find("providerDao", "search_encounter", new Object[] {request.getParameter("demographic_no")});
+   List<Map<String,Object>> resultList = oscarSuperManager.find("providerDao", "search_encounter", new Object[] {request.getParameter("demographic_no")});
    for (Map enc : resultList) {
 %> &nbsp;<%=enc.get("encounter_date")%> <%=enc.get("encounter_time")%><font
 			color="yellow"> <%

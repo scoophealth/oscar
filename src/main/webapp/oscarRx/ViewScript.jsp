@@ -75,7 +75,7 @@ if(bMultisites) {
 	String appt_no=(String)session.getAttribute("cur_appointment_no");
 	String location = null;
 	if (appt_no!=null) {
-		List<Map> resultList = oscarSuperManager.find("appointmentDao", "search", new Object[] {appt_no});
+		List<Map<String,Object>> resultList = oscarSuperManager.find("appointmentDao", "search", new Object[] {appt_no});
 		if (resultList!=null) location = (String) resultList.get(0).get("location");
 	}
 

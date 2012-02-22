@@ -59,7 +59,7 @@
    String demoname=null,dob=null,gender=null,hin=null,roster=null;
    int dob_year = 0, dob_month = 0, dob_date = 0;
    //dboperation=search_demograph
-   List<Map> resultList = oscarSuperManager.find("providerDao", request.getParameter("dboperation"), new Object[] {request.getParameter("demographic_no")});
+   List<Map<String,Object>> resultList = oscarSuperManager.find("providerDao", request.getParameter("dboperation"), new Object[] {request.getParameter("demographic_no")});
    for (Map demo : resultList) {
      demoname=demo.get("last_name")+", "+demo.get("first_name");
      dob_year = Integer.parseInt(String.valueOf(demo.get("year_of_birth")));

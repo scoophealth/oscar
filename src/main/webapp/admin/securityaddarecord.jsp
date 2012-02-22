@@ -185,7 +185,7 @@
 		<td><select name="provider_no">
 			<option value="">-- select one --</option>
 <%
-	List<Map> resultList ; 
+	List<Map<String,Object>> resultList ; 
     if (isSiteAccessPrivacy) {
     	Object[] param =new Object[1];
     	param[0] = curProvider_no;

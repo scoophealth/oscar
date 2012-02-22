@@ -137,7 +137,7 @@
 	<form method="post" action="admincontrol.jsp" name="updatearecord"
 		onsubmit="return onsub()">
 <%
-	List<Map> resultList = oscarSuperManager.find("adminDao", "security_search_detail", new Object[] {request.getParameter("keyword")});
+	List<Map<String,Object>> resultList = oscarSuperManager.find("adminDao", "security_search_detail", new Object[] {request.getParameter("keyword")});
 	if (resultList.size() == 0) {
 %>
 	<tr>

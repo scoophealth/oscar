@@ -57,7 +57,7 @@
 		</TABLE>
 
 <%
-   List<Map> resultList = oscarSuperManager.find("providerDao", "search_encountersingle", new Object[] {request.getParameter("encounter_no")});
+   List<Map<String,Object>> resultList = oscarSuperManager.find("providerDao", "search_encountersingle", new Object[] {request.getParameter("encounter_no")});
    String encounter_date=null,encounter_time=null,subject=null,content=null,provider_no=null;
    for (Map enc : resultList) {
      encounter_date=String.valueOf(enc.get("encounter_date"));

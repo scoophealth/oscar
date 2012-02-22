@@ -7,6 +7,8 @@ import org.apache.log4j.Logger;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.Provider;
 
+import com.quatro.model.security.Security;
+
 /**
  * The loggedInProvider fields should only be used if this is a user based thread, i.e. a thread handling a user request.
  * If this is an internal system thread, those fields should be ignored and left null.
@@ -14,7 +16,7 @@ import org.oscarehr.common.model.Provider;
  * It should signify where the code started for the most part, i.e. the thread class name,
  * or the jsp name, or web service name and method.
  */
-public class LoggedInInfo
+public final class LoggedInInfo
 {
 	private static Logger logger=MiscUtils.getLogger();
 	public static final ThreadLocal<LoggedInInfo> loggedInInfo = new ThreadLocal<LoggedInInfo>();
@@ -23,6 +25,7 @@ public class LoggedInInfo
 	public Facility currentFacility=null;
 	public Provider loggedInProvider=null;
 	public String initiatingCode=null;
+	public Security loggedInSecurity=null;
 		
 	@Override
     public String toString()

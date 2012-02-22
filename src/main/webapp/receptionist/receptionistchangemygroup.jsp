@@ -65,7 +65,7 @@
 			key="recepcionist.recepcionistchangemygroup.formChange" />:</TD>
 		<TD align="right"><select name="mygroup_no">
 <%
-	List<Map> resultList = oscarSuperManager.find("receptionistDao", "searchmygroupno", new Object[] {});
+	List<Map<String,Object>> resultList = oscarSuperManager.find("receptionistDao", "searchmygroupno", new Object[] {});
 	for (Map group : resultList) {
 		String groupNo = String.valueOf(group.get("mygroup_no"));
 %>

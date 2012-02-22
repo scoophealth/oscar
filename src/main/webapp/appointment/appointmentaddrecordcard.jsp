@@ -65,7 +65,7 @@
                 param2[6]=param[2];
                 param2[7]=param[3];
                 param2[8]=param[17];
-                List<Map> resultList  = oscarSuperManager.find("appointmentDao", "search_appt_name", param2);
+                List<Map<String,Object>> resultList  = oscarSuperManager.find("appointmentDao", "search_appt_name", param2);
                 if (resultList.size() > 0) {
                     Map name = resultList.get(0);
                     patientname = "" + name.get("name");
@@ -153,7 +153,7 @@
 		param3[5]=param[14]; //creator
 		param3[6]=param[16]; //demographic_no
 
-		List<Map> apptList = oscarSuperManager.find("appointmentDao", "search_appt_no", param3);
+		List<Map<String,Object>> apptList = oscarSuperManager.find("appointmentDao", "search_appt_no", param3);
 		if (apptList.size()>0) {
 			Integer apptNo = (Integer)apptList.get(0).get("appointment_no");
 			String mcNumber = request.getParameter("appt_mc_number");

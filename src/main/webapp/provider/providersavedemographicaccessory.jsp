@@ -55,7 +55,7 @@
 	param1[1]=param[0];
 
 	long numRecord=1, rowsAffected=0;
-	List<Map> resultList = oscarSuperManager.find("providerDao", "search_demographicaccessorycount", new Object[] {param[0]});
+	List<Map<String,Object>> resultList = oscarSuperManager.find("providerDao", "search_demographicaccessorycount", new Object[] {param[0]});
 	for (Map acc : resultList) {
 		numRecord = (Long) acc.get("count(demographic_no)");
 	}

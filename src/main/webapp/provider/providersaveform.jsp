@@ -79,7 +79,7 @@
     String[] param2 = new String[2];
     param2[0]=request.getParameter("demographic_no");
     param2[1]=request.getParameter("form_name");
-    List<Map> resultList = oscarSuperManager.find("providerDao", "search_form_no", param2);
+    List<Map<String,Object>> resultList = oscarSuperManager.find("providerDao", "search_form_no", param2);
     for (Map form : resultList) {
       //save as an encounter 
       if(request.getParameter("formtype")!=null && request.getParameter("formtype").compareTo("direct")==0 ) {
@@ -109,7 +109,7 @@
         int rowsAffected2=0;
         String[] param3 = new String[2];
 
-        List<Map> resultList1 = oscarSuperManager.find("providerDao", "search_demographicaccessory", new Object[] {request.getParameter("demographic_no")});
+        List<Map<String,Object>> resultList1 = oscarSuperManager.find("providerDao", "search_demographicaccessory", new Object[] {request.getParameter("demographic_no")});
         if (resultList1.size() > 0) { //update a record to the demoaccess
           Map acc = resultList1.get(0);
           //String tempcontent;
