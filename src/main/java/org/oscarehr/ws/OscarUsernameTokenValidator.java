@@ -5,60 +5,36 @@ import org.apache.ws.security.WSSecurityException;
 import org.apache.ws.security.handler.RequestData;
 import org.apache.ws.security.message.token.UsernameToken;
 import org.apache.ws.security.validate.UsernameTokenValidator;
-import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import com.quatro.dao.security.SecurityDao;
 import com.quatro.model.security.Security;
 
-public class OscarUsernameTokenValidator extends UsernameTokenValidator
-{
+/**
+ * Validation on a per-request basis is done against the Security table on the ID and password (not username). This is for efficiency purposes and immutability purposes of the ID. To get the ID some one can always use the LoginWs first which should supply
+ * you with the ID from the userName. The loginWs may also provide you with a security token which can then be used in place of the password. WS authorisation is only based on password and expiry time, all other fields are ignored as they don't make sense
+ * for this usage.
+ */
+public class OscarUsernameTokenValidator extends UsernameTokenValidator {
 	private static final Logger logger = MiscUtils.getLogger();
 	private SecurityDao securityDao = (SecurityDao) SpringUtils.getBean("securityDao");
 
 	@Override
-	protected void verifyPlaintextPassword(UsernameToken usernameToken, RequestData data) throws WSSecurityException
-	{
-		Security security = checkAuthentication(usernameToken.getName(), usernameToken.getPassword());
-		if (security == null) throw new WSSecurityException(WSSecurityException.FAILED_AUTHENTICATION);
-		
-		LoggedInInfo x=new LoggedInInfo();
-		x.loggedInSecurity=security;
-		LoggedInInfo.loggedInInfo.set(x);
-	}
+	protected void verifyPlaintextPassword(UsernameToken usernameToken, RequestData data) throws WSSecurityException {
+		logger.debug("userIdString=" + usernameToken.getName());
+		logger.debug("password=" + usernameToken.getPassword());
 
-	private Security checkAuthentication(String userIdString, String password)
-	{
-		logger.debug("userIdString=" + userIdString);
-		logger.debug("password=" + password);
-
-		if (userIdString == null || password == null) return(null);
-
-		Integer securityUserId = null;
-		try
-		{
-			securityUserId = Integer.parseInt(userIdString);
-
-			// check security token
-//			Long tokenId = AccountManager.checkSecurityToken(personIdLong, password);
-//			logger.debug("tokenId=" + tokenId);
-//			if (tokenId != null)
-//			{
-//				AccountManager.updateSecurityTokenLastUsedDate(tokenId);
-//				Person person = personDao.find(personIdLong);
-//				return(person);
-//			}
-
-			// check regular password
+		try {
+			Integer securityUserId = Integer.parseInt(usernameToken.getName());
 			Security security = securityDao.findById(securityUserId);
-			if (security != null && security.checkPassword(password)) return(security);
-		}
-		catch (NumberFormatException e)
-		{
-			logger.error("userIdString is not a number? userIdString='" + userIdString + '\'');
+			
+			// if it's all good just return
+			if (WsUtils.checkAuthenticationAndSetLoggedInInfo(security, usernameToken.getPassword())) return;
+		} catch (NumberFormatException e) {
+			logger.error("userIdString is not a number? usernameToken.getName()='" + usernameToken.getName() + '\'');
 		}
 
-		return(null);
+		throw new WSSecurityException(WSSecurityException.FAILED_AUTHENTICATION);
 	}
 }
