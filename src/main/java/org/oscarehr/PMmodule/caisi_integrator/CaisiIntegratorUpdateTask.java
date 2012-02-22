@@ -430,41 +430,62 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		return ret;
 	}
 
+	private List<Integer> getDemographicIdsToPush(Date lastDataUpdated) {
+		Facility facility = LoggedInInfo.loggedInInfo.get().currentFacility;
+
+		Properties p = OscarProperties.getInstance();
+		boolean omdTestingOnly = Boolean.parseBoolean(p.getProperty("ENABLE_CONFORMANCE_ONLY_FEATURES"));
+
+		if (!omdTestingOnly) {
+			return (DemographicDao.getDemographicIdsAdmittedIntoFacility(facility.getId()));
+		} else {
+			// This routine should never be used in real life, it should only be used in OMD testing to pass OMD requirements.
+			// There's some immediately visible problems with this routine,
+			// 1) the userProperty is stored on a per oscar instance, where as data and update times are synced on a per facility status, that means multiple facility systems will fail as the subsequent facilities will all have the wrong time.
+			// 2) The the userProperty and it's associated timestamp is stored before any processing has taken place, it should only be stored after full successful completion or else data will be missed upon failure or errors. 
+			// 3) getDemographicIdsOpenedSinceTime does not return the correct demographic set, it returns everyone, not just the people admitted into this facility who have been openned, this is a consent/security violation and in some jurisdictions like ontario and possibly most of canada, maybe illegal.
+			
+			List<Integer> demographicIds = null;
+
+			UserProperty fullPushProp = userPropertyDao.getProp(UserProperty.INTEGRATOR_FULL_PUSH);
+			UserProperty lastPushProp = userPropertyDao.getProp(UserProperty.INTEGRATOR_LAST_PUSH);
+			UserProperty lastPushUpdated = userPropertyDao.getProp(UserProperty.INTEGRATOR_LAST_UPDATED);
+
+			Date now = Calendar.getInstance().getTime();
+
+			if (fullPushProp != null) {
+				if (isIntegratorRequestDateOlderThanLastKnownDate(lastDataUpdated, lastPushUpdated)) { // If the date the integrator is asking for is before the last interm push, force a full push
+					fullPushProp.setValue("1");
+					logger.info("Forcing full integrator push Date from Integrator: " + lastDataUpdated + " Date on file: " + lastPushUpdated);
+				}
+
+				if (OscarProperties.getInstance().isPropertyActive("INTEGRATOR_FORCE_FULL")) {
+					fullPushProp.setValue("1");
+				}
+			}
+
+			if ((fullPushProp != null && fullPushProp.getValue().equalsIgnoreCase("1")) || lastPushProp == null) {
+				logger.info("Pushing all demographics");
+				demographicIds = DemographicDao.getDemographicIdsAdmittedIntoFacility(facility.getId());
+				// DemographicDao.getDemographicIdsAdmittedIntoFacilityAndRostered(facility.getId());
+			} else {
+				logger.info("Pushing all demographic charts opened/viewed since " + lastPushProp.getValue());
+				demographicIds = DemographicDao.getDemographicIdsOpenedSinceTime(lastPushProp.getValue());
+			}
+
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			userPropertyDao.saveProp(UserProperty.INTEGRATOR_FULL_PUSH, "0");
+			userPropertyDao.saveProp(UserProperty.INTEGRATOR_LAST_PUSH, format.format(now));
+			userPropertyDao.saveProp(UserProperty.INTEGRATOR_LAST_UPDATED, "" + lastDataUpdated.getTime());
+			
+			return(demographicIds);
+		}
+	}
+
 	private void pushAllDemographics(Date lastDataUpdated) throws MalformedURLException, ShutdownException {
 		Facility facility = LoggedInInfo.loggedInInfo.get().currentFacility;
 
-		List<Integer> demographicIds = null;// DemographicDao.getDemographicIdsAdmittedIntoFacility(facility.getId());
-
-		UserProperty fullPushProp = userPropertyDao.getProp(UserProperty.INTEGRATOR_FULL_PUSH);
-		UserProperty lastPushProp = userPropertyDao.getProp(UserProperty.INTEGRATOR_LAST_PUSH);
-		UserProperty lastPushUpdated = userPropertyDao.getProp(UserProperty.INTEGRATOR_LAST_UPDATED);
-
-		Date now = Calendar.getInstance().getTime();
-
-		if (fullPushProp != null) {
-			if (isIntegratorRequestDateOlderThanLastKnownDate(lastDataUpdated, lastPushUpdated)) { // If the date the integrator is asking for is before the last interm push, force a full push
-				fullPushProp.setValue("1");
-				logger.info("Forcing full integrator push Date from Integrator: " + lastDataUpdated + " Date on file: " + lastPushUpdated);
-			}
-
-			if (OscarProperties.getInstance().isPropertyActive("INTEGRATOR_FORCE_FULL")) {
-				fullPushProp.setValue("1");
-			}
-		}
-
-		if ((fullPushProp != null && fullPushProp.getValue().equalsIgnoreCase("1")) || lastPushProp == null) {
-			logger.info("Pushing all demographics");
-			demographicIds = DemographicDao.getDemographicIdsAdmittedIntoFacility(facility.getId());
-			// DemographicDao.getDemographicIdsAdmittedIntoFacilityAndRostered(facility.getId());
-		} else {
-			logger.info("Pushing all demographic charts opened/viewed since " + lastPushProp.getValue());
-			demographicIds = DemographicDao.getDemographicIdsOpenedSinceTime(lastPushProp.getValue());
-		}
-
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		userPropertyDao.saveProp(UserProperty.INTEGRATOR_FULL_PUSH, "0");
-		userPropertyDao.saveProp(UserProperty.INTEGRATOR_LAST_PUSH, format.format(now));
-		userPropertyDao.saveProp(UserProperty.INTEGRATOR_LAST_UPDATED, "" + lastDataUpdated.getTime());
+		List<Integer> demographicIds = getDemographicIdsToPush(lastDataUpdated);
 
 		DemographicWs demographicService = CaisiIntegratorManager.getDemographicWs();
 		List<Program> programsInFacility = programDao.getProgramsByFacilityId(facility.getId());
