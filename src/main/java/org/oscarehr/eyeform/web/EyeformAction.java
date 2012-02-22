@@ -1026,14 +1026,15 @@ public class EyeformAction extends DispatchAction {
 			}
 
 			cp.setCc(divycc(cp.getCc()));
-			cp.setClinicalInfo(divy(cp.getClinicalInfo()));
+			cp.setClinicalInfo(divy(wrap(cp.getClinicalInfo(),80)));
 			cp.setClinicalInfo(cp.getClinicalInfo().replaceAll("\\s", "&nbsp;"));
-			cp.setConcurrentProblems(divy(cp.getConcurrentProblems()));
-			cp.setCurrentMeds(cp.getCurrentMeds());
-			cp.setExamination(dive(cp.getExamination()));
-			cp.setImpression(divy(cp.getImpression()));
-			cp.setAllergies(divy(cp.getAllergies()));
-			cp.setPlan(divy(cp.getPlan()));
+			cp.setConcurrentProblems(divy(wrap(cp.getConcurrentProblems(),80)));
+			cp.setCurrentMeds(wrap(cp.getCurrentMeds(),80));
+			cp.setExamination(divy(wrap(cp.getExamination(),80)));
+			cp.setExamination(cp.getExamination().replaceAll("\n", ""));
+			cp.setImpression(divy(wrap(cp.getImpression(),80)));
+			cp.setAllergies(divy(wrap(cp.getAllergies(),80)));
+			cp.setPlan(divy(wrap(cp.getPlan(),80)));
 
 			SimpleDateFormat sf = new SimpleDateFormat("MM/dd/yyyy");
 			request.setAttribute("date", sf.format(new Date()));
@@ -1233,6 +1234,27 @@ public class EyeformAction extends DispatchAction {
 			tkl.setMessage(mes.toString());
 			ticklerDao.saveTickler(tkl);
 		}
+
+		public String wrap(String in,int len) {
+			if(in==null)
+				in="";
+			//in=in.trim();
+			if(in.length()<len) {
+				if(in.length()>1 && !in.startsWith("  ")) {
+					in=in.trim();
+				}
+				return in;
+			}
+			if(in.substring(0, len).contains("\n")) {
+				String x = in.substring(0, in.indexOf("\n"));
+				if(x.length()>1 && !x.startsWith("  ")) {
+					x=x.trim();
+				}
+				return x + "\n" + wrap(in.substring(in.indexOf("\n") + 1), len);
+			}
+			int place=Math.max(Math.max(in.lastIndexOf(" ",len),in.lastIndexOf("\t",len)),in.lastIndexOf("-",len));
+			return in.substring(0,place).trim()+"\n"+wrap(in.substring(place),len);
+			}
 
 		public String divy(String str) {
 			StringBuilder sb = new StringBuilder();

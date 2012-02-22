@@ -131,8 +131,8 @@ function confirmPrint(btn) {
 	var str="This referral is created and monitored automatically by CRM. Are you sure you want to print & fax it manually?";
 	return confirm(str);
 }
-    
-    
+
+
     con_cHis='<%=request.getAttribute("currentHistory")%>';
 	con_oHis='<%=request.getAttribute("otherMeds")%>';
 	con_pHis='<%=request.getAttribute("pastOcularHistory")%>';
@@ -149,7 +149,7 @@ function confirmPrint(btn) {
 	con_aller='<%=StringEscapeUtils.escapeJavaScript(aller) %>';
 	con_presc='<%=StringEscapeUtils.escapeJavaScript(presc) %>';
 
-	
+
   function trim(s) {
   	if (s==null || s=='') return s;
   	while (s.substring(0,1) == ' ') {
@@ -160,8 +160,8 @@ function confirmPrint(btn) {
   	}
   return s;
 }
-    
- 
+
+
  	function printsubmit(){
  		document.eyeForm.target='_top';
  		document.eyeForm.method.value='printConRequest';
@@ -189,26 +189,26 @@ function confirmPrint(btn) {
 			document.eyeForm.elements["cp.cc"].value=document.eyeForm.famDoctor.value;
 		else document.eyeForm.elements["cp.cc"].value=document.eyeForm.elements["cp.cc"].value+"; "+document.eyeForm.famDoctor.value;
 	}
-	function clinicalInfoAdd(str,name){		
-		if (document.eyeForm.elements["cp.clinicalInfo"].value.length>0 && name!=null && trim(name)!='')			
-			document.eyeForm.elements["cp.clinicalInfo"].value+='\n';
-		
-		if (name!=null && trim(name)!='')			
-			document.eyeForm.elements["cp.clinicalInfo"].value+=name;
-	}
-	function ocluarproAdd(str,name){
-		if (document.eyeForm.elements["cp.clinicalInfo"].value.length>0 && name!=null && trim(name)!='')			
-			document.eyeForm.elements["cp.clinicalInfo"].value+='\n';
-		
+	function clinicalInfoAdd(str,name){
+		if (document.eyeForm.elements["cp.clinicalInfo"].value.length>0 && name!=null && trim(name)!='')
+			document.eyeForm.elements["cp.clinicalInfo"].value+='\n\n';
+
 		if (name!=null && trim(name)!='')
 			document.eyeForm.elements["cp.clinicalInfo"].value+=name;
 	}
-	
+	function ocluarproAdd(str,name){
+		if (document.eyeForm.elements["cp.clinicalInfo"].value.length>0 && name!=null && trim(name)!='')
+			document.eyeForm.elements["cp.clinicalInfo"].value+='\n\n';
+
+		if (name!=null && trim(name)!='')
+			document.eyeForm.elements["cp.clinicalInfo"].value+=name;
+	}
+
 	function allergiesAdd(){
 		if (con_aller!=null && trim(con_aller)!='')
 			document.eyeForm.elements["cp.allergies"].value+="Allergies:"+con_aller+"\n";
 	}
-	
+
 	function prescriptionsAdd(){
 		if (con_presc!=null && trim(con_presc)!='')
 			document.eyeForm.elements["cp.allergies"].value+="Current Prescriptions:\n"+con_presc+"\n";
@@ -221,29 +221,29 @@ function confirmPrint(btn) {
 		if (str!=null && trim(str)!='')
 			document.eyeForm.elements["cp.allergies"].value+="Past Ocular History:\n"+str+"\n";
 	}
-	
+
 	function impressionAdd(){
 		if (con_impress!=null && trim(con_impress)!='')
 			document.eyeForm.elements["cp.impression"].value+=con_impress+"\n";
 	}
 	function planAdd(val){
 		document.eyeForm.elements["cp.plan"].value+=val;
-	
+
 	}
 	function addExam(ob){
-		var selected = new Array(); 
-		for (var i = 0; i < ob.options.length; i++) 
-			if (ob.options[ i ].selected) 
+		var selected = new Array();
+		for (var i = 0; i < ob.options.length; i++)
+			if (ob.options[ i ].selected)
 				selected.push(ob.options[ i ].value);
 		for (var i = 0; i < selected.length; i++)
 			addField(selected[i]);
-		
+
 	}
 	function addField(val){
 		var temps='';
 		switch (val){
 			case "specs":
-				
+
 				temps+=(trim(specs['od_'+val+'_sph'])=='')?'':('OD '+trim(specs['od_'+val+'_sph']));
 				temps+=(trim(specs['od_'+val+'_cyl'])=='')?'':(trim(specs['od_'+val+'_cyl']));
 				temps+=(trim(specs['od_'+val+'_axis'])=='')?'':('x'+trim(specs['od_'+val+'_axis']));
@@ -259,7 +259,7 @@ function confirmPrint(btn) {
 					document.eyeForm.elements['cp.examination'].value+='Specs:'+temps;
 				break;
 			case "ar":
-				
+
 				temps+=(trim(odMap['od_'+val+'_sph'])=='')?'':('OD '+trim(odMap['od_'+val+'_sph']));
 				temps+=(trim(odMap['od_'+val+'_cyl'])=='')?'':(trim(odMap['od_'+val+'_cyl']));
 				temps+=(trim(odMap['od_'+val+'_axis'])=='')?'\n':('x'+trim(odMap['od_'+val+'_axis'])+'\n');
@@ -270,7 +270,7 @@ function confirmPrint(btn) {
 				if (trim(temps)!='\n   \n')
 					document.eyeForm.elements['cp.examination'].value+='AR:'+temps;
 				break;
-				
+
 			case "k":
 				temps+=(trim(odMap['od_'+val+'1'])==''&&trim(odMap['od_'+val+'2'])==''&&trim(odMap['od_'+val+'2_axis'])=='')?'':'OD ';
 				temps+=(trim(odMap['od_'+val+'1'])=='')?'':(''+trim(odMap['od_'+val+'1']));
@@ -285,7 +285,7 @@ function confirmPrint(btn) {
 					document.eyeForm.elements['cp.examination'].value+='K:'+temps;
 				break;
 			case "manifest_refraction":
-				
+
 				temps+=(trim(odMap['od_'+val+'_sph'])=='')?'':('OD '+trim(odMap['od_'+val+'_sph']));
 				temps+=(trim(odMap['od_'+val+'_cyl'])=='')?'':(trim(odMap['od_'+val+'_cyl']));
 				temps+=(trim(odMap['od_'+val+'_axis'])=='')?'':('x'+trim(odMap['od_'+val+'_axis']));
@@ -299,7 +299,7 @@ function confirmPrint(btn) {
 					document.eyeForm.elements['cp.examination'].value+='Manifest refraction:'+temps;
 				break;
 			case "cycloplegic_refraction":
-				
+
 				temps+=(trim(odMap['od_'+val+'_sph'])=='')?'':('OD '+trim(odMap['od_'+val+'_sph']));
 				temps+=(trim(odMap['od_'+val+'_cyl'])=='')?'':(trim(odMap['od_'+val+'_cyl']));
 				temps+=(trim(odMap['od_'+val+'_axis'])=='')?'':('x'+trim(odMap['od_'+val+'_axis']));
@@ -318,7 +318,7 @@ function confirmPrint(btn) {
 					document.eyeForm.elements['cp.examination'].value+=temps;
 				break;
 			case "cd_ratio_horizontal":
-				
+
 				temps+=(trim(odMap['od_'+val])=='')?'':('OD '+trim(odMap['od_'+val])+'\n');
 				temps+='          ';
 				temps+=(trim(osMap['os_'+val])=='')?'\n':('OS '+trim(osMap['os_'+val])+'\n');
@@ -335,7 +335,7 @@ function confirmPrint(btn) {
 			default:
 				var ts="";
 				for(var i=0;i<val.length;i++) ts+=" ";
-				
+
 				temps+=(trim(odMap['od_'+val])=='')?'':('OD '+trim(odMap['od_'+val])+'\n');
 				temps+=ts+' ';
 				temps+=(trim(osMap['os_'+val])=='')?'\n':('OS '+trim(osMap['os_'+val])+'\n');
@@ -367,7 +367,7 @@ function confirmPrint(btn) {
 	<c:forEach items="${sessionScope.odMap}" var="field">
     odMap['>']='';
     </c:forEach>
-	
+
 	 function popupPageSmall(varpage,name) {
         var page = "" + varpage;
         windowprops = "height=300,width=700,location=no,"
@@ -403,8 +403,8 @@ function confirmPrint(btn) {
    <script src="<c:out value="${ctx}/js/jquery.js"/>"></script>
    <script>
      jQuery.noConflict();
-   </script>   
-	
+   </script>
+
 	<oscar:customInterface section="conreport"/>
 
 <script>
@@ -432,13 +432,13 @@ jQuery(document).ready(function() {
 	<html:hidden property="cp.id"/>
 	<html:hidden property="cp.demographicNo"/>
 	<html:hidden property="cp.providerNo"/>
-	<html:hidden property="cp.appointmentNo"/>	
-	<html:hidden property="cp.urgency"/>	
-	<html:hidden property="cp.reason"/>	
+	<html:hidden property="cp.appointmentNo"/>
+	<html:hidden property="cp.urgency"/>
+	<html:hidden property="cp.reason"/>
 	<html:hidden property="cp.referralId"/>
-	<html:hidden property="cp.referralNo"/>		
-	
-	
+	<html:hidden property="cp.referralNo"/>
+
+
 	<table class="MainTable" id="scrollNumber1" name="encounterTable">
 		<tr class="MainTableTopRow">
 			<td class="MainTableTopRowLeftColumn">Consultation report</td>
@@ -559,7 +559,7 @@ jQuery(document).ready(function() {
 							<td class="tite1" colspan="2">
 								<input type="text" style="width:120px;" name="clDoctor" />
 								<input type="button" class="btn" onclick="addDoc();" value="add to cc">
-								<a href="javascript:referralScriptAttach2('otherDocId','clDoctor')">								
+								<a href="javascript:referralScriptAttach2('otherDocId','clDoctor')">
 								<span style="font-size: 10;">Search #</span></a> </td>
 						</tr>
 					</table>
@@ -603,10 +603,10 @@ jQuery(document).ready(function() {
 							<input type="button" class="btn" value="past ocular hx" name="phis"	onclick="clinicalInfoAdd('Past ocular history:',con_pHis)">
 							<input type="button" class="btn" value="medical hx" name="mhis"	onclick="clinicalInfoAdd('Medical history:',con_mHis)">
 							<input type="button" class="btn" value="family hx" name="fhis" onclick="clinicalInfoAdd('Family history:',con_fHis)">
-							<input type="button" class="btn" value="specs hx" name="shis" onclick="clinicalInfoAdd('Specs history:',con_sHis)">  
-							
-							<input type="button" class="btn" value="ocular meds" name="ohis" onclick="clinicalInfoAdd('Ocular meds:',con_oMeds)"> 
-							<input type="button" class="btn" value="other meds" name="ohis"	onclick="clinicalInfoAdd('Other meds:',con_oHis)"> 					
+							<input type="button" class="btn" value="specs hx" name="shis" onclick="clinicalInfoAdd('Specs history:',con_sHis)">
+
+							<input type="button" class="btn" value="ocular meds" name="ohis" onclick="clinicalInfoAdd('Ocular meds:',con_oMeds)">
+							<input type="button" class="btn" value="other meds" name="ohis"	onclick="clinicalInfoAdd('Other meds:',con_oHis)">
 							<input type="button" class="btn" value="diag notes" name="dnote" onclick="clinicalInfoAdd('Diagnostics notes:',con_diag)">
 							<input type="button" class="btn" value="ocular proc" name="opro" onclick="ocluarproAdd('Ocular procedure:',con_ocularpro)">
 							</td>
@@ -656,7 +656,7 @@ jQuery(document).ready(function() {
 					<table>
 						<tr>
                		<td>
-                			<select name="fromlist1" multiple="multiple" size="9" ondblclick="addSection(document.eyeForm.elements['fromlist1'],document.eyeForm.elements['fromlist2']);">                				
+                			<select name="fromlist1" multiple="multiple" size="9" ondblclick="addSection(document.eyeForm.elements['fromlist1'],document.eyeForm.elements['fromlist2']);">
                 				<c:forEach var="item" items="${sections}">
                 					<option value="<c:out value="${item.value}"/>"><c:out value="${item.label}"/></option>
                 				</c:forEach>
@@ -670,18 +670,18 @@ jQuery(document).ready(function() {
                 				<c:forEach var="item" items="${headers}">
                 					<option value="<c:out value="${item.value}"/>"><c:out value="${item.label}"/></option>
                 				</c:forEach>
-                			</select>                			
+                			</select>
 							<input style="vertical-align: middle;" type="button" value="add" onclick="addExam(ctx,'fromlist2',document.eyeForm.elements['cp.examination'],appointmentNo);">
-						</td>              																				
+						</td>
 						</tr>
 					</table>
 					</td>
 				</tr>
-				
+
 				<tr>
 					<td colspan=2 style="width: 100%">
 					<table style="width: 100%">
-						<tr>										
+						<tr>
 							<td width="74%"><html:textarea rows="7" style="width:100%"
 								property="cp.examination" /></td>
 						</tr>
@@ -705,7 +705,7 @@ jQuery(document).ready(function() {
 					<td colspan="2"><html:textarea rows="3" style="width:100%"
 						property="cp.impression" /></td>
 				</tr>
-<!-- 
+<!--
 				<tr>
 					<td colspan=2 class="tite4">
 					<table width="100%">
@@ -725,7 +725,7 @@ jQuery(document).ready(function() {
 					<td colspan="2"><html:textarea rows="4" style="width:100%"
 						property="cp.plan" /></td>
 				</tr>
--->				
+-->
 				<c:if test='${param.from!="out"}'>
 					<tr>
 						<td colspan=2 class="tite4">Send Tickler:</td>
