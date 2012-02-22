@@ -58,7 +58,7 @@
 	//multi-site support
 	String appNo = request.getParameter("appNo");
 	appNo = (appNo==null ? "" : appNo);
-	
+
 	String defaultSiteName = "";
 	Integer defaultSiteId = 0;
 	Vector<String> vecAddressName = new Vector<String>() ;
@@ -66,16 +66,16 @@
 	Vector<Integer> siteIds = new Vector<Integer>();
 	if (bMultisites) {
 		SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
-		
+
 		List<Site> sites = siteDao.getActiveSitesByProviderNo((String) session.getAttribute("user"));
 		if (sites != null) {
 			for (Site s:sites) {
 				   siteIds.add(s.getSiteId());
-		           vecAddressName.add(s.getName());	
+		           vecAddressName.add(s.getName());
 		           bgColor.add(s.getBgColor());
 		 	}
 		}
-		
+
 		if (appNo != "") {
 			defaultSiteName = siteDao.getSiteNameByAppointmentNo(appNo);
 		}
@@ -149,7 +149,7 @@
 	var demographicNo = '<%=demo%>';
 	var demoNo = '<%=demo%>';
 	var appointmentNo = '<%=appNo%>';
-</script>	
+</script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/global.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery_oscar_defaults.js"></script>
@@ -165,15 +165,15 @@
        adding a calendar a matter of 1 or 2 lines of code. -->
 <script type="text/javascript"
 	src="<%=request.getContextPath()%>/share/calendar/calendar-setup.js"></script>
-	
+
    <script src="<c:out value="${ctx}/js/jquery.js"/>"></script>
    <script>
      jQuery.noConflict();
    </script>
-   
-	
+
+
 	<oscar:customInterface section="conreq"/>
-   
+
 <title><bean:message
 	key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.title" />
 </title>
@@ -301,7 +301,7 @@ function setDisabledDateFields(form, disabled)
 	form.appointmentDay.disabled = disabled;
 	form.appointmentHour.disabled = disabled;
 	form.appointmentMinute.disabled = disabled;
-	form.appointmentPm.disabled = disabled;	
+	form.appointmentPm.disabled = disabled;
 }
 
 function disableEditing()
@@ -312,38 +312,38 @@ function disableEditing()
 
 		setDisabledDateFields(form, disableFields);
 
-		form.status[0].disabled = disableFields;	
-		form.status[1].disabled = disableFields;	
-		form.status[2].disabled = disableFields;	
-		form.status[3].disabled = disableFields;	
-		
-		form.referalDate.disabled = disableFields;	
-		form.service.disabled = disableFields;	
-		form.urgency.disabled = disableFields;	
-		form.phone.disabled = disableFields;	
-		form.fax.disabled = disableFields;	
-		form.address.disabled = disableFields;	
-		form.patientWillBook.disabled = disableFields;	
-		form.sendTo.disabled = disableFields;	
+		form.status[0].disabled = disableFields;
+		form.status[1].disabled = disableFields;
+		form.status[2].disabled = disableFields;
+		form.status[3].disabled = disableFields;
 
-		form.appointmentNotes.disabled = disableFields;	
-		form.reasonForConsultation.disabled = disableFields;	
-		form.clinicalInformation.disabled = disableFields;	
-		form.concurrentProblems.disabled = disableFields;	
-		form.currentMedications.disabled = disableFields;	
+		form.referalDate.disabled = disableFields;
+		form.service.disabled = disableFields;
+		form.urgency.disabled = disableFields;
+		form.phone.disabled = disableFields;
+		form.fax.disabled = disableFields;
+		form.address.disabled = disableFields;
+		form.patientWillBook.disabled = disableFields;
+		form.sendTo.disabled = disableFields;
+
+		form.appointmentNotes.disabled = disableFields;
+		form.reasonForConsultation.disabled = disableFields;
+		form.clinicalInformation.disabled = disableFields;
+		form.concurrentProblems.disabled = disableFields;
+		form.currentMedications.disabled = disableFields;
 		form.allergies.disabled = disableFields;
                 form.annotation.disabled = disableFields;
 
-		disableIfExists(form.update, disableFields);	
-		disableIfExists(form.updateAndPrint, disableFields);	
-		disableIfExists(form.updateAndSendElectronically, disableFields);	
-		disableIfExists(form.updateAndFax, disableFields);	
+		disableIfExists(form.update, disableFields);
+		disableIfExists(form.updateAndPrint, disableFields);
+		disableIfExists(form.updateAndSendElectronically, disableFields);
+		disableIfExists(form.updateAndFax, disableFields);
 
-		disableIfExists(form.submitSaveOnly, disableFields);	
-		disableIfExists(form.submitAndPrint, disableFields);	
-		disableIfExists(form.submitAndSendElectronically, disableFields);	
-		disableIfExists(form.submitAndFax, disableFields);	
-	}	
+		disableIfExists(form.submitSaveOnly, disableFields);
+		disableIfExists(form.submitAndPrint, disableFields);
+		disableIfExists(form.submitAndSendElectronically, disableFields);
+		disableIfExists(form.submitAndFax, disableFields);
+	}
 }
 
 function disableIfExists(item, disabled)
@@ -535,7 +535,7 @@ function onSelectSpecialist(SelectedSpec)	{
 		form.address.value = ("");
 
 		enableDisableRemoteReferralButton(form, true);
-		
+
 		return;
 	}
 	var selectedService = document.EctConsultationFormRequestForm.service.value;  				// get the service that is selected now
@@ -546,23 +546,23 @@ function onSelectSpecialist(SelectedSpec)	{
             	form.phone.value = (aSpeci.phoneNum);
             	form.fax.value = (aSpeci.specFax);					// load the text fields with phone fax and address
             	form.address.value = (aSpeci.specAddress);
-                
-            	jQuery.getJSON("getProfessionalSpecialist.json", {id: aSpeci.specNbr}, 
+
+            	jQuery.getJSON("getProfessionalSpecialist.json", {id: aSpeci.specNbr},
                     function(xml)
                     {
                 		var hasUrl=xml.eDataUrl!=null&&xml.eDataUrl!="";
                 		enableDisableRemoteReferralButton(form, !hasUrl);
-                               
+
                                 var annotation = document.getElementById("annotation");
                                 annotation.value = xml.annotation;
                 	}
             	);
-            	
+
             	break;
             }
         }
 	}
-        
+
 //-----------------------------------------------------------------
 
 /////////////////////////////////////////////////////////////////////
@@ -585,7 +585,7 @@ function FillThreeBoxes(serNbr)	{
 
 function enableDisableRemoteReferralButton(form, disabled)
 {
-	var button=form.updateAndSendElectronically;		
+	var button=form.updateAndSendElectronically;
 	if (button!=null) button.disabled=disabled;
 	button=form.submitAndSendElectronically;
 	if (button!=null) button.disabled=disabled;
@@ -872,7 +872,7 @@ function addCCName(){
 	        		thisForm.setSiteName(defaultSiteName);
         		}
 		}
-		
+
 		if (thisForm.iseReferral())
 		{
 			%>
@@ -881,8 +881,8 @@ function addCCName(){
 				</SCRIPT>
 			<%
 		}
-		
-		
+
+
 	%>
 
 	<input type="hidden" name="providerNo" value="<%=providerNo%>">
@@ -995,7 +995,7 @@ function addCCName(){
 									</a>
 									<%
 								}
-							%>													
+							%>
 							</td>
 						</tr>
 						<tr>
@@ -1032,7 +1032,6 @@ function addCCName(){
 					%>
 						<input name="update" type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdate"/>" onclick="return checkForm('Update Consultation Request','EctConsultationFormRequestForm');" />
 						<input name="updateAndPrint" type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndPrint"/>" onclick="return checkForm('Update Consultation Request And Print Preview','EctConsultationFormRequestForm');" />
-						<input name="preserveFormatting" type="checkbox" value="true"/>&nbsp;<font style="font-size:10pt; font-style:italic; color:blue;"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.chkPreserveFormatting"/></font>
 						<input name="updateAndSendElectronicallyTop" type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndSendElectronicReferral"/>" onclick="return checkForm('Update_esend','EctConsultationFormRequestForm');" />
 						<%
 							if (props.getProperty("faxEnable", "").equalsIgnoreCase("yes"))
@@ -1049,7 +1048,6 @@ function addCCName(){
 					%>
 						<input name="submitSaveOnly" type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmit"/>" onclick="return checkForm('Submit Consultation Request','EctConsultationFormRequestForm'); " />
 						<input name="submitAndPrint" type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmitAndPrint"/>" onclick="return checkForm('Submit Consultation Request And Print Preview','EctConsultationFormRequestForm'); " />
-						<input name="preserveFormatting" type="checkbox" value="true"/>&nbsp;<font style="font-size:10pt; font-style:italic; color:blue;"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.chkPreserveFormatting"/></font>
 						<input name="submitAndSendElectronicallyTop" type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmitAndSendElectronicReferral"/>" onclick="return checkForm('Submit_esend','EctConsultationFormRequestForm');" />
 						<%
 							if (props.getProperty("faxEnable", "").equalsIgnoreCase("yes"))
@@ -1126,7 +1124,7 @@ function addCCName(){
 									</html:select>
 									<%
 								}
-							%>						
+							%>
 							</td>
 						</tr>
                                                 <tr>
@@ -1183,18 +1181,18 @@ function addCCName(){
 								if (thisForm.iseReferral())
 								{
 									%>
-										<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnAppointmentDate" /> : 
+										<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnAppointmentDate" /> :
 									<%
 								}
 								else
 								{
 									%>
 									<a href="javascript:popupOscarCal(300,380,'https://<%=request.getServerName()%>:<%=request.getServerPort()%><%=request.getContextPath()%>/oscarEncounter/oscarConsultationRequest/CalendarPopup.jsp?year=<%=year%>&month=<%=mon%>')">
-										<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnAppointmentDate" /> : 
+										<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnAppointmentDate" /> :
 									</a>
 									<%
 								}
-							%>						
+							%>
 							</td>
 							<td align="right" class="tite3">
 							<table bgcolor="white">
@@ -1222,7 +1220,7 @@ function addCCName(){
 										%>
 										</html:select>
 									</td>
-						
+
 									<td class="tite3">
 										<html:select property="appointmentDay">
 										<%
@@ -1287,18 +1285,18 @@ function addCCName(){
 						<%if (bMultisites) { %>
 						<tr>
 							<td  class="tite4">
-								<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.siteName" />:							
+								<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.siteName" />:
 							</td>
 							<td>
 								<html:select property="siteName" onchange='this.style.backgroundColor=this.options[this.selectedIndex].style.backgroundColor'>
 						            <%  for (int i =0; i < vecAddressName.size();i++){
 						                 String te = (String) vecAddressName.get(i);
-						                 String bg = (String) bgColor.get(i);	
+						                 String bg = (String) bgColor.get(i);
 						                 if (te.equals(defaultSiteName))
 						                	 defaultSiteId = siteIds.get(i);
 						            %>
 						                    <html:option value="<%=te%>" style='<%="background-color: "+bg%>'> <%=te%> </html:option>
-						            <%  }%>	
+						            <%  }%>
 							</html:select>
 							</td>
 						</tr>
@@ -1368,7 +1366,7 @@ function addCCName(){
 								%>
 							</html:select></td>
 						</tr>
-						
+
 <!--add for special encounter-->
 <plugin:hideWhenCompExists componentName="specialencounterComp" reverse="true">
 <special:SpecialEncounterTag moduleName="eyeform">
@@ -1525,9 +1523,9 @@ if (defaultSiteId!=0) aburl2+="&site="+defaultSiteId;
 					<td colspan=2><html:textarea cols="90" rows="3"
 						property="allergies"></html:textarea></td>
 				</tr>
-				
-				
-				
+
+
+
 
 				<tr>
 					<td colspan=2><input type="hidden" name="submission" value="">
@@ -1537,7 +1535,6 @@ if (defaultSiteId!=0) aburl2+="&site="+defaultSiteId;
 					%>
 						<input name="update" type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdate"/>" onclick="return checkForm('Update Consultation Request','EctConsultationFormRequestForm');" />
 						<input name="updateAndPrint" type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndPrint"/>" onclick="return checkForm('Update Consultation Request And Print Preview','EctConsultationFormRequestForm');" />
-						<input name="preserveFormatting" type="checkbox" value="true"/>&nbsp;<font style="font-size:10pt; font-style:italic; color:blue;"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.chkPreserveFormatting"/></font>
 						<input name="updateAndSendElectronically" type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndSendElectronicReferral"/>" onclick="return checkForm('Update_esend','EctConsultationFormRequestForm');" />
 						<%
 							if (props.getProperty("faxEnable", "").equalsIgnoreCase("yes"))
@@ -1551,10 +1548,9 @@ if (defaultSiteId!=0) aburl2+="&site="+defaultSiteId;
 						}
 								else
 								{
-					%> 
+					%>
 						<input name="submitSaveOnly" type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmit"/>" onclick="return checkForm('Submit Consultation Request','EctConsultationFormRequestForm'); " />
 						<input name="submitAndPrint" type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmitAndPrint"/>" onclick="return checkForm('Submit Consultation Request And Print Preview','EctConsultationFormRequestForm'); " />
-						<input name="preserveFormatting" type="checkbox" value="true"/>&nbsp;<font style="font-size:10pt; font-style:italic; color:blue;"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.chkPreserveFormatting"/></font>
 						<input name="submitAndSendElectronically" type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmitAndSendElectronicReferral"/>" onclick="return checkForm('Submit_esend','EctConsultationFormRequestForm');" />
 						<%
 							if (props.getProperty("faxEnable", "").equalsIgnoreCase("yes"))
@@ -1566,7 +1562,7 @@ if (defaultSiteId!=0) aburl2+="&site="+defaultSiteId;
 						%>
 					<%
 						}
-					
+
 						if (thisForm.iseReferral())
 						{
 							%>
