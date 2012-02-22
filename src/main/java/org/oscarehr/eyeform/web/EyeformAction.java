@@ -81,6 +81,7 @@ import oscar.oscarEncounter.oscarMeasurements.model.Measurements;
 import oscar.util.UtilDateUtilities;
 
 import com.lowagie.text.DocumentException;
+import com.lowagie.text.pdf.PdfCopyFields;
 
 public class EyeformAction extends DispatchAction {
 
@@ -435,14 +436,18 @@ public class EyeformAction extends DispatchAction {
 				cppFromMeasurements=true;
 			}
 
+			PdfCopyFields finalDoc = new PdfCopyFields(os);
+			finalDoc.getWriter().setStrictImageSequence(true);
 			PdfRecordPrinter printer = new PdfRecordPrinter(request, os);
-
 
 			//loop through each visit..concatenate into 1 PDF
 			for(int x=0;x<ids.length;x++) {
+
+
 				if(x>0) {
 					printer.setNewPage(true);
 				}
+
 				int appointmentNo = Integer.parseInt(ids[x]);
 				Appointment appointment = appointmentDao.find(appointmentNo);
 				Demographic demographic = demographicDao.getClientByDemographicNo(appointment.getDemographicNo());
@@ -573,7 +578,8 @@ public class EyeformAction extends DispatchAction {
 		        	printer.printDiagrams(diagrams);
 		        }
 
-			}
+
+			} //end of loop
 
 			printer.finish();
 
@@ -590,7 +596,7 @@ public class EyeformAction extends DispatchAction {
 		   return filtered.size();
 	   }
 
-	   public void printCppItem(PdfRecordPrinter printer, String header, String issueCode, int demographicNo, int appointmentNo, boolean includePrevious) throws DocumentException,IOException {
+	   public void printCppItem(PdfRecordPrinter printer, String header, String issueCode, int demographicNo, int appointmentNo, boolean includePrevious) throws DocumentException {
 		   Collection<CaseManagementNote> notes = null;
 		   if(!includePrevious) {
 			    notes = filterNotesByAppointment(caseManagementNoteDao.findNotesByDemographicAndIssueCode(demographicNo, new String[] {issueCode}),appointmentNo);
@@ -603,7 +609,7 @@ public class EyeformAction extends DispatchAction {
 		   }
 	   }
 
-	   public void printCppItemFromMeasurements(PdfRecordPrinter printer, String header, String measurementType, int demographicNo, int appointmentNo, boolean includePrevious) throws DocumentException,IOException {
+	   public void printCppItemFromMeasurements(PdfRecordPrinter printer, String header, String measurementType, int demographicNo, int appointmentNo, boolean includePrevious) throws DocumentException {
 			  Measurements measurement = measurementsDao.getLatestMeasurementByDemographicNoAndType(demographicNo,measurementType);
 			  if(measurement == null) {
 				  return;
