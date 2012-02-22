@@ -13,16 +13,19 @@ package com.quatro.model.security;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.apache.log4j.Logger;
 import org.oscarehr.util.EncryptionUtils;
-
+import org.oscarehr.util.MiscUtils;
 
 public class Security implements java.io.Serializable {
+	private static Logger logger = MiscUtils.getLogger();
+
 	public static final int LOGIN_SUCCESS = 0;
 	public static final int LOGIN_FAILED = 1;
 	public static final int USER_NOT_EXISTS = 2;
 	public static final int PASSWORD_EXPIRED = 3;
 	public static final int ACCOUNT_BLOCKED = 4;
-	
+
 	private Integer securityNo;
 	private String userName;
 	private String password;
@@ -37,6 +40,7 @@ public class Security implements java.io.Serializable {
 	private String loginIP = "";
 	private Date loginDate;
 	private int loginStatus = 0;
+
 	public Calendar getLastUpdateDate() {
 		return lastUpdateDate;
 	}
@@ -58,9 +62,7 @@ public class Security implements java.io.Serializable {
 	}
 
 	/** full constructor */
-	public Security(String userName, String password, String providerNo,
-			String pin, Integer BRemotelockset, Integer BLocallockset,
-			Date dateExpiredate, Integer BExpireset) {
+	public Security(String userName, String password, String providerNo, String pin, Integer BRemotelockset, Integer BLocallockset, Date dateExpiredate, Integer BExpireset) {
 		this.userName = userName;
 		this.password = password;
 		this.providerNo = providerNo;
@@ -172,17 +174,25 @@ public class Security implements java.io.Serializable {
 	/**
 	 * @return true if inputed password equals password in the DB, false otherwise.
 	 */
-	public boolean checkPassword(String inputedPassword)
-	{
-		if (password==null) return(false);
-		
-        byte[] sha1Bytes = EncryptionUtils.getSha1(inputedPassword);
-        StringBuilder sb=new StringBuilder();
-        for (byte b : sha1Bytes)
-        {
-        	sb.append(b);
-        }
-        
-		return(password.equals(sb.toString()));
+	public boolean checkPassword(String inputedPassword) {
+		if (password == null) return (false);
+
+		byte[] sha1Bytes = EncryptionUtils.getSha1(inputedPassword);
+		StringBuilder sb = new StringBuilder();
+		for (byte b : sha1Bytes) {
+			sb.append(b);
+		}
+
+		if (password.equals(sb.toString())) {
+			return (true);
+		} else {
+			try {
+				// sleep to throttle anyone trying to brute force hack passwords
+				Thread.sleep(250);
+			} catch (InterruptedException e) {
+				logger.error("Error", e);
+			}
+			return (false);
+		}
 	}
 }
