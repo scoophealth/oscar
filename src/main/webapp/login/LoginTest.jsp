@@ -29,7 +29,7 @@
 
         <%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
         <%
-            List<Map> resultList = oscarSuperManager.find("providerDao", "search_signed_confidentiality",
+            List<Map<String,Object>> resultList = oscarSuperManager.find("providerDao", "search_signed_confidentiality",
             new Object[] {session.getAttribute("user")});
             Map map = resultList.get(0);
             Date signdate = (Date)map.get("signed_confidentiality");

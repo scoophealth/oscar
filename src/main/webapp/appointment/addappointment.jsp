@@ -267,7 +267,7 @@ function pasteAppt() {
 
   GregorianCalendar caltime =new GregorianCalendar( );
   caltime.setTime(apptDate);
-  caltime.add(caltime.MINUTE, Integer.parseInt(duration)-1 );
+  caltime.add(GregorianCalendar.MINUTE, Integer.parseInt(duration)-1 );
 
   String [] param = new String[9] ;
   param[0] = dateString2;
@@ -280,7 +280,7 @@ function pasteAppt() {
   param[7] = param[3];
   param[8] = request.getParameter("programId_oscarView");
 
-  List<Map> resultList = oscarSuperManager.find("appointmentDao", "search_appt", param);
+  List<Map<String,Object>> resultList = oscarSuperManager.find("appointmentDao", "search_appt", param);
   long apptnum = resultList.size() > 0 ? (Long)resultList.get(0).get("n") : 0;
 
   String deepcolor = apptnum==0?"#CCCCFF":"gold", weakcolor = apptnum==0?"#EEEEFF":"ivory";
@@ -629,7 +629,7 @@ function pasteAppt() {
 <%
             GregorianCalendar now=new GregorianCalendar();
             GregorianCalendar cal = (GregorianCalendar) now.clone();
-            cal.add(cal.DATE, 1);
+            cal.add(GregorianCalendar.DATE, 1);
             String strDateTime=now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DAY_OF_MONTH)+" "
                 + now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE)+":"+now.get(Calendar.SECOND);
 %>

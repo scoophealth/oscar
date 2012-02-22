@@ -145,7 +145,7 @@ public class AppointmentMailer implements MessageMailer{
             Date today = new Date();
 
             AppointmentDao apptDao = (AppointmentDao) SpringUtils.getBean("appointmentSuperDao");
-            List<Map> resultList  = apptDao.executeSelectQuery("search", new Object[]{this.apptNo});
+            List<Map<String, Object>> resultList  = apptDao.executeSelectQuery("search", new Object[]{this.apptNo});
 
             ClinicDAO clinicDao = (ClinicDAO)SpringUtils.getBean("clinicDAO");
             Clinic clinic = clinicDao.getClinic();

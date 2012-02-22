@@ -13,210 +13,181 @@
  */
 package oscar.login;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.List;
 import java.util.Properties;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
+import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.PMmodule.dao.SecUserRoleDao;
+import org.oscarehr.PMmodule.model.SecUserRole;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
+import oscar.OscarProperties;
 import oscar.log.LogAction;
 import oscar.log.LogConst;
-import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
 
-public class LoginCheckLoginBean {
-    private static final Logger logger = MiscUtils.getLogger();
-    private static final String LOG_PRE = "Login!@#$: ";
+import com.quatro.dao.security.SecurityDao;
+import com.quatro.model.security.Security;
 
-    private String username = "";
-    private String password = "";
-    private String pin = "";
-    private String ip = "";
+public final class LoginCheckLoginBean {
+	private static final Logger logger = MiscUtils.getLogger();
+	private static final String LOG_PRE = "Login!@#$: ";
 
-    private String userpassword = null; //your password in the table
+	private String username = "";
+	private String password = "";
+	private String pin = "";
+	private String ip = "";
 
-    private String firstname = null;
-    private String lastname = null;
-    private String profession = null;
-    private String rolename = null;
-    Properties oscarVariables = null;
-    private MessageDigest md;
+	private String userpassword = null; // your password in the table
 
-    LoginSecurityBean secBean = null;
-    DBHelp accessDB = null;
+	private String firstname = null;
+	private String lastname = null;
+	private String profession = null;
+	private String rolename = null;
 
-    public void ini(String user_name, String password, String pin1, String ip1, Properties variables) {
-        setUsername(user_name);
-        setPassword(password);
-        setPin(pin1);
-        setIp(ip1);
-        setVariables(variables);
-    }
+	private Security security = null;
 
-    public String[] authenticate() throws Exception, SQLException {
-        secBean = getUserID();
+	public void ini(String user_name, String password, String pin1, String ip1) {
+		setUsername(user_name);
+		setPassword(password);
+		setPin(pin1);
+		setIp(ip1);
+	}
 
-        // the user is not in security table
-        if (secBean == null) {
-            return cleanNullObj(LOG_PRE + "No Such User: " + username);
-        }
-        // check pin if needed
+	public String[] authenticate() {
+		security = getUserID();
 
-        String sPin = pin;
-        if (oscar.OscarProperties.getInstance().isPINEncripted()) sPin = oscar.Misc.encryptPIN(sPin);
-        
-        if (isWAN() && secBean.getB_RemoteLockSet().intValue() == 1
-                && (!sPin.equals(secBean.getPin()) || pin.length() < 3)) {
-            return cleanNullObj(LOG_PRE + "Pin-remote needed: " + username);
-        } else if (!isWAN() && secBean.getB_LocalLockSet().intValue() == 1
-                && (!sPin.equals(secBean.getPin()) || pin.length() < 3)) {
-            return cleanNullObj(LOG_PRE + "Pin-local needed: " + username);
-        }
+		// the user is not in security table
+		if (security == null) {
+			return cleanNullObj(LOG_PRE + "No Such User: " + username);
+		}
+		// check pin if needed
 
-        if (secBean.getB_ExpireSet().intValue() == 1 && ( secBean.getDate_ExpireDate() == null || secBean.getDate_ExpireDate().before(UtilDateUtilities.now() ))) {
-            return cleanNullObjExpire(LOG_PRE + "Expired: " + username);
-        }
-        String expired_days = "";  
-        if (secBean.getB_ExpireSet().intValue() == 1 ){
-        //Give warning if the password will be expired in 10 days.
-            
-                long date_expireDate = secBean.getDate_ExpireDate().getTime();
-                long date_now = UtilDateUtilities.now().getTime();
-                long date_diff = (date_expireDate - date_now)/(24*3600*1000);
+		String sPin = pin;
+		if (oscar.OscarProperties.getInstance().isPINEncripted()) sPin = oscar.Misc.encryptPIN(sPin);
 
-                if (secBean.getB_ExpireSet().intValue() == 1 && date_diff < 11) {
-                        expired_days = String.valueOf(date_diff);        	
-                }
-        }
-        
-        StringBuilder sbTemp = new StringBuilder();
-        byte[] btTypeInPasswd = md.digest(password.getBytes());
-        for (int i = 0; i < btTypeInPasswd.length; i++)
-            sbTemp = sbTemp.append(btTypeInPasswd[i]);
-        password = sbTemp.toString();
+		if (isWAN() && security.getBRemotelockset() != null && security.getBRemotelockset().intValue() == 1 && (!sPin.equals(security.getPin()) || pin.length() < 3)) {
+			return cleanNullObj(LOG_PRE + "Pin-remote needed: " + username);
+		} else if (!isWAN() && security.getBLocallockset() != null && security.getBLocallockset().intValue() == 1 && (!sPin.equals(security.getPin()) || pin.length() < 3)) {
+			return cleanNullObj(LOG_PRE + "Pin-local needed: " + username);
+		}
 
-        userpassword = secBean.getPassword();
-        if (userpassword.length() < 20) {
-            sbTemp = new StringBuilder();
-            byte[] btDBPasswd = md.digest(userpassword.getBytes());
-            for (int i = 0; i < btDBPasswd.length; i++)
-                sbTemp = sbTemp.append(btDBPasswd[i]);
-            userpassword = sbTemp.toString();
-        }
+		if (security.getBExpireset() != null && security.getBExpireset().intValue() == 1 && (security.getDateExpiredate() == null || security.getDateExpiredate().before(UtilDateUtilities.now()))) {
+			return cleanNullObjExpire(LOG_PRE + "Expired: " + username);
+		}
+		String expired_days = "";
+		if (security.getBExpireset() != null && security.getBExpireset().intValue() == 1) {
+			// Give warning if the password will be expired in 10 days.
 
-        if (password.equals(userpassword)) { // login successfully           
-        	String[] strAuth = new String[6];
-            strAuth[0] = secBean.getProviderNo();
-            strAuth[1] = firstname;
-            strAuth[2] = lastname;
-            strAuth[3] = profession;
-            strAuth[4] = rolename;
-            strAuth[5] = expired_days;            
-            return strAuth;
-        } else { // login failed
-            return cleanNullObj(LOG_PRE + "password failed: " + username);
-        }
-    }
+			long date_expireDate = security.getDateExpiredate().getTime();
+			long date_now = UtilDateUtilities.now().getTime();
+			long date_diff = (date_expireDate - date_now) / (24 * 3600 * 1000);
 
-    private String[] cleanNullObj(String errorMsg) {
-        logger.info(errorMsg);
-        LogAction.addLogSynchronous("", "failed", LogConst.CON_LOGIN, username, ip);
-        userpassword = null;
-        password = null;
-        return null;
-    }
+			if (security.getBExpireset().intValue() == 1 && date_diff < 11) {
+				expired_days = String.valueOf(date_diff);
+			}
+		}
 
-    private String[] cleanNullObjExpire(String errorMsg) {
-        logger.info(errorMsg);
-        LogAction.addLogSynchronous("", "expired", LogConst.CON_LOGIN, username, ip);
-        userpassword = null;
-        password = null;
-        return new String[] { "expired" };
-    }
+		boolean auth = false;
 
-    private LoginSecurityBean getUserID() throws SQLException {
-        LoginSecurityBean secBean = null;
+		userpassword = security.getPassword();
+		if (userpassword.length() < 20) {
+			auth = password.equals(userpassword);
+		} else {
+			auth = security.checkPassword(password);
+		}
 
-        accessDB = new DBHelp();
-        
-       
-        
-        String sql = "select * from security where user_name = '" + StringEscapeUtils.escapeSql(username) + "'";
-        ResultSet rs =  DBHandler.GetSQL(sql);
-        while (rs.next()) {
-            secBean = new LoginSecurityBean();
-            secBean.setUser_name(oscar.Misc.getString(rs, "user_name"));
-            secBean.setPassword(oscar.Misc.getString(rs, "password"));
-            secBean.setProviderNo(oscar.Misc.getString(rs, "provider_no"));
-            secBean.setPin(oscar.Misc.getString(rs, "pin"));
-            secBean.setB_ExpireSet(new Integer(rs.getInt("b_ExpireSet")));
-            secBean.setDate_ExpireDate(rs.getDate("date_ExpireDate"));
-            secBean.setB_LocalLockSet(new Integer(oscar.Misc.getString(rs, "b_LocalLockSet")));
-            secBean.setB_RemoteLockSet(new Integer(oscar.Misc.getString(rs, "b_RemoteLockSet")));
-        }
-        rs.close();
+		if (auth) { // login successfully
+			String[] strAuth = new String[6];
+			strAuth[0] = security.getProviderNo();
+			strAuth[1] = firstname;
+			strAuth[2] = lastname;
+			strAuth[3] = profession;
+			strAuth[4] = rolename;
+			strAuth[5] = expired_days;
+			return strAuth;
+		} else { // login failed
+			return cleanNullObj(LOG_PRE + "password failed: " + username);
+		}
+	}
 
-        if (secBean == null)
-            return null;
+	private String[] cleanNullObj(String errorMsg) {
+		logger.info(errorMsg);
+		LogAction.addLogSynchronous("", "failed", LogConst.CON_LOGIN, username, ip);
+		userpassword = null;
+		password = null;
+		return null;
+	}
 
-        // find the detail of the user
-        sql = "select first_name, last_name, provider_type from provider where provider_no = '"
-                + secBean.getProviderNo() + "'";
-        rs = accessDB.searchDBRecord(sql);
-        while (rs.next()) {
-            firstname = accessDB.getString(rs,"first_name");
-            lastname = accessDB.getString(rs,"last_name");
-            profession = accessDB.getString(rs,"provider_type");
-        }
+	private String[] cleanNullObjExpire(String errorMsg) {
+		logger.info(errorMsg);
+		LogAction.addLogSynchronous("", "expired", LogConst.CON_LOGIN, username, ip);
+		userpassword = null;
+		password = null;
+		return new String[] { "expired" };
+	}
 
-        // retrieve the oscar roles for this Provider as a comma separated list
-        sql = "select role_name from secUserRole where activeyn=1 and provider_no = '" + secBean.getProviderNo() + "'";
-        rs = accessDB.searchDBRecord(sql);
-        while (rs.next()) {
-            if (rolename == null) {
-                rolename = accessDB.getString(rs,"role_name");
-            } else {
-                rolename += "," + accessDB.getString(rs,"role_name");
-            }
-        }
+	private Security getUserID() {
 
-        return secBean;
-    }
+		SecurityDao securityDao = (SecurityDao) SpringUtils.getBean("securityDao");
+		List<Security> results = securityDao.findByUserName(username);
+		Security security = null;
+		if (results.size() > 0) security = results.get(0);
 
-    public boolean isWAN() {
-        boolean bWAN = true;
-        if (ip.startsWith(oscarVariables.getProperty("login_local_ip")))
-            bWAN = false;
-        return bWAN;
-    }
+		if (security == null) return null;
 
-    public void setUsername(String user_name) {
-        this.username = user_name;
-    }
+		// find the detail of the user
+		ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
+		Provider provider = providerDao.getProvider(security.getProviderNo());
 
-    public void setPassword(String password) {
-        this.password = password.replace(' ', '\b'); //no white space to be allowed in the password
-    }
+		if (provider != null) {
+			firstname = provider.getFirstName();
+			lastname = provider.getLastName();
+			profession = provider.getProviderType();
+		}
 
-    public void setPin(String pin1) {
-        this.pin = pin1.replace(' ', '\b');
-    }
+		// retrieve the oscar roles for this Provider as a comma separated list
+		SecUserRoleDao secUserRoleDao = (SecUserRoleDao) SpringUtils.getBean("secUserRoleDao");
+		List<SecUserRole> roles = secUserRoleDao.getUserRoles(security.getProviderNo());
+		for (SecUserRole role : roles) {
+			if (rolename == null) {
+				rolename = role.getRoleName();
+			} else {
+				rolename += "," + role.getRoleName();
+			}
+		}
 
-    public void setIp(String ip1) {
-        this.ip = ip1;
-    }
+		return security;
+	}
 
-    public void setVariables(Properties variables) {
-        this.oscarVariables = variables;
-        try {
-            md = MessageDigest.getInstance("SHA"); //may get from prop file, e.g. MD5
-        } catch (NoSuchAlgorithmException foo) {
-            logger.error(LOG_PRE + "NoSuchAlgorithmException - SHA");
-        }
-    }
+	public boolean isWAN() {
+		boolean bWAN = true;
+		Properties p = OscarProperties.getInstance();
+		if (ip.startsWith(p.getProperty("login_local_ip"))) bWAN = false;
+		return bWAN;
+	}
+
+	public void setUsername(String user_name) {
+		this.username = user_name;
+	}
+
+	public void setPassword(String password) {
+		this.password = password.replace(' ', '\b'); // no white space to be allowed in the password
+	}
+
+	public void setPin(String pin1) {
+		this.pin = pin1.replace(' ', '\b');
+	}
+
+	public void setIp(String ip1) {
+		this.ip = ip1;
+	}
+
+	public Security getSecurity() {
+		return (security);
+	}
 
 }

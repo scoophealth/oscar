@@ -24,7 +24,6 @@
 package oscar.oscarBilling.ca.bc.pageUtil;
 
 import java.io.IOException;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -53,7 +52,6 @@ import oscar.oscarBilling.ca.bc.MSP.MSPReconcile;
 import oscar.oscarBilling.ca.bc.data.BillingHistoryDAO;
 import oscar.oscarBilling.ca.bc.data.BillingNote;
 import oscar.oscarBilling.ca.bc.data.BillingmasterDAO;
-import oscar.oscarDB.DBHandler;
 import oscar.service.OscarSuperManager;
 import oscar.util.UtilDateUtilities;
 
@@ -94,7 +92,7 @@ public class BillingSaveBillingAction extends Action {
         OscarSuperManager oscarSuperManager = (OscarSuperManager)SpringUtils.getBean("oscarSuperManager");
         if (bean.getApptNo() != null && !bean.getApptNo().trim().equals("0") &&  !bean.getApptNo().trim().equals("")){
             String apptStatus = "";
-            List<Map> resultList  = oscarSuperManager.find("appointmentDao", "search", new Object[]{bean.getApptNo()});
+            List<Map<String, Object>> resultList  = oscarSuperManager.find("appointmentDao", "search", new Object[]{bean.getApptNo()});
             if (resultList.size() < 1) {
                 log.error("LLLOOK: APPT ERROR - APPT ("+bean.getApptNo()+") NOT FOUND - FOR demo:" + bean.getPatientName() +" date " + curDate);
             } else {
@@ -357,86 +355,6 @@ public class BillingSaveBillingAction extends Action {
         }
         return billingAccountStatus;
     }
-    
-    
-
-    
-//    private String insertIntoBilling(final oscar.oscarBilling.ca.bc.pageUtil.BillingSessionBean bean, final String curDate, final char billingAccountStatus) {
-//
-//        //TODO STILL NEED TO ADD EXTRA FIELDS for dotes and bill type
-//        String billingSQL = "insert into billing (demographic_no, provider_no,appointment_no, demographic_name,hin,update_date, billing_date, total, status, dob, visitdate, visittype, provider_ohip_no, apptProvider_no, creator,billingtype)" + " values(" +
-//                "'" + bean.getPatientNo() + "'," +
-//                "'" + bean.getBillingProvider() + "', " +
-//                "'" + bean.getApptNo() + "'," +
-//                "'" + oscar.util.UtilMisc.mysqlEscape(bean.getPatientName()) + "'," +
-//                "'" + bean.getPatientPHN() + "'," +
-//                "'" + curDate + "'," +
-//                "'" + bean.getServiceDate() + "'," +
-//                "'" + bean.getGrandtotal() + "'," +
-//                "'" + billingAccountStatus + "'," + //status
-//                "'" + bean.getPatientDoB() + "'," +
-//                "'" + bean.getAdmissionDate() + "'," +
-//                "'" + oscar.util.UtilMisc.mysqlEscape(bean.getVisitType()) + "'," +
-//                "'" + bean.getBillingPracNo() + "'," +
-//                "'" + bean.getApptProviderNo() + "'," +
-//                "'" + bean.getCreator() + "'," +
-//                "'" + bean.getBillingType() + "')";
-//        return billingSQL;
-//    }
-
-//    private String createBillingMasterInsertString(BillingSessionBean bean,
-//            String billingid,
-//            char billingAccountStatus,
-//            String payeeNo) {
-//        String insertBillingMaster =
-//                " INSERT INTO billingmaster (billing_no, createdate, payee_no, billingstatus, demographic_no, appointment_no,service_date) " +
-//                " VALUES ('" + billingid + "',NOW(),'" + payeeNo + "','" + billingAccountStatus + "','" + bean.getPatientNo() + "','" + bean.getApptNo() + "','" + convertDate8Char(bean.getServiceDate()) + "')";
-//        return insertBillingMaster;
-//    }
-
-    private String getFeeByCode(String feeitem) {
-        ResultSet rs = null;
-        
-        String amnt = "0.00";
-        try {
-            
-            rs = DBHandler.GetSQL("SELECT value FROM billingservice WHERE service_code='" +
-                    feeitem + "'");
-            if (rs.next()) {
-                amnt = rs.getString("value");
-            }
-        } catch (SQLException ex) {
-            log.error(ex.getMessage(), ex);MiscUtils.getLogger().error("Error", ex);
-        } finally {
-            if (rs != null) {
-                try {
-                    rs.close();
-                } catch (SQLException ex2) {
-                    log.error(ex2.getMessage(), ex2);MiscUtils.getLogger().error("Error", ex2);
-                }
-            }
-        }
-
-        return amnt;
-    }
-
-//    private void updatePatientChartWithWCBInfo(
-//            WCBForm wcb) {
-//        EChartDAO dao = new EChartDAO();
-//        Echart echart = dao.getMostRecentEchart(wcb.getDemographic());
-//
-//        //if the patient doesn't have an echart than create  a new one
-//        if (echart == null) {
-//            echart = new Echart();
-//            echart.setDemographicNo(wcb.getDemographic());
-//            echart.setProviderNo(wcb.getW_pracno());
-//        }
-//
-//        String wcbEchartEntry = "\n\n[WCB Clinical Info - CLAIM# - " + wcb.getW_wcbno() + " @ " + echart.getTimeStampToString() + "]\n" + wcb.getW_clinicinfo();
-//        echart.setEncounter(wcbEchartEntry);
-//        log.debug("wcbEchartEntry=" + wcbEchartEntry);
-//        dao.addEchartEntry(echart);
-//    }
 
     public String convertDate8Char(String s) {
          String  sdate = "00000000", syear = "", smonth = "", sday = "";

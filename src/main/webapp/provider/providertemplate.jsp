@@ -86,7 +86,7 @@ function setfocus() {
 		<td align="center"><font color="white">Template Name: </font> <select
 			name="encountertemplate_name">
 <%
-  List<Map> resultList = oscarSuperManager.find("providerDao", "search_templatename", new Object[] {});
+  List<Map<String,Object>> resultList = oscarSuperManager.find("providerDao", "search_templatename", new Object[] {});
   for (Map template : resultList) {
 %>
 			<option value="<%=template.get("encountertemplate_name")%>"><%=template.get("encountertemplate_name")%></option>

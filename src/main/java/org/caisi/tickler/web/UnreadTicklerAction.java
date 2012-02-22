@@ -57,7 +57,7 @@ public class UnreadTicklerAction extends DispatchAction {
 	}
 
 	public ActionForward refresh(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response) throws Exception {
+			HttpServletRequest request, HttpServletResponse response) {
 		
 		String providerNo = (String) request.getSession().getAttribute("user");
 		if(providerNo == null) {
@@ -83,10 +83,9 @@ public class UnreadTicklerAction extends DispatchAction {
 	}
 	
 	public ActionForward login(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response) throws Exception {
+			HttpServletRequest request, HttpServletResponse response) {
 		LazyValidatorForm loginForm = (LazyValidatorForm)form;
 		
-		String propName = request.getContextPath().substring(1) + ".properties";
 		String ip = request.getRemoteAddr();
 
 		String userName = (String)loginForm.get("username");
@@ -99,14 +98,7 @@ public class UnreadTicklerAction extends DispatchAction {
 	        return mapping.findForward("login");
 	    }
 	    
-	    LoginCheckLogin cl = new LoginCheckLogin(propName);
-	    if (!cl.isPropFileFound()) {
-	      String errorMsg = "Unable to open the properties file " +
-	          cl.getPropFileName() + ".";
-	      request.setAttribute("errormsg",errorMsg);
-	      return (mapping.findForward("login"));
-	    }
-	    
+	    LoginCheckLogin cl = new LoginCheckLogin();	    
 	    if (cl.isBlock(ip, userName)) {
 	    	String errorMsg = "Your account is locked. Please contact your administrator to unlock.";
 	        request.setAttribute("errormsg",errorMsg);
@@ -142,7 +134,7 @@ public class UnreadTicklerAction extends DispatchAction {
 	}
 	
 	public ActionForward logout(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response) throws Exception {
+			HttpServletRequest request, HttpServletResponse response) {
 		request.getSession().invalidate();
 		return mapping.findForward("login");
 	}

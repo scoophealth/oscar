@@ -12,7 +12,7 @@
     response.sendRedirect("../logout.jsp");
 
   oscar.oscarSecurity.CookieSecurity cs = new oscar.oscarSecurity.CookieSecurity();
-  response.addCookie(cs.GiveMeACookie(cs.receptionistCookie));
+  response.addCookie(cs.GiveMeACookie(oscar.oscarSecurity.CookieSecurity.receptionistCookie));
 
   String tickler_no="", textColor="", tickler_note="";
   String curUser_no,userfirstname,userlastname, userprofession, mygroupno;
@@ -39,7 +39,7 @@
 	scope="session" />
 <%
   String resourcebaseurl = "http://resource.oscarmcmaster.org/oscarResource/";
-  List<Map> resultList = oscarSuperManager.find("receptionistDao", "search_resource_baseurl", new String[] {"resource_baseurl"});
+  List<Map<String,Object>> resultList = oscarSuperManager.find("receptionistDao", "search_resource_baseurl", new String[] {"resource_baseurl"});
   for (Map url : resultList) {
  	  resourcebaseurl = (String) url.get("value");
   }
@@ -526,9 +526,9 @@ function findProvider(p,m,d) {
      param[0]=curProvider_no[nProvider];
      param[1]=year+"-"+month+"-"+day;//e.g."2001-02-02";
 
-     List<Map> appointmentList = oscarSuperManager.find("receptionistDao", strsearchappointmentday, param);
-     Iterator<Map> it = appointmentList.iterator();
-     Map appointment = null;
+     List<Map<String,Object>> appointmentList = oscarSuperManager.find("receptionistDao", strsearchappointmentday, param);
+     Iterator<Map<String,Object>> it = appointmentList.iterator();
+     Map<String,Object> appointment = null;
 
      for (ih=startHour*60; ih<=(endHour*60+(60/depth-1)*depth); ih+=depth) { // use minutes as base
        hourCursor = ih/60;
@@ -579,7 +579,7 @@ function findProvider(p,m,d) {
 
           	  paramTickler[0]=String.valueOf(demographic_no);
 		  	  paramTickler[1]=year+"-"+month+"-"+day;//e.g."2001-02-02";
-		      List<Map> ticklerList = oscarSuperManager.find("receptionistDao", "search_tickler", paramTickler);
+		      List<Map<String,Object>> ticklerList = oscarSuperManager.find("receptionistDao", "search_tickler", paramTickler);
 
 		      tickler_no = "";
 		  	  for (Map tickler : ticklerList) {

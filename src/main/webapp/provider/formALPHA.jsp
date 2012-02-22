@@ -88,7 +88,7 @@ function onSubmitForm() {
 
   if( !bNew ) {
     String content="";
-    List<Map> resultList = oscarSuperManager.find("providerDao", "search_form", new Object[] {request.getParameter("form_no")});
+    List<Map<String, Object>> resultList = oscarSuperManager.find("providerDao", "search_form", new Object[] {request.getParameter("form_no")});
     for (Map form : resultList) {
         content = (String)form.get("content");
 %>

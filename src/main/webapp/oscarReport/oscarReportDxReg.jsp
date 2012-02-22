@@ -210,7 +210,7 @@ objectName="_admin,_admin.reporting" rights="r" reverse="<%=true%>">
                         <table border="0">
                             <thead>
                                 <tr>
-                                    <th>Total Number(s): <%= (Integer) session.getAttribute("Counter")%></th>
+                                    <th>Total Number(s): <%=session.getAttribute("Counter")%></th>
                                 </tr>
                             </thead>
                         </table>
@@ -238,7 +238,7 @@ objectName="_admin,_admin.reporting" rights="r" reverse="<%=true%>">
                                                objectName="_team_schedule_only" rights="r" reverse="false">
                                 <%
                                         String provider_no = curUser_no;
-                                        List<Map> resultList = oscarSuperManager.find("providerDao", "searchloginteam", new Object[]{provider_no, provider_no});
+                                        List<Map<String,Object>> resultList = oscarSuperManager.find("providerDao", "searchloginteam", new Object[]{provider_no, provider_no});
                                         for (Map provider : resultList) {
                                 %>
                                 <option value="<%=provider.get("provider_no")%>" <%=mygroupno.equals(provider.get("provider_no"))?"selected":""%>>
@@ -251,7 +251,7 @@ objectName="_admin,_admin.reporting" rights="r" reverse="<%=true%>">
                             <security:oscarSec roleName="<%=roleName$%>"
                                                objectName="_team_schedule_only" rights="r" reverse="true">
                                 <%
-                                        List<Map> resultList = oscarSuperManager.find("providerDao", "searchmygroupno", new Object[] {});
+                                        List<Map<String,Object>> resultList = oscarSuperManager.find("providerDao", "searchmygroupno", new Object[] {});
                                         for (Map group : resultList) {
                                 %>
                                 <option value="<%="_grp_"+group.get("mygroup_no")%>"

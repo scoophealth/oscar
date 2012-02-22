@@ -37,7 +37,7 @@
 <%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 
 <%
-	List<Map> resultList = oscarSuperManager.find("providerDao", "searchpassword", new Object[] {curUser_no});
+	List<Map<String,Object>> resultList = oscarSuperManager.find("providerDao", "searchpassword", new Object[] {curUser_no});
 	for (Map pwd : resultList) {
      StringBuffer sbTemp = new StringBuffer();
      byte[] btOldPasswd= md.digest(request.getParameter("oldpassword").getBytes());

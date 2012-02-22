@@ -119,7 +119,7 @@ function onSubmitForm() {
 
   if(!bNew ) { //not new form
     bNewList = false;
-    List<Map> resultList = oscarSuperManager.find("providerDao", "search_form", new Object[] {request.getParameter("form_no")});
+    List<Map<String, Object>> resultList = oscarSuperManager.find("providerDao", "search_form", new Object[] {request.getParameter("form_no")});
     for (Map form : resultList) {
       content = (String)form.get("content");
 %> <xml id="xml_list"><encounter><%=content%></encounter></xml> <%
@@ -129,7 +129,7 @@ function onSubmitForm() {
 	//get the data from the latest version of artenatal record 1 or 2
     param2[0]=request.getParameter("demographic_no");
     param2[1]="ar%";
-    List<Map> resultList = oscarSuperManager.find("providerDao", "compare_form", param2);
+    List<Map<String, Object>> resultList = oscarSuperManager.find("providerDao", "compare_form", param2);
     for (Map form : resultList) {
       content = (String)form.get("content");
       birthAttendants = SxmlMisc.getXmlContent(content, "<xml_ba>","</xml_ba>");
@@ -1317,7 +1317,7 @@ else {
    savedar1risk.setProperty("finalEDB", finalEDB);
     param2[0] = request.getParameter("demographic_no");
     param2[1] = "ar1%";  //form_name;
-    List<Map> resultList = oscarSuperManager.find("providerDao", "compare_form", param2);
+    List<Map<String, Object>> resultList = oscarSuperManager.find("providerDao", "compare_form", param2);
     String temp = "";
 	StringBuffer tt;
     for (Map form : resultList) {

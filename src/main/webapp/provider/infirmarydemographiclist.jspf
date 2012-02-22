@@ -64,7 +64,7 @@ String demographic_name=de.getLabel();
 %><c:if test="${empty sessionScope.archiveView or sessionScope.archiveView != true}"><%
 paramTickler[0]=String.valueOf(demographic_no);
 paramTickler[1]=MyDateFormat.getSysDate(strDate); //year+"-"+month+"-"+day;//e.g."2001-02-02";
-List<Map> ticklerResultList = oscarSuperManager.find("providerDao", "search_tickler", paramTickler);
+List<Map<String,Object>> ticklerResultList = oscarSuperManager.find("providerDao", "search_tickler", paramTickler);
 tickler_no = "";
 tickler_note="";
 for (Map tickler : ticklerResultList) {

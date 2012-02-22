@@ -81,7 +81,11 @@
 
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
 <%
-	if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
+	if(session.getAttribute("user") == null)
+	{
+		response.sendRedirect("../logout.jsp");
+		return;
+	}
 
 	String curProvider_no = (String) session.getAttribute("user");
 	String demographic_no = request.getParameter("demographic_no") ;
@@ -92,7 +96,7 @@
 	String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF" ;
 	String str = null;
 	int nStrShowLen = 20;
-	String prov= ((String ) oscarVariables.getProperty("billregion","")).trim().toUpperCase();
+	String prov= (oscarVariables.getProperty("billregion","")).trim().toUpperCase();
 
 	CaseManagementManager cmm = (CaseManagementManager) SpringUtils.getBean("caseManagementManager");
 	List<CaseManagementNoteLink> cml = cmm.getLinkByTableId(CaseManagementNoteLink.DEMOGRAPHIC, Long.valueOf(demographic_no));

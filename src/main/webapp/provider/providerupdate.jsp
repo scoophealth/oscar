@@ -60,7 +60,7 @@
 	  param[12]=request.getParameter("provider_no");
 
 	  oscarSuperManager.update("providerDao", request.getParameter("dboperation"), param);
-	  List<Map> resultList = oscarSuperManager.find("providerDao", "search_detail", new Object[] {request.getParameter("provider_no")});
+	  List<Map<String,Object>> resultList = oscarSuperManager.find("providerDao", "search_detail", new Object[] {request.getParameter("provider_no")});
 	  for (Map provider : resultList) {
 	  // the cursor only goes through once from top
 %>

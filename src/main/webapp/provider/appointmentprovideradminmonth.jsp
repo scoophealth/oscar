@@ -178,9 +178,9 @@ if (bMultisites) {
 <%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 
 <%
-  String prov= ((String ) oscarVariables.getProperty("billregion","")).trim().toUpperCase();
+  String prov=  oscarVariables.getProperty("billregion","").trim().toUpperCase();
   String resourcebaseurl = "http://resource.oscarmcmaster.org/oscarResource/";
-  List<Map> resultList = oscarSuperManager.find("providerDao", "search_resource_baseurl", new String[] {"resource_baseurl"});
+  List<Map<String, Object>> resultList = oscarSuperManager.find("providerDao", "search_resource_baseurl", new String[] {"resource_baseurl"});
   for (Map url : resultList) {
  	  resourcebaseurl = (String) url.get("value");
   }
@@ -688,7 +688,7 @@ function refreshTabAlerts(id) {
     String[] param = new String[2];
     boolean bFistEntry = true;
    	GregorianCalendar cal = new GregorianCalendar(year,(month-1),1);
-   	cal.add(cal.MONTH,1);
+   	cal.add(GregorianCalendar.MONTH,1);
 
    		
 
@@ -717,7 +717,7 @@ function refreshTabAlerts(id) {
       resultList = oscarSuperManager.find("providerDao", "search_scheduledate_singlep", param1);
     }
 
-              Iterator<Map> it = resultList.iterator();
+              Iterator<Map<String,Object>> it = resultList.iterator();
               Map date = null;
               for (int i=0; i<dateGrid.length; i++) {
                 out.println("</tr>");
@@ -750,7 +750,7 @@ function refreshTabAlerts(id) {
       if(String.valueOf(date.get("available")).equals("0")) continue;
     }
     if(isTeamOnly || !providerview.startsWith("_grp_",0) || myGrpBean.containsKey(String.valueOf(date.get("provider_no"))) ) {
-    	if (bMultisites && CurrentSiteMap.get((String)date.get("reason")) != null && ( selectedSite == null || "NONE".equals(date.get("reason")) || selectedSite.equals((String)date.get("reason")))) {
+    	if (bMultisites && CurrentSiteMap.get(date.get("reason")) != null && ( selectedSite == null || "NONE".equals(date.get("reason")) || selectedSite.equals(date.get("reason")))) {
 %> <br>
 <% if (bMultisites) { out.print(getSiteHTML((String)date.get("reason"), sites)); } %>
 					<span class='datepname'>&nbsp;<%=providerNameBean.getShortDef(String.valueOf(date.get("provider_no")),"",NameMaxLen )%></span><span

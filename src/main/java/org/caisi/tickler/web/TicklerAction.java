@@ -448,7 +448,6 @@ public class TicklerAction extends DispatchAction {
     
         
         OscarProperties proper = OscarProperties.getInstance();
-        // proper.loader(propFileName);
 
         if (proper.getProperty(moduleName, "").equalsIgnoreCase("yes") || proper.getProperty(moduleName, "").equalsIgnoreCase("true") || proper.getProperty(moduleName, "").equalsIgnoreCase("on")) {
             return true;
