@@ -43,7 +43,7 @@ function currentProAdd(val,ob) {
 	}
 	var prefix = "";
 	if(jQuery("#"+ob).val().length>0 && str.length>0) {
-		prefix = "\n";
+		prefix = "\n\n";
 	}
 	jQuery("#"+ob).val(jQuery("#"+ob).val() + prefix + str);
 }

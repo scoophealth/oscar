@@ -47,9 +47,9 @@
     oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestUtil reqFrm;
     reqFrm = new oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestUtil ();
     reqFrm.estRequestFromId((String)request.getAttribute("reqId"));
-    
+
 	String selectedSite = reqFrm.siteName;
-	
+
     reqFrm.specPhone = request.getParameter("phone");
 
     if (reqFrm.specPhone == null || reqFrm.specPhone.equals("null")){
@@ -85,7 +85,7 @@
     while (st.hasMoreTokens()) {
          vecFaxes.add(st.nextToken());
     }
-    
+
     // for satellite clinics
     Vector vecAddressName = null;
     Vector vecAddress = null;
@@ -99,7 +99,7 @@
         vecAddressPhone = new Vector();
         vecAddressFax = new Vector();
         vecAddressBillingNo = new Vector();
-        
+
     		SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
       		List<Site> sites = siteDao.getActiveSitesByProviderNo((String) session.getAttribute("user"));
  			Site defaultSite = sites.get(0);
@@ -107,7 +107,7 @@
                 vecAddressName.add(s.getName());
                 vecAddress.add(s.getAddress() + ", " + s.getCity() + ", " + s.getProvince() + "  " + s.getPostal());
                 vecAddressPhone.add(s.getPhone());
-                vecAddressFax.add(s.getFax());    
+                vecAddressFax.add(s.getFax());
                 if (selectedSite.equals(s.getName())) {
                 	defaultSite = s;
                 }
@@ -156,7 +156,7 @@
         clinic.setClinic_phone(temp5[0]);
         clinic.setClinic_fax(temp6[0]);
     }
-    
+
     ConsultationRequestExtDao consultationRequestExtDao = (ConsultationRequestExtDao)SpringUtils.getBean("consultationRequestExtDao");
     List<ConsultationRequestExt> exts =consultationRequestExtDao.getConsultationRequestExts(Integer.parseInt((String)request.getAttribute("reqId")));
 %>
@@ -216,7 +216,7 @@
         td.fillLine{
         border-bottom: 1pt solid #444444;
         font-size:10pt;
-        font-family: arial, verdana, tahoma, helvetica, sans serif;
+        font-family: courier,Courier New,arial, verdana, tahoma, helvetica, sans serif;
         }
 
         pre.text{
@@ -273,7 +273,7 @@
         	document.getElementById("clinicAddress").innerHTML="<%=vecAddress.get(i)%>";
         	document.getElementById("clinicPhone").innerHTML="Tel: "+"<%=vecAddressPhone.get(i)%>";
         	document.getElementById("clinicFax").innerHTML="Fax: "+"<%=vecAddressFax.get(i)%>";
-        } 
+        }
 		<% } }%>
     }
 
@@ -330,7 +330,7 @@
 		<% } %>
 		<% if(vecAddress != null) { %>
             <td align="center">
-                Address 
+                Address
                 <select name="addressSel" id="addressSel" onChange="addressSelect()" <%=(bMultisites && selectedSite != null ? " disabled " : " ") %>>>
             <%  for (int i =0; i < vecAddressName.size();i++){
                  String te = (String) vecAddressName.get(i);
@@ -418,7 +418,7 @@
                     <br>
                     <font size="-1">
                         <b>
-                    <% if (bMultisites) { 
+                    <% if (bMultisites) {
 							out.print("Please reply");
                     } else { %>
                         <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgPleaseReplyPart1"/>
@@ -506,7 +506,7 @@
                                     </tr>
 <plugin:hideWhenCompExists componentName="specialencounterComp" reverse="true">
 <special:SpecialEncounterTag moduleName="eyeform">
-<% 
+<%
 String requestId=(String)request.getAttribute("reqId");
 String aburl="/EyeForm.do?method=showCC";
 if (requestId!=null) aburl+="&requestId="+requestId; %>
@@ -521,7 +521,7 @@ for(ConsultationRequestExt ext:exts) {
 	<td class="subTitles" >cc:</td>
 	<td class="fillLine" ><%=ext.getValue()%></td>
 </tr>
-<%		
+<%
 	}
 }
 %>
@@ -622,7 +622,7 @@ for(ConsultationRequestExt ext:exts) {
             </tr>
             <tr>
                 <td class="fillLine">
-                    <%=reqFrm.reasonForConsultation %>
+                    <%=wrap(reqFrm.reasonForConsultation,80) %>
                     &nbsp;<br>
                 </td>
             </tr>
@@ -634,12 +634,7 @@ for(ConsultationRequestExt ext:exts) {
             </tr>
             <tr>
                 <td class="fillLine">
-                	<%if(request.getParameter("preserveFormatting")!= null ) {%>
-                    <%=divy(reqFrm.clinicalInformation).replaceAll("\\s","&nbsp;") %>
-                    <%}else {%>
-                    	<%=divy(reqFrm.clinicalInformation)%>
-                    <%}%>
-                    &nbsp;<br>
+                    	<%=divy(wrap(reqFrm.clinicalInformation,80)).replaceAll("\\s", "&nbsp;")%>
                 </td>
             </tr>
             <%}%>
@@ -655,7 +650,7 @@ for(ConsultationRequestExt ext:exts) {
             </tr>
             <tr>
                 <td class="fillLine">
-                    <%=divy(reqFrm.concurrentProblems) %>
+                    <%=divy(wrap(reqFrm.concurrentProblems,80)) %>
                     &nbsp;<br>
                 </td>
             </tr>
@@ -683,7 +678,7 @@ for(ConsultationRequestExt ext:exts) {
             </tr>
             <tr>
                 <td class="fillLine">
-                    <%=divy(ext.getValue()) %>
+                    <%=divy(wrap(ext.getValue(),80)) %>
                     &nbsp;<br>
                 </td>
             </tr>
@@ -709,7 +704,7 @@ for(ConsultationRequestExt ext:exts) {
             </tr>
             <tr>
                 <td class="fillLine">
-                    <%=divy(reqFrm.currentMedications) %>
+                    <%=divy(wrap(reqFrm.currentMedications,80)) %>
                     &nbsp;<br>
                 </td>
             </tr>
@@ -722,7 +717,7 @@ for(ConsultationRequestExt ext:exts) {
             </tr>
             <tr>
                 <td class="fillLine">
-                    <%=divy(reqFrm.allergies) %>
+                    <%=divy(wrap(reqFrm.allergies,80)) %>
                     &nbsp;<br>
                 </td>
             </tr>
@@ -777,6 +772,27 @@ public String divy (String str){
     i++;
     }
 return stringBuffer.toString();
+}
+
+public String wrap(String in,int len) {
+	if(in==null)
+		in="";
+	//in=in.trim();
+	if(in.length()<len) {
+		if(in.length()>1 && !in.startsWith("  ")) {
+			in=in.trim();
+		}
+		return in;
+	}
+	if(in.substring(0, len).contains("\n")) {
+		String x = in.substring(0, in.indexOf("\n"));
+		if(x.length()>1 && !x.startsWith("  ")) {
+			x=x.trim();
+		}
+		return x + "\n" + wrap(in.substring(in.indexOf("\n") + 1), len);
+	}
+	int place=Math.max(Math.max(in.lastIndexOf(" ",len),in.lastIndexOf("\t",len)),in.lastIndexOf("-",len));
+	return in.substring(0,place).trim()+"\n"+wrap(in.substring(place),len);
 }
 
 public int getlen (String str){
