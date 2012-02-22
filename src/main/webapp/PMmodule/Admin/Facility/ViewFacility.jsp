@@ -1,3 +1,4 @@
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@ include file="/taglibs.jsp"%>
 
 <%@ include file="/common/messages.jsp"%>
@@ -57,13 +58,23 @@
 
 		<tr class="b">
 			<td width="20%">Integrator Enabled:</td>
-			<td><c:out
-				value="${facilityManagerForm.facility.integratorEnabled}" /> <c:if
-				test="${facilityManagerForm.facility.integratorEnabled}">
-				<a target="_blank"
-					href="Admin/Facility/viewIntegratedCommunity.jsp?facilityId=<c:out value="${requestScope.id}" />">View
-				Integrated Facilities Community</a>
-			</c:if></td>
+			<td>
+				<c:out value="${facilityManagerForm.facility.integratorEnabled}" />
+				<%
+					// this needs to be checked against the running facility, not the viewing facility
+					// because the running facility is the one who will contact the integrator to see the facility list.
+					LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+					if (loggedInInfo.currentFacility.isIntegratorEnabled())
+					{
+						%>
+						&nbsp;
+						<a target="_blank" href="Admin/Facility/viewIntegratedCommunity.jsp?facilityId=<c:out value="${requestScope.id}" />">
+							View Integrated Facilities Community
+						</a>
+						<%
+					}
+				%>
+			</td>
 		</tr>
 
 
