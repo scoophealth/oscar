@@ -31,7 +31,6 @@
   java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
 
   OscarProperties props = OscarProperties.getInstance();
-  props.loader("oscar_mcmaster.properties");
 
   GregorianCalendar now=new GregorianCalendar();
   String curYear = Integer.toString(now.get(Calendar.YEAR));

@@ -7,7 +7,6 @@
 package oscar.oscarLab.ca.bc.PathNet;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -51,9 +50,9 @@ public class PathNetController {
          System.exit(1);
       }                 
       try {
-      OscarProperties.getInstance().loader(args[0]);
+      OscarProperties.getInstance().readFromFile(args[0]);
       }
-      catch(FileNotFoundException e)
+      catch(Exception e)
       {
     	  logger.error(args[0] + " file cannot be found", e);
       }
@@ -103,7 +102,7 @@ public class PathNetController {
       
    }
    
-   private static synchronized void init (String file) throws java.sql.SQLException, java.io.IOException  {
+   private static synchronized void init (String file) throws java.io.IOException  {
       Properties param = new Properties();
       param.load(new FileInputStream(file)); 
    }
