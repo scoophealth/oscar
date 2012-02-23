@@ -1,8 +1,11 @@
+<%@page import="org.oscarehr.util.SessionConstants"%>
+<%@page import="org.oscarehr.common.model.ProviderPreference"%>
 <%
 	if (session.getAttribute("user") == null)    response.sendRedirect("../logout.jsp");
 
 	String curProvider_no = request.getParameter("provider_no");
-    String mygroupno = (String) session.getAttribute("groupno");  
+	ProviderPreference providerPreference=(ProviderPreference)session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER_PREFERENCE);
+	String mygroupno = providerPreference.getMyGroupNo();  
     String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF", tableTitle = "#99ccff";
 	boolean bEdit = request.getParameter("appointment_no") != null ? true : false;
 %>

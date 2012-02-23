@@ -23,6 +23,8 @@
  * Ontario, Canada 
  */
 -->
+<%@page import="org.oscarehr.util.SessionConstants"%>
+<%@page import="org.oscarehr.common.model.ProviderPreference"%>
 <%!
 //multisite starts =====================
 private	List<Site> sites; 
@@ -61,10 +63,12 @@ private String getSiteHTML(String reason, List<Site> sites) {
   curProvider_no = (String) session.getAttribute("user");
   String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 
+  ProviderPreference providerPreference=(ProviderPreference)session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER_PREFERENCE);
+
   curUser_no = (String) session.getAttribute("user");
   userfirstname = (String) session.getAttribute("userfirstname");
   userlastname = (String) session.getAttribute("userlastname");
-  mygroupno = (request.getParameter("mygroup_no") == null ? (String) session.getAttribute("groupno") : request.getParameter("mygroup_no"));  
+  mygroupno = (request.getParameter("mygroup_no") == null ? providerPreference.getMyGroupNo() : request.getParameter("mygroup_no"));  
 if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
   n_t_w_w = (String) session.getAttribute("newticklerwarningwindow");
 }
@@ -74,9 +78,10 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 	newticklerwarningwindow = (String) session.getAttribute("newticklerwarningwindow");
 	default_pmm = (String)session.getAttribute("default_pmm");
 }    
-  int startHour=Integer.parseInt(((String) session.getAttribute("starthour")).trim());
-  int endHour=Integer.parseInt(((String) session.getAttribute("endhour")).trim());
-  int everyMin=Integer.parseInt(((String) session.getAttribute("everymin")).trim());
+
+  int startHour=providerPreference.getStartHour();
+  int endHour=providerPreference.getEndHour();
+  int everyMin=providerPreference.getEveryMin();
   int view=0;
   
   boolean isMygroupnoNumber = true;

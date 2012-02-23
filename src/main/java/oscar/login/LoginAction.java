@@ -152,11 +152,9 @@ public final class LoginAction extends DispatchAction {
                 // get preferences from preference table
             	ProviderPreference providerPreference=providerPreferenceDao.find(providerNo);
             	if (providerPreference==null) providerPreference=new ProviderPreference();
+             	
+            	session.setAttribute(SessionConstants.LOGGED_IN_PROVIDER_PREFERENCE, providerPreference);
             	
-                session.setAttribute("starthour", providerPreference.getStartHour().toString());
-                session.setAttribute("endhour", providerPreference.getEndHour().toString());
-                session.setAttribute("everymin", providerPreference.getEveryMin().toString());
-                session.setAttribute("groupno", providerPreference.getMyGroupNo());
                 if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable()) {
                     session.setAttribute("newticklerwarningwindow", providerPreference.getNewTicklerWarningWindow());
                     session.setAttribute("default_pmm", providerPreference.getDefaultCaisiPmm());

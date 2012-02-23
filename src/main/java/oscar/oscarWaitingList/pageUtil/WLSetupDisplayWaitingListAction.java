@@ -38,6 +38,8 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.validator.LazyValidatorForm;
+import org.oscarehr.common.model.ProviderPreference;
+import org.oscarehr.util.SessionConstants;
 
 import oscar.oscarProvider.bean.ProviderNameBean;
 import oscar.oscarProvider.bean.ProviderNameBeanHandler;
@@ -127,9 +129,10 @@ public final class WLSetupDisplayWaitingListAction extends Action {
         
         HttpSession session = request.getSession();
         
+        ProviderPreference providerPreference=(ProviderPreference)session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER_PREFERENCE);
         
-        if(session.getAttribute("groupno") != null){
-        	groupNo = (String)session.getAttribute("groupno");
+        if(providerPreference.getMyGroupNo() != null){
+        	groupNo = providerPreference.getMyGroupNo();
         }
         providerNo = (String)session.getAttribute("user");
         

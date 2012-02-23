@@ -35,7 +35,9 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.validator.LazyValidatorForm;
+import org.oscarehr.common.model.ProviderPreference;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SessionConstants;
 
 import oscar.oscarWaitingList.bean.WLWaitingListNameBeanHandler;
 import oscar.oscarWaitingList.util.WLWaitingListNameUtil;
@@ -78,8 +80,10 @@ public final class WLEditWaitingListNameAction extends Action {
         	if( wlNewName == null  ||  wlNewName.length()<= 0 ){
         		wlNewName = wlChangedName;
         	}
-            if(session.getAttribute("groupno") != null){
-            	groupNo = (String)session.getAttribute("groupno");
+        	
+        	ProviderPreference providerPreference=(ProviderPreference)session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER_PREFERENCE);
+            if(providerPreference.getMyGroupNo() != null){
+            	groupNo = providerPreference.getMyGroupNo();
             }
 
 

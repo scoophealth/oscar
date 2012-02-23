@@ -24,6 +24,8 @@
  */
 -->
 
+<%@page import="org.oscarehr.util.SessionConstants"%>
+<%@page import="org.oscarehr.common.model.ProviderPreference"%>
 <%
   String oldGroup_no = request.getParameter("mygroup_no")==null?".":request.getParameter("mygroup_no");
 %>
@@ -108,13 +110,15 @@ function setfocus() {
 			</tr>
 			<%
    }
+   
+   ProviderPreference providerPreference=(ProviderPreference)session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER_PREFERENCE);
 %>
 			<INPUT TYPE="hidden" NAME="start_hour"
-				VALUE='<%=(String) session.getAttribute("starthour")%>'>
+				VALUE='<%=providerPreference.getStartHour()%>'>
 			<INPUT TYPE="hidden" NAME="end_hour"
-				VALUE='<%=(String) session.getAttribute("endhour")%>'>
+				VALUE='<%=providerPreference.getEndHour()%>'>
 			<INPUT TYPE="hidden" NAME="every_min"
-				VALUE='<%=(String) session.getAttribute("everymin")%>'>
+				VALUE='<%=providerPreference.getEveryMin()%>'>
 			<INPUT TYPE="hidden" NAME="provider_no"
 				VALUE='<%=(String) session.getAttribute("user")%>'>
 			<caisi:isModuleLoad moduleName="ticklerplus">
