@@ -24,6 +24,8 @@
  */
 -->
 
+<%@page import="org.oscarehr.util.SessionConstants"%>
+<%@page import="org.oscarehr.common.model.ProviderPreference"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/msg-tag.tld" prefix="oscarmessage"%>
@@ -37,16 +39,18 @@
   String curUser_no, curProvider_no,userfirstname,userlastname, mygroupno,n_t_w_w="";
   curProvider_no = (String) session.getAttribute("user");
 
+  ProviderPreference providerPreference=(ProviderPreference)session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER_PREFERENCE);
+
   curUser_no = (String) session.getAttribute("user");
   userfirstname = (String) session.getAttribute("userfirstname");
   userlastname = (String) session.getAttribute("userlastname");
-  mygroupno = (String) session.getAttribute("groupno");  
+  mygroupno = providerPreference.getMyGroupNo();  
 if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
   n_t_w_w = (String) session.getAttribute("newticklerwarningwindow");
 }
-  int startHour=Integer.parseInt(((String) session.getAttribute("starthour")).trim());
-  int endHour=Integer.parseInt(((String) session.getAttribute("endhour")).trim());
-  int everyMin=Integer.parseInt(((String) session.getAttribute("everymin")).trim());
+  int startHour=providerPreference.getStartHour();
+  int endHour=providerPreference.getEndHour();
+  int everyMin=providerPreference.getEveryMin();
   int view=0;
 %>
 <jsp:useBean id="scheduleHolidayBean" class="java.util.Hashtable"

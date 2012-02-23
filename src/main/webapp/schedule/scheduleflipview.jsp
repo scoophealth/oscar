@@ -23,6 +23,8 @@
  * Ontario, Canada 
  */
 -->
+<%@page import="org.oscarehr.util.SessionConstants"%>
+<%@page import="org.oscarehr.common.model.ProviderPreference"%>
 <%!
 //multisite starts =====================
 private boolean bMultisites = org.oscarehr.common.IsPropertiesOn.isMultisitesEnable();	
@@ -44,10 +46,11 @@ sites = siteDao.getAllSites();
 
 <%
   
-  int nStartTime=Integer.parseInt(((String) session.getAttribute("starthour")).trim());
-  int nEndTime=Integer.parseInt(((String) session.getAttribute("endhour")).trim());
-  int nStep=Integer.parseInt(((String) session.getAttribute("everymin")).trim());
-  String mygroupno = (String) session.getAttribute("groupno");  
+  ProviderPreference providerPreference=(ProviderPreference)session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER_PREFERENCE);
+  int nStartTime=providerPreference.getStartHour();
+  int nEndTime=providerPreference.getEndHour();
+  int nStep=providerPreference.getEveryMin();
+  String mygroupno = providerPreference.getMyGroupNo();  
 
   String curProvider_no=request.getParameter("provider_no")!=null?request.getParameter("provider_no"):"174";
   String curDemoNo = request.getParameter("demographic_no")!=null?request.getParameter("demographic_no"):"";

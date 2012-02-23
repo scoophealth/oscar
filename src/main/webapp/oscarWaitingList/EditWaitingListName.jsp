@@ -24,6 +24,8 @@
  * Ontario, Canada 
  */
 -->
+<%@page import="org.oscarehr.util.SessionConstants"%>
+<%@page import="org.oscarehr.common.model.ProviderPreference"%>
 <%
     if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
 %>
@@ -57,9 +59,11 @@ function resetFields(actionType){
 
 </script>
 <%
+	ProviderPreference providerPreference=(ProviderPreference)session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER_PREFERENCE);
+	
 	String groupNo = "";
-	if(session.getAttribute("groupno") != null){
-		groupNo = (String)session.getAttribute("groupno");
+	if(providerPreference.getMyGroupNo() != null){
+		groupNo = providerPreference.getMyGroupNo();
 	}
 	WLWaitingListNameBeanHandler wlNameHd = new WLWaitingListNameBeanHandler(groupNo, (String)session.getAttribute("user"));
 

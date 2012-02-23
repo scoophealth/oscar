@@ -26,6 +26,8 @@
  */
 --%>
 
+<%@page import="org.oscarehr.common.model.ProviderPreference"%>
+<%@page import="org.oscarehr.util.SessionConstants"%>
 <%
     if(session.getAttribute("user") == null ) response.sendRedirect("../logout.jsp");
     String curProvider_no = (String) session.getAttribute("user");
@@ -51,7 +53,7 @@
     {"search_form_demo", "select demographic_no from form group by demographic_no"},
 
     {"search_demo_active", "select * from demographic where end_date = '0001-01-01' or end_date is null order by last_name limit ? offset ?"},
-    {"search_waiting_list", "select * from waitingListName where group_no='" + session.getAttribute("groupno") + "' and is_history='N' " },
+    {"search_waiting_list", "select * from waitingListName where group_no='" + ((ProviderPreference)session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER_PREFERENCE)).getMyGroupNo() + "' and is_history='N' " },
   };
 
   reportMainBean.doConfigure(dbQueries);

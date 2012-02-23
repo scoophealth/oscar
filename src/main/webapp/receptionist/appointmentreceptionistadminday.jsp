@@ -1,3 +1,5 @@
+<%@page import="org.oscarehr.util.SessionConstants"%>
+<%@page import="org.oscarehr.common.model.ProviderPreference"%>
 <%@ taglib uri="/WEB-INF/msg-tag.tld" prefix="oscarmessage"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -14,17 +16,20 @@
   oscar.oscarSecurity.CookieSecurity cs = new oscar.oscarSecurity.CookieSecurity();
   response.addCookie(cs.GiveMeACookie(oscar.oscarSecurity.CookieSecurity.receptionistCookie));
 
+  ProviderPreference providerPreference=(ProviderPreference)session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER_PREFERENCE);
+
   String tickler_no="", textColor="", tickler_note="";
   String curUser_no,userfirstname,userlastname, userprofession, mygroupno;
   curUser_no = (String) session.getAttribute("user");
-  mygroupno = (String) session.getAttribute("groupno");  
+  mygroupno = providerPreference.getMyGroupNo();  
   userfirstname = (String) session.getAttribute("userfirstname");
   userlastname = (String) session.getAttribute("userlastname");
   userprofession = (String) session.getAttribute("userprofession");
   String newticklerwarningwindow = (String) session.getAttribute("newticklerwarningwindow");
-  int startHour=Integer.parseInt(((String) session.getAttribute("starthour")).trim());
-  int endHour=Integer.parseInt(((String) session.getAttribute("endhour")).trim());
-  int everyMin=Integer.parseInt(((String) session.getAttribute("everymin")).trim());
+
+  int startHour=providerPreference.getStartHour();
+  int endHour=providerPreference.getEndHour();
+  int everyMin=providerPreference.getEveryMin();
   int view=0;
   int lenLimitedL=11, lenLimitedS=3;
   int len = lenLimitedL;

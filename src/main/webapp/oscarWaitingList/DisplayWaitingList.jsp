@@ -27,6 +27,8 @@
  *  
  */
 -->
+<%@page import="org.oscarehr.util.SessionConstants"%>
+<%@page import="org.oscarehr.common.model.ProviderPreference"%>
 <%
     if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
 
@@ -183,8 +185,9 @@ function removePatient(demographicNo, waitingList){
 						<%
                                 	String providerNo = (String)session.getAttribute("user");
                                 	String groupNo = "";
-                                    if(session.getAttribute("groupno") != null){
-                                    	groupNo = (String)session.getAttribute("groupno");
+                                	ProviderPreference providerPreference=(ProviderPreference)session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER_PREFERENCE);
+                                    if(providerPreference.getMyGroupNo() != null){
+                                    	groupNo = providerPreference.getMyGroupNo();
                                     }
                                     WLWaitingListNameBeanHandler wlNameHd = new WLWaitingListNameBeanHandler(groupNo, providerNo);
                                     List allWaitingListName = wlNameHd.getWaitingListNameList();
