@@ -177,7 +177,7 @@ public class PdfRecordPrinter {
         cb.beginText();
         cb.setFontAndSize(font.getBaseFont(),FONTSIZE);
         Rectangle page = document.getPageSize();
-        float width = page.width();
+        float width = page.getWidth();
 
         cb.showTextAligned(PdfContentByte.ALIGN_CENTER, strFooter, (width/2.0f), textBase - 20, 0);
 
@@ -279,10 +279,10 @@ public class PdfRecordPrinter {
         /*
         cb.setColorStroke(new Color(0,0,0));
         cb.setLineWidth(0.5f);
-
-        cb.moveTo(document.left(), document.top() - (font.leading(LINESPACING)*5f));
-        cb.lineTo(document.right(), document.top() - (font.leading(LINESPACING)*5f));
-        cb.stroke();
+        * 
+        cb.moveTo(document.left(), document.top() - (font.getCalculatedLeading(LINESPACING)*5f));
+        cb.lineTo(document.right(), document.top() - (font.getCalculatedLeading(LINESPACING)*5f));
+        cb.stroke();     
         */
     }
 
@@ -596,8 +596,7 @@ public class PdfRecordPrinter {
             cb.beginText();
             cb.setFontAndSize(font.getBaseFont(),FONTSIZE);
             Rectangle page = document.getPageSize();
-            float width = page.width();
-
+            float width = page.getWidth();            
             cb.showTextAligned(PdfContentByte.ALIGN_CENTER, strFooter, (width/2.0f), textBase - 20, 0);
 
             strFooter = "-" + writer.getPageNumber() + "-";
@@ -1115,12 +1114,12 @@ public class PdfRecordPrinter {
     			MiscUtils.getLogger().error("error:",e);
     			continue;
     		}
-    		img.scaleToFit(getDocument().getPageSize().width()-getDocument().leftMargin()-getDocument().rightMargin(), getDocument().getPageSize().height());
-
-    		Chunk chunk = new Chunk(img,getDocument().getPageSize().width()-getDocument().leftMargin()-getDocument().rightMargin(), getDocument().getPageSize().height());
-
-    		Paragraph p = new Paragraph();
-    		p.add(img);
+    		img.scaleToFit(getDocument().getPageSize().getWidth()-getDocument().leftMargin()-getDocument().rightMargin(), getDocument().getPageSize().getHeight());
+    		
+    		Chunk chunk = new Chunk(img,getDocument().getPageSize().getWidth()-getDocument().leftMargin()-getDocument().rightMargin(), getDocument().getPageSize().getHeight());
+    		
+    		Paragraph p = new Paragraph(); 
+    		p.add(img);    		
     		p.add(new Phrase("Description:"+doc.getDocdesc(),getFont()));
     		getDocument().add(p);
 
@@ -1177,10 +1176,9 @@ public class PdfRecordPrinter {
     			logger.error("error:",e);
     			continue;
     		}
-    		img.scaleToFit(getDocument().getPageSize().width()-getDocument().leftMargin()-getDocument().rightMargin(), getDocument().getPageSize().height());
-
-    		Paragraph p = new Paragraph();
-    		p.add(img);
+    		img.scaleToFit(getDocument().getPageSize().getWidth()-getDocument().leftMargin()-getDocument().rightMargin(), getDocument().getPageSize().getHeight()); 
+    		Paragraph p = new Paragraph(); 
+    		p.add(img);    		
     		p.add(new Phrase("Subject:"+subject.getVarValue(),getFont()));
     		getDocument().add(p);
 

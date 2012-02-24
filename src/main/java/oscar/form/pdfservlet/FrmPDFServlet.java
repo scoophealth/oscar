@@ -296,8 +296,8 @@ public class FrmPDFServlet extends HttpServlet {
             int n = reader.getNumberOfPages();
             // retrieve the size of the first page
             Rectangle pSize = reader.getPageSize(1);
-            float width = pSize.width();
-            float height = pSize.height();
+            float width = pSize.getWidth();
+            float height = pSize.getHeight();
             
             PdfContentByte cb = writer.getDirectContent();
             ColumnText ct = new ColumnText(cb);

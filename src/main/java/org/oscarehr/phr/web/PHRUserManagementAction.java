@@ -230,8 +230,8 @@ public class PHRUserManagementAction extends DispatchAction {
             int n = reader.getNumberOfPages();
             // retrieve the size of the first page
             Rectangle pSize = reader.getPageSize(1);
-            float width = pSize.width();
-            float height = pSize.height();
+            float width = pSize.getWidth();
+            float height = pSize.getHeight();
             log.debug("Width :"+width+" Height: "+height);
             
             PdfContentByte cb = writer.getDirectContent();
