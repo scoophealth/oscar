@@ -54,7 +54,10 @@ public class ReferralSummaryDisplay {
 		programName = cachedDestinationFacility.getName()+" / "+cachedProgram.getName();
 		programType = cachedProgram.getType();
 
-		referralDate = dateFormatter.format(referral.getReferralDate());
+		if (referral.getReferralDate()!=null)
+		{
+			referralDate = dateFormatter.format(referral.getReferralDate().getTime());
+		}
 		daysInQueue = DateUtils.calculateDayDifference(referral.getReferralDate(), new Date());
 
 		FacilityIdStringCompositePk remoteProviderPk = new FacilityIdStringCompositePk();
