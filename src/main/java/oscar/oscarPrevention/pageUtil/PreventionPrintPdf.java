@@ -82,7 +82,7 @@ public class PreventionPrintPdf {
         //Create the font we are going to print to
         BaseFont bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
         Font font = new Font(bf, FONTSIZE, Font.NORMAL);
-        float leading = font.leading(LINESPACING);
+        float leading = font.getCalculatedLeading(LINESPACING);
         
         //set up document title and header
         String title = "Preventions for " + request.getParameter("nameAge");
@@ -117,11 +117,11 @@ public class PreventionPrintPdf {
         cb.stroke();
         cb.setFontAndSize(bf, FONTSIZE);
         
-        upperYcoord = document.top() - (font.leading(LINESPACING)*2f);
+        upperYcoord = document.top() - (font.getCalculatedLeading(LINESPACING)*2f);
         cb.beginText();
         for( int idx = 0; idx < clinic.length; ++idx ) {
             cb.showTextAligned(cb.ALIGN_CENTER, clinic[idx], document.right()/2f, upperYcoord,0f);
-            upperYcoord -= font.leading(LINESPACING);
+            upperYcoord -= font.getCalculatedLeading(LINESPACING);
         }
         
         cb.endText();
@@ -130,7 +130,7 @@ public class PreventionPrintPdf {
         cb.stroke();
         
         //get top y-coord for starting to print columns
-        upperYcoord = cb.getYTLM() - font.leading(LINESPACING*2f);
+        upperYcoord = cb.getYTLM() - font.getCalculatedLeading(LINESPACING*2f);
         
         int subIdx;
         String preventionHeader, procedureAge, procedureDate;
@@ -149,7 +149,7 @@ public class PreventionPrintPdf {
         
         //2 - calculate max num of lines a page can hold and number of pages of data we have
         pageHeight = upperYcoord - document.bottom();
-        maxLines = (int)Math.floor((double)pageHeight/((double)font.leading(LINESPACING)+4d));
+        maxLines = (int)Math.floor((double)pageHeight/((double)font.getCalculatedLeading(LINESPACING)+4d));
         numPages = (int)Math.ceil((double)numLines/((double)maxLines*NUMCOLS));
         
         //3 - Start the column
@@ -236,9 +236,9 @@ public class PreventionPrintPdf {
             
             //reset upperYcoord for pages 2 and above
             if( curPage == 1 && pageBreak) {
-                upperYcoord = document.top() - font.leading(LINESPACING);
+                upperYcoord = document.top() - font.getCalculatedLeading(LINESPACING);
                 pageHeight = upperYcoord - document.bottom();
-                maxLines = (int)Math.floor((double)pageHeight/((double)font.leading(LINESPACING)+4d));
+                maxLines = (int)Math.floor((double)pageHeight/((double)font.getCalculatedLeading(LINESPACING)+4d));
                 numPages = (int)Math.ceil(((double)numLines-totalLinesWritten)/((double)maxLines*NUMCOLS)) + 1;
             }
             pageBreak = breakPage(pageBreak, upperYcoord);
@@ -258,7 +258,7 @@ public class PreventionPrintPdf {
         if ( OscarProperties.getInstance().getProperty("FORMS_PROMOTEXT") != null){
             cb.beginText();
             cb.setFontAndSize(BaseFont.createFont(BaseFont.HELVETICA,BaseFont.CP1252,BaseFont.NOT_EMBEDDED), 6);
-            cb.showTextAligned(PdfContentByte.ALIGN_CENTER, OscarProperties.getInstance().getProperty("FORMS_PROMOTEXT"), PageSize.LETTER.width()/2, 5, 0);
+            cb.showTextAligned(PdfContentByte.ALIGN_CENTER, OscarProperties.getInstance().getProperty("FORMS_PROMOTEXT"), PageSize.LETTER.getWidth()/2, 5, 0);
             cb.endText();
         }
     }

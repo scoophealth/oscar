@@ -242,8 +242,8 @@ public class OscarChartPrinter {
         cb.setColorStroke(new Color(0,0,0));
         cb.setLineWidth(0.5f);
   
-        cb.moveTo(document.left(), document.top() - (font.leading(LINESPACING)*5f));
-        cb.lineTo(document.right(), document.top() - (font.leading(LINESPACING)*5f));
+        cb.moveTo(document.left(), document.top() - (font.getCalculatedLeading(LINESPACING)*5f));
+        cb.lineTo(document.right(), document.top() - (font.getCalculatedLeading(LINESPACING)*5f));
         cb.stroke();       
     }
 	
@@ -888,7 +888,7 @@ public class OscarChartPrinter {
             cb.beginText();
             cb.setFontAndSize(font.getBaseFont(),FONTSIZE);
             Rectangle page = document.getPageSize();
-            float width = page.width();            
+            float width = page.getWidth();            
                         
             cb.showTextAligned(PdfContentByte.ALIGN_CENTER, strFooter, (width/2.0f), textBase - 20, 0);
             

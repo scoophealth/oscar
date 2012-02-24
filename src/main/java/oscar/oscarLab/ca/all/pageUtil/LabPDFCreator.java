@@ -493,8 +493,8 @@ public class LabPDFCreator extends PdfPageEventHelper{
             PdfContentByte cb = writer.getDirectContent();
             BaseFont bf = BaseFont.createFont(BaseFont.TIMES_ROMAN, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
             int pageNum = document.getPageNumber();
-            float width = page.width();
-            float height = page.height();
+            float width = page.getWidth();
+            float height = page.getHeight();
             
             //add patient name header for every page but the first.
             if (pageNum > 1){
