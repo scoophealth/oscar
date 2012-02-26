@@ -1,6 +1,5 @@
 package oscar.oscarLab.ca.all.upload.handlers.OscarToOscarHl7V2;
 
-import java.sql.SQLException;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -17,7 +16,6 @@ import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
 import oscar.appt.status.model.AppointmentStatus;
-import oscar.dao.ProviderDao;
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.v26.datatype.CX;
 import ca.uhn.hl7v2.model.v26.message.ADT_A09;
@@ -29,12 +27,12 @@ public final class AdtA09Handler {
 
 	private static final String WAITING_ROOM = "WAITING_ROOM";
 	private static final String PATIENT_CLASS = "P";
-	private static OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");        
+	private static OscarAppointmentDao appointmentDao = (OscarAppointmentDao) SpringUtils.getBean("oscarAppointmentDao");
 	private static DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
-	private static int checkInLateAllowance=Integer.parseInt(OscarProperties.getInstance().getProperty(AdtA09Handler.class.getSimpleName()+".CHECK_IN_LATE_ALLOWANCE"));
-	private static int checkInEarlyAllowance=Integer.parseInt(OscarProperties.getInstance().getProperty(AdtA09Handler.class.getSimpleName()+".CHECK_IN_EARLY_ALLOWANCE"));	
+	private static int checkInLateAllowance = Integer.parseInt(OscarProperties.getInstance().getProperty(AdtA09Handler.class.getSimpleName() + ".CHECK_IN_LATE_ALLOWANCE"));
+	private static int checkInEarlyAllowance = Integer.parseInt(OscarProperties.getInstance().getProperty(AdtA09Handler.class.getSimpleName() + ".CHECK_IN_EARLY_ALLOWANCE"));
 
-	public static void handle(ADT_A09 message) throws HL7Exception, SQLException {
+	public static void handle(ADT_A09 message) throws HL7Exception {
 		// algorithm
 		// ----------
 		// unparse the hl7 message so we know who's checking in and make sure it's a check in
@@ -52,89 +50,82 @@ public final class AdtA09Handler {
 		startTime.add(GregorianCalendar.HOUR_OF_DAY, -checkInLateAllowance);
 		GregorianCalendar endTime = new GregorianCalendar();
 		// add 24 because it's at the start of the day and it's exclusive of that day
-		endTime.add(GregorianCalendar.HOUR_OF_DAY, 24+checkInEarlyAllowance);
+		endTime.add(GregorianCalendar.HOUR_OF_DAY, 24 + checkInEarlyAllowance);
 
 		// so this only sorts out the day ranges i.e. we could have just done a select from today but this way we bridge 
 		// people checking in at 11:50pm for an appointment at 1:00am.
 		List<Appointment> appointments = appointmentDao.findByDateRange(startTime.getTime(), endTime.getTime());
-		logger.debug("Qualifying appointments found : "+appointments.size());
-		
+		logger.debug("Qualifying appointments found : " + appointments.size());
+
 		// adt messages can come in the form of pull PID's or just the chart number to switch
 		// if the chart number exists then use the chart number, otherwise match demographic record.
-		String chartNo=getChartNo(message);
-		if (chartNo!=null)
-		{
+		String chartNo = getChartNo(message);
+		if (chartNo != null) {
 			switchMatchingAppointment(chartNo, appointments);
-		}
-		else
-		{
+		} else {
 			Demographic demographic = DataTypeUtils.parsePid(message.getPID());
 			switchMatchingAppointment(demographic, appointments);
 		}
-		
+
 	}
 
 	private static String getChartNo(ADT_A09 message) throws HL7Exception {
-		PID pid=message.getPID();
+		PID pid = message.getPID();
 		CX cx = pid.getPatientIdentifierList(0);
-		if (cx.getIdentifierTypeCode()!=null && DataTypeUtils.CHART_NUMBER.equals(cx.getIdentifierTypeCode().getValue()))
-		{
-			return(StringUtils.trimToNull(cx.getIDNumber().getValue()));
-		}
-		else
-		{
-			return(null);
+		if (cx.getIdentifierTypeCode() != null && DataTypeUtils.CHART_NUMBER.equals(cx.getIdentifierTypeCode().getValue())) {
+			return (StringUtils.trimToNull(cx.getIDNumber().getValue()));
+		} else {
+			return (null);
 		}
 	}
 
-	private static void switchMatchingAppointment(Demographic demographic, List<Appointment> appointments) throws SQLException {
-	    // look through all appointments for matching demographic
+	private static void switchMatchingAppointment(Demographic demographic, List<Appointment> appointments) {
+		// look through all appointments for matching demographic
 		// set the here flag on matching
 		// of not match throw exception.
 
 		for (Appointment appointment : appointments) {
-			logger.debug("checking appointment : "+appointment.getId());
-			
+			logger.debug("checking appointment : " + appointment.getId());
+
 			if (!isValidAppointmentStatusForMatch(appointment)) continue;
-			
-			if (demographicMatches(appointment, demographic)) {				
+
+			if (demographicMatches(appointment, demographic)) {
 				switchAppointmentStatus(appointment);
 				return;
 			}
 		}
 
 		throw (new IllegalStateException("Some one checking in who has no appointment."));
-    }
+	}
 
-	private static void switchMatchingAppointment(String chartNo, List<Appointment> appointments) throws SQLException {
-	    // look through all appointments for matching demographic
+	private static void switchMatchingAppointment(String chartNo, List<Appointment> appointments) {
+		// look through all appointments for matching demographic
 		// set the here flag on matching
 		// of not match throw exception.
 
 		for (Appointment appointment : appointments) {
-			logger.debug("checking appointment : "+appointment.getId());
-			
+			logger.debug("checking appointment : " + appointment.getId());
+
 			if (!isValidAppointmentStatusForMatch(appointment)) continue;
-			
-			if (chartNoMatches(appointment, chartNo)) {				
+
+			if (chartNoMatches(appointment, chartNo)) {
 				switchAppointmentStatus(appointment);
 				return;
 			}
 		}
 
 		throw (new IllegalStateException("Some one checking in who has no appointment."));
-    }
-
-	private static boolean isValidAppointmentStatusForMatch(Appointment appointment)
-	{
-		if ("H".equals(appointment.getStatus())) return(false);
-		else if ("N".equals(appointment.getStatus())) return(false);
-		else if ("C".equals(appointment.getStatus())) return(false);
-		else if ("B".equals(appointment.getStatus())) return(false);
-		
-		return(true);
 	}
-	
+
+	private static boolean isValidAppointmentStatusForMatch(Appointment appointment) {
+		if ("H".equals(appointment.getStatus())) return (false);
+		else if ("N".equals(appointment.getStatus())) return (false);
+		else if ("C".equals(appointment.getStatus())) return (false);
+		else if ("B".equals(appointment.getStatus())) return (false);
+
+		return (true);
+	}
+
 	/**
 	 * Check to make sure the PV1 is a check in as expected.
 	 */
@@ -149,14 +140,13 @@ public final class AdtA09Handler {
 	private static boolean chartNoMatches(Appointment appointment, String chartNo) {
 		Demographic appointmentDemographic = demographicDao.getDemographicById(appointment.getDemographicNo());
 
-		if (appointmentDemographic==null)
-	    {
-			logger.debug("appointmentDemographic was null, appointment_no="+appointment.getId());
-			return(false);	    	
-	    }
-		
-		return(chartNo.equals(appointmentDemographic.getChartNo()));
-    }
+		if (appointmentDemographic == null) {
+			logger.debug("appointmentDemographic was null, appointment_no=" + appointment.getId());
+			return (false);
+		}
+
+		return (chartNo.equals(appointmentDemographic.getChartNo()));
+	}
 
 	private static boolean demographicMatches(Appointment appointment, Demographic demographic) {
 		Demographic appointmentDemographic = demographicDao.getDemographicById(appointment.getDemographicNo());
@@ -168,12 +158,12 @@ public final class AdtA09Handler {
 		// lastname, firstname, health number, health province, (gender/birthday are not ubiquitously available)
 		// there's a chance we may need to relax the birthday requirement to only need birth year/month as some or all BC cards may have no birthdays on them.
 		// because of name truncation, we will match only first and last initials of the names.
-		
-		if (appointmentDemographic==null) {
+
+		if (appointmentDemographic == null) {
 			logger.debug("appointmentDemographic was null");
-			return(false);
+			return (false);
 		}
-		
+
 		if (logger.isDebugEnabled()) {
 			logger.debug("Checking demographic : " + ReflectionToStringBuilder.toString(demographic));
 			logger.debug("Against appointmentDemographic : " + ReflectionToStringBuilder.toString(appointmentDemographic));
@@ -184,52 +174,52 @@ public final class AdtA09Handler {
 			return (false);
 		}
 
-		char firstLetter=demographic.getLastName().toLowerCase().charAt(0);
-		if (firstLetter!=appointmentDemographic.getLastName().toLowerCase().charAt(0)) {
+		char firstLetter = demographic.getLastName().toLowerCase().charAt(0);
+		if (firstLetter != appointmentDemographic.getLastName().toLowerCase().charAt(0)) {
 			logger.debug("fail : last name");
 			return (false);
 		}
 
-		firstLetter=demographic.getFirstName().toLowerCase().charAt(0);
-		if (firstLetter!=appointmentDemographic.getFirstName().toLowerCase().charAt(0)) {
+		firstLetter = demographic.getFirstName().toLowerCase().charAt(0);
+		if (firstLetter != appointmentDemographic.getFirstName().toLowerCase().charAt(0)) {
 			logger.debug("fail : first name");
 			return (false);
 		}
-		
+
 		if (!demographic.getHin().equals(appointmentDemographic.getHin())) {
 			logger.debug("fail : hin");
 			return (false);
 		}
-		
+
 		if (!demographic.getHcType().equalsIgnoreCase(appointmentDemographic.getHcType())) {
 			logger.debug("fail : hc type");
 			return (false);
 		}
 
 		// bc has no birthday
-		if (demographic.getBirthDay()!=null && !demographic.getBirthDay().equals(appointmentDemographic.getBirthDay())) {
+		if (demographic.getBirthDay() != null && !demographic.getBirthDay().equals(appointmentDemographic.getBirthDay())) {
 			logger.debug("fail : birthday");
 			return (false);
 		}
-		
+
 		// BC has no gender
-		if (demographic.getSex()!=null && !demographic.getSex().equalsIgnoreCase(appointmentDemographic.getSex())) {
+		if (demographic.getSex() != null && !demographic.getSex().equalsIgnoreCase(appointmentDemographic.getSex())) {
 			logger.debug("fail : gender");
 			return (false);
 		}
-		
+
 		// for people in ontario, if there's a hc version, it needs to match too.
 		if (demographic.getVer() != null && !demographic.getVer().equalsIgnoreCase(appointmentDemographic.getVer())) {
 			logger.debug("fail : hc ver");
 			return (false);
 		}
-		
+
 		logger.debug("successful match");
 		return (true);
 	}
 
-	private static void switchAppointmentStatus(Appointment appointment) throws SQLException {
-		ProviderDao.updateAppointmentStatus(appointment.getId(), AppointmentStatus.APPOINTMENT_STATUS_HERE);
+	private static void switchAppointmentStatus(Appointment appointment) {
+		appointment.setStatus(AppointmentStatus.APPOINTMENT_STATUS_HERE);
+		appointmentDao.merge(appointment);
 	}
-
 }
