@@ -120,8 +120,8 @@ public class EctConsultationFormRequestPrintPdf {
         //Use the template located at '/oscar/oscarEncounter/oscarConsultationRequest/props'
         reader = new PdfReader("/oscar/oscarEncounter/oscarConsultationRequest/props/consultationFormRequest.pdf");
         Rectangle pSize = reader.getPageSize(1);
-        width = pSize.width();
-        height = pSize.height();
+        width = pSize.getWidth();
+        height = pSize.getHeight();
         document.setPageSize(pSize);
         
         document.addTitle("Consultation Form Request");
