@@ -164,7 +164,7 @@ public class CaseManagementPrintPdf {
         cb.stroke();
         //cb.setFontAndSize(bf, FONTSIZE);
         
-        upperYcoord = document.top() - (font.leading(LINESPACING)*2f);
+        upperYcoord = document.top() - (font.getCalculatedLeading(LINESPACING)*2f);
        
         ColumnText ct = new ColumnText(cb);                
         Paragraph p = new Paragraph();
@@ -174,7 +174,7 @@ public class CaseManagementPrintPdf {
         for( int idx = 0; idx < clinic.length; ++idx ) {
             phrase.add(clinic[idx] + "\n");
             dummy.add("\n");
-            upperYcoord -= phrase.leading();
+            upperYcoord -= phrase.getLeading();
         }
 
         dummy.add("\n");
@@ -201,7 +201,7 @@ public class CaseManagementPrintPdf {
         cb.moveTo(document.left(), upperYcoord);
         cb.lineTo(document.right(), upperYcoord);
         cb.stroke();
-        upperYcoord -= phrase.leading();
+        upperYcoord -= phrase.getLeading();
         
     }
 
@@ -437,7 +437,7 @@ public class CaseManagementPrintPdf {
             cb.beginText();
             cb.setFontAndSize(font.getBaseFont(),FONTSIZE);
             Rectangle page = document.getPageSize();
-            float width = page.width();            
+            float width = page.getWidth();            
                         
             cb.showTextAligned(PdfContentByte.ALIGN_CENTER, strFooter, (width/2.0f), textBase - 20, 0);
             

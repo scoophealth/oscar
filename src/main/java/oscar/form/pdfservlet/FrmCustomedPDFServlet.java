@@ -206,7 +206,7 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 			try {
 
 
-				float height = page.height();
+				float height = page.getHeight();
                 boolean showPatientDOB=false;
                 //head.writeSelectedRows(0, 1,document.leftMargin(), page.height() - document.topMargin()+ head.getTotalHeight(),writer.getDirectContent());
                 if(this.patientDOB!=null && this.patientDOB.length()>0){
@@ -228,10 +228,10 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 				head.writeSelectedRows(0, -1, 13f, height - 90f, cb);
 
 				// draw R
-				writeDirectContent(cb, bf, 50, PdfContentByte.ALIGN_LEFT, "R", 20, page.height() - 53, 0);
+				writeDirectContent(cb, bf, 50, PdfContentByte.ALIGN_LEFT, "R", 20, page.getHeight() - 53, 0);
 
 				// draw X
-				writeDirectContent(cb, bf, 43, PdfContentByte.ALIGN_LEFT, "X", 40, page.height() - 71, 0);
+				writeDirectContent(cb, bf, 43, PdfContentByte.ALIGN_LEFT, "X", 40, page.getHeight() - 71, 0);
 
 				// render clinicName;
 				bf = BaseFont.createFont(BaseFont.COURIER, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
@@ -239,7 +239,7 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 				int fontFlags = Font.NORMAL;
 				Font font = new Font(bf, 10, fontFlags);
 				ColumnText ct = new ColumnText(cb);
-				ct.setSimpleColumn(80, (page.height() - 15), 280, (page.height() - 100), 11, Element.ALIGN_LEFT);
+				ct.setSimpleColumn(80, (page.getHeight() - 15), 280, (page.getHeight() - 100), 11, Element.ALIGN_LEFT);
 				// p("value of clinic name", this.clinicName);
 				ct.setText(new Phrase(12, this.clinicName, font));
 				ct.go();
@@ -247,15 +247,15 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 				// bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
 				bf = BaseFont.createFont(BaseFont.COURIER, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
 				if (this.clinicTel.length() <= 13) {
-					writeDirectContent(cb, bf, 10, PdfContentByte.ALIGN_LEFT, "Tel:" + this.clinicTel, 188, (page.height() - 70), 0);
+					writeDirectContent(cb, bf, 10, PdfContentByte.ALIGN_LEFT, "Tel:" + this.clinicTel, 188, (page.getHeight() - 70), 0);
 					// render clinicFax;
-					writeDirectContent(cb, bf, 10, PdfContentByte.ALIGN_LEFT, "Fax:" + this.clinicFax, 188, (page.height() - 80), 0);
+					writeDirectContent(cb, bf, 10, PdfContentByte.ALIGN_LEFT, "Fax:" + this.clinicFax, 188, (page.getHeight() - 80), 0);
 				} else {
 					String str1 = this.clinicTel.substring(0, 13);
 					String str2 = this.clinicTel.substring(13);
-					writeDirectContent(cb, bf, 10, PdfContentByte.ALIGN_LEFT, "Tel:" + str1, 188, (page.height() - 70), 0);
-					writeDirectContent(cb, bf, 10, PdfContentByte.ALIGN_LEFT, str2, 188, (page.height() - 80), 0);
-					writeDirectContent(cb, bf, 10, PdfContentByte.ALIGN_LEFT, "Fax:" + this.clinicFax, 188, (page.height() - 88), 0);
+					writeDirectContent(cb, bf, 10, PdfContentByte.ALIGN_LEFT, "Tel:" + str1, 188, (page.getHeight() - 70), 0);
+					writeDirectContent(cb, bf, 10, PdfContentByte.ALIGN_LEFT, str2, 188, (page.getHeight() - 80), 0);
+					writeDirectContent(cb, bf, 10, PdfContentByte.ALIGN_LEFT, "Fax:" + this.clinicFax, 188, (page.getHeight() - 88), 0);
 				}
 
 				// get the end of paragraph
@@ -483,7 +483,7 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 
 			document.setPageSize(pageSize);
 			// 285=left margin+width of box, 5f is space for looking nice
-			document.setMargins(15, pageSize.width() - 285f + 5f, 140, 60);// left, right, top , bottom
+			document.setMargins(15, pageSize.getWidth() - 285f + 5f, 140, 60);// left, right, top , bottom
 
 			writer = PdfWriter.getInstance(document, baosPDF);
 			writer.setPageEvent(new EndPage(clinicName, clinicTel, clinicFax, patientPhone, patientCityPostal, patientAddress, patientName,patientDOB, sigDoctorName, rxDate, origPrintDate, numPrint));
