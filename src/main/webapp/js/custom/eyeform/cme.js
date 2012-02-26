@@ -2,7 +2,7 @@
    jQuery(document).ready(function(){
 
 	   //need to test this on IE. Would like to make this configurable somewhere in prefs.
-	   window.resizeTo(screen.width,screen.height);
+	  // window.resizeTo(screen.width,screen.height);
 
 	   //header
 	   jQuery.ajax({url:ctx+"/eyeform/encounterHeader.jsp?appointmentNo="+appointmentNo,dataType: "html",success: function(data) {

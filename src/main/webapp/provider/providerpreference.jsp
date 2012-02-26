@@ -4,7 +4,7 @@
   String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF" ;
   LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
   String providerNo=loggedInInfo.loggedInProvider.getProviderNo();
-  
+
   String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 %>
 
@@ -20,29 +20,29 @@
 <%@ page import="org.oscarehr.common.model.UserProperty"%>
 <%@ page import="org.oscarehr.util.SpringUtils"%>
 <%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 
@@ -125,7 +125,7 @@ function checkTypeInAll() {
       document.UPDATEPRE.end_hour.focus();
      }
   } else {
-     alert ("<bean:message key="provider.providerpreference.msgTypeNumbers"/>"); 
+     alert ("<bean:message key="provider.providerpreference.msgTypeNumbers"/>");
   }
 	return checkin;
 }
@@ -136,7 +136,7 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
   var popup=window.open(page, "<bean:message key="provider.providerpreference.titlePopup"/>", windowprops);
   if (popup != null) {
     if (popup.opener == null) {
-      popup.opener = self; 
+      popup.opener = self;
     }
   }
 }
@@ -167,7 +167,7 @@ function showHideBillPref() {
 	{
 		border: solid white 2px;
 	}
-	
+
 	.preferenceLabel
 	{
 		text-align:right;
@@ -254,7 +254,7 @@ function showHideBillPref() {
 							String myCheck1 = "";
 							String myCheck2 = "";
 							String myValue ="";
-							if("enabled".equals(request.getParameter("new_tickler_warning_window"))) { 
+							if("enabled".equals(request.getParameter("new_tickler_warning_window"))) {
 								myCheck1 = "checked";
 								myCheck2 = "unchecked";
 							}
@@ -263,22 +263,22 @@ function showHideBillPref() {
 								myCheck2 = "checked";
 							}
 						%>
-			            <input type="radio" name="new_tickler_warning_window" value="enabled" <%= myCheck1 %>> Enabled 
+			            <input type="radio" name="new_tickler_warning_window" value="enabled" <%= myCheck1 %>> Enabled
 			            <br>
 						<input type="radio" name="new_tickler_warning_window" value="disabled" <%= myCheck2 %>> Disabled
 					</td>
 				</tr>
-		
+
 				<!-- check box of the default PMM window -->
 				<tr>
 					<td class="preferenceLabel">
 						Default PMM
 					</td>
 					<td class="preferenceValue">
-						<%  
+						<%
 							String myCheck3 = "";
-							String myCheck4 = "";                 
-							if("enabled".equals(request.getParameter("default_pmm"))) { 
+							String myCheck4 = "";
+							if("enabled".equals(request.getParameter("default_pmm"))) {
 								myCheck3 = "checked";
 								myCheck4 = "unchecked";
 							}
@@ -286,19 +286,19 @@ function showHideBillPref() {
 								myCheck3 = "unchecked";
 								myCheck4 = "checked";
 							}
-						%> 
-			            <input type="radio" name="default_pmm" value="enabled" <%= myCheck3 %>> Enabled 
+						%>
+			            <input type="radio" name="default_pmm" value="enabled" <%= myCheck3 %>> Enabled
 			            <br>
 						<input type="radio" name="default_pmm" value="disabled" <%= myCheck4 %>> Disabled
 					</td>
 				</tr>
-		
+
 				 <tr>
 		            <td class="preferenceLabel">
 		            <bean:message key="provider.btnCaisiBillPreferenceNotDelete"/>
 		            </td>
-		            <td class="preferenceValue">	              
-		            
+		            <td class="preferenceValue">
+
 		             <%  String myCheck5 = "";
 		                 String myCheck6 = "";
 		                 String value1 = request.getParameter("caisiBillingPreferenceNotDelete");
@@ -308,18 +308,18 @@ function showHideBillPref() {
 		                  else
 		                  { 	myCheck5 = "unchecked";
 		                  		myCheck6 = "checked";}
-		
+
 		               %>
-		
+
 		                                <input type="radio" name="caisiBillingPreferenceNotDelete" value="1" <%= myCheck5 %> > Enabled
 		                                <br>
 		                                <input type="radio" name="caisiBillingPreferenceNotDelete" value="0" <%= myCheck6 %> > Disabled
-		
-		            </td>		            
+
+		            </td>
 		          </tr>
-				
+
 			</caisi:isModuleLoad>
-		
+
 			<!-- QR Code on prescriptions setting -->
 			<tr>
 				<td class="preferenceLabel">
@@ -328,11 +328,11 @@ function showHideBillPref() {
 				<td class="preferenceValue">
 					<%
 	            		boolean checked=PrescriptionQrCodeUIBean.isPrescriptionQrCodeEnabledForCurrentProvider();
-	            	%> 
+	            	%>
 	            	<input type="checkbox" name="prescriptionQrCodes" <%=checked?"checked=\"checked\"":""%> />
 	            </td>
-			</tr>		
-		
+			</tr>
+
 			<%-- links to display on the appointment screen --%>
 			<tr>
 				<td class="preferenceLabel">
@@ -341,7 +341,7 @@ function showHideBillPref() {
 				<td class="preferenceValue">
 					<input type="text" name="appointmentScreenFormsNameDisplayLength" value='<%=providerPreference.getAppointmentScreenLinkNameDisplayLength()%>' size="2">
 	            </td>
-			</tr>		
+			</tr>
 			<tr>
 				<td class="preferenceLabel">
 					<bean:message key="provider.providerpreference.formsToDisplayOnAppointmentScreen" />
@@ -360,10 +360,10 @@ function showHideBillPref() {
 								<br />
 							<%
 						}
-	            	%> 
+	            	%>
 					</div>
 	            </td>
-			</tr>		
+			</tr>
 			<tr>
 				<td class="preferenceLabel">
 					<bean:message key="provider.providerpreference.eFormsToDisplayOnAppointmentScreen" />
@@ -381,10 +381,10 @@ function showHideBillPref() {
 								<br />
 							<%
 						}
-	            	%> 
+	            	%>
 					</div>
 	            </td>
-			</tr>		
+			</tr>
 			<tr>
 				<td class="preferenceLabel">
 					<bean:message key="provider.providerpreference.quickLinksToDisplayOnAppointmentScreen" />
@@ -396,12 +396,12 @@ function showHideBillPref() {
 						for(ProviderPreference.QuickLink quickLink : quickLinks)
 						{
 							%>
-								<input type="button" value="<bean:message key="REMOVE"/>" onclick="document.location='providerPreferenceQuickLinksAction.jsp?action=remove&name='+escape('<%=StringEscapeUtils.escapeHtml(quickLink.getName())%>')" /> 
-								<%=StringEscapeUtils.escapeHtml(quickLink.getName())%> : <%=StringEscapeUtils.escapeHtml(quickLink.getUrl())%> 
+								<input type="button" value="<bean:message key="REMOVE"/>" onclick="document.location='providerPreferenceQuickLinksAction.jsp?action=remove&name='+escape('<%=StringEscapeUtils.escapeHtml(quickLink.getName())%>')" />
+								<%=StringEscapeUtils.escapeHtml(quickLink.getName())%> : <%=StringEscapeUtils.escapeHtml(quickLink.getUrl())%>
 								<br />
 							<%
 						}
-	            	%> 
+	            	%>
 					</div>
 					<table style="border:none;border-collapse:collapse">
 						<tr>
@@ -430,9 +430,9 @@ function showHideBillPref() {
 							</td>
 						</tr>
 					</table>
-	            </td>	            
-			</tr>	
-			
+	            </td>
+			</tr>
+
 			<tr>
 				<%
 					UserPropertyDAO propertyDao = (UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
@@ -440,11 +440,11 @@ function showHideBillPref() {
 					String warningLevel = "0";
 					if(prop!=null) {
 						warningLevel = prop.getValue();
-					}					
+					}
 				%>
 				<td class="preferenceLabel">
 					<bean:message key="provider.providerpreference.rxInteractionWarningLevel" />
-				</td>			
+				</td>
 				<td class="preferenceValue">
 					<select id="rxInteractionWarningLevel">
 						<option value="0" <%=(warningLevel.equals("0")?"selected=\"selected\"":"") %>>Not Specified</option>
@@ -456,20 +456,20 @@ function showHideBillPref() {
 	            </td>
         <script>
 Event.observe('rxInteractionWarningLevel', 'change', function(event) {
-	var value = $('rxInteractionWarningLevel').getValue();	
-	
+	var value = $('rxInteractionWarningLevel').getValue();
+
 	new Ajax.Request('<c:out value="${ctx}"/>/provider/rxInteractionWarningLevel.do?method=update&value='+value, {
 		  method: 'get',
-		  onSuccess: function(transport) {		   
+		  onSuccess: function(transport) {
 		  }
 		});
 
 });
 
-</script>	            
-			</tr>						
-		
-		
+</script>
+			</tr>
+
+
 		</table>
 
 		<div style="background-color:<%=deepcolor%>;text-align:center;font-weight:bold">
@@ -484,21 +484,21 @@ Event.observe('rxInteractionWarningLevel', 'change', function(event) {
 
 <caisi:isModuleLoad moduleName="NEW_CME_SWITCH">
   <oscar:oscarPropertiesCheck property="TORONTO_RFQ" value="no">
-	<tr> 
-    <TD align="center"><a href=# onClick ="popupPage(230,600,'../casemgmt/newCaseManagementEnable.jsp');return false;">Enable OSCAR CME UI</a> &nbsp;&nbsp;&nbsp; 
+	<tr>
+    <TD align="center"><a href=# onClick ="popupPage(230,600,'../casemgmt/newCaseManagementEnable.jsp');return false;">Enable OSCAR CME UI</a> &nbsp;&nbsp;&nbsp;
     </tr>
   </oscar:oscarPropertiesCheck>
-  </caisi:isModuleLoad>  
-  
+  </caisi:isModuleLoad>
+
   <tr>
 	<td align="center"><a href=# onClick ="popupPage(230,600,'providerDefaultDxCode.jsp?provider_no=<%=request.getParameter("provider_no") %>');return false;">Edit Default Billing Diagnostic Code</a>&nbsp;&nbsp;&nbsp; </td>
-	</tr>			 
-  <tr> 
-  
+	</tr>
+  <tr>
+
     <TD align="center"><a href=# onClick ="popupPage(230,600,'providerchangepassword.jsp');return false;"><bean:message key="provider.btnChangePassword"/></a> &nbsp;&nbsp;&nbsp; <!--| a href=# onClick ="popupPage(350,500,'providercontrol.jsp?displaymode=savedeletetemplate');return false;"><bean:message key="provider.btnAddDeleteTemplate"/></a> | <a href=# onClick ="popupPage(200,500,'providercontrol.jsp?displaymode=savedeleteform');return false;"><bean:message key="provider.btnAddDeleteForm"/></a></td>
   </tr>
-   <tr> 
-    <TD align="center">  <a href="#" ONCLICK ="popupPage(550,800,'../schedule/scheduletemplatesetting1.jsp?provider_no=<%=providerNo%>&provider_name=<%=URLEncoder.encode(provider_name)%>');return false;" title="Holiday and Schedule Setting" ><bean:message key="provider.btnScheduleSetting"/></a> 
+   <tr>
+    <TD align="center">  <a href="#" ONCLICK ="popupPage(550,800,'../schedule/scheduletemplatesetting1.jsp?provider_no=<%=providerNo%>&provider_name=<%=URLEncoder.encode(provider_name)%>');return false;" title="Holiday and Schedule Setting" ><bean:message key="provider.btnScheduleSetting"/></a>
       &nbsp;&nbsp;&nbsp; | <a href="#" ONCLICK ="popupPage(550,800,'http://oscar1.mcmaster.ca:8888/oscarResource/manage?username=oscarfp&pw=oscarfp');return false;" title="Resource Management" ><bean:message key="provider.btnManageClinicalResource"/></a--> </td>
   </tr>
   <tr>
@@ -523,7 +523,7 @@ Event.observe('rxInteractionWarningLevel', 'change', function(event) {
   <tr>
       <td align="center">
 	  <div id="billingONpref">
-          <bean:message key="provider.labelDefaultBillForm"/>: 
+          <bean:message key="provider.labelDefaultBillForm"/>:
 	  <select name="default_servicetype">
 	      <option value="no">-- no --</option>
 <%
@@ -539,21 +539,21 @@ Event.observe('rxInteractionWarningLevel', 'change', function(event) {
 		}
 	} else {
 		List<Map<String,Object>> resultList = oscarSuperManager.find("providerDao", "list_bills_servicetype", new Object[] {});
-		for (Map bill : resultList) {	
+		for (Map bill : resultList) {
 %>
 		<option value="<%=bill.get("servicetype")%>"><%=bill.get("servicetype_name")%></option>
 <%
 		}
 	}
 %>
-	  </select>	    
+	  </select>
 	  </div>
       </td>
   </tr>
 </security:oscarSec>
       <tr>
           <td align="center"><a href=# onClick ="popupPage(230,860,'providerPhone.jsp');return false;"><bean:message key="provider.btnEditPhoneNumber"/></a></td>
-      </tr>  
+      </tr>
       <tr>
           <td align="center"><a href=# onClick ="popupPage(230,860,'providerFax.jsp');return false;"><bean:message key="provider.btnEditFaxNumber"/></a></td>
       </tr>
@@ -578,7 +578,7 @@ Event.observe('rxInteractionWarningLevel', 'change', function(event) {
       <tr>
           <td align="center"><a href=# onClick ="popupPage(230,860,'../setProviderStaleDate.do?method=view&provider_no=<%=providerNo%>');return false;"><bean:message key="provider.btnEditStaleDate"/></a></td>
       </tr>
-     
+
       <tr>
           <td align="center"><a href=# onClick ="popupPage(230,860,'../setProviderStaleDate.do?method=viewMyDrugrefId');return false;"><bean:message key="provider.btnSetmyDrugrefID"/></a></td>
       </tr>
@@ -618,12 +618,15 @@ Event.observe('rxInteractionWarningLevel', 'change', function(event) {
   		<tr>
           <td align="center"><a href=# onClick ="popupPage(400,860,'../provider/CppPreferences.do');return false;"><bean:message key="provider.cppPrefs" /></a></td>
       	</tr>
-      	
+
       	<tr>
           <td align="center"><a href=# onClick ="popupPage(400,860,'../provider/OlisPreferences.do');return false;"><bean:message key="provider.olisPrefs" /></a></td>
       	</tr>
       	<tr>
           <td align="center"><a href=# onClick ="popupPage(230,860,'../setProviderStaleDate.do?method=viewCommentLab');return false;"><bean:message key="provider.btnDisableAckCommentLab"/></a></td>
+      </tr>
+       <tr>
+          <td align="center"><a href=# onClick ="popupPage(230,860,'../setProviderStaleDate.do?method=viewEncounterWindowSize');return false;"><bean:message key="provider.btnEditDefaultEncounterWindowSize"/></a></td>
       </tr>
 
 </table>

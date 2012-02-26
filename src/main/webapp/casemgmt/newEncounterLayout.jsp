@@ -27,6 +27,11 @@
 <% if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp"); %>
 <%@ page import="java.util.Enumeration, org.apache.commons.lang.StringEscapeUtils" %>
 <%@page import="org.oscarehr.casemgmt.web.formbeans.*, org.oscarehr.casemgmt.model.CaseManagementNote"%>
+<%@page import="org.oscarehr.common.dao.UserPropertyDAO" %>
+<%@page import="org.oscarehr.common.model.UserProperty" %>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.util.LoggedInInfo" %>
+
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -252,6 +257,24 @@
     <%}%>
    </script>
 
+	<!-- set size of window if customized in preferences -->
+	<%
+	UserPropertyDAO uPropDao = (UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
+	String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
+	UserProperty widthP = uPropDao.getProp(providerNo, "encounterWindowWidth");
+	UserProperty heightP = uPropDao.getProp(providerNo, "encounterWindowHeight");
+	UserProperty maximizeP = uPropDao.getProp(providerNo, "encounterWindowMaximize");
+
+	if(maximizeP != null && maximizeP.getValue().equals("yes")) {
+		%><script> jQuery(document).ready(function(){window.resizeTo(screen.width,screen.height);});</script><%
+	} else if(widthP != null && widthP.getValue().length()>0 && heightP != null && heightP.getValue().length()>0) {
+		String width = widthP.getValue();
+		String height = heightP.getValue();
+		%>
+			<script> jQuery(document).ready(function(){window.resizeTo(<%=width%>,<%=height%>);});</script>
+		<%
+	}
+	%>
  	<oscar:customInterface section="cme"/>
 
     <style type="text/css">
