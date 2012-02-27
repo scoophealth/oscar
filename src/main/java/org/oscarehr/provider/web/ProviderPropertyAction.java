@@ -1586,6 +1586,100 @@ public class ProviderPropertyAction extends DispatchAction {
 	}
 
 
+    public ActionForward viewEncounterWindowSize(ActionMapping actionmapping,ActionForm actionform,HttpServletRequest request, HttpServletResponse response) {
+
+		DynaActionForm frm = (DynaActionForm)actionform;
+		String provider = (String) request.getSession().getAttribute("user");
+
+		UserProperty width = this.userPropertyDAO.getProp(provider, "encounterWindowWidth");
+		UserProperty height = this.userPropertyDAO.getProp(provider, "encounterWindowHeight");
+		UserProperty maximize = this.userPropertyDAO.getProp(provider, "encounterWindowMaximize");
+
+		if (width == null){
+			width = new UserProperty();
+		}
+		if (height == null){
+			height = new UserProperty();
+		}
+		if (maximize == null){
+			maximize = new UserProperty();
+		}
+		if(maximize.getValue()!=null) {
+			maximize.setChecked(maximize.getValue().equals("yes")?true:false);
+		}
+
+		request.setAttribute("width",width);
+		request.setAttribute("height",height);
+		request.setAttribute("maximize",maximize);
+
+
+		request.setAttribute("providertitle","provider.encounterWindowSize.title"); //=Set myDrugref ID
+		request.setAttribute("providermsgPrefs","provider.encounterWindowSize.msgPrefs"); //=Preferences"); //
+		request.setAttribute("providermsgProvider","provider.encounterWindowSize.msgProvider"); //=myDrugref ID
+		request.setAttribute("providermsgEdit","provider.encounterWindowSize.msgEdit"); //=Enter your desired login for myDrugref
+		request.setAttribute("providerbtnSubmit","provider.encounterWindowSize.btnSubmit"); //=Save
+		request.setAttribute("providermsgSuccess","provider.encounterWindowSize.msgSuccess"); //=myDrugref Id saved
+		request.setAttribute("method","saveEncounterWindowSize");
+
+		frm.set("encounterWindowWidth", width);
+		frm.set("encounterWindowHeight", height);
+		frm.set("encounterWindowMaximize", maximize);
+
+		return actionmapping.findForward("genEncounterWindowSize");
+    }
+
+    public ActionForward saveEncounterWindowSize(ActionMapping actionmapping,ActionForm actionform, HttpServletRequest request, HttpServletResponse response) {
+
+		DynaActionForm frm = (DynaActionForm)actionform;
+		UserProperty w = (UserProperty)frm.get("encounterWindowWidth");
+		UserProperty h = (UserProperty)frm.get("encounterWindowHeight");
+		UserProperty m = (UserProperty)frm.get("encounterWindowMaximize");
+
+		String width = w != null ? w.getValue() : "";
+		String height = h != null ? h.getValue() : "";
+		boolean maximize = m != null ? m.isChecked() : false;
+
+		String provider = (String) request.getSession().getAttribute("user");
+
+		UserProperty wProperty = this.userPropertyDAO.getProp(provider,"encounterWindowWidth");
+		if( wProperty == null ) {
+			wProperty = new UserProperty();
+			wProperty.setProviderNo(provider);
+			wProperty.setName("encounterWindowWidth");
+		}
+		wProperty.setValue(width);
+		userPropertyDAO.saveProp(wProperty);
+
+		UserProperty hProperty = this.userPropertyDAO.getProp(provider,"encounterWindowHeight");
+		if( hProperty == null ) {
+			hProperty = new UserProperty();
+			hProperty.setProviderNo(provider);
+			hProperty.setName("encounterWindowHeight");
+		}
+		hProperty.setValue(height);
+		userPropertyDAO.saveProp(hProperty);
+
+		UserProperty mProperty = this.userPropertyDAO.getProp(provider,"encounterWindowMaximize");
+		if( mProperty == null ) {
+			mProperty = new UserProperty();
+			mProperty.setProviderNo(provider);
+			mProperty.setName("encounterWindowMaximize");
+		}
+		mProperty.setValue(maximize?"yes":"no");
+		userPropertyDAO.saveProp(mProperty);
+
+		request.setAttribute("status", "success");
+		request.setAttribute("providertitle","provider.encounterWindowSize.title"); //=Set myDrugref ID
+		request.setAttribute("providermsgPrefs","provider.encounterWindowSize.msgPrefs"); //=Preferences"); //
+		request.setAttribute("providermsgProvider","provider.encounterWindowSize.msgProvider"); //=myDrugref ID
+		request.setAttribute("providermsgEdit","provider.encounterWindowSize.msgEdit"); //=Enter your desired login for myDrugref
+		request.setAttribute("providerbtnSubmit","provider.encounterWindowSize.btnSubmit"); //=Save
+		request.setAttribute("providermsgSuccess","provider.encounterWindowSize.msgSuccess"); //=myDrugref Id saved
+		request.setAttribute("method","saveEncounterWindowSize");
+
+		return actionmapping.findForward("genEncounterWindowSize");
+	}
+
 
     public ActionForward viewIntegratorProperties(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         UserProperty[] integratorProperties = new UserProperty[20];
