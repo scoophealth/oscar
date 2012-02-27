@@ -266,12 +266,14 @@
 			<form-property name="rxDefaultQuantityProperty" type="org.oscarehr.common.model.UserProperty" />
 			<form-property name="rxProfileViewProperty" type="org.oscarehr.common.model.UserProperty" />
 			<form-property name="rxUseRx3Property" type="org.oscarehr.common.model.UserProperty" />
-                        <form-property name="useMyMedsProperty" type="org.oscarehr.common.model.UserProperty" />
+            <form-property name="useMyMedsProperty" type="org.oscarehr.common.model.UserProperty" />
 			<form-property name="existingDefaultDocQueueProperty" type="org.oscarehr.common.model.UserProperty" />
 			<form-property name="newDefaultDocQueueProperty" type="org.oscarehr.common.model.UserProperty" />
-                        <form-property name="rxShowPatientDOBProperty" type="org.oscarehr.common.model.UserProperty"/>
+            <form-property name="rxShowPatientDOBProperty" type="org.oscarehr.common.model.UserProperty"/>
             <form-property name="cppSingleLineProperty" type="org.oscarehr.common.model.UserProperty"/>
-            <form-property name="labAckCommentProperty" type="org.oscarehr.common.model.UserProperty"/>
+            <form-property name="encounterWindowWidth" type="org.oscarehr.common.model.UserProperty"/>
+            <form-property name="encounterWindowHeight" type="org.oscarehr.common.model.UserProperty"/>
+            <form-property name="encounterWindowMaximize" type="org.oscarehr.common.model.UserProperty"/>
 		</form-bean>
 		<form-bean name="setMyOscarIdForm" type="org.apache.struts.action.DynaActionForm">
 			<form-property name="myOscarLoginId" type="java.lang.String" />
@@ -1333,6 +1335,7 @@
             <forward name="genCppSingleLine"     path="/provider/setCppSingleLine.jsp"/>
             <forward name="genAckCommentLab"     path="/provider/setLabAckComment.jsp"/>
             <forward name="genIntegrator" path="/admin/setIntegratorProperties.jsp" />
+            <forward name="genEncounterWindowSize"     path="/provider/setEncounterWindowSize.jsp"/>
                  </action>
 		<action input="/provider/providerIndivoIdSetter.jsp" name="setMyOscarIdForm" path="/setMyOscarId" scope="request" type="oscar.oscarProvider.pageUtil.ProEditMyOscarIdAction">
 			<forward name="success" path="/provider/providerIndivoIdSetter.jsp" />
