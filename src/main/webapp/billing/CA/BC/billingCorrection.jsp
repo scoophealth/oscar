@@ -3,8 +3,7 @@
   if(session.getValue("user") == null)
     response.sendRedirect("../logout.htm");
   String curUser_no,userfirstname,userlastname;
-  curUser_no = (String) session.getAttribute("user");
-//  mygroupno = (String) session.getAttribute("groupno");  
+  curUser_no = (String) session.getAttribute("user");  
  String UpdateDate = "";
  String DemoNo = "";
  String DemoName = "";

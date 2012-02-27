@@ -22,7 +22,9 @@
  * Hamilton
  * Ontario, Canada
  */
---><%@ page import="java.sql.*"%>
+--><%@page import="org.oscarehr.util.SessionConstants"%>
+<%@page import="org.oscarehr.common.model.ProviderPreference"%>
+<%@ page import="java.sql.*"%>
 <%@ page errorPage="/common/error.jsp"%>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
@@ -35,9 +37,10 @@
 	scope="page" />
 
 <%
-    int startHour=Integer.parseInt(((String) session.getAttribute("starthour")).trim());
-    int endHour=Integer.parseInt(((String) session.getAttribute("endhour")).trim());
-    int depth=Integer.parseInt(((String) session.getAttribute("everymin")).trim());
+	ProviderPreference providerPreference=(ProviderPreference)session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER_PREFERENCE);
+	int startHour=providerPreference.getStartHour();
+    int endHour=providerPreference.getEndHour();
+    int depth=providerPreference.getEveryMin();
     
     String provider = request.getParameter("providerid");
     String[] param =new String[2];

@@ -29,7 +29,6 @@
     response.sendRedirect("../logout.htm");
   String curUser_no,userfirstname,userlastname;
   curUser_no = (String) session.getAttribute("user");
-//  mygroupno = (String) session.getAttribute("groupno");  
  
 %>
 <%@ page

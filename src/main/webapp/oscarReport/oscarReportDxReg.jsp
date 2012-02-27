@@ -25,6 +25,8 @@
  * Ontario, Canada
  */
 -->
+<%@page import="org.oscarehr.util.SessionConstants"%>
+<%@page import="org.oscarehr.common.model.ProviderPreference"%>
 <%@ include file="/taglibs.jsp"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
@@ -78,8 +80,9 @@ objectName="_admin,_admin.reporting" rights="r" reverse="<%=true%>">
 	</style>
     </head>
     <%
+			    ProviderPreference providerPreference=(ProviderPreference)session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER_PREFERENCE);
                 String curUser_no = (String) session.getAttribute("user");
-                String mygroupno = (String) session.getAttribute("groupno");
+                String mygroupno = providerPreference.getMyGroupNo();
                 String radiostatus = (String) session.getAttribute("radiovaluestatus");
                 if (radiostatus==null || radiostatus=="")
                     radiostatus="patientRegistedAll";

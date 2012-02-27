@@ -24,6 +24,8 @@
  */
 -->
 
+<%@page import="org.oscarehr.util.SessionConstants"%>
+<%@page import="org.oscarehr.common.model.ProviderPreference"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
@@ -45,13 +47,10 @@
   String day = request.getParameter("pday")!=null?request.getParameter("pday"):"8";
 
   String curUser_no = (String) session.getAttribute("user");
-  String strStartHour = (String) session.getAttribute("starthour");
-  String strEndHour = (String) session.getAttribute("endhour");
-  String strEveryMin = (String) session.getAttribute("everymin");
-  
-  int startHour = Integer.parseInt(strStartHour.trim());
-  int endHour = Integer.parseInt(strEndHour.trim());
-  int everyMin = Integer.parseInt(strEveryMin.trim());
+  ProviderPreference providerPreference=(ProviderPreference)session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER_PREFERENCE); 
+  int startHour = providerPreference.getStartHour();
+  int endHour = providerPreference.getEndHour();
+  int everyMin = providerPreference.getEveryMin();
   String n_t_w_w = null;
 
   if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()) {

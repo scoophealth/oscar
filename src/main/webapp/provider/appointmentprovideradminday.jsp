@@ -155,7 +155,9 @@ public boolean patientHasOutstandingPrivateBills(String demographicNo){
 	oscar.oscarSecurity.CookieSecurity cs = new oscar.oscarSecurity.CookieSecurity();
     response.addCookie(cs.GiveMeACookie(oscar.oscarSecurity.CookieSecurity.providerCookie));
 
-    String mygroupno = (String) session.getAttribute("groupno"); 
+    ProviderPreference providerPreference2=(ProviderPreference)session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER_PREFERENCE);
+
+    String mygroupno = providerPreference2.getMyGroupNo(); 
     if(mygroupno == null){
     	mygroupno = ".default"; 
     }
@@ -168,9 +170,9 @@ public boolean patientHasOutstandingPrivateBills(String demographicNo){
     String userlastname = (String) session.getAttribute("userlastname");
     String prov= (oscarVariables.getProperty("billregion","")).trim().toUpperCase();
    
-    int startHour=Integer.parseInt(((String) session.getAttribute("starthour")).trim());
-    int endHour=Integer.parseInt(((String) session.getAttribute("endhour")).trim());
-    int everyMin=Integer.parseInt(((String) session.getAttribute("everymin")).trim());
+    int startHour=providerPreference2.getStartHour();
+    int endHour=providerPreference2.getEndHour();
+    int everyMin=providerPreference2.getEveryMin();
     String defaultServiceType = (String) session.getAttribute("default_servicetype");
 	ProviderPreference providerPreference=ProviderPreferencesUIBean.getLoggedInProviderPreference();
     if( defaultServiceType == null && providerPreference!=null) {

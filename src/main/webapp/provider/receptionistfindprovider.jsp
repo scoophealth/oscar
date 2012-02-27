@@ -23,6 +23,7 @@
  * Ontario, Canada 
  */
 -->
+<%@page import="org.oscarehr.util.SessionConstants"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
@@ -42,13 +43,16 @@
 
 <%
   String curUser_no = (String) session.getAttribute("user");
-  String strStartHour = (String) session.getAttribute("starthour");
-  String strEndHour = (String) session.getAttribute("endhour");
-  String strEveryMin = (String) session.getAttribute("everymin");
+
+  ProviderPreference providerPreference=(ProviderPreference)session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER_PREFERENCE);
+  int startHour=providerPreference.getStartHour();
+  int endHour=providerPreference.getEndHour();
+  int everyMin=providerPreference.getEveryMin();
+
   String defaultServiceType = (String) session.getAttribute("default_servicetype");
   if( defaultServiceType == null ) {
-	ProviderPreference providerPreference=ProviderPreferencesUIBean.getLoggedInProviderPreference();
-      if (providerPreference!=null) {
+	ProviderPreference providerPreferenceInDb=ProviderPreferencesUIBean.getLoggedInProviderPreference();
+      if (providerPreferenceInDb!=null) {
         defaultServiceType = providerPreference.getDefaultServiceType();
       }
   }
@@ -57,9 +61,6 @@
     defaultServiceType = "";
   }
 
-  int startHour=Integer.parseInt(strStartHour.trim());
-  int endHour=Integer.parseInt(strEndHour.trim());
-  int everyMin=Integer.parseInt(strEveryMin.trim());
   String n_t_w_w=null;
   if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
   	n_t_w_w = (String) session.getAttribute("newticklerwarningwindow");

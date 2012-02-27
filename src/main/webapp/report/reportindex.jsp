@@ -33,9 +33,9 @@
 <%
 String country = request.getLocale() .getCountry();
 
-
+ProviderPreference providerPreference=(ProviderPreference)session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER_PREFERENCE);
 String curUser_no = (String) session.getAttribute("user");
-String mygroupno = (String) session.getAttribute("groupno");
+String mygroupno = providerPreference.getMyGroupNo();
 mygroupno = StringUtils.trimToEmpty(mygroupno);
 String billingRegion = (oscar.OscarProperties.getInstance()).getProperty("billregion");
 %>
