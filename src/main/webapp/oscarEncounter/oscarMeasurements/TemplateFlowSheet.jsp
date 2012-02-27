@@ -404,7 +404,7 @@ div.recommendations li{
     <td class="MainTableTopRowRightColumn">
         <table class="TopStatusBar" cellpadding="2">
             <tr>
-                <td colspan="3>
+                <td colspan="3">
                     <oscar:nameage demographicNo="<%=demographic_no%>"/>
                     <oscar:oscarPropertiesCheck property="SPEC3" value="yes"> 
                     <span class="DoNotPrint">
@@ -447,7 +447,10 @@ div.recommendations li{
 <td class="MainTableLeftColumn" valign="top">
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">  
     <% if (recList.size() > 0){ %>
-    <p><a class="DoNotPrint" href="javascript: function myFunction() {return false; }"  onclick="javascript:fsPopup(760,670,'AddMeasurementData.jsp?demographic_no=<%=demographic_no%><%=recListBuffer.toString()%>&amp;template=<%=temp%>','addMeasurementData<%=Math.abs( "ADDTHEMALL".hashCode() ) %>')">
+    <p><a class="DoNotPrint" href="javascript: function myFunction() {return false; }"  onclick="javascript:createAddAll(<%=demographic_no%>, '<%= URLEncoder.encode(temp,"UTF-8") %>', <%=Math.abs( "ADDTHEMALL".hashCode() ) %>)" TITLE="Add all measurements.">
+	    Add All 
+	</a> </p>
+    <p><a class="DoNotPrint" href="javascript: function myFunction() {return false; }"  onclick="javascript:fsPopup(760,670,'AddMeasurementData.jsp?demographic_no=<%=demographic_no%><%=recListBuffer.toString()%>&amp;template=<%=temp%>','addMeasurementData<%=Math.abs( "ADDTHEMALL".hashCode() ) %>')" TITLE="Add all overdue measurements.">
         Add Overdue
     </a></p>
     <%}%>
@@ -596,6 +599,10 @@ div.recommendations li{
 --%>
 <div >
 <%
+	//set add link array
+	String[] addAllLink = new String[measurements.size()];
+	int mCount=0;
+	
     EctMeasurementTypeBeanHandler mType = new EctMeasurementTypeBeanHandler();
     long startTimeToLoopAndPrint = System.currentTimeMillis();
     for (String measure:measurements){
@@ -706,7 +713,12 @@ div.recommendations li{
     </div>
     <%}%>
 </div>
-<%}else{
+<%
+	//creating add all link array
+	addAllLink[mCount]=measure;
+	mCount++;
+        
+    }else{
     String prevType = (String) h2.get("prevention_type");
     long startPrevType = System.currentTimeMillis();
     ArrayList<Map<String,Object>> alist = PreventionData.getPreventionData(prevType, demographic_no);
@@ -749,17 +761,25 @@ div.recommendations li{
 </div>
 
 <%
-}%>
+	}
 
-<%}
-    
-%>
-
-
+}
+%> 
+   
+<script language="javascript">
+function createAddAll(d,t,h){
+	
+	//most likely will remove this and create qs above to account for prevention
+	var newMtype;
+	newMtype='<%for(int i=0;i<mCount;i++){
+   				out.print("&measurement="+ addAllLink[i]);	
+   				}%>';
+	
+	return fsPopup(760,670,'AddMeasurementData.jsp?demographic_no='+d+'&template='+t+newMtype,'addMeasurementData'+h);
+}
+</script>
 
 <%
-
-
     oscar.oscarRx.data.RxPrescriptionData prescriptData = new oscar.oscarRx.data.RxPrescriptionData();
     oscar.oscarRx.data.RxPrescriptionData.Prescription [] arr = {};
     
@@ -796,19 +816,6 @@ div.recommendations li{
 
 <%}%>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 </div>
 <br style="clear:left;"/>
 <div style="margin-top: 20px;">
@@ -835,6 +842,7 @@ div.recommendations li{
 <script type="text/javascript" src="../../share/javascript/boxover.js"></script>
 </body>
 </html:html>
+
 <%!
     String refused(Object re){
         String ret = "Given";
