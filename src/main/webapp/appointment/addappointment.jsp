@@ -1,4 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@page import="org.oscarehr.util.SessionConstants"%>
+<%@page import="org.oscarehr.common.model.ProviderPreference"%>
 <%@page %> <%
   if(session.getAttribute("user") == null)    response.sendRedirect("../logout.jsp");
 
@@ -12,7 +14,8 @@
   //String curDemoNo = request.getParameter("demographic_no")!=null?request.getParameter("demographic_no"):"";
   //String curDemoName = request.getParameter("demographic_name")!=null?request.getParameter("demographic_name"):"";
 
-  int everyMin=Integer.parseInt(((String) session.getAttribute("everymin")).trim());
+  ProviderPreference providerPreference=(ProviderPreference)session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER_PREFERENCE);
+  int everyMin=providerPreference.getEveryMin();
 
   boolean bFirstDisp=true; //this is the first time to display the window
   boolean bFromWL=false; //this is from waiting list page

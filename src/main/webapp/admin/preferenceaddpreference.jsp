@@ -24,6 +24,7 @@
  */
 -->
 
+<%@page import="org.oscarehr.util.SessionConstants"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -90,11 +91,7 @@ if (!isSiteAccessPrivacy || isAccessPass) {
 	ProviderPreference providerPreference=ProviderPreferencesUIBean.updateOrCreateProviderPreferences(request);
 
 	//---
-
-	session.setAttribute("starthour", providerPreference.getStartHour().toString());
-	session.setAttribute("endhour", providerPreference.getEndHour().toString());
-	session.setAttribute("everymin", providerPreference.getEveryMin().toString());
-	session.setAttribute("groupno", providerPreference.getMyGroupNo());
+	session.setAttribute(SessionConstants.LOGGED_IN_PROVIDER_PREFERENCE, providerPreference);
 	session.setAttribute("default_servicetype", providerPreference.getDefaultServiceType());
 	session.setAttribute("newticklerwarningwindow", providerPreference.getNewTicklerWarningWindow());
 	session.setAttribute("default_pmm", providerPreference.getDefaultCaisiPmm());

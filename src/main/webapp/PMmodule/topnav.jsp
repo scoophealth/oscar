@@ -21,6 +21,8 @@
 * Toronto, Ontario, Canada
 */
  -->
+<%@page import="org.oscarehr.util.SessionConstants"%>
+<%@page import="org.oscarehr.common.model.ProviderPreference"%>
 <%@ page import="java.util.GregorianCalendar" %>
 <%@ page import="java.util.Calendar" %>
 <%@ page import="java.net.URLEncoder" %>
@@ -41,15 +43,16 @@ int curYear = cal.get(Calendar.YEAR);
 int curMonth = (cal.get(Calendar.MONTH)+1);
 int curDay = cal.get(Calendar.DAY_OF_MONTH);
 
-int startHour=Integer.parseInt(((String) session.getAttribute("starthour")).trim());
-int endHour=Integer.parseInt(((String) session.getAttribute("endhour")).trim());
-int everyMin=Integer.parseInt(((String) session.getAttribute("everymin")).trim());
+ProviderPreference providerPreference=(ProviderPreference)session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER_PREFERENCE);
+int startHour=providerPreference.getStartHour();
+int endHour=providerPreference.getEndHour();
+int everyMin=providerPreference.getEveryMin();
 
 String curUser_no = (String) session.getAttribute("user");
-String prov= ((String ) oscarVariables.getProperty("billregion","")).trim().toUpperCase();
+String prov= (oscarVariables.getProperty("billregion","")).trim().toUpperCase();
 String userfirstname = (String) session.getAttribute("userfirstname");
 String userlastname = (String) session.getAttribute("userlastname");
-String mygroupno = (String) session.getAttribute("groupno");
+String mygroupno = providerPreference.getMyGroupNo();
 
 String newticklerwarningwindow=null;
 String default_pmm=null;

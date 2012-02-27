@@ -29,4 +29,5 @@ public class SessionConstants
     public static final String INTAKE_CLIENT_IS_DEPENDENT_OF_FAMILY="isClientDependentOfFamily";
     public static final String LOGGED_IN_PROVIDER="provider";
     public static final String LOGGED_IN_SECURITY="loggedInSecurity";
+    public static final String LOGGED_IN_PROVIDER_PREFERENCE="providerPreference";
 }

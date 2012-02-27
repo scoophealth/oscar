@@ -1,4 +1,5 @@
 
+<%@page import="org.oscarehr.util.SessionConstants"%>
 <%
   if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
   String curUser_no = (String) session.getAttribute("user");
@@ -23,7 +24,7 @@
     {"search_provider", "select * from provider where provider_type='doctor' and status='1' order by last_name"},
     {"search_rsstatus", "select distinct roster_status from demographic where roster_status != '' and roster_status != 'RO' and roster_status != 'NR' and roster_status != 'TE' and roster_status != 'FS' "},
     {"search_ptstatus", "select distinct patient_status from demographic where patient_status != '' and patient_status != 'AC' and patient_status != 'IN' and patient_status != 'DE' and patient_status != 'MO' and patient_status != 'FI'"},
-    {"search_waiting_list", "select * from waitingListName where group_no='" + session.getAttribute("groupno") +"' and is_history='N'  order by name"}
+    {"search_waiting_list", "select * from waitingListName where group_no='" + ((ProviderPreference)session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER_PREFERENCE)).getMyGroupNo() +"' and is_history='N'  order by name"}
   };
   String[][] responseTargets=new String[][] {  };
   addDemoBean.doConfigure(dbQueries,responseTargets);

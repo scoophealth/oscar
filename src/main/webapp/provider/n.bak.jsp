@@ -23,6 +23,8 @@
  * Ontario, Canada 
  */
 -->
+<%@page import="org.oscarehr.util.SessionConstants"%>
+<%@page import="org.oscarehr.common.model.ProviderPreference"%>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
 <%
   if(session.getValue("user") == null || !((String) session.getValue("userprofession")).equalsIgnoreCase("doctor"))
@@ -31,15 +33,18 @@
 	//if(request.getHeader("User-Agent").indexOf("MSIE")==-1) //not IE, see different pages
 	//	response.sendRedirect("../hlp.html");
 
+  ProviderPreference providerPreference=(ProviderPreference)session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER_PREFERENCE);
+
   String curUser_no,userfirstname,userlastname, userprofession, mygroupno, n_t_w_w="";
   curUser_no = (String) session.getAttribute("user");
-  mygroupno = (String) session.getAttribute("groupno");  
+  mygroupno = providerPreference.getMyGroupNo();  
   userfirstname = (String) session.getAttribute("userfirstname");
   userlastname = (String) session.getAttribute("userlastname");
   userprofession = (String) session.getAttribute("userprofession");
-  int startHour=Integer.parseInt((String) session.getAttribute("starthour"));
-  int endHour=Integer.parseInt((String) session.getAttribute("endhour"));
-  int everyMin=Integer.parseInt((String) session.getAttribute("everymin"));
+
+  int startHour=providerPreference.getStartHour();
+  int endHour=providerPreference.getEndHour();
+  int everyMin=providerPreference.getEveryMin();
 if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
   n_t_w_w= (String) session.getAttribute("newticklerwarningwindow");
 }

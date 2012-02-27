@@ -23,6 +23,8 @@
  * Ontario, Canada
  */
 --%>
+<%@page import="org.oscarehr.common.model.ProviderPreference"%>
+<%@page import="org.oscarehr.util.SessionConstants"%>
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="org.oscarehr.util.MiscUtils"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.MatchingDemographicTransferScore"%>
@@ -164,7 +166,7 @@
     {"search_waitingListPosition", "select max(position) as position from waitingList where listID=? AND is_history='N' "}, 
     {"add2WaitingList", "insert into waitingList (listID, demographic_no, note, position, onListSince, is_history) values(?,?,?,?,?,?)"}, 
     {"search_wlstatus", "select * from waitingList where demographic_no=? AND is_history='N' order by onListSince DESC"}, 
-    {"search_waiting_list", "select * from waitingListName where group_no='" + session.getAttribute("groupno") +"' AND is_history='N' order by name"}, 
+    {"search_waiting_list", "select * from waitingListName where group_no='" + ((ProviderPreference)session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER_PREFERENCE)).getMyGroupNo() +"' AND is_history='N' order by name"}, 
     {"search_demo_waiting_list", "select * from waitingList where demographic_no=? AND listID=?  AND is_history='N' "}, 
     {"search_future_appt", "select a.demographic_no, a.appointment_date from appointment a where a.appointment_date >= now() AND a.demographic_no=?"},
     {"search_hin", "select demographic_no, ver from demographic where hin=?"},
