@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
@@ -75,7 +74,7 @@ public class RourkeExportAction extends DispatchAction {
     	this.clinicDAO = clinicDAO;
     }
 	
-	public ActionForward getFile(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ActionForward getFile(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		OscarProperties properties = OscarProperties.getInstance();
 		String zipName = request.getParameter("zipFile");
 		String dir = properties.getProperty("DOCUMENT_DIR");
@@ -270,6 +269,24 @@ public class RourkeExportAction extends DispatchAction {
 	}
 	
 	private void buildProblemsPlans(Patient patient, FormRourke2009 frmRourke2009 ) {
+		
+		patient.setPROBPLAN1W(StringUtils.noNull(frmRourke2009.getP1Problems1w()));		
+		patient.setPROBPLAN2W(StringUtils.noNull(frmRourke2009.getP1Problems2w()));
+		patient.setPROBPLAN1M(StringUtils.noNull(frmRourke2009.getP1Problems1m()));
+		
+		patient.setPROBPLAN2M(StringUtils.noNull(frmRourke2009.getP2Problems2m()));
+		patient.setPROBPLAN4M(StringUtils.noNull(frmRourke2009.getP2Problems4m()));
+		patient.setPROBPLAN6M(StringUtils.noNull(frmRourke2009.getP2Problems6m()));
+		
+		patient.setPROBPLAN9M(StringUtils.noNull(frmRourke2009.getP3Problems9m()));
+		patient.setPROBPLAN12M(StringUtils.noNull(frmRourke2009.getP3Problems12m()));
+		patient.setPROBPLAN15M(StringUtils.noNull(frmRourke2009.getP3Problems15m()));
+		
+		patient.setPROBPLAN18M(StringUtils.noNull(frmRourke2009.getP4Problems18m()));
+		patient.setPROBPLAN2T3Y(StringUtils.noNull(frmRourke2009.getP4Problems24m()));
+		patient.setPROBPLAN4T5Y(StringUtils.noNull(frmRourke2009.getP4Problems48m()));
+		
+		
 		if( frmRourke2009.getP1_pkuThyroid1wOk() == 1 ) {
 			patient.setPKUT1W(new BigInteger("0"));
 		}
@@ -1131,6 +1148,16 @@ public class RourkeExportAction extends DispatchAction {
 		else {
 			patient.setPKUT1W(new BigInteger("2"));
 		}			
+		
+		if( frmRourke2009.getP1_skin1mOk() == 1 ) {
+			patient.setSKIN1M(new BigInteger("0"));
+		}
+		else if( frmRourke2009.getP1_skin1mNo() == 1 ) {
+			patient.setSKIN1M(new BigInteger("1"));
+		} 
+		else {
+			patient.setSKIN1M(new BigInteger("2"));
+		}
 	}
 	
 	private void buildDevelopment(Patient patient, FormRourke2009 frmRourke2009 ) {
@@ -1594,15 +1621,9 @@ public class RourkeExportAction extends DispatchAction {
 			patient.setTMW15M(new BigInteger("2"));
 		}
 		
-		if( frmRourke2009.getP4_points2wantOk() == 1 ) {
-			patient.setGSMS15M(new BigInteger("0"));
-		}
-		else if( frmRourke2009.getP4_points2wantOkConcerns() == 1 ) {
-			patient.setGSMS15M(new BigInteger("1"));
-		} 
-		else {
-			patient.setGSMS15M(new BigInteger("2"));
-		}
+		//TRIES TO GET SOMETHING BY MAKING SOUNDS WHILE REACHING OR POINTING Not on Rourke 		
+		patient.setGSMS15M(new BigInteger("2"));
+		
 		
 		if( frmRourke2009.getP3_fingerFoodsOk() == 1 ) {
 			patient.setEFNG15M(new BigInteger("0"));
@@ -1673,15 +1694,8 @@ public class RourkeExportAction extends DispatchAction {
 			patient.setCOCO18M(new BigInteger("2"));
 		}
 		
-		if( frmRourke2009.getP4_pointsOk() == 1 ) {
-			patient.setP3BP18M(new BigInteger("0"));
-		}
-		else if( frmRourke2009.getP4_pointsOkConcerns() == 1 ) {
-			patient.setP3BP18M(new BigInteger("1"));
-		} 
-		else {
-			patient.setP3BP18M(new BigInteger("2"));
-		}
+		//Points to 3 body parts Not on Rourke set to default
+		patient.setP3BP18M(new BigInteger("2"));		
 		
 		if( frmRourke2009.getP4_getAttnOk() == 1 ) {
 			patient.setGEAX18M(new BigInteger("0"));
@@ -1693,16 +1707,9 @@ public class RourkeExportAction extends DispatchAction {
 			patient.setGEAX18M(new BigInteger("2"));
 		}
 		
-		if( frmRourke2009.getP4_pretendsPlayOk() == 1 ) {
-			patient.setPRPL18M(new BigInteger("0"));
-		}
-		else if( frmRourke2009.getP4_pretendsPlayOkConcerns() == 1 ) {
-			patient.setPRPL18M(new BigInteger("1"));
-		} 
-		else {
-			patient.setPRPL18M(new BigInteger("2"));
-		}
-		
+		//PRETEND PLAY WITH TOYS AND FIGURES Not on Rourke		
+		patient.setPRPL18M(new BigInteger("2"));
+				
 		if( frmRourke2009.getP4_recsNameOk() == 1 ) {
 			patient.setTWNC18M(new BigInteger("0"));
 		}
@@ -1869,16 +1876,17 @@ public class RourkeExportAction extends DispatchAction {
 			patient.setLIMUS3Y(new BigInteger("2"));
 		}
 		
-		if( frmRourke2009.getP4_2directionsOk() == 1 ) {
+		if( frmRourke2009.getP4_3directionsOk() == 1 ) {
 			patient.setU3SD4Y(new BigInteger("0"));
 		}
-		else if( frmRourke2009.getP4_2directionsOkConcerns() == 1 ) {
+		else if( frmRourke2009.getP4_3directionsOkConcerns() == 1 ) {
 			patient.setU3SD4Y(new BigInteger("1"));
 		} 
 		else {
 			patient.setU3SD4Y(new BigInteger("2"));
 		}
 		
+		//ASKS A LOT OF QUESTIONS Duplicate with ALQ4Y
 		if( frmRourke2009.getP4_asksQuestionsOk() == 1 ) {
 			patient.setASKQ4Y(new BigInteger("0"));
 		}
@@ -1889,15 +1897,8 @@ public class RourkeExportAction extends DispatchAction {
 			patient.setASKQ4Y(new BigInteger("2"));
 		}
 		
-		if( frmRourke2009.getP4_upDownStairsOk() == 1 ) {
-			patient.setSF1T3S4Y(new BigInteger("0"));
-		}
-		else if( frmRourke2009.getP4_upDownStairsOkConcerns() == 1 ) {
-			patient.setSF1T3S4Y(new BigInteger("1"));
-		} 
-		else {
-			patient.setSF1T3S4Y(new BigInteger("2"));
-		}
+		//STANDS ON 1 FOOT FOR 1 - 3 SEC Not on Rourke		
+		patient.setSF1T3S4Y(new BigInteger("2"));
 		
 		//DRAWS A PERSON WITH AT LEAST 3 BODY PARTS not on rourke; set to default
 		patient.setDP3P4Y(new BigInteger("2"));
@@ -1915,15 +1916,8 @@ public class RourkeExportAction extends DispatchAction {
 			patient.setCOMUS4Y(new BigInteger("2"));
 		}
 		
-		if( frmRourke2009.getP4_countsOutloudOk() == 1 ) {
-			patient.setCOTEN5Y(new BigInteger("0"));
-		}
-		else if( frmRourke2009.getP4_countsOutloudOkConcerns() == 1 ) {
-			patient.setCOTEN5Y(new BigInteger("1"));
-		} 
-		else {
-			patient.setCOTEN5Y(new BigInteger("2"));
-		}
+		//COUNTS TO 10 AND KNOWS COMMON COLOURS AND SHAPES Not on Rourke		
+		patient.setCOTEN5Y(new BigInteger("2"));		
 		
 		if( frmRourke2009.getP4_speaksClearlyOk() == 1 ) {
 			patient.setSPCLS5Y(new BigInteger("0"));
@@ -1955,16 +1949,6 @@ public class RourkeExportAction extends DispatchAction {
 			patient.setHOPS5Y(new BigInteger("2"));
 		}
 		
-		if( frmRourke2009.getP4_hops1footOk() == 1 ) {
-			patient.setHOPS5Y(new BigInteger("0"));
-		}
-		else if( frmRourke2009.getP4_hops1footOkConcerns() == 1 ) {
-			patient.setHOPS5Y(new BigInteger("1"));
-		} 
-		else {
-			patient.setHOPS5Y(new BigInteger("2"));
-		}
-		
 		//SHARES WILLINGLY not on rourke for 5 years; set to default
 		patient.setSHARW5Y(new BigInteger("2"));
 		
@@ -1980,6 +1964,436 @@ public class RourkeExportAction extends DispatchAction {
 		else {
 			patient.setSEPEA5Y(new BigInteger("2"));
 		}				
+		
+		if( frmRourke2009.getP1_calms1mOk() == 1 ) {
+			patient.setCWC1M(new BigInteger("0"));
+		}
+		else if( frmRourke2009.getP1_calms1mNo() == 1 ) {
+			patient.setCWC1M(new BigInteger("1"));
+		} 
+		else {
+			patient.setCWC1M(new BigInteger("2"));
+		}
+		
+		if( frmRourke2009.getP2_coosOk() == 1 ) {
+			patient.setCOOS2M(new BigInteger("0"));
+		}
+		else if( frmRourke2009.getP2_coosOkConcerns() == 1 ) {
+			patient.setCOOS2M(new BigInteger("1"));
+		} 
+		else {
+			patient.setCOOS2M(new BigInteger("2"));
+		}
+		
+		if( frmRourke2009.getP2_headUpTummyOk() == 1 ) {
+			patient.setLHLT2M(new BigInteger("0"));
+		}
+		else if( frmRourke2009.getP2_headUpTummyOkConcerns() == 1 ) {
+			patient.setLHLT2M(new BigInteger("1"));
+		} 
+		else {
+			patient.setLHLT2M(new BigInteger("2"));
+		}
+		
+		if( frmRourke2009.getP2_cuddledOk() == 1 ) {
+			patient.setCBC2M(new BigInteger("0"));
+		}
+		else if( frmRourke2009.getP2_cuddledOkConcerns() == 1 ) {
+			patient.setCBC2M(new BigInteger("1"));
+		} 
+		else {
+			patient.setCBC2M(new BigInteger("2"));
+		}
+		
+		if( frmRourke2009.getP2_2sucksOk() == 1 ) {
+			patient.setS2S2M(new BigInteger("0"));
+		}
+		else if( frmRourke2009.getP2_2sucksOkConcerns() == 1 ) {
+			patient.setS2S2M(new BigInteger("1"));
+		} 
+		else {
+			patient.setS2S2M(new BigInteger("2"));
+		}
+		
+		if( frmRourke2009.getP2_movingObjOk() == 1 ) {
+			patient.setFMT4M(new BigInteger("0"));
+		}
+		else if( frmRourke2009.getP2_movingObjOkConcerns() == 1 ) {
+			patient.setFMT4M(new BigInteger("1"));
+		} 
+		else {
+			patient.setFMT4M(new BigInteger("2"));
+		}
+		
+		if( frmRourke2009.getP2_respondsOk() == 1 ) {
+			patient.setRTPE4M(new BigInteger("0"));
+		}
+		else if( frmRourke2009.getP2_respondsOkConcerns() == 1 ) {
+			patient.setRTPE4M(new BigInteger("1"));
+		} 
+		else {
+			patient.setRTPE4M(new BigInteger("2"));
+		}
+		
+		if( frmRourke2009.getP2_holdsObjOk() == 1 ) {
+			patient.setHOB4M(new BigInteger("0"));
+		}
+		else if( frmRourke2009.getP2_holdsObjOkConcerns() == 1 ) {
+			patient.setHOB4M(new BigInteger("1"));
+		} 
+		else {
+			patient.setHOB4M(new BigInteger("2"));
+		}
+		
+		if( frmRourke2009.getP2_laughsOk() == 1 ) {
+			patient.setLSR4M(new BigInteger("0"));
+		}
+		else if( frmRourke2009.getP2_laughsOkConcerns() == 1 ) {
+			patient.setLSR4M(new BigInteger("1"));
+		} 
+		else {
+			patient.setLSR4M(new BigInteger("2"));
+		}
+		
+		if( frmRourke2009.getP2_turnsHeadOk() == 1 ) {
+			patient.setTHTS6M(new BigInteger("0"));
+		}
+		else if( frmRourke2009.getP2_turnsHeadOkConcerns() == 1 ) {
+			patient.setTHTS6M(new BigInteger("1"));
+		} 
+		else {
+			patient.setTHTS6M(new BigInteger("2"));
+		}
+		
+		if( frmRourke2009.getP2_makesSoundOk() == 1 ) {
+			patient.setMSWT6M(new BigInteger("0"));
+		}
+		else if( frmRourke2009.getP2_makesSoundOkConcerns() == 1 ) {
+			patient.setMSWT6M(new BigInteger("1"));
+		} 
+		else {
+			patient.setMSWT6M(new BigInteger("2"));
+		}
+		
+		if( frmRourke2009.getP2_vocalizesOk() == 1 ) {
+			patient.setVPD6M(new BigInteger("0"));
+		}
+		else if( frmRourke2009.getP2_vocalizesOkConcerns() == 1 ) {
+			patient.setVPD6M(new BigInteger("1"));
+		} 
+		else {
+			patient.setVPD6M(new BigInteger("2"));
+		}
+		
+		if( frmRourke2009.getP2_rollsOk() == 1 ) {
+			patient.setRBS6M(new BigInteger("0"));
+		}
+		else if( frmRourke2009.getP2_rollsOkConcerns() == 1 ) {
+			patient.setRBS6M(new BigInteger("1"));
+		} 
+		else {
+			patient.setRBS6M(new BigInteger("2"));
+		}
+		
+		if( frmRourke2009.getP2_reachesGraspsOk() == 1 ) {
+			patient.setRGO6M(new BigInteger("0"));
+		}
+		else if( frmRourke2009.getP2_reachesGraspsOkConcerns() == 1 ) {
+			patient.setRGO6M(new BigInteger("1"));
+		} 
+		else {
+			patient.setRGO6M(new BigInteger("2"));
+		}
+		
+		if( frmRourke2009.getP3_responds2peopleOk() == 1 ) {
+			patient.setRDTDP9M(new BigInteger("0"));
+		}
+		else if( frmRourke2009.getP3_responds2peopleOkConcerns() == 1 ) {
+			patient.setRDTDP9M(new BigInteger("1"));
+		} 
+		else {
+			patient.setRDTDP9M(new BigInteger("2"));
+		}
+		
+		if( frmRourke2009.getP3_playGamesOk() == 1 ) {
+			patient.setPSG9M(new BigInteger("0"));
+		}
+		else if( frmRourke2009.getP3_playGamesOkConcerns() == 1 ) {
+			patient.setPSG9M(new BigInteger("1"));
+		} 
+		else {
+			patient.setPSG9M(new BigInteger("2"));
+		}
+		
+		if( frmRourke2009.getP3_attention9mOk() == 1 ) {
+			patient.setCSA9M(new BigInteger("0"));
+		}
+		else if( frmRourke2009.getP3_attention9mOkConcerns() == 1 ) {
+			patient.setCSA9M(new BigInteger("1"));
+		} 
+		else {
+			patient.setCSA9M(new BigInteger("2"));
+		}
+		
+		if( frmRourke2009.getP3_consonantOk() == 1 ) {
+			patient.setM1CVC12M(new BigInteger("0"));
+		}
+		else if( frmRourke2009.getP3_consonantOkConcerns() == 1 ) {
+			patient.setM1CVC12M(new BigInteger("1"));
+		} 
+		else {
+			patient.setM1CVC12M(new BigInteger("2"));
+		}
+		
+		if( frmRourke2009.getP3_showDistressOk() == 1 ) {
+			patient.setSDWS12M(new BigInteger("0"));
+		}
+		else if( frmRourke2009.getP3_showDistressOkConcerns() == 1 ) {
+			patient.setSDWS12M(new BigInteger("1"));
+		} 
+		else {
+			patient.setSDWS12M(new BigInteger("2"));
+		}
+		
+		if( frmRourke2009.getP3_followGazeOk() == 1 ) {
+			patient.setFGJR12M(new BigInteger("0"));
+		}
+		else if( frmRourke2009.getP3_followGazeOkConcerns() == 1 ) {
+			patient.setFGJR12M(new BigInteger("1"));
+		} 
+		else {
+			patient.setFGJR12M(new BigInteger("2"));
+		}
+		
+		if( frmRourke2009.getP3_says5wordsOk() == 1 ) {
+			patient.setS5W15M(new BigInteger("0"));
+		}
+		else if( frmRourke2009.getP3_says5wordsOkConcerns() == 1 ) {
+			patient.setS5W15M(new BigInteger("1"));
+		} 
+		else {
+			patient.setS5W15M(new BigInteger("2"));
+		}
+		
+		if( frmRourke2009.getP3_showsFearStrangersOk() == 1 ) {
+			patient.setSFSP15M(new BigInteger("0"));
+		}
+		else if( frmRourke2009.getP3_showsFearStrangersOkConcerns() == 1 ) {
+			patient.setSFSP15M(new BigInteger("1"));
+		} 
+		else {
+			patient.setSFSP15M(new BigInteger("2"));
+		}
+		
+		if( frmRourke2009.getP4_otherChildrenOk() == 1 ) {
+			patient.setIIOC18M(new BigInteger("0"));
+		}
+		else if( frmRourke2009.getP4_otherChildrenOkConcerns() == 1 ) {
+			patient.setIIOC18M(new BigInteger("1"));
+		} 
+		else {
+			patient.setIIOC18M(new BigInteger("2"));
+		}
+		
+		if( frmRourke2009.getP4_pointsOk() == 1 ) {
+			patient.setPSDBP18M(new BigInteger("0"));
+		}
+		else if( frmRourke2009.getP4_pointsOkConcerns() == 1 ) {
+			patient.setPSDBP18M(new BigInteger("1"));
+		} 
+		else {
+			patient.setPSDBP18M(new BigInteger("2"));
+		}
+		
+		if( frmRourke2009.getP4_points2wantOk() == 1 ) {
+			patient.setPWW18M(new BigInteger("0"));
+		}
+		else if( frmRourke2009.getP4_points2wantOkConcerns() == 1 ) {
+			patient.setPWW18M(new BigInteger("1"));
+		} 
+		else {
+			patient.setPWW18M(new BigInteger("2"));
+		}
+		
+		if( frmRourke2009.getP4_looks4toyOk() == 1 ) {
+			patient.setLFTWA18M(new BigInteger("0"));
+		}
+		else if( frmRourke2009.getP4_looks4toyOkConcerns() == 1 ) {
+			patient.setLFTWA18M(new BigInteger("1"));
+		} 
+		else {
+			patient.setLFTWA18M(new BigInteger("2"));
+		}
+		
+		if( frmRourke2009.getP4_says20wordsOk() == 1 ) {
+			patient.setS20W18M(new BigInteger("0"));
+		}
+		else if( frmRourke2009.getP4_says20wordsOkConcerns() == 1 ) {
+			patient.setS20W18M(new BigInteger("1"));
+		} 
+		else {
+			patient.setS20W18M(new BigInteger("2"));
+		}
+		
+		if( frmRourke2009.getP4_4consonantsOk() == 1 ) {
+			patient.setP4C18M(new BigInteger("0"));
+		}
+		else if( frmRourke2009.getP4_4consonantsOkConcerns() == 1 ) {
+			patient.setP4C18M(new BigInteger("1"));
+		} 
+		else {
+			patient.setP4C18M(new BigInteger("2"));
+		}
+		
+		if( frmRourke2009.getP4_walksbackOk() == 1 ) {
+			patient.setWALK18M(new BigInteger("0"));
+		}
+		else if( frmRourke2009.getP4_walksbackOkConcerns() == 1 ) {
+			patient.setWALK18M(new BigInteger("1"));
+		} 
+		else {
+			patient.setWALK18M(new BigInteger("2"));
+		}
+		
+		if( frmRourke2009.getP4_one2stepdirectionsOk() == 1 ) {
+			patient.setU2SD2Y(new BigInteger("0"));
+		}
+		else if( frmRourke2009.getP4_one2stepdirectionsOkConcerns() == 1 ) {
+			patient.setU2SD2Y(new BigInteger("1"));
+		} 
+		else {
+			patient.setU2SD2Y(new BigInteger("2"));
+		}
+		
+		if( frmRourke2009.getP4_walksbackwardOk() == 1 ) {
+			patient.setWABA2Y(new BigInteger("0"));
+		}
+		else if( frmRourke2009.getP4_walksbackwardOkConcerns() == 1 ) {
+			patient.setWABA2Y(new BigInteger("1"));
+		} 
+		else {
+			patient.setWABA2Y(new BigInteger("2"));
+		}
+		
+		if( frmRourke2009.getP4_pretendsPlayOk() == 1 ) {
+			patient.setPRPL2Y(new BigInteger("0"));
+		}
+		else if( frmRourke2009.getP4_pretendsPlayOkConcerns() == 1 ) {
+			patient.setPRPL2Y(new BigInteger("1"));
+		} 
+		else {
+			patient.setPRPL2Y(new BigInteger("2"));
+		}
+		
+		if( frmRourke2009.getP4_2directionsOk() == 1 ) {
+			patient.setU3SD3Y(new BigInteger("0"));
+		}
+		else if( frmRourke2009.getP4_2directionsOkConcerns() == 1 ) {
+			patient.setU3SD3Y(new BigInteger("1"));
+		} 
+		else {
+			patient.setU3SD3Y(new BigInteger("2"));
+		}
+		
+		if( frmRourke2009.getP4_5ormoreWordsOk() == 1 ) {
+			patient.setS5WS3Y(new BigInteger("0"));
+		}
+		else if( frmRourke2009.getP4_5ormoreWordsOkConcerns() == 1 ) {
+			patient.setS5WS3Y(new BigInteger("1"));
+		} 
+		else {
+			patient.setS5WS3Y(new BigInteger("2"));
+		}
+		
+		if( frmRourke2009.getP4_walksUpStairsOk() == 1 ) {
+			patient.setWUS3Y(new BigInteger("0"));
+		}
+		else if( frmRourke2009.getP4_walksUpStairsOkConcerns() == 1 ) {
+			patient.setWUS3Y(new BigInteger("1"));
+		} 
+		else {
+			patient.setWUS3Y(new BigInteger("2"));
+		}
+		
+		if( frmRourke2009.getP4_playMakeBelieveOk() == 1 ) {
+			patient.setPMBG3Y(new BigInteger("0"));
+		}
+		else if( frmRourke2009.getP4_playMakeBelieveOkConcerns() == 1 ) {
+			patient.setPMBG3Y(new BigInteger("1"));
+		} 
+		else {
+			patient.setPMBG3Y(new BigInteger("2"));
+		}
+		
+		if( frmRourke2009.getP4_asksQuestionsOk() == 1 ) {
+			patient.setALQ4Y(new BigInteger("0"));
+		}
+		else if( frmRourke2009.getP4_asksQuestionsOkConcerns() == 1 ) {
+			patient.setALQ4Y(new BigInteger("1"));
+		} 
+		else {
+			patient.setALQ4Y(new BigInteger("2"));
+		}
+		
+		if( frmRourke2009.getP4_upDownStairsOk() == 1 ) {
+			patient.setWSAF4Y(new BigInteger("0"));
+		}
+		else if( frmRourke2009.getP4_upDownStairsOkConcerns() == 1 ) {
+			patient.setWSAF4Y(new BigInteger("1"));
+		} 
+		else {
+			patient.setWSAF4Y(new BigInteger("2"));
+		}
+		
+		if( frmRourke2009.getP4_undoesZippersOk() == 1 ) {
+			patient.setBUTZIP4Y(new BigInteger("0"));
+		}
+		else if( frmRourke2009.getP4_undoesZippersOkConcerns() == 1 ) {
+			patient.setBUTZIP4Y(new BigInteger("1"));
+		} 
+		else {
+			patient.setBUTZIP4Y(new BigInteger("2"));
+		}
+		
+		if( frmRourke2009.getP4_countsOutloudOk() == 1 ) {
+			patient.setCOUNT5Y(new BigInteger("0"));
+		}
+		else if( frmRourke2009.getP4_countsOutloudOkConcerns() == 1 ) {
+			patient.setCOUNT5Y(new BigInteger("1"));
+		} 
+		else {
+			patient.setCOUNT5Y(new BigInteger("2"));
+		}
+		
+		if( frmRourke2009.getP4_dressesUndressesOk() == 1 ) {
+			patient.setDRESS5Y(new BigInteger("0"));
+		}
+		else if( frmRourke2009.getP4_dressesUndressesOkConcerns() == 1 ) {
+			patient.setDRESS5Y(new BigInteger("1"));
+		} 
+		else {
+			patient.setDRESS5Y(new BigInteger("2"));
+		}
+		
+		if( frmRourke2009.getP4_obeysAdultOk() == 1 ) {
+			patient.setCOOP5Y(new BigInteger("0"));
+		}
+		else if( frmRourke2009.getP4_obeysAdultOkConcerns() == 1 ) {
+			patient.setCOOP5Y(new BigInteger("1"));
+		} 
+		else {
+			patient.setCOOP5Y(new BigInteger("2"));
+		}
+		
+		if( frmRourke2009.getP4_retellsStoryOk() == 1 ) {
+			patient.setRETELL5Y(new BigInteger("0"));
+		}
+		else if( frmRourke2009.getP4_retellsStoryOkConcerns() == 1 ) {
+			patient.setRETELL5Y(new BigInteger("1"));
+		} 
+		else {
+			patient.setRETELL5Y(new BigInteger("2"));
+		}
 		
 	}
 	
@@ -2293,9 +2707,19 @@ public class RourkeExportAction extends DispatchAction {
 		}
 		
 		if( frmRourke2009.getP4_dentalCareOk() == 1 ) {
-			patient.setDENT2Y5Y(new BigInteger("0"));
+			patient.setDENT18M(new BigInteger("0"));
 		}
 		else if( frmRourke2009.getP4_dentalCareOkConcerns() == 1 ) {
+			patient.setDENT18M(new BigInteger("1"));
+		} 
+		else {
+			patient.setDENT18M(new BigInteger("2"));
+		}
+		
+		if( frmRourke2009.getP4_dentalCleaningOk() == 1 ) {
+			patient.setDENT2Y5Y(new BigInteger("0"));
+		}
+		else if( frmRourke2009.getP4_dentalCleaningOkConcerns() == 1 ) {
 			patient.setDENT2Y5Y(new BigInteger("1"));
 		} 
 		else {
@@ -2341,7 +2765,7 @@ public class RourkeExportAction extends DispatchAction {
 		else {
 			patient.setSIBL2Y5Y(new BigInteger("2"));
 		}
-		
+		/*START HERE */
 		if( frmRourke2009.getP1_2ndSmokeOk() == 1 ) {
 			patient.setSHS1W1M(new BigInteger("0"));
 		}
@@ -2382,40 +2806,40 @@ public class RourkeExportAction extends DispatchAction {
 			patient.setSHS2Y5Y(new BigInteger("2"));
 		}
 		
-		if( frmRourke2009.getP1_noCoughMedOk() == 1 ) {
+		if( frmRourke2009.getP1_altMedOk() == 1 ) {
 			patient.setCOAL1W1M(new BigInteger("0"));
 		}
-		else if( frmRourke2009.getP1_noCoughMedOkConcerns() == 1 ) {
+		else if( frmRourke2009.getP1_altMedOkConcerns() == 1 ) {
 			patient.setCOAL1W1M(new BigInteger("1"));
 		} 
 		else {
 			patient.setCOAL1W1M(new BigInteger("2"));
 		}
 		
-		if( frmRourke2009.getP2_noCoughMedOk() == 1 ) {
+		if( frmRourke2009.getP2_altMedOk() == 1 ) {
 			patient.setCOAL2M6M(new BigInteger("0"));
 		}
-		else if( frmRourke2009.getP2_noCoughMedOkConcerns() == 1 ) {
+		else if( frmRourke2009.getP2_altMedOkConcerns() == 1 ) {
 			patient.setCOAL2M6M(new BigInteger("1"));
 		} 
 		else {
 			patient.setCOAL2M6M(new BigInteger("2"));
 		}
 		
-		if( frmRourke2009.getP3_coughMedOk() == 1 ) {
+		if( frmRourke2009.getP3_altMedOk() == 1 ) {
 			patient.setCOAL9M15M(new BigInteger("0"));
 		}
-		else if( frmRourke2009.getP3_coughMedOkConcerns() == 1 ) {
+		else if( frmRourke2009.getP3_altMedOkConcerns() == 1 ) {
 			patient.setCOAL9M15M(new BigInteger("1"));
 		} 
 		else {
 			patient.setCOAL9M15M(new BigInteger("2"));
 		}
 		
-		if( frmRourke2009.getP4_noCough24mOk() == 1 ) {
+		if( frmRourke2009.getP4_altMedOk() == 1 ) {
 			patient.setCOAL2Y5Y(new BigInteger("0"));
 		}
-		else if( frmRourke2009.getP4_noCough24mOkConcerns() == 1 ) {
+		else if( frmRourke2009.getP4_altMedOkConcerns() == 1 ) {
 			patient.setCOAL2Y5Y(new BigInteger("1"));
 		} 
 		else {
@@ -3054,6 +3478,75 @@ public class RourkeExportAction extends DispatchAction {
 			patient.setH2OS(new BigInteger("2"));
 		}
 		
+		if( frmRourke2009.getP1_noCoughMedOk() == 1 ) {
+			patient.setNOCC1W1M(new BigInteger("0"));
+		}
+		else if( frmRourke2009.getP1_noCoughMedOkConcerns() == 1 ) {
+			patient.setNOCC1W1M(new BigInteger("1"));
+		} 
+		else {
+			patient.setNOCC1W1M(new BigInteger("2"));
+		}
+		
+		if( frmRourke2009.getP2_noCoughMedOk() == 1 ) {
+			patient.setNOCC2M6M(new BigInteger("0"));
+		}
+		else if( frmRourke2009.getP2_noCoughMedOkConcerns() == 1 ) {
+			patient.setNOCC2M6M(new BigInteger("1"));
+		} 
+		else {
+			patient.setNOCC2M6M(new BigInteger("2"));
+		}
+		
+		if( frmRourke2009.getP3_coughMedOk() == 1 ) {
+			patient.setNOCC9M15M(new BigInteger("0"));
+		}
+		else if( frmRourke2009.getP3_coughMedOkConcerns() == 1 ) {
+			patient.setNOCC9M15M(new BigInteger("1"));
+		} 
+		else {
+			patient.setNOCC9M15M(new BigInteger("2"));
+		}
+		
+		if( frmRourke2009.getP4_noCough24mOk() == 1 ) {
+			patient.setNOCC2Y5Y(new BigInteger("0"));
+		}
+		else if( frmRourke2009.getP4_noCough24mOkConcerns() == 1 ) {
+			patient.setNOCC2Y5Y(new BigInteger("1"));
+		} 
+		else {
+			patient.setNOCC2Y5Y(new BigInteger("2"));
+		}
+		
+		if( frmRourke2009.getP4_weanPacifier18mOk() == 1 ) {
+			patient.setWFPAC18M(new BigInteger("0"));
+		}
+		else if( frmRourke2009.getP4_weanPacifier18mOkConcerns() == 1 ) {
+			patient.setWFPAC18M(new BigInteger("1"));
+		} 
+		else {
+			patient.setWFPAC18M(new BigInteger("2"));
+		}
+		
+		if( frmRourke2009.getP4_encourageReading18mOk() == 1 ) {
+			patient.setREAD18M(new BigInteger("0"));
+		}
+		else if( frmRourke2009.getP4_encourageReading18mOkConcerns() == 1 ) {
+			patient.setREAD18M(new BigInteger("1"));
+		} 
+		else {
+			patient.setREAD18M(new BigInteger("2"));
+		}
+		
+		if( frmRourke2009.getP4_noPacifier24mOk() == 1 ) {
+			patient.setNOPAC2Y5Y(new BigInteger("0"));
+		}
+		else if( frmRourke2009.getP4_noPacifier24mOkConcerns() == 1 ) {
+			patient.setNOPAC2Y5Y(new BigInteger("1"));
+		} 
+		else {
+			patient.setNOPAC2Y5Y(new BigInteger("2"));
+		}
 		
 	}
 	
@@ -3666,7 +4159,7 @@ public class RourkeExportAction extends DispatchAction {
 		//2 week measurements
 		if( StringUtils.isNumeric(frmRourke2009.getP1Ht2w())) {
 			measure = String.valueOf(Math.round(Float.parseFloat(frmRourke2009.getP1Ht2w())));
-			patient.setHT1W(new BigInteger(measure));
+			patient.setHT2W(new BigInteger(measure));
 		}
 
 		if( StringUtils.isNumeric(frmRourke2009.getP1Wt2w())) {
@@ -3835,7 +4328,7 @@ public class RourkeExportAction extends DispatchAction {
 		}
 		
 		
-	}
+	}	
 	
 	private void buildVisitdates(Patient patient, FormRourke2009 frmRourke2009) {
 		Calendar calendar = Calendar.getInstance();
@@ -3858,11 +4351,11 @@ public class RourkeExportAction extends DispatchAction {
 			patient.setVD1M(calendar);
 		}
 		
-		/*date = frmRourke2009.getP2Date2m();
+		date = frmRourke2009.getP2Date2m();
 		if( date != null ) {
 			calendar.setTime(date);
 			patient.setVD2M(calendar);
-		}*/
+		}
 		
 		date = frmRourke2009.getP2Date4m();
 		if( date != null ) {
@@ -3925,9 +4418,10 @@ public class RourkeExportAction extends DispatchAction {
         String patientName = demo.getFormattedName();
         patient.setNAME(patientName);
         
+        
         Calendar calendarDob = demo.getBirthDay();
         if( calendarDob != null ) {
-        	patient.setDOB(calendarDob);
+        	patient.setDOB(demo.getYearOfBirth() + "-" + demo.getMonthOfBirth());
         }
         
         String sex = demo.getSex();
@@ -3997,11 +4491,7 @@ public class RourkeExportAction extends DispatchAction {
     	options.put( XmlOptions.SAVE_PRETTY_PRINT );
     	options.put( XmlOptions.SAVE_PRETTY_PRINT_INDENT, 3 );
     	options.put( XmlOptions.SAVE_AGGRESSIVE_NAMESPACES );
-
-        HashMap<String,String> suggestedPrefix = new HashMap<String,String>();
-        suggestedPrefix.put("cds_dt","cdsd");
-        options.setSaveSuggestedPrefixes(suggestedPrefix);
-        
+       
     	options.setSaveOuter();
     	
     	String fileName = "Rourke2009Export.xml";
