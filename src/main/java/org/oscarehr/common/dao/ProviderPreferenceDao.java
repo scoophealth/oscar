@@ -33,6 +33,4 @@ public class ProviderPreferenceDao extends AbstractDao<ProviderPreference> {
 	public ProviderPreferenceDao() {
 		super(ProviderPreference.class);
 	}
-	
-	
 }
