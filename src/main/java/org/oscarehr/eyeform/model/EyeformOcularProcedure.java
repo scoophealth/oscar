@@ -7,15 +7,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
 
 import org.oscarehr.common.model.AbstractModel;
 
 @Entity
-@Table(name="EyeformOcularProcedure")
-public class OcularProc extends AbstractModel<Integer> {
+public class EyeformOcularProcedure extends AbstractModel<Integer> {
 
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,7 +39,7 @@ public class OcularProc extends AbstractModel<Integer> {
 	
 	private int appointmentNo;
 	
-	public OcularProc() {
+	public EyeformOcularProcedure() {
 		status="A";			
 	}
 	

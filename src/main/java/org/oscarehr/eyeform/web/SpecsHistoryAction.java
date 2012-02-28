@@ -15,7 +15,7 @@ import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.validator.DynaValidatorForm;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.eyeform.dao.SpecsHistoryDao;
-import org.oscarehr.eyeform.model.SpecsHistory;
+import org.oscarehr.eyeform.model.EyeformSpecsHistory;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
@@ -34,7 +34,7 @@ public class SpecsHistoryAction extends DispatchAction {
     	String demographicNo = request.getParameter("demographicNo");
     	SpecsHistoryDao dao = (SpecsHistoryDao)SpringUtils.getBean("SpecsHistoryDAO");
     	
-    	List<SpecsHistory> specs = dao.getByDemographicNo(Integer.parseInt(demographicNo));
+    	List<EyeformSpecsHistory> specs = dao.getByDemographicNo(Integer.parseInt(demographicNo));
     	request.setAttribute("specs", specs);
     	
         return mapping.findForward("list");
@@ -48,7 +48,7 @@ public class SpecsHistoryAction extends DispatchAction {
     	
     	if(request.getParameter("specs.id") != null) {
     		int shId = Integer.parseInt(request.getParameter("specs.id"));
-    		SpecsHistory specs = dao.find(shId);
+    		EyeformSpecsHistory specs = dao.find(shId);
     		DynaValidatorForm f = (DynaValidatorForm)form;	
     		f.set("specs", specs);
     	}
@@ -58,7 +58,7 @@ public class SpecsHistoryAction extends DispatchAction {
     
     public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
     	DynaValidatorForm f = (DynaValidatorForm)form;
-    	SpecsHistory specs = (SpecsHistory)f.get("specs");
+    	EyeformSpecsHistory specs = (EyeformSpecsHistory)f.get("specs");
     	if(specs.getId()!=null && specs.getId()==0) {
     		specs.setId(null);
     	}
@@ -88,9 +88,9 @@ public class SpecsHistoryAction extends DispatchAction {
     public ActionForward copySpecs(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
     	String demographicNo = request.getParameter("demographicNo");
     	SpecsHistoryDao dao = (SpecsHistoryDao)SpringUtils.getBean("SpecsHistoryDAO");
-    	List<SpecsHistory> specs = dao.getByDemographicNo(Integer.parseInt(demographicNo));
+    	List<EyeformSpecsHistory> specs = dao.getByDemographicNo(Integer.parseInt(demographicNo));
     	if(specs.size()>0) {
-    		SpecsHistory latestSpecs = specs.get(0);
+    		EyeformSpecsHistory latestSpecs = specs.get(0);
     		PrintWriter out = response.getWriter();
     		out.println("setfieldvalue(\"od_manifest_refraction_sph\",\""+latestSpecs.getOdSph()+"\");");
     		out.println("setfieldvalue(\"os_manifest_refraction_sph\",\""+latestSpecs.getOsSph()+"\");");

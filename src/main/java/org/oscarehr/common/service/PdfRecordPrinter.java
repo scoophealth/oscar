@@ -24,11 +24,11 @@ import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.EFormValue;
 import org.oscarehr.eyeform.MeasurementFormatter;
 import org.oscarehr.eyeform.model.EyeForm;
-import org.oscarehr.eyeform.model.FollowUp;
-import org.oscarehr.eyeform.model.OcularProc;
-import org.oscarehr.eyeform.model.ProcedureBook;
-import org.oscarehr.eyeform.model.SpecsHistory;
-import org.oscarehr.eyeform.model.TestBookRecord;
+import org.oscarehr.eyeform.model.EyeformFollowUp;
+import org.oscarehr.eyeform.model.EyeformOcularProcedure;
+import org.oscarehr.eyeform.model.EyeformProcedureBook;
+import org.oscarehr.eyeform.model.EyeformSpecsHistory;
+import org.oscarehr.eyeform.model.EyeformTestBook;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -607,7 +607,7 @@ public class PdfRecordPrinter {
         }
     }
 
-    public void printOcularProcedures(List<OcularProc> ocularProcedures) throws DocumentException {
+    public void printOcularProcedures(List<EyeformOcularProcedure> ocularProcedures) throws DocumentException {
     	ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
 
  /*
@@ -628,7 +628,7 @@ public class PdfRecordPrinter {
         p.add(phrase);
         getDocument().add(p);
 
-        for(OcularProc proc:ocularProcedures) {
+        for(EyeformOcularProcedure proc:ocularProcedures) {
         	p = new Paragraph();
     		phrase = new Phrase(LEADING, "", getFont());
     		//Chunk chunk = new Chunk("Documentation Date: " + getFormatter().format(proc.getDate()) + "\n", obsfont);
@@ -639,7 +639,7 @@ public class PdfRecordPrinter {
         }
     }
 
-    public void printSpecsHistory(List<SpecsHistory> specsHistory) throws DocumentException {
+    public void printSpecsHistory(List<EyeformSpecsHistory> specsHistory) throws DocumentException {
     	ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
 
  /*
@@ -668,7 +668,7 @@ public class PdfRecordPrinter {
         table.setTotalWidth(5f);
     	table.setHorizontalAlignment(PdfPTable.ALIGN_LEFT);
 
-        for(SpecsHistory specs:specsHistory) {
+        for(EyeformSpecsHistory specs:specsHistory) {
     		PdfPCell cell1 = new PdfPCell(new Phrase(getFormatter().format(specs.getDate()),getFont()));
             cell1.setBorder(PdfPCell.NO_BORDER);
             cell1.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
@@ -714,21 +714,21 @@ public class PdfRecordPrinter {
         getDocument().add(new Phrase("\n",getFont()));
     }
 
-    public void printEyeformPlan(List<FollowUp>followUps, List<ProcedureBook> procedureBooks, List<TestBookRecord>testBooks,EyeForm eyeform) throws DocumentException {
+    public void printEyeformPlan(List<EyeformFollowUp>followUps, List<EyeformProcedureBook> procedureBooks, List<EyeformTestBook>testBooks,EyeForm eyeform) throws DocumentException {
 
-    	for(FollowUp followUp:followUps) {
+    	for(EyeformFollowUp followUp:followUps) {
         	Paragraph p = new Paragraph();
     		p.add(getFormatter().format(followUp.getDate()) + ":" + followUp.getType()+ " " + followUp.getTimespan() + " " + followUp.getTimeframe() + " " + followUp.getFollowupProvider() + " " + followUp.getUrgency() + "\n");
     		getDocument().add(p);
         }
 
-    	for(ProcedureBook proc:procedureBooks) {
+    	for(EyeformProcedureBook proc:procedureBooks) {
         	Paragraph p = new Paragraph();
     		p.add(getFormatter().format(proc.getDate()) + ":" + proc.getProcedureName() + "\n");
     		getDocument().add(p);
         }
 
-    	for(TestBookRecord test:testBooks) {
+    	for(EyeformTestBook test:testBooks) {
         	Paragraph p = new Paragraph();
     		p.add(getFormatter().format(test.getDate()) + ":" + test.getTestname() + "\n");
     		getDocument().add(p);

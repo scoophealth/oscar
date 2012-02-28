@@ -1,4 +1,4 @@
-<%@page import="org.oscarehr.eyeform.model.TestBookRecord"%>
+<%@page import="org.oscarehr.eyeform.model.EyeformTestBook"%>
 <%@page import="org.oscarehr.eyeform.web.TestBookAction"%>
 
 

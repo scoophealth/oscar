@@ -21,9 +21,9 @@ import org.oscarehr.eyeform.dao.FollowUpDao;
 import org.oscarehr.eyeform.dao.ProcedureBookDao;
 import org.oscarehr.eyeform.dao.TestBookRecordDao;
 import org.oscarehr.eyeform.model.EyeForm;
-import org.oscarehr.eyeform.model.FollowUp;
-import org.oscarehr.eyeform.model.ProcedureBook;
-import org.oscarehr.eyeform.model.TestBookRecord;
+import org.oscarehr.eyeform.model.EyeformFollowUp;
+import org.oscarehr.eyeform.model.EyeformProcedureBook;
+import org.oscarehr.eyeform.model.EyeformTestBook;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
@@ -48,17 +48,17 @@ public class NoteAddonAction extends DispatchAction {
 		ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
 		DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
 		
-		List<FollowUp> followUps = followUpDao.getByAppointmentNo(Integer.parseInt(appointmentNo));
-		for(FollowUp fu:followUps) {
+		List<EyeformFollowUp> followUps = followUpDao.getByAppointmentNo(Integer.parseInt(appointmentNo));
+		for(EyeformFollowUp fu:followUps) {
 			fu.setProvider(providerDao.getProvider(fu.getFollowupProvider()));
 			fu.setDemographic(demographicDao.getDemographic(String.valueOf(fu.getDemographicNo())));			
 		}		
 		request.setAttribute("followUps",followUps);
 		
-		List<TestBookRecord> testBookRecords = testDao.getByAppointmentNo(Integer.parseInt(appointmentNo));
+		List<EyeformTestBook> testBookRecords = testDao.getByAppointmentNo(Integer.parseInt(appointmentNo));
 		request.setAttribute("testBookRecords",testBookRecords);
 		
-		List<ProcedureBook> procedures = procedureBookDao.getByAppointmentNo(Integer.parseInt(appointmentNo));
+		List<EyeformProcedureBook> procedures = procedureBookDao.getByAppointmentNo(Integer.parseInt(appointmentNo));
 		request.setAttribute("procedures",procedures);
 		
 		EyeForm eyeform = eyeformDao.getByAppointmentNo(Integer.parseInt(appointmentNo));

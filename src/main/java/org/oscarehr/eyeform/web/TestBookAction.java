@@ -13,7 +13,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.validator.DynaValidatorForm;
 import org.oscarehr.eyeform.dao.TestBookRecordDao;
-import org.oscarehr.eyeform.model.TestBookRecord;
+import org.oscarehr.eyeform.model.EyeformTestBook;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
@@ -34,7 +34,7 @@ public class TestBookAction extends DispatchAction {
     	
     	
     	DynaValidatorForm f = (DynaValidatorForm)form;
-    	TestBookRecord data = (TestBookRecord)f.get("data");
+    	EyeformTestBook data = (EyeformTestBook)f.get("data");
     	if(data.getId() != null && data.getId().intValue()>0) {
     		data = dao.find(data.getId()); 
     	}
@@ -46,7 +46,7 @@ public class TestBookAction extends DispatchAction {
     
     public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {    	
     	DynaValidatorForm f = (DynaValidatorForm)form;
-    	TestBookRecord data = (TestBookRecord)f.get("data");
+    	EyeformTestBook data = (EyeformTestBook)f.get("data");
     	if(data.getId()!=null && data.getId()==0) {
     		data.setId(null);
     	}
@@ -61,10 +61,10 @@ public class TestBookAction extends DispatchAction {
     	String appointmentNo = request.getParameter("appointmentNo");
     	TestBookRecordDao dao = (TestBookRecordDao)SpringUtils.getBean("TestBookDAO");
     	
-    	List<TestBookRecord> tests = dao.getByAppointmentNo(Integer.parseInt(appointmentNo));
+    	List<EyeformTestBook> tests = dao.getByAppointmentNo(Integer.parseInt(appointmentNo));
     	StringBuilder sb = new StringBuilder();
     	
-    	for(TestBookRecord f:tests) {    		
+    	for(EyeformTestBook f:tests) {    		
     		sb.append("book diagnostic: ").append(f.getTestname()).append(" ").append(f.getEye()).append(" ").append(f.getUrgency());
     		sb.append(" ").append(f.getComment());
     		sb.append("\n");
@@ -92,10 +92,10 @@ public class TestBookAction extends DispatchAction {
     public static String getTicklerText(int appointmentNo) {
     	TestBookRecordDao dao = (TestBookRecordDao)SpringUtils.getBean("TestBookDAO");
     	
-    	List<TestBookRecord> tests = dao.getByAppointmentNo(appointmentNo);
+    	List<EyeformTestBook> tests = dao.getByAppointmentNo(appointmentNo);
     	StringBuilder sb = new StringBuilder();
     	
-    	for(TestBookRecord f:tests) {    
+    	for(EyeformTestBook f:tests) {    
     		String style = new String();
     		if(f.getUrgency().equals("URGENT") || f.getUrgency().equals("ASAP")) {
     			style = "style=\"color:red;\"";

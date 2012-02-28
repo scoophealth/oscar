@@ -38,7 +38,7 @@ import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.BillingreferralDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.eyeform.dao.ConsultationReportDao;
-import org.oscarehr.eyeform.model.ConsultationReport;
+import org.oscarehr.eyeform.model.EyeformConsultationReport;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -92,8 +92,8 @@ public class EctDisplayConReportAction extends EctDisplayAction {
     ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");	
     ConsultationReportDao crDao = (ConsultationReportDao)SpringUtils.getBean("consultationReportDao");
 	
-    List<ConsultationReport> crs = crDao.getByDemographic(Integer.parseInt(bean.demographicNo));
-    for(ConsultationReport cr:crs) {
+    List<EyeformConsultationReport> crs = crDao.getByDemographic(Integer.parseInt(bean.demographicNo));
+    for(EyeformConsultationReport cr:crs) {
     	NavBarDisplayDAO.Item item = Dao.Item();                  
     	item.setDate(cr.getDate());
     	

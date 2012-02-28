@@ -13,7 +13,7 @@ import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.validator.DynaValidatorForm;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.eyeform.dao.OcularProcDao;
-import org.oscarehr.eyeform.model.OcularProc;
+import org.oscarehr.eyeform.model.EyeformOcularProcedure;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
@@ -31,7 +31,7 @@ public class OcularProcAction extends DispatchAction {
     	OcularProcDao dao = (OcularProcDao)SpringUtils.getBean("OcularProcDAO");
     	String demographicNo = request.getParameter("demographicNo");
     	
-    	List<OcularProc> procs = dao.getByDemographicNo(Integer.parseInt(demographicNo));
+    	List<EyeformOcularProcedure> procs = dao.getByDemographicNo(Integer.parseInt(demographicNo));
     	request.setAttribute("procs", procs);
     	
         return mapping.findForward("list");
@@ -45,7 +45,7 @@ public class OcularProcAction extends DispatchAction {
     	
     	if(request.getParameter("proc.id") != null) {
     		int procId = Integer.parseInt(request.getParameter("proc.id"));
-    		OcularProc procedure = dao.find(procId);
+    		EyeformOcularProcedure procedure = dao.find(procId);
     		DynaValidatorForm f = (DynaValidatorForm)form;	
     		f.set("proc", procedure);
     	}
@@ -55,7 +55,7 @@ public class OcularProcAction extends DispatchAction {
     
     public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
     	DynaValidatorForm f = (DynaValidatorForm)form;
-    	OcularProc procedure = (OcularProc)f.get("proc");
+    	EyeformOcularProcedure procedure = (EyeformOcularProcedure)f.get("proc");
     	
     	OcularProcDao dao = (OcularProcDao)SpringUtils.getBean("ocularProcDao");
     	procedure.setProvider(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());

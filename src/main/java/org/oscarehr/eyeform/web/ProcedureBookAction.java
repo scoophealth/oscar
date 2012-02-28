@@ -13,7 +13,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.validator.DynaValidatorForm;
 import org.oscarehr.eyeform.dao.ProcedureBookDao;
-import org.oscarehr.eyeform.model.ProcedureBook;
+import org.oscarehr.eyeform.model.EyeformProcedureBook;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
@@ -34,7 +34,7 @@ public class ProcedureBookAction extends DispatchAction {
     	
     	
     	DynaValidatorForm f = (DynaValidatorForm)form;
-    	ProcedureBook data = (ProcedureBook)f.get("data");
+    	EyeformProcedureBook data = (EyeformProcedureBook)f.get("data");
     	if(data.getId() != null && data.getId().intValue()>0) {
     		data = dao.find(data.getId()); 
     	}
@@ -46,7 +46,7 @@ public class ProcedureBookAction extends DispatchAction {
     
     public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {    	
     	DynaValidatorForm f = (DynaValidatorForm)form;
-    	ProcedureBook data = (ProcedureBook)f.get("data");
+    	EyeformProcedureBook data = (EyeformProcedureBook)f.get("data");
     	if(data.getId()!=null && data.getId()==0) {
     		data.setId(null);
     	}
@@ -61,10 +61,10 @@ public class ProcedureBookAction extends DispatchAction {
     	String appointmentNo = request.getParameter("appointmentNo");
     	ProcedureBookDao dao = (ProcedureBookDao)SpringUtils.getBean("ProcedureBookDAO");
     	
-    	List<ProcedureBook> procedures = dao.getByAppointmentNo(Integer.parseInt(appointmentNo));
+    	List<EyeformProcedureBook> procedures = dao.getByAppointmentNo(Integer.parseInt(appointmentNo));
     	StringBuilder sb = new StringBuilder();
     	
-    	for(ProcedureBook f:procedures) {    		
+    	for(EyeformProcedureBook f:procedures) {    		
     		sb.append("book procedure: ").append(f.getProcedureName()).append(" ").append(f.getEye()).append(" ").append(f.getLocation());
     		sb.append(" ").append(f.getComment());
     		sb.append("\n");
@@ -92,10 +92,10 @@ public class ProcedureBookAction extends DispatchAction {
     public static String getTicklerText(int appointmentNo) {
     	ProcedureBookDao dao = (ProcedureBookDao)SpringUtils.getBean("ProcedureBookDAO");
     	
-    	List<ProcedureBook> procedures = dao.getByAppointmentNo(appointmentNo);
+    	List<EyeformProcedureBook> procedures = dao.getByAppointmentNo(appointmentNo);
     	StringBuilder sb = new StringBuilder();
     	
-    	for(ProcedureBook f:procedures) {
+    	for(EyeformProcedureBook f:procedures) {
     		String style = new String();
     		if(f.getUrgency().equals("URGENT") || f.getUrgency().equals("ASAP")) {
     			style = "style=\"color:red;\"";

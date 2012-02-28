@@ -3,7 +3,7 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
-<%@page import="org.oscarehr.eyeform.model.ConsultationReport"%>
+<%@page import="org.oscarehr.eyeform.model.EyeformConsultationReport"%>
 
 <html:html>
   <head>
@@ -31,11 +31,11 @@ span.h5 {
   text-decoration: none;
   display: block;
   clear: both;
-  white-space: nowrap;	
+  white-space: nowrap;
 
 }
 </style>
-	<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>	
+	<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
      <!-- calendar stylesheet -->
   <link rel="stylesheet" type="text/css" media="all" href="<c:out value="${ctx}"/>/share/calendar/calendar.css" title="win2k-cold-1">
 
@@ -48,7 +48,7 @@ span.h5 {
   <!-- the following script defines the Calendar.setup helper function, which makes
        adding a calendar a matter of 1 or 2 lines of code. -->
   <script type="text/javascript" src="<c:out value="${ctx}"/>/share/calendar/calendar-setup.js"></script>
- 
+
 <script type="text/javascript" language=javascript>
 function popupPage(varpage) {
         var page = "" + varpage;
@@ -59,7 +59,7 @@ function popupPage(varpage) {
 
 function updTklrList() {
     clearInterval(check_demo_no);
-   // createReport();   
+   // createReport();
 }
 
 function search_demographic() {
@@ -67,14 +67,14 @@ function search_demographic() {
     var popup = window.open(url,'demographic_search');
     demo_no_orig = document.consultationReportForm.elements['cr.demographicNo'].value;
     check_demo_no = setInterval("if (demo_no_orig != document.consultationReportForm.elements['cr.demographicNo'].value) updTklrList()",100);
-	
+
 		if (popup != null) {
 		if (popup.opener == null) {
 				popup.opener = self;
 		}
 		popup.focus();
-		}	
-}    
+		}
+}
 
 function clear_demographic() {
 	document.consultationReportForm.elements['cr.demographicNo'].value = '';
@@ -95,17 +95,17 @@ function doSubmit() {
 	<input type="hidden" name="method" value="list"/>
 	<html:hidden property="cr.demographicNo"/>
 	<html:hidden property="cr.demographicName"/>
-	
+
 	<table style="border:0;">
 	<tr>
 	<td style="text-align: right;">
-	<a style="color:red;" href="#" onclick="window.close();">Close</a> 
+	<a style="color:red;" href="#" onclick="window.close();">Close</a>
 	</td>
 	</tr>
 	</table>
 	<table bgcolor="#ddeeff">
 		<tr>
-			
+
 			<td>Status:</td>
 			<td><html:select property="cr.status">
 				<html:option value="">All</html:option>
@@ -128,9 +128,9 @@ function doSubmit() {
 						dmname=new String();
 					}
 				}
-			%>			
-			<input type="text" name="dmname" disabled="disabled" value="<%=dmname%>"/>  			  			
-  			<input type="button" value="Clear" onclick="clear_demographic();"/>  			
+			%>
+			<input type="text" name="dmname" disabled="disabled" value="<%=dmname%>"/>
+  			<input type="button" value="Clear" onclick="clear_demographic();"/>
   			<input type="button" value="Search Demographic" onclick="search_demographic();"/>
   			</td>
 		</tr>
@@ -139,55 +139,55 @@ function doSubmit() {
 		<td>
 		 <html:text styleClass="plain" property="cr.startDate" size="12" onfocus="this.blur()" readonly="readonly" styleId="sdate"/><img src="<%=request.getContextPath()%>/images/cal.gif" id="sdate_cal">
 	    </td>
-	<td>Report End Date:</td> 
+	<td>Report End Date:</td>
 	<td>
 	<html:text styleClass="plain" property="cr.endDate" size="12" onfocus="this.blur()" readonly="readonly" styleId="edate"/><img src="<%=request.getContextPath()%>/images/cal.gif" id="edate_cal">
 
 	</td>
-	
+
 	 <script type="text/javascript">
 				Calendar.setup({ inputField : "sdate", ifFormat : "%Y-%m-%d", showsTime :false, button : "sdate_cal", singleClick : true, step : 1 });
 				Calendar.setup({ inputField : "edate", ifFormat : "%Y-%m-%d", showsTime :false, button : "edate_cal", singleClick : true, step : 1 });
-	   </script>	
+	   </script>
 	<td></td>
-		
+
 			<td>
-			
+
 			<html:submit onclick="return doSubmit();">List Consultation Reports</html:submit>
-			
+
 			</td>
-			
+
 		</tr>
 	</table>
 
 	<c:if test="${not empty demoName}">
-	
+
 		Consultation reports for <c:out value="demoName"/>:
-	
+
 	</c:if>
-	
-	
-	<display:table name="conReportList" requestURI="/eyeform/conreportlist.jsp" defaultsort="2" sort="list" defaultorder="descending" 
+
+
+	<display:table name="conReportList" requestURI="/eyeform/conreportlist.jsp" defaultsort="2" sort="list" defaultorder="descending"
 		id="conreport" pagesize="15">
-		
+
 		<c:url var="thisURL" value="/eyeform/Eyeform.do">
 			<c:param name="conReportNo" value="${conreport.id}"/>
 			<c:param name="demographicNo" value="${conreport.demographicNo}"/>
 			<c:param name="method" value="prepareConReport"/>
 			<c:param name="from" value="out"/>
-		</c:url> 
-		
+		</c:url>
+
 		<c:url var="arURL" value="/ArConReport.do">
 			<c:param name="conReportNo" value="${conreport.id}"/>
 			<c:param name="demographicNo" value="${conreport.demographicNo}"/>
 			<c:param name="method" value="newReport"/>
 			<c:param name="newreport" value="false"/>
 		</c:url>
-		
+
 		<display:column title="Patient name" sortable="true" headerClass="sortable" style="width:210px;">
 			<c:if test="${conreport.type=='AR2'}" >
 			<a href="javascript:popupPage('<c:out value="${arURL}"/>')"><c:out value="${conreport.demographic.lastName}"/>, <c:out value="${conreport.demographic.firstName}"/></a>
-		    
+
 			</c:if>
 			<c:if test="${conreport.type!='AR2'}" >
 		    <a href="javascript:popupPage('<c:out value="${thisURL}"/>')"><c:out value="${conreport.demographic.lastName}"/>, <c:out value="${conreport.demographic.firstName}"/></a>
@@ -195,14 +195,14 @@ function doSubmit() {
 		</display:column>
 
 		<display:column property="date" title="Report Date" sortable="true" headerClass="sortable" style="width:160px;"></display:column>
-		<display:column title="Doctor" property="provider.formattedName" sortable="true" headerClass="sortable" style="width:165px;" />			
-		<display:column title="Status" property="status" sortable="true" headerClass="sortable"/>					
+		<display:column title="Doctor" property="provider.formattedName" sortable="true" headerClass="sortable" style="width:165px;" />
+		<display:column title="Status" property="status" sortable="true" headerClass="sortable"/>
 
 	</display:table>
 	<table style="border:0;">
 	<tr>
 	<td style="text-align: center;">
-	<a href="#" onclick="window.close();" >Close</a> 
+	<a href="#" onclick="window.close();" >Close</a>
 	</td>
 	</tr>
 	</table>
@@ -210,4 +210,3 @@ function doSubmit() {
 
  </body>
  </html:html>
- 

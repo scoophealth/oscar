@@ -1,23 +1,23 @@
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for 
- * Centre for Research on Inner City Health, St. Michael's Hospital, 
- * Toronto, Ontario, Canada 
+ *
+ * This software was written for
+ * Centre for Research on Inner City Health, St. Michael's Hospital,
+ * Toronto, Ontario, Canada
  */
 
 package org.oscarehr.casemgmt.web;
@@ -94,9 +94,9 @@ import org.oscarehr.eyeform.dao.FollowUpDao;
 import org.oscarehr.eyeform.dao.MacroDao;
 import org.oscarehr.eyeform.dao.TestBookRecordDao;
 import org.oscarehr.eyeform.model.EyeForm;
-import org.oscarehr.eyeform.model.FollowUp;
+import org.oscarehr.eyeform.model.EyeformFollowUp;
+import org.oscarehr.eyeform.model.EyeformTestBook;
 import org.oscarehr.eyeform.model.Macro;
-import org.oscarehr.eyeform.model.TestBookRecord;
 import org.oscarehr.eyeform.web.FollowUpAction;
 import org.oscarehr.eyeform.web.ProcedureBookAction;
 import org.oscarehr.eyeform.web.TestBookAction;
@@ -142,7 +142,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		return edit(mapping, form, request, response);
 	}
 
-	public ActionForward setUpMainEncounter(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ActionForward setUpMainEncounter(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		return mapping.findForward("setUpMainEncounterPage");
 	}
 
@@ -153,7 +153,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		long current = 0;
 		HttpSession session = request.getSession();
 		if (session.getAttribute("userrole") == null) {
-			response.sendError(response.SC_FORBIDDEN);
+			response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			return null;
 		}
 
@@ -563,7 +563,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 					extKeyMatched = true;
 					break;
 				}
-				if (filled(val) && !extKeyMatched) { //new ext value(s) added
+				if (filled(val) && !extKeyMatched) { // new ext value(s) added
 					extChanged = true;
 					break extNames;
 				}
@@ -854,7 +854,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		String attrib_name = request.getParameter("annotation_attrib");
 		CaseManagementNote cmn = (CaseManagementNote) session.getAttribute(attrib_name);
 		if (cmn != null) {
-			//new annotation created and got it in session attribute
+			// new annotation created and got it in session attribute
 
 			caseManagementMgr.saveNoteSimple(cmn);
 			CaseManagementNoteLink cml = new CaseManagementNoteLink(CaseManagementNoteLink.CASEMGMTNOTE, note.getId(), cmn.getId());
@@ -864,7 +864,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
 		}
 		if (!noteId.equals("0")) {
-			//Not a new note, look for old annotation
+			// Not a new note, look for old annotation
 
 			CaseManagementNoteLink cml_anno = null;
 			CaseManagementNoteLink cml_dump = null;
@@ -881,11 +881,11 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 				if (cml_anno != null && cml_dump != null) break;
 			}
 
-			if (cml_anno != null) {//old annotation exists - create new link
+			if (cml_anno != null) {// old annotation exists - create new link
 				CaseManagementNoteLink cml_n = new CaseManagementNoteLink(CaseManagementNoteLink.CASEMGMTNOTE, note.getId(), cml_anno.getNoteId());
 				caseManagementMgr.saveNoteLink(cml_n);
 			}
-			if (cml_dump != null) {//old dump exists - create new link
+			if (cml_dump != null) {// old dump exists - create new link
 				CaseManagementNoteLink cml_n = new CaseManagementNoteLink(CaseManagementNoteLink.CASEMGMTNOTE, note.getId(), cml_dump.getNoteId());
 				caseManagementMgr.saveNoteLink(cml_n);
 			}
@@ -932,7 +932,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		CaseManagementEntryFormBean sessionFrm = (CaseManagementEntryFormBean) session.getAttribute(sessionFrmName);
 
 		CaseManagementNote note = sessionFrm.getCaseNote();
-		Long old_note_id = note.getId(); //saved for use with annotation
+		Long old_note_id = note.getId(); // saved for use with annotation
 
 		note.setNote(noteTxt);
 
@@ -1219,7 +1219,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		String attrib_name = request.getParameter("annotation_attribname");
 		CaseManagementNote cmn = (CaseManagementNote) session.getAttribute(attrib_name);
 		if (cmn != null) {
-			//new annotation created and got it in session attribute
+			// new annotation created and got it in session attribute
 
 			caseManagementMgr.saveNoteSimple(cmn);
 			CaseManagementNoteLink cml = new CaseManagementNoteLink(CaseManagementNoteLink.CASEMGMTNOTE, note.getId(), cmn.getId());
@@ -1229,7 +1229,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
 		}
 		if (old_note_id != null) {
-			//Not a new note, look for old annotation
+			// Not a new note, look for old annotation
 
 			CaseManagementNoteLink cml_anno = null;
 			CaseManagementNoteLink cml_dump = null;
@@ -1246,11 +1246,11 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 				if (cml_anno != null && cml_dump != null) break;
 			}
 
-			if (cml_anno != null) {//old annotation exists - create new link
+			if (cml_anno != null) {// old annotation exists - create new link
 				CaseManagementNoteLink cml_n = new CaseManagementNoteLink(CaseManagementNoteLink.CASEMGMTNOTE, note.getId(), cml_anno.getNoteId());
 				caseManagementMgr.saveNoteLink(cml_n);
 			}
-			if (cml_dump != null) {//old dump exists - create new link
+			if (cml_dump != null) {// old dump exists - create new link
 				CaseManagementNoteLink cml_n = new CaseManagementNoteLink(CaseManagementNoteLink.CASEMGMTNOTE, note.getId(), cml_dump.getNoteId());
 				caseManagementMgr.saveNoteLink(cml_n);
 			}
@@ -1562,7 +1562,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		int numIssues = Integer.parseInt(request.getParameter("numIssues"));
 		// CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
 
-		CheckBoxBean[] checkedlist = (CheckBoxBean[]) sessionFrm.getIssueCheckList();
+		CheckBoxBean[] checkedlist = sessionFrm.getIssueCheckList();
 		for (int i = 0; i < numIssues; i++) {
 			String ischecked = request.getParameter("issue" + i);
 			if (ischecked != null && ischecked.equalsIgnoreCase("on")) {
@@ -1681,7 +1681,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 					Long tableId = EDocUtil.getTableIdFromNoteId(firstNote.getId());
 					CaseManagementNoteLink cmnl = new CaseManagementNoteLink();
 					cmnl.setNoteId(lastNoteId);
-					cmnl.setTableName(cmnl.DOCUMENT);
+					cmnl.setTableName(CaseManagementNoteLink.DOCUMENT);
 					cmnl.setTableId(tableId);
 					caseManagementMgr.saveNoteLink(cmnl);
 				} else if (firstNote.isRxAnnotation()) {
@@ -1690,7 +1690,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
 					CaseManagementNoteLink cmnl = new CaseManagementNoteLink();
 					cmnl.setNoteId(lastNoteId);
-					cmnl.setTableName(cmnl.DRUGS);
+					cmnl.setTableName(CaseManagementNoteLink.DRUGS);
 					cmnl.setTableId(latestLink.getTableId());
 					caseManagementMgr.saveNoteLink(cmnl);
 					// EDocUtil.addCaseMgmtNoteLink(cmnl);
@@ -1783,7 +1783,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		String chain = request.getParameter("chain");
 
 		SurveillanceMaster sMaster = SurveillanceMaster.getInstance();
-		if (!sMaster.surveysEmpty()) {
+		if (!SurveillanceMaster.surveysEmpty()) {
 			request.setAttribute("demoNo", demoNo);
 			if (chain != null && !chain.equals("")) {
 				request.setAttribute("proceedURL", chain);
@@ -1858,7 +1858,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 	public ActionForward issueList(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		HttpSession session = request.getSession();
 		if (session.getAttribute("userrole") == null) {
-			response.sendError(response.SC_FORBIDDEN);
+			response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			return null;
 		}
 
@@ -1898,7 +1898,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		CheckIssueBoxBean[] issueList = new CheckIssueBoxBean[filteredSearchResults.size()];
 		for (int i = 0; i < filteredSearchResults.size(); i++) {
 			issueList[i] = new CheckIssueBoxBean();
-			issueList[i].setIssue((Issue) filteredSearchResults.get(i));
+			issueList[i].setIssue(filteredSearchResults.get(i));
 
 		}
 		cform.setNewIssueCheckList(issueList);
@@ -1948,7 +1948,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
 		CheckIssueBoxBean[] issueList = new CheckIssueBoxBean[filteredSearchResults.size()];
 		for (int i = 0; i < filteredSearchResults.size(); i++) {
-			Issue issue = (Issue) filteredSearchResults.get(i);
+			Issue issue = filteredSearchResults.get(i);
 			issueList[i] = new CheckIssueBoxBean();
 			issueList[i].setIssue(issue);
 		}
@@ -2025,9 +2025,9 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
 		// add checked new issues to client's issue list
 		// client's old issues
-		CheckBoxBean[] oldList = (CheckBoxBean[]) sessionFrm.getIssueCheckList();
+		CheckBoxBean[] oldList = sessionFrm.getIssueCheckList();
 		// client's new issues
-		CheckIssueBoxBean[] issueList = (CheckIssueBoxBean[]) sessionFrm.getNewIssueCheckList();
+		CheckIssueBoxBean[] issueList = sessionFrm.getNewIssueCheckList();
 		int k = 0;
 		if (issueList != null) {
 			for (int i = 0; i < issueList.length; i++) {
@@ -2103,12 +2103,12 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		} else return mapping.findForward("view");
 	}
 
-	public ActionForward changeDiagnosis(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ActionForward changeDiagnosis(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		logger.debug("changeDiagnosis");
 		if (request.getSession().getAttribute("userrole") == null) return mapping.findForward("expired");
 
 		CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
-		String inds = (String) cform.getDeleteId();
+		String inds = cform.getDeleteId();
 
 		String demono = getDemographicNo(request);
 		request.setAttribute("demoName", getDemoName(demono));
@@ -2229,7 +2229,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
 		HttpSession session = request.getSession();
 		if (session.getAttribute("userrole") == null) {
-			response.sendError(response.SC_FORBIDDEN);
+			response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			return null;
 		}
 
@@ -2246,9 +2246,9 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		request.setAttribute("demoAge", getDemoAge(demono));
 		request.setAttribute("demoDOB", getDemoDOB(demono));
 
-		CheckBoxBean[] oldList = (CheckBoxBean[]) sessionFrm.getIssueCheckList();
+		CheckBoxBean[] oldList = sessionFrm.getIssueCheckList();
 
-		String inds = (String) cform.getDeleteId();
+		String inds = cform.getDeleteId();
 		Integer ind = new Integer(inds);
 
 		// delete the right issue
@@ -2302,7 +2302,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
 		HttpSession session = request.getSession();
 		if (session.getAttribute("userrole") == null) {
-			response.sendError(response.SC_FORBIDDEN);
+			response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			return null;
 		}
 		request.setAttribute("from", request.getParameter("from"));
@@ -2318,9 +2318,9 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		request.setAttribute("demoDOB", getDemoDOB(demono));
 
 		// noteSave(cform, request);
-		CheckBoxBean[] oldList = (CheckBoxBean[]) sessionFrm.getIssueCheckList();
+		CheckBoxBean[] oldList = sessionFrm.getIssueCheckList();
 
-		String inds = (String) cform.getLineId();
+		String inds = cform.getLineId();
 
 		Integer ind = new Integer(inds);
 		List<CaseManagementIssue> iss = new ArrayList<CaseManagementIssue>();
@@ -2348,7 +2348,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		} else return mapping.findForward("view");
 	}
 
-	public ActionForward notehistory(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ActionForward notehistory(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		if (request.getSession().getAttribute("userrole") == null) return mapping.findForward("expired");
 
 		String demono = getDemographicNo(request);
@@ -2363,7 +2363,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		return mapping.findForward("showHistory");
 	}
 
-	public ActionForward issuehistory(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ActionForward issuehistory(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		if (request.getSession().getAttribute("userrole") == null) return mapping.findForward("expired");
 
 		String demono = getDemographicNo(request);
@@ -2407,7 +2407,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		return mapping.findForward("showHistory");
 	}
 
-	public ActionForward history(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ActionForward history(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		logger.debug("history");
 
 		HttpSession session = request.getSession();
@@ -2454,7 +2454,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
 		cform.getCaseNote().setNote(note);
 
-		response.setStatus(response.SC_OK);
+		response.setStatus(HttpServletResponse.SC_OK);
 		return null;
 	}
 
@@ -2466,7 +2466,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		return edit(mapping, form, request, response);
 	}
 
-	public ActionForward cleanup(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ActionForward cleanup(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		String demoNo = this.getDemographicNo(request);
 		String sessionFrmName = "caseManagementEntryForm" + demoNo;
 		String strBeanName = "casemgmt_oscar_bean" + demoNo;
@@ -2589,7 +2589,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			}
 		}
 
-		//Create new file to save form to
+		// Create new file to save form to
 		String path = OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
 		String fileName = path + "EncounterForm-" + UtilDateUtilities.getToday("yyyy-MM-dd.hh.mm.ss") + ".pdf";
 		FileOutputStream out = new FileOutputStream(fileName);
@@ -2619,7 +2619,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		pdfDocs.add(fileName);
 
 		if (request.getParameter("printLabs") != null && request.getParameter("printLabs").equalsIgnoreCase("true")) {
-			//get the labs which fall into the date range which are attached to this patient
+			// get the labs which fall into the date range which are attached to this patient
 			CommonLabResultData comLab = new CommonLabResultData();
 			ArrayList<LabResultData> labs = comLab.populateLabResultsData("", demono, "", "", "", "U");
 			LinkedHashMap<String, LabResultData> accessionMap = new LinkedHashMap<String, LabResultData>();
@@ -2635,7 +2635,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			}
 			for (LabResultData result : accessionMap.values()) {
 				Date d = result.getDateObj();
-				//TODO:filter out the ones which aren't in our date range if there's a date range????
+				// TODO:filter out the ones which aren't in our date range if there's a date range????
 				String segmentId = result.segmentID;
 				MessageHandler handler = Factory.getHandler(segmentId);
 				String fileName2 = OscarProperties.getInstance().getProperty("DOCUMENT_DIR") + "//" + handler.getPatientName().replaceAll("\\s", "_") + "_" + handler.getMsgDate() + "_LabReport.pdf";
@@ -2676,7 +2676,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		if (fwd.getName().equals("windowClose")) {
 			EyeFormDao eyeformDao = (EyeFormDao) SpringUtils.getBean("EyeFormDao");
 			EyeForm eyeform = eyeformDao.getByAppointmentNo(Integer.parseInt(cform.getAppointmentNo()));
-			//load up the eyeform to set/unset checkboxes
+			// load up the eyeform to set/unset checkboxes
 			if (macro.getDischargeFlag() != null && macro.getDischargeFlag().equals("dischargeFlag")) {
 				eyeform.setDischarge("true");
 			}
@@ -2688,13 +2688,13 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			}
 			eyeformDao.merge(eyeform);
 
-			//follow ups
+			// follow ups
 			FollowUpDao followUpDao = (FollowUpDao) SpringUtils.getBean("FollowUpDAO");
 			int followUpNo = macro.getFollowupNo();
 			String followUpUnit = macro.getFollowupUnit();
 			String followUpDr = macro.getFollowupDoctorId();
 			if (followUpNo > 0) {
-				FollowUp f = new FollowUp();
+				EyeformFollowUp f = new EyeformFollowUp();
 				f.setAppointmentNo(Integer.parseInt(cform.getAppointmentNo()));
 				f.setDate(new Date());
 				f.setDemographicNo(Integer.parseInt(cform.getDemographicNo()));
@@ -2707,13 +2707,13 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 				followUpDao.persist(f);
 			}
 
-			//tests
+			// tests
 			TestBookRecordDao testDao = (TestBookRecordDao) SpringUtils.getBean("TestBookDAO");
 			String[] tests = macro.getTestRecords().split("\n");
 			for (String test : tests) {
 				String[] parts = test.trim().split("\\|");
 				if (parts.length == 3 || parts.length == 4) {
-					TestBookRecord rec = new TestBookRecord();
+					EyeformTestBook rec = new EyeformTestBook();
 					rec.setAppointmentNo(Integer.parseInt(cform.getAppointmentNo()));
 					if (parts.length == 4) rec.setComment(parts[3]);
 					else rec.setComment("");
@@ -2721,14 +2721,14 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 					rec.setDemographicNo(Integer.parseInt(cform.getDemographicNo()));
 					rec.setEye(parts[1]);
 					rec.setProvider(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
-					//rec.setStatus(null);
+					// rec.setStatus(null);
 					rec.setTestname(parts[0]);
 					rec.setUrgency(parts[2]);
 					testDao.save(rec);
 				}
 			}
 
-			//send tickler
+			// send tickler
 			if (macro.getTicklerRecipient() != null && macro.getTicklerRecipient().length() > 0) {
 				TicklerDAO ticklerDao = (TicklerDAO) SpringUtils.getBean("ticklerDAOT");
 				Tickler t = new Tickler();
@@ -2743,7 +2743,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 				ticklerDao.saveTickler(t);
 			}
 
-			//billing
+			// billing
 			if (macro.getBillingCodes() != null && macro.getBillingCodes().length() > 0) {
 				GstControlDao gstControlDao = (GstControlDao) SpringUtils.getBean("gstControlDao");
 				BillingServiceDao billingServiceDao = (BillingServiceDao) SpringUtils.getBean("billingServiceDao");
@@ -2781,7 +2781,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 						continue;
 					}
 
-					// price is unit_price*unit*at_percent, but in macro we only assume at_percent=1 
+					// price is unit_price*unit*at_percent, but in macro we only assume at_percent=1
 					// as it's not possible to enter percent value for macros (1-click action).
 					BigDecimal price = new BigDecimal((String) priceg[0]).multiply(new BigDecimal(codes[1]));
 					if ((Boolean) priceg[1] == true) {
@@ -2834,17 +2834,9 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 				BillingSavePrep bObj = new BillingSavePrep();
 				boolean ret = bObj.addABillingRecord(bObj.getBillingClaimObj(mockReq));
 				/*
-				 * not applicable in macro context if
-				 * (mockReq.getParameter("xml_billtype").substring(0, 3).matches(
-				 * BillingDataHlp.BILLINGMATCHSTRING_3RDPARTY)) {
-				 * mockReq.addParameter("billto", macro.getBillingBillto());
-				 * mockReq.addParameter("remitto", macro.getBillingRemitto());
-				 * mockReq.addParameter("gstBilledTotal", macro
-				 * .getBillingGstBilledTotal()); mockReq.addParameter("payment",
-				 * macro.getBillingPayment()); mockReq.addParameter("refund",
-				 * macro.getBillingRefund()); mockReq.addParameter("gst",
-				 * macro.getBillingGst()); mockReq.addParameter("payMethod",
-				 * macro.getBillingPayMethod());
+				 * not applicable in macro context if (mockReq.getParameter("xml_billtype").substring(0, 3).matches( BillingDataHlp.BILLINGMATCHSTRING_3RDPARTY)) { mockReq.addParameter("billto", macro.getBillingBillto()); mockReq.addParameter("remitto",
+				 * macro.getBillingRemitto()); mockReq.addParameter("gstBilledTotal", macro .getBillingGstBilledTotal()); mockReq.addParameter("payment", macro.getBillingPayment()); mockReq.addParameter("refund", macro.getBillingRefund());
+				 * mockReq.addParameter("gst", macro.getBillingGst()); mockReq.addParameter("payMethod", macro.getBillingPayMethod());
 				 * 
 				 * bObj.addPrivateBillExtRecord(mockReq); }
 				 */
@@ -3113,7 +3105,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			if (dateParts[0].length() == 4 && dateParts[1].length() >= 1 && dateParts[1].length() <= 2) return PartialDate.YEARMONTH;
 		}
 		if (dateParts.length == 3 && NumberUtils.isDigits(dateParts[0]) && NumberUtils.isDigits(dateParts[1]) && NumberUtils.isDigits(dateParts[2])) {
-			if (dateParts[0].length() == 4 && dateParts[1].length() >= 1 && dateParts[1].length() <= 2 && dateParts[2].length() >= 1 && dateParts[2].length() <= 2) return ""; //full date
+			if (dateParts[0].length() == 4 && dateParts[1].length() >= 1 && dateParts[1].length() <= 2 && dateParts[2].length() >= 1 && dateParts[2].length() <= 2) return ""; // full date
 		}
 		return null;
 	}

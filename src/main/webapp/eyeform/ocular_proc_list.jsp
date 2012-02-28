@@ -27,12 +27,12 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%@page
-	import="oscar.oscarEncounter.pageUtil.*,oscar.oscarEncounter.data.*,java.util.List,org.oscarehr.eyeform.model.OcularProc"%>
+	import="oscar.oscarEncounter.pageUtil.*,oscar.oscarEncounter.data.*,java.util.List,org.oscarehr.eyeform.model.EyeformOcularProcedure"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.PMmodule.dao.ProviderDao"%>
 
 <%
-if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
+	if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
 String demo = request.getParameter("demographicNo");
 String proNo = (String) session.getAttribute("user");
 oscar.oscarDemographic.data.DemographicData demoData=null;
@@ -49,9 +49,8 @@ else
     response.sendRedirect("../error.jsp");
 
 
-List<OcularProc> procs = (List<OcularProc>)request.getAttribute("procs");
+List<EyeformOcularProcedure> procs = (List<EyeformOcularProcedure>)request.getAttribute("procs");
 ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
-
 %>
 
 <html:html locale="true">

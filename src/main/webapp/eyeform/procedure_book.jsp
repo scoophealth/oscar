@@ -1,4 +1,4 @@
-<%@page import="org.oscarehr.eyeform.model.ProcedureBook"%>
+<%@page import="org.oscarehr.eyeform.model.EyeformProcedureBook"%>
 <%@page import="org.oscarehr.eyeform.web.ProcedureBookAction"%>
 
 

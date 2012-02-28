@@ -12,7 +12,7 @@ import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.casemgmt.service.CaseManagementPrintPdf;
 import org.oscarehr.casemgmt.util.ExtPrint;
 import org.oscarehr.eyeform.dao.SpecsHistoryDao;
-import org.oscarehr.eyeform.model.SpecsHistory;
+import org.oscarehr.eyeform.model.EyeformSpecsHistory;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -42,7 +42,7 @@ public class SpecsHistoryPrint implements ExtPrint {
 		SpecsHistoryDao dao = (SpecsHistoryDao)SpringUtils.getBean("SpecsHistoryDAO");
     	
     	
-		List<SpecsHistory> specs = null;
+		List<EyeformSpecsHistory> specs = null;
 		
 		if(startDate.equals("") && endDate.equals("")) {
 			specs = dao.getByDemographicNo(Integer.parseInt(demographicNo));
@@ -72,7 +72,7 @@ public class SpecsHistoryPrint implements ExtPrint {
         p.add(phrase);
         engine.getDocument().add(p);
         
-        for(SpecsHistory spec:specs) {
+        for(EyeformSpecsHistory spec:specs) {
         	p = new Paragraph();
     		phrase = new Phrase(engine.LEADING, "", engine.getFont());              
     		Chunk chunk = new Chunk("Documentation Date: " + engine.getFormatter().format(spec.getDate()) + "\n", obsfont);

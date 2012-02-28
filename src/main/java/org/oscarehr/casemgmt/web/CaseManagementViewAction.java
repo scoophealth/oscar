@@ -91,9 +91,9 @@ import org.oscarehr.eyeform.EyeformInit;
 import org.oscarehr.eyeform.dao.FollowUpDao;
 import org.oscarehr.eyeform.dao.MacroDao;
 import org.oscarehr.eyeform.dao.TestBookRecordDao;
-import org.oscarehr.eyeform.model.FollowUp;
+import org.oscarehr.eyeform.model.EyeformFollowUp;
 import org.oscarehr.eyeform.model.Macro;
-import org.oscarehr.eyeform.model.TestBookRecord;
+import org.oscarehr.eyeform.model.EyeformTestBook;
 import org.oscarehr.provider.web.CppPreferencesUIBean;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -1466,7 +1466,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		String followUpUnit = macro.getFollowupUnit();
 		String followUpDr = macro.getFollowupDoctorId();
 		if(followUpDr.length()>0) {
-			FollowUp f = new FollowUp();
+			EyeformFollowUp f = new EyeformFollowUp();
 			f.setAppointmentNo(Integer.parseInt(request.getParameter("appointmentNo")));
 			f.setDate(new Date());
 			f.setDemographicNo(Integer.parseInt(request.getParameter("demographicNo")));
@@ -1486,7 +1486,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		for(String test:tests) {
 			String[] parts = test.trim().split("\\|");
 			if(parts.length==4) {
-				TestBookRecord rec = new TestBookRecord();
+				EyeformTestBook rec = new EyeformTestBook();
 				rec.setAppointmentNo(Integer.parseInt(request.getParameter("appointmentNo")));
 				rec.setComment(parts[3]);
 				rec.setDate(new Date());

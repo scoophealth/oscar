@@ -7,7 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
@@ -19,8 +18,7 @@ import org.oscarehr.common.model.Provider;
 import oscar.util.StringUtils;
 
 @Entity
-@Table(name="EyeformFollowUp")
-public class FollowUp extends AbstractModel<Integer> {
+public class EyeformFollowUp extends AbstractModel<Integer> {
 
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -6,7 +6,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
@@ -16,8 +15,7 @@ import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Provider;
 
 @Entity
-@Table(name="EyeformConsultationReport")
-public class ConsultationReport extends AbstractModel<Integer> {
+public class EyeformConsultationReport extends AbstractModel<Integer> {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -62,7 +60,7 @@ public class ConsultationReport extends AbstractModel<Integer> {
 	private String referralNo;
 	
 	
-	public ConsultationReport() {
+	public EyeformConsultationReport() {
 		date = new Date();
 	}
 	

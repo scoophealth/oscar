@@ -1,4 +1,4 @@
-<%@page import="org.oscarehr.eyeform.model.OcularProc"%>
+<%@page import="org.oscarehr.eyeform.model.EyeformOcularProcedure"%>
 <%@page import="org.oscarehr.eyeform.web.OcularProcAction"%>
 
 
