@@ -175,10 +175,10 @@ public class MsgMessageData {
               MsgProviderData proData = (MsgProviderData) providerList.get(i);
               String proNo = proData.providerNo;
               if (i == (providerList.size() -1)){
-                 temp.append(" provider_no = "+proNo);
+                 temp.append(" provider_no = '"+proNo + "'");
               }
               else{
-                temp.append(" provider_no = "+proNo+" or ");
+                temp.append(" provider_no = '"+proNo+"' or ");
               }
             }
 
