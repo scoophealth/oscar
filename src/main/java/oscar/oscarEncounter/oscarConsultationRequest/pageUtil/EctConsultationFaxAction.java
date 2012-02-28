@@ -26,6 +26,7 @@ package oscar.oscarEncounter.oscarConsultationRequest.pageUtil;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -39,38 +40,46 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.common.dao.FaxClientLogDao;
+import org.oscarehr.common.model.FaxClientLog;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
 import oscar.oscarClinic.ClinicData;
 import oscar.oscarDB.DBHandler;
-import oscar.oscarFax.client.FaxClientLog;
 import oscar.oscarFax.client.OSCARFAXClient;
 import oscar.oscarFax.client.OSCARFAXSOAPMessage;
 
 public class EctConsultationFaxAction extends Action {
-   
+
    String replaceIllegalCharacters(String str){
       return str.replaceAll("&", "&amp;").replaceAll(">","&gt;").replaceAll("<","&lt;");
    }
-   
+
    String replaceIllegalCharactersAmps(String str){
       return str.replaceAll("&", "&amp;");
    }
-   
+
    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
    throws ServletException, IOException {
       String curUser_no = (String) request.getSession().getAttribute("user");
-      
+
       if(curUser_no == null){
          MiscUtils.getLogger().debug("EJECTING");
          return mapping.findForward("eject");
       }
-      
+
       OscarProperties props = OscarProperties.getInstance();
-      
-      FaxClientLog faxClientLog = new FaxClientLog(curUser_no);
-      
+
+      FaxClientLog faxClientLog = new FaxClientLog();
+      faxClientLog.setProviderNo(curUser_no);
+      faxClientLog.setStartTime(new Date());
+
+      FaxClientLogDao faxDao = (FaxClientLogDao)SpringUtils.getBean("faxClientLogDao");
+      faxDao.persist(faxClientLog);
+
+
       EctConsultationFaxForm frm = (EctConsultationFaxForm)form;
       MiscUtils.getLogger().debug("Provider = "+curUser_no+" has requested to send a fax");
       String requestId          = frm.getRequestId();
@@ -83,10 +92,10 @@ public class EctConsultationFaxAction extends Action {
       String sendersPhone       = frm.getSendersPhone();
       String recipient          = frm.getRecipient();
       String from               = frm.getFrom();
-      
+
       String appDate;
       String appTime;
-      
+
       java.util.Calendar calender = java.util.Calendar.getInstance();
       String day =  Integer.toString(calender.get(java.util.Calendar.DAY_OF_MONTH));
       String mon =  Integer.toString(calender.get(java.util.Calendar.MONTH)+1);
@@ -94,21 +103,21 @@ public class EctConsultationFaxAction extends Action {
       String hourOfDay = Integer.toString(calender.get(java.util.Calendar.HOUR_OF_DAY));
       String minute = Integer.toString(calender.get(java.util.Calendar.MINUTE));
       String formattedDate = year+"/"+mon+"/"+day+"  "+hourOfDay+":"+minute;
-      
+
       ClinicData clinic = new ClinicData();
       String SIMPLE_SAMPLE_URI = props.getProperty("faxURI", "https://67.69.12.117:14043/OSCARFaxWebService");
-      
+
       System.setProperty("javax.net.ssl.trustStore", props.getProperty("faxKeystore", "/root/oscarFax/oscarFax.keystore"));
       HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
          public boolean verify(String urlHostname, SSLSession a) {
             return true;
          }
       });
-      
+
       oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestUtil reqFrm;
       reqFrm = new oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestUtil();
       reqFrm.estRequestFromId(requestId);
-      
+
       try{
          if (Integer.parseInt(reqFrm.status) > 2 ){
             appDate = reqFrm.appointmentDay+"/"+reqFrm.appointmentMonth+"/"+reqFrm.appointmentYear+" (d/m/y) ";
@@ -116,7 +125,7 @@ public class EctConsultationFaxAction extends Action {
             appDate = "";
          }
       }catch(Exception dateExcp){ appDate = ""; }
-      
+
       try{
          if (Integer.parseInt(reqFrm.status) > 2 ){
             appTime = reqFrm.appointmentHour+":"+reqFrm.appointmentMinute+" "+reqFrm.appointmentPm;
@@ -124,29 +133,29 @@ public class EctConsultationFaxAction extends Action {
             appTime = "";
          }
       }catch(Exception timeExcp){ appTime = ""; }
-      
+
       if (reqFrm.specPhone == null || reqFrm.specPhone.equals("null")){ reqFrm.specPhone = new String(); }
       if (reqFrm.specFax == null || reqFrm.specFax.equals("null")){ reqFrm.specFax = new String(); }
       if (reqFrm.specAddr == null || reqFrm.specAddr.equals("null")){ reqFrm.specAddr = new String(); }
-      
+
       try {
          //URL endpoint = null;
          javax.xml.messaging.URLEndpoint endpoint = null;
-         
+
          //endpoint=new URL(SIMPLE_SAMPLE_URI);
          endpoint= new javax.xml.messaging.URLEndpoint(SIMPLE_SAMPLE_URI);
-         
-         
+
+
          OSCARFAXClient OSFc = new OSCARFAXClient();
          OSCARFAXSOAPMessage OFSm=  OSFc.createOSCARFAXSOAPMessage();
-         
+
          OFSm.setSendingProvider(sendingProvider);
          OFSm.setLocationId(locationId);
          OFSm.setIdentifier(identifier);
          OFSm.setFaxType(OFSm.consultation);
          //OFSm.setRecipientFaxNumber("9055750779");
          OFSm.setRecipientFaxNumber(recipentsFaxNumber);
-         
+
          OFSm.setCoverSheet(true);
          OFSm.setComments(comments);
          OFSm.setSendersFax(sendersFax);
@@ -154,20 +163,20 @@ public class EctConsultationFaxAction extends Action {
          OFSm.setDateOfSending(formattedDate);
          OFSm.setRecipient(recipient);
          OFSm.setFrom(from);
-         
-         
-         
+
+
+
          SOAPElement payloadEle = OFSm.getPayLoad();
          SOAPElement  conPacket;
-         
-         
+
+
          conPacket = payloadEle.addChildElement("conPacket");
-         
+
          conPacket.addChildElement("clinicName").addTextNode(replaceIllegalCharacters( clinic.getClinicName() ) );
          conPacket.addChildElement("clinicAddress").addTextNode(replaceIllegalCharacters(clinic.getClinicAddress()+", "+clinic.getClinicCity()+", "+clinic.getClinicProvince()+" "+clinic.getClinicPostal() ));
          conPacket.addChildElement("clinicTelephone").addTextNode(replaceIllegalCharacters(sendersPhone));
          conPacket.addChildElement("clinicFax").addTextNode(replaceIllegalCharacters(sendersFax));
-         
+
          conPacket.addChildElement("consultDate").addTextNode(replaceIllegalCharacters(reqFrm.referalDate));
          conPacket.addChildElement("status").addTextNode(replaceIllegalCharacters(urg(reqFrm.urgency)));
          conPacket.addChildElement("consultantName").addTextNode(replaceIllegalCharacters(reqFrm.getSpecailistsName(reqFrm.specialist)));
@@ -191,54 +200,60 @@ public class EctConsultationFaxAction extends Action {
          conPacket.addChildElement("allergies").addTextNode(replaceIllegalCharacters(reqFrm.allergies));
          conPacket.addChildElement("associatedWith").addTextNode(reqFrm.getProviderName(replaceIllegalCharacters(reqFrm.providerNo)));
          conPacket.addChildElement("familyDoctor").addTextNode(replaceIllegalCharacters(reqFrm.getFamilyDoctor()));
-         
+
          OFSm.save();
-         
+
          boolean reply = OSFc.sendMessage(OFSm, endpoint);
-         
+
          try{
             if (reply){
                MiscUtils.getLogger().debug("Job Id "+OSFc.getJobId());
                request.setAttribute("jobId",OSFc.getJobId());
                MiscUtils.getLogger().debug("Request Id "+OSFc.getRequestId());
                request.setAttribute("requestId",OSFc.getRequestId());
-               faxClientLog.setFaxRequestId(OSFc.getJobId(),OSFc.getRequestId());
+               faxClientLog.setRequestId(OSFc.getRequestId());
+               faxClientLog.setFaxId(OSFc.getJobId());
+               faxDao.merge(faxClientLog);
             }else{
                MiscUtils.getLogger().debug("Error Message "+OSFc.getErrorMessage());
                request.setAttribute("oscarFaxError",OSFc.getErrorMessage());
                faxClientLog.setResult(OSFc.getErrorMessage());
+               faxClientLog.setEndTime(new Date());
+               faxDao.merge(faxClientLog);
             }
          }catch(Exception e4){
         	 MiscUtils.getLogger().error("Error", e4);
             MiscUtils.getLogger().debug("Fax Service has Returned a Fatal Error ");
             request.setAttribute("oscarFaxError","Fax Service Is currently not available, please contact your Oscar Fax Administrator");
             faxClientLog.setResult("FAX SERVICE RETURNED NULL");
+            faxClientLog.setEndTime(new Date());
+            faxDao.merge(faxClientLog);
          }
-         
-         
-         
-         
-         
-         
-         
+
+
+
+
+
+
+
       } catch(Throwable e) {
          MiscUtils.getLogger().error("Error", e);
       }
       MiscUtils.getLogger().debug("Client Has Finished Running");
-      
-      
-      
-      
-      
-      
-      
+
+
+
+
+
+
+
       return mapping.findForward("success");
-      
+
    }
    String getLocationId(){
       String retval = "";
       try {
-         
+
          String sql = "select locationId from oscarcommlocations where current1 = '1' ";
          ResultSet rs = DBHandler.GetSQL(sql);
          if(rs.next())
@@ -260,5 +275,5 @@ public class EctConsultationFaxAction extends Action {
       }
       return retval;
    }
-   
+
 }
