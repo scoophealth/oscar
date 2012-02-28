@@ -1,32 +1,32 @@
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 -->
-<%@page import="org.oscarehr.eyeform.model.SpecsHistory"%>
-<%@page import="org.oscarehr.eyeform.model.FollowUp"%>
-<%@page import="org.oscarehr.eyeform.model.ProcedureBook"%>
-<%@page import="org.oscarehr.eyeform.model.TestBookRecord"%>
+<%@page import="org.oscarehr.eyeform.model.EyeformSpecsHistory"%>
+<%@page import="org.oscarehr.eyeform.model.EyeformFollowUp"%>
+<%@page import="org.oscarehr.eyeform.model.EyeformProcedureBook"%>
+<%@page import="org.oscarehr.eyeform.model.EyeformTestBook"%>
 <%@page import="java.util.List"%>
 
 <%@ include file="/taglibs.jsp"%>
@@ -52,17 +52,17 @@ function addFollowUp() {
 	total++;
 	jQuery("#followup_num").val(total);
 	jQuery.ajax({url:'plan_followup.jsp?id='+total,async:false, success:function(data) {
-		  jQuery("#followup_container").append(data);					 	
-	}});		
+		  jQuery("#followup_container").append(data);
+	}});
 }
 
-function deleteFollowUp(id) {	
+function deleteFollowUp(id) {
 	//var deleteList = jQuery("input[name='followup.delete']").val();
 	var followUpId = jQuery("input[name='followup_"+id+".id']").val();
 	//jQuery("input[name='followup.delete']").val(deleteList += ','+followUpId);
 	jQuery("form[name='eyeformPlanForm']").append("<input type=\"hidden\" name=\"followup.delete\" value=\""+followUpId+"\"/>");
-	jQuery("#followup_"+id).remove();	
-	
+	jQuery("#followup_"+id).remove();
+
 }
 
 function addProcedure() {
@@ -70,14 +70,14 @@ function addProcedure() {
 	total++;
 	jQuery("#procedure_num").val(total);
 	jQuery.ajax({url:'plan_procedure.jsp?id='+total,async:false, success:function(data) {
-		  jQuery("#procedure_container").append(data);					 	
-	}});		
+		  jQuery("#procedure_container").append(data);
+	}});
 }
 
-function deleteProcedure(id) {	
+function deleteProcedure(id) {
 	var procedureId = jQuery("input[name='procedure_"+id+".id']").val();
 	jQuery("form[name='eyeformPlanForm']").append("<input type=\"hidden\" name=\"procedure.delete\" value=\""+procedureId+"\"/>");
-	jQuery("#procedure_"+id).remove();		
+	jQuery("#procedure_"+id).remove();
 }
 
 function addTest() {
@@ -85,35 +85,34 @@ function addTest() {
 	total++;
 	jQuery("#test_num").val(total);
 	jQuery.ajax({url:'plan_test.jsp?id='+total,async:false, success:function(data) {
-		  jQuery("#test_container").append(data);					 	
-	}});		
+		  jQuery("#test_container").append(data);
+	}});
 }
 
-function deleteTest(id) {	
+function deleteTest(id) {
 	var testId = jQuery("input[name='test_"+id+".id']").val();
 	jQuery("form[name='eyeformPlanForm']").append("<input type=\"hidden\" name=\"test.delete\" value=\""+testId+"\"/>");
-	jQuery("#test_"+id).remove();		
+	jQuery("#test_"+id).remove();
 }
 
 function setSelect(id,type,name,val) {
 	jQuery("select[name='"+type+"_"+id+"."+name+"']").each(function() {
-		jQuery(this).val(val);					
+		jQuery(this).val(val);
 	});
 }
 
 function setInput(id,type,name,val) {
 	jQuery("input[name='"+type+"_"+id+"."+name+"']").each(function() {
-		jQuery(this).val(val);					
+		jQuery(this).val(val);
 	});
 }
 
 jQuery(document).ready(function() {
 <%
 	@SuppressWarnings("unchecked")
-	List<FollowUp> followUps = (List<FollowUp>) request.getAttribute("followUps");
+	List<EyeformFollowUp> followUps = (List<EyeformFollowUp>) request.getAttribute("followUps");
 	if(followUps != null) {
-		for(FollowUp fu:followUps) {
-			%>
+		for(EyeformFollowUp fu:followUps) {%>
 				addFollowUp();
 				var num = jQuery("#followup_num").val();
 				setInput(num,'followup','id','<%=fu.getId()%>');
@@ -123,15 +122,13 @@ jQuery(document).ready(function() {
 				setSelect(num,'followup','timeframe','<%=fu.getTimeframe()%>');
 				setSelect(num,'followup','urgency','<%=fu.getUrgency()%>');
 				setInput(num,'followup','comment','<%=fu.getComment()%>');
-			<%
-		}		
+			<%}
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	List<ProcedureBook> procedures = (List<ProcedureBook>) request.getAttribute("procedures");
+	List<EyeformProcedureBook> procedures = (List<EyeformProcedureBook>) request.getAttribute("procedures");
 	if(procedures != null) {
-		for(ProcedureBook proc:procedures) {
-			%>
+		for(EyeformProcedureBook proc:procedures) {%>
 				addProcedure();
 				var num = jQuery("#procedure_num").val();
 				setInput(num,'procedure','id','<%=proc.getId()%>');
@@ -139,29 +136,27 @@ jQuery(document).ready(function() {
 				setSelect(num,'procedure','eye','<%=proc.getEye()%>');
 				setInput(num,'procedure','procedureName','<%=proc.getProcedureName()%>');
 				setInput(num,'procedure','location','<%=proc.getLocation()%>');
-				setInput(num,'procedure','comment','<%=proc.getComment()%>');					
-			<%
-		}		
+				setInput(num,'procedure','comment','<%=proc.getComment()%>');
+			<%}
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	List<TestBookRecord> tests = (List<TestBookRecord>) request.getAttribute("tests");
+	List<EyeformTestBook> tests = (List<EyeformTestBook>) request.getAttribute("tests");
 	if(tests != null) {
-		for(TestBookRecord test:tests) {
-			%>
+		for(EyeformTestBook test:tests) {%>
 				addTest();
 				var num = jQuery("#test_num").val();
 				setInput(num,'test','id','<%=test.getId()%>');
-				setSelect(num,'test','eye','<%=test.getEye()%>');				
+				setSelect(num,'test','eye','<%=test.getEye()%>');
 				setInput(num,'test','testname','<%=test.getTestname()%>');
-				setSelect(num,'test','urgency','<%=test.getUrgency()%>');				
-				setInput(num,'test','comment','<%=test.getComment()%>');	
+				setSelect(num,'test','urgency','<%=test.getUrgency()%>');
+				setInput(num,'test','comment','<%=test.getComment()%>');
 			<%
-		}		
+		}
 	}
 %>
 });
-</script>		
+</script>
 </head>
 <body>
 <center><b>Arrange Plan</b></center>
@@ -170,31 +165,31 @@ jQuery(document).ready(function() {
 <br />
 
 <html:form action="/eyeform/EyeformPlan.do">
- 
-		<input type="hidden" name="method" value="save"/>		
-		
-		<input type="hidden" name="followup.demographicNo" value="<%=request.getParameter("followup.demographicNo")%>"/>		
-		<input type="hidden" name="followup.appointmentNo" value="<%=request.getParameter("followup.appointmentNo")%>"/>				
+
+		<input type="hidden" name="method" value="save"/>
+
+		<input type="hidden" name="followup.demographicNo" value="<%=request.getParameter("followup.demographicNo")%>"/>
+		<input type="hidden" name="followup.appointmentNo" value="<%=request.getParameter("followup.appointmentNo")%>"/>
 
 <!-- follow up section -->
 <div id="followup_container"></div>
-<input type="hidden" id="followup_num" name="followup_num" value="0"/>	
-<a href="#" onclick="addFollowUp();">[Add]</a>				
+<input type="hidden" id="followup_num" name="followup_num" value="0"/>
+<a href="#" onclick="addFollowUp();">[Add]</a>
 
 <br/><br/>
 <b>Book Procedure:</b>
 <br />
 <!-- procedure section -->
 <div id="procedure_container"></div>
-<input type="hidden" id="procedure_num" name="procedure_num" value="0"/>	
-<a href="#" onclick="addProcedure();">[Add]</a>	
+<input type="hidden" id="procedure_num" name="procedure_num" value="0"/>
+<a href="#" onclick="addProcedure();">[Add]</a>
 <br/><br/>
 <b>Book Diagnostics:</b>
 <br />
 <!-- test/diag section -->
 <div id="test_container"></div>
-<input type="hidden" id="test_num" name="test_num" value="0"/>	
-<a href="#" onclick="addTest();">[Add]</a>	
+<input type="hidden" id="test_num" name="test_num" value="0"/>
+<a href="#" onclick="addTest();">[Add]</a>
 <br/>
 <br/>
 	<html:submit value="Submit" />

@@ -19,7 +19,7 @@ import org.oscarehr.PMmodule.dao.ClientDao;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.eyeform.dao.ConsultationReportDao;
-import org.oscarehr.eyeform.model.ConsultationReport;
+import org.oscarehr.eyeform.model.EyeformConsultationReport;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -42,7 +42,7 @@ public class ConReportListAction extends DispatchAction {
 		DynaValidatorForm testForm = (DynaValidatorForm) form;
 		ConsultationReportFormBean crBean = (ConsultationReportFormBean)testForm.get("cr");
 		
-		ConsultationReport cr = new ConsultationReport();
+		EyeformConsultationReport cr = new EyeformConsultationReport();
 		if(crBean.getStatus() != null && crBean.getStatus().length()>0) {
 			cr.setStatus(crBean.getStatus());
 		}
@@ -82,8 +82,8 @@ public class ConReportListAction extends DispatchAction {
 		List<Provider> pl = providerDao.getActiveProviders();
 		crBean.setProviderList(pl);
 
-		List<ConsultationReport> results = crDao.search(cr,startDate,endDate);
-		for(ConsultationReport crtmp:results) {
+		List<EyeformConsultationReport> results = crDao.search(cr,startDate,endDate);
+		for(EyeformConsultationReport crtmp:results) {
 			crtmp.setDemographic(demographicDao.getClientByDemographicNo(crtmp.getDemographicNo()));
 			crtmp.setProvider(providerDao.getProvider(crtmp.getProviderNo()));
 		}

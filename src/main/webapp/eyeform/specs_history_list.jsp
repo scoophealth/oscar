@@ -27,10 +27,10 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%@page
-	import="oscar.oscarEncounter.pageUtil.*,oscar.oscarEncounter.data.*,java.util.List,org.oscarehr.eyeform.model.SpecsHistory"%>
+	import="oscar.oscarEncounter.pageUtil.*,oscar.oscarEncounter.data.*,java.util.List,org.oscarehr.eyeform.model.EyeformSpecsHistory"%>
 
 <%
-if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
+	if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
 String demo = request.getParameter("demographicNo");
 String proNo = (String) session.getAttribute("user");
 oscar.oscarDemographic.data.DemographicData demoData=null;
@@ -47,7 +47,7 @@ else
     response.sendRedirect("../error.jsp");
 
 
-List<SpecsHistory> specs = (List<SpecsHistory>)request.getAttribute("specs");
+List<EyeformSpecsHistory> specs = (List<EyeformSpecsHistory>)request.getAttribute("specs");
 %>
 
 <html:html locale="true">

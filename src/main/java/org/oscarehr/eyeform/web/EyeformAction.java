@@ -28,7 +28,6 @@ import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
-import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.IsPropertiesOn;
 import org.oscarehr.common.dao.AllergyDao;
@@ -62,14 +61,14 @@ import org.oscarehr.eyeform.dao.OcularProcDao;
 import org.oscarehr.eyeform.dao.ProcedureBookDao;
 import org.oscarehr.eyeform.dao.SpecsHistoryDao;
 import org.oscarehr.eyeform.dao.TestBookRecordDao;
-import org.oscarehr.eyeform.model.ConsultationReport;
+import org.oscarehr.eyeform.model.EyeformConsultationReport;
 import org.oscarehr.eyeform.model.EyeForm;
-import org.oscarehr.eyeform.model.FollowUp;
-import org.oscarehr.eyeform.model.OcularProc;
-import org.oscarehr.eyeform.model.ProcedureBook;
+import org.oscarehr.eyeform.model.EyeformFollowUp;
+import org.oscarehr.eyeform.model.EyeformOcularProcedure;
+import org.oscarehr.eyeform.model.EyeformProcedureBook;
 import org.oscarehr.eyeform.model.SatelliteClinic;
-import org.oscarehr.eyeform.model.SpecsHistory;
-import org.oscarehr.eyeform.model.TestBookRecord;
+import org.oscarehr.eyeform.model.EyeformSpecsHistory;
+import org.oscarehr.eyeform.model.EyeformTestBook;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -206,9 +205,9 @@ public class EyeformAction extends DispatchAction {
 
 
 		   SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
-		   List<OcularProc> ocularProcs = ocularProcDao.getHistory(Integer.parseInt(demo), new Date(), "A");
+		   List<EyeformOcularProcedure> ocularProcs = ocularProcDao.getHistory(Integer.parseInt(demo), new Date(), "A");
 		   StringBuilder ocularProc = new StringBuilder();
-		   for(OcularProc op:ocularProcs) {
+		   for(EyeformOcularProcedure op:ocularProcs) {
                ocularProc.append(sf.format(op.getDate()) + " ");
                ocularProc.append(op.getEye() + " ");
                ocularProc.append(op.getProcedureName() + " at " + op.getLocation());
@@ -224,9 +223,9 @@ public class EyeformAction extends DispatchAction {
            request.setAttribute("ocularProc", StringEscapeUtils.escapeJavaScript(strOcularProcs));
 
 
-           List<SpecsHistory> specs = specsHistoryDao.getAllPreviousAndCurrent(Integer.parseInt(demo), appNo);
+           List<EyeformSpecsHistory> specs = specsHistoryDao.getAllPreviousAndCurrent(Integer.parseInt(demo), appNo);
            StringBuilder specsStr = new StringBuilder();
-           for(SpecsHistory spec:specs) {
+           for(EyeformSpecsHistory spec:specs) {
         	   String specDate = sf.format(spec.getDate());
         	   specsStr.append(specDate + " ");
 
@@ -288,9 +287,9 @@ public class EyeformAction extends DispatchAction {
 
            //followUp
            FollowUpDao followUpDao = (FollowUpDao)SpringUtils.getBean("FollowUpDAO");
-           List<FollowUp> followUps = followUpDao.getByAppointmentNo(appNo);
+           List<EyeformFollowUp> followUps = followUpDao.getByAppointmentNo(appNo);
            StringBuilder followup = new StringBuilder();
-           for(FollowUp ef:followUps) {
+           for(EyeformFollowUp ef:followUps) {
 				if (ef.getTimespan() >0) {
 					followup.append((ef.getType().equals("followup")?"Follow Up":"Consult") + " in " + ef.getTimespan() + " " + ef.getTimeframe());
 				}
@@ -312,9 +311,9 @@ public class EyeformAction extends DispatchAction {
 
            //test book
            TestBookRecordDao testBookDao = (TestBookRecordDao)SpringUtils.getBean("TestBookDAO");
-           List<TestBookRecord> testBookRecords = testBookDao.getByAppointmentNo(appNo);
+           List<EyeformTestBook> testBookRecords = testBookDao.getByAppointmentNo(appNo);
            StringBuilder testbook = new StringBuilder();
-           for(TestBookRecord tt:testBookRecords) {
+           for(EyeformTestBook tt:testBookRecords) {
         	   testbook.append(tt.getTestname());
    				testbook.append(" ");
    				testbook.append(tt.getEye());
@@ -327,9 +326,9 @@ public class EyeformAction extends DispatchAction {
 
            //procedure book
            ProcedureBookDao procBookDao = (ProcedureBookDao)SpringUtils.getBean("ProcedureBookDAO");
-           List<ProcedureBook> procBookRecords = procBookDao.getByAppointmentNo(appNo);
+           List<EyeformProcedureBook> procBookRecords = procBookDao.getByAppointmentNo(appNo);
            StringBuilder probook = new StringBuilder();
-           for(ProcedureBook pp:procBookRecords) {
+           for(EyeformProcedureBook pp:procBookRecords) {
         	   probook.append(pp.getProcedureName());
         	   probook.append(" ");
         	   probook.append(pp.getEye());
@@ -387,7 +386,7 @@ public class EyeformAction extends DispatchAction {
 		   }
 		   return new String();
 	   }
-
+/*
 	   private String getCppItemAsString(String demo, String issueCode, String text) {
 		   if(cmm==null)
 			   cmm=(CaseManagementManager) SpringUtils.getBean("caseManagementManager");
@@ -403,7 +402,7 @@ public class EyeformAction extends DispatchAction {
 
 		   return text + "\n" + sb.toString();
 	   }
-
+*/
 	   private String getImpression(int appointmentNo) {
 		   List<CaseManagementNote> notes = caseManagementNoteDao.getMostRecentNotesByAppointmentNo(appointmentNo);
 		   notes = filterOutCpp(notes);
@@ -497,13 +496,13 @@ public class EyeformAction extends DispatchAction {
 				printer.setNewPage(true);
 
 				//ocular procs
-				List<OcularProc> ocularProcs = ocularProcDao.getAllPreviousAndCurrent(demographic.getDemographicNo(),appointmentNo);
+				List<EyeformOcularProcedure> ocularProcs = ocularProcDao.getAllPreviousAndCurrent(demographic.getDemographicNo(),appointmentNo);
 				if(ocularProcs.size()>0) {
 					printer.printOcularProcedures(ocularProcs);
 				}
 
 				//specs history
-				List<SpecsHistory> specsHistory = specsHistoryDao.getAllPreviousAndCurrent(demographic.getDemographicNo(),appointmentNo);
+				List<EyeformSpecsHistory> specsHistory = specsHistoryDao.getAllPreviousAndCurrent(demographic.getDemographicNo(),appointmentNo);
 				if(specsHistory.size()>0) {
 					printer.printSpecsHistory(specsHistory);
 				}
@@ -713,7 +712,7 @@ public class EyeformAction extends DispatchAction {
 			}
 			request.setAttribute("famName", famName);
 
-			ConsultationReport cp = new ConsultationReport();
+			EyeformConsultationReport cp = new EyeformConsultationReport();
 			String refNo = null;
 			String referraldoc = new String();
 
@@ -806,9 +805,9 @@ public class EyeformAction extends DispatchAction {
 
 
 			SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
-			   List<OcularProc> ocularProcs = ocularProcDao.getHistory(demographic.getDemographicNo(), new Date(), "A");
+			   List<EyeformOcularProcedure> ocularProcs = ocularProcDao.getHistory(demographic.getDemographicNo(), new Date(), "A");
 			   StringBuilder ocularProc = new StringBuilder();
-			   for(OcularProc op:ocularProcs) {
+			   for(EyeformOcularProcedure op:ocularProcs) {
 	               ocularProc.append(sf.format(op.getDate()) + " ");
 	               ocularProc.append(op.getEye() + " ");
 	               ocularProc.append(op.getProcedureName() + " at " + op.getLocation());
@@ -823,9 +822,9 @@ public class EyeformAction extends DispatchAction {
 	        	   strOcularProcs = "";
 	           request.setAttribute("ocularProc", StringEscapeUtils.escapeJavaScript(strOcularProcs));
 
-	           List<SpecsHistory> specs = specsHistoryDao.getAllPreviousAndCurrent(demographic.getDemographicNo(),appNo);
+	           List<EyeformSpecsHistory> specs = specsHistoryDao.getAllPreviousAndCurrent(demographic.getDemographicNo(),appNo);
 	           StringBuilder specsStr = new StringBuilder();
-	           for(SpecsHistory spec:specs) {
+	           for(EyeformSpecsHistory spec:specs) {
 	        	   String specDate = sf.format(spec.getDate());
 	        	   specsStr.append(specDate + " ");
 
@@ -876,9 +875,9 @@ public class EyeformAction extends DispatchAction {
 
 	           //followUp
 	           FollowUpDao followUpDao = (FollowUpDao)SpringUtils.getBean("FollowUpDAO");
-	           List<FollowUp> followUps = followUpDao.getByAppointmentNo(appNo);
+	           List<EyeformFollowUp> followUps = followUpDao.getByAppointmentNo(appNo);
 	           StringBuilder followup = new StringBuilder();
-	           for(FollowUp ef:followUps) {
+	           for(EyeformFollowUp ef:followUps) {
 					if (ef.getTimespan() >0) {
 						followup.append((ef.getType().equals("followup")?"Follow Up":"Consult") + " in " + ef.getTimespan() + " " + ef.getTimeframe());
 					}
@@ -900,9 +899,9 @@ public class EyeformAction extends DispatchAction {
 
 	           //test book
 	           TestBookRecordDao testBookDao = (TestBookRecordDao)SpringUtils.getBean("TestBookDAO");
-	           List<TestBookRecord> testBookRecords = testBookDao.getByAppointmentNo(appNo);
+	           List<EyeformTestBook> testBookRecords = testBookDao.getByAppointmentNo(appNo);
 	           StringBuilder testbook = new StringBuilder();
-	           for(TestBookRecord tt:testBookRecords) {
+	           for(EyeformTestBook tt:testBookRecords) {
 	        	   testbook.append(tt.getTestname());
 	   				testbook.append(" ");
 	   				testbook.append(tt.getEye());
@@ -915,9 +914,9 @@ public class EyeformAction extends DispatchAction {
 
 	           //procedure book
 	           ProcedureBookDao procBookDao = (ProcedureBookDao)SpringUtils.getBean("ProcedureBookDAO");
-	           List<ProcedureBook> procBookRecords = procBookDao.getByAppointmentNo(appNo);
+	           List<EyeformProcedureBook> procBookRecords = procBookDao.getByAppointmentNo(appNo);
 	           StringBuilder probook = new StringBuilder();
-	           for(ProcedureBook pp:procBookRecords) {
+	           for(EyeformProcedureBook pp:procBookRecords) {
 	        	   probook.append(pp.getProcedureName());
 	        	   probook.append(" ");
 	        	   probook.append(pp.getEye());
@@ -934,7 +933,7 @@ public class EyeformAction extends DispatchAction {
 			log.info("saveConRequest");
 
 			DynaValidatorForm crForm = (DynaValidatorForm) form;
-			ConsultationReport cp = (ConsultationReport) crForm.get("cp");
+			EyeformConsultationReport cp = (EyeformConsultationReport) crForm.get("cp");
 			String id = request.getParameter("cp.id");
 			if(id != null && id.length()>0) {
 				cp.setId(Integer.parseInt(id));
@@ -1004,7 +1003,7 @@ public class EyeformAction extends DispatchAction {
 		public ActionForward printConRequest(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 			log.debug("printConreport");
 			DynaValidatorForm crForm = (DynaValidatorForm) form;
-			ConsultationReport cp = (ConsultationReport) crForm.get("cp");
+			EyeformConsultationReport cp = (EyeformConsultationReport) crForm.get("cp");
 			Demographic demographic = demographicDao.getClientByDemographicNo(cp.getDemographicNo());
 			request.setAttribute("demographic",demographic);
 			Appointment appointment = this.appointmentDao.find(cp.getAppointmentNo());

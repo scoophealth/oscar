@@ -7,17 +7,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 
 import org.oscarehr.common.model.AbstractModel;
 import org.oscarehr.util.MiscUtils;
 
 @Entity
-@Table(name="EyeformSpecsHistory")
-public class SpecsHistory extends AbstractModel<Integer>{
+public class EyeformSpecsHistory extends AbstractModel<Integer>{
 
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,15 +37,13 @@ public class SpecsHistory extends AbstractModel<Integer>{
 	private String osAdd;
 	private String osPrism;
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date updateTime;	
+	private Date updateTime;
 	private int appointmentNo;
-	@Transient
-	private String dateStr;
-	
-	public SpecsHistory() {
+
+	public EyeformSpecsHistory() {
 		status="A";
 	}
-	
+
 	public int getAppointmentNo() {
 		return appointmentNo;
 	}
@@ -134,7 +129,7 @@ public class SpecsHistory extends AbstractModel<Integer>{
 	public void setOdPrism(String odPrism) {
 		this.odPrism = odPrism;
 	}
-	
+
 	public String getOsCyl() {
 		return osCyl;
 	}
@@ -165,55 +160,50 @@ public class SpecsHistory extends AbstractModel<Integer>{
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
 	}
-	
+
 	public String getDateStr() {
 		if(getDate()==null) return "";
 		java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
 		return sdf.format(getDate());
 	}
-	
-	public void setDateStr(String d) {		
+
+	public void setDateStr(String d) {
 		java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
 		try {
 			setDate(sdf.parse(d));
 		}catch(ParseException e) {
 			MiscUtils.getLogger().error("Error",e);
 		}
-	}	
-	
-	private String getPrefix(String data) {
-		if(data.startsWith("-")) return data;
-		return "+"+data;
 	}
-	
+
 	@Override
 	public String toString() {
 		return toString3("<br/>");
 	}
-	
+
 	public String toString2() {
 		StringBuilder sb = new StringBuilder();
         sb.append(getOdSph() == null ? "" : getOdSph());
         sb.append(getOdCyl() == null ? "" : getOdCyl());
-        if (getOdAxis() != null && getOdAxis().trim().length() != 0)                
+        if (getOdAxis() != null && getOdAxis().trim().length() != 0)
         	sb.append("x" + getOdAxis());
-        if (getOdAdd() != null && getOdAdd().trim().length() != 0)               
+        if (getOdAdd() != null && getOdAdd().trim().length() != 0)
         	sb.append("add" + getOdAdd());
-        if (getOdPrism() != null && getOdPrism().trim().length() != 0)                
+        if (getOdPrism() != null && getOdPrism().trim().length() != 0)
         	sb.append("prism" + getOdPrism());
         sb.append(" " + getType() + " " + getDoctor());
         sb.append("\n");
         sb.append(getOsSph() == null ? "" : getOsSph());
         sb.append(getOsCyl() == null ? "" : getOsCyl());
-        if (getOsAxis() != null && getOsAxis().trim().length() != 0)                
+        if (getOsAxis() != null && getOsAxis().trim().length() != 0)
         	sb.append("x" + getOsAxis());
-        if (getOsAdd() != null && getOsAdd().trim().length() != 0)               
+        if (getOsAdd() != null && getOsAdd().trim().length() != 0)
         	sb.append("add" + getOsAdd());
-        if (getOsPrism() != null && getOsPrism().trim().length() != 0)                
+        if (getOsPrism() != null && getOsPrism().trim().length() != 0)
         	sb.append("prism" + getOsPrism());
 		return sb.toString();
 	}
-	
+
 	public String toString3() {
 		return toString3("   ");
 	}
@@ -221,20 +211,20 @@ public class SpecsHistory extends AbstractModel<Integer>{
 		StringBuilder sb = new StringBuilder();
         sb.append(getOdSph() == null ? "" : getOdSph());
         sb.append(getOdCyl() == null ? "" : getOdCyl());
-        if (getOdAxis() != null && getOdAxis().trim().length() != 0)                
+        if (getOdAxis() != null && getOdAxis().trim().length() != 0)
         	sb.append("x" + getOdAxis());
-        if (getOdAdd() != null && getOdAdd().trim().length() != 0)               
+        if (getOdAdd() != null && getOdAdd().trim().length() != 0)
         	sb.append(" add " + getOdAdd());
-        if (getOdPrism() != null && getOdPrism().trim().length() != 0)                
+        if (getOdPrism() != null && getOdPrism().trim().length() != 0)
         	sb.append(" prism " + getOdPrism());
         sb.append(deliminator);
         sb.append(getOsSph() == null ? "" : getOsSph());
         sb.append(getOsCyl() == null ? "" : getOsCyl());
-        if (getOsAxis() != null && getOsAxis().trim().length() != 0)                
+        if (getOsAxis() != null && getOsAxis().trim().length() != 0)
         	sb.append("x" + getOsAxis());
-        if (getOsAdd() != null && getOsAdd().trim().length() != 0)               
+        if (getOsAdd() != null && getOsAdd().trim().length() != 0)
         	sb.append(" add " + getOsAdd());
-        if (getOsPrism() != null && getOsPrism().trim().length() != 0)                
+        if (getOsPrism() != null && getOsPrism().trim().length() != 0)
         	sb.append(" prism " + getOsPrism());
 		return sb.toString();
 	}

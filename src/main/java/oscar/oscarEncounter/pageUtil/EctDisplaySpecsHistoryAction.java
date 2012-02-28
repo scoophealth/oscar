@@ -2,30 +2,30 @@
 // *
 // *
 // * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
-// * This software is published under the GPL GNU General Public License. 
-// * This program is free software; you can redistribute it and/or 
-// * modify it under the terms of the GNU General Public License 
-// * as published by the Free Software Foundation; either version 2 
-// * of the License, or (at your option) any later version. * 
-// * This program is distributed in the hope that it will be useful, 
-// * but WITHOUT ANY WARRANTY; without even the implied warranty of 
-// * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
-// * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
-// * along with this program; if not, write to the Free Software 
-// * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
-// * 
+// * This software is published under the GPL GNU General Public License.
+// * This program is free software; you can redistribute it and/or
+// * modify it under the terms of the GNU General Public License
+// * as published by the Free Software Foundation; either version 2
+// * of the License, or (at your option) any later version. *
+// * This program is distributed in the hope that it will be useful,
+// * but WITHOUT ANY WARRANTY; without even the implied warranty of
+// * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+// * along with this program; if not, write to the Free Software
+// * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+// *
 // * <OSCAR TEAM>
-// * This software was written for the 
-// * Department of Family Medicine 
-// * McMaster University 
-// * Hamilton 
-// * Ontario, Canada 
+// * This software was written for the
+// * Department of Family Medicine
+// * McMaster University
+// * Hamilton
+// * Ontario, Canada
 // *
 // -----------------------------------------------------------------------------------------------------------------------
 
 package oscar.oscarEncounter.pageUtil;
 
- 
+
 import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
@@ -35,7 +35,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.struts.util.MessageResources;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.eyeform.dao.SpecsHistoryDao;
-import org.oscarehr.eyeform.model.SpecsHistory;
+import org.oscarehr.eyeform.model.EyeformSpecsHistory;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -46,9 +46,9 @@ import oscar.util.StringUtils;
 
 public class EctDisplaySpecsHistoryAction extends EctDisplayAction {
     private static final String cmd = "specshistory";
-    
+
  public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
-     
+
 	 boolean a = true;
  	Vector v = OscarRoleObjectPrivilege.getPrivilegeProp("_newCasemgmt.specsHistory");
      String roleName = (String)request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
@@ -57,48 +57,48 @@ public class EctDisplaySpecsHistoryAction extends EctDisplayAction {
  	if(!a) {
  		return true; //The link of tickler won't show up on new CME screen.
  	} else {
- 	 
- try {         
+
+ try {
 
 	 String appointmentNo = request.getParameter("appointment_no");
-			 
+
     //Set lefthand module heading and link
     String winName = "SpecsHistory" + bean.demographicNo;
     String pathview, pathedit;
-    
+
     pathview = request.getContextPath() + "/eyeform/SpecsHistory.do?method=list&demographicNo=" + bean.demographicNo;
     pathedit = request.getContextPath() + "/eyeform/SpecsHistory.do?specs.demographicNo=" + bean.demographicNo + "&specs.appointmentNo=" + appointmentNo;
-    
-    
+
+
     String url = "popupPage(500,900,'" + winName + "','" + pathview + "')";
     Dao.setLeftHeading(messages.getMessage(request.getLocale(), "global.viewSpecsHistory"));
-    Dao.setLeftURL(url);        
-    
+    Dao.setLeftURL(url);
+
     //set right hand heading link
     winName = "AddSpecsHistory" + bean.demographicNo;
     url = "popupPage(500,600,'" + winName + "','" + pathedit + "'); return false;";
     Dao.setRightURL(url);
     Dao.setRightHeadingID(cmd); //no menu so set div id to unique id for this action
-        
+
 
     SpecsHistoryDao shDao = (SpecsHistoryDao)SpringUtils.getBean("SpecsHistoryDAO");
     ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
-    
-    List<SpecsHistory> shs = shDao.getByDemographicNo(Integer.parseInt(bean.demographicNo));
 
-    for(SpecsHistory sh:shs) {
-    	NavBarDisplayDAO.Item item = Dao.Item();                  
+    List<EyeformSpecsHistory> shs = shDao.getByDemographicNo(Integer.parseInt(bean.demographicNo));
+
+    for(EyeformSpecsHistory sh:shs) {
+    	NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
     	item.setDate(sh.getDate());
-    	
-    	String title = sh.getType() + " - " + sh.getDoctor();    	
-    	String itemHeader = StringUtils.maxLenString(title, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);      
+
+    	String title = sh.getType() + " - " + sh.getDoctor();
+    	String itemHeader = StringUtils.maxLenString(title, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
     	item.setTitle(itemHeader);
-    	    	
-        item.setLinkTitle(sh.toString3());        
-        
-        int hash = Math.abs(winName.hashCode());        
-        url = "popupPage(500,900,'" + hash + "','" + request.getContextPath() + "/eyeform/SpecsHistory.do?specs.id="+ sh.getId() +"'); return false;";        
-        item.setURL(url);               
+
+        item.setLinkTitle(sh.toString3());
+
+        int hash = Math.abs(winName.hashCode());
+        url = "popupPage(500,900,'" + hash + "','" + request.getContextPath() + "/eyeform/SpecsHistory.do?specs.id="+ sh.getId() +"'); return false;";
+        item.setURL(url);
         Dao.addItem(item);
     }
 
@@ -108,9 +108,9 @@ public class EctDisplaySpecsHistoryAction extends EctDisplayAction {
      return false;
  }
     return true;
- 	}      
+ 	}
   }
- 
+
  public String getCmd() {
      return cmd;
  }

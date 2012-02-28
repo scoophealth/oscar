@@ -12,7 +12,7 @@ import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.casemgmt.service.CaseManagementPrintPdf;
 import org.oscarehr.casemgmt.util.ExtPrint;
 import org.oscarehr.eyeform.dao.OcularProcDao;
-import org.oscarehr.eyeform.model.OcularProc;
+import org.oscarehr.eyeform.model.EyeformOcularProcedure;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -42,7 +42,7 @@ public class OcularProcPrint implements ExtPrint {
 		ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
     	
     	
-		List<OcularProc> procs = null;
+		List<EyeformOcularProcedure> procs = null;
 		
 		if(startDate.equals("") && endDate.equals("")) {
 			procs = dao.getByDemographicNo(Integer.parseInt(demographicNo));
@@ -72,7 +72,7 @@ public class OcularProcPrint implements ExtPrint {
         p.add(phrase);
         engine.getDocument().add(p);
         
-        for(OcularProc proc:procs) {
+        for(EyeformOcularProcedure proc:procs) {
         	p = new Paragraph();
     		phrase = new Phrase(engine.LEADING, "", engine.getFont());              
     		Chunk chunk = new Chunk("Documentation Date: " + engine.getFormatter().format(proc.getDate()) + "\n", obsfont);

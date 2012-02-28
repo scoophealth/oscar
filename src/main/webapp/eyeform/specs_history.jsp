@@ -1,4 +1,4 @@
-<%@page import="org.oscarehr.eyeform.model.SpecsHistory"%>
+<%@page import="org.oscarehr.eyeform.model.EyeformSpecsHistory"%>
 
 
 <%@ include file="/taglibs.jsp"%>

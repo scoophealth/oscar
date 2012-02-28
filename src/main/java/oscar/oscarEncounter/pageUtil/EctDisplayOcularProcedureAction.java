@@ -36,7 +36,7 @@ import org.apache.struts.util.MessageResources;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.eyeform.dao.OcularProcDao;
-import org.oscarehr.eyeform.model.OcularProc;
+import org.oscarehr.eyeform.model.EyeformOcularProcedure;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -88,10 +88,10 @@ public class EctDisplayOcularProcedureAction extends EctDisplayAction {
     ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
 
 
-    List<OcularProc> ops = opDao.getByDemographicNo(Integer.parseInt(bean.demographicNo));
+    List<EyeformOcularProcedure> ops = opDao.getByDemographicNo(Integer.parseInt(bean.demographicNo));
 
-    for(OcularProc op:ops) {
-    	NavBarDisplayDAO.Item item = Dao.Item();
+    for(EyeformOcularProcedure op:ops) {
+    	NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
     	item.setDate(op.getDate());
 
     	Provider provider = providerDao.getProvider(op.getDoctor());

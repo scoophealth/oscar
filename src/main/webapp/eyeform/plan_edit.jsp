@@ -25,9 +25,9 @@
 -->
 <%@ include file="/taglibs.jsp"%>
 
-<%@page import="org.oscarehr.eyeform.model.FollowUp"%>
-<%@page import="org.oscarehr.eyeform.model.ProcedureBook"%>
-<%@page import="org.oscarehr.eyeform.model.TestBookRecord"%>
+<%@page import="org.oscarehr.eyeform.model.EyeformFollowUp"%>
+<%@page import="org.oscarehr.eyeform.model.EyeformProcedureBook"%>
+<%@page import="org.oscarehr.eyeform.model.EyeformTestBook"%>
 <%@page import="org.oscarehr.eyeform.web.PlanAction"%>
 
 
@@ -56,7 +56,9 @@
 </c:if>
 <c:if test="${not empty followUps}">
 	<c:forEach var="f" items="${followUps}">
-		<% FollowUp followUp = (FollowUp)pageContext.getAttribute("f"); %>
+		<%
+			EyeformFollowUp followUp = (EyeformFollowUp)pageContext.getAttribute("f");
+		%>
 		<input type="hidden" name="followup.id" value="<%=followUp.getId()%>"/>
 		<!-- table it -->
 		<table border="0">
@@ -64,23 +66,23 @@
            <tr>
 	            <td width="25%">
 		            <select name="followup<%=followUp.getId()%>.type">
-		            	<%=PlanAction.printFollowUpTypeOptions(followUp) %>		            	
+		            	<%=PlanAction.printFollowUpTypeOptions(followUp)%>		            	
 		            </select>
 	            </td>
 				<td width="30%">				           
 		             <input type="text" name="followup<%=followUp.getId()%>.timespan" size="4"  style="width: 25px;" class="special" value="<c:out value="${f.timespan}"/>"/>		             
 		             <select name="followup<%=followUp.getId()%>.timeframe">
-		             	<%=PlanAction.printFollowUpTimeFrameOptions(followUp) %>
+		             	<%=PlanAction.printFollowUpTimeFrameOptions(followUp)%>
 		            </select>*
 	            </td> 		            
 	            <td width="25%">	             
 		            <select name="followup<%=followUp.getId()%>.followupProvider">
-		            	<%=PlanAction.printFollowUpProvidersOptions(followUp) %>       	
+		            	<%=PlanAction.printFollowUpProvidersOptions(followUp)%>       	
 					</select>
 				</td>
          		<td width="20%">
 		            <select name="followup<%=followUp.getId()%>.urgency">
-		             	<%=PlanAction.printFollowUpUrgency(followUp) %>   	
+		             	<%=PlanAction.printFollowUpUrgency(followUp)%>   	
 		            </select>
 	           </td>				
 			</tr>
@@ -104,7 +106,9 @@
 </c:if>
 <c:if test="${not empty procedures}">
 	<c:forEach var="proc" items="${procedures}">
-		<% ProcedureBook proc = (ProcedureBook)pageContext.getAttribute("proc"); %>
+		<%
+			EyeformProcedureBook proc = (EyeformProcedureBook)pageContext.getAttribute("proc");
+		%>
 		<input type="hidden" name="procedures.id" value="<%=proc.getId()%>"/>		
 	<table>
 		<tr>
@@ -119,7 +123,7 @@
 			<td class="genericTableHeader">Eye</td>
 			<td class="genericTableData">
 			<select name="proc<%=proc.getId()%>.eye">
-					<%=PlanAction.printProcedureEye(proc) %>
+					<%=PlanAction.printProcedureEye(proc)%>
 			</select>
 			</td>
 		</tr>
@@ -128,7 +132,7 @@
 			<td class="genericTableHeader">Urgency</td>
 			<td class="genericTableData">
 			<select name="proc<%=proc.getId()%>.urgency">
-					<%=PlanAction.printProcedureUrgency(proc) %>
+					<%=PlanAction.printProcedureUrgency(proc)%>
 			</select>
 			</td>
 		</tr>
@@ -157,7 +161,9 @@
 </c:if>
 <c:if test="${not empty tests}">
 	<c:forEach var="test" items="${tests}">
-		<% TestBookRecord test = (TestBookRecord)pageContext.getAttribute("test"); %>		
+		<%
+			EyeformTestBook test = (EyeformTestBook)pageContext.getAttribute("test");
+		%>		
 		<input type="hidden" name="tests.id" value="<%=test.getId()%>"/>		
 	<table>
 		<tr>

@@ -2,7 +2,7 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <%@page import="java.text.SimpleDateFormat"%>
-<%@page import="org.oscarehr.eyeform.model.ConsultationReport"%>
+<%@page import="org.oscarehr.eyeform.model.EyeformConsultationReport"%>
 <%@page import="oscar.OscarProperties"%>
 <html:html>
 
@@ -19,8 +19,8 @@
         .header A {
         display:none;
         }
-        
-                
+
+
     </style>
 
     <style type="text/css">
@@ -127,7 +127,7 @@
     }
 
     function addressSelect() {
-    	
+
     }
     function changeAddress(){
     	var cid=document.inputForm.elements['sateliteId'].value;
@@ -146,9 +146,9 @@
 	var clinicPostal=new Array();
 	var clinicPhone=new Array();
 	var clinicFax=new Array();
-    
+
     <c:forEach items="${requestScope.clinicArr}" var="cli" varStatus="status">
-    
+
     clinicName['<c:out value="${cli.clinicId}"/>']='<c:out value="${cli.clinicName}"/>'
     clinicAddress['<c:out value="${cli.clinicId}"/>']='<c:out value="${cli.clinicAddress}"/>'
     clinicCity['<c:out value="${cli.clinicId}"/>']='<c:out value="${cli.clinicCity}"/>'
@@ -156,7 +156,7 @@
     clinicPostal['<c:out value="${cli.clinicId}"/>']='<c:out value="${cli.clinicPostal}"/>'
     clinicPhone['<c:out value="${cli.clinicId}"/>']='<c:out value="${cli.clinicPhone}"/>'
     clinicFax['<c:out value="${cli.clinicId}"/>']='<c:out value="${cli.clinicFax}"/>'
-    
+
     </c:forEach>
     </script>
     <title>
@@ -164,39 +164,39 @@
     </title>
     </head>
     <body onload="changeAddress()">
-    
-    <%ConsultationReport cp=(ConsultationReport)request.getAttribute("cp"); 
+
+    <%EyeformConsultationReport cp=(EyeformConsultationReport)request.getAttribute("cp");
     OscarProperties props = OscarProperties.getInstance();
     %>
 
         <html:form action="/eyeform/Eyeform">
             <html:hidden property="cp.id"/>
             <html:hidden property="cp.demographicNo"/>
-            
+
         <table class="header" >
             <tr>
             <td align="center">
-                
+
                 <input type=button value="Fax Footer" onclick="javascript :flipFaxFooter();"/>
             </td>
 
             <td align="center">
                 <input type=button value="Print" onclick="javascript: PrintWindow();"/>
-            </td>            
-            <!--  td align="center">               
+            </td>
+            <!--  td align="center">
                  <input type="submit" value="Print Attached" />
-            </td -->           
-            <td align="center">                
+            </td -->
+            <td align="center">
                 <input type=button value="Close" onclick="javascript: CloseWindow();"/>
             </td>
-            
+
             <!-- TODO: sateliteFlag -->
-            
-            
+
+
             </tr>
         </table>
 
-        
+
         <table class="printTable" name="headerTable">
             <!--header-->
             <tr>
@@ -204,21 +204,21 @@
                     <table name="innerTable" border="0" >
                         <tr>
                             <td rowspan=3>
-                                &nbsp;&nbsp;  
+                                &nbsp;&nbsp;
                             </td>
 
                             <td rowspan=3>
                     		 <%=props.getProperty("faxLogo", "").equals("")?"":"<img src=\""+props.getProperty("faxLogo", "")+"\">"%>
-                            
+
                             </td>
                             <td rowspan=3>
-                                &nbsp;&nbsp;  
+                                &nbsp;&nbsp;
                             </td>
-                            
-                            
+
+
                             <td colspan="2" class="title4" id="clinicName">
-                            
-                                <b><c:out value="${mdstring}"/> 
+
+                                <b><c:out value="${mdstring}"/>
                                 <c:out value="${internalDrName}"/>
                                 <c:out value="${specialty}"/></b>
                                 <br>
@@ -230,7 +230,7 @@
                             <td colspan="2" class="address" id="clinicAddress">
                 <span id="sclinicAddress"><c:out value="${clinic.clinicAddress}"/></span>,
                 <span id="sclinicCity"><c:out value="${clinic.clinicCity}"/></span>,
-                <span id="sclinicProvince"><c:out value="${clinic.clinicProvince}"/></span>, 
+                <span id="sclinicProvince"><c:out value="${clinic.clinicProvince}"/></span>,
                 <span id="sclinicPostal"><c:out value="${clinic.clinicPostal}"/></span>
                             </td>
                         </tr>
@@ -242,9 +242,9 @@
                             <td class="address" id="clinicFax">
                                 Fax: <span id="sclinicFax"><c:out value="${clinic.clinicFax}"/></span>
                                 <% if(props.getProperty("clinicurl", "").length() > 1) {%>
-                            
+
                             	URL: <%= props.getProperty("clinicurl", "")%>
-                            
+
                             <%} %>
                             </td>
                         </tr>
@@ -256,7 +256,7 @@
 
                     <b>Consultation Report</b>
                     <br>
-                    
+
                 </td>
             </tr>
             <tr>
@@ -266,16 +266,16 @@
                         <tr>
                             <td valign="top" align="left">
                                 <table border=0  >
-                                
+
                                     <tr>
                                         <td class="subTitlesh">
                                             Date:
                                         </td>
 
                                         <td class="fillLineh">
-			
+
                                 	<c:out value="${date}"/>
-                                
+
                                         </td>
                                     </tr>
                                     <tr>
@@ -283,7 +283,7 @@
                                             To:
                                         </td>
                                         <td class="fillLineh">
-			    
+
                                             <c:out value="${refer.lastName}"/>,
 			    							<c:out value="${refer.firstName}"/>,
                                         </td>
@@ -314,12 +314,12 @@
                                         <td class="subTitlesh">
                                             fax:
                                         </td>
-                                        
+
                                         <td class="fillLineh">
                                 			<c:out value="${refer.fax}"/>
                                         </td>
                                     </tr>
-                                    
+
                                     <tr>
                                         <td class="subTitlesh">
                                             cc:
@@ -378,7 +378,7 @@
                                         </td>
 
                                         <td class="fillLineh">
-                                <c:out value="${demographic.yearOfBirth}"/>/<c:out value="${demographic.monthOfBirth}"/>/<c:out value="${demographic.dateOfBirth}"/>  (y/m/d)  
+                                <c:out value="${demographic.yearOfBirth}"/>/<c:out value="${demographic.monthOfBirth}"/>/<c:out value="${demographic.dateOfBirth}"/>  (y/m/d)
                                         </td>
                                     </tr>
                                     <tr>
@@ -395,8 +395,8 @@
                                             &nbsp;
                                         </td>
                                         <td class="fillLineh">
-                            
-                			    
+
+
                                         </td>
 
                                     </tr>
@@ -405,18 +405,18 @@
                                             &nbsp;
                                         </td>
                                         <td class="fillLineh">
-                            
-                                
-		                      
+
+
+
                                         </td>
                                     </tr>
                                     <tr>
 
                                         <td class="subTitlesh">
-                                           
+
                                         </td>
                                         <td class="fillLineh">
-                                
+
                                         </td>
                                     </tr>
                                 </table>
@@ -435,13 +435,13 @@
 
                 <td class="letterContent">
                    <nested:equal property="cp.greeting" value="1">
-                    I had the pleasure of seeing <c:out value="${demographic.age}"/> year old 
+                    I had the pleasure of seeing <c:out value="${demographic.age}"/> year old
                     <c:out value="${demographic.lastName}"/>,<c:out value="${demographic.firstName}"/>
                     <c:if test="${not empty appointDate}">on <c:out value="${appointDate}"/></c:if> on your kind referral.<br>
                     </nested:equal>
                     <c:if test="${cp.greeting == 2}">
-                    This is a report on my most recent assessment of <c:out value="${demographic.age}"/> year old 
-                    <c:out value="${demographic.lastName}"/>,<c:out value="${demographic.firstName}"/>, whom I saw 
+                    This is a report on my most recent assessment of <c:out value="${demographic.age}"/> year old
+                    <c:out value="${demographic.lastName}"/>,<c:out value="${demographic.firstName}"/>, whom I saw
                     <c:if test="${not empty appointDate}">on <c:out value="${appointDate}"/></c:if>.<br>
                     </c:if>
                 </td>
@@ -452,7 +452,7 @@
                     <b>Current Clinical Information:</b>
                 </td>
             </tr>
-			
+
             <tr>
                 <td class="fillLine">
        <%=cp.getClinicalInfo()%>
@@ -462,21 +462,21 @@
             <c:if test="${not empty cp.allergies}">
             <tr>
                 <td class="subTitles">
-	            
+
                     <b>Allergies and Medications:</b>
-				
+
                 </td>
 
             </tr>
             <tr>
                 <td class="fillLine">
-       		
+
                    <%=cp.getAllergies()%>
                 </td>
             </tr>
             </c:if>
-           
-            
+
+
             <c:if test="${not empty cp.examination}">
             <tr>
                 <td class="subTitles">
@@ -486,7 +486,7 @@
             <tr>
                 <td class="fillLine">
                     <pre style="font-size: 10pt;font-family:courier,courier new;arial, verdana, tahoma, helvetica, sans serif;"><%=cp.getExamination()%></pre>
-                    
+
                 </td>
 
             </tr>
@@ -499,15 +499,15 @@
             </tr>
             <tr>
                 <td class="fillLine">
-        
+
                     <%=cp.getImpression()%>
                 </td>
 
             </tr>
             </c:if>
-             
+
             <tr>
-            
+
                 <td class="letterContent">
                     Thank you for allowing me to participate in the care of this patient.
                 </td>
@@ -526,14 +526,14 @@
             <c:if test="${providerflag eq 'false'}">
             <tr>
             <td class="letterContent">
-      			
+
                 Associated with: <c:out value="cp.provider"/>
             </td>
             </tr>
             </c:if>
             <tr>
             <td class="letterContent">
-      			
+
                 <c:out value="${appointmentDoctor}"/>
             </td>
             </tr>

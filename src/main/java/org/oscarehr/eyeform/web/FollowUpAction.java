@@ -15,7 +15,7 @@ import org.apache.struts.validator.DynaValidatorForm;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.eyeform.dao.FollowUpDao;
-import org.oscarehr.eyeform.model.FollowUp;
+import org.oscarehr.eyeform.model.EyeformFollowUp;
 import org.oscarehr.util.SpringUtils;
 
 public class FollowUpAction extends DispatchAction {
@@ -52,7 +52,7 @@ public class FollowUpAction extends DispatchAction {
     
     public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {    	
     	DynaValidatorForm f = (DynaValidatorForm)form;
-    	FollowUp data = (FollowUp)f.get("followup");
+    	EyeformFollowUp data = (EyeformFollowUp)f.get("followup");
     	if(data.getId()!=null && data.getId()==0) {
     		data.setId(null);
     	}
@@ -71,10 +71,10 @@ public class FollowUpAction extends DispatchAction {
     	ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
     	
     	
-    	List<FollowUp> followUps = dao.getByAppointmentNo(Integer.parseInt(appointmentNo));
+    	List<EyeformFollowUp> followUps = dao.getByAppointmentNo(Integer.parseInt(appointmentNo));
     	StringBuilder sb = new StringBuilder();
     	
-    	for(FollowUp f:followUps) {
+    	for(EyeformFollowUp f:followUps) {
     		Provider p = providerDao.getProvider(f.getFollowupProvider());
     		sb.append(f.getType());
     		if(f.getTimespan() > 0) {
@@ -105,10 +105,10 @@ public class FollowUpAction extends DispatchAction {
     	FollowUpDao dao = (FollowUpDao)SpringUtils.getBean("FollowUpDAO");
     	ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
     	
-    	List<FollowUp> followUps = dao.getByAppointmentNo(appointmentNo);
+    	List<EyeformFollowUp> followUps = dao.getByAppointmentNo(appointmentNo);
     	StringBuilder sb = new StringBuilder();
     	
-    	for(FollowUp f:followUps) {
+    	for(EyeformFollowUp f:followUps) {
     		Provider p = providerDao.getProvider(f.getFollowupProvider());
     		String type = "f/u:";
     		if(f.getType().equals("consult")) {
