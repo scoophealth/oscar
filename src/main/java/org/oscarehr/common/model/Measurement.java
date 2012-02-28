@@ -23,19 +23,29 @@ public class Measurement extends AbstractModel<Integer> implements Serializable 
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
+	@Column(name = "type")
 	private String type;
 
 	@Column(name = "demographicNo")
 	private Integer demographicId;
 
+	@Column(name = "providerNo")
 	private String providerNo;
+	
+	@Column(name = "dataField", nullable=false, length=255)
 	private String dataField;
+	
+	@Column(name = "measuringInstruction", nullable=false, length=255)
 	private String measuringInstruction;
+	
+	@Column(name = "comments", nullable=false, length=255)
 	private String comments;
 
 	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "dateObserved")
 	private Date dateObserved;
 
+	@Column(name = "appointmentNo")
 	private Integer appointmentNo;
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -81,7 +91,7 @@ public class Measurement extends AbstractModel<Integer> implements Serializable 
 	}
 
 	public void setDataField(String dataField) {
-		this.dataField = StringUtils.trimToNull(dataField);
+		this.dataField = dataField;
 	}
 
 	public String getMeasuringInstruction() {
@@ -89,7 +99,7 @@ public class Measurement extends AbstractModel<Integer> implements Serializable 
 	}
 
 	public void setMeasuringInstruction(String measuringInstruction) {
-		this.measuringInstruction = StringUtils.trimToNull(measuringInstruction);
+		this.measuringInstruction = measuringInstruction;
 	}
 
 	public String getComments() {
@@ -97,7 +107,7 @@ public class Measurement extends AbstractModel<Integer> implements Serializable 
 	}
 
 	public void setComments(String comments) {
-		this.comments = StringUtils.trimToNull(comments);
+		this.comments = comments;
 	}
 
 	public Date getDateObserved() {
