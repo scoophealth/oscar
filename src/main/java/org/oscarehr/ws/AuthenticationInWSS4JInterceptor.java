@@ -45,6 +45,7 @@ public class AuthenticationInWSS4JInterceptor extends WSS4JInInterceptor impleme
 	public void handleMessage(SoapMessage message)
 	{
 		HttpServletRequest request = (HttpServletRequest)message.get(AbstractHTTPDestination.HTTP_REQUEST);
+		if (request==null) return; // it's an outgoing request
 		String ip = request.getRemoteAddr();
 
 		try
