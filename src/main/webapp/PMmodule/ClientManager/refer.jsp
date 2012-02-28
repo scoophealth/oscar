@@ -22,6 +22,10 @@
 */
  -->
 
+<%@page import="org.oscarehr.common.model.Provider"%>
+<%@page import="org.oscarehr.util.SpringUtils"%>
+<%@page import="org.oscarehr.PMmodule.dao.ProviderDao"%>
+<%@page import="org.oscarehr.common.model.RemoteReferral"%>
 <%@ include file="/taglibs.jsp"%>
 <%@ page import="org.oscarehr.PMmodule.model.*"%>
 <%@ page import="java.util.*"%>
@@ -127,25 +131,33 @@
 	</table>
 	</div>
 	<display:table class="simple" cellspacing="2" cellpadding="3"
-		id="referral" name="remoteReferrals" export="false" pagesize="0"
+		id="remoteReferral" name="remoteReferrals" export="false" pagesize="0"
 		requestURI="/PMmodule/ClientManager.do">
+		<%
+			RemoteReferral temp = (RemoteReferral) pageContext.getAttribute("remoteReferral");
+		%>
 		<display:setProperty name="paging.banner.placement" value="bottom" />
-		<display:column property="programName" sortable="true"
-			title="Facility / Program" />
-		<display:column sortable="true" title="Referral Date">
-			<%
-				ClientReferral temp = (ClientReferral) pageContext.getAttribute("referral");
-				String date=DateFormatUtils.ISO_DATE_FORMAT.format(temp.getReferralDate());
-				String date1=DateFormatUtils.ISO_TIME_NO_T_FORMAT.format(temp.getReferralDate());
-			%>
-			<%=date+" "+date1%>
+		<display:column	title="Facility / Program">
+			<%=temp.getReferredToFacilityName()%> / <%=temp.getReferredToProgramName()%> 
 		</display:column>
-		<display:column property="providerFormattedName" sortable="true"
-			title="Referring Provider" />
-		<display:column property="notes" sortable="true"
-			title="Reason for referral" />
-		<display:column property="presentProblems" sortable="true"
-			title="Present Problems" />
+		<display:column title="Referral Date">
+			<%
+				String date=DateFormatUtils.ISO_DATETIME_FORMAT.format(temp.getReferalDate());
+				date=date.replace("T", " ");
+			%>
+			<%=date%>
+		</display:column>
+		<display:column title="Referring Provider">
+			<%
+				String providerName=temp.getReferringProviderNo();
+				ProviderDao providerDao=(ProviderDao)SpringUtils.getBean("providerDao");
+				Provider provider=providerDao.getProvider(temp.getReferringProviderNo());
+				if (provider!=null) providerName=provider.getFormattedName();
+			%>
+			<%=providerName%>
+		</display:column>
+		<display:column property="reasonForReferral"title="Reason for referral" />
+		<display:column property="presentingProblem" title="Present Problems" />
 	</display:table>
 </c:if>
 
